@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Contáctanos - PASALA CHÉ. Responderemos a todas tus dudas, consultas o sugerencias." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google-adsense-account" content="ca-pub-9579152019412427">
+    <title>Contacto - PASALA CHÉ</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/pages.css" />
+    <link rel="stylesheet" href="css/header.css" />
+    <link rel="stylesheet" href="css/footer-styles.css" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
+     crossorigin="anonymous"></script>
+    <style>
+      body {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: #f1f5f9;
+      }
+      
+      .page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      
+      .page-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        position: relative;
+        padding-bottom: 1.5rem;
+      }
+      
+      .page-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        border-radius: 2px;
+      }
+      
+      .page-header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #fff;
+        font-family: 'Oswald', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .page-description {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.8);
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+      
+      /* ================= Contact Page Styles ================= */
+      .contact-section {
+        padding: 2.5rem;
+        margin: 2.5rem 0;
+        background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+        border-radius: 16px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      
+      .contact-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+      }
+      
+      .contact-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        z-index: 1;
+      }
+      
+      .contact-section h2 {
+        font-family: 'Oswald', sans-serif;
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: #f8fafc;
+        display: inline-block;
+        position: relative;
+        padding-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .contact-section h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        transition: width 0.3s ease;
+      }
+      
+      .contact-section:hover h2::after {
+        width: 100px;
+      }
+      
+      .contact-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+      
+      .contact-method {
+        background: rgba(15, 23, 42, 0.6);
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .contact-method::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      .contact-method:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      
+      .contact-method:hover::before {
+        opacity: 1;
+      }
+      
+      .contact-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #fb7185;
+        background: rgba(225, 29, 72, 0.15);
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto 1rem;
+        transition: transform 0.3s ease;
+        box-shadow: 0 8px 20px rgba(225, 29, 72, 0.2);
+      }
+      
+      .contact-method:hover .contact-icon {
+        transform: scale(1.1) rotate(5deg);
+      }
+      
+      .contact-method h3 {
+        font-size: 1.3rem;
+        margin-bottom: 0.75rem;
+        color: #fbcfe8;
+        font-family: 'Oswald', sans-serif;
+        letter-spacing: 0.5px;
+      }
+      
+      .contact-method p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.75rem;
+      }
+      
+      .contact-method a {
+        color: #fb7185;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+        position: relative;
+        display: inline-block;
+      }
+      
+      .contact-method a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -3px;
+        left: 0;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        transition: width 0.3s ease;
+      }
+      
+      .contact-method a:hover {
+        color: #fda4af;
+      }
+      
+      .contact-method a:hover::after {
+        width: 100%;
+      }
+      
+      .contact-form-container {
+        margin-top: 2rem;
+      }
+      
+      .contact-form {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+      }
+      
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .form-group.full-width {
+        grid-column: 1 / -1;
+      }
+      
+      .form-group label {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+      }
+      
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        padding: 0.875rem 1rem;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: #fff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+      
+      .form-group input:focus,
+      .form-group select:focus,
+      .form-group textarea:focus {
+        border-color: #fb7185;
+        box-shadow: 0 0 0 2px rgba(251, 113, 133, 0.2);
+        outline: none;
+      }
+      
+      .form-group textarea {
+        min-height: 150px;
+        resize: vertical;
+      }
+      
+      .form-group.checkbox {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .form-group.checkbox input {
+        width: auto;
+      }
+      
+      .submit-btn {
+        background: linear-gradient(135deg, #e11d48, #be123c);
+        color: white;
+        border: none;
+        padding: 0.875rem 2rem;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
+      }
+      
+      .submit-btn i {
+        font-size: 1.1rem;
+      }
+      
+      .submit-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(225, 29, 72, 0.4);
+        background: linear-gradient(135deg, #be123c, #9f1239);
+      }
+      
+      .faq-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+      
+      .faq-item {
+        background: rgba(15, 23, 42, 0.6);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .faq-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      .faq-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      
+      .faq-item:hover::before {
+        opacity: 1;
+      }
+      
+      .faq-item h3 {
+        font-size: 1.1rem;
+        margin-bottom: 0.875rem;
+        color: #fbcfe8;
+        position: relative;
+        padding-left: 1.75rem;
+        font-family: 'Oswald', sans-serif;
+        letter-spacing: 0.5px;
+      }
+      
+      .faq-item h3::before {
+        content: '\f059';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        position: absolute;
+        left: 0;
+        color: #fb7185;
+      }
+      
+      .faq-item p {
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.6;
+      }
+      
+      .back-link-container {
+        text-align: center;
+        margin-top: 2rem;
+      }
+      
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 2rem;
+        background: linear-gradient(135deg, #e11d48, #be123c);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        border: none;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .back-link:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(225, 29, 72, 0.4);
+        background: linear-gradient(135deg, #be123c, #9f1239);
+      }
+      
+      /* Botón volver */
+      .back-button {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: rgba(0, 0, 0, 0.3);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+      
+      .back-button:hover {
+        background-color: rgba(225, 29, 72, 0.7);
+        transform: scale(1.1);
+      }
+      
+      @keyframes gradientMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      @media (max-width: 768px) {
+        .page-container {
+          padding: 1rem;
+        }
+        
+        .contact-section {
+          padding: 1.5rem;
+        }
+        
+        .page-header h1 {
+          font-size: 2rem;
+        }
+        
+        .contact-form {
+          grid-template-columns: 1fr;
+        }
+        
+        .faq-container {
+          grid-template-columns: 1fr;
+        }
+        
+        .back-button {
+          width: 50px;
+          height: 50px;
+          font-size: 1.2rem;
+          bottom: 20px;
+          right: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="logo-animation">
+        <i class="fas fa-futbol ball-icon bounce"></i>
+      </div>
+      <a href="index.html" class="title-link">
+        <h1 class="title-text">PASALA CHE</h1>
+      </a>
+      <p class="subtitle">El juego de palabras del fútbol</p>
+    </header>
+    
+    <div class="page-container">
+      <header class="page-header">
+        <h1>Contacto</h1>
+        <p class="page-description">¿Tienes preguntas, sugerencias o comentarios? Nos encantaría escucharte. Utiliza cualquiera de los siguientes métodos para ponerte en contacto con nuestro equipo.</p>
+      </header>
+      
+      <section class="contact-section">
+        <h2>Nuestros Canales</h2>
+        <div class="contact-info">
+          <div class="contact-method">
+            <div class="contact-icon">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <h3>Correo Electrónico</h3>
+            <p>Para consultas generales, sugerencias o comentarios</p>
+            <a href="mailto:contacto@pasalachee.com">contacto@pasalachee.com</a>
+          </div>
+          
+          <div class="contact-method">
+            <div class="contact-icon">
+              <i class="fas fa-question-circle"></i>
+            </div>
+            <h3>Soporte Técnico</h3>
+            <p>¿Problemas con el juego o tu cuenta?</p>
+            <a href="mailto:soporte@pasalachee.com">soporte@pasalachee.com</a>
+          </div>
+          
+          <div class="contact-method">
+            <div class="contact-icon">
+              <i class="fab fa-twitter"></i>
+            </div>
+            <h3>Redes Sociales</h3>
+            <p>Síguenos para las últimas novedades</p>
+            <a href="https://twitter.com/pasalachee" target="_blank">@pasalachee</a>
+          </div>
+        </div>
+      </section>
+      
+      <section class="contact-section">
+        <h2>Formulario de Contacto</h2>
+        <div class="contact-form-container">
+          <form class="contact-form" id="contact-form">
+            <div class="form-group">
+              <label for="name">Nombre</label>
+              <input type="text" id="name" name="name" placeholder="Tu nombre" required />
+            </div>
+            
+            <div class="form-group">
+              <label for="email">Correo Electrónico</label>
+              <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required />
+            </div>
+            
+            <div class="form-group">
+              <label for="subject">Asunto</label>
+              <select id="subject" name="subject" required>
+                <option value="" disabled selected>Selecciona un asunto</option>
+                <option value="suggestion">Sugerencia</option>
+                <option value="question">Pregunta</option>
+                <option value="support">Soporte Técnico</option>
+                <option value="partnership">Colaboración</option>
+                <option value="other">Otro</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="priority">Prioridad</label>
+              <select id="priority" name="priority">
+                <option value="normal">Normal</option>
+                <option value="high">Alta</option>
+                <option value="urgent">Urgente</option>
+              </select>
+            </div>
+            
+            <div class="form-group full-width">
+              <label for="message">Mensaje</label>
+              <textarea id="message" name="message" placeholder="Escribe tu mensaje aquí..." required></textarea>
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Enviar Mensaje</button>
+            </div>
+          </form>
+        </div>
+      </section>
+      
+      <section class="contact-section">
+        <h2>Preguntas Frecuentes</h2>
+        <div class="faq-container">
+          <div class="faq-item">
+            <h3>¿Cómo propongo nuevas preguntas?</h3>
+            <p>Puedes enviarnos tus propuestas de preguntas a través del formulario de contacto, seleccionando "Sugerencia" como asunto. Nuestro equipo revisará y considerará añadirlas al juego.</p>
+          </div>
+          
+          <div class="faq-item">
+            <h3>¿Puedo reportar preguntas incorrectas?</h3>
+            <p>¡Por supuesto! Si encuentras algún error en nuestras preguntas o respuestas, por favor repórtalo seleccionando "Soporte Técnico" en el formulario y detallando el problema.</p>
+          </div>
+          
+          <div class="faq-item">
+            <h3>¿Cómo recupero mi contraseña?</h3>
+            <p>Puedes recuperar tu contraseña haciendo clic en "Olvidé mi contraseña" en la página de inicio de sesión. Te enviaremos un correo electrónico con instrucciones para restablecerla.</p>
+          </div>
+          
+          <div class="faq-item">
+            <h3>¿Con qué frecuencia se añaden nuevas preguntas?</h3>
+            <p>Actualizamos nuestra base de datos de preguntas regularmente. Normalmente añadimos nuevas preguntas cada semana, priorizando eventos futbolísticos recientes y sugerencias de la comunidad.</p>
+          </div>
+          
+          <div class="faq-item">
+            <h3>¿Puedo sugerir nuevas funcionalidades?</h3>
+            <p>¡Absolutamente! Valoramos mucho la opinión de nuestra comunidad. Puedes enviarnos tus ideas a través del formulario de contacto, seleccionando "Sugerencia" como asunto.</p>
+          </div>
+          
+          <div class="faq-item">
+            <h3>¿Tienen aplicación móvil?</h3>
+            <p>Actualmente estamos trabajando en nuestra aplicación móvil para iOS y Android. Mientras tanto, nuestro sitio web está completamente optimizado para dispositivos móviles.</p>
+          </div>
+        </div>
+      </section>
+      
+      <div class="back-link-container">
+        <a href="index.html" class="back-link">
+          <i class="fas fa-home"></i> Volver al Inicio
+        </a>
+      </div>
+      
+      <footer class="policy-footer">
+        <div class="footer-links-mini">
+          <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+          <a href="profile.html"><i class="fas fa-user"></i> Perfil</a>
+          <a href="ranking.html"><i class="fas fa-trophy"></i> Ranking</a>
+          <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
+          <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+          <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+          <a href="cookies.html"><i class="fas fa-cookie"></i> Cookies</a>
+          <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+          <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+        </div>
+        <div class="copyright-text">&copy; 2023 PASALA CHÉ - El Juego del Rosco Futbolero. Todos los derechos reservados.</div>
+        
+        <div class="footer-social-icons">
+          <a href="https://www.facebook.com/pasalachee" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/pasalachee" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.instagram.com/pasalachee" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/c/pasalachee" class="social-icon"><i class="fab fa-youtube"></i></a>
+        </div>
+      </footer>
+    </div>
+    
+    <!-- Botón para volver a la página anterior -->
+    <button class="back-button" onclick="window.history.back()">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    
+    <!-- AdSense Container -->
+    <div class="adsense-container">
+      <div class="ad-label">PUBLICIDAD</div>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+           data-ad-slot="XXXXXXXXXX"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+    </div>
+    
+    <script>
+      // Submit form handling
+      document.getElementById('contact-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        
+        // Simulated form submission
+        alert('Gracias por tu mensaje. Te responderemos lo antes posible.');
+        this.reset();
+      });
+      
+      // Function to check cookie consent for ads
+      function checkCookieConsent() {
+        const hasConsent = localStorage.getItem("adConsent") === "true";
+        const adElements = document.querySelectorAll(".adsbygoogle");
+        adElements.forEach(el => {
+          el.style.display = hasConsent ? "block" : "none";
+        });
+      }
+      
+      // Check on page load
+      document.addEventListener("DOMContentLoaded", function() {
+        checkCookieConsent();
+      });
+    </script>
+  </body>
+</html>
+
+
+

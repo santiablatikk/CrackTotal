@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sin conexión - PASALA CHE</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Estilos mínimos embebidos para asegurar que se muestren sin conexión -->
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .offline-container {
+      max-width: 600px;
+      width: 100%;
+      margin: 50px auto;
+      padding: 2rem;
+      background: rgba(30, 41, 59, 0.7);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: fadeIn 0.5s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .app-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .title-text {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0.5rem 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .subtitle {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1rem;
+    }
+    
+    .offline-icon {
+      font-size: 5rem;
+      color: #e11d48;
+      margin: 1.5rem 0;
+      animation: pulse 1.5s infinite alternate;
+    }
+    
+    @keyframes pulse {
+      from { transform: scale(0.95); opacity: 0.8; }
+      to { transform: scale(1.05); opacity: 1; }
+    }
+    
+    .offline-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+    
+    .offline-message {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .offline-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+      gap: 10px;
+      text-decoration: none;
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .local-games {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .local-games-title {
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: #fff;
+    }
+    
+    .no-games-message {
+      color: rgba(255, 255, 255, 0.6);
+      font-style: italic;
+      margin: 20px 0;
+    }
+    
+    .game-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .game-item {
+      background: rgba(15, 23, 42, 0.5);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .game-item:hover {
+      background: rgba(15, 23, 42, 0.7);
+      transform: translateX(5px);
+    }
+    
+    .game-info {
+      text-align: left;
+    }
+    
+    .game-date {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 5px;
+    }
+    
+    .game-result {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+    
+    .result-victory {
+      color: #4ade80;
+    }
+    
+    .result-defeat {
+      color: #f87171;
+    }
+    
+    .score {
+      font-weight: bold;
+      margin-left: auto;
+      font-size: 1.1rem;
+      color: #f8fafc;
+    }
+    
+    @media (max-width: 576px) {
+      .offline-container {
+        padding: 1.5rem;
+        margin: 30px auto;
+      }
+      
+      .offline-icon {
+        font-size: 4rem;
+        margin: 1rem 0;
+      }
+      
+      .offline-title {
+        font-size: 1.5rem;
+      }
+      
+      .offline-message {
+        font-size: 1rem;
+      }
+      
+      .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="offline-container">
+    <header class="app-header">
+      <h1 class="title-text">PASALA CHE</h1>
+      <p class="subtitle">El juego de palabras del fútbol</p>
+    </header>
+    
+    <div class="offline-icon">
+      <i class="fas fa-wifi-slash"></i>
+    </div>
+    
+    <h2 class="offline-title">¡Estás sin conexión!</h2>
+    
+    <p class="offline-message">
+      Parece que no tienes conexión a Internet en este momento. Algunas funciones de PASALA CHE no estarán disponibles hasta que te vuelvas a conectar.
+    </p>
+    
+    <div class="offline-actions">
+      <button class="btn" id="refresh-btn">
+        <i class="fas fa-sync-alt"></i>
+        Intentar nuevamente
+      </button>
+      
+      <a href="/" class="btn btn-secondary">
+        <i class="fas fa-home"></i>
+        Ir a la página principal
+      </a>
+    </div>
+    
+    <div class="local-games" id="local-games-container">
+      <h3 class="local-games-title">Tus partidas recientes</h3>
+      <div id="games-list-container">
+        <p class="no-games-message" id="no-games-message">No tienes partidas guardadas en este dispositivo.</p>
+        <ul class="game-list" id="game-list"></ul>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Cargar partidas guardadas localmente cuando esté offline
+    document.addEventListener('DOMContentLoaded', function() {
+      const refreshBtn = document.getElementById('refresh-btn');
+      const gameList = document.getElementById('game-list');
+      const noGamesMessage = document.getElementById('no-games-message');
+      
+      // Evento para intentar reconectar
+      refreshBtn.addEventListener('click', function() {
+        window.location.reload();
+      });
+      
+      // Intentar cargar juegos desde localStorage
+      try {
+        // Obtener IP guardada, o usar un identificador genérico
+        const userIP = localStorage.getItem('userIP') || 'unknown';
+        const gameHistoryKey = `gameHistory_${userIP}`;
+        const gameHistory = localStorage.getItem(gameHistoryKey);
+        
+        if (gameHistory) {
+          const games = JSON.parse(gameHistory);
+          
+          if (games && games.length > 0) {
+            // Mostrar las partidas recientes
+            noGamesMessage.style.display = 'none';
+            
+            // Mostrar hasta 5 partidas recientes
+            const recentGames = games.slice(0, 5);
+            
+            recentGames.forEach(game => {
+              const date = new Date(game.date);
+              const formattedDate = date.toLocaleDateString('es-ES', { 
+                day: '2-digit', 
+                month: '2-digit', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              });
+              
+              const listItem = document.createElement('li');
+              listItem.className = 'game-item';
+              
+              listItem.innerHTML = `
+                <div class="game-info">
+                  <div class="game-date">${formattedDate}</div>
+                  <div class="game-result ${game.victory ? 'result-victory' : 'result-defeat'}">
+                    <i class="fas ${game.victory ? 'fa-trophy' : 'fa-times-circle'}"></i>
+                    ${game.victory ? 'Victoria' : 'Derrota'} - 
+                    Dificultad: ${game.difficulty || 'normal'}
+                  </div>
+                </div>
+                <div class="score">${game.score} pts</div>
+              `;
+              
+              gameList.appendChild(listItem);
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error cargando juegos offline:', error);
+      }
+    });
+  </script>
+</body>
+</html> 

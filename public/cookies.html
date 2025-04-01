@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Política de Cookies - PASALA CHÉ. Información sobre las cookies que utilizamos y cómo configurarlas.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-adsense-account" content="ca-pub-9579152019412427">
+    <title>Política de Cookies - PASALA CHÉ</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/header.css" />
+    <link rel="stylesheet" href="css/footer-styles.css" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
+     crossorigin="anonymous"></script>
+    <style>
+      body {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: #f1f5f9;
+      }
+      
+      .page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      
+      .cookies-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+      
+      .cookies-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        position: relative;
+        padding-bottom: 1.5rem;
+      }
+      
+      .cookies-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        border-radius: 2px;
+      }
+      
+      .cookies-header h1 {
+        font-size: 2.5rem;
+        color: #fff;
+        margin-bottom: 1rem;
+        position: relative;
+        display: inline-block;
+        font-family: 'Oswald', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .cookies-header p {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.8);
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+      
+      .cookies-section {
+        background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+        border-radius: 16px;
+        padding: 2.5rem;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      
+      .cookies-section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+      }
+      
+      .cookies-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        z-index: 1;
+      }
+      
+      .cookies-section h2 {
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        color: #f8fafc;
+        display: flex;
+        align-items: center;
+        position: relative;
+        padding-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .cookies-section h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        transition: width 0.3s ease;
+      }
+      
+      .cookies-section:hover h2::after {
+        width: 100px;
+      }
+      
+      .cookies-section h2 i {
+        margin-right: 1rem;
+        color: #fb7185;
+        font-size: 1.75rem;
+      }
+      
+      .cookies-section p {
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.8;
+        margin-bottom: 1.25rem;
+        font-size: 1.05rem;
+      }
+      
+      .cookies-section a {
+        color: #fb7185;
+        text-decoration: none;
+        transition: color 0.3s ease;
+        position: relative;
+        font-weight: 500;
+        display: inline-block;
+      }
+      
+      .cookies-section a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -3px;
+        left: 0;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        transition: width 0.3s ease;
+      }
+      
+      .cookies-section a:hover {
+        color: #fda4af;
+      }
+      
+      .cookies-section a:hover::after {
+        width: 100%;
+      }
+      
+      .cookie-types {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+      }
+      
+      .cookie-type {
+        background: rgba(15, 23, 42, 0.7);
+        border-radius: 12px;
+        padding: 1.5rem;
+        position: relative;
+        transition: all 0.3s ease;
+        border-left: 3px solid transparent;
+      }
+      
+      .cookie-type:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        background: rgba(30, 41, 59, 0.9);
+      }
+      
+      .cookie-type.essential {
+        border-color: #10b981;
+      }
+      
+      .cookie-type.preference {
+        border-color: #3b82f6;
+      }
+      
+      .cookie-type.statistics {
+        border-color: #8b5cf6;
+      }
+      
+      .cookie-type.marketing {
+        border-color: #f59e0b;
+      }
+      
+      .cookie-type h3 {
+        color: #fff;
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-size: 1.2rem;
+        font-family: 'Oswald', sans-serif;
+        letter-spacing: 0.5px;
+      }
+      
+      .cookie-type h3 i {
+        margin-right: 0.75rem;
+        font-size: 1.4rem;
+      }
+      
+      .cookie-type.essential h3 i {
+        color: #10b981;
+      }
+      
+      .cookie-type.preference h3 i {
+        color: #3b82f6;
+      }
+      
+      .cookie-type.statistics h3 i {
+        color: #8b5cf6;
+      }
+      
+      .cookie-type.marketing h3 i {
+        color: #f59e0b;
+      }
+      
+      .cookie-type p {
+        font-size: 1rem;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      
+      /* Sección de navegadores */
+      .browser-list {
+        list-style: none;
+        padding: 0;
+        margin: 1.5rem 0;
+      }
+      
+      .browser-list li {
+        padding: 0.75rem 0;
+        margin-bottom: 0.75rem;
+        background: rgba(15, 23, 42, 0.7);
+        border-radius: 8px;
+        position: relative;
+        padding-left: 3rem;
+        transition: transform 0.3s ease, background 0.3s ease;
+        display: flex;
+        align-items: center;
+        font-size: 1.05rem;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      
+      .browser-list li:hover {
+        transform: translateX(8px);
+        background: rgba(30, 41, 59, 0.9);
+        color: #fff;
+      }
+      
+      .browser-list li i {
+        position: absolute;
+        left: 1rem;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fb7185;
+      }
+      
+      .browser-list li a {
+        color: #fb7185;
+        text-decoration: none;
+        transition: color 0.3s ease;
+        position: relative;
+        font-weight: 500;
+      }
+      
+      .browser-list li a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -3px;
+        left: 0;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        transition: width 0.3s ease;
+      }
+      
+      .browser-list li a:hover {
+        color: #fda4af;
+      }
+      
+      .browser-list li a:hover::after {
+        width: 100%;
+      }
+      
+      .back-link-container {
+        text-align: center;
+        margin-top: 2rem;
+      }
+      
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 2rem;
+        background: linear-gradient(135deg, #e11d48, #be123c);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        border: none;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+      
+      .back-link:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(225, 29, 72, 0.4);
+        background: linear-gradient(135deg, #be123c, #9f1239);
+      }
+      
+      .cookies-footer {
+        text-align: center;
+        margin-top: 2.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      /* Botón volver */
+      .back-button {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: rgba(0, 0, 0, 0.3);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+      
+      .back-button:hover {
+        background-color: rgba(225, 29, 72, 0.7);
+        transform: scale(1.1);
+      }
+      
+      @media (max-width: 768px) {
+        .page-container {
+          padding: 1rem;
+        }
+        
+        .cookies-container {
+          padding: 1rem;
+        }
+        
+        .cookies-section {
+          padding: 1.5rem;
+        }
+        
+        .cookies-header h1 {
+          font-size: 2rem;
+        }
+        
+        .cookie-types {
+          grid-template-columns: 1fr;
+        }
+        
+        .back-button {
+          width: 50px;
+          height: 50px;
+          font-size: 1.2rem;
+          bottom: 20px;
+          right: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="logo-animation">
+        <i class="fas fa-futbol ball-icon bounce"></i>
+      </div>
+      <a href="index.html" class="title-link">
+        <h1 class="title-text">PASALA CHE</h1>
+      </a>
+      <p class="subtitle">El juego de palabras del fútbol</p>
+    </header>
+    
+    <div class="page-container">
+      <div class="cookies-container">
+        <header class="cookies-header">
+          <h1>Aviso de Cookies</h1>
+          <p>Entendemos que la privacidad es importante. Aquí explicamos cómo utilizamos las cookies y cómo puedes gestionar tus preferencias.</p>
+        </header>
+
+        <section class="cookies-section">
+          <h2><i class="fas fa-cookie-bite"></i> ¿Qué son las Cookies?</h2>
+          <p>
+            Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo (ordenador, tablet, smartphone) cuando visitas un sitio web. Estas cookies nos ayudan a mejorar tu experiencia, recordar tus preferencias y entender cómo utilizas nuestro sitio para poder ofrecerte un mejor servicio.
+          </p>
+          <p>
+            Algunos tipos de cookies son esenciales para que el sitio funcione correctamente, mientras que otras son opcionales y puedes decidir si aceptarlas o no.
+          </p>
+        </section>
+
+        <section class="cookies-section">
+          <h2><i class="fas fa-list-ul"></i> Tipos de Cookies que Utilizamos</h2>
+          <div class="cookie-types">
+            <div class="cookie-type essential">
+              <h3><i class="fas fa-shield-alt"></i> Cookies Esenciales</h3>
+              <p>Necesarias para el funcionamiento básico del sitio. Sin estas cookies, no podrías iniciar sesión, navegar o jugar correctamente.</p>
+            </div>
+            
+            <div class="cookie-type preference">
+              <h3><i class="fas fa-sliders-h"></i> Cookies de Preferencias</h3>
+              <p>Permiten recordar tus preferencias, como el nombre de usuario, dificultad preferida o ajustes de interfaz.</p>
+            </div>
+            
+            <div class="cookie-type statistics">
+              <h3><i class="fas fa-chart-bar"></i> Cookies de Estadísticas</h3>
+              <p>Nos ayudan a entender cómo interactúas con el sitio, qué secciones son más populares y cómo podemos mejorar.</p>
+            </div>
+            
+            <div class="cookie-type marketing">
+              <h3><i class="fas fa-ad"></i> Cookies de Marketing</h3>
+              <p>Utilizadas para mostrarte anuncios relevantes a través de servicios como Google AdSense y para medir la efectividad de las campañas.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="cookies-section">
+          <h2><i class="fas fa-cog"></i> Cómo Gestionar tus Cookies</h2>
+          <p>
+            La mayoría de navegadores web permiten controlar las cookies a través de sus preferencias. Puedes bloquear, eliminar o permitir cookies específicas según tus necesidades. Ten en cuenta que si decides bloquear ciertas cookies, es posible que algunas funciones de PASALA CHÉ no funcionen correctamente.
+          </p>
+          
+          <p>Aquí te explicamos cómo gestionar las cookies en los navegadores más populares:</p>
+          
+          <ul class="browser-list">
+            <li>
+              <i class="fab fa-chrome"></i>
+              <a href="https://support.google.com/chrome/answer/95647?hl=es" target="_blank">Google Chrome</a>
+            </li>
+            <li>
+              <i class="fab fa-firefox-browser"></i>
+              <a href="https://support.mozilla.org/es/kb/habilitar-y-deshabilitar-cookies-sitios-web-rastrear-preferencias" target="_blank">Mozilla Firefox</a>
+            </li>
+            <li>
+              <i class="fab fa-safari"></i>
+              <a href="https://support.apple.com/es-es/guide/safari/sfri11471/mac" target="_blank">Safari</a>
+            </li>
+            <li>
+              <i class="fab fa-edge"></i>
+              <a href="https://support.microsoft.com/es-es/microsoft-edge/eliminar-las-cookies-en-microsoft-edge-63947406-40ac-c3b8-57b9-2a946a29ae09" target="_blank">Microsoft Edge</a>
+            </li>
+          </ul>
+        </section>
+
+        <section class="cookies-section">
+          <h2><i class="fas fa-question-circle"></i> Más Información</h2>
+          <p>
+            Si necesitas más información sobre nuestro uso de cookies o tienes alguna pregunta sobre nuestra política de privacidad, no dudes en contactarnos a través de nuestro <a href="contact.html">formulario de contacto</a> o enviando un correo a <a href="mailto:pasalachee@gmail.com">pasalachee@gmail.com</a>.
+          </p>
+          <p>
+            También puedes obtener más información sobre las cookies y cómo gestionarlas en <a href="https://www.aboutcookies.org/" target="_blank">www.aboutcookies.org</a> o <a href="https://www.allaboutcookies.org/" target="_blank">www.allaboutcookies.org</a>.
+          </p>
+        </section>
+
+        <div class="back-link-container">
+          <a href="index.html" class="back-link"><i class="fas fa-home"></i> Volver al Inicio</a>
+        </div>
+
+        <!-- Footer común -->
+        <footer class="cookies-footer">
+          <p>&copy; marzo 2025 PASALA CHÉ. Todos los derechos reservados.</p>
+          <div class="footer-links-mini">
+            <a href="privacy.html" class="mini-btn">Privacidad</a>
+            <a href="terms.html" class="mini-btn">Términos</a>
+            <a href="contact.html" class="mini-btn">Contacto</a>
+          </div>
+        </footer>
+      </div>
+      
+      <!-- Botón para volver a la página anterior -->
+      <button class="back-button" onclick="window.history.back()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      
+      <!-- AdSense Containers -->
+      <div class="adsense-container">
+        <div class="ad-label">PUBLICIDAD</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+             data-ad-slot="XXXXXXXXXX"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+      
+      <script>
+        // Función para mostrar/ocultar anuncios según las preferencias de cookies
+        function checkCookieConsent() {
+          const hasConsent = localStorage.getItem("adConsent") === "true";
+          const adElements = document.querySelectorAll(".adsbygoogle");
+          
+          adElements.forEach(ad => {
+            if (!hasConsent) {
+              ad.style.display = "none";
+              ad.closest(".adsense-container").style.display = "none";
+            }
+          });
+        }
+        
+        // Comprobar el consentimiento al cargar
+        checkCookieConsent();
+      </script>
+      
+      <!-- Footer -->
+      <footer class="policy-footer">
+        <div class="footer-links-mini">
+          <a href="profile.html"><i class="fas fa-user"></i> Perfil</a>
+          <a href="ranking.html"><i class="fas fa-trophy"></i> Ranking</a>
+          <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
+          <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+          <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+          <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+          <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+          <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+          <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+        </div>
+        <div class="copyright-text">&copy; 2025 PASALA CHE - El Juego del Rosco Futbolero.</div>
+        <div class="footer-social-icons">
+          <a href="https://www.facebook.com/pasalachee" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/pasalachee" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.instagram.com/pasalachee" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/c/pasalachee" class="social-icon"><i class="fab fa-youtube"></i></a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

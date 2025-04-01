@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Conoce más sobre PASALA CHÉ, el juego de preguntas y respuestas sobre fútbol">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-adsense-account" content="ca-pub-9579152019412427">
+  <title>Acerca de PASALA CHÉ</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/footer-styles.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
+     crossorigin="anonymous"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #f8fafc;
+    }
+    
+    .page-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    
+    .content-container {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .content-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #e11d48, #fb7185);
+      z-index: 1;
+    }
+    
+    .page-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      position: relative;
+      padding-bottom: 1.5rem;
+    }
+    
+    .page-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, #e11d48, #fb7185);
+      border-radius: 2px;
+    }
+    
+    .page-header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #fff;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .page-description {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.8);
+      max-width: 800px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    .about-section {
+      padding: 2rem;
+      background: rgba(15, 23, 42, 0.7);
+      border-radius: 16px;
+      margin-bottom: 2.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .about-section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+    }
+    
+    .about-section h2 {
+      font-size: 2rem;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      position: relative;
+      padding-bottom: 0.75rem;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .about-section h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #e11d48, #fb7185);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+    
+    .about-section:hover h2::after {
+      width: 100px;
+    }
+    
+    .about-icon-container {
+      display: flex;
+      justify-content: center;
+      margin: 1.5rem 0;
+    }
+    
+    .about-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: transform 0.3s ease;
+    }
+    
+    .about-section:hover .about-icon {
+      transform: scale(1.1) rotate(5deg);
+    }
+    
+    .about-icon i {
+      font-size: 2.5rem;
+      color: #e11d48;
+      transition: transform 0.3s ease;
+    }
+    
+    .about-section:hover .about-icon i {
+      transform: scale(1.1);
+    }
+    
+    .about-section p {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 1.25rem;
+    }
+    
+    .highlight-text {
+      color: #fb7185;
+      font-weight: 500;
+    }
+    
+    .about-list {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0;
+    }
+    
+    .about-list li {
+      padding: 0.75rem 0;
+      display: flex;
+      align-items: center;
+      font-size: 1.05rem;
+      color: rgba(255, 255, 255, 0.8);
+      transition: transform 0.3s ease;
+    }
+    
+    .about-list li:hover {
+      transform: translateX(5px);
+      color: #fff;
+    }
+    
+    .about-list li i {
+      width: 30px;
+      height: 30px;
+      background: rgba(225, 29, 72, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fb7185;
+      margin-right: 1rem;
+      flex-shrink: 0;
+    }
+    
+    .back-link-container {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 2rem;
+      background: linear-gradient(135deg, #e11d48, #be123c);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .back-link:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 25px rgba(225, 29, 72, 0.4);
+      background: linear-gradient(135deg, #be123c, #9f1239);
+    }
+    
+    /* Botón volver */
+    .back-button {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: rgba(0, 0, 0, 0.3);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      backdrop-filter: blur(5px);
+      z-index: 9999;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .back-button:hover {
+      background-color: rgba(225, 29, 72, 0.7);
+      transform: scale(1.1);
+    }
+    
+    @media (max-width: 576px) {
+      .page-container {
+        padding: 1rem;
+      }
+      
+      .content-container {
+        padding: 1.5rem;
+      }
+      
+      .page-header h1 {
+        font-size: 2rem;
+      }
+      
+      .about-section {
+        padding: 1.5rem;
+      }
+      
+      .about-section h2 {
+        font-size: 1.5rem;
+      }
+      
+      .about-icon {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .about-icon i {
+        font-size: 1.8rem;
+      }
+      
+      .back-button {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="logo-animation">
+      <i class="fas fa-futbol ball-icon bounce"></i>
+    </div>
+    <a href="index.html" class="title-link">
+      <h1 class="title-text">PASALA CHE</h1>
+    </a>
+    <p class="subtitle">El juego de palabras del fútbol</p>
+  </header>
+  
+  <div class="page-container">
+    <main class="content-container">
+    <header class="page-header">
+      <h1>Sobre PASALA CHÉ</h1>
+      <p class="page-description">Descubre quiénes somos, nuestra pasión por el fútbol y cómo buscamos crear la mejor experiencia de juego para los fanáticos del deporte rey.</p>
+    </header>
+    
+    <section class="about-section">
+      <h2>Nuestra Historia</h2>
+      <div class="about-icon-container">
+        <div class="about-icon">
+          <i class="fas fa-history"></i>
+        </div>
+      </div>
+      <p><span class="highlight-text">PASALA CHÉ</span> nació en marzo 2025 de la pasión de un grupo de amigos por el fútbol y los juegos de preguntas y respuestas. Lo que comenzó como un proyecto personal rápidamente se convirtió en una comunidad vibrante de entusiastas del fútbol que comparten conocimientos, anécdotas y momentos memorables del deporte rey.</p>
+      
+      <p>Desde nuestro lanzamiento, hemos crecido hasta convertirnos en una plataforma reconocida para los fanáticos del fútbol que desean poner a prueba sus conocimientos de manera divertida e interactiva.</p>
+    </section>
+    
+    <section class="about-section">
+      <h2>Nuestra Misión</h2>
+      <p>En <span class="highlight-text">PASALA CHÉ</span>, nos dedicamos a crear una experiencia de juego desafiante y educativa que celebre la rica historia y cultura del fútbol mundial. Queremos unir a aficionados de todas las edades y nacionalidades a través de su pasión compartida por este deporte.</p>
+      
+      <div class="about-icon-container">
+        <div class="about-icon">
+          <i class="fas fa-bullseye"></i>
+        </div>
+      </div>
+      
+      <p>Nuestros valores fundamentales incluyen:</p>
+      <ul class="about-list">
+        <li><i class="fas fa-check-circle"></i> <span>Precisión en la información que proporcionamos</span></li>
+        <li><i class="fas fa-globe"></i> <span>Inclusión de diferentes ligas, torneos y épocas del fútbol</span></li>
+        <li><i class="fas fa-trophy"></i> <span>Fomento del espíritu competitivo sano</span></li>
+        <li><i class="fas fa-users"></i> <span>Creación de una comunidad respetuosa y colaborativa</span></li>
+      </ul>
+    </section>
+    
+    <section class="about-section">
+      <h2>Nuestro Equipo</h2>
+      <p>Somos un equipo diverso de desarrolladores, diseñadores y expertos en fútbol, todos unidos por nuestra pasión por crear la mejor experiencia de juego posible. Cada miembro aporta conocimientos únicos y perspectivas valiosas a <span class="highlight-text">PASALA CHÉ</span>.</p>
+      
+      <div class="about-icon-container">
+        <div class="about-icon">
+          <i class="fas fa-users-cog"></i>
+        </div>
+      </div>
+      
+      <p>Trabajamos constantemente para ampliar nuestra base de preguntas, mejorar la interfaz de usuario y responder a los comentarios de nuestra comunidad. Si tienes sugerencias o ideas para mejorar PASALA CHÉ, ¡nos encantaría escucharlas!</p>
+    </section>
+    
+    <section class="about-section">
+      <h2>Nuestro Futuro</h2>
+      <p>Tenemos grandes planes para el futuro de <span class="highlight-text">PASALA CHÉ</span>. Estamos trabajando en:</p>
+      <ul class="about-list">
+        <li><i class="fas fa-question-circle"></i> <span>Nuevas categorías de preguntas especializadas</span></li>
+        <li><i class="fas fa-medal"></i> <span>Torneos especiales con premios exclusivos</span></li>
+        <li><i class="fas fa-unlock"></i> <span>Más logros para desbloquear y mostrar</span></li>
+        <li><i class="fas fa-share-alt"></i> <span>Funciones sociales mejoradas para conectar jugadores</span></li>
+      </ul>
+      
+      <div class="about-icon-container">
+        <div class="about-icon">
+          <i class="fas fa-rocket"></i>
+        </div>
+      </div>
+      
+      <p>También estamos explorando la posibilidad de expandirnos a otros deportes, aunque el fútbol siempre será nuestra pasión principal. ¡Mantente atento a todas nuestras actualizaciones!</p>
+    </section>
+    
+    <!-- In-Article Ad (Enhanced Version) -->
+    <div class="adsense-container in-article-ad">
+      <div class="ad-label">PUBLICIDAD</div>
+      <div class="ad-loading"></div>
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-9579152019412427"
+           data-ad-slot="2847563752"></ins>
+      <script>
+        // Cargar anuncio solo si el usuario ha dado consentimiento
+        if (localStorage.getItem("adConsent") === "true") {
+          // Pequeño delay para mejorar la experiencia de usuario
+          setTimeout(function() {
+            document.querySelector('.in-article-ad .ad-loading').style.display = 'none';
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          }, 800);
+        } else {
+          document.querySelector('.in-article-ad').style.display = 'none';
+        }
+      </script>
+    </div>
+    
+    <div class="back-link-container">
+      <button onclick="window.history.back()" class="back-link">
+        <i class="fas fa-arrow-left"></i> Volver
+      </button>
+    </div>
+    
+    <!-- Banner Ad (Footer) -->
+    <div class="adsense-container footer-ad">
+      <div class="ad-label">PUBLICIDAD</div>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-9579152019412427"
+           data-ad-slot="5678901234"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>
+        // Cargar anuncio solo si el usuario ha dado consentimiento
+        if (localStorage.getItem("adConsent") === "true") {
+          // Pequeño delay para mejorar la experiencia de usuario
+          setTimeout(function() {
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          }, 1000);
+        } else {
+          document.querySelector('.footer-ad').style.display = 'none';
+        }
+      </script>
+    </div>
+    
+    <footer class="policy-footer">
+      <div class="footer-links-mini">
+        <a href="profile.html"><i class="fas fa-user"></i> Perfil</a>
+        <a href="ranking.html"><i class="fas fa-trophy"></i> Ranking</a>
+        <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
+        <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+        <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+        <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+        <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+        <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+        <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+      </div>
+      <div class="copyright-text">&copy; 2025 PASALA CHE - El Juego del Rosco Futbolero.</div>
+      <div class="footer-social-icons">
+        <a href="https://www.facebook.com/pasalachee" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://twitter.com/pasalachee" class="social-icon"><i class="fab fa-twitter"></i></a>
+        <a href="https://www.instagram.com/pasalachee" class="social-icon"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.youtube.com/c/pasalachee" class="social-icon"><i class="fab fa-youtube"></i></a>
+      </div>
+    </footer>
+  </div>
+  
+  <!-- Botón para volver a la página anterior -->
+  <button class="back-button" onclick="window.history.back()">
+    <i class="fas fa-arrow-left"></i>
+  </button>
+  
+  <script>
+    // Función para mostrar/ocultar anuncios según las preferencias de cookies
+    function checkCookieConsent() {
+      const hasConsent = localStorage.getItem("adConsent") === "true";
+      const adElements = document.querySelectorAll(".adsbygoogle");
+      adElements.forEach(el => {
+        el.style.display = hasConsent ? "block" : "none";
+      });
+      
+      // También ocultar los contenedores si no hay consentimiento
+      if (!hasConsent) {
+        const adContainers = document.querySelectorAll(".adsense-container");
+        adContainers.forEach(el => {
+          el.style.display = "none";
+        });
+      }
+    }
+    
+    // Verificar al cargar la página
+    document.addEventListener("DOMContentLoaded", function() {
+      checkCookieConsent();
+    });
+  </script>
+</main>
+</div>
+</body>
+</html> 

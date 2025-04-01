@@ -1,0 +1,23 @@
+{
+  "name": "millonario-futbol",
+  "version": "1.0.0",
+  "description": "Juego de preguntas sobre fútbol con modo 1v1",
+  "main": "public/millonario/js/vs/server.js",
+  "scripts": {
+    "start": "node public/millonario/js/vs/server.js",
+    "dev": "nodemon public/millonario/js/vs/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "node-fetch": "^2.6.9",
+    "socket.io": "^4.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "author": "",
+  "license": "ISC"
+}

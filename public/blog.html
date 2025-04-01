@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Blog de PASALA CHÉ: Noticias, artículos y curiosidades sobre el mundo del fútbol" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google-adsense-account" content="ca-pub-9579152019412427">
+    <title>Blog de Fútbol - PASALA CHÉ</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/header.css" />
+    <link rel="stylesheet" href="css/blog.css" />
+    <link rel="stylesheet" href="css/footer-styles.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet" />
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
+     crossorigin="anonymous"></script>
+    <style>
+      body {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: #f1f5f9;
+      }
+      
+      .blog-screen {
+        min-height: 100vh;
+        padding: 40px 0;
+      }
+      
+      .blog-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+        background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+        border-radius: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .blog-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        z-index: 1;
+      }
+      
+      .blog-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        position: relative;
+        padding-bottom: 1.5rem;
+      }
+      
+      .blog-header::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        border-radius: 2px;
+      }
+      
+      .blog-title {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Oswald', sans-serif;
+        background: linear-gradient(90deg, #ffffff, #f1f5f9);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      
+      .blog-intro {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+      }
+      
+      .blog-intro p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.1rem;
+        line-height: 1.6;
+        margin-bottom: 0.5rem;
+      }
+      
+      .blog-description {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1rem;
+        font-style: italic;
+      }
+      
+      .blog-entries {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 30px;
+        margin-top: 3rem;
+      }
+      
+      .blog-card {
+        background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+        border-radius: 16px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+      
+      .blog-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        z-index: 1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      .blog-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      
+      .blog-card:hover::before {
+        opacity: 1;
+      }
+      
+      .blog-img-container {
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+      }
+      
+      .blog-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+      
+      .blog-card:hover .blog-img {
+        transform: scale(1.1);
+      }
+      
+      .blog-card-content {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .blog-card h2 {
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #f8fafc;
+        position: relative;
+        padding-bottom: 0.75rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      
+      .blog-card h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #e11d48, #fb7185);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+      }
+      
+      .blog-card:hover h2::after {
+        width: 100px;
+      }
+      
+      .blog-card p {
+        font-size: 1rem;
+        line-height: 1.6;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 1.5rem;
+        flex-grow: 1;
+      }
+      
+      .blog-entry-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding-top: 1rem;
+      }
+      
+      .blog-date {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+      }
+      
+      .blog-date i {
+        margin-right: 0.5rem;
+        color: #fb7185;
+      }
+      
+      .read-more-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: linear-gradient(135deg, #e11d48, #be123c);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        border: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
+      }
+      
+      .read-more-btn:hover {
+        background: linear-gradient(135deg, #be123c, #9f1239);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(225, 29, 72, 0.4);
+      }
+      
+      .back-to-game-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem 2rem;
+        background: linear-gradient(135deg, #e11d48, #be123c);
+        color: white;
+        text-decoration: none;
+        border-radius: 50px;
+        border: none;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 2.5rem;
+      }
+      
+      .back-to-game-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(225, 29, 72, 0.4);
+        background: linear-gradient(135deg, #be123c, #9f1239);
+      }
+      
+      /* Botón volver */
+      .back-button {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: rgba(0, 0, 0, 0.3);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+      
+      .back-button:hover {
+        background-color: rgba(225, 29, 72, 0.7);
+        transform: scale(1.1);
+      }
+      
+      @media (max-width: 768px) {
+        .blog-entries {
+          grid-template-columns: 1fr;
+        }
+        
+        .blog-title {
+          font-size: 2.2rem;
+        }
+        
+        .blog-container {
+          padding: 1.5rem;
+        }
+        
+        .back-button {
+          width: 50px;
+          height: 50px;
+          font-size: 1.2rem;
+          bottom: 20px;
+          right: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="logo-animation">
+        <i class="fas fa-futbol ball-icon bounce"></i>
+      </div>
+      <a href="index.html" class="title-link">
+        <h1 class="title-text">PASALA CHE</h1>
+      </a>
+      <p class="subtitle">El juego de palabras del fútbol</p>
+    </header>
+    
+    <div class="blog-screen">
+      <div class="blog-container">
+        <header class="blog-header">
+          <h1 class="blog-title">El Blog del Futbolero</h1>
+          <div class="blog-intro">
+            <p>Entérate de las últimas noticias y curiosidades del mundo futbolero</p>
+            <p class="blog-description">En nuestro blog encontrarás artículos sobre la historia del fútbol, récords históricos, curiosidades de los jugadores y mucho más para complementar tu experiencia en el juego.</p>
+          </div>
+        </header>
+      
+        <div class="blog-entries">
+          <div class="blog-card">
+            <div class="blog-img-container">
+              <img src="img/blog/champions.jpg" alt="Champions League Trophy" class="blog-img" onerror="this.src='https://via.placeholder.com/400x225?text=Champions+League'">
+            </div>
+            <div class="blog-card-content">
+              <h2>Historia de la Champions League</h2>
+              <p>La UEFA Champions League, anteriormente conocida como Copa de Europa, es el torneo de clubes más prestigioso del mundo. Descubre su evolución desde 1955 hasta hoy.</p>
+              <div class="blog-entry-footer">
+                <span class="blog-date"><i class="fas fa-calendar-alt"></i> 12 Mayo, 2023</span>
+                <a href="blog-detail-tactics.html" class="read-more-btn">Leer más <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="blog-card">
+            <div class="blog-img-container">
+              <img src="img/blog/worldcup.jpg" alt="Copa del Mundo" class="blog-img" onerror="this.src='https://via.placeholder.com/400x225?text=Mundiales+de+Fútbol'">
+            </div>
+            <div class="blog-card-content">
+              <h2>Historia de los Mundiales de Fútbol</h2>
+              <p>Desde Uruguay 1930 hasta Qatar 2022, repasamos los momentos más memorables y las historias detrás de la competición más importante del planeta.</p>
+              <div class="blog-entry-footer">
+                <span class="blog-date"><i class="fas fa-calendar-alt"></i> 5 Mayo, 2023</span>
+                <a href="blog-detail-worldcups.html" class="read-more-btn">Leer más <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+        
+          <div class="blog-card">
+            <div class="blog-img-container">
+              <img src="img/blog/legends.jpg" alt="Leyendas del Fútbol" class="blog-img" onerror="this.src='https://via.placeholder.com/400x225?text=Leyendas+del+Fútbol'">
+            </div>
+            <div class="blog-card-content">
+              <h2>Leyendas del Fútbol</h2>
+              <p>Un recorrido por las carreras y legados de los mejores jugadores de todos los tiempos: Pelé, Maradona, Cruyff, Di Stéfano, Zidane y otras figuras legendarias.</p>
+              <div class="blog-entry-footer">
+                <span class="blog-date"><i class="fas fa-calendar-alt"></i> 28 Abril, 2023</span>
+                <a href="blog-detail-legends.html" class="read-more-btn">Leer más <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="blog-card">
+            <div class="blog-img-container">
+              <img src="img/blog/messi-evolution.jpg" alt="Evolución de Messi" class="blog-img" onerror="this.src='https://via.placeholder.com/400x225?text=Evolución+de+Messi'">
+            </div>
+            <div class="blog-card-content">
+              <h2>La Evolución de Lionel Messi</h2>
+              <p>Desde sus inicios en La Masía hasta convertirse en el campeón del mundo con Argentina, repasamos la trayectoria del astro argentino.</p>
+              <div class="blog-entry-footer">
+                <span class="blog-date"><i class="fas fa-calendar-alt"></i> 20 Abril, 2023</span>
+                <a href="blog-detail-ranking.html" class="read-more-btn">Leer más <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+        
+          <div class="blog-card">
+            <div class="blog-img-container">
+              <img src="img/blog/tacticas.jpg" alt="Tácticas" class="blog-img" onerror="this.src='https://via.placeholder.com/400x225?text=Tácticas+de+Fútbol'">
+            </div>
+            <div class="blog-card-content">
+              <h2>Evolución táctica del fútbol moderno</h2>
+              <p>Del 2-3-5 al 4-3-3, pasando por el catenaccio y el tiki-taka. Así ha evolucionado la táctica en el fútbol durante el último siglo.</p>
+              <div class="blog-entry-footer">
+                <span class="blog-date"><i class="fas fa-calendar-alt"></i> 15 Abril, 2023</span>
+                <a href="blog-detail-tactics-football.html" class="read-more-btn">Leer más <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+        
+          <div class="blog-card">
+            <div class="blog-img-container">
+              <img src="img/blog/estadios.jpg" alt="Estadios" class="blog-img" onerror="this.src='https://via.placeholder.com/400x225?text=Estadios+Icónicos'">
+            </div>
+            <div class="blog-card-content">
+              <h2>Estadios Icónicos del Fútbol</h2>
+              <p>Un recorrido por los templos del fútbol mundial: arquitectura, historia y experiencias inolvidables en los escenarios más emblemáticos.</p>
+              <div class="blog-entry-footer">
+                <span class="blog-date"><i class="fas fa-calendar-alt"></i> 8 Abril, 2023</span>
+                <a href="blog-detail-community.html" class="read-more-btn">Leer más <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div style="text-align: center;">
+          <a href="index.html" class="back-to-game-btn"><i class="fas fa-gamepad"></i> Volver al juego</a>
+        </div>
+      </div>
+      
+      <!-- Botón para volver a la página anterior -->
+      <button class="back-button" onclick="window.history.back()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      
+      <!-- AdSense Containers -->
+      <div class="adsense-container">
+        <div class="ad-label">PUBLICIDAD</div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+             data-ad-slot="XXXXXXXXXX"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+      
+      <script>
+        // Función para mostrar/ocultar anuncios según las preferencias de cookies
+        function checkCookieConsent() {
+          const hasConsent = localStorage.getItem("adConsent") === "true";
+          const adElements = document.querySelectorAll(".adsbygoogle");
+          
+          adElements.forEach(ad => {
+            if (!hasConsent) {
+              ad.style.display = "none";
+              ad.closest(".adsense-container").style.display = "none";
+            }
+          });
+        }
+        
+        // Comprobar el consentimiento al cargar
+        checkCookieConsent();
+
+        document.addEventListener('DOMContentLoaded', function() {
+          // Check if images don't exist and use placeholders
+          const images = document.querySelectorAll('.blog-img');
+          images.forEach(img => {
+            img.onerror = function() {
+              this.src = 'https://via.placeholder.com/400x225?text=Fútbol+Blog';
+            };
+          });
+        });
+      </script>
+      
+      <!-- Footer - Un solo footer al final de la página -->
+      <footer class="policy-footer">
+        <div class="footer-links-mini">
+          <a href="profile.html"><i class="fas fa-user"></i> Perfil</a>
+          <a href="ranking.html"><i class="fas fa-trophy"></i> Ranking</a>
+          <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
+          <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+          <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+          <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+          <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+          <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+          <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+        </div>
+        <div class="copyright-text">&copy; 2025 PASALA CHE - El Juego del Rosco Futbolero.</div>
+        <div class="footer-social-icons">
+          <a href="https://www.facebook.com/pasalachee" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/pasalachee" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.instagram.com/pasalachee" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/c/pasalachee" class="social-icon"><i class="fab fa-youtube"></i></a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>

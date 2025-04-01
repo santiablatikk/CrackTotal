@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Historia de los Mundiales de Fútbol - Desde Uruguay 1930 hasta Qatar 2022">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-adsense-account" content="ca-pub-9579152019412427">
+  <title>Historia de los Mundiales de Fútbol - PASALA CHÉ</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/footer-styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
+     crossorigin="anonymous"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #f1f5f9;
+    }
+    
+    .blog-detail-screen {
+      min-height: 100vh;
+      padding: 40px 0;
+    }
+    
+    .blog-detail-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2.5rem;
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+      border-radius: 16px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .blog-detail-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #e11d48, #fb7185);
+      z-index: 1;
+    }
+    
+    .blog-detail-header {
+      margin-bottom: 2.5rem;
+      position: relative;
+      padding-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .blog-detail-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 4px;
+      background: linear-gradient(90deg, #e11d48, #fb7185);
+      border-radius: 2px;
+    }
+    
+    .blog-detail-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: white;
+      font-family: 'Oswald', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .blog-detail-date {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+    
+    .blog-detail-date i {
+      margin-right: 0.5rem;
+      color: #fb7185;
+    }
+    
+    .blog-hero-image {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .blog-detail-content {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .blog-detail-content p {
+      margin-bottom: 1.5rem;
+    }
+    
+    .blog-detail-content h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.8rem;
+      margin: 2.5rem 0 1.25rem;
+      color: #f8fafc;
+      position: relative;
+      padding-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .blog-detail-content h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #e11d48, #fb7185);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+    
+    .blog-detail-content h2:hover::after {
+      width: 100px;
+    }
+    
+    .blog-detail-content h3 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.4rem;
+      margin: 2rem 0 1rem;
+      color: #f8fafc;
+    }
+    
+    .worldcup-item {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.7));
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      border-left: 4px solid;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .worldcup-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    }
+    
+    .worldcup-item h3 {
+      display: flex;
+      align-items: center;
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+    
+    .worldcup-item h3 i {
+      margin-right: 0.75rem;
+      color: #fb7185;
+      font-size: 1.5rem;
+    }
+    
+    .worldcup-detail {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .worldcup-detail strong {
+      display: inline-block;
+      min-width: 100px;
+      color: #fda4af;
+      font-weight: 600;
+    }
+    
+    .world-cup-1930 { border-color: #f59e0b; }
+    .world-cup-1950 { border-color: #3b82f6; }
+    .world-cup-1970 { border-color: #10b981; }
+    .world-cup-1986 { border-color: #8b5cf6; }
+    .world-cup-2010 { border-color: #f43f5e; }
+    .world-cup-2022 { border-color: #60a5fa; }
+    
+    .blog-footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    
+    .blog-nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, #e11d48, #be123c);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      border: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
+    }
+    
+    .blog-nav-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(225, 29, 72, 0.4);
+      background: linear-gradient(135deg, #be123c, #9f1239);
+    }
+    
+    .social-share {
+      display: flex;
+      gap: 0.75rem;
+    }
+    
+    .social-share-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(15, 23, 42, 0.7);
+      color: #fff;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .social-share-btn:hover {
+      transform: translateY(-3px);
+      background: linear-gradient(135deg, #e11d48, #be123c);
+    }
+    
+    /* Botón volver */
+    .back-button {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: rgba(0, 0, 0, 0.3);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      backdrop-filter: blur(5px);
+      z-index: 9999;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .back-button:hover {
+      background-color: rgba(225, 29, 72, 0.7);
+      transform: scale(1.1);
+    }
+    
+    @media (max-width: 768px) {
+      .blog-detail-container {
+        padding: 1.5rem;
+      }
+      
+      .blog-detail-title {
+        font-size: 2rem;
+      }
+      
+      .blog-hero-image {
+        height: 250px;
+      }
+      
+      .blog-footer {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+      }
+      
+      .blog-nav-link {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .back-button {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+        bottom: 20px;
+        right: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <div class="logo-animation">
+      <i class="fas fa-futbol ball-icon bounce"></i>
+    </div>
+    <a href="index.html" class="title-link">
+      <h1 class="title-text">PASALA CHE</h1>
+    </a>
+    <p class="subtitle">El juego de palabras del fútbol</p>
+  </header>
+  
+  <div class="blog-detail-screen">
+    <div class="blog-detail-container">
+      <header class="blog-detail-header">
+        <h1 class="blog-detail-title">Historia de los Mundiales de Fútbol</h1>
+        <div class="blog-detail-date">
+          <i class="fas fa-calendar-alt"></i> 5 Mayo, 2023
+        </div>
+      </header>
+      
+      <img src="img/blog/worldcup-hero.jpg" alt="Trofeo Copa del Mundo" class="blog-hero-image" onerror="this.src='https://via.placeholder.com/1000x400?text=Historia+de+los+Mundiales+de+Fútbol'">
+      
+      <div class="blog-detail-content">
+        <p>
+          Desde que el primer torneo se celebró en Uruguay en 1930, la Copa Mundial de la FIFA se ha convertido en el evento deportivo más grande y prestigioso del planeta. A lo largo de sus más de 90 años de historia, ha sido testigo de momentos inolvidables, hazañas legendarias y ha reflejado los cambios sociales, políticos y culturales que han marcado nuestra historia contemporánea.
+        </p>
+        
+        <h2><i class="fas fa-trophy"></i> Mundiales Históricos</h2>
+        
+        <div class="worldcup-item world-cup-1930">
+          <h3><i class="fas fa-futbol"></i> Uruguay 1930: El Origen</h3>
+          <div class="worldcup-detail">
+            <strong>Campeón:</strong> Uruguay
+          </div>
+          <div class="worldcup-detail">
+            <strong>Subcampeón:</strong> Argentina
+          </div>
+          <div class="worldcup-detail">
+            <strong>Sedes:</strong> Montevideo
+          </div>
+          <p>
+            El primer Mundial de la historia, organizado por Uruguay para conmemorar el centenario de su independencia. Solo participaron 13 selecciones, principalmente de América y Europa. La final, disputada en el recién construido Estadio Centenario, vio a Uruguay imponerse a Argentina por 4-2, convirtiéndose en el primer campeón mundial.
+          </p>
+        </div>
+        
+        <div class="worldcup-item world-cup-1950">
+          <h3><i class="fas fa-futbol"></i> Brasil 1950: El Maracanazo</h3>
+          <div class="worldcup-detail">
+            <strong>Campeón:</strong> Uruguay
+          </div>
+          <div class="worldcup-detail">
+            <strong>Subcampeón:</strong> Brasil
+          </div>
+          <div class="worldcup-detail">
+            <strong>Sedes:</strong> Río de Janeiro, São Paulo, Belo Horizonte, Curitiba, Porto Alegre y Recife
+          </div>
+          <p>
+            Primer Mundial tras la Segunda Guerra Mundial, este torneo es famoso por el "Maracanazo", una de las mayores sorpresas en la historia del fútbol. Brasil, anfitrión y favorito, solo necesitaba un empate en el partido final contra Uruguay para ser campeón. Sin embargo, ante casi 200.000 espectadores en el Maracaná, los uruguayos vencieron 2-1, sumiendo a todo Brasil en un silencio sepulcral.
+          </p>
+        </div>
+        
+        <div class="worldcup-item world-cup-1970">
+          <h3><i class="fas fa-futbol"></i> México 1970: El Fútbol Total</h3>
+          <div class="worldcup-detail">
+            <strong>Campeón:</strong> Brasil
+          </div>
+          <div class="worldcup-detail">
+            <strong>Subcampeón:</strong> Italia
+          </div>
+          <div class="worldcup-detail">
+            <strong>Sedes:</strong> Ciudad de México, Guadalajara, Puebla, León y Toluca
+          </div>
+          <p>
+            Considerado por muchos como el mejor Mundial de la historia, México 1970 fue el primero transmitido en color para todo el mundo y presentó quizás el mejor equipo de todos los tiempos: el Brasil de Pelé, Jairzinho, Tostão, Gérson y Rivelino. La final contra Italia (4-1) es recordada como una exhibición de "jogo bonito". Este fue también el Mundial donde se introdujeron las tarjetas amarilla y roja.
+          </p>
+        </div>
+        
+        <div class="worldcup-item world-cup-1986">
+          <h3><i class="fas fa-futbol"></i> México 1986: La Mano de Dios</h3>
+          <div class="worldcup-detail">
+            <strong>Campeón:</strong> Argentina
+          </div>
+          <div class="worldcup-detail">
+            <strong>Subcampeón:</strong> Alemania Federal
+          </div>
+          <div class="worldcup-detail">
+            <strong>Sedes:</strong> Ciudad de México, Guadalajara, Monterrey, Puebla, Querétaro, León, Toluca, Irapuato y San Nicolás de los Garza
+          </div>
+          <p>
+            El Mundial de Diego Armando Maradona. El astro argentino lideró a su selección hacia su segundo título mundial con actuaciones extraordinarias, especialmente en cuartos de final contra Inglaterra, donde anotó dos de los goles más famosos en la historia del fútbol: "La Mano de Dios" y el "Gol del Siglo", donde regateó a medio equipo inglés antes de definir.
+          </p>
+        </div>
+        
+        <div class="worldcup-item world-cup-2010">
+          <h3><i class="fas fa-futbol"></i> Sudáfrica 2010: El Tiki-Taka Triunfa</h3>
+          <div class="worldcup-detail">
+            <strong>Campeón:</strong> España
+          </div>
+          <div class="worldcup-detail">
+            <strong>Subcampeón:</strong> Países Bajos
+          </div>
+          <div class="worldcup-detail">
+            <strong>Sedes:</strong> Johannesburgo, Ciudad del Cabo, Durban, Pretoria, Port Elizabeth, Bloemfontein, Nelspruit, Polokwane y Rustenburg
+          </div>
+          <p>
+            El primer Mundial celebrado en suelo africano será recordado por el sonido constante de las vuvuzelas y por la consagración del "tiki-taka" español. La selección de España, liderada por Xavi, Iniesta y Villa, ganó todos sus partidos de eliminación directa por 1-0, incluyendo la final contra los Países Bajos, decidida por un gol de Andrés Iniesta en el minuto 116.
+          </p>
+        </div>
+        
+        <div class="worldcup-item world-cup-2022">
+          <h3><i class="fas fa-futbol"></i> Qatar 2022: El Sueño de Messi</h3>
+          <div class="worldcup-detail">
+            <strong>Campeón:</strong> Argentina
+          </div>
+          <div class="worldcup-detail">
+            <strong>Subcampeón:</strong> Francia
+          </div>
+          <div class="worldcup-detail">
+            <strong>Sedes:</strong> Doha, Lusail, Al Rayyan, Al Wakrah, Al Khor
+          </div>
+          <p>
+            El primer Mundial celebrado en Oriente Medio y en invierno del hemisferio norte culminó con una de las mejores finales de la historia. Argentina, liderada por un inspirado Lionel Messi, se impuso a Francia en los penaltis tras un espectacular 3-3 en 120 minutos. Messi completó su legendaria carrera al ganar el único título que le faltaba, mientras que Kylian Mbappé, a pesar de su hat-trick en la final, tuvo que conformarse con el subcampeonato.
+          </p>
+        </div>
+        
+        <h2><i class="fas fa-star"></i> Legado e Impacto Cultural</h2>
+        
+        <p>
+          La Copa Mundial de la FIFA ha trascendido el ámbito deportivo para convertirse en un fenómeno cultural global. Cada cuatro años, miles de millones de personas en todo el mundo suspenden sus actividades cotidianas para seguir los partidos, convirtiendo el torneo en el evento deportivo más visto del planeta.
+        </p>
+        
+        <p>
+          Más allá de los goles y las victorias, los Mundiales han servido como plataforma para la diplomacia internacional, el intercambio cultural y, en ocasiones, como espejo de tensiones geopolíticas. Desde el Mundial de Italia 1934, utilizado por Mussolini como propaganda fascista, hasta el boicot al Mundial de Argentina 1978 por parte de algunos países en protesta por la dictadura militar, la Copa del Mundo ha estado inevitablemente entrelazada con la historia política global.
+        </p>
+        
+        <p>
+          Con cada nueva edición, el torneo continúa evolucionando, reflejando los cambios tecnológicos, sociales y deportivos de nuestra época. El próximo Mundial, que se celebrará en 2026 en Estados Unidos, Canadá y México, será el primero con 48 equipos, abriendo un nuevo capítulo en la historia de la competición más prestigiosa del fútbol mundial.
+        </p>
+      </div>
+      
+      <div class="blog-footer">
+        <a href="blog.html" class="blog-nav-link"><i class="fas fa-arrow-left"></i> Volver al Blog</a>
+        
+        <div class="social-share">
+          <a href="#" class="social-share-btn" title="Compartir en Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-share-btn" title="Compartir en Twitter"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-share-btn" title="Compartir en WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Botón para volver a la página anterior -->
+    <button class="back-button" onclick="window.history.back()">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+  
+  <!-- AdSense Container -->
+  <div class="adsense-container">
+    <div class="ad-label">PUBLICIDAD</div>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+         data-ad-slot="XXXXXXXXXX"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+  
+  <script>
+    // Función para mostrar/ocultar anuncios según las preferencias de cookies
+    function checkCookieConsent() {
+      const hasConsent = localStorage.getItem("adConsent") === "true";
+      const adElements = document.querySelectorAll(".adsbygoogle");
+      
+      adElements.forEach(ad => {
+        if (!hasConsent) {
+          ad.style.display = "none";
+          ad.closest(".adsense-container").style.display = "none";
+        }
+      });
+    }
+    
+    // Comprobar el consentimiento al cargar
+    checkCookieConsent();
+  </script>
+  
+  <!-- Footer -->
+  <footer class="policy-footer">
+    <div class="footer-links-mini">
+        <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+      <a href="profile.html"><i class="fas fa-user"></i> Perfil</a>
+      <a href="ranking.html"><i class="fas fa-trophy"></i> Ranking</a>
+      <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
+        <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+      <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+        <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+        <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+      <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+      <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+    </div>
+      <div class="copyright-text">&copy; 2025 PASALA CHE - El Juego del Rosco Futbolero.</div>
+    <div class="footer-social-icons">
+        <a href="https://www.facebook.com/pasalachee" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://twitter.com/pasalachee" class="social-icon"><i class="fab fa-twitter"></i></a>
+        <a href="https://www.instagram.com/pasalachee" class="social-icon"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.youtube.com/c/pasalachee" class="social-icon"><i class="fab fa-youtube"></i></a>
+    </div>
+  </footer>
+  </div>
+</body>
+</html> 
