@@ -7,6 +7,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
 const cors = require('cors');
+const fs = require('fs');
 
 // Configuración del servidor
 const app = express();
@@ -24,7 +25,42 @@ app.use(express.static(path.join(__dirname, '../../../')));
 
 // Datos en memoria
 const rooms = new Map();
-const questions = require('../../data/questionss.json');
+
+// Cargar preguntas de los archivos level_X.json
+function loadQuestions() {
+  try {
+    const basePath = path.join(__dirname, '../../data');
+    const result = {
+      facil: [],
+      media: [],
+      dificil: []
+    };
+    
+    // Cargamos las preguntas desde los archivos level_X.json
+    for (let i = 1; i <= 6; i++) {
+      const filePath = path.join(basePath, `level_${i}.json`);
+      if (fs.existsSync(filePath)) {
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        
+        // Clasificar según el nivel
+        if (i <= 2) {
+          result.facil = result.facil.concat(data);
+        } else if (i <= 4) {
+          result.media = result.media.concat(data);
+        } else {
+          result.dificil = result.dificil.concat(data);
+        }
+      }
+    }
+    
+    return result;
+  } catch (error) {
+    console.error('Error al cargar preguntas:', error);
+    return { facil: [], media: [], dificil: [] };
+  }
+}
+
+const questions = loadQuestions();
 
 // Generador de códigos de sala
 function generateRoomCode() {
@@ -74,23 +110,12 @@ function getQuestionsForGame() {
 io.on('connection', (socket) => {
   console.log('Usuario conectado:', socket.id);
   
+  // Enviar inmediatamente las salas disponibles al conectar
+  sendAvailableRoomsTo(socket);
+  
   // Obtener salas disponibles
   socket.on('get_available_rooms', () => {
-    const availableRooms = [];
-    
-    rooms.forEach((room, roomId) => {
-      // Solo incluir salas que no están en juego y tienen espacio
-      if (!room.gameStarted && room.players.length < 2) {
-        availableRooms.push({
-          id: roomId,
-          name: room.name,
-          hasPassword: !!room.password,
-          playerCount: room.players.length
-        });
-      }
-    });
-    
-    socket.emit('available_rooms', { rooms: availableRooms });
+    sendAvailableRoomsTo(socket);
   });
   
   // Crear sala
@@ -131,6 +156,8 @@ io.on('connection', (socket) => {
     
     // Actualizar la lista de salas disponibles para todos
     broadcastAvailableRooms();
+    
+    console.log(`Sala creada: ${roomId} por ${username}`);
   });
   
   // Registrar sala en modo alternativo
@@ -224,6 +251,8 @@ io.on('connection', (socket) => {
     
     // Actualizar la lista de salas disponibles para todos
     broadcastAvailableRooms();
+    
+    console.log(`${username} se unió a la sala ${roomId}`);
   });
   
   // Abandonar sala
@@ -264,6 +293,8 @@ io.on('connection', (socket) => {
         
         // Actualizar la lista de salas disponibles para todos
         broadcastAvailableRooms();
+        
+        console.log(`${player.username} salió de la sala ${roomId}`);
       }
     }
   });
@@ -309,6 +340,8 @@ io.on('connection', (socket) => {
     
     // Actualizar la lista de salas disponibles para todos
     broadcastAvailableRooms();
+    
+    console.log(`Juego iniciado en sala ${roomId}`);
   });
   
   // Responder pregunta
@@ -412,6 +445,8 @@ io.on('connection', (socket) => {
       firstTurn,
       players: room.players
     });
+    
+    console.log(`Juego reiniciado en sala ${roomId}`);
   });
   
   // Desconexión
@@ -448,10 +483,31 @@ io.on('connection', (socket) => {
         
         // Actualizar la lista de salas disponibles para todos
         broadcastAvailableRooms();
+        
+        console.log(`${player.username} desconectado de sala ${roomId}`);
       }
     });
   });
 });
+
+// Función para enviar salas disponibles a un cliente específico
+function sendAvailableRoomsTo(socket) {
+  const availableRooms = [];
+  
+  rooms.forEach((room, roomId) => {
+    // Solo incluir salas que no están en juego y tienen espacio
+    if (!room.gameStarted && room.players.length < 2) {
+      availableRooms.push({
+        id: roomId,
+        name: room.name,
+        hasPassword: !!room.password,
+        playerCount: room.players.length
+      });
+    }
+  });
+  
+  socket.emit('available_rooms', { rooms: availableRooms });
+}
 
 // Función para enviar salas disponibles a todos los clientes
 function broadcastAvailableRooms() {
@@ -470,10 +526,12 @@ function broadcastAvailableRooms() {
   });
   
   io.emit('available_rooms', { rooms: availableRooms });
+  console.log(`Actualizando salas disponibles: ${availableRooms.length} salas`);
 }
 
 // Iniciar servidor
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Servidor escuchando en puerto ${PORT}`);
+  console.log(`Preguntas cargadas: ${questions.facil.length + questions.media.length + questions.dificil.length} en total`);
 }); 
