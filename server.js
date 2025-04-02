@@ -26,9 +26,9 @@ const io = new Server(server);
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 
-// Servir portal.html como página principal
+// Servir crack-total.html como página principal
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "portal.html"));
+  res.sendFile(path.join(__dirname, "public", "crack-total.html"));
 });
 
 // Gestión de salas y estado del juego

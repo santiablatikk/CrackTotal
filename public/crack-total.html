@@ -36,7 +36,7 @@
 
       <div class="main-container">
         <div class="content-card login-card">
-          <div class="card-section welcome-section">
+          <div class="card-section welcome-section" id="login-section">
             <div class="welcome-message">
               <h2>¡Bienvenido al portal de juegos!</h2>
               <p>Ingresa tu nombre para comenzar</p>
@@ -53,6 +53,28 @@
                 CONTINUAR <i class="fas fa-arrow-right"></i>
               </button>
             </form>
+          </div>
+          
+          <!-- Nueva sección de bienvenida para usuarios que regresan -->
+          <div class="card-section welcome-back-section" id="welcome-back-section" style="display: none;">
+            <div class="welcome-message">
+              <h2 class="welcome-title">¡Bienvenido de nuevo!</h2>
+              <div class="user-greeting">
+                <i class="fas fa-user-circle"></i>
+                <span id="returning-username">Jugador</span>
+              </div>
+              <p class="welcome-text">¡Es un gusto verte nuevamente por aquí!</p>
+            </div>
+            
+            <button id="continue-btn" class="btn btn-primary btn-large">
+              HAZ CLICK AQUÍ PARA COMENZAR <i class="fas fa-play"></i>
+            </button>
+            
+            <div class="user-actions">
+              <button id="change-user-btn" class="btn btn-text">
+                <i class="fas fa-user-edit"></i> Cambiar usuario
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -99,96 +121,70 @@
           particlesJS('particles-js', particlesConfig);
         }
         
-        // Manejar el envío del formulario
+        // Elementos DOM
+        const loginSection = document.getElementById('login-section');
+        const welcomeBackSection = document.getElementById('welcome-back-section');
         const loginForm = document.getElementById('login-form');
         const usernameInput = document.getElementById('username');
+        const returningUsername = document.getElementById('returning-username');
+        const continueBtn = document.getElementById('continue-btn');
+        const changeUserBtn = document.getElementById('change-user-btn');
         const mainContainer = document.querySelector('.main-container');
-        
-        loginForm.addEventListener('submit', function(e) {
-          e.preventDefault();
-          
-          const username = usernameInput.value.trim();
-          
-          if (username !== '') {
-            // Guardar el nombre en localStorage
-            localStorage.setItem('playerName', username);
-            
-            // Mostrar pantalla de selección de juego
-            mainContainer.innerHTML = `
-              <div class="content-card game-selection-card">
-                <div class="card-section welcome-section">
-                  <div class="welcome-message">
-                    <h2>¡Hola, ${username}!</h2>
-                    <p>Elige tu juego favorito</p>
-                  </div>
-                  
-                  <div class="game-options">
-                    <a href="index.html" class="game-option">
-                      <div class="game-icon">
-                        <i class="fas fa-futbol"></i>
-                      </div>
-                      <div class="game-info">
-                        <h3>PASALA CHE</h3>
-                        <p>El clásico rosco futbolero</p>
-                      </div>
-                    </a>
-                    
-                    <a href="millonario/index.html" class="game-option">
-                      <div class="game-icon">
-                        <i class="fas fa-trophy"></i>
-                      </div>
-                      <div class="game-info">
-                        <h3>¿QUIÉN SABE MÁS DE FÚTBOL?</h3>
-                        <p>Pon a prueba tu conocimiento</p>
-                      </div>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            `;
-          } else {
-            usernameInput.focus();
-          }
-        });
         
         // Comprobar si ya hay un nombre guardado
         const savedName = localStorage.getItem('playerName');
+        
         if (savedName) {
-          usernameInput.value = savedName;
+          // Mostrar pantalla de bienvenida para usuarios que regresan
+          loginSection.style.display = 'none';
+          welcomeBackSection.style.display = 'block';
+          returningUsername.textContent = savedName;
           
-          // Mostrar directamente la pantalla de selección de juego
-          mainContainer.innerHTML = `
-            <div class="content-card game-selection-card">
-              <div class="card-section welcome-section">
-                <div class="welcome-message">
-                  <h2>¡Hola, ${savedName}!</h2>
-                  <p>Elige tu juego favorito</p>
-                </div>
-                
-                <div class="game-options">
-                  <a href="index.html" class="game-option">
-                    <div class="game-icon">
-                      <i class="fas fa-futbol"></i>
-                    </div>
-                    <div class="game-info">
-                      <h3>PASALA CHE</h3>
-                      <p>El clásico rosco futbolero</p>
-                    </div>
-                  </a>
-                  
-                  <a href="millonario/index.html" class="game-option">
-                    <div class="game-icon">
-                      <i class="fas fa-trophy"></i>
-                    </div>
-                    <div class="game-info">
-                      <h3>¿QUIÉN SABE MÁS DE FÚTBOL?</h3>
-                      <p>Pon a prueba tu conocimiento</p>
-                    </div>
-                  </a>
-                </div>
-              </div>
-            </div>
-          `;
+          // Animar la entrada de la pantalla de bienvenida
+          welcomeBackSection.classList.add('animate-in');
+          setTimeout(() => {
+            welcomeBackSection.classList.remove('animate-in');
+          }, 500);
+        } else {
+          // Mostrar formulario de login para nuevos usuarios
+          loginSection.style.display = 'block';
+          welcomeBackSection.style.display = 'none';
+        }
+        
+        // Botón para continuar al portal
+        if (continueBtn) {
+          continueBtn.addEventListener('click', function() {
+            window.location.href = 'portal.html';
+          });
+        }
+        
+        // Botón para cambiar de usuario
+        if (changeUserBtn) {
+          changeUserBtn.addEventListener('click', function() {
+            loginSection.style.display = 'block';
+            welcomeBackSection.style.display = 'none';
+            usernameInput.value = savedName || '';
+            usernameInput.focus();
+          });
+        }
+        
+        // Manejar el envío del formulario
+        if (loginForm) {
+          loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            
+            if (username !== '') {
+              // Guardar el nombre en localStorage
+              localStorage.setItem('playerName', username);
+              
+              // Redirigir al portal
+              window.location.href = 'portal.html';
+            } else {
+              usernameInput.focus();
+            }
+          });
         }
         
         // Verificar consentimiento de cookies
@@ -314,6 +310,118 @@
       
       .btn-primary i {
         margin-left: 8px;
+      }
+      
+      .btn-large {
+        width: 100%;
+        padding: 18px 30px;
+        font-size: 1.1rem;
+        margin: 30px 0;
+        text-transform: uppercase;
+        font-weight: 700;
+        background: linear-gradient(135deg, #4299e1, #7f9cf5);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .btn-large:after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
+        transform: rotate(30deg);
+        animation: btnShine 3s infinite linear;
+      }
+      
+      @keyframes btnShine {
+        0% {
+          transform: translateX(-100%) rotate(30deg);
+        }
+        100% {
+          transform: translateX(100%) rotate(30deg);
+        }
+      }
+      
+      .welcome-back-section {
+        text-align: center;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      
+      .welcome-title {
+        font-size: 2.5rem !important;
+        font-weight: 800 !important;
+        margin-bottom: 20px !important;
+      }
+      
+      .welcome-text {
+        font-size: 1.3rem !important;
+        margin-bottom: 30px !important;
+      }
+      
+      .user-greeting {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 30px 0;
+        font-size: 2rem;
+        color: #f7fafc;
+        background: linear-gradient(135deg, rgba(26, 32, 44, 0.8), rgba(45, 55, 72, 0.8));
+        padding: 20px;
+        border-radius: 15px;
+        border: 2px solid rgba(66, 153, 225, 0.3);
+      }
+      
+      .user-greeting i {
+        font-size: 2.5rem;
+        margin-right: 15px;
+        color: #4299e1;
+      }
+      
+      .user-actions {
+        margin-top: 20px;
+      }
+      
+      .btn-text {
+        background: transparent;
+        border: none;
+        color: #a0aec0;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      
+      .btn-text:hover {
+        color: #f7fafc;
+      }
+      
+      .animate-in {
+        animation: bounceIn 0.5s;
+      }
+      
+      @keyframes bounceIn {
+        0% {
+          transform: scale(0.9);
+          opacity: 0;
+        }
+        70% {
+          transform: scale(1.05);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      
+      @keyframes fadeIn {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
       }
       
       .game-options {
