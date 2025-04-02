@@ -596,6 +596,33 @@
     .container:before {
       display: none !important;
     }
+    
+    /* Estilo para el enlace de volver al portal */
+    .return-portal-link {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.6rem 1.2rem;
+      background-color: rgba(225, 29, 72, 0.2);
+      color: white;
+      text-decoration: none;
+      border-radius: 2rem;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(225, 29, 72, 0.3);
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .return-portal-link i {
+      margin-right: 8px;
+      font-size: 1.1rem;
+    }
+    
+    .return-portal-link:hover {
+      background-color: rgba(225, 29, 72, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
   </style>
   </head>
   <body>
@@ -610,6 +637,7 @@
     </a>
     <h1>¿QUIÉN SABE MÁS DE FÚTBOL?</h1>
     <p class="subtitle">Pon a prueba tus conocimientos futboleros.</p>
+    <a href="../portal.html" class="return-portal-link"><i class="fas fa-home"></i> Volver al Portal</a>
   </header>
 
   <div class="container">
@@ -623,7 +651,7 @@
 
       <div class="promo-banner" style="margin-bottom: 3rem; padding: 1.5rem;">
         <i class="fas fa-futbol" style="font-size: 2.5rem;"></i>
-        <p style="font-size: 1.25rem; font-weight: 600;">¡Demostrá tu pasión y convertite en el verdadero Diez del fútbol!</p>
+        <p style="font-size: 1.25rem; font-weight: 600;">Pon a prueba tus conocimientos de fútbol</p>
       </div>
 
       <div class="game-modes" style="gap: 2rem;">
@@ -655,10 +683,10 @@
     </div>
     <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
     <div class="footer-social-icons">
-      <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-      <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
-      <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-      <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.facebook.com/cracktotal" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://twitter.com/cracktotal" class="social-icon"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.instagram.com/cracktotal" class="social-icon"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com/c/cracktotal" class="social-icon"><i class="fab fa-youtube"></i></a>
     </div>
   </footer>
 
@@ -666,6 +694,14 @@
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Verificar si hay un nombre de usuario guardado
+      const playerName = localStorage.getItem('playerName');
+      
+      if (!playerName) {
+        // Redirigir a la página de ingreso si no hay nombre guardado
+        window.location.href = '../crack-total.html';
+      }
+    
       // Configuración particles.js
       if (window.particlesJS) {
         particlesJS('particles-js', {

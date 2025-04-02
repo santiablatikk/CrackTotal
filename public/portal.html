@@ -2,11 +2,12 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="CRACK TOTAL - Portal de juegos de fútbol" />
+    <meta name="description" content="Portal de juegos de CRACK TOTAL. Accede a nuestros juegos de fútbol y pon a prueba tus conocimientos." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="theme-color" content="#1e293b">
-    <title>CRACK TOTAL - Portal de Juegos de Fútbol</title>
+    <meta name="google-adsense-account" content="ca-pub-9579152019412427">
+    <title>Portal de Juegos - CRACK TOTAL</title>
     <!-- Preconexiones para mejorar el rendimiento -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,38 +36,43 @@
       <!-- Header con título principal -->
       <header class="app-header">
         <div class="logo-animation">
-          <i class="fas fa-trophy ball-icon bounce"></i>
+          <i class="fas fa-futbol ball-icon bounce"></i>
         </div>
-        <h1 class="title-text">CRACK TOTAL</h1>
-        <p class="subtitle">¡Demuestra tu conocimiento futbolero!</p>
+        <a href="index.html" class="title-link">
+          <h1 class="title-text">CRACK TOTAL</h1>
+        </a>
+        <p class="subtitle">El juego de palabras del fútbol</p>
+        <button id="change-name-btn" class="change-name-btn">
+          <i class="fas fa-user-edit"></i> Cambiar Nombre
+        </button>
       </header>
 
       <div class="portal-container">
         <div class="content-card portal-card">
           <div class="card-section welcome-section">
             <div class="welcome-message">
-              <h2>Selecciona tu juego</h2>
-              <p>Elige entre nuestros desafiantes juegos de fútbol</p>
+              <h2>Hola, <span id="player-name-display">Jugador</span></h2>
+              <p>Elige tu juego favorito</p>
             </div>
             
             <div class="game-options">
-              <a href="crack-total.html" class="game-option">
-                <div class="game-icon">
+              <a href="game-rosco.html" class="game-option" style="padding: 2rem; flex: 1; border-radius: 15px; transition: all 0.4s ease; box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.2);">
+                <div class="game-icon" style="width: 70px; height: 70px; margin-right: 20px;">
                   <i class="fas fa-futbol"></i>
                 </div>
                 <div class="game-info">
-                  <h3>PASALA CHE</h3>
-                  <p>El clásico rosco futbolero</p>
+                  <h3 style="font-size: 1.6rem; margin-bottom: 10px;">PASALA CHE</h3>
+                  <p style="font-size: 1.1rem;">El clásico rosco futbolero</p>
                 </div>
               </a>
               
-              <a href="crack-total.html" class="game-option">
-                <div class="game-icon">
+              <a href="millonario/index.html" class="game-option" style="padding: 2rem; flex: 1; border-radius: 15px; transition: all 0.4s ease; box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.2);">
+                <div class="game-icon" style="width: 70px; height: 70px; margin-right: 20px;">
                   <i class="fas fa-trophy"></i>
                 </div>
                 <div class="game-info">
-                  <h3>¿QUIÉN SABE MÁS DE FÚTBOL?</h3>
-                  <p>Pon a prueba tu conocimiento</p>
+                  <h3 style="font-size: 1.6rem; margin-bottom: 10px;">¿QUIÉN SABE MÁS DE FÚTBOL?</h3>
+                  <p style="font-size: 1.1rem;">Pon a prueba tu conocimiento</p>
                 </div>
               </a>
             </div>
@@ -84,12 +90,12 @@
           <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
           <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
         </div>
-        <div class="copyright-text">&copy; 2025 PASALA CHE - El Juego del Rosco Futbolero.</div>
+        <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
         <div class="footer-social-icons">
-          <a href="https://www.facebook.com/pasalachee" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://twitter.com/pasalachee" class="social-icon"><i class="fab fa-twitter"></i></a>
-          <a href="https://www.instagram.com/pasalachee" class="social-icon"><i class="fab fa-instagram"></i></a>
-          <a href="https://www.youtube.com/c/pasalachee" class="social-icon"><i class="fab fa-youtube"></i></a>
+          <a href="https://www.facebook.com/cracktotal" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/cracktotal" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.instagram.com/cracktotal" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/c/cracktotal" class="social-icon"><i class="fab fa-youtube"></i></a>
         </div>
       </footer>
     </div>
@@ -112,6 +118,27 @@
     <script>
       // Script para manejar las cookies
       document.addEventListener('DOMContentLoaded', function() {
+        // Verificar si hay un nombre de usuario guardado
+        const playerName = localStorage.getItem('playerName');
+        const playerNameDisplay = document.getElementById('player-name-display');
+        
+        if (!playerName) {
+          // Redirigir a la página de ingreso si no hay nombre guardado
+          window.location.href = 'crack-total.html';
+          return;
+        } else {
+          // Mostrar el nombre del usuario
+          playerNameDisplay.textContent = playerName;
+        }
+        
+        // Configurar el botón de cambiar nombre
+        const changeNameBtn = document.getElementById('change-name-btn');
+        if (changeNameBtn) {
+          changeNameBtn.addEventListener('click', function() {
+            window.location.href = 'crack-total.html';
+          });
+        }
+        
         // Configurar particles.js
         if (document.getElementById('particles-js')) {
           particlesJS('particles-js', particlesConfig);
@@ -358,6 +385,33 @@
         .game-info h3 {
           font-size: 1.1rem;
         }
+      }
+      
+      .change-name-btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.6rem 1.2rem;
+        margin-top: 0.5rem;
+        background-color: rgba(66, 153, 225, 0.2);
+        color: white;
+        border: 1px solid rgba(66, 153, 225, 0.3);
+        border-radius: 2rem;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      .change-name-btn i {
+        margin-right: 8px;
+        font-size: 0.9rem;
+      }
+      
+      .change-name-btn:hover {
+        background-color: rgba(66, 153, 225, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
     </style>
   </body>

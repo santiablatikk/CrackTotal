@@ -19,13 +19,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Fuentes -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Open Graph tags para compartir en redes sociales -->
-    <meta property="og:title" content="CRACK TOTAL - Portal de Juegos de Fútbol">
-    <meta property="og:description" content="Juegos de fútbol para poner a prueba tus conocimientos futboleros.">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="img/preview.jpg">
-    <!-- Scripts -->
-    <script src="js/utils.js"></script>
   </head>
   <body>
     <!-- Partículas de fondo -->
@@ -41,35 +34,25 @@
         <p class="subtitle">¡Demuestra tu conocimiento futbolero!</p>
       </header>
 
-      <div class="portal-container">
-        <div class="content-card portal-card">
+      <div class="main-container">
+        <div class="content-card login-card">
           <div class="card-section welcome-section">
             <div class="welcome-message">
-              <h2>Selecciona tu juego</h2>
-              <p>Elige entre nuestros desafiantes juegos de fútbol</p>
+              <h2>¡Bienvenido al portal de juegos!</h2>
+              <p>Ingresa tu nombre para comenzar</p>
             </div>
             
-            <div class="game-options">
-              <a href="index.html" class="game-option">
-                <div class="game-icon">
-                  <i class="fas fa-futbol"></i>
+            <form id="login-form" class="login-form">
+              <div class="form-group">
+                <div class="input-with-icon">
+                  <i class="fas fa-user"></i>
+                  <input type="text" id="username" class="input-field" placeholder="Nombre de jugador..." required>
                 </div>
-                <div class="game-info">
-                  <h3>CRACK TOTAL</h3>
-                  <p>El clásico rosco futbolero</p>
-                </div>
-              </a>
-              
-              <a href="millonario/index.html" class="game-option">
-                <div class="game-icon">
-                  <i class="fas fa-trophy"></i>
-                </div>
-                <div class="game-info">
-                  <h3>¿QUIÉN SABE MÁS DE FÚTBOL?</h3>
-                  <p>Pon a prueba tu conocimiento</p>
-                </div>
-              </a>
-            </div>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                CONTINUAR <i class="fas fa-arrow-right"></i>
+              </button>
+            </form>
           </div>
         </div>
       </div>
@@ -77,7 +60,6 @@
       <!-- Footer -->
       <footer class="policy-footer">
         <div class="footer-links-mini">
-          <a href="portal.html"><i class="fas fa-home"></i> Portal</a>
           <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
           <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
           <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
@@ -111,12 +93,31 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="js/particles-config.js"></script>
     <script>
-      // Script para manejar las cookies
       document.addEventListener('DOMContentLoaded', function() {
         // Configurar particles.js
         if (document.getElementById('particles-js')) {
           particlesJS('particles-js', particlesConfig);
         }
+        
+        // Manejar el envío del formulario
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        
+        loginForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const username = usernameInput.value.trim();
+          
+          if (username !== '') {
+            // Guardar el nombre en localStorage
+            localStorage.setItem('playerName', username);
+            
+            // Redireccionar al portal
+            window.location.href = 'portal.html';
+          } else {
+            usernameInput.focus();
+          }
+        });
         
         // Verificar consentimiento de cookies
         if (!localStorage.getItem('cookieConsent')) {
@@ -142,34 +143,24 @@
             }
           }
         }
-        
-        // Inicializar animación del ícono
-        const iconElement = document.querySelector('.ball-icon');
-        function animateIcon() {
-          iconElement.classList.add('animate-bounce');
-          setTimeout(() => {
-            iconElement.classList.remove('animate-bounce');
-            setTimeout(animateIcon, 3000);
-          }, 1000);
-        }
-        animateIcon();
       });
     </script>
     <style>
-      .portal-container {
+      .main-container {
         display: flex;
         justify-content: center;
         align-items: center;
         width: 100%;
-        max-width: 900px;
+        max-width: 500px;
         margin: 0 auto;
         padding: 20px;
       }
       
-      .portal-card {
+      .login-card {
         width: 100%;
         padding: 30px;
         margin-bottom: 40px;
+        text-align: center;
       }
       
       .welcome-section {
@@ -193,144 +184,76 @@
         margin-bottom: 30px;
       }
       
-      .game-options {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-        max-width: 700px;
-        margin: 0 auto;
-      }
-      
-      .game-option {
-        display: flex;
-        align-items: center;
-        padding: 20px;
-        border-radius: 15px;
-        background: linear-gradient(135deg, rgba(26, 32, 44, 0.8), rgba(45, 55, 72, 0.8));
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        transition: all 0.3s ease;
-        text-decoration: none;
+      .input-with-icon {
         position: relative;
-        overflow: hidden;
-        border: 2px solid transparent;
+        margin-bottom: 20px;
       }
       
-      .game-option::before {
-        content: '';
+      .input-with-icon i {
         position: absolute;
-        top: -10px;
-        left: -10px;
-        right: -10px;
-        bottom: -10px;
-        background: linear-gradient(45deg, #4299e1, #667eea, #9f7aea, #ed64a6);
-        z-index: -2;
-        border-radius: 20px;
-        opacity: 0;
-        transition: opacity 0.4s ease;
-      }
-      
-      .game-option:hover {
-        transform: translateY(-5px);
-        border-color: rgba(66, 153, 225, 0.5);
-      }
-      
-      .game-option:hover::before {
-        opacity: 0.5;
-      }
-      
-      .game-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #4299e1, #667eea);
-        margin-right: 20px;
-        flex-shrink: 0;
-        position: relative;
-        overflow: hidden;
-        box-shadow: 0 0 20px rgba(66, 153, 225, 0.5);
-      }
-      
-      .game-icon::after {
-        content: '';
-        position: absolute;
-        width: 150%;
-        height: 150%;
-        background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.3), transparent);
-        transform: rotate(35deg) translateX(-150%);
-        animation: shine 3s infinite;
-      }
-      
-      .game-option:hover .game-icon::after {
-        animation: shine 1.5s infinite;
-      }
-      
-      .game-icon i {
-        font-size: 2.5rem;
-        color: white;
-        z-index: 1;
-      }
-      
-      .game-info {
-        flex: 1;
-      }
-      
-      .game-info h3 {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #e2e8f0;
-        margin-bottom: 8px;
-        transition: color 0.3s ease;
-      }
-      
-      .game-option:hover .game-info h3 {
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
         color: #4299e1;
+        font-size: 1.2rem;
       }
       
-      .game-info p {
+      .input-field {
+        width: 100%;
+        padding: 15px 15px 15px 45px;
+        border-radius: 10px;
+        border: 2px solid rgba(66, 153, 225, 0.3);
+        background-color: rgba(15, 23, 42, 0.5);
+        color: #f7fafc;
         font-size: 1rem;
-        color: #a0aec0;
-        line-height: 1.4;
+        transition: all 0.3s ease;
       }
       
-      @keyframes shine {
+      .input-field:focus {
+        outline: none;
+        border-color: #4299e1;
+        box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
+      }
+      
+      .input-field::placeholder {
+        color: #718096;
+      }
+      
+      .btn-primary {
+        background: linear-gradient(135deg, #4299e1, #667eea);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 15px 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(66, 153, 225, 0.25);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 14px rgba(66, 153, 225, 0.35);
+      }
+      
+      .btn-primary i {
+        margin-left: 8px;
+      }
+      
+      @keyframes titlePulse {
         0% {
-          transform: rotate(35deg) translateX(-150%);
+          opacity: 0.9;
         }
         100% {
-          transform: rotate(35deg) translateX(150%);
+          opacity: 1;
         }
       }
       
       @media (max-width: 768px) {
-        .game-options {
-          gap: 15px;
-        }
-        
-        .game-option {
-          padding: 15px;
-        }
-        
-        .game-icon {
-          width: 60px;
-          height: 60px;
-          margin-right: 15px;
-        }
-        
-        .game-icon i {
-          font-size: 1.8rem;
-        }
-        
-        .game-info h3 {
-          font-size: 1.2rem;
-        }
-        
-        .game-info p {
-          font-size: 0.9rem;
-        }
-        
         .welcome-message h2 {
           font-size: 1.8rem;
         }
@@ -341,23 +264,8 @@
       }
       
       @media (max-width: 480px) {
-        .portal-card {
+        .login-card {
           padding: 20px 15px;
-        }
-        
-        .game-option {
-          flex-direction: column;
-          text-align: center;
-          padding: 20px 15px;
-        }
-        
-        .game-icon {
-          margin-right: 0;
-          margin-bottom: 15px;
-        }
-        
-        .game-info h3 {
-          font-size: 1.1rem;
         }
       }
     </style>
