@@ -530,19 +530,21 @@ function broadcastAvailableRooms() {
 }
 
 // Iniciar servidor
-const PORT = process.env.PORT || 3001;
+const PORT = 3001; // Forzar puerto 3001
+
 server.listen(PORT, () => {
   console.log(`Servidor escuchando en puerto ${PORT}`);
   console.log(`Preguntas cargadas: ${questions.facil.length + questions.media.length + questions.dificil.length} en total`);
 }).on('error', (err) => {
   if (err.code === 'EADDRINUSE') {
-    console.error(`El puerto ${PORT} está en uso. Intentando con puerto ${PORT + 1}...`);
-    // Intentar con otro puerto automáticamente
-    server.listen(PORT + 1, () => {
-      console.log(`Servidor escuchando en puerto ${PORT + 1}`);
-      console.log(`Preguntas cargadas: ${questions.facil.length + questions.media.length + questions.dificil.length} en total`);
-    });
+    console.error(`------------------------------------------------------------`);
+    console.error(`¡ERROR FATAL! El puerto ${PORT} está en uso.`);
+    console.error(`Por favor, detén el proceso que usa el puerto ${PORT} y reinicia.`);
+    console.error(`Puedes usar 'npx kill-port ${PORT}' para intentar detenerlo.`);
+    console.error(`------------------------------------------------------------`);
+    process.exit(1); // Salir si el puerto está ocupado
   } else {
     console.error('Error al iniciar el servidor:', err);
+    process.exit(1);
   }
 }); 

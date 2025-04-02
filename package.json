@@ -5,7 +5,7 @@
   "main": "public/millonario/js/vs/server.js",
   "scripts": {
     "start": "node public/millonario/js/vs/server.js",
-    "dev": "nodemon public/millonario/js/vs/server.js"
+    "dev": "nodemon --watch public/millonario/js/vs/server.js --ignore public/millonario/js/vs/vs-mode.js --ignore public/**/*.html --ignore public/**/*.css --ignore public/millonario/data/* --ignore *.log --delay 1500 public/millonario/js/vs/server.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
