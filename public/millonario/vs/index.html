@@ -774,9 +774,10 @@
       
       function initializeSocket() {
         try {
-          console.log("Intentando conectar al servidor en puerto 3001...");
-          // Conectar explícitamente al puerto 3001 que sabemos está funcionando
-          socket = io('http://' + window.location.hostname + ':3001', socketOptions);
+          console.log("Intentando conectar al servidor Socket.IO...");
+          // Conectar al origen actual (Render se encargará de la ruta y puerto)
+          // Esto funciona tanto en Render como localmente si el servidor está en el mismo origen.
+          socket = io(socketOptions);
           
           // Evento cuando se conecta
           socket.on('connect', () => {

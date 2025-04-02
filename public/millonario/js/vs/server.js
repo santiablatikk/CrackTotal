@@ -530,7 +530,8 @@ function broadcastAvailableRooms() {
 }
 
 // Iniciar servidor
-const PORT = 3001; // Forzar puerto 3001
+// Usar el puerto asignado por Render (process.env.PORT) o 3001 como fallback local
+const PORT = process.env.PORT || 3001;
 
 server.listen(PORT, () => {
   console.log(`Servidor escuchando en puerto ${PORT}`);
