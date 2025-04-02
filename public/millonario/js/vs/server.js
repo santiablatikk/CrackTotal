@@ -530,8 +530,19 @@ function broadcastAvailableRooms() {
 }
 
 // Iniciar servidor
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
   console.log(`Servidor escuchando en puerto ${PORT}`);
   console.log(`Preguntas cargadas: ${questions.facil.length + questions.media.length + questions.dificil.length} en total`);
+}).on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`El puerto ${PORT} está en uso. Intentando con puerto ${PORT + 1}...`);
+    // Intentar con otro puerto automáticamente
+    server.listen(PORT + 1, () => {
+      console.log(`Servidor escuchando en puerto ${PORT + 1}`);
+      console.log(`Preguntas cargadas: ${questions.facil.length + questions.media.length + questions.dificil.length} en total`);
+    });
+  } else {
+    console.error('Error al iniciar el servidor:', err);
+  }
 }); 

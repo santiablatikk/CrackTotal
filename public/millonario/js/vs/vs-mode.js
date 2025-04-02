@@ -1,5 +1,5 @@
 // Variables globales
-const socket = io(window.socketOptions || {}); // Conexión Socket.io con opciones
+const socket = window.socket || io(window.socketOptions || {}); // Usar socket ya creado o crear uno nuevo
 let username = '';
 let roomId = '';
 let isHost = false;

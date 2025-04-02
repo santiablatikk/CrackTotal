@@ -317,6 +317,31 @@
         timeout: 20000
       };
       
+      // Try to connect to multiple ports if needed
+      let socket;
+      try {
+        // First try default connection
+        socket = io(socketOptions);
+        
+        // Set error handler to try alternative port if connection fails
+        socket.on('connect_error', (error) => {
+          console.error('Connection error on default port:', error);
+          console.log('Attempting connection on alternative port 3001...');
+          
+          // Try alternative port after short delay
+          setTimeout(() => {
+            if (!socket.connected) {
+              socket = io('http://' + window.location.hostname + ':3001', socketOptions);
+            }
+          }, 3000);
+        });
+        
+        // Make socket globally available
+        window.socket = socket;
+      } catch (e) {
+        console.error('Socket.io connection error:', e);
+      }
+      
       // This will be used in vs-mode.js
       window.socketOptions = socketOptions;
     </script>

@@ -2,456 +2,66 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="PASALA CHE - Juego interactivo de preguntas sobre fútbol. Pon a prueba tus conocimientos en este divertido rosco futbolero." />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="theme-color" content="#1e293b">
-    <meta name="google-adsense-account" content="ca-pub-9579152019412427">
-    <title>PASALA CHE - El Juego del Rosco Futbolero</title>
-    <!-- Preconexiones para mejorar el rendimiento -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Favicon -->
-    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
-    <!-- Estilos -->
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/footer-styles.css" />
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Fuentes -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Open Graph tags para compartir en redes sociales -->
-    <meta property="og:title" content="PASALA CHE - Juego de Preguntas sobre Fútbol">
-    <meta property="og:description" content="Pon a prueba tus conocimientos futboleros con este divertido juego de preguntas.">
-    <meta property="og:type" content="website">
-    <meta property="og:image" content="img/preview.jpg">
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
-     crossorigin="anonymous"></script>
-    <!-- Scripts -->
-    <script src="js/utils.js"></script>
-    <script src="js/main.js" defer></script>
+    <meta name="description" content="CRACK TOTAL - Juego interactivo de preguntas sobre fútbol. Pon a prueba tus conocimientos en este divertido rosco futbolero." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0;url=crack-total.html">
+    <title>Redireccionando a CRACK TOTAL</title>
     <style>
-      .return-portal-link {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.6rem 1.2rem;
-        background-color: rgba(66, 153, 225, 0.2);
+      body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: #0f172a;
         color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+      }
+      
+      p {
+        margin-bottom: 2rem;
+      }
+      
+      .loader {
+        border: 5px solid rgba(255, 255, 255, 0.2);
+        border-top: 5px solid #e11d48;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      a {
+        color: #e11d48;
         text-decoration: none;
-        border-radius: 2rem;
-        margin-top: 10px;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(66, 153, 225, 0.3);
-        font-weight: 500;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       }
       
-      .return-portal-link i {
-        margin-right: 8px;
-        font-size: 1.1rem;
-      }
-      
-      .return-portal-link:hover {
-        background-color: rgba(66, 153, 225, 0.4);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      a:hover {
+        text-decoration: underline;
       }
     </style>
   </head>
   <body>
-    <!-- Partículas de fondo -->
-    <div id="particles-js"></div>
-    
-    <div class="app-container">
-      <!-- Header con título principal -->
-      <header class="app-header">
-        <div class="logo-animation">
-          <i class="fas fa-futbol ball-icon bounce"></i>
-        </div>
-        <h1 class="title-text">PASALA CHE</h1>
-        <p class="subtitle">El juego de palabras del fútbol</p>
-        <a href="portal.html" class="return-portal-link"><i class="fas fa-home"></i> Volver al Portal</a>
-      </header>
-
-      <div class="screens-container">
-        <!-- Pantalla de Opciones de Juego -->
-        <div id="game-options-screen" class="content-card">
-          <div class="card-section">
-            <div class="welcome-header">
-              <div class="user-avatar">
-                <i class="fas fa-user"></i>
-              </div>
-              <h2 class="welcome-title">Bienvenido, <span id="player-name-display">Jugador</span></h2>
-            </div>
-            
-            <!-- Banner de mensaje promocional -->
-            <div class="game-banner">
-              <i class="fas fa-trophy banner-icon"></i>
-              <p class="banner-text">¡Más de 1000 preguntas aleatorias para jugar sin parar!</p>
-            </div>
-            
-            <!-- Selector de dificultad -->
-            <div class="difficulty-section">
-              <h3 class="difficulty-title">Elige la dificultad:</h3>
-              <div class="difficulty-options">
-                <div class="difficulty-option" data-difficulty="facil">
-                  <div class="difficulty-icon">
-                    <i class="fas fa-smile"></i>
-                  </div>
-                  <div class="difficulty-details">
-                    <span>Fácil</span>
-                    <small>300 segundos</small>
-                  </div>
-                </div>
-                <div class="difficulty-option" data-difficulty="normal">
-                  <div class="difficulty-icon">
-                    <i class="fas fa-meh"></i>
-                  </div>
-                  <div class="difficulty-details">
-                    <span>Normal</span>
-                    <small>240 segundos</small>
-                  </div>
-                </div>
-                <div class="difficulty-option" data-difficulty="dificil">
-                  <div class="difficulty-icon">
-                    <i class="fas fa-dizzy"></i>
-                  </div>
-                  <div class="difficulty-details">
-                    <span>Difícil</span>
-                    <small>200 segundos</small>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Botón de inicio -->
-            <div class="start-button-container">
-              <button id="start-game" class="btn btn-start-game">
-                <i class="fas fa-play"></i> ¡COMENZAR JUEGO!
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <footer class="policy-footer">
-        <div class="footer-links-mini">
-          <a href="portal.html"><i class="fas fa-home"></i> Portal</a>
-          <a href="profile.html"><i class="fas fa-user"></i> Perfil</a>
-          <a href="ranking.html"><i class="fas fa-trophy"></i> Ranking</a>
-          <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
-          <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
-          <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-          <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
-          <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-          <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-          <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
-        </div>
-        <div class="copyright-text">&copy; 2025 PASALA CHE - El Juego del Rosco Futbolero.</div>
-        <div class="footer-social-icons">
-          <a href="https://www.facebook.com/pasalachee" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://twitter.com/pasalachee" class="social-icon"><i class="fab fa-twitter"></i></a>
-          <a href="https://www.instagram.com/pasalachee" class="social-icon"><i class="fab fa-instagram"></i></a>
-          <a href="https://www.youtube.com/c/pasalachee" class="social-icon"><i class="fab fa-youtube"></i></a>
-        </div>
-      </footer>
-    </div>
-
-    <!-- Toast para notificaciones -->
-    <div id="notification" class="toast" style="display: none;"></div>
-    
-    <!-- Modal de Reglas del Juego -->
-    <div id="rules-modal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>REGLAS DEL JUEGO</h2>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="rules-grid">
-            <div class="rule-card">
-              <div class="rule-icon" style="background-color: rgba(239, 68, 68, 0.2); color: #ef4444;">
-                <i class="fas fa-exclamation-triangle"></i>
-              </div>
-              <div class="rule-content">
-                <h4>Máximo de Errores</h4>
-                <p>Hasta 2 errores (al tercer error pierdes).</p>
-              </div>
-            </div>
-            
-            <div class="rule-card">
-              <div class="rule-icon" style="background-color: rgba(59, 130, 246, 0.2); color: #3b82f6;">
-                <i class="fas fa-lightbulb"></i>
-              </div>
-              <div class="rule-content">
-                <h4>HELP</h4>
-                <p>2 oportunidades para obtener pista (primeras 3 letras).</p>
-              </div>
-            </div>
-            
-            <div class="rule-card">
-              <div class="rule-icon" style="background-color: rgba(139, 92, 246, 0.2); color: #8b5cf6;">
-                <i class="fas fa-keyboard"></i>
-              </div>
-              <div class="rule-content">
-                <h4>Respuesta Incompleta</h4>
-                <p>Puedes enviar respuestas incompletas hasta 2 veces.</p>
-              </div>
-            </div>
-            
-            <div class="rule-card">
-              <div class="rule-icon" style="background-color: rgba(16, 185, 129, 0.2); color: #10b981;">
-                <i class="fas fa-clock"></i>
-              </div>
-              <div class="rule-content">
-                <h4>Tiempo</h4>
-                <p>Fácil: 300" / Normal: 240" / Difícil: 200"</p>
-              </div>
-            </div>
-            
-            <div class="rule-card">
-              <div class="rule-icon" style="background-color: rgba(245, 158, 11, 0.2); color: #f59e0b;">
-                <i class="fas fa-spell-check"></i>
-              </div>
-              <div class="rule-content">
-                <h4>Ortografía</h4>
-                <p>Se toleran errores mínimos.</p>
-              </div>
-            </div>
-            
-            <div class="rule-card">
-              <div class="rule-icon" style="background-color: rgba(236, 72, 153, 0.2); color: #ec4899;">
-                <i class="fas fa-pen-fancy"></i>
-              </div>
-              <div class="rule-content">
-                <h4>Respuesta</h4>
-                <p>Si la pregunta NO dice "Apellido de.." la respuesta es el nombre completo.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button id="start-game-modal" class="btn btn-start-game">
-            <i class="fas fa-play"></i> ¡COMENZAR JUEGO!
-          </button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Cookie Consent Banner -->
-    <div id="cookieConsent" class="cookie-consent" style="display: none;">
-      <p>Utilizamos cookies para mejorar tu experiencia en nuestra web. Al continuar navegando, aceptas nuestra <a href="cookies.html">política de cookies</a>.</p>
-      <div class="cookie-consent-buttons">
-        <button class="cookie-btn cookie-accept">Aceptar</button>
-        <button class="cookie-btn cookie-decline">Rechazar</button>
-      </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="js/particles-config.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/main.js" defer></script>
+    <div class="loader"></div>
+    <h1>Redireccionando a CRACK TOTAL</h1>
+    <p>Si no eres redireccionado automáticamente, <a href="crack-total.html">haz clic aquí</a>.</p>
     <script>
-      // Script para manejar la navegación entre pantallas
-      document.addEventListener('DOMContentLoaded', function() {
-        const gameOptionsScreen = document.getElementById('game-options-screen');
-        const playerNameDisplay = document.getElementById('player-name-display');
-        
-        // Comprobar si hay un nombre de usuario guardado
-        const playerName = localStorage.getItem('playerName');
-        
-        if (playerName) {
-          // Mostrar el nombre del jugador
-          playerNameDisplay.textContent = playerName;
-        } else {
-          // Redirigir a la página de ingreso si no hay nombre guardado
-          window.location.href = 'crack-total.html';
-        }
-        
-        // Configurar la selección de dificultad
-        const difficultyOptions = document.querySelectorAll('.difficulty-option');
-        let selectedDifficulty = 'normal';
-        
-        difficultyOptions.forEach(option => {
-          option.addEventListener('click', function() {
-            // Quitar la clase seleccionada de todas las opciones
-            difficultyOptions.forEach(opt => opt.classList.remove('selected'));
-            
-            // Añadir la clase seleccionada a la opción actual
-            this.classList.add('selected');
-            
-            // Guardar la dificultad seleccionada
-            selectedDifficulty = this.getAttribute('data-difficulty');
-          });
-        });
-        
-        // Seleccionar la dificultad normal por defecto
-        document.querySelector('[data-difficulty="normal"]').classList.add('selected');
-        
-        // Modal de reglas
-        const modal = document.getElementById('rules-modal');
-        const startGameBtn = document.getElementById('start-game');
-        const startGameModalBtn = document.getElementById('start-game-modal');
-        const closeModalBtn = document.querySelector('.close-modal');
-        
-        // Mostrar modal al hacer clic en comenzar juego
-        startGameBtn.addEventListener('click', function() {
-          modal.style.display = 'flex';
-        });
-        
-        // Cerrar modal al hacer clic en la X
-        closeModalBtn.addEventListener('click', function() {
-          modal.style.display = 'none';
-        });
-        
-        // Cerrar modal al hacer clic fuera del contenido
-        window.addEventListener('click', function(event) {
-          if (event.target === modal) {
-            modal.style.display = 'none';
-          }
-        });
-        
-        // Iniciar juego desde el modal
-        startGameModalBtn.addEventListener('click', function() {
-          // Guardar la dificultad seleccionada en localStorage
-          localStorage.setItem('gameDifficulty', selectedDifficulty);
-          
-          // Redirigir a la página de juego
-          window.location.href = 'game.html';
-        });
-
-        // Configurar particles.js
-        if (document.getElementById('particles-js')) {
-          particlesJS('particles-js', particlesConfig);
-        }
-        
-        // Verificar consentimiento de cookies
-        if (!localStorage.getItem('cookieConsent')) {
-          const cookieConsent = document.getElementById('cookieConsent');
-          if (cookieConsent) {
-            cookieConsent.style.display = 'block';
-            
-            const acceptBtn = document.querySelector('.cookie-accept');
-            const declineBtn = document.querySelector('.cookie-decline');
-            
-            if (acceptBtn) {
-              acceptBtn.addEventListener('click', function() {
-                localStorage.setItem('cookieConsent', 'accepted');
-                cookieConsent.style.display = 'none';
-              });
-            }
-            
-            if (declineBtn) {
-              declineBtn.addEventListener('click', function() {
-                localStorage.setItem('cookieConsent', 'declined');
-                cookieConsent.style.display = 'none';
-              });
-            }
-          }
-        }
-      });
+      // Redirección con JavaScript como respaldo
+      window.location.href = "crack-total.html";
     </script>
-    <style>
-      /* Estilos para el modal */
-      .modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        backdrop-filter: blur(5px);
-      }
-      
-      .modal-content {
-        background: var(--secondary-bg, #1e293b);
-        border-radius: 12px;
-        width: 90%;
-        max-width: 700px;
-        max-height: 90vh;
-        overflow-y: auto;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        animation: modalFadeIn 0.3s ease;
-        position: relative;
-      }
-      
-      .modal-header {
-        padding: 1.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      
-      .modal-header h2 {
-        margin: 0;
-        font-size: 1.5rem;
-        color: white;
-      }
-      
-      .close-modal {
-        font-size: 1.8rem;
-        color: #9ca3af;
-        cursor: pointer;
-        transition: color 0.2s ease;
-      }
-      
-      .close-modal:hover {
-        color: white;
-      }
-      
-      .modal-body {
-        padding: 1.5rem;
-      }
-      
-      .modal-footer {
-        padding: 1.5rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        text-align: center;
-      }
-      
-      @keyframes modalFadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      
-      /* Ajustes para la reglas en el modal */
-      .modal .rules-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 1rem;
-        margin-top: 0.5rem;
-      }
-      
-      .modal .rule-card {
-        display: flex;
-        background: rgba(15, 23, 42, 0.5);
-        border-radius: 8px;
-        padding: 1rem;
-        align-items: center;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-      }
-      
-      .modal .rule-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-      }
-    </style>
   </body>
 </html>
 
