@@ -420,13 +420,15 @@
         top: 0;
         left: 0;
         width: 100%;
-        padding: 1rem;
+        padding: 15px;
         background: #ef4444;
         color: white;
-        display: flex;
+        display: none;
+        flex-direction: column;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
         z-index: 1000;
+        animation: fadeInDown 0.5s ease;
       }
       
       .server-error-banner i {
@@ -558,6 +560,11 @@
           gap: 1rem;
           font-size: 0.7rem;
         }
+      }
+      
+      @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
       }
     </style>
   </head>
@@ -775,21 +782,27 @@
       function initializeSocket() {
         try {
           console.log("Intentando conectar al servidor Socket.IO...");
-          // Conectar al origen actual (Render se encargará de la ruta y puerto)
-          // Esto funciona tanto en Render como localmente si el servidor está en el mismo origen.
           socket = io(socketOptions);
           
-          // Evento cuando se conecta
           socket.on('connect', () => {
             console.log("Conectado al servidor Socket.io");
             document.getElementById('connection-status').className = 'connection-status connected';
             document.getElementById('connection-status').innerHTML = '<i class="fas fa-circle"></i> Conectado';
             showNotification("Conectado al servidor", "success");
             
+            // Hide error banner on connect
+            const errorBanner = document.getElementById('server-error-banner');
+            if (errorBanner) {
+              errorBanner.style.display = 'none';
+            }
+            
             // Cargar salas disponibles tras conectar
             setTimeout(() => {
               socket.emit('get_available_rooms');
             }, 500);
+            
+            // Asegurarse que los listeners específicos de sala/juego están activos
+            setupSocketGameListeners();
           });
           
           socket.on('connect_error', (error) => {
@@ -806,12 +819,7 @@
           });
           
           // Eventos específicos de la sala
-          socket.on('room_created', (data) => {
-            console.log("Sala creada con éxito:", data);
-            showWaitingRoom(data.roomName || "Sala de espera");
-            document.getElementById('room-id').textContent = data.roomId;
-            showNotification("Sala creada correctamente", "success");
-          });
+          socket.on('room_created', handleRoomCreated);
           
           socket.on('error', (data) => {
             console.error("Error del servidor:", data);
@@ -1118,7 +1126,7 @@
       
       // Función para crear sala
       function createRoom() {
-        console.log("Intentando crear sala");
+        console.log("Función createRoom llamada");
         const roomNameInput = document.getElementById('room-name-input');
         const roomPasswordInput = document.getElementById('room-password-input');
         
@@ -1130,22 +1138,73 @@
         const roomName = roomNameInput.value.trim();
         const password = roomPasswordInput ? roomPasswordInput.value : '';
         
-        // Verificar conexión
         if (!socket || !socket.connected) {
           showNotification("No hay conexión con el servidor. No se puede crear la sala.", "error");
           showServerError("Error de conexión al servidor. Modo 1vs1 no disponible.");
           return;
         }
         
-        // Emitir evento
-        socket.emit('create_room', {
-          username: localStorage.getItem('millonarioUsername') || 'Jugador',
+        const username = localStorage.getItem('millonarioUsername') || 'Jugador';
+        const roomData = {
+          username: username,
           roomName: roomName,
           password: password
-        });
+        };
         
-        console.log("Evento create_room emitido");
+        console.log("Emitiendo evento 'create_room' con datos:", roomData);
+        socket.emit('create_room', roomData);
+        
+        // Opcional: Mostrar un estado de "Creando..." en el botón
+        const confirmButton = document.getElementById('confirm-create-room-btn');
+        if(confirmButton) {
+          confirmButton.disabled = true;
+          confirmButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREANDO...';
+        }
       }
+      
+      // Nueva función para agrupar listeners específicos del juego/sala
+      function setupSocketGameListeners() {
+        if (!socket) return;
+        
+        // Remover listeners anteriores para evitar duplicados si hay reconexión
+        socket.off('room_created');
+        socket.off('room_joined');
+        socket.off('players_updated');
+        socket.off('player_disconnected');
+        socket.off('error'); // Cuidado si se usa para errores generales
+        socket.off('available_rooms');
+        socket.off('game_started');
+        socket.off('next_turn');
+        socket.off('player_answered');
+        socket.off('game_restarted');
+
+        // Añadir listeners
+        console.log("Añadiendo listener para 'room_created'");
+        socket.on('room_created', handleRoomCreated);
+        socket.on('room_joined', handleRoomJoined); // Asumiendo que existe handleRoomJoined
+        socket.on('players_updated', handlePlayersUpdated); // Asumiendo que existe handlePlayersUpdated
+        socket.on('player_disconnected', handlePlayerDisconnected); // Asumiendo que existe handlePlayerDisconnected
+        socket.on('error', (data) => { // Manejo específico de errores de sala/juego
+          console.error("Error del servidor (sala/juego):", data);
+          showNotification(data.message || "Error en la operación de sala/juego", "error");
+           // Resetear botón si falló la creación
+          const confirmButton = document.getElementById('confirm-create-room-btn');
+          if(confirmButton) {
+             confirmButton.disabled = false;
+             confirmButton.innerHTML = '<i class="fas fa-plus-circle"></i> CREAR SALA';
+          }
+        });
+        socket.on('available_rooms', handleAvailableRooms); // Asumiendo que existe handleAvailableRooms
+        
+        // Listeners de juego (si existen)
+        // socket.on('game_started', handleGameStarted);
+        // socket.on('next_turn', handleNextTurn);
+        // socket.on('player_answered', handlePlayerAnswered);
+        // socket.on('game_restarted', handleGameRestarted);
+      }
+      
+      // Asegúrate que las funciones referenciadas (handleRoomJoined, etc.) existen
+      // Si no existen, coméntalas en setupSocketGameListeners o créalas.
     </script>
     <script src="../js/vs/vs-mode.js"></script>
     
