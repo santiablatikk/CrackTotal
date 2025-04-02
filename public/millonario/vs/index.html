@@ -588,10 +588,10 @@
       
       <!-- Sección principal para crear o unirse a sala -->
       <div id="room-section" class="content-card lobby-card">
-        <h2 class="section-title" style="position: relative; overflow: hidden;">
+        <h2 class="section-title" style="position: relative; overflow: hidden; padding: 1.8rem;">
           <span style="position: relative; z-index: 2;">SALA PRIVADA</span>
-          <div style="position: absolute; top: -10px; right: -10px; width: 80px; height: 80px; background: rgba(225, 29, 72, 0.2); border-radius: 100%; filter: blur(15px);"></div>
-          <div style="position: absolute; bottom: -20px; left: -20px; width: 100px; height: 100px; background: rgba(225, 29, 72, 0.15); border-radius: 100%; filter: blur(20px);"></div>
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(225, 29, 72, 0.2); z-index: 1;"></div>
+          <div style="position: absolute; top: -15px; right: -15px; width: 80px; height: 80px; background: rgba(225, 29, 72, 0.4); border-radius: 50%; filter: blur(20px); z-index: 0;"></div>
         </h2>
         
         <div class="main-options">
@@ -599,9 +599,9 @@
             <h3 class="option-title"><i class="fas fa-plus-circle"></i> Crear una sala</h3>
             <div class="option-content">
               <p>Crea una nueva sala y comparte el código con tus amigos</p>
-              <button id="create-room-btn" class="btn btn-primary" style="position: relative; overflow: hidden;">
+              <button id="create-room-btn" class="btn btn-primary" style="position: relative; overflow: hidden;" onclick="showCreateRoomFormDirect()">
                 <span style="position: relative; z-index: 2;"><i class="fas fa-plus-circle"></i> CREAR SALA</span>
-                <div style="position: absolute; top: 0; left: -50%; width: 200%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); animation: btn-shine 2s infinite;"></div>
+                <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(rgba(255, 255, 255, 0.2), transparent); transform: rotate(30deg); animation: btnShine 3s infinite linear; z-index: 1;"></div>
               </button>
             </div>
           </div>
@@ -644,24 +644,28 @@
       
       <!-- Formulario para crear sala -->
       <div id="create-room-section" class="content-card lobby-card" style="display: none;">
-        <h2 class="section-title" style="position: relative; overflow: hidden;">
+        <h2 class="section-title" style="position: relative; overflow: hidden; padding: 1.8rem;">
           <span style="position: relative; z-index: 2;">CREAR NUEVA SALA</span>
-          <div style="position: absolute; top: -10px; right: -10px; width: 80px; height: 80px; background: rgba(225, 29, 72, 0.2); border-radius: 100%; filter: blur(15px);"></div>
-          <div style="position: absolute; bottom: -20px; left: -20px; width: 100px; height: 100px; background: rgba(225, 29, 72, 0.15); border-radius: 100%; filter: blur(20px);"></div>
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(225, 29, 72, 0.2); z-index: 1;"></div>
+          <div style="position: absolute; top: -15px; right: -15px; width: 80px; height: 80px; background: rgba(225, 29, 72, 0.4); border-radius: 50%; filter: blur(20px); z-index: 0;"></div>
         </h2>
         
         <div style="padding: 2rem;">
-          <div style="margin-bottom: 1.5rem;">
-            <h3 style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-users" style="color: var(--accent-color);"></i> Nombre de la sala:</h3>
+          <div style="margin-bottom: 2rem; background: rgba(15, 23, 42, 0.4); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(225, 29, 72, 0.2);">
+            <h3 style="margin-top: 0; margin-bottom: 1rem; color: #e11d48; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-users"></i> Nombre de la sala:
+            </h3>
             <div>
-              <input type="text" id="room-name-input" class="input-field" placeholder="Ingresa un nombre para tu sala">
+              <input type="text" id="room-name-input" class="input-field" placeholder="Ingresa un nombre para tu sala" style="border: 1px solid rgba(225, 29, 72, 0.3);">
             </div>
           </div>
           
-          <div style="margin-bottom: 2rem;">
-            <h3 style="margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-lock" style="color: var(--accent-color);"></i> Contraseña (opcional):</h3>
+          <div style="margin-bottom: 2.5rem; background: rgba(15, 23, 42, 0.4); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(225, 29, 72, 0.2);">
+            <h3 style="margin-top: 0; margin-bottom: 1rem; color: #e11d48; display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-lock"></i> Contraseña (opcional):
+            </h3>
             <div>
-              <input type="password" id="room-password-input" class="input-field" placeholder="Deja en blanco para sala pública">
+              <input type="password" id="room-password-input" class="input-field" placeholder="Deja en blanco para sala pública" style="border: 1px solid rgba(225, 29, 72, 0.3);">
             </div>
           </div>
           
@@ -669,7 +673,7 @@
             <button id="back-to-menu-btn" class="btn btn-secondary" style="flex: 1;"><i class="fas fa-arrow-left"></i> CANCELAR</button>
             <button id="confirm-create-room-btn" class="btn btn-primary" style="flex: 1; position: relative; overflow: hidden;">
               <span style="position: relative; z-index: 2;"><i class="fas fa-plus-circle"></i> CREAR SALA</span>
-              <div style="position: absolute; top: 0; left: -50%; width: 200%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); animation: btn-shine 2s infinite;"></div>
+              <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(rgba(255, 255, 255, 0.2), transparent); transform: rotate(30deg); animation: btnShine 3s infinite linear; z-index: 1;"></div>
             </button>
           </div>
         </div>
@@ -677,36 +681,37 @@
       
       <!-- Sala de espera para 2 jugadores -->
       <div id="waiting-room" style="display: none;" class="content-card lobby-card">
-        <h2 class="section-title" id="waiting-room-name" style="position: relative; overflow: hidden;">
-          <span style="position: relative; z-index: 2;">¿QUIÉN SABE MÁS DE FÚTBOL?</span>
-          <div style="position: absolute; top: -10px; right: -10px; width: 80px; height: 80px; background: rgba(225, 29, 72, 0.2); border-radius: 100%; filter: blur(15px);"></div>
-          <div style="position: absolute; bottom: -20px; left: -20px; width: 100px; height: 100px; background: rgba(225, 29, 72, 0.15); border-radius: 100%; filter: blur(20px);"></div>
+        <h2 class="section-title" id="waiting-room-name" style="position: relative; overflow: hidden; padding: 1.8rem;">
+          <span style="position: relative; z-index: 2;">Sala de Espera</span>
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(225, 29, 72, 0.2); z-index: 1;"></div>
+          <div style="position: absolute; top: -15px; right: -15px; width: 80px; height: 80px; background: rgba(225, 29, 72, 0.4); border-radius: 50%; filter: blur(20px); z-index: 0;"></div>
         </h2>
         
         <div style="padding: 2rem;">
-          <div style="text-align: center; margin-bottom: 2rem;">
-            <h3 style="margin-bottom: 1rem; font-size: 1.5rem; color: var(--accent-color);" id="room-name-display">Sala de Espera</h3>
+          <h3 style="text-align: center; font-size: 1.8rem; margin-bottom: 1.5rem; color: #f8fafc; text-shadow: 0 0 15px rgba(225, 29, 72, 0.5);">¿QUIÉN SABE MÁS DE FÚTBOL?</h3>
+          
+          <div style="text-align: center; margin-bottom: 2rem; background: rgba(15, 23, 42, 0.4); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(225, 29, 72, 0.2);">
             <div style="width: 60px; height: 60px; margin: 0 auto 1rem; border: 4px solid rgba(255, 255, 255, 0.1); border-radius: 50%; border-top: 4px solid #e11d48; animation: spin 1s linear infinite;"></div>
             <p style="font-size: 1.2rem; font-weight: 500;">Esperando a que otro jugador se una...</p>
           </div>
           
-          <div style="background: rgba(15, 23, 42, 0.6); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(225, 29, 72, 0.2);">
-            <h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--accent-color);">Comparte este código con tu amigo:</h3>
+          <div style="background: rgba(15, 23, 42, 0.4); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(225, 29, 72, 0.2);">
+            <h3 style="margin-top: 0; margin-bottom: 1rem; text-align: center; color: #e11d48;">Comparte este código con tu amigo:</h3>
             <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
-              <span id="room-id" style="font-size: 2rem; font-weight: 700; letter-spacing: 2px; color: var(--accent-color); background: rgba(225, 29, 72, 0.1); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid rgba(225, 29, 72, 0.3);">------</span>
+              <span id="room-id" style="font-size: 2rem; font-weight: 700; letter-spacing: 2px; color: #e11d48; background: rgba(225, 29, 72, 0.1); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid rgba(225, 29, 72, 0.3);">------</span>
               <button id="copy-code-btn" class="btn btn-secondary" style="padding: 0.5rem 1rem;">
                 <i class="fas fa-copy"></i> COPIAR
               </button>
             </div>
-            <p style="text-align: center; color: var(--text-muted); margin: 0;">El jugador debe ingresar este código desde otro navegador</p>
+            <p style="text-align: center; color: var(--text-muted); margin: 0;">El jugador debe usar este código para encontrar tu sala</p>
           </div>
           
-          <div style="background: rgba(15, 23, 42, 0.6); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(255, 255, 255, 0.1);">
-            <h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--accent-color);">Jugadores en sala (<span id="player-count">1</span>/2)</h3>
+          <div style="background: rgba(15, 23, 42, 0.4); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(225, 29, 72, 0.2);">
+            <h3 style="margin-top: 0; margin-bottom: 1rem; color: #e11d48;">Jugadores en sala (<span id="player-count">1</span>/2)</h3>
             <ul id="players-container" style="list-style: none; padding: 0; margin: 0;"></ul>
           </div>
           
-          <div id="waiting-message" style="text-align: center; padding: 1rem; border-radius: 8px; background: rgba(225, 29, 72, 0.1); margin-bottom: 2rem; color: var(--accent-color);">
+          <div id="waiting-message" style="text-align: center; padding: 1rem; border-radius: 8px; background: rgba(225, 29, 72, 0.1); margin-bottom: 2rem; color: #e11d48;">
             <i class="fas fa-info-circle"></i>
             <span>Podrás iniciar el juego cuando se una otro jugador.</span>
           </div>
@@ -717,7 +722,7 @@
             </button>
             <button id="start-game-btn" class="btn btn-primary" style="flex: 1; position: relative; overflow: hidden;" disabled>
               <span style="position: relative; z-index: 2;"><i class="fas fa-play"></i> INICIAR DUELO</span>
-              <div style="position: absolute; top: 0; left: -50%; width: 200%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); animation: btn-shine 2s infinite;"></div>
+              <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(rgba(255, 255, 255, 0.2), transparent); transform: rotate(30deg); animation: btnShine 3s infinite linear; z-index: 1;"></div>
             </button>
           </div>
         </div>
@@ -758,26 +763,19 @@
         reconnectionDelay: 1000,
         reconnectionDelayMax: 5000,
         timeout: 20000,
-        autoConnect: false  // Evitar conexión automática hasta que sea necesario
+        autoConnect: true // Cambiado a true para conectar automáticamente
       };
       
       // Try to connect to multiple ports if needed
       let socket;
       try {
-        // Crear socket sin conectar automáticamente 
-        socket = io(socketOptions);
-        
-        // Conectar manualmente cuando estemos listos
-        setTimeout(() => {
-          socket.connect();
-        }, 1000);
+        // Intentar primero con puerto 3001 (que sabemos que está funcionando según los logs)
+        socket = io('http://' + window.location.hostname + ':3001', socketOptions);
         
         // Set error handler to try alternative port if connection fails
         socket.on('connect_error', (error) => {
-          console.error('Connection error on default port:', error);
-          console.log('Attempting connection on alternative port 3001...');
+          console.error('Connection error on port 3001:', error);
           
-          // Try alternative port after short delay
           setTimeout(() => {
             if (!socket.connected) {
               // Desconectar el socket anterior si existe
@@ -785,11 +783,11 @@
                 socket.disconnect();
               }
               
-              // Intentar con el puerto alternativo
-              socket = io('http://' + window.location.hostname + ':3001', socketOptions);
-              socket.connect();
+              // Intentar con el puerto predeterminado como respaldo
+              socket = io(socketOptions);
+              console.log('Intentando conexión con puerto predeterminado');
             }
-          }, 3000);
+          }, 2000);
         });
         
         // Make socket globally available
@@ -807,6 +805,81 @@
         if (passwordModal) {
           passwordModal.style.display = 'none';
         }
+        
+        // Agregar evento al botón directamente aquí como respaldo
+        const createRoomBtn = document.getElementById('create-room-btn');
+        if (createRoomBtn) {
+          createRoomBtn.addEventListener('click', showCreateRoomFormDirect);
+        }
+      });
+      
+      // Función directa para mostrar el formulario de creación de sala
+      function showCreateRoomFormDirect() {
+        console.log("Mostrando formulario de crear sala");
+        const roomSection = document.getElementById('room-section');
+        const createRoomSection = document.getElementById('create-room-section');
+        
+        if (roomSection && createRoomSection) {
+          roomSection.style.display = 'none';
+          createRoomSection.style.display = 'block';
+          
+          // Enfocar el campo de nombre de sala
+          const roomNameInput = document.getElementById('room-name-input');
+          if (roomNameInput) {
+            setTimeout(() => {
+              roomNameInput.focus();
+            }, 100);
+          }
+        } else {
+          console.error("No se encontraron los elementos necesarios");
+        }
+      }
+      
+      // También agregar eventos directos a otros botones críticos
+      document.addEventListener('DOMContentLoaded', function() {
+        const backToMenuBtn = document.getElementById('back-to-menu-btn');
+        const confirmCreateRoomBtn = document.getElementById('confirm-create-room-btn');
+        
+        if (backToMenuBtn) {
+          backToMenuBtn.addEventListener('click', function() {
+            const roomSection = document.getElementById('room-section');
+            const createRoomSection = document.getElementById('create-room-section');
+            
+            if (roomSection && createRoomSection) {
+              createRoomSection.style.display = 'none';
+              roomSection.style.display = 'block';
+            }
+          });
+        }
+        
+        if (confirmCreateRoomBtn) {
+          confirmCreateRoomBtn.addEventListener('click', function() {
+            console.log("Intentando crear sala");
+            const roomNameInput = document.getElementById('room-name-input');
+            const roomPasswordInput = document.getElementById('room-password-input');
+            
+            if (!roomNameInput || !roomNameInput.value.trim()) {
+              alert("Por favor ingresa un nombre para la sala");
+              return;
+            }
+            
+            const roomName = roomNameInput.value.trim();
+            const password = roomPasswordInput ? roomPasswordInput.value : '';
+            
+            // Emitir evento de socket para crear sala
+            if (socket && socket.connected) {
+              socket.emit('create_room', {
+                username: localStorage.getItem('millonarioUsername') || 'Jugador',
+                roomName: roomName,
+                password: password
+              });
+              console.log("Evento create_room emitido");
+            } else {
+              console.error("Socket no conectado");
+              alert("No se pudo establecer conexión con el servidor. Intenta de nuevo.");
+            }
+          });
+        }
       });
     </script>
     <script src="../js/vs/vs-mode.js"></script>
@@ -815,6 +888,15 @@
       @keyframes spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
+      }
+      
+      @keyframes btnShine {
+        0% {
+          transform: translateX(-100%) rotate(30deg);
+        }
+        100% {
+          transform: translateX(100%) rotate(30deg);
+        }
       }
       
       /* Estilos específicos para la lista de jugadores */
@@ -827,7 +909,7 @@
         border-radius: 8px;
         margin-bottom: 0.5rem;
         transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(225, 29, 72, 0.2);
       }
       
       #players-container li:last-child {
@@ -851,8 +933,8 @@
       }
       
       .badge {
-        background: rgba(225, 29, 72, 0.2);
-        color: var(--accent-color);
+        background: rgba(79, 70, 229, 0.2);
+        color: #4f46e5;
         padding: 0.25rem 0.5rem;
         border-radius: 4px;
         font-size: 0.8rem;
@@ -877,38 +959,6 @@
       #password-modal.active {
         display: flex !important;
       }
-      
-      @keyframes btn-shine {
-        0% {
-          left: -100%;
-        }
-        100% {
-          left: 100%;
-        }
-      }
     </style>
-    
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Referencia a los elementos relacionados con la sala
-      const confirmCreateRoomBtn = document.getElementById('confirm-create-room-btn');
-      const roomNameInput = document.getElementById('room-name-input');
-      const roomNameDisplay = document.getElementById('room-name-display');
-      
-      if (confirmCreateRoomBtn && roomNameInput && roomNameDisplay) {
-        // Almacenar el nombre de la sala cuando se crea
-        confirmCreateRoomBtn.addEventListener('click', function() {
-          const roomName = roomNameInput.value.trim() || 'Sala sin nombre';
-          localStorage.setItem('currentRoomName', roomName);
-        });
-      }
-      
-      // Actualizar el nombre de la sala en la sala de espera
-      const savedRoomName = localStorage.getItem('currentRoomName');
-      if (savedRoomName && roomNameDisplay) {
-        roomNameDisplay.textContent = savedRoomName;
-      }
-    });
-    </script>
   </body>
 </html> 
