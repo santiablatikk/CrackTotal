@@ -25,576 +25,6 @@
     
     <!-- Fuentes -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-      :root {
-        --primary-color: #0f172a;
-        --secondary-color: #1e293b;
-        --accent-color: #e11d48;
-        --text-color: #f8fafc;
-        --text-muted: #94a3b8;
-        --card-bg: rgba(30, 41, 59, 0.9);
-        --button-primary: #e11d48;
-        --button-hover: #be123c;
-        --button-secondary: #3b82f6;
-        --button-secondary-hover: #2563eb;
-      }
-      
-      body {
-        font-family: 'Montserrat', sans-serif;
-        background: radial-gradient(circle at center, #1e293b, #0f172a);
-        color: var(--text-color);
-        margin: 0;
-        padding: 0;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      
-      #particles-js {
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        z-index: -1;
-      }
-      
-      .container {
-        width: 100%;
-        max-width: 1000px;
-        padding: 0 20px;
-        margin: 0 auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        padding-bottom: 80px;
-        box-sizing: border-box;
-      }
-      
-      .app-header {
-        text-align: center;
-        margin-bottom: 2rem;
-        width: 100%;
-      }
-      
-      .title-text {
-        font-size: 3.5rem;
-        background: linear-gradient(135deg, #e11d48, #f43f5e);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 1rem;
-        text-transform: uppercase;
-        font-weight: 800;
-        letter-spacing: -1px;
-        text-shadow: 0 0 20px rgba(225, 29, 72, 0.3);
-      }
-      
-      .return-portal-link {
-        display: inline-flex;
-        align-items: center;
-        color: var(--text-muted);
-        text-decoration: none;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-      }
-      
-      .return-portal-link:hover {
-        color: var(--text-color);
-      }
-      
-      .return-portal-link i {
-        margin-right: 0.5rem;
-      }
-      
-      .content-card {
-        background: var(--card-bg);
-        border-radius: 20px;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        width: 100%;
-        max-width: 600px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        overflow: hidden;
-      }
-      
-      .lobby-card {
-        padding: 0;
-      }
-      
-      .section-title {
-        background: linear-gradient(to right, #e11d48, #f43f5e);
-        color: white;
-        margin: 0;
-        padding: 1.5rem;
-        font-size: 1.8rem;
-        text-align: center;
-        letter-spacing: 1px;
-        position: relative;
-      }
-      
-      .section-title::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(to right, #e11d48, #f43f5e);
-      }
-      
-      .main-options {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        padding: 2rem;
-      }
-      
-      .option-card {
-        background: rgba(15, 23, 42, 0.6);
-        border-radius: 15px;
-        padding: 1.8rem;
-        margin: 1.5rem 2rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: 1px solid rgba(225, 29, 72, 0.2);
-      }
-      
-      .option-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-        border-color: rgba(225, 29, 72, 0.4);
-      }
-      
-      .option-title {
-        font-size: 1.5rem;
-        color: var(--text-color);
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin: 0;
-      }
-      
-      .option-title i {
-        color: var(--accent-color);
-        font-size: 1.8rem;
-      }
-      
-      .option-content {
-        text-align: center;
-      }
-      
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 1rem 2rem;
-        border-radius: 8px;
-        font-weight: 600;
-        font-size: 1rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        border: none;
-        outline: none;
-        gap: 0.5rem;
-      }
-      
-      .btn-primary {
-        background: var(--button-primary);
-        color: white;
-        box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.2);
-      }
-      
-      .btn-primary:hover {
-        background: var(--button-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 10px 15px -3px rgba(225, 29, 72, 0.3);
-      }
-      
-      .btn-secondary {
-        background: var(--button-secondary);
-        color: white;
-        box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
-      }
-      
-      .btn-secondary:hover {
-        background: var(--button-secondary-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
-      }
-      
-      .input-field {
-        width: 100%;
-        padding: 1rem;
-        border-radius: 8px;
-        background: rgba(15, 23, 42, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: var(--text-color);
-        font-size: 1rem;
-        transition: all 0.3s ease;
-      }
-      
-      .input-field:focus {
-        border-color: var(--button-primary);
-        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.3);
-        outline: none;
-      }
-      
-      .separator {
-        display: flex;
-        align-items: center;
-        text-align: center;
-        color: var(--text-muted);
-        margin: 1.5rem 0;
-      }
-      
-      .separator::before,
-      .separator::after {
-        content: '';
-        flex: 1;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      
-      .separator::before {
-        margin-right: 1rem;
-      }
-      
-      .separator::after {
-        margin-left: 1rem;
-      }
-      
-      /* Available rooms styling */
-      .rooms-section {
-        margin-top: 2rem;
-        width: 100%;
-      }
-      
-      .rooms-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-      }
-      
-      .rooms-title {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 1.2rem;
-        margin: 0;
-      }
-      
-      .rooms-title i {
-        color: var(--accent-color);
-      }
-      
-      .refresh-btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-      }
-      
-      .rooms-list {
-        background: rgba(15, 23, 42, 0.6);
-        border-radius: 15px;
-        padding: 1.5rem;
-        max-height: 350px;
-        overflow-y: auto;
-      }
-      
-      .room-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1.2rem;
-        background: rgba(30, 41, 59, 0.5);
-        border-radius: 12px;
-        margin-bottom: 0.75rem;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-      }
-      
-      .room-item:hover {
-        background: rgba(30, 41, 59, 0.8);
-        transform: translateX(5px);
-        border-color: rgba(225, 29, 72, 0.3);
-      }
-      
-      .room-details {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-      }
-      
-      .room-name {
-        font-weight: 600;
-        font-size: 1.1rem;
-      }
-      
-      .room-info {
-        display: flex;
-        gap: 1rem;
-        font-size: 0.9rem;
-        color: var(--text-muted);
-      }
-      
-      .players, .locked {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-      
-      .join-room-btn {
-        background: var(--accent-color);
-        color: white;
-        box-shadow: 0 4px 6px -1px rgba(225, 29, 72, 0.2);
-      }
-      
-      .join-room-btn:hover {
-        background: var(--button-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 10px 15px -3px rgba(225, 29, 72, 0.3);
-      }
-      
-      /* Estados de conexión */
-      .connection-status {
-        position: fixed;
-        top: 1rem;
-        right: 1rem;
-        padding: 0.5rem 1rem;
-        border-radius: 2rem;
-        font-size: 0.8rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        z-index: 100;
-        background: rgba(15, 23, 42, 0.8);
-        backdrop-filter: blur(5px);
-      }
-      
-      .connection-status i {
-        font-size: 0.75rem;
-      }
-      
-      .connecting i {
-        color: var(--accent-color);
-        animation: pulse 1.5s infinite;
-      }
-      
-      .connected i {
-        color: #10b981;
-      }
-      
-      .disconnected i {
-        color: #ef4444;
-      }
-      
-      @keyframes pulse {
-        0% { opacity: 0.5; }
-        50% { opacity: 1; }
-        100% { opacity: 0.5; }
-      }
-      
-      .animated-dots::after {
-        content: "...";
-        animation: dots 1.5s infinite;
-        width: 1.5em;
-        display: inline-block;
-        text-align: left;
-      }
-      
-      @keyframes dots {
-        0% { content: "."; }
-        33% { content: ".."; }
-        66% { content: "..."; }
-      }
-      
-      /* Error banner */
-      .server-error-banner {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        padding: 15px;
-        background: #ef4444;
-        color: white;
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        animation: fadeInDown 0.5s ease;
-      }
-      
-      .server-error-banner i {
-        margin-right: 0.5rem;
-      }
-      
-      .dismiss-btn {
-        background: none;
-        border: none;
-        color: white;
-        cursor: pointer;
-        font-size: 1.2rem;
-      }
-      
-      /* Footer y notificaciones */
-      .policy-footer {
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        padding: 1rem 0;
-        background: rgba(15, 23, 42, 0.8);
-        backdrop-filter: blur(5px);
-        text-align: center;
-        font-size: 0.8rem;
-        color: var(--text-muted);
-      }
-      
-      .footer-links-mini {
-        display: flex;
-        justify-content: center;
-        gap: 1.5rem;
-        margin-bottom: 0.5rem;
-        flex-wrap: wrap;
-        padding: 0 1rem;
-      }
-      
-      .footer-links-mini a {
-        color: var(--text-muted);
-        text-decoration: none;
-        transition: color 0.3s ease;
-      }
-      
-      .footer-links-mini a:hover {
-        color: var(--text-color);
-      }
-      
-      .footer-social-icons {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        margin-top: 0.5rem;
-      }
-      
-      .social-icon {
-        color: var(--text-muted);
-        transition: all 0.3s ease;
-      }
-      
-      .social-icon:hover {
-        color: var(--text-color);
-        transform: translateY(-2px);
-      }
-      
-      .toast {
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        color: white;
-        font-weight: 500;
-        z-index: 1000;
-        transition: all 0.3s ease;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-      }
-      
-      .toast.success {
-        background: #10b981;
-      }
-      
-      .toast.error {
-        background: #ef4444;
-      }
-      
-      .toast.warning {
-        background: #f59e0b;
-      }
-      
-      .toast.info {
-        background: #3b82f6;
-      }
-      
-      /* Media queries */
-      @media (max-width: 768px) {
-        .title-text {
-          font-size: 2.5rem;
-        }
-        
-        .option-card {
-          padding: 1.2rem;
-        }
-        
-        .option-title {
-          font-size: 1.3rem;
-        }
-        
-        .btn {
-          padding: 0.8rem 1.5rem;
-          font-size: 0.9rem;
-        }
-      }
-      
-      @media (max-width: 480px) {
-        .title-text {
-          font-size: 2rem;
-        }
-        
-        .room-item {
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 1rem;
-        }
-        
-        .join-room-btn {
-          width: 100%;
-        }
-        
-        .footer-links-mini {
-          gap: 1rem;
-          font-size: 0.7rem;
-        }
-      }
-      
-      @keyframes fadeInDown {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      
-      /* Añadir esto para forzar la visibilidad del waiting-room */
-      #waiting-room.force-visible {
-        display: block !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        animation: fadeIn 0.5s ease;
-      }
-      
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      
-      /* Añadir un estilo para el botón de debug */
-      .debug-button {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: rgba(0,0,0,0.5);
-        color: white;
-        border: 1px solid #444;
-        border-radius: 4px;
-        padding: 5px 10px;
-        font-size: 12px;
-        z-index: 9999;
-        cursor: pointer;
-      }
-    </style>
   </head>
   <body>
     <!-- Partículas de fondo -->
@@ -607,181 +37,267 @@
     </div>
     
     <!-- Barra de error de servidor -->
-    <div id="server-error-banner" style="display: none; position: fixed; top: 0; left: 0; right: 0; background: rgba(220, 38, 38, 0.95); color: white; padding: 20px; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; gap: 15px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-      <h3 style="margin: 0; font-size: 1.2rem;">⚠️ Error de conexión</h3>
-      <p id="server-error-message" style="margin: 10px 0;">No se pudo conectar al servidor. El modo 1vs1 no está disponible actualmente.</p>
-      <div style="display: flex; gap: 10px; margin-top: 10px;">
-        <button id="dismiss-error-btn" class="btn" style="background: rgba(255,255,255,0.2); border: none;">Intentar de todos modos</button>
-        <a href="../crack-total.html" class="btn" style="background: white; color: #dc2626;">Volver a la página principal</a>
-      </div>
+    <div id="server-error-banner" class="server-error-banner" style="display: none;">
+      <i class="fas fa-exclamation-triangle"></i>
+      <span id="server-error-message">El servidor no responde. Se activó el modo alternativo.</span>
+      <button id="dismiss-error-btn" class="dismiss-btn">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
     
-    <div class="container">
+    <div class="container game-container">
       <header class="app-header">
+        <div class="logo-animation">
+          <i class="fas fa-futbol ball-icon bounce"></i>
+        </div>
         <h1 class="title-text">MODO 1 VS 1</h1>
         <a href="../index.html" class="return-portal-link"><i class="fas fa-angle-left"></i> Volver al inicio</a>
       </header>
       
       <!-- Sección principal para crear o unirse a sala -->
       <div id="room-section" class="content-card lobby-card">
-        <h2 class="section-title" style="position: relative; overflow: hidden; padding: 1.8rem;">
-          <span style="position: relative; z-index: 2;">SALA PRIVADA</span>
-          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(225, 29, 72, 0.2); z-index: 1;"></div>
-          <div style="position: absolute; top: -15px; right: -15px; width: 80px; height: 80px; background: rgba(225, 29, 72, 0.4); border-radius: 50%; filter: blur(20px); z-index: 0;"></div>
-        </h2>
+        <h2 class="section-title">SALA PRIVADA</h2>
         
-        <div class="main-options">
-          <div class="option-card">
-            <h3 class="option-title"><i class="fas fa-plus-circle"></i> Crear una sala</h3>
-            <div class="option-content">
-              <p>Crea una nueva sala y comparte el código con tus amigos</p>
-              <button id="create-room-btn" class="btn btn-primary" style="position: relative; overflow: hidden;" onclick="showCreateRoomFormDirect()">
-                <span style="position: relative; z-index: 2;"><i class="fas fa-plus-circle"></i> CREAR SALA</span>
-                <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(rgba(255, 255, 255, 0.2), transparent); transform: rotate(30deg); animation: btnShine 3s infinite linear; z-index: 1;"></div>
+        <div class="room-options">
+          <div class="create-room">
+            <h3>Crear una sala</h3>
+            <button id="create-room-btn" class="btn btn-start-game">
+              <i class="fas fa-plus-circle"></i> CREAR SALA
+            </button>
+          </div>
+          
+          <div class="separator">O</div>
+          
+          <div class="join-room">
+            <h3>Unirse a una sala</h3>
+            <div class="join-input">
+              <div class="input-with-icon">
+                <i class="fas fa-key"></i>
+                <input type="text" id="room-code" class="input-field" placeholder="Código de sala" maxlength="6">
+              </div>
+              <button id="join-room-btn" class="btn btn-start-game">
+                <i class="fas fa-sign-in-alt"></i> UNIRSE
               </button>
             </div>
           </div>
         </div>
         
         <!-- Lista de salas disponibles -->
-        <div class="rooms-section">
-          <div class="rooms-header" style="padding: 0 2rem;">
-            <h3 class="rooms-title"><i class="fas fa-list"></i> Salas disponibles</h3>
-            <button id="refresh-rooms-btn" class="btn btn-secondary refresh-btn">
-              <i class="fas fa-sync-alt"></i> Actualizar
-            </button>
-          </div>
-          <div id="rooms-container" class="rooms-list" style="margin: 0 2rem 2rem;">
-            <div class="loading-rooms" style="display: flex; flex-direction: column; align-items: center; padding: 2rem;">
-              <div class="loading-spinner" style="border: 4px solid rgba(255, 255, 255, 0.1); border-radius: 50%; border-top: 4px solid #e11d48; width: 40px; height: 40px; animation: spin 1s linear infinite;"></div>
-              <p style="margin-top: 1rem;">Cargando salas disponibles...</p>
+        <div class="available-rooms">
+          <h3 class="rooms-title"><i class="fas fa-list"></i> Salas disponibles</h3>
+          <div id="rooms-container" class="rooms-list">
+            <div class="loading-rooms">
+              <div class="loading-spinner"></div>
+              <p>Cargando salas disponibles...</p>
             </div>
           </div>
+          <button id="refresh-rooms-btn" class="btn secondary-btn refresh-btn">
+            <i class="fas fa-sync-alt"></i> Actualizar lista
+          </button>
         </div>
       </div>
       
       <!-- Modal para ingresar contraseña -->
-      <div id="password-modal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(5px); z-index: 999; justify-content: center; align-items: center;">
-        <div class="modal-content" style="background: var(--card-bg); border-radius: 15px; padding: 2rem; width: 90%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.1);">
-          <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-            <h3 style="margin: 0; font-size: 1.5rem;">Contraseña requerida</h3>
-            <button class="close-modal-btn" style="background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer;"><i class="fas fa-times"></i></button>
+      <div id="password-modal" class="modal">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Contraseña requerida</h3>
+            <button class="close-modal-btn"><i class="fas fa-times"></i></button>
           </div>
           <p>Esta sala está protegida con contraseña. Ingresa la contraseña para unirte.</p>
-          <div style="margin: 1.5rem 0;">
+          <div class="input-with-icon">
+            <i class="fas fa-lock"></i>
             <input type="password" id="modal-password-input" class="input-field" placeholder="Contraseña">
           </div>
-          <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-            <button id="cancel-join-btn" class="btn btn-secondary">CANCELAR</button>
-            <button id="confirm-join-btn" class="btn btn-primary">UNIRSE</button>
+          <div class="modal-buttons">
+            <button id="cancel-join-btn" class="btn secondary-btn">CANCELAR</button>
+            <button id="confirm-join-btn" class="btn action-btn">UNIRSE</button>
           </div>
         </div>
       </div>
       
       <!-- Formulario para crear sala -->
-      <div id="create-room-section" class="content-card lobby-card" style="display: none;">
-        <h2 class="section-title" style="position: relative; overflow: hidden; padding: 1.8rem;">
-          <span style="position: relative; z-index: 2;">CREAR NUEVA SALA</span>
-          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(225, 29, 72, 0.2); z-index: 1;"></div>
-          <div style="position: absolute; top: -15px; right: -15px; width: 80px; height: 80px; background: rgba(225, 29, 72, 0.4); border-radius: 50%; filter: blur(20px); z-index: 0;"></div>
-        </h2>
+      <div id="create-room-section" class="content-card lobby-card">
+        <h2 class="section-title">CREAR NUEVA SALA</h2>
         
-        <div style="padding: 2rem;">
-          <div style="margin-bottom: 2rem; background: rgba(15, 23, 42, 0.4); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(225, 29, 72, 0.2);">
-            <h3 style="margin-top: 0; margin-bottom: 1rem; color: #e11d48; display: flex; align-items: center; gap: 0.5rem;">
-              <i class="fas fa-users"></i> Nombre de la sala:
-            </h3>
-            <div>
-              <input type="text" id="room-name-input" class="input-field" placeholder="Ingresa un nombre para tu sala" style="border: 1px solid rgba(225, 29, 72, 0.3);">
+        <div class="room-options">
+          <div class="create-room">
+            <h3>Nombre de la sala:</h3>
+            <div class="input-with-icon">
+              <i class="fas fa-users"></i>
+              <input type="text" id="room-name-input" class="input-field" placeholder="Ingresa un nombre para tu sala">
             </div>
           </div>
           
-          <div style="margin-bottom: 2.5rem; background: rgba(15, 23, 42, 0.4); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(225, 29, 72, 0.2);">
-            <h3 style="margin-top: 0; margin-bottom: 1rem; color: #e11d48; display: flex; align-items: center; gap: 0.5rem;">
-              <i class="fas fa-lock"></i> Contraseña (opcional):
-            </h3>
-            <div>
-              <input type="password" id="room-password-input" class="input-field" placeholder="Deja en blanco para sala pública" style="border: 1px solid rgba(225, 29, 72, 0.3);">
+          <div class="separator">O</div>
+          
+          <div class="join-room">
+            <h3>Contraseña (opcional):</h3>
+            <div class="input-with-icon">
+              <i class="fas fa-lock"></i>
+              <input type="password" id="room-password-input" class="input-field" placeholder="Deja en blanco para sala pública">
             </div>
           </div>
-          
-          <div style="display: flex; gap: 1rem;">
-            <button id="back-to-menu-btn" class="btn btn-secondary" style="flex: 1;"><i class="fas fa-arrow-left"></i> CANCELAR</button>
-            <button id="confirm-create-room-btn" class="btn btn-primary" style="flex: 1; position: relative; overflow: hidden;">
-              <span style="position: relative; z-index: 2;"><i class="fas fa-plus-circle"></i> CREAR SALA</span>
-              <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(rgba(255, 255, 255, 0.2), transparent); transform: rotate(30deg); animation: btnShine 3s infinite linear; z-index: 1;"></div>
-            </button>
-          </div>
+        </div>
+        
+        <div class="buttons-group">
+          <button id="back-to-menu-btn" class="btn secondary-btn"><i class="fas fa-arrow-left"></i> CANCELAR</button>
+          <button id="confirm-create-room-btn" class="btn action-btn"><i class="fas fa-plus-circle"></i> CREAR SALA</button>
         </div>
       </div>
       
       <!-- Sala de espera para 2 jugadores -->
       <div id="waiting-room" style="display: none;" class="content-card lobby-card">
-        <h2 class="section-title" id="waiting-room-name" style="position: relative; overflow: hidden; padding: 1.8rem;">
-          <span style="position: relative; z-index: 2;">Sala de Espera</span>
-          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(225, 29, 72, 0.2); z-index: 1;"></div>
-          <div style="position: absolute; top: -15px; right: -15px; width: 80px; height: 80px; background: rgba(225, 29, 72, 0.4); border-radius: 50%; filter: blur(20px); z-index: 0;"></div>
-        </h2>
+        <h2 class="section-title" id="waiting-room-name">Sala de Espera</h2>
         
-        <div style="padding: 2rem;">
-          <h3 style="text-align: center; font-size: 1.8rem; margin-bottom: 1.5rem; color: #f8fafc; text-shadow: 0 0 15px rgba(225, 29, 72, 0.5);">¿QUIÉN SABE MÁS DE FÚTBOL?</h3>
-          
-          <div style="text-align: center; margin-bottom: 2rem; background: rgba(15, 23, 42, 0.4); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(225, 29, 72, 0.2);">
-            <div style="width: 60px; height: 60px; margin: 0 auto 1rem; border: 4px solid rgba(255, 255, 255, 0.1); border-radius: 50%; border-top: 4px solid #e11d48; animation: spin 1s linear infinite;"></div>
-            <p style="font-size: 1.2rem; font-weight: 500;">Esperando a que otro jugador se una...</p>
+        <div class="waiting-status">
+          <div class="waiting-animation">
+            <div class="loading-spinner"></div>
           </div>
-          
-          <div style="background: rgba(15, 23, 42, 0.4); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(225, 29, 72, 0.2);">
-            <h3 style="margin-top: 0; margin-bottom: 1rem; text-align: center; color: #e11d48;">Comparte este código con tu amigo:</h3>
-            <div style="display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
-              <span id="room-id" style="font-size: 2rem; font-weight: 700; letter-spacing: 2px; color: #e11d48; background: rgba(225, 29, 72, 0.1); padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid rgba(225, 29, 72, 0.3);">------</span>
-              <button id="copy-code-btn" class="btn btn-secondary" style="padding: 0.5rem 1rem;">
-                <i class="fas fa-copy"></i> COPIAR
-              </button>
-            </div>
-            <p style="text-align: center; color: var(--text-muted); margin: 0;">El jugador debe usar este código para encontrar tu sala</p>
-          </div>
-          
-          <div style="background: rgba(15, 23, 42, 0.4); border-radius: 15px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(225, 29, 72, 0.2);">
-            <h3 style="margin-top: 0; margin-bottom: 1rem; color: #e11d48;">Jugadores en sala (<span id="player-count">1</span>/2)</h3>
-            <ul id="players-container" style="list-style: none; padding: 0; margin: 0;"></ul>
-          </div>
-          
-          <div id="waiting-message" style="text-align: center; padding: 1rem; border-radius: 8px; background: rgba(225, 29, 72, 0.1); margin-bottom: 2rem; color: #e11d48;">
-            <i class="fas fa-info-circle"></i>
-            <span>Podrás iniciar el juego cuando se una otro jugador.</span>
-          </div>
-          
-          <div style="display: flex; gap: 1rem;">
-            <button id="leave-room-btn" class="btn btn-secondary" style="flex: 1;">
-              <i class="fas fa-sign-out-alt"></i> SALIR DE LA SALA
+          <p class="waiting-text">Esperando a que otro jugador se una...</p>
+        </div>
+        
+        <div class="room-code-box">
+          <h3>Comparte este código con tu amigo:</h3>
+          <div class="code-display">
+            <span id="room-id" class="room-code">------</span>
+            <button id="copy-code-btn" class="btn action-btn">
+              <i class="fas fa-copy"></i> COPIAR
             </button>
-            <button id="start-game-btn" class="btn btn-primary" style="flex: 1; position: relative; overflow: hidden;" disabled>
-              <span style="position: relative; z-index: 2;"><i class="fas fa-play"></i> INICIAR DUELO</span>
-              <div style="position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: linear-gradient(rgba(255, 255, 255, 0.2), transparent); transform: rotate(30deg); animation: btnShine 3s infinite linear; z-index: 1;"></div>
-            </button>
+          </div>
+          <p class="share-hint">El jugador debe ingresar este código en la opción "Unirse a una sala"</p>
+        </div>
+        
+        <div class="players-list">
+          <h3>Jugadores en sala (<span id="player-count">1</span>/2)</h3>
+          <ul id="players-container" class="player-items"></ul>
+        </div>
+        
+        <div id="waiting-message" class="waiting-message">
+          <i class="fas fa-info-circle"></i>
+          <span>Podrás iniciar el juego cuando se una otro jugador.</span>
+        </div>
+        
+        <div class="room-controls">
+          <button id="leave-room-btn" class="btn secondary-btn">
+            <i class="fas fa-sign-out-alt"></i> SALIR DE LA SALA
+          </button>
+          <button id="start-game-btn" class="btn action-btn" disabled>
+            <i class="fas fa-play"></i> INICIAR DUELO
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sección de juego (inicialmente oculta) -->
+    <div id="game-section" class="content-card game-section" style="display: none;">
+      <!-- Información del juego -->
+      <div class="game-info">
+        <div class="players-info">
+          <div class="player player-1">
+            <span id="player1-name">Jugador 1</span>
+            <span id="player1-score">0 pts</span>
+          </div>
+          <div class="vs-display">
+            <span class="vs-badge">VS</span>
+            <span id="current-turn">Turno de: <span id="turn-player">Jugador 1</span></span>
+          </div>
+          <div class="player player-2">
+            <span id="player2-name">Jugador 2</span>
+            <span id="player2-score">0 pts</span>
+          </div>
+        </div>
+        
+        <div class="game-progress">
+          <div class="level-indicator">
+            <span id="level-display">Nivel 1</span>
+            <span id="question-count">Pregunta 1/30</span>
+          </div>
+          <div class="timer-container">
+            <div id="timer-bar" class="timer-bar"></div>
+            <div id="timer-display" class="timer-display">60s</div>
           </div>
         </div>
       </div>
       
-      <!-- Footer -->
-      <footer class="policy-footer">
-        <div class="footer-links-mini">
-          <a href="../../terms.html"><i class="fas fa-file-contract"></i> Términos</a>
-          <a href="../../privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-          <a href="../../blog.html"><i class="fas fa-blog"></i> Blog</a>
-          <a href="../../cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-          <a href="../../contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-          <a href="../../about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+      <!-- Pregunta y respuestas -->
+      <div class="question-container">
+        <div id="question-text" class="question-text">
+          ¿La pregunta aparecerá aquí?
         </div>
-        <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
-        <div class="footer-social-icons">
-          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+        
+        <!-- Campo para responder por escrito (para preguntas sin opciones) -->
+        <div id="answer-input-container" class="answer-input-container">
+          <div class="input-with-icon">
+            <i class="fas fa-keyboard"></i>
+            <input type="text" id="answer-input" class="input-field" placeholder="Escribe tu respuesta..." maxlength="50">
+          </div>
+          <button id="submit-answer-btn" class="btn action-btn">
+            <i class="fas fa-check"></i> Responder
+          </button>
         </div>
-      </footer>
+        
+        <!-- Contenedor para botones de opciones (inicialmente oculto) -->
+        <div id="options-container" class="options-container" style="display: none;">
+          <!-- Las opciones se cargarán dinámicamente -->
+        </div>
+        
+        <!-- Botón para mostrar opciones (si están disponibles) -->
+        <div class="action-buttons">
+          <button id="show-options-btn" class="btn help-btn">
+            <i class="fas fa-list"></i> Ver opciones
+          </button>
+          <button id="fifty-fifty-btn" class="btn help-btn" disabled>
+            <i class="fas fa-balance-scale"></i> 50/50
+          </button>
+        </div>
+      </div>
+      
+      <!-- Feedback de respuesta -->
+      <div id="answer-feedback" class="answer-feedback" style="display: none;">
+        <div id="feedback-message" class="feedback-message">¡Correcto!</div>
+        <div id="correct-answer" class="correct-answer">La respuesta correcta es: <span></span></div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="policy-footer">
+      <div class="footer-links-mini">
+        <a href="../../terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+        <a href="../../privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+        <a href="../../blog.html"><i class="fas fa-blog"></i> Blog</a>
+        <a href="../../cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+        <a href="../../contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+        <a href="../../about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+      </div>
+      <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
+      <div class="footer-social-icons">
+        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+      </div>
+    </footer>
+    
+    <!-- Modal de resultados -->
+    <div id="result-modal" class="modal">
+      <div class="modal-content">
+        <h2 id="result-title">¡Fin del duelo!</h2>
+        <div id="final-scores" class="final-scores">
+          <!-- Se llenará dinámicamente -->
+        </div>
+        <div id="winner-display" class="winner-display">
+          <!-- Se llenará dinámicamente -->
+        </div>
+        <div class="modal-buttons">
+          <button id="rematch-btn" class="btn action-btn">
+            <i class="fas fa-redo"></i> Revancha
+          </button>
+          <button id="back-to-lobby-btn" class="btn back-btn">
+            <i class="fas fa-home"></i> Volver al lobby
+          </button>
+        </div>
+      </div>
     </div>
     
     <!-- Toast para notificaciones -->
@@ -795,564 +311,14 @@
       // Configure Socket.io with reconnection options
       const socketOptions = {
         reconnection: true,
-        reconnectionAttempts: 10,
-        reconnectionDelay: 500,
-        reconnectionDelayMax: 2000,
-        timeout: 10000,
-        autoConnect: true,
-        forceNew: true
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        timeout: 20000
       };
       
-      // Try to connect to server
-      let socket;
-      let connectionAttempts = 0;
-      
-      function initializeSocket() {
-        try {
-          console.log("Intentando conectar al servidor Socket.IO...");
-          socket = io(socketOptions);
-          
-          socket.on('connect', () => {
-            console.log("Conectado al servidor Socket.io");
-            document.getElementById('connection-status').className = 'connection-status connected';
-            document.getElementById('connection-status').innerHTML = '<i class="fas fa-circle"></i> Conectado';
-            showNotification("Conectado al servidor", "success");
-            
-            // Hide error banner on connect
-            const errorBanner = document.getElementById('server-error-banner');
-            if (errorBanner) {
-              errorBanner.style.display = 'none';
-            }
-            
-            // Cargar salas disponibles tras conectar
-            setTimeout(() => {
-              socket.emit('get_available_rooms');
-            }, 500);
-            
-            // Asegurarse que los listeners específicos de sala/juego están activos
-            setupSocketGameListeners();
-          });
-          
-          socket.on('connect_error', (error) => {
-            console.error("Error de conexión:", error);
-            connectionAttempts++;
-            document.getElementById('connection-status').className = 'connection-status disconnected';
-            document.getElementById('connection-status').innerHTML = '<i class="fas fa-circle"></i> Desconectado';
-            
-            if (connectionAttempts <= 3) {
-              showNotification("Error de conexión. Reintentando...", "error");
-            } else if (connectionAttempts === 4) {
-              showServerError("No se puede conectar al servidor. El modo 1vs1 podría no estar disponible.");
-            }
-          });
-          
-          // Eventos específicos de la sala
-          socket.on('room_created', handleRoomCreated);
-          
-          socket.on('error', (data) => {
-            console.error("Error del servidor:", data);
-            showNotification(data.message || "Error al realizar la operación", "error");
-          });
-          
-          socket.on('available_rooms', (data) => {
-            console.log("Salas disponibles:", data);
-            updateAvailableRooms(data.rooms || []);
-          });
-          
-          // Hacer socket disponible globalmente
-          window.socket = socket;
-        } catch (e) {
-          console.error("Error al inicializar socket:", e);
-          showServerError("Error al conectar con el servidor. Modo 1vs1 no disponible.");
-        }
-      }
-      
-      // Inicializar socket al cargar
-      initializeSocket();
-      
-      // Mostrar error de servidor
-      function showServerError(message) {
-        const errorBanner = document.getElementById('server-error-banner');
-        const errorMessage = document.getElementById('server-error-message');
-        
-        errorMessage.textContent = message || "No se pudo conectar al servidor. El modo 1vs1 no está disponible actualmente.";
-        errorBanner.style.display = 'flex';
-        
-        // Si después de varios intentos no hay conexión, ofrecer redirección automática
-        if (connectionAttempts > 5) {
-          setTimeout(() => {
-            if (!socket || !socket.connected) {
-              if (confirm("No se pudo establecer conexión con el servidor. ¿Desea volver a la página principal?")) {
-                window.location.href = "../crack-total.html";
-              }
-            }
-          }, 5000);
-        }
-      }
-      
-      // Mostrar notificación
-      function showNotification(message, type) {
-        const notification = document.getElementById('notification');
-        notification.textContent = message;
-        notification.className = 'toast ' + (type || 'info');
-        notification.style.display = 'block';
-        
-        setTimeout(() => {
-          notification.style.display = 'none';
-        }, 3000);
-      }
-      
-      // Actualizar salas disponibles
-      function updateAvailableRooms(rooms) {
-        const container = document.getElementById('rooms-container');
-        
-        if (!container) return;
-        
-        if (!rooms || rooms.length === 0) {
-          container.innerHTML = '<div style="text-align: center; padding: 2rem;"><p>No hay salas disponibles en este momento</p></div>';
-          return;
-        }
-        
-        let html = '';
-        rooms.forEach(room => {
-          html += `
-            <div class="room-item">
-              <div class="room-details">
-                <div class="room-name">${room.name}</div>
-                <div class="room-info">
-                  <div class="players"><i class="fas fa-users"></i> ${room.playerCount}/2</div>
-                  ${room.hasPassword ? '<div class="locked"><i class="fas fa-lock"></i> Protegida</div>' : ''}
-                </div>
-              </div>
-              <button class="btn join-room-btn" data-room-id="${room.id}" data-has-password="${room.hasPassword}">
-                <i class="fas fa-sign-in-alt"></i> UNIRSE
-              </button>
-            </div>
-          `;
-        });
-        
-        container.innerHTML = html;
-        
-        // Agregar eventos a los botones
-        const joinButtons = container.querySelectorAll('.join-room-btn');
-        joinButtons.forEach(btn => {
-          btn.addEventListener('click', handleJoinButtonClick);
-        });
-      }
-      
-      // Función para mostrar sala de espera
-      function showWaitingRoom(roomName) {
-        const roomSection = document.getElementById('room-section');
-        const createRoomSection = document.getElementById('create-room-section');
-        const waitingRoom = document.getElementById('waiting-room');
-        const waitingRoomName = document.getElementById('waiting-room-name');
-        
-        if (waitingRoomName) {
-          waitingRoomName.innerHTML = `
-            <span style="position: relative; z-index: 2;">${roomName}</span>
-            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(225, 29, 72, 0.2); z-index: 1;"></div>
-            <div style="position: absolute; top: -15px; right: -15px; width: 80px; height: 80px; background: rgba(225, 29, 72, 0.4); border-radius: 50%; filter: blur(20px); z-index: 0;"></div>
-          `;
-        }
-        
-        if (roomSection) roomSection.style.display = 'none';
-        if (createRoomSection) createRoomSection.style.display = 'none';
-        if (waitingRoom) waitingRoom.style.display = 'block';
-      }
-      
-      // Manejar clic en botón de unirse a sala
-      function handleJoinButtonClick(e) {
-        const roomId = e.currentTarget.getAttribute('data-room-id');
-        const hasPassword = e.currentTarget.getAttribute('data-has-password') === 'true';
-        
-        if (hasPassword) {
-          // Mostrar modal de contraseña
-          const passwordModal = document.getElementById('password-modal');
-          const modalPasswordInput = document.getElementById('modal-password-input');
-          
-          // Guardar el ID de la sala seleccionada
-          window.selectedRoomId = roomId;
-          
-          // Mostrar modal
-          passwordModal.classList.add('active');
-          
-          // Enfocar campo de contraseña
-          setTimeout(() => {
-            modalPasswordInput.focus();
-          }, 100);
-        } else {
-          // Unirse directamente a la sala
-          joinRoom(roomId, '');
-        }
-      }
-      
-      // Unirse a sala
-      function joinRoom(roomId, password) {
-        if (!socket || !socket.connected) {
-          showNotification("No hay conexión con el servidor", "error");
-          return;
-        }
-        
-        socket.emit('join_room', {
-          roomId,
-          password,
-          username: localStorage.getItem('millonarioUsername') || 'Jugador'
-        });
-      }
-      
-      // Confirmar unirse con contraseña
-      function confirmJoinRoom() {
-        const modalPasswordInput = document.getElementById('modal-password-input');
-        const passwordModal = document.getElementById('password-modal');
-        
-        const password = modalPasswordInput.value;
-        const roomId = window.selectedRoomId;
-        
-        // Cerrar modal
-        passwordModal.classList.remove('active');
-        
-        // Unirse a sala
-        joinRoom(roomId, password);
-      }
-      
-      // Asegurar que el modal está oculto al cargar la página
-      document.addEventListener('DOMContentLoaded', function() {
-        const passwordModal = document.getElementById('password-modal');
-        if (passwordModal) {
-          passwordModal.style.display = 'none';
-        }
-        
-        // Agregar eventos a botones importantes
-        setupEventListeners();
-      });
-      
-      // Configurar eventos
-      function setupEventListeners() {
-        // Eventos para el modal de contraseña
-        const confirmJoinBtn = document.getElementById('confirm-join-btn');
-        const cancelJoinBtn = document.getElementById('cancel-join-btn');
-        const closeModalBtn = document.querySelector('.close-modal-btn');
-        
-        if (confirmJoinBtn) {
-          confirmJoinBtn.addEventListener('click', confirmJoinRoom);
-        }
-        
-        if (cancelJoinBtn || closeModalBtn) {
-          const closeModal = function() {
-            const passwordModal = document.getElementById('password-modal');
-            passwordModal.classList.remove('active');
-          };
-          
-          if (cancelJoinBtn) cancelJoinBtn.addEventListener('click', closeModal);
-          if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-        }
-        
-        // Evento para el botón de crear sala
-        const createRoomBtn = document.getElementById('create-room-btn');
-        if (createRoomBtn) {
-          createRoomBtn.addEventListener('click', showCreateRoomFormDirect);
-        }
-        
-        // Eventos para el formulario de crear sala
-        const backToMenuBtn = document.getElementById('back-to-menu-btn');
-        const confirmCreateRoomBtn = document.getElementById('confirm-create-room-btn');
-        
-        if (backToMenuBtn) {
-          backToMenuBtn.addEventListener('click', function() {
-            const roomSection = document.getElementById('room-section');
-            const createRoomSection = document.getElementById('create-room-section');
-            
-            if (roomSection && createRoomSection) {
-              createRoomSection.style.display = 'none';
-              roomSection.style.display = 'block';
-            }
-          });
-        }
-        
-        if (confirmCreateRoomBtn) {
-          confirmCreateRoomBtn.addEventListener('click', createRoom);
-        }
-        
-        // Evento para el botón de refrescar salas
-        const refreshRoomsBtn = document.getElementById('refresh-rooms-btn');
-        if (refreshRoomsBtn) {
-          refreshRoomsBtn.addEventListener('click', function() {
-            if (socket && socket.connected) {
-              socket.emit('get_available_rooms');
-              showNotification("Actualizando lista de salas...", "info");
-            } else {
-              showNotification("No hay conexión con el servidor", "error");
-            }
-          });
-        }
-        
-        // Evento para copiar código de sala
-        const copyCodeBtn = document.getElementById('copy-code-btn');
-        if (copyCodeBtn) {
-          copyCodeBtn.addEventListener('click', function() {
-            const roomId = document.getElementById('room-id').textContent;
-            navigator.clipboard.writeText(roomId).then(() => {
-              showNotification("Código copiado al portapapeles", "success");
-            }).catch(() => {
-              showNotification("No se pudo copiar el código", "error");
-            });
-          });
-        }
-        
-        // Evento para salir de la sala
-        const leaveRoomBtn = document.getElementById('leave-room-btn');
-        if (leaveRoomBtn) {
-          leaveRoomBtn.addEventListener('click', function() {
-            if (socket && socket.connected) {
-              socket.emit('leave_room', { roomId: document.getElementById('room-id').textContent });
-              const roomSection = document.getElementById('room-section');
-              const waitingRoom = document.getElementById('waiting-room');
-              
-              if (roomSection && waitingRoom) {
-                waitingRoom.style.display = 'none';
-                roomSection.style.display = 'block';
-              }
-            }
-          });
-        }
-        
-        // Evento para el banner de error
-        const dismissErrorBtn = document.getElementById('dismiss-error-btn');
-        if (dismissErrorBtn) {
-          dismissErrorBtn.addEventListener('click', function() {
-            document.getElementById('server-error-banner').style.display = 'none';
-          });
-        }
-      }
-      
-      // Función para mostrar el formulario de creación de sala
-      function showCreateRoomFormDirect() {
-        console.log("Mostrando formulario de crear sala");
-        const roomSection = document.getElementById('room-section');
-        const createRoomSection = document.getElementById('create-room-section');
-        
-        if (roomSection && createRoomSection) {
-          roomSection.style.display = 'none';
-          createRoomSection.style.display = 'block';
-          
-          // Generar nombre de sala predeterminado
-          const username = localStorage.getItem('millonarioUsername') || 'Jugador';
-          const defaultRoomName = `Sala de ${username}`;
-          
-          // Enfocar el campo de nombre de sala
-          const roomNameInput = document.getElementById('room-name-input');
-          if (roomNameInput) {
-            roomNameInput.value = defaultRoomName;
-            setTimeout(() => {
-              roomNameInput.focus();
-            }, 100);
-          }
-        } else {
-          console.error("No se encontraron los elementos necesarios");
-        }
-      }
-      
-      // Función para crear sala - mejorada con manejo de errores
-      function createRoom() {
-        console.log("Función createRoom llamada");
-        const roomNameInput = document.getElementById('room-name-input');
-        const roomPasswordInput = document.getElementById('room-password-input');
-        
-        if (!roomNameInput || !roomNameInput.value.trim()) {
-          showNotification("Por favor ingresa un nombre para la sala", "warning");
-          return;
-        }
-        
-        const roomName = roomNameInput.value.trim();
-        const password = roomPasswordInput ? roomPasswordInput.value : '';
-        
-        if (!socket || !socket.connected) {
-          showNotification("No hay conexión con el servidor. No se puede crear la sala.", "error");
-          showServerError("Error de conexión al servidor. Modo 1vs1 no disponible.");
-          return;
-        }
-        
-        const username = localStorage.getItem('millonarioUsername') || 'Jugador';
-        const roomData = {
-          username: username,
-          roomName: roomName,
-          password: password
-        };
-        
-        console.log("Emitiendo evento 'create_room' con datos:", roomData);
-        
-        // Bloquear el botón mientras se procesa la solicitud
-        const confirmButton = document.getElementById('confirm-create-room-btn');
-        if(confirmButton) {
-          confirmButton.disabled = true;
-          confirmButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREANDO...';
-        }
-        
-        // Emitir el evento
-        socket.emit('create_room', roomData);
-        
-        // Establecer un timeout para restaurar el botón si no hay respuesta
-        setTimeout(() => {
-          if(confirmButton && confirmButton.disabled) {
-            confirmButton.disabled = false;
-            confirmButton.innerHTML = '<i class="fas fa-plus-circle"></i> CREAR SALA';
-            showNotification("El servidor está tardando en responder. Intenta nuevamente.", "warning");
-          }
-        }, 8000);
-      }
-      
-      // Función para manejar la creación de sala exitosa
-      function handleRoomCreated(data) {
-        console.log("Evento 'room_created' recibido:", data);
-        
-        // 1. Referencias a todos los elementos relevantes
-        const roomSection = document.getElementById('room-section');
-        const createRoomSection = document.getElementById('create-room-section');
-        const waitingRoom = document.getElementById('waiting-room');
-        const roomIdDisplay = document.getElementById('room-id');
-        const playersContainer = document.getElementById('players-container');
-        const playerCountDisplay = document.getElementById('player-count');
-        
-        console.log("Elementos encontrados:", {
-          roomSection: !!roomSection,
-          createRoomSection: !!createRoomSection,
-          waitingRoom: !!waitingRoom,
-          roomIdDisplay: !!roomIdDisplay,
-          playersContainer: !!playersContainer
-        });
-
-        // 2. Ocultar todas las secciones antes de mostrar la sala de espera
-        if (roomSection) roomSection.style.display = 'none';
-        if (createRoomSection) createRoomSection.style.display = 'none';
-        
-        // 3. Mostrar explícitamente la sala de espera
-        if (waitingRoom) {
-          console.log("Mostrando sala de espera");
-          waitingRoom.style.display = 'block';
-          // Forzar visibilidad con clase CSS
-          waitingRoom.classList.add('force-visible');
-          
-          // Inspeccionar el estilo calculado
-          setTimeout(() => {
-            const computedStyle = window.getComputedStyle(waitingRoom);
-            console.log("Estilo calculado del waiting-room:", {
-              display: computedStyle.display,
-              visibility: computedStyle.visibility,
-              opacity: computedStyle.opacity,
-              position: computedStyle.position
-            });
-          }, 50);
-        } else {
-          console.error("No se encontró el elemento 'waiting-room'");
-        }
-        
-        // 4. Actualizar todos los elementos con la información de la sala
-        if (roomIdDisplay) roomIdDisplay.textContent = data.roomId;
-        
-        // 5. Agregar el jugador actual (anfitrión) a la lista de jugadores
-        const username = localStorage.getItem('millonarioUsername') || 'Jugador';
-        if (playersContainer) {
-          playersContainer.innerHTML = `
-            <li>
-              <div class="player-info">
-                <span class="player-name">${username}</span>
-                <span class="host-badge">Anfitrión</span>
-              </div>
-            </li>
-          `;
-        }
-        
-        if (playerCountDisplay) playerCountDisplay.textContent = '1';
-        
-        // 6. Mostrar notificación
-        showNotification(`Sala creada con éxito. Código: ${data.roomId}`, 'success');
-        
-        // 7. Intentar copiar el código al portapapeles automáticamente
-        navigator.clipboard.writeText(data.roomId)
-          .then(() => {
-            showNotification('Código copiado al portapapeles', 'info');
-          })
-          .catch(() => {
-            // Ignorar errores de clipboard
-          });
-      }
-
-      // Nueva función para agrupar listeners específicos del juego/sala
-      function setupSocketGameListeners() {
-        if (!socket) return;
-
-        // Remover listeners anteriores para evitar duplicados
-        socket.off('room_created');
-        socket.off('room_joined');
-        socket.off('players_updated');
-        socket.off('player_disconnected');
-        socket.off('error'); // Listener específico para errores de sala/juego
-        socket.off('available_rooms');
-        // ... (remover otros listeners de juego si existen)
-
-        // Añadir listeners
-        console.log("Añadiendo listener para 'room_created'");
-        socket.on('room_created', handleRoomCreated);
-        // ... (otros listeners como room_joined, players_updated, etc.)
-        // socket.on('room_joined', handleRoomJoined);
-        // socket.on('players_updated', handlePlayersUpdated);
-        // socket.on('player_disconnected', handlePlayerDisconnected);
-
-        socket.on('error', (data) => { // Listener para errores específicos de sala/juego
-          console.error("Error del servidor (sala/juego):", data);
-          showNotification(data.message || "Error en la operación de sala/juego", "error");
-          // Resetear botón si falló la creación
-          const confirmButton = document.getElementById('confirm-create-room-btn');
-          if(confirmButton) {
-             confirmButton.disabled = false;
-             confirmButton.innerHTML = '<i class="fas fa-plus-circle"></i> CREAR SALA';
-          }
-        });
-        socket.on('available_rooms', updateAvailableRooms); // Llamar directamente a la función
-      }
-
-      // Añadir botón de depuración para comprobar las secciones
-      document.addEventListener('DOMContentLoaded', function() {
-        // Añadir botón de debug al cuerpo del documento
-        const debugButton = document.createElement('button');
-        debugButton.className = 'debug-button';
-        debugButton.textContent = 'Debug Secciones';
-        document.body.appendChild(debugButton);
-        
-        // Evento para botón de debug
-        debugButton.addEventListener('click', function() {
-          // Obtener todas las secciones principales
-          const sections = {
-            'room-section': document.getElementById('room-section'),
-            'create-room-section': document.getElementById('create-room-section'),
-            'waiting-room': document.getElementById('waiting-room'),
-            'game-section': document.getElementById('game-section')
-          };
-          
-          let info = 'Estado de las secciones:\n\n';
-          for (const [id, el] of Object.entries(sections)) {
-            if (el) {
-              const computedStyle = window.getComputedStyle(el);
-              info += `${id}: display=${computedStyle.display}, visible=${computedStyle.visibility}\n`;
-            } else {
-              info += `${id}: NO ENCONTRADO\n`;
-            }
-          }
-          
-          console.log(info);
-          alert(info);
-          
-          // Forzar sala de espera visible
-          const waitingRoom = document.getElementById('waiting-room');
-          if (waitingRoom && confirm('¿Quieres forzar la visibilidad de la sala de espera?')) {
-            waitingRoom.classList.add('force-visible');
-            // Ocultar otras secciones
-            if (sections['room-section']) sections['room-section'].style.display = 'none';
-            if (sections['create-room-section']) sections['create-room-section'].style.display = 'none';
-            if (sections['game-section']) sections['game-section'].style.display = 'none';
-          }
-        });
-      });
+      // This will be used in vs-mode.js
+      window.socketOptions = socketOptions;
     </script>
     <script src="../js/vs/vs-mode.js"></script>
   </body>

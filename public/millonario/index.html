@@ -379,9 +379,8 @@
     
     .game-modes {
       display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      gap: 1.5rem;
+      flex-direction: column;
+      gap: 1rem;
       margin-top: 1.5rem;
     }
     
@@ -396,7 +395,6 @@
       font-weight: 700;
       font-size: 1.2rem;
       color: white;
-      flex: 1;
     }
     
     .solo-mode {
@@ -538,15 +536,6 @@
       .footer-buttons {
         flex-direction: column;
       }
-      
-      .game-modes {
-        flex-direction: column;
-        gap: 1.2rem;
-      }
-      
-      .game-mode-btn {
-        width: 100%;
-      }
     }
     
     /* Estilos para la pelota de fútbol animada */
@@ -620,11 +609,7 @@
       </div>
     </a>
     <h1>¿QUIÉN SABE MÁS DE FÚTBOL?</h1>
-    <p class="subtitle">El juego de preguntas definitivo para los amantes del fútbol</p>
-    <!-- Botón para volver al portal -->
-    <a href="../portal.html" class="portal-link">
-      <i class="fas fa-arrow-left"></i> Volver al Portal Principal
-    </a>
+    <p class="subtitle">Pon a prueba tus conocimientos futboleros.</p>
   </header>
 
   <div class="container">
@@ -636,15 +621,20 @@
         <h2 style="font-size: 2rem; color: #e11d48; margin-bottom: 1rem;">ELIGE UN MODO</h2>
       </div>
 
-      <div class="game-modes" style="gap: 1.5rem; flex-direction: row;">
-        <a href="local.html" class="btn game-mode-btn modo-individual" style="padding: 1.8rem 1rem; font-size: 1.3rem; transition: all 0.4s ease; flex: 1;">
-          <div class="mode-icon" style="width: 50px; height: 50px; font-size: 1.5rem;">
+      <div class="promo-banner" style="margin-bottom: 3rem; padding: 1.5rem;">
+        <i class="fas fa-futbol" style="font-size: 2.5rem;"></i>
+        <p style="font-size: 1.25rem; font-weight: 600;">¡Demostrá tu pasión y convertite en el verdadero Diez del fútbol!</p>
+      </div>
+
+      <div class="game-modes" style="gap: 2rem;">
+        <a href="local.html" class="btn game-mode-btn modo-individual" style="padding: 2rem 1.5rem; font-size: 1.5rem; transition: all 0.4s ease;">
+          <div class="mode-icon" style="width: 60px; height: 60px; font-size: 1.8rem;">
             <i class="fas fa-user"></i>
           </div>
           <span>MODO INDIVIDUAL</span>
         </a>
-        <a href="vs/index.html" class="btn game-mode-btn modo-vs" style="padding: 1.8rem 1rem; font-size: 1.3rem; background: linear-gradient(135deg, #3182ce, #2c5282); border: 2px solid rgba(255, 255, 255, 0.1); transition: all 0.4s ease; flex: 1;">
-          <div class="mode-icon" style="width: 50px; height: 50px; font-size: 1.5rem;">
+        <a href="vs/index.html" class="btn game-mode-btn modo-vs" style="padding: 2rem 1.5rem; font-size: 1.5rem; background: linear-gradient(135deg, #3182ce, #2c5282); border: 2px solid rgba(255, 255, 255, 0.1); transition: all 0.4s ease;">
+          <div class="mode-icon" style="width: 60px; height: 60px; font-size: 1.8rem;">
             <i class="fas fa-bolt"></i>
           </div>
           <span>1 VS 1</span>
@@ -798,10 +788,6 @@
           this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.4)';
         });
       });
-      
-      // Ajustar ancho del contenedor para la visualización horizontal
-      const container = document.querySelector('.container');
-      container.style.maxWidth = '700px';
     });
   </script>
   </body>

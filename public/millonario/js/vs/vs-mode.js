@@ -1,5 +1,5 @@
 // Variables globales
-const socket = window.socket || io(window.socketOptions || {}); // Usar socket ya creado o crear uno nuevo
+const socket = io(window.socketOptions || {}); // Conexión Socket.io con opciones
 let username = '';
 let roomId = '';
 let isHost = false;
@@ -208,21 +208,11 @@ function init() {
   }
   
   if (backToMenuBtn) {
-    backToMenuBtn.addEventListener('click', () => {
-      createRoomSection.style.display = 'none';
-      roomSection.style.display = 'block';
-    });
+    backToMenuBtn.addEventListener('click', showRoomSection);
   }
   
   if (joinRoomBtn) {
-    joinRoomBtn.addEventListener('click', () => {
-      const code = roomCodeInput.value.trim().toUpperCase();
-      if (code) {
-        joinRoomByCode(code);
-      } else {
-        showNotification('Por favor ingresa un código de sala válido', 'warning');
-      }
-    });
+    joinRoomBtn.addEventListener('click', joinRoom);
   }
   
   if (copyCodeBtn) {
@@ -469,11 +459,12 @@ function showCreateRoomForm() {
   roomSection.style.display = 'none';
   createRoomSection.style.display = 'block';
   
-  // Limpiar formulario
-  roomNameInput.value = '';
+  // Generar un nombre de sala predeterminado
+  const defaultRoomName = `Sala de ${username}`;
+  roomNameInput.value = defaultRoomName;
   roomPasswordInput.value = '';
   
-  // Enfocar el campo de nombre de sala
+  // Poner el foco en el campo de nombre de sala
   setTimeout(() => {
     roomNameInput.focus();
   }, 100);
@@ -1346,20 +1337,19 @@ function handleJoinButtonClick(e) {
   }
 }
 
-// Función para mostrar modal de contraseña
-function showPasswordModal(roomId) {
+// Function to show password modal
+function showPasswordModal() {
   modalPasswordInput.value = '';
-  passwordModal.classList.add('active');
-  
-  // Enfocar el campo de contraseña
+  passwordModal.style.display = 'flex';
   setTimeout(() => {
     modalPasswordInput.focus();
   }, 100);
 }
 
-// Función para cerrar modal de contraseña
+// Function to close password modal
 function closePasswordModal() {
-  passwordModal.classList.remove('active');
+  passwordModal.style.display = 'none';
+  selectedRoomToJoin = null;
 }
 
 // Function to confirm joining room with password
