@@ -566,6 +566,34 @@
         from { opacity: 0; transform: translateY(-20px); }
         to { opacity: 1; transform: translateY(0); }
       }
+      
+      /* Añadir esto para forzar la visibilidad del waiting-room */
+      #waiting-room.force-visible {
+        display: block !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        animation: fadeIn 0.5s ease;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      
+      /* Añadir un estilo para el botón de debug */
+      .debug-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(0,0,0,0.5);
+        color: white;
+        border: 1px solid #444;
+        border-radius: 4px;
+        padding: 5px 10px;
+        font-size: 12px;
+        z-index: 9999;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -1124,7 +1152,7 @@
         }
       }
       
-      // Función para crear sala
+      // Función para crear sala - mejorada con manejo de errores
       function createRoom() {
         console.log("Función createRoom llamada");
         const roomNameInput = document.getElementById('room-name-input');
@@ -1152,67 +1180,101 @@
         };
         
         console.log("Emitiendo evento 'create_room' con datos:", roomData);
-        socket.emit('create_room', roomData);
         
-        // Opcional: Mostrar un estado de "Creando..." en el botón
+        // Bloquear el botón mientras se procesa la solicitud
         const confirmButton = document.getElementById('confirm-create-room-btn');
         if(confirmButton) {
           confirmButton.disabled = true;
           confirmButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CREANDO...';
         }
+        
+        // Emitir el evento
+        socket.emit('create_room', roomData);
+        
+        // Establecer un timeout para restaurar el botón si no hay respuesta
+        setTimeout(() => {
+          if(confirmButton && confirmButton.disabled) {
+            confirmButton.disabled = false;
+            confirmButton.innerHTML = '<i class="fas fa-plus-circle"></i> CREAR SALA';
+            showNotification("El servidor está tardando en responder. Intenta nuevamente.", "warning");
+          }
+        }, 8000);
       }
       
       // Función para manejar la creación de sala exitosa
       function handleRoomCreated(data) {
         console.log("Evento 'room_created' recibido:", data);
-        const confirmButton = document.getElementById('confirm-create-room-btn');
+        
+        // 1. Referencias a todos los elementos relevantes
+        const roomSection = document.getElementById('room-section');
         const createRoomSection = document.getElementById('create-room-section');
         const waitingRoom = document.getElementById('waiting-room');
         const roomIdDisplay = document.getElementById('room-id');
         const playersContainer = document.getElementById('players-container');
         const playerCountDisplay = document.getElementById('player-count');
-        const startGameBtn = document.getElementById('start-game-btn');
+        
+        console.log("Elementos encontrados:", {
+          roomSection: !!roomSection,
+          createRoomSection: !!createRoomSection,
+          waitingRoom: !!waitingRoom,
+          roomIdDisplay: !!roomIdDisplay,
+          playersContainer: !!playersContainer
+        });
 
-        // Actualizar estado global
-        roomId = data.roomId;
-        isHost = true;
-        players = [{
-          id: socket.id,
-          username: localStorage.getItem('millonarioUsername') || 'Jugador',
-          isHost: true,
-          score: 0
-        }];
-
-        // Ocultar formulario de creación y mostrar sala de espera
+        // 2. Ocultar todas las secciones antes de mostrar la sala de espera
+        if (roomSection) roomSection.style.display = 'none';
         if (createRoomSection) createRoomSection.style.display = 'none';
-        if (waitingRoom) waitingRoom.style.display = 'block';
-
-        // Actualizar UI de la sala de espera
-        if (roomIdDisplay) roomIdDisplay.textContent = roomId;
-        if (playersContainer) { // Mostrar el jugador actual en la lista
-            playersContainer.innerHTML = `
-                <li class="animate-in">
-                    <span class="player-name">${players[0].username} <span class="badge">(Tú)</span></span>
-                    <span class="player-status"><i class="fas fa-crown" style="color: #facc15;"></i> Anfitrión</span>
-                </li>
-            `;
+        
+        // 3. Mostrar explícitamente la sala de espera
+        if (waitingRoom) {
+          console.log("Mostrando sala de espera");
+          waitingRoom.style.display = 'block';
+          // Forzar visibilidad con clase CSS
+          waitingRoom.classList.add('force-visible');
+          
+          // Inspeccionar el estilo calculado
+          setTimeout(() => {
+            const computedStyle = window.getComputedStyle(waitingRoom);
+            console.log("Estilo calculado del waiting-room:", {
+              display: computedStyle.display,
+              visibility: computedStyle.visibility,
+              opacity: computedStyle.opacity,
+              position: computedStyle.position
+            });
+          }, 50);
+        } else {
+          console.error("No se encontró el elemento 'waiting-room'");
         }
-        if (playerCountDisplay) playerCountDisplay.textContent = players.length;
-        if (startGameBtn) startGameBtn.disabled = true; // Deshabilitar hasta que entre otro jugador
-
-        // Mostrar notificación
-        showNotification(`Sala ${roomId} creada. Comparte el código.`, 'success');
-
-        // Resetear botón por si el usuario vuelve atrás
-        if(confirmButton) {
-          confirmButton.disabled = false;
-          confirmButton.innerHTML = '<i class="fas fa-plus-circle"></i> CREAR SALA';
+        
+        // 4. Actualizar todos los elementos con la información de la sala
+        if (roomIdDisplay) roomIdDisplay.textContent = data.roomId;
+        
+        // 5. Agregar el jugador actual (anfitrión) a la lista de jugadores
+        const username = localStorage.getItem('millonarioUsername') || 'Jugador';
+        if (playersContainer) {
+          playersContainer.innerHTML = `
+            <li>
+              <div class="player-info">
+                <span class="player-name">${username}</span>
+                <span class="host-badge">Anfitrión</span>
+              </div>
+            </li>
+          `;
         }
-
-        // Copiar código (opcional, pero útil)
-        navigator.clipboard.writeText(roomId).then(() => {
-          showNotification('Código de sala copiado', 'info');
-        }).catch(() => {});
+        
+        if (playerCountDisplay) playerCountDisplay.textContent = '1';
+        
+        // 6. Mostrar notificación
+        showNotification(`Sala creada con éxito. Código: ${data.roomId}`, 'success');
+        
+        // 7. Intentar copiar el código al portapapeles automáticamente
+        navigator.clipboard.writeText(data.roomId)
+          .then(() => {
+            showNotification('Código copiado al portapapeles', 'info');
+          })
+          .catch(() => {
+            // Ignorar errores de clipboard
+          });
       }
 
       // Nueva función para agrupar listeners específicos del juego/sala
@@ -1248,84 +1310,50 @@
         });
         socket.on('available_rooms', updateAvailableRooms); // Llamar directamente a la función
       }
+
+      // Añadir botón de depuración para comprobar las secciones
+      document.addEventListener('DOMContentLoaded', function() {
+        // Añadir botón de debug al cuerpo del documento
+        const debugButton = document.createElement('button');
+        debugButton.className = 'debug-button';
+        debugButton.textContent = 'Debug Secciones';
+        document.body.appendChild(debugButton);
+        
+        // Evento para botón de debug
+        debugButton.addEventListener('click', function() {
+          // Obtener todas las secciones principales
+          const sections = {
+            'room-section': document.getElementById('room-section'),
+            'create-room-section': document.getElementById('create-room-section'),
+            'waiting-room': document.getElementById('waiting-room'),
+            'game-section': document.getElementById('game-section')
+          };
+          
+          let info = 'Estado de las secciones:\n\n';
+          for (const [id, el] of Object.entries(sections)) {
+            if (el) {
+              const computedStyle = window.getComputedStyle(el);
+              info += `${id}: display=${computedStyle.display}, visible=${computedStyle.visibility}\n`;
+            } else {
+              info += `${id}: NO ENCONTRADO\n`;
+            }
+          }
+          
+          console.log(info);
+          alert(info);
+          
+          // Forzar sala de espera visible
+          const waitingRoom = document.getElementById('waiting-room');
+          if (waitingRoom && confirm('¿Quieres forzar la visibilidad de la sala de espera?')) {
+            waitingRoom.classList.add('force-visible');
+            // Ocultar otras secciones
+            if (sections['room-section']) sections['room-section'].style.display = 'none';
+            if (sections['create-room-section']) sections['create-room-section'].style.display = 'none';
+            if (sections['game-section']) sections['game-section'].style.display = 'none';
+          }
+        });
+      });
     </script>
     <script src="../js/vs/vs-mode.js"></script>
-    
-    <style>
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-      
-      @keyframes btnShine {
-        0% {
-          transform: translateX(-100%) rotate(30deg);
-        }
-        100% {
-          transform: translateX(100%) rotate(30deg);
-        }
-      }
-      
-      /* Estilos específicos para la lista de jugadores */
-      #players-container li {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.75rem 1rem;
-        background: rgba(30, 41, 59, 0.5);
-        border-radius: 8px;
-        margin-bottom: 0.5rem;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(225, 29, 72, 0.2);
-      }
-      
-      #players-container li:last-child {
-        margin-bottom: 0;
-      }
-      
-      #players-container li:hover {
-        background: rgba(30, 41, 59, 0.8);
-      }
-      
-      .player-name {
-        font-weight: 500;
-      }
-      
-      .player-status {
-        color: #10b981;
-        font-size: 0.9rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-      
-      .badge {
-        background: rgba(79, 70, 229, 0.2);
-        color: #4f46e5;
-        padding: 0.25rem 0.5rem;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        font-weight: 600;
-      }
-      
-      /* Animación de entrada para elementos */
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      
-      .animate-in {
-        animation: fadeIn 0.3s ease forwards;
-      }
-      
-      /* Fix for modal display */
-      #password-modal {
-        display: none !important;
-      }
-      
-      #password-modal.active {
-        display: flex !important;
-      }
-    </style>
   </body>
 </html> 
