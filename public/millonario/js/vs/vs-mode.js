@@ -208,11 +208,21 @@ function init() {
   }
   
   if (backToMenuBtn) {
-    backToMenuBtn.addEventListener('click', showRoomSection);
+    backToMenuBtn.addEventListener('click', () => {
+      createRoomSection.style.display = 'none';
+      roomSection.style.display = 'block';
+    });
   }
   
   if (joinRoomBtn) {
-    joinRoomBtn.addEventListener('click', joinRoom);
+    joinRoomBtn.addEventListener('click', () => {
+      const code = roomCodeInput.value.trim().toUpperCase();
+      if (code) {
+        joinRoomByCode(code);
+      } else {
+        showNotification('Por favor ingresa un código de sala válido', 'warning');
+      }
+    });
   }
   
   if (copyCodeBtn) {
@@ -459,12 +469,11 @@ function showCreateRoomForm() {
   roomSection.style.display = 'none';
   createRoomSection.style.display = 'block';
   
-  // Generar un nombre de sala predeterminado
-  const defaultRoomName = `Sala de ${username}`;
-  roomNameInput.value = defaultRoomName;
+  // Limpiar formulario
+  roomNameInput.value = '';
   roomPasswordInput.value = '';
   
-  // Poner el foco en el campo de nombre de sala
+  // Enfocar el campo de nombre de sala
   setTimeout(() => {
     roomNameInput.focus();
   }, 100);
@@ -1337,19 +1346,20 @@ function handleJoinButtonClick(e) {
   }
 }
 
-// Function to show password modal
-function showPasswordModal() {
+// Función para mostrar modal de contraseña
+function showPasswordModal(roomId) {
   modalPasswordInput.value = '';
-  passwordModal.style.display = 'flex';
+  passwordModal.classList.add('active');
+  
+  // Enfocar el campo de contraseña
   setTimeout(() => {
     modalPasswordInput.focus();
   }, 100);
 }
 
-// Function to close password modal
+// Función para cerrar modal de contraseña
 function closePasswordModal() {
-  passwordModal.style.display = 'none';
-  selectedRoomToJoin = null;
+  passwordModal.classList.remove('active');
 }
 
 // Function to confirm joining room with password
