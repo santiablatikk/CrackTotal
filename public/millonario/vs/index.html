@@ -1162,49 +1162,92 @@
         }
       }
       
+      // Función para manejar la creación de sala exitosa
+      function handleRoomCreated(data) {
+        console.log("Evento 'room_created' recibido:", data);
+        const confirmButton = document.getElementById('confirm-create-room-btn');
+        const createRoomSection = document.getElementById('create-room-section');
+        const waitingRoom = document.getElementById('waiting-room');
+        const roomIdDisplay = document.getElementById('room-id');
+        const playersContainer = document.getElementById('players-container');
+        const playerCountDisplay = document.getElementById('player-count');
+        const startGameBtn = document.getElementById('start-game-btn');
+
+        // Actualizar estado global
+        roomId = data.roomId;
+        isHost = true;
+        players = [{
+          id: socket.id,
+          username: localStorage.getItem('millonarioUsername') || 'Jugador',
+          isHost: true,
+          score: 0
+        }];
+
+        // Ocultar formulario de creación y mostrar sala de espera
+        if (createRoomSection) createRoomSection.style.display = 'none';
+        if (waitingRoom) waitingRoom.style.display = 'block';
+
+        // Actualizar UI de la sala de espera
+        if (roomIdDisplay) roomIdDisplay.textContent = roomId;
+        if (playersContainer) { // Mostrar el jugador actual en la lista
+            playersContainer.innerHTML = `
+                <li class="animate-in">
+                    <span class="player-name">${players[0].username} <span class="badge">(Tú)</span></span>
+                    <span class="player-status"><i class="fas fa-crown" style="color: #facc15;"></i> Anfitrión</span>
+                </li>
+            `;
+        }
+        if (playerCountDisplay) playerCountDisplay.textContent = players.length;
+        if (startGameBtn) startGameBtn.disabled = true; // Deshabilitar hasta que entre otro jugador
+
+        // Mostrar notificación
+        showNotification(`Sala ${roomId} creada. Comparte el código.`, 'success');
+
+        // Resetear botón por si el usuario vuelve atrás
+        if(confirmButton) {
+          confirmButton.disabled = false;
+          confirmButton.innerHTML = '<i class="fas fa-plus-circle"></i> CREAR SALA';
+        }
+
+        // Copiar código (opcional, pero útil)
+        navigator.clipboard.writeText(roomId).then(() => {
+          showNotification('Código de sala copiado', 'info');
+        }).catch(() => {});
+      }
+
       // Nueva función para agrupar listeners específicos del juego/sala
       function setupSocketGameListeners() {
         if (!socket) return;
-        
-        // Remover listeners anteriores para evitar duplicados si hay reconexión
+
+        // Remover listeners anteriores para evitar duplicados
         socket.off('room_created');
         socket.off('room_joined');
         socket.off('players_updated');
         socket.off('player_disconnected');
-        socket.off('error'); // Cuidado si se usa para errores generales
+        socket.off('error'); // Listener específico para errores de sala/juego
         socket.off('available_rooms');
-        socket.off('game_started');
-        socket.off('next_turn');
-        socket.off('player_answered');
-        socket.off('game_restarted');
+        // ... (remover otros listeners de juego si existen)
 
         // Añadir listeners
         console.log("Añadiendo listener para 'room_created'");
         socket.on('room_created', handleRoomCreated);
-        socket.on('room_joined', handleRoomJoined); // Asumiendo que existe handleRoomJoined
-        socket.on('players_updated', handlePlayersUpdated); // Asumiendo que existe handlePlayersUpdated
-        socket.on('player_disconnected', handlePlayerDisconnected); // Asumiendo que existe handlePlayerDisconnected
-        socket.on('error', (data) => { // Manejo específico de errores de sala/juego
+        // ... (otros listeners como room_joined, players_updated, etc.)
+        // socket.on('room_joined', handleRoomJoined);
+        // socket.on('players_updated', handlePlayersUpdated);
+        // socket.on('player_disconnected', handlePlayerDisconnected);
+
+        socket.on('error', (data) => { // Listener para errores específicos de sala/juego
           console.error("Error del servidor (sala/juego):", data);
           showNotification(data.message || "Error en la operación de sala/juego", "error");
-           // Resetear botón si falló la creación
+          // Resetear botón si falló la creación
           const confirmButton = document.getElementById('confirm-create-room-btn');
           if(confirmButton) {
              confirmButton.disabled = false;
              confirmButton.innerHTML = '<i class="fas fa-plus-circle"></i> CREAR SALA';
           }
         });
-        socket.on('available_rooms', handleAvailableRooms); // Asumiendo que existe handleAvailableRooms
-        
-        // Listeners de juego (si existen)
-        // socket.on('game_started', handleGameStarted);
-        // socket.on('next_turn', handleNextTurn);
-        // socket.on('player_answered', handlePlayerAnswered);
-        // socket.on('game_restarted', handleGameRestarted);
+        socket.on('available_rooms', updateAvailableRooms); // Llamar directamente a la función
       }
-      
-      // Asegúrate que las funciones referenciadas (handleRoomJoined, etc.) existen
-      // Si no existen, coméntalas en setupSocketGameListeners o créalas.
     </script>
     <script src="../js/vs/vs-mode.js"></script>
     
