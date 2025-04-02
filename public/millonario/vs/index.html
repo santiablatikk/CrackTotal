@@ -572,12 +572,13 @@
     </div>
     
     <!-- Barra de error de servidor -->
-    <div id="server-error-banner" class="server-error-banner" style="display: none;">
-      <i class="fas fa-exclamation-triangle"></i>
-      <span id="server-error-message">El servidor no responde. Se activó el modo alternativo.</span>
-      <button id="dismiss-error-btn" class="dismiss-btn">
-        <i class="fas fa-times"></i>
-      </button>
+    <div id="server-error-banner" style="display: none; position: fixed; top: 0; left: 0; right: 0; background: rgba(220, 38, 38, 0.95); color: white; padding: 20px; z-index: 9999; flex-direction: column; align-items: center; justify-content: center; gap: 15px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+      <h3 style="margin: 0; font-size: 1.2rem;">⚠️ Error de conexión</h3>
+      <p id="server-error-message" style="margin: 10px 0;">No se pudo conectar al servidor. El modo 1vs1 no está disponible actualmente.</p>
+      <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <button id="dismiss-error-btn" class="btn" style="background: rgba(255,255,255,0.2); border: none;">Intentar de todos modos</button>
+        <a href="../crack-total.html" class="btn" style="background: white; color: #dc2626;">Volver a la página principal</a>
+      </div>
     </div>
     
     <div class="container">
@@ -759,45 +760,223 @@
       // Configure Socket.io with reconnection options
       const socketOptions = {
         reconnection: true,
-        reconnectionAttempts: 5,
-        reconnectionDelay: 1000,
-        reconnectionDelayMax: 5000,
-        timeout: 20000,
-        autoConnect: true // Cambiado a true para conectar automáticamente
+        reconnectionAttempts: 10,
+        reconnectionDelay: 500,
+        reconnectionDelayMax: 2000,
+        timeout: 10000,
+        autoConnect: true,
+        forceNew: true
       };
       
-      // Try to connect to multiple ports if needed
+      // Try to connect to server
       let socket;
-      try {
-        // Intentar primero con puerto 3001 (que sabemos que está funcionando según los logs)
-        socket = io('http://' + window.location.hostname + ':3001', socketOptions);
-        
-        // Set error handler to try alternative port if connection fails
-        socket.on('connect_error', (error) => {
-          console.error('Connection error on port 3001:', error);
+      let connectionAttempts = 0;
+      
+      function initializeSocket() {
+        try {
+          console.log("Intentando conectar al servidor en puerto 3001...");
+          // Conectar explícitamente al puerto 3001 que sabemos está funcionando
+          socket = io('http://' + window.location.hostname + ':3001', socketOptions);
           
-          setTimeout(() => {
-            if (!socket.connected) {
-              // Desconectar el socket anterior si existe
-              if (socket) {
-                socket.disconnect();
-              }
-              
-              // Intentar con el puerto predeterminado como respaldo
-              socket = io(socketOptions);
-              console.log('Intentando conexión con puerto predeterminado');
+          // Evento cuando se conecta
+          socket.on('connect', () => {
+            console.log("Conectado al servidor Socket.io");
+            document.getElementById('connection-status').className = 'connection-status connected';
+            document.getElementById('connection-status').innerHTML = '<i class="fas fa-circle"></i> Conectado';
+            showNotification("Conectado al servidor", "success");
+            
+            // Cargar salas disponibles tras conectar
+            setTimeout(() => {
+              socket.emit('get_available_rooms');
+            }, 500);
+          });
+          
+          socket.on('connect_error', (error) => {
+            console.error("Error de conexión:", error);
+            connectionAttempts++;
+            document.getElementById('connection-status').className = 'connection-status disconnected';
+            document.getElementById('connection-status').innerHTML = '<i class="fas fa-circle"></i> Desconectado';
+            
+            if (connectionAttempts <= 3) {
+              showNotification("Error de conexión. Reintentando...", "error");
+            } else if (connectionAttempts === 4) {
+              showServerError("No se puede conectar al servidor. El modo 1vs1 podría no estar disponible.");
             }
-          }, 2000);
-        });
-        
-        // Make socket globally available
-        window.socket = socket;
-      } catch (e) {
-        console.error('Socket.io connection error:', e);
+          });
+          
+          // Eventos específicos de la sala
+          socket.on('room_created', (data) => {
+            console.log("Sala creada con éxito:", data);
+            showWaitingRoom(data.roomName || "Sala de espera");
+            document.getElementById('room-id').textContent = data.roomId;
+            showNotification("Sala creada correctamente", "success");
+          });
+          
+          socket.on('error', (data) => {
+            console.error("Error del servidor:", data);
+            showNotification(data.message || "Error al realizar la operación", "error");
+          });
+          
+          socket.on('available_rooms', (data) => {
+            console.log("Salas disponibles:", data);
+            updateAvailableRooms(data.rooms || []);
+          });
+          
+          // Hacer socket disponible globalmente
+          window.socket = socket;
+        } catch (e) {
+          console.error("Error al inicializar socket:", e);
+          showServerError("Error al conectar con el servidor. Modo 1vs1 no disponible.");
+        }
       }
       
-      // This will be used in vs-mode.js
-      window.socketOptions = socketOptions;
+      // Inicializar socket al cargar
+      initializeSocket();
+      
+      // Mostrar error de servidor
+      function showServerError(message) {
+        const errorBanner = document.getElementById('server-error-banner');
+        const errorMessage = document.getElementById('server-error-message');
+        
+        errorMessage.textContent = message || "No se pudo conectar al servidor. El modo 1vs1 no está disponible actualmente.";
+        errorBanner.style.display = 'flex';
+        
+        // Si después de varios intentos no hay conexión, ofrecer redirección automática
+        if (connectionAttempts > 5) {
+          setTimeout(() => {
+            if (!socket || !socket.connected) {
+              if (confirm("No se pudo establecer conexión con el servidor. ¿Desea volver a la página principal?")) {
+                window.location.href = "../crack-total.html";
+              }
+            }
+          }, 5000);
+        }
+      }
+      
+      // Mostrar notificación
+      function showNotification(message, type) {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.className = 'toast ' + (type || 'info');
+        notification.style.display = 'block';
+        
+        setTimeout(() => {
+          notification.style.display = 'none';
+        }, 3000);
+      }
+      
+      // Actualizar salas disponibles
+      function updateAvailableRooms(rooms) {
+        const container = document.getElementById('rooms-container');
+        
+        if (!container) return;
+        
+        if (!rooms || rooms.length === 0) {
+          container.innerHTML = '<div style="text-align: center; padding: 2rem;"><p>No hay salas disponibles en este momento</p></div>';
+          return;
+        }
+        
+        let html = '';
+        rooms.forEach(room => {
+          html += `
+            <div class="room-item">
+              <div class="room-details">
+                <div class="room-name">${room.name}</div>
+                <div class="room-info">
+                  <div class="players"><i class="fas fa-users"></i> ${room.playerCount}/2</div>
+                  ${room.hasPassword ? '<div class="locked"><i class="fas fa-lock"></i> Protegida</div>' : ''}
+                </div>
+              </div>
+              <button class="btn join-room-btn" data-room-id="${room.id}" data-has-password="${room.hasPassword}">
+                <i class="fas fa-sign-in-alt"></i> UNIRSE
+              </button>
+            </div>
+          `;
+        });
+        
+        container.innerHTML = html;
+        
+        // Agregar eventos a los botones
+        const joinButtons = container.querySelectorAll('.join-room-btn');
+        joinButtons.forEach(btn => {
+          btn.addEventListener('click', handleJoinButtonClick);
+        });
+      }
+      
+      // Función para mostrar sala de espera
+      function showWaitingRoom(roomName) {
+        const roomSection = document.getElementById('room-section');
+        const createRoomSection = document.getElementById('create-room-section');
+        const waitingRoom = document.getElementById('waiting-room');
+        const waitingRoomName = document.getElementById('waiting-room-name');
+        
+        if (waitingRoomName) {
+          waitingRoomName.innerHTML = `
+            <span style="position: relative; z-index: 2;">${roomName}</span>
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(225, 29, 72, 0.2); z-index: 1;"></div>
+            <div style="position: absolute; top: -15px; right: -15px; width: 80px; height: 80px; background: rgba(225, 29, 72, 0.4); border-radius: 50%; filter: blur(20px); z-index: 0;"></div>
+          `;
+        }
+        
+        if (roomSection) roomSection.style.display = 'none';
+        if (createRoomSection) createRoomSection.style.display = 'none';
+        if (waitingRoom) waitingRoom.style.display = 'block';
+      }
+      
+      // Manejar clic en botón de unirse a sala
+      function handleJoinButtonClick(e) {
+        const roomId = e.currentTarget.getAttribute('data-room-id');
+        const hasPassword = e.currentTarget.getAttribute('data-has-password') === 'true';
+        
+        if (hasPassword) {
+          // Mostrar modal de contraseña
+          const passwordModal = document.getElementById('password-modal');
+          const modalPasswordInput = document.getElementById('modal-password-input');
+          
+          // Guardar el ID de la sala seleccionada
+          window.selectedRoomId = roomId;
+          
+          // Mostrar modal
+          passwordModal.classList.add('active');
+          
+          // Enfocar campo de contraseña
+          setTimeout(() => {
+            modalPasswordInput.focus();
+          }, 100);
+        } else {
+          // Unirse directamente a la sala
+          joinRoom(roomId, '');
+        }
+      }
+      
+      // Unirse a sala
+      function joinRoom(roomId, password) {
+        if (!socket || !socket.connected) {
+          showNotification("No hay conexión con el servidor", "error");
+          return;
+        }
+        
+        socket.emit('join_room', {
+          roomId,
+          password,
+          username: localStorage.getItem('millonarioUsername') || 'Jugador'
+        });
+      }
+      
+      // Confirmar unirse con contraseña
+      function confirmJoinRoom() {
+        const modalPasswordInput = document.getElementById('modal-password-input');
+        const passwordModal = document.getElementById('password-modal');
+        
+        const password = modalPasswordInput.value;
+        const roomId = window.selectedRoomId;
+        
+        // Cerrar modal
+        passwordModal.classList.remove('active');
+        
+        // Unirse a sala
+        joinRoom(roomId, password);
+      }
       
       // Asegurar que el modal está oculto al cargar la página
       document.addEventListener('DOMContentLoaded', function() {
@@ -806,37 +985,38 @@
           passwordModal.style.display = 'none';
         }
         
-        // Agregar evento al botón directamente aquí como respaldo
+        // Agregar eventos a botones importantes
+        setupEventListeners();
+      });
+      
+      // Configurar eventos
+      function setupEventListeners() {
+        // Eventos para el modal de contraseña
+        const confirmJoinBtn = document.getElementById('confirm-join-btn');
+        const cancelJoinBtn = document.getElementById('cancel-join-btn');
+        const closeModalBtn = document.querySelector('.close-modal-btn');
+        
+        if (confirmJoinBtn) {
+          confirmJoinBtn.addEventListener('click', confirmJoinRoom);
+        }
+        
+        if (cancelJoinBtn || closeModalBtn) {
+          const closeModal = function() {
+            const passwordModal = document.getElementById('password-modal');
+            passwordModal.classList.remove('active');
+          };
+          
+          if (cancelJoinBtn) cancelJoinBtn.addEventListener('click', closeModal);
+          if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+        }
+        
+        // Evento para el botón de crear sala
         const createRoomBtn = document.getElementById('create-room-btn');
         if (createRoomBtn) {
           createRoomBtn.addEventListener('click', showCreateRoomFormDirect);
         }
-      });
-      
-      // Función directa para mostrar el formulario de creación de sala
-      function showCreateRoomFormDirect() {
-        console.log("Mostrando formulario de crear sala");
-        const roomSection = document.getElementById('room-section');
-        const createRoomSection = document.getElementById('create-room-section');
         
-        if (roomSection && createRoomSection) {
-          roomSection.style.display = 'none';
-          createRoomSection.style.display = 'block';
-          
-          // Enfocar el campo de nombre de sala
-          const roomNameInput = document.getElementById('room-name-input');
-          if (roomNameInput) {
-            setTimeout(() => {
-              roomNameInput.focus();
-            }, 100);
-          }
-        } else {
-          console.error("No se encontraron los elementos necesarios");
-        }
-      }
-      
-      // También agregar eventos directos a otros botones críticos
-      document.addEventListener('DOMContentLoaded', function() {
+        // Eventos para el formulario de crear sala
         const backToMenuBtn = document.getElementById('back-to-menu-btn');
         const confirmCreateRoomBtn = document.getElementById('confirm-create-room-btn');
         
@@ -853,34 +1033,118 @@
         }
         
         if (confirmCreateRoomBtn) {
-          confirmCreateRoomBtn.addEventListener('click', function() {
-            console.log("Intentando crear sala");
-            const roomNameInput = document.getElementById('room-name-input');
-            const roomPasswordInput = document.getElementById('room-password-input');
-            
-            if (!roomNameInput || !roomNameInput.value.trim()) {
-              alert("Por favor ingresa un nombre para la sala");
-              return;
-            }
-            
-            const roomName = roomNameInput.value.trim();
-            const password = roomPasswordInput ? roomPasswordInput.value : '';
-            
-            // Emitir evento de socket para crear sala
+          confirmCreateRoomBtn.addEventListener('click', createRoom);
+        }
+        
+        // Evento para el botón de refrescar salas
+        const refreshRoomsBtn = document.getElementById('refresh-rooms-btn');
+        if (refreshRoomsBtn) {
+          refreshRoomsBtn.addEventListener('click', function() {
             if (socket && socket.connected) {
-              socket.emit('create_room', {
-                username: localStorage.getItem('millonarioUsername') || 'Jugador',
-                roomName: roomName,
-                password: password
-              });
-              console.log("Evento create_room emitido");
+              socket.emit('get_available_rooms');
+              showNotification("Actualizando lista de salas...", "info");
             } else {
-              console.error("Socket no conectado");
-              alert("No se pudo establecer conexión con el servidor. Intenta de nuevo.");
+              showNotification("No hay conexión con el servidor", "error");
             }
           });
         }
-      });
+        
+        // Evento para copiar código de sala
+        const copyCodeBtn = document.getElementById('copy-code-btn');
+        if (copyCodeBtn) {
+          copyCodeBtn.addEventListener('click', function() {
+            const roomId = document.getElementById('room-id').textContent;
+            navigator.clipboard.writeText(roomId).then(() => {
+              showNotification("Código copiado al portapapeles", "success");
+            }).catch(() => {
+              showNotification("No se pudo copiar el código", "error");
+            });
+          });
+        }
+        
+        // Evento para salir de la sala
+        const leaveRoomBtn = document.getElementById('leave-room-btn');
+        if (leaveRoomBtn) {
+          leaveRoomBtn.addEventListener('click', function() {
+            if (socket && socket.connected) {
+              socket.emit('leave_room', { roomId: document.getElementById('room-id').textContent });
+              const roomSection = document.getElementById('room-section');
+              const waitingRoom = document.getElementById('waiting-room');
+              
+              if (roomSection && waitingRoom) {
+                waitingRoom.style.display = 'none';
+                roomSection.style.display = 'block';
+              }
+            }
+          });
+        }
+        
+        // Evento para el banner de error
+        const dismissErrorBtn = document.getElementById('dismiss-error-btn');
+        if (dismissErrorBtn) {
+          dismissErrorBtn.addEventListener('click', function() {
+            document.getElementById('server-error-banner').style.display = 'none';
+          });
+        }
+      }
+      
+      // Función para mostrar el formulario de creación de sala
+      function showCreateRoomFormDirect() {
+        console.log("Mostrando formulario de crear sala");
+        const roomSection = document.getElementById('room-section');
+        const createRoomSection = document.getElementById('create-room-section');
+        
+        if (roomSection && createRoomSection) {
+          roomSection.style.display = 'none';
+          createRoomSection.style.display = 'block';
+          
+          // Generar nombre de sala predeterminado
+          const username = localStorage.getItem('millonarioUsername') || 'Jugador';
+          const defaultRoomName = `Sala de ${username}`;
+          
+          // Enfocar el campo de nombre de sala
+          const roomNameInput = document.getElementById('room-name-input');
+          if (roomNameInput) {
+            roomNameInput.value = defaultRoomName;
+            setTimeout(() => {
+              roomNameInput.focus();
+            }, 100);
+          }
+        } else {
+          console.error("No se encontraron los elementos necesarios");
+        }
+      }
+      
+      // Función para crear sala
+      function createRoom() {
+        console.log("Intentando crear sala");
+        const roomNameInput = document.getElementById('room-name-input');
+        const roomPasswordInput = document.getElementById('room-password-input');
+        
+        if (!roomNameInput || !roomNameInput.value.trim()) {
+          showNotification("Por favor ingresa un nombre para la sala", "warning");
+          return;
+        }
+        
+        const roomName = roomNameInput.value.trim();
+        const password = roomPasswordInput ? roomPasswordInput.value : '';
+        
+        // Verificar conexión
+        if (!socket || !socket.connected) {
+          showNotification("No hay conexión con el servidor. No se puede crear la sala.", "error");
+          showServerError("Error de conexión al servidor. Modo 1vs1 no disponible.");
+          return;
+        }
+        
+        // Emitir evento
+        socket.emit('create_room', {
+          username: localStorage.getItem('millonarioUsername') || 'Jugador',
+          roomName: roomName,
+          password: password
+        });
+        
+        console.log("Evento create_room emitido");
+      }
     </script>
     <script src="../js/vs/vs-mode.js"></script>
     
