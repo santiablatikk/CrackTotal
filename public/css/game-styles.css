@@ -2924,43 +2924,35 @@
 /* Navigation buttons container */
 .nav-buttons {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  margin-top: 25px;
-  padding: 0 10px;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+  flex-wrap: wrap;
 }
 
 /* Style for the three navigation buttons */
 .nav-btn {
-  flex: 1;
-  padding: 12px 15px;
-  font-size: 1rem;
-  font-weight: 600;
-  color: white;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 10px 15px;
   border-radius: 8px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  min-width: 180px;
-  position: relative;
-  overflow: hidden;
+  gap: 8px;
+  color: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-#dashboard-btn {
-  background: linear-gradient(135deg, #4f46e5, #7e22ce);
-  font-weight: 700;
+.nav-btn i {
   font-size: 1.1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
-  padding: 15px 20px;
+}
+
+.nav-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
 }
 
 /* Specific styles for each button */
@@ -4017,51 +4009,41 @@
 #dashboard-btn {
   background: linear-gradient(135deg, #4f46e5, #7e22ce);
   font-weight: 700;
-  font-size: 1.1rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
-  padding: 15px 20px;
-}
-
-#dashboard-btn:hover {
-  background: linear-gradient(135deg, #6366f1, #9333ea);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
-}
-
-.nav-btn i {
+  padding: 12px 20px;
   font-size: 1.1rem;
-  margin-right: 8px;
-}
-
-.nav-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
-  background: rgba(255, 255, 255, 0.2);
+  flex: 2;
+  margin-right: 12px;
 }
 
 #dashboard-btn:hover {
   background: linear-gradient(135deg, #6366f1, #9333ea);
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+}
+
+#play-again-btn {
+  flex: 1;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+  gap: 12px;
 }
 
 @media (max-width: 480px) {
   .nav-buttons {
     flex-direction: column;
-    gap: 15px;
   }
   
-  .nav-btn {
+  #dashboard-btn, #play-again-btn {
     width: 100%;
-    padding: 15px;
-    font-size: 1rem;
-  }
-  
-  #dashboard-btn {
-    order: -1; /* Makes the dashboard button appear first */
-    font-size: 1rem;
+    margin-bottom: 10px;
+    margin-right: 0;
   }
 }

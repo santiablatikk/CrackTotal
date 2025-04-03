@@ -188,10 +188,28 @@ function loadUserDataAndGame(game) {
 }
 
 // Mostrar indicadores de carga
-function showLoading() {
-    // Mostrar el indicador de carga correspondiente a la pestaña activa
+function showLoading(contentType = null) {
+    // Si se especifica un tipo de contenido, mostrar solo ese loader
+    if (contentType) {
+        const loadingElement = document.getElementById(`${contentType}-loading`);
+        if (loadingElement) {
+            loadingElement.style.display = 'flex';
+        }
+        
+        // Ocultar el contenido principal
+        const contentElement = document.querySelector(`#${contentType}-content .${contentType}-content`);
+        if (contentElement) {
+            contentElement.style.opacity = '0.3';
+        }
+        return;
+    }
+    
+    // Si no se especifica, mostrar el loader correspondiente a la pestaña activa
     const activeTabId = currentTab;
-    document.getElementById(`${activeTabId}-loading`).style.display = 'flex';
+    const activeLoader = document.getElementById(`${activeTabId}-loading`);
+    if (activeLoader) {
+        activeLoader.style.display = 'flex';
+    }
     
     // Ocultar el contenido principal
     const contentElement = document.querySelector(`#${activeTabId}-content .${activeTabId}-content`);
@@ -201,16 +219,34 @@ function showLoading() {
 }
 
 // Ocultar indicadores de carga
-function hideLoading() {
-    // Ocultar todos los indicadores de carga
-    document.querySelectorAll('.loading-content').forEach(el => {
-        el.style.display = 'none';
-    });
+function hideLoading(contentType = null) {
+    // Si se especifica un tipo de contenido, ocultar solo ese loader
+    if (contentType) {
+        const loadingElement = document.getElementById(`${contentType}-loading`);
+        if (loadingElement) {
+            loadingElement.style.display = 'none';
+        }
+        
+        // Mostrar el contenido principal
+        const contentElement = document.querySelector(`#${contentType}-content .${contentType}-content`);
+        if (contentElement) {
+            contentElement.style.opacity = '1';
+        }
+        return;
+    }
     
-    // Restaurar la opacidad del contenido
-    document.querySelectorAll('.tab-content > div:not(.loading-content)').forEach(el => {
-        el.style.opacity = '1';
-    });
+    // Si no se especifica, ocultar el loader correspondiente a la pestaña activa
+    const activeTabId = currentTab;
+    const activeLoader = document.getElementById(`${activeTabId}-loading`);
+    if (activeLoader) {
+        activeLoader.style.display = 'none';
+    }
+    
+    // Mostrar el contenido principal
+    const contentElement = document.querySelector(`#${activeTabId}-content .${activeTabId}-content`);
+    if (contentElement) {
+        contentElement.style.opacity = '1';
+    }
 }
 
 // Mostrar mensajes de error
@@ -440,14 +476,14 @@ function loadRankingData(game, gameData) {
     updateRankingTableLabels(gameData.rankingLabels);
     
     // Ocultar el indicador de carga después de un tiempo razonable
-    setTimeout(() => {
+        setTimeout(() => {
         if (rankingLoading) {
             rankingLoading.style.display = 'none';
         }
         if (rankingContent) {
             rankingContent.style.opacity = '1';
         }
-    }, 1000);
+        }, 1000);
 }
 
 // Cargar estadísticas globales para el ranking
@@ -560,8 +596,8 @@ function renderRankingTable(data, gameData) {
 // Cargar tabla de ranking
 function loadRankingTable(game, gameData) {
     console.log(`Cargando tabla de ranking para el juego: ${game}`);
-    
-    // Mostrar indicador de carga
+        
+        // Mostrar indicador de carga
     const tableBody = document.querySelector('#ranking-table-body');
     if (tableBody) {
         tableBody.innerHTML = `
@@ -894,7 +930,7 @@ function loadStatisticsData(game) {
             }
             
             detailedStatsSection.innerHTML = `
-                <div class="placeholder-message">
+                        <div class="placeholder-message">
                     <i class="fas fa-chart-line"></i>
                     <p>No se pudieron cargar las estadísticas. Intente nuevamente más tarde.</p>
                 </div>
@@ -926,8 +962,8 @@ function generateRoscoStatsFromData(data) {
             
             <div class="stat-card">
                 <div class="stat-card-icon">
-                    <i class="fas fa-trophy"></i>
-                </div>
+                            <i class="fas fa-trophy"></i>
+                        </div>
                 <div class="stat-card-value">${data.bestRosco || 0}</div>
                 <div class="stat-card-label">Mejor Rosco</div>
             </div>
@@ -1062,9 +1098,198 @@ function formatDate(dateString) {
 
 // Cargar datos de logros
 function loadAchievementsData(game) {
-    console.log(`Cargando datos de logros para el juego: ${game}`);
-    // Esta función se implementaría para mostrar logros 
-    // Por ahora, dejamos el contenido por defecto
+    const achievementsContainer = document.querySelector('#achievements-content .achievements-content');
+    
+    if (!achievementsContainer) return;
+    
+    showLoading('achievements');
+    
+    // Obtener IP del usuario para recuperar logros
+    const userIP = localStorage.getItem('userIP') || 'unknown';
+    const storageKey = `userAchievements_${userIP}`;
+    
+    setTimeout(() => {
+        // Obtener logros guardados
+        let savedAchievements = [];
+        try {
+            const achievementsData = localStorage.getItem(storageKey);
+            if (achievementsData) {
+                savedAchievements = JSON.parse(achievementsData);
+            }
+        } catch (error) {
+            console.error('Error al cargar logros:', error);
+        }
+        
+        // Verificar si tenemos definiciones de logros disponibles en la ventana global
+        const achievementDefinitions = window.gameAchievements || [];
+        
+        // Combinar definiciones con datos guardados
+        const achievements = savedAchievements.map(savedAchievement => {
+            // Buscar definición completa del logro
+            const definition = achievementDefinitions.find(a => a.id === savedAchievement.id);
+            
+            // Combinar datos guardados con definición
+            return {
+                ...savedAchievement,
+                icon: savedAchievement.icon || (definition ? definition.icon : 'fas fa-trophy'),
+                title: savedAchievement.title || (definition ? definition.title : savedAchievement.id),
+                description: savedAchievement.description || (definition ? definition.description : 'Logro desbloqueado'),
+                category: savedAchievement.category || (definition ? definition.category : 'beginner'),
+                maxCount: definition ? definition.maxCount : 1
+            };
+        });
+        
+        // Ocultar loader
+        hideLoading('achievements');
+        
+        // Si no hay logros, mostrar mensaje
+        if (achievements.length === 0) {
+            achievementsContainer.innerHTML = `
+                <div class="placeholder-message">
+                    <i class="fas fa-medal"></i>
+                    <p>Completa partidas para desbloquear logros</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Organizar logros por categoría
+        const categories = {
+            beginner: { name: 'Principiante', achievements: [] },
+            intermediate: { name: 'Intermedio', achievements: [] },
+            expert: { name: 'Experto', achievements: [] },
+            special: { name: 'Especial', achievements: [] }
+        };
+        
+        // Agrupar logros por categoría
+        achievements.forEach(achievement => {
+            const category = achievement.category || 'beginner';
+            if (categories[category]) {
+                categories[category].achievements.push(achievement);
+            } else {
+                categories.beginner.achievements.push(achievement);
+            }
+        });
+        
+        // Construir HTML para mostrar logros
+        let achievementsHTML = `
+            <div class="achievements-header">
+                <h2 class="section-title">Mis Logros</h2>
+                <p class="achievements-summary">Has desbloqueado <span class="highlight">${achievements.filter(a => a.unlocked).length}</span> de ${achievementDefinitions.length} logros disponibles</p>
+            </div>
+        `;
+        
+        // Agregar secciones por categoría
+        for (const [catKey, category] of Object.entries(categories)) {
+            if (category.achievements.length > 0) {
+                achievementsHTML += `
+                    <div class="achievement-category">
+                        <h3 class="category-title">${category.name}</h3>
+                        <div class="achievement-cards">
+                `;
+                
+                // Agregar tarjetas de logros
+                category.achievements.forEach(achievement => {
+                    const isUnlocked = achievement.unlocked;
+                    const progress = achievement.maxCount > 1 
+                        ? Math.min(100, (achievement.count / achievement.maxCount) * 100) 
+                        : (isUnlocked ? 100 : 0);
+                    
+                    achievementsHTML += `
+                        <div class="achievement-card ${isUnlocked ? '' : 'locked-achievement'}" data-id="${achievement.id}">
+                            <div class="achievement-icon">
+                                <i class="${achievement.icon}"></i>
+                            </div>
+                            <div class="achievement-name">${achievement.title}</div>
+                            <div class="achievement-description">${achievement.description}</div>
+                            ${achievement.maxCount > 1 ? `
+                                <div class="achievement-progress">
+                                    <div class="achievement-progress-bar">
+                                        <div class="achievement-progress-fill" style="width: ${progress}%"></div>
+                                    </div>
+                                    <div class="achievement-count">${achievement.count || 0}/${achievement.maxCount}</div>
+                                </div>
+                            ` : ''}
+                            ${isUnlocked ? `<div class="achievement-date">${formatDate(achievement.date)}</div>` : ''}
+                        </div>
+                    `;
+                });
+                
+                achievementsHTML += `
+                        </div>
+                    </div>
+                `;
+            }
+        }
+        
+        // Mostrar logros
+        achievementsContainer.innerHTML = achievementsHTML;
+        
+        // Agregar estilos dinámicamente si no existen
+        if (!document.getElementById('achievements-dynamic-styles')) {
+            const styleEl = document.createElement('style');
+            styleEl.id = 'achievements-dynamic-styles';
+            styleEl.textContent = `
+                .achievements-header {
+                    margin-bottom: 2rem;
+                    text-align: center;
+                }
+                
+                .achievements-summary {
+                    color: rgba(255, 255, 255, 0.7);
+                    margin-top: 0.5rem;
+                }
+                
+                .achievements-summary .highlight {
+                    color: #e11d48;
+                    font-weight: bold;
+                }
+                
+                .achievement-category {
+                    margin-bottom: 2rem;
+                }
+                
+                .category-title {
+                    font-size: 1.5rem;
+                    margin-bottom: 1rem;
+                    color: white;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                    padding-bottom: 0.5rem;
+                }
+                
+                .achievement-progress {
+                    width: 100%;
+                    margin-top: 0.5rem;
+                }
+                
+                .achievement-progress-bar {
+                    height: 6px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 3px;
+                    overflow: hidden;
+                    margin-bottom: 0.25rem;
+                }
+                
+                .achievement-progress-fill {
+                    height: 100%;
+                    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+                    border-radius: 3px;
+                    transition: width 0.5s ease;
+                }
+                
+                .achievement-count {
+                    font-size: 0.75rem;
+                    text-align: right;
+                    color: rgba(255, 255, 255, 0.6);
+                }
+                
+                .locked-achievement .achievement-progress-fill {
+                    background: rgba(255, 255, 255, 0.2);
+                }
+            `;
+            document.head.appendChild(styleEl);
+        }
+    }, 1000);
 }
 
 // Inicializar filtros de ranking

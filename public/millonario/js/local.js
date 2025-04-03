@@ -205,11 +205,22 @@ document.addEventListener('DOMContentLoaded', function() {
   });
   
   // Obtener el nombre de usuario guardado
-  const savedUsername = localStorage.getItem('millonarioUsername');
+  let savedUsername = localStorage.getItem('millonarioUsername');
+  
+  // Si no hay nombre específico para millonario, usar el nombre general de jugador
   if (!savedUsername) {
-    // Si no hay nombre guardado, redirigir a la página principal
-    window.location.href = "index.html";
-    return;
+    savedUsername = localStorage.getItem('playerName');
+    
+    // Si existe el nombre general, guardarlo también como millonarioUsername
+    if (savedUsername) {
+      localStorage.setItem('millonarioUsername', savedUsername);
+      console.log('Nombre de usuario recuperado de playerName:', savedUsername);
+    } else {
+      // Si no hay ningún nombre guardado, redirigir a la página principal
+      console.log('No se encontró ningún nombre de usuario guardado. Redirección a index.html');
+      window.location.href = "index.html";
+      return;
+    }
   }
   
   // Mostrar el nombre del jugador
@@ -623,6 +634,17 @@ document.addEventListener('DOMContentLoaded', function() {
       // Guardar puntuación en localStorage
       saveScore();
       
+      // Actualizar la vista previa del ranking
+      updateRankingPreview(points);
+      
+      // Asegurarse que el scroll del modal esté al inicio
+      const modalContentInner = resultModal.querySelector('.modal-content-inner');
+      if (modalContentInner) {
+        setTimeout(() => {
+          modalContentInner.scrollTop = 0;
+        }, 100);
+      }
+      
       // Mostrar el modal
       resultModal.style.display = 'block';
     }
@@ -664,6 +686,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const playAgainBtn = document.getElementById('play-again-btn');
   if (playAgainBtn) {
     playAgainBtn.addEventListener('click', function() {
+      console.log('Botón jugar de nuevo clickeado');
+      
       // Ocultar el modal de resultados
       const resultModal = document.getElementById('result-modal');
       if (resultModal) {
@@ -677,6 +701,9 @@ document.addEventListener('DOMContentLoaded', function() {
       if (difficultySection) {
         difficultySection.style.display = 'block';
       }
+      
+      // Reiniciar el juego
+      selectDifficulty('fácil'); // Resetear a dificultad fácil por defecto
     });
   }
   

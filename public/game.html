@@ -301,6 +301,63 @@
   <!-- Scripts -->
   <script src="js/utils.js"></script>
   <script src="js/game.js"></script>
+  <script src="js/game-achievements.js"></script>
+  
+  <!-- Sonidos adicionales -->
+  <audio id="achievement-sound" preload="auto">
+    <source src="sounds/achievement.mp3" type="audio/mpeg">
+  </audio>
+  <script>
+    // Cargar sonidos
+    const achievementSound = document.getElementById('achievement-sound');
+    
+    // Dispara eventos personalizados para el sistema de logros
+    document.addEventListener('DOMContentLoaded', function() {
+      const answerForm = document.getElementById('answer-form');
+      const answerInput = document.getElementById('answer-input');
+      
+      if (answerForm) {
+        // Anular el evento submit original temporalmente para poder disparar nuestros eventos personalizados
+        answerForm.addEventListener('submit', function(e) {
+          if (!window.gameStarted) return;
+          
+          // Obtener valores actuales
+          const userAnswer = answerInput.value.trim().toLowerCase();
+          const currentIndex = window.currentQuestionIndex || 0;
+          const questions = window.questions || [];
+          
+          if (questions.length > 0 && currentIndex < questions.length) {
+            const currentQuestion = questions[currentIndex];
+            const correctAnswer = currentQuestion.answer.toLowerCase().trim();
+            
+            // Verificar similitud
+            const isCorrect = window.stringSimilarity ? 
+              (window.stringSimilarity(userAnswer, correctAnswer) > 0.75 || 
+               window.normalizeText(userAnswer) === window.normalizeText(correctAnswer)) : 
+              (userAnswer === correctAnswer);
+            
+            // Disparar evento según resultado
+            if (isCorrect) {
+              document.dispatchEvent(new CustomEvent('correctAnswer', { 
+                detail: { answer: userAnswer, question: currentQuestion } 
+              }));
+            } else if (userAnswer) {
+              document.dispatchEvent(new CustomEvent('incorrectAnswer', { 
+                detail: { answer: userAnswer, question: currentQuestion } 
+              }));
+            }
+          }
+        });
+        
+        // Disparar evento al iniciar juego
+        document.addEventListener('click', function(e) {
+          if (e.target.id === 'start-game-btn' || e.target.closest('#start-game-btn')) {
+            document.dispatchEvent(new CustomEvent('gameStarted'));
+          }
+        });
+      }
+    });
+  </script>
 
   <!-- Mobile-specific optimizations -->
   <script>

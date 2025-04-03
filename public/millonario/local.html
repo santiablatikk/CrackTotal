@@ -203,47 +203,37 @@
       </footer>
     </div>
     
-    <!-- Modales -->
+    <!-- Modal de resultados -->
     <div id="result-modal" class="modal">
-      <div class="modal-content">
-        <h2 id="result-title">¡Felicidades!</h2>
-        <p id="result-message">Has ganado $1,000,000</p>
-        <div id="result-stats" class="result-stats"></div>
-        
-        <div class="ranking-preview">
-          <div class="ranking-title">
-            <i class="fas fa-trophy"></i>
-            <span>Ranking Mundial</span>
-          </div>
-          <div class="ranking-container">
-            <div class="ranking-position">
-              <span class="position-number">32</span>
-              <div class="position-info">
-                <span class="position-text">Tu posición</span>
-                <div class="ranking-progress">
-                  <div class="progress-bar" style="width: 68%"></div>
+      <div class="modal-content result-modal-content">
+        <div class="modal-content-inner">
+          <h2 id="result-title">¡Felicidades!</h2>
+          <p id="result-message">Has ganado $1,000,000</p>
+          <div id="result-stats" class="result-stats"></div>
+            
+          <div class="ranking-preview">
+            <div class="ranking-title">
+              <i class="fas fa-trophy"></i>
+              <span>Ranking Mundial</span>
+            </div>
+            <div class="ranking-container">
+              <div class="ranking-position">
+                <span class="position-number">32</span>
+                <div class="position-info">
+                  <span class="position-text">Tu posición</span>
+                  <div class="ranking-progress">
+                    <div class="progress-bar" style="width: 68%"></div>
+                  </div>
                 </div>
+                <span class="position-percentile">Top 12%</span>
               </div>
-              <span class="position-percentile">Top 12%</span>
             </div>
           </div>
-        </div>
-        
-        <div class="modal-buttons">
-          <button id="play-again-btn" class="btn">Jugar de nuevo</button>
-          <a href="index.html" class="btn">Volver al inicio</a>
-        </div>
-        
-        <div class="ranking-buttons">
-          <button id="global-ranking-btn" class="btn ranking-btn">
-            <i class="fas fa-globe"></i> Ranking Mundial
-          </button>
-          <button id="personal-ranking-btn" class="btn ranking-btn">
-            <i class="fas fa-user-chart"></i> Mis Partidas
-          </button>
-          <button id="friends-ranking-btn" class="btn ranking-btn">
-            <i class="fas fa-users"></i> Comparar con Amigos
-          </button>
+            
+          <div class="modal-buttons">
+            <button id="play-again-btn" class="btn action-btn">Jugar de nuevo</button>
+            <a href="../user-dashboard.html" class="btn stats-btn"><i class="fas fa-chart-bar"></i> Panel de Estadísticas</a>
+          </div>
         </div>
       </div>
     </div>
@@ -2574,6 +2564,100 @@
         font-size: 0.85rem;
         color: rgba(255, 255, 255, 0.8);
         font-style: italic;
+      }
+
+      /* Responsive */
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 2rem;
+        }
+        
+        .container {
+          max-width: 100%;
+        }
+        
+        .footer-buttons {
+          flex-direction: column;
+        }
+      }
+      
+      /* Estilos para la pelota de fútbol animada */
+      .ball-link {
+        display: inline-block;
+        text-decoration: none;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Estilos mejorados para el modal de resultados */
+      .result-modal-content {
+        max-height: 90vh;
+        max-width: 500px;
+        padding: 0;
+        overflow: hidden;
+      }
+      
+      .modal-content-inner {
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 2rem;
+        scrollbar-width: thin;
+        scrollbar-color: var(--accent-color) rgba(15, 23, 42, 0.5);
+      }
+      
+      .modal-content-inner::-webkit-scrollbar {
+        width: 8px;
+      }
+      
+      .modal-content-inner::-webkit-scrollbar-track {
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 4px;
+      }
+      
+      .modal-content-inner::-webkit-scrollbar-thumb {
+        background-color: var(--accent-color);
+        border-radius: 4px;
+      }
+      
+      .modal-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        margin-top: 2rem;
+      }
+      
+      #play-again-btn {
+        background: linear-gradient(135deg, #e11d48, #be123c);
+        font-weight: 700;
+        padding: 0.8rem;
+        box-shadow: 0 4px 10px rgba(225, 29, 72, 0.3);
+      }
+      
+      .stats-btn {
+        background: linear-gradient(135deg, #4338ca, #3730a3);
+        color: white;
+        font-weight: 600;
+        text-decoration: none;
+        padding: 0.8rem;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(67, 56, 202, 0.3);
+      }
+      
+      .stats-btn:hover {
+        background: linear-gradient(135deg, #3730a3, #312e81);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(67, 56, 202, 0.4);
+      }
+      
+      .stats-btn i {
+        margin-right: 0.5rem;
+      }
+      
+      @media (max-width: 768px) {
+        .result-modal-content {
+          width: 90%;
+          max-width: 90%;
+          margin: 5vh auto;
+        }
       }
     </style>
 
