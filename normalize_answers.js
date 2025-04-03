@@ -72,3 +72,4 @@ files.forEach(filePath => {
 });
 
 console.log('\nProceso de normalización completado.'); 
+ 

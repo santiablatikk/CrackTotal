@@ -1702,20 +1702,20 @@ function savePlayerData(gameData) {
   // Crear objeto de datos consistente para el sistema de notificación
   const extendedGameData = {
     gameType: 'pasala-che',
-    correctAnswers: gameData.correctCount || 0,
-    incorrectCount: gameData.incorrectCount || 0,
-    skippedCount: gameData.skippedCount || 0,
-    totalAnswers: (gameData.correctCount || 0) + (gameData.incorrectCount || 0) + (gameData.skippedCount || 0),
-    score: gameData.correctCount || 0,
-    isWin: (gameData.correctCount > 0),
-    timeSpent: timeLimit - timeRemaining,
+    correctAnswers: gameData.correct || 0,
+    incorrectCount: gameData.wrong || 0,
+    skippedCount: gameData.skipped || 0,
+    totalAnswers: (gameData.correct || 0) + (gameData.wrong || 0) + (gameData.skipped || 0),
+    score: gameData.score || gameData.correct || 0,
+    isWin: gameData.victory || (gameData.correct > 0),
+    timeSpent: gameData.timeUsed || (timeLimit - timeRemaining),
     letterResults: letterStatus,
-    username: username || localStorage.getItem('username') || 'Jugador'
+    username: gameData.name || localStorage.getItem('username') || 'Jugador'
   };
   
   // Guardar nombre de usuario para uso futuro
-  if (username) {
-    localStorage.setItem('username', username);
+  if (gameData.name) {
+    localStorage.setItem('username', gameData.name);
   }
   
   // Guardar datos del juego en el historial
@@ -1726,6 +1726,31 @@ function savePlayerData(gameData) {
   
   // Comprobar logros
   checkForAchievements(extendedGameData);
+  
+  // Si existe el API cliente, enviar los datos al backend
+  if (window.apiClient && window.apiClient.saveGameData) {
+    console.log('Enviando datos al backend a través de la API');
+    // Crear objeto para la API
+    const apiData = {
+      userId: userIP,
+      gameType: 'pasala-che',
+      score: extendedGameData.score,
+      correctAnswers: extendedGameData.correctAnswers,
+      incorrectAnswers: extendedGameData.incorrectCount,
+      skippedAnswers: extendedGameData.skippedCount,
+      timeSpent: extendedGameData.timeSpent,
+      isWin: extendedGameData.isWin
+    };
+    
+    // Enviar datos de manera asíncrona
+    window.apiClient.saveGameData(apiData)
+      .then(response => {
+        console.log('Datos guardados exitosamente en el backend:', response);
+      })
+      .catch(error => {
+        console.error('Error al guardar datos en el backend:', error);
+      });
+  }
   
   // Si existe la función de notificación, la llamamos
   if (typeof notifyGameCompletion === 'function') {
@@ -1755,10 +1780,12 @@ function savePlayerData(gameData) {
   return true;
 }
 
-// Generar identificador único para el usuario si no tiene IP
+// Generar un identificador único para el usuario
 function generateUserIdentifier() {
-  return 'user_' + Math.random().toString(36).substring(2, 15) + 
-         Math.random().toString(36).substring(2, 15);
+  const randomId = 'user_' + Math.random().toString(36).substring(2, 15) + 
+                    Math.random().toString(36).substring(2, 15);
+  console.log('Generando nuevo identificador de usuario:', randomId);
+  return randomId;
 }
 
 // Función para guardar partida en el historial

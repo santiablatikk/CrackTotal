@@ -500,15 +500,17 @@ function refreshDashboardData() {
         const tabId = activeTab.getAttribute('data-tab');
         console.log('Pestaña activa:', tabId);
         
-        if (tabId === 'ranking' && typeof loadRankingData === 'function') {
+        if (tabId === 'ranking' && typeof loadRanking === 'function') {
           console.log('Recargando datos de ranking...');
-          loadRankingData(window.currentGame || 'pasala-che');
-        } else if (tabId === 'stats' && typeof loadStatisticsData === 'function') {
+          loadRanking(window.currentGame || 'pasala-che');
+        } else if (tabId === 'stats' && typeof loadUserStats === 'function') {
           console.log('Recargando datos de estadísticas...');
-          loadStatisticsData(window.currentGame || 'pasala-che');
-        } else if (tabId === 'achievements' && typeof loadAchievementsData === 'function') {
+          const userIP = localStorage.getItem('userIP');
+          loadUserStats(userIP, window.currentGame || 'pasala-che');
+        } else if (tabId === 'achievements' && typeof loadAchievements === 'function') {
           console.log('Recargando datos de logros...');
-          loadAchievementsData(window.currentGame || 'pasala-che');
+          const userIP = localStorage.getItem('userIP');
+          loadAchievements(userIP, window.currentGame || 'pasala-che');
         }
       }
       
