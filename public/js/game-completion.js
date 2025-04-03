@@ -166,6 +166,90 @@ function showErrorNotification(message) {
 }
 
 /**
+ * Muestra una notificación tipo toast al usuario
+ * @param {string} message - Mensaje a mostrar
+ * @param {string} type - Tipo de notificación (success, error, info, warning)
+ * @param {number} duration - Duración en ms (default: 3000)
+ */
+function showToast(message, type = 'info', duration = 3000) {
+  // Verificar si existe una función global para mostrar notificaciones
+  if (typeof window.showNotification === 'function') {
+    window.showNotification(message, type);
+    return;
+  }
+  
+  try {
+    // Crear elemento toast
+    const toast = document.createElement('div');
+    toast.className = `game-toast toast-${type}`;
+    
+    // Añadir ícono según el tipo
+    let icon = 'info-circle';
+    if (type === 'success') icon = 'check-circle';
+    if (type === 'error') icon = 'exclamation-circle';
+    if (type === 'warning') icon = 'exclamation-triangle';
+    
+    // Establecer contenido
+    toast.innerHTML = `
+      <div class="toast-icon"><i class="fas fa-${icon}"></i></div>
+      <div class="toast-message">${message}</div>
+    `;
+    
+    // Aplicar estilos
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.right = '20px';
+    toast.style.zIndex = '9999';
+    toast.style.minWidth = '250px';
+    toast.style.padding = '12px 15px';
+    toast.style.borderRadius = '8px';
+    toast.style.display = 'flex';
+    toast.style.alignItems = 'center';
+    toast.style.gap = '10px';
+    toast.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+    toast.style.animation = 'fadeInUp 0.3s ease forwards';
+    toast.style.transform = 'translateY(20px)';
+    toast.style.opacity = '0';
+    toast.style.transition = 'all 0.3s ease';
+    
+    // Colores según el tipo
+    if (type === 'success') {
+      toast.style.background = 'rgba(34, 197, 94, 0.95)';
+      toast.style.color = 'white';
+    } else if (type === 'error') {
+      toast.style.background = 'rgba(239, 68, 68, 0.95)';
+      toast.style.color = 'white';
+    } else if (type === 'warning') {
+      toast.style.background = 'rgba(245, 158, 11, 0.95)';
+      toast.style.color = 'white';
+    } else {
+      toast.style.background = 'rgba(59, 130, 246, 0.95)';
+      toast.style.color = 'white';
+    }
+    
+    // Añadir al DOM
+    document.body.appendChild(toast);
+    
+    // Animar entrada
+    setTimeout(() => {
+      toast.style.transform = 'translateY(0)';
+      toast.style.opacity = '1';
+    }, 10);
+    
+    // Eliminar después de la duración especificada
+    setTimeout(() => {
+      toast.style.transform = 'translateY(20px)';
+      toast.style.opacity = '0';
+      setTimeout(() => {
+        toast.remove();
+      }, 300);
+    }, duration);
+  } catch (error) {
+    console.error('Error al mostrar notificación:', error);
+  }
+}
+
+/**
  * Ejemplo de uso para PASALA CHE:
  * 
  * // Al finalizar un juego de PASALA CHE
@@ -342,48 +426,243 @@ function notifyDashboardWindows(gameData) {
   }));
 }
 
-// Escuchar cuando se guarda el resultado de la partida
-function setupGameCompletionListener() {
-  console.log('Configurando listener de finalización de partida...');
+// Función para actualizar el dashboard con los nuevos datos
+function refreshDashboardData(gameType) {
+  console.log('📊 Actualizando datos del dashboard para:', gameType);
+  const startTime = performance.now();
   
-  // Verificar cada segundo hasta encontrar la función savePlayerData (en caso de que se cargue después)
-  const checkInterval = setInterval(() => {
-    if (typeof window.savePlayerData === 'function') {
-      console.log('Función savePlayerData encontrada, configurando listener...');
+  try {
+    // Verificar que existen las funciones necesarias
+    const loadUserDataAndGameFn = 
+      window.loadUserDataAndGame || 
+      (window.apiClient && (() => {
+        console.log('Usando apiClient como fallback para loadUserDataAndGame');
+        const userIP = localStorage.getItem('userIP');
+        if (userIP) {
+          window.apiClient.getOrCreateUser(userIP);
+        }
+      }));
       
-      // Guardar referencia original
-      const originalSavePlayerData = window.savePlayerData;
+    const loadRankingFn = 
+      window.loadRanking || 
+      (window.apiClient && ((gameType) => {
+        console.log('Usando apiClient como fallback para loadRanking');
+        return window.apiClient.getGlobalRanking(gameType);
+      }));
       
-      // Reemplazar con nuestra versión
-      window.savePlayerData = function(gameData) {
-        console.log('Interceptando llamada a savePlayerData');
-        
-        // Llamar a la función original
-        const result = originalSavePlayerData(gameData);
-        
-        // Asegurarnos de notificar la finalización
-        setTimeout(() => {
-          if (typeof notifyGameCompletion === 'function') {
-            console.log('Notificando finalización de partida desde listener');
-            notifyGameCompletion(gameData);
-          }
-        }, 500);
-        
-        return result;
-      };
+    const loadUserStatsFn = 
+      window.loadUserStats || 
+      (window.apiClient && ((gameType) => {
+        console.log('Usando apiClient como fallback para loadUserStats');
+        const userIP = localStorage.getItem('userIP');
+        if (userIP) {
+          return window.apiClient.getUserProfile(userIP, gameType);
+        }
+      }));
       
-      console.log('Listener de finalización de partida configurado correctamente');
-      clearInterval(checkInterval);
-    } else {
-      console.log('Esperando función savePlayerData...');
+    const loadAchievementsFn = 
+      window.loadAchievements || 
+      (window.apiClient && ((gameType) => {
+        console.log('Usando apiClient como fallback para loadAchievements');
+        const userIP = localStorage.getItem('userIP');
+        if (userIP) {
+          return window.apiClient.getUserAchievements(userIP, gameType);
+        }
+      }));
+    
+    // Obtener tipo de juego actual (o usar pasala-che como fallback)
+    const currentGame = gameType || window.currentGame || 'pasala-che';
+    
+    // Obtener userIP desde localStorage
+    const userIP = localStorage.getItem('userIP');
+    if (!userIP) {
+      console.warn('🚨 No se encontró userIP en localStorage. Es posible que algunas funciones no trabajen correctamente.');
     }
-  }, 1000);
+    
+    // Actualizar cada sección si las funciones existen
+    if (loadUserDataAndGameFn) {
+      console.log('Actualizando perfil de usuario y datos del juego');
+      loadUserDataAndGameFn(currentGame);
+    } else {
+      console.warn('⚠️ Función loadUserDataAndGame no encontrada');
+    }
+    
+    if (loadRankingFn) {
+      console.log('Actualizando ranking');
+      loadRankingFn(currentGame);
+    } else {
+      console.warn('⚠️ Función loadRanking no encontrada');
+    }
+    
+    if (loadUserStatsFn) {
+      console.log('Actualizando estadísticas');
+      loadUserStatsFn(currentGame);
+    } else {
+      console.warn('⚠️ Función loadUserStats no encontrada');
+    }
+    
+    if (loadAchievementsFn) {
+      console.log('Actualizando logros');
+      loadAchievementsFn(currentGame);
+    } else {
+      console.warn('⚠️ Función loadAchievements no encontrada');
+    }
+    
+    const endTime = performance.now();
+    console.log(`✅ Dashboard actualizado en ${Math.round(endTime - startTime)}ms`);
+    
+    // Mostrar notificación de actualización
+    showToast('Dashboard actualizado', 'success');
+    
+    // Indicar que se ha actualizado
+    window.lastDashboardUpdateTime = Date.now();
+    return true;
+  } catch (error) {
+    console.error('❌ Error al actualizar dashboard:', error);
+    showToast('Error al actualizar dashboard', 'error');
+    return false;
+  } finally {
+    window.isUpdatingDashboard = false;
+  }
+}
+
+function setupDashboardUpdater() {
+  console.log('📡 Configurando actualizador del dashboard');
   
-  // Cancelar después de 10 intentos (10 segundos)
-  setTimeout(() => {
-    clearInterval(checkInterval);
-    console.warn('No se pudo encontrar la función savePlayerData después de 10 intentos.');
-  }, 10000);
+  try {
+    // Verificar si hay actualizaciones recientes al cargar la página
+    checkForRecentUpdates();
+    
+    // Escuchar el evento de juego completado (mismo window)
+    window.addEventListener(GAME_COMPLETED_EVENT, (event) => {
+      console.log('🎮 Evento de juego completado detectado en esta ventana', event);
+      if (window.isUpdatingDashboard) {
+        console.log('Actualización en progreso, ignorando evento');
+        return;
+      }
+      
+      window.isUpdatingDashboard = true;
+      const gameType = event.detail?.gameType || window.currentGame || 'pasala-che';
+      refreshDashboardData(gameType);
+    });
+    
+    // Escuchar eventos de localStorage (otros windows)
+    window.addEventListener('storage', (event) => {
+      if (event.key === 'lastGameCompletion') {
+        try {
+          console.log('🔄 Detectado juego completado en otra ventana');
+          
+          // Verificar si la actualización es reciente (menos de 30 segundos)
+          const data = JSON.parse(event.newValue);
+          const timestamp = data.timestamp || 0;
+          const now = Date.now();
+          const secondsAgo = (now - timestamp) / 1000;
+          
+          if (secondsAgo <= 30) {
+            console.log(`🕒 Actualización de ${Math.round(secondsAgo)}s atrás`);
+            
+            if (window.isUpdatingDashboard) {
+              console.log('Actualización en progreso, ignorando evento');
+              return;
+            }
+            
+            window.isUpdatingDashboard = true;
+            const gameType = data.gameType || window.currentGame || 'pasala-che';
+            refreshDashboardData(gameType);
+          } else {
+            console.log(`🕒 Ignorando actualización antigua de ${Math.round(secondsAgo)}s atrás`);
+          }
+        } catch (error) {
+          console.error('Error al procesar evento de storage:', error);
+        }
+      }
+    });
+    
+    // Verificar periódicamente si hay actualizaciones recientes (backup)
+    setInterval(checkForRecentUpdates, 5000);
+    
+    console.log('✅ Actualizador del dashboard configurado correctamente');
+  } catch (error) {
+    console.error('❌ Error al configurar el actualizador del dashboard:', error);
+  }
+}
+
+// Función para verificar si hay actualizaciones recientes en localStorage
+function checkForRecentUpdates() {
+  try {
+    const lastCompletionStr = localStorage.getItem('lastGameCompletion');
+    if (!lastCompletionStr) return;
+    
+    const data = JSON.parse(lastCompletionStr);
+    const timestamp = data.timestamp || 0;
+    const now = Date.now();
+    const secondsAgo = (now - timestamp) / 1000;
+    
+    // Si hay una actualización reciente (menos de 15 segundos) y no estamos actualizando ya
+    if (secondsAgo <= 15 && !window.isUpdatingDashboard) {
+      console.log(`🔄 Detectada actualización reciente (${Math.round(secondsAgo)}s atrás)`);
+      
+      window.isUpdatingDashboard = true;
+      const gameType = data.gameType || window.currentGame || 'pasala-che';
+      refreshDashboardData(gameType);
+    }
+  } catch (error) {
+    console.error('Error al verificar actualizaciones recientes:', error);
+  }
+}
+
+function setupGameCompletionListener() {
+  console.log('🎮 Configurando detector de fin de juego');
+  
+  try {
+    // Si ya existe savePlayerData, lo reemplazamos inmediatamente
+    if (window.savePlayerData) {
+      console.log('Función savePlayerData encontrada, configurando interceptor');
+      setupSavePlayerDataInterceptor();
+      return;
+    }
+    
+    // Si no, verificamos periódicamente hasta que esté disponible
+    console.log('Esperando a que la función savePlayerData esté disponible...');
+    
+    let checkCount = 0;
+    const checkInterval = setInterval(() => {
+      checkCount++;
+      
+      if (window.savePlayerData) {
+        console.log(`✅ savePlayerData encontrado después de ${checkCount} intentos`);
+        clearInterval(checkInterval);
+        setupSavePlayerDataInterceptor();
+      } else if (checkCount >= 10) {
+        console.warn('⚠️ No se pudo encontrar savePlayerData después de 10 intentos');
+        clearInterval(checkInterval);
+      } else {
+        console.log(`Intento ${checkCount}: Esperando función savePlayerData...`);
+      }
+    }, 1000);
+  } catch (error) {
+    console.error('❌ Error al configurar detector de fin de juego:', error);
+  }
+}
+
+function setupSavePlayerDataInterceptor() {
+  // Guardar referencia a la función original
+  const originalSavePlayerData = window.savePlayerData;
+  
+  // Reemplazar con nuestra versión que notifica al completar
+  window.savePlayerData = function(gameData) {
+    // Llamar a la función original primero
+    const result = originalSavePlayerData.apply(this, arguments);
+    
+    // Luego notificar que el juego ha sido completado
+    console.log('🎮 Juego completado detectado en savePlayerData:', gameData);
+    notifyGameCompletion(gameData);
+    
+    // Devolver el resultado original
+    return result;
+  };
+  
+  console.log('✅ Interceptor de savePlayerData configurado correctamente');
 }
 
 // Inicializar con un retardo para asegurar que todos los scripts se han cargado
@@ -407,176 +686,11 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 1000);
 });
 
-// Configurar actualización automática del dashboard
-function setupDashboardUpdater() {
-  console.log('Configurando actualización automática del dashboard');
-  
-  // Verificar si se han recibido actualizaciones recientes (al cargar la página)
-  checkForRecentUpdates();
-  
-  // Escuchar eventos de finalización de partida (si la partida termina en esta ventana)
-  document.addEventListener(GAME_COMPLETED_EVENT, function(event) {
-    console.log('Evento de finalización de partida recibido:', event.detail);
-    refreshDashboardData();
-  });
-  
-  // Escuchar cambios en localStorage (si la partida termina en otra ventana)
-  window.addEventListener('storage', function(event) {
-    console.log('Evento de almacenamiento detectado:', event.key);
-    
-    if (event.key === 'dashboardUpdate') {
-      try {
-        const updateData = JSON.parse(event.newValue);
-        console.log('Datos de actualización recibidos:', updateData);
-        
-        // Verificar si la actualización es reciente (menos de 30 segundos)
-        if (updateData && (Date.now() - updateData.timestamp < 30000)) {
-          console.log('Actualización del dashboard recibida desde otra ventana:', updateData);
-          refreshDashboardData();
-        } else {
-          console.log('Ignorando actualización antigua:', updateData);
-        }
-      } catch (error) {
-        console.error('Error al procesar actualización del dashboard:', error);
-      }
-    }
-  });
-  
-  // Comprobar periódicamente actualizaciones (como respaldo)
-  setInterval(checkForRecentUpdates, 5000);
-}
-
-// Verificar si hay actualizaciones recientes en localStorage
-function checkForRecentUpdates() {
-  try {
-    const updateDataStr = localStorage.getItem('dashboardUpdate');
-    if (updateDataStr) {
-      const updateData = JSON.parse(updateDataStr);
-      
-      // Verificar si la actualización es reciente (menos de 30 segundos)
-      if (updateData && (Date.now() - updateData.timestamp < 30000)) {
-        console.log('Actualización reciente encontrada en localStorage:', updateData);
-        refreshDashboardData();
-        
-        // Marcar como procesada
-        const processedData = {
-          ...updateData,
-          processed: true
-        };
-        localStorage.setItem('dashboardUpdate', JSON.stringify(processedData));
-      }
-    }
-  } catch (error) {
-    console.error('Error al verificar actualizaciones recientes:', error);
-  }
-}
-
-// Actualizar datos del dashboard
-function refreshDashboardData() {
-  console.log('Actualizando datos del dashboard');
-  
-  // Marcar inicio de actualización
-  const updateStartTime = Date.now();
-  
-  // Añadir una bandera para evitar actualizaciones redundantes
-  if (window.isUpdatingDashboard) {
-    console.log('Actualización en curso, ignorando solicitud redundante');
-    return;
-  }
-  
-  window.isUpdatingDashboard = true;
-  
-  try {
-    // Obtener referencias a las funciones de carga de datos del dashboard
-    if (typeof loadUserDataAndGame === 'function') {
-      console.log('Recargando datos de usuario y juego...');
-      
-      // Recargar datos del usuario y del juego seleccionado
-      loadUserDataAndGame(window.currentGame || 'pasala-che');
-      
-      // Recargar datos específicos según la pestaña activa
-      const activeTab = document.querySelector('.tab.active');
-      if (activeTab) {
-        const tabId = activeTab.getAttribute('data-tab');
-        console.log('Pestaña activa:', tabId);
-        
-        if (tabId === 'ranking' && typeof loadRanking === 'function') {
-          console.log('Recargando datos de ranking...');
-          loadRanking(window.currentGame || 'pasala-che');
-        } else if (tabId === 'stats' && typeof loadUserStats === 'function') {
-          console.log('Recargando datos de estadísticas...');
-          const userIP = localStorage.getItem('userIP');
-          loadUserStats(userIP, window.currentGame || 'pasala-che');
-        } else if (tabId === 'achievements' && typeof loadAchievements === 'function') {
-          console.log('Recargando datos de logros...');
-          const userIP = localStorage.getItem('userIP');
-          loadAchievements(userIP, window.currentGame || 'pasala-che');
-        }
-      }
-      
-      // Mostrar notificación al usuario
-      console.log('Actualización completada en', (Date.now() - updateStartTime), 'ms');
-      showUpdateNotification();
-    } else {
-      console.warn('No se encontró la función loadUserDataAndGame. No se puede actualizar el dashboard.');
-    }
-  } catch (error) {
-    console.error('Error durante la actualización del dashboard:', error);
-  } finally {
-    // Limpiar bandera de actualización
-    setTimeout(() => {
-      window.isUpdatingDashboard = false;
-    }, 2000);
-  }
-}
-
-// Mostrar notificación de actualización
-function showUpdateNotification() {
-  // Verificar si hay una función existente para mostrar notificaciones
-  if (typeof showNotification === 'function') {
-    showNotification('¡Dashboard actualizado con los nuevos datos!', 'success');
-  } else {
-    // Crear notificación propia
-    const notification = document.createElement('div');
-    notification.className = 'update-notification';
-    notification.innerHTML = `
-      <i class="fas fa-sync-alt"></i>
-      <span>Dashboard actualizado con los últimos resultados</span>
-    `;
-    
-    // Estilos para la notificación
-    notification.style.position = 'fixed';
-    notification.style.top = '20px';
-    notification.style.right = '20px';
-    notification.style.background = 'rgba(59, 130, 246, 0.9)';
-    notification.style.color = 'white';
-    notification.style.padding = '10px 15px';
-    notification.style.borderRadius = '8px';
-    notification.style.display = 'flex';
-    notification.style.alignItems = 'center';
-    notification.style.gap = '8px';
-    notification.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
-    notification.style.zIndex = '9999';
-    notification.style.transform = 'translateY(-10px)';
-    notification.style.opacity = '0';
-    notification.style.transition = 'all 0.3s ease';
-    
-    // Añadir al DOM
-    document.body.appendChild(notification);
-    
-    // Animar entrada
-    setTimeout(() => {
-      notification.style.transform = 'translateY(0)';
-      notification.style.opacity = '1';
-    }, 10);
-    
-    // Eliminar después de 3 segundos
-    setTimeout(() => {
-      notification.style.transform = 'translateY(-10px)';
-      notification.style.opacity = '0';
-      setTimeout(() => {
-        notification.remove();
-      }, 300);
-    }, 3000);
-  }
-} 
+// Exponer funciones principales a nivel global
+window.gameCompletion = {
+  notifyGameCompletion,
+  refreshDashboardData,
+  setupDashboardUpdater,
+  setupGameCompletionListener,
+  showToast
+}; 

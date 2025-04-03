@@ -1,161 +1,336 @@
-/**
- * Cliente para conectar con la API del backend
- */
-
-const API_BASE_URL = 'http://localhost:3000/api';
-
-// Obtener información del juego
-async function getGameInfo(gameType) {
+// Funciones de fallback para datos locales
+function getLocalUser(ip, username) {
+  // Intentamos obtener datos del usuario desde localStorage
+  const profileKey = `profile_${ip}`;
+  let userData = {
+    id: ip,
+    username: username || 'Jugador',
+    level: 1,
+    xp: 0,
+    totalXp: 100,
+    createdAt: new Date().toISOString()
+  };
+  
   try {
-    const response = await fetch(`${API_BASE_URL}/games/${gameType}/info`);
-    if (!response.ok) {
-      throw new Error('Error al obtener información del juego');
+    const savedData = localStorage.getItem(profileKey);
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      // Combinar datos guardados con los valores predeterminados
+      userData = { ...userData, ...parsedData };
     }
-    return await response.json();
   } catch (error) {
-    console.error('Error en getGameInfo:', error);
-    // Fallback a datos locales si hay error
+    console.error('Error al leer datos de usuario locales:', error);
+  }
+  
+  return userData;
+}
+
+function getLocalUserStats(userId, gameType) {
+  try {
+    // Si tenemos una función global, la usamos (desde user-dashboard.js)
+    if (typeof window.getLocalUserStats === 'function') {
+      return window.getLocalUserStats(userId, gameType);
+    }
+    
+    const statsKey = `userStats_${userId}_${gameType}`;
+    const savedStats = localStorage.getItem(statsKey);
+    
+    if (savedStats) {
+      return JSON.parse(savedStats);
+    }
+    
+    // Estadísticas por defecto
+    return {
+      gamesPlayed: 0,
+      gamesWon: 0,
+      totalScore: 0,
+      highScore: 0,
+      totalCorrectAnswers: 0,
+      totalAnswers: 0,
+      winRate: 0,
+      accuracy: 0
+    };
+  } catch (error) {
+    console.error('Error al obtener estadísticas locales:', error);
     return null;
   }
 }
 
-// Obtener o crear usuario
-async function getOrCreateUser(ip, username) {
+function getLocalRanking(gameType) {
   try {
-    const response = await fetch(`${API_BASE_URL}/users`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+    // Si tenemos una función global, la usamos (desde user-dashboard.js)
+    if (typeof window.getLocalRanking === 'function') {
+      return window.getLocalRanking(gameType);
+    }
+    
+    // Generamos un ranking local con datos de ejemplo
+    const ranking = {
+      players: [],
+      currentPage: 1,
+      totalPages: 1,
+      totalPlayers: 5,
+      totalGames: 10,
+      avgScore: 50,
+      maxScore: 100
+    };
+    
+    // Generar algunos jugadores de ejemplo
+    for (let i = 1; i <= 5; i++) {
+      ranking.players.push({
+        rank: i,
+        name: `Jugador ${i}`,
+        score: 100 - (i * 10),
+        gamesPlayed: 5 - (i % 3),
+        lastActive: i
+      });
+    }
+    
+    // Intentar añadir al jugador actual
+    const userId = localStorage.getItem('userIP');
+    const username = localStorage.getItem('username') || 'Jugador';
+    
+    if (userId) {
+      // Añadir al jugador actual en una posición aleatoria
+      const randomPosition = Math.floor(Math.random() * ranking.players.length);
+      ranking.players.splice(randomPosition, 0, {
+        rank: randomPosition + 1,
+        name: username,
+        score: 75,
+        gamesPlayed: 3,
+        lastActive: 0,
+        isCurrentUser: true
+      });
+      
+      // Actualizar rangos
+      ranking.players.forEach((player, index) => {
+        player.rank = index + 1;
+      });
+    }
+    
+    return ranking;
+  } catch (error) {
+    console.error('Error al generar ranking local:', error);
+    return null;
+  }
+}
+
+function getLocalTopPlayers(gameType) {
+  try {
+    // Si tenemos una función global, la usamos (desde user-dashboard.js)
+    if (typeof window.getLocalTopPlayers === 'function') {
+      return window.getLocalTopPlayers(gameType);
+    }
+    
+    // Obtener el ranking completo y tomar los primeros 3 jugadores
+    const ranking = getLocalRanking(gameType);
+    return ranking.players.slice(0, 3);
+  } catch (error) {
+    console.error('Error al obtener top jugadores locales:', error);
+    return [];
+  }
+}
+
+function getLocalGlobalStats(gameType) {
+  try {
+    // Si tenemos una función global, la usamos (desde user-dashboard.js)
+    if (typeof window.getLocalGlobalStats === 'function') {
+      return window.getLocalGlobalStats(gameType);
+    }
+    
+    return {
+      totalPlayers: 100,
+      totalGames: 500,
+      avgScore: 75,
+      maxScore: 150
+    };
+  } catch (error) {
+    console.error('Error al obtener estadísticas globales locales:', error);
+    return null;
+  }
+}
+
+function getLocalUserAchievements(userId, gameType) {
+  try {
+    // Si tenemos una función global, la usamos (desde user-dashboard.js)
+    if (typeof window.getLocalUserAchievements === 'function') {
+      return window.getLocalUserAchievements(userId, gameType);
+    }
+    
+    // Intentar leer logros guardados en localStorage
+    const achievementsKey = `userAchievements_${userId}`;
+    const savedAchievements = localStorage.getItem(achievementsKey);
+    
+    if (savedAchievements) {
+      return JSON.parse(savedAchievements);
+    }
+    
+    // Devolver algunos logros de ejemplo por defecto
+    return [
+      {
+        id: 'first-game',
+        title: 'Primera Partida',
+        description: 'Jugar tu primera partida',
+        icon: 'gamepad',
+        status: 'unlocked',
+        progress: 100,
+        reward: '10 XP'
       },
-      body: JSON.stringify({ ip, username }),
-    });
-    
-    if (!response.ok) {
-      throw new Error('Error al obtener/crear usuario');
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('Error en getOrCreateUser:', error);
-    return null;
-  }
-}
-
-// Obtener perfil de usuario
-async function getUserProfile(userId, gameType) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/${userId}/profile/${gameType}`);
-    
-    if (!response.ok) {
-      throw new Error('Error al obtener perfil de usuario');
-    }
-    
-    return await response.json();
-  } catch (error) {
-    console.error('Error en getUserProfile:', error);
-    return null;
-  }
-}
-
-// Guardar datos de una partida
-async function saveGameData(gameData) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/games`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+      {
+        id: 'win-streak',
+        title: 'Racha Ganadora',
+        description: 'Gana 3 partidas seguidas',
+        icon: 'fire',
+        status: 'in-progress',
+        progress: 33,
+        reward: '50 XP'
       },
-      body: JSON.stringify(gameData),
-    });
-    
-    if (!response.ok) {
-      throw new Error('Error al guardar datos de la partida');
-    }
-    
-    return await response.json();
+      {
+        id: 'perfect-game',
+        title: 'Partida Perfecta',
+        description: 'Completa una partida sin errores',
+        icon: 'star',
+        status: 'locked',
+        progress: 0,
+        reward: '100 XP'
+      }
+    ];
   } catch (error) {
-    console.error('Error en saveGameData:', error);
-    return null;
+    console.error('Error al obtener logros locales:', error);
+    return [];
   }
 }
 
-// Obtener ranking global
-async function getGlobalRanking(gameType, filter = 'global', page = 1) {
+function searchLocalPlayers(gameType, term) {
   try {
-    const response = await fetch(`${API_BASE_URL}/games/${gameType}/ranking?filter=${filter}&page=${page}`);
+    // Obtener el ranking completo
+    const ranking = getLocalRanking(gameType);
     
-    if (!response.ok) {
-      throw new Error('Error al obtener ranking global');
-    }
+    // Filtrar jugadores cuyo nombre coincida con el término
+    const results = ranking.players.filter(player => 
+      player.name.toLowerCase().includes(term.toLowerCase())
+    );
     
-    return await response.json();
+    return {
+      players: results,
+      count: results.length,
+      term: term
+    };
   } catch (error) {
-    console.error('Error en getGlobalRanking:', error);
-    return null;
+    console.error('Error al buscar jugadores localmente:', error);
+    return { players: [], count: 0, term: term };
   }
 }
 
-// Obtener estadísticas globales
-async function getGlobalStats(gameType) {
+function saveGameDataLocally(gameData) {
   try {
-    const response = await fetch(`${API_BASE_URL}/games/${gameType}/global-stats`);
-    
-    if (!response.ok) {
-      throw new Error('Error al obtener estadísticas globales');
+    const userIP = gameData.userId || localStorage.getItem('userIP');
+    if (!userIP) {
+      console.error('No se pudo guardar partida: falta userId');
+      return false;
     }
     
-    return await response.json();
+    // Preparar datos de la partida para almacenamiento local
+    const gameHistoryEntry = {
+      gameType: gameData.gameType,
+      score: gameData.score,
+      correctAnswers: gameData.correctAnswers,
+      incorrectAnswers: gameData.incorrectAnswers || 0,
+      skippedAnswers: gameData.skippedAnswers || 0,
+      timeSpent: gameData.timeSpent,
+      timestamp: Date.now(),
+      isWin: gameData.isWin
+    };
+    
+    // Guardar en historial
+    const historyKey = `gameHistory_${userIP}`;
+    let history = [];
+    
+    try {
+      const savedHistory = localStorage.getItem(historyKey);
+      if (savedHistory) {
+        history = JSON.parse(savedHistory);
+      }
+    } catch (e) {
+      console.error('Error al leer historial:', e);
+    }
+    
+    // Añadir nueva partida
+    history.unshift(gameHistoryEntry);
+    
+    // Limitar a 50 partidas
+    if (history.length > 50) {
+      history = history.slice(0, 50);
+    }
+    
+    // Guardar historial actualizado
+    localStorage.setItem(historyKey, JSON.stringify(history));
+    
+    // Actualizar estadísticas
+    updateLocalUserStats(userIP, gameData);
+    
+    return true;
   } catch (error) {
-    console.error('Error en getGlobalStats:', error);
-    return null;
+    console.error('Error al guardar partida localmente:', error);
+    return false;
   }
 }
 
-// Obtener top jugadores
-async function getTopPlayers(gameType) {
+function updateLocalUserStats(userIP, gameData) {
   try {
-    const response = await fetch(`${API_BASE_URL}/games/${gameType}/top-players`);
+    // Clave para las estadísticas del usuario en este juego
+    const statsKey = `userStats_${userIP}_${gameData.gameType}`;
     
-    if (!response.ok) {
-      throw new Error('Error al obtener top jugadores');
+    // Cargar estadísticas existentes o crear nuevas
+    let stats = {
+      gamesPlayed: 0,
+      gamesWon: 0,
+      totalScore: 0,
+      highScore: 0,
+      totalCorrectAnswers: 0,
+      totalAnswers: 0,
+      winRate: 0,
+      accuracy: 0,
+      averageTime: 0,
+      totalTimeSpent: 0
+    };
+    
+    try {
+      const savedStats = localStorage.getItem(statsKey);
+      if (savedStats) {
+        stats = { ...stats, ...JSON.parse(savedStats) };
+      }
+    } catch (e) {
+      console.error('Error al leer estadísticas guardadas:', e);
     }
     
-    return await response.json();
-  } catch (error) {
-    console.error('Error en getTopPlayers:', error);
-    return null;
-  }
-}
-
-// Buscar jugadores
-async function searchPlayers(gameType, term) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/games/${gameType}/ranking/search?term=${encodeURIComponent(term)}`);
+    // Actualizar estadísticas
+    stats.gamesPlayed++;
+    stats.totalScore += gameData.score || 0;
+    stats.highScore = Math.max(stats.highScore, gameData.score || 0);
+    stats.totalCorrectAnswers += gameData.correctAnswers || 0;
+    stats.totalAnswers += gameData.totalAnswers || 
+                          (gameData.correctAnswers || 0) + 
+                          (gameData.incorrectAnswers || 0) + 
+                          (gameData.skippedAnswers || 0);
+    stats.totalTimeSpent += gameData.timeSpent || 0;
     
-    if (!response.ok) {
-      throw new Error('Error al buscar jugadores');
+    if (gameData.isWin) {
+      stats.gamesWon++;
     }
     
-    return await response.json();
-  } catch (error) {
-    console.error('Error en searchPlayers:', error);
-    return null;
-  }
-}
-
-// Obtener logros del usuario
-async function getUserAchievements(userId, gameType) {
-  try {
-    const response = await fetch(`${API_BASE_URL}/users/${userId}/achievements/${gameType}`);
+    // Calcular estadísticas derivadas
+    stats.winRate = stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0;
+    stats.accuracy = stats.totalAnswers > 0 ? Math.round((stats.totalCorrectAnswers / stats.totalAnswers) * 100) : 0;
+    stats.averageTime = stats.gamesPlayed > 0 ? Math.round(stats.totalTimeSpent / stats.gamesPlayed) : 0;
     
-    if (!response.ok) {
-      throw new Error('Error al obtener logros del usuario');
-    }
+    // Guardar estadísticas actualizadas
+    localStorage.setItem(statsKey, JSON.stringify(stats));
     
-    return await response.json();
+    console.log('Estadísticas locales actualizadas:', stats);
+    return true;
   } catch (error) {
-    console.error('Error en getUserAchievements:', error);
-    return null;
+    console.error('Error al actualizar estadísticas locales:', error);
+    return false;
   }
 }
 
@@ -169,5 +344,16 @@ window.apiClient = {
   getGlobalStats,
   getTopPlayers,
   searchPlayers,
-  getUserAchievements
+  getUserAchievements,
+  // Funciones de fallback
+  getLocalUser,
+  getLocalUserStats,
+  getLocalRanking,
+  getLocalTopPlayers,
+  getLocalGlobalStats,
+  getLocalUserAchievements,
+  searchLocalPlayers,
+  saveGameDataLocally,
+  updateLocalUserStats,
+  checkApiAvailability
 }; 
