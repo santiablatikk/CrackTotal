@@ -1689,45 +1689,56 @@ document.getElementById('play-again-btn').addEventListener('click', function() {
 
 // Asegurar que la información del jugador se guarde correctamente
 function savePlayerData(gameData) {
-  try {
-    // Guardar nombre de usuario en localStorage para uso futuro
-    if (gameData.name) {
-      localStorage.setItem('username', gameData.name);
-    }
-    
-    // Guardar datos de última partida para mostrar en ranking
-    localStorage.setItem('lastGameStats', JSON.stringify({
-      score: gameData.score || 0,
-      correct: gameData.correct || 0,
-      wrong: gameData.wrong || 0,
-      skipped: gameData.skipped || 0,
-      difficulty: gameData.difficulty || 'normal',
-      victory: gameData.victory || false,
-      date: new Date().toISOString()
-    }));
-    
-    // Detectar IP del usuario y guardar registro
-    const userIP = localStorage.getItem('userIP');
-    if (userIP) {
-      saveGameToHistory(gameData, userIP);
-    } else {
-      // Si no tenemos IP, intentar detectarla y luego guardar
-      detectAndSaveUserIP().then(ip => {
-        if (ip) {
-          saveGameToHistory(gameData, ip);
-        }
+  console.log('Guardando datos de la partida:', gameData);
+  
+  // Obtener IP del usuario (o generar un identificador único)
+  const userIP = localStorage.getItem('userIP') || 'unknown';
+  
+  // Guardar datos del juego en el historial
+  saveGameToHistory(gameData, userIP);
+  
+  // Actualizar perfil del usuario
+  updateUserProfile(gameData, userIP);
+  
+  // Comprobar logros
+  checkForAchievements(gameData);
+  
+  // Compatibilidad con el sistema de actualización del dashboard
+  // Ampliar el objeto gameData con información adicional para el sistema de actualización
+  const extendedGameData = {
+    ...gameData,
+    gameType: 'pasala-che',
+    totalAnswers: gameData.correctCount + gameData.incorrectCount + gameData.skippedCount,
+    correctAnswers: gameData.correctCount,
+    score: gameData.correctCount,
+    isWin: (gameData.correctCount > 0),
+    timeSpent: timeLimit - timeRemaining
+  };
+  
+  // Si existe la función de notificación, la llamamos
+  if (typeof notifyGameCompletion === 'function') {
+    notifyGameCompletion(extendedGameData);
+  } else {
+    // Si no existe, intentamos enviar un evento personalizado para que lo capture el listener
+    try {
+      const gameCompletedEvent = new CustomEvent('game-completed', { 
+        detail: extendedGameData,
+        bubbles: true 
       });
+      document.dispatchEvent(gameCompletedEvent);
+      
+      // También actualizamos localStorage para que otros dashboards abiertos lo detecten
+      localStorage.setItem('dashboardUpdate', JSON.stringify({
+        timestamp: Date.now(),
+        gameType: 'pasala-che',
+        action: 'gameCompleted'
+      }));
+    } catch (error) {
+      console.error('Error al notificar finalización de partida:', error);
     }
-    
-    // Verificar logros basados en esta partida (si la función está disponible)
-    if (typeof window.checkGameCompletionAchievements === 'function') {
-      window.checkGameCompletionAchievements(gameData);
-    }
-    
-    console.log('Datos del jugador guardados correctamente');
-  } catch (error) {
-    console.error('Error al guardar datos del jugador:', error);
   }
+  
+  return true;
 }
 
 // Función para guardar partida en el historial

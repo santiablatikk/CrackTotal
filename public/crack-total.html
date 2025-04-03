@@ -61,228 +61,417 @@
 
       <!-- Footer -->
       <footer class="policy-footer">
-        <div class="footer-links-mini">
-          <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
-          <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-          <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
-          <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-          <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-          <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
-        </div>
-        <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
-        <div class="footer-social-icons">
-          <a href="https://www.facebook.com/cracktotal" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://twitter.com/cracktotal" class="social-icon"><i class="fab fa-twitter"></i></a>
-          <a href="https://www.instagram.com/cracktotal" class="social-icon"><i class="fab fa-instagram"></i></a>
-          <a href="https://www.youtube.com/c/cracktotal" class="social-icon"><i class="fab fa-youtube"></i></a>
-        </div>
-      </footer>
-    </div>
+  <div class="footer-links-mini">
+    <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+    <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+    <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+    <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+    <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+    <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+  </div>
+  <div class="share-button-container">
+    <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
+  </div>
+  <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
+  <div class="footer-social-icons">
+    <a href="https://www.facebook.com/cracktotal" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://twitter.com/cracktotal" class="social-icon"><i class="fab fa-twitter"></i></a>
+    <a href="https://www.instagram.com/cracktotal" class="social-icon"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.youtube.com/c/cracktotal" class="social-icon"><i class="fab fa-youtube"></i></a>
+  </div>
+</footer>
 
-    <!-- Toast para notificaciones -->
-    <div id="notification" class="toast" style="display: none;"></div>
+<style>
+/* Estilos para el botón de compartir */
+.share-button-container {
+  text-align: center;
+  margin: 1.5rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+.share-button {
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #4299e1, #3182ce);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 10px rgba(66, 153, 225, 0.35);
+}
+
+.share-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(66, 153, 225, 0.5);
+  background: linear-gradient(135deg, #3182ce, #2c5282);
+}
+
+.share-button i {
+  font-size: 1.1rem;
+}
+
+/* Estilos para el footer */
+.policy-footer {
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto 0;
+  text-align: center;
+  position: relative;
+  padding-top: 1.5rem;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+.policy-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--accent-color), transparent);
+  opacity: 0.3;
+}
+
+.footer-links-mini {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.footer-links-mini a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.footer-links-mini a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--accent-color);
+  transition: var(--transition);
+}
+
+.footer-links-mini a:hover::after {
+  width: 100%;
+}
+
+.footer-links-mini a:hover {
+  color: var(--accent-color);
+  transform: translateY(-2px);
+}
+
+.footer-links-mini a i {
+  margin-right: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.copyright-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.footer-social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(225, 29, 72, 0.1);
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  background-color: var(--accent-color);
+  color: white;
+  transform: translateY(-3px);
+}
+
+/* Estilos para las notificaciones toast */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  z-index: 9999;
+  display: none;
+  animation: fadeInOut 3s ease forwards;
+  background-color: #1e293b;
+  color: white;
+  border-left: 4px solid var(--accent-color, #3182ce);
+}
+
+.toast.success {
+  border-left-color: #48bb78;
+}
+
+.toast.error {
+  border-left-color: #f56565;
+}
+
+.toast.info {
+  border-left-color: #4299e1;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-20px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
+
+@media (max-width: 600px) {
+  .footer-links-mini {
+    gap: 0.5rem;
+  }
+  
+  .footer-links-mini a {
+    font-size: 0.75rem;
+  }
+  
+  .share-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .toast {
+    width: calc(100% - 40px);
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+}
+</style>
+
+<script>
+// Función para compartir el sitio web
+document.addEventListener('DOMContentLoaded', function() {
+  const shareButton = document.getElementById('share-button');
+  
+  if (shareButton) {
+    shareButton.addEventListener('click', function() {
+      const shareData = {
+        title: 'CRACK TOTAL - Juegos de Fútbol',
+        text: 'Juega y pon a prueba tus conocimientos futboleros en CRACK TOTAL',
+        url: window.location.href
+      };
+      
+      // Si la API Web Share está disponible
+      if (navigator.share) {
+        navigator.share(shareData)
+          .then(() => {
+            showNotification('¡Gracias por compartir!', 'success');
+          })
+          .catch((error) => {
+            console.error('Error al compartir:', error);
+            shareWithFallback();
+          });
+      } else {
+        // Fallback para navegadores que no soportan la API Web Share
+        shareWithFallback();
+      }
+    });
+  }
+  
+  // Función de fallback para navegadores sin soporte de API Web Share
+  function shareWithFallback() {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent('CRACK TOTAL - Juegos de Fútbol');
+    const text = encodeURIComponent('Juega y pon a prueba tus conocimientos futboleros en CRACK TOTAL');
     
-    <!-- Cookie Consent Banner -->
-    <div id="cookieConsent" class="cookie-consent" style="display: none;">
-      <p>Utilizamos cookies para mejorar tu experiencia en nuestra web. Al continuar navegando, aceptas nuestra <a href="cookies.html">política de cookies</a>.</p>
-      <div class="cookie-consent-buttons">
-        <button class="cookie-btn cookie-accept">Aceptar</button>
-        <button class="cookie-btn cookie-decline">Rechazar</button>
+    const shareOptions = document.createElement('div');
+    shareOptions.classList.add('share-options');
+    shareOptions.innerHTML = `
+      <div class="share-dialog">
+        <div class="share-header">
+          <h3>Compartir en redes sociales</h3>
+          <button class="close-share"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="share-buttons">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" class="fb-share">
+            <i class="fab fa-facebook-f"></i> Facebook
+          </a>
+          <a href="https://twitter.com/intent/tweet?url=${url}&text=${text}" target="_blank" class="tw-share">
+            <i class="fab fa-twitter"></i> Twitter
+          </a>
+          <a href="https://api.whatsapp.com/send?text=${text}%20${url}" target="_blank" class="wa-share">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+          </a>
+          <a href="mailto:?subject=${title}&body=${text}%20${url}" class="email-share">
+            <i class="fas fa-envelope"></i> Email
+          </a>
+        </div>
       </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="js/particles-config.js"></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Configurar particles.js
-        if (document.getElementById('particles-js')) {
-          particlesJS('particles-js', particlesConfig);
-        }
-        
-        // Verificar si hay un nombre guardado (para cambiar el texto del formulario)
-        const playerName = localStorage.getItem('playerName');
-        const welcomeTitle = document.querySelector('.welcome-message h2');
-        const welcomeDesc = document.querySelector('.welcome-message p');
-        const submitBtn = document.querySelector('.btn-primary');
-        
-        if (playerName) {
-          // Estamos cambiando el nombre de usuario
-          welcomeTitle.textContent = '¿Quieres cambiar tu nombre?';
-          welcomeDesc.textContent = 'Ingresa tu nuevo nombre de jugador';
-          submitBtn.innerHTML = 'GUARDAR CAMBIOS <i class="fas fa-arrow-right"></i>';
-        }
-        
-        // Manejar el envío del formulario
-        const loginForm = document.getElementById('login-form');
-        const usernameInput = document.getElementById('username');
-        
-        loginForm.addEventListener('submit', function(e) {
-          e.preventDefault();
-          
-          const username = usernameInput.value.trim();
-          
-          if (username !== '') {
-            // Guardar el nombre en localStorage
-            localStorage.setItem('playerName', username);
-            
-            // Redireccionar al portal
-            window.location.href = 'portal.html';
-          } else {
-            usernameInput.focus();
-          }
-        });
-        
-        // Verificar consentimiento de cookies
-        if (!localStorage.getItem('cookieConsent')) {
-          const cookieConsent = document.getElementById('cookieConsent');
-          if (cookieConsent) {
-            cookieConsent.style.display = 'block';
-            
-            const acceptBtn = document.querySelector('.cookie-accept');
-            const declineBtn = document.querySelector('.cookie-decline');
-            
-            if (acceptBtn) {
-              acceptBtn.addEventListener('click', function() {
-                localStorage.setItem('cookieConsent', 'accepted');
-                cookieConsent.style.display = 'none';
-              });
-            }
-            
-            if (declineBtn) {
-              declineBtn.addEventListener('click', function() {
-                localStorage.setItem('cookieConsent', 'declined');
-                cookieConsent.style.display = 'none';
-              });
-            }
-          }
-        }
-      });
-    </script>
-    <style>
-      .main-container {
+    `;
+    
+    document.body.appendChild(shareOptions);
+    
+    // Cerrar el diálogo cuando se hace clic en el botón de cerrar
+    const closeButton = shareOptions.querySelector('.close-share');
+    closeButton.addEventListener('click', function() {
+      document.body.removeChild(shareOptions);
+    });
+    
+    // Cerrar el diálogo al hacer clic fuera de él
+    shareOptions.addEventListener('click', function(e) {
+      if (e.target === shareOptions) {
+        document.body.removeChild(shareOptions);
+      }
+    });
+    
+    // Agregar estilos para el diálogo de compartir
+    const style = document.createElement('style');
+    style.textContent = `
+      .share-options {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.7);
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 100%;
-        max-width: 500px;
-        margin: 0 auto;
-        padding: 20px;
+        z-index: 9999;
       }
       
-      .login-card {
-        width: 100%;
-        padding: 30px;
-        margin-bottom: 40px;
-        text-align: center;
+      .share-dialog {
+        background-color: var(--card-bg, #1e293b);
+        border-radius: 12px;
+        padding: 1.5rem;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
       }
       
-      .welcome-section {
-        text-align: center;
+      .share-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
       }
       
-      .welcome-message h2 {
-        font-size: 2.2rem;
-        font-weight: 700;
-        margin-bottom: 16px;
-        background: linear-gradient(45deg, #3490dc, #6574cd);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: titlePulse 3s infinite alternate;
-        position: relative;
-      }
-      
-      .welcome-message p {
-        font-size: 1.2rem;
-        color: #a0aec0;
-        margin-bottom: 30px;
-      }
-      
-      .input-with-icon {
-        position: relative;
-        margin-bottom: 20px;
-      }
-      
-      .input-with-icon i {
-        position: absolute;
-        left: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #4299e1;
-        font-size: 1.2rem;
-      }
-      
-      .input-field {
-        width: 100%;
-        padding: 15px 15px 15px 45px;
-        border-radius: 10px;
-        border: 2px solid rgba(66, 153, 225, 0.3);
-        background-color: rgba(15, 23, 42, 0.5);
-        color: #f7fafc;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-      }
-      
-      .input-field:focus {
-        outline: none;
-        border-color: #4299e1;
-        box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.2);
-      }
-      
-      .input-field::placeholder {
-        color: #718096;
-      }
-      
-      .btn-primary {
-        background: linear-gradient(135deg, #4299e1, #667eea);
+      .share-header h3 {
+        margin: 0;
         color: white;
+        font-size: 1.2rem;
+      }
+      
+      .close-share {
+        background: transparent;
         border: none;
-        border-radius: 10px;
-        padding: 15px 25px;
-        font-size: 1rem;
-        font-weight: 600;
+        color: white;
+        font-size: 1.2rem;
         cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(66, 153, 225, 0.25);
-        display: inline-flex;
+        opacity: 0.7;
+        transition: opacity 0.2s;
+      }
+      
+      .close-share:hover {
+        opacity: 1;
+      }
+      
+      .share-buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      
+      .share-buttons a {
+        display: flex;
         align-items: center;
         justify-content: center;
+        gap: 8px;
+        padding: 0.8rem;
+        text-decoration: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        transition: transform 0.2s, filter 0.2s;
       }
       
-      .btn-primary:hover {
+      .share-buttons a:hover {
         transform: translateY(-3px);
-        box-shadow: 0 7px 14px rgba(66, 153, 225, 0.35);
+        filter: brightness(1.1);
       }
       
-      .btn-primary i {
-        margin-left: 8px;
+      .fb-share {
+        background-color: #4267B2;
       }
       
-      @keyframes titlePulse {
-        0% {
-          opacity: 0.9;
-        }
-        100% {
-          opacity: 1;
-        }
+      .tw-share {
+        background-color: #1DA1F2;
       }
       
-      @media (max-width: 768px) {
-        .welcome-message h2 {
-          font-size: 1.8rem;
-        }
-        
-        .welcome-message p {
-          font-size: 1rem;
-        }
+      .wa-share {
+        background-color: #25D366;
       }
       
-      @media (max-width: 480px) {
-        .login-card {
-          padding: 20px 15px;
-        }
+      .email-share {
+        background-color: #666;
       }
-    </style>
-  </body>
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Función para mostrar notificaciones
+  function showNotification(message, type = 'info') {
+    // Buscar elemento de notificación existente o crear uno nuevo
+    let notification = document.getElementById('notification');
+    
+    if (!notification) {
+      notification = document.createElement('div');
+      notification.id = 'notification';
+      notification.className = 'toast';
+      notification.style.display = 'none';
+      document.body.appendChild(notification);
+    }
+    
+    // Mostrar notificación
+    notification.textContent = message;
+    notification.className = `toast ${type}`;
+    notification.style.display = 'block';
+    
+    // Ocultar después de 3 segundos
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 3000);
+  }
+});
+</script> 
+<!-- Botón flotante de compartir -->
+<script src="js/share-buttons.js"></script>
+<!-- Script para el footer global -->
+<script src="js/global-footer.js"></script>
+</body>
 </html> 

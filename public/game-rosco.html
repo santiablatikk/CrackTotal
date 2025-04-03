@@ -139,322 +139,468 @@
 
       <!-- Footer -->
       <footer class="policy-footer">
-        <div class="footer-links-mini">
-          <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
-          <a href="game.html"><i class="fas fa-gamepad"></i> Jugar</a>
-          <a href="user-dashboard.html"><i class="fas fa-user"></i> Mi Dashboard</a>
-          <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
-          <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
-          <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-          <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
-          <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-          <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-          <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
-        </div>
-        <div class="copyright-text">&copy; 2025 CRACK TOTAL - Todos los derechos reservados.</div>
-        <div class="footer-social-icons">
-          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
-        </div>
-      </footer>
-    </div>
+  <div class="footer-links-mini">
+    <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+    <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+    <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+    <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+    <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+    <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+  </div>
+  <div class="share-button-container">
+    <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
+  </div>
+  <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
+  <div class="footer-social-icons">
+    <a href="https://www.facebook.com/cracktotal" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://twitter.com/cracktotal" class="social-icon"><i class="fab fa-twitter"></i></a>
+    <a href="https://www.instagram.com/cracktotal" class="social-icon"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.youtube.com/c/cracktotal" class="social-icon"><i class="fab fa-youtube"></i></a>
+  </div>
+</footer>
 
-    <!-- Toast para notificaciones -->
-    <div id="notification" class="toast" style="display: none;"></div>
-    
-    <!-- Modal de Reglas del Juego -->
-    <div id="rules-modal" class="modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>REGLAS DEL JUEGO</h2>
-          <span class="close-modal">&times;</span>
-        </div>
-        <div class="modal-body">
-          <div class="rules-grid">
-            <div class="rule-card">
-              <div class="rule-icon" style="background-color: rgba(239, 68, 68, 0.2); color: #ef4444;">
-                <i class="fas fa-exclamation-triangle"></i>
-              </div>
-              <div class="rule-content">
-                <h4>Máximo de Errores</h4>
-                <p>Hasta 2 errores (al tercer error pierdes).</p>
-              </div>
-            </div>
-            
-            <div class="rule-card">
-              <div class="rule-icon" style="background-color: rgba(59, 130, 246, 0.2); color: #3b82f6;">
-                <i class="fas fa-lightbulb"></i>
-              </div>
-              <div class="rule-content">
-                <h4>HELP</h4>
-                <p>2 oportunidades para obtener pista (primeras 3 letras).</p>
-              </div>
-            </div>
-            
-            <div class="rule-card">
-              <div class="rule-icon" style="background-color: rgba(139, 92, 246, 0.2); color: #8b5cf6;">
-                <i class="fas fa-keyboard"></i>
-              </div>
-              <div class="rule-content">
-                <h4>Respuesta Incompleta</h4>
-                <p>Puedes enviar respuestas incompletas hasta 2 veces.</p>
-              </div>
-            </div>
-            
-            <div class="rule-card">
-              <div class="rule-icon" style="background-color: rgba(16, 185, 129, 0.2); color: #10b981;">
-                <i class="fas fa-clock"></i>
-              </div>
-              <div class="rule-content">
-                <h4>Tiempo</h4>
-                <p>Fácil: 300" / Normal: 240" / Difícil: 200"</p>
-              </div>
-            </div>
-            
-            <div class="rule-card">
-              <div class="rule-icon" style="background-color: rgba(245, 158, 11, 0.2); color: #f59e0b;">
-                <i class="fas fa-spell-check"></i>
-              </div>
-              <div class="rule-content">
-                <h4>Ortografía</h4>
-                <p>Se toleran errores mínimos.</p>
-              </div>
-            </div>
-            
-            <div class="rule-card">
-              <div class="rule-icon" style="background-color: rgba(236, 72, 153, 0.2); color: #ec4899;">
-                <i class="fas fa-pen-fancy"></i>
-              </div>
-              <div class="rule-content">
-                <h4>Respuesta</h4>
-                <p>Si la pregunta NO dice "Apellido de.." la respuesta es el nombre completo.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button id="start-game-modal" class="btn btn-start-game">
-            <i class="fas fa-play"></i> ¡COMENZAR JUEGO!
-          </button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Cookie Consent Banner -->
-    <div id="cookieConsent" class="cookie-consent" style="display: none;">
-      <p>Utilizamos cookies para mejorar tu experiencia en nuestra web. Al continuar navegando, aceptas nuestra <a href="cookies.html">política de cookies</a>.</p>
-      <div class="cookie-consent-buttons">
-        <button class="cookie-btn cookie-accept">Aceptar</button>
-        <button class="cookie-btn cookie-decline">Rechazar</button>
-      </div>
-    </div>
+<style>
+/* Estilos para el botón de compartir */
+.share-button-container {
+  text-align: center;
+  margin: 1.5rem 0;
+  position: relative;
+  z-index: 1;
+}
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="js/particles-config.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/main.js" defer></script>
-    <script>
-      // Script para manejar la navegación entre pantallas
-      document.addEventListener('DOMContentLoaded', function() {
-        const gameOptionsScreen = document.getElementById('game-options-screen');
-        const playerNameDisplay = document.getElementById('player-name-display');
-        
-        // Comprobar si hay un nombre de usuario guardado
-        const playerName = localStorage.getItem('playerName');
-        
-        if (playerName) {
-          // Mostrar el nombre del jugador
-          playerNameDisplay.textContent = playerName;
-        } else {
-          // Redirigir a la página de ingreso si no hay nombre guardado
-          window.location.href = 'crack-total.html';
-        }
-        
-        // Configurar la selección de dificultad
-        const difficultyOptions = document.querySelectorAll('.difficulty-option');
-        let selectedDifficulty = 'normal';
-        
-        difficultyOptions.forEach(option => {
-          option.addEventListener('click', function() {
-            // Quitar la clase seleccionada de todas las opciones
-            difficultyOptions.forEach(opt => opt.classList.remove('selected'));
-            
-            // Añadir la clase seleccionada a la opción actual
-            this.classList.add('selected');
-            
-            // Guardar la dificultad seleccionada
-            selectedDifficulty = this.getAttribute('data-difficulty');
+.share-button {
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #4299e1, #3182ce);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 10px rgba(66, 153, 225, 0.35);
+}
+
+.share-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 15px rgba(66, 153, 225, 0.5);
+  background: linear-gradient(135deg, #3182ce, #2c5282);
+}
+
+.share-button i {
+  font-size: 1.1rem;
+}
+
+/* Estilos para el footer */
+.policy-footer {
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto 0;
+  text-align: center;
+  position: relative;
+  padding-top: 1.5rem;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+.policy-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--accent-color), transparent);
+  opacity: 0.3;
+}
+
+.footer-links-mini {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.footer-links-mini a {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  position: relative;
+  padding-bottom: 2px;
+}
+
+.footer-links-mini a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+  background-color: var(--accent-color);
+  transition: var(--transition);
+}
+
+.footer-links-mini a:hover::after {
+  width: 100%;
+}
+
+.footer-links-mini a:hover {
+  color: var(--accent-color);
+  transform: translateY(-2px);
+}
+
+.footer-links-mini a i {
+  margin-right: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.copyright-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.footer-social-icons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.social-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(225, 29, 72, 0.1);
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  background-color: var(--accent-color);
+  color: white;
+  transform: translateY(-3px);
+}
+
+/* Estilos para las notificaciones toast */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  z-index: 9999;
+  display: none;
+  animation: fadeInOut 3s ease forwards;
+  background-color: #1e293b;
+  color: white;
+  border-left: 4px solid var(--accent-color, #3182ce);
+}
+
+.toast.success {
+  border-left-color: #48bb78;
+}
+
+.toast.error {
+  border-left-color: #f56565;
+}
+
+.toast.info {
+  border-left-color: #4299e1;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-20px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
+
+@media (max-width: 600px) {
+  .footer-links-mini {
+    gap: 0.5rem;
+  }
+  
+  .footer-links-mini a {
+    font-size: 0.75rem;
+  }
+  
+  .share-button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .toast {
+    width: calc(100% - 40px);
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+}
+</style>
+
+<script>
+// Función para compartir el sitio web
+document.addEventListener('DOMContentLoaded', function() {
+  const shareButton = document.getElementById('share-button');
+  
+  if (shareButton) {
+    shareButton.addEventListener('click', function() {
+      const shareData = {
+        title: 'CRACK TOTAL - Juegos de Fútbol',
+        text: 'Juega y pon a prueba tus conocimientos futboleros en CRACK TOTAL',
+        url: window.location.href
+      };
+      
+      // Si la API Web Share está disponible
+      if (navigator.share) {
+        navigator.share(shareData)
+          .then(() => {
+            showNotification('¡Gracias por compartir!', 'success');
+          })
+          .catch((error) => {
+            console.error('Error al compartir:', error);
+            shareWithFallback();
           });
-        });
-        
-        // Seleccionar la dificultad normal por defecto
-        document.querySelector('[data-difficulty="normal"]').classList.add('selected');
-        
-        // Modal de reglas
-        const modal = document.getElementById('rules-modal');
-        const startGameBtn = document.getElementById('start-game');
-        const startGameModalBtn = document.getElementById('start-game-modal');
-        const closeModalBtn = document.querySelector('.close-modal');
-        
-        // Mostrar modal al hacer clic en comenzar juego
-        startGameBtn.addEventListener('click', function() {
-          modal.style.display = 'flex';
-        });
-        
-        // Cerrar modal al hacer clic en la X
-        closeModalBtn.addEventListener('click', function() {
-          modal.style.display = 'none';
-        });
-        
-        // Cerrar modal al hacer clic fuera del contenido
-        window.addEventListener('click', function(event) {
-          if (event.target === modal) {
-            modal.style.display = 'none';
-          }
-        });
-        
-        // Iniciar juego desde el modal
-        startGameModalBtn.addEventListener('click', function() {
-          // Guardar la dificultad seleccionada en localStorage
-          localStorage.setItem('gameDifficulty', selectedDifficulty);
-          
-          // Redirigir a la página de juego
-          window.location.href = 'game.html';
-        });
-
-        // Configurar particles.js
-        if (document.getElementById('particles-js')) {
-          particlesJS('particles-js', particlesConfig);
-        }
-        
-        // Verificar consentimiento de cookies
-        if (!localStorage.getItem('cookieConsent')) {
-          const cookieConsent = document.getElementById('cookieConsent');
-          if (cookieConsent) {
-            cookieConsent.style.display = 'block';
-            
-            const acceptBtn = document.querySelector('.cookie-accept');
-            const declineBtn = document.querySelector('.cookie-decline');
-            
-            if (acceptBtn) {
-              acceptBtn.addEventListener('click', function() {
-                localStorage.setItem('cookieConsent', 'accepted');
-                cookieConsent.style.display = 'none';
-              });
-            }
-            
-            if (declineBtn) {
-              declineBtn.addEventListener('click', function() {
-                localStorage.setItem('cookieConsent', 'declined');
-                cookieConsent.style.display = 'none';
-              });
-            }
-          }
-        }
-      });
-    </script>
-    <style>
-      /* Estilos para el modal */
-      .modal {
-        display: none;
+      } else {
+        // Fallback para navegadores que no soportan la API Web Share
+        shareWithFallback();
+      }
+    });
+  }
+  
+  // Función de fallback para navegadores sin soporte de API Web Share
+  function shareWithFallback() {
+    const url = encodeURIComponent(window.location.href);
+    const title = encodeURIComponent('CRACK TOTAL - Juegos de Fútbol');
+    const text = encodeURIComponent('Juega y pon a prueba tus conocimientos futboleros en CRACK TOTAL');
+    
+    const shareOptions = document.createElement('div');
+    shareOptions.classList.add('share-options');
+    shareOptions.innerHTML = `
+      <div class="share-dialog">
+        <div class="share-header">
+          <h3>Compartir en redes sociales</h3>
+          <button class="close-share"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="share-buttons">
+          <a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" class="fb-share">
+            <i class="fab fa-facebook-f"></i> Facebook
+          </a>
+          <a href="https://twitter.com/intent/tweet?url=${url}&text=${text}" target="_blank" class="tw-share">
+            <i class="fab fa-twitter"></i> Twitter
+          </a>
+          <a href="https://api.whatsapp.com/send?text=${text}%20${url}" target="_blank" class="wa-share">
+            <i class="fab fa-whatsapp"></i> WhatsApp
+          </a>
+          <a href="mailto:?subject=${title}&body=${text}%20${url}" class="email-share">
+            <i class="fas fa-envelope"></i> Email
+          </a>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(shareOptions);
+    
+    // Cerrar el diálogo cuando se hace clic en el botón de cerrar
+    const closeButton = shareOptions.querySelector('.close-share');
+    closeButton.addEventListener('click', function() {
+      document.body.removeChild(shareOptions);
+    });
+    
+    // Cerrar el diálogo al hacer clic fuera de él
+    shareOptions.addEventListener('click', function(e) {
+      if (e.target === shareOptions) {
+        document.body.removeChild(shareOptions);
+      }
+    });
+    
+    // Agregar estilos para el diálogo de compartir
+    const style = document.createElement('style');
+    style.textContent = `
+      .share-options {
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.8);
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.7);
+        display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 1000;
-        backdrop-filter: blur(5px);
+        z-index: 9999;
       }
       
-      .modal-content {
-        background: var(--secondary-bg, #1e293b);
+      .share-dialog {
+        background-color: var(--card-bg, #1e293b);
         border-radius: 12px;
+        padding: 1.5rem;
         width: 90%;
-        max-width: 700px;
-        max-height: 90vh;
-        overflow-y: auto;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        animation: modalFadeIn 0.3s ease;
-        position: relative;
+        max-width: 400px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
       }
       
-      .modal-header {
-        padding: 1.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      .share-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 1.5rem;
       }
       
-      .modal-header h2 {
+      .share-header h3 {
         margin: 0;
-        font-size: 1.5rem;
         color: white;
+        font-size: 1.2rem;
       }
       
-      .close-modal {
-        font-size: 1.8rem;
-        color: #9ca3af;
+      .close-share {
+        background: transparent;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
         cursor: pointer;
-        transition: color 0.2s ease;
+        opacity: 0.7;
+        transition: opacity 0.2s;
       }
       
-      .close-modal:hover {
-        color: white;
+      .close-share:hover {
+        opacity: 1;
       }
       
-      .modal-body {
-        padding: 1.5rem;
-      }
-      
-      .modal-footer {
-        padding: 1.5rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        text-align: center;
-      }
-      
-      @keyframes modalFadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      
-      /* Ajustes para la reglas en el modal */
-      .modal .rules-grid {
+      .share-buttons {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-template-columns: 1fr 1fr;
         gap: 1rem;
-        margin-top: 0.5rem;
       }
       
-      .modal .rule-card {
+      .share-buttons a {
         display: flex;
-        background: rgba(15, 23, 42, 0.5);
-        border-radius: 8px;
-        padding: 1rem;
         align-items: center;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        justify-content: center;
+        gap: 8px;
+        padding: 0.8rem;
+        text-decoration: none;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        transition: transform 0.2s, filter 0.2s;
       }
       
-      .modal .rule-card:hover {
+      .share-buttons a:hover {
         transform: translateY(-3px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        filter: brightness(1.1);
       }
-    </style>
-  </body>
+      
+      .fb-share {
+        background-color: #4267B2;
+      }
+      
+      .tw-share {
+        background-color: #1DA1F2;
+      }
+      
+      .wa-share {
+        background-color: #25D366;
+      }
+      
+      .email-share {
+        background-color: #666;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Función para mostrar notificaciones
+  function showNotification(message, type = 'info') {
+    // Buscar elemento de notificación existente o crear uno nuevo
+    let notification = document.getElementById('notification');
+    
+    if (!notification) {
+      notification = document.createElement('div');
+      notification.id = 'notification';
+      notification.className = 'toast';
+      notification.style.display = 'none';
+      document.body.appendChild(notification);
+    }
+    
+    // Mostrar notificación
+    notification.textContent = message;
+    notification.className = `toast ${type}`;
+    notification.style.display = 'block';
+    
+    // Ocultar después de 3 segundos
+    setTimeout(() => {
+      notification.style.display = 'none';
+    }, 3000);
+  }
+});
+</script>
+<!-- Botón flotante de compartir -->
+<script src="js/share-buttons.js"></script>
+<!-- Particles.js scripts -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="js/particles-config.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar particles.js
+    if (document.getElementById('particles-js')) {
+      particlesJS('particles-js', particlesConfig);
+    }
+    
+    // Obtener el nombre del jugador
+    const playerNameDisplay = document.getElementById('player-name-display');
+    if (playerNameDisplay) {
+      const playerName = localStorage.getItem('playerName') || 'Jugador';
+      playerNameDisplay.textContent = playerName;
+    }
+    
+    // Inicializar las opciones de dificultad
+    const difficultyOptions = document.querySelectorAll('.difficulty-option');
+    difficultyOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        // Quitar clase selected de todas las opciones
+        difficultyOptions.forEach(opt => opt.classList.remove('selected'));
+        // Añadir clase selected a la opción clickeada
+        this.classList.add('selected');
+        
+        // Guardar la dificultad seleccionada
+        const difficulty = this.getAttribute('data-difficulty');
+        localStorage.setItem('selectedDifficulty', difficulty);
+      });
+    });
+    
+    // Seleccionar dificultad guardada o la predeterminada (facil)
+    const savedDifficulty = localStorage.getItem('selectedDifficulty') || 'facil';
+    const defaultOption = document.querySelector(`.difficulty-option[data-difficulty="${savedDifficulty}"]`);
+    if (defaultOption) {
+      defaultOption.click();
+    }
+    
+    // Inicializar botón de inicio
+    const startGameBtn = document.getElementById('start-game');
+    if (startGameBtn) {
+      startGameBtn.addEventListener('click', function() {
+        window.location.href = 'game.html';
+      });
+    }
+  });
+</script>
+<!-- Script para el footer global -->
+<script src="js/global-footer.js"></script>
+</body>
 </html>
+
 
 

@@ -872,10 +872,7 @@ function loadStatisticsData(game) {
     console.log(`Cargando datos de estadísticas para el juego: ${game}`);
     
     // Mostrar indicador de carga para estadísticas
-    const statsLoading = document.getElementById('stats-loading');
-    if (statsLoading) {
-        statsLoading.style.display = 'flex';
-    }
+    showLoading('stats');
     
     const statsContent = document.querySelector('#stats-content .stats-content');
     if (statsContent) {
@@ -885,61 +882,296 @@ function loadStatisticsData(game) {
     const detailedStatsSection = document.querySelector('#stats-content .detailed-stats-section');
     if (!detailedStatsSection) return;
     
-    // Realizar fetch para obtener estadísticas detalladas
-    fetch(`${apiBaseUrl}/user/stats/${game}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al cargar estadísticas');
-            }
-            return response.json();
-        })
-        .then(statsData => {
-            // Ocultar indicador de carga
-            if (statsLoading) {
-                statsLoading.style.display = 'none';
-            }
-            if (statsContent) {
-                statsContent.style.opacity = '1';
-            }
-            
-            // Limpiar contenido existente
-            detailedStatsSection.innerHTML = '';
-            
-            // Generar estadísticas específicas según el juego
-            let statsHTML = '';
-            
-            if (game === 'pasala-che') {
-                // Estadísticas para PASALA CHE (juego de rosco)
-                statsHTML = generateRoscoStatsFromData(statsData);
-            } else {
-                // Estadísticas para QUIÉN SABE MÁS (preguntas)
-                statsHTML = generateQuizStatsFromData(statsData);
-            }
-            
-            detailedStatsSection.innerHTML = statsHTML;
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            
-            // Ocultar indicador de carga
-            if (statsLoading) {
-                statsLoading.style.display = 'none';
-            }
-            if (statsContent) {
-                statsContent.style.opacity = '1';
-            }
-            
-            detailedStatsSection.innerHTML = `
-                        <div class="placeholder-message">
-                    <i class="fas fa-chart-line"></i>
-                    <p>No se pudieron cargar las estadísticas. Intente nuevamente más tarde.</p>
-                </div>
-            `;
-        });
+    // Obtener las estadísticas desde localStorage
+    const userIP = localStorage.getItem('userIP') || 'unknown';
+    const userStatsKey = `userStats_${userIP}_${game}`;
+    let statsData = null;
+    
+    try {
+        const savedStats = localStorage.getItem(userStatsKey);
+        if (savedStats) {
+            statsData = JSON.parse(savedStats);
+        }
+    } catch (error) {
+        console.error('Error al recuperar estadísticas guardadas:', error);
+    }
+    
+    // Obtener el historial de partidas desde localStorage
+    const userGamesKey = `userGames_${userIP}`;
+    let gameHistory = [];
+    
+    try {
+        const savedGames = localStorage.getItem(userGamesKey);
+        if (savedGames) {
+            // Filtrar solo las partidas del juego seleccionado
+            gameHistory = JSON.parse(savedGames).filter(g => g.gameType === game);
+        }
+    } catch (error) {
+        console.error('Error al recuperar historial de partidas:', error);
+    }
+    
+    // Ocultar indicador de carga
+    hideLoading('stats');
+    
+    if (statsContent) {
+        statsContent.style.opacity = '1';
+    }
+    
+    // Si no hay estadísticas, mostrar un mensaje
+    if (!statsData && gameHistory.length === 0) {
+        detailedStatsSection.innerHTML = `
+            <div class="placeholder-message">
+                <i class="fas fa-chart-line"></i>
+                <p>¡Completa partidas para ver tus estadísticas!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    // Si hay estadísticas, procesarlas según el juego
+    // Si no hay stats pero hay historial, calcular estadísticas básicas del historial
+    if (!statsData && gameHistory.length > 0) {
+        statsData = calculateStatsFromHistory(gameHistory, game);
+    }
+    
+    // Generar estadísticas específicas según el juego
+    let statsHTML = '';
+    
+    if (game === 'pasala-che') {
+        // Estadísticas para PASALA CHE (juego de rosco)
+        statsHTML = generateRoscoStatsFromData(statsData, gameHistory);
+    } else {
+        // Estadísticas para QUIÉN SABE MÁS (preguntas)
+        statsHTML = generateQuizStatsFromData(statsData, gameHistory);
+    }
+    
+    detailedStatsSection.innerHTML = statsHTML;
+    
+    // Inicializar gráficos si es necesario
+    initializeCharts(game, statsData, gameHistory);
 }
 
-// Generar estadísticas de visualización para el juego PASALA CHE con datos reales
-function generateRoscoStatsFromData(data) {
+// Calcular estadísticas básicas desde el historial de partidas
+function calculateStatsFromHistory(gameHistory, gameType) {
+    // Objeto base para estadísticas
+    const stats = {
+        gamesPlayed: gameHistory.length,
+        gamesWon: 0,
+        totalScore: 0,
+        highScore: 0,
+        totalCorrectAnswers: 0,
+        totalAnswers: 0,
+        totalTimeSpent: 0,
+        winRate: 0,
+        accuracy: 0,
+        averageTime: 0
+    };
+    
+    // Recorrer el historial y agregar datos
+    gameHistory.forEach(game => {
+        if (game.isWin) {
+            stats.gamesWon++;
+        }
+        
+        stats.totalScore += game.score || 0;
+        stats.highScore = Math.max(stats.highScore, game.score || 0);
+        stats.totalCorrectAnswers += game.correctAnswers || 0;
+        stats.totalAnswers += game.totalAnswers || 0;
+        stats.totalTimeSpent += game.timeSpent || 0;
+    });
+    
+    // Calcular estadísticas derivadas
+    if (stats.gamesPlayed > 0) {
+        stats.winRate = Math.round((stats.gamesWon / stats.gamesPlayed) * 100);
+        stats.averageTime = Math.round(stats.totalTimeSpent / stats.gamesPlayed);
+    }
+    
+    if (stats.totalAnswers > 0) {
+        stats.accuracy = Math.round((stats.totalCorrectAnswers / stats.totalAnswers) * 100);
+    }
+    
+    // Añadir datos específicos según el tipo de juego
+    if (gameType === 'pasala-che') {
+        // Añadir estadísticas específicas de PASALA CHE
+        stats.totalRoscos = stats.gamesPlayed;
+        stats.bestRosco = stats.highScore;
+        stats.avgLetters = Math.round(stats.totalCorrectAnswers / (stats.gamesPlayed || 1));
+        
+        // Calcular estadísticas por letra si es posible
+        stats.letterStats = calculateLetterStats(gameHistory);
+        
+        // Transformar las últimas partidas al formato necesario
+        stats.lastGames = gameHistory.slice(0, 5).map(game => ({
+            date: new Date(game.timestamp).toISOString(),
+            correct: game.correctAnswers || 0,
+            incorrect: game.incorrectCount || 0
+        }));
+    } else {
+        // Añadir estadísticas específicas de QUIÉN SABE MÁS
+        stats.totalQuestions = stats.totalAnswers;
+        stats.correctAnswers = stats.totalCorrectAnswers;
+        
+        // Calcular estadísticas por categoría si es posible
+        stats.categories = calculateCategoryStats(gameHistory);
+        
+        // Transformar las últimas partidas al formato necesario
+        stats.lastGames = gameHistory.slice(0, 5).map(game => ({
+            date: new Date(game.timestamp).toISOString(),
+            questions: game.totalAnswers || 0,
+            correct: game.correctAnswers || 0,
+            incorrect: (game.totalAnswers || 0) - (game.correctAnswers || 0),
+            skipped: game.skippedCount || 0
+        }));
+    }
+    
+    return stats;
+}
+
+// Calcular estadísticas por letra
+function calculateLetterStats(gameHistory) {
+    const letterStats = {};
+    
+    // Inicializar todas las letras del alfabeto
+    const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    
+    alphabet.forEach(letter => {
+        letterStats[letter] = {
+            attempts: 0,
+            correct: 0,
+            accuracy: 0
+        };
+    });
+    
+    // Si hay datos detallados de letras en el historial, usarlos
+    gameHistory.forEach(game => {
+        if (game.letterResults && typeof game.letterResults === 'object') {
+            Object.entries(game.letterResults).forEach(([letter, result]) => {
+                if (letterStats[letter]) {
+                    letterStats[letter].attempts++;
+                    if (result === 'correct') {
+                        letterStats[letter].correct++;
+                    }
+                }
+            });
+        }
+    });
+    
+    // Calcular porcentaje de precisión para cada letra
+    Object.keys(letterStats).forEach(letter => {
+        if (letterStats[letter].attempts > 0) {
+            letterStats[letter].accuracy = Math.round(
+                (letterStats[letter].correct / letterStats[letter].attempts) * 100
+            );
+        } else {
+            letterStats[letter].accuracy = 0;
+        }
+    });
+    
+    // Convertir al formato esperado por la función de visualización
+    const simplifiedLetterStats = {};
+    Object.keys(letterStats).forEach(letter => {
+        simplifiedLetterStats[letter] = letterStats[letter].accuracy;
+    });
+    
+    return simplifiedLetterStats;
+}
+
+// Calcular estadísticas por categoría
+function calculateCategoryStats(gameHistory) {
+    const categoryStats = {};
+    
+    // Si hay datos detallados de categorías en el historial, usarlos
+    gameHistory.forEach(game => {
+        if (game.categoryResults && typeof game.categoryResults === 'object') {
+            Object.entries(game.categoryResults).forEach(([category, result]) => {
+                if (!categoryStats[category]) {
+                    categoryStats[category] = {
+                        attempts: 0,
+                        correct: 0,
+                        accuracy: 0
+                    };
+                }
+                
+                categoryStats[category].attempts += result.total || 0;
+                categoryStats[category].correct += result.correct || 0;
+            });
+        }
+    });
+    
+    // Calcular porcentaje de precisión para cada categoría
+    Object.keys(categoryStats).forEach(category => {
+        if (categoryStats[category].attempts > 0) {
+            categoryStats[category].accuracy = Math.round(
+                (categoryStats[category].correct / categoryStats[category].attempts) * 100
+            );
+        } else {
+            categoryStats[category].accuracy = 0;
+        }
+    });
+    
+    // Si no hay categorías o son muy pocas, añadir algunas por defecto
+    if (Object.keys(categoryStats).length < 3) {
+        const defaultCategories = {
+            'Historia': 70,
+            'Jugadores': 85,
+            'Equipos': 60,
+            'Mundiales': 75,
+            'Táctica': 50
+        };
+        
+        // Si no hay categorías, usar las predeterminadas
+        if (Object.keys(categoryStats).length === 0) {
+            return defaultCategories;
+        }
+        
+        // Convertir al formato esperado por la función de visualización
+        const simplifiedCategoryStats = {};
+        Object.keys(categoryStats).forEach(category => {
+            simplifiedCategoryStats[category] = categoryStats[category].accuracy;
+        });
+        
+        return simplifiedCategoryStats;
+    }
+    
+    // Convertir al formato esperado por la función de visualización
+    const simplifiedCategoryStats = {};
+    Object.keys(categoryStats).forEach(category => {
+        simplifiedCategoryStats[category] = categoryStats[category].accuracy;
+    });
+    
+    return simplifiedCategoryStats;
+}
+
+// Generar estadísticas de visualización para el juego PASALA CHE
+function generateRoscoStatsFromData(data, gameHistory) {
+    // Asegurar que tenemos datos
+    if (!data) {
+        return `
+            <div class="placeholder-message">
+                <i class="fas fa-chart-line"></i>
+                <p>No hay datos disponibles. ¡Juega algunas partidas para ver tus estadísticas!</p>
+            </div>
+        `;
+    }
+    
+    // Si hay partidas recientes, mostrarlas
+    const recentGames = data.lastGames && data.lastGames.length > 0 
+        ? data.lastGames.map(game => `
+            <div class="recent-game-card">
+                <div class="game-date">${formatDate(game.date)}</div>
+                <div class="rosco-stats-preview">
+                    <div class="rosco-circle correct">${game.correct}</div>
+                    <div class="rosco-circle incorrect">${game.incorrect}</div>
+                    <div class="rosco-circle pending">${27 - game.correct - game.incorrect}</div>
+                </div>
+            </div>
+        `).join('') 
+        : `<div class="placeholder-message">
+            <i class="fas fa-history"></i>
+            <p>No hay roscos recientes para mostrar</p>
+        </div>`;
+    
+    // Generar el HTML con los datos disponibles
     return `
         <h2 class="section-title">Estadísticas de PASALA CHE</h2>
         
@@ -962,8 +1194,8 @@ function generateRoscoStatsFromData(data) {
             
             <div class="stat-card">
                 <div class="stat-card-icon">
-                            <i class="fas fa-trophy"></i>
-                        </div>
+                    <i class="fas fa-trophy"></i>
+                </div>
                 <div class="stat-card-value">${data.bestRosco || 0}</div>
                 <div class="stat-card-label">Mejor Rosco</div>
             </div>
@@ -976,28 +1208,119 @@ function generateRoscoStatsFromData(data) {
         
         <h3 class="subsection-title">Últimos Roscos</h3>
         <div class="recent-games">
-            ${data.lastGames && data.lastGames.length > 0 ? 
-                data.lastGames.map(game => `
-                    <div class="recent-game-card">
-                        <div class="game-date">${formatDate(game.date)}</div>
-                        <div class="rosco-stats-preview">
-                            <div class="rosco-circle correct">${game.correct}</div>
-                            <div class="rosco-circle incorrect">${game.incorrect}</div>
-                            <div class="rosco-circle pending">${27 - game.correct - game.incorrect}</div>
-                        </div>
-                    </div>
-                `).join('') : 
-                `<div class="placeholder-message">
-                    <i class="fas fa-history"></i>
-                    <p>No hay roscos recientes para mostrar</p>
-                </div>`
-            }
+            ${recentGames}
+        </div>
+        
+        <div class="stats-chart-container">
+            <h3 class="subsection-title">Progreso de Partidas</h3>
+            <div id="game-progress-chart" class="chart-canvas-container">
+                <canvas id="gameProgressChart"></canvas>
+            </div>
         </div>
     `;
 }
 
-// Generar estadísticas de visualización para el juego QUIÉN SABE MÁS con datos reales
-function generateQuizStatsFromData(data) {
+// Función para inicializar gráficos si están disponibles
+function initializeCharts(game, statsData, gameHistory) {
+    // Verificar si Chart.js está disponible
+    if (typeof Chart === 'undefined') {
+        console.warn('Chart.js no está disponible. No se pueden mostrar gráficos.');
+        return;
+    }
+    
+    // Inicializar gráfico de progreso de partidas si existe el contenedor
+    const progressChartCanvas = document.getElementById('gameProgressChart');
+    if (progressChartCanvas && gameHistory && gameHistory.length > 0) {
+        // Preparar datos para el gráfico
+        const labels = gameHistory.slice(0, 10).reverse().map((game, index) => `Partida ${index + 1}`);
+        const correctData = gameHistory.slice(0, 10).reverse().map(game => game.correctAnswers || 0);
+        
+        new Chart(progressChartCanvas, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Aciertos',
+                    data: correctData,
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Progreso en las últimas partidas',
+                        color: 'rgba(255, 255, 255, 0.9)'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: 'rgba(255, 255, 255, 0.7)'
+                        },
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.1)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
+// Generar estadísticas de visualización para el juego QUIÉN SABE MÁS
+function generateQuizStatsFromData(data, gameHistory) {
+    // Asegurar que tenemos datos
+    if (!data) {
+        return `
+            <div class="placeholder-message">
+                <i class="fas fa-chart-line"></i>
+                <p>No hay datos disponibles. ¡Juega algunas partidas para ver tus estadísticas!</p>
+            </div>
+        `;
+    }
+    
+    // Si hay partidas recientes, mostrarlas
+    const recentGames = data.lastGames && data.lastGames.length > 0 
+        ? data.lastGames.map(game => `
+            <div class="recent-game-card">
+                <div class="game-date">${formatDate(game.date)}</div>
+                <div class="game-questions">${game.questions} preguntas</div>
+                <div class="quiz-stats-preview">
+                    <div class="question-counter">
+                        ${Array(game.correct).fill('<div class="question-dot correct"></div>').join('')}
+                        ${Array(game.incorrect).fill('<div class="question-dot incorrect"></div>').join('')}
+                        ${Array(game.skipped).fill('<div class="question-dot skipped"></div>').join('')}
+                    </div>
+                    <div class="correctness-ratio">${game.correct}/${game.questions}</div>
+                </div>
+            </div>
+        `).join('') 
+        : `<div class="placeholder-message">
+            <i class="fas fa-history"></i>
+            <p>No hay partidas recientes para mostrar</p>
+        </div>`;
+    
+    // Generar el HTML con los datos disponibles
     return `
         <h2 class="section-title">Estadísticas de ¿QUIÉN SABE MÁS?</h2>
         
@@ -1034,26 +1357,7 @@ function generateQuizStatsFromData(data) {
         
         <h3 class="subsection-title">Últimas Partidas</h3>
         <div class="recent-games">
-            ${data.lastGames && data.lastGames.length > 0 ? 
-                data.lastGames.map(game => `
-                    <div class="recent-game-card">
-                        <div class="game-date">${formatDate(game.date)}</div>
-                        <div class="game-questions">${game.questions} preguntas</div>
-                        <div class="quiz-stats-preview">
-                            <div class="question-counter">
-                                ${Array(game.correct).fill('<div class="question-dot correct"></div>').join('')}
-                                ${Array(game.incorrect).fill('<div class="question-dot incorrect"></div>').join('')}
-                                ${Array(game.skipped).fill('<div class="question-dot skipped"></div>').join('')}
-                            </div>
-                            <div class="correctness-ratio">${game.correct}/${game.questions}</div>
-                        </div>
-                    </div>
-                `).join('') : 
-                `<div class="placeholder-message">
-                    <i class="fas fa-history"></i>
-                    <p>No hay partidas recientes para mostrar</p>
-                </div>`
-            }
+            ${recentGames}
         </div>
     `;
 }
@@ -1098,6 +1402,7 @@ function formatDate(dateString) {
 
 // Cargar datos de logros
 function loadAchievementsData(game) {
+    console.log(`Cargando datos de logros para el juego: ${game}`);
     const achievementsContainer = document.querySelector('#achievements-content .achievements-content');
     
     if (!achievementsContainer) return;
@@ -1108,188 +1413,312 @@ function loadAchievementsData(game) {
     const userIP = localStorage.getItem('userIP') || 'unknown';
     const storageKey = `userAchievements_${userIP}`;
     
-    setTimeout(() => {
-        // Obtener logros guardados
-        let savedAchievements = [];
-        try {
-            const achievementsData = localStorage.getItem(storageKey);
-            if (achievementsData) {
-                savedAchievements = JSON.parse(achievementsData);
-            }
-        } catch (error) {
-            console.error('Error al cargar logros:', error);
+    // Obtener logros guardados
+    let savedAchievements = [];
+    try {
+        const achievementsData = localStorage.getItem(storageKey);
+        if (achievementsData) {
+            savedAchievements = JSON.parse(achievementsData);
         }
-        
-        // Verificar si tenemos definiciones de logros disponibles en la ventana global
-        const achievementDefinitions = window.gameAchievements || [];
-        
-        // Combinar definiciones con datos guardados
-        const achievements = savedAchievements.map(savedAchievement => {
-            // Buscar definición completa del logro
-            const definition = achievementDefinitions.find(a => a.id === savedAchievement.id);
-            
-            // Combinar datos guardados con definición
-            return {
-                ...savedAchievement,
-                icon: savedAchievement.icon || (definition ? definition.icon : 'fas fa-trophy'),
-                title: savedAchievement.title || (definition ? definition.title : savedAchievement.id),
-                description: savedAchievement.description || (definition ? definition.description : 'Logro desbloqueado'),
-                category: savedAchievement.category || (definition ? definition.category : 'beginner'),
-                maxCount: definition ? definition.maxCount : 1
-            };
-        });
-        
-        // Ocultar loader
-        hideLoading('achievements');
-        
-        // Si no hay logros, mostrar mensaje
-        if (achievements.length === 0) {
-            achievementsContainer.innerHTML = `
-                <div class="placeholder-message">
-                    <i class="fas fa-medal"></i>
-                    <p>Completa partidas para desbloquear logros</p>
-                </div>
-            `;
-            return;
+    } catch (error) {
+        console.error('Error al cargar logros:', error);
+    }
+    
+    // Verificar si tenemos definiciones de logros disponibles
+    let achievementDefinitions = [];
+    if (window.gameAchievements && Array.isArray(window.gameAchievements)) {
+        achievementDefinitions = window.gameAchievements;
+    } else {
+        // Si no están cargadas, incluirlas
+        if (typeof loadGameAchievementsDefinitions === 'function') {
+            achievementDefinitions = loadGameAchievementsDefinitions();
+        } else {
+            console.warn('No se encontraron definiciones de logros');
         }
+    }
+    
+    // Combinar definiciones con datos guardados
+    const achievements = achievementDefinitions.map(definition => {
+        // Buscar si este logro está desbloqueado
+        const savedAchievement = savedAchievements.find(a => a.id === definition.id);
         
-        // Organizar logros por categoría
-        const categories = {
-            beginner: { name: 'Principiante', achievements: [] },
-            intermediate: { name: 'Intermedio', achievements: [] },
-            expert: { name: 'Experto', achievements: [] },
-            special: { name: 'Especial', achievements: [] }
+        return {
+            ...definition,
+            unlocked: savedAchievement ? true : false,
+            count: savedAchievement ? savedAchievement.count || 1 : 0,
+            date: savedAchievement ? savedAchievement.date : null
         };
-        
-        // Agrupar logros por categoría
-        achievements.forEach(achievement => {
-            const category = achievement.category || 'beginner';
-            if (categories[category]) {
-                categories[category].achievements.push(achievement);
-            } else {
-                categories.beginner.achievements.push(achievement);
-            }
-        });
-        
-        // Construir HTML para mostrar logros
-        let achievementsHTML = `
-            <div class="achievements-header">
-                <h2 class="section-title">Mis Logros</h2>
-                <p class="achievements-summary">Has desbloqueado <span class="highlight">${achievements.filter(a => a.unlocked).length}</span> de ${achievementDefinitions.length} logros disponibles</p>
+    });
+    
+    // Ocultar loader
+    hideLoading('achievements');
+    
+    // Si no hay definiciones de logros, mostrar mensaje
+    if (achievementDefinitions.length === 0) {
+        achievementsContainer.innerHTML = `
+            <div class="placeholder-message">
+                <i class="fas fa-medal"></i>
+                <p>Sistema de logros no disponible</p>
             </div>
         `;
-        
-        // Agregar secciones por categoría
-        for (const [catKey, category] of Object.entries(categories)) {
-            if (category.achievements.length > 0) {
-                achievementsHTML += `
-                    <div class="achievement-category">
-                        <h3 class="category-title">${category.name}</h3>
-                        <div class="achievement-cards">
-                `;
+        return;
+    }
+    
+    // Construir HTML para mostrar logros
+    let achievementsHTML = `
+        <div class="achievements-header">
+            <h2 class="section-title">Mis Logros</h2>
+            <p class="achievements-summary">Has desbloqueado <span class="highlight">${achievements.filter(a => a.unlocked).length}</span> de ${achievementDefinitions.length} logros disponibles</p>
+        </div>
+    `;
+    
+    // Organizar logros por categoría
+    const categories = {
+        beginner: { name: 'Principiante', achievements: [] },
+        intermediate: { name: 'Intermedio', achievements: [] },
+        expert: { name: 'Experto', achievements: [] },
+        special: { name: 'Especial', achievements: [] }
+    };
+    
+    // Agrupar logros por categoría
+    achievements.forEach(achievement => {
+        const category = achievement.category || 'beginner';
+        if (categories[category]) {
+            categories[category].achievements.push(achievement);
+        } else {
+            categories.beginner.achievements.push(achievement);
+        }
+    });
+    
+    // Agregar secciones por categoría
+    for (const [catKey, category] of Object.entries(categories)) {
+        if (category.achievements.length > 0) {
+            achievementsHTML += `
+                <div class="achievement-category">
+                    <h3 class="category-title">${category.name}</h3>
+                    <div class="achievement-cards">
+            `;
+            
+            // Agregar tarjetas de logros
+            category.achievements.forEach(achievement => {
+                const isUnlocked = achievement.unlocked;
+                const progress = achievement.maxCount > 1 
+                    ? Math.min(100, (achievement.count / achievement.maxCount) * 100) 
+                    : (isUnlocked ? 100 : 0);
                 
-                // Agregar tarjetas de logros
-                category.achievements.forEach(achievement => {
-                    const isUnlocked = achievement.unlocked;
-                    const progress = achievement.maxCount > 1 
-                        ? Math.min(100, (achievement.count / achievement.maxCount) * 100) 
-                        : (isUnlocked ? 100 : 0);
-                    
-                    achievementsHTML += `
-                        <div class="achievement-card ${isUnlocked ? '' : 'locked-achievement'}" data-id="${achievement.id}">
-                            <div class="achievement-icon">
-                                <i class="${achievement.icon}"></i>
-                            </div>
-                            <div class="achievement-name">${achievement.title}</div>
-                            <div class="achievement-description">${achievement.description}</div>
-                            ${achievement.maxCount > 1 ? `
-                                <div class="achievement-progress">
-                                    <div class="achievement-progress-bar">
-                                        <div class="achievement-progress-fill" style="width: ${progress}%"></div>
-                                    </div>
-                                    <div class="achievement-count">${achievement.count || 0}/${achievement.maxCount}</div>
+                achievementsHTML += `
+                    <div class="achievement-card ${isUnlocked ? '' : 'locked-achievement'}" data-id="${achievement.id}">
+                        <div class="achievement-icon">
+                            <i class="${achievement.icon}"></i>
+                        </div>
+                        <div class="achievement-name">${achievement.title}</div>
+                        <div class="achievement-description">${achievement.description}</div>
+                        ${achievement.maxCount > 1 ? `
+                            <div class="achievement-progress">
+                                <div class="achievement-progress-bar">
+                                    <div class="achievement-progress-fill" style="width: ${progress}%"></div>
                                 </div>
-                            ` : ''}
-                            ${isUnlocked ? `<div class="achievement-date">${formatDate(achievement.date)}</div>` : ''}
-                        </div>
-                    `;
-                });
-                
-                achievementsHTML += `
-                        </div>
+                                <div class="achievement-count">${achievement.count || 0}/${achievement.maxCount}</div>
+                            </div>
+                        ` : ''}
+                        ${isUnlocked ? `<div class="achievement-date">${formatDate(achievement.date)}</div>` : ''}
                     </div>
                 `;
+            });
+            
+            achievementsHTML += `
+                    </div>
+                </div>
+            `;
+        }
+    }
+    
+    // Mostrar logros
+    achievementsContainer.innerHTML = achievementsHTML;
+    
+    // Agregar estilos dinámicamente si no existen
+    addAchievementStyles();
+    
+    // Añadir comportamiento para mostrar detalles al hacer clic
+    setupAchievementInteractions();
+}
+
+// Agregar estilos para los logros
+function addAchievementStyles() {
+    if (!document.getElementById('achievements-dynamic-styles')) {
+        const styleEl = document.createElement('style');
+        styleEl.id = 'achievements-dynamic-styles';
+        styleEl.textContent = `
+            .achievements-header {
+                margin-bottom: 2rem;
+                text-align: center;
+            }
+            
+            .achievements-summary {
+                color: rgba(255, 255, 255, 0.7);
+                margin-top: 0.5rem;
+            }
+            
+            .achievements-summary .highlight {
+                color: #e11d48;
+                font-weight: bold;
+            }
+            
+            .achievement-category {
+                margin-bottom: 2rem;
+            }
+            
+            .category-title {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+                color: white;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                padding-bottom: 0.5rem;
+            }
+            
+            .achievement-cards {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .achievement-card {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 10px;
+                padding: 1.25rem;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+                border: 1px solid transparent;
+            }
+            
+            .achievement-card:hover {
+                background: rgba(255, 255, 255, 0.1);
+                transform: translateY(-3px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            }
+            
+            .achievement-icon {
+                font-size: 2rem;
+                margin-bottom: 1rem;
+                color: #e11d48;
+            }
+            
+            .achievement-name {
+                font-size: 1.25rem;
+                font-weight: 600;
+                margin-bottom: 0.5rem;
+                color: white;
+            }
+            
+            .achievement-description {
+                color: rgba(255, 255, 255, 0.7);
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+                line-height: 1.5;
+            }
+            
+            .achievement-date {
+                font-size: 0.8rem;
+                color: rgba(255, 255, 255, 0.5);
+                margin-top: 0.5rem;
+            }
+            
+            .achievement-progress {
+                width: 100%;
+                margin-top: 0.5rem;
+            }
+            
+            .achievement-progress-bar {
+                height: 6px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 3px;
+                overflow: hidden;
+                margin-bottom: 0.25rem;
+            }
+            
+            .achievement-progress-fill {
+                height: 100%;
+                background: linear-gradient(90deg, #3b82f6, #60a5fa);
+                border-radius: 3px;
+                transition: width 0.5s ease;
+            }
+            
+            .achievement-count {
+                font-size: 0.75rem;
+                text-align: right;
+                color: rgba(255, 255, 255, 0.6);
+            }
+            
+            .locked-achievement {
+                filter: grayscale(1);
+                opacity: 0.5;
+            }
+            
+            .locked-achievement .achievement-icon {
+                color: rgba(255, 255, 255, 0.3);
+            }
+            
+            .locked-achievement .achievement-name:after {
+                content: "🔒";
+                margin-left: 0.5rem;
+                font-size: 0.8rem;
+            }
+            
+            .locked-achievement .achievement-progress-fill {
+                background: rgba(255, 255, 255, 0.2);
+            }
+            
+            /* Animación para logros desbloqueados recientemente */
+            .achievement-card.recently-unlocked {
+                animation: pulse 2s infinite;
+                border-color: #e11d48;
+            }
+            
+            @keyframes pulse {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.7);
+                }
+                70% {
+                    box-shadow: 0 0 0 10px rgba(225, 29, 72, 0);
+                }
+                100% {
+                    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0);
+                }
+            }
+        `;
+        document.head.appendChild(styleEl);
+    }
+}
+
+// Configurar interacciones para las tarjetas de logros
+function setupAchievementInteractions() {
+    const achievementCards = document.querySelectorAll('.achievement-card');
+    
+    achievementCards.forEach(card => {
+        // Verificar si el logro fue desbloqueado recientemente (en los últimos 10 minutos)
+        const isUnlocked = !card.classList.contains('locked-achievement');
+        const dateElement = card.querySelector('.achievement-date');
+        
+        if (isUnlocked && dateElement) {
+            const unlockDate = new Date(dateElement.textContent);
+            const now = new Date();
+            const timeDiff = now - unlockDate;
+            
+            // Si fue desbloqueado hace menos de 10 minutos, añadir clase para destacarlo
+            if (timeDiff < 10 * 60 * 1000) { // 10 minutos en milisegundos
+                card.classList.add('recently-unlocked');
             }
         }
         
-        // Mostrar logros
-        achievementsContainer.innerHTML = achievementsHTML;
-        
-        // Agregar estilos dinámicamente si no existen
-        if (!document.getElementById('achievements-dynamic-styles')) {
-            const styleEl = document.createElement('style');
-            styleEl.id = 'achievements-dynamic-styles';
-            styleEl.textContent = `
-                .achievements-header {
-                    margin-bottom: 2rem;
-                    text-align: center;
-                }
-                
-                .achievements-summary {
-                    color: rgba(255, 255, 255, 0.7);
-                    margin-top: 0.5rem;
-                }
-                
-                .achievements-summary .highlight {
-                    color: #e11d48;
-                    font-weight: bold;
-                }
-                
-                .achievement-category {
-                    margin-bottom: 2rem;
-                }
-                
-                .category-title {
-                    font-size: 1.5rem;
-                    margin-bottom: 1rem;
-                    color: white;
-                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-                    padding-bottom: 0.5rem;
-                }
-                
-                .achievement-progress {
-                    width: 100%;
-                    margin-top: 0.5rem;
-                }
-                
-                .achievement-progress-bar {
-                    height: 6px;
-                    background: rgba(255, 255, 255, 0.1);
-                    border-radius: 3px;
-                    overflow: hidden;
-                    margin-bottom: 0.25rem;
-                }
-                
-                .achievement-progress-fill {
-                    height: 100%;
-                    background: linear-gradient(90deg, #3b82f6, #60a5fa);
-                    border-radius: 3px;
-                    transition: width 0.5s ease;
-                }
-                
-                .achievement-count {
-                    font-size: 0.75rem;
-                    text-align: right;
-                    color: rgba(255, 255, 255, 0.6);
-                }
-                
-                .locked-achievement .achievement-progress-fill {
-                    background: rgba(255, 255, 255, 0.2);
-                }
-            `;
-            document.head.appendChild(styleEl);
-        }
-    }, 1000);
+        // Añadir evento clic para mostrar más detalles (para una futura mejora)
+        card.addEventListener('click', function() {
+            const achievementId = this.getAttribute('data-id');
+            console.log(`Logro seleccionado: ${achievementId}`);
+            
+            // Aquí se puede implementar en el futuro mostrar un modal con detalles del logro
+        });
+    });
 }
 
 // Inicializar filtros de ranking

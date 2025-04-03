@@ -63,7 +63,6 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      padding-bottom: 180px; /* Ajustar espacio para el footer */
     }
     
     body::before {
@@ -465,75 +464,117 @@
       margin-right: 8px;
     }
     
-    /* Footer styles */
-    footer {
-      position: fixed;
-      bottom: 60px;
-      left: 0;
+    /* Footer social icons */
+    .policy-footer {
       width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      padding: 10px 0;
-      flex-wrap: wrap;
-      z-index: 50;
+      max-width: 500px;
+      text-align: center;
+      margin-top: 20px;
+      padding: 15px 0;
     }
     
-    footer a {
+    .footer-links-mini {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 15px;
+    }
+    
+    .footer-links-mini a {
       color: var(--text-muted);
       text-decoration: none;
       font-size: 0.8rem;
-      padding: 8px 15px;
-      border-radius: 4px;
-      display: inline-flex;
-      align-items: center;
-      background-color: rgba(30, 41, 59, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: all 0.2s ease;
-    }
-    
-    footer a i {
-      margin-right: 5px;
-      font-size: 0.85rem;
-    }
-    
-    footer a:hover {
-      background-color: rgba(30, 41, 59, 0.9);
-      transform: translateY(-2px);
-    }
-    
-    .copyright {
-      position: fixed;
-      bottom: 35px;
-      left: 0;
-      width: 100%;
-      text-align: center;
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      z-index: 50;
-    }
-    
-    .social-links {
-      position: fixed;
-      bottom: 5px;
-      left: 0;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      padding: 10px 0;
-      z-index: 50;
-    }
-    
-    .social-links a {
-      color: var(--text-muted);
-      font-size: 1.2rem;
       transition: all 0.3s ease;
     }
     
-    .social-links a:hover {
-      color: var(--text-color);
+    .footer-links-mini a:hover {
+      color: var(--accent-color);
+    }
+    
+    .copyright-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 15px;
+    }
+    
+    .footer-social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    
+    .social-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background-color: rgba(225, 29, 72, 0.1);
+      color: var(--text-muted);
+      transition: all 0.3s ease;
+    }
+    
+    .social-icon:hover {
+      background-color: var(--accent-color);
+      color: white;
       transform: translateY(-3px);
+    }
+    
+    /* Estilos para el banner de Próximamente */
+    .btn-container {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .coming-soon-banner {
+      position: absolute;
+      top: 5px;
+      left: 0;
+      right: 0;
+      background: linear-gradient(135deg, #e11d48, #be123c);
+      color: white;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 5px 15px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      z-index: 10;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transform: translateY(0);
+      animation: bounce 2.5s infinite;
+      width: fit-content;
+      margin: 0 auto;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+      }
+      40% {
+        transform: translateY(-10px);
+      }
+      60% {
+        transform: translateY(-5px);
+      }
+    }
+    
+    /* Ajustar el estilo del botón VS para mostrar que no está disponible */
+    .btn-container .modo-vs {
+      opacity: 0.85;
+      cursor: not-allowed;
+      filter: grayscale(20%);
+    }
+    
+    .btn-container .modo-vs:hover {
+      transform: none;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
     }
     
     /* Responsive */
@@ -548,25 +589,6 @@
       
       .footer-buttons {
         flex-direction: column;
-      }
-      
-      .policy-footer {
-        bottom: 10px;
-      }
-      
-      .footer-links {
-        gap: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin-bottom: 0;
-      }
-      
-      .footer-links a {
-        font-size: 0.7rem;
-      }
-      
-      .footer-social-icons {
-        gap: 15px;
       }
     }
     
@@ -656,90 +678,84 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
     
-    .ranking-btn i {
-      margin-right: 0.5rem;
-      font-size: 0.9rem;
-    }
-    
-    /* Estilos para el banner de próximamente */
-    .coming-soon-banner {
-      position: absolute;
-      top: 8px;
-      left: 0;
-      right: 0;
-      background: linear-gradient(90deg, #ff6b6b, #e11d48);
-      color: white;
-      font-weight: 700;
-      font-size: 1.2rem;
-      padding: 8px 0;
-      text-transform: uppercase;
-      box-shadow: 0 3px 10px rgba(225, 29, 72, 0.4);
-      border-radius: 4px;
-      letter-spacing: 1px;
-      z-index: 10;
-      text-align: center;
-      transform: rotate(-2deg);
-      width: 90%;
-      margin: 0 auto;
-      animation: pulseComingSoon 2s infinite;
-    }
-    
-    @keyframes pulseComingSoon {
-      0% { transform: rotate(-2deg) scale(1); }
-      50% { transform: rotate(-2deg) scale(1.05); }
-      100% { transform: rotate(-2deg) scale(1); }
-    }
-    
-    .modo-vs {
-      opacity: 0.85;
-      cursor: not-allowed;
-    }
-    
-    /* Estilos para la notificación toast */
-    .toast {
+    /* Estilos para botón de compartir flotante */
+    .share-floating-btn {
       position: fixed;
-      z-index: 1000;
       bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: var(--card-bg);
-      color: var(--text-color);
-      padding: 1rem 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.1);
-      border-left: 4px solid var(--accent-color);
-      max-width: 90%;
-      width: auto;
-      display: none;
-      animation: toastSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-      font-weight: 600;
-      text-align: center;
+      right: 30px;
+      z-index: 999;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
     }
     
-    .toast.success {
-      border-left-color: #10b981;
-      background-color: rgba(16, 185, 129, 0.15);
+    .share-main-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e11d48, #be123c);
+      border: none;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.4);
+      color: white;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 2;
     }
     
-    .toast.error {
-      border-left-color: #ef4444;
-      background-color: rgba(239, 68, 68, 0.15);
+    .share-main-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(225, 29, 72, 0.5);
     }
     
-    .toast.info {
-      border-left-color: #4299e1;
-      background-color: rgba(66, 153, 225, 0.15);
+    .share-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 15px;
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: all 0.3s ease;
     }
     
-    @keyframes toastSlideUp {
-      from {
-        opacity: 0;
-        transform: translate(-50%, 20px);
-      }
-      to {
-        opacity: 1;
-        transform: translate(-50%, 0);
-      }
+    .share-floating-btn:hover .share-options,
+    .share-main-btn:focus + .share-options {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+    
+    .share-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .share-item:hover {
+      transform: scale(1.1);
+    }
+    
+    .share-item.facebook {
+      background: #1877f2;
+    }
+    
+    .share-item.twitter {
+      background: #1da1f2;
+    }
+    
+    .share-item.whatsapp {
+      background: #25d366;
     }
   </style>
   </head>
@@ -779,36 +795,59 @@
           </div>
           <span>MODO INDIVIDUAL</span>
         </a>
-        <a href="#" class="btn game-mode-btn modo-vs" style="padding: 2rem 1.5rem; font-size: 1.5rem; background: linear-gradient(135deg, #3182ce, #2c5282); border: 2px solid rgba(255, 255, 255, 0.1); transition: all 0.4s ease; position: relative;" onclick="event.preventDefault(); showComingSoonMessage();">
+        <div class="btn-container">
           <div class="coming-soon-banner">¡PRÓXIMAMENTE!</div>
-          <div class="mode-icon" style="width: 60px; height: 60px; font-size: 1.8rem;">
-            <i class="fas fa-bolt"></i>
-          </div>
-          <span>1 VS 1</span>
-        </a>
+          <a href="javascript:void(0)" class="btn game-mode-btn modo-vs" style="padding: 2rem 1.5rem; font-size: 1.5rem; background: linear-gradient(135deg, #3182ce, #2c5282); border: 2px solid rgba(255, 255, 255, 0.1); transition: all 0.4s ease;">
+            <div class="mode-icon" style="width: 60px; height: 60px; font-size: 1.8rem;">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <span>1 VS 1</span>
+          </a>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Footer -->
-  <footer>
-    <a href="../terms.html"><i class="fas fa-file-contract"></i> Términos</a>
-    <a href="../privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-    <a href="../blog.html"><i class="fas fa-blog"></i> Blog</a>
-    <a href="../cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-    <a href="../contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-    <a href="../about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+  <footer class="policy-footer">
+    <div class="footer-links-mini">
+      <a href="../terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+      <a href="../privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+      <a href="../blog.html"><i class="fas fa-blog"></i> Blog</a>
+      <a href="../cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+      <a href="../contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+      <a href="../about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+    </div>
+    <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
+    <div class="footer-social-icons">
+      <a href="https://www.facebook.com/cracktotal" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://twitter.com/cracktotal" class="social-icon"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.instagram.com/cracktotal" class="social-icon"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com/c/cracktotal" class="social-icon"><i class="fab fa-youtube"></i></a>
+    </div>
   </footer>
-  <div class="copyright">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
-  <div class="social-links">
-    <a href="#"><i class="fab fa-facebook-f"></i></a>
-    <a href="#"><i class="fab fa-twitter"></i></a>
-    <a href="#"><i class="fab fa-instagram"></i></a>
-    <a href="#"><i class="fab fa-youtube"></i></a>
+
+  <!-- Botón flotante de compartir -->
+  <div class="share-floating-btn">
+    <button class="share-main-btn">
+      <i class="fas fa-share-alt"></i>
+    </button>
+    <div class="share-options">
+      <a href="javascript:void(0)" onclick="shareOnFacebook()" class="share-item facebook">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="javascript:void(0)" onclick="shareOnTwitter()" class="share-item twitter">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="javascript:void(0)" onclick="shareOnWhatsApp()" class="share-item whatsapp">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+    </div>
   </div>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script src="js/share-buttons.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Verificar si hay un nombre de usuario guardado
@@ -941,32 +980,36 @@
           this.style.boxShadow = '0 10px 20px rgba(0, 0, 0, 0.4)';
         });
       });
+      
+      // Configuración del botón de compartir
+      document.querySelector('.share-main-btn').addEventListener('click', function() {
+        const shareOptions = this.nextElementSibling;
+        shareOptions.style.opacity = shareOptions.style.opacity === '1' ? '0' : '1';
+        shareOptions.style.transform = shareOptions.style.opacity === '1' ? 'translateY(0)' : 'translateY(20px)';
+        shareOptions.style.pointerEvents = shareOptions.style.opacity === '1' ? 'all' : 'none';
+      });
     });
     
-    // Función para mostrar el mensaje de "Próximamente"
-    function showComingSoonMessage() {
-      // Verificar si existe el elemento notification
-      let notification = document.getElementById('notification');
-      
-      // Si no existe, crearlo
-      if (!notification) {
-        notification = document.createElement('div');
-        notification.id = 'notification';
-        notification.className = 'toast';
-        notification.style.display = 'none';
-        document.body.appendChild(notification);
-      }
-      
-      // Mostrar notificación
-      notification.textContent = 'El modo 1 VS 1 estará disponible próximamente. ¡Gracias por tu interés!';
-      notification.className = 'toast info';
-      notification.style.display = 'block';
-      
-      // Ocultar después de 3 segundos
-      setTimeout(() => {
-        notification.style.display = 'none';
-      }, 3000);
+    // Funciones para compartir en redes sociales
+    function shareOnFacebook() {
+      const url = encodeURIComponent(window.location.href);
+      const title = encodeURIComponent(document.title);
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&t=${title}`, '_blank');
+    }
+    
+    function shareOnTwitter() {
+      const url = encodeURIComponent(window.location.href);
+      const title = encodeURIComponent(`¡Juega a ${document.title} en CRACK TOTAL!`);
+      window.open(`https://twitter.com/intent/tweet?url=${url}&text=${title}`, '_blank');
+    }
+    
+    function shareOnWhatsApp() {
+      const url = encodeURIComponent(window.location.href);
+      const title = encodeURIComponent(`¡Juega a ${document.title} en CRACK TOTAL!`);
+      window.open(`https://api.whatsapp.com/send?text=${title}%20${url}`, '_blank');
     }
   </script>
-  </body>
+  <!-- Script para el footer global -->
+<script src="../js/global-footer.js"></script>
+</body>
 </html>

@@ -211,4 +211,280 @@ function showErrorNotification(message) {
 
 // Exportar funciones para uso en otros archivos
 window.sendPasalaCheResults = sendPasalaCheResults;
-window.sendQuienSabeMasResults = sendQuienSabeMasResults; 
+window.sendQuienSabeMasResults = sendQuienSabeMasResults;
+
+/**
+ * CRACK TOTAL - Sistema de finalización de partida
+ * Gestiona la actualización del dashboard de usuario cuando termina una partida
+ */
+
+// Evento personalizado para cuando se completa una partida
+const GAME_COMPLETED_EVENT = 'game-completed';
+
+// Función para notificar que se ha completado una partida
+function notifyGameCompletion(gameData) {
+  console.log('Notificando finalización de partida:', gameData);
+  
+  // Guardar los datos de la partida en localStorage para acceso inmediato
+  saveGameDataToLocalStorage(gameData);
+  
+  // Actualizar las estadísticas de usuario inmediatamente
+  updateUserStats(gameData);
+  
+  // Crear y disparar evento personalizado
+  const gameCompletedEvent = new CustomEvent(GAME_COMPLETED_EVENT, { 
+    detail: gameData,
+    bubbles: true 
+  });
+  document.dispatchEvent(gameCompletedEvent);
+  
+  // Comprobar si el dashboard está abierto en otra ventana
+  notifyDashboardWindows(gameData);
+}
+
+// Guardar datos de la partida en localStorage
+function saveGameDataToLocalStorage(gameData) {
+  // Obtener IP del usuario o identificador único
+  const userIP = localStorage.getItem('userIP') || 'unknown';
+  
+  // Clave para almacenar las partidas del usuario
+  const userGamesKey = `userGames_${userIP}`;
+  
+  // Recuperar partidas existentes o crear array vacío
+  let userGames = [];
+  try {
+    const savedGames = localStorage.getItem(userGamesKey);
+    if (savedGames) {
+      userGames = JSON.parse(savedGames);
+    }
+  } catch (error) {
+    console.error('Error al recuperar partidas guardadas:', error);
+  }
+  
+  // Añadir la nueva partida al principio del array
+  gameData.timestamp = Date.now();
+  userGames.unshift(gameData);
+  
+  // Limitar a las últimas 10 partidas para no llenar el localStorage
+  if (userGames.length > 10) {
+    userGames = userGames.slice(0, 10);
+  }
+  
+  // Guardar en localStorage
+  try {
+    localStorage.setItem(userGamesKey, JSON.stringify(userGames));
+  } catch (error) {
+    console.error('Error al guardar partidas:', error);
+  }
+}
+
+// Actualizar estadísticas de usuario
+function updateUserStats(gameData) {
+  // Obtener IP del usuario o identificador único
+  const userIP = localStorage.getItem('userIP') || 'unknown';
+  
+  // Clave para almacenar las estadísticas del usuario
+  const userStatsKey = `userStats_${userIP}_${gameData.gameType}`;
+  
+  // Recuperar estadísticas existentes o crear objeto vacío
+  let userStats = {
+    gamesPlayed: 0,
+    gamesWon: 0,
+    totalScore: 0,
+    highScore: 0,
+    totalCorrectAnswers: 0,
+    totalAnswers: 0,
+    totalTimeSpent: 0
+  };
+  
+  try {
+    const savedStats = localStorage.getItem(userStatsKey);
+    if (savedStats) {
+      userStats = JSON.parse(savedStats);
+    }
+  } catch (error) {
+    console.error('Error al recuperar estadísticas guardadas:', error);
+  }
+  
+  // Actualizar estadísticas con los datos de la nueva partida
+  userStats.gamesPlayed++;
+  if (gameData.isWin) {
+    userStats.gamesWon++;
+  }
+  
+  userStats.totalScore += gameData.score;
+  userStats.highScore = Math.max(userStats.highScore, gameData.score);
+  userStats.totalCorrectAnswers += gameData.correctAnswers;
+  userStats.totalAnswers += gameData.totalAnswers;
+  userStats.totalTimeSpent += gameData.timeSpent;
+  
+  // Calcular estadísticas derivadas
+  userStats.winRate = Math.round((userStats.gamesWon / userStats.gamesPlayed) * 100);
+  userStats.accuracy = Math.round((userStats.totalCorrectAnswers / userStats.totalAnswers) * 100);
+  userStats.averageTime = Math.round(userStats.totalTimeSpent / userStats.gamesPlayed);
+  
+  // Guardar en localStorage
+  try {
+    localStorage.setItem(userStatsKey, JSON.stringify(userStats));
+  } catch (error) {
+    console.error('Error al guardar estadísticas:', error);
+  }
+}
+
+// Notificar a otras ventanas del dashboard que hay datos nuevos
+function notifyDashboardWindows(gameData) {
+  // Usar localStorage como canal de comunicación entre ventanas
+  const notificationKey = 'dashboardUpdate';
+  localStorage.setItem(notificationKey, JSON.stringify({
+    timestamp: Date.now(),
+    gameType: gameData.gameType,
+    action: 'gameCompleted'
+  }));
+}
+
+// Escuchar cuando se guarda el resultado de la partida
+function setupGameCompletionListener() {
+  // Esta función debe ser llamada desde la página del juego
+  if (typeof savePlayerData === 'function') {
+    // Guardar referencia original a la función
+    const originalSavePlayerData = savePlayerData;
+    
+    // Reemplazar con nuestra versión que notifica el evento
+    window.savePlayerData = function(gameData) {
+      // Llamar a la función original
+      const result = originalSavePlayerData(gameData);
+      
+      // Notificar que la partida se ha completado
+      notifyGameCompletion(gameData);
+      
+      return result;
+    };
+    
+    console.log('Listener de finalización de partida configurado correctamente');
+  } else {
+    console.warn('No se encontró la función savePlayerData. El listener de finalización de partida no ha sido configurado.');
+  }
+}
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+  // Si estamos en la página del juego, configurar listener
+  if (document.getElementById('game-container') || 
+      document.querySelector('.game-container') || 
+      document.querySelector('.game-screen')) {
+    setupGameCompletionListener();
+  }
+  
+  // Si estamos en el dashboard, configurar escucha de actualizaciones
+  if (document.querySelector('.user-page-container')) {
+    setupDashboardUpdater();
+  }
+});
+
+// Configurar actualización automática del dashboard
+function setupDashboardUpdater() {
+  console.log('Configurando actualización automática del dashboard');
+  
+  // Escuchar eventos de finalización de partida (si la partida termina en esta ventana)
+  document.addEventListener(GAME_COMPLETED_EVENT, function(event) {
+    console.log('Evento de finalización de partida recibido:', event.detail);
+    refreshDashboardData();
+  });
+  
+  // Escuchar cambios en localStorage (si la partida termina en otra ventana)
+  window.addEventListener('storage', function(event) {
+    if (event.key === 'dashboardUpdate') {
+      try {
+        const updateData = JSON.parse(event.newValue);
+        // Verificar si la actualización es reciente (menos de 5 segundos)
+        if (updateData && (Date.now() - updateData.timestamp < 5000)) {
+          console.log('Actualización del dashboard recibida desde otra ventana:', updateData);
+          refreshDashboardData();
+        }
+      } catch (error) {
+        console.error('Error al procesar actualización del dashboard:', error);
+      }
+    }
+  });
+}
+
+// Actualizar datos del dashboard
+function refreshDashboardData() {
+  console.log('Actualizando datos del dashboard');
+  
+  // Obtener referencias a las funciones de carga de datos del dashboard
+  if (typeof loadUserDataAndGame === 'function') {
+    // Recargar datos del usuario y del juego seleccionado
+    loadUserDataAndGame(window.currentGame || 'pasala-che');
+    
+    // Recargar datos específicos según la pestaña activa
+    const activeTab = document.querySelector('.tab.active');
+    if (activeTab) {
+      const tabId = activeTab.getAttribute('data-tab');
+      
+      if (tabId === 'ranking' && typeof loadRankingData === 'function') {
+        loadRankingData(window.currentGame || 'pasala-che');
+      } else if (tabId === 'stats' && typeof loadStatisticsData === 'function') {
+        loadStatisticsData(window.currentGame || 'pasala-che');
+      } else if (tabId === 'achievements' && typeof loadAchievementsData === 'function') {
+        loadAchievementsData(window.currentGame || 'pasala-che');
+      }
+    }
+    
+    // Mostrar notificación al usuario
+    showUpdateNotification();
+  } else {
+    console.warn('No se encontró la función loadUserDataAndGame. No se puede actualizar el dashboard.');
+  }
+}
+
+// Mostrar notificación de actualización
+function showUpdateNotification() {
+  // Verificar si hay una función existente para mostrar notificaciones
+  if (typeof showNotification === 'function') {
+    showNotification('¡Dashboard actualizado con los nuevos datos!', 'success');
+  } else {
+    // Crear notificación propia
+    const notification = document.createElement('div');
+    notification.className = 'update-notification';
+    notification.innerHTML = `
+      <i class="fas fa-sync-alt"></i>
+      <span>Dashboard actualizado con los últimos resultados</span>
+    `;
+    
+    // Estilos para la notificación
+    notification.style.position = 'fixed';
+    notification.style.top = '20px';
+    notification.style.right = '20px';
+    notification.style.background = 'rgba(59, 130, 246, 0.9)';
+    notification.style.color = 'white';
+    notification.style.padding = '10px 15px';
+    notification.style.borderRadius = '8px';
+    notification.style.display = 'flex';
+    notification.style.alignItems = 'center';
+    notification.style.gap = '8px';
+    notification.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+    notification.style.zIndex = '9999';
+    notification.style.transform = 'translateY(-10px)';
+    notification.style.opacity = '0';
+    notification.style.transition = 'all 0.3s ease';
+    
+    // Añadir al DOM
+    document.body.appendChild(notification);
+    
+    // Animar entrada
+    setTimeout(() => {
+      notification.style.transform = 'translateY(0)';
+      notification.style.opacity = '1';
+    }, 10);
+    
+    // Eliminar después de 3 segundos
+    setTimeout(() => {
+      notification.style.transform = 'translateY(-10px)';
+      notification.style.opacity = '0';
+      setTimeout(() => {
+        notification.remove();
+      }, 300);
+    }, 3000);
+  }
+} 

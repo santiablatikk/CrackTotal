@@ -1,27 +1,23 @@
-/* ========== ESTILOS MODERNOS PARA FOOTER ========== */
+<!-- Nuevo footer para todas las páginas -->
+<footer class="nuevo-footer">
+  <div class="footer-links">
+    <a href="terms.html">Términos</a>
+    <a href="privacidad.html">Privacidad</a>
+    <a href="blog.html">Blog</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="contacto.html">Contacto</a>
+    <a href="about.html">Acerca de</a>
+  </div>
+  <div class="copyright-text">© 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
+  <div class="footer-social-icons">
+    <a href="https://www.facebook.com/cracktotal" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://twitter.com/cracktotal" class="social-icon"><i class="fab fa-twitter"></i></a>
+    <a href="https://www.instagram.com/cracktotal" class="social-icon"><i class="fab fa-instagram"></i></a>
+    <a href="https://www.youtube.com/c/cracktotal" class="social-icon"><i class="fab fa-youtube"></i></a>
+  </div>
+</footer>
 
-/* Estilos para asegurar que el footer siempre esté abajo */
-html, body {
-  height: 100%;
-  margin: 0;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
-
-.app-container, .profile-page, .ranking-page, .page-container, .blog-detail-screen, .ads-policy-container {
-  flex: 1 0 auto;
-  display: flex;
-  flex-direction: column;
-}
-
-main, .profile-container, .ranking-container, .content-container, .blog-detail-container {
-  flex: 1 0 auto;
-}
-
+<style>
 /* Estilos para el nuevo footer */
 .nuevo-footer {
   width: 100%;
@@ -32,7 +28,6 @@ main, .profile-container, .ranking-container, .content-container, .blog-detail-c
   padding-top: 1.5rem;
   z-index: 1;
   opacity: 0.9;
-  flex-shrink: 0;
 }
 
 .nuevo-footer::before {
@@ -89,9 +84,6 @@ main, .profile-container, .ranking-container, .content-container, .blog-detail-c
   color: var(--text-muted, #718096);
   opacity: 0.7;
   margin-bottom: 0.75rem;
-  text-align: center;
-  position: relative;
-  z-index: 1;
 }
 
 .footer-social-icons {
@@ -99,8 +91,6 @@ main, .profile-container, .ranking-container, .content-container, .blog-detail-c
   justify-content: center;
   gap: 15px;
   margin-top: 15px;
-  position: relative;
-  z-index: 1;
 }
 
 .social-icon {
@@ -121,12 +111,6 @@ main, .profile-container, .ranking-container, .content-container, .blog-detail-c
   transform: translateY(-3px);
 }
 
-/* Soporte para navegadores antiguos */
-.policy-footer {
-  display: none; /* Ocultar el footer antiguo */
-}
-
-/* Responsive */
 @media (max-width: 600px) {
   .footer-links {
     gap: 0.5rem;
@@ -135,4 +119,5 @@ main, .profile-container, .ranking-container, .content-container, .blog-detail-c
   .footer-links a {
     font-size: 0.75rem;
   }
-} 
+}
+</style> 
