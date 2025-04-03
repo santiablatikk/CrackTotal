@@ -211,4 +211,127 @@ function showErrorNotification(message) {
 
 // Exportar funciones para uso en otros archivos
 window.sendPasalaCheResults = sendPasalaCheResults;
-window.sendQuienSabeMasResults = sendQuienSabeMasResults; 
+window.sendQuienSabeMasResults = sendQuienSabeMasResults;
+
+/**
+ * CrackTotal - Game Completion Handler
+ * Este archivo se encarga de manejar la actualización de logros cuando un juego termina
+ */
+
+// Se ejecuta cuando el documento está listo
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Game Completion Handler cargado');
+    
+    // Verificar si venimos de terminar un juego
+    const fromGame = new URLSearchParams(window.location.search).get('fromGame');
+    
+    if (fromGame === 'true') {
+        console.log('Detectada redirección desde el juego. Procesando datos de partida.');
+        processGameCompletion();
+    }
+});
+
+/**
+ * Procesa la finalización de un juego y desbloquea logros
+ */
+function processGameCompletion() {
+    // Intentar obtener datos de la última partida
+    try {
+        const lastGameStatsStr = localStorage.getItem('lastGameStats');
+        
+        if (!lastGameStatsStr) {
+            console.log('No se encontraron datos de la última partida');
+            return;
+        }
+        
+        const gameStats = JSON.parse(lastGameStatsStr);
+        console.log('Datos de la última partida:', gameStats);
+        
+        // Desbloquear logros basados en los datos de la partida
+        unlockAchievementsBasedOnGame(gameStats);
+        
+        // Después de procesar, eliminar los datos para evitar procesamiento duplicado
+        localStorage.removeItem('lastGameStats');
+        
+    } catch (error) {
+        console.error('Error al procesar la finalización del juego:', error);
+    }
+}
+
+/**
+ * Desbloquea logros basados en los datos de la partida
+ * @param {Object} gameStats - Datos de la partida completada
+ */
+function unlockAchievementsBasedOnGame(gameStats) {
+    // Verificar si la función global de desbloqueo existe
+    if (typeof window.unlockAchievement !== 'function') {
+        console.error('La función de desbloqueo de logros no está disponible');
+        return;
+    }
+    
+    // Desbloquear logro de primer juego
+    unlockAchievement('first_game');
+    
+    // Si es victoria, desbloquear logro correspondiente
+    if (gameStats.endCondition === 'victory') {
+        console.log('Victoria detectada, desbloqueando logros correspondientes');
+        
+        // Si es un juego perfecto (sin errores)
+        if (gameStats.incorrect === 0) {
+            console.log('Juego perfecto detectado');
+            unlockAchievement('perfect_game');
+        }
+        
+        // Otros logros basados en condiciones de victoria
+        const totalAnswers = gameStats.correct + gameStats.incorrect + gameStats.skipped;
+        if (totalAnswers >= 20) {
+            unlockAchievement('completion_master');
+        }
+    }
+    
+    // Desbloquear logros basados en respuestas correctas
+    if (gameStats.correct >= 5) {
+        unlockAchievement('streak_5');
+    }
+    
+    if (gameStats.correct >= 10) {
+        unlockAchievement('streak_10');
+    }
+    
+    // Comprobar la hora del día para desbloquear logros específicos por tiempo
+    const currentHour = new Date().getHours();
+    
+    // Jugador nocturno (entre las 11pm y 5am)
+    if (currentHour >= 23 || currentHour < 5) {
+        unlockAchievement('night_owl');
+    }
+    
+    // Jugador madrugador (entre las 5am y 8am)
+    if (currentHour >= 5 && currentHour < 8) {
+        unlockAchievement('early_bird');
+    }
+    
+    // Actualizar la interfaz del dashboard si estamos en la pestaña de logros
+    updateAchievementsUIIfVisible();
+}
+
+/**
+ * Actualiza la UI de logros si la pestaña está visible
+ */
+function updateAchievementsUIIfVisible() {
+    const achievementsTab = document.querySelector('.tab[data-tab="achievements"]');
+    
+    if (achievementsTab && achievementsTab.classList.contains('active')) {
+        console.log('Actualizando UI de logros');
+        
+        // Si existe la función loadAchievements de logros.html, usarla
+        if (typeof loadAchievements === 'function') {
+            loadAchievements('all');
+        }
+        // Si estamos en el dashboard y existe loadAchievementsData, usarla
+        else if (typeof loadAchievementsData === 'function') {
+            const currentGame = window.currentGame || 'pasala-che';
+            loadAchievementsData(currentGame);
+        }
+    }
+} 

@@ -4,10 +4,10 @@
  */
 
 // Variables globales
-let currentGame = 'pasala-che';
+    let currentGame = 'pasala-che';
 let currentTab = 'profile';
 let apiBaseUrl = '/api'; // Base URL for API endpoints
-
+    
 // Evento para cuando el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM completamente cargado');
@@ -131,7 +131,7 @@ function activateTab(tabId) {
     const selectedTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
     if (selectedTab) {
         selectedTab.classList.add('active');
-    } else {
+                    } else {
         console.warn(`No se encontró la pestaña: ${tabId}`);
     }
     
@@ -603,7 +603,7 @@ function loadRankingTable(game, gameData) {
                     
                     // Añadir un efecto de destello a la fila del usuario
                     highlightRow.classList.add('flash-highlight');
-                    setTimeout(() => {
+        setTimeout(() => {
                         highlightRow.classList.remove('flash-highlight');
                     }, 1500);
                 }
@@ -819,14 +819,14 @@ function loadRankingPage(page) {
             
             // Mostrar mensaje de error en la tabla
             if (tableBody) {
-                tableBody.innerHTML = `
-                    <tr>
+            tableBody.innerHTML = `
+                <tr>
                         <td colspan="5" class="error-message">
                             <i class="fas fa-exclamation-circle"></i>
                             No se pudo cargar la página ${page}. Intente nuevamente más tarde.
-                        </td>
-                    </tr>
-                `;
+                    </td>
+                </tr>
+            `;
             }
         });
 }
@@ -1063,81 +1063,15 @@ function formatDate(dateString) {
 // Cargar datos de logros
 function loadAchievementsData(game) {
     console.log(`Cargando datos de logros para el juego: ${game}`);
-    
-    const achievementsContainer = document.querySelector('#achievements-content .achievements-content');
-    const loadingElement = document.getElementById('achievements-loading');
-    
-    // Show loading indicator
-    if (loadingElement) loadingElement.style.display = 'flex';
-    if (achievementsContainer) achievementsContainer.style.opacity = '0';
-    
-    // Short timeout to simulate loading
-    setTimeout(() => {
-        // Hide loading indicator
-        if (loadingElement) loadingElement.style.display = 'none';
-        if (achievementsContainer) achievementsContainer.style.opacity = '1';
-        
-        // Try to load achievements from localStorage
-        try {
-            const achievements = JSON.parse(localStorage.getItem('userAchievements') || '[]');
-            
-            // If there are achievements to display
-            if (achievements && achievements.length > 0) {
-                // Clear existing content
-                achievementsContainer.innerHTML = '<div class="achievements-grid"></div>';
-                const achievementsGrid = achievementsContainer.querySelector('.achievements-grid');
-                
-                // Create and append achievement cards
-                achievements.forEach(achievement => {
-                    const achievementCard = document.createElement('div');
-                    achievementCard.className = 'achievement-card';
-                    
-                    // Format date if available
-                    let dateDisplay = '';
-                    if (achievement.date) {
-                        const achievementDate = new Date(achievement.date);
-                        dateDisplay = `<div class="achievement-date">Obtenido el ${achievementDate.toLocaleDateString('es-ES')}</div>`;
-                    }
-                    
-                    achievementCard.innerHTML = `
-                        <div class="achievement-icon">
-                            <i class="fas ${achievement.icon || 'fa-medal'}"></i>
-                        </div>
-                        <div class="achievement-details">
-                            <div class="achievement-title">${achievement.title}</div>
-                            <div class="achievement-description">${achievement.description}</div>
-                            ${dateDisplay}
-                        </div>
-                    `;
-                    
-                    achievementsGrid.appendChild(achievementCard);
-                });
-            } else {
-                // No achievements found, show placeholder
-                achievementsContainer.innerHTML = `
-                    <div class="placeholder-message">
-                        <i class="fas fa-medal"></i>
-                        <p>Todavía no has conseguido ningún logro. ¡Sigue jugando para desbloquearlos!</p>
-                    </div>
-                `;
-            }
-        } catch (error) {
-            console.error('Error loading achievements:', error);
-            achievementsContainer.innerHTML = `
-                <div class="placeholder-message">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <p>Error al cargar los logros. Por favor, intenta de nuevo más tarde.</p>
-                </div>
-            `;
-        }
-    }, 500); // Short timeout to show loading animation
+    // Esta función se implementaría para mostrar logros 
+    // Por ahora, dejamos el contenido por defecto
 }
 
 // Inicializar filtros de ranking
 function initRankingFilters() {
     console.log('Inicializando filtros de ranking');
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
     if (filterButtons.length > 0) {
         filterButtons.forEach(button => {
             button.addEventListener('click', function() {

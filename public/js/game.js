@@ -859,98 +859,86 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // End the game
-  function endGame(endCondition) {
-    console.log(`Juego terminado. Condición: ${endCondition}`);
+  function endGame() {
+    console.log("Juego terminado");
     
-    // Stop the timer
+    // Detener el temporizador
     clearInterval(timerInterval);
     
-    // Play game over sound
-    playSound(gameOverSound);
+    // Asegurarse de que el botón de ayuda esté deshabilitado
+    helpBtn.disabled = true;
+    skipBtn.disabled = true;
+    answerInput.disabled = true;
+    submitBtn.disabled = true;
     
-    // Disable inputs
-    document.getElementById('answer-input').disabled = true;
-    document.getElementById('submit-btn').disabled = true;
-    document.getElementById('skip-btn').disabled = true;
-    document.getElementById('help-btn').disabled = true;
+    // Desactivar todos los elementos de letra
+    roscoContainer.querySelectorAll('.rosco-letter').forEach(el => {
+      el.classList.remove('current');
+    });
     
-    // Collect game statistics
-    const gameStats = {
-      correct: correctAnswers,
-      incorrect: incorrectAnswersCount,
-      skipped: skippedAnswers,
-      remaining: 27 - (correctAnswers + incorrectAnswersCount + skippedAnswers),
-      timeTotal: totalTime,
-      timeLeft: timeLeft,
-      timeUsed: totalTime - timeLeft,
-      victory: endCondition === 'victory'
-    };
+    // Ocultar toast
+    toast.style.display = 'none';
     
-    // Update statistics counters in the stats modal
-    document.getElementById('stats-correct').textContent = gameStats.correct;
-    document.getElementById('stats-incorrect').textContent = gameStats.incorrect;
-    document.getElementById('stats-skipped').textContent = gameStats.skipped;
+    // Actualizar las estadísticas en la pantalla
+    updateStatsDisplay();
     
-    // Generate incorrect answers list for the stats modal
-    generateIncorrectAnswersList(incorrectAnswersList);
-    
-    // Check for achievements
-    const unlockedAchievements = checkAchievements(gameStats);
-    
-    // Save game data to localStorage
-    saveGameData(gameStats);
+    // Calcular puntaje final
+    const score = calculateFinalScore();
     
     // Determine which modal to show based on end condition
     let modalType;
     
-    if (endCondition === 'completed') {
-      // All letters correct
-      modalType = 'victory';
-    } else if (endCondition === 'errors') {
-      // Too many errors
+    // Si el usuario ha cometido 3 errores o más, ha perdido
+    if (incorrectAnswersCount >= maxErrors) {
+      console.log("Fin por errores máximos");
+      playSound(gameOverSound);
       modalType = 'defeat';
-    } else if (endCondition === 'timeout') {
-      // Time ran out
+      window.lastGameEndCondition = 'defeat';
+    } 
+    // Si el tiempo se agotó
+    else if (timeLeft <= 0) {
+      console.log("Fin por tiempo agotado");
+      playSound(gameOverSound);
       modalType = 'timeout';
-    } else {
-      // Default to defeat if unknown
+      window.lastGameEndCondition = 'timeout';
+    }
+    // Si el usuario ha respondido correctamente todas las preguntas
+    else if (correctAnswers + incorrectAnswersCount + skippedAnswers === totalQuestions) {
+      console.log("¡Victoria! Todas las preguntas respondidas");
+      playSound(allCorrectSound || correctSound); // Usar un sonido especial para victoria o el sonido de correcto
+      modalType = 'victory';
+      window.lastGameEndCondition = 'victory';
+      
+      // Si no hay errores, el jugador ganó sin errores, posible logro
+      if (incorrectAnswersCount === 0) {
+        console.log("¡Perfecto! Sin errores");
+        window.gameCompletedPerfectly = true;
+      }
+    }
+    // En cualquier otro caso (probablemente no debería ocurrir)
+    else {
+      console.log("Fin por otra razón");
+      playSound(gameOverSound);
       modalType = 'defeat';
+      window.lastGameEndCondition = 'other';
     }
     
     // Update stats in the stats modal
-    updateStatsDisplay();
+    updateStatisticsModal(score);
     
-    // If achievements were unlocked, show that modal first
-    if (unlockedAchievements.length > 0) {
-      // Display unlocked achievements in the achievements modal
-      const achievementsContainer = document.getElementById('unlocked-achievements');
-      if (achievementsContainer) {
-        const achievementsHTML = unlockedAchievements.map(achievement => createAchievementCard(achievement)).join('');
-        achievementsContainer.innerHTML = achievementsHTML;
-      }
-      
-      // Show the achievements modal
-      const achievementsModal = document.getElementById('achievements-modal');
-      if (achievementsModal) {
-        achievementsModal.style.display = 'flex';
-        setTimeout(() => {
-          achievementsModal.classList.add('show');
-        }, 10);
-      }
-    } else {
-      // Show the corresponding result modal
-      const modal = document.getElementById(`${modalType}-modal`);
-      modal.style.display = 'flex';
-      
-      setTimeout(() => {
-        modal.classList.add('show');
-      }, 10);
-    }
+    // Guardar las estadísticas para posible uso en otras páginas
+    saveGameStatsToLocalStorage(score, modalType);
     
-    // Show ad after a short delay to not interfere with the game end experience
-    setTimeout(() => {
-      showPauseAd();
-    }, 1000); // Show the ad one second after the modal appears
+    // Show the corresponding modal
+    const modal = document.getElementById(`${modalType}-modal`);
+    modal.style.display = 'flex';
+    
+    requestAnimationFrame(() => {
+      modal.classList.add('show');
+    });
+    
+    // Mostrar publicidad después de terminar una partida
+    setTimeout(showPauseAd, 1000); // Mostrar el anuncio un segundo después de que aparezca el modal
   }
   
   // Configurar botones de los modales para redirigir al perfil
@@ -1005,6 +993,23 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Añadir nuevo event listener
       newDashboardBtn.addEventListener('click', function() {
+        // Sincronizar los logros obtenidos antes de ir al dashboard
+        try {
+          // Guardar el estado actual de la partida en localStorage para que dashboard lo lea
+          const gameStats = {
+            correct: correctAnswers,
+            incorrect: incorrectAnswersCount,
+            skipped: skippedAnswers,
+            timestamp: Date.now(),
+            endCondition: window.lastGameEndCondition || 'unknown'
+          };
+          localStorage.setItem('lastGameStats', JSON.stringify(gameStats));
+          console.log("Estadísticas de juego guardadas correctamente", gameStats);
+        } catch (error) {
+          console.error("Error al guardar estadísticas para el dashboard:", error);
+        }
+        
+        // Redirigir al dashboard
         window.location.href = 'user-dashboard.html?fromGame=true&t=' + Date.now();
       });
     }
@@ -2045,210 +2050,3 @@ styleEl.textContent = `
   }
 `;
 document.head.appendChild(styleEl);
-
-// Save achievement to localStorage
-function saveAchievement(achievement) {
-  try {
-    // Get existing achievements
-    let achievements = JSON.parse(localStorage.getItem('userAchievements') || '[]');
-    
-    // Check if this achievement is already earned
-    const existingIndex = achievements.findIndex(a => a.id === achievement.id);
-    
-    // If it's a new achievement, add it with the current date
-    if (existingIndex === -1) {
-      achievement.date = new Date().toISOString();
-      achievements.push(achievement);
-      
-      // Save updated achievements list
-      localStorage.setItem('userAchievements', JSON.stringify(achievements));
-      console.log(`Achievement unlocked: ${achievement.title}`);
-      return true;
-    } else {
-      console.log(`Achievement already unlocked: ${achievement.title}`);
-      return false;
-    }
-  } catch (error) {
-    console.error('Error saving achievement:', error);
-    return false;
-  }
-}
-
-// Format the date string for display
-function formatDate(dateString) {
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('es-ES', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-  } catch (error) {
-    return '';
-  }
-}
-
-// Create an achievement card for display
-function createAchievementCard(achievement) {
-  const dateDisplay = achievement.date ? 
-    `<div class="achievement-date">Obtenido el ${formatDate(achievement.date)}</div>` : '';
-  
-  return `
-    <div class="achievement-card">
-      <div class="achievement-icon">
-        <i class="fas ${achievement.icon || 'fa-medal'}"></i>
-      </div>
-      <div class="achievement-details">
-        <div class="achievement-title">${achievement.title}</div>
-        <div class="achievement-description">${achievement.description}</div>
-        ${dateDisplay}
-      </div>
-    </div>
-  `;
-}
-
-// Check for achievements based on game statistics
-function checkAchievements(gameStats) {
-  const unlockedAchievements = [];
-  
-  // Define possible achievements
-  const possibleAchievements = [
-    {
-      id: 'first_win',
-      title: 'Primera Victoria',
-      description: 'Completaste tu primer rosco con éxito',
-      icon: 'fa-trophy',
-      condition: () => gameStats.victory === true
-    },
-    {
-      id: 'perfect_game',
-      title: 'Perfección',
-      description: 'Completaste un rosco sin errores',
-      icon: 'fa-star',
-      condition: () => gameStats.victory === true && gameStats.incorrect === 0
-    },
-    {
-      id: 'speed_demon',
-      title: 'Velocidad Supersónica',
-      description: 'Completaste un rosco con más de 2 minutos restantes',
-      icon: 'fa-clock',
-      condition: () => gameStats.victory === true && gameStats.timeLeft > 120
-    },
-    {
-      id: 'persistence',
-      title: 'Persistencia',
-      description: 'Completaste un rosco después de al menos 3 errores',
-      icon: 'fa-hand-rock',
-      condition: () => gameStats.incorrect >= 3
-    },
-    {
-      id: 'half_way',
-      title: 'A Medio Camino',
-      description: 'Completaste al menos 13 letras correctamente',
-      icon: 'fa-route',
-      condition: () => gameStats.correct >= 13
-    }
-  ];
-  
-  // Check each achievement
-  possibleAchievements.forEach(achievement => {
-    if (achievement.condition()) {
-      // If achievement condition is met, save it
-      const isNew = saveAchievement(achievement);
-      if (isNew) {
-        unlockedAchievements.push(achievement);
-      }
-    }
-  });
-  
-  return unlockedAchievements;
-}
-
-// Save game data to localStorage
-function saveGameData(gameStats) {
-  try {
-    // Calculate score based on correct answers and remaining time
-    const timeBonus = gameStats.timeLeft > 0 ? Math.floor(gameStats.timeLeft / 10) : 0;
-    const scoreBase = gameStats.correct * 10;
-    const difficultyMultiplier = 
-      selectedDifficulty === 'dificil' ? 2.0 : 
-      selectedDifficulty === 'normal' ? 1.5 : 1.0;
-    
-    const totalScore = Math.floor((scoreBase + timeBonus) * difficultyMultiplier);
-    
-    // Ensure username is saved
-    let username = localStorage.getItem('username');
-    if (!username || username === 'undefined' || username === 'null') {
-      username = 'Jugador';
-      localStorage.setItem('username', username);
-    }
-    
-    // Create object with game data
-    const gameData = {
-      name: username,
-      date: new Date().toISOString(),
-      difficulty: selectedDifficulty,
-      score: totalScore,
-      correct: gameStats.correct,
-      wrong: gameStats.incorrect,
-      skipped: gameStats.skipped,
-      timeUsed: gameStats.timeUsed,
-      timeRemaining: gameStats.timeLeft,
-      victory: gameStats.victory,
-      hintsUsed: helpCount ? (2 - helpCount) : 0
-    };
-    
-    console.log('Saving game results:', gameData);
-    
-    // Save player data using our function
-    savePlayerData(gameData);
-    
-    // Indicate we just completed a game
-    localStorage.setItem('gameJustCompleted', 'true');
-    localStorage.setItem('hasPlayed', 'true');
-    
-    // Save last timestamp to avoid cache issues
-    localStorage.setItem('lastGameTimestamp', Date.now().toString());
-    
-    // Configure modal buttons to redirect to profile
-    configureModalButtons();
-    
-  } catch (error) {
-    console.error('Error saving game results:', error);
-  }
-}
-
-// Update the stats display
-function updateStatsDisplay() {
-  // This function can be expanded if needed
-  console.log('Updating stats display');
-}
-
-// Show the pause ad
-function showPauseAd() {
-  if (localStorage.getItem("adConsent") === "true") {
-    const gameEndAd = document.querySelector('.game-end-ad');
-    if (gameEndAd) {
-      // First show a loading container while the ad prepares
-      gameEndAd.innerHTML = `
-        <div class="ad-label">PUBLICIDAD</div>
-        <div class="ad-loading"></div>
-      `;
-      gameEndAd.style.display = 'block';
-      
-      // After a brief delay, load the actual ad
-      setTimeout(() => {
-        gameEndAd.innerHTML = `
-          <div class="ad-label">PUBLICIDAD</div>
-          <ins class="adsbygoogle"
-               style="display:block"
-               data-ad-client="ca-pub-9579152019412427"
-               data-ad-slot="1234567890"
-               data-ad-format="auto"
-               data-full-width-responsive="true"></ins>
-        `;
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      }, 600);
-    }
-  }
-}
