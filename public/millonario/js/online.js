@@ -54,8 +54,9 @@ async function loadOnlineQuestions(level) {
 if (createRoomSubmit) {
   createRoomSubmit.addEventListener("click", () => {
     // Aquí implementarías la lógica para crear la sala vía Socket.io
-    // Simulamos redirigiendo a la pantalla de espera:
-    window.location.href = "online_wait.html";
+    // Ya no redirigimos a online_wait.html
+    console.log("Creando sala...");
+    // La lógica de espera ahora se maneja dentro de online.html
   });
 }
 
@@ -63,15 +64,9 @@ if (createRoomSubmit) {
 if (joinRoomSubmit) {
   joinRoomSubmit.addEventListener("click", () => {
     // Implementa la lógica para unirse a una sala vía Socket.io
-    window.location.href = "online_wait.html";
+    console.log("Uniéndose a sala...");
+    // La lógica de espera ahora se maneja dentro de online.html
   });
-}
-
-// En la pantalla de espera (online_wait.html), redirige a online_game.html tras 5 segundos
-if (window.location.pathname.endsWith("online_wait.html")) {
-  setTimeout(() => {
-    window.location.href = "online_game.html";
-  }, 5000);
 }
 
 // Funciones para el juego online (en online_game.html)

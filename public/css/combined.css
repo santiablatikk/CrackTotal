@@ -9,9 +9,6 @@
 /* Importar los estilos del rosco */
 @import url('rosco-styles.css');
 
-/* Importar los estilos de perfil y ranking */
-@import url('profile-ranking-styles.css');
-
 /* ============= ANIMACIONES GLOBALES ============= */
 
 @keyframes pulse-animation {

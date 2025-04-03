@@ -3,32 +3,41 @@
  * Handles caching, offline support, and PWA functionality
  */
 
-// Nombres de las cachés
-const CACHE_NAME = 'pasala-che-v1';
-const DYNAMIC_CACHE_NAME = 'pasala-che-dynamic-v1';
+// Cache names
+const CACHE_NAME = 'crack-total-cache-v1';
+const ASSETS_CACHE = 'crack-total-assets-v1';
 
-// Archivos a precargar en la caché principal
+// Assets to pre-cache
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
-  '/game.html',
-  '/profile.html',
-  '/ranking.html',
-  '/about.html',
-  '/offline.html',
+  '/game.html', 
+  '/game-rosco.html',
+  '/user-profile.html',
+  '/user-ranking.html',
+  '/logros.html',
+  '/css/combined.css',
   '/css/styles.css',
   '/css/game-styles.css',
   '/css/footer-styles.css',
-  '/css/pages.css',
-  '/js/utils.js',
+  '/css/achievements.css',
+  '/css/user/user-styles.css',
+  '/js/main.js',
   '/js/game.js',
-  '/js/profile.js',
-  '/js/ranking.js',
-  '/img/icons/icon-192x192.png',
-  '/img/icons/icon-512x512.png',
-  '/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
+  '/js/utils.js',
+  '/js/particles-config.js',
+  '/js/user-profile.js',
+  '/img/logo.png',
+  '/img/background.jpg',
+  '/img/achievements/all-achievements.png',
+  '/favicon.ico'
+];
+
+// Scripts to preload
+const PRELOAD_SCRIPTS = [
+  '/js/main.js',
+  '/js/utils.js',
+  '/js/user-profile.js'
 ];
 
 // Archivos de sonido (pueden ser grandes, considerarlos opcionales)
@@ -81,7 +90,7 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME && 
-              cacheName !== DYNAMIC_CACHE_NAME && 
+              cacheName !== ASSETS_CACHE && 
               cacheName !== 'audio-cache-v1') {
             console.log('[Service Worker] Eliminando caché antigua:', cacheName);
             return caches.delete(cacheName);
@@ -114,7 +123,7 @@ self.addEventListener('fetch', event => {
         // En segundo plano, actualizar la caché con la versión más reciente
         fetch(event.request).then(networkResponse => {
           if (networkResponse && networkResponse.ok && networkResponse.type === 'basic') {
-            caches.open(DYNAMIC_CACHE_NAME).then(cache => {
+            caches.open(ASSETS_CACHE).then(cache => {
               cache.put(event.request, networkResponse.clone());
             });
           }
@@ -135,7 +144,7 @@ self.addEventListener('fetch', event => {
         let responseToCache = networkResponse.clone();
         
         // Guardar en caché dinámica
-        caches.open(DYNAMIC_CACHE_NAME).then(cache => {
+        caches.open(ASSETS_CACHE).then(cache => {
           cache.put(event.request, responseToCache);
         });
         

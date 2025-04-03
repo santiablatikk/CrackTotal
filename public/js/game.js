@@ -366,48 +366,65 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Fetch questions from the server (adapted to the structure in questions.json)
   async function fetchQuestions() {
+    const loadingOverlay = document.querySelector('.loading-overlay');
+    loadingOverlay.style.display = 'flex';
+
     try {
-      const response = await fetch('../data/questions.json');
-      const data = await response.json();
-      
-      // Process questions to format them for the game
-      // Exclude questions for the letter Ñ
-      questions = [];
-      
-      alphabet.forEach(letter => {
-        // Find matching letter in the data
-        const letterData = data.find(item => item.letra === letter);
+      // Fetch both question files concurrently
+      const [response1, response2] = await Promise.all([
+        fetch('data/questions.json'),
+        fetch('data/questions_pasapalabra.json')
+      ]);
+
+      if (!response1.ok) {
+        throw new Error(`HTTP error fetching questions.json! status: ${response1.status}`);
+      }
+      if (!response2.ok) {
+        throw new Error(`HTTP error fetching questions_pasapalabra.json! status: ${response2.status}`);
+      }
+
+      const data1 = await response1.json();
+      const data2 = await response2.json();
+
+      // Validate data structure
+      if (!Array.isArray(data1) || !Array.isArray(data2)) {
+          throw new Error('Invalid question data format in one or both files.');
+      }
+
+      // Combine questions from both sources
+      const combinedData = [];
+      const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+
+      letters.forEach(letter => {
+        const questions1 = data1.find(item => item.letra === letter)?.preguntas || [];
+        const questions2 = data2.find(item => item.letra === letter)?.preguntas || [];
         
-        if (letterData && letterData.preguntas && letterData.preguntas.length > 0) {
-          // Randomly select a question for this letter
-          const randomIndex = Math.floor(Math.random() * letterData.preguntas.length);
-          const questionItem = letterData.preguntas[randomIndex];
-          
-          // Add question to our game questions
-          questions.push({
-            letter: letter,
-            question: `Comienza con ${letter}:`,
-            definition: questionItem.pregunta,
-            answer: questionItem.respuesta.toLowerCase().trim()
-          });
+        const allQuestionsForLetter = [...questions1, ...questions2];
+
+        if (allQuestionsForLetter.length > 0) {
+            combinedData.push({
+                letra: letter,
+                preguntas: allQuestionsForLetter
+            });
         } else {
-          // Fallback if no questions for a letter
-          questions.push({
-            letter: letter,
-            question: `Comienza con ${letter}:`,
-            definition: `No hay preguntas disponibles para la letra ${letter}`,
-            answer: 'no disponible'
-          });
+            console.warn(`No questions found for letter ${letter} in either file.`);
         }
       });
       
-      // Update remaining count
-      remainingCountDisplay.textContent = questions.length;
-      
-      return true;
+      if (combinedData.length === 0) {
+         throw new Error('No questions found in any file after combining.');
+      }
+
+      questionsData = combinedData; // Store the combined data
+      console.log("Combined questions loaded successfully:", questionsData.length, "letters available.");
+      return true; // Indicate success
+
     } catch (error) {
-      console.error('Error fetching questions:', error);
-      return false;
+      console.error('Error fetching or processing questions:', error);
+      showGameMessage('Error al cargar las preguntas combinadas. Intenta recargar la página.', 'error');
+      return false; // Indicate failure
+    } finally {
+      loadingOverlay.style.display = 'none';
     }
   }
   
@@ -421,17 +438,99 @@ document.addEventListener('DOMContentLoaded', function() {
     // Crear el rosco
     createRosco();
     
-    // Cargar preguntas
+    // Cargar preguntas combinadas
     const questionsLoaded = await fetchQuestions();
     
-    if (!questionsLoaded) {
+    if (!questionsLoaded || !questionsData || questionsData.length === 0) {
       currentDefinition.textContent = 'Error al cargar las preguntas. Por favor, recarga la página.';
       loadingOverlay.style.display = 'none';
       return;
     }
     
+    // Process combined data to build the round's questions, avoiding duplicate and similar answers
+    questions = []; // Reset questions for the new round
+    const usedAnswers = []; // Track used answers for this round as an array (to check similarity)
+    const usedLetters = new Set(); // Track used letters for this round
+    const MAX_RETRIES_PER_LETTER = 15; // Increased retries to find unique non-similar answer
+    const SIMILARITY_THRESHOLD = 0.7; // Threshold to consider answers too similar
+
+    // Función auxiliar para verificar si una respuesta es similar a las ya usadas
+    function isAnswerTooSimilarToExisting(newAnswer) {
+      const normalizedNew = normalizeText(newAnswer);
+      
+      // Si la respuesta exacta ya existe después de normalizar
+      if (usedAnswers.some(ans => normalizeText(ans) === normalizedNew)) {
+        return true;
+      }
+      
+      // Comprobar similitud con todas las respuestas existentes
+      for (const existingAnswer of usedAnswers) {
+        const similarity = stringSimilarity(newAnswer, existingAnswer);
+        if (similarity >= SIMILARITY_THRESHOLD) {
+          console.log(`Respuesta demasiado similar rechazada: "${newAnswer}" vs "${existingAnswer}" (${similarity})`);
+          return true;
+        }
+      }
+      
+      return false;
+    }
+
+    questionsData.forEach(letterData => {
+      if (letterData.preguntas && letterData.preguntas.length > 0 && !usedLetters.has(letterData.letra)) {
+        
+        let foundUniqueQuestion = false;
+        let attempts = 0;
+        const potentialQuestions = [...letterData.preguntas]; // Clone to avoid modifying original
+        potentialQuestions.sort(() => Math.random() - 0.5); // Shuffle for random retries
+
+        for (const selectedQuestionItem of potentialQuestions) {
+           if (attempts >= MAX_RETRIES_PER_LETTER) {
+               console.warn(`Max retries reached for letter ${letterData.letra} without finding a unique non-similar answer.`);
+               break; // Stop trying for this letter
+           }
+           attempts++;
+
+           const candidateAnswer = selectedQuestionItem.respuesta;
+           
+           // Verificar si esta respuesta es similar a alguna ya utilizada
+           if (!isAnswerTooSimilarToExisting(candidateAnswer)) {
+             // Found a question with a unique non-similar answer
+             questions.push({
+               letter: letterData.letra,
+               question: selectedQuestionItem.pregunta.toLowerCase().includes('contiene') ? 
+                           `Contiene ${letterData.letra}:` : 
+                           `Comienza con ${letterData.letra}:`,
+               definition: selectedQuestionItem.pregunta,
+               answer: selectedQuestionItem.respuesta.toLowerCase().trim()
+             });
+             usedAnswers.push(candidateAnswer); // Add answer to used array
+             usedLetters.add(letterData.letra);   // Add letter to used set
+             foundUniqueQuestion = true;
+             break; // Move to the next letter
+           } else {
+             console.log(`Evitando respuesta similar para letra ${letterData.letra}: ${candidateAnswer}`);
+           }
+        }
+        
+        if (!foundUniqueQuestion) {
+             console.warn(`Could not find a question with a unique non-similar answer for letter ${letterData.letra} after checking ${attempts} options.`);
+        }
+      }
+    });
+
+    // Update remaining count based on the actual questions selected for the round
+    remainingCountDisplay.textContent = questions.length;
+    
+    if (questions.length === 0) {
+      currentDefinition.textContent = 'No se pudieron preparar preguntas únicas para la ronda. Recarga.';
+      loadingOverlay.style.display = 'none';
+      return;
+    }
+    
+    currentQuestionIndex = 0; // Reset index for the new round
+    
     // Mostrar primera pregunta
-    displayQuestion(0);
+    displayQuestion(currentQuestionIndex);
     
     // Iniciar temporizador
     startTimer();

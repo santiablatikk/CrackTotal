@@ -101,21 +101,6 @@ app.get("/api/questionsOnline", async (req, res) => {
   }
 });
 
-// Endpoint para obtener datos de ranking
-app.get("/api/ranking", (req, res) => {
-  try {
-    const rankingFile = path.join(__dirname, "data", "ranking.json");
-    const rankingData = fs.existsSync(rankingFile) 
-      ? JSON.parse(fs.readFileSync(rankingFile)) 
-      : [];
-    
-    res.json({ ranking: rankingData });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // Endpoint para guardar partida
 app.post("/api/partida", (req, res) => {
   try {

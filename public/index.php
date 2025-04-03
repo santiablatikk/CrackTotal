@@ -2,6 +2,19 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Verificar si el usuario ya ingresó su nombre
+      const playerName = localStorage.getItem('playerName');
+      
+      // Redirección condicional
+      if (playerName) {
+        // Si ya tiene nombre guardado, ir al portal
+        window.location.href = 'portal.html';
+      } else {
+        // Si no tiene nombre, ir a la página de ingreso
+        window.location.href = 'crack-total.html';
+      }
+    </script>
     <meta name="description" content="CRACK TOTAL - Portal de juegos de fútbol" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">

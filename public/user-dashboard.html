@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Dashboard - CRACK TOTAL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/user/dashboard-modern.css">
+    <link rel="stylesheet" href="css/user/game-notifications.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <meta name="theme-color" content="#e11d48">
+</head>
+<body>
+    <div class="user-page-container">
+        <!-- Cabecera -->
+        <header class="user-page-header">
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="app-header">
+                <div class="logo-animation">
+                    <i class="fas fa-futbol ball-icon bounce"></i>
+                </div>
+                <a href="#" class="title-link">
+                    <h1 class="title-text">CRACK TOTAL</h1>
+                </a>
+                <p class="subtitle">El juego del fútbol argentino</p>
+            </div>
+            <div class="user-profile-info">
+                <div class="profile-username-wrapper">
+                    <span class="profile-username" id="profile-username">Cargando...</span>
+                    <div class="level-container">
+                        <span class="level-badge" id="level-badge">-</span>
+                        <span class="profile-level-text" id="profile-level-text">Nivel -</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Selector de juego -->
+        <div class="game-selector">
+            <div class="game-options">
+                <div class="game-option active" data-game="pasala-che">
+                    <div class="game-icon">
+                        <i class="fas fa-circle-notch"></i>
+                    </div>
+                    <span class="game-name">PASALA CHE</span>
+                </div>
+                <div class="game-option" data-game="quien-sabe-theme">
+                    <div class="game-icon">
+                        <i class="fas fa-futbol"></i>
+                    </div>
+                    <span class="game-name">¿QUIÉN SABE MÁS?</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pestañas de Navegación -->
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <div class="tab active" data-tab="profile">
+                    <i class="fas fa-user"></i>
+                    <span>Mi Perfil</span>
+                </div>
+                <div class="tab" data-tab="stats">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Estadísticas</span>
+                </div>
+                <div class="tab" data-tab="ranking">
+                    <i class="fas fa-trophy"></i>
+                    <span>Ranking</span>
+                </div>
+                <div class="tab" data-tab="achievements">
+                    <i class="fas fa-medal"></i>
+                    <span>Logros</span>
+                </div>
+            </div>
+
+            <!-- Contenido Principal (Pestañas) -->
+            <main class="tabs-content">
+                <!-- Pestaña: Mi Perfil -->
+                <div class="tab-content active" id="profile-content">
+                    <div class="loading-content" id="profile-loading">
+                        <div class="loading-spinner"></div>
+                        <p>Cargando datos del perfil...</p>
+                    </div>
+                    <div class="profile-content">
+                        <!-- Sección de Nivel y Rango -->
+                        <section class="level-rank-section">
+                            <h2 class="section-title visually-hidden">Nivel y Rango</h2>
+                            <div class="level-rank-grid">
+                                <div class="level-progress-container">
+                                    <div class="level-info">
+                                        <span class="current-level" id="profile-level-display">Nivel 1</span>
+                                        <span class="xp-progress" id="xp-progress-text">0 / 100 XP</span>
+                                    </div>
+                                    <div class="level-progress-bar">
+                                        <div class="level-progress-fill" id="level-progress-fill" style="width: 0%;"></div>
+                                    </div>
+                                </div>
+                                <div class="rank-best-score">
+                                    <div class="rank-info">
+                                        <i class="fas fa-trophy rank-icon"></i>
+                                        <span class="rank-label">Ranking Actual</span>
+                                        <span class="rank-value" id="current-rank-profile">-</span>
+                                    </div>
+                                    <div class="best-score-info">
+                                        <i class="fas fa-star score-icon"></i>
+                                        <span class="score-label">Mejor Puntaje</span>
+                                        <span class="score-value" id="best-score-profile">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="section-divider"></div>
+
+                        <!-- Estadísticas Resumidas -->
+                        <section class="profile-stats-section">
+                            <h2 class="section-title">Mis Estadísticas Clave</h2>
+                            <div class="stats-grid">
+                                <div class="stat-item" data-stat="games-played">
+                                    <div class="stat-icon"><i class="fas fa-gamepad"></i></div>
+                                    <div class="stat-details">
+                                        <span class="stat-label">Partidas Jugadas</span>
+                                        <span class="stat-number" id="stat-games">-</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item" data-stat="win-rate">
+                                    <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                                    <div class="stat-details">
+                                        <span class="stat-label">Tasa de Victoria</span>
+                                        <span class="stat-number" id="stat-winrate">-</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item" data-stat="accuracy">
+                                    <div class="stat-icon"><i class="fas fa-bullseye"></i></div>
+                                    <div class="stat-details">
+                                        <span class="stat-label">Precisión Media</span>
+                                        <span class="stat-number" id="stat-accuracy">-</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item" data-stat="avg-time">
+                                    <div class="stat-icon"><i class="fas fa-stopwatch"></i></div>
+                                    <div class="stat-details">
+                                        <span class="stat-label">Tiempo Promedio</span>
+                                        <span class="stat-number" id="stat-avgtime">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <div class="section-divider"></div>
+
+                        <!-- Actividad Reciente (Placeholder) -->
+                        <section class="recent-activity-section">
+                            <h2 class="section-title">Actividad Reciente</h2>
+                            <div class="activity-feed">
+                                <div class="placeholder-message">
+                                    <i class="fas fa-history"></i>
+                                    <p>Tu actividad reciente aparecerá aquí.</p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- Pestaña: Estadísticas -->
+                <div class="tab-content" id="stats-content">
+                    <div class="loading-content" id="stats-loading">
+                        <div class="loading-spinner"></div>
+                        <p>Cargando estadísticas...</p>
+                    </div>
+                    <div class="stats-content">
+                        <!-- Gráficos y Estadísticas Detalladas -->
+                        <section class="detailed-stats-section">
+                            <h2 class="section-title">Estadísticas Detalladas</h2>
+                            <div class="placeholder-message">
+                                <i class="fas fa-chart-line"></i>
+                                <p>Próximamente estadísticas detalladas</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- Pestaña: Ranking -->
+                <div class="tab-content" id="ranking-content">
+                    <div class="loading-content" id="ranking-loading">
+                        <div class="loading-spinner"></div>
+                        <p>Cargando ranking global...</p>
+                    </div>
+                    <div class="ranking-content">                        
+                        <!-- Filtros de ranking -->
+                        <section class="ranking-filters">
+                            <div class="filter-options">
+                                <span class="filter-label">Ver ranking:</span>
+                                <button class="filter-btn active" data-filter="global">Global</button>
+                                <button class="filter-btn" data-filter="monthly">Mensual</button>
+                                <button class="filter-btn" data-filter="weekly">Semanal</button>
+                                <div class="filter-search">
+                                    <input type="text" id="ranking-search" placeholder="Buscar jugador...">
+                                    <button id="ranking-search-btn"><i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Estadísticas globales -->
+                        <section class="global-ranking-stats">
+                            <div class="stats-grid">
+                                <div class="stat-item" data-stat="total-players">
+                                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                                    <div class="stat-details">
+                                        <span class="stat-label">Jugadores Totales</span>
+                                        <span class="stat-number">-</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item" data-stat="total-games">
+                                    <div class="stat-icon"><i class="fas fa-gamepad"></i></div>
+                                    <div class="stat-details">
+                                        <span class="stat-label">Partidas Jugadas</span>
+                                        <span class="stat-number">-</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item" data-stat="avg-score">
+                                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                                    <div class="stat-details">
+                                        <span class="stat-label">Puntuación Media</span>
+                                        <span class="stat-number">-</span>
+                                    </div>
+                                </div>
+                                <div class="stat-item" data-stat="max-score">
+                                    <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                                    <div class="stat-details">
+                                        <span class="stat-label">Puntuación Máxima</span>
+                                        <span class="stat-number">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Top 3 jugadores -->
+                        <section class="top-players-section">
+                            <h2 class="section-title">Top Jugadores</h2>
+                            <div class="top-players-grid">
+                                <div class="top-player-card rank-2">
+                                    <div class="player-rank-badge">#2</div>
+                                    <div class="player-avatar">D</div>
+                                    <div class="player-name" id="top-player-2-name">-</div>
+                                    <div class="player-score" id="top-player-2-score">-</div>
+                                </div>
+                                
+                                <div class="top-player-card rank-1">
+                                    <div class="player-rank-badge">#1</div>
+                                    <div class="player-avatar">M</div>
+                                    <div class="player-name" id="top-player-1-name">-</div>
+                                    <div class="player-score" id="top-player-1-score">-</div>
+                                </div>
+                                
+                                <div class="top-player-card rank-3">
+                                    <div class="player-rank-badge">#3</div>
+                                    <div class="player-avatar">J</div>
+                                    <div class="player-name" id="top-player-3-name">-</div>
+                                    <div class="player-score" id="top-player-3-score">-</div>
+                                </div>
+                            </div>
+                        </section>
+                        
+                        <!-- Tabla de ranking -->
+                        <section class="ranking-table-section">
+                            <h2 class="section-title">Clasificación Global</h2>
+                            <div class="ranking-table-container">
+                                <table class="improved-ranking-table">
+                                    <thead>
+                                        <tr>
+                                            <th width="15%">Posición</th>
+                                            <th width="40%">Jugador</th>
+                                            <th width="15%" class="score-col">Puntos</th>
+                                            <th width="15%" class="games-col">Partidas</th>
+                                            <th width="15%" class="last-played-col">Última Partida</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ranking-table-body">
+                                        <tr class="loading-row">
+                                            <td colspan="5">
+                                                <div class="loading-spinner"></div> Cargando ranking...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                
+                                <!-- Paginación -->
+                                <div class="pagination-container">
+                                    <button class="pagination-btn" id="prev-page-btn" disabled><i class="fas fa-chevron-left"></i> Anterior</button>
+                                    <span id="pagination-info">Página 1 de 1</span>
+                                    <button class="pagination-btn" id="next-page-btn" disabled>Siguiente <i class="fas fa-chevron-right"></i></button>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- Pestaña: Logros -->
+                <div class="tab-content" id="achievements-content">
+                    <div class="loading-content" id="achievements-loading">
+                        <div class="loading-spinner"></div>
+                        <p>Cargando logros...</p>
+                    </div>
+                    <div class="achievements-content">
+                        <div class="placeholder-message">
+                            <i class="fas fa-medal"></i>
+                            <p>Próximamente logros y trofeos</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="policy-footer">
+        <div class="footer-links-mini">
+            <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+            <a href="game.html"><i class="fas fa-gamepad"></i> Jugar</a>
+            <a href="user-dashboard.html"><i class="fas fa-user"></i> Mi Dashboard</a>
+            <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
+            <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+            <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+            <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+            <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+            <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+        </div>
+        <div class="copyright-text">&copy; 2025 CRACK TOTAL - Todos los derechos reservados.</div>
+        <div class="footer-social-icons">
+            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/user-dashboard.js"></script>
+    <script src="js/game-completion.js"></script>
+</body>
+</html>
