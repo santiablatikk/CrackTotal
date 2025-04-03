@@ -344,46 +344,75 @@ function notifyDashboardWindows(gameData) {
 
 // Escuchar cuando se guarda el resultado de la partida
 function setupGameCompletionListener() {
-  // Esta función debe ser llamada desde la página del juego
-  if (typeof savePlayerData === 'function') {
-    // Guardar referencia original a la función
-    const originalSavePlayerData = savePlayerData;
-    
-    // Reemplazar con nuestra versión que notifica el evento
-    window.savePlayerData = function(gameData) {
-      // Llamar a la función original
-      const result = originalSavePlayerData(gameData);
+  console.log('Configurando listener de finalización de partida...');
+  
+  // Verificar cada segundo hasta encontrar la función savePlayerData (en caso de que se cargue después)
+  const checkInterval = setInterval(() => {
+    if (typeof window.savePlayerData === 'function') {
+      console.log('Función savePlayerData encontrada, configurando listener...');
       
-      // Notificar que la partida se ha completado
-      notifyGameCompletion(gameData);
+      // Guardar referencia original
+      const originalSavePlayerData = window.savePlayerData;
       
-      return result;
-    };
-    
-    console.log('Listener de finalización de partida configurado correctamente');
-  } else {
-    console.warn('No se encontró la función savePlayerData. El listener de finalización de partida no ha sido configurado.');
-  }
+      // Reemplazar con nuestra versión
+      window.savePlayerData = function(gameData) {
+        console.log('Interceptando llamada a savePlayerData');
+        
+        // Llamar a la función original
+        const result = originalSavePlayerData(gameData);
+        
+        // Asegurarnos de notificar la finalización
+        setTimeout(() => {
+          if (typeof notifyGameCompletion === 'function') {
+            console.log('Notificando finalización de partida desde listener');
+            notifyGameCompletion(gameData);
+          }
+        }, 500);
+        
+        return result;
+      };
+      
+      console.log('Listener de finalización de partida configurado correctamente');
+      clearInterval(checkInterval);
+    } else {
+      console.log('Esperando función savePlayerData...');
+    }
+  }, 1000);
+  
+  // Cancelar después de 10 intentos (10 segundos)
+  setTimeout(() => {
+    clearInterval(checkInterval);
+    console.warn('No se pudo encontrar la función savePlayerData después de 10 intentos.');
+  }, 10000);
 }
 
-// Inicializar cuando el DOM esté listo
+// Inicializar con un retardo para asegurar que todos los scripts se han cargado
 document.addEventListener('DOMContentLoaded', function() {
-  // Si estamos en la página del juego, configurar listener
-  if (document.getElementById('game-container') || 
-      document.querySelector('.game-container') || 
-      document.querySelector('.game-screen')) {
-    setupGameCompletionListener();
-  }
+  console.log('Inicializando sistema de actualización de dashboard...');
   
-  // Si estamos en el dashboard, configurar escucha de actualizaciones
-  if (document.querySelector('.user-page-container')) {
-    setupDashboardUpdater();
-  }
+  setTimeout(() => {
+    // Si estamos en la página del juego, configurar listener
+    if (document.getElementById('game-container') || 
+        document.querySelector('.game-container') || 
+        document.querySelector('.game-screen')) {
+      console.log('Detectada página del juego. Configurando listener...');
+      setupGameCompletionListener();
+    }
+    
+    // Si estamos en el dashboard, configurar escucha de actualizaciones
+    if (document.querySelector('.user-page-container')) {
+      console.log('Detectado dashboard de usuario. Configurando actualizador...');
+      setupDashboardUpdater();
+    }
+  }, 1000);
 });
 
 // Configurar actualización automática del dashboard
 function setupDashboardUpdater() {
   console.log('Configurando actualización automática del dashboard');
+  
+  // Verificar si se han recibido actualizaciones recientes (al cargar la página)
+  checkForRecentUpdates();
   
   // Escuchar eventos de finalización de partida (si la partida termina en esta ventana)
   document.addEventListener(GAME_COMPLETED_EVENT, function(event) {
@@ -393,48 +422,109 @@ function setupDashboardUpdater() {
   
   // Escuchar cambios en localStorage (si la partida termina en otra ventana)
   window.addEventListener('storage', function(event) {
+    console.log('Evento de almacenamiento detectado:', event.key);
+    
     if (event.key === 'dashboardUpdate') {
       try {
         const updateData = JSON.parse(event.newValue);
-        // Verificar si la actualización es reciente (menos de 5 segundos)
-        if (updateData && (Date.now() - updateData.timestamp < 5000)) {
+        console.log('Datos de actualización recibidos:', updateData);
+        
+        // Verificar si la actualización es reciente (menos de 30 segundos)
+        if (updateData && (Date.now() - updateData.timestamp < 30000)) {
           console.log('Actualización del dashboard recibida desde otra ventana:', updateData);
           refreshDashboardData();
+        } else {
+          console.log('Ignorando actualización antigua:', updateData);
         }
       } catch (error) {
         console.error('Error al procesar actualización del dashboard:', error);
       }
     }
   });
+  
+  // Comprobar periódicamente actualizaciones (como respaldo)
+  setInterval(checkForRecentUpdates, 5000);
+}
+
+// Verificar si hay actualizaciones recientes en localStorage
+function checkForRecentUpdates() {
+  try {
+    const updateDataStr = localStorage.getItem('dashboardUpdate');
+    if (updateDataStr) {
+      const updateData = JSON.parse(updateDataStr);
+      
+      // Verificar si la actualización es reciente (menos de 30 segundos)
+      if (updateData && (Date.now() - updateData.timestamp < 30000)) {
+        console.log('Actualización reciente encontrada en localStorage:', updateData);
+        refreshDashboardData();
+        
+        // Marcar como procesada
+        const processedData = {
+          ...updateData,
+          processed: true
+        };
+        localStorage.setItem('dashboardUpdate', JSON.stringify(processedData));
+      }
+    }
+  } catch (error) {
+    console.error('Error al verificar actualizaciones recientes:', error);
+  }
 }
 
 // Actualizar datos del dashboard
 function refreshDashboardData() {
   console.log('Actualizando datos del dashboard');
   
-  // Obtener referencias a las funciones de carga de datos del dashboard
-  if (typeof loadUserDataAndGame === 'function') {
-    // Recargar datos del usuario y del juego seleccionado
-    loadUserDataAndGame(window.currentGame || 'pasala-che');
-    
-    // Recargar datos específicos según la pestaña activa
-    const activeTab = document.querySelector('.tab.active');
-    if (activeTab) {
-      const tabId = activeTab.getAttribute('data-tab');
+  // Marcar inicio de actualización
+  const updateStartTime = Date.now();
+  
+  // Añadir una bandera para evitar actualizaciones redundantes
+  if (window.isUpdatingDashboard) {
+    console.log('Actualización en curso, ignorando solicitud redundante');
+    return;
+  }
+  
+  window.isUpdatingDashboard = true;
+  
+  try {
+    // Obtener referencias a las funciones de carga de datos del dashboard
+    if (typeof loadUserDataAndGame === 'function') {
+      console.log('Recargando datos de usuario y juego...');
       
-      if (tabId === 'ranking' && typeof loadRankingData === 'function') {
-        loadRankingData(window.currentGame || 'pasala-che');
-      } else if (tabId === 'stats' && typeof loadStatisticsData === 'function') {
-        loadStatisticsData(window.currentGame || 'pasala-che');
-      } else if (tabId === 'achievements' && typeof loadAchievementsData === 'function') {
-        loadAchievementsData(window.currentGame || 'pasala-che');
+      // Recargar datos del usuario y del juego seleccionado
+      loadUserDataAndGame(window.currentGame || 'pasala-che');
+      
+      // Recargar datos específicos según la pestaña activa
+      const activeTab = document.querySelector('.tab.active');
+      if (activeTab) {
+        const tabId = activeTab.getAttribute('data-tab');
+        console.log('Pestaña activa:', tabId);
+        
+        if (tabId === 'ranking' && typeof loadRankingData === 'function') {
+          console.log('Recargando datos de ranking...');
+          loadRankingData(window.currentGame || 'pasala-che');
+        } else if (tabId === 'stats' && typeof loadStatisticsData === 'function') {
+          console.log('Recargando datos de estadísticas...');
+          loadStatisticsData(window.currentGame || 'pasala-che');
+        } else if (tabId === 'achievements' && typeof loadAchievementsData === 'function') {
+          console.log('Recargando datos de logros...');
+          loadAchievementsData(window.currentGame || 'pasala-che');
+        }
       }
+      
+      // Mostrar notificación al usuario
+      console.log('Actualización completada en', (Date.now() - updateStartTime), 'ms');
+      showUpdateNotification();
+    } else {
+      console.warn('No se encontró la función loadUserDataAndGame. No se puede actualizar el dashboard.');
     }
-    
-    // Mostrar notificación al usuario
-    showUpdateNotification();
-  } else {
-    console.warn('No se encontró la función loadUserDataAndGame. No se puede actualizar el dashboard.');
+  } catch (error) {
+    console.error('Error durante la actualización del dashboard:', error);
+  } finally {
+    // Limpiar bandera de actualización
+    setTimeout(() => {
+      window.isUpdatingDashboard = false;
+    }, 2000);
   }
 }
 

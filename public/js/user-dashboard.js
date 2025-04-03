@@ -3,8 +3,24 @@
  * Gestiona la carga de datos y navegación en el dashboard unificado de perfil y ranking
  */
 
+// Inicializar identificador de usuario para persistencia
+(function() {
+    // Verificar si ya tenemos un userIP guardado
+    if (!localStorage.getItem('userIP')) {
+        // Generar un identificador único
+        const userIP = 'user_' + Math.random().toString(36).substring(2, 15) + 
+                        Math.random().toString(36).substring(2, 15);
+        
+        // Guardar en localStorage
+        localStorage.setItem('userIP', userIP);
+        console.log('Identificador de usuario generado:', userIP);
+    } else {
+        console.log('Usando identificador de usuario existente:', localStorage.getItem('userIP'));
+    }
+})();
+
 // Variables globales
-    let currentGame = 'pasala-che';
+let currentGame = 'pasala-che';
 let currentTab = 'profile';
 let apiBaseUrl = '/api'; // Base URL for API endpoints
     

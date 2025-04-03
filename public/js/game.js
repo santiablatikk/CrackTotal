@@ -1692,32 +1692,45 @@ function savePlayerData(gameData) {
   console.log('Guardando datos de la partida:', gameData);
   
   // Obtener IP del usuario (o generar un identificador único)
-  const userIP = localStorage.getItem('userIP') || 'unknown';
+  const userIP = localStorage.getItem('userIP') || generateUserIdentifier();
+  
+  // Asegurar que tenemos un userIP guardado
+  if (!localStorage.getItem('userIP')) {
+    localStorage.setItem('userIP', userIP);
+  }
+  
+  // Crear objeto de datos consistente para el sistema de notificación
+  const extendedGameData = {
+    gameType: 'pasala-che',
+    correctAnswers: gameData.correctCount || 0,
+    incorrectCount: gameData.incorrectCount || 0,
+    skippedCount: gameData.skippedCount || 0,
+    totalAnswers: (gameData.correctCount || 0) + (gameData.incorrectCount || 0) + (gameData.skippedCount || 0),
+    score: gameData.correctCount || 0,
+    isWin: (gameData.correctCount > 0),
+    timeSpent: timeLimit - timeRemaining,
+    letterResults: letterStatus,
+    username: username || localStorage.getItem('username') || 'Jugador'
+  };
+  
+  // Guardar nombre de usuario para uso futuro
+  if (username) {
+    localStorage.setItem('username', username);
+  }
   
   // Guardar datos del juego en el historial
-  saveGameToHistory(gameData, userIP);
+  saveGameToHistory(extendedGameData, userIP);
   
   // Actualizar perfil del usuario
-  updateUserProfile(gameData, userIP);
+  updateUserProfile(extendedGameData, userIP);
   
   // Comprobar logros
-  checkForAchievements(gameData);
-  
-  // Compatibilidad con el sistema de actualización del dashboard
-  // Ampliar el objeto gameData con información adicional para el sistema de actualización
-  const extendedGameData = {
-    ...gameData,
-    gameType: 'pasala-che',
-    totalAnswers: gameData.correctCount + gameData.incorrectCount + gameData.skippedCount,
-    correctAnswers: gameData.correctCount,
-    score: gameData.correctCount,
-    isWin: (gameData.correctCount > 0),
-    timeSpent: timeLimit - timeRemaining
-  };
+  checkForAchievements(extendedGameData);
   
   // Si existe la función de notificación, la llamamos
   if (typeof notifyGameCompletion === 'function') {
     notifyGameCompletion(extendedGameData);
+    console.log('Notificación de finalización enviada correctamente');
   } else {
     // Si no existe, intentamos enviar un evento personalizado para que lo capture el listener
     try {
@@ -1726,6 +1739,7 @@ function savePlayerData(gameData) {
         bubbles: true 
       });
       document.dispatchEvent(gameCompletedEvent);
+      console.log('Evento game-completed disparado correctamente');
       
       // También actualizamos localStorage para que otros dashboards abiertos lo detecten
       localStorage.setItem('dashboardUpdate', JSON.stringify({
@@ -1739,6 +1753,12 @@ function savePlayerData(gameData) {
   }
   
   return true;
+}
+
+// Generar identificador único para el usuario si no tiene IP
+function generateUserIdentifier() {
+  return 'user_' + Math.random().toString(36).substring(2, 15) + 
+         Math.random().toString(36).substring(2, 15);
 }
 
 // Función para guardar partida en el historial

@@ -1075,12 +1075,12 @@
         "respuesta": "Qatar"
       },
       {
-        "pregunta": "Apellido del exfutbolista portugués conocido por su habilidad para pegarle de 'tres dedos' o 'trivela'.",
+        "pregunta": "Apellido del exfutbolista portugués conocido por su habilidad para pegarle de 'tres dedos'.",
         "respuesta": "Quaresma"
       },
       {
-        "pregunta": "Nombre completo del ex técnico español que dirigió al FC Barcelona en la temporada 2019-20.",
-        "respuesta": "Quique Setien"
+        "pregunta": "CONTIENE Q: Nombre completo del ex técnico español que dirigió al FC Barcelona en la temporada 2019-20.",
+        "respuesta": "Enrique Setien"
       },
       {
         "pregunta": "CONTIENE Q: Apellido del futbolista argentino, ex defensor de la Fiorentina (Lucas...).",
@@ -1091,8 +1091,8 @@
         "respuesta": "Marquinhos"
       },
       {
-        "pregunta": "CONTIENE Q: Nombre del técnico español que ha dirigido al Barcelona y la selección española.",
-        "respuesta": "Enrique"
+        "pregunta": "CONTIENE Q: Nombre completo del técnico español, actual dt del psg, que ha dirigido al Barcelona y la selección española.",
+        "respuesta": "Luis Enrique"
       },
       {
         "pregunta": "CONTIENE Q: Apellido del futbolista argentino, ídolo y actual presidente de Boca Juniors.",
@@ -1105,10 +1105,6 @@
       {
         "pregunta": "CONTIENE Q: Apellido del ex entrenador español campeón del Mundial 2010.",
         "respuesta": "Del Bosque"
-      },
-      {
-        "pregunta": "CONTIENE Q: País asiático que participó en el Mundial 1986.",
-        "respuesta": "Iraq"
       }
     ]
   },
@@ -1229,7 +1225,7 @@
         "respuesta": "Messi"
       },
       {
-        "pregunta": "CONTIENE S: Estadio del Real Madrid.",
+        "pregunta": "Estadio del Real Madrid.",
         "respuesta": "Santiago Bernabeu"
       },
       {
@@ -1510,10 +1506,6 @@
         "respuesta": "Joao Felix"
       },
       {
-        "pregunta": "CONTIENE X: País europeo donde se habla francés, alemán y luxemburgués.",
-        "respuesta": "Luxemburgo"
-      },
-      {
         "pregunta": "CONTIENE X: Futbolista chileno que jugó en Barcelona, Arsenal, Man. United e Inter, actualmente en Udinese.",
         "respuesta": "Alexis Sanchez"
       },
@@ -1579,7 +1571,7 @@
         "respuesta": "Cruyff"
       },
       {
-        "pregunta": "CONTIENE Y: Apellido del ex defensor español campeón del mundo 2010.",
+        "pregunta": "CONTIENE Y: Apellido del ex defensor del Barcelona, español campeón del mundo 2010.",
         "respuesta": "Puyol"
       }
     ]
