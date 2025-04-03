@@ -859,163 +859,98 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   // End the game
-  function endGame() {
-    // Detener el temporizador y establecer el juego como finalizado
+  function endGame(endCondition) {
+    console.log(`Juego terminado. Condición: ${endCondition}`);
+    
+    // Stop the timer
     clearInterval(timerInterval);
-    gameStarted = false;
-    
-    // Track user's attempt details in incorrectAnswersList
-    const incorrectItems = incorrectAnswersList.map(item => {
-      const question = questions.find(q => q.letter === item.letter);
-      return {
-        letter: item.letter,
-        userAnswer: item.userAnswer || "Sin respuesta",
-        correctAnswer: item.correctAnswer,
-        question: question ? question.definition : ""
-      };
-    });
-    
-    // Determine which modal to show based on end condition
-    let modalType;
-    let victory = false;
-    
-    if (errorCount >= 3) {
-      // Game ended due to too many errors
-      modalType = 'defeat';
-      victory = false;
-    } else if (remainingTime <= 0) {
-      // Game ended due to timeout
-      modalType = 'timeout';
-      victory = false;
-    } else {
-      // Check if all questions are answered (not pending or skipped)
-      let allAnswered = true;
-      let hasSkipped = false;
-      
-      for (const letter in letterElements) {
-        const status = letterElements[letter].dataset.status;
-        if (status === 'pending') {
-          allAnswered = false;
-          break;
-        }
-        if (status === 'skipped') {
-          hasSkipped = true;
-        }
-      }
-      
-      // Victory if all questions are answered (except skipped) and less than 3 errors
-      if (allAnswered && errorCount < 3) {
-        modalType = 'victory';
-        victory = true;
-      } else if (hasSkipped) {
-        // If there are still skipped questions, don't end the game
-        return;
-      } else {
-        // Otherwise, it's a defeat
-        modalType = 'defeat';
-        victory = false;
-      }
-    }
-    
-    // Update stats in the stats modal
-    document.getElementById('stats-correct').textContent = correctAnswers;
-    document.getElementById('stats-incorrect').textContent = incorrectAnswersCount;
-    document.getElementById('stats-skipped').textContent = skippedAnswers;
-    
-    // Generate incorrect answers list
-    generateIncorrectAnswersList(incorrectItems);
-    
-    // Show the corresponding modal
-    const modal = document.getElementById(`${modalType}-modal`);
-    modal.style.display = 'flex';
-    setTimeout(() => {
-      modal.classList.add('show');
-    }, 10);
     
     // Play game over sound
     playSound(gameOverSound);
     
-    // ==================== SAVE GAME RESULTS TO PROFILE ====================
-    try {
-      // Calcular puntuación basada en respuestas correctas y tiempo restante
-      const timeBonus = remainingTime > 0 ? Math.floor(remainingTime / 10) : 0;
-      const scoreBase = correctAnswers * 10;
-      const difficultyMultiplier = 
-        selectedDifficulty === 'dificil' ? 2.0 : 
-        selectedDifficulty === 'normal' ? 1.5 : 1.0;
-      
-      const totalScore = Math.floor((scoreBase + timeBonus) * difficultyMultiplier);
-      
-      // Asegurar que el nombre de usuario esté guardado
-      let username = localStorage.getItem('username');
-      if (!username || username === 'undefined' || username === 'null') {
-        username = 'Jugador';
-        localStorage.setItem('username', username);
-      }
-      
-      // Crear objeto con los datos del juego
-      const gameData = {
-        name: username,
-        date: new Date().toISOString(),
-        difficulty: selectedDifficulty,
-        score: totalScore,
-        correct: correctAnswers,
-        wrong: incorrectAnswersCount,
-        skipped: skippedAnswers,
-        timeUsed: timeLimit - remainingTime,
-        timeRemaining: remainingTime,
-        victory: victory,
-        hintsUsed: 2 - helpCount,
-        incorrectItems: incorrectItems
-      };
-      
-      console.log('Guardando resultados del juego:', gameData);
-      
-      // Guardar datos del jugador usando nuestra nueva función
-      savePlayerData(gameData);
-      
-      // Indicar que acabamos de completar un juego
-      localStorage.setItem('gameJustCompleted', 'true');
-      localStorage.setItem('hasPlayed', 'true');
-      
-      // Guardar último timestamp para evitar problemas de caché
-      localStorage.setItem('lastGameTimestamp', Date.now().toString());
-      
-      // Configurar botones de los modales para redirigir al perfil
-      configureModalButtons();
-      
-    } catch (error) {
-      console.error('Error guardando resultados del juego:', error);
+    // Disable inputs
+    document.getElementById('answer-input').disabled = true;
+    document.getElementById('submit-btn').disabled = true;
+    document.getElementById('skip-btn').disabled = true;
+    document.getElementById('help-btn').disabled = true;
+    
+    // Collect game statistics
+    const gameStats = {
+      correct: correctAnswers,
+      incorrect: incorrectAnswersCount,
+      skipped: skippedAnswers,
+      remaining: 27 - (correctAnswers + incorrectAnswersCount + skippedAnswers),
+      timeTotal: totalTime,
+      timeLeft: timeLeft,
+      timeUsed: totalTime - timeLeft,
+      victory: endCondition === 'victory'
+    };
+    
+    // Update statistics counters in the stats modal
+    document.getElementById('stats-correct').textContent = gameStats.correct;
+    document.getElementById('stats-incorrect').textContent = gameStats.incorrect;
+    document.getElementById('stats-skipped').textContent = gameStats.skipped;
+    
+    // Generate incorrect answers list for the stats modal
+    generateIncorrectAnswersList(incorrectAnswersList);
+    
+    // Check for achievements
+    const unlockedAchievements = checkAchievements(gameStats);
+    
+    // Save game data to localStorage
+    saveGameData(gameStats);
+    
+    // Determine which modal to show based on end condition
+    let modalType;
+    
+    if (endCondition === 'completed') {
+      // All letters correct
+      modalType = 'victory';
+    } else if (endCondition === 'errors') {
+      // Too many errors
+      modalType = 'defeat';
+    } else if (endCondition === 'timeout') {
+      // Time ran out
+      modalType = 'timeout';
+    } else {
+      // Default to defeat if unknown
+      modalType = 'defeat';
     }
     
-    // Mostrar anuncio al finalizar la partida
-    if (localStorage.getItem("adConsent") === "true") {
+    // Update stats in the stats modal
+    updateStatsDisplay();
+    
+    // If achievements were unlocked, show that modal first
+    if (unlockedAchievements.length > 0) {
+      // Display unlocked achievements in the achievements modal
+      const achievementsContainer = document.getElementById('unlocked-achievements');
+      if (achievementsContainer) {
+        const achievementsHTML = unlockedAchievements.map(achievement => createAchievementCard(achievement)).join('');
+        achievementsContainer.innerHTML = achievementsHTML;
+      }
+      
+      // Show the achievements modal
+      const achievementsModal = document.getElementById('achievements-modal');
+      if (achievementsModal) {
+        achievementsModal.style.display = 'flex';
+        setTimeout(() => {
+          achievementsModal.classList.add('show');
+        }, 10);
+      }
+    } else {
+      // Show the corresponding result modal
+      const modal = document.getElementById(`${modalType}-modal`);
+      modal.style.display = 'flex';
+      
       setTimeout(() => {
-        const gameEndAd = document.querySelector('.game-end-ad');
-        if (gameEndAd) {
-          // Primero mostrar un contenedor de carga mientras el anuncio se prepara
-          gameEndAd.innerHTML = `
-            <div class="ad-label">PUBLICIDAD</div>
-            <div class="ad-loading"></div>
-          `;
-          gameEndAd.style.display = 'block';
-          
-          // Después de un breve delay, cargar el anuncio real
-          setTimeout(() => {
-            gameEndAd.innerHTML = `
-              <div class="ad-label">PUBLICIDAD</div>
-              <ins class="adsbygoogle"
-                   style="display:block"
-                   data-ad-client="ca-pub-9579152019412427"
-                   data-ad-slot="1234567890"
-                   data-ad-format="auto"
-                   data-full-width-responsive="true"></ins>
-            `;
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          }, 600);
-        }
-      }, 1000); // Mostrar el anuncio un segundo después de que aparezca el modal
+        modal.classList.add('show');
+      }, 10);
     }
+    
+    // Show ad after a short delay to not interfere with the game end experience
+    setTimeout(() => {
+      showPauseAd();
+    }, 1000); // Show the ad one second after the modal appears
   }
   
   // Configurar botones de los modales para redirigir al perfil
@@ -1061,29 +996,16 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Configurar botones en el modal de estadísticas
   function configureStatsModalButtons() {
-    // Botón "Ver Perfil"
-    const profileBtn = document.getElementById('profile-btn');
-    if (profileBtn) {
+    // Botón "PANEL DE ESTADÍSTICAS"
+    const dashboardBtn = document.getElementById('dashboard-btn');
+    if (dashboardBtn) {
       // Limpiar event listeners anteriores
-      const newProfileBtn = profileBtn.cloneNode(true);
-      profileBtn.parentNode.replaceChild(newProfileBtn, profileBtn);
+      const newDashboardBtn = dashboardBtn.cloneNode(true);
+      dashboardBtn.parentNode.replaceChild(newDashboardBtn, dashboardBtn);
       
       // Añadir nuevo event listener
-      newProfileBtn.addEventListener('click', function() {
-        window.location.href = 'profile.html?fromGame=true&t=' + Date.now();
-      });
-    }
-    
-    // Botón "Ver Ranking"
-    const rankingBtn = document.getElementById('ranking-btn');
-    if (rankingBtn) {
-      // Limpiar event listeners anteriores
-      const newRankingBtn = rankingBtn.cloneNode(true);
-      rankingBtn.parentNode.replaceChild(newRankingBtn, rankingBtn);
-      
-      // Añadir nuevo event listener
-      newRankingBtn.addEventListener('click', function() {
-        window.location.href = 'ranking.html?fromGame=true&t=' + Date.now();
+      newDashboardBtn.addEventListener('click', function() {
+        window.location.href = 'user-dashboard.html?fromGame=true&t=' + Date.now();
       });
     }
     
@@ -2123,3 +2045,210 @@ styleEl.textContent = `
   }
 `;
 document.head.appendChild(styleEl);
+
+// Save achievement to localStorage
+function saveAchievement(achievement) {
+  try {
+    // Get existing achievements
+    let achievements = JSON.parse(localStorage.getItem('userAchievements') || '[]');
+    
+    // Check if this achievement is already earned
+    const existingIndex = achievements.findIndex(a => a.id === achievement.id);
+    
+    // If it's a new achievement, add it with the current date
+    if (existingIndex === -1) {
+      achievement.date = new Date().toISOString();
+      achievements.push(achievement);
+      
+      // Save updated achievements list
+      localStorage.setItem('userAchievements', JSON.stringify(achievements));
+      console.log(`Achievement unlocked: ${achievement.title}`);
+      return true;
+    } else {
+      console.log(`Achievement already unlocked: ${achievement.title}`);
+      return false;
+    }
+  } catch (error) {
+    console.error('Error saving achievement:', error);
+    return false;
+  }
+}
+
+// Format the date string for display
+function formatDate(dateString) {
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+  } catch (error) {
+    return '';
+  }
+}
+
+// Create an achievement card for display
+function createAchievementCard(achievement) {
+  const dateDisplay = achievement.date ? 
+    `<div class="achievement-date">Obtenido el ${formatDate(achievement.date)}</div>` : '';
+  
+  return `
+    <div class="achievement-card">
+      <div class="achievement-icon">
+        <i class="fas ${achievement.icon || 'fa-medal'}"></i>
+      </div>
+      <div class="achievement-details">
+        <div class="achievement-title">${achievement.title}</div>
+        <div class="achievement-description">${achievement.description}</div>
+        ${dateDisplay}
+      </div>
+    </div>
+  `;
+}
+
+// Check for achievements based on game statistics
+function checkAchievements(gameStats) {
+  const unlockedAchievements = [];
+  
+  // Define possible achievements
+  const possibleAchievements = [
+    {
+      id: 'first_win',
+      title: 'Primera Victoria',
+      description: 'Completaste tu primer rosco con éxito',
+      icon: 'fa-trophy',
+      condition: () => gameStats.victory === true
+    },
+    {
+      id: 'perfect_game',
+      title: 'Perfección',
+      description: 'Completaste un rosco sin errores',
+      icon: 'fa-star',
+      condition: () => gameStats.victory === true && gameStats.incorrect === 0
+    },
+    {
+      id: 'speed_demon',
+      title: 'Velocidad Supersónica',
+      description: 'Completaste un rosco con más de 2 minutos restantes',
+      icon: 'fa-clock',
+      condition: () => gameStats.victory === true && gameStats.timeLeft > 120
+    },
+    {
+      id: 'persistence',
+      title: 'Persistencia',
+      description: 'Completaste un rosco después de al menos 3 errores',
+      icon: 'fa-hand-rock',
+      condition: () => gameStats.incorrect >= 3
+    },
+    {
+      id: 'half_way',
+      title: 'A Medio Camino',
+      description: 'Completaste al menos 13 letras correctamente',
+      icon: 'fa-route',
+      condition: () => gameStats.correct >= 13
+    }
+  ];
+  
+  // Check each achievement
+  possibleAchievements.forEach(achievement => {
+    if (achievement.condition()) {
+      // If achievement condition is met, save it
+      const isNew = saveAchievement(achievement);
+      if (isNew) {
+        unlockedAchievements.push(achievement);
+      }
+    }
+  });
+  
+  return unlockedAchievements;
+}
+
+// Save game data to localStorage
+function saveGameData(gameStats) {
+  try {
+    // Calculate score based on correct answers and remaining time
+    const timeBonus = gameStats.timeLeft > 0 ? Math.floor(gameStats.timeLeft / 10) : 0;
+    const scoreBase = gameStats.correct * 10;
+    const difficultyMultiplier = 
+      selectedDifficulty === 'dificil' ? 2.0 : 
+      selectedDifficulty === 'normal' ? 1.5 : 1.0;
+    
+    const totalScore = Math.floor((scoreBase + timeBonus) * difficultyMultiplier);
+    
+    // Ensure username is saved
+    let username = localStorage.getItem('username');
+    if (!username || username === 'undefined' || username === 'null') {
+      username = 'Jugador';
+      localStorage.setItem('username', username);
+    }
+    
+    // Create object with game data
+    const gameData = {
+      name: username,
+      date: new Date().toISOString(),
+      difficulty: selectedDifficulty,
+      score: totalScore,
+      correct: gameStats.correct,
+      wrong: gameStats.incorrect,
+      skipped: gameStats.skipped,
+      timeUsed: gameStats.timeUsed,
+      timeRemaining: gameStats.timeLeft,
+      victory: gameStats.victory,
+      hintsUsed: helpCount ? (2 - helpCount) : 0
+    };
+    
+    console.log('Saving game results:', gameData);
+    
+    // Save player data using our function
+    savePlayerData(gameData);
+    
+    // Indicate we just completed a game
+    localStorage.setItem('gameJustCompleted', 'true');
+    localStorage.setItem('hasPlayed', 'true');
+    
+    // Save last timestamp to avoid cache issues
+    localStorage.setItem('lastGameTimestamp', Date.now().toString());
+    
+    // Configure modal buttons to redirect to profile
+    configureModalButtons();
+    
+  } catch (error) {
+    console.error('Error saving game results:', error);
+  }
+}
+
+// Update the stats display
+function updateStatsDisplay() {
+  // This function can be expanded if needed
+  console.log('Updating stats display');
+}
+
+// Show the pause ad
+function showPauseAd() {
+  if (localStorage.getItem("adConsent") === "true") {
+    const gameEndAd = document.querySelector('.game-end-ad');
+    if (gameEndAd) {
+      // First show a loading container while the ad prepares
+      gameEndAd.innerHTML = `
+        <div class="ad-label">PUBLICIDAD</div>
+        <div class="ad-loading"></div>
+      `;
+      gameEndAd.style.display = 'block';
+      
+      // After a brief delay, load the actual ad
+      setTimeout(() => {
+        gameEndAd.innerHTML = `
+          <div class="ad-label">PUBLICIDAD</div>
+          <ins class="adsbygoogle"
+               style="display:block"
+               data-ad-client="ca-pub-9579152019412427"
+               data-ad-slot="1234567890"
+               data-ad-format="auto"
+               data-full-width-responsive="true"></ins>
+        `;
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      }, 600);
+    }
+  }
+}

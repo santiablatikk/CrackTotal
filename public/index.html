@@ -4,9 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRACK TOTAL - El juego del fútbol argentino</title>
-    <meta http-equiv="refresh" content="0; url=crack-total.html">
     <script>
-        window.location.href = "crack-total.html";
+        // Check if user already has a name saved in localStorage
+        const playerName = localStorage.getItem('playerName');
+        if (playerName) {
+            // If username exists, go directly to portal
+            window.location.href = "portal.html";
+        } else {
+            // If no username, go to name input page
+            window.location.href = "crack-total.html";
+        }
     </script>
 </head>
 <body>
