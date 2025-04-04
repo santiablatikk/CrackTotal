@@ -96,8 +96,16 @@ io.on("connection", (socket) => {
   });
 });
 
+// Ruta catch-all para manejar cualquier solicitud que no coincida con un archivo estático
+// Envía el archivo principal (probablemente crack-total.html o portal.html)
+// Ajusta 'crack-total.html' si tu punto de entrada principal es otro
+app.get('*', (req, res) => {
+  res.sendFile(path.join(path.join(__dirname, 'public'), 'crack-total.html'));
+});
+
 // Iniciar el servidor
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  console.log(`Sirviendo archivos desde: ${path.join(__dirname, 'public')}`);
 });
