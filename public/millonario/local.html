@@ -64,7 +64,9 @@
           <button id="start-game-btn" class="btn action-btn">
             <i class="fas fa-play"></i> ¡COMENZAR JUEGO!
           </button>
-          
+          <a href="../quien-sabe-profile.html" class="btn profile-btn">
+            <i class="fas fa-user"></i> Ver Perfil
+          </a>
           <button id="show-ranking-btn" class="btn trophy-btn">
             <i class="fas fa-trophy"></i> RANKING
           </button>
@@ -232,7 +234,7 @@
             
           <div class="modal-buttons">
             <button id="play-again-btn" class="btn action-btn">Jugar de nuevo</button>
-            <a href="../user-dashboard.html" class="btn stats-btn"><i class="fas fa-chart-bar"></i> Panel de Estadísticas</a>
+            <a href="../quien-sabe-profile.html" class="btn stats-btn"><i class="fas fa-user"></i> Ver Perfil</a>
           </div>
         </div>
       </div>
@@ -2483,6 +2485,26 @@
 
       .action-btn {
         flex: 2;
+      }
+      
+      .profile-btn {
+        flex: 1;
+        background: linear-gradient(135deg, #4338ca, #3730a3);
+        color: white;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 4px 10px rgba(67, 56, 202, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      .profile-btn:hover {
+        background: linear-gradient(135deg, #3730a3, #312e81);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(67, 56, 202, 0.4);
+      }
+      
+      .profile-btn i {
+        margin-right: 0.5rem;
       }
 
       .trophy-btn {

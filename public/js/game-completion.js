@@ -42,6 +42,9 @@ function sendPasalaCheResults(gameData) {
             showXpNotification(data.xpEarned);
         }
         
+        // Logros relacionados con el juego "Pasala Che"
+        handlePasalaCheAchievements(data);
+        
         return data;
     })
     .catch(error => {
@@ -95,6 +98,9 @@ function sendQuienSabeMasResults(gameData) {
         if (data.xpEarned) {
             showXpNotification(data.xpEarned);
         }
+        
+        // Logros relacionados con "Quién Sabe Más"
+        handleQuienSabeAchievements(data);
         
         return data;
     })

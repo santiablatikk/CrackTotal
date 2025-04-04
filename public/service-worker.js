@@ -4,33 +4,41 @@
  */
 
 // Cache names
-const CACHE_NAME = 'crack-total-cache-v1';
-const ASSETS_CACHE = 'crack-total-assets-v1';
+const CACHE_NAME = 'crack-total-cache-v2';
+const ASSETS_CACHE = 'crack-total-assets-v2';
 
 // Assets to pre-cache
 const PRECACHE_ASSETS = [
   '/',
-  '/index.html',
-  '/game.html', 
-  '/game-rosco.html',
-  '/user-profile.html',
-  '/user-ranking.html',
-  '/logros.html',
-  '/css/combined.css',
-  '/css/styles.css',
-  '/css/game-styles.css',
-  '/css/footer-styles.css',
-  '/css/achievements.css',
-  '/css/user/user-styles.css',
-  '/js/main.js',
-  '/js/game.js',
-  '/js/utils.js',
-  '/js/particles-config.js',
-  '/js/user-profile.js',
-  '/img/logo.png',
-  '/img/background.jpg',
-  '/img/achievements/all-achievements.png',
-  '/favicon.ico'
+  'index.html',
+  'crack-total.html',
+  'portal.html',
+  'game-rosco.html',
+  'logros.html',
+  'terms.html',
+  'privacy.html',
+  'blog.html',
+  'cookies.html',
+  'contact.html',
+  'about.html',
+  'css/variables.css',
+  'css/styles.css',
+  'css/game-styles.css',
+  'css/footer-styles.css',
+  'css/achievements.css',
+  'css/user/dashboard-modern.css',
+  'js/login.js',
+  'js/game.js',
+  'js/game-completion.js',
+  'js/game-achievements.js',
+  'js/global-footer.js',
+  'js/share-buttons.js',
+  'js/utils.js',
+  'js/particles-config.js',
+  'img/logo.png',
+  'img/favicon.ico',
+  'favicon.ico',
+  'manifest.json'
 ];
 
 // Scripts to preload
@@ -51,7 +59,7 @@ const AUDIO_ASSETS = [
 
 // Instalar el Service Worker
 self.addEventListener('install', event => {
-  console.log('[Service Worker] Instalando...');
+  console.log('[Service Worker] Instalando v2...');
   
   // Esperar hasta que todas las promesas se completen
   event.waitUntil(
@@ -59,7 +67,13 @@ self.addEventListener('install', event => {
       // Caché principal (recursos críticos)
       caches.open(CACHE_NAME).then(cache => {
         console.log('[Service Worker] Precargando recursos principales...');
-        return cache.addAll(PRECACHE_ASSETS);
+        // Use addAll with careful error handling for individual assets
+        const promises = PRECACHE_ASSETS.map(asset => {
+          return cache.add(asset).catch(err => {
+            console.warn(`[Service Worker] No se pudo precargar: ${asset}`, err);
+          });
+        });
+        return Promise.all(promises);
       }),
       
       // Caché de recursos de audio (opcionales)
@@ -68,21 +82,23 @@ self.addEventListener('install', event => {
         // Uso de Promise.allSettled para continuar incluso si algunos fallan
         return Promise.allSettled(
           AUDIO_ASSETS.map(url => cache.add(url).catch(error => {
-            console.log(`[Service Worker] Error al precargar audio: ${url}`, error);
+            console.warn(`[Service Worker] Error al precargar audio: ${url}`, error);
           }))
         );
       })
     ]).then(() => {
-      console.log('[Service Worker] Instalación completada');
+      console.log('[Service Worker] Instalación v2 completada');
       // Forzar que el nuevo service worker tome el control inmediatamente
       return self.skipWaiting();
+    }).catch(error => {
+      console.error('[Service Worker] Falló la instalación:', error);
     })
   );
 });
 
 // Activar el Service Worker
 self.addEventListener('activate', event => {
-  console.log('[Service Worker] Activando...');
+  console.log('[Service Worker] Activando v2...');
   
   // Borrar cachés antiguas
   event.waitUntil(
@@ -98,7 +114,7 @@ self.addEventListener('activate', event => {
         })
       );
     }).then(() => {
-      console.log('[Service Worker] ¡Ahora está activo!');
+      console.log('[Service Worker] v2 ¡Ahora está activo!');
       // Reclamar clientes para que el service worker tome el control inmediatamente
       return self.clients.claim();
     })
@@ -107,64 +123,45 @@ self.addEventListener('activate', event => {
 
 // Interceptar solicitudes de red
 self.addEventListener('fetch', event => {
-  // Ignorar solicitudes POST o a servicios externos excepto fuentes
-  if (event.request.method !== 'GET' || 
-      (!event.request.url.includes(self.location.origin) && 
-       !event.request.url.includes('fonts.googleapis') && 
-       !event.request.url.includes('cdnjs.cloudflare'))) {
-    return;
+  const url = new URL(event.request.url);
+
+  // Ignorar solicitudes a la API y no-GET
+  if (event.request.method !== 'GET' || url.pathname.startsWith('/api/')) {
+    return; // Let the browser handle it
   }
   
-  // Estrategia: Cache first, falling back to network and updating cache
+  // Estrategia: Cache first, falling back to network
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
-      // Si está en caché, devolver la respuesta de caché
       if (cachedResponse) {
-        // En segundo plano, actualizar la caché con la versión más reciente
-        fetch(event.request).then(networkResponse => {
-          if (networkResponse && networkResponse.ok && networkResponse.type === 'basic') {
-            caches.open(ASSETS_CACHE).then(cache => {
-              cache.put(event.request, networkResponse.clone());
-            });
-          }
-        }).catch(err => {
-          console.log('[Service Worker] Error al actualizar caché:', err);
-        });
-        
+        // console.log(`[Service Worker] Sirviendo desde caché: ${event.request.url}`);
         return cachedResponse;
       }
       
       // Si no está en caché, buscar en red
+      // console.log(`[Service Worker] Buscando en red: ${event.request.url}`);
       return fetch(event.request).then(networkResponse => {
+        // Check if we received a valid response
         if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-          return networkResponse;
+             // Don't cache non-basic responses (like opaque responses from CDNs)
+            return networkResponse;
         }
         
-        // Clonar la respuesta para guardarla en caché
+        // Clone the response to cache it
         let responseToCache = networkResponse.clone();
         
-        // Guardar en caché dinámica
         caches.open(ASSETS_CACHE).then(cache => {
+          // console.log(`[Service Worker] Cacheando nuevo recurso: ${event.request.url}`);
           cache.put(event.request, responseToCache);
         });
         
         return networkResponse;
       }).catch(error => {
-        console.log('[Service Worker] Error de red:', error);
-        
-        // Si es una navegación a una página HTML, mostrar página offline
-        if (event.request.headers.get('accept').includes('text/html')) {
-          return caches.match('/offline.html');
-        }
-        
-        // Para otros recursos, devolver fallback genérico en lugar de placeholder
-        if (event.request.url.match(/\.(jpg|jpeg|png|gif|svg)$/)) {
-          // Don't attempt to return a placeholder image that doesn't exist
-          return new Response('Image not available offline', { 
-            status: 200, 
-            headers: { 'Content-Type': 'text/plain' } 
-          });
-        }
+        console.warn(`[Service Worker] Error de fetch: ${event.request.url}`, error);
+        // Podrías devolver una página offline genérica aquí si es necesario
+        // Por ejemplo: return caches.match('/offline.html');
+        // O simplemente dejar que el navegador muestre el error
+        return new Response("Network error", { status: 408, headers: { 'Content-Type': 'text/plain' } });
       });
     })
   );
@@ -186,7 +183,7 @@ self.addEventListener('push', event => {
     const data = event.data.json();
     
     const options = {
-      body: data.body || 'Hay nuevas noticias de PASALA CHE.',
+      body: data.body || 'Hay nuevas noticias de CRACK TOTAL.',
       icon: '/img/icons/icon-192x192.png',
       badge: '/img/icons/badge-72x72.png',
       vibrate: [100, 50, 100],
@@ -197,7 +194,7 @@ self.addEventListener('push', event => {
     
     event.waitUntil(
       self.registration.showNotification(
-        data.title || 'PASALA CHE', 
+        data.title || 'CRACK TOTAL', 
         options
       )
     );
@@ -240,7 +237,8 @@ self.addEventListener('notificationclick', event => {
 // Gestión de sincronización en segundo plano
 self.addEventListener('sync', event => {
   if (event.tag === 'sync-profile-data') {
-    event.waitUntil(syncData());
+    console.log('[Service Worker] Evento Sync recibido:', event.tag);
+    // event.waitUntil(syncData());
   }
 });
 

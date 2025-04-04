@@ -11,7 +11,11 @@ function addShareButton() {
   const shareContainer = document.createElement('div');
   shareContainer.className = 'share-floating-btn';
   
-  // Si hay botón de volver, posicionamos a la izquierda
+  // Posicionar a la derecha por defecto
+  shareContainer.style.right = '30px'; 
+  shareContainer.style.left = 'auto';
+
+  // Si hay botón de volver, posicionamos a la izquierda (sobrescribe el estilo)
   if (hasBackButton) {
     shareContainer.style.left = '30px';
     shareContainer.style.right = 'auto';
@@ -76,7 +80,7 @@ function addShareButtonStyles() {
     .share-floating-btn {
       position: fixed;
       bottom: 30px;
-      left: 30px;
+      /* La posición (left/right) se define dinámicamente en JS */
       z-index: 999;
       display: flex;
       flex-direction: column-reverse;
@@ -124,16 +128,23 @@ function addShareButtonStyles() {
     }
     
     /* Opcionalmente podemos añadir una clase para detectar si estamos en una página con botón de volver */
-    .blog-page .share-floating-btn {
+    /* Ya no se necesita esta clase, la lógica está en JS */
+    /* .blog-page .share-floating-btn {
       left: 30px;
       right: auto;
-    }
+    } */
     
     /* Media query para dispositivos móviles */
     @media (max-width: 768px) {
       .share-floating-btn {
         bottom: 20px;
+        /* Ajustar posición izquierda/derecha si es necesario para móvil */
+        right: 20px; /* Posición por defecto en móvil */
+        left: auto;
+      }
+      .share-floating-btn[style*="left:"] { /* Si se movió a la izq por JS */
         left: 20px;
+        right: auto;
       }
     }
     

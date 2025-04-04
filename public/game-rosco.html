@@ -57,6 +57,33 @@
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
+
+      .btn-profile-link {
+        background: linear-gradient(135deg, #4338ca, #3730a3);
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.8rem 1.2rem;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(67, 56, 202, 0.3);
+      }
+
+      .btn-profile-link:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(67, 56, 202, 0.4);
+        background: linear-gradient(135deg, #3730a3, #312e81);
+      }
+
+      .btn-profile-link i {
+        margin-right: 0.5rem;
+      }
     </style>
   </head>
   <body>
@@ -127,11 +154,14 @@
               </div>
             </div>
             
-            <!-- Botón de inicio -->
-            <div class="start-button-container">
-              <button id="start-game" class="btn btn-start-game">
+            <!-- Botón de inicio y perfil -->
+            <div class="start-button-container" style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+              <button id="start-game" class="btn btn-start-game" style="flex: 2;">
                 <i class="fas fa-play"></i> ¡COMENZAR JUEGO!
               </button>
+              <a href="pasala-che-profile.html" class="btn btn-profile-link" style="flex: 1;">
+                <i class="fas fa-user"></i> Ver Perfil
+              </a>
             </div>
           </div>
         </div>
