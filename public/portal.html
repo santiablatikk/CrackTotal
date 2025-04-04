@@ -659,14 +659,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Evento para cambiar el nombre
     if (changeNameBtn) {
       changeNameBtn.addEventListener('click', function() {
-        const newName = prompt('Ingresa tu nuevo nombre:', playerNameDisplay.textContent);
-        if (newName && newName.trim() !== '') {
-          localStorage.setItem('playerName', newName.trim());
-          playerNameDisplay.textContent = newName.trim();
-          
-          // Mostrar notificación
-          showNotification('¡Nombre actualizado!', 'success');
-        }
+        // Redireccionar a la página de login (crack-total.html)
+        window.location.href = 'crack-total.html';
       });
     }
     
