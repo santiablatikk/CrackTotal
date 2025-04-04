@@ -310,6 +310,59 @@ body {
   margin-right: 0.5rem;
 }
 
+/* Estilo para el enlace al ranking que aparece como una pestaña */
+.tab.ranking-tab {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.tab.ranking-tab:hover {
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Estilo para la página de ranking */
+.ranking-main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    position: relative;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-button {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.nav-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.nav-button i {
+    font-size: 0.9rem;
+}
+
 /* Contenido principal */
 .tabs-content {
   background: var(--secondary-light);
@@ -1906,6 +1959,69 @@ tr:hover .player-avatar-small {
         width: 35px;
         height: 35px;
         font-size: 1rem;
+    }
+}
+
+/* Estilos para la nueva estructura de perfil */
+.profile-main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    position: relative;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 15px 0;
+}
+
+.nav-button.ranking-button {
+    background-color: rgba(225, 29, 72, 0.1);
+    border: 1px solid rgba(225, 29, 72, 0.3);
+}
+
+.nav-button.ranking-button:hover {
+    background-color: rgba(225, 29, 72, 0.2);
+}
+
+.nav-button.play-button {
+    background-color: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    color: #fff;
+}
+
+.nav-button.play-button:hover {
+    background-color: rgba(34, 197, 94, 0.2);
+}
+
+.detailed-stats-content {
+    margin-top: 15px;
+}
+
+.achievements-section {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+/* Ajuste de estilos existentes para el nuevo diseño */
+.section-divider {
+    margin: 30px 0;
+}
+
+@media (max-width: 768px) {
+    .navigation-buttons {
+        flex-direction: column;
+        margin: 10px 20px;
+    }
+    
+    .profile-main-content {
+        padding: 15px;
+    }
+    
+    .section-divider {
+        margin: 20px 0;
     }
 } 
  

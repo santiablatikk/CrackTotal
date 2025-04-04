@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function() {
             combinedData.push({
                 letra: letter,
                 preguntas: allQuestionsForLetter
-            });
+          });
         } else {
             console.warn(`No questions found for letter ${letter} in either file.`);
         }
@@ -413,7 +413,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       if (combinedData.length === 0) {
          throw new Error('No questions found in any file after combining.');
-      }
+        }
 
       questionsData = combinedData; // Store the combined data
       console.log("Combined questions loaded successfully:", questionsData.length, "letters available.");
@@ -1689,103 +1689,113 @@ document.getElementById('play-again-btn').addEventListener('click', function() {
 
 // Asegurar que la información del jugador se guarde correctamente
 function savePlayerData(gameData) {
-  console.log('Guardando datos de la partida:', gameData);
-  
-  // Obtener IP del usuario (o generar un identificador único)
-  const userIP = localStorage.getItem('userIP') || generateUserIdentifier();
-  
-  // Asegurar que tenemos un userIP guardado
-  if (!localStorage.getItem('userIP')) {
-    localStorage.setItem('userIP', userIP);
-  }
-  
-  // Crear objeto de datos consistente para el sistema de notificación
-  const extendedGameData = {
-    gameType: 'pasala-che',
-    correctAnswers: gameData.correct || 0,
-    incorrectCount: gameData.wrong || 0,
-    skippedCount: gameData.skipped || 0,
-    totalAnswers: (gameData.correct || 0) + (gameData.wrong || 0) + (gameData.skipped || 0),
-    score: gameData.score || gameData.correct || 0,
-    isWin: gameData.victory || (gameData.correct > 0),
-    timeSpent: gameData.timeUsed || (timeLimit - timeRemaining),
-    letterResults: letterStatus,
-    username: gameData.name || localStorage.getItem('username') || 'Jugador'
-  };
-  
-  // Guardar nombre de usuario para uso futuro
-  if (gameData.name) {
-    localStorage.setItem('username', gameData.name);
-  }
-  
-  // Guardar datos del juego en el historial
-  saveGameToHistory(extendedGameData, userIP);
-  
-  // Actualizar perfil del usuario
-  updateUserProfile(extendedGameData, userIP);
-  
-  // Comprobar logros
-  checkForAchievements(extendedGameData);
-  
-  // Si existe el API cliente, enviar los datos al backend
-  if (window.apiClient && window.apiClient.saveGameData) {
-    console.log('Enviando datos al backend a través de la API');
-    // Crear objeto para la API
-    const apiData = {
-      userId: userIP,
-      gameType: 'pasala-che',
-      score: extendedGameData.score,
-      correctAnswers: extendedGameData.correctAnswers,
-      incorrectAnswers: extendedGameData.incorrectCount,
-      skippedAnswers: extendedGameData.skippedCount,
-      timeSpent: extendedGameData.timeSpent,
-      isWin: extendedGameData.isWin
-    };
+  try {
+    console.log('Guardando datos del jugador:', gameData);
     
-    // Enviar datos de manera asíncrona
-    window.apiClient.saveGameData(apiData)
-      .then(response => {
-        console.log('Datos guardados exitosamente en el backend:', response);
-      })
-      .catch(error => {
-        console.error('Error al guardar datos en el backend:', error);
-      });
-  }
-  
-  // Si existe la función de notificación, la llamamos
-  if (typeof notifyGameCompletion === 'function') {
-    notifyGameCompletion(extendedGameData);
-    console.log('Notificación de finalización enviada correctamente');
-  } else {
-    // Si no existe, intentamos enviar un evento personalizado para que lo capture el listener
-    try {
-      const gameCompletedEvent = new CustomEvent('game-completed', { 
-        detail: extendedGameData,
-        bubbles: true 
-      });
-      document.dispatchEvent(gameCompletedEvent);
-      console.log('Evento game-completed disparado correctamente');
-      
-      // También actualizamos localStorage para que otros dashboards abiertos lo detecten
-      localStorage.setItem('dashboardUpdate', JSON.stringify({
-        timestamp: Date.now(),
-        gameType: 'pasala-che',
-        action: 'gameCompleted'
-      }));
-    } catch (error) {
-      console.error('Error al notificar finalización de partida:', error);
+    // Guardar nombre de usuario en localStorage para uso futuro
+    if (gameData.name) {
+      localStorage.setItem('username', gameData.name);
     }
+    
+    // Guardar datos de última partida para mostrar en ranking
+    localStorage.setItem('lastGameStats', JSON.stringify({
+      score: gameData.score || 0,
+      correct: gameData.correct || 0,
+      wrong: gameData.wrong || 0,
+      skipped: gameData.skipped || 0,
+      difficulty: gameData.difficulty || 'normal',
+      victory: gameData.victory || false,
+      date: new Date().toISOString()
+    }));
+    
+    // Detectar IP del usuario y guardar registro
+    const userIP = localStorage.getItem('userIP');
+    if (userIP) {
+      saveGameToHistory(gameData, userIP);
+    } else {
+      // Si no tenemos IP, intentar detectarla y luego guardar
+      detectAndSaveUserIP().then(ip => {
+        if (ip) {
+          saveGameToHistory(gameData, ip);
+        }
+      });
+    }
+    
+    // Guardar estadísticas específicas para cada tipo de juego usando el nuevo GameData
+    if (window.GameData) {
+      const gameType = currentQuestionType === 'wordDefinition' ? 'pasala-che' : 'quien-sabe-theme';
+      
+      if (gameType === 'pasala-che') {
+        // Crear objeto de datos para PASALA CHE con detalles específicos
+        const pasalaCheData = {
+          ...gameData,
+          letterDetails: gameData.incorrectItems.map(item => ({
+            letter: item.word ? item.word.charAt(0) : 'A',
+            word: item.word || '',
+            isCorrect: false
+          }))
+        };
+        
+        // Añadir letras correctas al detalle
+        for (let i = 0; i < gameData.correct; i++) {
+          pasalaCheData.letterDetails.push({
+            letter: String.fromCharCode(65 + i % 26), // A-Z
+            isCorrect: true
+          });
+        }
+        
+        // Guardar datos de PASALA CHE
+        window.GameData.savePasalaCheGame(pasalaCheData);
+      } else {
+        // Crear objeto de datos para QUIÉN SABE MÁS con detalles de categorías
+        const categoryMap = {};
+        
+        // Procesar items incorrectos para extraer categorías
+        if (gameData.incorrectItems && gameData.incorrectItems.length > 0) {
+          gameData.incorrectItems.forEach(item => {
+            const category = item.category || 'General';
+            if (!categoryMap[category]) {
+              categoryMap[category] = { correct: 0, total: 0 };
+            }
+            categoryMap[category].total += 1;
+          });
+        }
+        
+        // Calcular categegorías correctas basadas en estadísticas generales
+        const totalQuestions = gameData.correct + gameData.wrong + gameData.skipped;
+        const categoryDetails = Object.keys(categoryMap).map(category => ({
+          category,
+          correct: 0, // Inicializar correctas en 0
+          total: categoryMap[category].total
+        }));
+        
+        // Añadir una categoría general para respuestas correctas 
+        // (no podemos saber exactamente qué categorías fueron correctas)
+        categoryDetails.push({
+          category: 'General',
+          correct: gameData.correct,
+          total: totalQuestions
+        });
+        
+        // Guardar datos de QUIÉN SABE MÁS
+        window.GameData.saveQuienSabeGame({
+          ...gameData,
+          categoryDetails
+        });
+      }
+    } else {
+      console.warn('GameData no está disponible. Asegúrate de incluir game-data.js');
+    }
+    
+    // Verificar logros basados en esta partida (si la función está disponible)
+    if (typeof window.checkGameCompletionAchievements === 'function') {
+      window.checkGameCompletionAchievements(gameData);
+    }
+    
+    console.log('Datos del jugador guardados correctamente');
+  } catch (error) {
+    console.error('Error al guardar datos del jugador:', error);
   }
-  
-  return true;
-}
-
-// Generar un identificador único para el usuario
-function generateUserIdentifier() {
-  const randomId = 'user_' + Math.random().toString(36).substring(2, 15) + 
-                    Math.random().toString(36).substring(2, 15);
-  console.log('Generando nuevo identificador de usuario:', randomId);
-  return randomId;
 }
 
 // Función para guardar partida en el historial
@@ -2173,7 +2183,6 @@ styleEl.textContent = `
   }
 `;
 document.head.appendChild(styleEl);
-
 // Función para verificar y desbloquear logros basados en el rendimiento del juego
 function checkForAchievements(gameData) {
   try {
@@ -2345,3 +2354,4 @@ function unlockAchievement(achievementId) {
     console.error('Error al desbloquear logro:', error);
   }
 }
+

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking - CRACK TOTAL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/user/dashboard-modern.css">
+    <link rel="stylesheet" href="css/user/game-notifications.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <meta name="theme-color" content="#e11d48">
+</head>
+<body>
+    <div class="user-page-container">
+        <!-- Cabecera -->
+        <header class="user-page-header">
+            <a href="index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="app-header">
+                <div class="logo-animation">
+                    <i class="fas fa-futbol ball-icon bounce"></i>
+                </div>
+                <a href="#" class="title-link">
+                    <h1 class="title-text">CRACK TOTAL</h1>
+                </a>
+                <p class="subtitle">Ranking Global</p>
+            </div>
+            <div class="nav-buttons">
+                <a href="profile.html" class="nav-button">
+                    <i class="fas fa-user"></i>
+                    <span>Mi Perfil</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Selector de juego -->
+        <div class="game-selector">
+            <div class="game-options">
+                <div class="game-option active" data-game="pasala-che">
+                    <div class="game-icon">
+                        <i class="fas fa-circle-notch"></i>
+                    </div>
+                    <span class="game-name">PASALA CHE</span>
+                </div>
+                <div class="game-option" data-game="quien-sabe-theme">
+                    <div class="game-icon">
+                        <i class="fas fa-futbol"></i>
+                    </div>
+                    <span class="game-name">¿QUIÉN SABE MÁS?</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contenido Principal -->
+        <main class="ranking-main-content">
+            <div class="loading-content" id="ranking-loading">
+                <div class="loading-spinner"></div>
+                <p>Cargando ranking global...</p>
+            </div>
+            
+            <div class="ranking-content">
+                <!-- Filtros de ranking -->
+                <section class="ranking-filters">
+                    <div class="filter-options">
+                        <span class="filter-label">Ver ranking:</span>
+                        <button class="filter-btn active" data-filter="global">Global</button>
+                        <button class="filter-btn" data-filter="monthly">Mensual</button>
+                        <button class="filter-btn" data-filter="weekly">Semanal</button>
+                        <div class="filter-search">
+                            <input type="text" id="ranking-search" placeholder="Buscar jugador...">
+                            <button id="ranking-search-btn"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Estadísticas globales -->
+                <section class="global-ranking-stats">
+                    <div class="stats-grid">
+                        <div class="stat-item" data-stat="total-players">
+                            <div class="stat-icon"><i class="fas fa-users"></i></div>
+                            <div class="stat-details">
+                                <span class="stat-label">Jugadores Totales</span>
+                                <span class="stat-number">-</span>
+                            </div>
+                        </div>
+                        <div class="stat-item" data-stat="total-games">
+                            <div class="stat-icon"><i class="fas fa-gamepad"></i></div>
+                            <div class="stat-details">
+                                <span class="stat-label">Partidas Jugadas</span>
+                                <span class="stat-number">-</span>
+                            </div>
+                        </div>
+                        <div class="stat-item" data-stat="avg-score">
+                            <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                            <div class="stat-details">
+                                <span class="stat-label">Puntuación Media</span>
+                                <span class="stat-number">-</span>
+                            </div>
+                        </div>
+                        <div class="stat-item" data-stat="max-score">
+                            <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                            <div class="stat-details">
+                                <span class="stat-label">Puntuación Máxima</span>
+                                <span class="stat-number">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Top 3 jugadores -->
+                <section class="top-players-section">
+                    <h2 class="section-title">Top Jugadores</h2>
+                    <div class="top-players-grid">
+                        <div class="top-player-card rank-2">
+                            <div class="player-rank-badge">#2</div>
+                            <div class="player-avatar">D</div>
+                            <div class="player-name" id="top-player-2-name">-</div>
+                            <div class="player-score" id="top-player-2-score">-</div>
+                        </div>
+                        
+                        <div class="top-player-card rank-1">
+                            <div class="player-rank-badge">#1</div>
+                            <div class="player-avatar">M</div>
+                            <div class="player-name" id="top-player-1-name">-</div>
+                            <div class="player-score" id="top-player-1-score">-</div>
+                        </div>
+                        
+                        <div class="top-player-card rank-3">
+                            <div class="player-rank-badge">#3</div>
+                            <div class="player-avatar">J</div>
+                            <div class="player-name" id="top-player-3-name">-</div>
+                            <div class="player-score" id="top-player-3-score">-</div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Tabla de ranking -->
+                <section class="ranking-table-section">
+                    <h2 class="section-title">Clasificación Global</h2>
+                    <div class="ranking-table-container">
+                        <table class="improved-ranking-table">
+                            <thead>
+                                <tr>
+                                    <th width="10%">Pos.</th>
+                                    <th width="35%">Jugador</th>
+                                    <th width="15%">Puntaje</th>
+                                    <th width="20%">Juego</th>
+                                    <th width="20%">Fecha</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ranking-table-body">
+                                <tr class="loading-row">
+                                    <td colspan="5">
+                                        <div class="loading-spinner"></div> Cargando ranking...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <!-- Paginación -->
+                        <div class="pagination-container" id="ranking-pagination" style="display: none;">
+                            <button class="pagination-btn" id="prev-page-btn" disabled><i class="fas fa-chevron-left"></i> Anterior</button>
+                            <span id="pagination-info">Página 1 de 1</span>
+                            <button class="pagination-btn" id="next-page-btn" disabled>Siguiente <i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="policy-footer">
+        <div class="footer-links-mini">
+            <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+            <a href="game.html"><i class="fas fa-gamepad"></i> Jugar</a>
+            <a href="profile.html"><i class="fas fa-user"></i> Mi Perfil</a>
+            <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
+            <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+            <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+            <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+            <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+            <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+        </div>
+        <div class="copyright-text">&copy; 2025 CRACK TOTAL - Todos los derechos reservados.</div>
+        <div class="footer-social-icons">
+            <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/user-ranking.js"></script>
+    <script src="js/game-data.js"></script>
+    <script src="js/game-achievements.js"></script>
+    
+    <!-- Botón flotante de compartir -->
+    <script src="js/share-buttons.js"></script>
+    <!-- Script para el footer global -->
+    <script src="js/global-footer.js"></script>
+</body>
+</html> 

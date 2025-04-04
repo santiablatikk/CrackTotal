@@ -3,54 +3,18 @@
  * Gestiona la carga de datos y navegación en el dashboard unificado de perfil y ranking
  */
 
-// Inicializar identificador de usuario para persistencia
-(function() {
-    // Verificar si ya tenemos un userIP guardado
-    if (!localStorage.getItem('userIP')) {
-        // Generar un identificador único
-        const userIP = 'user_' + Math.random().toString(36).substring(2, 15) + 
-                        Math.random().toString(36).substring(2, 15);
-        
-        // Guardar en localStorage
-        localStorage.setItem('userIP', userIP);
-        console.log('Identificador de usuario generado:', userIP);
-    } else {
-        console.log('Usando identificador de usuario existente:', localStorage.getItem('userIP'));
-    }
-})();
-
-// Obtener el juego actual (o usar un valor por defecto)
-window.currentGame = 'pasala-che';
-
-// Verificar si tenemos apiClient disponible
-let useApiClient = window.apiClient !== undefined;
-console.log(`API Client ${useApiClient ? 'disponible' : 'no disponible'} - usando ${useApiClient ? 'backend' : 'localStorage'}`);
-
 // Variables globales
-let currentGame = 'pasala-che';
+    let currentGame = 'pasala-che';
 let currentTab = 'profile';
-// Reemplazamos la variable apiBaseUrl ya que ahora usamos el cliente API
-// let apiBaseUrl = '/api'; // Base URL for API endpoints
+let apiBaseUrl = '/api'; // Base URL for API endpoints
     
 // Evento para cuando el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM completamente cargado');
-    // Inicializar el dashboard completo
-    loadUserDataAndGame(window.currentGame);
-    
-    // Configurar manejadores para pestañas
-    setupTabs();
-    
-    // Configurar listener para el buscador
-    setupSearch();
-    
-    // Configurar actualizador automático si existe
-    if (window.gameCompletion && typeof window.gameCompletion.setupDashboardUpdater === 'function') {
-        console.log('🔄 Configurando actualizador automático del dashboard');
-        window.gameCompletion.setupDashboardUpdater();
-    } else {
-        console.warn('⚠️ Módulo de actualización automática no encontrado');
-    }
+    // Inicializar la UI
+    initUI();
+    // Cargar datos del usuario y del juego seleccionado
+    loadUserDataAndGame(currentGame);
 });
 
 // Inicializar la interfaz de usuario
@@ -64,601 +28,526 @@ function initUI() {
 
 // Configurar el selector de juegos
 function setupGameSelection() {
-    console.log('Configurando selector de juegos');
-    // Obtener todos los elementos de opciones de juego
     const gameOptions = document.querySelectorAll('.game-option');
+    console.log('Configurando selector de juegos, opciones encontradas:', gameOptions.length);
     
-    // Agregar listener de click a cada opción
     gameOptions.forEach(option => {
         option.addEventListener('click', function() {
-            // Guardar el juego seleccionado anteriormente para comparar
-            const previousGame = currentGame;
+            // Remover clase activa de todas las opciones
+            gameOptions.forEach(opt => opt.classList.remove('active'));
+            // Agregar clase activa a la opción seleccionada
+            this.classList.add('active');
             
-            // Actualizar el juego actual
-            currentGame = this.dataset.game;
+            // Actualizar el juego seleccionado
+            const game = this.getAttribute('data-game');
+            if (game !== currentGame) {
+                currentGame = game;
+                // Aplicar el atributo data-active-game al contenedor principal
+                applyGameTheme(game);
+                // Cargar datos específicos del juego
+                loadGameSpecificData(game);
+            }
+        });
+    });
+    
+    // Activar el juego por defecto
+    const defaultGameOption = document.querySelector(`.game-option[data-game="${currentGame}"]`);
+    if (defaultGameOption) {
+        defaultGameOption.classList.add('active');
+        // Aplicar el atributo data-active-game al contenedor principal para el juego por defecto
+        applyGameTheme(currentGame);
+    } else {
+        console.warn(`No se encontró la opción de juego predeterminada: ${currentGame}`);
+    }
+}
+
+// Aplicar tema específico del juego
+function applyGameTheme(game) {
+    const container = document.querySelector('.user-page-container');
+    if (container) {
+        // Eliminar cualquier atributo data-active-game anterior
+        container.removeAttribute('data-active-game');
+        // Aplicar el nuevo atributo
+        container.setAttribute('data-active-game', game);
+        
+        // Actualizar ícono del juego si es necesario
+        updateGameIcon(game);
+    }
+}
+
+// Actualizar ícono del juego según el tipo de juego
+function updateGameIcon(game) {
+    const iconClass = game === 'pasala-che' ? 'fa-circle-notch' : 'fa-question-circle';
+    const gameIcon = document.querySelector(`.game-option[data-game="${game}"] .game-icon i`);
+    
+    if (gameIcon) {
+        // Eliminar todas las clases de ícono y agregar la correcta
+        gameIcon.className = '';
+        gameIcon.classList.add('fas', iconClass);
+    }
+}
+
+// Configurar el sistema de pestañas
+    function setupTabs() {
+        const tabs = document.querySelectorAll('.tab');
+    console.log('Configurando tabs, tabs encontrados:', tabs.length);
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+            activateTab(tabId);
+        });
+    });
+    
+    // Activar la pestaña por defecto
+    activateTab(currentTab);
+}
+
+// Activar una pestaña específica
+function activateTab(tabId) {
+    console.log(`Activando tab: ${tabId}`);
+    // Si la pestaña ya está activa, no hacer nada
+    if (tabId === currentTab) return;
+    
+    // Actualizar la variable de pestaña actual
+    currentTab = tabId;
+    
+    // Desactivar todas las pestañas y contenidos
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+    
+    // Ocultar indicadores de carga
+    document.querySelectorAll('.loading-content').forEach(el => {
+        el.style.display = 'none';
+    });
+    
+    // Mostrar indicador de carga para la pestaña seleccionada
+    const loadingElement = document.getElementById(`${tabId}-loading`);
+    if (loadingElement) {
+        loadingElement.style.display = 'flex';
+    }
+    
+    // Activar la pestaña y contenido seleccionados
+    const selectedTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
+    if (selectedTab) {
+        selectedTab.classList.add('active');
+                    } else {
+        console.warn(`No se encontró la pestaña: ${tabId}`);
+    }
+    
+    const selectedContent = document.querySelector(`#${tabId}-content`);
+    if (selectedContent) {
+        selectedContent.classList.add('active');
+    } else {
+        console.warn(`No se encontró el contenido para la pestaña: ${tabId}`);
+    }
+    
+    // Cargar datos específicos de la pestaña si es necesario
+    if (tabId === 'ranking') {
+        loadRankingData(currentGame);
+    } else if (tabId === 'stats') {
+        loadStatisticsData(currentGame);
+    } else if (tabId === 'achievements') {
+        loadAchievementsData(currentGame);
+    }
+}
+
+// Cargar datos del usuario y del juego seleccionado
+function loadUserDataAndGame(game) {
+    console.log(`Cargando datos para el juego: ${game}`);
+    
+    // Mostrar indicadores de carga
+    showLoading();
+    
+    // Realizar fetch para obtener datos del usuario
+    fetch(`${apiBaseUrl}/user/profile?game=${game}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al cargar los datos del perfil');
+            }
+            return response.json();
+        })
+        .then(userData => {
+            // Actualizar información de perfil de usuario
+            updateUserProfileInfo(userData);
             
-            // Si el juego seleccionado es diferente, cargar los datos
-            if (previousGame !== currentGame) {
-                console.log('Juego seleccionado:', currentGame);
-                
-                // Remover la clase 'active' de todas las opciones
-                gameOptions.forEach(opt => opt.classList.remove('active'));
-                
-                // Agregar la clase 'active' a la opción seleccionada
-                this.classList.add('active');
-                
-                // Cargar datos del juego
+            // Cargar datos específicos del juego
+            loadGameSpecificData(game);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showError('No se pudieron cargar los datos del perfil');
+        })
+        .finally(() => {
+            // Ocultar el indicador de carga del perfil
+            const profileLoading = document.getElementById('profile-loading');
+            if (profileLoading) {
+                profileLoading.style.display = 'none';
+            }
+        });
+}
+
+// Mostrar indicadores de carga
+function showLoading(contentType = null) {
+    // Si se especifica un tipo de contenido, mostrar solo ese loader
+    if (contentType) {
+        const loadingElement = document.getElementById(`${contentType}-loading`);
+        if (loadingElement) {
+            loadingElement.style.display = 'flex';
+        }
+        
+        // Ocultar el contenido principal
+        const contentElement = document.querySelector(`#${contentType}-content .${contentType}-content`);
+        if (contentElement) {
+            contentElement.style.opacity = '0.3';
+        }
+        return;
+    }
+    
+    // Si no se especifica, mostrar el loader correspondiente a la pestaña activa
+    const activeTabId = currentTab;
+    const activeLoader = document.getElementById(`${activeTabId}-loading`);
+    if (activeLoader) {
+        activeLoader.style.display = 'flex';
+    }
+    
+    // Ocultar el contenido principal
+    const contentElement = document.querySelector(`#${activeTabId}-content .${activeTabId}-content`);
+    if (contentElement) {
+        contentElement.style.opacity = '0.3';
+    }
+}
+
+// Ocultar indicadores de carga
+function hideLoading(contentType = null) {
+    // Si se especifica un tipo de contenido, ocultar solo ese loader
+    if (contentType) {
+        const loadingElement = document.getElementById(`${contentType}-loading`);
+        if (loadingElement) {
+            loadingElement.style.display = 'none';
+        }
+        
+        // Mostrar el contenido principal
+        const contentElement = document.querySelector(`#${contentType}-content .${contentType}-content`);
+        if (contentElement) {
+            contentElement.style.opacity = '1';
+        }
+        return;
+    }
+    
+    // Si no se especifica, ocultar el loader correspondiente a la pestaña activa
+    const activeTabId = currentTab;
+    const activeLoader = document.getElementById(`${activeTabId}-loading`);
+    if (activeLoader) {
+        activeLoader.style.display = 'none';
+    }
+    
+    // Mostrar el contenido principal
+    const contentElement = document.querySelector(`#${activeTabId}-content .${activeTabId}-content`);
+    if (contentElement) {
+        contentElement.style.opacity = '1';
+    }
+}
+
+// Mostrar mensajes de error
+function showError(message) {
+    console.error(message);
+    
+    // Ocultar indicadores de carga
+    hideLoading();
+    
+    // Mostrar un mensaje de error en la pestaña activa
+    const activeTabContent = document.querySelector(`#${currentTab}-content .${currentTab}-content`);
+    if (activeTabContent) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.innerHTML = `
+            <i class="fas fa-exclamation-circle"></i>
+            <p>${message}</p>
+            <button class="retry-button">Intentar nuevamente</button>
+        `;
+        
+        // Agregar botón para reintentar
+        activeTabContent.appendChild(errorDiv);
+        const retryButton = errorDiv.querySelector('.retry-button');
+        if (retryButton) {
+            retryButton.addEventListener('click', function() {
+                errorDiv.remove();
                 loadUserDataAndGame(currentGame);
+            });
+        }
+    }
+}
+
+// Cargar datos específicos del juego seleccionado
+function loadGameSpecificData(game) {
+    console.log(`Cargando datos específicos para el juego: ${game}`);
+    
+    // Realizar fetch para obtener datos específicos del juego
+    fetch(`${apiBaseUrl}/games/${game}/info`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al cargar los datos del juego');
             }
+            return response.json();
+        })
+        .then(gameData => {
+            // Actualizar título del juego y descripción
+            updateGameHeader(gameData);
+            
+            // Actualizar estadísticas de perfil con los datos del juego
+            updateProfileStats(gameData.stats, gameData.statLabels);
+            
+            // Actualizar etiquetas específicas del juego
+            updateGameSpecificLabels(gameData);
+            
+            // Cargar otros datos según la pestaña activa
+            if (currentTab === 'ranking') {
+                loadRankingData(game, gameData);
+            } else if (currentTab === 'stats') {
+                loadStatisticsData(game);
+            } else if (currentTab === 'achievements') {
+                loadAchievementsData(game);
+            }
+            
+            // Ocultar todos los indicadores de carga una vez que los datos están listos
+            hideLoading();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showError('No se pudieron cargar los datos del juego');
+            
+            // Usar configuración por defecto en caso de error
+            const defaultGameData = getDefaultGameData(game);
+            updateGameHeader(defaultGameData);
+            updateProfileStats(defaultGameData.stats, defaultGameData.statLabels);
+            updateGameSpecificLabels(defaultGameData);
         });
-    });
 }
 
-// Configurar las pestañas de navegación
-function setupTabs() {
-    console.log('Configurando pestañas de navegación');
-    
-    // Obtener todos los elementos de pestañas y contenidos
-    const tabs = document.querySelectorAll('.tab');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    // Agregar listener de click a cada pestaña
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-            // Guardar la pestaña seleccionada anteriormente para comparar
-            const previousTab = currentTab;
-            
-            // Actualizar la pestaña actual
-            currentTab = this.dataset.tab;
-            
-            // Si la pestaña seleccionada es diferente, actualizar la UI
-            if (previousTab !== currentTab) {
-                console.log('Pestaña seleccionada:', currentTab);
-                
-                // Remover la clase 'active' de todas las pestañas
-                tabs.forEach(t => t.classList.remove('active'));
-                
-                // Ocultar todos los contenidos de pestañas
-                tabContents.forEach(content => content.classList.remove('active'));
-                
-                // Agregar la clase 'active' a la pestaña seleccionada
-                this.classList.add('active');
-                
-                // Mostrar el contenido de la pestaña seleccionada
-                const activeContent = document.getElementById(`${currentTab}-content`);
-                if (activeContent) {
-                    activeContent.classList.add('active');
-                    
-                    // Si la pestaña es ranking y no hay datos cargados, cargarlos
-                    if (currentTab === 'ranking' && activeContent.querySelector('.ranking-table tbody').children.length === 0) {
-                        loadRanking(currentGame);
-                    }
-                }
+// Obtener configuración por defecto para un juego en caso de error de API
+function getDefaultGameData(game) {
+    // Configuración básica por defecto
+    if (game === 'pasala-che') {
+        return {
+            title: 'PASALA CHE',
+            description: 'El juego de palabras del fútbol',
+            icon: 'fa-circle-notch',
+            stats: {
+                gamesPlayed: 0,
+                gamesWon: 0,
+                winRate: 0,
+                accuracy: 0,
+                highScore: 0,
+                averageTime: 0
+            },
+            statLabels: {
+                games: 'Partidas Jugadas',
+                winRate: 'Palabras Acertadas',
+                accuracy: 'Precisión Palabras',
+                time: 'Tiempo Promedio'
+            },
+            highScoreLabel: 'Récord Rosco',
+            rankingLabels: {
+                score: 'Aciertos',
+                games: 'Roscos',
+                timeLabel: 'Último Rosco'
             }
-        });
-    });
-}
-
-// Funciones para cargar datos del usuario y juego
-async function loadUserDataAndGame(gameType) {
-    console.log('Cargando datos del usuario y juego:', gameType);
-    
-    // Mostrar indicadores de carga en todas las secciones
-    showLoading('profile');
-    showLoading('ranking');
-    showLoading('stats');
-    showLoading('achievements');
-    
-    try {
-        // Obtener el user IP del localStorage
-        const userIP = localStorage.getItem('userIP');
-        
-        if (!userIP) {
-            throw new Error('No se encontró identificador de usuario');
-        }
-
-        // Si no tenemos API client o falla la API, usar datos locales
-        let userData = null;
-        let gameInfo = null;
-
-        try {
-            if (window.apiClient && typeof window.apiClient.getOrCreateUser === 'function') {
-                // Cargar datos del usuario usando el cliente API
-                userData = await window.apiClient.getOrCreateUser(userIP, localStorage.getItem('username') || 'Jugador');
-            }
-        } catch (error) {
-            console.warn('Error al usar API client para obtener usuario:', error);
-        }
-
-        if (!userData) {
-            // Usar datos locales como fallback
-            userData = getLocalUserData(userIP);
-        }
-
-        try {
-            if (window.apiClient && typeof window.apiClient.getGameInfo === 'function') {
-                // Cargar datos del juego usando el cliente API
-                gameInfo = await window.apiClient.getGameInfo(gameType);
-            }
-        } catch (error) {
-            console.warn('Error al usar API client para obtener información del juego:', error);
-        }
-
-        // Si no hay datos del juego, usar datos por defecto
-        if (!gameInfo) {
-            gameInfo = getDefaultGameData(gameType);
-        }
-        
-        // Actualizar la UI con los datos obtenidos
-        updateProfileUI(userData, gameInfo);
-        
-        // Cargar estadísticas del usuario para el juego actual
-        loadUserStats(userIP, gameType);
-        
-        // Cargar ranking para el juego actual si estamos en esa pestaña
-        if (currentTab === 'ranking') {
-            loadRanking(gameType);
-        }
-        
-        // Cargar logros para el juego actual
-        loadAchievements(userIP, gameType);
-        
-    } catch (error) {
-        console.error('Error al cargar datos:', error);
-        showError('Error al cargar datos. Por favor, intenta de nuevo más tarde.', 'profile');
-    }
-}
-
-// Obtener datos de usuario desde localStorage
-function getLocalUserData(userIP) {
-    console.log('Obteniendo datos locales de usuario');
-    const profileKey = `profile_${userIP}`;
-    let userData = {
-        username: localStorage.getItem('username') || 'Jugador',
-        level: 1,
-        xp: 0,
-        totalXp: 100
-    };
-
-    try {
-        const savedProfile = localStorage.getItem(profileKey);
-        if (savedProfile) {
-            const profileData = JSON.parse(savedProfile);
-            if (profileData) {
-                userData = { ...userData, ...profileData };
-            }
-        }
-    } catch (error) {
-        console.error('Error al cargar perfil local:', error);
-    }
-
-    return userData;
-}
-
-// Actualizar la UI del perfil con los datos del usuario y juego
-function updateProfileUI(userData, gameInfo) {
-    console.log('Actualizando UI del perfil');
-    
-    // Actualizar el nombre de usuario
-    const usernameElement = document.getElementById('profile-username');
-    if (usernameElement) {
-        usernameElement.textContent = userData.username || 'Jugador';
-        
-        // Guardar el nombre de usuario en localStorage
-        if (userData.username) {
-            localStorage.setItem('username', userData.username);
-        }
-    }
-    
-    // Actualizar nivel y experiencia
-    const levelBadge = document.getElementById('level-badge');
-    const levelText = document.getElementById('profile-level-text');
-    
-    if (levelBadge && levelText) {
-        levelBadge.textContent = userData.level || 1;
-        levelText.textContent = `Nivel ${userData.level || 1}`;
-    }
-
-    // Actualizar estadísticas en el perfil
-    updateProfileStats(userData, gameInfo);
-    
-    // Ocultar indicador de carga
-    hideLoading('profile');
-}
-
-// Actualizar estadísticas en la sección del perfil
-function updateProfileStats(userData, gameInfo) {
-    // Actualizar nivel en la visualización de progreso de nivel
-    const profileLevelDisplay = document.getElementById('profile-level-display');
-    if (profileLevelDisplay) {
-        profileLevelDisplay.textContent = `Nivel ${userData.level || 1}`;
-    }
-    
-    // Actualizar progreso de XP
-    const xpProgressText = document.getElementById('xp-progress-text');
-    if (xpProgressText) {
-        xpProgressText.textContent = `${userData.xp || 0} / ${userData.totalXp || 100} XP`;
-    }
-    
-    // Actualizar barra de progreso de nivel
-    const levelProgressFill = document.getElementById('level-progress-fill');
-    if (levelProgressFill) {
-        const progressPercent = userData.totalXp ? Math.floor((userData.xp / userData.totalXp) * 100) : 0;
-        levelProgressFill.style.width = `${progressPercent}%`;
-    }
-    
-    // Actualizar ranking actual
-    const currentRankProfile = document.getElementById('current-rank-profile');
-    if (currentRankProfile) {
-        currentRankProfile.textContent = userData.rank || '-';
-    }
-    
-    // Actualizar mejor puntaje
-    const bestScoreProfile = document.getElementById('best-score-profile');
-    if (bestScoreProfile) {
-        bestScoreProfile.textContent = userData.bestScore || '-';
-    }
-    
-    // Actualizar estadísticas clave
-    updateStatValue('stat-games', userData.gamesPlayed || 0);
-    updateStatValue('stat-winrate', `${userData.winRate || 0}%`);
-    updateStatValue('stat-accuracy', `${userData.accuracy || 0}%`);
-    
-    // Formatear tiempo promedio
-    let timeDisplay = '-';
-    if (userData.averageTime) {
-        if (userData.averageTime < 60) {
-            timeDisplay = `${userData.averageTime} seg`;
-        } else {
-            const minutes = Math.floor(userData.averageTime / 60);
-            const seconds = userData.averageTime % 60;
-            timeDisplay = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        }
-    }
-    updateStatValue('stat-avgtime', timeDisplay);
-}
-
-// Actualizar valor de una estadística
-function updateStatValue(elementId, value) {
-    const element = document.getElementById(elementId);
-    if (element) {
-        element.textContent = value;
-    }
-}
-
-// Cargar estadísticas del usuario para un juego específico
-async function loadUserStats(userIP, gameType) {
-    console.log('Cargando estadísticas del usuario:', gameType);
-    showLoading('stats');
-    
-    try {
-        let statsData = null;
-        
-        // Intentar obtener datos de la API
-        if (window.apiClient && typeof window.apiClient.getUserProfile === 'function') {
-            try {
-                statsData = await window.apiClient.getUserProfile(userIP, gameType);
-            } catch (error) {
-                console.warn('Error al obtener estadísticas desde API:', error);
-            }
-        }
-        
-        // Si no hay datos de la API, usar datos locales
-        if (!statsData) {
-            statsData = getLocalUserStats(userIP, gameType);
-        }
-        
-        if (!statsData) {
-            throw new Error('No se pudieron obtener estadísticas del usuario');
-        }
-        
-        // Actualizar la UI con las estadísticas
-        updateStatsUI(statsData);
-        
-    } catch (error) {
-        console.error('Error al cargar estadísticas:', error);
-        showError('Error al cargar estadísticas.', 'stats');
-    }
-}
-
-// Obtener estadísticas locales
-function getLocalUserStats(userIP, gameType) {
-    console.log('Obteniendo estadísticas locales');
-    const statsKey = `userStats_${userIP}_${gameType}`;
-    
-    try {
-        const savedStats = localStorage.getItem(statsKey);
-        if (savedStats) {
-            return JSON.parse(savedStats);
-        }
-    } catch (error) {
-        console.error('Error al cargar estadísticas locales:', error);
-    }
-    
-    // Estadísticas por defecto
-    return {
-        gamesPlayed: 0,
-        gamesWon: 0,
-        totalScore: 0,
-        highScore: 0,
-        totalCorrectAnswers: 0,
-        totalAnswers: 0,
-        winRate: 0,
-        accuracy: 0
-    };
-}
-
-// Actualizar la UI de estadísticas
-function updateStatsUI(statsData) {
-    console.log('Actualizando UI de estadísticas');
-    
-    // Obtener el contenedor de estadísticas
-    const statsContainer = document.querySelector('.stats-content');
-    if (!statsContainer) {
-        console.error('No se encontró el contenedor de estadísticas');
-        return;
-    }
-    
-    // Construir el HTML para las estadísticas
-    statsContainer.innerHTML = `
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>Resumen de Juego</h3>
-                <div class="stat-content">
-                    <div class="stat-item">
-                        <span class="stat-label">Partidas Jugadas</span>
-                        <span class="stat-value">${statsData.gamesPlayed || 0}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Victorias</span>
-                        <span class="stat-value">${statsData.gamesWon || 0}</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Ratio de Victoria</span>
-                        <span class="stat-value">${statsData.winRate || 0}%</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="stat-card">
-                <h3>Precisión</h3>
-                <div class="stat-content">
-                    <div class="accuracy-chart">
-                        <div class="accuracy-percentage">${statsData.accuracy || 0}%</div>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-label">Precisión General</span>
-                        <span class="stat-value">${statsData.accuracy || 0}%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="section-divider"></div>
-        
-        <div class="stats-grid">
-            <div class="stat-card full-width">
-                <h3>Rendimiento por Partida</h3>
-                <div class="stat-content">
-                    ${statsData.gamesPlayed > 0 
-                        ? '<div id="performance-chart-container" style="width:100%; height:200px;"></div>'
-                        : `<div class="no-data-message">
-                               <i class="fas fa-chart-line"></i>
-                               <p>Juega algunas partidas para ver estadísticas detalladas</p>
-                           </div>`
-                    }
-                </div>
-            </div>
-        </div>
-    `;
-    
-    // Inicializar gráficos si hay partidas jugadas y Chart.js está disponible
-    if (statsData.gamesPlayed > 0) {
-        // Intentar cargar historial de juegos para el gráfico
-        loadGameHistory(statsData);
-    }
-    
-    // Ocultar indicador de carga
-    hideLoading('stats');
-}
-
-// Cargar historial de juegos para gráficos
-function loadGameHistory(statsData) {
-    const userIP = localStorage.getItem('userIP');
-    if (!userIP) return;
-    
-    const userGamesKey = `userGames_${userIP}`;
-    try {
-        const savedGames = localStorage.getItem(userGamesKey);
-        if (savedGames) {
-            const games = JSON.parse(savedGames);
-            if (Array.isArray(games) && games.length > 0) {
-                // Intentar inicializar gráfico si Chart.js está disponible
-                if (typeof loadChartLibrary === 'function') {
-                    loadChartLibrary().then(() => {
-                        if (typeof Chart !== 'undefined') {
-                            initializePerformanceChart(games);
-                        }
-                    });
-                }
-            }
-        }
-    } catch (error) {
-        console.error('Error al cargar historial de juegos:', error);
-    }
-}
-
-// Inicializar gráfico de rendimiento
-function initializePerformanceChart(games) {
-    const container = document.getElementById('performance-chart-container');
-    if (!container) return;
-    
-    // Limitar a las últimas 10 partidas
-    const recentGames = games.slice(0, 10).reverse();
-    
-    // Crear canvas para el gráfico
-    const canvas = document.createElement('canvas');
-    canvas.id = 'performance-chart';
-    container.appendChild(canvas);
-    
-    // Inicializar gráfico
-    new Chart(canvas, {
-        type: 'line',
-        data: {
-            labels: recentGames.map((g, i) => `Partida ${i+1}`),
-            datasets: [{
-                label: 'Puntuación',
-                data: recentGames.map(g => g.score || 0),
-                borderColor: 'rgba(225, 29, 72, 1)',
-                backgroundColor: 'rgba(225, 29, 72, 0.2)',
-                tension: 0.4,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-}
-
-// Cargar el ranking global para un juego específico
-async function loadRanking(gameType) {
-    console.log('Cargando ranking global:', gameType);
-    showLoading('ranking');
-    
-    try {
-        let rankingData = null;
-        
-        // Intentar obtener datos de la API
-        if (window.apiClient && typeof window.apiClient.getGlobalRanking === 'function') {
-            try {
-                rankingData = await window.apiClient.getGlobalRanking(gameType);
-            } catch (error) {
-                console.warn('Error al obtener ranking desde API:', error);
-            }
-        }
-        
-        // Si no hay datos de la API, generar datos de ejemplo
-        if (!rankingData) {
-            rankingData = generateSampleRanking();
-        }
-        
-        if (!rankingData) {
-            throw new Error('No se pudieron obtener datos del ranking');
-        }
-        
-        // Actualizar la UI con el ranking
-        updateRankingUI(rankingData);
-        
-    } catch (error) {
-        console.error('Error al cargar ranking:', error);
-        showError('Error al cargar ranking.', 'ranking');
-    }
-}
-
-// Generar datos de ranking de ejemplo
-function generateSampleRanking() {
-    const players = [];
-    const currentUser = localStorage.getItem('username') || 'Jugador';
-    
-    // Generar 15 jugadores de ejemplo
-    for (let i = 1; i <= 15; i++) {
-        const player = {
-            rank: i,
-            name: i === 3 ? currentUser : `Jugador ${i}`,
-            score: Math.floor(Math.random() * 1000) + 500 - (i * 30),
-            gamesPlayed: Math.floor(Math.random() * 50) + 10,
-            lastActive: Math.floor(Math.random() * 10),
-            isCurrentUser: i === 3,
-            avatarColor: `hsl(${Math.floor(Math.random() * 360)}, 70%, 45%)`,
-            avatar: (i === 3 ? currentUser.charAt(0) : `J${i}`).toUpperCase()
         };
-        players.push(player);
+    } else {
+        return {
+            title: '¿QUIÉN SABE MÁS?',
+            description: 'El juego de preguntas del fútbol',
+            icon: 'fa-question-circle',
+            stats: {
+                gamesPlayed: 0,
+                gamesWon: 0,
+                winRate: 0,
+                accuracy: 0,
+                highScore: 0,
+                averageTime: 0
+            },
+            statLabels: {
+                games: 'Partidas Jugadas',
+                winRate: 'Tasa de Victoria',
+                accuracy: 'Preguntas Correctas',
+                time: 'Minutos por Juego'
+            },
+            highScoreLabel: 'Mejor Puntaje',
+            rankingLabels: {
+                score: 'Puntos',
+                games: 'Partidas',
+                timeLabel: 'Última Partida'
+            }
+        };
+    }
+}
+
+// Actualizar el encabezado del juego con información específica
+function updateGameHeader(gameData) {
+    const gameTitle = document.querySelector('.game-selector .game-option.active .game-name');
+    if (gameTitle) {
+        gameTitle.textContent = gameData.title;
     }
     
-    return {
-        players: players,
-        currentPage: 1,
-        totalPages: 5,
-        totalPlayers: 75,
-        totalGames: 348,
-        avgScore: 420,
-        maxScore: 1250
-    };
+    // Actualizar la descripción en la cabecera si existe
+    const gameDescription = document.querySelector('.subtitle');
+    if (gameDescription) {
+        gameDescription.textContent = gameData.description;
+    }
 }
 
-// Actualizar la UI del ranking
-function updateRankingUI(rankingData) {
-    console.log('Actualizando UI del ranking');
+// Actualizar estadísticas de perfil
+function updateProfileStats(stats, labels) {
+    console.log('Actualizando estadísticas de perfil con etiquetas personalizadas');
     
-    // Actualizar estadísticas globales
-    updateGlobalRankingStats(rankingData);
+    // Actualizar valores de estadísticas
+    updateStatValue('games-played', stats.gamesPlayed, labels.games);
+    updateStatValue('win-rate', `${stats.winRate}%`, labels.winRate);
+    updateStatValue('accuracy', `${stats.accuracy}%`, labels.accuracy);
     
-    // Actualizar top jugadores
-    updateTopPlayers(rankingData.players.slice(0, 3));
-    
-    // Actualizar tabla de ranking
-    updateRankingTable(rankingData.players);
-    
-    // Actualizar paginación
-    updatePagination(rankingData.currentPage, rankingData.totalPages);
-    
-    // Ocultar indicador de carga
-    hideLoading('ranking');
+    // Formatear el tiempo según el contexto del juego
+    let timeDisplay = '';
+    if (stats.averageTime < 60) {
+        timeDisplay = `${stats.averageTime} seg`;
+    } else {
+        timeDisplay = `${Math.floor(stats.averageTime / 60)}:${(stats.averageTime % 60).toString().padStart(2, '0')}`;
+    }
+    updateStatValue('avg-time', timeDisplay, labels.time);
 }
 
-// Actualizar estadísticas globales del ranking
-function updateGlobalRankingStats(rankingData) {
-    document.getElementById('total-players-stat').textContent = rankingData.totalPlayers || 0;
-    document.getElementById('total-games-stat').textContent = rankingData.totalGames || 0;
-    document.getElementById('avg-score-stat').textContent = rankingData.avgScore || 0;
-    document.getElementById('max-score-stat').textContent = rankingData.maxScore || 0;
+// Actualizar etiquetas específicas del juego
+function updateGameSpecificLabels(gameData) {
+    // Actualizar la etiqueta del mejor puntaje
+    const bestScoreLabel = document.querySelector('.score-label');
+    if (bestScoreLabel) {
+        bestScoreLabel.textContent = gameData.highScoreLabel;
+    }
 }
 
-// Actualizar top jugadores
-function updateTopPlayers(topPlayers) {
-    if (!topPlayers || topPlayers.length === 0) return;
+// Actualizar el valor y etiqueta de una estadística específica
+function updateStatValue(statId, value, label = null) {
+    // Actualizar el valor
+    const statElement = document.querySelector(`.stat-item[data-stat="${statId}"] .stat-number`);
+    if (statElement) {
+        statElement.textContent = value;
+    } else {
+        console.warn(`No se encontró el elemento para la estadística: ${statId}`);
+    }
     
-    // Asegurarnos de que tenemos 3 jugadores
-    while (topPlayers.length < 3) {
-        topPlayers.push({
-            name: '-',
-            score: 0,
-            avatar: '?'
+    // Actualizar la etiqueta si se proporciona
+    if (label) {
+        const labelElement = document.querySelector(`.stat-item[data-stat="${statId}"] .stat-label`);
+        if (labelElement) {
+            labelElement.textContent = label;
+        }
+    }
+}
+
+// Cargar datos de ranking
+function loadRankingData(game, gameData) {
+    console.log(`Cargando datos de ranking para el juego: ${game}`);
+    
+    // Mostrar indicador de carga para el ranking
+    const rankingLoading = document.getElementById('ranking-loading');
+    if (rankingLoading) {
+        rankingLoading.style.display = 'flex';
+    }
+    
+    // Obtener el contenedor de ranking
+    const rankingContent = document.querySelector('.ranking-content');
+    if (rankingContent) {
+        rankingContent.style.opacity = '0.3';
+    }
+    
+    // Cargar datos globales para el ranking
+    loadGlobalRankingStats(game, gameData);
+    
+    // Cargar top 3 jugadores
+    loadTopPlayers(game);
+    
+    // Cargar tabla de ranking
+    loadRankingTable(game, gameData);
+    
+    // Inicializar filtros de ranking
+    initRankingFilters();
+    
+    // Actualizar etiquetas específicas del juego en la tabla de ranking
+    updateRankingTableLabels(gameData.rankingLabels);
+    
+    // Ocultar el indicador de carga después de un tiempo razonable
+        setTimeout(() => {
+        if (rankingLoading) {
+            rankingLoading.style.display = 'none';
+        }
+        if (rankingContent) {
+            rankingContent.style.opacity = '1';
+        }
+        }, 1000);
+}
+
+// Cargar estadísticas globales para el ranking
+function loadGlobalRankingStats(game, gameData) {
+    console.log(`Cargando estadísticas globales para el juego: ${game}`);
+    
+    // Realizar fetch para obtener estadísticas globales
+    fetch(`${apiBaseUrl}/games/${game}/global-stats`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al cargar estadísticas globales');
+            }
+            return response.json();
+        })
+        .then(stats => {
+            // Actualizar estadísticas con etiquetas específicas del juego
+            updateStatValue('total-players', stats.totalPlayers.toLocaleString(), gameData.globalLabels.players);
+            updateStatValue('total-games', stats.totalGames.toLocaleString(), gameData.globalLabels.games);
+            updateStatValue('avg-score', stats.avgScore, gameData.globalLabels.avgScore);
+            updateStatValue('max-score', stats.maxScore, gameData.globalLabels.maxScore);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Mostrar guiones o valores por defecto en caso de error
+            updateStatValue('total-players', '-', gameData.globalLabels.players);
+            updateStatValue('total-games', '-', gameData.globalLabels.games);
+            updateStatValue('avg-score', '-', gameData.globalLabels.avgScore);
+            updateStatValue('max-score', '-', gameData.globalLabels.maxScore);
         });
+}
+
+// Actualizar etiquetas de la tabla de ranking
+function updateRankingTableLabels(labels) {
+    // Actualizar encabezados de la tabla
+    const scoreHeader = document.querySelector('.improved-ranking-table .score-col');
+    if (scoreHeader) {
+        scoreHeader.textContent = labels.score;
     }
     
-    // Actualizar nombres y puntajes
-    for (let i = 1; i <= 3; i++) {
-        const player = topPlayers[i-1];
-        
-        const nameElement = document.getElementById(`top-player-${i}-name`);
-        const scoreElement = document.getElementById(`top-player-${i}-score`);
-        
-        if (nameElement) nameElement.textContent = player.name;
-        if (scoreElement) scoreElement.textContent = `${player.score} pts`;
+    const gamesHeader = document.querySelector('.improved-ranking-table .games-col');
+    if (gamesHeader) {
+        gamesHeader.textContent = labels.games;
+    }
+    
+    const timeHeader = document.querySelector('.improved-ranking-table .last-played-col');
+    if (timeHeader) {
+        timeHeader.textContent = labels.timeLabel;
     }
 }
 
-// Actualizar tabla de ranking
-function updateRankingTable(players) {
-    if (!players || players.length === 0) {
-        showError('No hay datos de ranking disponibles.', 'ranking-table-body');
+// Renderizar tabla de ranking
+function renderRankingTable(data, gameData) {
+    console.log('Renderizando tabla de ranking');
+    const tableBody = document.querySelector('#ranking-table-body');
+    if (!tableBody) {
+        console.warn('No se encontró el tbody de la tabla de ranking');
         return;
     }
     
-    const tableBody = document.getElementById('ranking-table-body');
-    if (!tableBody) return;
-    
+    // Limpiar contenido existente
     tableBody.innerHTML = '';
     
-    players.forEach((player, index) => {
+    // Agregar filas
+    data.forEach((player, index) => {
         const row = document.createElement('tr');
         if (player.isCurrentUser) {
             row.classList.add('highlight-row');
@@ -668,25 +557,26 @@ function updateRankingTable(players) {
         row.style.animationDelay = `${index * 0.05}s`;
         row.classList.add('fade-in-row');
         
-        // Determinar texto de última actividad
-        let timeAgo = '';
-        if (player.lastActive === 0) {
-            timeAgo = 'Hoy';
-        } else if (player.lastActive === 1) {
-            timeAgo = 'Ayer';
-        } else if (player.lastActive < 7) {
-            timeAgo = `hace ${player.lastActive} días`;
-        } else {
-            timeAgo = `hace ${Math.floor(player.lastActive / 7)} semanas`;
+        // Generar indicador de cambio de ranking
+        let rankChangeHtml = '';
+        if (player.rankChange > 0) {
+            rankChangeHtml = `<span class="rank-change-up">+${player.rankChange}</span>`;
+        } else if (player.rankChange < 0) {
+            rankChangeHtml = `<span class="rank-change-down">${player.rankChange}</span>`;
         }
         
+        // Formatear tiempo de última actividad
+        const timeAgo = formatTimeAgo(player.lastActive);
+        
+        // Contenido HTML de la fila
         row.innerHTML = `
             <td class="rank-col">
                 <span class="rank-indicator">#${player.rank}</span>
+                ${rankChangeHtml}
             </td>
             <td>
                 <div class="player-info">
-                    <div class="player-avatar-small" style="background: ${player.avatarColor || '#e11d48'};">${player.avatar || '?'}</div>
+                    <div class="player-avatar-small" style="background: ${player.avatarColor};">${player.avatar}</div>
                     <span class="player-name-col">${player.name}</span>
                     ${player.isCurrentUser ? '<span class="you-badge">Tú</span>' : ''}
                 </div>
@@ -698,9 +588,187 @@ function updateRankingTable(players) {
         
         tableBody.appendChild(row);
     });
+    
+    // Actualizar la paginación
+    updatePagination(1, Math.ceil(data.length / 10));
 }
 
-// Actualizar paginación
+// Cargar tabla de ranking
+function loadRankingTable(game, gameData) {
+    console.log(`Cargando tabla de ranking para el juego: ${game}`);
+        
+        // Mostrar indicador de carga
+    const tableBody = document.querySelector('#ranking-table-body');
+    if (tableBody) {
+        tableBody.innerHTML = `
+            <tr class="loading-row">
+                <td colspan="5">
+                    <div class="loading-spinner"></div> Cargando ranking...
+                </td>
+            </tr>
+        `;
+    }
+    
+    // Obtener filtro actual
+    const activeFilter = document.querySelector('.filter-btn.active');
+    const filterType = activeFilter ? activeFilter.getAttribute('data-filter') : 'global';
+    
+    // Realizar fetch para obtener datos de ranking
+    fetch(`${apiBaseUrl}/games/${game}/ranking?filter=${filterType}&page=1`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al cargar el ranking');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Renderizar la tabla con los datos reales
+            renderRankingTable(data.players, gameData);
+            
+            // Actualizar título de la sección según el juego
+            const rankingTitle = document.querySelector('.ranking-table-section .section-title');
+            if (rankingTitle) {
+                rankingTitle.textContent = `Clasificación Global - ${gameData.title}`;
+            }
+            
+            // Añadir efecto de fila destacada con desplazamiento suave
+            setTimeout(function() {
+                const highlightRow = document.querySelector('.highlight-row');
+                if (highlightRow) {
+                    highlightRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    
+                    // Añadir un efecto de destello a la fila del usuario
+                    highlightRow.classList.add('flash-highlight');
+        setTimeout(() => {
+                        highlightRow.classList.remove('flash-highlight');
+                    }, 1500);
+                }
+            }, 500);
+            
+            // Actualizar la paginación
+            updatePagination(data.currentPage, data.totalPages);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            if (tableBody) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            No se pudo cargar el ranking. Intente nuevamente más tarde.
+                        </td>
+                    </tr>
+                `;
+            }
+        });
+}
+
+// Cargar los 3 mejores jugadores
+function loadTopPlayers(game) {
+    console.log(`Cargando top players para el juego: ${game}`);
+    
+    // Colores para los avatares de los top jugadores
+    const topColors = [
+        'linear-gradient(135deg, #ffd700, #ffaa33)', // Oro para #1
+        'linear-gradient(135deg, #c0c0c0, #e5e5e5)', // Plata para #2
+        'linear-gradient(135deg, #cd7f32, #dda15e)'  // Bronce para #3
+    ];
+    
+    // Realizar fetch para obtener top players
+    fetch(`${apiBaseUrl}/games/${game}/top-players`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al cargar los mejores jugadores');
+            }
+            return response.json();
+        })
+        .then(players => {
+            // Actualizar el grid de top players con animación
+            players.forEach((player, index) => {
+                // Seleccionar elementos
+                const nameElement = document.getElementById(`top-player-${player.rank}-name`);
+                const scoreElement = document.getElementById(`top-player-${player.rank}-score`);
+                const playerCard = document.querySelector(`.top-player-card.rank-${player.rank}`);
+                
+                // Añadir una clase para la animación de entrada
+                if (playerCard) {
+                    // Limpiar clases previas
+                    playerCard.classList.remove('animate-in');
+                    
+                    // Reflow para reiniciar la animación
+                    void playerCard.offsetWidth;
+                    
+                    // Añadir animación con delay según la posición
+                    playerCard.style.animationDelay = `${index * 0.2}s`;
+                    playerCard.classList.add('animate-in');
+                    
+                    // Actualizar avatar
+                    const avatarElement = playerCard.querySelector('.player-avatar');
+                    if (avatarElement) {
+                        avatarElement.textContent = player.avatar || player.name.charAt(0).toUpperCase();
+                        avatarElement.style.background = topColors[index];
+                    }
+                }
+                
+                // Actualizar textos con animación de contador
+                if (nameElement) {
+                    nameElement.textContent = player.name;
+                }
+                
+                if (scoreElement) {
+                    // Animación de contador para el puntaje
+                    animateCounter(scoreElement, 0, player.score, 1500);
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Actualizar con mensajes de error o datos de respaldo
+            for (let i = 1; i <= 3; i++) {
+                const nameElement = document.getElementById(`top-player-${i}-name`);
+                const scoreElement = document.getElementById(`top-player-${i}-score`);
+                
+                if (nameElement) nameElement.textContent = 'Sin datos';
+                if (scoreElement) scoreElement.textContent = '-';
+            }
+        });
+}
+
+// Animación de contador para números
+function animateCounter(element, start, end, duration) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const value = Math.floor(progress * (end - start) + start);
+        element.textContent = value;
+        if (progress < 1) {
+            window.requestAnimationFrame(step);
+        } else {
+            element.textContent = end;
+        }
+    };
+    window.requestAnimationFrame(step);
+}
+
+// Formatear tiempo de última actividad de forma más amigable
+function formatTimeAgo(days) {
+    if (days === 0) {
+        return 'Hoy';
+    } else if (days === 1) {
+        return 'Ayer';
+    } else if (days < 7) {
+        return `hace ${days} días`;
+    } else if (days < 14) {
+        return 'hace 1 semana';
+    } else if (days < 30) {
+        return `hace ${Math.floor(days / 7)} semanas`;
+    } else {
+        return `hace ${Math.floor(days / 30)} meses`;
+    }
+}
+
+// Actualizar información de paginación
 function updatePagination(currentPage, totalPages) {
     const prevBtn = document.getElementById('prev-page-btn');
     const nextBtn = document.getElementById('next-page-btn');
@@ -709,12 +777,13 @@ function updatePagination(currentPage, totalPages) {
     if (prevBtn) {
         prevBtn.disabled = currentPage <= 1;
         
-        // Eliminar event listeners anteriores
+        // Eliminar event listeners anteriores para evitar duplicación
         const newPrevBtn = prevBtn.cloneNode(true);
         prevBtn.parentNode.replaceChild(newPrevBtn, prevBtn);
         
         newPrevBtn.addEventListener('click', () => {
             if (currentPage > 1) {
+                // Cargar página anterior
                 loadRankingPage(currentPage - 1);
             }
         });
@@ -723,12 +792,13 @@ function updatePagination(currentPage, totalPages) {
     if (nextBtn) {
         nextBtn.disabled = currentPage >= totalPages;
         
-        // Eliminar event listeners anteriores
+        // Eliminar event listeners anteriores para evitar duplicación
         const newNextBtn = nextBtn.cloneNode(true);
         nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
         
         newNextBtn.addEventListener('click', () => {
             if (currentPage < totalPages) {
+                // Cargar página siguiente
                 loadRankingPage(currentPage + 1);
             }
         });
@@ -741,10 +811,8 @@ function updatePagination(currentPage, totalPages) {
 
 // Cargar una página específica del ranking
 function loadRankingPage(page) {
-    console.log('Cargando página', page, 'del ranking');
-    
     // Mostrar indicador de carga
-    const tableBody = document.getElementById('ranking-table-body');
+    const tableBody = document.querySelector('#ranking-table-body');
     if (tableBody) {
         tableBody.innerHTML = `
             <tr class="loading-row">
@@ -759,517 +827,1075 @@ function loadRankingPage(page) {
     const activeFilter = document.querySelector('.filter-btn.active');
     const filterType = activeFilter ? activeFilter.getAttribute('data-filter') : 'global';
     
-    // Si tenemos API client, intentar cargar desde API
-    if (window.apiClient && typeof window.apiClient.getGlobalRanking === 'function') {
-        window.apiClient.getGlobalRanking(currentGame, filterType, page)
-            .then(data => {
-                if (data) {
-                    updateRankingUI(data);
-                } else {
-                    throw new Error('No se pudieron obtener datos del ranking');
-                }
-            })
-            .catch(error => {
-                console.error('Error al cargar página del ranking:', error);
-                // Fallback a datos simulados
-                const sampleData = generateSampleRanking();
-                sampleData.currentPage = page;
-                updateRankingUI(sampleData);
-            });
-    } else {
-        // Fallback a datos simulados
-        const sampleData = generateSampleRanking();
-        sampleData.currentPage = page;
-        setTimeout(() => {
-            updateRankingUI(sampleData);
-        }, 1000);
-    }
-}
-
-// Cargar logros del usuario para un juego específico
-async function loadAchievements(userIP, gameType) {
-    console.log('Cargando logros del usuario:', gameType);
-    showLoading('achievements');
-    
-    try {
-        let achievementsData = null;
-        
-        // Intentar obtener datos de la API
-        if (window.apiClient && typeof window.apiClient.getUserAchievements === 'function') {
-            try {
-                achievementsData = await window.apiClient.getUserAchievements(userIP, gameType);
-            } catch (error) {
-                console.warn('Error al obtener logros desde API:', error);
+    // Realizar fetch para obtener datos de la página
+    fetch(`${apiBaseUrl}/games/${currentGame}/ranking?filter=${filterType}&page=${page}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al cargar la página');
             }
-        }
-        
-        // Si no hay datos de la API, generar datos de ejemplo
-        if (!achievementsData) {
-            achievementsData = generateSampleAchievements();
-        }
-        
-        if (!achievementsData) {
-            throw new Error('No se pudieron obtener logros del usuario');
-        }
-        
-        // Actualizar la UI con los logros
-        updateAchievementsUI(achievementsData);
-        
-    } catch (error) {
-        console.error('Error al cargar logros:', error);
-        showError('Error al cargar logros.', 'achievements');
-    }
+            return response.json();
+        })
+        .then(data => {
+            // Obtener información del juego para las etiquetas
+            fetch(`${apiBaseUrl}/games/${currentGame}/info`)
+                .then(response => response.json())
+                .then(gameData => {
+                    // Renderizar resultados
+                    renderRankingTable(data.players, gameData);
+                    
+                    // Actualizar paginación
+                    updatePagination(data.currentPage, data.totalPages);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            
+            // Mostrar mensaje de error en la tabla
+            if (tableBody) {
+            tableBody.innerHTML = `
+                <tr>
+                        <td colspan="5" class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            No se pudo cargar la página ${page}. Intente nuevamente más tarde.
+                    </td>
+                </tr>
+            `;
+            }
+        });
 }
 
-// Generar datos de logros de ejemplo
-function generateSampleAchievements() {
-    return [
-        {
-            id: 'first-win',
-            title: 'Primera Victoria',
-            description: 'Gana tu primera partida',
-            icon: 'trophy',
-            status: 'unlocked',
-            progress: 100,
-            reward: '10 XP'
-        },
-        {
-            id: 'streak-3',
-            title: 'Racha de 3',
-            description: 'Gana 3 partidas seguidas',
-            icon: 'fire',
-            status: 'in-progress',
-            progress: 67,
-            reward: '50 XP'
-        },
-        {
-            id: 'perfectionist',
-            title: 'Perfeccionista',
-            description: 'Completa un juego sin errores',
-            icon: 'check-double',
-            status: 'locked',
-            progress: 0,
-            reward: '100 XP'
-        },
-        {
-            id: 'explorer',
-            title: 'Explorador',
-            description: 'Juega 10 partidas completas',
-            icon: 'compass',
-            status: 'in-progress',
-            progress: 40,
-            reward: '30 XP'
-        }
-    ];
-}
-
-// Actualizar la UI de logros
-function updateAchievementsUI(achievementsData) {
-    console.log('Actualizando UI de logros');
+// Cargar datos de estadísticas
+function loadStatisticsData(game) {
+    console.log(`Cargando datos de estadísticas para el juego: ${game}`);
     
-    // Obtener el contenedor de logros
-    const achievementsContainer = document.querySelector('.achievements-content');
-    if (!achievementsContainer) {
-        console.error('No se encontró el contenedor de logros');
-        return;
+    // Mostrar indicador de carga para estadísticas
+    const statsLoading = document.getElementById('stats-loading');
+    if (statsLoading) {
+        statsLoading.style.display = 'flex';
     }
     
-    // Construir el HTML para los logros
-    achievementsContainer.innerHTML = `
-        <h2 class="section-title">Logros del juego</h2>
-        <div class="achievements-grid">
-            ${achievementsData.map(achievement => `
-                <div class="achievement-card ${achievement.status}">
-                    <div class="achievement-icon">
-                        <i class="fas fa-${achievement.icon}"></i>
-                    </div>
-                    <div class="achievement-info">
-                        <h3 class="achievement-title">${achievement.title}</h3>
-                        <p class="achievement-description">${achievement.description}</p>
-                        ${achievement.status === 'in-progress' ? 
-                            `<div class="achievement-progress">
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: ${achievement.progress}%"></div>
-                                </div>
-                                <span class="progress-text">${achievement.progress}%</span>
-                            </div>` : ''
-                        }
-                        <div class="achievement-reward">${achievement.reward}</div>
-                    </div>
-                    <div class="achievement-status-icon">
-                        ${achievement.status === 'unlocked' ? 
-                            '<i class="fas fa-check-circle"></i>' : 
-                            (achievement.status === 'in-progress' ? 
-                                '<i class="fas fa-spinner"></i>' : 
-                                '<i class="fas fa-lock"></i>')
-                        }
-                    </div>
+    const statsContent = document.querySelector('#stats-content .stats-content');
+    if (statsContent) {
+        statsContent.style.opacity = '0.3';
+    }
+    
+    const detailedStatsSection = document.querySelector('#stats-content .detailed-stats-section');
+    if (!detailedStatsSection) return;
+    
+    // Realizar fetch para obtener estadísticas detalladas
+    fetch(`${apiBaseUrl}/user/stats/${game}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al cargar estadísticas');
+            }
+            return response.json();
+        })
+        .then(statsData => {
+            // Ocultar indicador de carga
+            if (statsLoading) {
+                statsLoading.style.display = 'none';
+            }
+            if (statsContent) {
+                statsContent.style.opacity = '1';
+            }
+            
+            // Limpiar contenido existente
+            detailedStatsSection.innerHTML = '';
+            
+            // Generar estadísticas específicas según el juego
+            let statsHTML = '';
+            
+            if (game === 'pasala-che') {
+                // Estadísticas para PASALA CHE (juego de rosco)
+                statsHTML = generateRoscoStatsFromData(statsData);
+            } else {
+                // Estadísticas para QUIÉN SABE MÁS (preguntas)
+                statsHTML = generateQuizStatsFromData(statsData);
+            }
+            
+            detailedStatsSection.innerHTML = statsHTML;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            
+            // Ocultar indicador de carga
+            if (statsLoading) {
+                statsLoading.style.display = 'none';
+            }
+            if (statsContent) {
+                statsContent.style.opacity = '1';
+            }
+            
+            detailedStatsSection.innerHTML = `
+                        <div class="placeholder-message">
+                    <i class="fas fa-chart-line"></i>
+                    <p>No se pudieron cargar las estadísticas. Intente nuevamente más tarde.</p>
                 </div>
-            `).join('')}
+            `;
+        });
+}
+
+// Generar estadísticas de visualización para el juego PASALA CHE con datos reales
+function generateRoscoStatsFromData(data) {
+    return `
+        <h2 class="section-title">Estadísticas de PASALA CHE</h2>
+        
+        <div class="game-stats-summary">
+            <div class="stat-card">
+                <div class="stat-card-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <div class="stat-card-value">${data.totalRoscos || 0}</div>
+                <div class="stat-card-label">Roscos Completados</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-card-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-card-value">${data.avgLetters || 0}</div>
+                <div class="stat-card-label">Promedio de Aciertos</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-card-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                <div class="stat-card-value">${data.bestRosco || 0}</div>
+                <div class="stat-card-label">Mejor Rosco</div>
+            </div>
+        </div>
+        
+        <h3 class="subsection-title">Precisión por Letra</h3>
+        <div class="letter-accuracy-grid">
+            ${generateLetterAccuracyHTML(data.letterStats || {})}
+        </div>
+        
+        <h3 class="subsection-title">Últimos Roscos</h3>
+        <div class="recent-games">
+            ${data.lastGames && data.lastGames.length > 0 ? 
+                data.lastGames.map(game => `
+                    <div class="recent-game-card">
+                        <div class="game-date">${formatDate(game.date)}</div>
+                        <div class="rosco-stats-preview">
+                            <div class="rosco-circle correct">${game.correct}</div>
+                            <div class="rosco-circle incorrect">${game.incorrect}</div>
+                            <div class="rosco-circle pending">${27 - game.correct - game.incorrect}</div>
+                        </div>
+                    </div>
+                `).join('') : 
+                `<div class="placeholder-message">
+                    <i class="fas fa-history"></i>
+                    <p>No hay roscos recientes para mostrar</p>
+                </div>`
+            }
         </div>
     `;
-    
-    // Ocultar indicador de carga
-    hideLoading('achievements');
 }
 
-// Funciones de carga/error
-function showLoading(section) {
-    // Mostrar indicador de carga general
-    const loadingEl = document.getElementById(`${section ? section + '-' : ''}loading`);
-    if (loadingEl) {
-        loadingEl.style.display = 'flex';
-    }
-    
-    // Reducir opacidad del contenido
-    const contentEl = document.getElementById(`${section ? section + '-' : ''}content`);
-    if (contentEl) {
-        contentEl.style.opacity = '0.3';
-    }
+// Generar estadísticas de visualización para el juego QUIÉN SABE MÁS con datos reales
+function generateQuizStatsFromData(data) {
+    return `
+        <h2 class="section-title">Estadísticas de ¿QUIÉN SABE MÁS?</h2>
+        
+        <div class="game-stats-summary">
+            <div class="stat-card">
+                <div class="stat-card-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <div class="stat-card-value">${data.totalQuestions || 0}</div>
+                <div class="stat-card-label">Preguntas Respondidas</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-card-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="stat-card-value">${data.correctAnswers || 0}</div>
+                <div class="stat-card-label">Respuestas Correctas</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-card-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="stat-card-value">${data.accuracy || 0}%</div>
+                <div class="stat-card-label">Precisión Total</div>
+            </div>
+        </div>
+        
+        <h3 class="subsection-title">Rendimiento por Categoría</h3>
+        <div class="category-accuracy">
+            ${generateCategoryAccuracyHTML(data.categories || {})}
+        </div>
+        
+        <h3 class="subsection-title">Últimas Partidas</h3>
+        <div class="recent-games">
+            ${data.lastGames && data.lastGames.length > 0 ? 
+                data.lastGames.map(game => `
+                    <div class="recent-game-card">
+                        <div class="game-date">${formatDate(game.date)}</div>
+                        <div class="game-questions">${game.questions} preguntas</div>
+                        <div class="quiz-stats-preview">
+                            <div class="question-counter">
+                                ${Array(game.correct).fill('<div class="question-dot correct"></div>').join('')}
+                                ${Array(game.incorrect).fill('<div class="question-dot incorrect"></div>').join('')}
+                                ${Array(game.skipped).fill('<div class="question-dot skipped"></div>').join('')}
+                            </div>
+                            <div class="correctness-ratio">${game.correct}/${game.questions}</div>
+                        </div>
+                    </div>
+                `).join('') : 
+                `<div class="placeholder-message">
+                    <i class="fas fa-history"></i>
+                    <p>No hay partidas recientes para mostrar</p>
+                </div>`
+            }
+        </div>
+    `;
 }
 
-function hideLoading(section) {
-    // Ocultar indicador de carga
-    const loadingEl = document.getElementById(`${section ? section + '-' : ''}loading`);
-    if (loadingEl) {
-        loadingEl.style.display = 'none';
-    }
-    
-    // Restaurar opacidad del contenido
-    const contentEl = document.getElementById(`${section ? section + '-' : ''}content`);
-    if (contentEl) {
-        contentEl.style.opacity = '1';
-    }
-}
-
-function showError(message, section) {
-    const contentEl = document.getElementById(`${section ? section + '-' : ''}content`);
-    if (contentEl) {
-        contentEl.innerHTML = `
-            <div class="error-message">
-                <i class="fas fa-exclamation-circle"></i>
-                <p>${message}</p>
+// Generar HTML para la precisión por letra
+function generateLetterAccuracyHTML(letterStats) {
+    return Object.entries(letterStats).map(([letter, accuracy]) => {
+        const colorClass = accuracy >= 80 ? 'high' : (accuracy >= 60 ? 'medium' : 'low');
+        return `
+            <div class="letter-accuracy-item ${colorClass}">
+                <div class="letter">${letter}</div>
+                <div class="accuracy-bar">
+                    <div class="accuracy-fill" style="width: ${accuracy}%"></div>
+                </div>
+                <div class="accuracy-percentage">${accuracy}%</div>
             </div>
         `;
-    }
-    hideLoading(section);
+    }).join('');
 }
 
-// Obtener configuración por defecto para un juego en caso de error de API
-function getDefaultGameData(game) {
-    if (game === 'pasala-che') {
-        return {
-            id: 'pasala-che',
-            title: 'Pasala Che',
-            description: 'Juego de palabras con definiciones',
-            iconClass: 'fa-spell-check',
-            stats: [
-                { label: 'Jugadas', value: 0 },
-                { label: 'Ganadas', value: 0 },
-                { label: 'Precisión', value: '0%' }
-            ],
-            statLabels: {
-                gamesPlayed: 'Jugadas',
-                gamesWon: 'Ganadas',
-                avgAccuracy: 'Precisión'
-            },
-            rankingLabels: {
-                positionLabel: 'Posición',
-                playerLabel: 'Jugador',
-                scoreLabel: 'Puntos',
-                gamesLabel: 'Partidas',
-                lastPlayedLabel: 'Última Partida'
-            }
-        };
-    } else {
-        return {
-            id: 'quien-sabe-mas',
-            title: 'Quién Sabe Más',
-            description: 'Juego de preguntas y respuestas',
-            iconClass: 'fa-question-circle',
-            stats: [
-                { label: 'Jugadas', value: 0 },
-                { label: 'Máx. Puntos', value: 0 },
-                { label: 'Precisión', value: '0%' }
-            ],
-            statLabels: {
-                gamesPlayed: 'Jugadas',
-                highestScore: 'Máx. Puntos',
-                avgAccuracy: 'Precisión'
-            },
-            rankingLabels: {
-                positionLabel: 'Posición', 
-                playerLabel: 'Jugador',
-                scoreLabel: 'Puntos',
-                answersLabel: 'Respuestas',
-                lastPlayedLabel: 'Última Partida'
-            }
-        };
-    }
+// Generar HTML para la precisión por categoría
+function generateCategoryAccuracyHTML(categories) {
+    return Object.entries(categories).map(([category, accuracy]) => {
+        const colorClass = accuracy >= 80 ? 'high' : (accuracy >= 60 ? 'medium' : 'low');
+        return `
+            <div class="category-accuracy-item ${colorClass}">
+                <div class="category-name">${category}</div>
+                <div class="accuracy-bar">
+                    <div class="accuracy-fill" style="width: ${accuracy}%"></div>
+                </div>
+                <div class="accuracy-percentage">${accuracy}%</div>
+            </div>
+        `;
+    }).join('');
 }
 
-// Exportar funciones principales para que sean accesibles globalmente
-window.loadUserDataAndGame = loadUserDataAndGame;
-window.loadRanking = loadRanking;
-window.loadUserStats = loadUserStats;
-window.loadAchievements = loadAchievements;
-window.getLocalRanking = generateSampleRanking;
-window.getLocalUserStats = getLocalUserStats;
-window.getLocalUserAchievements = generateSampleAchievements;
-window.getLocalTopPlayers = function(gameType) {
-    const ranking = generateSampleRanking();
-    return ranking.players.slice(0, 3);
-};
-window.getLocalGlobalStats = function(gameType) {
-    const ranking = generateSampleRanking();
-    return {
-        totalPlayers: ranking.totalPlayers,
-        totalGames: ranking.totalGames,
-        avgScore: ranking.avgScore,
-        maxScore: ranking.maxScore
-    };
-};
-window.searchLocalPlayers = function(gameType, query) {
-    const ranking = generateSampleRanking();
-    const filteredPlayers = ranking.players.filter(player => 
-        player.name.toLowerCase().includes(query.toLowerCase())
-    );
-    return {
-        players: filteredPlayers,
-        count: filteredPlayers.length,
-        term: query
-    };
-};
-window.updateStats = updateStats || function(statsData) {
-    console.log('Actualizando estadísticas con:', statsData);
-    // Si no existe la función original, usar esta implementación básica
-    if (!statsData) return;
+// Formatear fecha
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+
+// Cargar datos de logros
+function loadAchievementsData(game) {
+    const achievementsContainer = document.querySelector('#achievements-content .achievements-content');
     
-    try {
-        // Actualizar gráficos si están disponibles
-        if (window.statsCharts && statsData) {
-            updateStatsCharts(statsData);
-        }
-        
-        // Actualizar contadores
-        if (statsData.gamesPlayed !== undefined) {
-            document.getElementById('gamesPlayed').textContent = statsData.gamesPlayed;
-        }
-        if (statsData.gamesWon !== undefined) {
-            document.getElementById('gamesWon').textContent = statsData.gamesWon;
-        }
-        if (statsData.winRate !== undefined) {
-            document.getElementById('winRate').textContent = `${statsData.winRate}%`;
-        }
-        if (statsData.highScore !== undefined) {
-            document.getElementById('highScore').textContent = statsData.highScore;
-        }
-        if (statsData.accuracy !== undefined) {
-            document.getElementById('accuracy').textContent = `${statsData.accuracy}%`;
-        }
-        if (statsData.averageTime !== undefined) {
-            const minutes = Math.floor(statsData.averageTime / 60);
-            const seconds = statsData.averageTime % 60;
-            document.getElementById('averageTime').textContent = `${minutes}m ${seconds}s`;
-        }
-    } catch (error) {
-        console.error('Error al actualizar estadísticas:', error);
-    }
-};
-window.updateProfile = updateProfile || function(userData, gameInfo) {
-    console.log('Actualizando perfil con:', userData, gameInfo);
-    // Si no existe la función original, usar esta implementación básica
-    if (!userData) return;
+    if (!achievementsContainer) return;
     
-    try {
-        // Actualizar nombre de usuario
-        if (userData.username) {
-            const usernameElements = document.querySelectorAll('.username-display');
-            usernameElements.forEach(el => {
-                el.textContent = userData.username;
-            });
-        }
-        
-        // Actualizar nivel y XP
-        if (userData.level !== undefined) {
-            document.getElementById('userLevel').textContent = userData.level;
-        }
-        
-        // Actualizar barra de progreso
-        if (userData.xp !== undefined && userData.totalXp !== undefined) {
-            const progress = (userData.xp / userData.totalXp) * 100;
-            const progressBar = document.querySelector('.progress-bar-fill');
-            if (progressBar) {
-                progressBar.style.width = `${progress}%`;
+    showLoading('achievements');
+    
+    // Obtener IP del usuario para recuperar logros
+    const userIP = localStorage.getItem('userIP') || 'unknown';
+    const storageKey = `userAchievements_${userIP}`;
+    
+    setTimeout(() => {
+        // Obtener logros guardados
+        let savedAchievements = [];
+        try {
+            const achievementsData = localStorage.getItem(storageKey);
+            if (achievementsData) {
+                savedAchievements = JSON.parse(achievementsData);
             }
-            
-            // Actualizar contador de XP
-            const xpCounter = document.getElementById('xpCounter');
-            if (xpCounter) {
-                xpCounter.textContent = `${userData.xp}/${userData.totalXp} XP`;
-            }
+        } catch (error) {
+            console.error('Error al cargar logros:', error);
         }
         
-        // Actualizar avatar si existe
-        if (userData.username) {
-            const avatarElements = document.querySelectorAll('.user-avatar');
-            const initial = userData.username.charAt(0).toUpperCase();
-            avatarElements.forEach(el => {
-                el.textContent = initial;
-            });
-        }
-    } catch (error) {
-        console.error('Error al actualizar perfil:', error);
-    }
-};
-window.updateAchievements = updateAchievements || function(achievementsData) {
-    console.log('Actualizando logros con:', achievementsData);
-    // Si no existe la función original, usar esta implementación básica
-    if (!achievementsData || !Array.isArray(achievementsData)) return;
-    
-    try {
-        const achievementsContainer = document.getElementById('achievements-container');
-        if (!achievementsContainer) return;
+        // Verificar si tenemos definiciones de logros disponibles en la ventana global
+        const achievementDefinitions = window.gameAchievements || [];
         
-        // Limpiar contenedor
-        achievementsContainer.innerHTML = '';
-        
-        // Generar HTML para cada logro
-        achievementsData.forEach(achievement => {
-            const achievementCard = document.createElement('div');
-            achievementCard.className = `achievement-card ${achievement.status}`;
+        // Combinar definiciones con datos guardados
+        const achievements = savedAchievements.map(savedAchievement => {
+            // Buscar definición completa del logro
+            const definition = achievementDefinitions.find(a => a.id === savedAchievement.id);
             
-            const progressPercent = achievement.progress || 0;
-            const statusText = getStatusText(achievement.status);
-            
-            achievementCard.innerHTML = `
-                <div class="achievement-icon">
-                    <i class="fas fa-${achievement.icon || 'trophy'}"></i>
-                </div>
-                <div class="achievement-info">
-                    <h3>${achievement.title}</h3>
-                    <p>${achievement.description}</p>
-                    <div class="achievement-progress">
-                        <div class="progress-bar">
-                            <div class="progress-bar-fill" style="width: ${progressPercent}%"></div>
-                        </div>
-                        <div class="progress-text">${progressPercent}% - ${statusText}</div>
-                    </div>
-                    <div class="achievement-reward">${achievement.reward || ''}</div>
-                </div>
-            `;
-            
-            achievementsContainer.appendChild(achievementCard);
+            // Combinar datos guardados con definición
+            return {
+                ...savedAchievement,
+                icon: savedAchievement.icon || (definition ? definition.icon : 'fas fa-trophy'),
+                title: savedAchievement.title || (definition ? definition.title : savedAchievement.id),
+                description: savedAchievement.description || (definition ? definition.description : 'Logro desbloqueado'),
+                category: savedAchievement.category || (definition ? definition.category : 'beginner'),
+                maxCount: definition ? definition.maxCount : 1
+            };
         });
         
-        // Mostrar mensaje si no hay logros
-        if (achievementsData.length === 0) {
+        // Ocultar loader
+        hideLoading('achievements');
+        
+        // Si no hay logros, mostrar mensaje
+        if (achievements.length === 0) {
             achievementsContainer.innerHTML = `
-                <div class="no-achievements">
-                    <i class="fas fa-trophy"></i>
-                    <p>No hay logros disponibles</p>
+                <div class="placeholder-message">
+                    <i class="fas fa-medal"></i>
+                    <p>Completa partidas para desbloquear logros</p>
                 </div>
             `;
-        }
-    } catch (error) {
-        console.error('Error al actualizar logros:', error);
-    }
-    
-    // Función auxiliar para obtener texto de estado
-    function getStatusText(status) {
-        switch (status) {
-            case 'unlocked':
-                return 'Desbloqueado';
-            case 'in-progress':
-                return 'En progreso';
-            case 'locked':
-                return 'Bloqueado';
-            default:
-                return 'Desconocido';
-        }
-    }
-};
-window.showNotification = showNotification || function(message, type = 'info') {
-    console.log(`Notificación (${type}): ${message}`);
-    // Si no existe la función original, usar esta implementación básica
-    
-    try {
-        // Usar gameCompletion.showToast si está disponible
-        if (window.gameCompletion && typeof window.gameCompletion.showToast === 'function') {
-            return window.gameCompletion.showToast(message, type);
+            return;
         }
         
-        // Crear elemento de notificación
-        const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
+        // Organizar logros por categoría
+        const categories = {
+            beginner: { name: 'Principiante', achievements: [] },
+            intermediate: { name: 'Intermedio', achievements: [] },
+            expert: { name: 'Experto', achievements: [] },
+            special: { name: 'Especial', achievements: [] }
+        };
         
-        // Añadir ícono según el tipo
-        let icon = 'info-circle';
-        if (type === 'success') icon = 'check-circle';
-        if (type === 'error') icon = 'exclamation-triangle';
-        if (type === 'warning') icon = 'exclamation-circle';
+        // Agrupar logros por categoría
+        achievements.forEach(achievement => {
+            const category = achievement.category || 'beginner';
+            if (categories[category]) {
+                categories[category].achievements.push(achievement);
+            } else {
+                categories.beginner.achievements.push(achievement);
+            }
+        });
         
-        notification.innerHTML = `
-            <i class="fas fa-${icon}"></i>
-            <span>${message}</span>
+        // Construir HTML para mostrar logros
+        let achievementsHTML = `
+            <div class="achievements-header">
+                <h2 class="section-title">Mis Logros</h2>
+                <p class="achievements-summary">Has desbloqueado <span class="highlight">${achievements.filter(a => a.unlocked).length}</span> de ${achievementDefinitions.length} logros disponibles</p>
+            </div>
         `;
         
-        // Estilos para la notificación
-        notification.style.position = 'fixed';
-        notification.style.top = '20px';
-        notification.style.right = '20px';
-        notification.style.padding = '10px 15px';
-        notification.style.borderRadius = '4px';
-        notification.style.display = 'flex';
-        notification.style.alignItems = 'center';
-        notification.style.gap = '10px';
-        notification.style.zIndex = '9999';
-        notification.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
-        notification.style.animation = 'slideIn 0.3s forwards';
-        
-        // Colores según el tipo
-        if (type === 'success') {
-            notification.style.backgroundColor = '#10b981';
-            notification.style.color = 'white';
-        } else if (type === 'error') {
-            notification.style.backgroundColor = '#ef4444';
-            notification.style.color = 'white';
-        } else if (type === 'warning') {
-            notification.style.backgroundColor = '#f59e0b';
-            notification.style.color = 'white';
-        } else {
-            notification.style.backgroundColor = '#3b82f6';
-            notification.style.color = 'white';
+        // Agregar secciones por categoría
+        for (const [catKey, category] of Object.entries(categories)) {
+            if (category.achievements.length > 0) {
+                achievementsHTML += `
+                    <div class="achievement-category">
+                        <h3 class="category-title">${category.name}</h3>
+                        <div class="achievement-cards">
+                `;
+                
+                // Agregar tarjetas de logros
+                category.achievements.forEach(achievement => {
+                    const isUnlocked = achievement.unlocked;
+                    const progress = achievement.maxCount > 1 
+                        ? Math.min(100, (achievement.count / achievement.maxCount) * 100) 
+                        : (isUnlocked ? 100 : 0);
+                    
+                    achievementsHTML += `
+                        <div class="achievement-card ${isUnlocked ? '' : 'locked-achievement'}" data-id="${achievement.id}">
+                            <div class="achievement-icon">
+                                <i class="${achievement.icon}"></i>
+                            </div>
+                            <div class="achievement-name">${achievement.title}</div>
+                            <div class="achievement-description">${achievement.description}</div>
+                            ${achievement.maxCount > 1 ? `
+                                <div class="achievement-progress">
+                                    <div class="achievement-progress-bar">
+                                        <div class="achievement-progress-fill" style="width: ${progress}%"></div>
+                                    </div>
+                                    <div class="achievement-count">${achievement.count || 0}/${achievement.maxCount}</div>
+                                </div>
+                            ` : ''}
+                            ${isUnlocked ? `<div class="achievement-date">${formatDate(achievement.date)}</div>` : ''}
+                        </div>
+                    `;
+                });
+                
+                achievementsHTML += `
+                        </div>
+                    </div>
+                `;
+            }
         }
         
-        // Añadir al DOM
-        document.body.appendChild(notification);
+        // Mostrar logros
+        achievementsContainer.innerHTML = achievementsHTML;
         
-        // Eliminar después de 3 segundos
-        setTimeout(() => {
-            notification.style.animation = 'slideOut 0.3s forwards';
-            setTimeout(() => {
-                notification.remove();
-            }, 300);
-        }, 3000);
-        
-        // Agregar keyframes para animaciones si no existen
-        if (!document.getElementById('notification-animations')) {
-            const style = document.createElement('style');
-            style.id = 'notification-animations';
-            style.textContent = `
-                @keyframes slideIn {
-                    from { transform: translateX(100%); opacity: 0; }
-                    to { transform: translateX(0); opacity: 1; }
+        // Agregar estilos dinámicamente si no existen
+        if (!document.getElementById('achievements-dynamic-styles')) {
+            const styleEl = document.createElement('style');
+            styleEl.id = 'achievements-dynamic-styles';
+            styleEl.textContent = `
+                .achievements-header {
+                    margin-bottom: 2rem;
+                    text-align: center;
                 }
-                @keyframes slideOut {
-                    from { transform: translateX(0); opacity: 1; }
-                    to { transform: translateX(100%); opacity: 0; }
+                
+                .achievements-summary {
+                    color: rgba(255, 255, 255, 0.7);
+                    margin-top: 0.5rem;
+                }
+                
+                .achievements-summary .highlight {
+                    color: #e11d48;
+                    font-weight: bold;
+                }
+                
+                .achievement-category {
+                    margin-bottom: 2rem;
+                }
+                
+                .category-title {
+                    font-size: 1.5rem;
+                    margin-bottom: 1rem;
+                    color: white;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                    padding-bottom: 0.5rem;
+                }
+                
+                .achievement-progress {
+                    width: 100%;
+                    margin-top: 0.5rem;
+                }
+                
+                .achievement-progress-bar {
+                    height: 6px;
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 3px;
+                    overflow: hidden;
+                    margin-bottom: 0.25rem;
+                }
+                
+                .achievement-progress-fill {
+                    height: 100%;
+                    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+                    border-radius: 3px;
+                    transition: width 0.5s ease;
+                }
+                
+                .achievement-count {
+                    font-size: 0.75rem;
+                    text-align: right;
+                    color: rgba(255, 255, 255, 0.6);
+                }
+                
+                .locked-achievement .achievement-progress-fill {
+                    background: rgba(255, 255, 255, 0.2);
                 }
             `;
-            document.head.appendChild(style);
+            document.head.appendChild(styleEl);
         }
-    } catch (error) {
-        console.error('Error al mostrar notificación:', error);
+    }, 1000);
+}
+
+// Inicializar filtros de ranking
+function initRankingFilters() {
+    console.log('Inicializando filtros de ranking');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+    if (filterButtons.length > 0) {
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Obtener tipo de filtro seleccionado
+                const filterType = this.getAttribute('data-filter');
+                console.log(`Filtro seleccionado: ${filterType}`);
+                
+                // Recargar tabla con el filtro seleccionado
+                loadRankingTable(currentGame);
+            });
+        });
+    } else {
+        console.warn('No se encontraron botones de filtro');
     }
-}; 
+    
+    // Inicializar búsqueda
+    const searchForm = document.querySelector('.filter-search');
+    if (searchForm) {
+        const searchBtn = document.querySelector('#ranking-search-btn');
+        if (searchBtn) {
+            searchBtn.addEventListener('click', handleSearch);
+        }
+        
+        const searchInput = document.querySelector('#ranking-search');
+        if (searchInput) {
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleSearch(e);
+                }
+            });
+        }
+    } else {
+        console.warn('No se encontró el formulario de búsqueda');
+    }
+}
+
+// Manejar la búsqueda
+function handleSearch(event) {
+    event.preventDefault();
+    const searchInput = document.querySelector('#ranking-search');
+    if (searchInput) {
+        const searchTerm = searchInput.value.trim();
+        if (searchTerm) {
+            console.log(`Búsqueda: ${searchTerm}`);
+            
+            // Realizar búsqueda con API
+            fetch(`${apiBaseUrl}/games/${currentGame}/ranking/search?term=${encodeURIComponent(searchTerm)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la búsqueda');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Obtener información del juego para las etiquetas
+                    fetch(`${apiBaseUrl}/games/${currentGame}/info`)
+                        .then(response => response.json())
+                        .then(gameData => {
+                            // Renderizar resultados
+                            renderRankingTable(data.players, gameData);
+                            
+                            // Actualizar título para mostrar que es un resultado de búsqueda
+                            const rankingTitle = document.querySelector('.ranking-table-section .section-title');
+                            if (rankingTitle) {
+                                rankingTitle.textContent = `Resultados de "${searchTerm}" - ${gameData.title}`;
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                        });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    
+                    // Mostrar mensaje de error en la tabla
+                    const tableBody = document.querySelector('#ranking-table-body');
+                    if (tableBody) {
+                        tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="5" class="error-message">
+                                    <i class="fas fa-search"></i>
+                                    No se encontraron resultados para "${searchTerm}"
+                                </td>
+                            </tr>
+                        `;
+                    }
+                });
+        }
+    }
+}
+
+// Actualizar la información del perfil de usuario
+function updateUserProfileInfo(userData) {
+    console.log('Actualizando información de perfil de usuario');
+    
+    // Actualizar nombre de usuario
+    const usernameElement = document.querySelector('.profile-username');
+    if (usernameElement) {
+        usernameElement.textContent = userData.username;
+    } else {
+        console.warn('No se encontró el elemento .profile-username');
+    }
+    
+    // Actualizar nivel
+    const levelBadgeElement = document.querySelector('.level-badge');
+    if (levelBadgeElement) {
+        levelBadgeElement.textContent = `${userData.level}`;
+    } else {
+        console.warn('No se encontró el elemento .level-badge');
+    }
+    
+    const profileLevelText = document.querySelector('.profile-level-text');
+    if (profileLevelText) {
+        profileLevelText.textContent = `Nivel ${userData.level}`;
+    }
+    
+    // Actualizar progreso de nivel
+    const currentLevel = userData.level;
+    const currentXP = userData.xp;
+    const totalXPForNextLevel = userData.totalXp;
+    const progressPercentage = (currentXP / totalXPForNextLevel) * 100;
+    
+    const currentLevelElement = document.querySelector('.current-level');
+    if (currentLevelElement) {
+        currentLevelElement.textContent = `Nivel ${currentLevel}`;
+    } else {
+        console.warn('No se encontró el elemento .current-level');
+    }
+    
+    const xpProgressElement = document.querySelector('.xp-progress');
+    if (xpProgressElement) {
+        xpProgressElement.textContent = `${currentXP.toLocaleString()} / ${totalXPForNextLevel.toLocaleString()} XP`;
+    } else {
+        console.warn('No se encontró el elemento .xp-progress');
+    }
+    
+    const progressFillElement = document.querySelector('.level-progress-fill');
+    if (progressFillElement) {
+        progressFillElement.style.width = `${progressPercentage}%`;
+    } else {
+        console.warn('No se encontró el elemento .level-progress-fill');
+    }
+    
+    // Actualizar rango y mejor puntuación
+    const rankValueElement = document.querySelector('.rank-value');
+    if (rankValueElement) {
+        rankValueElement.textContent = `#${userData.rank}`;
+    } else {
+        console.warn('No se encontró el elemento .rank-value');
+    }
+    
+    const scoreValueElement = document.querySelector('.score-value');
+    if (scoreValueElement) {
+        scoreValueElement.textContent = userData.highScore;
+    } else {
+        console.warn('No se encontró el elemento .score-value');
+    }
+} 
+    /**
+     * Inicializa elementos de la interfaz
+     */
+    function initUI() {
+        // Mostrar/ocultar indicador de carga principal
+        const mainLoader = document.querySelector('.main-loading-container');
+        if (mainLoader) {
+            setTimeout(() => {
+                mainLoader.style.display = 'none';
+            }, 800);
+        }
+        
+        // Inicializar animación del ícono de la pelota
+        const iconElement = document.querySelector('.ball-icon');
+        function animateIcon() {
+            iconElement.classList.add('animate-bounce');
+            setTimeout(() => {
+                iconElement.classList.remove('animate-bounce');
+                setTimeout(animateIcon, 3000);
+            }, 1000);
+        }
+        if (iconElement) {
+            animateIcon();
+        }
+    }
+    
+    /**
+     * Configura el sistema de navegación por pestañas
+     */
+    function setupTabs() {
+        const tabs = document.querySelectorAll('.tab');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Obtener el ID de la pestaña seleccionada
+                const tabId = this.getAttribute('data-tab');
+                
+                // Actualizar pestañas activas
+                tabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Actualizar contenido activo
+                const tabContents = document.querySelectorAll('.tab-content');
+                tabContents.forEach(content => {
+                    if (content.id === `${tabId}-tab`) {
+                        content.classList.add('active');
+                        
+                        // Cargar datos para la pestaña activa si es necesario
+                        loadTabData(tabId);
+                    } else {
+                        content.classList.remove('active');
+                    }
+                });
+                
+                // Guardar la pestaña actual en localStorage
+                localStorage.setItem('activeTab', tabId);
+            });
+        });
+        
+        // Verificar si hay una pestaña guardada
+        const savedTab = localStorage.getItem('activeTab');
+        if (savedTab) {
+            const tabToActivate = document.querySelector(`.tab[data-tab="${savedTab}"]`);
+            if (tabToActivate) {
+                tabToActivate.click();
+            }
+        }
+    }
+    
+    /**
+     * Obtiene el ID de la pestaña actualmente activa
+     */
+    function getCurrentTab() {
+        const activeTab = document.querySelector('.tab.active');
+        return activeTab ? activeTab.getAttribute('data-tab') : 'profile';
+    }
+    
+    /**
+     * Carga los datos necesarios según la pestaña activa
+     */
+    function loadTabData(tabId) {
+        switch (tabId) {
+            case 'profile':
+                loadUserProfile();
+                break;
+            case 'stats':
+                loadUserStats();
+                break;
+            case 'ranking':
+                loadRanking();
+                break;
+            case 'achievements':
+                loadAchievements();
+                break;
+        }
+    }
+    
+    /**
+     * Carga datos básicos del usuario (nombre, nivel)
+     */
+    function loadUserData() {
+        // Obtener el nombre de usuario del almacenamiento local
+        const username = localStorage.getItem('playerName') || 'Jugador';
+        
+        // Actualizar nombre de usuario en la interfaz
+        const usernameElement = document.getElementById('profile-username');
+        if (usernameElement) usernameElement.textContent = username;
+        
+        // Calcular nivel del usuario basado en partidas jugadas y puntuación
+        const totalGamesPlayed = parseInt(localStorage.getItem('totalGamesPlayed') || '0');
+        const totalScore = parseInt(localStorage.getItem('totalScore') || '0');
+        
+        // Cálculo simple de nivel: 1 nivel por cada 5 partidas + 1 nivel por cada 500 puntos
+        const level = Math.max(1, Math.floor(totalGamesPlayed / 5) + Math.floor(totalScore / 500));
+        
+        // Actualizar nivel en la interfaz
+        const levelBadge = document.getElementById('level-badge');
+        const levelText = document.getElementById('profile-level-text');
+        
+        if (levelBadge) levelBadge.textContent = level;
+        if (levelText) levelText.textContent = `Nivel ${level}`;
+    }
+    
+    /**
+     * Carga los datos del perfil del usuario
+     */
+    function loadUserProfile() {
+        // Obtener estadísticas del juego seleccionado
+        let stats = getUserStats(currentGame);
+        
+        // Actualizar estadísticas en la interfaz
+        updateProfileStats(stats);
+        
+        // Cargar datos de resumen
+        loadUserSummary();
+    }
+    
+    /**
+     * Carga los datos de estadísticas detalladas
+     */
+    function loadUserStats() {
+        // Cargar historial de partidas
+        loadGameHistory();
+        
+        // En una implementación real aquí cargaríamos los gráficos
+        // Por ahora dejamos los mensajes de placeholder
+    }
+    
+    /**
+     * Carga los datos de resumen del usuario
+     */
+    function loadUserSummary() {
+        // En una implementación real, estos datos vendrían de una API
+        const firstGameDate = localStorage.getItem(`${currentGame}_firstGameDate`) || '-';
+        const bestScore = localStorage.getItem(`${currentGame}_bestScore`) || '-';
+        const currentRank = localStorage.getItem(`${currentGame}_playerRank`) || '-';
+        
+        // Actualizar en la interfaz
+        const firstGameElement = document.getElementById('first-game-date');
+        const bestScoreElement = document.getElementById('best-score');
+        const currentRankElement = document.getElementById('current-rank');
+        
+        if (firstGameElement) firstGameElement.textContent = firstGameDate;
+        if (bestScoreElement) bestScoreElement.textContent = bestScore;
+        if (currentRankElement) currentRankElement.textContent = currentRank;
+    }
+    
+    /**
+     * Obtiene las estadísticas del usuario para el juego seleccionado
+     */
+    function getUserStats(game) {
+        // En una implementación real, estos datos vendrían de una API
+        // Por ahora, obtenemos datos del localStorage
+        const prefix = game === 'pasala-che' ? 'pasalaChe_' : 'quienSabe_';
+        
+        return {
+            games: parseInt(localStorage.getItem(`${prefix}gamesPlayed`) || '0'),
+            wins: parseInt(localStorage.getItem(`${prefix}wins`) || '0'),
+            losses: parseInt(localStorage.getItem(`${prefix}losses`) || '0'),
+            accuracy: parseInt(localStorage.getItem(`${prefix}accuracy`) || '0')
+        };
+    }
+    
+    /**
+     * Actualiza las estadísticas en la página de perfil
+     */
+    function updateProfileStats(stats) {
+        // Actualizar elementos de estadísticas
+        const gamesElement = document.getElementById('stat-games');
+        const winsElement = document.getElementById('stat-wins');
+        const lossesElement = document.getElementById('stat-losses');
+        const accuracyElement = document.getElementById('stat-accuracy');
+        
+        if (gamesElement) gamesElement.textContent = stats.games;
+        if (winsElement) winsElement.textContent = stats.wins;
+        if (lossesElement) lossesElement.textContent = stats.losses;
+        if (accuracyElement) accuracyElement.textContent = `${stats.accuracy}%`;
+    }
+    
+    /**
+     * Carga el historial de partidas del usuario
+     */
+    function loadGameHistory() {
+        const historyContainer = document.querySelector('.game-history-container');
+        
+        if (!historyContainer) return;
+        
+        // Mostrar indicador de carga
+        historyContainer.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div></div>';
+        
+        // Simulamos una carga de datos
+        setTimeout(() => {
+            // En una implementación real, estos datos vendrían de una API
+            historyContainer.innerHTML = `
+                <div class="placeholder-message">
+                    <i class="fas fa-history"></i>
+                    <p>Juegue partidas para ver su historial</p>
+                </div>
+            `;
+        }, 1000);
+        
+        // Configurar filtros del historial
+        const historyTabs = document.querySelectorAll('.history-tab');
+        historyTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter');
+                
+                // Actualizar pestañas activas
+                historyTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Filtrar historial (en una implementación real)
+                // filterGameHistory(filter);
+            });
+        });
+    }
+    
+    /**
+     * Carga los logros del usuario
+     */
+    function loadAchievements() {
+        const achievementsContainer = document.querySelector('.achievements-grid');
+        
+        if (!achievementsContainer) return;
+        
+        // Mostrar indicador de carga
+        achievementsContainer.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div></div>';
+        
+        // Simulamos una carga de datos
+        setTimeout(() => {
+            // En una implementación real, estos datos vendrían de una API
+            achievementsContainer.innerHTML = `
+                <div class="placeholder-message">
+                    <i class="fas fa-trophy"></i>
+                    <p>Complete partidas para desbloquear logros</p>
+                </div>
+            `;
+            
+            // Actualizar la barra de progreso
+            const progressFill = document.querySelector('.progress-fill');
+            const progressText = document.getElementById('achievement-progress');
+            const completedElement = document.getElementById('completed-achievements');
+            const totalElement = document.getElementById('total-achievements');
+            
+            if (progressFill) progressFill.style.width = '0%';
+            if (progressText) progressText.textContent = '0%';
+            if (completedElement) completedElement.textContent = '0';
+            if (totalElement) totalElement.textContent = '10';
+        }, 1000);
+    }
+    
+    /**
+     * Carga el ranking de jugadores
+     */
+    function loadRanking() {
+        // Cargar estadísticas globales
+        loadGlobalStats();
+        
+        // Cargar Top Jugadores
+        loadTopPlayers();
+        
+        // Cargar tabla de ranking
+        loadRankingTable();
+    }
+    
+    /**
+     * Carga estadísticas globales para el ranking
+     */
+    function loadGlobalStats() {
+        // En una implementación real, estos datos vendrían de una API
+        const stats = {
+            players: '-',
+            games: '-',
+            avgScore: '-',
+            maxScore: '-'
+        };
+        
+        // Actualizar estadísticas en la interfaz
+        const playersElement = document.getElementById('total-players');
+        const gamesElement = document.getElementById('total-games');
+        const avgScoreElement = document.getElementById('avg-score');
+        const maxScoreElement = document.getElementById('max-score');
+        
+        if (playersElement) playersElement.textContent = stats.players;
+        if (gamesElement) gamesElement.textContent = stats.games;
+        if (avgScoreElement) avgScoreElement.textContent = stats.avgScore;
+        if (maxScoreElement) maxScoreElement.textContent = stats.maxScore;
+    }
+    
+    /**
+     * Carga los jugadores top en el ranking
+     */
+    function loadTopPlayers() {
+        const topPlayersContainer = document.querySelector('.top-players');
+        
+        if (!topPlayersContainer) return;
+        
+        // Mostrar indicador de carga
+        topPlayersContainer.innerHTML = '<div class="loading-container" style="grid-column: 1 / -1;"><div class="loading-spinner"></div></div>';
+        
+        // Simulamos una carga de datos
+        setTimeout(() => {
+            // En una implementación real, estos datos vendrían de una API
+            topPlayersContainer.innerHTML = `
+                <div class="placeholder-message" style="grid-column: 1 / -1;">
+                    <i class="fas fa-users"></i>
+                    <p>Jugando partidas para generar el ranking</p>
+                </div>
+            `;
+        }, 1000);
+    }
+    
+    /**
+     * Carga la tabla de ranking
+     */
+    function loadRankingTable() {
+        const tableBody = document.querySelector('.ranking-table tbody');
+        
+        if (!tableBody) return;
+        
+        // Mostrar indicador de carga
+        tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 30px;"><div class="loading-spinner" style="margin: 0 auto;"></div></td></tr>';
+        
+        // Simulamos una carga de datos
+        setTimeout(() => {
+            // En una implementación real, estos datos vendrían de una API
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 30px;">
+                        <div class="placeholder-message">
+                            <i class="fas fa-trophy"></i>
+                            <p>Complete partidas para aparecer en el ranking</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }, 1000);
+    }
+    
+    /**
+     * Configura el selector de juego
+     */
+    function setupGameSelector() {
+        const gameOptions = document.querySelectorAll('.game-option');
+        
+        gameOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Obtener el juego seleccionado
+                const game = this.getAttribute('data-game');
+                
+                // Actualizar juego actual
+                currentGame = game;
+                
+                // Actualizar clase del tema
+                document.body.classList.remove('pasala-che-theme', 'quien-sabe-theme');
+                document.body.classList.add(game === 'pasala-che' ? 'pasala-che-theme' : 'quien-sabe-theme');
+                
+                // Actualizar opciones activas
+                gameOptions.forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Actualizar título según el juego
+                updateTitle(game);
+                
+                // Volver a cargar los datos para la pestaña activa
+                loadTabData(getCurrentTab());
+            });
+        });
+    }
+    
+    /**
+     * Actualiza el título según el juego seleccionado
+     */
+    function updateTitle(game) {
+        const titleElement = document.querySelector('.title-text');
+        
+        if (!titleElement) return;
+        
+        titleElement.textContent = `CRACK TOTAL`;
+    }
+    
+    /**
+     * Configura los filtros del ranking
+     */
+    function setupRankingFilters() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Obtener el período seleccionado
+                const period = this.getAttribute('data-period');
+                
+                // Actualizar botones activos
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Actualizar título de la tabla
+                const tableTitle = document.querySelector('.ranking-table-section .section-title');
+                if (tableTitle) {
+                    const periodText = {
+                        'global': 'Global',
+                        'monthly': 'Mensual',
+                        'weekly': 'Semanal',
+                        'daily': 'Diario'
+                    }[period];
+                    
+                    tableTitle.textContent = `Clasificación ${periodText}`;
+                }
+                
+                // Recargar ranking según el período
+                loadRankingTable();
+            });
+        });
+    }
+    
+    // Función para conectarse a eventos de actualización en tiempo real (implementación futura)
+    function setupRealTimeUpdates() {
+        // En una implementación real, aquí se configuraría una conexión de WebSocket
+        // o polling para actualizar los datos en tiempo real
+    }
+}); 
