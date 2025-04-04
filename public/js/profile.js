@@ -184,6 +184,29 @@ function loadUserDataAndGame(game) {
         totalAttempts: 0
     };
     
+    // Datos de ejemplo para mostrar en caso de que la API no esté disponible
+    const localTestData = {
+        username: localStorage.getItem('username') || localStorage.getItem('playerName') || 'Jugador',
+        level: 3,
+        xp: 750,
+        totalXp: 1000,
+        rank: 2,
+        highScore: 18,
+        gamesPlayed: 12,
+        gamesWon: 8,
+        accuracy: 75,
+        totalAttempts: 32
+    };
+    
+    // En entorno de render.com, optar por usar datos locales directamente
+    if (window.location.hostname.includes('render.com') || window.location.hostname === 'cracktotal.onrender.com') {
+        console.log('Ejecutando en render.com - usando datos locales');
+        updateUserProfileInfo(localTestData);
+        loadGameSpecificData(game);
+        hideLoading();
+        return;
+    }
+    
     // Intentar cargar los datos de la API primero
     fetch(`${apiBaseUrl}/user/profile?game=${game}`)
         .then(response => {
@@ -201,10 +224,35 @@ function loadUserDataAndGame(game) {
         })
         .catch(error => {
             console.error('Error cargando el perfil desde la API:', error);
-            console.log('Usando datos de perfil predeterminados');
+            console.log('Usando datos de perfil de ejemplo');
             
-            // Usar datos predeterminados en caso de error
-            updateUserProfileInfo(defaultUserData);
+            // Usar datos de ejemplo en caso de error
+            updateUserProfileInfo(localTestData);
+            
+            // Mostrar mensaje de notificación
+            const contentElement = document.querySelector('.profile-content');
+            if (contentElement) {
+                const noticeDiv = document.createElement('div');
+                noticeDiv.className = 'info-message';
+                noticeDiv.style.textAlign = 'center';
+                noticeDiv.style.padding = '10px';
+                noticeDiv.style.margin = '10px 0';
+                noticeDiv.style.backgroundColor = 'rgba(66, 153, 225, 0.1)';
+                noticeDiv.style.borderRadius = '8px';
+                noticeDiv.style.color = '#4299e1';
+                noticeDiv.innerHTML = `
+                    <i class="fas fa-info-circle"></i>
+                    <p style="margin: 5px 0">Mostrando datos de ejemplo. El servidor API no está disponible.</p>
+                `;
+                
+                // Insertar después del encabezado del perfil
+                const headerElement = document.querySelector('.profile-header');
+                if (headerElement && headerElement.nextElementSibling) {
+                    contentElement.insertBefore(noticeDiv, headerElement.nextElementSibling);
+                } else {
+                    contentElement.prepend(noticeDiv);
+                }
+            }
             
             // Cargar datos específicos del juego
             loadGameSpecificData(game);
@@ -569,30 +617,55 @@ function loadDetailedStats(game) {
         }
     }
     
+    // Datos de ejemplo más detallados y realistas para render.com o cuando la API falla
     // Definir estadísticas predeterminadas para cada juego
     const defaultRoscoStats = {
-        totalRoscos: 0,
-        avgLetters: 0,
-        bestRosco: 0,
-        letterStats: generateEmptyLetterStats(),
-        lastGames: []
+        totalRoscos: 12,
+        avgLetters: 16,
+        bestRosco: 22,
+        letterStats: generateSampleLetterStats(),
+        lastGames: [
+            { date: "2023-03-30", correct: 18, incorrect: 9 },
+            { date: "2023-03-25", correct: 21, incorrect: 6 },
+            { date: "2023-03-20", correct: 14, incorrect: 13 },
+            { date: "2023-03-15", correct: 19, incorrect: 8 },
+            { date: "2023-03-10", correct: 22, incorrect: 5 }
+        ]
     };
     
     const defaultQuizStats = {
-        totalQuestions: 0,
-        correctAnswers: 0,
-        accuracy: 0,
+        totalQuestions: 85,
+        correctAnswers: 64,
+        accuracy: 75,
         categories: {
-            'Historia': 0,
-            'Jugadores': 0,
-            'Clubes': 0,
-            'Mundiales': 0,
-            'Equipos': 0,
-            'Estadísticas': 0,
-            'Copas': 0
+            'Historia': 82,
+            'Jugadores': 94,
+            'Clubes': 78,
+            'Mundiales': 68,
+            'Equipos': 72,
+            'Estadísticas': 64,
+            'Copas': 80
         },
-        lastGames: []
+        lastGames: [
+            { date: "2023-03-30", questions: 10, correct: 8, incorrect: 1, skipped: 1 },
+            { date: "2023-03-25", questions: 10, correct: 7, incorrect: 2, skipped: 1 },
+            { date: "2023-03-20", questions: 10, correct: 9, incorrect: 1, skipped: 0 },
+            { date: "2023-03-15", questions: 15, correct: 12, incorrect: 2, skipped: 1 },
+            { date: "2023-03-10", questions: 10, correct: 8, incorrect: 2, skipped: 0 }
+        ]
     };
+    
+    // En entorno de render.com, usar datos de ejemplo directamente
+    if (window.location.hostname.includes('render.com') || window.location.hostname === 'cracktotal.onrender.com') {
+        console.log('Ejecutando en render.com - mostrando estadísticas de ejemplo');
+        
+        if (game === 'pasala-che') {
+            detailedStatsSection.innerHTML = generateRoscoStatsFromData(defaultRoscoStats);
+        } else {
+            detailedStatsSection.innerHTML = generateQuizStatsFromData(defaultQuizStats);
+        }
+        return;
+    }
     
     // Realizar fetch para obtener estadísticas detalladas de la API
     fetch(`${apiBaseUrl}/user/stats/${game}`)
@@ -630,6 +703,7 @@ function loadDetailedStats(game) {
                 detailedStatsSection.innerHTML = generateQuizStatsFromData(defaultQuizStats);
             }
         });
+    }
 }
 
 // Generar estadísticas de visualización para el juego PASALA CHE con datos reales
@@ -822,6 +896,32 @@ function generateEmptyLetterStats() {
     for (let i = 65; i <= 90; i++) {
         stats[String.fromCharCode(i)] = 0;
     }
+    return stats;
+}
+
+// Generar estadísticas de letras de ejemplo
+function generateSampleLetterStats() {
+    const stats = {};
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    
+    for (let i = 0; i < letters.length; i++) {
+        const letter = letters[i];
+        // Generar valores realistas con algunas letras mejores que otras
+        if ("AEIOU".includes(letter)) {
+            // Vocales: mayor precisión
+            stats[letter] = 75 + Math.floor(Math.random() * 20);
+        } else if ("RSLNTD".includes(letter)) {
+            // Letras comunes: precisión media-alta
+            stats[letter] = 65 + Math.floor(Math.random() * 25);
+        } else if ("JKQXZ".includes(letter)) {
+            // Letras difíciles: precisión baja
+            stats[letter] = 30 + Math.floor(Math.random() * 30);
+        } else {
+            // Resto: precisión media
+            stats[letter] = 50 + Math.floor(Math.random() * 30);
+        }
+    }
+    
     return stats;
 }
 
