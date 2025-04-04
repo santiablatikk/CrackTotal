@@ -1,118 +1,35 @@
 // server.js
-const express = require("express");
-const path = require("path");
-const fs = require("fs");
-const http = require("http");
-const { Server } = require("socket.io");
-const cors = require("cors");
-
-// Importación de node-fetch con compatibilidad para ESM y CJS
-let fetch;
-try {
-  if (!globalThis.fetch) {
-    fetch = require("node-fetch");
-  } else {
-    fetch = globalThis.fetch;
-  }
-} catch (error) {
-  fetch = require("node-fetch");
-  console.log("Usando node-fetch importado");
-}
+const express = require('express');
+const path = require('path');
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"]
-  }
-});
+const port = process.env.PORT || 3000; // Render proporciona el puerto vía env var
 
-// Middleware
-app.use(cors());
-app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json());
+// Define la carpeta que contiene los archivos estáticos (HTML, CSS, JS, imágenes)
+const publicDirectoryPath = path.join(__dirname, 'public');
 
-// Variable global para guardar el ranking real de partidas
-// En un entorno real deberías persistir esto en una base de datos.
-let rankingData = [];
-
-// Servir portal.html como página principal
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "portal.html"));
-});
-
-// ... (Aquí irían tus endpoints y lógica para Millonario y PASALA CHE)
-
-// Ejemplo de endpoint para ranking global
-app.get("/api/ranking", (req, res) => {
-  // Devolver ranking ordenado de mayor a menor puntuación
-  const sortedRanking = rankingData.sort((a, b) => b.score - a.score);
-  res.json(sortedRanking);
-});
-
-// Endpoint para guardar partida y actualizar ranking en tiempo real
-app.post("/api/partida", (req, res) => {
-  try {
-    const gameData = req.body;
-    if (!gameData || !gameData.player || typeof gameData.score !== 'number') {
-      return res.status(400).json({ error: "Datos de juego inválidos" });
-    }
-
-    // Asignar fecha de la partida si no viene incluida
-    if (!gameData.date) {
-      gameData.date = new Date().toISOString().split('T')[0];
-    }
-
-    // Guardar partida en el ranking
-    rankingData.push(gameData);
-    console.log("Partida guardada:", gameData);
-
-    // Emitir actualización en tiempo real a todos los clientes conectados
-    io.emit('ranking_update', rankingData);
-
-    res.status(201).json({ message: "Juego registrado correctamente" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Socket.io para otros juegos y eventos
-io.on("connection", (socket) => {
-  console.log(`Cliente conectado: ${socket.id}`);
-  
-  // Eventos para PASALA CHE (Rosco)
-  socket.on("playerAnswer", (data) => {
-    io.emit("answerResult", data);
-  });
-
-  // Eventos para Millonario y otros (tu código existente)
-  // ...
-
-  socket.on("disconnect", () => {
-    console.log(`Cliente desconectado: ${socket.id}`);
-    // Manejo de desconexión en salas, etc.
-  });
-});
+// Sirve los archivos estáticos desde la carpeta 'public'
+app.use(express.static(publicDirectoryPath));
 
 // Ruta catch-all para manejar cualquier solicitud que no coincida con un archivo estático
-// Envía el archivo principal (probablemente crack-total.html o portal.html)
-// Ajusta 'crack-total.html' si tu punto de entrada principal es otro
+// Envía el archivo principal (ajusta 'crack-total.html' si es necesario)
 app.get('*', (req, res) => {
   // Intenta enviar el archivo solicitado, si no, envía crack-total.html
-  // Esto es útil si tienes rutas internas que no mapean directamente a archivos
-  res.sendFile(path.join(path.join(__dirname, 'public'), 'crack-total.html'), (err) => {
+  res.sendFile(path.join(publicDirectoryPath, 'crack-total.html'), (err) => {
       if (err) {
           // Si hay un error (ej. archivo no encontrado), envía el index
-          res.sendFile(path.join(path.join(__dirname, 'public'), 'crack-total.html'));
+          // Asegúrate de que 'crack-total.html' existe en public/
+          res.sendFile(path.join(publicDirectoryPath, 'crack-total.html'), (finalErr) => {
+            if (finalErr) {
+                console.error("Error al enviar archivo catch-all:", finalErr);
+                res.status(500).send('Error interno del servidor');
+            }
+          });
       }
   });
 });
 
-// Iniciar el servidor
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Sirviendo archivos desde: ${path.join(__dirname, 'public')}`);
+app.listen(port, () => {
+  console.log(`Servidor iniciado en el puerto ${port}`);
+  console.log(`Sirviendo archivos desde: ${publicDirectoryPath}`);
 });
