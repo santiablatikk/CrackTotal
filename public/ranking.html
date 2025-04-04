@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1e293b">
+  <title>Ranking Global - CRACK TOTAL</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/footer-styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #e11d48;
+      --secondary-color: #3182ce;
+      --accent-color: #3182ce;
+      --background-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-color: #f8fafc;
+      --text-muted: #a0aec0;
+      --transition: all 0.3s ease;
+    }
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+    
+    .app-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .app-header {
+      text-align: center;
+      padding: 1rem 0;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    
+    .ball-icon {
+      font-size: 2rem;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+    
+    .bounce {
+      animation: bounce 1s ease infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    
+    .title-text {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--primary-color), #f43f5e);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+    
+    .subtitle {
+      margin: 0.5rem 0 0;
+      color: var(--text-muted);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    
+    .ranking-container {
+      max-width: 800px;
+      margin: 0 auto 2rem auto;
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(45deg, #3490dc, #6574cd);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .ranking-table-container {
+      overflow-x: auto;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    th {
+      background-color: rgba(49, 130, 206, 0.1);
+      color: var(--accent-color);
+      font-weight: 600;
+      padding: 16px 15px;
+      text-align: left;
+      border-bottom: 2px solid rgba(49, 130, 206, 0.3);
+    }
+    
+    td {
+      padding: 14px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    .top-player {
+      position: relative;
+    }
+    
+    .position-1 td:first-child {
+      color: gold;
+    }
+    
+    .position-2 td:first-child {
+      color: silver;
+    }
+    
+    .position-3 td:first-child {
+      color: #cd7f32; /* Bronze */
+    }
+    
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.8rem 1.5rem;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #3182ce, #2c5282);
+      color: white;
+      font-weight: 600;
+      text-decoration: none;
+      margin-top: 1.5rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(49, 130, 206, 0.35);
+    }
+    
+    .back-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(49, 130, 206, 0.5);
+    }
+    
+    .back-button i {
+      margin-right: 8px;
+    }
+    
+    /* Partículas en el fondo */
+    #particles-js {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    
+    /* Mensaje de carga y error */
+    .loading-message, .error-message {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+    }
+    
+    .loading-spinner {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(49, 130, 206, 0.3);
+      border-radius: 50%;
+      border-top-color: var(--accent-color);
+      animation: spin 1s ease-in-out infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Estilos responsive */
+    @media (max-width: 768px) {
+      .ranking-container {
+        padding: 1.5rem;
+      }
+      
+      th, td {
+        padding: 12px 10px;
+      }
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .ranking-container {
+        padding: 1rem;
+      }
+      
+      th, td {
+        padding: 10px 8px;
+        font-size: 0.9rem;
+      }
+      
+      h1 {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Partículas de fondo -->
+  <div id="particles-js"></div>
+  
+  <div class="app-container">
+    <!-- Header con título principal -->
+    <header class="app-header">
+      <div class="logo-animation">
+        <i class="fas fa-trophy ball-icon bounce"></i>
+      </div>
+      <h1 class="title-text">CRACK TOTAL</h1>
+      <p class="subtitle">Ranking Global</p>
+    </header>
+    
+    <div class="ranking-container">
+      <h1>Mejores Puntuaciones</h1>
+      <div class="ranking-table-container">
+        <table id="ranking-table">
+          <thead>
+            <tr>
+              <th>Posición</th>
+              <th>Jugador</th>
+              <th>Puntuación</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Mensaje de carga inicial -->
+            <tr>
+              <td colspan="4">
+                <div class="loading-message">
+                  <div class="loading-spinner"></div>
+                  <p>Cargando ranking...</p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div style="text-align: center; margin-top: 2rem;">
+        <a href="main.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Volver al Inicio
+        </a>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Footer -->
+  <footer class="nuevo-footer">
+    <div class="footer-links">
+      <a href="terms.html">Términos</a>
+      <a href="privacy.html">Privacidad</a>
+      <a href="blog.html">Blog</a>
+      <a href="cookies.html">Cookies</a>
+      <a href="contact.html">Contacto</a>
+      <a href="about.html">Acerca de</a>
+    </div>
+    <div class="copyright-text">© 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
+    <div class="footer-social-icons">
+      <a href="https://www.facebook.com/cracktotal" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://twitter.com/cracktotal" class="social-icon"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.instagram.com/cracktotal" class="social-icon"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com/c/cracktotal" class="social-icon"><i class="fab fa-youtube"></i></a>
+    </div>
+  </footer>
+
+  <!-- Incluir librería de partículas -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  
+  <!-- Script para partículas -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Inicializar partículas
+      if (typeof particlesJS !== 'undefined') {
+        particlesJS("particles-js", {
+          "particles": {
+            "number": {
+              "value": 80,
+              "density": {
+                "enable": true,
+                "value_area": 800
+              }
+            },
+            "color": {
+              "value": "#3182ce"
+            },
+            "shape": {
+              "type": "circle",
+              "stroke": {
+                "width": 0,
+                "color": "#000000"
+              },
+              "polygon": {
+                "nb_sides": 5
+              }
+            },
+            "opacity": {
+              "value": 0.5,
+              "random": false,
+              "anim": {
+                "enable": false,
+                "speed": 1,
+                "opacity_min": 0.1,
+                "sync": false
+              }
+            },
+            "size": {
+              "value": 3,
+              "random": true,
+              "anim": {
+                "enable": false,
+                "speed": 40,
+                "size_min": 0.1,
+                "sync": false
+              }
+            },
+            "line_linked": {
+              "enable": true,
+              "distance": 150,
+              "color": "#3182ce",
+              "opacity": 0.4,
+              "width": 1
+            },
+            "move": {
+              "enable": true,
+              "speed": 2,
+              "direction": "none",
+              "random": false,
+              "straight": false,
+              "out_mode": "out",
+              "bounce": false,
+              "attract": {
+                "enable": false,
+                "rotateX": 600,
+                "rotateY": 1200
+              }
+            }
+          },
+          "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+              "onhover": {
+                "enable": true,
+                "mode": "grab"
+              },
+              "onclick": {
+                "enable": true,
+                "mode": "push"
+              },
+              "resize": true
+            },
+            "modes": {
+              "grab": {
+                "distance": 140,
+                "line_linked": {
+                  "opacity": 1
+                }
+              },
+              "bubble": {
+                "distance": 400,
+                "size": 40,
+                "duration": 2,
+                "opacity": 8,
+                "speed": 3
+              },
+              "repulse": {
+                "distance": 200,
+                "duration": 0.4
+              },
+              "push": {
+                "particles_nb": 4
+              },
+              "remove": {
+                "particles_nb": 2
+              }
+            }
+          },
+          "retina_detect": true
+        });
+      }
+    });
+  </script>
+
+  <!-- Incluir la librería de Socket.io y script para ranking -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // Conexión a Socket.io
+    let socket;
+    try {
+      socket = io();
+    } catch (e) {
+      console.error("Error conectando a Socket.io:", e);
+    }
+
+    // Función para renderizar el ranking en la tabla
+    function renderRanking(rankingData) {
+      const tbody = document.querySelector('#ranking-table tbody');
+      
+      if (!rankingData || rankingData.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4">
+              <div class="error-message">
+                <i class="fas fa-trophy" style="font-size: 2rem; color: var(--accent-color); margin-bottom: 1rem;"></i>
+                <p>Aún no hay puntuaciones registradas.<br>¡Sé el primero en la tabla!</p>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+      
+      tbody.innerHTML = '';
+
+      // Ordenar de mayor a menor puntuación
+      rankingData.sort((a, b) => b.score - a.score);
+
+      rankingData.forEach((item, index) => {
+        const position = index + 1;
+        const tr = document.createElement('tr');
+        
+        // Añadir clase para los 3 primeros
+        if (position <= 3) {
+          tr.classList.add(`position-${position}`);
+        }
+        
+        // Formatear fecha
+        const dateObj = new Date(item.date);
+        const formattedDate = dateObj.toLocaleDateString('es-ES', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        });
+        
+        tr.innerHTML = `
+          <td>${position}</td>
+          <td>${item.player}</td>
+          <td>${item.score}</td>
+          <td>${formattedDate}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Cargar ranking inicial mediante fetch
+    async function loadInitialRanking() {
+      try {
+        const response = await fetch('/api/ranking');
+        if (!response.ok) {
+          throw new Error('Error al cargar el ranking');
+        }
+        const rankingData = await response.json();
+        renderRanking(rankingData);
+      } catch (error) {
+        console.error(error);
+        const tbody = document.querySelector('#ranking-table tbody');
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4">
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                <p>Error al cargar el ranking.<br>Por favor, intenta de nuevo más tarde.</p>
+              </div>
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    // Escuchar el evento de actualización en tiempo real
+    if (socket) {
+      socket.on('ranking_update', (rankingData) => {
+        renderRanking(rankingData);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadInitialRanking);
+  </script>
+  
+  <!-- Botón flotante de compartir -->
+  <script src="js/share-buttons.js"></script>
+  <!-- Script para el footer global -->
+  <script src="js/global-footer.js"></script>
+</body>
+</html>
