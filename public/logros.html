@@ -1,1 +1,901 @@
- 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-adsense-account" content="ca-pub-9579152019412427">
+  <meta name="description" content="PASALA CH?? - El juego de preguntas y respuestas sobre f??tbol">
+  <title>Logros - PASALA CH??</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/achievements.css">  
+  <link rel="stylesheet" href="css/footer-styles.css">
+  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+  
+  <!-- Google AdSense -->
+   crossorigin="anonymous"></script>
+  
+  <style>
+    /* Estilos espec??ficos para la p??gina de logros */
+    .achievements-page {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      overflow-x: hidden;
+      padding: 20px;
+    }
+    
+    .achievements-page::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 20px 20px;
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    .page-header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .page-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .page-header p {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .achievements-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .achievement-card {
+      background-color: rgba(0, 0, 0, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .achievement-card.locked {
+      filter: grayscale(100%);
+      opacity: 0.7;
+    }
+    
+    .achievement-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    
+    .achievement-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 15px;
+      font-size: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .achievement-icon::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #3a88fe, #57dd81);
+      opacity: 0.7;
+      z-index: -1;
+    }
+    
+    .achievement-card.locked .achievement-icon::before {
+      background: linear-gradient(135deg, #666, #999);
+    }
+    
+    .achievement-details {
+      text-align: center;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .achievement-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 10px;
+    }
+    
+    .achievement-description {
+      font-size: 0.95rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 15px;
+      flex-grow: 1;
+    }
+    
+    .achievement-progress {
+      margin-top: auto;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 50px;
+      height: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .achievement-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #fdbb2d, #b21f1f);
+      width: 0;
+      transition: width 0.5s;
+    }
+    
+    .achievement-count {
+      margin-top: 5px;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .achievement-card.locked .achievement-count {
+      color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .back-button {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background-color: rgba(0, 0, 0, 0.3);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      backdrop-filter: blur(5px);
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .back-button:hover {
+      background-color: rgba(253, 187, 45, 0.7);
+      transform: scale(1.1);
+    }
+    
+    .achievement-categories {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 2;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .category-filter {
+      background-color: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      border-radius: 50px;
+      padding: 8px 15px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .category-filter:hover, .category-filter.active {
+      background-color: rgba(253, 187, 45, 0.7);
+      transform: translateY(-2px);
+    }
+    
+    @media (max-width: 768px) {
+      .achievements-container {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      }
+      
+      .back-button {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="main-header">
+    <div class="logo-animation">
+      <i class="fas fa-futbol ball-icon bounce"></i>
+    </div>
+    <a href="index.html" class="title-link">
+      <h1 class="title-text">PASALA CHE</h1>
+    </a>
+    <p class="subtitle">El juego de palabras del f??tbol</p>
+  </header>
+  
+  <div class="achievements-page">
+    <div class="page-header">
+      <h1>LOGROS DE PASALA CH??</h1>
+      <p>Colecciona logros para demostrar tu habilidad en el juego de preguntas sobre f??tbol.</p>
+    </div>
+    
+    <div class="achievement-categories">
+      <button class="category-filter active" data-category="all">Todos</button>
+      <button class="category-filter" data-category="beginner">Principiante</button>
+      <button class="category-filter" data-category="intermediate">Intermedio</button>
+      <button class="category-filter" data-category="expert">Experto</button>
+      <button class="category-filter" data-category="special">Especiales</button>
+    </div>
+    
+    <div class="achievements-container" id="achievements-container">
+      <!-- Los logros se cargar??n din??micamente con JavaScript -->
+    </div>
+    
+    <button onclick="window.history.back()" class="back-button">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+  </div>
+  
+  <!-- Google AdSense -->
+  <div class="ad-container">
+    <p class="ad-label">Publicidad</p>
+    <ins class="adsbygoogle"
+      style="display:block"
+      data-ad-client="ca-pub-1234567890"
+      data-ad-slot="1234567890"
+      data-ad-format="auto"
+      data-full-width-responsive="true"></ins>
+      const cookieConsent = localStorage.getItem('cookieConsent');
+      if (cookieConsent === 'accepted') {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      }
+    </script>
+  </div>
+  
+    document.addEventListener('DOMContentLoaded', function() {
+      // Array con todos los logros posibles
+      const achievements = [
+        {
+          id: 'first_game',
+          icon: 'fas fa-gamepad',
+          title: 'Primer Juego',
+          description: 'Completa tu primer juego de PASALA CH??.',
+          category: 'beginner',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'fifth_game',
+          icon: 'fas fa-dice-five',
+          title: 'Jugador Dedicado',
+          description: 'Completa 5 juegos de PASALA CH??.',
+          category: 'beginner',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'beginner_score',
+          icon: 'fas fa-award',
+          title: 'Cazador de Puntos',
+          description: 'Consigue 100 puntos o m??s en una sola partida.',
+          category: 'beginner',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'perfect_game',
+          icon: 'fas fa-star',
+          title: 'Juego Perfecto',
+          description: 'Completa un juego sin ning??n error.',
+          category: 'intermediate',
+          maxCount: 10,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'fast_game',
+          icon: 'fas fa-bolt',
+          title: 'Velocista',
+          description: 'Completa el Rosco con al menos 2.5 minutos restantes.',
+          category: 'intermediate',
+          maxCount: 5,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'comeback',
+          icon: 'fas fa-undo',
+          title: 'Remontada ??pica',
+          description: 'Gana un juego despu??s de haber cometido 2 errores.',
+          category: 'intermediate',
+          maxCount: 3,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'hard_victory',
+          icon: 'fas fa-crown',
+          title: 'Maestro del Rosco',
+          description: 'Completa un Rosco en dificultad dif??cil.',
+          category: 'expert',
+          maxCount: 5,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'no_skip',
+          icon: 'fas fa-check-double',
+          title: 'Sin Saltos',
+          description: 'Completa el Rosco sin saltar ninguna letra.',
+          category: 'expert',
+          maxCount: 3,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'perfect_hard',
+          icon: 'fas fa-trophy',
+          title: 'Perfecci??n Extrema',
+          description: 'Completa un Rosco en dificultad dif??cil sin ning??n error.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'three_in_a_row',
+          icon: 'fas fa-fire',
+          title: 'Racha Ganadora',
+          description: 'Gana tres partidas consecutivas.',
+          category: 'special',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'cumulative_score',
+          icon: 'fas fa-gem',
+          title: 'Coleccionista de Puntos',
+          description: 'Acumula 1000 puntos en total.',
+          category: 'special',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'speed_demon',
+          icon: 'fas fa-tachometer-alt',
+          title: 'Demonio de la Velocidad',
+          description: 'Completa un Rosco dif??cil con 3 minutos o m??s restantes.',
+          category: 'special',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'fast_answer',
+          icon: 'fas fa-bolt',
+          title: 'Respuesta R??pida',
+          description: 'Responde correctamente en menos de 5 segundos.',
+          category: 'intermediate',
+          maxCount: 50,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'streak_5',
+          icon: 'fas fa-fire',
+          title: 'Racha Caliente',
+          description: 'Responde correctamente 5 preguntas seguidas.',
+          category: 'beginner',
+          maxCount: 20,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'streak_10',
+          icon: 'fas fa-fire-alt',
+          title: 'Racha Imparable',
+          description: 'Responde correctamente 10 preguntas seguidas.',
+          category: 'intermediate',
+          maxCount: 10,
+          unlocked: false,
+          count: 0,
+          date: null
+        }
+      ];
+      
+      // Variable para almacenar el IP del usuario
+      let userIP = '';
+      
+      // Funci??n para obtener el IP del usuario usando una API p??blica
+      async function getUserIP() {
+        try {
+          const response = await fetch('https://api.ipify.org?format=json');
+          const data = await response.json();
+          userIP = data.ip;
+          console.log('IP del usuario detectada:', userIP);
+          
+          // Una vez que tenemos el IP, cargar los logros
+          loadUserAchievements();
+        } catch (error) {
+          console.error('Error al obtener IP:', error);
+          // Si falla, usar un valor por defecto para no bloquear la funcionalidad
+          userIP = 'unknown-ip';
+          loadUserAchievements();
+        }
+      }
+      
+      // Funci??n para formatear la fecha en formato DD/MM/YYYY
+      function formatDate(date) {
+        if (!date) return 'Pendiente';
+        
+        const d = new Date(date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        
+        return `${day}/${month}/${year}`;
+      }
+      
+      // Funci??n para cargar los logros en la interfaz
+      function loadAchievements(category = 'all') {
+        const container = document.getElementById('achievements-container');
+        container.innerHTML = '';
+        
+        const filteredAchievements = category === 'all' 
+          ? achievements 
+          : achievements.filter(a => a.category === category);
+          
+        filteredAchievements.forEach(achievement => {
+          const card = document.createElement('div');
+          card.className = `achievement-card ${achievement.unlocked ? '' : 'locked'}`;
+          card.setAttribute('data-category', achievement.category);
+          
+          // Calcular el progreso
+          const progress = achievement.maxCount > 1 
+            ? Math.min(100, (achievement.count / achievement.maxCount) * 100) 
+            : (achievement.unlocked ? 100 : 0);
+          
+          // Formatear la fecha
+          const achievementDate = formatDate(achievement.date);
+          
+          card.innerHTML = `
+            <div class="achievement-icon">
+              <i class="${achievement.icon}"></i>
+            </div>
+            <div class="achievement-details">
+              <div class="achievement-title">${achievement.title}</div>
+              <div class="achievement-description">${achievement.description}</div>
+              <div class="achievement-progress">
+                <div class="achievement-progress-bar" style="width: ${progress}%"></div>
+              </div>
+              <div class="achievement-count">
+                ${achievement.maxCount > 1 ? `${achievement.count}/${achievement.maxCount}` : (achievement.unlocked ? 'Completado' : 'Bloqueado')}
+              </div>
+              <div class="achievement-date">${achievement.unlocked ? achievementDate : ''}</div>
+            </div>
+          `;
+          
+          container.appendChild(card);
+        });
+        
+        // Si no hay logros, mostrar un mensaje
+        if (filteredAchievements.length === 0) {
+          const emptyState = document.createElement('div');
+          emptyState.className = 'no-achievements';
+          emptyState.innerHTML = `
+            <i class="fas fa-trophy"></i>
+            <p>No hay logros disponibles en esta categor??a.</p>
+          `;
+          container.appendChild(emptyState);
+        }
+      }
+      
+      // Generar un ID ??nico basado en el IP para guardar y recuperar logros
+      function getAchievementsStorageKey() {
+        return `userAchievements_${userIP}`;
+      }
+      
+      // Cargar logros del usuario desde localStorage basado en su IP
+      function loadUserAchievements() {
+        const container = document.getElementById('achievements-container');
+        
+        // Mostrar estado de carga
+        container.innerHTML = `
+          <div class="loading-achievements">
+            <i class="fas fa-circle-notch"></i>
+            <p>Cargando tus logros...</p>
+          </div>
+        `;
+        
+        // Simular tiempo de carga
+        setTimeout(() => {
+          const storageKey = getAchievementsStorageKey();
+          const savedAchievements = localStorage.getItem(storageKey);
+          
+          if (savedAchievements) {
+            try {
+              const parsedAchievements = JSON.parse(savedAchievements);
+              
+              // Actualizar los logros con los datos guardados
+              parsedAchievements.forEach(saved => {
+                const achievement = achievements.find(a => a.id === saved.id);
+                if (achievement) {
+                  achievement.unlocked = saved.unlocked || false;
+                  achievement.count = saved.count || 0;
+                  achievement.date = saved.date || null;
+                }
+              });
+              
+              console.log(`Logros cargados para IP: ${userIP}`);
+            } catch (error) {
+              console.error('Error al cargar logros:', error);
+            }
+          } else {
+            console.log(`No hay logros guardados para IP: ${userIP}`);
+          }
+          
+          // Para demostraci??n, desbloquear algunos logros si es la primera vez
+          const demoKey = `demoAchievementsUnlocked_${userIP}`;
+          if (!localStorage.getItem(demoKey)) {
+            // Simular que ciertos logros se desbloquean autom??ticamente basados en la IP
+            const demoAchievements = getDefaultAchievementsForIP(userIP);
+            demoAchievements.forEach(id => unlockAchievement(id, true));
+            localStorage.setItem(demoKey, 'true');
+            
+            // A??adir notificaci??n
+            showAchievementNotification('??Logros desbloqueados!', 'Se han desbloqueado logros basados en tu actividad anterior.');
+          }
+          
+          // Cargar logros en la interfaz
+          loadAchievements(document.querySelector('.category-filter.active').dataset.category);
+        }, 1200);
+      }
+      
+      // Funci??n para mostrar una notificaci??n de logro desbloqueado
+      function showAchievementNotification(title, message) {
+        const notification = document.createElement('div');
+        notification.className = 'achievement-notification';
+        notification.innerHTML = `
+          <div class="notification-icon">
+            <i class="fas fa-trophy"></i>
+          </div>
+          <div class="notification-content">
+            <h3>${title}</h3>
+            <p>${message}</p>
+          </div>
+          <button class="notification-close">
+            <i class="fas fa-times"></i>
+          </button>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Mostrar con animaci??n
+        setTimeout(() => {
+          notification.classList.add('show');
+        }, 100);
+        
+        // Cerrar autom??ticamente despu??s de 5 segundos
+        setTimeout(() => {
+          notification.classList.remove('show');
+          setTimeout(() => {
+            notification.remove();
+          }, 300);
+        }, 5000);
+        
+        // Cerrar manualmente
+        notification.querySelector('.notification-close').addEventListener('click', function() {
+          notification.classList.remove('show');
+          setTimeout(() => {
+            notification.remove();
+          }, 300);
+        });
+      }
+      
+      // Determinar logros por defecto basados en el IP
+      function getDefaultAchievementsForIP(ip) {
+        // Usar el ??ltimo octeto del IP para determinar logros
+        // (Esto es solo una simulaci??n, no un m??todo real de tracking)
+        const lastOctet = ip.split('.').pop() || '0';
+        const num = parseInt(lastOctet, 10);
+        
+        // Logros b??sicos que todos reciben
+        const defaultAchievements = ['first_game'];
+        
+        // A??adir logros adicionales basados en el ??ltimo octeto del IP
+        if (num % 2 === 0) {
+          defaultAchievements.push('streak_5');
+        }
+        
+        if (num % 3 === 0) {
+          defaultAchievements.push('night_owl');
+        }
+        
+        if (num % 5 === 0) {
+          defaultAchievements.push('world_cup_expert');
+        }
+        
+        if (num % 7 === 0) {
+          defaultAchievements.push('help_master');
+        }
+        
+        console.log(`Logros predeterminados para IP ${ip}:`, defaultAchievements);
+        return defaultAchievements;
+      }
+      
+      // Funci??n para desbloquear un logro
+      window.unlockAchievement = function(achievementId, silent = false) {
+        if (!userIP) {
+          console.error('No se puede desbloquear el logro sin IP del usuario');
+          return false;
+        }
+        
+        const achievement = achievements.find(a => a.id === achievementId);
+        if (achievement) {
+          const wasAlreadyUnlocked = achievement.unlocked;
+          achievement.unlocked = true;
+          achievement.count = achievement.maxCount > 1 ? achievement.count + 1 : 1;
+          achievement.date = new Date().toISOString();
+          
+          // Guardar en localStorage con clave basada en IP
+          const storageKey = getAchievementsStorageKey();
+          const savedAchievements = localStorage.getItem(storageKey);
+          let allAchievements = [];
+          
+          if (savedAchievements) {
+            try {
+              allAchievements = JSON.parse(savedAchievements);
+              
+              // Actualizar o a??adir el logro
+              const existingIndex = allAchievements.findIndex(a => a.id === achievementId);
+              if (existingIndex >= 0) {
+                allAchievements[existingIndex] = {
+                  id: achievement.id,
+                  unlocked: achievement.unlocked,
+                  count: achievement.count,
+                  date: achievement.date
+                };
+              } else {
+                allAchievements.push({
+                  id: achievement.id,
+                  unlocked: achievement.unlocked,
+                  count: achievement.count,
+                  date: achievement.date
+                });
+              }
+            } catch (error) {
+              console.error('Error al actualizar logros:', error);
+            }
+          } else {
+            allAchievements = [{
+              id: achievement.id,
+              unlocked: achievement.unlocked,
+              count: achievement.count,
+              date: achievement.date
+            }];
+          }
+          
+          // Guardar en localStorage con clave basada en IP
+          localStorage.setItem(storageKey, JSON.stringify(allAchievements));
+          console.log(`Logro "${achievement.title}" guardado para IP: ${userIP}`);
+          
+          // Mostrar notificaci??n si es un nuevo desbloqueo y no est?? en modo silencioso
+          if (!wasAlreadyUnlocked && !silent) {
+            showAchievementNotification(
+              '??Nuevo logro desbloqueado!', 
+              `Has conseguido el logro "${achievement.title}"`
+            );
+          }
+          
+          // Actualizar la interfaz
+          if (!silent) {
+            loadAchievements(document.querySelector('.category-filter.active').dataset.category);
+          }
+          
+          return true;
+        }
+        
+        return false;
+      };
+      
+      // Escuchar eventos de actualizaci??n de logros en otras pesta??as
+      window.addEventListener('storage', function(e) {
+        if (e.key === getAchievementsStorageKey()) {
+          loadUserAchievements();
+        }
+      });
+      
+      // Simulador de desbloqueo para testing
+      window.simulateAchievement = function(achievementId) {
+        if (unlockAchievement(achievementId)) {
+          console.log(`Logro "${achievementId}" desbloqueado exitosamente.`);
+          return true;
+        } else {
+          console.error(`Error al desbloquear logro "${achievementId}".`);
+          return false;
+        }
+      };
+      
+      // Inicializar: obtener IP y luego cargar logros
+      getUserIP();
+      
+      // Configurar los filtros de categor??a
+      const filters = document.querySelectorAll('.category-filter');
+      filters.forEach(filter => {
+        filter.addEventListener('click', function() {
+          // Quitar clase activa de todos los filtros
+          filters.forEach(f => f.classList.remove('active'));
+          // A??adir clase activa al filtro actual
+          this.classList.add('active');
+          // Cargar logros filtrados
+          loadAchievements(this.dataset.category);
+        });
+      });
+    });
+  </script>
+  
+  <!-- Footer -->
+  <footer class="policy-footer">
+    <div class="footer-links-mini">
+      <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+      <a href="game.html"><i class="fas fa-gamepad"></i> Jugar</a>
+      <a href="user-dashboard.html"><i class="fas fa-user"></i> Mi Dashboard</a>
+      <a href="logros.html" class="active"><i class="fas fa-medal"></i> Logros</a>
+      <a href="terms.html"><i class="fas fa-file-contract"></i> T??rminos</a>
+      <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+      <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+      <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+      <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+      <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+    </div>
+    <div class="copyright-text">&copy; 2025 CRACK TOTAL - Todos los derechos reservados.</div>
+    <div class="footer-social-icons">
+      <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+      <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+      <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+    </div>
+  </footer>
+  
+  <style>
+    /* Estilos para notificaciones de logros */
+    .achievement-notification {
+      position: fixed;
+      bottom: -100px;
+      right: 20px;
+      width: 300px;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 12px;
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      backdrop-filter: blur(10px);
+      opacity: 0;
+    }
+    
+    .achievement-notification.show {
+      bottom: 20px;
+      opacity: 1;
+    }
+    
+    .notification-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #2563eb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      flex-shrink: 0;
+      animation: pulse 2s infinite;
+    }
+    
+    .notification-icon i {
+      color: white;
+      font-size: 1.2rem;
+    }
+    
+    .notification-content {
+      flex-grow: 1;
+    }
+    
+    .notification-content h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 0 0 5px;
+      color: white;
+    }
+    
+    .notification-content p {
+      font-size: 0.85rem;
+      margin: 0;
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .notification-close {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      padding: 5px;
+      margin-left: 5px;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+    }
+    
+    .notification-close:hover {
+      color: white;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5); }
+      70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    }
+  </style>
+</body>
+</html>
+< ! - -   B o t ? n   f l o t a n t e   d e   c o m p a r t i r   - - > < s c r i p t   s r c = " j s / s h a r e - b u t t o n s . j s " > < / s c r i p t > 
+ 
+ 
