@@ -667,6 +667,43 @@ function loadDetailedStats(game) {
         return;
     }
     
+    // Intentar cargar datos desde profile.json si estamos en desarrollo local
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        fetch(`profile.json`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('No se pudo cargar profile.json');
+                }
+                return response.json();
+            })
+            .then(profileData => {
+                console.log('Datos cargados desde profile.json:', profileData);
+                
+                // Extraer estadísticas según el juego
+                const statsData = game === 'pasala-che' ? 
+                    profileData.pasalaCheStats || defaultRoscoStats : 
+                    profileData.quienSabeMasStats || defaultQuizStats;
+                
+                // Renderizar estadísticas
+                if (game === 'pasala-che') {
+                    detailedStatsSection.innerHTML = generateRoscoStatsFromData(statsData);
+                } else {
+                    detailedStatsSection.innerHTML = generateQuizStatsFromData(statsData);
+                }
+            })
+            .catch(error => {
+                console.error('Error cargando profile.json:', error);
+                console.log('Usando estadísticas predeterminadas');
+                
+                if (game === 'pasala-che') {
+                    detailedStatsSection.innerHTML = generateRoscoStatsFromData(defaultRoscoStats);
+                } else {
+                    detailedStatsSection.innerHTML = generateQuizStatsFromData(defaultQuizStats);
+                }
+            });
+        return;
+    }
+    
     // Realizar fetch para obtener estadísticas detalladas de la API
     fetch(`${apiBaseUrl}/user/stats/${game}`)
         .then(response => {
@@ -703,7 +740,6 @@ function loadDetailedStats(game) {
                 detailedStatsSection.innerHTML = generateQuizStatsFromData(defaultQuizStats);
             }
         });
-    }
 }
 
 // Generar estadísticas de visualización para el juego PASALA CHE con datos reales

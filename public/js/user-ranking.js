@@ -566,35 +566,19 @@ function animateCounter(element, start, end, duration) {
 }
 
 // Cargar tabla de ranking
-function loadRankingTable(game, gameData) {
-    console.log(`Cargando tabla de ranking para el juego: ${game}`);
-        
+function loadRankingTable() {
     // Mostrar indicador de carga
-    const tableBody = document.querySelector('#ranking-table-body');
-    if (tableBody) {
-        tableBody.innerHTML = `
-            <tr class="loading-row">
-                <td colspan="5">
-                    <div class="loading-spinner"></div> Cargando ranking...
-                </td>
-            </tr>
-        `;
-    }
+    showLoading(true);
     
-    // Obtener filtro actual
-    const activeFilter = document.querySelector('.filter-btn.active');
-    const filterType = activeFilter ? activeFilter.getAttribute('data-filter') : 'global';
-    
-    let rankingUrl = '';
-    if (filterType === 'global') {
-        // Usar el nuevo endpoint para el ranking global
-        rankingUrl = `${apiBaseUrl}/global-ranking`;
+    // Determinar URL de la API según el filtro
+    let rankingUrl;
+    if (currentFilter === 'global') {
+        rankingUrl = 'api/global-ranking';
+    } else if (currentFilter === 'monthly') {
+        rankingUrl = 'api/monthly-ranking';
     } else {
-        // Usar endpoints existentes para filtros específicos
-        rankingUrl = `${apiBaseUrl}/games/${game}/ranking?filter=${filterType}&page=1`;
+        rankingUrl = 'api/weekly-ranking';
     }
-    
-    console.log('Cargando datos de: ' + rankingUrl); // Log adicional para debug
     
     // Detectar si estamos en render.com o en desarrollo local
     const isRenderEnvironment = window.location.hostname.includes('render.com') || 
@@ -604,10 +588,10 @@ function loadRankingTable(game, gameData) {
     if (isRenderEnvironment) {
         console.log('Ejecutando en render.com - mostrando datos de ranking de ejemplo');
         
-        if (filterType === 'global') {
+        if (currentFilter === 'global') {
             rankingData = fallbackData.globalRanking;
             renderRankingTable(rankingData, true);
-        } else if (filterType === 'monthly') {
+        } else if (currentFilter === 'monthly') {
             rankingData = fallbackData.monthlyRanking;
             renderRankingTable(rankingData, false);
         } else {
@@ -615,102 +599,119 @@ function loadRankingTable(game, gameData) {
             renderRankingTable(rankingData, false);
         }
         
-        // Actualizar título de la sección según el filtro y juego
-        const rankingTitle = document.querySelector('.ranking-table-section .section-title');
-        if (rankingTitle) {
-            rankingTitle.textContent = `Clasificación ${filterType.charAt(0).toUpperCase() + filterType.slice(1)} - ${filterType === 'global' ? 'Todos los Juegos' : gameData.title}`;
-        }
-        
-        // Añadir efecto de fila destacada con desplazamiento suave
-        setTimeout(function() {
-            const highlightRow = document.querySelector('.highlight-row');
-            if (highlightRow) {
-                highlightRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                // Añadir un efecto de destello a la fila del usuario
-                highlightRow.classList.add('flash-highlight');
-                setTimeout(() => {
-                    highlightRow.classList.remove('flash-highlight');
-                }, 1500);
-            }
-        }, 500);
-        
-        // Actualizar la paginación
-        const currentPage = filterType === 'global' ? 1 : (data.currentPage || 1);
-        const totalPages = filterType === 'global' ? 1 : (data.totalPages || Math.ceil(players.length / 10));
-        // Si es global, ocultar paginación
-        updatePagination(currentPage, totalPages, filterType === 'global');
+        // Actualizar título del ranking
+        updateRankingTitle(true);
         return;
     }
     
-    // Realizar fetch para obtener datos de ranking
+    // Intentar cargar desde ranking.json si estamos en desarrollo local
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        fetch('ranking.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('No se pudo cargar ranking.json');
+                }
+                return response.json();
+            })
+            .then(rankingFileData => {
+                console.log('Datos cargados desde ranking.json:', rankingFileData);
+                
+                // Extraer datos según el filtro
+                let data;
+                if (currentFilter === 'global') {
+                    data = rankingFileData.globalRanking || [];
+                    renderRankingTable(data, true);
+                } else if (currentFilter === 'monthly') {
+                    data = rankingFileData.monthlyRanking || [];
+                    renderRankingTable(data, false);
+                } else {
+                    data = rankingFileData.weeklyRanking || [];
+                    renderRankingTable(data, false);
+                }
+                
+                rankingData = data;
+                
+                // Actualizar título del ranking
+                updateRankingTitle(false);
+            })
+            .catch(error => {
+                console.error('Error cargando ranking.json:', error);
+                console.log('Usando datos de ranking de ejemplo');
+                
+                // Usar datos de ejemplo según el filtro
+                if (currentFilter === 'global') {
+                    rankingData = fallbackData.globalRanking;
+                    renderRankingTable(rankingData, true);
+                } else if (currentFilter === 'monthly') {
+                    rankingData = fallbackData.monthlyRanking;
+                    renderRankingTable(rankingData, false);
+                } else {
+                    rankingData = fallbackData.weeklyRanking;
+                    renderRankingTable(rankingData, false);
+                }
+                
+                // Actualizar título para indicar que se están usando datos de ejemplo
+                updateRankingTitle(true);
+            })
+            .finally(() => {
+                // Ocultar indicador de carga
+                showLoading(false);
+            });
+        return;
+    }
+    
+    // Realizar solicitud a la API
     fetch(rankingUrl)
         .then(response => {
             if (!response.ok) {
-                throw new Error(`Error al cargar el ranking: ${response.status} ${response.statusText}`);
+                throw new Error(`Error al cargar ranking: ${response.status}`);
             }
             return response.json();
         })
         .then(data => {
-            console.log('Datos recibidos:', data); // Log para depurar
+            // Determinar si los datos son de ranking global
+            const isGlobalRanking = currentFilter === 'global';
             
-            // Si es el ranking global, los datos pueden estar directamente en data.players
-            const players = data.players || [];
-            
-            // Renderizar la tabla con los datos
-            renderRankingTable(players, gameData, filterType === 'global');
-            
-            // Actualizar título de la sección según el filtro y juego
-            const rankingTitle = document.querySelector('.ranking-table-section .section-title');
-            if (rankingTitle) {
-                rankingTitle.textContent = `Clasificación ${filterType.charAt(0).toUpperCase() + filterType.slice(1)} - ${filterType === 'global' ? 'Todos los Juegos' : gameData.title}`;
+            // Actualizar datos globales
+            if (isGlobalRanking) {
+                // Para ranking global, los datos vienen directamente
+                rankingData = data;
+            } else {
+                // Para otros rankings, verificar estructura de datos
+                rankingData = Array.isArray(data.ranking) ? data.ranking : data;
             }
             
-            // Añadir efecto de fila destacada con desplazamiento suave
-            setTimeout(function() {
-                const highlightRow = document.querySelector('.highlight-row');
-                if (highlightRow) {
-                    highlightRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    
-                    // Añadir un efecto de destello a la fila del usuario
-                    highlightRow.classList.add('flash-highlight');
-                    setTimeout(() => {
-                        highlightRow.classList.remove('flash-highlight');
-                    }, 1500);
-                }
-            }, 500);
+            // Renderizar tabla con los datos obtenidos
+            renderRankingTable(rankingData, isGlobalRanking);
             
-            // Actualizar la paginación
-            const currentPage = filterType === 'global' ? 1 : (data.currentPage || 1);
-            const totalPages = filterType === 'global' ? 1 : (data.totalPages || Math.ceil(players.length / 10));
-            // Si es global, ocultar paginación
-            updatePagination(currentPage, totalPages, filterType === 'global');
+            // Actualizar título del ranking
+            updateRankingTitle(false);
         })
         .catch(error => {
-            console.error('Error cargando/procesando ranking:', error);
-            console.log('Usando datos locales de respaldo');
+            console.error("Error al cargar datos de ranking:", error);
             
-            // Usar datos de fallback cuando falle la API
-            const players = fallbackData.globalRanking;
-            renderRankingTable(players, gameData, filterType === 'global');
+            // Mostrar mensaje de error
+            document.getElementById('ranking-title').textContent = 
+                `Ranking ${currentFilter === 'global' ? 'Global' : (currentFilter === 'monthly' ? 'Mensual' : 'Semanal')} (Datos de ejemplo)`;
             
-            // Actualizar título con indicación de que son datos de respaldo
-            const rankingTitle = document.querySelector('.ranking-table-section .section-title');
-            if (rankingTitle) {
-                rankingTitle.textContent = `Clasificación ${filterType.charAt(0).toUpperCase() + filterType.slice(1)} - Datos Locales`;
+            // Usar datos de ejemplo según el filtro
+            if (currentFilter === 'global') {
+                rankingData = fallbackData.globalRanking;
+                renderRankingTable(rankingData, true);
+            } else if (currentFilter === 'monthly') {
+                rankingData = fallbackData.monthlyRanking;
+                renderRankingTable(rankingData, false);
+            } else {
+                rankingData = fallbackData.weeklyRanking;
+                renderRankingTable(rankingData, false);
             }
             
-            // Ocultar paginación para datos locales
-            updatePagination(1, 1, true);
-            
-            if (tableBody) {
-                tableBody.insertAdjacentHTML('afterend', `
-                    <div class="info-message" style="text-align: center; margin: 10px 0; font-size: 14px; color: #4299e1; padding: 8px;">
-                        <i class="fas fa-info-circle"></i> 
-                        Mostrando datos de ejemplo. El servidor API no está disponible.
-                    </div>
-                `);
-            }
+            // Actualizar título para indicar que se están usando datos de ejemplo
+            updateRankingTitle(true);
+        })
+        .finally(() => {
+            // Ocultar indicador de carga
+            showLoading(false);
         });
 }
 
