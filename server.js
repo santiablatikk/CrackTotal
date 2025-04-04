@@ -100,7 +100,14 @@ io.on("connection", (socket) => {
 // Envía el archivo principal (probablemente crack-total.html o portal.html)
 // Ajusta 'crack-total.html' si tu punto de entrada principal es otro
 app.get('*', (req, res) => {
-  res.sendFile(path.join(path.join(__dirname, 'public'), 'crack-total.html'));
+  // Intenta enviar el archivo solicitado, si no, envía crack-total.html
+  // Esto es útil si tienes rutas internas que no mapean directamente a archivos
+  res.sendFile(path.join(path.join(__dirname, 'public'), 'crack-total.html'), (err) => {
+      if (err) {
+          // Si hay un error (ej. archivo no encontrado), envía el index
+          res.sendFile(path.join(path.join(__dirname, 'public'), 'crack-total.html'));
+      }
+  });
 });
 
 // Iniciar el servidor
