@@ -24,6 +24,410 @@
     <!-- Scripts -->
     <script src="js/game-data.js" defer></script>
     <script src="js/ranking.js" defer></script>
+    
+    <style>
+      /* Estilos mejorados para la página de ranking */
+      .ranking-card {
+        background: var(--bg-gradient-dark);
+        border-radius: var(--border-radius);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(202, 138, 4, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        overflow: visible;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+      
+      .ranking-card::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, rgba(202, 138, 4, 0.3), transparent, rgba(234, 88, 12, 0.3), transparent);
+        border-radius: calc(var(--border-radius) + 2px);
+        z-index: -1;
+        animation: border-flow 8s linear infinite;
+      }
+      
+      @keyframes border-flow {
+        0% {
+          background-position: 0 0;
+        }
+        100% {
+          background-position: 300% 0;
+        }
+      }
+      
+      .ranking-header {
+        padding: 1.8rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background: linear-gradient(to right, rgba(202, 138, 4, 0.1), rgba(15, 23, 42, 0));
+        border-radius: var(--border-radius) var(--border-radius) 0 0;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .ranking-header::after {
+        content: '';
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, rgba(202, 138, 4, 0.4), transparent 70%);
+        top: -75px;
+        right: -75px;
+        border-radius: 50%;
+        filter: blur(20px);
+        z-index: 0;
+      }
+      
+      .section-title {
+        position: relative;
+        font-size: 1.6rem;
+        color: white;
+        margin: 0 0 1rem 0;
+        padding-bottom: 0.8rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        z-index: 1;
+      }
+      
+      .section-title::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(to right, #ca8a04, #ea580c);
+        border-radius: 3px;
+        transition: width 0.3s ease;
+      }
+      
+      .section-title:hover::after {
+        width: 100px;
+      }
+      
+      .section-title i {
+        color: #ca8a04;
+        font-size: 1.5rem;
+      }
+      
+      .ranking-subtitle {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.95rem;
+        margin: 0;
+        font-weight: 500;
+        position: relative;
+        z-index: 1;
+      }
+      
+      .ranking-section {
+        padding: 1.5rem;
+      }
+      
+      .loading-indicator {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem 0;
+        gap: 1rem;
+      }
+      
+      .loading-spinner {
+        width: 48px;
+        height: 48px;
+        border: 4px solid rgba(202, 138, 4, 0.2);
+        border-radius: 50%;
+        border-top-color: #ca8a04;
+        animation: spin 1s linear infinite;
+      }
+      
+      .loading-text {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1rem;
+        font-weight: 500;
+      }
+      
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      
+      /* Tabla de Ranking Mejorada */
+      .ranking-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 0.5rem;
+        margin-top: 1rem;
+      }
+      
+      .ranking-table thead th {
+        padding: 1rem 1.2rem;
+        text-align: left;
+        color: rgba(255, 255, 255, 0.7);
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      .ranking-table tbody tr {
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 12px;
+        transition: all 0.3s ease;
+        animation: fade-in-up 0.5s both;
+        animation-delay: calc(0.1s * var(--row-index, 0));
+      }
+      
+      .ranking-table tbody tr:hover {
+        background: rgba(15, 23, 42, 0.8);
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        position: relative;
+      }
+      
+      .ranking-table tbody tr td {
+        padding: 1rem 1.2rem;
+        color: white;
+        font-size: 0.95rem;
+      }
+      
+      .ranking-table tbody tr td:first-child {
+        border-top-left-radius: 12px;
+        border-bottom-left-radius: 12px;
+      }
+      
+      .ranking-table tbody tr td:last-child {
+        border-top-right-radius: 12px;
+        border-bottom-right-radius: 12px;
+      }
+      
+      /* Ranking Posiciones */
+      .ranking-position {
+        font-weight: 800;
+        font-size: 1.1rem;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto;
+      }
+      
+      .ranking-table tr:nth-child(1) .ranking-position {
+        background: linear-gradient(135deg, #fbbf24, #d97706);
+        color: white;
+        box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+      }
+      
+      .ranking-table tr:nth-child(2) .ranking-position {
+        background: linear-gradient(135deg, #94a3b8, #64748b);
+        color: white;
+        box-shadow: 0 0 10px rgba(148, 163, 184, 0.5);
+      }
+      
+      .ranking-table tr:nth-child(3) .ranking-position {
+        background: linear-gradient(135deg, #c2410c, #9a3412);
+        color: white;
+        box-shadow: 0 0 10px rgba(194, 65, 12, 0.5);
+      }
+      
+      /* Player Name */
+      .player-name {
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .player-avatar {
+        width: 35px;
+        height: 35px;
+        background: linear-gradient(45deg, #4f46e5, #3730a3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .player-avatar i {
+        color: white;
+        font-size: 1rem;
+      }
+      
+      /* Score */
+      .player-score {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #fbbf24;
+        text-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+      }
+      
+      /* Date */
+      .score-date {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.85rem;
+      }
+      
+      /* No Records Message */
+      .no-records {
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 12px;
+        padding: 2.5rem;
+        text-align: center;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
+        margin: 2rem 0;
+      }
+      
+      .no-records i {
+        font-size: 3rem;
+        color: rgba(255, 255, 255, 0.3);
+        margin-bottom: 1rem;
+        display: block;
+      }
+      
+      .no-records p {
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 1.5rem;
+      }
+      
+      /* Acciones */
+      .ranking-actions {
+        display: flex;
+        gap: 1rem;
+        padding: 1.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
+      }
+      
+      .btn {
+        padding: 0.9rem 1.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1;
+        justify-content: center;
+        text-decoration: none;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
+      
+      .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.8s ease;
+        z-index: -1;
+      }
+      
+      .btn:hover::before {
+        left: 100%;
+      }
+      
+      .btn-primary {
+        background: linear-gradient(135deg, #ca8a04, #a16207);
+        box-shadow: 0 6px 15px rgba(202, 138, 4, 0.4);
+      }
+      
+      .btn-primary:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(202, 138, 4, 0.5);
+        background: linear-gradient(135deg, #a16207, #854d0e);
+      }
+      
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+      
+      .btn-secondary:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        background: rgba(255, 255, 255, 0.15);
+      }
+      
+      /* Animación de entrada */
+      @keyframes fade-in-up {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      /* Responsive para pantallas pequeñas */
+      @media (max-width: 768px) {
+        .ranking-table thead {
+          display: none;
+        }
+        
+        .ranking-table, .ranking-table tbody, .ranking-table tr, .ranking-table td {
+          display: block;
+          width: 100%;
+        }
+        
+        .ranking-table tr {
+          margin-bottom: 1rem;
+          padding: 1rem;
+          border-radius: 12px;
+        }
+        
+        .ranking-table td {
+          text-align: right;
+          padding: 0.5rem 0;
+          position: relative;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .ranking-table td:last-child {
+          border-bottom: none;
+        }
+        
+        .ranking-table td::before {
+          content: attr(data-label);
+          position: absolute;
+          left: 0;
+          width: 50%;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 0.7);
+          text-align: left;
+        }
+        
+        .player-name, .player-score, .score-date {
+          padding-left: 50%;
+          text-align: right;
+        }
+        
+        .ranking-position {
+          margin: 0 0 0 auto;
+        }
+      }
+    </style>
 </head>
 <body>
     <!-- Partículas de fondo -->
@@ -49,20 +453,60 @@
       <div class="page-container">
         <div class="content-card ranking-card">
           <div class="ranking-header">
-            <h2 class="section-title"><i class="fas fa-trophy"></i> Ranking Global - Pasala Che</h2>
-            <p class="ranking-subtitle">Mostrando las mejores puntuaciones de todos los jugadores.</p>
+            <h2 class="section-title"><i class="fas fa-trophy"></i> Ranking Global</h2>
+            <p class="ranking-subtitle">Los mejores puntajes de los jugadores de PASALA CHE</p>
           </div>
 
           <div class="ranking-section">
             <div class="ranking-table-container" id="ranking-table-container">
-              <!-- La tabla del historial se cargará aquí -->
-              <p>Cargando historial...</p>
+              <!-- Indicador de carga -->
+              <div class="loading-indicator">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Cargando ranking global...</div>
+              </div>
+              
+              <!-- El contenido de ejemplo solo se muestra para referencia y será reemplazado por el JS -->
+              <table class="ranking-table" style="display: none;">
+                <thead>
+                  <tr>
+                    <th>Pos</th>
+                    <th>Jugador</th>
+                    <th>Puntuación</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Las filas se cargarán dinámicamente desde JS -->
+                  <tr style="--row-index: 0;">
+                    <td><div class="ranking-position">1</div></td>
+                    <td>
+                      <div class="player-name">
+                        <div class="player-avatar"><i class="fas fa-user"></i></div>
+                        <span>Jugador1</span>
+                      </div>
+                    </td>
+                    <td><div class="player-score">25</div></td>
+                    <td><div class="score-date">12/04/2024</div></td>
+                  </tr>
+                  <!-- Más filas irían aquí... -->
+                </tbody>
+              </table>
+              
+              <!-- Mensaje cuando no hay registros -->
+              <div class="no-records" style="display: none;">
+                <i class="fas fa-trophy-alt"></i>
+                <p>¡Aún no hay registros en el ranking global!</p>
+                <a href="game-rosco.html" class="btn btn-primary">
+                  <i class="fas fa-play"></i> Juega ahora y sé el primero
+                </a>
+              </div>
             </div>
           </div>
 
           <div class="ranking-actions">
             <a href="portal.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver al Portal</a>
-            <a href="perfil.html" class="btn btn-primary"><i class="fas fa-user"></i> Ver Mi Perfil</a>
+            <a href="game-rosco.html" class="btn btn-primary"><i class="fas fa-play"></i> Jugar Ahora</a>
+            <a href="perfil.html" class="btn btn-secondary"><i class="fas fa-user"></i> Mi Perfil</a>
           </div>
 
         </div>
@@ -96,5 +540,31 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="js/particles-config.js"></script>
     <script src="js/main.js"></script> <!-- Para funcionalidad común como el theme toggle -->
+    
+    <!-- Script para mejorar la experiencia de usuario al mostrar el ranking -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Este código es solo para demostración visual
+        // En la implementación real, esto sería manejado por ranking.js
+        
+        // Para poder ver la demostración visual de la tabla, descomenta esto:
+        /*
+        setTimeout(() => {
+          document.querySelector('.loading-indicator').style.display = 'none';
+          document.querySelector('.ranking-table').style.display = 'table';
+          
+          // Si no hay registros, mostrar el mensaje de no records
+          // document.querySelector('.no-records').style.display = 'block';
+          // document.querySelector('.ranking-table').style.display = 'none';
+          
+          // Animar las filas de la tabla
+          const tableRows = document.querySelectorAll('.ranking-table tbody tr');
+          tableRows.forEach((row, index) => {
+            row.style.setProperty('--row-index', index);
+          });
+        }, 1200);
+        */
+      });
+    </script>
 </body>
 </html> 
