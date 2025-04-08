@@ -7,7 +7,6 @@
     <meta name="google-adsense-account" content="ca-pub-9579152019412427">
     <title>Términos y Condiciones - CRACK TOTAL</title>
     <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/header.css" />
     <link rel="stylesheet" href="css/pages.css" />
     <link rel="stylesheet" href="css/footer-styles.css" />
     <!-- Google Fonts -->
@@ -775,33 +774,11 @@ document.addEventListener('DOMContentLoaded', function() {
     `;
     document.head.appendChild(style);
   }
-  
-  // Función para mostrar notificaciones
-  function showNotification(message, type = 'info') {
-    // Buscar elemento de notificación existente o crear uno nuevo
-    let notification = document.getElementById('notification');
-    
-    if (!notification) {
-      notification = document.createElement('div');
-      notification.id = 'notification';
-      notification.className = 'toast';
-      notification.style.display = 'none';
-      document.body.appendChild(notification);
-    }
-    
-    // Mostrar notificación
-    notification.textContent = message;
-    notification.className = `toast ${type}`;
-    notification.style.display = 'block';
-    
-    // Ocultar después de 3 segundos
-    setTimeout(() => {
-      notification.style.display = 'none';
-    }, 3000);
-  }
 });
 </script>
 
+<!-- Utilitarios -->
+<script src="utils/notifications.js"></script>
 <!-- Botón flotante de compartir -->
 <script src="js/share-buttons.js"></script>
 <!-- Script para el footer global -->

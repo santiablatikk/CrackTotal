@@ -28,23 +28,122 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
-    <!-- Scripts -->
-    <script src="js/utils.js"></script>
-    <script src="js/main.js" defer></script>
+    <!-- Scripts útiles -->
+    <script src="utils/notifications.js"></script>
     <style>
+      /* Variables globales */
+      :root {
+        --primary-color: #4338ca;
+        --primary-light: #4f46e5;
+        --primary-dark: #3730a3;
+        --secondary-color: #e11d48;
+        --secondary-light: #f43f5e;
+        --secondary-dark: #be123c;
+        --bg-gradient-dark: linear-gradient(135deg, #1e293b, #0f172a);
+        --bg-gradient-primary: linear-gradient(135deg, var(--primary-light), var(--primary-dark));
+        --bg-gradient-secondary: linear-gradient(135deg, var(--secondary-light), var(--secondary-dark));
+        --text-color: #ffffff;
+        --text-muted: rgba(255, 255, 255, 0.8);
+        --border-radius: 16px;
+        --card-border: 1px solid rgba(255, 255, 255, 0.1);
+        --transition-fast: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        --transition-bounce: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.15);
+        --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.2);
+        --shadow-lg: 0 15px 30px rgba(0, 0, 0, 0.3);
+        --shadow-highlight: 0 0 20px rgba(79, 70, 229, 0.4);
+      }
+
+      body {
+        background: radial-gradient(ellipse at bottom, #1f2937 0%, #0f172a 100%);
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text-color);
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      /* Mejoras para el contenedor principal */
+      .app-container {
+        position: relative;
+        z-index: 2;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 1.2rem 1rem;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      /* Mejoras para el header */
+      .app-header {
+        position: relative;
+        text-align: center;
+        margin-bottom: 1.5rem;
+        padding: 0.5rem 0;
+        animation: fadeIn 0.8s ease-out both;
+      }
+
+      .logo-animation {
+        margin-bottom: 0.5rem;
+      }
+
+      .ball-icon {
+        font-size: 2rem;
+        color: var(--secondary-color);
+        filter: drop-shadow(0 0 10px rgba(225, 29, 72, 0.5));
+      }
+
+      .bounce {
+        animation: bounce 2s infinite;
+      }
+
+      .title-link {
+        text-decoration: none;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+      }
+
+      .title-text {
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin: 0;
+        background: var(--bg-gradient-secondary);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-shadow: 0 5px 15px rgba(225, 29, 72, 0.3);
+        letter-spacing: -1px;
+        transform-origin: center;
+        transition: transform 0.3s ease;
+      }
+
+      .title-link:hover .title-text {
+        transform: scale(1.02);
+      }
+
+      .subtitle {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin-bottom: 1rem;
+        font-weight: 500;
+        color: var(--text-muted);
+      }
+
       .return-portal-link {
         display: inline-flex;
         align-items: center;
-        padding: 0.6rem 1.2rem;
+        padding: 0.5rem 1rem;
         background-color: rgba(66, 153, 225, 0.2);
         color: white;
         text-decoration: none;
         border-radius: 2rem;
-        margin-top: 10px;
-        transition: all 0.3s ease;
+        margin-top: 0.5rem;
+        transition: var(--transition-fast);
         border: 1px solid rgba(66, 153, 225, 0.3);
         font-weight: 500;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-sm);
+        backdrop-filter: blur(5px);
+        font-size: 0.9rem;
       }
       
       .return-portal-link i {
@@ -54,8 +153,680 @@
       
       .return-portal-link:hover {
         background-color: rgba(66, 153, 225, 0.4);
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+      }
+
+      /* Mejoras para la pantalla de opciones */
+      .screens-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 0.5rem 0;
+      }
+
+      .content-card {
+        background: var(--bg-gradient-dark);
+        border-radius: var(--border-radius);
+        box-shadow: var(--shadow-lg);
+        border: var(--card-border);
+        width: 100%;
+        max-width: 700px;
+        overflow: hidden;
+        position: relative;
+        animation: slideUpFade 0.8s cubic-bezier(0.19, 1, 0.22, 1) both;
+      }
+
+      .content-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: var(--bg-gradient-secondary);
+        z-index: 1;
+      }
+
+      .content-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at bottom right, rgba(79, 70, 229, 0.1), transparent 60%);
+        pointer-events: none;
+      }
+
+      .card-section {
+        padding: 1.5rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      /* Mejoras para la sección de bienvenida */
+      .welcome-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.2rem;
+        animation: fadeIn 0.6s ease-out both;
+        animation-delay: 0.3s;
+      }
+
+      .user-avatar {
+        width: 45px;
+        height: 45px;
+        background: var(--bg-gradient-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        position: relative;
+        box-shadow: var(--shadow-md);
+        flex-shrink: 0;
+      }
+
+      .user-avatar::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: conic-gradient(
+          from 0deg, 
+          transparent, 
+          var(--primary-light), 
+          transparent, 
+          var(--secondary-light), 
+          transparent
+        );
+        border-radius: 50%;
+        z-index: -1;
+        animation: rotate 4s linear infinite;
+      }
+
+      .user-avatar i {
+        font-size: 1.4rem;
+        color: white;
+      }
+
+      .welcome-title {
+        font-size: 1.5rem;
+        margin: 0;
+        font-weight: 700;
+        color: white;
+      }
+
+      #player-name-display {
+        background: linear-gradient(135deg, #f9fafb, #e5e7eb);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-weight: 800;
+      }
+
+      /* Mejoras para el banner */
+      .game-banner {
+        background: linear-gradient(135deg, rgba(225, 29, 72, 0.1), rgba(79, 70, 229, 0.1));
+        border-radius: var(--border-radius);
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.2rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        animation: fadeIn 0.6s ease-out both;
+        animation-delay: 0.4s;
+      }
+
+      .game-banner::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(225, 29, 72, 0.2), transparent 70%);
+        opacity: 0.6;
+        animation: pulse 3s ease-in-out infinite alternate;
+      }
+
+      .banner-icon {
+        font-size: 2rem;
+        color: var(--secondary-color);
+        margin-right: 1rem;
+        filter: drop-shadow(0 0 8px rgba(225, 29, 72, 0.5));
+        position: relative;
+        z-index: 1;
+        flex-shrink: 0;
+      }
+
+      .banner-text {
+        font-size: 0.95rem;
+        margin: 0;
+        font-weight: 600;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Mejoras para la sección de dificultad */
+      .difficulty-section {
+        margin-bottom: 1.2rem;
+        animation: fadeIn 0.6s ease-out both;
+        animation-delay: 0.5s;
+      }
+
+      .difficulty-title {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        color: white;
+        position: relative;
+        display: inline-block;
+      }
+
+      .difficulty-title::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--bg-gradient-secondary);
+        border-radius: 3px;
+      }
+
+      .difficulty-options {
+        display: flex;
+        gap: 0.8rem;
+        flex-wrap: wrap;
+      }
+
+      .difficulty-option {
+        flex: 1;
+        min-width: 110px;
+        background: rgba(15, 23, 42, 0.6);
+        border-radius: calc(var(--border-radius) - 4px);
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        cursor: pointer;
+        transition: var(--transition-fast);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .difficulty-option::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .difficulty-option:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-md);
+        border-color: rgba(255, 255, 255, 0.1);
+        z-index: 2;
+      }
+
+      .difficulty-option:hover::before {
+        opacity: 1;
+      }
+
+      .difficulty-option.selected {
+        background: rgba(79, 70, 229, 0.2);
+        border-color: rgba(79, 70, 229, 0.4);
+        box-shadow: var(--shadow-highlight);
+        transform: translateY(-8px) scale(1.03);
+      }
+
+      .difficulty-option.selected::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--bg-gradient-primary);
+      }
+
+      .difficulty-icon {
+        width: 45px;
+        height: 45px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 0.5rem;
+        transition: var(--transition-fast);
+      }
+
+      .difficulty-option:hover .difficulty-icon {
+        transform: scale(1.1) rotate(5deg);
+      }
+
+      .difficulty-option:nth-child(1) .difficulty-icon {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
+        box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+      }
+
+      .difficulty-option:nth-child(2) .difficulty-icon {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.2));
+        box-shadow: 0 5px 15px rgba(245, 158, 11, 0.2);
+      }
+
+      .difficulty-option:nth-child(3) .difficulty-icon {
+        background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2));
+        box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2);
+      }
+
+      .difficulty-option:nth-child(1) i, 
+      .difficulty-option:nth-child(2) i, 
+      .difficulty-option:nth-child(3) i {
+        font-size: 1.4rem;
+      }
+
+      .difficulty-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+
+      .difficulty-details span {
+        font-size: 1rem;
+        font-weight: 700;
+      }
+
+      .difficulty-details small {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+      }
+
+      /* Mejoras para los botones */
+      .start-button-container {
+        display: flex;
+        gap: 0.8rem;
+        margin-top: 1.2rem;
+        animation: fadeIn 0.6s ease-out both;
+        animation-delay: 0.6s;
+      }
+
+      .btn-start-game {
+        flex: 2;
+        background: var(--bg-gradient-secondary);
+        color: white;
+        text-decoration: none;
+        padding: 0.8rem 1rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition-bounce);
+        box-shadow: 0 6px 15px rgba(225, 29, 72, 0.4);
+        position: relative;
+        overflow: hidden;
+        letter-spacing: 0.5px;
+      }
+
+      .btn-start-game::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.7s ease;
+      }
+
+      .btn-start-game:hover {
+        transform: translateY(-8px);
+        background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+        box-shadow: 0 15px 30px rgba(225, 29, 72, 0.5);
+      }
+
+      .btn-start-game:hover::before {
+        left: 100%;
+      }
+
+      .btn-profile-link {
+        flex: 1;
+        background: var(--bg-gradient-primary);
+        color: white;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.8rem;
+        border-radius: var(--border-radius);
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: var(--transition-bounce);
+        box-shadow: 0 6px 15px rgba(67, 56, 202, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-profile-link::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.7s ease;
+      }
+
+      .btn-profile-link:hover {
+        transform: translateY(-8px);
+        background: linear-gradient(135deg, var(--primary-dark), #312e81);
+        box-shadow: 0 15px 30px rgba(67, 56, 202, 0.4);
+      }
+
+      .btn-profile-link:hover::before {
+        left: 100%;
+      }
+
+      .btn-profile-link i {
+        margin-right: 0.5rem;
+      }
+      
+      /* Mejoras para el modal de reglas */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        backdrop-filter: blur(8px);
+        animation: fadeIn 0.4s ease-out both;
+      }
+      
+      .rules-modal-content {
+        background: var(--bg-gradient-dark);
+        border-radius: 20px;
+        padding: 1.8rem;
+        max-width: 550px;
+        width: 90%;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        text-align: left;
+        position: relative;
+        border: 1px solid rgba(79, 70, 229, 0.2);
+        animation: zoomIn 0.5s cubic-bezier(0.19, 1, 0.22, 1) both;
+        overflow: hidden;
+      }
+      
+      .rules-modal-content::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at top right, rgba(79, 70, 229, 0.1), transparent 70%);
+        pointer-events: none;
+      }
+      
+      .rules-modal-content h2 {
+        color: #4f46e5;
+        margin-top: 0;
+        text-align: center;
+        font-size: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(79, 70, 229, 0.2);
+        font-weight: 700;
+        position: relative;
+      }
+      
+      .rules-modal-content h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #4f46e5, #e11d48);
+        border-radius: 3px;
+      }
+      
+      .rules-modal-content h2 i {
+        margin-right: 0.5rem;
+        color: #4f46e5;
+        font-size: 1.6rem;
+        vertical-align: middle;
+      }
+      
+      .rules-content {
+        margin: 1.5rem 0;
+      }
+      
+      .rules-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .rule-item {
+        display: flex;
+        align-items: flex-start;
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 12px;
+        padding: 0.8rem 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .rule-item:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        border-color: rgba(79, 70, 229, 0.3);
+      }
+      
+      .rule-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(to bottom, #4f46e5, #e11d48);
+        border-radius: 2px;
+      }
+      
+      .rule-icon {
+        color: #4f46e5;
+        font-size: 1rem;
+        margin-right: 0.8rem;
+        margin-top: 0.2rem;
+        flex-shrink: 0;
+      }
+      
+      .rule-content {
+        flex: 1;
+      }
+      
+      .rule-title {
+        font-weight: 700;
+        color: #4f46e5;
+        margin-bottom: 0.3rem;
+        font-size: 0.9rem;
+      }
+      
+      .rule-description {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.85rem;
+        line-height: 1.4;
+      }
+      
+      .rules-footer {
+        text-align: center;
+        margin-top: 1.8rem;
+      }
+      
+      #start-game-final {
+        background: var(--bg-gradient-primary);
+        color: white;
+        padding: 0.8rem 1.8rem;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition-bounce);
+        box-shadow: 0 6px 15px rgba(67, 56, 202, 0.4);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      #start-game-final::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.7s ease;
+      }
+      
+      #start-game-final:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(67, 56, 202, 0.5);
+        background: linear-gradient(135deg, #3730a3, #312e81);
+      }
+
+      #start-game-final:hover::before {
+        left: 100%;
+      }
+
+      /* Animaciones */
+      @keyframes bounce {
+        0%, 100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-12px);
+      }
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes pulse {
+        0% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 0.8;
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes slideUpFade {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes zoomIn {
+        from {
+          opacity: 0;
+          transform: scale(0.9);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      /* Media queries */
+      @media (max-width: 768px) {
+        .app-container {
+          padding: 1.5rem 1rem;
+      }
+
+        .card-section {
+          padding: 1.5rem;
+        }
+        
+        .title-text {
+          font-size: 2.8rem;
+        }
+        
+        .difficulty-options {
+          flex-direction: column;
+        }
+        
+        .difficulty-option {
+          width: 100%;
+        }
+        
+        .start-button-container {
+          flex-direction: column;
+        }
+        
+        .btn-start-game, .btn-profile-link {
+          width: 100%;
+        }
       }
     </style>
   </head>
@@ -69,7 +840,7 @@
         <div class="logo-animation">
           <i class="fas fa-futbol ball-icon bounce"></i>
         </div>
-        <a href="index.html" class="title-link">
+        <a href="game-rosco.html" class="title-link">
           <h1 class="title-text">PASALA CHE</h1>
         </a>
         <p class="subtitle">El juego de palabras del fútbol</p>
@@ -127,10 +898,61 @@
               </div>
             </div>
             
-            <!-- Botón de inicio -->
+            <!-- Botón de inicio y perfil -->
             <div class="start-button-container">
-              <button id="start-game" class="btn btn-start-game">
+              <button id="start-game" class="btn-start-game">
                 <i class="fas fa-play"></i> ¡COMENZAR JUEGO!
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Modal de Reglas -->
+        <div id="rules-modal" class="modal-overlay" style="display: none;">
+          <div class="rules-modal-content">
+            <h2><i class="fas fa-info-circle"></i> Reglas del Juego</h2>
+            <div class="rules-content">
+              <ul class="rules-list">
+                <li class="rule-item">
+                  <div class="rule-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                  <div class="rule-content">
+                    <div class="rule-title">Máximo de Errores</div>
+                    <div class="rule-description">Hasta 2 errores (al tercer error pierdes).</div>
+                  </div>
+                </li>
+                <li class="rule-item">
+                  <div class="rule-icon"><i class="fas fa-lightbulb"></i></div>
+                  <div class="rule-content">
+                    <div class="rule-title">HELP</div>
+                    <div class="rule-description">Tenes 2 oportunidades para obtener pista (primeras 3 letras).</div>
+                  </div>
+                </li>
+                <li class="rule-item">
+                  <div class="rule-icon"><i class="fas fa-comment-dots"></i></div>
+                  <div class="rule-content">
+                    <div class="rule-title">Respuesta Incompleta</div>
+                    <div class="rule-description">Podes enviar respuestas incompletas hasta 2 veces.</div>
+                  </div>
+                </li>
+                <li class="rule-item">
+                  <div class="rule-icon"><i class="fas fa-spell-check"></i></div>
+                  <div class="rule-content">
+                    <div class="rule-title">Ortografía</div>
+                    <div class="rule-description">Se toleran errores mínimos.</div>
+                  </div>
+                </li>
+                <li class="rule-item">
+                  <div class="rule-icon"><i class="fas fa-check-circle"></i></div>
+                  <div class="rule-content">
+                    <div class="rule-title">Respuestas</div>
+                    <div class="rule-description">Si la pregunta no dice "apellido..." o "nombre completo...", la respuesta es nombre y apellido.</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="rules-footer">
+              <button id="start-game-final" class="btn btn-primary">
+                <i class="fas fa-play"></i> ¡COMENZAR AHORA!
               </button>
             </div>
           </div>
@@ -139,419 +961,27 @@
 
       <!-- Footer -->
       <footer class="policy-footer">
-  <div class="footer-links-mini">
-    <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
-    <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-    <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
-    <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-    <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-    <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
-  </div>
-  <div class="share-button-container">
-    <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
-  </div>
-  <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
-  <div class="footer-social-icons">
-    <a href="https://www.facebook.com/cracktotal" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-    <a href="https://twitter.com/cracktotal" class="social-icon"><i class="fab fa-twitter"></i></a>
-    <a href="https://www.instagram.com/cracktotal" class="social-icon"><i class="fab fa-instagram"></i></a>
-    <a href="https://www.youtube.com/c/cracktotal" class="social-icon"><i class="fab fa-youtube"></i></a>
-  </div>
-</footer>
-
-<style>
-/* Estilos para el botón de compartir */
-.share-button-container {
-  text-align: center;
-  margin: 1.5rem 0;
-  position: relative;
-  z-index: 1;
-}
-
-.share-button {
-  padding: 0.6rem 1.5rem;
-  border-radius: 50px;
-  background: linear-gradient(135deg, #4299e1, #3182ce);
-  color: white;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 10px rgba(66, 153, 225, 0.35);
-}
-
-.share-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(66, 153, 225, 0.5);
-  background: linear-gradient(135deg, #3182ce, #2c5282);
-}
-
-.share-button i {
-  font-size: 1.1rem;
-}
-
-/* Estilos para el footer */
-.policy-footer {
-  width: 100%;
-  max-width: 800px;
-  margin: 2rem auto 0;
-  text-align: center;
-  position: relative;
-  padding-top: 1.5rem;
-  z-index: 1;
-  opacity: 0.9;
-}
-
-.policy-footer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--accent-color), transparent);
-  opacity: 0.3;
-}
-
-.footer-links-mini {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.footer-links-mini a {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.85rem;
-  transition: all 0.3s ease;
-  position: relative;
-  padding-bottom: 2px;
-}
-
-.footer-links-mini a::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 1px;
-  bottom: 0;
-  left: 0;
-  background-color: var(--accent-color);
-  transition: var(--transition);
-}
-
-.footer-links-mini a:hover::after {
-  width: 100%;
-}
-
-.footer-links-mini a:hover {
-  color: var(--accent-color);
-  transform: translateY(-2px);
-}
-
-.footer-links-mini a i {
-  margin-right: 0.3rem;
-  font-size: 0.9rem;
-}
-
-.copyright-text {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  opacity: 0.7;
-}
-
-.footer-social-icons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 15px;
-}
-
-.social-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: rgba(225, 29, 72, 0.1);
-  color: var(--text-muted);
-  transition: all 0.3s ease;
-}
-
-.social-icon:hover {
-  background-color: var(--accent-color);
-  color: white;
-  transform: translateY(-3px);
-}
-
-/* Estilos para las notificaciones toast */
-.toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 12px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  font-size: 14px;
-  z-index: 9999;
-  display: none;
-  animation: fadeInOut 3s ease forwards;
-  background-color: #1e293b;
-  color: white;
-  border-left: 4px solid var(--accent-color, #3182ce);
-}
-
-.toast.success {
-  border-left-color: #48bb78;
-}
-
-.toast.error {
-  border-left-color: #f56565;
-}
-
-.toast.info {
-  border-left-color: #4299e1;
-}
-
-@keyframes fadeInOut {
-  0% { opacity: 0; transform: translateY(-20px); }
-  10% { opacity: 1; transform: translateY(0); }
-  90% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-20px); }
-}
-
-@media (max-width: 600px) {
-  .footer-links-mini {
-    gap: 0.5rem;
-  }
-  
-  .footer-links-mini a {
-    font-size: 0.75rem;
-  }
-  
-  .share-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-  
-  .toast {
-    width: calc(100% - 40px);
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-  }
-}
-</style>
-
-<script>
-// Función para compartir el sitio web
-document.addEventListener('DOMContentLoaded', function() {
-  const shareButton = document.getElementById('share-button');
-  
-  if (shareButton) {
-    shareButton.addEventListener('click', function() {
-      const shareData = {
-        title: 'CRACK TOTAL - Juegos de Fútbol',
-        text: 'Juega y pon a prueba tus conocimientos futboleros en CRACK TOTAL',
-        url: window.location.href
-      };
-      
-      // Si la API Web Share está disponible
-      if (navigator.share) {
-        navigator.share(shareData)
-          .then(() => {
-            showNotification('¡Gracias por compartir!', 'success');
-          })
-          .catch((error) => {
-            console.error('Error al compartir:', error);
-            shareWithFallback();
-          });
-      } else {
-        // Fallback para navegadores que no soportan la API Web Share
-        shareWithFallback();
-      }
-    });
-  }
-  
-  // Función de fallback para navegadores sin soporte de API Web Share
-  function shareWithFallback() {
-    const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent('CRACK TOTAL - Juegos de Fútbol');
-    const text = encodeURIComponent('Juega y pon a prueba tus conocimientos futboleros en CRACK TOTAL');
-    
-    const shareOptions = document.createElement('div');
-    shareOptions.classList.add('share-options');
-    shareOptions.innerHTML = `
-      <div class="share-dialog">
-        <div class="share-header">
-          <h3>Compartir en redes sociales</h3>
-          <button class="close-share"><i class="fas fa-times"></i></button>
+        <div class="footer-links-mini">
+          <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+          <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+          <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+          <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+          <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+          <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+          <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
         </div>
-        <div class="share-buttons">
-          <a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" class="fb-share">
-            <i class="fab fa-facebook-f"></i> Facebook
-          </a>
-          <a href="https://twitter.com/intent/tweet?url=${url}&text=${text}" target="_blank" class="tw-share">
-            <i class="fab fa-twitter"></i> Twitter
-          </a>
-          <a href="https://api.whatsapp.com/send?text=${text}%20${url}" target="_blank" class="wa-share">
-            <i class="fab fa-whatsapp"></i> WhatsApp
-          </a>
-          <a href="mailto:?subject=${title}&body=${text}%20${url}" class="email-share">
-            <i class="fas fa-envelope"></i> Email
-          </a>
+        <div class="share-button-container">
+          <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
         </div>
-      </div>
-    `;
-    
-    document.body.appendChild(shareOptions);
-    
-    // Cerrar el diálogo cuando se hace clic en el botón de cerrar
-    const closeButton = shareOptions.querySelector('.close-share');
-    closeButton.addEventListener('click', function() {
-      document.body.removeChild(shareOptions);
-    });
-    
-    // Cerrar el diálogo al hacer clic fuera de él
-    shareOptions.addEventListener('click', function(e) {
-      if (e.target === shareOptions) {
-        document.body.removeChild(shareOptions);
-      }
-    });
-    
-    // Agregar estilos para el diálogo de compartir
-    const style = document.createElement('style');
-    style.textContent = `
-      .share-options {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.7);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-      }
-      
-      .share-dialog {
-        background-color: var(--card-bg, #1e293b);
-        border-radius: 12px;
-        padding: 1.5rem;
-        width: 90%;
-        max-width: 400px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-      }
-      
-      .share-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1.5rem;
-      }
-      
-      .share-header h3 {
-        margin: 0;
-        color: white;
-        font-size: 1.2rem;
-      }
-      
-      .close-share {
-        background: transparent;
-        border: none;
-        color: white;
-        font-size: 1.2rem;
-        cursor: pointer;
-        opacity: 0.7;
-        transition: opacity 0.2s;
-      }
-      
-      .close-share:hover {
-        opacity: 1;
-      }
-      
-      .share-buttons {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-      }
-      
-      .share-buttons a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 0.8rem;
-        text-decoration: none;
-        border-radius: 8px;
-        color: white;
-        font-weight: 500;
-        transition: transform 0.2s, filter 0.2s;
-      }
-      
-      .share-buttons a:hover {
-        transform: translateY(-3px);
-        filter: brightness(1.1);
-      }
-      
-      .fb-share {
-        background-color: #4267B2;
-      }
-      
-      .tw-share {
-        background-color: #1DA1F2;
-      }
-      
-      .wa-share {
-        background-color: #25D366;
-      }
-      
-      .email-share {
-        background-color: #666;
-      }
-    `;
-    document.head.appendChild(style);
-  }
-  
-  // Función para mostrar notificaciones
-  function showNotification(message, type = 'info') {
-    // Buscar elemento de notificación existente o crear uno nuevo
-    let notification = document.getElementById('notification');
-    
-    if (!notification) {
-      notification = document.createElement('div');
-      notification.id = 'notification';
-      notification.className = 'toast';
-      notification.style.display = 'none';
-      document.body.appendChild(notification);
-    }
-    
-    // Mostrar notificación
-    notification.textContent = message;
-    notification.className = `toast ${type}`;
-    notification.style.display = 'block';
-    
-    // Ocultar después de 3 segundos
-    setTimeout(() => {
-      notification.style.display = 'none';
-    }, 3000);
-  }
-});
-</script>
-<!-- Botón flotante de compartir -->
-<script src="js/share-buttons.js"></script>
-<!-- Particles.js scripts -->
-<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-<script src="js/particles-config.js"></script>
+        <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero</div>
+        <div class="footer-social-icons">
+          <a href="https://www.facebook.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.instagram.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/c/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-youtube"></i></a>
+        </div>
+      </footer>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Inicializar particles.js
@@ -592,12 +1022,173 @@ document.addEventListener('DOMContentLoaded', function() {
     const startGameBtn = document.getElementById('start-game');
     if (startGameBtn) {
       startGameBtn.addEventListener('click', function() {
+        // Mostrar el modal de reglas en lugar de redirigir directamente
+        const rulesModal = document.getElementById('rules-modal');
+        if (rulesModal) {
+          rulesModal.style.display = 'flex';
+        } else {
+          // Fallback si el modal no existe
+          window.location.href = 'game.html';
+        }
+      });
+    }
+    
+    // Configurar el botón dentro del modal de reglas
+    const startGameFinal = document.getElementById('start-game-final');
+    if (startGameFinal) {
+      startGameFinal.addEventListener('click', function() {
         window.location.href = 'game.html';
       });
     }
+    
+    // Permitir cerrar el modal haciendo clic fuera del contenido
+    const rulesModal = document.getElementById('rules-modal');
+    if (rulesModal) {
+      rulesModal.addEventListener('click', function(e) {
+        if (e.target === rulesModal) {
+          rulesModal.style.display = 'none';
+        }
+      });
+    }
+    
+    // Si no hay nombre guardado, mostrar un modal para que lo ingrese
+    if (!localStorage.getItem('playerName') && playerNameDisplay) {
+      showNameInputModal();
+    }
+    
+    // Función para mostrar el modal de ingreso de nombre
+    function showNameInputModal() {
+      // Crear el modal
+      const modal = document.createElement('div');
+      modal.className = 'name-input-modal modal-overlay';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <h2><i class="fas fa-user"></i> ¡Bienvenido a PASALA CHE!</h2>
+          <p>Para una mejor experiencia, ingresa tu nombre:</p>
+          <form id="name-form">
+            <input type="text" id="player-name-input" placeholder="Tu nombre aquí" maxlength="20" required>
+            <button type="submit" class="btn btn-primary">Continuar</button>
+          </form>
+        </div>
+      `;
+      
+      // Agregar estilos
+      const style = document.createElement('style');
+      style.textContent = `
+        .name-input-modal {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(0, 0, 0, 0.8);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 9999;
+          backdrop-filter: blur(5px);
+        }
+        
+        .name-input-modal .modal-content {
+          background: linear-gradient(145deg, #1e293b, #0f172a);
+          border-radius: 16px;
+          padding: 2rem;
+          width: 90%;
+          max-width: 500px;
+          text-align: center;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .name-input-modal h2 {
+          margin-top: 0;
+          color: white;
+          font-size: 1.8rem;
+          margin-bottom: 1rem;
+        }
+        
+        .name-input-modal p {
+          color: rgba(255, 255, 255, 0.8);
+          margin-bottom: 1.5rem;
+          font-size: 1.1rem;
+        }
+        
+        .name-input-modal form {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        
+        #player-name-input {
+          padding: 1rem;
+          border-radius: 8px;
+          background: rgba(15, 23, 42, 0.8);
+          border: 1px solid rgba(66, 153, 225, 0.3);
+          color: white;
+          font-size: 1.1rem;
+          text-align: center;
+        }
+        
+        #player-name-input:focus {
+          outline: none;
+          border-color: #4299e1;
+          box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.3);
+        }
+        
+        .name-input-modal .btn-primary {
+          background: linear-gradient(135deg, #4299e1, #3182ce);
+          color: white;
+          border: none;
+          padding: 1rem;
+          border-radius: 8px;
+          font-size: 1.1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+        
+        .name-input-modal .btn-primary:hover {
+          background: linear-gradient(135deg, #3182ce, #2c5282);
+          transform: translateY(-3px);
+          box-shadow: 0 6px 15px rgba(66, 153, 225, 0.4);
+        }
+      `;
+      
+      // Agregar elementos al DOM
+      document.head.appendChild(style);
+      document.body.appendChild(modal);
+      
+      // Enfocar el input
+      setTimeout(() => {
+        const input = document.getElementById('player-name-input');
+        if (input) input.focus();
+      }, 100);
+      
+      // Manejar el envío del formulario
+      const form = document.getElementById('name-form');
+      if (form) {
+        form.addEventListener('submit', function(event) {
+          event.preventDefault();
+          const input = document.getElementById('player-name-input');
+          const name = input.value.trim();
+          
+          if (name) {
+            localStorage.setItem('playerName', name);
+            if (playerNameDisplay) {
+              playerNameDisplay.textContent = name;
+            }
+            document.body.removeChild(modal);
+            showNotification('¡Bienvenido, ' + name + '!', 'success');
+          }
+        });
+      }
+    }
   });
 </script>
-<!-- Script para el footer global -->
+<!-- Particles.js scripts -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="js/particles-config.js"></script>
+<!-- Global footer script -->
 <script src="js/global-footer.js"></script>
 </body>
 </html>

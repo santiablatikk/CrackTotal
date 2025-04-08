@@ -43,6 +43,24 @@ const translations = {
     nav_profile: "Ver Perfil",
     share_button: "Compartir",
     selectLanguage: "Selecciona Idioma:",
+    nav_home: "Inicio",
+    nav_games: "Juegos",
+    nav_blog: "Blog",
+    nav_stats: "Estadísticas",
+    nav_about: "Nosotros",
+    nav_contact: "Contacto",
+    nav_achievements: "Logros",
+    btn_play: "Jugar",
+    btn_install: "Instalar App",
+    btn_continue: "Continuar",
+    title_games: "Nuestros Juegos",
+    title_news: "Novedades",
+    welcome: "Bienvenido",
+    cookie_message: "Usamos cookies para mejorar tu experiencia",
+    cookie_accept: "Aceptar",
+    cookie_decline: "Rechazar",
+    install_guide: "Instalación",
+    btn_close: "Cerrar"
   },
   en: {
     loginTitle: "PASALA CHE",
@@ -73,6 +91,24 @@ const translations = {
     nav_profile: "View Profile",
     share_button: "Share",
     selectLanguage: "Select Language:",
+    nav_home: "Home",
+    nav_games: "Games",
+    nav_blog: "Blog",
+    nav_stats: "Statistics",
+    nav_about: "About",
+    nav_contact: "Contact",
+    nav_achievements: "Achievements",
+    btn_play: "Play Now",
+    btn_install: "Install App",
+    btn_continue: "Continue",
+    title_games: "Our Games",
+    title_news: "News",
+    welcome: "Welcome",
+    cookie_message: "We use cookies to improve your experience",
+    cookie_accept: "Accept",
+    cookie_decline: "Decline",
+    install_guide: "Installation",
+    btn_close: "Close"
   },
 };
 
@@ -92,6 +128,14 @@ let gameQuestions = []; // preguntas del juego
 let gameStarted = false;
 let letterElements = {}; // referencia a los elementos DOM de las letras
 const ALPHABET = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
+
+// Configurar logger para evitar loggear en producción
+const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+const logger = {
+  log: isProduction ? function(){} : console.log,
+  warn: isProduction ? function(){} : console.warn,
+  error: console.error // Mantener errores siempre
+};
 
 /**
  * Aplica las traducciones según el idioma seleccionado
@@ -119,7 +163,7 @@ function setLanguage(lang) {
  * Inicialización cuando el DOM está completamente cargado
  */
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('Aplicación iniciada');
+  logger.log('Aplicación iniciada');
   
   // Configurar la página según la ruta
   setupPageBasedOnPath();
@@ -151,7 +195,7 @@ function setupPageBasedOnPath() {
   const path = window.location.pathname;
   
   if (path.endsWith('game.html')) {
-    console.log('Configurando página de juego');
+    logger.log('Configurando página de juego');
     
     // Recuperar datos de sesión
     username = sessionStorage.getItem('username') || '';
@@ -159,7 +203,7 @@ function setupPageBasedOnPath() {
     
     // Verificar si el usuario está autenticado
     if (!username) {
-      console.log('Usuario no autenticado, redirigiendo a home');
+      logger.log('Usuario no autenticado, redirigiendo a home');
       window.location.href = 'index.html';
       return;
     }
@@ -168,12 +212,12 @@ function setupPageBasedOnPath() {
     updateUserInfo();
     
   } else if (path.endsWith('index.html') || path === '/' || path.endsWith('/')) {
-    console.log('Configurando página principal');
+    logger.log('Configurando página principal');
     
     // Recuperar nombre de usuario si existe en sessionStorage
     if (sessionStorage.getItem('username')) {
       username = sessionStorage.getItem('username');
-      console.log('Usuario recuperado:', username);
+      logger.log('Usuario recuperado:', username);
       
       // Mostrar directamente la pantalla de opciones si ya hay un usuario
       showGameOptions();
@@ -185,7 +229,7 @@ function setupPageBasedOnPath() {
     // Recuperar dificultad si existe
     if (sessionStorage.getItem('selectedDifficulty')) {
       selectedDifficulty = sessionStorage.getItem('selectedDifficulty');
-      console.log('Dificultad recuperada:', selectedDifficulty);
+      logger.log('Dificultad recuperada:', selectedDifficulty);
       
       // Actualizar UI con la dificultad seleccionada
       updateSelectedDifficulty();
@@ -295,7 +339,7 @@ function handleLoginFormSubmit(e) {
     // Guardar nombre de usuario
     username = usernameInput.value.trim();
     sessionStorage.setItem('username', username);
-    console.log('Nombre de usuario guardado:', username);
+    logger.log('Nombre de usuario guardado:', username);
     
     // Mostrar mensaje de bienvenida
     showToast(`¡Bienvenido, ${username}!`, 'success');
@@ -327,7 +371,7 @@ function handleDifficultySelection(e) {
   // Guardar dificultad seleccionada
   selectedDifficulty = selectedOption.getAttribute('data-difficulty');
   sessionStorage.setItem('selectedDifficulty', selectedDifficulty);
-  console.log('Dificultad seleccionada:', selectedDifficulty);
+  logger.log('Dificultad seleccionada:', selectedDifficulty);
   
   // Actualizar tiempo límite según dificultad
   switch (selectedDifficulty) {

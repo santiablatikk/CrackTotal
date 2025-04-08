@@ -71,18 +71,22 @@
   ],
   "shortcuts": [
     {
-      "name": "Jugar Ahora",
-      "short_name": "Jugar",
-      "description": "Comienza una nueva partida",
-      "url": "/game.html",
-      "icons": [{ "src": "img/icons/play-icon.png", "sizes": "192x192" }]
+      "name": "Jugar PASALA CHE",
+      "short_name": "PASALA CHE",
+      "url": "/game-rosco.html",
+      "icons": [{ "src": "img/icons/pasala-icon.png", "sizes": "192x192" }]
     },
     {
-      "name": "Mi Perfil",
-      "short_name": "Perfil",
-      "description": "Ver mi perfil y estadísticas",
-      "url": "/profile.html",
-      "icons": [{ "src": "img/icons/profile-icon.png", "sizes": "192x192" }]
+      "name": "Jugar ¿QUIÉN SABE MÁS?",
+      "short_name": "¿QUIÉN SABE MÁS?",
+      "url": "/millonario/index.html",
+      "icons": [{ "src": "img/icons/quiensabe-icon.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Inicio",
+      "short_name": "Inicio",
+      "url": "/portal.html",
+      "icons": [{ "src": "img/icons/home-icon.png", "sizes": "192x192" }]
     }
   ],
   "related_applications": [],

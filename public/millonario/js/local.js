@@ -2,11 +2,19 @@
 
 // local.js - Funciones para manejar el juego en modo local
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('local.js cargado');
+  // Configurar logger para evitar loggear en producción
+  const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+  const logger = {
+    log: isProduction ? function(){} : console.log,
+    warn: isProduction ? function(){} : console.warn,
+    error: console.error // Mantener errores siempre
+  };
+
+  logger.log('local.js cargado');
   
   // Función para inicializar correctamente la aplicación
   function initApp() {
-    console.log('Inicializando aplicación...');
+    logger.log('Inicializando aplicación...');
     
     // Verificar elementos críticos
     const criticalElements = [
@@ -27,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const missingElements = criticalElements.filter(el => !document.getElementById(el.id));
     
     if (missingElements.length > 0) {
-      console.error('Elementos críticos no encontrados:', missingElements.map(el => el.name).join(', '));
+      logger.error('Elementos críticos no encontrados:', missingElements.map(el => el.name).join(', '));
       alert('Error: Faltan elementos críticos en la página. Por favor, recarga la página.');
       return false;
     }
@@ -143,12 +151,12 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         "retina_detect": true
       });
-      console.log('particles.js iniciado directamente desde local.js');
+      logger.log('particles.js iniciado directamente desde local.js');
     } catch (error) {
-      console.error('Error al iniciar particles.js desde local.js:', error);
+      logger.error('Error al iniciar particles.js desde local.js:', error);
     }
   } else {
-    console.warn('particlesJS no está disponible');
+    logger.warn('particlesJS no está disponible');
   }
   
   // Elementos DOM
@@ -174,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const writtenAnswerContainer = document.getElementById('written-answer-container');
   
   // Verificar elementos críticos
-  console.log('Elementos críticos del timer:', {
+  logger.log('Elementos críticos del timer:', {
     timerBar: !!timerBar,
     timerDisplay: !!timerDisplay,
     timerButton: !!timerButton
@@ -182,9 +190,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Configurar evento temporal para el timer para pruebas
   if (timerButton) {
-    console.log('Configurando evento temporal para el timer button');
+    logger.log('Configurando evento temporal para el timer button');
     timerButton.addEventListener('click', function() {
-      console.log('Timer button clickeado (evento temporal)');
+      logger.log('Timer button clickeado (evento temporal)');
       showNotification('Timer funcionando correctamente', 'info');
     });
   }
@@ -194,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const mediumBtn = document.getElementById('medium-btn');
   const hardBtn = document.getElementById('hard-btn');
   
-  console.log('Elementos DOM:', {
+  logger.log('Elementos DOM:', {
     difficultySection: !!difficultySection,
     instructionsSection: !!instructionsSection,
     gameSection: !!gameSection,
@@ -214,10 +222,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Si existe el nombre general, guardarlo también como millonarioUsername
     if (savedUsername) {
       localStorage.setItem('millonarioUsername', savedUsername);
-      console.log('Nombre de usuario recuperado de playerName:', savedUsername);
+      logger.log('Nombre de usuario recuperado de playerName:', savedUsername);
     } else {
       // Si no hay ningún nombre guardado, redirigir a la página principal
-      console.log('No se encontró ningún nombre de usuario guardado. Redirección a index.html');
+      logger.log('No se encontró ningún nombre de usuario guardado. Redirección a index.html');
       window.location.href = "index.html";
       return;
     }
@@ -256,14 +264,14 @@ document.addEventListener('DOMContentLoaded', function() {
   // Iniciar la aplicación
   const appInitialized = initApp();
   if (!appInitialized) {
-    console.error('La aplicación no pudo inicializarse correctamente');
+    logger.error('La aplicación no pudo inicializarse correctamente');
     return;
   }
   
   // Evento de botón volver
   if (backBtn) {
     backBtn.addEventListener('click', function() {
-      console.log('Botón volver clickeado');
+      logger.log('Botón volver clickeado');
       window.location.href = "index.html";
     });
   }
@@ -271,21 +279,21 @@ document.addEventListener('DOMContentLoaded', function() {
   // Eventos para los botones de dificultad
   if (easyBtn) {
     easyBtn.addEventListener('click', function() {
-      console.log('Botón Fácil clickeado');
+      logger.log('Botón Fácil clickeado');
       selectDifficulty('fácil');
     });
   }
   
   if (mediumBtn) {
     mediumBtn.addEventListener('click', function() {
-      console.log('Botón Media clickeado');
+      logger.log('Botón Media clickeado');
       selectDifficulty('media');
     });
   }
   
   if (hardBtn) {
     hardBtn.addEventListener('click', function() {
-      console.log('Botón Difícil clickeado');
+      logger.log('Botón Difícil clickeado');
       selectDifficulty('difícil');
     });
   }
@@ -293,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Evento para mostrar instrucciones
   if (startGameBtn) {
     startGameBtn.addEventListener('click', function() {
-      console.log('Botón Comenzar Juego clickeado - Mostrando instrucciones');
+      logger.log('Botón Comenzar Juego clickeado - Mostrando instrucciones');
       showInstructions();
     });
   }
@@ -301,7 +309,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Evento para iniciar el juego desde instrucciones
   if (startPlayBtn) {
     startPlayBtn.addEventListener('click', function() {
-      console.log('Botón Comenzar Juego desde instrucciones clickeado');
+      logger.log('Botón Comenzar Juego desde instrucciones clickeado');
       startGame();
     });
   }
@@ -349,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Funciones
   function selectDifficulty(difficulty) {
-    console.log('Seleccionando dificultad:', difficulty);
+    logger.log('Seleccionando dificultad:', difficulty);
     
     // Desmarcar todos los botones
     if (easyBtn) easyBtn.classList.remove('selected');
@@ -367,7 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
       hardBtn.classList.add('selected');
     }
     
-    console.log('Dificultad seleccionada:', difficulty);
+    logger.log('Dificultad seleccionada:', difficulty);
   }
   
   function showInstructions() {
@@ -383,24 +391,24 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   function loadQuestions() {
-    console.log('Cargando preguntas...');
-    console.log('URL de fetch:', 'data/questionss.json');
+    logger.log('Cargando preguntas...');
+    logger.log('URL de fetch:', 'data/questionss.json');
     
     fetch('data/questionss.json')
       .then(response => {
         if (!response.ok) {
-          console.error(`HTTP error! status: ${response.status}`);
+          logger.error(`HTTP error! status: ${response.status}`);
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        console.log('Respuesta recibida del servidor');
+        logger.log('Respuesta recibida del servidor');
         return response.json();
       })
       .then(data => {
-        console.log('Datos JSON parseados correctamente');
-        console.log('Estructura de datos recibida:', Object.keys(data));
+        logger.log('Datos JSON parseados correctamente');
+        logger.log('Estructura de datos recibida:', Object.keys(data));
         
         if (!data || !data.facil || !data.media || !data.dificil) {
-          console.error('El formato del JSON no es correcto:', data);
+          logger.error('El formato del JSON no es correcto:', data);
           throw new Error('Formato de datos incorrecto');
         }
         
@@ -423,8 +431,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         questions = data;
-        console.log('Preguntas cargadas y limpiadas:', Object.keys(questions));
-        console.log('Cantidad de preguntas por dificultad:', {
+        logger.log('Preguntas cargadas y limpiadas:', Object.keys(questions));
+        logger.log('Cantidad de preguntas por dificultad:', {
           facil: questions.facil ? questions.facil.length : 0,
           media: questions.media ? questions.media.length : 0,
           dificil: questions.dificil ? questions.dificil.length : 0
@@ -432,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Mostramos un ejemplo para verificar
         if (questions.facil && questions.facil.length > 0) {
-          console.log('Ejemplo de pregunta limpiada:', questions.facil[0]);
+          logger.log('Ejemplo de pregunta limpiada:', questions.facil[0]);
         }
         
         // Inicializar índices usados después de cargar preguntas
@@ -443,7 +451,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
       })
       .catch(error => {
-        console.error('Error al cargar preguntas:', error);
+        logger.error('Error al cargar preguntas:', error);
         alert('Error al cargar las preguntas. Por favor, recarga la página.');
       });
   }
@@ -498,16 +506,16 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function startGame() {
-    console.log('Iniciando juego...');
+    logger.log('Iniciando juego...');
     
     // Verificar que las preguntas estén cargadas
     if (!questions || !questions.facil || !questions.media || !questions.dificil || Object.keys(questions).length === 0) {
-      console.error('Las preguntas no están cargadas correctamente:', questions);
+      logger.error('Las preguntas no están cargadas correctamente:', questions);
       alert('Las preguntas aún no se han cargado. Por favor, espera unos segundos y vuelve a intentarlo.');
       return;
     }
     
-    console.log('Iniciando juego con dificultad:', selectedDifficulty);
+    logger.log('Iniciando juego con dificultad:', selectedDifficulty);
     
     // Cambiar pantallas
     if (instructionsSection) {
@@ -531,7 +539,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Configurar el evento del timer button
     const timerButton = document.getElementById('timer-button');
     if (timerButton) {
-      console.log('Configurando evento click para el timer button');
+      logger.log('Configurando evento click para el timer button');
       // Eliminar eventos previos para evitar duplicados
       timerButton.removeEventListener('click', timerClickHandler);
       // Añadir nuevo evento
@@ -676,9 +684,43 @@ document.addEventListener('DOMContentLoaded', function() {
       // Guardar en localStorage
       localStorage.setItem('millonarioScores', JSON.stringify(topScores));
       
-      console.log('Puntuación guardada:', scoreRecord);
+      // NUEVO: Actualizar estadísticas de ¿Quién Sabe Más? usando el sistema centralizado
+      if (window.GameData && typeof window.GameData.updateQuienSabeStats === 'function') {
+        // Determinar número de respuestas escritas y comodines 50/50 usados
+        const writtenAnswers = document.getElementById('written-answers-counter') 
+          ? parseInt(document.getElementById('written-answers-counter').textContent) || 0 
+          : 0;
+        
+        const fiftyFiftyUsedCount = document.getElementById('fifty-fifty-counter')
+          ? parseInt(document.getElementById('fifty-fifty-counter').textContent) || 0
+          : 0;
+        
+        // Calcular respuestas correctas (preguntas respondidas con puntos)
+        const correctAnswers = points > 0 ? Math.ceil(points / (selectedDifficulty === 'difícil' ? 2000 : selectedDifficulty === 'media' ? 1000 : 500)) : 0;
+        
+        // Crear objeto de resultado para ¿Quién Sabe Más?
+        const gameResult = {
+          score: points,
+          correctAnswers: correctAnswers,
+          totalQuestions: questionsAnswered,
+          level: selectedDifficulty,
+          writtenAnswers: writtenAnswers,
+          fiftyFiftyUsed: fiftyFiftyUsedCount
+        };
+        
+        // Actualizar estadísticas y logros
+        window.GameData.updateQuienSabeStats(gameResult);
+        logger.log('Estadísticas de ¿Quién Sabe Más? actualizadas:', gameResult);
+        
+        // Guardar flag indicando que se completó un juego
+        localStorage.setItem('gameJustCompleted', 'true');
+      } else {
+        logger.warn('GameData.updateQuienSabeStats no está disponible. Asegúrate de incluir game-data.js');
+      }
+      
+      logger.log('Puntuación guardada:', scoreRecord);
     } catch (error) {
-      console.error('Error al guardar la puntuación:', error);
+      logger.error('Error al guardar la puntuación:', error);
     }
   }
   
@@ -686,7 +728,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const playAgainBtn = document.getElementById('play-again-btn');
   if (playAgainBtn) {
     playAgainBtn.addEventListener('click', function() {
-      console.log('Botón jugar de nuevo clickeado');
+      logger.log('Botón jugar de nuevo clickeado');
       
       // Ocultar el modal de resultados
       const resultModal = document.getElementById('result-modal');
@@ -716,17 +758,17 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     const difficultyKey = difficultyMap[selectedDifficulty];
-    console.log('Mostrando pregunta de dificultad:', difficultyKey);
+    logger.log('Mostrando pregunta de dificultad:', difficultyKey);
     
     // Verificar que existan preguntas para la dificultad
     if (!questions) {
-      console.error('El objeto questions no está definido');
+      logger.error('El objeto questions no está definido');
       showNotification('Error al cargar preguntas. Recarga la página.', 'error');
       return;
     }
     
     if (!questions[difficultyKey]) {
-      console.error(`No existe la clave ${difficultyKey} en el objeto questions:`, questions);
+      logger.error(`No existe la clave ${difficultyKey} en el objeto questions:`, questions);
       showNotification('Error al cargar preguntas para esta dificultad. Recarga la página.', 'error');
       return;
     }
@@ -736,7 +778,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Si ya se usaron todas las preguntas, mostrar mensaje y terminar el juego
     if (usedQuestions >= availableQuestions) {
-      console.log('Se han usado todas las preguntas disponibles');
+      logger.log('Se han usado todas las preguntas disponibles');
       showNotification('¡Has respondido todas las preguntas disponibles!', 'success');
       showResults();
       return;
@@ -752,10 +794,10 @@ document.addEventListener('DOMContentLoaded', function() {
     usedQuestionIndices[difficultyKey].push(randomIndex);
     
     currentQuestion = questions[difficultyKey][randomIndex];
-    console.log('Pregunta seleccionada:', currentQuestion);
+    logger.log('Pregunta seleccionada:', currentQuestion);
     
     if (!currentQuestion) {
-      console.error('No se pudo seleccionar una pregunta válida');
+      logger.error('No se pudo seleccionar una pregunta válida');
       showNotification('Error al seleccionar pregunta. Recarga la página.', 'error');
       return;
     }
@@ -898,7 +940,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const normalizedCorrectText = normalizeText(correctText);
     const normalizedUserAnswer = normalizeText(answer);
     
-    console.log('Verificando respuesta escrita:', {
+    logger.log('Verificando respuesta escrita:', {
       userAnswer: normalizedUserAnswer,
       correctText: normalizedCorrectText
     });
@@ -928,7 +970,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   function useFiftyFifty() {
-    console.log('Usando 50/50');
+    logger.log('Usando 50/50');
     
     // Marcar como usado y deshabilitar el botón
     const fiftyFiftyBtn = document.getElementById('fifty-fifty-btn');
@@ -974,19 +1016,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  function showNotification(message, type) {
-    const notification = document.getElementById('notification');
-    if (notification) {
-      notification.textContent = message;
-      notification.className = `toast ${type}`;
-      notification.style.display = 'block';
-      
-      setTimeout(() => {
-        notification.style.display = 'none';
-      }, 3000);
-    } else {
-      console.log('Notificación:', message);
-    }
+  // Función para mostrar notificaciones
+  function showNotification(message, type = 'info', duration = 3000) {
+    Utils.showNotification(message, type, duration); // Use Utils
   }
   
   // Seleccionar la dificultad fácil por defecto

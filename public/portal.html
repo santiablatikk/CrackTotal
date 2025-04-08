@@ -15,7 +15,6 @@
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <!-- Estilos -->
     <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/footer-styles.css" />
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Fuentes -->
@@ -25,8 +24,15 @@
     <meta property="og:description" content="Juegos de fútbol para poner a prueba tus conocimientos futboleros.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="img/preview.jpg">
-    <!-- Scripts -->
-    <script src="js/utils.js"></script>
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
+     crossorigin="anonymous"></script>
+    <!-- Estilos del footer -->
+    <link rel="stylesheet" href="css/footer-styles.css" />
+    <!-- Scripts para la funcionalidad global -->
+    <script src="utils/notifications.js"></script>
+    <!-- Archivo de gestión de datos de juego y estadísticas -->
+    <script src="js/game-data.js"></script>
   </head>
   <body>
     <!-- Partículas de fondo -->
@@ -38,55 +44,136 @@
         <div class="logo-animation">
           <i class="fas fa-futbol ball-icon bounce"></i>
         </div>
-        <a href="index.html" class="title-link">
+        <a href="portal.html" class="title-link">
           <h1 class="title-text">CRACK TOTAL</h1>
         </a>
         <p class="subtitle">El juego de palabras del fútbol</p>
+        <div class="header-actions">
         <button id="change-name-btn" class="change-name-btn">
           <i class="fas fa-user-edit"></i> Cambiar Nombre
         </button>
+          <button id="theme-toggle-btn" class="theme-toggle-btn">
+            <i class="fas fa-moon"></i>
+          </button>
+        </div>
       </header>
 
       <div class="portal-container">
         <div class="content-card portal-card">
-          <div class="card-section welcome-section">
+          <div class="welcome-banner">
+            <div class="welcome-avatar">
+              <i class="fas fa-user-circle"></i>
+            </div>
             <div class="welcome-message">
               <h2>Hola, <span id="player-name-display">Jugador</span></h2>
-              <p>Elige tu juego favorito</p>
+              <p>Selecciona tu juego favorito</p>
             </div>
+          </div>
 
-            <!-- Botones de navegación del portal -->
-            <div class="portal-nav-buttons" style="display: flex; gap: 15px; margin-bottom: 30px; justify-content: center;">
-              <a href="profile.html" class="nav-button" style="padding: 10px 20px; background-color: rgba(59, 130, 246, 0.8); color: white; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease;">
-                <i class="fas fa-user"></i>
-                <span>Mi Perfil</span>
-              </a>
-              <a href="user-ranking.html" class="nav-button" style="padding: 10px 20px; background-color: rgba(37, 99, 235, 0.8); color: white; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.3s ease;">
-                <i class="fas fa-trophy"></i>
-                <span>Ver Ranking</span>
-              </a>
+          <div class="games-showcase">
+            <div class="section-header">
+              <div class="section-header-icon">
+                <i class="fas fa-gamepad"></i>
+              </div>
+              <h2 class="section-title">Nuestros Juegos</h2>
+              <div class="section-ribbon"></div>
             </div>
             
             <div class="game-options">
-              <a href="game-rosco.html" class="game-option" style="padding: 2rem; flex: 1; border-radius: 15px; transition: all 0.4s ease; box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.2);">
-                <div class="game-icon" style="width: 70px; height: 70px; margin-right: 20px;">
-                  <i class="fas fa-futbol"></i>
+              <a href="game-rosco.html" class="game-option featured">
+                <div class="game-card-content">
+                  <div class="game-icon-wrapper">
+                    <div class="game-icon">
+                      <i class="fas fa-futbol"></i>
+                    </div>
+                  </div>
+                  <div class="game-info">
+                    <h3>PASALA CHE</h3>
+                    <p>El clásico rosco futbolero que pondrá a prueba tus conocimientos sobre equipos, jugadores y momentos históricos del deporte más popular del mundo.</p>
+                    <div class="game-meta">
+                      <span class="game-badge popular">Popular</span>
+                      <span class="game-rating"><i class="fas fa-star"></i> 4.9</span>
+                      <span class="game-players"><i class="fas fa-users"></i> 10k+</span>
+                    </div>
+                    <div class="game-action">
+                      <span class="play-btn">JUGAR AHORA <i class="fas fa-play-circle"></i></span>
+                    </div>
+                  </div>
                 </div>
-                <div class="game-info">
-                  <h3 style="font-size: 1.6rem; margin-bottom: 10px;">PASALA CHE</h3>
-                  <p style="font-size: 1.1rem;">El clásico rosco futbolero</p>
+                <div class="game-preview">
+                  <img src="img/pasala-preview.jpg" alt="Pasala Che - Vista previa" class="preview-img" onerror="this.style.display='none'">
+                  <div class="preview-overlay">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </a>
               
-              <a href="millonario/index.html" class="game-option" style="padding: 2rem; flex: 1; border-radius: 15px; transition: all 0.4s ease; box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.2);">
-                <div class="game-icon" style="width: 70px; height: 70px; margin-right: 20px;">
-                  <i class="fas fa-trophy"></i>
+              <a href="millonario/index.html" class="game-option new-game">
+                <div class="game-card-content">
+                  <div class="game-icon-wrapper">
+                    <div class="game-icon">
+                      <i class="fas fa-trophy"></i>
+                    </div>
+                  </div>
+                  <div class="game-info">
+                    <h3>¿QUIÉN SABE MÁS DE FÚTBOL?</h3>
+                    <p>Pon a prueba tu conocimiento con este desafiante juego de preguntas múltiples sobre fútbol mundial. Demuestra que eres un verdadero crack del fútbol.</p>
+                    <div class="game-meta">
+                      <span class="game-badge new">Nuevo</span>
+                      <span class="game-rating"><i class="fas fa-star"></i> 4.8</span>
+                      <span class="game-players"><i class="fas fa-users"></i> 5k+</span>
+                    </div>
+                    <div class="game-action">
+                      <span class="play-btn">JUGAR AHORA <i class="fas fa-play-circle"></i></span>
+                    </div>
+                  </div>
                 </div>
-                <div class="game-info">
-                  <h3 style="font-size: 1.6rem; margin-bottom: 10px;">¿QUIÉN SABE MÁS DE FÚTBOL?</h3>
-                  <p style="font-size: 1.1rem;">Pon a prueba tu conocimiento</p>
+                <div class="game-preview">
+                  <img src="img/millonario-preview.jpg" alt="¿Quién Sabe Más de Fútbol? - Vista previa" class="preview-img" onerror="this.style.display='none'">
+                  <div class="preview-overlay">
+                    <i class="fas fa-play-circle"></i>
+                  </div>
                 </div>
               </a>
+            </div>
+          </div>
+          
+          <div class="stats-section">
+            <h3 class="stats-title"><i class="fas fa-chart-line"></i> Tus Estadísticas</h3>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-gamepad"></i></div>
+                <div class="stat-info">
+                  <span class="stat-value" id="games-played">0</span>
+                  <span class="stat-label">Partidas</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                <div class="stat-info">
+                  <span class="stat-value" id="victories">0</span>
+                  <span class="stat-label">Victorias</span>
+                </div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-star"></i></div>
+                <div class="stat-info">
+                  <span class="stat-value" id="points">0</span>
+                  <span class="stat-label">Puntos</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="news-section">
+            <h3 class="news-title"><i class="fas fa-bullhorn"></i> Novedades</h3>
+            <div class="news-item">
+              <div class="news-icon"><i class="fas fa-newspaper"></i></div>
+              <div class="news-content">
+                <h4>¡Nuevo modo de juego disponible!</h4>
+                <p>Descubre el nuevo desafío en nuestro juego "¿Quién sabe más de fútbol?"</p>
+                <a href="blog-detail-quiensabe.html" class="news-link">Leer más <i class="fas fa-arrow-right"></i></a>
+              </div>
             </div>
           </div>
         </div>
@@ -101,608 +188,1017 @@
     <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
     <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
     <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+          <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
   </div>
   <div class="share-button-container">
     <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
   </div>
-  <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
+        <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero</div>
   <div class="footer-social-icons">
-    <a href="https://www.facebook.com/cracktotal" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-    <a href="https://twitter.com/cracktotal" class="social-icon"><i class="fab fa-twitter"></i></a>
-    <a href="https://www.instagram.com/cracktotal" class="social-icon"><i class="fab fa-instagram"></i></a>
-    <a href="https://www.youtube.com/c/cracktotal" class="social-icon"><i class="fab fa-youtube"></i></a>
+          <a href="https://www.facebook.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.instagram.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/c/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-youtube"></i></a>
   </div>
 </footer>
 
 <style>
-/* Variables CSS globales */
-:root {
-  --accent-color: #3182ce;
-  --text-muted: #a0aec0;
-  --transition: all 0.3s ease;
-}
-
-/* Estilos para el botón de compartir */
-.share-button-container {
-  text-align: center;
-  margin: 1.5rem 0;
-  position: relative;
-  z-index: 1;
-}
-
-.share-button {
-  padding: 0.6rem 1.5rem;
-  border-radius: 50px;
-  background: linear-gradient(135deg, #4299e1, #3182ce);
-  color: white;
-  font-size: 1rem;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
+      /* Mejoras en el estilo general - Optimizado para rendimiento */
+body {
+        background: #0f172a;
+  font-family: 'Montserrat', sans-serif;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
-  box-shadow: 0 4px 10px rgba(66, 153, 225, 0.35);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
-.share-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 15px rgba(66, 153, 225, 0.5);
-  background: linear-gradient(135deg, #3182ce, #2c5282);
-}
-
-.share-button i {
-  font-size: 1.1rem;
-}
-
-/* Estilos para el footer */
-.policy-footer {
-  width: 100%;
-  max-width: 800px;
-  margin: 2rem auto 0;
-  text-align: center;
-  position: relative;
-  padding-top: 1.5rem;
-  z-index: 1;
-  opacity: 0.9;
-}
-
-.policy-footer::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 1px;
-  background: linear-gradient(to right, transparent, var(--accent-color), transparent);
-  opacity: 0.3;
-}
-
-.footer-links-mini {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.footer-links-mini a {
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.85rem;
-  transition: all 0.3s ease;
-  position: relative;
-  padding-bottom: 2px;
-}
-
-.footer-links-mini a::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 1px;
-  bottom: 0;
-  left: 0;
-  background-color: var(--accent-color);
-  transition: var(--transition);
-}
-
-.footer-links-mini a:hover::after {
-  width: 100%;
-}
-
-.footer-links-mini a:hover {
-  color: var(--accent-color);
-  transform: translateY(-2px);
-}
-
-.footer-links-mini a i {
-  margin-right: 0.3rem;
-  font-size: 0.9rem;
-}
-
-.copyright-text {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  opacity: 0.7;
-}
-
-.footer-social-icons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 15px;
-}
-
-.social-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background-color: rgba(225, 29, 72, 0.1);
-  color: var(--text-muted);
-  transition: all 0.3s ease;
-}
-
-.social-icon:hover {
-  background-color: var(--accent-color);
-  color: white;
-  transform: translateY(-3px);
-}
-
-/* Estilos para las notificaciones toast */
-.toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  padding: 12px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  font-size: 14px;
-  z-index: 9999;
-  display: none;
-  animation: fadeInOut 3s ease forwards;
-  background-color: #1e293b;
-  color: white;
-  border-left: 4px solid var(--accent-color, #3182ce);
-}
-
-.toast.success {
-  border-left-color: #48bb78;
-}
-
-.toast.error {
-  border-left-color: #f56565;
-}
-
-.toast.info {
-  border-left-color: #4299e1;
-}
-
-@keyframes fadeInOut {
-  0% { opacity: 0; transform: translateY(-20px); }
-  10% { opacity: 1; transform: translateY(0); }
-  90% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-20px); }
-}
-
-@media (max-width: 600px) {
-  .footer-links-mini {
-    gap: 0.5rem;
-  }
-  
-  .footer-links-mini a {
-    font-size: 0.75rem;
-  }
-  
-  .share-button {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-  
-  .toast {
-    width: calc(100% - 40px);
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-  }
-}
-
-/* Estilos para el portal */
-.portal-container {
+/* Centro todo el contenido de la página */
+.app-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 20px;
-  flex: 1;
+        max-width: 1100px;
+  padding: 1rem;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 }
 
-.portal-card {
+/* Estilos mejorados para el header */
+.app-header {
+        padding: 1rem 0;
+        margin-bottom: 1rem;
+  position: relative;
+  text-align: center;
   width: 100%;
-  max-width: 800px;
-  background: rgba(30, 41, 59, 0.7);
-  border-radius: 15px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.welcome-message {
-  margin-bottom: 40px;
+.title-text {
+  font-size: 3rem;
+        background: linear-gradient(135deg, #ff6b6b, #e11d48);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+        margin-bottom: 0.3rem;
+  letter-spacing: -1px;
+  font-weight: 800;
+}
+
+.subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+        margin-bottom: 0.5rem;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+        margin-top: 0.5rem;
+}
+
+.change-name-btn {
+        background: #3182ce;
+  color: white;
+  border: none;
+        padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+        transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.change-name-btn:hover {
+        transform: translateY(-2px);
+        background: #4299e1;
+}
+
+.theme-toggle-btn {
+        width: 38px;
+        height: 38px;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+        transition: all 0.2s ease;
+}
+
+.theme-toggle-btn:hover {
+  background: #3182ce;
+}
+
+/* Centro el contenedor del portal */
+.portal-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Centro el contenido de la tarjeta */
+.content-card {
+  width: 100%;
+        max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Estilos para la bienvenida */
+.welcome-banner {
+  display: flex;
+  align-items: center;
+        background: rgba(15, 23, 42, 0.9);
+        padding: 1.2rem;
+  border-radius: 12px;
+        margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  width: 100%;
+}
+
+.welcome-avatar {
+        width: 50px;
+        height: 50px;
+  border-radius: 50%;
+        background: #3182ce;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.5rem;
+  position: relative;
+}
+
+.welcome-avatar i {
+        font-size: 1.8rem;
+  color: white;
 }
 
 .welcome-message h2 {
-  font-size: 2.2rem;
+        font-size: 1.6rem;
+  color: white;
+        margin-bottom: 0.3rem;
   font-weight: 700;
-  margin-bottom: 10px;
-  background: linear-gradient(45deg, #3490dc, #6574cd);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: titlePulse 3s infinite alternate;
 }
 
 .welcome-message p {
-  font-size: 1.2rem;
-  color: var(--text-muted);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
 }
 
+/* Estilos mejorados para la sección de juegos */
+.games-showcase {
+  width: 100%;
+        margin-bottom: 1.5rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+        margin-bottom: 1rem;
+  position: relative;
+}
+
+.section-header-icon {
+        width: 45px;
+        height: 45px;
+  border-radius: 10px;
+        background: #be123c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+
+.section-header-icon i {
+        font-size: 1.4rem;
+  color: white;
+}
+
+.section-title {
+        font-size: 1.8rem;
+  font-weight: 800;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+  margin: 0;
+}
+
+.section-ribbon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #f43f5e, #be123c, rgba(190, 18, 60, 0));
+  margin-top: 2.5rem;
+  z-index: 1;
+}
+
+/* Estilos mejorados para las opciones de juego */
 .game-options {
   display: flex;
+  flex-direction: row;
+        gap: 1.5rem;
+  width: 100%;
   flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
 }
 
 .game-option {
   display: flex;
-  align-items: center;
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  min-width: 300px;
+  flex-direction: column;
+        background: rgba(15, 23, 42, 0.9);
+        border-radius: 16px;
   text-decoration: none;
   color: white;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+        width: calc(50% - 0.75rem);
+  flex: 1 1 400px;
+  padding: 0;
+        transition: all 0.2s ease;
 }
 
 .game-option:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.3) !important;
-  border: 1px solid rgba(66, 153, 225, 0.3);
+        transform: translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.game-card-content {
+  display: flex;
+        padding: 1.2rem;
+  z-index: 2;
+  position: relative;
+}
+
+.game-icon-wrapper {
+  position: relative;
+  margin-right: 1.5rem;
 }
 
 .game-icon {
+        width: 60px;
+        height: 60px;
+        background: #3182ce;
+  border-radius: 16px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
-  color: #e11d48;
-  background: linear-gradient(135deg, #3490dc, #6574cd);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.game-option.featured .game-icon {
+        background: #be123c;
+}
+
+.game-option:hover .game-icon {
+        transform: scale(1.05);
+}
+
+.game-icon i {
+        font-size: 2.5rem;
+  color: white;
+}
+
+.game-pulse {
+        display: none; /* Eliminamos animación para mejorar rendimiento */
 }
 
 .game-info {
   flex: 1;
+  position: relative;
 }
 
-.change-name-btn {
-  background: linear-gradient(to right, rgba(59, 130, 246, 0.5), rgba(37, 99, 235, 0.5));
+.game-info h3 {
+        font-size: 1.3rem;
+        margin-bottom: 6px;
   color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 6px 12px;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 5px;
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+}
+
+.game-info p {
+        font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.7rem;
+  line-height: 1.4;
+}
+
+.game-meta {
+  display: flex;
+  align-items: center;
+        gap: 0.7rem;
+        margin-bottom: 0.7rem;
+}
+
+.game-badge {
+        background: #be123c;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.game-badge.new {
+        background: #3182ce;
+}
+
+.game-rating, .game-players {
+        font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.game-rating i {
+  color: #EAB308;
+}
+
+.game-action {
+  display: flex;
+}
+
+.play-btn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.change-name-btn:hover {
-  background: linear-gradient(to right, rgba(59, 130, 246, 0.8), rgba(37, 99, 235, 0.8));
-  transform: translateY(-2px);
+.game-option:hover .play-btn {
+        background: #3182ce;
+  border-color: transparent;
 }
 
-.title-link {
+.game-option.featured:hover .play-btn {
+        background: #be123c;
+}
+
+.play-btn i {
+        font-size: 1.1rem;
+}
+
+.game-preview {
+  width: 100%;
+        height: 140px;
+  position: relative;
+  overflow: hidden;
+        border-radius: 0 0 16px 16px;
+}
+
+.preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+        transition: transform 0.2s ease;
+}
+
+.game-option:hover .preview-img {
+        transform: scale(1.03);
+}
+
+.preview-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to top, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.3), transparent);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+        transition: opacity 0.2s ease;
+  opacity: 0;
+}
+
+.preview-overlay i {
+        font-size: 3rem;
+  color: white;
+        transition: transform 0.2s ease;
+}
+
+.game-option:hover .preview-overlay {
+  opacity: 1;
+}
+
+.game-option:hover .preview-overlay i {
+        transform: scale(1.1);
+}
+
+/* Estilos para la sección de estadísticas */
+.stats-section {
+        background: rgba(15, 23, 42, 0.9);
+        padding: 1.2rem;
+  border-radius: 16px;
+        margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  width: 100%;
+}
+
+.stats-title {
+        font-size: 1.3rem;
+  color: white;
+        margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+    gap: 0.5rem;
+  }
+  
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+        gap: 0.8rem;
+  }
+  
+.stat-card {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+        transform: translateY(-3px);
+  background: rgba(30, 41, 59, 0.8);
+  }
+
+.stat-icon {
+        width: 36px;
+        height: 36px;
+        background: #3182ce;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+        font-size: 1.1rem;
+}
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-value {
+        font-size: 1.4rem;
+  font-weight: 700;
+  color: white;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Estilos para la sección de noticias */
+.news-section {
+        background: rgba(15, 23, 42, 0.9);
+        padding: 1.2rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  width: 100%;
+}
+
+.news-title {
+        font-size: 1.3rem;
+  color: white;
+        margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.news-item {
+  display: flex;
+  gap: 1rem;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 12px;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+        transition: all 0.2s ease;
+}
+
+.news-item:hover {
+        transform: translateY(-3px);
+  background: rgba(30, 41, 59, 0.8);
+}
+
+.news-icon {
+        width: 45px;
+        height: 45px;
+  flex-shrink: 0;
+        background: #be123c;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+        font-size: 1.3rem;
+}
+
+.news-content {
+  flex: 1;
+}
+
+.news-content h4 {
+        font-size: 1.1rem;
+  color: white;
+        margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+
+.news-content p {
+        font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 0.5rem;
+}
+
+.news-link {
+  color: #4299e1;
+        font-size: 0.85rem;
   text-decoration: none;
-  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+        transition: all 0.2s ease;
 }
 
-/* Animación para títulos gradient */
-@keyframes titlePulse {
-  0% {
-    filter: brightness(1) saturate(1);
-  }
-  100% {
-    filter: brightness(1.2) saturate(1.5);
-  }
+.news-link:hover {
+  color: #90cdf4;
+  transform: translateX(5px);
 }
 
-@media (max-width: 768px) {
-  .portal-card {
-    padding: 15px;
-  }
-  
-  .game-options {
+/* Mejoras para el footer */
+.policy-footer {
+  width: 100%;
+  display: flex;
     flex-direction: column;
+  align-items: center;
+        margin-top: 1.5rem;
   }
-  
-  .welcome-message h2 {
-    font-size: 1.8rem;
+
+      /* Removemos animaciones para mejorar rendimiento */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
   }
-  
-  .welcome-message p {
-    font-size: 1rem;
+  50% {
+          transform: translateY(-5px);
   }
 }
-</style>
 
-<script>
-// Función para compartir el sitio web
-document.addEventListener('DOMContentLoaded', function() {
-  const shareButton = document.getElementById('share-button');
-  
-  if (shareButton) {
-    shareButton.addEventListener('click', function() {
-      const shareData = {
-        title: 'CRACK TOTAL - Juegos de Fútbol',
-        text: 'Juega y pon a prueba tus conocimientos futboleros en CRACK TOTAL',
-        url: window.location.href
-      };
-      
-      // Si la API Web Share está disponible
-      if (navigator.share) {
-        navigator.share(shareData)
-          .then(() => {
-            showNotification('¡Gracias por compartir!', 'success');
-          })
-          .catch((error) => {
-            console.error('Error al compartir:', error);
-            shareWithFallback();
-          });
-      } else {
-        // Fallback para navegadores que no soportan la API Web Share
-        shareWithFallback();
-      }
-    });
-  }
-  
-  // Función de fallback para navegadores sin soporte de API Web Share
-  function shareWithFallback() {
-    const url = encodeURIComponent(window.location.href);
-    const title = encodeURIComponent('CRACK TOTAL - Juegos de Fútbol');
-    const text = encodeURIComponent('Juega y pon a prueba tus conocimientos futboleros en CRACK TOTAL');
-    
-    const shareOptions = document.createElement('div');
-    shareOptions.classList.add('share-options');
-    shareOptions.innerHTML = `
-      <div class="share-dialog">
-        <div class="share-header">
-          <h3>Compartir en redes sociales</h3>
-          <button class="close-share"><i class="fas fa-times"></i></button>
-        </div>
-        <div class="share-buttons">
-          <a href="https://www.facebook.com/sharer/sharer.php?u=${url}" target="_blank" class="fb-share">
-            <i class="fab fa-facebook-f"></i> Facebook
-          </a>
-          <a href="https://twitter.com/intent/tweet?url=${url}&text=${text}" target="_blank" class="tw-share">
-            <i class="fab fa-twitter"></i> Twitter
-          </a>
-          <a href="https://api.whatsapp.com/send?text=${text}%20${url}" target="_blank" class="wa-share">
-            <i class="fab fa-whatsapp"></i> WhatsApp
-          </a>
-          <a href="mailto:?subject=${title}&body=${text}%20${url}" class="email-share">
-            <i class="fas fa-envelope"></i> Email
-          </a>
-        </div>
-      </div>
-    `;
-    
-    document.body.appendChild(shareOptions);
-    
-    // Cerrar el diálogo cuando se hace clic en el botón de cerrar
-    const closeButton = shareOptions.querySelector('.close-share');
-    closeButton.addEventListener('click', function() {
-      document.body.removeChild(shareOptions);
-    });
-    
-    // Cerrar el diálogo al hacer clic fuera de él
-    shareOptions.addEventListener('click', function(e) {
-      if (e.target === shareOptions) {
-        document.body.removeChild(shareOptions);
-      }
-    });
-    
-    // Agregar estilos para el diálogo de compartir
-    const style = document.createElement('style');
-    style.textContent = `
-      .share-options {
+/* Mejoras para el modal de bienvenida */
+.name-input-modal {
         position: fixed;
         top: 0;
         left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.85);
         display: flex;
         justify-content: center;
         align-items: center;
         z-index: 9999;
       }
       
-      .share-dialog {
-        background-color: var(--card-bg, #1e293b);
-        border-radius: 12px;
-        padding: 1.5rem;
+.name-input-modal .modal-content {
+        background: #1e293b;
+        border-radius: 16px;
+        padding: 2rem;
         width: 90%;
-        max-width: 400px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        max-width: 480px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
       }
       
-      .share-header {
+.name-input-modal .modal-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+        height: 3px;
+        background: #3182ce;
+}
+
+.name-input-modal h2 {
+  margin-top: 0;
+  color: white;
+        font-size: 1.8rem;
+        margin-bottom: 0.7rem;
         display: flex;
-        justify-content: space-between;
         align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.name-input-modal h2 i {
+        color: #4299e1;
+        font-size: 1.6rem;
+      }
+      
+.name-input-modal p {
+  color: rgba(255, 255, 255, 0.8);
         margin-bottom: 1.5rem;
-      }
-      
-      .share-header h3 {
-        margin: 0;
-        color: white;
-        font-size: 1.2rem;
-      }
-      
-      .close-share {
-        background: transparent;
-        border: none;
-        color: white;
-        font-size: 1.2rem;
-        cursor: pointer;
-        opacity: 0.7;
-        transition: opacity 0.2s;
-      }
-      
-      .close-share:hover {
-        opacity: 1;
-      }
-      
-      .share-buttons {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
+        font-size: 1rem;
+}
+
+.name-input-modal form {
+  display: flex;
+  flex-direction: column;
         gap: 1rem;
-      }
-      
-      .share-buttons a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding: 0.8rem;
-        text-decoration: none;
-        border-radius: 8px;
+}
+
+#player-name-input {
+        padding: 1rem;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(66, 153, 225, 0.3);
         color: white;
-        font-weight: 500;
-        transition: transform 0.2s, filter 0.2s;
+        font-size: 1rem;
+  text-align: center;
+        transition: all 0.2s ease;
+}
+
+#player-name-input:focus {
+  outline: none;
+  border-color: #4299e1;
+}
+
+.name-input-modal .btn-primary {
+        background: #3182ce;
+        color: white;
+  border: none;
+        padding: 1rem;
+  border-radius: 12px;
+        font-size: 1rem;
+  font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+  position: relative;
       }
       
-      .share-buttons a:hover {
-        transform: translateY(-3px);
-        filter: brightness(1.1);
-      }
-      
-      .fb-share {
-        background-color: #4267B2;
-      }
-      
-      .tw-share {
-        background-color: #1DA1F2;
-      }
-      
-      .wa-share {
-        background-color: #25D366;
-      }
-      
-      .email-share {
-        background-color: #666;
-      }
-    `;
-    document.head.appendChild(style);
+.name-input-modal .btn-primary:hover {
+        background: #4299e1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .title-text {
+          font-size: 2.2rem;
   }
   
-  // Función para mostrar notificaciones
-  function showNotification(message, type = 'info') {
-    // Buscar elemento de notificación existente o crear uno nuevo
-    let notification = document.getElementById('notification');
-    
-    if (!notification) {
-      notification = document.createElement('div');
-      notification.id = 'notification';
-      notification.className = 'toast';
-      notification.style.display = 'none';
-      document.body.appendChild(notification);
-    }
-    
-    // Mostrar notificación
-    notification.textContent = message;
-    notification.className = `toast ${type}`;
-    notification.style.display = 'block';
-    
-    // Ocultar después de 3 segundos
-    setTimeout(() => {
-      notification.style.display = 'none';
-    }, 3000);
+  .welcome-avatar {
+          width: 45px;
+          height: 45px;
   }
-});
-</script> 
-<!-- Script para la lógica del Portal -->
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // Mostrar el nombre del jugador
-    const playerNameDisplay = document.getElementById('player-name-display');
-    const changeNameBtn = document.getElementById('change-name-btn');
-    
-    // Cargar el nombre del jugador desde localStorage
-    const playerName = localStorage.getItem('playerName');
-    if (playerName) {
-      playerNameDisplay.textContent = playerName;
+  
+  .welcome-message h2 {
+          font-size: 1.3rem;
+  }
+  
+  .game-info h3 {
+          font-size: 1.2rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+          gap: 0.8rem;
+  }
+  
+  .stat-card {
+    padding: 0.8rem;
+  }
+  
+  .news-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
     }
     
-    // Evento para cambiar el nombre
+  .news-icon {
+          margin-bottom: 0.7rem;
+  }
+  
+  .name-input-modal .modal-content {
+          padding: 1.7rem 1.2rem;
+  }
+  
+  .name-input-modal h2 {
+          font-size: 1.4rem;
+        }
+        
+        .game-options {
+          flex-direction: column;
+        }
+        
+        .game-option {
+          width: 100%;
+  }
+}
+</style>
+
+<script>
+// Código JavaScript para manejar el nombre del jugador y estadísticas
+  document.addEventListener('DOMContentLoaded', function() {
+  // Obtener el nombre del jugador de localStorage
+  const playerName = localStorage.getItem('playerName');
+    const playerNameDisplay = document.getElementById('player-name-display');
+  
+  // Si no hay nombre guardado, mostrar un modal para que lo ingrese
+  if (!playerName && playerNameDisplay) {
+    showNameInputModal();
+  } else if (playerNameDisplay) {
+    playerNameDisplay.textContent = playerName || 'Jugador';
+    }
+    
+  // Cargar estadísticas del jugador
+  loadPlayerStats();
+  
+  // Manejar el botón de cambio de nombre
+  const changeNameBtn = document.getElementById('change-name-btn');
     if (changeNameBtn) {
       changeNameBtn.addEventListener('click', function() {
-        // Redireccionar a la página de login (crack-total.html)
-        window.location.href = 'crack-total.html';
+      showNameInputModal();
+    });
+  }
+  
+  // Manejar el botón de cambio de tema
+  const themeToggleBtn = document.getElementById('theme-toggle-btn');
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', function() {
+      document.body.classList.toggle('dark-mode');
+      const icon = themeToggleBtn.querySelector('i');
+      if (icon.classList.contains('fa-moon')) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+      } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+    }
+      // Guardar preferencia de tema
+      const isDarkMode = document.body.classList.contains('dark-mode');
+      localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
+    });
+    
+    // Aplicar tema guardado
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (savedDarkMode) {
+      document.body.classList.add('dark-mode');
+      themeToggleBtn.querySelector('i').classList.remove('fa-moon');
+      themeToggleBtn.querySelector('i').classList.add('fa-sun');
+    }
+  }
+  
+  // Función para mostrar el modal de ingreso de nombre
+  function showNameInputModal() {
+    // Crear el modal
+    const modal = document.createElement('div');
+          modal.className = 'name-input-modal';
+    modal.innerHTML = `
+            <div class="modal-content">
+        <h2><i class="fas fa-user-circle"></i> ¡Bienvenido a CRACK TOTAL!</h2>
+        <p>Para una mejor experiencia, ingresa tu nombre de jugador:</p>
+        <form id="name-form">
+          <input type="text" id="player-name-input" placeholder="Tu nombre aquí" maxlength="20" required autocomplete="off">
+          <button type="submit" class="btn btn-primary">
+            <span>¡Comenzar la Aventura!</span>
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </form>
+      </div>
+    `;
+    
+    // Agregar elementos al DOM
+    document.body.appendChild(modal);
+      
+          // Enfocar el input
+      setTimeout(() => {
+      const input = document.getElementById('player-name-input');
+      if (input) {
+        input.focus();
+      }
+          }, 100);
+    
+    // Manejar el envío del formulario
+    const form = document.getElementById('name-form');
+    if (form) {
+      form.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const input = document.getElementById('player-name-input');
+        const name = input.value.trim();
+        
+        if (name) {
+          // Guardar el nombre y actualizar la UI
+          localStorage.setItem('playerName', name);
+          const playerNameDisplay = document.getElementById('player-name-display');
+          if (playerNameDisplay) {
+            playerNameDisplay.textContent = name;
+          }
+          
+                // Eliminar el modal
+            document.body.removeChild(modal);
+            showNotification('¡Bienvenido, ' + name + '!', 'success');
+                
+                // Inicializar datos de usuario si es necesario
+                if (window.GameData && typeof window.GameData.initUserData === 'function') {
+                  window.GameData.initUserData(name);
+                }
+        }
       });
     }
-    
-    // Función para mostrar notificaciones
-    function showNotification(message, type = 'info') {
-      // Buscar elemento de notificación existente o crear uno nuevo
-      let notification = document.getElementById('notification');
-      
-      if (!notification) {
-        notification = document.createElement('div');
-        notification.id = 'notification';
-        notification.className = 'toast';
-        notification.style.display = 'none';
-        document.body.appendChild(notification);
-      }
-      
-      // Mostrar notificación
-      notification.textContent = message;
-      notification.className = `toast ${type}`;
-      notification.style.display = 'block';
-      
-      // Ocultar después de 3 segundos
-      setTimeout(() => {
-        notification.style.display = 'none';
-      }, 3000);
-    }
-  });
-</script>
-<!-- Particles.js scripts -->
-<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-<script src="js/particles-config.js"></script>
-<script>
+  }
+  
+  // Función para cargar estadísticas del jugador
+  function loadPlayerStats() {
+          let gamesPlayed = 0;
+          let victories = 0;
+          let points = 0;
+          
+          // Intentar cargar estadísticas utilizando GameData
+          if (window.GameData) {
+            try {
+              // Obtener datos del usuario
+              const userData = window.Utils && window.Utils.getUserData ? Utils.getUserData() : {};
+              
+              // Cargar estadísticas de Quien Sabe Más
+              if (userData.stats && userData.stats.quiensabe) {
+                gamesPlayed += userData.stats.quiensabe.gamesPlayed || 0;
+                points += userData.stats.quiensabe.totalScore || 0;
+                
+                // No hay un contador directo de victorias, podemos estimar basado en partidas con puntuación positiva
+                if (userData.games && userData.games.quiensabe) {
+                  victories += userData.games.quiensabe.filter(game => game.score > 0).length;
+                }
+              }
+              
+              // Cargar estadísticas de Pasala Che
+              if (userData.stats && userData.stats.pasalache) {
+                gamesPlayed += userData.stats.pasalache.gamesPlayed || 0;
+                victories += userData.stats.pasalache.wins || 0;
+                
+                // Los puntos en Pasala Che son diferentes, podemos sumarlos de otra manera
+                if (userData.games && userData.games.pasalache) {
+                  userData.games.pasalache.forEach(game => {
+                    points += game.score || 0;
+                  });
+                }
+              }
+            } catch (error) {
+              console.error('Error al cargar estadísticas desde GameData:', error);
+              
+              // Si falla, intentar cargar desde localStorage individual
+              const quienSabeGamesPlayed = parseInt(localStorage.getItem('quienSabe_gamesPlayed')) || 0;
+              const pasalaCheGamesPlayed = parseInt(localStorage.getItem('pasalaChe_gamesPlayed')) || 0;
+              const quienSabeWins = parseInt(localStorage.getItem('quienSabe_wins')) || 0;
+              const pasalaCheWins = parseInt(localStorage.getItem('pasalaChe_wins')) || 0;
+              const quienSabeScore = parseInt(localStorage.getItem('quienSabe_highScore')) || 0;
+              const pasalaCheScore = parseInt(localStorage.getItem('pasalaChe_highScore')) || 0;
+              
+              gamesPlayed = quienSabeGamesPlayed + pasalaCheGamesPlayed;
+              victories = quienSabeWins + pasalaCheWins;
+              points = quienSabeScore + pasalaCheScore;
+            }
+          } else {
+            // Si no está disponible GameData, usar el método anterior de localStorage directo
+            gamesPlayed = parseInt(localStorage.getItem('gamesPlayed')) || 0;
+            victories = parseInt(localStorage.getItem('victories')) || 0;
+            points = parseInt(localStorage.getItem('points')) || 0;
+          }
+          
+          // Actualizar los elementos en el DOM
+          document.getElementById('games-played').textContent = gamesPlayed;
+          document.getElementById('victories').textContent = victories;
+          document.getElementById('points').textContent = points;
+        }
+        
+        // Verificar si se acaba de completar un juego y necesitamos actualizar estadísticas
+        const gameJustCompleted = localStorage.getItem('gameJustCompleted') === 'true';
+        if (gameJustCompleted) {
+          // Recargar estadísticas
+          loadPlayerStats();
+          // Limpiar la bandera
+          localStorage.removeItem('gameJustCompleted');
+  }
+});
+
+      // Reduzca la carga inicial deshabilitando partículas en dispositivos móviles
   document.addEventListener('DOMContentLoaded', function() {
-    // Inicializar particles.js
-    if (document.getElementById('particles-js')) {
-      particlesJS('particles-js', particlesConfig);
+        // Verificar si es un dispositivo móvil
+        const isMobile = window.innerWidth < 768;
+        
+        if (typeof particlesJS !== 'undefined' && !isMobile) {
+          // Cargar partículas solo en dispositivos de escritorio
+    particlesJS('particles-js', {
+      particles: {
+        number: {
+                value: 25, // Reducir el número de partículas
+          density: {
+            enable: true,
+                  value_area: 1000
+          }
+        },
+        color: {
+          value: '#3182ce'
+        },
+        shape: {
+          type: 'circle',
+          stroke: {
+            width: 0,
+            color: '#000000'
+          }
+        },
+        opacity: {
+                value: 0.2,
+          random: true,
+          anim: {
+                  enable: false // Desactivar animación de opacidad
+          }
+        },
+        size: {
+          value: 3,
+          random: true,
+          anim: {
+                  enable: false // Desactivar animación de tamaño
+          }
+        },
+        line_linked: {
+          enable: true,
+                distance: 180,
+          color: '#3182ce',
+                opacity: 0.15,
+          width: 1
+        },
+        move: {
+          enable: true,
+                speed: 1, // Reducir velocidad
+          direction: 'none',
+          random: true,
+          straight: false,
+          out_mode: 'out',
+          bounce: false
+        }
+      },
+      interactivity: {
+        detect_on: 'canvas',
+        events: {
+          onhover: {
+                  enable: false // Desactivar interacción hover
+          },
+          onclick: {
+                  enable: false // Desactivar interacción click
+          },
+          resize: true
+        }
+      },
+            retina_detect: false // Desactivar detección de retina
+    });
+        } else if (isMobile) {
+          // Ocultar elemento de partículas en móviles
+          const particlesElement = document.getElementById('particles-js');
+          if (particlesElement) {
+            particlesElement.style.display = 'none';
+          }
     }
   });
 </script>
-<!-- Botón flotante de compartir -->
-<script src="js/share-buttons.js"></script>
-<!-- Script para el footer global -->
+
+<!-- Scripts de partículas -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<!-- Scripts al final del cuerpo del documento -->
 <script src="js/global-footer.js"></script>
+    </div>
 </body>
 </html> 

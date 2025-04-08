@@ -183,107 +183,260 @@ const Utils = {
     };
   },
 
-  // Función para detectar y guardar la IP del usuario
-  async detectUserIP() {
+  /**
+   * Recupera el objeto principal de datos del usuario de localStorage
+   * @param {object} defaultValue - Valor por defecto si no se encuentra nada
+   * @returns {object} - Objeto de datos del usuario
+   */
+  getUserData: function(defaultValue = {}) {
     try {
-      // Verificar si ya tenemos la IP guardada
-      const savedIP = localStorage.getItem('userIP');
-      if (savedIP) {
-        console.log('IP del usuario ya almacenada:', savedIP);
-        return savedIP;
+      console.log('[Debug] getUserData - Attempting to get crackTotalUserData from localStorage');
+      const data = localStorage.getItem('crackTotalUserData'); // Clave principal
+      console.log('[Debug] getUserData - Raw data:', data ? data.substring(0, 50) + '...' : null);
+      
+      if (!data) {
+        console.log('[Debug] getUserData - No data found, returning default value');
+        return defaultValue;
       }
       
-      // Obtener IP usando servicio externo
-      const response = await fetch('https://api.ipify.org?format=json');
-      if (!response.ok) {
-        throw new Error('No se pudo obtener la IP');
-      }
+      // Intenta parsear los datos
+      const parsedData = JSON.parse(data);
+      console.log('[Debug] getUserData - Successfully parsed data, keys:', Object.keys(parsedData));
       
-      const data = await response.json();
-      const userIP = data.ip;
-      
-      // Guardar IP en localStorage para uso futuro
-      localStorage.setItem('userIP', userIP);
-      console.log('IP del usuario detectada y guardada:', userIP);
-      
-      return userIP;
+      return parsedData;
     } catch (error) {
-      console.error('Error al detectar IP del usuario:', error);
-      // Usar un valor por defecto si falla
-      const defaultIP = 'unknown-ip';
-      localStorage.setItem('userIP', defaultIP);
-      return defaultIP;
+      console.error('[Debug] getUserData - Error getting user data:', error);
+      return defaultValue;
     }
   },
 
-  // Función para obtener la IP actual del usuario (versión sincrónica)
-  getCurrentUserIP() {
-    return localStorage.getItem('userIP') || 'unknown-ip';
+  /**
+   * Guarda el objeto principal de datos del usuario en localStorage
+   * @param {object} userData - Objeto de datos del usuario a guardar
+   * @returns {boolean} - true si se guardó correctamente
+   */
+  saveUserData: function(userData) {
+    try {
+      console.log('[Debug] saveUserData - Saving user data with keys:', Object.keys(userData));
+      
+      if (!userData) {
+        console.error('[Debug] saveUserData - Attempted to save null/undefined userData');
+        return false;
+      }
+      
+      // Convertir a JSON
+      const dataString = JSON.stringify(userData);
+      
+      // Guardar en localStorage
+      localStorage.setItem('crackTotalUserData', dataString);
+      
+      // Verificar que se guardó correctamente
+      const savedData = localStorage.getItem('crackTotalUserData');
+      const success = !!savedData;
+      
+      console.log('[Debug] saveUserData - Save operation', success ? 'successful' : 'failed');
+      
+      // Disparar un evento personalizado para notificar a los listeners que los datos cambiaron
+      const event = new CustomEvent('userDataUpdated', { 
+        detail: { success, timestamp: Date.now() } 
+      });
+      document.dispatchEvent(event);
+      
+      return success;
+    } catch (error) {
+      console.error('[Debug] saveUserData - Error saving user data:', error);
+      return false;
+    }
   },
 
-  // Guardar datos de partida completada
-  saveGameResult(gameData) {
-    if (!gameData) return false;
+  /**
+   * Muestra una notificación toast
+   * @param {string} message - Mensaje a mostrar
+   * @param {string} type - Tipo de notificación ('success', 'error', 'info')
+   * @param {number} duration - Duración en ms (opcional, por defecto 3000)
+   */
+  showNotification: function(message, type = 'info', duration = 3000) {
+    let notification = document.getElementById('notification');
+    if (!notification) {
+      console.warn('Elemento #notification no encontrado. Creando uno...');
+      notification = document.createElement('div');
+      notification.id = 'notification';
+      notification.className = 'toast';
+      document.body.appendChild(notification);
+    } else {
+      // Limpiar clases anteriores y timeouts
+      notification.className = 'toast'; 
+      if (notification.timeoutId) {
+        clearTimeout(notification.timeoutId);
+      }
+    }
     
+    // Configurar y mostrar
+    notification.textContent = message;
+    notification.classList.add(type); // Añadir clase de tipo
+    notification.style.display = 'block';
+    notification.style.opacity = 1;
+    notification.style.bottom = '30px'; // Asegurar posición
+
+    // Ocultar después de la duración
+    notification.timeoutId = setTimeout(() => {
+      notification.style.opacity = 0;
+      // Esperar a que termine la transición antes de ocultar
+      setTimeout(() => {
+        notification.style.display = 'none';
+        notification.timeoutId = null; // Limpiar ID del timeout
+      }, 500); // Duración de la animación de fade-out
+    }, duration);
+  },
+
+  /**
+   * Genera HTML para un placeholder de carga
+   * @param {string} message - Mensaje de carga
+   * @returns {string} - HTML del placeholder
+   */
+  getLoadingPlaceholderHTML: function(message = 'Cargando...') {
+    return `<div class="loading-placeholder"><i class="fas fa-spinner fa-spin"></i> ${message}</div>`;
+  },
+
+  /**
+   * Genera HTML para un mensaje de error
+   * @param {string} title - Título del error
+   * @param {string} details - Detalles adicionales (opcional)
+   * @returns {string} - HTML del mensaje de error
+   */
+  getErrorMessageHTML: function(title, details = '') {
+    return `<div class="error-message">
+              <h4><i class="fas fa-exclamation-triangle"></i> ${title}</h4>
+              ${details ? `<p>${details}</p>` : ''}
+            </div>`;
+  },
+
+  /**
+   * Genera HTML para un mensaje informativo
+   * @param {string} message - Mensaje a mostrar
+   * @returns {string} - HTML del mensaje informativo
+   */
+  getInfoMessageHTML: function(message) {
+    return `<div class="info-message"><h4><i class="fas fa-info-circle"></i> Información</h4><p>${message}</p></div>`;
+  },
+  
+  /**
+   * Formatea números grandes con comas como separadores de miles.
+   * @param {number} number - El número a formatear.
+   * @returns {string} El número formateado como string.
+   */
+  numberWithCommas: function(number) {
+    if (number === null || number === undefined) return '0';
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  },
+
+  /**
+   * Función de depuración para mostrar todo el contenido de localStorage
+   * @returns {Object} - Un objeto con pares clave-valor de localStorage
+   */
+  debugLocalStorage: function() {
     try {
-      // Asegurarnos de que existe la IP del usuario
-      const userIP = this.getCurrentUserIP();
-      
-      // Usar las funciones de perfil.js para guardar los datos
-      if (typeof processGameCompletion === 'function') {
-        return processGameCompletion(gameData);
-      } else {
-        console.warn('La función processGameCompletion no está disponible. Asegúrate de cargar profile.js');
+      const result = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        let value = localStorage.getItem(key);
         
-        // Implementación de respaldo básica
-        // Guardar historial de juego
-        this.saveGameHistoryBackup(gameData, userIP);
+        // Intentar parsear JSON si el valor parece ser JSON
+        if (value && (value.startsWith('{') || value.startsWith('['))) {
+          try {
+            value = JSON.parse(value);
+          } catch (e) {
+            // Si no es JSON válido, dejar como string
+          }
+        }
+        
+        result[key] = value;
+      }
+      console.log('[Debug] LocalStorage contents:', result);
+      return result;
+    } catch (error) {
+      console.error('[Debug] Error debugging localStorage:', error);
+      return {};
+    }
+  },
+  
+  /**
+   * Intenta reparar el formato de crackTotalUserData si está corrupto
+   * @returns {boolean} - true si se reparó correctamente o no había error
+   */
+  repairUserData: function() {
+    try {
+      console.log('[Debug] Attempting to repair user data...');
+      
+      // Obtener datos actuales
+      const rawData = localStorage.getItem('crackTotalUserData');
+      
+      // Si no hay datos, no hay nada que reparar
+      if (!rawData) {
+        console.log('[Debug] No user data found to repair');
+        return false;
+      }
+      
+      // Intentar parsear para ver si hay error
+      try {
+        JSON.parse(rawData);
+        console.log('[Debug] User data is valid JSON, no repair needed');
+        return true; // Los datos son válidos, no necesita reparación
+      } catch (e) {
+        console.log('[Debug] User data is corrupted, attempting repair');
+        
+        // Intentar extraer datos válidos del string corrupto
+        let repairedData = {};
+        
+        // Crear estructura básica si no existe
+        repairedData = {
+          username: localStorage.getItem('username') || 'Jugador',
+          stats: {
+            pasalache: {},
+            quiensabe: {}
+          },
+          games: {
+            pasalache: [],
+            quiensabe: []
+          },
+          achievements: []
+        };
+        
+        // Guardar los datos reparados
+        localStorage.setItem('crackTotalUserData', JSON.stringify(repairedData));
+        console.log('[Debug] User data repaired and saved');
+        
         return true;
       }
     } catch (error) {
-      console.error('Error guardando resultados del juego:', error);
+      console.error('[Debug] Error repairing user data:', error);
       return false;
     }
   },
-
-  // Función de respaldo para guardar historial si profile.js no está cargado
-  saveGameHistoryBackup(gameData, userIP) {
+  
+  /**
+   * Forzar la actualización del perfil estableciendo la bandera gameJustCompleted
+   */
+  forceProfileUpdate: function() {
     try {
-      // Clave específica para el historial de esta IP
-      const historyKey = `gameHistory_${userIP}`;
+      console.log('[Debug] Forcing profile update...');
       
-      // Obtener historial existente o crear uno nuevo
-      let history = [];
-      const existingHistory = localStorage.getItem(historyKey);
+      // Establecer bandera de juego completado
+      localStorage.setItem('gameJustCompleted', 'true');
+      localStorage.setItem('lastGameCompletionTimestamp', Date.now().toString());
       
-      if (existingHistory) {
-        history = JSON.parse(existingHistory);
-      }
-      
-      // Añadir esta partida al historial
-      history.unshift({
-        ...gameData,
-        date: new Date().toISOString() // Asegurar que tiene timestamp
+      // Disparar evento para notificar a los listeners
+      const event = new CustomEvent('gameDataSaved', { 
+        detail: { timestamp: Date.now() } 
       });
+      document.dispatchEvent(event);
       
-      // Guardar historial actualizado
-      localStorage.setItem(historyKey, JSON.stringify(history));
-      
-      console.log('Partida guardada en historial (respaldo) para IP:', userIP);
+      console.log('[Debug] Profile update forced successfully');
       return true;
     } catch (error) {
-      console.error('Error guardando partida en historial (respaldo):', error);
+      console.error('[Debug] Error forcing profile update:', error);
       return false;
     }
-  },
-
-  // Detectar IP al cargar este archivo
-  initializeUtils() {
-    console.log('Inicializando utilidades...');
-    // Detectar IP del usuario inmediatamente
-    this.detectUserIP().then(ip => {
-      console.log('Utilidades inicializadas, IP del usuario:', ip);
-    });
   }
 };
 

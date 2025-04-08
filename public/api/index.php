@@ -27,19 +27,6 @@ $endpoint = strtok($endpoint, '?'); // Quitar parámetros de query
 // Obtener parámetros de query
 $params = $_GET;
 
-// Directorio para datos (ranking)
-$dataDir = __DIR__ . '/data';
-$rankingFile = $dataDir . '/ranking.json';
-
-// Crear directorio si no existe
-if (!is_dir($dataDir)) {
-    mkdir($dataDir, 0755, true);
-}
-// Crear archivo ranking.json si no existe
-if (!file_exists($rankingFile)) {
-    file_put_contents($rankingFile, json_encode([], JSON_PRETTY_PRINT));
-}
-
 // Log para depuración
 error_log("API Request: $endpoint - " . json_encode($params));
 
@@ -74,43 +61,6 @@ function closeDatabaseConnection() {
     $db_connection = null;
 }
 
-/**
- * Guarda un puntaje en el archivo ranking.json global
- */
-function guardarPuntajeGlobal($datosJugador) {
-    global $rankingFile;
-    
-    $ranking = [];
-    if (file_exists($rankingFile)) {
-        $data = file_get_contents($rankingFile);
-        if ($data) {
-            $decoded = json_decode($data, true);
-            if (is_array($decoded)) {
-                $ranking = $decoded;
-            }
-        }
-    }
-    
-    // Añadir nuevo puntaje
-    $ranking[] = $datosJugador;
-    
-    // Ordenar por puntaje (descendente)
-    usort($ranking, function($a, $b) {
-        return $b['score'] <=> $a['score'];
-    });
-    
-    // Opcional: Limitar ranking (ej. top 100)
-    // $ranking = array_slice($ranking, 0, 100);
-    
-    // Guardar archivo
-    try {
-        file_put_contents($rankingFile, json_encode($ranking, JSON_PRETTY_PRINT));
-        error_log("Ranking global guardado: " . json_encode($datosJugador));
-    } catch (Exception $e) {
-        error_log("Error guardando ranking global: " . $e->getMessage());
-    }
-}
-
 // Responder según el endpoint
 switch($endpoint) {
     case '/user/profile':
@@ -127,16 +77,6 @@ switch($endpoint) {
         getGlobalStats($endpoint, $params);
         break;
         
-    case '/games/pasala-che/ranking':
-    case '/games/quien-sabe-theme/ranking':
-        getRanking($endpoint, $params);
-        break;
-        
-    // NUEVO ENDPOINT PARA RANKING GLOBAL
-    case '/global-ranking':
-        getGlobalRanking();
-        break;
-        
     case '/games/pasala-che/top-players':
     case '/games/quien-sabe-theme/top-players':
         getTopPlayers($endpoint, $params);
@@ -145,11 +85,6 @@ switch($endpoint) {
     case '/user/stats/pasala-che':
     case '/user/stats/quien-sabe-theme':
         getUserStats($endpoint, $params);
-        break;
-        
-    case '/games/pasala-che/ranking/search':
-    case '/games/quien-sabe-theme/ranking/search':
-        searchRanking($endpoint, $params);
         break;
         
     case '/games/pasala-che/complete':
@@ -392,177 +327,6 @@ function getGlobalStats($endpoint, $params) {
     }
     
     echo json_encode($stats);
-}
-
-/**
- * Devuelve el ranking para un juego
- */
-function getRanking($endpoint, $params) {
-    global $db_connection;
-    $game = str_replace('/games/', '', $endpoint);
-    $game = str_replace('/ranking', '', $game);
-    
-    $filter = isset($params['filter']) ? $params['filter'] : 'global';
-    $page = isset($params['page']) ? (int)$params['page'] : 1;
-    $perPage = 10;
-    
-    // Valores por defecto
-    $players = [];
-    $totalPlayers = 0;
-    $totalPages = 1;
-    
-    // Calcular offset para paginación
-    $offset = ($page - 1) * $perPage;
-    
-    // Intentar conectar a la base de datos
-    if (connectToDatabase()) {
-        try {
-            // Determinar la condición de tiempo según el filtro
-            $timeCondition = "";
-            if ($filter === 'monthly') {
-                $timeCondition = "AND gr.played_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
-            } elseif ($filter === 'weekly') {
-                $timeCondition = "AND gr.played_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
-            }
-            
-            // Obtener ID del usuario actual
-            $currentUserId = getCurrentUserId();
-            
-            // Consulta para obtener datos de ranking con paginación
-            if ($game === 'pasala-che') {
-                // Contar total de jugadores para paginación
-                $countStmt = $db_connection->prepare("
-                    SELECT COUNT(DISTINCT u.id) as total
-                    FROM users u
-                    JOIN game_records gr ON u.id = gr.user_id
-                    WHERE gr.game_type = 'pasala-che' $timeCondition
-                ");
-                $countStmt->execute();
-                $totalPlayers = $countStmt->fetchColumn();
-                
-                // Consulta principal
-                $stmt = $db_connection->prepare("
-                    SELECT 
-                        u.username as name,
-                        ugs.high_score as score,
-                        COUNT(gr.id) as gamesPlayed,
-                        DATEDIFF(NOW(), MAX(gr.played_at)) as lastActive,
-                        SUBSTRING(u.username, 1, 1) as avatar,
-                        CASE WHEN u.id = :currentUserId THEN 1 ELSE 0 END as isCurrentUser,
-                        (SELECT rank FROM (
-                            SELECT user_id, RANK() OVER (ORDER BY high_score DESC) as rank
-                            FROM user_game_stats
-                            WHERE game_type = 'pasala-che'
-                        ) as r WHERE user_id = u.id) as rank,
-                        (SELECT COALESCE(
-                            (prev_rank - current_rank), 0)
-                        FROM (
-                            SELECT user_id, 
-                                rank() OVER (ORDER BY high_score DESC) as current_rank,
-                                COALESCE(LAG(rank() OVER (ORDER BY high_score DESC)) OVER (ORDER BY user_id), 0) as prev_rank
-                            FROM user_game_stats
-                            WHERE game_type = 'pasala-che'
-                        ) as rank_changes
-                        WHERE user_id = u.id) as rankChange
-                    FROM users u
-                    JOIN user_game_stats ugs ON u.id = ugs.user_id AND ugs.game_type = 'pasala-che'
-                    JOIN game_records gr ON u.id = gr.user_id AND gr.game_type = 'pasala-che' $timeCondition
-                    GROUP BY u.id, u.username, ugs.high_score
-                    ORDER BY ugs.high_score DESC, u.username ASC
-                    LIMIT :offset, :perPage
-                ");
-            } else {
-                // Contar total de jugadores para paginación
-                $countStmt = $db_connection->prepare("
-                    SELECT COUNT(DISTINCT u.id) as total
-                    FROM users u
-                    JOIN quiz_records qr ON u.id = qr.user_id
-                    WHERE 1=1 $timeCondition
-                ");
-                $countStmt->execute();
-                $totalPlayers = $countStmt->fetchColumn();
-                
-                // Consulta principal
-                $stmt = $db_connection->prepare("
-                    SELECT 
-                        u.username as name,
-                        ugs.high_score as score,
-                        COUNT(qr.id) as gamesPlayed,
-                        DATEDIFF(NOW(), MAX(qr.played_at)) as lastActive,
-                        SUBSTRING(u.username, 1, 1) as avatar,
-                        CASE WHEN u.id = :currentUserId THEN 1 ELSE 0 END as isCurrentUser,
-                        (SELECT rank FROM (
-                            SELECT user_id, RANK() OVER (ORDER BY high_score DESC) as rank
-                            FROM user_game_stats
-                            WHERE game_type = 'quien-sabe-theme'
-                        ) as r WHERE user_id = u.id) as rank,
-                        (SELECT COALESCE(
-                            (prev_rank - current_rank), 0)
-                        FROM (
-                            SELECT user_id, 
-                                rank() OVER (ORDER BY high_score DESC) as current_rank,
-                                COALESCE(LAG(rank() OVER (ORDER BY high_score DESC)) OVER (ORDER BY user_id), 0) as prev_rank
-                            FROM user_game_stats
-                            WHERE game_type = 'quien-sabe-theme'
-                        ) as rank_changes
-                        WHERE user_id = u.id) as rankChange
-                    FROM users u
-                    JOIN user_game_stats ugs ON u.id = ugs.user_id AND ugs.game_type = 'quien-sabe-theme'
-                    JOIN quiz_records qr ON u.id = qr.user_id $timeCondition
-                    GROUP BY u.id, u.username, ugs.high_score
-                    ORDER BY ugs.high_score DESC, u.username ASC
-                    LIMIT :offset, :perPage
-                ");
-            }
-            
-            $stmt->bindParam(':currentUserId', $currentUserId, PDO::PARAM_INT);
-            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-            $stmt->bindParam(':perPage', $perPage, PDO::PARAM_INT);
-            $stmt->execute();
-            
-            // Obtener resultados
-            $players = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-            // Asignar colores a avatares
-            $avatarColors = [
-                'rgba(225, 29, 72, 0.8)',  // Rojo
-                'rgba(6, 182, 212, 0.8)',   // Cyan
-                'rgba(249, 115, 22, 0.8)',  // Naranja
-                'rgba(5, 150, 105, 0.8)',   // Esmeralda
-                'rgba(124, 58, 237, 0.8)',  // Violeta
-                'rgba(234, 179, 8, 0.8)'    // Amarillo
-            ];
-            
-            // Procesar los resultados
-            foreach ($players as &$player) {
-                // Asignar un color consistente basado en el nombre del jugador
-                $colorIndex = crc32($player['name']) % count($avatarColors);
-                $player['avatarColor'] = $avatarColors[$colorIndex];
-                
-                // Asegurar que rankChange es un número
-                $player['rankChange'] = (int)$player['rankChange'];
-            }
-            
-            // Calcular total de páginas
-            $totalPages = ceil($totalPlayers / $perPage);
-            
-        } catch (PDOException $e) {
-            error_log("Error al obtener ranking: " . $e->getMessage());
-        } finally {
-            // Cerrar conexión
-            closeDatabaseConnection();
-        }
-    } else {
-        error_log("No se pudo conectar a la base de datos para getRanking");
-    }
-    
-    echo json_encode([
-        'players' => $players,
-        'currentPage' => $page,
-        'totalPages' => $totalPages,
-        'totalPlayers' => $totalPlayers,
-        'filter' => $filter
-    ]);
 }
 
 /**
@@ -823,235 +587,119 @@ function getUserStats($endpoint, $params) {
 }
 
 /**
- * Busca jugadores en el ranking
- */
-function searchRanking($endpoint, $params) {
-    global $db_connection;
-    $game = str_replace('/games/', '', $endpoint);
-    $game = str_replace('/ranking/search', '', $game);
-    
-    $term = isset($params['term']) ? $params['term'] : '';
-    
-    // Verificar que exista un término de búsqueda
-    if (empty($term)) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Término de búsqueda requerido']);
-        return;
-    }
-    
-    // Valores por defecto
-    $players = [];
-    $total = 0;
-    
-    // Intentar conectar a la base de datos
-    if (connectToDatabase()) {
-        try {
-            // Obtener ID del usuario actual
-            $currentUserId = getCurrentUserId();
-            
-            // Consulta para buscar jugadores por nombre
-            if ($game === 'pasala-che') {
-                $stmt = $db_connection->prepare("
-                    SELECT 
-                        u.username as name,
-                        ugs.high_score as score,
-                        (SELECT COUNT(*) FROM game_records WHERE user_id = u.id AND game_type = 'pasala-che') as gamesPlayed,
-                        DATEDIFF(NOW(), (SELECT MAX(played_at) FROM game_records WHERE user_id = u.id AND game_type = 'pasala-che')) as lastActive,
-                        SUBSTRING(u.username, 1, 1) as avatar,
-                        CASE WHEN u.id = :currentUserId THEN 1 ELSE 0 END as isCurrentUser,
-                        (SELECT rank FROM (
-                            SELECT user_id, RANK() OVER (ORDER BY high_score DESC) as rank
-                            FROM user_game_stats
-                            WHERE game_type = 'pasala-che'
-                        ) as r WHERE user_id = u.id) as rank,
-                        0 as rankChange
-                    FROM users u
-                    JOIN user_game_stats ugs ON u.id = ugs.user_id AND ugs.game_type = 'pasala-che'
-                    WHERE u.username LIKE :term
-                    ORDER BY ugs.high_score DESC, u.username ASC
-                    LIMIT 10
-                ");
-            } else {
-                $stmt = $db_connection->prepare("
-                    SELECT 
-                        u.username as name,
-                        ugs.high_score as score,
-                        (SELECT COUNT(*) FROM quiz_records WHERE user_id = u.id) as gamesPlayed,
-                        DATEDIFF(NOW(), (SELECT MAX(played_at) FROM quiz_records WHERE user_id = u.id)) as lastActive,
-                        SUBSTRING(u.username, 1, 1) as avatar,
-                        CASE WHEN u.id = :currentUserId THEN 1 ELSE 0 END as isCurrentUser,
-                        (SELECT rank FROM (
-                            SELECT user_id, RANK() OVER (ORDER BY high_score DESC) as rank
-                            FROM user_game_stats
-                            WHERE game_type = 'quien-sabe-theme'
-                        ) as r WHERE user_id = u.id) as rank,
-                        0 as rankChange
-                    FROM users u
-                    JOIN user_game_stats ugs ON u.id = ugs.user_id AND ugs.game_type = 'quien-sabe-theme'
-                    WHERE u.username LIKE :term
-                    ORDER BY ugs.high_score DESC, u.username ASC
-                    LIMIT 10
-                ");
-            }
-            
-            $searchTerm = "%$term%"; // Búsqueda parcial
-            $stmt->bindParam(':term', $searchTerm);
-            $stmt->bindParam(':currentUserId', $currentUserId, PDO::PARAM_INT);
-            $stmt->execute();
-            
-            // Obtener resultados
-            $players = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            $total = count($players);
-            
-            // Asignar colores a avatares
-            $avatarColors = [
-                'rgba(225, 29, 72, 0.8)',  // Rojo
-                'rgba(6, 182, 212, 0.8)',   // Cyan
-                'rgba(249, 115, 22, 0.8)',  // Naranja
-                'rgba(5, 150, 105, 0.8)',   // Esmeralda
-                'rgba(124, 58, 237, 0.8)',  // Violeta
-                'rgba(234, 179, 8, 0.8)'    // Amarillo
-            ];
-            
-            // Procesar los resultados
-            foreach ($players as &$player) {
-                // Asignar un color consistente basado en el nombre del jugador
-                $colorIndex = crc32($player['name']) % count($avatarColors);
-                $player['avatarColor'] = $avatarColors[$colorIndex];
-                
-                // Manejar casos donde lastActive es NULL (nuevo jugador)
-                if ($player['lastActive'] === null) {
-                    $player['lastActive'] = 0;
-                }
-            }
-            
-        } catch (PDOException $e) {
-            error_log("Error al buscar jugadores: " . $e->getMessage());
-        } finally {
-            // Cerrar conexión
-            closeDatabaseConnection();
-        }
-    } else {
-        error_log("No se pudo conectar a la base de datos para searchRanking");
-    }
-    
-    echo json_encode([
-        'players' => $players,
-        'total' => $total
-    ]);
-}
-
-/**
- * Devuelve el ranking global desde ranking.json
- */
-function getGlobalRanking() {
-    global $rankingFile;
-    
-    $ranking = [];
-    if (file_exists($rankingFile)) {
-        $data = file_get_contents($rankingFile);
-        if ($data) {
-            $decoded = json_decode($data, true);
-            if (is_array($decoded)) {
-                $ranking = $decoded;
-            }
-        }
-    }
-    
-    echo json_encode(['players' => $ranking]);
-}
-
-/**
- * Procesa la finalización de un juego y guarda estadísticas
+ * Completa una partida y guarda las estadísticas
  */
 function completeGame($endpoint, $data) {
-    global $db_connection; // Mantenemos DB por si acaso para XP/Niveles
-    $game = str_replace('/games/', '', $endpoint);
-    $game = str_replace('/complete', '', $game);
-    
-    // Verificar si se recibieron los datos necesarios
-    if (empty($data)) {
+    global $db_connection;
+    $gameType = (strpos($endpoint, 'pasala-che') !== false) ? 'pasala-che' : 'quien-sabe-theme';
+
+    // Validar datos recibidos
+    if (!isset($data['score']) || !isset($data['difficulty']) || !isset($data['victory']) || !isset($data['correct']) || !isset($data['wrong'])) {
         http_response_code(400);
-        echo json_encode(['error' => 'Datos incompletos']);
+        echo json_encode(['error' => 'Datos incompletos para completar la partida']);
         return;
     }
-    
-    // Obtener ID del usuario actual (asumimos función existente)
+
+    $score = intval($data['score']);
+    $difficulty = $data['difficulty'];
+    $victory = filter_var($data['victory'], FILTER_VALIDATE_BOOLEAN);
+    $correct = intval($data['correct']);
+    $wrong = intval($data['wrong']);
+    $time = isset($data['time']) ? intval($data['time']) : null; // Tiempo para PASALA CHE
+    $skipped = isset($data['skipped']) ? intval($data['skipped']) : null; // Saltadas para QUIÉN SABE
+
+    // Obtener ID de usuario (o crear uno si no existe - simplificado)
     $userId = getCurrentUserId();
-    $username = 'Jugador'; // Placeholder, idealmente obtener de DB/sesión
-    if (connectToDatabase()) {
-        $stmt = $db_connection->prepare("SELECT username FROM users WHERE id = :userId");
-        $stmt->bindParam(':userId', $userId);
-        $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($user) $username = $user['username'];
+
+    // Intentar conectar a la base de datos
+    if (!connectToDatabase()) {
+        http_response_code(500);
+        echo json_encode(['error' => 'No se pudo conectar a la base de datos para guardar la partida']);
+        return;
+    }
+
+    try {
+        $db_connection->beginTransaction();
+
+        // 1. Insertar registro de la partida
+        $stmtGame = $db_connection->prepare("
+            INSERT INTO game_results (user_id, game_type, score, difficulty, victory, correct_answers, incorrect_answers, time_seconds, skipped_questions, game_date)
+            VALUES (:userId, :gameType, :score, :difficulty, :victory, :correct, :wrong, :time, :skipped, NOW())
+        ");
+        $stmtGame->bindParam(':userId', $userId);
+        $stmtGame->bindParam(':gameType', $gameType);
+        $stmtGame->bindParam(':score', $score);
+        $stmtGame->bindParam(':difficulty', $difficulty);
+        $stmtGame->bindParam(':victory', $victory, PDO::PARAM_BOOL);
+        $stmtGame->bindParam(':correct', $correct);
+        $stmtGame->bindParam(':wrong', $wrong);
+        $stmtGame->bindParam(':time', $time);
+        $stmtGame->bindParam(':skipped', $skipped);
+        $stmtGame->execute();
+
+        // 2. Actualizar estadísticas agregadas del usuario para este juego
+        $stmtStats = $db_connection->prepare("
+            INSERT INTO user_game_stats (user_id, game_type, games_played, games_won, high_score, total_score, total_correct_answers, total_incorrect_answers, total_attempts, total_time_seconds, last_played)
+            VALUES (:userId, :gameType, 1, :victory, :score, :score, :correct, :wrong, :attempts, :time, NOW())
+            ON DUPLICATE KEY UPDATE
+                games_played = games_played + 1,
+                games_won = games_won + VALUES(games_won),
+                high_score = GREATEST(high_score, VALUES(high_score)),
+                total_score = total_score + VALUES(total_score),
+                total_correct_answers = total_correct_answers + VALUES(total_correct_answers),
+                total_incorrect_answers = total_incorrect_answers + VALUES(total_incorrect_answers),
+                total_attempts = total_attempts + VALUES(total_attempts),
+                total_time_seconds = total_time_seconds + VALUES(total_time_seconds),
+                last_played = NOW()
+        ");
+        
+        $attempts = $correct + $wrong + ($skipped ?? 0);
+        $timeUpdate = $time ?? 0; // Usar 0 si el tiempo no aplica o no se envió
+
+        $stmtStats->bindParam(':userId', $userId);
+        $stmtStats->bindParam(':gameType', $gameType);
+        $stmtStats->bindParam(':victory', $victory, PDO::PARAM_INT); // Usar INT (0 o 1)
+        $stmtStats->bindParam(':score', $score);
+        $stmtStats->bindParam(':correct', $correct);
+        $stmtStats->bindParam(':wrong', $wrong);
+        $stmtStats->bindParam(':attempts', $attempts);
+        $stmtStats->bindParam(':time', $timeUpdate);
+        $stmtStats->execute();
+
+        // 3. Actualizar XP y Nivel del usuario (ejemplo simple)
+        $xpGained = calculateXp($score, $victory, $difficulty);
+        $stmtUser = $db_connection->prepare("
+            UPDATE users SET xp = xp + :xpGained WHERE id = :userId
+        ");
+        $stmtUser->bindParam(':xpGained', $xpGained);
+        $stmtUser->bindParam(':userId', $userId);
+        $stmtUser->execute();
+
+        // Lógica adicional para subir de nivel (simplificada)
+        // Habría que verificar si xp supera el xp_required para el nivel actual
+
+        $db_connection->commit();
+        
+        http_response_code(200);
+        echo json_encode(['success' => true, 'message' => 'Partida guardada correctamente', 'xpGained' => $xpGained]);
+
+    } catch (PDOException $e) {
+        $db_connection->rollBack();
+        error_log("Error al guardar la partida: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode(['error' => 'Error interno al guardar la partida', 'details' => $e->getMessage()]);
+    } finally {
         closeDatabaseConnection();
     }
-    
-    $score = 0;
-    $xpAmount = 0;
-    
-    // Validar y extraer datos específicos del juego
-    if ($game === 'pasala-che') {
-        if (!isset($data['correctLetters']) || !isset($data['incorrectLetters'])) {
-            http_response_code(400);
-            echo json_encode(['error' => 'Datos incompletos para PASALA CHE']);
-            return;
-        }
-        $score = intval($data['correctLetters']);
-        $xpAmount = $score * 10; // Ejemplo de cálculo de XP
-    } else { // Asumimos 'quien-sabe-theme'
-        if (!isset($data['score']) || !isset($data['correctAnswers']) || !isset($data['totalQuestions'])) {
-            http_response_code(400);
-            echo json_encode(['error' => 'Datos incompletos para QUIÉN SABE MÁS']);
-            return;
-        }
-        $score = intval($data['score']);
-        $xpAmount = $score * 20; // Ejemplo de cálculo de XP
-    }
-    
-    // GUARDAR EN RANKING GLOBAL
-    $playerData = [
-        'name' => $username,
-        'score' => $score,
-        'gameType' => $game,
-        'date' => date('c') // Fecha ISO 8601
-    ];
-    guardarPuntajeGlobal($playerData);
-    
-    // Lógica existente para guardar en DB (si la hay) o actualizar XP/Nivel
-    // Esta parte es simplificada, asume que la conexión y lógica de DB ya existe
-    $updateSuccess = false;
-    if (connectToDatabase()) {
-        try {
-            $db_connection->beginTransaction();
-            
-            // Actualizar XP (ejemplo)
-            $xpStmt = $db_connection->prepare("
-                UPDATE users SET xp = xp + :xpAmount WHERE id = :userId
-            ");
-            $xpStmt->bindParam(':xpAmount', $xpAmount);
-            $xpStmt->bindParam(':userId', $userId);
-            $xpStmt->execute();
-            
-            // Podría haber más lógica aquí (actualizar user_game_stats, verificar niveles, etc.)
-            // ...
-            
-            $db_connection->commit();
-            $updateSuccess = true;
-        } catch (PDOException $e) {
-            $db_connection->rollBack();
-            error_log("Error al actualizar datos post-juego en DB: " . $e->getMessage());
-        } finally {
-            closeDatabaseConnection();
-        }
-    }
-    
-    // Devolver respuesta exitosa
-    echo json_encode([
-        'success' => true,
-        'message' => 'Juego completado y ranking global actualizado' . ($updateSuccess ? ' (y DB)' : ''),
-        'xpEarned' => $xpAmount
-    ]);
+}
+
+/**
+ * Calcula la XP ganada (ejemplo)
+ */
+function calculateXp($score, $victory, $difficulty) {
+    $baseXp = $score / 10; // XP base por puntaje
+    $victoryBonus = $victory ? 50 : 0;
+    $difficultyMultiplier = ($difficulty === 'hard') ? 1.5 : (($difficulty === 'easy') ? 0.75 : 1);
+    return round(($baseXp + $victoryBonus) * $difficultyMultiplier);
 } 
  

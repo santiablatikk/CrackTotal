@@ -16,14 +16,17 @@
     <link rel="icon" href="../img/favicon.ico" type="image/x-icon">
     
     <!-- Estilos -->
-    <!-- <link rel="stylesheet" href="css/pasala-style.css" /> -->
-    <!-- <link rel="stylesheet" href="css/styles.css" /> -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="../css/footer-styles.css">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Fuentes -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Scripts útiles -->
+    <script src="../utils/notifications.js"></script>
   </head>
   <body>
     <!-- Partículas de fondo -->
@@ -63,10 +66,6 @@
         <div class="start-buttons">
           <button id="start-game-btn" class="btn action-btn">
             <i class="fas fa-play"></i> ¡COMENZAR JUEGO!
-          </button>
-          
-          <button id="show-ranking-btn" class="btn trophy-btn">
-            <i class="fas fa-trophy"></i> RANKING
           </button>
         </div>
       </div>
@@ -186,19 +185,33 @@
       <!-- Footer -->
       <footer class="policy-footer">
         <div class="footer-links-mini">
+          <a href="index.html" class="btn home-btn">
+            <i class="fas fa-home"></i>
+            <span class="btn-text">Inicio</span>
+          </a>
+          <button class="btn sound-btn">
+            <i class="fas fa-volume-up"></i>
+            <span class="btn-text">Sonido</span>
+          </button>
+          <a href="../portal.html"><i class="fas fa-home"></i> Portal</a>
+          <a href="index.html"><i class="fas fa-arrow-left"></i> Volver</a>
           <a href="../terms.html"><i class="fas fa-file-contract"></i> Términos</a>
           <a href="../privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
           <a href="../blog.html"><i class="fas fa-blog"></i> Blog</a>
           <a href="../cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
           <a href="../contact.html"><i class="fas fa-envelope"></i> Contacto</a>
           <a href="../about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+          <a href="../logros.html"><i class="fas fa-medal"></i> Logros</a>
         </div>
-        <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
+        <div class="share-button-container">
+          <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
+        </div>
+        <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero</div>
         <div class="footer-social-icons">
-          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+          <a href="https://www.facebook.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.instagram.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/c/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-youtube"></i></a>
         </div>
       </footer>
     </div>
@@ -232,7 +245,6 @@
             
           <div class="modal-buttons">
             <button id="play-again-btn" class="btn action-btn">Jugar de nuevo</button>
-            <a href="../user-dashboard.html" class="btn stats-btn"><i class="fas fa-chart-bar"></i> Panel de Estadísticas</a>
           </div>
         </div>
       </div>
@@ -2484,6 +2496,26 @@
       .action-btn {
         flex: 2;
       }
+      
+      .profile-btn {
+        flex: 1;
+        background: linear-gradient(135deg, #4338ca, #3730a3);
+        color: white;
+        font-weight: 600;
+        text-decoration: none;
+        box-shadow: 0 4px 10px rgba(67, 56, 202, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      .profile-btn:hover {
+        background: linear-gradient(135deg, #3730a3, #312e81);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(67, 56, 202, 0.4);
+      }
+      
+      .profile-btn i {
+        margin-right: 0.5rem;
+      }
 
       .trophy-btn {
         flex: 1;
@@ -3147,7 +3179,28 @@
     </script>
     <!-- Botón flotante de compartir -->
     <script src="../js/share-buttons.js"></script>
-  <!-- Script para el footer global -->
-<script src="../js/global-footer.js"></script>
-</body>
+    <!-- Sistema centralizado de estadísticas y logros -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/game-data.js"></script>
+    <!-- Script para el footer global -->
+    <script src="../js/global-footer.js"></script>
+    
+    <!-- Modal de Respuesta Incorrecta -->
+    <div id="wrongAnswerModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2>¡Respuesta Incorrecta!</h2>
+        <p>Lo siento, esa no es la respuesta correcta.</p>
+        <p>La respuesta correcta era: <span id="correct-answer">...</span></p>
+        <button class="modal-btn continue-btn">Continuar</button>
+      </div>
+    </div>
+    
+    <!-- Scripts para el juego -->
+    <script src="js/data.js"></script>
+    <script src="js/local-game.js"></script>
+    
+    <!-- Scripts adicionales -->
+    <script src="../js/global-footer.js"></script>
+  </body>
 </html>

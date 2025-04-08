@@ -1,5 +1,13 @@
 // online.js
 
+// Configurar logger para evitar loggear en producción
+const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+const logger = {
+  log: isProduction ? function(){} : console.log,
+  warn: isProduction ? function(){} : console.warn,
+  error: console.error // Mantener errores siempre
+};
+
 // Conectar con Socket.io
 const socket = io();
 
@@ -55,7 +63,7 @@ if (createRoomSubmit) {
   createRoomSubmit.addEventListener("click", () => {
     // Aquí implementarías la lógica para crear la sala vía Socket.io
     // Ya no redirigimos a online_wait.html
-    console.log("Creando sala...");
+    logger.log("Creando sala...");
     // La lógica de espera ahora se maneja dentro de online.html
   });
 }
@@ -64,7 +72,7 @@ if (createRoomSubmit) {
 if (joinRoomSubmit) {
   joinRoomSubmit.addEventListener("click", () => {
     // Implementa la lógica para unirse a una sala vía Socket.io
-    console.log("Uniéndose a sala...");
+    logger.log("Uniéndose a sala...");
     // La lógica de espera ahora se maneja dentro de online.html
   });
 }

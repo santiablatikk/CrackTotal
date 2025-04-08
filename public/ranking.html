@@ -1,109 +1,100 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ranking Global - PASALA CHE</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <style>
-    body {
-      font-family: 'Montserrat', sans-serif;
-      background: #f9f9f9;
-      margin: 0;
-      padding: 20px;
-    }
-    .ranking-container {
-      max-width: 800px;
-      margin: 0 auto;
-      background: #fff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 12px 15px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    tr:hover {
-      background-color: #f1f1f1;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Historial de partidas en CRACK TOTAL." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#1e293b">
+    <title>Historial de Partidas - CRACK TOTAL</title>
+    <!-- Preconexiones -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Favicon -->
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/pages.css" /> <!-- Estilos específicos para páginas internas -->
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Estilos del footer -->
+    <link rel="stylesheet" href="css/footer-styles.css" />
+    <!-- Scripts -->
+    <script src="js/game-data.js" defer></script>
+    <script src="js/ranking.js" defer></script>
 </head>
 <body>
-  <div class="ranking-container">
-    <h1>Ranking Global - PASALA CHE</h1>
-    <table id="ranking-table">
-      <thead>
-        <tr>
-          <th>Posición</th>
-          <th>Jugador</th>
-          <th>Puntuación</th>
-          <th>Fecha</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Se insertarán los registros del ranking -->
-      </tbody>
-    </table>
-  </div>
+    <!-- Partículas de fondo -->
+    <div id="particles-js"></div>
 
-  <!-- Incluir la librería de Socket.io -->
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    // Conexión a Socket.io
-    const socket = io();
+    <div class="app-container">
+      <!-- Header similar al portal -->
+      <header class="app-header">
+        <div class="logo-animation">
+          <i class="fas fa-futbol ball-icon bounce"></i>
+        </div>
+        <a href="portal.html" class="title-link">
+          <h1 class="title-text">CRACK TOTAL</h1>
+        </a>
+        <p class="subtitle">Ranking Global - Pasala Che</p>
+        <div class="header-actions">
+          <button id="theme-toggle-btn" class="theme-toggle-btn">
+            <i class="fas fa-moon"></i>
+          </button>
+        </div>
+      </header>
 
-    // Función para renderizar el ranking en la tabla
-    function renderRanking(rankingData) {
-      const tbody = document.querySelector('#ranking-table tbody');
-      tbody.innerHTML = '';
+      <div class="page-container">
+        <div class="content-card ranking-card">
+          <div class="ranking-header">
+            <h2 class="section-title"><i class="fas fa-trophy"></i> Ranking Global - Pasala Che</h2>
+            <p class="ranking-subtitle">Mostrando las mejores puntuaciones de todos los jugadores.</p>
+          </div>
 
-      // Ordenar de mayor a menor puntuación
-      rankingData.sort((a, b) => b.score - a.score);
+          <div class="ranking-section">
+            <div class="ranking-table-container" id="ranking-table-container">
+              <!-- La tabla del historial se cargará aquí -->
+              <p>Cargando historial...</p>
+            </div>
+          </div>
 
-      rankingData.forEach((item, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${index + 1}</td>
-          <td>${item.player}</td>
-          <td>${item.score}</td>
-          <td>${item.date}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
+          <div class="ranking-actions">
+            <a href="portal.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver al Portal</a>
+            <a href="perfil.html" class="btn btn-primary"><i class="fas fa-user"></i> Ver Mi Perfil</a>
+          </div>
 
-    // Cargar ranking inicial mediante fetch
-    async function loadInitialRanking() {
-      try {
-        const response = await fetch('/api/ranking');
-        if (!response.ok) {
-          throw new Error('Error al cargar el ranking');
-        }
-        const rankingData = await response.json();
-        renderRanking(rankingData);
-      } catch (error) {
-        console.error(error);
-        const tbody = document.querySelector('#ranking-table tbody');
-        tbody.innerHTML = '<tr><td colspan="4">Error al cargar el ranking.</td></tr>';
-      }
-    }
+        </div>
+      </div>
 
-    // Escuchar el evento de actualización en tiempo real
-    socket.on('ranking_update', (rankingData) => {
-      renderRanking(rankingData);
-    });
+      <!-- Footer -->
+      <footer class="policy-footer">
+        <!-- Contenido del footer -->
+        <div class="footer-links-mini">
+          <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+          <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+          <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+          <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+          <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+          <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+          <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
+        </div>
+        <div class="share-button-container">
+          <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
+        </div>
+        <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero</div>
+        <div class="footer-social-icons">
+          <a href="https://www.facebook.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.instagram.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-instagram"></i></a>
+        </div>
+      </footer>
+    </div>
 
-    document.addEventListener('DOMContentLoaded', loadInitialRanking);
-  </script>
+    <!-- Scripts de utilidades -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/particles-config.js"></script>
+    <script src="js/main.js"></script> <!-- Para funcionalidad común como el theme toggle -->
 </body>
-</html>
+</html> 

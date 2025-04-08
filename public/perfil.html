@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Perfil de jugador y estadísticas en CRACK TOTAL." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#1e293b">
+    <title>Mi Perfil - CRACK TOTAL</title>
+    <!-- Preconexiones -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Favicon -->
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/pages.css" /> <!-- Estilos específicos para páginas internas -->
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Estilos del footer -->
+    <link rel="stylesheet" href="css/footer-styles.css" />
+    <!-- Scripts -->
+    <script src="js/game-data.js" defer></script>
+    <script src="js/perfil.js" defer></script>
+</head>
+<body>
+    <!-- Partículas de fondo -->
+    <div id="particles-js"></div>
+
+    <div class="app-container">
+      <!-- Header similar al portal -->
+      <header class="app-header">
+        <div class="logo-animation">
+          <i class="fas fa-futbol ball-icon bounce"></i>
+        </div>
+        <a href="portal.html" class="title-link">
+          <h1 class="title-text">CRACK TOTAL</h1>
+        </a>
+        <p class="subtitle">Mi Perfil de Jugador</p>
+        <div class="header-actions">
+          <button id="theme-toggle-btn" class="theme-toggle-btn">
+            <i class="fas fa-moon"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="page-container">
+        <div class="content-card profile-card">
+          <div class="profile-header">
+            <div class="profile-avatar">
+              <i class="fas fa-user-circle"></i>
+            </div>
+            <div class="profile-info">
+              <h2 id="profile-username">Jugador</h2>
+              <p>Estadísticas de Pasala Che</p>
+            </div>
+          </div>
+
+          <!-- Nuevo Contenedor Grid -->
+          <div class="profile-content-grid">
+
+            <!-- Columna Principal: Estadísticas Generales -->
+            <div class="profile-main-stats">
+              <div class="stats-section">
+                <h3 class="section-title"><i class="fas fa-chart-bar"></i> Resumen General</h3>
+                <div class="stats-grid profile-stats-grid">
+                  <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-gamepad"></i></div>
+                    <div class="stat-info">
+                      <span class="stat-value" id="stats-games-played">0</span>
+                      <span class="stat-label">Partidas Jugadas</span>
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                    <div class="stat-info">
+                      <span class="stat-value" id="stats-wins">0</span>
+                      <span class="stat-label">Victorias</span>
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+                    <div class="stat-info">
+                      <span class="stat-value" id="stats-losses">0</span>
+                      <span class="stat-label">Derrotas</span>
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-bullseye"></i></div>
+                    <div class="stat-info">
+                      <span class="stat-value" id="stats-accuracy">0%</span>
+                      <span class="stat-label">Precisión Media</span>
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-star"></i></div>
+                    <div class="stat-info">
+                      <span class="stat-value" id="stats-high-score">0</span>
+                      <span class="stat-label">Máx. Letras Correctas</span>
+                    </div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info">
+                      <span class="stat-value" id="stats-avg-time">0s</span>
+                      <span class="stat-label">Tiempo Medio Partida</span>
+                    </div>
+                  </div>
+                   <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-font"></i></div>
+                    <div class="stat-info">
+                      <span class="stat-value" id="stats-avg-letters">0</span>
+                      <span class="stat-label">Media Letras Correctas</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- Fin profile-main-stats -->
+
+            <!-- Columna Secundaria: Estadísticas por Letra -->
+            <div class="profile-letter-stats">
+              <div class="stats-section" id="letter-stats-section" style="display: none;">
+                  <h3 class="section-title"><i class="fas fa-spell-check"></i> Rendimiento por Letra</h3>
+                  <div class="letter-stats-container" id="letter-stats-container">
+                      <!-- Las estadísticas por letra se cargarán aquí -->
+                  </div>
+              </div>
+            </div> <!-- Fin profile-letter-stats -->
+
+          </div> <!-- Fin profile-content-grid -->
+
+          <div class="profile-actions">
+            <a href="portal.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver al Portal</a>
+            <a href="ranking.html" class="btn btn-primary"><i class="fas fa-history"></i> Ver Historial</a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="policy-footer">
+        <!-- Contenido del footer (copiado de portal.html o usando un include si es posible) -->
+        <div class="footer-links-mini">
+          <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+          <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+          <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+          <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+          <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+          <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+          <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
+        </div>
+        <div class="share-button-container">
+          <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
+        </div>
+        <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero</div>
+        <div class="footer-social-icons">
+          <a href="https://www.facebook.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.instagram.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-instagram"></i></a>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Scripts de utilidades (ej. partículas, theme toggle) -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/particles-config.js"></script>
+    <script src="js/main.js"></script> <!-- Para funcionalidad común como el theme toggle -->
+</body>
+</html> 

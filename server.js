@@ -1,35 +1,123 @@
 // server.js
 const express = require('express');
 const path = require('path');
+// const fs = require('fs').promises; // Ya no usaremos fs para el ranking
+
+// --- Configuración Firebase Admin ---
+const admin = require('firebase-admin');
+// Asegúrate de que el nombre del archivo coincida con el que descargaste
+const serviceAccount = require('./firebase-service-account.json'); 
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+const db = admin.firestore(); // Instancia de Firestore
+const rankingCollection = db.collection('rankings'); // Nombre de la colección en Firestore
+// --- Fin Configuración Firebase Admin ---
 
 const app = express();
-const port = process.env.PORT || 3000; // Render proporciona el puerto vía env var
+const port = process.env.PORT || 3000;
 
-// Define la carpeta que contiene los archivos estáticos (HTML, CSS, JS, imágenes)
+// Middleware para parsear JSON
+app.use(express.json());
+
+// Define la carpeta que contiene los archivos estáticos
 const publicDirectoryPath = path.join(__dirname, 'public');
+// const rankingFilePath = path.join(__dirname, 'ranking_data.json'); // Ya no se usa
 
-// Sirve los archivos estáticos desde la carpeta 'public'
+/* --- Funciones Auxiliares Firestore (reemplazan read/write Ranking) --- */
+
+// Ya no necesitamos funciones específicas para leer/escribir el archivo JSON.
+// Interactuaremos directamente con Firestore en las rutas API.
+
+/* --- Fin Funciones Auxiliares --- */
+
+// --- API Endpoints --- 
+
+// GET /api/ranking - Obtener el ranking global desde Firestore
+app.get('/api/ranking', async (req, res) => {
+  try {
+    const snapshot = await rankingCollection
+                           .orderBy('score', 'desc') // Ordenar por score descendente
+                           .limit(100) // Limitar a los 100 mejores
+                           .get();
+
+    if (snapshot.empty) {
+      console.log('No se encontraron documentos en el ranking.');
+      return res.json([]); // Devolver array vacío si no hay datos
+    }
+
+    const ranking = [];
+    snapshot.forEach(doc => {
+        // Añadimos el ID del documento por si acaso, y los datos
+        ranking.push({ id: doc.id, ...doc.data() }); 
+    });
+
+    res.json(ranking);
+
+  } catch (error) {
+    console.error("Error al obtener ranking desde Firestore:", error);
+    res.status(500).json({ message: "Error al obtener el ranking", error: error.message });
+  }
+});
+
+// POST /api/ranking - Añadir una nueva entrada al ranking en Firestore
+app.post('/api/ranking', async (req, res) => {
+  try {
+    const newEntry = req.body;
+    console.log('Recibida nueva entrada para ranking Firestore:', newEntry);
+
+    // Validación básica (mantener o mejorar)
+    if (!newEntry || typeof newEntry.score !== 'number' || !newEntry.name || !newEntry.date) {
+      return res.status(400).json({ message: "Datos de entrada inválidos" });
+    }
+
+    // Limpiar/Sanitizar datos 
+    newEntry.name = String(newEntry.name).substring(0, 30); 
+    // Asegurar que la fecha sea un Timestamp de Firestore para mejor ordenamiento/query
+    try {
+       // Intentar convertir la fecha ISO string (o Date) a Timestamp de Firestore
+       newEntry.date = admin.firestore.Timestamp.fromDate(new Date(newEntry.date));
+    } catch (dateError) {
+       console.warn('Error al convertir fecha a Timestamp, usando servidor actual:', dateError);
+       newEntry.date = admin.firestore.FieldValue.serverTimestamp(); // Usar fecha del servidor como fallback
+    }
+    
+    // Añadir la nueva entrada a la colección. Firestore asignará un ID automático.
+    const docRef = await rankingCollection.add(newEntry);
+
+    console.log('Entrada añadida al ranking Firestore con ID:', docRef.id);
+    res.status(201).json({ message: "Entrada añadida al ranking", entryId: docRef.id });
+
+    // Opcional: Limpieza periódica de entradas antiguas o de baja puntuación 
+    // (más complejo, se podría hacer con Cloud Functions o un script aparte)
+
+  } catch (error) {
+    console.error("Error al procesar POST /api/ranking Firestore:", error);
+    res.status(500).json({ message: "Error al guardar en el ranking", error: error.message });
+  }
+});
+
+// --- Servir Archivos Estáticos --- 
 app.use(express.static(publicDirectoryPath));
 
-// Ruta catch-all para manejar cualquier solicitud que no coincida con un archivo estático
-// Envía el archivo principal (ajusta 'crack-total.html' si es necesario)
+// --- Ruta Catch-all --- 
 app.get('*', (req, res) => {
-  // Intenta enviar el archivo solicitado, si no, envía crack-total.html
-  res.sendFile(path.join(publicDirectoryPath, 'crack-total.html'), (err) => {
-      if (err) {
-          // Si hay un error (ej. archivo no encontrado), envía el index
-          // Asegúrate de que 'crack-total.html' existe en public/
-          res.sendFile(path.join(publicDirectoryPath, 'crack-total.html'), (finalErr) => {
-            if (finalErr) {
-                console.error("Error al enviar archivo catch-all:", finalErr);
-                res.status(500).send('Error interno del servidor');
-            }
-          });
+  const mainHtmlFile = 'portal.html';
+  res.sendFile(path.join(publicDirectoryPath, mainHtmlFile), (err) => {
+    if (err) {
+      console.error(`Error al enviar archivo catch-all (${mainHtmlFile}):`, err);
+      if (!res.headersSent) {
+           res.status(404).send('Recurso no encontrado.');
       }
+    }
   });
 });
 
 app.listen(port, () => {
-  console.log(`Servidor iniciado en el puerto ${port}`);
-  console.log(`Sirviendo archivos desde: ${publicDirectoryPath}`);
+  // Ya no necesitamos inicializar el archivo JSON
+  console.log(`Servidor iniciado en http://localhost:${port}`);
+  console.log(`Sirviendo archivos estáticos desde: ${publicDirectoryPath}`);
+  console.log('Conectado a Firestore para el ranking.');
 });
