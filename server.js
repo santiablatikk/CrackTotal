@@ -5,11 +5,42 @@ const path = require('path');
 
 // --- Configuración Firebase Admin ---
 const admin = require('firebase-admin');
-// Asegúrate de que el nombre del archivo coincida con el que descargaste
-const serviceAccount = require('./firebase-service-account.json'); 
+
+// --- Cargar credenciales desde variable de entorno ---
+let serviceAccount;
+const firebaseConfigEnv = process.env.FIREBASE_CONFIG;
+
+if (!firebaseConfigEnv) {
+  console.error('¡Error Fatal! La variable de entorno FIREBASE_CONFIG no está definida.');
+  console.error('Asegúrate de configurar esta variable en tu entorno de despliegue (Render).');
+  // En un entorno local, podrías intentar cargar el archivo .json como fallback si existe,
+  // pero en producción es mejor fallar si la variable no está.
+  // Para desarrollo local podrías usar algo como:
+  // try { serviceAccount = require('./firebase-service-account.json'); } catch (e) { /* no hacer nada si no existe */ }
+  // if (!serviceAccount) process.exit(1); // Salir si no hay credenciales
+  process.exit(1); // Salir si no hay credenciales en producción/despliegue
+}
+
+try {
+  serviceAccount = JSON.parse(firebaseConfigEnv);
+  // Render maneja bien las variables de entorno multilínea, pero por si acaso,
+  // nos aseguramos que las nuevas líneas en la clave privada estén correctas.
+  if (serviceAccount.private_key) {
+     serviceAccount.private_key = serviceAccount.private_key.replace(/\n/g, '\n');
+  }
+  console.log("Credenciales de Firebase cargadas correctamente desde variable de entorno.");
+} catch (error) {
+  console.error('Error al parsear FIREBASE_CONFIG. Asegúrate que sea un JSON válido:', error);
+  process.exit(1); // Salir si la configuración es inválida
+}
+// --- Fin Cargar credenciales ---
+
+
+// Asegúrate de que el nombre del archivo coincida con el que descargaste - COMENTARIO OBSOLETO
+// const serviceAccount = require('./firebase-service-account.json'); // YA NO SE USA ESTA LÍNEA
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(serviceAccount) // Usamos el objeto parseado
 });
 
 const db = admin.firestore(); // Instancia de Firestore
