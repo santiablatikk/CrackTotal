@@ -56,7 +56,146 @@
       transform: scale(1.1);
     }
     
-    /* Estos estilos se eliminan para evitar conflictos con los consolidados en game-styles.css */
+    /* Optimizaciones para móviles */
+    @media (max-width: 768px) {
+      .question-card {
+        width: 90%;
+        max-width: 340px;
+        padding: 1rem;
+      }
+      
+      .current-letter-display {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .current-question {
+        font-size: 1rem;
+      }
+      
+      .current-definition {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+      }
+      
+      .answer-form {
+        gap: 0.5rem;
+      }
+      
+      .back-button {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+      }
+      
+      .rosco-status {
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 1rem;
+      }
+      
+      .status-item {
+        flex: 1 1 40%;
+        margin: 0.25rem;
+        padding: 0.6rem;
+      }
+      
+      .modal-content {
+        width: 90%;
+        max-width: 340px;
+        padding: 1.5rem;
+      }
+      
+      .stats-summary {
+        flex-wrap: wrap;
+      }
+      
+      .modal-actions {
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      
+      .modal-actions .btn {
+        width: 100%;
+      }
+    }
+    
+    /* Optimizaciones para pantallas muy pequeñas */
+    @media (max-width: 480px) {
+      .rosco-container {
+        transform: scale(0.85);
+        margin-top: -1rem;
+        margin-bottom: -1rem;
+      }
+      
+      .question-card {
+        padding: 0.8rem;
+        max-width: 280px;
+      }
+      
+      .current-letter-display {
+        font-size: 2rem;
+      }
+      
+      .title-text {
+        font-size: 1.8rem;
+      }
+      
+      .input-container {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .answer-input {
+        width: 100%;
+        padding: 0.8rem;
+      }
+      
+      .submit-btn {
+        width: 100%;
+        margin-left: 0;
+      }
+      
+      .skip-btn, .help-btn {
+        width: 100%;
+        padding: 0.8rem;
+      }
+      
+      .status-item {
+        flex: 1 1 100%;
+      }
+      
+      .footer-links-mini {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      .footer-links-mini a {
+        padding: 0.5rem;
+      }
+    }
+    
+    /* Optimización para interacciones táctiles */
+    @media (hover: none) {
+      .back-button:hover {
+        transform: none;
+      }
+      
+      .back-button:active {
+        background-color: rgba(225, 29, 72, 0.7);
+        transform: scale(0.95);
+      }
+      
+      .submit-btn:hover, .skip-btn:hover, .help-btn:hover {
+        transform: none;
+      }
+      
+      .submit-btn:active, .skip-btn:active, .help-btn:active {
+        transform: scale(0.95);
+      }
+    }
   </style>
   <!-- Open Graph tags para compartir en redes sociales -->
   <meta property="og:title" content="PASALA CHE - Juego de Preguntas sobre Fútbol">
@@ -277,7 +416,7 @@
           <button id="play-again-btn" class="btn btn-primary">
             <i class="fas fa-redo"></i> Volver a Jugar
           </button>
-          <a href="profile.html" class="btn btn-secondary">
+          <a href="perfil.html" class="btn btn-secondary">
             <i class="fas fa-user"></i> Perfil
           </a>
           <a href="ranking.html" class="btn btn-secondary">

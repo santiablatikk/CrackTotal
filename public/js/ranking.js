@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const tbody = table.createTBody();
             ranking.forEach((item, index) => {
                 const row = tbody.insertRow();
+                row.style.setProperty('--row-index', index);
 
                 // Añadir clase para Top 3
                 if (index === 0) {
@@ -64,45 +65,113 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Columna # (Posición)
                 const rankCell = row.insertCell();
-                rankCell.textContent = index + 1;
+                rankCell.setAttribute('data-label', 'Posición');
                 rankCell.classList.add('rank-position');
                 if (index < 3) {
                   let iconClass = '';
                   if (index === 0) iconClass = 'fas fa-trophy rank-icon-gold';
                   if (index === 1) iconClass = 'fas fa-medal rank-icon-silver';
                   if (index === 2) iconClass = 'fas fa-award rank-icon-bronze';
-                  rankCell.innerHTML = `<i class="${iconClass}"></i> ${index + 1}`;
+                  rankCell.innerHTML = `<div class="ranking-position"><i class="${iconClass}"></i> ${index + 1}</div>`;
+                } else {
+                  rankCell.innerHTML = `<div class="ranking-position">${index + 1}</div>`;
                 }
 
-                row.insertCell().textContent = item.name || 'Anónimo';
-                row.insertCell().textContent = item.score !== undefined ? item.score : 'N/A'; // Puntuación
+                // Jugador
+                const playerCell = row.insertCell();
+                playerCell.setAttribute('data-label', 'Jugador');
+                playerCell.innerHTML = `
+                  <div class="player-name">
+                    <div class="player-avatar"><i class="fas fa-user"></i></div>
+                    <span>${item.name || 'Anónimo'}</span>
+                  </div>
+                `;
 
+                // Puntuación
+                const scoreCell = row.insertCell();
+                scoreCell.setAttribute('data-label', 'Puntuación');
+                scoreCell.innerHTML = `<div class="player-score">${item.score !== undefined ? item.score : 'N/A'}</div>`;
+
+                // Fecha
                 const dateCell = row.insertCell();
+                dateCell.setAttribute('data-label', 'Fecha');
                 try {
+                    // Primero verificamos si la fecha es válida
+                    if (!item.date) {
+                        throw new Error('Fecha no disponible');
+                    }
+                    
                     const date = new Date(item.date);
-                    dateCell.textContent = date.toLocaleString('es-ES', { 
-                        day: '2-digit', month: '2-digit', year: 'numeric'
-                    }); // Solo fecha para ranking global
+                    
+                    // Verificar si la fecha es válida (Invalid Date dará NaN al usar getTime())
+                    if (isNaN(date.getTime())) {
+                        throw new Error('Fecha inválida');
+                    }
+                    
+                    // Formatear la fecha con opciones localizadas
+                    dateCell.innerHTML = `<div class="score-date">${date.toLocaleDateString('es-ES', { 
+                        day: '2-digit', 
+                        month: '2-digit', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })}</div>`;
                 } catch (e) {
-                    dateCell.textContent = 'Fecha inválida';
+                    // En caso de error, mostramos un mensaje amigable
+                    console.warn(`Error al formatear fecha: ${e.message}`, item.date);
+                    
+                    // Si hay una fecha en timestamp, intentamos usarla
+                    if (item.timestamp) {
+                        try {
+                            const timestampDate = new Date(parseInt(item.timestamp));
+                            if (!isNaN(timestampDate.getTime())) {
+                                dateCell.innerHTML = `<div class="score-date">${timestampDate.toLocaleDateString('es-ES', {
+                                    day: '2-digit', 
+                                    month: '2-digit', 
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                })}</div>`;
+                                return;
+                            }
+                        } catch (err) {
+                            console.warn('Error al usar timestamp alternativo', err);
+                        }
+                    }
+                    
+                    // Si no hay fecha o no se pudo formatear, mostramos "Fecha reciente" en lugar de la fecha actual
+                    dateCell.innerHTML = `<div class="score-date">Fecha reciente</div>`;
+                    dateCell.title = "La fecha exacta no está disponible";
+                    dateCell.style.color = "rgba(255, 255, 255, 0.5)";
                 }
                 
-                row.insertCell().textContent = item.difficulty || 'Normal';
+                // Dificultad
+                const difficultyCell = row.insertCell();
+                difficultyCell.setAttribute('data-label', 'Dificultad');
+                difficultyCell.innerHTML = `<div class="difficulty-label">${item.difficulty || 'Normal'}</div>`;
                 
+                // Resultado
                 const resultCell = row.insertCell();
-                 // Asumiendo que 'victory' está en los datos, si no, se puede omitir esta columna
+                resultCell.setAttribute('data-label', 'Resultado');
+                // Asumiendo que 'victory' está en los datos, si no, se puede omitir esta columna
                 if (item.victory !== undefined) { 
                     resultCell.innerHTML = item.victory 
-                        ? '<span class="victory-label"><i class="fas fa-check-circle"></i></span>' 
-                        : '<span class="defeat-label"><i class="fas fa-times-circle"></i></span>';
+                        ? '<div class="victory-label"><i class="fas fa-check-circle"></i> Victoria</div>' 
+                        : '<div class="defeat-label"><i class="fas fa-times-circle"></i> Derrota</div>';
                     resultCell.className = item.victory ? 'result-victory' : 'result-defeat';
-                    resultCell.style.textAlign = 'center'; // Centrar icono
                 } else {
-                     resultCell.textContent = '-';
+                     resultCell.innerHTML = '<div class="no-result">-</div>';
                 }
 
-                row.insertCell().textContent = item.correct !== undefined ? item.correct : '-';
-                row.insertCell().textContent = item.timeUsed !== undefined ? `${item.timeUsed}s` : '-';
+                // Correctas
+                const correctCell = row.insertCell();
+                correctCell.setAttribute('data-label', 'Correctas');
+                correctCell.innerHTML = `<div class="correct-count">${item.correct !== undefined ? item.correct : '-'}</div>`;
+                
+                // Tiempo
+                const timeCell = row.insertCell();
+                timeCell.setAttribute('data-label', 'Tiempo');
+                timeCell.innerHTML = `<div class="time-used">${item.timeUsed !== undefined ? `${item.timeUsed}s` : '-'}</div>`;
             });
 
             // Limpiar contenedor y añadir tabla

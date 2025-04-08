@@ -426,6 +426,141 @@
         .ranking-position {
           margin: 0 0 0 auto;
         }
+        
+        .ranking-header {
+          padding: 1.2rem;
+        }
+        
+        .section-title {
+          font-size: 1.4rem;
+        }
+        
+        .ranking-subtitle {
+          font-size: 0.85rem;
+        }
+        
+        .ranking-actions {
+          flex-wrap: wrap;
+          gap: 0.8rem;
+        }
+        
+        .btn {
+          padding: 0.8rem 1rem;
+          font-size: 0.9rem;
+          flex: 1 1 100%;
+        }
+      }
+      
+      /* Optimizaciones adicionales para pantallas muy pequeñas */
+      @media (max-width: 480px) {
+        .app-header {
+          padding: 1rem;
+        }
+        
+        .title-text {
+          font-size: 1.6rem;
+        }
+        
+        .subtitle {
+          font-size: 0.8rem;
+        }
+        
+        .ranking-section {
+          padding: 1rem;
+        }
+        
+        .section-title {
+          font-size: 1.3rem;
+        }
+        
+        .player-name {
+          font-size: 0.9rem;
+        }
+        
+        .player-score {
+          font-size: 1rem;
+        }
+        
+        .score-date {
+          font-size: 0.8rem;
+        }
+        
+        .ranking-table tr {
+          padding: 0.8rem;
+          margin-bottom: 0.8rem;
+        }
+        
+        .loading-indicator {
+          padding: 2rem 0;
+        }
+        
+        .loading-spinner {
+          width: 40px;
+          height: 40px;
+        }
+        
+        .no-records {
+          padding: 1.5rem;
+          margin: 1rem 0;
+        }
+        
+        .no-records i {
+          font-size: 2.5rem;
+        }
+        
+        .no-records p {
+          font-size: 1rem;
+          margin-bottom: 1rem;
+        }
+      }
+      
+      /* Optimizaciones para dispositivos táctiles */
+      @media (hover: none) {
+        .btn:active {
+          transform: scale(0.95);
+          opacity: 0.9;
+        }
+        
+        .btn::before {
+          display: none;
+        }
+        
+        .btn-primary:active {
+          background: linear-gradient(135deg, #854d0e, #a16207);
+        }
+        
+        .btn-secondary:active {
+          background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .ranking-table tbody tr:active {
+          background: rgba(15, 23, 42, 0.8);
+          transform: scale(0.98);
+        }
+        
+        /* Aumentar el área táctil de los botones y controles */
+        .btn, 
+        .theme-toggle-btn,
+        .share-button,
+        .footer-links-mini a {
+          min-height: 44px;
+          min-width: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .footer-links-mini {
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+        
+        .footer-links-mini a {
+          padding: 0.5rem 0.8rem;
+          flex: 1 1 calc(33.333% - 0.5rem);
+          justify-content: center;
+          white-space: nowrap;
+        }
       }
     </style>
 </head>
@@ -478,15 +613,15 @@
                 <tbody>
                   <!-- Las filas se cargarán dinámicamente desde JS -->
                   <tr style="--row-index: 0;">
-                    <td><div class="ranking-position">1</div></td>
-                    <td>
+                    <td data-label="Posición"><div class="ranking-position">1</div></td>
+                    <td data-label="Jugador">
                       <div class="player-name">
                         <div class="player-avatar"><i class="fas fa-user"></i></div>
                         <span>Jugador1</span>
                       </div>
                     </td>
-                    <td><div class="player-score">25</div></td>
-                    <td><div class="score-date">12/04/2024</div></td>
+                    <td data-label="Puntuación"><div class="player-score">25</div></td>
+                    <td data-label="Fecha"><div class="score-date">12/04/2024</div></td>
                   </tr>
                   <!-- Más filas irían aquí... -->
                 </tbody>
