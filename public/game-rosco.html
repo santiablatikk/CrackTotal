@@ -465,11 +465,13 @@
         margin-top: 1.2rem;
         animation: fadeIn 0.6s ease-out both;
         animation-delay: 0.6s;
+        flex-wrap: wrap;
       }
-
-      .btn-start-game {
-        flex: 2;
-        background: var(--bg-gradient-secondary);
+      
+      /* Estilo base para botones en este contenedor */
+      .start-button-container .btn {
+        flex: 1 1 auto;
+        min-width: 150px;
         color: white;
         text-decoration: none;
         padding: 0.8rem 1rem;
@@ -483,12 +485,18 @@
         border: none;
         cursor: pointer;
         transition: var(--transition-bounce);
-        box-shadow: 0 6px 15px rgba(225, 29, 72, 0.4);
         position: relative;
         overflow: hidden;
         letter-spacing: 0.5px;
+        text-align: center;
       }
 
+      /* Estilo específico para el botón de comenzar */
+      .btn-start-game {
+        background: var(--bg-gradient-secondary);
+        box-shadow: 0 6px 15px rgba(225, 29, 72, 0.4);
+      }
+      
       .btn-start-game::before {
         content: '';
         position: absolute;
@@ -507,6 +515,54 @@
       }
 
       .btn-start-game:hover::before {
+        left: 100%;
+      }
+
+      /* Estilo para el botón de Perfil */
+      .btn-profile {
+         background: var(--bg-gradient-primary);
+         box-shadow: 0 6px 15px rgba(67, 56, 202, 0.3);
+      }
+      .btn-profile:hover {
+         transform: translateY(-8px);
+         background: linear-gradient(135deg, var(--primary-dark), #312e81);
+         box-shadow: 0 15px 30px rgba(67, 56, 202, 0.4);
+      }
+      .btn-profile::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.7s ease;
+      }
+      .btn-profile:hover::before {
+        left: 100%;
+      }
+
+      /* Estilo para el botón de Ranking */
+      .btn-ranking {
+         background: linear-gradient(135deg, #ca8a04, #a16207);
+         box-shadow: 0 6px 15px rgba(202, 138, 4, 0.4);
+      }
+      .btn-ranking:hover {
+         transform: translateY(-8px);
+         background: linear-gradient(135deg, #a16207, #854d0e);
+         box-shadow: 0 15px 30px rgba(202, 138, 4, 0.5);
+      }
+       .btn-ranking::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.7s ease;
+      }
+       .btn-ranking:hover::before {
         left: 100%;
       }
 
@@ -529,7 +585,7 @@
         position: relative;
         overflow: hidden;
       }
-
+      
       .btn-profile-link::before {
         content: '';
         position: absolute;
@@ -900,9 +956,15 @@
             
             <!-- Botón de inicio y perfil -->
             <div class="start-button-container">
-              <button id="start-game" class="btn-start-game">
+              <button id="start-game" class="btn btn-start-game">
                 <i class="fas fa-play"></i> ¡COMENZAR JUEGO!
               </button>
+              <a href="profile.html" class="btn btn-profile">
+                 <i class="fas fa-user"></i> Perfil
+              </a>
+              <a href="ranking.html" class="btn btn-ranking">
+                 <i class="fas fa-trophy"></i> Ranking
+              </a>
             </div>
           </div>
         </div>
