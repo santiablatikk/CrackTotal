@@ -118,7 +118,7 @@
         bottom: 0;
         left: 0;
         width: 60px;
-        height: 3px;
+        height: 0;
         background: linear-gradient(90deg, #e11d48, #fb7185);
         transition: width 0.3s ease;
       }
@@ -206,6 +206,10 @@
         border-color: #f59e0b;
       }
       
+      .cookie-type.adsense {
+        border-color: #22c55e;
+      }
+      
       .cookie-type h3 {
         color: #fff;
         display: flex;
@@ -237,10 +241,43 @@
         color: #f59e0b;
       }
       
+      .cookie-type.adsense h3 i {
+        color: #22c55e;
+      }
+      
       .cookie-type p {
         font-size: 1rem;
         margin: 0;
         color: rgba(255, 255, 255, 0.8);
+      }
+      
+      .cookie-list {
+        list-style: none;
+        padding: 0;
+        margin: 1rem 0;
+      }
+      
+      .cookie-list li {
+        padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+        margin-bottom: 0.5rem;
+        background: rgba(15, 23, 42, 0.5);
+        border-radius: 6px;
+        position: relative;
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.5;
+      }
+      
+      .cookie-list li::before {
+        content: '•';
+        position: absolute;
+        left: 0.6rem;
+        color: #22c55e;
+      }
+      
+      .cookie-list li strong {
+        color: #fff;
+        font-weight: 600;
       }
       
       /* Sección de navegadores */
@@ -433,26 +470,40 @@
         </section>
 
         <section class="cookies-section">
-          <h2><i class="fas fa-list-ul"></i> Tipos de Cookies que Utilizamos</h2>
+          <h2><i class="fas fa-tags"></i> Tipos de Cookies que Utilizamos</h2>
+          <p>Las cookies pueden ser clasificadas según su finalidad y duración. En CRACK TOTAL utilizamos los siguientes tipos de cookies:</p>
+          
           <div class="cookie-types">
             <div class="cookie-type essential">
               <h3><i class="fas fa-shield-alt"></i> Cookies Esenciales</h3>
-              <p>Necesarias para el funcionamiento básico del sitio. Sin estas cookies, no podrías iniciar sesión, navegar o jugar correctamente.</p>
+              <p>Son indispensables para el correcto funcionamiento del sitio. Por ejemplo, cookies que te permiten iniciar sesión en áreas seguras o realizar transacciones. No se pueden deshabilitar sin afectar a la funcionalidad del sitio.</p>
             </div>
             
             <div class="cookie-type preference">
               <h3><i class="fas fa-sliders-h"></i> Cookies de Preferencias</h3>
-              <p>Permiten recordar tus preferencias, como el nombre de usuario, dificultad preferida o ajustes de interfaz.</p>
+              <p>Permiten que el sitio recuerde información que cambia la forma en que la página se comporta o se ve. Por ejemplo, tu tema preferido (claro u oscuro) o tus preferencias de idioma.</p>
             </div>
             
             <div class="cookie-type statistics">
-              <h3><i class="fas fa-chart-bar"></i> Cookies de Estadísticas</h3>
-              <p>Nos ayudan a entender cómo interactúas con el sitio, qué secciones son más populares y cómo podemos mejorar.</p>
+              <h3><i class="fas fa-chart-bar"></i> Cookies Estadísticas</h3>
+              <p>Nos ayudan a entender cómo interactúan los visitantes con el sitio recopilando información de forma anónima. Esta información nos permite mejorar el funcionamiento del sitio.</p>
             </div>
             
             <div class="cookie-type marketing">
               <h3><i class="fas fa-ad"></i> Cookies de Marketing</h3>
-              <p>Utilizadas para mostrarte anuncios relevantes a través de servicios como Google AdSense y para medir la efectividad de las campañas.</p>
+              <p>Se utilizan para rastrear a los visitantes en los sitios web. La intención es mostrar anuncios relevantes y atractivos para el usuario individual, y por lo tanto, más valiosos para los editores y anunciantes.</p>
+            </div>
+
+            <div class="cookie-type adsense">
+              <h3><i class="fas fa-dollar-sign"></i> Cookies de Google AdSense</h3>
+              <p>CRACK TOTAL utiliza Google AdSense para mostrar anuncios personalizados que podrían interesarte. Google AdSense usa cookies para varios propósitos, incluyendo seleccionar anuncios basados en contenido relevante para ti, mejorar los informes de rendimiento de las campañas, y evitar mostrar anuncios que ya hayas visto.</p>
+              <p>Algunos ejemplos de cookies que Google AdSense puede utilizar:</p>
+              <ul class="cookie-list">
+                <li><strong>IDE:</strong> Utilizada para el remarketing de Google DoubleClick. Duración: 1 año.</li>
+                <li><strong>ANID:</strong> Estas cookies se utilizan para recopilar información sobre el uso que haces del sitio. Esta información se utiliza para compilar informes y ayudar a mejorar el sitio. Duración: 2 años.</li>
+                <li><strong>DSID:</strong> Identifica a un usuario que ha iniciado sesión en una cuenta de Google. Duración: 2 semanas.</li>
+                <li><strong>NID:</strong> Contiene un ID único que Google utiliza para recordar tus preferencias y otra información. Duración: 6 meses.</li>
+              </ul>
             </div>
           </div>
         </section>
@@ -496,18 +547,8 @@
         </section>
 
         <div class="back-link-container">
-          <a href="index.html" class="back-link"><i class="fas fa-home"></i> Volver al Inicio</a>
+          <a href="portal.html" class="back-link"><i class="fas fa-home"></i> Volver al Inicio</a>
         </div>
-
-        <!-- Footer común -->
-        <footer class="cookies-footer">
-          <p>&copy; marzo 2025 CRACK TOTAL. Todos los derechos reservados.</p>
-          <div class="footer-links-mini">
-            <a href="privacy.html" class="mini-btn">Privacidad</a>
-            <a href="terms.html" class="mini-btn">Términos</a>
-            <a href="contact.html" class="mini-btn">Contacto</a>
-          </div>
-        </footer>
       </div>
       
       <!-- Botón para volver a la página anterior -->
@@ -520,8 +561,8 @@
         <div class="ad-label">PUBLICIDAD</div>
         <ins class="adsbygoogle"
              style="display:block"
-             data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
-             data-ad-slot="XXXXXXXXXX"
+             data-ad-client="ca-pub-9579152019412427"
+             data-ad-slot="1234567890"
              data-ad-format="auto"
              data-full-width-responsive="true"></ins>
         <script>
@@ -560,7 +601,7 @@
   <div class="share-button-container">
     <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
   </div>
-  <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
+  <div class="copyright-text">&copy; Abril 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
   <div class="footer-social-icons">
     <a href="https://www.facebook.com/cracktotal" class="social-icon"><i class="fab fa-facebook-f"></i></a>
     <a href="https://twitter.com/cracktotal" class="social-icon"><i class="fab fa-twitter"></i></a>

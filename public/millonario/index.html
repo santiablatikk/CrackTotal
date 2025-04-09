@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="theme-color" content="#182338">
+  <meta name="theme-color" content="#0a0f1c">
   <meta name="description" content="¿Quién Sabe Más de Fútbol? - El juego de preguntas que pone a prueba tus conocimientos futboleros">
   <meta name="google-adsense-account" content="ca-pub-9579152019412427">
   <title>¿Quién Sabe Más de Fútbol? - CRACK TOTAL</title>
@@ -18,13 +18,13 @@
   
   <!-- Estilos -->
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="../css/footer-styles.css">
   
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Fuentes -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Open Graph tags para compartir en redes sociales -->
   <meta property="og:title" content="¿Quién Sabe Más de Fútbol? - CRACK TOTAL">
@@ -44,224 +44,164 @@
   <body>
   <div id="particles-js"></div>
 
-  <header>
+  <header class="fade-in-down">
+    <a href="../portal.html" class="portal-link"><i class="fas fa-arrow-left"></i> Volver al Portal</a>
     <h1 data-text="¿QUIÉN SABE MÁS DE FÚTBOL?">¿QUIÉN SABE MÁS DE FÚTBOL?</h1>
-    <p class="subtitle">Pon a prueba tus conocimientos futboleros.</p>
-    <a href="../portal.html" class="portal-link"><i class="fas fa-home"></i> Volver al Portal</a>
+    <p class="subtitle">Demuestra tu sabiduría futbolística y alcanza la gloria.</p>
   </header>
 
-  <main class="container">
-    <div class="trophy-icon">
-      <i class="fas fa-trophy"></i>
-    </div>
-    <h2 class="screen-title">ELIGE UN MODO</h2>
+  <main class="container fade-in-up">
+    <h2 class="screen-title">Elige tu modo de juego</h2>
     
-    <div class="mode-options">
+    <div class="mode-options stagger-animation">
       <div class="mode-card" onclick="location.href='local.html';">
-        <div class="mode-icon">
+        <div class="mode-icon individual">
           <i class="fas fa-user"></i>
         </div>
-        <div class="mode-title">MODO INDIVIDUAL</div>
-        <div class="mode-description">Juega solo y demuestra tus conocimientos en fútbol respondiendo preguntas.</div>
+        <div class="mode-content">
+          <div class="mode-title">Modo Individual</div>
+          <div class="mode-description">Compite contra ti mismo y el reloj. ¿Cuántas preguntas puedes acertar?</div>
+        </div>
+        <div class="mode-action">
+          <span>Jugar Ahora <i class="fas fa-play"></i></span>
+        </div>
       </div>
 
       <div class="coming-soon-wrapper">
-        <div class="coming-soon-banner">¡PRÓXIMAMENTE!</div>
         <div class="mode-card mode-disabled">
-          <div class="mode-icon">
+          <div class="coming-soon-banner">¡PRÓXIMAMENTE!</div>
+          <div class="mode-icon multiplayer">
             <i class="fas fa-users"></i>
           </div>
-          <div class="mode-title">MULTIJUGADOR</div>
-          <div class="mode-description">Juega contra tus amigos y demuestra quién sabe más de fútbol.</div>
+          <div class="mode-content">
+            <div class="mode-title">Multijugador</div>
+            <div class="mode-description">Desafía a tus amigos y demuestra quién es el verdadero campeón del fútbol.</div>
+          </div>
+          <div class="mode-action">
+            <span>No Disponible</span>
+          </div>
         </div>
       </div>
     </div>
   </main>
   
-  <footer>
+  <footer class="fade-in">
     <div class="footer-content">
       <div class="footer-ball">
         <i class="fas fa-futbol"></i>
   </div>
 
       <nav class="footer-nav">
-        <a href="../portal.html" class="footer-link"><i class="fas fa-home"></i> Portal</a>
-        <a href="../blog.html" class="footer-link"><i class="fas fa-blog"></i> Blog</a>
-        <a href="../about.html" class="footer-link"><i class="fas fa-info-circle"></i> Acerca de</a>
-        <a href="../contact.html" class="footer-link"><i class="fas fa-envelope"></i> Contacto</a>
-        <a href="../privacy.html" class="footer-link"><i class="fas fa-lock"></i> Privacidad</a>
         <a href="../terms.html" class="footer-link"><i class="fas fa-file-contract"></i> Términos</a>
+        <a href="../privacy.html" class="footer-link"><i class="fas fa-lock"></i> Privacidad</a>
+        <a href="../blog.html" class="footer-link"><i class="fas fa-blog"></i> Blog</a>
+        <a href="../contact.html" class="footer-link"><i class="fas fa-envelope"></i> Contacto</a>
       </nav>
       
-      <button class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
-      
       <div class="social-links">
-        <a href="https://facebook.com" target="_blank" rel="noopener" class="social-link">
-          <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="https://twitter.com" target="_blank" rel="noopener" class="social-link">
-          <i class="fab fa-twitter"></i>
-        </a>
-        <a href="https://instagram.com" target="_blank" rel="noopener" class="social-link">
-          <i class="fab fa-instagram"></i>
-        </a>
-        <a href="https://youtube.com" target="_blank" rel="noopener" class="social-link">
-          <i class="fab fa-youtube"></i>
-        </a>
+        <a href="#" target="_blank" rel="noopener" class="social-link"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" target="_blank" rel="noopener" class="social-link"><i class="fab fa-twitter"></i></a>
+        <a href="#" target="_blank" rel="noopener" class="social-link"><i class="fab fa-instagram"></i></a>
     </div>
       
-      <p class="copyright">© 2023 CRACK TOTAL - Todos los derechos reservados</p>
+      <p class="copyright">&copy; 2024 CRACK TOTAL - Todos los derechos reservados</p>
     </div>
   </footer>
 
   <!-- Scripts -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Verificar si hay un jugador registrado
+      // Check for player name
       const playerName = localStorage.getItem('playerName');
-      
       if (!playerName) {
-        // Redirigir a la página de ingreso si no hay nombre guardado
-        window.location.href = '../portal.html';
+        showNotification('Debes ingresar un nombre en el portal primero.', 'warning');
+        // Redirect after a short delay to allow notification to be seen
+        setTimeout(() => {
+             window.location.href = '../portal.html';
+        }, 2000);
+        return; // Stop further execution
       }
-    
-      // Configuración particles.js
-      if (window.particlesJS) {
-        particlesJS('particles-js', {
-          "particles": {
-            "number": {
-              "value": 80,
-              "density": {
-                "enable": true,
-                "value_area": 800
-              }
-            },
-            "color": {
-              "value": "#e11d48"
-            },
-            "shape": {
-              "type": "circle",
-              "stroke": {
-                "width": 0,
-                "color": "#000000"
-              },
-              "polygon": {
-                "nb_sides": 5
-              }
-            },
-            "opacity": {
-              "value": 0.5,
-              "random": true,
-              "anim": {
-                "enable": true,
-                "speed": 1,
-                "opacity_min": 0.1,
-                "sync": false
-              }
-            },
-            "size": {
-              "value": 3,
-              "random": true,
-              "anim": {
-                "enable": true,
-                "speed": 2,
-                "size_min": 0.3,
-                "sync": false
-              }
-            },
-            "line_linked": {
-              "enable": true,
-              "distance": 150,
-              "color": "#e11d48",
-              "opacity": 0.4,
-              "width": 1
-            },
-            "move": {
-              "enable": true,
-              "speed": 1,
-              "direction": "none",
-              "random": true,
-              "straight": false,
-              "out_mode": "out",
-              "bounce": false,
-              "attract": {
-                "enable": false,
-                "rotateX": 600,
-                "rotateY": 1200
-              }
-            }
-          },
-          "interactivity": {
-            "detect_on": "canvas",
-            "events": {
-              "onhover": {
-                "enable": true,
-                "mode": "grab"
-              },
-              "onclick": {
-                "enable": true,
-                "mode": "push"
-              },
-              "resize": true
-            },
-            "modes": {
-              "grab": {
-                "distance": 140,
-                "line_linked": {
-                  "opacity": 1
-                }
-              },
-              "bubble": {
-                "distance": 400,
-                "size": 40,
-                "duration": 2,
-                "opacity": 8,
-                "speed": 3
-              },
-              "repulse": {
-                "distance": 200,
-                "duration": 0.4
-              },
-              "push": {
-                "particles_nb": 4
-              },
-              "remove": {
-                "particles_nb": 2
-              }
-            }
-          },
-          "retina_detect": true
-        });
-      }
-      
-      // Share functionality
+
+      // Configure particles.js (Subtle configuration)
+      const isMobile = window.innerWidth < 768;
+      if (typeof particlesJS !== 'undefined' && !isMobile) {
+            particlesJS('particles-js', {
+                particles: {
+                    number: {
+                        value: 40, // Reduced count
+                        density: {
+                            enable: true,
+                            value_area: 900 // Larger area
+                        }
+                    },
+                    color: {
+                        value: '#3b82f6' // Blue accent
+                    },
+                    shape: {
+                        type: 'circle'
+                    },
+                    opacity: {
+                        value: 0.15, // More transparent
+                        random: true
+                    },
+                    size: {
+                        value: 3,
+                        random: true
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 180,
+                        color: '#3b82f6',
+                        opacity: 0.08, // Very faint lines
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 1, // Slow movement
+                        direction: 'none',
+                        random: true,
+                        straight: false,
+                        out_mode: 'out'
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: { enable: false }, // No hover interaction
+                        onclick: { enable: false }, // No click interaction
+                        resize: true
+                    }
+                },
+                retina_detect: true
+            });
+        } else {
+            const particlesElement = document.getElementById('particles-js');
+            if (particlesElement) particlesElement.style.display = 'none';
+        }
+
+      // Share Button (Simplified, assuming no dedicated share button here now)
+      // If a share button exists with class 'share-button', this would work:
+      /*
       const shareButton = document.querySelector('.share-button');
       if (shareButton && navigator.share) {
+        shareButton.style.display = 'inline-flex'; // Show only if API available
         shareButton.addEventListener('click', async () => {
           try {
             await navigator.share({
-              title: '¿Quién Sabe Más de Fútbol?',
-              text: 'Pon a prueba tus conocimientos futboleros con este juego.',
+              title: document.title,
+              text: document.querySelector('meta[name="description"]')?.content || 'Juega ¿Quién Sabe Más de Fútbol?',
               url: window.location.href
             });
           } catch (error) {
-            console.log('Error sharing:', error);
+            console.error('Error sharing:', error);
+            showNotification('No se pudo compartir.', 'error');
           }
         });
       } else if (shareButton) {
-        // Fallback for browsers without Web Share API
-        shareButton.addEventListener('click', () => {
-          const url = window.location.href;
-          const dummy = document.createElement('textarea');
-          document.body.appendChild(dummy);
-          dummy.value = url;
-          dummy.select();
-          document.execCommand('copy');
-          document.body.removeChild(dummy);
-          
-          alert('¡Enlace copiado al portapapeles!');
-        });
+         shareButton.style.display = 'none'; // Hide if API not available
       }
+      */
+
     });
   </script>
 </body>

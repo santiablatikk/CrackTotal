@@ -1,542 +1,478 @@
-/* js/main.js */
-
-// Variables CSS para el juego
-document.documentElement.style.setProperty('--white', '#ffffff');
-document.documentElement.style.setProperty('--timer-start', '#4CAF50');
-document.documentElement.style.setProperty('--timer-end', '#2E7D32');
-document.documentElement.style.setProperty('--btn-bg', '#2196F3');
-document.documentElement.style.setProperty('--btn-hover-bg', '#1976D2');
-document.documentElement.style.setProperty('--help-btn-bg', '#9C27B0');
-document.documentElement.style.setProperty('--help-btn-hover', '#7B1FA2');
-document.documentElement.style.setProperty('--correct-color', '#4CAF50');
-document.documentElement.style.setProperty('--wrong-color', '#F44336');
-document.documentElement.style.setProperty('--active-glow', '0 0 15px 4px rgba(33, 150, 243, 0.7)');
-
-// Objeto de traducciones para i18n
-const translations = {
-  es: {
-    loginTitle: "PASALA CHE",
-    loginPrompt: "Ingresa tu nombre para comenzar:",
-    loginButton: "INGRESAR",
-    rulesTitle: "Reglas del Juego",
-    ruleError: "Máximo de Errores: Hasta 2 errores (al tercer error pierdes).",
-    ruleHelp: "HELP: Tienes 2 oportunidades para obtener pista (primeras 3 letras).",
-    ruleIncomplete: "Respuesta Incompleta: Puedes enviar respuestas incompletas hasta 2 veces.",
-    ruleTimeLabel: "Tiempo:",
-    ruleTimeValue: "Fácil: 300'' / Normal: 240'' / Difícil: 200''",
-    ruleSpelling: "Ortografía: Se toleran errores mínimos.",
-    ruleAnswers: "Respuestas: Si la pregunta no dice \"apellido...\" o \"nombre completo...\", la respuesta es nombre y apellido.",
-    promoMsg: "¡Más de 1000 preguntas para jugar sin parar!",
-    difficultyLabel: "Dificultad:",
-    difficultyHard: "Difícil",
-    difficultyNormal: "Normal",
-    difficultyEasy: "Fácil",
-    startGameButton: "INICIAR JUEGO",
-    gameTitle: "PASALA CHE",
-    soundOn: "🔊",
-    soundOff: "🔇",
-    timer: "Tiempo:",
-    questionPlaceholder: 'Presiona "Iniciar Juego" para comenzar',
-    helpBtn: "HELP",
-    passBtn: "Pasala Ché",
-    checkBtn: "Comprobar",
-    nav_profile: "Ver Perfil",
-    share_button: "Compartir",
-    selectLanguage: "Selecciona Idioma:",
-    nav_home: "Inicio",
-    nav_games: "Juegos",
-    nav_blog: "Blog",
-    nav_stats: "Estadísticas",
-    nav_about: "Nosotros",
-    nav_contact: "Contacto",
-    nav_achievements: "Logros",
-    btn_play: "Jugar",
-    btn_install: "Instalar App",
-    btn_continue: "Continuar",
-    title_games: "Nuestros Juegos",
-    title_news: "Novedades",
-    welcome: "Bienvenido",
-    cookie_message: "Usamos cookies para mejorar tu experiencia",
-    cookie_accept: "Aceptar",
-    cookie_decline: "Rechazar",
-    install_guide: "Instalación",
-    btn_close: "Cerrar"
-  },
-  en: {
-    loginTitle: "PASALA CHE",
-    loginPrompt: "Enter your name to start:",
-    loginButton: "ENTER",
-    rulesTitle: "Game Rules",
-    ruleError: "Maximum Mistakes: Up to 2 mistakes (3rd mistake loses).",
-    ruleHelp: "HELP: You have 2 chances to get a hint (first 3 letters).",
-    ruleIncomplete: "Incomplete Answer: You can submit incomplete answers up to 2 times.",
-    ruleTimeLabel: "Time:",
-    ruleTimeValue: "Easy: 300'' / Normal: 240'' / Hard: 200''",
-    ruleSpelling: "Spelling: Minor mistakes are tolerated.",
-    ruleAnswers: "Answers: If the question doesn't specify \"last name...\" or \"full name...\", the answer should be first and last name.",
-    promoMsg: "Over 1000 random questions to play non-stop!",
-    difficultyLabel: "Difficulty:",
-    difficultyHard: "Hard",
-    difficultyNormal: "Normal",
-    difficultyEasy: "Easy",
-    startGameButton: "START GAME",
-    gameTitle: "PASALA CHE",
-    soundOn: "🔊",
-    soundOff: "🔇",
-    timer: "Time:",
-    questionPlaceholder: 'Press "Start Game" to begin',
-    helpBtn: "HELP",
-    passBtn: "Pass",
-    checkBtn: "Check",
-    nav_profile: "View Profile",
-    share_button: "Share",
-    selectLanguage: "Select Language:",
-    nav_home: "Home",
-    nav_games: "Games",
-    nav_blog: "Blog",
-    nav_stats: "Statistics",
-    nav_about: "About",
-    nav_contact: "Contact",
-    nav_achievements: "Achievements",
-    btn_play: "Play Now",
-    btn_install: "Install App",
-    btn_continue: "Continue",
-    title_games: "Our Games",
-    title_news: "News",
-    welcome: "Welcome",
-    cookie_message: "We use cookies to improve your experience",
-    cookie_accept: "Accept",
-    cookie_decline: "Decline",
-    install_guide: "Installation",
-    btn_close: "Close"
-  },
-};
-
-// Variables globales para el estado del juego
-let currentLang = localStorage.getItem("lang") || "es";
-let username = ""; // Se asignará al iniciar la partida
-let selectedDifficulty = 'facil';
-let timeLimit = 300; // valor por defecto (fácil)
-let timer;
-let timeRemaining;
-let currentLetterIndex = 0;
-let currentQuestionIndex = 0;
-let helpCount = 2; // número de ayudas disponibles
-let errorCount = 0; // contador de errores
-let letterStatus = {}; // estado de cada letra (correcto, incorrecto, pendiente, pasado)
-let gameQuestions = []; // preguntas del juego
-let gameStarted = false;
-let letterElements = {}; // referencia a los elementos DOM de las letras
-const ALPHABET = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
-
-// Configurar logger para evitar loggear en producción
-const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-const logger = {
-  log: isProduction ? function(){} : console.log,
-  warn: isProduction ? function(){} : console.warn,
-  error: console.error // Mantener errores siempre
-};
-
 /**
- * Aplica las traducciones según el idioma seleccionado
+ * Main.js - Script principal de la aplicación
+ * Versión: 2.0.0
+ * 
+ * Este script controla las funcionalidades principales de la aplicación,
+ * incluyendo la inicialización de componentes, manejo de eventos y 
+ * adaptaciones para dispositivos móviles.
  */
-function applyTranslations() {
-  document.querySelectorAll("[data-i18n]").forEach((el) => {
-    const key = el.getAttribute("data-i18n");
-    if (translations[currentLang] && translations[currentLang][key]) {
-      el.textContent = translations[currentLang][key];
-    }
-  });
-}
 
-/**
- * Establece el idioma de la aplicación
- * @param {string} lang - Código del idioma (es, en)
- */
-function setLanguage(lang) {
-  currentLang = lang;
-  localStorage.setItem("lang", lang);
-  applyTranslations();
-}
-
-/**
- * Inicialización cuando el DOM está completamente cargado
- */
-document.addEventListener('DOMContentLoaded', function() {
-  logger.log('Aplicación iniciada');
-  
-  // Configurar la página según la ruta
-  setupPageBasedOnPath();
-  
-  // Configurar eventos
-  setupEventHandlers();
-  
-  // Verificar consentimiento de cookies
-  setupCookieConsent();
-  
-  // Configure particles
-  if (document.getElementById('particles-js')) {
-    particlesJS('particles-js', particlesConfig);
-  }
-  
-  // Game start button
-  const startGameBtn = document.getElementById('start-game-btn');
-  if (startGameBtn) {
-    startGameBtn.addEventListener('click', function() {
-      window.location.href = 'game.html';
-    });
-  }
-});
-
-/**
- * Configura la página según la ruta actual
- */
-function setupPageBasedOnPath() {
-  const path = window.location.pathname;
-  
-  if (path.endsWith('game.html')) {
-    logger.log('Configurando página de juego');
+// Función autoejecutable para encapsular todo el código
+(function() {
+    'use strict';
     
-    // Recuperar datos de sesión
-    username = sessionStorage.getItem('username') || '';
-    selectedDifficulty = sessionStorage.getItem('selectedDifficulty') || 'facil';
+    // Objetos para configuración y estado
+    const config = {
+        mobileBreakpoint: 768,
+        initialLoadDelay: 100,
+        transitionSpeed: 300,
+        enableLogging: !window.browserFeatures?.mobile && 
+                      (window.location.hostname === 'localhost' || 
+                       window.location.hostname.includes('127.0.0.1'))
+    };
     
-    // Verificar si el usuario está autenticado
-    if (!username) {
-      logger.log('Usuario no autenticado, redirigiendo a home');
-      window.location.href = 'index.html';
-      return;
+    // Estado de la aplicación
+    const state = {
+        isMobile: window.browserFeatures?.mobile || 
+                 window.innerWidth <= config.mobileBreakpoint,
+        menuOpen: false,
+        currentSection: null,
+        isLoading: true,
+        userLoggedIn: false
+    };
+    
+    /**
+     * Inicializa los elementos de la UI
+     */
+    function initUI() {
+        // Referencias a elementos del DOM
+        const menuButton = document.querySelector('.menu-button');
+        const navMenu = document.querySelector('.nav-menu');
+        const themeToggle = document.querySelector('.theme-toggle');
+        const loginButton = document.querySelector('.login-button');
+        const sections = document.querySelectorAll('section');
+        
+        // Inicializar componentes de UI
+        if (menuButton && navMenu) {
+            initMobileMenu(menuButton, navMenu);
+        }
+        
+        if (themeToggle) {
+            initThemeToggle(themeToggle);
+        }
+        
+        if (loginButton) {
+            initLoginSystem(loginButton);
+        }
+        
+        // Inicializar secciones
+        if (sections.length) {
+            initSections(sections);
+        }
+        
+        // Añadir clase cuando la UI esté lista
+        document.body.classList.add('ui-ready');
     }
     
-    // Actualizar UI con datos del usuario
-    updateUserInfo();
+    /**
+     * Inicializa el menú móvil
+     */
+    function initMobileMenu(button, menu) {
+        const closeButton = menu.querySelector('.close-menu');
+        const menuItems = menu.querySelectorAll('a');
+        
+        // Optimizar para móviles si está disponible
+        if (window.MobileUtils) {
+            window.MobileUtils.optimizeTouchTarget(button);
+            menuItems.forEach(item => {
+                window.MobileUtils.optimizeTouchTarget(item);
+            });
+        }
+        
+        // Configurar eventos
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            state.menuOpen = !state.menuOpen;
+            
+            if (state.menuOpen) {
+                menu.classList.add('open');
+                document.body.classList.add('menu-open');
+                
+                // Vibración táctil en dispositivos que lo soporten
+                if (window.MobileUtils && window.MobileUtils.env.supportsVibration) {
+                    navigator.vibrate(5);
+                }
+            } else {
+                closeMenu();
+            }
+        });
+        
+        // Cerrar menú al hacer clic en un enlace
+        menuItems.forEach(item => {
+            item.addEventListener('click', closeMenu);
+        });
+        
+        // Botón de cierre
+        if (closeButton) {
+            closeButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                closeMenu();
+            });
+        }
+        
+        // Cerrar menú con escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && state.menuOpen) {
+                closeMenu();
+            }
+        });
+        
+        // Función para cerrar el menú
+        function closeMenu() {
+            state.menuOpen = false;
+            menu.classList.remove('open');
+            document.body.classList.remove('menu-open');
+        }
+        
+        // Configurar gestos táctiles si está disponible
+        if (window.MobileUtils && state.isMobile) {
+            window.MobileUtils.setupGestureNavigation('.nav-menu', {
+                swipeLeft: closeMenu,
+                threshold: 50
+            });
+        }
+    }
     
-  } else if (path.endsWith('index.html') || path === '/' || path.endsWith('/')) {
-    logger.log('Configurando página principal');
+    /**
+     * Inicializa el cambio de tema
+     */
+    function initThemeToggle(toggle) {
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Establecer tema inicial
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            if (savedTheme === 'dark') {
+                toggle.classList.add('active');
+            }
+        } else if (prefersDark) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            toggle.classList.add('active');
+        }
+        
+        // Cambiar tema al hacer clic
+        toggle.addEventListener('click', function() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            toggle.classList.toggle('active');
+            
+            // Vibración táctil en dispositivos que lo soporten
+            if (window.MobileUtils && window.MobileUtils.env.supportsVibration) {
+                navigator.vibrate(5);
+            }
+        });
+    }
     
-    // Recuperar nombre de usuario si existe en sessionStorage
-    if (sessionStorage.getItem('username')) {
-      username = sessionStorage.getItem('username');
-      logger.log('Usuario recuperado:', username);
-      
-      // Mostrar directamente la pantalla de opciones si ya hay un usuario
-      showGameOptions();
+    /**
+     * Inicializa el sistema de login
+     */
+    function initLoginSystem(loginButton) {
+        // Comprobar si el usuario tiene sesión guardada
+        try {
+            const userData = JSON.parse(localStorage.getItem('userData'));
+            if (userData && userData.token) {
+                updateLoginState(true, userData);
+            }
+        } catch (e) {
+            console.error('Error al cargar datos de usuario:', e);
+        }
+        
+        // Evento de clic en el botón de login
+        loginButton.addEventListener('click', function(e) {
+            if (!state.userLoggedIn) {
+                e.preventDefault();
+                showLoginModal();
+            }
+        });
+    }
+    
+    /**
+     * Actualiza el estado de login en la UI
+     */
+    function updateLoginState(isLoggedIn, userData) {
+        const loginButton = document.querySelector('.login-button');
+        const userMenu = document.querySelector('.user-menu');
+        
+        state.userLoggedIn = isLoggedIn;
+        
+        if (isLoggedIn && loginButton && userMenu) {
+            loginButton.textContent = userData.username || 'Usuario';
+            loginButton.classList.add('logged-in');
+            
+            if (userData.avatar) {
+                const avatar = document.createElement('img');
+                avatar.src = userData.avatar;
+                avatar.alt = 'Avatar';
+                avatar.classList.add('user-avatar');
+                loginButton.prepend(avatar);
+            }
+            
+            // Actualizar enlaces del menú de usuario
+            const profileLink = userMenu.querySelector('.profile-link');
+            if (profileLink) {
+                profileLink.href = `/perfil/${userData.username}`;
+            }
+        } else if (loginButton) {
+            loginButton.textContent = 'Iniciar sesión';
+            loginButton.classList.remove('logged-in');
+            const avatar = loginButton.querySelector('.user-avatar');
+            if (avatar) {
+                avatar.remove();
+            }
+        }
+    }
+    
+    /**
+     * Muestra el modal de login
+     */
+    function showLoginModal() {
+        const modal = document.querySelector('#login-modal');
+        
+        if (!modal) {
+            // Crear modal si no existe
+            const modalHTML = `
+                <div id="login-modal" class="modal">
+                    <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Iniciar sesión</h2>
+                        <form id="login-form">
+                            <div class="form-group">
+                                <label for="username">Usuario:</label>
+                                <input type="text" id="username" name="username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Contraseña:</label>
+                                <input type="password" id="password" name="password" required>
+                            </div>
+                            <button type="submit" class="btn primary">Iniciar sesión</button>
+                        </form>
+                        <p class="register-link">¿No tienes cuenta? <a href="/registro">Regístrate</a></p>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            const newModal = document.querySelector('#login-modal');
+            
+            // Inicializar eventos del modal
+            initModalEvents(newModal);
+            
+            // Optimizar modal para móviles si el módulo está disponible
+            if (window.MobileUtils && state.isMobile) {
+                const form = newModal.querySelector('form');
+                if (form) {
+                    window.MobileUtils.optimizeFormForTouch(form);
+                }
+            }
+        } else {
+            // Mostrar modal existente
+            modal.style.display = 'block';
+        }
+    }
+    
+    /**
+     * Inicializa eventos del modal
+     */
+    function initModalEvents(modal) {
+        const closeButton = modal.querySelector('.close');
+        const form = modal.querySelector('form');
+        
+        // Cerrar modal
+        closeButton.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+        
+        // Cerrar modal al hacer clic fuera
+        window.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // Manejar envío del formulario
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = form.querySelector('#username').value;
+            const password = form.querySelector('#password').value;
+            
+            // Simulación de login exitoso (reemplazar con API real)
+            setTimeout(function() {
+                const userData = {
+                    username: username,
+                    token: 'simulated-token',
+                    avatar: '/img/default-avatar.png'
+                };
+                
+                localStorage.setItem('userData', JSON.stringify(userData));
+                updateLoginState(true, userData);
+                modal.style.display = 'none';
+                
+                // Mostrar notificación
+                if (window.Utils) {
+                    window.Utils.showNotification('¡Bienvenido, ' + username + '!', 'success');
+                }
+            }, 500);
+        });
+    }
+    
+    /**
+     * Inicializa las secciones de la página
+     */
+    function initSections(sections) {
+        // Marcar sección activa en la navegación
+        const currentPath = window.location.pathname;
+        let activeSection = null;
+        
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            if (currentPath === link.getAttribute('href')) {
+                link.classList.add('active');
+                activeSection = link.getAttribute('data-section');
+            }
+        });
+        
+        // Activar sección correspondiente
+        if (activeSection) {
+            sections.forEach(section => {
+                if (section.id === activeSection) {
+                    section.classList.add('active');
+                    state.currentSection = activeSection;
+                }
+            });
+        }
+    }
+    
+    /**
+     * Inicializa optimizaciones de imágenes si el módulo está disponible
+     */
+    function initImageOptimizations() {
+        if (window.ImageOptimizer) {
+            // Inicializar optimizador de imágenes con diferentes configuraciones según el dispositivo
+            window.ImageOptimizer.init({
+                lazyLoadSelector: 'img[data-src]',
+                quality: state.isMobile ? 70 : 85,
+                batchSize: state.isMobile ? 3 : 5
+            });
+            
+            // Optimizar imágenes de fondo
+            window.ImageOptimizer.optimizeBackgroundImages('.has-bg-image');
+        }
+    }
+    
+    /**
+     * Inicializa detección de cambios de tamaño y orientación
+     */
+    function initResponsiveHandlers() {
+        // Reaccionar a cambios de tamaño
+        window.addEventListener('resize', function() {
+            const wasMobile = state.isMobile;
+            state.isMobile = window.innerWidth <= config.mobileBreakpoint;
+            
+            // Si cambia entre móvil y desktop, actualizar UI
+            if (wasMobile !== state.isMobile) {
+                refreshUI();
+            }
+        });
+        
+        // Detectar cambios de orientación en móviles
+        if (state.isMobile) {
+            window.addEventListener('orientationchange', refreshUI);
+        }
+    }
+    
+    /**
+     * Actualiza la UI cuando cambia el entorno
+     */
+    function refreshUI() {
+        // Actualizar clases CSS
+        document.documentElement.classList.toggle('mobile-view', state.isMobile);
+        
+        // Actualizar optimizaciones de imágenes si está disponible
+        if (window.ImageOptimizer) {
+            window.ImageOptimizer.updateConfig({
+                quality: state.isMobile ? 70 : 85,
+                batchSize: state.isMobile ? 3 : 5
+            });
+        }
+        
+        // Evento personalizado para que otros componentes reaccionen
+        window.dispatchEvent(new CustomEvent('uiRefresh', {
+            detail: { isMobile: state.isMobile }
+        }));
+    }
+    
+    /**
+     * Registra service worker si está en producción
+     */
+    function registerServiceWorker() {
+        if ('serviceWorker' in navigator && !window.location.hostname.includes('localhost')) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(registration => {
+                    if (config.enableLogging) {
+                        console.log('ServiceWorker registrado con éxito:', registration.scope);
+                    }
+                }).catch(error => {
+                    console.error('Error al registrar ServiceWorker:', error);
+                });
+        }
+    }
+    
+    /**
+     * Función principal para inicializar todo
+     */
+    function init() {
+        // Marcar que la app está cargando
+        state.isLoading = true;
+        document.documentElement.classList.add('is-loading');
+        
+        // Registrar Service Worker
+        registerServiceWorker();
+        
+        // Inicializar UI con un pequeño retraso para asegurar que el DOM esté listo
+        setTimeout(function() {
+            initUI();
+            initResponsiveHandlers();
+            
+            // Optimizaciones para móviles
+            if (state.isMobile && window.MobileUtils) {
+                window.MobileUtils.init({
+                    fixVhUnits: true,
+                    optimizeScrolling: true
+                });
+            }
+            
+            // Inicializar optimizaciones de imágenes
+            initImageOptimizations();
+            
+            // Marcar como cargado
+            state.isLoading = false;
+            document.documentElement.classList.remove('is-loading');
+            document.documentElement.classList.add('is-loaded');
+            
+            // Limpiar almacenamiento local si Utils está disponible
+            if (window.Utils) {
+                window.Utils.cleanupStorage();
+            }
+        }, config.initialLoadDelay);
+    }
+    
+    // Iniciar la aplicación cuando el DOM esté completamente cargado
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
     } else {
-      // Mostrar pantalla de login
-      showLoginScreen();
+        init();
     }
     
-    // Recuperar dificultad si existe
-    if (sessionStorage.getItem('selectedDifficulty')) {
-      selectedDifficulty = sessionStorage.getItem('selectedDifficulty');
-      logger.log('Dificultad recuperada:', selectedDifficulty);
-      
-      // Actualizar UI con la dificultad seleccionada
-      updateSelectedDifficulty();
-    }
-  }
-}
-
-/**
- * Muestra la pantalla de login
- */
-function showLoginScreen() {
-  const loginScreen = document.getElementById('login-screen');
-  const gameOptionsScreen = document.getElementById('game-options-screen');
-  
-  if (loginScreen && gameOptionsScreen) {
-    loginScreen.classList.add('active');
-    gameOptionsScreen.classList.remove('active');
-  }
-}
-
-/**
- * Muestra la pantalla de opciones de juego
- */
-function showGameOptions() {
-  const loginScreen = document.getElementById('login-screen');
-  const gameOptionsScreen = document.getElementById('game-options-screen');
-  
-  if (loginScreen && gameOptionsScreen) {
-    loginScreen.classList.remove('active');
-    gameOptionsScreen.classList.add('active');
-    
-    // Actualizar UI con el nombre del usuario
-    updateUserInfo();
-  }
-}
-
-/**
- * Actualiza la información del usuario en la UI
- */
-function updateUserInfo() {
-  const usernameDisplay = document.getElementById('username-display');
-  if (usernameDisplay && username) {
-    usernameDisplay.textContent = username;
-  }
-}
-
-/**
- * Actualiza la UI para resaltar la dificultad seleccionada
- */
-function updateSelectedDifficulty() {
-  const difficultyOptions = document.querySelectorAll('.difficulty-option');
-  
-  if (difficultyOptions.length > 0) {
-    // Primero quitar selección de todas las opciones
-    difficultyOptions.forEach(option => {
-      option.classList.remove('selected');
-    });
-    
-    // Seleccionar la opción correspondiente
-    const targetOption = document.querySelector(`.difficulty-option[data-difficulty="${selectedDifficulty}"]`);
-    if (targetOption) {
-      targetOption.classList.add('selected');
-    }
-  }
-}
-
-/**
- * Configura los event handlers para toda la aplicación
- */
-function setupEventHandlers() {
-  // Formulario de login
-  const loginForm = document.getElementById('login-form');
-  if (loginForm) {
-    loginForm.addEventListener('submit', handleLoginFormSubmit);
-  }
-  
-  // Botón de inicio de juego
-  const startGameBtn = document.getElementById('start-game-btn');
-  if (startGameBtn) {
-    startGameBtn.addEventListener('click', handleStartGameClick);
-  }
-  
-  // Opciones de dificultad
-  const difficultyOptions = document.querySelectorAll('.difficulty-option');
-  if (difficultyOptions.length > 0) {
-    difficultyOptions.forEach(option => {
-      option.addEventListener('click', handleDifficultySelection);
-    });
-  }
-  
-  // Botón de volver atrás
-  const backButton = document.getElementById('back-button');
-  if (backButton) {
-    backButton.addEventListener('click', handleBackButtonClick);
-  }
-}
-
-/**
- * Maneja el envío del formulario de login
- * @param {Event} e - Evento de submit
- */
-function handleLoginFormSubmit(e) {
-      e.preventDefault(); 
-  
-  const usernameInput = document.getElementById('username-input');
-  if (usernameInput && usernameInput.value.trim() !== '') {
-    // Guardar nombre de usuario
-    username = usernameInput.value.trim();
-    sessionStorage.setItem('username', username);
-    logger.log('Nombre de usuario guardado:', username);
-    
-    // Mostrar mensaje de bienvenida
-    showToast(`¡Bienvenido, ${username}!`, 'success');
-    
-    // Mostrar pantalla de opciones de juego
-    showGameOptions();
-  } else {
-    // Mostrar mensaje de error
-    showToast('Por favor ingresa un nombre de usuario', 'error');
-  }
-}
-
-/**
- * Maneja la selección de dificultad
- * @param {Event} e - Evento de click
- */
-function handleDifficultySelection(e) {
-  // Obtener el elemento clickeado
-  const selectedOption = e.currentTarget;
-  
-  // Quitar selección de todas las opciones
-  document.querySelectorAll('.difficulty-option').forEach(option => {
-    option.classList.remove('selected');
-  });
-  
-  // Añadir selección a la opción clickeada
-  selectedOption.classList.add('selected');
-  
-  // Guardar dificultad seleccionada
-  selectedDifficulty = selectedOption.getAttribute('data-difficulty');
-  sessionStorage.setItem('selectedDifficulty', selectedDifficulty);
-  logger.log('Dificultad seleccionada:', selectedDifficulty);
-  
-  // Actualizar tiempo límite según dificultad
-  switch (selectedDifficulty) {
-    case 'dificil':
-      timeLimit = 200;
-      break;
-    case 'normal':
-      timeLimit = 240;
-      break;
-    case 'facil':
-    default:
-      timeLimit = 300;
-      break;
-  }
-  
-  // Guardar tiempo límite
-  sessionStorage.setItem('timeLimit', timeLimit);
-  
-  // Añadir efecto visual
-  selectedOption.classList.add('pulse-animation');
-  setTimeout(() => {
-    selectedOption.classList.remove('pulse-animation');
-  }, 600);
-}
-
-/**
- * Maneja el clic en el botón de iniciar juego
- */
-function handleStartGameClick() {
-  // Verificar si hay un nombre de usuario
-  if (!username) {
-    showToast('Por favor ingresa tu nombre primero', 'error');
-    showLoginScreen();
-    return;
-  }
-  
-  // Verificar si se ha seleccionado una dificultad
-  if (!selectedDifficulty) {
-    selectedDifficulty = 'facil'; // Valor por defecto
-    sessionStorage.setItem('selectedDifficulty', selectedDifficulty);
-  }
-  
-  // Mostrar mensaje de inicio
-  showToast('¡Comenzando el juego!', 'success');
-  
-  // Redirigir a la página de juego
-  setTimeout(() => {
-    window.location.href = 'game.html';
-  }, 500);
-}
-
-/**
- * Maneja el clic en el botón de volver atrás
- */
-function handleBackButtonClick() {
-  // Volver a la pantalla de login
-  showLoginScreen();
-}
-
-/**
- * Configura el banner de consentimiento de cookies
- */
-function setupCookieConsent() {
-  // Verificar si ya se ha dado consentimiento
-  if (localStorage.getItem('cookieConsent')) {
-    return;
-  }
-  
-  // Mostrar el banner de cookies
-  const cookieConsentBanner = document.getElementById('cookieConsent');
-  if (cookieConsentBanner) {
-    cookieConsentBanner.style.display = 'block';
-    
-    // Configurar eventos para los botones
-    const acceptButton = cookieConsentBanner.querySelector('.cookie-accept');
-    const declineButton = cookieConsentBanner.querySelector('.cookie-decline');
-    
-    if (acceptButton) {
-      acceptButton.addEventListener('click', () => {
-        acceptCookies();
-        cookieConsentBanner.style.display = 'none';
-      });
-    }
-    
-    if (declineButton) {
-      declineButton.addEventListener('click', () => {
-        declineCookies();
-        cookieConsentBanner.style.display = 'none';
-      });
-    }
-  }
-}
-
-/**
- * Acepta las cookies
- */
-function acceptCookies() {
-  localStorage.setItem('cookieConsent', 'accepted');
-  showToast('Has aceptado las cookies', 'info');
-}
-
-/**
- * Rechaza las cookies
- */
-function declineCookies() {
-  localStorage.setItem('cookieConsent', 'declined');
-  showToast('Has rechazado las cookies', 'info');
-}
-
-/**
- * Muestra un toast notification
- * @param {string} message - Mensaje a mostrar
- * @param {string} type - Tipo de toast (success, error, info)
- */
-function showToast(message, type = 'info') {
-  const toast = document.querySelector('.toast');
-  if (!toast) return;
-  
-  // Configurar contenido
-  const toastIcon = toast.querySelector('.toast-icon');
-  const toastMessage = toast.querySelector('.toast-message');
-  
-  if (toastIcon) {
-    // Asignar icono según el tipo
-    switch (type) {
-      case 'success':
-        toastIcon.innerHTML = '✓';
-        break;
-      case 'error':
-        toastIcon.innerHTML = '✗';
-        break;
-      case 'info':
-      default:
-        toastIcon.innerHTML = 'ℹ';
-      break;
-    }
-  }
-  
-  if (toastMessage) {
-    toastMessage.textContent = message;
-  }
-  
-  // Configurar clase de tipo
-  toast.className = 'toast';
-  toast.classList.add(type);
-  
-  // Mostrar toast
-  toast.style.display = 'flex';
-      setTimeout(() => {
-    toast.classList.add('show');
-  }, 10);
-    
-    // Ocultar después de 3 segundos
-    setTimeout(() => {
-      toast.classList.remove('show');
-      setTimeout(() => {
-      toast.style.display = 'none';
-    }, 300);
-    }, 3000);
-}
-
-// Exportar funciones que serán utilizadas por otros módulos
-window.PASALACHEE = {
-  showToast,
-  getUsername: () => username,
-  getDifficulty: () => selectedDifficulty,
-  getTimeLimit: () => timeLimit
-};
+    // Exponer funciones útiles globalmente para ser utilizadas por otros scripts
+    window.App = {
+        refreshUI: refreshUI,
+        updateLoginState: updateLoginState,
+        showLoginModal: showLoginModal
+    };
+})();

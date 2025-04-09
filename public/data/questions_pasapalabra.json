@@ -1083,7 +1083,7 @@
         "respuesta": "Quique Setien"
       },
       {
-        "pregunta": "CONTIENE Q: Apellido del futbolista argentino, ex defensor de la Fiorentina (Lucas...).",
+        "pregunta": "CONTIENE Q: Apellido del futbolista argentino, ex defensor de la Fiorentina.",
         "respuesta": "Martinez Quarta"
       },
       {
@@ -1092,7 +1092,7 @@
       },
       {
         "pregunta": "CONTIENE Q: Nombre del técnico español que ha dirigido al Barcelona y la selección española.",
-        "respuesta": "Enrique"
+        "respuesta": "Luis Enrique"
       },
       {
         "pregunta": "CONTIENE Q: Apellido del futbolista argentino, ídolo y actual presidente de Boca Juniors.",
@@ -1105,10 +1105,6 @@
       {
         "pregunta": "CONTIENE Q: Apellido del ex entrenador español campeón del Mundial 2010.",
         "respuesta": "Del Bosque"
-      },
-      {
-        "pregunta": "CONTIENE Q: País asiático que participó en el Mundial 1986.",
-        "respuesta": "Iraq"
       }
     ]
   },
@@ -1508,10 +1504,6 @@
       {
         "pregunta": "CONTIENE X: Futbolista portugués que jugó en Atlético Madrid, Chelsea y Barcelona.",
         "respuesta": "Joao Felix"
-      },
-      {
-        "pregunta": "CONTIENE X: País europeo donde se habla francés, alemán y luxemburgués.",
-        "respuesta": "Luxemburgo"
       },
       {
         "pregunta": "CONTIENE X: Futbolista chileno que jugó en Barcelona, Arsenal, Man. United e Inter, actualmente en Udinese.",

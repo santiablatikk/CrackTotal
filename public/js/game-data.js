@@ -33,72 +33,67 @@ const STORAGE_KEYS = {
     }
 };
 
-// Logros disponibles para el juego
-const GAME_ACHIEVEMENTS = {
-    'first_game': {
-        id: 'first_game',
-        icon: 'fas fa-gamepad',
-        title: 'Primer Juego',
-        description: 'Completa tu primer juego de PASALA CHÉ.',
-        category: 'beginner'
+// Sistema de logros
+if (!window.GAME_ACHIEVEMENTS) {
+  window.GAME_ACHIEVEMENTS = {
+    victory_first: {
+      id: 'victory_first',
+      title: 'Primera Victoria',
+      description: 'Completaste tu primer rosco con éxito.',
+      icon: 'fas fa-trophy',
+      type: 'victory',
+      condition: (stats) => stats.result === 'victory'
     },
-    'fifth_game': {
-        id: 'fifth_game',
-        icon: 'fas fa-dice-five',
-        title: 'Jugador Dedicado',
-        description: 'Completa 5 juegos de PASALA CHÉ.',
-        category: 'beginner'
+    perfect_game: {
+      id: 'perfect_game',
+      title: 'Perfección',
+      description: 'Completaste un rosco sin errores ni pasadas.',
+      icon: 'fas fa-star',
+      type: 'perfect',
+      condition: (stats) => stats.perfectGame && stats.result === 'victory'
     },
-    'beginner_score': {
-        id: 'beginner_score',
-        icon: 'fas fa-award',
-        title: 'Cazador de Puntos',
-        description: 'Consigue 100 puntos o más en una sola partida.',
-        category: 'beginner'
+    speed_demon: {
+      id: 'speed_demon',
+      title: 'Velocista',
+      description: 'Completaste un rosco en menos de la mitad del tiempo asignado.',
+      icon: 'fas fa-bolt',
+      type: 'fast',
+      condition: (stats) => stats.result === 'victory' && stats.totalTimePlayed < (stats.maxTimeLimit * 0.5)
     },
-    'perfect_game': {
-        id: 'perfect_game',
-        icon: 'fas fa-star',
-        title: 'Juego Perfecto',
-        description: 'Completa un juego sin ningún error.',
-        category: 'intermediate'
+    no_hints: {
+      id: 'no_hints',
+      title: 'Sin Ayuda',
+      description: 'Completaste un rosco sin usar ninguna pista.',
+      icon: 'fas fa-lightbulb',
+      type: 'noHelp',
+      condition: (stats) => stats.noHelp && stats.result === 'victory'
     },
-    'fast_game': {
-        id: 'fast_game',
-        icon: 'fas fa-bolt',
-        title: 'Velocista',
-        description: 'Completa el Rosco con al menos 2.5 minutos restantes.',
-        category: 'intermediate'
+    hardcore: {
+      id: 'hardcore',
+      title: 'Nivel Experto',
+      description: 'Ganaste en modo difícil.',
+      icon: 'fas fa-fire',
+      type: 'hard',
+      condition: (stats) => stats.result === 'victory' && stats.difficulty === 'dificil'
     },
-    'comeback': {
-        id: 'comeback',
-        icon: 'fas fa-undo',
-        title: 'Remontada Épica',
-        description: 'Gana un juego después de haber cometido 2 errores.',
-        category: 'intermediate'
+    almost_there: {
+      id: 'almost_there',
+      title: 'Casi Perfecto',
+      description: 'Se acabó el tiempo, pero respondiste más del 70% correctamente.',
+      icon: 'fas fa-hourglass-end',
+      type: 'perseverance',
+      condition: (stats) => stats.result === 'timeout' && stats.correctAnswers > (stats.remainingQuestions + stats.correctAnswers) * 0.7
     },
-    'fast_answer': {
-        id: 'fast_answer',
-        icon: 'fas fa-bolt',
-        title: 'Respuesta Rápida',
-        description: 'Responde correctamente en menos de 5 segundos.',
-        category: 'intermediate'
-    },
-    'streak_5': {
-        id: 'streak_5',
-        icon: 'fas fa-fire',
-        title: 'Racha Caliente',
-        description: 'Responde correctamente 5 preguntas seguidas.',
-        category: 'beginner'
-    },
-    'streak_10': {
-        id: 'streak_10',
-        icon: 'fas fa-fire-alt',
-        title: 'Racha Imparable',
-        description: 'Responde correctamente 10 preguntas seguidas.',
-        category: 'intermediate'
+    try_again: {
+      id: 'try_again',
+      title: 'Nunca Te Rindas',
+      description: 'Perdiste, pero no te des por vencido.',
+      icon: 'fas fa-redo',
+      type: 'defeat',
+      condition: (stats) => stats.result === 'defeat'
     }
-};
+  };
+}
 
 // Objeto principal que contiene las funciones de datos del juego
 const GameData = {

@@ -1,154 +1,259 @@
-// server.js
+// server.js - Servidor Express optimizado para PASALA CHE
 const express = require('express');
 const path = require('path');
-// const fs = require('fs').promises; // Ya no usaremos fs para el ranking
-
-// --- Configuración Firebase Admin ---
+const fs = require('fs');
 const admin = require('firebase-admin');
+const dotenv = require('dotenv');
 
-// --- Cargar credenciales desde variable de entorno ---
+// Cargar variables de entorno
+dotenv.config();
+
+/**
+ * CONFIGURACIÓN GENERAL DEL SERVIDOR
+ */
+// Constantes y variables globales
+const PORT = process.env.PORT || 3000;
+const PUBLIC_PATH = path.join(__dirname, 'public');
+const IMAGE_CACHE = new Map();
+const STATIC_CACHE_TIME = process.env.STATIC_CACHE_TIME || '1d'; // Tiempo de caché para archivos estáticos
+
+// --- Carga de credenciales Firebase optimizado ---
 let serviceAccount;
-const firebaseConfigEnv = process.env.FIREBASE_CONFIG;
-
-if (!firebaseConfigEnv) {
-  console.error('¡Error Fatal! La variable de entorno FIREBASE_CONFIG no está definida.');
-  console.error('Asegúrate de configurar esta variable en tu entorno de despliegue (Render).');
-  // En un entorno local, podrías intentar cargar el archivo .json como fallback si existe,
-  // pero en producción es mejor fallar si la variable no está.
-  // Para desarrollo local podrías usar algo como:
-  // try { serviceAccount = require('./firebase-service-account.json'); } catch (e) { /* no hacer nada si no existe */ }
-  // if (!serviceAccount) process.exit(1); // Salir si no hay credenciales
-  process.exit(1); // Salir si no hay credenciales en producción/despliegue
-}
-
 try {
-  serviceAccount = JSON.parse(firebaseConfigEnv);
-  // Render maneja bien las variables de entorno multilínea, pero por si acaso,
-  // nos aseguramos que las nuevas líneas en la clave privada estén correctas.
-  if (serviceAccount.private_key) {
-     serviceAccount.private_key = serviceAccount.private_key.replace(/\n/g, '\n');
+  const firebaseConfigEnv = process.env.FIREBASE_CONFIG;
+  if (!firebaseConfigEnv) {
+    // Para desarrollo local, intentar cargar el archivo JSON como fallback
+    serviceAccount = require('./firebase-service-account.json');
+    console.log("Credenciales de Firebase cargadas desde archivo local.");
+  } else {
+    serviceAccount = JSON.parse(firebaseConfigEnv);
+    // Asegurar que las nuevas líneas en la clave privada estén correctas
+    if (serviceAccount.private_key) {
+      serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, '\n');
+    }
+    console.log("Credenciales de Firebase cargadas correctamente desde variable de entorno.");
   }
-  console.log("Credenciales de Firebase cargadas correctamente desde variable de entorno.");
 } catch (error) {
-  console.error('Error al parsear FIREBASE_CONFIG. Asegúrate que sea un JSON válido:', error);
-  process.exit(1); // Salir si la configuración es inválida
+  console.error('Error al cargar credenciales Firebase:', error);
+  process.exit(1);
 }
-// --- Fin Cargar credenciales ---
 
+// Inicialización de Firebase
+admin.initializeApp({ credential: admin.credential.cert(serviceAccount) });
+const db = admin.firestore();
+const rankingCollection = db.collection('rankings');
 
-// Asegúrate de que el nombre del archivo coincida con el que descargaste - COMENTARIO OBSOLETO
-// const serviceAccount = require('./firebase-service-account.json'); // YA NO SE USA ESTA LÍNEA
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount) // Usamos el objeto parseado
-});
-
-const db = admin.firestore(); // Instancia de Firestore
-const rankingCollection = db.collection('rankings'); // Nombre de la colección en Firestore
-// --- Fin Configuración Firebase Admin ---
-
+/**
+ * CONFIGURACIÓN DE EXPRESS
+ */
 const app = express();
-const port = process.env.PORT || 3000;
 
-// Middleware para parsear JSON
+// Middleware básico
 app.use(express.json());
 
-// Define la carpeta que contiene los archivos estáticos
-const publicDirectoryPath = path.join(__dirname, 'public');
-// const rankingFilePath = path.join(__dirname, 'ranking_data.json'); // Ya no se usa
+// Middleware de seguridad básica
+app.use((req, res, next) => {
+  // Establecer encabezados de seguridad básicos
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  next();
+});
 
-/* --- Funciones Auxiliares Firestore (reemplazan read/write Ranking) --- */
+/**
+ * FUNCIONES AUXILIARES
+ */
 
-// Ya no necesitamos funciones específicas para leer/escribir el archivo JSON.
-// Interactuaremos directamente con Firestore en las rutas API.
+/**
+ * Asegura que un directorio exista, creándolo si es necesario
+ * @param {string} directoryPath - Ruta del directorio a verificar/crear
+ * @return {Promise<boolean>} - True si existe o se creó correctamente
+ */
+async function ensureDirectoryExists(directoryPath) {
+  try {
+    if (!fs.existsSync(directoryPath)) {
+      await fs.promises.mkdir(directoryPath, { recursive: true });
+    }
+    return true;
+  } catch (error) {
+    console.error(`Error al crear directorio ${directoryPath}:`, error);
+    return false;
+  }
+}
 
-/* --- Fin Funciones Auxiliares --- */
+/**
+ * API ENDPOINTS
+ */
 
-// --- API Endpoints --- 
+// GET /api/optimize-image - Optimización de imágenes bajo demanda
+app.get('/api/optimize-image', async (req, res) => {
+  try {
+    const { src, width, quality = 80 } = req.query;
+    
+    // Validación básica
+    if (!src) {
+      return res.status(400).json({ error: 'Se requiere el parámetro src' });
+    }
+    
+    // Crear una clave única para esta configuración de imagen
+    const cacheKey = `${src}-${width || 'auto'}-${quality}`;
+    
+    // Verificar si ya está en el cache
+    if (IMAGE_CACHE.has(cacheKey)) {
+      return res.sendFile(IMAGE_CACHE.get(cacheKey));
+    }
+    
+    const imagePath = path.join(PUBLIC_PATH, src);
+    
+    // Verificar si la imagen original existe
+    if (!fs.existsSync(imagePath)) {
+      return res.status(404).json({ error: 'Imagen no encontrada' });
+    }
+    
+    // Preparar directorio para imágenes optimizadas
+    const optimizedDir = path.join(PUBLIC_PATH, 'img', 'optimized');
+    if (!(await ensureDirectoryExists(optimizedDir))) {
+      return res.status(500).json({ error: 'Error al crear directorio para imágenes optimizadas' });
+    }
+    
+    // Generar nombre de archivo optimizado
+    const fileName = path.basename(imagePath);
+    const fileExt = path.extname(fileName);
+    const optimizedFileName = `${path.basename(fileName, fileExt)}-${width || 'auto'}-${quality}${fileExt}`;
+    const optimizedPath = path.join(optimizedDir, optimizedFileName);
+    
+    // Si ya existe la imagen optimizada, devolverla
+    if (fs.existsSync(optimizedPath)) {
+      // Guardar en cache
+      IMAGE_CACHE.set(cacheKey, optimizedPath);
+      return res.sendFile(optimizedPath);
+    }
+    
+    // Optimizar la imagen con sharp
+    try {
+      const sharp = require('sharp');
+      let pipeline = sharp(imagePath);
+      
+      if (width) {
+        pipeline = pipeline.resize(parseInt(width));
+      }
+      
+      // Detectar el formato de salida según la extensión
+      const ext = fileExt.toLowerCase();
+      if (ext === '.png') {
+        pipeline = pipeline.png({ quality: parseInt(quality) });
+      } else if (ext === '.webp') {
+        pipeline = pipeline.webp({ quality: parseInt(quality) });
+      } else if (ext === '.avif') {
+        pipeline = pipeline.avif({ quality: parseInt(quality) });
+      } else {
+        pipeline = pipeline.jpeg({ quality: parseInt(quality) });
+      }
+      
+      await pipeline.toFile(optimizedPath);
+      
+      // Guardar en cache y devolver
+      IMAGE_CACHE.set(cacheKey, optimizedPath);
+      return res.sendFile(optimizedPath);
+    } catch (error) {
+      console.error('Error al optimizar la imagen:', error);
+      // Fallback a la imagen original si hay error
+      return res.sendFile(imagePath);
+    }
+  } catch (error) {
+    console.error('Error en el endpoint de optimización de imágenes:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+});
 
-// GET /api/ranking - Obtener el ranking global desde Firestore
+// GET /api/ranking - Obtener el ranking global
 app.get('/api/ranking', async (req, res) => {
   try {
     const snapshot = await rankingCollection
-                           .orderBy('score', 'desc') // Ordenar por score descendente
-                           .limit(100) // Limitar a los 100 mejores
+                           .orderBy('score', 'desc')
+                           .limit(100)
                            .get();
 
     if (snapshot.empty) {
-      console.log('No se encontraron documentos en el ranking.');
-      return res.json([]); // Devolver array vacío si no hay datos
+      return res.json([]);
     }
 
-    const ranking = [];
-    snapshot.forEach(doc => {
-        // Añadimos el ID del documento por si acaso, y los datos
-        ranking.push({ id: doc.id, ...doc.data() }); 
-    });
-
+    const ranking = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
     res.json(ranking);
-
   } catch (error) {
-    console.error("Error al obtener ranking desde Firestore:", error);
-    res.status(500).json({ message: "Error al obtener el ranking", error: error.message });
+    console.error("Error al obtener ranking:", error);
+    res.status(500).json({ error: error.message });
   }
 });
 
-// POST /api/ranking - Añadir una nueva entrada al ranking en Firestore
+// POST /api/ranking - Añadir entrada al ranking
 app.post('/api/ranking', async (req, res) => {
   try {
     const newEntry = req.body;
-    console.log('Recibida nueva entrada para ranking Firestore:', newEntry);
-
-    // Validación básica (mantener o mejorar)
-    if (!newEntry || typeof newEntry.score !== 'number' || !newEntry.name || !newEntry.date) {
-      return res.status(400).json({ message: "Datos de entrada inválidos" });
+    
+    // Validación de datos
+    if (!newEntry || typeof newEntry.score !== 'number' || !newEntry.name) {
+      return res.status(400).json({ error: "Datos de entrada inválidos" });
     }
 
-    // Limpiar/Sanitizar datos 
-    newEntry.name = String(newEntry.name).substring(0, 30); 
-    // Asegurar que la fecha sea un Timestamp de Firestore para mejor ordenamiento/query
+    // Sanitizar datos
+    newEntry.name = String(newEntry.name).substring(0, 30);
+    
+    // Asegurar que haya una fecha válida
     try {
-       // Intentar convertir la fecha ISO string (o Date) a Timestamp de Firestore
-       newEntry.date = admin.firestore.Timestamp.fromDate(new Date(newEntry.date));
+      newEntry.date = newEntry.date 
+        ? admin.firestore.Timestamp.fromDate(new Date(newEntry.date))
+        : admin.firestore.FieldValue.serverTimestamp();
+      
+      // Agregar timestamp para facilitar comparaciones
+      newEntry.timestamp = Date.now();
     } catch (dateError) {
-       console.warn('Error al convertir fecha a Timestamp, usando servidor actual:', dateError);
-       newEntry.date = admin.firestore.FieldValue.serverTimestamp(); // Usar fecha del servidor como fallback
+      console.warn("Error con el formato de fecha, usando timestamp del servidor");
+      newEntry.date = admin.firestore.FieldValue.serverTimestamp();
+      newEntry.timestamp = Date.now();
     }
     
-    // Añadir la nueva entrada a la colección. Firestore asignará un ID automático.
     const docRef = await rankingCollection.add(newEntry);
-
-    console.log('Entrada añadida al ranking Firestore con ID:', docRef.id);
-    res.status(201).json({ message: "Entrada añadida al ranking", entryId: docRef.id });
-
-    // Opcional: Limpieza periódica de entradas antiguas o de baja puntuación 
-    // (más complejo, se podría hacer con Cloud Functions o un script aparte)
-
+    res.status(201).json({ entryId: docRef.id });
   } catch (error) {
-    console.error("Error al procesar POST /api/ranking Firestore:", error);
-    res.status(500).json({ message: "Error al guardar en el ranking", error: error.message });
+    console.error("Error al guardar ranking:", error);
+    res.status(500).json({ error: error.message });
   }
 });
 
-// --- Servir Archivos Estáticos --- 
-app.use(express.static(publicDirectoryPath));
+/**
+ * CONFIGURACIÓN DE ARCHIVOS ESTÁTICOS Y RUTAS
+ */
 
-// --- Ruta Catch-all --- 
-app.get('*', (req, res) => {
-  const mainHtmlFile = 'portal.html';
-  res.sendFile(path.join(publicDirectoryPath, mainHtmlFile), (err) => {
-    if (err) {
-      console.error(`Error al enviar archivo catch-all (${mainHtmlFile}):`, err);
-      if (!res.headersSent) {
-           res.status(404).send('Recurso no encontrado.');
-      }
+// Servir archivos estáticos con caché
+app.use(express.static(PUBLIC_PATH, {
+  maxAge: STATIC_CACHE_TIME, // Cache para archivos estáticos
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      // No cachear archivos HTML
+      res.setHeader('Cache-Control', 'no-cache');
     }
-  });
+  }
+}));
+
+// Ruta catch-all para SPA
+app.get('*', (req, res) => {
+  res.sendFile(path.join(PUBLIC_PATH, 'portal.html'));
 });
 
-app.listen(port, () => {
-  // Ya no necesitamos inicializar el archivo JSON
-  console.log(`Servidor iniciado en http://localhost:${port}`);
-  console.log(`Sirviendo archivos estáticos desde: ${publicDirectoryPath}`);
-  console.log('Conectado a Firestore para el ranking.');
+/**
+ * INICIALIZACIÓN DEL SERVIDOR
+ */
+app.listen(PORT, () => {
+  console.log(`Servidor iniciado en http://localhost:${PORT}`);
+  console.log(`Sirviendo archivos estáticos desde: ${PUBLIC_PATH}`);
+});
+
+// Manejo de errores no capturados
+process.on('uncaughtException', (error) => {
+  console.error('Error no capturado:', error);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Promesa rechazada no manejada:', reason);
 });

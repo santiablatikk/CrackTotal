@@ -490,30 +490,7 @@
   <!-- Scripts -->
   <script src="js/utils.js"></script>
   <script src="js/game-data.js"></script>
-  <script>
-  // Funciones esenciales de game-achievements.js y game-completion.js
-  function unlockAchievement(achievementId) {
-    // Implementación mínima para mantener compatibilidad
-    if (window.GameData && typeof GameData.unlockAchievement === 'function') {
-      GameData.unlockAchievement(achievementId);
-    }
-  }
-
-  function checkGameCompletionAchievements(gameData) {
-    // Implementación mínima para mantener compatibilidad
-    if (window.GameData && typeof GameData.checkGameAchievements === 'function') {
-      GameData.checkGameAchievements(gameData);
-    }
-  }
-
-  // Exponer funciones al ámbito global
-  window.unlockAchievement = unlockAchievement;
-  window.checkGameCompletionAchievements = checkGameCompletionAchievements;
-  </script>
   <script src="js/game.js"></script>
-  <!-- Botón flotante de compartir -->
-  <script src="js/share-buttons.js"></script>
-  <!-- Script para el footer global -->
   <script src="js/global-footer.js"></script>
 
   <!-- Sonidos adicionales -->

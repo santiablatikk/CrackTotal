@@ -31,6 +31,9 @@ let modalSwitchDelay = 400; // Retraso entre transiciones de modales en ms
 let debounceModalSwitch = false; // Evitar múltiples transiciones simultáneas
 let autoTransitionTimers = []; // Almacena los temporizadores para poder cancelarlos
 
+// Sistema de logros mejorado
+let achievementsUnlocked = []; // Almacena los logros desbloqueados en esta partida
+
 /**
  * Initialize the game when DOM is fully loaded
  */
@@ -1107,68 +1110,89 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Configurar botones de perfil para ir directamente a la página de perfil
-    const profileBtns = document.querySelectorAll('[onclick*="pasala-che-profile.html"]');
+    const profileBtns = document.querySelectorAll('[onclick*="perfil.html"]');
     profileBtns.forEach(btn => {
       btn.addEventListener('click', function(e) {
         e.preventDefault();
-        window.location.href = 'pasala-che-profile.html';
+        window.location.href = 'perfil.html';
       });
     });
   }
   
   // Configurar botones en el modal de estadísticas
   function configureStatsModalButtons() {
-    // Botón "PANEL DE ESTADÍSTICAS"
-    const dashboardBtn = document.getElementById('dashboard-btn');
-    if (dashboardBtn) {
-      // Limpiar event listeners anteriores
-      const newDashboardBtn = dashboardBtn.cloneNode(true);
-      dashboardBtn.parentNode.replaceChild(newDashboardBtn, dashboardBtn);
-      
-      // Añadir nuevo event listener
-      newDashboardBtn.addEventListener('click', function() {
-        // Cancelar cualquier transición automática pendiente
-        cancelAllAutoTransitions();
-        
-        // Asegurar que la bandera de juego completado esté establecida
+    // Botón "Perfil"
+    const profileBtn = document.querySelector('.modal-actions a[href="perfil.html"]');
+    if (profileBtn) {
+      profileBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        // Cancelar cualquier redirección pendiente
+        if (window.redirectTimeout) {
+          clearTimeout(window.redirectTimeout);
+          window.redirectTimeout = null;
+        }
+        // Indicar que el juego acaba de ser completado
         localStorage.setItem('gameJustCompleted', 'true');
-        
-        window.location.href = 'perfil.html'; // Actualizado aquí
+        // Redireccionar a la página de perfil
+        window.location.href = 'perfil.html';
       });
     }
     
     // Botón "Jugar de Nuevo"
     const playAgainBtn = document.getElementById('play-again-btn');
     if (playAgainBtn) {
-      // Limpiar event listeners anteriores
-      const newPlayAgainBtn = playAgainBtn.cloneNode(true);
-      playAgainBtn.parentNode.replaceChild(newPlayAgainBtn, playAgainBtn);
-      
-      // Añadir nuevo event listener
-      newPlayAgainBtn.addEventListener('click', function() {
-        // Cancelar cualquier transición automática pendiente
-        cancelAllAutoTransitions();
-        
-        hideStatsModal();
-        hideModals();
+      playAgainBtn.addEventListener('click', function() {
+        // Cancelar cualquier redirección pendiente
+        if (window.redirectTimeout) {
+          clearTimeout(window.redirectTimeout);
+          window.redirectTimeout = null;
+        }
+        // Resetear el juego y ocultar modales
         resetGame();
+        hideModals(); // Usando la función correcta que existe en el código
       });
     }
-    
-    // Botón para cerrar estadísticas
-    const closeStatsBtn = document.getElementById('close-stats-btn');
-    if (closeStatsBtn) {
-      // Limpiar event listeners anteriores
-      const newCloseStatsBtn = closeStatsBtn.cloneNode(true);
-      closeStatsBtn.parentNode.replaceChild(newCloseStatsBtn, closeStatsBtn);
-      
-      // Añadir nuevo event listener
-      newCloseStatsBtn.addEventListener('click', function() {
-        // Cancelar cualquier transición automática pendiente
-        cancelAllAutoTransitions();
-        
-        // Redirigir a la página de perfil
-        switchToProfilePage();
+
+    // Botón "Ver Mis Logros"
+    const achievementsBtn = document.getElementById('view-achievements-btn');
+    if (achievementsBtn) {
+      // Añadir clase especial para estilo
+      achievementsBtn.classList.add('btn-achievements');
+      achievementsBtn.addEventListener('click', function() {
+        // Cancelar cualquier redirección pendiente
+        if (window.redirectTimeout) {
+          clearTimeout(window.redirectTimeout);
+          window.redirectTimeout = null;
+        }
+        // Cambiar al modal de logros - Pasamos el ID del modal actual como fuente
+        switchToAchievementsModal('stats-modal');
+      });
+    }
+
+    // Botón "Volver al Inicio"
+    const returnHomeBtn = document.getElementById('return-home-btn');
+    if (returnHomeBtn) {
+      returnHomeBtn.addEventListener('click', function() {
+        // Cancelar cualquier redirección pendiente
+        if (window.redirectTimeout) {
+          clearTimeout(window.redirectTimeout);
+          window.redirectTimeout = null;
+        }
+        // Redireccionar a la página principal
+        window.location.href = 'game-rosco.html';
+      });
+    }
+
+    // Botón para cerrar el modal de estadísticas
+    const closeBtn = document.getElementById('close-stats-btn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function() {
+        // Cancelar cualquier redirección pendiente
+        if (window.redirectTimeout) {
+          clearTimeout(window.redirectTimeout);
+          window.redirectTimeout = null;
+        }
+        hideStatsModal(); // Usando la función correcta que existe en el código
       });
     }
   }
@@ -1292,9 +1316,21 @@ function playSound(sound) {
       soundToggle.classList.remove('muted');
     }
     
+    // Mostrar notificación de cambio de estado del sonido
+    if (window.Utils && window.Utils.showNotification) {
+      window.Utils.showNotification(`Sonido ${soundEnabled ? 'activado' : 'desactivado'}`, 'info', 1500);
+    }
+    
     // Play click sound if sound is enabled
     if (soundEnabled) {
       playSound(clickSound);
+    }
+    
+    // Guardar preferencia en localStorage
+    try {
+      localStorage.setItem('soundEnabled', soundEnabled.toString());
+    } catch (e) {
+      console.error('Error al guardar preferencia de sonido:', e);
     }
   }
   
@@ -1410,15 +1446,27 @@ function playSound(sound) {
     }
   }
   
-  // Function to hide all modals
+  // Function unificada para ocultar todos los modales
   function hideModals() {
-    const modals = document.querySelectorAll('.result-modal, #achievements-modal');
+    // Ocultar todos los modales mediante clases
+    const modals = document.querySelectorAll('.modal');
     modals.forEach(modal => {
       modal.classList.remove('show');
       setTimeout(() => {
         modal.style.display = 'none';
       }, 300);
     });
+    
+    // También ocultar el modal de estadísticas (por si acaso)
+    hideStatsModal();
+    
+    // Cancelar cualquier transición automática pendiente
+    cancelAllAutoTransitions();
+  }
+  
+  // Alias para mantener compatibilidad con código existente
+  function hideAllModals() {
+    hideModals();
   }
   
   // Llamar a la inicialización de la UI
@@ -1760,11 +1808,11 @@ function playSound(sound) {
         });
       }
       
-      const viewProfileBtn = statsModal.querySelector('[onclick*="pasala-che-profile.html"]');
+      const viewProfileBtn = statsModal.querySelector('[onclick*="perfil.html"]');
       if (viewProfileBtn) {
         viewProfileBtn.addEventListener('click', function(e) {
           e.preventDefault();
-          window.location.href = 'pasala-che-profile.html';
+          window.location.href = 'perfil.html';
         });
       }
     }
@@ -1860,7 +1908,7 @@ function playSound(sound) {
   // Inicializar los botones de perfil - ELIMINAR
   function initProfileButtons() {
     // Obtener todos los botones que tengan onclick con link al perfil
-    const profileBtns = document.querySelectorAll('[onclick*="pasala-che-profile.html"]');
+    const profileBtns = document.querySelectorAll('[onclick*="perfil.html"]');
     
     // Reemplazar el comportamiento onclick
     profileBtns.forEach(btn => {
@@ -1893,7 +1941,7 @@ function playSound(sound) {
     }
     
     // Botón de ver perfil
-    const viewProfileBtn = statsModal.querySelector('[onclick*="pasala-che-profile.html"]');
+    const viewProfileBtn = statsModal.querySelector('[onclick*="perfil.html"]');
     if (viewProfileBtn) {
       viewProfileBtn.addEventListener('click', function(e) {
         e.preventDefault();
@@ -1923,6 +1971,490 @@ function playSound(sound) {
       }, countdown * 1000);
     }
   }
+
+  // Inicializar event listeners adicionales
+  function initAdditionalEventListeners() {
+    // Event listener para el botón de retroceso
+    const backButton = document.querySelector('.back-button');
+    if (backButton) {
+      backButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Si hay cambios sin guardar o el juego está en progreso, mostrar confirmación
+        if (gameStarted && (correctAnswers > 0 || incorrectAnswersCount > 0 || skippedAnswers > 0)) {
+          if (confirm('¿Estás seguro que deseas salir? Tu progreso actual se perderá.')) {
+            window.history.back();
+          }
+        } else {
+          window.history.back();
+        }
+        
+        // Reproducir sonido de clic si el sonido está habilitado
+        if (soundEnabled) {
+          playSound(clickSound);
+        }
+      });
+    }
+    
+    // Cargar preferencia de sonido desde localStorage
+    try {
+      const savedSoundPreference = localStorage.getItem('soundEnabled');
+      if (savedSoundPreference !== null) {
+        soundEnabled = savedSoundPreference === 'true';
+        
+        // Actualizar UI para reflejar la preferencia guardada
+        const icon = soundToggle.querySelector('i');
+        if (!soundEnabled) {
+          icon.className = 'fas fa-volume-mute';
+          soundToggle.classList.add('muted');
+        } else {
+          icon.className = 'fas fa-volume-up';
+          soundToggle.classList.remove('muted');
+        }
+      }
+    } catch (e) {
+      console.error('Error al cargar preferencia de sonido:', e);
+    }
+  }
+
+  // Llamamos a la función de inicialización adicional
+  initAdditionalEventListeners();
+
+  // ... existing code ...
+
+  // Sistema de logros mejorado
+  let achievementsUnlocked = []; // Almacena los logros desbloqueados en esta partida
+
+  /**
+   * Comprueba los logros al finalizar la partida
+   * @param {string} result - Resultado de la partida: 'victory', 'timeout', 'defeat'
+   */
+  function checkAchievements(result) {
+    // Reset de logros de esta partida
+    achievementsUnlocked = [];
+    
+    // Si no tenemos los datos de los logros, los cargamos
+    if (!window.GAME_ACHIEVEMENTS) {
+      console.error("No se encontraron los logros definidos");
+      return false;
+    }
+    
+    // Obtenemos logros ya desbloqueados del almacenamiento local
+    let unlockedAchievements = [];
+    try {
+      const saved = localStorage.getItem('unlockedAchievements');
+      if (saved) {
+        unlockedAchievements = JSON.parse(saved);
+      }
+    } catch (e) {
+      console.error("Error al cargar logros:", e);
+      unlockedAchievements = [];
+    }
+    
+    // Estadísticas finales
+    const finalStats = {
+      correctAnswers,
+      incorrectAnswers: incorrectAnswersCount,
+      skippedAnswers,
+      remainingQuestions: questions.length - (correctAnswers + incorrectAnswersCount + skippedAnswers),
+      timeRemaining,
+      maxTimeLimit: timeLimit,
+      result,
+      difficulty: selectedDifficulty,
+      totalTimePlayed: timeLimit - timeRemaining,
+      letters: letterStatus, // Estado de cada letra
+      perfectGame: incorrectAnswersCount === 0 && skippedAnswers === 0,
+      allCorrect: correctAnswers === questions.length,
+      noHelp: Object.keys(letterHints).length === 0
+    };
+    
+    // Verificar cada logro
+    for (const achievementId in window.GAME_ACHIEVEMENTS) {
+      const achievement = window.GAME_ACHIEVEMENTS[achievementId];
+      let isUnlocked = false;
+      
+      // Verificamos si ya estaba desbloqueado
+      const alreadyUnlocked = unlockedAchievements.includes(achievementId);
+      
+      // Si existe una función de condición personalizada, la usamos
+      if (typeof achievement.condition === 'function') {
+        isUnlocked = achievement.condition(finalStats);
+      } else {
+        // Condiciones básicas según el tipo de logro
+        switch(achievement.type) {
+          case 'victory':
+            isUnlocked = result === 'victory';
+            break;
+          case 'perfect':
+            isUnlocked = finalStats.perfectGame && result === 'victory';
+            break;
+          case 'fast':
+            isUnlocked = result === 'victory' && finalStats.totalTimePlayed < (finalStats.maxTimeLimit * 0.5);
+            break;
+          case 'noHelp':
+            isUnlocked = finalStats.noHelp && result === 'victory';
+            break;
+          case 'hard':
+            isUnlocked = result === 'victory' && selectedDifficulty === 'dificil';
+            break;
+          case 'perseverance':
+            isUnlocked = result === 'timeout' && finalStats.correctAnswers > (questions.length * 0.7);
+            break;
+          // Puedes añadir más tipos de logros aquí
+        }
+      }
+      
+      // Si se desbloquea y no estaba desbloqueado antes, lo agregamos
+      if (isUnlocked) {
+        if (!alreadyUnlocked) {
+          // Lo añadimos a los logros desbloqueados en general
+          unlockedAchievements.push(achievementId);
+          
+          // Lo añadimos a los logros desbloqueados en esta partida
+          achievementsUnlocked.push(achievementId);
+        }
+      }
+    }
+    
+    // Guardamos los logros desbloqueados
+    try {
+      localStorage.setItem('unlockedAchievements', JSON.stringify(unlockedAchievements));
+    } catch (e) {
+      console.error("Error al guardar logros:", e);
+    }
+    
+    // Devolvemos true si se desbloquearon nuevos logros en esta partida
+    return achievementsUnlocked.length > 0;
+  }
+
+  /**
+   * Muestra el modal de logros con los logros desbloqueados en esta partida
+   */
+  function showAchievementsModal(sourceModalId) {
+    // Cancelar cualquier transición automática pendiente
+    cancelAllAutoTransitions();
+    
+    // Ocultar modal actual
+    const sourceModal = document.getElementById(sourceModalId);
+    if (sourceModal) {
+      sourceModal.classList.remove('show');
+      setTimeout(() => {
+        sourceModal.style.display = 'none';
+      }, 300);
+    }
+    
+    // Si no hay logros desbloqueados, pasamos directamente a las estadísticas
+    if (achievementsUnlocked.length === 0) {
+      return switchToStatsModal(sourceModalId);
+    }
+    
+    // Obtenemos el contenedor de logros desbloqueados
+    const unlockedAchievementsContainer = document.getElementById('unlocked-achievements');
+    if (!unlockedAchievementsContainer) return;
+    
+    // Limpiamos el contenedor
+    unlockedAchievementsContainer.innerHTML = '';
+    
+    // Creamos y añadimos los elementos HTML para cada logro desbloqueado
+    achievementsUnlocked.forEach((achievementId, index) => {
+      const achievement = window.GAME_ACHIEVEMENTS[achievementId];
+      if (!achievement) return;
+      
+      const achievementElement = document.createElement('div');
+      achievementElement.className = 'achievement-item';
+      achievementElement.style.setProperty('--animation-order', index); // Establecemos el orden para la animación
+      
+      achievementElement.innerHTML = `
+        <div class="achievement-icon">
+          <i class="${achievement.icon || 'fas fa-award'}"></i>
+        </div>
+        <div class="achievement-info">
+          <h3>${achievement.title}</h3>
+          <p>${achievement.description}</p>
+        </div>
+      `;
+      
+      unlockedAchievementsContainer.appendChild(achievementElement);
+    });
+    
+    // Reproducir sonido si está disponible
+    if (window.achievementSound && soundEnabled) {
+      try {
+        achievementSound.currentTime = 0;
+        achievementSound.play();
+      } catch (e) {
+        console.error("Error al reproducir sonido de logro:", e);
+      }
+    }
+    
+    // Mostrar modal de logros
+    const achievementsModal = document.getElementById('achievements-modal');
+    if (achievementsModal) {
+      achievementsModal.style.display = 'flex';
+      
+      // Forzar reflow para asegurar animación
+      void achievementsModal.offsetWidth;
+      
+      achievementsModal.classList.add('show');
+      
+      // Iniciar contador regresivo visual
+      const countdownElement = achievementsModal.querySelector('.countdown');
+      if (countdownElement) {
+        startModalCountdown(countdownElement, 6);
+      }
+      
+      // Configurar temporizador para pasar automáticamente a las estadísticas
+      const timer = setTimeout(() => {
+        switchToStatsModal('achievements-modal');
+      }, 6000);
+      
+      // Guardar el temporizador para poder cancelarlo si es necesario
+      autoTransitionTimers.push(timer);
+    }
+  }
+
+  // Actualizar las funciones que muestran los modales de victoria/derrota/tiempo
+  function showVictoryModal() {
+    const modal = document.getElementById('victory-modal');
+    if (!modal) return;
+    
+    modal.style.display = 'flex';
+    
+    // Forzar reflow para asegurar animación
+    void modal.offsetWidth;
+    
+    modal.classList.add('show');
+    
+    // Reproducir sonido si está habilitado
+    if (soundEnabled) {
+      playSound(gameOverSound);
+    }
+    
+    // Comprobar logros y determinar si mostramos primero el modal de logros
+    if (checkAchievements('victory')) {
+      // Si hay logros desbloqueados, configurar el botón para mostrar modal de logros
+      document.getElementById('victory-stats-btn').addEventListener('click', function() {
+        showAchievementsModal('victory-modal');
+      }, { once: true }); // El evento se ejecuta solo una vez
+      
+      // Modal se cierra automáticamente luego de 6 segundos
+      startModalCountdown(modal.querySelector('.countdown'), 6);
+      const timer = setTimeout(() => {
+        showAchievementsModal('victory-modal');
+      }, 6000);
+      autoTransitionTimers.push(timer);
+    } else {
+      // Si no hay logros, configurar para ir directamente a las estadísticas
+      document.getElementById('victory-stats-btn').addEventListener('click', function() {
+        switchToStatsModal('victory-modal');
+      }, { once: true });
+      
+      // Modal se cierra automáticamente
+      startModalCountdown(modal.querySelector('.countdown'), 6);
+      const timer = setTimeout(() => {
+        switchToStatsModal('victory-modal');
+      }, 6000);
+      autoTransitionTimers.push(timer);
+    }
+  }
+
+  function showTimeoutModal() {
+    const modal = document.getElementById('timeout-modal');
+    if (!modal) return;
+    
+    modal.style.display = 'flex';
+    
+    // Forzar reflow para asegurar animación
+    void modal.offsetWidth;
+    
+    modal.classList.add('show');
+    
+    // Reproducir sonido si está habilitado
+    if (soundEnabled) {
+      playSound(gameOverSound);
+    }
+    
+    // Comprobar logros y determinar si mostramos primero el modal de logros
+    if (checkAchievements('timeout')) {
+      // Si hay logros desbloqueados, configurar el botón para mostrar modal de logros
+      document.getElementById('timeout-stats-btn').addEventListener('click', function() {
+        showAchievementsModal('timeout-modal');
+      }, { once: true });
+      
+      // Modal se cierra automáticamente
+      startModalCountdown(modal.querySelector('.countdown'), 6);
+      const timer = setTimeout(() => {
+        showAchievementsModal('timeout-modal');
+      }, 6000);
+      autoTransitionTimers.push(timer);
+    } else {
+      // Si no hay logros, configurar para ir directamente a las estadísticas
+      document.getElementById('timeout-stats-btn').addEventListener('click', function() {
+        switchToStatsModal('timeout-modal');
+      }, { once: true });
+      
+      // Modal se cierra automáticamente
+      startModalCountdown(modal.querySelector('.countdown'), 6);
+      const timer = setTimeout(() => {
+        switchToStatsModal('timeout-modal');
+      }, 6000);
+      autoTransitionTimers.push(timer);
+    }
+  }
+
+  function showDefeatModal() {
+    const modal = document.getElementById('defeat-modal');
+    if (!modal) return;
+    
+    modal.style.display = 'flex';
+    
+    // Forzar reflow para asegurar animación
+    void modal.offsetWidth;
+    
+    modal.classList.add('show');
+    
+    // Reproducir sonido si está habilitado
+    if (soundEnabled) {
+      playSound(gameOverSound);
+    }
+    
+    // Comprobar logros y determinar si mostramos primero el modal de logros
+    if (checkAchievements('defeat')) {
+      // Si hay logros desbloqueados, configurar el botón para mostrar modal de logros
+      document.getElementById('defeat-stats-btn').addEventListener('click', function() {
+        showAchievementsModal('defeat-modal');
+      }, { once: true });
+      
+      // Modal se cierra automáticamente
+      startModalCountdown(modal.querySelector('.countdown'), 6);
+      const timer = setTimeout(() => {
+        showAchievementsModal('defeat-modal');
+      }, 6000);
+      autoTransitionTimers.push(timer);
+    } else {
+      // Si no hay logros, configurar para ir directamente a las estadísticas
+      document.getElementById('defeat-stats-btn').addEventListener('click', function() {
+        switchToStatsModal('defeat-modal');
+      }, { once: true });
+      
+      // Modal se cierra automáticamente
+      startModalCountdown(modal.querySelector('.countdown'), 6);
+      const timer = setTimeout(() => {
+        switchToStatsModal('defeat-modal');
+      }, 6000);
+      autoTransitionTimers.push(timer);
+    }
+  }
+
+  // Actualizar conexión entre el modal de logros y el de estadísticas
+  document.addEventListener('DOMContentLoaded', function() {
+    const achievementsStatsBtn = document.getElementById('achievements-stats-btn');
+    if (achievementsStatsBtn) {
+      achievementsStatsBtn.addEventListener('click', function() {
+        switchToStatsModal('achievements-modal');
+      });
+    }
+  });
+
+  // ... existing code ...
+
+  // Función para mostrar el modal de logros
+  function switchToAchievementsModal(sourceModalId) {
+    console.log("Switching to achievements modal from:", sourceModalId);
+    
+    // Cancelar cualquier transición automática pendiente
+    cancelAllAutoTransitions();
+    
+    // Ocultar modal actual
+    const sourceModal = document.getElementById(sourceModalId);
+    if (sourceModal) {
+      sourceModal.classList.remove('show');
+      setTimeout(() => {
+        sourceModal.style.display = 'none';
+      }, 300);
+    }
+    
+    // Si tenemos acceso al contenedor de logros
+    const achievementsContainer = document.getElementById('unlocked-achievements');
+    if (achievementsContainer) {
+      // Cargar todos los logros desbloqueados, no solo los de esta partida
+      try {
+        const unlockedAchievements = JSON.parse(localStorage.getItem('unlockedAchievements')) || [];
+        
+        // Limpiar el contenedor
+        achievementsContainer.innerHTML = '';
+        
+        if (unlockedAchievements.length === 0) {
+          // Si no hay logros desbloqueados, mostrar mensaje
+          achievementsContainer.innerHTML = `
+            <div class="no-achievements">
+              <i class="fas fa-trophy-alt"></i>
+              <p>Aún no has desbloqueado ningún logro. ¡Sigue jugando para conseguir logros!</p>
+            </div>
+          `;
+        } else {
+          // Añadir cada logro desbloqueado
+          unlockedAchievements.forEach((achievementId, index) => {
+            if (window.GAME_ACHIEVEMENTS && window.GAME_ACHIEVEMENTS[achievementId]) {
+              const achievement = window.GAME_ACHIEVEMENTS[achievementId];
+              
+              // Crear elemento para el logro
+              const achievementElement = document.createElement('div');
+              achievementElement.className = 'achievement-item';
+              achievementElement.style.setProperty('--animation-order', index);
+              
+              achievementElement.innerHTML = `
+                <div class="achievement-icon">
+                  <i class="${achievement.icon || 'fas fa-award'}"></i>
+                </div>
+                <div class="achievement-info">
+                  <h3>${achievement.title}</h3>
+                  <p>${achievement.description}</p>
+                </div>
+              `;
+              
+              achievementsContainer.appendChild(achievementElement);
+            }
+          });
+        }
+      } catch (e) {
+        console.error("Error al cargar logros:", e);
+        achievementsContainer.innerHTML = '<p>Error al cargar los logros</p>';
+      }
+    }
+    
+    // Mostrar modal de logros
+    const achievementsModal = document.getElementById('achievements-modal');
+    if (achievementsModal) {
+      achievementsModal.style.display = 'flex';
+      
+      // Forzar reflow para asegurar animación
+      void achievementsModal.offsetWidth;
+      
+      achievementsModal.classList.add('show');
+      
+      // Iniciar contador regresivo visual
+      const countdownElement = achievementsModal.querySelector('.countdown');
+      if (countdownElement) {
+        startModalCountdown(countdownElement, 6);
+      }
+      
+      // Configurar temporizador para pasar automáticamente a las estadísticas
+      const timer = setTimeout(() => {
+        // Si venimos de las estadísticas, no tiene sentido volver a ellas
+        if (sourceModalId === 'stats-modal') {
+          hideModals(); // Solo cerramos el modal
+        } else {
+          switchToStatsModal('achievements-modal');
+        }
+      }, 6000);
+      
+      // Guardar el temporizador para poder cancelarlo si es necesario
+      autoTransitionTimers.push(timer);
+    }
+  }
+
+  // ... existing code ...
 });
 
 // Función para mostrar mensajes sutiles
@@ -2743,7 +3275,8 @@ function switchToProfilePage() {
   localStorage.setItem('gameJustCompleted', 'true');
   
   // Redirigir a la página de perfil
-  window.location.href = 'pasala-che-profile.html';
+  window.location.href = 'perfil.html';
 }
+
 
 
