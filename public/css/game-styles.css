@@ -3492,8 +3492,6 @@
 @media screen and (max-width: 480px) {
   body {
     overflow-x: hidden;
-    /* Eliminar position: fixed para permitir scroll */
-    /* position: fixed; */
     width: 100%;
     height: auto;
     min-height: 100%;
@@ -3540,18 +3538,21 @@
 
   /* Estilo fijo para el rosco en móvil, como en la imagen de referencia */
   #rosco-container {
-    position: relative; /* Cambiado de sticky a relative para evitar superposiciones */
-    width: 85% !important; /* Reducido para que no toque los bordes */
+    position: relative;
+    width: 85% !important;
     max-width: 85vw !important;
     height: auto !important;
     aspect-ratio: 1 / 1 !important;
-    margin: 10px auto 20px !important; /* Margen para separación */
+    margin: 10px auto 20px !important;
     background: radial-gradient(circle, rgba(25, 118, 210, 0.8) 30%, rgba(13, 71, 161, 0.9) 70%) !important;
     border-radius: 50% !important;
-    box-shadow: 0 0 25px rgba(0, 120, 255, 0.5) !important;
+    border: 3px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 0 25px rgba(0, 120, 255, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.1) !important;
     transform: none !important;
-    border: none !important;
     overflow: visible !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
   
   /* Eliminar backgrounds adicionales */
@@ -3563,165 +3564,83 @@
   /* Estilo para las letras - reducidas de tamaño */
   .rosco-letter {
     position: absolute !important;
-    width: 24px !important;
-    height: 24px !important;
-    font-size: 0.75rem !important;
-    border-width: 2px !important;
-    line-height: 20px !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 50% !important;
+    background: #3498db !important;
+    color: white !important;
+    font-weight: bold !important;
+    font-size: 0.8rem !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3) !important;
+    z-index: 5 !important;
+    transition: all 0.3s ease !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
   }
   
-  /* Letra actual destacada - reducida de tamaño */
+  /* Letra actual con mejor visibilidad */
   .rosco-letter.current {
-    width: 30px !important;
-    height: 30px !important;
-    font-size: 0.9rem !important;
-    z-index: 5 !important; /* Reducido para no interferir con otros elementos */
-    box-shadow: 0 0 15px rgba(255, 165, 0, 0.8) !important;
+    transform: scale(1.25) !important;
+    z-index: 10 !important;
+    box-shadow: 0 0 12px rgba(243, 156, 18, 0.9) !important;
+    border: 2px solid rgba(255, 255, 255, 0.7) !important;
   }
   
-  /* Estilos para tarjeta de preguntas - reducida de tamaño */
+  /* Asegurar que la tarjeta de preguntas se sitúe correctamente */
   .question-card {
     position: absolute !important;
     top: 50% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) !important;
-    width: 55% !important;
-    max-width: 180px !important;
-    min-height: unset !important;
-    padding: 8px !important;
-    background: rgba(16, 54, 103, 0.85) !important;
-    border-radius: 12px !important;
-    z-index: 5 !important;
+    width: 75% !important;
+    max-width: 280px !important;
+    background: rgba(0, 32, 64, 0.85) !important;
+    border-radius: 15px !important;
+    padding: 15px !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4) !important;
+    z-index: 20 !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
   }
   
-  /* Optimizar textos para móvil - reducidos de tamaño */
-  .current-letter-display {
-    font-size: 1.8rem !important;
-    line-height: 1 !important;
-    margin: 0 auto 4px !important;
-  }
-  
-  .current-question {
-    font-size: 0.7rem !important;
-    line-height: 1.2 !important;
-    margin-bottom: 4px !important;
-  }
-  
-  .current-definition {
-    font-size: 0.65rem !important;
-    line-height: 1.2 !important;
-    max-height: 40px !important;
-    overflow-y: auto !important;
-    padding: 3px !important;
-    margin-bottom: 4px !important;
-  }
-  
-  /* Optimizar inputs - reducidos de tamaño */
-  .input-container {
-    height: 26px !important;
-    max-width: 140px !important;
-    margin: 0 auto 4px !important;
-  }
-  
-  .answer-input {
-    height: 26px !important;
-    font-size: 13px !important;
-    padding: 2px 8px !important;
-  }
-  
-  .submit-btn {
-    width: 22px !important;
-    height: 22px !important;
-    right: 2px !important;
-  }
-  
-  /* Botones compactos - reducidos de tamaño */
-  .skip-btn, .help-btn {
-    font-size: 0.65rem !important;
-    padding: 4px !important;
-    height: 24px !important;
-    max-width: 130px !important;
-    margin-bottom: 3px !important;
-  }
-  
-  /* Panel de estado DEBAJO del rosco en lugar de a la derecha */
+  /* Panel de estado vertical en el lado derecho */
   .rosco-status {
-    position: relative !important; /* Cambiado de fixed a relative para posicionarlo debajo */
-    right: auto !important;
-    top: auto !important;
-    transform: none !important;
-    flex-direction: row !important; /* Cambiado a horizontal */
-    width: 90% !important;
-    margin: 5px auto 10px !important;
-    padding: 5px !important;
-    background: rgba(13, 71, 161, 0.9) !important;
-    border-radius: 10px !important; /* Bordes redondeados en todos los lados */
-    z-index: 5 !important;
-    display: flex;
-    justify-content: space-around;
+    position: fixed !important;
+    right: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    background: rgba(0, 22, 44, 0.85) !important;
+    border-radius: 12px 0 0 12px !important;
+    padding: 8px 5px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 40px !important;
+    z-index: 50 !important;
+    box-shadow: -3px 0 10px rgba(0, 0, 0, 0.3) !important;
   }
   
-  /* Ajuste de los items de estado para layout horizontal */
-  .status-item {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2px;
-  }
-  
-  .status-icon {
-    font-size: 0.8rem !important;
-    margin-bottom: 2px;
-  }
-  
-  .status-label {
-    font-size: 0.55rem !important;
-    margin-bottom: 1px;
-  }
-  
-  .status-value {
-    font-size: 0.8rem !important;
-    font-weight: bold;
-  }
-  
-  /* Temporizador - reducido de tamaño */
-  .mini-timer {
-    padding: 2px 4px !important;
-    font-size: 0.7rem !important;
-    margin: 2px auto !important;
-  }
-  
-  /* Footer */
+  /* Ajustes para el footer para que no se superponga con el contenido */
   .policy-footer {
     position: fixed !important;
     bottom: 0 !important;
     left: 0 !important;
     width: 100% !important;
-    padding: 4px 8px !important;
-    background: rgba(0, 0, 0, 0.6) !important;
-    z-index: 50 !important;
-    height: auto !important;
-    max-height: 35px !important;
+    padding: 8px 5px !important;
+    background-color: rgba(0, 22, 44, 0.95) !important;
+    z-index: 100 !important;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3) !important;
   }
   
-  /* Links del footer */
-  .policy-footer a {
-    font-size: 0.6rem !important;
-    margin: 0 4px !important;
-  }
-  
-  /* Permitir scroll en la sección principal */
-  .container {
-    overflow-y: visible;
-    height: auto;
-    min-height: 100vh;
+  /* Mini timer en posición fija */
+  .mini-timer {
+    padding: 3px 8px !important;
+    font-size: 0.85rem !important;
+    margin: 5px auto !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2) !important;
   }
 }
 
