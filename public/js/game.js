@@ -1955,7 +1955,7 @@ function playSound(sound) {
           if (confirm('¿Estás seguro que deseas salir? Tu progreso actual se perderá.')) {
             window.history.back();
           }
-        } else {
+    } else {
           window.history.back();
         }
         
@@ -2015,8 +2015,8 @@ function playSound(sound) {
       const saved = localStorage.getItem('unlockedAchievements');
       if (saved) {
         unlockedAchievements = JSON.parse(saved);
-      }
-    } catch (e) {
+        }
+      } catch (e) {
       console.error("Error al cargar logros:", e);
       unlockedAchievements = [];
     }
@@ -2101,15 +2101,15 @@ function playSound(sound) {
    * Muestra el modal de logros con los logros desbloqueados en esta partida
    */
   function showAchievementsModal(sourceModalId) {
-    // Cancelar cualquier transición automática pendiente
-    cancelAllAutoTransitions();
-    
-    // Ocultar modal actual
-    const sourceModal = document.getElementById(sourceModalId);
-    if (sourceModal) {
-      sourceModal.classList.remove('show');
+  // Cancelar cualquier transición automática pendiente
+  cancelAllAutoTransitions();
+  
+  // Ocultar modal actual
+  const sourceModal = document.getElementById(sourceModalId);
+  if (sourceModal) {
+    sourceModal.classList.remove('show');
       setTimeout(() => {
-        sourceModal.style.display = 'none';
+    sourceModal.style.display = 'none';
       }, 300);
     }
     
@@ -2156,32 +2156,32 @@ function playSound(sound) {
         console.error("Error al reproducir sonido de logro:", e);
       }
     }
+  
+  // Mostrar modal de logros
+  const achievementsModal = document.getElementById('achievements-modal');
+  if (achievementsModal) {
+    achievementsModal.style.display = 'flex';
     
-    // Mostrar modal de logros
-    const achievementsModal = document.getElementById('achievements-modal');
-    if (achievementsModal) {
-      achievementsModal.style.display = 'flex';
-      
-      // Forzar reflow para asegurar animación
-      void achievementsModal.offsetWidth;
-      
-      achievementsModal.classList.add('show');
-      
-      // Iniciar contador regresivo visual
-      const countdownElement = achievementsModal.querySelector('.countdown');
-      if (countdownElement) {
-        startModalCountdown(countdownElement, 6);
-      }
-      
-      // Configurar temporizador para pasar automáticamente a las estadísticas
-      const timer = setTimeout(() => {
-        switchToStatsModal('achievements-modal');
-      }, 6000);
-      
-      // Guardar el temporizador para poder cancelarlo si es necesario
-      autoTransitionTimers.push(timer);
+    // Forzar reflow para asegurar animación
+    void achievementsModal.offsetWidth;
+    
+    achievementsModal.classList.add('show');
+    
+    // Iniciar contador regresivo visual
+    const countdownElement = achievementsModal.querySelector('.countdown');
+    if (countdownElement) {
+      startModalCountdown(countdownElement, 6);
     }
+    
+      // Configurar temporizador para pasar automáticamente a las estadísticas
+    const timer = setTimeout(() => {
+      switchToStatsModal('achievements-modal');
+    }, 6000);
+    
+    // Guardar el temporizador para poder cancelarlo si es necesario
+    autoTransitionTimers.push(timer);
   }
+}
 
   // Actualizar las funciones que muestran los modales de victoria/derrota/tiempo
   function showVictoryModal() {
@@ -2383,10 +2383,10 @@ function playSound(sound) {
         switchToStatsModal('achievements-modal');
         return;
       }
-      
-      // Limpiar contenedor
-      unlockedContainer.innerHTML = '';
-      
+    
+    // Limpiar contenedor
+    unlockedContainer.innerHTML = '';
+    
       // Obtener logro actual
       const achievementId = achievementsUnlocked[currentIndex];
       const achievement = window.GAME_ACHIEVEMENTS[achievementId];
@@ -2394,9 +2394,9 @@ function playSound(sound) {
       if (!achievement) {
         currentIndex++;
         showNextAchievement();
-        return;
-      }
-      
+            return;
+        }
+        
       // Actualizar título si hay múltiples logros
       if (modalTitle && achievementsUnlocked.length > 1) {
         modalTitle.textContent = `¡Logro Desbloqueado! (${currentIndex + 1}/${achievementsUnlocked.length})`;
@@ -2409,7 +2409,7 @@ function playSound(sound) {
       achievementElement.innerHTML = `
         <div class="achievement-icon">
           <i class="${achievement.icon || 'fas fa-award'}"></i>
-        </div>
+                </div>
         <div class="achievement-info">
           <h3>${achievement.title}</h3>
           <p>${achievement.description}</p>
@@ -2417,8 +2417,8 @@ function playSound(sound) {
             <span class="achievement-number">${currentIndex + 1}/${achievementsUnlocked.length}</span>
             <div class="achievement-label">¡LOGRO DESBLOQUEADO!</div>
           </div>
-        </div>
-      `;
+            </div>
+        `;
       
       // Añadir al contenedor
       unlockedContainer.appendChild(achievementElement);
@@ -2450,69 +2450,69 @@ function playSound(sound) {
     
     // Iniciar secuencia
     showNextAchievement();
-  }
+}
 
-  // Función para actualizar visualmente un contador regresivo en un modal
-  function startModalCountdown(countdownElement, seconds) {
-    if (!countdownElement) return;
-    
-    let remaining = seconds;
+// Función para actualizar visualmente un contador regresivo en un modal
+function startModalCountdown(countdownElement, seconds) {
+  if (!countdownElement) return;
+  
+  let remaining = seconds;
+  countdownElement.textContent = remaining;
+  
+  // Iniciar intervalo para actualizar el contador cada segundo
+  const countdownInterval = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(countdownInterval);
+      remaining = 0;
+    }
     countdownElement.textContent = remaining;
-    
-    // Iniciar intervalo para actualizar el contador cada segundo
-    const countdownInterval = setInterval(() => {
-      remaining--;
-      if (remaining <= 0) {
+  }, 1000);
+  
+  // Guardar el intervalo para poder cancelarlo si es necesario
+  autoTransitionTimers.push(countdownInterval);
+  
+  // Parar el intervalo si el usuario hace clic en el botón para avanzar manualmente
+  const modal = countdownElement.closest('.modal-content');
+  if (modal) {
+    const nextButton = modal.querySelector('.stats-arrow, .close-btn');
+    if (nextButton) {
+      nextButton.addEventListener('click', () => {
         clearInterval(countdownInterval);
-        remaining = 0;
-      }
-      countdownElement.textContent = remaining;
-    }, 1000);
-    
-    // Guardar el intervalo para poder cancelarlo si es necesario
-    autoTransitionTimers.push(countdownInterval);
-    
-    // Parar el intervalo si el usuario hace clic en el botón para avanzar manualmente
-    const modal = countdownElement.closest('.modal-content');
-    if (modal) {
-      const nextButton = modal.querySelector('.stats-arrow, .close-btn');
-      if (nextButton) {
-        nextButton.addEventListener('click', () => {
-          clearInterval(countdownInterval);
-        }, { once: true });
-      }
+      }, { once: true });
     }
   }
+}
 
-  // Cancelar todos los temporizadores de transición automática
-  function cancelAllAutoTransitions() {
-    while (autoTransitionTimers.length > 0) {
-      const timer = autoTransitionTimers.pop();
-      clearTimeout(timer);
-      clearInterval(timer);
-    }
+// Cancelar todos los temporizadores de transición automática
+function cancelAllAutoTransitions() {
+  while (autoTransitionTimers.length > 0) {
+    const timer = autoTransitionTimers.pop();
+    clearTimeout(timer);
+    clearInterval(timer);
   }
+}
 
-  // Función para cambiar del modal de estadísticas a la página de perfil
-  function switchToProfilePage() {
-    console.log("Redirigiendo a la página de perfil...");
-    
-    // Cancelar cualquier transición automática pendiente
-    cancelAllAutoTransitions();
-    
-    // Ocultar modal de estadísticas
-    const statsModal = document.getElementById('stats-modal');
-    if (statsModal) {
-      statsModal.classList.remove('show');
-      statsModal.style.display = 'none';
-    }
-    
-    // Asegurar que la bandera de juego completado esté establecida
-    localStorage.setItem('gameJustCompleted', 'true');
-    
-    // Redirigir a la página de perfil
+// Función para cambiar del modal de estadísticas a la página de perfil
+function switchToProfilePage() {
+  console.log("Redirigiendo a la página de perfil...");
+  
+  // Cancelar cualquier transición automática pendiente
+  cancelAllAutoTransitions();
+  
+  // Ocultar modal de estadísticas
+  const statsModal = document.getElementById('stats-modal');
+  if (statsModal) {
+    statsModal.classList.remove('show');
+    statsModal.style.display = 'none';
+  }
+  
+  // Asegurar que la bandera de juego completado esté establecida
+  localStorage.setItem('gameJustCompleted', 'true');
+  
+  // Redirigir a la página de perfil
     window.location.href = 'perfil.html';
-  }
+}
 
 });
 
