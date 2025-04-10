@@ -15,6 +15,7 @@
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <!-- Estilos -->
     <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/portal-mobile-fix.css" />
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Fuentes -->
@@ -270,8 +271,8 @@
               
               .coming-soon-banner {
                 position: absolute;
-                top: 64px;
-                right: -32px;
+                top: 24px;
+                right: -42px;
                 background: linear-gradient(135deg, #f43f5e, #e11d48);
                 color: white;
                 font-weight: 700;
@@ -285,6 +286,8 @@
                 justify-content: center;
                 gap: 6px;
                 animation: shine 2s infinite;
+                width: max-content;
+                max-width: 200px;
               }
               
               @keyframes shine {
@@ -721,5 +724,49 @@ const isMobile = window.innerWidth < 768;
     <script src="utils/notifications.js"></script>
     <script src="js/game-data.js"></script>
     <script src="js/global-footer.js"></script>
+    
+    <!-- Script para corregir problemas de visualización móvil -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Detectar si es un dispositivo móvil
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+          // Aplicar clase a body para optimizaciones móviles
+          document.body.classList.add('mobile-view');
+          
+          // Desactivar particles.js en dispositivos de baja gama para mejorar rendimiento
+          if (window.innerWidth < 480) {
+            const particlesContainer = document.getElementById('particles-js');
+            if (particlesContainer) {
+              particlesContainer.style.opacity = "0.3";
+            }
+          }
+          
+          // Corregir problema de scroll en iOS
+          document.documentElement.style.height = 'auto';
+          document.body.style.height = 'auto';
+          document.body.style.position = 'relative';
+          document.body.style.overflow = 'auto';
+          
+          // Mejorar el posicionamiento del banner próximamente en pantallas pequeñas
+          const comingSoonBanner = document.querySelector('.coming-soon-banner');
+          if (comingSoonBanner && window.innerWidth < 480) {
+            comingSoonBanner.style.top = '20px';
+            comingSoonBanner.style.right = '-45px';
+            comingSoonBanner.style.fontSize = '0.75rem';
+            comingSoonBanner.style.padding = '4px 45px';
+          }
+          
+          // Corregir el footer para asegurar que no se solapa con el contenido
+          const footer = document.querySelector('.policy-footer');
+          if (footer) {
+            footer.style.position = 'relative';
+            footer.style.bottom = 'auto';
+            footer.style.marginTop = '2rem';
+          }
+        }
+      });
+    </script>
 </body>
 </html> 
