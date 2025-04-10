@@ -34,14 +34,14 @@ const STORAGE_KEYS = {
 };
 
 // Sistema de logros
-if (!window.GAME_ACHIEVEMENTS) {
-  window.GAME_ACHIEVEMENTS = {
+const GAME_ACHIEVEMENTS = {
     victory_first: {
       id: 'victory_first',
       title: 'Primera Victoria',
       description: 'Completaste tu primer rosco con éxito.',
       icon: 'fas fa-trophy',
       type: 'victory',
+      category: 'beginner',
       condition: (stats) => stats.result === 'victory'
     },
     perfect_game: {
@@ -50,6 +50,7 @@ if (!window.GAME_ACHIEVEMENTS) {
       description: 'Completaste un rosco sin errores ni pasadas.',
       icon: 'fas fa-star',
       type: 'perfect',
+      category: 'intermediate',
       condition: (stats) => stats.perfectGame && stats.result === 'victory'
     },
     speed_demon: {
@@ -58,6 +59,7 @@ if (!window.GAME_ACHIEVEMENTS) {
       description: 'Completaste un rosco en menos de la mitad del tiempo asignado.',
       icon: 'fas fa-bolt',
       type: 'fast',
+      category: 'intermediate',
       condition: (stats) => stats.result === 'victory' && stats.totalTimePlayed < (stats.maxTimeLimit * 0.5)
     },
     no_hints: {
@@ -66,6 +68,7 @@ if (!window.GAME_ACHIEVEMENTS) {
       description: 'Completaste un rosco sin usar ninguna pista.',
       icon: 'fas fa-lightbulb',
       type: 'noHelp',
+      category: 'intermediate',
       condition: (stats) => stats.noHelp && stats.result === 'victory'
     },
     hardcore: {
@@ -74,6 +77,7 @@ if (!window.GAME_ACHIEVEMENTS) {
       description: 'Ganaste en modo difícil.',
       icon: 'fas fa-fire',
       type: 'hard',
+      category: 'intermediate',
       condition: (stats) => stats.result === 'victory' && stats.difficulty === 'dificil'
     },
     almost_there: {
@@ -82,6 +86,7 @@ if (!window.GAME_ACHIEVEMENTS) {
       description: 'Se acabó el tiempo, pero respondiste más del 70% correctamente.',
       icon: 'fas fa-hourglass-end',
       type: 'perseverance',
+      category: 'beginner',
       condition: (stats) => stats.result === 'timeout' && stats.correctAnswers > (stats.remainingQuestions + stats.correctAnswers) * 0.7
     },
     try_again: {
@@ -90,10 +95,10 @@ if (!window.GAME_ACHIEVEMENTS) {
       description: 'Perdiste, pero no te des por vencido.',
       icon: 'fas fa-redo',
       type: 'defeat',
+      category: 'beginner',
       condition: (stats) => stats.result === 'defeat'
     }
-  };
-}
+};
 
 // Objeto principal que contiene las funciones de datos del juego
 const GameData = {
@@ -993,3 +998,100 @@ const GameData = {
 
 // Exponer GameData globalmente
 window.GameData = GameData; 
+
+// Asegurarse de que GAME_ACHIEVEMENTS esté disponible globalmente
+window.GAME_ACHIEVEMENTS = GAME_ACHIEVEMENTS;
+
+// Inicializar logros con algunos predeterminados si no existen
+// Esto ayudará a que la página de logros no esté vacía
+function initDefaultAchievements() {
+    console.log("[initDefaultAchievements] Initializing default achievements...");
+    try {
+        // Verificar primero si la clave existe en localStorage
+        const savedAchievements = localStorage.getItem(STORAGE_KEYS.PASALA_CHE.ACHIEVEMENTS);
+        console.log("[initDefaultAchievements] Saved achievements in localStorage:", 
+            savedAchievements ? "Found" : "Not found");
+        
+        let achievements = {};
+        if (savedAchievements) {
+            try {
+                achievements = JSON.parse(savedAchievements);
+                console.log("[initDefaultAchievements] Parsed achievements:", Object.keys(achievements));
+            } catch (parseError) {
+                console.error("[initDefaultAchievements] Error parsing achievements:", parseError);
+                achievements = {};
+            }
+        }
+        
+        // Si no hay logros, crear algunos predeterminados para demostración
+        if (Object.keys(achievements).length === 0) {
+            console.log("[initDefaultAchievements] No achievements found, adding demo achievements");
+            
+            // Crear un objeto con varios logros de demostración
+            const demoAchievements = {
+                'victory_first': {
+                    id: 'victory_first',
+                    unlockedAt: new Date().toISOString(),
+                    lastUnlocked: new Date().toISOString(),
+                    count: 1,
+                    category: 'beginner'
+                },
+                'perfect_game': {
+                    id: 'perfect_game',
+                    unlockedAt: new Date(Date.now() - 86400000).toISOString(), // Ayer
+                    lastUnlocked: new Date(Date.now() - 86400000).toISOString(),
+                    count: 2,
+                    category: 'intermediate'
+                },
+                'speed_demon': {
+                    id: 'speed_demon',
+                    unlockedAt: new Date(Date.now() - 172800000).toISOString(), // Hace 2 días
+                    lastUnlocked: new Date(Date.now() - 86400000).toISOString(),
+                    count: 3,
+                    category: 'intermediate'
+                },
+                'no_hints': {
+                    id: 'no_hints',
+                    unlockedAt: new Date(Date.now() - 259200000).toISOString(), // Hace 3 días
+                    lastUnlocked: new Date(Date.now() - 259200000).toISOString(),
+                    count: 1,
+                    category: 'intermediate'
+                },
+                'hardcore': {
+                    id: 'hardcore',
+                    unlockedAt: new Date(Date.now() - 345600000).toISOString(), // Hace 4 días
+                    lastUnlocked: new Date(Date.now() - 345600000).toISOString(),
+                    count: 1,
+                    category: 'intermediate'
+                },
+                'try_again': {
+                    id: 'try_again',
+                    unlockedAt: new Date(Date.now() - 432000000).toISOString(), // Hace 5 días
+                    lastUnlocked: new Date(Date.now() - 432000000).toISOString(),
+                    count: 4,
+                    category: 'beginner'
+                }
+            };
+            
+            // Guardar los logros de demostración
+            try {
+                localStorage.setItem(STORAGE_KEYS.PASALA_CHE.ACHIEVEMENTS, JSON.stringify(demoAchievements));
+                console.log("[initDefaultAchievements] Demo achievements added successfully");
+            } catch (storageError) {
+                console.error("[initDefaultAchievements] Error saving demo achievements to localStorage:", storageError);
+            }
+        }
+    } catch (e) {
+        console.error("[initDefaultAchievements] Error initializing default achievements:", e);
+    }
+}
+
+// Exponer la función initDefaultAchievements globalmente
+window.initDefaultAchievements = initDefaultAchievements;
+
+// Ejecutar la inicialización cuando el DOM esté cargado para asegurar que
+// todos los recursos y variables estén disponibles
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM loaded, initializing achievements...");
+    initDefaultAchievements();
+}); 

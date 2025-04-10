@@ -335,20 +335,71 @@
   <script src="js/utils.js"></script>
   <script src="js/game-data.js"></script>
   <script>
+    // Debug function to directly check localStorage
+    function checkLocalStorageData() {
+      console.log("Checking localStorage data...");
+      
+      // Check all key prefixes related to achievements
+      const keys = {
+        pasalaCheAchievements: localStorage.getItem('pasalaChe_achievements'),
+        quienSabeAchievements: localStorage.getItem('quienSabe_achievements'),
+        unlockedAchievements: localStorage.getItem('unlockedAchievements'),
+        userData: localStorage.getItem('userData')
+      };
+      
+      console.log("localStorage keys found:", 
+        Object.keys(keys).filter(k => keys[k] !== null).join(', ') || 'none');
+      
+      // Parse and display the content of each found key
+      Object.keys(keys).forEach(key => {
+        if (keys[key]) {
+          try {
+            const data = JSON.parse(keys[key]);
+            console.log(`${key} content:`, data);
+          } catch (e) {
+            console.error(`Error parsing ${key}:`, e);
+          }
+        }
+      });
+      
+      // Check GAME_ACHIEVEMENTS global object
+      if (window.GAME_ACHIEVEMENTS) {
+        console.log("GAME_ACHIEVEMENTS global object exists with keys:", 
+          Object.keys(window.GAME_ACHIEVEMENTS));
+      } else {
+        console.error("GAME_ACHIEVEMENTS global object is not defined!");
+      }
+      
+      // Check GameData object
+      if (window.GameData) {
+        console.log("GameData object methods:", 
+          Object.keys(window.GameData).filter(k => typeof window.GameData[k] === 'function'));
+      } else {
+        console.error("GameData global object is not defined!");
+      }
+    }
+    
+    // Run the debug function immediately
+    checkLocalStorageData();
+    
     document.addEventListener('DOMContentLoaded', function() {
       const achievementsContainer = document.getElementById('achievements-container');
       if (!achievementsContainer) return;
       
+      console.log("DOM loaded, initializing achievements page...");
+      
       // Obtener logros del usuario desde GameData
       if (window.GameData && typeof GameData.getAchievements === 'function') {
+        console.log("GameData found, getting achievements...");
         const achievements = GameData.getAchievements();
+        console.log("Loaded achievements:", achievements);
         const achievementIds = Object.keys(achievements);
         
         if (achievementIds.length === 0) {
           // No hay logros desbloqueados
           achievementsContainer.innerHTML = `
             <div class="no-achievements">
-              <i class="fas fa-medal"></i>
+              <i class="fas fa-medal" style="font-size: 4rem; margin-bottom: 20px; color: #fdbb2d;"></i>
               <h3>Sin logros desbloqueados</h3>
               <p>Aún no has desbloqueado ningún logro.</p>
               <p>¡Sigue jugando para conseguirlos!</p>
@@ -358,22 +409,28 @@
         }
         
         // Referencia a la lista completa de logros
-        const gameAchievements = window.GameData.GAME_ACHIEVEMENTS || {};
+        const gameAchievements = window.GameData && GameData.GAME_ACHIEVEMENTS ? GameData.GAME_ACHIEVEMENTS : {};
+        console.log("Game achievements definitions:", gameAchievements);
         
         // Función para cargar logros filtrados por categoría
         function loadFilteredAchievements(category = 'all') {
+          console.log("Filtering achievements by category:", category);
+          
           // Filtrar logros por categoría
           const filteredIds = category === 'all' 
             ? achievementIds 
             : achievementIds.filter(id => {
-                const achievement = gameAchievements[id];
-                return achievement && achievement.category === category;
+                const achievement = achievements[id];
+                const achievementDef = gameAchievements[id];
+                return achievementDef && (achievementDef.category === category || achievement.category === category);
               });
+          
+          console.log("Filtered achievement IDs:", filteredIds);
           
           if (filteredIds.length === 0) {
             achievementsContainer.innerHTML = `
               <div class="no-achievements">
-                <i class="fas fa-medal"></i>
+                <i class="fas fa-medal" style="font-size: 4rem; margin-bottom: 20px; color: #fdbb2d;"></i>
                 <h3>No hay logros</h3>
                 <p>No hay logros disponibles en esta categoría.</p>
               </div>
@@ -386,6 +443,7 @@
           
           filteredIds.forEach(id => {
             const achievementData = gameAchievements[id];
+            const userAchievement = achievements[id];
             if (!achievementData) return;
             
             html += `
@@ -397,9 +455,9 @@
                   <h3 class="achievement-title">${achievementData.title}</h3>
                   <p class="achievement-description">${achievementData.description}</p>
                   <div class="achievement-date">
-                    Desbloqueado: ${new Date(achievements[id].unlockedAt).toLocaleDateString()}
+                    Desbloqueado: ${new Date(userAchievement.unlockedAt).toLocaleDateString()}
                   </div>
-                  <div class="achievement-count">Conseguido ${achievements[id].count || 1} veces</div>
+                  <div class="achievement-count">Conseguido ${userAchievement.count || 1} veces</div>
                 </div>
               </div>
             `;
@@ -426,12 +484,14 @@
         });
         
       } else {
+        console.error("GameData or getAchievements not found!");
         // GameData no disponible
         achievementsContainer.innerHTML = `
-          <div class="error-message">
-            <i class="fas fa-exclamation-triangle"></i>
+          <div class="error-message" style="text-align: center; padding: 40px; color: white;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 4rem; margin-bottom: 20px; color: #b21f1f;"></i>
             <h3>Error al cargar logros</h3>
-            <p>No se pudieron cargar los datos de logros. Por favor, inténtalo más tarde.</p>
+            <p>No se pudieron cargar los datos de logros.</p>
+            <p>Intenta jugar algunas partidas primero para desbloquear logros.</p>
           </div>
         `;
       }

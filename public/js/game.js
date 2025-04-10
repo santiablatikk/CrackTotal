@@ -43,6 +43,9 @@ document.addEventListener('DOMContentLoaded', function() {
   // Cargar la variable GAME_ACHIEVEMENTS desde GameData si está disponible
   if (window.GameData && GameData.GAME_ACHIEVEMENTS) {
       window.GAME_ACHIEVEMENTS = GameData.GAME_ACHIEVEMENTS;
+      console.log("Game achievements loaded from GameData:", window.GAME_ACHIEVEMENTS);
+  } else {
+      console.error("GameData.GAME_ACHIEVEMENTS not available!");
   }
   
   // DOM Elements
@@ -1055,7 +1058,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Configurar temporizador para avanzar automáticamente al modal de logros después de 6 segundos
       const timer = setTimeout(() => {
-        switchToAchievementsModal(modalType + '-modal');
+        showAchievementsSequentially(modalType + '-modal');
       }, 6000);
       
       // Guardar el temporizador para poder cancelarlo si es necesario
@@ -1083,9 +1086,9 @@ document.addEventListener('DOMContentLoaded', function() {
           // Cancelar cualquier transición automática pendiente
           cancelAllAutoTransitions();
           
-          // Mostrar modal de logros
+          // Mostrar modal de logros secuenciales
           const sourceModalId = this.closest('.modal').id;
-          switchToAchievementsModal(sourceModalId);
+          showAchievementsSequentially(sourceModalId);
         });
       }
     });
@@ -1121,78 +1124,57 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Configurar botones en el modal de estadísticas
   function configureStatsModalButtons() {
-    // Botón "Perfil"
-    const profileBtn = document.querySelector('.modal-actions a[href="perfil.html"]');
-    if (profileBtn) {
-      profileBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        // Cancelar cualquier redirección pendiente
-        if (window.redirectTimeout) {
-          clearTimeout(window.redirectTimeout);
-          window.redirectTimeout = null;
-        }
-        // Indicar que el juego acaba de ser completado
+    // Botón "PANEL DE ESTADÍSTICAS"
+    const dashboardBtn = document.getElementById('dashboard-btn');
+    if (dashboardBtn) {
+      // Limpiar event listeners anteriores
+      const newDashboardBtn = dashboardBtn.cloneNode(true);
+      dashboardBtn.parentNode.replaceChild(newDashboardBtn, dashboardBtn);
+      
+      // Añadir nuevo event listener
+      newDashboardBtn.addEventListener('click', function() {
+        // Cancelar cualquier transición automática pendiente
+        cancelAllAutoTransitions();
+        
+        // Asegurar que la bandera de juego completado esté establecida
         localStorage.setItem('gameJustCompleted', 'true');
-        // Redireccionar a la página de perfil
-        window.location.href = 'perfil.html';
+        
+        window.location.href = 'perfil.html'; // Actualizado aquí
       });
     }
     
     // Botón "Jugar de Nuevo"
     const playAgainBtn = document.getElementById('play-again-btn');
     if (playAgainBtn) {
-      playAgainBtn.addEventListener('click', function() {
-        // Cancelar cualquier redirección pendiente
-        if (window.redirectTimeout) {
-          clearTimeout(window.redirectTimeout);
-          window.redirectTimeout = null;
-        }
-        // Resetear el juego y ocultar modales
+      // Limpiar event listeners anteriores
+      const newPlayAgainBtn = playAgainBtn.cloneNode(true);
+      playAgainBtn.parentNode.replaceChild(newPlayAgainBtn, playAgainBtn);
+      
+      // Añadir nuevo event listener
+      newPlayAgainBtn.addEventListener('click', function() {
+        // Cancelar cualquier transición automática pendiente
+        cancelAllAutoTransitions();
+        
+        hideStatsModal();
+        hideModals();
         resetGame();
-        hideModals(); // Usando la función correcta que existe en el código
       });
     }
-
-    // Botón "Ver Mis Logros"
-    const achievementsBtn = document.getElementById('view-achievements-btn');
-    if (achievementsBtn) {
-      // Añadir clase especial para estilo
-      achievementsBtn.classList.add('btn-achievements');
-      achievementsBtn.addEventListener('click', function() {
-        // Cancelar cualquier redirección pendiente
-        if (window.redirectTimeout) {
-          clearTimeout(window.redirectTimeout);
-          window.redirectTimeout = null;
-        }
-        // Cambiar al modal de logros - Pasamos el ID del modal actual como fuente
-        switchToAchievementsModal('stats-modal');
-      });
-    }
-
-    // Botón "Volver al Inicio"
-    const returnHomeBtn = document.getElementById('return-home-btn');
-    if (returnHomeBtn) {
-      returnHomeBtn.addEventListener('click', function() {
-        // Cancelar cualquier redirección pendiente
-        if (window.redirectTimeout) {
-          clearTimeout(window.redirectTimeout);
-          window.redirectTimeout = null;
-        }
-        // Redireccionar a la página principal
-        window.location.href = 'game-rosco.html';
-      });
-    }
-
-    // Botón para cerrar el modal de estadísticas
-    const closeBtn = document.getElementById('close-stats-btn');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', function() {
-        // Cancelar cualquier redirección pendiente
-        if (window.redirectTimeout) {
-          clearTimeout(window.redirectTimeout);
-          window.redirectTimeout = null;
-        }
-        hideStatsModal(); // Usando la función correcta que existe en el código
+    
+    // Botón para cerrar estadísticas
+    const closeStatsBtn = document.getElementById('close-stats-btn');
+    if (closeStatsBtn) {
+      // Limpiar event listeners anteriores
+      const newCloseStatsBtn = closeStatsBtn.cloneNode(true);
+      closeStatsBtn.parentNode.replaceChild(newCloseStatsBtn, closeStatsBtn);
+      
+      // Añadir nuevo event listener
+      newCloseStatsBtn.addEventListener('click', function() {
+        // Cancelar cualquier transición automática pendiente
+        cancelAllAutoTransitions();
+        
+        // Redirigir a la página de perfil
+        switchToProfilePage();
       });
     }
   }
@@ -1446,27 +1428,15 @@ function playSound(sound) {
     }
   }
   
-  // Function unificada para ocultar todos los modales
+  // Function to hide all modals
   function hideModals() {
-    // Ocultar todos los modales mediante clases
-    const modals = document.querySelectorAll('.modal');
+    const modals = document.querySelectorAll('.result-modal, #achievements-modal');
     modals.forEach(modal => {
       modal.classList.remove('show');
       setTimeout(() => {
         modal.style.display = 'none';
       }, 300);
     });
-    
-    // También ocultar el modal de estadísticas (por si acaso)
-    hideStatsModal();
-    
-    // Cancelar cualquier transición automática pendiente
-    cancelAllAutoTransitions();
-  }
-  
-  // Alias para mantener compatibilidad con código existente
-  function hideAllModals() {
-    hideModals();
   }
   
   // Llamar a la inicialización de la UI
@@ -2358,11 +2328,12 @@ function playSound(sound) {
 
   // ... existing code ...
 
-  // Función para mostrar el modal de logros
-  function switchToAchievementsModal(sourceModalId) {
-    console.log("Switching to achievements modal from:", sourceModalId);
-    
-    // Cancelar cualquier transición automática pendiente
+  /**
+   * Muestra los logros desbloqueados uno por uno, cada uno durante 3 segundos
+   * @param {string} sourceModalId - ID del modal desde el que se muestra los logros
+   */
+  function showAchievementsSequentially(sourceModalId) {
+    // Cancelar transiciones automáticas pendientes
     cancelAllAutoTransitions();
     
     // Ocultar modal actual
@@ -2374,909 +2345,176 @@ function playSound(sound) {
       }, 300);
     }
     
-    // Si tenemos acceso al contenedor de logros
-    const achievementsContainer = document.getElementById('unlocked-achievements');
-    if (achievementsContainer) {
-      // Cargar todos los logros desbloqueados, no solo los de esta partida
-      try {
-        const unlockedAchievements = JSON.parse(localStorage.getItem('unlockedAchievements')) || [];
-        
-        // Limpiar el contenedor
-        achievementsContainer.innerHTML = '';
-        
-        if (unlockedAchievements.length === 0) {
-          // Si no hay logros desbloqueados, mostrar mensaje
-          achievementsContainer.innerHTML = `
-            <div class="no-achievements">
-              <i class="fas fa-trophy-alt"></i>
-              <p>Aún no has desbloqueado ningún logro. ¡Sigue jugando para conseguir logros!</p>
-            </div>
-          `;
-        } else {
-          // Añadir cada logro desbloqueado
-          unlockedAchievements.forEach((achievementId, index) => {
-            if (window.GAME_ACHIEVEMENTS && window.GAME_ACHIEVEMENTS[achievementId]) {
-              const achievement = window.GAME_ACHIEVEMENTS[achievementId];
-              
-              // Crear elemento para el logro
-              const achievementElement = document.createElement('div');
-              achievementElement.className = 'achievement-item';
-              achievementElement.style.setProperty('--animation-order', index);
-              
-              achievementElement.innerHTML = `
-                <div class="achievement-icon">
-                  <i class="${achievement.icon || 'fas fa-award'}"></i>
-                </div>
-                <div class="achievement-info">
-                  <h3>${achievement.title}</h3>
-                  <p>${achievement.description}</p>
-                </div>
-              `;
-              
-              achievementsContainer.appendChild(achievementElement);
-            }
-          });
-        }
-      } catch (e) {
-        console.error("Error al cargar logros:", e);
-        achievementsContainer.innerHTML = '<p>Error al cargar los logros</p>';
-      }
+    // Si no hay logros, ir directamente a las estadísticas
+    if (!achievementsUnlocked || achievementsUnlocked.length === 0) {
+      return switchToStatsModal(sourceModalId);
     }
     
-    // Mostrar modal de logros
+    // Obtener modal de logros
     const achievementsModal = document.getElementById('achievements-modal');
-    if (achievementsModal) {
-      achievementsModal.style.display = 'flex';
-      
-      // Forzar reflow para asegurar animación
-      void achievementsModal.offsetWidth;
-      
-      achievementsModal.classList.add('show');
-      
-      // Iniciar contador regresivo visual
-      const countdownElement = achievementsModal.querySelector('.countdown');
-      if (countdownElement) {
-        startModalCountdown(countdownElement, 6);
-      }
-      
-      // Configurar temporizador para pasar automáticamente a las estadísticas
-      const timer = setTimeout(() => {
-        // Si venimos de las estadísticas, no tiene sentido volver a ellas
-        if (sourceModalId === 'stats-modal') {
-          hideModals(); // Solo cerramos el modal
-        } else {
-          switchToStatsModal('achievements-modal');
-        }
-      }, 6000);
-      
-      // Guardar el temporizador para poder cancelarlo si es necesario
-      autoTransitionTimers.push(timer);
-    }
-  }
-
-  // ... existing code ...
-});
-
-// Función para mostrar mensajes sutiles
-function showGameMessage(message, type = 'info', duration = 2000) {
-  Utils.showNotification(message, type, duration); // Use Utils
-}
-
-// Close button on stats modal
-document.getElementById('close-stats-btn').addEventListener('click', function() {
-  hideStatsModal();
-});
-
-// New navigation buttons for the stats modal
-document.getElementById('profile-btn').addEventListener('click', function() {
-  window.location.href = 'profile.html';
-});
-
-document.getElementById('ranking-btn').addEventListener('click', function() {
-  window.location.href = 'ranking.html';
-});
-
-document.getElementById('play-again-btn').addEventListener('click', function() {
-  hideStatsModal();
-  hideModals();
-  resetGame();
-});
-
-// Después de guardar los resultados del juego en endGame() o donde corresponda
-
-// Asegurar que la información del jugador se guarde correctamente
-function savePlayerData(gameData) {
-  try {
-    console.log('Guardando datos del jugador:', gameData);
-
-    // --- Enviar al Ranking Global (NUEVO) ---
-    // Solo enviar si tenemos datos relevantes (nombre, score, fecha)
-    if (gameData.name && typeof gameData.score === 'number' && gameData.date) {
-      const rankingEntry = {
-        name: gameData.name,
-        score: gameData.score,
-        difficulty: gameData.difficulty || 'normal',
-        correct: gameData.correct || 0,
-        wrong: gameData.wrong || 0,
-        skipped: gameData.skipped || 0,
-        timeUsed: gameData.timeUsed || 0,
-        victory: gameData.victory || false,
-        date: gameData.date // Usar la fecha ya existente en gameData
-      };
-
-      fetch('/api/ranking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(rankingEntry),
-      })
-      .then(response => {
-        if (!response.ok) {
-          // Intentar leer el mensaje de error del servidor si existe
-          response.json().then(errData => {
-             console.error('Error al enviar al ranking (respuesta no OK):', response.status, errData);
-          }).catch(() => {
-             console.error('Error al enviar al ranking (respuesta no OK):', response.status, response.statusText);
-          });
-        } else {
-          console.log('Resultado enviado al ranking global correctamente.');
-        }
-      })
-      .catch(error => {
-        console.error('Error de red al enviar al ranking global:', error);
-      });
-    } else {
-        console.warn('No se enviarán datos al ranking global por falta de información esencial (nombre, score, fecha).', gameData);
-    }
-    // --- Fin Enviar al Ranking Global ---
-
-    // Intentar detectar la IP del usuario (MANTENIDO PARA HISTORIAL LOCAL)
-    detectAndSaveUserIP()
-      .then(userIP => {
-        // Guardar partida en el historial
-        saveGameToHistory(gameData, userIP);
-      })
-      .catch(error => {
-        console.error('Error al detectar IP:', error);
-        // Usar fallback en caso de error
-        saveGameToHistory(gameData, 'unknown');
-      });
+    if (!achievementsModal) return switchToStatsModal(sourceModalId);
     
-    // Si GameData está disponible, usar para guardar datos (para portal)
-    if (window.GameData) {
-      if (typeof window.GameData.savePasalaCheGame === 'function') {
-        // PASALA CHE data
-        window.GameData.savePasalaCheGame({
-          name: gameData.name,
-          difficulty: gameData.difficulty,
-          score: gameData.score,
-          correct: gameData.correct,
-          wrong: gameData.wrong,
-          skipped: gameData.skipped,
-          timeUsed: gameData.timeUsed,
-          timeRemaining: gameData.timeRemaining,
-          victory: gameData.victory,
-          letterDetails: gameData.incorrectItems
-        });
-      } else if (typeof window.GameData.updatePasalaCheStats === 'function') {
-        // PASALA CHE stats update
-        window.GameData.updatePasalaCheStats({
-          victory: gameData.victory,
-          correctAnswers: gameData.correct,
-          timeLeft: gameData.timeRemaining,
-          score: gameData.score,
-          perfect: gameData.wrong === 0 && gameData.skipped === 0
-        });
-      } else if (typeof window.GameData.saveQuienSabeGame === 'function') {
-        // QUIÉN SABE MÁS data
-        const totalQuestions = gameData.correct + gameData.wrong + gameData.skipped;
-        
-        // Construir detalles por categoría (ejemplo)
-        let categoryDetails = [];
-        
-        // Si no hay detalles, usar un valor predeterminado
-        categoryDetails.push({
-          category: 'General',
-          correct: gameData.correct,
-          total: totalQuestions
-        });
-        
-        // Guardar datos de QUIÉN SABE MÁS
-        if (typeof window.GameData.saveQuienSabeGame === 'function') {
-          window.GameData.saveQuienSabeGame({
-            ...gameData,
-            categoryDetails
-          });
-        }
-      }
-    } else {
-      console.warn('GameData no está disponible. Asegúrate de incluir game-data.js');
-    }
-    
-    // Verificar logros basados en esta partida (si la función está disponible)
-    if (typeof window.checkGameCompletionAchievements === 'function') {
-      window.checkGameCompletionAchievements(gameData);
-    }
-    
-    // Indicar explícitamente que un juego acaba de completarse
-    // Esto es clave para que el perfil se actualice automáticamente
-    localStorage.setItem('gameJustCompleted', 'true');
-    
-    // Añadir una marca de tiempo para asegurar que las páginas de perfil detecten un cambio reciente
-    localStorage.setItem('lastGameCompletionTimestamp', Date.now().toString());
-    
-    console.log('Datos del jugador guardados localmente y envío a ranking iniciado.');
-    
-    // Disparar un evento personalizado que puede ser escuchado por otras partes de la aplicación
-    document.dispatchEvent(new CustomEvent('gameDataSaved', { 
-      detail: { 
-        gameType: 'pasalaChe',
-        gameData: gameData,
-        timestamp: Date.now()
-      } 
-    }));
-    
-  } catch (error) {
-    console.error('Error al guardar datos del jugador:', error);
-  }
-}
-
-// Función para guardar partida en el historial
-function saveGameToHistory(gameData, userIP) {
-  try {
-    console.log('Guardando partida en historial para IP:', userIP);
-    // Key para guardar historial en localStorage
-    const historyKey = `gameHistory_${userIP}`;
-    
-    // Obtener historial existente o crear uno nuevo
-    let history = [];
-    const existingHistory = localStorage.getItem(historyKey);
-    
-    if (existingHistory) {
-      try {
-        history = JSON.parse(existingHistory);
-        if (!Array.isArray(history)) {
-          history = [];
-        }
-      } catch (e) {
-        console.error('Error al parsear historial existente:', e);
-        history = [];
-      }
-    }
-    
-    // Añadir nueva partida al inicio
-    history.unshift(gameData);
-    
-    // Limitar historial a 50 partidas
-    if (history.length > 50) {
-      history = history.slice(0, 50);
-    }
-    
-    // Guardar historial actualizado
-    localStorage.setItem(historyKey, JSON.stringify(history));
-    
-    // Actualizar perfil del usuario
-    updateUserProfile(gameData, userIP);
-    
-    // Establecer la bandera de juego completado para que el perfil se actualice automáticamente
-    localStorage.setItem('gameJustCompleted', 'true');
-    
-    console.log('Historial de juego guardado correctamente');
-  } catch (error) {
-    console.error('Error al guardar historial:', error);
-  }
-}
-
-// Función para actualizar el perfil del usuario
-function updateUserProfile(gameData, userIP) {
-  try {
-    // Key para guardar perfil en localStorage
-    const profileKey = `profile_${userIP}`;
-    
-    // Intentar obtener perfil existente
-    let profile = {
-      name: gameData.name || 'Jugador',
-      gamesPlayed: 0,
-      totalScore: 0,
-      bestScore: 0,
-      totalCorrect: 0,
-      totalWrong: 0,
-      totalSkipped: 0,
-      victories: 0,
-      defeats: 0,
-      lastPlayed: new Date().toISOString()
-    };
-    
-    const existingProfile = localStorage.getItem(profileKey);
-    if (existingProfile) {
-      try {
-        const parsedProfile = JSON.parse(existingProfile);
-        if (parsedProfile && typeof parsedProfile === 'object') {
-          profile = { ...profile, ...parsedProfile };
-        }
-      } catch (e) {
-        console.error('Error al parsear perfil existente:', e);
-      }
-    }
-    
-    // Actualizar estadísticas
-    profile.gamesPlayed += 1;
-    profile.totalScore += gameData.score || 0;
-    profile.bestScore = Math.max(profile.bestScore, gameData.score || 0);
-    profile.totalCorrect += gameData.correct || 0;
-    profile.totalWrong += gameData.wrong || 0;
-    profile.totalSkipped += gameData.skipped || 0;
-    profile.lastPlayed = new Date().toISOString();
-    
-    if (gameData.victory) {
-      profile.victories += 1;
-    } else {
-      profile.defeats += 1;
-    }
-    
-    // Guardar perfil actualizado
-    localStorage.setItem(profileKey, JSON.stringify(profile));
-    
-    console.log('Perfil de usuario actualizado:', profile);
-  } catch (error) {
-    console.error('Error al actualizar perfil:', error);
-  }
-}
-
-// Función para detectar y guardar IP del usuario
-async function detectAndSaveUserIP() {
-  try {
-    // Intentar usar servicios externos para detectar IP
-    const response = await fetch('https://api.ipify.org?format=json');
-    if (response.ok) {
-      const data = await response.json();
-      const ip = data.ip;
-      localStorage.setItem('userIP', ip);
-      return ip;
-    }
-    
-    // Alternativa si la primera falla
-    const backupResponse = await fetch('https://ipapi.co/json/');
-    if (backupResponse.ok) {
-      const backupData = await backupResponse.json();
-      const ip = backupData.ip;
-      localStorage.setItem('userIP', ip);
-      return ip;
-    }
-    
-    // Si ambas fallan, usar una combinación de timestamp y user agent
-    const userAgent = navigator.userAgent;
-    const timestamp = new Date().getTime();
-    const fallbackID = `user-${btoa(userAgent).substring(0, 8)}-${timestamp}`;
-    localStorage.setItem('userIP', fallbackID);
-    return fallbackID;
-  } catch (error) {
-    console.error('Error al detectar IP:', error);
-    return null;
-  }
-}
-
-// Función para cambiar de un modal de resultado al modal de logros
-function switchToAchievementsModal(sourceModalId) {
-  console.log("Switching to achievements modal from:", sourceModalId);
-  
-  // Cancelar cualquier transición automática pendiente
-  cancelAllAutoTransitions();
-  
-  // Ocultar modal actual
-  const sourceModal = document.getElementById(sourceModalId);
-  if (sourceModal) {
-    sourceModal.classList.remove('show');
-    sourceModal.style.display = 'none';
-  }
-  
-  // Llenar modal de logros
-  fillAchievementsModal();
-  
-  // Mostrar modal de logros
-  const achievementsModal = document.getElementById('achievements-modal');
-  if (achievementsModal) {
-    achievementsModal.style.display = 'flex';
-    
-    // Forzar reflow para asegurar animación
-    void achievementsModal.offsetWidth;
-    
-    achievementsModal.classList.add('show');
-    
-    // Iniciar contador regresivo visual
-    const countdownElement = achievementsModal.querySelector('.countdown');
-    if (countdownElement) {
-      startModalCountdown(countdownElement, 6);
-    }
-    
-    // Configurar temporizador para avanzar automáticamente al modal de estadísticas después de 6 segundos
-    const timer = setTimeout(() => {
-      switchToStatsModal('achievements-modal');
-    }, 6000);
-    
-    // Guardar el temporizador para poder cancelarlo si es necesario
-    autoTransitionTimers.push(timer);
-  }
-}
-
-// Function to load achievements after a game
-function loadAchievements(container) {
-  container.innerHTML = '';
-  
-  // Check if we have the gameJustCompleted flag
-  const gameJustCompleted = localStorage.getItem('gameJustCompleted') === 'true';
-  
-  // Get achievements from localStorage
-  let achievements = [];
-  try {
-    const userIP = localStorage.getItem('userIP') || 'unknown';
-    const storageKey = `userAchievements_${userIP}`;
-    const savedAchievements = localStorage.getItem(storageKey);
-    
-    if (savedAchievements) {
-      achievements = JSON.parse(savedAchievements);
-      
-      // Filter only achievements unlocked in the last 5 minutes (recently unlocked)
-      const fiveMinutesAgo = new Date();
-      fiveMinutesAgo.setMinutes(fiveMinutesAgo.getMinutes() - 5);
-      
-      const recentAchievements = achievements.filter(achievement => {
-        if (!achievement.date) return false;
-        const unlockDate = new Date(achievement.date);
-        return unlockDate > fiveMinutesAgo;
-      });
-      
-      // If we have recent achievements, display them
-      if (recentAchievements.length > 0) {
-        recentAchievements.forEach(achievement => {
-          const card = createAchievementCard(achievement);
-          container.appendChild(card);
-        });
-        return;
-      }
-    }
-  } catch (error) {
-    console.error('Error loading achievements:', error);
-  }
-  
-  // If no achievements or error, show default message
-  const noAchievements = document.createElement('div');
-  noAchievements.className = 'no-achievements';
-  noAchievements.innerHTML = `
-    <i class="fas fa-trophy"></i>
-    <p>¡Sigue jugando para desbloquear logros!</p>
-  `;
-  container.appendChild(noAchievements);
-}
-
-// Function to create achievement card
-function createAchievementCard(achievement) {
-  const card = document.createElement('div');
-  card.className = 'achievement-card';
-  
-  card.innerHTML = `
-    <div class="achievement-icon">
-      <i class="${achievement.icon || 'fas fa-medal'}"></i>
-    </div>
-    <div class="achievement-info">
-      <div class="achievement-title">${achievement.title || achievement.id}</div>
-      <div class="achievement-description">${achievement.description || '¡Nuevo logro desbloqueado!'}</div>
-    </div>
-  `;
-  
-  return card;
-}
-
-// Nueva función para mostrar anuncio durante pausas en el juego
-function showPauseAd() {
-  // Solo mostrar si el usuario ha aceptado anuncios
-  if (localStorage.getItem("adConsent") !== "true") return;
-  
-  // Solo mostrar si el juego está en progreso
-  if (!gameStarted) return;
-  
-  // Evitar mostrar anuncios con demasiada frecuencia
-  const lastPauseAd = parseInt(localStorage.getItem('lastPauseAdTimestamp') || '0');
-  const now = Date.now();
-  
-  // Solo mostrar un anuncio de pausa cada 3 minutos como mínimo
-  if (now - lastPauseAd < 3 * 60 * 1000) return;
-  
-  // Pausar el juego
-  const currentTimerState = remainingTime;
-  clearInterval(timerInterval);
-  
-  // Mostrar el contenedor de anuncios de pausa
-  const pauseAdContainer = document.getElementById('pause-ad');
-  if (!pauseAdContainer) return;
-  
-  // Crear contenido del anuncio de pausa
-  pauseAdContainer.innerHTML = `
-    <div class="pause-ad-header">
-      <div class="pause-ad-title">Juego en pausa</div>
-      <button class="pause-ad-close" id="close-pause-ad">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="ad-label">PUBLICIDAD</div>
-    <div class="ad-loading"></div>
-  `;
-  
-  pauseAdContainer.style.display = 'block';
-  
-  // Cargar el anuncio real después de mostrar el indicador de carga
-  setTimeout(() => {
-    pauseAdContainer.querySelector('.ad-loading').outerHTML = `
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-9579152019412427"
-           data-ad-slot="9876543210"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-    `;
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  }, 600);
-  
-  // Configurar el botón de cierre
-  document.getElementById('close-pause-ad').addEventListener('click', function() {
-    pauseAdContainer.style.display = 'none';
-    
-    // Guardar timestamp para evitar mostrar otro anuncio pronto
-    localStorage.setItem('lastPauseAdTimestamp', Date.now().toString());
-    
-    // Reanudar el juego
-    remainingTime = currentTimerState;
-    startTimer();
-  });
-  
-  // Forzar cierre automático después de 20 segundos 
-  setTimeout(() => {
-    if (pauseAdContainer.style.display !== 'none') {
-      pauseAdContainer.style.display = 'none';
-      
-      // Guardar timestamp
-      localStorage.setItem('lastPauseAdTimestamp', Date.now().toString());
-      
-      // Reanudar el juego
-      remainingTime = currentTimerState;
-      startTimer();
-    }
-  }, 20000);
-}
-
-// Escuchar por eventos de activación/desactivación para mostrar anuncios
-document.addEventListener('visibilitychange', function() {
-  if (document.visibilityState === 'hidden' && gameStarted) {
-    // El usuario cambió de pestaña o minimizó - pausa el juego
-    clearInterval(timerInterval);
-  } else if (document.visibilityState === 'visible' && gameStarted) {
-    // El usuario volvió - considera mostrar un anuncio antes de reanudar
-    const wasAwayTime = parseInt(localStorage.getItem('lastHiddenTimestamp') || '0');
-    const now = Date.now();
-    
-    if (wasAwayTime && now - wasAwayTime > 30000) {
-      // Si estuvo ausente más de 30 segundos, mostrar anuncio de pausa
-      showPauseAd();
-    } else {
-      // Si no, simplemente reanudar el juego
-      startTimer();
-    }
-  }
-});
-
-// Almacenar el timestamp cuando el usuario se va
-window.addEventListener('beforeunload', function() {
-  if (gameStarted) {
-    localStorage.setItem('lastHiddenTimestamp', Date.now().toString());
-  }
-});
-
-// Evento para mostrar anuncio de pausa cuando el usuario presiona pausa (tecla ESC)
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape' && gameStarted) {
-    e.preventDefault();
-    showPauseAd();
-  }
-});
-
-// Añadir estilos dinámicamente
-const styleEl = document.createElement('style');
-styleEl.textContent = `
-  .floating-sound-btn, .sound-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background-color: rgba(0, 0, 0, 0.3);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 44px;
-    height: 44px;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s;
-    backdrop-filter: blur(5px);
-    z-index: 100;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-  
-  .sound-btn:hover {
-    background-color: rgba(225, 29, 72, 0.7);
-    transform: scale(1.1);
-  }
-`;
-document.head.appendChild(styleEl);
-// Función para verificar y desbloquear logros basados en el rendimiento del juego
-function checkForAchievements(gameData) {
-  try {
-    console.log('Verificando logros para la partida actual...');
-    
-    // Obtener IP del usuario
-    const userIP = localStorage.getItem('userIP') || 'unknown';
-    
-    // Obtener historial de juego para verificar logros acumulativos
-    const historyKey = `gameHistory_${userIP}`;
-    let gameHistory = [];
-    
-    try {
-      const savedHistory = localStorage.getItem(historyKey);
-      if (savedHistory) {
-        gameHistory = JSON.parse(savedHistory);
-        if (!Array.isArray(gameHistory)) {
-          gameHistory = [];
-        }
-      }
-    } catch (e) {
-      console.error('Error al cargar historial para logros:', e);
-      gameHistory = [];
-    }
-    
-    // Añadir la partida actual al inicio para incluirla en las verificaciones
-    gameHistory.unshift(gameData);
-    
-    // Definir los logros a comprobar
-    const achievementsToCheck = [
-      // Logros de Principiante
-      {
-        id: 'first_game',
-        check: () => true, // Se desbloquea con la primera partida
-        category: 'beginner'
-      },
-      {
-        id: 'fifth_game',
-        check: () => gameHistory.length >= 5,
-        category: 'beginner'
-      },
-      {
-        id: 'beginner_score',
-        check: () => gameData.score >= 100,
-        category: 'beginner'
-      },
-      
-      // Logros Intermedios
-      {
-        id: 'perfect_game',
-        check: () => gameData.wrong === 0 && gameData.victory === true,
-        category: 'intermediate'
-      },
-      {
-        id: 'fast_game',
-        check: () => gameData.timeRemaining >= 150 && gameData.victory === true, // 2.5 minutos restantes
-        category: 'intermediate'
-      },
-      {
-        id: 'comeback',
-        check: () => gameData.wrong >= 2 && gameData.victory === true, // Ganar con 2 errores
-        category: 'intermediate'
-      },
-      
-      // Logros Experto
-      {
-        id: 'hard_victory',
-        check: () => gameData.difficulty === 'dificil' && gameData.victory === true,
-        category: 'expert'
-      },
-      {
-        id: 'no_skip',
-        check: () => gameData.skipped === 0 && gameData.victory === true,
-        category: 'expert'
-      },
-      {
-        id: 'perfect_hard',
-        check: () => gameData.difficulty === 'dificil' && gameData.wrong === 0 && gameData.victory === true,
-        category: 'expert'
-      },
-      
-      // Logros Especiales
-      {
-        id: 'three_in_a_row',
-        check: () => {
-          if (gameHistory.length < 3) return false;
-          return gameHistory[0].victory && gameHistory[1].victory && gameHistory[2].victory;
-        },
-        category: 'special'
-      },
-      {
-        id: 'cumulative_score',
-        check: () => {
-          const totalScore = gameHistory.reduce((sum, game) => sum + (game.score || 0), 0);
-          return totalScore >= 1000;
-        },
-        category: 'special'
-      },
-      {
-        id: 'speed_demon',
-        check: () => gameData.timeRemaining >= 180 && gameData.difficulty === 'dificil' && gameData.victory === true,
-        category: 'special'
-      }
-    ];
-    
-    // Intentar desbloquear los logros
-    achievementsToCheck.forEach(achievement => {
-      if (achievement.check()) {
-        unlockAchievement(achievement.id);
-      }
-    });
-    
-    console.log('Verificación de logros completada');
-  } catch (error) {
-    console.error('Error en la verificación de logros:', error);
-  }
-}
-
-/**
- * Desbloquea un logro
- * @param {string} achievementId - ID del logro a desbloquear
- */
-function unlockAchievement(achievementId) {
-    console.log(`Desbloqueando logro: ${achievementId}`);
-    
-    // Usar GameData si está disponible
-    if (window.GameData && typeof GameData.unlockAchievement === 'function') {
-        GameData.unlockAchievement(achievementId);
-    }
-    // Usar la función global como fallback si existe
-    else if (typeof window.unlockAchievement === 'function' && window.unlockAchievement !== this) {
-        window.unlockAchievement(achievementId);
-    }
-}
-
-// Configurar logger para evitar loggear en producción
-const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-const logger = {
-  log: isProduction ? function(){} : console.log,
-  warn: isProduction ? function(){} : console.warn,
-  error: console.error // Mantener errores siempre
-};
-
-// Reemplazar todos los console.log por logger.log
-// ... resto del código existente ...
-
-/**
- * Llena el modal de logros con los logros desbloqueados
- */
-function fillAchievementsModal() {
+    // Preparar el modal para mostrar logros uno por uno
     const unlockedContainer = document.getElementById('unlocked-achievements');
-    if (!unlockedContainer) return;
+    if (!unlockedContainer) return switchToStatsModal(sourceModalId);
+    
+    // Ocultar elementos innecesarios del modal
+    const statsArrow = achievementsModal.querySelector('.stats-arrow');
+    const progressBar = achievementsModal.querySelector('.auto-progress-bar');
+    const progressText = achievementsModal.querySelector('.auto-progress-text');
+    
+    if (statsArrow) statsArrow.style.display = 'none';
+    if (progressBar) progressBar.style.display = 'none';
+    if (progressText) progressText.style.display = 'none';
+    
+    // Cambiar título del modal
+    const modalTitle = achievementsModal.querySelector('h2');
+    if (modalTitle) modalTitle.textContent = '¡Nuevo Logro Desbloqueado!';
     
     // Limpiar contenedor
     unlockedContainer.innerHTML = '';
     
-    // Obtener logros del GameData
-    if (window.GameData && typeof GameData.getAchievements === 'function') {
-        const achievements = GameData.getAchievements();
-        const achievementIds = Object.keys(achievements);
-        
-        if (achievementIds.length === 0) {
-            // No hay logros desbloqueados
-            unlockedContainer.innerHTML = `
-                <div class="no-achievements">
-                    <i class="fas fa-medal"></i>
-                    <p>Aún no has desbloqueado ningún logro.</p>
-                    <p>¡Sigue jugando para conseguirlos!</p>
-                </div>
-            `;
-            return;
+    // Mostrar logros en secuencia
+    let currentIndex = 0;
+    
+    function showNextAchievement() {
+      // Si terminamos todos los logros, mostrar estadísticas
+      if (currentIndex >= achievementsUnlocked.length) {
+        switchToStatsModal('achievements-modal');
+        return;
+      }
+      
+      // Limpiar contenedor
+      unlockedContainer.innerHTML = '';
+      
+      // Obtener logro actual
+      const achievementId = achievementsUnlocked[currentIndex];
+      const achievement = window.GAME_ACHIEVEMENTS[achievementId];
+      
+      if (!achievement) {
+        currentIndex++;
+        showNextAchievement();
+        return;
+      }
+      
+      // Actualizar título si hay múltiples logros
+      if (modalTitle && achievementsUnlocked.length > 1) {
+        modalTitle.textContent = `¡Logro Desbloqueado! (${currentIndex + 1}/${achievementsUnlocked.length})`;
+      }
+      
+      // Crear elemento de logro
+      const achievementElement = document.createElement('div');
+      achievementElement.className = 'achievement-item';
+      
+      achievementElement.innerHTML = `
+        <div class="achievement-icon">
+          <i class="${achievement.icon || 'fas fa-award'}"></i>
+        </div>
+        <div class="achievement-info">
+          <h3>${achievement.title}</h3>
+          <p>${achievement.description}</p>
+          <div class="achievement-progress">
+            <span class="achievement-number">${currentIndex + 1}/${achievementsUnlocked.length}</span>
+            <div class="achievement-label">¡LOGRO DESBLOQUEADO!</div>
+          </div>
+        </div>
+      `;
+      
+      // Añadir al contenedor
+      unlockedContainer.appendChild(achievementElement);
+      
+      // Reproducir sonido
+      if (window.achievementSound && soundEnabled) {
+        try {
+          achievementSound.currentTime = 0;
+          achievementSound.play();
+        } catch (e) {
+          console.error("Error al reproducir sonido:", e);
         }
-        
-        // Mostrar logros desbloqueados
-        achievementIds.forEach(id => {
-            // Obtener datos del logro
-            const achievementData = window.GAME_ACHIEVEMENTS ? 
-                window.GAME_ACHIEVEMENTS[id] : null;
-            
-            if (!achievementData) return;
-            
-            // Crear tarjeta de logro
-            const card = document.createElement('div');
-            card.className = 'achievement-card';
-            card.innerHTML = `
-                <div class="achievement-card-icon">
-                    <i class="${achievementData.icon}"></i>
-                </div>
-                <div class="achievement-card-title">${achievementData.title}</div>
-                <div class="achievement-card-desc">${achievementData.description}</div>
-                <div class="achievement-card-count">x${achievements[id].count || 1}</div>
-            `;
-            
-            unlockedContainer.appendChild(card);
-        });
-    } else {
-        // GameData no disponible
-        unlockedContainer.innerHTML = `
-            <div class="error-message">
-                <i class="fas fa-exclamation-triangle"></i>
-                <p>No se pudieron cargar los logros.</p>
-            </div>
-        `;
+      }
+      
+      // Mostrar modal si es el primer logro
+      if (currentIndex === 0) {
+        achievementsModal.style.display = 'flex';
+        void achievementsModal.offsetWidth; // Forzar reflow
+        achievementsModal.classList.add('show');
+      }
+      
+      // Avanzar al siguiente logro
+      currentIndex++;
+      
+      // Programar siguiente logro en 3 segundos
+      const timer = setTimeout(showNextAchievement, 3000);
+      autoTransitionTimers.push(timer);
     }
-}
+    
+    // Iniciar secuencia
+    showNextAchievement();
+  }
 
-// Función para actualizar visualmente un contador regresivo en un modal
-function startModalCountdown(countdownElement, seconds) {
-  if (!countdownElement) return;
-  
-  let remaining = seconds;
-  countdownElement.textContent = remaining;
-  
-  // Iniciar intervalo para actualizar el contador cada segundo
-  const countdownInterval = setInterval(() => {
-    remaining--;
-    if (remaining <= 0) {
-      clearInterval(countdownInterval);
-      remaining = 0;
-    }
+  // Función para actualizar visualmente un contador regresivo en un modal
+  function startModalCountdown(countdownElement, seconds) {
+    if (!countdownElement) return;
+    
+    let remaining = seconds;
     countdownElement.textContent = remaining;
-  }, 1000);
-  
-  // Guardar el intervalo para poder cancelarlo si es necesario
-  autoTransitionTimers.push(countdownInterval);
-  
-  // Parar el intervalo si el usuario hace clic en el botón para avanzar manualmente
-  const modal = countdownElement.closest('.modal-content');
-  if (modal) {
-    const nextButton = modal.querySelector('.stats-arrow, .close-btn');
-    if (nextButton) {
-      nextButton.addEventListener('click', () => {
+    
+    // Iniciar intervalo para actualizar el contador cada segundo
+    const countdownInterval = setInterval(() => {
+      remaining--;
+      if (remaining <= 0) {
         clearInterval(countdownInterval);
-      }, { once: true });
+        remaining = 0;
+      }
+      countdownElement.textContent = remaining;
+    }, 1000);
+    
+    // Guardar el intervalo para poder cancelarlo si es necesario
+    autoTransitionTimers.push(countdownInterval);
+    
+    // Parar el intervalo si el usuario hace clic en el botón para avanzar manualmente
+    const modal = countdownElement.closest('.modal-content');
+    if (modal) {
+      const nextButton = modal.querySelector('.stats-arrow, .close-btn');
+      if (nextButton) {
+        nextButton.addEventListener('click', () => {
+          clearInterval(countdownInterval);
+        }, { once: true });
+      }
     }
   }
-}
 
-// Cancelar todos los temporizadores de transición automática
-function cancelAllAutoTransitions() {
-  while (autoTransitionTimers.length > 0) {
-    const timer = autoTransitionTimers.pop();
-    clearTimeout(timer);
-    clearInterval(timer);
+  // Cancelar todos los temporizadores de transición automática
+  function cancelAllAutoTransitions() {
+    while (autoTransitionTimers.length > 0) {
+      const timer = autoTransitionTimers.pop();
+      clearTimeout(timer);
+      clearInterval(timer);
+    }
   }
-}
 
-// Función para cambiar del modal de estadísticas a la página de perfil
-function switchToProfilePage() {
-  console.log("Redirigiendo a la página de perfil...");
-  
-  // Cancelar cualquier transición automática pendiente
-  cancelAllAutoTransitions();
-  
-  // Ocultar modal de estadísticas
-  const statsModal = document.getElementById('stats-modal');
-  if (statsModal) {
-    statsModal.classList.remove('show');
-    statsModal.style.display = 'none';
+  // Función para cambiar del modal de estadísticas a la página de perfil
+  function switchToProfilePage() {
+    console.log("Redirigiendo a la página de perfil...");
+    
+    // Cancelar cualquier transición automática pendiente
+    cancelAllAutoTransitions();
+    
+    // Ocultar modal de estadísticas
+    const statsModal = document.getElementById('stats-modal');
+    if (statsModal) {
+      statsModal.classList.remove('show');
+      statsModal.style.display = 'none';
+    }
+    
+    // Asegurar que la bandera de juego completado esté establecida
+    localStorage.setItem('gameJustCompleted', 'true');
+    
+    // Redirigir a la página de perfil
+    window.location.href = 'perfil.html';
   }
-  
-  // Asegurar que la bandera de juego completado esté establecida
-  localStorage.setItem('gameJustCompleted', 'true');
-  
-  // Redirigir a la página de perfil
-  window.location.href = 'perfil.html';
-}
+
+});
 
 
 
