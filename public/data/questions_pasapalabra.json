@@ -430,7 +430,7 @@
       },
       {
         "pregunta": "Nombre completo del mediocampista español del Barcelona, Golden Boy 2022.",
-        "respuesta": "Gavi Paez"
+        "respuesta": "Gavi"
       },
       {
         "pregunta": "Club turco de Estambul, 24 veces campeón de liga.",
@@ -491,7 +491,7 @@
       },
       {
         "pregunta": "Nombre completo del futbolista surcoreano del Tottenham.",
-        "respuesta": "Son Heung-min"
+        "respuesta": "Heung min Son"
       },
       {
         "pregunta": "Nombre completo del ex arquero francés campeón del mundo 2018, actualmente en LAFC.",
@@ -563,16 +563,12 @@
         "respuesta": "Inaki Williams"
       },
       {
-        "pregunta": "CONTIENE I: Nombre completo del futbolista brasileño del Real Madrid.",
+        "pregunta": "CONTIENE I: Nombre completo del extremo brasileño del Real Madrid.",
         "respuesta": "Vinicius Junior"
       },
       {
         "pregunta": "CONTIENE I: Apellido del técnico argentino del Atlético de Madrid.",
         "respuesta": "Simeone"
-      },
-      {
-        "pregunta": "CONTIENE I: Apellido del mediocampista alemán del Barcelona.",
-        "respuesta": "Gundogan"
       },
       {
         "pregunta": "CONTIENE I: Apellido del ex defensor italiano, leyenda de la Juventus y campeón de Europa 2020.",
@@ -640,10 +636,6 @@
         "respuesta": "Araujo"
       },
       {
-        "pregunta": "CONTIENE J: Apellido del futbolista argelino que jugó en el Manchester City, actualmente en Al-Ahli.",
-        "respuesta": "Mahrez"
-      },
-      {
         "pregunta": "CONTIENE J: Apellido del mediocampista neerlandés del Barcelona (Frenkie...).",
         "respuesta": "De Jong"
       },
@@ -701,7 +693,7 @@
         "respuesta": "Lewandowski"
       },
       {
-        "pregunta": "CONTIENE K: Apellido del defensor senegalés que jugó en Napoli y Chelsea, actualmente en Al-Hilal.",
+        "pregunta": "Apellido del defensor senegalés que jugó en Napoli y Chelsea, actualmente en Al-Hilal.",
         "respuesta": "Koulibaly"
       },
       {
@@ -721,7 +713,7 @@
         "respuesta": "Doku"
       },
       {
-        "pregunta": "CONTIENE K: Apellido del defensor inglés del Manchester City (Kyle...).",
+        "pregunta": "CONTIENE K: Apellido del ex lateral inglés del Manchester City. Actualemente en Milan.",
         "respuesta": "Walker"
       }
     ]
@@ -912,7 +904,7 @@
         "respuesta": "NGolo Kante"
       },
       {
-        "pregunta": "Apellido del arquero costarricense ex Real Madrid y PSG, agente libre.",
+        "pregunta": "Apellido del arquero costarricense ex Real Madrid y PSG.",
         "respuesta": "Navas"
       },
       {
@@ -1014,7 +1006,7 @@
         "respuesta": "Pirlo"
       },
       {
-        "pregunta": "Apellido del exfutbolista español, capitán emblemático del FC Barcelona.",
+        "pregunta": "Apellido del exfutbolista español de nombre Carles, capitán emblemático del FC Barcelona.",
         "respuesta": "Puyol"
       },
       {
@@ -1030,8 +1022,8 @@
         "respuesta": "Palmeiras"
       },
       {
-        "pregunta": "Nombre completo del mediocampista español del Barcelona, Golden Boy 2021.",
-        "respuesta": "Pedri Gonzalez"
+        "pregunta": "Nombre del mediocampista español del Barcelona, Golden Boy 2021.",
+        "respuesta": "Pedri"
       },
       {
         "pregunta": "Apellido del futbolista argentino campeón del mundo 2022, juega en la Roma (Leandro...).",
@@ -1160,8 +1152,8 @@
         "respuesta": "Lautaro Martinez"
       },
       {
-        "pregunta": "CONTIENE R: Apellido del delantero noruego del Manchester City.",
-        "respuesta": "Haaland"
+        "pregunta": "CONTIENE R: Nombre y Apellido del delantero noruego del Manchester City.",
+        "respuesta": "Erling Haaland"
       },
       {
         "pregunta": "CONTIENE R: Apellido del arquero alemán del Barcelona.",
@@ -1189,8 +1181,8 @@
         "respuesta": "Suarez"
       },
       {
-        "pregunta": "Nombre completo del futbolista surcoreano, figura del Tottenham Hotspur.",
-        "respuesta": "Son Heung-min"
+        "pregunta": "Apellido del futbolista surcoreano, figura del Tottenham Hotspur. (Heung-min)",
+        "respuesta": "Son"
       },
       {
         "pregunta": "Nombre completo (con título) del legendario técnico escocés del Manchester United.",

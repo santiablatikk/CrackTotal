@@ -23,7 +23,7 @@
         "respuesta": "Argentina"
       },
       {
-        "pregunta": "Nombre completo del arquero brasilero del Liverpool desde 2018",
+        "pregunta": "Nombre completo del arquero brasileño del Liverpool desde 2018",
         "respuesta": "Alisson Becker"
       },
       {
@@ -55,23 +55,23 @@
         "respuesta": "Atletico de Madrid"
       },
       {
-        "pregunta": "Club saudí que ficho a Neymar en 2023",
+        "pregunta": "Club saudí que fichó a Neymar en 2023",
         "respuesta": "Al Hilal"
       },
       {
-        "pregunta": "Club camepeón de 3 Champions consecutivas 1971-73",
+        "pregunta": "Club campeón de 3 Champions consecutivas 1971-73",
         "respuesta": "Ajax"
       },
       {
-        "pregunta": "Club saudí que ficho a Sadio Mané",
+        "pregunta": "Club saudí que fichó a Sadio Mané",
         "respuesta": "Al Nassr"
       },
       {
-        "pregunta": "Club de la MLS con Josef Martínez como maximo goleador historico",
+        "pregunta": "Club de la MLS con Josef Martínez como máximo goleador histórico",
         "respuesta": "Atlanta United"
       },
       {
-        "pregunta": "Apellido del Defensa español del ex Chelsea y hoy Atlético de Madrid",
+        "pregunta": "Apellido del defensa español del ex Chelsea y hoy Atlético de Madrid",
         "respuesta": "Azpilicueta"
       },
       {
@@ -99,7 +99,7 @@
         "respuesta": "Arsene Wenger"
       },
       {
-        "pregunta": "Autor del gol en la final del mundial 2010",
+        "pregunta": "Autor del gol en la final del Mundial 2010",
         "respuesta": "Andres Iniesta"
       },
       {
@@ -139,7 +139,7 @@
         "respuesta": "Ajax"
       },
       {
-        "pregunta": "Posición en el campo donde juega principalmente un jugador que defiende su propia arco",
+        "pregunta": "Posición en el campo donde juega principalmente un jugador que defiende su propio arco",
         "respuesta": "Arquero"
       }
     ]
@@ -305,7 +305,7 @@
         "respuesta": "Celtic"
       },
       {
-        "pregunta": "Unico club chileno en ganar la Copa Libertadores",
+        "pregunta": "Único club chileno en ganar la Copa Libertadores",
         "respuesta": "Colo Colo"
       },
       {
@@ -563,7 +563,7 @@
         "respuesta": "Emelec"
       },
       {
-        "pregunta": "Apellido del balón de Oro 1965 y leyenda del Benfica",
+        "pregunta": "Apellido del Balón de Oro 1965 y leyenda del Benfica",
         "respuesta": "Eusebio"
       },
       {
@@ -612,7 +612,7 @@
         "respuesta": "Frank Lampard"
       },
       {
-        "pregunta": "Entrenador italiano ex Milan, Roma y Real Madrid. Dirigió la seleccion inglesa",
+        "pregunta": "Entrenador italiano ex Milan, Roma y Real Madrid. Dirigió la selección inglesa",
         "respuesta": "Fabio Capello"
       },
       {
@@ -644,7 +644,7 @@
         "respuesta": "Falcao"
       },
       {
-        "pregunta": "Inglés formado en el Manchester city. Usa el dorsal 47'",
+        "pregunta": "Inglés formado en el Manchester City. Usa el dorsal 47",
         "respuesta": "Foden"
       },
       {
@@ -692,7 +692,7 @@
         "respuesta": "Fuera de juego"
       },
       {
-        "pregunta": "Apellido del delantero brasileño ex Liverpool, hoy en la liga arabe",
+        "pregunta": "Apellido del delantero brasileño ex Liverpool, hoy en la liga árabe",
         "respuesta": "Firmino"
       },
       {
@@ -932,7 +932,7 @@
         "respuesta": "Jamie Vardy"
       },
       {
-        "pregunta": "DT actual del Inter Miami",
+        "pregunta": "Ex mediocampista que dirigió la selección argentina sub-23",
         "respuesta": "Javier Mascherano"
       },
       {
@@ -1226,7 +1226,7 @@
         "respuesta": "Pepe Reina"
       },
       {
-        "pregunta": "Apellio del ex defensa español, símbolo y líder del Barcelona durante una era dorada",
+        "pregunta": "Apellido del ex defensa español, símbolo y líder del Barcelona durante una era dorada. Carles...",
         "respuesta": "Puyol"
       },
       {
@@ -1290,10 +1290,6 @@
       {
         "pregunta": "DT de River Libertadores 1996",
         "respuesta": "Ramon Diaz"
-      },
-      {
-        "pregunta": "Campeón de la Libertadores 2015",
-        "respuesta": "River Plate"
       },
       {
         "pregunta": "Campeón de la Libertadores 2015",
@@ -1570,20 +1566,20 @@
     "letra": "X",
     "preguntas": [
       {
-        "pregunta": "Apellido del mediocampista español que brilló en el Barcelona y la selección española, Ex entrenador del Barcelona",
+        "pregunta": "Apellido del mediocampista español que brilló en el Barcelona y la selección española, ex entrenador del Barcelona",
         "respuesta": "Xavi"
       },
       {
-        "pregunta": "Contiene X: Delantero chileno bi-campeon de america. Jugó en Barcelona, Arsenal, Inter entre otros",
+        "pregunta": "CONTIENE X: Delantero chileno bicampeón de América. Jugó en Barcelona, Arsenal, Inter entre otros",
         "respuesta": "Alexis sanchez"
       },
       {
-        "pregunta": "Contiene X: Nombre de pila de Mac Allister",
+        "pregunta": "CONTIENE X: Nombre de pila de Mac Allister",
         "respuesta": "Alexis"
       },
       {
-        "pregunta": "Delantero holandes que jugo en PSG y actualmente esta en el Leipzig",
-        "respuesta": "Boca Juniors"
+        "pregunta": "Delantero holandés que jugó en PSG y actualmente está en el Leipzig",
+        "respuesta": "Xavi Simons"
       },
       {
         "pregunta": "Nombre completo del mediocampista español campeón del mundo en 2010 que jugó en el Real Madrid y Liverpool",

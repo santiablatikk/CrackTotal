@@ -28,7 +28,6 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/game-styles.css">
   <link rel="stylesheet" href="css/footer-styles.css">
-  <link rel="stylesheet" href="css/mobile.css">
   <style>
     /* Botón volver */
     .back-button {
@@ -205,27 +204,6 @@
   <meta property="og:image" content="img/preview.jpg">
   <!-- Scripts útiles -->
   <script src="utils/notifications.js"></script>
-
-  <!-- Mobile optimization script -->
-  <script src="js/modules/mobileUtils.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Inicializar utilidades móviles
-      MobileUtils.init({
-        optimizeRosco: true,
-        optimizeForLowMemory: true,
-        preventDoubleTapZoom: true,
-        fixVhUnits: true
-      });
-      
-      // Aplicar optimizaciones al juego cuando esté cargado
-      window.addEventListener('gameLoaded', function() {
-        if (MobileUtils.env.isMobile || MobileUtils.env.supportsTouch) {
-          MobileUtils.optimizeGameForMobile();
-        }
-      });
-    });
-  </script>
 </head>
 <body>
   <div class="loading-overlay">
@@ -495,7 +473,6 @@
   <!-- Scripts -->
   <script src="js/utils.js"></script>
   <script src="js/game-data.js"></script>
-  <script src="js/achievements-data.js"></script>
   <script src="js/game.js"></script>
   <script src="js/global-footer.js"></script>
 

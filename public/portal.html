@@ -25,7 +25,7 @@
     <meta property="og:description" content="Juegos de fútbol para poner a prueba tus conocimientos futboleros.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="img/preview.jpg">
-    <!-- Google AdSense Verification Code -->
+    <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427" crossorigin="anonymous"></script>
   </head>
   <body>
@@ -92,7 +92,10 @@
                 </div>
               </a>
               
-              <a href="millonario/index.html" class="game-option new-game">
+              <div class="game-option new-game coming-soon">
+                <div class="coming-soon-banner">
+                  <i class="fas fa-clock"></i> PRÓXIMAMENTE
+                </div>
                 <div class="game-card-content">
                   <div class="game-icon-wrapper">
                     <div class="game-icon">
@@ -105,14 +108,14 @@
                     <div class="game-meta">
                       <span class="game-badge new">Nuevo</span>
                       <span class="game-rating"><i class="fas fa-star"></i> 4.8</span>
-                      <span class="game-players"><i class="fas fa-users"></i> 5k+</span>
+                      <span class="game-badge coming-soon-date"><i class="fas fa-calendar-alt"></i> Mayo 2025</span>
                     </div>
                   </div>
                 </div>
-                 <div class="game-action">
-                  <span class="play-btn">JUGAR AHORA <i class="fas fa-arrow-right"></i></span>
+                <div class="game-action disabled">
+                  <span class="play-btn">DISPONIBLE PRONTO <i class="fas fa-hourglass-half"></i></span>
                 </div>
-              </a>
+              </div>
             </div>
             
             <style>
@@ -253,6 +256,108 @@
                 gap: 0.3rem;
                 color: rgba(255, 255, 255, 0.8);
                 font-size: 1rem;
+              }
+              
+              /* Estilos para juego próximamente */
+              .coming-soon {
+                position: relative;
+                overflow: hidden;
+                pointer-events: none;
+                opacity: 0.9;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+                border: 1px solid rgba(79, 70, 229, 0.3);
+              }
+              
+              .coming-soon-banner {
+                position: absolute;
+                top: 64px;
+                right: -32px;
+                background: linear-gradient(135deg, #f43f5e, #e11d48);
+                color: white;
+                font-weight: 700;
+                font-size: 0.9rem;
+                padding: 6px 50px;
+                transform: rotate(45deg);
+                z-index: 10;
+                box-shadow: 0 2px 10px rgba(225, 29, 72, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                animation: shine 2s infinite;
+              }
+              
+              @keyframes shine {
+                0% { box-shadow: 0 2px 10px rgba(225, 29, 72, 0.5); }
+                50% { box-shadow: 0 2px 15px rgba(225, 29, 72, 0.8); }
+                100% { box-shadow: 0 2px 10px rgba(225, 29, 72, 0.5); }
+              }
+              
+              .game-badge.coming-soon-date {
+                background: linear-gradient(135deg, #64748b, #475569);
+                color: white;
+                font-weight: 600;
+                padding: 0.3rem 0.6rem;
+                border-radius: 12px;
+                font-size: 0.7rem;
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+              }
+              
+              .game-badge.coming-soon-date i {
+                font-size: 0.7rem;
+              }
+              
+              .coming-soon .game-action {
+                background: rgba(79, 70, 229, 0.5);
+                cursor: not-allowed;
+              }
+              
+              .coming-soon .game-action.disabled {
+                background: linear-gradient(135deg, #64748b, #475569);
+              }
+              
+              .coming-soon .game-action .play-btn i {
+                animation: pulse 1.5s infinite;
+              }
+              
+              @keyframes pulse {
+                0% { opacity: 0.6; }
+                50% { opacity: 1; }
+                100% { opacity: 0.6; }
+              }
+              
+              @media (max-width: 480px) {
+                .coming-soon-banner {
+                  font-size: 0.8rem;
+                  top: 20px;
+                  right: -45px;
+                  padding: 5px 50px;
+                }
+                
+                .game-option {
+                  min-height: 240px;
+                  padding: 1rem;
+                }
+                
+                .game-action {
+                  padding: 0.8rem;
+                }
+                
+                .play-btn {
+                  font-size: 1.1rem;
+                }
+                
+                .game-meta {
+                  flex-wrap: wrap;
+                  gap: 0.4rem;
+                }
+                
+                .game-badge.coming-soon-date {
+                  font-size: 0.65rem;
+                  padding: 0.25rem 0.5rem;
+                }
               }
             </style>
           </div>
@@ -412,92 +517,92 @@
   }
 </style>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const playerName = localStorage.getItem('playerName');
-        const playerNameDisplay = document.getElementById('player-name-display');
-        const nameInputModal = document.getElementById('name-input-modal');
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const playerName = localStorage.getItem('playerName');
+    const playerNameDisplay = document.getElementById('player-name-display');
+    const nameInputModal = document.getElementById('name-input-modal');
 
-        function showNameInputModal(show = true) {
-            let modal = document.getElementById('name-input-modal');
-            if (!modal) {
-                modal = document.createElement('div');
-                modal.id = 'name-input-modal';
-                modal.className = 'name-input-modal';
-                modal.innerHTML = `
-                    <div class="modal-content">
-                        <h2><i class="fas fa-user-circle"></i> ¡Bienvenido a CRACK TOTAL!</h2>
-                        <p>Ingresa tu nombre para guardar tu progreso:</p>
-                        <form id="name-form">
-                        <input type="text" id="player-name-input" placeholder="Tu nombre aquí" maxlength="20" required autocomplete="off">
-                        <button type="submit" class="btn-primary">
-                            <span>¡Jugar!</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </button>
-                        </form>
-                    </div>
-                `;
-                document.body.appendChild(modal);
+    function showNameInputModal(show = true) {
+        let modal = document.getElementById('name-input-modal');
+        if (!modal) {
+            modal = document.createElement('div');
+            modal.id = 'name-input-modal';
+            modal.className = 'name-input-modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h2><i class="fas fa-user-circle"></i> ¡Bienvenido a CRACK TOTAL!</h2>
+                    <p>Ingresa tu nombre para guardar tu progreso:</p>
+                    <form id="name-form">
+                    <input type="text" id="player-name-input" placeholder="Tu nombre aquí" maxlength="20" required autocomplete="off">
+                    <button type="submit" class="btn-primary">
+                        <span>¡Jugar!</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
 
-                const form = document.getElementById('name-form');
-                if (form) {
-                    form.addEventListener('submit', handleNameSubmit);
-                }
-            }
-
-            if (show) {
-                requestAnimationFrame(() => {
-                    modal.classList.add('visible');
-                    const input = document.getElementById('player-name-input');
-                    if (input) input.focus();
-                });
-            } else {
-                modal.classList.remove('visible');
+            const form = document.getElementById('name-form');
+            if (form) {
+                form.addEventListener('submit', handleNameSubmit);
             }
         }
 
-        function handleNameSubmit(event) {
-            event.preventDefault();
-            const input = document.getElementById('player-name-input');
-            const name = input.value.trim();
-
-            if (name) {
-                localStorage.setItem('playerName', name);
-                if (playerNameDisplay) {
-                    playerNameDisplay.textContent = name;
-}
-                showNameInputModal(false);
-                showNotification('¡Bienvenido, ' + name + '!', 'success');
-
-                if (window.GameData && typeof window.GameData.initUserData === 'function') {
-                    window.GameData.initUserData(name);
-                    loadPlayerStats();
-                }
-            } else {
-                showNotification('Por favor, ingresa un nombre válido.', 'error');
-            }
+        if (show) {
+            requestAnimationFrame(() => {
+                modal.classList.add('visible');
+                const input = document.getElementById('player-name-input');
+                if (input) input.focus();
+            });
+        } else {
+            modal.classList.remove('visible');
         }
-
-  if (!playerName && playerNameDisplay) {
-            showNameInputModal(true);
-  } else if (playerNameDisplay) {
-    playerNameDisplay.textContent = playerName || 'Jugador';
     }
-    
-  loadPlayerStats();
-  
-  const changeNameBtn = document.getElementById('change-name-btn');
-    if (changeNameBtn) {
-            changeNameBtn.addEventListener('click', () => showNameInputModal(true));
+
+    function handleNameSubmit(event) {
+        event.preventDefault();
+        const input = document.getElementById('player-name-input');
+        const name = input.value.trim();
+
+        if (name) {
+            localStorage.setItem('playerName', name);
+            if (playerNameDisplay) {
+                playerNameDisplay.textContent = name;
+}
+            showNameInputModal(false);
+            showNotification('¡Bienvenido, ' + name + '!', 'success');
+
+            if (window.GameData && typeof window.GameData.initUserData === 'function') {
+                window.GameData.initUserData(name);
+                loadPlayerStats();
+            }
+        } else {
+            showNotification('Por favor, ingresa un nombre válido.', 'error');
+        }
+    }
+
+if (!playerName && playerNameDisplay) {
+        showNameInputModal(true);
+} else if (playerNameDisplay) {
+  playerNameDisplay.textContent = playerName || 'Jugador';
   }
   
-  const themeToggleBtn = document.getElementById('theme-toggle-btn');
-  if (themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', function() {
-      document.body.classList.toggle('dark-mode');
-      const icon = themeToggleBtn.querySelector('i');
-                const isDarkMode = document.body.classList.contains('dark-mode');
-                if (isDarkMode) {
+loadPlayerStats();
+
+const changeNameBtn = document.getElementById('change-name-btn');
+  if (changeNameBtn) {
+          changeNameBtn.addEventListener('click', () => showNameInputModal(true));
+}
+
+const themeToggleBtn = document.getElementById('theme-toggle-btn');
+if (themeToggleBtn) {
+  themeToggleBtn.addEventListener('click', function() {
+    document.body.classList.toggle('dark-mode');
+    const icon = themeToggleBtn.querySelector('i');
+              const isDarkMode = document.body.classList.contains('dark-mode');
+              if (isDarkMode) {
         icon.classList.remove('fa-moon');
         icon.classList.add('fa-sun');
       } else {
@@ -514,79 +619,79 @@
             }
         }
 
-  function loadPlayerStats() {
+function loadPlayerStats() {
   // Esta función ahora solo maneja la bandera gameJustCompleted
   // sin actualizar elementos de estadísticas que ya no existen en la UI
   if (localStorage.getItem('gameJustCompleted') === 'true') {
     localStorage.removeItem('gameJustCompleted');
   }
-        }
+}
 
-        if (localStorage.getItem('gameJustCompleted') === 'true') {
-          loadPlayerStats();
+if (localStorage.getItem('gameJustCompleted') === 'true') {
+  loadPlayerStats();
+}
+
+const isMobile = window.innerWidth < 768;
+      if (typeof particlesJS !== 'undefined' && !isMobile) {
+  particlesJS('particles-js', {
+    particles: {
+      number: {
+                      value: 30,
+        density: {
+          enable: true,
+                          value_area: 800
+        }
+      },
+      color: {
+                      value: '#3b82f6'
+      },
+      shape: {
+                      type: 'circle'
+      },
+      opacity: {
+                      value: 0.15,
+                      random: true
+      },
+      size: {
+        value: 3,
+                      random: true
+      },
+      line_linked: {
+        enable: true,
+                      distance: 160,
+                      color: '#3b82f6',
+                      opacity: 0.1,
+        width: 1
+      },
+      move: {
+        enable: true,
+                      speed: 0.8,
+        direction: 'none',
+        random: true,
+        straight: false,
+                      out_mode: 'out'
+      }
+    },
+    interactivity: {
+      detect_on: 'canvas',
+      events: {
+        onhover: {
+                          enable: false
+        },
+        onclick: {
+                          enable: false
+        },
+        resize: true
+      }
+    },
+              retina_detect: true
+  });
+      } else {
+        const particlesElement = document.getElementById('particles-js');
+        if (particlesElement) {
+          particlesElement.style.display = 'none';
+        }
   }
-
-        const isMobile = window.innerWidth < 768;
-        if (typeof particlesJS !== 'undefined' && !isMobile) {
-    particlesJS('particles-js', {
-      particles: {
-        number: {
-                        value: 30,
-          density: {
-            enable: true,
-                            value_area: 800
-          }
-        },
-        color: {
-                        value: '#3b82f6'
-        },
-        shape: {
-                        type: 'circle'
-        },
-        opacity: {
-                        value: 0.15,
-                        random: true
-        },
-        size: {
-          value: 3,
-                        random: true
-        },
-        line_linked: {
-          enable: true,
-                        distance: 160,
-                        color: '#3b82f6',
-                        opacity: 0.1,
-          width: 1
-        },
-        move: {
-          enable: true,
-                        speed: 0.8,
-          direction: 'none',
-          random: true,
-          straight: false,
-                        out_mode: 'out'
-        }
-      },
-      interactivity: {
-        detect_on: 'canvas',
-        events: {
-          onhover: {
-                            enable: false
-          },
-          onclick: {
-                            enable: false
-          },
-          resize: true
-        }
-      },
-                retina_detect: true
-    });
-        } else {
-          const particlesElement = document.getElementById('particles-js');
-          if (particlesElement) {
-            particlesElement.style.display = 'none';
-          }
-    }
 
   // Función para el banner de cookies
   const cookieBanner = document.getElementById('cookie-consent-banner');
@@ -608,7 +713,7 @@
     // Opcional: Cargar scripts de tracking que dependen del consentimiento
     // loadTrackingScripts();
   });
-  });
+});
 </script>
 
     <!-- Scripts moved to the end -->

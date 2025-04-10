@@ -15,7 +15,9 @@ const MobileUtils = (function() {
         isAndroid: /Android/i.test(navigator.userAgent),
         viewportHeight: window.innerHeight,
         viewportWidth: window.innerWidth,
-        pixelRatio: window.devicePixelRatio || 1
+        pixelRatio: window.devicePixelRatio || 1,
+        isLowMemoryDevice: false,
+        hasNotch: checkForNotch()
     };
     
     // Configuración por defecto
@@ -27,7 +29,11 @@ const MobileUtils = (function() {
         optimizeScrolling: true,
         lazyLoadOffscreen: true,
         offscreenThreshold: 300, // px
-        debugMode: false
+        debugMode: false,
+        optimizeRosco: true,
+        enableFastClick: true,
+        optimizeForLowMemory: true,
+        preventDoubleTapZoom: true
     };
     
     // Configuración actual
@@ -40,6 +46,9 @@ const MobileUtils = (function() {
     function init(options = {}) {
         // Fusionar opciones con la configuración por defecto
         config = {...defaultConfig, ...options};
+        
+        // Detectar dispositivos de bajos recursos
+        detectLowMemoryDevice();
         
         // Aplicar correcciones solo si estamos en móvil
         if (env.isMobile || env.supportsTouch) {
@@ -55,20 +64,76 @@ const MobileUtils = (function() {
                 setupLazyLoading();
             }
             
+            // Evitar doble tap zoom
+            if (config.preventDoubleTapZoom) {
+                preventDoubleTapZoom();
+            }
+            
+            // Optimización específica para el rosco
+            if (config.optimizeRosco) {
+                optimizeRoscoForMobile();
+            }
+            
             // Detectar orientación
             detectOrientation();
             window.addEventListener('resize', detectOrientation);
+            
+            // Eventos específicos para dispositivos móviles
+            window.addEventListener('orientationchange', handleOrientationChange);
         }
         
         debug('MobileUtils inicializado', config);
         
         // Disparar evento personalizado
-        window.dispatchEvent(new CustomEvent('mobileUtilsReady'));
+        window.dispatchEvent(new CustomEvent('mobileUtilsReady', { detail: { env } }));
         
         return {
             env, // Exponer información del entorno
-            config // Exponer configuración actual
+            config, // Exponer configuración actual
+            optimizeTouchTarget // Exponer función útil
         };
+    }
+    
+    /**
+     * Detecta dispositivos con memoria limitada
+     */
+    function detectLowMemoryDevice() {
+        // Comprobamos la memoria del dispositivo si está disponible
+        if (navigator.deviceMemory) {
+            env.isLowMemoryDevice = navigator.deviceMemory < 4;
+        } else {
+            // Inferencia basada en otros factores
+            env.isLowMemoryDevice = env.isMobile && (
+                navigator.hardwareConcurrency < 4 || 
+                /low|mid|sm-g|a10|j\d/i.test(navigator.userAgent)
+            );
+        }
+        
+        debug('Detección de dispositivo de baja memoria:', env.isLowMemoryDevice);
+        
+        // Aplicar optimizaciones si es un dispositivo de bajos recursos
+        if (env.isLowMemoryDevice && config.optimizeForLowMemory) {
+            document.documentElement.classList.add('low-memory-device');
+        }
+    }
+    
+    /**
+     * Detecta si el dispositivo tiene notch
+     */
+    function checkForNotch() {
+        // Para iPhoneX en adelante
+        const iPhoneWithNotch = env.isIOS && (
+            window.screen.height >= 812 || 
+            window.screen.width >= 812
+        );
+        
+        // Detección para Android 
+        const androidWithNotch = env.isAndroid && (
+            window.matchMedia('(orientation: portrait) and (max-width: 380px) and (min-height: 800px)').matches ||
+            window.matchMedia('(orientation: landscape) and (min-width: 780px) and (max-height: 420px)').matches
+        );
+        
+        return iPhoneWithNotch || androidWithNotch;
     }
     
     /**
@@ -84,7 +149,34 @@ const MobileUtils = (function() {
         env.viewportWidth = window.innerWidth;
         env.orientation = isLandscape ? 'landscape' : 'portrait';
         
+        // Variable CSS para detectar orientación desde CSS
+        document.documentElement.style.setProperty('--is-landscape', isLandscape ? '1' : '0');
+        
         debug('Orientación detectada', env.orientation);
+    }
+    
+    /**
+     * Maneja el cambio de orientación en dispositivos móviles
+     */
+    function handleOrientationChange() {
+        // Forzar un pequeño retraso para asegurar que la orientación se ha actualizado
+        setTimeout(() => {
+            detectOrientation();
+            
+            // Reoptimizar el rosco tras el cambio de orientación
+            if (config.optimizeRosco) {
+                optimizeRoscoForMobile();
+            }
+            
+            // Anunciar el cambio de orientación para que los componentes puedan responder
+            window.dispatchEvent(new CustomEvent('mobileOrientationChanged', {
+                detail: { 
+                    isLandscape: env.orientation === 'landscape',
+                    viewportWidth: env.viewportWidth,
+                    viewportHeight: env.viewportHeight
+                }
+            }));
+        }, 300);
     }
     
     /**
@@ -96,6 +188,17 @@ const MobileUtils = (function() {
             // Calcular altura actual del viewport
             const vh = window.innerHeight * 0.01;
             document.documentElement.style.setProperty('--vh', `${vh}px`);
+            
+            // También establecer --viewport-height y --viewport-width para cálculos en CSS
+            document.documentElement.style.setProperty('--viewport-height', `${window.innerHeight}px`);
+            document.documentElement.style.setProperty('--viewport-width', `${window.innerWidth}px`);
+            
+            // Detectar si estamos en pantalla completa o no (iOS)
+            if (env.isIOS) {
+                const isFullScreen = window.innerHeight === window.screen.height;
+                document.documentElement.classList.toggle('ios-fullscreen', isFullScreen);
+            }
+            
             debug('Unidades vh actualizadas', vh);
         }
         
@@ -114,6 +217,111 @@ const MobileUtils = (function() {
             // Pequeño retraso para asegurar que la orientación ha cambiado completamente
             setTimeout(updateVhProperty, 200);
         });
+    }
+    
+    /**
+     * Evita el zoom al hacer doble tap en elementos
+     */
+    function preventDoubleTapZoom() {
+        // Aplicar el enfoque táctil mejorado a botones e inputs
+        document.querySelectorAll('button, .btn, input[type="button"], input[type="submit"], .rosco-letter, .skip-btn, .help-btn, .submit-btn')
+        .forEach(element => {
+            element.addEventListener('touchend', function(e) {
+                // Prevenir comportamiento predeterminado sólo si es un tap rápido
+                const now = Date.now();
+                if (this.lastTouch && (now - this.lastTouch) < 300) {
+                    e.preventDefault();
+                }
+                this.lastTouch = now;
+            });
+        });
+    }
+    
+    /**
+     * Optimiza específicamente el rosco para móviles
+     * Ajusta el tamaño y posicionamiento dinámicamente
+     */
+    function optimizeRoscoForMobile() {
+        const roscoContainer = document.getElementById('rosco-container');
+        if (!roscoContainer) return;
+        
+        const roscoLetters = document.querySelectorAll('.rosco-letter');
+        if (!roscoLetters.length) return;
+        
+        // Cálculos para dispositivos móviles
+        const isTinyScreen = window.innerWidth < 360;
+        const isSmallScreen = window.innerWidth < 480;
+        const isLandscape = window.innerWidth > window.innerHeight;
+        
+        // Ajustar el tamaño del rosco basado en la pantalla
+        let roscoSize;
+        
+        if (isLandscape) {
+            // En modo horizontal, ajustar a la altura disponible
+            roscoSize = Math.min(window.innerHeight * 0.8, window.innerWidth * 0.4);
+        } else {
+            // En modo vertical, ajustar al ancho de la pantalla
+            roscoSize = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.45);
+        }
+        
+        // Limitar tamaño máximo y mínimo
+        roscoSize = Math.max(240, Math.min(roscoSize, 450));
+        
+        // Aplicar el tamaño al contenedor
+        roscoContainer.style.width = `${roscoSize}px`;
+        roscoContainer.style.height = `${roscoSize}px`;
+        
+        // Calcular el tamaño de las letras
+        const letterSize = isTinyScreen ? 22 : (isSmallScreen ? 30 : 40);
+        const currentLetterSize = letterSize * 1.2;
+        
+        // Calcular el radio del rosco (ligeramente menor para pantallas pequeñas)
+        const radius = (roscoSize / 2) * (isSmallScreen ? 0.85 : 0.8);
+        
+        // Reposicionar cada letra
+        roscoLetters.forEach((letter, index) => {
+            // Calcular posición radial
+            const angle = (index * (2 * Math.PI / roscoLetters.length)) - Math.PI/2;
+            const x = radius * Math.cos(angle);
+            const y = radius * Math.sin(angle);
+            
+            // Aplicar posición
+            letter.style.left = `calc(50% + ${x}px)`;
+            letter.style.top = `calc(50% + ${y}px)`;
+            
+            // Tamaño de letra
+            if (letter.classList.contains('current')) {
+                letter.style.width = `${currentLetterSize}px`;
+                letter.style.height = `${currentLetterSize}px`;
+                letter.style.lineHeight = `${currentLetterSize}px`;
+            } else {
+                letter.style.width = `${letterSize}px`;
+                letter.style.height = `${letterSize}px`;
+                letter.style.lineHeight = `${letterSize}px`;
+            }
+            
+            // Ajustar tamaño de fuente
+            letter.style.fontSize = isTinyScreen ? '10px' : (isSmallScreen ? '14px' : '16px');
+        });
+        
+        // Ajustar la tarjeta de pregunta
+        const questionCard = document.querySelector('.question-card');
+        if (questionCard) {
+            // En landscape, posicionar al lado del rosco
+            if (isLandscape && window.innerWidth > 600) {
+                questionCard.style.width = '40%';
+                questionCard.style.position = 'relative';
+                questionCard.style.left = 'auto';
+                questionCard.style.top = 'auto';
+                questionCard.style.transform = 'none';
+            } else {
+                // En portrait o pantallas pequeñas, centrar debajo
+                questionCard.style.width = isSmallScreen ? '90%' : '80%';
+                questionCard.style.maxWidth = '320px';
+                questionCard.style.margin = '10px auto';
+                questionCard.style.position = 'relative';
+            }
+        }
     }
     
     /**
@@ -248,197 +456,147 @@ const MobileUtils = (function() {
     function setupLazyLoading() {
         // Comprobar soporte para IntersectionObserver
         if ('IntersectionObserver' in window) {
-            const options = {
-                rootMargin: `${config.offscreenThreshold}px 0px`
-            };
+            const lazyElements = document.querySelectorAll('.lazy-load');
             
-            const observer = new IntersectionObserver(entries => {
+            const lazyObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        const element = entry.target;
+                        const lazyElement = entry.target;
                         
-                        // Cargar imagen si tiene data-src
-                        if (element.tagName === 'IMG' && element.dataset.src) {
-                            element.src = element.dataset.src;
-                            if (element.dataset.srcset) {
-                                element.srcset = element.dataset.srcset;
+                        // Imagen
+                        if (lazyElement.tagName === 'IMG') {
+                            if (lazyElement.dataset.src) {
+                                lazyElement.src = lazyElement.dataset.src;
+                                lazyElement.removeAttribute('data-src');
                             }
                         } 
-                        // Cargar fondo si tiene data-bg
-                        else if (element.dataset.bg) {
-                            element.style.backgroundImage = `url(${element.dataset.bg})`;
+                        // Background
+                        else if (lazyElement.dataset.background) {
+                            lazyElement.style.backgroundImage = `url('${lazyElement.dataset.background}')`;
+                            lazyElement.removeAttribute('data-background');
                         }
                         
-                        // Añadir clase para posibles animaciones
-                        element.classList.add('loaded');
-                        
-                        // Dejar de observar este elemento
-                        observer.unobserve(element);
+                        lazyElement.classList.remove('lazy-load');
+                        lazyObserver.unobserve(lazyElement);
                     }
                 });
-            }, options);
-            
-            // Observar elementos con atributos data-src o data-bg
-            document.querySelectorAll('[data-src], [data-bg]').forEach(element => {
-                observer.observe(element);
+            }, {
+                rootMargin: `${config.offscreenThreshold}px 0px`
             });
             
-            debug('Lazy loading configurado con IntersectionObserver');
+            lazyElements.forEach(lazyElement => {
+                lazyObserver.observe(lazyElement);
+            });
+            
+            debug('Carga perezosa configurada con IntersectionObserver');
         } else {
             // Fallback para navegadores que no soportan IntersectionObserver
             function loadVisibleElements() {
-                const elements = document.querySelectorAll('[data-src], [data-bg]');
-                const viewportBottom = window.scrollY + window.innerHeight + config.offscreenThreshold;
-                const viewportTop = window.scrollY - config.offscreenThreshold;
+                const lazyElements = document.querySelectorAll('.lazy-load');
+                const viewportBottom = window.innerHeight + window.pageYOffset;
+                const offset = config.offscreenThreshold;
                 
-                elements.forEach(element => {
-                    const rect = element.getBoundingClientRect();
-                    const elementTop = window.scrollY + rect.top;
-                    const elementBottom = elementTop + rect.height;
+                lazyElements.forEach(lazyElement => {
+                    const elementTop = lazyElement.getBoundingClientRect().top + window.pageYOffset;
                     
-                    // Comprobar si el elemento está en el viewport
-                    if (elementBottom >= viewportTop && elementTop <= viewportBottom) {
-                        if (element.tagName === 'IMG' && element.dataset.src) {
-                            element.src = element.dataset.src;
-                            if (element.dataset.srcset) {
-                                element.srcset = element.dataset.srcset;
+                    if (elementTop < viewportBottom + offset) {
+                        if (lazyElement.tagName === 'IMG') {
+                            if (lazyElement.dataset.src) {
+                                lazyElement.src = lazyElement.dataset.src;
+                                lazyElement.removeAttribute('data-src');
                             }
-                        } else if (element.dataset.bg) {
-                            element.style.backgroundImage = `url(${element.dataset.bg})`;
+                        } else if (lazyElement.dataset.background) {
+                            lazyElement.style.backgroundImage = `url('${lazyElement.dataset.background}')`;
+                            lazyElement.removeAttribute('data-background');
                         }
                         
-                        element.classList.add('loaded');
-                        element.removeAttribute('data-src');
-                        element.removeAttribute('data-bg');
+                        lazyElement.classList.remove('lazy-load');
                     }
                 });
             }
             
-            // Aplicar throttling al evento de scroll
-            let scrollTimeout;
-            window.addEventListener('scroll', function() {
-                if (scrollTimeout) return;
-                scrollTimeout = setTimeout(() => {
-                    loadVisibleElements();
-                    scrollTimeout = null;
-                }, config.scrollThrottleTime);
-            }, false);
-            
-            // Cargar elementos visibles inicialmente
+            // Cargar elementos visibles inmediatamente
             loadVisibleElements();
             
-            debug('Lazy loading configurado con fallback de scroll');
+            // Configurar evento de scroll con throttling
+            let scrollTimeout;
+            window.addEventListener('scroll', function() {
+                if (scrollTimeout) clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(loadVisibleElements, config.scrollThrottleTime);
+            });
+            
+            debug('Carga perezosa configurada con scroll event (fallback)');
         }
     }
     
     /**
-     * Configura navegación por gestos para un contenedor
-     * @param {string|Element} container - Selector o elemento contenedor
-     * @param {Object} options - Configuración de gestos
+     * Aplica optimizaciones específicas para el juego del rosco
      */
-    function setupGestureNavigation(container, options = {}) {
-        const containerEl = typeof container === 'string' ? document.querySelector(container) : container;
-        if (!containerEl || !env.supportsTouch) return;
+    function optimizeGameForMobile() {
+        if (!document.getElementById('rosco-container')) return;
         
-        const defaults = {
-            threshold: 100, // px mínimos para detectar un gesto
-            velocityThreshold: 0.3, // velocidad mínima para detectar un gesto
-            swipeLeft: null, // callback para swipe izquierda
-            swipeRight: null, // callback para swipe derecha
-            swipeUp: null, // callback para swipe arriba
-            swipeDown: null // callback para swipe abajo
-        };
+        // Optimizar la disposición del rosco
+        optimizeRoscoForMobile();
         
-        const settings = {...defaults, ...options};
+        // Optimizar áreas táctiles de los botones principales
+        document.querySelectorAll('.submit-btn, .skip-btn, .help-btn, .home-link, .back-button').forEach(element => {
+            optimizeTouchTarget(element, { minSize: 48 });
+        });
         
-        let startX, startY, startTime;
-        let isTracking = false;
+        // Asegurar que el input de respuesta tenga tamaño adecuado
+        const answerInput = document.querySelector('.answer-input');
+        if (answerInput) {
+            answerInput.style.fontSize = '16px'; // Prevenir zoom en iOS
+            answerInput.style.height = 'auto';
+            answerInput.style.minHeight = '44px';
+        }
         
-        containerEl.addEventListener('touchstart', e => {
-            if (e.touches.length !== 1) return;
+        // Optimizar el rendimiento desactivando algunas animaciones en dispositivos de bajos recursos
+        if (env.isLowMemoryDevice) {
+            document.documentElement.classList.add('reduce-animations');
             
-            isTracking = true;
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            startTime = Date.now();
-        }, {passive: true});
-        
-        containerEl.addEventListener('touchmove', e => {
-            if (!isTracking || e.touches.length !== 1) return;
-            
-            // Si hay un scroll vertical significativo y es un contenedor con scroll,
-            // cancelar el tracking para permitir scroll normal
-            const deltaY = Math.abs(e.touches[0].clientY - startY);
-            if (deltaY > 30 && containerEl.scrollHeight > containerEl.clientHeight) {
-                isTracking = false;
-                return;
-            }
-        }, {passive: true});
-        
-        containerEl.addEventListener('touchend', e => {
-            if (!isTracking) return;
-            isTracking = false;
-            
-            const endX = e.changedTouches[0].clientX;
-            const endY = e.changedTouches[0].clientY;
-            const deltaX = endX - startX;
-            const deltaY = endY - startY;
-            const elapsedTime = Date.now() - startTime;
-            
-            const velocityX = Math.abs(deltaX) / elapsedTime;
-            const velocityY = Math.abs(deltaY) / elapsedTime;
-            
-            // Determinar dirección del swipe
-            if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                // Swipe horizontal
-                if (Math.abs(deltaX) >= settings.threshold || velocityX > settings.velocityThreshold) {
-                    if (deltaX > 0 && settings.swipeRight) {
-                        settings.swipeRight(e);
-                        debug('Swipe derecha detectado', {deltaX, velocityX});
-                    } else if (deltaX < 0 && settings.swipeLeft) {
-                        settings.swipeLeft(e);
-                        debug('Swipe izquierda detectado', {deltaX, velocityX});
-                    }
+            // Limitar algunas animaciones y efectos
+            const styleElement = document.createElement('style');
+            styleElement.textContent = `
+                .reduce-animations .rosco-letter,
+                .reduce-animations .submit-btn,
+                .reduce-animations .skip-btn,
+                .reduce-animations .help-btn {
+                    transition: all 0.2s linear !important;
                 }
-            } else {
-                // Swipe vertical
-                if (Math.abs(deltaY) >= settings.threshold || velocityY > settings.velocityThreshold) {
-                    if (deltaY > 0 && settings.swipeDown) {
-                        settings.swipeDown(e);
-                        debug('Swipe abajo detectado', {deltaY, velocityY});
-                    } else if (deltaY < 0 && settings.swipeUp) {
-                        settings.swipeUp(e);
-                        debug('Swipe arriba detectado', {deltaY, velocityY});
-                    }
+                
+                .reduce-animations .rosco-letter.current {
+                    animation: none !important;
                 }
-            }
-        }, {passive: true});
+                
+                .reduce-animations .question-card::before,
+                .reduce-animations .question-card::after {
+                    display: none !important;
+                }
+            `;
+            document.head.appendChild(styleElement);
+        }
         
-        debug('Navegación por gestos configurada', {container, settings});
+        debug('Juego optimizado para móviles');
     }
     
     /**
-     * Función de depuración
-     * @param {string} message - Mensaje a mostrar
-     * @param {any} data - Datos adicionales
+     * Imprime mensajes de depuración si el modo está activado
      */
     function debug(message, data) {
-        if (!config.debugMode) return;
-        
-        console.groupCollapsed(`%cMobileUtils: ${message}`, 'color: #9c27b0; font-weight: bold;');
-        if (data !== undefined) {
-            console.log(data);
+        if (config.debugMode) {
+            console.log(`%c[MobileUtils] ${message}`, 'color: #4338ca', data || '');
         }
-        console.groupEnd();
     }
     
     // API pública
     return {
         init,
-        env,
         optimizeTouchTarget,
         optimizeFormForTouch,
-        setupGestureNavigation
+        env,
+        optimizeRoscoForMobile,
+        optimizeGameForMobile
     };
 })();
 

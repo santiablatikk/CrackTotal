@@ -31,11 +31,6 @@ let modalSwitchDelay = 400; // Retraso entre transiciones de modales en ms
 let debounceModalSwitch = false; // Evitar múltiples transiciones simultáneas
 let autoTransitionTimers = []; // Almacena los temporizadores para poder cancelarlos
 
-// Variables para seguimiento de rachas
-let currentStreak = 0;
-let longestStreak = 0;
-let pressureStreak = 0; // Racha de respuestas correctas bajo presión (menos de 15 segundos)
-
 // Sistema de logros mejorado
 let achievementsUnlocked = []; // Almacena los logros desbloqueados en esta partida
 
@@ -658,19 +653,6 @@ document.addEventListener('DOMContentLoaded', function() {
       // Sonido sutil
       playSound(correctSound);
       
-      // Actualizar racha de respuestas correctas
-      currentStreak++;
-      if (currentStreak > longestStreak) {
-        longestStreak = currentStreak;
-      }
-      
-      // Actualizar racha bajo presión (menos de 15 segundos)
-      if (timeLeft < 15) {
-        pressureStreak++;
-      } else {
-        pressureStreak = 0;
-      }
-      
       // Actualizar contador
       correctCountDisplay.textContent = correctAnswers;
       
@@ -710,10 +692,6 @@ document.addEventListener('DOMContentLoaded', function() {
       incorrectAnswersCount++;
       // Sonido sutil
       playSound(incorrectSound);
-      
-      // Reiniciar rachas cuando falla una respuesta
-      currentStreak = 0;
-      pressureStreak = 0;
       
       // Actualizar contador
       incorrectCountDisplay.textContent = incorrectAnswersCount;
@@ -759,10 +737,6 @@ document.addEventListener('DOMContentLoaded', function() {
     letterElem.dataset.status = 'skipped';
     skippedAnswers++;
     playSound(skipSound);
-    
-    // Reiniciar rachas cuando se salta una pregunta
-    currentStreak = 0;
-    pressureStreak = 0;
     
     // Actualizar contador
     skippedCountDisplay.textContent = skippedAnswers;
@@ -1015,9 +989,6 @@ document.addEventListener('DOMContentLoaded', function() {
       // Guardar datos del jugador usando nuestra nueva función
       savePlayerData(gameData);
       
-      // Verificar logros desbloqueados
-      checkAchievements(modalType);
-      
       // Indicar que acabamos de completar un juego
       localStorage.setItem('gameJustCompleted', 'true');
       localStorage.setItem('hasPlayed', 'true');
@@ -1111,31 +1082,40 @@ document.addEventListener('DOMContentLoaded', function() {
           // Cancelar cualquier transición automática pendiente
           cancelAllAutoTransitions();
           
-          // Obtener el ID del modal padre
-          const modalId = newButton.closest('.modal').id;
-          
-          // Mostrar secuencia de logros primero
-          switchToAchievementsModal(modalId);
+          // Mostrar modal de logros
+          const sourceModalId = this.closest('.modal').id;
+          switchToAchievementsModal(sourceModalId);
         });
       }
     });
     
-    // Configurar botón para ir al perfil en el modal de estadísticas
-    const profileButton = document.getElementById('stats-profile-btn');
-    if (profileButton) {
+    // Configurar botón para ir de logros a estadísticas
+    const achievementsStatsBtn = document.getElementById('achievements-stats-btn');
+    if (achievementsStatsBtn) {
       // Limpiar event listeners anteriores
-      const newProfileButton = profileButton.cloneNode(true);
-      profileButton.parentNode.replaceChild(newProfileButton, profileButton);
+      const newButton = achievementsStatsBtn.cloneNode(true);
+      achievementsStatsBtn.parentNode.replaceChild(newButton, achievementsStatsBtn);
       
       // Añadir nuevo event listener
-      newProfileButton.addEventListener('click', function() {
+      newButton.addEventListener('click', function() {
         // Cancelar cualquier transición automática pendiente
         cancelAllAutoTransitions();
         
-        // Ir directamente a la página de perfil
-        switchToProfilePage();
+        switchToStatsModal('achievements-modal');
+        
+        // Configurar botones en el modal de estadísticas
+        configureStatsModalButtons();
       });
     }
+    
+    // Configurar botones de perfil para ir directamente a la página de perfil
+    const profileBtns = document.querySelectorAll('[onclick*="perfil.html"]');
+    profileBtns.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.location.href = 'perfil.html';
+      });
+    });
   }
   
   // Configurar botones en el modal de estadísticas
@@ -2041,6 +2021,9 @@ function playSound(sound) {
 
   // ... existing code ...
 
+  // Sistema de logros mejorado
+  let achievementsUnlocked = []; // Almacena los logros desbloqueados en esta partida
+
   /**
    * Comprueba los logros al finalizar la partida
    * @param {string} result - Resultado de la partida: 'victory', 'timeout', 'defeat'
@@ -2049,34 +2032,18 @@ function playSound(sound) {
     // Reset de logros de esta partida
     achievementsUnlocked = [];
     
-    // Primero verificamos si tenemos acceso a los logros completos
-    if (window.FULL_GAME_ACHIEVEMENTS) {
-      window.GAME_ACHIEVEMENTS = window.FULL_GAME_ACHIEVEMENTS;
-    }
-    
     // Si no tenemos los datos de los logros, los cargamos
     if (!window.GAME_ACHIEVEMENTS) {
       console.error("No se encontraron los logros definidos");
       return false;
     }
     
-    // Verificar si podemos usar el sistema GameData para desbloquear logros
-    const useGameDataSystem = window.GameData && typeof GameData.unlockAchievement === 'function';
-    
     // Obtenemos logros ya desbloqueados del almacenamiento local
     let unlockedAchievements = [];
     try {
-      // Primero intentar usar el sistema de GameData si está disponible
-      if (useGameDataSystem && typeof GameData.getUnlockedAchievements === 'function') {
-        unlockedAchievements = GameData.getUnlockedAchievements() || [];
-        console.log("Logros ya desbloqueados (GameData):", unlockedAchievements.length);
-      } else {
-        // Caer en el sistema clásico
       const saved = localStorage.getItem('unlockedAchievements');
       if (saved) {
         unlockedAchievements = JSON.parse(saved);
-        }
-        console.log("Logros ya desbloqueados (clásico):", unlockedAchievements.length);
       }
     } catch (e) {
       console.error("Error al cargar logros:", e);
@@ -2097,12 +2064,8 @@ function playSound(sound) {
       letters: letterStatus, // Estado de cada letra
       perfectGame: incorrectAnswersCount === 0 && skippedAnswers === 0,
       allCorrect: correctAnswers === questions.length,
-      noHelp: Object.keys(letterHints).length === 0,
-      // Añadimos información de racha para los nuevos logros
-      longestStreak: currentStreak > longestStreak ? currentStreak : longestStreak
+      noHelp: Object.keys(letterHints).length === 0
     };
-    
-    console.log("Evaluando logros con las estadísticas:", finalStats);
     
     // Verificar cada logro
     for (const achievementId in window.GAME_ACHIEVEMENTS) {
@@ -2114,14 +2077,9 @@ function playSound(sound) {
       
       // Si existe una función de condición personalizada, la usamos
       if (typeof achievement.condition === 'function') {
-        try {
         isUnlocked = achievement.condition(finalStats);
-        } catch (error) {
-          console.error(`Error al evaluar la condición del logro ${achievementId}:`, error);
-          isUnlocked = false;
-        }
       } else {
-        // Condiciones básicas según el tipo de logro (compatibilidad con logros antiguos)
+        // Condiciones básicas según el tipo de logro
         switch(achievement.type) {
           case 'victory':
             isUnlocked = result === 'victory';
@@ -2141,221 +2099,37 @@ function playSound(sound) {
           case 'perseverance':
             isUnlocked = result === 'timeout' && finalStats.correctAnswers > (questions.length * 0.7);
             break;
+          // Puedes añadir más tipos de logros aquí
         }
       }
       
       // Si se desbloquea y no estaba desbloqueado antes, lo agregamos
-      if (isUnlocked && !alreadyUnlocked) {
+      if (isUnlocked) {
+        if (!alreadyUnlocked) {
+          // Lo añadimos a los logros desbloqueados en general
+          unlockedAchievements.push(achievementId);
+          
           // Lo añadimos a los logros desbloqueados en esta partida
           achievementsUnlocked.push(achievementId);
-        
-        // También registrarlo en el sistema correspondiente
-        if (useGameDataSystem) {
-          // Usar GameData para desbloquear (true = silencioso para evitar mostrar notificación ahora)
-          GameData.unlockAchievement(achievementId, true);
-          console.log(`Logro desbloqueado con GameData: ${achievement.title}`);
-        } else {
-          // Sistema clásico: añadir al array
-          unlockedAchievements.push(achievementId);
         }
-        
-        console.log(`¡Logro desbloqueado!: ${achievement.title} - ${achievement.description}`);
       }
     }
     
-    // Si estamos usando el sistema clásico, guardamos en localStorage
-    if (!useGameDataSystem) {
+    // Guardamos los logros desbloqueados
     try {
       localStorage.setItem('unlockedAchievements', JSON.stringify(unlockedAchievements));
     } catch (e) {
       console.error("Error al guardar logros:", e);
-      }
     }
     
     // Devolvemos true si se desbloquearon nuevos logros en esta partida
     return achievementsUnlocked.length > 0;
   }
 
-  // ... existing code ...
-
   /**
-   * Crea un efecto de confeti dentro de un contenedor
-   * @param {HTMLElement} container - El contenedor donde se crearán los elementos de confeti
-   * @param {number} count - La cantidad de partículas de confeti a crear
+   * Muestra el modal de logros con los logros desbloqueados en esta partida
    */
-  function createConfetti(container, count = 50) {
-    for (let i = 0; i < count; i++) {
-      const confetti = document.createElement('div');
-      confetti.className = 'achievement-confetti';
-      
-      // Propiedades aleatorias
-      const colors = ['#ffbe0b', '#fb5607', '#ff006e', '#8338ec', '#3a86ff'];
-      const size = Math.random() * 8 + 5;
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      const translateX = (Math.random() - 0.5) * 500;
-      const translateY = Math.random() * 300 + 100;
-      const rotate = Math.random() * 360;
-      const duration = Math.random() * 2 + 1;
-      
-      confetti.style.setProperty('--color', color);
-      confetti.style.setProperty('--translateX', `${translateX}px`);
-      confetti.style.setProperty('--translateY', `${translateY}px`);
-      confetti.style.setProperty('--rotate', `${rotate}deg`);
-      confetti.style.setProperty('--duration', `${duration}s`);
-      confetti.style.width = `${size}px`;
-      confetti.style.height = `${size}px`;
-      confetti.style.left = `${Math.random() * 100}%`;
-      confetti.style.top = '0';
-      
-      container.appendChild(confetti);
-      
-      // Eliminar después de la animación
-      setTimeout(() => {
-        if (confetti.parentNode === container) {
-          container.removeChild(confetti);
-        }
-      }, duration * 1000);
-    }
-  }
-
-  /**
-   * Llena el modal de logros con los logros desbloqueados
-   */
-  function fillAchievementsModal() {
-    const unlockedContainer = document.getElementById('unlocked-achievements');
-    if (!unlockedContainer) return;
-    
-    // Determinar si tenemos acceso al sistema GameData
-    const useGameDataSystem = window.GameData && typeof GameData.getAchievements === 'function';
-    
-    // Obtener logros desbloqueados
-    let achievements = {};
-    let achievementIds = [];
-    
-    if (useGameDataSystem) {
-        // Usar primero el sistema moderno
-        achievements = GameData.getAchievements() || {};
-        achievementIds = Object.keys(achievements);
-        
-        // Si no hay logros en el sistema moderno, intentar con el array
-        if (achievementIds.length === 0 && typeof GameData.getUnlockedAchievements === 'function') {
-            const unlockedArray = GameData.getUnlockedAchievements() || [];
-            achievementIds = unlockedArray;
-            
-            // Crear objetos temporales para cada ID
-            unlockedArray.forEach(id => {
-                achievements[id] = { id: id, count: 1 };
-            });
-            
-            console.log("Logros obtenidos del formato array:", achievementIds.length);
-        }
-    } else {
-        // Caer al sistema clásico
-        try {
-            const savedAchievements = localStorage.getItem('unlockedAchievements');
-            if (savedAchievements) {
-                achievementIds = JSON.parse(savedAchievements);
-                // Crear objetos para cada ID
-                achievementIds.forEach(id => {
-                    achievements[id] = { id: id, count: 1 };
-                });
-            }
-      } catch (e) {
-            console.error("Error al cargar logros:", e);
-            achievementIds = [];
-        }
-    }
-    
-    if (achievementIds.length === 0) {
-        // No hay logros desbloqueados
-        unlockedContainer.innerHTML = `
-            <div class="no-achievements">
-                <i class="fas fa-medal"></i>
-                <p>Aún no has desbloqueado ningún logro.</p>
-                <p>¡Sigue jugando para conseguirlos!</p>
-            </div>
-        `;
-        return;
-    }
-    
-    // Limpiar contenedor
-    unlockedContainer.innerHTML = '';
-    
-    // Mostrar logros desbloqueados
-    achievementIds.forEach(id => {
-        // Obtener datos del logro - intentar FULL_GAME_ACHIEVEMENTS primero (logros nuevos)
-        let achievementData = null;
-        
-        if (window.FULL_GAME_ACHIEVEMENTS && window.FULL_GAME_ACHIEVEMENTS[id]) {
-            achievementData = window.FULL_GAME_ACHIEVEMENTS[id];
-        } else if (window.GAME_ACHIEVEMENTS && window.GAME_ACHIEVEMENTS[id]) {
-            achievementData = window.GAME_ACHIEVEMENTS[id];
-        }
-        
-        if (!achievementData) {
-            console.warn(`No se encontraron datos para el logro: ${id}`);
-            return;
-        }
-        
-        // Crear tarjeta de logro
-        const card = document.createElement('div');
-        card.className = 'achievement-card';
-        card.innerHTML = `
-            <div class="achievement-card-icon">
-                <i class="${achievementData.icon || 'fas fa-trophy'}"></i>
-            </div>
-            <div class="achievement-card-title">${achievementData.title || id}</div>
-            <div class="achievement-card-desc">${achievementData.description || 'Logro misterioso'}</div>
-            <div class="achievement-card-count">x${achievements[id]?.count || 1}</div>
-        `;
-        
-        unlockedContainer.appendChild(card);
-    });
-  }
-
-  // Función para cambiar de un modal de resultado al modal de logros
-  function switchToAchievementsModal(sourceModalId) {
-    console.log("Switching to sequential achievements from:", sourceModalId);
-    
-    // Cancelar cualquier transición automática pendiente
-    cancelAllAutoTransitions();
-    
-    // Ocultar modal actual
-    const sourceModal = document.getElementById(sourceModalId);
-    if (sourceModal) {
-      sourceModal.classList.remove('show');
-      sourceModal.style.display = 'none';
-    }
-    
-    // Obtener los logros desbloqueados del localStorage
-    try {
-      const savedAchievements = localStorage.getItem('unlockedAchievements');
-      if (savedAchievements) {
-        achievementsUnlocked = JSON.parse(savedAchievements);
-      }
-      
-      // Mostrar logros secuencialmente
-      showSequentialAchievements(sourceModalId);
-    } catch (e) {
-      console.error("Error al cargar logros:", e);
-      // En caso de error, ir directamente a las estadísticas
-      switchToStatsModal(sourceModalId);
-    }
-  }
-
-  /**
-   * Muestra los logros uno por uno en modales grandes y modernos
-   * @param {string} sourceModalId - ID del modal desde el que se invoca esta función
-   */
-  function showSequentialAchievements(sourceModalId) {
-    console.log("Mostrando logros secuenciales desde:", sourceModalId, "Total:", achievementsUnlocked.length);
-    
-    // Verificar que tengamos logros para mostrar
-    if (!achievementsUnlocked || achievementsUnlocked.length === 0) {
-      console.log("No hay logros para mostrar, pasando directamente a estadísticas");
-      return switchToStatsModal(sourceModalId);
-    }
-    
+  function showAchievementsModal(sourceModalId) {
     // Cancelar cualquier transición automática pendiente
     cancelAllAutoTransitions();
     
@@ -2368,114 +2142,481 @@ function playSound(sound) {
       }, 300);
     }
     
-    // Crear o actualizar el modal para mostrar logros secuencialmente
+    // Si no hay logros desbloqueados, pasamos directamente a las estadísticas
+    if (achievementsUnlocked.length === 0) {
+      return switchToStatsModal(sourceModalId);
+    }
+    
+    // Mostrar logros secuencialmente uno por uno
+    showSequentialAchievements(sourceModalId);
+  }
+
+  /**
+   * Muestra los logros uno por uno en modales grandes y modernos
+   * @param {string} sourceModalId - ID del modal desde el que se invoca esta función
+   */
+  function showSequentialAchievements(sourceModalId) {
+    // Si no hay logros, ir directamente a estadísticas
+    if (achievementsUnlocked.length === 0) {
+      return switchToStatsModal(sourceModalId);
+    }
+    
+    // Crear un modal para mostrar logros secuencialmente
     let sequentialModal = document.getElementById('sequential-achievement-modal');
     
     // Si el modal no existe, crearlo
     if (!sequentialModal) {
       sequentialModal = document.createElement('div');
       sequentialModal.id = 'sequential-achievement-modal';
-      sequentialModal.className = 'sequential-achievement-modal';
+      sequentialModal.className = 'modal';
       
       // Contenido del modal
       sequentialModal.innerHTML = `
-        <div class="achievement-sequential-content">
+        <div class="modal-content achievement-sequential-content">
           <div class="achievement-display">
             <!-- Aquí se mostrará cada logro -->
-            </div>
-                </div>
-              `;
-              
+          </div>
+        </div>
+      `;
+      
       // Añadir al documento
       document.body.appendChild(sequentialModal);
-    } else {
-      // Limpiar contenido anterior
-      const achievementDisplay = sequentialModal.querySelector('.achievement-display');
-      if (achievementDisplay) {
-        achievementDisplay.innerHTML = '';
-      }
-    }
-    
-    // Asegurarse de que sea visible
-    sequentialModal.style.display = 'none';
-    setTimeout(() => {
-      sequentialModal.style.display = 'flex';
-      void sequentialModal.offsetWidth; // Forzar reflow
-      sequentialModal.classList.add('show');
       
-      // Índice actual del logro a mostrar
-      let currentAchievementIndex = 0;
-      
-      // Función interna para mostrar logros uno por uno
-      function showCurrentAchievement() {
-        const achievementDisplay = sequentialModal.querySelector('.achievement-display');
-        
-        // Si ya mostramos todos los logros, pasar a las estadísticas
-        if (currentAchievementIndex >= achievementsUnlocked.length) {
-          console.log("Todos los logros mostrados, pasando a estadísticas");
-          sequentialModal.classList.remove('show');
-          setTimeout(() => {
-            sequentialModal.style.display = 'none';
-            switchToStatsModal(sourceModalId);
-          }, 300);
-          return;
+      // Añadir estilos CSS para el modal
+      const style = document.createElement('style');
+      style.textContent = `
+        .achievement-sequential-content {
+          max-width: 500px;
+          width: 90%;
+          background: rgba(15, 23, 42, 0.9);
+          border-radius: 20px;
+          padding: 2rem;
+          text-align: center;
+          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+          border: 2px solid rgba(255, 255, 255, 0.1);
+          backdrop-filter: blur(10px);
+          position: relative;
+          overflow: hidden;
         }
         
-        // Obtener el logro actual
-        const achievementId = achievementsUnlocked[currentAchievementIndex];
-        console.log("Mostrando logro:", achievementId, currentAchievementIndex + 1, "de", achievementsUnlocked.length);
-        
-        let achievementData = null;
-        
-        // Intentar obtener los datos del logro de diferentes fuentes
-        if (window.FULL_GAME_ACHIEVEMENTS && window.FULL_GAME_ACHIEVEMENTS[achievementId]) {
-          achievementData = window.FULL_GAME_ACHIEVEMENTS[achievementId];
-        } else if (window.GAME_ACHIEVEMENTS && window.GAME_ACHIEVEMENTS[achievementId]) {
-          achievementData = window.GAME_ACHIEVEMENTS[achievementId];
+        .achievement-sequential-content::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: 
+            radial-gradient(circle at top right, rgba(124, 58, 237, 0.5), transparent 300px),
+            radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.5), transparent 300px);
+          opacity: 0.5;
+          z-index: -1;
         }
         
-        if (!achievementData) {
-          console.warn("No se encontraron datos para el logro:", achievementId);
-          currentAchievementIndex++;
-          showCurrentAchievement();
-          return;
+        .achievement-display {
+          text-align: center;
         }
         
-        // Limpiar y actualizar el contenido
-        achievementDisplay.innerHTML = `
-          <div class="achievement-large-icon">
-            <i class="${achievementData.icon || 'fas fa-award'}"></i>
-          </div>
-          <h2 class="achievement-large-title">¡Logro Desbloqueado!</h2>
-          <h3 class="achievement-large-subtitle">${achievementData.title || 'Logro misterioso'}</h3>
-          <p class="achievement-large-description">${achievementData.description || 'Has conseguido un logro especial'}</p>
-          <p class="achievement-large-note">Este logro se ha añadido a tu perfil</p>
-        `;
+        .achievement-large-icon {
+          width: 120px;
+          height: 120px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #ffb300, #ff6f00);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 2rem;
+          font-size: 3.5rem;
+          box-shadow: 0 15px 35px rgba(255, 179, 0, 0.3);
+          position: relative;
+          overflow: hidden;
+          transform: scale(0);
+          animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
         
-        // Crear efecto de confeti
-        createConfetti(achievementDisplay, 80);
+        .achievement-large-icon i {
+          color: white;
+          animation: beatPulse 1.5s ease-in-out infinite;
+        }
         
-        // Reproducir sonido
-        if (window.achievementSound && soundEnabled) {
-          try {
-            achievementSound.currentTime = 0;
-            achievementSound.play().catch(e => console.log("Error al reproducir sonido:", e));
-          } catch (e) {
-            console.error("Error al reproducir sonido de logro:", e);
+        .achievement-large-icon::after {
+          content: '';
+          position: absolute;
+          inset: -50%;
+          background: conic-gradient(
+            from 0deg, 
+            rgba(255, 255, 255, 0),
+            rgba(255, 255, 255, 0.2),
+            rgba(255, 255, 255, 0.5),
+            rgba(255, 255, 255, 0.2),
+            rgba(255, 255, 255, 0)
+          );
+          animation: rotateGlow 3s linear infinite;
+        }
+        
+        @keyframes popIn {
+          0% {
+            transform: scale(0);
+          }
+          50% {
+            transform: scale(1.1);
+          }
+          100% {
+            transform: scale(1);
           }
         }
         
-        // Incrementar índice para el próximo logro
-        currentAchievementIndex++;
+        @keyframes rotateGlow {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
         
-        // Programar el próximo logro después de 3 segundos
-        setTimeout(showCurrentAchievement, 3000);
+        @keyframes beatPulse {
+          0% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+          100% { transform: scale(1); }
+        }
+        
+        .achievement-large-title {
+          font-size: 2.5rem;
+          font-weight: bold;
+          color: white;
+          margin-bottom: 1rem;
+          opacity: 0;
+          transform: translateY(20px);
+          animation: fadeUp 0.7s forwards 0.3s;
+          text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .achievement-large-subtitle {
+          font-size: 1.6rem;
+          font-weight: bold;
+          background: linear-gradient(90deg, #ffa500, #ff6f00);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          margin-bottom: 1.5rem;
+          opacity: 0;
+          transform: translateY(20px);
+          animation: fadeUp 0.7s forwards 0.5s;
+        }
+        
+        .achievement-large-description {
+          font-size: 1.2rem;
+          color: rgba(255, 255, 255, 0.9);
+          margin-bottom: 1.5rem;
+          opacity: 0;
+          transform: translateY(20px);
+          animation: fadeUp 0.7s forwards 0.7s;
+          line-height: 1.6;
+        }
+        
+        .achievement-large-note {
+          font-size: 0.9rem;
+          color: rgba(255, 255, 255, 0.6);
+          margin-top: 1.5rem;
+          opacity: 0;
+          transform: translateY(20px);
+          animation: fadeUp 0.7s forwards 0.9s;
+        }
+        
+        @keyframes fadeUp {
+          0% {
+            transform: translateY(20px);
+            opacity: 0;
+          }
+          100% {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+        
+        .achievement-confetti {
+          position: absolute;
+          width: 10px;
+          height: 10px;
+          opacity: 0;
+          background-color: var(--color);
+          border-radius: 50%;
+          animation: confetti-fall var(--duration) ease-in forwards;
+        }
+        
+        @keyframes confetti-fall {
+          0% {
+            transform: translate(0, -50px) rotate(0deg);
+            opacity: 1;
+          }
+          100% {
+            transform: translate(var(--translateX), var(--translateY)) rotate(var(--rotate));
+            opacity: 0;
+          }
+        }
+      `;
+      
+      document.head.appendChild(style);
+    }
+    
+    // Crear efecto de confeti
+    function createConfetti(container, count = 50) {
+      for (let i = 0; i < count; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'achievement-confetti';
+        
+        // Propiedades aleatorias
+        const colors = ['#ffbe0b', '#fb5607', '#ff006e', '#8338ec', '#3a86ff'];
+        const size = Math.random() * 8 + 5;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const translateX = (Math.random() - 0.5) * 500;
+        const translateY = Math.random() * 300 + 100;
+        const rotate = Math.random() * 360;
+        const duration = Math.random() * 2 + 1;
+        
+        confetti.style.setProperty('--color', color);
+        confetti.style.setProperty('--translateX', `${translateX}px`);
+        confetti.style.setProperty('--translateY', `${translateY}px`);
+        confetti.style.setProperty('--rotate', `${rotate}deg`);
+        confetti.style.setProperty('--duration', `${duration}s`);
+        confetti.style.width = `${size}px`;
+        confetti.style.height = `${size}px`;
+        confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.top = '0';
+        
+        container.appendChild(confetti);
+        
+        // Eliminar después de la animación
+        setTimeout(() => {
+          if (confetti.parentNode === container) {
+            container.removeChild(confetti);
+          }
+        }, duration * 1000);
+      }
+    }
+    
+    // Índice actual del logro a mostrar
+    let currentAchievementIndex = 0;
+    
+    // Función para mostrar el logro actual
+    function showCurrentAchievement() {
+      const achievementDisplay = sequentialModal.querySelector('.achievement-display');
+      
+      // Si ya mostramos todos los logros, pasar a las estadísticas
+      if (currentAchievementIndex >= achievementsUnlocked.length) {
+        sequentialModal.classList.remove('show');
+        setTimeout(() => {
+          sequentialModal.style.display = 'none';
+          switchToStatsModal(sourceModalId);
+        }, 300);
+        return;
       }
       
-      // Comenzar la secuencia de mostrar logros
-      setTimeout(showCurrentAchievement, 300);
-    }, 300);
+      // Obtener el logro actual
+      const achievementId = achievementsUnlocked[currentAchievementIndex];
+      const achievement = window.GAME_ACHIEVEMENTS[achievementId];
+      if (!achievement) {
+        currentAchievementIndex++;
+        showCurrentAchievement();
+        return;
+      }
+      
+      // Limpiar y actualizar el contenido
+      achievementDisplay.innerHTML = `
+        <div class="achievement-large-icon">
+          <i class="${achievement.icon || 'fas fa-award'}"></i>
+        </div>
+        <h2 class="achievement-large-title">¡Logro Desbloqueado!</h2>
+        <h3 class="achievement-large-subtitle">${achievement.title}</h3>
+        <p class="achievement-large-description">${achievement.description}</p>
+        <p class="achievement-large-note">Este logro se ha añadido a tu perfil</p>
+      `;
+      
+      // Crear efecto de confeti
+      createConfetti(achievementDisplay, 80);
+      
+      // Reproducir sonido
+      if (window.achievementSound && soundEnabled) {
+        try {
+          achievementSound.currentTime = 0;
+          achievementSound.play();
+        } catch (e) {
+          console.error("Error al reproducir sonido de logro:", e);
+        }
+      }
+      
+      // Incrementar índice para el próximo logro
+      currentAchievementIndex++;
+      
+      // Programar el próximo logro después de 3 segundos
+      setTimeout(showCurrentAchievement, 3000);
+    }
+    
+    // Mostrar el modal
+    sequentialModal.style.display = 'flex';
+    void sequentialModal.offsetWidth; // Forzar reflow
+    sequentialModal.classList.add('show');
+    
+    // Comenzar a mostrar los logros
+    showCurrentAchievement();
   }
+
+  // Actualizar las funciones que muestran los modales de victoria/derrota/tiempo
+  function showVictoryModal() {
+    const modal = document.getElementById('victory-modal');
+    if (!modal) return;
+    
+    modal.style.display = 'flex';
+    
+    // Forzar reflow para asegurar animación
+    void modal.offsetWidth;
+    
+    modal.classList.add('show');
+    
+    // Reproducir sonido si está habilitado
+    if (soundEnabled) {
+      playSound(gameOverSound);
+    }
+    
+    // Comprobar logros y determinar si mostramos primero el modal de logros
+    checkAchievements('victory');
+    
+    // Configurar el botón para mostrar logros o estadísticas
+    document.getElementById('victory-stats-btn').addEventListener('click', function() {
+      if (achievementsUnlocked.length > 0) {
+        showAchievementsModal('victory-modal');
+      } else {
+        switchToStatsModal('victory-modal');
+      }
+    }, { once: true });
+    
+    // Modal se cierra automáticamente luego de 6 segundos
+    startModalCountdown(modal.querySelector('.countdown'), 6);
+    const timer = setTimeout(() => {
+      if (achievementsUnlocked.length > 0) {
+        showAchievementsModal('victory-modal');
+      } else {
+        switchToStatsModal('victory-modal');
+      }
+    }, 6000);
+    autoTransitionTimers.push(timer);
+  }
+
+  function showTimeoutModal() {
+    const modal = document.getElementById('timeout-modal');
+    if (!modal) return;
+    
+    modal.style.display = 'flex';
+    
+    // Forzar reflow para asegurar animación
+    void modal.offsetWidth;
+    
+    modal.classList.add('show');
+    
+    // Reproducir sonido si está habilitado
+    if (soundEnabled) {
+      playSound(gameOverSound);
+    }
+    
+    // Comprobar logros
+    checkAchievements('timeout');
+    
+    // Configurar el botón para mostrar logros o estadísticas
+    document.getElementById('timeout-stats-btn').addEventListener('click', function() {
+      if (achievementsUnlocked.length > 0) {
+        showAchievementsModal('timeout-modal');
+      } else {
+        switchToStatsModal('timeout-modal');
+      }
+    }, { once: true });
+    
+    // Modal se cierra automáticamente
+    startModalCountdown(modal.querySelector('.countdown'), 6);
+    const timer = setTimeout(() => {
+      if (achievementsUnlocked.length > 0) {
+        showAchievementsModal('timeout-modal');
+      } else {
+        switchToStatsModal('timeout-modal');
+      }
+    }, 6000);
+    autoTransitionTimers.push(timer);
+  }
+
+  function showDefeatModal() {
+    const modal = document.getElementById('defeat-modal');
+    if (!modal) return;
+    
+    modal.style.display = 'flex';
+    
+    // Forzar reflow para asegurar animación
+    void modal.offsetWidth;
+    
+    modal.classList.add('show');
+    
+    // Reproducir sonido si está habilitado
+    if (soundEnabled) {
+      playSound(gameOverSound);
+    }
+    
+    // Comprobar logros
+    checkAchievements('defeat');
+    
+    // Configurar el botón para mostrar logros o estadísticas
+    document.getElementById('defeat-stats-btn').addEventListener('click', function() {
+      if (achievementsUnlocked.length > 0) {
+        showAchievementsModal('defeat-modal');
+      } else {
+        switchToStatsModal('defeat-modal');
+      }
+    }, { once: true });
+    
+    // Modal se cierra automáticamente
+    startModalCountdown(modal.querySelector('.countdown'), 6);
+    const timer = setTimeout(() => {
+      if (achievementsUnlocked.length > 0) {
+        showAchievementsModal('defeat-modal');
+      } else {
+        switchToStatsModal('defeat-modal');
+      }
+    }, 6000);
+    autoTransitionTimers.push(timer);
+  }
+
+  // Actualizar conexión entre el modal de logros y el de estadísticas
+  document.addEventListener('DOMContentLoaded', function() {
+    const achievementsStatsBtn = document.getElementById('achievements-stats-btn');
+    if (achievementsStatsBtn) {
+      achievementsStatsBtn.addEventListener('click', function() {
+        switchToStatsModal('achievements-modal');
+      });
+    }
+  });
+
+  // ... existing code ...
+
+  // Función para mostrar el modal de logros
+  function switchToAchievementsModal(sourceModalId) {
+    console.log("Switching to achievements modal from:", sourceModalId);
+    
+    // Cancelar cualquier transición automática pendiente
+    cancelAllAutoTransitions();
+    
+    // Ocultar modal actual
+    const sourceModal = document.getElementById(sourceModalId);
+    if (sourceModal) {
+      sourceModal.classList.remove('show');
+      sourceModal.style.display = 'none';
+    }
+    
+    // Cargar todos los logros para visualizar
+    try {
+      achievementsUnlocked = JSON.parse(localStorage.getItem('unlockedAchievements')) || [];
+      // Usar el nuevo sistema para mostrar logros secuencialmente
+      showSequentialAchievements(sourceModalId);
+    } catch (e) {
+      console.error("Error al cargar logros:", e);
+      // En caso de error, ir directamente a las estadísticas
+      switchToStatsModal(sourceModalId);
+    }
+  }
+
+  // ... existing code ...
 });
 
 // Función para mostrar mensajes sutiles
@@ -2780,7 +2921,7 @@ async function detectAndSaveUserIP() {
 
 // Función para cambiar de un modal de resultado al modal de logros
 function switchToAchievementsModal(sourceModalId) {
-  console.log("Switching to sequential achievements from:", sourceModalId);
+  console.log("Switching to achievements modal from:", sourceModalId);
   
   // Cancelar cualquier transición automática pendiente
   cancelAllAutoTransitions();
@@ -2792,14 +2933,10 @@ function switchToAchievementsModal(sourceModalId) {
     sourceModal.style.display = 'none';
   }
   
-  // Obtener los logros desbloqueados del localStorage
+  // Cargar todos los logros para visualizar
   try {
-    const savedAchievements = localStorage.getItem('unlockedAchievements');
-    if (savedAchievements) {
-      achievementsUnlocked = JSON.parse(savedAchievements);
-    }
-    
-    // Mostrar logros secuencialmente
+    achievementsUnlocked = JSON.parse(localStorage.getItem('unlockedAchievements')) || [];
+    // Usar el nuevo sistema para mostrar logros secuencialmente
     showSequentialAchievements(sourceModalId);
   } catch (e) {
     console.error("Error al cargar logros:", e);
@@ -3171,46 +3308,13 @@ function fillAchievementsModal() {
     const unlockedContainer = document.getElementById('unlocked-achievements');
     if (!unlockedContainer) return;
     
-    // Determinar si tenemos acceso al sistema GameData
-    const useGameDataSystem = window.GameData && typeof GameData.getAchievements === 'function';
+    // Limpiar contenedor
+    unlockedContainer.innerHTML = '';
     
-    // Obtener logros desbloqueados
-    let achievements = {};
-    let achievementIds = [];
-    
-    if (useGameDataSystem) {
-        // Usar primero el sistema moderno
-        achievements = GameData.getAchievements() || {};
-        achievementIds = Object.keys(achievements);
-        
-        // Si no hay logros en el sistema moderno, intentar con el array
-        if (achievementIds.length === 0 && typeof GameData.getUnlockedAchievements === 'function') {
-            const unlockedArray = GameData.getUnlockedAchievements() || [];
-            achievementIds = unlockedArray;
-            
-            // Crear objetos temporales para cada ID
-            unlockedArray.forEach(id => {
-                achievements[id] = { id: id, count: 1 };
-            });
-            
-            console.log("Logros obtenidos del formato array:", achievementIds.length);
-        }
-    } else {
-        // Caer al sistema clásico
-        try {
-            const savedAchievements = localStorage.getItem('unlockedAchievements');
-            if (savedAchievements) {
-                achievementIds = JSON.parse(savedAchievements);
-                // Crear objetos para cada ID
-                achievementIds.forEach(id => {
-                    achievements[id] = { id: id, count: 1 };
-                });
-            }
-        } catch (e) {
-            console.error("Error al cargar logros:", e);
-            achievementIds = [];
-        }
-    }
+    // Obtener logros del GameData
+    if (window.GameData && typeof GameData.getAchievements === 'function') {
+        const achievements = GameData.getAchievements();
+        const achievementIds = Object.keys(achievements);
         
         if (achievementIds.length === 0) {
             // No hay logros desbloqueados
@@ -3223,40 +3327,38 @@ function fillAchievementsModal() {
             `;
             return;
         }
-    
-    // Limpiar contenedor
-    unlockedContainer.innerHTML = '';
         
         // Mostrar logros desbloqueados
         achievementIds.forEach(id => {
-        // Obtener datos del logro - intentar FULL_GAME_ACHIEVEMENTS primero (logros nuevos)
-        let achievementData = null;
-        
-        if (window.FULL_GAME_ACHIEVEMENTS && window.FULL_GAME_ACHIEVEMENTS[id]) {
-            achievementData = window.FULL_GAME_ACHIEVEMENTS[id];
-        } else if (window.GAME_ACHIEVEMENTS && window.GAME_ACHIEVEMENTS[id]) {
-            achievementData = window.GAME_ACHIEVEMENTS[id];
-        }
-        
-        if (!achievementData) {
-            console.warn(`No se encontraron datos para el logro: ${id}`);
-            return;
-        }
+            // Obtener datos del logro
+            const achievementData = window.GAME_ACHIEVEMENTS ? 
+                window.GAME_ACHIEVEMENTS[id] : null;
+            
+            if (!achievementData) return;
             
             // Crear tarjeta de logro
             const card = document.createElement('div');
             card.className = 'achievement-card';
             card.innerHTML = `
                 <div class="achievement-card-icon">
-                <i class="${achievementData.icon || 'fas fa-trophy'}"></i>
+                    <i class="${achievementData.icon}"></i>
                 </div>
-            <div class="achievement-card-title">${achievementData.title || id}</div>
-            <div class="achievement-card-desc">${achievementData.description || 'Logro misterioso'}</div>
-            <div class="achievement-card-count">x${achievements[id]?.count || 1}</div>
+                <div class="achievement-card-title">${achievementData.title}</div>
+                <div class="achievement-card-desc">${achievementData.description}</div>
+                <div class="achievement-card-count">x${achievements[id].count || 1}</div>
             `;
             
             unlockedContainer.appendChild(card);
         });
+    } else {
+        // GameData no disponible
+        unlockedContainer.innerHTML = `
+            <div class="error-message">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>No se pudieron cargar los logros.</p>
+            </div>
+        `;
+    }
 }
 
 // Función para actualizar visualmente un contador regresivo en un modal

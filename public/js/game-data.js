@@ -34,14 +34,14 @@ const STORAGE_KEYS = {
 };
 
 // Sistema de logros
-const GAME_ACHIEVEMENTS = {
+if (!window.GAME_ACHIEVEMENTS) {
+  window.GAME_ACHIEVEMENTS = {
     victory_first: {
       id: 'victory_first',
       title: 'Primera Victoria',
       description: 'Completaste tu primer rosco con éxito.',
       icon: 'fas fa-trophy',
       type: 'victory',
-      category: 'beginner',
       condition: (stats) => stats.result === 'victory'
     },
     perfect_game: {
@@ -50,7 +50,6 @@ const GAME_ACHIEVEMENTS = {
       description: 'Completaste un rosco sin errores ni pasadas.',
       icon: 'fas fa-star',
       type: 'perfect',
-      category: 'intermediate',
       condition: (stats) => stats.perfectGame && stats.result === 'victory'
     },
     speed_demon: {
@@ -59,7 +58,6 @@ const GAME_ACHIEVEMENTS = {
       description: 'Completaste un rosco en menos de la mitad del tiempo asignado.',
       icon: 'fas fa-bolt',
       type: 'fast',
-      category: 'intermediate',
       condition: (stats) => stats.result === 'victory' && stats.totalTimePlayed < (stats.maxTimeLimit * 0.5)
     },
     no_hints: {
@@ -68,7 +66,6 @@ const GAME_ACHIEVEMENTS = {
       description: 'Completaste un rosco sin usar ninguna pista.',
       icon: 'fas fa-lightbulb',
       type: 'noHelp',
-      category: 'intermediate',
       condition: (stats) => stats.noHelp && stats.result === 'victory'
     },
     hardcore: {
@@ -77,7 +74,6 @@ const GAME_ACHIEVEMENTS = {
       description: 'Ganaste en modo difícil.',
       icon: 'fas fa-fire',
       type: 'hard',
-      category: 'intermediate',
       condition: (stats) => stats.result === 'victory' && stats.difficulty === 'dificil'
     },
     almost_there: {
@@ -86,7 +82,6 @@ const GAME_ACHIEVEMENTS = {
       description: 'Se acabó el tiempo, pero respondiste más del 70% correctamente.',
       icon: 'fas fa-hourglass-end',
       type: 'perseverance',
-      category: 'beginner',
       condition: (stats) => stats.result === 'timeout' && stats.correctAnswers > (stats.remainingQuestions + stats.correctAnswers) * 0.7
     },
     try_again: {
@@ -95,15 +90,102 @@ const GAME_ACHIEVEMENTS = {
       description: 'Perdiste, pero no te des por vencido.',
       icon: 'fas fa-redo',
       type: 'defeat',
-      category: 'beginner',
       condition: (stats) => stats.result === 'defeat'
     }
-};
+  };
+}
 
 // Objeto principal que contiene las funciones de datos del juego
 const GameData = {
     // Exponer la lista de logros
     GAME_ACHIEVEMENTS: GAME_ACHIEVEMENTS,
+    
+    /**
+     * Obtiene los logros desbloqueados por el jugador
+     * @returns {Array} Array con los IDs de los logros desbloqueados
+     */
+    getUnlockedAchievements: function() {
+        try {
+            let allAchievements = [];
+            
+            // Primero intentar obtener del nuevo formato de array
+            const pasalaCheArrayAchievements = localStorage.getItem(STORAGE_KEYS.PASALA_CHE.ACHIEVEMENTS + '_array');
+            if (pasalaCheArrayAchievements) {
+                const pasalaCheArrayUnlocked = JSON.parse(pasalaCheArrayAchievements);
+                if (Array.isArray(pasalaCheArrayUnlocked) && pasalaCheArrayUnlocked.length > 0) {
+                    allAchievements = [...pasalaCheArrayUnlocked];
+                    console.log('Logros obtenidos del formato array:', allAchievements);
+                    return allAchievements;
+                }
+            }
+            
+            // Si no encontramos nada en el nuevo formato, probamos con el formato antiguo
+            // Obtener logros desbloqueados de PASALA CHE formato objeto
+            const pasalaCheAchievements = localStorage.getItem(STORAGE_KEYS.PASALA_CHE.ACHIEVEMENTS);
+            if (pasalaCheAchievements) {
+                try {
+                    const pasalaCheObj = JSON.parse(pasalaCheAchievements);
+                    // Si es un objeto, extraer las claves como IDs de logros
+                    if (pasalaCheObj && typeof pasalaCheObj === 'object' && !Array.isArray(pasalaCheObj)) {
+                        const pasalaCheUnlocked = Object.keys(pasalaCheObj);
+                        if (pasalaCheUnlocked.length > 0) {
+                            allAchievements = [...pasalaCheUnlocked];
+                            console.log('Logros obtenidos del formato objeto:', allAchievements);
+                            
+                            // Guardar en el nuevo formato para próximas consultas
+                            this.migrateAchievementsToArray(allAchievements);
+                            
+                            return allAchievements;
+                        }
+                    }
+                    // Si es un array, usarlo directamente
+                    else if (Array.isArray(pasalaCheObj) && pasalaCheObj.length > 0) {
+                        allAchievements = [...pasalaCheObj];
+                        console.log('Logros obtenidos del formato array en clave antigua:', allAchievements);
+                        
+                        // Guardar en el nuevo formato para próximas consultas
+                        this.migrateAchievementsToArray(allAchievements);
+                        
+                        return allAchievements;
+                    }
+                } catch (e) {
+                    console.error('Error al analizar logros de PASALA CHE:', e);
+                }
+            }
+            
+            // Obtener logros desbloqueados de QUIÉN SABE MÁS
+            const quienSabeAchievements = localStorage.getItem(STORAGE_KEYS.QUIEN_SABE.ACHIEVEMENTS);
+            const quienSabeUnlocked = quienSabeAchievements ? JSON.parse(quienSabeAchievements) : [];
+            
+            // Combinar con los encontrados hasta ahora
+            if (quienSabeUnlocked.length > 0) {
+                allAchievements = [...allAchievements, ...quienSabeUnlocked];
+            }
+            
+            // Eliminar duplicados y devolver
+            return [...new Set(allAchievements)];
+            
+        } catch (error) {
+            console.error('Error al obtener logros desbloqueados:', error);
+            return [];
+        }
+    },
+    
+    /**
+     * Migra los logros al nuevo formato de array
+     * @param {Array} achievementIds IDs de logros a migrar
+     * @private
+     */
+    migrateAchievementsToArray: function(achievementIds) {
+        if (!Array.isArray(achievementIds) || achievementIds.length === 0) return;
+        
+        try {
+            localStorage.setItem(STORAGE_KEYS.PASALA_CHE.ACHIEVEMENTS + '_array', JSON.stringify(achievementIds));
+            console.log('Logros migrados al nuevo formato array:', achievementIds);
+        } catch (error) {
+            console.error('Error al migrar logros al formato array:', error);
+        }
+    },
     
     /**
      * Guarda los datos de una partida completada de PASALA CHE
@@ -879,6 +961,9 @@ const GameData = {
             // Guardar logros actualizados
             localStorage.setItem(STORAGE_KEYS.PASALA_CHE.ACHIEVEMENTS, JSON.stringify(achievements));
             
+            // También guardar en formato array para compatibilidad con getUnlockedAchievements
+            this.updateUnlockedAchievementsArray(achievementId);
+            
             // Disparar evento de logro desbloqueado
             document.dispatchEvent(new CustomEvent('achievementUnlocked', { 
                 detail: { achievement: achievementData }
@@ -888,6 +973,29 @@ const GameData = {
         } catch (error) {
             console.error('Error al desbloquear logro:', error);
             return false;
+        }
+    },
+    
+    /**
+     * Actualiza el array de logros desbloqueados
+     * @param {string} achievementId ID del logro a agregar
+     * @private
+     */
+    updateUnlockedAchievementsArray: function(achievementId) {
+        try {
+            // Obtener array actual de logros
+            const pasalaCheAchievements = localStorage.getItem(STORAGE_KEYS.PASALA_CHE.ACHIEVEMENTS + '_array');
+            let pasalaCheUnlocked = pasalaCheAchievements ? JSON.parse(pasalaCheAchievements) : [];
+            
+            // Verificar si ya existe
+            if (!pasalaCheUnlocked.includes(achievementId)) {
+                // Agregar el nuevo logro
+                pasalaCheUnlocked.push(achievementId);
+                // Guardar el array actualizado
+                localStorage.setItem(STORAGE_KEYS.PASALA_CHE.ACHIEVEMENTS + '_array', JSON.stringify(pasalaCheUnlocked));
+            }
+        } catch (error) {
+            console.error('Error al actualizar array de logros:', error);
         }
     },
     
@@ -998,100 +1106,3 @@ const GameData = {
 
 // Exponer GameData globalmente
 window.GameData = GameData; 
-
-// Asegurarse de que GAME_ACHIEVEMENTS esté disponible globalmente
-window.GAME_ACHIEVEMENTS = GAME_ACHIEVEMENTS;
-
-// Inicializar logros con algunos predeterminados si no existen
-// Esto ayudará a que la página de logros no esté vacía
-function initDefaultAchievements() {
-    console.log("[initDefaultAchievements] Initializing default achievements...");
-    try {
-        // Verificar primero si la clave existe en localStorage
-        const savedAchievements = localStorage.getItem(STORAGE_KEYS.PASALA_CHE.ACHIEVEMENTS);
-        console.log("[initDefaultAchievements] Saved achievements in localStorage:", 
-            savedAchievements ? "Found" : "Not found");
-        
-        let achievements = {};
-        if (savedAchievements) {
-            try {
-                achievements = JSON.parse(savedAchievements);
-                console.log("[initDefaultAchievements] Parsed achievements:", Object.keys(achievements));
-            } catch (parseError) {
-                console.error("[initDefaultAchievements] Error parsing achievements:", parseError);
-                achievements = {};
-            }
-        }
-        
-        // Si no hay logros, crear algunos predeterminados para demostración
-        if (Object.keys(achievements).length === 0) {
-            console.log("[initDefaultAchievements] No achievements found, adding demo achievements");
-            
-            // Crear un objeto con varios logros de demostración
-            const demoAchievements = {
-                'victory_first': {
-                    id: 'victory_first',
-                    unlockedAt: new Date().toISOString(),
-                    lastUnlocked: new Date().toISOString(),
-                    count: 1,
-                    category: 'beginner'
-                },
-                'perfect_game': {
-                    id: 'perfect_game',
-                    unlockedAt: new Date(Date.now() - 86400000).toISOString(), // Ayer
-                    lastUnlocked: new Date(Date.now() - 86400000).toISOString(),
-                    count: 2,
-                    category: 'intermediate'
-                },
-                'speed_demon': {
-                    id: 'speed_demon',
-                    unlockedAt: new Date(Date.now() - 172800000).toISOString(), // Hace 2 días
-                    lastUnlocked: new Date(Date.now() - 86400000).toISOString(),
-                    count: 3,
-                    category: 'intermediate'
-                },
-                'no_hints': {
-                    id: 'no_hints',
-                    unlockedAt: new Date(Date.now() - 259200000).toISOString(), // Hace 3 días
-                    lastUnlocked: new Date(Date.now() - 259200000).toISOString(),
-                    count: 1,
-                    category: 'intermediate'
-                },
-                'hardcore': {
-                    id: 'hardcore',
-                    unlockedAt: new Date(Date.now() - 345600000).toISOString(), // Hace 4 días
-                    lastUnlocked: new Date(Date.now() - 345600000).toISOString(),
-                    count: 1,
-                    category: 'intermediate'
-                },
-                'try_again': {
-                    id: 'try_again',
-                    unlockedAt: new Date(Date.now() - 432000000).toISOString(), // Hace 5 días
-                    lastUnlocked: new Date(Date.now() - 432000000).toISOString(),
-                    count: 4,
-                    category: 'beginner'
-                }
-            };
-            
-            // Guardar los logros de demostración
-            try {
-                localStorage.setItem(STORAGE_KEYS.PASALA_CHE.ACHIEVEMENTS, JSON.stringify(demoAchievements));
-                console.log("[initDefaultAchievements] Demo achievements added successfully");
-            } catch (storageError) {
-                console.error("[initDefaultAchievements] Error saving demo achievements to localStorage:", storageError);
-            }
-        }
-    } catch (e) {
-        console.error("[initDefaultAchievements] Error initializing default achievements:", e);
-    }
-}
-
-// Exponer la función initDefaultAchievements globalmente
-window.initDefaultAchievements = initDefaultAchievements;
-
-// Ejecutar la inicialización cuando el DOM esté cargado para asegurar que
-// todos los recursos y variables estén disponibles
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM loaded, initializing achievements...");
-    initDefaultAchievements();
-}); 

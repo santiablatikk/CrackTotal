@@ -2,12 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="description" content="Logros y recompensas en CRACK TOTAL, el juego del rosco futbolero." />
+  <meta name="description" content="Logros y recompensas en CRACK TOTAL, el juego del rosco futbolero. Desbloquea 50 logros diferentes jugando PASALA CHE." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="theme-color" content="#1e293b">
   <meta name="google-adsense-account" content="ca-pub-9579152019412427">
-  <title>Logros - CRACK TOTAL</title>
+  <title>Logros - CRACK TOTAL | PASALA CHE</title>
   <!-- Preconexiones -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,242 +23,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427" crossorigin="anonymous"></script>
-  
-  <style>
-    /* Estilos específicos para la página de logros */
-    .achievements-page {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      overflow-x: hidden;
-      padding: 20px;
-    }
-    
-    .achievements-page::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-      background-size: 20px 20px;
-      pointer-events: none;
-      z-index: 1;
-    }
-    
-    .page-header {
-      text-align: center;
-      color: white;
-      margin-bottom: 30px;
-      position: relative;
-      z-index: 2;
-    }
-    
-    .page-header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    }
-    
-    .page-header p {
-      font-size: 1.2rem;
-      opacity: 0.8;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    
-    .achievements-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 2;
-    }
-    
-    .achievement-card {
-      background-color: rgba(0, 0, 0, 0.2);
-      border-radius: 12px;
-      padding: 20px;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-    
-    .achievement-card.locked {
-      filter: grayscale(100%);
-      opacity: 0.7;
-    }
-    
-    .achievement-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    }
-    
-    .achievement-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      margin: 0 auto 15px;
-      font-size: 2.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .achievement-icon::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, #3a88fe, #57dd81);
-      opacity: 0.7;
-      z-index: -1;
-    }
-    
-    .achievement-card.locked .achievement-icon::before {
-      background: linear-gradient(135deg, #666, #999);
-    }
-    
-    .achievement-details {
-      text-align: center;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .achievement-title {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: white;
-      margin-bottom: 10px;
-    }
-    
-    .achievement-description {
-      font-size: 0.95rem;
-      color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 15px;
-      flex-grow: 1;
-    }
-    
-    .achievement-progress {
-      margin-top: auto;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 50px;
-      height: 10px;
-      overflow: hidden;
-      position: relative;
-    }
-    
-    .achievement-progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #fdbb2d, #b21f1f);
-      width: 0;
-      transition: width 0.5s;
-    }
-    
-    .achievement-count {
-      margin-top: 5px;
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.7);
-    }
-    
-    .achievement-card.locked .achievement-count {
-      color: rgba(255, 255, 255, 0.4);
-    }
-    
-    .back-button {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background-color: rgba(0, 0, 0, 0.3);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s;
-      backdrop-filter: blur(5px);
-      z-index: 100;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-    
-    .back-button:hover {
-      background-color: rgba(253, 187, 45, 0.7);
-      transform: scale(1.1);
-    }
-    
-    .achievement-categories {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-      position: relative;
-      z-index: 2;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    
-    .category-filter {
-      background-color: rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
-      border-radius: 50px;
-      padding: 8px 15px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .category-filter:hover, .category-filter.active {
-      background-color: rgba(253, 187, 45, 0.7);
-      transform: translateY(-2px);
-    }
-
-    .achievements-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      width: 100%;
-    }
-    
-    .achievement-date {
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.6);
-      margin-top: 5px;
-    }
-    
-    @media (max-width: 768px) {
-      .achievements-container {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      }
-      
-      .back-button {
-        bottom: 20px;
-        right: 20px;
-        width: 50px;
-        height: 50px;
-        font-size: 1.2rem;
-      }
-    }
-  </style>
 </head>
 <body>
   <header class="main-header">
@@ -272,22 +36,38 @@
   </header>
   
   <div class="achievements-page">
+    <!-- Partículas decorativas -->
+    <div class="particles" id="particles"></div>
+    
     <div class="page-header">
-      <h1>LOGROS DE PASALA CHE</h1>
-      <p>Colecciona logros para demostrar tu habilidad en el juego de preguntas sobre fútbol.</p>
+      <h1>TROFEOS Y LOGROS</h1>
+      <p>Demuestra tu habilidad y conocimiento futbolero desbloqueando estos 50 logros. 
+        Cada uno representa un desafío único en el juego del Rosco.</p>
+    </div>
+    
+    <!-- Contador de logros desbloqueados -->
+    <div class="achievements-summary" id="achievements-summary">
+      <div class="achievement-counter">
+        <span id="unlocked-count">0</span>/<span id="total-count">50</span>
+        <span class="counter-label">logros desbloqueados</span>
+      </div>
     </div>
     
     <div class="achievement-categories">
-      <button class="category-filter active" data-category="all">Todos</button>
-      <button class="category-filter" data-category="beginner">Principiante</button>
-      <button class="category-filter" data-category="intermediate">Intermedio</button>
+      <button class="category-filter active" data-category="all">Todos los Logros</button>
+      <button class="category-filter" data-category="principiante">Principiante</button>
+      <button class="category-filter" data-category="intermedio">Intermedio</button>
+      <button class="category-filter" data-category="experto">Experto</button>
+      <button class="category-filter" data-category="maestria">Maestría</button>
+      <button class="category-filter" data-category="coleccionista">Coleccionista</button>
+      <button class="category-filter" data-category="especial">Especial</button>
     </div>
     
     <div class="achievements-container" id="achievements-container">
       <!-- Los logros se cargarán dinámicamente con JavaScript -->
     </div>
     
-    <button onclick="window.history.back()" class="back-button">
+    <button onclick="window.history.back()" class="back-button" title="Volver atrás">
       <i class="fas fa-arrow-left"></i>
     </button>
   </div>
@@ -297,7 +77,7 @@
     <p class="ad-label">Publicidad</p>
     <ins class="adsbygoogle"
       style="display:block"
-      data-ad-client="ca-pub-9579152019412427"
+      data-ad-client="ca-pub-1234567890"
       data-ad-slot="1234567890"
       data-ad-format="auto"
       data-full-width-responsive="true"></ins>
@@ -335,106 +115,159 @@
   <!-- Scripts -->
   <script src="js/utils.js"></script>
   <script src="js/game-data.js"></script>
+  <script src="js/achievements-data.js"></script>
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Obtener el contenedor de logros
       const achievementsContainer = document.getElementById('achievements-container');
       if (!achievementsContainer) return;
       
-      // Obtener logros del usuario desde GameData
-      if (window.GameData && typeof GameData.getAchievements === 'function') {
-        const achievements = GameData.getAchievements();
-        const achievementIds = Object.keys(achievements);
+      // Categorías de logros
+      const ACHIEVEMENT_CATEGORIES = {
+        PRINCIPIANTE: 'principiante',
+        INTERMEDIO: 'intermedio',
+        EXPERTO: 'experto',
+        MAESTRIA: 'maestria',
+        COLECCIONISTA: 'coleccionista',
+        ESPECIAL: 'especial'
+      };
+
+      // Utilizar los logros completos si están disponibles
+      let gameAchievements = {};
+      if (window.FULL_GAME_ACHIEVEMENTS) {
+        gameAchievements = window.FULL_GAME_ACHIEVEMENTS;
+      } else if (window.GameData && GameData.GAME_ACHIEVEMENTS) {
+        gameAchievements = GameData.GAME_ACHIEVEMENTS;
+      }
+
+      // Obtener logros desbloqueados
+      let unlockedAchievements = [];
+      try {
+        const saved = localStorage.getItem('unlockedAchievements');
+        if (saved) {
+          unlockedAchievements = JSON.parse(saved);
+        }
+      } catch (e) {
+        console.error("Error al cargar logros:", e);
+      }
+      
+      // Actualizar contador de logros desbloqueados
+      const unlockedCount = document.getElementById('unlocked-count');
+      const totalCount = document.getElementById('total-count');
+      
+      if (unlockedCount && totalCount) {
+        unlockedCount.textContent = unlockedAchievements.length;
+        totalCount.textContent = Object.keys(gameAchievements).length;
+      }
+      
+      // Verificar si hay logros recién desbloqueados
+      const recentlyUnlocked = [];
+      try {
+        const recentUnlocked = sessionStorage.getItem('recentlyUnlockedAchievements');
+        if (recentUnlocked) {
+          JSON.parse(recentUnlocked).forEach(id => recentlyUnlocked.push(id));
+          // Limpiar después de cargar
+          sessionStorage.removeItem('recentlyUnlockedAchievements');
+        }
+      } catch (e) {
+        console.error("Error al cargar logros recientes:", e);
+      }
+      
+      // Función para cargar logros filtrados por categoría
+      function loadFilteredAchievements(category = 'all') {
+        // Obtener todos los IDs de logros
+        const achievementIds = Object.keys(gameAchievements);
         
-        if (achievementIds.length === 0) {
-          // No hay logros desbloqueados
+        // Filtrar por categoría si es necesario
+        const filteredIds = category === 'all' 
+          ? achievementIds
+          : achievementIds.filter(id => {
+              const achievement = gameAchievements[id];
+              return achievement && achievement.category === category;
+            });
+        
+        // Si no hay logros, mostrar mensaje
+        if (filteredIds.length === 0) {
           achievementsContainer.innerHTML = `
             <div class="no-achievements">
               <i class="fas fa-medal"></i>
-              <h3>Sin logros desbloqueados</h3>
-              <p>Aún no has desbloqueado ningún logro.</p>
-              <p>¡Sigue jugando para conseguirlos!</p>
+              <p>No hay logros en esta categoría.</p>
             </div>
           `;
           return;
         }
         
-        // Referencia a la lista completa de logros
-        const gameAchievements = window.GameData.GAME_ACHIEVEMENTS || {};
+        // Generar HTML para los logros
+        let html = '<div class="achievements-grid">';
         
-        // Función para cargar logros filtrados por categoría
-        function loadFilteredAchievements(category = 'all') {
-          // Filtrar logros por categoría
-          const filteredIds = category === 'all' 
-            ? achievementIds 
-            : achievementIds.filter(id => {
-                const achievement = gameAchievements[id];
-                return achievement && achievement.category === category;
-              });
+        filteredIds.forEach(id => {
+          const achievementData = gameAchievements[id];
+          if (!achievementData) return;
           
-          if (filteredIds.length === 0) {
-            achievementsContainer.innerHTML = `
-              <div class="no-achievements">
-                <i class="fas fa-medal"></i>
-                <h3>No hay logros</h3>
-                <p>No hay logros disponibles en esta categoría.</p>
+          const isUnlocked = unlockedAchievements.includes(id);
+          const isRecentlyUnlocked = recentlyUnlocked.includes(id);
+          
+          const statusClass = isUnlocked ? '' : 'locked';
+          const newClass = isRecentlyUnlocked ? 'new-unlock' : '';
+          const justUnlockedClass = isRecentlyUnlocked ? 'just-unlocked' : '';
+          
+          html += `
+            <div class="achievement-card ${statusClass} ${newClass} ${justUnlockedClass}">
+              <div class="achievement-icon">
+                <i class="${achievementData.icon || 'fas fa-award'}"></i>
               </div>
-            `;
-            return;
-          }
-          
-          // Mostrar logros desbloqueados
-          let html = '<div class="achievements-grid">';
-          
-          filteredIds.forEach(id => {
-            const achievementData = gameAchievements[id];
-            if (!achievementData) return;
-            
-            html += `
-              <div class="achievement-card">
-                <div class="achievement-icon">
-                  <i class="${achievementData.icon}"></i>
+              <div class="achievement-details">
+                <h3 class="achievement-title">${achievementData.title}</h3>
+                <p class="achievement-description">${achievementData.description}</p>
+                <div class="achievement-progress">
+                  <div class="achievement-progress-bar"></div>
                 </div>
-                <div class="achievement-details">
-                  <h3 class="achievement-title">${achievementData.title}</h3>
-                  <p class="achievement-description">${achievementData.description}</p>
-                  <div class="achievement-date">
-                    Desbloqueado: ${new Date(achievements[id].unlockedAt).toLocaleDateString()}
-                  </div>
-                  <div class="achievement-count">Conseguido ${achievements[id].count || 1} veces</div>
+                ${isUnlocked ? `
+                <div class="achievement-date">
+                  Desbloqueado: ${new Date().toLocaleDateString()}
                 </div>
+                ` : ''}
               </div>
-            `;
-          });
-          
-          html += '</div>';
-          achievementsContainer.innerHTML = html;
-        }
-        
-        // Cargar todos los logros inicialmente
-        loadFilteredAchievements('all');
-        
-        // Configurar los filtros de categoría
-        const filters = document.querySelectorAll('.category-filter');
-        filters.forEach(filter => {
-          filter.addEventListener('click', function() {
-            // Quitar clase activa de todos los filtros
-            filters.forEach(f => f.classList.remove('active'));
-            // Añadir clase activa al filtro actual
-            this.classList.add('active');
-            // Cargar logros filtrados
-            loadFilteredAchievements(this.dataset.category);
-          });
+            </div>
+          `;
         });
         
-      } else {
-        // GameData no disponible
-        achievementsContainer.innerHTML = `
-          <div class="error-message">
-            <i class="fas fa-exclamation-triangle"></i>
-            <h3>Error al cargar logros</h3>
-            <p>No se pudieron cargar los datos de logros. Por favor, inténtalo más tarde.</p>
-          </div>
-        `;
+        html += '</div>';
+        achievementsContainer.innerHTML = html;
+      }
+      
+      // Cargar todos los logros inicialmente
+      loadFilteredAchievements('all');
+      
+      // Configurar filtros por categoría
+      const categoryFilters = document.querySelectorAll('.category-filter');
+      categoryFilters.forEach(filter => {
+        filter.addEventListener('click', function() {
+          // Actualizar clase activa
+          categoryFilters.forEach(f => f.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Cargar logros filtrados
+          loadFilteredAchievements(this.dataset.category);
+        });
+      });
+      
+      // Crear partículas decorativas
+      const particlesContainer = document.getElementById('particles');
+      if (particlesContainer) {
+        for (let i = 0; i < 30; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'particle';
+          particle.style.left = `${Math.random() * 100}%`;
+          particle.style.top = `${Math.random() * 100}%`;
+          particle.style.width = `${Math.random() * 4 + 1}px`;
+          particle.style.height = particle.style.width;
+          particle.style.opacity = Math.random() * 0.5 + 0.1;
+          particle.style.animationDuration = `${Math.random() * 30 + 10}s`;
+          particle.style.animationDelay = `${Math.random() * 5}s`;
+          particlesContainer.appendChild(particle);
+        }
       }
     });
   </script>

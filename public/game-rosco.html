@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/game-styles.css" />
     <link rel="stylesheet" href="css/footer-styles.css" />
+    <link rel="stylesheet" href="css/mobile.css" />
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Open Graph tags para compartir en redes sociales -->
@@ -36,6 +37,44 @@
     <script src="js/modules/mobileUtils.js"></script>
     <!-- Preload script - carga antes que cualquier otro script -->
     <script src="js/preload.js"></script>
+    <!-- Inicialización de optimizaciones móviles -->
+    <script>
+      // Inicializar utilidades móviles cuando el DOM esté listo
+      document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar con opciones para el juego de rosco
+        MobileUtils.init({
+          optimizeRosco: true,
+          optimizeForLowMemory: true,
+          preventDoubleTapZoom: true,
+          fixVhUnits: true
+        });
+        
+        // Aplicar optimizaciones específicas al juego cuando esté cargado
+        window.addEventListener('gameLoaded', function() {
+          if (MobileUtils.env.isMobile || MobileUtils.env.supportsTouch) {
+            MobileUtils.optimizeGameForMobile();
+            
+            // Optimizar formulario de respuesta
+            const answerForm = document.querySelector('.answer-form');
+            if (answerForm) {
+              MobileUtils.optimizeFormForTouch(answerForm);
+            }
+            
+            // Optimizar áreas táctiles para mejor experiencia
+            document.querySelectorAll('.rosco-letter, .submit-btn, .skip-btn, .help-btn').forEach(function(el) {
+              MobileUtils.optimizeTouchTarget(el);
+            });
+          }
+        });
+        
+        // Reoptimizar cuando cambie la orientación
+        window.addEventListener('mobileOrientationChanged', function() {
+          if (MobileUtils.env.isMobile || MobileUtils.env.supportsTouch) {
+            MobileUtils.optimizeRoscoForMobile();
+          }
+        });
+      });
+    </script>
     <style>
       /* Variables globales */
       :root {
