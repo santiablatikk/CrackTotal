@@ -622,5 +622,147 @@
       }
     });
   </script>
+  
+  <!-- Script para forzar optimización móvil -->
+  <script>
+    // Función para aplicar estilos móviles al rosco
+    function optimizeMobileRosco() {
+      // Verificar si es dispositivo móvil
+      const isMobile = window.innerWidth <= 768;
+      const isSmallMobile = window.innerWidth <= 480;
+      const isVeryNarrow = window.innerWidth <= 360;
+      
+      if (isMobile) {
+        // Permitir desplazamiento
+        document.body.style.overflow = 'auto';
+        document.body.style.overflowX = 'hidden';
+        document.documentElement.style.overflowY = 'auto';
+        
+        // Configurar container
+        const container = document.querySelector('.container');
+        if (container) {
+          container.style.height = 'auto';
+          container.style.minHeight = '100vh';
+        }
+        
+        // Configurar game-container
+        const gameContainer = document.querySelector('.game-container');
+        if (gameContainer) {
+          gameContainer.style.margin = '0.5rem';
+          gameContainer.style.padding = '0.75rem';
+        }
+        
+        // Configurar el rosco
+        const roscoContainer = document.getElementById('rosco-container');
+        if (roscoContainer) {
+          if (isSmallMobile) {
+            roscoContainer.style.transformOrigin = 'center';
+            roscoContainer.style.width = '100%';
+            roscoContainer.style.height = 'auto';
+            roscoContainer.style.margin = '0 auto';
+            
+            // Ajustar letras del rosco
+            const letters = roscoContainer.querySelectorAll('.rosco-letter');
+            letters.forEach(letter => {
+              letter.style.fontSize = isVeryNarrow ? '0.7rem' : '0.8rem';
+              if (isVeryNarrow) {
+                letter.style.width = '30px';
+                letter.style.height = '30px';
+              }
+            });
+          }
+        }
+        
+        // Ajustar tarjeta de pregunta
+        const questionCard = document.querySelector('.question-card');
+        if (questionCard) {
+          questionCard.style.width = isSmallMobile ? '85%' : '95%';
+          questionCard.style.maxWidth = 'none';
+          questionCard.style.margin = '0 auto';
+          questionCard.style.padding = isSmallMobile ? '0.8rem' : '1rem';
+        }
+        
+        // Ajustar letra actual
+        const letterDisplay = document.querySelector('.current-letter-display');
+        if (letterDisplay) {
+          letterDisplay.style.fontSize = isVeryNarrow ? '2.2rem' : (isSmallMobile ? '2.5rem' : '3rem');
+        }
+        
+        // Ajustar pregunta actual
+        const currentQuestion = document.querySelector('.current-question');
+        if (currentQuestion) {
+          currentQuestion.style.fontSize = isVeryNarrow ? '0.95rem' : (isSmallMobile ? '1rem' : '1.1rem');
+        }
+        
+        // Ajustar definición
+        const definition = document.querySelector('.current-definition');
+        if (definition) {
+          definition.style.fontSize = isSmallMobile ? '0.9rem' : '1rem';
+          definition.style.maxHeight = '25vh';
+        }
+        
+        // Ajustar inputs
+        const inputContainer = document.querySelector('.input-container');
+        if (inputContainer) {
+          inputContainer.style.flexWrap = 'nowrap';
+          inputContainer.style.width = '100%';
+        }
+        
+        const answerInput = document.querySelector('.answer-input');
+        if (answerInput) {
+          answerInput.style.flex = '1';
+          answerInput.style.width = 'auto';
+        }
+        
+        const submitBtn = document.querySelector('.submit-btn');
+        if (submitBtn) {
+          submitBtn.style.flexShrink = '0';
+        }
+        
+        // Ajustar status
+        const roscoStatus = document.querySelector('.rosco-status');
+        if (roscoStatus) {
+          roscoStatus.style.flexWrap = 'wrap';
+          roscoStatus.style.justifyContent = 'center';
+          roscoStatus.style.gap = '0.5rem';
+        }
+        
+        const statusItems = document.querySelectorAll('.status-item');
+        statusItems.forEach(item => {
+          item.style.minWidth = isVeryNarrow ? '70px' : '80px';
+          item.style.flex = '1 1 40%';
+          item.style.margin = '0.2rem';
+          item.style.padding = isVeryNarrow ? '0.5rem' : '0.6rem';
+        });
+        
+        if (isVeryNarrow) {
+          // Ajustes adicionales para pantallas muy estrechas
+          const statusLabels = document.querySelectorAll('.status-label');
+          statusLabels.forEach(label => {
+            label.style.fontSize = '0.7rem';
+          });
+          
+          const statusValues = document.querySelectorAll('.status-value');
+          statusValues.forEach(value => {
+            value.style.fontSize = '1.2rem';
+          });
+        }
+      }
+    }
+    
+    // Aplicar optimizaciones al cargar, redimensionar y cambiar orientación
+    document.addEventListener('DOMContentLoaded', optimizeMobileRosco);
+    window.addEventListener('resize', optimizeMobileRosco);
+    window.addEventListener('orientationchange', function() {
+      setTimeout(optimizeMobileRosco, 200);
+    });
+    
+    // Forzar aplicación después de cargar todo el contenido
+    window.addEventListener('load', function() {
+      optimizeMobileRosco();
+      // Repetir después de un retraso para asegurar que cualquier otro script no lo sobreescriba
+      setTimeout(optimizeMobileRosco, 500);
+    });
+  </script>
 </body>
 </html>
