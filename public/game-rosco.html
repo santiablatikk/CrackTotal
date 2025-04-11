@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/game-styles.css" />
     <link rel="stylesheet" href="css/footer-styles.css" />
+    <link rel="stylesheet" href="css/mobile-fix.css" />
+    <link rel="stylesheet" href="css/rosco-mobile-fix.css" />
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Open Graph tags para compartir en redes sociales -->
@@ -27,6 +29,8 @@
     <meta property="og:description" content="Pon a prueba tus conocimientos futboleros con este divertido juego de preguntas.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="img/preview.jpg">
+    <!-- Script de override para móviles con alta prioridad -->
+    <script src="js/rosco-mobile-override.js"></script>
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
@@ -34,6 +38,18 @@
     <script src="utils/notifications.js"></script>
     <!-- Mobile optimization script -->
     <script src="js/modules/mobileUtils.js"></script>
+    <script>
+      // Inicializar MobileUtils inmediatamente
+      if (window.MobileUtils) {
+        window.MobileUtils.init({
+          debugMode: true,
+          fixVhUnits: true,
+          optimizeTouchElements: true,
+          lazyLoadImages: true,
+          allowScrolling: true
+        });
+      }
+    </script>
     <!-- Preload script - carga antes que cualquier otro script -->
     <script src="js/preload.js"></script>
     <style>
@@ -1776,6 +1792,7 @@
     <script src="js/particles-config.js"></script>
     <!-- Global footer script -->
     <script src="js/global-footer.js"></script>
+    <script src="js/mobile-override.js"></script>
   </body>
 </html>
 
