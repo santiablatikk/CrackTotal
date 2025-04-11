@@ -20,8 +20,7 @@
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/game-styles.css" />
     <link rel="stylesheet" href="css/footer-styles.css" />
-    <link rel="stylesheet" href="css/mobile-fix.css" />
-    <link rel="stylesheet" href="css/rosco-mobile-fix.css" />
+    <link rel="stylesheet" href="css/mobile.css" />
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Open Graph tags para compartir en redes sociales -->
@@ -29,8 +28,6 @@
     <meta property="og:description" content="Pon a prueba tus conocimientos futboleros con este divertido juego de preguntas.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="img/preview.jpg">
-    <!-- Script de override para móviles con alta prioridad -->
-    <script src="js/rosco-mobile-override.js"></script>
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
@@ -38,20 +35,57 @@
     <script src="utils/notifications.js"></script>
     <!-- Mobile optimization script -->
     <script src="js/modules/mobileUtils.js"></script>
-    <script>
-      // Inicializar MobileUtils inmediatamente
-      if (window.MobileUtils) {
-        window.MobileUtils.init({
-          debugMode: true,
-          fixVhUnits: true,
-          optimizeTouchElements: true,
-          lazyLoadImages: true,
-          allowScrolling: true
-        });
-      }
-    </script>
+    <script src="js/modules/mobilePositioning.js"></script>
     <!-- Preload script - carga antes que cualquier otro script -->
     <script src="js/preload.js"></script>
+    <!-- Inicialización de optimizaciones móviles -->
+    <script>
+      // Inicializar utilidades móviles cuando el DOM esté listo
+      document.addEventListener('DOMContentLoaded', function() {
+        // Inicializar con opciones para el juego de rosco
+        MobileUtils.init({
+          optimizeRosco: true,
+          optimizeForLowMemory: true,
+          preventDoubleTapZoom: true,
+          fixVhUnits: true
+        });
+        
+        // Aplicar optimizaciones específicas al juego cuando esté cargado
+        window.addEventListener('gameLoaded', function() {
+          if (MobileUtils.env.isMobile || MobileUtils.env.supportsTouch) {
+            MobileUtils.optimizeGameForMobile();
+            
+            // Optimizar la interfaz del juego con el nuevo módulo
+            if (window.MobilePositioning) {
+              MobilePositioning.optimizeGameInterface();
+            }
+            
+            // Optimizar formulario de respuesta
+            const answerForm = document.querySelector('.answer-form');
+            if (answerForm) {
+              MobileUtils.optimizeFormForTouch(answerForm);
+            }
+            
+            // Optimizar áreas táctiles para mejor experiencia
+            document.querySelectorAll('.rosco-letter, .submit-btn, .skip-btn, .help-btn').forEach(function(el) {
+              MobileUtils.optimizeTouchTarget(el);
+            });
+          }
+        });
+        
+        // Reoptimizar cuando cambie la orientación
+        window.addEventListener('mobileOrientationChanged', function() {
+          if (MobileUtils.env.isMobile || MobileUtils.env.supportsTouch) {
+            MobileUtils.optimizeRoscoForMobile();
+            
+            // También optimizar con el nuevo posicionamiento
+            if (window.MobilePositioning) {
+              MobilePositioning.positionRoscoElements();
+            }
+          }
+        });
+      });
+    </script>
     <style>
       /* Variables globales */
       :root {
@@ -85,7 +119,6 @@
         margin: 0;
         padding: 0;
         min-height: 100vh;
-        overflow-y: auto;
       }
 
       /* Mejoras para el contenedor principal */
@@ -1017,15 +1050,12 @@
         
         .modal-overlay {
           align-items: center;
-          position: fixed;
-          overflow-y: auto;
         }
         
         .rules-modal-content {
           width: 100%;
           max-height: 85vh;
           padding: 1.25rem;
-          overflow-y: auto;
         }
         
         .date {
@@ -1035,21 +1065,8 @@
 
       /* Media queries para móviles y pantallas pequeñas */
       @media (max-width: 480px) {
-        html, body {
-          width: 100%;
-          overflow-x: hidden;
-        }
-        
         .app-container {
           padding: 0.75rem;
-          width: calc(100% - 1.5rem);
-          max-width: 100%;
-        }
-        
-        .content-card {
-          width: 100%;
-          margin: 0;
-          border-radius: calc(var(--border-radius) - 4px);
         }
         
         .card-section {
@@ -1143,70 +1160,6 @@
           width: 28px;
           height: 28px;
         }
-        
-        .screens-container {
-          padding: 0;
-        }
-        
-        /* Ajustes para modal en vista vertical */
-        .rules-modal {
-          width: 95%;
-          max-width: 420px;
-        }
-        
-        /* Ajustes para banner de cookies en modo vertical */
-        .cookie-banner.show {
-          padding: 10px;
-        }
-        
-        .cookie-content {
-          padding: 0;
-        }
-        
-        .cookie-text p {
-          font-size: 0.8rem;
-        }
-        
-        .cookie-buttons {
-          margin-top: 8px;
-        }
-      }
-      
-      /* Específicamente para pantallas muy angostas en modo vertical */
-      @media (max-width: 370px) {
-        .title-text {
-          font-size: 1.8rem;
-        }
-        
-        .ball-icon {
-          font-size: 1.8rem;
-        }
-        
-        .app-header {
-          margin-bottom: 1rem;
-        }
-        
-        .difficulty-option {
-          padding: 0.75rem 0.5rem;
-        }
-        
-        .difficulty-icon {
-          width: 40px;
-          height: 40px;
-        }
-        
-        .btn {
-          padding: 0.7rem 0.5rem !important;
-        }
-        
-        .welcome-title {
-          font-size: 1.1rem;
-        }
-        
-        .return-portal-link {
-          font-size: 0.75rem;
-          padding: 0.35rem 0.7rem;
-        }
       }
       
       /* Optimizaciones para dispositivos táctiles */
@@ -1276,7 +1229,17 @@
         }
       }
 
-      /* Corregir el comportamiento del modal de cookies para que no bloquee el scroll */
+      /* Estilos para las fechas en la tabla de ranking */
+      .date {
+        font-size: 0.9rem;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      
+      .date-invalid {
+        color: rgba(255, 255, 255, 0.6);
+        font-style: italic;
+      }
+
       .cookie-banner {
         position: fixed;
         bottom: 0;
@@ -1289,6 +1252,93 @@
         box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
         transform: translateY(100%);
         transition: transform 0.4s ease-in-out;
+      }
+      
+      .cookie-banner.show {
+        transform: translateY(0);
+      }
+      
+      .cookie-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+      
+      .cookie-text {
+        flex: 1;
+        min-width: 280px;
+        padding-right: 20px;
+      }
+      
+      .cookie-text h3 {
+        color: white;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .cookie-text p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.5;
+      }
+      
+      .cookie-buttons {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-top: 10px;
+      }
+      
+      .cookie-more-info {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: underline;
+        font-size: 0.9rem;
+        transition: color 0.3s;
+      }
+      
+      .cookie-more-info:hover {
+        color: white;
+      }
+      
+      .accept-cookies {
+        background: linear-gradient(135deg, #4f46e5, #3730a3);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+      }
+      
+      .accept-cookies:hover {
+        background: linear-gradient(135deg, #4338ca, #312e81);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+      }
+      
+      @media (max-width: 768px) {
+        .cookie-content {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        
+        .cookie-text {
+          padding-right: 0;
+          margin-bottom: 15px;
+        }
+        
+        .cookie-buttons {
+          justify-content: space-between;
+        }
       }
     </style>
   </head>
@@ -1792,7 +1842,6 @@
     <script src="js/particles-config.js"></script>
     <!-- Global footer script -->
     <script src="js/global-footer.js"></script>
-    <script src="js/mobile-override.js"></script>
   </body>
 </html>
 

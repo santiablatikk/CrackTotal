@@ -39,6 +39,31 @@ div[style*="z-index:999"] {
   pointer-events: auto !important;
 }
 
+/* IMPORTANTE: Anular cualquier estilo adicional que pueda venir del preload.js */
+html.fonts-loaded,
+html.webp,
+html.avif,
+html.touchscreen,
+html.mobile-device {
+  overflow: auto !important;
+  height: auto !important;
+  min-height: 100% !important;
+  max-height: none !important;
+  position: relative !important;
+}
+
+/* Si hay alguna animación o transición que esté bloqueando, desactivarla */
+* {
+  animation-play-state: paused !important;
+  transition: none !important;
+}
+
+/* Solo permitir animaciones en elementos específicos que lo necesiten */
+.ball-icon, .bounce, .title-text, .return-portal-link, .btn {
+  animation-play-state: running !important;
+  transition: var(--transition-fast) !important;
+}
+
 @media screen and (max-width: 768px) {
   /* Estructura principal - asegurar que todo sea visible y se permita scroll */
   html, body {
