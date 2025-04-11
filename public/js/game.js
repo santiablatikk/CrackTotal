@@ -34,7 +34,6 @@ let autoTransitionTimers = []; // Almacena los temporizadores para poder cancela
 // Variables para seguimiento de rachas
 let currentStreak = 0;
 let longestStreak = 0;
-let pressureStreak = 0; // Racha de respuestas correctas bajo presión (menos de 15 segundos)
 
 // Sistema de logros mejorado
 let achievementsUnlocked = []; // Almacena los logros desbloqueados en esta partida
@@ -664,13 +663,6 @@ document.addEventListener('DOMContentLoaded', function() {
         longestStreak = currentStreak;
       }
       
-      // Actualizar racha bajo presión (menos de 15 segundos)
-      if (timeLeft < 15) {
-        pressureStreak++;
-      } else {
-        pressureStreak = 0;
-      }
-      
       // Actualizar contador
       correctCountDisplay.textContent = correctAnswers;
       
@@ -711,9 +703,8 @@ document.addEventListener('DOMContentLoaded', function() {
       // Sonido sutil
       playSound(incorrectSound);
       
-      // Reiniciar rachas cuando falla una respuesta
+      // Reiniciar racha cuando falla una respuesta
       currentStreak = 0;
-      pressureStreak = 0;
       
       // Actualizar contador
       incorrectCountDisplay.textContent = incorrectAnswersCount;
@@ -760,9 +751,8 @@ document.addEventListener('DOMContentLoaded', function() {
     skippedAnswers++;
     playSound(skipSound);
     
-    // Reiniciar rachas cuando se salta una pregunta
+    // Reiniciar racha cuando se salta una pregunta
     currentStreak = 0;
-    pressureStreak = 0;
     
     // Actualizar contador
     skippedCountDisplay.textContent = skippedAnswers;

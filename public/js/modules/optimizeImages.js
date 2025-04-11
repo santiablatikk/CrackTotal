@@ -14,24 +14,14 @@ const ImageOptimizer = (function() {
     const config = {
         apiEndpoint: '/api/optimize-image',
         defaultQuality: 80,
-        mobileQuality: 60,
-        mobileMaxWidth: 768,
         defaultSelectors: 'img:not(.no-optimize)',
         placeholderColor: '#f0f0f0',
-        batchSize: {
-            mobile: 3,
-            desktop: 5
-        },
-        batchDelay: {
-            mobile: 200,
-            desktop: 100
-        }
+        batchSize: 5,
+        batchDelay: 100
     };
     
     // Detectar entorno
     const env = {
-        isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-                 window.innerWidth <= config.mobileMaxWidth,
         hasIntersectionObserver: typeof IntersectionObserver !== 'undefined',
         hasIdleCallback: typeof window.requestIdleCallback !== 'undefined'
     };
@@ -54,10 +44,8 @@ const ImageOptimizer = (function() {
             return src;
         }
         
-        // Ajustar calidad según dispositivo
-        const adjustedQuality = env.isMobile 
-            ? Math.min(quality || config.defaultQuality, config.mobileQuality)
-            : (quality || config.defaultQuality);
+        // Ajustar calidad
+        const adjustedQuality = quality || config.defaultQuality;
         
         // Crear clave de cache
         const cacheKey = `${src}-${width || 'auto'}-${adjustedQuality}`;
@@ -113,9 +101,9 @@ const ImageOptimizer = (function() {
         
         if (!images.length) return;
         
-        // Determinar tamaño del lote según dispositivo
-        const batchSize = env.isMobile ? config.batchSize.mobile : config.batchSize.desktop;
-        const batchDelay = env.isMobile ? config.batchDelay.mobile : config.batchDelay.desktop;
+        // Determinar tamaño del lote
+        const batchSize = config.batchSize;
+        const batchDelay = config.batchDelay;
         
         let index = 0;
         
@@ -167,7 +155,7 @@ const ImageOptimizer = (function() {
         
         if (!targetWidth) {
             // Si no tiene data-width, usar el ancho actual o el ancho natural
-            targetWidth = img.width || img.naturalWidth || (env.isMobile ? 320 : null);
+            targetWidth = img.width || img.naturalWidth || null;
         }
         
         // Generar URL optimizada

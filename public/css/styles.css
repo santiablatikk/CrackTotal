@@ -516,58 +516,6 @@ html, body {
 }
 
 
-/* ... Resto de estilos (stats, news, modal, footer) ... */
-
-/* --- Fix Linter Errors --- */
-/* Reemplazar comentario inválido y verificar estructura */
-/* --- Estilos originales de styles.css que se mantienen --- */
-/* (Asegurarse que no haya conflictos mayores con lo nuevo) */
-/* ... existing code ... */ /* Reemplazo del comentario inválido */
-/* Estilos para asegurar que el footer siempre esté abajo */
-/* Note: Some html, body height rules might conflict if body isn't flex */
-/* Ensure body has display: flex; flex-direction: column; min-height: 100vh; */
-/* And the main content container has flex: 1 0 auto; */
-
-/* Estilos para el nuevo footer (renamed from .nuevo-footer) */
-/* Ajustado arriba como .policy-footer para coincidir con HTML, revisar si el selector <footer class="policy-footer"> sigue en uso */
-
-/* Hide the old footer class if it exists */
-/* .policy-footer { */
-  /* display: none; /* Ocultar si se reemplaza completamente */
-/* } */
-
-/* Responsive */
-@media (max-width: 600px) {
-  /* Asegurar que la estructura aquí sea correcta */
-  .footer-links { /* Si se usa esta clase, ajustar */
-    gap: 0.5rem;
-  } /* Llave de cierre para .footer-links */
-
-  .footer-links a {
-    font-size: 0.75rem;
-  } /* Llave de cierre para .footer-links a */
-} /* Llave de cierre para @media */
-
-/* Add styles for particles-js */
-/* ... estilos de particles ... */
-
-
-.preview-overlay i {
-  font-size: 4rem; /* Icono más grande */
-  color: rgba(255, 255, 255, 0.7);
-  transition: transform 0.3s ease;
-  text-shadow: 0 3px 12px rgba(0,0,0,0.6);
-}
-
-.game-option:hover .preview-overlay {
-  opacity: 1;
-}
-
-.game-option:hover .preview-overlay i {
-  transform: scale(1.1);
-}
-
-
 /* Sección de Estadísticas */
 .stats-section {
   background: rgba(15, 23, 42, 0.7); /* Fondo consistente */
@@ -1046,180 +994,9 @@ html, body {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-  .app-container {
-    padding: 0.8rem;
-}
-  .title-text {
-    font-size: 2.2rem;
-  }
-  .subtitle {
-    font-size: 0.9rem;
-}
-  .header-actions {
-      flex-direction: column; /* Apilar botones */
-      align-items: center;
-      gap: 0.8rem;
-  }
-  .change-name-btn {
-      width: auto; /* Ancho automático */
-      padding: 0.6rem 1.5rem;
-  }
-  .theme-toggle-btn {
-      position: absolute; /* Posicionar diferente en móvil? */
-      top: 1rem;
-      right: 1rem;
-  }
+/* @media (max-width: 768px) { ... } */
 
-  .welcome-banner {
-    flex-direction: column; /* Apilar avatar y texto */
-  text-align: center;
-    padding: 1.2rem;
-}
-  .welcome-avatar {
-    margin-right: 0;
-    margin-bottom: 1rem; /* Espacio debajo del avatar */
-  }
-  .welcome-message h2 {
-    font-size: 1.5rem;
-  }
-
-  .game-options {
-      grid-template-columns: 1fr; /* Una columna */
-      gap: 1.2rem;
-  }
-  .game-option {
-      /* Ajustes menores si son necesarios */
-  }
-  .game-info h3 {
-      font-size: 1.3rem;
-  }
-  .game-info p {
-      font-size: 0.85rem;
-  }
-  .game-preview {
-      height: 140px; /* Reducir altura imagen */
-  }
-
-  .stats-grid {
-    grid-template-columns: 1fr; /* Una columna */
-  gap: 0.8rem;
-  }
-  .stat-card {
-    padding: 1rem;
-  }
-  .stat-value {
-      font-size: 1.6rem;
-  }
-
-  .news-item {
-    flex-direction: column; /* Apilar icono y contenido */
-    align-items: flex-start; /* Alinear a la izquierda */
-    text-align: left;
-    padding: 1rem;
-  }
-  .news-icon {
-    margin-bottom: 0.8rem; /* Espacio debajo del icono */
-    align-self: flex-start; /* Alinear icono a la izquierda */
-  }
-
-  .name-input-modal .modal-content {
-    padding: 2rem 1.5rem; /* Menos padding horizontal */
-  }
-  .name-input-modal h2 {
-    font-size: 1.6rem;
-  }
-  #player-name-input, .name-input-modal .btn-primary {
-      font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-    .app-header {
-        padding: 0.5rem 0;
-        margin-bottom: 1rem;
-  }
-  .title-text {
-        font-size: 1.8rem;
-  }
-  .subtitle {
-        font-size: 0.8rem;
-  }
-    .change-name-btn, .theme-toggle-btn {
-        /* Ajustar tamaño si es necesario */
-    }
-
-    .content-card.portal-card {
-        padding: 1rem;
-        gap: 1.5rem;
-    }
-    .welcome-message h2 {
-        font-size: 1.3rem;
-  }
-    .welcome-message p {
-        font-size: 0.9rem;
-    }
-
-    .section-title {
-        font-size: 1.3rem;
-    }
-    .game-card-content {
-        padding: 1.2rem;
-    }
-    .game-icon {
-        width: 55px; height: 55px;
-  }
-    .game-icon i {
-        font-size: 2.2rem;
-    }
-    .game-info h3 {
-        font-size: 1.2rem;
-  }
-    .game-meta {
-        gap: 0.5rem;
-    }
-    .game-badge, .game-rating, .game-players {
-        font-size: 0.7rem;
-    }
-    .play-btn {
-        padding: 0.6rem 1.1rem;
-        font-size: 0.8rem;
-    }
-
-    .stats-title, .news-title {
-        font-size: 1.2rem;
-    }
-    .stat-card {
-        padding: 1rem;
-        gap: 0.8rem;
-    }
-    .stat-icon {
-        width: 35px; height: 35px; font-size: 1.1rem;
-  }
-    .stat-value {
-        font-size: 1.5rem;
-    }
-    .stat-label {
-        font-size: 0.75rem;
-    }
-
-    .news-icon {
-        width: 40px; height: 40px; font-size: 1.2rem;
-    }
-    .news-content h4 { font-size: 1rem; }
-    .news-content p { font-size: 0.8rem; }
-    .news-link { font-size: 0.8rem; }
-
-    .footer-links-mini {
-        gap: 0.5rem 1rem;
-  }
-    .footer-links-mini a {
-        font-size: 0.8rem;
-    }
-    .social-icon {
-        width: 32px; height: 32px; font-size: 0.9rem;
-  }
-}
+/* @media (max-width: 480px) { ... } */
 
 /* Eliminar estilos viejos que ya no aplican si es necesario */
 /* ... (buscar y eliminar selectores obsoletos o redundantes) ... */
@@ -1245,15 +1022,7 @@ html, body {
 /* } */
 
 /* Responsive */
-@media (max-width: 600px) {
-  .footer-links { /* Si se usa esta clase, ajustar */
-    gap: 0.5rem;
-  } /* Llave de cierre para .footer-links */
-
-  .footer-links a {
-    font-size: 0.75rem;
-  } /* Llave de cierre para .footer-links a */
-} /* Llave de cierre para @media */
+/* @media (max-width: 600px) { ... } */
 
 /* Add styles for particles-js */
 #particles-js {
@@ -1396,21 +1165,7 @@ html, body {
 }
 
 /* Responsive ad adjustments */
-@media (max-width: 768px) {
-  .adsense-container {
-    padding: 12px;
-    margin: 15px auto;
-  }
-  
-  .game-end-ad {
-    margin-top: 30px;
-  }
-  
-  .pause-ad-container {
-    width: 85%;
-    padding: 15px;
-  }
-}
+/* @media (max-width: 768px) { ... } */
 
 .game-buttons {
   display: flex;
@@ -1477,12 +1232,7 @@ html, body {
 }
 
 /* Media queries for responsive design */
-@media (max-width: 768px) {
-  .game-start-btn, .alt-game-btn {
-    padding: 14px 24px;
-    font-size: 1rem;
-  }
-}
+/* @media (max-width: 768px) { ... } */
 
 .alt-game-btn i {
   margin-right: 10px;
@@ -1520,12 +1270,7 @@ html, body {
   margin-right: 5px;
 }
 
-@media (max-width: 768px) {
-  .game-start-btn, .alt-game-btn {
-    padding: 14px 24px;
-    font-size: 1rem;
-  }
-}
+/* @media (max-width: 768px) { ... } */
 
 /* ========== ESTILOS MODERNOS PARA FOOTER ========== */
 
@@ -1639,12 +1384,4 @@ footer::before {
 }
 
 /* Responsive */
-@media (max-width: 600px) {
-  .footer-links {
-    gap: 0.5rem;
-  }
-  
-  .footer-links a {
-    font-size: 0.75rem;
-  }
-} 
+/* @media (max-width: 600px) { ... } */

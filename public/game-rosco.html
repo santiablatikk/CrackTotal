@@ -20,7 +20,6 @@
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/game-styles.css" />
     <link rel="stylesheet" href="css/footer-styles.css" />
-    <link rel="stylesheet" href="css/mobile.css" />
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Open Graph tags para compartir en redes sociales -->
@@ -37,44 +36,6 @@
     <script src="js/modules/mobileUtils.js"></script>
     <!-- Preload script - carga antes que cualquier otro script -->
     <script src="js/preload.js"></script>
-    <!-- Inicialización de optimizaciones móviles -->
-    <script>
-      // Inicializar utilidades móviles cuando el DOM esté listo
-      document.addEventListener('DOMContentLoaded', function() {
-        // Inicializar con opciones para el juego de rosco
-        MobileUtils.init({
-          optimizeRosco: true,
-          optimizeForLowMemory: true,
-          preventDoubleTapZoom: true,
-          fixVhUnits: true
-        });
-        
-        // Aplicar optimizaciones específicas al juego cuando esté cargado
-        window.addEventListener('gameLoaded', function() {
-          if (MobileUtils.env.isMobile || MobileUtils.env.supportsTouch) {
-            MobileUtils.optimizeGameForMobile();
-            
-            // Optimizar formulario de respuesta
-            const answerForm = document.querySelector('.answer-form');
-            if (answerForm) {
-              MobileUtils.optimizeFormForTouch(answerForm);
-            }
-            
-            // Optimizar áreas táctiles para mejor experiencia
-            document.querySelectorAll('.rosco-letter, .submit-btn, .skip-btn, .help-btn').forEach(function(el) {
-              MobileUtils.optimizeTouchTarget(el);
-            });
-          }
-        });
-        
-        // Reoptimizar cuando cambie la orientación
-        window.addEventListener('mobileOrientationChanged', function() {
-          if (MobileUtils.env.isMobile || MobileUtils.env.supportsTouch) {
-            MobileUtils.optimizeRoscoForMobile();
-          }
-        });
-      });
-    </script>
     <style>
       /* Variables globales */
       :root {
@@ -108,6 +69,7 @@
         margin: 0;
         padding: 0;
         min-height: 100vh;
+        overflow-y: auto;
       }
 
       /* Mejoras para el contenedor principal */
@@ -120,6 +82,8 @@
         display: flex;
         flex-direction: column;
         min-height: 100vh;
+        height: auto;
+        overflow-y: visible;
       }
 
       /* Mejoras para el header */
@@ -986,6 +950,9 @@
       @media (max-width: 768px) {
         .app-container {
           padding: 1rem;
+          height: auto;
+          min-height: unset;
+          overflow-y: visible;
         }
 
         .card-section {
@@ -1039,12 +1006,16 @@
         
         .modal-overlay {
           align-items: center;
+          position: fixed;
+          height: 100%;
+          overflow-y: auto;
         }
         
         .rules-modal-content {
           width: 100%;
           max-height: 85vh;
           padding: 1.25rem;
+          overflow-y: auto;
         }
         
         .date {
@@ -1054,8 +1025,17 @@
 
       /* Media queries para móviles y pantallas pequeñas */
       @media (max-width: 480px) {
+        body {
+          overflow-y: auto;
+          position: relative;
+          height: auto;
+        }
+        
         .app-container {
           padding: 0.75rem;
+          height: auto;
+          position: relative;
+          overflow-y: visible;
         }
         
         .card-section {
@@ -1148,6 +1128,16 @@
         .social-icon {
           width: 28px;
           height: 28px;
+        }
+        
+        .screens-container {
+          min-height: auto;
+          height: auto;
+          overflow-y: visible;
+        }
+        
+        .content-card {
+          height: auto;
         }
       }
       

@@ -225,29 +225,6 @@
   background: linear-gradient(135deg, #be123c, #9f1239);
 }
 
-/* Estilos responsive */
-@media (max-width: 768px) {
-  .page-container {
-    padding: 1rem;
-  }
-  
-  .page-section {
-    padding: 1.5rem;
-  }
-  
-  .page-header h1 {
-    font-size: 2rem;
-  }
-  
-  .back-button {
-    width: 50px;
-    height: 50px;
-    font-size: 1.2rem;
-    bottom: 20px;
-    right: 20px;
-  }
-}
-
 /* ====================================
    Estilos específicos para Perfil
    ==================================== */
@@ -544,66 +521,6 @@
 }
 
 /* --- Fin Estilos Top 3 Ranking --- */
-
-/* ====================================
-   Ajustes Responsivos Generales
-   ==================================== */
-   
-/* Estilos responsive originales */
-@media (max-width: 768px) {
-  .profile-header {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .profile-stats-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 1rem;
-  }
-  
-  .stat-card {
-    padding: 1rem;
-  }
-  
-  .stat-icon { font-size: 1.5rem; width: 40px; height: 40px; }
-  .stat-value { font-size: 1.4rem; }
-  .stat-label { font-size: 0.8rem; }
-  
-  .letter-stats-table th, .letter-stats-table td,
-  .ranking-table th, .ranking-table td {
-    padding: 0.6rem 0.8rem;
-    font-size: 0.85rem;
-  }
-  
-  .profile-actions, .ranking-actions {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .btn {
-    width: 80%;
-    text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .profile-card, .ranking-card {
-    padding: 1.5rem;
-  }
-  
-  .profile-stats-grid {
-    grid-template-columns: repeat(2, 1fr); /* Dos columnas en móviles */
-  }
-  
-  .letter-stats-table, .ranking-table {
-    font-size: 0.8rem;
-  }
-  
-  .letter-stats-table th, .letter-stats-table td,
-  .ranking-table th, .ranking-table td {
-    padding: 0.5rem;
-  }
-}
 
 /* --- Estilos para Barras de Progreso --- */
 .progress-bar-container {

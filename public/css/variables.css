@@ -160,12 +160,4 @@ body {
 }
 
 /* Media queries para responsividad */
-@media (max-width: 768px) {
-  .title-text {
-    font-size: 2rem;
-  }
-  
-  .content-card {
-    padding: 1.5rem;
-  }
-} 
+/* @media (max-width: 768px) { ... } */ 

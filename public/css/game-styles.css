@@ -1096,287 +1096,727 @@
   color: #3498db;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-  .game-header {
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 10px;
-  }
-  
-  .game-title {
-    order: -1;
-    width: 100%;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  
-  #rosco-container {
-    width: 450px;
-    height: 450px;
-  }
-  
-  .rosco-letter {
-    width: 45px;
-    height: 45px;
-    line-height: 45px;
-    font-size: 22px;
-  }
-  
-  .question-card {
-    width: 280px;
-    min-height: 260px;
-    padding: 20px 15px;
-  }
-  
-  .rosco-status {
-    width: 100%;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-    margin-top: 15px;
-  }
-  
-  .status-item {
-    flex: 1 1 40%;
-    min-width: 100px;
-    padding: 8px;
-  }
-  
-  .status-item:not(:last-child)::after {
-    display: none;
-  }
+/* Make the letters pop with subtle animation when status changes */
+.rosco-letter.correct,
+.rosco-letter.incorrect,
+.rosco-letter.skipped {
+  animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
 
-  .game-play-area {
-    padding: 10px;
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+} 
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0; transform: scale(0.8); }
+  50% { opacity: 0.5; transform: scale(1); }
+} 
+
+@keyframes pulse-line {
+  0%, 100% { opacity: 0.6; width: 40px; filter: blur(0.5px); }
+  50% { opacity: 1; width: 65px; filter: blur(0px); }
+} 
+
+/* Rosco Status Info - Estilo mejorado */
+.rosco-status {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-top: -30px;
+  background: linear-gradient(145deg, rgba(16, 54, 103, 0.4), rgba(8, 28, 54, 0.2));
+  padding: 1px;
+  border-radius: 12px;
+  width: 30%;
+  max-width: 240px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(52, 152, 219, 0.2);
+  backdrop-filter: blur(5px);
+  margin-left: auto;
+  margin-right: 10px;
+  position: relative;
+  z-index: 5;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3px 1px;
+  position: relative;
+  color: #ecf0f1;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  min-width: 40px;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.status-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.status-icon {
+  font-size: 18px;
+  margin-bottom: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.status-label {
+  display: none;
+}
+
+.status-value {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  margin-top: 2px;
+}
+
+.correct-container .status-icon {
+  color: #2ecc71;
+  background: rgba(46, 204, 113, 0.1);
+}
+
+.incorrect-container .status-icon {
+  color: #e74c3c;
+  background: rgba(231, 76, 60, 0.1);
+}
+
+.skipped-container .status-icon {
+  color: #f1c40f;
+  background: rgba(241, 196, 15, 0.1);
+}
+
+.remaining-container .status-icon {
+  color: #3498db;
+  background: rgba(52, 152, 219, 0.1);
+}
+
+/* Mini Timer en el contenedor de preguntas */
+.mini-timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 28, 54, 0.6);
+  padding: 7px 16px;
+  border-radius: 25px;
+  margin: 5px auto 12px;
+  width: fit-content;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 
+              inset 0 1px 2px rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+}
+
+.mini-timer::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: linear-gradient(90deg, rgba(46, 204, 113, 0.25), rgba(46, 204, 113, 0));
+  opacity: 0.8;
+  z-index: 0;
+  transition: background 0.5s ease;
+}
+
+.mini-timer.medium-time::before {
+  background: linear-gradient(90deg, rgba(241, 196, 15, 0.25), rgba(241, 196, 15, 0));
+}
+
+.mini-timer.low-time::before {
+  background: linear-gradient(90deg, rgba(231, 76, 60, 0.25), rgba(231, 76, 60, 0));
+  animation: pulse-background 1.5s infinite alternate;
+}
+
+@keyframes pulse-background {
+  0% {
+    opacity: 0.5;
   }
-  
-  .floating-sound-btn, .back-button {
-    transform: scale(0.9);
+  100% {
+    opacity: 1;
   }
 }
 
-/* ESTILOS MÓVILES CONSOLIDADOS - Un único bloque para todas las pantallas pequeñas */
-@media (max-width: 480px) {
-  /* Estilos básicos para móvil */
-  body {
-    position: relative;
-    width: 100%;
-    overflow-x: hidden;
+.mini-timer i {
+  margin-right: 8px;
+  color: #fff;
+  font-size: 1rem;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3));
+  transition: color 0.3s ease;
+}
+
+.mini-timer.medium-time i {
+  color: #f1c40f;
+}
+
+.mini-timer.low-time i {
+  color: #e74c3c;
+  animation: pulse-icon 1s infinite alternate;
+}
+
+@keyframes pulse-icon {
+  0% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 2px rgba(231, 76, 60, 0.5));
   }
-  
-  .game-container {
-    margin: 5px;
-    padding: 8px;
+  100% {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 5px rgba(231, 76, 60, 0.8));
   }
-  
-  .game-header {
-    padding: 8px;
-    margin-bottom: 10px;
+}
+
+.mini-timer span {
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+  font-size: 1.3rem;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+  color: #2ecc71;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.mini-timer.medium-time span {
+  color: #f1c40f;
+}
+
+.mini-timer.low-time span {
+  color: #e74c3c;
+  animation: pulse-mini-timer 1s infinite alternate;
+}
+
+@keyframes pulse-mini-timer {
+  0% { 
+    opacity: 1;
+    text-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
   }
-  
-  .game-title {
-    font-size: 1.8rem;
+  100% { 
+    opacity: 0.9;
+    text-shadow: 0 0 12px rgba(231, 76, 60, 0.9);
   }
-  
-  .home-link, .player-info {
-    padding: 6px 10px;
-    font-size: 0.9rem;
+}
+
+/* Botón de sonido flotante */
+.floating-sound-btn {
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(25, 35, 60, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  overflow: hidden;
+}
+
+.floating-sound-btn::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: conic-gradient(
+    from 0deg, 
+    transparent, 
+    var(--primary-light), 
+    transparent, 
+    var(--secondary-light), 
+    transparent
+  );
+  border-radius: 50%;
+  z-index: -1;
+  opacity: 0.5;
+  animation: sound-btn-shimmer 5s infinite;
+}
+
+@keyframes sound-btn-shimmer {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.floating-sound-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.floating-sound-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  background: rgba(30, 40, 70, 0.9);
+}
+
+.floating-sound-btn:hover::after {
+  opacity: 1;
+}
+
+.floating-sound-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.floating-sound-btn i {
+  color: white;
+  font-size: 1.3rem;
+  transition: all 0.3s ease;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Estilo mejorado para el estado "muted" */
+.floating-sound-btn.muted {
+  background: rgba(50, 50, 70, 0.75);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2), 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.floating-sound-btn.muted::before {
+  opacity: 0.2;
+  animation-play-state: paused;
+}
+
+.floating-sound-btn.muted i {
+  color: rgba(255, 255, 255, 0.7);
+  opacity: 0.8;
+}
+
+/* Efecto pulsante cuando está muteado */
+.floating-sound-btn.muted i {
+  animation: pulse-muted 2s infinite ease-in-out;
+}
+
+@keyframes pulse-muted {
+  0% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.05); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.7; }
+}
+
+/* Enlace del título */
+.title-link {
+  text-decoration: none;
+  display: block;
+  transition: transform 0.3s ease;
+  position: relative;
+}
+
+.title-link:hover {
+  transform: translateY(-2px);
+}
+
+.title-link:hover .title-text {
+  text-shadow: 0 6px 15px rgba(225, 29, 72, 0.5);
+  animation: titlePulse 1s ease-in-out infinite alternate;
+}
+
+.title-link:active {
+  transform: translateY(1px);
+}
+
+.title-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #e11d48, transparent);
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+  opacity: 0;
+  border-radius: 3px;
+}
+
+.title-link:hover::after {
+  width: 70%;
+  opacity: 1;
+}
+
+/* Estilos para el elemento de pista flotante */
+.hint-element {
+  position: absolute;
+  z-index: 100;
+  background-color: rgba(255, 223, 0, 0.9);
+  color: #000;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: bold;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  transform: translateY(0);
+  transition: all 0.3s ease;
+  animation: hint-float 2s infinite ease-in-out;
+  pointer-events: none; /* Para que no interfiera con el click en las letras */
+}
+
+.hint-element::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  margin-left: -8px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid rgba(255, 223, 0, 0.9);
+}
+
+.hint-text {
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+@keyframes hint-float {
+  0%, 100% {
+    transform: translateY(0);
   }
-  
-  .timer-display {
-    font-size: 1.2rem;
-    padding: 6px 10px;
+  50% {
+    transform: translateY(-5px);
   }
-  
-  /* Contenedor principal del rosco - mejorado para móviles */
-  #rosco-container {
-    position: relative;
-    width: 300px;
-    height: 300px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transform: scale(0.95);
+}
+
+/* Estilos para los modales de resultado */
+.result-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.result-modal.show {
+  opacity: 1;
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 20px;
+  max-width: 500px;
+  width: 90%;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+  transform: translateY(30px);
+  opacity: 0;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.result-modal.show .modal-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Victory Modal (Green) */
+.victory-content {
+  background: linear-gradient(145deg, #f0fff4, #d1fae5);
+  border: 3px solid #10b981;
+}
+
+.victory-content h2 {
+  color: #047857;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  animation: victoryPulse 2s infinite;
+}
+
+.victory-content p {
+  color: #059669;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.victory-content .result-icon {
+  font-size: 5rem;
+  color: #10b981;
+  margin-bottom: 1rem;
+  animation: trophyShine 3s infinite;
+}
+
+@keyframes victoryPulse {
+  0%, 100% {
+    text-shadow: 0 0 5px rgba(16, 185, 129, 0.1);
   }
-  
-  /* Letras más pequeñas para pantallas pequeñas */
-  .rosco-letter {
-    position: absolute;
-    width: 32px;
-    height: 32px;
-    line-height: 32px;
-    border-radius: 50%;
-    font-weight: bold;
-    font-size: 0.85rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    z-index: 5;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+  50% {
+    text-shadow: 0 0 15px rgba(16, 185, 129, 0.5), 0 0 30px rgba(16, 185, 129, 0.3);
   }
-  
-  /* Letra actual */
-  .rosco-letter.current {
-    width: 38px;
-    height: 38px;
+}
+
+@keyframes trophyShine {
+  0% {
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.1);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.5);
     transform: scale(1.1);
-    z-index: 100;
-    box-shadow: 0 0 8px rgba(243, 156, 18, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.5);
   }
-  
-  /* Tarjeta de pregunta rediseñada para móvil */
-  .question-card {
-    width: 85%;
-    max-width: 270px;
-    background: rgba(16, 54, 103, 0.9);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
-    padding: 12px;
-    min-height: auto;
-    margin: 0 auto;
+  100% {
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.1);
+    transform: scale(1);
   }
-  
-  /* Letra central */
-  .current-letter-display {
-    font-size: 2rem;
-    margin-bottom: 5px;
+}
+
+/* Timeout Modal (Yellow) */
+.timeout-content {
+  background: linear-gradient(145deg, #fffbeb, #fef3c7);
+  border: 3px solid #f59e0b;
+}
+
+.timeout-content h2 {
+  color: #b45309;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.timeout-content p {
+  color: #d97706;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.timeout-content .result-icon {
+  font-size: 5rem;
+  color: #f59e0b;
+  margin-bottom: 1rem;
+  animation: clockTick 2s infinite;
+}
+
+@keyframes clockTick {
+  0%, 100% {
+    transform: rotate(-5deg);
   }
-  
-  /* Textos ajustados */
-  .current-question {
-    font-size: 0.9rem;
-    margin-bottom: 8px;
+  50% {
+    transform: rotate(5deg);
   }
-  
-  .current-definition {
-    font-size: 0.85rem;
-    padding: 6px;
-    margin-bottom: 10px;
-    max-height: none;
-    overflow-y: auto;
+}
+
+/* Defeat Modal (Red) */
+.defeat-content {
+  background: linear-gradient(145deg, #fee2e2, #fecaca);
+  border: 3px solid #ef4444;
+}
+
+.defeat-content h2 {
+  color: #b91c1c;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.defeat-content p {
+  color: #dc2626;
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.defeat-content .result-icon {
+  font-size: 5rem;
+  color: #ef4444;
+  margin-bottom: 1rem;
+  animation: defeatShake 1.5s infinite;
+}
+
+@keyframes defeatShake {
+  0%, 100% {
+    transform: translateX(0);
   }
-  
-  /* Input y botones rediseñados */
-  .input-container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  15%, 45%, 75% {
+    transform: translateX(-5px);
   }
-  
-  .answer-input {
-    width: 100%;
-    padding: 12px;
-    font-size: 1rem;
+  30%, 60%, 90% {
+    transform: translateX(5px);
   }
-  
-  .submit-btn {
-    width: 100%;
-    margin-left: 0;
-    padding: 12px;
-  }
-  
-  .submit-btn i {
-    margin-left: 8px;
-  }
-  
-  .skip-btn, .help-btn {
-    width: 48%;
-    padding: 10px;
-    font-size: 0.9rem;
-  }
-  
-  /* Status items mejorados */
-  .rosco-status {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    width: 100%;
-    margin: 12px auto;
-    gap: 6px;
-  }
-  
-  .status-item {
-    flex: 1 1 45%;
-    text-align: center;
-    padding: 6px;
-    font-size: 0.8rem;
-    min-width: 0;
-  }
-  
-  /* Mejorar modales */
-  .modal-content {
-    width: 90%;
-    max-width: 320px;
-    padding: 15px;
-  }
-  
-  .modal-actions {
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .modal-actions .btn {
-    width: 100%;
-  }
-  
-  /* Footer mejorado */
-  .policy-footer {
-    padding: 12px 10px;
-  }
-  
-  .footer-links-mini {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .footer-links-mini a {
-    padding: 5px 8px;
-    font-size: 0.8rem;
-  }
-  
-  /* Ajustes para landscape en móviles */
-  @media (max-height: 600px) and (orientation: landscape) {
-    .game-container {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    
-    .rosco-section {
-      flex: 1;
-      min-width: 280px;
-    }
-    
-    #rosco-container {
-      width: 280px;
-      height: 280px;
-    }
-    
-    .question-card {
-      flex: 1;
-      max-width: 320px;
-    }
-    
-    .rosco-status {
-      width: auto;
-      flex-direction: column;
-      margin: 0 10px;
-    }
-    
-    .status-item {
-      flex: 0 0 auto;
-      width: 100%;
-      margin-bottom: 4px;
-    }
-  }
+}
+
+/* Estilos comunes para estadísticas en los modales */
+.result-stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.result-stat {
+  text-align: center;
+  flex: 1;
+  min-width: 100px;
+  margin: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.result-stat:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.result-stat i {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.result-stat h3 {
+  font-size: 1rem;
+  margin: 0.3rem 0;
+  font-weight: 600;
+}
+
+.result-stat p {
+  font-size: 1.8rem !important;
+  font-weight: bold;
+  margin: 0 !important;
+  color: #1f2937 !important;
+}
+
+/* Botones de los modales */
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.modal-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.modal-btn:hover::before {
+  transform: translateX(100%);
+}
+
+#stats-restart-btn {
+  background: linear-gradient(135deg, #3B82F6, #2563EB);
+  color: white;
+}
+
+#stats-restart-btn:hover {
+  background: linear-gradient(135deg, #2563EB, #1D4ED8);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+}
+
+#stats-home-btn {
+  background: linear-gradient(135deg, #4B5563, #374151);
+  color: white;
+}
+
+#stats-home-btn:hover {
+  background: linear-gradient(135deg, #374151, #1F2937);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Footer */
+.footer {
+  margin-top: 20px;
+  padding: 15px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 5px;
+}
+
+.footer-links a {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: #3498db;
 }
 
 /* Make the letters pop with subtle animation when status changes */
@@ -1712,27 +2152,6 @@
   100% { transform: scale(1); opacity: 0.7; }
 }
 
-/* Responsive para el botón flotante */
-@media (max-width: 768px) {
-  .floating-sound-btn {
-    top: 15px;
-    right: 15px;
-    width: 45px;
-    height: 45px;
-    font-size: 1.2rem;
-  }
-}
-
-@media (max-width: 500px) {
-  .floating-sound-btn {
-    top: 10px;
-    right: 10px;
-    width: 40px;
-    height: 40px;
-    font-size: 1.1rem;
-  }
-} 
-
 /* Enlace del título */
 .title-link {
   text-decoration: none;
@@ -1818,21 +2237,6 @@
     transform: translateY(-5px);
   }
 }
-
-/* Media queries para responsividad de las pistas */
-@media (max-width: 768px) {
-  .hint-element {
-    font-size: 12px;
-    padding: 4px 8px;
-  }
-}
-
-@media (max-width: 480px) {
-  .hint-element {
-    font-size: 10px;
-    padding: 3px 6px;
-  }
-} 
 
 /* Estilos para los modales de resultado */
 .result-modal {
@@ -2108,151 +2512,6 @@
   background: linear-gradient(135deg, #374151, #1F2937);
   transform: translateY(-3px);
   box-shadow: 0 12px 20px rgba(0, 0, 0, 0.3);
-}
-
-/* Responsive para los modales */
-@media (max-width: 768px) {
-  .modal-content {
-    padding: 1.5rem;
-  }
-  
-  .victory-content h2,
-  .timeout-content h2,
-  .defeat-content h2 {
-    font-size: 2rem;
-  }
-  
-  .victory-content p,
-  .timeout-content p,
-  .defeat-content p {
-    font-size: 1rem;
-  }
-  
-  .result-icon {
-    font-size: 4rem !important;
-  }
-  
-  .result-stat p {
-    font-size: 1.5rem !important;
-  }
-}
-
-@media (max-width: 480px) {
-  .modal-content {
-    width: 90%;
-    max-width: 320px;
-    padding: 1.5rem;
-  }
-  
-  .victory-content h2,
-  .timeout-content h2,
-  .defeat-content h2 {
-    font-size: 1.8rem;
-  }
-  
-  .modal-buttons {
-    flex-direction: column;
-  }
-  
-  .result-stat {
-    padding: 0.8rem;
-  }
-  
-  .result-icon {
-    font-size: 3.5rem;
-  }
-  
-  /* Improve rosco letter visibility */
-  .rosco-letter {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
-    border-width: 2px;
-  }
-  
-  /* Fix footer for mobile */
-  .policy-footer {
-    padding: 15px 10px;
-  }
-  
-  .footer-links-mini {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 8px;
-  }
-  
-  .footer-links-mini a {
-    font-size: 0.75rem;
-    padding: 5px 8px;
-  }
-  
-  /* Improve toast notification placement */
-  .toast {
-    bottom: 65px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    max-width: 280px;
-  }
-  
-  /* Optimize floating sound button position */
-  .floating-sound-btn {
-    top: 10px;
-    right: 10px;
-    width: 40px;
-    height: 40px;
-    font-size: 1rem;
-  }
-  
-  /* Ensure stats modal content is visible */
-  .stats-content {
-    max-height: 80vh;
-    overflow-y: auto;
-    padding: 1.2rem;
-  }
-  
-  /* Better visibility for stats summary */
-  .stats-summary {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-  
-  /* Make question text more readable */
-  .current-question {
-    font-size: 18px;
-  }
-  
-  .current-definition {
-    font-size: 16px;
-    max-height: 120px;
-  }
-}
-
-/* Portrait specific adjustments */
-@media (max-width: 480px) and (max-height: 800px) {
-  #rosco-container {
-    transform: scale(0.75);
-    margin-top: -20px;
-  }
-  
-  .question-card {
-    max-width: 280px;
-    padding: 0.8rem;
-  }
-  
-  .current-letter-display {
-    font-size: 3rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .skip-btn, .help-btn {
-    padding: 8px 15px;
-    margin-bottom: 5px;
-  }
-  
-  .game-container {
-    padding: 10px 5px;
-  }
 }
 
 /* Landscape adjustments */
@@ -2893,167 +3152,6 @@
   }
 }
 
-/* Optimizaciones adicionales para dispositivos móviles */
-@media (max-width: 480px) {
-  .rosco-letter {
-    /* Tamaño reducido para evitar superposiciones */
-    width: 28px !important;
-    height: 28px !important;
-    font-size: 0.75rem !important;
-    /* Asegurar que tengan sus propios contextos de apilamiento */
-    z-index: 5 !important;
-    transition: all 0.3s ease !important;
-  }
-  
-  /* Asegurar que la letra actual siempre esté por encima */
-  .rosco-letter.current {
-    z-index: 10 !important;
-    width: 34px !important;
-    height: 34px !important;
-    font-size: 0.85rem !important;
-  }
-  
-  /* Ajustar contenedor de botones de acción */
-  .action-container {
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    padding: 0 10px !important;
-    max-width: 100% !important;
-    box-sizing: border-box !important;
-  }
-  
-  /* Estilo específico para el botón de enviar que a veces interfiere */
-  .submit-btn {
-    /* Reducir tamaño para evitar interferencia */
-    width: 32px !important;
-    height: 32px !important;
-    right: 12% !important;
-    border: none !important;
-    outline: none !important;
-    touch-action: manipulation !important;
-    appearance: none !important;
-    -webkit-appearance: none !important;
-  }
-  
-  /* Asegurar que el contenedor del rosco funcione correctamente */
-  #rosco-container {
-    position: relative !important;
-    overflow: visible !important; /* Permitir que las letras se posicionen fuera si es necesario */
-    transform-origin: center center !important;
-    transition: transform 0.3s ease !important;
-  }
-  
-  /* Prevenir interferencia de botones con las letras */
-  .skip-btn, .help-btn {
-    position: relative !important;
-    z-index: 20 !important; /* Mayor que las letras para estar encima */
-    margin-bottom: 10px !important;
-    transform: scale(0.95) !important; /* Ligeramente más pequeño */
-    touch-action: manipulation !important;
-    -webkit-tap-highlight-color: transparent !important;
-  }
-  
-  /* Ajuste para la tarjeta de pregunta para que no interfiera */
-  .question-card {
-    z-index: 15 !important; /* Por encima de las letras */
-    background-color: transparent !important;
-    pointer-events: none !important; /* No interceptar clicks/toques */
-  }
-  
-  /* Los elementos dentro de la tarjeta sí pueden recibir eventos */
-  .question-card * {
-    pointer-events: auto !important;
-  }
-}
-
-/* Optimizaciones específicas para pantallas muy pequeñas */
-@media (max-width: 360px) {
-  .rosco-letter {
-    width: 24px !important;
-    height: 24px !important;
-    font-size: 0.7rem !important;
-  }
-  
-  .rosco-letter.current {
-    width: 30px !important;
-    height: 30px !important;
-    font-size: 0.8rem !important;
-  }
-  
-  .question-card {
-    max-width: 190px !important;
-    transform: translate(-50%, -50%) scale(0.9) !important;
-  }
-  
-  .current-letter-display {
-    width: 50px !important;
-    height: 50px !important;
-  }
-}
-
-/* Ajustes específicos para el contenedor del rosco en móvil */
-@media (max-width: 480px) {
-  /* ... existing styles ... */
-  
-  /* Asegurar que el contenedor del rosco sea perfectamente circular */
-  #rosco-container::before {
-    width: auto !important; /* Será definido dinámicamente por JavaScript */
-    height: auto !important; /* Será definido dinámicamente por JavaScript */
-    transform: translate(-50%, -50%) !important;
-    border-radius: 50% !important;
-    background: linear-gradient(135deg, rgba(30, 80, 130, 0.85), rgba(13, 50, 90, 0.95)) !important;
-    transition: width 0.3s ease, height 0.3s ease !important;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.4) !important;
-  }
-  
-  /* Resaltar el borde del círculo */
-  #rosco-container::after {
-    content: "" !important;
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    width: calc(100% - 10px) !important; /* Ligeramente más pequeño que el contenedor */
-    height: calc(100% - 10px) !important;
-    transform: translate(-50%, -50%) !important;
-    border-radius: 50% !important;
-    border: 2px solid rgba(52, 152, 219, 0.4) !important;
-    z-index: 0 !important;
-    box-shadow: inset 0 0 20px rgba(52, 152, 219, 0.2) !important;
-  }
-  
-  /* Asegurar que la posición de las letras sea exacta */
-  .rosco-letter {
-    position: absolute !important;
-    width: 26px !important;
-    height: 26px !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    z-index: 5 !important;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4) !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
-  }
-  
-  /* La letra actual debe destacar más */
-  .rosco-letter.current {
-    transform: scale(1.25) !important;
-    z-index: 10 !important;
-    box-shadow: 0 0 12px rgba(243, 156, 18, 0.8) !important;
-    border: 1px solid rgba(255, 255, 255, 0.5) !important;
-  }
-  
-  /* Contenedor del rosco responsivo */
-  #rosco-container {
-    width: 100% !important;
-    max-width: 100% !important;
-    overflow: visible !important;
-    position: relative !important;
-  }
-}
-
 /* Eliminar secciones duplicadas y consolidar estilos móviles */
 @media (max-width: 480px) {
   /* Optimizaciones fundamentales para el rosco */
@@ -3215,10 +3313,10 @@
 @media (max-width: 480px) {
   /* Estilos básicos para móvil */
   body {
-    overflow: hidden !important;
-    position: fixed !important;
+    overflow-y: auto !important;
+    position: relative !important;
     width: 100% !important;
-    height: 100% !important;
+    height: auto !important;
   }
   
   /* Contenedor principal del rosco */
@@ -3394,12 +3492,14 @@
 /* Media queries for mobile devices */
 @media screen and (max-width: 480px) {
   body {
+    overflow-y: auto;
     overflow-x: hidden;
     width: 100%;
     height: auto;
     min-height: 100%;
     padding: 0;
     margin: 0;
+    position: relative;
   }
   
   .game-container {
@@ -3412,6 +3512,8 @@
     align-items: center;
     padding-top: 60px; /* Espacio para header */
     padding-bottom: 60px; /* Espacio para footer */
+    position: relative;
+    overflow-y: auto;
   }
 
   /* Header siempre fijo en la parte superior y separado */
@@ -3892,39 +3994,6 @@
   font-size: 0.9rem;
 }
 
-/* Ajustes para móviles */
-@media (max-width: 768px) {
-  .policy-footer, footer.nuevo-footer {
-    margin-top: 1rem;
-    padding-top: 1rem;
-  }
-  
-  .footer-links-mini, .footer-links {
-    gap: 0.5rem;
-  }
-  
-  .footer-links-mini a, .footer-links a {
-    font-size: 0.75rem;
-  }
-}
-
-/* Ajustes para dispositivos muy pequeños */
-@media (max-width: 480px) {
-  .policy-footer, footer.nuevo-footer {
-    padding: 0.5rem;
-  }
-  
-  .footer-links-mini a, .footer-links a {
-    font-size: 0.7rem;
-    padding: 2px 5px;
-  }
-  
-  .social-icon {
-    width: 25px;
-    height: 25px;
-  }
-}
-
 /* Estilos para notificaciones de logros */
 .achievement-notification {
   position: fixed;
@@ -4017,22 +4086,6 @@
   font-size: 0.8rem;
   opacity: 0.8;
   line-height: 1.3;
-}
-
-/* Responsive para dispositivos móviles */
-@media (max-width: 768px) {
-  .achievement-notification {
-    bottom: 70px;
-    max-width: 280px;
-  }
-  
-  .achievement-notification.show {
-    transform: translateX(-300px);
-  }
-  
-  #unlocked-achievements {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
 }
 
 /* Estilos para el mensaje de no hay logros */
@@ -4148,19 +4201,6 @@
   animation-play-state: paused;
 }
 
-/* En dispositivos móviles */
-@media (max-width: 768px) {
-  .auto-progress-bar {
-    height: 3px;
-    margin-top: 10px;
-  }
-  
-  .auto-progress-text {
-    font-size: 0.7rem;
-    margin-top: 4px;
-  }
-}
-
 /* Botón de retroceso mejorado */
 .back-button {
   position: fixed;
@@ -4240,25 +4280,6 @@
   font-size: 1.3rem;
   transition: all 0.3s ease;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
-}
-
-/* Media queries para responsive */
-@media (max-width: 768px) {
-  .back-button, .floating-sound-btn {
-    width: 38px;
-    height: 38px;
-  }
-}
-
-@media (max-width: 480px) {
-  .back-button, .floating-sound-btn {
-    width: 36px;
-    height: 36px;
-  }
-  
-  .back-button i, .floating-sound-btn i {
-    font-size: 1.1rem;
-  }
 }
 
 /* Botón de estadísticas mejorado */
@@ -4355,18 +4376,6 @@
 .countdown {
   font-weight: 700;
   color: white;
-}
-
-/* Media query para dispositivos móviles */
-@media (max-width: 480px) {
-  .stats-arrow {
-    padding: 8px 16px;
-    font-size: 0.85rem;
-  }
-  
-  .auto-progress-text {
-    font-size: 0.75rem;
-  }
 }
 
 /* Nuevo Modal de Reglas */
@@ -4510,37 +4519,6 @@
 
 #rules-modal #start-game-final i {
   margin-right: 8px;
-}
-
-/* Media queries para responsive */
-@media (max-width: 500px) {
-  .reglas-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  
-  .reglas-title {
-    font-size: 1.3rem;
-  }
-  
-  .regla-item {
-    padding: 10px;
-  }
-  
-  .regla-icon {
-    width: 32px;
-    height: 32px;
-    min-width: 32px;
-    font-size: 0.9rem;
-  }
-  
-  .regla-text h3 {
-    font-size: 0.8rem;
-  }
-  
-  .regla-text p {
-    font-size: 0.7rem;
-  }
 }
 
 /* Animación de entrada */
@@ -4709,37 +4687,6 @@
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
-  }
-}
-
-/* Ajustes para dispositivos móviles */
-@media (max-width: 480px) {
-  #achievements-modal h2 {
-    font-size: 1.4rem;
-    margin-bottom: 1.2rem;
-  }
-  
-  .achievements-container {
-    max-height: 250px;
-  }
-  
-  .achievement-icon {
-    width: 38px;
-    height: 38px;
-    min-width: 38px;
-    margin-right: 12px;
-  }
-  
-  .achievement-icon i {
-    font-size: 1.2rem;
-  }
-  
-  .achievement-info h3 {
-    font-size: 0.95rem;
-  }
-  
-  .achievement-info p {
-    font-size: 0.8rem;
   }
 }
 
@@ -5290,30 +5237,5 @@
   100% {
     transform: translate(var(--translateX), var(--translateY)) rotate(var(--rotate));
     opacity: 0;
-  }
-}
-
-/* Estilos responsivos para el modal de logros secuenciales */
-@media (max-width: 480px) {
-  .achievement-sequential-content {
-    padding: 1.5rem;
-  }
-  
-  .achievement-large-icon {
-    width: 90px;
-    height: 90px;
-    font-size: 2.5rem;
-  }
-  
-  .achievement-large-title {
-    font-size: 1.8rem;
-  }
-  
-  .achievement-large-subtitle {
-    font-size: 1.3rem;
-  }
-  
-  .achievement-large-description {
-    font-size: 1rem;
   }
 }
