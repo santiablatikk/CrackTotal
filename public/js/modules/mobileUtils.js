@@ -165,8 +165,8 @@ const MobileUtils = {
                         if (lazyImage.dataset.src) {
                             lazyImage.src = lazyImage.dataset.src;
                             lazyImage.removeAttribute('data-src');
-                        }
-                    } else {
+                }
+            } else {
                         // Para fondos
                         if (lazyImage.dataset.background) {
                             lazyImage.style.backgroundImage = `url('${lazyImage.dataset.background}')`;

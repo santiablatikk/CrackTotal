@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/game-styles.css">
   <link rel="stylesheet" href="css/footer-styles.css">
+  <link rel="stylesheet" href="css/mobile-fix.css">
   <style>
     /* Botón volver */
     .back-button {
@@ -553,6 +554,7 @@
   <script src="js/achievements-data.js"></script>
   <script src="js/game.js"></script>
   <script src="js/global-footer.js"></script>
+  <script src="js/mobile-override.js"></script>
 
   <!-- Sonidos adicionales -->
   <audio id="achievement-sound" preload="auto">
@@ -607,190 +609,6 @@
           }
         });
       }
-    });
-  </script>
-
-  <!-- Mobile-specific optimizations -->
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Configurar el botón de volver al inicio
-      const homeButton = document.getElementById('return-home-btn');
-      if (homeButton) {
-        homeButton.addEventListener('click', function() {
-          window.location.href = 'game-rosco.html';
-        });
-      }
-      
-      // Detector de dispositivos móviles
-      function isMobile() {
-        return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      }
-      
-      // Función para forzar la correcta visualización en móviles
-      function forceMobileStyles() {
-        if (!isMobile()) return;
-        
-        // Corregir el body
-        document.body.style.position = 'relative';
-        document.body.style.overflowY = 'auto';
-        document.body.style.overflowX = 'hidden';
-        document.body.style.height = 'auto';
-        document.body.style.minHeight = '100vh';
-        
-        // Corregir contenedores principales
-        const container = document.querySelector('.container');
-        if (container) {
-          container.style.height = 'auto';
-          container.style.minHeight = '100vh';
-          container.style.overflowY = 'visible';
-        }
-        
-        const gameContainer = document.querySelector('.game-container');
-        if (gameContainer) {
-          gameContainer.style.height = 'auto';
-          gameContainer.style.minHeight = 'auto';
-          gameContainer.style.overflowY = 'visible';
-          gameContainer.style.margin = '0.5rem';
-          gameContainer.style.padding = '0.75rem';
-        }
-        
-        // Corregir el rosco
-        const roscoContainer = document.getElementById('rosco-container');
-        if (roscoContainer) {
-          // Eliminar cualquier transform previo
-          roscoContainer.style.transform = 'none';
-          roscoContainer.style.transformOrigin = 'center center';
-          roscoContainer.style.position = 'relative';
-          roscoContainer.style.width = '100%';
-          roscoContainer.style.maxWidth = '100%';
-          roscoContainer.style.height = 'auto';
-          roscoContainer.style.aspectRatio = '1/1';
-          roscoContainer.style.margin = '0 auto';
-          roscoContainer.style.display = 'flex';
-          roscoContainer.style.alignItems = 'center';
-          roscoContainer.style.justifyContent = 'center';
-          roscoContainer.style.zIndex = '5';
-        }
-        
-        // Corregir letras del rosco
-        const roscoLetters = document.querySelectorAll('.rosco-letter');
-        roscoLetters.forEach(letter => {
-          letter.style.transformOrigin = 'center center';
-          letter.style.fontSize = window.innerWidth <= 360 ? '0.8rem' : '0.9rem';
-          letter.style.width = window.innerWidth <= 360 ? '25px' : '30px';
-          letter.style.height = window.innerWidth <= 360 ? '25px' : '30px';
-        });
-        
-        // Corregir tarjeta de pregunta
-        const questionCard = document.querySelector('.question-card');
-        if (questionCard) {
-          questionCard.style.width = '80%';
-          questionCard.style.maxWidth = 'none';
-          questionCard.style.margin = '0 auto';
-          questionCard.style.background = 'rgba(8, 31, 54, 0.85)';
-          questionCard.style.borderRadius = '15px';
-          questionCard.style.backdropFilter = 'blur(6px)';
-          questionCard.style.padding = '1rem';
-          questionCard.style.zIndex = '20';
-        }
-        
-        // Corregir elementos internos
-        const letterDisplay = document.querySelector('.current-letter-display');
-        if (letterDisplay) {
-          letterDisplay.style.fontSize = window.innerWidth <= 360 ? '2.2rem' : '2.5rem';
-        }
-        
-        const currentQuestion = document.querySelector('.current-question');
-        if (currentQuestion) {
-          currentQuestion.style.fontSize = window.innerWidth <= 360 ? '1rem' : '1.1rem';
-        }
-        
-        const definition = document.querySelector('.current-definition');
-        if (definition) {
-          definition.style.fontSize = window.innerWidth <= 360 ? '0.9rem' : '0.95rem';
-          definition.style.maxHeight = '25vh';
-          definition.style.overflowY = 'auto';
-        }
-        
-        // Corregir controles
-        const inputContainer = document.querySelector('.input-container');
-        if (inputContainer) {
-          inputContainer.style.flexDirection = 'row';
-          inputContainer.style.width = '100%';
-          inputContainer.style.gap = '0.5rem';
-        }
-        
-        const answerInput = document.querySelector('.answer-input');
-        if (answerInput) {
-          answerInput.style.flex = '1';
-          answerInput.style.width = 'auto';
-          answerInput.style.padding = '0.8rem';
-          answerInput.style.fontSize = '1rem';
-        }
-        
-        const submitBtn = document.querySelector('.submit-btn');
-        if (submitBtn) {
-          submitBtn.style.flexShrink = '0';
-          submitBtn.style.marginLeft = '0';
-        }
-        
-        const skipBtn = document.querySelector('.skip-btn');
-        if (skipBtn) {
-          skipBtn.style.width = '100%';
-          skipBtn.style.padding = '0.8rem';
-        }
-        
-        const helpBtn = document.querySelector('.help-btn');
-        if (helpBtn) {
-          helpBtn.style.width = '100%';
-          helpBtn.style.padding = '0.8rem';
-        }
-        
-        // Corregir panel de estado
-        const roscoStatus = document.querySelector('.rosco-status');
-        if (roscoStatus) {
-          roscoStatus.style.flexWrap = 'wrap';
-          roscoStatus.style.justifyContent = 'center';
-          roscoStatus.style.gap = '0.5rem';
-          roscoStatus.style.position = 'relative';
-          roscoStatus.style.background = 'rgba(8, 31, 54, 0.8)';
-          roscoStatus.style.marginTop = '1rem';
-          roscoStatus.style.padding = '0.5rem';
-          roscoStatus.style.borderRadius = '12px';
-          roscoStatus.style.width = '90%';
-          roscoStatus.style.maxWidth = 'none';
-          roscoStatus.style.right = 'auto';
-          roscoStatus.style.top = 'auto';
-          roscoStatus.style.transform = 'none';
-          roscoStatus.style.zIndex = '10';
-        }
-        
-        const statusItems = document.querySelectorAll('.status-item');
-        statusItems.forEach(item => {
-          item.style.flex = '1 1 40%';
-          item.style.minWidth = window.innerWidth <= 360 ? '70px' : '80px';
-          item.style.margin = '0.2rem';
-        });
-      }
-      
-      // Ejecutar inmediatamente
-      forceMobileStyles();
-      
-      // Ejecutar después de la carga completa de la página
-      window.addEventListener('load', forceMobileStyles);
-      
-      // Ejecutar al cambiar el tamaño de la ventana
-      window.addEventListener('resize', forceMobileStyles);
-      
-      // Ejecutar al cambiar la orientación
-      window.addEventListener('orientationchange', function() {
-        setTimeout(forceMobileStyles, 200);
-      });
-      
-      // Forzar múltiples veces para asegurar que ningún otro script sobrescriba
-      setTimeout(forceMobileStyles, 500);
-      setTimeout(forceMobileStyles, 1000);
-      setTimeout(forceMobileStyles, 2000);
     });
   </script>
 </body>
