@@ -82,8 +82,6 @@
         display: flex;
         flex-direction: column;
         min-height: 100vh;
-        height: auto;
-        overflow-y: visible;
       }
 
       /* Mejoras para el header */
@@ -950,9 +948,6 @@
       @media (max-width: 768px) {
         .app-container {
           padding: 1rem;
-          height: auto;
-          min-height: unset;
-          overflow-y: visible;
         }
 
         .card-section {
@@ -1007,7 +1002,6 @@
         .modal-overlay {
           align-items: center;
           position: fixed;
-          height: 100%;
           overflow-y: auto;
         }
         
@@ -1025,17 +1019,21 @@
 
       /* Media queries para móviles y pantallas pequeñas */
       @media (max-width: 480px) {
-        body {
-          overflow-y: auto;
-          position: relative;
-          height: auto;
+        html, body {
+          width: 100%;
+          overflow-x: hidden;
         }
         
         .app-container {
           padding: 0.75rem;
-          height: auto;
-          position: relative;
-          overflow-y: visible;
+          width: calc(100% - 1.5rem);
+          max-width: 100%;
+        }
+        
+        .content-card {
+          width: 100%;
+          margin: 0;
+          border-radius: calc(var(--border-radius) - 4px);
         }
         
         .card-section {
@@ -1131,13 +1129,67 @@
         }
         
         .screens-container {
-          min-height: auto;
-          height: auto;
-          overflow-y: visible;
+          padding: 0;
         }
         
-        .content-card {
-          height: auto;
+        /* Ajustes para modal en vista vertical */
+        .rules-modal {
+          width: 95%;
+          max-width: 420px;
+        }
+        
+        /* Ajustes para banner de cookies en modo vertical */
+        .cookie-banner.show {
+          padding: 10px;
+        }
+        
+        .cookie-content {
+          padding: 0;
+        }
+        
+        .cookie-text p {
+          font-size: 0.8rem;
+        }
+        
+        .cookie-buttons {
+          margin-top: 8px;
+        }
+      }
+      
+      /* Específicamente para pantallas muy angostas en modo vertical */
+      @media (max-width: 370px) {
+        .title-text {
+          font-size: 1.8rem;
+        }
+        
+        .ball-icon {
+          font-size: 1.8rem;
+        }
+        
+        .app-header {
+          margin-bottom: 1rem;
+        }
+        
+        .difficulty-option {
+          padding: 0.75rem 0.5rem;
+        }
+        
+        .difficulty-icon {
+          width: 40px;
+          height: 40px;
+        }
+        
+        .btn {
+          padding: 0.7rem 0.5rem !important;
+        }
+        
+        .welcome-title {
+          font-size: 1.1rem;
+        }
+        
+        .return-portal-link {
+          font-size: 0.75rem;
+          padding: 0.35rem 0.7rem;
         }
       }
       
@@ -1208,17 +1260,7 @@
         }
       }
 
-      /* Estilos para las fechas en la tabla de ranking */
-      .date {
-        font-size: 0.9rem;
-        color: rgba(255, 255, 255, 0.9);
-      }
-      
-      .date-invalid {
-        color: rgba(255, 255, 255, 0.6);
-        font-style: italic;
-      }
-
+      /* Corregir el comportamiento del modal de cookies para que no bloquee el scroll */
       .cookie-banner {
         position: fixed;
         bottom: 0;
@@ -1231,93 +1273,6 @@
         box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
         transform: translateY(100%);
         transition: transform 0.4s ease-in-out;
-      }
-      
-      .cookie-banner.show {
-        transform: translateY(0);
-      }
-      
-      .cookie-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-      }
-      
-      .cookie-text {
-        flex: 1;
-        min-width: 280px;
-        padding-right: 20px;
-      }
-      
-      .cookie-text h3 {
-        color: white;
-        font-size: 1.2rem;
-        margin-bottom: 10px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-      
-      .cookie-text p {
-        color: rgba(255, 255, 255, 0.8);
-        font-size: 0.9rem;
-        margin: 0;
-        line-height: 1.5;
-      }
-      
-      .cookie-buttons {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-top: 10px;
-      }
-      
-      .cookie-more-info {
-        color: rgba(255, 255, 255, 0.7);
-        text-decoration: underline;
-        font-size: 0.9rem;
-        transition: color 0.3s;
-      }
-      
-      .cookie-more-info:hover {
-        color: white;
-      }
-      
-      .accept-cookies {
-        background: linear-gradient(135deg, #4f46e5, #3730a3);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 50px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-size: 0.9rem;
-      }
-      
-      .accept-cookies:hover {
-        background: linear-gradient(135deg, #4338ca, #312e81);
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
-      }
-      
-      @media (max-width: 768px) {
-        .cookie-content {
-          flex-direction: column;
-          align-items: stretch;
-        }
-        
-        .cookie-text {
-          padding-right: 0;
-          margin-bottom: 15px;
-        }
-        
-        .cookie-buttons {
-          justify-content: space-between;
-        }
       }
     </style>
   </head>

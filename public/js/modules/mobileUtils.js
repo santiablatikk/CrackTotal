@@ -10,13 +10,8 @@ const MobileUtils = {
         fixVhUnits: true,
         optimizeTouchElements: true,
         lazyLoadImages: true,
-        allowScrolling: true, // Aseguramos que el desplazamiento esté habilitado por defecto
-        minTouchTargetSize: 44, // Recomendado por WCAG
-        scrollThrottleTime: 100,
-        touchThrottleTime: 150,
-        optimizeScrolling: true,
-        lazyLoadOffscreen: true,
-        offscreenThreshold: 300, // px
+        allowScrolling: true,
+        preserveRoscoSize: true // Nueva opción para preservar el tamaño del rosco
     },
 
     // Método de inicialización
@@ -29,60 +24,129 @@ const MobileUtils = {
             console.log('MobileUtils inicializado con configuración:', this.config);
         }
         
-        // Aplicar optimizaciones
-        this.setupViewportHeight();
-        this.optimizeTouch();
-        if (this.config.lazyLoadImages) {
-            this.setupLazyLoading();
-        }
-        
-        // Asegurar que el desplazamiento funciona correctamente en móviles
+        // Aplicar corrección de desplazamiento inmediatamente
         this.fixScrolling();
         
-        // Escuchar eventos de orientación
+        // Establecer listeners
+        window.addEventListener('load', () => {
+            this.fixScrolling();
+            if (this.config.preserveRoscoSize) {
+                this.preserveRoscoSize();
+            }
+        });
+        
         window.addEventListener('orientationchange', () => {
             setTimeout(() => {
-                this.setupViewportHeight();
                 this.fixScrolling();
+                if (this.config.preserveRoscoSize) {
+                    this.preserveRoscoSize();
+                }
             }, 200);
         });
         
-        // Escuchar eventos de redimensionamiento para ajustes
         window.addEventListener('resize', () => {
-            this.setupViewportHeight();
             this.fixScrolling();
+            if (this.config.preserveRoscoSize) {
+                this.preserveRoscoSize();
+            }
         });
+        
+        // Ejecutar otras optimizaciones solo si están habilitadas
+        if (this.config.fixVhUnits) {
+            this.setupViewportHeight();
+        }
+        
+        if (this.config.optimizeTouchElements) {
+            this.optimizeTouch();
+        }
+        
+        if (this.config.lazyLoadImages) {
+            this.setupLazyLoading();
+        }
     },
     
-    // Corregir la altura del viewport en dispositivos móviles (especialmente iOS)
-    setupViewportHeight: function() {
-        if (!this.config.fixVhUnits) return;
+    // Fix para el problema de desplazamiento en móviles
+    fixScrolling: function() {
+        // Solución mínima para habilitar desplazamiento sin cambiar la apariencia
+        document.body.style.position = 'relative';
+        document.body.style.overflowY = 'auto';
+        document.body.style.overflowX = 'hidden';
+        document.documentElement.style.overflowY = 'auto';
         
+        // Arreglo específico para iOS
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            document.documentElement.style.webkitOverflowScrolling = 'touch';
+            
+            // Arreglar modales en iOS
+            const modals = document.querySelectorAll('.modal-overlay, .modal');
+            modals.forEach(modal => {
+                if (modal && window.getComputedStyle(modal).display !== 'none') {
+                    modal.style.overflowY = 'auto';
+                    modal.style.webkitOverflowScrolling = 'touch';
+                }
+            });
+        }
+    },
+    
+    // Preservar el tamaño del rosco para que se vea como en escritorio
+    preserveRoscoSize: function() {
+        const roscoContainer = document.getElementById('rosco-container');
+        if (!roscoContainer) return;
+        
+        // Asegurar que el rosco mantenga proporciones adecuadas
+        const isMobile = window.innerWidth <= 480;
+        const isVeryNarrow = window.innerWidth <= 360;
+        
+        if (isMobile) {
+            // Asegurar que el rosco se vea bien
+            roscoContainer.style.transform = 'scale(1)';
+            roscoContainer.style.transformOrigin = 'center center';
+            roscoContainer.style.width = '100%';
+            roscoContainer.style.margin = '0 auto';
+            
+            // Asegurar que las letras se vean bien
+            const letters = roscoContainer.querySelectorAll('.rosco-letter');
+            letters.forEach(letter => {
+                letter.style.fontSize = isVeryNarrow ? '0.7rem' : '0.8rem';
+            });
+            
+            // Ajustar la tarjeta de pregunta
+            const questionCard = document.querySelector('.question-card');
+            if (questionCard) {
+                questionCard.style.width = isVeryNarrow ? '80%' : '85%';
+                questionCard.style.maxWidth = 'none';
+            }
+        } else {
+            // Resetear estilos en desktop
+            roscoContainer.style.transform = '';
+            roscoContainer.style.transformOrigin = '';
+            roscoContainer.style.width = '';
+            roscoContainer.style.margin = '';
+            
+            const letters = roscoContainer.querySelectorAll('.rosco-letter');
+            letters.forEach(letter => {
+                letter.style.fontSize = '';
+            });
+            
+            const questionCard = document.querySelector('.question-card');
+            if (questionCard) {
+                questionCard.style.width = '';
+                questionCard.style.maxWidth = '';
+            }
+        }
+    },
+    
+    // Corregir la altura del viewport en dispositivos móviles
+    setupViewportHeight: function() {
         const vh = window.innerHeight * 0.01;
         document.documentElement.style.setProperty('--vh', `${vh}px`);
-        
-        if (this.config.debugMode) {
-            console.log('Viewport height ajustado:', vh);
-        }
     },
     
     // Optimizar interacciones táctiles
     optimizeTouch: function() {
-        if (!this.config.optimizeTouchElements) return;
-        
-        // Mejorar respuesta táctil en elementos clicables
-        const touchTargets = document.querySelectorAll('a, button, .difficulty-option, [role="button"]');
+        const touchTargets = document.querySelectorAll('a, button, .difficulty-option, .rosco-letter, [role="button"]');
         touchTargets.forEach(el => {
             el.style.touchAction = 'manipulation';
-            
-            // Añadir feedback táctil
-            el.addEventListener('touchstart', function() {
-                this.classList.add('touch-active');
-            }, { passive: true });
-            
-            el.addEventListener('touchend', function() {
-                this.classList.remove('touch-active');
-            }, { passive: true });
         });
     },
     
@@ -119,54 +183,6 @@ const MobileUtils = {
         lazyImages.forEach(img => {
             imageObserver.observe(img);
         });
-    },
-    
-    // Asegurar que el desplazamiento funciona correctamente en dispositivos móviles
-    fixScrolling: function() {
-        if (!this.config.allowScrolling) return;
-        
-        // Eliminar restricciones de altura fija que pueden bloquear el desplazamiento
-        const scrollContainers = [
-            document.body,
-            document.querySelector('.app-container'),
-            document.querySelector('.screens-container'),
-            document.querySelector('.content-card')
-        ];
-        
-        scrollContainers.forEach(container => {
-            if (container) {
-                // Asegurar que el contenedor permite desplazamiento
-                container.style.minHeight = 'auto';
-                container.style.height = 'auto';
-                container.style.overflowY = 'visible';
-                
-                // Eliminar cualquier posición fija que pueda bloquear el scroll
-                if (container !== document.body) {
-                    container.style.position = 'relative';
-                }
-            }
-        });
-        
-        // Arreglar problemas específicos de iOS
-        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-            document.documentElement.style.height = 'auto';
-            document.body.style.height = 'auto';
-            document.body.style.position = 'relative';
-            document.body.style.overflow = 'auto';
-            
-            // Permitir scroll cuando hay modales abiertos
-            const modals = document.querySelectorAll('.modal-overlay');
-            modals.forEach(modal => {
-                if (modal && window.getComputedStyle(modal).display !== 'none') {
-                    modal.style.overflowY = 'auto';
-                    modal.style.webkitOverflowScrolling = 'touch';
-                }
-            });
-        }
-        
-        if (this.config.debugMode) {
-            console.log('Ajustes de scroll aplicados para dispositivos móviles');
-        }
     }
 };
 

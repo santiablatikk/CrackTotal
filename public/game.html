@@ -56,30 +56,46 @@
       transform: scale(1.1);
     }
     
-    /* Optimizaciones para móviles */
+    /* Optimizaciones para móviles manteniendo la apariencia original */
     @media (max-width: 768px) {
+      body {
+        overflow-y: auto;
+      }
+      
+      .container {
+        height: auto;
+        min-height: 100vh;
+      }
+      
+      .game-container {
+        margin: 0.5rem;
+        padding: 0.75rem;
+      }
+      
       .question-card {
-        width: 90%;
-        max-width: 340px;
+        width: 95%;
+        max-width: none;
         padding: 1rem;
+        margin: 0 auto;
       }
       
       .current-letter-display {
-        font-size: 2.5rem;
-        margin-bottom: 0.5rem;
+        font-size: 3rem;
+        margin-bottom: 0.75rem;
       }
       
       .current-question {
-        font-size: 1rem;
+        font-size: 1.1rem;
       }
       
       .current-definition {
-        font-size: 0.9rem;
+        font-size: 1rem;
         margin-bottom: 1rem;
+        max-height: 25vh;
       }
       
       .answer-form {
-        gap: 0.5rem;
+        gap: 0.75rem;
       }
       
       .back-button {
@@ -94,17 +110,19 @@
         flex-wrap: wrap;
         justify-content: center;
         margin-top: 1rem;
+        gap: 0.5rem;
       }
       
       .status-item {
+        min-width: 80px;
         flex: 1 1 40%;
-        margin: 0.25rem;
+        margin: 0.2rem;
         padding: 0.6rem;
       }
       
       .modal-content {
         width: 90%;
-        max-width: 340px;
+        max-width: 400px;
         padding: 1.5rem;
       }
       
@@ -119,24 +137,43 @@
       
       .modal-actions .btn {
         width: 100%;
+        margin: 0;
       }
     }
     
-    /* Optimizaciones para pantallas muy pequeñas */
+    /* Optimizaciones para pantallas muy pequeñas manteniendo proporción del rosco */
     @media (max-width: 480px) {
-      .rosco-container {
-        transform: scale(0.85);
-        margin-top: -1rem;
-        margin-bottom: -1rem;
+      body {
+        overflow-x: hidden;
+      }
+      
+      .rosco-section {
+        margin: 0.5rem -0.5rem;
+        overflow: visible;
+      }
+      
+      #rosco-container {
+        transform: scale(1);
+        transform-origin: center center;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1/1;
+        margin: 0 auto;
+        padding: 0;
+      }
+      
+      .rosco-letter {
+        font-size: 0.8rem;
       }
       
       .question-card {
         padding: 0.8rem;
-        max-width: 280px;
+        width: 85%;
+        max-width: none;
       }
       
       .current-letter-display {
-        font-size: 2rem;
+        font-size: 2.5rem;
       }
       
       .title-text {
@@ -144,36 +181,76 @@
       }
       
       .input-container {
-        flex-direction: column;
+        flex-wrap: nowrap;
+        width: 100%;
         gap: 0.5rem;
       }
       
       .answer-input {
-        width: 100%;
+        flex: 1;
         padding: 0.8rem;
+        font-size: 1rem;
       }
       
       .submit-btn {
-        width: 100%;
+        flex-shrink: 0;
         margin-left: 0;
       }
       
-      .skip-btn, .help-btn {
+      .help-btn, .skip-btn {
         width: 100%;
         padding: 0.8rem;
+        font-size: 0.9rem;
       }
       
-      .status-item {
-        flex: 1 1 100%;
+      .policy-footer {
+        margin-top: 1rem;
       }
       
       .footer-links-mini {
-        flex-direction: column;
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 0.5rem;
       }
       
       .footer-links-mini a {
         padding: 0.5rem;
+        flex: 0 0 auto;
+      }
+    }
+    
+    /* Corrección para pantallas muy angostas */
+    @media (max-width: 360px) {
+      #rosco-container {
+        transform-origin: center;
+        transform: scale(0.95);
+      }
+      
+      .rosco-letter {
+        width: 30px;
+        height: 30px;
+        font-size: 0.7rem;
+      }
+      
+      .current-letter-display {
+        font-size: 2.2rem;
+      }
+      
+      .current-question {
+        font-size: 0.95rem;
+      }
+      
+      .status-item {
+        padding: 0.5rem;
+        min-width: 70px;
+      }
+      
+      .status-label {
+        font-size: 0.7rem;
+      }
+      
+      .status-value {
+        font-size: 1.2rem;
       }
     }
     
