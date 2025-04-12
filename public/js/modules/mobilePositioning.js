@@ -257,20 +257,27 @@ const MobilePositioning = (function() {
     const letterSize = deviceConfig.activeLetterSize; 
     
     // Calcular el radio interno para que llegue justo hasta antes de las letras
-    // Reducimos el margen para que llegue más cerca de las letras
-    const innerRadius = letterRingRadius - letterSize * 0.55;
+    // Ajustar según el tamaño de pantalla
+    const isMobile = window.innerWidth <= 768;
+    const innerRadius = isMobile 
+      ? letterRingRadius - letterSize * 0.8  // Más reducido en móvil
+      : letterRingRadius - letterSize * 0.55; // Original para escritorio
     
-    // Forzar estilos
+    // Calcular dimensiones adaptativas para móvil
+    const cardWidth = isMobile ? Math.min(innerRadius * 1.8, window.innerWidth * 0.85) : innerRadius * 2;
+    const cardHeight = isMobile ? Math.min(innerRadius * 1.8, window.innerHeight * 0.7) : innerRadius * 2;
+    
+    // Forzar estilos con !important para evitar sobrescrituras
     questionCard.style.cssText = `
       position: absolute !important;
       top: 50% !important;
       left: 50% !important;
       transform: translate(-50%, -50%) !important;
-      width: ${innerRadius * 2}px !important;
-      height: ${innerRadius * 2}px !important;
-      max-width: ${innerRadius * 2}px !important;
-      max-height: ${innerRadius * 2}px !important;
-      border-radius: 50% !important;
+      width: ${cardWidth}px !important;
+      height: ${cardHeight}px !important;
+      max-width: ${cardWidth}px !important;
+      max-height: ${cardHeight}px !important;
+      border-radius: ${isMobile ? '20px' : '50%'} !important;
       padding: 0 !important;
       margin: 0 !important;
       box-sizing: border-box !important;
@@ -287,6 +294,14 @@ const MobilePositioning = (function() {
       -ms-overflow-style: none !important;
     `;
     
+    // Registrar el estilo aplicado en localStorage para verificaciones futuras
+    try {
+      localStorage.setItem('questionCardStyle', questionCard.style.cssText);
+      localStorage.setItem('questionCardStyleApplied', Date.now().toString());
+    } catch (e) {
+      console.warn('No se pudo guardar el estilo en localStorage:', e);
+    }
+    
     // Crear contenedor interior para el contenido si no existe
     let innerContent = questionCard.querySelector('.question-card-inner');
     if (!innerContent) {
@@ -301,11 +316,14 @@ const MobilePositioning = (function() {
       questionCard.appendChild(innerContent);
     }
     
+    // Ajustar el padding según el dispositivo
+    const paddingPercent = isMobile ? '8%' : '12%';
+    
     // Reducir el padding para aprovechar más espacio
     innerContent.style.cssText = `
       width: 100% !important;
       height: 100% !important;
-      padding: 12% !important;
+      padding: ${paddingPercent} !important;
       box-sizing: border-box !important;
       display: flex !important;
       flex-direction: column !important;
@@ -317,26 +335,18 @@ const MobilePositioning = (function() {
       -ms-overflow-style: none !important;
       overscroll-behavior: contain !important;
       overflow-x: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
     `;
     
     // Eliminar la barra de desplazamiento en webkit
     innerContent.style.webkitOverflowScrolling = 'touch';
     
-    // Añadir regla para webkit
-    innerContent.style.cssText += `
-      &::-webkit-scrollbar {
-        width: 0 !important;
-        height: 0 !important;
-        display: none !important;
-      }
-    `;
-    
     // Ajustar elementos internos con estilos importantes
     const letterDisplay = innerContent.querySelector('.current-letter-display');
     if (letterDisplay) {
       letterDisplay.style.cssText = `
-        font-size: 4rem !important;
-        margin-bottom: 12px !important;
+        font-size: ${isMobile ? '3rem' : '4rem'} !important;
+        margin-bottom: ${isMobile ? '8px' : '12px'} !important;
         text-align: center !important;
         font-weight: bold !important;
       `;
@@ -345,8 +355,8 @@ const MobilePositioning = (function() {
     const currentQuestion = innerContent.querySelector('.current-question');
     if (currentQuestion) {
       currentQuestion.style.cssText = `
-        margin-bottom: 12px !important;
-        font-size: 1.35rem !important;
+        margin-bottom: ${isMobile ? '8px' : '12px'} !important;
+        font-size: ${isMobile ? '1.15rem' : '1.35rem'} !important;
         line-height: 1.4 !important;
         text-align: center !important;
       `;
@@ -355,8 +365,8 @@ const MobilePositioning = (function() {
     const currentDefinition = innerContent.querySelector('.current-definition');
     if (currentDefinition) {
       currentDefinition.style.cssText = `
-        margin-bottom: 18px !important;
-        font-size: 1.2rem !important;
+        margin-bottom: ${isMobile ? '12px' : '18px'} !important;
+        font-size: ${isMobile ? '1.05rem' : '1.2rem'} !important;
         line-height: 1.4 !important;
         text-align: center !important;
       `;
@@ -368,7 +378,7 @@ const MobilePositioning = (function() {
       answerForm.style.cssText = `
         display: flex !important;
         flex-direction: column !important;
-        gap: 12px !important;
+        gap: ${isMobile ? '8px' : '12px'} !important;
         width: 100% !important;
         align-items: center !important;
       `;
@@ -378,11 +388,11 @@ const MobilePositioning = (function() {
     const answerInput = innerContent.querySelector('.answer-input');
     if (answerInput) {
       answerInput.style.cssText = `
-        width: 90% !important;
-        padding: 10px 15px !important;
+        width: ${isMobile ? '95%' : '90%'} !important;
+        padding: ${isMobile ? '8px 12px' : '10px 15px'} !important;
         border-radius: 30px !important;
-        font-size: 1.1rem !important;
-        height: 45px !important;
+        font-size: ${isMobile ? '1rem' : '1.1rem'} !important;
+        height: ${isMobile ? '40px' : '45px'} !important;
         box-sizing: border-box !important;
         text-align: center !important;
       `;
@@ -393,62 +403,16 @@ const MobilePositioning = (function() {
     if (actionButtons.length) {
       actionButtons.forEach(button => {
         button.style.cssText = `
-          padding: 10px 18px !important;
-          font-size: 1.05rem !important;
+          padding: ${isMobile ? '8px 15px' : '10px 18px'} !important;
+          font-size: ${isMobile ? '0.95rem' : '1.05rem'} !important;
           border-radius: 30px !important;
-          margin: 0 6px !important;
-          height: 45px !important;
-          min-height: 45px !important;
-          box-sizing: border-box !important;
+          margin: 0 ${isMobile ? '4px' : '6px'} !important;
         `;
       });
     }
     
-    // Estilos especiales para el contenedor de botones
-    const buttonContainer = innerContent.querySelector('.button-container');
-    if (buttonContainer) {
-      buttonContainer.style.cssText = `
-        display: flex !important;
-        flex-direction: row !important;
-        justify-content: center !important;
-        gap: 12px !important;
-        flex-wrap: wrap !important;
-        width: 100% !important;
-      `;
-    }
-    
-    // Posicionar las letras alrededor de la circunferencia
-    const roscoLetters = roscoContainer.querySelectorAll('.rosco-letter');
-    const letterCount = roscoLetters.length;
-    const radius = (roscoSize / 2) * deviceConfig.ringRadius;
-    
-    roscoLetters.forEach((letter, index) => {
-      const angle = (index * (2 * Math.PI / letterCount)) - Math.PI/2;
-      const x = radius * Math.cos(angle);
-      const y = radius * Math.sin(angle);
-      
-      // Aplicar estilos importantes
-      letter.style.cssText = `
-        position: absolute !important;
-        left: calc(50% + ${x}px) !important;
-        top: calc(50% + ${y}px) !important;
-        transform: translate(-50%, -50%) !important;
-        width: ${letter.classList.contains('current') ? deviceConfig.activeLetterSize : deviceConfig.letterSize}px !important;
-        height: ${letter.classList.contains('current') ? deviceConfig.activeLetterSize : deviceConfig.letterSize}px !important;
-        font-size: ${letter.classList.contains('current') ? deviceConfig.fontSizes.active : deviceConfig.fontSizes.normal} !important;
-        z-index: 10 !important;
-        transition: all ${config.transitionDuration} ${config.transitionTiming} !important;
-      `;
-    });
-    
-    // Ajustar el tamaño del contenedor del rosco para ocupar más espacio
-    roscoContainer.style.width = `${roscoSize}px`;
-    roscoContainer.style.height = `${roscoSize}px`;
-    roscoContainer.style.margin = '0 auto';
-    roscoContainer.style.position = 'relative';
-    roscoContainer.style.overflow = 'hidden';
-    
-    console.log("✅ Diseño circular aplicado correctamente");
+    // Guardar a localStorage para persistencia
+    localStorage.setItem('mobilePositioningConfigured', 'true');
   }
   
   /**

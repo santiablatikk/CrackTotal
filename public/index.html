@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#1e293b">
+  <!-- Prevenir caché del navegador -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>CRACK TOTAL - Juegos de Fútbol</title>
+  
+  <!-- Script para limpiar caché -->
+  <script>
+    // Versión de la aplicación - incrementar cuando se hacen cambios importantes
+    const appVersion = '1.3.0';
+    
+    // Verificar si necesitamos limpiar la caché
+    function checkCacheVersion() {
+      const lastVersion = localStorage.getItem('appVersion');
+      if (lastVersion !== appVersion) {
+        console.log('Nueva versión detectada, limpiando caché...');
+        
+        // Limpiar caché de localStorage
+        const keysToKeep = ['playerName', 'sound', 'userID']; // Mantener sólo estos datos importantes
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (!keysToKeep.includes(key)) {
+            localStorage.removeItem(key);
+          }
+        }
+        
+        // Forzar recarga sin caché
+        if ('caches' in window) {
+          caches.keys().then(names => {
+            names.forEach(name => {
+              caches.delete(name);
+            });
+          });
+        }
+        
+        // Guardar la nueva versión
+        localStorage.setItem('appVersion', appVersion);
+        
+        // Recargar la página si no es la primera carga
+        if (lastVersion) {
+          window.location.reload(true);
+        }
+      }
+    }
+    
+    // Ejecutar al cargar
+    checkCacheVersion();
+  </script>
+</head>
+<body>
+  <!-- Rest of the file remains unchanged -->
+</body>
+</html> 
