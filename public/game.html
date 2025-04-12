@@ -21,6 +21,18 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Google AdSense -->
+  <script>
+    // Script para manejar errores de adsbygoogle
+    window.onerror = function(message, source, lineno, colno, error) {
+      if (source && source.includes('googlesyndication') || 
+          message && message.includes('adsbygoogle')) {
+        console.log('Manejando error de AdSense:', message);
+        return true; // Evitar que el error se propague
+      }
+      // Permitir que otros errores sean manejados normalmente
+      return false;
+    };
+  </script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
   
