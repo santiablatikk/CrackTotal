@@ -293,7 +293,7 @@ const MobilePositioning = (function() {
     const cardWidth = isMobile ? Math.min(innerRadius * 1.8, window.innerWidth * 0.85) : innerRadius * 2;
     const cardHeight = isMobile ? Math.min(innerRadius * 1.8, window.innerHeight * 0.7) : innerRadius * 2;
     
-    // Forzar estilos con !important para evitar sobrescrituras
+    // Forzar estilos con !important para evitar sobrescrituras y mantener fija la posición
     questionCard.style.cssText = `
       position: absolute !important;
       top: 50% !important;
@@ -318,6 +318,8 @@ const MobilePositioning = (function() {
       z-index: 5 !important;
       scrollbar-width: none !important;
       -ms-overflow-style: none !important;
+      transition: none !important; /* Evitar animaciones que puedan causar movimiento */
+      animation: none !important; /* Evitar animaciones que puedan causar movimiento */
     `;
     
     // Registrar el estilo aplicado en localStorage para verificaciones futuras
@@ -342,10 +344,10 @@ const MobilePositioning = (function() {
       questionCard.appendChild(innerContent);
     }
     
-    // Ajustar el padding según el dispositivo
-    const paddingPercent = isMobile ? '8%' : '12%';
+    // Ajustar el padding según el dispositivo, reducido para evitar scroll
+    const paddingPercent = isMobile ? '6%' : '10%';
     
-    // Reducir el padding para aprovechar más espacio
+    // Modificar para que no requiera scroll y se adapte al contenido
     innerContent.style.cssText = `
       width: 100% !important;
       height: 100% !important;
@@ -356,12 +358,12 @@ const MobilePositioning = (function() {
       justify-content: center !important;
       align-items: center !important;
       text-align: center !important;
-      overflow: auto !important;
+      overflow: visible !important; /* Cambiar a visible para evitar scroll */
       scrollbar-width: none !important;
       -ms-overflow-style: none !important;
-      overscroll-behavior: contain !important;
       overflow-x: hidden !important;
       -webkit-overflow-scrolling: touch !important;
+      transition: none !important;
     `;
     
     // Eliminar la barra de desplazamiento en webkit
@@ -372,73 +374,118 @@ const MobilePositioning = (function() {
     if (letterDisplay) {
       letterDisplay.style.cssText = `
         font-size: ${isMobile ? '3rem' : '4rem'} !important;
-        margin-bottom: ${isMobile ? '8px' : '12px'} !important;
+        margin-bottom: ${isMobile ? '6px' : '10px'} !important;
         text-align: center !important;
         font-weight: bold !important;
+        line-height: 1.1 !important;
       `;
     }
     
     const currentQuestion = innerContent.querySelector('.current-question');
     if (currentQuestion) {
       currentQuestion.style.cssText = `
-        margin-bottom: ${isMobile ? '8px' : '12px'} !important;
+        margin-bottom: ${isMobile ? '6px' : '10px'} !important;
         font-size: ${isMobile ? '1.15rem' : '1.35rem'} !important;
-        line-height: 1.4 !important;
+        line-height: 1.3 !important;
         text-align: center !important;
+        max-height: none !important; /* Evitar recorte */
+        overflow: visible !important; /* Asegurar que el texto sea visible */
       `;
     }
     
     const currentDefinition = innerContent.querySelector('.current-definition');
     if (currentDefinition) {
       currentDefinition.style.cssText = `
-        margin-bottom: ${isMobile ? '12px' : '18px'} !important;
+        margin-bottom: ${isMobile ? '10px' : '15px'} !important;
         font-size: ${isMobile ? '1.05rem' : '1.2rem'} !important;
-        line-height: 1.4 !important;
+        line-height: 1.3 !important;
         text-align: center !important;
+        max-height: none !important; /* Evitar recorte */
+        overflow: visible !important; /* Asegurar que el texto sea visible */
+        display: -webkit-box !important;
+        -webkit-line-clamp: ${isMobile ? '3' : '4'} !important;
+        -webkit-box-orient: vertical !important;
       `;
     }
     
-    // Ajustar formulario para modo circular
+    // Ajustar formulario para modo circular y evitar que cause scroll
     const answerForm = innerContent.querySelector('.answer-form');
     if (answerForm) {
       answerForm.style.cssText = `
         display: flex !important;
         flex-direction: column !important;
-        gap: ${isMobile ? '8px' : '12px'} !important;
+        gap: ${isMobile ? '6px' : '10px'} !important;
         width: 100% !important;
         align-items: center !important;
+        margin-top: auto !important; /* Empujar hacia abajo */
       `;
     }
     
-    // Ajustar input
+    // Ajustar input para que sea más compacto
     const answerInput = innerContent.querySelector('.answer-input');
     if (answerInput) {
       answerInput.style.cssText = `
         width: ${isMobile ? '95%' : '90%'} !important;
-        padding: ${isMobile ? '8px 12px' : '10px 15px'} !important;
+        padding: ${isMobile ? '8px 10px' : '9px 12px'} !important;
         border-radius: 30px !important;
         font-size: ${isMobile ? '1rem' : '1.1rem'} !important;
-        height: ${isMobile ? '40px' : '45px'} !important;
+        height: ${isMobile ? '38px' : '42px'} !important;
         box-sizing: border-box !important;
         text-align: center !important;
       `;
     }
     
-    // Ajustar botones
+    // Ajustar botones para que sean más compactos
     const actionButtons = innerContent.querySelectorAll('button');
     if (actionButtons.length) {
       actionButtons.forEach(button => {
         button.style.cssText = `
-          padding: ${isMobile ? '8px 15px' : '10px 18px'} !important;
-          font-size: ${isMobile ? '0.95rem' : '1.05rem'} !important;
+          padding: ${isMobile ? '6px 12px' : '8px 15px'} !important;
+          font-size: ${isMobile ? '0.9rem' : '1rem'} !important;
           border-radius: 30px !important;
-          margin: 0 ${isMobile ? '4px' : '6px'} !important;
+          margin: 0 ${isMobile ? '3px' : '5px'} !important;
+          min-height: ${isMobile ? '36px' : '40px'} !important;
         `;
       });
     }
     
     // Guardar a localStorage para persistencia
     localStorage.setItem('mobilePositioningConfigured', 'true');
+    
+    // Forzar un redimensionamiento de la tarjeta si el contenido es demasiado grande
+    setTimeout(() => {
+      adjustQuestionCardSizeIfNeeded(questionCard, innerContent);
+    }, 50);
+  }
+  
+  /**
+   * Ajusta el tamaño de la tarjeta de preguntas si el contenido es demasiado grande
+   */
+  function adjustQuestionCardSizeIfNeeded(questionCard, innerContent) {
+    if (!questionCard || !innerContent) return;
+    
+    // Verificar si hay overflow
+    const contentHeight = innerContent.scrollHeight;
+    const containerHeight = questionCard.clientHeight;
+    
+    // Si el contenido es más grande que el contenedor, ajustar el tamaño
+    if (contentHeight > containerHeight * 0.9) {
+      console.log("⚠️ Contenido demasiado grande, ajustando tamaño de tarjeta");
+      
+      // Obtener el tamaño actual
+      const currentWidth = questionCard.clientWidth;
+      const currentHeight = questionCard.clientHeight;
+      
+      // Aumentar un poco el tamaño
+      const newWidth = currentWidth * 1.05;
+      const newHeight = currentHeight * 1.1;
+      
+      // Aplicar nuevo tamaño
+      questionCard.style.width = `${newWidth}px !important`;
+      questionCard.style.height = `${newHeight}px !important`;
+      questionCard.style.maxWidth = `${newWidth}px !important`;
+      questionCard.style.maxHeight = `${newHeight}px !important`;
+    }
   }
   
   /**
