@@ -273,37 +273,62 @@ const MobilePositioning = (function() {
       return;
     }
     
-    const deviceConfig = getDeviceConfig();
-    const roscoSize = deviceConfig.containerSize;
+    // FIJAR COMPLETAMENTE EL ROSCO CONTAINER - Evitar cualquier movimiento
+    roscoContainer.style.cssText = `
+      position: relative !important;
+      width: 650px !important;
+      height: 650px !important;
+      margin: 0 auto !important;
+      overflow: hidden !important;
+      transform: none !important;
+      transition: none !important;
+      animation: none !important;
+    `;
     
-    // Calcular el radio del anillo donde están las letras
-    const letterRingRadius = (roscoSize / 2) * deviceConfig.ringRadius;
-    
-    // Calcular el tamaño de la letra activa para saber cuánto espacio dejar
-    const letterSize = deviceConfig.activeLetterSize; 
-    
-    // Calcular el radio interno para que llegue justo hasta antes de las letras
-    // Ajustar según el tamaño de pantalla
+    // Calculamos dimensiones fijas - sin cálculos dinámicos que causen movimiento
     const isMobile = window.innerWidth <= 768;
-    const innerRadius = isMobile 
-      ? letterRingRadius - letterSize * 0.8  // Más reducido en móvil
-      : letterRingRadius - letterSize * 0.55; // Original para escritorio
+    const containerSize = 650; // Tamaño fijo para más estabilidad
+    const letterSize = isMobile ? 38 : 55;
+    const activeLetterSize = isMobile ? 44 : 65;
+    const radius = (containerSize / 2) * 0.9; // Radio fijo para posición de letras
+    const innerRadius = radius - activeLetterSize * 0.6; // Tamaño fijo para tarjeta de preguntas
     
-    // Calcular dimensiones adaptativas para móvil
-    const cardWidth = isMobile ? Math.min(innerRadius * 1.8, window.innerWidth * 0.85) : innerRadius * 2;
-    const cardHeight = isMobile ? Math.min(innerRadius * 1.8, window.innerHeight * 0.7) : innerRadius * 2;
+    // Fijar todas las letras del rosco en posiciones exactas
+    const roscoLetters = roscoContainer.querySelectorAll('.rosco-letter');
+    if (roscoLetters.length) {
+      roscoLetters.forEach((letter, index) => {
+        const angle = (index * (2 * Math.PI / roscoLetters.length)) - Math.PI/2;
+        const x = radius * Math.cos(angle);
+        const y = radius * Math.sin(angle);
+        
+        // Aplicar posición fija SIN TRANSICIONES
+        letter.style.cssText = `
+          position: absolute !important;
+          left: calc(50% + ${x}px) !important;
+          top: calc(50% + ${y}px) !important;
+          transform: translate(-50%, -50%) !important;
+          width: ${letter.classList.contains('current') ? activeLetterSize : letterSize}px !important;
+          height: ${letter.classList.contains('current') ? activeLetterSize : letterSize}px !important;
+          font-size: ${letter.classList.contains('current') ? '28px' : '26px'} !important;
+          transition: none !important;
+          animation: none !important;
+          z-index: 10 !important;
+        `;
+      });
+    }
     
-    // Forzar estilos con !important para evitar sobrescrituras y mantener fija la posición
+    // Modificar la tarjeta de preguntas para que esté COMPLETAMENTE FIJA
+    const cardSize = innerRadius * 2;
     questionCard.style.cssText = `
       position: absolute !important;
       top: 50% !important;
       left: 50% !important;
       transform: translate(-50%, -50%) !important;
-      width: ${cardWidth}px !important;
-      height: ${cardHeight}px !important;
-      max-width: ${cardWidth}px !important;
-      max-height: ${cardHeight}px !important;
-      border-radius: ${isMobile ? '20px' : '50%'} !important;
+      width: ${cardSize}px !important;
+      height: ${cardSize}px !important;
+      max-width: ${cardSize}px !important;
+      max-height: ${cardSize}px !important;
+      border-radius: 50% !important;
       padding: 0 !important;
       margin: 0 !important;
       box-sizing: border-box !important;
@@ -318,17 +343,12 @@ const MobilePositioning = (function() {
       z-index: 5 !important;
       scrollbar-width: none !important;
       -ms-overflow-style: none !important;
-      transition: none !important; /* Evitar animaciones que puedan causar movimiento */
-      animation: none !important; /* Evitar animaciones que puedan causar movimiento */
+      transition: none !important;
+      animation: none !important;
+      will-change: transform !important;
+      transform-style: preserve-3d !important;
+      backface-visibility: hidden !important;
     `;
-    
-    // Registrar el estilo aplicado en localStorage para verificaciones futuras
-    try {
-      localStorage.setItem('questionCardStyle', questionCard.style.cssText);
-      localStorage.setItem('questionCardStyleApplied', Date.now().toString());
-    } catch (e) {
-      console.warn('No se pudo guardar el estilo en localStorage:', e);
-    }
     
     // Crear contenedor interior para el contenido si no existe
     let innerContent = questionCard.querySelector('.question-card-inner');
@@ -344,118 +364,131 @@ const MobilePositioning = (function() {
       questionCard.appendChild(innerContent);
     }
     
-    // Ajustar el padding según el dispositivo, reducido para evitar scroll
-    const paddingPercent = isMobile ? '6%' : '10%';
-    
-    // Modificar para que no requiera scroll y se adapte al contenido
+    // Fijar completamente el contenido interno
     innerContent.style.cssText = `
       width: 100% !important;
       height: 100% !important;
-      padding: ${paddingPercent} !important;
+      padding: 10% !important;
       box-sizing: border-box !important;
       display: flex !important;
       flex-direction: column !important;
       justify-content: center !important;
       align-items: center !important;
       text-align: center !important;
-      overflow: visible !important; /* Cambiar a visible para evitar scroll */
+      overflow: hidden !important;
       scrollbar-width: none !important;
       -ms-overflow-style: none !important;
       overflow-x: hidden !important;
-      -webkit-overflow-scrolling: touch !important;
+      transform: translateZ(0) !important;
+      will-change: transform !important;
+      backface-visibility: hidden !important;
       transition: none !important;
+      animation: none !important;
     `;
     
-    // Eliminar la barra de desplazamiento en webkit
-    innerContent.style.webkitOverflowScrolling = 'touch';
-    
-    // Ajustar elementos internos con estilos importantes
+    // Ajustar elementos internos con estilos fijos e importantes
     const letterDisplay = innerContent.querySelector('.current-letter-display');
     if (letterDisplay) {
       letterDisplay.style.cssText = `
         font-size: ${isMobile ? '3rem' : '4rem'} !important;
-        margin-bottom: ${isMobile ? '6px' : '10px'} !important;
+        margin: 0 0 10px 0 !important;
         text-align: center !important;
         font-weight: bold !important;
-        line-height: 1.1 !important;
+        line-height: 1 !important;
+        transition: none !important;
+        animation: none !important;
+        transform: translateZ(0) !important;
+        will-change: transform !important;
       `;
     }
     
     const currentQuestion = innerContent.querySelector('.current-question');
     if (currentQuestion) {
       currentQuestion.style.cssText = `
-        margin-bottom: ${isMobile ? '6px' : '10px'} !important;
+        margin: 0 0 10px 0 !important;
         font-size: ${isMobile ? '1.15rem' : '1.35rem'} !important;
         line-height: 1.3 !important;
         text-align: center !important;
-        max-height: none !important; /* Evitar recorte */
-        overflow: visible !important; /* Asegurar que el texto sea visible */
+        max-height: none !important;
+        overflow: visible !important;
+        transition: none !important;
+        animation: none !important;
+        transform: translateZ(0) !important;
       `;
     }
     
     const currentDefinition = innerContent.querySelector('.current-definition');
     if (currentDefinition) {
       currentDefinition.style.cssText = `
-        margin-bottom: ${isMobile ? '10px' : '15px'} !important;
+        margin: 0 0 15px 0 !important;
         font-size: ${isMobile ? '1.05rem' : '1.2rem'} !important;
         line-height: 1.3 !important;
         text-align: center !important;
-        max-height: none !important; /* Evitar recorte */
-        overflow: visible !important; /* Asegurar que el texto sea visible */
-        display: -webkit-box !important;
-        -webkit-line-clamp: ${isMobile ? '3' : '4'} !important;
-        -webkit-box-orient: vertical !important;
+        max-height: none !important;
+        overflow: visible !important;
+        transition: none !important;
+        animation: none !important;
+        transform: translateZ(0) !important;
       `;
     }
     
-    // Ajustar formulario para modo circular y evitar que cause scroll
+    // Ajustar formulario con posición fija
     const answerForm = innerContent.querySelector('.answer-form');
     if (answerForm) {
       answerForm.style.cssText = `
         display: flex !important;
         flex-direction: column !important;
-        gap: ${isMobile ? '6px' : '10px'} !important;
+        gap: 10px !important;
         width: 100% !important;
         align-items: center !important;
-        margin-top: auto !important; /* Empujar hacia abajo */
+        margin-top: auto !important;
+        transition: none !important;
+        animation: none !important;
+        transform: translateZ(0) !important;
       `;
     }
     
-    // Ajustar input para que sea más compacto
+    // Ajustar input con posición fija
     const answerInput = innerContent.querySelector('.answer-input');
     if (answerInput) {
       answerInput.style.cssText = `
-        width: ${isMobile ? '95%' : '90%'} !important;
-        padding: ${isMobile ? '8px 10px' : '9px 12px'} !important;
+        width: 90% !important;
+        padding: 8px 12px !important;
         border-radius: 30px !important;
-        font-size: ${isMobile ? '1rem' : '1.1rem'} !important;
-        height: ${isMobile ? '38px' : '42px'} !important;
+        font-size: 1.1rem !important;
+        height: 40px !important;
         box-sizing: border-box !important;
         text-align: center !important;
+        transition: none !important;
+        animation: none !important;
+        transform: translateZ(0) !important;
       `;
     }
     
-    // Ajustar botones para que sean más compactos
+    // Ajustar botones con posición fija
     const actionButtons = innerContent.querySelectorAll('button');
     if (actionButtons.length) {
       actionButtons.forEach(button => {
         button.style.cssText = `
-          padding: ${isMobile ? '6px 12px' : '8px 15px'} !important;
-          font-size: ${isMobile ? '0.9rem' : '1rem'} !important;
+          padding: 8px 15px !important;
+          font-size: 1rem !important;
           border-radius: 30px !important;
-          margin: 0 ${isMobile ? '3px' : '5px'} !important;
-          min-height: ${isMobile ? '36px' : '40px'} !important;
+          margin: 0 5px !important;
+          height: 40px !important;
+          transition: none !important;
+          animation: none !important;
+          transform: translateZ(0) !important;
         `;
       });
     }
     
     // Guardar a localStorage para persistencia
-    localStorage.setItem('mobilePositioningConfigured', 'true');
-    
-    // Forzar un redimensionamiento de la tarjeta si el contenido es demasiado grande
-    setTimeout(() => {
-      adjustQuestionCardSizeIfNeeded(questionCard, innerContent);
-    }, 50);
+    try {
+      localStorage.setItem('questionCardFixedStyle', 'true');
+      localStorage.setItem('lastFixedStyleApplied', Date.now().toString());
+    } catch (e) {
+      console.warn('No se pudo guardar el estilo en localStorage:', e);
+    }
   }
   
   /**
