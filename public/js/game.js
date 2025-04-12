@@ -1203,6 +1203,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         hideStatsModal(); // Usando la función correcta que existe en el código
       });
+    } else {
+      console.warn("Element with ID 'close-stats-btn' not found.");
     }
   }
   
@@ -1707,6 +1709,8 @@ function playSound(sound) {
     rankingBtn.addEventListener('click', function() {
       window.location.href = 'ranking.html';
     });
+  } else {
+    console.warn("Element with ID 'ranking-btn' not found.");
   }
   
   // Redirección al perfil
@@ -1715,6 +1719,8 @@ function playSound(sound) {
     profileBtn.addEventListener('click', function() {
       window.location.href = 'profile.html';
     });
+  } else {
+    console.warn("Element with ID 'profile-btn' not found.");
   }
   
   // Redirección a Futbol Millonario
@@ -2474,26 +2480,44 @@ function showGameMessage(message, type = 'info', duration = 2000) {
 }
 
 // Close button on stats modal
-document.getElementById('close-stats-btn').addEventListener('click', function() {
-  hideStatsModal();
-});
+const closeStatsBtn = document.getElementById('close-stats-btn');
+if (closeStatsBtn) {
+  closeStatsBtn.addEventListener('click', function() {
+    hideStatsModal();
+  });
+} else {
+  console.warn("Element with ID 'close-stats-btn' not found.");
+}
 
 // New navigation buttons for the stats modal
-document.getElementById('profile-btn').addEventListener('click', function() {
-  window.location.href = 'profile.html';
-});
+const profileBtn = document.getElementById('profile-btn');
+if (profileBtn) {
+  profileBtn.addEventListener('click', function() {
+    window.location.href = 'profile.html';
+  });
+} else {
+  console.warn("Element with ID 'profile-btn' not found.");
+}
 
-document.getElementById('ranking-btn').addEventListener('click', function() {
-  window.location.href = 'ranking.html';
-});
+const rankingBtn = document.getElementById('ranking-btn');
+if (rankingBtn) {
+  rankingBtn.addEventListener('click', function() {
+    window.location.href = 'ranking.html';
+  });
+} else {
+  console.warn("Element with ID 'ranking-btn' not found.");
+}
 
-document.getElementById('play-again-btn').addEventListener('click', function() {
-  hideStatsModal();
-  hideModals();
-  resetGame();
-});
-
-// Después de guardar los resultados del juego en endGame() o donde corresponda
+const playAgainBtn = document.getElementById('play-again-btn');
+if (playAgainBtn) {
+  playAgainBtn.addEventListener('click', function() {
+    hideStatsModal();
+    hideModals();
+    resetGame();
+  });
+} else {
+  console.warn("Element with ID 'play-again-btn' not found.");
+}
 
 // Asegurar que la información del jugador se guarde correctamente
 function savePlayerData(gameData) {
