@@ -10,7 +10,7 @@ const MobilePositioning = (function() {
   'use strict';
   
   // Versión del script - cambiar cuando se actualice
-  const SCRIPT_VERSION = '1.2.0';
+  const SCRIPT_VERSION = '1.5.0'; // Versión incrementada para forzar recarga
   
   // Verificar si hay una versión nueva y forzar recarga
   (function checkVersion() {
@@ -20,13 +20,27 @@ const MobilePositioning = (function() {
         console.log(`🔄 Nueva versión de MobilePositioning detectada: ${SCRIPT_VERSION} (anterior: ${savedVersion || 'ninguna'})`);
         localStorage.setItem('mobilePositioningVersion', SCRIPT_VERSION);
         
+        // Forzar recarga global para todos los usuarios
+        localStorage.setItem('forceReload', 'true');
+        localStorage.setItem('reloadTimestamp', Date.now().toString());
+        
         // Si no es la primera carga, forzar recarga para aplicar la nueva versión
         if (savedVersion) {
+          // Limpiar caché de navegador
+          if ('caches' in window) {
+            caches.keys().then(names => {
+              names.forEach(name => {
+                caches.delete(name);
+              });
+            });
+          }
+          
           // Forzar recarga sin caché después de un breve retraso
           console.log('🔄 Forzando recarga para aplicar nueva versión...');
+          document.body.style.opacity = '0.5';
           setTimeout(() => {
-            window.location.reload(true);
-          }, 500);
+            window.location.href = window.location.href.split('?')[0] + '?v=' + Date.now();
+          }, 100);
           return; // Detener la ejecución del script
         }
       }

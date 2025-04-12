@@ -14,7 +14,7 @@
   <!-- Script para forzar recarga y evitar caché -->
   <script>
     // Versión de la aplicación - incrementar cuando se hacen cambios importantes
-    const gameAppVersion = '1.4.0';
+    const gameAppVersion = '1.5.0'; // Incrementada para forzar actualización
     const lastRefresh = Date.now();
     
     // Guardar la hora de carga para detectar si el navegador está usando caché antigua
@@ -24,16 +24,12 @@
         const savedVersion = localStorage.getItem('gameAppVersion');
         const lastPageLoad = parseInt(localStorage.getItem('lastGameLoad') || '0');
         
-        // Si ha pasado más de 1 hora, forzar recarga
-        const oneHour = 60 * 60 * 1000; // 1 hora en milisegundos
-        const timeSinceLastLoad = Date.now() - lastPageLoad;
-        
         // Actualizar versión y tiempo de carga
         localStorage.setItem('gameAppVersion', gameAppVersion);
         localStorage.setItem('lastGameLoad', Date.now().toString());
         
         // Si es una nueva versión o hace tiempo que no se recarga, forzar recarga
-        if ((savedVersion && savedVersion !== gameAppVersion) || timeSinceLastLoad > oneHour) {
+        if ((savedVersion && savedVersion !== gameAppVersion) || (Date.now() - lastPageLoad > 1800000)) { // 30 minutos
           console.log('Forzando recarga para actualizar la página...');
           
           // Limpiar toda la caché de almacenamiento para asegurar una carga limpia
@@ -45,9 +41,13 @@
             });
           }
           
+          // Añadir un parámetro dinámico a la URL para evitar caché
+          const currentUrl = window.location.href.split('?')[0];
+          const newUrl = currentUrl + '?v=' + Date.now();
+          
           // Recargar después de un pequeño retraso
           setTimeout(() => {
-            window.location.reload(true);
+            window.location.href = newUrl;
           }, 100);
           
           // Mostrar página de carga mientras tanto
@@ -65,7 +65,7 @@
             localStorage.removeItem('forceReload');
             window.location.reload(true);
           }
-        }, 30000);
+        }, 15000); // Verificar más frecuentemente
         
       } catch (e) {
         console.warn('Error verificando caché:', e);
@@ -79,6 +79,20 @@
       // Si se inició una recarga, detener el resto de la carga de la página
       throw new Error('Recargando página para usar versión actualizada');
     }
+    
+    // Verificar que los scripts se carguen correctamente
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        // Verificar si el módulo MobilePositioning está disponible
+        if (!window.MobilePositioning) {
+          console.error('Error: MobilePositioning no se cargó correctamente');
+          // Forzar recarga de la página
+          localStorage.setItem('forceReload', 'true');
+          localStorage.setItem('reloadTimestamp', Date.now().toString());
+          window.location.reload(true);
+        }
+      }, 500);
+    });
   </script>
   
   <meta name="description" content="PASALA CHE - El juego de preguntas tipo rosco sobre fútbol. Demuestra tus conocimientos.">

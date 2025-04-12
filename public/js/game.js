@@ -4,6 +4,39 @@
  * loading questions, handling user answers, and game flow.
  */
 
+// Asegurar que esta versión del script esté actualizada
+(function checkScriptVersion() {
+  try {
+    const scriptVersion = '1.5.0'; // Incrementar al hacer cambios
+    const savedVersion = localStorage.getItem('gameJsVersion');
+    
+    // Guardar versión actual
+    localStorage.setItem('gameJsVersion', scriptVersion);
+    
+    // Si la versión guardada no coincide con la actual, forzar recarga
+    if (savedVersion && savedVersion !== scriptVersion) {
+      console.log(`Detectada nueva versión del script game.js: ${scriptVersion}`);
+      // Forzar recarga global
+      localStorage.setItem('forceReload', 'true');
+      localStorage.setItem('reloadTimestamp', Date.now().toString());
+      
+      // Intentar recargar inmediatamente
+      try {
+        if ('caches' in window) {
+          caches.keys().then(names => {
+            names.forEach(name => caches.delete(name));
+          });
+        }
+        window.location.href = window.location.href.split('?')[0] + '?v=' + Date.now();
+      } catch (e) {
+        console.warn('Error al recargar la página:', e);
+      }
+    }
+  } catch (e) {
+    console.warn('Error al verificar versión del script:', e);
+  }
+})();
+
 // Global variables
 let username = "";
 let selectedDifficulty = 'facil';
