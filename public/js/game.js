@@ -2521,66 +2521,9 @@ function playSound(sound) {
 
   // Nueva función para mostrar anuncio durante pausas en el juego
   function showPauseAd() {
-    // Solo mostrar si el usuario ha aceptado anuncios
-    if (localStorage.getItem("adConsent") !== "true") return;
-    
-    // Solo mostrar si el juego está en progreso
-    if (!gameStarted) return;
-    
-    // Evitar mostrar anuncios con demasiada frecuencia
-    const lastPauseAd = parseInt(localStorage.getItem('lastPauseAdTimestamp') || '0');
-    const now = Date.now();
-    
-    // Solo mostrar un anuncio de pausa cada 3 minutos como mínimo
-    if (now - lastPauseAd < 3 * 60 * 1000) return;
-    
-    // Pausar el juego
-    const currentTimerState = remainingTime;
-    clearInterval(timerInterval);
-    
-    // Mostrar el contenedor de anuncios de pausa
-    const pauseAdContainer = document.getElementById('pause-ad');
-    if (!pauseAdContainer) return;
-    
-    // Crear contenido del anuncio de pausa
-    pauseAdContainer.innerHTML = `
-      <div class="pause-ad-header">
-        <div class="pause-ad-title">Juego en pausa</div>
-        <button class="pause-ad-close" id="close-pause-ad">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-      <div class="ad-label">PUBLICIDAD</div>
-      <div class="ad-loading"></div>
-    `;
-    
-    pauseAdContainer.style.display = 'block';
-    
-    // Cargar el anuncio real después de mostrar el indicador de carga
-    setTimeout(() => {
-      const adContainer = pauseAdContainer.querySelector('.ad-loading');
-      adContainer.outerHTML = `
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-9579152019412427"
-             data-ad-slot="9876543210"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-      `;
-      
-      // Intentar cargar el anuncio de forma segura
-      try {
-        const adElement = pauseAdContainer.querySelector('.adsbygoogle');
-        if (adElement) {
-          safelyLoadAd(adElement).catch(() => {
-            // Si falla, simplemente seguir sin mostrar el anuncio
-            console.log('No se pudo cargar el anuncio de pausa, continuando el juego');
-          });
-        }
-      } catch (error) {
-        console.warn('Error al intentar cargar el anuncio:', error);
-      }
-    }, 600);
+    // Función desactivada para eliminar anuncios de pausa
+    console.log("Anuncios de pausa desactivados");
+    return false;
   }
 
   // Escuchar por eventos de activación/desactivación para mostrar anuncios
