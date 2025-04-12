@@ -864,4 +864,41 @@ window.addEventListener('pageshow', function(event) {
       }
     }, 200);
   }
-}); 
+});
+
+// Verificar cambios persistentes al iniciar y aplicarlos
+(function checkPersistentChanges() {
+  // Guardar configuración actual al hacer cambios
+  const applyAndSave = function() {
+    MobilePositioning.init();
+    if (window.innerWidth > 1024) {
+      MobilePositioning.makeQuestionCardCircular();
+    }
+    // Guardar estado en localStorage
+    localStorage.setItem('mobilePositioningApplied', 'true');
+    localStorage.setItem('lastApplied', Date.now().toString());
+  };
+  
+  // Verificar periódicamente que los estilos se mantengan
+  const intervalCheck = function() {
+    const questionCard = document.querySelector('.question-card');
+    if (questionCard && (!questionCard.style.borderRadius || questionCard.style.borderRadius !== '50%')) {
+      console.log("⚠️ Detectada pérdida de estilos, reaplicando...");
+      applyAndSave();
+    }
+  };
+  
+  // Aplicar al cargar
+  if (localStorage.getItem('mobilePositioningApplied') === 'true') {
+    console.log("🔄 Restaurando configuración guardada...");
+    applyAndSave();
+  }
+  
+  // Verificar cada segundo que los estilos se mantengan
+  setInterval(intervalCheck, 1000);
+  
+  // Añadir listener adicional para recarga y cambios de orientación
+  window.addEventListener('resize', applyAndSave);
+  window.addEventListener('orientationchange', applyAndSave);
+  window.addEventListener('load', applyAndSave);
+})(); 
