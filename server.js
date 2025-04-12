@@ -57,6 +57,28 @@ app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   res.setHeader('X-XSS-Protection', '1; mode=block');
   res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+
+  // Añadir encabezados anti-caché para archivos HTML, JS y CSS
+  const ext = path.extname(req.path).toLowerCase();
+  if (ext === '.html' || ext === '.js' || ext === '.css' || req.path === '/') {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+    res.setHeader('Surrogate-Control', 'no-store');
+    
+    // Agregar un parámetro de versión dinámico
+    if (req.path.endsWith('.js') || req.path.endsWith('.css')) {
+      const originalUrl = req.url;
+      // Si aún no tiene un parámetro de versión, añadirlo
+      if (!originalUrl.includes('v=')) {
+        const separator = originalUrl.includes('?') ? '&' : '?';
+        // Usar timestamp actual como versión
+        const version = Date.now();
+        req.url = `${originalUrl}${separator}v=${version}`;
+      }
+    }
+  }
+  
   next();
 });
 
@@ -227,11 +249,22 @@ app.post('/api/ranking', async (req, res) => {
 
 // Servir archivos estáticos con caché
 app.use(express.static(PUBLIC_PATH, {
-  maxAge: STATIC_CACHE_TIME, // Cache para archivos estáticos
-  setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.html')) {
-      // No cachear archivos HTML
-      res.setHeader('Cache-Control', 'no-cache');
+  maxAge: (req, res) => {
+    const ext = path.extname(req.path).toLowerCase();
+    // No almacenar en caché archivos HTML, JS o CSS
+    if (ext === '.html' || ext === '.js' || ext === '.css') {
+      return 0; // Sin caché
+    }
+    // Caché normal para imágenes y otros archivos
+    return STATIC_CACHE_TIME;
+  },
+  setHeaders: (res, path, stat) => {
+    const ext = path.toLowerCase();
+    // Configurar headers para HTML, JS y CSS
+    if (ext.endsWith('.html') || ext.endsWith('.js') || ext.endsWith('.css')) {
+      res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.set('Pragma', 'no-cache');
+      res.set('Expires', '0');
     }
   }
 }));

@@ -10,6 +10,77 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>PASALA CHE - Juego del Rosco</title>
+  
+  <!-- Script para forzar recarga y evitar caché -->
+  <script>
+    // Versión de la aplicación - incrementar cuando se hacen cambios importantes
+    const gameAppVersion = '1.4.0';
+    const lastRefresh = Date.now();
+    
+    // Guardar la hora de carga para detectar si el navegador está usando caché antigua
+    function enforceFreshPage() {
+      try {
+        // Comprobar última versión
+        const savedVersion = localStorage.getItem('gameAppVersion');
+        const lastPageLoad = parseInt(localStorage.getItem('lastGameLoad') || '0');
+        
+        // Si ha pasado más de 1 hora, forzar recarga
+        const oneHour = 60 * 60 * 1000; // 1 hora en milisegundos
+        const timeSinceLastLoad = Date.now() - lastPageLoad;
+        
+        // Actualizar versión y tiempo de carga
+        localStorage.setItem('gameAppVersion', gameAppVersion);
+        localStorage.setItem('lastGameLoad', Date.now().toString());
+        
+        // Si es una nueva versión o hace tiempo que no se recarga, forzar recarga
+        if ((savedVersion && savedVersion !== gameAppVersion) || timeSinceLastLoad > oneHour) {
+          console.log('Forzando recarga para actualizar la página...');
+          
+          // Limpiar toda la caché de almacenamiento para asegurar una carga limpia
+          if (window.caches) {
+            caches.keys().then(names => {
+              names.forEach(name => {
+                caches.delete(name);
+              });
+            });
+          }
+          
+          // Recargar después de un pequeño retraso
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 100);
+          
+          // Mostrar página de carga mientras tanto
+          document.documentElement.style.display = 'none';
+          return false;
+        }
+        
+        // Comprueba cada 30 segundos si hay recargas forzadas
+        setInterval(() => {
+          const forceReload = localStorage.getItem('forceReload');
+          const reloadTimestamp = parseInt(localStorage.getItem('reloadTimestamp') || '0');
+          
+          if (forceReload === 'true' && reloadTimestamp > lastRefresh) {
+            console.log('Recarga forzada detectada');
+            localStorage.removeItem('forceReload');
+            window.location.reload(true);
+          }
+        }, 30000);
+        
+      } catch (e) {
+        console.warn('Error verificando caché:', e);
+      }
+      
+      return true;
+    }
+    
+    // Ejecutar verificación inmediatamente
+    if (!enforceFreshPage()) {
+      // Si se inició una recarga, detener el resto de la carga de la página
+      throw new Error('Recargando página para usar versión actualizada');
+    }
+  </script>
+  
   <meta name="description" content="PASALA CHE - El juego de preguntas tipo rosco sobre fútbol. Demuestra tus conocimientos.">
   <meta name="google-adsense-account" content="ca-pub-9579152019412427">
   

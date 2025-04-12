@@ -9,6 +9,32 @@
 const MobilePositioning = (function() {
   'use strict';
   
+  // Versión del script - cambiar cuando se actualice
+  const SCRIPT_VERSION = '1.2.0';
+  
+  // Verificar si hay una versión nueva y forzar recarga
+  (function checkVersion() {
+    try {
+      const savedVersion = localStorage.getItem('mobilePositioningVersion');
+      if (savedVersion !== SCRIPT_VERSION) {
+        console.log(`🔄 Nueva versión de MobilePositioning detectada: ${SCRIPT_VERSION} (anterior: ${savedVersion || 'ninguna'})`);
+        localStorage.setItem('mobilePositioningVersion', SCRIPT_VERSION);
+        
+        // Si no es la primera carga, forzar recarga para aplicar la nueva versión
+        if (savedVersion) {
+          // Forzar recarga sin caché después de un breve retraso
+          console.log('🔄 Forzando recarga para aplicar nueva versión...');
+          setTimeout(() => {
+            window.location.reload(true);
+          }, 500);
+          return; // Detener la ejecución del script
+        }
+      }
+    } catch (e) {
+      console.warn('No se pudo verificar la versión:', e);
+    }
+  })();
+  
   // Configuración por defecto
   const config = {
     letterBases: {
