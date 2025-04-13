@@ -208,6 +208,11 @@ app.get('/api/ranking', async (req, res) => {
   }
 });
 
+// GET /health - Endpoint para health check
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // POST /api/ranking - Añadir entrada al ranking
 app.post('/api/ranking', async (req, res) => {
   try {
