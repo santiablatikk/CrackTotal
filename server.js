@@ -321,9 +321,42 @@ app.use(express.static(PUBLIC_PATH, {
   }
 }));
 
+// Middleware para manejar errores de archivos estáticos
+app.use((err, req, res, next) => {
+  if (err) {
+    console.error('Error sirviendo archivo estático:', {
+      url: req.url,
+      error: err.message,
+      stack: err.stack
+    });
+    return res.status(500).json({
+      error: 'Error al cargar recurso',
+      message: err.message,
+      path: req.path
+    });
+  }
+  next();
+});
+
 // Ruta catch-all para SPA
 app.get('*', (req, res) => {
-  res.sendFile(path.join(PUBLIC_PATH, 'portal.html'));
+  // Primero verificamos si el archivo solicitado existe
+  const filePath = path.join(PUBLIC_PATH, req.path);
+  
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+    // Si el archivo existe, lo servimos directamente
+    return res.sendFile(filePath);
+  }
+  
+  // Si estamos en la ruta raíz o cualquier otra ruta no encontrada, servimos el index.html
+  if (req.path === '/') {
+    console.log('Sirviendo index.html para la ruta raíz');
+    return res.sendFile(path.join(PUBLIC_PATH, 'index.html'));
+  }
+  
+  // Para otras rutas, servimos portal.html (aplicación principal)
+  console.log(`Sirviendo portal.html para la ruta: ${req.path}`);
+  return res.sendFile(path.join(PUBLIC_PATH, 'portal.html'));
 });
 
 /**
