@@ -247,6 +247,53 @@ app.post('/api/ranking', async (req, res) => {
  * CONFIGURACIÓN DE ARCHIVOS ESTÁTICOS Y RUTAS
  */
 
+// Crear un archivo de versión para forzar recarga en clientes
+const VERSION_FILE_PATH = path.join(PUBLIC_PATH, 'version.json');
+fs.writeFileSync(
+  VERSION_FILE_PATH,
+  JSON.stringify({
+    version: Date.now().toString(),
+    buildTime: new Date().toISOString(),
+    forceRefresh: true
+  })
+);
+console.log('Archivo de versión creado para forzar actualización en clientes.');
+
+// Middleware para garantizar conexiones seguras
+app.enable('trust proxy');
+app.use((req, res, next) => {
+  res.setHeader('X-Force-Reload', 'true');
+  // Encabezados anti-caché super agresivos
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private, max-age=0');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  
+  // Agregar la marca de tiempo a los recursos estáticos para evitar caché
+  if (req.url.match(/\.(js|css|html)$/)) {
+    req.url = req.url.replace(/\?.*|$/, match => {
+      const timestamp = Date.now();
+      return (match ? '&' : '?') + 'v=' + timestamp;
+    });
+  }
+  
+  next();
+});
+
+// Endpoint para verificar si hay actualizaciones disponibles
+app.get('/api/check-updates', (req, res) => {
+  // Leer el archivo de versión
+  try {
+    const versionData = JSON.parse(fs.readFileSync(VERSION_FILE_PATH));
+    res.json(versionData);
+  } catch (error) {
+    res.json({
+      version: Date.now().toString(),
+      buildTime: new Date().toISOString(),
+      forceRefresh: true
+    });
+  }
+});
+
 // Servir archivos estáticos con caché
 app.use(express.static(PUBLIC_PATH, {
   maxAge: (req, res) => {

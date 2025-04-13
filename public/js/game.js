@@ -4,39 +4,6 @@
  * loading questions, handling user answers, and game flow.
  */
 
-// Asegurar que esta versión del script esté actualizada
-(function checkScriptVersion() {
-  try {
-    const scriptVersion = '1.5.0'; // Incrementar al hacer cambios
-    const savedVersion = localStorage.getItem('gameJsVersion');
-    
-    // Guardar versión actual
-    localStorage.setItem('gameJsVersion', scriptVersion);
-    
-    // Si la versión guardada no coincide con la actual, forzar recarga
-    if (savedVersion && savedVersion !== scriptVersion) {
-      console.log(`Detectada nueva versión del script game.js: ${scriptVersion}`);
-      // Forzar recarga global
-      localStorage.setItem('forceReload', 'true');
-      localStorage.setItem('reloadTimestamp', Date.now().toString());
-      
-      // Intentar recargar inmediatamente
-      try {
-        if ('caches' in window) {
-          caches.keys().then(names => {
-            names.forEach(name => caches.delete(name));
-          });
-        }
-        window.location.href = window.location.href.split('?')[0] + '?v=' + Date.now();
-      } catch (e) {
-        console.warn('Error al recargar la página:', e);
-      }
-    }
-  } catch (e) {
-    console.warn('Error al verificar versión del script:', e);
-  }
-})();
-
 // Global variables
 let username = "";
 let selectedDifficulty = 'facil';
@@ -2534,7 +2501,7 @@ function playSound(sound) {
               }
             }
           });
-        } catch (error) {
+  } catch (error) {
           reject(error);
         }
       });
@@ -2546,419 +2513,481 @@ function playSound(sound) {
       });
       
       return adPromise;
-    } catch (error) {
+  } catch (error) {
       console.warn('Error preparando carga de anuncio:', error);
       return Promise.resolve(false);
     }
-  }
+}
 
-  // Nueva función para mostrar anuncio durante pausas en el juego
-  function showPauseAd() {
-    // Función desactivada para eliminar anuncios de pausa
-    console.log("Anuncios de pausa desactivados");
-    return false;
-  }
-
-  // Escuchar por eventos de activación/desactivación para mostrar anuncios
-  document.addEventListener('visibilitychange', function() {
-    if (document.visibilityState === 'hidden' && gameStarted) {
-      // El usuario cambió de pestaña o minimizó - pausa el juego
-      clearInterval(timerInterval);
-    } else if (document.visibilityState === 'visible' && gameStarted) {
-      // El usuario volvió - considera mostrar un anuncio antes de reanudar
-      const wasAwayTime = parseInt(localStorage.getItem('lastHiddenTimestamp') || '0');
-      const now = Date.now();
-      
-      if (wasAwayTime && now - wasAwayTime > 30000) {
-        // Si estuvo ausente más de 30 segundos, mostrar anuncio de pausa
-        showPauseAd();
-      } else {
-        // Si no, simplemente reanudar el juego
-        startTimer();
-      }
-    }
-  });
-
-  // Almacenar el timestamp cuando el usuario se va
-  window.addEventListener('beforeunload', function() {
-    if (gameStarted) {
-      localStorage.setItem('lastHiddenTimestamp', Date.now().toString());
-    }
-  });
-
-  // Evento para mostrar anuncio de pausa cuando el usuario presiona pausa (tecla ESC)
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && gameStarted) {
-      e.preventDefault();
-      showPauseAd();
-    }
-  });
-
-  // Añadir estilos dinámicamente
-  const styleEl = document.createElement('style');
-  styleEl.textContent = `
-    .floating-sound-btn, .sound-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background-color: rgba(0, 0, 0, 0.3);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 44px;
-      height: 44px;
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s;
-      backdrop-filter: blur(5px);
-      z-index: 100;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    
-    .sound-btn:hover {
-      background-color: rgba(225, 29, 72, 0.7);
-      transform: scale(1.1);
-    }
+// Nueva función para mostrar anuncio durante pausas en el juego
+function showPauseAd() {
+  // DESHABILITAR COMPLETAMENTE LOS ANUNCIOS DE PAUSA
+  console.log("Anuncios de pausa deshabilitados");
+  return false;
+  
+  // El código siguiente no se ejecutará
+  // Solo mostrar si el usuario ha aceptado anuncios
+  if (localStorage.getItem("adConsent") !== "true") return;
+  
+  // Solo mostrar si el juego está en progreso
+  if (!gameStarted) return;
+  
+  // Evitar mostrar anuncios con demasiada frecuencia
+  const lastPauseAd = parseInt(localStorage.getItem('lastPauseAdTimestamp') || '0');
+  const now = Date.now();
+  
+  // Solo mostrar un anuncio de pausa cada 3 minutos como mínimo
+  if (now - lastPauseAd < 3 * 60 * 1000) return;
+  
+  // Pausar el juego
+  const currentTimerState = remainingTime;
+  clearInterval(timerInterval);
+  
+  // Mostrar el contenedor de anuncios de pausa
+  const pauseAdContainer = document.getElementById('pause-ad');
+  if (!pauseAdContainer) return;
+  
+  // Crear contenido del anuncio de pausa
+  pauseAdContainer.innerHTML = `
+    <div class="pause-ad-header">
+      <div class="pause-ad-title">Juego en pausa</div>
+      <button class="pause-ad-close" id="close-pause-ad">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="ad-label">PUBLICIDAD</div>
+    <div class="ad-loading"></div>
   `;
-  document.head.appendChild(styleEl);
+  
+  pauseAdContainer.style.display = 'block';
+  
+  // Configurar el botón de cierre
+  document.getElementById('close-pause-ad').addEventListener('click', function() {
+    pauseAdContainer.style.display = 'none';
+    
+    // Guardar timestamp para evitar mostrar otro anuncio pronto
+    localStorage.setItem('lastPauseAdTimestamp', Date.now().toString());
+    
+    // Reanudar el juego
+    remainingTime = currentTimerState;
+    startTimer();
+  });
+  
+  // Forzar cierre automático después de 5 segundos (reducido de 20)
+  setTimeout(() => {
+    if (pauseAdContainer.style.display !== 'none') {
+      pauseAdContainer.style.display = 'none';
+      
+      // Guardar timestamp
+      localStorage.setItem('lastPauseAdTimestamp', Date.now().toString());
+      
+      // Reanudar el juego
+      remainingTime = currentTimerState;
+      startTimer();
+    }
+  }, 5000);
+}
 
-  // Función para verificar y desbloquear logros basados en el rendimiento del juego
-  function checkForAchievements(gameData) {
+// Escuchar por eventos de activación/desactivación para mostrar anuncios
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden' && gameStarted) {
+    // El usuario cambió de pestaña o minimizó - pausa el juego
+    clearInterval(timerInterval);
+  } else if (document.visibilityState === 'visible' && gameStarted) {
+    // El usuario volvió - considera mostrar un anuncio antes de reanudar
+    const wasAwayTime = parseInt(localStorage.getItem('lastHiddenTimestamp') || '0');
+    const now = Date.now();
+    
+    if (wasAwayTime && now - wasAwayTime > 30000) {
+      // Si estuvo ausente más de 30 segundos, mostrar anuncio de pausa
+      showPauseAd();
+    } else {
+      // Si no, simplemente reanudar el juego
+      startTimer();
+    }
+  }
+});
+
+// Almacenar el timestamp cuando el usuario se va
+window.addEventListener('beforeunload', function() {
+  if (gameStarted) {
+    localStorage.setItem('lastHiddenTimestamp', Date.now().toString());
+  }
+});
+
+// Evento para mostrar anuncio de pausa cuando el usuario presiona pausa (tecla ESC)
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && gameStarted) {
+    e.preventDefault();
+    showPauseAd();
+  }
+});
+
+// Añadir estilos dinámicamente
+const styleEl = document.createElement('style');
+styleEl.textContent = `
+  .floating-sound-btn, .sound-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    backdrop-filter: blur(5px);
+    z-index: 100;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .sound-btn:hover {
+    background-color: rgba(225, 29, 72, 0.7);
+    transform: scale(1.1);
+  }
+`;
+document.head.appendChild(styleEl);
+
+// Función para verificar y desbloquear logros basados en el rendimiento del juego
+function checkForAchievements(gameData) {
+  try {
+    console.log('Verificando logros para la partida actual...');
+    
+    // Obtener IP del usuario
+    const userIP = localStorage.getItem('userIP') || 'unknown';
+    
+    // Obtener historial de juego para verificar logros acumulativos
+    const historyKey = `gameHistory_${userIP}`;
+    let gameHistory = [];
+    
     try {
-      console.log('Verificando logros para la partida actual...');
-      
-      // Obtener IP del usuario
-      const userIP = localStorage.getItem('userIP') || 'unknown';
-      
-      // Obtener historial de juego para verificar logros acumulativos
-      const historyKey = `gameHistory_${userIP}`;
-      let gameHistory = [];
-      
-      try {
-        const savedHistory = localStorage.getItem(historyKey);
-        if (savedHistory) {
-          gameHistory = JSON.parse(savedHistory);
-          if (!Array.isArray(gameHistory)) {
-            gameHistory = [];
-          }
+      const savedHistory = localStorage.getItem(historyKey);
+      if (savedHistory) {
+        gameHistory = JSON.parse(savedHistory);
+        if (!Array.isArray(gameHistory)) {
+          gameHistory = [];
         }
-      } catch (e) {
-        console.error('Error al cargar historial para logros:', e);
-        gameHistory = [];
       }
-      
-      // Añadir la partida actual al inicio para incluirla en las verificaciones
-      gameHistory.unshift(gameData);
-      
-      // Definir los logros a comprobar
-      const achievementsToCheck = [
-        // Logros de Principiante
-        {
-          id: 'first_game',
-          check: () => true, // Se desbloquea con la primera partida
-          category: 'beginner'
-        },
-        {
-          id: 'fifth_game',
-          check: () => gameHistory.length >= 5,
-          category: 'beginner'
-        },
-        {
-          id: 'beginner_score',
-          check: () => gameData.score >= 100,
-          category: 'beginner'
-        },
-        
-        // Logros Intermedios
-        {
-          id: 'perfect_game',
-          check: () => gameData.wrong === 0 && gameData.victory === true,
-          category: 'intermediate'
-        },
-        {
-          id: 'fast_game',
-          check: () => gameData.timeRemaining >= 150 && gameData.victory === true, // 2.5 minutos restantes
-          category: 'intermediate'
-        },
-        {
-          id: 'comeback',
-          check: () => gameData.wrong >= 2 && gameData.victory === true, // Ganar con 2 errores
-          category: 'intermediate'
-        },
-        
-        // Logros Experto
-        {
-          id: 'hard_victory',
-          check: () => gameData.difficulty === 'dificil' && gameData.victory === true,
-          category: 'expert'
-        },
-        {
-          id: 'no_skip',
-          check: () => gameData.skipped === 0 && gameData.victory === true,
-          category: 'expert'
-        },
-        {
-          id: 'perfect_hard',
-          check: () => gameData.difficulty === 'dificil' && gameData.wrong === 0 && gameData.victory === true,
-          category: 'expert'
-        },
-        
-        // Logros Especiales
-        {
-          id: 'three_in_a_row',
-          check: () => {
-            if (gameHistory.length < 3) return false;
-            return gameHistory[0].victory && gameHistory[1].victory && gameHistory[2].victory;
-          },
-          category: 'special'
-        },
-        {
-          id: 'cumulative_score',
-          check: () => {
-            const totalScore = gameHistory.reduce((sum, game) => sum + (game.score || 0), 0);
-            return totalScore >= 1000;
-          },
-          category: 'special'
-        },
-        {
-          id: 'speed_demon',
-          check: () => gameData.timeRemaining >= 180 && gameData.difficulty === 'dificil' && gameData.victory === true,
-          category: 'special'
-        }
-      ];
-      
-      // Intentar desbloquear los logros
-      achievementsToCheck.forEach(achievement => {
-        if (achievement.check()) {
-          unlockAchievement(achievement.id);
-        }
-      });
-      
-      console.log('Verificación de logros completada');
-    } catch (error) {
-      console.error('Error en la verificación de logros:', error);
+    } catch (e) {
+      console.error('Error al cargar historial para logros:', e);
+      gameHistory = [];
     }
-  }
-
-  /**
-   * Desbloquea un logro
-   * @param {string} achievementId - ID del logro a desbloquear
-   */
-  function unlockAchievement(achievementId) {
-      console.log(`Desbloqueando logro: ${achievementId}`);
+    
+    // Añadir la partida actual al inicio para incluirla en las verificaciones
+    gameHistory.unshift(gameData);
+    
+    // Definir los logros a comprobar
+    const achievementsToCheck = [
+      // Logros de Principiante
+      {
+        id: 'first_game',
+        check: () => true, // Se desbloquea con la primera partida
+        category: 'beginner'
+      },
+      {
+        id: 'fifth_game',
+        check: () => gameHistory.length >= 5,
+        category: 'beginner'
+      },
+      {
+        id: 'beginner_score',
+        check: () => gameData.score >= 100,
+        category: 'beginner'
+      },
       
-      // Usar GameData si está disponible
-      if (window.GameData && typeof GameData.unlockAchievement === 'function') {
-          GameData.unlockAchievement(achievementId);
+      // Logros Intermedios
+      {
+        id: 'perfect_game',
+        check: () => gameData.wrong === 0 && gameData.victory === true,
+        category: 'intermediate'
+      },
+      {
+        id: 'fast_game',
+        check: () => gameData.timeRemaining >= 150 && gameData.victory === true, // 2.5 minutos restantes
+        category: 'intermediate'
+      },
+      {
+        id: 'comeback',
+        check: () => gameData.wrong >= 2 && gameData.victory === true, // Ganar con 2 errores
+        category: 'intermediate'
+      },
+      
+      // Logros Experto
+      {
+        id: 'hard_victory',
+        check: () => gameData.difficulty === 'dificil' && gameData.victory === true,
+        category: 'expert'
+      },
+      {
+        id: 'no_skip',
+        check: () => gameData.skipped === 0 && gameData.victory === true,
+        category: 'expert'
+      },
+      {
+        id: 'perfect_hard',
+        check: () => gameData.difficulty === 'dificil' && gameData.wrong === 0 && gameData.victory === true,
+        category: 'expert'
+      },
+      
+      // Logros Especiales
+      {
+        id: 'three_in_a_row',
+        check: () => {
+          if (gameHistory.length < 3) return false;
+          return gameHistory[0].victory && gameHistory[1].victory && gameHistory[2].victory;
+        },
+        category: 'special'
+      },
+      {
+        id: 'cumulative_score',
+        check: () => {
+          const totalScore = gameHistory.reduce((sum, game) => sum + (game.score || 0), 0);
+          return totalScore >= 1000;
+        },
+        category: 'special'
+      },
+      {
+        id: 'speed_demon',
+        check: () => gameData.timeRemaining >= 180 && gameData.difficulty === 'dificil' && gameData.victory === true,
+        category: 'special'
       }
-      // Usar la función global como fallback si existe
-      else if (typeof window.unlockAchievement === 'function' && window.unlockAchievement !== this) {
-          window.unlockAchievement(achievementId);
+    ];
+    
+    // Intentar desbloquear los logros
+    achievementsToCheck.forEach(achievement => {
+      if (achievement.check()) {
+        unlockAchievement(achievement.id);
       }
+    });
+    
+    console.log('Verificación de logros completada');
+  } catch (error) {
+    console.error('Error en la verificación de logros:', error);
   }
+}
 
-  // Configurar logger para evitar loggear en producción
-  const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-  const logger = {
-    log: isProduction ? function(){} : console.log,
-    warn: isProduction ? function(){} : console.warn,
-    error: console.error // Mantener errores siempre
-  };
+/**
+ * Desbloquea un logro
+ * @param {string} achievementId - ID del logro a desbloquear
+ */
+function unlockAchievement(achievementId) {
+    console.log(`Desbloqueando logro: ${achievementId}`);
+    
+    // Usar GameData si está disponible
+    if (window.GameData && typeof GameData.unlockAchievement === 'function') {
+        GameData.unlockAchievement(achievementId);
+    }
+    // Usar la función global como fallback si existe
+    else if (typeof window.unlockAchievement === 'function' && window.unlockAchievement !== this) {
+        window.unlockAchievement(achievementId);
+    }
+}
 
-  // Reemplazar todos los console.log por logger.log
-  // ... resto del código existente ...
+// Configurar logger para evitar loggear en producción
+const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+const logger = {
+  log: isProduction ? function(){} : console.log,
+  warn: isProduction ? function(){} : console.warn,
+  error: console.error // Mantener errores siempre
+};
 
-  /**
-   * Llena el modal de logros con los logros desbloqueados
-   */
-  function fillAchievementsModal() {
-      const unlockedContainer = document.getElementById('unlocked-achievements');
-      if (!unlockedContainer) return;
-      
-      // Determinar si tenemos acceso al sistema GameData
-      const useGameDataSystem = window.GameData && typeof GameData.getAchievements === 'function';
-      
-      // Obtener logros desbloqueados
-      let achievements = {};
-      let achievementIds = [];
-      
-      if (useGameDataSystem) {
-          // Usar primero el sistema moderno
-          achievements = GameData.getAchievements() || {};
-          achievementIds = Object.keys(achievements);
-          
-          // Si no hay logros en el sistema moderno, intentar con el array
-          if (achievementIds.length === 0 && typeof GameData.getUnlockedAchievements === 'function') {
-              const unlockedArray = GameData.getUnlockedAchievements() || [];
-              achievementIds = unlockedArray;
-              
-              // Crear objetos temporales para cada ID
-              unlockedArray.forEach(id => {
-                  achievements[id] = { id: id, count: 1 };
-              });
-              
-              console.log("Logros obtenidos del formato array:", achievementIds.length);
-          }
-      } else {
-          // Caer al sistema clásico
-          try {
-              const savedAchievements = localStorage.getItem('unlockedAchievements');
-              if (savedAchievements) {
-                  achievementIds = JSON.parse(savedAchievements);
-                  // Crear objetos para cada ID
-                  achievementIds.forEach(id => {
-                      achievements[id] = { id: id, count: 1 };
-                  });
-              }
+// Reemplazar todos los console.log por logger.log
+// ... resto del código existente ...
+
+/**
+ * Llena el modal de logros con los logros desbloqueados
+ */
+function fillAchievementsModal() {
+    const unlockedContainer = document.getElementById('unlocked-achievements');
+    if (!unlockedContainer) return;
+    
+    // Determinar si tenemos acceso al sistema GameData
+    const useGameDataSystem = window.GameData && typeof GameData.getAchievements === 'function';
+    
+    // Obtener logros desbloqueados
+    let achievements = {};
+    let achievementIds = [];
+    
+    if (useGameDataSystem) {
+        // Usar primero el sistema moderno
+        achievements = GameData.getAchievements() || {};
+        achievementIds = Object.keys(achievements);
+        
+        // Si no hay logros en el sistema moderno, intentar con el array
+        if (achievementIds.length === 0 && typeof GameData.getUnlockedAchievements === 'function') {
+            const unlockedArray = GameData.getUnlockedAchievements() || [];
+            achievementIds = unlockedArray;
+            
+            // Crear objetos temporales para cada ID
+            unlockedArray.forEach(id => {
+                achievements[id] = { id: id, count: 1 };
+            });
+            
+            console.log("Logros obtenidos del formato array:", achievementIds.length);
+        }
+    } else {
+        // Caer al sistema clásico
+        try {
+            const savedAchievements = localStorage.getItem('unlockedAchievements');
+            if (savedAchievements) {
+                achievementIds = JSON.parse(savedAchievements);
+                // Crear objetos para cada ID
+                achievementIds.forEach(id => {
+                    achievements[id] = { id: id, count: 1 };
+                });
+            }
         } catch (e) {
-              console.error("Error al cargar logros:", e);
-              achievementIds = [];
-          }
-      }
-          
-          if (achievementIds.length === 0) {
-              // No hay logros desbloqueados
-              unlockedContainer.innerHTML = `
-                  <div class="no-achievements">
-                      <i class="fas fa-medal"></i>
-                      <p>Aún no has desbloqueado ningún logro.</p>
-                      <p>¡Sigue jugando para conseguirlos!</p>
-                  </div>
-              `;
-              return;
-          }
-      
-      // Limpiar contenedor
-      unlockedContainer.innerHTML = '';
-          
-          // Mostrar logros desbloqueados
-          achievementIds.forEach(id => {
-          // Obtener datos del logro - intentar FULL_GAME_ACHIEVEMENTS primero (logros nuevos)
-          let achievementData = null;
-          
-          if (window.FULL_GAME_ACHIEVEMENTS && window.FULL_GAME_ACHIEVEMENTS[id]) {
-              achievementData = window.FULL_GAME_ACHIEVEMENTS[id];
-          } else if (window.GAME_ACHIEVEMENTS && window.GAME_ACHIEVEMENTS[id]) {
-              achievementData = window.GAME_ACHIEVEMENTS[id];
-          }
-          
-          if (!achievementData) {
-              console.warn(`No se encontraron datos para el logro: ${id}`);
-              return;
-          }
-              
-              // Crear tarjeta de logro
-              const card = document.createElement('div');
-              card.className = 'achievement-card';
-              card.innerHTML = `
-                  <div class="achievement-card-icon">
-                  <i class="${achievementData.icon || 'fas fa-trophy'}"></i>
-                  </div>
-              <div class="achievement-card-title">${achievementData.title || id}</div>
-              <div class="achievement-card-desc">${achievementData.description || 'Logro misterioso'}</div>
-              <div class="achievement-card-count">x${achievements[id]?.count || 1}</div>
-              `;
-              
-              unlockedContainer.appendChild(card);
-          });
-  }
-
-  // Función para actualizar visualmente un contador regresivo en un modal
-  function startModalCountdown(countdownElement, seconds) {
-    if (!countdownElement) return;
+            console.error("Error al cargar logros:", e);
+            achievementIds = [];
+        }
+    }
+        
+        if (achievementIds.length === 0) {
+            // No hay logros desbloqueados
+            unlockedContainer.innerHTML = `
+                <div class="no-achievements">
+                    <i class="fas fa-medal"></i>
+                    <p>Aún no has desbloqueado ningún logro.</p>
+                    <p>¡Sigue jugando para conseguirlos!</p>
+                </div>
+            `;
+            return;
+        }
     
-    let remaining = seconds;
+    // Limpiar contenedor
+    unlockedContainer.innerHTML = '';
+        
+        // Mostrar logros desbloqueados
+        achievementIds.forEach(id => {
+        // Obtener datos del logro - intentar FULL_GAME_ACHIEVEMENTS primero (logros nuevos)
+        let achievementData = null;
+        
+        if (window.FULL_GAME_ACHIEVEMENTS && window.FULL_GAME_ACHIEVEMENTS[id]) {
+            achievementData = window.FULL_GAME_ACHIEVEMENTS[id];
+        } else if (window.GAME_ACHIEVEMENTS && window.GAME_ACHIEVEMENTS[id]) {
+            achievementData = window.GAME_ACHIEVEMENTS[id];
+        }
+        
+        if (!achievementData) {
+            console.warn(`No se encontraron datos para el logro: ${id}`);
+            return;
+        }
+            
+            // Crear tarjeta de logro
+            const card = document.createElement('div');
+            card.className = 'achievement-card';
+            card.innerHTML = `
+                <div class="achievement-card-icon">
+                <i class="${achievementData.icon || 'fas fa-trophy'}"></i>
+                </div>
+            <div class="achievement-card-title">${achievementData.title || id}</div>
+            <div class="achievement-card-desc">${achievementData.description || 'Logro misterioso'}</div>
+            <div class="achievement-card-count">x${achievements[id]?.count || 1}</div>
+            `;
+            
+            unlockedContainer.appendChild(card);
+        });
+}
+
+// Función para actualizar visualmente un contador regresivo en un modal
+function startModalCountdown(countdownElement, seconds) {
+  if (!countdownElement) return;
+  
+  let remaining = seconds;
+  countdownElement.textContent = remaining;
+  
+  // Iniciar intervalo para actualizar el contador cada segundo
+  const countdownInterval = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(countdownInterval);
+      remaining = 0;
+    }
     countdownElement.textContent = remaining;
-    
-    // Iniciar intervalo para actualizar el contador cada segundo
-    const countdownInterval = setInterval(() => {
-      remaining--;
-      if (remaining <= 0) {
+  }, 1000);
+  
+  // Guardar el intervalo para poder cancelarlo si es necesario
+  autoTransitionTimers.push(countdownInterval);
+  
+  // Parar el intervalo si el usuario hace clic en el botón para avanzar manualmente
+  const modal = countdownElement.closest('.modal-content');
+  if (modal) {
+    const nextButton = modal.querySelector('.stats-arrow, .close-btn');
+    if (nextButton) {
+      nextButton.addEventListener('click', () => {
         clearInterval(countdownInterval);
-        remaining = 0;
-      }
-      countdownElement.textContent = remaining;
-    }, 1000);
-    
-    // Guardar el intervalo para poder cancelarlo si es necesario
-    autoTransitionTimers.push(countdownInterval);
-    
-    // Parar el intervalo si el usuario hace clic en el botón para avanzar manualmente
-    const modal = countdownElement.closest('.modal-content');
-    if (modal) {
-      const nextButton = modal.querySelector('.stats-arrow, .close-btn');
-      if (nextButton) {
-        nextButton.addEventListener('click', () => {
-          clearInterval(countdownInterval);
-        }, { once: true });
-      }
+      }, { once: true });
     }
   }
+}
 
-  // Cancelar todos los temporizadores de transición automática
-  function cancelAllAutoTransitions() {
-    while (autoTransitionTimers.length > 0) {
-      const timer = autoTransitionTimers.pop();
-      clearTimeout(timer);
-      clearInterval(timer);
-    }
+// Cancelar todos los temporizadores de transición automática
+function cancelAllAutoTransitions() {
+  while (autoTransitionTimers.length > 0) {
+    const timer = autoTransitionTimers.pop();
+    clearTimeout(timer);
+    clearInterval(timer);
   }
+}
 
-  // Función para cambiar del modal de estadísticas a la página de perfil
-  function switchToProfilePage() {
-    console.log("Redirigiendo a la página de perfil...");
-    
-    // Cancelar cualquier transición automática pendiente
-    cancelAllAutoTransitions();
-    
-    // Ocultar modal de estadísticas
-    const statsModal = document.getElementById('stats-modal');
-    if (statsModal) {
-      statsModal.classList.remove('show');
-      statsModal.style.display = 'none';
-    }
-    
-    // Asegurar que la bandera de juego completado esté establecida
-    localStorage.setItem('gameJustCompleted', 'true');
-    
-    // Redirigir a la página de perfil
-    window.location.href = 'perfil.html';
+// Función para cambiar del modal de estadísticas a la página de perfil
+function switchToProfilePage() {
+  console.log("Redirigiendo a la página de perfil...");
+  
+  // Cancelar cualquier transición automática pendiente
+  cancelAllAutoTransitions();
+  
+  // Ocultar modal de estadísticas
+  const statsModal = document.getElementById('stats-modal');
+  if (statsModal) {
+    statsModal.classList.remove('show');
+    statsModal.style.display = 'none';
   }
+  
+  // Asegurar que la bandera de juego completado esté establecida
+  localStorage.setItem('gameJustCompleted', 'true');
+  
+  // Redirigir a la página de perfil
+  window.location.href = 'perfil.html';
+}
 
-  function showIncompleteResponseToast(userAnswer, incompleteAttempts) {
-    // Obtener el elemento toast
-    const toastElement = document.getElementById('toast');
+function showIncompleteResponseToast(userAnswer, incompleteAttempts) {
+  // Obtener el elemento toast
+  const toastElement = document.getElementById('toast');
+  
+  // Primero ocultar el toast si está visible
+  toastElement.className = 'toast toast-warning';
+  
+  // Obtener el contenedor del mensaje
+  const toastMessage = toastElement.querySelector('.toast-message');
+  
+  // Estructura del mensaje
+  toastMessage.innerHTML = `
+    <div style="text-align: center; padding: 10px;">
+      <i class="fas fa-exclamation-circle" style="font-size: 1.5rem; color: #f59e0b; margin-bottom: 10px;"></i>
+      <h3 style="margin: 5px 0; font-size: 1.2rem;">Respuesta Incompleta</h3>
+      <p style="margin: 5px 0;">La respuesta "${userAnswer}" es correcta pero incompleta.</p>
+      <p style="margin: 5px 0; font-weight: bold;">Intenta nuevamente con la respuesta completa.</p>
+      <p style="margin-top: 8px; font-size: 0.8rem;">Te quedan ${incompleteAttempts} intentos para respuestas incompletas</p>
+    </div>
+  `;
+  
+  // Mostrar el toast después de un breve retraso
+  setTimeout(() => {
+    toastElement.className = 'toast toast-warning show';
     
-    // Primero ocultar el toast si está visible
-    toastElement.className = 'toast toast-warning';
-    
-    // Obtener el contenedor del mensaje
-    const toastMessage = toastElement.querySelector('.toast-message');
-    
-    // Estructura del mensaje
-    toastMessage.innerHTML = `
-      <div style="text-align: center; padding: 10px;">
-        <i class="fas fa-exclamation-circle" style="font-size: 1.5rem; color: #f59e0b; margin-bottom: 10px;"></i>
-        <h3 style="margin: 5px 0; font-size: 1.2rem;">Respuesta Incompleta</h3>
-        <p style="margin: 5px 0;">La respuesta "${userAnswer}" es correcta pero incompleta.</p>
-        <p style="margin: 5px 0; font-weight: bold;">Intenta nuevamente con la respuesta completa.</p>
-        <p style="margin-top: 8px; font-size: 0.8rem;">Te quedan ${incompleteAttempts} intentos para respuestas incompletas</p>
-      </div>
-    `;
-    
-    // Mostrar el toast después de un breve retraso
+    // Cerrar automáticamente después de 5 segundos
     setTimeout(() => {
-      toastElement.className = 'toast toast-warning show';
-      
-      // Cerrar automáticamente después de 5 segundos
-      setTimeout(() => {
-        toastElement.className = 'toast toast-warning';
-      }, 3700);
-    }, 37);
-  }
+      toastElement.className = 'toast toast-warning';
+    }, 3700);
+  }, 37);
+}
 });
 
 // Función para mostrar mensajes sutiles

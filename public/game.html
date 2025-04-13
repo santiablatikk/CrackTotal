@@ -14,8 +14,59 @@
   <!-- Script para forzar recarga y evitar caché -->
   <script>
     // Versión de la aplicación - incrementar cuando se hacen cambios importantes
-    const gameAppVersion = '1.5.0'; // Incrementada para forzar actualización
+    const gameAppVersion = '1.5.0';
     const lastRefresh = Date.now();
+    
+    // Verificar periódicamente si hay actualizaciones del servidor
+    function setupVersionChecker() {
+      // Intervalo más corto para desarrollo, más largo para producción
+      const CHECK_INTERVAL = 30 * 1000; // 30 segundos
+      
+      // Función para verificar si hay actualizaciones
+      function checkForUpdates() {
+        fetch('/api/check-updates?' + Date.now())
+          .then(response => response.json())
+          .then(data => {
+            const lastKnownVersion = localStorage.getItem('serverVersion');
+            
+            // Guardar versión actual
+            localStorage.setItem('serverVersion', data.version);
+            
+            // Si es primera vez o hay una nueva versión, recargar
+            if (!lastKnownVersion || lastKnownVersion !== data.version || data.forceRefresh) {
+              console.log('Nueva versión detectada, recargando página...');
+              
+              // Limpiar caché antes de recargar
+              if ('caches' in window) {
+                caches.keys().then(names => {
+                  names.forEach(name => caches.delete(name));
+                });
+              }
+              
+              // Recargar sin caché después de un breve retraso
+              setTimeout(() => {
+                window.location.reload(true);
+              }, 500);
+            }
+          })
+          .catch(error => {
+            console.warn('Error al verificar actualizaciones:', error);
+          });
+      }
+      
+      // Verificar al iniciar
+      checkForUpdates();
+      
+      // Verificar periódicamente
+      setInterval(checkForUpdates, CHECK_INTERVAL);
+      
+      // También verificar cuando la ventana vuelve a estar activa
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          checkForUpdates();
+        }
+      });
+    }
     
     // Guardar la hora de carga para detectar si el navegador está usando caché antigua
     function enforceFreshPage() {
@@ -24,12 +75,16 @@
         const savedVersion = localStorage.getItem('gameAppVersion');
         const lastPageLoad = parseInt(localStorage.getItem('lastGameLoad') || '0');
         
+        // Si ha pasado más de 1 hora, forzar recarga
+        const oneHour = 60 * 60 * 1000; // 1 hora en milisegundos
+        const timeSinceLastLoad = Date.now() - lastPageLoad;
+        
         // Actualizar versión y tiempo de carga
         localStorage.setItem('gameAppVersion', gameAppVersion);
         localStorage.setItem('lastGameLoad', Date.now().toString());
         
         // Si es una nueva versión o hace tiempo que no se recarga, forzar recarga
-        if ((savedVersion && savedVersion !== gameAppVersion) || (Date.now() - lastPageLoad > 1800000)) { // 30 minutos
+        if ((savedVersion && savedVersion !== gameAppVersion) || timeSinceLastLoad > oneHour) {
           console.log('Forzando recarga para actualizar la página...');
           
           // Limpiar toda la caché de almacenamiento para asegurar una carga limpia
@@ -41,13 +96,9 @@
             });
           }
           
-          // Añadir un parámetro dinámico a la URL para evitar caché
-          const currentUrl = window.location.href.split('?')[0];
-          const newUrl = currentUrl + '?v=' + Date.now();
-          
           // Recargar después de un pequeño retraso
           setTimeout(() => {
-            window.location.href = newUrl;
+            window.location.reload(true);
           }, 100);
           
           // Mostrar página de carga mientras tanto
@@ -55,17 +106,8 @@
           return false;
         }
         
-        // Comprueba cada 30 segundos si hay recargas forzadas
-        setInterval(() => {
-          const forceReload = localStorage.getItem('forceReload');
-          const reloadTimestamp = parseInt(localStorage.getItem('reloadTimestamp') || '0');
-          
-          if (forceReload === 'true' && reloadTimestamp > lastRefresh) {
-            console.log('Recarga forzada detectada');
-            localStorage.removeItem('forceReload');
-            window.location.reload(true);
-          }
-        }, 15000); // Verificar más frecuentemente
+        // Iniciar verificaciones de versión
+        setupVersionChecker();
         
       } catch (e) {
         console.warn('Error verificando caché:', e);
@@ -79,20 +121,6 @@
       // Si se inició una recarga, detener el resto de la carga de la página
       throw new Error('Recargando página para usar versión actualizada');
     }
-    
-    // Verificar que los scripts se carguen correctamente
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        // Verificar si el módulo MobilePositioning está disponible
-        if (!window.MobilePositioning) {
-          console.error('Error: MobilePositioning no se cargó correctamente');
-          // Forzar recarga de la página
-          localStorage.setItem('forceReload', 'true');
-          localStorage.setItem('reloadTimestamp', Date.now().toString());
-          window.location.reload(true);
-        }
-      }, 500);
-    });
   </script>
   
   <meta name="description" content="PASALA CHE - El juego de preguntas tipo rosco sobre fútbol. Demuestra tus conocimientos.">
@@ -631,8 +659,15 @@
     </script>
   </div>
 
-  <!-- Elemento de anuncio de pausa desactivado -->
-  <div id="pause-ad" class="pause-ad-container" style="display:none !important; visibility:hidden !important; opacity:0 !important;"></div>
+  <div id="pause-ad" class="pause-ad-container" style="display:none;">
+    <div class="ad-label">PUBLICIDAD</div>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-9579152019412427"
+         data-ad-slot="9876543210"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+  </div>
   
   <!-- Scripts -->
   <script src="js/utils.js"></script>
