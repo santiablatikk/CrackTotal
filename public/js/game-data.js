@@ -1106,3 +1106,116 @@ const GameData = {
 
 // Exponer GameData globalmente
 window.GameData = GameData; 
+            }
+        } catch (error) {
+            console.error('Error al actualizar array de logros:', error);
+        }
+    },
+    
+    /**
+     * Obtiene todos los logros desbloqueados
+     * @returns {Object} Objeto con los logros desbloqueados
+     */
+    getAchievements: function() {
+        try {
+            const savedAchievements = localStorage.getItem(STORAGE_KEYS.PASALA_CHE.ACHIEVEMENTS);
+            return savedAchievements ? JSON.parse(savedAchievements) : {};
+        } catch (error) {
+            console.error('Error al obtener logros:', error);
+            return {};
+        }
+    },
+    
+    /**
+     * Muestra una notificación de logro desbloqueado
+     * @param {Object} achievement Datos del logro
+     */
+    showAchievementNotification: function(achievement) {
+        try {
+            // Reproducir sonido si existe
+            const achievementSound = document.getElementById('achievement-sound');
+            if (achievementSound) {
+                achievementSound.play().catch(e => {});
+            }
+            
+            // Crear elemento de notificación
+            const notification = document.createElement('div');
+            notification.className = 'achievement-notification';
+            notification.innerHTML = `
+                <div class="achievement-icon"><i class="${achievement.icon}"></i></div>
+                <div class="achievement-content">
+                    <div class="achievement-title">${achievement.title}</div>
+                    <div class="achievement-description">${achievement.description}</div>
+                </div>
+            `;
+            
+            // Añadir al DOM
+            document.body.appendChild(notification);
+            
+            // Animar entrada
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Eliminar después de un tiempo
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 500);
+            }, 5000);
+            
+            console.log(`¡Logro desbloqueado!: ${achievement.description}`);
+        } catch (error) {
+            console.error('Error al mostrar notificación de logro:', error);
+        }
+    },
+    
+    /**
+     * Verificar y desbloquear logros basados en los datos del juego
+     * @param {Object} gameData Datos del juego completado
+     */
+    checkGameAchievements: function(gameData) {
+        try {
+            console.log('Verificando logros para la partida actual...');
+            
+            // Verificar logro de primer juego
+            const stats = this.getPasalaCheStats();
+            if (stats.gamesPlayed <= 1) {
+                this.unlockAchievement('first_game');
+            }
+            
+            // Verificar logro de quinto juego
+            if (stats.gamesPlayed === 5) {
+                this.unlockAchievement('fifth_game');
+            }
+            
+            // Verificar logro de puntuación
+            if (gameData.score >= 100) {
+                this.unlockAchievement('beginner_score');
+            }
+            
+            // Verificar juego perfecto (sin errores)
+            if (gameData.victory && gameData.wrong === 0) {
+                this.unlockAchievement('perfect_game');
+            }
+            
+            // Verificar juego rápido (más de 2.5 minutos restantes)
+            if (gameData.victory && gameData.remainingTime >= 150) {
+                this.unlockAchievement('fast_game');
+            }
+            
+            // Verificar remontada (ganar con 2 errores)
+            if (gameData.victory && gameData.wrong === 2) {
+                this.unlockAchievement('comeback');
+            }
+            
+            console.log('Verificación de logros completada');
+        } catch (error) {
+            console.error('Error al verificar logros:', error);
+        }
+    }
+};
+
+// Exponer GameData globalmente
+window.GameData = GameData; 

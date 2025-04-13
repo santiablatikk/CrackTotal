@@ -5,124 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="theme-color" content="#1e293b">
-  <!-- Prevenir caché del navegador -->
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
   <title>PASALA CHE - Juego del Rosco</title>
-  
-  <!-- Script para forzar recarga y evitar caché -->
-  <script>
-    // Versión de la aplicación - incrementar cuando se hacen cambios importantes
-    const gameAppVersion = '1.5.0';
-    const lastRefresh = Date.now();
-    
-    // Verificar periódicamente si hay actualizaciones del servidor
-    function setupVersionChecker() {
-      // Intervalo más corto para desarrollo, más largo para producción
-      const CHECK_INTERVAL = 30 * 1000; // 30 segundos
-      
-      // Función para verificar si hay actualizaciones
-      function checkForUpdates() {
-        fetch('/api/check-updates?' + Date.now())
-          .then(response => response.json())
-          .then(data => {
-            const lastKnownVersion = localStorage.getItem('serverVersion');
-            
-            // Guardar versión actual
-            localStorage.setItem('serverVersion', data.version);
-            
-            // Si es primera vez o hay una nueva versión, recargar
-            if (!lastKnownVersion || lastKnownVersion !== data.version || data.forceRefresh) {
-              console.log('Nueva versión detectada, recargando página...');
-              
-              // Limpiar caché antes de recargar
-              if ('caches' in window) {
-                caches.keys().then(names => {
-                  names.forEach(name => caches.delete(name));
-                });
-              }
-              
-              // Recargar sin caché después de un breve retraso
-              setTimeout(() => {
-                window.location.reload(true);
-              }, 500);
-            }
-          })
-          .catch(error => {
-            console.warn('Error al verificar actualizaciones:', error);
-          });
-      }
-      
-      // Verificar al iniciar
-      checkForUpdates();
-      
-      // Verificar periódicamente
-      setInterval(checkForUpdates, CHECK_INTERVAL);
-      
-      // También verificar cuando la ventana vuelve a estar activa
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-          checkForUpdates();
-        }
-      });
-    }
-    
-    // Guardar la hora de carga para detectar si el navegador está usando caché antigua
-    function enforceFreshPage() {
-      try {
-        // Comprobar última versión
-        const savedVersion = localStorage.getItem('gameAppVersion');
-        const lastPageLoad = parseInt(localStorage.getItem('lastGameLoad') || '0');
-        
-        // Si ha pasado más de 1 hora, forzar recarga
-        const oneHour = 60 * 60 * 1000; // 1 hora en milisegundos
-        const timeSinceLastLoad = Date.now() - lastPageLoad;
-        
-        // Actualizar versión y tiempo de carga
-        localStorage.setItem('gameAppVersion', gameAppVersion);
-        localStorage.setItem('lastGameLoad', Date.now().toString());
-        
-        // Si es una nueva versión o hace tiempo que no se recarga, forzar recarga
-        if ((savedVersion && savedVersion !== gameAppVersion) || timeSinceLastLoad > oneHour) {
-          console.log('Forzando recarga para actualizar la página...');
-          
-          // Limpiar toda la caché de almacenamiento para asegurar una carga limpia
-          if (window.caches) {
-            caches.keys().then(names => {
-              names.forEach(name => {
-                caches.delete(name);
-              });
-            });
-          }
-          
-          // Recargar después de un pequeño retraso
-          setTimeout(() => {
-            window.location.reload(true);
-          }, 100);
-          
-          // Mostrar página de carga mientras tanto
-          document.documentElement.style.display = 'none';
-          return false;
-        }
-        
-        // Iniciar verificaciones de versión
-        setupVersionChecker();
-        
-      } catch (e) {
-        console.warn('Error verificando caché:', e);
-      }
-      
-      return true;
-    }
-    
-    // Ejecutar verificación inmediatamente
-    if (!enforceFreshPage()) {
-      // Si se inició una recarga, detener el resto de la carga de la página
-      throw new Error('Recargando página para usar versión actualizada');
-    }
-  </script>
-  
   <meta name="description" content="PASALA CHE - El juego de preguntas tipo rosco sobre fútbol. Demuestra tus conocimientos.">
   <meta name="google-adsense-account" content="ca-pub-9579152019412427">
   
@@ -138,18 +21,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- Google AdSense -->
-  <script>
-    // Script para manejar errores de adsbygoogle
-    window.onerror = function(message, source, lineno, colno, error) {
-      if (source && source.includes('googlesyndication') || 
-          message && message.includes('adsbygoogle')) {
-        console.log('Manejando error de AdSense:', message);
-        return true; // Evitar que el error se propague
-      }
-      // Permitir que otros errores sean manejados normalmente
-      return false;
-    };
-  </script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
   
@@ -157,7 +28,6 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/game-styles.css">
   <link rel="stylesheet" href="css/footer-styles.css">
-  <link rel="stylesheet" href="css/mobile.css">
   <style>
     /* Botón volver */
     .back-button {
@@ -334,75 +204,6 @@
   <meta property="og:image" content="img/preview.jpg">
   <!-- Scripts útiles -->
   <script src="utils/notifications.js"></script>
-
-  <!-- Mobile optimization script -->
-  <script src="js/modules/mobileUtils.js"></script>
-  <script src="js/modules/mobilePositioning.js"></script>
-  <script src="js/rosco-mobile-override.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Inicializar utilidades móviles
-      MobileUtils.init({
-        optimizeRosco: true,
-        optimizeForLowMemory: true,
-        preventDoubleTapZoom: true,
-        fixVhUnits: true
-      });
-      
-      // Aplicar optimizaciones al juego cuando esté cargado
-      window.addEventListener('gameLoaded', function() {
-        if (MobileUtils.env.isMobile || MobileUtils.env.supportsTouch) {
-          MobileUtils.optimizeGameForMobile();
-          
-          // Usar el nuevo módulo de posicionamiento
-          if (window.MobilePositioning) {
-            MobilePositioning.optimizeGameInterface();
-          }
-        } else {
-          // Si estamos en escritorio, asegurar el diseño circular
-          if (window.innerWidth > 1024) {
-            if (window.forceCircularQuestionCard) {
-              window.forceCircularQuestionCard();
-            } else if (window.MobilePositioning && window.MobilePositioning.makeQuestionCardCircular) {
-              window.MobilePositioning.makeQuestionCardCircular();
-            }
-          }
-        }
-      });
-      
-      // Forzar el diseño circular después de un tiempo para asegurar que se aplique
-      setTimeout(function() {
-        if (window.innerWidth > 1024) {
-          if (window.forceCircularQuestionCard) {
-            window.forceCircularQuestionCard();
-          } else if (window.MobilePositioning && window.MobilePositioning.makeQuestionCardCircular) {
-            window.MobilePositioning.makeQuestionCardCircular();
-          }
-        }
-      }, 2000);
-      
-      // Reoptimizar cuando cambie la orientación
-      window.addEventListener('orientationchange', function() {
-        setTimeout(function() {
-          if (MobileUtils.env.isMobile || MobileUtils.env.supportsTouch) {
-            MobileUtils.optimizeRoscoForMobile();
-            
-            // También usar el nuevo posicionamiento
-            if (window.MobilePositioning) {
-              MobilePositioning.positionRoscoElements();
-            }
-          } else if (window.innerWidth > 1024) {
-            // Para escritorio después de un cambio de orientación
-            if (window.forceCircularQuestionCard) {
-              window.forceCircularQuestionCard();
-            } else if (window.MobilePositioning && window.MobilePositioning.makeQuestionCardCircular) {
-              window.MobilePositioning.makeQuestionCardCircular();
-            }
-          }
-        }, 300);
-      });
-    });
-  </script>
 </head>
 <body>
   <div class="loading-overlay">

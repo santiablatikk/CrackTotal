@@ -743,3 +743,146 @@
     </script>
 </body>
 </html> 
+                      <span class="stat-label">Partidas Jugadas</span>
+                    </div>
+                  </div>
+                  <div class="stat-card" style="--index: 1;">
+                    <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                    <div class="stat-info">
+                      <span class="stat-value" id="stats-wins">0</span>
+                      <span class="stat-label">Victorias</span>
+                    </div>
+                  </div>
+                  <div class="stat-card" style="--index: 2;">
+                    <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
+                    <div class="stat-info">
+                      <span class="stat-value" id="stats-losses">0</span>
+                      <span class="stat-label">Derrotas</span>
+                    </div>
+                  </div>
+                  <div class="stat-card" style="--index: 3;">
+                    <div class="stat-icon"><i class="fas fa-bullseye"></i></div>
+                    <div class="stat-info">
+                      <span class="stat-value" id="stats-accuracy">0%</span>
+                      <span class="stat-label">Precisión Media</span>
+                    </div>
+                  </div>
+                  <div class="stat-card" style="--index: 4;">
+                    <div class="stat-icon"><i class="fas fa-star"></i></div>
+                    <div class="stat-info">
+                      <span class="stat-value" id="stats-high-score">0</span>
+                      <span class="stat-label">Máx. Letras Correctas</span>
+                    </div>
+                  </div>
+                  <div class="stat-card" style="--index: 5;">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info">
+                      <span class="stat-value" id="stats-avg-time">0s</span>
+                      <span class="stat-label">Tiempo Medio Partida</span>
+                    </div>
+                  </div>
+                   <div class="stat-card" style="--index: 6;">
+                    <div class="stat-icon"><i class="fas fa-font"></i></div>
+                    <div class="stat-info">
+                      <span class="stat-value" id="stats-avg-letters">0</span>
+                      <span class="stat-label">Media Letras Correctas</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- Fin profile-main-stats -->
+
+            <!-- Columna Secundaria: Estadísticas por Letra -->
+            <div class="profile-letter-stats">
+              <div class="stats-section" id="letter-stats-section" style="display: none;">
+                  <h3 class="section-title"><i class="fas fa-spell-check"></i> Rendimiento por Letra</h3>
+                  <div class="letter-stats-container" id="letter-stats-container">
+                      <!-- Las estadísticas por letra se cargarán aquí -->
+                  </div>
+              </div>
+            </div> <!-- Fin profile-letter-stats -->
+
+            <!-- Nueva sección para Logros -->
+            <div class="profile-achievements">
+              <div class="stats-section" id="achievements-section">
+                <h3 class="section-title"><i class="fas fa-medal"></i> Mis Logros</h3>
+                <div id="achievements-loading" class="loading-indicator">
+                  <div class="loading-spinner"></div>
+                </div>
+                <div class="achievements-counter" id="achievements-counter" style="display: none;">
+                  <span id="unlocked-count">0</span> de <span id="total-count">0</span> logros desbloqueados
+                </div>
+                <div class="achievements-container" id="achievements-container" style="display: none;">
+                  <!-- Los logros se cargarán aquí dinámicamente -->
+                  <div class="no-achievements" id="no-achievements" style="display: none;">
+                    <i class="fas fa-trophy"></i>
+                    <p>Aún no has desbloqueado ningún logro.<br>¡Sigue jugando para conseguirlos!</p>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- Fin profile-achievements -->
+
+          </div> <!-- Fin profile-content-grid -->
+
+          <div class="profile-actions">
+            <a href="portal.html" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Volver al Portal</a>
+            <a href="game-rosco.html" class="btn btn-primary"><i class="fas fa-play"></i> Jugar Ahora</a>
+            <a href="ranking.html" class="btn btn-secondary"><i class="fas fa-trophy"></i> Ver Ranking</a>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="policy-footer">
+        <!-- Contenido del footer (copiado de portal.html o usando un include si es posible) -->
+        <div class="footer-links-mini">
+          <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+          <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+          <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+          <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+          <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+          <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+          <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
+        </div>
+        <div class="share-button-container">
+          <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
+        </div>
+        <div class="copyright-text">&copy; Abril 2025 CRACK TOTAL - El Juego del Rosco Futbolero</div>
+        <div class="footer-social-icons">
+          <a href="https://www.facebook.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.instagram.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-instagram"></i></a>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Scripts de utilidades (ej. partículas, theme toggle) -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/particles-config.js"></script>
+    <script src="js/main.js"></script> <!-- Para funcionalidad común como el theme toggle -->
+    
+    <!-- Script para mejorar la experiencia de usuario al cargar los datos -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Simular tiempo de carga (podría ser reemplazado por la verdadera carga de datos)
+        setTimeout(() => {
+          document.getElementById('stats-loading').style.display = 'none';
+          document.getElementById('stats-grid').style.display = 'grid';
+          
+          // Animar las estadísticas por letra si están disponibles
+          const letterStats = document.getElementById('letter-stats-section');
+          if (letterStats) {
+            letterStats.style.display = 'block';
+          }
+        }, 800);
+        
+        // Aplicar animación a las cartas de estadísticas
+        const statCards = document.querySelectorAll('.stat-card');
+        statCards.forEach((card, index) => {
+          card.style.setProperty('--index', index);
+        });
+      });
+    </script>
+</body>
+</html> 

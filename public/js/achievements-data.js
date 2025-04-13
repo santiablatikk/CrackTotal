@@ -710,630 +710,323 @@ window.FULL_GAME_ACHIEVEMENTS = {
       return (month === 10 && day === 30) || (month === 11 && day === 25);
     }
   },
-  
-  // === NUEVOS LOGROS ADICIONALES (50 más) ===
-  
-  // === PRINCIPIANTE (10 más) ===
-  early_morning_player: {
-    id: 'early_morning_player',
-    title: 'Jugador Madrugador',
-    description: 'Juega una partida entre las 5:00 AM y las 8:00 AM.',
-    icon: 'fas fa-sun',
-    category: ACHIEVEMENT_CATEGORIES.PRINCIPIANTE,
+  messi_magic: {
+    id: 'messi_magic',
+    title: 'Magia de Messi',
+    description: 'Consigue 10 respuestas correctas sin fallar ni una.',
+    icon: 'fas fa-wand-magic-sparkles',
+    category: ACHIEVEMENT_CATEGORIES.EXPERTO,
     condition: (stats) => {
-      const hour = new Date().getHours();
-      return hour >= 5 && hour < 8;
+      return stats.correctAnswers >= 10 && stats.incorrectAnswers === 0;
     }
   },
-  late_night_player: {
-    id: 'late_night_player',
+  ronaldo_siuu: {
+    id: 'ronaldo_siuu',
+    title: '¡SIUUUU!',
+    description: 'Gana 7 partidas consecutivas, como los 7 balones de oro de Ronaldo.',
+    icon: 'fas fa-trophy',
+    category: ACHIEVEMENT_CATEGORIES.MAESTRIA,
+    condition: (stats) => {
+      const history = getGameHistory().slice(0, 7);
+      return history.length >= 7 && history.every(game => game.victory);
+    }
+  },
+  night_owl: {
+    id: 'night_owl',
     title: 'Búho Nocturno',
-    description: 'Juega una partida entre las 11:00 PM y las 3:00 AM.',
+    description: 'Completa una partida entre las 11:00 PM y las 5:00 AM.',
     icon: 'fas fa-moon',
-    category: ACHIEVEMENT_CATEGORIES.PRINCIPIANTE,
+    category: ACHIEVEMENT_CATEGORIES.ESPECIAL,
     condition: (stats) => {
       const hour = new Date().getHours();
-      return hour >= 23 || hour < 3;
+      return (hour >= 23 || hour < 5);
     }
   },
-  weekend_player: {
-    id: 'weekend_player',
-    title: 'Jugador de Fin de Semana',
-    description: 'Juega una partida un sábado o domingo.',
-    icon: 'fas fa-umbrella-beach',
-    category: ACHIEVEMENT_CATEGORIES.PRINCIPIANTE,
-    condition: (stats) => {
-      const day = new Date().getDay();
-      return day === 0 || day === 6; // Domingo o Sábado
-    }
-  },
-  first_hard_game: {
-    id: 'first_hard_game',
-    title: 'Nivel Avanzado',
-    description: 'Juega tu primera partida en dificultad difícil.',
-    icon: 'fas fa-gauge-high',
-    category: ACHIEVEMENT_CATEGORIES.PRINCIPIANTE,
-    condition: (stats) => stats.difficulty === 'dificil'
-  },
-  six_letters: {
-    id: 'six_letters',
-    title: 'Media Docena',
-    description: 'Acierta 6 letras en una partida.',
-    icon: 'fas fa-6',
-    category: ACHIEVEMENT_CATEGORIES.PRINCIPIANTE,
-    condition: (stats) => stats.correctAnswers >= 6
-  },
-  alphabet_start: {
-    id: 'alphabet_start',
-    title: 'Principio del Alfabeto',
-    description: 'Responde correctamente a las letras A, B y C en una misma partida.',
-    icon: 'fas fa-a',
-    category: ACHIEVEMENT_CATEGORIES.PRINCIPIANTE,
-    condition: (stats) => {
-      if (!stats.letters) return false;
-      return stats.letters['A'] === 'correct' && 
-             stats.letters['B'] === 'correct' && 
-             stats.letters['C'] === 'correct';
-    }
-  },
-  monday_player: {
-    id: 'monday_player',
-    title: 'Jugador del Lunes',
-    description: 'Gana una partida un lunes.',
-    icon: 'fas fa-1',
-    category: ACHIEVEMENT_CATEGORIES.PRINCIPIANTE,
-    condition: (stats) => {
-      const day = new Date().getDay();
-      return day === 1 && stats.result === 'victory'; // Lunes
-    }
-  },
-  first_timer: {
-    id: 'first_timer',
-    title: 'Primera Vez',
-    description: 'Completa tu primera partida, independientemente del resultado.',
-    icon: 'fas fa-hourglass-start',
-    category: ACHIEVEMENT_CATEGORIES.PRINCIPIANTE,
-    condition: (stats) => true // Siempre se desbloquea al terminar la primera partida
-  },
-  five_consecutive_answers: {
-    id: 'five_consecutive_answers',
-    title: 'Racha Inicial',
-    description: 'Responde correctamente a 5 preguntas consecutivas.',
-    icon: 'fas fa-bolt',
-    category: ACHIEVEMENT_CATEGORIES.PRINCIPIANTE,
-    condition: (stats) => stats.longestStreak >= 5
-  },
-  saturday_player: {
-    id: 'saturday_player',
-    title: 'Jugador del Sábado',
-    description: 'Gana una partida un sábado.',
-    icon: 'fas fa-6',
-    category: ACHIEVEMENT_CATEGORIES.PRINCIPIANTE,
-    condition: (stats) => {
-      const day = new Date().getDay();
-      return day === 6 && stats.result === 'victory'; // Sábado
-    }
-  },
-  
-  // === INTERMEDIO (15 más) ===
-  comeback_kid: {
-    id: 'comeback_kid',
-    title: 'La Remontada',
-    description: 'Gana una partida después de fallar las 2 primeras preguntas.',
-    icon: 'fas fa-arrow-trend-up',
+  weekend_warrior: {
+    id: 'weekend_warrior',
+    title: 'Guerrero de Fin de Semana',
+    description: 'Juega 5 partidas en un fin de semana.',
+    icon: 'fas fa-calendar-weekend',
     category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
     condition: (stats) => {
-      if (!stats.startFails || !stats.result) return false;
-      return stats.startFails >= 2 && stats.result === 'victory';
-    }
-  },
-  a_to_e: {
-    id: 'a_to_e',
-    title: 'De la A a la E',
-    description: 'Responde correctamente a todas las primeras 5 letras del alfabeto en una partida.',
-    icon: 'fas fa-e',
-    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
-    condition: (stats) => {
-      if (!stats.letters) return false;
-      return stats.letters['A'] === 'correct' && 
-             stats.letters['B'] === 'correct' && 
-             stats.letters['C'] === 'correct' &&
-             stats.letters['D'] === 'correct' &&
-             stats.letters['E'] === 'correct';
-    }
-  },
-  three_in_row: {
-    id: 'three_in_row',
-    title: 'Hat-Trick',
-    description: 'Gana 3 partidas consecutivas.',
-    icon: 'fas fa-crown',
-    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
-    condition: (stats) => {
-      const history = getGameHistory().slice(0, 3);
-      return history.length >= 3 && history.every(game => game.victory);
-    }
-  },
-  seventeen_correct: {
-    id: 'seventeen_correct',
-    title: 'Diecisiete',
-    description: 'Consigue 17 respuestas correctas en una partida.',
-    icon: 'fas fa-certificate',
-    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
-    condition: (stats) => stats.correctAnswers >= 17
-  },
-  morning_coffee: {
-    id: 'morning_coffee',
-    title: 'Café Matutino',
-    description: 'Gana una partida entre las 8:00 AM y las 10:00 AM.',
-    icon: 'fas fa-mug-hot',
-    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
-    condition: (stats) => {
-      const hour = new Date().getHours();
-      return hour >= 8 && hour < 10 && stats.result === 'victory';
-    }
-  },
-  dinner_time: {
-    id: 'dinner_time',
-    title: 'Hora de Cenar',
-    description: 'Gana una partida entre las 8:00 PM y las 10:00 PM.',
-    icon: 'fas fa-utensils',
-    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
-    condition: (stats) => {
-      const hour = new Date().getHours();
-      return hour >= 20 && hour < 22 && stats.result === 'victory';
-    }
-  },
-  sunday_player: {
-    id: 'sunday_player',
-    title: 'Jugador del Domingo',
-    description: 'Gana una partida un domingo.',
-    icon: 'fas fa-church',
-    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
-    condition: (stats) => {
-      const day = new Date().getDay();
-      return day === 0 && stats.result === 'victory'; // Domingo
-    }
-  },
-  last_minute_hero: {
-    id: 'last_minute_hero',
-    title: 'Héroe de Último Minuto',
-    description: 'Gana una partida con menos de 15 segundos restantes.',
-    icon: 'fas fa-stopwatch',
-    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
-    condition: (stats) => stats.result === 'victory' && stats.timeRemaining > 0 && stats.timeRemaining < 15
-  },
-  i_know_vowels: {
-    id: 'i_know_vowels',
-    title: 'Maestro de Vocales',
-    description: 'Responde correctamente a todas las vocales (A, E, I, O, U) en una misma partida.',
-    icon: 'fas fa-font',
-    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
-    condition: (stats) => {
-      if (!stats.letters) return false;
-      return stats.letters['A'] === 'correct' && 
-             stats.letters['E'] === 'correct' && 
-             stats.letters['I'] === 'correct' &&
-             stats.letters['O'] === 'correct' &&
-             stats.letters['U'] === 'correct';
-    }
-  },
-  seven_consecutive_answers: {
-    id: 'seven_consecutive_answers',
-    title: 'Siete de Suerte',
-    description: 'Responde correctamente a 7 preguntas consecutivas.',
-    icon: 'fas fa-dice-seven',
-    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
-    condition: (stats) => stats.longestStreak >= 7
-  },
-  no_skip_victory: {
-    id: 'no_skip_victory',
-    title: 'Sin Atajos',
-    description: 'Gana una partida sin saltarte ninguna pregunta.',
-    icon: 'fas fa-forward-step',
-    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
-    condition: (stats) => stats.result === 'victory' && stats.skippedAnswers === 0
-  },
-  double_digits: {
-    id: 'double_digits',
-    title: 'Doble Dígito',
-    description: 'Consigue 10 o más respuestas correctas en 3 partidas consecutivas.',
-    icon: 'fas fa-1',
-    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
-    condition: (stats) => {
-      const history = getGameHistory().slice(0, 3);
-      return history.length >= 3 && history.every(game => game.correct >= 10);
-    }
-  },
-  time_bonus: {
-    id: 'time_bonus',
-    title: 'Tiempo Extra',
-    description: 'Gana una partida con al menos 2 minutos restantes.',
-    icon: 'fas fa-hourglass-half',
-    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
-    condition: (stats) => stats.result === 'victory' && stats.timeRemaining >= 120
-  },
-  one_mistake_victory: {
-    id: 'one_mistake_victory',
-    title: 'Casi Perfecto',
-    description: 'Gana una partida con exactamente un error.',
-    icon: 'fas fa-exclamation',
-    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
-    condition: (stats) => stats.result === 'victory' && stats.incorrectAnswers === 1
-  },
-  
-  // === EXPERTO (10 más) ===
-  twenty_correct: {
-    id: 'twenty_correct',
-    title: 'Veinte Aciertos',
-    description: 'Consigue 20 respuestas correctas en una partida.',
-    icon: 'fas fa-2',
-    category: ACHIEVEMENT_CATEGORIES.EXPERTO,
-    condition: (stats) => stats.correctAnswers >= 20
-  },
-  ten_consecutive_answers: {
-    id: 'ten_consecutive_answers',
-    title: 'Racha de Diez',
-    description: 'Responde correctamente a 10 preguntas consecutivas.',
-    icon: 'fas fa-fire-flame-curved',
-    category: ACHIEVEMENT_CATEGORIES.EXPERTO,
-    condition: (stats) => stats.longestStreak >= 10
-  },
-  four_in_row: {
-    id: 'four_in_row',
-    title: 'Póker de Victorias',
-    description: 'Gana 4 partidas consecutivas.',
-    icon: 'fas fa-4',
-    category: ACHIEVEMENT_CATEGORIES.EXPERTO,
-    condition: (stats) => {
-      const history = getGameHistory().slice(0, 4);
-      return history.length >= 4 && history.every(game => game.victory);
-    }
-  },
-  hard_challenge_master: {
-    id: 'hard_challenge_master',
-    title: 'Desafío Extremo',
-    description: 'Gana 3 partidas consecutivas en dificultad difícil.',
-    icon: 'fas fa-skull',
-    category: ACHIEVEMENT_CATEGORIES.EXPERTO,
-    condition: (stats) => {
-      const history = getGameHistory().slice(0, 3);
-      return history.length >= 3 && 
-             history.every(game => game.victory && game.difficulty === 'dificil');
-    }
-  },
-  consecutive_days_3: {
-    id: 'consecutive_days_3',
-    title: 'Hábito de Tres Días',
-    description: 'Juega al menos una partida durante 3 días consecutivos.',
-    icon: 'fas fa-calendar-check',
-    category: ACHIEVEMENT_CATEGORIES.EXPERTO,
-    condition: (stats) => {
+      const today = new Date();
+      const day = today.getDay();
+      const isWeekend = day === 0 || day === 6;
+      
+      if (!isWeekend) return false;
+      
       const history = getGameHistory();
-      if (history.length < 3) return false;
-      
-      // Obtener fechas únicas ordenadas
-      const uniqueDates = new Set();
-      history.forEach(game => {
-        if (game.date) {
-          const date = new Date(game.date);
-          uniqueDates.add(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`);
-        }
+      const weekendGames = history.filter(game => {
+        if (!game.date) return false;
+        const gameDate = new Date(game.date);
+        const gameDay = gameDate.getDay();
+        // Solo contar partidas del fin de semana actual
+        const isSameWeekend = Math.abs(today - gameDate) < 3 * 24 * 60 * 60 * 1000;
+        return (gameDay === 0 || gameDay === 6) && isSameWeekend;
       });
       
-      const dates = Array.from(uniqueDates).sort();
-      
-      // Verificar si hay al menos 3 días consecutivos
-      for (let i = 0; i < dates.length - 2; i++) {
-        const date1 = new Date(dates[i]);
-        const date2 = new Date(dates[i+1]);
-        const date3 = new Date(dates[i+2]);
-        
-        const diffDays1 = Math.floor((date2 - date1) / (1000 * 60 * 60 * 24));
-        const diffDays2 = Math.floor((date3 - date2) / (1000 * 60 * 60 * 24));
-        
-        if (diffDays1 === 1 && diffDays2 === 1) {
-          return true;
-        }
-      }
-      
-      return false;
+      return weekendGames.length >= 5;
     }
   },
-  z_master: {
-    id: 'z_master',
-    title: 'Maestro de la Z',
-    description: 'Responde correctamente a la letra Z en 3 partidas diferentes.',
-    icon: 'fas fa-z',
+  puyol_defense: {
+    id: 'puyol_defense',
+    title: 'Defensa de Puyol',
+    description: 'Completa una partida con menos de 3 preguntas incorrectas.',
+    icon: 'fas fa-shield-halved',
+    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
+    condition: (stats) => {
+      return stats.result === 'victory' && stats.incorrectAnswers < 3;
+    }
+  },
+  guardiola_strategy: {
+    id: 'guardiola_strategy',
+    title: 'Estrategia de Guardiola',
+    description: 'Gana una partida después de haber saltado preguntas y volver a ellas con éxito.',
+    icon: 'fas fa-chess-knight',
     category: ACHIEVEMENT_CATEGORIES.EXPERTO,
     condition: (stats) => {
-      const history = getGameHistory().slice(0, 10);
-      let count = 0;
-      
-      history.forEach(game => {
-        if (game.letters && game.letters['Z'] === 'correct') {
-          count++;
-        }
-      });
-      
-      return count >= 3;
+      return stats.result === 'victory' && 
+             stats.skippedAnswers > 0 && 
+             stats.secondAttemptSuccess && 
+             stats.correctAnswers > 10;
     }
   },
-  half_alphabet: {
-    id: 'half_alphabet',
-    title: 'Medio Alfabeto',
-    description: 'Responde correctamente a 13 letras diferentes en una misma partida.',
-    icon: 'fas fa-language',
-    category: ACHIEVEMENT_CATEGORIES.EXPERTO,
+  twenty_one_letters: {
+    id: 'twenty_one_letters',
+    title: 'Veintiuna Letras',
+    description: 'Responde correctamente 21 letras en una partida.',
+    icon: 'fas fa-2',
+    category: ACHIEVEMENT_CATEGORIES.MAESTRIA,
+    condition: (stats) => stats.correctAnswers >= 21
+  },
+  lucky_seven: {
+    id: 'lucky_seven',
+    title: 'Siete de la Suerte',
+    description: 'Gana una partida con exactamente 7 minutos restantes.',
+    icon: 'fas fa-clover',
+    category: ACHIEVEMENT_CATEGORIES.ESPECIAL,
     condition: (stats) => {
-      if (!stats.letters) return false;
-      
-      let correctCount = 0;
-      for (const letter in stats.letters) {
-        if (stats.letters[letter] === 'correct') {
-          correctCount++;
-        }
-      }
-      
-      return correctCount >= 13;
+      const minutesLeft = Math.floor(stats.timeRemaining / 60);
+      return stats.result === 'victory' && minutesLeft === 7;
     }
   },
-  speed_expert: {
-    id: 'speed_expert',
-    title: 'Velocista Extremo',
-    description: 'Gana una partida con más de 3 minutos restantes.',
-    icon: 'fas fa-gauge-simple-high',
-    category: ACHIEVEMENT_CATEGORIES.EXPERTO,
-    condition: (stats) => stats.result === 'victory' && stats.timeRemaining >= 180
-  },
-  alphabet_end: {
-    id: 'alphabet_end',
-    title: 'Final del Alfabeto',
-    description: 'Responde correctamente a las letras V, W, X, Y y Z en una misma partida.',
-    icon: 'fas fa-z',
-    category: ACHIEVEMENT_CATEGORIES.EXPERTO,
-    condition: (stats) => {
-      if (!stats.letters) return false;
-      return stats.letters['V'] === 'correct' && 
-             stats.letters['W'] === 'correct' && 
-             stats.letters['X'] === 'correct' &&
-             stats.letters['Y'] === 'correct' &&
-             stats.letters['Z'] === 'correct';
-    }
-  },
-  no_help_needed: {
-    id: 'no_help_needed',
-    title: 'Sin Ayuda Externa',
-    description: 'Gana 5 partidas consecutivas sin usar ninguna pista.',
+  memory_master: {
+    id: 'memory_master',
+    title: 'Maestro de la Memoria',
+    description: 'Gana 5 partidas seguidas sin usar ninguna pista.',
     icon: 'fas fa-lightbulb',
     category: ACHIEVEMENT_CATEGORIES.EXPERTO,
     condition: (stats) => {
       const history = getGameHistory().slice(0, 5);
       return history.length >= 5 && 
-             history.every(game => game.victory && (!game.hintsUsed || game.hintsUsed === 0));
+             history.every(game => game.victory && game.hintsUsed === 0);
     }
   },
-  
-  // === MAESTRÍA (10 más) ===
-  fifteen_consecutive_answers: {
-    id: 'fifteen_consecutive_answers',
-    title: 'Racha Imparable',
-    description: 'Responde correctamente a 15 preguntas consecutivas.',
-    icon: 'fas fa-fire',
-    category: ACHIEVEMENT_CATEGORIES.MAESTRIA,
-    condition: (stats) => stats.longestStreak >= 15
+  streak_master: {
+    id: 'streak_master',
+    title: 'Maestro de las Rachas',
+    description: 'Consigue una racha de 10 respuestas correctas consecutivas.',
+    icon: 'fas fa-bolt',
+    category: ACHIEVEMENT_CATEGORIES.EXPERTO,
+    condition: (stats) => stats.longestStreak >= 10
   },
-  five_in_row: {
-    id: 'five_in_row',
-    title: 'Cinco de Oro',
-    description: 'Gana 5 partidas consecutivas.',
-    icon: 'fas fa-5',
+  golden_hour: {
+    id: 'golden_hour',
+    title: 'Hora Dorada',
+    description: 'Gana una partida durante la puesta de sol (entre las 6:00 PM y 7:30 PM).',
+    icon: 'fas fa-sun',
+    category: ACHIEVEMENT_CATEGORIES.ESPECIAL,
+    condition: (stats) => {
+      const hour = new Date().getHours();
+      const minutes = new Date().getMinutes();
+      return stats.result === 'victory' && 
+             ((hour === 18) || (hour === 19 && minutes <= 30));
+    }
+  },
+  early_bird: {
+    id: 'early_bird',
+    title: 'Madrugador',
+    description: 'Gana una partida antes de las 7:00 AM.',
+    icon: 'fas fa-mug-saucer',
+    category: ACHIEVEMENT_CATEGORIES.ESPECIAL,
+    condition: (stats) => {
+      const hour = new Date().getHours();
+      return stats.result === 'victory' && hour < 7;
+    }
+  },
+  perfect_end: {
+    id: 'perfect_end',
+    title: 'Final Perfecto',
+    description: 'Completa las últimas 5 letras del rosco sin errores.',
+    icon: 'fas fa-flag-checkered',
+    category: ACHIEVEMENT_CATEGORIES.EXPERTO,
+    condition: (stats) => {
+      return stats.perfectEnding && stats.result === 'victory';
+    }
+  },
+  no_hint_hero: {
+    id: 'no_hint_hero',
+    title: 'Héroe sin Pistas',
+    description: 'Gana 10 partidas consecutivas sin usar ninguna pista.',
+    icon: 'fas fa-eye-slash',
     category: ACHIEVEMENT_CATEGORIES.MAESTRIA,
     condition: (stats) => {
-      const history = getGameHistory().slice(0, 5);
-      return history.length >= 5 && history.every(game => game.victory);
+      const history = getGameHistory().slice(0, 10);
+      return history.length >= 10 && 
+             history.every(game => game.victory && game.hintsUsed === 0);
     }
   },
-  true_master: {
-    id: 'true_master',
-    title: 'Verdadero Maestro',
-    description: 'Gana 3 partidas consecutivas en dificultad difícil sin cometer errores.',
-    icon: 'fas fa-user-graduate',
-    category: ACHIEVEMENT_CATEGORIES.MAESTRIA,
-    condition: (stats) => {
-      const history = getGameHistory().slice(0, 3);
-      return history.length >= 3 && 
-             history.every(game => 
-               game.victory && 
-               game.difficulty === 'dificil' && 
-               game.wrong === 0);
-    }
-  },
-  consecutive_days_7: {
-    id: 'consecutive_days_7',
-    title: 'Hábito Semanal',
-    description: 'Juega al menos una partida durante 7 días consecutivos.',
-    icon: 'fas fa-calendar-week',
-    category: ACHIEVEMENT_CATEGORIES.MAESTRIA,
+  letter_collector: {
+    id: 'letter_collector',
+    title: 'Coleccionista de Letras',
+    description: 'Acierta al menos una vez cada letra del abecedario.',
+    icon: 'fas fa-spell-check',
+    category: ACHIEVEMENT_CATEGORIES.COLECCIONISTA,
     condition: (stats) => {
       const history = getGameHistory();
-      if (history.length < 7) return false;
+      const alphabet = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'.split('');
+      const correctLetters = new Set();
       
-      // Obtener fechas únicas ordenadas
-      const uniqueDates = new Set();
       history.forEach(game => {
-        if (game.date) {
-          const date = new Date(game.date);
-          uniqueDates.add(`${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`);
+        if (game.letters) {
+          for (const letter in game.letters) {
+            if (game.letters[letter] === 'correct') {
+              correctLetters.add(letter);
+            }
+          }
         }
       });
       
-      const dates = Array.from(uniqueDates).sort();
-      
-      // Verificar si hay al menos 7 días consecutivos
-      for (let i = 0; i < dates.length - 6; i++) {
-        let consecutive = true;
-        
-        for (let j = 0; j < 6; j++) {
-          const date1 = new Date(dates[i+j]);
-          const date2 = new Date(dates[i+j+1]);
-          
-          const diffDays = Math.floor((date2 - date1) / (1000 * 60 * 60 * 24));
-          
-          if (diffDays !== 1) {
-            consecutive = false;
-            break;
-          }
-        }
-        
-        if (consecutive) {
-          return true;
-        }
-      }
-      
-      return false;
+      return alphabet.every(letter => correctLetters.has(letter));
     }
   },
-  twentytwo_correct: {
-    id: 'twentytwo_correct',
-    title: 'Veintidós',
-    description: 'Consigue 22 respuestas correctas en una partida.',
-    icon: 'fas fa-trophy',
-    category: ACHIEVEMENT_CATEGORIES.MAESTRIA,
-    condition: (stats) => stats.correctAnswers >= 22
+  new_years_player: {
+    id: 'new_years_player',
+    title: 'Jugador de Año Nuevo',
+    description: 'Juega una partida el 31 de diciembre o el 1 de enero.',
+    icon: 'fas fa-champagne-glasses',
+    category: ACHIEVEMENT_CATEGORIES.ESPECIAL,
+    condition: (stats) => {
+      const date = new Date();
+      const month = date.getMonth() + 1; // 1-12
+      const day = date.getDate();
+      
+      return (month === 12 && day === 31) || (month === 1 && day === 1);
+    }
   },
-  perfect_ten: {
-    id: 'perfect_ten',
-    title: 'Diez Perfectos',
-    description: 'Completa 10 partidas perfectas (sin errores ni omisiones).',
-    icon: 'fas fa-diamond',
+  zodiac_collector: {
+    id: 'zodiac_collector',
+    title: 'Coleccionista del Zodiaco',
+    description: 'Juega al menos una partida en cada mes del año.',
+    icon: 'fas fa-stars',
+    category: ACHIEVEMENT_CATEGORIES.COLECCIONISTA,
+    condition: (stats) => {
+      const history = getGameHistory();
+      const months = new Set();
+      
+      history.forEach(game => {
+        if (game.date) {
+          const month = new Date(game.date).getMonth();
+          months.add(month);
+        }
+      });
+      
+      return months.size >= 12;
+    }
+  },
+  accuracy_king: {
+    id: 'accuracy_king',
+    title: 'Rey de la Precisión',
+    description: 'Mantén una precisión del 90% o superior después de 50 partidas.',
+    icon: 'fas fa-bullseye-arrow',
     category: ACHIEVEMENT_CATEGORIES.MAESTRIA,
     condition: (stats) => {
       const history = getGameHistory();
-      const perfectGames = history.filter(game => 
-        game.victory && game.wrong === 0 && game.skipped === 0
-      ).length;
-      return perfectGames >= 10;
+      if (history.length < 50) return false;
+      
+      let totalCorrect = 0;
+      let totalQuestions = 0;
+      
+      history.forEach(game => {
+        totalCorrect += game.correctAnswers || 0;
+        totalQuestions += (game.correctAnswers || 0) + (game.incorrectAnswers || 0);
+      });
+      
+      return totalQuestions > 0 && (totalCorrect / totalQuestions) >= 0.9;
     }
   },
-  twenty_games: {
-    id: 'twenty_games',
-    title: 'Jugador Dedicado',
-    description: 'Juega 20 partidas en total.',
-    icon: 'fas fa-gamepad',
-    category: ACHIEVEMENT_CATEGORIES.MAESTRIA,
+  coffee_break: {
+    id: 'coffee_break',
+    title: 'Descanso para el Café',
+    description: 'Gana una partida en menos de 3 minutos.',
+    icon: 'fas fa-mug-hot',
+    category: ACHIEVEMENT_CATEGORIES.INTERMEDIO,
     condition: (stats) => {
-      const history = getGameHistory();
-      return history.length >= 20;
+      return stats.result === 'victory' && stats.totalTimePlayed < 180;
     }
   },
-  full_alphabet: {
-    id: 'full_alphabet',
-    title: 'Alfabeto Completo',
-    description: 'Responde correctamente a todas las letras del alfabeto en una misma partida.',
-    icon: 'fas fa-spell-check',
-    category: ACHIEVEMENT_CATEGORIES.MAESTRIA,
-    condition: (stats) => {
-      if (!stats.letters) return false;
-      
-      // El alfabeto español tiene 27 letras
-      const spanishAlphabet = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ'.split('');
-      
-      for (const letter of spanishAlphabet) {
-        if (!stats.letters[letter] || stats.letters[letter] !== 'correct') {
-          return false;
-        }
-      }
-      
-      return true;
-    }
-  },
-  twenty_consecutive_answers: {
-    id: 'twenty_consecutive_answers',
-    title: 'Racha de Campeón',
-    description: 'Responde correctamente a 20 preguntas consecutivas.',
-    icon: 'fas fa-medal',
-    category: ACHIEVEMENT_CATEGORIES.MAESTRIA,
-    condition: (stats) => stats.longestStreak >= 20
-  },
-  fifty_wins: {
-    id: 'fifty_wins',
-    title: 'Medio Centenar',
-    description: 'Alcanza 50 victorias en total.',
+  triple_cinco: {
+    id: 'triple_cinco',
+    title: 'Triple Cinco',
+    description: 'Gana una partida con exactamente 5 aciertos, 5 fallos y 5 saltos.',
     icon: 'fas fa-5',
+    category: ACHIEVEMENT_CATEGORIES.ESPECIAL,
+    condition: (stats) => {
+      return stats.result === 'victory' && 
+             stats.correctAnswers === 5 && 
+             stats.incorrectAnswers === 5 && 
+             stats.skippedAnswers === 5;
+    }
+  },
+  consistent_player: {
+    id: 'consistent_player',
+    title: 'Jugador Constante',
+    description: 'Juega al menos una partida al día durante 7 días consecutivos.',
+    icon: 'fas fa-calendar-check',
     category: ACHIEVEMENT_CATEGORIES.MAESTRIA,
     condition: (stats) => {
       const history = getGameHistory();
-      const wins = history.filter(game => game.victory).length;
-      return wins >= 50;
-    }
-  },
-  
-  // === COLECCIONISTA (3 más) ===
-  category_master_principiante: {
-    id: 'category_master_principiante',
-    title: 'Coleccionista Principiante',
-    description: 'Desbloquea todos los logros de la categoría Principiante.',
-    icon: 'fas fa-award',
-    category: ACHIEVEMENT_CATEGORIES.COLECCIONISTA,
-    condition: (stats) => {
-      // Esta lógica debe ser implementada en checkAchievements
-      return false; // La lógica real requiere acceso a todos los logros desbloqueados
-    }
-  },
-  category_master_intermedio: {
-    id: 'category_master_intermedio',
-    title: 'Coleccionista Intermedio',
-    description: 'Desbloquea todos los logros de la categoría Intermedio.',
-    icon: 'fas fa-medal',
-    category: ACHIEVEMENT_CATEGORIES.COLECCIONISTA,
-    condition: (stats) => {
-      // Esta lógica debe ser implementada en checkAchievements
-      return false; // La lógica real requiere acceso a todos los logros desbloqueados
-    }
-  },
-  category_master_experto: {
-    id: 'category_master_experto',
-    title: 'Coleccionista Experto',
-    description: 'Desbloquea todos los logros de la categoría Experto.',
-    icon: 'fas fa-trophy',
-    category: ACHIEVEMENT_CATEGORIES.COLECCIONISTA,
-    condition: (stats) => {
-      // Esta lógica debe ser implementada en checkAchievements
-      return false; // La lógica real requiere acceso a todos los logros desbloqueados
-    }
-  },
-  
-  // === ESPECIAL (2 más) ===
-  world_cup_day: {
-    id: 'world_cup_day',
-    title: 'Día del Mundial',
-    description: 'Juega una partida el 18 de diciembre (día de la final del Mundial de Qatar 2022).',
-    icon: 'fas fa-earth-americas',
-    category: ACHIEVEMENT_CATEGORIES.ESPECIAL,
-    condition: (stats) => {
-      const today = new Date();
-      const month = today.getMonth() + 1; // 1-12
-      const day = today.getDate();
+      const dates = new Set();
       
-      return month === 12 && day === 18;
-    }
-  },
-  copa_america_day: {
-    id: 'copa_america_day',
-    title: 'Día de la Copa América',
-    description: 'Juega una partida el 14 de julio (día de la final de la Copa América 2024).',
-    icon: 'fas fa-trophy',
-    category: ACHIEVEMENT_CATEGORIES.ESPECIAL,
-    condition: (stats) => {
-      const today = new Date();
-      const month = today.getMonth() + 1; // 1-12
-      const day = today.getDate();
+      // Recopila las fechas de juego en formato YYYY-MM-DD
+      history.forEach(game => {
+        if (game.date) {
+          const date = new Date(game.date);
+          const dateStr = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+          dates.add(dateStr);
+        }
+      });
       
-      return month === 7 && day === 14;
+      // Verifica si hay 7 días consecutivos
+      const dateArray = Array.from(dates).sort();
+      let maxConsecutive = 1;
+      let current = 1;
+      
+      for (let i = 1; i < dateArray.length; i++) {
+        const prevDate = new Date(dateArray[i-1]);
+        const currDate = new Date(dateArray[i]);
+        const diffTime = Math.abs(currDate - prevDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 1) {
+          current++;
+          maxConsecutive = Math.max(maxConsecutive, current);
+        } else {
+          current = 1;
+        }
+      }
+      
+      return maxConsecutive >= 7;
     }
   },
-  
-  // ... existing code ...
+  ultimate_streak: {
+    id: 'ultimate_streak',
+    title: 'Racha Definitiva',
+    description: 'Consigue una racha de 15 respuestas correctas consecutivas.',
+    icon: 'fas fa-fire',
+    category: ACHIEVEMENT_CATEGORIES.MAESTRIA,
+    condition: (stats) => stats.longestStreak >= 15
+  }
 };
 
 // Make achievements accessible globally if needed (for legacy code)
