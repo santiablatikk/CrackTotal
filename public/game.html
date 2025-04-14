@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="theme-color" content="#1e293b">
-  <title>PASALA CHE - Juego del Rosco</title>
-  <meta name="description" content="PASALA CHE - El juego de preguntas tipo rosco sobre fútbol. Demuestra tus conocimientos.">
+  <title>PASALA CHE - El Juego del Rosco Futbolero</title>
+  <meta name="description" content="PASALA CHE - Juego interactivo de preguntas sobre fútbol. Pon a prueba tus conocimientos en este divertido rosco futbolero.">
   <meta name="google-adsense-account" content="ca-pub-9579152019412427">
   
   <!-- Favicon -->
@@ -56,159 +54,13 @@
       transform: scale(1.1);
     }
     
-    /* Optimizaciones para móviles */
-    @media (max-width: 768px) {
-      .question-card {
-        width: 90%;
-        max-width: 340px;
-        padding: 1rem;
-      }
-      
-      .current-letter-display {
-        font-size: 2.5rem;
-        margin-bottom: 0.5rem;
-      }
-      
-      .current-question {
-        font-size: 1rem;
-      }
-      
-      .current-definition {
-        font-size: 0.9rem;
-        margin-bottom: 1rem;
-      }
-      
-      .answer-form {
-        gap: 0.5rem;
-      }
-      
-      .back-button {
-        bottom: 20px;
-        right: 20px;
-        width: 50px;
-        height: 50px;
-        font-size: 1.2rem;
-      }
-      
-      .rosco-status {
-        flex-wrap: wrap;
-        justify-content: center;
-        margin-top: 1rem;
-      }
-      
-      .status-item {
-        flex: 1 1 40%;
-        margin: 0.25rem;
-        padding: 0.6rem;
-      }
-      
-      .modal-content {
-        width: 90%;
-        max-width: 340px;
-        padding: 1.5rem;
-      }
-      
-      .stats-summary {
-        flex-wrap: wrap;
-      }
-      
-      .modal-actions {
-        flex-direction: column;
-        gap: 0.8rem;
-      }
-      
-      .modal-actions .btn {
-        width: 100%;
-      }
-    }
-    
-    /* Optimizaciones para pantallas muy pequeñas */
-    @media (max-width: 480px) {
-      .rosco-container {
-        transform: scale(0.85);
-        margin-top: -1rem;
-        margin-bottom: -1rem;
-      }
-      
-      .question-card {
-        padding: 0.8rem;
-        max-width: 280px;
-      }
-      
-      .current-letter-display {
-        font-size: 2rem;
-      }
-      
-      .title-text {
-        font-size: 1.8rem;
-      }
-      
-      .input-container {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-      
-      .answer-input {
-        width: 100%;
-        padding: 0.8rem;
-      }
-      
-      .submit-btn {
-        width: 100%;
-        margin-left: 0;
-      }
-      
-      .skip-btn, .help-btn {
-        width: 100%;
-        padding: 0.8rem;
-      }
-      
-      .status-item {
-        flex: 1 1 100%;
-      }
-      
-      .footer-links-mini {
-        flex-direction: column;
-        gap: 0.5rem;
-      }
-      
-      .footer-links-mini a {
-        padding: 0.5rem;
-      }
-    }
-    
-    /* Optimización para interacciones táctiles */
-    @media (hover: none) {
-      .back-button:hover {
-        transform: none;
-      }
-      
-      .back-button:active {
-        background-color: rgba(225, 29, 72, 0.7);
-        transform: scale(0.95);
-      }
-      
-      .submit-btn:hover, .skip-btn:hover, .help-btn:hover {
-        transform: none;
-      }
-      
-      .submit-btn:active, .skip-btn:active, .help-btn:active {
-        transform: scale(0.95);
-      }
-    }
+    /* Estos estilos se eliminan para evitar conflictos con los consolidados en game-styles.css */
   </style>
-  <!-- Open Graph tags para compartir en redes sociales -->
-  <meta property="og:title" content="PASALA CHE - Juego de Preguntas sobre Fútbol">
-  <meta property="og:description" content="Pon a prueba tus conocimientos futboleros con este divertido juego de preguntas.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="img/preview.jpg">
-  <!-- Scripts útiles -->
-  <script src="utils/notifications.js"></script>
 </head>
 <body>
   <div class="loading-overlay">
     <div class="loading-spinner"></div>
-    <div class="loading-message">Cargando preguntas...</div>
+    <div class="loading-text">Cargando preguntas...</div>
   </div>
 
   <!-- Botón de sonido flotante -->
@@ -228,7 +80,7 @@
         <div class="logo-animation">
           <i class="fas fa-futbol ball-icon bounce"></i>
         </div>
-        <a href="game-rosco.html" class="title-link">
+        <a href="index.html" class="title-link">
           <h1 class="title-text">PASALA CHE</h1>
         </a>
         <div class="game-controls">
@@ -320,10 +172,8 @@
         <h2>¡FELICIDADES!</h2>
         <p>Has completado el Rosco con éxito</p>
         <button class="stats-arrow" id="victory-stats-btn">
-          Ver estadísticas <i class="fas fa-arrow-right"></i>
+          Ver resultados <i class="fas fa-arrow-right"></i>
         </button>
-        <div class="auto-progress-bar"><div class="progress-fill"></div></div>
-        <div class="auto-progress-text">Avanzando en <span class="countdown">6</span>s</div>
       </div>
     </div>
     
@@ -336,10 +186,8 @@
         <h2>¡TIEMPO AGOTADO!</h2>
         <p>Se ha terminado el tiempo para completar el Rosco</p>
         <button class="stats-arrow" id="timeout-stats-btn">
-          Ver estadísticas <i class="fas fa-arrow-right"></i>
+          Ver resultados <i class="fas fa-arrow-right"></i>
         </button>
-        <div class="auto-progress-bar"><div class="progress-fill"></div></div>
-        <div class="auto-progress-text">Avanzando en <span class="countdown">6</span>s</div>
       </div>
     </div>
     
@@ -352,10 +200,38 @@
         <h2>¡HAS PERDIDO!</h2>
         <p>Has cometido 3 errores en el Rosco</p>
         <button class="stats-arrow" id="defeat-stats-btn">
-          Ver estadísticas <i class="fas fa-arrow-right"></i>
+          Ver resultados <i class="fas fa-arrow-right"></i>
         </button>
-        <div class="auto-progress-bar"><div class="progress-fill"></div></div>
-        <div class="auto-progress-text">Avanzando en <span class="countdown">6</span>s</div>
+      </div>
+    </div>
+    
+    <!-- Modal de Logro Individual -->
+    <div class="modal" id="single-achievement-modal">
+      <div class="modal-content achievement-single-content">
+        <div class="achievement-header">
+          <div class="achievement-icon" id="achievement-icon">
+            <i class="fas fa-medal"></i>
+          </div>
+          <div class="achievement-title-wrapper">
+            <h3>¡LOGRO DESBLOQUEADO!</h3>
+            <h2 id="achievement-title">Título del logro</h2>
+          </div>
+        </div>
+        <div class="achievement-body">
+          <p id="achievement-description">Descripción del logro conseguido.</p>
+          <div class="achievement-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" id="achievement-progress"></div>
+            </div>
+            <div class="progress-text">
+              <span id="achievement-progress-text">1/1</span>
+              <span class="progress-date" id="achievement-percent">100%</span>
+            </div>
+          </div>
+        </div>
+        <button class="stats-arrow" id="next-achievement-btn">
+          Continuar <i class="fas fa-arrow-right"></i>
+        </button>
       </div>
     </div>
     
@@ -394,26 +270,18 @@
           </div>
         </div>
         
-        <!-- Modal Actions -->
-        <div class="modal-actions">
-          <button id="play-again-btn" class="btn btn-primary">
-            <i class="fas fa-redo"></i> Volver a Jugar
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+          <button id="profile-btn" class="nav-btn">
+            <i class="fas fa-user"></i> Ver Perfil
           </button>
-          <a href="perfil.html" class="btn btn-secondary">
-            <i class="fas fa-user"></i> Perfil
-          </a>
-          <a href="ranking.html" class="btn btn-secondary">
-            <i class="fas fa-trophy"></i> Ranking
-          </a>
-          <button id="view-achievements-btn" class="btn btn-secondary">
-            <i class="fas fa-medal"></i> Ver Mis Logros
+          <button id="ranking-btn" class="nav-btn">
+            <i class="fas fa-trophy"></i> Ver Ranking
           </button>
-          <button id="return-home-btn" class="btn btn-secondary">
-            <i class="fas fa-home"></i> Volver al Inicio
+          <button id="play-again-btn" class="nav-btn">
+            <i class="fas fa-redo"></i> Jugar de Nuevo
           </button>
         </div>
-        <div class="auto-progress-bar"><div class="progress-fill"></div></div>
-        <div class="auto-progress-text">Redirigiendo en <span class="countdown">6</span>s</div>
       </div>
     </div>
   </div>
@@ -428,23 +296,1288 @@
   <!-- Footer -->
   <footer class="policy-footer">
     <div class="footer-links-mini">
-      <a href="portal.html"><i class="fas fa-home"></i> Portal</a>
-      <a href="game-rosco.html"><i class="fas fa-arrow-left"></i> Volver</a>
+      <a href="profile.html"><i class="fas fa-user"></i> Perfil</a>
+      <a href="ranking.html"><i class="fas fa-trophy"></i> Ranking</a>
       <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
       <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
       <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+      <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+      <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+      <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+      <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
     </div>
-    <div class="share-button-container">
-      <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
-    </div>
-    <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero</div>
+    <div class="copyright-text">&copy; 2025 PASALA CHE - El Juego del Rosco Futbolero.</div>
     <div class="footer-social-icons">
-      <a href="https://www.facebook.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-      <a href="https://twitter.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-twitter"></i></a>
-      <a href="https://www.instagram.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-instagram"></i></a>
-      <a href="https://www.youtube.com/c/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-youtube"></i></a>
+      <a href="https://www.facebook.com/pasalachee" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://twitter.com/pasalachee" class="social-icon"><i class="fab fa-twitter"></i></a>
+      <a href="https://www.instagram.com/pasalachee" class="social-icon"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.youtube.com/c/pasalachee" class="social-icon"><i class="fab fa-youtube"></i></a>
     </div>
   </footer>
+
+  <!-- Scripts -->
+  <script src="js/utils.js"></script>
+  <script src="js/profile.js"></script>
+  <script src="js/game.js"></script>
+  
+  <!-- Script para el manejo de modales de logros individuales -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Almacén temporal de logros obtenidos en esta partida
+      window.currentSessionAchievements = [];
+      
+      // Índice del logro actual que se está mostrando
+      let currentAchievementIndex = 0;
+      
+      // Referencia al modal de logro individual
+      const singleAchievementModal = document.getElementById('single-achievement-modal');
+      
+      // Referencias a los elementos del modal de logro individual
+      const achievementIcon = document.getElementById('achievement-icon');
+      const achievementTitle = document.getElementById('achievement-title');
+      const achievementDescription = document.getElementById('achievement-description');
+      const achievementProgress = document.getElementById('achievement-progress');
+      const achievementProgressText = document.getElementById('achievement-progress-text');
+      const achievementPercent = document.getElementById('achievement-percent');
+      const nextAchievementBtn = document.getElementById('next-achievement-btn');
+      
+      // Referencia a los botones de estadísticas en los modales de resultado
+      const resultButtons = [
+        document.getElementById('victory-stats-btn'),
+        document.getElementById('timeout-stats-btn'),
+        document.getElementById('defeat-stats-btn')
+      ];
+      
+      // Referencia a los modales de resultado
+      const resultModals = [
+        document.getElementById('victory-modal'),
+        document.getElementById('timeout-modal'),
+        document.getElementById('defeat-modal')
+      ];
+      
+      // Temporizadores para cada modal
+      let modalTimers = {};
+      
+      // Sobrescribir la función de mostrar notificación de logro para almacenar los logros
+      const originalShowAchievementNotification = window.showAchievementNotification;
+      window.showAchievementNotification = function(achievement) {
+        // Llamamos a la función original para seguir mostrando la notificación
+        if (originalShowAchievementNotification) {
+          originalShowAchievementNotification(achievement);
+        }
+        
+        // Almacenamos el logro conseguido para mostrarlo más tarde
+        window.currentSessionAchievements.push(achievement);
+      };
+      
+      // Sistema de verificación y desbloqueo de logros basado en resultados del juego
+      function checkAndUnlockAchievements(gameData) {
+        // Para seguimiento de los logros obtenidos en esta partida
+        const achievementsUnlocked = [];
+        
+        try {
+          // Referencia a los logros de logros.html
+          const storageKey = `userAchievements_${localStorage.getItem('userIP') || 'unknown'}`;
+          let existingAchievements = [];
+          
+          try {
+            const savedData = localStorage.getItem(storageKey);
+            if (savedData) {
+              existingAchievements = JSON.parse(savedData);
+            }
+          } catch (e) {
+            console.error('Error al cargar logros existentes:', e);
+          }
+          
+          // Verificar primer juego
+          if (!existingAchievements.some(a => a.id === 'first_game')) {
+            achievementsUnlocked.push({
+              id: 'first_game',
+              icon: 'fas fa-gamepad',
+              title: 'Primer Juego',
+              description: 'Completa tu primer juego de PASALA CHÉ.',
+              date: new Date().toISOString()
+            });
+          }
+          
+          // Verificar juego perfecto (todas las respuestas correctas)
+          if (gameData.victory && gameData.wrong === 0 && !existingAchievements.some(a => a.id === 'perfect_game' && a.count >= 10)) {
+            achievementsUnlocked.push({
+              id: 'perfect_game',
+              icon: 'fas fa-star',
+              title: 'Juego Perfecto',
+              description: 'Completa un juego respondiendo correctamente todas las preguntas.',
+              date: new Date().toISOString()
+            });
+          }
+          
+          // Verificar "Sin Pasar" (no usar "Pasala Che")
+          if (gameData.victory && gameData.skipped === 0 && !existingAchievements.some(a => a.id === 'no_pass' && a.count >= 5)) {
+            achievementsUnlocked.push({
+              id: 'no_pass',
+              icon: 'fas fa-trophy',
+              title: 'Sin Pasar',
+              description: 'Completa un juego sin usar la opción "Pasala Ché".',
+              date: new Date().toISOString()
+            });
+          }
+          
+          // Verificar "Modo Difícil"
+          if (gameData.difficulty === 'dificil' && gameData.victory && !existingAchievements.some(a => a.id === 'hard_mode' && a.count >= 5)) {
+            achievementsUnlocked.push({
+              id: 'hard_mode',
+              icon: 'fas fa-skull',
+              title: 'Modo Difícil',
+              description: 'Completa un juego en modo difícil.',
+              date: new Date().toISOString()
+            });
+          }
+          
+          // Verificar "Demonio de la Velocidad"
+          const timeUsedMinutes = gameData.timeUsed / 60;
+          if (gameData.victory && timeUsedMinutes < 2 && !existingAchievements.some(a => a.id === 'speed_demon' && a.count >= 3)) {
+            achievementsUnlocked.push({
+              id: 'speed_demon',
+              icon: 'fas fa-tachometer-alt',
+              title: 'Demonio de la Velocidad',
+              description: 'Completa un juego en menos de 2 minutos.',
+              date: new Date().toISOString()
+            });
+          }
+          
+          // Verificar hora para "Búho Nocturno"
+          const currentHour = new Date().getHours();
+          if (currentHour >= 0 && currentHour < 6 && !existingAchievements.some(a => a.id === 'night_owl')) {
+            achievementsUnlocked.push({
+              id: 'night_owl',
+              icon: 'fas fa-moon',
+              title: 'Búho Nocturno',
+              description: 'Juega una partida después de medianoche.',
+              date: new Date().toISOString()
+            });
+          }
+          
+          // Desbloquear los logros obtenidos
+          achievementsUnlocked.forEach(achievement => {
+            // Llamamos a la función de desbloqueo de logros.html si está disponible
+            if (typeof window.unlockAchievement === 'function') {
+              window.unlockAchievement(achievement.id, true); // true = modo silencioso
+            } else {
+              // Si no está disponible, implementamos un guardado manual
+              saveUnlockedAchievement(achievement);
+            }
+            
+            // Añadir a la lista de logros de la sesión para mostrar después
+            window.currentSessionAchievements.push(achievement);
+          });
+          
+          console.log('Logros obtenidos en esta partida:', achievementsUnlocked);
+          
+        } catch (error) {
+          console.error('Error al verificar logros:', error);
+        }
+        
+        return achievementsUnlocked.length > 0;
+      }
+      
+      // Función para guardar un logro desbloqueado si no existe la función en logros.html
+      function saveUnlockedAchievement(achievement) {
+        try {
+          const userIP = localStorage.getItem('userIP') || 'unknown';
+          const storageKey = `userAchievements_${userIP}`;
+          let allAchievements = [];
+          
+          // Recuperar logros existentes
+          const savedAchievements = localStorage.getItem(storageKey);
+          if (savedAchievements) {
+            try {
+              allAchievements = JSON.parse(savedAchievements);
+            } catch (e) {
+              console.error('Error al analizar logros guardados:', e);
+            }
+          }
+          
+          // Buscar si el logro ya existe
+          const existingIndex = allAchievements.findIndex(a => a.id === achievement.id);
+          if (existingIndex >= 0) {
+            // Actualizar el existente
+            allAchievements[existingIndex].unlocked = true;
+            allAchievements[existingIndex].count = (allAchievements[existingIndex].count || 0) + 1;
+            allAchievements[existingIndex].date = achievement.date || new Date().toISOString();
+          } else {
+            // Añadir nuevo logro
+            allAchievements.push({
+              id: achievement.id,
+              unlocked: true,
+              count: 1,
+              date: achievement.date || new Date().toISOString()
+            });
+          }
+          
+          // Guardar en localStorage
+          localStorage.setItem(storageKey, JSON.stringify(allAchievements));
+          console.log(`Logro guardado: ${achievement.title}`);
+        } catch (error) {
+          console.error('Error al guardar logro:', error);
+        }
+      }
+      
+      // Función para cargar todos los logros disponibles (similares a los de logros.html)
+      function getDefaultAchievements() {
+        return [
+          {
+            id: 'first_game',
+            icon: 'fas fa-gamepad',
+            title: 'Primer Juego',
+            description: 'Completa tu primer juego de PASALA CHÉ.',
+            category: 'beginner',
+            maxCount: 1
+          },
+          {
+            id: 'perfect_game',
+            icon: 'fas fa-star',
+            title: 'Juego Perfecto',
+            description: 'Completa un juego respondiendo correctamente todas las preguntas.',
+            category: 'expert',
+            maxCount: 10
+          },
+          {
+            id: 'no_pass',
+            icon: 'fas fa-trophy',
+            title: 'Sin Pasar',
+            description: 'Completa un juego sin usar la opción "Pasala Ché".',
+            category: 'expert',
+            maxCount: 5
+          },
+          {
+            id: 'hard_mode',
+            icon: 'fas fa-skull',
+            title: 'Modo Difícil',
+            description: 'Completa un juego en modo difícil.',
+            category: 'expert',
+            maxCount: 5
+          },
+          {
+            id: 'speed_demon',
+            icon: 'fas fa-tachometer-alt',
+            title: 'Demonio de la Velocidad',
+            description: 'Completa un juego en menos de 2 minutos.',
+            category: 'expert',
+            maxCount: 3
+          },
+          {
+            id: 'night_owl',
+            icon: 'fas fa-moon',
+            title: 'Búho Nocturno',
+            description: 'Juega una partida después de medianoche.',
+            category: 'special',
+            maxCount: 1
+          }
+        ];
+      }
+      
+      // Función para mostrar un logro individual
+      function showSingleAchievement(achievement) {
+        if (!achievement) return false;
+        
+        // Configurar los elementos del modal
+        achievementIcon.innerHTML = `<i class="${achievement.icon || 'fas fa-medal'}"></i>`;
+        achievementTitle.textContent = achievement.title || 'Logro desbloqueado';
+        achievementDescription.textContent = achievement.description || '';
+        
+        // Configurar la barra de progreso
+        const progress = achievement.maxCount > 1 ? Math.min(100, (1 / achievement.maxCount) * 100) : 100;
+        achievementProgress.style.width = '0%'; // Inicialmente en 0 para animar
+        achievementProgressText.textContent = achievement.maxCount > 1 ? `1/${achievement.maxCount}` : 'Completado';
+        achievementPercent.textContent = `${progress}%`;
+        
+        // Mostrar el modal
+        singleAchievementModal.style.display = 'flex';
+        
+        // Forzar un reflow antes de añadir la clase show
+        void singleAchievementModal.offsetWidth;
+        singleAchievementModal.classList.add('show');
+        
+        // Animar la barra de progreso
+        setTimeout(() => {
+          achievementProgress.style.width = `${progress}%`;
+        }, 100);
+        
+        return true;
+      }
+      
+      // Función para ocultar el modal de logro individual
+      function hideSingleAchievementModal() {
+        singleAchievementModal.classList.remove('show');
+        setTimeout(() => {
+          singleAchievementModal.style.display = 'none';
+        }, 300);
+      }
+      
+      // Inicializar un modal para mostrar todos los logros obtenidos
+      const achievementsModal = document.getElementById('achievements-modal');
+      
+      // Crear un modal para los logros si no existe
+      if (!achievementsModal) {
+        // Crear el modal de logros
+        const achievementsModalHTML = `
+          <div class="modal" id="achievements-modal">
+            <div class="modal-content achievement-content">
+              <h2>¡LOGROS DESBLOQUEADOS!</h2>
+              <div id="unlocked-achievements" class="achievements-container">
+                <!-- Se llenará dinámicamente -->
+              </div>
+              <button class="stats-arrow" id="achievements-stats-btn">
+                Ver estadísticas <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </div>
+        `;
+        
+        // Insertar el HTML
+        document.querySelector('.container').insertAdjacentHTML('beforeend', achievementsModalHTML);
+        
+        // Crear estilos para el modal de logros
+        const achievementsStyleEl = document.createElement('style');
+        achievementsStyleEl.textContent = `
+          .achievement-content {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            width: 90%;
+            color: white;
+            text-align: center;
+          }
+          
+          .achievement-content h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #60a5fa;
+          }
+          
+          .achievements-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 1.5rem;
+          }
+          
+          .achievement-card {
+            background-color: rgba(30, 41, 59, 0.8);
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease;
+          }
+          
+          .achievement-card:hover {
+            transform: translateY(-5px);
+          }
+          
+          .achievement-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(59, 130, 246, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #60a5fa;
+            margin-bottom: 10px;
+          }
+          
+          .achievement-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 0.95rem;
+          }
+          
+          .achievement-description {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+          }
+          
+          .no-achievements {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            grid-column: 1 / -1;
+          }
+          
+          .no-achievements i {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.3);
+            margin-bottom: 1rem;
+          }
+          
+          .no-achievements p {
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+          }
+        `;
+        document.head.appendChild(achievementsStyleEl);
+      }
+      
+      // Función para crear una tarjeta de logro
+      function createAchievementCard(achievement) {
+        const card = document.createElement('div');
+        card.className = 'achievement-card';
+        
+        card.innerHTML = `
+          <div class="achievement-icon">
+            <i class="${achievement.icon || 'fas fa-medal'}"></i>
+          </div>
+          <div class="achievement-title">${achievement.title || 'Logro desbloqueado'}</div>
+          <div class="achievement-description">${achievement.description || ''}</div>
+        `;
+        
+        return card;
+      }
+      
+      // Función para mostrar los logros desbloqueados en el modal
+      function showUnlockedAchievements() {
+        const achievementsModal = document.getElementById('achievements-modal');
+        const container = document.getElementById('unlocked-achievements');
+        
+        if (!achievementsModal || !container) return false;
+        
+        // Limpiar el contenedor
+        container.innerHTML = '';
+        
+        // Si hay logros desbloqueados durante esta sesión
+        if (window.currentSessionAchievements && window.currentSessionAchievements.length > 0) {
+          // Crear tarjetas para cada logro
+          window.currentSessionAchievements.forEach(achievement => {
+            const card = createAchievementCard(achievement);
+            container.appendChild(card);
+          });
+        } else {
+          // Si no hay logros, mostrar mensaje
+          const noAchievements = document.createElement('div');
+          noAchievements.className = 'no-achievements';
+          noAchievements.innerHTML = `
+            <i class="fas fa-trophy"></i>
+            <p>No has desbloqueado nuevos logros en esta partida.<br>¡Sigue jugando para conseguir más!</p>
+          `;
+          container.appendChild(noAchievements);
+        }
+        
+        // Mostrar el modal
+        achievementsModal.style.display = 'flex';
+        void achievementsModal.offsetWidth;
+        achievementsModal.classList.add('show');
+        
+        // Configurar el botón para ir a las estadísticas
+        const statsBtn = document.getElementById('achievements-stats-btn');
+        if (statsBtn) {
+          // Eliminar listeners previos
+          const newStatsBtn = statsBtn.cloneNode(true);
+          if (statsBtn.parentNode) {
+            statsBtn.parentNode.replaceChild(newStatsBtn, statsBtn);
+          }
+          
+          // Añadir nuevo listener
+          newStatsBtn.addEventListener('click', switchToStatsModal);
+        }
+        
+        return true;
+      }
+      
+      // Función para cambiar al modal de estadísticas
+      function switchToStatsModal() {
+        // Ocultar el modal de logros
+        const achievementsModal = document.getElementById('achievements-modal');
+        if (achievementsModal) {
+          achievementsModal.classList.remove('show');
+          setTimeout(() => {
+            achievementsModal.style.display = 'none';
+            
+            // Mostrar el modal de estadísticas
+            const statsModal = document.getElementById('stats-modal');
+            if (statsModal) {
+              statsModal.style.display = 'flex';
+              void statsModal.offsetWidth;
+              statsModal.classList.add('show');
+            }
+          }, 300);
+        }
+      }
+      
+      // Función para cambiar del flujo de modales
+      function switchModalFlow() {
+        // Ocultar el modal de logro individual
+        hideSingleAchievementModal();
+        
+        // Primero mostrar el modal de todos los logros
+        if (window.currentSessionAchievements && window.currentSessionAchievements.length > 0) {
+          showUnlockedAchievements();
+        } else {
+          // Si no hay logros, ir directamente a estadísticas
+          const statsModal = document.getElementById('stats-modal');
+          if (statsModal) {
+            statsModal.style.display = 'flex';
+            void statsModal.offsetWidth;
+            statsModal.classList.add('show');
+          }
+        }
+      }
+      
+      // Función para mostrar el siguiente logro o ir a estadísticas
+      function showNextAchievementOrStats() {
+        currentAchievementIndex++;
+        
+        if (currentAchievementIndex < window.currentSessionAchievements.length) {
+          // Todavía hay más logros para mostrar individualmente
+          showSingleAchievement(window.currentSessionAchievements[currentAchievementIndex]);
+        } else {
+          // No hay más logros individuales, mostrar todos juntos
+          switchModalFlow();
+        }
+      }
+      
+      // Función para procesar el flujo modal
+      function processResultModal(modal) {
+        if (!modal) return;
+        
+        // Limpiar cualquier temporizador anterior
+        Object.values(modalTimers).forEach(timer => clearTimeout(timer));
+        
+        // Verificar logros obtenidos antes de cambiar el modal
+        // Solo si venimos de un modal de resultado (victoria, derrota, timeout)
+        if (modal.id.includes('victory') || modal.id.includes('defeat') || modal.id.includes('timeout')) {
+          try {
+            // Obtener datos de la partida actual
+            const lastGameStats = JSON.parse(localStorage.getItem('lastGameStats') || '{}');
+            
+            // Determinar el límite de tiempo en base a la dificultad
+            let timeLimit = 300; // Por defecto 5 minutos (facil)
+            if (lastGameStats.difficulty === 'normal') {
+              timeLimit = 240; // 4 minutos
+            } else if (lastGameStats.difficulty === 'dificil') {
+              timeLimit = 200; // 3:20 minutos
+            }
+            
+            const gameData = {
+              victory: modal.id.includes('victory'),
+              correct: lastGameStats.correct || 0,
+              wrong: lastGameStats.wrong || 0,
+              skipped: lastGameStats.skipped || 0,
+              difficulty: lastGameStats.difficulty || 'facil',
+              timeUsed: lastGameStats.timeUsed || (timeLimit - (lastGameStats.timeRemaining || 0)),
+              timeRemaining: lastGameStats.timeRemaining || 0
+            };
+            
+            // Verificar y desbloquear logros
+            checkAndUnlockAchievements(gameData);
+          } catch (e) {
+            console.error('Error al verificar logros después del juego:', e);
+          }
+        }
+        
+        // Ocultar el modal actual
+        modal.classList.remove('show');
+        setTimeout(() => {
+          modal.style.display = 'none';
+          
+          // Si hay logros para mostrar, mostrar el primero individualmente
+          if (window.currentSessionAchievements && window.currentSessionAchievements.length > 0) {
+            currentAchievementIndex = 0;
+            showSingleAchievement(window.currentSessionAchievements[currentAchievementIndex]);
+            
+            // Registro para depuración
+            console.log(`Mostrando logros conseguidos (${window.currentSessionAchievements.length}):`, 
+                       window.currentSessionAchievements);
+          } else {
+            // Si no hay logros, ir directamente a estadísticas
+            const statsModal = document.getElementById('stats-modal');
+            if (statsModal) {
+              statsModal.style.display = 'flex';
+              void statsModal.offsetWidth;
+              statsModal.classList.add('show');
+            }
+          }
+        }, 300);
+      }
+      
+      // Configurar temporizadores para avanzar automáticamente
+      function setupAutoAdvance(modal, delaySeconds = 6) {
+        if (!modal) return;
+        
+        // Limpiar el temporizador anterior si existe
+        if (modalTimers[modal.id]) {
+          clearTimeout(modalTimers[modal.id]);
+        }
+        
+        // Crear nuevo temporizador
+        modalTimers[modal.id] = setTimeout(() => {
+          // Solo avanzar si el modal está visible
+          if (modal.classList.contains('show')) {
+            console.log(`Avanzando automáticamente desde ${modal.id} después de ${delaySeconds} segundos`);
+            processResultModal(modal);
+          }
+        }, delaySeconds * 1000);
+      }
+      
+      // Evento para el botón de siguiente logro
+      if (nextAchievementBtn) {
+        nextAchievementBtn.addEventListener('click', showNextAchievementOrStats);
+      }
+      
+      // Configuración para modales de resultado
+      resultModals.forEach(modal => {
+        if (modal) {
+          // Configurar auto-avance cuando el modal se muestra
+          const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              if (mutation.attributeName === 'class' && modal.classList.contains('show')) {
+                setupAutoAdvance(modal, 6);
+              }
+            });
+          });
+          
+          observer.observe(modal, { attributes: true });
+        }
+      });
+      
+      // Modificar el flujo para que después de cualquier modal final se actualice el perfil
+      function setupAutoProfileUpdate() {
+        // Capturar el evento cuando se cierre el modal de estadísticas
+        if (statsModal) {
+          const closeStatsBtn = document.getElementById('close-stats-btn');
+          if (closeStatsBtn) {
+            // Eliminar listeners previos
+            const newCloseBtn = closeStatsBtn.cloneNode(true);
+            if (closeStatsBtn.parentNode) {
+              closeStatsBtn.parentNode.replaceChild(newCloseBtn, closeStatsBtn);
+            }
+            
+            // Añadir nuevo listener
+            newCloseBtn.addEventListener('click', function() {
+              statsModal.classList.remove('show');
+              setTimeout(() => {
+                statsModal.style.display = 'none';
+                // Actualizar perfil automáticamente al cerrar
+                updateProfileAndRedirect();
+              }, 300);
+            });
+          }
+        }
+        
+        // Asegurar que los botones de estadísticas en los modales de resultado
+        // redirijan finalmente al perfil
+        const setupResultButton = function(btn) {
+          if (btn) {
+            // Eliminar listeners previos para evitar duplicados
+            const newBtn = btn.cloneNode(true);
+            if (btn.parentNode) {
+              btn.parentNode.replaceChild(newBtn, btn);
+            }
+            
+            // Añadir nuevo listener
+            newBtn.addEventListener('click', function(e) {
+              e.preventDefault();
+              const modal = this.closest('.modal');
+              if (modal) {
+                // Limpiar temporizador
+                if (modalTimers[modal.id]) {
+                  clearTimeout(modalTimers[modal.id]);
+                }
+                
+                processResultModal(modal);
+                
+                // Marcar para actualizar el perfil después
+                window.autoUpdateProfileAfterStats = true;
+              }
+            });
+          }
+        };
+        
+        // Configurar los botones de los tres modales de resultado
+        setupResultButton(victoryStatsBtn);
+        setupResultButton(timeoutStatsBtn);
+        setupResultButton(defeatStatsBtn);
+        
+        // También configurar el botón de logros si existe
+        if (achievementsStatsBtn) {
+          achievementsStatsBtn.addEventListener('click', function() {
+            window.autoUpdateProfileAfterStats = true;
+          });
+        }
+        
+        // Observer para detectar cuando se cierra el modal de estadísticas
+        const statsObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'style' && 
+                statsModal.style.display === 'none' && 
+                window.autoUpdateProfileAfterStats) {
+              // Resetear la bandera y actualizar el perfil
+              window.autoUpdateProfileAfterStats = false;
+              updateProfileAndRedirect();
+            }
+          });
+        });
+        
+        if (statsModal) {
+          statsObserver.observe(statsModal, { attributes: true });
+        }
+      }
+      
+      // Inicializar la configuración
+      setupAutoProfileUpdate();
+    });
+  </script>
+
+  <!-- Actualización automática de perfil -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Referencias a los botones relevantes
+      const profileBtn = document.getElementById('profile-btn');
+      const statsModal = document.getElementById('stats-modal');
+      const victoryStatsBtn = document.getElementById('victory-stats-btn');
+      const timeoutStatsBtn = document.getElementById('timeout-stats-btn');
+      const defeatStatsBtn = document.getElementById('defeat-stats-btn');
+      const achievementsStatsBtn = document.getElementById('achievements-stats-btn');
+      
+      // Función para actualizar el perfil y redireccionar
+      async function updateProfileAndRedirect() {
+        try {
+          // Mostrar indicador de carga
+          const notification = document.createElement('div');
+          notification.className = 'toast show';
+          notification.innerHTML = '<div class="toast-icon"><i class="fas fa-sync-alt fa-spin"></i></div><div class="toast-message">Actualizando perfil...</div>';
+          document.body.appendChild(notification);
+          
+          // Obtenemos el IP del usuario para identificar su perfil
+          const userIP = await detectUserIP();
+          
+          // Verificar logros antes de la redirección (tras completar una partida)
+          if (localStorage.getItem('gameJustCompleted') === 'true') {
+            // Recuperar datos de la última partida
+            try {
+              const lastGameStats = JSON.parse(localStorage.getItem('lastGameStats'));
+              if (lastGameStats) {
+                // Determinar el límite de tiempo en base a la dificultad
+                let timeLimit = 300; // Por defecto 5 minutos (facil)
+                if (lastGameStats.difficulty === 'normal') {
+                  timeLimit = 240; // 4 minutos
+                } else if (lastGameStats.difficulty === 'dificil') {
+                  timeLimit = 200; // 3:20 minutos
+                }
+                
+                const gameData = {
+                  victory: lastGameStats.victory,
+                  correct: lastGameStats.correct,
+                  wrong: lastGameStats.wrong,
+                  skipped: lastGameStats.skipped,
+                  difficulty: lastGameStats.difficulty,
+                  timeUsed: lastGameStats.timeUsed || (timeLimit - (lastGameStats.timeRemaining || 0)),
+                  timeRemaining: lastGameStats.timeRemaining || 0
+                };
+                
+                // Verificar y desbloquear logros basados en esta partida
+                checkAndUnlockAchievements(gameData);
+              }
+            } catch (e) {
+              console.error('Error procesando datos de última partida:', e);
+            }
+            
+            // Limpiar bandera para evitar procesamiento repetido
+            localStorage.setItem('gameJustCompleted', 'false');
+          }
+          
+          // Forzar recarga del perfil para asegurar datos actualizados
+          await loadUserProfile(userIP, true);
+          
+          // Redireccionar a la página de perfil después de una breve pausa
+          setTimeout(() => {
+            window.location.href = 'profile.html';
+          }, 1500);
+        } catch (error) {
+          console.error('Error al actualizar el perfil:', error);
+          // En caso de error, redireccionar de todas formas
+          window.location.href = 'profile.html';
+        }
+      }
+      
+      // Evento para el botón de perfil en el modal de estadísticas
+      if (profileBtn) {
+        // Reemplazar el comportamiento predeterminado por la actualización automática
+        profileBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          updateProfileAndRedirect();
+        });
+      }
+      
+      // Modificar el flujo para que después de cualquier modal final se actualice el perfil
+      function setupAutoProfileUpdate() {
+        // Capturar el evento cuando se cierre el modal de estadísticas
+        if (statsModal) {
+          const closeStatsBtn = document.getElementById('close-stats-btn');
+          if (closeStatsBtn) {
+            // Eliminar listeners previos
+            const newCloseBtn = closeStatsBtn.cloneNode(true);
+            if (closeStatsBtn.parentNode) {
+              closeStatsBtn.parentNode.replaceChild(newCloseBtn, closeStatsBtn);
+            }
+            
+            // Añadir nuevo listener
+            newCloseBtn.addEventListener('click', function() {
+              statsModal.classList.remove('show');
+              setTimeout(() => {
+                statsModal.style.display = 'none';
+                // Actualizar perfil automáticamente al cerrar
+                updateProfileAndRedirect();
+              }, 300);
+            });
+          }
+        }
+        
+        // Asegurar que los botones de estadísticas en los modales de resultado
+        // redirijan finalmente al perfil
+        const setupResultButton = function(btn) {
+          if (btn) {
+            // Eliminar listeners previos para evitar duplicados
+            const newBtn = btn.cloneNode(true);
+            if (btn.parentNode) {
+              btn.parentNode.replaceChild(newBtn, btn);
+            }
+            
+            // Añadir nuevo listener
+            newBtn.addEventListener('click', function(e) {
+              e.preventDefault();
+              const modal = this.closest('.modal');
+              if (modal) {
+                // Limpiar temporizador
+                if (modalTimers[modal.id]) {
+                  clearTimeout(modalTimers[modal.id]);
+                }
+                
+                processResultModal(modal);
+                
+                // Marcar para actualizar el perfil después
+                window.autoUpdateProfileAfterStats = true;
+              }
+            });
+          }
+        };
+        
+        // Configurar los botones de los tres modales de resultado
+        setupResultButton(victoryStatsBtn);
+        setupResultButton(timeoutStatsBtn);
+        setupResultButton(defeatStatsBtn);
+        
+        // También configurar el botón de logros si existe
+        if (achievementsStatsBtn) {
+          achievementsStatsBtn.addEventListener('click', function() {
+            window.autoUpdateProfileAfterStats = true;
+          });
+        }
+        
+        // Observer para detectar cuando se cierra el modal de estadísticas
+        const statsObserver = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            if (mutation.attributeName === 'style' && 
+                statsModal.style.display === 'none' && 
+                window.autoUpdateProfileAfterStats) {
+              // Resetear la bandera y actualizar el perfil
+              window.autoUpdateProfileAfterStats = false;
+              updateProfileAndRedirect();
+            }
+          });
+        });
+        
+        if (statsModal) {
+          statsObserver.observe(statsModal, { attributes: true });
+        }
+      }
+      
+      // Inicializar la configuración
+      setupAutoProfileUpdate();
+    });
+  </script>
+
+  <!-- Mobile-specific optimizations -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Detectar si es móvil
+      function isMobile() {
+        return window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      }
+      
+      // Posicionar letras en círculo perfecto
+      function posicionarLetrasEnCirculo() {
+        if (!isMobile()) return; // Solo aplicar en móvil
+        
+        const letras = document.querySelectorAll('.rosco-letter');
+        if (!letras.length) return;
+        
+        // Dimensiones de la pantalla
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const isPortrait = height > width;
+        
+        // Contenedor del rosco
+        const contenedor = document.getElementById('rosco-container');
+        if (!contenedor) return;
+        
+        const contenedorRect = contenedor.getBoundingClientRect();
+        
+        // Calcular centro del círculo
+        const centerX = contenedorRect.width / 2;
+        const centerY = contenedorRect.height / 2;
+        
+        // Obtener el tamaño de la tarjeta de pregunta
+        const questionCard = document.querySelector('.question-card');
+        const questionCardWidth = questionCard ? questionCard.offsetWidth : 150;
+        const questionCardHeight = questionCard ? questionCard.offsetHeight : 150;
+        
+        // Radio reducido para un círculo más pequeño
+        let radioPercent = 0.35; // Reducido del 0.38 original
+        
+        // Radio calculado
+        let radio = Math.min(contenedorRect.width, contenedorRect.height) * radioPercent;
+        
+        // Asegurar que el radio sea suficiente para que no se superpongan las letras con la tarjeta
+        const diagonalQuestionCard = Math.sqrt(Math.pow(questionCardWidth/2, 2) + Math.pow(questionCardHeight/2, 2));
+        const minRadio = diagonalQuestionCard + 8; // Reducido de 10px
+        radio = Math.max(radio, minRadio);
+        
+        // Posicionar cada letra
+        letras.forEach((letra, indice) => {
+          // Calcular ángulo (empezando desde arriba, en sentido horario)
+          const totalLetras = letras.length;
+          const angulo = (indice / totalLetras) * 2 * Math.PI - (Math.PI / 2);
+          
+          // Coordenadas X e Y basadas en el ángulo y radio
+          const x = centerX + radio * Math.cos(angulo);
+          const y = centerY + radio * Math.sin(angulo);
+          
+          // Posicionar la letra (centrada en sus coordenadas)
+          letra.style.left = `${x - letra.offsetWidth/2}px`;
+          letra.style.top = `${y - letra.offsetHeight/2}px`;
+          letra.style.transform = 'none'; // Resetear transformaciones
+          
+          // Destacar letra actual
+          if (letra.classList.contains('current')) {
+            letra.style.transform = 'scale(1.2)';
+            letra.style.zIndex = '5';
+          }
+        });
+        
+        // Permitir scroll en la página
+        document.body.style.height = 'auto';
+        document.body.style.overflow = 'auto';
+        
+        // Configurar el rosco como un elemento normal con margen superior adecuado
+        contenedor.style.position = 'relative';
+        contenedor.style.width = '85%';
+        contenedor.style.maxWidth = '85vw';
+        contenedor.style.height = 'auto';
+        contenedor.style.aspectRatio = '1/1'; // Forzar proporción 1:1 para círculo perfecto
+        contenedor.style.margin = '10px auto 20px';
+        
+        // Mover el panel de estado debajo del rosco
+        const statusPanel = document.querySelector('.rosco-status');
+        if (statusPanel) {
+          statusPanel.style.position = 'relative';
+          statusPanel.style.flexDirection = 'row';
+          statusPanel.style.right = 'auto';
+          statusPanel.style.left = 'auto';
+          statusPanel.style.top = 'auto';
+          statusPanel.style.bottom = 'auto';
+          statusPanel.style.transform = 'none';
+          statusPanel.style.width = '90%';
+          statusPanel.style.margin = '5px auto 10px';
+          statusPanel.style.padding = '5px';
+          statusPanel.style.borderRadius = '10px';
+          statusPanel.style.zIndex = '5';
+          statusPanel.style.display = 'flex';
+          statusPanel.style.justifyContent = 'space-around';
+          
+          // Ajustar los items del panel de estado
+          const statusItems = statusPanel.querySelectorAll('.status-item');
+          statusItems.forEach(item => {
+            item.style.flex = '1';
+            item.style.display = 'flex';
+            item.style.flexDirection = 'column';
+            item.style.alignItems = 'center';
+            item.style.padding = '2px';
+            
+            // Ajustar iconos y textos
+            const icon = item.querySelector('.status-icon');
+            if (icon) {
+              icon.style.fontSize = '0.8rem';
+              icon.style.marginBottom = '2px';
+            }
+            
+            const label = item.querySelector('.status-label');
+            if (label) {
+              label.style.fontSize = '0.55rem';
+              label.style.marginBottom = '1px';
+            }
+            
+            const value = item.querySelector('.status-value');
+            if (value) {
+              value.style.fontSize = '0.8rem';
+              value.style.fontWeight = 'bold';
+            }
+          });
+        }
+        
+        // Asegurar que el header está fijo y con suficiente z-index
+        const header = document.querySelector('.game-header');
+        if (header) {
+          header.style.position = 'fixed';
+          header.style.top = '0';
+          header.style.left = '0';
+          header.style.width = '100%';
+          header.style.height = '50px';
+          header.style.zIndex = '100';
+          header.style.padding = '5px 10px';
+          header.style.backgroundColor = 'rgba(0, 22, 44, 0.95)';
+          header.style.display = 'flex';
+          header.style.alignItems = 'center';
+          header.style.justifyContent = 'center';
+          header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.3)';
+        }
+        
+        // Dar suficiente espacio entre elementos
+        const roscoSection = document.querySelector('.rosco-section');
+        if (roscoSection) {
+          roscoSection.style.marginTop = '60px';
+          roscoSection.style.marginBottom = '60px';
+          roscoSection.style.width = '100%';
+          roscoSection.style.display = 'flex';
+          roscoSection.style.justifyContent = 'center';
+          roscoSection.style.flexDirection = 'column';
+          roscoSection.style.alignItems = 'center';
+        }
+        
+        // Forzar la aplicación de los estilos CSS únicos
+        // Eliminar elemento de estilo anterior si existe
+        const estiloAnterior = document.getElementById('estilos-rosco-mobile');
+        if (estiloAnterior) estiloAnterior.remove();
+        
+        const forzarEstilos = document.createElement('style');
+        forzarEstilos.id = 'estilos-rosco-mobile';
+        forzarEstilos.textContent = `
+          /* Header fijo en la parte superior */
+          .game-header {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 50px !important;
+            z-index: 100 !important;
+            padding: 5px 10px !important;
+            background-color: rgba(0, 22, 44, 0.95) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+          }
+          
+          /* Contenedor principal con scroll */
+          body {
+            height: auto !important;
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+            padding: 0 !important;
+            margin: 0 !important;
+          }
+          
+          .container, .game-container {
+            height: auto !important;
+            min-height: 100vh !important;
+            overflow-y: visible !important;
+            padding: 0 !important;
+          }
+          
+          .game-container {
+            padding-top: 60px !important;
+            padding-bottom: 60px !important;
+          }
+          
+          /* Sección del rosco con margen */
+          .rosco-section {
+            margin-top: 60px !important;
+            margin-bottom: 60px !important;
+            width: 100% !important;
+            display: flex !important;
+            justify-content: center !important;
+            flex-direction: column !important;
+            align-items: center !important;
+          }
+          
+          /* Fondo circular azul */
+          #rosco-container {
+            background: radial-gradient(circle, rgba(25, 118, 210, 0.8) 30%, rgba(13, 71, 161, 0.9) 70%) !important;
+            border-radius: 50% !important;
+            box-shadow: 0 0 25px rgba(0, 120, 255, 0.5) !important;
+            overflow: visible !important;
+            position: relative !important;
+            width: 85% !important;
+            max-width: 85vw !important;
+            height: auto !important;
+            aspect-ratio: 1/1 !important;
+            margin: 10px auto 20px !important;
+          }
+          
+          /* Eliminar otros fondos */
+          #rosco-container::before, 
+          #rosco-container::after {
+            display: none !important;
+          }
+          
+          /* Panel de estado DEBAJO del rosco */
+          .rosco-status {
+            position: relative !important;
+            flex-direction: row !important;
+            right: auto !important;
+            left: auto !important;
+            top: auto !important;
+            bottom: auto !important;
+            transform: none !important;
+            width: 90% !important;
+            margin: 5px auto 10px !important;
+            padding: 5px !important;
+            border-radius: 10px !important;
+            z-index: 5 !important;
+            display: flex !important;
+            justify-content: space-around !important;
+            background: rgba(13, 71, 161, 0.9) !important;
+          }
+          
+          /* Items del panel de estado */
+          .status-item {
+            flex: 1 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            padding: 2px !important;
+          }
+          
+          .status-icon {
+            font-size: 0.8rem !important;
+            margin-bottom: 2px !important;
+          }
+          
+          .status-label {
+            font-size: 0.55rem !important;
+            margin-bottom: 1px !important;
+          }
+          
+          .status-value {
+            font-size: 0.8rem !important;
+            font-weight: bold !important;
+          }
+          
+          /* Footer estático en mobile */
+          .policy-footer {
+            position: fixed !important;
+            bottom: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            z-index: 50 !important;
+            background: rgba(0, 0, 0, 0.6) !important;
+            max-height: 35px !important;
+            padding: 4px 8px !important;
+          }
+        `;
+        document.head.appendChild(forzarEstilos);
+      }
+      
+      // Gestionar visibilidad del teclado virtual
+      function gestionarTeclado() {
+        if (!isMobile()) return;
+        
+        const inputRespuesta = document.getElementById('answer-input');
+        if (!inputRespuesta) return;
+        
+        // Al mostrar el teclado
+        inputRespuesta.addEventListener('focus', function() {
+          const roscoContainer = document.getElementById('rosco-container');
+          const footer = document.querySelector('.policy-footer');
+          
+          if (roscoContainer) {
+            // Reducir tamaño del rosco cuando aparece el teclado
+            roscoContainer.style.transform = 'scale(0.8)';
+            roscoContainer.style.transformOrigin = 'center center';
+          }
+          
+          // Ocultar el footer cuando aparece el teclado
+          if (footer) {
+            footer.style.display = 'none';
+          }
+        });
+        
+        // Al ocultar el teclado
+        inputRespuesta.addEventListener('blur', function() {
+          const roscoContainer = document.getElementById('rosco-container');
+          const footer = document.querySelector('.policy-footer');
+          
+          if (roscoContainer) {
+            // Restaurar tamaño original
+            roscoContainer.style.transform = '';
+            roscoContainer.style.transformOrigin = '';
+            
+            // Reposicionar letras
+            setTimeout(posicionarLetrasEnCirculo, 300);
+          }
+          
+          // Mostrar el footer cuando desaparece el teclado
+          if (footer) {
+            footer.style.display = 'flex';
+          }
+        });
+      }
+      
+      // Prevenir zoom en doble tap (iOS Safari)
+      document.addEventListener('touchend', function(e) {
+        const now = Date.now();
+        const lastTouch = window.lastTouch || now + 1;
+        const delta = now - lastTouch;
+        
+        if (delta < 300 && delta > 0) {
+          e.preventDefault();
+        }
+        
+        window.lastTouch = now;
+      }, false);
+      
+      // Crear elemento de observación para redimensionar
+      const resizeObserver = new ResizeObserver(() => {
+        posicionarLetrasEnCirculo();
+      });
+      
+      // Observar cambios en el tamaño del contenedor
+      const roscoContainer = document.getElementById('rosco-container');
+      if (roscoContainer) {
+        resizeObserver.observe(roscoContainer);
+      }
+      
+      // Ejecutar posicionamiento inicial y posteriores para asegurar ajuste correcto
+      setTimeout(posicionarLetrasEnCirculo, 100);
+      setTimeout(posicionarLetrasEnCirculo, 500);
+      setTimeout(posicionarLetrasEnCirculo, 1000);
+      gestionarTeclado();
+      
+      // Actualizar en cambios de orientación o resize
+      window.addEventListener('resize', posicionarLetrasEnCirculo);
+      window.addEventListener('orientationchange', function() {
+        // Pequeño delay para asegurar que los cambios de orientación sean registrados
+        setTimeout(posicionarLetrasEnCirculo, 300);
+      });
+    });
+  </script>
 
   <!-- Anuncio entre partidas -->
   <div class="adsense-container game-end-ad">
@@ -469,81 +1602,208 @@
          data-ad-format="auto"
          data-full-width-responsive="true"></ins>
   </div>
-  
-  <!-- Scripts -->
-  <script src="js/utils.js"></script>
-  <script src="js/game-data.js"></script>
-  <script src="js/achievements-data.js"></script>
-  <script src="js/game.js"></script>
-  <script src="js/global-footer.js"></script>
 
-  <!-- Sonidos adicionales -->
-  <audio id="achievement-sound" preload="auto">
-    <source src="sounds/achievement.mp3" type="audio/mpeg">
-  </audio>
+  <!-- Función para actualizar el perfil después de completar una partida -->
   <script>
-    // Cargar sonidos
-    const achievementSound = document.getElementById('achievement-sound');
-    
-    // Dispara eventos personalizados para el sistema de logros
-    document.addEventListener('DOMContentLoaded', function() {
-      const answerForm = document.getElementById('answer-form');
-      const answerInput = document.getElementById('answer-input');
+    function updateUserProfileAfterGame(result, stats) {
+      // Obtener IP del usuario
+      getUserIP().then(userIP => {
+        if (!userIP) {
+          console.error('No se pudo obtener la IP del usuario');
+          return;
+        }
+
+        // Cargar perfil actual
+        let profile = JSON.parse(localStorage.getItem(`userProfile_${userIP}`)) || {
+          username: 'Jugador',
+          gamesPlayed: 0,
+          wins: 0,
+          bestScore: 0,
+          avgTime: 0,
+          totalTime: 0
+        };
+
+        // Actualizar estadísticas
+        profile.gamesPlayed++;
+        if (result === 'win') {
+          profile.wins++;
+        }
+
+        // Actualizar tiempo
+        const gameTime = stats.timeElapsed || 0;
+        profile.totalTime += gameTime;
+        profile.avgTime = profile.totalTime / profile.gamesPlayed;
+
+        // Calcular puntuación
+        const score = calculateScore(stats, result);
+        
+        // Actualizar mejor puntuación si corresponde
+        if (score > profile.bestScore) {
+          profile.bestScore = score;
+        }
+
+        // Guardar perfil actualizado
+        localStorage.setItem(`userProfile_${userIP}`, JSON.stringify(profile));
+
+        // Cargar logros actuales
+        let achievements = loadAchievementsFromLocalStorage(userIP);
+        
+        // Verificar nuevos logros en base a las estadísticas acumuladas
+        const newAchievements = checkProfileAchievements(profile, achievements);
+        
+        // Si hay nuevos logros, guardarlos
+        if (newAchievements && newAchievements.length > 0) {
+          saveAchievementsForIP(achievements, userIP);
+        }
+
+        console.log('Perfil actualizado después de la partida:', profile);
+      }).catch(error => {
+        console.error('Error al actualizar el perfil:', error);
+      });
+    }
+
+    // Función para calcular la puntuación en base a las estadísticas
+    function calculateScore(stats, result) {
+      let score = 0;
       
-      if (answerForm) {
-        // Anular el evento submit original temporalmente para poder disparar nuestros eventos personalizados
-        answerForm.addEventListener('submit', function(e) {
-          if (!window.gameStarted) return;
-          
-          // Obtener valores actuales
-          const userAnswer = answerInput.value.trim().toLowerCase();
-          const currentIndex = window.currentQuestionIndex || 0;
-          const questions = window.questions || [];
-          
-          if (questions.length > 0 && currentIndex < questions.length) {
-            const currentQuestion = questions[currentIndex];
-            const correctAnswer = currentQuestion.answer.toLowerCase().trim();
-            
-            // Verificar similitud
-            const isCorrect = window.stringSimilarity ? 
-              (window.stringSimilarity(userAnswer, correctAnswer) > 0.75 || 
-               window.normalizeText(userAnswer) === window.normalizeText(correctAnswer)) : 
-              (userAnswer === correctAnswer);
-            
-            // Disparar evento según resultado
-            if (isCorrect) {
-              document.dispatchEvent(new CustomEvent('correctAnswer', { 
-                detail: { answer: userAnswer, question: currentQuestion } 
-              }));
-            } else if (userAnswer) {
-              document.dispatchEvent(new CustomEvent('incorrectAnswer', { 
-                detail: { answer: userAnswer, question: currentQuestion } 
-              }));
+      // Puntos base por victoria/derrota
+      if (result === 'win') {
+        score += 100;
+      } else {
+        score += 10;
+      }
+      
+      // Puntos por tiempo (menos tiempo es mejor)
+      if (stats.timeElapsed) {
+        // Máximo 50 puntos por tiempo rápido (menos de 60 segundos)
+        const timePoints = Math.max(0, 50 - Math.floor(stats.timeElapsed / 1.2));
+        score += timePoints;
+      }
+      
+      // Puntos por intentos (menos intentos es mejor)
+      if (stats.attempts) {
+        // Máximo 50 puntos por pocos intentos (6 o menos)
+        const attemptPoints = Math.max(0, 50 - (stats.attempts - 6) * 8);
+        score += attemptPoints;
+      }
+      
+      return score;
+    }
+
+    // Función para verificar logros basados en el perfil
+    function checkProfileAchievements(profile, achievements) {
+      let newAchievements = [];
+      
+      // Logros por cantidad de partidas jugadas
+      if (profile.gamesPlayed >= 5 && !isAchievementUnlocked(achievements, 'games_5')) {
+        newAchievements.push(unlockAchievement(achievements, 'games_5'));
+      }
+      
+      if (profile.gamesPlayed >= 20 && !isAchievementUnlocked(achievements, 'games_20')) {
+        newAchievements.push(unlockAchievement(achievements, 'games_20'));
+      }
+      
+      if (profile.gamesPlayed >= 50 && !isAchievementUnlocked(achievements, 'games_50')) {
+        newAchievements.push(unlockAchievement(achievements, 'games_50'));
+      }
+      
+      // Logros por victorias
+      if (profile.wins >= 3 && !isAchievementUnlocked(achievements, 'wins_3')) {
+        newAchievements.push(unlockAchievement(achievements, 'wins_3'));
+      }
+      
+      if (profile.wins >= 10 && !isAchievementUnlocked(achievements, 'wins_10')) {
+        newAchievements.push(unlockAchievement(achievements, 'wins_10'));
+      }
+      
+      if (profile.wins >= 25 && !isAchievementUnlocked(achievements, 'wins_25')) {
+        newAchievements.push(unlockAchievement(achievements, 'wins_25'));
+      }
+      
+      // Logros por puntuación
+      if (profile.bestScore >= 150 && !isAchievementUnlocked(achievements, 'score_150')) {
+        newAchievements.push(unlockAchievement(achievements, 'score_150'));
+      }
+      
+      if (profile.bestScore >= 175 && !isAchievementUnlocked(achievements, 'score_175')) {
+        newAchievements.push(unlockAchievement(achievements, 'score_175'));
+      }
+      
+      if (profile.bestScore >= 190 && !isAchievementUnlocked(achievements, 'score_190')) {
+        newAchievements.push(unlockAchievement(achievements, 'score_190'));
+      }
+      
+      return newAchievements;
+    }
+
+    // Función para comprobar si un logro está desbloqueado
+    function isAchievementUnlocked(achievements, id) {
+      return achievements.some(a => a.id === id && a.unlocked);
+    }
+
+    // Al cerrar el modal de resultado, actualizar perfil
+    document.addEventListener('DOMContentLoaded', function() {
+      // Observador para detectar cuando se cierra el modal de resultados
+      const modalObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.attributeName === 'class') {
+            const resultModal = document.getElementById('resultModal');
+            if (resultModal && !resultModal.classList.contains('show')) {
+              // El modal de resultados se ha cerrado
+              // Obtener el resultado y estadísticas del juego
+              const gameResult = localStorage.getItem('lastGameResult');
+              const gameStats = JSON.parse(localStorage.getItem('lastGameStats') || '{}');
+              
+              if (gameResult) {
+                // Actualizar el perfil con el resultado
+                updateUserProfileAfterGame(gameResult, gameStats);
+              }
             }
           }
         });
-        
-        // Disparar evento al iniciar juego
-        document.addEventListener('click', function(e) {
-          if (e.target.id === 'start-game-btn' || e.target.closest('#start-game-btn')) {
-            document.dispatchEvent(new CustomEvent('gameStarted'));
-          }
-        });
+      });
+      
+      // Iniciar la observación del modal de resultados
+      const resultModal = document.getElementById('resultModal');
+      if (resultModal) {
+        modalObserver.observe(resultModal, { attributes: true });
       }
     });
-  </script>
 
-  <!-- Mobile-specific optimizations -->
+    // Función para guardar el resultado y estadísticas de la partida
+    function saveGameResult(result, stats) {
+      localStorage.setItem('lastGameResult', result);
+      localStorage.setItem('lastGameStats', JSON.stringify(stats));
+    }
+  </script>
+  
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
+  
+  <!-- Firebase initialization -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Configurar el botón de volver al inicio
-      const homeButton = document.getElementById('return-home-btn');
-      if (homeButton) {
-        homeButton.addEventListener('click', function() {
-          window.location.href = 'game-rosco.html';
-        });
-      }
-    });
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyA_3zRD0fwsRCSFqyZ3ach4mhMl9gYr4",
+      authDomain: "cracktotal-cd2e7.firebaseapp.com",
+      projectId: "cracktotal-cd2e7",
+      storageBucket: "cracktotal-cd2e7.firebasestorage.app",
+      messagingSenderId: "210391454350",
+      appId: "1:210391454350:web:ec36c626aca23e80562fdf",
+      measurementId: "G-5X93T1RTH7"
+    };
+    
+    // Initialize Firebase
+    try {
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      const analytics = firebase.analytics();
+      console.log('Firebase inicializado correctamente');
+    } catch (error) {
+      console.error('Error al inicializar Firebase:', error);
+    }
   </script>
 </body>
 </html>
