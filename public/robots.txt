@@ -3,15 +3,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /private/
 
-# Specifically allow Googlebot and Adsbot
-User-agent: Googlebot
-Allow: /
-
-User-agent: Adsbot-Google
-Allow: /
-
-# Allow Mediapartners (AdSense)
-User-agent: Mediapartners-Google*
-Allow: /
-
 Sitemap: https://www.pasalachee.com/sitemap.xml 

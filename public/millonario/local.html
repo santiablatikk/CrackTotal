@@ -16,17 +16,14 @@
     <link rel="icon" href="../img/favicon.ico" type="image/x-icon">
     
     <!-- Estilos -->
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="../css/footer-styles.css">
+    <!-- <link rel="stylesheet" href="css/pasala-style.css" /> -->
+    <!-- <link rel="stylesheet" href="css/styles.css" /> -->
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Fuentes -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Scripts útiles -->
-    <script src="../utils/notifications.js"></script>
   </head>
   <body>
     <!-- Partículas de fondo -->
@@ -66,6 +63,10 @@
         <div class="start-buttons">
           <button id="start-game-btn" class="btn action-btn">
             <i class="fas fa-play"></i> ¡COMENZAR JUEGO!
+          </button>
+          
+          <button id="show-ranking-btn" class="btn trophy-btn">
+            <i class="fas fa-trophy"></i> RANKING
           </button>
         </div>
       </div>
@@ -185,67 +186,64 @@
       <!-- Footer -->
       <footer class="policy-footer">
         <div class="footer-links-mini">
-          <a href="index.html" class="btn home-btn">
-            <i class="fas fa-home"></i>
-            <span class="btn-text">Inicio</span>
-          </a>
-          <button class="btn sound-btn">
-            <i class="fas fa-volume-up"></i>
-            <span class="btn-text">Sonido</span>
-          </button>
-          <a href="../portal.html"><i class="fas fa-home"></i> Portal</a>
-          <a href="index.html"><i class="fas fa-arrow-left"></i> Volver</a>
           <a href="../terms.html"><i class="fas fa-file-contract"></i> Términos</a>
           <a href="../privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
           <a href="../blog.html"><i class="fas fa-blog"></i> Blog</a>
           <a href="../cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
           <a href="../contact.html"><i class="fas fa-envelope"></i> Contacto</a>
           <a href="../about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
-          <a href="../logros.html"><i class="fas fa-medal"></i> Logros</a>
         </div>
-        <div class="share-button-container">
-          <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
-        </div>
-        <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero</div>
+        <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
         <div class="footer-social-icons">
-          <a href="https://www.facebook.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://twitter.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-twitter"></i></a>
-          <a href="https://www.instagram.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-instagram"></i></a>
-          <a href="https://www.youtube.com/c/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-youtube"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
         </div>
       </footer>
     </div>
     
-    <!-- Modal de resultados -->
+    <!-- Modales -->
     <div id="result-modal" class="modal">
-      <div class="modal-content result-modal-content">
-        <div class="modal-content-inner">
-          <h2 id="result-title">¡Felicidades!</h2>
-          <p id="result-message">Has ganado $1,000,000</p>
-          <div id="result-stats" class="result-stats"></div>
-            
-          <div class="ranking-preview">
-            <div class="ranking-title">
-              <i class="fas fa-trophy"></i>
-              <span>Ranking Mundial</span>
-            </div>
-            <div class="ranking-container">
-              <div class="ranking-position">
-                <span class="position-number">32</span>
-                <div class="position-info">
-                  <span class="position-text">Tu posición</span>
-                  <div class="ranking-progress">
-                    <div class="progress-bar" style="width: 68%"></div>
-                  </div>
+      <div class="modal-content">
+        <h2 id="result-title">¡Felicidades!</h2>
+        <p id="result-message">Has ganado $1,000,000</p>
+        <div id="result-stats" class="result-stats"></div>
+        
+        <div class="ranking-preview">
+          <div class="ranking-title">
+            <i class="fas fa-trophy"></i>
+            <span>Ranking Mundial</span>
+          </div>
+          <div class="ranking-container">
+            <div class="ranking-position">
+              <span class="position-number">32</span>
+              <div class="position-info">
+                <span class="position-text">Tu posición</span>
+                <div class="ranking-progress">
+                  <div class="progress-bar" style="width: 68%"></div>
                 </div>
-                <span class="position-percentile">Top 12%</span>
               </div>
+              <span class="position-percentile">Top 12%</span>
             </div>
           </div>
-            
-          <div class="modal-buttons">
-            <button id="play-again-btn" class="btn action-btn">Jugar de nuevo</button>
-          </div>
+        </div>
+        
+        <div class="modal-buttons">
+          <button id="play-again-btn" class="btn">Jugar de nuevo</button>
+          <a href="index.html" class="btn">Volver al inicio</a>
+        </div>
+        
+        <div class="ranking-buttons">
+          <button id="global-ranking-btn" class="btn ranking-btn">
+            <i class="fas fa-globe"></i> Ranking Mundial
+          </button>
+          <button id="personal-ranking-btn" class="btn ranking-btn">
+            <i class="fas fa-user-chart"></i> Mis Partidas
+          </button>
+          <button id="friends-ranking-btn" class="btn ranking-btn">
+            <i class="fas fa-users"></i> Comparar con Amigos
+          </button>
         </div>
       </div>
     </div>
@@ -753,12 +751,15 @@
       h2::after {
         content: '';
         position: absolute;
-        bottom: 0;
+        bottom: -6px;
         left: 0;
-        width: 60px;
-        height: 0; /* Cambiado de 3px a 0 para eliminar el subrayado */
-        background: linear-gradient(90deg, #e11d48, #fb7185);
-        transition: width 0.3s ease;
+        width: 100%;
+        height: 2px;
+        background: var(--gradient-primary);
+        border-radius: 1px;
+        transform: scaleX(0.7);
+        transform-origin: center;
+        transition: transform 0.4s ease;
       }
       
       .content-card:hover h2::after {
@@ -2493,26 +2494,6 @@
       .action-btn {
         flex: 2;
       }
-      
-      .profile-btn {
-        flex: 1;
-        background: linear-gradient(135deg, #4338ca, #3730a3);
-        color: white;
-        font-weight: 600;
-        text-decoration: none;
-        box-shadow: 0 4px 10px rgba(67, 56, 202, 0.3);
-        transition: all 0.3s ease;
-      }
-      
-      .profile-btn:hover {
-        background: linear-gradient(135deg, #3730a3, #312e81);
-        transform: translateY(-3px);
-        box-shadow: 0 6px 15px rgba(67, 56, 202, 0.4);
-      }
-      
-      .profile-btn i {
-        margin-right: 0.5rem;
-      }
 
       .trophy-btn {
         flex: 1;
@@ -2593,100 +2574,6 @@
         font-size: 0.85rem;
         color: rgba(255, 255, 255, 0.8);
         font-style: italic;
-      }
-
-      /* Responsive */
-      @media (max-width: 600px) {
-        h1 {
-          font-size: 2rem;
-        }
-        
-        .container {
-          max-width: 100%;
-        }
-        
-        .footer-buttons {
-          flex-direction: column;
-        }
-      }
-      
-      /* Estilos para la pelota de fútbol animada */
-      .ball-link {
-        display: inline-block;
-        text-decoration: none;
-        margin-bottom: 0.5rem;
-      }
-
-      /* Estilos mejorados para el modal de resultados */
-      .result-modal-content {
-        max-height: 90vh;
-        max-width: 500px;
-        padding: 0;
-        overflow: hidden;
-      }
-      
-      .modal-content-inner {
-        max-height: 90vh;
-        overflow-y: auto;
-        padding: 2rem;
-        scrollbar-width: thin;
-        scrollbar-color: var(--accent-color) rgba(15, 23, 42, 0.5);
-      }
-      
-      .modal-content-inner::-webkit-scrollbar {
-        width: 8px;
-      }
-      
-      .modal-content-inner::-webkit-scrollbar-track {
-        background: rgba(15, 23, 42, 0.5);
-        border-radius: 4px;
-      }
-      
-      .modal-content-inner::-webkit-scrollbar-thumb {
-        background-color: var(--accent-color);
-        border-radius: 4px;
-      }
-      
-      .modal-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 0.8rem;
-        margin-top: 2rem;
-      }
-      
-      #play-again-btn {
-        background: linear-gradient(135deg, #e11d48, #be123c);
-        font-weight: 700;
-        padding: 0.8rem;
-        box-shadow: 0 4px 10px rgba(225, 29, 72, 0.3);
-      }
-      
-      .stats-btn {
-        background: linear-gradient(135deg, #4338ca, #3730a3);
-        color: white;
-        font-weight: 600;
-        text-decoration: none;
-        padding: 0.8rem;
-        text-align: center;
-        box-shadow: 0 4px 10px rgba(67, 56, 202, 0.3);
-      }
-      
-      .stats-btn:hover {
-        background: linear-gradient(135deg, #3730a3, #312e81);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(67, 56, 202, 0.4);
-      }
-      
-      .stats-btn i {
-        margin-right: 0.5rem;
-      }
-      
-      @media (max-width: 768px) {
-        .result-modal-content {
-          width: 90%;
-          max-width: 90%;
-          margin: 5vh auto;
-        }
       }
     </style>
 
@@ -3043,161 +2930,5 @@
         }
       });
     </script>
-    
-    <!-- Botón flotante de compartir -->
-    <div class="share-floating-btn">
-      <button class="share-main-btn">
-        <i class="fas fa-share-alt"></i>
-      </button>
-      <div class="share-options">
-        <a href="javascript:void(0)" onclick="shareOnFacebook()" class="share-item facebook">
-          <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="javascript:void(0)" onclick="shareOnTwitter()" class="share-item twitter">
-          <i class="fab fa-twitter"></i>
-        </a>
-        <a href="javascript:void(0)" onclick="shareOnWhatsApp()" class="share-item whatsapp">
-          <i class="fab fa-whatsapp"></i>
-        </a>
-      </div>
-    </div>
-    
-    <style>
-      /* Estilos para botón de compartir flotante */
-      .share-floating-btn {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        z-index: 999;
-        display: flex;
-        flex-direction: column-reverse;
-        align-items: center;
-      }
-      
-      .share-main-btn {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #e11d48, #be123c);
-        border: none;
-        box-shadow: 0 4px 12px rgba(225, 29, 72, 0.4);
-        color: white;
-        font-size: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        z-index: 2;
-      }
-      
-      .share-main-btn:hover {
-        transform: scale(1.1);
-        box-shadow: 0 6px 16px rgba(225, 29, 72, 0.5);
-      }
-      
-      .share-options {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin-bottom: 15px;
-        opacity: 0;
-        transform: translateY(20px);
-        pointer-events: none;
-        transition: all 0.3s ease;
-      }
-      
-      .share-floating-btn:hover .share-options,
-      .share-main-btn:focus + .share-options {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: all;
-      }
-      
-      .share-item {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        color: white;
-        font-size: 1.2rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      }
-      
-      .share-item:hover {
-        transform: scale(1.1);
-      }
-      
-      .share-item.facebook {
-        background: #1877f2;
-      }
-      
-      .share-item.twitter {
-        background: #1da1f2;
-      }
-      
-      .share-item.whatsapp {
-        background: #25d366;
-      }
-    </style>
-    
-    <script>
-      // Funciones para compartir en redes sociales
-      function shareOnFacebook() {
-        const url = encodeURIComponent(window.location.href);
-        const title = encodeURIComponent(document.title);
-        window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&t=${title}`, '_blank');
-      }
-      
-      function shareOnTwitter() {
-        const url = encodeURIComponent(window.location.href);
-        const title = encodeURIComponent(`¡Juega a ${document.title} en CRACK TOTAL!`);
-        window.open(`https://twitter.com/intent/tweet?url=${url}&text=${title}`, '_blank');
-      }
-      
-      function shareOnWhatsApp() {
-        const url = encodeURIComponent(window.location.href);
-        const title = encodeURIComponent(`¡Juega a ${document.title} en CRACK TOTAL!`);
-        window.open(`https://api.whatsapp.com/send?text=${title}%20${url}`, '_blank');
-      }
-      
-      // Configuración del botón de compartir
-      document.addEventListener('DOMContentLoaded', function() {
-        document.querySelector('.share-main-btn').addEventListener('click', function() {
-          const shareOptions = this.nextElementSibling;
-          shareOptions.style.opacity = shareOptions.style.opacity === '1' ? '0' : '1';
-          shareOptions.style.transform = shareOptions.style.opacity === '1' ? 'translateY(0)' : 'translateY(20px)';
-          shareOptions.style.pointerEvents = shareOptions.style.opacity === '1' ? 'all' : 'none';
-        });
-      });
-    </script>
-    <!-- Botón flotante de compartir -->
-    <script src="../js/share-buttons.js"></script>
-    <!-- Sistema centralizado de estadísticas y logros -->
-    <script src="../js/utils.js"></script>
-    <script src="../js/game-data.js"></script>
-    <!-- Script para el footer global -->
-    <script src="../js/global-footer.js"></script>
-    
-    <!-- Modal de Respuesta Incorrecta -->
-    <div id="wrongAnswerModal" class="modal">
-      <div class="modal-content">
-        <span class="close-btn">&times;</span>
-        <h2>¡Respuesta Incorrecta!</h2>
-        <p>Lo siento, esa no es la respuesta correcta.</p>
-        <p>La respuesta correcta era: <span id="correct-answer">...</span></p>
-        <button class="modal-btn continue-btn">Continuar</button>
-      </div>
-    </div>
-    
-    <!-- Scripts para el juego -->
-    <script src="js/data.js"></script>
-    <script src="js/local-game.js"></script>
-    
-    <!-- Scripts adicionales -->
-    <script src="../js/global-footer.js"></script>
   </body>
 </html>

@@ -22,14 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let selectedDifficulty = null;
     
-    // Configurar logger para evitar loggear en producción
-    const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-    const logger = {
-        log: isProduction ? function(){} : console.log,
-        warn: isProduction ? function(){} : console.warn,
-        error: console.error // Mantener errores siempre
-    };
-    
     // Create star background
     createStars();
     
@@ -121,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 url: window.location.href
             })
             .then(() => showInfoMessage('¡Gracias por compartir!'))
-            .catch(error => logger.log('Error sharing:', error));
+            .catch(error => console.log('Error sharing:', error));
         } else {
             const url = window.location.href;
             navigator.clipboard.writeText(url)

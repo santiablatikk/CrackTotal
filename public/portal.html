@@ -2,31 +2,662 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Portal de juegos de CRACK TOTAL. Accede a nuestros juegos de fútbol y pon a prueba tus conocimientos." />
+    <meta name="description" content="CRACK TOTAL - Portal de juegos de fútbol" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="theme-color" content="#0f172a">
-    <meta name="google-adsense-account" content="ca-pub-9579152019412427">
-    <title>Portal de Juegos - CRACK TOTAL</title>
-    <!-- Preconexiones -->
+    <meta name="theme-color" content="#1e293b">
+    <title>CRACK TOTAL - Portal de Juegos de Fútbol</title>
+    <!-- Preconexiones para mejorar el rendimiento -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Favicon -->
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <!-- Estilos -->
     <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/footer-styles.css" />
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Fuentes -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Open Graph -->
+    <!-- Open Graph tags para compartir en redes sociales -->
     <meta property="og:title" content="CRACK TOTAL - Portal de Juegos de Fútbol">
     <meta property="og:description" content="Juegos de fútbol para poner a prueba tus conocimientos futboleros.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="img/preview.jpg">
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427" crossorigin="anonymous"></script>
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <style>
+      /* Estilos mejorados para el portal */
+      .portal-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+        perspective: 1000px;
+      }
+      
+      .portal-card {
+        width: 100%;
+        padding: 40px;
+        margin-bottom: 40px;
+        background: rgba(15, 23, 42, 0.7);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 0 30px rgba(66, 153, 225, 0.2) inset;
+        transition: box-shadow 0.5s ease;
+        border: 1px solid rgba(66, 153, 225, 0.2);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .portal-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          45deg, 
+          rgba(59, 130, 246, 0) 0%, 
+          rgba(59, 130, 246, 0.1) 50%, 
+          rgba(59, 130, 246, 0) 100%
+        );
+        transform: rotate(45deg);
+        animation: cardShimmer 6s linear infinite;
+        z-index: 0;
+      }
+      
+      @keyframes cardShimmer {
+        0% { transform: translateX(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) rotate(45deg); }
+      }
+      
+      .welcome-section {
+        text-align: center;
+        position: relative;
+        z-index: 1;
+      }
+      
+      .welcome-message h2 {
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #3490dc, #6574cd, #9f7aea);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        position: relative;
+        letter-spacing: -1px;
+        animation: gradientFlow 5s ease infinite;
+      }
+      
+      @keyframes gradientFlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      .welcome-message h2::after {
+        content: '';
+        position: absolute;
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(to right, #3490dc, #6574cd);
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+        animation: underlineWidth 3s ease-in-out infinite alternate;
+      }
+      
+      @keyframes underlineWidth {
+        from { width: 60px; }
+        to { width: 120px; }
+      }
+      
+      .welcome-message p {
+        font-size: 1.4rem;
+        color: #a0aec0;
+        margin-bottom: 50px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeUp 0.8s ease 0.3s forwards;
+      }
+      
+      @keyframes fadeUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .game-options {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        max-width: 900px;
+        margin: 0 auto;
+        perspective: 1000px;
+      }
+      
+      .game-option {
+        display: flex;
+        flex-direction: column;
+        padding: 30px;
+        border-radius: 20px;
+        background: linear-gradient(135deg, rgba(17, 24, 39, 0.8), rgba(31, 41, 55, 0.8));
+        box-shadow: 0 15px 30px -10px rgba(0, 0, 0, 0.3);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+        border: 2px solid transparent;
+        height: 220px;
+        justify-content: space-between;
+        transform: translateY(30px);
+        opacity: 0;
+        animation: cardAppear 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+      
+      .game-option:nth-child(1) {
+        animation-delay: 0.4s;
+      }
+      
+      .game-option:nth-child(2) {
+        animation-delay: 0.6s;
+      }
+      
+      @keyframes cardAppear {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .game-option::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, #4299e1, #667eea, #9f7aea, #ed64a6);
+        z-index: -1;
+        border-radius: 18px;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+      }
+      
+      .game-option:hover {
+        transform: translateY(-15px) scale(1.03);
+        border-color: rgba(102, 126, 234, 0.5);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5),
+                    0 0 15px rgba(102, 126, 234, 0.6);
+      }
+      
+      .game-option:hover::before {
+        opacity: 0.15;
+      }
+      
+      .game-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4299e1, #667eea);
+        margin: 0 auto 25px;
+        position: relative;
+        box-shadow: 0 15px 30px -10px rgba(66, 153, 225, 0.5);
+        transition: all 0.4s ease;
+        z-index: 1;
+      }
+      
+      .game-icon::after {
+        content: '';
+        position: absolute;
+        inset: -5px;
+        border-radius: 50%;
+        background: conic-gradient(from 0deg, transparent 0%, rgba(102, 126, 234, 0.8) 50%, transparent 100%);
+        opacity: 0.5;
+        animation: spinAura 3s linear infinite;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      
+      @keyframes spinAura {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      
+      .game-option:hover .game-icon::after {
+        opacity: 0.8;
+      }
+      
+      .game-option:hover .game-icon {
+        transform: scale(1.1) rotate(5deg);
+        box-shadow: 0 20px 40px -10px rgba(102, 126, 234, 0.7);
+      }
+      
+      .game-icon i {
+        font-size: 2.5rem;
+        color: white;
+        filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.3));
+        transition: all 0.4s ease;
+      }
+      
+      .game-option:hover .game-icon i {
+        transform: scale(1.2);
+        animation: iconPulse 1.5s infinite alternate ease-in-out;
+      }
+      
+      @keyframes iconPulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.3); }
+      }
+      
+      .game-info {
+        text-align: center;
+      }
+      
+      .game-info h3 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+      
+      .game-option:hover .game-info h3 {
+        color: #a5b4fc;
+        text-shadow: 0 0 10px rgba(165, 180, 252, 0.5);
+      }
+      
+      .game-info p {
+        font-size: 1.1rem;
+        color: #a0aec0;
+        transition: all 0.3s ease;
+      }
+      
+      .game-option:hover .game-info p {
+        color: #e2e8f0;
+      }
+      
+      .game-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 5px 10px;
+        border-radius: 30px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 5px 15px rgba(245, 158, 11, 0.5);
+        animation: badgePulse 2s infinite alternate;
+      }
+      
+      @keyframes badgePulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.1); }
+      }
+      
+      .coming-soon {
+        background: linear-gradient(135deg, #9333ea, #6366f1);
+        animation: comingSoonPulse 2s infinite alternate;
+      }
+      
+      @keyframes comingSoonPulse {
+        0% { 
+          transform: scale(1);
+          box-shadow: 0 5px 15px rgba(147, 51, 234, 0.5);
+        }
+        100% { 
+          transform: scale(1.1);
+          box-shadow: 0 5px 20px rgba(147, 51, 234, 0.7);
+        }
+      }
+      
+      .game-locked {
+        pointer-events: none;
+        opacity: 0.9;
+      }
+      
+      .game-locked::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 18px;
+        background: rgba(15, 23, 42, 0.3);
+        backdrop-filter: blur(2px);
+        z-index: 2;
+      }
+      
+      .game-locked .game-icon {
+        filter: grayscale(0.3);
+      }
+      
+      .lock-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 3;
+        color: white;
+        font-size: 2rem;
+        opacity: 0;
+        animation: lockFadeIn 0.3s ease 0.8s forwards;
+      }
+      
+      @keyframes lockFadeIn {
+        to { opacity: 0.9; }
+      }
+      
+      /* Animación para el header */
+      .app-header {
+        animation: headerFadeIn 0.8s ease forwards;
+        opacity: 0;
+      }
+      
+      @keyframes headerFadeIn {
+        to { opacity: 1; }
+      }
+      
+      /* Mejoras para el título */
+      .title-text {
+        background-size: 200% 200%;
+        animation: titlePulse 2s ease-in-out infinite alternate, gradientFlow 5s ease infinite;
+        -webkit-background-clip: text;
+        background-clip: text;
+      }
+      
+      /* Welcome Banner */
+      .welcome-banner {
+        background: rgba(15, 23, 42, 0.7);
+        border-radius: 12px;
+        padding: 12px 20px;
+        margin-bottom: 25px;
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transform: translateY(20px);
+        opacity: 0;
+        animation: fadeUp 0.8s ease 0.2s forwards;
+      }
+      
+      .welcome-banner-text {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      
+      .welcome-banner-text i {
+        font-size: 1.4rem;
+        color: #6366f1;
+      }
+      
+      .welcome-banner-text span {
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: #e2e8f0;
+      }
+      
+      .username {
+        color: #60a5fa;
+        font-weight: 600;
+        margin-left: 5px;
+        position: relative;
+      }
+      
+      .username::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(to right, #60a5fa, #6366f1);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.3s ease;
+      }
+      
+      .welcome-banner:hover .username::after {
+        transform: scaleX(1);
+      }
+      
+      .change-name-btn {
+        background: rgba(99, 102, 241, 0.2);
+        color: #e2e8f0;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      
+      .change-name-btn:hover {
+        background: rgba(99, 102, 241, 0.4);
+        transform: translateY(-2px);
+      }
+      
+      .change-name-btn i {
+        font-size: 0.85rem;
+      }
+      
+      /* Modal para cambiar nombre - Adaptado para primera visita */
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+      }
+      
+      .modal-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      
+      .modal-content {
+        background: linear-gradient(135deg, #1e293b, #0f172a);
+        border-radius: 12px;
+        padding: 25px;
+        width: 90%;
+        max-width: 400px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        transform: translateY(0);
+        transition: all 0.3s ease;
+      }
+      
+      .first-visit-modal .modal-content {
+        animation: modalBounce 0.5s ease;
+      }
+      
+      @keyframes modalBounce {
+        0% { transform: scale(0.8); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+      
+      .modal-header {
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      
+      .modal-header h3 {
+        font-size: 1.5rem;
+        color: #e2e8f0;
+        margin-bottom: 8px;
+      }
+      
+      .modal-body {
+        margin-bottom: 25px;
+      }
+      
+      .input-group {
+        margin-bottom: 20px;
+      }
+      
+      .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #94a3b8;
+        font-size: 0.9rem;
+      }
+      
+      .input-field-custom {
+        width: 100%;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        padding: 12px 15px;
+        border-radius: 8px;
+        color: #e2e8f0;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+      
+      .input-field-custom:focus {
+        outline: none;
+        border-color: rgba(99, 102, 241, 0.8);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+      }
+      
+      .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+      }
+      
+      .modal-btn {
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+      }
+      
+      .modal-btn-cancel {
+        background: rgba(148, 163, 184, 0.2);
+        color: #e2e8f0;
+      }
+      
+      .modal-btn-cancel:hover {
+        background: rgba(148, 163, 184, 0.3);
+      }
+      
+      .modal-btn-save {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+        color: white;
+      }
+      
+      .modal-btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
+      }
+      
+      /* Mejoras para el footer */
+      .policy-footer {
+        transform: translateY(20px);
+        opacity: 0;
+        animation: footerFadeIn 0.8s ease 1s forwards;
+      }
+      
+      @keyframes footerFadeIn {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      /* Particles mejoras */
+      #particles-js {
+        opacity: 0.7;
+        animation: particlesFadeIn 2s ease forwards;
+      }
+      
+      @keyframes particlesFadeIn {
+        from { opacity: 0; }
+        to { opacity: 0.7; }
+      }
+      
+      /* Responsive */
+      @media (max-width: 768px) {
+        .portal-card {
+          padding: 30px 20px;
+        }
+        
+        .welcome-message h2 {
+          font-size: 2.2rem;
+        }
+        
+        .welcome-message p {
+          font-size: 1.1rem;
+          margin-bottom: 30px;
+        }
+        
+        .game-options {
+          grid-template-columns: 1fr;
+          gap: 20px;
+        }
+        
+        .game-option {
+          height: 180px;
+          padding: 20px;
+        }
+        
+        .game-icon {
+          width: 70px;
+          height: 70px;
+          margin-bottom: 15px;
+        }
+        
+        .game-icon i {
+          font-size: 2rem;
+        }
+        
+        .game-info h3 {
+          font-size: 1.3rem;
+        }
+        
+        .game-info p {
+          font-size: 0.95rem;
+        }
+      }
+    </style>
   </head>
   <body>
     <!-- Partículas de fondo -->
@@ -35,341 +666,54 @@
     <div class="app-container">
       <!-- Header con título principal -->
       <header class="app-header">
-        <a href="portal.html" class="title-link" style="text-decoration: none;">
-          <h1 class="title-text">CRACK TOTAL</h1>
-        </a>
-        <p class="subtitle">Elige tu desafío y demuestra quién es el verdadero crack</p>
-        <div class="header-actions">
-        <button id="change-name-btn" class="change-name-btn">
-          <i class="fas fa-user-edit"></i> Cambiar Nombre
-        </button>
-          <button id="theme-toggle-btn" class="theme-toggle-btn">
-            <i class="fas fa-moon"></i>
-          </button>
+        <div class="logo-animation">
+          <i class="fas fa-trophy ball-icon bounce"></i>
         </div>
+        <h1 class="title-text">CRACK TOTAL</h1>
+        <p class="subtitle">¡Demuestra tu conocimiento futbolero!</p>
       </header>
 
       <div class="portal-container">
         <div class="content-card portal-card">
-          <div class="welcome-banner">
-            <div class="welcome-avatar">
-              <i class="fas fa-user-circle"></i>
-            </div>
-            <div class="welcome-message">
-              <h2>Hola, <span id="player-name-display">Jugador</span></h2>
-              <p>Selecciona tu juego favorito</p>
-            </div>
-          </div>
-
-          <div class="games-showcase">
-            <div class="section-header">
-              <div class="section-header-icon">
-                <i class="fas fa-gamepad"></i>
+          <div class="card-section welcome-section">
+            <!-- Cartel de bienvenida con el nombre -->
+            <div class="welcome-banner">
+              <div class="welcome-banner-text">
+                <i class="fas fa-user-circle"></i>
+                <span>Bienvenido, <span class="username" id="userName">Visitante</span></span>
               </div>
-              <h2 class="section-title">Nuestros Juegos</h2>
+              <button class="change-name-btn" id="changeNameBtn">
+                <i class="fas fa-edit"></i> Cambiar nombre
+              </button>
+            </div>
+            
+            <div class="welcome-message">
+              <h2>Elige tu Juego</h2>
+              <p>Pone a prueba tus conocimientos de fútbol con nuestros juegos creados para verdaderos aficionados</p>
             </div>
             
             <div class="game-options">
-              <a href="game-rosco.html" class="game-option featured">
-                <div class="game-card-content">
-                  <div class="game-icon-wrapper">
-                    <div class="game-icon">
-                      <i class="fas fa-futbol"></i>
-                    </div>
-                  </div>
-                  <div class="game-info">
-                    <h3>PASALA CHE</h3>
-                    <p>El clásico rosco futbolero. ¿Podrás completarlo?</p>
-                    <div class="game-meta">
-                      <span class="game-badge popular">Popular</span>
-                      <span class="game-rating"><i class="fas fa-star"></i> 4.9</span>
-                      <span class="game-players"><i class="fas fa-users"></i> 10k+</span>
-                    </div>
-                  </div>
+              <a href="index.html" class="game-option">
+                <span class="game-badge">Popular</span>
+                <div class="game-icon">
+                  <i class="fas fa-futbol"></i>
                 </div>
-                <div class="game-action">
-                  <span class="play-btn">JUGAR AHORA <i class="fas fa-arrow-right"></i></span>
+                <div class="game-info">
+                  <h3>PASALA CHE</h3>
+                  <p>El clásico rosco futbolero con palabras que debes adivinar</p>
                 </div>
               </a>
               
-              <div class="game-option new-game coming-soon">
-                <div class="coming-soon-banner">
-                  <i class="fas fa-clock"></i> PRÓXIMAMENTE
+              <div class="game-option game-locked">
+                <span class="game-badge coming-soon">Próximamente</span>
+                <i class="fas fa-lock lock-icon"></i>
+                <div class="game-icon">
+                  <i class="fas fa-trophy"></i>
                 </div>
-                <div class="game-card-content">
-                  <div class="game-icon-wrapper">
-                    <div class="game-icon">
-                      <i class="fas fa-trophy"></i>
-                    </div>
-                  </div>
-                  <div class="game-info">
-                    <h3>¿QUIÉN SABE MÁS?</h3>
-                    <p>Preguntas de opción múltiple para verdaderos expertos.</p>
-                    <div class="game-meta">
-                      <span class="game-badge new">Nuevo</span>
-                      <span class="game-rating"><i class="fas fa-star"></i> 4.8</span>
-                      <span class="game-badge coming-soon-date"><i class="fas fa-calendar-alt"></i> Mayo 2025</span>
-                    </div>
-                  </div>
+                <div class="game-info">
+                  <h3>¿QUIÉN SABE MÁS?</h3>
+                  <p>Compite con tus amigos y demuestra quién es el verdadero crack</p>
                 </div>
-                <div class="game-action disabled">
-                  <span class="play-btn">DISPONIBLE PRONTO <i class="fas fa-hourglass-half"></i></span>
-                </div>
-              </div>
-            </div>
-            
-            <style>
-              /* Estilos mejorados para dar más presencia a los juegos */
-              .games-showcase {
-                padding: 2rem 0;
-                margin-bottom: 2rem;
-              }
-              
-              .section-header {
-                margin-bottom: 2rem;
-              }
-              
-              .section-title {
-                font-size: 2.2rem;
-                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-              }
-              
-              .game-options {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 2rem;
-              }
-              
-              @media (min-width: 768px) {
-                .game-options {
-                  grid-template-columns: repeat(2, 1fr);
-                }
-              }
-              
-              .game-option {
-                transform: scale(1);
-                transition: transform 0.3s ease, box-shadow 0.3s ease;
-                border-radius: 16px;
-                overflow: hidden;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-                height: 100%;
-                min-height: 280px;
-                display: flex;
-                flex-direction: column;
-                background: linear-gradient(135deg, #1e293b, #0f172a);
-                padding: 1.5rem;
-              }
-              
-              .game-option:hover {
-                transform: translateY(-10px) scale(1.02);
-                box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
-              }
-              
-              .game-card-content {
-                flex: 1;
-                margin-bottom: 1.5rem;
-              }
-              
-              .game-action {
-                margin-top: auto;
-                padding: 1.2rem;
-                background: linear-gradient(135deg, #4338ca, #3730a3);
-                border-radius: 12px;
-                text-align: center;
-                transition: all 0.3s ease;
-              }
-              
-              .game-action:hover {
-                background: linear-gradient(135deg, #4f46e5, #4338ca);
-                transform: translateY(-3px);
-                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-              }
-              
-              .play-btn {
-                font-size: 1.3rem;
-                font-weight: 700;
-                letter-spacing: 0.5px;
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.5rem;
-              }
-              
-              .play-btn i {
-                font-size: 1.2rem;
-                transition: transform 0.3s ease;
-              }
-              
-              .game-option:hover .play-btn i {
-                transform: translateX(5px);
-              }
-              
-              .game-info {
-                flex: 1;
-              }
-              
-              .game-info h3 {
-                font-size: 2.5rem;
-                margin-bottom: 0.5rem;
-                color: white;
-                font-weight: 800;
-                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-                letter-spacing: -0.5px;
-              }
-              
-              .game-info p {
-                font-size: 1.3rem;
-                color: rgba(255, 255, 255, 0.9);
-                margin-bottom: 1rem;
-                line-height: 1.4;
-              }
-              
-              .game-meta {
-                display: flex;
-                align-items: center;
-                gap: 0.8rem;
-                flex-wrap: wrap;
-              }
-              
-              .game-badge {
-                padding: 0.3rem 0.7rem;
-                border-radius: 20px;
-                font-size: 0.9rem;
-                font-weight: 600;
-                text-transform: uppercase;
-              }
-              
-              .game-badge.popular {
-                background: linear-gradient(135deg, #e11d48, #be123c);
-                color: white;
-              }
-              
-              .game-badge.new {
-                background: linear-gradient(135deg, #0ea5e9, #0284c7);
-                color: white;
-              }
-              
-              .game-rating, .game-players {
-                display: flex;
-                align-items: center;
-                gap: 0.3rem;
-                color: rgba(255, 255, 255, 0.8);
-                font-size: 1rem;
-              }
-              
-              /* Estilos para juego próximamente */
-              .coming-soon {
-                position: relative;
-                overflow: hidden;
-                pointer-events: none;
-                opacity: 0.9;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-                border: 1px solid rgba(79, 70, 229, 0.3);
-              }
-              
-              .coming-soon-banner {
-                position: absolute;
-                top: 64px;
-                right: -32px;
-                background: linear-gradient(135deg, #f43f5e, #e11d48);
-                color: white;
-                font-weight: 700;
-                font-size: 0.9rem;
-                padding: 6px 50px;
-                transform: rotate(45deg);
-                z-index: 10;
-                box-shadow: 0 2px 10px rgba(225, 29, 72, 0.5);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 6px;
-                animation: shine 2s infinite;
-              }
-              
-              @keyframes shine {
-                0% { box-shadow: 0 2px 10px rgba(225, 29, 72, 0.5); }
-                50% { box-shadow: 0 2px 15px rgba(225, 29, 72, 0.8); }
-                100% { box-shadow: 0 2px 10px rgba(225, 29, 72, 0.5); }
-              }
-              
-              .game-badge.coming-soon-date {
-                background: linear-gradient(135deg, #64748b, #475569);
-                color: white;
-                font-weight: 600;
-                padding: 0.3rem 0.6rem;
-                border-radius: 12px;
-                font-size: 0.7rem;
-                display: inline-flex;
-                align-items: center;
-                gap: 4px;
-              }
-              
-              .game-badge.coming-soon-date i {
-                font-size: 0.7rem;
-              }
-              
-              .coming-soon .game-action {
-                background: rgba(79, 70, 229, 0.5);
-                cursor: not-allowed;
-              }
-              
-              .coming-soon .game-action.disabled {
-                background: linear-gradient(135deg, #64748b, #475569);
-              }
-              
-              .coming-soon .game-action .play-btn i {
-                animation: pulse 1.5s infinite;
-              }
-              
-              @keyframes pulse {
-                0% { opacity: 0.6; }
-                50% { opacity: 1; }
-                100% { opacity: 0.6; }
-              }
-              
-              @media (max-width: 480px) {
-                .coming-soon-banner {
-                  font-size: 0.8rem;
-                  top: 20px;
-                  right: -45px;
-                  padding: 5px 50px;
-                }
-                
-                .game-option {
-                  min-height: 240px;
-                  padding: 1rem;
-                }
-                
-                .game-action {
-                  padding: 0.8rem;
-                }
-                
-                .play-btn {
-                  font-size: 1.1rem;
-                }
-                
-                .game-meta {
-                  flex-wrap: wrap;
-                  gap: 0.4rem;
-                }
-                
-                .game-badge.coming-soon-date {
-                  font-size: 0.65rem;
-                  padding: 0.25rem 0.5rem;
-                }
-              }
-            </style>
-          </div>
-          
-          <div class="news-section">
-            <h3 class="news-title"><i class="fas fa-bullhorn"></i> Novedades</h3>
-            <div class="news-item">
-              <div class="news-icon"><i class="fas fa-newspaper"></i></div>
-              <div class="news-content">
-                <h4>¡Nuevo modo de juego pronto!</h4>
-                <p>Descubre el nuevo desafío en "¿Quién sabe más?"</p>
-                <a href="blog-detail-quiensabe.html" class="news-link">Leer más <i class="fas fa-arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -378,348 +722,244 @@
 
       <!-- Footer -->
       <footer class="policy-footer">
-  <div class="footer-links-mini">
-    <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
-    <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-    <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
-    <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-    <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-    <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
-          <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
-  </div>
-  <div class="share-button-container">
-    <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
-  </div>
-        <div class="copyright-text">&copy; 2025 CRACK TOTAL - Juegos de Fútbol</div>
-  <div class="footer-social-icons">
-          <a href="https://www.facebook.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://twitter.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-twitter"></i></a>
-          <a href="https://www.instagram.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-instagram"></i></a>
-          <a href="https://www.youtube.com/c/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-youtube"></i></a>
-  </div>
-</footer>
+        <div class="footer-links-mini">
+          <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+          <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+          <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+          <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+          <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+          <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+        </div>
+        <div class="copyright-text">&copy; 2025 PASALA CHE - El Juego del Rosco Futbolero.</div>
+        <div class="footer-social-icons">
+          <a href="https://www.facebook.com/pasalachee" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://twitter.com/pasalachee" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="https://www.instagram.com/pasalachee" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/c/pasalachee" class="social-icon"><i class="fab fa-youtube"></i></a>
+        </div>
+      </footer>
     </div>
 
-<!-- Banner de Consentimiento de Cookies -->
-<div id="cookie-consent-banner" class="cookie-banner">
-  <div class="cookie-content">
-    <div class="cookie-text">
-      <h3><i class="fas fa-cookie-bite"></i> Uso de Cookies</h3>
-      <p>Este sitio utiliza cookies para mejorar tu experiencia, mostrar anuncios personalizados y analizar el tráfico. Al hacer clic en "Aceptar", aceptas nuestro uso de cookies.</p>
+    <!-- Toast para notificaciones -->
+    <div id="notification" class="toast" style="display: none;"></div>
+    
+    <!-- Cookie Consent Banner -->
+    <div id="cookieConsent" class="cookie-consent" style="display: none;">
+      <p>Utilizamos cookies para mejorar tu experiencia en nuestra web. Al continuar navegando, aceptas nuestra <a href="cookies.html">política de cookies</a>.</p>
+      <div class="cookie-consent-buttons">
+        <button class="cookie-btn cookie-accept">Aceptar</button>
+        <button class="cookie-btn cookie-decline">Rechazar</button>
+      </div>
     </div>
-    <div class="cookie-buttons">
-      <a href="cookies.html" class="cookie-more-info">Más información</a>
-      <button id="accept-cookies-btn" class="accept-cookies">Aceptar</button>
+    
+    <!-- Modal para cambiar nombre -->
+    <div class="modal-overlay" id="changeNameModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Cambiar tu nombre</h3>
+          <p>Personaliza cómo quieres que te llamemos</p>
+        </div>
+        <div class="modal-body">
+          <div class="input-group">
+            <label for="newUserName">Tu nombre</label>
+            <input type="text" id="newUserName" class="input-field-custom" placeholder="Ingresa tu nombre" maxlength="20">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="modal-btn modal-btn-cancel" id="cancelNameChange">Cancelar</button>
+          <button class="modal-btn modal-btn-save" id="saveNameChange">Guardar</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
 
-<style>
-  .cookie-banner {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(135deg, #1e293b, #0f172a);
-    border-top: 3px solid #4f46e5;
-    z-index: 1000;
-    padding: 15px;
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
-    transform: translateY(100%);
-    transition: transform 0.4s ease-in-out;
-  }
-  
-  .cookie-banner.show {
-    transform: translateY(0);
-  }
-  
-  .cookie-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
-  
-  .cookie-text {
-    flex: 1;
-    min-width: 280px;
-    padding-right: 20px;
-  }
-  
-  .cookie-text h3 {
-    color: white;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
-  .cookie-text p {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9rem;
-    margin: 0;
-    line-height: 1.5;
-  }
-  
-  .cookie-buttons {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-top: 10px;
-  }
-  
-  .cookie-more-info {
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: underline;
-    font-size: 0.9rem;
-    transition: color 0.3s;
-  }
-  
-  .cookie-more-info:hover {
-    color: white;
-  }
-  
-  .accept-cookies {
-    background: linear-gradient(135deg, #4f46e5, #3730a3);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 50px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-    font-size: 0.9rem;
-  }
-  
-  .accept-cookies:hover {
-    background: linear-gradient(135deg, #4338ca, #312e81);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.4);
-  }
-  
-  @media (max-width: 768px) {
-    .cookie-content {
-      flex-direction: column;
-      align-items: stretch;
-    }
-    
-    .cookie-text {
-      padding-right: 0;
-      margin-bottom: 15px;
-    }
-    
-    .cookie-buttons {
-      justify-content: space-between;
-    }
-  }
-</style>
-
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const playerName = localStorage.getItem('playerName');
-    const playerNameDisplay = document.getElementById('player-name-display');
-    const nameInputModal = document.getElementById('name-input-modal');
-
-    function showNameInputModal(show = true) {
-        let modal = document.getElementById('name-input-modal');
-        if (!modal) {
-            modal = document.createElement('div');
-            modal.id = 'name-input-modal';
-            modal.className = 'name-input-modal';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <h2><i class="fas fa-user-circle"></i> ¡Bienvenido a CRACK TOTAL!</h2>
-                    <p>Ingresa tu nombre para guardar tu progreso:</p>
-                    <form id="name-form">
-                    <input type="text" id="player-name-input" placeholder="Tu nombre aquí" maxlength="20" required autocomplete="off">
-                    <button type="submit" class="btn-primary">
-                        <span>¡Jugar!</span>
-                        <i class="fas fa-arrow-right"></i>
-                    </button>
-                    </form>
-                </div>
-            `;
-            document.body.appendChild(modal);
-
-            const form = document.getElementById('name-form');
-            if (form) {
-                form.addEventListener('submit', handleNameSubmit);
-            }
-        }
-
-        if (show) {
-            requestAnimationFrame(() => {
-                modal.classList.add('visible');
-                const input = document.getElementById('player-name-input');
-                if (input) input.focus();
-            });
-        } else {
-            modal.classList.remove('visible');
-        }
-    }
-
-    function handleNameSubmit(event) {
-        event.preventDefault();
-        const input = document.getElementById('player-name-input');
-        const name = input.value.trim();
-
-        if (name) {
-            localStorage.setItem('playerName', name);
-            if (playerNameDisplay) {
-                playerNameDisplay.textContent = name;
-}
-            showNameInputModal(false);
-            showNotification('¡Bienvenido, ' + name + '!', 'success');
-
-            if (window.GameData && typeof window.GameData.initUserData === 'function') {
-                window.GameData.initUserData(name);
-                loadPlayerStats();
-            }
-        } else {
-            showNotification('Por favor, ingresa un nombre válido.', 'error');
-        }
-    }
-
-if (!playerName && playerNameDisplay) {
-        showNameInputModal(true);
-} else if (playerNameDisplay) {
-  playerNameDisplay.textContent = playerName || 'Jugador';
-  }
-  
-loadPlayerStats();
-
-const changeNameBtn = document.getElementById('change-name-btn');
-  if (changeNameBtn) {
-          changeNameBtn.addEventListener('click', () => showNameInputModal(true));
-}
-
-const themeToggleBtn = document.getElementById('theme-toggle-btn');
-if (themeToggleBtn) {
-  themeToggleBtn.addEventListener('click', function() {
-    document.body.classList.toggle('dark-mode');
-    const icon = themeToggleBtn.querySelector('i');
-              const isDarkMode = document.body.classList.contains('dark-mode');
-              if (isDarkMode) {
-        icon.classList.remove('fa-moon');
-        icon.classList.add('fa-sun');
-      } else {
-        icon.classList.remove('fa-sun');
-        icon.classList.add('fa-moon');
-    }
-      localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
-    });
-    
-    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-    if (savedDarkMode) {
-      document.body.classList.add('dark-mode');
-                themeToggleBtn.querySelector('i').classList.replace('fa-moon', 'fa-sun');
-            }
-        }
-
-function loadPlayerStats() {
-  // Esta función ahora solo maneja la bandera gameJustCompleted
-  // sin actualizar elementos de estadísticas que ya no existen en la UI
-  if (localStorage.getItem('gameJustCompleted') === 'true') {
-    localStorage.removeItem('gameJustCompleted');
-  }
-}
-
-if (localStorage.getItem('gameJustCompleted') === 'true') {
-  loadPlayerStats();
-}
-
-const isMobile = window.innerWidth < 768;
-      if (typeof particlesJS !== 'undefined' && !isMobile) {
-  particlesJS('particles-js', {
-    particles: {
-      number: {
-                      value: 30,
-        density: {
-          enable: true,
-                          value_area: 800
-        }
-      },
-      color: {
-                      value: '#3b82f6'
-      },
-      shape: {
-                      type: 'circle'
-      },
-      opacity: {
-                      value: 0.15,
-                      random: true
-      },
-      size: {
-        value: 3,
-                      random: true
-      },
-      line_linked: {
-        enable: true,
-                      distance: 160,
-                      color: '#3b82f6',
-                      opacity: 0.1,
-        width: 1
-      },
-      move: {
-        enable: true,
-                      speed: 0.8,
-        direction: 'none',
-        random: true,
-        straight: false,
-                      out_mode: 'out'
-      }
-    },
-    interactivity: {
-      detect_on: 'canvas',
-      events: {
-        onhover: {
-                          enable: false
-        },
-        onclick: {
-                          enable: false
-        },
-        resize: true
-      }
-    },
-              retina_detect: true
-  });
-      } else {
-        const particlesElement = document.getElementById('particles-js');
-        if (particlesElement) {
-          particlesElement.style.display = 'none';
-        }
-  }
-
-  // Función para el banner de cookies
-  const cookieBanner = document.getElementById('cookie-consent-banner');
-  const acceptCookiesBtn = document.getElementById('accept-cookies-btn');
-  
-  // Verificar si ya se aceptaron las cookies
-  if (!localStorage.getItem('cookiesAccepted')) {
-    // Mostrar el banner con un pequeño retraso
-    setTimeout(() => {
-      cookieBanner.classList.add('show');
-    }, 1000);
-  }
-  
-  // Manejar el clic en el botón de aceptar
-  acceptCookiesBtn.addEventListener('click', function() {
-    localStorage.setItem('cookiesAccepted', 'true');
-    cookieBanner.classList.remove('show');
-    
-    // Opcional: Cargar scripts de tracking que dependen del consentimiento
-    // loadTrackingScripts();
-  });
-});
-</script>
-
-    <!-- Scripts moved to the end -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="utils/notifications.js"></script>
-    <script src="js/game-data.js"></script>
-    <script src="js/global-footer.js"></script>
-</body>
-</html> 
+    <script src="js/particles-config.js"></script>
+    <script>
+      // Script para manejar las cookies
+      document.addEventListener('DOMContentLoaded', function() {
+        // Configurar particles.js
+        if (document.getElementById('particles-js')) {
+          particlesJS('particles-js', particlesConfig);
+        }
+        
+        // Verificar consentimiento de cookies
+        if (!localStorage.getItem('cookieConsent')) {
+          const cookieConsent = document.getElementById('cookieConsent');
+          if (cookieConsent) {
+            cookieConsent.style.display = 'block';
+            
+            const acceptBtn = document.querySelector('.cookie-accept');
+            const declineBtn = document.querySelector('.cookie-decline');
+            
+            if (acceptBtn) {
+              acceptBtn.addEventListener('click', function() {
+                localStorage.setItem('cookieConsent', 'accepted');
+                cookieConsent.style.display = 'none';
+              });
+            }
+            
+            if (declineBtn) {
+              declineBtn.addEventListener('click', function() {
+                localStorage.setItem('cookieConsent', 'declined');
+                cookieConsent.style.display = 'none';
+              });
+            }
+          }
+        }
+        
+        // Manejo del nombre del usuario
+        const userNameElement = document.getElementById('userName');
+        const changeNameBtn = document.getElementById('changeNameBtn');
+        const changeNameModal = document.getElementById('changeNameModal');
+        const newUserNameInput = document.getElementById('newUserName');
+        const saveNameChange = document.getElementById('saveNameChange');
+        const cancelNameChange = document.getElementById('cancelNameChange');
+        
+        // Comprobar si es la primera visita
+        const checkFirstVisit = function() {
+          if (!localStorage.getItem('userName')) {
+            // Es la primera visita
+            changeNameModal.classList.add('active', 'first-visit-modal');
+            newUserNameInput.focus();
+            
+            // Cambiar el texto del encabezado para primera visita
+            const modalHeader = changeNameModal.querySelector('.modal-header h3');
+            if (modalHeader) {
+              modalHeader.textContent = '¡Bienvenido a CRACK TOTAL!';
+            }
+            
+            const modalDesc = changeNameModal.querySelector('.modal-header p');
+            if (modalDesc) {
+              modalDesc.textContent = 'Para comenzar, dinos cómo quieres que te llamemos';
+            }
+            
+            // Ocultar el botón de cancelar en primera visita
+            if (cancelNameChange) {
+              cancelNameChange.style.display = 'none';
+            }
+          }
+        };
+        
+        // Cargar nombre si existe
+        if (localStorage.getItem('userName')) {
+          userNameElement.textContent = localStorage.getItem('userName');
+        }
+        
+        // Ejecutar comprobación de primera visita
+        checkFirstVisit();
+        
+        // Abrir modal para cambiar nombre
+        changeNameBtn.addEventListener('click', function() {
+          changeNameModal.classList.add('active');
+          changeNameModal.classList.remove('first-visit-modal');
+          
+          // Restablecer el texto predeterminado
+          const modalHeader = changeNameModal.querySelector('.modal-header h3');
+          if (modalHeader) {
+            modalHeader.textContent = 'Cambiar tu nombre';
+          }
+          
+          const modalDesc = changeNameModal.querySelector('.modal-header p');
+          if (modalDesc) {
+            modalDesc.textContent = 'Personaliza cómo quieres que te llamemos';
+          }
+          
+          // Mostrar el botón de cancelar 
+          if (cancelNameChange) {
+            cancelNameChange.style.display = 'block';
+          }
+          
+          newUserNameInput.value = userNameElement.textContent;
+          newUserNameInput.focus();
+        });
+        
+        // Cerrar modal
+        cancelNameChange.addEventListener('click', function() {
+          // Solo permitir cerrar si no es primera visita
+          if (!changeNameModal.classList.contains('first-visit-modal')) {
+            changeNameModal.classList.remove('active');
+          }
+        });
+        
+        // Guardar el nuevo nombre
+        saveNameChange.addEventListener('click', function() {
+          const newName = newUserNameInput.value.trim();
+          if (newName) {
+            userNameElement.textContent = newName;
+            localStorage.setItem('userName', newName);
+            changeNameModal.classList.remove('active', 'first-visit-modal');
+            
+            // Mostrar notificación de éxito
+            const notification = document.getElementById('notification');
+            
+            if (changeNameModal.classList.contains('first-visit-modal')) {
+              notification.textContent = '¡Bienvenido ' + newName + '!';
+            } else {
+              notification.textContent = '¡Nombre actualizado correctamente!';
+            }
+            
+            notification.style.display = 'block';
+            notification.classList.add('success');
+            
+            setTimeout(function() {
+              notification.style.display = 'none';
+              notification.classList.remove('success');
+            }, 3000);
+          } else {
+            // No permitir cerrar el modal en primera visita si no hay nombre
+            if (changeNameModal.classList.contains('first-visit-modal')) {
+              alert('Por favor, ingresa tu nombre para continuar');
+              newUserNameInput.focus();
+            }
+          }
+        });
+        
+        // Cerrar modal al hacer clic fuera (solo si no es primera visita)
+        changeNameModal.addEventListener('click', function(e) {
+          if (e.target === changeNameModal && !changeNameModal.classList.contains('first-visit-modal')) {
+            changeNameModal.classList.remove('active');
+          }
+        });
+        
+        // Permitir cerrar modal con ESC (solo si no es primera visita)
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && changeNameModal.classList.contains('active') && !changeNameModal.classList.contains('first-visit-modal')) {
+            changeNameModal.classList.remove('active');
+          }
+        });
+        
+        // Guardar nombre con Enter
+        newUserNameInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            saveNameChange.click();
+          }
+        });
+        
+        // Inicializar animación del ícono
+        const iconElement = document.querySelector('.ball-icon');
+        function animateIcon() {
+          iconElement.classList.add('animate-bounce');
+          setTimeout(() => {
+            iconElement.classList.remove('animate-bounce');
+            setTimeout(animateIcon, 3000);
+          }, 1000);
+        }
+        animateIcon();
+
+        // Efecto de iluminación al pasar el mouse por los juegos
+        const gameOptions = document.querySelectorAll('.game-option:not(.game-locked)');
+        gameOptions.forEach(option => {
+          option.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            this.style.setProperty('--x', `${x}px`);
+            this.style.setProperty('--y', `${y}px`);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

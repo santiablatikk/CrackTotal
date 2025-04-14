@@ -1,13 +1,5 @@
 // online.js
 
-// Configurar logger para evitar loggear en producción
-const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-const logger = {
-  log: isProduction ? function(){} : console.log,
-  warn: isProduction ? function(){} : console.warn,
-  error: console.error // Mantener errores siempre
-};
-
 // Conectar con Socket.io
 const socket = io();
 
@@ -62,9 +54,8 @@ async function loadOnlineQuestions(level) {
 if (createRoomSubmit) {
   createRoomSubmit.addEventListener("click", () => {
     // Aquí implementarías la lógica para crear la sala vía Socket.io
-    // Ya no redirigimos a online_wait.html
-    logger.log("Creando sala...");
-    // La lógica de espera ahora se maneja dentro de online.html
+    // Simulamos redirigiendo a la pantalla de espera:
+    window.location.href = "online_wait.html";
   });
 }
 
@@ -72,9 +63,15 @@ if (createRoomSubmit) {
 if (joinRoomSubmit) {
   joinRoomSubmit.addEventListener("click", () => {
     // Implementa la lógica para unirse a una sala vía Socket.io
-    logger.log("Uniéndose a sala...");
-    // La lógica de espera ahora se maneja dentro de online.html
+    window.location.href = "online_wait.html";
   });
+}
+
+// En la pantalla de espera (online_wait.html), redirige a online_game.html tras 5 segundos
+if (window.location.pathname.endsWith("online_wait.html")) {
+  setTimeout(() => {
+    window.location.href = "online_game.html";
+  }, 5000);
 }
 
 // Funciones para el juego online (en online_game.html)

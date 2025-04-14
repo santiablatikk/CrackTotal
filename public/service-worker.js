@@ -3,45 +3,32 @@
  * Handles caching, offline support, and PWA functionality
  */
 
-// Cache names
-const CACHE_NAME = 'crack-total-cache-v2';
-const ASSETS_CACHE = 'crack-total-assets-v2';
+// Nombres de las cachés
+const CACHE_NAME = 'pasala-che-v1';
+const DYNAMIC_CACHE_NAME = 'pasala-che-dynamic-v1';
 
-// Assets to pre-cache
+// Archivos a precargar en la caché principal
 const PRECACHE_ASSETS = [
   '/',
-  'index.html',
-  'portal.html',
-  'game-rosco.html',
-  'logros.html',
-  'terms.html',
-  'privacy.html',
-  'blog.html',
-  'cookies.html',
-  'contact.html',
-  'about.html',
-  'css/variables.css',
-  'css/styles.css',
-  'css/game-styles.css',
-  'css/footer-styles.css',
-  'css/achievements.css',
-  'css/user/dashboard-modern.css',
-  'js/login.js',
-  'js/game.js',
-  'js/game-data.js',
-  'js/global-footer.js',
-  'js/utils.js',
-  'js/particles-config.js',
-  'img/logo.png',
-  'img/favicon.ico',
-  'favicon.ico',
-  'manifest.json'
-];
-
-// Scripts to preload
-const PRELOAD_SCRIPTS = [
-  '/js/main.js',
-  '/js/utils.js'
+  '/index.html',
+  '/game.html',
+  '/profile.html',
+  '/ranking.html',
+  '/about.html',
+  '/offline.html',
+  '/css/styles.css',
+  '/css/game-styles.css',
+  '/css/footer-styles.css',
+  '/css/pages.css',
+  '/js/utils.js',
+  '/js/game.js',
+  '/js/profile.js',
+  '/js/ranking.js',
+  '/img/icons/icon-192x192.png',
+  '/img/icons/icon-512x512.png',
+  '/manifest.json',
+  'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
 ];
 
 // Archivos de sonido (pueden ser grandes, considerarlos opcionales)
@@ -53,70 +40,40 @@ const AUDIO_ASSETS = [
   '/sounds/click.mp3'
 ];
 
-// Archivos a almacenar en caché
-const filesToCache = [
-  '/',
-  '/index.html',
-  '/portal.html',
-  '/game-rosco.html',
-  '/game.html',
-  '/ranking.html',
-  '/perfil.html',
-  '/logros.html',
-  '/terms.html',
-  '/privacy.html',
-  '/cookies.html',
-  '/blog.html',
-  '/about.html',
-  '/contact.html',
-  '/blog-detail-history.html',
-  '/blog-detail-tactics.html',
-  '/css/styles.css',
-  '/css/game-styles.css',
-  '/css/variables.css',
-  '/css/achievements.css',
-  '/css/footer-styles.css',
-  '/css/pages.css',
-  '/css/blog.css',
-  '/js/game.js',
-  '/js/game-data.js',
-  '/js/global-footer.js',
-  '/js/particles-config.js',
-  '/js/utils.js',
-  '/js/main.js',
-  '/utils/notifications.js',
-  '/img/logo.png',
-  '/img/favicon.ico',
-  '/img/preview.jpg',
-  '/img/backgrounds/bg-pattern.png',
-  '/img/backgrounds/field-bg.jpg',
-  '/img/backgrounds/stadium-blur.jpg',
-  '/sounds/correct.mp3',
-  '/sounds/error.mp3',
-  '/sounds/victory.mp3',
-  '/sounds/defeat.mp3',
-  '/sounds/click.mp3',
-  '/favicon.ico',
-  '/manifest.json',
-  '/millonario/index.html',
-  '/millonario/local.html',
-  '/millonario/online.html'
-];
-
 // Instalar el Service Worker
-self.addEventListener('install', function(event) {
+self.addEventListener('install', event => {
+  console.log('[Service Worker] Instalando...');
+  
+  // Esperar hasta que todas las promesas se completen
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(function(cache) {
-        console.log('Caché abierta');
-        return cache.addAll(filesToCache);
+    Promise.all([
+      // Caché principal (recursos críticos)
+      caches.open(CACHE_NAME).then(cache => {
+        console.log('[Service Worker] Precargando recursos principales...');
+        return cache.addAll(PRECACHE_ASSETS);
+      }),
+      
+      // Caché de recursos de audio (opcionales)
+      caches.open('audio-cache-v1').then(cache => {
+        console.log('[Service Worker] Precargando recursos de audio...');
+        // Uso de Promise.allSettled para continuar incluso si algunos fallan
+        return Promise.allSettled(
+          AUDIO_ASSETS.map(url => cache.add(url).catch(error => {
+            console.log(`[Service Worker] Error al precargar audio: ${url}`, error);
+          }))
+        );
       })
+    ]).then(() => {
+      console.log('[Service Worker] Instalación completada');
+      // Forzar que el nuevo service worker tome el control inmediatamente
+      return self.skipWaiting();
+    })
   );
 });
 
 // Activar el Service Worker
 self.addEventListener('activate', event => {
-  console.log('[Service Worker] Activando v2...');
+  console.log('[Service Worker] Activando...');
   
   // Borrar cachés antiguas
   event.waitUntil(
@@ -124,7 +81,7 @@ self.addEventListener('activate', event => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME && 
-              cacheName !== ASSETS_CACHE && 
+              cacheName !== DYNAMIC_CACHE_NAME && 
               cacheName !== 'audio-cache-v1') {
             console.log('[Service Worker] Eliminando caché antigua:', cacheName);
             return caches.delete(cacheName);
@@ -132,7 +89,7 @@ self.addEventListener('activate', event => {
         })
       );
     }).then(() => {
-      console.log('[Service Worker] v2 ¡Ahora está activo!');
+      console.log('[Service Worker] ¡Ahora está activo!');
       // Reclamar clientes para que el service worker tome el control inmediatamente
       return self.clients.claim();
     })
@@ -141,44 +98,64 @@ self.addEventListener('activate', event => {
 
 // Interceptar solicitudes de red
 self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
-
-  // Ignorar solicitudes a la API y no-GET
-  if (event.request.method !== 'GET' || url.pathname.startsWith('/api/')) {
-    return; // Let the browser handle it
+  // Ignorar solicitudes POST o a servicios externos excepto fuentes
+  if (event.request.method !== 'GET' || 
+      (!event.request.url.includes(self.location.origin) && 
+       !event.request.url.includes('fonts.googleapis') && 
+       !event.request.url.includes('cdnjs.cloudflare'))) {
+    return;
   }
   
-  // Estrategia: Cache first, falling back to network
+  // Estrategia: Cache first, falling back to network and updating cache
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
+      // Si está en caché, devolver la respuesta de caché
       if (cachedResponse) {
-        // console.log(`[Service Worker] Sirviendo desde caché: ${event.request.url}`);
+        // En segundo plano, actualizar la caché con la versión más reciente
+        fetch(event.request).then(networkResponse => {
+          if (networkResponse && networkResponse.ok && networkResponse.type === 'basic') {
+            caches.open(DYNAMIC_CACHE_NAME).then(cache => {
+              cache.put(event.request, networkResponse.clone());
+            });
+          }
+        }).catch(err => {
+          console.log('[Service Worker] Error al actualizar caché:', err);
+        });
+        
         return cachedResponse;
       }
       
       // Si no está en caché, buscar en red
-      // console.log(`[Service Worker] Buscando en red: ${event.request.url}`);
       return fetch(event.request).then(networkResponse => {
-        // Check if we received a valid response
         if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
-             // Don't cache non-basic responses (like opaque responses from CDNs)
-            return networkResponse;
+          return networkResponse;
         }
         
-        // Clone the response to cache it
+        // Clonar la respuesta para guardarla en caché
         let responseToCache = networkResponse.clone();
         
-        caches.open(ASSETS_CACHE).then(cache => {
-          // console.log(`[Service Worker] Cacheando nuevo recurso: ${event.request.url}`);
+        // Guardar en caché dinámica
+        caches.open(DYNAMIC_CACHE_NAME).then(cache => {
           cache.put(event.request, responseToCache);
         });
         
         return networkResponse;
       }).catch(error => {
-        console.warn(`[Service Worker] Error de fetch: ${event.request.url}`, error);
-        // Devolver mensaje de error genérico
-        return new Response("Network error. No se pudo conectar al servidor.", 
-                           { status: 408, headers: { 'Content-Type': 'text/plain' } });
+        console.log('[Service Worker] Error de red:', error);
+        
+        // Si es una navegación a una página HTML, mostrar página offline
+        if (event.request.headers.get('accept').includes('text/html')) {
+          return caches.match('/offline.html');
+        }
+        
+        // Para otros recursos, devolver fallback genérico en lugar de placeholder
+        if (event.request.url.match(/\.(jpg|jpeg|png|gif|svg)$/)) {
+          // Don't attempt to return a placeholder image that doesn't exist
+          return new Response('Image not available offline', { 
+            status: 200, 
+            headers: { 'Content-Type': 'text/plain' } 
+          });
+        }
       });
     })
   );
@@ -200,7 +177,7 @@ self.addEventListener('push', event => {
     const data = event.data.json();
     
     const options = {
-      body: data.body || 'Hay nuevas noticias de CRACK TOTAL.',
+      body: data.body || 'Hay nuevas noticias de PASALA CHE.',
       icon: '/img/icons/icon-192x192.png',
       badge: '/img/icons/badge-72x72.png',
       vibrate: [100, 50, 100],
@@ -211,7 +188,7 @@ self.addEventListener('push', event => {
     
     event.waitUntil(
       self.registration.showNotification(
-        data.title || 'CRACK TOTAL', 
+        data.title || 'PASALA CHE', 
         options
       )
     );
@@ -254,8 +231,7 @@ self.addEventListener('notificationclick', event => {
 // Gestión de sincronización en segundo plano
 self.addEventListener('sync', event => {
   if (event.tag === 'sync-profile-data') {
-    console.log('[Service Worker] Evento Sync recibido:', event.tag);
-    // event.waitUntil(syncData());
+    event.waitUntil(syncData());
   }
 });
 

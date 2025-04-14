@@ -1649,7 +1649,7 @@ function savePlayerData(gameData) {
 function saveGameToFirebase(gameData, userIP) {
   try {
     // Verificar si Firebase está disponible
-    if (typeof firebase !== 'undefined' && firebase.firestore) {
+    if (window.firebaseAvailable && typeof firebase !== 'undefined' && firebase.firestore) {
       const db = firebase.firestore();
       
       // Preparar datos para guardar

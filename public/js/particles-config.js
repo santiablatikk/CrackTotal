@@ -1,7 +1,7 @@
 const particlesConfig = {
   particles: {
     number: {
-      value: 50,
+      value: 80,
       density: {
         enable: true,
         value_area: 800
@@ -15,6 +15,9 @@ const particlesConfig = {
       stroke: {
         width: 0,
         color: '#000000'
+      },
+      polygon: {
+        nb_sides: 5
       }
     },
     opacity: {
@@ -51,7 +54,12 @@ const particlesConfig = {
       random: true,
       straight: false,
       out_mode: 'out',
-      bounce: false
+      bounce: false,
+      attract: {
+        enable: false,
+        rotateX: 600,
+        rotateY: 1200
+      }
     }
   },
   interactivity: {
@@ -74,8 +82,22 @@ const particlesConfig = {
           opacity: 1
         }
       },
+      bubble: {
+        distance: 400,
+        size: 40,
+        duration: 2,
+        opacity: 8,
+        speed: 3
+      },
+      repulse: {
+        distance: 200,
+        duration: 0.4
+      },
       push: {
         particles_nb: 4
+      },
+      remove: {
+        particles_nb: 2
       }
     }
   },

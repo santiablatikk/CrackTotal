@@ -17,8 +17,15 @@ let analytics;
 document.addEventListener("DOMContentLoaded", async () => {
   console.log('DOM cargado - Inicializando ranking');
   
-  // Initialize Firebase
-  initializeFirebase();
+  // Don't explicitly initialize Firebase - wait for the script loader to do it
+  // Check for Firebase availability
+  if (window.firebaseAvailable) {
+    db = window.db;
+    analytics = window.analytics;
+    console.log('Firebase encontrado y listo para usar');
+  } else {
+    console.log('Firebase no está disponible, usando modo offline');
+  }
   
   // Obtener el nombre de usuario guardado
   const username = getUsernameFromStorage();
@@ -42,22 +49,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Configurar los botones de navegación
   setupNavigationButtons();
 });
-
-// Inicializar Firebase
-function initializeFirebase() {
-  try {
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    
-    // Initialize Firebase services
-    db = firebase.firestore();
-    analytics = firebase.analytics();
-    
-    console.log('Firebase inicializado correctamente');
-  } catch (error) {
-    console.error('Error al inicializar Firebase:', error);
-  }
-}
 
 // Obtener nombre de usuario desde localStorage
 function getUsernameFromStorage() {
@@ -136,6 +127,12 @@ function setupRankingTabs() {
 async function getRankingDataFromFirebase(period = 'global') {
   try {
     console.log(`Obteniendo datos de ranking de Firebase para período: ${period}`);
+    
+    // Check if Firebase is available
+    if (!window.firebaseAvailable || !db) {
+      console.log('Firebase no está disponible para obtener datos, usando localStorage');
+      return await getRankingDataFromLocalStorage(period);
+    }
     
     // Obtener rangos de fecha según el período
     const dateRange = getPeriodDateRange(period);
@@ -243,8 +240,9 @@ async function getRankingDataFromLocalStorage(period = 'global') {
 // Guardar partida en Firebase para el ranking global
 async function saveGameToFirebase(gameData) {
   try {
-    if (!db) {
-      console.error('Firebase no está inicializado');
+    // Verify that Firebase is available
+    if (!window.firebaseAvailable || !db) {
+      console.log('Firebase no está disponible, los datos se guardan solo localmente');
       return false;
     }
     
@@ -557,10 +555,14 @@ function showGameCompletionMessage() {
         timeUsed: lastGameData.timeUsed || 0
       };
       
-      // Guardar en Firebase
-      saveGameToFirebase(gameDataForFirebase)
-        .then(() => console.log('Partida guardada en Firebase correctamente'))
-        .catch(err => console.error('Error al guardar partida en Firebase:', err));
+      // Guardar en Firebase solo si está disponible
+      if (window.firebaseAvailable) {
+        saveGameToFirebase(gameDataForFirebase)
+          .then(() => console.log('Partida guardada en Firebase correctamente'))
+          .catch(err => console.error('Error al guardar partida en Firebase:', err));
+      } else {
+        console.log('Firebase no disponible, omitiendo guardado en la nube');
+      }
     }
   }
   
@@ -652,8 +654,8 @@ async function loadRanking(forceRefresh = false, period = 'global') {
     // Intentar obtener datos desde Firebase
     let rankingData = [];
     
-    // Verificar si Firebase está inicializado
-    if (db) {
+    // Verificar si Firebase está disponible
+    if (window.firebaseAvailable) {
       try {
         rankingData = await getRankingDataFromFirebase(period);
       } catch (firebaseError) {
@@ -662,7 +664,7 @@ async function loadRanking(forceRefresh = false, period = 'global') {
         rankingData = await getRankingDataFromLocalStorage(period);
       }
     } else {
-      console.warn('Firebase no está inicializado, usando localStorage');
+      console.warn('Firebase no está disponible, usando localStorage');
       rankingData = await getRankingDataFromLocalStorage(period);
     }
     
@@ -682,7 +684,7 @@ async function loadRanking(forceRefresh = false, period = 'global') {
     if (rankingTable) rankingTable.style.display = 'table';
     
     // Ordenar por puntaje (score) de mayor a menor - no necesario si ya viene ordenado de Firebase
-    if (rankingData.length > 0 && !db) {
+    if (rankingData.length > 0 && !window.firebaseAvailable) {
       rankingData.sort((a, b) => b.score - a.score);
     }
     

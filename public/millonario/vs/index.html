@@ -19,16 +19,12 @@
     <link rel="stylesheet" href="../css/pasala-style.css" />
     <link rel="stylesheet" href="../css/styles.css" />
     <link rel="stylesheet" href="vs-styles.css" />
-    <link rel="stylesheet" href="../../css/footer-styles.css">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Fuentes -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Scripts útiles -->
-    <script src="../../utils/notifications.js"></script>
   </head>
   <body>
     <!-- Partículas de fondo -->
@@ -54,9 +50,7 @@
         <div class="logo-animation">
           <i class="fas fa-futbol ball-icon bounce"></i>
         </div>
-        <a href="../index.html" class="title-link">
-          <h1 class="title-text">MODO 1 VS 1</h1>
-        </a>
+        <h1 class="title-text">MODO 1 VS 1</h1>
         <a href="../index.html" class="return-portal-link"><i class="fas fa-angle-left"></i> Volver al inicio</a>
       </header>
       
@@ -269,29 +263,63 @@
     <!-- Footer -->
     <footer class="policy-footer">
       <div class="footer-links-mini">
-        <a href="../../portal.html"><i class="fas fa-home"></i> Portal</a>
-        <a href="../index.html"><i class="fas fa-arrow-left"></i> Volver</a>
         <a href="../../terms.html"><i class="fas fa-file-contract"></i> Términos</a>
         <a href="../../privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
         <a href="../../blog.html"><i class="fas fa-blog"></i> Blog</a>
         <a href="../../cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
         <a href="../../contact.html"><i class="fas fa-envelope"></i> Contacto</a>
         <a href="../../about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
-        <a href="../../logros.html"><i class="fas fa-medal"></i> Logros</a>
       </div>
-      <div class="share-button-container">
-        <button id="share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
-      </div>
-      <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero</div>
+      <div class="copyright-text">&copy; 2025 CRACK TOTAL - El Juego del Rosco Futbolero.</div>
       <div class="footer-social-icons">
-        <a href="https://www.facebook.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://twitter.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-twitter"></i></a>
-        <a href="https://www.instagram.com/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.youtube.com/c/cracktotal" target="_blank" rel="noopener" class="social-icon"><i class="fab fa-youtube"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
       </div>
     </footer>
-
-    <!-- Scripts adicionales -->
-    <script src="../../js/global-footer.js"></script>
+    
+    <!-- Modal de resultados -->
+    <div id="result-modal" class="modal">
+      <div class="modal-content">
+        <h2 id="result-title">¡Fin del duelo!</h2>
+        <div id="final-scores" class="final-scores">
+          <!-- Se llenará dinámicamente -->
+        </div>
+        <div id="winner-display" class="winner-display">
+          <!-- Se llenará dinámicamente -->
+        </div>
+        <div class="modal-buttons">
+          <button id="rematch-btn" class="btn action-btn">
+            <i class="fas fa-redo"></i> Revancha
+          </button>
+          <button id="back-to-lobby-btn" class="btn back-btn">
+            <i class="fas fa-home"></i> Volver al lobby
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Toast para notificaciones -->
+    <div id="notification" class="toast" style="display: none;"></div>
+    
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="../../js/particles-config.js"></script>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+    <script>
+      // Configure Socket.io with reconnection options
+      const socketOptions = {
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        timeout: 20000
+      };
+      
+      // This will be used in vs-mode.js
+      window.socketOptions = socketOptions;
+    </script>
+    <script src="../js/vs/vs-mode.js"></script>
   </body>
 </html> 

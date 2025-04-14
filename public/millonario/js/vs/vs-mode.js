@@ -94,14 +94,6 @@ const backToLobbyBtn = document.getElementById('back-to-lobby-btn');
 
 const notification = document.getElementById('notification');
 
-// Configurar logger para evitar loggear en producción
-const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
-const logger = {
-  log: isProduction ? function(){} : console.log,
-  warn: isProduction ? function(){} : console.warn,
-  error: console.error // Mantener errores siempre
-};
-
 // Event listeners
 document.addEventListener('DOMContentLoaded', init);
 
@@ -139,7 +131,7 @@ function init() {
   
   // Check socket connection state
   socket.on('connect', () => {
-    logger.log('Connected to server');
+    console.log('Connected to server');
     isConnected = true;
     updateConnectionStatus('connected');
     showNotification('Conectado al servidor', 'success');
@@ -150,7 +142,7 @@ function init() {
   });
   
   socket.on('connect_error', (error) => {
-    logger.error('Connection error:', error);
+    console.error('Connection error:', error);
     isConnected = false;
     updateConnectionStatus('disconnected');
     showNotification('Error de conexión al servidor', 'error');
@@ -166,7 +158,7 @@ function init() {
   });
   
   socket.on('disconnect', (reason) => {
-    logger.log('Disconnected from server:', reason);
+    console.log('Disconnected from server:', reason);
     isConnected = false;
     updateConnectionStatus('disconnected');
     showNotification('Desconectado del servidor. Reconectando...', 'warning');
@@ -178,14 +170,14 @@ function init() {
   });
   
   socket.on('reconnect', (attemptNumber) => {
-    logger.log('Reconnected to server after', attemptNumber, 'attempts');
+    console.log('Reconnected to server after', attemptNumber, 'attempts');
     isConnected = true;
     updateConnectionStatus('connected');
     showNotification('Reconectado al servidor', 'success');
   });
   
   socket.on('reconnect_attempt', (attemptNumber) => {
-    logger.log('Reconnection attempt:', attemptNumber);
+    console.log('Reconnection attempt:', attemptNumber);
     updateConnectionStatus('connecting');
     showNotification(`Intentando reconectar (${attemptNumber})...`, 'info');
   });
@@ -332,7 +324,8 @@ function handleRoomCreated(data) {
       showNotification('Código copiado al portapapeles para compartir', 'info');
     })
     .catch(() => {
-      logger.log('No se pudo copiar automáticamente el código');
+      // Si falla la copia automática, no mostrar error
+      console.log('No se pudo copiar automáticamente el código');
     });
 }
 
@@ -642,7 +635,7 @@ function copyRoomCode() {
       showNotification('Código copiado al portapapeles', 'success');
     })
     .catch(() => {
-      logger.log('No se pudo copiar el código');
+      showNotification('No se pudo copiar el código', 'error');
     });
 }
 
