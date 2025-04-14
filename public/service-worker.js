@@ -3,9 +3,10 @@
  * Handles caching, offline support, and PWA functionality
  */
 
-// Nombres de las cachés
-const CACHE_NAME = 'pasala-che-v1';
-const DYNAMIC_CACHE_NAME = 'pasala-che-dynamic-v1';
+// Nombres de las cachés (Incrementar versión para forzar actualización)
+const CACHE_VERSION = 'v1.1'; // Incrementa este número cuando cambies archivos precacheados
+const CACHE_NAME = `pasala-che-static-${CACHE_VERSION}`;
+const DYNAMIC_CACHE_NAME = `pasala-che-dynamic-${CACHE_VERSION}`;
 
 // Archivos a precargar en la caché principal
 const PRECACHE_ASSETS = [
@@ -14,24 +15,32 @@ const PRECACHE_ASSETS = [
   '/game.html',
   '/profile.html',
   '/ranking.html',
+  '/logros.html', // Añadido logros.html si no estaba
   '/about.html',
   '/offline.html',
   '/css/styles.css',
+  '/css/combined.css', // Añadido combined.css
   '/css/game-styles.css',
   '/css/footer-styles.css',
   '/css/pages.css',
+  '/css/profile-ranking-styles.css', // Añadido profile-ranking-styles.css
+  '/css/achievements.css', // Añadido achievements.css
   '/js/utils.js',
   '/js/game.js',
   '/js/profile.js',
   '/js/ranking.js',
+  '/img/favicon.ico',
   '/img/icons/icon-192x192.png',
   '/img/icons/icon-512x512.png',
   '/manifest.json',
-  'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap',
-  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
+  'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Oswald:wght@500;700&display=swap',
+  'https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
+  'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
 ];
 
 // Archivos de sonido (pueden ser grandes, considerarlos opcionales)
+const AUDIO_CACHE_NAME = `audio-cache-${CACHE_VERSION}`;
 const AUDIO_ASSETS = [
   '/sounds/correct.mp3',
   '/sounds/incorrect.mp3',
@@ -54,7 +63,7 @@ self.addEventListener('install', event => {
       }),
       
       // Caché de recursos de audio (opcionales)
-      caches.open('audio-cache-v1').then(cache => {
+      caches.open(AUDIO_CACHE_NAME).then(cache => {
         console.log('[Service Worker] Precargando recursos de audio...');
         // Uso de Promise.allSettled para continuar incluso si algunos fallan
         return Promise.allSettled(
@@ -75,14 +84,14 @@ self.addEventListener('install', event => {
 self.addEventListener('activate', event => {
   console.log('[Service Worker] Activando...');
   
-  // Borrar cachés antiguas
+  // Borrar TODAS las cachés antiguas que no coincidan con las actuales
   event.waitUntil(
     caches.keys().then(cacheNames => {
       return Promise.all(
         cacheNames.map(cacheName => {
           if (cacheName !== CACHE_NAME && 
               cacheName !== DYNAMIC_CACHE_NAME && 
-              cacheName !== 'audio-cache-v1') {
+              cacheName !== AUDIO_CACHE_NAME) { // Comparar con TODOS los nombres de caché actuales
             console.log('[Service Worker] Eliminando caché antigua:', cacheName);
             return caches.delete(cacheName);
           }
@@ -98,67 +107,86 @@ self.addEventListener('activate', event => {
 
 // Interceptar solicitudes de red
 self.addEventListener('fetch', event => {
-  // Ignorar solicitudes POST o a servicios externos excepto fuentes
-  if (event.request.method !== 'GET' || 
-      (!event.request.url.includes(self.location.origin) && 
-       !event.request.url.includes('fonts.googleapis') && 
-       !event.request.url.includes('cdnjs.cloudflare'))) {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // Ignorar solicitudes que no son GET o a dominios externos (excepto fuentes/CDNs)
+  if (request.method !== 'GET' || 
+      (url.origin !== self.location.origin && 
+       !url.origin.includes('fonts.googleapis.com') && 
+       !url.origin.includes('fonts.gstatic.com') && 
+       !url.origin.includes('cdnjs.cloudflare.com'))) {
+    // Dejar que el navegador maneje estas solicitudes
     return;
   }
-  
-  // Estrategia: Cache first, falling back to network and updating cache
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      // Si está en caché, devolver la respuesta de caché
-      if (cachedResponse) {
-        // En segundo plano, actualizar la caché con la versión más reciente
-        fetch(event.request).then(networkResponse => {
-          if (networkResponse && networkResponse.ok && networkResponse.type === 'basic') {
+
+  // Estrategia: Network First para HTML y JS (para obtener siempre lo último)
+  if (request.headers.get('Accept').includes('text/html') || url.pathname.endsWith('.js')) {
+    event.respondWith(
+      fetch(request)
+        .then(networkResponse => {
+          // Si la red responde bien, guardar en caché dinámica y devolver
+          if (networkResponse.ok) {
+            const clonedResponse = networkResponse.clone();
             caches.open(DYNAMIC_CACHE_NAME).then(cache => {
-              cache.put(event.request, networkResponse.clone());
+              cache.put(request, clonedResponse);
             });
           }
-        }).catch(err => {
-          console.log('[Service Worker] Error al actualizar caché:', err);
-        });
-        
-        return cachedResponse;
-      }
-      
-      // Si no está en caché, buscar en red
-      return fetch(event.request).then(networkResponse => {
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
           return networkResponse;
-        }
-        
-        // Clonar la respuesta para guardarla en caché
-        let responseToCache = networkResponse.clone();
-        
-        // Guardar en caché dinámica
-        caches.open(DYNAMIC_CACHE_NAME).then(cache => {
-          cache.put(event.request, responseToCache);
-        });
-        
-        return networkResponse;
-      }).catch(error => {
-        console.log('[Service Worker] Error de red:', error);
-        
-        // Si es una navegación a una página HTML, mostrar página offline
-        if (event.request.headers.get('accept').includes('text/html')) {
-          return caches.match('/offline.html');
-        }
-        
-        // Para otros recursos, devolver fallback genérico en lugar de placeholder
-        if (event.request.url.match(/\.(jpg|jpeg|png|gif|svg)$/)) {
-          // Don't attempt to return a placeholder image that doesn't exist
-          return new Response('Image not available offline', { 
-            status: 200, 
-            headers: { 'Content-Type': 'text/plain' } 
+        })
+        .catch(error => {
+          // Si la red falla, intentar obtener de la caché
+          console.log(`[Service Worker] Red falló para ${url.pathname}, intentando caché...`);
+          return caches.match(request).then(cachedResponse => {
+            if (cachedResponse) {
+              return cachedResponse;
+            } else if (request.headers.get('Accept').includes('text/html')) {
+              // Si es HTML y no está en caché, mostrar offline.html
+              return caches.match('/offline.html');
+            } else {
+              // Para JS u otros, simplemente fallar si no está en caché
+              return new Response('Recurso no disponible offline', {
+                status: 404,
+                headers: { 'Content-Type': 'text/plain' }
+              });
+            }
           });
+        })
+    );
+  } 
+  // Estrategia: Cache First para otros assets (CSS, imágenes, fuentes, audio)
+  else {
+    event.respondWith(
+      caches.match(request).then(cachedResponse => {
+        if (cachedResponse) {
+          return cachedResponse; // Servir desde caché si existe
         }
-      });
-    })
-  );
+        
+        // Si no está en caché, ir a la red
+        return fetch(request).then(networkResponse => {
+          if (networkResponse.ok) {
+            // Guardar la respuesta en caché dinámica para futuras solicitudes
+            const clonedResponse = networkResponse.clone();
+            // Determinar en qué caché guardar (audio u otros dinámicos)
+            const targetCache = url.pathname.match(/\.(mp3|wav|ogg)$/) ? AUDIO_CACHE_NAME : DYNAMIC_CACHE_NAME;
+            caches.open(targetCache).then(cache => {
+              cache.put(request, clonedResponse);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(error => {
+          console.log(`[Service Worker] Error de red para asset ${url.pathname}:`, error);
+          // Fallback para recursos no encontrados (opcional)
+          // Podríamos devolver un placeholder si tuviéramos uno
+          return new Response('Recurso no disponible offline', {
+            status: 404,
+            headers: { 'Content-Type': 'text/plain' }
+          });
+        });
+      })
+    );
+  }
 });
 
 // Escuchar mensajes de clientes (desde la aplicación)
