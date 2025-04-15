@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -7,9 +7,8 @@
     <meta name="google-adsense-account" content="ca-pub-9579152019412427">
     <title>Contacto - PASALA CHÉ</title>
     <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/pages.css" />
-    <link rel="stylesheet" href="css/header.css" />
     <link rel="stylesheet" href="css/footer-styles.css" />
+    <link rel="stylesheet" href="css/combined.css" />
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet" />
     <!-- Font Awesome -->
@@ -27,35 +26,6 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 2rem;
-      }
-      
-      .page-header {
-        text-align: center;
-        margin-bottom: 2.5rem;
-        position: relative;
-        padding-bottom: 1.5rem;
-      }
-      
-      .page-header::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 4px;
-        background: linear-gradient(90deg, #e11d48, #fb7185);
-        border-radius: 2px;
-      }
-      
-      .page-header h1 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        color: #fff;
-        font-family: 'Oswald', sans-serif;
-        text-transform: uppercase;
-        letter-spacing: 1px;
       }
       
       .page-description {
@@ -454,10 +424,6 @@
           padding: 1.5rem;
         }
         
-        .page-header h1 {
-          font-size: 2rem;
-        }
-        
         .contact-form {
           grid-template-columns: 1fr;
         }
@@ -477,23 +443,22 @@
     </style>
   </head>
   <body>
-    <header class="main-header">
+    <a href="index.html" class="home-link">
+      <i class="fas fa-home"></i> Inicio
+    </a>
+
+    <header class="app-header">
       <div class="logo-animation">
-        <i class="fas fa-futbol ball-icon bounce"></i>
+          <i class="fas fa-envelope ball-icon bounce"></i>
       </div>
-      <a href="index.html" class="title-link">
-        <h1 class="title-text">PASALA CHE</h1>
+      <a href="pasalache.html" class="title-link">
+          <h1 class="title-text">Contacto</h1>
       </a>
-      <p class="subtitle">El juego de palabras del fútbol</p>
+      <p class="subtitle">Ponte en contacto con nosotros</p>
     </header>
-    
+
     <div class="page-container">
-      <header class="page-header">
-        <h1>Contacto</h1>
-        <p class="page-description">¿Tienes preguntas, sugerencias o comentarios? Nos encantaría escucharte. Utiliza cualquiera de los siguientes métodos para ponerte en contacto con nuestro equipo.</p>
-      </header>
-      
-      <section class="contact-section">
+      <div class="contact-section">
         <h2>Nuestros Canales</h2>
         <div class="contact-info">
           <div class="contact-method">
@@ -523,7 +488,7 @@
             <a href="https://twitter.com/pasalachee" target="_blank">@pasalachee</a>
           </div>
         </div>
-      </section>
+      </div>
       
       <section class="contact-section">
         <h2>Formulario de Contacto</h2>
@@ -608,7 +573,7 @@
       </section>
       
       <div class="back-link-container">
-        <a href="index.html" class="back-link">
+        <a href="pasalache.html" class="back-link">
           <i class="fas fa-home"></i> Volver al Inicio
         </a>
       </div>
@@ -681,6 +646,8 @@
     </script>
   </body>
 </html>
+
+
 
 
 

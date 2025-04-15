@@ -107,9 +107,6 @@ document.addEventListener('DOMContentLoaded', function() {
     return selectedDifficulty;
   }
   
-  // The alphabet for the rosco (Spanish alphabet without Ñ)
-  const alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-  
   // Sound settings
   let soundEnabled = true;
   
@@ -129,6 +126,11 @@ document.addEventListener('DOMContentLoaded', function() {
       skipQuestion();
     });
     
+    // Event listener para el botón de ayuda
+    helpBtn.addEventListener('click', function() {
+      showHelp();
+    });
+    
     // Event listener para el form
     answerForm.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -142,11 +144,6 @@ document.addEventListener('DOMContentLoaded', function() {
   function updateHelpButtonText() {
     document.querySelector('.help-count').textContent = `(${helpCount})`;
   }
-  
-  // Event listener para el botón de ayuda
-  helpBtn.addEventListener('click', function() {
-    showHelp();
-  });
   
   // Actualizar el texto del botón de ayuda
   updateHelpButtonText();
@@ -285,16 +282,6 @@ document.addEventListener('DOMContentLoaded', function() {
     return false;
   }
   
-  // Event listeners
-  answerForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    if (answerInput.value.trim()) {
-      handleAnswer();
-    } else {
-      skipQuestion();
-    }
-  });
-  
   // Create the rosco with letters in a clockwise circle
   function createRosco() {
     // Clear any existing letters but keep the question card
@@ -367,7 +354,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Fetch questions from the server (adapted to the structure in questions.json)
   async function fetchQuestions() {
     try {
-      const response = await fetch('../data/questions.json');
+      const response = await fetch('./data/questions.json');
       const data = await response.json();
       
       // Process questions to format them for the game
@@ -420,6 +407,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Crear el rosco
     createRosco();
+
+    // Llamar a initUI para configurar los botones y eventos
+    initUI();
     
     // Cargar preguntas
     const questionsLoaded = await fetchQuestions();
@@ -1072,11 +1062,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Show toast notification
   function showToast(message, type = 'success') {
-    // Función deshabilitada para evitar que aparezca el toast
-    return;
-
-    // El código original está comentado a continuación
-    /*
     toastMessage.textContent = message;
     
     // Set toast type
@@ -1118,7 +1103,6 @@ document.addEventListener('DOMContentLoaded', function() {
         toast.style.display = 'none';
       }, 300);
     }, 3000);
-    */
   }
   
   // Play sound

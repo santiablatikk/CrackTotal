@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -7,8 +7,8 @@
     <meta name="google-adsense-account" content="ca-pub-9579152019412427">
     <title>Política de Cookies - PASALA CHÉ</title>
     <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/header.css" />
     <link rel="stylesheet" href="css/footer-styles.css" />
+    <link rel="stylesheet" href="css/combined.css" />
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
@@ -32,44 +32,6 @@
         max-width: 900px;
         margin: 0 auto;
         padding: 2rem;
-      }
-      
-      .cookies-header {
-        text-align: center;
-        margin-bottom: 2.5rem;
-        position: relative;
-        padding-bottom: 1.5rem;
-      }
-      
-      .cookies-header::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 4px;
-        background: linear-gradient(90deg, #e11d48, #fb7185);
-        border-radius: 2px;
-      }
-      
-      .cookies-header h1 {
-        font-size: 2.5rem;
-        color: #fff;
-        margin-bottom: 1rem;
-        position: relative;
-        display: inline-block;
-        font-family: 'Oswald', sans-serif;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-      }
-      
-      .cookies-header p {
-        font-size: 1.1rem;
-        color: rgba(255, 255, 255, 0.8);
-        max-width: 800px;
-        margin: 0 auto;
-        line-height: 1.6;
       }
       
       .cookies-section {
@@ -406,23 +368,23 @@
     </style>
   </head>
   <body>
-    <header class="main-header">
+    <a href="index.html" class="home-link">
+      <i class="fas fa-home"></i> Inicio
+    </a>
+
+    <!-- Header Inserted -->
+    <header class="app-header">
       <div class="logo-animation">
-        <i class="fas fa-futbol ball-icon bounce"></i>
+          <i class="fas fa-cookie-bite ball-icon bounce"></i>
       </div>
-      <a href="index.html" class="title-link">
-        <h1 class="title-text">PASALA CHE</h1>
+      <a href="pasalache.html" class="title-link">
+          <h1 class="title-text">Política de Cookies</h1>
       </a>
-      <p class="subtitle">El juego de palabras del fútbol</p>
+      <p class="subtitle">Información sobre las cookies que utilizamos</p>
     </header>
     
-    <div class="page-container">
-      <div class="cookies-container">
-        <header class="cookies-header">
-          <h1>Aviso de Cookies</h1>
-          <p>Entendemos que la privacidad es importante. Aquí explicamos cómo utilizamos las cookies y cómo puedes gestionar tus preferencias.</p>
-        </header>
-
+    <div class="cookies-container page-container">
+      <div class="content-container">
         <section class="cookies-section">
           <h2><i class="fas fa-cookie-bite"></i> ¿Qué son las Cookies?</h2>
           <p>
@@ -497,7 +459,7 @@
         </section>
 
         <div class="back-link-container">
-          <a href="index.html" class="back-link"><i class="fas fa-home"></i> Volver al Inicio</a>
+          <a href="pasalache.html" class="back-link"><i class="fas fa-home"></i> Volver al Inicio</a>
         </div>
 
         <!-- Footer común -->
@@ -572,3 +534,5 @@
     </div>
   </body>
 </html>
+
+

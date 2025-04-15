@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -7,8 +7,8 @@
     <meta name="google-adsense-account" content="ca-pub-9579152019412427">
     <title>Política de Privacidad - PASALA CHÉ</title>
     <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/pages.css" />
     <link rel="stylesheet" href="css/footer-styles.css" />
+    <link rel="stylesheet" href="css/combined.css" />
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
@@ -32,44 +32,6 @@
         max-width: 900px;
         margin: 0 auto;
         padding: 2rem;
-      }
-      
-      .privacy-header {
-        text-align: center;
-        margin-bottom: 2.5rem;
-        position: relative;
-        padding-bottom: 1.5rem;
-      }
-      
-      .privacy-header::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 4px;
-        background: linear-gradient(90deg, #e11d48, #fb7185);
-        border-radius: 2px;
-      }
-      
-      .privacy-header h1 {
-        font-size: 2.5rem;
-        color: #fff;
-        margin-bottom: 1rem;
-        position: relative;
-        display: inline-block;
-        font-family: 'Oswald', sans-serif;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-      }
-      
-      .privacy-header p {
-        font-size: 1.1rem;
-        color: rgba(255, 255, 255, 0.8);
-        max-width: 800px;
-        margin: 0 auto;
-        line-height: 1.6;
       }
       
       .privacy-section {
@@ -305,10 +267,6 @@
           padding: 1.5rem;
         }
         
-        .privacy-header h1 {
-          font-size: 2rem;
-        }
-        
         .back-button {
           width: 50px;
           height: 50px;
@@ -320,23 +278,23 @@
     </style>
   </head>
   <body>
-    <header class="main-header">
+    <a href="index.html" class="home-link">
+      <i class="fas fa-home"></i> Inicio
+    </a>
+
+    <!-- Header Inserted -->
+    <header class="app-header">
       <div class="logo-animation">
-        <i class="fas fa-futbol ball-icon bounce"></i>
+          <i class="fas fa-shield-alt ball-icon bounce"></i> <!-- Changed icon -->
       </div>
-      <a href="index.html" class="title-link">
-        <h1 class="title-text">PASALA CHE</h1>
+      <a href="pasalache.html" class="title-link">
+          <h1 class="title-text">Política de Privacidad</h1>
       </a>
-      <p class="subtitle">El juego de palabras del fútbol</p>
+      <p class="subtitle">Cómo protegemos tus datos</p>
     </header>
     
     <div class="page-container">
       <div class="privacy-container">
-        <header class="privacy-header">
-          <h1>Política de Privacidad</h1>
-          <p>Tu privacidad es importante para nosotros. Esta política explica cómo recopilamos, usamos y protegemos tu información personal.</p>
-        </header>
-        
         <section class="privacy-section">
           <h2><i class="fas fa-info-circle"></i> Introducción</h2>
           <p>
@@ -409,12 +367,12 @@
         </section>
 
         <div class="back-link-container">
-          <a href="index.html" class="back-link"><i class="fas fa-home"></i> Volver al Inicio</a>
+          <a href="pasalache.html" class="back-link"><i class="fas fa-home"></i> Volver al Inicio</a>
         </div>
 
         <!-- Footer común -->
         <footer class="privacy-footer">
-          <p>&copy; 2025 PASALA CHÉ. Todos los derechos reservados.</p>
+          <p>&copy; marzo 2025 PASALA CHÉ. Todos los derechos reservados.</p>
           <div class="footer-links-mini">
             <a href="terms.html" class="mini-btn">Términos</a>
             <a href="cookies.html" class="mini-btn">Cookies</a>
@@ -484,3 +442,5 @@
     </div>
   </body>
 </html>
+
+

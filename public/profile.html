@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -8,8 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/combined.css">
-    <link rel="stylesheet" href="css/footer-styles.css">
-    <link rel="stylesheet" href="css/profile-ranking-styles.css">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     
     <!-- Google AdSense -->
@@ -17,181 +15,252 @@
      crossorigin="anonymous"></script>
     
     <style>
-        /* Enhanced styles for profile page */
-        .profile-page {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
+        /* --- Estilos Generales --- */
+        :root {
+            --color-primary: #e11d48; /* Rojo principal */
+            --color-secondary: #fb7185; /* Rojo claro */
+            --color-background: #0f172a; /* Azul muy oscuro */
+            --color-card-bg: rgba(30, 41, 59, 0.8); /* Azul oscuro semi-trans */
+            --color-card-bg-darker: rgba(15, 23, 42, 0.9);
+            --color-text: #e2e8f0; /* Gris claro */
+            --color-text-muted: #94a3b8; /* Gris medio */
+            --color-border: rgba(255, 255, 255, 0.1);
+            --font-primary: 'Poppins', sans-serif;
+            --font-secondary: 'Oswald', sans-serif;
+            --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.2);
+            --shadow-medium: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --border-radius-md: 12px;
+            --border-radius-lg: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: linear-gradient(135deg, var(--color-background), #1e293b);
+            color: var(--color-text);
+            line-height: 1.6;
             min-height: 100vh;
-            padding: 2rem;
+        }
+
+        a {
+            color: var(--color-primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--color-secondary);
         }
         
+        /* --- Cabecera (REMOVED - MOVED TO combined.css) --- */
+        /*
+        .app-header { ... }
+        .app-header .logo-animation { ... }
+        .app-header .ball-icon.bounce { ... }
+        .app-header .title-link { ... }
+        .app-header .title-text { ... }
+        .app-header .subtitle { ... }
+        */
+
+        /* --- Contenedor Principal --- */
+        .profile-page {
+            padding: 1rem;
+        }
+
         .profile-container {
             max-width: 1200px;
-            margin: 0 auto;
+            margin: 1rem auto;
+            padding: 0 1rem; /* Añadido padding lateral */
         }
         
+        /* Contenedor de Error */
+        #profile-error {
+            display: none; /* Oculto por defecto */
+            color: #f87171; /* Rojo claro para error */
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius-md);
+            margin: 1rem 0;
+            text-align: center;
+        }
+        #profile-error i {
+            margin-right: 0.5rem;
+        }
+
         .profile-content {
             display: grid;
-            grid-template-columns: 1fr 2fr;
+            grid-template-columns: 1fr;
             gap: 2rem;
-            margin-top: 2rem;
         }
         
+        @media (min-width: 992px) {
+            .profile-content {
+                grid-template-columns: 1fr 2fr;
+            }
+        }
+
+        /* --- Tarjeta Izquierda (Perfil Básico) --- */
         .profile-card {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
-            border-radius: 20px;
-            padding: 2.5rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(8px);
+            background: linear-gradient(145deg, var(--color-card-bg), var(--color-card-bg-darker));
+            border-radius: var(--border-radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--color-border);
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
             height: fit-content;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centrar contenido */
+            text-align: center;
         }
-        
+
         .profile-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #e11d48, #fb7185);
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
             z-index: 1;
         }
-        
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--color-card-bg-darker);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            border: 3px solid var(--color-primary);
+            box-shadow: var(--shadow-light);
+        }
+        .profile-avatar i {
+            font-size: 3rem;
+            color: var(--color-primary);
+        }
+
         .profile-name {
-            font-size: 2.6rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(90deg, #fff, rgba(255, 255, 255, 0.8));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            font-family: var(--font-secondary);
+            font-size: 2.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #fff;
             letter-spacing: 1px;
-            text-transform: uppercase;
-            font-family: 'Oswald', sans-serif;
         }
         
         .profile-level {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.6rem 1.5rem;
+            gap: 0.4rem;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 0.3rem 0.8rem;
             border-radius: 50px;
-            font-weight: 600;
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-            color: #fff;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(37, 99, 235, 0.9));
-            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
-            transform: translateY(0);
-            transition: all 0.3s ease;
         }
-        
-        .profile-level:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);
+        .profile-level i {
+             color: var(--color-secondary);
         }
-        
+
         .profile-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.2rem;
-            margin: 2rem 0;
+            gap: 1rem;
+            width: 100%; /* Ocupar ancho */
+            margin-bottom: 2rem;
         }
         
         .stat-item {
-            background: rgba(15, 23, 42, 0.7);
-            border-radius: 15px;
-            padding: 1.2rem;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: var(--border-radius-md);
+            padding: 1rem 0.5rem;
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .stat-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         
         .stat-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-        
-        .stat-item:hover::before {
-            opacity: 1;
+            box-shadow: var(--shadow-light);
         }
         
         .stat-number {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, #e11d48, #fb7185);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 0.5rem;
-            line-height: 1;
+            font-family: var(--font-secondary);
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            line-height: 1.1;
         }
         
         .stat-label {
-            font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 500;
+            letter-spacing: 0.5px;
         }
         
         .profile-details {
-            background: rgba(15, 23, 42, 0.7);
-            border-radius: 15px;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: var(--border-radius-md);
             padding: 1.5rem;
+            margin-bottom: 2rem;
             border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: left; /* Alinear texto a la izquierda */
         }
         
         .detail-item {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 1rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--color-border);
         }
         
         .detail-item:last-child {
             border-bottom: none;
             padding-bottom: 0;
         }
+         .detail-item:first-child {
+            padding-top: 0;
+        }
         
         .detail-item i {
-            font-size: 1.2rem;
-            width: 25px;
-            height: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            color: #e11d48;
+            font-size: 1.1rem;
+            color: var(--color-secondary);
+            width: 20px; /* Ancho fijo para icono */
+            text-align: center;
+        }
+        .detail-item span {
+            flex-grow: 1; /* Ocupar espacio */
+            color: var(--color-text-muted);
+        }
+        .detail-item strong {
+            font-weight: 600;
+            color: var(--color-text);
+            font-size: 1.1rem;
         }
         
         .view-ranking-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.8rem;
+            gap: 0.6rem;
             width: 100%;
-            padding: 1rem 1.5rem;
-            background: linear-gradient(135deg, #e11d48, #be123c);
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, var(--color-primary), #be123c);
             border-radius: 50px;
             color: #fff;
             font-weight: 600;
@@ -199,18 +268,19 @@
             transition: all 0.3s ease;
             border: none;
             cursor: pointer;
-            margin-top: 1.5rem;
-            box-shadow: 0 8px 20px rgba(190, 18, 60, 0.3);
+            box-shadow: 0 5px 15px rgba(190, 18, 60, 0.2);
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-size: 0.9rem;
         }
         
         .view-ranking-btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(190, 18, 60, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(190, 18, 60, 0.3);
+            background: linear-gradient(135deg, #be123c, var(--color-primary));
         }
-        
-        /* Game history and achievements sections */
+
+        /* --- Secciones Derecha (Historial y Logros) --- */
         .profile-sections {
             display: flex;
             flex-direction: column;
@@ -219,219 +289,283 @@
         
         .game-history,
         .achievements-section {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
-            border-radius: 20px;
-            padding: 2.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(8px);
-            position: relative;
-            overflow: hidden;
+            background: linear-gradient(145deg, var(--color-card-bg), var(--color-card-bg-darker));
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem 2rem; /* Ajustar padding */
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-medium);
         }
         
         .history-title {
-            font-size: 1.8rem;
+            font-family: var(--font-secondary);
+            font-size: 1.6rem;
             color: #fff;
             margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
+            padding-bottom: 0.8rem;
             border-bottom: 2px solid rgba(225, 29, 72, 0.3);
             display: flex;
             align-items: center;
             gap: 0.8rem;
-            font-family: 'Oswald', sans-serif;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         
         .history-title i {
-            color: #e11d48;
-            font-size: 1.5rem;
+            color: var(--color-primary);
+            font-size: 1.3rem;
+        }
+
+        /* Estilo para Placeholder (Cargando...) */
+        .placeholder-message {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--color-text-muted);
+            font-size: 1rem;
+        }
+        .placeholder-message i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+            color: var(--color-primary);
         }
         
+        /* Estilo para Entradas de Historial */
+        .game-history-container {
+             max-height: 400px; /* Limitar altura y habilitar scroll */
+             overflow-y: auto;
+             padding-right: 10px; /* Espacio para scrollbar */
+        }
         .game-entry {
-            background: rgba(15, 23, 42, 0.7);
-            border-radius: 15px;
-            padding: 1.5rem;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: var(--border-radius-md);
+            padding: 1rem 1.5rem;
             margin-bottom: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.05);
             transition: all 0.3s ease;
-            display: grid;
-            grid-template-columns: 1fr auto auto auto;
+            display: flex;
             align-items: center;
-            gap: 1.5rem;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap; /* Para pantallas pequeñas */
         }
         
         .game-entry:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-light);
             border-color: rgba(255, 255, 255, 0.1);
         }
-        
-        .game-entry.victory {
-            border-left: 4px solid rgba(34, 197, 94, 0.8);
-        }
-        
-        .game-entry.defeat {
-            border-left: 4px solid rgba(225, 29, 72, 0.8);
-        }
-        
-        .game-score {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #fff;
-        }
-        
-        .result-badge {
-            display: inline-flex;
+
+        .game-entry-main {
+            flex-grow: 1;
+            display: flex;
             align-items: center;
-            gap: 0.4rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 50px;
-            font-size: 0.85rem;
+            gap: 1rem;
+        }
+        
+        .game-result-icon {
+            font-size: 1.5rem;
+            width: 30px;
+            text-align: center;
+        }
+        .game-result-icon.victory {
+            color: #22c55e; /* Verde */
+        }
+        .game-result-icon.defeat {
+            color: #ef4444; /* Rojo */
+        }
+        
+        .game-info span {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+        }
+        .game-info strong {
+            color: var(--color-text);
             font-weight: 600;
         }
         
-        .result-badge.win {
-            background: rgba(34, 197, 94, 0.2);
-            color: #4ade80;
-            border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-        
-        .result-badge.loss {
-            background: rgba(225, 29, 72, 0.2);
-            color: #fb7185;
-            border: 1px solid rgba(225, 29, 72, 0.3);
-        }
-        
-        .achievement-item {
-            background: rgba(15, 23, 42, 0.7);
-            border-radius: 16px;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .achievement-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
-        }
-        
-        .achievement-icon {
-            width: 64px;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
+        .game-score {
+            font-family: var(--font-secondary);
             font-size: 1.8rem;
-            background: rgba(15, 23, 42, 0.8);
-            margin-right: 1rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            text-align: right;
+            min-width: 80px; /* Ancho mínimo */
         }
         
-        /* Botón volver con estilo más visible */
+        /* Estilo para Logros (Contenedor) */
+        .achievements-container {
+            /* La función JS genera el contenido, aquí solo estilos base */
+             display: grid;
+             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+             gap: 1.5rem;
+        }
+        /* Estilos específicos para las tarjetas de logros (si se generan por JS) 
+           se pueden añadir aquí o dentro de la función JS que las crea */
+
+        /* --- Footer (Asumiendo estructura similar) --- */
+        .policy-footer {
+            background-color: rgba(15, 23, 42, 0.8);
+            padding: 1.5rem 1rem;
+            margin-top: 3rem;
+            text-align: center;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .footer-links-mini {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links-mini a {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+         .footer-links-mini a:hover {
+            color: var(--color-primary);
+        }
+         .footer-links-mini i {
+             margin-right: 0.3rem;
+         }
+
+        .copyright-text {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .footer-social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .social-icon {
+            color: var(--color-text-muted);
+            font-size: 1.2rem;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+        .social-icon:hover {
+            color: var(--color-primary);
+            transform: scale(1.2);
+        }
+
+        /* --- Botón Volver --- */
         .back-btn {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background-color: rgba(0, 0, 0, 0.6);
+            background-color: rgba(0, 0, 0, 0.5);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            z-index: 99999;
-            border: none;
+            box-shadow: var(--shadow-light);
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
         }
         
         .back-btn:hover {
-            background-color: rgba(225, 29, 72, 0.8);
+            background-color: var(--color-primary);
             transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(225, 29, 72, 0.5);
         }
         
-        /* Responsive styles */
-        @media (max-width: 992px) {
-            .profile-content {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            
+        /* --- Media Queries Adicionales --- */
+         @media (max-width: 576px) {
             .profile-card {
-                margin-bottom: 0;
+                padding: 1.5rem;
             }
-        }
-        
-        @media (max-width: 768px) {
-            .profile-stats {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .game-entry {
-                grid-template-columns: 1fr;
-                gap: 0.8rem;
-            }
-            
-            .game-date, .game-result, .game-difficulty, .game-score {
-                margin-bottom: 0.5rem;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .profile-page {
-                padding: 1rem;
-            }
-            
-            .profile-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
             .profile-name {
-                font-size: 2rem;
-            }
-            
-            .stat-number {
                 font-size: 1.8rem;
             }
-            
+             .profile-stats {
+                 grid-template-columns: repeat(3, 1fr); /* 3 columnas en móvil es mucho, mejor 2? */
+                 gap: 0.5rem;
+             }
+             .stat-number {
+                 font-size: 1.5rem;
+             }
+             .stat-label {
+                 font-size: 0.7rem;
+             }
+            .profile-details {
+                 padding: 1rem;
+            }
+            .detail-item strong {
+                font-size: 1rem;
+            }
+            .game-history,
+            .achievements-section {
+                 padding: 1rem 1.5rem;
+            }
             .history-title {
-                font-size: 1.5rem;
+                 font-size: 1.3rem;
             }
-            
-            .back-btn {
-                width: 50px;
-                height: 50px;
-                font-size: 1.2rem;
-                bottom: 20px;
-                right: 20px;
+            .game-entry {
+                 padding: 0.8rem 1rem;
+                 flex-direction: column; /* Apilar en móvil */
+                 align-items: flex-start; 
             }
+            .game-score {
+                 text-align: left;
+                 margin-top: 0.5rem;
+                 font-size: 1.5rem;
+            }
+            .achievements-container {
+                 grid-template-columns: 1fr; /* Una columna en móvil */
+            }
+             .policy-footer {
+                 padding: 1rem;
+             }
+             .footer-links-mini {
+                 gap: 0.3rem 1rem;
+                 font-size: 0.8rem;
+             }
         }
+
     </style>
 </head>
 <body>
+    <a href="index.html" class="home-link">
+        <i class="fas fa-home"></i> Inicio
+    </a>
+    
+    <!-- Cabecera Reemplazada -->
+    <header class="app-header">
+        <div class="logo-animation">
+            <i class="fas fa-user-circle ball-icon"></i>
+        </div>
+        <a href="pasalache.html" class="title-link">
+            <h1 class="title-text">Perfil de Usuario</h1>
+        </a>
+        <p class="subtitle">Tu progreso y estadísticas</p>
+    </header>
+
     <div class="profile-page">
-        <header class="app-header">
-            <div class="logo-animation">
-                <i class="fas fa-futbol ball-icon bounce"></i>
-            </div>
-            <a href="index.html" class="title-link">
-                <h1 class="title-text">PASALA CHE</h1>
-            </a>
-            <p class="subtitle">El juego de palabras del fútbol</p>
-        </header>
-        
-        <!-- Contenedor principal -->
-        <div class="profile-container">
+        <div class="profile-container" id="profile-container">
+            <div id="profile-error" style="display: none;"></div>
+            
             <div class="profile-content">
                 <div class="profile-card">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
                     <h2 class="profile-name" id="profile-username">Cargando...</h2>
                     <div class="profile-level">
-                        <span id="rank-badge"><i class="fas fa-user"></i></span>
-                        <span id="profile-status">Jugador</span>
+                        <span id="rank-badge"><i class="fas fa-question-circle"></i></span> 
+                        <span id="profile-status">Cargando...</span>
                     </div>
                     
                     <div class="profile-stats">
@@ -441,7 +575,7 @@
                         </div>
                         <div class="stat-item">
                             <div class="stat-number" id="best-score">0</div>
-                            <div class="stat-label">Mejor Puntuación</div>
+                            <div class="stat-label">Mejor Puntaje</div>
                         </div>
                         <div class="stat-item">
                             <div class="stat-number" id="ranking-position">-</div>
@@ -461,8 +595,13 @@
                             <strong id="wrong-answers">0</strong>
                         </div>
                         <div class="detail-item">
-                            <i class="fas fa-clock"></i>
-                            <span>Tiempo promedio: </span>
+                            <i class="fas fa-forward"></i>
+                            <span>Saltadas (Pasala Ché): </span> 
+                            <strong id="skipped-answers">0</strong>
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-stopwatch"></i>
+                            <span>Tiempo Promedio: </span>
                             <strong id="avg-time">0:00</strong>
                         </div>
                     </div>
@@ -480,10 +619,9 @@
                         </h3>
                         
                         <div class="game-history-container">
-                            <!-- El historial de partidas se cargará dinámicamente -->
                             <div class="placeholder-message">
                                 <i class="fas fa-spinner fa-pulse"></i>
-                                <p>Cargando historial de partidas...</p>
+                                <p>Cargando historial...</p>
                             </div>
                         </div>
                     </div>
@@ -495,7 +633,6 @@
                         </h3>
                         
                         <div class="achievements-container">
-                            <!-- Los logros se cargarán dinámicamente -->
                             <div class="placeholder-message">
                                 <i class="fas fa-spinner fa-pulse"></i>
                                 <p>Cargando logros...</p>
@@ -528,7 +665,6 @@
         </div>
     </footer>
 
-    <!-- Botón para volver a la página anterior con nueva clase -->
     <button class="back-btn" onclick="window.history.back()">
         <i class="fas fa-arrow-left"></i>
     </button>
@@ -537,3 +673,4 @@
     <script src="js/profile.js"></script>
 </body>
 </html> 
+

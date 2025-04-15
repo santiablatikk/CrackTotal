@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -9,254 +9,30 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/achievements.css">  
   <link rel="stylesheet" href="css/footer-styles.css">
+  <link rel="stylesheet" href="css/combined.css">
   <link rel="icon" href="img/favicon.ico" type="image/x-icon">
   
   <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
    crossorigin="anonymous"></script>
-  
-  <style>
-    /* Estilos específicos para la página de logros */
-    .achievements-page {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-      background-size: 400% 400%;
-      animation: gradientBG 15s ease infinite;
-      overflow-x: hidden;
-      padding: 20px;
-    }
-    
-    .achievements-page::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-      background-size: 20px 20px;
-      pointer-events: none;
-      z-index: 1;
-    }
-    
-    .page-header {
-      text-align: center;
-      color: white;
-      margin-bottom: 30px;
-      position: relative;
-      z-index: 2;
-    }
-    
-    .page-header h1 {
-      font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    }
-    
-    .page-header p {
-      font-size: 1.2rem;
-      opacity: 0.8;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    
-    .achievements-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 2;
-    }
-    
-    .achievement-card {
-      background-color: rgba(0, 0, 0, 0.2);
-      border-radius: 12px;
-      padding: 20px;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-    }
-    
-    .achievement-card.locked {
-      filter: grayscale(100%);
-      opacity: 0.7;
-    }
-    
-    .achievement-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-    }
-    
-    .achievement-icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      margin: 0 auto 15px;
-      font-size: 2.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .achievement-icon::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, #3a88fe, #57dd81);
-      opacity: 0.7;
-      z-index: -1;
-    }
-    
-    .achievement-card.locked .achievement-icon::before {
-      background: linear-gradient(135deg, #666, #999);
-    }
-    
-    .achievement-details {
-      text-align: center;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .achievement-title {
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: white;
-      margin-bottom: 10px;
-    }
-    
-    .achievement-description {
-      font-size: 0.95rem;
-      color: rgba(255, 255, 255, 0.8);
-      margin-bottom: 15px;
-      flex-grow: 1;
-    }
-    
-    .achievement-progress {
-      margin-top: auto;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 50px;
-      height: 10px;
-      overflow: hidden;
-      position: relative;
-    }
-    
-    .achievement-progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #fdbb2d, #b21f1f);
-      width: 0;
-      transition: width 0.5s;
-    }
-    
-    .achievement-count {
-      margin-top: 5px;
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.7);
-    }
-    
-    .achievement-card.locked .achievement-count {
-      color: rgba(255, 255, 255, 0.4);
-    }
-    
-    .back-button {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background-color: rgba(0, 0, 0, 0.3);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      font-size: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.3s;
-      backdrop-filter: blur(5px);
-      z-index: 100;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-    
-    .back-button:hover {
-      background-color: rgba(253, 187, 45, 0.7);
-      transform: scale(1.1);
-    }
-    
-    .achievement-categories {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-      position: relative;
-      z-index: 2;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    
-    .category-filter {
-      background-color: rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: white;
-      border-radius: 50px;
-      padding: 8px 15px;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    
-    .category-filter:hover, .category-filter.active {
-      background-color: rgba(253, 187, 45, 0.7);
-      transform: translateY(-2px);
-    }
-    
-    @media (max-width: 768px) {
-      .achievements-container {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      }
-      
-      .back-button {
-        bottom: 20px;
-        right: 20px;
-        width: 50px;
-        height: 50px;
-        font-size: 1.2rem;
-      }
-    }
-  </style>
 </head>
 <body>
-  <header class="main-header">
+  <a href="index.html" class="home-link">
+    <i class="fas fa-home"></i> Inicio
+  </a>
+
+  <header class="app-header">
     <div class="logo-animation">
-      <i class="fas fa-futbol ball-icon bounce"></i>
+      <i class="fas fa-medal ball-icon bounce"></i>
     </div>
-    <a href="index.html" class="title-link">
-      <h1 class="title-text">PASALA CHE</h1>
+    <a href="pasalache.html" class="title-link">
+      <h1 class="title-text">Logros</h1>
     </a>
-    <p class="subtitle">El juego de palabras del fútbol</p>
+    <p class="subtitle">Colecciona todas las medallas</p>
   </header>
   
   <div class="achievements-page">
-    <div class="page-header">
-      <h1>LOGROS DE PASALA CHÉ</h1>
-      <p>Colecciona logros para demostrar tu habilidad en el juego de preguntas sobre fútbol.</p>
-    </div>
-    
     <div class="achievement-categories">
       <button class="category-filter active" data-category="all">Todos</button>
       <button class="category-filter" data-category="beginner">Principiante</button>
@@ -825,87 +601,7 @@
       <a href="https://www.youtube.com/c/pasalachee" class="social-icon"><i class="fab fa-youtube"></i></a>
     </div>
   </footer>
-  
-  <style>
-    /* Estilos para notificaciones de logros */
-    .achievement-notification {
-      position: fixed;
-      bottom: -100px;
-      right: 20px;
-      width: 300px;
-      background: rgba(15, 23, 42, 0.95);
-      border-radius: 12px;
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-      z-index: 1000;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      backdrop-filter: blur(10px);
-      opacity: 0;
-    }
-    
-    .achievement-notification.show {
-      bottom: 20px;
-      opacity: 1;
-    }
-    
-    .notification-icon {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #3b82f6, #2563eb);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 15px;
-      flex-shrink: 0;
-      animation: pulse 2s infinite;
-    }
-    
-    .notification-icon i {
-      color: white;
-      font-size: 1.2rem;
-    }
-    
-    .notification-content {
-      flex-grow: 1;
-    }
-    
-    .notification-content h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      margin: 0 0 5px;
-      color: white;
-    }
-    
-    .notification-content p {
-      font-size: 0.85rem;
-      margin: 0;
-      color: rgba(255, 255, 255, 0.8);
-    }
-    
-    .notification-close {
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.5);
-      cursor: pointer;
-      padding: 5px;
-      margin-left: 5px;
-      font-size: 0.9rem;
-      transition: color 0.3s ease;
-    }
-    
-    .notification-close:hover {
-      color: white;
-    }
-    
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5); }
-      70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
-    }
-  </style>
 </body>
 </html>
+
+

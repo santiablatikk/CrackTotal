@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/pages.css">
   <link rel="stylesheet" href="css/footer-styles.css">
+  <link rel="stylesheet" href="css/combined.css">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
   <!-- Font Awesome -->
@@ -48,43 +49,6 @@
       height: 5px;
       background: linear-gradient(90deg, #e11d48, #fb7185);
       z-index: 1;
-    }
-    
-    .page-header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-      position: relative;
-      padding-bottom: 1.5rem;
-    }
-    
-    .page-header::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 4px;
-      background: linear-gradient(90deg, #e11d48, #fb7185);
-      border-radius: 2px;
-    }
-    
-    .page-header h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-      color: #fff;
-      font-family: 'Oswald', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-    
-    .page-description {
-      font-size: 1.1rem;
-      color: rgba(255, 255, 255, 0.8);
-      max-width: 800px;
-      margin: 0 auto;
-      line-height: 1.6;
     }
     
     .about-section {
@@ -274,10 +238,6 @@
         padding: 1.5rem;
       }
       
-      .page-header h1 {
-        font-size: 2rem;
-      }
-      
       .about-section {
         padding: 1.5rem;
       }
@@ -306,23 +266,23 @@
   </style>
 </head>
 <body>
+  <a href="index.html" class="home-link">
+    <i class="fas fa-home"></i> Inicio
+  </a>
+
+  <!-- Header Inserted -->
   <header class="app-header">
     <div class="logo-animation">
-      <i class="fas fa-futbol ball-icon bounce"></i>
+        <i class="fas fa-info-circle ball-icon"></i>
     </div>
-    <a href="index.html" class="title-link">
-      <h1 class="title-text">PASALA CHE</h1>
+    <a href="pasalache.html" class="title-link">
+        <h1 class="title-text">Acerca de PASALA CHÉ</h1>
     </a>
-    <p class="subtitle">El juego de palabras del fútbol</p>
+    <p class="subtitle">Conoce más sobre el juego de preguntas y respuestas sobre fútbol</p>
   </header>
-  
+
   <div class="page-container">
     <main class="content-container">
-    <header class="page-header">
-      <h1>Sobre PASALA CHÉ</h1>
-      <p class="page-description">Descubre quiénes somos, nuestra pasión por el fútbol y cómo buscamos crear la mejor experiencia de juego para los fanáticos del deporte rey.</p>
-    </header>
-    
     <section class="about-section">
       <h2>Nuestra Historia</h2>
       <div class="about-icon-container">
@@ -492,3 +452,4 @@
 </div>
 </body>
 </html> 
+

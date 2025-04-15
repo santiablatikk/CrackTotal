@@ -136,70 +136,361 @@ function showProfileUpdatedNotification() {
   }, 4000);
 }
 
+// Función para actualizar las estadísticas del perfil basado en historial
+function updateProfileStats(profile, userIP) {
+  if (!profile || !userIP) {
+    console.error('Datos inválidos para updateProfileStats');
+    return;
+  }
+
+  const historyKey = `gameHistory_${userIP}`;
+  let history = [];
+  const storedHistory = localStorage.getItem(historyKey);
+
+  if (storedHistory) {
+    try {
+      history = JSON.parse(storedHistory);
+      if (!Array.isArray(history)) history = [];
+    } catch (e) {
+      console.error('Error al parsear historial para estadísticas:', e);
+      history = [];
+    }
+  }
+
+  // Reiniciar contadores antes de recalcular
+  profile.gamesPlayed = history.length;
+  profile.totalScore = 0;
+  profile.bestScore = 0;
+  profile.totalCorrect = 0;
+  profile.totalWrong = 0;
+  profile.totalSkipped = 0;
+  profile.totalTime = 0;
+  profile.victories = 0;
+  profile.defeats = 0;
+
+  // Calcular estadísticas desde el historial
+  history.forEach(game => {
+    profile.totalScore += game.score || 0;
+    profile.bestScore = Math.max(profile.bestScore, game.score || 0);
+    profile.totalCorrect += game.correct || 0;
+    profile.totalWrong += game.wrong || 0;
+    profile.totalSkipped += game.skipped || 0;
+    profile.totalTime += game.timeUsed || 0;
+    if (game.victory) {
+      profile.victories += 1;
+    } else {
+      profile.defeats += 1;
+    }
+  });
+
+  // Actualizar fecha de última partida si hay historial
+  if (history.length > 0 && history[0].date) {
+    profile.lastPlayed = history[0].date;
+  } else if (!profile.lastPlayed) {
+     profile.lastPlayed = new Date().toISOString(); // O establecer una fecha si no hay historial
+  }
+
+  console.log('[updateProfileStats] Estadísticas recalculadas:', profile);
+}
+
+// Función para actualizar la interfaz de usuario con los datos del perfil
+function updateProfileUI(profile) {
+  if (!profile) {
+    console.error('No se proporcionó perfil para actualizar la UI');
+    displayProfileError('No se pudieron cargar los datos del perfil.');
+    return;
+  }
+
+  console.log('[updateProfileUI] Actualizando elementos del DOM con:', profile);
+
+  // Actualizar Nombre de Usuario
+  const usernameElement = document.getElementById('profile-username');
+  if (usernameElement) {
+    usernameElement.textContent = profile.name || 'Jugador Desconocido';
+  }
+
+  // Actualizar Estado/Nivel y Badge
+  const statusElement = document.getElementById('profile-status');
+  const badgeElement = document.getElementById('rank-badge'); // Obtener el span del badge
+  if (statusElement && badgeElement) {
+    const statusInfo = getPlayerStatus(profile); // Obtener estado e icono
+    statusElement.textContent = statusInfo.status; 
+    badgeElement.innerHTML = `<i class="fas ${statusInfo.icon}"></i>`; // Actualizar icono del badge
+  }
+
+  // Actualizar Estadísticas Principales
+  const gamesPlayedElement = document.getElementById('games-played');
+  if (gamesPlayedElement) {
+    gamesPlayedElement.textContent = profile.gamesPlayed || 0;
+  }
+  const bestScoreElement = document.getElementById('best-score');
+  if (bestScoreElement) {
+    bestScoreElement.textContent = profile.bestScore || 0;
+  }
+  // El ranking se carga asíncronamente, se deja placeholder
+  const rankingElement = document.getElementById('ranking-position');
+  if (rankingElement) {
+     rankingElement.textContent = profile.rankingPosition || '-'; 
+  }
+
+  // Actualizar Detalles
+  const correctAnswersElement = document.getElementById('correct-answers');
+  if (correctAnswersElement) {
+    correctAnswersElement.textContent = profile.totalCorrect || 0;
+  }
+  const wrongAnswersElement = document.getElementById('wrong-answers');
+  if (wrongAnswersElement) {
+    wrongAnswersElement.textContent = profile.totalWrong || 0;
+  }
+  // Añadir actualización para respuestas saltadas
+  const skippedAnswersElement = document.getElementById('skipped-answers');
+  if (skippedAnswersElement) {
+      skippedAnswersElement.textContent = profile.totalSkipped || 0;
+  }
+  const avgTimeElement = document.getElementById('avg-time');
+  if (avgTimeElement) {
+    const avgTimeSeconds = profile.gamesPlayed > 0 ? Math.round(profile.totalTime / profile.gamesPlayed) : 0;
+    const minutes = Math.floor(avgTimeSeconds / 60);
+    const seconds = avgTimeSeconds % 60;
+    avgTimeElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  // Actualizar historial y logros (las funciones que hacen esto se llaman en loadUserProfile)
+  updateGameHistory(profile.userIP); // Asumiendo que existe esta función
+  // updateAchievementsDisplay se llama después en loadUserProfile
+  
+  // Ocultar cualquier mensaje de error que pudiera estar visible
+  const errorContainer = document.getElementById('profile-error'); 
+  if (errorContainer) {
+      errorContainer.style.display = 'none';
+  }
+  
+  console.log('[updateProfileUI] Actualización del DOM completada.');
+}
+
+// Nueva función para determinar el estado y el icono del jugador
+function getPlayerStatus(profile) {
+    let status = 'Novato';
+    let icon = 'fa-user-astronaut'; // Icono inicial
+    const games = profile.gamesPlayed || 0;
+    const wins = profile.victories || 0;
+    const score = profile.bestScore || 0;
+
+    if (games >= 50 || score >= 1000) {
+        status = 'Leyenda';
+        icon = 'fa-crown';
+    } else if (games >= 25 || score >= 500 || wins >= 10) {
+        status = 'Veterano';
+        icon = 'fa-shield-alt';
+    } else if (games >= 10 || score >= 200 || wins >= 5) {
+        status = 'Experimentado';
+        icon = 'fa-star';
+    } else if (games >= 5 || score >= 100) {
+        status = 'Habitual';
+        icon = 'fa-user-check';
+    } else if (games >= 1) {
+        status = 'Principiante';
+        icon = 'fa-user-graduate';
+    }
+
+    return { status, icon };
+}
+
+// Función para actualizar el historial de partidas en la UI
+function updateGameHistory(userIP) {
+    const container = document.querySelector('.game-history-container');
+    if (!container) {
+        console.error('No se encontró el contenedor del historial de partidas.');
+        return;
+    }
+
+    const historyKey = `gameHistory_${userIP}`;
+    let history = [];
+    const storedHistory = localStorage.getItem(historyKey);
+
+    if (storedHistory) {
+        try {
+            history = JSON.parse(storedHistory);
+            if (!Array.isArray(history)) history = [];
+        } catch (e) {
+            console.error('Error al parsear historial:', e);
+            history = [];
+        }
+    }
+
+    // Limpiar contenedor antes de añadir entradas
+    container.innerHTML = ''; 
+
+    if (history.length === 0) {
+        container.innerHTML = `
+            <div class="placeholder-message">
+                <i class="fas fa-history"></i>
+                <p>Aún no has jugado ninguna partida.</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Mostrar las últimas X partidas (ej. 10)
+    const recentHistory = history.slice(0, 10);
+
+    recentHistory.forEach(game => {
+        const entry = document.createElement('div');
+        entry.className = 'game-entry';
+        
+        const gameDate = game.date ? new Date(game.date) : null;
+        const formattedDate = gameDate ? gameDate.toLocaleDateString() : 'Fecha desconocida';
+        const resultIconClass = game.victory ? 'fas fa-trophy victory' : 'fas fa-times-circle defeat';
+        const difficulty = game.difficulty ? game.difficulty.charAt(0).toUpperCase() + game.difficulty.slice(1) : '-';
+
+        entry.innerHTML = `
+            <div class="game-entry-main">
+                <span class="game-result-icon ${game.victory ? 'victory' : 'defeat'}">
+                    <i class="${resultIconClass}"></i>
+                </span>
+                <div class="game-info">
+                    <span>${formattedDate} - ${difficulty}</span>
+                    <strong>${game.correct || 0} Correctas / ${game.wrong || 0} Errores</strong>
+                </div>
+            </div>
+            <div class="game-score">${game.score !== undefined ? game.score : '-'}</div>
+        `;
+        container.appendChild(entry);
+    });
+}
+
+// Añadir una función básica de displayProfileError si no existe
+function displayProfileError(message) {
+    console.error('Error de Perfil:', message);
+    const errorContainer = document.getElementById('profile-error'); // Necesitas un div con id="profile-error" en tu HTML
+    const profileContainer = document.querySelector('.profile-container'); // O el contenedor principal
+    
+    if (errorContainer) {
+        errorContainer.textContent = message;
+        errorContainer.style.display = 'block';
+    } else if (profileContainer) {
+        // Si no hay contenedor de error, mostrar en el contenedor principal
+        profileContainer.innerHTML = `<div class="error-message" style="color: red; text-align: center; padding: 20px;">${message}</div>`;
+    }
+    // Podrías querer ocultar el spinner aquí también si no se hizo antes
+    const loadingIndicator = document.querySelector('.loading-indicator-class'); // Usa la clase real del indicador
+    if (loadingIndicator) loadingIndicator.remove();
+}
+
 // Función para cargar el perfil del usuario
 function loadUserProfile(userIP, forceReload = false) {
     if (!userIP) {
         console.error('Se requiere userIP para cargar el perfil de usuario');
-        return null;
+        return Promise.reject('No user IP provided'); // Devolver promesa rechazada
     }
     
-    // Mostrar indicador de carga
-    const loadingIndicator = showEnhancedLoadingIndicator();
+    // Mostrar indicador de carga y guardar referencia al objeto de control
+    console.log('[loadUserProfile] Mostrando indicador de carga');
+    const loadingControl = showEnhancedLoadingIndicator(); 
+    // Verificar si la función devolvió el objeto esperado
+    if (!loadingControl || typeof loadingControl.completeLoading !== 'function') {
+        console.error('showEnhancedLoadingIndicator no devolvió el objeto esperado.');
+        // Intentar ocultar cualquier spinner genérico como fallback
+        const genericSpinner = document.querySelector('.loading-indicator-class'); // Usar la clase correcta si existe
+        if (genericSpinner) genericSpinner.remove();
+        // Continuar sin la animación de carga avanzada
+    }
     
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
+    return new Promise(async (resolve, reject) => { // Hacer la función interna async para usar await
             try {
+                console.log('[loadUserProfile] Intentando cargar datos...');
                 // Cargar datos del perfil
                 const profileKey = `userProfile_${userIP}`;
                 let profile = null;
                 
                 const storedProfile = localStorage.getItem(profileKey);
+                console.log('[loadUserProfile] Perfil almacenado:', storedProfile ? 'Encontrado' : 'No encontrado');
                 if (storedProfile && !forceReload) {
                     try {
                         profile = JSON.parse(storedProfile);
+                        console.log('[loadUserProfile] Perfil parseado correctamente.');
                     } catch (e) {
                         console.error('Error al parsear perfil almacenado:', e);
-                        profile = createDefaultProfile(userIP);
+                        // Intentar crear perfil por defecto ANTES de rechazar
+                        try {
+                           profile = createDefaultProfile(userIP);
+                           console.log('[loadUserProfile] Creado perfil por defecto tras error de parseo.');
+                        } catch (createError) {
+                           console.error('Error también al crear perfil por defecto:', createError);
+                           throw e; // Relanzar el error original de parseo si falla la creación
+                        }
                     }
                 } else {
                     // Crear perfil por defecto
-                    profile = createDefaultProfile(userIP);
+                     try {
+                        profile = createDefaultProfile(userIP);
+                        console.log('[loadUserProfile] Creado perfil por defecto (forzado o no existente).');
+                    } catch (createError) {
+                         console.error('Error al crear perfil por defecto:', createError);
+                         throw createError; // Lanzar error si falla la creación
+                    }
+                }
+                
+                // Si después de todo, profile sigue siendo null, es un error.
+                if (!profile) {
+                    throw new Error('No se pudo cargar ni crear el perfil de usuario.');
                 }
                 
                 // Cargar y mostrar logros del usuario
+                console.log('[loadUserProfile] Cargando logros...');
                 const achievements = loadAchievementsFromLocalStorage(userIP);
+                console.log(`[loadUserProfile] Logros cargados: ${achievements.length}`);
                 
                 // Actualizar contador de logros en el perfil
-                if (profile) {
-                    profile.achievementsCount = achievements.length;
-                    
-                    // Actualizar las estadísticas basadas en el historial de juegos
-                    updateProfileStats(profile, userIP);
-                    
-                    // Guardar perfil actualizado
-                    localStorage.setItem(profileKey, JSON.stringify(profile));
+                profile.achievementsCount = achievements.length;
+                
+                // Actualizar las estadísticas basadas en el historial de juegos
+                console.log('[loadUserProfile] Actualizando estadísticas del perfil...');
+                updateProfileStats(profile, userIP);
+                
+                // Guardar perfil actualizado
+                console.log('[loadUserProfile] Guardando perfil actualizado...');
+                localStorage.setItem(profileKey, JSON.stringify(profile));
+                
+                // Indicar que la carga lógica está completa ANTES de restaurar UI
+                console.log('[loadUserProfile] Carga lógica completa. Completando animación...');
+                if (loadingControl && typeof loadingControl.completeLoading === 'function') {
+                    // Esperar a que la animación de completar termine (restaura el HTML original)
+                    await loadingControl.completeLoading(); 
+                    console.log('[loadUserProfile] Contenido original restaurado.');
+                } else {
+                     console.warn('[loadUserProfile] No se pudo llamar a completeLoading.');
+                     // Si no hay control de carga, puede que el HTML no necesite restauración
                 }
                 
-                // Actualizar interfaz de usuario con los datos del perfil
-                updateProfileUI(profile);
+                // AHORA, con el HTML original restaurado, actualizar la UI
+                console.log('[loadUserProfile] Actualizando UI del perfil...');
+                updateProfileUI(profile); 
                 
-                // Actualizar visualización de logros
-                updateAchievementsDisplay(achievements);
-                
-                // Ocultar indicador de carga
-                if (loadingIndicator) {
-                    loadingIndicator.remove();
-                }
-                
+                console.log('[loadUserProfile] Actualizando UI de logros...');
+                updateAchievementsDisplay(achievements); // Ahora debería encontrar el contenedor
+                 
+                console.log('[loadUserProfile] Proceso completado con éxito.');
                 resolve(profile);
-            } catch (error) {
-                console.error('Error al cargar perfil de usuario:', error);
-                if (loadingIndicator) {
-                    loadingIndicator.remove();
+
+  } catch (error) {
+                console.error('Error CRÍTICO al cargar perfil de usuario:', error);
+                // Asegurarse de ocultar el indicador y restaurar contenido en caso de error
+                console.log('[loadUserProfile] Ocultando indicador de carga (Error).');
+                if (loadingControl && typeof loadingControl.completeLoading === 'function') {
+                    try {
+                       await loadingControl.completeLoading(); // Intentar restaurar HTML
+                    } catch (completeError) {
+                       console.error('Error al intentar completar la carga en el catch:', completeError);
+                       // Si falla, intentar limpiar manualmente el contenedor
+                       const profileContent = document.querySelector('.profile-content');
+                       if(profileContent) profileContent.innerHTML = ''; // Limpiar para evitar mostrar spinner roto
+                    }
                 }
+                // Mostrar mensaje de error al usuario
+                displayProfileError('Ocurrió un error al cargar tu perfil.');
                 reject(error);
             }
-        }, 800); // Simular tiempo de carga para la animación
     });
 }
 
@@ -361,7 +652,7 @@ function unlockAchievement(achievements, achievementId) {
     } else {
         console.error('Logro no encontrado en la lista de logros disponibles:', achievementId);
         return false;
-    }
+  }
 }
 
 // Actualizar la interfaz con los datos del perfil
@@ -1206,9 +1497,11 @@ function updateAchievementsDisplay(achievements) {
     return;
   }
   
-  // Limpiar el contenedor
+  // Limpiar el contenedor y eliminar placeholder si existe
   container.innerHTML = '';
-  
+  const placeholder = container.querySelector('.placeholder-message');
+  if(placeholder) placeholder.remove();
+
   // Filtrar solo los logros desbloqueados
   const unlockedAchievements = Array.isArray(achievements) 
     ? achievements.filter(achievement => achievement.unlocked)
@@ -1225,355 +1518,282 @@ function updateAchievementsDisplay(achievements) {
         </a>
       </div>
     `;
-    
-    // Agregar estilos para el botón de jugar
-    const styleNoAchievements = document.createElement('style');
-    styleNoAchievements.textContent = `
-      .no-achievements-message {
-        text-align: center;
-        padding: 3rem;
-        background: rgba(15, 23, 42, 0.7);
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-      }
-      
-      .no-achievements-message i {
-        font-size: 4rem;
-        color: rgba(225, 29, 72, 0.3);
-        margin-bottom: 1.5rem;
-        display: block;
-      }
-      
-      .no-achievements-message p {
-        font-size: 1.2rem;
-        color: rgba(255, 255, 255, 0.7);
-        margin-bottom: 2rem;
-      }
-      
-      .play-button {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.8rem 1.5rem;
-        background: linear-gradient(135deg, #e11d48, #be123c);
-        color: white;
-        border-radius: 30px;
-        font-weight: 600;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        box-shadow: 0 5px 15px rgba(190, 18, 60, 0.3);
-      }
-      
-      .play-button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(190, 18, 60, 0.4);
-      }
-    `;
-    document.head.appendChild(styleNoAchievements);
+    // Añadir estilos específicos para este mensaje si no existen
+    if (!document.getElementById('no-achievements-style')) {
+        const styleNoAchievements = document.createElement('style');
+        styleNoAchievements.id = 'no-achievements-style';
+        styleNoAchievements.textContent = `
+          .no-achievements-message {
+            text-align: center;
+            padding: 3rem 1rem;
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: var(--border-radius-md);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-muted);
+          }
+          .no-achievements-message i {
+            font-size: 3rem;
+            color: rgba(225, 29, 72, 0.5);
+            margin-bottom: 1.5rem;
+            display: block;
+          }
+          .no-achievements-message p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+          }
+          .play-button {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: linear-gradient(135deg, var(--color-primary), #be123c);
+            color: white; border-radius: 30px; font-weight: 600;
+            text-decoration: none; transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(190, 18, 60, 0.3);
+          }
+          .play-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(190, 18, 60, 0.4);
+          }
+        `;
+        document.head.appendChild(styleNoAchievements);
+    }
     return;
   }
   
-  // Ordenar logros por categoría y fecha
-  unlockedAchievements.sort((a, b) => {
-    const categoryOrder = { special: 1, expert: 2, intermediate: 3, beginner: 4 };
-    const aOrder = categoryOrder[a.category] || 5;
-    const bOrder = categoryOrder[b.category] || 5;
-    
-    // Primero ordenar por categoría
-    if (aOrder !== bOrder) {
-      return aOrder - bOrder;
+  // --- Agrupar logros por categoría --- 
+  const groupedAchievements = unlockedAchievements.reduce((groups, achievement) => {
+    const category = achievement.category || 'otros'; // Agrupar sin categoría en 'otros'
+    if (!groups[category]) {
+      groups[category] = [];
     }
-    
-    // Si misma categoría, ordenar por fecha (más reciente primero)
-    if (a.date && b.date) {
-      return new Date(b.date) - new Date(a.date);
+    groups[category].push(achievement);
+    return groups;
+  }, {});
+
+  // --- Definir orden de categorías y títulos --- 
+  const categoryOrder = ['special', 'expert', 'intermediate', 'beginner', 'otros'];
+  const categoryTitles = {
+    special: 'Logros Especiales',
+    expert: 'Logros de Experto',
+    intermediate: 'Logros Intermedios',
+    beginner: 'Logros de Principiante',
+    otros: 'Otros Logros'
+  };
+
+  // --- Renderizar logros agrupados --- 
+  categoryOrder.forEach(category => {
+    if (groupedAchievements[category] && groupedAchievements[category].length > 0) {
+      // 1. Crear título de la categoría
+      const categoryTitle = document.createElement('h4');
+      categoryTitle.className = 'achievement-category-title';
+      categoryTitle.textContent = categoryTitles[category];
+      container.appendChild(categoryTitle);
+
+      // 2. Crear grid para esta categoría
+      const categoryGrid = document.createElement('div');
+      categoryGrid.className = 'achievements-grid'; // Usar la misma clase para el grid
+      
+      // 3. Ordenar logros dentro de la categoría por fecha (más reciente primero)
+      groupedAchievements[category].sort((a, b) => {
+          try { return new Date(b.date) - new Date(a.date); } catch (e) { return 0; }
+      });
+
+      // 4. Añadir tarjetas al grid de la categoría
+      groupedAchievements[category].forEach(achievement => {
+        const achievementCard = createAchievementCard(
+          achievement.id,
+          achievement.icon || 'fas fa-medal',
+          achievement.title,
+          achievement.description,
+          achievement.count || 1,
+          achievement.maxCount || 1,
+          achievement.date,
+          achievement.category || 'beginner' // Pasar categoría para estilos
+        );
+        categoryGrid.appendChild(achievementCard);
+      });
+
+      // 5. Añadir el grid de la categoría al contenedor principal
+      container.appendChild(categoryGrid);
     }
-    
-    return 0;
   });
   
-  // Crear grid para mostrar los logros
-  const achievementsGrid = document.createElement('div');
-  achievementsGrid.className = 'achievements-grid';
-  container.appendChild(achievementsGrid);
-  
-  // Añadir cada logro desbloqueado al grid
-  unlockedAchievements.forEach(achievement => {
-    const achievementCard = createAchievementCard(
-      achievement.id,
-      achievement.icon || 'fas fa-medal',
-      achievement.title,
-      achievement.description,
-      achievement.count || 1,
-      achievement.maxCount || 1,
-      achievement.date,
-      achievement.category || 'beginner'
-    );
-    achievementsGrid.appendChild(achievementCard);
-  });
-  
-  // Añadir estilo CSS al grid
-  const style = document.createElement('style');
-  style.textContent = `
-    .achievements-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-top: 1rem;
-    }
-    
-    .achievement-card {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(9, 14, 26, 0.9));
-      border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      display: flex;
-      flex-direction: column;
-      transition: all 0.3s ease;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-      height: 100%;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .achievement-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: linear-gradient(to right, #3a88fe, #57dd81);
-      transition: all 0.3s ease;
-    }
-    
-    .achievement-card.special::before {
-      background: linear-gradient(to right, #9333ea, #d946ef);
-    }
-    
-    .achievement-card.expert::before {
-      background: linear-gradient(to right, #e11d48, #fb7185);
-    }
-    
-    .achievement-card.intermediate::before {
-      background: linear-gradient(to right, #f59e0b, #fbbf24);
-    }
-    
-    .achievement-card.beginner::before {
-      background: linear-gradient(to right, #3b82f6, #60a5fa);
-    }
-    
-    .achievement-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
-    }
-    
-    .achievement-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-    
-    .achievement-icon {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.5rem;
-      color: white;
-      margin-right: 1rem;
-      position: relative;
-      z-index: 1;
-      flex-shrink: 0;
-      transition: all 0.3s ease;
-    }
-    
-    .achievement-card.special .achievement-icon {
-      background: rgba(147, 51, 234, 0.2);
-      color: #d946ef;
-    }
-    
-    .achievement-card.expert .achievement-icon {
-      background: rgba(225, 29, 72, 0.2);
-      color: #fb7185;
-    }
-    
-    .achievement-card.intermediate .achievement-icon {
-      background: rgba(245, 158, 11, 0.2);
-      color: #fbbf24;
-    }
-    
-    .achievement-card.beginner .achievement-icon {
-      background: rgba(59, 130, 246, 0.2);
-      color: #60a5fa;
-    }
-    
-    .achievement-card:hover .achievement-icon {
-      transform: scale(1.1);
-    }
-    
-    .achievement-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: white;
-      margin: 0;
-      line-height: 1.3;
-    }
-    
-    .achievement-description {
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.7);
-      margin: 0.5rem 0 1.2rem;
-      line-height: 1.5;
-      flex-grow: 1;
-    }
-    
-    .achievement-progress {
-      margin-top: auto;
-    }
-    
-    .achievement-counter {
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.6);
-      margin-bottom: 0.5rem;
-    }
-    
-    .progress-bar {
-      height: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 0.8rem;
-    }
-    
-    .progress-value {
-      height: 100%;
-      border-radius: 4px;
-      transition: width 1s ease;
-    }
-    
-    .achievement-card.special .progress-value {
-      background: linear-gradient(90deg, #9333ea, #d946ef);
-    }
-    
-    .achievement-card.expert .progress-value {
-      background: linear-gradient(90deg, #e11d48, #fb7185);
-    }
-    
-    .achievement-card.intermediate .progress-value {
-      background: linear-gradient(90deg, #f59e0b, #fbbf24);
-    }
-    
-    .achievement-card.beginner .progress-value {
-      background: linear-gradient(90deg, #3b82f6, #60a5fa);
-    }
-    
-    .achievement-date {
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.5);
-      text-align: right;
-    }
-    
-    .achievement-badge {
-      position: absolute;
-      top: 0;
-      right: 0;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 0.3rem 0.6rem;
-      border-radius: 0 12px 0 12px;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      font-weight: 600;
-      letter-spacing: 0.5px;
-    }
-    
-    .achievement-card.special .achievement-badge {
-      background: rgba(147, 51, 234, 0.2);
-      color: #d946ef;
-    }
-    
-    .achievement-card.expert .achievement-badge {
-      background: rgba(225, 29, 72, 0.2);
-      color: #fb7185;
-    }
-    
-    .achievement-card.intermediate .achievement-badge {
-      background: rgba(245, 158, 11, 0.2);
-      color: #fbbf24;
-    }
-    
-    .achievement-card.beginner .achievement-badge {
-      background: rgba(59, 130, 246, 0.2);
-      color: #60a5fa;
-    }
-    
-    @media (max-width: 768px) {
-      .achievements-grid {
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 1rem;
-      }
-      
-      .achievement-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 1.2rem;
-      }
-      
-      .achievement-title {
-        font-size: 1rem;
-      }
-    }
-  `;
-  document.head.appendChild(style);
+  // --- Añadir estilos CSS si no existen --- 
+  if (!document.getElementById('achievements-styles')) {
+      const style = document.createElement('style');
+      style.id = 'achievements-styles';
+      style.textContent = `
+        .achievement-category-title {
+          font-family: var(--font-secondary);
+          font-size: 1.4rem;
+          color: var(--color-secondary);
+          margin-top: 2.5rem; /* Más espacio entre categorías */
+          margin-bottom: 1rem;
+          padding-bottom: 0.5rem;
+          border-bottom: 1px solid rgba(225, 29, 72, 0.2);
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+        .achievements-container > *:first-child {
+             margin-top: 0; /* Eliminar margen superior del primer título */
+        }
+        
+        .achievements-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Un poco más ancho */
+          gap: 1.5rem;
+          margin-bottom: 1.5rem; /* Espacio después de cada grid */
+        }
+        
+        .achievement-card {
+          background: linear-gradient(145deg, var(--color-card-bg), var(--color-card-bg-darker));
+          border-radius: var(--border-radius-md);
+          padding: 1.5rem;
+          border: 1px solid var(--color-border);
+          display: flex;
+          flex-direction: column;
+          transition: all 0.3s ease;
+          box-shadow: var(--shadow-light);
+          height: 100%; /* Asegurar altura uniforme en la fila */
+          position: relative;
+          overflow: hidden;
+        }
+        
+        /* Línea de color superior basada en categoría */
+        .achievement-card::before {
+          content: '';
+          position: absolute;
+          top: 0; left: 0; width: 100%; height: 4px;
+          background: var(--color-text-muted); /* Color por defecto */
+        }
+        .achievement-card.special::before { background: linear-gradient(to right, #9333ea, #d946ef); /* Morado */ }
+        .achievement-card.expert::before { background: linear-gradient(to right, var(--color-primary), var(--color-secondary)); /* Rojo */ }
+        .achievement-card.intermediate::before { background: linear-gradient(to right, #f59e0b, #fbbf24); /* Naranja */ }
+        .achievement-card.beginner::before { background: linear-gradient(to right, #3b82f6, #60a5fa); /* Azul */ }
+        
+        .achievement-card:hover {
+          transform: translateY(-5px);
+          box-shadow: var(--shadow-medium);
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .achievement-header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 1rem;
+          gap: 1rem;
+        }
+        
+        .achievement-icon-wrapper {
+          width: 55px;
+          height: 55px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid var(--color-border);
+        }
+        .achievement-icon-wrapper i {
+          font-size: 1.6rem;
+          color: var(--color-secondary);
+        }
+         /* Iconos con color por categoría */
+        .achievement-card.special .achievement-icon-wrapper i { color: #d946ef; }
+        .achievement-card.expert .achievement-icon-wrapper i { color: var(--color-primary); }
+        .achievement-card.intermediate .achievement-icon-wrapper i { color: #f59e0b; }
+        .achievement-card.beginner .achievement-icon-wrapper i { color: #3b82f6; }
+
+        .achievement-info {
+            flex-grow: 1;
+        }
+        
+        .achievement-title {
+          font-family: var(--font-secondary);
+          font-size: 1.1rem; /* Ligeramente más pequeño */
+          font-weight: 600;
+          color: var(--color-text);
+          margin-bottom: 0.3rem;
+          line-height: 1.3;
+        }
+        
+        .achievement-description {
+          font-size: 0.85rem;
+          color: var(--color-text-muted);
+          margin-bottom: 1rem;
+          line-height: 1.5;
+        }
+        
+        .achievement-footer {
+            margin-top: auto; /* Empujar al fondo */
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-border);
+        }
+        
+        .achievement-progress-bar {
+          height: 6px; /* Más delgada */
+          background: rgba(0, 0, 0, 0.3);
+          border-radius: 3px;
+          overflow: hidden;
+          margin-bottom: 0.5rem;
+        }
+        
+        .achievement-progress-fill {
+          height: 100%;
+          background: var(--color-primary);
+          width: 0%;
+          border-radius: 3px;
+          transition: width 0.5s ease;
+        }
+        
+        .achievement-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+        }
+        
+        .achievement-count { /* Progreso numérico */ }
+        .achievement-date { /* Fecha */ }
+      `;
+      document.head.appendChild(style);
+  }
 }
 
-// Función para crear una tarjeta de logro
+// Modificar createAchievementCard para que use la nueva estructura y clases
 function createAchievementCard(id, icon, title, description, count, maxCount, date, category) {
-  const card = document.createElement('div');
-  card.className = `achievement-card ${category || 'beginner'}`;
-  card.setAttribute('data-id', id);
-  
-  // Calcular progreso
-  const progress = Math.min(100, Math.round((count / maxCount) * 100));
-  
-  // Formatear fecha
-  const formattedDate = date ? formatAchievementDate(date) : 'Fecha desconocida';
-  
-  // Traducir categoría para mostrar
-  let categoryLabel = 'Principiante';
-  if (category === 'expert') categoryLabel = 'Experto';
-  if (category === 'intermediate') categoryLabel = 'Intermedio';
-  if (category === 'special') categoryLabel = 'Especial';
-  
-  card.innerHTML = `
-    <div class="achievement-badge">${categoryLabel}</div>
-    <div class="achievement-header">
-      <div class="achievement-icon">
-        <i class="${icon}"></i>
+    const card = document.createElement('div');
+    card.className = `achievement-card ${category || 'beginner'}`; // Añadir clase de categoría
+    
+    const progressPercent = maxCount > 0 ? Math.min(100, (count / maxCount) * 100) : 100;
+    const isMultiCount = maxCount > 1;
+    const formattedDate = date ? formatAchievementDate(date) : 'Reciente';
+
+    card.innerHTML = `
+        <div class="achievement-header">
+            <div class="achievement-icon-wrapper">
+                <i class="${icon}"></i>
       </div>
-      <div class="achievement-title">${title}</div>
-    </div>
-    <div class="achievement-description">${description}</div>
-    <div class="achievement-progress">
-      <div class="achievement-counter">
-        <div>Progreso:</div>
-        <span>${count}/${maxCount}</span>
+            <div class="achievement-info">
+                <div class="achievement-title">${title}</div>
+                <div class="achievement-description">${description}</div>
+            </div>
+        </div>
+        <div class="achievement-footer">
+            ${isMultiCount ? `
+            <div class="achievement-progress-bar">
+                <div class="achievement-progress-fill" style="width: ${progressPercent}%"></div>
+            </div>
+            ` : ''}
+            <div class="achievement-meta">
+                <span class="achievement-count">${isMultiCount ? `${count} / ${maxCount}` : 'Completado'}</span>
+                <span class="achievement-date">${formattedDate}</span>
+            </div>
       </div>
-      <div class="progress-bar">
-        <div class="progress-value" style="width: 0%"></div>
-      </div>
-      <div class="achievement-date">Desbloqueado: ${formattedDate}</div>
-    </div>
-  `;
-  
-  // Animar la barra de progreso
-  setTimeout(() => {
-    card.querySelector('.progress-value').style.width = `${progress}%`;
-  }, 100);
-  
-  return card;
+    `;
+    
+    return card;
 }
 
 // Función para formatear la fecha
@@ -1591,59 +1811,6 @@ function formatAchievementDate(dateString) {
   } catch (error) {
     console.error('Error formateando fecha:', error);
     return 'Fecha reciente';
-  }
-}
-
-// Actualizar historial de partidas
-function updateGameHistory(history) {
-  const historyContainer = document.querySelector('.game-history-container');
-  if (!historyContainer) return;
-  
-  // Limpiar contenedor
-  historyContainer.innerHTML = '';
-  
-  // Crear elementos para cada partida
-  history.forEach((game, index) => {
-    const gameDate = new Date(game.date);
-    const formattedDate = gameDate.toLocaleDateString() + ' ' + gameDate.toLocaleTimeString();
-    
-    const gameElement = document.createElement('div');
-    gameElement.className = `game-entry ${game.victory ? 'victory' : 'defeat'}`;
-    gameElement.innerHTML = `
-      <div class="game-date">${formattedDate}</div>
-      <div class="game-result">
-        <span class="result-badge ${game.victory ? 'win' : 'loss'}">
-          ${game.victory ? '<i class="fas fa-trophy"></i> Victoria' : '<i class="fas fa-times"></i> Derrota'}
-        </span>
-      </div>
-      <div class="game-difficulty">${formatDifficulty(game.difficulty)}</div>
-      <div class="game-score">${game.score} pts</div>
-      <div class="game-stats">
-        <span><i class="fas fa-check"></i> ${game.correct}</span>
-        <span><i class="fas fa-times"></i> ${game.wrong}</span>
-        <span><i class="fas fa-clock"></i> ${formatTime(game.timeUsed)}</span>
-      </div>
-    `;
-    
-    historyContainer.appendChild(gameElement);
-  });
-}
-
-// Función auxiliar para formatear tiempo
-function formatTime(seconds) {
-  if (!seconds) return '0:00';
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
-}
-
-// Formatear nivel de dificultad
-function formatDifficulty(difficulty) {
-  switch (difficulty) {
-    case 'facil': return 'Fácil';
-    case 'normal': return 'Normal';
-    case 'dificil': return 'Difícil';
-    default: return difficulty;
   }
 }
 
@@ -2062,14 +2229,20 @@ function checkAchievements(gameData, userIP) {
 })();
 
 function showEnhancedLoadingIndicator() {
-  // Create a nicer loading indicator
   const profileContent = document.querySelector('.profile-content');
-  if (!profileContent) return;
+  // Asegurarse de que profileContent exista antes de continuar
+  if (!profileContent) {
+      console.error('No se encontró el elemento .profile-content para el indicador de carga.');
+      return null; // Devolver null si no se encuentra el contenedor
+  }
   
-  // Remove existing content temporarily
-  const originalContent = profileContent.innerHTML;
+  // Guardar el contenido original de forma segura
+  const originalContentHTML = profileContent.innerHTML;
+  
+  // ... (resto del código para crear el HTML del indicador y los estilos) ...
   profileContent.innerHTML = `
     <div class="enhanced-loading">
+       {/* ... HTML del spinner ... */} 
       <div class="loading-animation">
         <div class="football-spinner">
           <i class="fas fa-futbol"></i>
@@ -2087,94 +2260,61 @@ function showEnhancedLoadingIndicator() {
     </div>
   `;
   
-  // Add CSS animation
+  // Añadir estilos si no existen ya
+  if (!document.getElementById('enhanced-loading-style')) {
   const style = document.createElement('style');
+    style.id = 'enhanced-loading-style'; // Añadir ID para evitar duplicados
   style.textContent = `
-    .enhanced-loading {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 300px;
-      text-align: center;
-      padding: 2rem;
-      background: rgba(15, 23, 42, 0.7);
-      border-radius: 15px;
-      backdrop-filter: blur(5px);
-    }
-    
-    .loading-animation {
-      margin-bottom: 2rem;
-    }
-    
-    .football-spinner {
-      font-size: 4rem;
-      color: #e11d48;
-      animation: spin-bounce 2s infinite;
-    }
-    
-    .loading-text h3 {
-      margin: 0 0 1rem 0;
-      color: white;
-      font-size: 1.5rem;
-    }
-    
-    .loading-progress {
-      width: 200px;
-    }
-    
-    .progress-bar {
-      height: 10px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 5px;
-      overflow: hidden;
-      margin-bottom: 0.5rem;
-    }
-    
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #e11d48, #fb7185);
-      border-radius: 5px;
-      transition: width 0.3s ease;
-    }
-    
-    .loading-percentage {
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.7);
-    }
-    
-    @keyframes spin-bounce {
-      0%, 100% { transform: scale(1) rotate(0deg); }
-      25% { transform: scale(1.2) rotate(90deg); }
-      50% { transform: scale(1) rotate(180deg); }
-      75% { transform: scale(1.2) rotate(270deg); }
-    }
-  `;
-  document.head.appendChild(style);
-  
-  // Animate loading
+      .enhanced-loading { /* ... Estilos ... */ }
+      .loading-animation { /* ... Estilos ... */ }
+      .football-spinner { /* ... Estilos ... */ }
+      .loading-text h3 { /* ... Estilos ... */ }
+      .loading-progress { /* ... Estilos ... */ }
+      .progress-bar { /* ... Estilos ... */ }
+      .progress-fill { /* ... Estilos ... */ }
+      .loading-percentage { /* ... Estilos ... */ }
+      @keyframes spin-bounce { /* ... Keyframes ... */ }
+    `;
+    document.head.appendChild(style);
+  }
+
   let progress = 0;
-  const progressFill = document.querySelector('.progress-fill');
-  const percentageText = document.querySelector('.loading-percentage');
-  
-  const interval = setInterval(() => {
-    progress += Math.random() * 15;
-    if (progress > 90) progress = 90; // Cap at 90% until actual load complete
-    
-    progressFill.style.width = `${progress}%`;
-    percentageText.textContent = `${Math.round(progress)}%`;
-  }, 300);
+  const progressFill = profileContent.querySelector('.progress-fill');
+  const percentageText = profileContent.querySelector('.loading-percentage');
+  let interval = null;
+
+  // Asegurarse de que los elementos existan antes de iniciar el intervalo
+  if (progressFill && percentageText) {
+    interval = setInterval(() => {
+      progress += Math.random() * 15;
+      if (progress > 90) progress = 90; 
+      progressFill.style.width = `${progress}%`;
+      percentageText.textContent = `${Math.round(progress)}%`;
+    }, 300);
+  } else {
+     console.error('No se encontraron elementos para la barra de progreso.');
+  }
   
   return {
     completeLoading: function() {
-      clearInterval(interval);
-      progressFill.style.width = '100%';
-      percentageText.textContent = '100%';
-      
-      setTimeout(() => {
-        profileContent.innerHTML = originalContent;
-      }, 500);
+      return new Promise(resolve => {
+        if(interval) clearInterval(interval);
+        if (progressFill) progressFill.style.width = '100%';
+        if (percentageText) percentageText.textContent = '100%';
+        
+        // Restaurar contenido original después de un breve retardo
+        setTimeout(() => {
+          // Verificar si profileContent todavía existe y es válido
+          const currentProfileContent = document.querySelector('.profile-content');
+          if (currentProfileContent) {
+             currentProfileContent.innerHTML = originalContentHTML;
+             console.log('[completeLoading] Contenido HTML original restaurado.');
+          } else {
+             console.error('[completeLoading] .profile-content no encontrado al intentar restaurar.');
+          }
+          resolve(); // Resolver la promesa después de restaurar
+        }, 500); // 500ms para que se vea el 100%
+      });
     }
   };
 }
@@ -2266,5 +2406,28 @@ function mergeGameAchievementsWithProfile(gameAchievements, userIP) {
     return profileAchievements;
 }
 
-// Actualizar estadísticas basadas en historial de juegos
+// Función para crear un perfil por defecto con valores realistas
+function createDefaultProfile(userIP) {
+  console.log(`[createDefaultProfile] Creando perfil por defecto para IP: ${userIP}`);
+  return {
+    name: localStorage.getItem('username') || 'Jugador Anónimo', // Intentar obtener nombre guardado
+    userIP: userIP,
+    gamesPlayed: 0,
+    totalScore: 0,
+    bestScore: 0,
+    totalCorrect: 0,
+    totalWrong: 0,
+    totalSkipped: 0,
+    totalTime: 0,
+    victories: 0,
+    defeats: 0,
+    achievementsCount: 0,
+    rankingPosition: null, // El ranking se determinará por separado
+    status: 'Novato', // Un estado inicial lógico
+    lastPlayed: null, // Sin fecha de última partida
+    createdAt: new Date().toISOString() // Fecha de creación
+  };
+}
+
+// Función para actualizar las estadísticas del perfil basado en historial
 // ... existing code ...

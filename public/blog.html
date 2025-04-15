@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -7,9 +7,9 @@
     <meta name="google-adsense-account" content="ca-pub-9579152019412427">
     <title>Blog de Fútbol - PASALA CHÉ</title>
     <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/header.css" />
     <link rel="stylesheet" href="css/blog.css" />
     <link rel="stylesheet" href="css/footer-styles.css" />
+    <link rel="stylesheet" href="css/combined.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet" />
@@ -49,57 +49,6 @@
         height: 5px;
         background: linear-gradient(90deg, #e11d48, #fb7185);
         z-index: 1;
-      }
-      
-      .blog-header {
-        text-align: center;
-        margin-bottom: 2.5rem;
-        position: relative;
-        padding-bottom: 1.5rem;
-      }
-      
-      .blog-header::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 4px;
-        background: linear-gradient(90deg, #e11d48, #fb7185);
-        border-radius: 2px;
-      }
-      
-      .blog-title {
-        font-size: 3rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        color: white;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-family: 'Oswald', sans-serif;
-        background: linear-gradient(90deg, #ffffff, #f1f5f9);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      
-      .blog-intro {
-        max-width: 800px;
-        margin: 0 auto;
-        text-align: center;
-      }
-      
-      .blog-intro p {
-        color: rgba(255, 255, 255, 0.9);
-        font-size: 1.1rem;
-        line-height: 1.6;
-        margin-bottom: 0.5rem;
-      }
-      
-      .blog-description {
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 1rem;
-        font-style: italic;
       }
       
       .blog-entries {
@@ -325,26 +274,23 @@
     </style>
   </head>
   <body>
-    <header class="main-header">
+    <a href="index.html" class="home-link">
+      <i class="fas fa-home"></i> Inicio
+    </a>
+
+    <!-- Header Inserted -->
+    <header class="app-header">
       <div class="logo-animation">
-        <i class="fas fa-futbol ball-icon bounce"></i>
+          <i class="fas fa-futbol ball-icon bounce"></i>
       </div>
-      <a href="index.html" class="title-link">
-        <h1 class="title-text">PASALA CHE</h1>
+      <a href="blog.html" class="title-link"> <!-- Link to self -->
+          <h1 class="title-text">Blog PASALA CHÉ</h1>
       </a>
-      <p class="subtitle">El juego de palabras del fútbol</p>
+      <p class="subtitle">Noticias, artículos y curiosidades sobre el mundo del fútbol</p>
     </header>
-    
-    <div class="blog-screen">
-      <div class="blog-container">
-        <header class="blog-header">
-          <h1 class="blog-title">El Blog del Futbolero</h1>
-          <div class="blog-intro">
-            <p>Entérate de las últimas noticias y curiosidades del mundo futbolero</p>
-            <p class="blog-description">En nuestro blog encontrarás artículos sobre la historia del fútbol, récords históricos, curiosidades de los jugadores y mucho más para complementar tu experiencia en el juego.</p>
-          </div>
-        </header>
-      
+
+    <div class="blog-screen page-container"> <!-- Added page-container -->
+      <div class="blog-container content-container"> <!-- Added content-container -->
         <div class="blog-entries">
           <div class="blog-card">
             <div class="blog-img-container">
@@ -432,7 +378,7 @@
         </div>
         
         <div style="text-align: center;">
-          <a href="index.html" class="back-to-game-btn"><i class="fas fa-gamepad"></i> Volver al juego</a>
+          <a href="pasalache.html" class="back-to-game-btn"><i class="fas fa-gamepad"></i> Volver al juego</a>
         </div>
       </div>
       
@@ -507,3 +453,5 @@
     </div>
   </body>
 </html>
+
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -7,7 +7,8 @@
   <meta name="google-adsense-account" content="ca-pub-9579152019412427">
   <title>Evolución Táctica del Fútbol Moderno - PASALA CHÉ</title>
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/footer-styles.css">
+  <link rel="stylesheet" href="css/combined.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
@@ -31,52 +32,6 @@
       backdrop-filter: blur(10px);
       border: 2px solid rgba(59, 130, 246, 0.2);
       color: white;
-    }
-    
-    .blog-detail-header {
-      text-align: center;
-      margin-bottom: 40px;
-      position: relative;
-      padding-bottom: 20px;
-    }
-    
-    .blog-detail-header::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 4px;
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-      border-radius: 2px;
-    }
-    
-    .blog-detail-title {
-      font-size: 38px;
-      font-weight: 700;
-      margin-bottom: 15px;
-      background: linear-gradient(90deg, #ffffff, #a5b4fc);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    .blog-detail-meta {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 14px;
-    }
-    
-    .blog-detail-meta span {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    
-    .blog-detail-meta i {
-      color: #3b82f6;
     }
     
     .blog-detail-img-container {
@@ -292,25 +247,25 @@
   </style>
 </head>
 <body>
-  <header class="main-header">
-    <a href="index.html" class="title-link">
-      <h1 class="main-title">PASALA CHÉ</h1>
+  <a href="index.html" class="home-link">
+    <i class="fas fa-home"></i> Inicio
+  </a>
+
+  <!-- Header Inserted -->
+  <header class="app-header">
+    <div class="logo-animation">
+        <i class="fas fa-futbol ball-icon bounce"></i>
+    </div>
+    <a href="blog.html" class="title-link">
+        <h1 class="title-text">Evolución Táctica del Fútbol Moderno</h1>
     </a>
+    <p class="subtitle">Blog PASALA CHÉ</p>
   </header>
-  
-  <div class="blog-detail-screen">
-    <div class="blog-detail-container">
-      <header class="blog-detail-header">
-        <h1 class="blog-detail-title">Evolución Táctica del Fútbol Moderno</h1>
-        <div class="blog-detail-meta">
-          <span><i class="fas fa-calendar-alt"></i> 15 Abril, 2023</span>
-          <span><i class="fas fa-user"></i> Equipo PASALA CHÉ</span>
-          <span><i class="fas fa-tag"></i> Tácticas, Estrategia</span>
-        </div>
-      </header>
-      
+
+  <div class="blog-detail-screen page-container">
+    <div class="blog-detail-container content-container">
       <div class="blog-detail-img-container">
-        <img src="img/blog/tacticas.jpg" alt="Evolución táctica del fútbol" class="blog-detail-img" onerror="this.src='https://via.placeholder.com/800x400?text=Evolución+Táctica+del+Fútbol'">
+        <img src="img/blog/tactics-evolution.jpg" alt="Evolución táctica del fútbol" class="blog-detail-img" onerror="this.src='https://via.placeholder.com/800x400?text=Evolución+Táctica+del+Fútbol'">
       </div>
       
       <article class="blog-detail-content">
@@ -434,7 +389,7 @@
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-links">
-        <a href="index.html">Inicio</a>
+        <a href="pasalache.html">Inicio</a>
         <a href="profile.html">Perfil</a>
         <a href="ranking.html">Ranking</a>
         <a href="about.html">Sobre Nosotros</a>
@@ -461,3 +416,4 @@
   <script src="js/utils.js"></script>
 </body>
 </html> 
+

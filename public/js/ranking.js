@@ -35,16 +35,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const fromGame = urlParams.get('fromGame');
   
-  // Si venimos de una partida, forzar recarga del ranking
+  // Siempre cargar ranking global, forzar recarga si viene de partida
+  await loadRanking(fromGame === 'true'); 
+  
   if (fromGame === 'true') {
-    await loadRanking(true); // Forzar recarga al venir de partida
     showGameCompletionMessage();
-  } else {
-    await loadRanking(false); // Carga normal
   }
   
-  // Configurar los tabs de períodos
-  setupRankingTabs();
+  // Eliminar configuración de tabs
+  // setupRankingTabs(); // <-- REMOVED
   
   // Configurar los botones de navegación
   setupNavigationButtons();
@@ -101,59 +100,37 @@ function setupNavigationButtons() {
   }
 }
 
-// Configurar tabs del ranking
-function setupRankingTabs() {
-  const tabs = document.querySelectorAll('.ranking-tab');
-  if (tabs.length === 0) return;
-  
-  tabs.forEach(tab => {
-    tab.addEventListener('click', function() {
-      // Eliminar clase active de todos los tabs
-      tabs.forEach(t => t.classList.remove('active'));
-      
-      // Añadir clase active al tab clickeado
-      this.classList.add('active');
-      
-      // Obtener período seleccionado
-      const period = this.getAttribute('data-period');
-      
-      // Cargar datos según el período
-      loadRanking(true, period);
-    });
-  });
+// Eliminar función setupRankingTabs
+/* 
+function setupRankingTabs() { 
+  // ... implementation removed ...
 }
+*/
 
-// Obtener datos del ranking desde Firebase
-async function getRankingDataFromFirebase(period = 'global') {
+// Modificar getRankingDataFromFirebase para que sea siempre global y sin fallback
+async function getRankingDataFromFirebase() { // <-- REMOVED period parameter
+  console.log(`[Firebase] Iniciando obtención de ranking GLOBAL`); // <-- Updated log
   try {
-    console.log(`Obteniendo datos de ranking de Firebase para período: ${period}`);
-    
     // Check if Firebase is available
     if (!window.firebaseAvailable || !db) {
-      console.log('Firebase no está disponible para obtener datos, usando localStorage');
-      return await getRankingDataFromLocalStorage(period);
+      console.error('[Firebase] Firebase no está disponible. No se puede cargar el ranking.'); // <-- Changed error message
+      // Lanzar error para que sea capturado por loadRanking
+      throw new Error('Firebase no disponible'); 
     }
     
-    // Obtener rangos de fecha según el período
-    const dateRange = getPeriodDateRange(period);
-    
-    // Referencia a la colección de partidas
+    // Referencia a la colección de partidas (sin filtro de fecha)
     let query = db.collection('gameHistory');
-    
-    // Filtrar por período si es necesario
-    if (dateRange) {
-      query = query.where('timestamp', '>=', dateRange.start)
-                  .where('timestamp', '<=', dateRange.end);
-    }
     
     // Ordenar por puntuación (mayor a menor)
     query = query.orderBy('score', 'desc');
     
     // Obtener los datos
+    console.log(`[Firebase] Ejecutando query para ranking GLOBAL...`); // <-- Updated log
     const snapshot = await query.get();
+    console.log(`[Firebase] Query completada para ranking GLOBAL. Documentos encontrados: ${snapshot.size}`); // <-- Updated log
     
     if (snapshot.empty) {
-      console.log('No se encontraron datos de ranking.');
+      console.log('[Firebase] No se encontraron datos de ranking en Firebase.');
       return [];
     }
     
@@ -172,70 +149,21 @@ async function getRankingDataFromFirebase(period = 'global') {
       });
     });
     
-    console.log(`Datos de ranking obtenidos: ${rankingData.length} registros para período ${period}`);
+    console.log(`[Firebase] Datos de ranking GLOBAL procesados: ${rankingData.length} registros`); // <-- Updated log
     return rankingData;
   } catch (error) {
-    console.error('Error al obtener datos del ranking desde Firebase:', error);
-    
-    // Como fallback, intentar obtener datos de localStorage
-    console.log('Intentando obtener datos desde localStorage como fallback...');
-    return await getRankingDataFromLocalStorage(period);
+    console.error(`[Firebase] Error al obtener datos del ranking GLOBAL desde Firebase:`, error);
+    // Re-lanzar el error para que sea manejado en loadRanking
+    throw error; 
   }
 }
 
-// Mantener la función de localStorage como fallback
+// Eliminar función getRankingDataFromLocalStorage
+/*
 async function getRankingDataFromLocalStorage(period = 'global') {
-  try {
-    // Cargamos todos los historiales de juego guardados en localStorage
-    let rankingData = [];
-    const keys = Object.keys(localStorage);
-    
-    // Obtener rangos de fecha según el período
-    const dateRange = getPeriodDateRange(period);
-    
-    // Obtener todos los registros que comienzan con "gameHistory_"
-    for (const key of keys) {
-      if (key.startsWith('gameHistory_')) {
-        try {
-          const history = JSON.parse(localStorage.getItem(key));
-          if (Array.isArray(history)) {
-            // Filtrar partidas según el período seleccionado
-            const filteredHistory = history.filter(game => {
-              if (!dateRange) return true; // Si no hay filtro, incluir todas
-              
-              const gameDate = game.date ? new Date(game.date) : null;
-              if (!gameDate) return false;
-              
-              return gameDate >= dateRange.start && gameDate <= dateRange.end;
-            });
-            
-            // Añadir cada partida como una entrada en el ranking
-            filteredHistory.forEach(game => {
-              if (game.name) { // Usar el nombre guardado en la partida
-                rankingData.push({
-                  name: game.name,
-                  score: game.score || 0,
-                  correct: game.correct || 0,
-                  wrong: game.wrong || 0,
-                  difficulty: game.difficulty || 'normal',
-                  date: game.date
-                });
-              }
-            });
-          }
-        } catch (e) {
-          console.error(`Error al procesar clave ${key}:`, e);
-        }
-      }
-    }
-    
-    console.log(`Datos de ranking obtenidos de localStorage: ${rankingData.length} registros para período ${period}`);
-    return rankingData;
-  } catch (error) {
-    console.error('Error al obtener datos del ranking desde localStorage:', error);
-    return [];
-  }
+  // ... implementation removed ...
 }
+*/
 
 // Guardar partida en Firebase para el ranking global
 async function saveGameToFirebase(gameData) {
@@ -288,31 +216,6 @@ function detectDeviceType() {
   }
   
   return 'desktop';
-}
-
-// Obtener rango de fechas para el período seleccionado
-function getPeriodDateRange(period) {
-  if (period === 'global') return null; // Sin límite de fecha
-  
-  const now = new Date();
-  const start = new Date();
-  
-  if (period === 'monthly') {
-    // Primer día del mes actual
-    start.setDate(1);
-    start.setHours(0, 0, 0, 0);
-  } else if (period === 'weekly') {
-    // Primer día de la semana actual (lunes)
-    const day = start.getDay();
-    const diff = start.getDate() - day + (day === 0 ? -6 : 1); // Ajuste para que la semana comience el lunes
-    start.setDate(diff);
-    start.setHours(0, 0, 0, 0);
-  }
-  
-  return {
-    start: start,
-    end: now
-  };
 }
 
 // Actualizar estadísticas globales mostradas en la página
@@ -628,112 +531,124 @@ function scrollToCurrentPlayer() {
   }, 500);
 }
 
-// Modificar la función loadRanking para usar Firebase
-async function loadRanking(forceRefresh = false, period = 'global') {
+// Modificar la función loadRanking para usar SIEMPRE Firebase global y sin fallback
+async function loadRanking(forceRefresh = false) { // <-- REMOVED period parameter
   const loadingContainer = document.getElementById('loading-container');
   const rankingTable = document.getElementById('ranking-table');
   const rankingTableBody = document.getElementById('ranking-body');
   const noResultsContainer = document.getElementById('no-results');
-  
-  if (!rankingTableBody) {
-    console.error("No se encontró el elemento '#ranking-body'");
+  const errorContainer = document.getElementById('error-message-container');
+
+  if (!rankingTableBody || !loadingContainer || !rankingTable || !noResultsContainer || !errorContainer) {
+    console.error("Error crítico: No se encontraron todos los elementos necesarios para el ranking en el DOM.");
+    if (errorContainer) {
+        errorContainer.innerHTML = `<p>Error crítico al inicializar la página. Por favor, recarga.</p>`;
+        errorContainer.style.display = 'block';
+    }
+    if (loadingContainer) loadingContainer.style.display = 'none';
     return;
   }
   
-  // Mostrar el spinner de carga
-  if (loadingContainer) loadingContainer.style.display = 'flex';
-  if (rankingTable) rankingTable.style.display = 'none';
-  if (noResultsContainer) noResultsContainer.style.display = 'none';
-  
+  // Reset UI state at the beginning
+  loadingContainer.style.display = 'flex';
+  rankingTable.style.display = 'none';
+  noResultsContainer.style.display = 'none';
+  errorContainer.style.display = 'none';
+  errorContainer.innerHTML = '';
+  rankingTableBody.innerHTML = '';
+  // Ensure top players container exists before clearing
+  const topPlayersContainer = document.querySelector('.top-players');
+  if (topPlayersContainer) {
+    topPlayersContainer.innerHTML = '';
+  } else {
+      console.warn('Elemento .top-players no encontrado al resetear UI.');
+  }
+
+
   try {
-    console.log('Cargando ranking ' + period + (forceRefresh ? ' (forzando recarga)' : ''));
+    console.log(`Cargando ranking GLOBAL${forceRefresh ? ' (forzando recarga)' : ''}`); // <-- Updated log
     
-    // Pequeña espera para asegurar que el spinner se muestre (evita parpadeos)
-    await new Promise(resolve => setTimeout(resolve, 300));
+    // Small delay for spinner visibility
+    await new Promise(resolve => setTimeout(resolve, 150));
     
-    // Intentar obtener datos desde Firebase
     let rankingData = [];
     
-    // Verificar si Firebase está disponible
-    if (window.firebaseAvailable) {
-      try {
-        rankingData = await getRankingDataFromFirebase(period);
-      } catch (firebaseError) {
-        console.error('Error al obtener datos de Firebase:', firebaseError);
-        // Si falla Firebase, usar localStorage como respaldo
-        rankingData = await getRankingDataFromLocalStorage(period);
-      }
-    } else {
-      console.warn('Firebase no está disponible, usando localStorage');
-      rankingData = await getRankingDataFromLocalStorage(period);
-    }
-    
-    // Ocultar spinner de carga
-    if (loadingContainer) loadingContainer.style.display = 'none';
-    
-    // Limpiar contenido anterior
-    rankingTableBody.innerHTML = '';
-    
+    // SIEMPRE intentar obtener de Firebase
+    rankingData = await getRankingDataFromFirebase(); // <-- Direct call, no period
+        
     if (!rankingData || rankingData.length === 0) {
-      // Si no hay datos, mostrar mensaje
-      if (noResultsContainer) noResultsContainer.style.display = 'flex';
-      return;
+      noResultsContainer.style.display = 'flex';
+      rankingTable.style.display = 'none';
+      console.log(`No se encontraron datos de ranking GLOBAL.`); // <-- Updated log
+      updateGlobalStats([]); 
+      updatePlayerPositionDisplay(-1, null);
+      // Ocultar spinner si no hay resultados
+      if (loadingContainer) loadingContainer.style.display = 'none';
+      return; // Importante: salir aquí si no hay datos
     }
     
-    // Mostrar tabla
-    if (rankingTable) rankingTable.style.display = 'table';
+    // Data found, show table
+    rankingTable.style.display = 'table';
+    noResultsContainer.style.display = 'none';
     
-    // Ordenar por puntaje (score) de mayor a menor - no necesario si ya viene ordenado de Firebase
-    if (rankingData.length > 0 && !window.firebaseAvailable) {
-      rankingData.sort((a, b) => b.score - a.score);
-    }
+    // Sorting should not be needed as Firebase query already sorts
+    // if (rankingData.length > 0) {
+    //   rankingData.sort((a, b) => (b.score || 0) - (a.score || 0));
+    // }
     
-    // Obtener nombre del jugador actual para destacarlo
     const currentPlayer = getUsernameFromStorage();
-    
-    // Variable para rastrear si el jugador actual está en la tabla
     let currentPlayerPosition = -1;
     
-    // Generar filas de la tabla (primero los top 3)
-    populateTopPlayers(rankingData.slice(0, 3), currentPlayer);
+    // Populate Top 3
+    // Ensure container exists before populating
+    if (topPlayersContainer) {
+        populateTopPlayers(rankingData.slice(0, 3), currentPlayer);
+    } else {
+        console.warn('Elemento .top-players no encontrado al popular.');
+    }
     
-    // Generar filas de la tabla principal
+    // Populate main table
+    const fragment = document.createDocumentFragment();
     rankingData.forEach((item, index) => {
       const position = index + 1;
-      
-      // Determinar si es el jugador actual (comparar sin importar mayúsculas/minúsculas)
       const isCurrentPlayer = currentPlayer && item.name && 
                              item.name.toLowerCase() === currentPlayer.toLowerCase();
       if (isCurrentPlayer) {
         currentPlayerPosition = position;
       }
       
-      // No volver a mostrar los top 3 en la tabla principal si hay sección top-players
-      if (position <= 3 && document.querySelector('.top-players').children.length > 0) {
+      // Skip top 3 if they are already displayed separately
+      // Check if top players container actually has children
+      const topPlayersDisplayed = topPlayersContainer && topPlayersContainer.children.length > 0;
+      if (position <= 3 && topPlayersDisplayed) {
         return;
       }
       
       const tr = document.createElement("tr");
-      
-      // Añadir clase si es el jugador actual
       if (isCurrentPlayer) {
         tr.classList.add('current-player');
-        tr.classList.add('highlight'); // Añadir highlight directamente
       }
       
-      // Determinar clase para posición
       let positionClass = '';
+      // Use position directly for medal colors
       if (position === 1) positionClass = 'gold';
       else if (position === 2) positionClass = 'silver';
       else if (position === 3) positionClass = 'bronze';
       
-      // Formatear fecha
       let formattedDate = '-';
       if (item.date) {
-        const gameDate = typeof item.date === 'object' && item.date.toDate ? 
-                         item.date.toDate() : new Date(item.date);
-        
-        formattedDate = `${gameDate.toLocaleDateString()} ${gameDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+         try {
+           // Ensure date is a valid Date object before formatting
+           const gameDate = item.date instanceof Date ? item.date : new Date(item.date);
+           
+           if (!isNaN(gameDate.getTime())) {
+              formattedDate = `${gameDate.toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' })} ${gameDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+           } else {
+             console.warn('Fecha inválida encontrada en los datos:', item.date);
+           }
+         } catch (dateError) {
+           console.warn('Error formateando fecha:', item.date, dateError);
+         }
       }
       
       tr.innerHTML = `
@@ -746,34 +661,40 @@ async function loadRanking(forceRefresh = false, period = 'global') {
         <td class="date">${formattedDate}</td>
       `;
       
-      rankingTableBody.appendChild(tr);
+      fragment.appendChild(tr);
     });
+    rankingTableBody.appendChild(fragment);
     
-    // Mostrar posición del jugador actual si está en el ranking
     updatePlayerPositionDisplay(currentPlayerPosition, currentPlayer);
     
-    // Scroll al jugador actual si está en el ranking
     if (currentPlayerPosition > 0) {
       scrollToCurrentPlayer();
     }
     
-    // Actualizar estadísticas globales
     updateGlobalStats(rankingData);
     
-    console.log('Ranking cargado correctamente');
+    console.log('Ranking GLOBAL cargado correctamente'); // <-- Updated log
+    
   } catch (err) {
-    console.error("Error general al cargar ranking:", err);
-    if (loadingContainer) {
-      loadingContainer.innerHTML = `
-        <div class="error-message">
-          <i class="fas fa-exclamation-circle"></i>
-          <p>Error al cargar el ranking: ${err.message}</p>
-          <button onclick="location.reload()" class="retry-button">
+    console.error("Error general al cargar ranking GLOBAL:", err); // <-- Updated log
+    errorContainer.innerHTML = `
+      <div class="error-message-content">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>¡Ups! Hubo un problema al cargar el ranking desde Firebase.</p> <!-- Updated message -->
+        <p class="error-details">Detalle: ${err.message || 'Error desconocido'}</p> 
+        <button onclick="loadRanking(true)" class="retry-button"> <!-- Removed period from retry -->
             <i class="fas fa-redo"></i> Reintentar
-          </button>
-        </div>
-      `;
-      loadingContainer.style.display = 'flex';
-    }
+        </button>
+      </div>
+    `;
+    errorContainer.style.display = 'block';
+    rankingTable.style.display = 'none';
+    noResultsContainer.style.display = 'none';
+
+  } finally {
+     // Always hide the loading spinner
+     if (loadingContainer) {
+        loadingContainer.style.display = 'none';
+     }
   }
 }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -9,48 +9,427 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/combined.css">
     <link rel="stylesheet" href="css/footer-styles.css">
-    <link rel="stylesheet" href="css/profile-ranking-styles.css">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
     <style>
-        /* Botón volver */
-        .back-button-nav {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background-color: rgba(0, 0, 0, 0.3);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            backdrop-filter: blur(5px);
-            z-index: 100;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        /* --- Estilos Generales --- */
+        :root {
+            --color-primary: #e11d48; /* Rojo principal (Pasala Che) */
+            --color-secondary: #fb7185; /* Rojo claro */
+            --color-background: #0f172a; /* Azul muy oscuro (más oscuro) */
+            --color-surface: #1e293b; /* Azul oscuro */
+            --color-card-bg: rgba(30, 41, 59, 0.85); /* Azul oscuro semi-trans */
+            --color-card-bg-darker: rgba(15, 23, 42, 0.9);
+            --color-text: #e2e8f0; /* Gris claro */
+            --color-text-muted: #94a3b8; /* Gris medio */
+            --color-border: rgba(255, 255, 255, 0.1);
+            --color-gold: #ffd700;
+            --color-silver: #c0c0c0;
+            --color-bronze: #cd7f32;
+            --color-success: #10b981; /* Verde para aciertos */
+            --color-error: #f43f5e; /* Rojo para errores */
+            --font-primary: 'Poppins', sans-serif;
+            --font-secondary: 'Oswald', sans-serif; /* Títulos más audaces */
+            --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.2);
+            --shadow-medium: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --border-radius-md: 10px;
+            --border-radius-lg: 14px;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-primary);
+            background: linear-gradient(145deg, var(--color-background) 0%, var(--color-surface) 100%);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
+
+        a { color: var(--color-primary); text-decoration: none; transition: color 0.3s ease; }
+        a:hover { color: var(--color-secondary); }
         
-        .back-button-nav:hover {
-            background-color: rgba(225, 29, 72, 0.7);
-            transform: scale(1.1);
+        /* --- Página de Ranking --- */
+        .ranking-page { padding: 1rem; }
+        .ranking-container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+        /* --- Header del Ranking --- */
+        .ranking-header {
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9)), url('img/stadium-blur.jpg') center center/cover no-repeat; /* Añadido fondo sutil */
+            background-blend-mode: overlay;
+            border-radius: var(--border-radius-lg);
+            padding: 2.5rem 2rem;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-medium);
+            position: relative;
+            overflow: hidden;
+        }
+        .ranking-header::before { /* Efecto decorativo */
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at top left, rgba(225, 29, 72, 0.15) 0%, transparent 40%);
+            pointer-events: none;
+        }
+         .ranking-header::after { /* Efecto decorativo */
+            content: ''; position: absolute; bottom: 0; right: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
+             pointer-events: none;
+        }
+
+        .trophy-icon {
+            font-size: 3rem; margin-bottom: 1rem; color: var(--color-gold);
+            display: inline-block; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .ranking-title {
+            font-family: var(--font-secondary); font-size: 2.5rem; color: #fff;
+            margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
+        }
+
+        .ranking-subtitle {
+            font-size: 1.05rem; color: var(--color-text-muted); max-width: 650px;
+            margin: 0 auto 2rem;
+        }
+
+        /* --- Mensaje Posición Jugador --- */
+        .player-position-note {
+            background: var(--color-card-bg);
+            padding: 1rem 1.5rem; border-radius: var(--border-radius-md);
+            margin: 2rem 0 1.5rem; display: flex; align-items: center;
+            gap: 1rem; box-shadow: var(--shadow-light);
+            font-weight: 500; font-size: 1rem;
+            border-left: 5px solid var(--color-primary);
+        }
+        .player-position-note i { font-size: 1.4rem; color: var(--color-primary); }
+        .player-position-note strong { font-weight: 700; color: #fff; }
+        .player-position-note.top-position { border-left-color: var(--color-gold); }
+        .player-position-note.top-position i { color: var(--color-gold); }
+        .player-position-note.not-in-ranking { border-left-color: var(--color-text-muted); }
+        .player-position-note.not-in-ranking i { color: var(--color-text-muted); }
+
+        /* --- Contenedor Carga / Error / Sin Resultados --- */
+        .loading-container, .no-results, .error-message-container {
+            text-align: center; padding: 4rem 1rem;
+            background: var(--color-card-bg-darker);
+            border-radius: var(--border-radius-lg);
+            margin: 2.5rem 0;
+            color: var(--color-text-muted);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 250px; /* Ensure it takes some space */
+            border: 1px solid var(--color-border);
+        }
+        .loading-container i, .no-results i, .error-message-container i.fa-exclamation-circle { /* Target specific error icon */
+            font-size: 3rem; margin-bottom: 1.5rem; display: block;
+        }
+        .loading-container i { color: var(--color-primary); animation: spin 1.5s linear infinite; }
+        .no-results i { color: var(--color-text-muted); }
+        .error-message-container i.fa-exclamation-circle { color: var(--color-error); }
+        .error-message-container p { font-size: 1.1rem; color: var(--color-text); margin-bottom: 0.5rem; }
+        .error-message-container p.error-details { font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 1.5rem; }
+        .retry-button {
+             background: var(--color-primary); color: white; border: none; padding: 0.8rem 1.6rem;
+             border-radius: 50px; cursor: pointer; transition: background 0.3s ease;
+             font-weight: 600; font-size: 1rem;
+             display: inline-flex; align-items: center; gap: 0.5rem;
+        }
+        .retry-button:hover { background: var(--color-secondary); }
+        .retry-button i { font-size: 1em; animation: none; margin: 0; /* Reset potential inherited styles */ }
+
+
+        /* --- Top 3 Jugadores --- */
+        .top-players {
+            display: grid; grid-template-columns: 1fr 1.3fr 1fr; /* Destacar más el 1ro */
+            align-items: flex-end; gap: 1.5rem; /* Más separación */
+            margin-bottom: 3.5rem; position: relative;
+        }
+        .top-player {
+            background: linear-gradient(145deg, var(--color-card-bg), var(--color-card-bg-darker));
+            border-radius: var(--border-radius-lg);
+            padding: 2rem 1.5rem 1.5rem;
+            display: flex; flex-direction: column; align-items: center;
+            text-align: center; position: relative; border: 1px solid var(--color-border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: var(--shadow-light);
+        }
+        .top-player:hover { transform: translateY(-10px); box-shadow: var(--shadow-medium); }
+
+        .top-player.first { order: 2; padding-bottom: 3rem; z-index: 2; transform: scale(1.05); } /* Slight scale up */
+        .top-player.second { order: 1; z-index: 1; }
+        .top-player.third { order: 3; z-index: 1; }
+
+        .rank-number {
+            position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
+            width: 44px; height: 44px; border-radius: 50%;
+            background: var(--color-primary); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 1.1rem; box-shadow: 0 0 15px rgba(0,0,0,0.3);
+            border: 3px solid var(--color-surface); /* Match body background */
+        }
+        .top-player.first .rank-number { background: var(--color-gold); color: var(--color-background); width: 52px; height: 52px; font-size: 1.3rem; border-color: var(--color-gold); box-shadow: 0 0 20px var(--color-gold); }
+        .top-player.second .rank-number { background: var(--color-silver); color: var(--color-background); border-color: var(--color-silver); }
+        .top-player.third .rank-number { background: var(--color-bronze); color: #fff; border-color: var(--color-bronze); }
+
+        .top-avatar {
+            width: 90px; height: 90px; border-radius: 50%;
+            background: var(--color-card-bg-darker); display: flex; align-items: center;
+            justify-content: center; margin-bottom: 1.2rem; border: 4px solid var(--color-border);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
+        }
+        .top-avatar i { font-size: 3rem; color: var(--color-text-muted); }
+        .top-player.first .top-avatar { width: 110px; height: 110px; border-color: var(--color-gold); }
+        .top-player.first .top-avatar i { color: var(--color-gold); }
+        .top-player.second .top-avatar { border-color: var(--color-silver); }
+        .top-player.second .top-avatar i { color: var(--color-silver); }
+        .top-player.third .top-avatar { border-color: var(--color-bronze); }
+        .top-player.third .top-avatar i { color: var(--color-bronze); }
+
+        .top-name { font-size: 1.2rem; font-weight: 600; color: #fff; margin-bottom: 0.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+        .top-score {
+            font-family: var(--font-secondary);
+            font-size: 2rem; font-weight: 700; color: var(--color-primary);
+            margin-bottom: 1rem; line-height: 1;
+        }
+        .top-player.first .top-score { color: var(--color-gold); font-size: 2.4rem; }
+        .top-player.second .top-score { color: var(--color-silver); }
+        .top-player.third .top-score { color: var(--color-bronze); }
+
+        .top-details { font-size: 0.85rem; color: var(--color-text-muted); display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .top-details span { display: inline-flex; align-items: center; gap: 0.4rem; }
+        .top-details i { color: var(--color-secondary); font-size: 0.9em; }
+        .top-details .fa-check-circle { color: var(--color-success); }
+        .top-details .fa-times-circle { color: var(--color-error); }
+
+
+        .top-player.current-player { border: 3px solid var(--color-primary); box-shadow: 0 0 20px rgba(225, 29, 72, 0.4); }
+
+        /* --- Tabla Ranking --- */
+        .ranking-table-container {
+            background: var(--color-card-bg-darker);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-medium);
+            max-height: 65vh; /* Increase height slightly */
+            overflow-y: auto;
+        }
+        /* Custom Scrollbar */
+        .ranking-table-container::-webkit-scrollbar { width: 10px; }
+        .ranking-table-container::-webkit-scrollbar-track { background: var(--color-card-bg-darker); border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0; }
+        .ranking-table-container::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 5px; border: 2px solid var(--color-card-bg-darker); }
+        .ranking-table-container::-webkit-scrollbar-thumb:hover { background: var(--color-secondary); }
+
+        .ranking-table { width: 100%; border-collapse: collapse; }
+        .ranking-table thead tr { border-bottom: 2px solid var(--color-primary); } /* Stronger header border */
+        .ranking-table th {
+            background: rgba(15, 23, 42, 0.98); /* Slightly darker/opaque header */
+            color: var(--color-text-muted);
+            font-family: var(--font-secondary);
+            font-weight: 600; text-align: left;
+            padding: 1rem 1.3rem;
+            font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.8px;
+            position: sticky; top: 0; z-index: 5; /* Ensure header stays on top */
+        }
+        .ranking-table th:first-child { border-radius: var(--border-radius-lg) 0 0 0; } /* Round corners if container not scrolled */
+        .ranking-table th:last-child { border-radius: 0 var(--border-radius-lg) 0 0; }
+        .ranking-table td {
+            padding: 0.9rem 1.3rem; border-bottom: 1px solid var(--color-border);
+            color: var(--color-text); font-size: 0.95rem; transition: background-color 0.2s ease;
+            vertical-align: middle;
+        }
+        .ranking-table tr:last-child td { border-bottom: none; }
+        .ranking-table tbody tr:hover td { background-color: rgba(255, 255, 255, 0.04); }
+
+        .ranking-table tr.current-player td {
+            background-color: rgba(225, 29, 72, 0.15); /* Slightly stronger highlight */
+            position: relative;
+        }
+        /* Highlight indicator */
+        .ranking-table tr.current-player td:first-child::before {
+            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+            background-color: var(--color-primary);
+            border-radius: 3px 0 0 3px;
+        }
+        .ranking-table tr.highlight td { /* Animation for JS scroll */
+            animation: highlight-pulse 1.5s ease-in-out;
+        }
+
+        .ranking-table .position { font-weight: 700; font-family: var(--font-secondary); text-align: center; width: 60px; font-size: 1.1rem; color: var(--color-text-muted); }
+        .ranking-table .position.gold { color: var(--color-gold); text-shadow: 0 0 5px var(--color-gold); }
+        .ranking-table .position.silver { color: var(--color-silver); text-shadow: 0 0 5px var(--color-silver); }
+        .ranking-table .position.bronze { color: var(--color-bronze); text-shadow: 0 0 5px var(--color-bronze); }
+        .ranking-table .username { font-weight: 600; color: #fff; }
+        .ranking-table .score { font-weight: 700; font-family: var(--font-secondary); color: var(--color-secondary); font-size: 1.05rem; }
+        .ranking-table .correct { color: var(--color-success); }
+        .ranking-table .wrong { color: var(--color-error); }
+        .ranking-table .difficulty, .ranking-table .date { font-size: 0.85rem; color: var(--color-text-muted); }
+
+        /* --- Acciones y Stats Globales --- */
+        .ranking-actions {
+            display: flex; justify-content: center; gap: 1.2rem; margin: 2.5rem 0; flex-wrap: wrap;
+        }
+        .action-button {
+            display: inline-flex; align-items: center; gap: 0.6rem;
+            padding: 0.8rem 1.8rem; background: var(--color-card-bg);
+            border: 1px solid var(--color-border); border-radius: 50px;
+            color: var(--color-text); font-weight: 500; text-decoration: none;
+            transition: all 0.3s ease; font-size: 1rem;
+        }
+        .action-button:hover {
+            background: var(--color-card-bg-darker); transform: translateY(-3px);
+            box-shadow: var(--shadow-light); border-color: rgba(255,255,255,0.2);
+        }
+        .action-button.primary {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-color: transparent; color: #fff;
+            box-shadow: 0 5px 15px rgba(225, 29, 72, 0.4);
+        }
+        .action-button.primary:hover {
+             background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+             box-shadow: 0 8px 20px rgba(225, 29, 72, 0.5);
+             transform: translateY(-3px);
+        }
+        .action-button i { font-size: 1.1em; }
+
+        .ranking-stats {
+            margin-top: 3.5rem; display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Wider cards */
+            gap: 1.8rem;
+        }
+        .stat-card {
+            background: linear-gradient(145deg, var(--color-card-bg), var(--color-card-bg-darker));
+            border-radius: var(--border-radius-lg);
+            padding: 2rem 1.5rem; text-align: center;
+            border: 1px solid var(--color-border);
+            box-shadow: var(--shadow-light);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        .stat-card::before { /* Subtle inner glow */
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 40%);
+            transition: opacity 0.5s ease; opacity: 0; pointer-events: none;
+        }
+        .stat-card:hover::before { opacity: 1; }
+        .stat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-medium); }
+        .stat-card-icon { font-size: 2.5rem; color: var(--color-primary); margin-bottom: 1rem; line-height: 1; }
+        .stat-card-value { font-family: var(--font-secondary); font-size: 2.5rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; line-height: 1; }
+        .stat-card-title { font-size: 0.95rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* --- Animaciones --- */
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes highlight-pulse { 0% { background-color: rgba(225, 29, 72, 0.15); } 50% { background-color: rgba(225, 29, 72, 0.3); } 100% { background-color: rgba(225, 29, 72, 0.15); } }
+
+
+        /* --- Footer y Botón Volver --- */
+        .policy-footer { /* Reusing footer style, minor adjustments if needed */
+            background-color: rgba(15, 23, 42, 0.9); padding: 2rem 1rem; margin-top: 4rem;
+            text-align: center; border-top: 1px solid var(--color-border);
+        }
+        .footer-links-mini { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem 1.8rem; margin-bottom: 1.5rem; }
+        .footer-links-mini a { color: var(--color-text-muted); font-size: 0.9rem; transition: color 0.3s ease; }
+        .footer-links-mini a:hover { color: var(--color-primary); }
+        .footer-links-mini i { margin-right: 0.4rem; width: 1em; text-align: center; }
+        .copyright-text { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem; }
+        .footer-social-icons { display: flex; justify-content: center; gap: 1.2rem; }
+        .social-icon { color: var(--color-text-muted); font-size: 1.3rem; transition: color 0.3s ease, transform 0.3s ease; }
+        .social-icon:hover { color: var(--color-primary); transform: scale(1.2) rotate(5deg); }
+
+        .back-button-nav { /* Floating back button */
+             position: fixed; bottom: 25px; right: 25px; width: 55px; height: 55px; border-radius: 50%;
+             background-color: rgba(30, 41, 59, 0.8); color: white; display: flex; align-items: center; justify-content: center;
+             font-size: 1.3rem; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-medium);
+             z-index: 1000; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px);
+        }
+        .back-button-nav:hover { background-color: var(--color-primary); transform: scale(1.1) rotate(-5deg); box-shadow: 0 0 20px rgba(225, 29, 72, 0.6); }
+
+
+        /* --- Responsividad --- */
+        @media (max-width: 992px) {
+            .ranking-table th:nth-child(6), /* Ocultar Dificultad */
+            .ranking-table td:nth-child(6) { display: none; }
+            .top-players { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+            .top-player.first { grid-column: 1 / -1; order: 1; transform: scale(1); } /* Centro arriba */
+            .top-player.second { order: 2; }
+            .top-player.third { order: 3; }
+        }
+
+        @media (max-width: 768px) {
+            .app-header .title-text { font-size: 2.4rem; }
+            .home-link { top: 15px; left: 15px; padding: 0.4rem 0.8rem; font-size: 0.8rem; }
+            .ranking-header { padding: 2rem 1.5rem; }
+            .ranking-title { font-size: 2rem; }
+            .ranking-subtitle { font-size: 1rem; }
+            .top-players { grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
+            .top-player { width: 100%; max-width: 320px; margin: 0 auto; padding: 1.5rem 1rem; }
+            .top-player.first { order: 1; padding-bottom: 2rem; }
+            .top-player.second { order: 2; }
+            .top-player.third { order: 3; }
+            .top-avatar { width: 70px; height: 70px; }
+            .top-player.first .top-avatar { width: 90px; height: 90px; }
+            .top-name { font-size: 1.1rem; }
+            .top-score { font-size: 1.8rem; }
+            .top-player.first .top-score { font-size: 2.1rem; }
+            .rank-number { width: 40px; height: 40px; font-size: 1rem; top: -20px; }
+            .top-player.first .rank-number { width: 48px; height: 48px; font-size: 1.2rem; }
+
+            .ranking-table th, .ranking-table td { padding: 0.8rem 1rem; font-size: 0.9rem; }
+            .ranking-table th:nth-child(7), /* Ocultar Fecha */
+            .ranking-table td:nth-child(7) { display: none; }
+            .ranking-stats { grid-template-columns: 1fr; gap: 1.2rem; }
+            .stat-card { padding: 1.5rem; }
+            .stat-card-value { font-size: 2.2rem; }
+            .action-button { padding: 0.7rem 1.4rem; font-size: 0.9rem; }
+            .back-button-nav { width: 50px; height: 50px; font-size: 1.2rem; bottom: 20px; right: 20px;}
         }
         
         @media (max-width: 576px) {
-            .back-button-nav {
-                width: 50px;
-                height: 50px;
-                font-size: 1.2rem;
-                bottom: 20px;
-                right: 20px;
-            }
+            .app-header { padding-bottom: 0.5rem; }
+            .app-header .title-text { font-size: 2rem; }
+            .app-header .subtitle { font-size: 0.9rem; }
+            .ranking-header { padding: 1.5rem 1rem; }
+            .ranking-title { font-size: 1.8rem; }
+            .ranking-subtitle { font-size: 0.9rem; margin-bottom: 1.5rem; }
+            .player-position-note { padding: 0.8rem 1rem; font-size: 0.9rem; }
+            .player-position-note i { font-size: 1.2rem; }
+
+            .ranking-table th, .ranking-table td { padding: 0.6rem 0.7rem; font-size: 0.85rem; }
+            .ranking-table th:nth-child(4), /* Ocultar Aciertos */
+            .ranking-table td:nth-child(4),
+            .ranking-table th:nth-child(5), /* Ocultar Errores */
+            .ranking-table td:nth-child(5) { display: none; }
+            .ranking-table .position { width: 40px; font-size: 1rem; }
+            .ranking-table .username { max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* Truncate long names */
+
+            .top-players { gap: 1rem; }
+            .top-player { padding: 1.2rem 0.8rem; }
+            .top-avatar { width: 60px; height: 60px; }
+            .top-player.first .top-avatar { width: 75px; height: 75px; }
+            .top-name { font-size: 1rem; }
+            .top-score { font-size: 1.6rem; }
+            .top-player.first .top-score { font-size: 1.9rem; }
+            .rank-number { width: 36px; height: 36px; font-size: 0.9rem; top: -18px; }
+            .top-player.first .rank-number { width: 42px; height: 42px; font-size: 1.1rem; }
+
+            .ranking-actions { gap: 0.8rem; margin: 2rem 0; }
+            .action-button { padding: 0.6rem 1.2rem; font-size: 0.9rem; gap: 0.4rem; }
+            .action-button i { font-size: 1em; }
+            .ranking-stats { gap: 1rem; margin-top: 2.5rem; }
+            .stat-card { padding: 1.2rem; }
+            .stat-card-icon { font-size: 2rem; margin-bottom: 0.8rem; }
+            .stat-card-value { font-size: 2rem; }
+            .stat-card-title { font-size: 0.85rem; }
+
+            .footer-links-mini { gap: 0.5rem 1rem; }
+            .footer-links-mini a { font-size: 0.85rem; }
+            .footer-social-icons { gap: 1rem; }
+            .social-icon { font-size: 1.2rem; }
         }
+
     </style>
 </head>
 <body>
@@ -63,7 +442,7 @@
             <div class="logo-animation">
                 <i class="fas fa-futbol ball-icon bounce"></i>
             </div>
-            <a href="index.html" class="title-link">
+            <a href="pasalache.html" class="title-link">
                 <h1 class="title-text">PASALA CHE</h1>
             </a>
             <p class="subtitle">El juego de palabras del fútbol</p>
@@ -75,54 +454,55 @@
                     <i class="fas fa-trophy"></i>
                 </div>
                 <h2 class="ranking-title">Ranking Mundial</h2>
-                <p class="ranking-subtitle">Los mejores jugadores de PASALA CHE de todo el mundo. ¿Podrás alcanzar la cima?</p>
-                
-                <div class="ranking-tabs">
-                    <div class="ranking-tab active" data-period="global">Global</div>
-                    <div class="ranking-tab" data-period="monthly">Este Mes</div>
-                    <div class="ranking-tab" data-period="weekly">Esta Semana</div>
-                </div>
+                <p class="ranking-subtitle">Compite con jugadores de todo el mundo y demuestra quién es el verdadero Crack.</p>
             </div>
             
             <!-- Posición del jugador actual -->
-            <div id="player-position-note" class="player-position-note">
-                <i class="fas fa-spinner fa-spin"></i> Calculando tu posición...
+            <div id="player-position-note" class="player-position-note" style="display: none;"> 
+                 <!-- Contenido se carga por JS -->
+            </div>
+
+             <!-- Mensaje de Error -->
+            <div id="error-message-container" class="error-message-container" style="display:none">
+                <i class="fas fa-exclamation-circle"></i>
+                <p id="error-message-text">Ocurrió un error.</p>
+                <button id="retry-button" class="retry-button">
+                    <i class="fas fa-redo"></i> Reintentar
+                </button>
             </div>
             
             <!-- Contenedor de carga -->
-            <div id="loading-container" class="loading-container">
-                <div class="spinner">
-                    <i class="fas fa-circle-notch fa-spin"></i>
-                </div>
+            <div id="loading-container" class="loading-container" style="display: flex;"> 
+                <i class="fas fa-circle-notch"></i>
                 <p>Cargando ranking...</p>
             </div>
             
             <!-- Mensaje sin resultados -->
             <div id="no-results" class="no-results" style="display:none">
                 <i class="fas fa-info-circle"></i>
-                <p>No hay resultados disponibles en este momento.</p>
+                <p>No hay resultados para este período.</p>
             </div>
             
-            <!-- Top 3 jugadores (se cargarán dinámicamente) -->
-            <div class="top-players">
-                <!-- Los top players se cargarán dinámicamente con datos reales -->
+            <!-- Top 3 jugadores -->
+            <div class="top-players" id="top-players-container">
+                <!-- Se rellena por JS -->
             </div>
             
             <div class="ranking-table-container">
-                <table class="ranking-table" id="ranking-table">
+                <table class="ranking-table" id="ranking-table" style="display: none;"> 
                     <thead>
                         <tr>
-                            <th width="8%">Posición</th>
-                            <th width="25%">Jugador</th>
+                            <th width="8%">#</th>
+                            <th width="30%">Jugador</th>
                             <th width="12%">Puntos</th>
                             <th width="10%">Aciertos</th>
                             <th width="10%">Errores</th>
                             <th width="15%">Dificultad</th>
-                            <th width="20%">Fecha</th>
+                            <th width="15%">Fecha</th>
                         </tr>
                     </thead>
                     <tbody id="ranking-body">
-                        <!-- Filas generadas dinámicamente con datos reales -->
+                        <!-- Filas generadas dinámicamente -->
                     </tbody>
                 </table>
             </div>
@@ -131,44 +511,37 @@
                 <a href="profile.html" class="action-button" id="view-profile">
                     <i class="fas fa-user"></i> Ver mi perfil
                 </a>
-                <a href="index.html" class="action-button primary">
+                <a href="pasalache.html" class="action-button primary">
                     <i class="fas fa-gamepad"></i> Jugar ahora
                 </a>
             </div>
             
             <div class="ranking-stats">
                 <div class="stat-card">
-                    <div class="stat-card-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
+                    <div class="stat-card-icon"><i class="fas fa-users"></i></div>
                     <div class="stat-card-value" id="total-players">-</div>
-                    <div class="stat-card-title">Jugadores Totales</div>
+                    <div class="stat-card-title">Jugadores</div>
                 </div>
-                
                 <div class="stat-card">
-                    <div class="stat-card-icon">
-                        <i class="fas fa-gamepad"></i>
-                    </div>
+                    <div class="stat-card-icon"><i class="fas fa-gamepad"></i></div>
                     <div class="stat-card-value" id="total-games">-</div>
-                    <div class="stat-card-title">Partidas Jugadas</div>
+                    <div class="stat-card-title">Partidas</div>
                 </div>
-                
                 <div class="stat-card">
-                    <div class="stat-card-icon">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div class="stat-card-value" id="success-rate">-</div>
-                    <div class="stat-card-title">Tasa de Aciertos</div>
+                    <div class="stat-card-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-card-value" id="success-rate">-%</div>
+                    <div class="stat-card-title">Aciertos</div>
                 </div>
             </div>
         </div>
         
-        <!-- Botón para volver a la página anterior -->
+        <!-- Botón volver -->
         <button class="back-button-nav" onclick="window.history.back()">
             <i class="fas fa-arrow-left"></i>
         </button>
     </div>
     
+    <!-- Footer -->
     <footer class="policy-footer">
         <div class="footer-links-mini">
             <a href="profile.html"><i class="fas fa-user"></i> Perfil</a>
@@ -190,72 +563,45 @@
         </div>
     </footer>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK Loader -->
     <script>
-      // Attempt to load Firebase in a way that won't block the app if it fails
-      function loadFirebase() {
-        // Flag to indicate if Firebase is available
-        window.firebaseAvailable = false;
-        
-        // Function to load Firebase scripts sequentially
-        function loadScript(src, callback) {
-          const script = document.createElement('script');
-          script.src = src;
-          script.async = true;
-          script.onload = callback;
-          script.onerror = function() {
-            console.warn('Failed to load Firebase script:', src);
-            if (callback) callback();
-          };
-          document.body.appendChild(script);
+        function loadFirebase() {
+            window.firebaseAvailable = false;
+            function loadScript(src, callback) {
+                const script = document.createElement('script'); script.src = src; script.async = true;
+                script.onload = callback;
+                script.onerror = function() { console.warn('Failed to load:', src); if(callback) callback(); };
+                document.body.appendChild(script);
+            }
+            loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js', () => {
+            loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js', () => {
+            loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js', initializeFirebase);
+            });});
         }
-        
-        // Load scripts in sequence
-        loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js', function() {
-          loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js', function() {
-            loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js', function() {
-              // Once all scripts are loaded, initialize Firebase
-              initializeFirebase();
-            });
-          });
-        });
-      }
-      
-      // Initialize Firebase safely
-      function initializeFirebase() {
-        try {
-          // Firebase configuration
-          const firebaseConfig = {
-            apiKey: "AIzaSyA_3zRD0fwsRCSFqyZ3ach4mhMl9gYr4",
-            authDomain: "cracktotal-cd2e7.firebaseapp.com",
-            projectId: "cracktotal-cd2e7",
-            storageBucket: "cracktotal-cd2e7.firebasestorage.app",
-            messagingSenderId: "210391454350",
-            appId: "1:210391454350:web:ec36c626aca23e80562fdf",
-            measurementId: "G-5X93T1RTH7"
-          };
-          
-          // Only initialize if Firebase is available
-          if (typeof firebase !== 'undefined') {
-            firebase.initializeApp(firebaseConfig);
-            window.db = firebase.firestore();
-            if (firebase.analytics) window.analytics = firebase.analytics();
-            window.firebaseAvailable = true;
-            console.log('Firebase inicializado correctamente');
-          } else {
-            console.warn('Firebase no está disponible. La aplicación funcionará en modo offline.');
-          }
-        } catch (error) {
-          console.error('Error al inicializar Firebase:', error);
-          window.firebaseAvailable = false;
+        function initializeFirebase() {
+            try {
+                const firebaseConfig = {
+                    apiKey: "AIzaSyA_3zRD0fwsRCSFqyZ3ach4mhMl9gYr4",
+                    authDomain: "cracktotal-cd2e7.firebaseapp.com", projectId: "cracktotal-cd2e7",
+                    storageBucket: "cracktotal-cd2e7.firebasestorage.app", messagingSenderId: "210391454350",
+                    appId: "1:210391454350:web:ec36c626aca23e80562fdf", measurementId: "G-5X93T1RTH7"
+                };
+                if (typeof firebase !== 'undefined') {
+                    firebase.initializeApp(firebaseConfig);
+                    window.db = firebase.firestore();
+                    if (firebase.analytics) window.analytics = firebase.analytics();
+                    window.firebaseAvailable = true;
+                    console.log('Firebase init OK');
+                    // Disparar evento personalizado cuando Firebase esté listo
+                    document.dispatchEvent(new CustomEvent('firebaseReady'));
+                } else { console.warn('Firebase library not loaded.'); }
+            } catch (error) { console.error('Firebase init error:', error); window.firebaseAvailable = false; }
         }
-      }
-      
-      // Start loading Firebase but don't wait for it
-      loadFirebase();
+        loadFirebase();
     </script>
 
     <script src="js/utils.js"></script>
     <script src="js/ranking.js"></script>
 </body>
 </html> 
+
