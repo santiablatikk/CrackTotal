@@ -367,29 +367,102 @@ document.addEventListener('DOMContentLoaded', function() {
   // Fetch questions from the server (adapted to the structure in questions.json)
   async function fetchQuestions() {
     try {
-      const response = await fetch('../data/questions.json');
-      const data = await response.json();
+      // Fetch both question sets
+      const [regularResponse, pasapalabraResponse] = await Promise.all([
+        fetch('data/questions.json'),
+        fetch('data/questions_pasapalabra.json')
+      ]);
+      
+      const regularData = await regularResponse.json();
+      const pasapalabraData = await pasapalabraResponse.json();
+      
+      // Combine both data sets
+      const combinedData = combineQuestionSets(regularData, pasapalabraData);
       
       // Process questions to format them for the game
       // Exclude questions for the letter Ñ
       questions = [];
       
+      // Track selected questions' content to avoid similar ones
+      const selectedQuestionTexts = [];
+      
       alphabet.forEach(letter => {
-        // Find matching letter in the data
-        const letterData = data.find(item => item.letra === letter);
+        // Find matching letter in the combined data
+        const letterData = combinedData.find(item => item.letra === letter);
         
         if (letterData && letterData.preguntas && letterData.preguntas.length > 0) {
-          // Randomly select a question for this letter
-          const randomIndex = Math.floor(Math.random() * letterData.preguntas.length);
-          const questionItem = letterData.preguntas[randomIndex];
+          // Get all questions for this letter
+          const availableQuestions = letterData.preguntas;
           
-          // Add question to our game questions
-          questions.push({
-            letter: letter,
-            question: `Comienza con ${letter}:`,
-            definition: questionItem.pregunta,
-            answer: questionItem.respuesta.toLowerCase().trim()
-          });
+          // Shuffle questions to get random order before filtering
+          const shuffledQuestions = shuffleArray([...availableQuestions]);
+          
+          // Find a question that's not too similar to already selected ones
+          let selectedQuestion = null;
+          
+          for (const questionItem of shuffledQuestions) {
+            // Check if this question is sufficiently different from already selected ones
+            const isTooSimilar = selectedQuestionTexts.some(text => {
+              // Calculate similarity between this question and already selected ones
+              return calculateQuestionSimilarity(text, questionItem.pregunta) > 0.6;
+            });
+            
+            if (!isTooSimilar) {
+              selectedQuestion = questionItem;
+              selectedQuestionTexts.push(questionItem.pregunta);
+              break;
+            }
+          }
+          
+          // If all questions are too similar, just pick the first shuffled one
+          if (!selectedQuestion && shuffledQuestions.length > 0) {
+            selectedQuestion = shuffledQuestions[0];
+            selectedQuestionTexts.push(selectedQuestion.pregunta);
+          }
+          
+          // Add selected question to our game questions
+          if (selectedQuestion) {
+            // Check if it's a "CONTIENE X" type question or regular
+            const isContainsType = selectedQuestion.pregunta.startsWith('CONTIENE ');
+            let questionPrefix, questionText;
+            
+            if (isContainsType) {
+              // Extract the CONTIENE part (e.g., "CONTIENE A:")
+              const match = selectedQuestion.pregunta.match(/^CONTIENE ([A-Z]):/);
+              if (match && match[1]) {
+                questionPrefix = `CONTIENE ${match[1]}:`;
+                questionText = selectedQuestion.pregunta.replace(/^CONTIENE [A-Z]:/, '').trim();
+              } else {
+                // If format is different, keep the first part and clean up
+                const parts = selectedQuestion.pregunta.split(':');
+                if (parts.length > 1) {
+                  questionPrefix = parts[0] + ':';
+                  questionText = parts.slice(1).join(':').trim();
+                } else {
+                  questionPrefix = `CONTIENE ${letter}:`;
+                  questionText = selectedQuestion.pregunta.replace(/^CONTIENE [A-Z]\s?/, '').trim();
+                }
+              }
+            } else {
+              questionPrefix = `Comienza con ${letter}:`;
+              questionText = selectedQuestion.pregunta;
+            }
+            
+            questions.push({
+              letter: letter,
+              question: questionPrefix,
+              definition: questionText,
+              answer: selectedQuestion.respuesta.toLowerCase().trim()
+            });
+          } else {
+            // Fallback if no questions for a letter
+            questions.push({
+              letter: letter,
+              question: `Comienza con ${letter}:`,
+              definition: `No hay preguntas disponibles para la letra ${letter}`,
+              answer: 'no disponible'
+            });
+          }
         } else {
           // Fallback if no questions for a letter
           questions.push({
@@ -409,6 +482,71 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('Error fetching questions:', error);
       return false;
     }
+  }
+  
+  // Helper function to combine the two question sets
+  function combineQuestionSets(regularData, pasapalabraData) {
+    const combinedData = [];
+    
+    // Process each letter
+    alphabet.forEach(letter => {
+      const regularLetterData = regularData.find(item => item.letra === letter);
+      const pasapalabraLetterData = pasapalabraData.find(item => item.letra === letter);
+      
+      // Create a new entry for this letter
+      const combinedLetterData = { letra: letter, preguntas: [] };
+      
+      // Add questions from regular set if available
+      if (regularLetterData && regularLetterData.preguntas) {
+        combinedLetterData.preguntas = [...combinedLetterData.preguntas, ...regularLetterData.preguntas];
+      }
+      
+      // Add questions from pasapalabra set if available
+      if (pasapalabraLetterData && pasapalabraLetterData.preguntas) {
+        combinedLetterData.preguntas = [...combinedLetterData.preguntas, ...pasapalabraLetterData.preguntas];
+      }
+      
+      // Only add this letter if it has questions
+      if (combinedLetterData.preguntas.length > 0) {
+        combinedData.push(combinedLetterData);
+      }
+    });
+    
+    return combinedData;
+  }
+  
+  // Helper function to shuffle an array (Fisher-Yates algorithm)
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+  
+  // Function to calculate similarity between two question texts
+  function calculateQuestionSimilarity(text1, text2) {
+    // Convert both texts to lowercase for case-insensitive comparison
+    const t1 = text1.toLowerCase();
+    const t2 = text2.toLowerCase();
+    
+    // Simple word overlap calculation
+    const words1 = t1.split(/\s+/).filter(w => w.length > 3); // Only consider words longer than 3 chars
+    const words2 = t2.split(/\s+/).filter(w => w.length > 3);
+    
+    // Count common significant words
+    let commonWords = 0;
+    for (const word of words1) {
+      if (words2.includes(word)) {
+        commonWords++;
+      }
+    }
+    
+    // Calculate similarity ratio
+    const maxWords = Math.max(words1.length, words2.length);
+    if (maxWords === 0) return 0;
+    
+    return commonWords / maxWords;
   }
   
   // Initialize the game
@@ -458,8 +596,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update current letter
     currentLetterDisplay.textContent = currentLetter;
     currentLetterDisplay.setAttribute('data-letter', currentLetter);
-    currentQuestion.textContent = question.question;
-    currentDefinition.textContent = question.definition;
+    
+    // Display the correct question prefix (either "Comienza con X:" or "CONTIENE X:")
+    // And handle the definition correctly
+    if (question.question.startsWith('CONTIENE')) {
+      currentQuestion.textContent = question.question; // Use the CONTIENE X format directly
+      currentDefinition.textContent = question.definition;
+    } else {
+      currentQuestion.textContent = question.question;
+      currentDefinition.textContent = question.definition;
+    }
     
     // Highlight current letter in the rosco
     Object.values(letterElements).forEach(elem => {
@@ -1290,211 +1436,151 @@ function playSound(sound) {
 
   // Add this function near the top of the file, after other initialization code
   function adjustRoscoForMobile() {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const roscoContainer = document.getElementById('rosco-container');
+    // Only apply on mobile devices
+    if (window.innerWidth > 768 && !isMobileDevice()) return;
     
+    // Function to check if it's a mobile device
+    function isMobileDevice() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
+    
+    // Get all rosco letters
+    const letters = document.querySelectorAll('.rosco-letter');
+    if (!letters.length) return;
+    
+    // Handle the rosco container
+    const roscoContainer = document.getElementById('rosco-container');
     if (!roscoContainer) return;
     
-    // Get all letter elements
-    const letterElements = document.querySelectorAll('.rosco-letter');
-    const isPortrait = height > width;
-    const isMobile = width <= 480;
-    const isTablet = width > 480 && width <= 768;
+    // Calculate the optimal positioning of letters
+    positionLettersInCircle(letters, roscoContainer);
     
-    // Apply different scaling and positioning for mobile
-    if (isMobile) {
-      // Calcular el radio extremadamente pequeño para letras
-      let radius = isPortrait ? Math.min(width, height) * 0.18 : Math.min(width, height) * 0.15;
-      
-      // Limitar el radio a un valor máximo muy pequeño
-      radius = Math.min(radius, isPortrait ? 80 : 90);
-      
-      // Asegurar que el radio sea suficiente para que las letras no se superpongan a la tarjeta
-      const questionCard = document.querySelector('.question-card');
-      if (questionCard) {
-        const cardWidth = questionCard.offsetWidth || 150;
-        const cardHeight = questionCard.offsetHeight || 180;
-        const diagonalQuestionCard = Math.sqrt(Math.pow(cardWidth/2, 2) + Math.pow(cardHeight/2, 2));
-        const minRadius = diagonalQuestionCard + 5; // Margen mínimo
-        radius = Math.max(radius, minRadius);
-      }
-      
-      // Position the center of the rosco - Ajustar para dejar espacio para el footer
-      const centerX = width / 2;
-      const footerHeight = 70; // Altura estimada del footer
-      const centerY = (height - footerHeight) * (isPortrait ? 0.4 : 0.45); // Más arriba para dejar espacio al footer
-      
-      // Update the rosco container position and size
-      roscoContainer.style.width = `${width}px`;
-      roscoContainer.style.height = `${(height - footerHeight) * 0.85}px`;
-      roscoContainer.style.transform = 'none';
-      roscoContainer.style.transformOrigin = 'center center';
-      roscoContainer.style.border = 'none';
-      roscoContainer.style.background = 'none';
-      roscoContainer.style.boxShadow = 'none';
-      roscoContainer.style.marginBottom = `${footerHeight}px`; // Espacio para el footer
-      
-      // The positioning for landscape mode
-      if (!isPortrait) {
-        // Even smaller radius for landscape
-        radius = Math.min(width, height) * 0.15;
-        radius = Math.min(radius, 80);
-        
-        // Move the question card more to the left
-        const questionCard = document.querySelector('.question-card');
-        if (questionCard) {
-          questionCard.style.transform = 'translate(-50%, -50%) scale(0.85)';
-          questionCard.style.width = '45%';
-          questionCard.style.maxWidth = '130px';
-        }
-        
-        // Move the rosco status to the right side
-        const roscoStatus = document.querySelector('.rosco-status');
-        if (roscoStatus) {
-          roscoStatus.style.right = '0';
-          roscoStatus.style.left = 'auto';
-          roscoStatus.style.top = '40%'; // Un poco más arriba para que no interfiera con el footer
-          roscoStatus.style.transform = 'translateY(-50%)';
-          roscoStatus.style.flexDirection = 'column';
-          roscoStatus.style.width = '28px';
-          roscoStatus.style.padding = '4px 2px';
-          roscoStatus.style.borderRadius = '12px 0 0 12px';
-        }
-      } else {
-        // Reset question card position in portrait mode
-        const questionCard = document.querySelector('.question-card');
-        if (questionCard) {
-          questionCard.style.transform = 'translate(-50%, -50%)';
-          questionCard.style.width = '55%';
-          questionCard.style.maxWidth = '150px';
-        }
-        
-        // Mover el panel de estatus un poco más arriba en modo retrato
-        const roscoStatus = document.querySelector('.rosco-status');
-        if (roscoStatus) {
-          roscoStatus.style.top = '40%';
-        }
-      }
-      
-      // Apply a fixed size to letter elements
-      letterElements.forEach(elem => {
-        elem.style.width = '20px';
-        elem.style.height = '20px';
-        elem.style.fontSize = '12px';
-        elem.style.lineHeight = '20px';
+    // Handle input focus/blur to deal with virtual keyboard
+    const answerInput = document.getElementById('answer-input');
+    if (answerInput) {
+      answerInput.addEventListener('focus', function() {
+        document.body.classList.add('keyboard-open');
+        adjustForKeyboard(true);
       });
       
-      // Position each letter in a circle
-      letterElements.forEach((elem, index) => {
-        const totalLetters = letterElements.length;
-        
-        // Calculate angle for each letter (starting from the top, going clockwise)
-        const angle = (2 * Math.PI * index / totalLetters) - (Math.PI / 2);
-        
-        // Calculate position based on angle and radius
-        const x = centerX + radius * Math.cos(angle);
-        const y = centerY + radius * Math.sin(angle);
-        
-        // Set absolute position
-        elem.style.left = `${x - 10}px`; // Center based on width/2
-        elem.style.top = `${y - 10}px`;
-        elem.style.position = 'absolute';
-        
-        // Make sure current letter appears above others
-        if (elem.classList.contains('current')) {
-          elem.style.width = '24px';
-          elem.style.height = '24px';
-          elem.style.fontSize = '14px';
-          elem.style.zIndex = '100';
-          elem.style.left = `${x - 12}px`; // Adjust for larger size
-          elem.style.top = `${y - 12}px`;
-        }
+      answerInput.addEventListener('blur', function() {
+        document.body.classList.remove('keyboard-open');
+        adjustForKeyboard(false);
+        // Re-position letters after keyboard closes
+        setTimeout(() => positionLettersInCircle(letters, roscoContainer), 300);
       });
+    }
+    
+    // Reposition on orientation change
+    window.addEventListener('orientationchange', function() {
+      setTimeout(() => positionLettersInCircle(letters, roscoContainer), 300);
+    });
+    
+    // Reposition on resize
+    window.addEventListener('resize', function() {
+      if (window.innerWidth <= 768 || isMobileDevice()) {
+        positionLettersInCircle(letters, roscoContainer);
+      }
+    });
+  }
+
+  // Position letters in a perfect circle
+  function positionLettersInCircle(letters, container) {
+    // Dimensions of the container
+    const containerRect = container.getBoundingClientRect();
+    const centerX = containerRect.width / 2;
+    const centerY = containerRect.height / 2;
+    
+    // Get the question card size
+    const questionCard = document.querySelector('.question-card');
+    const questionCardRadius = questionCard ? 
+      Math.max(questionCard.offsetWidth, questionCard.offsetHeight) / 2 : 
+      containerRect.width * 0.3;
+    
+    // Calculate radius for letter placement (outside the question card)
+    const radius = centerX * 0.8; // 80% of container radius
+    
+    // Position each letter around the circle
+    letters.forEach((letter, index) => {
+      const totalLetters = letters.length;
+      // Calculate angle (starting from top, clockwise)
+      const angle = (index / totalLetters) * 2 * Math.PI - (Math.PI / 2);
       
-      // Forzar la aplicación de los estilos móviles
-      const estilosMobile = document.createElement('style');
-      estilosMobile.id = 'estilos-mobile-override';
-      estilosMobile.textContent = `
-        #rosco-container::before, #rosco-container::after {
-          display: none !important;
-        }
-        
-        /* Asegurarse que la caja de preguntas sea pequeña */
-        .question-card {
-          min-height: auto !important;
-        }
-        
-        /* Asegurar que los elementos ajustados tengan en cuenta el footer */
-        .game-container {
-          padding-bottom: 70px !important;
-        }
-        
-        /* Estilo específico para el footer fijo */
-        .policy-footer {
-          position: fixed !important;
-          bottom: 0 !important;
-          left: 0 !important;
-          width: 100% !important;
-          z-index: 50 !important;
-        }
-      `;
+      // Calculate x,y position
+      const x = centerX + radius * Math.cos(angle);
+      const y = centerY + radius * Math.sin(angle);
       
-      // Remove previous style if exists
-      const prevStyle = document.getElementById('estilos-mobile-override');
-      if (prevStyle) prevStyle.remove();
+      // Position the letter (centered at x,y)
+      letter.style.position = 'absolute';
+      letter.style.left = `${x - letter.offsetWidth/2}px`;
+      letter.style.top = `${y - letter.offsetHeight/2}px`;
+      letter.style.transform = 'none'; // Reset any transforms
       
-      document.head.appendChild(estilosMobile);
-      
-      // Asegurarse de que el footer sea visible
-      const footer = document.querySelector('.policy-footer');
-      if (footer) {
-        footer.style.display = 'flex';
-        footer.style.zIndex = '50';
+      // Highlight current letter
+      if (letter.classList.contains('current')) {
+        letter.style.transform = 'scale(1.2)';
+        letter.style.zIndex = '10';
+      }
+    });
+  }
+
+  // Adjust layout when keyboard appears/disappears
+  function adjustForKeyboard(isOpen) {
+    const roscoContainer = document.getElementById('rosco-container');
+    const statusPanel = document.querySelector('.rosco-status');
+    const footer = document.querySelector('.site-footer');
+    
+    if (isOpen) {
+      // Keyboard is open - create more space
+      if (roscoContainer) {
+        roscoContainer.style.transform = 'scale(0.85)';
+        roscoContainer.style.marginBottom = '120px';
       }
       
-    } else if (isTablet) {
-      // Tablet mode
-      roscoContainer.style.transform = 'scale(0.9)';
-      roscoContainer.style.transformOrigin = 'center center';
+      if (statusPanel) {
+        statusPanel.style.position = 'relative';
+        statusPanel.style.bottom = 'auto';
+      }
       
-      // Asegurarse de que el footer tenga un estilo adecuado para tablets
-      const footer = document.querySelector('.policy-footer');
       if (footer) {
-        footer.style.position = 'relative';
-        footer.style.marginTop = '20px';
+        footer.style.display = 'none';
       }
     } else {
-      // Reset for desktop
-      roscoContainer.style.transform = '';
-      roscoContainer.style.width = '';
-      roscoContainer.style.height = '';
-      roscoContainer.style.marginBottom = '';
+      // Keyboard is closed - restore layout
+      if (roscoContainer) {
+        roscoContainer.style.transform = '';
+        roscoContainer.style.marginBottom = '';
+      }
       
-      // Reset letter positions for desktop (if needed)
-      letterElements.forEach(elem => {
-        if (elem.style.left && elem.style.top && !elem.getAttribute('data-original-position')) {
-          // Store original positions if not already stored
-          elem.setAttribute('data-original-position', `${elem.style.left}|${elem.style.top}`);
-        } else if (elem.getAttribute('data-original-position')) {
-          // Restore original positions
-          const pos = elem.getAttribute('data-original-position').split('|');
-          elem.style.left = pos[0];
-          elem.style.top = pos[1];
-        }
-      });
+      if (statusPanel) {
+        statusPanel.style.position = '';
+        statusPanel.style.bottom = '';
+      }
       
-      // Restaurar el estilo normal del footer
-      const footer = document.querySelector('.policy-footer');
       if (footer) {
-        footer.style.position = '';
-        footer.style.bottom = '';
-        footer.style.left = '';
-        footer.style.width = '';
-        footer.style.zIndex = '';
+        footer.style.display = '';
       }
     }
   }
+
+  // Initialize mobile optimizations
+  document.addEventListener('DOMContentLoaded', function() {
+    // Call the mobile adjustment function
+    adjustRoscoForMobile();
+    
+    // Prevent zoom on double tap (iOS Safari)
+    document.addEventListener('touchend', function(e) {
+      const now = Date.now();
+      const lastTouch = window.lastTouch || now + 1;
+      const delta = now - lastTouch;
+      
+      if (delta < 300 && delta > 0) {
+        e.preventDefault();
+      }
+      
+      window.lastTouch = now;
+    }, false);
+  });
 
   // Call the adjustment function on page load and window resize
   window.addEventListener('load', adjustRoscoForMobile);
@@ -1610,12 +1696,9 @@ document.getElementById('play-again-btn').addEventListener('click', function() {
 // Asegurar que la información del jugador se guarde correctamente
 function savePlayerData(gameData) {
   try {
-    // Guardar nombre de usuario en localStorage para uso futuro
     if (gameData.name) {
       localStorage.setItem('username', gameData.name);
     }
-    
-    // Guardar datos de última partida para mostrar en ranking
     localStorage.setItem('lastGameStats', JSON.stringify({
       score: gameData.score || 0,
       correct: gameData.correct || 0,
@@ -1626,26 +1709,31 @@ function savePlayerData(gameData) {
       date: new Date().toISOString()
     }));
     
-    // Detectar IP del usuario y guardar registro
     const userIP = localStorage.getItem('userIP');
+    let ipForSaving = userIP;
+
+    const saveTasks = (ip) => {
+      if (!ip) return;
+      // 1. Guardar en historial local
+      if (saveGameToHistory(gameData, ip)) {
+          // 2. Comprobar logros DESPUÉS de guardar en historial (si tiene éxito)
+          // Pasar una copia de gameData por si acaso
+          checkAchievements({ ...gameData }, ip); 
+      }
+      // 3. Guardar en Firebase (puede ocurrir en paralelo o después)
+      saveGameToFirebase(gameData, ip);
+    };
+
     if (userIP) {
-      saveGameToHistory(gameData, userIP);
-      
-      // Verificar si Firebase está disponible y guardar
-      saveGameToFirebase(gameData, userIP);
+      saveTasks(userIP);
     } else {
-      // Si no tenemos IP, intentar detectarla y luego guardar
       detectAndSaveUserIP().then(ip => {
-        if (ip) {
-          saveGameToHistory(gameData, ip);
-          
-          // Verificar si Firebase está disponible y guardar
-          saveGameToFirebase(gameData, ip);
-        }
+        ipForSaving = ip;
+        saveTasks(ip);
       });
     }
     
-    console.log('Datos del jugador guardados correctamente');
+    console.log('Datos del jugador procesados para guardado.');
   } catch (error) {
     console.error('Error al guardar datos del jugador:', error);
   }
@@ -1704,103 +1792,89 @@ function detectDeviceType() {
   return 'desktop';
 }
 
-// Función para guardar partida en el historial
+// Función para guardar partida en el historial LOCAL
 function saveGameToHistory(gameData, userIP) {
   try {
     console.log('Guardando partida en historial para IP:', userIP);
-    // Key para guardar historial en localStorage
     const historyKey = `gameHistory_${userIP}`;
-    
-    // Obtener historial existente o crear uno nuevo
     let history = [];
     const existingHistory = localStorage.getItem(historyKey);
-    
     if (existingHistory) {
       try {
         history = JSON.parse(existingHistory);
-        if (!Array.isArray(history)) {
-          history = [];
-        }
-      } catch (e) {
-        console.error('Error al parsear historial existente:', e);
-        history = [];
-      }
+        if (!Array.isArray(history)) history = [];
+      } catch (e) { console.error('Error parseando historial:', e); history = []; }
     }
-    
-    // Añadir nueva partida al inicio
     history.unshift(gameData);
-    
-    // Limitar historial a 50 partidas
-    if (history.length > 50) {
-      history = history.slice(0, 50);
-    }
-    
-    // Guardar historial actualizado
+    if (history.length > 50) history = history.slice(0, 50);
     localStorage.setItem(historyKey, JSON.stringify(history));
-    
-    // Actualizar perfil del usuario
-    updateUserProfile(gameData, userIP);
-    
-    console.log('Historial de juego guardado correctamente');
+    console.log('Historial de juego guardado localmente');
+    return true; // Indicar éxito
   } catch (error) {
-    console.error('Error al guardar historial:', error);
+    console.error('Error al guardar historial local:', error);
+    return false; // Indicar fallo
   }
 }
 
-// Función para actualizar el perfil del usuario
-function updateUserProfile(gameData, userIP) {
-  try {
-    // Key para guardar perfil en localStorage
-    const profileKey = `profile_${userIP}`;
-    
-    // Intentar obtener perfil existente
-    let profile = {
-      name: gameData.name || 'Jugador',
-      gamesPlayed: 0,
-      totalScore: 0,
-      bestScore: 0,
-      totalCorrect: 0,
-      totalWrong: 0,
-      totalSkipped: 0,
-      victories: 0,
-      defeats: 0,
-      lastPlayed: new Date().toISOString()
-    };
-    
-    const existingProfile = localStorage.getItem(profileKey);
-    if (existingProfile) {
-      try {
-        const parsedProfile = JSON.parse(existingProfile);
-        if (parsedProfile && typeof parsedProfile === 'object') {
-          profile = { ...profile, ...parsedProfile };
-        }
-      } catch (e) {
-        console.error('Error al parsear perfil existente:', e);
-      }
-    }
-    
-    // Actualizar estadísticas
-    profile.gamesPlayed += 1;
-    profile.totalScore += gameData.score || 0;
-    profile.bestScore = Math.max(profile.bestScore, gameData.score || 0);
-    profile.totalCorrect += gameData.correct || 0;
-    profile.totalWrong += gameData.wrong || 0;
-    profile.totalSkipped += gameData.skipped || 0;
-    profile.lastPlayed = new Date().toISOString();
-    
-    if (gameData.victory) {
-      profile.victories += 1;
-    } else {
-      profile.defeats += 1;
-    }
-    
-    // Guardar perfil actualizado
-    localStorage.setItem(profileKey, JSON.stringify(profile));
-    
-    console.log('Perfil de usuario actualizado:', profile);
-  } catch (error) {
-    console.error('Error al actualizar perfil:', error);
+// Verificar logros basados en los resultados de una partida
+function checkAchievements(gameData, userIP) {
+  if (!gameData || !userIP) return;
+  console.log("Verificando logros para:", gameData);
+
+  // Cargar funciones necesarias (asumiendo que están disponibles globalmente o importadas)
+  // Si unlockAchievement, getAvailableAchievements, showAchievementNotification están en profile.js
+  // necesitarían ser movidas aquí también o cargadas de forma diferente.
+  // POR AHORA, asumimos que están disponibles.
+  if (typeof unlockAchievement !== 'function') {
+      console.error("unlockAchievement no está definido en game.js");
+      return; 
   }
+
+  // Logro: Primer juego (siempre se verifica)
+  unlockAchievement('first_game', userIP);
+  
+  // Logro: Partida perfecta (sin errores y con aciertos)
+  if ((gameData.wrong || 0) === 0 && (gameData.correct || 0) > 0) {
+    unlockAchievement('perfect_game', userIP);
+  }
+  
+  // Logro: Velocista (menos de 2 minutos y con aciertos)
+  if ((gameData.timeUsed || 0) < 120 && (gameData.correct || 0) > 0) {
+    unlockAchievement('speed_demon', userIP);
+  }
+  
+  // Logro: Ganar partidas (contador)
+  if (gameData.victory) {
+    unlockAchievement('five_wins', userIP); // Esta función debería manejar el conteo
+  }
+  
+  // Logro: Ganar en dificultad difícil
+  if (gameData.victory && gameData.difficulty === 'dificil') {
+    unlockAchievement('hard_mode', userIP);
+  }
+  
+  // Logro: Sin usar pistas (y con aciertos)
+  if ((gameData.hintsUsed || 0) === 0 && (gameData.correct || 0) > 0) {
+    unlockAchievement('no_help', userIP);
+  }
+  
+  // Logro: Sin pasar preguntas (y con aciertos)
+  if ((gameData.skipped || 0) === 0 && (gameData.correct || 0) > 0) {
+    unlockAchievement('no_pass', userIP);
+  }
+  
+  // Logro: Rey de la remontada
+  if (gameData.victory && (gameData.wrong || 0) >= 5) {
+    unlockAchievement('comeback_king', userIP);
+  }
+  
+  // Logro: Búho nocturno (jugar después de medianoche)
+  const currentHour = new Date().getHours();
+  if (currentHour >= 0 && currentHour < 5) {
+    unlockAchievement('night_owl', userIP);
+  }
+  
+  console.log("Verificación de logros completada.");
 }
 
 // Función para detectar y guardar IP del usuario

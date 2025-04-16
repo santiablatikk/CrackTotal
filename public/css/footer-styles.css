@@ -232,4 +232,201 @@ main, .profile-container, .ranking-container, .content-container, .blog-detail-c
     height: 35px;
     font-size: 1rem;
   }
-} 
+}
+
+/* --- Standard Site Footer Styles --- */
+.site-footer {
+    background-color: #111827; /* Dark background */
+    color: #9ca3af; /* Light gray text */
+    padding: 40px 20px 20px 20px; /* Increased top padding */
+    margin-top: 50px; /* Space above footer */
+    border-top: 1px solid #374151; /* Subtle top border */
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px; /* Limit width */
+    margin: 0 auto 30px auto; /* Center content and add bottom margin */
+    gap: 25px; /* Increased gap */
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px; /* Increased gap */
+    margin-bottom: 15px; /* Space below links on small screens */
+    justify-content: center; /* Center links when wrapped */
+}
+
+.footer-links a {
+    color: #d1d5db; /* Slightly lighter gray */
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px; /* Space between icon and text */
+    padding: 5px 0; /* Add some vertical padding for better touch targets */
+}
+
+.footer-links a:hover {
+    color: #ffffff; /* White on hover */
+    transform: translateY(-2px); /* Subtle lift effect */
+}
+
+.footer-links a i {
+    width: 16px; /* Ensure icons align nicely */
+    text-align: center;
+}
+
+
+.footer-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping */
+    gap: 20px; /* Consistent gap */
+    justify-content: center; /* Center actions when wrapped */
+}
+
+/* Enhanced Share Button Style */
+.site-footer .share-button {
+    background: linear-gradient(135deg, #4f46e5, #ec4899); /* Vibrant gradient */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px; /* Slightly more padding */
+    border-radius: 50px; /* Pill shape */
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother transition */
+    font-size: 14px;
+    font-weight: 600; /* Bold */
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 0 15px rgba(236, 72, 153, 0.2); /* Added glow */
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.site-footer .share-button i {
+    transition: transform 0.3s ease;
+}
+
+.site-footer .share-button:hover {
+    background: linear-gradient(135deg, #ec4899, #4f46e5); /* Reverse gradient */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25), 0 0 25px rgba(79, 70, 229, 0.3); /* Enhanced glow */
+    transform: translateY(-3px) scale(1.03); /* More lift */
+}
+
+.site-footer .share-button:hover i {
+    transform: rotate(-15deg) scale(1.1); /* Icon animation */
+}
+
+.site-footer .share-button:active {
+    transform: translateY(0px) scale(1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Enhanced Social Icons */
+.site-footer .social-icons {
+    display: flex;
+    gap: 12px; /* Slightly reduced gap */
+}
+
+.site-footer .social-icons a {
+    color: #9ca3af;
+    font-size: 18px; /* Slightly smaller */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex; /* Use flex for centering */
+    align-items: center;
+    justify-content: center;
+    width: 40px; /* Fixed size */
+    height: 40px; /* Fixed size */
+    border-radius: 50%;
+    background-color: rgba(55, 65, 81, 0.4); /* Slightly lighter bg */
+    border: 1px solid rgba(107, 114, 128, 0.2); /* Subtle border */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.site-footer .social-icons a:hover {
+    color: #ffffff;
+    transform: translateY(-4px) scale(1.1) rotate(5deg); /* More pronounced hover effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Individual hover colors */
+.site-footer .social-icons a[aria-label="Facebook"]:hover { background-color: #1877F2; border-color: #1877F2;}
+.site-footer .social-icons a[aria-label="Twitter"]:hover { background-color: #1DA1F2; border-color: #1DA1F2;}
+.site-footer .social-icons a[aria-label="Instagram"]:hover { background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%); border: none; }
+.site-footer .social-icons a[aria-label="YouTube"]:hover { background-color: #FF0000; border-color: #FF0000;}
+
+.site-footer .social-icons a i {
+    transition: transform 0.2s ease-in-out;
+}
+
+.site-footer .social-icons a:hover i {
+    transform: scale(1.1);
+}
+
+.footer-copyright {
+    text-align: center;
+    font-size: 12px;
+    color: #6b7280; /* Darker gray for copyright */
+    margin-top: 30px; /* More space before copyright */
+    padding-top: 20px;
+    border-top: 1px solid #374151; /* Separator line */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center; /* Center items */
+        text-align: center;
+        gap: 20px; /* Adjust gap for column layout */
+    }
+
+    .footer-links {
+        justify-content: center; /* Center links */
+        margin-bottom: 25px; /* More space below links */
+        gap: 15px 20px; /* Adjust row and column gap */
+    }
+
+    .footer-actions {
+       margin-top: 10px;
+       gap: 15px; /* Adjust gap */
+    }
+
+    .site-footer {
+        padding: 30px 15px 15px 15px; /* Adjust padding */
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-links {
+        gap: 10px 15px;
+    }
+
+    .footer-links a {
+        font-size: 13px; /* Smaller font on very small screens */
+    }
+
+    .share-button {
+        padding: 8px 15px;
+        font-size: 13px;
+    }
+
+    .social-icons a {
+        font-size: 18px;
+    }
+
+     .footer-copyright {
+        font-size: 11px;
+    }
+}
+/* --- End Standard Site Footer Styles --- */ 

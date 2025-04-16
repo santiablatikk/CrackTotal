@@ -580,27 +580,51 @@
     });
   </script>
   
-  <!-- Footer -->
-  <footer class="policy-footer">
-    <div class="footer-links-mini">
-      <a href="profile.html"><i class="fas fa-user"></i> Perfil</a>
-      <a href="ranking.html"><i class="fas fa-trophy"></i> Ranking</a>
-      <a href="logros.html"><i class="fas fa-medal"></i> Logros</a>
-      <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
-      <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-      <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
-      <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-      <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-      <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+  <!-- Footer - Standard Site Footer -->
+<footer class="site-footer">
+    <div class="footer-content">
+        <div class="footer-links">
+            <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+            <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+            <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+            <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+            <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+            <a href="terms.html"><i class="fas fa-file-contract"></i> Terminos</a>
+        </div>
+        <div class="footer-actions">
+             <button id="footer-share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
+             <div class="social-icons">
+                 <a href="https://www.facebook.com/pasalachee" target="_blank" aria-label="Facebook" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                 <a href="https://twitter.com/pasalachee" target="_blank" aria-label="Twitter" class="social-icon"><i class="fab fa-twitter"></i></a>
+                 <a href="https://www.instagram.com/pasalachee" target="_blank" aria-label="Instagram" class="social-icon"><i class="fab fa-instagram"></i></a>
+                 <a href="https://www.youtube.com/c/pasalachee" target="_blank" aria-label="YouTube" class="social-icon"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
     </div>
-    <div class="copyright-text">&copy; 2025 PASALA CHE - El Juego del Rosco Futbolero.</div>
-    <div class="footer-social-icons">
-      <a href="https://www.facebook.com/pasalachee" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-      <a href="https://twitter.com/pasalachee" class="social-icon"><i class="fab fa-twitter"></i></a>
-      <a href="https://www.instagram.com/pasalachee" class="social-icon"><i class="fab fa-instagram"></i></a>
-      <a href="https://www.youtube.com/c/pasalachee" class="social-icon"><i class="fab fa-youtube"></i></a>
+    <div class="footer-copyright">
+        &copy; 2025 PASALA CHE - El Juego del Rosco Futbolero. Todos los derechos reservados.
     </div>
-  </footer>
+</footer>
+<!-- Script for Share Button -->
+<script>
+    const shareButton = document.getElementById('footer-share-button');
+    if (shareButton && navigator.share) {
+        shareButton.addEventListener('click', async () => {
+            try {
+                await navigator.share({
+                    title: document.title,
+                    text: '¡Mira mis logros en PASALA CHE!',
+                    url: window.location.href
+                });
+                console.log('Contenido compartido con éxito');
+            } catch (err) {
+                console.error('Error al compartir:', err);
+            }
+        });
+    } else if (shareButton) {
+         shareButton.style.display = 'none';
+    }
+</script>
 </body>
 </html>
 
