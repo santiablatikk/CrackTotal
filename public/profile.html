@@ -6,6 +6,7 @@
     <meta name="google-adsense-account" content="ca-pub-9579152019412427">
     <title>Tu Perfil - PASALA CHE</title>
     <link rel="stylesheet" href="css/profile-styles.css" type="text/css">
+    <link rel="stylesheet" href="css/footer-styles.css" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" type="text/css">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
@@ -268,28 +269,24 @@
                     
                     <!-- Achievements Section -->
                     <section id="achievements-section" class="profile-section achievements-section">
-                        <h3 class="section-title"><i class="fas fa-award"></i> Logros Desbloqueados</h3>
+                        <div class="section-header">
+                            <h3 class="section-title"><i class="fas fa-award"></i> Tus Logros</h3>
+                            <a href="logros.html" class="view-all-btn">
+                                <i class="fas fa-list-ul"></i> Ver Todos
+                            </a>
+                        </div>
                          
                         <div class="achievements-progress">
                             <div class="achievements-summary">
                                 <div class="achievement-count-display">
-                                    <span class="achievements-count">0</span>
-                                    <span class="achievements-total">/ 9 logros</span>
+                                    <span class="achievements-count-value" id="achievements-unlocked-count">0</span>
+                                    <span class="achievements-count-separator">/</span>
+                                    <span class="achievements-count-value" id="achievements-total-count">0</span>
                                 </div>
-                                <div class="achievements-text">logros desbloqueados</div>
+                                <div class="achievements-text">Logros Desbloqueados</div> 
                             </div>
                             <div class="achievements-progress-bar">
-                                <div class="achievements-progress-fill" id="achievements-progress-fill" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="section-actions">
-                            <div class="section-filter">
-                                <select id="achievements-filter" class="filter-select">
-                                    <option value="all">Todos los logros</option>
-                                    <option value="unlocked">Desbloqueados</option>
-                                    <option value="locked">Por desbloquear</option>
-                                </select>
+                                <div class="achievements-progress-fill" id="achievements-completed" style="width: 0%"></div> 
                             </div>
                         </div>
                         
@@ -399,9 +396,56 @@
         <span class="fab-tooltip">Jugar</span>
     </button>
 
-    <!-- Scripts -->
-    <script src="js/utils.js"></script> 
-    <script src="js/profile.js"></script>
+    <!-- Scripts - IMPORTANTE: logros.js DEBE ir ANTES que profile.js -->
+    <script src="js/logros.js" defer></script>
+    <script src="js/utils.js" defer></script> 
+    <script src="js/profile.js" defer></script>
+
+    <!-- Footer - Standard Site Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+                <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+                <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+                <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+                <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+                <a href="terms.html"><i class="fas fa-file-contract"></i> Terminos</a>
+            </div>
+            <div class="footer-actions">
+                 <button id="footer-share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
+                 <div class="social-icons">
+                     <a href="https://www.facebook.com/pasalachee" target="_blank" aria-label="Facebook" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                     <a href="https://twitter.com/pasalachee" target="_blank" aria-label="Twitter" class="social-icon"><i class="fab fa-twitter"></i></a>
+                     <a href="https://www.instagram.com/pasalachee" target="_blank" aria-label="Instagram" class="social-icon"><i class="fab fa-instagram"></i></a>
+                     <a href="https://www.youtube.com/c/pasalachee" target="_blank" aria-label="YouTube" class="social-icon"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            &copy; 2025 PASALA CHE - El Juego del Rosco Futbolero. Todos los derechos reservados.
+        </div>
+    </footer>
+    <!-- Script for Share Button -->
+    <script>
+        const shareButton = document.getElementById('footer-share-button');
+        if (shareButton && navigator.share) {
+            shareButton.addEventListener('click', async () => {
+                try {
+                    await navigator.share({
+                        title: document.title,
+                        text: '¡Mira mi perfil en PASALA CHE!',
+                        url: window.location.href
+                    });
+                    console.log('Contenido compartido con éxito');
+                } catch (err) {
+                    console.error('Error al compartir:', err);
+                }
+            });
+        } else if (shareButton) {
+             shareButton.style.display = 'none';
+        }
+    </script>
 </body>
 </html> 
 

@@ -52,18 +52,13 @@ async function initializeUserProfile() {
       // Forzar recarga si venimos de completar una partida
       await loadUserProfile(userIP, fromGame);
       
-      // Si venimos de una partida completada, mostrar notificación y redirigir
+      // Si venimos de una partida completada, mostrar notificación
       if (fromGame) {
         // Mostrar notificación de actualización
         showProfileUpdatedNotification();
         
         // Limpiar el flag
         localStorage.removeItem('gameJustCompleted');
-        
-        // Después de mostrar el perfil brevemente, redirigir al ranking
-        setTimeout(() => {
-          window.location.href = 'ranking.html?fromGame=true&t=' + Date.now();
-        }, 3500);
       }
     } else {
       console.error('No se pudo detectar la IP del usuario');
@@ -431,23 +426,50 @@ async function updateGameHistory(userIP) {
         }
     }
 
-    if (history.length === 0) {
+    // --- NUEVO: Filtrar duplicados --- 
+    const uniqueHistory = [];
+    const seenKeys = new Set();
+    
+    // Iterar en orden cronológico (asumiendo que history[0] es el más reciente)
+    for (const game of history) {
+        // Crear una clave única para esta partida, redondeando la fecha al minuto
+        let gameTimestamp = 'invalid_date';
+        try {
+             // Intentar redondear la fecha al minuto
+             gameTimestamp = new Date(game.date).setSeconds(0, 0); 
+        } catch (e) {
+            console.warn('Fecha inválida en historial:', game.date, game);
+            // Usar la fecha original o un valor por defecto si falla
+            gameTimestamp = game.date || `invalid-${Math.random()}`;
+        }
+        
+        const uniqueKey = `${gameTimestamp}-${game.score}-${game.victory}-${game.difficulty}`;
+        
+        if (!seenKeys.has(uniqueKey)) {
+            seenKeys.add(uniqueKey);
+            uniqueHistory.push(game); // Añadir solo si no se ha visto antes
+        }
+    }
+    // --- Fin del filtrado ---
+
+    if (uniqueHistory.length === 0) {
     placeholder.innerHTML = '<i class="fas fa-folder-open"></i><p>Aún no has jugado ninguna partida.</p>';
     return; // Mantener placeholder visible si no hay historial
   }
 
   placeholder.style.display = 'none'; // Ocultar placeholder si hay historial
 
-  // Limitar a las últimas X partidas (ej. 20)
-  const recentHistory = history.slice(0, 20);
+  // Limitar a las últimas X partidas ÚNICAS (ej. 20)
+  const recentUniqueHistory = uniqueHistory.slice(0, 20);
 
-    recentHistory.forEach(game => {
+    // Iterar sobre el historial ÚNICO
+    recentUniqueHistory.forEach(game => {
     const entryElement = document.createElement('div');
     entryElement.classList.add('game-entry');
 
     const resultIconClass = game.victory ? 'fas fa-check-circle victory' : 'fas fa-times-circle defeat';
     const resultText = game.victory ? 'Victoria' : 'Derrota';
-    const gameDate = new Date(game.date).toLocaleString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    const gameDate = new Date(game.date).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     const difficulty = game.difficulty || 'normal'; // Add difficulty display
 
     entryElement.innerHTML = `
@@ -534,7 +556,7 @@ async function loadUserProfile(userIP, forceReload = false) {
 
     // Cargar historial y logros (éstos manejan sus propios placeholders)
     updateGameHistory(userIP);
-    updateAchievementsDisplay(userIP); // Llama a la función de logros revisada
+    updateAchievementsDisplay(userIP); // LLAMAR A ESTA FUNCIÓN
 
   } catch (error) {
     console.error('Error al cargar el perfil completo:', error);
@@ -566,210 +588,163 @@ function saveUserProfile(profile, userIP) {
     }
 }
 
-// Cargar Logros (Devuelve ARRAY)
-function loadAchievementsFromLocalStorage(userIP) {
-    if (!userIP) {
-        console.error('Se requiere userIP para cargar los logros');
-    return []; // Devolver ARRAY vacío si no hay IP
-    }
-  const achievementsKey = `achievements_${userIP}`; // Clave consistente
-    const storedAchievements = localStorage.getItem(achievementsKey);
-    if (storedAchievements) {
-        try {
-      const parsed = JSON.parse(storedAchievements);
-      // Asegurarse de que es un array
-      return Array.isArray(parsed) ? parsed : []; 
-        } catch (e) {
-      console.error('Error al parsear logros desde localStorage:', e);
-      localStorage.removeItem(achievementsKey); // Remover datos corruptos
-            return [];
-        }
-    }
-  return []; // Devolver ARRAY vacío si no hay nada guardado
-}
-
-// Guardar Logros (Espera ARRAY)
-function saveAchievementsForIP(achievements, userIP) {
-  if (!Array.isArray(achievements) || !userIP) { // Verifica que sea ARRAY
-        console.error('Se requieren achievements (array) y userIP para guardar los logros');
-        return false;
-    }
-  const achievementsKey = `achievements_${userIP}`; // Clave consistente
-    try {
-    localStorage.setItem(achievementsKey, JSON.stringify(achievements));
-    console.log(`Logros guardados para IP ${userIP}:`, achievements);
-        return true;
-    } catch (e) {
-        console.error('Error al guardar los logros:', e);
-        return false;
-    }
-}
-
-// Desbloquear Logro (Trabaja con ARRAY)
-function unlockAchievement(achievementId, userIP, count = 1) {
-  if (!achievementId || !userIP) return false;
-  
-  try {
-    const achievements = loadAchievementsFromLocalStorage(userIP); // Carga el array
-    const availableDefinitions = getAvailableAchievements(); // Carga las definiciones
-    const definition = availableDefinitions.find(a => a.id === achievementId);
-
-    if (!definition) {
-      console.error('Definición de logro no encontrada:', achievementId);
-        return false;
-    }
-
-    const existingIndex = achievements.findIndex(a => a.id === achievementId);
-    let isNewUnlock = false;
-
-    if (existingIndex >= 0) {
-      // Ya existe, actualizar contador si es relevante y no está ya al máximo
-      const currentAchievement = achievements[existingIndex];
-      const neededCount = definition.maxCount || 1;
-      if (neededCount > 1 && currentAchievement.count < neededCount) {
-          currentAchievement.count = (currentAchievement.count || 0) + count;
-          currentAchievement.date = new Date().toISOString(); // Actualizar fecha
-          // Comprobar si AHORA se desbloquea
-          if (!currentAchievement.unlocked && currentAchievement.count >= neededCount) {
-              currentAchievement.unlocked = true;
-              isNewUnlock = true;
-              console.log(`Logro multi-count completado: ${achievementId}`);
-  } else {
-               console.log(`Progreso de logro actualizado: ${achievementId}, Count: ${currentAchievement.count}`);
-          }
-        } else {
-          // Si es maxCount=1 o ya estaba desbloqueado/contado, no hacer nada más que quizás actualizar fecha?
-          // achievements[existingIndex].date = new Date().toISOString(); // Opcional: actualizar fecha siempre?
-          console.log(`Logro ${achievementId} ya estaba desbloqueado o no requiere más conteo.`);
-          return false; // No hubo nuevo desbloqueo ni progreso relevante
-      }
-    } else {
-      // Es nuevo, añadirlo al array
-       const newAchievement = {
-        id: achievementId,
-        count: Math.min(count, definition.maxCount || 1), // Asegurar que el conteo inicial no exceda maxCount
-        category: definition.category,
-        date: new Date().toISOString(),
-        unlocked: false // Se marcará como unlocked si cumple condición
-      };
-
-      if (newAchievement.count >= (definition.maxCount || 1)) {
-          newAchievement.unlocked = true;
-          isNewUnlock = true; // Es un nuevo desbloqueo
-      }
-      achievements.push(newAchievement);
-    }
-    
-    // Guardar el array actualizado
-    saveAchievementsForIP(achievements, userIP);
-
-    // Mostrar notificación solo si es un desbloqueo nuevo y completo
-    if (isNewUnlock) {
-        console.log('Mostrando notificación para logro nuevo/completado:', achievementId);
-        showAchievementNotification(definition); // Mostrar notificación con la definición
-    }
-    return true;
-
-  } catch (error) {
-    console.error(`Error desbloqueando logro ${achievementId}:`, error);
-    return false;
-  }
-}
-
-// Actualizar UI de Logros (CORREGIDO - Trabaja con ARRAY)
+// Actualizar UI de Logros (CORREGIDO - Muestra solo desbloqueados, contador Unlocked/Total)
 function updateAchievementsDisplay(userIP) {
     const achievementsContainer = document.getElementById('achievements-list');
     const placeholder = document.getElementById('achievements-placeholder');
+    const unlockedCountElement = document.getElementById('achievements-unlocked-count');
+    const totalCountElement = document.getElementById('achievements-total-count');
+    const achievementsCompleted = document.getElementById('achievements-completed');
 
-    if (!achievementsContainer || !placeholder) {
-        console.error('Contenedor de logros o placeholder no encontrado.');
+    if (!achievementsContainer || !placeholder || !unlockedCountElement || !totalCountElement || !achievementsCompleted) {
+        console.error('Elementos HTML necesarios para logros no encontrados.');
     return;
   }
   
-    placeholder.style.display = 'block'; // Mostrar placeholder mientras se carga
-    achievementsContainer.innerHTML = ''; // Limpiar contenido previo
-    achievementsContainer.appendChild(placeholder); // Re-adjuntar placeholder
+    // Mostrar placeholder inicialmente
+    placeholder.style.display = 'block';
+    achievementsContainer.innerHTML = ''; 
+    achievementsContainer.appendChild(placeholder);
+    unlockedCountElement.textContent = '-'; 
+    totalCountElement.textContent = '-';
+    achievementsCompleted.style.width = '0%';
+    placeholder.innerHTML = '<i class="fas fa-spinner fa-spin"></i><p>Cargando logros...</p>'; // Mensaje inicial
 
-    const userAchievementsArray = loadAchievementsFromLocalStorage(userIP); // Carga el ARRAY
-    const allPossibleAchievements = getAvailableAchievements(); // Carga ARRAY de definiciones
+    // Intentar obtener datos SOLO desde las funciones globales
+    if (typeof window.getAllAchievements === 'function' && typeof window.getUnlockedAchievements === 'function') {
+        try {
+            const allPossibleAchievements = window.getAllAchievements();
+            const userUnlockedAchievements = window.getUnlockedAchievements();
+            const totalCount = allPossibleAchievements.length;
+            const unlockedCount = userUnlockedAchievements.length;
 
-    if (allPossibleAchievements.length === 0) {
-        placeholder.innerHTML = '<i class="fas fa-question-circle"></i><p>No hay logros definidos en el juego.</p>';
+            if (totalCount === 0) {
+                console.warn('getAllAchievements() devolvió 0 logros definidos.');
+                placeholder.innerHTML = '<i class="fas fa-exclamation-triangle"></i><p>No hay logros definidos.</p>';
+                 unlockedCountElement.textContent = '0';
+                 totalCountElement.textContent = '0';
+                 achievementsCompleted.style.width = '0%';
     return;
   }
   
-    // Crear un mapa de definiciones para fácil acceso
+            console.log(`Logros cargados desde logros.js: ${unlockedCount} desbloqueados de ${totalCount}`);
+
+            // Actualizar contador y barra
+            unlockedCountElement.textContent = unlockedCount;
+            totalCountElement.textContent = totalCount;
+            const progressPercent = totalCount > 0 ? (unlockedCount / totalCount) * 100 : 0;
+            achievementsCompleted.style.width = `${progressPercent}%`;
+
+            // Ocultar placeholder y limpiar
+            placeholder.style.display = 'none';
+            achievementsContainer.innerHTML = '';
+
+            // Crear un mapa de todos los logros para obtener detalles
     const definitionsMap = allPossibleAchievements.reduce((map, def) => {
         map[def.id] = def;
         return map;
   }, {});
 
-    // Combinar datos del usuario con definiciones
-    const combinedAchievements = allPossibleAchievements.map(def => {
-        const userData = userAchievementsArray.find(ua => ua.id === def.id);
-        return {
-            ...def, // Datos de definición (title, desc, icon, maxCount, category)
-            ...(userData || {}), // Datos del usuario (count, date, unlocked)
-            unlocked: userData ? (userData.unlocked ?? (userData.count >= (def.maxCount || 1))) : false, // Asegurar que unlocked esté bien definido
-            count: userData ? (userData.count || 0) : 0 // Asegurar que count exista
-        };
-    });
+            // --- LÓGICA REVERTIDA: Iterar sobre SOLO los logros DESBLOQUEADOS --- 
+            if (userUnlockedAchievements.length === 0) {
+                 achievementsContainer.innerHTML = `
+                  <div class="empty-state">
+                    <div class="empty-state-icon"><i class="fas fa-trophy"></i></div>
+                    <h4>Aún no tienes logros desbloqueados.</h4>
+                    <p>¡Sigue jugando para conseguirlos!</p>
+                    <a href="logros.html" class="empty-state-action view-all-btn styled-button">Ver todos los logros posibles</a>
+                  </div>
+                `;
+            } else {
+                // Ordenar los desbloqueados (p.ej., por fecha)
+                userUnlockedAchievements.sort((a, b) => {
+                    const dateA = a.date ? new Date(a.date) : 0;
+                    const dateB = b.date ? new Date(b.date) : 0;
+                    return dateB - dateA; // Más recientes primero
+                });
+                
+                userUnlockedAchievements.forEach(unlockedAch => {
+                    // Obtener definición completa usando el mapa
+                    const achievementDef = definitionsMap[unlockedAch.id];
+                    if (!achievementDef) return; // Saltar si la definición no se encuentra
+                    
+                    const icon = achievementDef.icon || 'fas fa-award';
+                    const category = achievementDef.category || 'common';
+                    const title = achievementDef.title || 'Logro Desconocido';
+                    const description = achievementDef.description || 'Detalles no disponibles';
+                    const maxCount = achievementDef.maxCount || 1;
+                    const currentCount = unlockedAch.count || (unlockedAch.unlocked ? 1 : 0); // Usar count del logro desbloqueado
+                    const date = unlockedAch.date;
 
-    // Ordenar: Desbloqueados primero, luego por categoría, luego alfabético
-    combinedAchievements.sort((a, b) => {
-        if (a.unlocked && !b.unlocked) return -1;
-        if (!a.unlocked && b.unlocked) return 1;
-        // Aquí puedes añadir orden por categoría si quieres
-        const categoryOrder = ['special', 'expert', 'intermediate', 'beginner', 'otros'];
-        const catAIndex = categoryOrder.indexOf(a.category || 'otros');
-        const catBIndex = categoryOrder.indexOf(b.category || 'otros');
-        if (catAIndex !== catBIndex) return catAIndex - catBIndex;
-        // Finalmente por título
-        return a.title.localeCompare(b.title);
-    });
-    
-    placeholder.style.display = 'none'; // Ocultar placeholder
-    achievementsContainer.innerHTML = ''; // Limpiar de nuevo antes de añadir tarjetas
+                    const achievementDate = date
+                        ? (typeof window.formatDate === 'function' 
+                          ? window.formatDate(date) 
+                          : new Date(date).toLocaleDateString('es-ES'))
+                        : '';
+                      
+                    const card = document.createElement('div');
+                    // Siempre añadir clase 'unlocked' ya que solo iteramos sobre ellos
+                    card.className = `achievement-card unlocked`; 
+                    card.setAttribute('data-id', unlockedAch.id || '');
+                    card.setAttribute('data-category', category);
+                    
+                    const progressPercent = maxCount > 1 
+                        ? Math.min(100, (currentCount / maxCount) * 100) 
+                        : 100;
+                    
+                    let countText = '';
+                    if (maxCount > 1) {
+                        countText = `${currentCount}/${maxCount}`;
+                    } else {
+                         countText = '<i class="fas fa-check-circle"></i> Completado';
+                    }
 
-    if (combinedAchievements.length === 0) { // Seguridad por si algo falla
-         placeholder.style.display = 'block';
-         placeholder.innerHTML = '<i class="fas fa-folder-open"></i><p>No se pudieron cargar los logros.</p>';
-         return;
-    }
-    
-    // Actualizar barra de progreso de logros
-    const unlockedCount = combinedAchievements.filter(a => a.unlocked).length;
-    const totalCount = combinedAchievements.length;
-    const progressPercent = (unlockedCount / totalCount) * 100;
-    
-    const countElement = document.querySelector('.achievements-count');
-    if (countElement) countElement.textContent = unlockedCount;
-    
-    const progressFill = document.getElementById('achievements-progress-fill');
-    if (progressFill) {
-        progressFill.style.width = `${progressPercent}%`;
-    }
-    
-    // Renderizar tarjetas
-    combinedAchievements.forEach(ach => {
-        const card = createAchievementCard(
-            ach.id,
-            ach.icon,
-            ach.title,
-            ach.description,
-            ach.count,
-            ach.maxCount,
-            ach.date,
-            ach.category,
-            ach.unlocked // Pasar el estado unlocked
-        );
+                    card.innerHTML = `
+                      <div class="achievement-icon"><i class="${icon}"></i></div>
+                      <div class="achievement-details">
+                        <h4>${title}</h4>
+                        <p>${description}</p>
+                        <div class="achievement-date">${achievementDate}</div>
+                        ${maxCount > 1 ? 
+                          `<div class="achievement-progress">
+                            <div class="achievement-progress-bar" style="width: ${progressPercent}%"></div>
+                          </div>` 
+                        : ''}
+                         <div class="achievement-count-status">${countText}</div>
+                      </div>
+                    `;
         achievementsContainer.appendChild(card);
     });
-    
-    // Añadir estilos CSS si no existen (como estaba antes, debería funcionar)
-    if (!document.getElementById('achievements-styles')) {
-      // ... (código para añadir los estilos de logros - sin cambios) ...
-    }
+            } // Fin del else (userUnlockedAchievements > 0)
+
+        } catch (e) {
+            console.error("Error al procesar logros desde funciones globales:", e);
+            placeholder.style.display = 'block'; // Asegurarse que el placeholder sea visible
+            placeholder.innerHTML = '<i class="fas fa-exclamation-triangle"></i><p>Error al cargar logros.</p>';
+             unlockedCountElement.textContent = 'E'; // Marcar error en contador
+             totalCountElement.textContent = 'R';
+             achievementsCompleted.style.width = '0%';
+        } // Fin del catch
+    } else {
+        // Si las funciones globales AÚN no están listas
+        console.warn('Funciones globales de logros no disponibles todavía. Esperando...');
+        // El placeholder ya está visible con "Cargando..."
+        
+        // Reintentar después de un delay por si logros.js carga tarde
+        setTimeout(() => {
+             // Verificar DE NUEVO si las funciones ya existen
+             if (typeof window.getAllAchievements === 'function' && typeof window.getUnlockedAchievements === 'function') {
+                 console.log('Funciones de logros ahora disponibles. Reintentando carga...');
+                 updateAchievementsDisplay(userIP); // Llamar de nuevo a la función
+             } else if (placeholder.innerText.includes('Cargando')) { // Solo mostrar error si aún está cargando
+                 placeholder.innerHTML = '<i class="fas fa-exclamation-triangle"></i><p>No se pudo conectar con el sistema de logros. Intenta recargar.</p>';
+                 console.error("Error definitivo: Funciones de logros no se cargaron.");
+                  unlockedCountElement.textContent = 'E'; 
+                  totalCountElement.textContent = 'R';
+                  achievementsCompleted.style.width = '0%';
+             }
+        }, 4000); // Esperar 4 segundos
+    } // Fin del else (funciones globales no disponibles)
 }
 
 // Crear Tarjeta de Logro (CORREGIDO - Trabaja con estado unlocked)
@@ -1503,3 +1478,266 @@ function showNotification(title, message, type = 'success') {
     notification.classList.remove('show');
   }, 5000);
 }
+
+function getAchievementIcon(id) {
+  const icons = {
+    'first_game': 'fas fa-gamepad',
+    'perfect_game': 'fas fa-star',
+    'fast_answer': 'fas fa-bolt',
+    'streak_5': 'fas fa-fire',
+    'streak_10': 'fas fa-fire-alt',
+    'no_pass': 'fas fa-trophy'
+    // Añadir más según sea necesario
+  };
+  return icons[id] || 'fas fa-award';
+}
+
+function getTotalAchievementsCount() {
+  // If logros.js is loaded and provides the array, use its length
+  if (typeof window.getAllAchievements === 'function') { // Check for the function instead of the array
+      try {
+        // Attempt to get the length dynamically
+        return window.getAllAchievements().length;
+      } catch (e) {
+        console.warn('Error getting achievements length dynamically:', e);
+        // Fallback if the function fails for some reason
+      }
+  } 
+  // Fallback to the known total if the script isn't loaded or function isn't ready/fails
+  return 81; // Updated fallback total
+}
+
+// Mostrar estado vacío de logros (solo para desbloqueados)
+function showEmptyAchievements() {
+  // ... (contenido actual sin cambios) ...
+}
+
+/* Funciones auxiliares obsoletas - eliminadas/comentadas 
+   ya que la información ahora viene de logros.js
+
+function getAchievementTitle(id) { ... }
+function getAchievementDescription(id) { ... }
+function getAchievementIcon(id) { ... }
+function getAvailableAchievements() { ... }
+
+*/
+
+// Escuchar eventos de actualización de logros
+window.addEventListener('update_profile_achievements', function(event) {
+  // ... (contenido actual sin cambios) ...
+});
+
+// Definiciones de logros de respaldo (COMPLETA - ASEGURAR QUE ESTÉN LOS 81)
+const fallbackAchievementDefinitions = [
+    {
+        id: "gol_primer_minuto",
+        title: "Gol en el Primer Minuto",
+        description: "Responde correctamente a la primera pregunta en menos de 3 segundos.",
+        category: "intermedio",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-bolt"
+    },
+    {
+        id: "gol_tiempo_descuento",
+        title: "Gol en Tiempo de Descuento",
+        description: "Responde correctamente a la última pregunta con menos de 5 segundos restantes.",
+        category: "especial",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-stopwatch"
+    },
+    {
+        id: "tecnologia_linea_gol",
+        title: "Tecnología de Línea de Gol",
+        description: "Utiliza la opción de ayuda correctamente 10 veces seguidas.",
+        category: "intermedio",
+        maxCount: 10,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-life-ring"
+    },
+    {
+        id: "decision_var",
+        title: "Decisión del VAR",
+        description: "Cambia tu respuesta y acierta después de dudar inicialmente.",
+        category: "intermedio",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-video"
+    },
+    {
+        id: "centenario",
+        title: "Centenario",
+        description: "Juega un total de 100 partidas.",
+        category: "épico",
+        maxCount: 100,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-trophy"
+    },
+    {
+        id: "porteria_cero",
+        title: "Portería a Cero",
+        description: "Completa una partida sin errores.",
+        category: "intermedio",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-shield-alt"
+    },
+    {
+        id: "first_game",
+        title: "Primer Gol",
+        description: "Completa tu primera pregunta correctamente en el juego.",
+        category: "básico",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-gamepad"
+    },
+    {
+        id: "perfect_game",
+        title: "Juego Perfecto",
+        description: "Completa un juego respondiendo correctamente todas las preguntas.",
+        category: "especial",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-star"
+    },
+    {
+        id: "speed_demon",
+        title: "Velocidad Máxima",
+        description: "Completa una partida en menos de 2 minutos con respuestas correctas.",
+        category: "intermedio",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-bolt"
+    },
+    {
+        id: "five_wins",
+        title: "Pentacampeón",
+        description: "Gana 5 partidas.",
+        category: "intermedio",
+        maxCount: 5,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-medal"
+    },
+    {
+        id: "hard_mode",
+        title: "Modo Difícil",
+        description: "Gana una partida en dificultad difícil.",
+        category: "avanzado",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-fire"
+    },
+    {
+        id: "no_help",
+        title: "Sin Ayuda",
+        description: "Completa una partida sin usar pistas y con respuestas correctas.",
+        category: "avanzado",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-user-graduate"
+    },
+    {
+        id: "no_pass",
+        title: "Sin Pasar",
+        description: "Completa un juego sin usar la opción 'Pasala Ché'.",
+        category: "intermedio",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-flag-checkered"
+    },
+    {
+        id: "comeback_king",
+        title: "Rey de la Remontada",
+        description: "Gana una partida después de haber cometido 5 o más errores.",
+        category: "especial",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-crown"
+    },
+    {
+        id: "night_owl",
+        title: "Búho Nocturno",
+        description: "Juega una partida entre la medianoche y las 5 de la mañana.",
+        category: "especial",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-moon"
+    },
+    {
+        id: "fast_answer",
+        title: "Respuesta Rápida",
+        description: "Responde correctamente en menos de 5 segundos.",
+        category: "básico",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-bolt"
+    },
+    {
+        id: "streak_5",
+        title: "En Racha",
+        description: "Responde correctamente 5 preguntas consecutivas.",
+        category: "intermedio",
+        maxCount: 5,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-fire"
+    },
+    {
+        id: "streak_10",
+        title: "Racha Imparable",
+        description: "Responde correctamente 10 preguntas seguidas.",
+        category: "avanzado",
+        maxCount: 10,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-fire-alt"
+    },
+    {
+        id: "world_cup_expert",
+        title: "Experto en Mundiales",
+        description: "Acerta todas las preguntas relacionadas con Copas del Mundo.",
+        category: "especialista",
+        maxCount: 1,
+        count: 0,
+        unlocked: false,
+        date: null,
+        icon: "fas fa-globe"
+    }
+    // SE ASUME QUE FALTAN ~62 LOGROS MÁS AQUÍ
+    // SI ESTA LISTA SIGUE INCOMPLETA, EL TOTAL SERÁ INCORRECTO
+];

@@ -1,544 +1,473 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="description" content="PASALA CHE - Ranking global de jugadores. Compite y compara tus puntajes con jugadores de todo el mundo." />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="theme-color" content="#1e293b">
     <meta name="google-adsense-account" content="ca-pub-9579152019412427">
-    <title>PASALA CHE - Ranking Mundial</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/combined.css">
-    <link rel="stylesheet" href="css/footer-styles.css">
+    <title>Ranking Global - PASALA CHE</title>
+    <!-- Preconexiones para mejorar el rendimiento -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Favicon -->
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/footer-styles.css" />
+    <link rel="stylesheet" href="css/combined.css" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Fuentes -->
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Open Graph tags para compartir en redes sociales -->
+    <meta property="og:title" content="Ranking Global - PASALA CHE">
+    <meta property="og:description" content="Compara tus puntajes con jugadores de todo el mundo en PASALA CHE.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="img/preview.jpg">
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
+    
     <style>
-        /* --- Estilos Generales --- */
-        :root {
-            --color-primary: #e11d48; /* Rojo principal (Pasala Che) */
-            --color-secondary: #fb7185; /* Rojo claro */
-            --color-background: #0f172a; /* Azul muy oscuro (más oscuro) */
-            --color-surface: #1e293b; /* Azul oscuro */
-            --color-card-bg: rgba(30, 41, 59, 0.85); /* Azul oscuro semi-trans */
-            --color-card-bg-darker: rgba(15, 23, 42, 0.9);
-            --color-text: #e2e8f0; /* Gris claro */
-            --color-text-muted: #94a3b8; /* Gris medio */
-            --color-border: rgba(255, 255, 255, 0.1);
-            --color-gold: #ffd700;
-            --color-silver: #c0c0c0;
-            --color-bronze: #cd7f32;
-            --color-success: #10b981; /* Verde para aciertos */
-            --color-error: #f43f5e; /* Rojo para errores */
-            --font-primary: 'Poppins', sans-serif;
-            --font-secondary: 'Oswald', sans-serif; /* Títulos más audaces */
-            --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.2);
-            --shadow-medium: 0 10px 30px rgba(0, 0, 0, 0.3);
-            --border-radius-md: 10px;
-            --border-radius-lg: 14px;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: var(--font-primary);
-            background: linear-gradient(145deg, var(--color-background) 0%, var(--color-surface) 100%);
-            color: var(--color-text);
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden; /* Prevent horizontal scroll */
-        }
-
-        a { color: var(--color-primary); text-decoration: none; transition: color 0.3s ease; }
-        a:hover { color: var(--color-secondary); }
-        
-        /* --- Página de Ranking --- */
-        .ranking-page { padding: 1rem; }
-        .ranking-container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
-
-        /* --- Header del Ranking --- */
-        .ranking-header {
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9)), url('img/stadium-blur.jpg') center center/cover no-repeat; /* Añadido fondo sutil */
-            background-blend-mode: overlay;
-            border-radius: var(--border-radius-lg);
-            padding: 2.5rem 2rem;
-            margin-bottom: 2.5rem;
+      /* Estilos para el ranking */
+      .ranking-container {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      
+      .ranking-header {
+        background: rgba(13, 71, 161, 0.6);
+        padding: 15px 20px;
+        border-radius: 12px 12px 0 0;
+        display: flex;
+        justify-content: space-between;
+        color: white;
+        font-weight: 600;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: none;
+      }
+      
+      .ranking-header .rank-col {
+        width: 10%;
+        text-align: center;
+      }
+      
+      .ranking-header .player-col {
+        width: 40%;
+        text-align: left;
+      }
+      
+      .ranking-header .score-col {
+        width: 20%;
+        text-align: center;
+      }
+      
+      .ranking-header .date-col {
+        width: 30%;
             text-align: center;
-            border: 1px solid var(--color-border);
-            box-shadow: var(--shadow-medium);
-            position: relative;
+      }
+      
+      .ranking-list {
+        border-radius: 0 0 12px 12px;
             overflow: hidden;
-        }
-        .ranking-header::before { /* Efecto decorativo */
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at top left, rgba(225, 29, 72, 0.15) 0%, transparent 40%);
-            pointer-events: none;
-        }
-         .ranking-header::after { /* Efecto decorativo */
-            content: ''; position: absolute; bottom: 0; right: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at bottom right, rgba(59, 130, 246, 0.1) 0%, transparent 40%);
-             pointer-events: none;
-        }
-
-        .trophy-icon {
-            font-size: 3rem; margin-bottom: 1rem; color: var(--color-gold);
-            display: inline-block; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-        }
-
-        .ranking-title {
-            font-family: var(--font-secondary); font-size: 2.5rem; color: #fff;
-            margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.4);
-        }
-
-        .ranking-subtitle {
-            font-size: 1.05rem; color: var(--color-text-muted); max-width: 650px;
-            margin: 0 auto 2rem;
-        }
-
-        /* --- Mensaje Posición Jugador --- */
-        .player-position-note {
-            background: var(--color-card-bg);
-            padding: 1rem 1.5rem; border-radius: var(--border-radius-md);
-            margin: 2rem 0 1.5rem; display: flex; align-items: center;
-            gap: 1rem; box-shadow: var(--shadow-light);
-            font-weight: 500; font-size: 1rem;
-            border-left: 5px solid var(--color-primary);
-        }
-        .player-position-note i { font-size: 1.4rem; color: var(--color-primary); }
-        .player-position-note strong { font-weight: 700; color: #fff; }
-        .player-position-note.top-position { border-left-color: var(--color-gold); }
-        .player-position-note.top-position i { color: var(--color-gold); }
-        .player-position-note.not-in-ranking { border-left-color: var(--color-text-muted); }
-        .player-position-note.not-in-ranking i { color: var(--color-text-muted); }
-
-        /* --- Contenedor Carga / Error / Sin Resultados --- */
-        .loading-container, .no-results, .error-message-container {
-            text-align: center; padding: 4rem 1rem;
-            background: var(--color-card-bg-darker);
-            border-radius: var(--border-radius-lg);
-            margin: 2.5rem 0;
-            color: var(--color-text-muted);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            min-height: 250px; /* Ensure it takes some space */
-            border: 1px solid var(--color-border);
-        }
-        .loading-container i, .no-results i, .error-message-container i.fa-exclamation-circle { /* Target specific error icon */
-            font-size: 3rem; margin-bottom: 1.5rem; display: block;
-        }
-        .loading-container i { color: var(--color-primary); animation: spin 1.5s linear infinite; }
-        .no-results i { color: var(--color-text-muted); }
-        .error-message-container i.fa-exclamation-circle { color: var(--color-error); }
-        .error-message-container p { font-size: 1.1rem; color: var(--color-text); margin-bottom: 0.5rem; }
-        .error-message-container p.error-details { font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 1.5rem; }
-        .retry-button {
-             background: var(--color-primary); color: white; border: none; padding: 0.8rem 1.6rem;
-             border-radius: 50px; cursor: pointer; transition: background 0.3s ease;
-             font-weight: 600; font-size: 1rem;
-             display: inline-flex; align-items: center; gap: 0.5rem;
-        }
-        .retry-button:hover { background: var(--color-secondary); }
-        .retry-button i { font-size: 1em; animation: none; margin: 0; /* Reset potential inherited styles */ }
-
-
-        /* --- Top 3 Jugadores --- */
-        .top-players {
-            display: grid; grid-template-columns: 1fr 1.3fr 1fr; /* Destacar más el 1ro */
-            align-items: flex-end; gap: 1.5rem; /* Más separación */
-            margin-bottom: 3.5rem; position: relative;
-        }
-        .top-player {
-            background: linear-gradient(145deg, var(--color-card-bg), var(--color-card-bg-darker));
-            border-radius: var(--border-radius-lg);
-            padding: 2rem 1.5rem 1.5rem;
-            display: flex; flex-direction: column; align-items: center;
-            text-align: center; position: relative; border: 1px solid var(--color-border);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: var(--shadow-light);
-        }
-        .top-player:hover { transform: translateY(-10px); box-shadow: var(--shadow-medium); }
-
-        .top-player.first { order: 2; padding-bottom: 3rem; z-index: 2; transform: scale(1.05); } /* Slight scale up */
-        .top-player.second { order: 1; z-index: 1; }
-        .top-player.third { order: 3; z-index: 1; }
-
-        .rank-number {
-            position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
-            width: 44px; height: 44px; border-radius: 50%;
-            background: var(--color-primary); color: #fff;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 700; font-size: 1.1rem; box-shadow: 0 0 15px rgba(0,0,0,0.3);
-            border: 3px solid var(--color-surface); /* Match body background */
-        }
-        .top-player.first .rank-number { background: var(--color-gold); color: var(--color-background); width: 52px; height: 52px; font-size: 1.3rem; border-color: var(--color-gold); box-shadow: 0 0 20px var(--color-gold); }
-        .top-player.second .rank-number { background: var(--color-silver); color: var(--color-background); border-color: var(--color-silver); }
-        .top-player.third .rank-number { background: var(--color-bronze); color: #fff; border-color: var(--color-bronze); }
-
-        .top-avatar {
-            width: 90px; height: 90px; border-radius: 50%;
-            background: var(--color-card-bg-darker); display: flex; align-items: center;
-            justify-content: center; margin-bottom: 1.2rem; border: 4px solid var(--color-border);
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.4);
-        }
-        .top-avatar i { font-size: 3rem; color: var(--color-text-muted); }
-        .top-player.first .top-avatar { width: 110px; height: 110px; border-color: var(--color-gold); }
-        .top-player.first .top-avatar i { color: var(--color-gold); }
-        .top-player.second .top-avatar { border-color: var(--color-silver); }
-        .top-player.second .top-avatar i { color: var(--color-silver); }
-        .top-player.third .top-avatar { border-color: var(--color-bronze); }
-        .top-player.third .top-avatar i { color: var(--color-bronze); }
-
-        .top-name { font-size: 1.2rem; font-weight: 600; color: #fff; margin-bottom: 0.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
-        .top-score {
-            font-family: var(--font-secondary);
-            font-size: 2rem; font-weight: 700; color: var(--color-primary);
-            margin-bottom: 1rem; line-height: 1;
-        }
-        .top-player.first .top-score { color: var(--color-gold); font-size: 2.4rem; }
-        .top-player.second .top-score { color: var(--color-silver); }
-        .top-player.third .top-score { color: var(--color-bronze); }
-
-        .top-details { font-size: 0.85rem; color: var(--color-text-muted); display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-        .top-details span { display: inline-flex; align-items: center; gap: 0.4rem; }
-        .top-details i { color: var(--color-secondary); font-size: 0.9em; }
-        .top-details .fa-check-circle { color: var(--color-success); }
-        .top-details .fa-times-circle { color: var(--color-error); }
-
-
-        .top-player.current-player { border: 3px solid var(--color-primary); box-shadow: 0 0 20px rgba(225, 29, 72, 0.4); }
-
-        /* --- Tabla Ranking --- */
-        .ranking-table-container {
-            background: var(--color-card-bg-darker);
-            border-radius: var(--border-radius-lg);
-            overflow: hidden;
-            border: 1px solid var(--color-border);
-            box-shadow: var(--shadow-medium);
-            max-height: 65vh; /* Increase height slightly */
-            overflow-y: auto;
-        }
-        /* Custom Scrollbar */
-        .ranking-table-container::-webkit-scrollbar { width: 10px; }
-        .ranking-table-container::-webkit-scrollbar-track { background: var(--color-card-bg-darker); border-radius: 0 var(--border-radius-lg) var(--border-radius-lg) 0; }
-        .ranking-table-container::-webkit-scrollbar-thumb { background: var(--color-primary); border-radius: 5px; border: 2px solid var(--color-card-bg-darker); }
-        .ranking-table-container::-webkit-scrollbar-thumb:hover { background: var(--color-secondary); }
-
-        .ranking-table { width: 100%; border-collapse: collapse; }
-        .ranking-table thead tr { border-bottom: 2px solid var(--color-primary); } /* Stronger header border */
-        .ranking-table th {
-            background: rgba(15, 23, 42, 0.98); /* Slightly darker/opaque header */
-            color: var(--color-text-muted);
-            font-family: var(--font-secondary);
-            font-weight: 600; text-align: left;
-            padding: 1rem 1.3rem;
-            font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.8px;
-            position: sticky; top: 0; z-index: 5; /* Ensure header stays on top */
-        }
-        .ranking-table th:first-child { border-radius: var(--border-radius-lg) 0 0 0; } /* Round corners if container not scrolled */
-        .ranking-table th:last-child { border-radius: 0 var(--border-radius-lg) 0 0; }
-        .ranking-table td {
-            padding: 0.9rem 1.3rem; border-bottom: 1px solid var(--color-border);
-            color: var(--color-text); font-size: 0.95rem; transition: background-color 0.2s ease;
-            vertical-align: middle;
-        }
-        .ranking-table tr:last-child td { border-bottom: none; }
-        .ranking-table tbody tr:hover td { background-color: rgba(255, 255, 255, 0.04); }
-
-        .ranking-table tr.current-player td {
-            background-color: rgba(225, 29, 72, 0.15); /* Slightly stronger highlight */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-top: none;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+      
+      .ranking-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        background: rgba(15, 23, 42, 0.7);
+        transition: all 0.3s ease;
+      }
+      
+      .ranking-item:last-child {
+        border-bottom: none;
+      }
+      
+      .ranking-item:hover {
+        background: rgba(30, 41, 59, 0.8);
+        transform: translateX(5px);
+      }
+      
+      .ranking-item .rank {
+        width: 10%;
+        text-align: center;
+        font-weight: 700;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      /* Medallas para los tres primeros */
+      .rank.rank-1, .rank.rank-2, .rank.rank-3 {
+        font-size: 0;
+      }
+      
+      .rank.rank-1:after, .rank.rank-2:after, .rank.rank-3:after {
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        font-size: 1.5rem;
+      }
+      
+      .rank.rank-1:after {
+        content: "\f521"; /* Trophy */
+        color: gold;
+      }
+      
+      .rank.rank-2:after {
+        content: "\f559"; /* Medal */
+        color: silver;
+      }
+      
+      .rank.rank-3:after {
+        content: "\f559"; /* Medal */
+        color: #cd7f32; /* Bronze */
+      }
+      
+      .ranking-item .player {
+        width: 40%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .player-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(59, 130, 246, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      
+      .player-avatar i {
+        color: #3b82f6;
+        font-size: 0.9rem;
+      }
+      
+      .player-name {
+        font-weight: 600;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      
+      .ranking-item .score {
+        width: 20%;
+        text-align: center;
+        font-weight: 700;
+        color: #3b82f6;
+      }
+      
+      .ranking-item .date {
+        width: 30%;
+        text-align: center;
+        font-size: 0.85rem;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      
+      .user-highlight {
+        background: rgba(59, 130, 246, 0.15) !important;
+        border-left: 3px solid #3b82f6;
+      }
+      
+      .loading-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      
+      .loading-spinner {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        border-top-color: #3b82f6;
+        animation: spin 1s ease-in-out infinite;
+        margin-bottom: 15px;
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 50px 20px;
+        color: rgba(255, 255, 255, 0.7);
+      }
+      
+      .empty-icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+        color: rgba(255, 255, 255, 0.3);
+      }
+      
+      /* Header */
+      .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+      
+      .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: white;
+        font-family: 'Oswald', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin: 0;
+      }
+      
+      .header-actions {
+        display: flex;
+        gap: 10px;
+      }
+      
+      .filter-btn, .refresh-btn, .back-btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 15px;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      
+      .filter-btn:hover, .refresh-btn:hover, .back-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      
+      .filter-dropdown {
             position: relative;
         }
-        /* Highlight indicator */
-        .ranking-table tr.current-player td:first-child::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-            background-color: var(--color-primary);
-            border-radius: 3px 0 0 3px;
+      
+      .filter-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: rgba(15, 23, 42, 0.95);
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        display: none;
+        z-index: 100;
+        min-width: 180px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(8px);
+      }
+      
+      .filter-menu.show {
+        display: block;
+        animation: fadeInDown 0.2s ease;
+      }
+      
+      .filter-option {
+        padding: 10px 15px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      
+      .filter-option:hover {
+        background: rgba(255, 255, 255, 0.1);
+      }
+      
+      .filter-option.selected {
+        color: #3b82f6;
+        font-weight: 600;
+      }
+      
+      .filter-option i {
+        opacity: 0;
+        transition: all 0.2s;
+      }
+      
+      .filter-option.selected i {
+        opacity: 1;
+      }
+      
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
         }
-        .ranking-table tr.highlight td { /* Animation for JS scroll */
-            animation: highlight-pulse 1.5s ease-in-out;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-
-        .ranking-table .position { font-weight: 700; font-family: var(--font-secondary); text-align: center; width: 60px; font-size: 1.1rem; color: var(--color-text-muted); }
-        .ranking-table .position.gold { color: var(--color-gold); text-shadow: 0 0 5px var(--color-gold); }
-        .ranking-table .position.silver { color: var(--color-silver); text-shadow: 0 0 5px var(--color-silver); }
-        .ranking-table .position.bronze { color: var(--color-bronze); text-shadow: 0 0 5px var(--color-bronze); }
-        .ranking-table .username { font-weight: 600; color: #fff; }
-        .ranking-table .score { font-weight: 700; font-family: var(--font-secondary); color: var(--color-secondary); font-size: 1.05rem; }
-        .ranking-table .correct { color: var(--color-success); }
-        .ranking-table .wrong { color: var(--color-error); }
-        .ranking-table .difficulty, .ranking-table .date { font-size: 0.85rem; color: var(--color-text-muted); }
-
-        /* --- Acciones y Stats Globales --- */
-        .ranking-actions {
-            display: flex; justify-content: center; gap: 1.2rem; margin: 2.5rem 0; flex-wrap: wrap;
-        }
-        .action-button {
-            display: inline-flex; align-items: center; gap: 0.6rem;
-            padding: 0.8rem 1.8rem; background: var(--color-card-bg);
-            border: 1px solid var(--color-border); border-radius: 50px;
-            color: var(--color-text); font-weight: 500; text-decoration: none;
-            transition: all 0.3s ease; font-size: 1rem;
-        }
-        .action-button:hover {
-            background: var(--color-card-bg-darker); transform: translateY(-3px);
-            box-shadow: var(--shadow-light); border-color: rgba(255,255,255,0.2);
-        }
-        .action-button.primary {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            border-color: transparent; color: #fff;
-            box-shadow: 0 5px 15px rgba(225, 29, 72, 0.4);
-        }
-        .action-button.primary:hover {
-             background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
-             box-shadow: 0 8px 20px rgba(225, 29, 72, 0.5);
-             transform: translateY(-3px);
-        }
-        .action-button i { font-size: 1.1em; }
-
-        .ranking-stats {
-            margin-top: 3.5rem; display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Wider cards */
-            gap: 1.8rem;
-        }
-        .stat-card {
-            background: linear-gradient(145deg, var(--color-card-bg), var(--color-card-bg-darker));
-            border-radius: var(--border-radius-lg);
-            padding: 2rem 1.5rem; text-align: center;
-            border: 1px solid var(--color-border);
-            box-shadow: var(--shadow-light);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative; overflow: hidden;
-        }
-        .stat-card::before { /* Subtle inner glow */
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 40%);
-            transition: opacity 0.5s ease; opacity: 0; pointer-events: none;
-        }
-        .stat-card:hover::before { opacity: 1; }
-        .stat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-medium); }
-        .stat-card-icon { font-size: 2.5rem; color: var(--color-primary); margin-bottom: 1rem; line-height: 1; }
-        .stat-card-value { font-family: var(--font-secondary); font-size: 2.5rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; line-height: 1; }
-        .stat-card-title { font-size: 0.95rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-
-        /* --- Animaciones --- */
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes highlight-pulse { 0% { background-color: rgba(225, 29, 72, 0.15); } 50% { background-color: rgba(225, 29, 72, 0.3); } 100% { background-color: rgba(225, 29, 72, 0.15); } }
-
-
-        /* --- Footer y Botón Volver --- */
-        .policy-footer { /* Reusing footer style, minor adjustments if needed */
-            background-color: rgba(15, 23, 42, 0.9); padding: 2rem 1rem; margin-top: 4rem;
-            text-align: center; border-top: 1px solid var(--color-border);
-        }
-        .footer-links-mini { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem 1.8rem; margin-bottom: 1.5rem; }
-        .footer-links-mini a { color: var(--color-text-muted); font-size: 0.9rem; transition: color 0.3s ease; }
-        .footer-links-mini a:hover { color: var(--color-primary); }
-        .footer-links-mini i { margin-right: 0.4rem; width: 1em; text-align: center; }
-        .copyright-text { font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem; }
-        .footer-social-icons { display: flex; justify-content: center; gap: 1.2rem; }
-        .social-icon { color: var(--color-text-muted); font-size: 1.3rem; transition: color 0.3s ease, transform 0.3s ease; }
-        .social-icon:hover { color: var(--color-primary); transform: scale(1.2) rotate(5deg); }
-
-        .back-button-nav { /* Floating back button */
-             position: fixed; bottom: 25px; right: 25px; width: 55px; height: 55px; border-radius: 50%;
-             background-color: rgba(30, 41, 59, 0.8); color: white; display: flex; align-items: center; justify-content: center;
-             font-size: 1.3rem; cursor: pointer; transition: all 0.3s ease; box-shadow: var(--shadow-medium);
-             z-index: 1000; border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(8px);
-        }
-        .back-button-nav:hover { background-color: var(--color-primary); transform: scale(1.1) rotate(-5deg); box-shadow: 0 0 20px rgba(225, 29, 72, 0.6); }
-
-
-        /* --- Responsividad --- */
-        @media (max-width: 992px) {
-            .ranking-table th:nth-child(6), /* Ocultar Dificultad */
-            .ranking-table td:nth-child(6) { display: none; }
-            .top-players { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-            .top-player.first { grid-column: 1 / -1; order: 1; transform: scale(1); } /* Centro arriba */
-            .top-player.second { order: 2; }
-            .top-player.third { order: 3; }
-        }
-
-        @media (max-width: 768px) {
-            .app-header .title-text { font-size: 2.4rem; }
-            .home-link { top: 15px; left: 15px; padding: 0.4rem 0.8rem; font-size: 0.8rem; }
-            .ranking-header { padding: 2rem 1.5rem; }
-            .ranking-title { font-size: 2rem; }
-            .ranking-subtitle { font-size: 1rem; }
-            .top-players { grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2.5rem; }
-            .top-player { width: 100%; max-width: 320px; margin: 0 auto; padding: 1.5rem 1rem; }
-            .top-player.first { order: 1; padding-bottom: 2rem; }
-            .top-player.second { order: 2; }
-            .top-player.third { order: 3; }
-            .top-avatar { width: 70px; height: 70px; }
-            .top-player.first .top-avatar { width: 90px; height: 90px; }
-            .top-name { font-size: 1.1rem; }
-            .top-score { font-size: 1.8rem; }
-            .top-player.first .top-score { font-size: 2.1rem; }
-            .rank-number { width: 40px; height: 40px; font-size: 1rem; top: -20px; }
-            .top-player.first .rank-number { width: 48px; height: 48px; font-size: 1.2rem; }
-
-            .ranking-table th, .ranking-table td { padding: 0.8rem 1rem; font-size: 0.9rem; }
-            .ranking-table th:nth-child(7), /* Ocultar Fecha */
-            .ranking-table td:nth-child(7) { display: none; }
-            .ranking-stats { grid-template-columns: 1fr; gap: 1.2rem; }
-            .stat-card { padding: 1.5rem; }
-            .stat-card-value { font-size: 2.2rem; }
-            .action-button { padding: 0.7rem 1.4rem; font-size: 0.9rem; }
-            .back-button-nav { width: 50px; height: 50px; font-size: 1.2rem; bottom: 20px; right: 20px;}
+      }
+      
+      /* Responsive */
+      @media (max-width: 768px) {
+        .ranking-header .date-col,
+        .ranking-item .date {
+          display: none;
         }
         
-        @media (max-width: 576px) {
-            .app-header { padding-bottom: 0.5rem; }
-            .app-header .title-text { font-size: 2rem; }
-            .app-header .subtitle { font-size: 0.9rem; }
-            .ranking-header { padding: 1.5rem 1rem; }
-            .ranking-title { font-size: 1.8rem; }
-            .ranking-subtitle { font-size: 0.9rem; margin-bottom: 1.5rem; }
-            .player-position-note { padding: 0.8rem 1rem; font-size: 0.9rem; }
-            .player-position-note i { font-size: 1.2rem; }
-
-            .ranking-table th, .ranking-table td { padding: 0.6rem 0.7rem; font-size: 0.85rem; }
-            .ranking-table th:nth-child(4), /* Ocultar Aciertos */
-            .ranking-table td:nth-child(4),
-            .ranking-table th:nth-child(5), /* Ocultar Errores */
-            .ranking-table td:nth-child(5) { display: none; }
-            .ranking-table .position { width: 40px; font-size: 1rem; }
-            .ranking-table .username { max-width: 120px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* Truncate long names */
-
-            .top-players { gap: 1rem; }
-            .top-player { padding: 1.2rem 0.8rem; }
-            .top-avatar { width: 60px; height: 60px; }
-            .top-player.first .top-avatar { width: 75px; height: 75px; }
-            .top-name { font-size: 1rem; }
-            .top-score { font-size: 1.6rem; }
-            .top-player.first .top-score { font-size: 1.9rem; }
-            .rank-number { width: 36px; height: 36px; font-size: 0.9rem; top: -18px; }
-            .top-player.first .rank-number { width: 42px; height: 42px; font-size: 1.1rem; }
-
-            .ranking-actions { gap: 0.8rem; margin: 2rem 0; }
-            .action-button { padding: 0.6rem 1.2rem; font-size: 0.9rem; gap: 0.4rem; }
-            .action-button i { font-size: 1em; }
-            .ranking-stats { gap: 1rem; margin-top: 2.5rem; }
-            .stat-card { padding: 1.2rem; }
-            .stat-card-icon { font-size: 2rem; margin-bottom: 0.8rem; }
-            .stat-card-value { font-size: 2rem; }
-            .stat-card-title { font-size: 0.85rem; }
-
-            .footer-links-mini { gap: 0.5rem 1rem; }
-            .footer-links-mini a { font-size: 0.85rem; }
-            .footer-social-icons { gap: 1rem; }
-            .social-icon { font-size: 1.2rem; }
+        .ranking-header .rank-col,
+        .ranking-item .rank {
+          width: 15%;
         }
-
+        
+        .ranking-header .player-col,
+        .ranking-item .player {
+          width: 55%;
+        }
+        
+        .ranking-header .score-col,
+        .ranking-item .score {
+          width: 30%;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .page-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 15px;
+        }
+        
+        .header-actions {
+          width: 100%;
+          justify-content: space-between;
+        }
+        
+        .page-title {
+          font-size: 1.5rem;
+        }
+        
+        .filter-btn, .refresh-btn, .back-btn {
+          font-size: 0.8rem;
+          padding: 6px 10px;
+        }
+        
+        .player-avatar {
+          width: 28px;
+          height: 28px;
+        }
+      }
+      
+      /* Add styles for the clickable header */
+      .header-link {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+        transition: transform 0.3s ease;
+      }
+      
+      .header-link:hover {
+        transform: scale(1.02);
+      }
+      
+      .header-link:hover .title-text {
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+      }
+      
+      .header-link:hover .ball-icon {
+        animation: bounce 0.8s ease infinite;
+      }
     </style>
 </head>
 <body>
-    <div class="ranking-page">
-        <a href="index.html" class="home-link" id="back-button">
-            <i class="fas fa-home"></i> Inicio
-        </a>
-        
+    <!-- Partículas de fondo -->
+    <div id="particles-js"></div>
+    
+    <div class="app-container">
+      <!-- Header con título principal -->
         <header class="app-header">
+        <a href="pasalache.html" class="header-link">
             <div class="logo-animation">
                 <i class="fas fa-futbol ball-icon bounce"></i>
             </div>
-            <a href="pasalache.html" class="title-link">
                 <h1 class="title-text">PASALA CHE</h1>
+          <p class="subtitle">Ranking Global de Jugadores</p>
             </a>
-            <p class="subtitle">El juego de palabras del fútbol</p>
+        <a href="pasalache.html" class="return-portal-link"><i class="fas fa-arrow-left"></i> Volver al Juego</a>
         </header>
         
         <div class="ranking-container">
-            <div class="ranking-header">
-                <div class="trophy-icon">
-                    <i class="fas fa-trophy"></i>
+        <!-- Header con título y acciones -->
+        <div class="page-header">
+          <h2 class="page-title"><i class="fas fa-trophy"></i> Mejores Jugadores</h2>
+          
+          <div class="header-actions">
+            <button id="back-btn" class="back-btn" onclick="window.location.href='pasalache.html'">
+              <i class="fas fa-arrow-left"></i> <span>Volver</span>
+            </button>
+            
+            <div class="filter-dropdown">
+              <button id="filter-btn" class="filter-btn">
+                <i class="fas fa-filter"></i> <span>Filtrar</span>
+              </button>
+              
+              <div id="filter-menu" class="filter-menu">
+                <div class="filter-option selected" data-filter="all">
+                  <i class="fas fa-check"></i> Todos los tiempos
                 </div>
-                <h2 class="ranking-title">Ranking Mundial</h2>
-                <p class="ranking-subtitle">Compite con jugadores de todo el mundo y demuestra quién es el verdadero Crack.</p>
+                <div class="filter-option" data-filter="week">
+                  <i class="fas fa-check"></i> Esta semana
+                </div>
+                <div class="filter-option" data-filter="month">
+                  <i class="fas fa-check"></i> Este mes
+                </div>
+                <div class="filter-option" data-filter="day">
+                  <i class="fas fa-check"></i> Hoy
+                </div>
+              </div>
             </div>
             
-            <!-- Posición del jugador actual -->
-            <div id="player-position-note" class="player-position-note" style="display: none;"> 
-                 <!-- Contenido se carga por JS -->
+            <button id="refresh-btn" class="refresh-btn">
+              <i class="fas fa-sync-alt"></i> <span>Actualizar</span>
+            </button>
+          </div>
             </div>
 
-             <!-- Mensaje de Error -->
-            <div id="error-message-container" class="error-message-container" style="display:none">
-                <i class="fas fa-exclamation-circle"></i>
-                <p id="error-message-text">Ocurrió un error.</p>
-                <button id="retry-button" class="retry-button">
-                    <i class="fas fa-redo"></i> Reintentar
-                </button>
+        <!-- Ranking table header -->
+        <div class="ranking-header">
+          <div class="rank-col">Pos</div>
+          <div class="player-col">Jugador</div>
+          <div class="score-col">Puntos</div>
+          <div class="date-col">Fecha</div>
             </div>
             
-            <!-- Contenedor de carga -->
-            <div id="loading-container" class="loading-container" style="display: flex;"> 
-                <i class="fas fa-circle-notch"></i>
+        <!-- Ranking list -->
+        <div class="ranking-list" id="ranking-list">
+          <!-- Estado de carga -->
+          <div class="loading-state" id="loading-state">
+            <div class="loading-spinner"></div>
                 <p>Cargando ranking...</p>
             </div>
             
-            <!-- Mensaje sin resultados -->
-            <div id="no-results" class="no-results" style="display:none">
-                <i class="fas fa-info-circle"></i>
-                <p>No hay resultados para este período.</p>
+          <!-- Estado vacío (se muestra si no hay datos) -->
+          <div class="empty-state" id="empty-state" style="display:none">
+            <div class="empty-icon">
+              <i class="fas fa-trophy"></i>
+            </div>
+            <h3>Aún no hay puntuaciones</h3>
+            <p>¡Sé el primero en jugar y aparecer en el ranking!</p>
             </div>
             
-            <!-- Top 3 jugadores -->
-            <div class="top-players" id="top-players-container">
-                <!-- Se rellena por JS -->
-            </div>
-            
-            <div class="ranking-table-container">
-                <table class="ranking-table" id="ranking-table" style="display: none;"> 
-                    <thead>
-                        <tr>
-                            <th width="8%">#</th>
-                            <th width="30%">Jugador</th>
-                            <th width="12%">Puntos</th>
-                            <th width="10%">Aciertos</th>
-                            <th width="10%">Errores</th>
-                            <th width="15%">Dificultad</th>
-                            <th width="15%">Fecha</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ranking-body">
-                        <!-- Filas generadas dinámicamente -->
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="ranking-actions">
-                <a href="profile.html" class="action-button" id="view-profile">
-                    <i class="fas fa-user"></i> Ver mi perfil
-                </a>
-                <a href="pasalache.html" class="action-button primary">
-                    <i class="fas fa-gamepad"></i> Jugar ahora
-                </a>
-            </div>
-            
-            <div class="ranking-stats">
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class="fas fa-users"></i></div>
-                    <div class="stat-card-value" id="total-players">-</div>
-                    <div class="stat-card-title">Jugadores</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class="fas fa-gamepad"></i></div>
-                    <div class="stat-card-value" id="total-games">-</div>
-                    <div class="stat-card-title">Partidas</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class="fas fa-check-circle"></i></div>
-                    <div class="stat-card-value" id="success-rate">-%</div>
-                    <div class="stat-card-title">Aciertos</div>
-                </div>
-            </div>
+          <!-- Las entradas del ranking se cargarán dinámicamente aquí -->
         </div>
-        
-        <!-- Botón volver -->
-        <button class="back-button-nav" onclick="window.history.back()">
-            <i class="fas fa-arrow-left"></i>
-        </button>
     </div>
     
     <!-- Footer -->
@@ -566,16 +495,257 @@
             &copy; 2025 PASALA CHE - El Juego del Rosco Futbolero. Todos los derechos reservados.
         </div>
     </footer>
+    </div>
 
-    <!-- Script for Share Button -->
-    <script>
+    <!-- Toast para notificaciones -->
+    <div id="notification" class="toast" style="display: none;"></div>
+    
+    <!-- Cookie Consent Banner -->
+    <div id="cookieConsent" class="cookie-consent" style="display: none;">
+      <p>Utilizamos cookies para mejorar tu experiencia en nuestra web. Al continuar navegando, aceptas nuestra <a href="cookies.html">política de cookies</a>.</p>
+      <div class="cookie-consent-buttons">
+        <button class="cookie-btn cookie-accept">Aceptar</button>
+        <button class="cookie-btn cookie-decline">Rechazar</button>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/particles-config.js"></script>
+    <script src="js/utils.js"></script>
+    
+    <!-- Firebase Scripts -->
+    <script type="module">
+      // Import the functions you need from the SDKs
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { getFirestore, collection, query, orderBy, limit, getDocs, where, Timestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+      
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyA_3zDONffadhCSFgyZziachdherN19vYr4",
+        authDomain: "cracktotal-cd2e7.firebaseapp.com",
+        projectId: "cracktotal-cd2e7",
+        storageBucket: "cracktotal-cd2e7.firebasestorage.app",
+        messagingSenderId: "121839145458",
+        appId: "1:121839145458:web:ec36c626aca23e80562fdf",
+        measurementId: "G-5XP3T1RTH7"
+      };
+      
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getFirestore(app);
+      
+      // DOM elements
+      const rankingList = document.getElementById('ranking-list');
+      const loadingState = document.getElementById('loading-state');
+      const emptyState = document.getElementById('empty-state');
+      const filterBtn = document.getElementById('filter-btn');
+      const filterMenu = document.getElementById('filter-menu');
+      const filterOptions = document.querySelectorAll('.filter-option');
+      const refreshBtn = document.getElementById('refresh-btn');
+      
+      // Current filter
+      let currentFilter = 'all';
+      
+      // Toggle filter menu
+      filterBtn.addEventListener('click', () => {
+        filterMenu.classList.toggle('show');
+      });
+      
+      // Close filter menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!filterBtn.contains(e.target) && !filterMenu.contains(e.target)) {
+          filterMenu.classList.remove('show');
+        }
+      });
+      
+      // Handle filter selection
+      filterOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          const filter = option.getAttribute('data-filter');
+          
+          // Update selected option
+          filterOptions.forEach(opt => opt.classList.remove('selected'));
+          option.classList.add('selected');
+          
+          // Update current filter and refresh data
+          currentFilter = filter;
+          fetchRankingData();
+          
+          // Close menu
+          filterMenu.classList.remove('show');
+        });
+      });
+      
+      // Refresh button handler
+      refreshBtn.addEventListener('click', fetchRankingData);
+      
+      // Format date function
+      function formatDate(timestamp) {
+        if (!timestamp) return 'Desconocido';
+        
+        const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) {
+          return 'Hoy, ' + date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        } else if (diffDays === 1) {
+          return 'Ayer, ' + date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        } else if (diffDays < 7) {
+          return `Hace ${diffDays} días`;
+        } else {
+          return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+      }
+      
+      // Fetch ranking data from Firebase
+      async function fetchRankingData() {
+        try {
+          // Show loading state
+          loadingState.style.display = 'block';
+          emptyState.style.display = 'none';
+          
+          // Clear current list
+          const existingItems = document.querySelectorAll('.ranking-item');
+          existingItems.forEach(item => item.remove());
+          
+          // Create query based on current filter
+          let q;
+          const gamesRef = collection(db, 'games');
+          
+          if (currentFilter === 'all') {
+            q = query(gamesRef, orderBy('score', 'desc'), limit(30));
+          } else {
+            let startDate;
+            const now = new Date();
+            
+            if (currentFilter === 'day') {
+              // Today
+              startDate = new Date(now.setHours(0, 0, 0, 0));
+            } else if (currentFilter === 'week') {
+              // Start of week (Monday)
+              const day = now.getDay();
+              const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+              startDate = new Date(now.setDate(diff));
+              startDate.setHours(0, 0, 0, 0);
+            } else if (currentFilter === 'month') {
+              // Start of month
+              startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+            }
+            
+            q = query(
+              gamesRef,
+              where('timestamp', '>=', Timestamp.fromDate(startDate)),
+              orderBy('timestamp', 'desc'),
+              orderBy('score', 'desc'),
+              limit(30)
+            );
+          }
+          
+          // Execute query
+          const querySnapshot = await getDocs(q);
+          
+          // Check if we have results
+          if (querySnapshot.empty) {
+            loadingState.style.display = 'none';
+            emptyState.style.display = 'block';
+            return;
+          }
+          
+          // Get current player name from localStorage
+          const currentPlayerName = localStorage.getItem('playerName') || localStorage.getItem('userName');
+          
+          // Process results
+          querySnapshot.docs.forEach((doc, index) => {
+            const data = doc.data();
+            
+            // Create ranking item
+            const rankingItem = document.createElement('div');
+            rankingItem.className = 'ranking-item';
+            
+            // Highlight current user
+            if (currentPlayerName && data.playerName === currentPlayerName) {
+              rankingItem.classList.add('user-highlight');
+            }
+            
+            // Create HTML structure
+            rankingItem.innerHTML = `
+              <div class="rank rank-${index + 1}">${index + 1}</div>
+              <div class="player">
+                <div class="player-avatar">
+                  <i class="fas fa-user"></i>
+                </div>
+                <div class="player-name">${data.playerName || 'Jugador Anónimo'}</div>
+              </div>
+              <div class="score">${data.score}</div>
+              <div class="date">${formatDate(data.timestamp)}</div>
+            `;
+            
+            // Add to the list
+            rankingList.appendChild(rankingItem);
+          });
+          
+          // Hide loading state
+          loadingState.style.display = 'none';
+        } catch (error) {
+          console.error('Error fetching ranking data: ', error);
+          
+          // Show error state
+          loadingState.style.display = 'none';
+          emptyState.style.display = 'block';
+          emptyState.innerHTML = `
+            <div class="empty-icon">
+              <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <h3>Error al cargar el ranking</h3>
+            <p>Intenta actualizar la página o vuelve más tarde.</p>
+          `;
+        }
+      }
+      
+      // Setup page on load
+      document.addEventListener('DOMContentLoaded', () => {
+        // Configure particles.js
+        if (typeof particlesJS !== 'undefined' && document.getElementById('particles-js')) {
+          if (typeof particlesConfig !== 'undefined') {
+            particlesJS('particles-js', particlesConfig);
+          }
+        }
+        
+        // Fetch initial data
+        fetchRankingData();
+        
+        // Verificar consentimiento de cookies
+        if (!localStorage.getItem('cookieConsent')) {
+          const cookieConsent = document.getElementById('cookieConsent');
+          if (cookieConsent) {
+            cookieConsent.style.display = 'flex';
+            
+            const acceptBtn = cookieConsent.querySelector('.cookie-accept');
+            const declineBtn = cookieConsent.querySelector('.cookie-decline');
+            
+            acceptBtn?.addEventListener('click', function() {
+              localStorage.setItem('cookieConsent', 'accepted');
+              cookieConsent.style.display = 'none';
+            });
+            
+            declineBtn?.addEventListener('click', function() {
+              localStorage.setItem('cookieConsent', 'declined');
+              cookieConsent.style.display = 'none';
+            });
+          }
+        }
+        
+        // Share button functionality
         const shareButton = document.getElementById('footer-share-button');
         if (shareButton && navigator.share) {
             shareButton.addEventListener('click', async () => {
                 try {
                     await navigator.share({
                         title: document.title,
-                        text: 'Mira el ranking de PASALA CHE!',
+                text: '¡Mira el ranking global de PASALA CHE!',
                         url: window.location.href
                     });
                     console.log('Contenido compartido con éxito');
@@ -586,47 +756,8 @@
         } else if (shareButton) {
             shareButton.style.display = 'none';
         }
+      });
     </script>
-
-    <!-- Firebase SDK Loader -->
-    <script>
-        function loadFirebase() {
-            window.firebaseAvailable = false;
-            function loadScript(src, callback) {
-                const script = document.createElement('script'); script.src = src; script.async = true;
-                script.onload = callback;
-                script.onerror = function() { console.warn('Failed to load:', src); if(callback) callback(); };
-                document.body.appendChild(script);
-            }
-            loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js', () => {
-            loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js', () => {
-            loadScript('https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js', initializeFirebase);
-            });});
-        }
-        function initializeFirebase() {
-            try {
-                const firebaseConfig = {
-                    apiKey: "AIzaSyA_3zRD0fwsRCSFqyZ3ach4mhMl9gYr4",
-                    authDomain: "cracktotal-cd2e7.firebaseapp.com", projectId: "cracktotal-cd2e7",
-                    storageBucket: "cracktotal-cd2e7.firebasestorage.app", messagingSenderId: "210391454350",
-                    appId: "1:210391454350:web:ec36c626aca23e80562fdf", measurementId: "G-5X93T1RTH7"
-                };
-                if (typeof firebase !== 'undefined') {
-                    firebase.initializeApp(firebaseConfig);
-                    window.db = firebase.firestore();
-                    if (firebase.analytics) window.analytics = firebase.analytics();
-                    window.firebaseAvailable = true;
-                    console.log('Firebase init OK');
-                    // Disparar evento personalizado cuando Firebase esté listo
-                    document.dispatchEvent(new CustomEvent('firebaseReady'));
-                } else { console.warn('Firebase library not loaded.'); }
-            } catch (error) { console.error('Firebase init error:', error); window.firebaseAvailable = false; }
-        }
-        loadFirebase();
-    </script>
-
-    <script src="js/utils.js"></script>
-    <script src="js/ranking.js"></script>
 </body>
 </html> 
 

@@ -39,6 +39,68 @@
       .return-portal-link i { ... } 
       .return-portal-link:hover { ... } 
       */
+      
+      /* Estilos para botones adicionales */
+      .additional-actions {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        margin-top: 10px;
+      }
+      
+      .btn-secondary {
+        background: rgba(59, 130, 246, 0.2);
+        color: #3b82f6;
+        border: 1px solid rgba(59, 130, 246, 0.4);
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      
+      .btn-secondary i {
+        margin-right: 8px;
+        font-size: 1rem;
+      }
+      
+      .btn-secondary:hover {
+        background: rgba(59, 130, 246, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      }
+      
+      /* Media queries para responsividad */
+      @media (max-width: 768px) {
+        .additional-actions {
+          flex-direction: row;
+          width: 100%;
+        }
+        
+        .btn-secondary {
+          flex: 1;
+          padding: 8px 10px;
+          font-size: 0.8rem;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        .btn-secondary {
+          padding: 8px 5px;
+          font-size: 0.75rem;
+        }
+        
+        .btn-secondary i {
+          margin-right: 5px;
+          font-size: 0.9rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -105,6 +167,19 @@
                   </div>
                 </div>
               </div>
+            </div>
+            
+            <!-- Acciones adicionales -->
+            <div class="additional-actions">
+              <button id="view-profile-btn" class="btn btn-secondary">
+                <i class="fas fa-user"></i> Mi Perfil
+              </button>
+              <button id="view-ranking-btn" class="btn btn-secondary">
+                <i class="fas fa-trophy"></i> Ranking
+              </button>
+              <button id="view-achievements-btn" class="btn btn-secondary">
+                <i class="fas fa-medal"></i> Ver Logros
+              </button>
             </div>
             
             <!-- Botón de inicio -->
@@ -299,6 +374,32 @@
                  firstOption.classList.add('selected');
                  selectedDifficulty = firstOption.getAttribute('data-difficulty');
              }
+        }
+        
+        // Botones de Perfil y Ranking
+        const profileBtn = document.getElementById('view-profile-btn');
+        const rankingBtn = document.getElementById('view-ranking-btn');
+        const achievementsBtn = document.getElementById('view-achievements-btn');
+        
+        // Manejar clic en botón de perfil
+        if (profileBtn) {
+          profileBtn.addEventListener('click', function() {
+            window.location.href = 'profile.html';
+          });
+        }
+        
+        // Manejar clic en botón de ranking
+        if (rankingBtn) {
+          rankingBtn.addEventListener('click', function() {
+            window.location.href = 'ranking.html';
+          });
+        }
+        
+        // Manejar clic en botón de logros
+        if (achievementsBtn) {
+          achievementsBtn.addEventListener('click', function() {
+            window.location.href = 'logros.html';
+          });
         }
         
         // Modal de reglas

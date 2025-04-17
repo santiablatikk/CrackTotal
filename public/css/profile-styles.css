@@ -51,6 +51,8 @@ body {
   line-height: 1.6;
   min-height: 100vh;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 img {
@@ -118,8 +120,7 @@ img {
 /* --- Main Profile Layout --- */
 .profile-page {
   padding: 0 0.5rem 1.5rem;
-  min-height: calc(100vh - 250px);
-  max-height: 100%;
+  flex-grow: 1;
 }
 
 .profile-container {
@@ -132,7 +133,6 @@ img {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem; 
-  max-height: calc(100vh - 250px);
 }
 
 @media (min-width: 992px) {
@@ -151,6 +151,15 @@ img {
   box-shadow: var(--shadow-card);
   margin-bottom: 1rem; /* Spacing between sections in main column */
   backdrop-filter: blur(5px);
+}
+
+.section-header { /* New style for header containing title and button */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-primary);
 }
 
 .section-title {
@@ -1967,4 +1976,69 @@ img {
   font-weight: 400;
   font-display: block;
   src: url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-brands-400.woff2) format('woff2');
+}
+
+/* Ensure footer is always at the bottom */
+.site-footer {
+  margin-top: auto;
+}
+
+/* Estilos para el botón 'Ver Todos' en la sección de logros */
+.achievements-section .section-header .view-all-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 16px;
+    background-color: var(--color-accent-secondary);
+    color: var(--color-text-light);
+    border-radius: var(--border-radius-medium);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border: 1px solid transparent;
+    box-shadow: var(--shadow-sm);
+}
+
+.achievements-section .section-header .view-all-btn i {
+    margin-right: 8px;
+    font-size: 1rem;
+}
+
+.achievements-section .section-header .view-all-btn:hover {
+    background-color: var(--color-primary-dark);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.achievements-section .section-header .view-all-btn:active {
+    transform: translateY(0);
+    background-color: var(--color-primary-darker);
+}
+
+/* Estilos específicos si el botón está dentro del estado vacío */
+.empty-state .view-all-btn.styled-button {
+     margin-top: 20px; /* Espacio arriba */
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     padding: 10px 20px;
+     background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+     color: white;
+     border: none;
+     border-radius: var(--border-radius-large);
+     font-weight: 600;
+     text-decoration: none;
+     transition: all 0.3s ease;
+     box-shadow: var(--shadow-medium);
+}
+
+.empty-state .view-all-btn.styled-button:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-large);
+    filter: brightness(1.1);
+}
+
+.empty-state .view-all-btn.styled-button i {
+     margin-right: 10px;
 } 

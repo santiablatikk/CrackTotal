@@ -1,40 +1,707 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-adsense-account" content="ca-pub-9579152019412427">
-  <meta name="description" content="PASALA CHÉ - El juego de preguntas y respuestas sobre fútbol">
-  <title>Logros - PASALA CHÉ</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/footer-styles.css">
-  <link rel="stylesheet" href="css/combined.css">
-  <link rel="icon" href="img/favicon.ico" type="image/x-icon">
-  
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
-   crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-adsense-account" content="ca-pub-9579152019412427">
+    <meta name="description" content="PASALA CHÉ - El juego de preguntas y respuestas sobre fútbol">
+    <title>Logros - PASALA CHÉ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/footer-styles.css">
+    <link rel="stylesheet" href="css/combined.css">
+    <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
+     crossorigin="anonymous"></script>
+    
+    <!-- Cargar el script de logros -->
+    <script src="js/logros.js"></script>
+    
+    <style>
+        /* Estilos mejorados para la página de logros */
+        body {
+            background: linear-gradient(135deg, #121a2e 0%, #243664 100%);
+            color: #e2e8f0;
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        /* Header rediseñado */
+        .app-header {
+            background: linear-gradient(to bottom, #2a4298, #193382);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 3px solid #4169E1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjMWEyNTZlIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDVMNSAwWk01IDVMNSA0TDEgMEwwIDBaIiBmaWxsPSIjMjMzMTc5Ij48L3BhdGg+Cjwvc3ZnPg==');
+            opacity: 0.3;
+        }
+        
+        .app-header .logo-animation {
+            margin-bottom: 5px;
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 20px rgba(65, 105, 225, 0.5);
+        }
+        
+        .app-header .ball-icon {
+            font-size: 32px;
+            color: #FFCC00;
+            filter: drop-shadow(0 0 10px rgba(255, 204, 0, 0.7));
+            animation: iconPulse 2s infinite ease-in-out;
+        }
+        
+        @keyframes iconPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .app-header .title-text {
+            font-size: 2.5rem;
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+        }
+        
+        .app-header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin: 10px 0 0;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            color: #a2c0ff;
+        }
+        
+        /* Fondo para la zona de contenido principal */
+        .achievements-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            position: relative;
+            min-height: calc(100vh - 300px);
+            background: rgba(18, 26, 46, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-top: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        /* Botones de filtro rediseñados */
+        .achievement-categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 auto 30px;
+            max-width: 800px;
+            padding: 0 15px;
+            position: relative;
+            z-index: 5;
+        }
+        
+        .category-filter {
+            background: rgba(25, 51, 130, 0.6);
+            border: 1px solid rgba(65, 105, 225, 0.5);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            outline: none;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .category-filter:hover {
+            background: rgba(65, 105, 225, 0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(65, 105, 225, 0.3);
+        }
+        
+        .category-filter.active {
+            background: #4169E1;
+            color: white;
+            box-shadow: 0 4px 15px rgba(65, 105, 225, 0.5);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Contenedor de logros mejorado */
+        .achievements-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 20px auto;
+            padding: 10px;
+        }
+        
+        /* Tarjetas de logro mejoradas */
+        .achievement-card {
+            background: rgba(25, 51, 130, 0.4);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(65, 105, 225, 0.3);
+            position: relative;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 20px;
+        }
+        
+        .achievement-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(65, 105, 225, 0.3);
+            border-color: rgba(65, 105, 225, 0.6);
+        }
+        
+        .achievement-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 65px;
+            height: 65px;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            background: rgba(65, 105, 225, 0.15);
+            color: #4169E1;
+            font-size: 24px;
+            flex-shrink: 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(65, 105, 225, 0.4);
+        }
+        
+        .achievement-details {
+            flex: 1;
+        }
+        
+        .achievement-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+            line-height: 1.3;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .achievement-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+        
+        .achievement-progress {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            margin-top: auto;
+        }
+        
+        .achievement-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4169E1, #8b5cf6);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .achievement-count {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Estados de logros */
+        .achievement-card.locked {
+            opacity: 0.75;
+            filter: grayscale(0.8);
+        }
+        
+        .achievement-card.locked:hover {
+            filter: grayscale(0.6);
+            opacity: 0.85;
+        }
+        
+        .achievement-card.locked .achievement-icon {
+            background: rgba(100, 116, 139, 0.2);
+            color: #64748b;
+        }
+        
+        /* Notificación mejorada */
+        .achievement-notification {
+            position: fixed;
+            bottom: -100px;
+            right: 20px;
+            background: linear-gradient(135deg, #4169E1, #6366f1);
+            border-radius: 12px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            max-width: 350px;
+            transform: translateY(0);
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                        opacity 0.3s ease;
+        }
+        
+        .achievement-notification.show {
+            transform: translateY(-120px);
+            opacity: 1;
+        }
+        
+        .notification-icon {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-content h3 {
+            margin: 0 0 5px;
+            font-size: 1.1rem;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .notification-content p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .notification-close {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            padding: 5px;
+            margin-left: 5px;
+            font-size: 1.1rem;
+        }
+        
+        .notification-close:hover {
+            color: white;
+        }
+        
+        /* Estado vacío */
+        .no-achievements {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 20px;
+            background: rgba(25, 51, 130, 0.3);
+            border-radius: 15px;
+            border: 1px dashed rgba(65, 105, 225, 0.4);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .no-achievements i {
+            font-size: 3rem;
+            color: rgba(65, 105, 225, 0.5);
+            margin-bottom: 20px;
+        }
+        
+        .no-achievements p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+        }
+        
+        /* Estado de carga */
+        .loading-achievements {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 50px 20px;
+        }
+        
+        .loading-achievements i {
+            font-size: 2.2rem;
+            color: #4169E1;
+            margin-bottom: 20px;
+            animation: spin 1.5s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Animaciones adicionales */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .achievement-card.unlocked .achievement-icon {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Estilos para categorías de logros */
+        .achievement-card[data-category="beginner"] .achievement-icon {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+        
+        .achievement-card[data-category="intermediate"] .achievement-icon {
+            background: rgba(65, 105, 225, 0.15);
+            color: #4169E1;
+            border-color: rgba(65, 105, 225, 0.4);
+        }
+        
+        .achievement-card[data-category="expert"] .achievement-icon {
+            background: rgba(168, 85, 247, 0.15);
+            color: #a855f7;
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+        
+        .achievement-card[data-category="special"] .achievement-icon {
+            background: rgba(234, 88, 12, 0.15);
+            color: #ea580c;
+            border-color: rgba(234, 88, 12, 0.4);
+        }
+        
+        /* Mejora de los logros desbloqueados */
+        .achievement-card.unlocked {
+            border-color: rgba(65, 105, 225, 0.5);
+            box-shadow: 0 8px 25px rgba(65, 105, 225, 0.25);
+        }
+        
+        /* Contador de logros */
+        .achievement-count {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* Fecha del logro */
+        .achievement-date {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        /* Animación para la tarjeta cuando se desbloquea */
+        @keyframes unlockPulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 rgba(65, 105, 225, 0); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(65, 105, 225, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 0 0 rgba(65, 105, 225, 0); }
+        }
+        
+        .achievement-card.newly-unlocked {
+            animation: unlockPulse 1.2s ease-in-out;
+        }
+        
+        /* Badges para los logros */
+        .achievement-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 0.7rem;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .badge-common {
+            background: rgba(148, 163, 184, 0.3);
+            color: #94a3b8;
+        }
+        
+        .badge-rare {
+            background: rgba(139, 92, 246, 0.3);
+            color: #c4b5fd;
+        }
+        
+        .badge-epic {
+            background: rgba(236, 72, 153, 0.3);
+            color: #f9a8d4;
+        }
+        
+        .badge-legendary {
+            background: rgba(245, 158, 11, 0.3);
+            color: #fcd34d;
+        }
+        
+        /* Estilos de rareza para las tarjetas */
+        .achievement-card.rare .achievement-icon {
+            color: #8b5cf6;
+            background: rgba(139, 92, 246, 0.15);
+        }
+        
+        .achievement-card.epic .achievement-icon {
+            color: #ec4899;
+            background: rgba(236, 72, 153, 0.15);
+        }
+        
+        .achievement-card.legendary .achievement-icon {
+            color: #f59e0b;
+            background: rgba(245, 158, 11, 0.15);
+        }
+        
+        /* Progress fill con colores basados en rareza */
+        .achievement-card.rare .progress-fill {
+            background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+        }
+        
+        .achievement-card.epic .progress-fill {
+            background: linear-gradient(90deg, #ec4899, #f472b6);
+        }
+        
+        .achievement-card.legendary .progress-fill {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+        
+        /* Mejoras responsivas */
+        @media (max-width: 768px) {
+            .app-header .title-text {
+                font-size: 2rem;
+            }
+            
+            .achievements-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                padding: 0 10px;
+                gap: 20px;
+            }
+            
+            .achievement-categories {
+                padding: 0 10px;
+                gap: 8px;
+            }
+            
+            .category-filter {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+            
+            .achievements-page {
+                margin-top: 20px;
+                padding: 20px 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .app-header .title-text {
+                font-size: 1.6rem;
+            }
+            
+            .app-header .logo-animation {
+                width: 50px;
+                height: 50px;
+                margin-bottom: 10px;
+            }
+            
+            .app-header .ball-icon {
+                font-size: 24px;
+            }
+            
+            .app-header .subtitle {
+                font-size: 0.85rem;
+            }
+            
+            .home-link {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+            
+            .achievements-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .achievement-categories {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding: 10px;
+                margin: 10px 0;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            
+            .achievement-categories::-webkit-scrollbar {
+                display: none;
+            }
+            
+            .category-filter {
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+            
+            .back-button {
+                bottom: 20px;
+                left: 20px;
+                width: 50px;
+                height: 50px;
+            }
+        }
+        
+        /* Footer mejorado */
+        .site-footer {
+            background: linear-gradient(to top, #121a2e, #193382);
+            border-top: 3px solid #4169E1;
+            padding: 30px 0 20px;
+            margin-top: 50px;
+            box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Mejoras para el botón home */
+        .home-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            padding: 10px 18px;
+            border-radius: 30px;
+            background: rgba(65, 105, 225, 0.5);
+            transition: all 0.3s ease;
+            z-index: 100;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .home-link i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .home-link:hover {
+            background: rgba(65, 105, 225, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Botón atrás rediseñado */
+        .back-button {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(65, 105, 225, 0.5);
+            color: #fff;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+        
+        .back-button:hover {
+            background: rgba(65, 105, 225, 0.8);
+            transform: translateY(-5px) rotate(-5deg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        /* Estilos para el contenedor de anuncios */
+        .ad-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: rgba(25, 51, 130, 0.3);
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(65, 105, 225, 0.3);
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .ad-label {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #4169E1;
+            color: #ffffff;
+            font-size: 0.7rem;
+            padding: 3px 10px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
 </head>
 <body>
-  <a href="index.html" class="home-link">
-    <i class="fas fa-home"></i> Inicio
+  <a href="pasalache.html" class="home-link">
+    <i class="fas fa-gamepad"></i> Volver al Juego
   </a>
 
   <header class="app-header">
     <div class="logo-animation">
-      <i class="fas fa-medal ball-icon bounce"></i>
+      <i class="fas fa-medal ball-icon"></i>
     </div>
-    <a href="pasalache.html" class="title-link">
-      <h1 class="title-text">Logros</h1>
-    </a>
-    <p class="subtitle">Colecciona todas las medallas</p>
+    <h1 class="title-text">SALÓN DE LA FAMA</h1>
+    <p class="subtitle">Colecciona todos los logros y conviértete en leyenda</p>
   </header>
   
   <div class="achievements-page">
     <div class="achievement-categories">
-      <button class="category-filter active" data-category="all">Todos</button>
+      <button class="category-filter active" data-category="all">Todos los logros</button>
       <button class="category-filter" data-category="beginner">Principiante</button>
       <button class="category-filter" data-category="intermediate">Intermedio</button>
       <button class="category-filter" data-category="expert">Experto</button>
@@ -43,9 +710,13 @@
     
     <div class="achievements-container" id="achievements-container">
       <!-- Los logros se cargarán dinámicamente con JavaScript -->
+      <div class="loading-achievements">
+        <i class="fas fa-spinner"></i>
+        <p>Cargando tus logros...</p>
+      </div>
     </div>
     
-    <button onclick="window.history.back()" class="back-button">
+    <button onclick="window.location.href='pasalache.html'" class="back-button">
       <i class="fas fa-arrow-left"></i>
     </button>
   </div>
@@ -55,7 +726,7 @@
     <p class="ad-label">Publicidad</p>
     <ins class="adsbygoogle"
       style="display:block"
-      data-ad-client="ca-pub-1234567890"
+      data-ad-client="ca-pub-9579152019412427"
       data-ad-slot="1234567890"
       data-ad-format="auto"
       data-full-width-responsive="true"></ins>
@@ -69,13 +740,14 @@
   
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Array con todos los logros posibles
+      // Array con todos los logros posibles (30 en total)
       const achievements = [
+        // Logros básicos
         {
           id: 'first_game',
           icon: 'fas fa-gamepad',
-          title: 'Primer Juego',
-          description: 'Completa tu primer juego de PASALA CHÉ.',
+          title: 'Primer Gol',
+          description: 'Completa tu primera pregunta correctamente en el juego.',
           category: 'beginner',
           maxCount: 1,
           unlocked: false,
@@ -107,8 +779,8 @@
         {
           id: 'streak_5',
           icon: 'fas fa-fire',
-          title: 'Racha Caliente',
-          description: 'Responde correctamente 5 preguntas seguidas.',
+          title: 'En Racha',
+          description: 'Responde correctamente 5 preguntas consecutivas.',
           category: 'beginner',
           maxCount: 20,
           unlocked: false,
@@ -151,7 +823,7 @@
         {
           id: 'speed_demon',
           icon: 'fas fa-tachometer-alt',
-          title: 'Demonio de la Velocidad',
+          title: 'Velocidad Máxima',
           description: 'Completa un juego en menos de 2 minutos.',
           category: 'expert',
           maxCount: 3,
@@ -163,7 +835,7 @@
           id: 'comeback_king',
           icon: 'fas fa-crown',
           title: 'Rey de la Remontada',
-          description: 'Gana después de tener 5 respuestas incorrectas.',
+          description: 'Gana después de tener 2 respuestas incorrectas.',
           category: 'special',
           maxCount: 3,
           unlocked: false,
@@ -246,6 +918,725 @@
           unlocked: false,
           count: 0,
           date: null
+        },
+        
+        // Nuevos logros adicionales
+        {
+          id: 'maradona_fan',
+          icon: 'fas fa-futbol',
+          title: 'Fanático de Maradona',
+          description: 'Responde correctamente 5 preguntas sobre Diego Maradona.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'messi_magic',
+          icon: 'fas fa-magic',
+          title: 'Magia de Messi',
+          description: 'Responde correctamente 5 preguntas sobre Lionel Messi.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'pele_legend',
+          icon: 'fas fa-crown',
+          title: 'Leyenda de Pelé',
+          description: 'Responde correctamente 5 preguntas sobre Pelé.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'champions_expert',
+          icon: 'fas fa-trophy',
+          title: 'Experto en Champions',
+          description: 'Responde correctamente 10 preguntas sobre la Champions League.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'copa_libertadores',
+          icon: 'fas fa-trophy',
+          title: 'Conocedor de Libertadores',
+          description: 'Responde correctamente 10 preguntas sobre la Copa Libertadores.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'goalkeeper_guru',
+          icon: 'fas fa-hands',
+          title: 'Gurú de los Porteros',
+          description: 'Responde correctamente 10 preguntas sobre porteros famosos.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'early_bird',
+          icon: 'fas fa-sun',
+          title: 'Madrugador',
+          description: 'Juega una partida antes de las 7:00 AM.',
+          category: 'special',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'weekend_warrior',
+          icon: 'fas fa-calendar-day',
+          title: 'Guerrero de Fin de Semana',
+          description: 'Juega 5 partidas durante un fin de semana.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'marathon_player',
+          icon: 'fas fa-running',
+          title: 'Maratonista',
+          description: 'Juega 10 partidas en un solo día.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'penalty_master',
+          icon: 'fas fa-bullseye',
+          title: 'Maestro de los Penaltis',
+          description: 'Responde correctamente 10 preguntas sobre penaltis históricos.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'euro_champion',
+          icon: 'fas fa-euro-sign',
+          title: 'Campeón de la Eurocopa',
+          description: 'Responde correctamente 10 preguntas sobre la Eurocopa.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'copa_america',
+          icon: 'fas fa-globe-americas',
+          title: 'Experto en Copa América',
+          description: 'Responde correctamente 10 preguntas sobre la Copa América.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'transfer_guru',
+          icon: 'fas fa-money-bill-wave',
+          title: 'Gurú de los Traspasos',
+          description: 'Responde correctamente 10 preguntas sobre traspasos históricos.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'stadium_aficionado',
+          icon: 'fas fa-landmark',
+          title: 'Aficionado de Estadios',
+          description: 'Responde correctamente 10 preguntas sobre estadios famosos.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'super_sub',
+          icon: 'fas fa-person-booth',
+          title: 'Super Suplente',
+          description: 'Gana una partida después de saltarte 5 preguntas.',
+          category: 'beginner',
+          maxCount: 3,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        
+        // 50 nuevos logros adicionales
+        {
+          id: 'cr7_fanatic',
+          icon: 'fas fa-rocket',
+          title: 'Fanático de CR7',
+          description: 'Responde correctamente 5 preguntas sobre Cristiano Ronaldo.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'argentina_expert',
+          icon: 'fas fa-flag',
+          title: 'Experto en Argentina',
+          description: 'Responde correctamente 10 preguntas sobre la selección argentina.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'brazil_expert',
+          icon: 'fas fa-flag',
+          title: 'Experto en Brasil',
+          description: 'Responde correctamente 10 preguntas sobre la selección brasileña.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'defender_master',
+          icon: 'fas fa-shield-alt',
+          title: 'Maestro de la Defensa',
+          description: 'Responde correctamente 10 preguntas sobre defensores históricos.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'striker_expert',
+          icon: 'fas fa-bullseye',
+          title: 'Experto en Delanteros',
+          description: 'Responde correctamente 10 preguntas sobre delanteros históricos.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'world_cup_historian',
+          icon: 'fas fa-globe-americas',
+          title: 'Historiador de Mundiales',
+          description: 'Responde correctamente 15 preguntas sobre la historia de los Mundiales.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'golden_boot',
+          icon: 'fas fa-shoe-prints',
+          title: 'Bota de Oro',
+          description: 'Responde correctamente 8 preguntas sobre goleadores históricos.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'coaching_legend',
+          icon: 'fas fa-user-tie',
+          title: 'Leyenda del Banquillo',
+          description: 'Responde correctamente 10 preguntas sobre entrenadores famosos.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'hat_trick_hero',
+          icon: 'fas fa-hat-wizard',
+          title: 'Héroe del Hat-Trick',
+          description: 'Contesta correctamente 3 preguntas seguidas en menos de 15 segundos.',
+          category: 'expert',
+          maxCount: 3,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'copa_expert',
+          icon: 'fas fa-award',
+          title: 'Experto en Copas',
+          description: 'Responde correctamente preguntas sobre 5 torneos de copa diferentes.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'premier_league_fan',
+          icon: 'fas fa-crown',
+          title: 'Fan de la Premier League',
+          description: 'Responde correctamente 10 preguntas sobre la Premier League.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'laliga_expert',
+          icon: 'fas fa-trophy',
+          title: 'Experto en LaLiga',
+          description: 'Responde correctamente 10 preguntas sobre LaLiga española.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'serie_a_maestro',
+          icon: 'fas fa-pizza-slice',
+          title: 'Maestro de la Serie A',
+          description: 'Responde correctamente 10 preguntas sobre la Serie A italiana.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'bundesliga_fan',
+          icon: 'fas fa-beer',
+          title: 'Fan de la Bundesliga',
+          description: 'Responde correctamente 10 preguntas sobre la Bundesliga alemana.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'ligue1_expert',
+          icon: 'fas fa-cookie',
+          title: 'Experto en Ligue 1',
+          description: 'Responde correctamente 10 preguntas sobre la Ligue 1 francesa.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'perfect_week',
+          icon: 'fas fa-calendar-week',
+          title: 'Semana Perfecta',
+          description: 'Juega al menos una partida cada día durante una semana.',
+          category: 'special',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'monthly_legend',
+          icon: 'fas fa-calendar-alt',
+          title: 'Leyenda Mensual',
+          description: 'Juega 30 días seguidos, al menos una partida cada día.',
+          category: 'epic',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'midfield_maestro',
+          icon: 'fas fa-circle-notch',
+          title: 'Maestro del Mediocampo',
+          description: 'Responde correctamente 10 preguntas sobre mediocampistas famosos.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'tactical_genius',
+          icon: 'fas fa-chess',
+          title: 'Genio Táctico',
+          description: 'Responde correctamente 10 preguntas sobre tácticas y formaciones.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'derby_day_hero',
+          icon: 'fas fa-fire',
+          title: 'Héroe del Derbi',
+          description: 'Responde correctamente 8 preguntas sobre derbis y clásicos.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'comeback_queen',
+          icon: 'fas fa-venus',
+          title: 'Reina de la Remontada',
+          description: 'Responde correctamente 5 preguntas sobre fútbol femenino.',
+          category: 'special',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'young_talent_scout',
+          icon: 'fas fa-baby',
+          title: 'Ojeador de Jóvenes Talentos',
+          description: 'Responde correctamente 8 preguntas sobre jóvenes promesas.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'world_traveler',
+          icon: 'fas fa-plane',
+          title: 'Viajero Mundial',
+          description: 'Responde correctamente preguntas sobre equipos de 10 países diferentes.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'conmebol_expert',
+          icon: 'fas fa-globe-americas',
+          title: 'Experto en CONMEBOL',
+          description: 'Responde correctamente 10 preguntas sobre fútbol sudamericano.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'uefa_expert',
+          icon: 'fas fa-globe-europe',
+          title: 'Experto en UEFA',
+          description: 'Responde correctamente 10 preguntas sobre fútbol europeo.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'concacaf_expert',
+          icon: 'fas fa-globe-americas',
+          title: 'Experto en CONCACAF',
+          description: 'Responde correctamente 8 preguntas sobre fútbol norteamericano.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'afc_expert',
+          icon: 'fas fa-globe-asia',
+          title: 'Experto en AFC',
+          description: 'Responde correctamente 8 preguntas sobre fútbol asiático.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'caf_expert',
+          icon: 'fas fa-globe-africa',
+          title: 'Experto en CAF',
+          description: 'Responde correctamente 8 preguntas sobre fútbol africano.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'ofc_expert',
+          icon: 'fas fa-globe-asia',
+          title: 'Experto en OFC',
+          description: 'Responde correctamente 5 preguntas sobre fútbol de Oceanía.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'underdog_champion',
+          icon: 'fas fa-dog',
+          title: 'Campeón de los Underdog',
+          description: 'Responde correctamente 8 preguntas sobre equipos sorpresa y éxitos inesperados.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'record_breaker',
+          icon: 'fas fa-chart-line',
+          title: 'Rompe Récords',
+          description: 'Responde correctamente 10 preguntas sobre récords en el fútbol.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'international_roster',
+          icon: 'fas fa-users',
+          title: 'Plantilla Internacional',
+          description: 'Responde correctamente preguntas sobre jugadores de 15 nacionalidades distintas.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'set_piece_specialist',
+          icon: 'fas fa-bullseye',
+          title: 'Especialista en Balón Parado',
+          description: 'Responde correctamente 8 preguntas sobre tiros libres, córners y penaltis.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'golden_era',
+          icon: 'fas fa-hourglass-half',
+          title: 'Época Dorada',
+          description: 'Responde correctamente 10 preguntas sobre fútbol clásico (antes de 1990).',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'modern_football',
+          icon: 'fas fa-desktop',
+          title: 'Fútbol Moderno',
+          description: 'Responde correctamente 10 preguntas sobre fútbol contemporáneo (después de 2010).',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'jersey_collector',
+          icon: 'fas fa-tshirt',
+          title: 'Coleccionista de Camisetas',
+          description: 'Responde correctamente preguntas sobre 15 equipos diferentes.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'futbol_philosopher',
+          icon: 'fas fa-book',
+          title: 'Filósofo del Fútbol',
+          description: 'Responde correctamente 8 preguntas sobre frases célebres y filosofías del fútbol.',
+          category: 'special',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'goal_celebration',
+          icon: 'fas fa-child',
+          title: 'Celebración de Gol',
+          description: 'Consigue una racha de 5 respuestas correctas en menos de 30 segundos.',
+          category: 'expert',
+          maxCount: 3,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'club_historian',
+          icon: 'fas fa-university',
+          title: 'Historiador de Clubes',
+          description: 'Responde correctamente 15 preguntas sobre la historia de los clubes de fútbol.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'scandal_expert',
+          icon: 'fas fa-exclamation-triangle',
+          title: 'Experto en Escándalos',
+          description: 'Responde correctamente 8 preguntas sobre polémicas y escándalos en el fútbol.',
+          category: 'special',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'cup_final_hero',
+          icon: 'fas fa-medal',
+          title: 'Héroe de la Final',
+          description: 'Gana 5 partidas con puntaje perfecto.',
+          category: 'expert',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'relegation_battler',
+          icon: 'fas fa-arrow-down',
+          title: 'Luchador del Descenso',
+          description: 'Gana una partida después de fallar las primeras 3 preguntas.',
+          category: 'special',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'streak_20',
+          icon: 'fas fa-fire-alt',
+          title: 'Racha Legendaria',
+          description: 'Responde correctamente 20 preguntas consecutivas.',
+          category: 'expert',
+          maxCount: 5,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'golden_question',
+          icon: 'fas fa-question-circle',
+          title: 'Pregunta Dorada',
+          description: 'Responde correctamente a la pregunta final para ganar una partida.',
+          category: 'intermediate',
+          maxCount: 10,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'first_minute_goal',
+          icon: 'fas fa-stopwatch',
+          title: 'Gol en el Primer Minuto',
+          description: 'Responde correctamente a la primera pregunta en menos de 3 segundos.',
+          category: 'intermediate',
+          maxCount: 5,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'injury_time_winner',
+          icon: 'fas fa-heartbeat',
+          title: 'Gol en Tiempo de Descuento',
+          description: 'Responde correctamente a la última pregunta con menos de 5 segundos restantes.',
+          category: 'special',
+          maxCount: 3,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'goal_line_technology',
+          icon: 'fas fa-microscope',
+          title: 'Tecnología de Línea de Gol',
+          description: 'Usa correctamente la opción de ayuda 10 veces seguidas.',
+          category: 'intermediate',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'var_decision',
+          icon: 'fas fa-video',
+          title: 'Decisión del VAR',
+          description: 'Cambia tu respuesta y acierta después de dudar inicialmente.',
+          category: 'intermediate',
+          maxCount: 5,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'centenario',
+          icon: 'fas fa-100',
+          title: 'Centenario',
+          description: 'Juega 100 partidas en total.',
+          category: 'epic',
+          maxCount: 1,
+          unlocked: false,
+          count: 0,
+          date: null
+        },
+        {
+          id: 'clean_sheet',
+          icon: 'fas fa-clipboard-check',
+          title: 'Portería a Cero',
+          description: 'Completa una partida sin ningún error.',
+          category: 'intermediate',
+          maxCount: 10,
+          unlocked: false,
+          count: 0,
+          date: null
         }
       ];
       
@@ -255,6 +1646,7 @@
       // Función para obtener el IP del usuario usando una API pública
       async function getUserIP() {
         try {
+          // Primero intentamos API ipify
           const response = await fetch('https://api.ipify.org?format=json');
           const data = await response.json();
           userIP = data.ip;
@@ -263,10 +1655,21 @@
           // Una vez que tenemos el IP, cargar los logros
           loadUserAchievements();
         } catch (error) {
-          console.error('Error al obtener IP:', error);
-          // Si falla, usar un valor por defecto para no bloquear la funcionalidad
-          userIP = 'unknown-ip';
-          loadUserAchievements();
+          console.error('Error al obtener IP con ipify:', error);
+          try {
+            // Si falla, intentar otra API alternativa
+            const backupResponse = await fetch('https://ipapi.co/json/');
+            const backupData = await backupResponse.json();
+            userIP = backupData.ip;
+            console.log('IP del usuario detectada (backup):', userIP);
+            loadUserAchievements();
+          } catch (err) {
+            console.error('Error al obtener IP con métodos alternativos:', err);
+            // Si todo falla, usar timestamp como identificador único
+            userIP = 'user-' + Date.now();
+            console.log('Usando identificador alternativo:', userIP);
+            loadUserAchievements();
+          }
         }
       }
       
@@ -287,14 +1690,40 @@
         const container = document.getElementById('achievements-container');
         container.innerHTML = '';
         
+        // Filtrar logros según la categoría seleccionada
         const filteredAchievements = category === 'all' 
           ? achievements 
           : achievements.filter(a => a.category === category);
           
+        // Ordenar logros: primero desbloqueados, luego por categoría, después por título
+        filteredAchievements.sort((a, b) => {
+          // Primero por estado (desbloqueado/bloqueado)
+          if (a.unlocked && !b.unlocked) return -1;
+          if (!a.unlocked && b.unlocked) return 1;
+          
+          // Luego por categoría (orden personalizado)
+          const categoryOrder = {
+            'beginner': 1,
+            'intermediate': 2,
+            'expert': 3,
+            'special': 4
+          };
+          
+          const catA = categoryOrder[a.category] || 99;
+          const catB = categoryOrder[b.category] || 99;
+          
+          if (catA !== catB) return catA - catB;
+          
+          // Finalmente por título
+          return a.title.localeCompare(b.title);
+        });
+          
+        // Crear tarjetas para cada logro
         filteredAchievements.forEach(achievement => {
           const card = document.createElement('div');
-          card.className = `achievement-card ${achievement.unlocked ? '' : 'locked'}`;
+          card.className = `achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}`;
           card.setAttribute('data-category', achievement.category);
+          card.setAttribute('data-id', achievement.id);
           
           // Calcular el progreso
           const progress = achievement.maxCount > 1 
@@ -304,23 +1733,39 @@
           // Formatear la fecha
           const achievementDate = formatDate(achievement.date);
           
+          // Generar HTML de la tarjeta
           card.innerHTML = `
-            <div class="achievement-icon">
-              <i class="${achievement.icon}"></i>
-            </div>
             <div class="achievement-details">
+              <div class="achievement-icon">
+                <i class="${achievement.icon}"></i>
+              </div>
               <div class="achievement-title">${achievement.title}</div>
               <div class="achievement-description">${achievement.description}</div>
               <div class="achievement-progress">
                 <div class="achievement-progress-bar" style="width: ${progress}%"></div>
               </div>
-              <div class="achievement-count">
-                ${achievement.maxCount > 1 ? `${achievement.count}/${achievement.maxCount}` : (achievement.unlocked ? 'Completado' : 'Bloqueado')}
+              <div class="achievement-info">
+                <div class="achievement-count">
+                  ${achievement.maxCount > 1 
+                    ? `<span>${achievement.count}/${achievement.maxCount}</span>` 
+                    : (achievement.unlocked ? '<span><i class="fas fa-check-circle"></i> Completado</span>' : '<span><i class="fas fa-lock"></i> Bloqueado</span>')}
+                </div>
+                <div class="achievement-date">${achievement.unlocked ? achievementDate : ''}</div>
               </div>
-              <div class="achievement-date">${achievement.unlocked ? achievementDate : ''}</div>
             </div>
           `;
           
+          // Añadir interactividad (tooltip o clic para más información)
+          card.addEventListener('click', function() {
+            if (!this.classList.contains('expanded')) {
+              // Añadir clase para expandir detalles (opcional)
+              this.classList.add('expanded');
+            } else {
+              this.classList.remove('expanded');
+            }
+          });
+          
+          // Añadir al contenedor
           container.appendChild(card);
         });
         
@@ -348,12 +1793,12 @@
         // Mostrar estado de carga
         container.innerHTML = `
           <div class="loading-achievements">
-            <i class="fas fa-circle-notch"></i>
+            <i class="fas fa-spinner"></i>
             <p>Cargando tus logros...</p>
           </div>
         `;
         
-        // Simular tiempo de carga
+        // Simular tiempo de carga (opcional, para UX)
         setTimeout(() => {
           const storageKey = getAchievementsStorageKey();
           const savedAchievements = localStorage.getItem(storageKey);
@@ -392,13 +1837,31 @@
             showAchievementNotification('¡Logros desbloqueados!', 'Se han desbloqueado logros basados en tu actividad anterior.');
           }
           
-          // Cargar logros en la interfaz
+          // Cargar logros en la interfaz según el filtro activo
           loadAchievements(document.querySelector('.category-filter.active').dataset.category);
-        }, 1200);
+          
+          // Mostrar estadísticas generales de logros
+          updateAchievementStats();
+        }, 600); // Reducido el tiempo de carga simulada
+      }
+      
+      // Actualizar estadísticas generales de logros (totales, desbloqueados, etc.)
+      function updateAchievementStats() {
+        const totalAchievements = achievements.length;
+        const unlockedAchievements = achievements.filter(a => a.unlocked).length;
+        const percentComplete = (unlockedAchievements / totalAchievements) * 100;
+        
+        // Aquí podrías actualizar un elemento DOM con estas estadísticas
+        console.log(`Progreso de logros: ${unlockedAchievements}/${totalAchievements} (${percentComplete.toFixed(1)}%)`);
       }
       
       // Función para mostrar una notificación de logro desbloqueado
       function showAchievementNotification(title, message) {
+        // Eliminar notificaciones anteriores
+        const oldNotifications = document.querySelectorAll('.achievement-notification');
+        oldNotifications.forEach(n => n.remove());
+        
+        // Crear nueva notificación
         const notification = document.createElement('div');
         notification.className = 'achievement-notification';
         notification.innerHTML = `
@@ -479,8 +1942,20 @@
         const achievement = achievements.find(a => a.id === achievementId);
         if (achievement) {
           const wasAlreadyUnlocked = achievement.unlocked;
-          achievement.unlocked = true;
-          achievement.count = achievement.maxCount > 1 ? achievement.count + 1 : 1;
+          const oldCount = achievement.count || 0;
+          
+          // Incrementar contador y verificar si se desbloquea
+          if (achievement.maxCount > 1) {
+            achievement.count = oldCount + 1;
+            if (achievement.count >= achievement.maxCount && !achievement.unlocked) {
+              achievement.unlocked = true;
+            }
+          } else {
+            achievement.count = 1;
+            achievement.unlocked = true;
+          }
+          
+          // Actualizar fecha
           achievement.date = new Date().toISOString();
           
           // Guardar en localStorage con clave basada en IP
@@ -523,20 +1998,48 @@
           
           // Guardar en localStorage con clave basada en IP
           localStorage.setItem(storageKey, JSON.stringify(allAchievements));
-          console.log(`Logro "${achievement.title}" guardado para IP: ${userIP}`);
+          console.log(`Logro "${achievement.title}" actualizado para IP: ${userIP}`);
           
-          // Mostrar notificación si es un nuevo desbloqueo y no está en modo silencioso
-          if (!wasAlreadyUnlocked && !silent) {
+          // Mostrar notificación si es la primera vez que se desbloquea completamente y no está en modo silencioso
+          if (!wasAlreadyUnlocked && achievement.unlocked && !silent) {
             showAchievementNotification(
               '¡Nuevo logro desbloqueado!', 
               `Has conseguido el logro "${achievement.title}"`
             );
+            
+            // Marcar la tarjeta con animación especial
+            const card = document.querySelector(`.achievement-card[data-id="${achievementId}"]`);
+            if (card) {
+              card.classList.add('newly-unlocked');
+              setTimeout(() => {
+                card.classList.remove('newly-unlocked');
+              }, 3000);
+            }
           }
           
-          // Actualizar la interfaz
+          // Actualizar la interfaz si no es silencioso
           if (!silent) {
             loadAchievements(document.querySelector('.category-filter.active').dataset.category);
+            updateAchievementStats();
           }
+          
+          // Disparar evento personalizado para que otras páginas puedan actualizarse
+          const achievementEvent = new CustomEvent('achievement_updated', {
+            detail: {
+              achievementId,
+              achievement: {
+                id: achievement.id,
+                unlocked: achievement.unlocked,
+                count: achievement.count,
+                date: achievement.date,
+                title: achievement.title,
+                description: achievement.description,
+                icon: achievement.icon,
+                category: achievement.category
+              }
+            }
+          });
+          window.dispatchEvent(achievementEvent);
           
           return true;
         }
@@ -562,6 +2065,38 @@
         }
       };
       
+      // Función para obtener todos los logros (para uso en profile.html)
+      window.getAllAchievements = function() {
+        return JSON.parse(JSON.stringify(achievements)); // Devuelve una copia para evitar modificaciones
+      };
+      
+      // Función para obtener logros desbloqueados
+      window.getUnlockedAchievements = function() {
+        return achievements.filter(a => a.unlocked).map(a => ({
+          id: a.id,
+          title: a.title,
+          description: a.description,
+          icon: a.icon,
+          category: a.category,
+          date: a.date,
+          count: a.count,
+          maxCount: a.maxCount
+        }));
+      };
+      
+      // Función para actualizar la sección de logros en profile.html
+      window.updateProfileAchievements = function() {
+        // Esta función puede ser llamada desde profile.js
+        const event = new CustomEvent('update_profile_achievements', {
+          detail: {
+            achievements: window.getUnlockedAchievements(),
+            totalAchievements: achievements.length,
+            unlockedCount: achievements.filter(a => a.unlocked).length
+          }
+        });
+        window.dispatchEvent(event);
+      };
+      
       // Inicializar: obtener IP y luego cargar logros
       getUserIP();
       
@@ -577,6 +2112,30 @@
           loadAchievements(this.dataset.category);
         });
       });
+      
+      // Habilitar consola para pruebas
+      window.achievementsApp = {
+        unlockAchievement,
+        achievements,
+        loadAchievements,
+        userIP: () => userIP,
+        getAllAchievements: window.getAllAchievements,
+        getUnlockedAchievements: window.getUnlockedAchievements,
+        updateProfileAchievements: window.updateProfileAchievements,
+        resetAll: function() {
+          localStorage.removeItem(getAchievementsStorageKey());
+          localStorage.removeItem(`demoAchievementsUnlocked_${userIP}`);
+          location.reload();
+        }
+      };
+      
+      // Vinculación con la página de perfil
+      if (window.location.pathname.includes('profile.html')) {
+        // Si estamos en la página de perfil, cargar los logros en esa vista
+        window.addEventListener('profile_loaded', function() {
+          window.updateProfileAchievements();
+        });
+      }
     });
   </script>
   

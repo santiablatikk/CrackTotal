@@ -1,3 +1,10 @@
+/**
+ * ranking.js - Additional functionality for the ranking page
+ * 
+ * This script contains helper functions and UI enhancements
+ * for the PASALA CHE ranking page.
+ */
+
 // ranking.js
 // Firebase configuration
 const firebaseConfig = {
@@ -698,3 +705,104 @@ async function loadRanking(forceRefresh = false) { // <-- REMOVED period paramet
      }
   }
 }
+
+// Animation for ranking items when they enter viewport
+document.addEventListener('DOMContentLoaded', function() {
+    // Helper function to check if element is in viewport
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+    
+    // Add animation to ranking items when they enter viewport
+    function handleScrollAnimations() {
+        const items = document.querySelectorAll('.ranking-item');
+        items.forEach((item, index) => {
+            if (isElementInViewport(item) && !item.classList.contains('animated')) {
+                // Add animation with delay based on index
+                setTimeout(() => {
+                    item.style.opacity = '0';
+                    item.style.transform = 'translateX(-20px)';
+                    item.classList.add('animated');
+                    
+                    // Trigger animation
+                    setTimeout(() => {
+                        item.style.transition = 'all 0.5s ease';
+                        item.style.opacity = '1';
+                        item.style.transform = 'translateX(0)';
+                    }, 50);
+                }, index * 80); // Stagger effect
+            }
+        });
+    }
+    
+    // Listen for scroll events
+    window.addEventListener('scroll', handleScrollAnimations);
+    
+    // Initial check
+    setTimeout(handleScrollAnimations, 500);
+    
+    // Add confetti effect for top ranked player (if it's the current user)
+    const checkForTopRank = () => {
+        const currentUserItem = document.querySelector('.user-highlight');
+        if (currentUserItem && currentUserItem.querySelector('.rank.rank-1')) {
+            // User is top ranked! Add celebration effect
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            } else {
+                console.log("Confetti library not loaded. Would show celebration for top rank.");
+            }
+        }
+    };
+    
+    // Check after data is loaded
+    const rankingList = document.getElementById('ranking-list');
+    const observer = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                if (document.querySelector('.ranking-item')) {
+                    checkForTopRank();
+                    observer.disconnect();
+                    break;
+                }
+            }
+        }
+    });
+    
+    // Start observing the ranking list for added items
+    observer.observe(rankingList, { childList: true, subtree: true });
+    
+    // Add tooltip functionality
+    const initTooltips = () => {
+        const scoreElements = document.querySelectorAll('.ranking-item .score');
+        
+        scoreElements.forEach(element => {
+            element.setAttribute('title', 'Puntuación total obtenida');
+            
+            // Optional: Implement custom tooltips here if needed
+        });
+    };
+    
+    // Init tooltips when content changes
+    const tooltipObserver = new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                if (document.querySelector('.ranking-item')) {
+                    initTooltips();
+                    break;
+                }
+            }
+        }
+    });
+    
+    tooltipObserver.observe(rankingList, { childList: true });
+});

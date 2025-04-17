@@ -456,12 +456,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
           } else {
             // Fallback if no questions for a letter
-            questions.push({
-              letter: letter,
-              question: `Comienza con ${letter}:`,
+          questions.push({
+            letter: letter,
+            question: `Comienza con ${letter}:`,
               definition: `No hay preguntas disponibles para la letra ${letter}`,
               answer: 'no disponible'
-            });
+          });
           }
         } else {
           // Fallback if no questions for a letter
@@ -599,12 +599,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Display the correct question prefix (either "Comienza con X:" or "CONTIENE X:")
     // And handle the definition correctly
-    if (question.question.startsWith('CONTIENE')) {
-      currentQuestion.textContent = question.question; // Use the CONTIENE X format directly
+    currentQuestion.classList.remove('contains-question-text', 'starts-with-question-text'); // Reset classes first
+
+    if (question.question.startsWith('CONTIENE')) { // Check for CONTIENE
+      currentQuestion.textContent = question.question; // Display the full text
+      currentQuestion.classList.add('contains-question-text'); // Add class for CONTIENE styling
+      currentDefinition.textContent = question.definition;
+    } else if (question.question.startsWith('Comienza con')) {
+      currentQuestion.textContent = question.question; // Display the full text
+      currentQuestion.classList.add('starts-with-question-text'); // Add class for Comienza con styling
       currentDefinition.textContent = question.definition;
     } else {
-      currentQuestion.textContent = question.question;
-      currentDefinition.textContent = question.definition;
+      // Fallback for any other question format (should not happen with current logic)
+    currentQuestion.textContent = question.question;
+    currentDefinition.textContent = question.definition;
     }
     
     // Highlight current letter in the rosco
@@ -1507,9 +1515,9 @@ function playSound(sound) {
       const angle = (index / totalLetters) * 2 * Math.PI - (Math.PI / 2);
       
       // Calculate x,y position
-      const x = centerX + radius * Math.cos(angle);
-      const y = centerY + radius * Math.sin(angle);
-      
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        
       // Position the letter (centered at x,y)
       letter.style.position = 'absolute';
       letter.style.left = `${x - letter.offsetWidth/2}px`;
@@ -1548,8 +1556,8 @@ function playSound(sound) {
     } else {
       // Keyboard is closed - restore layout
       if (roscoContainer) {
-        roscoContainer.style.transform = '';
-        roscoContainer.style.marginBottom = '';
+      roscoContainer.style.transform = '';
+      roscoContainer.style.marginBottom = '';
       }
       
       if (statusPanel) {
@@ -2160,6 +2168,57 @@ styleEl.textContent = `
   .sound-btn:hover {
     background-color: rgba(225, 29, 72, 0.7);
     transform: scale(1.1);
+  }
+
+  /* Estilo para la letra resaltada en CONTIENE */
+  .highlight-letter {
+    color: var(--accent-color, #e11d48); /* Usa el color de acento si está definido */
+    font-weight: bold;
+    font-size: 2.2em; /* Aumentar tamaño aún más */
+    display: inline-block; /* Asegura que se apliquen estilos */
+    padding: 0 0.2em; /* Añadir un poco de espacio horizontal */
+    margin: 0 0.1em; /* Ajustar margen */
+    vertical-align: middle; /* Alinear mejor con el texto circundante */
+    animation: pulseHighlight 1.5s infinite ease-in-out;
+  }
+
+  @keyframes pulseHighlight {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.1);
+      opacity: 0.8;
+    }
+  }
+
+  /* Estilo para TODO el texto "CONTIENE X:" */
+  .contains-question-text {
+    font-size: 1.5em !important; /* Más grande que el texto normal */
+    font-weight: 600 !important; /* Más grueso */
+    color: #FFD700 !important; /* Amarillo dorado brillante */
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.6); /* Sutil brillo dorado */
+    animation: gentlePulse 2s infinite ease-in-out;
+  }
+
+  @keyframes gentlePulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.95;
+      transform: scale(1.02);
+    }
+  }
+
+  /* Estilo para el texto "Comienza con X:" */
+  .starts-with-question-text {
+    font-size: 1.5em !important; /* Mismo tamaño que CONTIENE */
+    font-weight: 500 !important; /* Un poco más grueso que normal */
+    color: #00FFFF !important; /* Cian / Aguamarina brillante */
+    text-shadow: 0 0 4px rgba(0, 255, 255, 0.5); /* Sutil brillo cian */
   }
 `;
 document.head.appendChild(styleEl);
