@@ -167,7 +167,7 @@ h1 {
   transform: translateY(-3px);
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   h1 {
     font-size: 2.2rem;
   }
@@ -179,9 +179,9 @@ h1 {
   .btn {
     padding: 10px 20px;
   }
-}
+} */
 
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   h1 {
     font-size: 1.8rem;
   }
@@ -197,4 +197,4 @@ h1 {
   .footer-links-mini a {
     font-size: 0.75rem;
   }
-} 
+} */ 

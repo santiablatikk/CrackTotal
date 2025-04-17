@@ -637,7 +637,7 @@ body {
 
 /* ============= RESPONSIVE STYLES ============= */
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .difficulty-option {
     width: calc(50% - 1rem);
   }
@@ -672,9 +672,9 @@ body {
     right: 10px;
     padding: 1rem;
   }
-}
+} */
 
-@media (max-width: 576px) {
+/* @media (max-width: 576px) {
   .difficulty-option {
     width: 100%;
   }
@@ -698,7 +698,7 @@ body {
   .login-form, .rules-container {
     padding: 1.5rem;
   }
-}
+} */
 
 /* Estilos para el header de todas las páginas - igual que index.html */
 .app-header {
@@ -1269,14 +1269,14 @@ body {
 }
 
 /* Responsive Adjustments for Achievements */
-@media (max-width: 1200px) {
+/* @media (max-width: 1200px) {
   .achievements-container {
     max-width: 1000px;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
-}
+} */
 
-@media (max-width: 992px) {
+/* @media (max-width: 992px) {
   .achievements-container {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
@@ -1286,9 +1286,9 @@ body {
   .achievement-description {
     font-size: 0.9rem;
   }
-}
+} */
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .achievements-page {
     padding: 1.5rem 0.5rem;
   }
@@ -1335,11 +1335,11 @@ body {
     right: 20px;
     bottom: 20px;
   }
-}
+} */
 
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
     .achievements-container {
-        grid-template-columns: 1fr; /* Single column on very small screens */
+        grid-template-columns: 1fr; 
     }
     .achievement-card {
         padding: 15px;
@@ -1365,7 +1365,7 @@ body {
     .notification-content p {
         font-size: 0.8rem;
     }
-}
+} */
 
 /* Ad Container Styling (if needed universally) */
 .ad-container {

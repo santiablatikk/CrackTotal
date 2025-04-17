@@ -702,104 +702,6 @@ img {
   margin-right: 0.5rem;
 }
 
-/* --- Responsive Adjustments --- */
-@media (max-width: 991px) {
-  .profile-sidebar {
-    position: relative; /* Remove sticky on smaller screens */
-    top: auto;
-    margin-bottom: 2rem;
-  }
-  .profile-section {
-      padding: 1.25rem 1rem;
-  }
-  .stats-grid {
-      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-      gap: 0.75rem;
-  }
-  .stat-card {
-      padding: 1rem 0.75rem;
-  }
-  .stat-value {
-      font-size: 1.6rem;
-  }
-  .stat-icon {
-      font-size: 1.5rem;
-  }
-}
-
-@media (max-width: 767px) {
-  .app-header {
-      padding: 1.5rem 1rem 2rem;
-  }
-  .profile-container {
-      padding: 0 0.5rem;
-  }
-  .profile-section {
-      padding: 1.5rem 1rem;
-  }
-   .section-title {
-      font-size: 1.4rem;
-  }
-  .stats-grid {
-      grid-template-columns: repeat(2, 1fr);
-  }
-   .stat-card {
-      padding: 1rem 0.5rem;
-  }
-   .stat-value {
-      font-size: 1.6rem;
-  }
-   .stat-label {
-      font-size: 0.7rem;
-  }
-  .game-entry {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.8rem;
-  }
-  .game-score {
-      text-align: left;
-      font-size: 1.4rem;
-  }
-  .game-difficulty {
-      margin-left: 0; 
-      margin-top: 0.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-   .app-header .title-text {
-        letter-spacing: 1px;
-    }
-    .profile-avatar-large {
-    width: 100px;
-    height: 100px;
-    }
-    .profile-avatar-large i {
-        font-size: 3rem;
-    }
-    .profile-name-large {
-        font-size: 1.6rem;
-    }
-    .stats-grid {
-      grid-template-columns: 1fr 1fr; /* Force 2 columns */
-      gap: 1rem;
-   }
-   .back-btn {
-       width: 45px;
-       height: 45px;
-       font-size: 1.1rem;
-       bottom: 15px;
-       right: 15px;
-   }
-    .footer-links-mini {
-        gap: 0.5rem 1rem;
-    }
-    .footer-social-icons {
-        gap: 1rem;
-    }
-}
-
 /* --- IP Detection Status --- */
 .ip-status {
   background: var(--color-card-bg);
@@ -1893,7 +1795,7 @@ img {
 }
 
 /* --- Responsive Adjustments --- */
-@media (max-width: 1200px) {
+/* @media (max-width: 1200px) {
   .stats-highlights {
     flex-direction: column;
     align-items: center;
@@ -1903,19 +1805,19 @@ img {
     width: 100%;
     max-width: 300px;
   }
-}
+} */
 
-@media (max-width: 991px) {
+/* @media (max-width: 991px) {
   .quick-access-nav {
-    display: none; /* Hide quick nav on smaller screens */
+    display: none; 
   }
   
   .notification {
     width: 280px;
   }
-}
+} */
 
-@media (max-width: 767px) {
+/* @media (max-width: 767px) {
   .achievements-progress {
     padding: 1rem;
   }
@@ -1948,7 +1850,7 @@ img {
   .filter-select {
     width: 100%;
   }
-}
+} */
 
 /* Arreglo para errores MIME de CSS */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');

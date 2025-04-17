@@ -1208,7 +1208,7 @@ body:not(.game-body) {
   }
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .rules-grid {
     grid-template-columns: 1fr;
   }
@@ -1221,7 +1221,7 @@ body:not(.game-body) {
   .difficulty-option {
     width: 100%;
   }
-}
+} */
 
 /* Asegurar que el footer siempre esté en la parte inferior */
 html, body {
@@ -1379,8 +1379,7 @@ body {
   }
 }
 
-/* Responsive ad adjustments */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .adsense-container {
     padding: 12px;
     margin: 15px auto;
@@ -1394,7 +1393,7 @@ body {
     width: 85%;
     padding: 15px;
   }
-}
+} */
 
 .game-buttons {
   display: flex;
@@ -1460,13 +1459,17 @@ body {
   font-size: 1.3rem;
 }
 
-/* Media queries for responsive design */
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .game-start-btn, .alt-game-btn {
-    padding: 14px 24px;
-    font-size: 1rem;
+    padding: 12px 18px;
+    font-size: 0.9rem;
+    margin: 8px 0;
   }
-}
+
+  .alt-game-btn i {
+    font-size: 1.1rem;
+  }
+} */
 
 .alt-game-btn i {
   margin-right: 10px;
@@ -1504,9 +1507,16 @@ body {
   margin-right: 5px;
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .game-start-btn, .alt-game-btn {
-    padding: 14px 24px;
-    font-size: 1rem;
+    padding: 12px 18px;
+    font-size: 0.9rem;
   }
-} 
+} */
+
+/* @media (max-width: 768px) {
+  .game-start-btn, .alt-game-btn {
+    width: 100%;
+    max-width: none;
+  }
+} */ 
