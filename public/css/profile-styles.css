@@ -135,12 +135,12 @@ img {
   gap: 1rem; 
 }
 
-@media (min-width: 992px) {
+/* @media (min-width: 992px) {
   .profile-grid {
-    grid-template-columns: clamp(220px, 22%, 280px) 1fr;
-    gap: 1rem;
+    grid-template-columns: 280px 1fr; 
+    gap: 2.5rem;
   }
-}
+} */
 
 /* --- Sections (Common Styles) --- */
 .profile-section {

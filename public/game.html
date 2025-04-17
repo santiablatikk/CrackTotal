@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="css/game-styles.css">
   <link rel="stylesheet" href="css/footer-styles.css">
   <link rel="stylesheet" href="css/combined.css">
+  <link rel="stylesheet" href="css/desktop-override.css">
 </head>
 <body>
   <a href="index.html" class="home-link">
@@ -404,11 +405,11 @@
         
         // Configurar el rosco como un elemento normal con margen superior adecuado
         contenedor.style.position = 'relative';
-        contenedor.style.width = '85%';
-        contenedor.style.maxWidth = '85vw';
+        contenedor.style.width = '80%';
+        contenedor.style.maxWidth = '80vw';
         contenedor.style.height = 'auto';
         contenedor.style.aspectRatio = '1/1'; // Forzar proporción 1:1 para círculo perfecto
-        contenedor.style.margin = '10px auto 20px';
+        contenedor.style.margin = '10px auto 15px';
         
         // Mover el panel de estado debajo del rosco
         const statusPanel = document.querySelector('.rosco-status');
@@ -421,8 +422,8 @@
           statusPanel.style.bottom = 'auto';
           statusPanel.style.transform = 'none';
           statusPanel.style.width = '90%';
-          statusPanel.style.margin = '5px auto 10px';
-          statusPanel.style.padding = '5px';
+          statusPanel.style.margin = '10px auto 15px';
+          statusPanel.style.padding = '6px';
           statusPanel.style.borderRadius = '10px';
           statusPanel.style.zIndex = '5';
           statusPanel.style.display = 'flex';
@@ -435,24 +436,24 @@
             item.style.display = 'flex';
             item.style.flexDirection = 'column';
             item.style.alignItems = 'center';
-            item.style.padding = '2px';
+            item.style.padding = '3px';
             
             // Ajustar iconos y textos
             const icon = item.querySelector('.status-icon');
             if (icon) {
-              icon.style.fontSize = '0.8rem';
-              icon.style.marginBottom = '2px';
+              icon.style.fontSize = '0.85rem';
+              icon.style.marginBottom = '3px';
             }
             
             const label = item.querySelector('.status-label');
             if (label) {
-              label.style.fontSize = '0.55rem';
-              label.style.marginBottom = '1px';
+              label.style.fontSize = '0.65rem';
+              label.style.marginBottom = '2px';
             }
             
             const value = item.querySelector('.status-value');
             if (value) {
-              value.style.fontSize = '0.8rem';
+              value.style.fontSize = '0.85rem';
               value.style.fontWeight = 'bold';
             }
           });
@@ -478,8 +479,8 @@
         // Dar suficiente espacio entre elementos
         const roscoSection = document.querySelector('.rosco-section');
         if (roscoSection) {
-          roscoSection.style.marginTop = '60px';
-          roscoSection.style.marginBottom = '60px';
+          roscoSection.style.marginTop = '15px';
+          roscoSection.style.marginBottom = '15px';
           roscoSection.style.width = '100%';
           roscoSection.style.display = 'flex';
           roscoSection.style.justifyContent = 'center';
@@ -528,14 +529,14 @@
           }
           
           .game-container {
-            padding-top: 60px !important;
-            padding-bottom: 60px !important;
+            padding-top: 55px !important; /* Reduced from 60px */
+            padding-bottom: 45px !important; /* Reduced from 60px */
           }
           
           /* Sección del rosco con margen */
           .rosco-section {
-            margin-top: 60px !important;
-            margin-bottom: 60px !important;
+            margin-top: 15px !important; /* Reduced from 60px */
+            margin-bottom: 15px !important; /* Reduced from 60px */
             width: 100% !important;
             display: flex !important;
             justify-content: center !important;
@@ -550,11 +551,11 @@
             box-shadow: 0 0 25px rgba(0, 120, 255, 0.5) !important;
             overflow: visible !important;
             position: relative !important;
-            width: 85% !important;
-            max-width: 85vw !important;
+            width: 80% !important; /* Reduced from 85% */
+            max-width: 80vw !important; /* Reduced from 85vw */
             height: auto !important;
             aspect-ratio: 1/1 !important;
-            margin: 10px auto 20px !important;
+            margin: 10px auto 15px !important; /* Adjusted bottom margin */
           }
           
           /* Eliminar otros fondos */
@@ -573,8 +574,8 @@
             bottom: auto !important;
             transform: none !important;
             width: 90% !important;
-            margin: 5px auto 10px !important;
-            padding: 5px !important;
+            margin: 10px auto 15px !important; /* Adjusted margins */
+            padding: 6px !important; /* Slightly more padding */
             border-radius: 10px !important;
             z-index: 5 !important;
             display: flex !important;
@@ -588,21 +589,21 @@
             display: flex !important;
             flex-direction: column !important;
             align-items: center !important;
-            padding: 2px !important;
+            padding: 3px !important; /* Adjusted padding */
           }
           
           .status-icon {
-            font-size: 0.8rem !important;
-            margin-bottom: 2px !important;
+            font-size: 0.85rem !important; /* Slightly larger */
+            margin-bottom: 3px !important;
           }
           
           .status-label {
-            font-size: 0.55rem !important;
-            margin-bottom: 1px !important;
+            font-size: 0.65rem !important; /* Increased from 0.55rem */
+            margin-bottom: 2px !important;
           }
           
           .status-value {
-            font-size: 0.8rem !important;
+            font-size: 0.85rem !important; /* Slightly larger */
             font-weight: bold !important;
           }
           
@@ -691,17 +692,21 @@
       }
       
       // Ejecutar posicionamiento inicial y posteriores para asegurar ajuste correcto
+      /* Comentado para forzar vista de escritorio en móvil
       setTimeout(posicionarLetrasEnCirculo, 100);
       setTimeout(posicionarLetrasEnCirculo, 500);
       setTimeout(posicionarLetrasEnCirculo, 1000);
       gestionarTeclado();
+      */
       
       // Actualizar en cambios de orientación o resize
+      /* Comentado para forzar vista de escritorio en móvil
       window.addEventListener('resize', posicionarLetrasEnCirculo);
       window.addEventListener('orientationchange', function() {
         // Pequeño delay para asegurar que los cambios de orientación sean registrados
         setTimeout(posicionarLetrasEnCirculo, 300);
       });
+      */
     });
   </script>
 </body>
