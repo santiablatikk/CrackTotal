@@ -1,4 +1,8 @@
 // profile.js - Funcionalidad para la página de perfil moderna
+
+// --- Global State ---
+let isProfileLoading = false; // Flag to prevent concurrent loads
+
 document.addEventListener('DOMContentLoaded', async function() {
   console.log('Inicializando perfil de usuario moderno');
   
@@ -18,6 +22,142 @@ document.addEventListener('DOMContentLoaded', async function() {
   // Detectar IP e inicializar perfil automáticamente
   await initializeUserProfile();
 });
+
+// --- Data Handling Functions ---
+
+// Load profile data from localStorage
+async function loadProfileData(userIP) {
+    const profileKey = `profile_${userIP}`;
+    const storedProfile = localStorage.getItem(profileKey);
+    if (storedProfile) {
+        try {
+            return JSON.parse(storedProfile);
+        } catch (e) {
+            console.error(`Error parsing stored profile for ${userIP}:`, e);
+            // If parsing fails, maybe return a default profile or null
+            localStorage.removeItem(profileKey); // Remove corrupted data
+            return null;
+        }
+    } else {
+        return null; // No profile found
+    }
+}
+
+// Save profile data to localStorage
+async function saveProfileData(userIP, profile) { // Renamed from saveUserProfile
+    if (!profile || !userIP) {
+        console.error('Error: Missing profile or userIP for saving');
+        return false;
+    }
+
+    const profileKey = `profile_${userIP}`; // Use consistent key
+    try {
+        profile.lastUpdated = new Date().toISOString(); // Add/update timestamp
+        localStorage.setItem(profileKey, JSON.stringify(profile));
+        console.log('Profile data saved for IP:', userIP);
+        return true;
+    } catch (error) {
+        console.error(`Error saving profile for ${userIP}:`, error);
+        return false;
+    }
+}
+
+// Load game history from localStorage 
+function loadGameHistory(userIP) {
+    console.log(`[loadGameHistory] Loading game history for IP: ${userIP}`);
+    const historyKey = `gameHistory_${userIP}`;
+    const storedHistory = localStorage.getItem(historyKey);
+    let history = [];
+
+    if (storedHistory) {
+        try {
+            history = JSON.parse(storedHistory);
+            if (!Array.isArray(history)) {
+                console.error(`[loadGameHistory] History is not an array for ${userIP}, returning empty array`);
+                return [];
+            }
+        } catch (e) {
+            console.error(`[loadGameHistory] Error parsing game history for ${userIP}:`, e);
+            localStorage.removeItem(historyKey); // Remove corrupted data
+            return [];
+        }
+    } else {
+        console.log(`[loadGameHistory] No history found for ${userIP}`);
+        return []; // No history found
+    }
+
+    // --- Aplicar de-duplicación para garantizar que los datos cargados sean correctos ---
+    console.log(`[loadGameHistory] Original history length before de-duplication: ${history.length}`);
+    
+    // Eliminar duplicados en memoria (sin modificar localStorage)
+    // Usamos el mismo sistema que saveGameToHistory para mantener consistencia
+    const uniqueHistory = [];
+    const seenUniqueIds = new Set();
+    const seenKeys = new Set();
+
+    for (const entry of history) {
+        // Priorizar uniqueId si existe (CRITERIO PRINCIPAL)
+        if (entry.uniqueId) {
+            if (!seenUniqueIds.has(entry.uniqueId)) {
+                seenUniqueIds.add(entry.uniqueId);
+                uniqueHistory.push(entry);
+            }
+        } else {
+            // Para entradas sin uniqueId, usar clave compuesta
+            let entryTimestamp = 'invalid_date';
+            try {
+                // Redondear timestamp al minuto más cercano
+                entryTimestamp = new Date(entry.date).setSeconds(0, 0);
+            } catch (e) {
+                entryTimestamp = entry.date || `invalid-${Math.random()}`;
+            }
+            
+            // Clave compuesta con toda la información relevante
+            const uniqueKey = `${entryTimestamp}-${entry.score || 0}-${entry.victory}-${entry.difficulty || 'unknown'}-${entry.correct || 0}-${entry.wrong || 0}`;
+
+            if (!seenKeys.has(uniqueKey)) {
+                seenKeys.add(uniqueKey);
+                uniqueHistory.push(entry);
+            }
+        }
+    }
+
+    console.log(`[loadGameHistory] Final de-duplicated history length: ${uniqueHistory.length}`);
+
+    // Ordenar por fecha, más reciente primero
+    return uniqueHistory.sort((a, b) => {
+        try {
+            return new Date(b.date) - new Date(a.date);
+        } catch (e) {
+            // En caso de error en la fecha, mantener el orden
+            return 0;
+        }
+    });
+}
+
+// Create Default Profile structure
+function createDefaultProfile(userIP) {
+    console.log(`[createDefaultProfile] Creating default profile for IP: ${userIP}`);
+    return {
+        name: localStorage.getItem('username') || 'Jugador Anónimo', // Attempt to get saved name
+        userIP: userIP,
+        memberSince: new Date().toISOString(), // Set creation date
+        gamesPlayed: 0,
+        totalScore: 0,
+        bestScore: 0,
+        totalCorrect: 0,
+        totalWrong: 0,
+        totalSkipped: 0,
+        totalTime: 0,
+        victories: 0,
+        defeats: 0,
+        lastPlayed: null,
+        lastUpdated: new Date().toISOString()
+        // Ranking position and achievements count will be added/updated later
+    };
+}
+
+// --- End Data Handling Functions ---
 
 // Nueva función para inicializar el perfil de usuario
 async function initializeUserProfile() {
@@ -154,7 +294,7 @@ function showProfileUpdatedNotification() {
     <i class="fas fa-check-circle" style="margin-right: 10px;"></i>
     ¡Perfil actualizado! Puntuación: ${lastGameStats.score || 0} 
     (Aciertos: ${lastGameStats.correct || 0}, Errores: ${lastGameStats.wrong || 0})
-    <div style="font-size: 0.8rem; margin-top: 5px;">Redirigiendo al ranking en 5 segundos...</div>
+    <div style="font-size: 0.8rem; margin-top: 5px;">SE</div>
   `;
   
   // Mostrar notificación
@@ -412,64 +552,27 @@ async function updateGameHistory(userIP) {
   historyContainer.innerHTML = ''; // Limpiar historial anterior (excepto placeholder)
   historyContainer.appendChild(placeholder); // Asegurar que el placeholder esté dentro
 
-    const historyKey = `gameHistory_${userIP}`;
-    let history = [];
-    const storedHistory = localStorage.getItem(historyKey);
+    // Load the already de-duplicated history
+    const history = loadGameHistory(userIP);
 
-    if (storedHistory) {
-        try {
-            history = JSON.parse(storedHistory);
-            if (!Array.isArray(history)) history = [];
-        } catch (e) {
-            console.error('Error al parsear historial:', e);
-            history = [];
-        }
-    }
-
-    // --- NUEVO: Filtrar duplicados --- 
-    const uniqueHistory = [];
-    const seenKeys = new Set();
-    
-    // Iterar en orden cronológico (asumiendo que history[0] es el más reciente)
-    for (const game of history) {
-        // Crear una clave única para esta partida, redondeando la fecha al minuto
-        let gameTimestamp = 'invalid_date';
-        try {
-             // Intentar redondear la fecha al minuto
-             gameTimestamp = new Date(game.date).setSeconds(0, 0); 
-        } catch (e) {
-            console.warn('Fecha inválida en historial:', game.date, game);
-            // Usar la fecha original o un valor por defecto si falla
-            gameTimestamp = game.date || `invalid-${Math.random()}`;
-        }
-        
-        const uniqueKey = `${gameTimestamp}-${game.score}-${game.victory}-${game.difficulty}`;
-        
-        if (!seenKeys.has(uniqueKey)) {
-            seenKeys.add(uniqueKey);
-            uniqueHistory.push(game); // Añadir solo si no se ha visto antes
-        }
-    }
-    // --- Fin del filtrado ---
-
-    if (uniqueHistory.length === 0) {
+    if (history.length === 0) {
     placeholder.innerHTML = '<i class="fas fa-folder-open"></i><p>Aún no has jugado ninguna partida.</p>';
     return; // Mantener placeholder visible si no hay historial
   }
 
   placeholder.style.display = 'none'; // Ocultar placeholder si hay historial
 
-  // Limitar a las últimas X partidas ÚNICAS (ej. 20)
-  const recentUniqueHistory = uniqueHistory.slice(0, 20);
+    // Limitar a las últimas X partidas (la historia ya está de-duplicada)
+  const recentHistory = history.slice(0, 20);
 
-    // Iterar sobre el historial ÚNICO
-    recentUniqueHistory.forEach(game => {
+    // Iterar sobre el historial
+    recentHistory.forEach(game => {
     const entryElement = document.createElement('div');
     entryElement.classList.add('game-entry');
 
     const resultIconClass = game.victory ? 'fas fa-check-circle victory' : 'fas fa-times-circle defeat';
     const resultText = game.victory ? 'Victoria' : 'Derrota';
-    const gameDate = new Date(game.date).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        const gameDate = new Date(game.date).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     const difficulty = game.difficulty || 'normal'; // Add difficulty display
 
     entryElement.innerHTML = `
@@ -500,92 +603,171 @@ function displayProfileError(message = 'No se pudo cargar el perfil') {
   console.error('Error de perfil mostrado:', message);
 }
 
-// Cargar Perfil (SIN CAMBIOS - ya maneja forceReload y recalcula)
-async function loadUserProfile(userIP, forceReload = false) {
+// --- Main Load Function ---
+
+async function loadUserProfile(userIP, forceRecalculateStats = false) {
+    // --- Prevent Concurrent Execution --- START
+    if (isProfileLoading) {
+        console.warn('Carga de perfil ya en progreso. Omitiendo llamada duplicada.');
+        return;
+    }
+    isProfileLoading = true;
+    // --- Prevent Concurrent Execution --- END
+
+    console.log(`Cargando perfil para IP: ${userIP}, Forzar recálculo: ${forceRecalculateStats}`);
   showLoadingIndicator(true);
   hideProfileContent(true);
-  document.getElementById('profile-error').style.display = 'none'; // Ocultar errores previos
+    const errorContainer = document.getElementById('profile-error-container');
+    if(errorContainer) errorContainer.style.display = 'none'; // Hide previous errors
 
-  const profileKey = `profile_${userIP}`;
-                let profile = null;
-                
-                    try {
-    // Forzar recarga desde historial si es necesario
-    if (forceReload) {
-        console.log("Forzando recarga de perfil desde historial...");
-        const storedProfile = localStorage.getItem(profileKey);
-        if (storedProfile) {
-                        profile = JSON.parse(storedProfile);
+    // --- NUEVA FUNCIÓN DE LIMPIEZA DEL HISTORIAL ---
+    const historyWasCleaned = cleanupGameHistory(userIP);
+    if (historyWasCleaned) {
+        console.log('El historial fue limpiado, forzando recálculo de estadísticas.');
+        forceRecalculateStats = true;
+    }
+    // --- FIN DE LA NUEVA FUNCIÓN ---
+
+    try {
+        let profile = await loadProfileData(userIP);
+
+        // Ensure basic profile structure if it's the first load
+        if (!profile || !profile.memberSince) { // Check memberSince as a proxy for existing profile
+             profile = createDefaultProfile(userIP); // Use createDefaultProfile
+             console.log('Perfil inicializado para nuevo usuario:', profile);
+             // Initial save for new profile
+             await saveProfileData(userIP, profile);
         } else {
-                           profile = createDefaultProfile(userIP);
+            console.log('Perfil existente cargado:', profile);
         }
-        updateProfileStats(profile, userIP); // Recalcular stats
-        saveUserProfile(profile, userIP); // Guardar stats actualizadas
-    } else {
-        const storedProfile = localStorage.getItem(profileKey);
-        if (storedProfile) {
-            profile = JSON.parse(storedProfile);
-             // Validar si las stats básicas parecen faltar (pudo guardarse mal)
-            if (profile.gamesPlayed === undefined || profile.totalScore === undefined) {
-                console.warn("Perfil incompleto detectado, recalculando stats...");
-                updateProfileStats(profile, userIP);
-                saveUserProfile(profile, userIP); 
-                    }
-                } else {
-                        profile = createDefaultProfile(userIP);
-            updateProfileStats(profile, userIP); // Calcular stats iniciales si es nuevo
-            saveUserProfile(profile, userIP);
+
+        // Recalculate stats from history if forced or if stats seem missing/stale
+        // Use optional chaining for safety
+        if (forceRecalculateStats || profile?.gamesPlayed === undefined) {
+             console.log('Recalculando estadísticas del perfil desde el historial.');
+             updateProfileStats(profile, userIP); // Update stats based on local history
+             await saveProfileData(userIP, profile); // Save the recalculated stats
         }
-    }
 
-    // Cargar nombre si no existe en perfil pero sí globalmente
-    if (!profile.name) {
-        const globalName = localStorage.getItem('playerName') || localStorage.getItem('userName');
-        if (globalName) {
-            profile.name = globalName;
-            saveUserProfile(profile, userIP);
-        }
-    }
+        const history = loadGameHistory(userIP); // Use the new function
 
-    // Obtener posición en el ranking (asíncrono)
-    // Esto puede permanecer como placeholder o actualizarse aquí
-    profile.rankingPosition = await fetchPlayerRankingPosition(profile.name || userIP);
+        // Display everything
+        updateProfileUI(profile, userIP);
+        updateGameHistory(userIP); // Use this function instead, passing userIP
+        updateAchievementsDisplay(profile); // Display achievements
 
-    // Actualizar UI principal (esto también ocultará el loader)
-    updateProfileUI(profile, userIP); // Usa la función UI revisada
+        // Removing this save call as it might save intermediate states unnecessarily
+        // await saveProfileData(userIP, profile);
 
-    // Cargar historial y logros (éstos manejan sus propios placeholders)
-    updateGameHistory(userIP);
-    updateAchievementsDisplay(userIP); // LLAMAR A ESTA FUNCIÓN
+        hideProfileContent(false); // Show content AFTER data is loaded/calculated
 
   } catch (error) {
-    console.error('Error al cargar el perfil completo:', error);
-    displayProfileError('Error fatal al cargar datos del perfil.');
-  }
+        console.error('Error detallado al cargar el perfil:', error);
+        displayProfileError(`No se pudo cargar el perfil. ${error.message}`);
+    } finally {
+        showLoadingIndicator(false); // Hide loader regardless of outcome
+        isProfileLoading = false; // --- Release the lock --- 
+    }
 }
 
-// Guardar Perfil (CORREGIDO - Guarda el objeto COMPLETO)
-function saveUserProfile(profile, userIP) {
-    if (!profile || !userIP) {
-    console.error('Error: Falta perfil o IP de usuario para guardar');
+// Nueva función de limpieza del historial que elimina duplicados de forma permanente
+function cleanupGameHistory(userIP) {
+    console.log('[cleanupGameHistory] Iniciando limpieza de historial para IP:', userIP);
+    const historyKey = `gameHistory_${userIP}`;
+    const storedHistory = localStorage.getItem(historyKey);
+    
+    if (!storedHistory) {
+        console.log('[cleanupGameHistory] No se encontró historial para limpiar');
         return false;
     }
 
-  const profileKey = `profile_${userIP}`; // Usar clave consistente
-  try {
-    // Añadir timestamp de guardado
-    profile.lastUpdated = new Date().toISOString();
-    
-    // Guardar el objeto profile COMPLETO
-    localStorage.setItem(profileKey, JSON.stringify(profile)); 
-    
-    console.log('Perfil completo guardado para IP:', userIP, profile);
+    try {
+        // Cargar historial actual
+        let history = JSON.parse(storedHistory);
+        if (!Array.isArray(history)) {
+            localStorage.removeItem(historyKey);
+            console.log('[cleanupGameHistory] El historial no es un array, se ha eliminado');
         return true;
+        }
+        
+        console.log(`[cleanupGameHistory] Historial original: ${history.length} entradas`);
+        
+        // --- PRIMERA FASE: De-duplicación por uniqueId (campo más confiable) ---
+        const seenUniqueIds = new Set();
+        const cleanHistory1 = [];
+        
+        for (const entry of history) {
+            if (entry.uniqueId) {
+                if (!seenUniqueIds.has(entry.uniqueId)) {
+                    seenUniqueIds.add(entry.uniqueId);
+                    cleanHistory1.push(entry);
+                } else {
+                    console.log(`[cleanupGameHistory] Eliminado duplicado con uniqueId: ${entry.uniqueId}`);
+                }
+            } else {
+                cleanHistory1.push(entry); // Mantener entradas sin uniqueId para fase 2
+            }
+        }
+        
+        // --- SEGUNDA FASE: De-duplicación por clave compuesta para entradas sin uniqueId ---
+        const seenKeys = new Set();
+        const cleanHistory2 = [];
+        
+        for (const entry of cleanHistory1) {
+            if (!entry.uniqueId) {
+                let gameTimestamp = 'invalid_date';
+                try {
+                    // Redondear timestamp al minuto más cercano para agrupar guardados cercanos
+                    const date = new Date(entry.date);
+                    if (!isNaN(date.getTime())) {
+                        date.setSeconds(0, 0);
+                        gameTimestamp = date.getTime().toString();
+                    } else {
+                        gameTimestamp = entry.date || `unknown-${Math.random()}`;
+                    }
+                } catch (e) {
+                    gameTimestamp = entry.date || `invalid-${Math.random()}`;
+                }
+                
+                // Crear clave única compuesta con múltiples campos
+                const uniqueKey = `${gameTimestamp}-${entry.score || 0}-${entry.victory}-${entry.difficulty || 'unknown'}-${entry.correct || 0}-${entry.wrong || 0}`;
+                
+                if (!seenKeys.has(uniqueKey)) {
+                    seenKeys.add(uniqueKey);
+                    cleanHistory2.push(entry);
+  } else {
+                    console.log(`[cleanupGameHistory] Eliminado duplicado con clave compuesta: ${uniqueKey}`);
+          }
+        } else {
+                cleanHistory2.push(entry); // Mantener entradas con uniqueId
+            }
+        }
+        
+        // --- FASE FINAL: Ordenar por fecha (más reciente primero) y limitar a 50 entradas ---
+        const sortedHistory = cleanHistory2.sort((a, b) => {
+            try {
+                return new Date(b.date) - new Date(a.date);
+            } catch (e) {
+                return 0; // Mantener orden si hay error en fechas
+            }
+        });
+        
+        // Limitar a 50 entradas para mantener el rendimiento
+        const limitedHistory = sortedHistory.slice(0, 50);
+        
+        console.log(`[cleanupGameHistory] Historial después de limpieza: ${limitedHistory.length} entradas (reducción de ${history.length - limitedHistory.length} entradas)`);
+        
+        // Solo guardar si hubo cambios
+        if (limitedHistory.length !== history.length) {
+            localStorage.setItem(historyKey, JSON.stringify(limitedHistory));
+            return true; // Indocator que se hicieron cambios
+        }
+        
+        return false; // No hubo cambios
   } catch (error) {
-    console.error(`Error guardando perfil para ${userIP}:`, error);
-    // Considerar mostrar un error al usuario si el guardado falla críticamente
-        return false;
-    }
+        console.error('[cleanupGameHistory] Error limpiando historial:', error);
+    return false;
+  }
 }
 
 // Actualizar UI de Logros (CORREGIDO - Muestra solo desbloqueados, contador Unlocked/Total)
@@ -827,29 +1009,6 @@ function getAvailableAchievements() {
 
 // --- Otras Funciones (SIN CAMBIOS - Asegurar que existen y son correctas) ---
 
-// Crear Perfil por Defecto (SIN CAMBIOS)
-function createDefaultProfile(userIP) {
-  console.log(`[createDefaultProfile] Creando perfil por defecto para IP: ${userIP}`);
-  return {
-    name: localStorage.getItem('username') || 'Jugador Anónimo', // Intentar obtener nombre guardado
-    userIP: userIP,
-    gamesPlayed: 0,
-    totalScore: 0,
-    bestScore: 0,
-    totalCorrect: 0,
-    totalWrong: 0,
-    totalSkipped: 0,
-    totalTime: 0,
-    victories: 0,
-    defeats: 0,
-    achievementsCount: 0,
-    rankingPosition: null, // El ranking se determinará por separado
-    status: 'Novato', // Un estado inicial lógico
-    lastPlayed: null, // Sin fecha de última partida
-    createdAt: new Date().toISOString() // Fecha de creación
-  };
-}
-
 // Obtener Ranking (Placeholder - MODIFICADO PARA EVITAR ERROR 404)
 async function fetchPlayerRankingPosition(identifier) {
   console.log(`(Placeholder) Obteniendo ranking para: ${identifier} - Se devuelve '-' para evitar error 404.`);
@@ -1040,6 +1199,36 @@ function setupProfileManagement() {
     exportDataBtn.addEventListener('click', exportProfileData);
   }
   
+  // NUEVO: Botón para reparar historial
+  const repairHistoryBtn = document.getElementById('repair-history-btn');
+  if (repairHistoryBtn) {
+    repairHistoryBtn.addEventListener('click', repairGameHistory);
+  } else {
+    // Si el botón no existe en el HTML, agregarlo dinámicamente
+    const profileSettings = document.getElementById('profile-settings');
+    if (profileSettings) {
+      const repairSection = document.createElement('div');
+      repairSection.className = 'profile-setting';
+      repairSection.innerHTML = `
+        <div class="setting-label">
+          <i class="fas fa-wrench"></i> Reparar Historial
+          <span class="setting-description">Elimina entradas duplicadas del historial de partidas</span>
+        </div>
+        <button id="repair-history-btn" class="action-button">
+          <i class="fas fa-tools"></i> Reparar
+        </button>
+        <div id="repair-history-result" class="repair-result" style="display: none;">
+          <i class="fas fa-check-circle"></i> <span id="repair-history-message"></span>
+        </div>
+      `;
+      
+      profileSettings.appendChild(repairSection);
+      
+      // Agregar event listener al botón recién creado
+      document.getElementById('repair-history-btn').addEventListener('click', repairGameHistory);
+    }
+  }
+  
   // Modal
   const modalClose = document.querySelector('.modal-close');
   const modalCancel = document.getElementById('modal-cancel');
@@ -1050,6 +1239,169 @@ function setupProfileManagement() {
   
   if (modalCancel) {
     modalCancel.addEventListener('click', hideModal);
+  }
+}
+
+// Nueva función para reparar el historial de juegos
+function repairGameHistory() {
+  const userIP = localStorage.getItem('userIP');
+  if (!userIP) {
+    showNotification('Error', 'No se pudo detectar tu identidad.', 'error');
+    return;
+  }
+  
+  const repairBtn = document.getElementById('repair-history-btn');
+  if (repairBtn) {
+    // Cambiar botón a estado de "procesando"
+    repairBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+    repairBtn.disabled = true;
+  }
+  
+  try {
+    // Obtener historial actual
+    const historyKey = `gameHistory_${userIP}`;
+    const storedHistory = localStorage.getItem(historyKey);
+    
+    if (!storedHistory) {
+      showNotification('Información', 'No hay historial de partidas para reparar.', 'info');
+      resetRepairButton();
+      return;
+    }
+    
+    // Parsear historial
+    let history = [];
+    try {
+      history = JSON.parse(storedHistory);
+      if (!Array.isArray(history)) {
+        localStorage.removeItem(historyKey); // Eliminar datos corruptos
+        showNotification('Completado', 'Se eliminaron datos corruptos del historial.', 'success');
+        resetRepairButton();
+        return;
+      }
+      
+      if (history.length <= 1) {
+        showNotification('Información', 'El historial es demasiado pequeño para requerir reparación.', 'info');
+        resetRepairButton();
+        return;
+      }
+    } catch (e) {
+      localStorage.removeItem(historyKey); // Eliminar datos corruptos
+      showNotification('Completado', 'Se eliminaron datos corruptos del historial.', 'success');
+      resetRepairButton();
+      return;
+    }
+    
+    const originalLength = history.length;
+    
+    // Proceso de de-duplicación (igual al implementado en cleanupGameHistory)
+    // --- FASE 1: De-duplicación por uniqueId ---
+    const seenUniqueIds = new Set();
+    const cleanHistory1 = [];
+    
+    for (const entry of history) {
+        if (entry.uniqueId) {
+            if (!seenUniqueIds.has(entry.uniqueId)) {
+                seenUniqueIds.add(entry.uniqueId);
+                cleanHistory1.push(entry);
+            }
+        } else {
+            cleanHistory1.push(entry);
+        }
+    }
+    
+    // --- FASE 2: De-duplicación por clave compuesta ---
+    const seenKeys = new Set();
+    const cleanHistory2 = [];
+    
+    for (const entry of cleanHistory1) {
+        if (!entry.uniqueId) {
+            let entryTimestamp = 'invalid_date';
+            try {
+                const date = new Date(entry.date);
+                if (!isNaN(date.getTime())) {
+                    date.setSeconds(0, 0);
+                    entryTimestamp = date.getTime().toString();
+                } else {
+                    entryTimestamp = entry.date || `unknown-${Math.random()}`;
+                }
+            } catch (e) {
+                entryTimestamp = entry.date || `invalid-${Math.random()}`;
+            }
+            
+            // Crear clave única compuesta
+            const uniqueKey = `${entryTimestamp}-${entry.score || 0}-${entry.victory}-${entry.difficulty || 'unknown'}-${entry.correct || 0}-${entry.wrong || 0}`;
+            
+            if (!seenKeys.has(uniqueKey)) {
+                seenKeys.add(uniqueKey);
+                cleanHistory2.push(entry);
+            }
+        } else {
+            cleanHistory2.push(entry);
+        }
+    }
+    
+    // --- FASE 3: Ordenar y limitar ---
+    const sortedHistory = cleanHistory2.sort((a, b) => {
+        try {
+            return new Date(b.date) - new Date(a.date);
+        } catch (e) {
+            return 0;
+        }
+    });
+    
+    const limitedHistory = sortedHistory.slice(0, 50);
+    const removedEntries = originalLength - limitedHistory.length;
+    
+    if (removedEntries > 0) {
+        // Guardar nuevo historial limpio
+        localStorage.setItem(historyKey, JSON.stringify(limitedHistory));
+        
+        // Mostrar mensaje con el resultado
+        const resultContainer = document.getElementById('repair-history-result');
+        const messageEl = document.getElementById('repair-history-message');
+        
+        if (resultContainer && messageEl) {
+            messageEl.textContent = `Se eliminaron ${removedEntries} entradas duplicadas.`;
+            resultContainer.style.display = 'block';
+            
+            // Ocultar el mensaje después de 10 segundos
+            setTimeout(() => {
+                resultContainer.style.display = 'none';
+            }, 10000);
+        }
+        
+        // Mostrar notificación
+        showNotification('Reparación completa', `Se eliminaron ${removedEntries} entradas duplicadas de tu historial.`, 'success');
+        
+        // Forzar recálculo de estadísticas
+        const profile = loadProfileData(userIP);
+        profile.then(profileData => {
+            if (profileData) {
+                updateProfileStats(profileData, userIP);
+                saveProfileData(userIP, profileData);
+                updateProfileUI(profileData, userIP);
+                updateGameHistory(userIP);
+            }
+        });
+    } else {
+        // No se encontraron duplicados
+        showNotification('Información', 'No se encontraron entradas duplicadas en tu historial.', 'info');
+    }
+    
+    resetRepairButton();
+  } catch (error) {
+    console.error('[repairGameHistory] Error:', error);
+    showNotification('Error', 'Ocurrió un error al intentar reparar el historial.', 'error');
+    resetRepairButton();
+  }
+  
+  // Función para restablecer el botón
+  function resetRepairButton() {
+    const repairBtn = document.getElementById('repair-history-btn');
+    if (repairBtn) {
+      repairBtn.innerHTML = '<i class="fas fa-tools"></i> Reparar';
+      repairBtn.disabled = false;
+    }
   }
 }
 
@@ -1086,7 +1438,7 @@ function changePlayerName() {
       if (storedProfile) {
         profile = JSON.parse(storedProfile);
         profile.name = newName;
-        saveUserProfile(profile, userIP);
+        saveProfileData(userIP, profile);
         
         // Actualizar UI con el nuevo nombre
         const usernameElement = document.getElementById('profile-username');
@@ -1127,7 +1479,7 @@ function resetPlayerProfile() {
     if (globalName) {
       newProfile.name = globalName;
     }
-    saveUserProfile(newProfile, userIP);
+    saveProfileData(userIP, newProfile);
     
     // Recargar la página
     alert('Tu perfil ha sido reiniciado correctamente.');
@@ -1741,3 +2093,45 @@ const fallbackAchievementDefinitions = [
     // SE ASUME QUE FALTAN ~62 LOGROS MÁS AQUÍ
     // SI ESTA LISTA SIGUE INCOMPLETA, EL TOTAL SERÁ INCORRECTO
 ];
+
+// Listener for achievement updates from other tabs/windows (via logros.js/logros.html)
+window.addEventListener('achievement_updated', (event) => {
+    // --- Check Loading Flag --- START
+    if (isProfileLoading) {
+        console.warn('Carga de perfil en progreso. Omitiendo actualización de logros por evento.');
+        return;
+    }
+    // --- Check Loading Flag --- END
+
+    console.log('Evento achievement_updated recibido en profile.js:', event.detail);
+    const userIP = localStorage.getItem('userIP');
+    if (userIP) {
+        // Reload profile data minimally to update achievement display
+        loadProfileData(userIP).then(profile => {
+            if (profile) {
+                updateAchievementsDisplay(profile);
+            }
+        }).catch(err => {
+             console.error('Error recargando datos para actualizar logros:', err);
+        });
+    }
+});
+
+// Listener to potentially trigger profile update from other parts of the app
+window.addEventListener('request_profile_update', () => {
+    // --- Check Loading Flag --- START
+    if (isProfileLoading) {
+        console.warn('Carga de perfil en progreso. Omitiendo request_profile_update.');
+        return;
+    }
+    // --- Check Loading Flag --- END
+
+    console.log('Evento request_profile_update recibido.');
+    const userIP = localStorage.getItem('userIP');
+    if (userIP) {
+        // Force recalculation if requested
+        loadUserProfile(userIP, true); // This call is now protected by the flag
+    }
+});
+
+console.log('profile.js cargado y listo.');

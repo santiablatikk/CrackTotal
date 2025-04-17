@@ -813,7 +813,7 @@
   display: none;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   backdrop-filter: blur(10px);
-  animation: message-fade 0.4s forwards, message-hide 0.4s 3s forwards;
+  animation: message-fade 3s ease-in-out forwards;
   border-top: 3px solid #f39c12;
 }
 
