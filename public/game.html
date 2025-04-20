@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=1024, initial-scale=1.0">
   <title>PASALA CHE - El Juego del Rosco Futbolero</title>
   <meta name="description" content="PASALA CHE - Juego interactivo de preguntas sobre fútbol. Pon a prueba tus conocimientos en este divertido rosco futbolero.">
   <meta name="google-adsense-account" content="ca-pub-9579152019412427">
@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="css/game-styles.css">
   <link rel="stylesheet" href="css/footer-styles.css">
   <link rel="stylesheet" href="css/combined.css">
+  <link rel="stylesheet" href="css/desktop-override.css">
 </head>
 <body>
   <a href="index.html" class="home-link">
@@ -459,7 +460,7 @@
         }
         
         // Asegurar que el header está fijo y con suficiente z-index
-        const header = document.querySelector('.app-header');
+        const header = document.querySelector('.game-header');
         if (header) {
           header.style.position = 'fixed';
           header.style.top = '0';
@@ -496,7 +497,7 @@
         forzarEstilos.id = 'estilos-rosco-mobile';
         forzarEstilos.textContent = `
           /* Header fijo en la parte superior */
-          .app-header {
+          .game-header {
             position: fixed !important;
             top: 0 !important;
             left: 0 !important;

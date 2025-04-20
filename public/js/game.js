@@ -1524,8 +1524,7 @@ function playSound(sound) {
     
     // Function to check if it's a mobile device
     function isMobileDevice() {
-      const deviceType = detectDeviceType();
-      return deviceType === 'mobile' || deviceType === 'mobile-landscape' || deviceType === 'tablet';
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     }
     
     // Get all rosco letters
@@ -1582,11 +1581,7 @@ function playSound(sound) {
       containerRect.width * 0.3;
     
     // Calculate radius for letter placement (outside the question card)
-    // Adjust radius for mobile to be smaller
-    const isMobile = window.innerWidth <= 480;
-    const radius = isMobile ? 
-      Math.min(centerX, centerY) * 0.7 : // 70% para móviles 
-      centerX * 0.8;                     // 80% para escritorio
+    const radius = centerX * 0.8; // 80% of container radius
     
     // Position each letter around the circle
     letters.forEach((letter, index) => {
@@ -1595,8 +1590,8 @@ function playSound(sound) {
       const angle = (index / totalLetters) * 2 * Math.PI - (Math.PI / 2);
       
       // Calculate x,y position
-      const x = centerX + radius * Math.cos(angle);
-      const y = centerY + radius * Math.sin(angle);
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
         
       // Position the letter (centered at x,y)
       letter.style.position = 'absolute';
@@ -1617,47 +1612,32 @@ function playSound(sound) {
     const roscoContainer = document.getElementById('rosco-container');
     const statusPanel = document.querySelector('.rosco-status');
     const footer = document.querySelector('.site-footer');
-    const questionCard = document.querySelector('.question-card');
     
     if (isOpen) {
       // Keyboard is open - create more space
       if (roscoContainer) {
-        roscoContainer.style.transform = 'scale(0.75)';
-        roscoContainer.style.height = '45vh';
-        roscoContainer.style.marginTop = '0';
-      }
-      
-      if (questionCard) {
-        // Mover la tarjeta de preguntas ligeramente hacia arriba
-        questionCard.style.top = '40%';
+        roscoContainer.style.transform = 'scale(0.85)';
+        roscoContainer.style.marginBottom = '120px';
       }
       
       if (statusPanel) {
-        statusPanel.style.opacity = '0.5';
-        statusPanel.style.transform = 'scale(0.9)';
+        statusPanel.style.position = 'relative';
+        statusPanel.style.bottom = 'auto';
       }
       
       if (footer) {
         footer.style.display = 'none';
       }
-      
-      // Asegurar que el contenido sea visible por encima del teclado
-      window.scrollTo(0, 0);
     } else {
       // Keyboard is closed - restore layout
       if (roscoContainer) {
-        roscoContainer.style.transform = '';
-        roscoContainer.style.height = '';
-        roscoContainer.style.marginTop = '';
-      }
-      
-      if (questionCard) {
-        questionCard.style.top = '';
+      roscoContainer.style.transform = '';
+      roscoContainer.style.marginBottom = '';
       }
       
       if (statusPanel) {
-        statusPanel.style.opacity = '';
-        statusPanel.style.transform = '';
+        statusPanel.style.position = '';
+        statusPanel.style.bottom = '';
       }
       
       if (footer) {
@@ -1915,30 +1895,13 @@ function saveGameToFirebase(gameData, userIP) {
   }
 }
 
-// Function to detect device type - enhanced version
+// Detectar tipo de dispositivo para Firebase
 function detectDeviceType() {
-  // Check screen size first for responsive design
-  const isMobileSize = window.innerWidth <= 768;
-  
-  // Check for mobile user agent as fallback
   const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-  const isMobileAgent = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
   
-  // Check for touch capability
-  const isTouchDevice = 'ontouchstart' in window || 
-                        navigator.maxTouchPoints > 0 ||
-                        navigator.msMaxTouchPoints > 0;
-  
-  // Return device type
-  if (isMobileSize || isMobileAgent) {
-    if (window.innerWidth > window.innerHeight) {
-      return 'mobile-landscape';
-    }
+  // Detectar si es móvil
+  if (/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent)) {
     return 'mobile';
-  }
-  
-  if (isTouchDevice) {
-    return 'tablet';
   }
   
   return 'desktop';
