@@ -459,7 +459,7 @@
         }
         
         // Asegurar que el header está fijo y con suficiente z-index
-        const header = document.querySelector('.game-header');
+        const header = document.querySelector('.app-header');
         if (header) {
           header.style.position = 'fixed';
           header.style.top = '0';
@@ -496,7 +496,7 @@
         forzarEstilos.id = 'estilos-rosco-mobile';
         forzarEstilos.textContent = `
           /* Header fijo en la parte superior */
-          .game-header {
+          .app-header {
             position: fixed !important;
             top: 0 !important;
             left: 0 !important;

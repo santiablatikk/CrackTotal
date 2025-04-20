@@ -4333,3 +4333,216 @@
     font-size: 1.2rem;
   }
 }
+
+/* Optimizaciones para dispositivos móviles */
+@media (max-width: 480px) {
+  /* Mejoras para la experiencia móvil */
+  body {
+    overflow-y: auto !important;
+    position: relative !important;
+  }
+
+  .container {
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  #rosco-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 65vh !important;
+    position: relative !important;
+    margin: 0 auto !important;
+  }
+
+  /* Tamaño ajustado para las letras */
+  .rosco-letter {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.8rem !important;
+    margin: 0 !important;
+  }
+
+  /* Destacar la letra actual */
+  .rosco-letter.current {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.9rem !important;
+    transform: scale(1.2) !important;
+    z-index: 10 !important;
+    box-shadow: 0 0 10px rgba(243, 156, 18, 0.8) !important;
+  }
+
+  /* Centrar adecuadamente la tarjeta de pregunta */
+  .question-card {
+    width: 90% !important;
+    max-width: 280px !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    background: rgba(8, 31, 54, 0.95) !important;
+  }
+
+  /* Mejorar visibilidad de la letra actual */
+  .current-letter-display {
+    font-size: 2.5rem !important;
+    width: 60px !important;
+    height: 60px !important;
+    margin: 0 auto 10px !important;
+  }
+
+  /* Mejorar legibilidad de la pregunta */
+  .current-question {
+    font-size: 1rem !important;
+    margin-bottom: 10px !important;
+  }
+
+  .current-definition {
+    font-size: 0.9rem !important;
+    max-height: 100px !important;
+    overflow-y: auto !important;
+  }
+
+  /* Ajustar el panel de estado para mejor visualización */
+  .rosco-status {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 90% !important;
+    margin: 10px auto !important;
+    padding: 8px !important;
+    justify-content: space-around !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    border-radius: 10px !important;
+  }
+
+  .status-item {
+    flex: 1;
+    text-align: center;
+    padding: 5px;
+  }
+
+  .status-icon {
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+
+  .status-label {
+    font-size: 0.7rem;
+  }
+
+  .status-value {
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  /* Campos de entrada y botones más accesibles */
+  .input-container {
+    width: 90% !important;
+    margin: 10px auto !important;
+  }
+
+  .answer-input {
+    font-size: 1rem !important;
+    height: 42px !important;
+  }
+
+  .submit-btn {
+    font-size: 1.2rem !important;
+    height: 42px !important;
+  }
+
+  .skip-btn, .help-btn {
+    font-size: 0.9rem !important;
+    padding: 10px !important;
+    margin-top: 8px !important;
+  }
+
+  /* Ajustar timer para mejor visibilidad */
+  .mini-timer {
+    background: rgba(0, 0, 0, 0.5) !important;
+    padding: 5px 10px !important;
+    border-radius: 15px !important;
+    margin: 10px auto !important;
+  }
+
+  /* Asegurar que los modales sean accesibles en móvil */
+  .modal-content {
+    width: 90% !important;
+    max-width: 330px !important;
+    padding: 15px !important;
+  }
+}
+
+/* Reglas específicas para dispositivos móviles en landscape */
+@media (max-width: 768px) and (orientation: landscape) {
+  body {
+    overflow-y: auto !important;
+    height: auto !important;
+  }
+  
+  .container {
+    min-height: auto !important;
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+  }
+  
+  #rosco-container {
+    height: 80vh !important;
+    width: 70vw !important;
+    margin: 0 auto !important;
+  }
+  
+  .rosco-letter {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 0.7rem !important;
+  }
+  
+  .rosco-letter.current {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .rosco-status {
+    position: absolute !important;
+    right: 5px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 20% !important;
+    max-width: 80px !important;
+    flex-direction: column !important;
+    margin: 0 !important;
+  }
+  
+  .status-item {
+    margin-bottom: 8px !important;
+  }
+  
+  .question-card {
+    max-width: 250px !important;
+  }
+  
+  .current-letter-display {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 2rem !important;
+  }
+  
+  .current-question, .current-definition {
+    font-size: 0.85rem !important;
+  }
+  
+  .input-container {
+    max-width: 90% !important;
+  }
+  
+  .answer-input, .submit-btn {
+    height: 36px !important;
+  }
+  
+  .skip-btn, .help-btn {
+    padding: 8px !important;
+    font-size: 0.8rem !important;
+  }
+}
