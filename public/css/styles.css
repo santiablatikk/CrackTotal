@@ -1379,7 +1379,7 @@ body {
   }
 }
 
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
   .adsense-container {
     padding: 12px;
     margin: 15px auto;
@@ -1393,7 +1393,7 @@ body {
     width: 85%;
     padding: 15px;
   }
-} */
+}
 
 .game-buttons {
   display: flex;
@@ -1459,20 +1459,83 @@ body {
   font-size: 1.3rem;
 }
 
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
   .game-start-btn, .alt-game-btn {
     padding: 12px 18px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     margin: 8px 0;
   }
 
   .alt-game-btn i {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
-} */
+}
 
-.alt-game-btn i {
-  margin-right: 10px;
+@media (max-width: 768px) {
+  .game-start-btn, .alt-game-btn {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .title-text {
+    font-size: 2rem;
+  }
+  .subtitle {
+    font-size: 0.9rem;
+  }
+  .input-field {
+    font-size: 0.9rem;
+  }
+  .btn {
+    font-size: 0.9rem;
+    padding: 0.7rem 1.2rem;
+  }
+  .rules-grid {
+    grid-template-columns: 1fr;
+  }
+  .welcome-header {
+    padding: 0.8rem;
+    flex-direction: column;
+    text-align: center;
+  }
+  .user-avatar {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+  .welcome-title {
+    font-size: 1.2rem;
+  }
+  .game-banner {
+    padding: 0.8rem 1rem;
+  }
+  .banner-text {
+    font-size: 0.9rem;
+  }
+  .difficulty-option {
+    padding: 0.8rem;
+    flex-direction: column;
+    align-items: center;
+  }
+  .difficulty-icon {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+  .difficulty-details {
+    text-align: center;
+    align-items: center;
+  }
+  .difficulty-details span {
+    font-size: 0.9rem;
+  }
+  .difficulty-details small {
+    font-size: 0.7rem;
+  }
+  .btn-start-game {
+    padding: 0.8rem 1.8rem;
+    font-size: 1rem;
+  }
 }
 
 .portal-btn {

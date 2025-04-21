@@ -1852,6 +1852,40 @@ img {
   }
 }
 
+@media (max-width: 480px) {
+  .stats-card {
+    padding: 12px; /* Menos padding interno */
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .stats-icon {
+    margin-right: 0;
+    margin-bottom: 8px;
+    font-size: 1.8rem;
+  }
+  .stats-value {
+    font-size: 1.5rem;
+  }
+  .stats-label {
+    font-size: 0.75rem;
+  }
+  .game-history-item {
+    padding: 10px; /* Menos padding */
+    margin-bottom: 8px; /* Menos margen */
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .game-details span {
+    font-size: 0.8rem;
+  }
+  .game-score {
+    font-size: 1rem; /* Ligeramente más pequeño */
+    margin-top: 5px;
+    align-self: flex-end;
+  }
+}
+
 /* Arreglo para errores MIME de CSS */
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 

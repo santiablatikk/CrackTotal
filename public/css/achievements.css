@@ -471,7 +471,22 @@
 }
 
 @media (max-width: 480px) {
-  .achievement-categories {
-    gap: 5px;
+  .achievements-grid {
+    grid-template-columns: 1fr;
+  }
+  .achievement-card {
+    padding: 12px;
+  }
+  .achievement-icon {
+    font-size: 2.5rem;
+  }
+  .achievement-title {
+    font-size: 0.95rem;
+  }
+  .achievement-description {
+    font-size: 0.8rem;
+  }
+  .achievement-progress-bar {
+    height: 6px;
   }
 } 

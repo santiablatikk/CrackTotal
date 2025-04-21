@@ -1115,6 +1115,13 @@
   .status-item:not(:last-child)::after {
     display: none;
   }
+  .game-container {
+    padding-left: 10px; /* Añadir padding lateral */
+    padding-right: 10px;
+  }
+  .current-definition {
+    font-size: 0.9rem; /* Ligeramente más grande */
+  }
 }
 
 /* ESTILOS MÓVILES CONSOLIDADOS - Un único bloque para todas las pantallas pequeñas */
@@ -1473,6 +1480,26 @@
   
   .game-container {
     padding-bottom: 70px;
+  }
+  .game-container {
+    padding-top: 50px; /* Menos padding arriba */
+    padding-bottom: 50px; /* Menos padding abajo */
+    padding-left: 5px; /* Menos padding lateral */
+    padding-right: 5px;
+  }
+  .rosco-section {
+    margin-bottom: 10px; /* Menos espacio bajo el rosco */
+  }
+  .current-definition {
+    font-size: 0.85rem; /* Ajustar para pantallas muy pequeñas */
+    max-height: 90px; /* Limitar altura */
+  }
+  .skip-btn, .help-btn {
+    padding: 8px 12px; /* Hacer botones ligeramente más pequeños */
+    font-size: 0.8rem;
+  }
+  .answer-input {
+    font-size: 0.9rem;
   }
 }
 
