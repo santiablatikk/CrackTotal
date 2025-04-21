@@ -624,46 +624,51 @@
       
       // Gestionar visibilidad del teclado virtual
       function gestionarTeclado() {
-        if (!isMobile()) return;
+        // Comentado: Ya no necesitamos la detección móvil aquí si forzamos escritorio
+        // if (!isMobile()) return;
         
         const inputRespuesta = document.getElementById('answer-input');
         if (!inputRespuesta) return;
         
         // Al mostrar el teclado
         inputRespuesta.addEventListener('focus', function() {
+          // Comentado: No modificar el rosco al hacer focus
+          /*
           const roscoContainer = document.getElementById('rosco-container');
-          const footer = document.querySelector('.policy-footer');
-          
           if (roscoContainer) {
-            // Reducir tamaño del rosco cuando aparece el teclado - Comentado
             // roscoContainer.style.transform = 'scale(0.8)';
             // roscoContainer.style.transformOrigin = 'center center';
           }
+          */
           
-          // Ocultar el footer cuando aparece el teclado
+          // Comentado: No ocultar el footer al hacer focus
+          /*
+          const footer = document.querySelector('.policy-footer');
           if (footer) {
             footer.style.display = 'none';
           }
+          */
         });
         
         // Al ocultar el teclado
         inputRespuesta.addEventListener('blur', function() {
+          // Comentado: No modificar el rosco al quitar focus
+          /*
           const roscoContainer = document.getElementById('rosco-container');
-          const footer = document.querySelector('.policy-footer');
-          
           if (roscoContainer) {
-            // Restaurar tamaño original - Comentado
             // roscoContainer.style.transform = '';
             // roscoContainer.style.transformOrigin = '';
-            
-            // Reposicionar letras - Ya comentado
             // setTimeout(posicionarLetrasEnCirculo, 300);
           }
+          */
           
-          // Mostrar el footer cuando desaparece el teclado
+          // Comentado: No mostrar el footer al quitar focus
+          /*
+          const footer = document.querySelector('.policy-footer');
           if (footer) {
             footer.style.display = 'flex';
           }
+          */
         });
       }
       

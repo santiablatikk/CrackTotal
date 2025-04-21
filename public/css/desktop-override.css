@@ -1,11 +1,11 @@
-/* desktop-override.css - Solo fija el ancho mínimo del viewport */
+/* desktop-override.css - Solo fija el ancho mínimo del viewport y oculta/muestra elementos */
 
 /* Configuración global básica */
 html, body {
   min-width: 1024px !important;
-  width: auto !important; /* Permite que el cuerpo crezca si es necesario */
-  overflow-x: auto !important; /* Habilita el scroll horizontal */
-  height: auto !important; /* Evita problemas con fixed height */
+  width: auto !important;
+  overflow-x: auto !important;
+  height: auto !important;
 }
 
 /* Ocultar elementos exclusivos para móvil */
@@ -23,7 +23,7 @@ html, body {
   display: none !important;
 }
 
-/* Asegurarse que los contenedores principales no se limiten por viewport */
+/* Evitar que los contenedores se limiten (puede ser necesario para algunos layouts) */
 .container, .app-container, .main-content, .content-wrapper, .page-container {
-    max-width: none !important; /* Permitir que ocupen el ancho necesario */
+    max-width: none !important;
 } 
