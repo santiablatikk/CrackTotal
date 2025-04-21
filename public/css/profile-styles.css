@@ -1853,37 +1853,165 @@ img {
 }
 
 @media (max-width: 480px) {
-  .stats-card {
-    padding: 12px; /* Menos padding interno */
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+  .profile-grid {
+    grid-template-columns: 1fr; /* Ya está así implícitamente, pero lo dejamos claro */
   }
-  .stats-icon {
-    margin-right: 0;
-    margin-bottom: 8px;
-    font-size: 1.8rem;
+
+  .profile-sidebar {
+    position: static; /* Resetear sticky */
+    margin-bottom: 1.5rem;
   }
-  .stats-value {
-    font-size: 1.5rem;
+
+  .profile-card-condensed {
+      padding: 1rem;
   }
-  .stats-label {
-    font-size: 0.75rem;
+
+  .avatar-border-effect {
+      width: 75px; /* Reducir */
+      height: 75px; /* Reducir */
+      margin-bottom: 0.4rem;
   }
-  .game-history-item {
-    padding: 10px; /* Menos padding */
-    margin-bottom: 8px; /* Menos margen */
-    flex-direction: column;
-    align-items: flex-start;
+  .profile-avatar-large {
+    width: 65px; /* Reducir */
+    height: 65px; /* Reducir */
   }
-  .game-details span {
+  .profile-avatar-large i {
+    font-size: 2rem;
+  }
+
+  .profile-name-large {
+    font-size: 1.1rem; /* Reducir */
+  }
+
+  .profile-status-badge {
+    padding: 0.3rem 0.8rem;
     font-size: 0.8rem;
   }
-  .game-score {
-    font-size: 1rem; /* Ligeramente más pequeño */
-    margin-top: 5px;
-    align-self: flex-end;
+
+  .sidebar-stat {
+    padding: 0.4rem 0;
   }
+  .sidebar-stat-label {
+    font-size: 0.75rem;
+  }
+  .sidebar-stat-value {
+    font-size: 1rem;
+  }
+
+  .view-ranking-btn-sidebar {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  .profile-section {
+    padding: 1rem 0.8rem; /* Ajustar padding */
+  }
+
+  .section-title {
+    font-size: 1rem; /* Reducir */
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.4rem;
+  }
+  .section-title i {
+    font-size: 1.1rem; /* Reducir */
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr; /* Forzar 2 columnas */
+    gap: 0.5rem; /* Reducir gap */
+  }
+
+  /* Ajustes previos para stat-card y game-entry se mantienen */
+  .stat-card {
+    padding: 0.6rem 0.4rem;
+    /* Reducir padding si es necesario basado en el nuevo grid */
+  }
+  .stat-icon {
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+  }
+  .stat-value {
+    font-size: 1.2rem;
+  }
+  .stat-label {
+    font-size: 0.65rem;
+  }
+
+  .game-entry {
+    padding: 0.6rem 0.8rem;
+    gap: 0.8rem;
+  }
+  .game-info span {
+      font-size: 0.75rem;
+      line-height: 1.3;
+  }
+   .game-info strong {
+      font-size: 0.85rem;
+  }
+  .game-score {
+    font-size: 1.1rem;
+    min-width: 50px;
+  }
+
+  /* Logros dentro del perfil */
+  .achievements-container {
+    grid-template-columns: 1fr; /* Asegurar 1 columna */
+    gap: 0.8rem;
+    max-height: none; /* Quitar límite de altura aquí */
+  }
+  .achievement-card {
+    padding: 1rem; /* Ajustar padding */
+    flex-direction: row; /* Mantener fila si cabe */
+    align-items: center;
+    opacity: 1; /* No dim locked ones here */
+    filter: none;
+  }
+  .achievement-icon-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+  .achievement-icon-wrapper i {
+    font-size: 1.2rem;
+  }
+  .achievement-details h4 {
+    font-size: 0.9rem;
+  }
+  .achievement-details p {
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+  }
+  .achievement-progress {
+    height: 6px;
+  }
+  .achievement-progress-text {
+      font-size: 0.7rem;
+  }
+  .achievement-date {
+      font-size: 0.7rem;
+  }
+
+  /* Gestión de perfil */
+  .management-option {
+    padding: 1rem;
+  }
+  .management-option h4 {
+    font-size: 0.95rem;
+  }
+  .name-change-controls {
+    flex-direction: column; /* Apilar en móvil */
+    gap: 0.5rem;
+  }
+  #new-name-input {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.8rem;
+  }
+  .action-button {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+    text-align: center;
+  }
+
 }
 
 /* Arreglo para errores MIME de CSS */

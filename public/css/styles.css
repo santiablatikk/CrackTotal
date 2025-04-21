@@ -1479,11 +1479,18 @@ body {
 }
 
 @media (max-width: 480px) {
+  .app-container {
+    padding: 0.3rem 0.5rem;
+  }
+
   .title-text {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
   .subtitle {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+  }
+  .input-with-icon {
+    padding: 0.7rem 0.8rem;
   }
   .input-field {
     font-size: 0.9rem;
@@ -1494,6 +1501,13 @@ body {
   }
   .rules-grid {
     grid-template-columns: 1fr;
+  }
+  .rule-card {
+    padding: 0.5rem;
+  }
+  .rule-content p {
+    font-size: 0.75rem;
+    line-height: 1.2;
   }
   .welcome-header {
     padding: 0.8rem;
@@ -1513,10 +1527,15 @@ body {
   .banner-text {
     font-size: 0.9rem;
   }
+  .difficulty-options {
+    gap: 0.8rem;
+  }
   .difficulty-option {
     padding: 0.8rem;
     flex-direction: column;
     align-items: center;
+    margin-bottom: 0.5rem;
+    width: 95%;
   }
   .difficulty-icon {
     margin-right: 0;
