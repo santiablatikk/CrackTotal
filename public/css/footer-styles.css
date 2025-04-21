@@ -198,9 +198,9 @@ main, .profile-container, .ranking-container, .content-container, .blog-detail-c
 }
 
 /* Responsive */
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
   .policy-footer {
-    padding: 1.5rem 1rem;
+    padding: 2rem 1rem;
   }
   
   .footer-links-mini {
@@ -211,9 +211,9 @@ main, .profile-container, .ranking-container, .content-container, .blog-detail-c
     font-size: 0.8rem;
     padding: 0.4rem 0.8rem;
   }
-} */
+}
 
-/* @media (max-width: 480px) {
+@media (max-width: 480px) {
   .footer-links-mini {
     justify-content: center;
     flex-direction: row;
@@ -232,7 +232,7 @@ main, .profile-container, .ranking-container, .content-container, .blog-detail-c
     height: 35px;
     font-size: 1rem;
   }
-} */
+}
 
 /* --- Standard Site Footer Styles --- */
 .site-footer {
@@ -383,7 +383,7 @@ main, .profile-container, .ranking-container, .content-container, .blog-detail-c
 }
 
 /* Responsive adjustments */
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
     .footer-content {
         flex-direction: column;
         align-items: center; 
@@ -405,9 +405,9 @@ main, .profile-container, .ranking-container, .content-container, .blog-detail-c
     .site-footer {
         padding: 30px 15px 15px 15px; 
     }
-} */
+}
 
-/* @media (max-width: 480px) {
+@media (max-width: 480px) {
     .footer-links {
         gap: 10px 15px;
     }
@@ -428,5 +428,5 @@ main, .profile-container, .ranking-container, .content-container, .blog-detail-c
      .footer-copyright {
         font-size: 11px;
     }
-} */
+}
 /* --- End Standard Site Footer Styles --- */ 

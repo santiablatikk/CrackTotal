@@ -1181,7 +1181,7 @@ body:not(.game-body) {
 }
 
 /* Responsive */
-/* @media (max-height: 700px) {
+@media (max-height: 700px) {
   .app-container {
     min-height: 90vh;
     padding: 0.2rem;
@@ -1206,9 +1206,9 @@ body:not(.game-body) {
   .rule-content p {
     font-size: 0.65rem;
   }
-} */
+}
 
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
   .rules-grid {
     grid-template-columns: 1fr;
   }
@@ -1221,7 +1221,7 @@ body:not(.game-body) {
   .difficulty-option {
     width: 100%;
   }
-} */
+}
 
 /* Asegurar que el footer siempre esté en la parte inferior */
 html, body {

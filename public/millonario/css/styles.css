@@ -444,7 +444,11 @@ footer {
 }
 
 /* Responsive Styles */
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+  
   h1 {
     font-size: 2.5rem;
   }
@@ -462,9 +466,9 @@ footer {
     width: 100%;
     max-width: 320px;
   }
-} */
+}
 
-/* @media (max-width: 480px) {
+@media (max-width: 480px) {
   h1 {
     font-size: 2rem;
   }
@@ -489,4 +493,4 @@ footer {
     width: 100%;
     border-radius: 0 0 var(--border-radius) var(--border-radius);
   }
-} */
+}

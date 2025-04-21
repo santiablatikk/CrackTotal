@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=1024, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>PASALA CHE - El Juego del Rosco Futbolero</title>
   <meta name="description" content="PASALA CHE - Juego interactivo de preguntas sobre fútbol. Pon a prueba tus conocimientos en este divertido rosco futbolero.">
   <meta name="google-adsense-account" content="ca-pub-9579152019412427">
@@ -27,7 +27,6 @@
   <link rel="stylesheet" href="css/game-styles.css">
   <link rel="stylesheet" href="css/footer-styles.css">
   <link rel="stylesheet" href="css/combined.css">
-  <link rel="stylesheet" href="css/desktop-override.css">
 </head>
 <body>
   <a href="index.html" class="home-link">
@@ -624,51 +623,46 @@
       
       // Gestionar visibilidad del teclado virtual
       function gestionarTeclado() {
-        // Comentado: Ya no necesitamos la detección móvil aquí si forzamos escritorio
-        // if (!isMobile()) return;
+        if (!isMobile()) return; // <-- Restaurar la condición móvil
         
         const inputRespuesta = document.getElementById('answer-input');
         if (!inputRespuesta) return;
         
         // Al mostrar el teclado
         inputRespuesta.addEventListener('focus', function() {
-          // Comentado: No modificar el rosco al hacer focus
-          /*
           const roscoContainer = document.getElementById('rosco-container');
-          if (roscoContainer) {
-            // roscoContainer.style.transform = 'scale(0.8)';
-            // roscoContainer.style.transformOrigin = 'center center';
-          }
-          */
-          
-          // Comentado: No ocultar el footer al hacer focus
-          /*
           const footer = document.querySelector('.policy-footer');
+          
+          if (roscoContainer) {
+            // Restaurar la reducción de tamaño
+            roscoContainer.style.transform = 'scale(0.8)';
+            roscoContainer.style.transformOrigin = 'center center';
+          }
+          
+          // Restaurar ocultar el footer
           if (footer) {
             footer.style.display = 'none';
           }
-          */
         });
         
         // Al ocultar el teclado
         inputRespuesta.addEventListener('blur', function() {
-          // Comentado: No modificar el rosco al quitar focus
-          /*
           const roscoContainer = document.getElementById('rosco-container');
-          if (roscoContainer) {
-            // roscoContainer.style.transform = '';
-            // roscoContainer.style.transformOrigin = '';
-            // setTimeout(posicionarLetrasEnCirculo, 300);
-          }
-          */
-          
-          // Comentado: No mostrar el footer al quitar focus
-          /*
           const footer = document.querySelector('.policy-footer');
+          
+          if (roscoContainer) {
+            // Restaurar tamaño original
+            roscoContainer.style.transform = '';
+            roscoContainer.style.transformOrigin = '';
+            
+            // Restaurar el reposicionamiento de letras
+            setTimeout(posicionarLetrasEnCirculo, 300);
+          }
+          
+          // Restaurar mostrar el footer
           if (footer) {
             footer.style.display = 'flex';
           }
-          */
         });
       }
       
@@ -687,8 +681,8 @@
       
       // Crear elemento de observación para redimensionar
       const resizeObserver = new ResizeObserver(() => {
-        // Comentado para forzar vista de escritorio
-        // posicionarLetrasEnCirculo();
+        // Restaurar llamada a posicionar letras
+        posicionarLetrasEnCirculo();
       });
       
       // Observar cambios en el tamaño del contenedor
@@ -698,21 +692,17 @@
       }
       
       // Ejecutar posicionamiento inicial y posteriores para asegurar ajuste correcto
-      /* Comentado para forzar vista de escritorio en móvil
       setTimeout(posicionarLetrasEnCirculo, 100);
       setTimeout(posicionarLetrasEnCirculo, 500);
       setTimeout(posicionarLetrasEnCirculo, 1000);
       gestionarTeclado();
-      */
       
       // Actualizar en cambios de orientación o resize
-      /* Comentado para forzar vista de escritorio en móvil
       window.addEventListener('resize', posicionarLetrasEnCirculo);
       window.addEventListener('orientationchange', function() {
         // Pequeño delay para asegurar que los cambios de orientación sean registrados
         setTimeout(posicionarLetrasEnCirculo, 300);
       });
-      */
     });
   </script>
 </body>

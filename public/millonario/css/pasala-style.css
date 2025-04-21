@@ -167,34 +167,14 @@ h1 {
   transform: translateY(-3px);
 }
 
-/* @media (max-width: 768px) {
-  h1 {
-    font-size: 2.2rem;
+@media (max-width: 768px) {
+  .modal-content {
+    max-width: 90%;
   }
-  
-  .subtitle {
-    font-size: 1rem;
-  }
-  
-  .btn {
-    padding: 10px 20px;
-  }
-} */
+}
 
-/* @media (max-width: 480px) {
-  h1 {
-    font-size: 1.8rem;
+@media (max-width: 480px) {
+  .timer-display {
+    font-size: 1.2rem;
   }
-  
-  .content-card {
-    padding: 20px 15px;
-  }
-  
-  .footer-links-mini {
-    gap: 8px;
-  }
-  
-  .footer-links-mini a {
-    font-size: 0.75rem;
-  }
-} */ 
+} 
