@@ -682,7 +682,8 @@
       
       // Crear elemento de observación para redimensionar
       const resizeObserver = new ResizeObserver(() => {
-        posicionarLetrasEnCirculo();
+        // Comentado para forzar vista de escritorio
+        // posicionarLetrasEnCirculo();
       });
       
       // Observar cambios en el tamaño del contenedor
@@ -692,17 +693,21 @@
       }
       
       // Ejecutar posicionamiento inicial y posteriores para asegurar ajuste correcto
+      /* Comentado para forzar vista de escritorio en móvil
       setTimeout(posicionarLetrasEnCirculo, 100);
       setTimeout(posicionarLetrasEnCirculo, 500);
       setTimeout(posicionarLetrasEnCirculo, 1000);
       gestionarTeclado();
+      */
       
       // Actualizar en cambios de orientación o resize
+      /* Comentado para forzar vista de escritorio en móvil
       window.addEventListener('resize', posicionarLetrasEnCirculo);
       window.addEventListener('orientationchange', function() {
         // Pequeño delay para asegurar que los cambios de orientación sean registrados
         setTimeout(posicionarLetrasEnCirculo, 300);
       });
+      */
     });
   </script>
 </body>
