@@ -635,9 +635,9 @@
           const footer = document.querySelector('.policy-footer');
           
           if (roscoContainer) {
-            // Reducir tamaño del rosco cuando aparece el teclado
-            roscoContainer.style.transform = 'scale(0.8)';
-            roscoContainer.style.transformOrigin = 'center center';
+            // Reducir tamaño del rosco cuando aparece el teclado - Comentado
+            // roscoContainer.style.transform = 'scale(0.8)';
+            // roscoContainer.style.transformOrigin = 'center center';
           }
           
           // Ocultar el footer cuando aparece el teclado
@@ -652,12 +652,12 @@
           const footer = document.querySelector('.policy-footer');
           
           if (roscoContainer) {
-            // Restaurar tamaño original
-            roscoContainer.style.transform = '';
-            roscoContainer.style.transformOrigin = '';
+            // Restaurar tamaño original - Comentado
+            // roscoContainer.style.transform = '';
+            // roscoContainer.style.transformOrigin = '';
             
-            // Reposicionar letras
-            setTimeout(posicionarLetrasEnCirculo, 300);
+            // Reposicionar letras - Ya comentado
+            // setTimeout(posicionarLetrasEnCirculo, 300);
           }
           
           // Mostrar el footer cuando desaparece el teclado

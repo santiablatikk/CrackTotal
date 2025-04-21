@@ -3,30 +3,27 @@
 /* Configuración global básica */
 html, body {
   min-width: 1024px !important;
-  width: auto !important;
-  overflow-x: auto !important;
+  width: auto !important; /* Permite que el cuerpo crezca si es necesario */
+  overflow-x: auto !important; /* Habilita el scroll horizontal */
+  height: auto !important; /* Evita problemas con fixed height */
 }
 
-/* IMPORTANTE: No afectar el posicionamiento original de los elementos del juego */
-/* Solo deshabilitar cambios específicos para móvil */
-@media (max-width: 1024px) {
-  html, body {
-    width: 1024px !important;
-    min-width: 1024px !important;
-  }
-  
-  /* Ocultar elementos exclusivos para móvil */
-  .mobile-only, .xs-only, .sm-only, .md-only {
-    display: none !important;
-  }
-  
-  /* Mostrar elementos exclusivos para escritorio */
-  .desktop-only, .lg-only, .xl-only {
-    display: block !important;
-  }
-  
-  /* Ocultar botones de menú móvil */
-  .menu-toggle {
-    display: none !important;
-  }
+/* Ocultar elementos exclusivos para móvil */
+.mobile-only, .xs-only, .sm-only, .md-only, [class*="-xs"], [class*="-sm"], [class*="-md"] {
+  display: none !important;
+}
+
+/* Mostrar elementos exclusivos para escritorio */
+.desktop-only, .lg-only, .xl-only, [class*="-lg"], [class*="-xl"] {
+  display: block !important;
+}
+
+/* Ocultar botones de menú móvil específico si existe */
+.menu-toggle {
+  display: none !important;
+}
+
+/* Asegurarse que los contenedores principales no se limiten por viewport */
+.container, .app-container, .main-content, .content-wrapper, .page-container {
+    max-width: none !important; /* Permitir que ocupen el ancho necesario */
 } 
