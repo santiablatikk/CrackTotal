@@ -53,6 +53,15 @@
   --button-padding-small: 8px 15px;
   --toast-bg: rgba(15, 23, 42, 0.9);
   --modal-bg: rgba(15, 23, 42, 0.95);
+  
+  /* Variables de tamaño para diferentes dispositivos */
+  --mobile-small: 320px;  /* iPhone SE, dispositivos muy pequeños */
+  --mobile-medium: 375px; /* iPhone X/11/12/13 */
+  --mobile-large: 414px;  /* iPhone 8 Plus, dispositivos más grandes */
+  --tablet: 768px;        /* iPad y tablets */
+  --desktop-small: 1024px; /* Laptops pequeñas */
+  --desktop: 1280px;      /* Pantallas de escritorio */
+  --desktop-large: 1440px; /* Pantallas grandes */
 }
 
 /* Clases de accesibilidad */
@@ -84,6 +93,23 @@
   box-shadow: var(--shadow-md);
 }
 
+/* Clases de ayuda para accesibilidad y visibilidad en diferentes dispositivos */
+.visible-desktop {
+  display: block;
+}
+
+.visible-tablet {
+  display: none;
+}
+
+.visible-mobile {
+  display: none;
+}
+
+.hidden-mobile {
+  display: block;
+}
+
 /* Mejoras responsivas globales */
 body {
   overflow-x: hidden;
@@ -92,6 +118,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none; /* Evita el rebote en iOS */
 }
 
 img, svg {
@@ -884,5 +911,836 @@ button, input, select, textarea {
   .floating-sound-btn {
     width: 44px !important;
     height: 44px !important;
+  }
+}
+
+/* ============= OPTIMIZACIONES RESPONSIVAS PARA PASALA CHE (Perfect Mobile Version) ============= */
+
+/* Reset de escalado para evitar problemas en dispositivos táctiles */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
+body {
+  -webkit-overflow-scrolling: touch; /* Scroll suave para iOS */
+}
+
+/* Mejoras para todos los elementos interactivos en móvil */
+button, 
+input[type="submit"],
+input[type="button"],
+.btn,
+.nav-btn,
+.skip-btn,
+.help-btn {
+  min-height: 42px; /* Estándar de Apple para elementos táctiles */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(0,0,0,0); /* Elimina el highlight en tap */
+}
+
+/* Mejora de scroll para mobile */
+* {
+  -webkit-overflow-scrolling: touch; /* Scroll suave para iOS */
+}
+
+/* Mejora del contraste para mejor legibilidad en pantallas pequeñas */
+h1, h2, h3, p, span, div {
+  text-rendering: optimizeLegibility;
+}
+
+/* ============= OPTIMIZACIONES TABLET (768px y menos) ============= */
+@media only screen and (max-width: 768px) {
+  .visible-desktop {
+    display: none !important;
+  }
+  
+  .visible-tablet {
+    display: block !important;
+  }
+  
+  /* Ajustes de tamaño para el rosco en tablet */
+  #rosco-container {
+    width: 550px;
+    height: 550px;
+    margin: 0 auto;
+  }
+  
+  .rosco-letter {
+    width: 70px;
+    height: 70px;
+    font-size: 2.2rem;
+    border-width: 3px;
+  }
+  
+  /* Tarjeta de pregunta adaptada para tablet */
+  .question-card {
+    width: 75% !important;
+    padding: 20px !important;
+  }
+  
+  .current-letter-display {
+    font-size: 3rem !important;
+    margin-bottom: 10px !important;
+  }
+  
+  .current-question {
+    font-size: 1.5rem !important;
+    margin-bottom: 15px !important;
+  }
+  
+  .current-definition {
+    font-size: 1rem !important;
+    max-height: 180px !important;
+    padding: 10px !important;
+  }
+  
+  /* Botones de navegación más amigables para tablet */
+  .nav-btn, .skip-btn, .help-btn {
+    padding: 12px 15px !important;
+    font-size: 1.1rem !important;
+  }
+  
+  /* Ajuste del modal para tablet */
+  .modal-content {
+    width: 90%;
+    max-width: 650px;
+    padding: 30px 25px;
+  }
+  
+  /* Mejoras en la barra de estado */
+  .rosco-status {
+    width: 95%;
+    padding: 15px;
+    gap: 10px;
+  }
+  
+  .status-label {
+    font-size: 0.8rem;
+  }
+  
+  .status-value {
+    font-size: 1.8rem;
+  }
+}
+
+/* ============= OPTIMIZACIONES MÓVIL (599px y menos) ============= */
+@media only screen and (max-width: 599px) {
+  .visible-tablet {
+    display: none !important;
+  }
+  
+  .visible-mobile {
+    display: block !important;
+  }
+  
+  .hidden-mobile {
+    display: none !important;
+  }
+  
+  /* Header ajustado para móvil */
+  .app-header {
+    padding: 10px 0 8px;
+    margin-bottom: 10px;
+  }
+  
+  .title-text {
+    font-size: 2.2rem !important; 
+    letter-spacing: 1px;
+  }
+  
+  .subtitle {
+    font-size: 0.9rem !important;
+    margin-top: -5px;
+  }
+  
+  /* Botones de navegación más accesibles */
+  .home-link, .sound-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  
+  .home-link span {
+    display: none;
+  }
+  
+  /* Rosco optimizado para móvil con posicionamiento perfecto */
+  #rosco-container {
+    width: calc(100vw - 30px);
+    max-width: 400px;
+    height: auto;
+    aspect-ratio: 1/1;
+  }
+  
+  .rosco-letter {
+    width: 40px;
+    height: 40px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    border-width: 2px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+  }
+  
+  /* Reposicionamiento preciso de letras */
+  .rosco-letter.current {
+    transform: scale(1.3);
+  }
+  
+  /* Optimizaciones en la tarjeta de pregunta para claridad en móvil */
+  .question-card {
+    width: 85% !important;
+    height: auto !important;
+    aspect-ratio: 1/1 !important;
+    padding: 15px 10px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+  }
+  
+  .question-content {
+    width: 100% !important;
+    height: auto !important;
+    gap: 8px !important;
+  }
+  
+  .current-letter-display {
+    font-size: 2.4rem !important;
+    margin-bottom: 5px !important;
+  }
+  
+  .current-question {
+    font-size: 1.2rem !important;
+    line-height: 1.3 !important;
+    margin-bottom: 8px !important;
+    padding: 0 5px !important;
+  }
+  
+  .starts-with-question-text,
+  .contains-question-text {
+    font-size: 1.1rem !important;
+  }
+  
+  .current-definition {
+    font-size: 0.9rem !important;
+    line-height: 1.3 !important;
+    max-height: 100px !important;
+    margin-bottom: 10px !important;
+    padding: 8px !important;
+  }
+  
+  /* Timer más visible */
+  .mini-timer {
+    margin: 8px 0 !important;
+    padding: 5px 12px !important;
+    border-radius: 30px !important;
+  }
+  
+  .mini-timer span {
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+  }
+  
+  /* Formulario de respuesta optimizado */
+  .answer-form {
+    width: 95% !important;
+  }
+  
+  .input-container {
+    margin-bottom: 8px !important;
+  }
+  
+  .answer-input {
+    padding: 10px 40px 10px 15px !important;
+    font-size: 1rem !important;
+    border-radius: 25px !important;
+    height: 45px !important;
+  }
+  
+  .submit-btn {
+    width: 32px !important;
+    height: 32px !important;
+    right: 6px !important;
+  }
+  
+  /* Botones principales mejorados para tacto */
+  .skip-btn {
+    width: 85% !important;
+    padding: 10px 0 !important;
+    margin: 0 auto 10px !important;
+    font-size: 0.9rem !important;
+    border-radius: 22px !important;
+  }
+  
+  .help-btn {
+    width: 65% !important;
+    padding: 8px 0 !important;
+    font-size: 0.85rem !important;
+    border-radius: 20px !important;
+  }
+  
+  .help-btn .help-count {
+    padding: 2px 6px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  /* Mejora para la barra de estado */
+  .rosco-status {
+    width: 90%;
+    padding: 12px 8px;
+    margin: 15px auto;
+    border-radius: 12px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+  }
+  
+  .status-item {
+    padding: 5px;
+    min-width: unset;
+  }
+  
+  .status-icon {
+    font-size: 1.2rem;
+    margin-bottom: 3px;
+  }
+  
+  .status-label {
+    font-size: 0.7rem;
+    margin-bottom: 1px;
+  }
+  
+  .status-value {
+    font-size: 1.4rem;
+  }
+  
+  /* Modales optimizados */
+  .modal-content {
+    width: 92%;
+    padding: 25px 15px;
+    border-radius: 20px;
+  }
+  
+  .result-icon {
+    width: 65px;
+    height: 65px;
+    margin-bottom: 15px;
+  }
+  
+  .modal-content h2 {
+    font-size: 1.7rem;
+    margin-bottom: 10px;
+  }
+  
+  .modal-content p {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+  }
+  
+  /* Navegación en modales más táctil */
+  .nav-buttons {
+    flex-direction: column;
+    gap: 10px;
+    width: 90%;
+    margin: 15px auto 5px;
+  }
+  
+  .nav-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 0.95rem;
+    border-radius: 10px;
+  }
+  
+  /* Estadísticas en formato móvil */
+  .stats-content {
+    padding: 20px 15px;
+    max-width: 92%;
+  }
+  
+  .stats-summary {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .stat-item {
+    min-width: 45%;
+    padding: 10px;
+  }
+  
+  .incorrect-answers-container {
+    max-height: 35vh;
+    overflow-y: auto;
+    padding: 15px 10px;
+  }
+  
+  .incorrect-answers-list {
+    gap: 10px;
+  }
+  
+  .incorrect-answer-item {
+    padding: 10px;
+    grid-template-columns: 35px 1fr;
+    gap: 10px;
+  }
+  
+  .incorrect-letter {
+    width: 35px;
+    height: 35px;
+    font-size: 1.2rem;
+  }
+  
+  .incorrect-question {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  
+  .answer-comparison {
+    font-size: 0.8rem;
+  }
+  
+  /* Toast mejorado */
+  .toast {
+    bottom: 30px;
+    padding: 12px 20px;
+    min-width: 200px;
+    border-radius: 30px;
+  }
+  
+  .toast-message {
+    font-size: 0.95rem;
+  }
+  
+  .toast-icon {
+    font-size: 1.3rem;
+    margin-right: 10px;
+  }
+}
+
+/* ============= OPTIMIZACIONES MÓVIL PEQUEÑO (400px y menos) ============= */
+@media only screen and (max-width: 400px) {
+  /* Ajustes para dispositivos extremadamente pequeños */
+  #rosco-container {
+    width: calc(100vw - 20px);
+    max-width: 340px;
+  }
+  
+  .rosco-letter {
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
+    border-width: 2px;
+  }
+  
+  .question-card {
+    width: 90% !important;
+  }
+  
+  .current-letter-display {
+    font-size: 2.2rem !important;
+  }
+  
+  .current-question {
+    font-size: 1.1rem !important;
+  }
+  
+  .current-definition {
+    font-size: 0.85rem !important;
+    padding: 6px !important;
+  }
+  
+  /* Asegurar visibilidad de inputs en móviles pequeños */
+  .answer-input {
+    padding: 8px 38px 8px 12px !important;
+    font-size: 0.95rem !important;
+    height: 42px !important;
+  }
+  
+  .submit-btn {
+    width: 30px !important;
+    height: 30px !important;
+  }
+  
+  /* Barra de estado más compacta */
+  .rosco-status {
+    padding: 8px 5px;
+  }
+  
+  .status-value {
+    font-size: 1.2rem;
+  }
+  
+  .status-label {
+    font-size: 0.65rem;
+  }
+  
+  /* Modales más compactos */
+  .modal-content {
+    padding: 20px 12px;
+    border-radius: 15px;
+  }
+  
+  .result-icon {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .modal-content h2 {
+    font-size: 1.5rem;
+  }
+  
+  /* Ajustes especiales para iPhone SE y similares */
+  .nav-btn {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .incorrect-answers-container {
+    max-height: 30vh;
+  }
+}
+
+/* ============= OPTIMIZACIONES PARA TECLADO VIRTUAL ============= */
+/* Activas cuando se abre el teclado en móvil */
+.keyboard-open .question-card {
+  transform: translateY(-15%);
+  transition: transform 0.3s ease;
+}
+
+.keyboard-open .rosco-section {
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+  margin-bottom: -40px;
+}
+
+.keyboard-open .rosco-status,
+.keyboard-open .adsense-container {
+  display: none;
+}
+
+/* ============= MEJORAS DE PERFORMANCE MÓVIL ============= */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============= SOPORTE PARA PANTALLAS CON NOTCH (iPhone X+) ============= */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-top: max(12px, env(safe-area-inset-top));
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  
+  .toast {
+    bottom: max(30px, env(safe-area-inset-bottom));
+  }
+}
+
+/* ============= MEJORAS DE ACCESIBILIDAD ============= */
+@media (prefers-contrast: more) {
+  .rosco-letter {
+    border-width: 3px;
+  }
+  
+  .current-question,
+  .current-definition,
+  .status-value,
+  .status-label,
+  .answer-input,
+  .skip-btn,
+  .help-btn {
+    filter: contrast(1.1);
+  }
+}
+
+/* ============= ORIENTACIÓN LANDSCAPE (OPTIMIZACIONES) ============= */
+@media screen and (max-width: 900px) and (orientation: landscape) {
+  .app-header {
+    padding: 5px 0;
+    margin-bottom: 5px;
+  }
+  
+  .title-text {
+    font-size: 1.8rem !important;
+  }
+  
+  .subtitle {
+    display: none;
+  }
+  
+  .game-container {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .rosco-section {
+    grid-column: 1;
+    margin: 0;
+  }
+  
+  .question-card {
+    grid-column: 2;
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    border-radius: 15px !important;
+  }
+  
+  .rosco-status {
+    grid-column: 1 / span 2;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Ajustes específicos para la posición de las letras en dispositivos móviles */
+@media only screen and (max-width: 599px) {
+  /* Posiciones optimizadas para teléfonos móviles (width: 400px) */
+  #rosco-container .rosco-letter:nth-child(1) { top: 45px; left: 200px; } /* A */
+  #rosco-container .rosco-letter:nth-child(2) { top: 55px; left: 245px; } /* B */
+  #rosco-container .rosco-letter:nth-child(3) { top: 75px; left: 285px; } /* C */
+  #rosco-container .rosco-letter:nth-child(4) { top: 110px; left: 315px; } /* D */
+  #rosco-container .rosco-letter:nth-child(5) { top: 150px; left: 335px; } /* E */
+  #rosco-container .rosco-letter:nth-child(6) { top: 195px; left: 335px; } /* F */
+  #rosco-container .rosco-letter:nth-child(7) { top: 240px; left: 320px; } /* G */
+  #rosco-container .rosco-letter:nth-child(8) { top: 275px; left: 290px; } /* H */
+  #rosco-container .rosco-letter:nth-child(9) { top: 305px; left: 250px; } /* I */
+  #rosco-container .rosco-letter:nth-child(10) { top: 320px; left: 195px; } /* J */
+  #rosco-container .rosco-letter:nth-child(11) { top: 320px; left: 155px; } /* K */
+  #rosco-container .rosco-letter:nth-child(12) { top: 305px; left: 105px; } /* L */
+  #rosco-container .rosco-letter:nth-child(13) { top: 275px; left: 65px; } /* M */
+  #rosco-container .rosco-letter:nth-child(14) { top: 240px; left: 40px; } /* N */
+  #rosco-container .rosco-letter:nth-child(15) { top: 195px; left: 25px; } /* O */
+  #rosco-container .rosco-letter:nth-child(16) { top: 150px; left: 25px; } /* P */
+  #rosco-container .rosco-letter:nth-child(17) { top: 110px; left: 45px; } /* Q */
+  #rosco-container .rosco-letter:nth-child(18) { top: 75px; left: 75px; } /* R */
+  #rosco-container .rosco-letter:nth-child(19) { top: 55px; left: 115px; } /* S */
+  #rosco-container .rosco-letter:nth-child(20) { top: 45px; left: 160px; } /* T */
+  #rosco-container .rosco-letter:nth-child(21) { top: 50px; left: 270px; } /* U */
+  #rosco-container .rosco-letter:nth-child(22) { top: 70px; left: 310px; } /* V */
+  #rosco-container .rosco-letter:nth-child(23) { top: 100px; left: 340px; } /* W */
+  #rosco-container .rosco-letter:nth-child(24) { top: 140px; left: 355px; } /* X */
+  #rosco-container .rosco-letter:nth-child(25) { top: 185px; left: 355px; } /* Y */
+  #rosco-container .rosco-letter:nth-child(26) { top: 230px; left: 340px; } /* Z */
+}
+
+/* Ajustes para teléfonos pequeños (iPhone SE, etc.) */
+@media only screen and (max-width: 359px) {
+  #rosco-container .rosco-letter:nth-child(1) { top: 35px; left: 160px; } /* A */
+  #rosco-container .rosco-letter:nth-child(2) { top: 45px; left: 195px; } /* B */
+  #rosco-container .rosco-letter:nth-child(3) { top: 65px; left: 225px; } /* C */
+  #rosco-container .rosco-letter:nth-child(4) { top: 90px; left: 250px; } /* D */
+  #rosco-container .rosco-letter:nth-child(5) { top: 120px; left: 265px; } /* E */
+  #rosco-container .rosco-letter:nth-child(6) { top: 155px; left: 265px; } /* F */
+  #rosco-container .rosco-letter:nth-child(7) { top: 190px; left: 255px; } /* G */
+  #rosco-container .rosco-letter:nth-child(8) { top: 220px; left: 230px; } /* H */
+  #rosco-container .rosco-letter:nth-child(9) { top: 240px; left: 200px; } /* I */
+  #rosco-container .rosco-letter:nth-child(10) { top: 250px; left: 160px; } /* J */
+  #rosco-container .rosco-letter:nth-child(11) { top: 250px; left: 125px; } /* K */
+  #rosco-container .rosco-letter:nth-child(12) { top: 240px; left: 90px; } /* L */
+  #rosco-container .rosco-letter:nth-child(13) { top: 220px; left: 60px; } /* M */
+  #rosco-container .rosco-letter:nth-child(14) { top: 190px; left: 35px; } /* N */
+  #rosco-container .rosco-letter:nth-child(15) { top: 155px; left: 25px; } /* O */
+  #rosco-container .rosco-letter:nth-child(16) { top: 120px; left: 25px; } /* P */
+  #rosco-container .rosco-letter:nth-child(17) { top: 90px; left: 40px; } /* Q */
+  #rosco-container .rosco-letter:nth-child(18) { top: 65px; left: 65px; } /* R */
+  #rosco-container .rosco-letter:nth-child(19) { top: 45px; left: 95px; } /* S */
+  #rosco-container .rosco-letter:nth-child(20) { top: 35px; left: 130px; } /* T */
+  #rosco-container .rosco-letter:nth-child(21) { top: 40px; left: 215px; } /* U */
+  #rosco-container .rosco-letter:nth-child(22) { top: 55px; left: 245px; } /* V */
+  #rosco-container .rosco-letter:nth-child(23) { top: 80px; left: 270px; } /* W */
+  #rosco-container .rosco-letter:nth-child(24) { top: 110px; left: 280px; } /* X */
+  #rosco-container .rosco-letter:nth-child(25) { top: 145px; left: 280px; } /* Y */
+  #rosco-container .rosco-letter:nth-child(26) { top: 180px; left: 270px; } /* Z */
+}
+
+/* Ajustes específicos para el modo landscape en móvil */
+@media screen and (max-width: 900px) and (orientation: landscape) {
+  .game-container {
+    display: grid;
+    grid-template-columns: 55% 45%;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 900px;
+    padding: 5px;
+  }
+  
+  .rosco-section {
+    grid-column: 1;
+    margin: 0;
+  }
+  
+  #rosco-container {
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    aspect-ratio: 1/1;
+    margin: 0 auto;
+  }
+  
+  .rosco-letter {
+    width: 38px;
+    height: 38px;
+    font-size: 1.3rem;
+  }
+  
+  .question-card {
+    grid-column: 2;
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    border-radius: 15px !important;
+    padding: 15px !important;
+    margin: 0 !important;
+  }
+  
+  .question-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    height: auto !important;
+  }
+  
+  .current-letter-display {
+    font-size: 2.2rem !important;
+    margin-bottom: 5px !important;
+  }
+  
+  .current-question {
+    font-size: 1.1rem !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .current-definition {
+    font-size: 0.9rem !important;
+    max-height: 80px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .mini-timer {
+    margin: 5px 0 !important;
+  }
+  
+  .answer-form {
+    width: 100% !important;
+  }
+  
+  .rosco-status {
+    grid-column: 1 / span 2;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 10px;
+    padding: 10px 15px;
+  }
+  
+  .skip-btn, .help-btn {
+    padding: 8px 0 !important;
+  }
+}
+
+/* Ajustes específicos para el hint en dispositivos móviles */
+.hint-element {
+  position: absolute;
+  background: rgba(52, 152, 219, 0.9);
+  color: white;
+  padding: 3px 8px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  z-index: 100;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  pointer-events: none;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  transform: translateY(-100%);
+}
+
+.hint-text {
+  white-space: nowrap;
+}
+
+@keyframes hintPulse {
+  0% { transform: translateY(-100%) scale(1); }
+  50% { transform: translateY(-100%) scale(1.1); }
+  100% { transform: translateY(-100%) scale(1); }
+}
+
+/* Estilos para elementos ocultos cuando el teclado está abierto */
+.keyboard-hide {
+  display: none !important;
+}
+
+/* Transiciones suaves para elementos que se ocultan/muestran */
+.rosco-status, .adsense-container, #rosco-container, .question-card {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Estilos para los dispositivos con notch */
+@supports (padding: max(0px)) {
+  .app-header {
+    padding-top: max(15px, env(safe-area-inset-top));
+  }
+  
+  .home-link {
+    top: max(20px, env(safe-area-inset-top));
+    left: max(20px, env(safe-area-inset-left));
+  }
+  
+  .sound-btn {
+    top: max(20px, env(safe-area-inset-top));
+    right: max(20px, env(safe-area-inset-right));
+  }
+}
+
+/* Ajustes para pantallas grandes y buena densidad de píxeles */
+@media only screen and (min-width: 1200px) and (min-resolution: 1.5dppx) {
+  .rosco-letter {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2), inset 0 2px 10px rgba(255, 255, 255, 0.15);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .rosco-letter:hover:not(.current) {
+    transform: scale(1.15);
+    z-index: 10;
+  }
+  
+  .question-card {
+    backdrop-filter: blur(15px);
+  }
+}
+
+/* Mejoras táctiles */
+@media (hover: none) {
+  .skip-btn:active, .help-btn:active, .nav-btn:active, .submit-btn:active {
+    transform: scale(0.95);
+  }
+  
+  .touch-active {
+    opacity: 0.8;
   }
 } 

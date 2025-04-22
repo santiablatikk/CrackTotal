@@ -1,311 +1,547 @@
 /**
- * responsive.js - Mejoras de funcionalidad responsiva para CRACK TOTAL
- * Este archivo contiene funciones para mejorar la experiencia en diferentes dispositivos
+ * RESPONSIVE.JS
+ * Mejoras para la adaptación responsiva de PASALA CHE
+ * Versión perfeccionada con optimizaciones específicas para móvil
  */
 
-// Función para detectar si el dispositivo es móvil
-function isMobile() {
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-}
+// Variables para el seguimiento del estado responsivo
+let currentDeviceType = null;
+let isKeyboardVisible = false;
+let windowHeight = window.innerHeight;
+let resizeDebounceTimer;
+let eventListenersAttached = false;
+let isIOS = false;
+let isAndroid = false;
 
-// Función para detectar el tipo de dispositivo más específicamente
-function getDeviceType() {
-  const width = window.innerWidth;
-  if (width < 576) return 'mobile-small';
-  if (width < 768) return 'mobile-large';
-  if (width < 992) return 'tablet';
-  if (width < 1200) return 'desktop-small';
-  return 'desktop-large';
-}
+// Esperar a que el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', function() {
+    initResponsiveEnhancements();
+});
 
-// Aplicar clases CSS según el tipo de dispositivo
-function applyDeviceClasses() {
-  const deviceType = getDeviceType();
-  document.body.classList.remove('device-mobile-small', 'device-mobile-large', 'device-tablet', 'device-desktop-small', 'device-desktop-large');
-  document.body.classList.add(`device-${deviceType}`);
-  
-  // Actualizar variables CSS según el dispositivo
-  if (deviceType.includes('mobile')) {
-    document.documentElement.style.setProperty('--card-padding', '1rem');
-    document.documentElement.style.setProperty('--container-padding', '0.75rem');
-    document.documentElement.style.setProperty('--font-size-base', '0.9rem');
-  } else if (deviceType === 'tablet') {
-    document.documentElement.style.setProperty('--card-padding', '1.5rem');
-    document.documentElement.style.setProperty('--container-padding', '1.5rem');
-    document.documentElement.style.setProperty('--font-size-base', '1rem');
-  } else {
-    document.documentElement.style.setProperty('--card-padding', '2rem');
-    document.documentElement.style.setProperty('--container-padding', '2rem');
-    document.documentElement.style.setProperty('--font-size-base', '1rem');
-  }
-}
-
-// Optimizar imágenes según el dispositivo
-function optimizeImages() {
-  if (!isMobile()) return;
-  
-  // Reemplazar imágenes pesadas por versiones más ligeras en móvil
-  const images = document.querySelectorAll('img[data-src-mobile]');
-  images.forEach(img => {
-    if (img.dataset.srcMobile) {
-      img.src = img.dataset.srcMobile;
-    }
-  });
-  
-  // Establecer tamaño correcto para las imágenes sin dimensiones
-  const allImages = document.querySelectorAll('img:not([width]):not([height])');
-  allImages.forEach(img => {
-    img.addEventListener('load', function() {
-      // Solo si no tienen ya dimensiones definidas
-      if (!this.getAttribute('width') && !this.getAttribute('height')) {
-        this.setAttribute('width', this.naturalWidth);
-        this.setAttribute('height', this.naturalHeight);
-      }
-    });
-  });
-}
-
-// Mejorar comportamiento de elementos fijos
-function fixPositioningIssues() {
-  const fixedElements = document.querySelectorAll('.fixed-element');
-  
-  if (isMobile()) {
-    // En móvil, algunos elementos fijos pueden causar problemas
-    fixedElements.forEach(el => {
-      el.classList.add('absolute-mobile');
-    });
+/**
+ * Inicializa todas las mejoras responsivas
+ */
+function initResponsiveEnhancements() {
+    detectPlatform();
+    applyDeviceClasses();
+    optimizeImages();
+    fixPositioningIssues();
+    enhanceTouchInteractions();
+    optimizeRoscoGame();
+    mobileKeyboardManager();
     
-    // Ajustar la altura de la ventana para dispositivos móviles
-    document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-    
-    // Arreglar problemas de footer en iOS
-    const footer = document.querySelector('footer, .site-footer');
-    if (footer) {
-      if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        footer.style.position = 'relative';
-      }
-    }
-  } else {
-    fixedElements.forEach(el => {
-      el.classList.remove('absolute-mobile');
-    });
-  }
-}
-
-// Optimizar interacciones táctiles
-function enhanceTouchInteractions() {
-  if (!isMobile()) return;
-  
-  // Prevenir el zoom en doble tap (problema común en iOS)
-  document.addEventListener('touchend', function(e) {
-    const now = Date.now();
-    const lastTouch = window.lastTouch || now + 1;
-    const delta = now - lastTouch;
-    
-    if (delta < 300 && delta > 0) {
-      e.preventDefault();
+    // Adjuntar event listeners solo una vez
+    if (!eventListenersAttached) {
+        window.addEventListener('resize', handleWindowResize);
+        window.addEventListener('orientationchange', handleOrientationChange);
+        eventListenersAttached = true;
     }
     
-    window.lastTouch = now;
-  }, { passive: false });
-  
-  // Mejorar efectos de hover en táctil
-  document.querySelectorAll('.hover-effect').forEach(el => {
-    el.addEventListener('touchstart', function() {
-      this.classList.add('touch-active');
-    }, { passive: true });
+    // Inicialización específica por plataforma
+    if (isIOS) {
+        initIOSSpecificFixes();
+    } else if (isAndroid) {
+        initAndroidSpecificFixes();
+    }
     
-    el.addEventListener('touchend', function() {
-      setTimeout(() => {
-        this.classList.remove('touch-active');
-      }, 300);
-    }, { passive: true });
-  });
-  
-  // Mejorar comportamiento de botones táctiles
-  document.querySelectorAll('button, .btn, [role="button"]').forEach(el => {
-    el.addEventListener('touchstart', function() {
-      this.setAttribute('aria-pressed', 'true');
-    }, { passive: true });
-    
-    el.addEventListener('touchend', function() {
-      this.removeAttribute('aria-pressed');
-    }, { passive: true });
-  });
+    console.log("Mejoras responsivas inicializadas. Tipo de dispositivo: " + currentDeviceType);
 }
 
 /**
- * Ajusta el tamaño y posición de los elementos del juego de rosco para una visualización óptima
- * basado en el tamaño de la pantalla.
- * @returns {ResizeObserver} El observer que ajusta los elementos
+ * Detecta si el dispositivo es móvil basado en el user agent y ancho de pantalla
+ * @returns {boolean} true si es dispositivo móvil
  */
-function optimizeRoscoGame() {
-    const roscoContainer = document.querySelector('#rosco-container');
-    if (!roscoContainer) return;
+function isMobile() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const mobileKeywords = ['android', 'iphone', 'ipod', 'ipad', 'windows phone', 'blackberry', 'nokia', 'opera mini', 'mobile'];
+    const isMobileUserAgent = mobileKeywords.some(keyword => userAgent.includes(keyword));
+    const hasSmallScreen = window.innerWidth <= 768;
+    
+    return isMobileUserAgent || hasSmallScreen;
+}
 
-    const questionCard = document.querySelector('.question-card');
-    const letters = document.querySelectorAll('.rosco-letter');
+/**
+ * Detecta el sistema operativo del dispositivo
+ */
+function detectPlatform() {
+    const ua = navigator.userAgent.toLowerCase();
+    isIOS = /iphone|ipad|ipod/.test(ua);
+    isAndroid = /android/.test(ua);
+}
+
+/**
+ * Determina el tipo de dispositivo basado en el tamaño de la pantalla
+ * @returns {string} tipo de dispositivo ('mobile-small', 'mobile', 'tablet', etc.)
+ */
+function getDeviceType() {
+    const width = window.innerWidth;
     
-    // Get the device type for specific optimizations
-    const deviceType = getDeviceType();
+    if (width <= 320) {
+        return 'mobile-small';  // iPhone SE, dispositivos muy pequeños
+    } else if (width <= 480) {
+        return 'mobile-medium'; // iPhone 8/X/11/12/13 en portrait
+    } else if (width <= 768) {
+        return 'mobile-large';  // Dispositivos móviles grandes o tablets pequeñas
+    } else if (width <= 1024) {
+        return 'tablet';        // iPads y tablets
+    } else if (width <= 1366) {
+        return 'desktop-small';
+    } else {
+        return 'desktop';
+    }
+}
+
+/**
+ * Aplica clases CSS al <html> según el tipo de dispositivo
+ */
+function applyDeviceClasses() {
+    const previousDeviceType = currentDeviceType;
+    currentDeviceType = getDeviceType();
+    const htmlElement = document.documentElement;
     
-    // Make sure the container is square
-    const containerWidth = roscoContainer.offsetWidth;
-    roscoContainer.style.height = `${containerWidth}px`;
+    // Eliminar todas las clases de dispositivo anteriores
+    htmlElement.classList.remove('mobile-small', 'mobile-medium', 'mobile-large', 'tablet', 'desktop-small', 'desktop');
     
-    // Don't modify the question card dimensions - use CSS instead
-    // CSS will handle the question card styling
+    // Aplicar la clase actual
+    htmlElement.classList.add(currentDeviceType);
     
-    // Only set the position to absolute and center it
-    if (questionCard) {
-        questionCard.style.position = 'absolute';
-        questionCard.style.top = '50%';
-        questionCard.style.left = '50%';
-        questionCard.style.transform = 'translate(-50%, -50%)';
-        // Remove any width/height/padding settings that might conflict with CSS
-        questionCard.style.width = '';
-        questionCard.style.height = '';
-        questionCard.style.maxWidth = '';
+    // Aplicar clases para móvil general
+    if (currentDeviceType.includes('mobile')) {
+        htmlElement.classList.add('mobile-device');
+        
+        // Aplicar variables CSS adicionales para móvil
+        document.documentElement.style.setProperty('--question-font-size', '1.1rem');
+        document.documentElement.style.setProperty('--input-height', '45px');
+        document.documentElement.style.setProperty('--button-padding', '10px 15px');
+    } else {
+        htmlElement.classList.remove('mobile-device');
+        
+        // Revertir a valores predeterminados
+        document.documentElement.style.setProperty('--question-font-size', '1.5rem');
+        document.documentElement.style.setProperty('--input-height', '50px');
+        document.documentElement.style.setProperty('--button-padding', '12px 20px');
     }
     
-    // Position letters in a circle around the question card
-    // Calculate the radius based on container size
-    const radius = containerWidth * 0.42; // Slightly reduced to accommodate larger question card
+    // Aplicar clase de orientación
+    if (window.innerHeight > window.innerWidth) {
+        htmlElement.classList.add('portrait');
+        htmlElement.classList.remove('landscape');
+    } else {
+        htmlElement.classList.add('landscape');
+        htmlElement.classList.remove('portrait');
+    }
     
-    letters.forEach((letter, index) => {
-        const angle = (index * 2 * Math.PI / letters.length) - Math.PI / 2;
-        const x = Math.cos(angle) * radius;
-        const y = Math.sin(angle) * radius;
-        
-        letter.style.position = 'absolute';
-        letter.style.left = `calc(50% + ${x}px)`;
-        letter.style.top = `calc(50% + ${y}px)`;
-        letter.style.transform = 'translate(-50%, -50%)';
-        
-        // Set letter size based on device
-        if (deviceType === 'mobile-small') {
-            letter.style.width = '28px';
-            letter.style.height = '28px';
-            letter.style.fontSize = '14px';
-        } else if (deviceType === 'mobile-large') {
-            letter.style.width = '32px';
-            letter.style.height = '32px';
-            letter.style.fontSize = '16px';
-        } else if (deviceType === 'tablet') {
-            letter.style.width = '40px';
-            letter.style.height = '40px';
-            letter.style.fontSize = '20px';
-        } else if (deviceType === 'desktop-small') {
-            letter.style.width = '45px';
-            letter.style.height = '45px';
-            letter.style.fontSize = '22px';
-        } else {
-            letter.style.width = '50px';
-            letter.style.height = '50px';
-            letter.style.fontSize = '24px';
+    // Aplicar clase de plataforma
+    if (isIOS) {
+        htmlElement.classList.add('ios-device');
+    } else if (isAndroid) {
+        htmlElement.classList.add('android-device');
+    }
+    
+    // Solo registrar cambios cuando realmente cambia el tipo de dispositivo
+    if (previousDeviceType !== currentDeviceType) {
+        console.log(`Tipo de dispositivo cambiado: ${previousDeviceType} -> ${currentDeviceType}`);
+    }
+}
+
+/**
+ * Optimiza las imágenes para dispositivos móviles
+ */
+function optimizeImages() {
+    if (!isMobile()) return;
+    
+    // Reemplazar imágenes pesadas con versiones más ligeras para móvil
+    const heavyImages = document.querySelectorAll('img[data-mobile-src]');
+    heavyImages.forEach(img => {
+        const mobileSrc = img.getAttribute('data-mobile-src');
+        if (mobileSrc) {
+            img.src = mobileSrc;
         }
     });
     
-    // Use ResizeObserver to adapt to changes in container size
-    if (!window.roscoResizeObserver) {
-        window.roscoResizeObserver = new ResizeObserver(entries => {
-            for (let entry of entries) {
-                if (entry.target === roscoContainer) {
-                    optimizeRoscoGame();
-                }
-            }
-        });
-        window.roscoResizeObserver.observe(roscoContainer);
-    }
+    // Establecer dimensiones para imágenes sin tamaño específico
+    const allImages = document.querySelectorAll('img:not([width]):not([height])');
+    allImages.forEach(img => {
+        // Esperar a que la imagen cargue para establecer dimensiones correctas
+        if (img.complete) {
+            img.setAttribute('width', img.naturalWidth);
+            img.setAttribute('height', img.naturalHeight);
+        } else {
+            img.onload = function() {
+                img.setAttribute('width', img.naturalWidth);
+                img.setAttribute('height', img.naturalHeight);
+            };
+        }
+    });
 }
 
-// Listen for orientation changes and window resizing
-window.addEventListener('orientationchange', optimizeRoscoGame);
-window.addEventListener('resize', debounce(optimizeRoscoGame, 250));
+/**
+ * Arregla problemas de posicionamiento en dispositivos móviles
+ */
+function fixPositioningIssues() {
+    if (!isMobile()) return;
+    
+    // Corregir posicionamiento fixed en iOS que causa problemas de scroll
+    if (isIOS) {
+        const fixedElements = document.querySelectorAll('.fixed-element, .modal, .toast');
+        fixedElements.forEach(el => {
+            el.style.position = 'absolute';
+            el.style.transform = 'translateZ(0)'; // Forzar GPU acceleration
+        });
+        
+        // Corregir el footer en iOS (conocido por causar problemas)
+        const footer = document.querySelector('footer');
+        if (footer) {
+            footer.style.position = 'relative';
+            footer.style.zIndex = '1';
+        }
+    }
+    
+    // Añadir padding extra para evitar que el contenido quede detrás de la barra de navegación
+    const safeAreaBottom = Math.max(10, window.innerHeight * 0.02);
+    document.body.style.paddingBottom = `${safeAreaBottom}px`;
+}
 
-// Mejorar la gestión del teclado virtual en móviles
-function mobileKeyboardManager() {
-  if (!isMobile()) return;
-  
-  const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], textarea');
-  if (!inputs.length) return;
-  
-  // Al mostrar teclado
-  const handleFocus = () => {
-    // Esconder elementos no esenciales para dar más espacio
-    const nonEssentials = document.querySelectorAll('.hide-on-keyboard');
-    nonEssentials.forEach(el => {
-      el.style.display = 'none';
+/**
+ * Mejora las interacciones táctiles en dispositivos móviles
+ */
+function enhanceTouchInteractions() {
+    if (!isMobile()) return;
+    
+    // Prevenir zoom de doble tap en todo el sitio
+    const viewportMeta = document.querySelector('meta[name="viewport"]');
+    if (viewportMeta) {
+        viewportMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no';
+    }
+    
+    // Mejorar hover en dispositivos táctiles
+    document.querySelectorAll('a, button, .btn, .nav-btn, .skip-btn, .help-btn').forEach(el => {
+        el.addEventListener('touchstart', function() {
+            this.classList.add('touch-active');
+        }, { passive: true });
+        
+        el.addEventListener('touchend', function() {
+            this.classList.remove('touch-active');
+        }, { passive: true });
     });
     
-    // En iOS detectar el cambio de altura de la ventana
-    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-      const viewportHeight = window.innerHeight;
-      document.documentElement.style.setProperty('--keyboard-viewport-height', `${viewportHeight}px`);
+    // Añadir soporte para fastclick en iOS para reducir retraso
+    if (isIOS) {
+        document.body.style.cursor = 'pointer';
     }
-  };
-  
-  // Al ocultar teclado
-  const handleBlur = () => {
-    setTimeout(() => {
-      // Mostrar elementos escondidos
-      const nonEssentials = document.querySelectorAll('.hide-on-keyboard');
-      nonEssentials.forEach(el => {
-        el.style.display = '';
-      });
-      
-      // Restablecer altura
-      if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        document.documentElement.style.setProperty('--keyboard-viewport-height', '100vh');
-      }
-    }, 300);
-  };
-  
-  // Aplicar a todos los inputs
-  inputs.forEach(input => {
-    input.addEventListener('focus', handleFocus);
-    input.addEventListener('blur', handleBlur);
-  });
 }
 
-// Inicializar todas las mejoras responsivas
-function initResponsiveEnhancements() {
-  // Aplicar todas las mejoras
-  applyDeviceClasses();
-  optimizeImages();
-  fixPositioningIssues();
-  enhanceTouchInteractions();
-  optimizeRoscoGame();
-  mobileKeyboardManager();
-  
-  // Log para depuración
-  console.log(`[Responsive] Dispositivo detectado: ${getDeviceType()}`);
-}
-
-// Ejecutar al cargar la página
-document.addEventListener('DOMContentLoaded', function() {
-  initResponsiveEnhancements();
-  
-  // Actualizar en cambios de tamaño de ventana
-  window.addEventListener('resize', function() {
-    applyDeviceClasses();
-    fixPositioningIssues();
+/**
+ * Optimiza el juego del rosco para diferentes tamaños de pantalla
+ */
+function optimizeRoscoGame() {
+    const roscoContainer = document.getElementById('rosco-container');
+    if (!roscoContainer) return;
     
-    // Actualizar la altura en dispositivos móviles
-    document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-  });
-  
-  // Actualizar en cambios de orientación
-  window.addEventListener('orientationchange', function() {
-    setTimeout(initResponsiveEnhancements, 200); // Pequeño retraso para asegurar que los cambios de orientación sean registrados
-  });
-});
+    // Determinar escala apropiada para el rosco
+    let roscoScale = 1;
+    const deviceType = getDeviceType();
+    
+    switch (deviceType) {
+        case 'mobile-small':
+            roscoScale = 0.75;
+            break;
+        case 'mobile-medium':
+            roscoScale = 0.85;
+            break;
+        case 'mobile-large':
+            roscoScale = 0.9;
+            break;
+        case 'tablet':
+            roscoScale = 0.95;
+            break;
+    }
+    
+    // Aplicar transformación solo en dispositivos móviles
+    if (deviceType.includes('mobile') || deviceType === 'tablet') {
+        // Para landscape en móvil, usamos un enfoque distinto (definido en CSS)
+        if (window.innerWidth > window.innerHeight) {
+            roscoContainer.style.transform = '';
+        } else {
+            // Ajustar tamaño basado en viewport para escalar dinámicamente
+            const containerSize = Math.min(window.innerWidth * 0.9, 400);
+            roscoContainer.style.width = `${containerSize}px`;
+            roscoContainer.style.height = `${containerSize}px`;
+        }
+    }
+    
+    // Ajustar automáticamente al cambio de tamaño
+    const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+            const roscoLetters = document.querySelectorAll('.rosco-letter');
+            if (!roscoLetters.length) return;
+            
+            // Calcular y posicionar las letras basado en el tamaño actual del contenedor
+            const containerWidth = entry.contentRect.width;
+            const radius = containerWidth * 0.40; // Radio para posicionar las letras
+            
+            roscoLetters.forEach((letter, index) => {
+                const totalLetters = roscoLetters.length;
+                // Calcular posición en círculo
+                const angle = ((index * (360 / totalLetters)) + 270) % 360; // Empezar desde arriba
+                const angleInRad = (angle * Math.PI) / 180;
+                
+                const x = Math.cos(angleInRad) * radius + containerWidth / 2 - letter.offsetWidth / 2;
+                const y = Math.sin(angleInRad) * radius + containerWidth / 2 - letter.offsetHeight / 2;
+                
+                // Aplicar posición
+                letter.style.left = `${x}px`;
+                letter.style.top = `${y}px`;
+            });
+        }
+    });
+    
+    // Observar cambios en el tamaño del contenedor
+    resizeObserver.observe(roscoContainer);
+}
 
-// Exportar funciones útiles
-window.ResponsiveUtils = {
-  isMobile,
-  getDeviceType,
-  applyDeviceClasses,
-  fixPositioningIssues,
-  optimizeRoscoGame
-}; 
+/**
+ * Gestiona el teclado virtual en dispositivos móviles
+ */
+function mobileKeyboardManager() {
+    if (!isMobile()) return;
+    
+    const inputElements = document.querySelectorAll('input[type="text"], input[type="search"], textarea');
+    
+    inputElements.forEach(input => {
+        // Al enfocar cualquier campo de entrada, detectar teclado abierto
+        input.addEventListener('focus', function() {
+            // Usar setTimeout para permitir que el teclado se abra completamente
+            setTimeout(checkKeyboardVisibility, 300);
+            
+            // Mejorar visibilidad del campo de entrada activo
+            this.style.fontSize = '16px'; // Evita que iOS haga zoom en campos de texto
+        });
+        
+        // Al perder el foco, restaurar layout
+        input.addEventListener('blur', function() {
+            // Usar setTimeout para asegurar que el teclado se haya cerrado
+            setTimeout(() => {
+                document.documentElement.classList.remove('keyboard-open');
+                restoreLayoutAfterKeyboard();
+            }, 100);
+        });
+    });
+    
+    // Verificar si el teclado está visible basado en cambio de altura
+    function checkKeyboardVisibility() {
+        const newWindowHeight = window.innerHeight;
+        
+        // Si la altura de la ventana disminuyó significativamente, el teclado está abierto
+        if (newWindowHeight < windowHeight * 0.75) {
+            handleKeyboardOpen();
+        } else {
+            handleKeyboardClose();
+        }
+    }
+    
+    function handleKeyboardOpen() {
+        if (!isKeyboardVisible) {
+            isKeyboardVisible = true;
+            document.documentElement.classList.add('keyboard-open');
+            
+            // Ocultar elementos no esenciales cuando se muestra el teclado
+            optimizeLayoutForKeyboard();
+            
+            // Scroll al elemento activo
+            const activeElement = document.activeElement;
+            if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+                setTimeout(() => {
+                    activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
+        }
+    }
+    
+    function handleKeyboardClose() {
+        if (isKeyboardVisible) {
+            isKeyboardVisible = false;
+            document.documentElement.classList.remove('keyboard-open');
+            restoreLayoutAfterKeyboard();
+        }
+    }
+    
+    function optimizeLayoutForKeyboard() {
+        // Ocultar elementos no esenciales cuando se muestra el teclado
+        const nonEssentialElements = document.querySelectorAll('.rosco-status, .adsense-container, footer');
+        nonEssentialElements.forEach(el => {
+            if (el) el.classList.add('keyboard-hide');
+        });
+        
+        // Reducir tamaño del rosco
+        const roscoContainer = document.getElementById('rosco-container');
+        if (roscoContainer) {
+            roscoContainer.style.transform = 'scale(0.8)';
+            roscoContainer.style.transformOrigin = 'center top';
+            roscoContainer.style.marginBottom = '-40px';
+        }
+        
+        // Ajustar la tarjeta de pregunta para que sea visible con el teclado
+        const questionCard = document.querySelector('.question-card');
+        if (questionCard) {
+            questionCard.style.transform = 'translateY(-15%)';
+        }
+    }
+    
+    function restoreLayoutAfterKeyboard() {
+        // Restaurar elementos ocultos
+        const hiddenElements = document.querySelectorAll('.keyboard-hide');
+        hiddenElements.forEach(el => {
+            el.classList.remove('keyboard-hide');
+        });
+        
+        // Restaurar tamaño del rosco
+        const roscoContainer = document.getElementById('rosco-container');
+        if (roscoContainer) {
+            roscoContainer.style.transform = '';
+            roscoContainer.style.marginBottom = '';
+        }
+        
+        // Restaurar posición de la tarjeta de pregunta
+        const questionCard = document.querySelector('.question-card');
+        if (questionCard) {
+            questionCard.style.transform = '';
+        }
+    }
+}
+
+/**
+ * Maneja eventos de cambio de tamaño de ventana
+ */
+function handleWindowResize() {
+    // Debounce para evitar múltiples ejecuciones
+    clearTimeout(resizeDebounceTimer);
+    resizeDebounceTimer = setTimeout(() => {
+        // Actualizar altura de ventana para detección de teclado
+        const newHeight = window.innerHeight;
+        
+        // Solo considerar cambios significativos en altura
+        if (Math.abs(windowHeight - newHeight) > 150) {
+            // Un cambio grande en altura probablemente es el teclado
+            const keyboardVisible = newHeight < windowHeight;
+            document.documentElement.classList.toggle('keyboard-open', keyboardVisible);
+            
+            // Si no es el teclado, actualizar la altura de referencia
+            if (!keyboardVisible) {
+                windowHeight = newHeight;
+            }
+        } else {
+            // Cambios pequeños son probablemente scroll o ajustes de UI
+            windowHeight = newHeight;
+            
+            // Reaplicar clases de dispositivo
+            applyDeviceClasses();
+        }
+        
+        // Optimizar tamaño del rosco después del cambio
+        optimizeRoscoGame();
+    }, 200); // Esperar 200ms para evitar demasiadas actualizaciones
+}
+
+/**
+ * Maneja cambios de orientación del dispositivo
+ */
+function handleOrientationChange() {
+    // La orientación está cambiando, esperar a que se complete
+    setTimeout(() => {
+        // Actualizar altura de referencia
+        windowHeight = window.innerHeight;
+        
+        // Regenerar clases y optimizaciones
+        applyDeviceClasses();
+        optimizeRoscoGame();
+        fixPositioningIssues();
+        
+        // Verificar si la visibilidad del teclado ha cambiado
+        if (document.activeElement && 
+            (document.activeElement.tagName === 'INPUT' || 
+             document.activeElement.tagName === 'TEXTAREA')) {
+            setTimeout(checkKeyboardVisibility, 500);
+        }
+    }, 300); // Esperar 300ms para que la orientación termine de cambiar
+}
+
+/**
+ * Inicializa correcciones específicas para iOS
+ */
+function initIOSSpecificFixes() {
+    // Corregir el problema de 100vh en iOS
+    const setIOSViewportHeight = () => {
+        document.documentElement.style.setProperty('--ios-viewport-height', `${window.innerHeight}px`);
+    };
+    
+    window.addEventListener('resize', setIOSViewportHeight);
+    setIOSViewportHeight();
+    
+    // Corregir problemas de scroll suave en iOS
+    document.querySelectorAll('.scroll-container').forEach(container => {
+        container.style.webkitOverflowScrolling = 'touch';
+    });
+    
+    // Prevenir doble tap para zoom
+    document.addEventListener('touchend', function(event) {
+        const now = Date.now();
+        const DOUBLE_TAP_THRESHOLD = 300;
+        const target = event.target;
+        
+        if (target.__lastTap && (now - target.__lastTap) < DOUBLE_TAP_THRESHOLD) {
+            event.preventDefault();
+        }
+        
+        target.__lastTap = now;
+    }, { passive: false });
+}
+
+/**
+ * Inicializa correcciones específicas para Android
+ */
+function initAndroidSpecificFixes() {
+    // Corregir problemas con viewport en algunos dispositivos Android
+    const viewportMeta = document.querySelector('meta[name="viewport"]');
+    if (viewportMeta) {
+        viewportMeta.content = 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, target-densitydpi=device-dpi';
+    }
+    
+    // Mejorar rendimiento de scroll en Android
+    document.addEventListener('touchstart', function() {}, { passive: true });
+    
+    // Corregir problema de foco en campos de texto
+    document.querySelectorAll('input, textarea').forEach(input => {
+        input.addEventListener('touchstart', function(e) {
+            if (document.activeElement !== this) {
+                e.preventDefault();
+                this.focus();
+            }
+        });
+    });
+}
+
+/**
+ * Función auxiliar para verificar visibilidad del teclado
+ */
+function checkKeyboardVisibility() {
+    const newWindowHeight = window.innerHeight;
+    
+    // Si la altura de la ventana disminuyó significativamente, el teclado está abierto
+    if (newWindowHeight < windowHeight * 0.75) {
+        document.documentElement.classList.add('keyboard-open');
+    } else {
+        document.documentElement.classList.remove('keyboard-open');
+    }
+}
+
+// Inicializar mejoras responsivas cuando se carga la página
+window.addEventListener('load', function() {
+    // Guardar altura inicial de la ventana
+    windowHeight = window.innerHeight;
+    
+    // Iniciar todas las mejoras responsivas
+    initResponsiveEnhancements();
+    
+    console.log("Optimizaciones móviles cargadas completamente");
+}); 

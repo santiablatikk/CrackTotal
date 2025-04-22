@@ -1,0 +1,296 @@
+/**
+ * MOBILE-SPECIFIC.CSS
+ * Optimizaciones específicas para dispositivos móviles en PASALA CHE
+ * Archivo complementario a responsive-fixes.css con mejoras enfocadas en experiencia táctil y performance
+ */
+
+/* ===== OPTIMIZACIONES PARA DISPOSITIVOS ESPECÍFICOS ===== */
+
+/* Corrección para notch en iPhone X/11/12/13/14 */
+@supports (padding-top: env(safe-area-inset-top)) {
+  .app-header {
+    padding-top: calc(env(safe-area-inset-top) + 10px);
+  }
+  
+  .home-link {
+    top: calc(env(safe-area-inset-top) + 15px);
+    left: calc(env(safe-area-inset-left) + 15px);
+  }
+  
+  .sound-btn {
+    top: calc(env(safe-area-inset-top) + 15px);
+    right: calc(env(safe-area-inset-right) + 15px);
+  }
+  
+  .toast {
+    bottom: calc(env(safe-area-inset-bottom) + 20px);
+  }
+}
+
+/* Optimización para pantallas con alta densidad de píxeles */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .rosco-letter {
+    border-width: 1.5px;
+  }
+  
+  .answer-input {
+    border-width: 1.5px !important;
+  }
+  
+  .modal-content {
+    border-width: 0.5px;
+  }
+}
+
+/* ===== OPTIMIZACIONES ESPECÍFICAS PARA iOS ===== */
+.ios-device {
+  /* Soluciona el problema del 100vh en iOS */
+  --real-viewport-height: 100vh;
+  
+  /* Mejoras para scroll inercial suave */
+  -webkit-overflow-scrolling: touch;
+  
+  /* Previene el rebote del scroll en iOS */
+  overscroll-behavior: none;
+}
+
+.ios-device .scroll-container {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Soluciona problema del input zoom en iOS */
+.ios-device input[type="text"],
+.ios-device input[type="search"],
+.ios-device .answer-input {
+  font-size: 16px !important; /* Previene zoom automático en iOS */
+}
+
+/* Elimina el highlight en tap para iOS */
+.ios-device .btn,
+.ios-device button,
+.ios-device .nav-btn,
+.ios-device .skip-btn,
+.ios-device .help-btn {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+/* ===== OPTIMIZACIONES ESPECÍFICAS PARA ANDROID ===== */
+.android-device {
+  /* Mejora la nitidez de las fuentes en Android */
+  -webkit-font-smoothing: antialiased;
+  
+  /* Mejora la calidad de los degradados */
+  -webkit-backface-visibility: hidden;
+  
+  /* Corrige problema con botones en algunos dispositivos Android */
+  -webkit-tap-highlight-color: transparent;
+}
+
+.android-device .btn,
+.android-device button {
+  /* Elimina el borde extraño que aparece al pulsar botones en Chrome/Android */
+  outline: none !important;
+}
+
+/* ===== MEJORAS DE RENDIMIENTO PARA MÓVILES ===== */
+
+/* Optimizaciones para reducir jank/reflow durante el scroll */
+.mobile-device .rosco-letter,
+.mobile-device .question-card,
+.mobile-device .modal-content {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Reducir complejidad de animaciones en dispositivos de gama baja */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== MEJORAS TÁCTILES ===== */
+
+/* Efectos de pulsación para retroalimentación táctil */
+@media (hover: none) {
+  .btn:active,
+  button:active,
+  .rosco-letter:active,
+  .skip-btn:active,
+  .help-btn:active,
+  .nav-btn:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+    transition: transform 0.1s ease, opacity 0.1s ease;
+  }
+  
+  .touch-active {
+    opacity: 0.8;
+    transform: scale(0.97);
+  }
+}
+
+/* Tamaños mínimos para elementos táctiles (44x44px según WCAG) */
+.mobile-device .btn,
+.mobile-device button,
+.mobile-device .nav-btn,
+.mobile-device .skip-btn,
+.mobile-device .help-btn,
+.mobile-device .submit-btn {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* ===== MEJORAS DE EXPERIENCIA DE USUARIO ===== */
+
+/* Ajustes para cuando el teclado virtual está activo */
+.keyboard-open .app-header {
+  opacity: 0.6;
+  transform: translateY(-10px);
+}
+
+.keyboard-open .answer-input {
+  background-color: rgba(21, 33, 52, 0.95) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Efectos de transición mejorados para estado activo */
+.rosco-letter.current {
+  animation: currentLetterPulse 1.5s infinite;
+}
+
+@keyframes currentLetterPulse {
+  0% { transform: scale(1.4); }
+  50% { transform: scale(1.5); }
+  100% { transform: scale(1.4); }
+}
+
+/* Asegura que los iconos en botones no sean demasiado pequeños en móviles */
+.mobile-device .btn i,
+.mobile-device button i {
+  font-size: max(1rem, 16px);
+}
+
+/* ===== OPTIMIZACIONES DE ACCESIBILIDAD ===== */
+
+/* Mayor contraste para elementos principales */
+@media (prefers-contrast: more) {
+  .rosco-letter {
+    border-width: 3px !important;
+  }
+  
+  .question-card {
+    background: linear-gradient(145deg, rgba(10, 18, 30, 0.97), rgba(7, 12, 22, 0.98)) !important;
+  }
+  
+  .current-question,
+  .current-definition {
+    color: rgba(255, 255, 255, 1) !important;
+  }
+}
+
+/* Mejoras para lectores de pantalla */
+.rosco-letter {
+  position: absolute;
+  /* Asegura que se pueda navegar con teclado/lector de pantalla */
+  &:focus-visible {
+    outline: 3px solid #3b82f6;
+    outline-offset: 2px;
+  }
+}
+
+/* ===== OPTIMIZACIONES ESPECÍFICAS POR ORIENTACIÓN ===== */
+
+/* Clase para orientación landscape (añadida desde JavaScript) */
+.landscape .question-card,
+.landscape .rosco-container {
+  transition: all 0.3s ease;
+}
+
+/* ===== CORRECCIONES DE LAYOUT PARA PANTALLAS PEQUEÑAS ===== */
+
+/* iPhone 5/SE (pantalla muy pequeña) */
+@media screen and (max-height: 568px) {
+  .app-header {
+    padding: 5px 0;
+    margin-bottom: 5px;
+  }
+  
+  .title-text {
+    font-size: 1.8rem !important;
+  }
+  
+  .subtitle {
+    display: none;
+  }
+  
+  .rosco-status {
+    padding: 8px 5px;
+    margin: 10px auto;
+  }
+  
+  .status-label {
+    font-size: 0.6rem;
+  }
+  
+  .submit-btn,
+  .skip-btn,
+  .help-btn {
+    transform: scale(0.9);
+  }
+  
+  .keyboard-open .rosco-section {
+    transform: scale(0.7);
+    margin-bottom: -60px;
+  }
+}
+
+/* Ajustes específicos para teléfonos con pantalla plegable */
+@media screen and (min-width: 768px) and (max-width: 884px) {
+  .game-container {
+    max-width: 90%;
+  }
+  
+  #rosco-container {
+    width: 90%;
+    max-width: 500px;
+  }
+}
+
+/* ===== CORRECCIONES PARA NAVEGADORES ESPECÍFICOS ===== */
+
+/* Safari en iOS tiene problemas con position: fixed cuando el teclado está abierto */
+@supports (-webkit-touch-callout: none) {
+  .fixed-position {
+    position: absolute;
+  }
+}
+
+/* ===== MEJORAS VISUALES PARA EL MODO OSCURO DEL SISTEMA ===== */
+
+@media (prefers-color-scheme: dark) {
+  .question-card {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 
+                inset 0 0 35px rgba(59, 130, 246, 0.15) !important;
+  }
+  
+  .rosco-letter {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ===== INDICADOR DE CARGA OPTIMIZADO PARA MÓVIL ===== */
+
+.mobile-device .loading-overlay {
+  background-color: rgba(7, 21, 36, 0.9);
+}
+
+.mobile-device .loading-spinner {
+  width: 50px;
+  height: 50px;
+  border-width: 3px;
+} 
