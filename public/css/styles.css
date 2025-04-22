@@ -1180,49 +1180,6 @@ body:not(.game-body) {
   }
 }
 
-/* Responsive */
-@media (max-height: 700px) {
-  .app-container {
-    min-height: 90vh;
-    padding: 0.2rem;
-  }
-  
-  .title-text {
-    font-size: 2rem;
-  }
-  
-  .subtitle {
-    font-size: 0.7rem;
-  }
-  
-  .ball-icon {
-    font-size: 1.4rem;
-  }
-  
-  .rule-card {
-    min-height: 4rem;
-  }
-  
-  .rule-content p {
-    font-size: 0.65rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .rules-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .difficulty-options {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .difficulty-option {
-    width: 100%;
-  }
-}
-
 /* Asegurar que el footer siempre esté en la parte inferior */
 html, body {
   height: 100%;
@@ -1250,8 +1207,8 @@ body {
 }
 
 .adsense-container {
-  margin: 20px auto;
   padding: 15px;
+  margin: 20px auto;
   background: rgba(15, 23, 42, 0.6);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -1286,7 +1243,7 @@ body {
 }
 
 .game-end-ad {
-  margin-top: 40px;
+  margin-top: 30px;
   border-top: 2px solid rgba(225, 29, 72, 0.3);
   animation: fadeInUp 0.5s ease-out;
 }
@@ -1302,7 +1259,7 @@ body {
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   max-width: 90%;
-  width: 320px;
+  width: 85%;
   backdrop-filter: blur(10px);
   display: none;
   border: 2px solid rgba(59, 130, 246, 0.3);
@@ -1379,22 +1336,6 @@ body {
   }
 }
 
-@media (max-width: 768px) {
-  .adsense-container {
-    padding: 12px;
-    margin: 15px auto;
-  }
-  
-  .game-end-ad {
-    margin-top: 30px;
-  }
-  
-  .pause-ad-container {
-    width: 85%;
-    padding: 15px;
-  }
-}
-
 .game-buttons {
   display: flex;
   flex-direction: column;
@@ -1459,304 +1400,6 @@ body {
   font-size: 1.3rem;
 }
 
-@media (max-width: 768px) {
-  .game-start-btn, .alt-game-btn {
-    padding: 12px 18px;
-    font-size: 1rem;
-    margin: 8px 0;
-  }
-
-  .alt-game-btn i {
-    font-size: 1.2rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .game-start-btn, .alt-game-btn {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-@media (max-width: 480px) {
-  .app-container {
-    padding: 0.25rem;
-  }
-
-  .title-text {
-    font-size: 1.6rem;
-    padding: 0.5rem 0;
-  }
-
-  .subtitle {
-    font-size: 0.75rem;
-    margin-bottom: 1rem;
-  }
-
-  .input-with-icon {
-    padding: 0.6rem 0.7rem;
-  }
-
-  .input-field {
-    font-size: 0.85rem;
-    padding: 0.6rem 0.4rem 0.6rem 1.8rem;
-  }
-
-  .btn {
-    font-size: 0.85rem;
-    padding: 0.6rem 1rem;
-    margin: 0.5rem 0;
-  }
-
-  .divider {
-    margin: 1rem 0;
-  }
-
-  .divider span {
-    font-size: 0.7rem;
-    padding: 0 0.5rem;
-  }
-
-  .rules-grid {
-    grid-template-columns: 1fr;
-    gap: 0.5rem;
-  }
-
-  .rule-card {
-    padding: 0.4rem;
-    margin-bottom: 0.4rem;
-  }
-
-  .rule-icon {
-    font-size: 1.2rem;
-    margin-right: 0.3rem;
-  }
-
-  .rule-content h4 {
-    font-size: 0.9rem;
-  }
-
-  .rule-content p {
-    font-size: 0.7rem;
-    line-height: 1.2;
-  }
-
-  .welcome-header {
-    padding: 0.7rem;
-    flex-direction: column;
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-
-  .user-avatar {
-    margin-right: 0;
-    margin-bottom: 0.5rem;
-    width: 3rem;
-    height: 3rem;
-  }
-
-  .welcome-title {
-    font-size: 1.1rem;
-  }
-
-  .game-banner {
-    padding: 0.7rem;
-    margin-bottom: 0.8rem;
-  }
-
-  .banner-text {
-    font-size: 0.85rem;
-  }
-
-  .banner-icon {
-    font-size: 1.2rem;
-    margin-right: 0.5rem;
-  }
-
-  .difficulty-options {
-    gap: 0.7rem;
-  }
-
-  .difficulty-option {
-    padding: 0.7rem 0.8rem;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 0.4rem;
-  }
-
-  .difficulty-icon {
-    margin-right: 0;
-    margin-bottom: 0.4rem;
-    width: 2.5rem;
-    height: 2.5rem;
-  }
-
-  .difficulty-icon i {
-    font-size: 1rem;
-  }
-
-  .difficulty-details {
-    text-align: center;
-    align-items: center;
-  }
-
-  .difficulty-details span {
-    font-size: 0.85rem;
-  }
-
-  .difficulty-details small {
-    font-size: 0.65rem;
-  }
-
-  .btn-start-game {
-    padding: 0.7rem 1.5rem;
-    font-size: 0.95rem;
-    margin-top: 0.5rem;
-  }
-
-  .btn-start-game i {
-    font-size: 1rem;
-    margin-right: 0.4rem;
-  }
-
-  .footer-links-mini {
-    flex-wrap: wrap;
-    gap: 0.3rem 0.5rem;
-    justify-content: center;
-  }
-
-  .footer-link {
-    font-size: 0.65rem;
-    padding: 0.3rem 0.5rem;
-  }
-
-  .copyright-text {
-    font-size: 0.6rem;
-    padding: 0.5rem 0;
-    text-align: center;
-  }
-
-  .toast {
-    width: 90%;
-    left: 5%;
-    padding: 0.6rem;
-    font-size: 0.8rem;
-  }
-  
-  /* Game buttons (responsive) */
-  .game-start-btn, .alt-game-btn {
-    padding: 0.6rem 0.8rem;
-    font-size: 0.85rem;
-    width: 100%;
-    margin-bottom: 0.5rem;
-  }
-  
-  /* Forms & Inputs (better mobile experience) */
-  .login-form {
-    width: 100%;
-    max-width: 300px;
-    margin: 0 auto;
-  }
-  
-  .form-group {
-    margin-bottom: 0.8rem;
-  }
-  
-  /* Fix potential overflow issues */
-  html, body {
-    overflow-x: hidden;
-    width: 100%;
-  }
-  
-  /* Improve tap targets */
-  .btn, button, a, input[type="submit"] {
-    min-height: 40px;
-  }
-}
-
-/* Extra small devices */
-@media (max-width: 360px) {
-  .app-container {
-    padding: 0.2rem;
-  }
-  
-  .title-text {
-    font-size: 1.4rem;
-  }
-  
-  .input-with-icon {
-    padding: 0.5rem 0.6rem;
-  }
-  
-  .input-field {
-    font-size: 0.8rem;
-  }
-  
-  .difficulty-option {
-    padding: 0.6rem;
-  }
-  
-  .difficulty-icon {
-    width: 2.2rem;
-    height: 2.2rem;
-  }
-  
-  .btn-start-game {
-    padding: 0.6rem 1.2rem;
-    font-size: 0.9rem;
-  }
-  
-  .rule-content h4 {
-    font-size: 0.85rem;
-  }
-  
-  .rule-content p {
-    font-size: 0.65rem;
-  }
-}
-
-/* Medium height devices */
-@media (max-height: 700px) and (max-width: 480px) {
-  .app-container {
-    padding-top: 0.2rem;
-    padding-bottom: 0.2rem;
-  }
-  
-  .title-text {
-    margin-bottom: 0.2rem;
-  }
-  
-  .subtitle {
-    margin-bottom: 0.5rem;
-  }
-  
-  .rules-grid {
-    gap: 0.3rem;
-  }
-  
-  .rule-card {
-    padding: 0.3rem;
-    margin-bottom: 0.3rem;
-  }
-  
-  .welcome-header {
-    margin-bottom: 0.5rem;
-  }
-  
-  .game-banner {
-    margin-bottom: 0.5rem;
-  }
-  
-  .difficulty-options {
-    gap: 0.5rem;
-  }
-  
-  .difficulty-option {
-    margin-bottom: 0.3rem;
-  }
-}
-
 .portal-btn {
   background: linear-gradient(135deg, #4299e1, #3182ce);
   border: 2px solid #4299e1;
@@ -1787,18 +1430,4 @@ body {
 
 .return-portal-link i {
   margin-right: 5px;
-}
-
-/* @media (max-width: 768px) {
-  .game-start-btn, .alt-game-btn {
-    padding: 12px 18px;
-    font-size: 0.9rem;
-  }
-} */
-
-/* @media (max-width: 768px) {
-  .game-start-btn, .alt-game-btn {
-    width: 100%;
-    max-width: none;
-  }
-} */ 
+} 

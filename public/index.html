@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="description" content="CRACK TOTAL - Portal de juegos de fútbol" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="theme-color" content="#1e293b">
     <title>CRACK TOTAL - Portal de Juegos de Fútbol</title>
@@ -12,10 +12,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Favicon -->
     <link rel="icon" href="img/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
     <!-- Estilos -->
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/footer-styles.css" />
-    <link rel="stylesheet" href="css/combined.css" />
+    <link rel="stylesheet" href="css/responsive-fixes.css" />
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Fuentes -->
@@ -27,6 +28,8 @@
     <meta property="og:image" content="img/preview.jpg">
     <!-- Scripts -->
     <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/responsive.js"></script>
     <style>
       :root {
         --primary-bg: #0a0f18; /* Even darker base */
@@ -637,6 +640,9 @@
     </style>
   </head>
   <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link visually-hidden">Saltar al contenido principal</a>
+
     <a href="index.html" class="home-link" style="display: none;">
       <i class="fas fa-home"></i> Inicio
     </a>
@@ -644,7 +650,7 @@
     <!-- Header (Structure remains, styles updated above) -->
     <header class="app-header">
       <div class="logo-animation">
-          <i class="fas fa-futbol ball-icon bounce"></i>
+          <i class="fas fa-futbol ball-icon bounce" aria-hidden="true"></i>
       </div>
       <a href="index.html" class="title-link">
           <h1 class="title-text">CRACK TOTAL</h1>
@@ -719,7 +725,7 @@
             <a href="terms.html"><i class="fas fa-file-contract"></i> Terminos</a>
         </div>
         <div class="footer-actions">
-             <button id="footer-share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
+             <button id="footer-share-button" class="share-button" aria-label="Compartir esta página"><i class="fas fa-share-alt"></i> Compartir</button>
              <div class="social-icons">
                  <a href="https://www.facebook.com/pasalachee" target="_blank" aria-label="Facebook" class="social-icon"><i class="fab fa-facebook-f"></i></a>
                  <a href="https://twitter.com/pasalachee" target="_blank" aria-label="Twitter" class="social-icon"><i class="fab fa-twitter"></i></a>

@@ -198,16 +198,32 @@ document.addEventListener('DOMContentLoaded', function() {
       document.body.appendChild(hintElement);
     }
     
-    // Actualizar contenido y posición
-    hintElement.innerHTML = `<span class="hint-text">${hintText}...</span>`;
+    // Actualizar contenido con formato mejorado
+    hintElement.innerHTML = `
+      <span class="hint-text">
+        <strong>${hintText}</strong>...
+      </span>
+    `;
     
     // Obtener posición de la letra en el rosco
     const letterElem = letterElements[letter];
     if (letterElem) {
       const rect = letterElem.getBoundingClientRect();
+      
+      // Posicionar la pista encima de la letra con margen
+      const offsetY = -40; // Ajustar según necesidad
+      
       hintElement.style.left = `${rect.left + window.scrollX + rect.width/2 - hintElement.offsetWidth/2}px`;
-      hintElement.style.top = `${rect.top + window.scrollY - 40}px`;
+      hintElement.style.top = `${rect.top + window.scrollY + offsetY}px`;
       hintElement.style.display = 'block';
+      
+      // Aplicar animación de entrada
+      hintElement.style.animation = 'hintPulse 2s infinite';
+      
+      // Reproducir un sonido sutil si está habilitado
+      if (soundEnabled && clickSound) {
+        playSound(clickSound);
+      }
     }
   }
   
@@ -1299,55 +1315,59 @@ document.addEventListener('DOMContentLoaded', function() {
     remainingCountDisplay.textContent = remaining;
   }
   
-  // Show toast notification
+  /**
+   * Muestra un mensaje toast con animación y tipo personalizado
+   * @param {string} message - Mensaje a mostrar
+   * @param {string} type - Tipo de toast: 'success', 'error', 'warning', 'info'
+   */
   function showToast(message, type = 'success') {
-    // Función deshabilitada para evitar que aparezca el toast
-    return;
-
-    // El código original está comentado a continuación
-    /*
+    const toast = document.getElementById('toast');
+    const toastMessage = document.querySelector('.toast-message');
+    const toastIcon = document.querySelector('.toast-icon i');
+    
+    if (!toast || !toastMessage) return;
+    
+    // Limpiar clases anteriores
+    toast.classList.remove('success', 'error', 'warning', 'info');
+    toast.classList.add(type);
+    
+    // Actualizar ícono según tipo
+    if (toastIcon) {
+      toastIcon.className = ''; // Limpiar clases de ícono
+      
+      switch (type) {
+        case 'success':
+          toastIcon.className = 'fas fa-check-circle';
+          break;
+        case 'error':
+          toastIcon.className = 'fas fa-times-circle';
+          break;
+        case 'warning':
+          toastIcon.className = 'fas fa-exclamation-triangle';
+          break;
+        case 'info':
+        default:
+          toastIcon.className = 'fas fa-info-circle';
+      }
+    }
+    
+    // Actualizar mensaje
     toastMessage.textContent = message;
     
-    // Set toast type
-    toast.className = 'toast';
-    toast.classList.add(`toast-${type}`);
-    
-    // Configurar el ícono según el tipo
-    const toastIcon = toast.querySelector('.toast-icon i') || document.createElement('i');
-    
-    if (!toast.querySelector('.toast-icon')) {
-      const iconContainer = document.createElement('div');
-      iconContainer.className = 'toast-icon';
-      iconContainer.appendChild(toastIcon);
-      toast.insertBefore(iconContainer, toastMessage);
-    }
-    
-    // Actualizar el ícono según el tipo de toast
-    if (type === 'success') {
-      toastIcon.className = 'fas fa-check-circle';
-    } else if (type === 'error') {
-      toastIcon.className = 'fas fa-times-circle';
-    } else if (type === 'warning') {
-      toastIcon.className = 'fas fa-exclamation-triangle';
-    } else if (type === 'info') {
-      toastIcon.className = 'fas fa-info-circle';
-    }
-    
-    // Show the toast
+    // Mostrar con animación
     toast.style.display = 'flex';
-    toast.style.opacity = '1';
-    toast.style.transform = 'translateY(0)';
-    
-    // Hide toast after 3 seconds
     setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateY(-20px)';
-      
+      toast.classList.add('show');
+    }, 10);
+    
+    // Ocultar después de 3 segundos
+    clearTimeout(window.toastTimeout);
+    window.toastTimeout = setTimeout(() => {
+      toast.classList.remove('show');
       setTimeout(() => {
         toast.style.display = 'none';
       }, 300);
     }, 3000);
-    */
   }
   
   // Play sound
@@ -1362,18 +1382,24 @@ function playSound(sound) {
   function toggleSound() {
     soundEnabled = !soundEnabled;
     
-    const icon = soundToggle.querySelector('i');
+    // Actualizar icono y clase del botón de sonido
+    const soundBtn = document.getElementById('sound-toggle');
+    const soundIcon = soundBtn.querySelector('i');
+    
     if (!soundEnabled) {
-      icon.className = 'fas fa-volume-mute';
-      soundToggle.classList.add('muted');
-  } else {
-      icon.className = 'fas fa-volume-up';
-      soundToggle.classList.remove('muted');
+      soundIcon.className = 'fas fa-volume-mute';
+      soundBtn.classList.add('muted');
+    } else {
+      soundIcon.className = 'fas fa-volume-up';
+      soundBtn.classList.remove('muted');
     }
     
-    // Play click sound if sound is enabled
+    // Guardar preferencia de sonido
+    localStorage.setItem('soundEnabled', soundEnabled);
+    
+    // Reproducir sonido de click si se activa el sonido
     if (soundEnabled) {
-      playSound(clickSound);
+      playSound('click');
     }
   }
   
@@ -1502,7 +1528,7 @@ function playSound(sound) {
   
   // Function to hide all modals
   function hideModals() {
-    const modals = document.querySelectorAll('.result-modal, #achievements-modal');
+    const modals = document.querySelectorAll('.modal');
     modals.forEach(modal => {
       modal.classList.remove('show');
       setTimeout(() => {
@@ -1517,92 +1543,188 @@ function playSound(sound) {
   // Initialize game on page load
   initGame();
 
-  // Add this function near the top of the file, after other initialization code
+  /**
+   * Ajusta el tamaño y posición del rosco para dispositivos móviles
+   * Esta función se llama al cargar la página y al cambiar la orientación
+   */
   function adjustRoscoForMobile() {
-    // Only apply on mobile devices
-    if (window.innerWidth > 768 && !isMobileDevice()) return;
-    
-    // Function to check if it's a mobile device
-    function isMobileDevice() {
-      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    }
-    
-    // Get all rosco letters
-    const letters = document.querySelectorAll('.rosco-letter');
-    if (!letters.length) return;
-    
-    // Handle the rosco container
-    const roscoContainer = document.getElementById('rosco-container');
-    if (!roscoContainer) return;
-    
-    // Calculate the optimal positioning of letters
-    positionLettersInCircle(letters, roscoContainer);
-    
-    // Handle input focus/blur to deal with virtual keyboard
-    const answerInput = document.getElementById('answer-input');
-    if (answerInput) {
-      answerInput.addEventListener('focus', function() {
-        document.body.classList.add('keyboard-open');
-        adjustForKeyboard(true);
+    // Aprovechamos la función optimizeRoscoGame() de responsive.js
+    // que ya maneja todo el ajuste dinámico del rosco
+    if (typeof optimizeRoscoGame === 'function') {
+      const roscoOptimizer = optimizeRoscoGame();
+      
+      // Escuchar eventos de cambio de orientación específicamente para el juego
+      window.addEventListener('orientationchange', () => {
+        // Pequeño retraso para permitir que se complete el cambio de orientación
+        setTimeout(() => {
+          const container = document.getElementById('rosco-container');
+          const roscoSection = document.querySelector('.rosco-section');
+          
+          // Asegurar que el contenedor tenga suficiente espacio
+          if (roscoSection) {
+            roscoSection.style.marginTop = '20px';
+            roscoSection.style.marginBottom = '20px';
+          }
+          
+          // Re-aplicar clases de estado a las letras después del ajuste
+          const letters = document.querySelectorAll('.rosco-letter');
+          letters.forEach(letter => {
+            const letterValue = letter.textContent.trim();
+            if (letterStatus[letterValue]) {
+              switch (letterStatus[letterValue]) {
+                case 'correct':
+                  letter.classList.add('correct');
+                  break;
+                case 'incorrect':
+                  letter.classList.add('incorrect');
+                  break;
+                case 'skipped':
+                  letter.classList.add('skipped');
+                  break;
+                case 'current':
+                  letter.classList.add('current');
+                  break;
+              }
+            }
+          });
+        }, 300);
       });
       
-      answerInput.addEventListener('blur', function() {
-        document.body.classList.remove('keyboard-open');
-        adjustForKeyboard(false);
-        // Re-position letters after keyboard closes
-        setTimeout(() => positionLettersInCircle(letters, roscoContainer), 300);
-      });
-    }
-    
-    // Reposition on orientation change
-    window.addEventListener('orientationchange', function() {
-      setTimeout(() => positionLettersInCircle(letters, roscoContainer), 300);
-    });
-    
-    // Reposition on resize
-    window.addEventListener('resize', function() {
-      if (window.innerWidth <= 768 || isMobileDevice()) {
-        positionLettersInCircle(letters, roscoContainer);
+      // Retornar el optimizador para posible limpieza futura
+      return roscoOptimizer;
+    } else {
+      console.warn('La función optimizeRoscoGame no está disponible');
+      // Implementación de respaldo si no existe optimizeRoscoGame
+      const isMobile = isMobileDevice();
+      if (isMobile) {
+        const roscoContainer = document.getElementById('rosco-container');
+        const questionCard = document.querySelector('.question-card');
+        
+        if (roscoContainer && questionCard) {
+          // Ajustes básicos de tamaño para móvil como respaldo
+          const vw = Math.min(window.innerWidth, window.innerHeight);
+          roscoContainer.style.width = `${vw * 0.9}px`;
+          roscoContainer.style.height = `${vw * 0.9}px`;
+          questionCard.style.width = `${vw * 0.6}px`;
+          
+          // Posicionar letras en círculo
+          const letters = document.querySelectorAll('.rosco-letter');
+          if (letters.length > 0) {
+            positionLettersInCircle(letters, roscoContainer);
+          }
+        }
       }
-    });
+    }
   }
 
-  // Position letters in a perfect circle
+  /**
+   * Detecta si el dispositivo es móvil basado en el ancho de pantalla y User Agent
+   * @returns {boolean} True si es un dispositivo móvil
+   */
+  function isMobileDevice() {
+    return (
+      window.innerWidth < 768 ||
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+    );
+  }
+
+  /**
+   * Posiciona las letras del rosco en un círculo alrededor del centro
+   * Esta función sirve como respaldo si optimizeRoscoGame no está disponible
+   * @param {NodeList} letters - Lista de elementos de letra
+   * @param {HTMLElement} container - Contenedor del rosco
+   */
   function positionLettersInCircle(letters, container) {
-    // Dimensions of the container
-    const containerRect = container.getBoundingClientRect();
-    const centerX = containerRect.width / 2;
-    const centerY = containerRect.height / 2;
+    if (!letters.length || !container) return;
     
-    // Get the question card size
-    const questionCard = document.querySelector('.question-card');
-    const questionCardRadius = questionCard ? 
-      Math.max(questionCard.offsetWidth, questionCard.offsetHeight) / 2 : 
-      containerRect.width * 0.3;
+    const containerWidth = container.offsetWidth;
+    const containerHeight = container.offsetHeight;
     
-    // Calculate radius for letter placement (outside the question card)
-    const radius = centerX * 0.8; // 80% of container radius
+    // Asegurar que el contenedor sea cuadrado para un círculo perfecto
+    const size = Math.min(containerWidth, containerHeight);
+    container.style.width = `${size}px`;
+    container.style.height = `${size}px`;
     
-    // Position each letter around the circle
+    // Determinar tamaños adecuados basados en el tamaño del contenedor
+    const deviceType = window.innerWidth < 360 ? 'mobile-small' :
+                      window.innerWidth < 480 ? 'mobile-large' :
+                      window.innerWidth < 768 ? 'tablet' : 'desktop';
+    
+    // Radio del círculo (ajustado para evitar solapamiento)
+    let letterRadius;
+    switch (deviceType) {
+      case 'mobile-small':
+        letterRadius = size * 0.4;
+        break;
+      case 'mobile-large':
+        letterRadius = size * 0.42;
+        break;
+      case 'tablet':
+        letterRadius = size * 0.43;
+        break;
+      default: // desktop
+        letterRadius = size * 0.45;
+    }
+    
+    // Tamaño de las letras según el dispositivo
+    let letterSize;
+    switch (deviceType) {
+      case 'mobile-small':
+        letterSize = size * 0.09;
+        break;
+      case 'mobile-large':
+        letterSize = size * 0.095;
+        break;
+      case 'tablet':
+        letterSize = size * 0.085;
+        break;
+      default: // desktop
+        letterSize = size * 0.08;
+    }
+    
+    const numLetters = letters.length;
+    const isFullAlphabet = numLetters >= 26;
+    const angleStep = (2 * Math.PI) / numLetters;
+    const startAngle = -Math.PI / 2; // Comenzar desde arriba (letra A)
+    const containerRadius = size / 2;
+    
+    // Posicionar cada letra del rosco
     letters.forEach((letter, index) => {
-      const totalLetters = letters.length;
-      // Calculate angle (starting from top, clockwise)
-      const angle = (index / totalLetters) * 2 * Math.PI - (Math.PI / 2);
+      // Configurar tamaño de letra
+      letter.style.width = `${letterSize}px`;
+      letter.style.height = `${letterSize}px`;
+      letter.style.fontSize = `${letterSize * 0.6}px`;
       
-      // Calculate x,y position
-        const x = centerX + radius * Math.cos(angle);
-        const y = centerY + radius * Math.sin(angle);
+      // Calcular ángulo basado en el índice
+      let angle;
+      if (isFullAlphabet) {
+        // Distribución para el alfabeto completo
+        angle = startAngle + (index * angleStep);
         
-      // Position the letter (centered at x,y)
-      letter.style.position = 'absolute';
-      letter.style.left = `${x - letter.offsetWidth/2}px`;
-      letter.style.top = `${y - letter.offsetHeight/2}px`;
-      letter.style.transform = 'none'; // Reset any transforms
+        // Ajustes especiales para ciertas letras en móvil
+        if (deviceType.includes('mobile')) {
+          // Podemos ajustar letras específicas si es necesario
+          // Ejemplo: if (index === 21) angle += 0.1; // Ajustar letra U ligeramente
+        }
+      } else {
+        // Distribución estándar para conjuntos más pequeños
+        angle = startAngle + (index * angleStep);
+      }
       
-      // Highlight current letter
-      if (letter.classList.contains('current')) {
-        letter.style.transform = 'scale(1.2)';
-        letter.style.zIndex = '10';
+      // Calcular la posición en el círculo
+      const x = Math.cos(angle) * letterRadius + containerRadius - (letterSize / 2);
+      const y = Math.sin(angle) * letterRadius + containerRadius - (letterSize / 2);
+      
+      // Aplicar posición
+      letter.style.position = 'absolute';
+      letter.style.left = `${x}px`;
+      letter.style.top = `${y}px`;
+      
+      // Actualizar estado visual de la letra
+      const letterValue = letter.textContent.trim();
+      if (letterStatus[letterValue]) {
+        letter.classList.remove('correct', 'incorrect', 'skipped', 'current');
+        letter.classList.add(letterStatus[letterValue]);
       }
     });
   }
@@ -1721,6 +1843,116 @@ function playSound(sound) {
         optionsMenu.classList.add('hide');
       }
     });
+  }
+
+  /**
+   * Inicializa todos los eventos de los modales mejorados
+   */
+  function initializeModalEvents() {
+    // Botones para ir del modal de resultado a logros
+    const victoryStatsBtn = document.getElementById('victory-stats-btn');
+    const timeoutStatsBtn = document.getElementById('timeout-stats-btn');
+    const defeatStatsBtn = document.getElementById('defeat-stats-btn');
+    
+    // Botón para ir de logros a estadísticas
+    const achievementsStatsBtn = document.getElementById('achievements-stats-btn');
+    
+    // Botón para cerrar estadísticas
+    const closeStatsBtn = document.getElementById('close-stats-btn');
+    
+    // Botones de navegación en el modal de estadísticas
+    const profileBtn = document.getElementById('profile-btn');
+    const rankingBtn = document.getElementById('ranking-btn');
+    const playAgainBtn = document.getElementById('play-again-btn');
+    
+    // Configurar eventos de resultado a logros
+    if (victoryStatsBtn) victoryStatsBtn.addEventListener('click', () => switchToModal('achievements-modal'));
+    if (timeoutStatsBtn) timeoutStatsBtn.addEventListener('click', () => switchToModal('achievements-modal'));
+    if (defeatStatsBtn) defeatStatsBtn.addEventListener('click', () => switchToModal('achievements-modal'));
+    
+    // Configurar evento de logros a estadísticas
+    if (achievementsStatsBtn) achievementsStatsBtn.addEventListener('click', () => switchToModal('stats-modal'));
+    
+    // Configurar evento de cerrar estadísticas
+    if (closeStatsBtn) {
+      closeStatsBtn.addEventListener('click', () => {
+        hideModals();
+        
+        // También verificar si debemos resetear el juego después de cerrar
+        if (!gameStarted) {
+          resetGame();
+        }
+      });
+    }
+    
+    // Configurar eventos de navegación
+    if (profileBtn) profileBtn.addEventListener('click', () => window.location.href = 'profile.html');
+    if (rankingBtn) rankingBtn.addEventListener('click', () => window.location.href = 'ranking.html');
+    if (playAgainBtn) {
+      playAgainBtn.addEventListener('click', () => {
+        hideModals();
+        resetGame();
+      });
+    }
+    
+    // Cerrar modales al hacer clic fuera del contenido
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          hideModals();
+        }
+      });
+    });
+  }
+
+  // Llamar a esta función durante la inicialización del juego
+  document.addEventListener('DOMContentLoaded', () => {
+    // ... código existente de inicialización
+    
+    // Inicializar eventos de modales
+    initializeModalEvents();
+  });
+
+  // Función para mostrar la pregunta actual
+  function displayCurrentQuestion() {
+    // Actualizar la letra actual
+    currentLetterDisplay.textContent = currentLetter.toUpperCase();
+    
+    // Obtener la pregunta actual
+    const currentQuestionObj = questions[currentIndex];
+    
+    if (currentQuestionObj) {
+        // Determinar si la pregunta comienza con o contiene la letra
+        const questionType = currentQuestionObj.starts_with ? 'COMIENZA CON' : 'CONTIENE';
+        
+        // Construir y mostrar la pregunta
+        const questionText = `${questionType} "${currentLetter.toUpperCase()}"`;
+        currentQuestionElement.textContent = questionText;
+        
+        // Añadir clases para diferenciar visualmente los tipos de preguntas
+        if (currentQuestionObj.starts_with) {
+            currentQuestionElement.classList.add('starts-with-question-text');
+            currentQuestionElement.classList.remove('contains-question-text');
+        } else {
+            currentQuestionElement.classList.add('contains-question-text');
+            currentQuestionElement.classList.remove('starts-with-question-text');
+        }
+        
+        // Mostrar la definición
+        currentDefinitionElement.textContent = currentQuestionObj.definition;
+        
+        // Actualizar el estado del rosco
+        updateRoscoDisplay();
+        
+        // Limpiar el input de respuesta y darle foco
+        answerInput.value = '';
+        answerInput.focus();
+        
+        // Reiniciar el timer para esta pregunta
+        resetTimer();
+    } else {
+        console.error(`No se encontró pregunta para el índice ${currentIndex}`);
+    }
   }
 });
 
@@ -2240,4 +2472,127 @@ function countWeekendGames(gameHistory) {
     const day = gameDate.getDay();
     return day === 0 || day === 6; // 0 es domingo, 6 es sábado
   }).length;
+}
+
+/**
+ * Muestra el modal de fin de juego adecuado según el resultado
+ * y actualiza sus estadísticas
+ */
+function showGameEndModal(gameResult) {
+  hideModals(); // Ocultar cualquier modal visible
+  
+  let modalId;
+  
+  // Determinar qué modal mostrar según el resultado
+  switch (gameResult) {
+    case 'victory':
+      modalId = 'victory-modal';
+      if (gameOverSound) playSound(gameOverSound);
+      break;
+    case 'timeout':
+      modalId = 'timeout-modal';
+      if (gameOverSound) playSound(gameOverSound);
+      break;
+    case 'defeat':
+      modalId = 'defeat-modal';
+      if (gameOverSound) playSound(gameOverSound);
+      break;
+    default:
+      modalId = 'stats-modal';
+  }
+  
+  // Mostrar el modal con animación
+  const modal = document.getElementById(modalId);
+  if (modal) {
+    modal.style.display = 'flex';
+    // Pequeño retraso para que la animación funcione correctamente
+    setTimeout(() => {
+      modal.classList.add('show');
+    }, 10);
+    
+    // Actualizar estadísticas si es el modal de estadísticas
+    if (modalId === 'stats-modal') {
+      updateStatsModal();
+    }
+  }
+}
+
+/**
+ * Actualiza el contenido del modal de estadísticas
+ */
+function updateStatsModal() {
+  // Actualizar contadores
+  const statsCorrect = document.getElementById('stats-correct');
+  const statsIncorrect = document.getElementById('stats-incorrect');
+  const statsSkipped = document.getElementById('stats-skipped');
+  
+  if (statsCorrect) statsCorrect.textContent = correctAnswers;
+  if (statsIncorrect) statsIncorrect.textContent = incorrectAnswersCount;
+  if (statsSkipped) statsSkipped.textContent = skippedAnswers;
+  
+  // Generar lista de respuestas incorrectas
+  generateIncorrectAnswersList(incorrectAnswersList);
+}
+
+/**
+ * Oculta todos los modales abiertos
+ */
+function hideModals() {
+  const modals = document.querySelectorAll('.modal');
+  modals.forEach(modal => {
+    modal.classList.remove('show');
+    setTimeout(() => {
+      modal.style.display = 'none';
+    }, 300);
+  });
+}
+
+/**
+ * Cambia de un modal a otro con transición suave
+ */
+function switchToModal(targetModalId) {
+  const currentModals = document.querySelectorAll('.modal.show');
+  const targetModal = document.getElementById(targetModalId);
+  
+  if (!targetModal) return;
+  
+  // Ocultar modales actuales
+  currentModals.forEach(modal => {
+    modal.classList.remove('show');
+    setTimeout(() => {
+      modal.style.display = 'none';
+      
+      // Mostrar modal destino
+      if (targetModal) {
+        targetModal.style.display = 'flex';
+        setTimeout(() => {
+          targetModal.classList.add('show');
+        }, 10);
+      }
+    }, 300);
+  });
+}
+
+function updateQuestionContent(currentQuestionObj) {
+    const currentLetterDisplay = document.querySelector('.current-letter-display');
+    const currentQuestionDisplay = document.querySelector('.current-question');
+    const currentDefinitionDisplay = document.querySelector('.current-definition');
+    
+    if (currentLetterDisplay && currentQuestionDisplay && currentDefinitionDisplay) {
+        currentLetterDisplay.textContent = currentQuestionObj.letter.toUpperCase();
+        
+        // Aplicar las clases de estilo según el tipo de pregunta
+        if (currentQuestionObj.question.toLowerCase().includes("comienza con")) {
+            currentQuestionDisplay.textContent = currentQuestionObj.question;
+            currentQuestionDisplay.className = 'current-question starts-with-question-text';
+        } else if (currentQuestionObj.question.toLowerCase().includes("contiene")) {
+            currentQuestionDisplay.textContent = currentQuestionObj.question;
+            currentQuestionDisplay.className = 'current-question contains-question-text';
+        } else {
+            currentQuestionDisplay.textContent = currentQuestionObj.question;
+            currentQuestionDisplay.className = 'current-question';
+        }
+        
+        currentDefinitionDisplay.textContent = currentQuestionObj.definition;
+    }
 }

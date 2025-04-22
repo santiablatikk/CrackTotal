@@ -119,7 +119,7 @@ img {
 
 /* --- Main Profile Layout --- */
 .profile-page {
-  padding: 0 0.5rem 1.5rem;
+  padding: 1rem;
   flex-grow: 1;
 }
 
@@ -131,25 +131,18 @@ img {
 
 .profile-grid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem; 
-}
-
-@media (min-width: 992px) {
-  .profile-grid {
-    grid-template-columns: 280px 1fr; 
-    gap: 2.5rem;
-  }
+  grid-template-columns: 300px 1fr;
+  gap: 1.5rem;
 }
 
 /* --- Sections (Common Styles) --- */
 .profile-section {
   background: var(--color-card-bg);
   border-radius: var(--border-radius-lg);
-  padding: 1rem;
+  padding: 1.2rem;
   border: 1px solid var(--color-card-border);
   box-shadow: var(--shadow-card);
-  margin-bottom: 1rem; /* Spacing between sections in main column */
+  margin-bottom: 1.5rem; /* Spacing between sections in main column */
   backdrop-filter: blur(5px);
 }
 
@@ -163,7 +156,7 @@ img {
 }
 
 .section-title {
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   font-family: var(--font-secondary);
   color: var(--color-text-light);
   margin-bottom: 0.8rem;
@@ -308,7 +301,7 @@ img {
 .stat-card {
   background: rgba(17, 24, 39, 0.5); /* Darker card bg */
   border-radius: var(--border-radius-md);
-  padding: 0.75rem 0.5rem;
+  padding: 1rem;
   text-align: center;
   border: 1px solid transparent;
   transition: var(--transition-smooth);
@@ -341,14 +334,14 @@ img {
 }
 
 .stat-icon {
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   color: var(--color-primary);
   margin-bottom: 0.4rem;
   line-height: 1;
 }
 
 .stat-value {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-family: var(--font-secondary);
   font-weight: 600;
   color: var(--color-text-light);
@@ -375,8 +368,8 @@ img {
 .game-entry {
   background: rgba(17, 24, 39, 0.5);
   border-radius: var(--border-radius-md);
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
   border: 1px solid var(--color-card-border);
   transition: var(--transition-smooth);
   display: flex;
@@ -417,8 +410,7 @@ img {
 }
 
 .game-info span {
-  display: block;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   color: var(--color-text-medium);
   line-height: 1.4;
 }
@@ -441,8 +433,8 @@ img {
 }
 
 .game-score {
+  font-size: 1.5rem;
   font-family: var(--font-secondary);
-  font-size: 1.4rem;
   font-weight: 600;
   color: var(--color-primary);
   text-align: right;
@@ -463,7 +455,7 @@ img {
 .achievement-card {
   background: rgba(17, 24, 39, 0.5);
   border-radius: var(--border-radius-md);
-  padding: 1.25rem;
+  padding: 1rem;
   border: 1px solid var(--color-card-border);
   display: flex;
   gap: 1rem;
@@ -1208,7 +1200,7 @@ img {
   appearance: none;
   cursor: pointer;
   transition: var(--transition-smooth);
-  width: 180px;
+  width: auto;
 }
 
 .filter-select:focus {
@@ -1232,7 +1224,7 @@ img {
 /* --- Empty State --- */
 .empty-state {
   text-align: center;
-  padding: 3rem 1rem;
+  padding: 2rem;
   background: rgba(17, 24, 39, 0.3);
   border-radius: var(--border-radius-md);
   border: 1px dashed var(--color-card-border);
@@ -1439,7 +1431,7 @@ img {
   position: relative;
   background: rgba(17, 24, 39, 0.5);
   border-radius: var(--border-radius-lg);
-  padding: 1.25rem;
+  padding: 1rem;
   transition: var(--transition-smooth);
   overflow: hidden;
   backdrop-filter: blur(5px);
@@ -1618,7 +1610,7 @@ img {
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  width: 320px;
+  width: 300px;
   max-width: calc(100% - 50px);
   z-index: 1000;
   transform: translateY(100px);
@@ -1727,9 +1719,9 @@ img {
 .floating-action-button {
   position: fixed;
   bottom: 15px;
-  right: 70px; /* Positioned next to back button */
-  width: 45px;
-  height: 45px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--color-success), #059669);
   color: white;
@@ -1737,7 +1729,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   cursor: pointer;
   box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
   transition: var(--transition-smooth);
@@ -1792,532 +1784,6 @@ img {
 
 .action-button i {
   font-size: 1rem;
-}
-
-/* --- Responsive Adjustments --- */
-@media (max-width: 1200px) {
-  .stats-highlights {
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .highlight-stat {
-    width: 100%;
-    max-width: 300px;
-  }
-}
-
-@media (max-width: 991px) {
-  .quick-access-nav {
-    display: none; 
-  }
-  
-  .notification {
-    width: 280px;
-  }
-}
-
-@media (max-width: 767px) {
-  .achievements-progress {
-    padding: 1rem;
-  }
-  
-  .empty-state {
-    padding: 2rem 1rem;
-  }
-  
-  .modal-content {
-    width: 95%;
-  }
-  
-  .floating-action-button,
-  .back-btn {
-    width: 45px;
-    height: 45px;
-    font-size: 1.1rem;
-  }
-  
-  .floating-action-button {
-    right: 80px;
-  }
-  
-  .section-actions {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-  
-  .filter-select {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  /* Layout base */
-  .profile-page {
-    padding: 0.5rem;
-  }
-
-  .profile-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .profile-section {
-    padding: 0.8rem;
-    margin-bottom: 1rem;
-    border-radius: 10px;
-  }
-
-  /* Sidebar perfil */
-  .profile-sidebar {
-    position: static;
-    margin-bottom: 1rem;
-  }
-  
-  .profile-card-condensed {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .avatar-border-effect {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 0.5rem;
-  }
-  
-  .profile-avatar-large {
-    width: 70px;
-    height: 70px;
-  }
-  
-  .profile-avatar-large i {
-    font-size: 2rem;
-  }
-  
-  .profile-name-large {
-    font-size: 1.2rem;
-    margin-bottom: 0.3rem;
-  }
-  
-  .profile-status-badge {
-    padding: 0.3rem 0.8rem;
-    font-size: 0.8rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .sidebar-stats-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-    margin: 0.7rem 0;
-  }
-  
-  .sidebar-stat {
-    padding: 0.4rem;
-    border-bottom: none;
-    background: rgba(15, 23, 42, 0.3);
-    border-radius: 8px;
-  }
-  
-  .sidebar-stat-label {
-    font-size: 0.7rem;
-  }
-  
-  .sidebar-stat-value {
-    font-size: 1.1rem;
-  }
-  
-  .view-ranking-btn-sidebar {
-    width: 100%;
-    padding: 0.6rem;
-    font-size: 0.8rem;
-    margin-top: 0.5rem;
-  }
-  
-  /* Secciones */
-  .section-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-    margin-bottom: 0.8rem;
-  }
-  
-  .section-title {
-    font-size: 1.1rem;
-    padding-bottom: 0.3rem;
-    gap: 0.5rem;
-  }
-  
-  .section-title i {
-    font-size: 1.1rem;
-  }
-  
-  .section-actions {
-    width: 100%;
-  }
-  
-  .section-filter {
-    width: 100%;
-  }
-  
-  .filter-select {
-    font-size: 0.8rem;
-    padding: 0.5rem;
-    width: 100%;
-  }
-
-  /* Estadísticas */
-  .stats-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.6rem;
-  }
-  
-  .stat-card {
-    padding: 0.7rem 0.5rem;
-    min-height: 0;
-  }
-  
-  .stat-icon {
-    font-size: 1.2rem;
-    margin-bottom: 0.3rem;
-  }
-  
-  .stat-value {
-    font-size: 1.1rem;
-    margin: 0.1rem 0;
-  }
-  
-  .stat-label {
-    font-size: 0.7rem;
-  }
-  
-  /* Historial de juegos */
-  .game-history-container {
-    margin-top: 0.8rem;
-  }
-  
-  .game-entry {
-    padding: 0.7rem;
-    gap: 0.6rem;
-    margin-bottom: 0.6rem;
-    border-radius: 8px;
-  }
-  
-  .game-entry-main {
-    width: 100%;
-  }
-  
-  .game-result-icon {
-    width: 30px;
-    height: 30px;
-    font-size: 1rem;
-    flex-shrink: 0;
-  }
-  
-  .game-info {
-    flex-grow: 1;
-  }
-  
-  .game-info span {
-    font-size: 0.75rem;
-    display: block;
-    line-height: 1.3;
-  }
-  
-  .game-info strong {
-    font-size: 0.85rem;
-  }
-  
-  .game-difficulty {
-    font-size: 0.7rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-  }
-  
-  .game-score {
-    font-size: 1.1rem;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    min-width: 50px;
-    text-align: center;
-  }
-  
-  /* Logros */
-  .achievements-container {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
-    max-height: none;
-    margin-top: 0.8rem;
-  }
-  
-  .achievement-card {
-    padding: 0.8rem;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    text-align: left;
-    opacity: 1;
-    filter: none;
-    gap: 0.8rem;
-    min-height: 0;
-  }
-  
-  .achievement-card.unlocked {
-    background-color: rgba(30, 41, 59, 0.5);
-  }
-  
-  .achievement-icon-wrapper {
-    width: 40px;
-    height: 40px;
-    flex-shrink: 0;
-  }
-  
-  .achievement-icon-wrapper i {
-    font-size: 1.1rem;
-  }
-  
-  .achievement-header {
-    margin-bottom: 0.2rem;
-  }
-  
-  .achievement-details {
-    flex-grow: 1;
-  }
-  
-  .achievement-details h4 {
-    font-size: 0.9rem;
-    margin-bottom: 0.2rem;
-  }
-  
-  .achievement-details p {
-    font-size: 0.75rem;
-    margin-bottom: 0.4rem;
-    line-height: 1.2;
-  }
-  
-  .achievement-progress {
-    height: 6px;
-  }
-  
-  .achievement-progress-text {
-    font-size: 0.7rem;
-  }
-  
-  .achievement-date {
-    font-size: 0.7rem;
-  }
-  
-  /* Vacío / Empty state */
-  .empty-state {
-    padding: 1.5rem 1rem;
-  }
-  
-  .empty-state-icon {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .empty-state h4 {
-    font-size: 1rem;
-  }
-  
-  .empty-state p {
-    font-size: 0.8rem;
-  }
-  
-  .empty-state-action {
-    padding: 0.6rem 1rem;
-    font-size: 0.8rem;
-    margin-top: 0.8rem;
-  }
-  
-  /* Opciones de perfil */
-  .management-option {
-    padding: 0.8rem;
-    margin-bottom: 0.8rem;
-  }
-  
-  .management-option h4 {
-    font-size: 0.9rem;
-    margin-bottom: 0.6rem;
-  }
-  
-  .name-change-controls {
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-  
-  #new-name-input {
-    font-size: 0.85rem;
-    padding: 0.6rem;
-    width: 100%;
-  }
-  
-  .action-button {
-    font-size: 0.85rem;
-    padding: 0.6rem;
-    width: 100%;
-  }
-  
-  .danger-button {
-    width: 100%;
-    margin-top: 0.5rem;
-  }
-  
-  .warning-text {
-    font-size: 0.75rem;
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-  }
-  
-  /* Modal */
-  .modal-content {
-    width: 90%;
-    padding: 1rem;
-  }
-  
-  .modal-header h3 {
-    font-size: 1.1rem;
-  }
-  
-  .modal-body {
-    font-size: 0.85rem;
-    margin: 0.8rem 0;
-  }
-  
-  .modal-button {
-    padding: 0.6rem;
-    font-size: 0.85rem;
-    margin: 0.3rem;
-  }
-  
-  /* Footer */
-  .policy-footer {
-    margin-top: 1.5rem;
-    padding: 0.8rem 0.5rem;
-  }
-  
-  .footer-links-mini {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: center;
-    margin-bottom: 0.5rem;
-  }
-  
-  .footer-links-mini a {
-    font-size: 0.7rem;
-    padding: 0.3rem 0.5rem;
-  }
-  
-  .copyright-text {
-    font-size: 0.65rem;
-    text-align: center;
-  }
-  
-  /* Notificaciones */
-  .notification {
-    width: 90%;
-    left: 5%;
-    padding: 0.7rem;
-    max-width: none;
-  }
-  
-  .notification-icon {
-    font-size: 1.2rem;
-    width: 2.5rem;
-  }
-  
-  .notification-title {
-    font-size: 0.9rem;
-  }
-  
-  .notification-message {
-    font-size: 0.8rem;
-  }
-}
-
-/* Extra small devices */
-@media (max-width: 360px) {
-  .profile-page {
-    padding: 0.3rem;
-  }
-  
-  .profile-section {
-    padding: 0.6rem;
-  }
-  
-  .section-title {
-    font-size: 1rem;
-  }
-  
-  .stat-card {
-    padding: 0.6rem 0.4rem;
-  }
-  
-  .stat-icon {
-    font-size: 1.1rem;
-  }
-  
-  .stat-value {
-    font-size: 1rem;
-  }
-  
-  .game-entry {
-    padding: 0.6rem;
-  }
-  
-  .game-info span {
-    font-size: 0.7rem;
-  }
-  
-  .game-score {
-    font-size: 1rem;
-  }
-  
-  .achievement-card {
-    padding: 0.7rem;
-  }
-  
-  .achievement-icon-wrapper {
-    width: 35px;
-    height: 35px;
-  }
-  
-  .achievement-details h4 {
-    font-size: 0.85rem;
-  }
-  
-  .achievement-details p {
-    font-size: 0.7rem;
-  }
-}
-
-/* Pantallas pequeñas pero altas */
-@media (max-height: 700px) and (max-width: 480px) {
-  .profile-page {
-    padding-top: 0.3rem;
-    padding-bottom: 0.3rem;
-  }
-  
-  .profile-section {
-    margin-bottom: 0.6rem;
-  }
-  
-  .game-entry {
-    margin-bottom: 0.4rem;
-  }
-  
-  .achievement-card {
-    padding: 0.7rem;
-  }
-  
-  .empty-state {
-    padding: 1rem 0.8rem;
-  }
 }
 
 /* Arreglo para errores MIME de CSS */
