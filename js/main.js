@@ -60,7 +60,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         localStorage.setItem('playerName', newName);
                         playerNameDisplay.textContent = newName;
                         changeNameModal.classList.remove('active');
-                        
+                        playerName = newName;
+
                         // Actualizar cualquier otro elemento con nombre de jugador
                         document.querySelectorAll('.player-name').forEach(element => {
                             element.textContent = newName;
@@ -100,14 +101,6 @@ document.addEventListener('DOMContentLoaded', function() {
             element.textContent = playerName;
         });
     }
-    
-    // Hacer que el logo sea un enlace
-    const logoElements = document.querySelectorAll('.logo');
-    logoElements.forEach(logo => {
-        logo.addEventListener('click', function() {
-            window.location.href = 'games.html';
-        });
-    });
 });
 
 // Animation helpers

@@ -19,7 +19,6 @@
                         <h1 class="logo">Crack Total</h1>
                     </a>
                     <div class="game-title">Pasala Che</div>
-
                     <div class="player-info">
                         <div class="player-avatar">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
@@ -38,6 +37,11 @@
         <main class="game-content">
             <div class="container">
                 <div class="rosco-container">
+                    <div class="game-instructions">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        Responde preguntas para cada letra o pasa palabra para continuar con la siguiente
+                    </div>
+                    
                     <div class="rosco-circle">
                         <div class="letters-container" id="lettersContainer">
                             <!-- Letters will be populated dynamically -->
@@ -73,21 +77,6 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                                 HELP (2)
                             </button>
-                        </div>
-                    </div>
-                    
-                    <div class="score-tracker">
-                        <div class="score-item correct">
-                            <span class="score-label">Correctas</span>
-                            <span class="score-value" id="correctCount">0</span>
-                        </div>
-                        <div class="score-item passed">
-                            <span class="score-label">Pasadas</span>
-                            <span class="score-value" id="passedCount">0</span>
-                        </div>
-                        <div class="score-item incorrect">
-                            <span class="score-label">Incorrectas</span>
-                            <span class="score-value" id="incorrectCount">0</span>
                         </div>
                     </div>
                 </div>
