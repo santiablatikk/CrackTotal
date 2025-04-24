@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crack Total - Selecciona un Juego</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="description" content="Elige entre nuestros juegos de fútbol y demuestra cuánto sabes del deporte rey.">
+</head>
+<body>
+    <div class="background-elements">
+        <div class="floating-ball ball-1"></div>
+        <div class="floating-ball ball-2"></div>
+        <div class="floating-ball ball-3"></div>
+    </div>
+    
+    <div class="container games-container">
+        <div class="welcome-user">
+            <div class="logo-container">
+                <a href="games.html" style="text-decoration: none;">
+                    <h1 class="logo">Crack Total</h1>
+                </a>
+                <div class="logo-badge">Fútbol Edition</div>
+            </div>
+            <h2>¡Hola, <span class="player-highlight" id="playerNameDisplay">Jugador</span>!
+                <button class="username-change-btn" id="changeNameBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    Cambiar
+                </button>
+            </h2>
+            <p class="welcome-subtitle">Elige tu juego y demuestra cuánto sabes de fútbol</p>
+        </div>
+
+        <div class="games-grid">
+            <div class="game-card" data-game="pasalache">
+                <div class="game-badge">ROSCO</div>
+                <div class="game-image pasalache-img">
+                    <div class="game-overlay"></div>
+                </div>
+                <div class="game-info">
+                    <h3 class="game-name">Pasala Che</h3>
+                    <p class="game-desc">Un rosco de preguntas futboleras. Responde preguntas para cada letra del abecedario y demuestra tu conocimiento enciclopédico del fútbol.</p>
+                    <div class="game-features">
+                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>27 Letras</span>
+                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>Contrarreloj</span>
+                    </div>
+                    <button class="play-button">
+                        <span>Jugar</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16l15-8-15-8z"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="game-card" data-game="quiensabemas">
+                <div class="game-badge">PREMIO</div>
+                <div class="game-image quiensabemas-img">
+                    <div class="game-overlay"></div>
+                </div>
+                <div class="game-info">
+                    <h3 class="game-name">Quien Sabe Más</h3>
+                    <p class="game-desc">Responde preguntas de dificultad creciente y compite por el gran premio. ¿Llegarás a ser el más grande conocedor del fútbol?</p>
+                    <div class="game-features">
+                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>15 Niveles</span>
+                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>3 Comodines</span>
+                    </div>
+                    <button class="play-button">
+                        <span>Jugar</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16l15-8-15-8z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="coming-soon">
+            <div class="coming-soon-badge">PRÓXIMAMENTE</div>
+            <p>Nuevos juegos y desafíos</p>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2024 Crack Total | <span class="highlight">La Experiencia Definitiva del Fútbol</span>
+        </div>
+    </div>
+
+    <!-- Modal para cambiar nombre -->
+    <div class="modal-overlay" id="changeNameModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Cambiar nombre de usuario</h3>
+            <form id="changeNameForm">
+                <label for="newPlayerName">Nuevo nombre:</label>
+                <div class="input-group">
+                    <input type="text" id="newPlayerName" placeholder="Tu nombre" required autocomplete="off">
+                    <div class="input-focus-border"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="cancel-button" id="cancelNameChange">Cancelar</button>
+                    <button type="submit" class="save-button">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html> 
