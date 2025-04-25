@@ -304,15 +304,6 @@
         <div class="back-link-container">
           <a href="pasalache.html" class="back-link"><i class="fas fa-home"></i> Volver al Inicio</a>
         </div>
-        
-        <footer class="terms-footer">
-          <p>&copy; 2025 PASALA CHÉ. Todos los derechos reservados.</p>
-          <div class="footer-links-mini">
-            <a href="privacy.html" class="mini-btn">Privacidad</a>
-            <a href="cookies.html" class="mini-btn">Cookies</a>
-            <a href="contact.html" class="mini-btn">Contacto</a>
-          </div>
-        </footer>
       </div>
       
       <!-- Botón para volver a la página anterior -->
@@ -352,56 +343,48 @@
         checkCookieConsent();
       </script>
       
-      <!-- Footer - Standard Site Footer -->
-<footer class="site-footer">
-    <div class="footer-content">
-        <div class="footer-links">
-            <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
-            <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
-            <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-            <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-            <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-            <a href="terms.html"><i class="fas fa-file-contract"></i> Terminos</a>
-        </div>
-        <div class="footer-actions">
-             <button id="footer-share-button" class="share-button"><i class="fas fa-share-alt"></i> Compartir</button>
-             <div class="social-icons">
-                 <a href="https://www.facebook.com/pasalachee" target="_blank" aria-label="Facebook" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                 <a href="https://twitter.com/pasalachee" target="_blank" aria-label="Twitter" class="social-icon"><i class="fab fa-twitter"></i></a>
-                 <a href="https://www.instagram.com/pasalachee" target="_blank" aria-label="Instagram" class="social-icon"><i class="fab fa-instagram"></i></a>
-                 <a href="https://www.youtube.com/c/pasalachee" target="_blank" aria-label="YouTube" class="social-icon"><i class="fab fa-youtube"></i></a>
+      <!-- Footer -->
+      <footer class="site-footer"> 
+          <div class="footer-content">
+            <div class="footer-links">
+              <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+              <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+              <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+              <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+              <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+              <a href="terms.html"><i class="fas fa-file-contract"></i> Terminos</a>
+              <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
             </div>
-        </div>
-    </div>
-    <div class="footer-copyright">
-        &copy; 2025 PASALA CHE - El Juego del Rosco Futbolero. Todos los derechos reservados.
-    </div>
-</footer>
-<!-- Script for Share Button -->
-<script>
-    const shareButton = document.getElementById('footer-share-button');
-    if (shareButton && navigator.share) {
-        shareButton.addEventListener('click', async () => {
-            try {
-                await navigator.share({
-                    title: document.title,
-                    text: 'Echa un vistazo a PASALA CHE!',
-                    url: window.location.href
-                });
-                console.log('Contenido compartido con éxito');
-            } catch (err) {
-                console.error('Error al compartir:', err);
-                // Optional: Show a message to the user if sharing fails
-                // alert('No se pudo compartir. Inténtalo de nuevo.');
-            }
-        });
-    } else if (shareButton) {
-         // Hide button if Web Share API not supported
-         shareButton.style.display = 'none';
-         // Or provide a fallback, e.g., copy link to clipboard
-         // shareButton.addEventListener('click', () => { /* copy logic */ alert('Link copiado!'); });
-    }
-</script>
+             <div class="footer-copyright">
+               &copy; 2024 Crack Total. Todos los derechos reservados. 
+             </div>
+          </div>
+      </footer>
+      <!-- Script for Share Button -->
+      <script>
+          const shareButton = document.getElementById('footer-share-button');
+          if (shareButton && navigator.share) {
+              shareButton.addEventListener('click', async () => {
+                  try {
+                      await navigator.share({
+                          title: document.title,
+                          text: 'Echa un vistazo a PASALA CHE!',
+                          url: window.location.href
+                      });
+                      console.log('Contenido compartido con éxito');
+                  } catch (err) {
+                      console.error('Error al compartir:', err);
+                      // Optional: Show a message to the user if sharing fails
+                      // alert('No se pudo compartir. Inténtalo de nuevo.');
+                  }
+              });
+          } else if (shareButton) {
+               // Hide button if Web Share API not supported
+               shareButton.style.display = 'none';
+               // Or provide a fallback, e.g., copy link to clipboard
+               // shareButton.addEventListener('click', () => { /* copy logic */ alert('Link copiado!'); });
+          }
+      </script>
     </div>
   </body>
 </html>

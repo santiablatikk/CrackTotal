@@ -123,3 +123,33 @@ function handleResponsiveChanges() {
 
 window.addEventListener('resize', handleResponsiveChanges);
 handleResponsiveChanges(); 
+
+
+// Función para compartir el sitio
+async function shareSite() {
+    const shareData = {
+        title: document.title, // Usa el título de la página actual
+        text: '¡Juega y demuestra tus conocimientos de fútbol en Crack Total!', // Texto a compartir
+        url: window.location.href // URL de la página actual
+    };
+
+    try {
+        // Comprobar si la API Web Share es compatible
+        if (navigator.share) {
+            await navigator.share(shareData);
+            console.log('Contenido compartido exitosamente!');
+        } else {
+            // Fallback para navegadores que no soportan Web Share
+            // Podríamos mostrar un modal personalizado aquí en lugar de un alert
+            alert('Tu navegador no soporta la función de compartir. Por favor, copia el enlace manualmente: ' + window.location.href);
+            // O intentar copiar al portapapeles si es posible
+            // navigator.clipboard.writeText(window.location.href).then(() => alert('Enlace copiado al portapapeles')).catch(err => console.error('Error al copiar:', err));
+        }
+    } catch (err) {
+        console.error('Error al compartir: ', err);
+        // Solo mostrar error si no es porque el usuario canceló
+        if (err.name !== 'AbortError') {
+            alert('Hubo un error al intentar compartir.');
+        }
+    }
+} 

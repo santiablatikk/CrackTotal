@@ -84,6 +84,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     // --- Fin Funciones para el Historial ---
 
+    // --- Simple Debounce Function ---
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    };
+
     // Game variables
     let questions = [];
     let currentLetterIndex = 0;
@@ -201,41 +214,22 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
     
-    // Setup the letter circles
+    // Setup the letter structure (called once)
     function setupLetters() {
-        // Clear existing letters
-        lettersContainer.innerHTML = '';
-        
-        // Calculate positions in a circle
-        const radius = lettersContainer.offsetWidth / 2;
-        const letterSize = 50; // Match the CSS width of letters (updated)
-        
-        alphabet.split('').forEach((letter, index) => {
+        lettersContainer.innerHTML = ''; // Clear existing letters
+        alphabet.split('').forEach((letter) => {
             const letterElement = document.createElement('div');
             letterElement.className = 'letter';
             letterElement.textContent = letter;
             letterElement.dataset.letter = letter;
-            
-            // Añadir un elemento para mostrar la pista
+
             const hintElement = document.createElement('span');
             hintElement.className = 'letter-hint';
             hintElement.id = `hint-${letter}`;
             letterElement.appendChild(hintElement);
-            
-            // Calculate position on circle
-            const angleRadians = (index / alphabet.length) * 2 * Math.PI;
-            
-            // Position from center using cos and sin
-            // Adjust radius to account for letter size (position on exact edge)
-            const adjustedRadius = radius - (letterSize / 2);
-            const posX = adjustedRadius * Math.sin(angleRadians);
-            const posY = -adjustedRadius * Math.cos(angleRadians);
-            
-            // Position letter
-            letterElement.style.transform = `translate(${posX}px, ${posY}px)`;
-            
+
             lettersContainer.appendChild(letterElement);
-            
+
             // Add click event to jump to that letter
             letterElement.addEventListener('click', () => {
                 if (letterStatuses[letter] === 'unanswered' || letterStatuses[letter] === 'pending') {
@@ -243,8 +237,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
-        
-        // Añadir estilos CSS para las pistas
+        positionLetters(); // Position letters initially
+
+        // Add hint styles if not present
         if (!document.getElementById('hint-styles')) {
             const style = document.createElement('style');
             style.id = 'hint-styles';
@@ -270,22 +265,51 @@ document.addEventListener('DOMContentLoaded', function() {
             document.head.appendChild(style);
         }
     }
-    
-    // Initialize letter statuses
+
+    // Position letters dynamically (can be called on resize)
+    function positionLetters() {
+        if (!lettersContainer) return; // Exit if container not found
+
+        const allLetterElements = lettersContainer.querySelectorAll('.letter');
+        if (!allLetterElements || allLetterElements.length === 0) return; // Exit if no letters
+
+        const containerWidth = lettersContainer.offsetWidth;
+        const radius = containerWidth / 2;
+
+        // Get letter size dynamically from the first letter element
+        const firstLetterStyle = window.getComputedStyle(allLetterElements[0]);
+        const letterSize = parseFloat(firstLetterStyle.width); // Use width (assuming square)
+
+        if (isNaN(letterSize) || letterSize <= 0) {
+            console.error("Could not determine letter size dynamically.");
+            return; // Cannot position without size
+        }
+
+        const adjustedRadius = radius - (letterSize / 2);
+
+        allLetterElements.forEach((letterElement, index) => {
+            const angleRadians = (index / alphabet.length) * 2 * Math.PI;
+            const posX = adjustedRadius * Math.sin(angleRadians);
+            const posY = -adjustedRadius * Math.cos(angleRadians);
+            letterElement.style.transform = `translate(${posX}px, ${posY}px)`;
+        });
+    }
+
+    // Setup the letter statuses (called once)
     function setupLetterStatuses() {
         alphabet.split('').forEach(letter => {
             letterStatuses[letter] = 'unanswered';
             pendingLetters.push(letter);
         });
     }
-    
-    // Start the game
+
+    // Start the game logic
     function startGame() {
         currentLetterIndex = 0;
         loadQuestion();
     }
     
-    // Load a question for the current letter
+    // Load question for the current letter
     function loadQuestion() {
         if (pendingLetters.length === 0) {
             endGame();
@@ -364,7 +388,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Update letter circle styles based on status
+    // Update letter styles based on status
     function updateLetterStyles() {
         document.querySelectorAll('.letter').forEach(element => {
             const letter = element.dataset.letter;
@@ -395,7 +419,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Move to the next letter
+    // Move to the next available letter
     function nextLetter() {
         // Incrementar el índice para ir a la siguiente letra
         currentLetterIndex = (currentLetterIndex + 1) % pendingLetters.length;
@@ -1141,25 +1165,35 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Event Listeners
-    answerForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const userAnswer = answerInput.value.trim();
-        
-        if (userAnswer) {
-            checkAnswer(userAnswer);
-        } else {
-            // Si la respuesta está vacía, se comporta igual que "Pasala Che"
-            pasapalabra();
-        }
-    });
-    
-    pasapalabraButton.addEventListener('click', pasapalabra);
-    
+    if (answerForm) {
+        answerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const userAnswer = answerInput.value.trim();
+            if (userAnswer) {
+                checkAnswer(userAnswer);
+            }
+        });
+    }
+
+    if (pasapalabraButton) {
+        pasapalabraButton.addEventListener('click', pasapalabra);
+    }
+
     // Add help button when game starts
     if (startGameButton) {
         startGameButton.addEventListener('click', function() {
             // Add help button when game starts with a slight delay to ensure DOM is ready
             setTimeout(addHelpButton, 100);
         });
+    }
+
+    // Add debounced resize listener
+    const debouncedPositionLetters = debounce(positionLetters, 250); // Adjust debounce time (ms) as needed
+    window.addEventListener('resize', debouncedPositionLetters);
+
+    // --- Initial Setup ---
+    // Display rules modal on load
+    if (gameRulesModal) {
+        gameRulesModal.classList.add('active');
     }
 }); 

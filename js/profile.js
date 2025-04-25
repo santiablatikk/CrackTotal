@@ -105,11 +105,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         resultClass = 'history-result-victory';
                         break;
                     case 'defeat': 
-                        resultText = 'Derrota (Errores)'; 
+                        resultText = 'Derrota'; 
                         resultClass = 'history-result-defeat';
                         break;
                     case 'timeout': 
-                        resultText = 'Derrota (Tiempo)'; 
+                        resultText = 'Derrota por Tiempo'; 
                         resultClass = 'history-result-timeout';
                         break;
                 }
