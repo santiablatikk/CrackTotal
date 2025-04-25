@@ -10,4 +10,7 @@ yarn-error.log*
 .DS_Store
 
 # Firebase config local - NO SUBIR
-js/firebase-config-local.js 
+js/firebase-config-local.js
+
+# Vite
+dist/ 

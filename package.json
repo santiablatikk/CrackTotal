@@ -5,7 +5,10 @@
   "main": "index.html",
   "scripts": {
     "start": "http-server . -p $PORT -o",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "keywords": [
     "game",
@@ -18,5 +21,16 @@
   "dependencies": {
     "firebase": "^11.6.1",
     "http-server": "^14.1.1"
-  }
+  },
+  "devDependencies": {
+    "vite": "^6.3.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/santiablatikk/CrackTotal.git"
+  },
+  "bugs": {
+    "url": "https://github.com/santiablatikk/CrackTotal/issues"
+  },
+  "homepage": "https://github.com/santiablatikk/CrackTotal#readme"
 }
