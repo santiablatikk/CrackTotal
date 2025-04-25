@@ -6,44 +6,59 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebas
 // import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js";
 // import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// --- Importar la configuración desde el archivo local --- 
-// Asegúrate de haber creado 'firebase-config-local.js' siguiendo el .example
-import { firebaseConfig } from './firebase-config-local.js';
-
-// Your web app's Firebase configuration
-// MOVED TO firebase-config-local.js
-/*
-const firebaseConfig = {
-  apiKey: "AIzaSyA_3ZRD8ffWsRCSFgyZ3ach4hmrM19gYr4", // REMOVED - DO NOT COMMIT KEYS
-  authDomain: "cracktotal-cd2e7.firebaseapp.com",
-  projectId: "cracktotal-cd2e7",
-  storageBucket: "cracktotal-cd2e7.appspot.com",
-  messagingSenderId: "210391454350",
-  appId: "1:210391454350:web:ec36c626aca23e80562fdf",
-  measurementId: "G-5XP3T1RTH7" // REMOVED
-};
-*/
-
-// Initialize Firebase
+let firebaseConfig;
 let app;
 let db;
 
 try {
-    app = initializeApp(firebaseConfig);
-    db = getFirestore(app); // Initialize Firestore
-    console.log("Firebase initialized successfully.");
-} catch (error) {
-    console.error("Error initializing Firebase:", error);
-    // Mostrar un mensaje al usuario podría ser útil aquí
-    alert("Error al inicializar la conexión con la base de datos. Por favor, verifica la configuración local (firebase-config-local.js) y recarga la página.");
-    // Podrías deshabilitar funcionalidad aquí o mostrar un estado de error permanente
-    db = null; // Asegurarse de que db es null si falla
+    // Intenta importar la configuración local (para desarrollo)
+    const localConfigModule = await import('./firebase-config-local.js');
+    firebaseConfig = localConfigModule.firebaseConfig;
+    console.log("Using local Firebase config.");
+} catch (e) {
+    // Si falla la importación local (estamos en producción), usa variables de entorno
+    console.log("Local config not found, attempting to use environment variables.");
+    // --- ¡¡¡IMPORTANTE!!! ---
+    // Esto asume que las variables de entorno están disponibles en `import.meta.env`.
+    // Esto es común con Vite, pero puede NO funcionar en otros setups o directamente en Render sin un paso de build.
+    // Verifica cómo Render expone las variables de entorno a tu frontend.
+    // ¡¡¡Exponer API Key en el frontend es un RIESGO DE SEGURIDAD!!!
+    // Considera alternativas como un backend o funciones serverless.
+    firebaseConfig = {
+        apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+        authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+        projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+        storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+        appId: import.meta.env.VITE_FIREBASE_APP_ID,
+        measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID // Opcional
+    };
+
+    // Verifica que las variables de entorno se cargaron
+    if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+        console.error("Firebase environment variables not found!");
+        alert("Error crítico: No se pudo cargar la configuración de Firebase desde las variables de entorno.");
+        firebaseConfig = null; // Previene inicialización con config incompleta
+    }
 }
 
-// const analytics = getAnalytics(app); // Uncomment if you need Analytics
-// const auth = getAuth(app); // Uncomment if you need Authentication
+// Initialize Firebase solo si tenemos una configuración válida
+if (firebaseConfig) {
+    try {
+        app = initializeApp(firebaseConfig);
+        db = getFirestore(app); // Initialize Firestore
+        console.log("Firebase initialized successfully.");
+        // const analytics = getAnalytics(app); // Uncomment if you need Analytics
+        // const auth = getAuth(app); // Uncomment if you need Authentication
+    } catch (error) {
+        console.error("Error initializing Firebase:", error);
+        alert("Error al inicializar Firebase. Verifica la consola para más detalles.");
+        db = null; // Asegurarse de que db es null si falla la inicialización
+    }
+} else {
+    console.error("Firebase configuration is missing. Initialization skipped.");
+    db = null;
+}
 
-
-// Export the necessary Firebase services
-// Exportar db solo si la inicialización fue exitosa
+// Export the necessary Firebase services (db might be null if initialization failed)
 export { db /*, auth */ }; // Add other exports like auth if needed 
