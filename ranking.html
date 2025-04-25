@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking y Historial - Crack Total</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos específicos para la página de ranking - Tema Oscuro */
+        body {
+            /* Ya debería heredar de styles.css, pero aseguramos */
+            background-color: var(--background);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Reutilizar estilo de contenedor de contenido */
+        .ranking-container, .history-container {
+            background: var(--card-bg, #242629); /* Fondo oscuro de tarjeta */
+            border-radius: 16px; /* Bordes redondeados */
+            padding: clamp(1.5rem, 4vw, 2rem); /* Padding adaptable */
+            margin-bottom: 2rem;
+            border: 1px solid var(--border, #383A47); /* Borde sutil */
+            box-shadow: var(--shadow, 0 10px 25px -5px rgba(0, 0, 0, 0.4)); /* Sombra */
+            color: var(--text); /* Asegurar color de texto */
+        }
+
+        .ranking-container h2,
+        .history-container h2 {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
+            margin-bottom: 1.5rem;
+            color: var(--primary-light, #AB8BFA); /* Color primario claro */
+            text-align: center;
+            position: relative;
+            padding-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(var(--primary-rgb, 127, 90, 248), 0.1);
+        }
+        .ranking-container h2::after,
+        .history-container h2::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary, #7F5AF8), var(--accent, #FF8E3C));
+            border-radius: 2px;
+        }
+
+        /* Estilos para la tabla (adaptados de .history-table en styles.css) */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+            background-color: rgba(var(--darker-bg-rgb, 15, 23, 42), 0.3); /* Fondo semi-transparente */
+            border-radius: 8px;
+            overflow: hidden; /* Para que el border-radius funcione en las esquinas */
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px 15px; /* Más padding */
+            text-align: left;
+            border-bottom: 1px solid var(--border, #383A47);
+            font-size: 0.9rem;
+            color: var(--text-light, #94A1B2);
+        }
+
+        .history-table th {
+            background-color: rgba(var(--primary-rgb, 127, 90, 248), 0.15);
+            color: var(--primary-light, #AB8BFA);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 0.8rem;
+            border-bottom: 2px solid var(--primary, #7F5AF8);
+        }
+
+        .history-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .history-table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .history-table tbody tr:hover {
+            background-color: rgba(var(--primary-rgb, 127, 90, 248), 0.1);
+        }
+
+        .history-table td.player-name-rank {
+             font-weight: 600;
+             color: var(--text, #FFFFFE);
+        }
+        .history-table td.score-rank {
+            font-weight: 700;
+            color: var(--accent, #FF8E3C); /* Usar color accent para puntos */
+        }
+
+        /* Estilo para el historial de partidas */
+        #history-list {
+            margin-top: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .match-entry {
+            background: rgba(var(--darker-bg-rgb, 15, 23, 42), 0.4);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            border: 1px solid rgba(var(--border-rgb, 56, 58, 71), 0.5);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border-left: 4px solid var(--secondary, #2CB67D); /* Color secundario para historial */
+        }
+
+        .match-entry:hover {
+             transform: translateY(-3px);
+             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+             border-left-color: var(--secondary-dark, #239D6A);
+        }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .match-date {
+            font-size: 0.8rem;
+            color: var(--text-light, #94A1B2);
+        }
+         .match-date i {
+             margin-right: 0.3rem;
+             color: var(--secondary, #2CB67D);
+         }
+
+        .match-players {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .player-match-info {
+            font-size: 0.9rem;
+            color: var(--text, #FFFFFE);
+        }
+        .player-match-info strong {
+             color: var(--primary-light, #AB8BFA); /* Nombre de jugador destacado */
+             margin-right: 0.5rem;
+        }
+        .player-match-info .score {
+             font-weight: 600;
+             color: var(--accent, #FF8E3C); /* Puntuación destacada */
+             margin-left: 0.5rem;
+        }
+         .player-match-info.winner strong {
+             color: var(--success, #31D0AA); /* Destacar ganador */
+         }
+         .player-match-info.winner .score {
+             color: var(--success, #31D0AA);
+         }
+
+        /* Estilos para mensajes de carga/error */
+        #ranking-body td,
+        #history-list p {
+            color: var(--text-light, #94A1B2);
+            text-align: center;
+            padding: 2rem;
+            font-style: italic;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- App Header -->
+    <header class="app-header">
+        <a href="index.html" class="home-link" aria-label="Volver al Inicio">
+            <i class="fas fa-home"></i>
+            <span>Inicio</span>
+        </a>
+        <div class="logo-animation">
+             <i class="fas fa-futbol ball-icon"></i> <!-- O la clase correcta del icono de pelota -->
+        </div>
+        <a href="ranking.html" class="title-link">
+             <h1 class="title-text">Crack Total</h1>
+        </a>
+        <p class="subtitle">Ranking Global y Historial de Partidas</p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="page-container">
+        <div class="content-container">
+
+            <!-- Ranking Section -->
+            <section class="ranking-container" aria-labelledby="ranking-title">
+                <h2 id="ranking-title">Ranking Global</h2>
+                <div style="overflow-x:auto;"> <!-- Wrapper para scroll horizontal en tablas pequeñas -->
+                    <table id="ranking-table" class="history-table"> <!-- Reutilizar estilo de tabla de historial -->
+                        <thead>
+                            <tr>
+                                <th>Pos.</th>
+                                <th>Jugador</th>
+                                <th>Puntos</th>
+                                <th>Jugadas</th>
+                                <th>Victorias</th>
+                                <!-- Agrega más columnas si es necesario -->
+                            </tr>
+                        </thead>
+                        <tbody id="ranking-body">
+                            <!-- Las filas del ranking se cargarán aquí -->
+                            <tr><td colspan="5">Cargando ranking...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section class="history-container" aria-labelledby="history-title">
+                <h2 id="history-title">Historial de Partidas Recientes</h2>
+                <div id="history-list">
+                    <!-- Las entradas del historial se cargarán aquí -->
+                    <p>Cargando historial...</p>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Site Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+                <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+                <a href="blog.html"><i class="fas fa-newspaper"></i> Blog</a>
+                <a href="privacy.html"><i class="fas fa-shield-alt"></i> Privacidad</a>
+                <a href="terms.html"><i class="fas fa-file-contract"></i> Términos</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2024 CrackTotal. Todos los derechos reservados.
+            </div>
+             <button class="footer-share-button" id="shareButton">
+                <i class="fas fa-share-alt"></i> Compartir
+            </button>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="module" src="js/firebase-init.js"></script>
+    <script type="module" src="js/ranking.js"></script>
+    <!-- Script para el botón compartir (si lo necesitas) -->
+    <script>
+        const shareButton = document.getElementById('shareButton');
+        if (shareButton && navigator.share) {
+            shareButton.addEventListener('click', async () => {
+                try {
+                    await navigator.share({
+                        title: document.title,
+                        text: '¡Mira el ranking y el historial de CrackTotal!',
+                        url: window.location.href
+                    });
+                    console.log('Contenido compartido con éxito');
+                } catch (err) {
+                    console.error('Error al compartir:', err);
+                }
+            });
+        } else if (shareButton) {
+            shareButton.style.display = 'none'; // Ocultar si la API no está soportada
+        }
+    </script>
+
+</body>
+</html> 

@@ -100,16 +100,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Game variables
     let questions = [];
     let currentLetterIndex = 0;
-    let currentQuestionIndex = 0;
+    let currentQuestionIndex = 0; // This will now store the index *within* the letter's questions array
     let correctAnswers = 0;
     let incorrectAnswers = 0;
     let passedAnswers = 0;
     let pendingLetters = [];
     let letterStatuses = {}; // 'correct', 'incorrect', 'pending', 'unanswered'
-    let hintDisplayed = {}; // Rastrear para qué letras se ha mostrado una pista
-    let letterHints = {}; // Almacena las pistas para cada letra
-    let selectedQuestionIndices = {}; // Almacena el índice de pregunta seleccionado para cada letra
-    let gameErrors = []; // Almacena los errores para mostrarlos en el modal de estadísticas
+    let hintDisplayed = {};
+    let letterHints = {};
+    let gameErrors = [];
+    let usedAnswerSignatures = new Set(); // <--- Track used answers for the current game
     
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     let totalTime = 240; // Default: Normal difficulty (240 seconds)
@@ -188,8 +188,8 @@ document.addEventListener('DOMContentLoaded', function() {
         letterStatuses = {};
         hintDisplayed = {};
         letterHints = {};
-        selectedQuestionIndices = {};
         gameErrors = [];
+        usedAnswerSignatures = new Set(); // <--- Reset used answers for new game
         timeLeft = totalTime;
         helpUsed = 0;
         incompleteAnswersUsed = 0;
@@ -311,80 +311,88 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Load question for the current letter
     function loadQuestion() {
+        const questionTextElement = document.getElementById('questionText');
+        const currentLetterTextElement = document.getElementById('currentLetterText');
+        const questionHeader = document.querySelector('.question-header');
+        const headerText = questionHeader?.querySelector('h3');
+
+        if (!questionTextElement || !currentLetterTextElement || !questionHeader || !headerText) {
+            console.error("Critical UI elements for question display not found!");
+            if(timerInterval) clearInterval(timerInterval);
+            // Display error to user?
+            return;
+        }
+
         if (pendingLetters.length === 0) {
             endGame();
             return;
         }
-        
+
         const currentLetter = pendingLetters[currentLetterIndex];
-        
-        // Find letter data from questions array
         const letterData = questions.find(item => item.letra === currentLetter);
-        
-        if (letterData) {
-            // Verificar si ya tenemos un índice de pregunta seleccionado para esta letra
-            if (selectedQuestionIndices[currentLetter] === undefined) {
-                // Si no existe, seleccionar uno aleatorio y almacenarlo
-                selectedQuestionIndices[currentLetter] = Math.floor(Math.random() * letterData.preguntas.length);
-            }
-            
-            // Usar el índice almacenado para esta letra
-            currentQuestionIndex = selectedQuestionIndices[currentLetter];
-            const question = letterData.preguntas[currentQuestionIndex];
-            
-            // Guardar la respuesta para las pistas
-            letterHints[currentLetter] = letterData.preguntas[currentQuestionIndex].respuesta.substring(0, 3);
-            
-            // Update UI
-            currentLetterElement.textContent = currentLetter;
-            currentLetterTextElement.textContent = currentLetter;
-            
-            // Set question text and identify question type
-                questionTextElement.textContent = question.pregunta;
-            
-            // Remove any previous question type classes
-            questionTextElement.classList.remove('question-type-starts', 'question-type-contains');
-            
-            // También actualizar el encabezado de la pregunta
-            const questionHeader = document.querySelector('.question-header');
-            if (questionHeader) {
-                questionHeader.classList.remove('question-type-starts', 'question-type-contains');
-                
-                // Actualizar el texto del encabezado según el tipo de pregunta
-                const headerText = questionHeader.querySelector('h3');
-                if (headerText) {
-                    if (question.pregunta.startsWith('CONTIENE')) {
-                        headerText.innerHTML = `Contiene <span id="currentLetterText">${currentLetter}</span>:`;
-                        questionHeader.classList.add('question-type-contains');
-            } else {
-                        headerText.innerHTML = `Comienza con <span id="currentLetterText">${currentLetter}</span>:`;
-                        questionHeader.classList.add('question-type-starts');
-                    }
+
+        if (letterData && letterData.preguntas && letterData.preguntas.length > 0) {
+            let foundQuestion = false;
+            let question = null;
+
+            // Create a list of indices and shuffle them to try randomly
+            let availableIndices = Array.from(letterData.preguntas.keys());
+            availableIndices.sort(() => Math.random() - 0.5); // Shuffle indices
+
+            for (let i = 0; i < availableIndices.length; i++) {
+                let testIndex = availableIndices[i];
+                let potentialQuestion = letterData.preguntas[testIndex];
+                let potentialAnswer = potentialQuestion.respuesta;
+
+                if (!checkAnswerConflict(potentialAnswer, usedAnswerSignatures)) {
+                    // Found a non-conflicting question
+                    currentQuestionIndex = testIndex; // Store the index of the selected question
+                    question = potentialQuestion;
+                    letterHints[currentLetter] = potentialAnswer.substring(0, 3);
+                    foundQuestion = true;
+                    break; // Exit loop once a valid question is found
                 }
             }
-            
-            // Add appropriate class based on question type
+
+            if (!foundQuestion) {
+                console.warn(`No non-conflicting question found for letter ${currentLetter}. Skipping.`);
+                // Automatically pass the word if no valid question is found after checking all
+                pasapalabra(true); // Pass silently without counting as user action
+                return; // Exit function to avoid displaying anything
+            }
+
+            // --- Display the found question --- 
+            currentLetterTextElement.textContent = currentLetter;
+            questionTextElement.textContent = question.pregunta;
+
+            // Remove previous type classes
+            questionTextElement.classList.remove('question-type-starts', 'question-type-contains');
+            questionHeader.classList.remove('question-type-starts', 'question-type-contains');
+
+            // Update header and question text style based on type
             if (question.pregunta.startsWith('CONTIENE')) {
+                headerText.innerHTML = `Contiene <span id="currentLetterText">${currentLetter}</span>:`;
+                questionHeader.classList.add('question-type-contains');
                 questionTextElement.classList.add('question-type-contains');
             } else {
-                // Default is "comienza con"
+                headerText.innerHTML = `Comienza con <span id="currentLetterText">${currentLetter}</span>:`;
+                questionHeader.classList.add('question-type-starts');
                 questionTextElement.classList.add('question-type-starts');
             }
-            
-            // Highlight current letter
+
             updateLetterStyles();
-            
-            // Clear input and focus
             answerInput.value = '';
             answerInput.focus();
-            
-            // Si esta letra ya tenía una pista mostrada anteriormente, mostrarla automáticamente
+
             if (hintDisplayed[currentLetter]) {
                 showHint();
             }
+            // --- End Display --- 
+
         } else {
-            // Skip this letter if no questions found
-            nextLetter();
+            // No questions for this letter or invalid data
+            console.warn(`No questions found or invalid data for letter ${currentLetter}. Skipping.`);
+            nextLetter(); // Skip to the next letter
         }
     }
     
@@ -456,75 +464,72 @@ document.addEventListener('DOMContentLoaded', function() {
     function checkAnswer(userAnswer) {
         const currentLetter = pendingLetters[currentLetterIndex];
         const letterData = questions.find(item => item.letra === currentLetter);
-        
-        if (letterData) {
-            const correctAnswer = letterData.preguntas[currentQuestionIndex].respuesta.toLowerCase();
-            userAnswer = userAnswer.toLowerCase().trim();
-            
-            // Solo verificar si es incompleta cuando realmente parece ser una respuesta parcial
-            // y no una respuesta errónea completa
-            if (isIncompleteAnswer(userAnswer, correctAnswer) && isPartiallyCorrect(userAnswer, correctAnswer)) {
+
+        // Ensure currentQuestionIndex is valid for the letterData
+        if (letterData && letterData.preguntas && currentQuestionIndex < letterData.preguntas.length) {
+            const correctAnswerFull = letterData.preguntas[currentQuestionIndex].respuesta;
+            const correctAnswerNorm = correctAnswerFull.toLowerCase().trim();
+            const userAnswerNorm = userAnswer.toLowerCase().trim();
+
+            // Incomplete answer check (only if it looks partial)
+            if (isIncompleteAnswer(userAnswerNorm, correctAnswerNorm) && isPartiallyCorrect(userAnswerNorm, correctAnswerNorm)) {
                 if (incompleteAnswersUsed < maxIncompleteAnswers) {
                     incompleteAnswersUsed++;
                     const remainingAttempts = maxIncompleteAnswers - incompleteAnswersUsed;
                     showFeedback(`Respuesta incompleta. Te ${remainingAttempts === 1 ? 'queda 1 intento' : 'quedan ' + remainingAttempts + ' intentos'} para respuestas incompletas.`, 'warning');
-                    return;
+                    return; // Don't proceed further for incomplete
                 }
             }
-            
-            // Verificar si la respuesta es lo suficientemente correcta (permite errores ortográficos menores)
-            const isCorrect = isAnswerCorrectEnough(userAnswer, correctAnswer);
-            
-            // Si la respuesta es incorrecta, guardar el error para mostrarlo en estadísticas
+
+            const isCorrect = isAnswerCorrectEnough(userAnswerNorm, correctAnswerNorm);
+
             if (!isCorrect) {
+                // Record error details
                 const question = letterData.preguntas[currentQuestionIndex].pregunta;
                 gameErrors.push({
                     letter: currentLetter,
                     question: question,
-                    userAnswer: userAnswer,
-                    correctAnswer: correctAnswer
+                    userAnswer: userAnswer, // Store original user input for display
+                    correctAnswer: correctAnswerFull // Store original correct answer
                 });
             }
-            
-            // Update letter status
+
+            // Update status and counters
             letterStatuses[currentLetter] = isCorrect ? 'correct' : 'incorrect';
-            
-            // Update counters
             if (isCorrect) {
                 correctAnswers++;
-                // No mostrar modal de correcto
+                usedAnswerSignatures.add(correctAnswerNorm); // <--- Add CORRECT answer signature
+                console.log("Added to used signatures:", correctAnswerNorm, usedAnswerSignatures);
             } else {
                 incorrectAnswers++;
-                // No mostrar modal de incorrecto
             }
-            
-            // Update score displays
+
             updateScoreDisplays();
-            
-            // Update letter styles to show correct/incorrect
             updateLetterStyles();
-            
-            // Remove letter from pending list
-            pendingLetters.splice(currentLetterIndex, 1);
-            
-            // Adjust index if needed
+            pendingLetters.splice(currentLetterIndex, 1); // Remove from pending
+
+            // Adjust index
             if (currentLetterIndex >= pendingLetters.length && pendingLetters.length > 0) {
                 currentLetterIndex = 0;
             }
-                
-            // Check if game should end
-                if (incorrectAnswers > maxErrors) {
+
+            // Check end game conditions
+            if (incorrectAnswers > maxErrors) {
                 endGame('defeat');
-                    return;
-                }
-            
+                return;
+            }
             if (pendingLetters.length === 0) {
                 endGame('victory');
                 return;
             }
-            
-            // Load next question immediately since no feedback is shown
+
+            // Load next question immediately
             setTimeout(loadQuestion, 150);
+
+        } else {
+            console.error(`Could not find question data for letter ${currentLetter} at index ${currentQuestionIndex}`);
+            // Maybe skip the letter or show an error
+            nextLetter();
         }
     }
     
@@ -761,22 +766,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Mark current letter as "pasapalabra"
-    function pasapalabra() {
+    function pasapalabra(silent = false) { // Added silent parameter
         const currentLetter = pendingLetters[currentLetterIndex];
-        
-        // Solo marcar como pendiente y contar si no ha sido pasada antes
-        if (letterStatuses[currentLetter] === 'unanswered') {
-        letterStatuses[currentLetter] = 'pending';
+
+        // Only count as a user pass if not silent
+        if (!silent && letterStatuses[currentLetter] === 'unanswered') {
+            letterStatuses[currentLetter] = 'pending';
             passedAnswers++;
-            
-            // Update score displays
             updateScoreDisplays();
+        } else if (letterStatuses[currentLetter] === 'unanswered') {
+            // Mark as pending even if silent, so it cycles
+            letterStatuses[currentLetter] = 'pending';
         }
-        
-        // Move to next letter
+
         nextLetter();
-        
-        // Update letter styles
         updateLetterStyles();
     }
     
@@ -1169,7 +1172,9 @@ document.addEventListener('DOMContentLoaded', function() {
         answerForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const userAnswer = answerInput.value.trim();
-            if (userAnswer) {
+            if (!userAnswer) {
+                pasapalabra();
+            } else {
                 checkAnswer(userAnswer);
             }
         });
@@ -1195,5 +1200,35 @@ document.addEventListener('DOMContentLoaded', function() {
     // Display rules modal on load
     if (gameRulesModal) {
         gameRulesModal.classList.add('active');
+    }
+
+    // --- Helper Function to Check Answer Conflict ---
+    function checkAnswerConflict(potentialAnswer, usedSignatures) {
+        const potentialAnswerNorm = potentialAnswer.toLowerCase().trim();
+        if (!potentialAnswerNorm) return false; // Empty answer is not a conflict
+
+        const potentialWords = potentialAnswerNorm.split(' ').filter(w => w.length > 2); // Ignore short words
+
+        for (const usedAnswerNorm of usedSignatures) {
+            // 1. Check full containment (either way)
+            if (usedAnswerNorm.includes(potentialAnswerNorm) || potentialAnswerNorm.includes(usedAnswerNorm)) {
+                // Avoid trivial contains like 'a' in 'apple'
+                if (potentialAnswerNorm.length > 1 && usedAnswerNorm.length > 1) {
+                    console.log(`Conflict (containment): '${potentialAnswerNorm}' vs '${usedAnswerNorm}'`);
+                    return true; // Conflict: One contains the other
+                }
+            }
+
+            // 2. Check for significant word overlap
+            const usedWords = usedAnswerNorm.split(' ').filter(w => w.length > 2);
+            const commonWords = potentialWords.filter(pw => usedWords.includes(pw));
+
+            // Conflict if > 1 common word, or 1 common word and answers are short (<= 2 significant words)
+            if (commonWords.length > 1 || (commonWords.length === 1 && potentialWords.length <= 2 && usedWords.length <= 2)) {
+                 console.log(`Conflict (words): '${potentialAnswerNorm}' vs '${usedAnswerNorm}'`);
+                 return true;
+            }
+        }
+        return false; // No conflict found
     }
 }); 
