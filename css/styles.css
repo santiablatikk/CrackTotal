@@ -895,15 +895,15 @@ input:focus {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 15px 20px; /* Ajustar gaps */
+    gap: 10px 15px; /* Reduce gap */
     max-width: 1200px; /* Limitar ancho */
     margin: 0 auto; /* Centrar */
-    padding: 0 1rem; /* Padding horizontal */
+    padding: 0 0.8rem; /* Reduce horizontal padding */
 }
 
 /* Ajustar logo en el header */
 .game-header .logo {
-    font-size: 1.8rem; /* Tamaño adecuado para header */
+    font-size: 1.5rem; /* Smaller logo */
     text-shadow: 0 0 15px rgba(127, 90, 248, 0.4); /* Sombra ajustada */
     margin: 0; /* Quitar margen por defecto */
     gap: 0.4rem; /* Espacio menor en header */
@@ -919,17 +919,16 @@ input:focus {
 
 /* Modern game title */
 .game-title {
-    font-size: 1.6rem; /* Ligeramente más grande y prominente */
+    font-size: 1.3rem; /* Smaller title */
     font-weight: 800; /* Más grueso */
     color: var(--text); /* Color base blanco */
     text-transform: uppercase;
     letter-spacing: 1px; /* Ajustar espaciado */
-    margin: 0 auto; /* Centrarlo */
+    margin: 0 10px; /* Add some horizontal margin */
     padding: 5px 0; /* Padding vertical ligero */
     position: relative; /* Para pseudo-elementos si se añaden */
     /* Efecto de texto sutil */
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4), 
-                 0 0 10px rgba(255, 142, 60, 0.4); /* Sombra con color accent */
+    text-shadow: 0 1px 0 rgba(0,0,0,0.3), 0 0 8px rgba(255, 142, 60, 0.3); /* Adjust shadow */
     /* Transición suave para futuros efectos */
     transition: all 0.3s ease;
 }
@@ -996,9 +995,9 @@ input:focus {
 .player-info {
     display: flex;
     align-items: center;
-    gap: 10px; /* Menos gap */
+    gap: 8px; /* Smaller gap */
     background: rgba(23, 25, 35, 0.7); /* Ligeramente más transparente */
-    padding: 8px 15px; /* Reducir padding */
+    padding: 6px 12px; /* Smaller padding */
     border-radius: 25px; /* Más redondo */
     border: 1px solid rgba(131, 93, 255, 0.25); /* Borde más visible */
     backdrop-filter: blur(10px);
@@ -1007,8 +1006,8 @@ input:focus {
 }
 
 .player-avatar {
-    width: 28px; /* Más pequeño */
-    height: 28px; /* Más pequeño */
+    width: 24px; /* Smaller size */
+    height: 24px; /* Smaller size */
     border-radius: 50%;
     background: linear-gradient(135deg, var(--primary), var(--primary-dark)); /* Ajustar gradiente */
     display: flex;
@@ -1020,32 +1019,32 @@ input:focus {
 }
 
 .player-avatar svg {
-    width: 14px; /* Icono más pequeño */
-    height: 14px;
+    width: 12px; /* Smaller icon size */
+    height: 12px;
 }
 
 .player-name {
     font-weight: 600;
     color: var(--text); /* Blanco */
-    font-size: 0.85rem; /* Ligeramente más pequeño */
+    font-size: 0.8rem; /* Smaller font size */
     white-space: nowrap; /* Evitar que el nombre se parta */
     overflow: hidden;
     text-overflow: ellipsis; /* Añadir puntos si es muy largo */
-    max-width: 120px; /* Limitar ancho máximo */
+    max-width: 100px; /* Slightly narrower */
 }
 
 .score {
     font-weight: 700;
     color: var(--primary-light); /* Color primario claro */
     background: rgba(131, 93, 255, 0.2); /* Fondo más intenso */
-    padding: 4px 12px; /* Padding ajustado */
+    padding: 3px 10px; /* Smaller padding */
     border-radius: 20px; 
-    font-size: 0.8rem; /* Ligeramente más pequeño */
+    font-size: 0.75rem; /* Smaller font size */
     text-shadow: 0 0 6px rgba(131, 93, 255, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 50px; /* Ancho mínimo */
+    min-width: 45px; /* Smaller width */
     text-align: center;
 }
 
@@ -1057,9 +1056,9 @@ input:focus {
     background: rgba(255, 255, 255, 0.08); /* Fondo claro sutil */
     border: 1px solid rgba(255, 255, 255, 0.15);
     color: var(--text); /* Blanco */
-    padding: 9px 16px; /* Padding ajustado */
+    padding: 7px 12px; /* Smaller padding */
     border-radius: 8px; 
-    font-size: 0.85rem; /* Ligeramente más pequeño */
+    font-size: 0.8rem; /* Smaller font size */
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -1075,8 +1074,8 @@ input:focus {
 }
 
 .back-button svg {
-    width: 18px; /* Icono más pequeño */
-    height: 18px;
+    width: 16px; /* Smaller icon size */
+    height: 16px;
     transition: transform 0.3s ease;
 }
 
@@ -1096,7 +1095,7 @@ input:focus {
 
 /* Rosco container - modern style */
 .rosco-container {
-    padding: 30px;
+    padding: 20px 15px; /* Reduce padding */
     position: relative;
     background: linear-gradient(135deg, rgba(22, 24, 38, 0.85), rgba(13, 14, 26, 0.95));
     border-radius: 24px;
@@ -1105,7 +1104,7 @@ input:focus {
     backdrop-filter: blur(20px);
     overflow: hidden;
     max-width: 900px;
-    margin: 0 auto;
+    margin: 20px auto 0; /* Add some top margin */
 }
 
 .rosco-container::before {
@@ -1157,8 +1156,8 @@ input:focus {
     position: relative;
     /* width: 580px; */ /* Replaced with responsive width */
     /* height: 580px; */ /* Replaced with aspect-ratio */
-    width: 90vw; /* Use viewport width */
-    max-width: 580px; /* Set a maximum size */
+    width: 92vw; /* Slightly larger vw usage */
+    max-width: 500px; /* Slightly smaller max */
     aspect-ratio: 1 / 1; /* Maintain square shape */
     margin: 0 auto;
     display: flex;
@@ -1207,8 +1206,8 @@ input:focus {
     position: absolute;
     /* width: 48px; */ /* Made responsive */
     /* height: 48px; */ /* Made responsive */
-    width: clamp(36px, 8vw, 48px); /* Responsive size with min/max */
-    height: clamp(36px, 8vw, 48px); /* Responsive size with min/max */
+    width: clamp(32px, 7.5vw, 44px); /* Responsive size with min/max */
+    height: clamp(32px, 7.5vw, 44px); /* Responsive size with min/max */
     border-radius: 50%;
     background: rgba(45, 48, 71, 0.8);
     color: white;
@@ -1217,7 +1216,7 @@ input:focus {
     justify-content: center;
     font-weight: 700;
     /* font-size: 1.2rem; */ /* Made responsive */
-    font-size: clamp(1rem, 2.5vw, 1.2rem); /* Responsive font size */
+    font-size: clamp(0.9rem, 2.2vw, 1.1rem); /* Responsive font size */
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     cursor: pointer;
@@ -1269,8 +1268,8 @@ input:focus {
 .question-card {
     /* width: 460px; */ /* Replaced with responsive width */
     /* height: 460px; */ /* Replaced with aspect-ratio */
-    width: 80%; /* Relative to parent (.rosco-circle) */
-    max-width: 460px; /* Keep max size consistent */
+    width: 78%; /* Relative to parent (.rosco-circle) */
+    max-width: 420px; /* Keep max size consistent */
     aspect-ratio: 1 / 1; /* Maintain square shape */
     background: rgba(18, 20, 31, 0.95);
     border-radius: 50%;
@@ -1311,23 +1310,23 @@ input:focus {
 /* Question text - modern style */
 .question-text {
     background: rgba(13, 14, 26, 0.6);
-    padding: 14px 15px;
+    padding: 10px 12px; /* Adjust padding */
     border-radius: 10px;
-    margin-bottom: 15px;
-    font-size: 0.92rem;
+    margin-bottom: 12px;
+    font-size: 0.85rem; /* Slightly smaller */
     line-height: 1.4;
     text-align: center;
     color: rgba(255, 255, 255, 0.95);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(131, 93, 255, 0.1);
-    max-height: 125px;
+    max-height: 100px; /* Adjust max height */
     overflow-y: auto;
 }
 
 /* Timer - modern style */
 .timer-wrapper {
     margin-top: 0.1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
     position: relative;
     width: 100%;
 }
@@ -1336,7 +1335,7 @@ input:focus {
 .timer-count {
     text-align: center;
     font-weight: 700;
-    font-size: 1.5rem;
+    font-size: 1.3rem; /* Smaller timer count */
     margin-bottom: 0.5rem;
     color: rgba(255, 255, 255, 0.95);
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -1348,7 +1347,7 @@ input:focus {
 }
 
 .timer {
-    height: 12px;
+    height: 10px; /* Slightly thinner */
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     overflow: hidden;
@@ -1402,10 +1401,10 @@ input:focus {
     width: 100%;
     background: rgba(13, 14, 26, 0.5);
     border: 1.5px solid rgba(131, 93, 255, 0.3);
-    padding: 12px 16px;
+    padding: 10px 14px; /* Adjust padding */
     border-radius: 8px;
     color: white;
-    font-size: 0.95rem;
+    font-size: 0.9rem; /* Adjust font */
     transition: all 0.3s ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -1494,8 +1493,8 @@ input:focus {
 
 /* Question header - modern style */
 .question-header {
-    margin-top: 70px;
-    margin-bottom: 12px;
+    margin-top: 40px; /* Reduce top margin inside card */
+    margin-bottom: 8px;
     text-align: center;
 }
 
@@ -1503,8 +1502,8 @@ input:focus {
 .action-buttons {
     display: flex;
     justify-content: center;
-    gap: 15px;
-    margin-bottom: 10px;
+    gap: 12px; /* Reduce gap */
+    margin-bottom: 8px;
 }
 
 /* Pasapalabra button - modern style */
@@ -1513,8 +1512,8 @@ input:focus {
     color: white;
     border: none;
     border-radius: 8px;
-    padding: 10px 25px;
-    font-size: 0.9rem;
+    padding: 8px 20px; /* Adjust padding */
+    font-size: 0.8rem; /* Adjust font */
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -1535,21 +1534,21 @@ input:focus {
     color: white;
     border: none;
     border-radius: 6px;
-    padding: 5px 7px;
-    font-size: 0.7rem;
+    padding: 4px 6px; /* Adjust padding */
+    font-size: 0.65rem; /* Adjust font */
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 3px;
     box-shadow: 0 4px 10px rgba(131, 93, 255, 0.3);
     position: relative;
     overflow: hidden;
     min-width: auto;
     width: auto;
-    margin-top: 3px;
+    margin-top: 5px; /* Add some space */
 }
 
 .input-group {
@@ -2740,3 +2739,71 @@ h3:not([class]) {
 }
 
 /* --- End Profile Page Styles --- */
+
+/* Further Header adjustments */
+.header-content {
+    flex-wrap: wrap; /* Allow wrapping */
+    justify-content: space-around; /* Space out items when wrapped */
+    padding: 0 0.5rem;
+}
+.game-header .logo {
+    font-size: 1.4rem; /* Even smaller */
+    order: 1; /* Position */
+    width: 100%; /* Take full width for centering */
+    text-align: center;
+    margin-bottom: 5px;
+}
+.game-title {
+    order: 2;
+    font-size: 1.1rem;
+    width: 100%; /* Take full width for centering */
+    text-align: center;
+    margin-bottom: 10px;
+}
+.player-info {
+    order: 3;
+    flex-grow: 1; /* Allow to grow */
+    justify-content: center; /* Center items */
+}
+.back-button {
+    order: 4;
+    flex-grow: 1; /* Allow to grow */
+    justify-content: center; /* Center text/icon */
+}
+/* End Header adjustments */
+
+/* Further Rosco Adjustments */
+.rosco-container {
+    padding: 15px 10px;
+}
+.rosco-circle {
+    /* Ensure it doesn't exceed viewport width */
+    width: 95vw;
+    max-width: 450px; /* Further limit size */
+}
+.letter {
+    width: clamp(30px, 7vw, 40px);
+    height: clamp(30px, 7vw, 40px);
+    font-size: clamp(0.8rem, 2vw, 1rem);
+}
+.question-card {
+    width: 75%; /* Slightly smaller percentage */
+}
+ .question-header {
+    margin-top: 25px; /* Reduce top margin */
+}
+ .question-header h3 {
+    font-size: 0.85rem; /* Even smaller */
+}
+.question-text {
+    font-size: 0.8rem;
+    max-height: 80px; /* Further limit height */
+}
+.timer-count {
+    font-size: 1.2rem;
+}
+.pasapalabra-button {
+    padding: 7px 18px;
+    font-size: 0.75rem;
+}
+/* End Rosco Adjustments */
