@@ -1,0 +1,17 @@
+// Este es un archivo de ejemplo. 
+// Copia este archivo a 'firebase-config-local.js' (¡sin el .example!)
+// y reemplaza los valores con tus credenciales reales de Firebase.
+// ¡IMPORTANTE! Asegúrate de que 'firebase-config-local.js' esté en tu .gitignore
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA_3ZRD8ffWsRCSFgyZ3ach4hmrM19gYr4", 
+  authDomain: "cracktotal-cd2e7.firebaseapp.com",
+  projectId: "cracktotal-cd2e7",
+  storageBucket: "cracktotal-cd2e7.appspot.com", // Ojo: Firebase a veces usa .appspot.com y otras .firebasestorage.app, usa el que te muestra a ti
+  messagingSenderId: "210391454350",
+  appId: "1:210391454350:web:ec36c626aca23e80562fdf",
+  measurementId: "G-5XP3T1RTH7"
+};
+
+// Exportar la configuración para que firebase-init.js pueda importarla
+export { firebaseConfig }; 

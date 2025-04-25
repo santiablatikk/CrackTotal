@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let totalTime = 240; // Default: Normal difficulty (240 seconds)
     let timeLeft = totalTime;
     let timerInterval;
-    let maxErrors = 2; // Maximum number of errors allowed
+    let maxErrors = 3; // Maximum number of errors allowed
     let helpUsed = 0; // Track help usage
     let maxHelp = 2; // Maximum number of helps
     let incompleteAnswersUsed = 0; // Track incomplete answers
@@ -471,60 +471,88 @@ document.addEventListener('DOMContentLoaded', function() {
             const correctAnswerNorm = correctAnswerFull.toLowerCase().trim();
             const userAnswerNorm = userAnswer.toLowerCase().trim();
 
-            // Incomplete answer check (only if it looks partial)
-            if (isIncompleteAnswer(userAnswerNorm, correctAnswerNorm) && isPartiallyCorrect(userAnswerNorm, correctAnswerNorm)) {
+            // 1. Check for INCOMPLETENESS first
+            if (isIncompleteAnswer(userAnswerNorm, correctAnswerNorm)) {
                 if (incompleteAnswersUsed < maxIncompleteAnswers) {
                     incompleteAnswersUsed++;
                     const remainingAttempts = maxIncompleteAnswers - incompleteAnswersUsed;
-                    showFeedback(`Respuesta incompleta. Te ${remainingAttempts === 1 ? 'queda 1 intento' : 'quedan ' + remainingAttempts + ' intentos'} para respuestas incompletas.`, 'warning');
-                    return; // Don't proceed further for incomplete
+                    // Show specific feedback for incomplete answer
+                    showIncompleteFeedback(`Respuesta incompleta. Te ${remainingAttempts === 1 ? 'queda 1 intento' : 'quedan ' + remainingAttempts + ' intentos'} para respuestas incompletas.`);
+                    // DO NOT clear input here, let user edit
+                    // answerInput.value = '';
+                    answerInput.focus();
+                    return; // Stop processing for this answer attempt
+                } else {
+                     // User is out of incomplete attempts, show message and treat as incorrect
+                     showTemporaryFeedback("Respuesta incompleta y sin intentos restantes. Se cuenta como error.", "error", 3000);
+                     // Fall through to the incorrect logic below
+                     console.log("Incomplete answer, but no attempts left. Treating as incorrect.");
+                     // No return here, let it be processed as incorrect
                 }
             }
 
+            // 2. If not incomplete (or out of attempts), check for CORRECTNESS
             const isCorrect = isAnswerCorrectEnough(userAnswerNorm, correctAnswerNorm);
 
             if (!isCorrect) {
-                // Record error details
-                const question = letterData.preguntas[currentQuestionIndex].pregunta;
-                gameErrors.push({
-                    letter: currentLetter,
-                    question: question,
-                    userAnswer: userAnswer, // Store original user input for display
-                    correctAnswer: correctAnswerFull // Store original correct answer
-                });
+                // Record error details ONLY if it wasn't an incomplete answer out of attempts
+                if (!isIncompleteAnswer(userAnswerNorm, correctAnswerNorm) || incompleteAnswersUsed >= maxIncompleteAnswers) {
+                    const question = letterData.preguntas[currentQuestionIndex].pregunta;
+                    gameErrors.push({
+                        letter: currentLetter,
+                        question: question,
+                        userAnswer: userAnswer, // Store original user input
+                        correctAnswer: correctAnswerFull // Store original correct answer
+                    });
+                }
+                incorrectAnswers++; // Increment incorrect count if !isCorrect
             }
 
             // Update status and counters
             letterStatuses[currentLetter] = isCorrect ? 'correct' : 'incorrect';
             if (isCorrect) {
                 correctAnswers++;
-                usedAnswerSignatures.add(correctAnswerNorm); // <--- Add CORRECT answer signature
+                usedAnswerSignatures.add(correctAnswerNorm); // Add CORRECT answer signature
                 console.log("Added to used signatures:", correctAnswerNorm, usedAnswerSignatures);
+                // Update aggregated stats immediately
+                profileStats.totalCorrectAnswers += 1;
             } else {
-                incorrectAnswers++;
+                 // incorrectAnswers already incremented above
+                 // Update aggregated stats immediately
+                 profileStats.totalIncorrectAnswers += 1;
             }
 
+            // Common updates after correct or incorrect (but not incomplete with attempts left)
             updateScoreDisplays();
             updateLetterStyles();
             pendingLetters.splice(currentLetterIndex, 1); // Remove from pending
 
-            // Adjust index
+            // Adjust index for next question
             if (currentLetterIndex >= pendingLetters.length && pendingLetters.length > 0) {
-                currentLetterIndex = 0;
+                currentLetterIndex = 0; // Wrap around if needed
+            } else if (pendingLetters.length === 0) {
+                 // No letters left, handled below
+            } else {
+                 // currentLetterIndex remains valid, no change needed before loadQuestion
             }
 
-            // Check end game conditions
-            if (incorrectAnswers > maxErrors) {
+            // Check end game conditions AFTER processing the answer
+            if (incorrectAnswers >= maxErrors) { // Use >= because we check after incrementing
+                saveProfileStats(profileStats); // Save stats before ending
                 endGame('defeat');
-                return;
+                return; // End game due to errors
             }
             if (pendingLetters.length === 0) {
+                saveProfileStats(profileStats); // Save stats before ending
                 endGame('victory');
-                return;
+                return; // End game successfully
             }
 
-            // Load next question immediately
-            setTimeout(loadQuestion, 150);
+            // Load next question if game continues
+            setTimeout(() => {
+                 answerInput.value = ''; // Clear input AFTER processing and BEFORE next question
+                 loadQuestion();
+            }, 150); // Short delay to show letter color change
 
         } else {
             console.error(`Could not find question data for letter ${currentLetter} at index ${currentQuestionIndex}`);
@@ -533,55 +561,70 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Determina si una respuesta es incompleta
-    function isIncompleteAnswer(userAnswer, correctAnswer) {
-        // Si la respuesta es una subcadena exacta de la respuesta correcta
-        // y es menos del 80% de la longitud total, se considera incompleta
-        if (correctAnswer.includes(userAnswer) && userAnswer.length < correctAnswer.length * 0.8) {
-            return true;
+    // Determina si una respuesta es incompleta (REFINED LOGIC)
+    function isIncompleteAnswer(userAnswerNorm, correctAnswerNorm) {
+        // Normalize further: remove extra spaces
+        userAnswerNorm = userAnswerNorm.replace(/\s+/g, ' ').trim();
+        correctAnswerNorm = correctAnswerNorm.replace(/\s+/g, ' ').trim();
+
+        // Exact match is never incomplete
+        if (userAnswerNorm === correctAnswerNorm) {
+            return false;
         }
-        
-        // Comprobar si la respuesta contiene solo el apellido o solo el nombre
-        const words = correctAnswer.split(' ');
-        if (words.length > 1) {
-            // Si la respuesta correcta tiene múltiples palabras (nombre y apellido)
-            // y el usuario solo ha puesto una parte
-            for (const word of words) {
-                if (userAnswer === word || userAnswer.startsWith(word) || word.startsWith(userAnswer)) {
-                    return true;
-                }
+
+        // If user answer is significantly longer, it's not 'incomplete'
+        // Allows for minor additions like "Club", "FC", etc.
+        if (userAnswerNorm.length > correctAnswerNorm.length + 10) {
+             return false;
+        }
+
+        // Avoid flagging if similarity is very high (likely a typo, not incompleteness)
+        const similarity = calculateStringSimilarity(userAnswerNorm, correctAnswerNorm);
+        if (similarity > 0.90) { // If 90% similar or more, treat as correct/incorrect
+            return false;
+        }
+
+        const userWords = userAnswerNorm.split(' ').filter(w => w.length > 1); // Ignore short/empty words
+        const correctWords = correctAnswerNorm.split(' ').filter(w => w.length > 1);
+
+        // If correct answer is a single word, incomplete if user answer is a starting substring
+        if (correctWords.length === 1 && userWords.length === 1) {
+            // Check if user answer starts the correct answer AND is meaningfully shorter
+            if (correctAnswerNorm.startsWith(userAnswerNorm) &&
+                userAnswerNorm.length < correctAnswerNorm.length &&
+                userAnswerNorm.length >= 3) { // Require at least 3 chars to count as incomplete start
+                return true;
             }
+        }
+
+        // If correct answer has multiple words
+        if (correctWords.length > 1) {
+            // Case 1: User provided only a *proper* subset of the correct words
+            // Check if all user words are present in the correct answer words
+            let allUserWordsFound = userWords.length > 0 && userWords.every(uw => correctWords.includes(uw));
+            if (allUserWordsFound && userWords.length < correctWords.length) {
+                // This means user typed *some* correct words, but missed others.
+                // Example: Correct="Lionel Messi", User="Lionel" -> true
+                // Example: Correct="Real Madrid", User="Real" -> true
+                return true;
             }
-            
-        // Si la respuesta del usuario es significativamente más corta
-        if (userAnswer.length < correctAnswer.length * 0.6) {
-            return true;
+
+            // Case 2: User answer is a starting substring of the multi-word correct answer
+            // Example: Correct="Real Madrid Club de Futbol", User="Real Madrid"
+            // This might be considered incomplete depending on strictness.
+            // Let's be less strict here: if it startsWith and similarity is decent (but not too high)
+            // We already checked for high similarity above.
+            if (correctAnswerNorm.startsWith(userAnswerNorm) &&
+                userAnswerNorm.length < correctAnswerNorm.length &&
+                userWords.length < correctWords.length) { // Ensure fewer words were typed
+                // If similarity is moderate (e.g., > 0.6) it indicates they are on the right track but incomplete
+                 if (similarity > 0.6) {
+                     return true;
+                 }
+            }
         }
-        
-        return false;
-    }
-    
-    // Verifica si la respuesta es parcialmente correcta (contiene parte de la respuesta correcta)
-    function isPartiallyCorrect(userAnswer, correctAnswer) {
-        // Si la respuesta del usuario está contenida en la respuesta correcta
-        if (correctAnswer.includes(userAnswer)) {
-            return true;
-        }
-        
-        // Comprobar si alguna palabra de la respuesta correcta está en la respuesta del usuario
-        const correctWords = correctAnswer.split(' ');
-        const userWords = userAnswer.split(' ');
-        
-        for (const word of correctWords) {
-            if (word.length > 2) { // Solo considerar palabras significativas
-                for (const userWord of userWords) {
-                    if (userWord.includes(word) || word.includes(userWord)) {
-                        return true;
-                }
-                }
-        }
-        }
-        
+
+        // If none of the above specific incomplete conditions match, it's not incomplete.
         return false;
     }
     
@@ -722,12 +765,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!hintDisplayed[currentLetter]) {
             // Verificar si quedan ayudas disponibles
             if (helpUsed >= maxHelp) {
-                return; // No hay más ayudas disponibles
+                // Optional: Show a message saying no more help available
+                showTemporaryFeedback("No quedan más ayudas disponibles.", "info", 2000);
+                return;
             }
-            
+
             // Incrementar contador de ayudas usadas
                     helpUsed++;
-                    
+                    profileStats.totalHelpUsed += 1; // Track aggregated help usage immediately
+
             // Actualizar el botón de ayuda
             const helpButton = document.getElementById('helpButton');
             if (helpButton) {
@@ -735,7 +781,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
                     HELP (${maxHelp - helpUsed})
                     `;
-                    
+
                 // Deshabilitar botón si ya no quedan ayudas
                     if (helpUsed >= maxHelp) {
                     helpButton.disabled = true;
@@ -749,10 +795,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Obtener la respuesta correcta
         const letterData = questions.find(item => item.letra === currentLetter);
-        if (letterData) {
+        if (letterData && letterData.preguntas && currentQuestionIndex < letterData.preguntas.length) {
             const correctAnswer = letterData.preguntas[currentQuestionIndex].respuesta;
-            const hint = correctAnswer.substring(0, 3);
-            
+            const hint = correctAnswer.substring(0, 3); // Keep 3-letter hint
+
             // Mostrar la pista junto a la letra en el rosco
             const letterElement = document.querySelector(`.letter[data-letter="${currentLetter}"]`);
             if (letterElement) {
@@ -762,6 +808,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     hintElement.textContent = hint;
                 }
             }
+        } else {
+             console.warn(`Could not find question data for letter ${currentLetter} to show hint.`);
         }
     }
     
@@ -817,22 +865,28 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update timer display
     function updateTimerDisplay() {
-        const percentage = (timeLeft / totalTime) * 100;
+        // Ensure totalTime is not zero to avoid division by zero
+        if (totalTime <= 0) {
+            timerBar.style.width = '0%';
+            return;
+        }
+
+        const percentage = Math.max(0, (timeLeft / totalTime) * 100); // Ensure percentage is not negative
         timerBar.style.width = `${percentage}%`;
-        
+
         // Update timer count
         const timerCount = document.getElementById('timerCount');
         if (timerCount) {
-            timerCount.textContent = timeLeft;
+            timerCount.textContent = Math.max(0, timeLeft); // Ensure displayed time is not negative
         }
-        
+
         // Change color when time is running out
         if (percentage < 20) {
             timerBar.style.backgroundColor = '#FF5470'; // red
         } else if (percentage < 50) {
             timerBar.style.backgroundColor = '#FF8E3C'; // orange
         } else {
-            timerBar.style.backgroundColor = '#31D0AA'; // green
+            timerBar.style.backgroundColor = '#31D0AA'; // green (default)
         }
     }
     
@@ -995,6 +1049,16 @@ document.addEventListener('DOMContentLoaded', function() {
             Ver Perfil
         `;
         
+        // ---> NEW BUTTON START <---
+        const viewRankingButton = document.createElement('button');
+        // Reuse profile style, add specific class if needed later for different styling
+        viewRankingButton.className = 'ranking-button profile-button'; 
+        viewRankingButton.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg> <!-- Trophy Icon -->
+            Ver Ranking
+        `;
+        // ---> NEW BUTTON END <---
+        
         const goHomeButton = document.createElement('button');
         goHomeButton.className = 'play-again-button';
         goHomeButton.innerHTML = `
@@ -1004,6 +1068,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         buttonsContainer.appendChild(viewStatsButton);
         buttonsContainer.appendChild(viewProfileButton);
+        buttonsContainer.appendChild(viewRankingButton); // Append the new button
         buttonsContainer.appendChild(goHomeButton);
         
         // Assemble modal
@@ -1022,6 +1087,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         viewProfileButton.addEventListener('click', () => {
             window.location.href = 'profile.html';
+        });
+        
+        viewRankingButton.addEventListener('click', () => {
+            window.location.href = 'ranking.html';
         });
         
         goHomeButton.addEventListener('click', () => {
@@ -1167,6 +1236,92 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Function to show temporary feedback messages (like incomplete warnings)
+    function showTemporaryFeedback(message, type = 'warning', duration = 2500) {
+        // Remove existing temporary feedback
+        const existingFeedback = document.querySelector('.temporary-feedback-modal');
+        if (existingFeedback) {
+            existingFeedback.remove();
+        }
+
+        const modalOverlay = document.createElement('div');
+        // Basic overlay styling (can be enhanced with CSS)
+        modalOverlay.style.position = 'fixed';
+        modalOverlay.style.top = '0';
+        modalOverlay.style.left = '0';
+        modalOverlay.style.right = '0';
+        modalOverlay.style.bottom = '0';
+        modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+        modalOverlay.style.display = 'flex';
+        modalOverlay.style.justifyContent = 'center';
+        modalOverlay.style.alignItems = 'center';
+        modalOverlay.style.zIndex = '1100';
+        modalOverlay.style.opacity = '0';
+        modalOverlay.style.transition = 'opacity 0.3s ease';
+        modalOverlay.className = 'modal-overlay temporary-feedback-modal'; // Add class for potential CSS targeting
+
+        const modalContent = document.createElement('div');
+        // Basic content styling (can be enhanced with CSS)
+        modalContent.style.background = 'var(--background-alt, #242629)';
+        modalContent.style.padding = '25px';
+        modalContent.style.borderRadius = '12px';
+        modalContent.style.maxWidth = '350px';
+        modalContent.style.textAlign = 'center';
+        modalContent.style.color = 'var(--text, #FFFFFE)';
+        modalContent.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
+        modalContent.style.transform = 'scale(0.95)';
+        modalContent.style.transition = 'transform 0.3s ease';
+        modalContent.className = 'modal-content feedback-content'; // Add class
+
+        // Add icon based on type
+        let iconHtml = '';
+        let color = 'var(--accent)'; // Default yellow/orange for warning
+        if (type === 'warning') {
+            iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
+            color = 'var(--accent, #FF8E3C)';
+        } else if (type === 'info') {
+             iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
+             color = 'var(--primary-light, #AB8BFA)';
+        } // Add other types if needed
+
+        modalContent.innerHTML = `
+            <div style="color: ${color}; margin-bottom: 10px;">${iconHtml}</div>
+            <p style="font-size: 1rem; color: var(--text, #FFFFFE); margin: 0;">${message}</p>
+        `;
+        modalContent.style.border = `2px solid ${color}`;
+
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
+
+        // Trigger fade-in and scale-up animation
+        requestAnimationFrame(() => {
+            modalOverlay.style.opacity = '1';
+            modalContent.style.transform = 'scale(1)';
+        });
+
+
+        // Auto-remove after duration
+        const timeoutId = setTimeout(() => {
+            modalOverlay.style.opacity = '0';
+            modalContent.style.transform = 'scale(0.95)';
+            // Optional: Add fade-out animation before removing
+            setTimeout(() => modalOverlay.remove(), 300); // Wait for fade animation
+        }, duration);
+
+        // Allow clicking overlay to dismiss early
+        modalOverlay.addEventListener('click', () => {
+             clearTimeout(timeoutId); // Prevent auto-removal if clicked
+             modalOverlay.style.opacity = '0';
+             modalContent.style.transform = 'scale(0.95)';
+             setTimeout(() => modalOverlay.remove(), 300);
+        });
+    }
+
+    // Simple alias for the specific incomplete feedback
+    function showIncompleteFeedback(message) {
+        showTemporaryFeedback(message, 'warning', 2000); // Show for 2 seconds (changed from 3000)
+    }
+
     // Event Listeners
     if (answerForm) {
         answerForm.addEventListener('submit', function(e) {
@@ -1199,8 +1354,25 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Initial Setup ---
     // Display rules modal on load
     if (gameRulesModal) {
-        gameRulesModal.classList.add('active');
+        // Make sure it's active initially
+        if (!gameRulesModal.classList.contains('active')) {
+            gameRulesModal.classList.add('active');
+        }
+        // Ensure player name is loaded if available
+        const playerName = localStorage.getItem('crackTotalUsername') || 'Jugador';
+        const playerNameDisplay = document.querySelector('.player-name');
+        if (playerNameDisplay) {
+            playerNameDisplay.textContent = playerName;
+        }
+    } else {
+        // If no rules modal, maybe initialize game directly or show error
+        console.error("Game rules modal not found. Cannot start game.");
+        // Optionally, try to init game if the structure allows
+        // initGame(); // Be cautious calling this if modal handles setup
     }
+
+    // --- Global Profile Stats Variable ---
+    let profileStats = loadProfileStats(); // Load stats once at the beginning
 
     // --- Helper Function to Check Answer Conflict ---
     function checkAnswerConflict(potentialAnswer, usedSignatures) {
