@@ -5,7 +5,7 @@ import {
     query,
     orderBy,
     limit,
-    getDocs,
+    onSnapshot,
     Timestamp // Importar Timestamp para formatear fechas
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -27,50 +27,67 @@ function formatFirebaseTimestamp(firebaseTimestamp) {
     });
 }
 
-// --- Cargar Ranking Global ---
+// --- Cargar Ranking Global (MODIFIED FOR REAL-TIME) ---
 async function loadRanking() {
     if (!rankingBody) {
         console.error('Error: Elemento ranking-body no encontrado.');
         return;
     }
+    if (!db) { // Check if db initialization failed
+        console.error('Error: Firestore DB not initialized.');
+        rankingBody.innerHTML = '<tr><td colspan="5">Error: No se pudo conectar a la base de datos.</td></tr>';
+        return;
+    }
 
-    rankingBody.innerHTML = '<tr><td colspan="5">Cargando ranking...</td></tr>'; // Mensaje de carga
+    rankingBody.innerHTML = '<tr><td colspan="5">Cargando ranking en tiempo real...</td></tr>'; // Update loading message
 
     try {
         // Crear la consulta a la colección 'users', ordenando por 'totalScore' descendente, limitando a 100
         const usersRef = collection(db, "users");
         const q = query(usersRef, orderBy("totalScore", "desc"), limit(100));
 
-        const querySnapshot = await getDocs(q);
+        // Usar onSnapshot en lugar de getDocs
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            // Este código se ejecutará cada vez que los datos cambien
+            if (querySnapshot.empty) {
+                rankingBody.innerHTML = '<tr><td colspan="5">Aún no hay datos en el ranking. ¡Juega una partida!</td></tr>';
+                return;
+            }
 
-        if (querySnapshot.empty) {
-            rankingBody.innerHTML = '<tr><td colspan="5">Aún no hay datos en el ranking. ¡Juega una partida!</td></tr>';
-            return;
-        }
+            rankingBody.innerHTML = ''; // Limpiar tabla antes de redibujar
+            let position = 1;
 
-        rankingBody.innerHTML = ''; // Limpiar mensaje de carga/datos anteriores
-        let position = 1;
+            querySnapshot.forEach((doc) => {
+                const userData = doc.data();
+                const row = document.createElement('tr');
 
-        querySnapshot.forEach((doc) => {
-            const userData = doc.data();
-            const row = document.createElement('tr');
+                // Añadir clases para estilo si es necesario (ej. basado en posición)
 
-            // Añadir clases para estilo si es necesario (ej. basado en posición)
+                row.innerHTML = `
+                    <td>${position}</td>
+                    <td class="player-name-rank">${userData.displayName || 'Jugador Anónimo'}</td>
+                    <td class="score-rank">${userData.totalScore || 0}</td>
+                    <td>${userData.matchesPlayed || 0}</td>
+                    <td>${userData.wins || 0}</td>
+                `;
+                rankingBody.appendChild(row);
+                position++;
+            });
+            console.log("Ranking actualizado en tiempo real."); // Log para confirmar actualización
 
-            row.innerHTML = `
-                <td>${position}</td>
-                <td class="player-name-rank">${userData.displayName || 'Jugador Anónimo'}</td>
-                <td class="score-rank">${userData.totalScore || 0}</td>
-                <td>${userData.matchesPlayed || 0}</td>
-                <td>${userData.wins || 0}</td>
-            `;
-            rankingBody.appendChild(row);
-            position++;
+        }, (error) => {
+            // Manejador de errores para onSnapshot
+            console.error("Error al escuchar cambios en el ranking: ", error);
+            rankingBody.innerHTML = '<tr><td colspan="5">Error al cargar el ranking en tiempo real. Inténtalo de nuevo más tarde.</td></tr>';
         });
 
+        // Opcional: Guardar la función `unsubscribe` si necesitas dejar de escuchar en algún momento.
+        // window.unsubscribeRanking = unsubscribe; // Ejemplo
+
     } catch (error) {
-        console.error("Error al cargar el ranking: ", error);
-        rankingBody.innerHTML = '<tr><td colspan="5">Error al cargar el ranking. Inténtalo de nuevo más tarde.</td></tr>';
+        // Error inicial al configurar la consulta o el listener
+        console.error("Error al configurar el listener del ranking: ", error);
+        rankingBody.innerHTML = '<tr><td colspan="5">Error al configurar la carga del ranking.</td></tr>';
     }
 }
 
@@ -139,6 +156,6 @@ async function loadHistory() {
 
 // --- Cargar datos al iniciar la página ---
 document.addEventListener('DOMContentLoaded', () => {
-    loadRanking();
+    loadRanking(); // Ahora inicia el listener en tiempo real
     loadHistory();
 }); 
