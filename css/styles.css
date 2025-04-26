@@ -4188,3 +4188,309 @@ h3:not([class]) {
         min-width: 70px;
     }
 }
+
+/* Estilos para el botón de actualización del ranking */
+.refresh-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 auto 1.5rem;
+    padding: 10px 16px;
+    background-color: var(--primary, #7F5AF8);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 10px rgba(var(--primary-rgb, 127, 90, 248), 0.3);
+}
+
+.refresh-button i {
+    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+}
+
+.refresh-button:hover {
+    background-color: var(--primary-dark, #6B4AD8);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(var(--primary-rgb, 127, 90, 248), 0.4);
+}
+
+.refresh-button:hover i {
+    transform: rotate(180deg);
+}
+
+.refresh-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(var(--primary-rgb, 127, 90, 248), 0.3);
+}
+
+.refresh-button:disabled {
+    background-color: var(--primary-light, #AB8BFA);
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Estilos para posiciones destacadas en el ranking */
+.rank-position-1 td {
+    color: gold !important;
+    font-weight: 700;
+}
+
+.rank-position-2 td {
+    color: silver !important;
+    font-weight: 600;
+}
+
+.rank-position-3 td {
+    color: #CD7F32 !important; /* Bronce */
+    font-weight: 600;
+}
+
+/* Estilo para el tipo de juego en el historial */
+.match-game-type {
+    font-size: 0.8rem;
+    background-color: rgba(var(--primary-rgb, 127, 90, 248), 0.15);
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: var(--primary-light, #AB8BFA);
+}
+
+/* Adaptar para móviles */
+@media (max-width: 576px) {
+    .refresh-button {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+        width: 100%;
+        max-width: 200px;
+    }
+    
+    .match-game-type {
+        font-size: 0.7rem;
+        padding: 3px 6px;
+    }
+}
+
+/* ===== Estilos del Botón de Actualizar Ranking ===== */
+.refresh-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--primary, #7F5AF8);
+    color: var(--background-light, #fff);
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    margin-left: auto;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.refresh-button:hover {
+    background-color: var(--primary-dark, #6E48E0);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.refresh-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.refresh-button i {
+    font-size: 1rem;
+}
+
+/* Animación de rotación para el icono al actualizar */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.refresh-button:active i {
+    animation: spin 0.8s linear;
+}
+
+/* ===== Estilos de las posiciones destacadas en el ranking ===== */
+.rank-position-1 {
+    background-color: rgba(255, 215, 0, 0.15) !important; /* Gold */
+    font-weight: 700;
+}
+
+.rank-position-1 td {
+    color: var(--text) !important;
+}
+
+.rank-position-1 td:first-child {
+    color: gold !important;
+    font-weight: 900;
+}
+
+.rank-position-2 {
+    background-color: rgba(192, 192, 192, 0.15) !important; /* Silver */
+    font-weight: 600;
+}
+
+.rank-position-2 td:first-child {
+    color: silver !important;
+    font-weight: 800;
+}
+
+.rank-position-3 {
+    background-color: rgba(205, 127, 50, 0.15) !important; /* Bronze */
+    font-weight: 500;
+}
+
+.rank-position-3 td:first-child {
+    color: #cd7f32 !important; /* Bronze */
+    font-weight: 700;
+}
+
+/* Estilo para el tipo de juego en el historial */
+.match-game-type {
+    font-size: 0.8rem;
+    background-color: var(--primary-dark, #6E48E0);
+    color: white;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+/* Ajustes para móviles */
+@media (max-width: 768px) {
+    .refresh-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .match-game-type {
+        font-size: 0.7rem;
+        padding: 0.15rem 0.4rem;
+    }
+}
+
+/* Estilos del Botón de Actualizar Ranking */
+.refresh-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--gradient-primary);
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm), var(--glow-primary);
+    position: relative;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.refresh-button i {
+    font-size: 1.1em;
+    transition: transform 0.5s ease;
+}
+
+.refresh-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(127, 90, 248, 0.4);
+}
+
+.refresh-button:hover i {
+    transform: rotate(180deg);
+}
+
+.refresh-button:active {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(127, 90, 248, 0.3);
+}
+
+.refresh-button:disabled {
+    background: linear-gradient(135deg, #9d9fb3, #7a7c8a);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.refresh-button:active i {
+    animation: spin 1s linear infinite;
+}
+
+/* Estilos de las posiciones destacadas en el ranking */
+.rank-position-1 {
+    background-color: rgba(255, 215, 0, 0.15);
+}
+
+.rank-position-1 td {
+    color: var(--text) !important;
+    font-weight: 700;
+}
+
+.rank-position-1 td:first-child {
+    position: relative;
+    background-color: rgba(255, 215, 0, 0.3);
+    color: gold !important;
+}
+
+.rank-position-2 {
+    background-color: rgba(192, 192, 192, 0.15);
+}
+
+.rank-position-2 td:first-child {
+    position: relative;
+    background-color: rgba(192, 192, 192, 0.3);
+    color: silver !important;
+}
+
+.rank-position-3 {
+    background-color: rgba(205, 127, 50, 0.15);
+}
+
+.rank-position-3 td:first-child {
+    position: relative;
+    background-color: rgba(205, 127, 50, 0.3);
+    color: #cd7f32 !important;
+}
+
+/* Estilo para el tipo de juego en el historial */
+.match-game-type {
+    font-size: 0.7rem;
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    background-color: rgba(131, 93, 255, 0.15);
+    color: var(--primary-light);
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+/* Ajustes para móvil */
+@media (max-width: 768px) {
+    .refresh-button {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+    }
+    
+    .match-game-type {
+        font-size: 0.65rem;
+        padding: 2px 6px;
+        margin-left: 5px;
+    }
+}

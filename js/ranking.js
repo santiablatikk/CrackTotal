@@ -5,20 +5,26 @@ import {
     query,
     orderBy,
     limit,
-    onSnapshot, // <--- Para el ranking en tiempo real
-    getDocs // <--- AÑADIR ESTA LÍNEA para el historial
-    // Timestamp // Timestamp no se usa directamente en el ranking
+    getDocs,
+    Timestamp, // Importar Timestamp para formatear fechas
+    onSnapshot // Añadido para escuchar cambios en tiempo real
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 console.log('Ranking script loaded and Firebase initialized');
 
 // --- Elementos del DOM ---
 const rankingBody = document.getElementById('ranking-body');
-// const historyList = document.getElementById('history-list'); // El historial no necesita ser en tiempo real por ahora
+const historyList = document.getElementById('history-list');
 
-// --- Función para formatear Timestamps de Firebase (Se mantiene por si se usa en historial u otro lado) ---
+// --- Variables para intervalos y tiempo ---
+let autoRefreshInterval = null;
+const REFRESH_INTERVAL = 60000; // Actualizar cada 60 segundos (ajustar según necesidades)
+let rankingUnsubscribe = null; // Para cancelar la escucha en tiempo real
+let historyUnsubscribe = null; // Para cancelar la escucha en tiempo real
+
+// --- Función para formatear Timestamps de Firebase ---
 function formatFirebaseTimestamp(firebaseTimestamp) {
-    if (!firebaseTimestamp || !firebaseTimestamp.toDate) return 'Fecha desconocida'; // Added check for toDate method
+    if (!firebaseTimestamp) return 'Fecha desconocida';
     // Convertir a objeto Date de JavaScript
     const date = firebaseTimestamp.toDate();
     // Formatear a un string legible (puedes personalizar el formato)
@@ -28,39 +34,42 @@ function formatFirebaseTimestamp(firebaseTimestamp) {
     });
 }
 
-// --- Cargar Ranking Global (AHORA EN TIEMPO REAL) ---
-function listenToRanking() { // Renamed function for clarity
+// --- Cargar Ranking Global en Tiempo Real ---
+function setupRankingListener() {
+    if (rankingUnsubscribe) {
+        rankingUnsubscribe(); // Cancelar escucha anterior si existe
+    }
+
     if (!rankingBody) {
         console.error('Error: Elemento ranking-body no encontrado.');
         return;
     }
-    if (!db) { // Verificar si la inicialización de DB falló
-        console.error("Error: Firestore DB no está inicializado. Ranking no se puede cargar.");
-        rankingBody.innerHTML = '<tr><td colspan="5">Error: No se pudo conectar a la base de datos.</td></tr>';
-        return;
-    }
 
-    rankingBody.innerHTML = '<tr><td colspan="5">Cargando ranking...</td></tr>'; // Mensaje inicial
+    rankingBody.innerHTML = '<tr><td colspan="5">Cargando ranking...</td></tr>'; // Mensaje de carga
 
     try {
+        // Crear la consulta a la colección 'users', ordenando por 'totalScore' descendente, limitando a 100
         const usersRef = collection(db, "users");
         const q = query(usersRef, orderBy("totalScore", "desc"), limit(100));
 
-        // Usar onSnapshot para escuchar cambios en tiempo real
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            rankingBody.innerHTML = ''; // Limpiar tabla antes de volver a dibujar
-            let position = 1;
-
+        // Configurar escucha en tiempo real
+        rankingUnsubscribe = onSnapshot(q, (querySnapshot) => {
             if (querySnapshot.empty) {
                 rankingBody.innerHTML = '<tr><td colspan="5">Aún no hay datos en el ranking. ¡Juega una partida!</td></tr>';
                 return;
             }
 
+            rankingBody.innerHTML = ''; // Limpiar mensaje de carga/datos anteriores
+            let position = 1;
+
             querySnapshot.forEach((doc) => {
                 const userData = doc.data();
                 const row = document.createElement('tr');
-
-                // Añadir clases para estilo si es necesario (ej. basado en posición)
+                
+                // Añadir clases para destacar posiciones (1º, 2º, 3º)
+                if (position <= 3) {
+                    row.classList.add(`rank-position-${position}`);
+                }
 
                 row.innerHTML = `
                     <td>${position}</td>
@@ -72,110 +81,169 @@ function listenToRanking() { // Renamed function for clarity
                 rankingBody.appendChild(row);
                 position++;
             });
-             // Ajustar colspan del mensaje de carga/error en función de las columnas visibles (para móvil)
-            checkColspan();
-
+            
+            console.log('Ranking actualizado en tiempo real');
         }, (error) => {
-            // Manejo de errores de onSnapshot
-            console.error("Error al escuchar el ranking: ", error);
-            rankingBody.innerHTML = '<tr><td colspan="5">Error al cargar el ranking en tiempo real. Inténtalo de nuevo más tarde.</td></tr>';
-             checkColspan(); // Ajustar colspan también en caso de error
+            console.error("Error en la escucha del ranking:", error);
+            rankingBody.innerHTML = '<tr><td colspan="5">Error al cargar el ranking. Inténtalo de nuevo más tarde.</td></tr>';
         });
 
-        // Opcional: guardar la función 'unsubscribe' si necesitas dejar de escuchar más tarde
-        // window.unsubscribeRanking = unsubscribe;
-
     } catch (error) {
-        console.error("Error al configurar el listener del ranking: ", error);
-        rankingBody.innerHTML = '<tr><td colspan="5">Error al configurar la carga del ranking.</td></tr>';
-         checkColspan();
+        console.error("Error al configurar escucha del ranking:", error);
+        rankingBody.innerHTML = '<tr><td colspan="5">Error al cargar el ranking. Inténtalo de nuevo más tarde.</td></tr>';
     }
 }
 
-// --- Cargar Historial de Partidas (se mantiene con getDocs, no necesita tiempo real) ---
-async function loadHistory() {
-    const historyList = document.getElementById('history-list'); // Obtener aquí ya que no es global
+// --- Cargar Historial de Partidas en Tiempo Real ---
+function setupHistoryListener() {
+    if (historyUnsubscribe) {
+        historyUnsubscribe(); // Cancelar escucha anterior si existe
+    }
+
     if (!historyList) {
         console.error('Error: Elemento history-list no encontrado.');
-        return;
-    }
-    if (!db) { // Verificar si la inicialización de DB falló
-        console.error("Error: Firestore DB no está inicializado. Historial no se puede cargar.");
-        historyList.innerHTML = '<p>Error: No se pudo conectar a la base de datos.</p>';
         return;
     }
 
     historyList.innerHTML = '<p>Cargando historial...</p>'; // Mensaje de carga
 
     try {
+        // Crear la consulta a la colección 'matches', ordenando por 'timestamp' descendente, limitando a 20
         const matchesRef = collection(db, "matches");
         const q = query(matchesRef, orderBy("timestamp", "desc"), limit(20));
 
-        const querySnapshot = await getDocs(q); // Usamos getDocs aquí, es suficiente
-
-        if (querySnapshot.empty) {
-            historyList.innerHTML = '<p>No hay partidas registradas en el historial.</p>';
-            return;
-        }
-
-        historyList.innerHTML = ''; // Limpiar mensaje de carga/datos anteriores
-
-        querySnapshot.forEach((doc) => {
-            const matchData = doc.data();
-            const matchEntry = document.createElement('div');
-            matchEntry.classList.add('match-entry');
-
-            let playersHtml = '<div class="match-players">';
-            if (matchData.players && Array.isArray(matchData.players)) {
-                matchData.players.forEach(player => {
-                    const isWinner = matchData.winnerUserId === player.userId;
-                    playersHtml += `
-                        <div class="player-match-info ${isWinner ? 'winner' : ''}">
-                            <strong>${player.displayName || 'Jugador Anónimo'}</strong>
-                            marcó <span class="score">${player.score !== undefined ? player.score : 'N/A'}</span> puntos ${isWinner ? '(Ganador)' : ''}
-                        </div>
-                    `;
-                });
-            } else {
-                playersHtml += '<p>Datos de jugadores no disponibles.</p>';
+        // Configurar escucha en tiempo real
+        historyUnsubscribe = onSnapshot(q, (querySnapshot) => {
+            if (querySnapshot.empty) {
+                historyList.innerHTML = '<p>No hay partidas registradas en el historial.</p>';
+                return;
             }
-            playersHtml += '</div>';
 
-            matchEntry.innerHTML = `
-                <div class="match-header">
-                    <span class="match-date">
-                        <i class="fas fa-calendar-alt"></i>
-                        ${formatFirebaseTimestamp(matchData.timestamp)}
-                     </span>
-                    <!-- Puedes añadir aquí info del ganador si no está en la lista de jugadores -->
-                </div>
-                ${playersHtml}
-            `;
-            historyList.appendChild(matchEntry);
+            historyList.innerHTML = ''; // Limpiar mensaje de carga/datos anteriores
+
+            querySnapshot.forEach((doc) => {
+                const matchData = doc.data();
+                const matchEntry = document.createElement('div');
+                matchEntry.classList.add('match-entry');
+
+                // Añadir clase según resultado (victoria, derrota, timeout)
+                if (matchData.result) {
+                    matchEntry.classList.add(`result-${matchData.result}`);
+                }
+
+                let playersHtml = '<div class="match-players">';
+                if (matchData.players && Array.isArray(matchData.players)) {
+                    matchData.players.forEach(player => {
+                        const isWinner = matchData.winnerUserId === player.userId;
+                        playersHtml += `
+                            <div class="player-match-info ${isWinner ? 'winner' : ''}">
+                                <strong>${player.displayName || 'Jugador Anónimo'}</strong>
+                                marcó <span class="score">${player.score !== undefined ? player.score : 'N/A'}</span> puntos ${isWinner ? '(Ganador)' : ''}
+                            </div>
+                        `;
+                    });
+                } else {
+                    playersHtml += '<p>Datos de jugadores no disponibles.</p>';
+                }
+                playersHtml += '</div>';
+
+                matchEntry.innerHTML = `
+                    <div class="match-header">
+                        <span class="match-date">
+                            <i class="fas fa-calendar-alt"></i>
+                            ${formatFirebaseTimestamp(matchData.timestamp)}
+                         </span>
+                        <!-- Tipo de partida o modo de juego -->
+                        <span class="match-game-type">${matchData.gameType || 'Pasala Che'}</span>
+                    </div>
+                    ${playersHtml}
+                `;
+                historyList.appendChild(matchEntry);
+            });
+            
+            console.log('Historial actualizado en tiempo real');
+        }, (error) => {
+            console.error("Error en la escucha del historial:", error);
+            historyList.innerHTML = '<p>Error al cargar el historial. Inténtalo de nuevo más tarde.</p>';
         });
 
     } catch (error) {
-        console.error("Error al cargar el historial: ", error);
+        console.error("Error al configurar escucha del historial:", error);
         historyList.innerHTML = '<p>Error al cargar el historial. Inténtalo de nuevo más tarde.</p>';
     }
 }
 
-// Función auxiliar para ajustar colspan en mensajes de error/carga (considerando CSS móvil)
-function checkColspan() {
-    if (!rankingBody) return;
-    const td = rankingBody.querySelector('td[colspan]');
-    if (td) {
-        // Si la ventana es pequeña (ej. < 768px), asumimos que se ocultan 2 columnas
-        const colspanValue = window.innerWidth < 768 ? 3 : 5;
-        td.setAttribute('colspan', colspanValue);
+// --- Función para actualizar manualmente ---
+function refreshData() {
+    console.log('Actualizando datos manualmente...');
+    // Desactivar y volver a activar las escuchas
+    if (rankingUnsubscribe) rankingUnsubscribe();
+    if (historyUnsubscribe) historyUnsubscribe();
+    
+    // Configurar nuevas escuchas
+    setupRankingListener();
+    setupHistoryListener();
+    
+    // Mostrar feedback al usuario
+    const refreshButton = document.getElementById('refreshButton');
+    if (refreshButton) {
+        const originalText = refreshButton.innerHTML;
+        refreshButton.innerHTML = '<i class="fas fa-check"></i> ¡Actualizado!';
+        refreshButton.disabled = true;
+        
+        // Restaurar estado original después de 2 segundos
+        setTimeout(() => {
+            refreshButton.innerHTML = originalText;
+            refreshButton.disabled = false;
+        }, 2000);
+    }
+}
+
+// --- Detener escuchas cuando se abandona la página ---
+function cleanupListeners() {
+    console.log('Deteniendo escuchas...');
+    if (rankingUnsubscribe) rankingUnsubscribe();
+    if (historyUnsubscribe) historyUnsubscribe();
+    if (autoRefreshInterval) clearInterval(autoRefreshInterval);
+}
+
+// --- Añadir botón de actualización manual --- 
+function addRefreshButton() {
+    // Comprobar si ya existe un botón de actualización
+    if (document.getElementById('refreshButton')) return;
+
+    // Crear el botón
+    const refreshButton = document.createElement('button');
+    refreshButton.id = 'refreshButton';
+    refreshButton.className = 'refresh-button';
+    refreshButton.innerHTML = '<i class="fas fa-sync-alt"></i> Actualizar datos';
+    refreshButton.addEventListener('click', refreshData);
+    
+    // Insertar el botón al principio de .content-container
+    const contentContainer = document.querySelector('.content-container');
+    if (contentContainer) {
+        contentContainer.insertBefore(refreshButton, contentContainer.firstChild);
     }
 }
 
 // --- Cargar datos al iniciar la página ---
 document.addEventListener('DOMContentLoaded', () => {
-    listenToRanking(); // <--- Llamar a la nueva función con listener
-    loadHistory(); // Cargar historial una vez
+    // Añadir botón de actualización
+    addRefreshButton();
+    
+    // Iniciar escuchas en tiempo real
+    setupRankingListener();
+    setupHistoryListener();
+    
+    // Configurar intervalo para actualización periódica (opcional)
+    autoRefreshInterval = setInterval(() => {
+        console.log('Actualización automática...');
+        refreshData();
+    }, REFRESH_INTERVAL);
+    
+    // Limpiar escuchas al abandonar la página
+    window.addEventListener('beforeunload', cleanupListeners);
+});
 
-    // Reajustar colspan si la ventana cambia de tamaño (para mensajes)
-    window.addEventListener('resize', checkColspan);
-}); 
+// Exponer función de actualización global
+window.refreshRankingData = refreshData; 
