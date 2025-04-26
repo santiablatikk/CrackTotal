@@ -5,19 +5,20 @@ import {
     query,
     orderBy,
     limit,
-    onSnapshot,
-    Timestamp // Importar Timestamp para formatear fechas
+    onSnapshot // <--- Importar onSnapshot
+    // getDocs, // <--- Ya no necesitamos getDocs para el ranking
+    // Timestamp // Timestamp no se usa directamente en el ranking
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 console.log('Ranking script loaded and Firebase initialized');
 
 // --- Elementos del DOM ---
 const rankingBody = document.getElementById('ranking-body');
-const historyList = document.getElementById('history-list');
+// const historyList = document.getElementById('history-list'); // El historial no necesita ser en tiempo real por ahora
 
-// --- Función para formatear Timestamps de Firebase ---
+// --- Función para formatear Timestamps de Firebase (Se mantiene por si se usa en historial u otro lado) ---
 function formatFirebaseTimestamp(firebaseTimestamp) {
-    if (!firebaseTimestamp) return 'Fecha desconocida';
+    if (!firebaseTimestamp || !firebaseTimestamp.toDate) return 'Fecha desconocida'; // Added check for toDate method
     // Convertir a objeto Date de JavaScript
     const date = firebaseTimestamp.toDate();
     // Formatear a un string legible (puedes personalizar el formato)
@@ -27,35 +28,33 @@ function formatFirebaseTimestamp(firebaseTimestamp) {
     });
 }
 
-// --- Cargar Ranking Global (MODIFIED FOR REAL-TIME) ---
-async function loadRanking() {
+// --- Cargar Ranking Global (AHORA EN TIEMPO REAL) ---
+function listenToRanking() { // Renamed function for clarity
     if (!rankingBody) {
         console.error('Error: Elemento ranking-body no encontrado.');
         return;
     }
-    if (!db) { // Check if db initialization failed
-        console.error('Error: Firestore DB not initialized.');
+    if (!db) { // Verificar si la inicialización de DB falló
+        console.error("Error: Firestore DB no está inicializado. Ranking no se puede cargar.");
         rankingBody.innerHTML = '<tr><td colspan="5">Error: No se pudo conectar a la base de datos.</td></tr>';
         return;
     }
 
-    rankingBody.innerHTML = '<tr><td colspan="5">Cargando ranking en tiempo real...</td></tr>'; // Update loading message
+    rankingBody.innerHTML = '<tr><td colspan="5">Cargando ranking...</td></tr>'; // Mensaje inicial
 
     try {
-        // Crear la consulta a la colección 'users', ordenando por 'totalScore' descendente, limitando a 100
         const usersRef = collection(db, "users");
         const q = query(usersRef, orderBy("totalScore", "desc"), limit(100));
 
-        // Usar onSnapshot en lugar de getDocs
+        // Usar onSnapshot para escuchar cambios en tiempo real
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            // Este código se ejecutará cada vez que los datos cambien
+            rankingBody.innerHTML = ''; // Limpiar tabla antes de volver a dibujar
+            let position = 1;
+
             if (querySnapshot.empty) {
                 rankingBody.innerHTML = '<tr><td colspan="5">Aún no hay datos en el ranking. ¡Juega una partida!</td></tr>';
                 return;
             }
-
-            rankingBody.innerHTML = ''; // Limpiar tabla antes de redibujar
-            let position = 1;
 
             querySnapshot.forEach((doc) => {
                 const userData = doc.data();
@@ -73,39 +72,46 @@ async function loadRanking() {
                 rankingBody.appendChild(row);
                 position++;
             });
-            console.log("Ranking actualizado en tiempo real."); // Log para confirmar actualización
+             // Ajustar colspan del mensaje de carga/error en función de las columnas visibles (para móvil)
+            checkColspan();
 
         }, (error) => {
-            // Manejador de errores para onSnapshot
-            console.error("Error al escuchar cambios en el ranking: ", error);
+            // Manejo de errores de onSnapshot
+            console.error("Error al escuchar el ranking: ", error);
             rankingBody.innerHTML = '<tr><td colspan="5">Error al cargar el ranking en tiempo real. Inténtalo de nuevo más tarde.</td></tr>';
+             checkColspan(); // Ajustar colspan también en caso de error
         });
 
-        // Opcional: Guardar la función `unsubscribe` si necesitas dejar de escuchar en algún momento.
-        // window.unsubscribeRanking = unsubscribe; // Ejemplo
+        // Opcional: guardar la función 'unsubscribe' si necesitas dejar de escuchar más tarde
+        // window.unsubscribeRanking = unsubscribe;
 
     } catch (error) {
-        // Error inicial al configurar la consulta o el listener
         console.error("Error al configurar el listener del ranking: ", error);
         rankingBody.innerHTML = '<tr><td colspan="5">Error al configurar la carga del ranking.</td></tr>';
+         checkColspan();
     }
 }
 
-// --- Cargar Historial de Partidas ---
+// --- Cargar Historial de Partidas (se mantiene con getDocs, no necesita tiempo real) ---
 async function loadHistory() {
+    const historyList = document.getElementById('history-list'); // Obtener aquí ya que no es global
     if (!historyList) {
         console.error('Error: Elemento history-list no encontrado.');
+        return;
+    }
+    if (!db) { // Verificar si la inicialización de DB falló
+        console.error("Error: Firestore DB no está inicializado. Historial no se puede cargar.");
+        historyList.innerHTML = '<p>Error: No se pudo conectar a la base de datos.</p>';
         return;
     }
 
     historyList.innerHTML = '<p>Cargando historial...</p>'; // Mensaje de carga
 
     try {
-        // Crear la consulta a la colección 'matches', ordenando por 'timestamp' descendente, limitando a 20
         const matchesRef = collection(db, "matches");
         const q = query(matchesRef, orderBy("timestamp", "desc"), limit(20));
 
-        const querySnapshot = await getDocs(q);
+        const querySnapshot = await getDocs(q); // Usamos getDocs aquí, es suficiente
 
         if (querySnapshot.empty) {
             historyList.innerHTML = '<p>No hay partidas registradas en el historial.</p>';
@@ -154,8 +160,22 @@ async function loadHistory() {
     }
 }
 
+// Función auxiliar para ajustar colspan en mensajes de error/carga (considerando CSS móvil)
+function checkColspan() {
+    if (!rankingBody) return;
+    const td = rankingBody.querySelector('td[colspan]');
+    if (td) {
+        // Si la ventana es pequeña (ej. < 768px), asumimos que se ocultan 2 columnas
+        const colspanValue = window.innerWidth < 768 ? 3 : 5;
+        td.setAttribute('colspan', colspanValue);
+    }
+}
+
 // --- Cargar datos al iniciar la página ---
 document.addEventListener('DOMContentLoaded', () => {
-    loadRanking(); // Ahora inicia el listener en tiempo real
-    loadHistory();
+    listenToRanking(); // <--- Llamar a la nueva función con listener
+    loadHistory(); // Cargar historial una vez
+
+    // Reajustar colspan si la ventana cambia de tamaño (para mensajes)
+    window.addEventListener('resize', checkColspan);
 }); 
