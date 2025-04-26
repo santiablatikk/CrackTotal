@@ -5,8 +5,8 @@ import {
     query,
     orderBy,
     limit,
-    onSnapshot // <--- Importar onSnapshot
-    // getDocs, // <--- Ya no necesitamos getDocs para el ranking
+    onSnapshot, // <--- Para el ranking en tiempo real
+    getDocs // <--- AÑADIR ESTA LÍNEA para el historial
     // Timestamp // Timestamp no se usa directamente en el ranking
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
