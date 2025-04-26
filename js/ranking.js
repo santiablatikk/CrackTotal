@@ -5,112 +5,118 @@ import {
     query,
     orderBy,
     limit,
-    onSnapshot,
-    Timestamp
+    onSnapshot, // <--- ADDED: For real-time updates
+    Timestamp // Importar Timestamp para formatear fechas
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Verificar que la conexión a Firebase está activa
-if (!db) {
-    console.error("La base de datos Firebase no está inicializada correctamente");
-    document.querySelector('#ranking-body').innerHTML = '<tr><td colspan="5">Error al conectar con la base de datos. Por favor, recarga la página.</td></tr>';
-    document.querySelector('#history-list').innerHTML = '<p>Error al conectar con la base de datos. Por favor, recarga la página.</p>';
-}
+console.log('Ranking script loaded and Firebase initialized for real-time updates');
 
-console.log('Ranking script loaded and Firebase initialized');
-
+// --- Elementos del DOM ---
 const rankingBody = document.getElementById('ranking-body');
 const historyList = document.getElementById('history-list');
 
-let autoRefreshInterval = null;
-const REFRESH_INTERVAL = 60000;
-let rankingUnsubscribe = null;
-let historyUnsubscribe = null;
-
+// --- Función para formatear Timestamps de Firebase ---
 function formatFirebaseTimestamp(firebaseTimestamp) {
     if (!firebaseTimestamp) return 'Fecha desconocida';
-    try {
-        const date = firebaseTimestamp.toDate();
-        return date.toLocaleString('es-ES', {
-            year: 'numeric', month: 'long', day: 'numeric',
-            hour: '2-digit', minute: '2-digit'
-        });
-    } catch (error) {
-        console.error("Error al formatear timestamp:", error);
-        return 'Fecha inválida';
-    }
+    // Convertir a objeto Date de JavaScript
+    const date = firebaseTimestamp.toDate();
+    // Formatear a un string legible (puedes personalizar el formato)
+    return date.toLocaleString('es-ES', {
+        year: 'numeric', month: 'long', day: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+    });
 }
 
-function setupRankingListener() {
-    if (rankingUnsubscribe) rankingUnsubscribe();
-    if (!rankingBody) return;
+// --- Cargar Ranking Global (AHORA CON onSnapshot) ---
+function loadRanking() {
+    if (!rankingBody) {
+        console.error('Error: Elemento ranking-body no encontrado.');
+        return;
+    }
 
-    rankingBody.innerHTML = '<tr><td colspan="5">Cargando ranking...</td></tr>';
+    rankingBody.innerHTML = '<tr><td colspan="5">Cargando ranking...</td></tr>'; // Mensaje inicial
 
     try {
         const usersRef = collection(db, "users");
         const q = query(usersRef, orderBy("totalScore", "desc"), limit(100));
 
-        rankingUnsubscribe = onSnapshot(q, (snapshot) => {
-            if (snapshot.empty) {
+        // Usar onSnapshot en lugar de getDocs
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            console.log("Ranking data received/updated"); // Log para ver actualizaciones
+            rankingBody.innerHTML = ''; // Limpiar tabla en cada actualización
+
+            if (querySnapshot.empty) {
                 rankingBody.innerHTML = '<tr><td colspan="5">Aún no hay datos en el ranking. ¡Juega una partida!</td></tr>';
                 return;
             }
-            rankingBody.innerHTML = '';
-            let pos = 1;
-            snapshot.forEach(doc => {
-                const u = doc.data();
+
+            let position = 1;
+            querySnapshot.forEach((doc) => {
+                const userData = doc.data();
                 const row = document.createElement('tr');
-                if (pos <= 3) row.classList.add(`rank-position-${pos}`);
+
                 row.innerHTML = `
-                    <td>${pos}</td>
-                    <td class="player-name-rank">${u.displayName || 'Jugador Anónimo'}</td>
-                    <td class="score-rank">${u.totalScore || 0}</td>
-                    <td>${u.matchesPlayed || 0}</td>
-                    <td>${u.wins || 0}</td>
+                    <td>${position}</td>
+                    <td class="player-name-rank">${userData.displayName || 'Jugador Anónimo'}</td>
+                    <td class="score-rank">${userData.totalScore || 0}</td>
+                    <td>${userData.matchesPlayed || 0}</td>
+                    <td>${userData.wins || 0}</td>
                 `;
                 rankingBody.appendChild(row);
-                pos++;
+                position++;
             });
-        }, (err) => {
-            console.error("Error en la escucha del ranking:", err);
-            rankingBody.innerHTML = '<tr><td colspan="5">Error al cargar el ranking. Inténtalo de nuevo más tarde.</td></tr>';
+        }, (error) => {
+            // Manejo de errores del listener
+            console.error("Error al escuchar el ranking: ", error);
+            rankingBody.innerHTML = '<tr><td colspan="5">Error al cargar el ranking en tiempo real. Inténtalo de nuevo más tarde.</td></tr>';
         });
+
+        // Podrías guardar 'unsubscribe' si necesitaras detener el listener en algún momento,
+        // pero para una página de ranking generalmente quieres que siga escuchando.
+
     } catch (error) {
-        console.error("Error al configurar escucha del ranking:", error);
-        rankingBody.innerHTML = '<tr><td colspan="5">Error al cargar el ranking. Inténtalo de nuevo más tarde.</td></tr>';
+        // Error inicial al configurar la consulta (raro)
+        console.error("Error al configurar la consulta del ranking: ", error);
+        rankingBody.innerHTML = '<tr><td colspan="5">Error al configurar la carga del ranking.</td></tr>';
     }
 }
 
-function setupHistoryListener() {
-    if (historyUnsubscribe) historyUnsubscribe();
-    if (!historyList) return;
+// --- Cargar Historial de Partidas (AHORA CON onSnapshot) ---
+function loadHistory() {
+    if (!historyList) {
+        console.error('Error: Elemento history-list no encontrado.');
+        return;
+    }
 
-    historyList.innerHTML = '<p>Cargando historial...</p>';
+    historyList.innerHTML = '<p>Cargando historial...</p>'; // Mensaje inicial
 
     try {
         const matchesRef = collection(db, "matches");
         const q = query(matchesRef, orderBy("timestamp", "desc"), limit(20));
 
-        historyUnsubscribe = onSnapshot(q, (snapshot) => {
-            if (snapshot.empty) {
+        // Usar onSnapshot en lugar de getDocs
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            console.log("History data received/updated"); // Log para ver actualizaciones
+            historyList.innerHTML = ''; // Limpiar lista en cada actualización
+
+            if (querySnapshot.empty) {
                 historyList.innerHTML = '<p>No hay partidas registradas en el historial.</p>';
                 return;
             }
-            historyList.innerHTML = '';
-            snapshot.forEach(doc => {
-                const m = doc.data();
-                const entry = document.createElement('div');
-                entry.classList.add('match-entry');
-                if (m.result) entry.classList.add(`result-${m.result}`);
+
+            querySnapshot.forEach((doc) => {
+                const matchData = doc.data();
+                const matchEntry = document.createElement('div');
+                matchEntry.classList.add('match-entry');
 
                 let playersHtml = '<div class="match-players">';
-                if (Array.isArray(m.players)) {
-                    m.players.forEach(p => {
-                        const win = m.winnerUserId === p.userId;
+                if (matchData.players && Array.isArray(matchData.players)) {
+                    matchData.players.forEach(player => {
+                        const isWinner = matchData.winnerUserId === player.userId;
                         playersHtml += `
-                            <div class="player-match-info ${win ? 'winner' : ''}">
-                                <strong>${p.displayName || 'Jugador Anónimo'}</strong>
-                                marcó <span class="score">${p.score ?? 'N/A'}</span> puntos ${win ? '(Ganador)' : ''}
+                            <div class="player-match-info ${isWinner ? 'winner' : ''}">
+                                <strong>${player.displayName || 'Jugador Anónimo'}</strong>
+                                marcó <span class="score">${player.score !== undefined ? player.score : 'N/A'}</span> puntos ${isWinner ? '(Ganador)' : ''}
                             </div>
                         `;
                     });
@@ -119,68 +125,42 @@ function setupHistoryListener() {
                 }
                 playersHtml += '</div>';
 
-                entry.innerHTML = `
+                matchEntry.innerHTML = `
                     <div class="match-header">
                         <span class="match-date">
                             <i class="fas fa-calendar-alt"></i>
-                            ${formatFirebaseTimestamp(m.timestamp)}
-                        </span>
-                        <span class="match-game-type">${m.gameType || 'Pasala Che'}</span>
+                            ${formatFirebaseTimestamp(matchData.timestamp)}
+                         </span>
                     </div>
                     ${playersHtml}
                 `;
-                historyList.appendChild(entry);
+                historyList.appendChild(matchEntry);
             });
-        }, (err) => {
-            console.error("Error en la escucha del historial:", err);
-            historyList.innerHTML = '<p>Error al cargar el historial. Inténtalo de nuevo más tarde.</p>';
+        }, (error) => {
+            // Manejo de errores del listener
+            console.error("Error al escuchar el historial: ", error);
+            historyList.innerHTML = '<p>Error al cargar el historial en tiempo real. Inténtalo de nuevo más tarde.</p>';
         });
+
+        // Podrías guardar 'unsubscribe' si fuera necesario detener el listener.
+
     } catch (error) {
-        console.error("Error al configurar escucha del historial:", error);
-        historyList.innerHTML = '<p>Error al cargar el historial. Inténtalo de nuevo más tarde.</p>';
+        // Error inicial al configurar la consulta (raro)
+        console.error("Error al configurar la consulta del historial: ", error);
+        historyList.innerHTML = '<p>Error al configurar la carga del historial.</p>';
     }
 }
 
-function refreshData() {
-    if (rankingUnsubscribe) rankingUnsubscribe();
-    if (historyUnsubscribe) historyUnsubscribe();
-    setupRankingListener();
-    setupHistoryListener();
-    const btn = document.getElementById('refreshButton');
-    if (btn) {
-        const txt = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> ¡Actualizado!';
-        btn.disabled = true;
-        setTimeout(() => {
-            btn.innerHTML = txt;
-            btn.disabled = false;
-        }, 2000);
-    }
-}
-
-function cleanupListeners() {
-    if (rankingUnsubscribe) rankingUnsubscribe();
-    if (historyUnsubscribe) historyUnsubscribe();
-    if (autoRefreshInterval) clearInterval(autoRefreshInterval);
-}
-
-function addRefreshButton() {
-    if (document.getElementById('refreshButton')) return;
-    const btn = document.createElement('button');
-    btn.id = 'refreshButton';
-    btn.className = 'refresh-button';
-    btn.innerHTML = '<i class="fas fa-sync-alt"></i> Actualizar datos';
-    btn.addEventListener('click', refreshData);
-    const container = document.querySelector('.content-container');
-    if (container) container.insertBefore(btn, container.firstChild);
-}
-
+// --- Cargar datos al iniciar la página --- (Sin cambios, llama a las funciones que AHORA configuran listeners)
 document.addEventListener('DOMContentLoaded', () => {
-    addRefreshButton();
-    setupRankingListener();
-    setupHistoryListener();
-    autoRefreshInterval = setInterval(refreshData, REFRESH_INTERVAL);
-    window.addEventListener('beforeunload', cleanupListeners);
-});
-
-window.refreshRankingData = refreshData;
+    // Verificar que db esté inicializado correctamente
+    if (db) {
+        loadRanking();
+        loadHistory();
+    } else {
+        console.error("Firestore no está inicializado. No se puede cargar el ranking ni el historial.");
+        // Podrías mostrar mensajes de error en la UI aquí también si db es null
+        if (rankingBody) rankingBody.innerHTML = '<tr><td colspan="5">Error de conexión con la base de datos.</td></tr>';
+        if (historyList) historyList.innerHTML = '<p>Error de conexión con la base de datos.</p>';
+    }
+}); 

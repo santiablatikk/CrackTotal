@@ -265,18 +265,22 @@
     <script type="module" src="js/ranking.js"></script>
     <!-- Script para el botón compartir (si lo necesitas) -->
     <script>
-        function shareSite() {
-            if (navigator.share) {
-                navigator.share({
-                    title: document.title,
-                    text: '¡Mira el ranking y el historial de CrackTotal!',
-                    url: window.location.href
-                })
-                .then(() => console.log('Contenido compartido con éxito'))
-                .catch((err) => console.error('Error al compartir:', err));
-            } else {
-                alert('Tu navegador no soporta la funcionalidad de compartir. Copia manualmente el enlace.');
-            }
+        const shareButton = document.getElementById('shareButton');
+        if (shareButton && navigator.share) {
+            shareButton.addEventListener('click', async () => {
+                try {
+                    await navigator.share({
+                        title: document.title,
+                        text: '¡Mira el ranking y el historial de CrackTotal!',
+                        url: window.location.href
+                    });
+                    console.log('Contenido compartido con éxito');
+                } catch (err) {
+                    console.error('Error al compartir:', err);
+                }
+            });
+        } else if (shareButton) {
+            shareButton.style.display = 'none'; // Ocultar si la API no está soportada
         }
     </script>
 
