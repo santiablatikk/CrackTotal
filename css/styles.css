@@ -56,42 +56,57 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 40px 20px; /* Added more padding */
+    padding: 40px 20px;
+    /* Añadir perspectiva para posibles efectos 3D sutiles */
+    /* perspective: 1500px; */
 }
 
 .welcome-card {
-    background: rgba(36, 38, 41, 0.85); /* Slightly less transparent */
+    /* Usar un gradiente más oscuro y sutil */
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
     border-radius: 24px;
     box-shadow: var(--shadow-lg);
-    padding: 50px; /* Increased padding */
+    padding: 50px;
     width: 100%;
-    max-width: 550px; /* Slightly wider */
+    max-width: 550px;
     position: relative;
     overflow: hidden;
     animation: fadeScale 0.8s ease-out;
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Slightly more visible border */
-    backdrop-filter: blur(15px);
+    /* Borde primario más sutil */
+    border: 1px solid rgba(var(--primary-rgb), 0.15);
+    /* Reducir blur */
+    backdrop-filter: blur(10px);
+    /* Añadir una transición para hover (opcional) */
+    /* transition: transform 0.4s ease, box-shadow 0.4s ease; */
 }
 
-.welcome-card::before {
+/* Opcional: Efecto hover sutil para la tarjeta */
+/*
++.welcome-card:hover {
++    transform: translateY(-5px) scale(1.01);
++    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
++}
++*/
+
+.welcome-card::before { /* Shimmer effect */
     content: '';
     position: absolute;
-    top: -100%; /* Adjusted position */
+    top: -100%;
     left: -50%;
     width: 200%;
     height: 200%;
     background: linear-gradient(
         to bottom right,
-        transparent,
-        rgba(127, 90, 248, 0.04), /* Adjusted opacity */
-        rgba(127, 90, 248, 0.06),
-        rgba(127, 90, 248, 0.02),
-        transparent
-    );
-    transform: rotate(30deg);
-    animation: shimmerEffect 10s linear infinite; /* Slower animation */
+        transparent 40%, /* Más transparente */
+        rgba(var(--primary-rgb), 0.03),
+        rgba(var(--primary-rgb), 0.05),
+        rgba(var(--primary-rgb), 0.02),
+        transparent 60%
+     );
+     transform: rotate(30deg);
+    animation: shimmerEffect 15s linear infinite; /* Aún más lento */
     pointer-events: none;
-    opacity: 0.8; /* Slightly more visible shimmer */
+    opacity: 0.5; /* Más sutil */
 }
 
 /* Logo styling */
@@ -4187,4 +4202,96 @@ h3:not([class]) {
         padding: 4px 8px;
         min-width: 70px;
     }
+}
+
+/* Formulario */
+.name-input-container {
+    width: 100%;
+}
+
+#nameForm label {
+    display: block;
+    margin-bottom: 12px; /* Más espacio */
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-weight: 500;
+    text-align: center; /* Centrar etiqueta */
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px; /* Más espacio debajo del input */
+}
+
+input#playerName {
+    padding: 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    font-family: 'Montserrat', sans-serif;
+    background-color: rgba(var(--darker-bg-rgb), 0.6); /* Fondo más oscuro y sutil */
+    color: var(--text);
+    box-shadow: var(--shadow-inner);
+    width: 100%; /* Asegurar ancho completo */
+    text-align: center; /* Centrar texto placeholder/input */
+}
+
+input#playerName:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(127, 90, 248, 0.2), var(--shadow-inner);
+    background-color: rgba(var(--darker-bg-rgb), 0.8); /* Ligeramente más opaco en focus */
+}
+
+/* Eliminar el borde animado que no se usaba bien */
+.input-focus-border {
+    display: none;
+}
+
+/* Botón Empezar */
+button#startButton {
+    background: var(--gradient-accent); /* Usar gradiente accent */
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 15px auto 0 auto; /* Centrar botón */
+    width: 80%; /* Limitar ancho del botón */
+    max-width: 250px;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    box-shadow: 0 8px 20px rgba(255, 142, 60, 0.3); /* Sombra accent */
+}
+
+/* Efecto de gradiente animado en hover para botón */
+button#startButton::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%; /* Empezar fuera a la izquierda */
+    width: 200%; /* Más ancho para cubrir */
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+    z-index: -1;
+    transform: skewX(-25deg); /* Inclinar el brillo */
+    transition: left 0.6s ease; /* Transición de posición */
+}
+
+button#startButton:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 25px rgba(255, 142, 60, 0.4); /* Sombra accent más fuerte */
+}
+
+button#startButton:hover::after {
+    left: 50%; /* Mover el brillo al pasar */
 }
