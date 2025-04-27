@@ -144,9 +144,9 @@ body {
 
 /* Estilos para la pelota */
 .logo-ball {
-    font-size: 1.5rem; /* Adjust size as needed */
-    color: var(--primary);
-    margin-left: 0.5rem;
+    font-size: 0.8em; /* Tamaño del icono relativo al texto del logo */
+    color: var(--primary); /* Color del icono */
+    /* margin-left es manejado por gap en .logo */
     display: inline-block; /* Ensure transform works */
     animation: bounce 1.5s infinite ease-in-out;
 }
@@ -4295,3 +4295,42 @@ button#startButton:hover {
 button#startButton:hover::after {
     left: 50%; /* Mover el brillo al pasar */
 }
+
+/* --- Estilos para botones extra (Perfil/Ranking) debajo del grid --- */
+.extra-links-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Espacio entre botones */
+    margin-top: 35px; /* Espacio sobre los botones */
+    margin-bottom: 35px; /* Espacio debajo antes de "Coming Soon" */
+    flex-wrap: wrap; /* Permitir que se envuelvan en pantallas pequeñas */
+}
+
+.extra-link-button {
+    background: rgba(var(--primary-rgb), 0.1); /* Fondo sutil primario */
+    border: 1px solid rgba(var(--primary-rgb), 0.25);
+    color: var(--primary-light);
+    padding: 12px 25px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.extra-link-button:hover {
+    background: rgba(var(--primary-rgb), 0.2);
+    transform: translateY(-3px);
+    color: white;
+    box-shadow: 0 8px 15px rgba(var(--primary-rgb), 0.2);
+}
+
+.extra-link-button i {
+    font-size: 1.1em; /* Icono ligeramente más grande que el texto */
+}
+/* --- Fin estilos botones extra --- */
