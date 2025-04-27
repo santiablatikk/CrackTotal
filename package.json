@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node build-config.js",
     "preview": "vite preview",
     "start": "http-server ./dist -p $PORT -o"
   },
