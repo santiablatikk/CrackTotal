@@ -38,7 +38,13 @@ function loadRanking() {
 
     try {
         const usersRef = collection(db, "users");
-        const q = query(usersRef, orderBy("totalScore", "desc"), limit(100));
+        // NUEVA Consulta: Ordenar por rendimiento (Victorias DESC, Aciertos DESC, Derrotas ASC, Errores ASC)
+        const q = query(usersRef, 
+                        orderBy("wins", "desc"), 
+                        orderBy("totalScore", "desc"), 
+                        orderBy("totalLosses", "asc"),
+                        orderBy("totalErrors", "asc"),
+                        limit(100));
 
         // Usar onSnapshot en lugar de getDocs
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -58,9 +64,12 @@ function loadRanking() {
             row.innerHTML = `
                 <td>${position}</td>
                 <td class="player-name-rank">${userData.displayName || 'Jugador Anónimo'}</td>
-                <td class="score-rank">${userData.totalScore || 0}</td>
-                <td>${userData.matchesPlayed || 0}</td>
                 <td>${userData.wins || 0}</td>
+                <td>${userData.totalLosses || 0}</td>
+                <td>${userData.matchesPlayed || 0}</td>
+                <td class="score-rank">${userData.totalScore || 0}</td>
+                <td>${userData.totalErrors || 0}</td>
+                <td>${userData.totalPasses || 0}</td>
             `;
             rankingBody.appendChild(row);
             position++;
@@ -107,33 +116,101 @@ function loadHistory() {
         querySnapshot.forEach((doc) => {
             const matchData = doc.data();
             const matchEntry = document.createElement('div');
-            matchEntry.classList.add('match-entry');
+            // Añadir clase nueva para el estilo tarjeta
+            matchEntry.classList.add('match-entry', 'match-card'); 
 
-            let playersHtml = '<div class="match-players">';
+            // --- Preparar datos adicionales (sin cambios) ---
+            let resultIcon = '';
+            let resultText = matchData.result || 'Desconocido';
+            let resultClass = '';
+            switch(matchData.result) {
+                case 'victory':
+                    resultIcon = '<i class="fas fa-trophy result-icon"></i>';
+                    resultText = 'Victoria';
+                    resultClass = 'victory';
+                    break;
+                case 'defeat':
+                    resultIcon = '<i class="fas fa-times-circle result-icon"></i>';
+                    resultText = 'Derrota';
+                    resultClass = 'defeat';
+                    break;
+                case 'timeout':
+                    resultIcon = '<i class="fas fa-clock result-icon"></i>';
+                    resultText = 'Tiempo Agotado';
+                    resultClass = 'timeout';
+                    break;
+                default:
+                     resultIcon = '<i class="fas fa-question-circle result-icon"></i>';
+            }
+
+            let difficultyText = (matchData.difficulty || 'normal').charAt(0).toUpperCase() + (matchData.difficulty || 'normal').slice(1);
+            
+            let timeFormatted = 'N/A';
+            if (typeof matchData.timeSpent === 'number') {
+                const minutes = Math.floor(matchData.timeSpent / 60);
+                const seconds = matchData.timeSpent % 60;
+                timeFormatted = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            // CORREGIDO: Acceder a los errores dentro del primer jugador
+            let errorsValue = 'N/A';
+            if (matchData.players && Array.isArray(matchData.players) && matchData.players.length > 0 && matchData.players[0].errors !== undefined) {
+                errorsValue = matchData.players[0].errors;
+            }
+            const errorsText = errorsValue;
+            const passesText = matchData.passes !== undefined ? matchData.passes : 'N/A';
+            // --- Fin Preparar datos adicionales ---
+
+
+            let playerInfoHtml = '';
             if (matchData.players && Array.isArray(matchData.players)) {
-                matchData.players.forEach(player => {
-                    const isWinner = matchData.winnerUserId === player.userId;
-                    playersHtml += `
-                        <div class="player-match-info ${isWinner ? 'winner' : ''}">
-                            <strong>${player.displayName || 'Jugador Anónimo'}</strong>
-                            marcó <span class="score">${player.score !== undefined ? player.score : 'N/A'}</span> puntos ${isWinner ? '(Ganador)' : ''}
+                // Asumimos un solo jugador para PasalaChe por ahora
+                const player = matchData.players[0]; 
+                if(player) {
+                    playerInfoHtml = `
+                        <div class="player-name">${player.displayName || 'Jugador Anónimo'}</div>
+                        <div class="player-score">
+                            <span class="score-value">${player.score !== undefined ? player.score : 'N/A'}</span> Aciertos
                         </div>
                     `;
-                });
+                } else {
+                     playerInfoHtml = '<p>Datos de jugador no disponibles.</p>';
+                }
             } else {
-                playersHtml += '<p>Datos de jugadores no disponibles.</p>';
+                playerInfoHtml = '<p>Datos de jugadores no disponibles.</p>';
             }
-            playersHtml += '</div>';
 
+            // --- NUEVA Estructura HTML para matchEntry (Estilo Tarjeta) --- 
             matchEntry.innerHTML = `
-                <div class="match-header">
+                <div class="match-card-header">
                     <span class="match-date">
-                        <i class="fas fa-calendar-alt"></i>
+                        <i class="far fa-calendar-alt"></i> <!-- Icono diferente -->
                         ${formatFirebaseTimestamp(matchData.timestamp)}
+                    </span>
+                    <span class="match-result-badge ${resultClass}">
+                        ${resultIcon} ${resultText}
+                    </span>
+                </div>
+                <div class="match-card-body">
+                    ${playerInfoHtml}
+                </div>
+                <div class="match-card-footer">
+                    <span class="detail-item" title="Dificultad">
+                        <i class="fas fa-cogs"></i> ${difficultyText} <!-- Icono diferente -->
+                    </span>
+                    <span class="detail-item" title="Tiempo Empleado">
+                        <i class="far fa-clock"></i> ${timeFormatted} <!-- Icono diferente -->
+                    </span>
+                     <span class="detail-item error-count" title="Errores">
+                        <i class="fas fa-times"></i> ${errorsText} <!-- Cambiado icono a fa-times -->
+                     </span>
+                     <span class="detail-item" title="Pasadas">
+                        <i class="fas fa-forward"></i> ${passesText} <!-- Añadido pases -->
                      </span>
                 </div>
-                ${playersHtml}
             `;
+            // --- Fin NUEVA Estructura HTML --- 
+
             historyList.appendChild(matchEntry);
         });
         }, (error) => {

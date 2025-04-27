@@ -110,67 +110,127 @@
             margin-top: 1.5rem;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.5rem; /* Aumentar espacio entre tarjetas */
         }
 
-        .match-entry {
-            background: rgba(var(--darker-bg-rgb, 15, 23, 42), 0.4);
-            border-radius: 8px;
-            padding: 1rem 1.25rem;
+        /* --- Inicio: Nuevo Estilo Tarjeta para Historial --- */
+        .match-card {
+            background: var(--darker-bg, #111827);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-left-color 0.2s ease;
+            border-left: 5px solid var(--primary, #7F5AF8);
             border: 1px solid rgba(var(--border-rgb, 56, 58, 71), 0.5);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border-left: 4px solid var(--secondary, #2CB67D); /* Color secundario para historial */
         }
 
-        .match-entry:hover {
-             transform: translateY(-3px);
-             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-             border-left-color: var(--secondary-dark, #239D6A);
+        .match-card:hover {
+             transform: translateY(-4px);
+             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+             border-left-color: var(--accent, #FF8E3C);
+             background: var(--card-bg-hover, #1f2937);
         }
 
-        .match-header {
+        .match-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.8rem;
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            padding: 0.7rem 1.3rem;
+            background-color: rgba(var(--primary-rgb, 127, 90, 248), 0.1);
+            border-bottom: 1px solid rgba(var(--primary-rgb, 127, 90, 248), 0.2);
+            font-size: 0.8rem;
+            color: var(--text-light, #a0aec0);
         }
 
-        .match-date {
-            font-size: 0.8rem;
-            color: var(--text-light, #94A1B2);
+        .match-card-header .match-date i {
+             margin-right: 0.4rem;
+             color: var(--primary-light, #AB8BFA);
         }
-         .match-date i {
-             margin-right: 0.3rem;
-             color: var(--secondary, #2CB67D);
+
+        .match-result-badge {
+            font-weight: 600;
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px; /* Más redondeado tipo badge */
+            font-size: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        /* Colores para badges (similar a antes pero aplicado a .match-result-badge) */
+        .match-result-badge.victory {
+            color: #E0F2F7; /* Texto claro */
+            background-color: var(--success, #31D0AA);
+        }
+        .match-result-badge.defeat {
+            color: #FCE8EC; /* Texto claro */
+            background-color: var(--danger, #FF5470);
+        }
+        .match-result-badge.timeout {
+            color: #2D231A;
+            background-color: var(--warning, #f59e0b);
+        }
+         .match-result-badge .result-icon {
+             font-size: 0.9em;
          }
 
-        .match-players {
+        .match-card-body {
+            padding: 1.2rem 1.3rem;
             display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            background-color: rgba(var(--darker-bg-rgb, 15, 23, 42), 0.2);
         }
 
-        .player-match-info {
-            font-size: 0.9rem;
+        .match-card-body .player-name {
+            font-size: 1.1rem;
+            font-weight: 600;
             color: var(--text, #FFFFFE);
         }
-        .player-match-info strong {
-             color: var(--primary-light, #AB8BFA); /* Nombre de jugador destacado */
-             margin-right: 0.5rem;
+
+        .match-card-body .player-score {
+            text-align: right;
+            color: var(--text-light, #94A1B2);
+            font-size: 0.9rem;
         }
-        .player-match-info .score {
-             font-weight: 600;
-             color: var(--accent, #FF8E3C); /* Puntuación destacada */
-             margin-left: 0.5rem;
+
+        .match-card-body .player-score .score-value {
+            display: block;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent, #FF8E3C);
+            margin-bottom: 0.1rem;
+            line-height: 1.1;
         }
-         .player-match-info.winner strong {
-             color: var(--success, #31D0AA); /* Destacar ganador */
-         }
-         .player-match-info.winner .score {
-             color: var(--success, #31D0AA);
-         }
+
+        .match-card-footer {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0.8rem 1.2rem;
+            background-color: rgba(var(--darker-bg-rgb, 15, 23, 42), 0.5); /* Fondo footer */
+            border-top: 1px solid rgba(var(--border-rgb, 56, 58, 71), 0.4);
+            font-size: 0.8rem;
+        }
+
+        /* Estilos para los items de detalle en el footer (reutiliza detail-item) */
+        .match-card-footer .detail-item {
+            display: inline-flex;
+            align-items: center;
+            color: var(--text-light, #94A1B2);
+            gap: 0.4rem;
+        }
+
+        .match-card-footer .detail-item i {
+            color: var(--secondary, #2CB67D);
+            width: 1.2em;
+            text-align: center;
+            font-size: 0.95em;
+        }
+
+        /* --- Fin: Nuevo Estilo Tarjeta para Historial --- */
 
         /* Estilos para mensajes de carga/error */
         #ranking-body td,
@@ -180,6 +240,64 @@
             padding: 2rem;
             font-style: italic;
         }
+
+        /* Estilos para la sección de detalles de la partida */
+        .match-details {
+            display: flex;
+            justify-content: space-around; /* O space-between si prefieres */
+            align-items: center;
+            margin-top: 0.8rem; /* Espacio sobre los detalles */
+            padding-top: 0.8rem; /* Espacio sobre los detalles */
+            border-top: 1px solid rgba(var(--border-rgb, 56, 58, 71), 0.3); /* Línea separadora sutil */
+            flex-wrap: wrap; /* Para que quepa en pantallas pequeñas */
+            gap: 1rem; /* Espacio entre items si se envuelven */
+        }
+
+        .detail-item {
+            display: inline-flex; /* Usar inline-flex para alinear icono y texto */
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-light, #94A1B2);
+            gap: 0.4rem; /* Espacio entre icono y texto */
+        }
+
+        .detail-item i {
+            color: var(--secondary, #2CB67D); /* Color secundario para iconos de detalle */
+            font-size: 0.9em; /* Iconos ligeramente más pequeños */
+            width: 1.2em; /* Ancho fijo para alinear texto */
+            text-align: center;
+        }
+
+        /* Estilos específicos para iconos de resultado */
+        .match-result {
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .match-result.victory {
+            color: var(--success-dark, #1F8A70);
+            background-color: rgba(var(--success-rgb, 49, 208, 170), 0.15);
+        }
+        .match-result.defeat {
+            color: var(--danger-dark, #CC334E);
+            background-color: rgba(var(--danger-rgb, 255, 84, 112), 0.15);
+        }
+        .match-result.timeout {
+            color: var(--warning-dark, #D97706);
+            background-color: rgba(var(--warning-rgb, 255, 142, 60), 0.15);
+        }
+
+        .match-result .result-icon {
+            font-size: 1em;
+        }
+        .match-result.victory .result-icon { color: var(--success, #31D0AA); }
+        .match-result.defeat .result-icon { color: var(--danger, #FF5470); }
+        .match-result.timeout .result-icon { color: var(--warning, #FF8E3C); }
 
     </style>
 </head>
@@ -213,15 +331,17 @@
                             <tr>
                                 <th>Pos.</th>
                                 <th>Jugador</th>
-                                <th>Puntos</th>
-                                <th>Jugadas</th>
                                 <th>Victorias</th>
-                                <!-- Agrega más columnas si es necesario -->
+                                <th>Derrotas</th>
+                                <th>Jugadas</th>
+                                <th>Aciertos</th>
+                                <th>Errores</th>
+                                <th>Pasadas</th>
                             </tr>
                         </thead>
                         <tbody id="ranking-body">
                             <!-- Las filas del ranking se cargarán aquí -->
-                            <tr><td colspan="5">Cargando ranking...</td></tr>
+                            <tr><td colspan="8">Cargando ranking...</td></tr>
                         </tbody>
                     </table>
                 </div>

@@ -967,6 +967,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     totalScore: increment(correctAnswers), // Incrementar por los aciertos de ESTA partida
                     matchesPlayed: increment(1),
                     wins: increment(isWin ? 1 : 0),
+                    totalLosses: increment(!isWin ? 1 : 0), // <-- AÑADIDO: Incrementar derrotas si no es victoria
+                    totalErrors: increment(incorrectAnswers || 0), // <-- AÑADIDO: Incrementar total de errores
+                    totalPasses: increment(passedAnswers || 0), // <-- AÑADIDO: Incrementar total de pases
                     // Añade otros campos si los quieres trackear globalmente (ej. errores totales)
                     // totalErrors: increment(incorrectAnswers)
                     lastPlayed: serverTimestamp() // Marcar cuándo jugó por última vez
@@ -987,12 +990,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         displayName: userDisplayName,
                         score: correctAnswers,
                         errors: incorrectAnswers // Guardar errores de esta partida
+                        // No añadimos passes aquí, ya que es una estadística de la partida general
                     }
                     // Si hubiera más jugadores, se añadirían aquí
                 ],
                 result: result, // 'victory', 'defeat', 'timeout'
                 timeSpent: timeSpent,
-                difficulty: document.querySelector('.difficulty-btn.active')?.getAttribute('data-difficulty') || 'normal'
+                difficulty: document.querySelector('.difficulty-btn.active')?.getAttribute('data-difficulty') || 'normal',
+                passes: passedAnswers || 0 // <-- AÑADIDO: Guardar pases de esta partida
                 // Podrías añadir winnerUserId si fuera un juego multijugador
                 // winnerUserId: (isWin ? userId : null)
             };
