@@ -1,5 +1,6 @@
 // Importar funciones de Firestore y la instancia db inicializada
 import { db } from './firebase-init.js';
+import { userController } from './userController.js';
 import {
     collection,
     query,
@@ -25,6 +26,16 @@ function formatFirebaseTimestamp(firebaseTimestamp) {
         year: 'numeric', month: 'long', day: 'numeric',
         hour: '2-digit', minute: '2-digit'
     });
+}
+
+// Función para resaltar al usuario actual en el ranking
+function highlightCurrentUser(row, userId) {
+    if (userId === userController.userId) {
+        row.classList.add('current-user-row');
+        // Añadir indicador visual
+        const positionCell = row.cells[0];
+        positionCell.innerHTML = `<span class="current-user-indicator">👤</span> ${positionCell.innerText}`;
+    }
 }
 
 // --- Cargar Ranking Global (AHORA CON onSnapshot) ---
@@ -53,15 +64,23 @@ function loadRanking() {
             let position = 1;
             querySnapshot.forEach((doc) => {
                 const userData = doc.data();
+                const userId = doc.id;
                 const row = document.createElement('tr');
+                
+                // Usar nombre real del usuario, con fallback a "Jugador Anónimo"
+                const displayName = userData.displayName || 'Jugador Anónimo';
 
                 row.innerHTML = `
                     <td>${position}</td>
-                    <td class="player-name-rank">${userData.displayName || 'Jugador Anónimo'}</td>
+                    <td class="player-name-rank">${displayName}</td>
                     <td class="score-rank">${userData.totalScore || 0}</td>
                     <td>${userData.matchesPlayed || 0}</td>
                     <td>${userData.wins || 0}</td>
                 `;
+                
+                // Resaltar fila si es el usuario actual
+                highlightCurrentUser(row, userId);
+                
                 rankingBody.appendChild(row);
                 position++;
             });
@@ -113,10 +132,13 @@ function loadHistory() {
                 if (matchData.players && Array.isArray(matchData.players)) {
                     matchData.players.forEach(player => {
                         const isWinner = matchData.winnerUserId === player.userId;
+                        const isCurrentUser = player.userId === userController.userId;
+                        
                         playersHtml += `
-                            <div class="player-match-info ${isWinner ? 'winner' : ''}">
+                            <div class="player-match-info ${isWinner ? 'winner' : ''} ${isCurrentUser ? 'current-user' : ''}">
                                 <strong>${player.displayName || 'Jugador Anónimo'}</strong>
                                 marcó <span class="score">${player.score !== undefined ? player.score : 'N/A'}</span> puntos ${isWinner ? '(Ganador)' : ''}
+                                ${isCurrentUser ? '<span class="current-user-badge">Tú</span>' : ''}
                             </div>
                         `;
                     });
@@ -151,12 +173,16 @@ function loadHistory() {
     }
 }
 
-// --- Cargar datos al iniciar la página --- (Sin cambios, llama a las funciones que AHORA configuran listeners)
+// --- Cargar datos al iniciar la página ---
 document.addEventListener('DOMContentLoaded', () => {
     // Verificar que db esté inicializado correctamente
     if (db) {
-        loadRanking();
-        loadHistory();
+        // Asegurarnos que el controlador de usuario esté cargado primero
+        userController.addUserListener(() => {
+            // Una vez que tenemos los datos del usuario, cargar ranking e historial
+            loadRanking();
+            loadHistory();
+        });
     } else {
         console.error("Firestore no está inicializado. No se puede cargar el ranking ni el historial.");
         // Podrías mostrar mensajes de error en la UI aquí también si db es null

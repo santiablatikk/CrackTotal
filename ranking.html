@@ -104,6 +104,38 @@
             font-weight: 700;
             color: var(--accent, #FF8E3C); /* Usar color accent para puntos */
         }
+        
+        /* Estilos para resaltar al usuario actual en el ranking */
+        .history-table tr.current-user-row {
+            background-color: rgba(var(--accent-rgb, 255, 142, 60), 0.15) !important;
+            border-left: 3px solid var(--accent, #FF8E3C);
+            position: relative;
+        }
+        
+        .history-table tr.current-user-row:hover {
+            background-color: rgba(var(--accent-rgb, 255, 142, 60), 0.25) !important;
+        }
+        
+        .history-table tr.current-user-row td {
+            font-weight: 600;
+        }
+        
+        .current-user-indicator {
+            margin-right: 5px;
+            color: var(--accent, #FF8E3C);
+        }
+        
+        .current-user-badge {
+            display: inline-block;
+            background-color: var(--accent, #FF8E3C);
+            color: var(--card-bg, #242629);
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 5px;
+            vertical-align: middle;
+        }
 
         /* Estilo para el historial de partidas */
         #history-list {
@@ -170,6 +202,11 @@
          }
          .player-match-info.winner .score {
              color: var(--success, #31D0AA);
+         }
+         
+         /* Estilo para jugador actual en historial */
+         .player-match-info.current-user strong {
+             color: var(--accent, #FF8E3C);
          }
 
         /* Estilos para mensajes de carga/error */
