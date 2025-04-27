@@ -14,11 +14,14 @@ document.addEventListener('DOMContentLoaded', function() {
     function getCurrentUserId() {
         // Usamos el nombre como ID simple. Podría mejorarse con un ID único real.
         const name = localStorage.getItem('crackTotalUsername') || 'JugadorAnónimo';
+        console.log("Nombre obtenido para ID:", name); // <--- Log temporal
         // Reemplazar espacios o caracteres inválidos para IDs de Firestore si es necesario
         return name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, ''); 
     }
     function getCurrentDisplayName() {
-        return localStorage.getItem('crackTotalUsername') || 'Jugador Anónimo';
+        const name = localStorage.getItem('crackTotalUsername') || 'Jugador Anónimo';
+        console.log("Nombre obtenido para Display:", name); // <--- Log temporal
+        return name;
     }
 
     // Function to get default stats object
