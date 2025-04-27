@@ -1,11 +1,25 @@
-// Importar el controlador de usuario
-import { userController } from './userController.js';
+// --- Importaciones de Firebase ---
+import { db } from './firebase-init.js'; // Importar la instancia de DB
+import {
+    collection, doc, setDoc, addDoc, Timestamp, increment, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', function() {
     // Stats Profile Keys
     const STATS_KEY = 'pasalacheUserStats';
     const HISTORY_KEY = 'pasalacheGameHistory'; // Nueva clave para el historial
     const HISTORY_LIMIT = 15; // Límite de partidas en el historial
+
+    // --- Obtener Nombre/ID de Usuario --- 
+    function getCurrentUserId() {
+        // Usamos el nombre como ID simple. Podría mejorarse con un ID único real.
+        const name = localStorage.getItem('crackTotalUsername') || 'JugadorAnónimo';
+        // Reemplazar espacios o caracteres inválidos para IDs de Firestore si es necesario
+        return name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, ''); 
+    }
+    function getCurrentDisplayName() {
+        return localStorage.getItem('crackTotalUsername') || 'Jugador Anónimo';
+    }
 
     // Function to get default stats object
     function getDefaultStats() {
@@ -894,12 +908,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // End the game
-    function endGame(result = 'timeout') {
+    async function endGame(result = 'timeout') { // <--- Convertida a async
         clearInterval(timerInterval);
         
         const timeSpent = totalTime - timeLeft;
         
-        // --- Actualizar Estadísticas Agregadas --- 
+        // --- Actualizar Estadísticas LOCALES --- 
         let profileStats = loadProfileStats();
         profileStats.gamesPlayed += 1;
         profileStats.totalCorrectAnswers += correctAnswers;
@@ -907,8 +921,10 @@ document.addEventListener('DOMContentLoaded', function() {
         profileStats.totalPassedAnswers += passedAnswers; // Assuming you track this
         profileStats.totalHelpUsed += helpUsed;
 
+        let isWin = false;
         if (result === 'victory') {
             profileStats.gamesWon += 1;
+            isWin = true;
             if (profileStats.fastestWinTime === null || timeSpent < profileStats.fastestWinTime) {
                 profileStats.fastestWinTime = timeSpent;
             }
@@ -923,9 +939,65 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         saveProfileStats(profileStats);
-        // --- Fin Actualizar Estadísticas Agregadas ---
+        // --- Fin Actualizar Estadísticas LOCALES ---
 
-        // --- Guardar Partida en Historial --- 
+        // <<<--- INICIO: Guardar en FIRESTORE --- >>>
+        if (db) { // Solo intentar si la DB está inicializada
+            const userId = getCurrentUserId();
+            const userDisplayName = getCurrentDisplayName();
+
+            // 1. Actualizar Estadísticas GLOBALES en Firestore
+            const userDocRef = doc(db, "users", userId);
+            try {
+                await setDoc(userDocRef, {
+                    displayName: userDisplayName, // Asegurar que el nombre esté actualizado
+                    totalScore: increment(correctAnswers), // Incrementar por los aciertos de ESTA partida
+                    matchesPlayed: increment(1),
+                    wins: increment(isWin ? 1 : 0),
+                    // Añade otros campos si los quieres trackear globalmente (ej. errores totales)
+                    // totalErrors: increment(incorrectAnswers)
+                    lastPlayed: serverTimestamp() // Marcar cuándo jugó por última vez
+                }, { merge: true }); // merge:true crea el doc si no existe, o actualiza campos existentes sin borrar otros
+                console.log("User stats updated in Firestore for:", userId);
+            } catch (error) {
+                console.error("Error updating user stats in Firestore:", error);
+                // No detener el flujo del juego, pero registrar el error
+            }
+
+            // 2. Guardar Partida en Historial GLOBAL de Firestore
+            const gameDataForFirestore = {
+                timestamp: Timestamp.now(), // Usar Timestamp de Firestore
+                // Guardar info de los jugadores (en este caso, solo uno)
+                players: [
+                    {
+                        userId: userId, // Identificador del usuario
+                        displayName: userDisplayName,
+                        score: correctAnswers,
+                        errors: incorrectAnswers // Guardar errores de esta partida
+                    }
+                    // Si hubiera más jugadores, se añadirían aquí
+                ],
+                result: result, // 'victory', 'defeat', 'timeout'
+                timeSpent: timeSpent,
+                difficulty: document.querySelector('.difficulty-btn.active')?.getAttribute('data-difficulty') || 'normal'
+                // Podrías añadir winnerUserId si fuera un juego multijugador
+                // winnerUserId: (isWin ? userId : null)
+            };
+
+            try {
+                const matchesCollectionRef = collection(db, "matches");
+                await addDoc(matchesCollectionRef, gameDataForFirestore);
+                console.log("Match added to Firestore history");
+            } catch (error) {
+                console.error("Error adding match to Firestore history:", error);
+            }
+
+        } else {
+            console.warn("Firestore DB not initialized. Skipping online save.");
+        }
+        // <<<--- FIN: Guardar en FIRESTORE --- >>>
+
+        // --- Guardar Partida en Historial LOCAL --- 
         const gameDataForHistory = {
             date: new Date().toISOString(), // Guardar fecha en formato ISO
             result: result, // 'victory', 'defeat', 'timeout'
@@ -935,21 +1007,7 @@ document.addEventListener('DOMContentLoaded', function() {
             difficulty: document.querySelector('.difficulty-btn.active')?.getAttribute('data-difficulty') || 'normal' // Guardar dificultad
         };
         addGameToHistory(gameDataForHistory);
-        // --- Fin Guardar Partida en Historial ---
-        
-        // --- Sincronizar datos con ranking global a través de userController ---
-        try {
-            // Determinar si es victoria para el ranking global
-            const isWin = (result === 'victory');
-            
-            // Registrar partida en Firebase
-            userController.registerMatch(correctAnswers, isWin)
-                .then(() => console.log('Partida registrada en ranking global'))
-                .catch(error => console.error('Error al registrar partida en ranking global:', error));
-        } catch (error) {
-            console.error('Error al sincronizar datos con Firebase:', error);
-        }
-        // --- Fin sincronización con ranking global ---
+        // --- Fin Guardar Partida en Historial LOCAL ---
         
         // --- Lógica del Modal (sin cambios) --- 
         const totalAnswered = correctAnswers + incorrectAnswers;
@@ -1294,7 +1352,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let iconHtml = '';
         let color = 'var(--accent)'; // Default yellow/orange for warning
         if (type === 'warning') {
-            iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12" y2="17"></line></svg>`;
+            iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
             color = 'var(--accent, #FF8E3C)';
         } else if (type === 'info') {
              iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;

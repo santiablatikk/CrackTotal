@@ -1,6 +1,3 @@
-// Importar el controlador de usuario
-import { userController } from './userController.js';
-
 // Store player name in local storage
 document.addEventListener('DOMContentLoaded', function() {
     // Check if we're on the home page
@@ -18,11 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const playerName = document.getElementById('playerName').value.trim();
             
             if (playerName) {
-                // Usar controlador de usuario para actualizar nombre
-                userController.updateDisplayName(playerName).then(() => {
-                    // Redirect to game selection page
-                    window.location.href = 'games.html';
-                });
+                // Save the name to local storage
+                localStorage.setItem('playerName', playerName);
+                // Redirect to game selection page
+                window.location.href = 'games.html';
             }
         });
     }
@@ -30,8 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check if we're on the games page
     const playerNameDisplay = document.getElementById('playerNameDisplay');
     if (playerNameDisplay) {
-        // Usar displayName del controlador
-        playerNameDisplay.textContent = userController.displayName;
+        const playerName = localStorage.getItem('playerName') || 'Jugador';
+        playerNameDisplay.textContent = playerName;
         
         // Configurar el cambio de nombre
         const changeNameBtn = document.getElementById('changeNameBtn');
@@ -43,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (changeNameBtn && changeNameModal) {
             // Mostrar modal
             changeNameBtn.addEventListener('click', function() {
-                newPlayerNameInput.value = userController.displayName;
+                newPlayerNameInput.value = playerName;
                 changeNameModal.classList.add('active');
             });
             
@@ -61,26 +57,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     const newName = newPlayerNameInput.value.trim();
                     
                     if (newName) {
-                        userController.updateDisplayName(newName).then(() => {
-                            playerNameDisplay.textContent = newName;
-                            changeNameModal.classList.remove('active');
+                        localStorage.setItem('playerName', newName);
+                        playerNameDisplay.textContent = newName;
+                        changeNameModal.classList.remove('active');
+                        playerName = newName;
+
+                        // Actualizar cualquier otro elemento con nombre de jugador
+                        document.querySelectorAll('.player-name').forEach(element => {
+                            element.textContent = newName;
                         });
                     }
                 });
             }
         }
-        
-        // Registrar listener para actualizar UI cuando cambien los datos
-        userController.addUserListener(function(userData) {
-            if (playerNameDisplay) {
-                playerNameDisplay.textContent = userData.displayName;
-            }
-            
-            // Actualizar cualquier otro elemento con nombre de jugador
-            document.querySelectorAll('.player-name').forEach(element => {
-                element.textContent = userData.displayName;
-            });
-        });
     }
 
     // Handle clicking on game cards
@@ -107,8 +96,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update player name in game headers
     const playerNameElements = document.querySelectorAll('.player-name');
     if (playerNameElements.length > 0) {
+        const playerName = localStorage.getItem('playerName') || 'Jugador';
         playerNameElements.forEach(element => {
-            element.textContent = userController.displayName;
+            element.textContent = playerName;
         });
     }
 });
@@ -162,7 +152,4 @@ async function shareSite() {
             alert('Hubo un error al intentar compartir.');
         }
     }
-}
-
-// Exportar la función shareSite para que esté disponible globalmente
-window.shareSite = shareSite; 
+} 
