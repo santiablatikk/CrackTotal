@@ -13,13 +13,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Obtener Nombre/ID de Usuario --- 
     function getCurrentUserId() {
         // Usamos el nombre como ID simple. Podría mejorarse con un ID único real.
-        const name = localStorage.getItem('crackTotalUsername') || 'JugadorAnónimo';
+        const name = localStorage.getItem('playerName') || 'JugadorAnónimo';
         console.log("Nombre obtenido para ID:", name); // <--- Log temporal
         // Reemplazar espacios o caracteres inválidos para IDs de Firestore si es necesario
         return name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, ''); 
     }
     function getCurrentDisplayName() {
-        const name = localStorage.getItem('crackTotalUsername') || 'Jugador Anónimo';
+        const name = localStorage.getItem('playerName') || 'Jugador Anónimo';
         console.log("Nombre obtenido para Display:", name); // <--- Log temporal
         return name;
     }
@@ -526,23 +526,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 }
                 incorrectAnswers++; // Increment incorrect count if !isCorrect
-            }
 
-            // Update status and counters
-            letterStatuses[currentLetter] = isCorrect ? 'correct' : 'incorrect';
-            if (isCorrect) {
+                // --- Comprobar derrota INMEDIATAMENTE ---
+                if (incorrectAnswers >= maxErrors) {
+                    saveProfileStats(profileStats); // Guardar estadísticas antes de terminar
+                    endGame('defeat');
+                    return; // Terminar ejecución de checkAnswer aquí mismo
+                }
+                // --- Fin comprobación derrota ---
+
+                 // Actualizar estadísticas agregadas si no es derrota
+                 profileStats.totalIncorrectAnswers += 1;
+                 // Marcar letra como incorrecta
+                 letterStatuses[currentLetter] = 'incorrect';
+
+            } else { // isCorrect === true
                 correctAnswers++;
                 usedAnswerSignatures.add(correctAnswerNorm); // Add CORRECT answer signature
                 console.log("Added to used signatures:", correctAnswerNorm, usedAnswerSignatures);
                 // Update aggregated stats immediately
                 profileStats.totalCorrectAnswers += 1;
-            } else {
-                 // incorrectAnswers already incremented above
-                 // Update aggregated stats immediately
-                 profileStats.totalIncorrectAnswers += 1;
+                // Marcar letra como correcta
+                letterStatuses[currentLetter] = 'correct';
             }
 
-            // Common updates after correct or incorrect (but not incomplete with attempts left)
+            // Common updates after correct or *non-losing* incorrect
             updateScoreDisplays();
             updateLetterStyles();
             pendingLetters.splice(currentLetterIndex, 1); // Remove from pending
@@ -556,12 +564,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  // currentLetterIndex remains valid, no change needed before loadQuestion
             }
 
-            // Check end game conditions AFTER processing the answer
-            if (incorrectAnswers >= maxErrors) { // Use >= because we check after incrementing
-                saveProfileStats(profileStats); // Save stats before ending
-                endGame('defeat');
-                return; // End game due to errors
-            }
+            // Check victory condition (defeat check is now done earlier)
             if (pendingLetters.length === 0) {
                 saveProfileStats(profileStats); // Save stats before ending
                 endGame('victory');
@@ -913,6 +916,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // End the game
     async function endGame(result = 'timeout') { // <--- Convertida a async
         clearInterval(timerInterval);
+
+        // --- Deshabilitar Controles INMEDIATAMENTE ---
+        if (answerInput) answerInput.disabled = true;
+        if (pasapalabraButton) pasapalabraButton.disabled = true;
+        const helpButton = document.getElementById('helpButton');
+        if (helpButton) helpButton.disabled = true;
+        // --- Fin Deshabilitar Controles ---
         
         const timeSpent = totalTime - timeLeft;
         
@@ -1355,7 +1365,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let iconHtml = '';
         let color = 'var(--accent)'; // Default yellow/orange for warning
         if (type === 'warning') {
-            iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`;
+            iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12" y2="17"></line></svg>`;
             color = 'var(--accent, #FF8E3C)';
         } else if (type === 'info') {
              iconHtml = `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
@@ -1437,7 +1447,7 @@ document.addEventListener('DOMContentLoaded', function() {
             gameRulesModal.classList.add('active');
         }
         // Ensure player name is loaded if available
-        const playerName = localStorage.getItem('crackTotalUsername') || 'Jugador';
+        const playerName = localStorage.getItem('playerName') || 'Jugador';
         const playerNameDisplay = document.querySelector('.player-name');
         if (playerNameDisplay) {
             playerNameDisplay.textContent = playerName;
