@@ -1,3 +1,6 @@
+// --- WebSocket URL (¡Configura esto!) ---
+const WEBSOCKET_URL = 'ws://localhost:8080';
+
 document.addEventListener('DOMContentLoaded', function() {
     // --- Game State Variables ---
     let gameState = {
@@ -55,8 +58,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultMessageEl = document.getElementById('resultMessage');
     const finalPlayer1ScoreEl = document.getElementById('finalPlayer1Score');
     const finalPlayer2ScoreEl = document.getElementById('finalPlayer2Score');
+    const resultStatsEl = document.getElementById('resultStats');
     const playAgainButtonQSM = document.getElementById('playAgainButtonQSM');
-    const backToGamesButtonQSM = document.getElementById('backToGamesButtonQSM');
+    const backToLobbyButtonQSM = document.getElementById('backToLobbyButtonQSM');
 
     // Lobby Elements
     const lobbySectionEl = document.getElementById('lobbySection');
@@ -70,6 +74,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const joinRoomButton = document.getElementById('joinRoomButton');
     const joinRandomRoomButton = document.getElementById('joinRandomRoomButton'); // New button
     const gameContentSectionEl = document.getElementById('gameContentSection'); // Game area container
+    const availableRoomsListEl = document.getElementById('availableRoomsList'); // Container for the room list UL
+    const playersHeaderInfoEl = document.getElementById('playersHeaderInfo'); // Referencia al contenedor de info de jugadores
 
     // --- Initialization ---
     function initializeApp() {
@@ -86,8 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
         lobbySectionEl.classList.add('active');
         gameContentSectionEl.classList.remove('active');
         // Hide player info in header while in lobby
-        player1InfoEl.style.display = 'none';
-        player2InfoEl.style.display = 'none';
+        if (playersHeaderInfoEl) playersHeaderInfoEl.style.display = 'none';
         clearLobbyMessage();
         enableLobbyButtons(); // Ensure buttons are enabled when returning to lobby
     }
@@ -98,13 +103,11 @@ document.addEventListener('DOMContentLoaded', function() {
         lobbySectionEl.classList.remove('active');
         gameContentSectionEl.classList.add('active');
         // Show player info in header
-        player1InfoEl.style.display = 'flex'; // Or 'block' depending on your CSS
-        player2InfoEl.style.display = 'flex'; // Or 'block'
+        if (playersHeaderInfoEl) playersHeaderInfoEl.style.display = 'flex'; // Or 'block' depending on your CSS
     }
 
     function startGame() {
         console.log("Starting game (waiting for server data)...");
-        // Game state is now primarily set by server messages ('gameStart', 'newQuestion')
         updatePlayerUI(); // Update with initial player data from server
         showGameScreen();
         gameState.gameActive = true;
@@ -157,14 +160,35 @@ document.addEventListener('DOMContentLoaded', function() {
          sendToServer('joinRandomRoom', { playerName });
      }
 
-    function showLobbyMessage(message, type = "info") { // type can be 'info', 'success', 'error'
+    function showLobbyMessage(message, type = "info", persistent = false) { // type can be 'info', 'success', 'error'
         lobbyMessageAreaEl.textContent = message;
-        lobbyMessageAreaEl.className = `lobby-message ${type}`; // Use classes for styling
+        lobbyMessageAreaEl.className = 'lobby-message'; // Reset classes
+        void lobbyMessageAreaEl.offsetWidth; // Force reflow
+        lobbyMessageAreaEl.classList.add(type);
+        lobbyMessageAreaEl.classList.add('show');
+
+        // Si no es persistente, ocultar después de un tiempo (ej. 5 segundos)
+        if (!persistent && (type === 'success' || type === 'info')) {
+            setTimeout(() => {
+                // Solo ocultar si sigue siendo el mismo mensaje (evita ocultar un error posterior)
+                if (lobbyMessageAreaEl.textContent === message) {
+                    clearLobbyMessage();
+                }
+            }, 5000);
+        }
+        // Los errores (type === 'error') se quedan visibles hasta la siguiente acción.
     }
 
     function clearLobbyMessage() {
+        lobbyMessageAreaEl.classList.remove('show');
+        // Retrasar limpieza de texto y clases para permitir la transición de salida
+         setTimeout(() => {
+            // Solo limpiar si no se mostró otro mensaje mientras tanto
+             if (!lobbyMessageAreaEl.classList.contains('show')) {
         lobbyMessageAreaEl.textContent = '';
         lobbyMessageAreaEl.className = 'lobby-message';
+             }
+         }, 500); // Debe ser >= duración de transición CSS
     }
 
     function disableLobbyButtons() {
@@ -181,41 +205,53 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Game Logic ---
     function updatePlayerUI() {
-        // Determine which player is local and which is opponent based on myPlayerId
-        let localPlayerKey = null;
-        let opponentPlayerKey = null;
+        if (!gameState.players || !gameState.myPlayerId) return; // Necesitamos saber quiénes somos
 
-        // Ensure players object and IDs exist before accessing them
-        if (gameState.players && gameState.players.player1 && gameState.players.player1.id === gameState.myPlayerId) {
-            localPlayerKey = 'player1';
-            opponentPlayerKey = 'player2';
-        } else if (gameState.players && gameState.players.player2 && gameState.players.player2.id === gameState.myPlayerId) {
-            localPlayerKey = 'player2';
-            opponentPlayerKey = 'player1';
+        const player1 = gameState.players.player1;
+        const player2 = gameState.players.player2;
+        const localPlayer = player1?.id === gameState.myPlayerId ? player1 : (player2?.id === gameState.myPlayerId ? player2 : null);
+        const opponentPlayer = player1?.id !== gameState.myPlayerId ? player1 : (player2?.id !== gameState.myPlayerId ? player2 : null);
+
+        // Actualizar Header
+        if (playersHeaderInfoEl && localPlayer && opponentPlayer) {
+            const localNameEl = playersHeaderInfoEl.querySelector('.local-player .player-name');
+            const localScoreEl = playersHeaderInfoEl.querySelector('.local-player .score');
+            const opponentNameEl = playersHeaderInfoEl.querySelector('.opponent-player .player-name');
+            const opponentScoreEl = playersHeaderInfoEl.querySelector('.opponent-player .score');
+
+            if (localNameEl) localNameEl.textContent = localPlayer.name || 'Tú';
+            if (localScoreEl) localScoreEl.textContent = `Score: ${localPlayer.score || 0}`;
+            if (opponentNameEl) opponentNameEl.textContent = opponentPlayer.name || 'Oponente';
+            if (opponentScoreEl) opponentScoreEl.textContent = `Score: ${opponentPlayer.score || 0}`;
+
+            // Marcar turno activo en el header
+            const localPlayerBox = playersHeaderInfoEl.querySelector('.local-player');
+            const opponentPlayerBox = playersHeaderInfoEl.querySelector('.opponent-player');
+            if (localPlayerBox) localPlayerBox.classList.toggle('active-turn', localPlayer.id === gameState.currentTurn);
+            if (opponentPlayerBox) opponentPlayerBox.classList.toggle('active-turn', opponentPlayer.id === gameState.currentTurn);
+
+        } else if (playersHeaderInfoEl) {
+            // Estado inicial o si falta info
+             const localNameEl = playersHeaderInfoEl.querySelector('.local-player .player-name');
+             const localScoreEl = playersHeaderInfoEl.querySelector('.local-player .score');
+             const opponentNameEl = playersHeaderInfoEl.querySelector('.opponent-player .player-name');
+             const opponentScoreEl = playersHeaderInfoEl.querySelector('.opponent-player .score');
+             if (localNameEl) localNameEl.textContent = 'Esperando...';
+             if (localScoreEl) localScoreEl.textContent = 'Score: 0';
+             if (opponentNameEl) opponentNameEl.textContent = 'Esperando...';
+             if (opponentScoreEl) opponentScoreEl.textContent = 'Score: 0';
         }
 
-        // Update UI - Assuming player1 UI elements always show local player, player2 shows opponent
-        // Add checks to ensure player objects exist before accessing properties
-        if (localPlayerKey && opponentPlayerKey && gameState.players && gameState.players[localPlayerKey] && gameState.players[opponentPlayerKey]) {
-            player1NameEl.textContent = gameState.players[localPlayerKey].name || 'You';
-            player1ScoreEl.textContent = `Score: ${gameState.players[localPlayerKey].score}`;
-            player2NameEl.textContent = gameState.players[opponentPlayerKey].name || 'Opponent';
-            player2ScoreEl.textContent = `Score: ${gameState.players[opponentPlayerKey].score}`;
+        // Actualizar Turn Indicator (si existe fuera del header)
+        if (turnIndicatorEl) {
+             if (!gameState.currentTurn || !gameState.players) {
+                 turnIndicatorEl.textContent = "Esperando turno...";
         } else {
-            // Fallback or initial state before full player data is known
-            // Check if gameState.players itself exists
-             const p1Name = gameState.players && gameState.players.player1 ? gameState.players.player1.name : 'Player 1';
-             const p1Score = gameState.players && gameState.players.player1 ? gameState.players.player1.score : 0;
-             const p2Name = gameState.players && gameState.players.player2 ? gameState.players.player2.name : 'Player 2';
-             const p2Score = gameState.players && gameState.players.player2 ? gameState.players.player2.score : 0;
-
-             player1NameEl.textContent = p1Name;
-             player1ScoreEl.textContent = `Score: ${p1Score}`;
-             player2NameEl.textContent = p2Name;
-             player2ScoreEl.textContent = `Score: ${p2Score}`;
+                 const currentPlayer = player1?.id === gameState.currentTurn ? player1 : player2;
+                 turnIndicatorEl.textContent = `Turno de: ${currentPlayer?.name || '...'}`;
+             }
         }
     }
-
 
     // --- Question Display (Triggered by Server) ---
     function displayQuestion(question) {
@@ -260,32 +296,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Turn & Game Flow Updates (Triggered by Server) ---
     function updateTurnIndicator() {
-        if (!gameState.currentTurn || !gameState.players) { // Add check for gameState.players
-            turnIndicatorEl.textContent = "Waiting for turn...";
-            return;
+        // Esta lógica ahora está integrada en updatePlayerUI para el header
+        // Si tienes otro indicador de turno fuera del header, actualízalo aquí
+        if (turnIndicatorEl) {
+            // ... (lógica para actualizar turnIndicatorEl si aún existe y es necesario) ...
         }
-        // Add checks for player existence before accessing name
-        const player1Exists = gameState.players.player1 && gameState.players.player1.id;
-        const player2Exists = gameState.players.player2 && gameState.players.player2.id;
-
-        const currentPlayer = (player1Exists && gameState.players.player1.id === gameState.currentTurn)
-                            ? gameState.players.player1
-                            : ((player2Exists && gameState.players.player2.id === gameState.currentTurn)
-                                ? gameState.players.player2
-                                : null);
-
-        const currentPlayerName = currentPlayer ? currentPlayer.name : 'Player ?';
-        turnIndicatorEl.textContent = `Turn: ${currentPlayerName}`;
-
-        // Highlight the active player's info box
-        const isP1Turn = player1Exists && gameState.players.player1.id === gameState.currentTurn;
-        const isP2Turn = player2Exists && gameState.players.player2.id === gameState.currentTurn;
-
-        // Assuming player1InfoEl ALWAYS refers to player1 from gameState, player2InfoEl to player2
-        player1InfoEl.classList.toggle('active-turn', isP1Turn);
-        player2InfoEl.classList.toggle('active-turn', isP2Turn);
     }
-
 
     function updateLevelAndQuestionCounter(level, qNum = null, qTotal = null) {
         gameState.currentLevel = level;
@@ -491,13 +507,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- WebSocket Communication ---
     function initializeWebSocket() {
-        // Determine WebSocket URL (adjust as needed for deployment)
-        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        // Use relative path or configure absolute path if needed
-        // Assumes WS server is on same host/port and listens at the root path '/'
-        const wsUrl = `${wsProtocol}//${window.location.host}`;
-        // For local development, you might use:
-        // const wsUrl = 'ws://localhost:8080'; // Ensure this matches your server config
+        // URL definida arriba
+        const wsUrl = WEBSOCKET_URL;
 
         console.log(`Attempting to connect WebSocket: ${wsUrl}`);
 
@@ -805,12 +816,17 @@ document.addEventListener('DOMContentLoaded', function() {
                  }
                  break;
 
+            case 'availableRooms': // Server sends the list of available rooms
+                console.log("Received availableRooms:", message.payload.rooms);
+                renderAvailableRooms(message.payload.rooms);
+                 break;
+
             default:
                  console.warn('Unknown message type received:', message.type);
         }
     }
 
-    // --- End Game ---
+    // --- End Game --- Reestructurada para 1v1
     function endGame(payload) { // payload: { finalScores: {playerId1: score, playerId2: score}, winnerId: id | null, draw: boolean, reason?: string }
         console.log("Game Over. Payload:", payload);
         gameState.gameActive = false;
@@ -818,53 +834,69 @@ document.addEventListener('DOMContentLoaded', function() {
         hideWaitingMessage();
 
         const finalScores = payload.finalScores;
-        // Ensure myPlayerId is valid and we have score data before proceeding
         if (!gameState.myPlayerId || !finalScores || typeof finalScores !== 'object') {
-             console.error("Cannot determine final scores. Invalid state or payload.", gameState, payload);
-             showEndGameModalWithError("Error calculating results.");
+            console.error("Cannot determine final scores.", gameState, payload);
+            showEndGameModalWithError("Error calculando resultados.");
              return;
          }
 
-        const myScore = finalScores[gameState.myPlayerId] !== undefined ? finalScores[gameState.myPlayerId] : 'N/A';
-        const opponentId = Object.keys(finalScores).find(id => id !== gameState.myPlayerId);
-        const opponentScore = opponentId && finalScores[opponentId] !== undefined ? finalScores[opponentId] : 'N/A';
+        // Identificar mi score y el del oponente
+        let myFinalScore = 'N/A';
+        let opponentFinalScore = 'N/A';
+        let opponentId = null;
 
-         // Get names safely, falling back to defaults, using the last known state
-        let myName = 'You';
-        let opponentName = 'Opponent';
-        if (gameState.players && gameState.players.player1 && gameState.players.player1.id === gameState.myPlayerId) myName = gameState.players.player1.name;
-        else if (gameState.players && gameState.players.player2 && gameState.players.player2.id === gameState.myPlayerId) myName = gameState.players.player2.name;
+        for (const playerId in finalScores) {
+            if (playerId === gameState.myPlayerId) {
+                myFinalScore = finalScores[playerId];
+            } else {
+                opponentFinalScore = finalScores[playerId];
+                opponentId = playerId; // Guardamos el ID del oponente
+            }
+        }
 
-        if (opponentId && gameState.players && gameState.players.player1 && gameState.players.player1.id === opponentId) opponentName = gameState.players.player1.name;
-        else if (opponentId && gameState.players && gameState.players.player2 && gameState.players.player2.id === opponentId) opponentName = gameState.players.player2.name;
+        // Obtener nombres (del estado actual del juego)
+        let myName = 'Tú';
+        let opponentName = 'Oponente';
+        const player1 = gameState.players?.player1;
+        const player2 = gameState.players?.player2;
+        if (player1?.id === gameState.myPlayerId) myName = player1.name || myName;
+        else if (player2?.id === gameState.myPlayerId) myName = player2.name || myName;
+
+        if (player1?.id === opponentId) opponentName = player1.name || opponentName;
+        else if (player2?.id === opponentId) opponentName = player2.name || opponentName;
 
 
         let title = "";
-        let message = `Final Score: ${myName} ${myScore} - ${opponentName} ${opponentScore}`;
+        let message = payload.reason || ""; // Mostrar razón si la hay (ej. desconexión)
 
         if (payload.draw) {
-            title = "It's a Draw!";
+            title = "¡Es un Empate!";
+            if (!message) message = "Ambos jugadores tienen la misma puntuación.";
         } else if (payload.winnerId === gameState.myPlayerId) {
-            title = `You Won, ${myName}!`;
+            title = `¡Has Ganado, ${myName}!`;
+            if (!message) message = "¡Felicidades!";
         } else if (opponentId && payload.winnerId === opponentId) {
-            title = `${opponentName} Won!`;
-            // message += ". Better luck next time!"; // Keep message shorter
+            title = `¡${opponentName} ha Ganado!`;
+             if (!message) message = "Mejor suerte la próxima vez.";
         } else {
-            // Handle cases like disconnect where winner might be null but not a draw
-             title = "Game Over";
-             if (payload.reason) { // Optional reason from server (e.g., "Opponent disconnected")
-                 message = payload.reason;
-             } else {
-                 // Default message if no specific reason given
-                 message = `Final Score: ${myName} ${myScore} - ${opponentName} ${opponentScore}`;
-             }
+             title = "Juego Terminado";
+             if (!message) message = "La partida ha finalizado."; // Mensaje por defecto si no hay razón ni ganador claro
         }
 
         resultTitleEl.textContent = title;
         resultMessageEl.textContent = message;
-        // Assuming finalPlayer1ScoreEl shows YOUR score and finalPlayer2ScoreEl shows OPPONENT's score
-        finalPlayer1ScoreEl.textContent = myScore;
-        finalPlayer2ScoreEl.textContent = opponentScore;
+
+        // Llenar dinámicamente los stats en el modal
+        resultStatsEl.innerHTML = `
+            <div class="stat-item your-score">
+                <span class="stat-label">${myName} (Tú)</span>
+                <span class="stat-value">${myFinalScore}</span>
+            </div>
+            <div class="stat-item opponent-score">
+                <span class="stat-label">${opponentName}</span>
+                <span class="stat-value">${opponentFinalScore}</span>
+            </div>
+        `;
 
         showEndGameModal();
     }
@@ -874,24 +906,45 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
      function showEndGameModalWithError(reason) {
-         resultTitleEl.textContent = "Game Over";
-         resultMessageEl.textContent = reason || "An error occurred.";
-         // Try to display last known scores if available
-         const myScore = gameState.myPlayerId && gameState.players && gameState.players[gameState.myPlayerId === gameState.players.player1.id ? 'player1' : 'player2']
-                        ? gameState.players[gameState.myPlayerId === gameState.players.player1.id ? 'player1' : 'player2'].score
-                        : 'N/A';
-         const opponentId = gameState.myPlayerId && gameState.players
-                            ? Object.keys(gameState.players).find(key => gameState.players[key] && gameState.players[key].id !== gameState.myPlayerId)
-                            : null;
-         const opponentScore = opponentId && gameState.players[opponentId]
-                               ? gameState.players[opponentId].score
-                               : 'N/A';
+         resultTitleEl.textContent = "Juego Interrumpido";
+         resultMessageEl.textContent = reason || "Ha ocurrido un error.";
 
-         finalPlayer1ScoreEl.textContent = myScore;
-         finalPlayer2ScoreEl.textContent = opponentScore;
+         // Intentar mostrar el último score conocido
+         let myLastScore = 'N/A';
+         let opponentLastScore = 'N/A';
+         let myName = 'Tú';
+         let opponentName = 'Oponente';
+         const player1 = gameState.players?.player1;
+         const player2 = gameState.players?.player2;
+
+         if (player1?.id === gameState.myPlayerId) {
+             myLastScore = player1.score;
+             myName = player1.name || myName;
+             if(player2) {
+                 opponentLastScore = player2.score;
+                 opponentName = player2.name || opponentName;
+             }
+         } else if (player2?.id === gameState.myPlayerId) {
+             myLastScore = player2.score;
+             myName = player2.name || myName;
+              if(player1) {
+                 opponentLastScore = player1.score;
+                 opponentName = player1.name || opponentName;
+             }
+         }
+
+         resultStatsEl.innerHTML = `
+            <div class="stat-item your-score">
+                <span class="stat-label">${myName} (Tú)</span>
+                <span class="stat-value">${myLastScore}</span>
+            </div>
+            <div class="stat-item opponent-score">
+                <span class="stat-label">${opponentName}</span>
+                <span class="stat-value">${opponentLastScore}</span>
+            </div>
+        `;
          showEndGameModal();
      }
-
 
     function hideEndGameModal() {
         endGameModalEl.classList.remove('active');
@@ -899,7 +952,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Event Listeners Setup ---
     function setupEventListeners() {
-        setupLobbyEventListeners(); // Sets up lobby button listeners
+        setupLobbyEventListeners(); // Lobby listeners
 
         // Game Listeners
         answerFormLevel1.addEventListener('submit', handleLevel1Submit);
@@ -912,16 +965,126 @@ document.addEventListener('DOMContentLoaded', function() {
         // Modal Buttons
         playAgainButtonQSM.addEventListener('click', () => {
             hideEndGameModal();
-            showLobby(); // Go back to lobby, WS connection should persist if server is up
-             // Reset local state? Better to let server send fresh 'gameStart' if playing again.
-             gameState.gameActive = false; // Ensure game is marked inactive
-             // Consider sending a 'leaveRoom' message to server if needed
-             // Or just rely on server cleanup / new room creation flow
+            // Enviar mensaje al servidor para buscar nueva partida o crear una?
+            // Por ahora, simplemente vuelve al lobby
+            showLobby();
+            gameState.gameActive = false;
+            // Considerar enviar 'leaveRoom' al servidor aquí
+             if (gameState.roomId) {
+                sendToServer('leaveRoom', { roomId: gameState.roomId }); // Asumiendo que existe este mensaje
+                gameState.roomId = null;
+             }
         });
-        backToGamesButtonQSM.addEventListener('click', () => {
-            // Navigate back to a main games page if applicable
-            window.location.href = 'games.html'; // Adjust if needed
+        backToLobbyButtonQSM.addEventListener('click', () => {
+            hideEndGameModal();
+            showLobby();
+             gameState.gameActive = false;
+             if (gameState.roomId) {
+                sendToServer('leaveRoom', { roomId: gameState.roomId }); // Asumiendo que existe este mensaje
+                gameState.roomId = null;
+             }
         });
+    }
+
+    // --- Lobby Room List Rendering ---
+    function renderAvailableRooms(rooms) {
+        if (!availableRoomsListEl) {
+            console.error("Available rooms list element not found.");
+            return;
+        }
+
+        availableRoomsListEl.innerHTML = ''; // Clear existing list
+
+        if (!rooms || rooms.length === 0) {
+            const noRoomsMsg = document.createElement('li');
+            noRoomsMsg.className = 'no-rooms-message';
+            noRoomsMsg.textContent = 'No public rooms available currently.';
+            availableRoomsListEl.appendChild(noRoomsMsg);
+            return;
+        }
+
+        rooms.forEach(room => {
+            const roomItem = document.createElement('li');
+            roomItem.className = 'room-item';
+            roomItem.dataset.roomId = room.id;
+
+            const roomInfo = document.createElement('div');
+            roomInfo.className = 'room-info';
+
+            // Display Room ID (or name if server provides it)
+            const roomIdSpan = document.createElement('span');
+            roomIdSpan.innerHTML = `ID: <strong>${room.id}</strong>`;
+            roomInfo.appendChild(roomIdSpan);
+
+            // Display Player Count
+            const playerCountSpan = document.createElement('span');
+            // Assuming server sends playerCount like '1/2'
+            const currentPlayers = room.playerCount || 0; // Default to 0 if undefined
+            const maxPlayers = room.maxPlayers || 2; // Default to 2 if undefined
+            playerCountSpan.innerHTML = `Players: <strong>${currentPlayers}/${maxPlayers}</strong>`;
+            roomInfo.appendChild(playerCountSpan);
+
+             // Display if password required (optional)
+            if (room.requiresPassword) {
+                 const passwordSpan = document.createElement('span');
+                 passwordSpan.innerHTML = `<strong><i class="fas fa-lock"></i> Private</strong>`;
+                 roomInfo.appendChild(passwordSpan);
+            }
+
+            roomItem.appendChild(roomInfo);
+
+            // Add Join Button
+            const joinButton = document.createElement('button');
+            joinButton.className = 'secondary-button lobby-button join-room-list-btn'; // Re-use styling
+            joinButton.textContent = 'Join';
+            // Disable join button if room is full or if it's the player's own room (need player ID check)
+            joinButton.disabled = currentPlayers >= maxPlayers; // Basic check for fullness
+
+            joinButton.addEventListener('click', () => {
+                handleJoinRoomFromList(room.id, room.requiresPassword);
+            });
+
+            roomItem.appendChild(joinButton);
+            availableRoomsListEl.appendChild(roomItem);
+        });
+    }
+
+    // --- Join Room from List Logic ---
+    function handleJoinRoomFromList(roomId, requiresPassword) {
+        const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2'; // Use name from join section
+        let password = '';
+
+        console.log(`Attempting to join room ${roomId} from list as ${playerName}. Requires Password: ${requiresPassword}`);
+
+        // If password is required, prompt the user or use the dedicated input field
+        if (requiresPassword) {
+            password = joinRoomPasswordInput.value;
+            if (!password) {
+                // Instead of prompt, let's use the input field and show a message if empty
+                showLobbyMessage(`Room ${roomId} requires a password. Please enter it below.`, "error");
+                joinRoomPasswordInput.focus();
+                // Clear the room ID input when focusing on password for a listed room
+                joinRoomIdInput.value = '';
+                return; // Stop the joining process until password is entered
+            } else {
+                // Clear password field after attempting to use it
+                joinRoomPasswordInput.value = '';
+                 // Optionally, set the Room ID input field for consistency before sending
+                 joinRoomIdInput.value = roomId;
+            }
+        } else {
+             // Clear password field if not needed for this room
+             joinRoomPasswordInput.value = '';
+              // Optionally, set the Room ID input field for consistency before sending
+              joinRoomIdInput.value = roomId;
+        }
+
+        showLobbyMessage(`Joining room ${roomId}...`, "info");
+        disableLobbyButtons();
+        // Clear the room ID input again after sending, maybe?
+        // joinRoomIdInput.value = '';
+
+        sendToServer('joinRoom', { playerName, roomId, password });
     }
 
     // --- Start App ---

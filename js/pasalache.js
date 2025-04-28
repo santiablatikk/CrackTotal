@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const answerForm = document.getElementById('answerForm');
     const answerInput = document.getElementById('answerInput');
     const pasapalabraButton = document.getElementById('pasapalabraButton');
-    const submitButton = document.getElementById('submitButton');
+    const submitAnswerBtnIcon = document.getElementById('submitAnswerBtnIcon');
     const scoreDisplay = document.getElementById('scoreDisplay');
     const correctCountDisplay = document.getElementById('correctCount');
     const passedCountDisplay = document.getElementById('passedCount');
@@ -920,6 +920,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // --- Deshabilitar Controles INMEDIATAMENTE ---
         if (answerInput) answerInput.disabled = true;
         if (pasapalabraButton) pasapalabraButton.disabled = true;
+        if (submitAnswerBtnIcon) submitAnswerBtnIcon.disabled = true;
         const helpButton = document.getElementById('helpButton');
         if (helpButton) helpButton.disabled = true;
         // --- Fin Deshabilitar Controles ---
@@ -1420,10 +1421,21 @@ document.addEventListener('DOMContentLoaded', function() {
         answerForm.addEventListener('submit', function(e) {
             e.preventDefault();
             const userAnswer = answerInput.value.trim();
-            if (!userAnswer) {
-                pasapalabra();
+            if (userAnswer === '') { // Si la respuesta está vacía al presionar Enter
+                pasapalabra();      // Ejecutar pasapalabra
             } else {
-                checkAnswer(userAnswer);
+                checkAnswer(userAnswer); // Si no está vacía, comprobar respuesta
+            }
+        });
+    }
+
+    if (submitAnswerBtnIcon) {
+        submitAnswerBtnIcon.addEventListener('click', function() {
+            const userAnswer = answerInput.value.trim();
+            if (userAnswer === '') { // Si la respuesta está vacía
+                pasapalabra();      // Ejecutar pasapalabra
+            } else {
+                checkAnswer(userAnswer); // Si no está vacía, comprobar respuesta
             }
         });
     }

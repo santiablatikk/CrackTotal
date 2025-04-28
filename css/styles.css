@@ -1414,7 +1414,7 @@ input:focus {
     width: 100%;
     background: rgba(13, 14, 26, 0.5);
     border: 1.5px solid rgba(131, 93, 255, 0.3);
-    padding: 12px 16px;
+    padding: 12px 45px 12px 16px; /* Aumentar padding derecho para dejar espacio al botón */
     border-radius: 8px;
     color: white;
     font-size: 0.95rem;
@@ -1823,52 +1823,52 @@ h3:not([class]) {
 
 
 #gameRulesModal .modal-content {
-    max-width: 550px; /* Reducir ancho máximo */
-    padding: 30px 25px; /* Reducir padding */
+    max-width: 430px; /* Reducir ancho máximo aún más */
+    padding: 20px 20px; /* Reducir padding general */
     background: linear-gradient(135deg, rgba(23, 25, 35, 0.95), rgba(16, 17, 25, 0.97));
     border: 1px solid rgba(131, 93, 255, 0.3);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 25px rgba(131, 93, 255, 0.15); /* Sombra ligeramente menor */
-    border-radius: 20px; /* Menos redondeado */
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(131, 93, 255, 0.1); /* Sombra menor */
+    border-radius: 16px; /* Menos redondeado */
     position: relative;
     overflow-y: hidden; /* Ocultar scrollbar vertical */
 }
 
 #gameRulesModal .modal-title {
-    font-size: 1.8rem; /* Reducir tamaño título */
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    margin-bottom: 20px; /* Menos margen */
+    font-size: 1.6rem; /* Reducir tamaño título */
+    font-weight: 700; /* Ligeramente menos grueso */
+    letter-spacing: -0.4px;
+    margin-bottom: 15px; /* Menos margen */
     text-align: center;
     background: linear-gradient(120deg, #835DFF 0%, #b29aff 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    text-shadow: 0 0 15px rgba(131, 93, 255, 0.25); /* Sombra menor */
+    text-shadow: 0 0 12px rgba(131, 93, 255, 0.2); /* Sombra menor */
     position: relative;
 }
 
 #gameRulesModal .modal-title::after {
     content: '';
     position: absolute;
-    bottom: -8px; /* Más cerca */
+    bottom: -6px; /* Más cerca */
     left: 50%;
     transform: translateX(-50%);
-    width: 70px; /* Más corto */
+    width: 60px; /* Más corto */
     height: 2px; /* Más fino */
     background: linear-gradient(90deg, transparent, #835DFF, transparent);
-    border-radius: 3px;
+    border-radius: 2px;
 }
 
 .game-promo {
-    font-size: 1.05rem; /* Reducir tamaño */
-    font-weight: 600; /* Ligeramente menos grueso */
+    font-size: 0.95rem; /* Reducir tamaño */
+    font-weight: 600;
     text-align: center;
-    margin: 15px 0 20px; /* Ajustar márgenes */
+    margin: 10px 0 15px; /* Ajustar márgenes */
     background: linear-gradient(120deg, #FF8E3C 0%, #FF5A5A 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    text-shadow: 0 0 8px rgba(255, 142, 60, 0.3);
+    text-shadow: 0 0 6px rgba(255, 142, 60, 0.25);
     animation: pulseText 2.5s infinite alternate;
 }
 
@@ -1884,38 +1884,38 @@ h3:not([class]) {
 
 /* Game options */
 .game-options {
-    margin-bottom: 20px; /* Menos margen */
+    margin-bottom: 15px; /* Menos margen */
 }
 
 .game-options h4 {
-    font-size: 0.95rem; /* Reducir tamaño */
-    margin-bottom: 12px; /* Menos margen */
+    font-size: 0.85rem; /* Reducir tamaño */
+    margin-bottom: 8px; /* Menos margen */
     color: white;
     font-weight: 600;
     text-align: center;
     text-transform: uppercase;
-    letter-spacing: 0.8px; /* Menos espaciado */
+    letter-spacing: 0.6px; /* Menos espaciado */
 }
 
 .difficulty-options {
     display: flex;
-    gap: 8px; /* Menos espacio */
+    gap: 6px; /* Menos espacio */
     justify-content: center;
-    margin-top: 12px; /* Menos margen */
+    margin-top: 8px; /* Menos margen */
 }
 
 .difficulty-btn {
     background: rgba(13, 14, 26, 0.6);
     border: 1px solid rgba(131, 93, 255, 0.2);
     color: white;
-    padding: 10px 18px; /* Menos padding */
-    border-radius: 10px; /* Menos redondeado */
-    font-size: 0.85rem; /* Reducir fuente */
+    padding: 8px 14px; /* Menos padding */
+    border-radius: 8px; /* Menos redondeado */
+    font-size: 0.75rem; /* Reducir fuente */
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    min-width: 100px; /* Ancho mínimo menor */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Sombra menor */
+    min-width: 80px; /* Ancho mínimo menor */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra menor */
     position: relative;
     overflow: hidden;
 }
@@ -1954,40 +1954,40 @@ h3:not([class]) {
 /* Rules grid */
 .rules-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Permitir que se ajusten más columnas si cabe */
-    gap: 12px; /* Menos espacio */
-    margin-bottom: 25px; /* Menos margen */
+    grid-template-columns: repeat(auto-fit, minmax(125px, 1fr)); /* Columnas más pequeñas */
+    gap: 8px; /* Menos espacio */
+    margin-bottom: 20px; /* Menos margen */
 }
 
 .rule-item {
     background: rgba(13, 14, 26, 0.6);
-    border-radius: 12px; /* Menos redondeado */
-    padding: 14px 10px; /* Menos padding */
+    border-radius: 10px; /* Menos redondeado */
+    padding: 10px 8px; /* Menos padding */
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     border: 1px solid rgba(131, 93, 255, 0.15);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.18); /* Sombra menor */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Sombra menor */
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .rule-item:hover {
     background: rgba(23, 25, 35, 0.8);
-    transform: translateY(-5px);
-    border-color: rgba(131, 93, 255, 0.4);
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25), 0 0 15px rgba(131, 93, 255, 0.2);
+    transform: translateY(-4px); /* Menos elevación */
+    border-color: rgba(131, 93, 255, 0.3);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 10px rgba(131, 93, 255, 0.15);
 }
 
 .rule-icon {
-    width: 40px; /* Icono más pequeño */
-    height: 40px; /* Icono más pequeño */
-    border-radius: 12px; /* Menos redondeado */
+    width: 32px; /* Icono más pequeño */
+    height: 32px; /* Icono más pequeño */
+    border-radius: 10px; /* Menos redondeado */
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 10px; /* Menos margen */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.18); /* Sombra menor */
+    margin-bottom: 8px; /* Menos margen */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* Sombra menor */
     position: relative;
     z-index: 1;
     overflow: hidden;
@@ -2036,32 +2036,32 @@ h3:not([class]) {
 }
 
 .rule-item h4 {
-    font-size: 0.85rem; /* Reducir tamaño */
-    font-weight: 700;
-    margin-bottom: 6px; /* Menos margen */
+    font-size: 0.75rem; /* Reducir tamaño */
+    font-weight: 600;
+    margin-bottom: 4px; /* Menos margen */
     color: white;
 }
 
 .rule-item p {
-    font-size: 0.75rem; /* Reducir tamaño */
+    font-size: 0.7rem; /* Reducir tamaño */
     color: rgba(255, 255, 255, 0.7);
-    line-height: 1.35; /* Menos altura */
+    line-height: 1.3; /* Menos altura */
 }
 
 /* Start game button - modern style */
 #gameRulesModal .primary-button {
     width: 100%;
     justify-content: center;
-    margin-top: 15px; /* Menos margen */
-    font-size: 1rem; /* Reducir tamaño */
-    padding: 14px 18px; /* Menos padding */
-    border-radius: 12px; /* Menos redondeado */
+    margin-top: 10px; /* Menos margen */
+    font-size: 0.9rem; /* Reducir tamaño */
+    padding: 10px 15px; /* Menos padding */
+    border-radius: 10px; /* Menos redondeado */
     background: linear-gradient(135deg, #835DFF, #5636C9);
-    box-shadow: 0 12px 25px rgba(86, 54, 201, 0.35); /* Sombra menor */
+    box-shadow: 0 10px 20px rgba(86, 54, 201, 0.3); /* Sombra menor */
     position: relative;
     overflow: hidden;
     text-transform: uppercase;
-    letter-spacing: 0.8px; /* Menos espaciado */
+    letter-spacing: 0.7px; /* Menos espaciado */
     border: none;
     color: white;
     font-weight: 700;
@@ -4902,4 +4902,44 @@ button#startButton:hover::after {
 }
 .spinner.active {
     display: block;
+}
+
+/* Botón de check dentro del input */
+.submit-answer-icon-btn {
+    position: absolute;
+    right: 5px; /* Posición desde la derecha */
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--secondary); /* Color verde */
+    color: white;
+    border: none;
+    border-radius: 6px; /* Redondeado */
+    width: 34px; /* Ancho */
+    height: 34px; /* Alto (igual al ancho) */
+    font-size: 1rem; /* Tamaño del icono */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.submit-answer-icon-btn:hover {
+    background-color: var(--secondary-dark); /* Verde más oscuro en hover */
+    transform: translateY(-50%) scale(1.05); /* Efecto hover */
+}
+
+.submit-answer-icon-btn:active {
+    transform: translateY(-50%) scale(0.95); /* Efecto click */
+}
+
+.submit-answer-icon-btn:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.submit-answer-icon-btn i {
+    line-height: 1; /* Ajuste para centrar el icono */
 }
