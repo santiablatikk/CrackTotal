@@ -19,7 +19,8 @@
   "license": "ISC",
   "dependencies": {
     "firebase": "^11.6.1",
-    "http-server": "^14.1.1"
+    "http-server": "^14.1.1",
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "vite": "^6.3.3"
