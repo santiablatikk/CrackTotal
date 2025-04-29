@@ -92,6 +92,16 @@ document.addEventListener('DOMContentLoaded', function() {
         showLobby(); // Start in the lobby
         setupEventListeners();
         hideEndGameModal();
+
+        // --- Prefill player name from session storage ---
+        const savedPlayerName = sessionStorage.getItem('playerName');
+        if (savedPlayerName) {
+            if (createPlayerNameInput) createPlayerNameInput.value = savedPlayerName;
+            if (joinPlayerNameInput) joinPlayerNameInput.value = savedPlayerName;
+            console.log(`Prefilled player name: ${savedPlayerName}`);
+        }
+        // --- End Prefill ---
+
         initializeWebSocket(); // Connect WebSocket on app load
     }
 

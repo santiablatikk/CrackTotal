@@ -6,7 +6,7 @@ const path = require('path'); // Added for constructing file paths
 
 // --- Constants ---
 const MAX_LEVELS = 6;
-const QUESTIONS_TO_ADVANCE_LEVEL = 5; // Adjust to 5 questions per level (assuming 1 question per turn, shared between players)
+const QUESTIONS_PER_LEVEL = 5; // Number of questions per level before advancing
 const DATA_DIR = path.join(__dirname, 'data'); // Assuming 'data' folder is in the same directory as server.js
 
 // --- Server Setup ---
@@ -20,50 +20,59 @@ const server = http.createServer((req, res) => {
 // Obtener puerto de Render o usar 8081 por defecto
 const PORT = process.env.PORT || 8081;
 
-const wss = new WebSocket.Server({ port: PORT });
+// Attach WebSocket server to the HTTP server
+const wss = new WebSocket.Server({ server });
 
-console.log(`Servidor WebSocket iniciado en el puerto ${PORT}...`);
+server.listen(PORT, () => {
+    console.log(`Servidor HTTP y WebSocket iniciado en el puerto ${PORT}...`);
+    loadQuestions(); // Load questions when server starts
+});
 
 // --- Game Data Loading ---
 let allQuestions = {}; // Store questions globally { level: [processedQuestion, ...] }
 
 function processRawQuestion(rawQ, level) {
-    // Similar processing as frontend, but keep answers on server
+    // Ensure basic structure exists
+    if (!rawQ || typeof rawQ.pregunta !== 'string' || !rawQ.opciones || typeof rawQ.respuesta_correcta !== 'string') {
+        console.warn(`Invalid question structure skipped in Level ${level}:`, rawQ.pregunta);
+        return null;
+    }
+
     let optionsArray = [];
     let correctIndex = -1;
     let correctAnswerText = '';
+    const optionKeys = ['A', 'B', 'C', 'D'];
 
-    if (level > 1 && rawQ.opciones) {
-        const optionKeys = ['A', 'B', 'C', 'D'];
-        optionsArray = optionKeys.map(key => rawQ.opciones[key]).filter(opt => opt !== undefined && opt !== null);
+    if (level > 1) {
+        // Levels 2-6 expect options object {A, B, C, D}
+        optionsArray = optionKeys.map(key => rawQ.opciones[key]).filter(opt => typeof opt === 'string');
+        if (optionsArray.length !== 4) {
+            console.warn(`Question in Level ${level} does not have exactly 4 options:`, rawQ.pregunta);
+            return null; // Skip incomplete questions for levels > 1
+        }
         correctIndex = optionKeys.indexOf(rawQ.respuesta_correcta);
-        if (correctIndex !== -1 && optionsArray[correctIndex]) {
-            correctAnswerText = optionsArray[correctIndex];
-        } else {
-             console.warn(`Missing correct answer text/index for Q: ${rawQ.pregunta} in Level ${level}`);
-             correctIndex = -1; // Mark as invalid if data is inconsistent
+        if (correctIndex === -1) {
+            console.warn(`Invalid correct answer key ('${rawQ.respuesta_correcta}') for Q: ${rawQ.pregunta} in Level ${level}`);
+            return null; // Skip if correct answer key is wrong
         }
-         // Ensure exactly 4 options if possible, pad if necessary?
-         // For simplicity, we assume data files have 4 options for levels > 1
-
-    } else if (level === 1 && rawQ.opciones && rawQ.respuesta_correcta) {
-        // Level 1: Extract the correct answer text directly
-        correctAnswerText = rawQ.opciones[rawQ.respuesta_correcta];
-        if (!correctAnswerText) {
-            console.warn(`Missing correct answer text for Q: ${rawQ.pregunta} in Level 1`);
-        }
-        optionsArray = [];
-        correctIndex = -1;
+        correctAnswerText = optionsArray[correctIndex];
     } else {
-        console.warn(`Invalid question format for Q: ${rawQ.pregunta} in Level ${level}`);
-         return null; // Skip invalid questions
+        // Level 1 expects answer text directly
+        correctAnswerText = rawQ.opciones[rawQ.respuesta_correcta];
+        if (typeof correctAnswerText !== 'string') {
+            console.warn(`Missing or invalid correct answer text for Q: ${rawQ.pregunta} in Level 1`);
+            return null; // Skip if level 1 answer is not found
+        }
+        optionsArray = []; // No multiple choice options for level 1
+        correctIndex = -1;
     }
 
     return {
         text: rawQ.pregunta,
         options: optionsArray, // Array of options text [A, B, C, D] for levels > 1
         correctIndex: correctIndex, // Index (0-3) of the correct option for levels > 1
-        correctAnswerText: correctAnswerText ? correctAnswerText.toLowerCase().trim() : '', // Correct answer text (esp. for level 1)
+        // Standardize correct answer for comparison
+        correctAnswerText: correctAnswerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, ""), // Normalize for comparison
         level: level
     };
 }
@@ -71,6 +80,7 @@ function processRawQuestion(rawQ, level) {
 function loadQuestions() {
     console.log(`Loading questions from ${DATA_DIR}...`);
     allQuestions = {}; // Reset
+    let totalLoaded = 0;
     try {
         for (let level = 1; level <= MAX_LEVELS; level++) {
             const filePath = path.join(DATA_DIR, `level_${level}.json`);
@@ -81,9 +91,10 @@ function loadQuestions() {
                     allQuestions[level] = jsonData.preguntas
                                             .map(q => processRawQuestion(q, level))
                                             .filter(q => q !== null); // Filter out invalid questions
-                    console.log(`Loaded ${allQuestions[level].length} questions for Level ${level}`);
+                    console.log(`Loaded ${allQuestions[level].length} valid questions for Level ${level}`);
+                    totalLoaded += allQuestions[level].length;
                 } else {
-                    console.warn(`Invalid format in ${filePath}`);
+                    console.warn(`Invalid format or missing 'preguntas' array in ${filePath}`);
                     allQuestions[level] = [];
                 }
             } else {
@@ -91,27 +102,34 @@ function loadQuestions() {
                 allQuestions[level] = [];
             }
         }
+        console.log(`Total valid questions loaded: ${totalLoaded}`);
+        if (totalLoaded === 0) {
+             console.error("CRITICAL: No questions loaded. Game cannot function.");
+             // Optionally, stop the server or enter a safe mode
+        }
     } catch (error) {
         console.error("Error loading questions:", error);
-        // Handle critical error? Maybe prevent server start?
         allQuestions = {}; // Clear potentially partial data
     }
 }
 
 // --- Game State Management ---
-// Store connected clients and game rooms
 const clients = new Map(); // Map<WebSocket, {id: string, roomId: string | null}>
 const rooms = new Map(); // Map<string, Room>
 // interface Room {
 //     roomId: string;
 //     players: { player1: Player | null, player2: Player | null };
 //     password?: string;
-//     // Game-specific state will go here
-//     currentTurn: string | null;
-//     currentLevel: number;
-//     // ... other game state like scores, questions used, etc.
 //     gameActive: boolean;
 //     spectators: WebSocket[]; // Optional
+//     // Game state added:
+//     currentTurn: string | null; // Player ID of the current turn
+//     currentLevel: number;
+//     questionsAnsweredInLevel: number;
+//     usedQuestionIndices: { [level: number]: number[] }; // Tracks indices used per level
+//     currentQuestion: any | null; // The question object currently active
+//     optionsSent: boolean; // Track if options were sent for current level > 1 question
+//     fiftyFiftyUsed: boolean; // Track if 50/50 was used for current question turn
 // }
 // interface Player {
 //     id: string;
@@ -122,45 +140,44 @@ const rooms = new Map(); // Map<string, Room>
 
 // --- Helper Functions ---
 function generateUniqueId() {
-    // Simple ID generation (replace with a more robust method if needed)
     return Math.random().toString(36).substring(2, 9);
 }
 
 function generateRoomId() {
-    // Simple 4-digit room code (ensure it's unique enough for your scale)
     let newId;
     do {
         newId = Math.floor(1000 + Math.random() * 9000).toString();
-    } while (rooms.has(newId)); // Ensure uniqueness
+    } while (rooms.has(newId));
     return newId;
 }
 
-function broadcast(roomId, message, senderWs = null) {
+// Broadcast to everyone IN THE ROOM (players and spectators)
+function broadcastToRoom(roomId, message, senderWs = null) {
     const room = rooms.get(roomId);
     if (!room) return;
 
     const messageString = JSON.stringify(message);
-    console.log(`Broadcasting to room ${roomId}:`, messageString);
+    // console.log(`Broadcasting to room ${roomId}:`, messageString); // Verbose
 
-    const players = [room.players.player1, room.players.player2].filter(p => p !== null);
+    const players = [room.players.player1, room.players.player2].filter(p => p);
     players.forEach(player => {
-        if (player && player.ws !== senderWs && player.ws.readyState === WebSocket.OPEN) {
+        if (player.ws !== senderWs && player.ws.readyState === WebSocket.OPEN) {
             player.ws.send(messageString);
         }
     });
-    // Optionally broadcast to spectators too
     room.spectators.forEach(spectatorWs => {
-         if (spectatorWs !== senderWs && spectatorWs.readyState === WebSocket.OPEN) {
-             spectatorWs.send(messageString);
-         }
+        if (spectatorWs !== senderWs && spectatorWs.readyState === WebSocket.OPEN) {
+            spectatorWs.send(messageString);
+        }
     });
 }
 
+// Send message safely to a specific WebSocket client
 function safeSend(ws, message) {
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify(message));
     } else {
-        console.warn("Attempted to send message to a closed or invalid WebSocket.");
+        // console.warn("Attempted to send message to a closed or invalid WebSocket."); // Can be noisy
     }
 }
 
@@ -170,10 +187,18 @@ wss.on('connection', (ws, req) => {
     clients.set(ws, { id: clientId, roomId: null });
     console.log(`Client connected: ${clientId} (Total: ${clients.size})`);
     safeSend(ws, { type: 'yourInfo', payload: { playerId: clientId } });
+    // Send available rooms to the new client (implement if lobby list needed)
+    // sendAvailableRooms(ws);
 
     ws.on('message', (message) => {
         let parsedMessage;
         try {
+            // Limit message size to prevent abuse
+            if (message.length > 4096) {
+                console.warn(`Message too long from ${clientId}. Closing connection.`);
+                ws.terminate();
+                return;
+            }
             parsedMessage = JSON.parse(message);
             // console.log(`Received from ${clientId}:`, parsedMessage); // Less verbose logging
             handleClientMessage(ws, parsedMessage);
@@ -199,10 +224,15 @@ wss.on('connection', (ws, req) => {
         const clientInfo = clients.get(ws);
         const clientId = clientInfo ? clientInfo.id : 'unknown';
         console.error(`WebSocket error for client ${clientId}:`, error);
+        // Attempt graceful disconnect and cleanup if possible
         if (clientInfo) {
-            handleDisconnect(ws, clientInfo.id, clientInfo.roomId);
+            handleDisconnect(ws, clientInfo.id, clientInfo.roomId); // Try cleanup
             clients.delete(ws);
             console.log(`Client removed after error. Total clients: ${clients.size}`);
+        }
+        // Terminate the connection if it's still open
+        if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+             ws.terminate();
         }
     });
 });
@@ -210,7 +240,11 @@ wss.on('connection', (ws, req) => {
 // --- Message Routing ---
 function handleClientMessage(ws, message) {
     const clientInfo = clients.get(ws);
-    if (!clientInfo) { return; }
+    if (!clientInfo) { return; } // Should not happen if client is connected
+
+    // Log message type and player ID for debugging
+    // console.log(`Handling message type: ${message.type} from player ${clientInfo.id}`);
+
     switch (message.type) {
         case 'createRoom':
             handleCreateRoom(ws, clientInfo, message.payload);
@@ -219,19 +253,23 @@ function handleClientMessage(ws, message) {
             handleJoinRoom(ws, clientInfo, message.payload);
             break;
         case 'joinRandomRoom':
-             handleJoinRandomRoom(ws, clientInfo, message.payload);
-             break;
+            handleJoinRandomRoom(ws, clientInfo, message.payload);
+            break;
+        case 'leaveRoom': // Added leave room handler
+            handleLeaveRoom(ws, clientInfo);
+            break;
+        // --- Game Actions ---
         case 'submitAnswer':
-             handleSubmitAnswer(ws, clientInfo, message.payload);
-             break;
+            handleSubmitAnswer(ws, clientInfo, message.payload);
+            break;
         case 'requestOptions':
-             handleRequestOptions(ws, clientInfo, message.payload);
-             break;
+            handleRequestOptions(ws, clientInfo);
+            break;
         case 'requestFiftyFifty':
-             handleRequestFiftyFifty(ws, clientInfo, message.payload);
-             break;
+            handleRequestFiftyFifty(ws, clientInfo);
+            break;
         default:
-            console.warn(`Unknown message type received: ${message.type}`);
+            console.warn(`Unknown message type received from ${clientInfo.id}: ${message.type}`);
             safeSend(ws, { type: 'errorMessage', payload: { error: `Unknown message type: ${message.type}` } });
     }
 }
@@ -240,502 +278,580 @@ function handleClientMessage(ws, message) {
 
 function handleCreateRoom(ws, clientInfo, payload) {
     if (clientInfo.roomId) {
-        safeSend(ws, { type: 'joinError', payload: { error: 'You are already in a room.' } });
+        safeSend(ws, { type: 'joinError', payload: { error: 'Ya estás en una sala.' } });
         return;
     }
     const roomId = generateRoomId();
-    const player = {
+    const playerName = payload.playerName || `Jugador_${clientInfo.id.substring(0, 4)}`;
+    const password = payload.password || ''; // Empty string if no password
+
+    const player1 = {
         id: clientInfo.id,
-        name: payload.playerName || `Player_${clientInfo.id.substring(0, 4)}`,
+        name: playerName,
         ws: ws,
         score: 0
     };
 
-    // Initialize usedQuestionIndices for all levels
-    const usedQuestionIndices = {};
-    for (let i = 1; i <= MAX_LEVELS; i++) {
-        usedQuestionIndices[i] = [];
-    }
-
     const newRoom = {
         roomId: roomId,
-        players: { player1: player, player2: null },
-        password: payload.password || undefined,
-        currentTurn: null,
-        currentLevel: 1,
+        players: { player1: player1, player2: null },
+        password: password,
         gameActive: false,
         spectators: [],
-        // --- Game State --- //
-        usedQuestionIndices: usedQuestionIndices,
-        questionsAnsweredThisLevel: 0,
-        currentQuestionData: null, // Stores the full question object from allQuestions
-        fiftyFiftyUsedThisTurn: false,
-        optionsSentThisTurn: false // Track if options were sent for current question
+        // Game state initialization (will be properly set in startGame)
+        currentTurn: null,
+        currentLevel: 1,
+        questionsAnsweredInLevel: 0,
+        usedQuestionIndices: {},
+        currentQuestion: null,
+        optionsSent: false,
+        fiftyFiftyUsed: false,
+        questionsPerLevel: QUESTIONS_PER_LEVEL // Store config per room
     };
 
     rooms.set(roomId, newRoom);
-    clientInfo.roomId = roomId;
-    console.log(`Room created: ${roomId} by ${player.name} (${player.id})`);
+    clientInfo.roomId = roomId; // Update client's state
+
+    console.log(`Room ${roomId} created by ${playerName} (${clientInfo.id}). Password: ${password ? 'Yes' : 'No'}`);
     safeSend(ws, { type: 'roomCreated', payload: { roomId: roomId } });
+
+    // Broadcast updated room list to lobby (implement if needed)
+    // broadcastAvailableRooms();
 }
 
 function handleJoinRoom(ws, clientInfo, payload) {
     if (clientInfo.roomId) {
-        safeSend(ws, { type: 'joinError', payload: { error: 'You are already in a room.' } });
+        safeSend(ws, { type: 'joinError', payload: { error: 'Ya estás en una sala.' } });
         return;
     }
-    if (!payload || !payload.roomId) {
-         safeSend(ws, { type: 'joinError', payload: { error: 'Room ID is required.' } });
-         return;
-     }
-
-    const room = rooms.get(payload.roomId);
+    const { roomId, password, playerName } = payload;
+    const room = rooms.get(roomId);
 
     if (!room) {
-        safeSend(ws, { type: 'joinError', payload: { error: 'Room not found.' } });
+        safeSend(ws, { type: 'joinError', payload: { error: `La sala ${roomId} no existe.` } });
         return;
     }
 
-    // Check password if the room has one
-    if (room.password && room.password !== payload.password) {
-        safeSend(ws, { type: 'joinError', payload: { error: 'Incorrect password.' } });
+    // Check password
+    if (room.password && room.password !== password) {
+        safeSend(ws, { type: 'joinError', payload: { error: 'Contraseña incorrecta.' } });
         return;
     }
 
     // Check if room is full
     if (room.players.player1 && room.players.player2) {
-        safeSend(ws, { type: 'joinError', payload: { error: 'Room is full.' } });
+        safeSend(ws, { type: 'joinError', payload: { error: 'La sala ya está llena.' } });
         return;
     }
 
-    // Add player to the room
-    const player = {
+    // Add player 2
+    const player2 = {
         id: clientInfo.id,
-        name: payload.playerName || `Player_${clientInfo.id.substring(0, 4)}`,
+        name: playerName || `Jugador_${clientInfo.id.substring(0, 4)}`,
         ws: ws,
         score: 0
     };
+    room.players.player2 = player2;
+    clientInfo.roomId = roomId; // Update client's state
 
-    let joinedAs = '';
-    if (!room.players.player1) { room.players.player1 = player; joinedAs = 'player1';}
-    else if (!room.players.player2) { room.players.player2 = player; joinedAs = 'player2';}
+    console.log(`${player2.name} (${clientInfo.id}) joined room ${roomId}`);
 
-    clientInfo.roomId = room.roomId; // Update client's state
-    console.log(`${player.name} (${player.id}) joined room ${room.roomId} as ${joinedAs}`);
+    // Notify both players they are joined and prepare for game start
+    const playersInfo = {
+        player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
+        player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
+    };
 
-    safeSend(ws, {
-        type: 'joinSuccess',
-        payload: {
-            roomId: room.roomId,
-            players: {
-                 player1: room.players.player1 ? { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score } : null,
-                 player2: room.players.player2 ? { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score } : null
-             }
-        }
-    });
+    // Send join success specifically to the joining player (player 2)
+    safeSend(ws, { type: 'joinSuccess', payload: { roomId: roomId, players: playersInfo } });
 
-    // Notify the other player
-    const otherPlayer = room.players.player1 === player ? room.players.player2 : room.players.player1;
-    if (otherPlayer) {
-        safeSend(otherPlayer.ws, {
-            type: 'playerJoined',
-            payload: {
-                playerName: player.name,
-                players: { // Send updated player list
-                    player1: room.players.player1 ? { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score } : null,
-                    player2: room.players.player2 ? { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score } : null
-                }
-            }
-        });
-    }
+    // Notify player 1 that player 2 joined
+    safeSend(room.players.player1.ws, { type: 'playerJoined', payload: { players: playersInfo } });
 
-    // Start game if full
-    if (room.players.player1 && room.players.player2) {
-        startGame(room.roomId);
-    }
+    // Start the game now that both players are in
+    startGame(roomId);
+
+    // Broadcast updated room list (room is now full or private, so might disappear from public list)
+    // broadcastAvailableRooms();
 }
 
 function handleJoinRandomRoom(ws, clientInfo, payload) {
     if (clientInfo.roomId) {
-        safeSend(ws, { type: 'randomJoinError', payload: { error: 'You are already in a room.' } });
+        safeSend(ws, { type: 'randomJoinError', payload: { error: 'Ya estás en una sala.' } });
         return;
     }
-    let foundRoomId = null;
+
+    let availableRoomId = null;
+    // Find a public room with exactly one player
     for (const [roomId, room] of rooms.entries()) {
-        if (!room.password && !room.players.player2 && room.players.player1) {
-            if(room.players.player1.id !== clientInfo.id) {
-                foundRoomId = roomId;
-                break;
-            }
+        if (!room.password && room.players.player1 && !room.players.player2 && !room.gameActive) {
+            availableRoomId = roomId;
+            break;
         }
     }
-    if (foundRoomId) {
-        console.log(`Found random room ${foundRoomId} for ${clientInfo.id}`);
-         handleJoinRoom(ws, clientInfo, {
-             roomId: foundRoomId,
-             playerName: payload.playerName,
-             password: ''
-         });
-         console.log(`Client ${clientInfo.id} joined room ${foundRoomId} via random join.`);
+
+    if (availableRoomId) {
+        // Join the found room
+        console.log(`Found random room ${availableRoomId} for ${clientInfo.id}`);
+        handleJoinRoom(ws, clientInfo, {
+            roomId: availableRoomId,
+            password: '',
+            playerName: payload.playerName
+        });
+        // Use specific success type for random join if needed by client?
+        // safeSend(ws, { type: 'randomJoinSuccess', payload: { roomId: availableRoomId } });
     } else {
-        console.log(`No random room found for ${clientInfo.id}, creating a new one.`);
-         handleCreateRoom(ws, clientInfo, {
-             playerName: payload.playerName,
-             password: ''
-         });
+        // No room found, maybe create a new public room instead?
+        console.log(`No random room found for ${clientInfo.id}. Creating new public room.`);
+        handleCreateRoom(ws, clientInfo, { playerName: payload.playerName, password: '' });
+        // Let the client know it's waiting in a new room
+        // safeSend(ws, { type: 'randomJoinError', payload: { error: 'No rooms available, created a new one for you.' } });
     }
 }
+
+function handleLeaveRoom(ws, clientInfo) {
+    const roomId = clientInfo.roomId;
+    if (!roomId) {
+        // safeSend(ws, { type: 'errorMessage', payload: { error: 'You are not in a room.' } });
+        return; // Not in a room, nothing to leave
+    }
+
+    const room = rooms.get(roomId);
+    if (!room) {
+        console.warn(`Client ${clientInfo.id} tried to leave non-existent room ${roomId}`);
+        clientInfo.roomId = null; // Correct client state anyway
+        return;
+    }
+
+    console.log(`Player ${clientInfo.id} is leaving room ${roomId}`);
+    const leavingPlayerId = clientInfo.id;
+    let remainingPlayer = null;
+
+    // Remove player from room
+    if (room.players.player1 && room.players.player1.id === leavingPlayerId) {
+        remainingPlayer = room.players.player2;
+        room.players.player1 = null;
+    } else if (room.players.player2 && room.players.player2.id === leavingPlayerId) {
+        remainingPlayer = room.players.player1;
+        room.players.player2 = null;
+    }
+
+    // Update client state
+    clientInfo.roomId = null;
+
+    // Check room status
+    if (!room.players.player1 && !room.players.player2) {
+        // Room is empty, delete it
+        console.log(`Room ${roomId} is empty, deleting.`);
+        rooms.delete(roomId);
+    } else if (remainingPlayer && room.gameActive) {
+        // Game was active, opponent left, remaining player wins
+        console.log(`Game in room ${roomId} ended due to player ${leavingPlayerId} leaving.`);
+        endGame(roomId, `${remainingPlayer.name} wins! Opponent left.`);
+        // Notify the remaining player
+        safeSend(remainingPlayer.ws, {
+            type: 'gameOver',
+            payload: {
+                reason: `Opponent left the game.`, // Use a generic payload, endGame handles details
+                 winnerId: remainingPlayer.id // Indicate winner explicitly
+            }
+        });
+        // Room might persist until the winner leaves or manually removed
+        room.gameActive = false; // Mark game as inactive
+    } else if (remainingPlayer) {
+        // Game wasn't active (lobby), just notify remaining player
+        safeSend(remainingPlayer.ws, {
+            type: 'opponentLeftLobby',
+            payload: { message: 'Your opponent has left the lobby.' }
+        });
+    }
+
+    // Broadcast updated room list (room might become available)
+    // broadcastAvailableRooms();
+}
+
+// --- Game Logic Handlers ---
 
 function startGame(roomId) {
     const room = rooms.get(roomId);
-    if (!room || !room.players.player1 || !room.players.player2) { return; }
-
-    room.gameActive = true;
-    room.players.player1.score = 0;
-    room.players.player2.score = 0;
-    room.currentLevel = 1;
-    room.questionsAnsweredThisLevel = 0;
-    room.currentQuestionData = null;
-    // Reset used questions for the new game
-    for (let i = 1; i <= MAX_LEVELS; i++) {
-        room.usedQuestionIndices[i] = [];
+    if (!room || !room.players.player1 || !room.players.player2) {
+        console.error(`Cannot start game in room ${roomId}: Missing players.`);
+        return;
     }
 
+    console.log(`Starting game in room ${roomId}...`);
+
+    // Initialize game state
+    room.gameActive = true;
+    room.currentLevel = 1;
+    room.questionsAnsweredInLevel = 0;
+    room.usedQuestionIndices = {};
+    room.currentQuestion = null;
+    room.players.player1.score = 0;
+    room.players.player2.score = 0;
+    room.optionsSent = false;
+    room.fiftyFiftyUsed = false;
+
+    // Randomly select starting player
     room.currentTurn = Math.random() < 0.5 ? room.players.player1.id : room.players.player2.id;
-    console.log(`Starting game in room ${roomId}. Turn: ${room.currentTurn}`);
+    console.log(`Room ${roomId} - Game state initialized. Starting turn: ${room.currentTurn}`); // <--- DEBUG LOG
 
-    const playersData = {
-        player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
-        player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
+    const playersInfo = {
+        player1: { id: room.players.player1.id, name: room.players.player1.name, score: 0 },
+        player2: { id: room.players.player2.id, name: room.players.player2.name, score: 0 }
     };
-    const message = {
-        type: 'gameStart',
-        payload: {
-            players: playersData,
-            startingPlayerId: room.currentTurn,
-            currentLevel: room.currentLevel
-        }
-    };
-    safeSend(room.players.player1.ws, message);
-    safeSend(room.players.player2.ws, message);
 
-    // Send the first question
+    // Send gameStart message to both players
+    const startMessage = { type: 'gameStart', payload: { players: playersInfo, startingPlayerId: room.currentTurn } };
+    console.log(`Room ${roomId} - Sending gameStart message...`); // <--- DEBUG LOG
+    safeSend(room.players.player1.ws, startMessage);
+    safeSend(room.players.player2.ws, startMessage);
+    console.log(`Room ${roomId} - gameStart message sent.`); // <--- DEBUG LOG
+
+    // Send the first question immediately
+    console.log(`Room ${roomId} - Calling sendNextQuestion for the first time...`); // <--- DEBUG LOG
     sendNextQuestion(roomId);
+    console.log(`Room ${roomId} - Returned from first call to sendNextQuestion.`); // <--- DEBUG LOG
 }
 
 function sendNextQuestion(roomId) {
+    console.log(`DEBUG: sendNextQuestion called for room ${roomId}`); // <--- DEBUG LOG
     const room = rooms.get(roomId);
-    if (!room || !room.gameActive || !room.players.player1 || !room.players.player2) return;
+    if (!room || !room.gameActive) {
+         console.log(`DEBUG: sendNextQuestion aborted for room ${roomId} - Room not found or game not active.`); // <--- DEBUG LOG
+        return;
+    }
 
-    // Reset turn-specific flags
-    room.fiftyFiftyUsedThisTurn = false;
-    room.optionsSentThisTurn = false;
+    console.log(`Sending next question for room ${roomId}, Level ${room.currentLevel}`);
 
-    const currentLevel = room.currentLevel;
-    const levelQuestions = allQuestions[currentLevel] || [];
-    const usedIndices = room.usedQuestionIndices[currentLevel] || [];
+    // Check for level advancement
+    if (room.questionsAnsweredInLevel >= room.questionsPerLevel) {
+        room.currentLevel++;
+        room.questionsAnsweredInLevel = 0;
+        console.log(`Advancing room ${roomId} to Level ${room.currentLevel}`);
+    }
 
-    const availableIndices = levelQuestions
+    // Check if game should end (max level reached)
+    if (room.currentLevel > MAX_LEVELS) {
+        console.log(`Room ${roomId} reached max level.`);
+        endGame(roomId, "Completed all levels!");
+        return;
+    }
+
+    // Ensure the level exists in loaded questions
+     console.log(`DEBUG: Checking questions for Level ${room.currentLevel}...`); // <--- DEBUG LOG
+    if (!allQuestions[room.currentLevel] || allQuestions[room.currentLevel].length === 0) {
+        console.error(`CRITICAL: No questions available for Level ${room.currentLevel} in room ${roomId}. Ending game.`); // <--- DEBUG LOG
+        endGame(roomId, "Error: No questions available for this level.");
+        return;
+    }
+     console.log(`DEBUG: Found ${allQuestions[room.currentLevel].length} questions for Level ${room.currentLevel}.`); // <--- DEBUG LOG
+
+    // Select a random, unused question for the current level
+    const questionsForLevel = allQuestions[room.currentLevel];
+    const usedIndices = room.usedQuestionIndices[room.currentLevel] || [];
+    const availableIndices = questionsForLevel
         .map((_, index) => index)
         .filter(index => !usedIndices.includes(index));
 
+     console.log(`DEBUG: Level ${room.currentLevel} - Used Indices: [${usedIndices.join(', ')}], Available Indices: [${availableIndices.join(', ')}]`); // <--- DEBUG LOG
+
     if (availableIndices.length === 0) {
-        console.warn(`No more questions available for level ${currentLevel} in room ${roomId}.`);
-        // TODO: Handle this case properly - End game? Go to final round?
-        // For now, let's end the game if no questions left in the final level
-        if (currentLevel >= MAX_LEVELS) {
-             endGame(roomId, "Ran out of questions!");
-        } else {
-            // Or maybe advance level automatically if possible?
-             console.warn(`Advancing level prematurely for room ${roomId} due to lack of questions.`);
-             room.currentLevel++;
-             room.questionsAnsweredThisLevel = 0;
-             sendNextQuestion(roomId); // Try sending question for next level
-        }
+        console.warn(`No unused questions left for Level ${room.currentLevel} in room ${roomId}. Ending game.`);
+        endGame(roomId, `Ran out of questions for Level ${room.currentLevel}.`);
         return;
     }
 
     const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
-    room.usedQuestionIndices[currentLevel].push(randomIndex);
-    room.currentQuestionData = levelQuestions[randomIndex]; // Store the full question object
+    room.currentQuestion = questionsForLevel[randomIndex];
+     console.log(`DEBUG: Selected question index ${randomIndex} for Level ${room.currentLevel}. Text: ${room.currentQuestion.text}`); // <--- DEBUG LOG
 
-    console.log(`Sending Q (Level ${currentLevel}, Index ${randomIndex}) to room ${roomId}. Turn: ${room.currentTurn}`);
+    // Mark question as used for this room and level
+    if (!room.usedQuestionIndices[room.currentLevel]) {
+        room.usedQuestionIndices[room.currentLevel] = [];
+    }
+    room.usedQuestionIndices[room.currentLevel].push(randomIndex);
 
-    // Prepare question data for the client (exclude answer info)
-    const questionPayloadForClient = {
-        level: room.currentQuestionData.level,
-        text: room.currentQuestionData.text
+    // Increment count AFTER selecting the question for this turn
+    room.questionsAnsweredInLevel++;
+
+    // Reset turn-specific state
+    room.optionsSent = false;
+    room.fiftyFiftyUsed = false;
+
+    // Prepare payload (exclude answer info)
+    const questionPayload = {
+        level: room.currentQuestion.level,
+        text: room.currentQuestion.text,
+        options: room.currentQuestion.level > 1 ? room.currentQuestion.options : []
     };
 
-    // Calculate question number within the level based on used count
-    const questionNumber = usedIndices.length; // Before pushing, it was the count of previous questions
-    // Total questions = number available initially for this level
-    const totalQuestionsInLevel = levelQuestions.length;
+     const playersInfo = {
+        player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
+        player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
+    };
 
-     const message = {
-         type: 'newQuestion',
-         payload: {
-             question: questionPayloadForClient, // Send sanitized question
-             currentTurn: room.currentTurn,
-             players: { // Send updated scores/state
-                 player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
-                 player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
-             },
-             questionNumber: questionNumber,
-             totalQuestionsInLevel: totalQuestionsInLevel
-         }
-     };
+    const message = {
+        type: 'newQuestion',
+        payload: {
+            question: questionPayload,
+            questionNumber: room.questionsAnsweredInLevel,
+            totalQuestionsInLevel: room.questionsPerLevel,
+            currentTurn: room.currentTurn,
+            players: playersInfo
+        }
+    };
 
+    console.log(`Room ${roomId} - Sending Q${room.questionsAnsweredInLevel} L${room.currentLevel}, Turn: ${room.currentTurn}`);
+     console.log(`DEBUG: Broadcasting newQuestion message for room ${roomId}...`); // <--- DEBUG LOG
+    broadcastToRoom(roomId, message);
+    // Also send individually to handle cases where broadcast might miss one
     safeSend(room.players.player1.ws, message);
     safeSend(room.players.player2.ws, message);
+     console.log(`DEBUG: newQuestion message sent for room ${roomId}.`); // <--- DEBUG LOG
 }
 
 function handleSubmitAnswer(ws, clientInfo, payload) {
-    const room = rooms.get(clientInfo.roomId);
-    if (!room || !room.gameActive || !clientInfo.roomId) { return; }
-    if (clientInfo.id !== room.currentTurn) {
-         safeSend(ws, { type: 'errorMessage', payload: { error: 'Not your turn.' } });
-         return;
-     }
-     if (!room.currentQuestionData) {
-          safeSend(ws, { type: 'errorMessage', payload: { error: 'No active question to answer.' } });
-          return;
-      }
+    const roomId = clientInfo.roomId;
+    const room = rooms.get(roomId);
 
-    const question = room.currentQuestionData;
+    if (!room || !room.gameActive) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Game not active.' } });
+        return;
+    }
+    if (clientInfo.id !== room.currentTurn) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Not your turn.' } });
+        return;
+    }
+    if (!room.currentQuestion) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No active question.' } });
+        return;
+    }
+
+    const question = room.currentQuestion;
     let isCorrect = false;
+    let pointsAwarded = 0;
+    let submittedAnswerIndex = -1; // For levels > 1
 
     if (question.level === 1) {
-        const playerAnswer = (payload.answerText || '').toLowerCase().trim();
-        isCorrect = playerAnswer === question.correctAnswerText && playerAnswer !== '';
+        const playerAnswer = payload.answerText?.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "") || '';
+        isCorrect = playerAnswer === question.correctAnswerText;
+        console.log(`Room ${roomId} L1 Answer: Submitted='${playerAnswer}', Correct='${question.correctAnswerText}', Result=${isCorrect}`);
     } else {
-        const playerIndex = payload.selectedIndex;
-        isCorrect = playerIndex === question.correctIndex && playerIndex !== undefined && playerIndex !== null;
+        submittedAnswerIndex = payload.selectedIndex;
+        if (typeof submittedAnswerIndex === 'number' && submittedAnswerIndex >= 0 && submittedAnswerIndex < question.options.length) {
+            isCorrect = submittedAnswerIndex === question.correctIndex;
+             console.log(`Room ${roomId} L>1 Answer: Submitted Index=${submittedAnswerIndex}, Correct Index=${question.correctIndex}, Result=${isCorrect}`);
+        } else {
+             console.warn(`Room ${roomId} Invalid index submitted:`, payload.selectedIndex);
+             safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format.' } });
+             return; // Invalid submission
+        }
     }
 
-    const pointsAwarded = isCorrect ? (10 * room.currentLevel) : 0;
-
-    // Update player score
+    // Update score
     const currentPlayer = room.players.player1.id === clientInfo.id ? room.players.player1 : room.players.player2;
-    if(currentPlayer) {
+    if (isCorrect) {
+        pointsAwarded = 10 * question.level; // Example scoring
         currentPlayer.score += pointsAwarded;
-        console.log(`Player ${clientInfo.id} answered ${isCorrect ? 'correctly' : 'incorrectly'}. Score: ${currentPlayer.score}`);
     }
 
-    // Send result to both players
+    // Prepare result message
     const resultPayload = {
         isCorrect: isCorrect,
         pointsAwarded: pointsAwarded,
-        // Send correct answer info so client can display it
-        correctAnswerText: question.correctAnswerText,
-        correctIndex: question.correctIndex,
-        selectedIndex: payload.selectedIndex, // Echo back the selection
-        forPlayerId: clientInfo.id
+        correctAnswerText: question.level === 1 ? question.correctAnswerText : null, // Send text for level 1 display
+        correctIndex: question.level > 1 ? question.correctIndex : -1, // Send index for levels > 1
+        forPlayerId: clientInfo.id,
+        selectedIndex: submittedAnswerIndex // Include submitted index for visualization
     };
-    const resultMessage = { type: 'answerResult', payload: resultPayload };
-    safeSend(room.players.player1.ws, resultMessage);
-    safeSend(room.players.player2.ws, resultMessage);
 
-    // Increment answered count and check for level advance / game over
-    room.questionsAnsweredThisLevel++;
-    let levelAdvanced = false;
-    if (room.currentLevel < MAX_LEVELS && room.questionsAnsweredThisLevel >= QUESTIONS_TO_ADVANCE_LEVEL) {
-        room.currentLevel++;
-        room.questionsAnsweredThisLevel = 0;
-        levelAdvanced = true;
-        console.log(`Advancing room ${room.roomId} to level ${room.currentLevel}`);
-    }
+    // Send result to everyone in the room
+    broadcastToRoom(roomId, { type: 'answerResult', payload: resultPayload });
+     // Also send individually to ensure delivery
+     safeSend(room.players.player1.ws, { type: 'answerResult', payload: resultPayload });
+     safeSend(room.players.player2.ws, { type: 'answerResult', payload: resultPayload });
 
     // Switch turn
-    room.currentTurn = room.players.player1.id === clientInfo.id
-        ? room.players.player2.id
-        : room.players.player1.id;
+    room.currentTurn = room.players.player1.id === clientInfo.id ? room.players.player2.id : room.players.player1.id;
 
-    // Send next question or end game after a delay
+    // Prepare state update message
+     const playersInfo = {
+        player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
+        player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
+    };
+    const updatePayload = { currentTurn: room.currentTurn, players: playersInfo };
+    const updateMessage = { type: 'updateState', payload: updatePayload };
+
+     // Send state update to everyone
+     broadcastToRoom(roomId, updateMessage);
+     safeSend(room.players.player1.ws, updateMessage);
+     safeSend(room.players.player2.ws, updateMessage);
+
+    // Send next question after a short delay to allow clients to process result
     setTimeout(() => {
-         if (!rooms.has(room.roomId)) return; // Room might have been deleted due to disconnect during timeout
-         const isGameOver = room.currentLevel > MAX_LEVELS;
-         if (isGameOver) {
-             endGame(room.roomId, "Reached max level");
-         } else {
-             sendNextQuestion(room.roomId);
-         }
-     }, 2500); // 2.5 second delay
+        sendNextQuestion(roomId);
+    }, 1500); // Adjust delay as needed (e.g., 1.5 seconds)
 }
 
-function handleRequestOptions(ws, clientInfo, payload) {
-    const room = rooms.get(clientInfo.roomId);
-    if (!room || !room.gameActive || !clientInfo.roomId) return;
-    if (clientInfo.id !== room.currentTurn) return;
-    if (!room.currentQuestionData || room.currentQuestionData.level === 1) {
-         safeSend(ws, { type: 'errorMessage', payload: { error: 'Options not available for this question/level.' } });
-         return;
-    }
-    if (room.optionsSentThisTurn) {
-         safeSend(ws, { type: 'errorMessage', payload: { error: 'Options already requested/sent for this turn.' } });
-         return;
-     }
+function handleRequestOptions(ws, clientInfo) {
+    const roomId = clientInfo.roomId;
+    const room = rooms.get(roomId);
 
-    console.log(`Sending options for Q (Level ${room.currentLevel}) to ${clientInfo.id} in room ${room.roomId}`);
-    room.optionsSentThisTurn = true; // Mark options as sent for this question/turn
-    safeSend(ws, { type: 'optionsProvided', payload: { options: room.currentQuestionData.options } });
-}
-
-function handleRequestFiftyFifty(ws, clientInfo, payload) {
-    const room = rooms.get(clientInfo.roomId);
-    if (!room || !room.gameActive || !clientInfo.roomId) return;
-    if (clientInfo.id !== room.currentTurn) return;
-    if (!room.currentQuestionData || room.currentQuestionData.level === 1) {
-        safeSend(ws, { type: 'errorMessage', payload: { error: '50/50 not available for this question/level.' } });
+    if (!room || !room.gameActive || clientInfo.id !== room.currentTurn || !room.currentQuestion || room.currentQuestion.level === 1) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot request options now.' } });
         return;
     }
-    if (!room.optionsSentThisTurn) {
-         safeSend(ws, { type: 'errorMessage', payload: { error: 'Options must be requested before using 50/50.' } });
-         return;
-     }
-    if (room.fiftyFiftyUsedThisTurn) {
-         safeSend(ws, { type: 'errorMessage', payload: { error: '50/50 already used for this turn.' } });
-         return;
-     }
-
-    const question = room.currentQuestionData;
-    const correctIndex = question.correctIndex;
-    const options = question.options;
-
-    if (correctIndex < 0 || correctIndex >= options.length) {
-         safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot apply 50/50 due to invalid question data.' } });
-         return;
-     }
-
-    // Find indices of incorrect options
-    const incorrectIndices = options
-        .map((_, index) => index)
-        .filter(index => index !== correctIndex);
-
-    if (incorrectIndices.length < 2) {
-        safeSend(ws, { type: 'errorMessage', payload: { error: 'Not enough incorrect options to remove for 50/50.' } });
-        return; // Should not happen with 4 options
+    if (room.optionsSent) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Options already requested/sent.' } });
+        return;
     }
 
-    // Shuffle incorrect indices and pick the first two to remove
-    incorrectIndices.sort(() => 0.5 - Math.random());
-    const optionsToRemoveIndices = incorrectIndices.slice(0, 2);
-
-    room.fiftyFiftyUsedThisTurn = true; // Mark as used
-    console.log(`Applying 50/50 for ${clientInfo.id} in room ${room.roomId}. Removing indices:`, optionsToRemoveIndices);
-
-    safeSend(ws, { type: 'fiftyFiftyApplied', payload: { optionsToRemove: optionsToRemoveIndices } });
+    room.optionsSent = true;
+    const optionsPayload = { options: room.currentQuestion.options };
+    console.log(`Room ${roomId} - Sending options to ${clientInfo.id}`);
+    safeSend(ws, { type: 'optionsProvided', payload: optionsPayload });
+    // No broadcast needed, only sender gets this implicitly via client logic
 }
+
+function handleRequestFiftyFifty(ws, clientInfo) {
+    const roomId = clientInfo.roomId;
+    const room = rooms.get(roomId);
+
+     if (!room || !room.gameActive || clientInfo.id !== room.currentTurn || !room.currentQuestion || room.currentQuestion.level === 1 || !room.optionsSent || room.fiftyFiftyUsed) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot use 50/50 now.' } });
+        return;
+    }
+
+    room.fiftyFiftyUsed = true;
+    const correctIndex = room.currentQuestion.correctIndex;
+    const optionsCount = room.currentQuestion.options.length;
+    let indicesToRemove = [];
+    let attempts = 0;
+
+    while (indicesToRemove.length < 2 && attempts < 10) {
+        const randomIndex = Math.floor(Math.random() * optionsCount);
+        if (randomIndex !== correctIndex && !indicesToRemove.includes(randomIndex)) {
+            indicesToRemove.push(randomIndex);
+        }
+        attempts++; // Prevent infinite loop just in case
+    }
+
+    if (indicesToRemove.length === 2) {
+        const fiftyFiftyPayload = { optionsToRemove: indicesToRemove };
+        console.log(`Room ${roomId} - Sending 50/50 removal indices ${indicesToRemove} to ${clientInfo.id}`);
+        safeSend(ws, { type: 'fiftyFiftyApplied', payload: fiftyFiftyPayload });
+    } else {
+        // Should not happen with 4 options, but handle defensively
+        console.error(`Room ${roomId} - Failed to generate 50/50 indices.`);
+        room.fiftyFiftyUsed = false; // Reset if failed
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Failed to apply 50/50.' } });
+    }
+}
+
+// --- End Game & Cleanup ---
 
 function endGame(roomId, reason = "Game finished") {
     const room = rooms.get(roomId);
     if (!room) return;
-    if (!room.gameActive) return; // Prevent ending game twice
 
     console.log(`Ending game in room ${roomId}. Reason: ${reason}`);
     room.gameActive = false;
+
     let winnerId = null;
     let draw = false;
-    if (room.players.player1 && room.players.player2) {
-        if (room.players.player1.score > room.players.player2.score) winnerId = room.players.player1.id;
-        else if (room.players.player2.score > room.players.player1.score) winnerId = room.players.player2.id;
+    const p1 = room.players.player1;
+    const p2 = room.players.player2;
+
+    if (p1 && p2) {
+        if (p1.score > p2.score) winnerId = p1.id;
+        else if (p2.score > p1.score) winnerId = p2.id;
         else draw = true;
-    } else {
-        winnerId = room.players.player1 ? room.players.player1.id : (room.players.player2 ? room.players.player2.id : null);
-        reason = reason || "Opponent left";
+    } else if (p1 && !p2) {
+         winnerId = p1.id; // Player 1 wins if player 2 wasn't there or left
+    } else if (!p1 && p2) {
+         winnerId = p2.id; // Player 2 wins if player 1 wasn't there or left
     }
 
     const finalScores = {};
-    if(room.players.player1) finalScores[room.players.player1.id] = room.players.player1.score;
-    if(room.players.player2) finalScores[room.players.player2.id] = room.players.player2.score;
+    if (p1) finalScores[p1.id] = p1.score;
+    if (p2) finalScores[p2.id] = p2.score;
 
-    const message = {
-        type: 'gameOver',
-        payload: {
-            finalScores: finalScores,
-            winnerId: winnerId,
-            draw: draw,
-            reason: reason
-        }
+    const gameOverPayload = {
+        finalScores: finalScores,
+        winnerId: winnerId,
+        draw: draw,
+        reason: reason
     };
 
-    // Use safeSend for robustness
-    if(room.players.player1) safeSend(room.players.player1.ws, message);
-    if(room.players.player2) safeSend(room.players.player2.ws, message);
-    room.spectators.forEach(ws => safeSend(ws, message)); // Notify spectators too
+    // Send gameOver message to both players (if they exist)
+    const message = { type: 'gameOver', payload: gameOverPayload };
+    if (p1) safeSend(p1.ws, message);
+    if (p2) safeSend(p2.ws, message);
 
-    // Consider deleting room after a short delay? Or keep it until players leave?
-    // For simplicity, let's keep it until handled by disconnects or explicit leave.
-    // setTimeout(() => rooms.delete(roomId), 60000); // Example: delete after 1 minute
+    // Consider cleanup: remove room? Or wait for players to leave?
+    // For now, keep the room until players disconnect or leave.
 }
 
 function handleDisconnect(ws, clientId, roomId) {
-    console.log(`Handling disconnect for ${clientId} in room ${roomId}`);
-    if (!roomId) return;
-    const room = rooms.get(roomId);
-    if (!room) return;
+    console.log(`Handling disconnect for ${clientId} in room ${roomId || 'lobby'}`);
+    if (roomId) {
+        const room = rooms.get(roomId);
+        if (room) {
+            let remainingPlayer = null;
+            let disconnectedPlayerName = 'Opponent';
 
-    let disconnectedPlayerKey = null;
-    let remainingPlayer = null;
-    let disconnectedPlayerName = 'Opponent';
+            // Identify players and check if game was active
+            if (room.players.player1 && room.players.player1.id === clientId) {
+                disconnectedPlayerName = room.players.player1.name;
+                room.players.player1 = null;
+                remainingPlayer = room.players.player2;
+            } else if (room.players.player2 && room.players.player2.id === clientId) {
+                disconnectedPlayerName = room.players.player2.name;
+                room.players.player2 = null;
+                remainingPlayer = room.players.player1;
+            }
 
-    if (room.players.player1 && room.players.player1.id === clientId) {
-        disconnectedPlayerKey = 'player1';
-        disconnectedPlayerName = room.players.player1.name;
-        remainingPlayer = room.players.player2;
-        room.players.player1 = null;
-    } else if (room.players.player2 && room.players.player2.id === clientId) {
-        disconnectedPlayerKey = 'player2';
-        disconnectedPlayerName = room.players.player2.name;
-        remainingPlayer = room.players.player1;
-        room.players.player2 = null;
-    } else {
-         const spectatorIndex = room.spectators.indexOf(ws);
-         if (spectatorIndex > -1) {
-             room.spectators.splice(spectatorIndex, 1);
-             console.log(`Spectator ${clientId} left room ${roomId}`);
-             return;
-         }
-         console.warn(`Disconnecting client ${clientId} not found in room ${roomId}`);
-         return;
-    }
-
-    console.log(`Player ${clientId} (${disconnectedPlayerName}) disconnected from room ${roomId}`);
-
-    if (room.gameActive) {
-        if (remainingPlayer) {
-            safeSend(remainingPlayer.ws, {
-                type: 'playerDisconnect',
-                payload: { disconnectedPlayerName: disconnectedPlayerName }
-            });
-             endGame(roomId, `${disconnectedPlayerName} disconnected`);
-        } else {
-             console.log(`Game was active in room ${roomId} but no remaining player found after disconnect.`);
-             rooms.delete(roomId);
-             console.log(`Room ${roomId} deleted.`);
-        }
-    } else {
-        // Lobby stage
-        if (remainingPlayer) {
-            safeSend(remainingPlayer.ws, {
-                type: 'lobbyUpdate',
-                payload: { message: `${disconnectedPlayerName} left the lobby.` }
-            });
-        } else {
-            console.log(`Room ${roomId} is now empty. Deleting.`);
-            rooms.delete(roomId);
+            if (!room.players.player1 && !room.players.player2) {
+                // Both players gone (or only one was ever there), remove room
+                console.log(`Room ${roomId} empty after disconnect, removing.`);
+                rooms.delete(roomId);
+            } else if (remainingPlayer && room.gameActive) {
+                // Game was active, notify remaining player and end game
+                console.log(`Game in room ${roomId} ended due to player ${clientId} disconnecting.`);
+                safeSend(remainingPlayer.ws, {
+                    type: 'gameOver',
+                    payload: {
+                        reason: `${disconnectedPlayerName} disconnected. You win!`, // Custom reason
+                        winnerId: remainingPlayer.id
+                        // Include final scores if desired
+                    }
+                });
+                room.gameActive = false; // Stop the game
+            } else if (remainingPlayer) {
+                 // Game not active (lobby), notify remaining player opponent left
+                 safeSend(remainingPlayer.ws, {
+                     type: 'opponentLeftLobby',
+                     payload: { message: `${disconnectedPlayerName} left the lobby.` }
+                 });
+            }
+            // Broadcast updated room list if needed
+            // broadcastAvailableRooms();
         }
     }
+    // Client record is deleted in the main 'close' handler
 }
 
-// --- Start Server ---
-loadQuestions(); // Load questions before starting the server
+console.log("Server script initialized. Waiting for connections...");
 
-server.listen(PORT, () => {
-    console.log(`HTTP and WebSocket server listening on port ${PORT}`);
-});
-
-// Basic error handling for the server itself
-server.on('error', (error) => {
-    console.error('Server error:', error);
+// Graceful shutdown (optional but good practice)
+process.on('SIGINT', () => {
+    console.log('\nGracefully shutting down...');
+    wss.close(() => {
+        console.log('WebSocket server closed.');
+        server.close(() => {
+            console.log('HTTP server closed.');
+            process.exit(0);
+        });
+    });
 }); 

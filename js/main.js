@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const nameForm = document.getElementById('nameForm');
     if (nameForm) {
         // Si ya hay un nombre guardado, redirigir directamente a games.html
-        const existingName = localStorage.getItem('playerName');
+        const existingName = sessionStorage.getItem('playerName');
         if (existingName) {
             window.location.href = 'games.html';
             return;
@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const playerName = document.getElementById('playerName').value.trim();
             
             if (playerName) {
-                // Save the name to local storage
-                localStorage.setItem('playerName', playerName);
+                // Save the name to session storage
+                sessionStorage.setItem('playerName', playerName);
                 // Redirect to game selection page
                 window.location.href = 'games.html';
             }
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check if we're on the games page
     const playerNameDisplay = document.getElementById('playerNameDisplay');
     if (playerNameDisplay) {
-        const playerName = localStorage.getItem('playerName') || 'Jugador';
+        let playerName = sessionStorage.getItem('playerName') || 'Jugador';
         playerNameDisplay.textContent = playerName;
         
         // Configurar el cambio de nombre
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const newName = newPlayerNameInput.value.trim();
                     
                     if (newName) {
-                        localStorage.setItem('playerName', newName);
+                        sessionStorage.setItem('playerName', newName);
                         playerNameDisplay.textContent = newName;
                         changeNameModal.classList.remove('active');
                         playerName = newName;
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update player name in game headers
     const playerNameElements = document.querySelectorAll('.player-name');
     if (playerNameElements.length > 0) {
-        const playerName = localStorage.getItem('playerName') || 'Jugador';
+        const playerName = sessionStorage.getItem('playerName') || 'Jugador';
         playerNameElements.forEach(element => {
             element.textContent = playerName;
         });
