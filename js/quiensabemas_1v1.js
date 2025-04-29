@@ -1,5 +1,14 @@
 // --- WebSocket URL (¡Configura esto!) ---
-const WEBSOCKET_URL = 'ws://localhost:8080';
+const WEBSOCKET_URL = (() => {
+    // Usa 'wss:' si tu sitio está en HTTPS, 'ws:' si está en HTTP
+    // const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    // Asume que el servidor WebSocket corre en el mismo host y puerto, en la raíz '/'.
+    // ¡AJUSTA ESTO SI TU SERVIDOR ESTÁ EN OTRO LADO!
+    // Ejemplo local: 'ws://localhost:8080'
+    // Ejemplo producción: `${protocol}//${window.location.host}`
+    // return `${protocol}//${window.location.host}`;
+    return 'ws://localhost:8080'; // <-- URL para desarrollo local
+})();
 
 document.addEventListener('DOMContentLoaded', function() {
     // --- Game State Variables ---
@@ -249,8 +258,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
                  const currentPlayer = player1?.id === gameState.currentTurn ? player1 : player2;
                  turnIndicatorEl.textContent = `Turno de: ${currentPlayer?.name || '...'}`;
-             }
         }
+    }
     }
 
     // --- Question Display (Triggered by Server) ---
