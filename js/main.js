@@ -72,16 +72,60 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // --- Get Modal Elements --- 
+    const qsmIntroModal = document.getElementById('qsmIntroModal');
+    const goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
+
     // Handle clicking on game cards
     const gameCards = document.querySelectorAll('.game-card');
     if (gameCards.length > 0) {
         gameCards.forEach(card => {
-            card.addEventListener('click', function() {
+            // We need the button inside the card to check if it's disabled
+            const playButton = card.querySelector('.play-button');
+
+            card.addEventListener('click', function(event) {
+                // Prevent click if the button inside is disabled (e.g., Coming Soon)
+                if (playButton && playButton.disabled) {
+                    event.stopPropagation(); // Stop the event from bubbling/default action
+                    return;
+                }
+
                 const gameType = this.getAttribute('data-game');
-                window.location.href = `${gameType}.html`;
+
+                if (gameType === 'quiensabemas') {
+                    event.preventDefault(); // Prevent default navigation for QSM
+                    event.stopPropagation(); // Stop event propagation
+                    // Show the intro modal
+                    if (qsmIntroModal) {
+                        qsmIntroModal.classList.add('active');
+                    }
+                } else if (gameType) {
+                    // For other games, navigate directly (original behavior)
+                    window.location.href = `${gameType}.html`;
+                } 
+                // If gameType is null/undefined (e.g. clicked on empty space), do nothing
             });
         });
     }
+
+    // --- Event Listener for QSM Intro Modal Button ---
+    if (goToLobbyQSMButton && qsmIntroModal) {
+        goToLobbyQSMButton.addEventListener('click', function() {
+            qsmIntroModal.classList.remove('active'); // Hide modal
+            window.location.href = 'quiensabemas.html'; // Navigate to the game lobby
+        });
+    }
+
+    // --- Optional: Close modal if clicking outside the content ---
+    if (qsmIntroModal) {
+        qsmIntroModal.addEventListener('click', function(event) {
+            // Check if the click is directly on the overlay (not the content)
+            if (event.target === qsmIntroModal) {
+                qsmIntroModal.classList.remove('active');
+            }
+        });
+    }
+    // --- End Modal Logic ---
 
     // Handle back buttons
     const backButtons = document.querySelectorAll('.back-button');

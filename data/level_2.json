@@ -3,142 +3,82 @@
     "dificultad": "Fácil",
     "preguntas": [
       {
-        "pregunta": "¿Cuáles son los '5 grandes' del fútbol argentino?",
+        "pregunta": "Además de Boca Juniors y River Plate, ¿cuáles son los otros 3 equipos considerados 'grandes' tradicionalmente en Argentina?",
         "opciones": {
-          "A": "Boca, River, Racing, Independiente, San Lorenzo",
-          "B": "Boca, River, Vélez, Estudiantes, Newell's",
-          "C": "Boca, River, Rosario Central, Gimnasia, Lanús",
-          "D": "Boca, River, Argentinos, Huracán, Banfield"
+          "A": "Racing, Independiente, San Lorenzo",
+          "B": "Vélez, Estudiantes, Newell's",
+          "C": "Rosario Central, Gimnasia, Lanús",
+          "D": "Huracán, Argentinos Jrs, Banfield"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Cuál es el estadio de Boca Juniors?",
+        "pregunta": "¿Con qué nombre se conoce popularmente al estadio de Boca Juniors?", 
         "opciones": {
           "A": "La Bombonera",
           "B": "El Monumental",
           "C": "El Cilindro",
-          "D": "La Doble Visera"
+          "D": "Libertadores de América"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Cuál es el estadio de River Plate?",
+        "pregunta": "¿Cuál es el estadio principal de River Plate?",
         "opciones": {
-          "A": "El Monumental",
+          "A": "Monumental",
           "B": "La Bombonera",
           "C": "El Cilindro",
-          "D": "La Doble Visera"
+          "D": "Nuevo Gasómetro"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿En qué ciudad se encuentra el club Independiente?",
+        "pregunta": "En la ciudad de Avellaneda se encuentran dos de los '5 grandes', ¿cuáles son?",
         "opciones": {
-          "A": "Avellaneda",
-          "B": "Buenos Aires",
-          "C": "Córdoba",
-          "D": "La Plata"
+          "A": "Independiente y Racing Club",
+          "B": "Boca Juniors y River Plate",
+          "C": "San Lorenzo y Huracán",
+          "D": "Estudiantes y Gimnasia"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Cuál de estos equipos NO forma parte de los 5 grandes del fútbol argentino?",
+        "pregunta": "¿Qué equipo argentino es apodado 'Los Millonarios'?",
         "opciones": {
-          "A": "Vélez Sarsfield",
+          "A": "River Plate",
           "B": "Boca Juniors",
-          "C": "River Plate",
-          "D": "Independiente"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué equipo argentino es apodado 'Xeneizes'?",
-        "opciones": {
-          "A": "Boca Juniors",
-          "B": "River Plate",
           "C": "San Lorenzo",
           "D": "Racing Club"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Cuál es el apodo de River Plate?",
-        "opciones": {
-          "A": "Los Millonarios",
-          "B": "Los Xeneizes",
-          "C": "Los Canallas",
-          "D": "Los Albicelestes"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Cómo se denomina el clásico entre Boca Juniors y River Plate?",
+        "pregunta": "¿Cómo se conoce popularmente al partido entre Boca Juniors y River Plate?",
         "opciones": {
           "A": "Superclásico",
-          "B": "Clásico",
-          "C": "Derbi",
-          "D": "Choque"
+          "B": "Clásico de Avellaneda",
+          "C": "Clásico Rosarino",
+          "D": "Derbi Porteño"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿En qué ciudad se ubica el estadio de San Lorenzo?",
+        "pregunta": "¿Qué equipo es conocido como 'El Ciclón' y juega en el Nuevo Gasómetro?",
         "opciones": {
-          "A": "Buenos Aires",
-          "B": "Avellaneda",
-          "C": "Rosario",
-          "D": "Córdoba"
+          "A": "San Lorenzo",
+          "B": "Racing Club",
+          "C": "Independiente",
+          "D": "Huracán"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo es conocido como 'El Ciclón'?",
+        "pregunta": "¿Cuál es el apodo principal de Independiente, por el color de su camiseta?",
         "opciones": {
-          "A": "Racing Club",
-          "B": "Independiente",
-          "C": "Boca Juniors",
-          "D": "San Lorenzo"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Cuál es el apodo de Independiente?",
-        "opciones": {
-          "A": "Los Diablos Rojos",
-          "B": "Los Xeneizes",
-          "C": "Los Millonarios",
-          "D": "Los Albicelestes"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Con qué equipos se disputa el Superclásico del fútbol argentino?",
-        "opciones": {
-          "A": "Boca Juniors vs. River Plate",
-          "B": "Independiente vs. Racing Club",
-          "C": "San Lorenzo vs. Huracán",
-          "D": "Boca Juniors vs. Independiente"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué club de Avellaneda forma parte de los 5 grandes?",
-        "opciones": {
-          "A": "Independiente",
-          "B": "Boca Juniors",
-          "C": "San Lorenzo",
-          "D": "Estudiantes"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿A qué equipo se le conoce por tener una gran hinchada y rica historia en Argentina?",
-        "opciones": {
-          "A": "Boca Juniors",
-          "B": "Huracán",
-          "C": "Platense",
-          "D": "Defensores de Belgrano"
+          "A": "El Rojo",
+          "B": "El Xeneize",
+          "C": "La Academia",
+          "D": "El Ciclón"
         },
         "respuesta_correcta": "A"
       },
@@ -153,27 +93,7 @@
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿En qué ciudad se centra la histórica rivalidad entre Boca y River?",
-        "opciones": {
-          "A": "Buenos Aires",
-          "B": "Avellaneda",
-          "C": "Rosario",
-          "D": "Córdoba"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué equipo de los 5 grandes tiene la palabra 'Club' en su nombre?",
-        "opciones": {
-          "A": "Boca Juniors",
-          "B": "River Plate",
-          "C": "Independiente",
-          "D": "San Lorenzo"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué equipo español viste de blanco?",
+        "pregunta": "¿Qué equipo español es famoso por vestir de blanco y jugar en el Santiago Bernabéu?",
         "opciones": {
           "A": "Barcelona",
           "B": "Real Madrid",
@@ -183,47 +103,17 @@
         "respuesta_correcta": "B"
       },
       {
-        "pregunta": "¿Qué selección ganó el Mundial 2014?",
+        "pregunta": "¿Qué selección europea ganó el Mundial de Fútbol en 2014?",
         "opciones": {
           "A": "Alemania",
-          "B": "Argentina",
-          "C": "Brasil",
-          "D": "España"
+          "B": "España",
+          "C": "Francia",
+          "D": "Italia"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo es conocido como 'Los Merengues'?",
-        "opciones": {
-          "A": "Barcelona",
-          "B": "Real Madrid",
-          "C": "Juventus",
-          "D": "Manchester United"
-        },
-        "respuesta_correcta": "B"
-      },
-      {
-        "pregunta": "¿En qué año se celebró el primer Mundial de Fútbol?",
-        "opciones": {
-          "A": "1920",
-          "B": "1930",
-          "C": "1940",
-          "D": "1950"
-        },
-        "respuesta_correcta": "B"
-      },
-      {
-        "pregunta": "¿Qué selección es conocida como 'La Albiceleste'?",
-        "opciones": {
-          "A": "Uruguay",
-          "B": "Argentina",
-          "C": "Chile",
-          "D": "Paraguay"
-        },
-        "respuesta_correcta": "B"
-      },
-      {
-        "pregunta": "¿Quién es el máximo goleador histórico del FC Barcelona?",
+        "pregunta": "¿Quién es considerado el máximo goleador en la historia del FC Barcelona?",
         "opciones": {
           "A": "Lionel Messi",
           "B": "Luis Suárez",
@@ -233,75 +123,235 @@
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo ganó la Premier League en la temporada 2015-2016?",
+        "pregunta": "¿Qué equipo dio la sorpresa ganando la Premier League en la temporada 2015-2016?",
         "opciones": {
           "A": "Leicester City",
-          "B": "Manchester City",
-          "C": "Chelsea",
-          "D": "Arsenal"
+          "B": "Tottenham Hotspur",
+          "C": "Southampton",
+          "D": "West Ham United"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿En qué país se jugó la final del Mundial 2010?",
+        "pregunta": "¿En qué continente se encuentra Sudáfrica, país anfitrión del Mundial 2010?",
         "opciones": {
-          "A": "Sudáfrica",
-          "B": "Brasil",
-          "C": "Alemania",
-          "D": "España"
+          "A": "África",
+          "B": "Asia",
+          "C": "Europa",
+          "D": "América"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador es conocido por su 'Mano de Dios'?",
+        "pregunta": "¿Qué legendario jugador argentino es famoso por el gol conocido como la 'Mano de Dios'?",
         "opciones": {
           "A": "Lionel Messi",
           "B": "Diego Maradona",
-          "C": "Pelé",
-          "D": "Zinedine Zidane"
+          "C": "Mario Kempes",
+          "D": "Gabriel Batistuta"
         },
         "respuesta_correcta": "B"
       },
       {
-        "pregunta": "¿Qué selección ganó la Copa Confederaciones 2017?",
+        "pregunta": "¿Cómo se llama la regla que anula una jugada si un atacante está adelantado al último defensor (sin contar al arquero) al recibir un pase?",
         "opciones": {
-          "A": "Alemania",
-          "B": "Chile",
-          "C": "Brasil",
-          "D": "Portugal"
+          "A": "Offside",
+          "B": "Falta directa",
+          "C": "Córner",
+          "D": "Lateral"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador ganó el Balón de Oro 2023?",
+        "pregunta": "¿Qué competición enfrenta cada cuatro años a las mejores selecciones nacionales de Europa?",
         "opciones": {
-          "A": "Lionel Messi",
-          "B": "Erling Haaland",
-          "C": "Kylian Mbappé",
-          "D": "Kevin De Bruyne"
+          "A": "Eurocopa",
+          "B": "Copa América",
+          "C": "Copa Africana de Naciones",
+          "D": "Champions League"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué país organizó el Mundial 2018?",
+        "pregunta": "¿Qué legendario futbolista brasileño es apodado 'O Rei' (El Rey)?",
         "opciones": {
-          "A": "Rusia",
-          "B": "Brasil",
-          "C": "Alemania",
-          "D": "Qatar"
+          "A": "Pelé",
+          "B": "Ronaldo Nazário",
+          "C": "Ronaldinho",
+          "D": "Zico"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador argentino ganó el Balón de Oro 2023?",
+        "pregunta": "¿Qué equipo italiano, rival histórico del AC Milan, viste de negro y azul?",
         "opciones": {
-          "A": "Lionel Messi",
-          "B": "Sergio Agüero",
-          "C": "Paulo Dybala",
-          "D": "Enzo Fernández"
+          "A": "Inter de Milán",
+          "B": "Juventus",
+          "C": "Napoli",
+          "D": "AS Roma"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cómo se llama el torneo de clubes más importante de Sudamérica?",
+        "opciones": {
+          "A": "Copa Libertadores",
+          "B": "Copa Sudamericana",
+          "C": "Recopa Sudamericana",
+          "D": "Brasileirão"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué resultado indica que ambos equipos hicieron la misma cantidad de goles?",
+        "opciones": {
+          "A": "Empate",
+          "B": "Victoria",
+          "C": "Derrota",
+          "D": "Goleada"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el clásico rival del FC Barcelona en la liga española?",
+        "opciones": {
+          "A": "Real Madrid",
+          "B": "Atlético de Madrid",
+          "C": "Valencia CF",
+          "D": "Sevilla FC"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué suelen indicar los árbitros asistentes (jueces de línea) con su banderín?",
+        "opciones": {
+          "A": "Offside y laterales",
+          "B": "Goles y penales",
+          "C": "Faltas y tarjetas",
+          "D": "Cambios y tiempo añadido"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué famoso equipo inglés juega sus partidos como local en el estadio Old Trafford?",
+        "opciones": {
+          "A": "Manchester United",
+          "B": "Liverpool FC",
+          "C": "Arsenal FC",
+          "D": "Manchester City"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué sucede generalmente si un partido de eliminación directa termina empatado tras los 90 minutos?",
+        "opciones": {
+          "A": "Se juega un alargue / tiempo suplementario",
+          "B": "Se declara empate y clasifican ambos",
+          "C": "Se juega de nuevo otro día",
+          "D": "Gana el equipo visitante por sorteo"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué trofeo anual enfrenta al campeón de la Champions League contra el campeón de la Europa League?",
+        "opciones": {
+          "A": "Supercopa de Europa",
+          "B": "Mundial de Clubes",
+          "C": "Copa Intercontinental",
+          "D": "Copa UEFA"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador brasileño, famoso por su sonrisa y habilidad mágica, brilló en el FC Barcelona?",
+        "opciones": {
+          "A": "Ronaldinho",
+          "B": "Neymar",
+          "C": "Kaká",
+          "D": "Rivaldo"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cómo se reanuda el juego si la pelota sale por la línea de fondo y fue tocada por última vez por un defensor?",
+        "opciones": {
+          "A": "Córner",
+          "B": "Saque de arco",
+          "C": "Lateral",
+          "D": "Tiro libre indirecto"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el nombre del estadio nacional de Inglaterra, ubicado en Londres?",
+        "opciones": {
+          "A": "Wembley",
+          "B": "Old Trafford",
+          "C": "Anfield",
+          "D": "Stamford Bridge"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección europea es famosa por su color naranja y fue apodada 'La Naranja Mecánica' en los años 70?",
+        "opciones": {
+          "A": "Países Bajos (Holanda)",
+          "B": "Bélgica",
+          "C": "Dinamarca",
+          "D": "Suecia"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el apodo del Club Atlético Huracán?",
+        "opciones": {
+          "A": "El Globo",
+          "B": "El Fortín",
+          "C": "El Taladro",
+          "D": "El Granate"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué ciudad se encuentra el estadio 'Gigante de Arroyito'?",
+        "opciones": {
+          "A": "Rosario",
+          "B": "La Plata",
+          "C": "Córdoba",
+          "D": "Santa Fe"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué significa que un equipo juegue 'de contra' o 'al contragolpe'?",
+        "opciones": {
+          "A": "Defender y atacar rápidamente tras recuperar la pelota",
+          "B": "Tener la posesión de la pelota la mayor parte del tiempo",
+          "C": "Hacer muchas faltas",
+          "D": "Jugar con muchos defensores"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué torneo juegan los equipos campeones de la Copa Libertadores y la Copa Sudamericana?",
+        "opciones": {
+          "A": "Recopa Sudamericana",
+          "B": "Suruga Bank",
+          "C": "Mundial de Clubes",
+          "D": "Copa Interamericana"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador, ídolo de Boca Juniors, es conocido como 'El Titán'?",
+        "opciones": {
+          "A": "Martín Palermo",
+          "B": "Juan Román Riquelme",
+          "C": "Carlos Tevez",
+          "D": "Guillermo Barros Schelotto"
         },
         "respuesta_correcta": "A"
       }
     ]
-  }
+}
   

@@ -6376,3 +6376,108 @@ button#startButton:hover::after {
         font-size: 0.9rem;
     }
 }
+
+/* --- Styling for Quien Sabe Más Intro Modal --- */
+#qsmIntroModal .qsm-intro-modal {
+    max-width: 600px; /* Slightly wider modal */
+    background: linear-gradient(140deg, var(--background-alt), #2c2c2c);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-lg);
+    padding: 30px 35px; /* More padding */
+    box-shadow: var(--shadow-lg);
+}
+
+#qsmIntroModal .modal-title {
+    color: var(--primary-light);
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 2px solid var(--primary);
+    padding-bottom: 10px;
+}
+
+#qsmIntroModal .modal-title i {
+    margin-right: 10px;
+    color: var(--primary);
+}
+
+#qsmIntroModal p {
+    color: var(--text-light);
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+}
+
+#qsmIntroModal ul {
+    list-style: none; /* Remove default bullets */
+    padding-left: 0;
+    margin-bottom: 30px;
+}
+
+#qsmIntroModal li {
+    background-color: rgba(var(--primary-rgb), 0.05);
+    border-left: 4px solid var(--primary);
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: var(--border-radius-sm);
+    color: var(--text);
+    font-size: 0.95rem;
+    transition: background-color var(--transition-speed) var(--transition-func);
+}
+
+#qsmIntroModal li:hover {
+    background-color: rgba(var(--primary-rgb), 0.1);
+}
+
+#qsmIntroModal li strong {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+#qsmIntroModal .modal-footer {
+    text-align: center;
+    margin-top: 15px;
+}
+
+#qsmIntroModal #goToLobbyQSMButton {
+    padding: 12px 25px; /* Larger button */
+    font-size: 1.1rem;
+}
+
+/* Responsive adjustments if needed */
+@media (max-width: 600px) {
+    #qsmIntroModal .qsm-intro-modal {
+        padding: 25px 20px;
+    }
+    #qsmIntroModal .modal-title {
+        font-size: 1.4rem;
+    }
+    #qsmIntroModal p {
+        font-size: 1rem;
+    }
+    #qsmIntroModal li {
+        font-size: 0.9rem;
+        padding: 10px 12px;
+    }
+     #qsmIntroModal #goToLobbyQSMButton {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+}
+/* --- End QSM Intro Modal Styling --- */
+
+/* --- Level Highlight Colors --- */
+.level-highlight-1,
+.level-highlight-2,
+.level-highlight-6 {
+    color: var(--error); /* Using error color (red) for levels */
+    font-weight: bold;
+}
+/* --- End Level Highlight Colors --- */
+
+/* --- Specific Text Highlight --- */
+.highlight-consagra {
+    color: var(--accent); /* Using accent color for emphasis */
+    font-weight: bold;
+}
+/* --- End Specific Text Highlight --- */

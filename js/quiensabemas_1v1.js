@@ -105,6 +105,15 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeWebSocket(); // Connect WebSocket on app load
     }
 
+    // --- Helper function to normalize text ---
+    function normalizeText(text) {
+        if (typeof text !== 'string') return '';
+        return text.toLowerCase()
+                   .normalize("NFD") // Decompose accented characters
+                   .replace(/[\u0300-\u036f]/g, ""); // Remove diacritical marks
+    }
+    // --- End Helper ---
+
     function showLobby() {
         lobbySectionEl.style.display = 'block';
         gameContentSectionEl.style.display = 'none';
@@ -348,9 +357,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function handleLevel1Submit(event) {
         event.preventDefault();
-        const playerAnswer = answerInputEl.value.trim();
-        if (!playerAnswer) return; // Don't submit empty answers
-        submitAnswer({ answerText: playerAnswer });
+        const rawAnswer = answerInputEl.value.trim();
+        if (!rawAnswer) return; // Don't submit empty answers
+
+        const normalizedAnswer = normalizeText(rawAnswer); // Normalize the answer
+        gameState.lastSubmittedNormalizedAnswer = normalizedAnswer; // Store for comparison later
+
+        submitAnswer({ answerText: normalizedAnswer }); // Send normalized answer
         answerInputEl.value = ''; // Clear input after submission
     }
 
@@ -787,23 +800,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
                  const playerName = answeredPlayer ? answeredPlayer.name : 'Player';
                  let feedbackMsg = `${playerName} answered: ${isCorrect ? 'Correct!' : 'Incorrect.'} ${pointsAwarded > 0 ? `(+${pointsAwarded} points)` : ''}`;
+                 let finalIsCorrect = isCorrect; // Use this for feedback display
 
-                 // Update score in local state immediately for responsiveness (server 'updateState' should confirm)
-                 // if(answeredPlayer) {
-                 //     answeredPlayer.score += pointsAwarded; // Let updateState handle score updates primarily
-                 // }
-                 // updatePlayerUI(); // updateState will handle UI updates
+                 // --- Client-side check for "contains" correctness (Level 1 only) ---
+                 if (!isCorrect && 
+                     gameState.currentQuestionData?.level === 1 && 
+                     correctAnswerText && 
+                     gameState.lastSubmittedNormalizedAnswer) {
+                     
+                     const normalizedCorrect = normalizeText(correctAnswerText);
+                     if (gameState.lastSubmittedNormalizedAnswer.includes(normalizedCorrect)) {
+                         console.log("Client-side override: Answer contains correct text.");
+                         finalIsCorrect = true; // Treat as correct for feedback
+                         feedbackMsg = `${playerName} answered: Correct! (Contained: ${correctAnswerText}) ${pointsAwarded > 0 ? `(+${pointsAwarded} points)` : ''}`;
+                         // NOTE: Score is still based on server's 'isCorrect'
+                     }
+                 }
+                 // Clear the stored answer after checking
+                 delete gameState.lastSubmittedNormalizedAnswer;
+                 // --- End Client-side check ---
 
                  // Show feedback (correct/incorrect message)
-                 // Add correct answer text if incorrect
-                 if (!isCorrect && correctAnswerText) {
+                 // Add correct answer text if incorrect (based on server's verdict or override)
+                 if (!finalIsCorrect && correctAnswerText) {
                      // Show correct answer for Level 1 always, or Level 2+ only if options were shown
                      if (gameState.currentQuestionData &&
                          (gameState.currentQuestionData.level === 1 || gameState.optionsRequested)) {
                          feedbackMsg += ` Answer: ${correctAnswerText}`;
                      }
                  }
-                 showFeedback(feedbackMsg, isCorrect ? 'correct' : 'incorrect');
+                 // Use finalIsCorrect to determine feedback type class
+                 showFeedback(feedbackMsg, finalIsCorrect ? 'correct' : 'incorrect');
 
 
                  // Visualize options if level > 1 and options were requested

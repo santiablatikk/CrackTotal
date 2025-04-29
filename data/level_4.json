@@ -3,165 +3,355 @@
     "dificultad": "Medio/Difícil",
     "preguntas": [
       {
-        "pregunta": "¿Quién es el máximo goleador histórico de LaLiga?",
+        "pregunta": "¿Quién es el máximo goleador histórico de LaLiga española?",
         "opciones": {
           "A": "Lionel Messi",
           "B": "Cristiano Ronaldo",
           "C": "Telmo Zarra",
-          "D": "Hugo Sánchez"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué jugador tiene más asistencias en la historia de la Premier League?",
-        "opciones": {
-          "A": "Ryan Giggs",
-          "B": "Cesc Fàbregas",
-          "C": "Kevin De Bruyne",
-          "D": "Frank Lampard"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué equipo ganó la Bundesliga 11 veces consecutivas?",
-        "opciones": {
-          "A": "Bayern Múnich",
-          "B": "Borussia Dortmund",
-          "C": "Hamburgo",
-          "D": "Bayer Leverkusen"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué jugador tiene más partidos en la selección española?",
-        "opciones": {
-          "A": "Sergio Ramos",
-          "B": "Iker Casillas",
-          "C": "Xavi Hernández",
-          "D": "Andrés Iniesta"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué arquero tiene más partidos sin recibir goles en la Premier League?",
-        "opciones": {
-          "A": "Petr Čech",
-          "B": "David de Gea",
-          "C": "Edwin van der Sar",
-          "D": "Joe Hart"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué jugador tiene más goles en partidos Clásicos (Barcelona vs Real Madrid)?",
-        "opciones": {
-          "A": "Lionel Messi",
-          "B": "Cristiano Ronaldo",
-          "C": "Alfredo Di Stéfano",
-          "D": "Raúl González"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué selección tiene más títulos de la Copa América?",
-        "opciones": {
-          "A": "Uruguay",
-          "B": "Argentina",
-          "C": "Brasil",
-          "D": "Chile"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué jugador tiene más tripletes en la Champions League?",
-        "opciones": {
-          "A": "Cristiano Ronaldo",
-          "B": "Lionel Messi",
-          "C": "Robert Lewandowski",
           "D": "Karim Benzema"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo ganó la Copa Libertadores 2019?",
+        "pregunta": "¿Qué jugador galés ostenta el récord de más asistencias en la historia de la Premier League?",
         "opciones": {
-          "A": "Flamengo",
-          "B": "River Plate",
-          "C": "Boca Juniors",
-          "D": "Palmeiras"
+          "A": "Ryan Giggs",
+          "B": "Gareth Bale",
+          "C": "Aaron Ramsey",
+          "D": "Ian Rush"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador tiene más goles en una temporada de la Bundesliga?",
+        "pregunta": "¿Qué equipo alemán estableció un récord al ganar la Bundesliga 11 veces consecutivas entre 2013 y 2023?",
+        "opciones": {
+          "A": "Bayern Múnich",
+          "B": "Borussia Dortmund",
+          "C": "Werder Bremen",
+          "D": "Bayer Leverkusen"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador tiene el récord de más partidos jugados con la selección nacional de España?",
+        "opciones": {
+          "A": "Sergio Ramos",
+          "B": "Iker Casillas",
+          "C": "Xavi Hernández",
+          "D": "Andoni Zubizarreta"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué arquero checo mantiene el récord de más partidos con la valla invicta en la Premier League?",
+        "opciones": {
+          "A": "Petr Čech",
+          "B": "Peter Schmeichel",
+          "C": "David Seaman",
+          "D": "Joe Hart"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador argentino es el máximo goleador histórico en los partidos Clásicos entre Barcelona y Real Madrid?",
+        "opciones": {
+          "A": "Lionel Messi",
+          "B": "Alfredo Di Stéfano",
+          "C": "Diego Maradona",
+          "D": "Mario Kempes"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "Hasta 2024, ¿Qué dos selecciones comparten el récord de más títulos de Copa América (15 cada una)?",
+        "opciones": {
+          "A": "Uruguay y Argentina",
+          "B": "Brasil y Argentina",
+          "C": "Uruguay y Brasil",
+          "D": "Chile y Argentina"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador polaco rompió el récord de Gerd Müller al anotar 41 goles en una sola temporada de la Bundesliga (2020-21)?",
         "opciones": {
           "A": "Robert Lewandowski",
-          "B": "Gerd Müller",
-          "C": "Claudio Pizarro",
-          "D": "Mario Gómez"
+          "B": "Krzysztof Piątek",
+          "C": "Arkadiusz Milik",
+          "D": "Jakub Błaszczykowski"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué equipo brasileño ganó la Copa Libertadores 2019 en una final única contra River Plate?",
+        "opciones": {
+          "A": "Flamengo",
+          "B": "Palmeiras",
+          "C": "Grêmio",
+          "D": "Santos"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué selección tiene más Copas Oro de la CONCACAF?",
+        "pregunta": "¿Qué selección tiene el récord de más títulos de la Copa Oro de la CONCACAF?",
         "opciones": {
           "A": "México",
           "B": "Estados Unidos",
-          "C": "Costa Rica",
-          "D": "Honduras"
+          "C": "Canadá",
+          "D": "Costa Rica"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador tiene más Balones de Oro?",
+        "pregunta": "¿Qué jugador argentino ha ganado más veces el premio Balón de Oro?",
         "opciones": {
           "A": "Lionel Messi",
-          "B": "Cristiano Ronaldo",
-          "C": "Michel Platini",
-          "D": "Johan Cruyff"
+          "B": "Diego Maradona",
+          "C": "Alfredo Di Stéfano",
+          "D": "Mario Kempes"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo ganó la Serie A invicto en la temporada 2011-12?",
+        "pregunta": "¿Qué equipo italiano, dirigido por Antonio Conte, ganó la Serie A invicto en la temporada 2011-12?",
         "opciones": {
           "A": "Juventus",
           "B": "AC Milan",
           "C": "Inter de Milán",
-          "D": "Napoli"
+          "D": "AS Roma"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador tiene más asistencias en la historia de la selección argentina?",
+        "pregunta": "¿Qué jugador es el máximo asistente histórico de la selección argentina?",
         "opciones": {
           "A": "Lionel Messi",
           "B": "Juan Román Riquelme",
-          "C": "Diego Maradona",
-          "D": "Ángel Di María"
+          "C": "Ángel Di María",
+          "D": "Diego Maradona"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué país ganó la Copa Asiática 2019?",
+        "pregunta": "¿Qué país anfitrión ganó la Copa Asiática de la AFC en 2019?",
         "opciones": {
           "A": "Qatar",
-          "B": "Japón",
-          "C": "Corea del Sur",
-          "D": "Australia"
+          "B": "Emiratos Árabes Unidos",
+          "C": "Japón",
+          "D": "Corea del Sur"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Quién es el máximo goleador histórico de LaLiga?",
+        "pregunta": "¿Qué jugador alemán ostenta el récord de más goles anotados en la historia de los Mundiales?",
         "opciones": {
-          "A": "Lionel Messi",
-          "B": "Cristiano Ronaldo",
-          "C": "Telmo Zarra",
-          "D": "Hugo Sánchez"
+          "A": "Miroslav Klose",
+          "B": "Gerd Müller",
+          "C": "Jürgen Klinsmann",
+          "D": "Thomas Müller"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo de Gran Bretaña en ganar la Copa de Europa (actual Champions League) en 1967?",
+        "opciones": {
+          "A": "Celtic FC",
+          "B": "Manchester United",
+          "C": "Liverpool FC",
+          "D": "Rangers FC"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cómo se llama la regla que permite al árbitro continuar el juego después de una falta si beneficia al equipo que la sufrió?",
+        "opciones": {
+          "A": "Ley de la ventaja",
+          "B": "Offside",
+          "C": "Falta táctica",
+          "D": "Obstrucción"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club italiano logró el 'triplete' (Serie A, Coppa Italia, Champions) en 2010 bajo la dirección de José Mourinho?",
+        "opciones": {
+          "A": "Inter de Milán",
+          "B": "AC Milan",
+          "C": "Juventus",
+          "D": "AS Roma"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el icónico arquero titular de Italia que se consagró campeón del Mundo en 2006?",
+        "opciones": {
+          "A": "Gianluigi Buffon",
+          "B": "Francesco Toldo",
+          "C": "Walter Zenga",
+          "D": "Angelo Peruzzi"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección sudamericana ganó su primera medalla de oro olímpica en fútbol masculino en Río 2016?",
+        "opciones": {
+          "A": "Brasil",
+          "B": "Argentina",
+          "C": "Colombia",
+          "D": "Uruguay"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cómo se conoce al intenso clásico del fútbol escocés entre Celtic y Rangers?",
+        "opciones": {
+          "A": "Old Firm",
+          "B": "The Derby",
+          "C": "Highland Clash",
+          "D": "Tartan Battle"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué jugador español marcó el gol de la victoria para España en la final del Mundial 2010 contra Países Bajos?",
+        "opciones": {
+          "A": "Andrés Iniesta",
+          "B": "David Villa",
+          "C": "Xavi Hernández",
+          "D": "Fernando Torres"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué equipo de Barcelona, dirigido por Johan Cruyff, fue apodado el 'Dream Team' a principios de los 90?",
+        "opciones": {
+          "A": "FC Barcelona",
+          "B": "RCD Espanyol",
+          "C": "Girona FC",
+          "D": "CE Sabadell"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué jugador ucraniano, estrella del AC Milan, ganó el Balón de Oro en 2004?",
+        "opciones": {
+          "A": "Andriy Shevchenko",
+          "B": "Oleg Blokhin",
+          "C": "Igor Belanov",
+          "D": "Andriy Yarmolenko"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "Según las reglas, ¿a qué distancia mínima (en metros) debe colocarse la barrera defensiva en un tiro libre directo?",
+        "opciones": {
+          "A": "9.15 metros",
+          "B": "8 metros",
+          "C": "10 metros",
+          "D": "7.5 metros"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club inglés ganó la Premier League de la temporada 2003-04 sin perder un solo partido, recibiendo el apodo de 'Los Invencibles'?",
+        "opciones": {
+          "A": "Arsenal",
+          "B": "Manchester United",
+          "C": "Chelsea",
+          "D": "Liverpool"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué año se otorgó por primera vez el premio Balón de Oro?",
+        "opciones": {
+          "A": "1956",
+          "B": "1960",
+          "C": "1950",
+          "D": "1964"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador noruego, conocido por su velocidad y definición, es una de las figuras actuales del Manchester City?",
+        "opciones": {
+          "A": "Erling Haaland",
+          "B": "Martin Ødegaard",
+          "C": "Alexander Sørloth",
+          "D": "Joshua King"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cómo se llama la definición desde el punto penal que termina un partido empatado en fase eliminatoria, si persiste el empate tras el alargue?",
+        "opciones": {
+          "A": "Tanda de penales / Definición por penales",
+          "B": "Gol de oro",
+          "C": "Repetición del partido",
+          "D": "Sorteo"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué director técnico argentino llevó a la selección de fútbol a ganar la medalla de oro en los Juegos Olímpicos de Atenas 2004 y Pekín 2008?",
+        "opciones": {
+          "A": "Marcelo Bielsa (2004) / Sergio Batista (2008)",
+          "B": "José Pekerman",
+          "C": "Carlos Bilardo",
+          "D": "César Luis Menotti"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién es el máximo goleador histórico de la selección argentina, después de Lionel Messi?",
+        "opciones": {
+          "A": "Gabriel Batistuta",
+          "B": "Sergio Agüero",
+          "C": "Hernán Crespo",
+          "D": "Diego Maradona"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo inglés perdió la final de la Champions League 2008 contra Manchester United por penales en Moscú?",
+        "opciones": {
+          "A": "Chelsea",
+          "B": "Liverpool",
+          "C": "Arsenal",
+          "D": "Manchester City"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuántas Copas Intercontinentales ganó Independiente?",
+        "opciones": {
+          "A": "2",
+          "B": "3",
+          "C": "1",
+          "D": "0"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección ganó la Eurocopa 2004 dando una de las mayores sorpresas del torneo?",
+        "opciones": {
+          "A": "Grecia",
+          "B": "Portugal",
+          "C": "República Checa",
+          "D": "Dinamarca"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué año descendió River Plate a la B Nacional por primera vez en su historia?",
+        "opciones": {
+          "A": "2011",
+          "B": "2013",
+          "C": "2008",
+          "D": "Nunca descendió"
         },
         "respuesta_correcta": "A"
       }
     ]
-  }
+}
   

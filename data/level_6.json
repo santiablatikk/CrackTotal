@@ -3,235 +3,355 @@
     "dificultad": "Difícil/Imposible",
     "preguntas": [
       {
-        "pregunta": "¿Cuántos metros mide en promedio una cancha de fútbol 11?",
+        "pregunta": "¿Cuál es la longitud (largo) recomendada por la FIFA para una cancha en partidos internacionales?",
         "opciones": {
-          "A": "90-120 metros (largo)",
-          "B": "100-110 metros (largo)",
-          "C": "80-100 metros (largo)",
-          "D": "105-120 metros (largo)"
-        },
-        "respuesta_correcta": "B"
-      },
-      {
-        "pregunta": "¿Cuántos metros de ancho tiene una cancha de fútbol profesional?",
-        "opciones": {
-          "A": "68 metros",
-          "B": "70 metros",
-          "C": "65 metros",
-          "D": "75 metros"
+          "A": "105 metros",
+          "B": "100 metros",
+          "C": "110 metros",
+          "D": "108 metros"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿En qué año se jugó el primer partido oficial entre selecciones?",
+        "pregunta": "¿Cuál fue el resultado exacto del primer partido internacional oficial de fútbol en 1872 entre Escocia e Inglaterra?",
         "opciones": {
-          "A": "1872",
-          "B": "1880",
-          "C": "1890",
-          "D": "1900"
+          "A": "0-0",
+          "B": "1-0 Inglaterra",
+          "C": "1-1",
+          "D": "2-1 Escocia"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador marcó el primer gol en la historia de la Copa del Mundo?",
+        "pregunta": "¿Contra qué selección marcó Lucien Laurent el primer gol en la historia de la Copa del Mundo (Uruguay 1930)?",
         "opciones": {
-          "A": "Lucien Laurent",
-          "B": "André Maschinot",
-          "C": "Bart McGhee",
-          "D": "Juan Carreño"
+          "A": "México",
+          "B": "Argentina",
+          "C": "Chile",
+          "D": "Estados Unidos"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿En qué año se fundó la Football Association (FA) de Inglaterra?",
+        "pregunta": "¿En qué año exacto se fundó la Football Association (FA) de Inglaterra, la más antigua del mundo?",
         "opciones": {
-          "A": "1857",
-          "B": "1863",
-          "C": "1870",
-          "D": "1880"
+          "A": "1863",
+          "B": "1857",
+          "C": "1871",
+          "D": "1888"
         },
-        "respuesta_correcta": "B"
+        "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo ganó la primera edición de la Recopa de Europa en 1961?",
+        "pregunta": "¿Qué equipo italiano ganó la primera edición de la Recopa de Europa en 1961, venciendo en la final al Rangers?",
         "opciones": {
           "A": "Fiorentina",
-          "B": "Rangers",
-          "C": "Atlético de Madrid",
-          "D": "Benfica"
+          "B": "AC Milan",
+          "C": "Juventus",
+          "D": "AS Roma"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Quién es el jugador con más partidos en la historia de la selección brasileña?",
+        "pregunta": "¿Qué lateral derecho brasileño ostenta el récord de más partidos jugados con la selección de Brasil?",
         "opciones": {
-          "A": "Pelé",
-          "B": "Cafú",
-          "C": "Roberto Carlos",
-          "D": "Neymar"
-        },
-        "respuesta_correcta": "B"
-      },
-      {
-        "pregunta": "¿En qué estadio se jugó la final del Mundial 1962?",
-        "opciones": {
-          "A": "Estadio Nacional",
-          "B": "Estadio Sausalito",
-          "C": "Estadio El Teniente",
-          "D": "Estadio Carlos Dittborn"
+          "A": "Cafú",
+          "B": "Roberto Carlos",
+          "C": "Dani Alves",
+          "D": "Carlos Alberto Torres"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué selección es conocida como 'Los Leones del Atlas'?",
+        "pregunta": "¿En qué estadio de Santiago de Chile se jugó la final del Mundial 1962 entre Brasil y Checoslovaquia?",
+        "opciones": {
+          "A": "Estadio Nacional Julio Martínez Prádanos",
+          "B": "Estadio Monumental David Arellano",
+          "C": "Estadio Santa Laura",
+          "D": "Estadio El Teniente (Rancagua)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección africana es apodada 'Los Leones del Atlas'?",
         "opciones": {
           "A": "Marruecos",
-          "B": "Túnez",
-          "C": "Argelia",
-          "D": "Egipto"
+          "B": "Senegal",
+          "C": "Camerún",
+          "D": "Nigeria"
         },
         "respuesta_correcta": "A"
       },
-      {
-        "pregunta": "¿Qué jugador marcó el gol más rápido en la historia del fútbol (2 segundos)?",
+       {
+        "pregunta": "¿En qué club de Arabia Saudita jugaba Nawaf Al Abed cuando marcó el gol considerado (extraoficialmente) el más rápido (2 segundos)?",
         "opciones": {
-          "A": "Nawaf Al Abed",
-          "B": "Hakan Şükür",
-          "C": "Gareth Morris",
-          "D": "Ricardo Olivera"
+          "A": "Al-Hilal",
+          "B": "Al-Nassr",
+          "C": "Al-Ahli",
+          "D": "Al-Ittihad"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué selección mantuvo 914 minutos sin recibir goles en eliminatorias mundialistas?",
+        "pregunta": "¿Quién era el arquero titular de Italia durante el récord de 914 minutos sin recibir goles en las eliminatorias para el Mundial 1974?",
         "opciones": {
-          "A": "Italia",
-          "B": "España",
-          "C": "Alemania",
-          "D": "Brasil"
+          "A": "Dino Zoff",
+          "B": "Enrico Albertosi",
+          "C": "Walter Zenga",
+          "D": "Gianluigi Buffon"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador tiene más goles en Superclásicos argentinos?",
+        "pregunta": "¿Cuántos goles marcó exactamente Ángel Labruna en los Superclásicos oficiales contra Boca Juniors?",
         "opciones": {
-          "A": "Ángel Labruna",
-          "B": "Alfredo Di Stéfano",
-          "C": "Hugo Gatti",
-          "D": "Martín Palermo"
+          "A": "16",
+          "B": "15",
+          "C": "18",
+          "D": "14"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué árbitro pitó la 'Mano de Dios' de Maradona en 1986?",
+        "pregunta": "¿Qué árbitro tunecino validó el polémico gol de la 'Mano de Dios' de Maradona en el Mundial 1986?",
         "opciones": {
           "A": "Ali Bin Nasser",
-          "B": "Pierluigi Collina",
-          "C": "Horacio Elizondo",
-          "D": "Howard Webb"
+          "B": "Said Belqola",
+          "C": "Gamal Al-Ghandour",
+          "D": "Neji Jouini"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿En qué minuto exacto marcó Iniesta el gol del Mundial 2010?",
+        "pregunta": "¿En qué minuto exacto del alargue marcó Andrés Iniesta el gol que le dio a España el Mundial 2010?",
         "opciones": {
           "A": "116'",
-          "B": "113'",
-          "C": "120'",
-          "D": "105'"
+          "B": "112'",
+          "C": "118'",
+          "D": "109'"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador anotó 40 goles en una temporada de La Liga?",
+        "pregunta": "¿Contra qué equipo jugó Colo-Colo la final de la Copa Libertadores que ganó en 1991?",
         "opciones": {
-          "A": "Lionel Messi",
-          "B": "Cristiano Ronaldo",
-          "C": "Telmo Zarra",
-          "D": "Hugo Sánchez"
+          "A": "Olimpia (Paraguay)",
+          "B": "Boca Juniors (Argentina)",
+          "C": "São Paulo (Brasil)",
+          "D": "Nacional (Uruguay)"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo ganó la Copa Libertadores 1991?",
+        "pregunta": "¿Qué árbitro inglés le mostró 3 tarjetas amarillas a Josip Šimunić antes de expulsarlo en el Mundial 2006 (Croacia vs Australia)?",
         "opciones": {
-          "A": "Colo-Colo",
-          "B": "Boca Juniors",
-          "C": "River Plate",
-          "D": "Olimpia"
-        },
-        "respuesta_correcta": "B"
-      },
-      {
-        "pregunta": "¿Qué jugador recibió 3 tarjetas rojas en un solo partido?",
-        "opciones": {
-          "A": "José Batista",
-          "B": "Zinedine Zidane",
-          "C": "Sergio Ramos",
-          "D": "Roy Keane"
+          "A": "Graham Poll",
+          "B": "Howard Webb",
+          "C": "Mark Clattenburg",
+          "D": "Mike Riley"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué país tiene el récord de más penales atajados en un Mundial?",
+        "pregunta": "¿Qué arquero portugués atajó 3 penales a Inglaterra en la definición por penales de cuartos de final del Mundial 2006?",
         "opciones": {
-          "A": "Argentina (1990)",
-          "B": "Alemania (2006)",
-          "C": "Italia (2006)",
-          "D": "Brasil (1994)"
+          "A": "Ricardo Pereira",
+          "B": "Vítor Baía",
+          "C": "Rui Patrício",
+          "D": "Eduardo Carvalho"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador anotó de chilena en cuartos del Mundial 2018?",
+        "pregunta": "¿Cuál fue el resultado de la definición por penales en la final de la Copa UEFA 2000 entre Galatasaray y Arsenal?",
         "opciones": {
-          "A": "Benjamin Pavard",
-          "B": "Cristiano Ronaldo",
-          "C": "Olivier Giroud",
-          "D": "Kylian Mbappé"
+          "A": "4-1 a favor de Galatasaray",
+          "B": "3-2 a favor de Galatasaray",
+          "C": "5-4 a favor de Arsenal",
+          "D": "3-0 a favor de Galatasaray"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Contra qué equipo disputó Atlético Nacional la final de la Copa Libertadores 2016?",
+        "opciones": {
+          "A": "Independiente del Valle (Ecuador)",
+          "B": "São Paulo (Brasil)",
+          "C": "Boca Juniors (Argentina)",
+          "D": "Rosario Central (Argentina)"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Cuál fue el marcador final del partido Alemania Federal vs Hungría en la final del Mundial 1954, el 'Milagro de Berna'?",
+        "opciones": {
+          "A": "3-2",
+          "B": "2-1",
+          "C": "4-3",
+          "D": "1-0"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Cuántos goles marcó exactamente Kevin Phillips para ganar la Bota de Oro europea 1999-2000 jugando para el Sunderland?",
+        "opciones": {
+          "A": "30",
+          "B": "28",
+          "C": "32",
+          "D": "25"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué jugador marcó el último 'Gol de Oro' en la historia de los Mundiales (Octavos de Final 2002, Senegal vs Suecia)?",
+        "opciones": {
+          "A": "Henri Camara",
+          "B": "El Hadji Diouf",
+          "C": "Papa Bouba Diop",
+          "D": "Salif Diao"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué club español ganó la Copa de Ferias (precursora de la Europa League) en más ocasiones?",
+        "opciones": {
+          "A": "FC Barcelona",
+          "B": "Valencia CF",
+          "C": "Real Zaragoza",
+          "D": "Atlético de Madrid"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo ganó la Copa UEFA 2000 tras 9 penales fallidos?",
+        "pregunta": "¿Qué árbitro argentino dirigió la final del Mundial 2006 y expulsó a Zinedine Zidane?",
         "opciones": {
-          "A": "Galatasaray",
-          "B": "Arsenal",
-          "C": "Valencia",
-          "D": "Liverpool"
+          "A": "Horacio Elizondo",
+          "B": "Néstor Pitana",
+          "C": "Javier Castrilli",
+          "D": "Ángel Sánchez"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Cuál era el nombre original del Manchester United, fundado por trabajadores ferroviarios?",
+        "opciones": {
+          "A": "Newton Heath LYR F.C.",
+          "B": "Manchester Central",
+          "C": "Ardwick A.F.C.",
+          "D": "St. Mark's (West Gorton)"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador tiene el récord de más goles en un Clásico español?",
+        "pregunta": "¿Qué jugador portugués superó los 800 goles oficiales, siendo considerado el máximo goleador histórico registrado?",
         "opciones": {
-          "A": "Lionel Messi",
-          "B": "Cristiano Ronaldo",
-          "C": "Alfredo Di Stéfano",
-          "D": "Raúl González"
+          "A": "Cristiano Ronaldo",
+          "B": "Eusébio",
+          "C": "Fernando Peyroteo",
+          "D": "Nuno Gomes"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo ganó la Copa Libertadores 2016?",
+        "pregunta": "¿Contra qué selección perdió Japón la final de la Copa Asiática 1992 que ganó como anfitrión?",
         "opciones": {
-          "A": "Atlético Nacional",
-          "B": "Independiente del Valle",
-          "C": "River Plate",
-          "D": "Chapecoense"
+          "A": "Arabia Saudita",
+          "B": "China",
+          "C": "Corea del Sur",
+          "D": "Irán"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador marcó 5 goles en un partido de la Bundesliga en 9 minutos?",
+        "pregunta": "¿En qué ciudad se fundó la FIFA en 1904?",
         "opciones": {
-          "A": "Robert Lewandowski",
-          "B": "Gerd Müller",
-          "C": "Claudio Pizarro",
-          "D": "Mario Gómez"
+          "A": "París",
+          "B": "Londres",
+          "C": "Zúrich",
+          "D": "Ámsterdam"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Quién fue el primer jugador en ganar el premio 'The Best' de la FIFA dos veces consecutivas?",
+        "opciones": {
+          "A": "Cristiano Ronaldo",
+          "B": "Lionel Messi",
+          "C": "Luka Modrić",
+          "D": "Robert Lewandowski"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué equipo argentino logró el tricampeonato de la Copa Libertadores entre 1972 y 1974?",
+        "opciones": {
+          "A": "Independiente",
+          "B": "Estudiantes de La Plata",
+          "C": "Boca Juniors",
+          "D": "Peñarol"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué club de barrio porteño es conocido como 'El Semillero del Mundo' por su prolífica cantera?",
+        "opciones": {
+          "A": "Argentinos Juniors",
+          "B": "Vélez Sarsfield",
+          "C": "Huracán",
+          "D": "Lanús"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo no perteneciente a la CONMEBOL o la UEFA en llegar a una semifinal de Copa del Mundo?",
+        "opciones": {
+          "A": "Estados Unidos (1930)",
+          "B": "Corea del Sur (2002)",
+          "C": "México (1970)",
+          "D": "Camerún (1990)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál fue el resultado exacto del famoso partido entre Austria y Suiza en el Mundial 1954, el partido con más goles en la historia de los mundiales?",
+        "opciones": {
+          "A": "7-5 a favor de Austria",
+          "B": "6-4 a favor de Austria",
+          "C": "8-3 a favor de Suiza",
+          "D": "5-5"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club ganó la Copa de Ganadores de Copa de la CONMEBOL en su única edición de 1970?",
+        "opciones": {
+          "A": "Mariscal Santa Cruz (Bolivia)",
+          "B": "El Nacional (Ecuador)",
+          "C": "Atlanta (Argentina)",
+          "D": "Unión Española (Chile)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Según el reglamento actual de la IFAB, qué circunferencia debe tener el balón de fútbol (Talla 5)?",
+        "opciones": {
+          "A": "Entre 68 y 70 cm",
+          "B": "Entre 65 y 68 cm",
+          "C": "Entre 70 y 72 cm",
+          "D": "Entre 67 y 71 cm"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el presidente de la AFA durante más tiempo de forma ininterrumpida (35 años)?",
+        "opciones": {
+          "A": "Julio Humberto Grondona",
+          "B": "Valentín Suárez",
+          "C": "Raúl Colombo",
+          "D": "Alfredo Cantilo"
         },
         "respuesta_correcta": "A"
       }
     ]
-  }
+}
   

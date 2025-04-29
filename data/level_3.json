@@ -3,195 +3,355 @@
     "dificultad": "Medio",
     "preguntas": [
       {
-        "pregunta": "¿Quién fue el campeón mundial 2014?",
-        "opciones": {
-          "A": "Alemania",
-          "B": "Brasil",
-          "C": "Argentina",
-          "D": "Holanda"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿En qué año se celebró el Mundial 2014?",
-        "opciones": {
-          "A": "2014",
-          "B": "2010",
-          "C": "2018",
-          "D": "2006"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué país ganó el Mundial 2010?",
-        "opciones": {
-          "A": "España",
-          "B": "Alemania",
-          "C": "Italia",
-          "D": "Brasil"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Quién marcó el gol decisivo en la final del Mundial 2014?",
+        "pregunta": "¿Quién marcó el gol con el que Alemania ganó la final del Mundial 2014 en el alargue?",
         "opciones": {
           "A": "Mario Götze",
           "B": "Thomas Müller",
           "C": "Miroslav Klose",
-          "D": "Toni Kroos"
+          "D": "André Schürrle"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo ganó la Champions League 2019?",
+        "pregunta": "¿Qué equipo inglés ganó la Champions League en 2019 venciendo al Tottenham en la final?",
         "opciones": {
           "A": "Liverpool",
-          "B": "Real Madrid",
-          "C": "Barcelona",
-          "D": "Bayern Munich"
+          "B": "Manchester City",
+          "C": "Chelsea",
+          "D": "Manchester United"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Cuál es el récord de goles en un Mundial individual?",
+        "pregunta": "¿Cuántos goles marcó Just Fontaine en el Mundial de 1958, estableciendo el récord para una sola edición?",
         "opciones": {
           "A": "13",
-          "B": "12",
-          "C": "11",
-          "D": "10"
+          "B": "10",
+          "C": "15",
+          "D": "11"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué selección fue subcampeona en el Mundial 2006?",
+        "pregunta": "¿Qué selección perdió la final del Mundial 2006 contra Italia en la definición por penales?",
         "opciones": {
           "A": "Francia",
-          "B": "Italia",
-          "C": "Alemania",
-          "D": "Brasil"
+          "B": "Alemania",
+          "C": "Brasil",
+          "D": "Portugal"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿En qué año debutó Lionel Messi con la selección argentina?",
+        "pregunta": "¿En qué año Lionel Messi hizo su debut oficial con la selección mayor de Argentina?",
         "opciones": {
           "A": "2005",
           "B": "2004",
           "C": "2006",
-          "D": "2003"
+          "D": "2007"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Quién es el máximo goleador histórico de la selección alemana?",
+        "pregunta": "¿Quién es el máximo goleador histórico de la selección nacional de Alemania?",
         "opciones": {
           "A": "Miroslav Klose",
           "B": "Gerd Müller",
           "C": "Lukas Podolski",
-          "D": "Thomas Müller"
+          "D": "Jürgen Klinsmann"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué selección ganó la Eurocopa 2016?",
+        "pregunta": "¿Qué selección, capitaneada por Cristiano Ronaldo, ganó la Eurocopa 2016?",
         "opciones": {
           "A": "Portugal",
           "B": "Francia",
-          "C": "Alemania",
-          "D": "España"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Quién ganó el Balón de Oro en el Mundial 2018?",
-        "opciones": {
-          "A": "Luka Modric",
-          "B": "Cristiano Ronaldo",
-          "C": "Lionel Messi",
-          "D": "Kylian Mbappé"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué selección alcanzó el récord de 29 partidos sin perder en competiciones internacionales?",
-        "opciones": {
-          "A": "España",
-          "B": "Alemania",
-          "C": "Brasil",
+          "C": "España",
           "D": "Italia"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Quién fue el máximo goleador del Mundial 1998?",
+        "pregunta": "¿Qué jugador croata ganó el Balón de Oro al mejor jugador del Mundial 2018?",
+        "opciones": {
+          "A": "Luka Modric",
+          "B": "Ivan Rakitić",
+          "C": "Ivan Perišić",
+          "D": "Mario Mandžukić"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador croata fue el máximo goleador del Mundial 1998 celebrado en Francia?",
         "opciones": {
           "A": "Davor Šuker",
-          "B": "Ronaldo",
-          "C": "Christian Vieri",
-          "D": "Thierry Henry"
+          "B": "Gabriel Batistuta",
+          "C": "Ronaldo Nazário",
+          "D": "Christian Vieri"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo inglés ganó la Premier League en la temporada 2015-16?",
+        "pregunta": "¿En qué Mundial se introdujeron oficialmente las tarjetas amarillas y rojas?",
         "opciones": {
-          "A": "Leicester City",
-          "B": "Manchester United",
-          "C": "Chelsea",
-          "D": "Arsenal"
+          "A": "México 1970",
+          "B": "Alemania 1974",
+          "C": "Argentina 1978",
+          "D": "España 1982"
         },
         "respuesta_correcta": "A"
       },
-      {
-        "pregunta": "¿En qué año se implementaron las tarjetas amarillas en el fútbol?",
+       {
+        "pregunta": "¿Quién fue el DT que llevó a España a ganar la Eurocopa 2008?",
         "opciones": {
-          "A": "1970",
-          "B": "1974",
-          "C": "1982",
-          "D": "1986"
+          "A": "Luis Aragonés",
+          "B": "Vicente del Bosque",
+          "C": "Javier Clemente",
+          "D": "José Antonio Camacho"
         },
         "respuesta_correcta": "A"
       },
-      {
-        "pregunta": "¿Quién fue el entrenador de la selección española durante la Eurocopa 2008?",
+       {
+        "pregunta": "¿Cómo se llama el trofeo que se entrega al equipo campeón del Mundial desde 1974?",
         "opciones": {
-          "A": "Vicente del Bosque",
-          "B": "Luis Aragonés",
-          "C": "Pep Guardiola",
-          "D": "José Mourinho"
+          "A": "Trofeo de la Copa Mundial de la FIFA",
+          "B": "Copa Jules Rimet",
+          "C": "Copa Stanley",
+          "D": "Balón de Oro"
         },
         "respuesta_correcta": "A"
       },
-      {
-        "pregunta": "¿Cuál es el nombre del trofeo que se entrega en el Mundial?",
-        "opciones": {
-          "A": "Trofeo Jules Rimet",
-          "B": "Copa del Mundo",
-          "C": "Trofeo FIFA",
-          "D": "Trofeo Real"
-        },
-        "respuesta_correcta": "B"
-      },
-      {
-        "pregunta": "¿Qué país fue el anfitrión del Mundial 2002?",
+       {
+        "pregunta": "¿Qué dos países asiáticos fueron co-anfitriones del Mundial 2002?",
         "opciones": {
           "A": "Corea del Sur y Japón",
-          "B": "Alemania",
-          "C": "Sudáfrica",
-          "D": "Francia"
+          "B": "China y Corea del Sur",
+          "C": "Japón y China",
+          "D": "Qatar y Arabia Saudita"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué selección ganó la Copa América 2019?",
+        "pregunta": "¿Qué selección ganó la Copa América 2019, celebrada en su propio país?",
         "opciones": {
-          "A": "Argentina",
-          "B": "Brasil",
+          "A": "Brasil",
+          "B": "Argentina",
           "C": "Chile",
           "D": "Perú"
         },
-        "respuesta_correcta": "B"
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué significa la sigla 'VAR' utilizada como asistencia tecnológica para los árbitros?",
+        "opciones": {
+          "A": "Video Assistant Referee",
+          "B": "Visual Area Review",
+          "C": "Verified Action Replay",
+          "D": "Video Analysis Resource"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué famoso jugador francés fue expulsado en la final del Mundial 2006 tras dar un cabezazo a Materazzi?",
+        "opciones": {
+          "A": "Zinedine Zidane",
+          "B": "Thierry Henry",
+          "C": "Patrick Vieira",
+          "D": "Lilian Thuram"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo de Ámsterdam es conocido por su histórica academia y el 'Fútbol Total' de los 70?",
+        "opciones": {
+          "A": "Ajax",
+          "B": "PSV Eindhoven",
+          "C": "Feyenoord",
+          "D": "AZ Alkmaar"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué se sanciona si un jugador (que no sea el arquero) toca intencionalmente la pelota con la mano dentro de su propia área?",
+        "opciones": {
+          "A": "Penal",
+          "B": "Tiro libre directo",
+          "C": "Tiro libre indirecto",
+          "D": "Córner"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es la formación táctica que se representa numéricamente como 4-4-2?",
+        "opciones": {
+          "A": "4 Defensores - 4 Mediocampistas - 2 Delanteros",
+          "B": "4 Defensores - 3 Mediocampistas - 3 Delanteros",
+          "C": "3 Defensores - 5 Mediocampistas - 2 Delanteros",
+          "D": "5 Defensores - 4 Mediocampistas - 1 Delantero"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué jugador alemán tiene el récord de más partidos disputados en la historia de los Mundiales?",
+        "opciones": {
+          "A": "Lothar Matthäus",
+          "B": "Miroslav Klose",
+          "C": "Paolo Maldini",
+          "D": "Lionel Messi"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cómo se llama el principal torneo de fútbol entre selecciones nacionales de África?",
+        "opciones": {
+          "A": "Copa Africana de Naciones (CAN)",
+          "B": "Copa Asiática",
+          "C": "Copa Oro",
+          "D": "Eurocopa"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo español ganó la Champions League en 2016, 2017 y 2018 consecutivamente?",
+        "opciones": {
+          "A": "Real Madrid",
+          "B": "FC Barcelona",
+          "C": "Atlético de Madrid",
+          "D": "Sevilla FC"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué describe la famosa (pero no oficial) 'ley del ex' en el fútbol?",
+        "opciones": {
+          "A": "Un jugador que le marca gol a su antiguo equipo",
+          "B": "Una regla sobre transferencias de jugadores",
+          "C": "Una táctica defensiva específica",
+          "D": "Una norma sobre el comportamiento de los hinchas"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué estadio ocurrió el 'Maracanazo', la sorpresiva victoria de Uruguay sobre Brasil en la final del Mundial 1950?",
+        "opciones": {
+          "A": "Estadio Maracaná (Río de Janeiro)",
+          "B": "Estadio Centenario (Montevideo)",
+          "C": "Estadio Azteca (Ciudad de México)",
+          "D": "Wembley Stadium (Londres)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién es el único arquero en la historia del fútbol que ha ganado el Balón de Oro (en 1963)?",
+        "opciones": {
+          "A": "Lev Yashin",
+          "B": "Dino Zoff",
+          "C": "Gianluigi Buffon",
+          "D": "Oliver Kahn"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador neerlandés, famoso por su elegancia y goles espectaculares, tuvo un paso destacado por el Arsenal?",
+        "opciones": {
+          "A": "Dennis Bergkamp",
+          "B": "Johan Cruyff",
+          "C": "Marco van Basten",
+          "D": "Ruud Gullit"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club ganó la primera edición de la Copa Libertadores de América en 1960?",
+        "opciones": {
+          "A": "Peñarol (Uruguay)",
+          "B": "Santos (Brasil)",
+          "C": "Olimpia (Paraguay)",
+          "D": "Boca Juniors (Argentina)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cómo se llama la regla que permite al árbitro dejar seguir una jugada aunque se haya cometido una falta, si la continuación favorece al equipo que sufrió la infracción?",
+        "opciones": {
+          "A": "Ley de la ventaja",
+          "B": "Offside",
+          "C": "Falta táctica",
+          "D": "Presión alta"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección africana fue la primera en alcanzar los cuartos de final de un Mundial (Italia 1990)?",
+        "opciones": {
+          "A": "Camerún",
+          "B": "Nigeria",
+          "C": "Senegal",
+          "D": "Ghana"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué entrenador argentino llevó a la selección a ganar el Mundial de 1986 en México?",
+        "opciones": {
+          "A": "Carlos Bilardo",
+          "B": "César Luis Menotti",
+          "C": "Alfio Basile",
+          "D": "Marcelo Bielsa"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección eliminó a Argentina en los cuartos de final del Mundial 2006 por penales?",
+        "opciones": {
+          "A": "Alemania",
+          "B": "Italia",
+          "C": "México",
+          "D": "Inglaterra"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué función principal cumple un 'enganche' o 'número 10 clásico' en el fútbol argentino?",
+        "opciones": {
+          "A": "Crear juego y asistir a los delanteros",
+          "B": "Recuperar pelotas en el mediocampo",
+          "C": "Marcar al delantero rival",
+          "D": "Desbordar por las bandas"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo argentino fue el primer campeón de la Copa Sudamericana en 2002?",
+        "opciones": {
+          "A": "San Lorenzo",
+          "B": "Boca Juniors",
+          "C": "River Plate",
+          "D": "Cienciano"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el arquero de Argentina en la final del Mundial 1990 contra Alemania?",
+        "opciones": {
+          "A": "Sergio Goycochea",
+          "B": "Nery Pumpido",
+          "C": "Luis Islas",
+          "D": "Ubaldo Fillol"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué significa el término 'vaselina' o 'globito' aplicado a un remate?",
+        "opciones": {
+          "A": "Picar la pelota suavemente por encima del arquero",
+          "B": "Rematar con mucha potencia",
+          "C": "Rematar con el borde externo del pie",
+          "D": "Hacer rebotar la pelota antes de que entre al arco"
+        },
+        "respuesta_correcta": "A"
       }
     ]
-  }
+}
   

@@ -127,55 +127,64 @@
         <!-- Contenido Principal del Juego (Inicialmente Oculto) -->
         <main id="gameContentSection" class="game-content qsm-1v1-content" style="display: none;">
             <div class="container game-area">
+                <!-- Game Status (puede ir arriba o dentro del card) -->
                 <div class="game-status">
                     <span id="gameLevelDisplay">Nivel 1</span> - <span id="questionCounter">Pregunta X/Y</span>
-                    <div class="turn-indicator" id="turnIndicator">Turno de: Jugador 1</div>
+                    <!-- El indicador de turno ahora está en el header -->
+                    <!-- <div class="turn-indicator" id="turnIndicator">Turno de: Jugador 1</div> -->
                 </div>
 
-                <div class="question-display-area">
-                    <h3 class="qsm-question" id="questionText">Cargando pregunta...</h3>
-                </div>
-
-                <div class="answer-area">
-                    <div id="level1InputArea" class="answer-input-container active">
-                         <form id="answerFormLevel1">
-                            <input type="text" id="answerInput" class="qsm-input" placeholder="Escribe tu respuesta aquí..." autocomplete="off" required>
-                            <button type="submit" class="primary-button submit-answer-btn">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                Enviar
-                            </button>
-                         </form>
+                <!-- Card principal del juego -->
+                <div class="game-card">
+                    <div class="question-area">
+                        <h3 class="qsm-question" id="questionText">Cargando pregunta...</h3>
                     </div>
 
-                    <div id="level2PlusOptionsArea" class="options-container">
-                        <div class="options-grid qsm-options-grid" id="optionsContainer">
-                            <button class="option" data-index="0"><span class="option-letter">A</span><span class="option-text"></span></button>
-                            <button class="option" data-index="1"><span class="option-letter">B</span><span class="option-text"></span></button>
-                            <button class="option" data-index="2"><span class="option-letter">C</span><span class="option-text"></span></button>
-                            <button class="option" data-index="3"><span class="option-letter">D</span><span class="option-text"></span></button>
+                    <div class="answer-area">
+                        <!-- Área de respuesta (Texto + Opciones) -->
+                        <div id="level1InputArea" class="answer-input-container active"> <!-- Siempre activo estructuralmente, JS maneja habilitado/deshabilitado -->
+                             <form id="answerFormLevel1" class="answer-form">
+                                <input type="text" id="answerInput" class="qsm-input modern-input" placeholder="Escribe tu respuesta aquí..." autocomplete="off" required>
+                                <button type="submit" class="primary-button submit-answer-btn modern-submit-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    <span>Enviar</span>
+                                </button>
+                             </form>
                         </div>
-                        <div class="action-buttons-qsm">
-                             <button id="requestOptionsButton" class="secondary-button request-options-btn">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.46 10.46 5 19l-1.76-1.76a6 6 0 0 1 8.48-8.48l1.76 1.76Z"></path><path d="m14.58 13.42 5.5-5.5M16 3l5 5"></path></svg>
-                                Pedir Opciones
-                            </button>
-                            <button id="fiftyFiftyButton" class="secondary-button fifty-fifty-btn" disabled>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9h.01"></path><path d="M15 15h.01"></path><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z"></path></svg>
-                                50/50
-                            </button>
+
+                        <!-- Área específica Nivel 2+ (Botones Pedir Opciones / 50-50) -->
+                        <div id="level2PlusOptionsArea" class="options-container">
+                            <div class="options-grid qsm-options-grid" id="optionsContainer" style="display: none;"> <!-- Opciones ocultas inicialmente -->
+                                <button class="option modern-option" data-index="0"><span class="option-letter">A</span><span class="option-text"></span></button>
+                                <button class="option modern-option" data-index="1"><span class="option-letter">B</span><span class="option-text"></span></button>
+                                <button class="option modern-option" data-index="2"><span class="option-letter">C</span><span class="option-text"></span></button>
+                                <button class="option modern-option" data-index="3"><span class="option-letter">D</span><span class="option-text"></span></button>
+                            </div>
+                            <!-- Grupo de botones de acción -->
+                            <div class="action-buttons-qsm">
+                                 <button id="requestOptionsButton" class="secondary-button action-btn request-options-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.46 10.46 5 19l-1.76-1.76a6 6 0 0 1 8.48-8.48l1.76 1.76Z"></path><path d="m14.58 13.42 5.5-5.5M16 3l5 5"></path></svg>
+                                    <span>Pedir Opciones</span>
+                                </button>
+                                <button id="fiftyFiftyButton" class="secondary-button action-btn fifty-fifty-btn" disabled>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9h.01"></path><path d="M15 15h.01"></path><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z"></path></svg>
+                                    <span>50/50</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="feedback-area" id="feedbackArea">
-                </div>
+                    <div class="feedback-area" id="feedbackArea">
+                        <!-- Mensajes de feedback -->
+                    </div>
+                </div> <!-- Fin game-card -->
 
                 <div class="waiting-area" id="waitingArea">
-                    <p>Esperando al oponente...</p>
                     <div class="spinner"></div>
+                    <p>Esperando al oponente...</p>
                 </div>
 
-                 <div class="timer-container-qsm" id="timerContainer">
+                 <div class="timer-container-qsm" id="timerContainer" style="display: none;"> <!-- Oculto por defecto hasta que se implemente -->
                     <div class="timer-bar-qsm" id="timerBar"></div>
                  </div>
 

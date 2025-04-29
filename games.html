@@ -60,8 +60,8 @@
                 </div>
             </div>
 
-            <div class="game-card coming-soon-card" >
-                <div class="game-badge coming-soon-badge-style">PRÓXIMAMENTE</div>
+            <div class="game-card" data-game="quiensabemas">
+                <div class="game-badge">1v1</div>
                 <div class="game-image quiensabemas-img">
                     <div class="game-overlay"></div>
                 </div>
@@ -72,7 +72,7 @@
                         <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>15 Niveles</span>
                         <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>3 Comodines</span>
                     </div>
-                    <button class="play-button" disabled>
+                    <button class="play-button">
                         <span>Jugar</span>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16l15-8-15-8z"></path></svg>
                     </button>
@@ -135,5 +135,32 @@
     </div>
 
     <script src="js/main.js"></script>
+
+    <!-- Modal Introducción Quien Sabe Más -->
+    <div class="modal-overlay" id="qsmIntroModal">
+        <div class="modal-content qsm-intro-modal">
+            <h3 class="modal-title"><i class="fas fa-question-circle"></i> ¿Cómo se juega al Quien Sabe Más?</h3>
+            <p>¡Dale, mostrá lo que sabés de fulbo!</p>
+            <ul>
+                <li>Vas a jugar <strong>mano a mano</strong> contra otro crack.</li>
+                <li>Son <strong>6 niveles</strong> de preguntas, cada vez más picantes.</li>
+                <li><strong>Puntaje:</strong> <span class="level-highlight-1">Nivel 1</span> (sin opciones): <strong>1 punto</strong>.<br>
+                    &nbsp;&nbsp;<span class="level-highlight-2">Nivel 2</span> al <span class="level-highlight-6">Nivel 6</span>:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- Sin opciones: <strong>2 puntos</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- Con opciones: <strong>1 punto</strong><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;- Usando 50/50: <strong>0.5 puntos</strong>.
+                </li>
+                <li>Tenés un comodín <strong>50/50</strong> por pregunta (usalo después de ver las opciones).</li>
+                <li>El que suma más puntos al final <span class="highlight-consagra">¡se consagra!</span></li>
+            </ul>
+            <div class="modal-footer">
+                <button type="button" class="primary-button" id="goToLobbyQSMButton">
+                    <i class="fas fa-door-open"></i> IR AL LOBBY QUIEN SABE MAS
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Fin Modal -->
+
 </body>
 </html> 

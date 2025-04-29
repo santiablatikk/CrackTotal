@@ -3,97 +3,97 @@
     "dificultad": "Difícil",
     "preguntas": [
       {
-        "pregunta": "¿Cuál es el clásico rival de la Juventus?",
+        "pregunta": "¿Contra qué equipo disputa la Juventus el 'Derby della Mole', el clásico de la ciudad de Turín?",
         "opciones": {
           "A": "Torino",
           "B": "Inter de Milán",
           "C": "AC Milan",
-          "D": "Napoli"
+          "D": "Genoa"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo ganó la Copa Libertadores 1994?",
+        "pregunta": "¿Qué equipo argentino, dirigido por Carlos Bianchi, ganó la Copa Libertadores en 1994?",
         "opciones": {
           "A": "Vélez Sarsfield",
           "B": "Boca Juniors",
           "C": "River Plate",
-          "D": "Independiente"
+          "D": "San Lorenzo"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador marcó el gol más rápido en un Mundial (11 segundos)?",
+        "pregunta": "¿Qué jugador turco marcó el gol más rápido en la historia de los Mundiales (11 segundos) en 2002?",
         "opciones": {
           "A": "Hakan Şükür",
-          "B": "Clint Dempsey",
-          "C": "Bryan Ruiz",
-          "D": "Robin van Persie"
+          "B": "Nihat Kahveci",
+          "C": "Emre Belözoğlu",
+          "D": "Arda Turan"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo es apodado 'La Academia' en Argentina?",
+        "pregunta": "¿Qué equipo de Avellaneda es conocido como 'La Academia' en el fútbol argentino?",
         "opciones": {
           "A": "Racing Club",
-          "B": "River Plate",
-          "C": "Estudiantes",
-          "D": "Independiente"
+          "B": "Independiente",
+          "C": "Arsenal de Sarandí",
+          "D": "Defensa y Justicia"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué selección tiene el récord de más partidos invictos (35) en torneos internacionales?",
+        "pregunta": "¿Qué selección estableció el récord mundial de más partidos internacionales consecutivos invicta (37 partidos)?",
         "opciones": {
-          "A": "Brasil",
-          "B": "España",
-          "C": "Italia",
-          "D": "Alemania"
+          "A": "Italia",
+          "B": "Brasil",
+          "C": "España",
+          "D": "Argentina"
         },
-        "respuesta_correcta": "C"
+        "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador ganó la Bota de Oro en 2012 con 50 goles?",
+        "pregunta": "¿Qué jugador argentino ganó la Bota de Oro europea en 2012 tras marcar 50 goles en LaLiga?",
         "opciones": {
           "A": "Lionel Messi",
-          "B": "Cristiano Ronaldo",
-          "C": "Radamel Falcao",
-          "D": "Luis Suárez"
+          "B": "Gonzalo Higuaín",
+          "C": "Sergio Agüero",
+          "D": "Diego Milito"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué club inglés ganó la Premier League invicto en 2003-04?",
+        "pregunta": "¿Qué club londinense, conocido como 'The Gunners', ganó la Premier League invicto en la temporada 2003-04?",
         "opciones": {
           "A": "Arsenal",
-          "B": "Manchester United",
-          "C": "Chelsea",
-          "D": "Liverpool"
+          "B": "Chelsea",
+          "C": "Tottenham Hotspur",
+          "D": "West Ham United"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador anotó 5 goles en un partido de la Bundesliga?",
+        "pregunta": "¿Qué jugador polaco anotó 5 goles en solo 9 minutos tras entrar como suplente / desde el banco en un partido de la Bundesliga en 2015?",
         "opciones": {
           "A": "Robert Lewandowski",
-          "B": "Gerd Müller",
-          "C": "Claudio Pizarro",
-          "D": "Mario Gómez"
+          "B": "Arkadiusz Milik",
+          "C": "Łukasz Piszczek",
+          "D": "Piotr Zieliński"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo ganó la Copa Libertadores 2008?",
+        "pregunta": "¿Qué equipo ecuatoriano sorprendió al ganar la Copa Libertadores en 2008?",
         "opciones": {
           "A": "LDU Quito",
-          "B": "Boca Juniors",
-          "C": "River Plate",
-          "D": "São Paulo"
+          "B": "Barcelona SC",
+          "C": "Emelec",
+          "D": "Independiente del Valle"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué país fue sede de la primera Copa América (1916)?",
+        "pregunta": "¿Qué país sudamericano fue sede y campeón de la primera Copa América (entonces Campeonato Sudamericano) en 1916?",
         "opciones": {
           "A": "Argentina",
           "B": "Uruguay",
@@ -103,55 +103,255 @@
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador tiene más goles en finales de la Champions League?",
+        "pregunta": "¿Qué jugador portugués tiene el récord de más goles anotados en finales de la Champions League?",
         "opciones": {
           "A": "Cristiano Ronaldo",
-          "B": "Alfredo Di Stéfano",
-          "C": "Ferenc Puskás",
-          "D": "Raúl González"
+          "B": "Eusébio",
+          "C": "Luís Figo",
+          "D": "Deco"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué equipo ganó la Copa Intercontinental en 2000?",
+        "pregunta": "¿Qué equipo argentino venció al Real Madrid en la final de la Copa Intercontinental del año 2000?",
         "opciones": {
           "A": "Boca Juniors",
-          "B": "Real Madrid",
-          "C": "Bayern Múnich",
-          "D": "Manchester United"
+          "B": "River Plate",
+          "C": "Independiente",
+          "D": "Vélez Sarsfield"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador recibió la tarjeta roja más rápida en un Mundial (56 segundos)?",
+        "pregunta": "¿Qué jugador uruguayo recibió la tarjeta roja más rápida en un Mundial (56 segundos vs Escocia en 1986)?",
         "opciones": {
           "A": "José Batista",
-          "B": "Wayne Rooney",
-          "C": "Zinedine Zidane",
-          "D": "Claudio Caniggia"
+          "B": "Paolo Montero",
+          "C": "Diego Godín",
+          "D": "Enzo Francescoli"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué club tiene más títulos de la Copa Libertadores?",
+        "pregunta": "¿Qué club argentino ostenta el récord de más títulos de Copa Libertadores ganados (7)?",
         "opciones": {
           "A": "Independiente",
           "B": "Boca Juniors",
           "C": "River Plate",
-          "D": "Peñarol"
+          "D": "Estudiantes de La Plata"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador africano ganó el Balón de Oro?",
+        "pregunta": "¿Cuál es el único jugador africano que ha ganado el Balón de Oro (en 1995)?",
         "opciones": {
           "A": "George Weah",
-          "B": "Didier Drogba",
-          "C": "Samuel Eto'o",
-          "D": "Yaya Touré"
+          "B": "Samuel Eto'o",
+          "C": "Didier Drogba",
+          "D": "Roger Milla"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué Copa del Mundo se permitió por primera vez realizar sustituciones de jugadores durante los partidos?",
+        "opciones": {
+          "A": "México 1970",
+          "B": "Inglaterra 1966",
+          "C": "Alemania 1974",
+          "D": "Chile 1962"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué regla prohíbe al arquero tocar la pelota con las manos tras un pase deliberado con el pie de un compañero?",
+        "opciones": {
+          "A": "Cesión al arquero",
+          "B": "Regla de los 6 segundos",
+          "C": "Offside",
+          "D": "Regla de Obstrucción"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué legendario jugador brasileño de dribbling endiablado fue figura en los Mundiales 1958 y 1962 junto a Pelé?",
+        "opciones": {
+          "A": "Garrincha",
+          "B": "Zico",
+          "C": "Sócrates",
+          "D": "Rivelino"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué modesto equipo inglés, dirigido por Brian Clough, ganó dos Copas de Europa consecutivas en 1979 y 1980?",
+        "opciones": {
+          "A": "Nottingham Forest",
+          "B": "Aston Villa",
+          "C": "Derby County",
+          "D": "Leeds United"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué excéntrico arquero colombiano popularizó la parada conocida como 'El Escorpión'?",
+        "opciones": {
+          "A": "René Higuita",
+          "B": "Faryd Mondragón",
+          "C": "Óscar Córdoba",
+          "D": "David Ospina"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección femenina ganó la primera Copa Mundial Femenina de la FIFA en China 1991?",
+        "opciones": {
+          "A": "Estados Unidos",
+          "B": "Noruega",
+          "C": "Alemania",
+          "D": "China"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo argentino ganó la Copa Libertadores de forma invicta en 1969?",
+        "opciones": {
+          "A": "Estudiantes de La Plata",
+          "B": "Racing Club",
+          "C": "Independiente",
+          "D": "River Plate"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador estableció el récord de más goles (17) en una sola temporada de la Champions League (2013-14)?",
+        "opciones": {
+          "A": "Cristiano Ronaldo",
+          "B": "Lionel Messi",
+          "C": "Robert Lewandowski",
+          "D": "Ruud van Nistelrooy"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué equipo alemán se convirtió en el primero de su país en lograr el 'triplete' (Bundesliga, Copa DFB, Champions) en 2013?",
+        "opciones": {
+          "A": "Bayern Múnich",
+          "B": "Borussia Dortmund",
+          "C": "Hamburgo SV",
+          "D": "Werder Bremen"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Quién fue el máximo goleador y figura de la selección argentina campeona del Mundo en 1978?",
+        "opciones": {
+          "A": "Mario Kempes",
+          "B": "Leopoldo Luque",
+          "C": "Daniel Bertoni",
+          "D": "René Houseman"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué estadio albergó la final de la Copa del Mundo de 1994 en Estados Unidos?",
+        "opciones": {
+          "A": "Rose Bowl (Pasadena)",
+          "B": "Giants Stadium (East Rutherford)",
+          "C": "Stanford Stadium (Stanford)",
+          "D": "Soldier Field (Chicago)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador italiano marcó el penal decisivo que le dio a Italia el Mundial 2006?",
+        "opciones": {
+          "A": "Fabio Grosso",
+          "B": "Andrea Pirlo",
+          "C": "Daniele De Rossi",
+          "D": "Alessandro Del Piero"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club español es conocido por su política de fichar únicamente jugadores vascos?",
+        "opciones": {
+          "A": "Athletic Club (Bilbao)",
+          "B": "Real Sociedad",
+          "C": "Osasuna",
+          "D": "Alavés"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Cuál fue el primer club no británico ni irlandés en ganar la Copa de Europa (Champions League)?",
+        "opciones": {
+          "A": "Real Madrid (1956)",
+          "B": "Benfica (1961)",
+          "C": "AC Milan (1963)",
+          "D": "Inter de Milán (1964)"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué futbolista brasileño tiene el récord de más goles anotados en una sola Copa del Mundo (13 goles en 1958)?",
+        "opciones": {
+          "A": "Just Fontaine (Francia)",
+          "B": "Pelé",
+          "C": "Gerd Müller",
+          "D": "Ademir"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo paraguayo ganó la Copa Libertadores en tres ocasiones (1979, 1990, 2002)?",
+        "opciones": {
+          "A": "Olimpia",
+          "B": "Cerro Porteño",
+          "C": "Libertad",
+          "D": "Guaraní"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el arquero titular de Alemania en la final del Mundial 2002 contra Brasil?",
+        "opciones": {
+          "A": "Oliver Kahn",
+          "B": "Jens Lehmann",
+          "C": "Andreas Köpke",
+          "D": "Bodo Illgner"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador ostenta el récord de goles en una sola temporada de la liga argentina (contando solo torneos largos anuales post-1930)?",
+        "opciones": {
+          "A": "Arsenio Erico (47 goles en 1937)",
+          "B": "Bernabé Ferreyra (43 goles en 1932)",
+          "C": "Martín Palermo (20 goles en Apertura 98)",
+          "D": "Diego Maradona (22 goles en Metropolitano 80)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club fue el primer equipo argentino en ganar la Copa Intercontinental en 1967?",
+        "opciones": {
+          "A": "Racing Club",
+          "B": "Independiente",
+          "C": "Estudiantes LP",
+          "D": "Boca Juniors"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer país africano en organizar una Copa del Mundo?",
+        "opciones": {
+          "A": "Sudáfrica (2010)",
+          "B": "Marruecos",
+          "C": "Egipto",
+          "D": "Nigeria"
         },
         "respuesta_correcta": "A"
       }
     ]
-  }
+}
   

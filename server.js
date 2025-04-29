@@ -802,17 +802,36 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
     // --- Score Calculation & Result Payload --- 
     const currentPlayer = room.players.player1.id === clientInfo.id ? room.players.player1 : room.players.player2;
     if (isCorrect) {
-        pointsAwarded = 10 * question.level;
+        // --- New Scoring Logic --- 
+        if (question.level === 1) {
+            pointsAwarded = 1;
+        } else { // Levels 2-6
+            if (answerMethod === 'text') { // Answered without requesting options
+                pointsAwarded = 2;
+            } else { // Answered using options index
+                if (room.fiftyFiftyUsed) {
+                    pointsAwarded = 0.5;
+                } else {
+                    pointsAwarded = 1;
+                }
+            }
+        }
+        // --- End New Scoring Logic ---
         currentPlayer.score += pointsAwarded;
+    } else {
+        pointsAwarded = 0; // Explicitly set to 0 if incorrect
     }
+
+    // Correct answer text normalization should happen during question loading now
+    // const normalizedCorrectAnswerText = question.correctAnswerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "");
 
     const resultPayload = {
         isCorrect: isCorrect,
         pointsAwarded: pointsAwarded,
-        correctAnswerText: question.correctAnswerText.toUpperCase(), // Send normalized correct text for all levels
+        // Send the already normalized correctAnswerText from the question object
+        correctAnswerText: question.correctAnswerText.toUpperCase(), 
         correctIndex: question.correctIndex, // Send correct index (will be -1 for L1)
         forPlayerId: clientInfo.id,
-        // Include submitted data based on method
         submittedAnswerText: answerMethod === 'text' ? submittedAnswerText : null, // Send original submitted text if answered via text
         selectedIndex: answerMethod === 'index' ? submittedAnswerIndex : -1 // Send submitted index if answered via index
     };
