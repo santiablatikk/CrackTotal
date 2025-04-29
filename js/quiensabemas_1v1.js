@@ -633,12 +633,33 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'yourInfo': // Server assigns our ID
                 gameState.myPlayerId = message.payload.playerId;
                 console.log(`Assigned Player ID: ${gameState.myPlayerId}`);
+                // --- Save player name to session storage when assigned ---
+                const creatorPlayerName = createPlayerNameInput?.value || joinPlayerNameInput?.value;
+                if (creatorPlayerName) {
+                    sessionStorage.setItem('playerName', creatorPlayerName);
+                    console.log(`Saved player name to session storage: ${creatorPlayerName}`);
+                }
+                // --- End Save ---
                 break;
 
             case 'roomCreated': // Successfully created a room
                 gameState.roomId = message.payload.roomId;
-                showLobbyMessage(`Room ${gameState.roomId} created. Waiting for opponent... (ID: ${gameState.roomId})`, "success");
-                // Still waiting, keep buttons disabled, show waiting state visually if needed
+                // Update player state with the creator's info (assuming server doesn't send full player list here)
+                gameState.players.player1 = {
+                    id: gameState.myPlayerId,
+                    name: createPlayerNameInput.value.trim() || 'Jugador 1',
+                    score: 0
+                };
+                gameState.players.player2 = null; // No opponent yet
+
+                showGameScreen(); // Transition UI away from lobby
+                updatePlayerUI(); // Show player 1 info in the header
+                // Hide game elements not needed yet
+                questionTextEl.textContent = '';
+                level1InputAreaEl.classList.remove('active');
+                level2PlusOptionsAreaEl.classList.remove('active');
+                showWaitingMessage(`Room ${gameState.roomId} created. Waiting for opponent...`); // Show waiting message in the game screen area
+                disablePlayerInput(); // Ensure inputs are disabled while waiting
                 break;
 
             case 'joinSuccess': // Successfully joined a room

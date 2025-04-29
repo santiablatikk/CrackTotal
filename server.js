@@ -492,7 +492,7 @@ function handleLeaveRoom(ws, clientInfo) {
         safeSend(remainingPlayer.ws, {
             type: 'opponentLeftLobby',
             payload: { message: `${leavingPlayerName} has left the lobby.` }
-        });
+         });
     }
 
     // Broadcast updated room list (room might become available)
@@ -692,7 +692,7 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
     if (!room.players.player1 || !room.players.player2) {
          console.warn(`handleSubmitAnswer called in room ${roomId} but a player is missing.`);
          return; // Avoid errors if a player disconnected right before answering
-    }
+      }
 
     const question = room.currentQuestion;
     let isCorrect = false;
@@ -806,8 +806,8 @@ function handleRequestFiftyFifty(ws, clientInfo) {
     // Add check for currentQuestion existence
      if (!room || !room.gameActive || clientInfo.id !== room.currentTurn || !room.currentQuestion || room.currentQuestion.level === 1 || !room.optionsSent || room.fiftyFiftyUsed) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot use 50/50 now.' } });
-        return;
-    }
+         return;
+     }
     // Ensure options array exists and has enough elements
      if (!room.currentQuestion.options || room.currentQuestion.options.length < 4) {
           console.error(`Room ${roomId} - Cannot apply 50/50: Invalid options data.`);
@@ -844,7 +844,7 @@ function handleRequestFiftyFifty(ws, clientInfo) {
         console.error(`Room ${roomId} - Failed to select 2 indices for 50/50. Incorrect Indices:`, incorrectIndices);
         room.fiftyFiftyUsed = false; // Reset if failed
         safeSend(ws, { type: 'errorMessage', payload: { error: 'Failed to apply 50/50.' } });
-    }
+}
 }
 
 
