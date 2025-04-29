@@ -130,6 +130,7 @@ const rooms = new Map(); // Map<string, Room>
 //     currentQuestion: any | null; // The question object currently active
 //     optionsSent: boolean; // Track if options were sent for current level > 1 question
 //     fiftyFiftyUsed: boolean; // Track if 50/50 was used for current question turn
+//     questionsPerLevel: number; // Config stored per room
 // }
 // interface Player {
 //     id: string;
@@ -161,15 +162,18 @@ function broadcastToRoom(roomId, message, senderWs = null) {
 
     const players = [room.players.player1, room.players.player2].filter(p => p);
     players.forEach(player => {
-        if (player.ws !== senderWs && player.ws.readyState === WebSocket.OPEN) {
+        // Ensure player.ws exists before checking readyState
+        if (player && player.ws && player.ws !== senderWs && player.ws.readyState === WebSocket.OPEN) {
             player.ws.send(messageString);
         }
     });
-    room.spectators.forEach(spectatorWs => {
-        if (spectatorWs !== senderWs && spectatorWs.readyState === WebSocket.OPEN) {
-            spectatorWs.send(messageString);
-        }
-    });
+    if (room.spectators) { // Check if spectators array exists
+        room.spectators.forEach(spectatorWs => {
+            if (spectatorWs !== senderWs && spectatorWs.readyState === WebSocket.OPEN) {
+                spectatorWs.send(messageString);
+            }
+        });
+    }
 }
 
 // Send message safely to a specific WebSocket client
@@ -194,12 +198,13 @@ wss.on('connection', (ws, req) => {
         let parsedMessage;
         try {
             // Limit message size to prevent abuse
-            if (message.length > 4096) {
+             const messageString = message.toString(); // Ensure it's a string
+            if (messageString.length > 4096) {
                 console.warn(`Message too long from ${clientId}. Closing connection.`);
                 ws.terminate();
                 return;
             }
-            parsedMessage = JSON.parse(message);
+            parsedMessage = JSON.parse(messageString);
             // console.log(`Received from ${clientId}:`, parsedMessage); // Less verbose logging
             handleClientMessage(ws, parsedMessage);
         } catch (error) {
@@ -324,7 +329,16 @@ function handleJoinRoom(ws, clientInfo, payload) {
         safeSend(ws, { type: 'joinError', payload: { error: 'Ya estás en una sala.' } });
         return;
     }
+    // Ensure payload exists before destructuring
+    if (!payload) {
+         safeSend(ws, { type: 'joinError', payload: { error: 'Invalid join request.' } });
+        return;
+    }
     const { roomId, password, playerName } = payload;
+     if (!roomId) {
+         safeSend(ws, { type: 'joinError', payload: { error: 'Room ID is required.' } });
+        return;
+    }
     const room = rooms.get(roomId);
 
     if (!room) {
@@ -343,6 +357,14 @@ function handleJoinRoom(ws, clientInfo, payload) {
         safeSend(ws, { type: 'joinError', payload: { error: 'La sala ya está llena.' } });
         return;
     }
+
+    // Ensure player1 exists before proceeding
+    if (!room.players.player1) {
+        console.error(`Room ${roomId} has no player 1, cannot join.`);
+        safeSend(ws, { type: 'joinError', payload: { error: 'Error interno de la sala.' } });
+        return;
+    }
+
 
     // Add player 2
     const player2 = {
@@ -385,8 +407,11 @@ function handleJoinRandomRoom(ws, clientInfo, payload) {
     // Find a public room with exactly one player
     for (const [roomId, room] of rooms.entries()) {
         if (!room.password && room.players.player1 && !room.players.player2 && !room.gameActive) {
-            availableRoomId = roomId;
-            break;
+             // Ensure the only player isn't the one trying to join
+             if (room.players.player1.id !== clientInfo.id) {
+                availableRoomId = roomId;
+                break;
+             }
         }
     }
 
@@ -396,14 +421,14 @@ function handleJoinRandomRoom(ws, clientInfo, payload) {
         handleJoinRoom(ws, clientInfo, {
             roomId: availableRoomId,
             password: '',
-            playerName: payload.playerName
+            playerName: payload ? payload.playerName : undefined // Handle potential missing payload
         });
         // Use specific success type for random join if needed by client?
         // safeSend(ws, { type: 'randomJoinSuccess', payload: { roomId: availableRoomId } });
     } else {
         // No room found, maybe create a new public room instead?
         console.log(`No random room found for ${clientInfo.id}. Creating new public room.`);
-        handleCreateRoom(ws, clientInfo, { playerName: payload.playerName, password: '' });
+        handleCreateRoom(ws, clientInfo, { playerName: payload ? payload.playerName : undefined, password: '' });
         // Let the client know it's waiting in a new room
         // safeSend(ws, { type: 'randomJoinError', payload: { error: 'No rooms available, created a new one for you.' } });
     }
@@ -426,17 +451,20 @@ function handleLeaveRoom(ws, clientInfo) {
     console.log(`Player ${clientInfo.id} is leaving room ${roomId}`);
     const leavingPlayerId = clientInfo.id;
     let remainingPlayer = null;
+    let leavingPlayerName = 'Opponent';
 
-    // Remove player from room
+    // Remove player from room and get their name
     if (room.players.player1 && room.players.player1.id === leavingPlayerId) {
+        leavingPlayerName = room.players.player1.name;
         remainingPlayer = room.players.player2;
         room.players.player1 = null;
     } else if (room.players.player2 && room.players.player2.id === leavingPlayerId) {
+        leavingPlayerName = room.players.player2.name;
         remainingPlayer = room.players.player1;
         room.players.player2 = null;
     }
 
-    // Update client state
+    // Update client state (must happen after checking room)
     clientInfo.roomId = null;
 
     // Check room status
@@ -447,12 +475,13 @@ function handleLeaveRoom(ws, clientInfo) {
     } else if (remainingPlayer && room.gameActive) {
         // Game was active, opponent left, remaining player wins
         console.log(`Game in room ${roomId} ended due to player ${leavingPlayerId} leaving.`);
-        endGame(roomId, `${remainingPlayer.name} wins! Opponent left.`);
+        // Use the name we captured before setting the player to null
+        endGame(roomId, `${leavingPlayerName} left the game.`);
         // Notify the remaining player
         safeSend(remainingPlayer.ws, {
             type: 'gameOver',
             payload: {
-                reason: `Opponent left the game.`, // Use a generic payload, endGame handles details
+                reason: `${leavingPlayerName} left the game.`, // Use a generic payload, endGame handles details
                  winnerId: remainingPlayer.id // Indicate winner explicitly
             }
         });
@@ -462,7 +491,7 @@ function handleLeaveRoom(ws, clientInfo) {
         // Game wasn't active (lobby), just notify remaining player
         safeSend(remainingPlayer.ws, {
             type: 'opponentLeftLobby',
-            payload: { message: 'Your opponent has left the lobby.' }
+            payload: { message: `${leavingPlayerName} has left the lobby.` }
         });
     }
 
@@ -474,10 +503,20 @@ function handleLeaveRoom(ws, clientInfo) {
 
 function startGame(roomId) {
     const room = rooms.get(roomId);
-    if (!room || !room.players.player1 || !room.players.player2) {
-        console.error(`Cannot start game in room ${roomId}: Missing players.`);
+    // Add rigorous checks
+    if (!room) {
+         console.error(`startGame called for non-existent room: ${roomId}`);
+         return;
+     }
+    if (!room.players.player1 || !room.players.player2) {
+        console.error(`Cannot start game in room ${roomId}: Missing players. P1:${!!room.players.player1}, P2:${!!room.players.player2}`);
+        // Maybe notify players if possible?
         return;
     }
+     if (room.gameActive) {
+         console.warn(`startGame called for already active room: ${roomId}`);
+         return; // Prevent restarting an active game
+     }
 
     console.log(`Starting game in room ${roomId}...`);
 
@@ -485,9 +524,12 @@ function startGame(roomId) {
     room.gameActive = true;
     room.currentLevel = 1;
     room.questionsAnsweredInLevel = 0;
-    room.usedQuestionIndices = {};
+    room.usedQuestionIndices = {}; // Reset used questions for new game
+    for (let l = 1; l <= MAX_LEVELS; l++) { // Initialize for all potential levels
+        room.usedQuestionIndices[l] = [];
+    }
     room.currentQuestion = null;
-    room.players.player1.score = 0;
+    room.players.player1.score = 0; // Reset scores
     room.players.player2.score = 0;
     room.optionsSent = false;
     room.fiftyFiftyUsed = false;
@@ -510,8 +552,11 @@ function startGame(roomId) {
 
     // Send the first question immediately
     console.log(`Room ${roomId} - Calling sendNextQuestion for the first time...`); // <--- DEBUG LOG
-    sendNextQuestion(roomId);
-    console.log(`Room ${roomId} - Returned from first call to sendNextQuestion.`); // <--- DEBUG LOG
+    // Add a small delay before sending the first question?
+    setTimeout(() => {
+        sendNextQuestion(roomId);
+        console.log(`Room ${roomId} - Returned from first call to sendNextQuestion.`); // <--- DEBUG LOG
+    }, 50); // Short delay (50ms)
 }
 
 function sendNextQuestion(roomId) {
@@ -521,6 +566,13 @@ function sendNextQuestion(roomId) {
          console.log(`DEBUG: sendNextQuestion aborted for room ${roomId} - Room not found or game not active.`); // <--- DEBUG LOG
         return;
     }
+    // Ensure players are still present
+    if (!room.players.player1 || !room.players.player2) {
+        console.warn(`DEBUG: sendNextQuestion aborted for room ${roomId} - Player missing.`);
+        // Game might have ended due to disconnect between answer and next question
+        return;
+    }
+
 
     console.log(`Sending next question for room ${roomId}, Level ${room.currentLevel}`);
 
@@ -549,7 +601,11 @@ function sendNextQuestion(roomId) {
 
     // Select a random, unused question for the current level
     const questionsForLevel = allQuestions[room.currentLevel];
-    const usedIndices = room.usedQuestionIndices[room.currentLevel] || [];
+     // Ensure the array exists before accessing it
+     if (!room.usedQuestionIndices[room.currentLevel]) {
+        room.usedQuestionIndices[room.currentLevel] = [];
+    }
+    const usedIndices = room.usedQuestionIndices[room.currentLevel];
     const availableIndices = questionsForLevel
         .map((_, index) => index)
         .filter(index => !usedIndices.includes(index));
@@ -567,9 +623,6 @@ function sendNextQuestion(roomId) {
      console.log(`DEBUG: Selected question index ${randomIndex} for Level ${room.currentLevel}. Text: ${room.currentQuestion.text}`); // <--- DEBUG LOG
 
     // Mark question as used for this room and level
-    if (!room.usedQuestionIndices[room.currentLevel]) {
-        room.usedQuestionIndices[room.currentLevel] = [];
-    }
     room.usedQuestionIndices[room.currentLevel].push(randomIndex);
 
     // Increment count AFTER selecting the question for this turn
@@ -583,13 +636,21 @@ function sendNextQuestion(roomId) {
     const questionPayload = {
         level: room.currentQuestion.level,
         text: room.currentQuestion.text,
+        // Send options immediately for levels > 1 for simplicity
         options: room.currentQuestion.level > 1 ? room.currentQuestion.options : []
     };
 
-     const playersInfo = {
-        player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
-        player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
-    };
+     // Ensure players exist before accessing properties
+     const player1Info = room.players.player1 ? { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score } : null;
+     const player2Info = room.players.player2 ? { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score } : null;
+
+     if (!player1Info || !player2Info) {
+          console.error(`DEBUG: Player data missing when sending newQuestion for room ${roomId}`);
+          return; // Cannot proceed without player info
+      }
+
+     const playersInfo = { player1: player1Info, player2: player2Info };
+
 
     const message = {
         type: 'newQuestion',
@@ -605,9 +666,9 @@ function sendNextQuestion(roomId) {
     console.log(`Room ${roomId} - Sending Q${room.questionsAnsweredInLevel} L${room.currentLevel}, Turn: ${room.currentTurn}`);
      console.log(`DEBUG: Broadcasting newQuestion message for room ${roomId}...`); // <--- DEBUG LOG
     broadcastToRoom(roomId, message);
-    // Also send individually to handle cases where broadcast might miss one
-    safeSend(room.players.player1.ws, message);
-    safeSend(room.players.player2.ws, message);
+    // Also send individually to handle cases where broadcast might miss one? Redundant if broadcast works? Let's rely on broadcast for now.
+    // safeSend(room.players.player1.ws, message);
+    // safeSend(room.players.player2.ws, message);
      console.log(`DEBUG: newQuestion message sent for room ${roomId}.`); // <--- DEBUG LOG
 }
 
@@ -627,6 +688,11 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'No active question.' } });
         return;
     }
+    // Check players still exist
+    if (!room.players.player1 || !room.players.player2) {
+         console.warn(`handleSubmitAnswer called in room ${roomId} but a player is missing.`);
+         return; // Avoid errors if a player disconnected right before answering
+    }
 
     const question = room.currentQuestion;
     let isCorrect = false;
@@ -634,18 +700,28 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
     let submittedAnswerIndex = -1; // For levels > 1
 
     if (question.level === 1) {
-        const playerAnswer = payload.answerText?.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "") || '';
+        // Ensure payload and answerText exist
+         const playerAnswer = payload && typeof payload.answerText === 'string'
+             ? payload.answerText.toLowerCase().trim().normalize("NFD").replace(/\\p{Diacritic}/gu, "")
+             : '';
         isCorrect = playerAnswer === question.correctAnswerText;
         console.log(`Room ${roomId} L1 Answer: Submitted='${playerAnswer}', Correct='${question.correctAnswerText}', Result=${isCorrect}`);
     } else {
-        submittedAnswerIndex = payload.selectedIndex;
-        if (typeof submittedAnswerIndex === 'number' && submittedAnswerIndex >= 0 && submittedAnswerIndex < question.options.length) {
-            isCorrect = submittedAnswerIndex === question.correctIndex;
-             console.log(`Room ${roomId} L>1 Answer: Submitted Index=${submittedAnswerIndex}, Correct Index=${question.correctIndex}, Result=${isCorrect}`);
+         // Ensure payload and selectedIndex exist and are valid
+         if (payload && typeof payload.selectedIndex === 'number') {
+            submittedAnswerIndex = payload.selectedIndex;
+            if (submittedAnswerIndex >= 0 && submittedAnswerIndex < question.options.length) {
+                isCorrect = submittedAnswerIndex === question.correctIndex;
+                 console.log(`Room ${roomId} L>1 Answer: Submitted Index=${submittedAnswerIndex}, Correct Index=${question.correctIndex}, Result=${isCorrect}`);
+            } else {
+                 console.warn(`Room ${roomId} Invalid index submitted:`, payload.selectedIndex);
+                 safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (index out of bounds).' } });
+                 return; // Invalid submission
+            }
         } else {
-             console.warn(`Room ${roomId} Invalid index submitted:`, payload.selectedIndex);
-             safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format.' } });
-             return; // Invalid submission
+            console.warn(`Room ${roomId} Invalid or missing index submitted:`, payload);
+            safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (missing index).' } });
+            return; // Invalid submission
         }
     }
 
@@ -660,7 +736,8 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
     const resultPayload = {
         isCorrect: isCorrect,
         pointsAwarded: pointsAwarded,
-        correctAnswerText: question.level === 1 ? question.correctAnswerText : null, // Send text for level 1 display
+        // Send correct answer text only for level 1 where it's needed for display
+        correctAnswerText: question.level === 1 ? room.currentQuestion.correctAnswerText : null, // Send original text for level 1 display maybe? Let's stick to normalized for now.
         correctIndex: question.level > 1 ? question.correctIndex : -1, // Send index for levels > 1
         forPlayerId: clientInfo.id,
         selectedIndex: submittedAnswerIndex // Include submitted index for visualization
@@ -668,14 +745,11 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
 
     // Send result to everyone in the room
     broadcastToRoom(roomId, { type: 'answerResult', payload: resultPayload });
-     // Also send individually to ensure delivery
-     safeSend(room.players.player1.ws, { type: 'answerResult', payload: resultPayload });
-     safeSend(room.players.player2.ws, { type: 'answerResult', payload: resultPayload });
 
     // Switch turn
     room.currentTurn = room.players.player1.id === clientInfo.id ? room.players.player2.id : room.players.player1.id;
 
-    // Prepare state update message
+    // Prepare state update message (with potentially updated scores)
      const playersInfo = {
         player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
         player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
@@ -685,12 +759,16 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
 
      // Send state update to everyone
      broadcastToRoom(roomId, updateMessage);
-     safeSend(room.players.player1.ws, updateMessage);
-     safeSend(room.players.player2.ws, updateMessage);
 
     // Send next question after a short delay to allow clients to process result
     setTimeout(() => {
-        sendNextQuestion(roomId);
+         // Check if room still exists and game is active before sending next question
+         const currentRoom = rooms.get(roomId);
+         if (currentRoom && currentRoom.gameActive) {
+            sendNextQuestion(roomId);
+         } else {
+              console.log(`DEBUG: Skipping sendNextQuestion for room ${roomId} as it no longer exists or game is inactive.`);
+         }
     }, 1500); // Adjust delay as needed (e.g., 1.5 seconds)
 }
 
@@ -698,6 +776,7 @@ function handleRequestOptions(ws, clientInfo) {
     const roomId = clientInfo.roomId;
     const room = rooms.get(roomId);
 
+    // Add check for currentQuestion existence
     if (!room || !room.gameActive || clientInfo.id !== room.currentTurn || !room.currentQuestion || room.currentQuestion.level === 1) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot request options now.' } });
         return;
@@ -708,52 +787,78 @@ function handleRequestOptions(ws, clientInfo) {
     }
 
     room.optionsSent = true;
+    // Ensure currentQuestion has options before sending
+     if (!room.currentQuestion.options || room.currentQuestion.options.length === 0) {
+          console.error(`Room ${roomId} - Cannot provide options for question without options array.`);
+          safeSend(ws, { type: 'errorMessage', payload: { error: 'Error retrieving options for this question.' } });
+          room.optionsSent = false; // Reset flag if failed
+          return;
+      }
     const optionsPayload = { options: room.currentQuestion.options };
     console.log(`Room ${roomId} - Sending options to ${clientInfo.id}`);
     safeSend(ws, { type: 'optionsProvided', payload: optionsPayload });
-    // No broadcast needed, only sender gets this implicitly via client logic
 }
 
 function handleRequestFiftyFifty(ws, clientInfo) {
     const roomId = clientInfo.roomId;
     const room = rooms.get(roomId);
 
+    // Add check for currentQuestion existence
      if (!room || !room.gameActive || clientInfo.id !== room.currentTurn || !room.currentQuestion || room.currentQuestion.level === 1 || !room.optionsSent || room.fiftyFiftyUsed) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot use 50/50 now.' } });
         return;
     }
+    // Ensure options array exists and has enough elements
+     if (!room.currentQuestion.options || room.currentQuestion.options.length < 4) {
+          console.error(`Room ${roomId} - Cannot apply 50/50: Invalid options data.`);
+          safeSend(ws, { type: 'errorMessage', payload: { error: 'Error applying 50/50.' } });
+          return;
+      }
 
     room.fiftyFiftyUsed = true;
     const correctIndex = room.currentQuestion.correctIndex;
-    const optionsCount = room.currentQuestion.options.length;
+    const optionsCount = room.currentQuestion.options.length; // Should be 4
     let indicesToRemove = [];
-    let attempts = 0;
 
-    while (indicesToRemove.length < 2 && attempts < 10) {
-        const randomIndex = Math.floor(Math.random() * optionsCount);
-        if (randomIndex !== correctIndex && !indicesToRemove.includes(randomIndex)) {
-            indicesToRemove.push(randomIndex);
-        }
-        attempts++; // Prevent infinite loop just in case
+    // Generate indices 0, 1, 2, 3
+    const allIndices = Array.from({ length: optionsCount }, (_, i) => i);
+    // Filter out the correct index
+    const incorrectIndices = allIndices.filter(index => index !== correctIndex);
+
+    // Shuffle incorrect indices
+    for (let i = incorrectIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [incorrectIndices[i], incorrectIndices[j]] = [incorrectIndices[j], incorrectIndices[i]];
     }
+
+    // Take the first two shuffled incorrect indices
+    indicesToRemove = incorrectIndices.slice(0, 2);
+
 
     if (indicesToRemove.length === 2) {
         const fiftyFiftyPayload = { optionsToRemove: indicesToRemove };
         console.log(`Room ${roomId} - Sending 50/50 removal indices ${indicesToRemove} to ${clientInfo.id}`);
         safeSend(ws, { type: 'fiftyFiftyApplied', payload: fiftyFiftyPayload });
     } else {
-        // Should not happen with 4 options, but handle defensively
-        console.error(`Room ${roomId} - Failed to generate 50/50 indices.`);
+        // Fallback logic (should ideally not be reached with 4 options)
+        console.error(`Room ${roomId} - Failed to select 2 indices for 50/50. Incorrect Indices:`, incorrectIndices);
         room.fiftyFiftyUsed = false; // Reset if failed
         safeSend(ws, { type: 'errorMessage', payload: { error: 'Failed to apply 50/50.' } });
     }
 }
+
 
 // --- End Game & Cleanup ---
 
 function endGame(roomId, reason = "Game finished") {
     const room = rooms.get(roomId);
     if (!room) return;
+     // Check if game is already inactive to prevent double execution
+     if (!room.gameActive) {
+          console.log(`Game in room ${roomId} is already inactive. Ignoring endGame call.`);
+          return;
+      }
+
 
     console.log(`Ending game in room ${roomId}. Reason: ${reason}`);
     room.gameActive = false;
@@ -763,15 +868,23 @@ function endGame(roomId, reason = "Game finished") {
     const p1 = room.players.player1;
     const p2 = room.players.player2;
 
+    // Determine winner based on score, handle cases where a player might be null
     if (p1 && p2) {
         if (p1.score > p2.score) winnerId = p1.id;
         else if (p2.score > p1.score) winnerId = p2.id;
         else draw = true;
     } else if (p1 && !p2) {
-         winnerId = p1.id; // Player 1 wins if player 2 wasn't there or left
+         winnerId = p1.id; // Player 1 wins if player 2 disconnected earlier
+         reason = reason || `${p1.name} wins! Opponent disconnected.`; // Adjust reason if needed
     } else if (!p1 && p2) {
-         winnerId = p2.id; // Player 2 wins if player 1 wasn't there or left
+         winnerId = p2.id; // Player 2 wins if player 1 disconnected earlier
+         reason = reason || `${p2.name} wins! Opponent disconnected.`; // Adjust reason if needed
+    } else {
+         // Both players null? Should not happen if called correctly, but handle defensively
+         console.warn(`endGame called for room ${roomId} with no players.`);
+         reason = reason || "Game ended unexpectedly.";
     }
+
 
     const finalScores = {};
     if (p1) finalScores[p1.id] = p1.score;
@@ -784,13 +897,14 @@ function endGame(roomId, reason = "Game finished") {
         reason: reason
     };
 
-    // Send gameOver message to both players (if they exist)
+    // Send gameOver message to both players (if they exist and are connected)
     const message = { type: 'gameOver', payload: gameOverPayload };
     if (p1) safeSend(p1.ws, message);
     if (p2) safeSend(p2.ws, message);
 
-    // Consider cleanup: remove room? Or wait for players to leave?
-    // For now, keep the room until players disconnect or leave.
+    // Consider cleanup: Keep room until players disconnect?
+    // Let's keep it for now, disconnect logic handles removal.
+    console.log(`Game ended for room ${roomId}. Final state sent.`);
 }
 
 function handleDisconnect(ws, clientId, roomId) {
@@ -800,6 +914,7 @@ function handleDisconnect(ws, clientId, roomId) {
         if (room) {
             let remainingPlayer = null;
             let disconnectedPlayerName = 'Opponent';
+            let wasGameActive = room.gameActive; // Check game status *before* modifying players
 
             // Identify players and check if game was active
             if (room.players.player1 && room.players.player1.id === clientId) {
@@ -816,18 +931,13 @@ function handleDisconnect(ws, clientId, roomId) {
                 // Both players gone (or only one was ever there), remove room
                 console.log(`Room ${roomId} empty after disconnect, removing.`);
                 rooms.delete(roomId);
-            } else if (remainingPlayer && room.gameActive) {
-                // Game was active, notify remaining player and end game
+            } else if (remainingPlayer && wasGameActive) { // Use the captured status
+                // Game was active, notify remaining player and end game immediately
                 console.log(`Game in room ${roomId} ended due to player ${clientId} disconnecting.`);
-                safeSend(remainingPlayer.ws, {
-                    type: 'gameOver',
-                    payload: {
-                        reason: `${disconnectedPlayerName} disconnected. You win!`, // Custom reason
-                        winnerId: remainingPlayer.id
-                        // Include final scores if desired
-                    }
-                });
-                room.gameActive = false; // Stop the game
+                // End the game *before* sending the final message to ensure state is updated
+                endGame(roomId, `${disconnectedPlayerName} disconnected. ${remainingPlayer.name} wins!`);
+                // The endGame function now sends the gameOver message. No need to send another one here.
+                 room.gameActive = false; // Ensure game is marked inactive again if endGame didn't run fully
             } else if (remainingPlayer) {
                  // Game not active (lobby), notify remaining player opponent left
                  safeSend(remainingPlayer.ws, {
@@ -837,9 +947,11 @@ function handleDisconnect(ws, clientId, roomId) {
             }
             // Broadcast updated room list if needed
             // broadcastAvailableRooms();
+        } else {
+             console.warn(`Disconnect in room ${roomId}, but room not found in rooms map.`);
         }
     }
-    // Client record is deleted in the main 'close' handler
+    // Client record is deleted in the main 'close' handler outside this function
 }
 
 console.log("Server script initialized. Waiting for connections...");
