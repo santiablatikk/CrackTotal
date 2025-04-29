@@ -17,9 +17,12 @@ const server = http.createServer((req, res) => {
     res.end('WebSocket server is running.');
 });
 
-const wss = new WebSocket.Server({ server }); // Attach WebSocket server to HTTP server
+// Obtener puerto de Render o usar 8081 por defecto
+const PORT = process.env.PORT || 8081;
 
-console.log('WebSocket server started...');
+const wss = new WebSocket.Server({ port: PORT });
+
+console.log(`Servidor WebSocket iniciado en el puerto ${PORT}...`);
 
 // --- Game Data Loading ---
 let allQuestions = {}; // Store questions globally { level: [processedQuestion, ...] }
@@ -728,7 +731,6 @@ function handleDisconnect(ws, clientId, roomId) {
 // --- Start Server ---
 loadQuestions(); // Load questions before starting the server
 
-const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
     console.log(`HTTP and WebSocket server listening on port ${PORT}`);
 });

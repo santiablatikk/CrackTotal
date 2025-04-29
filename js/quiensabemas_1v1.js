@@ -4,10 +4,10 @@ const WEBSOCKET_URL = (() => {
     // const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     // Asume que el servidor WebSocket corre en el mismo host y puerto, en la raíz '/'.
     // ¡AJUSTA ESTO SI TU SERVIDOR ESTÁ EN OTRO LADO!
-    // Ejemplo local: 'ws://localhost:8080'
+    // Ejemplo local: 'ws://localhost:8081'
     // Ejemplo producción: `${protocol}//${window.location.host}`
     // return `${protocol}//${window.location.host}`;
-    return 'ws://localhost:8080'; // <-- URL para desarrollo local
+    return 'wss://TU-APP-NAME.onrender.com'; // <-- CAMBIAR por tu URL real de Render Web Service
 })();
 
 document.addEventListener('DOMContentLoaded', function() {
