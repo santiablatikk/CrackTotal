@@ -7,7 +7,7 @@ const WEBSOCKET_URL = (() => {
     // Ejemplo local: 'ws://localhost:8081'
     // Ejemplo producción: `${protocol}//${window.location.host}`
     // return `${protocol}//${window.location.host}`;
-    return 'wss://TU-APP-NAME.onrender.com'; // <-- CAMBIAR por tu URL real de Render Web Service
+    return 'wss://cracktotal-servidor.onrender.com'; // <-- URL real de Render Web Service
 })();
 
 document.addEventListener('DOMContentLoaded', function() {
