@@ -152,6 +152,43 @@ function generateRoomId() {
     return newId;
 }
 
+// NEW FUNCTION: Broadcast available rooms to lobby clients
+function broadcastAvailableRooms() {
+    console.log('--- Broadcasting Available Rooms ---');
+    const availableRoomsList = [];
+    for (const [roomId, room] of rooms.entries()) {
+        // Criteria: Not active, public (no password), waiting for player 2
+        if (!room.gameActive && !room.password && room.players.player1 && !room.players.player2) {
+            console.log(`Room ${roomId} is available (Player: ${room.players.player1.name}).`);
+            availableRoomsList.push({
+                id: roomId,
+                playerCount: 1, // Always 1 if it meets criteria
+                maxPlayers: 2,
+                requiresPassword: false,
+                // Optionally add creator's name if needed by client UI
+                 creatorName: room.players.player1.name
+            });
+        }
+    }
+
+    const message = {
+        type: 'availableRooms',
+        payload: { rooms: availableRoomsList }
+    };
+    const messageString = JSON.stringify(message);
+    let lobbyCount = 0;
+
+    // Send to clients in the lobby (roomId is null)
+    clients.forEach((clientInfo, ws) => {
+        if (clientInfo.roomId === null && ws.readyState === WebSocket.OPEN) {
+            ws.send(messageString);
+            lobbyCount++;
+        }
+    });
+    console.log(`Sent available rooms list to ${lobbyCount} client(s) in lobby.`);
+    console.log('--- Finished Broadcasting Rooms ---');
+}
+
 // Broadcast to everyone IN THE ROOM (players and spectators)
 function broadcastToRoom(roomId, message, senderWs = null) {
     const room = rooms.get(roomId);
@@ -191,8 +228,8 @@ wss.on('connection', (ws, req) => {
     clients.set(ws, { id: clientId, roomId: null });
     console.log(`Client connected: ${clientId} (Total: ${clients.size})`);
     safeSend(ws, { type: 'yourInfo', payload: { playerId: clientId } });
-    // Send available rooms to the new client (implement if lobby list needed)
-    // sendAvailableRooms(ws);
+    // Send available rooms to the new client
+    broadcastAvailableRooms();
 
     ws.on('message', (message) => {
         let parsedMessage;
@@ -320,8 +357,8 @@ function handleCreateRoom(ws, clientInfo, payload) {
     console.log(`Room ${roomId} created by ${playerName} (${clientInfo.id}). Password: ${password ? 'Yes' : 'No'}`);
     safeSend(ws, { type: 'roomCreated', payload: { roomId: roomId } });
 
-    // Broadcast updated room list to lobby (implement if needed)
-    // broadcastAvailableRooms();
+    // Broadcast updated room list to lobby
+    broadcastAvailableRooms();
 }
 
 function handleJoinRoom(ws, clientInfo, payload) {
@@ -394,7 +431,7 @@ function handleJoinRoom(ws, clientInfo, payload) {
     startGame(roomId);
 
     // Broadcast updated room list (room is now full or private, so might disappear from public list)
-    // broadcastAvailableRooms();
+    broadcastAvailableRooms();
 }
 
 function handleJoinRandomRoom(ws, clientInfo, payload) {
@@ -495,8 +532,8 @@ function handleLeaveRoom(ws, clientInfo) {
          });
     }
 
-    // Broadcast updated room list (room might become available)
-    // broadcastAvailableRooms();
+    // Broadcast updated room list (room might become available or be deleted)
+    broadcastAvailableRooms();
 }
 
 // --- Game Logic Handlers ---
@@ -946,12 +983,12 @@ function handleDisconnect(ws, clientId, roomId) {
             });
             }
             // Broadcast updated room list if needed
-            // broadcastAvailableRooms();
+            broadcastAvailableRooms();
         } else {
              console.warn(`Disconnect in room ${roomId}, but room not found in rooms map.`);
         }
     }
-    // Client record is deleted in the main 'close' handler outside this function
+    // Client record is deleted in the main 'close' handler AFTER this function runs
 }
 
 console.log("Server script initialized. Waiting for connections...");
