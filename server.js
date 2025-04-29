@@ -32,22 +32,26 @@ server.listen(PORT, () => {
 let allQuestions = {}; // Store questions globally { level: [processedQuestion, ...] }
 
 function processRawQuestion(rawQ, level) {
-    // Ensure basic structure exists
-    if (!rawQ || typeof rawQ.pregunta !== 'string' || !rawQ.opciones || typeof rawQ.respuesta_correcta !== 'string') {
-        console.warn(`Invalid question structure skipped in Level ${level}:`, rawQ.pregunta);
+    // Ensure basic structure exists based on level
+    if (!rawQ || typeof rawQ.pregunta !== 'string' || typeof rawQ.respuesta_correcta !== 'string') {
+        console.warn(`Invalid basic structure (missing question/answer) skipped in Level ${level}:`, rawQ.pregunta);
         return null;
     }
 
     let optionsArray = [];
     let correctIndex = -1;
     let correctAnswerText = '';
-        const optionKeys = ['A', 'B', 'C', 'D'];
+    const optionKeys = ['A', 'B', 'C', 'D'];
 
     if (level > 1) {
         // Levels 2-6 expect options object {A, B, C, D}
+        if (!rawQ.opciones || typeof rawQ.opciones !== 'object') {
+            console.warn(`Missing or invalid 'opciones' object for L > 1 question skipped:`, rawQ.pregunta);
+            return null;
+        }
         optionsArray = optionKeys.map(key => rawQ.opciones[key]).filter(opt => typeof opt === 'string');
         if (optionsArray.length !== 4) {
-            console.warn(`Question in Level ${level} does not have exactly 4 options:`, rawQ.pregunta);
+            console.warn(`Question in Level ${level} does not have exactly 4 string options:`, rawQ.pregunta);
             return null; // Skip incomplete questions for levels > 1
         }
         correctIndex = optionKeys.indexOf(rawQ.respuesta_correcta);
@@ -55,24 +59,30 @@ function processRawQuestion(rawQ, level) {
             console.warn(`Invalid correct answer key ('${rawQ.respuesta_correcta}') for Q: ${rawQ.pregunta} in Level ${level}`);
             return null; // Skip if correct answer key is wrong
         }
-            correctAnswerText = optionsArray[correctIndex];
-        } else {
-        // Level 1 expects answer text directly
-        correctAnswerText = rawQ.opciones[rawQ.respuesta_correcta];
-        if (typeof correctAnswerText !== 'string') {
-            console.warn(`Missing or invalid correct answer text for Q: ${rawQ.pregunta} in Level 1`);
-            return null; // Skip if level 1 answer is not found
-        }
+        correctAnswerText = optionsArray[correctIndex]; // Get the text of the correct option
+
+    } else {
+        // Level 1 expects answer text directly in respuesta_correcta
+        // No options object is needed or processed for Level 1
         optionsArray = []; // No multiple choice options for level 1
         correctIndex = -1;
+        correctAnswerText = rawQ.respuesta_correcta; // The correct answer IS the text itself
+        // No need to check rawQ.opciones here anymore
+    }
+
+    // Normalize the extracted correct answer text for comparison
+    const normalizedCorrectAnswer = correctAnswerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+
+    if (!normalizedCorrectAnswer) { // Check if after processing we got a valid answer text
+        console.warn(`Could not determine valid correct answer text for Q: ${rawQ.pregunta} in Level ${level}`);
+        return null;
     }
 
     return {
         text: rawQ.pregunta,
         options: optionsArray, // Array of options text [A, B, C, D] for levels > 1
         correctIndex: correctIndex, // Index (0-3) of the correct option for levels > 1
-        // Standardize correct answer for comparison
-        correctAnswerText: correctAnswerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, ""), // Normalize for comparison
+        correctAnswerText: normalizedCorrectAnswer, // Store the processed, normalized correct answer text
         level: level
     };
 }
@@ -737,39 +747,54 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
     let isCorrect = false;
     let pointsAwarded = 0;
     let submittedAnswerIndex = -1; // For levels > 1 option clicks
-    let submittedAnswerText = ''; // For level 1 text input
+    let submittedAnswerText = ''; // For level 1 OR level > 1 text input
+    let answerMethod = ''; // Track how the answer was submitted ('text' or 'index')
+
+    // Normalize submitted text answer if present
+    const playerAnswerText = payload && typeof payload.answerText === 'string'
+        ? payload.answerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "")
+        : '';
+    submittedAnswerText = payload?.answerText || ''; // Keep original for display
 
     if (question.level === 1) {
-        // Level 1: Check text input
-        const playerAnswer = payload && typeof payload.answerText === 'string'
-            ? payload.answerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "")
-            : '';
-        submittedAnswerText = payload?.answerText || ''; // Keep original for display
-
-        if (!playerAnswerText) {
-             console.warn(`Room ${roomId} L1 Answer: No text submitted.`);
-             safeSend(ws, { type: 'errorMessage', payload: { error: 'Answer cannot be empty.' } });
-             return; // Empty submission
+        // Level 1: Always check text
+        if (playerAnswerText) {
+            isCorrect = playerAnswerText === question.correctAnswerText;
+            answerMethod = 'text';
+            console.log(`Room ${roomId} L1 Answer (Text): Submitted='${playerAnswerText}', Correct='${question.correctAnswerText}', Result=${isCorrect}`);
+        } else {
+            console.warn(`Room ${roomId} L1 Answer: No text submitted.`);
+            safeSend(ws, { type: 'errorMessage', payload: { error: 'Answer cannot be empty.' } });
+            return; // Empty submission for Level 1
         }
-        isCorrect = playerAnswerText === question.correctAnswerText;
-        console.log(`Room ${roomId} L1 Answer (Text): Submitted='${playerAnswerText}', Correct='${question.correctAnswerText}', Result=${isCorrect}`);
-
     } else {
-        // Levels > 1: Check selected index
-        if (payload && typeof payload.selectedIndex === 'number') {
-            submittedAnswerIndex = payload.selectedIndex;
+        // Levels > 1: Prioritize text input if provided
+        if (playerAnswerText) {
+            isCorrect = playerAnswerText === question.correctAnswerText;
+            answerMethod = 'text';
+            console.log(`Room ${roomId} L>1 Answer (Text): Submitted='${playerAnswerText}', Correct='${question.correctAnswerText}', Result=${isCorrect}`);
+        } else if (payload && typeof payload.selectedIndex === 'number') {
+            // If no text, check for selected index (options must have been requested)
+             submittedAnswerIndex = payload.selectedIndex;
             if (submittedAnswerIndex >= 0 && submittedAnswerIndex < question.options.length) {
+                // Check if options were actually sent before accepting index answer
+                if (!room.optionsSent) {
+                    console.warn(`Room ${roomId} L>1 Answer: Index submitted but options were not requested/sent.`);
+                    safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot answer with index before requesting options.' } });
+                    return;
+                }
                 isCorrect = submittedAnswerIndex === question.correctIndex;
-                console.log(`Room ${roomId} L>1 Answer (Index): Submitted Index=${submittedAnswerIndex}, Correct Index=${question.correctIndex}, Result=${isCorrect}`);
+                answerMethod = 'index';
+                 console.log(`Room ${roomId} L>1 Answer (Index): Submitted Index=${submittedAnswerIndex}, Correct Index=${question.correctIndex}, Result=${isCorrect}`);
             } else {
-                console.warn(`Room ${roomId} L>1 Answer: Invalid index submitted:`, payload.selectedIndex);
-                safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (index out of bounds).' } });
-                return; // Invalid submission
+                 console.warn(`Room ${roomId} L>1 Answer: Invalid index submitted:`, payload.selectedIndex);
+                 safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (index out of bounds).' } });
+                 return; // Invalid submission
             }
         } else {
-            // No valid index provided for Level > 1
-            console.warn(`Room ${roomId} L>1 Answer: No valid index submitted. Payload:`, payload);
-            safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (missing index).' } });
+            // Neither text nor valid index provided for Level > 1
+            console.warn(`Room ${roomId} L>1 Answer: No valid answer submitted (neither text nor index). Payload:`, payload);
+            safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format.' } });
             return; // Invalid submission
         }
     }
@@ -784,12 +809,12 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
     const resultPayload = {
         isCorrect: isCorrect,
         pointsAwarded: pointsAwarded,
-        correctAnswerText: question.correctAnswerText.toUpperCase(),
-        correctIndex: question.correctIndex,
+        correctAnswerText: question.correctAnswerText.toUpperCase(), // Send normalized correct text for all levels
+        correctIndex: question.correctIndex, // Send correct index (will be -1 for L1)
         forPlayerId: clientInfo.id,
-        // Include submitted data based on level
-        submittedAnswerText: question.level === 1 ? submittedAnswerText : null,
-        selectedIndex: question.level > 1 ? submittedAnswerIndex : -1
+        // Include submitted data based on method
+        submittedAnswerText: answerMethod === 'text' ? submittedAnswerText : null, // Send original submitted text if answered via text
+        selectedIndex: answerMethod === 'index' ? submittedAnswerIndex : -1 // Send submitted index if answered via index
     };
 
     // Send result to everyone in the room
