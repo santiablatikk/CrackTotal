@@ -4791,7 +4791,30 @@ button#startButton:hover::after {
     width: 100%;
     background: linear-gradient(90deg, var(--secondary), var(--primary));
     border-radius: 3px;
-    transition: width 1s linear; /* La duración debe coincidir con el JS */
+    transition: width 1s linear, background-color 0.5s ease;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.timer-bar-qsm::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0.1) 100%);
+    background-size: 200% 100%;
+    animation: timerShimmer 2s infinite linear;
+    border-radius: 3px;
+    }
+
+@keyframes timerShimmer {
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
 }
 
 /* Modal de Fin de Juego */
@@ -5680,4 +5703,676 @@ button#startButton:hover::after {
   50% {
     transform: translateY(-50%);
   }
+}
+
+/* ------------------------- */
+/* Estilos Juego QSM 1v1     */
+/* ------------------------- */
+
+/* Contenedor principal del área de juego */
+.game-area {
+    padding: 20px;
+    max-width: 800px; /* Ajusta el ancho máximo si es necesario */
+    margin: 20px auto;
+}
+
+/* Card principal que contiene pregunta y respuesta */
+.game-card {
+    background-color: #ffffff; /* Fondo blanco o un color claro */
+    border-radius: 12px;
+    padding: 25px 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    margin-top: 15px;
+    border: 1px solid #e0e0e0; /* Borde sutil */
+}
+
+/* Estado del juego (Nivel, Contador) */
+.game-status {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 0.95em;
+    color: #555;
+    font-weight: 500;
+}
+
+/* Área de la pregunta */
+.question-area {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.qsm-question { /* Estilo para el texto de la pregunta */
+    font-size: 1.6em; /* Más grande */
+    font-weight: 600;
+    color: #333;
+    line-height: 1.4;
+    margin-bottom: 0; /* Ajusta según sea necesario */
+}
+
+/* Área general de respuesta */
+.answer-area {
+    margin-bottom: 20px;
+}
+
+/* Formulario de respuesta (Nivel 1 y Nivel 2+ texto) */
+.answer-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 20px; /* Espacio antes de los botones de acción L2+ */
+}
+
+/* Input de texto moderno */
+.modern-input {
+    flex-grow: 1;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modern-input:focus {
+    outline: none;
+    border-color: var(--primary-color, #007bff); /* Usa tu color primario */
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15); /* Sutil glow */
+}
+
+/* Botón de enviar moderno */
+.modern-submit-btn {
+    padding: 10px 15px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Espacio entre icono y texto */
+    font-size: 0.95em;
+    font-weight: 600;
+    white-space: nowrap; /* Evita que el texto se rompa */
+}
+.modern-submit-btn svg {
+    width: 18px; /* Ajusta tamaño del icono */
+    height: 18px;
+}
+
+
+/* Contenedor de opciones Nivel 2+ */
+.options-container {
+    margin-top: 15px;
+}
+
+/* Grid para los botones de opción */
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive */
+    gap: 15px;
+    margin-bottom: 25px; /* Espacio antes de botones de acción */
+}
+
+/* Botones de opción modernos */
+.modern-option {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f8f9fa; /* Fondo ligeramente gris */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+    font-size: 1em;
+    color: #333;
+}
+
+.modern-option:hover:not(:disabled) {
+    background-color: #e9ecef;
+    border-color: #bbb;
+    transform: translateY(-2px); /* Ligero efecto hover */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+}
+
+.modern-option:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.modern-option .option-letter {
+    font-weight: 700;
+    margin-right: 12px;
+    color: var(--primary-color, #007bff); /* Letra con color primario */
+    min-width: 20px; /* Asegura espacio */
+    text-align: center;
+}
+
+/* Estilos de feedback en opciones */
+.modern-option.correct {
+    background-color: #d4edda; /* Verde suave */
+    border-color: #c3e6cb;
+    color: #155724;
+    font-weight: 600;
+}
+.modern-option.correct .option-letter {
+    color: #155724;
+}
+
+.modern-option.incorrect {
+    background-color: #f8d7da; /* Rojo suave */
+    border-color: #f5c6cb;
+    color: #721c24;
+    /* No necesita font-weight especial */
+}
+.modern-option.incorrect .option-letter {
+    color: #721c24;
+}
+
+/* Botones de acción (Pedir Opciones, 50/50) */
+.action-buttons-qsm {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px; /* Espacio extra */
+}
+
+.action-btn {
+    padding: 10px 18px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+.action-btn svg {
+    width: 16px;
+    height: 16px;
+}
+.action-btn.used { /* Para indicar que se usó (opcional) */
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+
+/* Área de feedback */
+.feedback-area {
+    margin-top: 25px;
+    text-align: center;
+    min-height: 30px; /* Para evitar saltos de layout */
+    font-weight: 500;
+}
+
+.feedback-message.correct {
+    color: #155724; /* Verde oscuro */
+    background-color: #d4edda;
+    padding: 8px 15px;
+    border-radius: 6px;
+    display: inline-block; /* Para que el fondo se ajuste */
+}
+
+.feedback-message.incorrect {
+    color: #721c24; /* Rojo oscuro */
+     background-color: #f8d7da;
+    padding: 8px 15px;
+    border-radius: 6px;
+    display: inline-block;
+}
+.feedback-message.error { /* Para errores generales del juego */
+    color: #721c24;
+    font-weight: bold;
+}
+
+
+/* Área de espera */
+.waiting-area {
+    display: flex; /* Cambiado a flex */
+    flex-direction: column; /* Elementos en columna */
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
+    border-radius: 8px;
+    margin-top: 20px;
+    display: none; /* JS lo mostrará con .active */
+}
+
+.waiting-area.active {
+    display: flex;
+}
+
+.waiting-area p {
+    margin-top: 15px; /* Espacio entre spinner y texto */
+    font-size: 1.1em;
+    color: #555;
+    font-weight: 500;
+}
+
+/* Spinner (puedes usar el que ya tenías o uno nuevo) */
+.spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border-left-color: var(--primary-color, #007bff); /* Color primario */
+    animation: spin 1s ease infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Opcional: Estilos para el Timer (si lo usas) */
+.timer-container-qsm {
+    width: 100%;
+    height: 8px; /* Altura de la barra */
+    background-color: #e9ecef; /* Fondo de la barra */
+    border-radius: 4px;
+    margin-top: 25px;
+    overflow: hidden; /* Para que la barra interior no se salga */
+    /* display: none; por defecto si no está implementado */
+}
+
+.timer-bar-qsm {
+    height: 100%;
+    width: 100%; /* Empieza llena */
+    background-color: var(--primary-color, #007bff); /* Color de la barra */
+    border-radius: 4px;
+    transition: width 0.5s linear; /* Transición suave */
+}
+
+/* ========================================== */
+/* ===== Quien Sabe Más 1v1 Game Styles ===== */
+/* =====       (Revised Dark Theme)       ===== */
+/* ========================================== */
+
+/* Ensure game content takes space */
+#gameContentSection {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align card to top */
+    padding: 2rem 1rem; /* Padding around the game area */
+}
+
+/* Main game area container */
+.game-area {
+    width: 100%;
+    max-width: 850px; /* Slightly wider */
+    margin: 0 auto; /* Center */
+    /* Remove background/border from here, apply to game-card */
+}
+
+/* Card principal del juego */
+.game-card {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius-lg); /* Consistent rounding */
+    padding: clamp(1.5rem, 4vw, 2.5rem); /* Responsive padding */
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem; /* Space between sections */
+    width: 100%; /* Take full width of game-area */
+}
+
+/* Status (Level/Question Count) */
+.game-status {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    background-color: var(--background-alt);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-md);
+    border: 1px solid var(--border);
+    /* Adjust position visually if needed */
+    margin: -1.5rem -1.5rem 0 -1.5rem; /* Pull out to edge */
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    position: relative;
+    top: -1.5rem; /* Overlap effect */
+    margin-bottom: -0.5rem; /* Adjust spacing below */
+}
+
+/* Question Area */
+.question-area {
+    text-align: center;
+}
+
+.qsm-question {
+    font-size: clamp(1.3rem, 4vw, 1.7rem); /* Responsive size */
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.4;
+}
+
+/* Answer Area */
+.answer-area {
+    /* Container for both input methods */
+}
+
+/* Text Input Form */
+.answer-form {
+    display: flex;
+    gap: 0.75rem;
+    align-items: stretch; /* Align items vertically */
+    margin-bottom: 1rem; /* Space below text input when options are shown */
+}
+
+.modern-input { /* Text input field */
+    flex-grow: 1;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-md);
+    font-size: 1rem;
+    background-color: var(--input-bg);
+    color: var(--text);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modern-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
+}
+
+.modern-submit-btn { /* Text input submit */
+    padding: 0.8rem 1rem;
+    border-radius: var(--border-radius-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    background-color: var(--secondary); /* Use secondary for submit */
+    color: white;
+    border: none;
+    transition: all 0.2s ease; /* Added transition */
+}
+.modern-submit-btn:hover {
+    background-color: var(--secondary-dark);
+    transform: translateY(-2px);
+}
+.modern-submit-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Options Area (L2+) */
+.options-container {
+    /* display: flex; /* Keep flex for column layout */
+    /* flex-direction: column; */
+    /* gap: 1rem; /* Space between grid and action buttons */
+    /* margin-top: 1rem; /* Space above if text input is also visible */
+    /* JS handles display: none/flex */
+}
+
+.options-grid { /* Grid for option buttons */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Adjusted minmax */
+    gap: 0.75rem;
+    margin-bottom: 1rem; /* Space before action buttons */
+}
+
+.modern-option { /* Option button */
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius-md);
+    background-color: var(--background-alt); /* Use alt background */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    font-size: 0.95rem;
+    color: var(--text);
+    gap: 0.75rem; /* Space between letter and text */
+}
+
+.modern-option:hover:not(:disabled) {
+    background-color: rgba(var(--primary-rgb), 0.1);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.modern-option:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    transform: none; /* Reset transform when disabled */
+    box-shadow: none;
+}
+
+.modern-option .option-letter {
+    font-weight: 700;
+    color: white;
+    background-color: var(--primary);
+    width: 28px; /* Fixed size */
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Prevent shrinking */
+    font-size: 0.85rem;
+}
+
+.modern-option .option-text {
+    flex-grow: 1;
+    line-height: 1.3; /* Improve readability for longer options */
+}
+
+/* Option feedback styles */
+.modern-option.correct {
+    background-color: rgba(var(--success-rgb), 0.15);
+    border-color: var(--success);
+    color: var(--success);
+}
+.modern-option.correct .option-letter {
+    background-color: var(--success);
+    color: white;
+}
+
+.modern-option.incorrect {
+    background-color: rgba(var(--error-rgb), 0.15);
+    border-color: var(--error);
+    color: var(--error);
+}
+.modern-option.incorrect .option-letter {
+    background-color: var(--error);
+    color: white;
+}
+/* Style for selected option before result */
+.modern-option.selected {
+    background-color: rgba(var(--primary-rgb), 0.2);
+    border-color: var(--primary-light);
+}
+
+/* Action Buttons (Pedir Opciones, 50/50) */
+.action-buttons-qsm {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem; /* Add space above */
+}
+
+.action-btn { /* Shared style for action buttons */
+    padding: 0.6rem 1rem;
+    border-radius: var(--border-radius-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background: var(--background-alt);
+    border: 1px solid var(--border);
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.action-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+.action-btn:hover:not(:disabled) {
+    background-color: var(--background); /* Slightly darker background */
+    border-color: var(--text-light);
+    color: var(--text);
+    transform: translateY(-1px);
+}
+
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.action-btn.used {
+    opacity: 0.5;
+    pointer-events: none; /* Disable clicks */
+    background-color: var(--input-bg); /* Darker indication */
+    border-color: var(--input-bg);
+}
+
+/* Feedback Area */
+.feedback-area {
+    min-height: 24px; /* Space for feedback */
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.5rem 0;
+}
+
+.feedback-message.correct {
+    color: var(--success);
+}
+
+.feedback-message.incorrect {
+    color: var(--error);
+}
+
+.feedback-message.error { /* General game errors */
+    color: var(--error);
+    font-weight: bold;
+}
+
+/* Waiting Area */
+.waiting-area {
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background-color: rgba(var(--card-bg), 0.8); /* Use card background with alpha */
+    border-radius: var(--border-radius-md);
+    margin-top: 1rem;
+    text-align: center;
+    border: 1px dashed var(--border); /* Dashed border */
+}
+.waiting-area.active {
+    display: flex;
+}
+.waiting-area p {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* Spinner */
+.waiting-area .spinner {
+    border: 4px solid rgba(var(--text-light-rgb), 0.2); /* Use text-light for base */
+    border-left-color: var(--primary);
+    width: 32px;
+    height: 32px;
+    /* animation: spin 1s linear infinite; */ /* Ensure spin animation is defined */
+}
+
+/* Optional Timer Styles */
+.timer-container-qsm {
+    height: 6px;
+    background-color: var(--input-bg);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 1.5rem;
+    border: 1px solid var(--border);
+    display: none; /* Hide until implemented */
+}
+
+.timer-bar-qsm {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--primary));
+    border-radius: 3px;
+    transition: width 0.5s linear;
+}
+
+/* Responsive Adjustments for Dark Theme */
+@media (max-width: 768px) {
+    .game-card {
+        padding: 1.5rem;
+    }
+    .qsm-question {
+        font-size: clamp(1.2rem, 3.5vw, 1.5rem);
+    }
+    .modern-input, .modern-option {
+        font-size: 0.95rem;
+    }
+    .action-buttons-qsm {
+        flex-direction: column; /* Stack action buttons */
+        align-items: center;
+    }
+    .action-btn {
+        width: 100%;
+        max-width: 250px; /* Limit button width */
+    }
+}
+
+@media (max-width: 576px) {
+     .game-card {
+        padding: 1rem;
+        gap: 1rem;
+    }
+    .game-status {
+        margin: -1rem -1rem 0 -1rem;
+        top: -1rem;
+        font-size: 0.85rem;
+    }
+    .qsm-question {
+        font-size: 1.1rem;
+    }
+    .answer-form {
+        flex-direction: column; /* Stack input and button */
+    }
+    .modern-submit-btn {
+        width: 100%; /* Full width button */
+    }
+     .options-grid {
+        grid-template-columns: 1fr; /* Single column options */
+        gap: 0.5rem;
+    }
+    .modern-option {
+        padding: 0.7rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    .modern-option .option-letter {
+        width: 26px;
+        height: 26px;
+        font-size: 0.8rem;
+    }
+    .action-buttons-qsm {
+        gap: 0.75rem;
+    }
+    .action-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    .feedback-area {
+        font-size: 0.9rem;
+    }
+    .waiting-area p {
+        font-size: 0.9rem;
+    }
 }
