@@ -290,18 +290,18 @@ document.addEventListener('DOMContentLoaded', function() {
         fiftyFiftyButtonEl.classList.remove('used'); // Reset visual state if any
         gameState.fiftyFiftyUsed = false; // Reset fifty-fifty status for the new question
 
+        // --- Input Area Visibility (Reverted Logic) --- 
         if (question.level === 1) {
-            level1InputAreaEl.classList.add('active');
-            level2PlusOptionsAreaEl.classList.remove('active');
-            answerInputEl.value = '';
+            level1InputAreaEl.classList.add('active'); // Show text input
+            level2PlusOptionsAreaEl.classList.remove('active'); // Hide options area
+            answerInputEl.value = ''; // Clear text input
             answerInputEl.disabled = true; // Disabled until it's our turn
-            const submitBtn = answerFormLevel1.querySelector('button[type="submit"]');
-             if(submitBtn) submitBtn.disabled = true;
-
+            const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]');
+            if(submitBtnLvl1) submitBtnLvl1.disabled = true;
         } else {
-            level1InputAreaEl.classList.remove('active');
-            level2PlusOptionsAreaEl.classList.add('active');
-            optionsContainerEl.style.display = 'none'; // Options hidden initially
+            level1InputAreaEl.classList.remove('active'); // Hide text input
+            level2PlusOptionsAreaEl.classList.add('active'); // Show options area
+            optionsContainerEl.style.display = 'none'; // Options themselves hidden initially
             optionButtons.forEach(btn => {
                 btn.style.display = 'none'; // Hide all buttons initially
                 btn.disabled = true;
@@ -438,6 +438,12 @@ document.addEventListener('DOMContentLoaded', function() {
          requestOptionsButtonEl.disabled = true; // Cannot request again
          requestOptionsButtonEl.classList.add('used');
 
+         // --- IMPORTANT: Disable text input when options are shown --- 
+         answerInputEl.disabled = true;
+         const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]');
+         if(submitBtnLvl1) submitBtnLvl1.disabled = true;
+         // ----------------------------------------------------------
+
          // Re-evaluate if 50/50 button should be enabled now (if it's player's turn)
          if (gameState.currentTurn === gameState.myPlayerId && gameState.gameActive) {
              fiftyFiftyButtonEl.disabled = gameState.fiftyFiftyUsed; // Enable if not used
@@ -449,7 +455,7 @@ document.addEventListener('DOMContentLoaded', function() {
          indicesToRemove.forEach(index => {
              if (optionButtons[index]) {
                  optionButtons[index].style.display = 'none'; // Hide the button
-                 optionButtons[index].classList.add('hidden'); // Add class for potential styling/logic
+                 optionButtons.classList.add('hidden'); // Add class for potential styling/logic
                  optionButtons[index].disabled = true; // Ensure it's disabled
              }
          });
@@ -494,28 +500,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
         hideWaitingMessage(); // Hide waiting message when input is enabled
 
-        // Enable based on current level and state
+        // Enable based on current level and state (Reverted Logic)
         if (gameState.currentQuestionData) { // Check if question data exists
             if (gameState.currentQuestionData.level === 1) {
+                // Level 1: Enable text input
                 answerInputEl.disabled = false;
                 const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]');
                 if(submitBtnLvl1) submitBtnLvl1.disabled = false;
                 answerInputEl.focus();
+                // Ensure L2+ buttons remain disabled
+                 requestOptionsButtonEl.disabled = true;
+                 fiftyFiftyButtonEl.disabled = true;
+                 optionButtons.forEach(btn => btn.disabled = true);
             } else {
-                // Level 2+
-                requestOptionsButtonEl.disabled = gameState.optionsRequested; // Enable only if options not yet shown/requested
+                // Level 2+: Enable request options button if not requested
+                requestOptionsButtonEl.disabled = gameState.optionsRequested;
 
-                // Enable 50/50 only if options ARE shown AND it hasn't been used for this question
+                // Enable 50/50 only if options ARE shown AND it hasn't been used
                 fiftyFiftyButtonEl.disabled = !gameState.optionsRequested || gameState.fiftyFiftyUsed;
 
-                // Enable option buttons only if options are shown AND they are not hidden by 50/50
+                // Enable option buttons only if options are shown AND not hidden
                 optionButtons.forEach(btn => {
-                    if (gameState.optionsRequested && !btn.classList.contains('hidden')) {
-                        btn.disabled = false;
-                    } else {
-                        btn.disabled = true; // Keep disabled if options not shown or hidden by 50/50
-                    }
+                    btn.disabled = !(gameState.optionsRequested && !btn.classList.contains('hidden'));
                 });
+                // Ensure L1 input remains disabled
+                 answerInputEl.disabled = true;
+                 const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]');
+                 if(submitBtnLvl1) submitBtnLvl1.disabled = true;
             }
         } else {
              console.warn("enablePlayerInput called but no currentQuestionData available.");

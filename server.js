@@ -718,66 +718,78 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
         return;
     }
     if (clientInfo.id !== room.currentTurn) {
-         safeSend(ws, { type: 'errorMessage', payload: { error: 'Not your turn.' } });
-         return;
-     }
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Not your turn.' } });
+        return;
+    }
     if (!room.currentQuestion) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'No active question.' } });
-          return;
-      }
+        return;
+    }
     // Check players still exist
     if (!room.players.player1 || !room.players.player2) {
          console.warn(`handleSubmitAnswer called in room ${roomId} but a player is missing.`);
+         // If a player is missing, end the game
+         if (room.gameActive) endGame(roomId, "Player disconnected before answering.");
          return; // Avoid errors if a player disconnected right before answering
-      }
+    }
 
     const question = room.currentQuestion;
     let isCorrect = false;
     let pointsAwarded = 0;
-    let submittedAnswerIndex = -1; // For levels > 1
+    let submittedAnswerIndex = -1; // For levels > 1 option clicks
+    let submittedAnswerText = ''; // For level 1 text input
 
     if (question.level === 1) {
-        // Ensure payload and answerText exist
-         const playerAnswer = payload && typeof payload.answerText === 'string'
-             ? payload.answerText.toLowerCase().trim().normalize("NFD").replace(/\\p{Diacritic}/gu, "")
-             : '';
-        isCorrect = playerAnswer === question.correctAnswerText;
-        console.log(`Room ${roomId} L1 Answer: Submitted='${playerAnswer}', Correct='${question.correctAnswerText}', Result=${isCorrect}`);
+        // Level 1: Check text input
+        const playerAnswer = payload && typeof payload.answerText === 'string'
+            ? payload.answerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "")
+            : '';
+        submittedAnswerText = payload?.answerText || ''; // Keep original for display
+
+        if (!playerAnswerText) {
+             console.warn(`Room ${roomId} L1 Answer: No text submitted.`);
+             safeSend(ws, { type: 'errorMessage', payload: { error: 'Answer cannot be empty.' } });
+             return; // Empty submission
+        }
+        isCorrect = playerAnswerText === question.correctAnswerText;
+        console.log(`Room ${roomId} L1 Answer (Text): Submitted='${playerAnswerText}', Correct='${question.correctAnswerText}', Result=${isCorrect}`);
+
     } else {
-         // Ensure payload and selectedIndex exist and are valid
-         if (payload && typeof payload.selectedIndex === 'number') {
+        // Levels > 1: Check selected index
+        if (payload && typeof payload.selectedIndex === 'number') {
             submittedAnswerIndex = payload.selectedIndex;
             if (submittedAnswerIndex >= 0 && submittedAnswerIndex < question.options.length) {
                 isCorrect = submittedAnswerIndex === question.correctIndex;
-                 console.log(`Room ${roomId} L>1 Answer: Submitted Index=${submittedAnswerIndex}, Correct Index=${question.correctIndex}, Result=${isCorrect}`);
+                console.log(`Room ${roomId} L>1 Answer (Index): Submitted Index=${submittedAnswerIndex}, Correct Index=${question.correctIndex}, Result=${isCorrect}`);
             } else {
-                 console.warn(`Room ${roomId} Invalid index submitted:`, payload.selectedIndex);
-                 safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (index out of bounds).' } });
-                 return; // Invalid submission
+                console.warn(`Room ${roomId} L>1 Answer: Invalid index submitted:`, payload.selectedIndex);
+                safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (index out of bounds).' } });
+                return; // Invalid submission
             }
         } else {
-            console.warn(`Room ${roomId} Invalid or missing index submitted:`, payload);
+            // No valid index provided for Level > 1
+            console.warn(`Room ${roomId} L>1 Answer: No valid index submitted. Payload:`, payload);
             safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (missing index).' } });
             return; // Invalid submission
         }
     }
 
-    // Update score
+    // --- Score Calculation & Result Payload --- 
     const currentPlayer = room.players.player1.id === clientInfo.id ? room.players.player1 : room.players.player2;
     if (isCorrect) {
-        pointsAwarded = 10 * question.level; // Example scoring
+        pointsAwarded = 10 * question.level;
         currentPlayer.score += pointsAwarded;
     }
 
-    // Prepare result message
     const resultPayload = {
         isCorrect: isCorrect,
         pointsAwarded: pointsAwarded,
-        // Send correct answer text only for level 1 where it's needed for display
-        correctAnswerText: question.level === 1 ? room.currentQuestion.correctAnswerText : null, // Send original text for level 1 display maybe? Let's stick to normalized for now.
-        correctIndex: question.level > 1 ? question.correctIndex : -1, // Send index for levels > 1
+        correctAnswerText: question.correctAnswerText.toUpperCase(),
+        correctIndex: question.correctIndex,
         forPlayerId: clientInfo.id,
-        selectedIndex: submittedAnswerIndex // Include submitted index for visualization
+        // Include submitted data based on level
+        submittedAnswerText: question.level === 1 ? submittedAnswerText : null,
+        selectedIndex: question.level > 1 ? submittedAnswerIndex : -1
     };
 
     // Send result to everyone in the room
@@ -786,7 +798,7 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
     // Switch turn
     room.currentTurn = room.players.player1.id === clientInfo.id ? room.players.player2.id : room.players.player1.id;
 
-    // Prepare state update message (with potentially updated scores)
+    // Prepare state update message
      const playersInfo = {
         player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
         player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
