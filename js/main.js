@@ -55,8 +55,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 changeNameForm.addEventListener('submit', function(e) {
                     e.preventDefault();
                     const newName = newPlayerNameInput.value.trim();
+                    const saveButton = changeNameForm.querySelector('.save-button');
+                    const cancelButton = changeNameForm.querySelector('.cancel-button');
                     
                     if (newName) {
+                        // Disable buttons during save
+                        if(saveButton) saveButton.disabled = true;
+                        if(cancelButton) cancelButton.disabled = true;
+
                         sessionStorage.setItem('playerName', newName);
                         playerNameDisplay.textContent = newName;
                         changeNameModal.classList.remove('active');
@@ -66,7 +72,14 @@ document.addEventListener('DOMContentLoaded', function() {
                         document.querySelectorAll('.player-name').forEach(element => {
                             element.textContent = newName;
                         });
-                    }
+                        // Re-enable buttons after a short delay (optional, or keep disabled)
+                        // setTimeout(() => {
+                        //    if(saveButton) saveButton.disabled = false;
+                        //    if(cancelButton) cancelButton.disabled = false;
+                        // }, 300); 
+                    } // Re-enable buttons if save fails (e.g., empty name)? 
+                      // Currently, buttons remain disabled if newName is empty.
+                      // Consider re-enabling them in an else block if desired.
                 });
             }
         }
@@ -101,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 } else if (gameType) {
                     // For other games, navigate directly (original behavior)
-                    window.location.href = `${gameType}.html`;
+                window.location.href = `${gameType}.html`;
                 } 
                 // If gameType is null/undefined (e.g. clicked on empty space), do nothing
             });

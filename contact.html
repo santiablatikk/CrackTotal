@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="Contacta con el equipo de CrackTotal. Envíanos tus preguntas, sugerencias o comentarios." />
+    <meta name="description" content="Contactate con el equipo de Crack Total. Mandanos tus preguntas, sugerencias o comentarios." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="google-adsense-account" content="ca-pub-9579152019412427">
     <title>Contacto - Crack Total</title>
@@ -35,6 +35,8 @@
         max-width: 800px;
         margin: 0 auto;
         line-height: 1.6;
+        text-align: center;
+        margin-bottom: 2rem;
       }
       
       /* ================= Contact Page Styles ================= */
@@ -95,9 +97,10 @@
       
       .contact-info {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 1.5rem;
         margin-top: 1.5rem;
+        margin-bottom: 2.5rem;
       }
       
       .contact-method {
@@ -203,7 +206,7 @@
       
       .contact-form {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: 1fr 1fr;
         gap: 1.5rem;
       }
       
@@ -233,6 +236,7 @@
         color: #fff;
         font-size: 1rem;
         transition: all 0.3s ease;
+        font-family: 'Poppins', sans-serif;
       }
       
       .form-group input:focus,
@@ -248,199 +252,74 @@
         resize: vertical;
       }
       
-      .form-group.checkbox {
-        flex-direction: row;
-        align-items: center;
-        gap: 10px;
-      }
-      
-      .form-group.checkbox input {
-        width: auto;
-      }
-      
-      .submit-btn {
-        background: linear-gradient(135deg, #e11d48, #be123c);
-        color: white;
-        border: none;
-        padding: 0.875rem 2rem;
-        border-radius: 50px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        margin-top: 1rem;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
-      }
-      
-      .submit-btn i {
-        font-size: 1.1rem;
-      }
-      
-      .submit-btn:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(225, 29, 72, 0.4);
-        background: linear-gradient(135deg, #be123c, #9f1239);
-      }
-      
-      .faq-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1.5rem;
-        margin-top: 1.5rem;
-      }
-      
-      .faq-item {
-        background: rgba(15, 23, 42, 0.6);
-        border-radius: 12px;
-        padding: 1.5rem;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        position: relative;
-        overflow: hidden;
-      }
-      
-      .faq-item::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 4px;
+      .submit-button {
+        grid-column: 1 / -1;
+        padding: 1rem 1.5rem;
         background: linear-gradient(90deg, #e11d48, #fb7185);
-        z-index: 1;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-      }
-      
-      .faq-item:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        border-color: rgba(255, 255, 255, 0.2);
-      }
-      
-      .faq-item:hover::before {
-        opacity: 1;
-      }
-      
-      .faq-item h3 {
-        font-size: 1.1rem;
-        margin-bottom: 0.875rem;
-        color: #fbcfe8;
-        position: relative;
-        padding-left: 1.75rem;
-        font-family: 'Oswald', sans-serif;
-        letter-spacing: 0.5px;
-      }
-      
-      .faq-item h3::before {
-        content: '\f059';
-        font-family: 'Font Awesome 6 Free';
-        font-weight: 900;
-        position: absolute;
-        left: 0;
-        color: #fb7185;
-      }
-      
-      .faq-item p {
-        font-size: 0.95rem;
-        color: rgba(255, 255, 255, 0.8);
-        line-height: 1.6;
-      }
-      
-      .back-link-container {
-        text-align: center;
-        margin-top: 2rem;
-      }
-      
-      .back-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.75rem 2rem;
-        background: linear-gradient(135deg, #e11d48, #be123c);
-        color: white;
-        text-decoration: none;
-        border-radius: 50px;
+        color: #fff;
         border: none;
-        font-size: 1rem;
-        font-weight: 600;
+        border-radius: 8px;
+        font-size: 1.1rem;
+        font-weight: 700;
         cursor: pointer;
         transition: all 0.3s ease;
-        box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
         text-transform: uppercase;
         letter-spacing: 1px;
+        margin-top: 1rem;
+        font-family: 'Oswald', sans-serif;
       }
       
-      .back-link:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 25px rgba(225, 29, 72, 0.4);
-        background: linear-gradient(135deg, #be123c, #9f1239);
+      .submit-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(225, 29, 72, 0.25);
       }
       
-      /* Botón volver */
-      .back-button {
-        position: fixed;
-        bottom: 30px;
-        right: 30px;
-        background-color: rgba(0, 0, 0, 0.3);
-        color: white;
-        border: none;
+      .submit-button:active {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 10px rgba(225, 29, 72, 0.2);
+      }
+      
+      #form-feedback {
+        grid-column: 1 / -1;
+        padding: 1rem;
+        margin-top: 1rem;
+        border-radius: 8px;
+        font-weight: 500;
+        text-align: center;
+        display: none;
+      }
+
+      #form-feedback.success {
+        background-color: rgba(49, 196, 141, 0.2);
+        color: #31c48d;
+        border: 1px solid #31c48d;
+        display: block;
+      }
+
+      #form-feedback.error {
+        background-color: rgba(255, 84, 112, 0.2);
+        color: var(--error);
+        border: 1px solid var(--error);
+        display: block;
+      }
+      
+      .spinner-form {
+        border: 4px solid rgba(255, 255, 255, 0.3);
         border-radius: 50%;
-        width: 60px;
-        height: 60px;
-        font-size: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.3s;
-        backdrop-filter: blur(5px);
-        z-index: 9999;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        border-top: 4px solid #fb7185;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        margin-left: 10px;
+        vertical-align: middle;
       }
       
-      .back-button:hover {
-        background-color: rgba(225, 29, 72, 0.7);
-        transform: scale(1.1);
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
-      
-      @keyframes gradientMove {
-        0% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
-        100% { background-position: 0% 50%; }
-      }
-      
-      @media (max-width: 768px) {
-        .page-container {
-          padding: 1rem;
-        }
-        
-        .contact-section {
-          padding: 1.5rem;
-        }
-        
-        .contact-form {
-          grid-template-columns: 1fr;
-        }
-        
-        .faq-container {
-          grid-template-columns: 1fr;
-        }
-        
-        .back-button {
-          width: 50px;
-          height: 50px;
-          font-size: 1.2rem;
-          bottom: 20px;
-          right: 20px;
-        }
-      }
+
     </style>
   </head>
   <body>
@@ -459,118 +338,70 @@
     </header>
 
     <div class="page-container">
-      <div class="contact-section">
-        <h2>Nuestros Canales</h2>
+      <p class="page-description">
+        ¿Tenés alguna pregunta, sugerencia o simplemente querés charlar de fútbol? Estamos acá para escucharte. Completá el formulario de acá abajo o usá nuestras redes sociales.
+      </p>
+
+      <section class="contact-section">
+        <h2>Formas de Contacto</h2>
         <div class="contact-info">
           <div class="contact-method">
             <div class="contact-icon">
               <i class="fas fa-envelope"></i>
             </div>
-            <h3>Correo Electrónico</h3>
-            <p>Para consultas generales, sugerencias o comentarios</p>
-            <a href="mailto:contacto@pasalachee.com">contacto@pasalachee.com</a>
+            <h3>Email de Soporte</h3>
+            <p>Para preguntas generales o ayuda técnica.</p>
+            <p>Mandanos un mail a:<br><a href="mailto:contacto@cracktotal.com">contacto@cracktotal.com</a></p>
           </div>
-          
           <div class="contact-method">
             <div class="contact-icon">
-              <i class="fas fa-question-circle"></i>
-            </div>
-            <h3>Soporte Técnico</h3>
-            <p>¿Problemas con el juego o tu cuenta?</p>
-            <a href="mailto:soporte@pasalachee.com">soporte@pasalachee.com</a>
-          </div>
-          
-          <div class="contact-method">
-            <div class="contact-icon">
-              <i class="fab fa-twitter"></i>
+              <i class="fas fa-share-alt"></i>
             </div>
             <h3>Redes Sociales</h3>
-            <p>Síguenos para las últimas novedades</p>
-            <a href="https://twitter.com/pasalachee" target="_blank">@pasalachee</a>
-          </div>
+            <p>Seguinos y contactate por nuestras redes.</p>
+            <p>
+              <a href="#" target="_blank" title="Twitter (Próximamente)"><i class="fab fa-twitter"></i> Twitter</a> | 
+              <a href="#" target="_blank" title="Instagram (Próximamente)"><i class="fab fa-instagram"></i> Instagram</a>
+            </p>
         </div>
       </div>
       
-      <section class="contact-section">
         <h2>Formulario de Contacto</h2>
-        <div class="contact-form-container">
-          <form class="contact-form" id="contact-form">
+         <div id="form-feedback"></div>
+        <form id="contact-form" class="contact-form" action="#" method="POST">
+           <input type="hidden" name="_subject" value="Nuevo mensaje de Contacto - Crack Total">
             <div class="form-group">
-              <label for="name">Nombre</label>
-              <input type="text" id="name" name="name" placeholder="Tu nombre" required />
-            </div>
-            
-            <div class="form-group">
-              <label for="email">Correo Electrónico</label>
-              <input type="email" id="email" name="email" placeholder="tucorreo@ejemplo.com" required />
-            </div>
-            
-            <div class="form-group">
-              <label for="subject">Asunto</label>
-              <select id="subject" name="subject" required>
-                <option value="" disabled selected>Selecciona un asunto</option>
-                <option value="suggestion">Sugerencia</option>
-                <option value="question">Pregunta</option>
-                <option value="support">Soporte Técnico</option>
-                <option value="partnership">Colaboración</option>
-                <option value="other">Otro</option>
-              </select>
-            </div>
-            
-            <div class="form-group">
-              <label for="priority">Prioridad</label>
-              <select id="priority" name="priority">
-                <option value="normal">Normal</option>
-                <option value="high">Alta</option>
-                <option value="urgent">Urgente</option>
-              </select>
-            </div>
-            
-            <div class="form-group full-width">
-              <label for="message">Mensaje</label>
-              <textarea id="message" name="message" placeholder="Escribe tu mensaje aquí..." required></textarea>
-            </div>
-            
-            <div class="form-actions">
-              <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Enviar Mensaje</button>
-            </div>
-          </form>
-        </div>
-      </section>
-      
-      <section class="contact-section">
-        <h2>Preguntas Frecuentes</h2>
-        <div class="faq-container">
-          <div class="faq-item">
-            <h3>¿Cómo propongo nuevas preguntas?</h3>
-            <p>Puedes enviarnos tus propuestas de preguntas a través del formulario de contacto, seleccionando "Sugerencia" como asunto. Nuestro equipo revisará y considerará añadirlas al juego.</p>
+            <label for="name">Nombre Completo</label>
+            <input type="text" id="name" name="name" required>
           </div>
-          
-          <div class="faq-item">
-            <h3>¿Puedo reportar preguntas incorrectas?</h3>
-            <p>¡Por supuesto! Si encuentras algún error en nuestras preguntas o respuestas, por favor repórtalo seleccionando "Soporte Técnico" en el formulario y detallando el problema.</p>
+          <div class="form-group">
+            <label for="email">Mail</label>
+            <input type="email" id="email" name="email" required>
           </div>
-          
-          <div class="faq-item">
-            <h3>¿Cómo recupero mi contraseña?</h3>
-            <p>Puedes recuperar tu contraseña haciendo clic en "Olvidé mi contraseña" en la página de inicio de sesión. Te enviaremos un correo electrónico con instrucciones para restablecerla.</p>
+          <div class="form-group">
+            <label for="subject">Asunto</label>
+            <input type="text" id="subject" name="subject" required>
           </div>
-          
-          <div class="faq-item">
-            <h3>¿Con qué frecuencia se añaden nuevas preguntas?</h3>
-            <p>Actualizamos nuestra base de datos de preguntas regularmente. Normalmente añadimos nuevas preguntas cada semana, priorizando eventos futbolísticos recientes y sugerencias de la comunidad.</p>
+          <div class="form-group">
+            <label for="queryType">Tipo de Consulta</label>
+            <select id="queryType" name="queryType" required>
+              <option value="" disabled selected>Elegí una opción...</option>
+              <option value="Pregunta General">Pregunta General</option>
+              <option value="Reportar Bug">Reportar un Bug</option>
+              <option value="Sugerencia">Sugerencia</option>
+              <option value="Colaboracion">Colaboración</option>
+              <option value="Otro">Otro</option>
+            </select>
           </div>
-          
-          <div class="faq-item">
-            <h3>¿Puedo sugerir nuevas funcionalidades?</h3>
-            <p>¡Absolutamente! Valoramos mucho la opinión de nuestra comunidad. Puedes enviarnos tus ideas a través del formulario de contacto, seleccionando "Sugerencia" como asunto.</p>
+          <div class="form-group full-width">
+            <label for="message">Tu Mensaje</label>
+            <textarea id="message" name="message" required></textarea>
           </div>
-          
-          <div class="faq-item">
-            <h3>¿Tienen aplicación móvil?</h3>
-            <p>Actualmente estamos trabajando en nuestra aplicación móvil para iOS y Android. Mientras tanto, nuestro sitio web está completamente optimizado para dispositivos móviles.</p>
-          </div>
-        </div>
+          <button type="submit" class="submit-button" id="submit-form-button">
+             Mandar Mensaje
+             <span class="spinner-form" style="display: none;"></span>
+          </button>
+        </form>
       </section>
       
       <div class="back-link-container">
@@ -579,13 +410,12 @@
         </a>
       </div>
       
-      <!-- Footer -->
       <footer class="site-footer">
           <div class="footer-content">
             <div class="footer-links">
               <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
               <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
-              <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+              <a href="contact.html" class="active"><i class="fas fa-envelope"></i> Contacto</a>
               <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
               <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
               <a href="terms.html"><i class="fas fa-file-contract"></i> Terminos</a>
@@ -598,62 +428,73 @@
       </footer>
     </div>
     
-    <!-- AdSense Container -->
-    <div class="adsense-container">
+    <div class="adsense-container footer-ad">
       <div class="ad-label">PUBLICIDAD</div>
       <ins class="adsbygoogle"
            style="display:block"
-           data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+           data-ad-client="ca-pub-9579152019412427"
            data-ad-slot="XXXXXXXXXX"
            data-ad-format="auto"
            data-full-width-responsive="true"></ins>
       <script>
+        if (localStorage.getItem("adConsent") === "true") {
            (adsbygoogle = window.adsbygoogle || []).push({});
+        }
       </script>
     </div>
     
     <script>
-      // Submit form handling
-      document.getElementById('contact-form').addEventListener('submit', function(event) {
-        event.preventDefault();
-        
-        // Simulated form submission
-        alert('Gracias por tu mensaje. Te responderemos lo antes posible.');
-        this.reset();
-      });
-      
-      // Function to check cookie consent for ads
-      function checkCookieConsent() {
-        const hasConsent = localStorage.getItem("adConsent") === "true";
-        const adElements = document.querySelectorAll(".adsbygoogle");
-        adElements.forEach(el => {
-          el.style.display = hasConsent ? "block" : "none";
-        });
-      }
-      
-      // Check on page load
-      document.addEventListener("DOMContentLoaded", function() {
-        checkCookieConsent();
-      });
+      const form = document.getElementById('contact-form');
+      const submitButton = document.getElementById('submit-form-button');
+      const spinner = submitButton.querySelector('.spinner-form');
+      const feedbackDiv = document.getElementById('form-feedback');
 
-      // Script for Share Button
-      const shareButton = document.getElementById('footer-share-button');
-      if (shareButton && navigator.share) {
-          shareButton.addEventListener('click', async () => {
-              try {
-                  await navigator.share({
-                      title: document.title,
-                      text: 'Contacta con el equipo de PASALA CHE',
-                      url: window.location.href
-                  });
-                  console.log('Contenido compartido con éxito');
-              } catch (err) {
-                  console.error('Error al compartir:', err);
-              }
-          });
-      } else if (shareButton) {
-          shareButton.style.display = 'none';
-      }
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        submitButton.disabled = true;
+        spinner.style.display = 'inline-block';
+        feedbackDiv.style.display = 'none';
+        feedbackDiv.className = '';
+
+        const formData = new FormData(form);
+        const endpoint = '#';
+
+        fetch(endpoint, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json'
+          }
+        })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+             return response.json().then(data => { 
+                 throw new Error(data.error || 'Network response was not ok.'); 
+             }).catch(() => {
+                 throw new Error('Network response was not ok. Status: ' + response.status);
+             });
+          }
+        })
+        .then(data => {
+          feedbackDiv.textContent = '¡Gracias! Tu mensaje fue enviado.';
+          feedbackDiv.className = 'success';
+          feedbackDiv.style.display = 'block';
+          form.reset();
+        })
+        .catch(error => {
+          console.error('Error sending form:', error);
+          feedbackDiv.textContent = 'Error al enviar el mensaje: ' + error.message + ". Probá de nuevo o usá el mail.";
+          feedbackDiv.className = 'error';
+          feedbackDiv.style.display = 'block';
+        })
+        .finally(() => {
+          submitButton.disabled = false;
+          spinner.style.display = 'none';
+        });
+      });
     </script>
   </body>
 </html>

@@ -292,16 +292,6 @@
         },
         "respuesta_correcta": "A"
       },
-       {
-        "pregunta": "¿Qué club de barrio porteño es conocido como 'El Semillero del Mundo' por su prolífica cantera?",
-        "opciones": {
-          "A": "Argentinos Juniors",
-          "B": "Vélez Sarsfield",
-          "C": "Huracán",
-          "D": "Lanús"
-        },
-        "respuesta_correcta": "A"
-      },
       {
         "pregunta": "¿Cuál fue el primer equipo no perteneciente a la CONMEBOL o la UEFA en llegar a una semifinal de Copa del Mundo?",
         "opciones": {
@@ -349,6 +339,306 @@
           "B": "Valentín Suárez",
           "C": "Raúl Colombo",
           "D": "Alfredo Cantilo"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección perdió la final de la Copa del Mundo 1974 contra Alemania Federal?",
+        "opciones": {
+          "A": "Países Bajos",
+          "B": "Italia",
+          "C": "Polonia",
+          "D": "Brasil"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el árbitro de la final del Mundial 1986 entre Argentina y Alemania Federal?",
+        "opciones": {
+          "A": "Romualdo Arppi Filho (Brasil)",
+          "B": "Ali Bin Nasser (Túnez)",
+          "C": "George Courtney (Inglaterra)",
+          "D": "Michel Vautrot (Francia)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué año se jugó la primera Copa Intercontinental?",
+        "opciones": {
+          "A": "1960",
+          "B": "1955",
+          "C": "1962",
+          "D": "1958"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el único equipo que ganó la Copa Libertadores 4 veces consecutivas?",
+        "opciones": {
+          "A": "Independiente (1972-1975)",
+          "B": "Estudiantes LP (1968-1971)",
+          "C": "Peñarol (1960-1963)",
+          "D": "Boca Juniors (2000-2003)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién marcó el gol de Checoslovaquia en la final del Mundial 1962 contra Brasil?",
+        "opciones": {
+          "A": "Josef Masopust",
+          "B": "Adolf Scherer",
+          "C": "Václav Mašek",
+          "D": "Andrej Kvašňák"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador tiene el récord de más goles en la historia de la Copa América?",
+        "opciones": {
+          "A": "Norberto Méndez / Zizinho (17)",
+          "B": "Lionel Messi / Pelé (15)",
+          "C": "Gabriel Batistuta (13)",
+          "D": "Teodoro Fernández (15)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer club de David Beckham?",
+        "opciones": {
+          "A": "Manchester United",
+          "B": "Preston North End",
+          "C": "Tottenham Hotspur (juvenil)",
+          "D": "Leyton Orient (prueba)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué equipo se retiró Zinedine Zidane como jugador profesional?",
+        "opciones": {
+          "A": "Real Madrid",
+          "B": "Juventus",
+          "C": "Bordeaux",
+          "D": "Selección de Francia"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuántos equipos participaron en el primer Mundial de Fútbol (Uruguay 1930)?",
+        "opciones": {
+          "A": "13",
+          "B": "16",
+          "C": "12",
+          "D": "10"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el primer jugador africano en ganar la Bota de Oro europea (compartida en 1984)?",
+        "opciones": {
+          "A": "Ian Rush (Gales)",
+          "B": "Rabah Madjer (Argelia)",
+          "C": "George Weah (Liberia)",
+          "D": "Abedi Pele (Ghana)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador anotó el primer gol en la historia del estadio Wembley (el original, en 1923)?",
+        "opciones": {
+          "A": "David Jack (Bolton Wanderers)",
+          "B": "Billy Walker (Aston Villa)",
+          "C": "Dixie Dean (Everton)",
+          "D": "Hughie Gallacher (Newcastle)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el peso oficial (según reglamento FIFA) que debe tener un balón talla 5 al inicio del partido?",
+        "opciones": {
+          "A": "Entre 410 y 450 gramos",
+          "B": "Entre 400 y 440 gramos",
+          "C": "Entre 420 y 460 gramos",
+          "D": "Exactamente 430 gramos"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección ganó el torneo olímpico de fútbol masculino en Londres 2012?",
+        "opciones": {
+          "A": "México",
+          "B": "Brasil",
+          "C": "Corea del Sur",
+          "D": "Japón"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el autor del 'Gol del Siglo' (Argentina vs Inglaterra, Mundial 1986)?",
+        "opciones": {
+          "A": "Diego Maradona",
+          "B": "Jorge Valdano",
+          "C": "Claudio Caniggia",
+          "D": "Lionel Messi"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué año se implementó por primera vez la regla del 'Gol de Oro' en competiciones FIFA?",
+        "opciones": {
+          "A": "1993 (Mundial Sub-20)",
+          "B": "1996 (Eurocopa)",
+          "C": "1998 (Mundial)",
+          "D": "1995 (Copa Confederaciones)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo en ganar la FA Cup de Inglaterra en 1872?",
+        "opciones": {
+          "A": "Wanderers F.C.",
+          "B": "Royal Engineers",
+          "C": "Old Etonians",
+          "D": "Sheffield F.C."
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador escocés tiene el récord de goles en la liga escocesa (408 goles)?",
+        "opciones": {
+          "A": "Jimmy McGrory",
+          "B": "Ally McCoist",
+          "C": "Kenny Dalglish",
+          "D": "Henrik Larsson"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué año exacto se unificaron las reglas del fútbol con la creación de la IFAB?",
+        "opciones": {
+          "A": "1886",
+          "B": "1863",
+          "C": "1904",
+          "D": "1871"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el nombre del trofeo original de la Copa del Mundo, robado en 1983 y nunca recuperado?",
+        "opciones": {
+          "A": "Copa Jules Rimet",
+          "B": "Trofeo Victoria",
+          "C": "Copa de la Diosa",
+          "D": "Trofeo FIFA World Cup"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club ganó la Copa Mitropa (precursora de competiciones europeas) en más ocasiones?",
+        "opciones": {
+          "A": "Vasas SC (Hungría)",
+          "B": "AC Sparta Praga (Checoslovaquia)",
+          "C": "Bologna FC (Italia)",
+          "D": "Ferencvárosi TC (Hungría)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el primer presidente de la FIFA?",
+        "opciones": {
+          "A": "Robert Guérin (Francia)",
+          "B": "Daniel Burley Woolfall (Inglaterra)",
+          "C": "Jules Rimet (Francia)",
+          "D": "Rodolphe Seeldrayers (Bélgica)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la final de la Copa Libertadores 1971 contra Nacional de Montevideo?",
+        "opciones": {
+          "A": "Estudiantes de La Plata",
+          "B": "Nacional",
+          "C": "Peñarol",
+          "D": "Independiente"
+        },
+        "respuesta_correcta": "B"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer partido de fútbol televisado en la historia (BBC, 1937)?",
+        "opciones": {
+          "A": "Arsenal vs Arsenal Reserves (partido de práctica)",
+          "B": "Inglaterra vs Escocia",
+          "C": "Preston North End vs Huddersfield Town (Final FA Cup)",
+          "D": "Chelsea vs Charlton Athletic"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador posee el récord de más goles en un solo partido de la Copa del Mundo (5 goles vs Camerún, 1994)?",
+        "opciones": {
+          "A": "Oleg Salenko (Rusia)",
+          "B": "Emilio Butragueño (España)",
+          "C": "Eusébio (Portugal)",
+          "D": "Just Fontaine (Francia)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué equipo jugaba Stanley Matthews cuando ganó el primer Balón de Oro en 1956?",
+        "opciones": {
+          "A": "Blackpool",
+          "B": "Stoke City",
+          "C": "Manchester United",
+          "D": "Preston North End"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el equipo con más títulos de la liga de Bélgica?",
+        "opciones": {
+          "A": "RSC Anderlecht",
+          "B": "Club Brugge",
+          "C": "Standard Lieja",
+          "D": "Union Saint-Gilloise"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el árbitro del partido conocido como la 'Batalla de Santiago' (Chile vs Italia, Mundial 1962)?",
+        "opciones": {
+          "A": "Ken Aston (Inglaterra)",
+          "B": "Nikolay Latyshev (Unión Soviética)",
+          "C": "Leo Horn (Países Bajos)",
+          "D": "Arthur Ellis (Inglaterra)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club ganó la Copa Master de Supercopa (única edición, 1992)?",
+        "opciones": {
+          "A": "Boca Juniors",
+          "B": "Cruzeiro",
+          "C": "Olimpia",
+          "D": "Racing Club"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es la selección con más títulos de la Copa Asiática de la AFC?",
+        "opciones": {
+          "A": "Japón (4)",
+          "B": "Arabia Saudita (3)",
+          "C": "Irán (3)",
+          "D": "Corea del Sur (2)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador marcó el gol que le dio al Steaua Bucarest la Copa de Europa 1986 en la final contra Barcelona?",
+        "opciones": {
+          "A": "Ninguno (ganaron por penales 2-0)",
+          "B": "Marius Lăcătuș",
+          "C": "Gheorghe Hagi",
+          "D": "Victor Pițurcă"
         },
         "respuesta_correcta": "A"
       }

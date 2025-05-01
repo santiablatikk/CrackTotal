@@ -163,16 +163,6 @@
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Cómo se llama la regla que permite al árbitro continuar el juego después de una falta si beneficia al equipo que la sufrió?",
-        "opciones": {
-          "A": "Ley de la ventaja",
-          "B": "Offside",
-          "C": "Falta táctica",
-          "D": "Obstrucción"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
         "pregunta": "¿Qué club italiano logró el 'triplete' (Serie A, Coppa Italia, Champions) en 2010 bajo la dirección de José Mourinho?",
         "opciones": {
           "A": "Inter de Milán",
@@ -242,18 +232,8 @@
         },
         "respuesta_correcta": "A"
       },
-       {
-        "pregunta": "Según las reglas, ¿a qué distancia mínima (en metros) debe colocarse la barrera defensiva en un tiro libre directo?",
-        "opciones": {
-          "A": "9.15 metros",
-          "B": "8 metros",
-          "C": "10 metros",
-          "D": "7.5 metros"
-        },
-        "respuesta_correcta": "A"
-      },
       {
-        "pregunta": "¿Qué club inglés ganó la Premier League de la temporada 2003-04 sin perder un solo partido, recibiendo el apodo de 'Los Invencibles'?",
+        "pregunta": "¿Qué equipo inglés ganó la Premier League de la temporada 2003-04 sin perder un solo partido, recibiendo el apodo de 'Los Invencibles'?",
         "opciones": {
           "A": "Arsenal",
           "B": "Manchester United",
@@ -279,26 +259,6 @@
           "B": "Martin Ødegaard",
           "C": "Alexander Sørloth",
           "D": "Joshua King"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Cómo se llama la definición desde el punto penal que termina un partido empatado en fase eliminatoria, si persiste el empate tras el alargue?",
-        "opciones": {
-          "A": "Tanda de penales / Definición por penales",
-          "B": "Gol de oro",
-          "C": "Repetición del partido",
-          "D": "Sorteo"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué director técnico argentino llevó a la selección de fútbol a ganar la medalla de oro en los Juegos Olímpicos de Atenas 2004 y Pekín 2008?",
-        "opciones": {
-          "A": "Marcelo Bielsa (2004) / Sergio Batista (2008)",
-          "B": "José Pekerman",
-          "C": "Carlos Bilardo",
-          "D": "César Luis Menotti"
         },
         "respuesta_correcta": "A"
       },
@@ -349,6 +309,306 @@
           "B": "2013",
           "C": "2008",
           "D": "Nunca descendió"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador inglés ganó el Balón de Oro en 2001 jugando para el Liverpool?",
+        "opciones": {
+          "A": "Michael Owen",
+          "B": "Steven Gerrard",
+          "C": "David Beckham",
+          "D": "Frank Lampard"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuántas Champions League ha ganado el AC Milan?",
+        "opciones": {
+          "A": "7",
+          "B": "6",
+          "C": "5",
+          "D": "8"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección ganó la Eurocopa 1992 sin haberse clasificado inicialmente, entrando en lugar de Yugoslavia?",
+        "opciones": {
+          "A": "Dinamarca",
+          "B": "Suecia",
+          "C": "Alemania",
+          "D": "Países Bajos"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el DT de Boca Juniors en la obtención de la Copa Libertadores del 2007?",
+        "opciones": {
+          "A": "Miguel Ángel Russo",
+          "B": "Carlos Bianchi",
+          "C": "Alfio Basile",
+          "D": "Guillermo Barros Schelotto"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué estadio se jugó la final de la Champions League 2005 conocida como el 'Milagro de Estambul'?",
+        "opciones": {
+          "A": "Estadio Olímpico Atatürk",
+          "B": "San Siro",
+          "C": "Anfield",
+          "D": "Estadio Olímpico de Múnich"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador francés es el máximo goleador histórico de la selección de Francia?",
+        "opciones": {
+          "A": "Olivier Giroud",
+          "B": "Thierry Henry",
+          "C": "Kylian Mbappé",
+          "D": "Antoine Griezmann"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer Mundial que ganó Italia?",
+        "opciones": {
+          "A": "1934",
+          "B": "1938",
+          "C": "1982",
+          "D": "2006"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club argentino ganó la Copa Libertadores en 1967, siendo el primer equipo argentino en lograrlo?",
+        "opciones": {
+          "A": "Racing Club",
+          "B": "Independiente",
+          "C": "Estudiantes LP",
+          "D": "Boca Juniors"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién es el jugador con más partidos disputados en la historia del FC Barcelona?",
+        "opciones": {
+          "A": "Lionel Messi",
+          "B": "Xavi Hernández",
+          "C": "Andrés Iniesta",
+          "D": "Sergio Busquets"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección africana llegó a semifinales del Mundial 2022, siendo la primera del continente en lograrlo?",
+        "opciones": {
+          "A": "Marruecos",
+          "B": "Senegal",
+          "C": "Ghana",
+          "D": "Camerún"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué año ganó Johan Cruyff su primer Balón de Oro?",
+        "opciones": {
+          "A": "1971",
+          "B": "1973",
+          "C": "1974",
+          "D": "1970"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club posee el récord de más títulos de Europa League / Copa UEFA?",
+        "opciones": {
+          "A": "Sevilla",
+          "B": "Liverpool",
+          "C": "Juventus",
+          "D": "Inter de Milán"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el autor del gol del 'Iniestazo' contra Chelsea en semifinales de Champions 2009?",
+        "opciones": {
+          "A": "Andrés Iniesta",
+          "B": "Lionel Messi",
+          "C": "Samuel Eto'o",
+          "D": "Xavi Hernández"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuántos Balones de Oro ganó Michel Platini?",
+        "opciones": {
+          "A": "3",
+          "B": "2",
+          "C": "4",
+          "D": "1"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo fue el primer campeón del Mundial de Clubes de la FIFA en su formato actual (iniciado en 2005)?",
+        "opciones": {
+          "A": "São Paulo",
+          "B": "Liverpool",
+          "C": "Internacional",
+          "D": "Barcelona"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador tiene el récord de más goles en una sola temporada de la Premier League (formato 38 partidos)?",
+        "opciones": {
+          "A": "Erling Haaland (36)",
+          "B": "Mohamed Salah (32)",
+          "C": "Alan Shearer (34)",
+          "D": "Cristiano Ronaldo (31)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál fue el resultado de la final de la Champions League 1994 (Milan vs Barcelona)?",
+        "opciones": {
+          "A": "4-0 (Milan)",
+          "B": "1-0 (Milan)",
+          "C": "2-1 (Barcelona)",
+          "D": "0-0 (Milan por penales)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección sudamericana eliminó a Italia en octavos del Mundial 1990 con gol de Caniggia?",
+        "opciones": {
+          "A": "Argentina",
+          "B": "Brasil",
+          "C": "Uruguay",
+          "D": "Colombia"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién es el máximo goleador histórico de la selección inglesa?",
+        "opciones": {
+          "A": "Harry Kane",
+          "B": "Wayne Rooney",
+          "C": "Bobby Charlton",
+          "D": "Gary Lineker"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Recopa Sudamericana en 2023?",
+        "opciones": {
+          "A": "Independiente del Valle",
+          "B": "Flamengo",
+          "C": "Palmeiras",
+          "D": "Athletico Paranaense"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué ciudad se jugó la final de la Eurocopa 2000 (Francia vs Italia)?",
+        "opciones": {
+          "A": "Róterdam",
+          "B": "Bruselas",
+          "C": "Ámsterdam",
+          "D": "París"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador neerlandés fue 3 veces Balón de Oro (1988, 1989, 1992)?",
+        "opciones": {
+          "A": "Marco van Basten",
+          "B": "Johan Cruyff",
+          "C": "Ruud Gullit",
+          "D": "Frank Rijkaard"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el clásico rival del Bayern Múnich en Baviera?",
+        "opciones": {
+          "A": "TSV 1860 Múnich",
+          "B": "FC Nürnberg",
+          "C": "FC Augsburg",
+          "D": "Borussia Dortmund"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador tiene el récord de más partidos jugados en la historia de la Champions League?",
+        "opciones": {
+          "A": "Cristiano Ronaldo",
+          "B": "Iker Casillas",
+          "C": "Lionel Messi",
+          "D": "Xavi Hernández"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa Intercontinental 1994 venciendo al Milan?",
+        "opciones": {
+          "A": "Vélez Sarsfield",
+          "B": "São Paulo",
+          "C": "Boca Juniors",
+          "D": "River Plate"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador de la selección italiana campeona del mundo en 2006?",
+        "opciones": {
+          "A": "Marcello Lippi",
+          "B": "Arrigo Sacchi",
+          "C": "Giovanni Trapattoni",
+          "D": "Fabio Capello"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué año se disputó la primera Copa Mundial Femenina de la FIFA?",
+        "opciones": {
+          "A": "1991",
+          "B": "1995",
+          "C": "1989",
+          "D": "1999"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador liberiano ganó el Balón de Oro en 1995?",
+        "opciones": {
+          "A": "George Weah",
+          "B": "Didier Drogba",
+          "C": "Samuel Eto'o",
+          "D": "Jay-Jay Okocha"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuántos títulos de Bundesliga tiene el Borussia Dortmund (hasta 2024)?",
+        "opciones": {
+          "A": "5",
+          "B": "8",
+          "C": "3",
+          "D": "10"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Contra qué equipo debutó Lionel Messi oficialmente en el FC Barcelona en 2004?",
+        "opciones": {
+          "A": "RCD Espanyol",
+          "B": "Real Madrid",
+          "C": "Albacete",
+          "D": "Shakhtar Donetsk"
         },
         "respuesta_correcta": "A"
       }

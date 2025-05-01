@@ -61,15 +61,28 @@ function loadRanking() {
             const userData = doc.data();
             const row = document.createElement('tr');
 
+            // --- Datos necesarios para las columnas --- 
+            const playerName = userData.displayName || 'Jugador Anónimo';
+            const totalScore = userData.totalScore || 0;
+            const matchesPlayed = userData.matchesPlayed || 0;
+            // Calcular precisión si no está guardada directamente
+            const totalCorrect = userData.totalCorrectAnswers || 0;
+            const totalIncorrect = userData.totalIncorrectAnswers || 0;
+            const totalAnswered = totalCorrect + totalIncorrect;
+            const averageAccuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+            const fastestWinTime = userData.fastestWinTime; // Asume que existe en Firestore
+            
+            // Formatear tiempo (usando una función auxiliar si es necesario)
+            const formattedTime = formatFirestoreTime(fastestWinTime);
+
+            // --- Generar HTML para la fila --- 
             row.innerHTML = `
                 <td>${position}</td>
-                <td class="player-name-rank">${userData.displayName || 'Jugador Anónimo'}</td>
-                <td>${userData.wins || 0}</td>
-                <td>${userData.totalLosses || 0}</td>
-                <td>${userData.matchesPlayed || 0}</td>
-                <td class="score-rank">${userData.totalScore || 0}</td>
-                <td>${userData.totalErrors || 0}</td>
-                <td>${userData.totalPasses || 0}</td>
+                <td class="player-name-rank">${playerName}</td>
+                <td class="score-rank">${totalScore}</td>
+                <td>${matchesPlayed}</td>
+                <td>${averageAccuracy}%</td>
+                <td>${formattedTime}</td>
             `;
             rankingBody.appendChild(row);
             position++;
@@ -241,3 +254,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (historyList) historyList.innerHTML = '<p>Error de conexión con la base de datos.</p>';
     }
 }); 
+
+// --- Función auxiliar para formatear tiempo (puede ser null) ---
+function formatFirestoreTime(totalSeconds) {
+    if (totalSeconds === null || typeof totalSeconds === 'undefined' || totalSeconds <= 0) {
+        return '--:--';
+    }
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+} 

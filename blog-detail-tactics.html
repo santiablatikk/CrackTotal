@@ -146,6 +146,7 @@
       margin-bottom: 0.5rem;
       background: linear-gradient(90deg, #fb7185, #e11d48);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     
@@ -330,184 +331,112 @@
   <!-- Header Inserted -->
   <header class="app-header">
     <div class="logo-animation">
-        <i class="fas fa-futbol ball-icon bounce"></i>
+        <i class="fas fa-chalkboard-teacher ball-icon bounce"></i>
     </div>
-    <a href="blog.html" class="title-link">
-        <h1 class="title-text">La Evolución de las Tácticas en el Fútbol</h1>
+    <a href="games.html" class="title-link">
+        <h1 class="title-text">Crack Total</h1>
     </a>
-    <p class="subtitle">Blog PASALA CHÉ</p>
+    <p class="subtitle">Blog: Tácticas de Fútbol</p>
   </header>
 
   <div class="blog-detail-screen page-container">
     <div class="blog-detail-container content-container">
       <div class="blog-detail-img-container">
-        <img src="img/blog/tacticas-historia.jpg" alt="Tácticas de fútbol a lo largo de la historia" class="blog-detail-img">
+        <img src="img/blog/tacticas.jpg" alt="Pizarrón táctico" class="blog-detail-img" onerror="this.src='https://via.placeholder.com/1000x400?text=Tácticas+de+Fútbol'">
       </div>
       
       <article class="blog-detail-content">
-        <p>La UEFA Champions League, anteriormente conocida como Copa de Europa, es sin duda el torneo de clubes más prestigioso del mundo. Con su icónico himno y la famosa "orejona" —como se conoce popularmente al trofeo— se ha convertido en la competición más deseada por jugadores, entrenadores y aficionados.</p>
+        <h1>Historia de la Champions League</h1>
+        <p class="article-intro">
+          La Champions League, el torneo que todos quieren ganar en Europa. ¿Alguna vez te preguntaste cómo empezó todo? Desde la vieja Copa de Europa hasta el formato actual, un viaje por la historia del trofeo más codiciado a nivel de clubes.
+        </p>
         
+        <h2>Los Inicios: La Copa de Europa (1955-1992)</h2>
+        <p>
+          La idea surgió de periodistas franceses de L'Équipe a mediados de los 50. Querían un torneo para definir al mejor club de Europa. La primera edición arrancó en 1955 y el Real Madrid, con Di Stéfano a la cabeza, se la llevó cinco veces seguidas. ¡Una locura! En esa época, solo jugaban los campeones de cada liga y era eliminación directa.
+        </p>
+        
+        <p>
+          Clubes como el Benfica de Eusébio, el Inter de Helenio Herrera, el Ajax de Cruyff con su "Fútbol Total", el Bayern de Beckenbauer y el Liverpool de los 70 y 80 dominaron distintas épocas. Eran partidos a todo o nada, con un aura especial.
+        </p>
+
+        <!-- AdSense In-Article Unit -->
+        <div class="adsense-container in-article-ad" style="margin: 2rem 0;">
+          <div class="ad-label">PUBLICIDAD</div>
+          <ins class="adsbygoogle"
+               style="display:block; text-align:center;"
+               data-ad-layout="in-article"
+               data-ad-format="fluid"
+               data-ad-client="ca-pub-9579152019412427" 
+               data-ad-slot="YYYYYYYYYY"></ins> 
+          <script>
+            if (localStorage.getItem("adConsent") === "true") {
+              (adsbygoogle = window.adsbygoogle || []).push({});
+            }
+          </script>
+        </div>
+        
+        <h2>La Revolución: Nace la Champions League (1992-Presente)</h2>
+        <p>
+          En la temporada 92/93, la UEFA metió mano y cambió todo. Nació la UEFA Champions League con un formato nuevo: una fase de grupos antes de las eliminatorias. Esto significaba más partidos, más guita por derechos de TV y más chances para los clubes. Al principio, solo iban los campeones, pero después se abrió para los subcampeones y hasta los terceros y cuartos de las ligas más grosas.
+        </p>
+        
+        <p>
+          El Milan de Sacchi y Capello, el Manchester United de Ferguson, el Barcelona de Guardiola con Messi y el Real Madrid de Zidane y Cristiano Ronaldo marcaron épocas recientes. El formato actual, con 32 equipos en la fase de grupos, se consolidó como un éxito total.
+        </p>
+
+        <h2>Los Más Ganadores</h2>
         <div class="champions-stats">
           <div class="stat-item">
-            <div class="stat-value">1955</div>
-            <div class="stat-label">Año de fundación</div>
+            <div class="stat-value">15</div> <div class="stat-label">Real Madrid</div>
           </div>
           <div class="stat-item">
-            <div class="stat-value">67</div>
-            <div class="stat-label">Ediciones disputadas</div>
+            <div class="stat-value">7</div> <div class="stat-label">AC Milan</div>
           </div>
           <div class="stat-item">
-            <div class="stat-value">22</div>
-            <div class="stat-label">Clubes campeones</div>
+            <div class="stat-value">6</div> <div class="stat-label">Liverpool</div>
           </div>
           <div class="stat-item">
-            <div class="stat-value">15</div>
-            <div class="stat-label">Títulos del Real Madrid</div>
+            <div class="stat-value">6</div> <div class="stat-label">Bayern Múnich</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">5</div> <div class="stat-label">FC Barcelona</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">4</div> <div class="stat-label">Ajax</div>
           </div>
         </div>
         
-        <h2>Orígenes: La Copa de Europa (1955-1992)</h2>
-        <p>La competición nació en 1955 bajo el nombre de Copa de Clubes Campeones Europeos (o simplemente Copa de Europa) por iniciativa del periódico deportivo francés L'Équipe y su editor Gabriel Hanot, con el apoyo de dirigentes como Santiago Bernabéu.</p>
-        
-        <p>El formato original era sencillo: participaban únicamente los campeones de las principales ligas europeas en un sistema de eliminación directa. El primer campeón fue el Real Madrid, que derrotó al Stade de Reims por 4-3 en la final disputada en el Parc des Princes de París el 13 de junio de 1956.</p>
-        
-        <div class="champions-year-milestone">
-          <div class="champions-year">1955-1960: La dinastía del Real Madrid</div>
-          <div class="champions-milestone-content">
-            <p>El Real Madrid marcó una era irrepetible al ganar las cinco primeras ediciones consecutivas del torneo, con estrellas como Alfredo Di Stéfano, Ferenc Puskás y Francisco Gento. La final de 1960 en Hampden Park (Glasgow), donde el Madrid venció al Eintracht Frankfurt por 7-3, es considerada una de las mejores exhibiciones futbolísticas de todos los tiempos.</p>
-          </div>
-        </div>
-        
-        <div class="image-gallery">
-          <div class="gallery-item">
-            <img src="img/blog/real-madrid-1950s.jpg" alt="Real Madrid años 50" onerror="this.src='https://via.placeholder.com/400x250?text=Real+Madrid+1950s'">
-            <div class="gallery-caption">El legendario equipo del Real Madrid de los años 50</div>
-          </div>
-          <div class="gallery-item">
-            <img src="img/blog/di-stefano.jpg" alt="Alfredo Di Stefano" onerror="this.src='https://via.placeholder.com/400x250?text=Alfredo+Di+Stefano'">
-            <div class="gallery-caption">Alfredo Di Stéfano, la 'Saeta Rubia', figura clave de aquella era</div>
-          </div>
-        </div>
-        
-        <div class="champions-year-milestone">
-          <div class="champions-year">1960-1970: La diversificación de campeones</div>
-          <div class="champions-milestone-content">
-            <p>Tras el dominio madridista, la década de los 60 vio surgir nuevos campeones: el Benfica de Eusébio (1961 y 1962), el Inter de Milán de Helenio Herrera (1964 y 1965), el Celtic de Glasgow (1967), el Manchester United (1968) y el Feyenoord (1970). El Ajax de Johan Cruyff cerraría esta década inaugurando su propia era de dominio.</p>
-          </div>
-        </div>
-        
-        <div class="champions-year-milestone">
-          <div class="champions-year">1970-1980: Dominio holandés y alemán</div>
-          <div class="champions-milestone-content">
-            <p>El fútbol total del Ajax conquistó tres títulos consecutivos (1971-1973), seguido por el Bayern Múnich que igualó la hazaña con tres campeonatos seguidos (1974-1976). El Liverpool comenzó a destacar al final de esta década, inaugurando la era de dominio inglés.</p>
-          </div>
-        </div>
-        
-        <div class="image-gallery">
-          <div class="gallery-item">
-            <img src="img/blog/ajax-1970s.jpg" alt="Ajax años 70" onerror="this.src='https://via.placeholder.com/400x250?text=Ajax+1970s'">
-            <div class="gallery-caption">El revolucionario Ajax de Johan Cruyff</div>
-          </div>
-          <div class="gallery-item">
-            <img src="img/blog/bayern-70s.jpg" alt="Bayern años 70" onerror="this.src='https://via.placeholder.com/400x250?text=Bayern+Munich+1970s'">
-            <div class="gallery-caption">El poderoso Bayern de Franz Beckenbauer</div>
-          </div>
-        </div>
-        
-        <div class="champions-year-milestone">
-          <div class="champions-year">1980-1992: La era inglesa y el Milan de Sacchi</div>
-          <div class="champions-milestone-content">
-            <p>Los clubes ingleses dominaron el inicio de la década (Liverpool, Nottingham Forest, Aston Villa), hasta que la tragedia de Heysel en 1985 provocó la exclusión de los equipos ingleses durante cinco años. La última fase de la Copa de Europa vio el surgimiento del espectacular AC Milan de Arrigo Sacchi, que ganó dos veces consecutivas (1989 y 1990) con un fútbol revolucionario.</p>
-          </div>
-        </div>
-        
-        <h2>El nacimiento de la Champions League (1992-2000)</h2>
-        <p>En 1992, la competición fue rebautizada como UEFA Champions League, con un nuevo formato que incluía una fase de grupos antes de las eliminatorias. Este cambio coincidió con la creación de la Premier League inglesa y la Sentencia Bosman, que transformó el panorama del fútbol europeo.</p>
-        
-        <p>El Olympique de Marsella se convirtió en el primer campeón de la remodelada competición, venciendo al AC Milan en la final de 1993. El Ajax de Louis van Gaal ganó de manera sorprendente en 1995, mientras que la Juventus lo hizo en 1996.</p>
-        
-        <div class="champions-year-milestone">
-          <div class="champions-year">1997-1999: La Copa vuelve a Alemania y el triplete del Manchester United</div>
-          <div class="champions-milestone-content">
-            <p>El Borussia Dortmund logró su primera Copa de Europa en 1997, mientras que el Real Madrid rompió 32 años de sequía en 1998 al vencer a la Juventus. La década cerró con el dramático triplete del Manchester United, que remontó milagrosamente en los minutos finales contra el Bayern Múnich en 1999.</p>
-          </div>
-        </div>
-        
-        <div class="image-gallery">
-          <div class="gallery-item">
-            <img src="img/blog/champions-trophy-new.jpg" alt="Nuevo trofeo Champions" onerror="this.src='https://via.placeholder.com/400x250?text=Champions+Trophy+New'">
-            <div class="gallery-caption">El rediseño del trofeo coincidió con el nacimiento de la Champions League</div>
-          </div>
-          <div class="gallery-item">
-            <img src="img/blog/manchester-united-1999.jpg" alt="Manchester United 1999" onerror="this.src='https://via.placeholder.com/400x250?text=Man+Utd+1999'">
-            <div class="gallery-caption">El Manchester United celebra su histórico triplete en 1999</div>
-          </div>
-        </div>
-        
-        <h2>La era moderna (2000-2023)</h2>
-        <p>El nuevo milenio comenzó con el Real Madrid ganando su octava Copa de Europa en 2000 y la novena en 2002. El Milan volvió a la cima en 2003 y 2007, mientras que equipos como el Porto (2004) y el Liverpool (2005, con una remontada histórica ante el Milan) también levantaron el trofeo.</p>
-        
-        <div class="champions-year-milestone">
-          <div class="champions-year">2006-2015: La revolución del Barcelona y el dominio español</div>
-          <div class="champions-milestone-content">
-            <p>El Barcelona de Rijkaard ganó en 2006, pero fue bajo Pep Guardiola cuando los catalanes alcanzaron su apogeo, con títulos en 2009 y 2011 practicando un fútbol que cambió el paradigma del juego. El triunfo culé en 2015 con el tridente formado por Messi, Suárez y Neymar cerró una década de claro dominio español, con cinco títulos para el Barcelona y cuatro para el Real Madrid.</p>
-          </div>
-        </div>
-        
-        <div class="image-gallery">
-          <div class="gallery-item">
-            <img src="img/blog/barcelona-2009.jpg" alt="Barcelona 2009" onerror="this.src='https://via.placeholder.com/400x250?text=Barcelona+2009'">
-            <div class="gallery-caption">El Barcelona de Guardiola revolucionó el fútbol</div>
-          </div>
-          <div class="gallery-item">
-            <img src="img/blog/real-madrid-la-decima.jpg" alt="Real Madrid La Décima" onerror="this.src='https://via.placeholder.com/400x250?text=Real+Madrid+La+Decima'">
-            <div class="gallery-caption">El Real Madrid celebra "La Décima" en 2014</div>
-          </div>
-        </div>
-        
-        <div class="champions-year-milestone">
-          <div class="champions-year">2016-2024: La dinastía del Real Madrid y la era del VAR</div>
-          <div class="champions-milestone-content">
-            <p>El Real Madrid estableció una nueva era de dominio al ganar 4 de 5 ediciones entre 2014 y 2018 bajo la dirección de Zinedine Zidane, alcanzando "La Decimotercera" en 2018. El Liverpool de Jürgen Klopp ganó en 2019, seguido por el Bayern Múnich en la atípica edición de 2020 marcada por la pandemia. El Chelsea se coronó en 2021, antes de que el Real Madrid lograra su decimocuarta corona en 2022.</p>
-            <p>En 2023, el Manchester City de Pep Guardiola finalmente consiguió su primera Champions League, completando un triplete histórico y llevando el título a Inglaterra tras una década de espera. Y en 2024, el Real Madrid volvió a hacer historia conquistando "La Decimoquinta" en Wembley ante el Borussia Dortmund, consolidando su posición como el club más laureado de la competición con 15 títulos.</p>
-          </div>
-        </div>
-        
-        <h2>Evolución del formato y futuro</h2>
-        <p>La Champions League ha evolucionado constantemente: desde la inclusión de equipos no campeones de sus ligas, hasta la eliminación de la segunda fase de grupos, la implementación del VAR y los cambios en el valor de los goles fuera de casa.</p>
-        
-        <p>A partir de la temporada 2024/25, se implementará un nuevo formato con 36 equipos en una única tabla de clasificación, donde cada equipo jugará ocho partidos contra rivales diferentes, cuatro en casa y cuatro fuera. Los ocho primeros pasarán directamente a octavos, mientras que los clasificados entre el 9º y el 24º puesto disputarán una ronda previa de playoffs.</p>
-        
-        <p>La historia de la Champions League refleja la evolución del fútbol europeo y mundial. De ser una competición entre campeones nacionales ha pasado a ser un espectáculo global que paraliza el mundo cada año cuando suena su inconfundible himno en la final de temporada.</p>
+        <h2>Momentos Inolvidables</h2>
+        <p>
+          La Champions nos regaló noches mágicas: la remontada del Manchester United contra el Bayern en el 99, el milagro de Estambul del Liverpool contra el Milan en 2005, la exhibición del Barça de Guardiola en Wembley 2011, las tres seguidas del Madrid de Zidane... Cada año, la final es el evento deportivo más visto del mundo. ¿Cuál es tu momento favorito?
+        </p>
       </article>
       
       <div class="blog-related">
-        <h3 class="blog-related-title">Artículos Relacionados</h3>
+        <h3 class="blog-related-title">Otros artículos que te pueden interesar</h3>
         
         <div class="related-article-card">
-          <img src="img/blog/legends.jpg" alt="Leyendas del Fútbol" class="related-article-img" onerror="this.src='https://via.placeholder.com/300x150?text=Leyendas+del+Fútbol'">
+          <img src="img/blog/worldcup.jpg" alt="Copa del Mundo" class="related-article-img" onerror="this.src='https://via.placeholder.com/300x150?text=Copa+del+Mundo'">
           <div class="related-article-content">
-            <h3>Leyendas del Fútbol</h3>
-            <p>Un recorrido por las carreras de los mejores jugadores de todos los tiempos.</p>
-            <span class="related-article-date"><i class="fas fa-calendar-alt"></i> 28 Abril, 2023</span>
-          </div>
-        </div>
-        
-        <div class="related-article-card">
-          <img src="img/blog/worldcup.jpg" alt="Mundiales de Fútbol" class="related-article-img" onerror="this.src='https://via.placeholder.com/300x150?text=Mundiales+de+Fútbol'">
-          <div class="related-article-content">
-            <h3>Historia de los Mundiales</h3>
-            <p>Momentos legendarios de la Copa del Mundo desde 1930 hasta 2022.</p>
+            <h4 class="related-article-title">Historia de los Mundiales</h4>
             <span class="related-article-date"><i class="fas fa-calendar-alt"></i> 5 Mayo, 2023</span>
           </div>
         </div>
         
         <div class="related-article-card">
-          <img src="img/blog/estadios.jpg" alt="Estadios Icónicos" class="related-article-img" onerror="this.src='https://via.placeholder.com/300x150?text=Estadios+Icónicos'">
+          <img src="img/blog/legends.jpg" alt="Leyendas del Fútbol" class="related-article-img" onerror="this.src='https://via.placeholder.com/300x150?text=Leyendas+del+Fútbol'">
           <div class="related-article-content">
-            <h3>Estadios Icónicos del Fútbol</h3>
-            <p>Un recorrido por los templos más emblemáticos del fútbol mundial.</p>
-            <span class="related-article-date"><i class="fas fa-calendar-alt"></i> 8 Abril, 2023</span>
+            <h4 class="related-article-title">Leyendas del Fútbol</h4>
+            <span class="related-article-date"><i class="fas fa-calendar-alt"></i> 28 Abril, 2023</span>
+          </div>
+        </div>
+        
+        <div class="related-article-card">
+          <img src="img/blog/messi-evolution.jpg" alt="Evolución de Messi" class="related-article-img" onerror="this.src='https://via.placeholder.com/300x150?text=Evolución+de+Messi'">
+          <div class="related-article-content">
+            <h4 class="related-article-title">La Evolución de Messi</h4>
+            <span class="related-article-date"><i class="fas fa-calendar-alt"></i> 20 Abril, 2023</span>
           </div>
         </div>
       </div>
@@ -523,7 +452,7 @@
     <div class="footer-content">
       <div class="footer-links">
         <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
-        <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+        <a href="blog.html" class="active"><i class="fas fa-blog"></i> Blog</a>
         <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
         <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
         <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>

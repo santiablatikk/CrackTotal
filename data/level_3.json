@@ -120,7 +120,7 @@
           "C": "Copa Stanley",
           "D": "Balón de Oro"
         },
-        "respuesta_correcta": "A"
+        "respuesta_correcta": ["Trofeo de la Copa Mundial de la FIFA", "Copa del Mundo", "Copa Mundial", "A"]
       },
        {
         "pregunta": "¿Qué dos países asiáticos fueron co-anfitriones del Mundial 2002?",
@@ -142,16 +142,6 @@
         },
         "respuesta_correcta": "A"
       },
-       {
-        "pregunta": "¿Qué significa la sigla 'VAR' utilizada como asistencia tecnológica para los árbitros?",
-        "opciones": {
-          "A": "Video Assistant Referee",
-          "B": "Visual Area Review",
-          "C": "Verified Action Replay",
-          "D": "Video Analysis Resource"
-        },
-        "respuesta_correcta": "A"
-      },
       {
         "pregunta": "¿Qué famoso jugador francés fue expulsado en la final del Mundial 2006 tras dar un cabezazo a Materazzi?",
         "opciones": {
@@ -169,26 +159,6 @@
           "B": "PSV Eindhoven",
           "C": "Feyenoord",
           "D": "AZ Alkmaar"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué se sanciona si un jugador (que no sea el arquero) toca intencionalmente la pelota con la mano dentro de su propia área?",
-        "opciones": {
-          "A": "Penal",
-          "B": "Tiro libre directo",
-          "C": "Tiro libre indirecto",
-          "D": "Córner"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Cuál es la formación táctica que se representa numéricamente como 4-4-2?",
-        "opciones": {
-          "A": "4 Defensores - 4 Mediocampistas - 2 Delanteros",
-          "B": "4 Defensores - 3 Mediocampistas - 3 Delanteros",
-          "C": "3 Defensores - 5 Mediocampistas - 2 Delanteros",
-          "D": "5 Defensores - 4 Mediocampistas - 1 Delantero"
         },
         "respuesta_correcta": "A"
       },
@@ -273,52 +243,12 @@
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Cómo se llama la regla que permite al árbitro dejar seguir una jugada aunque se haya cometido una falta, si la continuación favorece al equipo que sufrió la infracción?",
-        "opciones": {
-          "A": "Ley de la ventaja",
-          "B": "Offside",
-          "C": "Falta táctica",
-          "D": "Presión alta"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
         "pregunta": "¿Qué selección africana fue la primera en alcanzar los cuartos de final de un Mundial (Italia 1990)?",
         "opciones": {
           "A": "Camerún",
           "B": "Nigeria",
           "C": "Senegal",
           "D": "Ghana"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué entrenador argentino llevó a la selección a ganar el Mundial de 1986 en México?",
-        "opciones": {
-          "A": "Carlos Bilardo",
-          "B": "César Luis Menotti",
-          "C": "Alfio Basile",
-          "D": "Marcelo Bielsa"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué selección eliminó a Argentina en los cuartos de final del Mundial 2006 por penales?",
-        "opciones": {
-          "A": "Alemania",
-          "B": "Italia",
-          "C": "México",
-          "D": "Inglaterra"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué función principal cumple un 'enganche' o 'número 10 clásico' en el fútbol argentino?",
-        "opciones": {
-          "A": "Crear juego y asistir a los delanteros",
-          "B": "Recuperar pelotas en el mediocampo",
-          "C": "Marcar al delantero rival",
-          "D": "Desbordar por las bandas"
         },
         "respuesta_correcta": "A"
       },
@@ -343,12 +273,302 @@
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué significa el término 'vaselina' o 'globito' aplicado a un remate?",
+        "pregunta": "¿Quién fue el máximo goleador del Mundial 2022?",
         "opciones": {
-          "A": "Picar la pelota suavemente por encima del arquero",
-          "B": "Rematar con mucha potencia",
-          "C": "Rematar con el borde externo del pie",
-          "D": "Hacer rebotar la pelota antes de que entre al arco"
+          "A": "Kylian Mbappé",
+          "B": "Lionel Messi",
+          "C": "Olivier Giroud",
+          "D": "Julián Álvarez"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa Sudamericana 2023?",
+        "opciones": {
+          "A": "LDU Quito",
+          "B": "Fortaleza",
+          "C": "São Paulo",
+          "D": "Independiente del Valle"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué estadio se jugó la final del Mundial 2002?",
+        "opciones": {
+          "A": "Estadio Internacional de Yokohama",
+          "B": "Estadio de Saitama",
+          "C": "Estadio Olímpico de Seúl",
+          "D": "Camp Nou"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador italiano ganó el Balón de Oro en 2006 tras ganar el Mundial?",
+        "opciones": {
+          "A": "Fabio Cannavaro",
+          "B": "Gianluigi Buffon",
+          "C": "Andrea Pirlo",
+          "D": "Francesco Totti"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el apodo del estadio de Racing Club?",
+        "opciones": {
+          "A": "El Cilindro",
+          "B": "La Bombonera",
+          "C": "El Monumental",
+          "D": "Libertadores de América"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué país fue sede del Mundial de 1998?",
+        "opciones": {
+          "A": "Francia",
+          "B": "Italia",
+          "C": "Estados Unidos",
+          "D": "Japón"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador del Liverpool que ganó la Champions en 2019?",
+        "opciones": {
+          "A": "Jürgen Klopp",
+          "B": "Pep Guardiola",
+          "C": "Rafael Benítez",
+          "D": "Brendan Rodgers"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club tiene el récord de más títulos de Serie A en Italia?",
+        "opciones": {
+          "A": "Juventus",
+          "B": "AC Milan",
+          "C": "Inter de Milán",
+          "D": "AS Roma"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador anotó el gol de la victoria para Uruguay en el 'Maracanazo'?",
+        "opciones": {
+          "A": "Alcides Ghiggia",
+          "B": "Juan Alberto Schiaffino",
+          "C": "Obdulio Varela",
+          "D": "Roque Máspoli"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo en ganar la Premier League (formato actual desde 1992)?",
+        "opciones": {
+          "A": "Manchester United",
+          "B": "Blackburn Rovers",
+          "C": "Arsenal",
+          "D": "Liverpool"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección ganó la primera Eurocopa en 1960?",
+        "opciones": {
+          "A": "Unión Soviética",
+          "B": "Yugoslavia",
+          "C": "España",
+          "D": "Francia"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién es el máximo goleador histórico del Real Madrid?",
+        "opciones": {
+          "A": "Cristiano Ronaldo",
+          "B": "Karim Benzema",
+          "C": "Raúl González",
+          "D": "Alfredo Di Stéfano"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa Libertadores 2018 en la final jugada en Madrid?",
+        "opciones": {
+          "A": "River Plate",
+          "B": "Boca Juniors",
+          "C": "Flamengo",
+          "D": "Grêmio"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador tiene el apodo de 'El Fideo'?",
+        "opciones": {
+          "A": "Ángel Di María",
+          "B": "Paulo Dybala",
+          "C": "Javier Pastore",
+          "D": "Érik Lamela"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué año se fundó el club River Plate?",
+        "opciones": {
+          "A": "1901",
+          "B": "1905",
+          "C": "1899",
+          "D": "1910"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo africano en ganar un partido en un Mundial (vs Alemania Federal en 1982)?",
+        "opciones": {
+          "A": "Argelia",
+          "B": "Camerún",
+          "C": "Marruecos",
+          "D": "Túnez"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador es conocido como 'El Bati' y fue un gran goleador argentino?",
+        "opciones": {
+          "A": "Gabriel Batistuta",
+          "B": "Hernán Crespo",
+          "C": "Martín Palermo",
+          "D": "Sergio Agüero"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué Mundial Diego Maradona marcó el gol con la mano conocido como 'La Mano de Dios'?",
+        "opciones": {
+          "A": "México 1986",
+          "B": "Italia 1990",
+          "C": "España 1982",
+          "D": "Estados Unidos 1994"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club inglés tiene como clásico rival al Everton (Merseyside Derby)?",
+        "opciones": {
+          "A": "Liverpool",
+          "B": "Manchester United",
+          "C": "Chelsea",
+          "D": "Arsenal"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuántos Balones de Oro tiene Cristiano Ronaldo?",
+        "opciones": {
+          "A": "5",
+          "B": "7",
+          "C": "6",
+          "D": "4"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la final de la Copa Libertadores 2023?",
+        "opciones": {
+          "A": "Fluminense",
+          "B": "Boca Juniors",
+          "C": "Palmeiras",
+          "D": "Internacional"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el arquero de la selección argentina campeona en México 1986?",
+        "opciones": {
+          "A": "Nery Pumpido",
+          "B": "Sergio Goycochea",
+          "C": "Ubaldo Fillol",
+          "D": "Luis Islas"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo de la Premier League es conocido como los 'Spurs'?",
+        "opciones": {
+          "A": "Tottenham Hotspur",
+          "B": "Arsenal",
+          "C": "West Ham United",
+          "D": "Crystal Palace"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué país nació Zlatan Ibrahimović?",
+        "opciones": {
+          "A": "Suecia",
+          "B": "Bosnia y Herzegovina",
+          "C": "Croacia",
+          "D": "Serbia"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club argentino es apodado 'El Granate'?",
+        "opciones": {
+          "A": "Lanús",
+          "B": "Banfield",
+          "C": "Talleres",
+          "D": "Defensa y Justicia"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el DT de River Plate durante la mayor parte de su etapa más ganadora entre 2014 y 2022?",
+        "opciones": {
+          "A": "Marcelo Gallardo",
+          "B": "Ramón Díaz",
+          "C": "Matías Almeyda",
+          "D": "Ángel Labruna"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la primera Copa del Mundo en 1930?",
+        "opciones": {
+          "A": "Uruguay",
+          "B": "Argentina",
+          "C": "Brasil",
+          "D": "Italia"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cómo se llama el clásico entre San Lorenzo y Huracán?",
+        "opciones": {
+          "A": "Clásico Porteño",
+          "B": "Clásico de Barrio",
+          "C": "Superclásico",
+          "D": "Clásico del Sur"
+        },
+        "respuesta_correcta": ["Clásico Porteño", "Clásico de Barrio", "A", "B"]
+      },
+      {
+        "pregunta": "¿Qué jugador inglés es el máximo goleador histórico de la Premier League?",
+        "opciones": {
+          "A": "Alan Shearer",
+          "B": "Wayne Rooney",
+          "C": "Harry Kane",
+          "D": "Andy Cole"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuántas Champions League ganó Pep Guardiola como entrenador del FC Barcelona?",
+        "opciones": {
+          "A": "2",
+          "B": "1",
+          "C": "3",
+          "D": "4"
         },
         "respuesta_correcta": "A"
       }

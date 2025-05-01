@@ -319,42 +319,54 @@
     </header>
 
     <!-- Main Content -->
-    <main class="page-container">
-        <div class="content-container">
+    <main class="game-content">
+        <div class="container">
+            <!-- Botón Volver (opcional, si no está en el header global) -->
+            <div style="margin-bottom: 1.5rem; text-align: left;">
+                <a href="index.html" class="back-button small-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    Volver al Inicio
+                </a>
+                 <!-- Enlace al Perfil -->
+                <a href="profile.html" class="profile-link small-button" style="margin-left: 10px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    Mi Perfil
+                </a>
+            </div>
 
-            <!-- Ranking Section -->
-            <section class="ranking-container" aria-labelledby="ranking-title">
-                <h2 id="ranking-title">Ranking Global</h2>
-                <div style="overflow-x:auto;"> <!-- Wrapper para scroll horizontal en tablas pequeñas -->
-                    <table id="ranking-table" class="history-table"> <!-- Reutilizar estilo de tabla de historial -->
+            <!-- Sección Ranking -->
+            <div class="ranking-container">
+                <h2>Ranking Pasala Che (Top 50)</h2>
+                <div class="table-responsive">
+                    <table class="history-table ranking-table">
                         <thead>
                             <tr>
-                                <th>Pos.</th>
-                                <th>Jugador</th>
-                                <th>Victorias</th>
-                                <th>Derrotas</th>
-                                <th>Jugadas</th>
-                                <th>Aciertos</th>
-                                <th>Errores</th>
-                                <th>Pasadas</th>
+                                <th>#</th>
+                                <th>Jugador/a</th>
+                                <th>Puntaje Total</th>
+                                <th>Partidas</th>
+                                <th>Precisión Prom.</th>
+                                <th>Mejor Tiempo (Pasala)</th>
                             </tr>
                         </thead>
                         <tbody id="ranking-body">
-                            <!-- Las filas del ranking se cargarán aquí -->
-                            <tr><td colspan="8">Cargando ranking...</td></tr>
+                            <!-- Las filas se llenarán dinámicamente -->
+                            <tr>
+                                <td colspan="6" style="text-align:center; padding: 20px;">Buscando a los cracks... Si tarda, ¡quizás sos el primero!</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
-            </section>
+            </div>
 
-            <!-- History Section -->
-            <section class="history-container" aria-labelledby="history-title">
-                <h2 id="history-title">Historial de Partidas Recientes</h2>
+            <!-- Sección Historial de Partidas del Usuario Actual -->
+             <div class="history-container">
+                <h2>Tu Historial (Pasala Che)</h2>
                 <div id="history-list">
-                    <!-- Las entradas del historial se cargarán aquí -->
-                    <p>Cargando historial...</p>
+                    <!-- Las tarjetas de partidas se llenarán dinámicamente con JS -->
+                     <p style="text-align:center; padding: 20px;">Revisando tus partidos... Si no ves nada, ¡mandale mecha a jugar!</p>
                 </div>
-            </section>
+            </div>
 
         </div>
     </main>

@@ -162,16 +162,6 @@
         },
         "respuesta_correcta": "A"
       },
-       {
-        "pregunta": "¿Qué regla prohíbe al arquero tocar la pelota con las manos tras un pase deliberado con el pie de un compañero?",
-        "opciones": {
-          "A": "Cesión al arquero",
-          "B": "Regla de los 6 segundos",
-          "C": "Offside",
-          "D": "Regla de Obstrucción"
-        },
-        "respuesta_correcta": "A"
-      },
       {
         "pregunta": "¿Qué legendario jugador brasileño de dribbling endiablado fue figura en los Mundiales 1958 y 1962 junto a Pelé?",
         "opciones": {
@@ -293,16 +283,6 @@
         "respuesta_correcta": "A"
       },
        {
-        "pregunta": "¿Qué futbolista brasileño tiene el récord de más goles anotados en una sola Copa del Mundo (13 goles en 1958)?",
-        "opciones": {
-          "A": "Just Fontaine (Francia)",
-          "B": "Pelé",
-          "C": "Gerd Müller",
-          "D": "Ademir"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
         "pregunta": "¿Qué equipo paraguayo ganó la Copa Libertadores en tres ocasiones (1979, 1990, 2002)?",
         "opciones": {
           "A": "Olimpia",
@@ -349,6 +329,306 @@
           "B": "Marruecos",
           "C": "Egipto",
           "D": "Nigeria"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el DT de Estudiantes LP en el tricampeonato de América (1968, 1969, 1970)?",
+        "opciones": {
+          "A": "Osvaldo Zubeldía",
+          "B": "Carlos Bilardo",
+          "C": "Miguel Ignomiriello",
+          "D": "Alberto Poletti"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador marcó el gol de la victoria para Manchester United en la final de Champions de 1999 sobre el final?",
+        "opciones": {
+          "A": "Ole Gunnar Solskjær",
+          "B": "Teddy Sheringham",
+          "C": "Dwight Yorke",
+          "D": "Andy Cole"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo alemán ganó la Recopa de Europa en 1977 venciendo al Liverpool?",
+        "opciones": {
+          "A": "Hamburgo SV",
+          "B": "Borussia Mönchengladbach",
+          "C": "Eintracht Frankfurt",
+          "D": "Colonia"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo inglés en ganar el 'triplete' (Liga, FA Cup, Copa de Europa)?",
+        "opciones": {
+          "A": "Manchester United (1999)",
+          "B": "Liverpool (1984)",
+          "C": "Manchester City (2023)",
+          "D": "Celtic (1967)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador brasileño ganó el Balón de Oro en 1997 jugando para el Inter de Milán?",
+        "opciones": {
+          "A": "Ronaldo Nazário",
+          "B": "Rivaldo",
+          "C": "Roberto Carlos",
+          "D": "Romario"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Contra qué equipo perdió el 'Milan de Sacchi' la final de la Copa Intercontinental 1993 por penales?",
+        "opciones": {
+          "A": "São Paulo",
+          "B": "Vélez Sarsfield",
+          "C": "Olimpia",
+          "D": "Nacional (Medellín)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién es el máximo goleador histórico de la selección de Países Bajos?",
+        "opciones": {
+          "A": "Robin van Persie",
+          "B": "Klaas-Jan Huntelaar",
+          "C": "Patrick Kluivert",
+          "D": "Dennis Bergkamp"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club ganó la Copa CONMEBOL en 1996, venciendo a Lanús en la final?",
+        "opciones": {
+          "A": "Rosario Central",
+          "B": "Atlético Mineiro",
+          "C": "Santa Fe",
+          "D": "San Lorenzo"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuántos goles marcó Paolo Rossi en el Mundial de España 1982, donde fue Bota de Oro?",
+        "opciones": {
+          "A": "6",
+          "B": "5",
+          "C": "7",
+          "D": "4"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador ostenta el récord de más partidos jugados en la historia de la Serie A italiana?",
+        "opciones": {
+          "A": "Gianluigi Buffon",
+          "B": "Paolo Maldini",
+          "C": "Francesco Totti",
+          "D": "Javier Zanetti"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué año ganó Luis Suárez Miramontes (el español) el Balón de Oro?",
+        "opciones": {
+          "A": "1960",
+          "B": "1961",
+          "C": "1964",
+          "D": "1959"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo colombiano perdió la final de la Copa Libertadores 1989 por penales contra Atlético Nacional?",
+        "opciones": {
+          "A": "Olimpia (Paraguay)",
+          "B": "América de Cali",
+          "C": "Millonarios",
+          "D": "Deportivo Cali"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador de la selección de Alemania que ganó el Mundial 1990?",
+        "opciones": {
+          "A": "Franz Beckenbauer",
+          "B": "Berti Vogts",
+          "C": "Helmut Schön",
+          "D": "Jupp Derwall"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el nombre completo del estadio del Arsenal, inaugurado en 2006?",
+        "opciones": {
+          "A": "Emirates Stadium",
+          "B": "Highbury",
+          "C": "Wembley Stadium",
+          "D": "Tottenham Hotspur Stadium"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador búlgaro fue Balón de Oro en 1994?",
+        "opciones": {
+          "A": "Hristo Stoichkov",
+          "B": "Dimitar Berbatov",
+          "C": "Emil Kostadinov",
+          "D": "Krasimir Balakov"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el único club que ganó la Copa Libertadores y la Copa Sudamericana en el mismo año (2023)?",
+        "opciones": {
+          "A": "LDU Quito",
+          "B": "Fluminense",
+          "C": "Ninguno",
+          "D": "Independiente del Valle"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué arquero alemán detuvo dos penales en la semifinal del Mundial 2006 contra Argentina?",
+        "opciones": {
+          "A": "Jens Lehmann",
+          "B": "Oliver Kahn",
+          "C": "Manuel Neuer",
+          "D": "Andreas Köpke"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el autor del gol en la final de la Champions League 2012 que llevó el partido a penales (Chelsea vs Bayern)?",
+        "opciones": {
+          "A": "Didier Drogba",
+          "B": "Frank Lampard",
+          "C": "Fernando Torres",
+          "D": "Salomon Kalou"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo peruano llegó a la final de la Copa Libertadores en 1997?",
+        "opciones": {
+          "A": "Sporting Cristal",
+          "B": "Universitario",
+          "C": "Alianza Lima",
+          "D": "Cienciano"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué año se introdujo la regla del fuera de juego (offside) en el fútbol?",
+        "opciones": {
+          "A": "1863 (Reglas de Cambridge)",
+          "B": "1925 (Reforma importante)",
+          "C": "1907",
+          "D": "1888"
+        },
+        "respuesta_correcta": "B"
+      },
+      {
+        "pregunta": "¿Quién fue el primer jugador en marcar goles en 5 Mundiales distintos?",
+        "opciones": {
+          "A": "Cristiano Ronaldo",
+          "B": "Lionel Messi",
+          "C": "Miroslav Klose",
+          "D": "Pelé"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa de Ferias en 1969 venciendo al Újpesti Dózsa?",
+        "opciones": {
+          "A": "Newcastle United",
+          "B": "Leeds United",
+          "C": "Arsenal",
+          "D": "Liverpool"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el nombre del estadio donde se jugó el partido con más goles en la historia de los mundiales (Austria 7-5 Suiza, 1954)?",
+        "opciones": {
+          "A": "Stade Olympique de la Pontaise (Lausana)",
+          "B": "Wankdorfstadion (Berna)",
+          "C": "Hardturm (Zúrich)",
+          "D": "Charmilles Stadium (Ginebra)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador checo ganó el Balón de Oro en 2003 jugando para la Juventus?",
+        "opciones": {
+          "A": "Pavel Nedvěd",
+          "B": "Tomáš Rosický",
+          "C": "Jan Koller",
+          "D": "Petr Čech"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo sudamericano en ganar la Copa Intercontinental?",
+        "opciones": {
+          "A": "Peñarol (1961)",
+          "B": "Santos (1962)",
+          "C": "Racing Club (1967)",
+          "D": "Estudiantes LP (1968)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador del 'Ajax de Van Gaal' que ganó la Champions en 1995?",
+        "opciones": {
+          "A": "Louis van Gaal",
+          "B": "Johan Cruyff",
+          "C": "Rinus Michels",
+          "D": "Frank Rijkaard"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club ganó la Copa Suruga Bank en más ocasiones?",
+        "opciones": {
+          "A": "Kashima Antlers (2)",
+          "B": "Independiente (1)",
+          "C": "River Plate (1)",
+          "D": "Internacional (1)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué ciudad se jugó la final del Mundial 1958 (Brasil vs Suecia)?",
+        "opciones": {
+          "A": "Solna (Estocolmo)",
+          "B": "Gotemburgo",
+          "C": "Malmö",
+          "D": "Helsingborg"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador alemán fue capitán de la selección campeona del mundo en 1974?",
+        "opciones": {
+          "A": "Franz Beckenbauer",
+          "B": "Gerd Müller",
+          "C": "Sepp Maier",
+          "D": "Paul Breitner"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer club de Cristiano Ronaldo?",
+        "opciones": {
+          "A": "Sporting de Lisboa",
+          "B": "Manchester United",
+          "C": "Nacional",
+          "D": "Andorinha"
         },
         "respuesta_correcta": "A"
       }

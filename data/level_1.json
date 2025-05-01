@@ -16,15 +16,15 @@
       },
       {
         "pregunta": "¿Cómo se llama la estructura con red donde se marcan los goles?",
-        "respuesta_correcta": "Arco"
+        "respuesta_correcta": ["Arco", "Porteria", "Meta"]
       },
       {
         "pregunta": "¿Quién es la máxima autoridad dentro de la cancha durante un partido?",
-        "respuesta_correcta": "Árbitro"
+        "respuesta_correcta": ["Arbitro", "Juez", "Referee"]
       },
       {
         "pregunta": "¿Qué forma geométrica tiene una pelota de fútbol estándar?",
-        "respuesta_correcta": "Esférica"
+        "respuesta_correcta": ["Esferica", "Esfera", "Redonda"]
       },
       {
         "pregunta": "¿De qué color es la camiseta principal tradicional del Real Madrid?",
@@ -36,7 +36,7 @@
       },
       {
         "pregunta": "¿Cómo se llama el torneo MÁS importante de selecciones nacionales que se juega cada 4 años?",
-        "respuesta_correcta": "Copa del Mundo"
+        "respuesta_correcta": ["Copa del Mundo", "Mundial", "Copa Mundial"]
       },
       {
         "pregunta": "¿Cuántos minutos dura el tiempo reglamentario de un partido de fútbol (sin contar tiempo añadido o alargue)?",
@@ -64,7 +64,7 @@
       },
        {
         "pregunta": "¿Qué significa si el árbitro muestra una tarjeta amarilla a un jugador?",
-        "respuesta_correcta": "Amonestación"
+        "respuesta_correcta": ["Amonestacion", "Advertencia"]
       },
       {
         "pregunta": "¿Con qué parte del cuerpo se debe realizar un saque lateral?",
@@ -76,7 +76,7 @@
       },
       {
         "pregunta": "¿Cómo se llama comúnmente el calzado especial con tapones que usan los futbolistas?",
-        "respuesta_correcta": "Botines"
+        "respuesta_correcta": ["Botines", "Zapatos de futbol", "Tacos", "Chimpunes"]
       },
       {
         "pregunta": "¿Cuántos tiempos tiene un partido de fútbol estándar?",
@@ -88,7 +88,7 @@
       },
       {
         "pregunta": "¿Quién dirige tácticamente al equipo desde el banco de suplentes?",
-        "respuesta_correcta": "Director Técnico"
+        "respuesta_correcta": ["Director Tecnico", "Entrenador", "DT"]
       },
       {
         "pregunta": "¿Qué equipo inglés es conocido popularmente como 'The Blues'?",
@@ -108,11 +108,11 @@
       },
       {
         "pregunta": "¿Qué famoso jugador portugués es apodado 'CR7' o 'El Bicho'?",
-        "respuesta_correcta": "Cristiano Ronaldo"
+        "respuesta_correcta": ["Cristiano Ronaldo", "Ronaldo", "CR7"]
       },
       {
         "pregunta": "¿Qué equipo alemán, conocido por su dominio reciente, viste de rojo?",
-        "respuesta_correcta": "Bayern Munich"
+        "respuesta_correcta": ["Bayern Munich", "Bayern Munchen", "Bayern"]
       },
       {
         "pregunta": "¿Qué continente acogió la Copa del Mundo 2022?",
@@ -140,15 +140,15 @@
       },
       {
         "pregunta": "¿Qué acción ilegal se comete generalmente al hacer caer a un jugador contrario de forma antirreglamentaria?",
-        "respuesta_correcta": "Falta"
+        "respuesta_correcta": ["Falta", "Infraccion"]
       },
       {
         "pregunta": "¿Cómo se llama la remera principal que identifica a los jugadores de un equipo?",
-        "respuesta_correcta": "Camiseta"
+        "respuesta_correcta": ["Camiseta", "Playera", "Jersey"]
       },
       {
         "pregunta": "¿Cuál es el objetivo principal del fútbol para ganar un partido?",
-        "respuesta_correcta": "Hacer goles"
+        "respuesta_correcta": ["Hacer goles", "Marcar goles", "Anotar goles"]
       },
       {
         "pregunta": "¿Qué famoso equipo inglés es conocido como los 'Red Devils' (Diablos Rojos)?",
@@ -159,12 +159,8 @@
         "respuesta_correcta": "Italia"
       },
       {
-        "pregunta": "¿Qué condición debe cumplir la pelota para que un gol sea válido?",
-        "respuesta_correcta": "Cruzar totalmente la línea de meta"
-      },
-      {
         "pregunta": "¿Quién es el único jugador del equipo que puede usar legalmente las manos dentro de su propia área?",
-        "respuesta_correcta": "Arquero"
+        "respuesta_correcta": ["Arquero", "Portero", "Guardameta"]
       },
       {
         "pregunta": "¿Qué famoso club italiano de Turín viste tradicionalmente de negro y blanco?",
@@ -176,7 +172,7 @@
       },
       {
         "pregunta": "¿Cómo se llama el clásico rival de Independiente?",
-        "respuesta_correcta": "Racing Club"
+        "respuesta_correcta": ["Racing Club", "Racing"]
       },
       {
         "pregunta": "¿Qué país organizó el Mundial de Fútbol 2022?",
@@ -187,8 +183,124 @@
         "respuesta_correcta": "Azul"
       },
       {
-        "pregunta": "¿Qué significa 'hacer un hat-trick'?",
-        "respuesta_correcta": "Marcar 3 goles en un partido"
+        "pregunta": "¿Cuántos puntos se otorgan por una victoria en la mayoría de las ligas?",
+        "respuesta_correcta": "3"
+      },
+      {
+        "pregunta": "¿En qué liga juega el Paris Saint-Germain (PSG)?",
+        "respuesta_correcta": ["Ligue 1", "Liga Francesa"]
+      },
+      {
+        "pregunta": "¿Cómo se llama el área pequeña frente al arco donde se para el arquero para los saques de meta?",
+        "respuesta_correcta": ["Area chica", "Area de meta"]
+      },
+      {
+        "pregunta": "¿Qué club italiano es conocido como los 'Rossoneri' por sus colores rojo y negro?",
+        "respuesta_correcta": ["AC Milan", "Milan"]
+      },
+      {
+        "pregunta": "¿Qué número de camiseta usó Diego Maradona en el Mundial 1986?",
+        "respuesta_correcta": "10"
+      },
+      {
+        "pregunta": "¿Cuál es el clásico rival del Real Madrid?",
+        "respuesta_correcta": ["Barcelona", "FC Barcelona"]
+      },
+      {
+        "pregunta": "¿En qué país se encuentra la ciudad de Mánchester, hogar de dos famosos equipos?",
+        "respuesta_correcta": "Inglaterra"
+      },
+      {
+        "pregunta": "¿Cómo se llama el descanso entre los dos tiempos de un partido?",
+        "respuesta_correcta": "Entretiepo"
+      },
+      {
+        "pregunta": "¿Qué selección ganó el Mundial de 2018?",
+        "respuesta_correcta": "Francia"
+      },
+      {
+        "pregunta": "¿Cuál es el nombre del estadio donde juega como local la selección argentina usualmente?",
+        "respuesta_correcta": ["Monumental", "Estadio Monumental"]
+      },
+      {
+        "pregunta": "¿De qué colores es la camiseta principal de Boca Juniors?",
+        "respuesta_correcta": ["Azul y amarillo", "Azul y oro"]
+      },
+      {
+        "pregunta": "¿Qué jugador brasileño es conocido mundialmente como 'Neymar'?",
+        "respuesta_correcta": "Neymar Jr."
+      },
+      {
+        "pregunta": "¿Cuántos minutos dura típicamente el entretiempo?",
+        "respuesta_correcta": "15"
+      },
+      {
+        "pregunta": "¿Qué equipo es conocido como el 'Rey de Copas' en Argentina por sus 7 Libertadores?",
+        "respuesta_correcta": "Independiente"
+      },
+      {
+        "pregunta": "¿En qué país juega actualmente Lionel Messi (a mediados de 2024)?",
+        "respuesta_correcta": "Estados Unidos"
+      },
+      {
+        "pregunta": "¿Cuántos jugadores suplentes pueden estar sentados en el banco, como máximo, en competiciones oficiales?",
+        "respuesta_correcta": "12"
+      },
+      {
+        "pregunta": "¿Cómo se llama la línea que divide el campo de juego en dos mitades?",
+        "respuesta_correcta": ["Línea de medio campo", "Mitad de cancha"]
+      },
+      {
+        "pregunta": "¿Qué equipo inglés tiene como apodo 'The Gunners'?",
+        "respuesta_correcta": "Arsenal"
+      },
+      {
+        "pregunta": "¿De qué color son las tarjetas que usa el árbitro para sancionar?",
+        "respuesta_correcta": ["Amarilla y Roja", "Roja y Amarilla"]
+      },
+      {
+        "pregunta": "¿Cómo se llama el punto blanco en el centro del campo desde donde se inicia el partido?",
+        "respuesta_correcta": ["Punto central", "Círculo central"]
+      },
+      {
+        "pregunta": "¿Qué selección sudamericana es conocida como 'La Celeste'?",
+        "respuesta_correcta": "Uruguay"
+      },
+      {
+        "pregunta": "¿Cuál es el nombre del torneo de selecciones más importante de Sudamérica?",
+        "respuesta_correcta": "Copa América"
+      },
+      {
+        "pregunta": "¿Qué parte del cuerpo utiliza principalmente un arquero para atajar?",
+        "respuesta_correcta": "Manos"
+      },
+      {
+        "pregunta": "¿Cómo se llama el tiro que se realiza desde una esquina del campo?",
+        "respuesta_correcta": ["Córner", "Tiro de esquina"]
+      },
+      {
+        "pregunta": "¿Qué equipo de fútbol juega como local en el estadio Anfield?",
+        "respuesta_correcta": "Liverpool"
+      },
+      {
+        "pregunta": "¿De qué nacionalidad es el jugador Kylian Mbappé?",
+        "respuesta_correcta": "Francesa"
+      },
+      {
+        "pregunta": "¿Cómo se llama el área grande delimitada frente al arco?",
+        "respuesta_correcta": ["Área penal", "Área grande"]
+      },
+      {
+        "pregunta": "¿Qué número usaba habitualmente Pelé?",
+        "respuesta_correcta": "10"
+      },
+      {
+        "pregunta": "¿Cuál es la capital de España, hogar del Real Madrid y Atlético de Madrid?",
+        "respuesta_correcta": "Madrid"
+      },
+      {
+        "pregunta": "¿Cuántos puntos obtiene un equipo por empatar un partido?",
+        "respuesta_correcta": "1"
       }
     ]
 }

@@ -144,51 +144,61 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Lobby Logic ---
     function setupLobbyEventListeners() {
-        createRoomButton.addEventListener('click', handleCreateRoom);
-        joinRoomButton.addEventListener('click', handleJoinRoomById);
-        joinRandomRoomButton.addEventListener('click', handleJoinRandomRoom);
+        if (createRoomButton) createRoomButton.addEventListener('click', handleCreateRoom);
+        if (joinRoomButton) joinRoomButton.addEventListener('click', handleJoinRoomById);
+        if (joinRandomRoomButton) joinRandomRoomButton.addEventListener('click', handleJoinRandomRoom);
         // Add listener for password inputs to potentially clear errors on input
         [createRoomPasswordInput, joinRoomPasswordInput].forEach(input => {
-            input.addEventListener('input', clearLobbyMessage);
+            if(input) input.addEventListener('input', clearLobbyMessage);
         });
         [createPlayerNameInput, joinPlayerNameInput, joinRoomIdInput].forEach(input => {
-             input.addEventListener('input', clearLobbyMessage);
+            if(input) input.addEventListener('input', clearLobbyMessage);
         });
     }
 
     function handleCreateRoom() {
+        // Check if button exists and is already disabled (prevent double click)
+        if (!createRoomButton || createRoomButton.disabled) return;
+
         const playerName = createPlayerNameInput.value.trim() || 'Jugador 1';
         const password = createRoomPasswordInput.value; // Don't trim password
         console.log(`Requesting to create room for ${playerName}` + (password ? ' with password.' : '.'));
-        showLobbyMessage("Creating room...", "info");
-        disableLobbyButtons();
+        showLobbyMessage("Creando sala...", "info");
+        disableLobbyButtons(true); // Disable and show spinner on create button
         sendToServer('createRoom', { playerName, password });
     }
 
     function handleJoinRoomById() {
+        // Check if button exists and is already disabled
+        if (!joinRoomButton || joinRoomButton.disabled) return;
+
         const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
         const roomId = joinRoomIdInput.value.trim();
         const password = joinRoomPasswordInput.value; // Don't trim password
 
         if (!roomId) {
-            showLobbyMessage("Please enter a Room ID.", "error");
+            showLobbyMessage("Por favor, poné un ID de sala.", "error");
             return;
         }
         console.log(`Requesting to join room ${roomId} as ${playerName}` + (password ? ' with password.' : '.'));
-        showLobbyMessage(`Joining room ${roomId}...`, "info");
-        disableLobbyButtons();
+        showLobbyMessage(`Uniéndote a la sala ${roomId}...`, "info");
+        disableLobbyButtons(false, true); // Disable and show spinner on join by ID button
         sendToServer('joinRoom', { playerName, roomId, password });
     }
 
      function handleJoinRandomRoom() {
+         // Check if button exists and is already disabled
+         if (!joinRandomRoomButton || joinRandomRoomButton.disabled) return;
+
          const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2'; // Use the name from the join section
          console.log(`Searching for random room for ${playerName}...`);
-         showLobbyMessage("Searching for an available room...", "info");
-         disableLobbyButtons();
+         showLobbyMessage("Buscando una sala disponible...", "info");
+         disableLobbyButtons(false, false, true); // Disable and show spinner on join random button
          sendToServer('joinRandomRoom', { playerName });
      }
 
     function showLobbyMessage(message, type = "info", persistent = false) { // type can be 'info', 'success', 'error'
+        if (!lobbyMessageAreaEl) return;
         lobbyMessageAreaEl.textContent = message;
         lobbyMessageAreaEl.className = 'lobby-message'; // Reset classes
         void lobbyMessageAreaEl.offsetWidth; // Force reflow
@@ -219,16 +229,35 @@ document.addEventListener('DOMContentLoaded', function() {
          }, 500); // Debe ser >= duración de transición CSS
     }
 
-    function disableLobbyButtons() {
+    function disableLobbyButtons(spinCreate = false, spinJoinId = false, spinJoinRandom = false) {
+        if (createRoomButton) {
         createRoomButton.disabled = true;
+            // Add spinner logic if needed, assuming spinner element exists or is added via CSS
+            createRoomButton.innerHTML = spinCreate ? 'Creando... <span class="spinner-lobby"></span>' : 'Crear Sala';
+        }
+        if (joinRoomButton) {
         joinRoomButton.disabled = true;
+            joinRoomButton.innerHTML = spinJoinId ? 'Uniéndote... <span class="spinner-lobby"></span>' : 'Unirse por ID';
+        }
+        if (joinRandomRoomButton) {
         joinRandomRoomButton.disabled = true;
+            joinRandomRoomButton.innerHTML = spinJoinRandom ? 'Buscando... <span class="spinner-lobby"></span>' : 'Buscar Sala Aleatoria';
+        }
     }
 
     function enableLobbyButtons() {
+        if (createRoomButton) {
         createRoomButton.disabled = false;
+            createRoomButton.innerHTML = 'Crear Sala'; // Restore original text
+        }
+        if (joinRoomButton) {
         joinRoomButton.disabled = false;
+             joinRoomButton.innerHTML = 'Unirse por ID';
+        }
+        if (joinRandomRoomButton) {
         joinRandomRoomButton.disabled = false;
+            joinRandomRoomButton.innerHTML = 'Buscar Sala Aleatoria';
+        }
     }
 
     // --- Game Logic ---

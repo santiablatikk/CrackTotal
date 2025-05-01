@@ -218,18 +218,48 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update score displays
         updateScoreDisplays();
         
-        // Fetch questions
-        fetch('data/questions_pasapalabra.json')
-            .then(response => response.json())
-            .then(data => {
-                questions = data;
+        // Fetch questions from all sources
+        const questionFiles = [
+            'data/new_questions.json',
+            'data/questions_pasapalabra.json',
+            'data/questions.json'
+        ];
+
+        Promise.all(questionFiles.map(file => fetch(file).then(res => res.json())))
+            .then(allData => {
+                // Combine questions from all files
+                const combinedQuestions = {}; // Use an object for easier merging
+
+                allData.forEach(dataSet => {
+                    dataSet.forEach(letterData => {
+                        const letter = letterData.letra;
+                        if (!combinedQuestions[letter]) {
+                            combinedQuestions[letter] = { letra: letter, preguntas: [] };
+                        }
+                        // Add questions, ensuring no duplicates if necessary (simple concat for now)
+                        combinedQuestions[letter].preguntas.push(...letterData.preguntas); 
+                    });
+                });
+
+                // Convert back to array format expected by the game
+                questions = Object.values(combinedQuestions);
+
+                // Shuffle questions within each letter for more randomness
+                questions.forEach(letterData => {
+                     if (letterData.preguntas) {
+                         letterData.preguntas.sort(() => Math.random() - 0.5);
+                     }
+                });
+
+                console.log(`Total questions loaded: ${questions.reduce((sum, l) => sum + (l.preguntas?.length || 0), 0)}`);
+
                 setupLetters();
                 setupLetterStatuses();
                 startGame();
                 startTimer();
             })
             .catch(error => {
-                console.error('Error loading questions:', error);
+                console.error('Error loading or combining questions:', error);
                 questionTextElement.textContent = 'Error cargando preguntas. Por favor, recarga la página.';
             });
     }

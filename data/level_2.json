@@ -3,16 +3,6 @@
     "dificultad": "Fácil",
     "preguntas": [
       {
-        "pregunta": "Además de Boca Juniors y River Plate, ¿cuáles son los otros 3 equipos considerados 'grandes' tradicionalmente en Argentina?",
-        "opciones": {
-          "A": "Racing, Independiente, San Lorenzo",
-          "B": "Vélez, Estudiantes, Newell's",
-          "C": "Rosario Central, Gimnasia, Lanús",
-          "D": "Huracán, Argentinos Jrs, Banfield"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
         "pregunta": "¿Con qué nombre se conoce popularmente al estadio de Boca Juniors?", 
         "opciones": {
           "A": "La Bombonera",
@@ -160,7 +150,7 @@
           "C": "Córner",
           "D": "Lateral"
         },
-        "respuesta_correcta": "A"
+        "respuesta_correcta": ["Offside", "Fuera de juego", "Posicion adelantada"]
       },
       {
         "pregunta": "¿Qué competición enfrenta cada cuatro años a las mejores selecciones nacionales de Europa?",
@@ -203,16 +193,6 @@
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué resultado indica que ambos equipos hicieron la misma cantidad de goles?",
-        "opciones": {
-          "A": "Empate",
-          "B": "Victoria",
-          "C": "Derrota",
-          "D": "Goleada"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
         "pregunta": "¿Cuál es el clásico rival del FC Barcelona en la liga española?",
         "opciones": {
           "A": "Real Madrid",
@@ -223,32 +203,12 @@
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué suelen indicar los árbitros asistentes (jueces de línea) con su banderín?",
-        "opciones": {
-          "A": "Offside y laterales",
-          "B": "Goles y penales",
-          "C": "Faltas y tarjetas",
-          "D": "Cambios y tiempo añadido"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
         "pregunta": "¿Qué famoso equipo inglés juega sus partidos como local en el estadio Old Trafford?",
         "opciones": {
           "A": "Manchester United",
           "B": "Liverpool FC",
           "C": "Arsenal FC",
           "D": "Manchester City"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
-        "pregunta": "¿Qué sucede generalmente si un partido de eliminación directa termina empatado tras los 90 minutos?",
-        "opciones": {
-          "A": "Se juega un alargue / tiempo suplementario",
-          "B": "Se declara empate y clasifican ambos",
-          "C": "Se juega de nuevo otro día",
-          "D": "Gana el equipo visitante por sorteo"
         },
         "respuesta_correcta": "A"
       },
@@ -300,7 +260,7 @@
           "C": "Dinamarca",
           "D": "Suecia"
         },
-        "respuesta_correcta": "A"
+        "respuesta_correcta": ["Paises Bajos", "Holanda", "A"]
       },
       {
         "pregunta": "¿Cuál es el apodo del Club Atlético Huracán?",
@@ -323,16 +283,6 @@
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué significa que un equipo juegue 'de contra' o 'al contragolpe'?",
-        "opciones": {
-          "A": "Defender y atacar rápidamente tras recuperar la pelota",
-          "B": "Tener la posesión de la pelota la mayor parte del tiempo",
-          "C": "Hacer muchas faltas",
-          "D": "Jugar con muchos defensores"
-        },
-        "respuesta_correcta": "A"
-      },
-      {
         "pregunta": "¿Qué torneo juegan los equipos campeones de la Copa Libertadores y la Copa Sudamericana?",
         "opciones": {
           "A": "Recopa Sudamericana",
@@ -349,6 +299,306 @@
           "B": "Juan Román Riquelme",
           "C": "Carlos Tevez",
           "D": "Guillermo Barros Schelotto"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el clásico rival de Rosario Central?",
+        "opciones": {
+          "A": "Newell's Old Boys",
+          "B": "Colón",
+          "C": "Belgrano",
+          "D": "Talleres"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la final de la Champions League 2023?",
+        "opciones": {
+          "A": "Manchester City",
+          "B": "Real Madrid",
+          "C": "Inter de Milán",
+          "D": "Bayern Múnich"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué número de camiseta es famoso por haber sido usado por Pelé?",
+        "opciones": {
+          "A": "10",
+          "B": "9",
+          "C": "7",
+          "D": "11"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo es apodado 'El Xeneize'?",
+        "opciones": {
+          "A": "Boca Juniors",
+          "B": "River Plate",
+          "C": "Independiente",
+          "D": "San Lorenzo"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué país se juega la liga conocida como 'Serie A'?",
+        "opciones": {
+          "A": "Italia",
+          "B": "España",
+          "C": "Brasil",
+          "D": "Portugal"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cómo se llama el estadio de Independiente?",
+        "opciones": {
+          "A": "Libertadores de América",
+          "B": "El Cilindro",
+          "C": "La Bombonera",
+          "D": "El Monumental"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección es conocida como 'La Roja'?",
+        "opciones": {
+          "A": "España",
+          "B": "Chile",
+          "C": "Perú",
+          "D": "Paraguay"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador de Argentina en el Mundial 2022?",
+        "opciones": {
+          "A": "Lionel Scaloni",
+          "B": "Jorge Sampaoli",
+          "C": "Gerardo Martino",
+          "D": "Alejandro Sabella"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo de Mánchester viste de color celeste?",
+        "opciones": {
+          "A": "Manchester City",
+          "B": "Manchester United",
+          "C": "Bolton Wanderers",
+          "D": "Wigan Athletic"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuántas Copas del Mundo ha ganado Argentina?",
+        "opciones": {
+          "A": "3",
+          "B": "2",
+          "C": "4",
+          "D": "5"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué país ganó el Mundial de Fútbol 2010?",
+        "opciones": {
+          "A": "España",
+          "B": "Países Bajos",
+          "C": "Alemania",
+          "D": "Uruguay"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el clásico rival de Estudiantes de La Plata?",
+        "opciones": {
+          "A": "Gimnasia y Esgrima La Plata",
+          "B": "Independiente",
+          "C": "Racing Club",
+          "D": "Quilmes"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador es conocido como 'La Pulga'?",
+        "opciones": {
+          "A": "Lionel Messi",
+          "B": "Diego Maradona",
+          "C": "Sergio Agüero",
+          "D": "Ángel Di María"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué año ganó el AC Milan su última Champions League (hasta 2024)?",
+        "opciones": {
+          "A": "2007",
+          "B": "2003",
+          "C": "2010",
+          "D": "1994"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cómo se llama comúnmente a la segunda división del fútbol argentino?",
+        "opciones": {
+          "A": "Primera Nacional",
+          "B": "B Nacional",
+          "C": "Torneo Federal A",
+          "D": "Liga Profesional B"
+        },
+        "respuesta_correcta": ["Primera Nacional", "B Nacional", "A", "B"]
+      },
+      {
+        "pregunta": "¿Qué jugador francés es famoso por su velocidad y juega en el PSG?",
+        "opciones": {
+          "A": "Kylian Mbappé",
+          "B": "Antoine Griezmann",
+          "C": "Olivier Giroud",
+          "D": "Paul Pogba"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el clásico rival de Lazio en Roma?",
+        "opciones": {
+          "A": "AS Roma",
+          "B": "Juventus",
+          "C": "Napoli",
+          "D": "Fiorentina"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo alemán juega en el Signal Iduna Park (Westfalenstadion)?",
+        "opciones": {
+          "A": "Borussia Dortmund",
+          "B": "Bayern Múnich",
+          "C": "Schalke 04",
+          "D": "Bayer Leverkusen"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección ganó la Copa América 2015 y 2016?",
+        "opciones": {
+          "A": "Chile",
+          "B": "Argentina",
+          "C": "Brasil",
+          "D": "Uruguay"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cómo se llama el trofeo individual que premia al mejor jugador del mundo cada año?",
+        "opciones": {
+          "A": "Balón de Oro",
+          "B": "Bota de Oro",
+          "C": "The Best",
+          "D": "Premio Puskás"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué club inglés jugó Sergio 'Kun' Agüero la mayor parte de su carrera europea?",
+        "opciones": {
+          "A": "Manchester City",
+          "B": "Manchester United",
+          "C": "Chelsea",
+          "D": "Liverpool"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el nombre del estadio del Atlético de Madrid?",
+        "opciones": {
+          "A": "Cívitas Metropolitano",
+          "B": "Santiago Bernabéu",
+          "C": "Vicente Calderón",
+          "D": "Camp Nou"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué significa la sigla FIFA?",
+        "opciones": {
+          "A": "Federación Internacional de Fútbol Asociación",
+          "B": "Federación Internacional de Fútbol Americano",
+          "C": "Fondo Internacional de Finanzas Atléticas",
+          "D": "Federación Inglesa de Fútbol Asociado"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo es conocido como 'El Fortín' y juega en Liniers?",
+        "opciones": {
+          "A": "Vélez Sarsfield",
+          "B": "San Lorenzo",
+          "C": "Argentinos Juniors",
+          "D": "Ferro Carril Oeste"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuántos jugadores son expulsados si un equipo recibe 5 tarjetas rojas en un mismo partido?",
+        "opciones": {
+          "A": "5 (y el partido se suspende)",
+          "B": "4",
+          "C": "5 (el partido continúa)",
+          "D": "3"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué país organizó la Copa del Mundo de 1986?",
+        "opciones": {
+          "A": "México",
+          "B": "Argentina",
+          "C": "España",
+          "D": "Colombia"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el clásico rival del Inter de Milán?",
+        "opciones": {
+          "A": "AC Milan",
+          "B": "Juventus",
+          "C": "AS Roma",
+          "D": "Napoli"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador argentino fue el goleador del Mundial 1978?",
+        "opciones": {
+          "A": "Mario Kempes",
+          "B": "Leopoldo Luque",
+          "C": "Daniel Bertoni",
+          "D": "Diego Maradona"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué liga juega el Ajax?",
+        "opciones": {
+          "A": "Eredivisie (Países Bajos)",
+          "B": "Bundesliga (Alemania)",
+          "C": "Jupiler Pro League (Bélgica)",
+          "D": "Ligue 1 (Francia)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué significa 'penal' en fútbol?",
+        "opciones": {
+          "A": "Un tiro libre directo dentro del área",
+          "B": "Un saque de esquina corto",
+          "C": "Un cambio de jugador",
+          "D": "Una tarjeta amarilla"
         },
         "respuesta_correcta": "A"
       }
