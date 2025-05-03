@@ -4,11 +4,17 @@ import {
     collection, doc, setDoc, addDoc, Timestamp, increment, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// --- Game variables (Declare totalTime globally/module scope) ---
+let totalTime = 240; // Default: Normal difficulty (240 seconds)
+
 document.addEventListener('DOMContentLoaded', function() {
     // Stats Profile Keys
     const STATS_KEY = 'pasalacheUserStats';
     const HISTORY_KEY = 'pasalacheGameHistory'; // Nueva clave para el historial
     const HISTORY_LIMIT = 15; // Límite de partidas en el historial
+
+    // Define alphabet here so it's available to functions within this scope
+    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     // --- Obtener Nombre/ID de Usuario --- 
     function getCurrentUserId() {
@@ -130,9 +136,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let letterHints = {};
     let gameErrors = [];
     let usedAnswerSignatures = new Set(); // <--- Track used answers for the current game
-    
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    let totalTime = 240; // Default: Normal difficulty (240 seconds)
+    let gameUsedQuestionIndices = {}; // <<<--- Reset used QUESTIONS for new game
+    alphabet.split('').forEach(letter => { gameUsedQuestionIndices[letter] = []; }); // Initialize arrays
     let timeLeft = totalTime;
     let timerInterval;
     let maxErrors = 3; // Maximum number of errors allowed
@@ -142,7 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let maxIncompleteAnswers = 2; // Maximum incomplete answers allowed
     let completedRounds = 0; // Contador de vueltas completas
     
-    // DOM elements
+    // <<<--- MOVED DOM ELEMENT VARIABLES HERE --- >>>
     const lettersContainer = document.getElementById('lettersContainer');
     const currentLetterElement = document.getElementById('currentLetter');
     const currentLetterTextElement = document.getElementById('currentLetterText');
@@ -156,11 +161,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const passedCountDisplay = document.getElementById('passedCount');
     const incorrectCountDisplay = document.getElementById('incorrectCount');
     const timerBar = document.getElementById('timerBar');
-    
-    // Rules modal elements
     const gameRulesModal = document.getElementById('gameRulesModal');
     const startGameButton = document.getElementById('startGameButton');
     const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+    const helpButton = document.getElementById('helpButton');
+    const timerCount = document.getElementById('timerCount');
+    const gameContainer = document.getElementById('gameContainer');
+    const playerNameDisplay = document.querySelector('.player-name');
+    // --- End Moved DOM Elements ---
+    
+    // Rules modal elements
+    // const gameRulesModal = document.getElementById('gameRulesModal');
+    // const startGameButton = document.getElementById('startGameButton');
+    // const difficultyButtons = document.querySelectorAll('.difficulty-btn');
     
     // Handle difficulty selection
     difficultyButtons.forEach(button => {
@@ -210,6 +223,8 @@ document.addEventListener('DOMContentLoaded', function() {
         letterHints = {};
         gameErrors = [];
         usedAnswerSignatures = new Set(); // <--- Reset used answers for new game
+        gameUsedQuestionIndices = {}; // <<<--- Reset used QUESTIONS for new game
+        alphabet.split('').forEach(letter => { gameUsedQuestionIndices[letter] = []; }); // Initialize arrays
         timeLeft = totalTime;
         helpUsed = 0;
         incompleteAnswersUsed = 0;
@@ -218,49 +233,48 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update score displays
         updateScoreDisplays();
         
-        // Fetch questions from all sources
-        const questionFiles = [
-            'data/new_questions.json',
-            'data/questions_pasapalabra.json',
-            'data/questions.json'
-        ];
-
-        Promise.all(questionFiles.map(file => fetch(file).then(res => res.json())))
-            .then(allData => {
-                // Combine questions from all files
-                const combinedQuestions = {}; // Use an object for easier merging
-
-                allData.forEach(dataSet => {
-                    dataSet.forEach(letterData => {
-                        const letter = letterData.letra;
-                        if (!combinedQuestions[letter]) {
-                            combinedQuestions[letter] = { letra: letter, preguntas: [] };
-                        }
-                        // Add questions, ensuring no duplicates if necessary (simple concat for now)
-                        combinedQuestions[letter].preguntas.push(...letterData.preguntas); 
-                    });
-                });
-
-                // Convert back to array format expected by the game
-                questions = Object.values(combinedQuestions);
+        // Fetch questions from the consolidated file
+        fetch('data/final_questions_pasalache.json') // <--- Updated URL
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Assign directly as the file should have the correct structure
+                questions = data; 
 
                 // Shuffle questions within each letter for more randomness
                 questions.forEach(letterData => {
                      if (letterData.preguntas) {
                          letterData.preguntas.sort(() => Math.random() - 0.5);
                      }
-                });
+                 });
 
-                console.log(`Total questions loaded: ${questions.reduce((sum, l) => sum + (l.preguntas?.length || 0), 0)}`);
+                // Check if questions were loaded correctly
+                if (!questions || questions.length === 0) {
+                    console.error("Error: No se pudieron cargar las preguntas o el archivo está vacío.");
+                    showTemporaryFeedback("Error al cargar preguntas. Intenta recargar.", 'error', 5000);
+                    return; // Stop game initialization
+                }
+                
+                console.log("Preguntas cargadas y mezcladas.");
 
-                setupLetters();
+                // Setup the game interface
+                setupLetters(); 
                 setupLetterStatuses();
-                startGame();
-                startTimer();
+                
+                // Show the game container and start
+                 document.getElementById('gameContainer').style.display = 'flex'; // Or 'block'
+                 startGame();
+
             })
             .catch(error => {
-                console.error('Error loading or combining questions:', error);
-                questionTextElement.textContent = 'Error cargando preguntas. Por favor, recarga la página.';
+                console.error('Error loading questions:', error);
+                 showTemporaryFeedback(`Error cargando preguntas: ${error.message}. Revisa la consola.`, 'error', 5000);
+                 // Optionally, display an error message to the user on the page
+                 questionTextElement.textContent = 'Error al cargar las preguntas. Por favor, recarga la página.';
             });
     }
     
@@ -356,11 +370,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Start the game logic
     function startGame() {
         currentLetterIndex = 0;
+        startTimer();
         loadQuestion();
     }
     
     // Load question for the current letter
     function loadQuestion() {
+        console.log(`--- loadQuestion called. Index: ${currentLetterIndex}, Pending Letters: [${pendingLetters.join(', ')}] ---`); // Log at start
         const questionTextElement = document.getElementById('questionText');
         const currentLetterTextElement = document.getElementById('currentLetterText');
         const questionHeader = document.querySelector('.question-header');
@@ -384,34 +400,55 @@ document.addEventListener('DOMContentLoaded', function() {
         if (letterData && letterData.preguntas && letterData.preguntas.length > 0) {
             let foundQuestion = false;
             let question = null;
+            let potentialQuestion = null; // Declare here for broader scope
+            let potentialAnswer = null; // Declare here
 
-            // Create a list of indices and shuffle them to try randomly
+            // Try to find the *same* question index if the letter status is 'incorrect' or 'pending'
+            // This requires storing the last shown index *somewhere*. 
+            // Let's try a simpler approach first: only mark as used on correct answer.
+            // We still need to handle the case where multiple questions exist for a letter.
+
+            // Shuffle indices to try different questions if the first one fails the conflict check
             let availableIndices = Array.from(letterData.preguntas.keys());
-            availableIndices.sort(() => Math.random() - 0.5); // Shuffle indices
+            availableIndices.sort(() => Math.random() - 0.5); 
 
+            // Find the first question index for this letter that hasn't been *correctly* answered yet
+            // AND whose answer doesn't conflict with previous correct answers.
             for (let i = 0; i < availableIndices.length; i++) {
                 let testIndex = availableIndices[i];
-                let potentialQuestion = letterData.preguntas[testIndex];
-                let potentialAnswer = potentialQuestion.respuesta;
 
-                if (!checkAnswerConflict(potentialAnswer, usedAnswerSignatures)) {
-                    // Found a non-conflicting question
-                    currentQuestionIndex = testIndex; // Store the index of the selected question
-                    question = potentialQuestion;
-                    letterHints[currentLetter] = potentialAnswer.substring(0, 3);
-                    foundQuestion = true;
-                    break; // Exit loop once a valid question is found
+                // Skip if this specific index has ALREADY BEEN ANSWERED CORRECTLY
+                if (gameUsedQuestionIndices[currentLetter].includes(testIndex)) {
+                    continue; 
                 }
+
+                potentialQuestion = letterData.preguntas[testIndex];
+                potentialAnswer = potentialQuestion.respuesta;
+
+                // Skip if answer conflicts with already CORRECTED answers 
+                if (checkAnswerConflict(potentialAnswer, usedAnswerSignatures)) {
+                     continue; 
+                }
+
+                // Found a suitable question (not answered correctly yet, no answer conflict)
+                currentQuestionIndex = testIndex; // Store the index we are showing
+                // DO NOT mark as used here anymore -> gameUsedQuestionIndices[currentLetter].push(currentQuestionIndex); 
+                question = potentialQuestion;
+                letterHints[currentLetter] = potentialAnswer.substring(0, 3); // Prepare hint
+                foundQuestion = true;
+                break; // Exit loop once a suitable question is found
             }
 
             if (!foundQuestion) {
-                console.warn(`No non-conflicting question found for letter ${currentLetter}. Skipping.`);
-                // Automatically pass the word if no valid question is found after checking all
-                pasapalabra(true); // Pass silently without counting as user action
-                return; // Exit function to avoid displaying anything
+                console.warn(`No suitable (unused, non-conflicting) question found for letter ${currentLetter}. Treating as passed.`);
+                // If no question could be found (e.g., all conflict or were somehow marked used)
+                // Treat it as if the user passed silently.
+                pasapalabra(true); 
+                return; 
             }
 
             // --- Display the found question --- 
+            console.log(`Displaying question for letter: ${currentLetter}. Question: ${question.pregunta.substring(0,30)}...`); // Log before display update
             currentLetterTextElement.textContent = currentLetter;
             questionTextElement.textContent = question.pregunta;
 
@@ -520,10 +557,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const correctAnswerFull = letterData.preguntas[currentQuestionIndex].respuesta;
             const correctAnswerNorm = correctAnswerFull.toLowerCase().trim();
             const userAnswerNorm = userAnswer.toLowerCase().trim();
+            let isCorrect = false; // Initialize isCorrect
 
-            // 1. Check for INCOMPLETENESS first
+            // Check for incompleteness first...
             if (isIncompleteAnswer(userAnswerNorm, correctAnswerNorm)) {
-                if (incompleteAnswersUsed < maxIncompleteAnswers) {
+                 if (incompleteAnswersUsed < maxIncompleteAnswers) {
                     incompleteAnswersUsed++;
                     const remainingAttempts = maxIncompleteAnswers - incompleteAnswersUsed;
                     // Show specific feedback for incomplete answer
@@ -531,7 +569,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // DO NOT clear input here, let user edit
                     // answerInput.value = '';
                     answerInput.focus();
-                    return; // Stop processing for this answer attempt
+                    return; // Stop processing for this attempt
                 } else {
                      // User is out of incomplete attempts, show message and treat as incorrect
                      showTemporaryFeedback("Respuesta incompleta y sin intentos restantes. Se cuenta como error.", "error", 3000);
@@ -541,71 +579,88 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            // 2. If not incomplete (or out of attempts), check for CORRECTNESS
-            const isCorrect = isAnswerCorrectEnough(userAnswerNorm, correctAnswerNorm);
+            // Check for correctness if not handled as incomplete
+            isCorrect = isAnswerCorrectEnough(userAnswerNorm, correctAnswerNorm);
 
             if (!isCorrect) {
-                // Record error details ONLY if it wasn't an incomplete answer out of attempts
-                if (!isIncompleteAnswer(userAnswerNorm, correctAnswerNorm) || incompleteAnswersUsed >= maxIncompleteAnswers) {
-                    const question = letterData.preguntas[currentQuestionIndex].pregunta;
-                    gameErrors.push({
-                        letter: currentLetter,
-                        question: question,
-                        userAnswer: userAnswer, // Store original user input
-                        correctAnswer: correctAnswerFull // Store original correct answer
-                    });
-                }
-                incorrectAnswers++; // Increment incorrect count if !isCorrect
+                // --- INCORRECT --- 
+                incorrectAnswers++; // Increment incorrect count
+                profileStats.totalIncorrectAnswers += 1; // Update aggregate stats
+                
+                // Record error details
+                const questionText = letterData.preguntas[currentQuestionIndex].pregunta;
+                gameErrors.push({
+                    letter: currentLetter,
+                    question: questionText,
+                    userAnswer: userAnswer,
+                    correctAnswer: correctAnswerFull
+                });
 
-                // --- Comprobar derrota INMEDIATAMENTE ---
+                // Mark letter status
+                letterStatuses[currentLetter] = 'incorrect';
+                
+                // --- Check for DEFEAT --- 
                 if (incorrectAnswers >= maxErrors) {
-                    saveProfileStats(profileStats); // Guardar estadísticas antes de terminar
+                    saveProfileStats(profileStats); 
                     endGame('defeat');
-                    return; // Terminar ejecución de checkAnswer aquí mismo
+                    return; // Stop execution
                 }
-                // --- Fin comprobación derrota ---
+                
+                // --- Update UI and move to next letter --- 
+                updateScoreDisplays();
+                updateLetterStyles();
+                // DO NOT remove from pendingLetters
+                nextLetter(); // Move to the next letter immediately
 
-                 // Actualizar estadísticas agregadas si no es derrota
-                 profileStats.totalIncorrectAnswers += 1;
-                 // Marcar letra como incorrecta
-                 letterStatuses[currentLetter] = 'incorrect';
-
-            } else { // isCorrect === true
+            } else {
+                // --- CORRECT --- 
                 correctAnswers++;
+                profileStats.totalCorrectAnswers += 1; // Update aggregate stats
+
+                // <<<--- MARK QUESTION AS USED HERE (on correct answer) --- >>>
+                if (!gameUsedQuestionIndices[currentLetter].includes(currentQuestionIndex)){
+                    gameUsedQuestionIndices[currentLetter].push(currentQuestionIndex);
+                }
                 usedAnswerSignatures.add(correctAnswerNorm); // Add CORRECT answer signature
                 console.log("Added to used signatures:", correctAnswerNorm, usedAnswerSignatures);
-                // Update aggregated stats immediately
-                profileStats.totalCorrectAnswers += 1;
-                // Marcar letra como correcta
+
+                // Mark letter status
                 letterStatuses[currentLetter] = 'correct';
+
+                // --- Update UI and remove letter --- 
+                updateScoreDisplays();
+                updateLetterStyles();
+                const indexToRemove = pendingLetters.indexOf(currentLetter);
+                if (indexToRemove > -1) {
+                    pendingLetters.splice(indexToRemove, 1); // Remove from pending
+                }
+
+                // Adjust index for next question load
+                if (currentLetterIndex >= pendingLetters.length && pendingLetters.length > 0) {
+                    currentLetterIndex = 0; 
+                } // No change needed if index is still valid
+
+                // --- Check for VICTORY --- 
+                if (pendingLetters.length === 0) {
+                    saveProfileStats(profileStats); 
+                    endGame('victory');
+                    return; // Stop execution
+                }
+
+                console.log(`Correct answer for ${currentLetter}. Pending letters: [${pendingLetters.join(', ')}]. Next index: ${currentLetterIndex}.`); // Log before timeout
+
+                // --- Load next question after delay --- 
+                setTimeout(() => {
+                     answerInput.value = ''; 
+                     // Check if the game hasn't ended in the meantime
+                     if (timerInterval) { // Check if timer is still active as proxy for game state
+                         console.log(`Timeout finished. Calling loadQuestion for index: ${currentLetterIndex}, letter: ${pendingLetters[currentLetterIndex]}`); // Log inside timeout
+                         loadQuestion();
+                     } else {
+                         console.error("Timeout finished, BUT timerInterval was null/cleared. Skipping loadQuestion."); // Log if timerInterval is missing
+                     } 
+                }, 150); 
             }
-
-            // Common updates after correct or *non-losing* incorrect
-            updateScoreDisplays();
-            updateLetterStyles();
-            pendingLetters.splice(currentLetterIndex, 1); // Remove from pending
-
-            // Adjust index for next question
-            if (currentLetterIndex >= pendingLetters.length && pendingLetters.length > 0) {
-                currentLetterIndex = 0; // Wrap around if needed
-            } else if (pendingLetters.length === 0) {
-                 // No letters left, handled below
-            } else {
-                 // currentLetterIndex remains valid, no change needed before loadQuestion
-            }
-
-            // Check victory condition (defeat check is now done earlier)
-            if (pendingLetters.length === 0) {
-                saveProfileStats(profileStats); // Save stats before ending
-                endGame('victory');
-                return; // End game successfully
-            }
-
-            // Load next question if game continues
-            setTimeout(() => {
-                 answerInput.value = ''; // Clear input AFTER processing and BEFORE next question
-                 loadQuestion();
-            }, 150); // Short delay to show letter color change
 
         } else {
             console.error(`Could not find question data for letter ${currentLetter} at index ${currentQuestionIndex}`);
