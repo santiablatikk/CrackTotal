@@ -83,7 +83,7 @@ button, input[type="text"], input[type="password"], input[type="submit"] {
     font-size: 1rem;
     border-radius: var(--border-radius-md);
     border: 1px solid var(--border);
-    padding: 0.6rem 1rem;
+    padding: 0.6rem 4rem;
     transition: all var(--transition-speed) var(--transition-func);
 }
 
@@ -5528,22 +5528,22 @@ button#startButton:hover::after {
 /* Botón de check dentro del input */
 .submit-answer-icon-btn {
     position: absolute;
-    right: 5px; /* Posición desde la derecha */
+    right: 4px; /* Adjust position slightly for smaller size */
     top: 50%;
     transform: translateY(-50%);
     background-color: var(--secondary); /* Color verde */
     color: white;
     border: none;
-    border-radius: 6px; /* Redondeado */
-    width: 34px; /* Ancho */
-    height: 34px; /* Alto (igual al ancho) */
-    font-size: 1rem; /* Tamaño del icono */
+    border-radius: 5px; /* Slightly less rounded */
+    width: 28px; /* REDUCIDO ancho */
+    height: 28px; /* REDUCIDO alto */
+    font-size: 1rem; /* REDUCIDO tamaño del icono */
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15); /* Adjust shadow */
 }
 
 .submit-answer-icon-btn:hover {

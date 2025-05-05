@@ -1,0 +1,357 @@
+/* ===================================== */
+/* ==== Styles for Static Pages ======== */
+/* ===================================== */
+
+/* General Page Containers (Re-used here for context) */
+/* Ensure .page-container is defined in base.css or layout.css */
+
+.content-container {
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+  border-radius: 20px;
+  padding: clamp(1.5rem, 5vw, 2.5rem); /* Responsive padding */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08); /* Subtle border */
+  margin-bottom: 2rem; /* Space below container */
+}
+
+.content-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  z-index: 1;
+  border-radius: 20px 20px 0 0;
+}
+
+/* Section Styling (for About, Privacy, Terms, Ads) */
+.about-section,
+.privacy-section,
+.terms-section,
+.ads-section {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 16px;
+  padding: clamp(1.5rem, 4vw, 2rem);
+  margin-bottom: 2rem;
+  border: 1px solid rgba(var(--primary-rgb), 0.1);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.about-section:hover,
+.privacy-section:hover,
+.terms-section:hover,
+.ads-section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+  border-color: rgba(var(--primary-rgb), 0.2);
+}
+
+/* Section Headings */
+.about-section h2,
+.privacy-section h2,
+.terms-section h2,
+.ads-section h2 {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(1.5rem, 4vw, 1.8rem);
+  margin-bottom: 1.5rem;
+  color: var(--light-text); /* Use theme variable */
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-bottom: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(var(--primary-rgb), 0.1);
+}
+
+/* Accent line under headings */
+.about-section h2::after,
+.privacy-section h2::after,
+.terms-section h2::after,
+.ads-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.about-section:hover h2::after,
+.privacy-section:hover h2::after,
+.terms-section:hover h2::after,
+.ads-section:hover h2::after {
+  width: 100px;
+}
+
+/* Icons next to headings */
+.about-section h2 i,
+.privacy-section h2 i,
+.terms-section h2 i,
+.ads-section h2 i {
+  margin-right: 1rem;
+  color: var(--primary);
+  background: rgba(var(--primary-rgb), 0.1);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.about-section:hover h2 i,
+.privacy-section:hover h2 i,
+.terms-section:hover h2 i,
+.ads-section:hover h2 i {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Paragraph styling within sections */
+.about-section p,
+.privacy-section p,
+.terms-section p,
+.ads-section p {
+  color: var(--medium-text); /* Use theme variable */
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+  font-size: clamp(0.95rem, 2.5vw, 1.05rem);
+}
+
+/* Link styling within sections */
+.about-section a,
+.privacy-section a,
+.terms-section a,
+.ads-section a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
+  font-weight: 500;
+}
+
+.about-section a:hover,
+.privacy-section a:hover,
+.terms-section a:hover,
+.ads-section a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+/* List styling (About, Privacy, Terms, Ads) */
+.about-list,
+.privacy-list,
+.terms-list,
+.ads-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.about-list li,
+.privacy-list li,
+.terms-list li,
+.ads-list li {
+  background: rgba(var(--dark-bg-rgb), 0.5); /* Use theme variable */
+  border-radius: 8px;
+  padding: 0.8rem 1rem 0.8rem 3rem; /* Adjust padding for icon */
+  margin-bottom: 0.75rem;
+  position: relative;
+  transition: transform 0.3s ease, background 0.3s ease;
+  font-size: clamp(0.9rem, 2.5vw, 1rem);
+  color: var(--medium-text); /* Use theme variable */
+  display: flex;
+  align-items: center;
+}
+
+.about-list li:hover,
+.privacy-list li:hover,
+.terms-list li:hover,
+.ads-list li:hover {
+  transform: translateX(5px);
+  background: rgba(var(--primary-rgb), 0.1);
+  color: var(--light-text); /* Use theme variable */
+}
+
+/* List item icons */
+.about-list li i, /* Specific for about page */
+.privacy-list li::before,
+.terms-list li::before,
+.ads-list li::before {
+  content: '\f105'; /* Default icon */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background: rgba(var(--primary-rgb), 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Specific icon for about list (overrides default if <i> used) */
+.about-list li i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1em;
+    width: 24px; /* Ensure size consistency */
+    height: 24px;
+    background: rgba(var(--primary-rgb), 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.about-list li:hover i,
+.privacy-list li:hover::before,
+.terms-list li:hover::before,
+.ads-list li:hover::before {
+  background: var(--primary);
+  color: var(--dark-bg); /* Use theme variable */
+}
+
+.about-list li span { /* Ensure text aligns correctly when using <i> */
+    display: inline-block;
+}
+
+/* Specific styles for Ads Policy Page (if needed) */
+.ads-header h1, .ads-header p {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+.ads-header h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    color: var(--light-text);
+}
+.ads-header .page-description {
+    color: var(--medium-text);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Floating Back Button */
+.back-button {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: rgba(var(--darker-bg-rgb), 0.6);
+    color: var(--light-text);
+    border: 1px solid rgba(var(--primary-rgb), 0.2);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(6px);
+    z-index: 9990;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+.back-button:hover {
+    background-color: rgba(var(--primary-rgb), 0.8);
+    transform: scale(1.1) rotate(-5deg);
+    color: white;
+    border-color: var(--primary);
+    box-shadow: 0 6px 20px rgba(var(--primary-rgb), 0.3);
+}
+
+/* Responsive Adjustments for Static Pages */
+@media (max-width: 768px) {
+    .content-container,
+    .about-section,
+    .privacy-section,
+    .terms-section,
+    .ads-section {
+        padding: clamp(1.2rem, 4vw, 1.8rem);
+    }
+}
+
+@media (max-width: 576px) {
+    .content-container,
+    .about-section,
+    .privacy-section,
+    .terms-section,
+    .ads-section {
+        padding: 1rem 0.8rem;
+    }
+    .about-section h2, .privacy-section h2, .terms-section h2, .ads-section h2 {
+        font-size: 1.2rem;
+    }
+    .about-section p, .privacy-section p, .terms-section p, .ads-section p {
+        font-size: 0.9rem;
+    }
+    .about-list li, .privacy-list li, .terms-list li, .ads-list li {
+        font-size: 0.85rem;
+        padding: 0.7rem 0.8rem 0.7rem 2.5rem;
+    }
+}
+
+/* AdSense Container Styles */
+.adsense-container {
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: rgba(var(--darker-bg-rgb), 0.3);
+    border-radius: 8px;
+    border: 1px solid rgba(var(--border-rgb), 0.5);
+    text-align: center;
+    overflow: hidden; /* Contain ads */
+    position: relative;
+}
+
+.ad-label {
+    font-size: 0.7rem;
+    color: var(--medium-text);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.ad-loading {
+    /* Basic loading indicator (optional) */
+    min-height: 50px; /* Placeholder height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--medium-text);
+}
+
+.in-article-ad {
+    /* Specific styles for in-article if needed */
+    max-width: 700px;
+}
+
+.footer-ad {
+    /* Specific styles for footer ad */
+    max-width: 970px; /* Common banner width */
+    margin-top: 2.5rem;
+} 

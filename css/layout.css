@@ -1,0 +1,475 @@
+/* ========================================= */
+/* ========= App Header Styles =========== */
+/* ========================================= */
+
+.app-header {
+  background: linear-gradient(135deg, rgba(var(--darker-bg-rgb), 0.85) 0%, rgba(var(--dark-bg-rgb), 0.9) 100%);
+  padding: clamp(1rem, 4vw, 1.5rem) 1rem;
+  text-align: center;
+  border-bottom: 2px solid rgba(var(--primary-rgb), 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  position: relative; /* For potential absolute elements if needed */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem; /* Space below header */
+}
+
+.logo-animation {
+  margin-bottom: 0.5rem; /* Space between icon and title */
+}
+
+.app-header .ball-icon {
+    font-size: 2rem; /* Adjust size as needed */
+    color: var(--primary);
+    display: inline-block; /* Add display property */
+    animation: bounce-vertical 1.2s infinite ease-in-out; /* Apply vertical bounce */
+}
+
+/* Assuming .bounce animation is defined elsewhere */
+
+.app-header .title-link {
+  text-decoration: none;
+}
+
+.app-header .title-text {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(2rem, 6vw, 2.8rem); /* Responsive title size */
+  font-weight: 700;
+  color: var(--light-text);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 0; /* Reset margin */
+  line-height: 1.2;
+  transition: color 0.3s ease;
+}
+
+.app-header .title-link:hover .title-text {
+    color: var(--primary); /* Highlight on hover */
+}
+
+.app-header .subtitle {
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+  color: var(--medium-text);
+  margin-top: 0.5rem; /* Space below title */
+  margin-bottom: 0; /* Reset margin */
+  font-weight: 400;
+  max-width: 600px; /* Prevent subtitle becoming too wide */
+}
+
+/* Ensure home link is styled consistently */
+.home-link {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: rgba(var(--dark-bg-rgb), 0.6);
+    color: var(--light-text);
+    padding: 8px 12px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 10;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(var(--primary-rgb), 0.1);
+}
+
+.home-link i {
+    color: var(--primary);
+}
+
+.home-link:hover {
+    background-color: rgba(var(--primary-rgb), 0.8);
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.3);
+}
+
+@media (max-width: 576px) {
+    .app-header {
+        padding: 1rem;
+    }
+    .app-header .title-text {
+        font-size: 1.8rem;
+    }
+    .app-header .subtitle {
+        font-size: 0.85rem;
+    }
+    .home-link {
+        top: 10px;
+        left: 10px;
+        padding: 6px 10px;
+        font-size: 0.8rem;
+    }
+}
+
+/* --- Game header improvements - Modern Style --- */
+/* --- (Used in Pasalache & QSM) --- */
+.game-header {
+    background: linear-gradient(135deg, rgba(22, 24, 38, 0.95), rgba(13, 14, 26, 1));
+    color: white;
+    padding: 18px 0;
+    /* position: sticky; Quitamos el estilo pegajoso */
+    /* top: 0; */
+    z-index: 100;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
+    border-bottom: 1px solid rgba(131, 93, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.game-header::after {
+    /* Quitar el gradiente inferior anterior si existe, ya que usamos border */
+    display: none;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px 20px; /* Ajustar gaps */
+    max-width: 1200px; /* Limitar ancho */
+    margin: 0 auto; /* Centrar */
+    padding: 0 1rem; /* Padding horizontal */
+}
+
+/* Ajustar logo en el header */
+.game-header .logo {
+    font-size: 1.8rem; /* Tamaño adecuado para header */
+    text-shadow: 0 0 15px rgba(127, 90, 248, 0.4); /* Sombra ajustada */
+    margin: 0; /* Quitar margen por defecto */
+    gap: 0.4rem; /* Espacio menor en header */
+}
+.game-header .logo::after { /* Ocultar subrayado en header */
+    display: none;
+}
+
+.game-header .logo-ball {
+    font-size: 0.6em; /* Pelota más pequeña en header */
+    animation: bounce-vertical 1.2s infinite ease-in-out; /* Apply vertical bounce */
+}
+
+/* Modern game title */
+.game-title {
+    font-size: 1.6rem; /* Ligeramente más grande y prominente */
+    font-weight: 800; /* Más grueso */
+    color: var(--text); /* Color base blanco */
+    text-transform: uppercase;
+    letter-spacing: 1px; /* Ajustar espaciado */
+    margin: 0 auto; /* Centrarlo */
+    padding: 5px 0; /* Padding vertical ligero */
+    position: relative; /* Para pseudo-elementos si se añaden */
+    /* Efecto de texto sutil */
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4),
+                 0 0 10px rgba(255, 142, 60, 0.4); /* Sombra con color accent */
+    /* Transición suave para futuros efectos */
+    transition: all 0.3s ease;
+}
+
+/* Player info - modern style */
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Menos gap */
+    background: rgba(23, 25, 35, 0.7); /* Ligeramente más transparente */
+    padding: 8px 15px; /* Reducir padding */
+    border-radius: 25px; /* Más redondo */
+    border: 1px solid rgba(131, 93, 255, 0.25); /* Borde más visible */
+    backdrop-filter: blur(10px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25); /* Sombra ajustada */
+    transform: translateZ(0);
+}
+
+.player-avatar {
+    width: 28px; /* Más pequeño */
+    height: 28px; /* Más pequeño */
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark)); /* Ajustar gradiente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 3px 8px rgba(86, 54, 201, 0.4); /* Sombra ajustada */
+    flex-shrink: 0; /* Evitar que se encoja */
+}
+
+.player-avatar svg {
+    width: 14px; /* Icono más pequeño */
+    height: 14px;
+}
+
+.player-name {
+    font-weight: 600;
+    color: var(--text); /* Blanco */
+    font-size: 0.85rem; /* Ligeramente más pequeño */
+    white-space: nowrap; /* Evitar que el nombre se parta */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Añadir puntos si es muy largo */
+    max-width: 120px; /* Limitar ancho máximo */
+}
+
+.score {
+    font-weight: 700;
+    color: var(--primary-light); /* Color primario claro */
+    background: rgba(131, 93, 255, 0.2); /* Fondo más intenso */
+    padding: 4px 12px; /* Padding ajustado */
+    border-radius: 20px;
+    font-size: 0.8rem; /* Ligeramente más pequeño */
+    text-shadow: 0 0 6px rgba(131, 93, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 50px; /* Ancho mínimo */
+    text-align: center;
+}
+
+/* Back button - modern style (Puede ir en layout o base/buttons)*/
+.back-button {
+    display: inline-flex; /* display: flex; <-- Mantenido flex */
+    align-items: center;
+    gap: 6px; /* Menos gap */
+    background: rgba(255, 255, 255, 0.08); /* Fondo claro sutil */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text); /* Blanco */
+    padding: 9px 16px; /* Padding ajustado */
+    border-radius: 8px;
+    font-size: 0.85rem; /* Ligeramente más pequeño */
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap; /* Evitar que el texto se parta */
+    text-decoration: none; /* Añadido para asegurar que no haya subrayado */
+}
+
+.back-button:hover {
+    background: rgba(255, 255, 255, 0.15); /* Más claro en hover */
+    transform: translateY(-2px); /* Menos pronunciado */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Sombra ajustada */
+    border-color: rgba(131, 93, 255, 0.4); /* Borde primario en hover */
+    color: var(--primary-light); /* Texto primario en hover */
+}
+
+.back-button svg {
+    width: 18px; /* Icono más pequeño */
+    height: 18px;
+    transition: transform 0.3s ease;
+}
+
+.back-button:hover svg {
+    transform: translateX(-2px); /* Movimiento más sutil */
+}
+
+/* --- Responsive Game Header --- */
+@media (max-width: 768px) {
+    .game-header {
+        padding: 12px 0;
+    }
+    .header-content {
+        padding: 0 10px;
+        gap: 10px 15px;
+    }
+    .game-header .logo {
+        font-size: 1.5rem;
+    }
+    .game-title {
+        font-size: 1.3rem;
+        text-align: center;
+        width: 100%;
+        order: -1;
+        margin: 5px 0;
+    }
+    .player-info {
+        padding: 6px 12px;
+        gap: 8px;
+    }
+    .player-avatar {
+        width: 24px;
+        height: 24px;
+    }
+    .player-avatar svg {
+        width: 12px;
+        height: 12px;
+    }
+    .player-name {
+        font-size: 0.8rem;
+    }
+    .score {
+        padding: 3px 10px;
+        font-size: 0.75rem;
+    }
+    .back-button {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+    .back-button svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+     .header-container { /* Apply to modern-header container */
+        flex-direction: column;
+        gap: 0.5rem;
+     }
+     .game-title-header { /* Apply to modern-header game title */
+        order: -1; /* Título arriba */
+     }
+     .players-info-header { /* Apply to modern-header player info */
+        width: 100%;
+        justify-content: space-around;
+     }
+}
+
+
+/* ========================================= */
+/* ========= Site Footer Styles =========== */
+/* ========================================= */
+
+.site-footer {
+    background-color: var(--background-alt);
+    padding: 2.5rem 0; /* Aumentar padding vertical */
+    margin-top: auto; /* Empuja el footer al final */
+    border-top: 2px solid var(--border);
+    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+}
+
+.footer-content {
+    max-width: 1200px; /* Limitar ancho */
+    margin: 0 auto;
+    padding: 0 1rem; /* Padding horizontal */
+    display: flex;
+    flex-direction: column; /* Apilar verticalmente por defecto */
+    align-items: center; /* Centrar elementos */
+    text-align: center;
+}
+
+.footer-links {
+    display: flex;
+    flex-wrap: wrap; /* Permitir que los enlaces pasen a la siguiente línea */
+    justify-content: center; /* Centrar enlaces */
+    gap: 0.6rem 1rem; /* Reducir más el espacio entre enlaces */
+    margin-bottom: 1.5rem; /* Espacio antes del copyright */
+}
+
+.footer-links a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.85rem; /* Reducir más tamaño de fuente */
+    display: inline-flex; /* Para alinear icono y texto */
+    align-items: center;
+    gap: 0.3rem; /* Reducir más espacio entre icono y texto */
+    transition: color 0.3s ease, transform 0.3s ease;
+    position: relative; /* Para el pseudo-elemento */
+}
+
+.footer-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--primary-light);
+    transform: translateY(-2px);
+}
+
+.footer-links a:hover::after {
+    width: 100%;
+}
+
+.footer-links a i {
+    color: var(--primary); /* Color del icono */
+    font-size: 0.95em; /* Reducir más tamaño del icono */
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover i {
+    color: var(--primary-light); /* Cambiar color del icono en hover */
+}
+
+.footer-copyright {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 1rem; /* Separación si hay botón de compartir */
+}
+
+.footer-share-button {
+    background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem; /* Reducir más padding del botón */
+    border-radius: 50px; /* Redondo */
+    font-size: 0.8rem; /* Reducir más fuente del botón */
+    font-weight: 500; /* Ligeramente menos grueso */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem; /* Reducir más gap del botón */
+    margin-top: 1.5rem; /* Espacio sobre el copyright */
+    margin-bottom: 1rem; /* Espacio debajo del botón */
+    box-shadow: 0 3px 8px rgba(44, 182, 125, 0.3);
+}
+
+.footer-share-button i {
+    font-size: 0.85em; /* Ajustar más tamaño icono botón */
+}
+
+.footer-share-button:hover {
+    background: linear-gradient(135deg, var(--secondary-dark), var(--secondary));
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 6px 15px rgba(44, 182, 125, 0.4);
+}
+
+.footer-share-button:active {
+    transform: translateY(-1px) scale(1);
+    box-shadow: 0 2px 5px rgba(44, 182, 125, 0.3);
+}
+
+/* Responsive Footer */
+@media (min-width: 768px) {
+    .footer-content {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+    }
+    .footer-links {
+        margin-bottom: 0;
+        gap: 25px; /* Increased gap for desktop */
+    }
+    .footer-share-button {
+        margin-top: 0;
+        margin-left: 20px; /* Add space from links */
+        margin-right: 0;
+    }
+    .footer-copyright {
+        margin-top: 0;
+        flex-grow: 1; /* Allow copyright to take remaining space */
+        text-align: center;
+    }
+}
+
+/* --- Vertical Bounce Animation --- */
+@keyframes bounce-vertical {
+  0%, 100% {
+    transform: translateY(0);
+    animation-timing-function: ease-out;
+  }
+  50% {
+    transform: translateY(-8px); /* Adjust bounce height */
+    animation-timing-function: ease-in;
+  }
+} 

@@ -1,0 +1,746 @@
+/* ========================================= */
+/* ========= Pasalache Game Styles ========= */
+/* ========================================= */
+
+/* Game content wrapper (adjust padding if needed) */
+.game-content {
+    flex: 1;
+    padding: 30px 0;
+    position: relative;
+    background-image:
+        radial-gradient(circle at 15% 15%, rgba(131, 93, 255, 0.08) 0%, transparent 30%),
+        radial-gradient(circle at 85% 85%, rgba(49, 229, 178, 0.08) 0%, transparent 30%);
+}
+
+/* Rosco container - modern style */
+.rosco-container {
+    padding: 30px;
+    position: relative;
+    background: linear-gradient(135deg, rgba(22, 24, 38, 0.85), rgba(13, 14, 26, 0.95));
+    border-radius: 24px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(131, 93, 255, 0.15);
+    backdrop-filter: blur(20px);
+    overflow: hidden;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.rosco-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(circle at 20% 20%, rgba(131, 93, 255, 0.1), transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(49, 229, 178, 0.05), transparent 40%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Game instructions - modern style */
+.game-instructions {
+    position: absolute;
+    top: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    max-width: 500px;
+    z-index: 5;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(131, 93, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    display: none; /* Ocultar el cuadro de instrucciones */
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    backdrop-filter: blur(12px);
+}
+
+.game-instructions svg {
+    color: #835DFF;
+    flex-shrink: 0;
+}
+
+/* Rosco circle - modern style */
+.rosco-circle {
+    position: relative;
+    width: 90vw; /* Use viewport width */
+    max-width: 580px; /* Set a maximum size */
+    aspect-ratio: 1 / 1; /* Maintain square shape */
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 0 60px rgba(131, 93, 255, 0.15);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    background: transparent;
+    border: none;
+}
+
+.rosco-circle::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(131, 93, 255, 0.1), transparent, rgba(49, 229, 178, 0.1));
+    z-index: -1;
+    opacity: 0.4;
+    filter: blur(10px);
+}
+
+/* Letters container */
+.letters-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.letters-container::after { /* Remove inner dashed circle if it exists */
+    display: none;
+}
+
+/* Letter styles - modern design */
+.letter {
+    position: absolute;
+    width: clamp(36px, 8vw, 48px); /* Responsive size */
+    height: clamp(36px, 8vw, 48px);
+    border-radius: 50%;
+    background: rgba(45, 48, 71, 0.8);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: clamp(1rem, 2.5vw, 1.2rem); /* Responsive font size */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+                box-shadow 0.3s ease,
+                background-color 0.3s ease,
+                width 0.3s ease,
+                height 0.3s ease,
+                font-size 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 10;
+    transform-origin: center;
+}
+
+.letter.active {
+    background: linear-gradient(135deg, #FF8E3C, #FF5A5A);
+    box-shadow: 0 0 20px rgba(255, 142, 60, 0.5);
+    transform: scale(1.2);
+    z-index: 10;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.letter.correct {
+    background: linear-gradient(135deg, #31E5B2, #26B38D);
+    box-shadow: 0 5px 15px rgba(49, 229, 178, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.letter.incorrect {
+    background: linear-gradient(135deg, #FF5A7A, #E83A5A);
+    box-shadow: 0 5px 15px rgba(255, 90, 122, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.letter.pending {
+    background: linear-gradient(135deg, #FFD74B, #FFC107);
+    opacity: 0.8;
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.letter:hover:not(.active):not(.correct):not(.incorrect) {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Question card - circular style */
+.question-card {
+    width: 80%; /* Relative to parent (.rosco-circle) */
+    max-width: 460px;
+    aspect-ratio: 1 / 1;
+    background: rgba(18, 20, 31, 0.95);
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(131, 93, 255, 0.2);
+    z-index: 5;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.question-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(131, 93, 255, 0.05), transparent, rgba(49, 229, 178, 0.05));
+    pointer-events: none;
+}
+
+/* Center the content within the circular container */
+.question-card > * {
+    width: 85%;
+    max-width: 340px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Question header - modern style */
+.question-header {
+    /* margin-top: 70px; <-- Adjust this if needed, was high */
+    margin-bottom: 12px;
+    text-align: center;
+    font-size: 1rem; /* Header text size */
+    font-weight: 600;
+    color: var(--primary-light);
+}
+
+/* Style for letter within header */
+#currentLetterText {
+    color: var(--accent); /* Highlight current letter */
+    font-weight: 700;
+}
+
+/* Question text - modern style */
+.question-text {
+    background: rgba(13, 14, 26, 0.6);
+    padding: 14px 15px;
+    border-radius: 10px;
+    margin-bottom: 1px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(131, 93, 255, 0.1);
+    max-height: 125px;
+    overflow-y: auto;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Styles for "Comienza" question type (override default accent) */
+.question-header.question-type-starts #currentLetterText {
+    color: var(--primary); /* Blue highlight for starts */
+}
+
+.question-text.question-type-starts {
+    background: rgba(var(--primary-rgb), 0.08); /* Subtle blue background */
+    border-color: rgba(var(--primary-rgb), 0.15); /* Bluish border */
+}
+
+/* Styles for "Contiene" question type */
+.question-header.question-type-contains #currentLetterText {
+    color: var(--secondary); /* Green highlight for contains */
+}
+
+.question-text.question-type-contains {
+    background: rgba(var(--secondary-rgb), 0.1); /* Subtle green background */
+    border-color: rgba(var(--secondary-rgb), 0.2); /* Greenish border */
+}
+
+/* Timer - modern style */
+.timer-wrapper {
+    margin-top: 0.1rem;
+    margin-bottom: 1rem;
+    position: relative;
+    width: 100%;
+}
+
+.timer-count {
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    background: linear-gradient(135deg, #FF8E3C, #FF5A5A);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.timer {
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.timer-bar {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #31D0AA, #31E5B2);
+    border-radius: 10px;
+    transition: width 1s linear, background-color 0.5s ease;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.timer-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        rgba(255, 255, 255, 0.1) 100%);
+    background-size: 200% 100%;
+    animation: timerShimmer 2s infinite linear;
+    border-radius: 10px;
+}
+
+/* Answer form - modern style */
+.answer-form {
+    width: 100%;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 1px;
+}
+
+.answer-input {
+    width: 100%;
+    background: rgba(13, 14, 26, 0.5);
+    border: 1.5px solid rgba(131, 93, 255, 0.3);
+    padding: 12px 40px 12px 16px; /* Adjust padding-right for submit button */
+    border-radius: 8px;
+    color: white;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    height: 38px; /* Explicit height */
+}
+
+.answer-input:focus {
+    outline: none;
+    background: rgba(13, 14, 26, 0.6);
+    border-color: #835DFF;
+    box-shadow: 0 0 0 3px rgba(131, 93, 255, 0.2), 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Submit answer icon button */
+.submit-answer-icon-btn {
+    position: absolute;
+    right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    width: 28px; /* Smaller size */
+    height: 28px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+.submit-answer-icon-btn:hover {
+    background-color: var(--secondary-dark);
+    transform: translateY(-50%) scale(1.05);
+}
+
+.submit-answer-icon-btn:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+.submit-answer-icon-btn:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.submit-answer-icon-btn i {
+    line-height: 1;
+}
+
+/* Action buttons container */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 1rem; /* Add margin above buttons */
+    /* margin-bottom: 38px; <-- This seemed too large */
+}
+
+/* Pasapalabra button - modern style */
+.pasapalabra-button {
+    background: linear-gradient(135deg, #FF8E3C, #FF5A5A);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 25px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 8px 15px rgba(255, 142, 60, 0.3);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pasapalabra-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.pasapalabra-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 20px rgba(255, 142, 60, 0.4);
+}
+
+.pasapalabra-button:hover::before {
+    transform: translateX(100%);
+}
+
+/* Help button - modern style */
+.help-button {
+    background: linear-gradient(135deg, #835DFF, #5636C9);
+    color: white;
+    border: none;
+    border-radius: 8px; /* Match pasapalabra */
+    padding: 10px 15px; /* Adjust padding for consistency */
+    font-size: 0.9rem; /* Match pasapalabra */
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; /* Adjust gap */
+    box-shadow: 0 4px 10px rgba(131, 93, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+    min-width: auto;
+    width: auto;
+    text-transform: uppercase; /* Match pasapalabra */
+    letter-spacing: 0.5px;
+}
+
+.help-button svg {
+    width: 14px;
+    height: 14px;
+}
+
+.help-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.help-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(131, 93, 255, 0.4);
+}
+
+.help-button:hover::before {
+    transform: translateX(100%);
+}
+
+.help-button.disabled {
+    background: linear-gradient(135deg, #5a5f7a, #474b61);
+    opacity: 0.8;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Feedback - modern style */
+.feedback {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    transform: translateY(-50%);
+    z-index: 100;
+    padding: 20px 15px;
+    border-radius: 15px;
+    background-color: rgba(13, 14, 26, 0.85);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    width: 75%;
+    max-width: 300px;
+    margin: 0 auto;
+    pointer-events: none;
+    animation: feedbackAnimation 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 2px solid;
+}
+
+.feedback.correct { border-color: #31E5B2; }
+.feedback.incorrect { border-color: #FF5A7A; }
+.feedback.hint { border-color: #835DFF; }
+.feedback.warning { border-color: #FF8E3C; }
+
+.feedback-icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    text-shadow: 0 0 15px currentColor;
+}
+
+.feedback.correct .feedback-icon { color: #31E5B2; }
+.feedback.incorrect .feedback-icon { color: #FF5A7A; }
+
+.feedback-text {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.feedback.correct .feedback-text { color: #31E5B2; }
+.feedback.incorrect .feedback-text { color: #FF5A7A; }
+
+.correct-answer { /* Used in incorrect feedback */
+    font-size: 1rem;
+    opacity: 0.9;
+    color: white;
+    margin-top: 8px;
+}
+
+.feedback-fadeout {
+    animation: feedbackFadeOut 0.3s ease forwards;
+}
+
+/* Animations for feedback */
+@keyframes feedbackAnimation {
+    0% { opacity: 0; transform: translateY(-50%) scale(0.85); }
+    100% { opacity: 1; transform: translateY(-50%) scale(1); }
+}
+
+@keyframes feedbackFadeOut {
+    0% { opacity: 1; transform: translateY(-50%) scale(1); }
+    100% { opacity: 0; transform: translateY(-50%) scale(0.85); }
+}
+
+@keyframes timerShimmer { /* Timer bar animation */
+    0% { background-position: 100% 0; }
+    100% { background-position: -100% 0; }
+}
+
+/* Responsive Pasalache */
+@media (max-width: 768px) {
+    .rosco-container {
+        padding: 15px 10px;
+        margin-top: 10px;
+    }
+    .rosco-circle {
+        max-width: 95vw;
+    }
+    .letter {
+        width: clamp(30px, 7vw, 38px);
+        height: clamp(30px, 7vw, 38px);
+        font-size: clamp(0.8rem, 2vw, 1rem);
+    }
+    .question-card {
+        width: 78%;
+        padding: clamp(10px, 3vw, 15px);
+    }
+    .question-header {
+        margin-bottom: 8px;
+    }
+    .question-header h3 {
+        font-size: 0.75rem;
+    }
+    .question-text {
+        font-size: 0.75rem;
+        padding: 4px 6px;
+        margin-bottom: 8px;
+        max-height: none;
+        line-height: 1.2;
+    }
+    .timer-wrapper {
+        margin-bottom: 6px;
+    }
+    .timer-count {
+        font-size: 0.9rem;
+        margin-bottom: 2px;
+    }
+    .timer {
+        height: 7px;
+    }
+    .input-group {
+        margin-bottom: 8px;
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .answer-input {
+        padding: 4px 35px 4px 10px; /* Adjust padding for smaller button */
+        font-size: 1rem; /* Font size can be larger for input */
+        height: 34px; /* Match button size */
+        width: 100%;
+    }
+    .submit-answer-icon-btn {
+        width: 26px; /* Even smaller */
+        height: 26px;
+        font-size: 0.7rem;
+        right: 4px;
+    }
+    .action-buttons {
+        gap: 10px;
+        margin-top: 0.5rem;
+    }
+    .pasapalabra-button {
+        padding: 6px 12px;
+        font-size: 0.7rem;
+    }
+    .help-button {
+        padding: 6px 10px; /* Match pasapalabra padding */
+        font-size: 0.7rem;
+    }
+    .help-button svg {
+        width: 11px;
+        height: 11px;
+    }
+}
+
+@media (max-width: 576px) {
+    .rosco-container {
+        padding: 20px 5px;
+        margin-top: 1px;
+    }
+    .rosco-circle {
+        max-width: 270px;
+    }
+    .letter {
+        width: clamp(25px, 7vw, 28px);
+        height: clamp(25px, 7vw, 28px);
+        font-size: clamp(0.6rem, 2vw, 0.75rem);
+    }
+    .question-card {
+        width: 95%;
+        padding: 7px;
+        min-height: 210px;
+    }
+    .question-header h3 {
+        font-size: 0.6rem;
+        margin-bottom: 3px;
+    }
+    .question-text {
+        font-size: 0.54rem;
+        line-height: 1.3;
+        margin-bottom: 2px;
+        padding: 14px;
+        max-height: 75px;
+    }
+    .timer-wrapper {
+        margin-bottom: 5px;
+    }
+    .timer-count {
+        font-size: 0.9rem;
+        margin-bottom: 2px;
+    }
+    .timer {
+        height: 4px;
+    }
+    .answer-input {
+        padding: 6px 30px 6px 8px; /* Adjust padding */
+        font-size: 0.8rem;
+        height: 30px;
+    }
+    .submit-answer-icon-btn {
+        width: 24px; /* Min size */
+        height: 24px;
+        font-size: 0.7rem;
+    }
+    .input-group {
+        margin-bottom: 4px;
+    }
+    .action-buttons {
+        gap: 4px;
+        margin-top: 0px;
+    }
+    .pasapalabra-button,
+    .help-button {
+        padding: 6px 8px;
+        font-size: 0.41rem;
+    }
+    .help-button svg {
+        width: 9px;
+        height: 9px;
+    }
+}
+
+/* Hint styles for letters */
+.letter-hint {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px; /* Smaller hint font */
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 1px 4px;
+    border-radius: 3px;
+    margin-top: 3px; /* Closer to letter */
+    white-space: nowrap;
+    display: none;
+    z-index: 11; /* Ensure hint is above letters */
+}
+.letter.with-hint .letter-hint {
+    display: block;
+} 

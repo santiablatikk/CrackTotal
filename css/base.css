@@ -1,0 +1,148 @@
+:root {
+    /* Paleta Moderna Oscura */
+    --primary: #007bff; --primary-rgb: 0, 123, 255;
+    --primary-dark: #0056b3;
+    --primary-light: #66aaff;
+    --secondary: #28a745; --secondary-rgb: 40, 167, 69;
+    --secondary-dark: #1e7e34;
+    --accent: #ffc107; --accent-rgb: 255, 193, 7;
+    --accent-dark: #d39e00;
+
+    --background: #121212; --background-rgb: 18, 18, 18;
+    --background-alt: #1e1e1e; --background-alt-rgb: 30, 30, 30;
+    --card-bg: #2a2a2a;
+    --text: #e0e0e0;
+    --text-light: #b0b0b0;
+    --border: #444444; --border-rgb: 68, 68, 68;
+    --input-bg: #333333;
+
+    --success: #28a745; --success-rgb: 40, 167, 69;
+    --error: #dc3545; --error-rgb: 220, 53, 69;
+    --warning: #ffc107; --warning-rgb: 255, 193, 7;
+    --info: #17a2b8; --info-rgb: 23, 162, 184;
+
+    /* Variables Faltantes Definidas (Mapeadas o Nuevas) */
+    --dark-bg-rgb: var(--background-alt-rgb);
+    --darker-bg-rgb: var(--background-rgb);
+    --light-text: var(--text);
+    --medium-text: var(--text-light);
+    --danger: var(--error); --danger-rgb: var(--error-rgb);
+    --danger-dark: #b02a37;
+    --success-dark: #1e7e34;
+    --warning-dark: var(--accent-dark);
+
+    /* Degradados */
+    --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-light));
+    --gradient-secondary: linear-gradient(135deg, var(--secondary), #55c57a);
+    --gradient-accent: linear-gradient(135deg, var(--accent), #ffd54f);
+    --gradient-dark: linear-gradient(135deg, var(--background-alt), var(--background));
+    --gradient-error: linear-gradient(135deg, var(--error), #ff5470);
+
+    /* Sombras */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.4);
+    --shadow-inner: inset 0 2px 4px rgba(0,0,0,0.1);
+
+    /* Efectos Glow (Ejemplos, ajustar colores/intensidad según necesidad) */
+    --glow-primary: 0 0 15px rgba(var(--primary-rgb), 0.3);
+    --glow-secondary: 0 0 15px rgba(var(--secondary-rgb), 0.3);
+    --glow-accent: 0 0 15px rgba(var(--accent-rgb), 0.3);
+    --glow-error: 0 0 15px rgba(var(--error-rgb), 0.3);
+
+    /* Tipografía */
+    --font-family: 'Montserrat', sans-serif;
+    --font-family-headings: 'Oswald', sans-serif;
+    --font-size-base: 16px;
+    --font-weight-normal: 400;
+    --font-weight-bold: 700;
+
+    /* Radios de borde */
+    --border-radius-sm: 0.2rem;
+    --border-radius-md: 0.375rem;
+    --border-radius-lg: 0.5rem;
+
+    /* Transiciones */
+    --transition-speed: 0.2s;
+    --transition-func: ease-in-out;
+}
+
+/* Reset básico y estilos globales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: var(--font-size-base);
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--background);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+/* Responsive adjustments for container */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 10px; /* Reduce container padding further */
+    }
+}
+
+/* Asegurarse que los SVG se vean bien en tema oscuro */
+svg {
+    stroke: currentColor; /* Hereda color del texto por defecto */
+    vertical-align: middle; /* Mejor alineación */
+}
+
+/* =================================
+   General Text Styles (from old file)
+   ================================= */
+
+/* Estilo base para párrafos si no tienen clase */
+p:not([class]) {
+    line-height: 1.7;
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+/* Estilo base para h3 si no tienen clase */
+h3:not([class]) {
+    color: var(--primary-light);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* Highlight text style */
+.highlight-text {
+  color: var(--primary); /* Use primary accent color */
+  font-weight: 600; /* Make it bolder */
+}
+
+/* General Page Containers (Maybe move to layout or static?) */
+.page-container {
+  max-width: 1200px; /* Consistent max-width */
+  margin: 2rem auto; /* Centering and spacing */
+  padding: 0 1rem; /* Padding for smaller screens */
+}
+
+/* Back link container consistency */
+.back-link-container {
+    text-align: center;
+    margin-top: 2rem;
+} 

@@ -1,0 +1,264 @@
+/* ==================================================== */
+/* ========= Ranking & History Page Styles ========== */
+/* ==================================================== */
+
+/* Ensure main content area takes full width on mobile, but centered on desktop */
+main.game-content {
+    width: 100%;
+    padding: 1rem 0; /* Vertical padding */
+    box-sizing: border-box;
+}
+
+.ranking-container,
+.history-container {
+    max-width: 1100px; /* Max-width for desktop */
+    margin: 2rem auto; /* Centering for desktop */
+    padding: clamp(1.5rem, 4vw, 2rem);
+    background: linear-gradient(145deg, rgba(var(--background-alt-rgb), 0.8), rgba(var(--background-rgb), 0.9));
+    border-radius: 16px; /* Radius for desktop */
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(var(--primary-rgb), 0.1);
+}
+
+.ranking-container h2,
+.history-container h2 {
+    font-family: var(--font-family-headings);
+    font-size: clamp(1.5rem, 4vw, 1.8rem);
+    margin-bottom: 1.5rem;
+    color: var(--primary-light);
+    text-align: center; /* Center align */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(var(--primary-rgb), 0.15);
+    padding-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center icon */
+    gap: 0.8rem;
+    position: relative;
+}
+
+.ranking-container h2::after,
+.history-container h2::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%; /* Center */
+    transform: translateX(-50%); /* Center */
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.ranking-container:hover h2::after,
+.history-container:hover h2::after {
+    width: 80px;
+}
+
+.ranking-container h2 i,
+.history-container h2 i {
+    color: var(--primary);
+    font-size: 1.1em;
+    background: rgba(var(--primary-rgb), 0.1);
+    padding: 0.3em;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* General Table Styles */
+.history-table { /* Applied to ranking table too */
+    width: 100%; /* Full width within its container */
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: rgba(var(--background-rgb), 0.4);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem; /* Default font size */
+}
+
+.history-table th,
+.history-table td {
+    padding: 10px 12px; /* Default padding */
+    text-align: left;
+    border-bottom: 1px solid rgba(var(--border-rgb), 0.5);
+    vertical-align: middle;
+    white-space: nowrap; /* Prevent wrapping by default */
+}
+
+.history-table th {
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(var(--primary-rgb), 0.2);
+}
+
+.history-table td { color: var(--text-light); }
+.history-table tbody tr:last-child td { border-bottom: none; }
+.history-table tbody tr { transition: background-color 0.2s ease; }
+.history-table tbody tr:hover td { background-color: rgba(var(--primary-rgb), 0.06); color: var(--text); }
+
+/* Ranking Table Cell Styles */
+.ranking-table td.rank-cell { text-align: center; font-weight: 600; color: var(--text); width: 50px; }
+.ranking-table td.player-cell { font-weight: 500; color: var(--text); white-space: normal; word-break: break-word; } /* Allow wrap */
+.ranking-table td.score-cell { text-align: right; font-weight: 700; color: var(--accent); min-width: 70px; }
+.ranking-table td.matches-cell { text-align: center; min-width: 70px; }
+.ranking-table td.accuracy-cell, .ranking-table td.time-cell { text-align: right; min-width: 90px; }
+
+/* Wrapper for responsive table scrolling - REINTRODUCED */
+.table-responsive-wrapper {
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+    /* Optional: Add subtle shadow indicator again if desired */
+    /* box-shadow: inset -10px 0 8px -8px rgba(0,0,0,0.1); */
+}
+
+/* --- Profile Button --- */
+/* (Keep existing styles or adjust as needed) */
+main.game-content > div:first-child { /* Target the div holding the profile button */
+   padding: 0 0.5rem;
+   margin-bottom: 1rem;
+}
+.profile-link.small-button { /* Keep consistent style */
+    background: rgba(var(--primary-rgb), 0.1);
+    border: 1px solid rgba(var(--primary-rgb), 0.25);
+    color: var(--primary-light);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.profile-link.small-button:hover { background: rgba(var(--primary-rgb), 0.2); transform: translateY(-2px); color: white; box-shadow: 0 6px 15px rgba(var(--primary-rgb), 0.2); }
+.profile-link.small-button svg { width: 16px; height: 16px; }
+
+/* --- Loading / Error Messages --- */
+/* (Keep existing styles) */
+#ranking-body td[colspan="6"], /* Use colspan 6 again */
+#history-list p.loading-message,
+#history-list p.error-message {
+    padding: 1.5rem 0.5rem;
+    text-align: center;
+    font-style: italic;
+    color: var(--text-light);
+    font-size: 0.8rem;
+    background-color: rgba(var(--background-rgb), 0.2);
+}
+
+/* === Responsive Adjustments === */
+
+@media (max-width: 768px) {
+    /* Make containers full width */
+    .ranking-container,
+    .history-container {
+        max-width: none;
+        margin: 1.5rem 0;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        padding-left: 0.8rem; /* Add some padding back */
+        padding-right: 0.8rem;
+    }
+    /* Adjust first/last container borders */
+    .ranking-container { margin-top: 0; border-top: none; }
+    .history-container { margin-bottom: 0; border-bottom: none; }
+
+    /* Hide less critical columns */
+    .ranking-table th.accuracy-cell,
+    .ranking-table td.accuracy-cell,
+    .ranking-table th.time-cell,
+    .ranking-table td.time-cell {
+         display: none;
+    }
+
+    /* Adjust table font/padding slightly */
+    .history-table {
+        font-size: 0.85rem; /* Slightly larger than previous attempt */
+    }
+    .history-table th,
+    .history-table td {
+        padding: 8px 10px;
+    }
+
+     /* Adjust Match Cards for Tablet */
+     .match-card-body .player-name { font-size: 0.9rem; }
+     .match-card-body .score-value { font-size: 1.3rem; }
+     .match-card-footer { font-size: 0.7rem; }
+}
+
+@media (max-width: 576px) {
+    main.game-content {
+        padding: 0.5rem 0;
+    }
+    .ranking-container,
+    .history-container {
+        padding-left: 0.5rem; /* Minimal horizontal padding */
+        padding-right: 0.5rem;
+        padding-top: 0.3rem; /* Minimal top padding */
+        padding-bottom: 0.5rem; /* Minimal bottom padding */
+        margin: 0.3rem 0; /* Minimal vertical margin */
+    }
+    /* Adjust first/last container borders/margins */
+    .ranking-container { margin-top: 0; border-top: none; }
+    .history-container { margin-bottom: 0; border-bottom: none; }
+
+    .ranking-container h2,
+    .history-container h2 {
+        font-size: 0.95rem; /* Slightly smaller title */
+        gap: 0.3rem;
+        margin-bottom: 0.3rem; /* Reduced margin below title */
+        padding-bottom: 0.3rem; /* Reduced padding below title */
+    }
+    .ranking-container h2 i,
+    .history-container h2 i {
+        font-size: 0.85em;
+        padding: 0.2em;
+    }
+
+    .table-responsive-wrapper {
+        margin-top: 0.3rem; /* Reduced margin above table */
+        margin-bottom: 0; /* Remove bottom margin if table is last element */
+    }
+
+    /* Further compact the table */
+    .history-table {
+        font-size: 0.75rem; /* Keep font size readable */
+    }
+    .history-table th,
+    .history-table td {
+        padding: 3px 3px; /* Very minimal cell padding */
+    }
+    .history-table th {
+         padding: 4px 3px;
+         font-size: 0.6rem;
+    }
+    .ranking-table td.rank-cell { width: 30px; }
+    .ranking-table td.score-cell { min-width: 50px; }
+    .ranking-table td.matches-cell { min-width: 50px; }
+
+    /* Hide matches column as well on smallest screens */
+    .ranking-table th.matches-cell,
+    .ranking-table td.matches-cell {
+         display: none;
+    }
+
+     /* Adjust Match Cards for Small Mobile */
+     .match-card-header { padding: 5px 8px; font-size: 0.65rem; }
+     .match-result-badge { padding: 2px 5px; font-size: 0.6rem; }
+     .match-card-body { padding: 6px 8px; gap: 5px; }
+     .match-card-body .player-name { font-size: 0.8rem; }
+     .match-card-body .score-value { font-size: 1.1rem; }
+     .match-card-footer { padding: 4px 8px; gap: 4px 8px; font-size: 0.65rem; }
+} 

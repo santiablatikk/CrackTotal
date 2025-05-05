@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking y Historial - Crack Total</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- <link rel="stylesheet" href="css/styles.css"> -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/ranking.css">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -320,56 +323,54 @@
 
     <!-- Main Content -->
     <main class="game-content">
-        <div class="container">
-            <!-- Botón Volver (opcional, si no está en el header global) -->
-            <div style="margin-bottom: 1.5rem; text-align: left;">
-                <!-- Remove this link -->
-                <!-- <a href="index.html" class="back-button small-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    Volver al Inicio
-                </a> -->
-                 <!-- Enlace al Perfil -->
-                <a href="profile.html" class="profile-link small-button" style="margin-left: 0;"> <!-- Remove margin-left: 10px -->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    Mi Perfil
-                </a>
-            </div>
-
-            <!-- Sección Ranking -->
-            <div class="ranking-container">
-                <h2>Ranking Pasala Che (Top 50)</h2>
-                <div class="table-responsive">
-                    <table class="history-table ranking-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Jugador/a</th>
-                                <th>Puntaje Total</th>
-                                <th>Partidas</th>
-                                <th>Precisión Prom.</th>
-                                <th>Mejor Tiempo (Pasala)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="ranking-body">
-                            <!-- Las filas se llenarán dinámicamente -->
-                            <tr>
-                                <td colspan="6" style="text-align:center; padding: 20px;">Buscando a los cracks... Si tarda, ¡quizás sos el primero!</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Sección Historial de Partidas del Usuario Actual -->
-             <div class="history-container">
-                <h2>Tu Historial (Pasala Che)</h2>
-                <div id="history-list">
-                    <!-- Las tarjetas de partidas se llenarán dinámicamente con JS -->
-                     <p style="text-align:center; padding: 20px;">Revisando tus partidos... Si no ves nada, ¡mandale mecha a jugar!</p>
-                </div>
-            </div>
-
+        <!-- Botón Volver (opcional, si no está en el header global) -->
+        <div style="margin-bottom: 1.5rem; text-align: left;">
+            <!-- Remove this link -->
+            <!-- <a href="index.html" class="back-button small-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                Volver al Inicio
+            </a> -->
+             <!-- Enlace al Perfil -->
+            <a href="profile.html" class="profile-link small-button" style="margin-left: 0;"> <!-- Remove margin-left: 10px -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Mi Perfil
+            </a>
         </div>
+
+        <!-- Sección Ranking -->
+        <div class="ranking-container">
+            <h2><i class="fas fa-trophy"></i>Ranking Pasala Che (Top 50)</h2>
+             <div class="table-responsive-wrapper">
+                <table class="history-table ranking-table">
+                    <thead>
+                        <tr>
+                            <th class="rank-cell">#</th>
+                            <th class="player-cell">Jugador/a</th>
+                            <th class="score-cell">Puntaje Total</th>
+                            <th class="matches-cell">Partidas</th>
+                            <th class="accuracy-cell">Precisión Prom.</th>
+                            <th class="time-cell">Mejor Tiempo (Pasala)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ranking-body">
+                        <!-- Las filas se llenarán dinámicamente -->
+                        <tr>
+                            <td colspan="6" style="text-align:center; padding: 20px;">Buscando a los cracks... Si tarda, ¡quizás sos el primero!</td>
+                        </tr>
+                    </tbody>
+                </table>
+             </div>
+        </div>
+
+        <!-- Sección Historial de Partidas del Usuario Actual -->
+         <div class="history-container">
+            <h2><i class="fas fa-history"></i>Tu Historial (Pasala Che)</h2>
+            <div id="history-list" class="match-history-list">
+                <!-- Las tarjetas de partidas se llenarán dinámicamente con JS -->
+                 <p class="loading-message" style="text-align:center; padding: 20px;">Revisando tus partidos... Si no ves nada, ¡mandale mecha a jugar!</p>
+            </div>
+        </div>
+
     </main>
 
     <!-- Site Footer -->

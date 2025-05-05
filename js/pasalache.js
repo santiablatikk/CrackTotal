@@ -1177,7 +1177,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Create modal header with icon
         const modalHeader = document.createElement('div');
         modalHeader.className = 'result-modal-header';
-        modalHeader.style.background = color;
+        modalHeader.classList.add(`result-header-${type}`);
         modalHeader.innerHTML = `
             <div class="result-icon">${icon}</div>
             <h2 class="result-title">${title}</h2>
@@ -1215,31 +1215,28 @@ document.addEventListener('DOMContentLoaded', function() {
         buttonsContainer.className = 'result-buttons';
         
         const viewStatsButton = document.createElement('button');
-        viewStatsButton.className = 'stats-button';
+        viewStatsButton.className = 'modal-button';
         viewStatsButton.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
             Ver Estadísticas
         `;
 
         const viewProfileButton = document.createElement('button');
-        viewProfileButton.className = 'profile-button';
+        viewProfileButton.className = 'modal-button';
         viewProfileButton.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             Ver Perfil
         `;
         
-        // ---> NEW BUTTON START <---
         const viewRankingButton = document.createElement('button');
-        // Reuse profile style, add specific class if needed later for different styling
-        viewRankingButton.className = 'ranking-button profile-button'; 
+        viewRankingButton.className = 'modal-button';
         viewRankingButton.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg> <!-- Trophy Icon -->
             Ver Ranking
         `;
-        // ---> NEW BUTTON END <---
         
         const goHomeButton = document.createElement('button');
-        goHomeButton.className = 'play-again-button';
+        goHomeButton.className = 'modal-button primary';
         goHomeButton.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             Volver a inicio
@@ -1247,7 +1244,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         buttonsContainer.appendChild(viewStatsButton);
         buttonsContainer.appendChild(viewProfileButton);
-        buttonsContainer.appendChild(viewRankingButton); // Append the new button
+        buttonsContainer.appendChild(viewRankingButton);
         buttonsContainer.appendChild(goHomeButton);
         
         // Assemble modal
@@ -1362,21 +1359,21 @@ document.addEventListener('DOMContentLoaded', function() {
         buttonsContainer.className = 'stats-buttons';
         
         const closeButton = document.createElement('button');
-        closeButton.className = 'stats-close-button';
+        closeButton.className = 'modal-button secondary';
         closeButton.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"></path><path d="M6 6l12 12"></path></svg>
             Cerrar
         `;
 
         const viewProfileButton = document.createElement('button');
-        viewProfileButton.className = 'profile-button';
+        viewProfileButton.className = 'modal-button';
         viewProfileButton.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             Ver Perfil
         `;
         
         const goHomeButton = document.createElement('button');
-        goHomeButton.className = 'stats-play-again-button';
+        goHomeButton.className = 'modal-button primary';
         goHomeButton.innerHTML = `
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             Volver a inicio
