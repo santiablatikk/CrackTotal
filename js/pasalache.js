@@ -1210,55 +1210,80 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         
-        // Create buttons
+        // --- Create buttons Container --- 
         const buttonsContainer = document.createElement('div');
-        buttonsContainer.className = 'result-buttons';
-        
+        buttonsContainer.className = 'result-buttons'; // Use a general class
+
+        // --- Botones de Acción (Estadísticas, Perfil, Ranking, Inicio) ---
+        const actionButtonsWrapper = document.createElement('div');
+        actionButtonsWrapper.className = 'result-action-buttons'; // Wrapper for non-share buttons
+
         const viewStatsButton = document.createElement('button');
-        viewStatsButton.className = 'modal-button';
+        viewStatsButton.className = 'modal-button secondary-button'; // Style adjustment
         viewStatsButton.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
-            Ver Estadísticas
+            <i class="fas fa-chart-bar"></i>
+            Ver Errores
         `;
 
         const viewProfileButton = document.createElement('button');
-        viewProfileButton.className = 'modal-button';
+        viewProfileButton.className = 'modal-button secondary-button'; // Style adjustment
         viewProfileButton.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <i class="fas fa-user"></i>
             Ver Perfil
         `;
         
         const viewRankingButton = document.createElement('button');
-        viewRankingButton.className = 'modal-button';
+        viewRankingButton.className = 'modal-button secondary-button'; // Style adjustment
         viewRankingButton.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg> <!-- Trophy Icon -->
+             <i class="fas fa-trophy"></i>
             Ver Ranking
         `;
         
         const goHomeButton = document.createElement('button');
-        goHomeButton.className = 'modal-button primary';
+        goHomeButton.className = 'modal-button primary-button'; // Keep primary style
         goHomeButton.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            Volver a inicio
+            <i class="fas fa-redo-alt"></i>
+            Jugar de Nuevo
         `;
-        
-        buttonsContainer.appendChild(viewStatsButton);
-        buttonsContainer.appendChild(viewProfileButton);
-        buttonsContainer.appendChild(viewRankingButton);
-        buttonsContainer.appendChild(goHomeButton);
+
+        actionButtonsWrapper.appendChild(viewStatsButton);
+        actionButtonsWrapper.appendChild(viewProfileButton);
+        actionButtonsWrapper.appendChild(viewRankingButton);
+        actionButtonsWrapper.appendChild(goHomeButton);
+
+        // --- Botones de Compartir --- 
+        const shareButtonsWrapper = document.createElement('div');
+        shareButtonsWrapper.className = 'result-share-buttons'; // Wrapper for share buttons
+
+        const shareTwitterButton = document.createElement('button');
+        shareTwitterButton.className = 'modal-button share-button twitter-share-button';
+        shareTwitterButton.innerHTML = `
+            <i class="fab fa-twitter"></i> Compartir en Twitter
+        `;
+
+        const shareWhatsAppButton = document.createElement('button');
+        shareWhatsAppButton.className = 'modal-button share-button whatsapp-share-button';
+        shareWhatsAppButton.innerHTML = `
+            <i class="fab fa-whatsapp"></i> Compartir en WhatsApp
+        `;
+
+        shareButtonsWrapper.appendChild(shareTwitterButton);
+        shareButtonsWrapper.appendChild(shareWhatsAppButton);
         
         // Assemble modal
         modalContent.appendChild(modalHeader);
         modalContent.appendChild(statsContainer);
+        buttonsContainer.appendChild(actionButtonsWrapper); // Add action buttons first
+        buttonsContainer.appendChild(shareButtonsWrapper); // Add share buttons below
         modalContent.appendChild(buttonsContainer);
         modalOverlay.appendChild(modalContent);
         
         // Add modal to the DOM
         document.body.appendChild(modalOverlay);
         
-        // Add event listeners
+        // --- Add event listeners --- 
         viewStatsButton.addEventListener('click', () => {
-            showStatsDetailModal();
+            showStatsDetailModal(); // This function should already exist
         });
 
         viewProfileButton.addEventListener('click', () => {
@@ -1269,10 +1294,38 @@ document.addEventListener('DOMContentLoaded', function() {
             window.location.href = 'ranking.html';
         });
         
+        // **MODIFIED:** Go Home button now restarts the game (same page)
         goHomeButton.addEventListener('click', () => {
             modalOverlay.remove(); 
-            window.location.href = 'games.html'; 
+            // Reiniciar el juego en lugar de ir a games.html
+            const statsModal = document.querySelector('.stats-detail-modal'); // Cierra también el modal de stats si está abierto
+            if (statsModal) statsModal.remove();
+            initGame(); 
         });
+
+        // --- Event Listener for Twitter Share ---
+        shareTwitterButton.addEventListener('click', () => {
+            const score = stats.correctAnswers;
+            const total = alphabet.length;
+            const gameUrl = 'https://www.cracktotal.com/pasalache.html'; 
+            const twitterHandle = '@cracktotal_';
+            let tweetText = `¡Hice ${score}/${total} en el #PasalaChe de #CrackTotal! ⚽️🇦🇷 ¿Te animás a superarme? ${twitterHandle}`; 
+            
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(gameUrl)}`;
+            window.open(twitterUrl, '_blank');
+        });
+
+        // --- Event Listener for WhatsApp Share ---
+        shareWhatsAppButton.addEventListener('click', () => {
+            const score = stats.correctAnswers;
+            const total = alphabet.length;
+            const gameUrl = 'https://www.cracktotal.com/pasalache.html'; 
+            let whatsappText = `¡Hice ${score}/${total} en el Pasala Che de Crack Total! ⚽️🇦🇷 ¿Te animás a superarme? ${gameUrl}`;
+
+            const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappText)}`;
+            window.open(whatsappUrl, '_blank');
+        });
+
     }
     
     // Show detailed statistics modal
