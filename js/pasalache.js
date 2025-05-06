@@ -6,8 +6,13 @@ import {
 
 // --- Game variables (Declare totalTime globally/module scope) ---
 let totalTime = 240; // Default: Normal difficulty (240 seconds)
+let currentPlayerName = 'Jugador Anónimo'; // <-- Variable para guardar el nombre
 
 document.addEventListener('DOMContentLoaded', function() {
+    // <-- Leer el nombre del jugador UNA VEZ al cargar -->
+    currentPlayerName = localStorage.getItem('playerName') || 'Jugador Anónimo';
+    console.log("Player name loaded on init:", currentPlayerName);
+
     // Stats Profile Keys
     const STATS_KEY = 'pasalacheUserStats';
     const HISTORY_KEY = 'pasalacheGameHistory'; // Nueva clave para el historial
@@ -25,9 +30,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return name.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, ''); 
     }
     function getCurrentDisplayName() {
-        const name = localStorage.getItem('playerName') || 'Jugador Anónimo';
-        console.log("Nombre obtenido para Display:", name); // <--- Log temporal
-        return name;
+        // const name = localStorage.getItem('playerName') || 'Jugador Anónimo'; <--- REMOVED
+        // console.log("Nombre obtenido para Display:", name); // <--- REMOVED
+        // return name; <--- REMOVED
+        return currentPlayerName; // <-- Devolver el nombre guardado en la variable
     }
 
     // Function to get default stats object
@@ -1100,6 +1106,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.warn("Firestore DB not initialized. Skipping online save.");
         }
         // <<<--- FIN: Guardar en FIRESTORE --- >>>
+
+        // --- Log ANTES de guardar historial local --- 
+        console.log("[History Check] displayName being used for local history:", getCurrentDisplayName()); // Log para el nombre local
 
         // --- Guardar Partida en Historial LOCAL --- 
         const gameDataForHistory = {
