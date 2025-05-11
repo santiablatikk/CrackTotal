@@ -145,10 +145,8 @@ main.game-content > div:first-child { /* Target the div holding the profile butt
 .profile-link.small-button svg { width: 16px; height: 16px; }
 
 /* --- Loading / Error Messages --- */
-/* (Keep existing styles) */
-#ranking-body td[colspan="6"], /* Use colspan 6 again */
-#history-list p.loading-message,
-#history-list p.error-message {
+/* General style for messages spanning columns in ranking table */
+#ranking-body td[colspan] {
     padding: 1.5rem 0.5rem;
     text-align: center;
     font-style: italic;
@@ -244,9 +242,10 @@ main.game-content > div:first-child { /* Target the div holding the profile butt
          padding: 4px 3px;
          font-size: 0.6rem;
     }
-    .ranking-table td.rank-cell { width: 30px; }
-    .ranking-table td.score-cell { min-width: 50px; }
-    .ranking-table td.matches-cell { min-width: 50px; }
+    .ranking-table td.rank-cell { width: 25px; padding: 3px 2px; }
+    .ranking-table td.player-cell { /* white-space: nowrap; text-overflow: ellipsis; overflow: hidden; max-width: 150px; */ } /* Considerar si el nombre es muy largo */
+    .ranking-table td.score-cell { min-width: 45px; padding: 3px 2px; text-align: right; }
+    /* .ranking-table td.matches-cell { min-width: 50px; } */ /* Ya está oculto */
 
     /* Hide matches column as well on smallest screens */
     .ranking-table th.matches-cell,

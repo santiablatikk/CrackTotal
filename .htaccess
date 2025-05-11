@@ -1,0 +1,13 @@
+RewriteEngine On
+
+# 1. Redirigir HTTP a HTTPS y www a no-www
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\.cracktotal\.com [NC]
+RewriteRule ^(.*)$ https://cracktotal.com/$1 [L,R=301,NE]
+
+# 2. Redirigir index.html a la raíz /
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s(.*)/index\.html\sHTTP [NC]
+RewriteRule ^(.*)/index\.html$ /$1 [L,R=301,NE]
+
+# 3. Redirigir terms.html a terminos.html
+RewriteRule ^terms\.html$ /terminos.html [L,R=301,NC]

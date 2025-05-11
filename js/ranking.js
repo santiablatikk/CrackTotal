@@ -34,7 +34,7 @@ function loadRanking() {
         return;
     }
 
-    rankingBody.innerHTML = '<tr><td colspan="5">Cargando ranking...</td></tr>'; // Mensaje inicial
+    rankingBody.innerHTML = '<tr><td colspan="3">Cargando ranking...</td></tr>'; // Mensaje inicial (asumiendo 3 columnas en móvil)
 
     try {
         const usersRef = collection(db, "users");
@@ -52,7 +52,7 @@ function loadRanking() {
             rankingBody.innerHTML = ''; // Limpiar tabla en cada actualización
 
         if (querySnapshot.empty) {
-            rankingBody.innerHTML = '<tr><td colspan="5">Aún no hay datos en el ranking. ¡Juega una partida!</td></tr>';
+            rankingBody.innerHTML = '<tr><td colspan="3">Aún no hay datos en el ranking. ¡Juega una partida!</td></tr>'; // (asumiendo 3 cols)
             return;
         }
 
@@ -66,23 +66,21 @@ function loadRanking() {
             const totalScore = userData.totalScore || 0;
             const matchesPlayed = userData.matchesPlayed || 0;
             // Calcular precisión si no está guardada directamente
-            const totalCorrect = userData.totalCorrectAnswers || 0;
-            const totalIncorrect = userData.totalIncorrectAnswers || 0;
-            const totalAnswered = totalCorrect + totalIncorrect;
-            const averageAccuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
-            const fastestWinTime = userData.fastestWinTime; // Asume que existe en Firestore
+            // const totalCorrect = userData.totalCorrectAnswers || 0;
+            // const totalIncorrect = userData.totalIncorrectAnswers || 0;
+            // const totalAnswered = totalCorrect + totalIncorrect;
+            // const averageAccuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+            // const fastestWinTime = userData.fastestWinTime; // Asume que existe en Firestore
             
             // Formatear tiempo (usando una función auxiliar si es necesario)
-            const formattedTime = formatFirestoreTime(fastestWinTime);
+            // const formattedTime = formatFirestoreTime(fastestWinTime);
 
             // --- Generar HTML para la fila --- 
             row.innerHTML = `
                 <td>${position}</td>
                 <td class="player-name-rank">${playerName}</td>
                 <td class="score-rank">${totalScore}</td>
-                <td>${matchesPlayed}</td>
-                <td>${averageAccuracy}%</td>
-                <td>${formattedTime}</td>
+                <td class="matches-cell">${matchesPlayed}</td>
             `;
             rankingBody.appendChild(row);
             position++;
@@ -90,7 +88,7 @@ function loadRanking() {
         }, (error) => {
             // Manejo de errores del listener
             console.error("Error al escuchar el ranking: ", error);
-            rankingBody.innerHTML = '<tr><td colspan="5">Error al cargar el ranking en tiempo real. Inténtalo de nuevo más tarde.</td></tr>';
+            rankingBody.innerHTML = '<tr><td colspan="3">Error al cargar el ranking en tiempo real. Inténtalo de nuevo más tarde.</td></tr>'; // (asumiendo 3 cols)
         });
 
         // Podrías guardar 'unsubscribe' si necesitaras detener el listener en algún momento,
@@ -99,7 +97,7 @@ function loadRanking() {
     } catch (error) {
         // Error inicial al configurar la consulta (raro)
         console.error("Error al configurar la consulta del ranking: ", error);
-        rankingBody.innerHTML = '<tr><td colspan="5">Error al configurar la carga del ranking.</td></tr>';
+        rankingBody.innerHTML = '<tr><td colspan="3">Error al configurar la carga del ranking.</td></tr>'; // (asumiendo 3 cols)
     }
 }
 
@@ -250,17 +248,17 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error("Firestore no está inicializado. No se puede cargar el ranking ni el historial.");
         // Podrías mostrar mensajes de error en la UI aquí también si db es null
-        if (rankingBody) rankingBody.innerHTML = '<tr><td colspan="5">Error de conexión con la base de datos.</td></tr>';
+        if (rankingBody) rankingBody.innerHTML = '<tr><td colspan="3">Error de conexión con la base de datos.</td></tr>'; // (asumiendo 3 cols)
         if (historyList) historyList.innerHTML = '<p>Error de conexión con la base de datos.</p>';
     }
 }); 
 
 // --- Función auxiliar para formatear tiempo (puede ser null) ---
-function formatFirestoreTime(totalSeconds) {
-    if (totalSeconds === null || typeof totalSeconds === 'undefined' || totalSeconds <= 0) {
-        return '--:--';
-    }
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-} 
+// function formatFirestoreTime(totalSeconds) {
+//     if (totalSeconds === null || typeof totalSeconds === 'undefined' || totalSeconds <= 0) {
+//         return '--:--';
+//     }
+//     const minutes = Math.floor(totalSeconds / 60);
+//     const seconds = totalSeconds % 60;
+//     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+// } 
