@@ -66,6 +66,18 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
+    <script>
+(function() {
+    const USUARIO_REGISTRADO_KEY = 'cracktotal_usuarioHaIngresadoNombre';
+    const esPaginaDeIngreso = window.location.pathname.endsWith('/index.html') || 
+                              window.location.pathname === '/' || 
+                              window.location.pathname.endsWith('/index'); 
+
+    if (!localStorage.getItem(USUARIO_REGISTRADO_KEY) && !esPaginaDeIngreso) {
+        window.location.href = '/index.html'; 
+    }
+})();
+</script>
 </head>
 <body class="game-body">
     <div class="game-layout">

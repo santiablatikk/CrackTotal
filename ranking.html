@@ -356,6 +356,19 @@
         .match-result.timeout .result-icon { color: var(--warning, #FF8E3C); }
 
     </style>
+
+    <script>
+(function() {
+    const USUARIO_REGISTRADO_KEY = 'cracktotal_usuarioHaIngresadoNombre';
+    const esPaginaDeIngreso = window.location.pathname.endsWith('/index.html') || 
+                              window.location.pathname === '/' || 
+                              window.location.pathname.endsWith('/index'); 
+
+    if (!localStorage.getItem(USUARIO_REGISTRADO_KEY) && !esPaginaDeIngreso) {
+        window.location.href = '/index.html'; 
+    }
+})();
+</script>
 </head>
 <body>
 
