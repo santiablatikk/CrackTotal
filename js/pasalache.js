@@ -1226,7 +1226,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // --- Botones de Acción (Estadísticas, Perfil, Ranking, Inicio) ---
         const actionButtonsWrapper = document.createElement('div');
         actionButtonsWrapper.className = 'result-action-buttons'; // Wrapper for non-share buttons
-
+        
         const viewStatsButton = document.createElement('button');
         viewStatsButton.className = 'modal-button secondary-button'; // Style adjustment
         viewStatsButton.innerHTML = `
