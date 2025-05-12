@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', function() {
             if (playerName) {
                 // Save the name to local storage
                 localStorage.setItem('playerName', playerName);
-                localStorage.setItem('cracktotal_usuarioHaIngresadoNombre', 'true');
                 // Redirect to game selection page
                 window.location.href = 'games.html';
             }
