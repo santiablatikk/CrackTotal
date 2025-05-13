@@ -6,8 +6,7 @@ from collections import defaultdict
 
 # Regex to find prefixes like "CONTIENE X:" or "Comienza con X:"
 # It captures the letter (group 1) and the rest of the question (group 2)
-# Keep this for potential future use, but not strictly needed for merge/dedup
-PREFIX_PATTERN = re.compile(r"^(?:CONTIENE|Comienza con)\\s+([A-Z]):\\s*(.*)", re.IGNORECASE)
+PREFIX_PATTERN = re.compile(r"^(?:CONTIENE|Comienza con)\s+([A-Z]):\s*(.*)", re.IGNORECASE)
 
 def normalize_string(s):
     """Lowercase and remove diacritics for comparison."""
@@ -24,7 +23,7 @@ def normalize_string(s):
     for a, b in replacements:
         s = s.replace(a, b)
     # Remove extra whitespace
-    s = re.sub(r'\\s+', ' ', s).strip()
+    s = re.sub(r'\s+', ' ', s).strip()
     return s
 
 APELLIDOS_COMPUESTOS_CONOCIDOS_NORMALIZADOS = [
@@ -74,6 +73,62 @@ PALABRAS_CLAVE_PREGUNTA_GENERICA = [
 ]
 # --- END: Palabras clave --- 
 
+# --- NUEVO: Lista de términos futbolísticos que no son apellidos ---
+NO_APELLIDOS = [
+    # Clubes
+    "real madrid", "barcelona", "atletico", "atletico madrid", "manchester united", "manchester city", 
+    "liverpool", "chelsea", "arsenal", "juventus", "milan", "inter", "bayern", "borussia", "psg",
+    "paris saint germain", "ajax", "porto", "benfica", "sporting", "river plate", "boca juniors", 
+    "flamengo", "fc", "united", "city", "albion", "wanderers", "rovers", "atletico", "racing",
+    "dynamo", "dinamo", "lokomotiv", "zenit", "shakhtar", "galatasaray", "fenerbahce", "besiktas", 
+    "olympiakos", "celtic", "rangers", "anderlecht", "brugge", "copenhagen", "malmo", "rosario",
+    "estudiantes", "racing", "independiente", "huracan", "velez", "newells", "gimnasia",
+    "godoy cruz", "union", "colon", "talleres", "banfield", "lanus", "argentinos", "patronato",
+    "platense", "tigre", "defensa", "sarmiento", "arsenal", "belgrano", "instituto", 
+    "sevilla", "valencia", "villarreal", "athletic", "betis", "sociedad", "getafe", "celta", "vigo",
+    "mallorca", "valladolid", "espanyol", "deportivo", "alaves", "osasuna", "girona", "leganes", "cadiz", 
+    "rayo", "vallecano", "levante", "eibar", "zaragoza", "almeria", "malaga", "sporting", "gijon",
+    "corinthians", "palmeiras", "santos", "sao paulo", "gremio", "cruzeiro", "internacional", "vasco",
+    "botafogo", "fluminense", "atletico mineiro", "colo colo", "universidad",
+    
+    # Estadios
+    "santiago bernabeu", "camp nou", "wanda metropolitano", "old trafford", "anfield", "stamford bridge", 
+    "emirates", "etihad", "san siro", "juventus stadium", "allianz arena", "signal iduna", 
+    "parc des princes", "johan cruyff", "la bombonera", "monumental", "maracana",
+    "stadium", "arena", "estadio", "park", "field", "coliseum", "court", "ground",
+    
+    # Términos de fútbol
+    "offside", "penalty", "corner", "throw in", "free kick", "goal kick", "goalkeeper", "defender", 
+    "midfielder", "striker", "forward", "manager", "coach", "referee", "linesman", "var", "goal", 
+    "assist", "tackle", "pass", "shot", "save", "clearance", "dribble", "headed", "volley", 
+    "fuera de juego", "penalti", "penal", "penalty", "tiro libre", "saque", "arquero", "portero", 
+    "defensor", "mediocampista", "delantero", "arbitro", "juez", "linea", "gol", "asistencia", 
+    "entrada", "pase", "disparo", "atajada", "despeje", "regate", "cabezazo", "volea",
+    
+    # Países y ciudades
+    "alemania", "argentina", "brasil", "espana", "francia", "inglaterra", "italia", "portugal", 
+    "holanda", "belgica", "croacia", "uruguay", "colombia", "mexico", "japon", "corea", 
+    "estados unidos", "canada", "australia", "rusia", "ucrania", "suiza", "austria", 
+    "dinamarca", "suecia", "noruega", "finlandia", "islandia", "escocia", "gales", "irlanda", 
+    "polonia", "republica checa", "hungria", "rumania", "bulgaria", "serbia", "grecia", "turquia", 
+    "marruecos", "egipto", "senegal", "camerun", "nigeria", "ghana", "costa de marfil", "argelia", 
+    "sudafrica", "china", "qatar", "arabia saudita", "iran", "irak", "emiratos", "australia", 
+    "nueva zelanda",
+    
+    # Competiciones
+    "mundial", "champions", "europa league", "copa libertadores", "copa sudamericana", "copa america", 
+    "eurocopa", "premier league", "la liga", "serie a", "bundesliga", "ligue 1", "eredivisie", 
+    "primeira liga", "superliga", "copa", "league", "championship", "copa del rey", "fa cup", 
+    "carabao cup", "dfb pokal", "copa italia", "copa",
+    
+    # Misceláneos
+    "balon de oro", "bota de oro", "fifa", "uefa", "conmebol", "concacaf", "afc", "caf", "ofc", 
+    "var", "fair play", "hat trick", "seleccion", "nacional", "liga", "division", "campeonato", 
+    "torneo", "clasificacion", "eliminatoria", "amistoso", "sub-", "sub17", "sub20", "sub21", "sub23", 
+    "femenino", "masculino", "tecnico", "dt", "director tecnico", "federacion", "asociacion"
+]
+# --- FIN NUEVO ---
+
 def merge_and_deduplicate(input_filenames, output_filename, report_filename="data/name_mismatch_report.txt"):
     """
     Merges questions from multiple JSON files into a single file,
@@ -88,6 +143,9 @@ def merge_and_deduplicate(input_filenames, output_filename, report_filename="dat
     total_questions_processed = 0
     duplicates_found = 0
     potential_mismatches_logged = 0
+    contiene_prefix_removed = 0
+    questions_modified_for_name_clarity = 0
+    apellido_prefix_removed = 0  # <-- NUEVO: Contador para prefijos de apellido eliminados
 
     report_entries = []
 
@@ -131,42 +189,29 @@ def merge_and_deduplicate(input_filenames, output_filename, report_filename="dat
                  respuesta = q_data["respuesta"]
                  total_questions_processed += 1
 
-                 normalized_respuesta = normalize_string(respuesta) # Normalize respuesta once
-
-                 # Handle "CONTIENE L:" prefix modification
-                 prefix_match = PREFIX_PATTERN.match(pregunta)
-                 is_contiene_question_to_skip = False
-
-                 if prefix_match:
-                     prefix_full_text = prefix_match.group(0) 
-                     prefix_letter_captured = prefix_match.group(1) 
-                     actual_question_text = prefix_match.group(2).strip()
-
-                     if "CONTIENE" in prefix_full_text.upper(): 
-                         normalized_prefix_letter = normalize_string(prefix_letter_captured)
-                         if normalized_respuesta.startswith(normalized_prefix_letter):
-                             # Answer starts with the letter, so remove "CONTIENE L:" prefix
-                             pregunta = actual_question_text # Update pregunta
-                             # print(f"  INFO: 'CONTIENE {prefix_letter_captured}:' prefix removed. New Q: '{pregunta[:50]}...'")
-                         else:
-                             # "CONTIENE L:" and answer does NOT start with L. Mark for skipping.
-                             is_contiene_question_to_skip = True
-                 
-                 if is_contiene_question_to_skip:
-                     # print(f"  SKIP: 'CONTIENE' question where answer doesn't start with specified letter. Original Q: '{q_data['pregunta'][:50]}...'")
-                     continue
-
-                 # Now, normalize the (potentially modified) pregunta
                  normalized_pregunta = normalize_string(pregunta)
-                 
+                 normalized_respuesta = normalize_string(respuesta)
                  palabras_respuesta = normalized_respuesta.split()
                  palabras_significativas_respuesta = [p for p in palabras_respuesta if p not in PREPOSICIONES_APELLIDOS]
                  num_palabras_significativas = len(palabras_significativas_respuesta)
+                 
+                 # --- NUEVO: Verificar si la respuesta NO es un apellido ---
+                 respuesta_no_es_apellido = False
+                 for termino in NO_APELLIDOS:
+                     if termino in normalized_respuesta:
+                         respuesta_no_es_apellido = True
+                         break
+                 
+                 # También verificar por iniciales mayúsculas múltiples (como FC, AC, etc.)
+                 if re.search(r'\b[A-Z]{2,}\b', respuesta) or re.search(r'\b[A-Z]\.[A-Z]\.', respuesta):
+                     respuesta_no_es_apellido = True
+                 # --- FIN NUEVO ---
 
                  # --- START: Validación y Logueo Nombre/Apellido/Completo ---
                  pregunta_pide_nombre_completo = (
                      "nombre completo" in normalized_pregunta or
-                     "nombres y apellidos" in normalized_pregunta
+                     "nombres y apellidos" in normalized_pregunta or
+                     "nombre y apellido" in normalized_pregunta
                  )
                  pregunta_pide_apellido = (
                      ("apellido del" in normalized_pregunta or
@@ -182,6 +227,95 @@ def merge_and_deduplicate(input_filenames, output_filename, report_filename="dat
                  )
                  
                  es_pregunta_generica = any(frase in normalized_pregunta for frase in PALABRAS_CLAVE_PREGUNTA_GENERICA)
+
+                 # ----- NUEVO: Modificar pregunta para aclarar el tipo de respuesta esperada -----
+                 pregunta_original = pregunta
+                 
+                 # NUEVO: Quitar prefijo "Apellido:" si la respuesta no es un apellido
+                 if pregunta_pide_apellido and respuesta_no_es_apellido:
+                     if pregunta.startswith("Apellido:"):
+                         pregunta = pregunta.replace("Apellido:", "").strip()
+                         apellido_prefix_removed += 1
+                         print(f"    Removed 'Apellido:' prefix because answer '{respuesta}' is not a surname")
+                     elif pregunta.startswith("Apellido del"):
+                         pregunta = pregunta.replace("Apellido del", "").strip()
+                         apellido_prefix_removed += 1
+                         print(f"    Removed 'Apellido del' prefix because answer '{respuesta}' is not a surname")
+                     elif pregunta.startswith("Apellido de la"):
+                         pregunta = pregunta.replace("Apellido de la", "").strip()
+                         apellido_prefix_removed += 1
+                         print(f"    Removed 'Apellido de la' prefix because answer '{respuesta}' is not a surname")
+                     elif "apellido" in normalized_pregunta:
+                         # Reemplazar la palabra "apellido" por una alternativa más adecuada
+                         if "club" in normalized_respuesta or "fc" in normalized_respuesta or "united" in normalized_respuesta:
+                             pregunta = re.sub(r'(?i)apellido', 'Nombre del club', pregunta)
+                         elif "estadio" in normalized_respuesta or "stadium" in normalized_respuesta or "arena" in normalized_respuesta:
+                             pregunta = re.sub(r'(?i)apellido', 'Nombre del estadio', pregunta)
+                         elif any(pais in normalized_respuesta for pais in ["alemania", "argentina", "brasil", "espana", "francia"]):
+                             pregunta = re.sub(r'(?i)apellido', 'País', pregunta)
+                         else:
+                             pregunta = re.sub(r'(?i)apellido', 'Nombre', pregunta)
+                         
+                         apellido_prefix_removed += 1
+                         print(f"    Modified 'apellido' in question because answer '{respuesta}' is not a surname")
+                 
+                 # Caso 1: La respuesta parece un nombre completo (2+ palabras significativas) 
+                 # pero la pregunta no lo especifica
+                 elif (num_palabras_significativas >= 2 and 
+                     not pregunta_pide_nombre_completo and 
+                     not es_pregunta_generica and 
+                     not (pregunta_pide_apellido and normalized_respuesta in APELLIDOS_COMPUESTOS_CONOCIDOS_NORMALIZADOS) and
+                     not respuesta_no_es_apellido):  # <-- MODIFICADO: No modificar si no es un apellido
+                     
+                     # Si la pregunta es "¿Quién...?" o "¿Cuál...?" añadir frase al final
+                     if pregunta.startswith("¿") and ("?" in pregunta):
+                         # Reemplazar el signo de interrogación final con la especificación
+                         pregunta = pregunta.replace("?", " (nombre completo)?")
+                     # Para otras formas de preguntas
+                     elif not "nombre completo" in pregunta.lower():
+                         # Si no tiene signos de interrogación, añadir al principio
+                         if pregunta.startswith("Apellido del"):
+                             # Si dice "Apellido del..." pero la respuesta es nombre completo, corregir
+                             pregunta = pregunta.replace("Apellido del", "Nombre completo del")
+                         elif pregunta.startswith("Apellido de la"):
+                             pregunta = pregunta.replace("Apellido de la", "Nombre completo de la")
+                         else:
+                             # Para otros casos añadir al inicio
+                             pregunta = "Nombre completo: " + pregunta
+                     
+                     if pregunta != pregunta_original:
+                         questions_modified_for_name_clarity += 1
+                         print(f"    Modified: '{pregunta_original}' -> '{pregunta}'")
+                 
+                 # Caso 2: La respuesta parece solo apellido (1 palabra significativa) 
+                 # pero la pregunta no lo especifica y no es nombre de pila
+                 elif (num_palabras_significativas == 1 and 
+                       not pregunta_pide_apellido and 
+                       not pregunta_pide_nombre_pila and
+                       not pregunta_pide_nombre_completo and
+                       not es_pregunta_generica and
+                       not respuesta_no_es_apellido):  # <-- MODIFICADO: No modificar si no es un apellido
+                     
+                     # Si la pregunta es "¿Quién...?" o "¿Cuál...?" añadir frase al final
+                     if pregunta.startswith("¿") and ("?" in pregunta):
+                         # Reemplazar el signo de interrogación final con la especificación
+                         pregunta = pregunta.replace("?", " (apellido)?")
+                     # Para otras formas de preguntas
+                     elif not "apellido" in pregunta.lower():
+                         # Si no tiene signos de interrogación, añadir al principio
+                         if pregunta.startswith("Nombre completo del"):
+                             # Si dice "Nombre completo del..." pero la respuesta es solo apellido, corregir
+                             pregunta = pregunta.replace("Nombre completo del", "Apellido del")
+                         elif pregunta.startswith("Nombre completo de la"):
+                             pregunta = pregunta.replace("Nombre completo de la", "Apellido de la")
+                         else:
+                             # Para otros casos añadir al inicio
+                             pregunta = "Apellido: " + pregunta
+                     
+                     if pregunta != pregunta_original:
+                         questions_modified_for_name_clarity += 1
+                         print(f"    Modified: '{pregunta_original}' -> '{pregunta}'")
+                 # ----- FIN NUEVO -----
 
                  mismatch_reason = None
 
@@ -220,14 +354,26 @@ def merge_and_deduplicate(input_filenames, output_filename, report_filename="dat
                      # NO HACEMOS `continue` AQUI - la pregunta sigue para otros filtros
                  # --- END: Validación y Logueo ---
 
-                 # The old "Contiene" skip block is now handled by the logic above.
-                 # Questions that passed the new "CONTIENE" logic (either transformed or never had it)
-                 # will now proceed to the duplicate check.
-
+                 # Check if the question has a "CONTIENE X:" prefix
+                 contiene_match = re.match(r"^\s*CONTIENE\s+([A-Z])\s*:\s*(.*)", pregunta, re.IGNORECASE)
+                 if contiene_match:
+                     contiene_letra = contiene_match.group(1).lower()
+                     resto_pregunta = contiene_match.group(2)
+                     
+                     # If the answer starts with the same letter mentioned in "CONTIENE X:"
+                     if normalized_respuesta.startswith(contiene_letra):
+                         # Remove the prefix "CONTIENE X:" from the question
+                         pregunta_sin_prefijo = resto_pregunta.strip()
+                         pregunta = pregunta_sin_prefijo
+                         contiene_prefix_removed += 1
+                         print(f"    Removed 'CONTIENE {contiene_letra.upper()}:' prefix because answer '{respuesta}' starts with '{contiene_letra}'")
+                 
+                 # Check for duplicates
+                 normalized_pregunta = normalize_string(pregunta)  # Re-normalize if the question was modified
                  normalized_tuple = (normalized_pregunta, normalized_respuesta)
                  if normalized_tuple not in seen_normalized_tuples:
                      seen_normalized_tuples.add(normalized_tuple)
-                     # Store the original question data
+                     # Store the question data (may be modified if prefix was removed)
                      merged_questions_by_letter[section_letter].append({
                          "pregunta": pregunta,
                          "respuesta": respuesta
@@ -241,7 +387,7 @@ def merge_and_deduplicate(input_filenames, output_filename, report_filename="dat
     # End of filename loop
 
     # <<<--- START FINAL LETTER CHECK --- >>>
-    print("\\nPerforming final letter-answer check before writing...")
+    print("\nPerforming final letter-answer check before writing...")
     final_validated_questions = defaultdict(list)
     post_merge_mismatched_removed = 0
     final_question_count = 0
@@ -289,6 +435,9 @@ def merge_and_deduplicate(input_filenames, output_filename, report_filename="dat
 
         print(f"\nMerge and deduplication complete.")
         print(f"  Total questions processed initially: {total_questions_processed}")
+        print(f"  'CONTIENE X:' prefixes removed: {contiene_prefix_removed}")
+        print(f"  Questions modified for name/apellido clarity: {questions_modified_for_name_clarity}")
+        print(f"  'Apellido:' prefixes removed from non-apellidos: {apellido_prefix_removed}")  # <-- NUEVO
         print(f"  Duplicate questions removed: {duplicates_found}")
         print(f"  Mismatched questions removed post-merge: {post_merge_mismatched_removed}")
         # Calculate final count based on what's actually written
@@ -321,7 +470,7 @@ def merge_and_deduplicate(input_filenames, output_filename, report_filename="dat
 def main():
     parser = argparse.ArgumentParser(description="Merge, deduplicate, and check Pasapalabra JSON files.")
     parser.add_argument('input_files', nargs='+', help='List of input JSON files.')
-    parser.add_argument('-o', '--output', default='data/all_questions_merged_v3.json', help='Output file for merged data.')
+    parser.add_argument('-o', '--output', default='data/all_questions_merged_v5.json', help='Output file for merged data.')
     parser.add_argument('-r', '--report', default='data/name_mismatch_report.txt', help='Output file for name mismatch report.')
     
     args = parser.parse_args()

@@ -215,7 +215,7 @@
         "respuesta": "Aguero"
       },
       {
-        "pregunta": "¿Cuál es el apellido del ex defensor argentino, capitán del Inter campeón de la Champions 2010?",
+        "pregunta": "CONTIENE A: ¿Cuál es el apellido del ex defensor argentino, capitán del Inter campeón de la Champions 2010?",
         "respuesta": "Zanetti"
       },
       {
@@ -239,7 +239,7 @@
         "respuesta": "Alonso"
       },
       {
-        "pregunta": "¿Cuál es el apellido del futbolista brasileño, Balón de Oro 2007?",
+        "pregunta": "CONTIENE A: ¿Cuál es el apellido del futbolista brasileño, Balón de Oro 2007?",
         "respuesta": "Kaka"
       },
       {
@@ -247,11 +247,11 @@
         "respuesta": "Alemania"
       },
       {
-        "pregunta": "¿Cuál es el apellido del futbolista brasileño, leyenda del AC Milan?",
+        "pregunta": "CONTIENE A: ¿Cuál es el apellido del futbolista brasileño, leyenda del AC Milan?",
         "respuesta": "Cafu"
       },
       {
-        "pregunta": "¿Cómo se llama el estadio de Boca Juniors?",
+        "pregunta": "CONTIENE A: ¿Cómo se llama el estadio de Boca Juniors?",
         "respuesta": "La Bombonera"
       },
       {
@@ -259,19 +259,19 @@
         "respuesta": "Ajax"
       },
       {
-        "pregunta": "¿Cuál es el apellido del futbolista noruego del Manchester City, Bota de Oro 2023?",
+        "pregunta": "CONTIENE A: ¿Cuál es el apellido del futbolista noruego del Manchester City, Bota de Oro 2023?",
         "respuesta": "Haaland"
       },
       {
-        "pregunta": "¿Cuál es el apellido del exfutbolista español, leyenda del Barcelona y la selección, autor del gol en la final del Mundial 2010?",
+        "pregunta": "CONTIENE A: ¿Cuál es el apellido del exfutbolista español, leyenda del Barcelona y la selección, autor del gol en la final del Mundial 2010?",
         "respuesta": "Iniesta"
       },
       {
-        "pregunta": "¿Cuál es el apellido del legendario defensor italiano, ícono del AC Milan?",
+        "pregunta": "CONTIENE A: ¿Cuál es el apellido del legendario defensor italiano, ícono del AC Milan?",
         "respuesta": "Maldini"
       },
       {
-        "pregunta": "¿Cuál es el apellido del legendario defensor español, campeón del mundo 2010, que jugó en Real Madrid y Sevilla?",
+        "pregunta": "CONTIENE A: ¿Cuál es el apellido del legendario defensor español, campeón del mundo 2010, que jugó en Real Madrid y Sevilla?",
         "respuesta": "Ramos"
       }
     ]
@@ -428,7 +428,7 @@
         "respuesta": "Bayer Leverkusen"
       },
       {
-        "pregunta": "¿Cuál es el nombre completo del mediocampista español, técnico del Bayer Leverkusen campeón invicto 2023/24?",
+        "pregunta": "CONTIENE B: ¿Cuál es el nombre completo del mediocampista español, técnico del Bayer Leverkusen campeón invicto 2023/24?",
         "respuesta": "Xabi Alonso"
       },
       {
@@ -560,7 +560,7 @@
         "respuesta": "Balon de Oro"
       },
       {
-        "pregunta": "Apellido del ex delantero sueco que jugó en Ajax, Juventus, Inter, Barcelona, Milan, PSG y Man Utd.",
+        "pregunta": "CONTIENE B: Apellido del ex delantero sueco que jugó en Ajax, Juventus, Inter, Barcelona, Milan, PSG y Man Utd.",
         "respuesta": "Ibrahimovic"
       },
       {
@@ -568,7 +568,7 @@
         "respuesta": "Ballack"
       },
       {
-        "pregunta": "Nombre completo del arquero brasileño del Liverpool.",
+        "pregunta": "CONTIENE B: Nombre completo del arquero brasileño del Liverpool.",
         "respuesta": "Alisson Becker"
       },
       {
@@ -612,11 +612,11 @@
         "respuesta": "Gotze"
       },
       {
-        "pregunta": "¿Cuál es el apellido del ex delantero sueco que jugó en múltiples grandes de Europa?",
+        "pregunta": "CONTIENE B: ¿Cuál es el apellido del ex delantero sueco que jugó en múltiples grandes de Europa?",
         "respuesta": "Ibrahimovic"
       },
       {
-        "pregunta": "¿Cuál es el apellido del mediocampista español, técnico del Bayer Leverkusen campeón invicto 2023/24?",
+        "pregunta": "CONTIENE B: ¿Cuál es el apellido del mediocampista español, técnico del Bayer Leverkusen campeón invicto 2023/24?",
         "respuesta": "Xabi Alonso"
       },
       {
@@ -781,15 +781,15 @@
         "respuesta": "Casemiro"
       },
       {
-        "pregunta": "Apellido del mediocampista croata del Real Madrid, Balón de Oro 2018.",
+        "pregunta": "CONTIENE C: Apellido del mediocampista croata del Real Madrid, Balón de Oro 2018.",
         "respuesta": "Modric"
       },
       {
-        "pregunta": "Apellido del técnico italiano del Real Madrid.",
+        "pregunta": "CONTIENE C: Apellido del técnico italiano del Real Madrid.",
         "respuesta": "Ancelotti"
       },
       {
-        "pregunta": "Apellido del técnico argentino campeón del mundo 2022.",
+        "pregunta": "CONTIENE C: Apellido del técnico argentino campeón del mundo 2022.",
         "respuesta": "Scaloni"
       },
       {
@@ -885,7 +885,7 @@
         "respuesta": "Scaloni"
       },
       {
-        "pregunta": "CONTIENE C: Apellido del arquero belga del Real Madrid.",
+        "pregunta": "Apellido del arquero belga del Real Madrid.",
         "respuesta": "Courtois"
       },
       {
@@ -925,7 +925,7 @@
         "respuesta": "Racing Club"
       },
       {
-        "pregunta": "Club de Rosario que viste de azul y amarillo.",
+        "pregunta": "CONTIENE C: Club de Rosario que viste de azul y amarillo.",
         "respuesta": "Rosario Central"
       },
       {
@@ -1078,15 +1078,15 @@
         "respuesta": "Diaz"
       },
       {
-        "pregunta": "Apellido del futbolista neerlandés, capitán del Liverpool.",
+        "pregunta": "CONTIENE D: Apellido del futbolista neerlandés, capitán del Liverpool.",
         "respuesta": "Van Dijk"
       },
       {
-        "pregunta": "Apellido del mediocampista español del Barcelona, Golden Boy 2021.",
+        "pregunta": "CONTIENE D: Apellido del mediocampista español del Barcelona, Golden Boy 2021.",
         "respuesta": "Pedri"
       },
       {
-        "pregunta": "Apellido del mediocampista alemán del Manchester City, ex FC Barcelona.",
+        "pregunta": "CONTIENE D: Apellido del mediocampista alemán del Manchester City, ex FC Barcelona.",
         "respuesta": "Gundogan"
       },
       {
@@ -1170,43 +1170,43 @@
         "respuesta": "David Luiz"
       },
       {
-        "pregunta": "Contiene D: Leyenda del Real Madrid, 'la saeta rubia'",
+        "pregunta": "Leyenda del Real Madrid, 'la saeta rubia'",
         "respuesta": "Di Stefano"
       },
       {
-        "pregunta": "Contiene D: Nombre completo de la leyenda argentina campeón del mundo en 1986",
+        "pregunta": "Nombre completo de la leyenda argentina campeón del mundo en 1986",
         "respuesta": "Diego Armando Maradona"
       },
       {
-        "pregunta": "Contiene D: Partido entre equipos de la misma ciudad o región que son rivales históricos",
+        "pregunta": "Partido entre equipos de la misma ciudad o región que son rivales históricos",
         "respuesta": "Derbi"
       },
       {
-        "pregunta": "Contiene D: Apellido del mediocampista belga del Manchester City, conocido por su visión de juego y precisión en el pase",
+        "pregunta": "Apellido del mediocampista belga del Manchester City, conocido por su visión de juego y precisión en el pase",
         "respuesta": "De Bruyne"
       },
       {
-        "pregunta": "Contiene D: Campeón de la Copa Sudamericana 2020",
+        "pregunta": "Campeón de la Copa Sudamericana 2020",
         "respuesta": "Defensa y Justicia"
       },
       {
-        "pregunta": "Contiene D: Campeón de la Euro 1992",
+        "pregunta": "Campeón de la Euro 1992",
         "respuesta": "Dinamarca"
       },
       {
-        "pregunta": "Contiene D: Nombre completo del delantero marfileño clave Champions 2012",
+        "pregunta": "Nombre completo del delantero marfileño clave Champions 2012",
         "respuesta": "Didier Drogba"
       },
       {
-        "pregunta": "Contiene D: Delantero holandés leyenda del Arsenal",
+        "pregunta": "Delantero holandés leyenda del Arsenal",
         "respuesta": "Dennis Bergkamp"
       },
       {
-        "pregunta": "Contiene D: Lateral brasileño con 43 trofeos",
+        "pregunta": "Lateral brasileño con 43 trofeos",
         "respuesta": "Dani Alves"
       },
       {
-        "pregunta": "Contiene D: ExArquero brasileño historico del AC Milan",
+        "pregunta": "ExArquero brasileño historico del AC Milan",
         "respuesta": "Dida"
       },
       {
@@ -1266,7 +1266,7 @@
         "respuesta": "Diego Simeone"
       },
       {
-        "pregunta": "Apellido del entrenador de River Plate campeón de América en 2018.",
+        "pregunta": "CONTIENE D: Apellido del entrenador de River Plate campeón de América en 2018.",
         "respuesta": "Gallardo"
       },
       {
@@ -1274,7 +1274,7 @@
         "respuesta": "D'Alessandro"
       },
       {
-        "pregunta": "Nombre del estadio de Independiente de Avellaneda.",
+        "pregunta": "CONTIENE D: Nombre del estadio de Independiente de Avellaneda.",
         "respuesta": "Libertadores de America"
       },
       {
@@ -1286,7 +1286,7 @@
         "respuesta": "Derbi"
       },
       {
-        "pregunta": "Estadio del Manchester United.",
+        "pregunta": "CONTIENE D: Estadio del Manchester United.",
         "respuesta": "Old Trafford"
       },
       {
@@ -1411,15 +1411,15 @@
         "respuesta": "Eusebio"
       },
       {
-        "pregunta": "Apellido del delantero francés Balón de Oro 2022, actualmente en Al-Ittihad.",
+        "pregunta": "CONTIENE E: Apellido del delantero francés Balón de Oro 2022, actualmente en Al-Ittihad.",
         "respuesta": "Benzema"
       },
       {
-        "pregunta": "Apellido del arquero alemán del Barcelona.",
+        "pregunta": "CONTIENE E: Apellido del arquero alemán del Barcelona.",
         "respuesta": "Ter Stegen"
       },
       {
-        "pregunta": "Apellido del legendario arquero danés, padre del actual arquero del Leicester.",
+        "pregunta": "CONTIENE E: Apellido del legendario arquero danés, padre del actual arquero del Leicester.",
         "respuesta": "Schmeichel"
       },
       {
@@ -1495,7 +1495,7 @@
         "respuesta": "AC Milan"
       },
       {
-        "pregunta": "Leyenda del Real Madrid, 'la saeta rubia'",
+        "pregunta": "CONTIENE E: Leyenda del Real Madrid, 'la saeta rubia'",
         "respuesta": "Di Stefano"
       },
       {
@@ -1503,43 +1503,43 @@
         "respuesta": "Cavani"
       },
       {
-        "pregunta": "Contiene E: Campeón del Mundial 2010",
+        "pregunta": "Campeón del Mundial 2010",
         "respuesta": "España"
       },
       {
-        "pregunta": "Contiene E: Delantero francés leyenda del Man Utd",
+        "pregunta": "Delantero francés leyenda del Man Utd",
         "respuesta": "Eric Cantona"
       },
       {
-        "pregunta": "Contiene E: Mediocampista francés clave Mundial 1998",
+        "pregunta": "Mediocampista francés clave Mundial 1998",
         "respuesta": "Emmanuel Petit"
       },
       {
-        "pregunta": "Contiene E: Campeón de la Libertadores 2009",
+        "pregunta": "Campeón de la Libertadores 2009",
         "respuesta": "Estudiantes"
       },
       {
-        "pregunta": "Contiene E: Mediocampista argentino ex River y Tottenham",
+        "pregunta": "Mediocampista argentino ex River y Tottenham",
         "respuesta": "Erik Lamela"
       },
       {
-        "pregunta": "Contiene E: Club inglés del Goodison Park",
+        "pregunta": "Club inglés del Goodison Park",
         "respuesta": "Everton"
       },
       {
-        "pregunta": "Contiene E: Ex mediocampista argentino jugó en River e Inter",
+        "pregunta": "Ex mediocampista argentino jugó en River e Inter",
         "respuesta": "Esteban Cambiasso"
       },
       {
-        "pregunta": "Contiene E: Futbolista uruguayo 'El Príncipe'",
+        "pregunta": "Futbolista uruguayo 'El Príncipe'",
         "respuesta": "Enzo Francescoli"
       },
       {
-        "pregunta": "Contiene E: Club ecuatoriano de la Serie A",
+        "pregunta": "Club ecuatoriano de la Serie A",
         "respuesta": "Emelec"
       },
       {
-        "pregunta": "Contiene E: Apellido del Balón de Oro 1965 y leyenda del Benfica",
+        "pregunta": "Apellido del Balón de Oro 1965 y leyenda del Benfica",
         "respuesta": "Eusebio"
       },
       {
@@ -1876,7 +1876,7 @@
         "respuesta": "Forlan"
       },
       {
-        "pregunta": "Apellido del legendario lateral brasileño, campeón del mundo 2002.",
+        "pregunta": "CONTIENE F: Apellido del legendario lateral brasileño, campeón del mundo 2002.",
         "respuesta": "Cafu"
       },
       {
@@ -2065,11 +2065,11 @@
         "respuesta": "Galatasaray"
       },
       {
-        "pregunta": "Apellido del defensor alemán del Real Madrid.",
+        "pregunta": "CONTIENE G: Apellido del defensor alemán del Real Madrid.",
         "respuesta": "Rüdiger"
       },
       {
-        "pregunta": "Apellido del delantero argentino, máximo goleador histórico del Manchester City.",
+        "pregunta": "CONTIENE G: Apellido del delantero argentino, máximo goleador histórico del Manchester City.",
         "respuesta": "Agüero"
       },
       {
@@ -2117,7 +2117,7 @@
         "respuesta": "Lewandowski"
       },
       {
-        "pregunta": "Apellido del delantero noruego del Manchester City",
+        "pregunta": "CONTIENE G: Apellido del delantero noruego del Manchester City",
         "respuesta": "Erling Haaland"
       },
       {
@@ -2133,7 +2133,7 @@
         "respuesta": "Vinicius Junior"
       },
       {
-        "pregunta": "Apellido del mediocampista inglés del Real Madrid",
+        "pregunta": "CONTIENE G: Apellido del mediocampista inglés del Real Madrid",
         "respuesta": "Bellingham"
       },
       {
@@ -2169,19 +2169,19 @@
         "respuesta": "Camp Nou"
       },
       {
-        "pregunta": "Contiene G: Apellido del mediocampista alemán campeón del mundo en 2014",
+        "pregunta": "Apellido del mediocampista alemán campeón del mundo en 2014",
         "respuesta": "Gotze"
       },
       {
-        "pregunta": "Contiene G: Apellido del delantero francés campeón del mundo en 2018",
+        "pregunta": "Apellido del delantero francés campeón del mundo en 2018",
         "respuesta": "Griezmann"
       },
       {
-        "pregunta": "Contiene G: Club español de la ciudad de Granada",
+        "pregunta": "Club español de la ciudad de Granada",
         "respuesta": "Granada CF"
       },
       {
-        "pregunta": "Contiene G: Apellido del arquero argentino campeón del mundo en 2022",
+        "pregunta": "Apellido del arquero argentino campeón del mundo en 2022",
         "respuesta": "Gerónimo Rulli"
       },
       {
@@ -2209,7 +2209,7 @@
         "respuesta": "Gimnasia"
       },
       {
-        "pregunta": "Apellido del defensor argentino campeón del mundo 1986 (Oscar...).",
+        "pregunta": "CONTIENE G: Apellido del defensor argentino campeón del mundo 1986 (Oscar...).",
         "respuesta": "Ruggeri"
       },
       {
@@ -2217,7 +2217,7 @@
         "respuesta": "Gago"
       },
       {
-        "pregunta": "Apellido del exfutbolista portugués, Balón de Oro 2000.",
+        "pregunta": "CONTIENE G: Apellido del exfutbolista portugués, Balón de Oro 2000.",
         "respuesta": "Figo"
       },
       {
@@ -2414,19 +2414,19 @@
         "respuesta": "London Stadium"
       },
       {
-        "pregunta": "Apellido del mediocampista español que jugó en el Barcelona y la selección española",
+        "pregunta": "CONTIENE H: Apellido del mediocampista español que jugó en el Barcelona y la selección española",
         "respuesta": "Xavi Hernandez"
       },
       {
-        "pregunta": "Apellido del delantero inglés que jugó en el Liverpool y el Real Madrid",
+        "pregunta": "CONTIENE H: Apellido del delantero inglés que jugó en el Liverpool y el Real Madrid",
         "respuesta": "Michael Owen"
       },
       {
-        "pregunta": "Apellido del mediocampista francés campeón del mundo en 1998",
+        "pregunta": "CONTIENE H: Apellido del mediocampista francés campeón del mundo en 1998",
         "respuesta": "Thierry Henry"
       },
       {
-        "pregunta": "Apellido del delantero argentino que jugó en el Inter y el Real Madrid",
+        "pregunta": "CONTIENE H: Apellido del delantero argentino que jugó en el Inter y el Real Madrid",
         "respuesta": "Gonzalo Higuain"
       },
       {
@@ -2442,7 +2442,7 @@
         "respuesta": "Edinson Cavani"
       },
       {
-        "pregunta": "Apellido del delantero francés que jugó en el Arsenal y el Barcelona",
+        "pregunta": "CONTIENE H: Apellido del delantero francés que jugó en el Arsenal y el Barcelona",
         "respuesta": "Thierry Henry"
       },
       {
@@ -2454,7 +2454,7 @@
         "respuesta": "Harry Kane"
       },
       {
-        "pregunta": "Apellido del mediocampista belga que jugó en el Chelsea y el Real Madrid",
+        "pregunta": "CONTIENE H: Apellido del mediocampista belga que jugó en el Chelsea y el Real Madrid",
         "respuesta": "Eden Hazard"
       },
       {
@@ -2470,7 +2470,7 @@
         "respuesta": "Kevin De Bruyne"
       },
       {
-        "pregunta": "Apellido del delantero egipcio que juega en el Liverpool",
+        "pregunta": "CONTIENE H: Apellido del delantero egipcio que juega en el Liverpool",
         "respuesta": "Mohamed Salah"
       },
       {
@@ -2534,11 +2534,11 @@
         "respuesta": "Higuita"
       },
       {
-        "pregunta": "Apellido del ex delantero ucraniano, Balón de Oro 2004.",
+        "pregunta": "CONTIENE H: Apellido del ex delantero ucraniano, Balón de Oro 2004.",
         "respuesta": "Shevchenko"
       },
       {
-        "pregunta": "Apellido del mediocampista alemán leyenda del Bayern.",
+        "pregunta": "CONTIENE H: Apellido del mediocampista alemán leyenda del Bayern.",
         "respuesta": "Schweinsteiger"
       },
       {
@@ -2687,19 +2687,19 @@
         "respuesta": "Independiente"
       },
       {
-        "pregunta": "Estadio del Independiente",
+        "pregunta": "CONTIENE I: Estadio del Independiente",
         "respuesta": "Libertadores de America"
       },
       {
-        "pregunta": "Apellido del delantero argentino que jugó en el Inter y el Real Madrid",
+        "pregunta": "CONTIENE I: Apellido del delantero argentino que jugó en el Inter y el Real Madrid",
         "respuesta": "Higuain"
       },
       {
-        "pregunta": "Apellido del delantero uruguayo que jugó en el PSG y el Manchester United",
+        "pregunta": "CONTIENE I: Apellido del delantero uruguayo que jugó en el PSG y el Manchester United",
         "respuesta": "Cavani"
       },
       {
-        "pregunta": "Apellido del mediocampista argentino que jugó en River Plate y el Inter",
+        "pregunta": "CONTIENE I: Apellido del mediocampista argentino que jugó en River Plate y el Inter",
         "respuesta": "Cambiasso"
       },
       {
@@ -2707,7 +2707,7 @@
         "respuesta": "Icardi"
       },
       {
-        "pregunta": "Apellido del mediocampista croata que jugó en el Barcelona y el Inter",
+        "pregunta": "CONTIENE I: Apellido del mediocampista croata que jugó en el Barcelona y el Inter",
         "respuesta": "Rakitic"
       },
       {
@@ -2727,7 +2727,7 @@
         "respuesta": "Forlan"
       },
       {
-        "pregunta": "Apellido del mediocampista chileno que jugó en el Inter y el Barcelona",
+        "pregunta": "CONTIENE I: Apellido del mediocampista chileno que jugó en el Inter y el Barcelona",
         "respuesta": "Alexis Sanchez"
       },
       {
@@ -2940,15 +2940,15 @@
         "respuesta": "Robinho"
       },
       {
-        "pregunta": "Contiene J: Club italiano conocido como 'La Vecchia Signora'",
+        "pregunta": "Club italiano conocido como 'La Vecchia Signora'",
         "respuesta": "Juventus"
       },
       {
-        "pregunta": "Contiene J: Apellido del mediocampista colombiano que jugó en el Real Madrid y el Bayern Munich",
+        "pregunta": "Apellido del mediocampista colombiano que jugó en el Real Madrid y el Bayern Munich",
         "respuesta": "James Rodriguez"
       },
       {
-        "pregunta": "Contiene J: Apellido del mediocampista del Liverpool dorsal 20",
+        "pregunta": "Apellido del mediocampista del Liverpool dorsal 20",
         "respuesta": "Jota"
       },
       {
@@ -3133,7 +3133,7 @@
         "respuesta": "Lukaku"
       },
       {
-        "pregunta": "CONTIENE K: Apellido del mediocampista alemán del Bayern Munich.",
+        "pregunta": "Apellido del mediocampista alemán del Bayern Munich.",
         "respuesta": "Kimmich"
       },
       {
@@ -3153,7 +3153,7 @@
         "respuesta": "Kane"
       },
       {
-        "pregunta": "Apellido del arquero alemán que jugó en el Bayern Munich y la selección alemana",
+        "pregunta": "CONTIENE K: Apellido del arquero alemán que jugó en el Bayern Munich y la selección alemana",
         "respuesta": "Oliver Kahn"
       },
       {
@@ -3161,15 +3161,15 @@
         "respuesta": "Cavani"
       },
       {
-        "pregunta": "Contiene K: Apellido del delantero inglés que juega en el Bayern Munich",
+        "pregunta": "Apellido del delantero inglés que juega en el Bayern Munich",
         "respuesta": "Kane"
       },
       {
-        "pregunta": "Contiene K: Apellido del mediocampista belga que juega en el Manchester City",
+        "pregunta": "Apellido del mediocampista belga que juega en el Manchester City",
         "respuesta": "Kevin De Bruyne"
       },
       {
-        "pregunta": "Contiene K: Apellido del delantero francés que juega en el Real Madrid",
+        "pregunta": "Apellido del delantero francés que juega en el Real Madrid",
         "respuesta": "Karim Benzema"
       },
       {
@@ -3269,7 +3269,7 @@
         "respuesta": "Koln"
       },
       {
-        "pregunta": "Apellido del ex mediocampista alemán que jugó en la selección y fue figura del Chelsea.",
+        "pregunta": "CONTIENE K: Apellido del ex mediocampista alemán que jugó en la selección y fue figura del Chelsea.",
         "respuesta": "Ballack"
       },
       {
@@ -3422,27 +3422,27 @@
         "respuesta": "Lukaku"
       },
       {
-        "pregunta": "Contiene L: Club inglés de Anfield",
+        "pregunta": "Club inglés de Anfield",
         "respuesta": "Liverpool"
       },
       {
-        "pregunta": "Contiene L: Máximo goleador histórico del Barcelona",
+        "pregunta": "Máximo goleador histórico del Barcelona",
         "respuesta": "Lionel Messi"
       },
       {
-        "pregunta": "Contiene L: Apellido del delantero polaco del Barcelona",
+        "pregunta": "Apellido del delantero polaco del Barcelona",
         "respuesta": "Lewandowski"
       },
       {
-        "pregunta": "Contiene L: Apellido del mediocampista croata del Real Madrid",
+        "pregunta": "Apellido del mediocampista croata del Real Madrid",
         "respuesta": "Luka Modric"
       },
       {
-        "pregunta": "Contiene L: Apellido del delantero uruguayo que jugó en Liverpool y Barcelona",
+        "pregunta": "Apellido del delantero uruguayo que jugó en Liverpool y Barcelona",
         "respuesta": "Luis Suarez"
       },
       {
-        "pregunta": "Contiene L: Apellido del delantero belga que jugó en el Inter y el Chelsea",
+        "pregunta": "Apellido del delantero belga que jugó en el Inter y el Chelsea",
         "respuesta": "Lukaku"
       },
       {
@@ -3635,7 +3635,7 @@
         "respuesta": "Camavinga"
       },
       {
-        "pregunta": "Máximo ganador del Balón de Oro",
+        "pregunta": "CONTIENE M: Máximo ganador del Balón de Oro",
         "respuesta": "Lionel Messi"
       },
       {
@@ -3651,23 +3651,23 @@
         "respuesta": "Lionel Messi"
       },
       {
-        "pregunta": "Contiene M: Club inglés de Old Trafford",
+        "pregunta": "Club inglés de Old Trafford",
         "respuesta": "Manchester United"
       },
       {
-        "pregunta": "Contiene M: Club inglés de The Etihad Stadium",
+        "pregunta": "Club inglés de The Etihad Stadium",
         "respuesta": "Manchester City"
       },
       {
-        "pregunta": "Contiene M: Apellido del mediocampista croata del Real Madrid",
+        "pregunta": "Apellido del mediocampista croata del Real Madrid",
         "respuesta": "Modric"
       },
       {
-        "pregunta": "Contiene M: Apellido del delantero francés del PSG",
+        "pregunta": "Apellido del delantero francés del PSG",
         "respuesta": "Mbappe"
       },
       {
-        "pregunta": "Contiene M: Apellido del delantero argentino del Inter Miami",
+        "pregunta": "Apellido del delantero argentino del Inter Miami",
         "respuesta": "Messi"
       },
       {
@@ -3675,7 +3675,7 @@
         "respuesta": "Bellingham"
       },
       {
-        "pregunta": "Contiene M: Apellido del mediocampista alemán que jugó en el Real Madrid y el Arsenal",
+        "pregunta": "Apellido del mediocampista alemán que jugó en el Real Madrid y el Arsenal",
         "respuesta": "Mesut Ozil"
       },
       {
@@ -3848,11 +3848,11 @@
         "respuesta": "Navas"
       },
       {
-        "pregunta": "Apellido del futbolista francés del Real Madrid.",
+        "pregunta": "CONTIENE N: Apellido del futbolista francés del Real Madrid.",
         "respuesta": "Tchouameni"
       },
       {
-        "pregunta": "Apellido del defensor argentino campeón del mundo 2022, juega en el Manchester United.",
+        "pregunta": "CONTIENE N: Apellido del defensor argentino campeón del mundo 2022, juega en el Manchester United.",
         "respuesta": "Lisandro Martinez"
       },
       {
@@ -3872,15 +3872,15 @@
         "respuesta": "Neymar"
       },
       {
-        "pregunta": "Selección nacional conocida como 'La Naranja Mecánica'",
+        "pregunta": "CONTIENE N: Selección nacional conocida como 'La Naranja Mecánica'",
         "respuesta": "Holanda"
       },
       {
-        "pregunta": "Contiene N: Club italiano de Nápoles",
+        "pregunta": "Club italiano de Nápoles",
         "respuesta": "Napoli"
       },
       {
-        "pregunta": "Contiene N: Apellido del delantero brasileño que jugó en el Barcelona y el PSG",
+        "pregunta": "Apellido del delantero brasileño que jugó en el Barcelona y el PSG",
         "respuesta": "Neymar"
       },
       {
@@ -4013,7 +4013,7 @@
         "respuesta": "Oblak"
       },
       {
-        "pregunta": "¿Cuál es el nombre completo del delantero egipcio, estrella en la Premier League?",
+        "pregunta": "CONTIENE O: ¿Cuál es el nombre completo del delantero egipcio, estrella en la Premier League?",
         "respuesta": "Mohamed Salah"
       },
       {
@@ -4081,15 +4081,15 @@
         "respuesta": "Olympique de Marsella"
       },
       {
-        "pregunta": "Apellido del futbolista portugués, 5 veces Balón de Oro, juega en Al Nassr.",
+        "pregunta": "CONTIENE O: Apellido del futbolista portugués, 5 veces Balón de Oro, juega en Al Nassr.",
         "respuesta": "Cristiano Ronaldo"
       },
       {
-        "pregunta": "Apellido del mediocampista español del Manchester City.",
+        "pregunta": "CONTIENE O: Apellido del mediocampista español del Manchester City.",
         "respuesta": "Rodri"
       },
       {
-        "pregunta": "Apellido del ex mediocampista español, actual técnico del Bayer Leverkusen.",
+        "pregunta": "CONTIENE O: Apellido del ex mediocampista español, actual técnico del Bayer Leverkusen.",
         "respuesta": "Xabi Alonso"
       },
       {
@@ -4105,15 +4105,15 @@
         "respuesta": "Owen"
       },
       {
-        "pregunta": "Club portugués de Oporto",
+        "pregunta": "CONTIENE O: Club portugués de Oporto",
         "respuesta": "Porto"
       },
       {
-        "pregunta": "Contiene O: Apellido del mediocampista alemán que jugó en el Real Madrid y el Arsenal",
+        "pregunta": "Apellido del mediocampista alemán que jugó en el Real Madrid y el Arsenal",
         "respuesta": "Ozil"
       },
       {
-        "pregunta": "Contiene O: Apellido del delantero inglés que jugó en el Liverpool y el Real Madrid",
+        "pregunta": "Apellido del delantero inglés que jugó en el Liverpool y el Real Madrid",
         "respuesta": "Owen"
       },
       {
@@ -4342,7 +4342,7 @@
         "respuesta": "Brasil"
       },
       {
-        "pregunta": "Apellido del mediocampista italiano 'Il Maestro' de Juve y Milan",
+        "pregunta": "CONTIENE P: Apellido del mediocampista italiano 'Il Maestro' de Juve y Milan",
         "respuesta": "Andrea Pirlo"
       },
       {
@@ -4354,7 +4354,7 @@
         "respuesta": "Palacio"
       },
       {
-        "pregunta": "Contiene P: Club francés de la capital",
+        "pregunta": "Club francés de la capital",
         "respuesta": "PSG"
       },
       {
@@ -4374,15 +4374,15 @@
         "respuesta": "Benfica"
       },
       {
-        "pregunta": "Contiene P: Apellido del mediocampista argentino que jugó en el Inter y el PSG",
+        "pregunta": "Apellido del mediocampista argentino que jugó en el Inter y el PSG",
         "respuesta": "Pastore"
       },
       {
-        "pregunta": "Contiene P: Club portugués de Oporto",
+        "pregunta": "Club portugués de Oporto",
         "respuesta": "Porto"
       },
       {
-        "pregunta": "Contiene P: Apellido del delantero argentino que jugó en el Inter y el Boca Juniors",
+        "pregunta": "Apellido del delantero argentino que jugó en el Inter y el Boca Juniors",
         "respuesta": "Palacio"
       },
       {
@@ -4487,11 +4487,11 @@
         "respuesta": "Quique Setien"
       },
       {
-        "pregunta": "¿Cuál es el nombre completo del entrenador español que dirige actualmente al PSG?",
+        "pregunta": "CONTIENE Q: ¿Cuál es el nombre completo del entrenador español que dirige actualmente al PSG?",
         "respuesta": "Luis Enrique"
       },
       {
-        "pregunta": "¿Cuál es la posición en la que jugaban jugadores como Marcelo o Roberto Carlos?",
+        "pregunta": "CONTIENE Q: ¿Cuál es la posición en la que jugaban jugadores como Marcelo o Roberto Carlos?",
         "respuesta": "Lateral izquierdo"
       },
       {
@@ -4507,11 +4507,11 @@
         "respuesta": "Quique Setien"
       },
       {
-        "pregunta": "Apellido del futbolista argentino, ex defensor de la Fiorentina.",
+        "pregunta": "CONTIENE Q: Apellido del futbolista argentino, ex defensor de la Fiorentina.",
         "respuesta": "Martinez Quarta"
       },
       {
-        "pregunta": "Apellido del defensa central brasileño del PSG.",
+        "pregunta": "CONTIENE Q: Apellido del defensa central brasileño del PSG.",
         "respuesta": "Marquinhos"
       },
       {
@@ -4623,7 +4623,7 @@
         "respuesta": "Marquez"
       },
       {
-        "pregunta": "Apellido del futbolista argentino, defensor de la Fiorentina (Lucas...).",
+        "pregunta": "CONTIENE Q: Apellido del futbolista argentino, defensor de la Fiorentina (Lucas...).",
         "respuesta": "Martinez Quarta"
       },
       {
@@ -4768,19 +4768,19 @@
         "respuesta": "River Plate"
       },
       {
-        "pregunta": "Contiene R: Club argentino de Avellaneda, clásico rival de Independiente",
+        "pregunta": "Club argentino de Avellaneda, clásico rival de Independiente",
         "respuesta": "Racing"
       },
       {
-        "pregunta": "Contiene R: Club español con más Champions League",
+        "pregunta": "Club español con más Champions League",
         "respuesta": "Real Madrid"
       },
       {
-        "pregunta": "Contiene R: Apellido del delantero brasileño, 'El Fenómeno'",
+        "pregunta": "Apellido del delantero brasileño, 'El Fenómeno'",
         "respuesta": "Ronaldo"
       },
       {
-        "pregunta": "Contiene R: Club argentino con más títulos locales",
+        "pregunta": "Club argentino con más títulos locales",
         "respuesta": "River Plate"
       },
       {
@@ -4796,11 +4796,11 @@
         "respuesta": "Cambiasso"
       },
       {
-        "pregunta": "Contiene R: Apellido del mediocampista croata que jugó en el Barcelona y el Inter",
+        "pregunta": "Apellido del mediocampista croata que jugó en el Barcelona y el Inter",
         "respuesta": "Rakitic"
       },
       {
-        "pregunta": "Contiene R: Apellido del delantero brasileño que jugó en el Inter y el Real Madrid",
+        "pregunta": "Apellido del delantero brasileño que jugó en el Inter y el Real Madrid",
         "respuesta": "Ronaldo"
       },
       {
@@ -4864,7 +4864,7 @@
         "respuesta": "Henry"
       },
       {
-        "pregunta": "Apellido del ex delantero francés leyenda del Arsenal.",
+        "pregunta": "CONTIENE R: Apellido del ex delantero francés leyenda del Arsenal.",
         "respuesta": "Henry"
       },
       {
@@ -4908,7 +4908,7 @@
         "respuesta": "Xeneize"
       },
       {
-        "pregunta": "CONTIENE X: Apellido del mediocampista argentino campeón del mundo 2022 (Alexis...).",
+        "pregunta": "CONTIENE R: CONTIENE X: Apellido del mediocampista argentino campeón del mundo 2022 (Alexis...).",
         "respuesta": "Mac Allister"
       },
       {
@@ -4916,7 +4916,7 @@
         "respuesta": "Xavi"
       },
       {
-        "pregunta": "CONTIENE X: Apellido del ex mediocampista español campeón del mundo 2010 (Javier...).",
+        "pregunta": "CONTIENE R: CONTIENE X: Apellido del ex mediocampista español campeón del mundo 2010 (Javier...).",
         "respuesta": "Martinez"
       }
     ]
@@ -5037,15 +5037,15 @@
         "respuesta": "San Lorenzo"
       },
       {
-        "pregunta": "Apellido del DT campeón de la Euro 2016",
+        "pregunta": "CONTIENE S: Apellido del DT campeón de la Euro 2016",
         "respuesta": "Fernando Santos"
       },
       {
-        "pregunta": "Contiene S: Apellido del delantero egipcio del Liverpool",
+        "pregunta": "Apellido del delantero egipcio del Liverpool",
         "respuesta": "Salah"
       },
       {
-        "pregunta": "Contiene S: Club español con más títulos de Europa League",
+        "pregunta": "Club español con más títulos de Europa League",
         "respuesta": "Sevilla"
       },
       {
@@ -5053,7 +5053,7 @@
         "respuesta": "Luis Suarez"
       },
       {
-        "pregunta": "Contiene S: Club argentino de Boedo",
+        "pregunta": "Club argentino de Boedo",
         "respuesta": "San Lorenzo"
       },
       {
@@ -5061,11 +5061,11 @@
         "respuesta": "Fernando Santos"
       },
       {
-        "pregunta": "Contiene S: Apellido del mediocampista inglés que jugó en el Liverpool y el LA Galaxy",
+        "pregunta": "Apellido del mediocampista inglés que jugó en el Liverpool y el LA Galaxy",
         "respuesta": "Steven Gerrard"
       },
       {
-        "pregunta": "Contiene S: Apellido del delantero argentino que jugó en el Manchester City y el Barcelona",
+        "pregunta": "Apellido del delantero argentino que jugó en el Manchester City y el Barcelona",
         "respuesta": "Sergio Aguero"
       },
       {
@@ -5133,7 +5133,7 @@
         "respuesta": "Busquets"
       },
       {
-        "pregunta": "CONTIENE S: Estadio del Real Madrid.",
+        "pregunta": "Estadio del Real Madrid.",
         "respuesta": "Santiago Bernabeu"
       },
       {
@@ -5238,7 +5238,7 @@
         "respuesta": "Toure Yaya"
       },
       {
-        "pregunta": "Nombre completo del defensor argentino campeón del mundo 2022, juega en Lyon.",
+        "pregunta": "CONTIENE T: Nombre completo del defensor argentino campeón del mundo 2022, juega en Lyon.",
         "respuesta": "Nicolas Tagliafico"
       },
       {
@@ -5270,7 +5270,7 @@
         "respuesta": "Tevez"
       },
       {
-        "pregunta": "Apellido del delantero español 'El Niño'",
+        "pregunta": "CONTIENE T: Apellido del delantero español 'El Niño'",
         "respuesta": "Fernando Torres"
       },
       {
@@ -5278,11 +5278,11 @@
         "respuesta": "Eriksen"
       },
       {
-        "pregunta": "Contiene T: Club inglés de Londres, rival del Arsenal",
+        "pregunta": "Club inglés de Londres, rival del Arsenal",
         "respuesta": "Tottenham"
       },
       {
-        "pregunta": "Contiene T: Apellido del delantero argentino 'El Apache'",
+        "pregunta": "Apellido del delantero argentino 'El Apache'",
         "respuesta": "Tevez"
       },
       {
@@ -5290,7 +5290,7 @@
         "respuesta": "Fernando Torres"
       },
       {
-        "pregunta": "Contiene T: Apellido del mediocampista francés campeón del mundo en 1998",
+        "pregunta": "Apellido del mediocampista francés campeón del mundo en 1998",
         "respuesta": "Thierry Henry"
       },
       {
@@ -5503,7 +5503,7 @@
         "respuesta": "Valencia CF"
       },
       {
-        "pregunta": "Contiene U: País sudamericano bicampeón del mundo",
+        "pregunta": "País sudamericano bicampeón del mundo",
         "respuesta": "Uruguay"
       },
       {
@@ -5704,15 +5704,15 @@
         "respuesta": "Kovacic"
       },
       {
-        "pregunta": "Apellido del delantero mexicano, estrella en la MLS y reconocido por su capacidad goleadora",
+        "pregunta": "CONTIENE V: Apellido del delantero mexicano, estrella en la MLS y reconocido por su capacidad goleadora",
         "respuesta": "Carlos Vela"
       },
       {
-        "pregunta": "Contiene V: Club español de Valencia",
+        "pregunta": "Club español de Valencia",
         "respuesta": "Valencia CF"
       },
       {
-        "pregunta": "Contiene V: Apellido del delantero brasileño del Real Madrid",
+        "pregunta": "Apellido del delantero brasileño del Real Madrid",
         "respuesta": "Vinicius Junior"
       },
       {
@@ -5889,7 +5889,7 @@
         "respuesta": "Howedes"
       },
       {
-        "pregunta": "Nombre completo del entrenador que llevó a Arsenal a la temporada invicta de 2003-04",
+        "pregunta": "CONTIENE W: Nombre completo del entrenador que llevó a Arsenal a la temporada invicta de 2003-04",
         "respuesta": "Arsene Wenger"
       },
       {
@@ -5901,7 +5901,7 @@
         "respuesta": "Arsene Wenger"
       },
       {
-        "pregunta": "Contiene W: Club inglés de Londres",
+        "pregunta": "Club inglés de Londres",
         "respuesta": "West Ham United"
       },
       {
@@ -5989,7 +5989,7 @@
         "respuesta": "Wigan"
       },
       {
-        "pregunta": "CONTIENE W: Apellido del ex mediocampista alemán del Bayer Leverkusen.",
+        "pregunta": "Apellido del ex mediocampista alemán del Bayer Leverkusen.",
         "respuesta": "Wirtz"
       }
     ]
@@ -6002,7 +6002,7 @@
         "respuesta": "Xavi"
       },
       {
-        "pregunta": "¿Cuál es el nombre completo del delantero chileno bicampeón de América? Jugó en Barcelona, Arsenal, Inter entre otros?",
+        "pregunta": "CONTIENE X: ¿Cuál es el nombre completo del delantero chileno bicampeón de América? Jugó en Barcelona, Arsenal, Inter entre otros?",
         "respuesta": "Alexis Sánchez"
       },
       {
@@ -6054,11 +6054,11 @@
         "respuesta": "Alexander-Arnold"
       },
       {
-        "pregunta": "Contiene X: Apellido del mediocampista español que jugó en el Barcelona y la selección española",
+        "pregunta": "Apellido del mediocampista español que jugó en el Barcelona y la selección española",
         "respuesta": "Xavi Hernandez"
       },
       {
-        "pregunta": "Contiene X: Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
+        "pregunta": "Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
         "respuesta": "Xabi Alonso"
       },
       {
@@ -6126,7 +6126,7 @@
         "respuesta": "Xhaka"
       },
       {
-        "pregunta": "Apellido del futbolista portugués del Atlético Madrid (João...).",
+        "pregunta": "CONTIENE X: Apellido del futbolista portugués del Atlético Madrid (João...).",
         "respuesta": "Félix"
       },
       {
@@ -6163,7 +6163,7 @@
         "respuesta": "Yaya Toure"
       },
       {
-        "pregunta": "¿Cuál es el país sudamericano cuya selección ha ganado dos Mundiales?",
+        "pregunta": "CONTIENE Y: ¿Cuál es el país sudamericano cuya selección ha ganado dos Mundiales?",
         "respuesta": "Uruguay"
       },
       {
@@ -6195,7 +6195,7 @@
         "respuesta": "Yannick Carrasco"
       },
       {
-        "pregunta": "Apellido del futbolista ucraniano del Chelsea.",
+        "pregunta": "CONTIENE Y: Apellido del futbolista ucraniano del Chelsea.",
         "respuesta": "Mudryk"
       },
       {
