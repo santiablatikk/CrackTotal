@@ -1005,10 +1005,6 @@
         "respuesta": "Oblak"
       },
       {
-        "pregunta": "¿Cuál es el nombre completo del delantero egipcio, estrella en la Premier League?",
-        "respuesta": "Mohamed Salah"
-      },
-      {
         "pregunta": "¿Cuál es el nombre completo del exdelantero argentino, ícono en Juventus y en River Plate por su técnica y clase en los años 60?",
         "respuesta": "Omar Sivori"
       },
@@ -1077,14 +1073,6 @@
       {
         "pregunta": "¿Cuál es el nombre completo del técnico del Barcelona en 2020, destituido luego de perder por 2-8 con el Bayern?",
         "respuesta": "Quique Setien"
-      },
-      {
-        "pregunta": "¿Cuál es el nombre completo del entrenador español que dirige actualmente al PSG?",
-        "respuesta": "Luis Enrique"
-      },
-      {
-        "pregunta": "¿Cuál es la posición en la que jugaban jugadores como Marcelo o Roberto Carlos?",
-        "respuesta": "Lateral izquierdo"
       }
     ]
   },
@@ -1334,14 +1322,6 @@
         "respuesta": "Xavi"
       },
       {
-        "pregunta": "¿Cuál es el nombre completo del delantero chileno bicampeón de América? Jugó en Barcelona, Arsenal, Inter entre otros?",
-        "respuesta": "Alexis Sánchez"
-      },
-      {
-        "pregunta": "¿Cuál es el nombre de pila de Mac Allister?",
-        "respuesta": "Alexis"
-      },
-      {
         "pregunta": "¿Cuál es el nombre completo del delantero neerlandés que jugó en PSG y actualmente está en el Leipzig?",
         "respuesta": "Xavi Simons"
       },
@@ -1359,16 +1339,8 @@
         "respuesta": "Yaya Toure"
       },
       {
-        "pregunta": "¿Cuál es el país sudamericano cuya selección ha ganado dos Mundiales?",
-        "respuesta": "Uruguay"
-      },
-      {
         "pregunta": "¿Cuál es el nombre completo del defensor del Everton destacado en 2021?",
         "respuesta": "Yerry Mina"
-      },
-      {
-        "pregunta": "¿Cuál es el club argentino de Mendoza?",
-        "respuesta": "Godoy Cruz"
       }
     ]
   },

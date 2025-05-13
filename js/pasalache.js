@@ -239,27 +239,30 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update score displays
         updateScoreDisplays();
         
-        // Fetch questions from the consolidated file
-        fetch('data/final_questions_pasalache.json') // <--- Updated URL
+        // <<<--- START: Fetch questions from the single merged file --- >>>
+        const questionFile = 'data/all_questions_merged_v2.json';
+
+        fetch(questionFile)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error(`HTTP error! status: ${response.status} for file ${questionFile}`);
                 }
                 return response.json();
             })
-            .then(data => {
-                // Assign directly as the file should have the correct structure
-                questions = data; 
+            .then(loadedQuestions => {
+                // Assign the loaded questions directly
+                questions = loadedQuestions; // Assumes the merged file has the correct array structure
 
-                // Shuffle questions within each letter for more randomness
+                // Optional: Shuffle questions within each letter for randomness (if needed)
                 questions.forEach(letterData => {
-                     if (letterData.preguntas) {
-                         letterData.preguntas.sort(() => Math.random() - 0.5);
-                     }
-                 });
+                    if (letterData.preguntas && Array.isArray(letterData.preguntas)) {
+                        letterData.preguntas.sort(() => Math.random() - 0.5);
+                    }
+                });
+                // <<<--- END: Fetch questions from the single merged file --- >>>
 
                 // Check if questions were loaded correctly
-                if (!questions || questions.length === 0) {
+                if (!questions || !Array.isArray(questions) || questions.length === 0) {
                     console.error("Error: No se pudieron cargar las preguntas o el archivo está vacío.");
                     showTemporaryFeedback("Error al cargar preguntas. Intenta recargar.", 'error', 5000);
                     return; // Stop game initialization
@@ -404,28 +407,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const letterData = questions.find(item => item.letra === currentLetter);
 
         if (letterData && letterData.preguntas && letterData.preguntas.length > 0) {
-            let foundQuestion = false;
             let question = null;
-            let potentialQuestion = null; // Declare here for broader scope
-            let potentialAnswer = null; // Declare here
-
-            // Try to find the *same* question index if the letter status is 'incorrect' or 'pending'
-            // This requires storing the last shown index *somewhere*. 
-            // Let's try a simpler approach first: only mark as used on correct answer.
-            // We still need to handle the case where multiple questions exist for a letter.
-
-            // Shuffle indices to try different questions if the first one fails the conflict check
-            let availableIndices = Array.from(letterData.preguntas.keys());
-            availableIndices.sort(() => Math.random() - 0.5); 
+            let currentQuestionIndex = -1; // Keep track of the index being shown
+            let foundQuestion = false;
+            let potentialQuestion = null;
+            let potentialAnswer = null;
 
             // Find the first question index for this letter that hasn't been *correctly* answered yet
             // AND whose answer doesn't conflict with previous correct answers.
-            for (let i = 0; i < availableIndices.length; i++) {
-                let testIndex = availableIndices[i];
-
+            // Iterate sequentially through the pre-shuffled list
+            for (let testIndex = 0; testIndex < letterData.preguntas.length; testIndex++) {
                 // Skip if this specific index has ALREADY BEEN ANSWERED CORRECTLY
-                if (gameUsedQuestionIndices[currentLetter].includes(testIndex)) {
-                    continue; 
+                if (gameUsedQuestionIndices[currentLetter] && gameUsedQuestionIndices[currentLetter].includes(testIndex)) {
+                    continue;
                 }
 
                 potentialQuestion = letterData.preguntas[testIndex];
@@ -528,8 +522,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Si volvemos al principio, incrementar el contador de vueltas completadas
         if (currentLetterIndex === 0 && pendingLetters.length > 0) {
             completedRounds++;
-            
-            // Al completar una vuelta, limpiar el estado "pending" de todas las letras
+
+            // Al completar una vuelta, limpiar el estado "pending"
             if (completedRounds > 0) {
                 for (let letter of pendingLetters) {
                     if (letterStatuses[letter] === 'pending') {
@@ -755,41 +749,20 @@ document.addEventListener('DOMContentLoaded', function() {
             return true;
         }
         
-        // Comprobar el caso inverso pero con un alto umbral de similitud
-        // Si la respuesta correcta está casi completamente contenida en la respuesta del usuario
-        const correctWords = correctAnswer.split(' ');
-        let allWordsFound = true;
-        
-        for (const word of correctWords) {
-            if (word.length > 2) { // Solo verificar palabras significativas (más de 2 letras)
-                // Buscar la palabra en la respuesta del usuario con cierta tolerancia
-                const wordFound = userAnswer.split(' ').some(userWord => 
-                    calculateStringSimilarity(userWord, word) > 0.85
-                );
-                
-                if (!wordFound) {
-                    allWordsFound = false;
-                    break;
-                }
-            }
-        }
-        
-        if (allWordsFound) {
-            return true;
-        }
-        
-        // Calculate similarity for the entire string comparison
-        const similarity = calculateStringSimilarity(userAnswer, correctAnswer);
-        
-        // Permitir errores menores si la similitud es alta
-        // Umbral ajustado para ser más tolerante con errores ortográficos menores
-        return similarity > 0.85;
+        // Calculate similarity and distance
+        const similarityResult = calculateStringSimilarity(userAnswer, correctAnswer);
+
+        // Permitir errores menores si la similitud es alta Y la distancia es mínima (1 error)
+        const similarityThreshold = 0.85;
+        const maxAllowedTypos = 1; 
+
+        return similarityResult.similarity >= similarityThreshold && similarityResult.distance <= maxAllowedTypos;
     }
     
     // Calculate string similarity (Levenshtein distance based)
     function calculateStringSimilarity(a, b) {
-        if (a.length === 0) return 0;
-        if (b.length === 0) return 0;
+        if (a.length === 0) return { distance: 0, similarity: 0 };
+        if (b.length === 0) return { distance: 0, similarity: 0 };
         
         // Calculate Levenshtein distance
         const matrix = [];
@@ -819,7 +792,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Calculate similarity as a percentage
         const maxLength = Math.max(a.length, b.length);
         const distance = matrix[b.length][a.length];
-        return 1 - (distance / maxLength);
+        const similarity = maxLength === 0 ? 1 : 1 - (distance / maxLength); // Handle empty strings case
+        return { distance, similarity }; // Return both values
     }
     
     // Add help button functionality

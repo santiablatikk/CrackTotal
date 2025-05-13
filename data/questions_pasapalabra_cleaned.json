@@ -15,7 +15,7 @@
         "respuesta": "Ancelotti"
       },
       {
-        "pregunta": "¿Cuál es el club neerlandés famoso por su cantera, donde jugaron Cruyff, Van Basten y Bergkamp?",
+        "pregunta": "¿Cuál es el club neerlandés famoso por su cantera, donde jugaron Cruyff y Van Basten?",
         "respuesta": "Ajax"
       },
       {
@@ -39,22 +39,6 @@
         "respuesta": "Alba"
       },
       {
-        "pregunta": "¿Cuál es el apellido del futbolista noruego del Manchester City, Bota de Oro 2023?",
-        "respuesta": "Haaland"
-      },
-      {
-        "pregunta": "¿Cuál es el apellido del exfutbolista español, leyenda del Barcelona y la selección, autor del gol en la final del Mundial 2010?",
-        "respuesta": "Iniesta"
-      },
-      {
-        "pregunta": "¿Cuál es el apellido del legendario defensor italiano, ícono del AC Milan?",
-        "respuesta": "Maldini"
-      },
-      {
-        "pregunta": "¿Cuál es el apellido del legendario defensor español, campeón del mundo 2010, que jugó en Real Madrid y Sevilla?",
-        "respuesta": "Ramos"
-      },
-      {
         "pregunta": "¿Cuál es el apellido del delantero gabonés que jugó en Borussia Dortmund, Arsenal y Barcelona?",
         "respuesta": "Aubameyang"
       },
@@ -65,10 +49,6 @@
       {
         "pregunta": "¿Cuál es el club italiano de Bérgamo, campeón de la Europa League 2024?",
         "respuesta": "Atalanta"
-      },
-      {
-        "pregunta": "¿Cuál es el apellido del futbolista brasileño, Balón de Oro 2007?",
-        "respuesta": "Kaka"
       }
     ]
   },
@@ -88,20 +68,12 @@
         "respuesta": "Barcelona"
       },
       {
-        "pregunta": "¿Cuál es el apellido del lateral canadiense que deslumbra en la Bundesliga por su velocidad y recuperación?",
-        "respuesta": "Davies"
-      },
-      {
         "pregunta": "¿Cuál es el apellido del mediocampista inglés figura del Real Madrid, revelación de la temporada 2023/24?",
         "respuesta": "Bellingham"
       },
       {
         "pregunta": "¿Cuál es el apellido del delantero francés, ganador del Balón de Oro 2022?",
         "respuesta": "Benzema"
-      },
-      {
-        "pregunta": "¿Cuál es el apellido del legendario mediocampista alemán, campeón del mundo en 2014 anotando el gol de la final?",
-        "respuesta": "Gotze"
       },
       {
         "pregunta": "¿Cuál es el apellido del arquero marroquí destacado en el Mundial 2022?",
@@ -116,28 +88,16 @@
         "respuesta": "Borussia Dortmund"
       },
       {
-        "pregunta": "¿Cuál es el apellido del ex delantero sueco que jugó en múltiples grandes de Europa?",
-        "respuesta": "Ibrahimovic"
-      },
-      {
-        "pregunta": "¿Cuál es el apellido del mediocampista belga del Manchester City, conocido por su visión de juego y precisión en el pase?",
-        "respuesta": "De Bruyne"
+        "pregunta": "¿Cuál es el apellido del legendario defensor italiano, capitán del Milan y la selección?",
+        "respuesta": "Baresi"
       },
       {
         "pregunta": "¿Cuál es el club alemán que rompió la hegemonía del Bayern Munich, coronándose campeón invicto de la Bundesliga 2023/24?",
         "respuesta": "Bayer Leverkusen"
       },
       {
-        "pregunta": "¿Cuál es el apellido del mediocampista español, técnico del Bayer Leverkusen campeón invicto 2023/24?",
-        "respuesta": "Xabi Alonso"
-      },
-      {
         "pregunta": "¿Cuál es el apellido del autor del gol decisivo en la final del Mundial 1986?",
         "respuesta": "Burruchaga"
-      },
-      {
-        "pregunta": "¿Cuál es el apellido del defensor que integró la Scaloneta campeona del mundo, surgido de Newell's?",
-        "respuesta": "Lisandro Martinez"
       },
       {
         "pregunta": "¿Cuál es el club español con sede en Sevilla, uno de los históricos de La Liga?",
@@ -149,28 +109,24 @@
     "letra": "C",
     "preguntas": [
       {
-        "pregunta": "Apellido del legendario futbolista y técnico neerlandés, símbolo del 'Fútbol Total'.",
+        "pregunta": "Futbolista portugués, máximo goleador de la historia del fútbol, actualmente en Al Nassr.",
+        "respuesta": "Cristiano Ronaldo"
+      },
+      {
+        "pregunta": "Nombre del estadio del FC Barcelona.",
+        "respuesta": "Camp Nou"
+      },
+      {
+        "pregunta": "Apellido del legendario futbolista y técnico neerlandés, figura del 'Fútbol Total'.",
         "respuesta": "Cruyff"
       },
       {
-        "pregunta": "Apellido del legendario defensor italiano, Balón de Oro 2006.",
-        "respuesta": "Cannavaro"
+        "pregunta": "País sudamericano cuya selección viste de amarillo, azul y rojo.",
+        "respuesta": "Colombia"
       },
       {
         "pregunta": "Club inglés de Londres, ganador de dos Champions League (2012 y 2021).",
         "respuesta": "Chelsea"
-      },
-      {
-        "pregunta": "Apellido del técnico argentino campeón del mundo 2022.",
-        "respuesta": "Scaloni"
-      },
-      {
-        "pregunta": "Apellido del mediocampista brasileño del Manchester United.",
-        "respuesta": "Casemiro"
-      },
-      {
-        "pregunta": "Apellido del mediocampista croata del Real Madrid, Balón de Oro 2018.",
-        "respuesta": "Modric"
       },
       {
         "pregunta": "Apellido del delantero uruguayo que actualmente juega en Boca Juniors.",
@@ -185,36 +141,20 @@
         "respuesta": "Camavinga"
       },
       {
+        "pregunta": "Apellido del arquero belga del Real Madrid.",
+        "respuesta": "Courtois"
+      },
+      {
         "pregunta": "País cuya selección fue subcampeona del Mundial 2018 y tercera en 2022.",
         "respuesta": "Croacia"
       },
       {
-        "pregunta": "Apellido del ex delantero argentino que jugó en River, Chelsea e Inter.",
-        "respuesta": "Crespo"
+        "pregunta": "Apellido del legendario defensor italiano, Balón de Oro 2006.",
+        "respuesta": "Cannavaro"
       },
       {
-        "pregunta": "Apellido del técnico italiano del Real Madrid.",
-        "respuesta": "Ancelotti"
-      },
-      {
-        "pregunta": "Club de Rosario que viste de azul y amarillo.",
-        "respuesta": "Rosario Central"
-      },
-      {
-        "pregunta": "Nombre del estadio de Racing Club de Avellaneda.",
-        "respuesta": "Cilindro"
-      },
-      {
-        "pregunta": "Futbolista portugués, máximo goleador de la historia del fútbol, actualmente en Al Nassr.",
-        "respuesta": "Cristiano Ronaldo"
-      },
-      {
-        "pregunta": "Nombre del estadio del FC Barcelona.",
-        "respuesta": "Camp Nou"
-      },
-      {
-        "pregunta": "País sudamericano cuya selección viste de amarillo, azul y rojo.",
-        "respuesta": "Colombia"
+        "pregunta": "Apellido del mediocampista brasileño del Manchester United.",
+        "respuesta": "Casemiro"
       }
     ]
   },
@@ -222,64 +162,32 @@
     "letra": "D",
     "preguntas": [
       {
-        "pregunta": "Apellido del futbolista argentino campeón del mundo 2022, autor de goles clave, apodado 'Fideo'.",
-        "respuesta": "Di Maria"
-      },
-      {
-        "pregunta": "Apellido del ex delantero marfileño leyenda del Chelsea.",
-        "respuesta": "Drogba"
-      },
-      {
-        "pregunta": "País europeo que sorprendió ganando la Eurocopa 1992.",
-        "respuesta": "Dinamarca"
-      },
-      {
-        "pregunta": "Apellido del futbolista neerlandés, capitán del Liverpool.",
-        "respuesta": "Van Dijk"
-      },
-      {
-        "pregunta": "Apellido del legendario futbolista argentino-español, figura del Real Madrid en los 50s y 60s.",
-        "respuesta": "Di Stefano"
-      },
-      {
-        "pregunta": "Apellido del mediocampista alemán del Manchester City, ex FC Barcelona.",
-        "respuesta": "Gundogan"
-      },
-      {
-        "pregunta": "Apellido del defensor alemán del Real Madrid.",
-        "respuesta": "Rüdiger"
-      },
-      {
-        "pregunta": "Apellido del delantero argentino, máximo goleador histórico del Manchester City.",
-        "respuesta": "Agüero"
-      },
-      {
-        "pregunta": "Apellido del delantero sueco ex-Milan, Inter, Juventus, Barcelona y PSG.",
-        "respuesta": "Ibrahimovic"
-      },
-      {
-        "pregunta": "Apellido del exfutbolista portugués, Balón de Oro 2000.",
-        "respuesta": "Figo"
-      },
-      {
-        "pregunta": "Apellido del defensor argentino campeón del mundo 1986 (Oscar...).",
-        "respuesta": "Ruggeri"
-      },
-      {
-        "pregunta": "Nombre completo del ídolo máximo del fútbol argentino.",
+        "pregunta": "Nombre completo del legendario futbolista argentino, campeón del mundo en México 1986.",
         "respuesta": "Diego Armando Maradona"
+      },
+      {
+        "pregunta": "Apellido del futbolista argentino campeón del mundo 2022, leyenda de la selección.",
+        "respuesta": "Di Maria"
       },
       {
         "pregunta": "Club alemán de camiseta amarilla y negra, juega en el Signal Iduna Park.",
         "respuesta": "Dortmund"
       },
       {
-        "pregunta": "Técnico argentino del Atlético de Madrid, apodado 'Cholo'.",
+        "pregunta": "Técnico argentino del Atlético de Madrid.",
         "respuesta": "Diego Simeone"
+      },
+      {
+        "pregunta": "Apellido del ex delantero marfileño leyenda del Chelsea, clave en la Champions 2012.",
+        "respuesta": "Drogba"
       },
       {
         "pregunta": "Posición del jugador que se ubica por delante de los mediocampistas, encargado de hacer goles.",
         "respuesta": "Delantero"
+      },
+      {
+        "pregunta": "País europeo que sorprendió al ganar la Eurocopa 1992.",
+        "respuesta": "Dinamarca"
       },
       {
         "pregunta": "Apellido del mediocampista belga figura del Manchester City.",
@@ -290,56 +198,16 @@
         "respuesta": "De Gea"
       },
       {
-        "pregunta": "Apellido del mediocampista español del Barcelona, Golden Boy 2021.",
-        "respuesta": "Pedri"
-      },
-      {
-        "pregunta": "Apellido del entrenador de River Plate campeón de América en 2018.",
-        "respuesta": "Gallardo"
-      },
-      {
-        "pregunta": "Apellido del exmediocampista de Boca y Vélez, campeón del mundo Sub-20 en 2001.",
-        "respuesta": "D'Alessandro"
-      },
-      {
-        "pregunta": "Nombre del estadio de Independiente de Avellaneda.",
-        "respuesta": "Libertadores de America"
-      },
-      {
-        "pregunta": "Apellido del delantero colombiano del Liverpool.",
-        "respuesta": "Diaz"
-      },
-      {
         "pregunta": "Apellido del técnico de la selección francesa campeona del mundo en 2018.",
         "respuesta": "Deschamps"
       },
       {
-        "pregunta": "Partido entre equipos de la misma ciudad o región que son rivales históricos",
-        "respuesta": "Derbi"
+        "pregunta": "Apellido del legendario futbolista argentino-español, figura del Real Madrid en los 50s y 60s.",
+        "respuesta": "Di Stefano"
       },
       {
-        "pregunta": "Falta que se señala cuando un jugador está más adelantado que el último defensor al recibir el balón",
-        "respuesta": "Fuera de juego"
-      },
-      {
-        "pregunta": "Estadio del Manchester United.",
-        "respuesta": "Old Trafford"
-      },
-      {
-        "pregunta": "Apellido del técnico alemán campeón del sextete con Bayern Munich.",
-        "respuesta": "Hansi Flick"
-      },
-      {
-        "pregunta": "Apellido del legendario lateral brasileño, campeón del mundo 2002.",
-        "respuesta": "Cafu"
-      },
-      {
-        "pregunta": "Club de Florencio Varela campeón de la Sudamericana 2020 y Recopa 2021.",
-        "respuesta": "Defensa y Justicia"
-      },
-      {
-        "pregunta": "Apellido del máximo goleador histórico del Manchester United.",
-        "respuesta": "Wayne Rooney"
+        "pregunta": "Apellido del futbolista colombiano del Liverpool.",
+        "respuesta": "Diaz"
       }
     ]
   },
@@ -351,7 +219,7 @@
         "respuesta": "España"
       },
       {
-        "pregunta": "Nombre del estadio del Arsenal FC en Londres.",
+        "pregunta": "Nombre del estadio local del Arsenal FC en Londres.",
         "respuesta": "Emirates Stadium"
       },
       {
@@ -383,40 +251,12 @@
         "respuesta": "Eriksen"
       },
       {
-        "pregunta": "Apellido del legendario futbolista portugués, figura del Benfica en los 60s.",
-        "respuesta": "Eusebio"
-      },
-      {
-        "pregunta": "CONTIENE E: Apellido del delantero francés Balón de Oro 2022, actualmente en Al-Ittihad.",
-        "respuesta": "Benzema"
-      },
-      {
-        "pregunta": "CONTIENE E: Apellido del arquero alemán del Barcelona.",
-        "respuesta": "Ter Stegen"
-      },
-      {
-        "pregunta": "CONTIENE E: Apellido del legendario arquero danés, padre del actual arquero del Leicester.",
-        "respuesta": "Schmeichel"
-      },
-      {
-        "pregunta": "CONTIENE E: Apellido del histórico 10 uruguayo, ídolo de River Plate.",
-        "respuesta": "Francescoli"
-      },
-      {
-        "pregunta": "CONTIENE E: Forma de definir un partido igualado tras la prórroga.",
-        "respuesta": "Penales"
-      },
-      {
         "pregunta": "Club alemán campeón de la Europa League 2022.",
         "respuesta": "Eintracht Frankfurt"
       },
       {
-        "pregunta": "Club catalán de la Primera División, reconocido históricamente en la capital de Cataluña",
-        "respuesta": "Espanyol"
-      },
-      {
-        "pregunta": "Recinto deportivo donde se disputan los partidos de fútbol",
-        "respuesta": "Estadio"
+        "pregunta": "Apellido del legendario futbolista portugués, figura del Benfica en los 60s.",
+        "respuesta": "Eusebio"
       }
     ]
   },
@@ -472,44 +312,16 @@
         "respuesta": "Old Trafford"
       },
       {
+        "pregunta": "CONTIENE F: Apellido del futbolista brasileño del Barcelona.",
+        "respuesta": "Raphinha"
+      },
+      {
         "pregunta": "CONTIENE F: Apellido del técnico alemán, actual entrenador del FC Barcelona.",
         "respuesta": "Hansi Flick"
       },
       {
         "pregunta": "CONTIENE F: Apellido del legendario lateral brasileño, campeón del mundo 2002.",
         "respuesta": "Cafu"
-      },
-      {
-        "pregunta": "Apellido del ex delantero colombiano figura en River, Porto y Atlético Madrid.",
-        "respuesta": "Falcao"
-      },
-      {
-        "pregunta": "CONTIENE F: Club de Florencio Varela campeón de la Sudamericana 2020.",
-        "respuesta": "Defensa y Justicia"
-      },
-      {
-        "pregunta": "Apellido del ex delantero inglés, máximo goleador histórico del Manchester United.",
-        "respuesta": "Wayne Rooney"
-      },
-      {
-        "pregunta": "Apellido del delantero brasileño ex Liverpool, hoy en la liga árabe",
-        "respuesta": "Firmino"
-      },
-      {
-        "pregunta": "Club londinense del Craven Cottage",
-        "respuesta": "Fulham"
-      },
-      {
-        "pregunta": "CONTIENE F: Apellido del arquero italiano campeón del mundo 2006.",
-        "respuesta": "Buffon"
-      },
-      {
-        "pregunta": "¿Cuál es el apodo y apellido del arquero español reconocido por su liderazgo, ex Liverpool y Napoli entre otros?",
-        "respuesta": "Pepe Reina"
-      },
-      {
-        "pregunta": "Máxima sanción en el fútbol, tiro directo desde 11 metros",
-        "respuesta": "Penal"
       }
     ]
   },
@@ -541,7 +353,7 @@
         "respuesta": "Gimnasia"
       },
       {
-        "pregunta": "Acción de introducir la pelota en el arco contrario.",
+        "pregunta": "Acción de introducir el balón en el arco contrario.",
         "respuesta": "Gol"
       },
       {
@@ -563,30 +375,6 @@
       {
         "pregunta": "Club turco de Estambul, 24 veces campeón de liga.",
         "respuesta": "Galatasaray"
-      },
-      {
-        "pregunta": "CONTIENE G: Apellido del exfutbolista portugués, Balón de Oro 2000.",
-        "respuesta": "Figo"
-      },
-      {
-        "pregunta": "CONTIENE G: Apellido del defensor argentino campeón del mundo 1986.",
-        "respuesta": "Ruggeri"
-      },
-      {
-        "pregunta": "Apellido del DT de River campeón de Libertadores 2015 y 2018.",
-        "respuesta": "Gallardo"
-      },
-      {
-        "pregunta": "Apellido del ex arquero argentino recordado por atajar penales en Italia 90.",
-        "respuesta": "Goycochea"
-      },
-      {
-        "pregunta": "Ex Defensa italiano emblema de la Juventus",
-        "respuesta": "Giorgio Chiellini"
-      },
-      {
-        "pregunta": "Nombre completo del arquero italiano, campeón del mundo en 2006, considerado uno de los mejores de la historia",
-        "respuesta": "Gianluigi Buffon"
       }
     ]
   },
@@ -652,30 +440,6 @@
       {
         "pregunta": "CONTIENE H: Apellido del futbolista brasileño del Barcelona.",
         "respuesta": "Raphinha"
-      },
-      {
-        "pregunta": "Apellido del ex arquero colombiano famoso por la atajada del 'Escorpión'.",
-        "respuesta": "Higuita"
-      },
-      {
-        "pregunta": "Tres goles de un mismo jugador",
-        "respuesta": "Hat trick"
-      },
-      {
-        "pregunta": "Club alemán 'Die Elbe'",
-        "respuesta": "Hamburgo"
-      },
-      {
-        "pregunta": "Club español de la comunidad de Aragón que ha participado en Primera División",
-        "respuesta": "Huesca"
-      },
-      {
-        "pregunta": "Apellido del mediocampista español que jugó en el Barcelona y la selección española",
-        "respuesta": "Xavi Hernandez"
-      },
-      {
-        "pregunta": "Apellido del mediocampista francés campeón del mundo en 1998",
-        "respuesta": "Thierry Henry"
       }
     ]
   },
@@ -745,14 +509,6 @@
       {
         "pregunta": "CONTIENE I: Apellido del futbolista neerlandés que jugó en Liverpool y PSG, actualmente en Al-Ettifaq.",
         "respuesta": "Wijnaldum"
-      },
-      {
-        "pregunta": "Club de fútbol cordobés que juega en la Primera División.",
-        "respuesta": "Instituto"
-      },
-      {
-        "pregunta": "Apellido del ex delantero sueco, conocido por su personalidad y goles acrobáticos.",
-        "respuesta": "Ibrahimovic"
       }
     ]
   },
@@ -814,22 +570,6 @@
       {
         "pregunta": "CONTIENE J: Apellido del mediocampista neerlandés del AC Milan.",
         "respuesta": "Reijnders"
-      },
-      {
-        "pregunta": "Árbitros que marcan offside",
-        "respuesta": "Juez de linea"
-      },
-      {
-        "pregunta": "Delantero joven del Dortmund, ex Manchester United",
-        "respuesta": "Jadon Sancho"
-      },
-      {
-        "pregunta": "Apellido del mediocampista colombiano que jugó en el Real Madrid y el Bayern Munich",
-        "respuesta": "James Rodriguez"
-      },
-      {
-        "pregunta": "Apellido del mediocampista del Liverpool dorsal 20",
-        "respuesta": "Jota"
       }
     ]
   },
@@ -885,11 +625,11 @@
         "respuesta": "Koulibaly"
       },
       {
-        "pregunta": "CONTIENE K: Apellido del delantero checo del Bayer Leverkusen.",
-        "respuesta": "Schick"
+        "pregunta": "CONTIENE K: Apellido del delantero belga que jugó en Inter, Chelsea, Man. United y Roma.",
+        "respuesta": "Lukaku"
       },
       {
-        "pregunta": "CONTIENE K: Apellido del mediocampista alemán del Bayern Munich.",
+        "pregunta": "Apellido del mediocampista alemán del Bayern Munich.",
         "respuesta": "Kimmich"
       },
       {
@@ -901,24 +641,8 @@
         "respuesta": "Doku"
       },
       {
-        "pregunta": "CONTIENE K: Apellido del ex lateral inglés del Manchester City. Actualmente en Milan.",
+        "pregunta": "CONTIENE K: Apellido del ex lateral inglés del Manchester City. Actualemente en Milan.",
         "respuesta": "Walker"
-      },
-      {
-        "pregunta": "Apellido del ex delantero argentino campeón del mundo 1978, máximo goleador de ese torneo.",
-        "respuesta": "Kempes"
-      },
-      {
-        "pregunta": "Club alemán FC Colonia",
-        "respuesta": "Koln"
-      },
-      {
-        "pregunta": "Apellido del ex mediocampista alemán que jugó en la selección y fue figura del Chelsea.",
-        "respuesta": "Ballack"
-      },
-      {
-        "pregunta": "Apellido del mediocampista alemán que ganó el Mundial 2014 con Sami...",
-        "respuesta": "Khedira"
       }
     ]
   },
@@ -996,50 +720,6 @@
       {
         "pregunta": "CONTIENE L: Apellido del mediocampista portugués del Man City.",
         "respuesta": "Bernardo Silva"
-      },
-      {
-        "pregunta": "Club argentino del sur del Gran Buenos Aires, campeón en 2007.",
-        "respuesta": "Lanus"
-      },
-      {
-        "pregunta": "CONTIENE L: Nombre del estadio de Estudiantes de La Plata.",
-        "respuesta": "UNO Jorge Luis Hirschi"
-      },
-      {
-        "pregunta": "Competición regular entre clubes",
-        "respuesta": "Liga"
-      },
-      {
-        "pregunta": "Club español de la Comunidad Valenciana que ha jugado en Primera División",
-        "respuesta": "Levante"
-      },
-      {
-        "pregunta": "Defensa brasileño, campeón del Mundial 2002 por su solidez en la zaga",
-        "respuesta": "Lucio"
-      },
-      {
-        "pregunta": "CONTIENE L: Apellido del ex delantero marfileño leyenda del Chelsea.",
-        "respuesta": "Drogba"
-      },
-      {
-        "pregunta": "CONTIENE L: Apellido del legendario futbolista brasileño tricampeón mundial.",
-        "respuesta": "Pele"
-      },
-      {
-        "pregunta": "Apellido del mediocampista alemán que jugó en el Real Madrid y el Arsenal",
-        "respuesta": "Mesut Ozil"
-      },
-      {
-        "pregunta": "Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
-        "respuesta": "Xabi Alonso"
-      },
-      {
-        "pregunta": "Apellido del delantero portugués que jugó en el Manchester United y el Real Madrid",
-        "respuesta": "Cristiano Ronaldo"
-      },
-      {
-        "pregunta": "Apellido del mediocampista belga que juega en el Manchester City",
-        "respuesta": "Kevin De Bruyne"
       }
     ]
   },
@@ -1105,26 +785,6 @@
       {
         "pregunta": "CONTIENE M: Apellido del mediocampista francés del Real Madrid.",
         "respuesta": "Camavinga"
-      },
-      {
-        "pregunta": "Nombre del estadio principal de River Plate.",
-        "respuesta": "Monumental"
-      },
-      {
-        "pregunta": "Apellido del DT argentino campeón del mundo 1978.",
-        "respuesta": "Menotti"
-      },
-      {
-        "pregunta": "Apellido del ex mediocampista argentino de River y Barcelona, apodado 'Jefecito'.",
-        "respuesta": "Mascherano"
-      },
-      {
-        "pregunta": "Club inglés apodado 'The Citizens'",
-        "respuesta": "Manchester City"
-      },
-      {
-        "pregunta": "Delantero neerlandés famoso por su velocidad en el Arsenal",
-        "respuesta": "Marc Overmars"
       }
     ]
   },
@@ -1148,7 +808,7 @@
         "respuesta": "Newells Old Boys"
       },
       {
-        "pregunta": "Apellido del legendario defensor italiano, campeón del mundo 2006.",
+        "pregunta": "Apellido del legendario defensor italiano, campeón del mundo 2006, jugó en Lazio y Milan.",
         "respuesta": "Nesta"
       },
       {
@@ -1176,36 +836,12 @@
         "respuesta": "Navas"
       },
       {
-        "pregunta": "CONTIENE N: Apellido del futbolista francés del Real Madrid.",
-        "respuesta": "Tchouameni"
-      },
-      {
-        "pregunta": "CONTIENE N: Apellido del defensor argentino campeón del mundo 2022, juega en el Manchester United.",
-        "respuesta": "Lisandro Martinez"
-      },
-      {
         "pregunta": "CONTIENE N: Futbolista brasileño del Real Madrid.",
         "respuesta": "Vinicius Junior"
       },
       {
         "pregunta": "CONTIENE N: Apellido del mediocampista portugués del Manchester United.",
         "respuesta": "Fernandes"
-      },
-      {
-        "pregunta": "Barrio de Buenos Aires donde se ubica el estadio de River Plate.",
-        "respuesta": "Nuñez"
-      },
-      {
-        "pregunta": "CONTIENE N: Apellido del ex delantero uruguayo ídolo de River Plate, apodado 'El Príncipe'.",
-        "respuesta": "Francescoli"
-      },
-      {
-        "pregunta": "Delantero portugués, hábil regateador que brilló en el Manchester United",
-        "respuesta": "Nani"
-      },
-      {
-        "pregunta": "Club inglés donde jugó Alan Shearer, máximo goleador histórico de la Premier League",
-        "respuesta": "Newcastle"
       }
     ]
   },
@@ -1257,40 +893,8 @@
         "respuesta": "Olympique de Marsella"
       },
       {
-        "pregunta": "CONTIENE O: Futbolista portugués, 5 veces Balón de Oro, juega en Al Nassr.",
-        "respuesta": "Cristiano Ronaldo"
-      },
-      {
-        "pregunta": "CONTIENE O: Apellido del mediocampista español del Manchester City.",
-        "respuesta": "Rodri"
-      },
-      {
-        "pregunta": "CONTIENE O: Apellido del ex mediocampista español, actual técnico del Bayer Leverkusen.",
-        "respuesta": "Xabi Alonso"
-      },
-      {
         "pregunta": "CONTIENE O: Apellido del defensor alemán campeón del mundo 2014, ex Bayern, actualmente en LASK.",
         "respuesta": "Boateng"
-      },
-      {
-        "pregunta": "Apellido del ex delantero de River Plate y la Selección Argentina, apodado 'Burrito'.",
-        "respuesta": "Ortega"
-      },
-      {
-        "pregunta": "Club paraguayo tricampeón de la Copa Libertadores.",
-        "respuesta": "Olimpia"
-      },
-      {
-        "pregunta": "Mediocampista brasileño, exjugador clave del Chelsea",
-        "respuesta": "Oscar"
-      },
-      {
-        "pregunta": "Club español de LaLiga, con tradición y afición fiel en Navarra",
-        "respuesta": "Osasuna"
-      },
-      {
-        "pregunta": "Arquero colombiano, reconocido a nivel internacional por sus reflejos y seguridad",
-        "respuesta": "Oscar Cordoba"
       }
     ]
   },
@@ -1356,30 +960,6 @@
       {
         "pregunta": "CONTIENE P: Apellido del defensor español del Al-Nassr.",
         "respuesta": "Laporte"
-      },
-      {
-        "pregunta": "Apellido del histórico delantero de Boca Juniors, máximo goleador del club, apodado 'El Titán'.",
-        "respuesta": "Palermo"
-      },
-      {
-        "pregunta": "Apodo del arquero campeón del mundo con Argentina en 1978.",
-        "respuesta": "Pato"
-      },
-      {
-        "pregunta": "Apellido del ex defensor de River y la Selección, campeón del mundo 1978.",
-        "respuesta": "Passarella"
-      },
-      {
-        "pregunta": "Apellido de la leyenda húngara, famoso goleador vinculado al Real Madrid",
-        "respuesta": "Puskas"
-      },
-      {
-        "pregunta": "Apodo y apellido del arquero español reconocido por su liderazgo. Ex Liverpool y Napoli entre otros.",
-        "respuesta": "Pepe Reina"
-      },
-      {
-        "pregunta": "Máxima sanción en el fútbol, tiro directo desde 11 metros",
-        "respuesta": "Penal"
       }
     ]
   },
@@ -1399,18 +979,6 @@
         "respuesta": "Quique Setien"
       },
       {
-        "pregunta": "Apellido del futbolista argentino, defensor de la Fiorentina (Lucas...).",
-        "respuesta": "Martinez Quarta"
-      },
-      {
-        "pregunta": "Club inglés que juega en Loftus Road.",
-        "respuesta": "Queens Park Rangers"
-      },
-      {
-        "pregunta": "CONTIENE Q: Apellido del defensa central brasileño del PSG.",
-        "respuesta": "Marquinhos"
-      },
-      {
         "pregunta": "CONTIENE Q: Nombre completo del técnico español que ha dirigido al Barcelona y la selección española.",
         "respuesta": "Luis Enrique"
       },
@@ -1425,18 +993,6 @@
       {
         "pregunta": "CONTIENE Q: Apellido del ex entrenador español campeón del Mundial 2010.",
         "respuesta": "Del Bosque"
-      },
-      {
-        "pregunta": "Club argentino del sur del Gran Buenos Aires, apodado 'El Cervecero'.",
-        "respuesta": "Quilmes"
-      },
-      {
-        "pregunta": "Apellido del ex mediocampista de Racing y Selección, campeón del mundo Sub-20.",
-        "respuesta": "Quiroz"
-      },
-      {
-        "pregunta": "CONTIENE Q: Posición en la que jugaban jugadores como Marcelo o Roberto Carlos",
-        "respuesta": "Lateral izquierdo"
       }
     ]
   },
@@ -1476,8 +1032,8 @@
         "respuesta": "Rodri"
       },
       {
-        "pregunta": "Apellido del ex delantero francés leyenda del Arsenal.",
-        "respuesta": "Henry"
+        "pregunta": "Apellido del futbolista brasileño que jugó en Barcelona, actualmente en Betis (Vitor...).",
+        "respuesta": "Roque"
       },
       {
         "pregunta": "Apellido del defensor argentino campeón del mundo 2022, juega en Tottenham (Cristian...).",
@@ -1502,62 +1058,6 @@
       {
         "pregunta": "CONTIENE R: Apellido del arquero alemán del Barcelona.",
         "respuesta": "Ter Stegen"
-      },
-      {
-        "pregunta": "Club argentino de Avellaneda, rival de Independiente, apodado 'La Academia'.",
-        "respuesta": "Racing Club"
-      },
-      {
-        "pregunta": "Apellido del ex mediocampista de Boca y Villarreal, ídolo Xeneize.",
-        "respuesta": "Riquelme"
-      },
-      {
-        "pregunta": "Apellido del ex defensor de River y la Selección Argentina, apodado 'Cabezón'.",
-        "respuesta": "Ruggeri"
-      },
-      {
-        "pregunta": "DT de River Libertadores 1996",
-        "respuesta": "Ramon Diaz"
-      },
-      {
-        "pregunta": "Nombre completo del ex lateral izquierdo brasileño que brilló en el Real Madrid, conocido por sus tiros libres",
-        "respuesta": "Roberto Carlos"
-      },
-      {
-        "pregunta": "Apellido del extremo brasileño del Barcelona",
-        "respuesta": "Raphinha"
-      },
-      {
-        "pregunta": "CONTIENE R: Apellido del ex delantero francés leyenda del Arsenal.",
-        "respuesta": "Henry"
-      },
-      {
-        "pregunta": "CONTIENE R: Apellido del delantero francés campeón del mundo 1998, jugó en Juventus y Mónaco.",
-        "respuesta": "Trezeguet"
-      },
-      {
-        "pregunta": "CONTIENE R: Apellido del ex-defensor inglés del Manchester City.",
-        "respuesta": "Walker"
-      },
-      {
-        "pregunta": "CONTIENE R: Apellido del ex mediocampista alemán leyenda del Bayern.",
-        "respuesta": "Schweinsteiger"
-      },
-      {
-        "pregunta": "Apodo del club Boca Juniors.",
-        "respuesta": "Xeneize"
-      },
-      {
-        "pregunta": "CONTIENE X: Apellido del mediocampista argentino campeón del mundo 2022 (Alexis...).",
-        "respuesta": "Mac Allister"
-      },
-      {
-        "pregunta": "Apellido del mediocampista español campeón del mundo 2010, conocido por su visión de juego.",
-        "respuesta": "Xavi"
-      },
-      {
-        "pregunta": "CONTIENE X: Apellido del ex mediocampista español campeón del mundo 2010 (Javier...).",
-        "respuesta": "Martinez"
       }
     ]
   },
@@ -1613,11 +1113,11 @@
         "respuesta": "Messi"
       },
       {
-        "pregunta": "CONTIENE S: Estadio del Real Madrid.",
+        "pregunta": "Estadio del Real Madrid.",
         "respuesta": "Santiago Bernabeu"
       },
       {
-        "pregunta": "CONTIENE S: Apellido del ex mediocampista español que jugó en Barcelona e Inter Miami.",
+        "pregunta": "CONTIENE S: Apellido del mediocampista español que jugó en Barcelona e Inter Miami.",
         "respuesta": "Busquets"
       },
       {
@@ -1627,38 +1127,6 @@
       {
         "pregunta": "CONTIENE S: Apellido del mediocampista portugués del Man City.",
         "respuesta": "Bernardo Silva"
-      },
-      {
-        "pregunta": "Apellido del ex DT de Estudiantes, campeón de Libertadores 2009 y subcampeón del mundo 2014.",
-        "respuesta": "Sabella"
-      },
-      {
-        "pregunta": "Apellido del ex defensor de Boca e Inter, campeón mundial Sub-20.",
-        "respuesta": "Samuel"
-      },
-      {
-        "pregunta": "Club argentino de la provincia de Santa Fe.",
-        "respuesta": "Sarmiento"
-      },
-      {
-        "pregunta": "Apellido del DT argentino Chile Copa América 2015",
-        "respuesta": "Sampaoli"
-      },
-      {
-        "pregunta": "Segunda máxima competición de clubes en Sudamérica",
-        "respuesta": "Sudamericana"
-      },
-      {
-        "pregunta": "Club italiano, campeón de la Serie A en 1991, conocido por sus colores azul y blanco",
-        "respuesta": "Sampdoria"
-      },
-      {
-        "pregunta": "CONTIENE S: Apellido del ex mediocampista español leyenda del Barcelona.",
-        "respuesta": "Busquets"
-      },
-      {
-        "pregunta": "CONTIENE S: Apellido del mediocampista español que jugó en Barcelona e Inter Miami.",
-        "respuesta": "Busquets"
       }
     ]
   },
@@ -1686,16 +1154,12 @@
         "respuesta": "Torres"
       },
       {
-        "pregunta": "Apellido del ex delantero argentino apodado 'El Apache'.",
+        "pregunta": "Apellido del ex delantero argentino apodado 'El Apache', también fue técnico.",
         "respuesta": "Tevez"
       },
       {
         "pregunta": "Nombre completo del ex mediocampista marfileño leyenda del Manchester City.",
         "respuesta": "Toure Yaya"
-      },
-      {
-        "pregunta": "Nombre completo del defensor argentino campeón del mundo 2022, juega en Lyon.",
-        "respuesta": "Nicolas Tagliafico"
       },
       {
         "pregunta": "Apellido del mediocampista francés del Real Madrid (Aurélien...).",
@@ -1710,40 +1174,12 @@
         "respuesta": "Trent Alexander-Arnold"
       },
       {
-        "pregunta": "CONTIENE T: Apellido del técnico italiano del Real Madrid.",
-        "respuesta": "Ancelotti"
-      },
-      {
-        "pregunta": "CONTIENE T: Club español campeón de Liga en 2021.",
-        "respuesta": "Atletico de Madrid"
-      },
-      {
         "pregunta": "CONTIENE T: Apellido del mediocampista español ex Chelsea y Man Utd, agente libre.",
         "respuesta": "Mata"
       },
       {
         "pregunta": "CONTIENE T: Apellido del arquero argentino campeón del mundo 2022.",
         "respuesta": "Emiliano Martinez"
-      },
-      {
-        "pregunta": "Club de fútbol de la provincia de Córdoba.",
-        "respuesta": "Talleres"
-      },
-      {
-        "pregunta": "Club de fútbol de la provincia de Buenos Aires, apodado 'El Matador'.",
-        "respuesta": "Tigre"
-      },
-      {
-        "pregunta": "Apellido del ex mediocampista de Estudiantes y Selección Argentina, campeón del mundo 1986.",
-        "respuesta": "Trobbiani"
-      },
-      {
-        "pregunta": "DT brasileño Copa América 2019",
-        "respuesta": "Tite"
-      },
-      {
-        "pregunta": "Jugador con más partidos en la historia del Bayern Munich",
-        "respuesta": "Thomas Muller"
       }
     ]
   },
@@ -1797,26 +1233,6 @@
       {
         "pregunta": "CONTIENE U: Apellido del delantero uruguayo del Liverpool (Darwin...).",
         "respuesta": "Nunez"
-      },
-      {
-        "pregunta": "Club de fútbol de la provincia de Santa Fe, rival de Colón.",
-        "respuesta": "Union"
-      },
-      {
-        "pregunta": "CONTIENE U: Apellido del ex mediocampista de River y Selección Argentina, campeón de América en 1991 y 1993.",
-        "respuesta": "Astrada"
-      },
-      {
-        "pregunta": "Apellido del ex mediocampista español campeón del mundo 2010 (Javier...).",
-        "respuesta": "Martinez"
-      },
-      {
-        "pregunta": "CONTIENE U: Apellido del lateral inglés del Liverpool.",
-        "respuesta": "Alexander-Arnold"
-      },
-      {
-        "pregunta": "CONTIENE U: Apellido del futbolista portugués del Manchester United.",
-        "respuesta": "Bruno Fernandes"
       }
     ]
   },
@@ -1872,32 +1288,16 @@
         "respuesta": "Gavi"
       },
       {
+        "pregunta": "CONTIENE V: Apellido del futbolista argentino campeón del mundo 2022 (Julián...)",
+        "respuesta": "Alvarez"
+      },
+      {
         "pregunta": "CONTIENE V: Apellido del exfutbolista checo Balón de Oro 2003.",
         "respuesta": "Nedved"
       },
       {
         "pregunta": "CONTIENE V: Apellido del mediocampista croata del Manchester City.",
         "respuesta": "Kovacic"
-      },
-      {
-        "pregunta": "Club argentino del barrio de Liniers, campeón de la Libertadores 1994.",
-        "respuesta": "Velez Sarsfield"
-      },
-      {
-        "pregunta": "Apellido de la 'Brujita', ex jugador de Estudiantes, Lazio y Manchester United.",
-        "respuesta": "Veron"
-      },
-      {
-        "pregunta": "Apellido del entrenador español, actual técnico del Aston Villa.",
-        "respuesta": "Emery"
-      },
-      {
-        "pregunta": "Club brasileño histórico de Río de Janeiro",
-        "respuesta": "Vasco da Gama"
-      },
-      {
-        "pregunta": "Apellido del delantero italiano que brilló en el Inter de Milán y la selección italiana a finales de los 90",
-        "respuesta": "Vieri"
       }
     ]
   },
@@ -1951,18 +1351,6 @@
       {
         "pregunta": "CONTIENE W: Apellido del ex defensor alemán campeón del mundo 2014.",
         "respuesta": "Howedes"
-      },
-      {
-        "pregunta": "Club inglés sorprendente, campeón de la FA Cup en 2013 con una campaña épica",
-        "respuesta": "Wigan"
-      },
-      {
-        "pregunta": "CONTIENE W: Apellido del ex mediocampista alemán del Bayer Leverkusen.",
-        "respuesta": "Wirtz"
-      },
-      {
-        "pregunta": "CONTIENE W: Apellido del ex mediocampista alemán leyenda del Bayern.",
-        "respuesta": "Schweinsteiger"
       }
     ]
   },
@@ -1986,7 +1374,7 @@
         "respuesta": "Xavi Simons"
       },
       {
-        "pregunta": "CONTIENE X: Futbolista portugués que jugó en Atlético Madrid y Chelsea.",
+        "pregunta": "CONTIENE X: Futbolista portugués que jugó en Atlético Madrid, Chelsea y Barcelona.",
         "respuesta": "Joao Felix"
       },
       {
@@ -2008,22 +1396,6 @@
       {
         "pregunta": "CONTIENE X: Apellido del lateral inglés del Liverpool.",
         "respuesta": "Alexander-Arnold"
-      },
-      {
-        "pregunta": "Apodo del club Boca Juniors.",
-        "respuesta": "Xeneize"
-      },
-      {
-        "pregunta": "Apellido del mediocampista argentino campeón del mundo 2022 (Alexis...).",
-        "respuesta": "Mac Allister"
-      },
-      {
-        "pregunta": "Apellido del mediocampista español campeón del mundo 2010, conocido por su visión de juego.",
-        "respuesta": "Xavi"
-      },
-      {
-        "pregunta": "CONTIENE X: Apellido del ex mediocampista español campeón del mundo 2010 (Javier...).",
-        "respuesta": "Martinez"
       }
     ]
   },
@@ -2055,10 +1427,6 @@
         "respuesta": "Yannick Carrasco"
       },
       {
-        "pregunta": "CONTIENE Y: Apellido del futbolista ucraniano del Chelsea.",
-        "respuesta": "Mudryk"
-      },
-      {
         "pregunta": "CONTIENE Y: Club alemán campeón invicto de la Bundesliga 2023-24.",
         "respuesta": "Bayer Leverkusen"
       },
@@ -2073,22 +1441,6 @@
       {
         "pregunta": "CONTIENE Y: Apellido del ex defensor español campeón del mundo 2010.",
         "respuesta": "Puyol"
-      },
-      {
-        "pregunta": "Apellido del ex defensor colombiano, capitán de su selección, jugó en Milan e Independiente.",
-        "respuesta": "Yepes"
-      },
-      {
-        "pregunta": "CONTIENE Y: País sudamericano cuya selección ha ganado dos Mundiales",
-        "respuesta": "Uruguay"
-      },
-      {
-        "pregunta": "CONTIENE Y: Apellido del ex mediocampista español campeón del mundo 2010 (Javier...).",
-        "respuesta": "Martinez"
-      },
-      {
-        "pregunta": "CONTIENE Y: Apellido del mediocampista belga del Man City.",
-        "respuesta": "De Bruyne"
       }
     ]
   },
@@ -2154,15 +1506,7 @@
       {
         "pregunta": "CONTIENE Z: Apellido del mediocampista argentino campeón del mundo 2022 (Enzo...).",
         "respuesta": "Fernandez"
-      },
-      {
-        "pregunta": "Apellido del ex mediocampista de Racing y River.",
-        "respuesta": "Zuculini"
-      },
-      {
-        "pregunta": "Nombre completo de 'Zizou'",
-        "respuesta": "Zinedine Zidane"
       }
     ]
   }
-] 
+]

@@ -3,64 +3,52 @@
     "letra": "A",
     "preguntas": [
       {
-        "pregunta": "País que ganó los Mundiales de 1978, 1986 y 2022.",
+        "pregunta": "¿Qué país ganó los Mundiales de 1978, 1986 y 2022?",
         "respuesta": "Argentina"
       },
       {
-        "pregunta": "Club español conocido como 'colchonero', juega en el Cívitas Metropolitano.",
+        "pregunta": "¿Cuál es el club español conocido como 'colchonero', que juega en el estadio Cívitas Metropolitano?",
         "respuesta": "Atletico de Madrid"
       },
       {
-        "pregunta": "Apellido del técnico italiano multicampeón con Milan y Real Madrid.",
+        "pregunta": "¿Cuál es el apellido del técnico italiano multicampeón con Milan y Real Madrid?",
         "respuesta": "Ancelotti"
       },
       {
-        "pregunta": "Club neerlandés famoso por su cantera, donde jugaron Cruyff, Van Basten y Bergkamp.",
+        "pregunta": "¿Cuál es el club neerlandés famoso por su cantera, donde jugaron Cruyff y Van Basten?",
         "respuesta": "Ajax"
       },
       {
-        "pregunta": "Posición del jugador encargado principalmente de evitar los goles en su propia valla.",
+        "pregunta": "¿Cuál es la posición del jugador encargado principalmente de evitar los goles en su propio arco?",
         "respuesta": "Arquero"
       },
       {
-        "pregunta": "Apellido del delantero gabonés que jugó en Borussia Dortmund, Arsenal y Barcelona.",
-        "respuesta": "Aubameyang"
-      },
-      {
-        "pregunta": "Club inglés del norte de Londres, rival histórico del Tottenham.",
-        "respuesta": "Arsenal"
-      },
-      {
-        "pregunta": "Apellido del futbolista argentino, delantero del Atletico de Madrid, apodado 'La Araña'.",
+        "pregunta": "¿Cuál es el apellido del delantero argentino, figura del Manchester City, apodado 'La Araña'?",
         "respuesta": "Alvarez"
       },
       {
-        "pregunta": "Club argentino de Sarandí, campeón de la Copa Sudamericana 2007.",
+        "pregunta": "¿Cuál es el club inglés del norte de Londres, clásico rival del Tottenham?",
         "respuesta": "Arsenal"
       },
       {
-        "pregunta": "Club italiano de Bérgamo, campeón de la Europa League 2024.",
-        "respuesta": "Atalanta"
+        "pregunta": "¿Cuál es el club de La Paternal, cuna de Diego Maradona?",
+        "respuesta": "Argentinos Juniors"
       },
       {
-        "pregunta": "Apellido del lateral izquierdo español, leyenda del FC Barcelona, actualmente en Inter Miami.",
+        "pregunta": "¿Cuál es el apellido del lateral izquierdo español que jugó en Barcelona, actualmente en Inter Miami?",
         "respuesta": "Alba"
       },
       {
-        "pregunta": "CONTIENE A: Apellido del futbolista noruego del Manchester City, Bota de Oro 2023.",
-        "respuesta": "Haaland"
+        "pregunta": "¿Cuál es el apellido del delantero gabonés que jugó en Borussia Dortmund, Arsenal y Barcelona?",
+        "respuesta": "Aubameyang"
       },
       {
-        "pregunta": "CONTIENE A: Apellido del exfutbolista español, leyenda del Barcelona y la selección, autor del gol en la final del Mundial 2010.",
-        "respuesta": "Iniesta"
+        "pregunta": "¿Cuál es el club argentino de Sarandí, campeón de la Copa Sudamericana 2007?",
+        "respuesta": "Arsenal"
       },
       {
-        "pregunta": "CONTIENE A: Apellido del legendario defensor italiano, ícono del AC Milan.",
-        "respuesta": "Maldini"
-      },
-      {
-        "pregunta": "CONTIENE A: Apellido del legendario defensor español, campeón del mundo 2010, jugó en Real Madrid y Sevilla.",
-        "respuesta": "Ramos"
+        "pregunta": "¿Cuál es el club italiano de Bérgamo, campeón de la Europa League 2024?",
+        "respuesta": "Atalanta"
       }
     ]
   },
@@ -68,64 +56,68 @@
     "letra": "B",
     "preguntas": [
       {
-        "pregunta": "Club argentino del barrio de La Ribera, cuyo estadio es la Bombonera.",
+        "pregunta": "¿Cuál es el club argentino del barrio de La Ribera, cuyo estadio es la Bombonera?",
         "respuesta": "Boca Juniors"
       },
       {
-        "pregunta": "Club alemán más laureado de la Bundesliga, hexacampeón de Europa.",
+        "pregunta": "¿Cuál es el club alemán más ganador de la Bundesliga, hexacampeón de Europa?",
         "respuesta": "Bayern Munich"
       },
       {
-        "pregunta": "Club español donde Lionel Messi jugó la mayor parte de su carrera profesional.",
+        "pregunta": "¿Cuál es el club español donde Lionel Messi jugó la mayor parte de su carrera profesional?",
         "respuesta": "Barcelona"
       },
       {
-        "pregunta": "Apellido del legendario defensor alemán, campeón del mundo como jugador y técnico.",
-        "respuesta": "Beckenbauer"
-      },
-      {
-        "pregunta": "Trofeo que distingue anualmente al mejor futbolista del mundo, entregado por France Football.",
-        "respuesta": "Balon de Oro"
-      },
-      {
-        "pregunta": "Apellido del mediocampista inglés fichado por el Real Madrid en 2023.",
+        "pregunta": "¿Cuál es el apellido del mediocampista inglés figura del Real Madrid, revelación de la temporada 2023/24?",
         "respuesta": "Bellingham"
       },
       {
-        "pregunta": "País sudamericano, máximo ganador de Copas del Mundo con cinco títulos.",
-        "respuesta": "Brasil"
-      },
-      {
-        "pregunta": "Apellido del arquero marroquí semifinalista del Mundial 2022, actualmente en Al-Hilal.",
-        "respuesta": "Bono"
-      },
-      {
-        "pregunta": "Apellido del delantero francés, Balón de Oro 2022, actualmente en Al-Ittihad.",
+        "pregunta": "¿Cuál es el apellido del delantero francés, ganador del Balón de Oro 2022?",
         "respuesta": "Benzema"
       },
       {
-        "pregunta": "Apellido del legendario ex arquero italiano, campeón del mundo 2006.",
-        "respuesta": "Buffon"
+        "pregunta": "¿Cuál es el apellido del arquero marroquí destacado en el Mundial 2022?",
+        "respuesta": "Bono"
       },
       {
-        "pregunta": "Club alemán campeón invicto de la Bundesliga 2023-24.",
+        "pregunta": "¿Cuál es el trofeo que premia al mejor jugador del mundo?",
+        "respuesta": "Balon de Oro"
+      },
+      {
+        "pregunta": "¿Cuál es el club alemán que juega en el Signal Iduna Park?",
+        "respuesta": "Borussia Dortmund"
+      },
+      {
+        "pregunta": "¿Cuál es el apellido del atacante egipcio del Liverpool, máximo goleador de la Premier League en varias temporadas?",
+        "respuesta": "Salah"
+      },
+      {
+        "pregunta": "¿Cuál es el apellido del legendario defensor italiano, capitán del Milan y la selección?",
+        "respuesta": "Baresi"
+      },
+      {
+        "pregunta": "¿Cuál es el apellido del mediocampista belga del Manchester City, conocido por su visión de juego y precisión en el pase?",
+        "respuesta": "De Bruyne"
+      },
+      {
+        "pregunta": "¿Cuál es el club alemán que rompió la hegemonía del Bayern Munich, coronándose campeón invicto de la Bundesliga 2023/24?",
         "respuesta": "Bayer Leverkusen"
       },
       {
-        "pregunta": "Apellido del mediocampista español que jugó la mayor parte de su carrera en Barcelona, actualmente en Inter Miami.",
-        "respuesta": "Busquets"
-      },
-      {
-        "pregunta": "CONTIENE B: Apellido del ex mediocampista español, actual técnico del Bayer Leverkusen.",
+        "pregunta": "¿Cuál es el nombre completo del mediocampista español, técnico del Bayer Leverkusen campeón invicto 2023/24?",
         "respuesta": "Xabi Alonso"
       },
       {
-        "pregunta": "CONTIENE B: Apellido del ex delantero sueco que jugó en múltiples grandes de Europa.",
-        "respuesta": "Ibrahimovic"
+        "pregunta": "¿Cuál es el apellido del autor del gol decisivo en la final del Mundial 1986?",
+        "respuesta": "Burruchaga"
       },
       {
-        "pregunta": "CONTIENE B: Apellido del arquero brasileño del Liverpool.",
-        "respuesta": "Alisson Becker"
+        "pregunta": "¿Cuál es el nombre completo del defensor que integró la Scaloneta campeona del mundo, surgido de Newell's?",
+        "respuesta": "Lisandro Martinez"
+      },
+      {
+        "pregunta": "¿Cuál es el club español con sede en Sevilla, uno de los históricos de La Liga?",
+        "respuesta": "Betis"
       }
     ]
   },
@@ -181,15 +173,15 @@
         "respuesta": "Casemiro"
       },
       {
-        "pregunta": "CONTIENE C: Apellido del mediocampista croata del Real Madrid, Balón de Oro 2018.",
+        "pregunta": "Apellido del mediocampista croata del Real Madrid, Balón de Oro 2018.",
         "respuesta": "Modric"
       },
       {
-        "pregunta": "CONTIENE C: Apellido del técnico italiano del Real Madrid.",
+        "pregunta": "Apellido del técnico italiano del Real Madrid.",
         "respuesta": "Ancelotti"
       },
       {
-        "pregunta": "CONTIENE C: Apellido del técnico argentino campeón del mundo 2022.",
+        "pregunta": "Apellido del técnico argentino campeón del mundo 2022.",
         "respuesta": "Scaloni"
       }
     ]
@@ -246,15 +238,15 @@
         "respuesta": "Diaz"
       },
       {
-        "pregunta": "CONTIENE D: Apellido del futbolista neerlandés, capitán del Liverpool.",
+        "pregunta": "Apellido del futbolista neerlandés, capitán del Liverpool.",
         "respuesta": "Van Dijk"
       },
       {
-        "pregunta": "CONTIENE D: Apellido del mediocampista español del Barcelona, Golden Boy 2021.",
+        "pregunta": "Apellido del mediocampista español del Barcelona, Golden Boy 2021.",
         "respuesta": "Pedri"
       },
       {
-        "pregunta": "CONTIENE D: Apellido del mediocampista alemán del Manchester City, ex FC Barcelona.",
+        "pregunta": "Apellido del mediocampista alemán del Manchester City, ex FC Barcelona.",
         "respuesta": "Gundogan"
       }
     ]
@@ -307,15 +299,15 @@
         "respuesta": "Eusebio"
       },
       {
-        "pregunta": "CONTIENE E: Apellido del delantero francés Balón de Oro 2022, actualmente en Al-Ittihad.",
+        "pregunta": "Apellido del delantero francés Balón de Oro 2022, actualmente en Al-Ittihad.",
         "respuesta": "Benzema"
       },
       {
-        "pregunta": "CONTIENE E: Apellido del arquero alemán del Barcelona.",
+        "pregunta": "Apellido del arquero alemán del Barcelona.",
         "respuesta": "Ter Stegen"
       },
       {
-        "pregunta": "CONTIENE E: Apellido del legendario arquero danés, padre del actual arquero del Leicester.",
+        "pregunta": "Apellido del legendario arquero danés, padre del actual arquero del Leicester.",
         "respuesta": "Schmeichel"
       }
     ]
@@ -437,12 +429,16 @@
         "respuesta": "Galatasaray"
       },
       {
-        "pregunta": "CONTIENE G: Apellido del exfutbolista portugués, Balón de Oro 2000.",
-        "respuesta": "Figo"
+        "pregunta": "Apellido del defensor alemán del Real Madrid.",
+        "respuesta": "Rüdiger"
       },
       {
-        "pregunta": "CONTIENE G: Apellido del defensor argentino campeón del mundo 1986.",
-        "respuesta": "Ruggeri"
+        "pregunta": "Apellido del delantero argentino, máximo goleador histórico del Manchester City.",
+        "respuesta": "Agüero"
+      },
+      {
+        "pregunta": "Apellido del delantero sueco ex-Milan, Inter, Juventus, Barcelona y PSG.",
+        "respuesta": "Ibrahimovic"
       }
     ]
   },
@@ -904,11 +900,11 @@
         "respuesta": "Navas"
       },
       {
-        "pregunta": "CONTIENE N: Apellido del futbolista francés del Real Madrid.",
+        "pregunta": "Apellido del futbolista francés del Real Madrid.",
         "respuesta": "Tchouameni"
       },
       {
-        "pregunta": "CONTIENE N: Apellido del defensor argentino campeón del mundo 2022, juega en el Manchester United.",
+        "pregunta": "Apellido del defensor argentino campeón del mundo 2022, juega en el Manchester United.",
         "respuesta": "Lisandro Martinez"
       },
       {
@@ -969,15 +965,15 @@
         "respuesta": "Olympique de Marsella"
       },
       {
-        "pregunta": "CONTIENE O: Futbolista portugués, 5 veces Balón de Oro, juega en Al Nassr.",
+        "pregunta": "Apellido del futbolista portugués, 5 veces Balón de Oro, juega en Al Nassr.",
         "respuesta": "Cristiano Ronaldo"
       },
       {
-        "pregunta": "CONTIENE O: Apellido del mediocampista español del Manchester City.",
+        "pregunta": "Apellido del mediocampista español del Manchester City.",
         "respuesta": "Rodri"
       },
       {
-        "pregunta": "CONTIENE O: Apellido del ex mediocampista español, actual técnico del Bayer Leverkusen.",
+        "pregunta": "Apellido del ex mediocampista español, actual técnico del Bayer Leverkusen.",
         "respuesta": "Xabi Alonso"
       },
       {
@@ -1067,11 +1063,11 @@
         "respuesta": "Quique Setien"
       },
       {
-        "pregunta": "CONTIENE Q: Apellido del futbolista argentino, ex defensor de la Fiorentina.",
+        "pregunta": "Apellido del futbolista argentino, ex defensor de la Fiorentina.",
         "respuesta": "Martinez Quarta"
       },
       {
-        "pregunta": "CONTIENE Q: Apellido del defensa central brasileño del PSG.",
+        "pregunta": "Apellido del defensa central brasileño del PSG.",
         "respuesta": "Marquinhos"
       },
       {
@@ -1209,7 +1205,7 @@
         "respuesta": "Messi"
       },
       {
-        "pregunta": "CONTIENE S: Estadio del Real Madrid.",
+        "pregunta": "Estadio del Real Madrid.",
         "respuesta": "Santiago Bernabeu"
       },
       {
@@ -1274,12 +1270,12 @@
         "respuesta": "Trent Alexander-Arnold"
       },
       {
-        "pregunta": "CONTIENE T: Apellido del técnico italiano del Real Madrid.",
+        "pregunta": "Apellido del técnico italiano del Real Madrid.",
         "respuesta": "Ancelotti"
       },
       {
-        "pregunta": "CONTIENE T: Club español campeón de Liga en 2021.",
-        "respuesta": "Atletico de Madrid"
+        "pregunta": "Apellido del técnico argentino campeón del mundo 2022.",
+        "respuesta": "Scaloni"
       },
       {
         "pregunta": "CONTIENE T: Apellido del mediocampista español ex Chelsea y Man Utd, agente libre.",
@@ -1401,7 +1397,7 @@
       },
       {
         "pregunta": "CONTIENE V: Apellido del futbolista argentino campeón del mundo 2022 (Julián...)",
-        "respuesta": ""
+        "respuesta": "Alvarez"
       },
       {
         "pregunta": "CONTIENE V: Apellido del exfutbolista checo Balón de Oro 2003.",

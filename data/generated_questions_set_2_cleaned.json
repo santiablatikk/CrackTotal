@@ -3,10 +3,6 @@
     "letra": "A",
     "preguntas": [
       {
-        "pregunta": "¿Cuál es el apellido del ex defensor argentino, capitán del Inter campeón de la Champions 2010?",
-        "respuesta": "Zanetti"
-      },
-      {
         "pregunta": "¿Cuál es el club inglés de Birmingham, campeón de Europa en 1982?",
         "respuesta": "Aston Villa"
       },
@@ -27,20 +23,8 @@
         "respuesta": "Alonso"
       },
       {
-        "pregunta": "¿Cuál es el apellido del futbolista brasileño, Balón de Oro 2007?",
-        "respuesta": "Kaka"
-      },
-      {
         "pregunta": "¿Cuál es el país que ganó el Mundial 2014?",
         "respuesta": "Alemania"
-      },
-      {
-        "pregunta": "¿Cuál es el apellido del futbolista brasileño, leyenda del AC Milan?",
-        "respuesta": "Cafu"
-      },
-      {
-        "pregunta": "¿Cómo se llama el estadio de Boca Juniors?",
-        "respuesta": "La Bombonera"
       }
     ]
   },
@@ -340,14 +324,6 @@
       {
         "pregunta": "Apellido del ex arquero colombiano famoso por 'El Escorpión'.",
         "respuesta": "Higuita"
-      },
-      {
-        "pregunta": "Apellido del ex delantero ucraniano, Balón de Oro 2004.",
-        "respuesta": "Shevchenko"
-      },
-      {
-        "pregunta": "Apellido del mediocampista alemán leyenda del Bayern.",
-        "respuesta": "Schweinsteiger"
       },
       {
         "pregunta": "Apellido del futbolista noruego del Manchester City.",
@@ -998,10 +974,6 @@
         "respuesta": "Xhaka"
       },
       {
-        "pregunta": "Apellido del futbolista portugués del Atlético Madrid (João...).",
-        "respuesta": "Félix"
-      },
-      {
         "pregunta": "Apellido del mediocampista suizo del Leverkusen.",
         "respuesta": "Xhaka"
       },
@@ -1101,4 +1073,4 @@
       }
     ]
   }
-] 
+]

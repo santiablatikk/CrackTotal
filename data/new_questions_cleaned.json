@@ -40,16 +40,8 @@
         "respuesta": "Balon de Oro"
       },
       {
-        "pregunta": "Apellido del ex delantero sueco que jugó en Ajax, Juventus, Inter, Barcelona, Milan, PSG y Man Utd.",
-        "respuesta": "Ibrahimovic"
-      },
-      {
         "pregunta": "Apellido del ex mediocampista alemán del Chelsea, conocido por su pegada.",
         "respuesta": "Ballack"
-      },
-      {
-        "pregunta": "Nombre completo del arquero brasileño del Liverpool.",
-        "respuesta": "Alisson Becker"
       }
     ]
   },
@@ -77,7 +69,7 @@
         "respuesta": "Casemiro"
       },
       {
-        "pregunta": "CONTIENE C: Apellido del arquero belga del Real Madrid.",
+        "pregunta": "Apellido del arquero belga del Real Madrid.",
         "respuesta": "Courtois"
       }
     ]
@@ -98,16 +90,8 @@
         "respuesta": "Dinamarca"
       },
       {
-        "pregunta": "Apellido del futbolista neerlandés, capitán del Liverpool.",
-        "respuesta": "Van Dijk"
-      },
-      {
         "pregunta": "Apellido del legendario futbolista argentino-español, figura del Real Madrid en los 50s y 60s.",
         "respuesta": "Di Stefano"
-      },
-      {
-        "pregunta": "Apellido del mediocampista alemán del Manchester City, ex FC Barcelona.",
-        "respuesta": "Gundogan"
       }
     ]
   },
@@ -127,16 +111,8 @@
         "respuesta": "Eriksen"
       },
       {
-        "pregunta": "Apellido del arquero alemán del Barcelona.",
-        "respuesta": "Ter Stegen"
-      },
-      {
         "pregunta": "Club argentino de La Plata, tetracampeón de la Copa Libertadores.",
         "respuesta": "Estudiantes"
-      },
-      {
-        "pregunta": "Apellido del legendario arquero danés, padre del actual arquero del Leicester.",
-        "respuesta": "Schmeichel"
       }
     ]
   },
@@ -154,10 +130,6 @@
       {
         "pregunta": "Apellido del ex delantero uruguayo, Bota de Oro en 2005 y 2009.",
         "respuesta": "Forlan"
-      },
-      {
-        "pregunta": "Apellido del legendario lateral brasileño, campeón del mundo 2002.",
-        "respuesta": "Cafu"
       },
       {
         "pregunta": "Apellido del futbolista inglés del Manchester City.",
@@ -185,16 +157,8 @@
         "respuesta": "Gimnasia"
       },
       {
-        "pregunta": "Apellido del defensor argentino campeón del mundo 1986 (Oscar...).",
-        "respuesta": "Ruggeri"
-      },
-      {
         "pregunta": "Apellido del ex mediocampista argentino, jugó en Boca y Real Madrid.",
         "respuesta": "Gago"
-      },
-      {
-        "pregunta": "Apellido del exfutbolista portugués, Balón de Oro 2000.",
-        "respuesta": "Figo"
       }
     ]
   },
@@ -218,16 +182,8 @@
         "respuesta": "Higuain"
       },
       {
-        "pregunta": "Apellido del ex mediocampista alemán del Manchester City, ex FC Barcelona.",
-        "respuesta": "Gundogan"
-      },
-      {
         "pregunta": "Apellido del ex mediocampista argentino, jugó en River, Napoli y Juventus.",
         "respuesta": "Higuain"
-      },
-      {
-        "pregunta": "Apellido del ex mediocampista español campeón del mundo 2010, conocido por su visión de juego.",
-        "respuesta": "Xavi"
       }
     ]
   },
@@ -249,10 +205,6 @@
       {
         "pregunta": "CONTIENE Y: Club alemán campeón invicto de la Bundesliga 2023-24.",
         "respuesta": "Bayer Leverkusen"
-      },
-      {
-        "pregunta": "Apellido del ex mediocampista español campeón del mundo 2010 (Javier...).",
-        "respuesta": "Martinez"
       },
       {
         "pregunta": "CONTIENE Y: Apellido del legendario futbolista y técnico neerlandés.",
@@ -293,4 +245,4 @@
       }
     ]
   }
-] 
+]
