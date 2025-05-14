@@ -5,7 +5,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // --- Game variables (Declare totalTime globally/module scope) ---
-let totalTime = 240; // Default: Normal difficulty (240 seconds)
+let totalTime = 300; // Default: Normal difficulty (300 seconds)
 let currentPlayerName = 'Jugador Anónimo'; // <-- Variable para guardar el nombre
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
     alphabet.split('').forEach(letter => { gameUsedQuestionIndices[letter] = []; }); // Initialize arrays
     let timeLeft = totalTime;
     let timerInterval;
-    let maxErrors = 3; // Maximum number of errors allowed
+    let maxErrors = 3; // Maximum number of errors allowed (default for Normal)
     let helpUsed = 0; // Track help usage
     let maxHelp = 2; // Maximum number of helps
     let incompleteAnswersUsed = 0; // Track incomplete answers
@@ -194,13 +194,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const difficulty = this.getAttribute('data-difficulty');
             switch(difficulty) {
                 case 'facil':
-                    totalTime = 300; // 5 minutes
+                    totalTime = 360; // 6 minutes
+                    maxErrors = 4;
                     break;
                 case 'dificil':
-                    totalTime = 180; // 3 minutes
+                    totalTime = 240; // 4 minutes
+                    maxErrors = 2;
                     break;
-                default:
-                    totalTime = 240; // 4 minutes (normal)
+                default: // normal
+                    totalTime = 300; // 5 minutes
+                    maxErrors = 3;
             }
         });
     });
@@ -232,7 +235,24 @@ document.addEventListener('DOMContentLoaded', function() {
         gameUsedQuestionIndices = {}; // <<<--- Reset used QUESTIONS for new game
         alphabet.split('').forEach(letter => { gameUsedQuestionIndices[letter] = []; }); // Initialize arrays
         timeLeft = totalTime;
-        helpUsed = 0;
+        const activeDifficultyButton = document.querySelector('.difficulty-btn.active');
+        if (activeDifficultyButton) {
+            const difficulty = activeDifficultyButton.getAttribute('data-difficulty');
+            switch(difficulty) {
+                case 'facil':
+                    totalTime = 360;
+                    maxErrors = 4;
+                    break;
+                case 'dificil':
+                    totalTime = 240;
+                    maxErrors = 2;
+                    break;
+                default: // normal
+                    totalTime = 300;
+                    maxErrors = 3;
+            }
+        }
+        helpUsed = 0; 
         incompleteAnswersUsed = 0;
         completedRounds = 0;
         
