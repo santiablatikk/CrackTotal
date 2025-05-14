@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', function() {
             totalHelpUsed: 0,
             bestScore: 0, // Max correct answers in a game
             fastestWinTime: null, // Time in seconds
+            currentWinStreak: 0, // <-- NUEVO: Racha de victorias actual
+            winsInDifficult: 0,  // <-- NUEVO: Victorias en dificultad Difícil
             // Add more stats as needed
         };
     }
@@ -115,6 +117,17 @@ document.addEventListener('DOMContentLoaded', function() {
         saveGameHistory(history);
     }
     // --- Fin Funciones para el Historial ---
+
+    // --- Función para Normalizar Texto (sin acentos, minúsculas) ---
+    function normalizeText(text) {
+        if (typeof text !== 'string') return '';
+        return text
+            .toLowerCase()
+            .normalize('NFD') // Descompone los caracteres acentuados en letra base + diacrítico
+            .replace(/[\u0300-\u036f]/g, '') // Elimina los diacríticos
+            .trim();
+    }
+    // --- Fin Función para Normalizar Texto ---
 
     // --- Simple Debounce Function ---
     function debounce(func, wait) {
@@ -575,8 +588,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ensure currentQuestionIndex is valid for the letterData
         if (letterData && letterData.preguntas && currentQuestionIndex < letterData.preguntas.length) {
             const correctAnswerFull = letterData.preguntas[currentQuestionIndex].respuesta;
-            const correctAnswerNorm = correctAnswerFull.toLowerCase().trim();
-            const userAnswerNorm = userAnswer.toLowerCase().trim();
+            const correctAnswerNorm = normalizeText(correctAnswerFull); // <--- NORMALIZADO
+            const userAnswerNorm = normalizeText(userAnswer);       // <--- NORMALIZADO
             let isCorrect = false; // Initialize isCorrect
 
             // Check for incompleteness first...
@@ -635,14 +648,14 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 // --- CORRECT --- 
                 correctAnswers++;
-                profileStats.totalCorrectAnswers += 1; // Update aggregate stats
+                // profileStats.totalCorrectAnswers += 1; // Se actualiza en endGame
 
                 // <<<--- MARK QUESTION AS USED HERE (on correct answer) --- >>>
                 if (!gameUsedQuestionIndices[currentLetter].includes(currentQuestionIndex)){
                     gameUsedQuestionIndices[currentLetter].push(currentQuestionIndex);
                 }
-                usedAnswerSignatures.add(correctAnswerNorm); // Add CORRECT answer signature
-                console.log("Added to used signatures:", correctAnswerNorm, usedAnswerSignatures);
+                usedAnswerSignatures.add(correctAnswerNorm); // Add NORMALIZED CORRECT answer signature
+                console.log("Added to used signatures (normalized):", correctAnswerNorm, usedAnswerSignatures);
 
                 // Mark letter status
                 letterStatuses[currentLetter] = 'correct';
@@ -691,8 +704,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Determina si una respuesta es incompleta (REFINED LOGIC)
     function isIncompleteAnswer(userAnswerNorm, correctAnswerNorm) {
-        // Normalize further: remove extra spaces
-        userAnswerNorm = userAnswerNorm.replace(/\s+/g, ' ').trim();
+        // Las cadenas ya vienen normalizadas (minúsculas, sin acentos, trim)
+        // Solo se normalizan de nuevo los espacios múltiples internos si es necesario.
+        userAnswerNorm = userAnswerNorm.replace(/\s+/g, ' ').trim(); 
         correctAnswerNorm = correctAnswerNorm.replace(/\s+/g, ' ').trim();
 
         // Exact match is never incomplete
@@ -758,6 +772,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Compare answers with tolerance for minor errors
     function isAnswerCorrectEnough(userAnswer, correctAnswer) {
+        // Las cadenas ya vienen normalizadas (minúsculas, sin acentos, trim)
+        // No es necesario llamar a normalizeText() aquí de nuevo.
+
         // Exact match
         if (userAnswer === correctAnswer) {
             return true;
@@ -1013,32 +1030,69 @@ document.addEventListener('DOMContentLoaded', function() {
         const timeSpent = totalTime - timeLeft;
         
         // --- Actualizar Estadísticas LOCALES --- 
-        let profileStats = loadProfileStats();
+        let profileStats = loadProfileStats(); // Carga las stats ANTES de esta partida
+        
+        // Actualizar contadores básicos de la partida actual (estos se usan para gameDataForAchievements)
+        // y luego se suman a los totales de profileStats.
+        // Los valores como correctAnswers, incorrectAnswers, passedAnswers, helpUsed son los de la partida actual.
+
         profileStats.gamesPlayed += 1;
-        profileStats.totalCorrectAnswers += correctAnswers;
-        profileStats.totalIncorrectAnswers += incorrectAnswers;
-        profileStats.totalPassedAnswers += passedAnswers; // Assuming you track this
-        profileStats.totalHelpUsed += helpUsed;
+        profileStats.totalCorrectAnswers += correctAnswers; // Sumar los de esta partida
+        profileStats.totalIncorrectAnswers += incorrectAnswers; // Sumar los de esta partida
+        profileStats.totalPassedAnswers += passedAnswers; // Sumar los de esta partida
+        profileStats.totalHelpUsed += helpUsed; // Sumar los de esta partida
 
         let isWin = false;
+        const currentDifficulty = document.querySelector('.difficulty-btn.active')?.getAttribute('data-difficulty') || 'normal';
+
         if (result === 'victory') {
             profileStats.gamesWon += 1;
             isWin = true;
+            profileStats.currentWinStreak += 1; // Incrementar racha
             if (profileStats.fastestWinTime === null || timeSpent < profileStats.fastestWinTime) {
                 profileStats.fastestWinTime = timeSpent;
             }
-        } else if (result === 'defeat') {
-            profileStats.gamesLostByErrors += 1;
-        } else { // timeout
-            profileStats.gamesLostByTimeout += 1;
+            if (currentDifficulty === 'dificil') {
+                profileStats.winsInDifficult += 1; // Incrementar victorias en difícil
+            }
+        } else {
+            profileStats.currentWinStreak = 0; // Resetear racha si no es victoria
+            if (result === 'defeat') {
+                profileStats.gamesLostByErrors += 1;
+            } else { // timeout
+                profileStats.gamesLostByTimeout += 1;
+            }
         }
 
         if (correctAnswers > profileStats.bestScore) {
             profileStats.bestScore = correctAnswers;
         }
 
+        // Guardar stats actualizadas ANTES de llamar a checkAndUnlockAchievements,
+        // para que la API de logros y la función de chequeo usen los datos más recientes del perfil.
         saveProfileStats(profileStats);
-        // --- Fin Actualizar Estadísticas LOCALES ---
+        // --- Fin Actualizar Estadísticas LOCALES (parcial) ---
+
+        // --- Preparar datos para los logros ---
+        const gameDataForAchievements = {
+            result: result,
+            correctAnswers: correctAnswers,         // de la partida actual
+            incorrectAnswers: incorrectAnswers,     // de la partida actual
+            timeSpent: timeSpent,                   // de la partida actual
+            timeLeft: timeLeft,                     // de la partida actual
+            difficulty: currentDifficulty,          // de la partida actual
+            helpUsed: helpUsed,                     // de la partida actual
+            passedAnswers: passedAnswers,           // de la partida actual
+            maxErrors: maxErrors,                   // de la partida actual (configuración)
+            gameErrors: gameErrors,                 // array de errores de la partida actual
+            profileStats: profileStats,             // objeto profileStats YA ACTUALIZADO con los resultados de esta partida
+            // alphabetLength: alphabet.length       // alphabet es accesible en el scope de checkAndUnlockAchievements
+        };
+
+        // --- Comprobar y Desbloquear Logros ---
+        // No es necesario `await` ya que `intentarDesbloquearLogro` y sus componentes son síncronos.
+        checkAndUnlockAchievements(gameDataForAchievements);
+        // --- Fin Comprobar y Desbloquear Logros ---
 
         // <<<--- INICIO: Guardar en FIRESTORE --- >>>
         if (db) { // Solo intentar si la DB está inicializada
@@ -1619,12 +1673,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Helper Function to Check Answer Conflict ---
     function checkAnswerConflict(potentialAnswer, usedSignatures) {
-        const potentialAnswerNorm = potentialAnswer.toLowerCase().trim();
+        const potentialAnswerNorm = normalizeText(potentialAnswer); // <--- NORMALIZADO
         if (!potentialAnswerNorm) return false; // Empty answer is not a conflict
 
         const potentialWords = potentialAnswerNorm.split(' ').filter(w => w.length > 2); // Ignore short words
 
         for (const usedAnswerNorm of usedSignatures) {
+            // usedAnswerNorm ya está normalizado y guardado en usedSignatures
             // 1. Check full containment (either way)
             if (usedAnswerNorm.includes(potentialAnswerNorm) || potentialAnswerNorm.includes(usedAnswerNorm)) {
                 // Avoid trivial contains like 'a' in 'apple'
@@ -1635,7 +1690,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // 2. Check for significant word overlap
-            const usedWords = usedAnswerNorm.split(' ').filter(w => w.length > 2);
+            const usedWords = usedAnswerNorm.split(' ').filter(w => w.length > 2); // usedAnswerNorm ya está normalizado
             const commonWords = potentialWords.filter(pw => usedWords.includes(pw));
 
             // Conflict if > 1 common word, or 1 common word and answers are short (<= 2 significant words)
@@ -1646,4 +1701,91 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return false; // No conflict found
     }
+
+    // --- Función para Comprobar y Desbloquear Logros ---
+    function checkAndUnlockAchievements(gameData) {
+        if (!window.CrackTotalLogrosAPI) {
+            console.warn("CrackTotalLogrosAPI no está disponible. No se pueden verificar los logros.");
+            return;
+        }
+        if (!alphabet || alphabet.length === 0) {
+            console.warn("Alphabet no disponible para PasalaChe. No se pueden verificar logros como 'rosco_completo'.");
+            // Considerar no continuar o tener un valor por defecto para alphabet.length
+        }
+
+        const logrosActuales = window.CrackTotalLogrosAPI.cargarLogros();
+        const todosLosLogrosDef = window.CrackTotalLogrosAPI.getTodosLosLogrosDef();
+
+        const tryUnlock = (id) => {
+            const logroDef = todosLosLogrosDef.find(d => d.id === id);
+            if (!logroDef) {
+                // console.warn(`Intento de desbloquear logro con ID '${id}\' que no existe en las definiciones globales.`);
+                return; // No intentar desbloquear si no existe en la definición actual.
+            }
+            if (logrosActuales[id] && !logrosActuales[id].unlocked) {
+                window.CrackTotalLogrosAPI.intentarDesbloquearLogro(id);
+            }
+        };
+
+        // Logros de Partida Única (basados en el resultado de la partida actual)
+        if (gameData.result === 'victory') {
+            if (gameData.correctAnswers >= 10) tryUnlock('aciertos_10');
+            if (gameData.correctAnswers >= 15) tryUnlock('aciertos_15');
+            if (gameData.correctAnswers >= 20) tryUnlock('aciertos_20');
+            if (gameData.correctAnswers >= 25) tryUnlock('aciertos_25');
+            if (gameData.correctAnswers === alphabet.length) tryUnlock('rosco_completo');
+
+            if (gameData.difficulty === 'facil') tryUnlock('victoria_facil');
+            if (gameData.difficulty === 'normal') tryUnlock('victoria_normal');
+            if (gameData.difficulty === 'dificil') tryUnlock('victoria_dificil');
+
+            if (gameData.incorrectAnswers === 0) tryUnlock('partida_perfecta');
+            if (gameData.helpUsed === 0) tryUnlock('sin_ayuda');
+            if (gameData.timeSpent < 120) tryUnlock('victoria_rapida');
+            if (gameData.timeSpent > 240) tryUnlock('victoria_lenta');
+            
+            // Gana con el máximo de errores -1 (ej. si maxErrors es 3, gana con 2 errores)
+            if (gameData.incorrectAnswers === (gameData.maxErrors - 1)) tryUnlock('victoria_limite');
+            // Gana con menos de 10 segundos restantes (y no es timeout)
+            if (gameData.timeLeft < 10 && gameData.timeLeft > 0) tryUnlock('victoria_agonica');
+        }
+
+        // Logros Acumulativos y de Estado (usan gameData.profileStats ya actualizado con la partida actual)
+        if (gameData.profileStats.gamesPlayed === 1) tryUnlock('partida_1');
+        if (gameData.profileStats.gamesPlayed === 5) tryUnlock('partida_5');
+        if (gameData.profileStats.gamesPlayed === 25) tryUnlock('partida_25');
+        if (gameData.profileStats.gamesPlayed === 100) tryUnlock('partida_100');
+
+        // Primera victoria (gamesWon ya está incrementado si esta partida fue una victoria)
+        if (gameData.result === 'victory' && gameData.profileStats.gamesWon === 1) tryUnlock('victoria_1');
+
+        // Rachas (currentWinStreak ya está actualizado)
+        if (gameData.profileStats.currentWinStreak >= 2) tryUnlock('racha_2');
+        if (gameData.profileStats.currentWinStreak >= 5) tryUnlock('racha_5');
+        if (gameData.profileStats.currentWinStreak >= 10) tryUnlock('racha_10');
+
+        // Totales de aciertos (totalCorrectAnswers ya está actualizado)
+        if (gameData.profileStats.totalCorrectAnswers >= 100) tryUnlock('total_aciertos_100');
+        if (gameData.profileStats.totalCorrectAnswers >= 500) tryUnlock('total_aciertos_500');
+        if (gameData.profileStats.totalCorrectAnswers >= 1000) tryUnlock('total_aciertos_1000');
+        
+        // Victorias en difícil (winsInDifficult ya está actualizado)
+        if (gameData.result === 'victory' && gameData.difficulty === 'dificil' && gameData.profileStats.winsInDifficult >= 5) {
+            tryUnlock('victorias_dificil_5');
+        }
+
+        // Totales de pases y ayudas (ya actualizados)
+        if (gameData.profileStats.totalPassedAnswers >= 50) tryUnlock('pasa_50');
+        if (gameData.profileStats.totalHelpUsed >= 25) tryUnlock('help_25');
+        
+        // Total de derrotas (calculado con stats actualizadas)
+        const totalLosses = gameData.profileStats.gamesLostByErrors + gameData.profileStats.gamesLostByTimeout;
+        if (totalLosses >= 10) tryUnlock('corazon_valiente');
+
+        // TODO: Implementar lógica para 'rey_a'
+        // Este logro requiere rastrear las respuestas correctas a preguntas de la letra 'A'.
+        // Ver el comentario en la función checkAnswer() para una posible aproximación.
+        // console.log("Logro 'rey_a' (Rey de la 'A') - Ver TODO en checkAndUnlockAchievements.");
+    }
+    // --- Fin Función para Comprobar y Desbloquear Logros ---
 }); 

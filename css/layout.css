@@ -472,4 +472,59 @@
     transform: translateY(-8px); /* Adjust bounce height */
     animation-timing-function: ease-in;
   }
+}
+
+/* Main Navigation Styles */
+.main-navigation {
+    background-color: #333; /* Color de fondo oscuro para el menú */
+    padding: 10px 0; /* Espaciado vertical */
+    width: 100%; /* Ocupar todo el ancho */
+    z-index: 1000; /* Asegurar que esté por encima de otros elementos */
+    border-bottom: 2px solid #e11d48; /* Línea inferior distintiva */
+}
+
+.main-navigation ul {
+    list-style: none; /* Quitar viñetas de la lista */
+    margin: 0;
+    padding: 0;
+    display: flex; /* Organizar elementos horizontalmente */
+    justify-content: center; /* Centrar los elementos del menú */
+    align-items: center;
+}
+
+.main-navigation li {
+    margin: 0 15px; /* Espaciado horizontal entre elementos */
+}
+
+.main-navigation a {
+    color: #fff; /* Color del texto blanco */
+    text-decoration: none; /* Quitar subrayado de los enlaces */
+    font-weight: 500; /* Peso de la fuente */
+    padding: 8px 12px; /* Espaciado interno de los enlaces */
+    border-radius: 4px; /* Bordes redondeados */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave */
+}
+
+.main-navigation a:hover,
+.main-navigation a.active { /* Estilo para el enlace activo o al pasar el mouse */
+    background-color: #e11d48; /* Color de fondo distintivo */
+    color: #fff;
+}
+
+/* Responsive adjustments for a hamburger menu on smaller screens */
+@media (max-width: 768px) {
+    .main-navigation ul {
+        flex-direction: column; /* Apilar elementos verticalmente en pantallas pequeñas */
+        align-items: center;
+    }
+
+    .main-navigation li {
+        margin: 10px 0; /* Espaciado vertical entre elementos en móvil */
+    }
+
+    .main-navigation a {
+        display: block; /* Hacer que los enlaces ocupen todo el ancho disponible */
+        width: 100%;
+        text-align: center;
+    }
 } 
