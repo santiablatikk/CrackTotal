@@ -3422,66 +3422,6 @@
         "respuesta": "Lukaku"
       },
       {
-        "pregunta": "Contiene L: Club inglés de Anfield",
-        "respuesta": "Liverpool"
-      },
-      {
-        "pregunta": "Contiene L: Máximo goleador histórico del Barcelona",
-        "respuesta": "Lionel Messi"
-      },
-      {
-        "pregunta": "Contiene L: Apellido del delantero polaco del Barcelona",
-        "respuesta": "Lewandowski"
-      },
-      {
-        "pregunta": "Contiene L: Apellido del mediocampista croata del Real Madrid",
-        "respuesta": "Luka Modric"
-      },
-      {
-        "pregunta": "Contiene L: Apellido del delantero uruguayo que jugó en Liverpool y Barcelona",
-        "respuesta": "Luis Suarez"
-      },
-      {
-        "pregunta": "Contiene L: Apellido del delantero belga que jugó en el Inter y el Chelsea",
-        "respuesta": "Lukaku"
-      },
-      {
-        "pregunta": "Contiene L: Apellido del mediocampista alemán que jugó en el Real Madrid y el Arsenal",
-        "respuesta": "Mesut Ozil"
-      },
-      {
-        "pregunta": "Contiene L: Apellido del delantero uruguayo que jugó en el PSG y el Manchester United",
-        "respuesta": "Edinson Cavani"
-      },
-      {
-        "pregunta": "Contiene L: Apellido del delantero francés que jugó en el Arsenal y el Barcelona",
-        "respuesta": "Thierry Henry"
-      },
-      {
-        "pregunta": "Contiene L: Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
-        "respuesta": "Xabi Alonso"
-      },
-      {
-        "pregunta": "Contiene L: Apellido del delantero inglés que jugó en el Tottenham y el Bayern Munich",
-        "respuesta": "Harry Kane"
-      },
-      {
-        "pregunta": "Contiene L: Apellido del mediocampista belga que jugó en el Chelsea y el Real Madrid",
-        "respuesta": "Eden Hazard"
-      },
-      {
-        "pregunta": "Contiene L: Apellido del delantero argentino que jugó en el Manchester City y el Barcelona",
-        "respuesta": "Sergio Aguero"
-      },
-      {
-        "pregunta": "Contiene L: Apellido del delantero portugués que jugó en el Manchester United y el Real Madrid",
-        "respuesta": "Cristiano Ronaldo"
-      },
-      {
-        "pregunta": "Contiene L: Apellido del mediocampista belga que juega en el Manchester City",
-        "respuesta": "Kevin De Bruyne"
-      },
-      {
         "pregunta": "Apellido del ex delantero sueco que jugó en Celtic y Barcelona.",
         "respuesta": "Larsson"
       },
@@ -3617,94 +3557,6 @@
       {
         "pregunta": "Apellido del legendario defensor italiano, ícono del AC Milan.",
         "respuesta": "Maldini"
-      },
-      {
-        "pregunta": "CONTIENE M: Apellido del delantero francés del Atlético Madrid.",
-        "respuesta": "Griezmann"
-      },
-      {
-        "pregunta": "CONTIENE M: Apellido del legendario defensor español, campeón del mundo 2010, jugó en Real Madrid y Sevilla.",
-        "respuesta": "Ramos"
-      },
-      {
-        "pregunta": "CONTIENE M: Futbolista colombiano que jugó en Real Madrid y Bayern Munich, actualmente en São Paulo.",
-        "respuesta": "James Rodriguez"
-      },
-      {
-        "pregunta": "CONTIENE M: Apellido del mediocampista francés del Real Madrid.",
-        "respuesta": "Camavinga"
-      },
-      {
-        "pregunta": "Máximo ganador del Balón de Oro",
-        "respuesta": "Lionel Messi"
-      },
-      {
-        "pregunta": "Club inglés de Old Trafford",
-        "respuesta": "Manchester United"
-      },
-      {
-        "pregunta": "Club inglés de The Etihad Stadium",
-        "respuesta": "Manchester City"
-      },
-      {
-        "pregunta": "Contiene M: Máximo ganador del Balón de Oro",
-        "respuesta": "Lionel Messi"
-      },
-      {
-        "pregunta": "Contiene M: Club inglés de Old Trafford",
-        "respuesta": "Manchester United"
-      },
-      {
-        "pregunta": "Contiene M: Club inglés de The Etihad Stadium",
-        "respuesta": "Manchester City"
-      },
-      {
-        "pregunta": "Contiene M: Apellido del mediocampista croata del Real Madrid",
-        "respuesta": "Modric"
-      },
-      {
-        "pregunta": "Contiene M: Apellido del delantero francés del PSG",
-        "respuesta": "Mbappe"
-      },
-      {
-        "pregunta": "Contiene M: Apellido del delantero argentino del Inter Miami",
-        "respuesta": "Messi"
-      },
-      {
-        "pregunta": "Contiene M: Apellido del mediocampista inglés del Real Madrid",
-        "respuesta": "Bellingham"
-      },
-      {
-        "pregunta": "Contiene M: Apellido del mediocampista alemán que jugó en el Real Madrid y el Arsenal",
-        "respuesta": "Mesut Ozil"
-      },
-      {
-        "pregunta": "Contiene M: Apellido del delantero uruguayo que jugó en el PSG y el Manchester United",
-        "respuesta": "Edinson Cavani"
-      },
-      {
-        "pregunta": "Contiene M: Apellido del delantero francés que jugó en el Arsenal y el Barcelona",
-        "respuesta": "Thierry Henry"
-      },
-      {
-        "pregunta": "Contiene M: Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
-        "respuesta": "Xabi Alonso"
-      },
-      {
-        "pregunta": "Contiene M: Apellido del delantero inglés que jugó en el Tottenham y el Bayern Munich",
-        "respuesta": "Harry Kane"
-      },
-      {
-        "pregunta": "Contiene M: Apellido del mediocampista belga que jugó en el Chelsea y el Real Madrid",
-        "respuesta": "Eden Hazard"
-      },
-      {
-        "pregunta": "Contiene M: Apellido del delantero argentino que jugó en el Manchester City y el Barcelona",
-        "respuesta": "Sergio Aguero"
-      },
-      {
-        "pregunta": "Contiene M: Apellido del delantero portugués que jugó en el Manchester United y el Real Madrid",
-        "respuesta": "Cristiano Ronaldo"
       },
       {
         "pregunta": "Apellido del ex futbolista argentino, campeón del mundo 1986.",
@@ -3846,94 +3698,6 @@
       {
         "pregunta": "Apellido del arquero costarricense ex Real Madrid y PSG.",
         "respuesta": "Navas"
-      },
-      {
-        "pregunta": "Apellido del futbolista francés del Real Madrid.",
-        "respuesta": "Tchouameni"
-      },
-      {
-        "pregunta": "Apellido del defensor argentino campeón del mundo 2022, juega en el Manchester United.",
-        "respuesta": "Lisandro Martinez"
-      },
-      {
-        "pregunta": "CONTIENE N: Futbolista brasileño del Real Madrid.",
-        "respuesta": "Vinicius Junior"
-      },
-      {
-        "pregunta": "CONTIENE N: Apellido del mediocampista portugués del Manchester United.",
-        "respuesta": "Fernandes"
-      },
-      {
-        "pregunta": "Club italiano de Nápoles",
-        "respuesta": "Napoli"
-      },
-      {
-        "pregunta": "Apellido del delantero brasileño que jugó en el Barcelona y el PSG",
-        "respuesta": "Neymar"
-      },
-      {
-        "pregunta": "Selección nacional conocida como 'La Naranja Mecánica'",
-        "respuesta": "Holanda"
-      },
-      {
-        "pregunta": "Contiene N: Club italiano de Nápoles",
-        "respuesta": "Napoli"
-      },
-      {
-        "pregunta": "Contiene N: Apellido del delantero brasileño que jugó en el Barcelona y el PSG",
-        "respuesta": "Neymar"
-      },
-      {
-        "pregunta": "Contiene N: Selección nacional conocida como 'La Naranja Mecánica'",
-        "respuesta": "Holanda"
-      },
-      {
-        "pregunta": "Contiene N: Apellido del delantero noruego del Manchester City",
-        "respuesta": "Haaland"
-      },
-      {
-        "pregunta": "Contiene N: Apellido del mediocampista español que jugó en el Barcelona y la selección española",
-        "respuesta": "Xavi Hernandez"
-      },
-      {
-        "pregunta": "Contiene N: Apellido del delantero inglés que jugó en el Liverpool y el Real Madrid",
-        "respuesta": "Michael Owen"
-      },
-      {
-        "pregunta": "Contiene N: Apellido del mediocampista francés campeón del mundo en 1998",
-        "respuesta": "Thierry Henry"
-      },
-      {
-        "pregunta": "Contiene N: Apellido del delantero argentino que jugó en el Inter y el Real Madrid",
-        "respuesta": "Gonzalo Higuain"
-      },
-      {
-        "pregunta": "Contiene N: Apellido del delantero brasileño que jugó en el Porto y el Hulk",
-        "respuesta": "Hulk"
-      },
-      {
-        "pregunta": "Contiene N: Apellido del mediocampista alemán que jugó en el Real Madrid y el Arsenal",
-        "respuesta": "Mesut Ozil"
-      },
-      {
-        "pregunta": "Contiene N: Apellido del delantero uruguayo que jugó en el PSG y el Manchester United",
-        "respuesta": "Edinson Cavani"
-      },
-      {
-        "pregunta": "Contiene N: Apellido del delantero francés que jugó en el Arsenal y el Barcelona",
-        "respuesta": "Thierry Henry"
-      },
-      {
-        "pregunta": "Contiene N: Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
-        "respuesta": "Xabi Alonso"
-      },
-      {
-        "pregunta": "Contiene N: Apellido del delantero inglés que jugó en el Tottenham y el Bayern Munich",
-        "respuesta": "Harry Kane"
-      },
-      {
-        "pregunta": "Contiene N: Apellido del mediocampista belga que jugó en el Chelsea y el Real Madrid",
-        "respuesta": "Eden Hazard"
       },
       {
         "pregunta": "Club inglés de la ciudad homónima, juega en St James' Park.",
@@ -4105,70 +3869,6 @@
         "respuesta": "Owen"
       },
       {
-        "pregunta": "Club portugués de Oporto",
-        "respuesta": "Porto"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del mediocampista alemán que jugó en el Real Madrid y el Arsenal",
-        "respuesta": "Ozil"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del delantero inglés que jugó en el Liverpool y el Real Madrid",
-        "respuesta": "Owen"
-      },
-      {
-        "pregunta": "Contiene O: Club portugués de Oporto",
-        "respuesta": "Porto"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del mediocampista español que jugó en el Barcelona y la selección española",
-        "respuesta": "Xavi Hernandez"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del delantero francés que jugó en el Arsenal y el Barcelona",
-        "respuesta": "Thierry Henry"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
-        "respuesta": "Xabi Alonso"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del delantero inglés que jugó en el Tottenham y el Bayern Munich",
-        "respuesta": "Harry Kane"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del mediocampista belga que jugó en el Chelsea y el Real Madrid",
-        "respuesta": "Eden Hazard"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del delantero argentino que jugó en el Manchester City y el Barcelona",
-        "respuesta": "Sergio Aguero"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del delantero portugués que jugó en el Manchester United y el Real Madrid",
-        "respuesta": "Cristiano Ronaldo"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del mediocampista belga que juega en el Manchester City",
-        "respuesta": "Kevin De Bruyne"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del delantero francés que juega en el Real Madrid",
-        "respuesta": "Karim Benzema"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del delantero uruguayo que juega en el Boca Juniors",
-        "respuesta": "Edinson Cavani"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del delantero egipcio que juega en el Liverpool",
-        "respuesta": "Mohamed Salah"
-      },
-      {
-        "pregunta": "Contiene O: Apellido del delantero noruego del Manchester City",
-        "respuesta": "Erling Haaland"
-      },
-      {
         "pregunta": "Apellido del ex delantero inglés, Balón de Oro 2001.",
         "respuesta": "Owen"
       },
@@ -4334,84 +4034,8 @@
         "respuesta": "Laporte"
       },
       {
-        "pregunta": "Club francés de la capital",
-        "respuesta": "PSG"
-      },
-      {
-        "pregunta": "País campeón del Mundial 1958, 1962, 1970, 1994, 2002",
-        "respuesta": "Brasil"
-      },
-      {
-        "pregunta": "Apellido del mediocampista italiano 'Il Maestro' de Juve y Milan",
-        "respuesta": "Andrea Pirlo"
-      },
-      {
-        "pregunta": "Apellido del mediocampista portugués del Man Utd desde 2020",
-        "respuesta": "Bruno Fernandes"
-      },
-      {
         "pregunta": "Apellido del delantero argentino que jugó en el Inter y el Boca Juniors",
         "respuesta": "Palacio"
-      },
-      {
-        "pregunta": "Contiene P: Club francés de la capital",
-        "respuesta": "PSG"
-      },
-      {
-        "pregunta": "Contiene P: País campeón del Mundial 1958, 1962, 1970, 1994, 2002",
-        "respuesta": "Brasil"
-      },
-      {
-        "pregunta": "Contiene P: Apellido del mediocampista italiano 'Il Maestro' de Juve y Milan",
-        "respuesta": "Andrea Pirlo"
-      },
-      {
-        "pregunta": "Contiene P: Apellido del mediocampista portugués del Man Utd desde 2020",
-        "respuesta": "Bruno Fernandes"
-      },
-      {
-        "pregunta": "Contiene P: Club portugués de Lisboa",
-        "respuesta": "Benfica"
-      },
-      {
-        "pregunta": "Contiene P: Apellido del mediocampista argentino que jugó en el Inter y el PSG",
-        "respuesta": "Pastore"
-      },
-      {
-        "pregunta": "Contiene P: Club portugués de Oporto",
-        "respuesta": "Porto"
-      },
-      {
-        "pregunta": "Contiene P: Apellido del delantero argentino que jugó en el Inter y el Boca Juniors",
-        "respuesta": "Palacio"
-      },
-      {
-        "pregunta": "Contiene P: Apellido del delantero uruguayo que jugó en el PSG y el Manchester United",
-        "respuesta": "Edinson Cavani"
-      },
-      {
-        "pregunta": "Contiene P: Apellido del delantero francés del PSG",
-        "respuesta": "Mbappe"
-      },
-      {
-        "pregunta": "Contiene P: Apellido del delantero portugués que jugó en el Manchester United y el Real Madrid",
-        "respuesta": "Cristiano Ronaldo"
-      },
-      {
-        "pregunta": "Contiene P: Apellido del mediocampista belga que juega en el Manchester City",
-        "respuesta": "Kevin De Bruyne"
-      },
-      {
-        "pregunta": "Contiene P: Apellido del delantero francés que juega en el Real Madrid",
-        "respuesta": "Karim Benzema"
-      },
-      {
-        "pregunta": "Contiene P: Apellido del delantero uruguayo que juega en el Boca Juniors",
-        "respuesta": "Edinson Cavani"
-      },
-      {
-        "pregunta": "Contiene P: Apellido del delantero egipcio que juega en el Liverpool",
-        "respuesta": "Mohamed Salah"
       },
       {
         "pregunta": "Apellido del ex mediocampista francés campeón del mundo 1998 (Emmanuel...).",
@@ -4505,94 +4129,6 @@
       {
         "pregunta": "Nombre completo del ex técnico español que dirigió al FC Barcelona en la temporada 2019-20.",
         "respuesta": "Quique Setien"
-      },
-      {
-        "pregunta": "Apellido del futbolista argentino, ex defensor de la Fiorentina.",
-        "respuesta": "Martinez Quarta"
-      },
-      {
-        "pregunta": "Apellido del defensa central brasileño del PSG.",
-        "respuesta": "Marquinhos"
-      },
-      {
-        "pregunta": "CONTIENE Q: Nombre completo del técnico español que ha dirigido al Barcelona y la selección española.",
-        "respuesta": "Luis Enrique"
-      },
-      {
-        "pregunta": "CONTIENE Q: Apellido del futbolista argentino, ídolo y actual presidente de Boca Juniors.",
-        "respuesta": "Riquelme"
-      },
-      {
-        "pregunta": "CONTIENE Q: Apellido del futbolista brasileño del West Ham United.",
-        "respuesta": "Paqueta"
-      },
-      {
-        "pregunta": "CONTIENE Q: Apellido del ex entrenador español campeón del Mundial 2010.",
-        "respuesta": "Del Bosque"
-      },
-      {
-        "pregunta": "Apellido del mediocampista argentino campeón del mundo en 2022",
-        "respuesta": "Enzo Fernandez"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del mediocampista argentino campeón del mundo en 2022",
-        "respuesta": "Enzo Fernandez"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del delantero uruguayo que jugó en el PSG y el Manchester United",
-        "respuesta": "Edinson Cavani"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
-        "respuesta": "Xabi Alonso"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del delantero inglés que jugó en el Tottenham y el Bayern Munich",
-        "respuesta": "Harry Kane"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del mediocampista belga que jugó en el Chelsea y el Real Madrid",
-        "respuesta": "Eden Hazard"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del delantero argentino que jugó en el Manchester City y el Barcelona",
-        "respuesta": "Sergio Aguero"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del delantero portugués que jugó en el Manchester United y el Real Madrid",
-        "respuesta": "Cristiano Ronaldo"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del mediocampista belga que juega en el Manchester City",
-        "respuesta": "Kevin De Bruyne"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del delantero francés que juega en el Real Madrid",
-        "respuesta": "Karim Benzema"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del delantero uruguayo que juega en el Boca Juniors",
-        "respuesta": "Edinson Cavani"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del delantero egipcio que juega en el Liverpool",
-        "respuesta": "Mohamed Salah"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del delantero noruego del Manchester City",
-        "respuesta": "Erling Haaland"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del mediocampista español que jugó en el Barcelona y la selección española",
-        "respuesta": "Xavi Hernandez"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del delantero inglés que jugó en el Liverpool y el Real Madrid",
-        "respuesta": "Michael Owen"
-      },
-      {
-        "pregunta": "Contiene Q: Apellido del mediocampista francés campeón del mundo en 1998",
-        "respuesta": "Thierry Henry"
       },
       {
         "pregunta": "Club argentino de la ciudad homónima, campeón de Primera B en 1949.",
@@ -4768,66 +4304,6 @@
         "respuesta": "River Plate"
       },
       {
-        "pregunta": "Contiene R: Club argentino de Avellaneda, clásico rival de Independiente",
-        "respuesta": "Racing"
-      },
-      {
-        "pregunta": "Contiene R: Club español con más Champions League",
-        "respuesta": "Real Madrid"
-      },
-      {
-        "pregunta": "Contiene R: Apellido del delantero brasileño, 'El Fenómeno'",
-        "respuesta": "Ronaldo"
-      },
-      {
-        "pregunta": "Contiene R: Club argentino con más títulos locales",
-        "respuesta": "River Plate"
-      },
-      {
-        "pregunta": "Contiene R: Apellido del mediocampista croata del Real Madrid",
-        "respuesta": "Modric"
-      },
-      {
-        "pregunta": "Contiene R: Apellido del delantero uruguayo que jugó en Liverpool y Barcelona",
-        "respuesta": "Luis Suarez"
-      },
-      {
-        "pregunta": "Contiene R: Apellido del mediocampista argentino que jugó en River Plate y el Inter",
-        "respuesta": "Cambiasso"
-      },
-      {
-        "pregunta": "Contiene R: Apellido del mediocampista croata que jugó en el Barcelona y el Inter",
-        "respuesta": "Rakitic"
-      },
-      {
-        "pregunta": "Contiene R: Apellido del delantero brasileño que jugó en el Inter y el Real Madrid",
-        "respuesta": "Ronaldo"
-      },
-      {
-        "pregunta": "Contiene R: Apellido del delantero uruguayo que jugó en el Inter y el Atlético de Madrid",
-        "respuesta": "Forlan"
-      },
-      {
-        "pregunta": "Contiene R: Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
-        "respuesta": "Xabi Alonso"
-      },
-      {
-        "pregunta": "Contiene R: Apellido del delantero portugués que jugó en el Manchester United y el Real Madrid",
-        "respuesta": "Cristiano Ronaldo"
-      },
-      {
-        "pregunta": "Contiene R: Apellido del mediocampista belga que juega en el Manchester City",
-        "respuesta": "Kevin De Bruyne"
-      },
-      {
-        "pregunta": "Contiene R: Apellido del delantero francés que juega en el Real Madrid",
-        "respuesta": "Karim Benzema"
-      },
-      {
-        "pregunta": "Contiene R: Apellido del delantero uruguayo que juega en el Boca Juniors",
-        "respuesta": "Edinson Cavani"
-      },
-      {
         "pregunta": "Apellido del ex mediocampista argentino, figura del Real Madrid en los 90.",
         "respuesta": "Redondo"
       },
@@ -4902,22 +4378,6 @@
       {
         "pregunta": "CONTIENE R: Apellido del ex mediocampista alemán leyenda del Bayern.",
         "respuesta": "Schweinsteiger"
-      },
-      {
-        "pregunta": "Apodo del club Boca Juniors.",
-        "respuesta": "Xeneize"
-      },
-      {
-        "pregunta": "CONTIENE X: Apellido del mediocampista argentino campeón del mundo 2022 (Alexis...).",
-        "respuesta": "Mac Allister"
-      },
-      {
-        "pregunta": "Apellido del mediocampista español campeón del mundo 2010, conocido por su visión de juego.",
-        "respuesta": "Xavi"
-      },
-      {
-        "pregunta": "CONTIENE X: Apellido del ex mediocampista español campeón del mundo 2010 (Javier...).",
-        "respuesta": "Martinez"
       }
     ]
   },
@@ -5037,68 +4497,8 @@
         "respuesta": "San Lorenzo"
       },
       {
-        "pregunta": "Apellido del DT campeón de la Euro 2016",
-        "respuesta": "Fernando Santos"
-      },
-      {
-        "pregunta": "Contiene S: Apellido del delantero egipcio del Liverpool",
-        "respuesta": "Salah"
-      },
-      {
-        "pregunta": "Contiene S: Club español con más títulos de Europa League",
-        "respuesta": "Sevilla"
-      },
-      {
         "pregunta": "Contiene S: Apellido del delantero uruguayo que jugó en Liverpool y Barcelona",
         "respuesta": "Luis Suarez"
-      },
-      {
-        "pregunta": "Contiene S: Club argentino de Boedo",
-        "respuesta": "San Lorenzo"
-      },
-      {
-        "pregunta": "Contiene S: Apellido del DT campeón de la Euro 2016",
-        "respuesta": "Fernando Santos"
-      },
-      {
-        "pregunta": "Contiene S: Apellido del mediocampista inglés que jugó en el Liverpool y el LA Galaxy",
-        "respuesta": "Steven Gerrard"
-      },
-      {
-        "pregunta": "Contiene S: Apellido del delantero argentino que jugó en el Manchester City y el Barcelona",
-        "respuesta": "Sergio Aguero"
-      },
-      {
-        "pregunta": "Contiene S: Apellido del delantero portugués que jugó en el Manchester United y el Real Madrid",
-        "respuesta": "Cristiano Ronaldo"
-      },
-      {
-        "pregunta": "Contiene S: Apellido del mediocampista belga que juega en el Manchester City",
-        "respuesta": "Kevin De Bruyne"
-      },
-      {
-        "pregunta": "Contiene S: Apellido del delantero francés que juega en el Real Madrid",
-        "respuesta": "Karim Benzema"
-      },
-      {
-        "pregunta": "Contiene S: Apellido del delantero uruguayo que juega en el Boca Juniors",
-        "respuesta": "Edinson Cavani"
-      },
-      {
-        "pregunta": "Contiene S: Apellido del delantero noruego del Manchester City",
-        "respuesta": "Erling Haaland"
-      },
-      {
-        "pregunta": "Contiene S: Apellido del mediocampista español que jugó en el Barcelona y la selección española",
-        "respuesta": "Xavi Hernandez"
-      },
-      {
-        "pregunta": "Contiene S: Apellido del delantero inglés que jugó en el Liverpool y el Real Madrid",
-        "respuesta": "Michael Owen"
-      },
-      {
-        "pregunta": "Contiene S: Apellido del mediocampista francés campeón del mundo en 1998",
-        "respuesta": "Thierry Henry"
       },
       {
         "pregunta": "Apellido del ex arquero danés leyenda del Manchester United.",
@@ -5127,14 +4527,6 @@
       {
         "pregunta": "CONTIENE S: Apellido del futbolista argentino, 8 veces Balón de Oro.",
         "respuesta": "Messi"
-      },
-      {
-        "pregunta": "CONTIENE S: Apellido del ex mediocampista español leyenda del Barcelona.",
-        "respuesta": "Busquets"
-      },
-      {
-        "pregunta": "CONTIENE S: Estadio del Real Madrid.",
-        "respuesta": "Santiago Bernabeu"
       },
       {
         "pregunta": "CONTIENE S: Apellido del ex mediocampista español que jugó en Barcelona e Inter Miami.",
@@ -5238,7 +4630,7 @@
         "respuesta": "Toure Yaya"
       },
       {
-        "pregunta": "Nombre completo del defensor argentino campeón del mundo 2022, juega en Lyon.",
+        "pregunta": "CONTIENE T: Nombre completo del defensor argentino campeón del mundo 2022, juega en Lyon.",
         "respuesta": "Nicolas Tagliafico"
       },
       {
@@ -5250,7 +4642,7 @@
         "respuesta": "Tuchel"
       },
       {
-        "pregunta": "Apellido del lateral derecho inglés del Liverpool.",
+        "pregunta": "Nombre completo del lateral derecho inglés del Liverpool.",
         "respuesta": "Trent Alexander-Arnold"
       },
       {
@@ -5270,67 +4662,15 @@
         "respuesta": "Tevez"
       },
       {
-        "pregunta": "Apellido del delantero español 'El Niño'",
-        "respuesta": "Fernando Torres"
-      },
-      {
-        "pregunta": "Apellido del mediocampista danés que jugó en el Inter y el Tottenham",
-        "respuesta": "Eriksen"
-      },
-      {
-        "pregunta": "Contiene T: Club inglés de Londres, rival del Arsenal",
-        "respuesta": "Tottenham"
-      },
-      {
-        "pregunta": "Contiene T: Apellido del delantero argentino 'El Apache'",
-        "respuesta": "Tevez"
-      },
-      {
         "pregunta": "Contiene T: Apellido del delantero español 'El Niño'",
-        "respuesta": "Fernando Torres"
-      },
-      {
-        "pregunta": "Contiene T: Apellido del mediocampista francés campeón del mundo en 1998",
-        "respuesta": "Thierry Henry"
-      },
-      {
-        "pregunta": "Contiene T: Apellido del delantero inglés que jugó en el Tottenham y el Bayern Munich",
-        "respuesta": "Harry Kane"
-      },
-      {
-        "pregunta": "Contiene T: Apellido del mediocampista danés que jugó en el Inter y el Tottenham",
-        "respuesta": "Eriksen"
-      },
-      {
-        "pregunta": "Contiene T: Apellido del delantero argentino que jugó en el Inter y el Real Madrid",
-        "respuesta": "Higuain"
-      },
-      {
-        "pregunta": "Contiene T: Apellido del delantero uruguayo que jugó en el PSG y el Manchester United",
-        "respuesta": "Edinson Cavani"
-      },
-      {
-        "pregunta": "Contiene T: Apellido del mediocampista argentino que jugó en River Plate y el Inter",
-        "respuesta": "Cambiasso"
-      },
-      {
-        "pregunta": "Contiene T: Apellido del delantero argentino que jugó en el Barcelona y el Inter",
-        "respuesta": "Icardi"
+        "respuesta": "Torres"
       },
       {
         "pregunta": "Contiene T: Apellido del mediocampista croata que jugó en el Barcelona y el Inter",
         "respuesta": "Rakitic"
       },
       {
-        "pregunta": "Contiene T: Apellido del delantero argentino que jugó en el Inter y el Manchester City",
-        "respuesta": "Aguero"
-      },
-      {
-        "pregunta": "Contiene T: Apellido del delantero brasileño que jugó en el Inter y el Real Madrid",
-        "respuesta": "Ronaldo"
-      },
-      {
-        "pregunta": "Contiene T: Apellido del mediocampista argentino que jugó en el Inter y el PSG",
+        "pregunta": "Contiene T: Apellido del mediocampista argentino que jugó en Huracan y el PSG",
         "respuesta": "Pastore"
       },
       {
@@ -5492,51 +4832,15 @@
       },
       {
         "pregunta": "CONTIENE U: Apellido del delantero uruguayo del Liverpool (Darwin...).",
-        "respuesta": "Nunez"
+        "respuesta": "Nuñez"
       },
       {
         "pregunta": "País sudamericano bicampeón del mundo",
         "respuesta": "Uruguay"
       },
       {
-        "pregunta": "Club español de Valencia",
-        "respuesta": "Valencia CF"
-      },
-      {
-        "pregunta": "Contiene U: País sudamericano bicampeón del mundo",
-        "respuesta": "Uruguay"
-      },
-      {
-        "pregunta": "Contiene U: Club español de Valencia",
-        "respuesta": "Valencia CF"
-      },
-      {
         "pregunta": "Contiene U: Apellido del delantero uruguayo que jugó en Liverpool y Barcelona",
         "respuesta": "Luis Suarez"
-      },
-      {
-        "pregunta": "Contiene U: Apellido del delantero uruguayo que jugó en el PSG y el Manchester United",
-        "respuesta": "Edinson Cavani"
-      },
-      {
-        "pregunta": "Contiene U: Apellido del delantero uruguayo que jugó en el Inter y el Atlético de Madrid",
-        "respuesta": "Forlan"
-      },
-      {
-        "pregunta": "Contiene U: Apellido del delantero uruguayo que juega en el Boca Juniors",
-        "respuesta": "Edinson Cavani"
-      },
-      {
-        "pregunta": "Contiene U: Apellido del mediocampista español que jugó en el Barcelona y la selección española",
-        "respuesta": "Xavi Hernandez"
-      },
-      {
-        "pregunta": "Contiene U: Apellido del delantero inglés que jugó en el Liverpool y el Real Madrid",
-        "respuesta": "Michael Owen"
-      },
-      {
-        "pregunta": "Contiene U: Apellido del mediocampista francés campeón del mundo en 1998",
-        "respuesta": "Thierry Henry"
       },
       {
         "pregunta": "Contiene U: Apellido del delantero argentino que jugó en el Inter y el Real Madrid",
@@ -5549,18 +4853,6 @@
       {
         "pregunta": "Contiene U: Apellido del mediocampista alemán que jugó en el Real Madrid y el Arsenal",
         "respuesta": "Mesut Ozil"
-      },
-      {
-        "pregunta": "Contiene U: Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
-        "respuesta": "Xabi Alonso"
-      },
-      {
-        "pregunta": "Contiene U: Apellido del delantero inglés que jugó en el Tottenham y el Bayern Munich",
-        "respuesta": "Harry Kane"
-      },
-      {
-        "pregunta": "Contiene U: Apellido del mediocampista belga que jugó en el Chelsea y el Real Madrid",
-        "respuesta": "Eden Hazard"
       },
       {
         "pregunta": "País sudamericano, dos veces campeón del mundo.",
@@ -5597,14 +4889,6 @@
       {
         "pregunta": "Club de fútbol de la provincia de Santa Fe, rival de Colón.",
         "respuesta": "Union"
-      },
-      {
-        "pregunta": "CONTIENE U: Apellido del ex mediocampista de River y Selección Argentina, campeón de América en 1991 y 1993.",
-        "respuesta": "Astrada"
-      },
-      {
-        "pregunta": "CONTIENE U: Apellido del lateral inglés del Liverpool.",
-        "respuesta": "Alexander-Arnold"
       }
     ]
   },
@@ -5680,14 +4964,6 @@
         "respuesta": "Verratti"
       },
       {
-        "pregunta": "Apellido del entrenador español, actual técnico del Aston Villa.",
-        "respuesta": "Emery"
-      },
-      {
-        "pregunta": "CONTIENE V: Apellido del arquero esloveno del Atlético de Madrid.",
-        "respuesta": "Oblak"
-      },
-      {
         "pregunta": "CONTIENE V: Apellido del mediocampista español Golden Boy 2022.",
         "respuesta": "Gavi"
       },
@@ -5708,14 +4984,6 @@
         "respuesta": "Carlos Vela"
       },
       {
-        "pregunta": "Contiene V: Club español de Valencia",
-        "respuesta": "Valencia CF"
-      },
-      {
-        "pregunta": "Contiene V: Apellido del delantero brasileño del Real Madrid",
-        "respuesta": "Vinicius Junior"
-      },
-      {
         "pregunta": "Contiene V: Apellido del delantero mexicano, estrella en la MLS y reconocido por su capacidad goleadora",
         "respuesta": "Carlos Vela"
       },
@@ -5724,48 +4992,8 @@
         "respuesta": "Xavi Hernandez"
       },
       {
-        "pregunta": "Contiene V: Apellido del delantero inglés que jugó en el Liverpool y el Real Madrid",
-        "respuesta": "Michael Owen"
-      },
-      {
-        "pregunta": "Contiene V: Apellido del mediocampista francés campeón del mundo en 1998",
-        "respuesta": "Thierry Henry"
-      },
-      {
-        "pregunta": "Contiene V: Apellido del delantero argentino que jugó en el Inter y el Real Madrid",
-        "respuesta": "Gonzalo Higuain"
-      },
-      {
-        "pregunta": "Contiene V: Apellido del delantero brasileño que jugó en el Porto y el Hulk",
-        "respuesta": "Hulk"
-      },
-      {
-        "pregunta": "Contiene V: Apellido del mediocampista alemán que jugó en el Real Madrid y el Arsenal",
-        "respuesta": "Mesut Ozil"
-      },
-      {
         "pregunta": "Contiene V: Apellido del delantero uruguayo que jugó en el PSG y el Manchester United",
         "respuesta": "Edinson Cavani"
-      },
-      {
-        "pregunta": "Contiene V: Apellido del delantero francés que jugó en el Arsenal y el Barcelona",
-        "respuesta": "Thierry Henry"
-      },
-      {
-        "pregunta": "Contiene V: Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
-        "respuesta": "Xabi Alonso"
-      },
-      {
-        "pregunta": "Contiene V: Apellido del delantero inglés que jugó en el Tottenham y el Bayern Munich",
-        "respuesta": "Harry Kane"
-      },
-      {
-        "pregunta": "Contiene V: Apellido del mediocampista belga que jugó en el Chelsea y el Real Madrid",
-        "respuesta": "Eden Hazard"
-      },
-      {
-        "pregunta": "Contiene V: Apellido del delantero argentino que jugó en el Manchester City y el Barcelona",
-        "respuesta": "Sergio Aguero"
       },
       {
         "pregunta": "Apellido del ex mediocampista francés, campeón del mundo 1998, leyenda del Arsenal.",
@@ -5889,10 +5117,6 @@
         "respuesta": "Howedes"
       },
       {
-        "pregunta": "Nombre completo del entrenador que llevó a Arsenal a la temporada invicta de 2003-04",
-        "respuesta": "Arsene Wenger"
-      },
-      {
         "pregunta": "Club inglés de Londres",
         "respuesta": "West Ham United"
       },
@@ -5901,60 +5125,12 @@
         "respuesta": "Arsene Wenger"
       },
       {
-        "pregunta": "Contiene W: Club inglés de Londres",
+        "pregunta": "Club inglés de Londres",
         "respuesta": "West Ham United"
-      },
-      {
-        "pregunta": "Contiene W: Apellido del mediocampista alemán campeón del mundo en 2014",
-        "respuesta": "Gotze"
-      },
-      {
-        "pregunta": "Contiene W: Apellido del delantero francés campeón del mundo en 2018",
-        "respuesta": "Griezmann"
-      },
-      {
-        "pregunta": "Contiene W: Apellido del arquero argentino campeón del mundo en 2022",
-        "respuesta": "Gerónimo Rulli"
-      },
-      {
-        "pregunta": "Contiene W: Apellido del mediocampista croata del Real Madrid",
-        "respuesta": "Modric"
-      },
-      {
-        "pregunta": "Contiene W: Apellido del delantero uruguayo que jugó en Liverpool y Barcelona",
-        "respuesta": "Luis Suarez"
       },
       {
         "pregunta": "Contiene W: Apellido del delantero polaco del Barcelona",
         "respuesta": "Lewandowski"
-      },
-      {
-        "pregunta": "Contiene W: Apellido del delantero noruego del Manchester City",
-        "respuesta": "Erling Haaland"
-      },
-      {
-        "pregunta": "Contiene W: Apellido del delantero egipcio del Liverpool",
-        "respuesta": "Salah"
-      },
-      {
-        "pregunta": "Contiene W: Apellido del delantero francés del PSG",
-        "respuesta": "Mbappe"
-      },
-      {
-        "pregunta": "Contiene W: Apellido del delantero brasileño del Real Madrid",
-        "respuesta": "Vinicius Junior"
-      },
-      {
-        "pregunta": "Contiene W: Apellido del mediocampista inglés del Real Madrid",
-        "respuesta": "Bellingham"
-      },
-      {
-        "pregunta": "Contiene W: Apellido del delantero argentino del Inter Miami",
-        "respuesta": "Messi"
-      },
-      {
-        "pregunta": "Contiene W: Apellido del delantero portugués que jugó en el Manchester United y el Real Madrid",
-        "respuesta": "Cristiano Ronaldo"
       },
       {
         "pregunta": "Estadio nacional de Inglaterra.",
@@ -5989,7 +5165,7 @@
         "respuesta": "Wigan"
       },
       {
-        "pregunta": "CONTIENE W: Apellido del ex mediocampista alemán del Bayer Leverkusen.",
+        "pregunta": "Apellido del mediocampista alemán numero 10 del Bayer Leverkusen.",
         "respuesta": "Wirtz"
       }
     ]
@@ -6051,67 +5227,15 @@
       },
       {
         "pregunta": "CONTIENE X: Apellido del lateral inglés del Liverpool.",
-        "respuesta": "Alexander-Arnold"
+        "respuesta": "Alexander Arnold"
       },
       {
         "pregunta": "Contiene X: Apellido del mediocampista español que jugó en el Barcelona y la selección española",
         "respuesta": "Xavi Hernandez"
       },
       {
-        "pregunta": "Contiene X: Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
+        "pregunta": "Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
         "respuesta": "Xabi Alonso"
-      },
-      {
-        "pregunta": "Contiene X: Apellido del mediocampista croata del Real Madrid",
-        "respuesta": "Modric"
-      },
-      {
-        "pregunta": "Contiene X: Apellido del delantero uruguayo que jugó en Liverpool y Barcelona",
-        "respuesta": "Luis Suarez"
-      },
-      {
-        "pregunta": "Contiene X: Apellido del delantero polaco del Barcelona",
-        "respuesta": "Lewandowski"
-      },
-      {
-        "pregunta": "Contiene X: Apellido del delantero noruego del Manchester City",
-        "respuesta": "Erling Haaland"
-      },
-      {
-        "pregunta": "Contiene X: Apellido del delantero egipcio del Liverpool",
-        "respuesta": "Salah"
-      },
-      {
-        "pregunta": "Contiene X: Apellido del delantero francés del PSG",
-        "respuesta": "Mbappe"
-      },
-      {
-        "pregunta": "Contiene X: Apellido del delantero brasileño del Real Madrid",
-        "respuesta": "Vinicius Junior"
-      },
-      {
-        "pregunta": "Contiene X: Apellido del mediocampista inglés del Real Madrid",
-        "respuesta": "Bellingham"
-      },
-      {
-        "pregunta": "Contiene X: Apellido del delantero argentino del Inter Miami",
-        "respuesta": "Messi"
-      },
-      {
-        "pregunta": "Contiene X: Apellido del delantero portugués del Al Nassr",
-        "respuesta": "Cristiano Ronaldo"
-      },
-      {
-        "pregunta": "Contiene X: Apellido del mediocampista belga que juega en el Manchester City",
-        "respuesta": "Kevin De Bruyne"
-      },
-      {
-        "pregunta": "Contiene X: Apellido del delantero francés que juega en el Real Madrid",
-        "respuesta": "Karim Benzema"
-      },
-      {
-        "pregunta": "Contiene X: Apellido del delantero uruguayo que juega en el Boca Juniors",
-        "respuesta": "Edinson Cavani"
       },
       {
         "pregunta": "Apellido del ex mediocampista español, técnico campeón invicto con Bayer Leverkusen.",
@@ -6148,10 +5272,6 @@
       {
         "pregunta": "CONTIENE X: Futbolista portugués que jugó en Atlético Madrid y Chelsea.",
         "respuesta": "Joao Felix"
-      },
-      {
-        "pregunta": "Apellido del mediocampista argentino campeón del mundo 2022 (Alexis...).",
-        "respuesta": "Mac Allister"
       }
     ]
   },
@@ -6161,10 +5281,6 @@
       {
         "pregunta": "¿Cuál es el nombre completo del mediocampista marfileño que brilló en el Manchester City y Barcelona?",
         "respuesta": "Yaya Toure"
-      },
-      {
-        "pregunta": "¿Cuál es el país sudamericano cuya selección ha ganado dos Mundiales?",
-        "respuesta": "Uruguay"
       },
       {
         "pregunta": "¿Cuál es el nombre completo del defensor del Everton destacado en 2021?",
@@ -6219,40 +5335,8 @@
         "respuesta": "Uruguay"
       },
       {
-        "pregunta": "Contiene Y: Apellido del mediocampista español que jugó en el Barcelona y la selección española",
-        "respuesta": "Xavi Hernandez"
-      },
-      {
-        "pregunta": "Contiene Y: Apellido del delantero inglés que jugó en el Liverpool y el Real Madrid",
-        "respuesta": "Michael Owen"
-      },
-      {
-        "pregunta": "Contiene Y: Apellido del mediocampista francés campeón del mundo en 1998",
-        "respuesta": "Thierry Henry"
-      },
-      {
-        "pregunta": "Contiene Y: Apellido del delantero argentino que jugó en el Inter y el Real Madrid",
-        "respuesta": "Gonzalo Higuain"
-      },
-      {
-        "pregunta": "Contiene Y: Apellido del delantero brasileño que jugó en el Porto y el Hulk",
-        "respuesta": "Hulk"
-      },
-      {
-        "pregunta": "Contiene Y: Apellido del mediocampista alemán que jugó en el Real Madrid y el Arsenal",
-        "respuesta": "Mesut Ozil"
-      },
-      {
-        "pregunta": "Contiene Y: Apellido del delantero uruguayo que jugó en el PSG y el Manchester United",
-        "respuesta": "Edinson Cavani"
-      },
-      {
         "pregunta": "Contiene Y: Apellido del delantero francés que jugó en el Arsenal y el Barcelona",
         "respuesta": "Thierry Henry"
-      },
-      {
-        "pregunta": "Contiene Y: Apellido del mediocampista español que jugó en el Real Madrid y el Bayern Munich",
-        "respuesta": "Xabi Alonso"
       },
       {
         "pregunta": "Contiene Y: Apellido del delantero inglés que jugó en el Tottenham y el Bayern Munich",
@@ -6273,10 +5357,6 @@
       {
         "pregunta": "Nombre completo del defensor colombiano que jugó en Palmeiras y Everton.",
         "respuesta": "Yerry Mina"
-      },
-      {
-        "pregunta": "Apellido del ex mediocampista español campeón del mundo 2010 (Javier...).",
-        "respuesta": "Martinez"
       },
       {
         "pregunta": "Apellido del mediocampista ucraniano que jugó en Borussia Dortmund y West Ham.",
@@ -6329,10 +5409,6 @@
       {
         "pregunta": "CONTIENE Y: País sudamericano cuya selección ha ganado dos Mundiales",
         "respuesta": "Uruguay"
-      },
-      {
-        "pregunta": "CONTIENE Y: Apellido del ex mediocampista español campeón del mundo 2010 (Javier...).",
-        "respuesta": "Martinez"
       }
     ]
   },
