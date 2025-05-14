@@ -1,1 +1,4 @@
-Sitemap: https://www.cracktotal.com/sitemap.xml
+User-agent: *
+Disallow: 
+
+Sitemap: https://cracktotal.com/sitemap.xml
