@@ -4812,2226 +4812,828 @@ h3:not([class]) {
     }
 }
 
-/* Formulario */
-.name-input-container {
-    width: 100%;
+/* ============================================ */
+/* ======= Responsive Quién Sabe Más ======== */
+/* ============================================ */
+
+/* Styles for Coming Soon Game Card */
+.game-card.coming-soon-card {
+    opacity: 0.6;
+    cursor: default;
+    /* filter: grayscale(80%); Optional: Add grayscale effect */
 }
 
-#nameForm label {
-    display: block;
-    margin-bottom: 12px; /* Más espacio */
-    font-size: 0.9rem;
+.game-card.coming-soon-card:hover {
+    transform: none; /* Disable hover effect */
+    box-shadow: 0 10px 20px rgba(0,0,0, 0.3); /* Reset shadow */
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.coming-soon-badge-style {
+    background: var(--gradient-accent); /* Use accent color for coming soon */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3), var(--glow-accent);
+}
+
+.game-card.coming-soon-card .play-button {
+    background: var(--background-alt); /* Grey out button */
     color: var(--text-light);
-    font-weight: 500;
-    text-align: center; /* Centrar etiqueta */
-}
-
-.input-group {
-    position: relative;
-    margin-bottom: 20px; /* Más espacio debajo del input */
-}
-
-input#playerName {
-    padding: 16px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    font-family: 'Montserrat', sans-serif;
-    background-color: rgba(var(--darker-bg-rgb), 0.6); /* Fondo más oscuro y sutil */
-    color: var(--text);
-    box-shadow: var(--shadow-inner);
-    width: 100%; /* Asegurar ancho completo */
-    text-align: center; /* Centrar texto placeholder/input */
-}
-
-input#playerName:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(127, 90, 248, 0.2), var(--shadow-inner);
-    background-color: rgba(var(--darker-bg-rgb), 0.8); /* Ligeramente más opaco en focus */
-}
-
-/* Eliminar el borde animado que no se usaba bien */
-.input-focus-border {
-    display: none;
-}
-
-/* Botón Empezar */
-button#startButton {
-    background: var(--gradient-accent); /* Usar gradiente accent */
-    color: white;
-    border: none;
-    padding: 15px 25px;
-    border-radius: 12px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin: 15px auto 0 auto; /* Centrar botón */
-    width: 80%; /* Limitar ancho del botón */
-    max-width: 250px;
-    position: relative;
-    overflow: hidden;
-    z-index: 1;
-    box-shadow: 0 8px 20px rgba(255, 142, 60, 0.3); /* Sombra accent */
-}
-
-/* Efecto de gradiente animado en hover para botón */
-button#startButton::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -50%; /* Empezar fuera a la izquierda */
-    width: 200%; /* Más ancho para cubrir */
-    height: 100%;
-    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
-    z-index: -1;
-    transform: skewX(-25deg); /* Inclinar el brillo */
-    transition: left 0.6s ease; /* Transición de posición */
-}
-
-button#startButton:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 12px 25px rgba(255, 142, 60, 0.4); /* Sombra accent más fuerte */
-}
-
-button#startButton:hover::after {
-    left: 50%; /* Mover el brillo al pasar */
-}
-
-/* --- Estilos para botones extra (Perfil/Ranking) debajo del grid --- */
-.extra-links-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px; /* Espacio entre botones */
-    margin-top: 35px; /* Espacio sobre los botones */
-    margin-bottom: 35px; /* Espacio debajo antes de "Coming Soon" */
-    flex-wrap: wrap; /* Permitir que se envuelvan en pantallas pequeñas */
-}
-
-.extra-link-button {
-    background: rgba(var(--primary-rgb), 0.1); /* Fondo sutil primario */
-    border: 1px solid rgba(var(--primary-rgb), 0.25);
-    color: var(--primary-light);
-    padding: 12px 25px;
-    border-radius: 10px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-}
-
-.extra-link-button:hover {
-    background: rgba(var(--primary-rgb), 0.2);
-    transform: translateY(-3px);
-    color: white;
-    box-shadow: 0 8px 15px rgba(var(--primary-rgb), 0.2);
-}
-
-.extra-link-button i {
-    font-size: 1.1em; /* Icono ligeramente más grande que el texto */
-}
-/* --- Fin estilos botones extra --- */
-
-/* ========================================== */
-/* ===== Quien Sabe Más 1v1 Styles ====== */
-/* ========================================== */
-
-
-.qsm-1v1-content {
-    padding: 20px 0; /* Menor padding vertical */
-}
-
-.game-area {
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
-    border-radius: 16px;
-    padding: clamp(1rem, 4vw, 2rem); /* Padding responsivo */
-    box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(var(--primary-rgb), 0.15);
-    backdrop-filter: blur(10px);
-    max-width: 800px;
-    margin: 1rem auto;
-    position: relative;
-    overflow: hidden;
-}
-
-/* Header Player Info Adjustments */
-.header-content {
-    justify-content: space-around; /* Mejor distribución con 2 jugadores */
-}
-.player-info {
-    flex-basis: 45%; /* Ocupar casi la mitad */
-    justify-content: center;
-    min-width: 200px; /* Ancho mínimo */
-}
-.opponent-info {
-    /* Estilos específicos para el oponente si son necesarios */
-    border-color: rgba(var(--secondary-rgb), 0.25);
-}
-.opponent-info .player-avatar {
-    background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
-    box-shadow: 0 3px 8px rgba(var(--secondary-rgb), 0.4);
-}
-.opponent-info .score {
-    color: var(--secondary); /* Usar color secundario */
-    background: rgba(var(--secondary-rgb), 0.2);
-    text-shadow: 0 0 6px rgba(var(--secondary-rgb), 0.4);
-}
-
-/* Game Status Area */
-.game-status {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    color: var(--text-light);
-    font-size: 0.9rem;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 8px 15px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-}
-
-.turn-indicator {
-    font-weight: 600;
-    color: var(--primary-light);
-    margin-top: 5px;
-    font-size: 1rem;
-}
-
-/* Question Display */
-.question-display-area {
-    background: rgba(0, 0, 0, 0.15);
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 1.5rem;
-    min-height: 80px; /* Altura mínima */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(var(--primary-rgb), 0.1);
-}
-
-.qsm-question {
-    font-size: clamp(1.1rem, 3vw, 1.4rem); /* Tamaño responsivo */
-    text-align: center;
-    color: var(--text);
-    line-height: 1.4;
-    font-weight: 600;
-}
-
-/* Answer Area */
-.answer-area {
-    margin-bottom: 1.5rem;
-}
-
-.answer-input-container,
-.options-container {
-    display: none; /* Ocultar por defecto */
-    flex-direction: column;
-    align-items: center;
-}
-
-.answer-input-container.active,
-.options-container.active {
-    display: flex; /* Mostrar el activo */
-}
-
-/* Input Nivel 1 */
-#answerFormLevel1 {
-    display: flex;
-    width: 100%;
-    max-width: 500px;
-    gap: 10px;
-}
-
-.qsm-input {
-    flex-grow: 1;
-    padding: 14px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 1rem;
-    background-color: rgba(15, 23, 42, 0.8);
-    color: var(--text);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.qsm-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2), inset 0 1px 3px rgba(0,0,0,0.2);
-}
-
-.submit-answer-btn {
-    padding: 14px 20px;
-    font-size: 1rem;
-    flex-shrink: 0; /* Evitar que el botón se encoja */
-}
-
-/* Opciones Nivel 2+ */
-.options-container {
-    width: 100%;
-}
-
-.qsm-options-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 10px;
-    width: 100%;
-    margin-bottom: 1rem;
-}
-
-/* Hereda estilos de .option pero ajustamos algunos */
-.qsm-options-grid .option {
-    background: var(--background-alt);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 15px;
-    border-radius: 8px;
-    font-size: 1rem;
-    text-align: left;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.qsm-options-grid .option .option-letter {
-    background-color: var(--primary);
-    color: white;
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    flex-shrink: 0;
-    font-size: 0.9rem;
-}
-
-.qsm-options-grid .option .option-text {
-    flex-grow: 1;
-}
-
-.qsm-options-grid .option:hover {
-    background-color: rgba(var(--primary-rgb), 0.1);
-    border-color: var(--primary);
-    transform: translateY(-2px);
-}
-
-.qsm-options-grid .option.selected {
-    background-color: rgba(var(--primary-rgb), 0.3);
-    border-color: var(--primary-light);
-    box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.3);
-}
-
-.qsm-options-grid .option.correct {
-    background-color: rgba(var(--success-rgb), 0.2);
-    border-color: var(--success);
-    color: var(--success);
-}
-.qsm-options-grid .option.correct .option-letter {
-    background-color: var(--success);
-    color: white;
-}
-
-.qsm-options-grid .option.incorrect {
-    background-color: rgba(var(--error-rgb), 0.2);
-    border-color: var(--error);
-    color: var(--error);
-    opacity: 0.7;
-}
-.qsm-options-grid .option.incorrect .option-letter {
-    background-color: var(--error);
-    color: white;
-}
-
-.qsm-options-grid .option:disabled {
-    opacity: 0.5;
     cursor: not-allowed;
-    transform: none;
     box-shadow: none;
-}
-
-/* Botones de Acción (Pedir Opciones, 50/50) */
-.action-buttons-qsm {
-    display: flex;
-    gap: 15px;
-    margin-top: 1rem;
-}
-
-.request-options-btn,
-.fifty-fifty-btn {
-    padding: 10px 20px;
-    font-size: 0.9rem;
-    /* Estilos heredados de .secondary-button si existe o definirlos */
-    background: var(--background-alt);
-    border: 1px solid var(--border);
-    color: var(--text-light);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.request-options-btn:hover,
-.fifty-fifty-btn:hover:not(:disabled) {
-    background: rgba(var(--primary-rgb), 0.1);
-    border-color: var(--primary);
-    color: var(--primary-light);
-    transform: translateY(-2px);
-}
-
-.request-options-btn:disabled,
-.fifty-fifty-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-    background: var(--background-alt);
-    border-color: var(--border);
-    color: var(--text-light);
-}
-
-.fifty-fifty-btn.used {
-    /* Estilo cuando ya se usó el 50/50 */
-    background: rgba(var(--accent-rgb), 0.1);
-    border-color: var(--accent);
-    color: var(--accent);
     opacity: 0.7;
 }
 
-/* Feedback Area */
-.feedback-area {
-    min-height: 30px; /* Espacio para mensajes */
-    margin-top: 1rem;
-    text-align: center;
-    font-weight: 600;
-    font-size: 1.1rem;
-}
-
-.feedback-message.correct {
-    color: var(--success);
-}
-
-.feedback-message.incorrect {
-    color: var(--error);
-}
-
-/* Waiting Area */
-.waiting-area {
-    display: none; /* Oculto por defecto */
-    text-align: center;
-    padding: 20px;
-    color: var(--text-light);
-}
-.waiting-area.active {
-    display: block;
-}
-.waiting-area p {
-    margin-bottom: 15px;
-}
-
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(var(--primary-rgb), 0.2);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto;
-}
-
-
-/* Timer visual (opcional) */
-.timer-container-qsm {
-    height: 6px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
-    overflow: hidden;
-    margin-top: 1.5rem;
-}
-
-.timer-bar-qsm {
-    height: 100%;
-    width: 100%;
-    background: linear-gradient(90deg, var(--secondary), var(--primary));
-    border-radius: 3px;
-    transition: width 1s linear, background-color 0.5s ease;
-    position: relative;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-.timer-bar-qsm::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, 
-        rgba(255, 255, 255, 0.1) 0%,
-        rgba(255, 255, 255, 0.3) 50%,
-        rgba(255, 255, 255, 0.1) 100%);
-    background-size: 200% 100%;
-    animation: timerShimmer 2s infinite linear;
-    border-radius: 3px;
-    }
-
-@keyframes timerShimmer {
-    0% { background-position: 100% 0; }
-    100% { background-position: -100% 0; }
-}
-
-/* Modal de Fin de Juego */
-#endGameModal .modal-content {
-    text-align: center;
-}
-
-#endGameModal .result-stats {
-    grid-template-columns: 1fr 1fr;
-    margin-bottom: 1.5rem;
-}
-
-#endGameModal .result-buttons button {
-    min-width: 150px; /* Ancho mínimo */
-}
-
-/* Responsive para 1v1 */
-@media (max-width: 768px) {
-    .header-content {
-        flex-direction: column;
-        gap: 15px;
-    }
-    .player-info {
-        flex-basis: auto;
-        width: 90%;
-        max-width: 300px;
-    }
-    .game-area {
-        padding: 1rem;
-    }
-    .qsm-question {
-        font-size: 1.1rem;
-    }
-    .qsm-options-grid {
-        grid-template-columns: 1fr; /* Apilar opciones */
-    }
-    #answerFormLevel1 {
-        flex-direction: column;
-    }
-    .submit-answer-btn {
-        width: 100%;
-    }
-    .action-buttons-qsm {
-        flex-direction: column;
-        width: 100%;
-        max-width: 300px;
-    }
-    .request-options-btn,
-    .fifty-fifty-btn {
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    .player-info {
-        padding: 6px 10px;
-    }
-    .player-name {
-        font-size: 0.8rem;
-    }
-    .score {
-        font-size: 0.8rem;
-        padding: 3px 8px;
-    }
-    .qsm-question {
-        font-size: 1rem;
-    }
-    .qsm-input,
-    .qsm-options-grid .option {
-        font-size: 0.9rem;
-    }
-    .qsm-options-grid .option {
-        padding: 12px;
-    }
-    .submit-answer-btn {
-        padding: 12px 15px;
-        font-size: 0.9rem;
-    }
-    .request-options-btn,
-    .fifty-fifty-btn {
-        padding: 8px 15px;
-        font-size: 0.8rem;
-    }
-    #endGameModal .result-buttons {
-        flex-direction: column;
-    }
-}
-
-/* ... existing 1v1 styles ... */
-
-/* ========================================== */
-/* =========== Lobby 1v1 Styles =========== */
-/* ========================================== */
-
-.lobby-container {
-    display: none; /* Oculto por defecto, JS lo mostrará */
-    padding: 2rem 1rem;
-    max-width: 900px;
-    margin: 2rem auto;
-}
-
-.lobby-container.active {
-    display: block;
-}
-
-.lobby-content {
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
-    border-radius: 16px;
-    padding: clamp(1.5rem, 5vw, 2.5rem);
-    box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(var(--primary-rgb), 0.2);
-    backdrop-filter: blur(12px);
-    text-align: center;
-}
-
-.lobby-title {
-    font-size: clamp(1.8rem, 5vw, 2.2rem);
-    font-weight: 700;
-    color: var(--primary-light);
-    margin-bottom: 1.5rem;
-    text-shadow: 0 2px 10px rgba(var(--primary-rgb), 0.2);
-}
-
-.lobby-message {
-    min-height: 24px;
-    margin-bottom: 1.5rem;
-    color: var(--accent);
-    font-weight: 600;
-    font-size: 1rem;
-    /* Estilo para mensajes de error/éxito */
-}
-.lobby-message.success {
-    color: var(--success);
-}
-.lobby-message.error {
-    color: var(--error);
-}
-
-.lobby-actions {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1rem;
-}
-
-.lobby-action-card {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 1.5rem;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.lobby-action-card h3 {
-    font-size: 1.3rem;
-    color: var(--text);
-    font-weight: 600;
-    margin-bottom: 0.5rem; /* Reducir margen */
-}
-
-.lobby-input {
-    /* Reutiliza .qsm-input o define estilos específicos */
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 0.95rem;
-    background-color: rgba(15, 23, 42, 0.8);
-    color: var(--text);
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.lobby-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2), inset 0 1px 3px rgba(0,0,0,0.2);
-}
-
-.lobby-button {
-    /* Hereda .primary-button o .secondary-button */
-    width: 100%;
-    padding: 12px 15px;
-    font-size: 1rem;
-    justify-content: center; /* Centrar icono y texto */
-}
-
-.lobby-button i {
-    margin-right: 8px; /* Espacio para icono */
-}
-
-/* Responsive Lobby */
-@media (max-width: 600px) {
-    .lobby-actions {
-        grid-template-columns: 1fr; /* Apilar siempre en móvil */
-    }
-    .lobby-content {
-        padding: 1.5rem;
-    }
-    .lobby-title {
-        font-size: 1.6rem;
-    }
-    .lobby-action-card h3 {
-        font-size: 1.1rem;
-    }
-    .lobby-input {
-        font-size: 0.9rem;
-        padding: 10px;
-    }
-    .lobby-button {
-        font-size: 0.9rem;
-        padding: 10px 12px;
-    }
-}
-
-
-.spinner {
-    width: 30px; /* Más pequeño para lobby */
-    height: 30px;
-    border: 3px solid rgba(var(--primary-rgb), 0.2);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 1rem auto 0 auto;
-    display: none; /* Oculto hasta que se necesite */
-}
-.spinner.active {
-    display: block;
-}
-
-/* Botón de check dentro del input */
-.submit-answer-icon-btn {
-    position: absolute;
-    right: 4px; /* Adjust position slightly for smaller size */
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: var(--secondary); /* Color verde */
-    color: white;
-    border: none;
-    border-radius: 5px; /* Slightly less rounded */
-    width: 28px; /* REDUCIDO ancho */
-    height: 28px; /* REDUCIDO alto */
-    font-size: 1rem; /* REDUCIDO tamaño del icono */
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.15); /* Adjust shadow */
-}
-
-.submit-answer-icon-btn:hover {
-    background-color: var(--secondary-dark); /* Verde más oscuro en hover */
-    transform: translateY(-50%) scale(1.05); /* Efecto hover */
-}
-
-.submit-answer-icon-btn:active {
-    transform: translateY(-50%) scale(0.95); /* Efecto click */
-}
-
-.submit-answer-icon-btn:disabled {
-    background-color: #555;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.submit-answer-icon-btn i {
-    line-height: 1; /* Ajuste para centrar el icono */
-}
-
-/* --- Available Rooms List Styles --- */
-.available-rooms-container {
-    width: 100%;
-    margin-top: 2rem;
-    background-color: rgba(255, 255, 255, 0.03);
-    border-radius: 8px;
-    padding: 1.5rem;
-    border: 1px solid var(--border);
-    max-height: 300px; /* Limit height and make scrollable */
-    overflow-y: auto;
-}
-
-.available-rooms-container h3 {
-    font-size: 1.3rem;
-    color: var(--primary-light);
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-}
-
-.rooms-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.room-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgba(var(--primary-rgb), 0.1);
-    padding: 0.8rem 1rem;
-    border-radius: 6px;
-    margin-bottom: 0.75rem;
-    border: 1px solid transparent;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.room-item:hover {
-    background-color: rgba(var(--primary-rgb), 0.15);
-    border-color: var(--primary-light);
-}
-
-.room-info span {
-    margin-right: 1rem;
-    font-size: 0.95rem;
-    color: var(--text-light);
-}
-
-.room-info span strong {
-    color: var(--text);
-    font-weight: 600;
-}
-
-.room-item .join-room-list-btn {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.85rem;
-    background-color: var(--secondary);
-    color: var(--text);
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.room-item .join-room-list-btn:hover {
-    background-color: var(--secondary-dark);
-}
-
-.room-item .join-room-list-btn:disabled {
-    background-color: var(--border);
-    cursor: not-allowed;
-}
-
-.no-rooms-message {
-    color: var(--text-light);
-    font-style: italic;
-    text-align: center;
-    padding: 1rem 0;
-}
-
-/* Adjustments for responsiveness */
-@media (max-width: 600px) {
-    .available-rooms-container {
-        padding: 1rem;
-        max-height: 250px;
-    }
-    .room-item {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 0.75rem;
-    }
-    .room-info {
-        margin-bottom: 0.5rem;
-    }
-    .room-item .join-room-list-btn {
-        width: 100%;
-        text-align: center;
-    }
-}
-
-/* ... existing spinner and other styles ... */
-
-/* --- Header Moderno --- */
-.modern-header {
-    background-color: var(--background-alt);
-    padding: 0.8rem 0;
-    border-bottom: 2px solid var(--primary);
-    box-shadow: var(--shadow-md);
-}
-
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo-link {
-    text-decoration: none;
-}
-
-.modern-header .logo {
-    color: var(--primary-light);
-    font-size: 1.6rem; /* Más grande */
-    font-weight: var(--font-weight-bold);
-    display: flex;
-    align-items: center;
-    transition: color var(--transition-speed) var(--transition-func);
-}
-
-.modern-header .logo:hover {
-    color: var(--primary);
-}
-
-.modern-header .logo-ball {
-    margin-right: 0.6rem;
-    font-size: 1.8rem; /* Ícono más grande */
-    color: var(--accent);
-}
-
-.game-title-header {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: var(--text);
-    text-align: center; /* Centrado si no hay info de jugadores */
-}
-
-.game-mode-badge {
-    background-color: var(--primary);
-    color: white;
-    font-size: 0.7rem;
-    font-weight: bold;
-    padding: 0.2rem 0.5rem;
-    border-radius: var(--border-radius-sm);
-    margin-left: 0.5rem;
-    vertical-align: middle;
-}
-
-/* Contenedor info jugadores en header */
-.players-info-header {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.player-box {
-    display: flex;
-    align-items: center;
-    background-color: var(--card-bg);
-    padding: 0.4rem 0.8rem;
-    border-radius: var(--border-radius-md);
-    border: 1px solid var(--border);
-}
-
-.player-box.active-turn {
-    border-color: var(--accent);
-    box-shadow: 0 0 8px rgba(var(--accent-rgb, 255, 193, 7), 0.5); /* Necesita --accent-rgb */
-}
-
-.player-avatar {
-    font-size: 1.2rem;
-    margin-right: 0.5rem;
-    color: var(--primary-light);
-    width: 25px; /* Ancho fijo */
-    text-align: center;
-}
-
-.player-details {
-    display: flex;
-    flex-direction: column;
-    line-height: 1.2;
-}
-
-.player-name {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: var(--text);
-}
-
-.player-box .score {
-    font-size: 0.8rem;
-    color: var(--text-light);
-}
-
-.vs-separator {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: var(--accent);
-}
-
-/* --- Lobby Rediseñado --- */
-.lobby-container-inner {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-}
-
-.lobby-title {
-    text-align: center;
-    font-size: 2rem;
-    color: var(--primary-light);
-    margin-bottom: 0.5rem;
-}
-
-.lobby-subtitle {
-    text-align: center;
-    font-size: 1rem;
-    color: var(--text-light);
-    margin-bottom: 1.5rem;
-}
-
-.lobby-message {
-    padding: 0.8rem 1rem;
-    border-radius: var(--border-radius-md);
-    margin-bottom: 1.5rem;
-    text-align: center;
-    font-weight: 500;
-    display: none; /* Oculto hasta que haya mensaje */
-}
-
-.lobby-message.info {
-    background-color: rgba(var(--info-rgb, 23, 162, 184), 0.2);
-    color: var(--info);
-    border: 1px solid var(--info);
-    display: block;
-}
-.lobby-message.success {
-    background-color: rgba(var(--success-rgb, 40, 167, 69), 0.2);
-    color: var(--success);
-    border: 1px solid var(--success);
-    display: block;
-}
-.lobby-message.error {
-    background-color: rgba(var(--error-rgb, 220, 53, 69), 0.2);
-    color: var(--error);
-    border: 1px solid var(--error);
-    display: block;
-}
-
-.lobby-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Dos columnas */
-    gap: 2rem;
-}
-
-.lobby-column {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem; /* Espacio entre cards en la misma columna */
-}
-
-.lobby-card {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius-lg);
-    padding: 1.5rem;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-md);
-    display: flex;
-    flex-direction: column;
-}
-
-.lobby-card h3 {
-    font-size: 1.25rem;
-    color: var(--primary-light);
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-}
-
-.lobby-card h3 i {
-    margin-right: 0.75rem;
-    color: var(--primary);
-}
-
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.4rem;
-    font-size: 0.9rem;
-    color: var(--text-light);
-    font-weight: 500;
-}
-
-.lobby-input {
-    width: 100%;
-    padding: 0.7rem 0.8rem;
-}
-
-.lobby-button {
-    width: 100%;
-    padding: 0.7rem 1rem;
-    margin-top: 0.5rem; /* Espacio sobre el botón */
-}
-
-.lobby-button.create-btn {
-    margin-top: 1rem; /* Más espacio para el botón principal de crear */
-}
-
-/* Estilos específicos para la card de unirse */
-.join-options {
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.join-by-id, .join-random {
-    padding-top: 1rem;
-    border-top: 1px dashed var(--border);
-}
-
-.join-options h4 {
-    font-size: 1rem;
-    color: var(--text);
-    margin-bottom: 0.8rem;
-    display: flex;
-    align-items: center;
-}
-
-.join-options h4 i {
-    margin-right: 0.5rem;
-    color: var(--accent);
-}
-
-.lobby-button.join-id-btn {
-    background-color: var(--secondary);
-    border-color: var(--secondary);
-    color: white;
-}
-.lobby-button.join-id-btn:hover {
-    background-color: var(--secondary-dark);
-    border-color: var(--secondary-dark);
-}
-
-.lobby-button.join-random-btn {
-    background-color: transparent;
-    border: 1px solid var(--accent);
-    color: var(--accent);
-}
-.lobby-button.join-random-btn:hover {
-    background-color: rgba(var(--accent-rgb, 255, 193, 7), 0.1);
-    border-color: var(--accent-dark);
-    color: var(--accent-dark);
-}
-
-/* Columna de Salas Disponibles */
-.available-rooms-card {
-    flex-grow: 1; /* Ocupa el espacio vertical disponible */
-}
-
-.available-rooms-card h3 i {
-    color: var(--secondary); /* Icono verde para la lista */
-}
-
-.rooms-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    max-height: 400px; /* Altura máxima y scroll */
-    overflow-y: auto;
-    margin-top: 0.5rem; /* Pequeño espacio arriba */
-    padding-right: 0.5rem; /* Espacio para scrollbar */
-}
-
-/* Scrollbar estilizado (WebKit) */
-.rooms-list::-webkit-scrollbar {
-    width: 8px;
-}
-.rooms-list::-webkit-scrollbar-track {
-    background: var(--background-alt);
-    border-radius: 4px;
-}
-.rooms-list::-webkit-scrollbar-thumb {
-    background-color: var(--border);
-    border-radius: 4px;
-    border: 2px solid var(--background-alt);
-}
-.rooms-list::-webkit-scrollbar-thumb:hover {
-    background-color: var(--text-light);
-}
-
-.room-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: var(--background-alt);
-    padding: 0.7rem 1rem;
-    border-radius: var(--border-radius-md);
-    margin-bottom: 0.75rem;
-    border: 1px solid var(--border);
-    transition: background-color var(--transition-speed) var(--transition-func), border-color var(--transition-speed) var(--transition-func);
-}
-
-.room-item:hover {
-    background-color: #333;
-    border-color: var(--primary-light);
-}
-
-.room-info {
-    display: flex;
-    gap: 1rem; /* Espacio entre spans de info */
-    align-items: center;
-    flex-wrap: wrap; /* Para que se ajuste en pantallas pequeñas */
-}
-
-.room-info span {
-    font-size: 0.9rem;
-    color: var(--text-light);
-}
-
-.room-info span strong {
-    color: var(--text);
-    font-weight: 600;
-}
-
-.room-info span i.fa-lock {
-    color: var(--accent);
-    margin-right: 0.2rem;
-}
-
-.join-room-list-btn {
-    padding: 0.3rem 0.7rem;
-    font-size: 0.8rem;
-    background-color: var(--secondary);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius-sm);
-    cursor: pointer;
-    transition: background-color var(--transition-speed) var(--transition-func);
-    text-transform: none; /* No capitalizar botón de lista */
-    white-space: nowrap; /* Evitar que se parta */
-}
-
-.join-room-list-btn:hover {
-    background-color: var(--secondary-dark);
-}
-
-.join-room-list-btn:disabled {
-    background-color: var(--border);
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.no-rooms-message {
-    color: var(--text-light);
-    font-style: italic;
-    text-align: center;
-    padding: 1.5rem 0;
-}
-.no-rooms-message i {
-    margin-left: 0.5rem;
-}
-
-/* --- Responsividad del Lobby --- */
-@media (max-width: 992px) { /* Tabletas */
-    .lobby-grid {
-        grid-template-columns: 1fr; /* Una columna */
-    }
-    .available-rooms-column {
-        order: -1; /* Mover lista de salas arriba en móvil */
-    }
-    .rooms-list {
-        max-height: 250px; /* Reducir altura en móvil */
-    }
-}
-
-@media (max-width: 768px) { /* Móviles grandes */
-    .modern-header .logo {
-        font-size: 1.3rem;
-    }
-    .game-title-header {
-        font-size: 1.1rem;
-    }
-    .players-info-header {
-        gap: 0.5rem;
-    }
-    .player-box {
-        padding: 0.3rem 0.6rem;
-    }
-    .player-name {
-        font-size: 0.8rem;
-    }
-    .player-box .score {
-        font-size: 0.7rem;
-    }
-    .vs-separator {
-        font-size: 1rem;
-    }
-
-    .lobby-title {
-        font-size: 1.8rem;
-    }
-    .lobby-card {
-        padding: 1rem;
-    }
-    .lobby-card h3 {
-        font-size: 1.1rem;
-    }
-}
-
-@media (max-width: 576px) { /* Móviles pequeños */
-     .header-container {
-        flex-direction: column;
-        gap: 0.5rem;
-     }
-     .game-title-header {
-        order: -1; /* Título arriba */
-     }
-     .players-info-header {
-        width: 100%;
-        justify-content: space-around;
-     }
-
-    .join-options {
-        flex-direction: column;
-    }
-    .room-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-    .join-room-list-btn {
-        width: 100%;
-        margin-top: 0.5rem;
-    }
-}
-
-/* --- Estilos Anteriores (Adaptar o Eliminar) --- */
-
-/* .lobby-container (old) - Eliminado o adaptado a .lobby-container-inner */
-/* .lobby-content (old) - Eliminado o adaptado */
-/* .lobby-actions (old) - Reemplazado por lobby-grid */
-/* .lobby-action-card (old) - Reemplazado por lobby-card */
-
-/* Adaptar estilos de .available-rooms-container y .rooms-list si es necesario */
-/* ... (revisar y limpiar estilos anteriores de lobby/available rooms) ... */
-
-
-
-.qsm-1v1-content {
-    flex-grow: 1; /* Asegura que ocupe el espacio restante */
-    display: flex; /* Necesario para centrar game-area si se aplica verticalmente */
-    justify-content: center;
-    align-items: flex-start; /* Alinear arriba */
-    padding: 2rem 0;
-}
-
-.game-area {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius-lg);
-    padding: 2rem;
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow-lg);
-    width: 100%;
-    max-width: 800px; /* Ancho máximo para el área de juego */
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-/* Estilos para el texto dentro del logo si se necesita diferenciarlo */
-.modern-header .logo-text {
-    /* Quitar el fondo de gradiente y aplicar color primario */
-    background: none;
-    -webkit-background-clip: initial;
-    background-clip: initial;
-    color: var(--primary);
-}
-
-/* Estilos para la pelota */
-.modern-header .logo-ball {
-    font-size: 0.8em; /* Tamaño del icono relativo al texto del logo */
-    color: var(--primary); /* Color del icono */
-    /* margin-left es manejado por gap en .logo */
-    display: inline-block; /* Ensure transform works */
-    animation: bounce 1.5s infinite ease-in-out;
-}
-
-@keyframes bounce { /* Renamed from bounceBall */
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-50%);
-  }
-}
-
-/* ------------------------- */
-/* Estilos Juego QSM 1v1     */
-/* ------------------------- */
-
-/* Contenedor principal del área de juego */
-.game-area {
-    padding: 20px;
-    max-width: 800px; /* Ajusta el ancho máximo si es necesario */
-    margin: 20px auto;
-}
-
-/* Card principal que contiene pregunta y respuesta */
-.game-card {
-    background-color: #ffffff; /* Fondo blanco o un color claro */
-    border-radius: 12px;
-    padding: 25px 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-    margin-top: 15px;
-    border: 1px solid #e0e0e0; /* Borde sutil */
-}
-
-/* Estado del juego (Nivel, Contador) */
-.game-status {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 0.95em;
-    color: #555;
-    font-weight: 500;
-}
-
-/* Área de la pregunta */
-.question-area {
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-.qsm-question { /* Estilo para el texto de la pregunta */
-    font-size: 1.6em; /* Más grande */
-    font-weight: 600;
-    color: #333;
-    line-height: 1.4;
-    margin-bottom: 0; /* Ajusta según sea necesario */
-}
-
-/* Área general de respuesta */
-.answer-area {
-    margin-bottom: 20px;
-}
-
-/* Formulario de respuesta (Nivel 1 y Nivel 2+ texto) */
-.answer-form {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 20px; /* Espacio antes de los botones de acción L2+ */
-}
-
-/* Input de texto moderno */
-.modern-input {
-    flex-grow: 1;
-    padding: 12px 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 1em;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.modern-input:focus {
-    outline: none;
-    border-color: var(--primary-color, #007bff); /* Usa tu color primario */
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15); /* Sutil glow */
-}
-
-/* Botón de enviar moderno */
-.modern-submit-btn {
-    padding: 10px 15px;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px; /* Espacio entre icono y texto */
-    font-size: 0.95em;
-    font-weight: 600;
-    white-space: nowrap; /* Evita que el texto se rompa */
-}
-.modern-submit-btn svg {
-    width: 18px; /* Ajusta tamaño del icono */
-    height: 18px;
-}
-
-
-/* Contenedor de opciones Nivel 2+ */
-.options-container {
-    margin-top: 15px;
-}
-
-/* Grid para los botones de opción */
-.options-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive */
-    gap: 15px;
-    margin-bottom: 25px; /* Espacio antes de botones de acción */
-}
-
-/* Botones de opción modernos */
-.modern-option {
-    display: flex;
-    align-items: center;
-    padding: 12px 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f8f9fa; /* Fondo ligeramente gris */
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: left;
-    font-size: 1em;
-    color: #333;
-}
-
-.modern-option:hover:not(:disabled) {
-    background-color: #e9ecef;
-    border-color: #bbb;
-    transform: translateY(-2px); /* Ligero efecto hover */
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
-}
-
-.modern-option:disabled {
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-.modern-option .option-letter {
-    font-weight: 700;
-    margin-right: 12px;
-    color: var(--primary-color, #007bff); /* Letra con color primario */
-    min-width: 20px; /* Asegura espacio */
-    text-align: center;
-}
-
-/* Estilos de feedback en opciones */
-.modern-option.correct {
-    background-color: #d4edda; /* Verde suave */
-    border-color: #c3e6cb;
-    color: #155724;
-    font-weight: 600;
-}
-.modern-option.correct .option-letter {
-    color: #155724;
-}
-
-.modern-option.incorrect {
-    background-color: #f8d7da; /* Rojo suave */
-    border-color: #f5c6cb;
-    color: #721c24;
-    /* No necesita font-weight especial */
-}
-.modern-option.incorrect .option-letter {
-    color: #721c24;
-}
-
-/* Botones de acción (Pedir Opciones, 50/50) */
-.action-buttons-qsm {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px; /* Espacio extra */
-}
-
-.action-btn {
-    padding: 10px 18px;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9em;
-    font-weight: 500;
-}
-.action-btn svg {
-    width: 16px;
-    height: 16px;
-}
-.action-btn.used { /* Para indicar que se usó (opcional) */
-    opacity: 0.6;
-    pointer-events: none;
-}
-
-
-/* Área de feedback */
-.feedback-area {
-    margin-top: 25px;
-    text-align: center;
-    min-height: 30px; /* Para evitar saltos de layout */
-    font-weight: 500;
-}
-
-.feedback-message.correct {
-    color: #155724; /* Verde oscuro */
-    background-color: #d4edda;
-    padding: 8px 15px;
-    border-radius: 6px;
-    display: inline-block; /* Para que el fondo se ajuste */
-}
-
-.feedback-message.incorrect {
-    color: #721c24; /* Rojo oscuro */
-     background-color: #f8d7da;
-    padding: 8px 15px;
-    border-radius: 6px;
-    display: inline-block;
-}
-.feedback-message.error { /* Para errores generales del juego */
-    color: #721c24;
-    font-weight: bold;
-}
-
-
-/* Área de espera */
-.waiting-area {
-    display: flex; /* Cambiado a flex */
-    flex-direction: column; /* Elementos en columna */
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
-    text-align: center;
-    background-color: rgba(255, 255, 255, 0.8); /* Fondo semi-transparente */
-    border-radius: 8px;
-    margin-top: 20px;
-    display: none; /* JS lo mostrará con .active */
-}
-
-.waiting-area.active {
-    display: flex;
-}
-
-.waiting-area p {
-    margin-top: 15px; /* Espacio entre spinner y texto */
-    font-size: 1.1em;
-    color: #555;
-    font-weight: 500;
-}
-
-/* Spinner (puedes usar el que ya tenías o uno nuevo) */
-.spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border-left-color: var(--primary-color, #007bff); /* Color primario */
-    animation: spin 1s ease infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Opcional: Estilos para el Timer (si lo usas) */
-.timer-container-qsm {
-    width: 100%;
-    height: 8px; /* Altura de la barra */
-    background-color: #e9ecef; /* Fondo de la barra */
-    border-radius: 4px;
-    margin-top: 25px;
-    overflow: hidden; /* Para que la barra interior no se salga */
-    /* display: none; por defecto si no está implementado */
-}
-
-.timer-bar-qsm {
-    height: 100%;
-    width: 100%; /* Empieza llena */
-    background-color: var(--primary-color, #007bff); /* Color de la barra */
-    border-radius: 4px;
-    transition: width 0.5s linear; /* Transición suave */
-}
-
-/* ========================================== */
-/* ===== Quien Sabe Más 1v1 Game Styles ===== */
-/* =====       (Revised Dark Theme)       ===== */
-/* ========================================== */
-
-/* Ensure game content takes space */
-#gameContentSection {
-    flex-grow: 1;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Align card to top */
-    padding: 2rem 1rem; /* Padding around the game area */
-}
-
-/* Main game area container */
-.game-area {
-    width: 100%;
-    max-width: 850px; /* Slightly wider */
-    margin: 0 auto; /* Center */
-    /* Remove background/border from here, apply to game-card */
-}
-
-/* Card principal del juego */
-.game-card {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius-lg); /* Consistent rounding */
-    padding: clamp(1.5rem, 4vw, 2.5rem); /* Responsive padding */
-    box-shadow: var(--shadow-md);
-    border: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem; /* Space between sections */
-    width: 100%; /* Take full width of game-area */
-}
-
-/* Status (Level/Question Count) */
-.game-status {
-    text-align: center;
-    font-size: 0.9rem;
-    color: var(--text-light);
-    background-color: var(--background-alt);
-    padding: 0.5rem 1rem;
-    border-radius: var(--border-radius-md);
-    border: 1px solid var(--border);
-    /* Adjust position visually if needed */
-    margin: -1.5rem -1.5rem 0 -1.5rem; /* Pull out to edge */
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    position: relative;
-    top: -1.5rem; /* Overlap effect */
-    margin-bottom: -0.5rem; /* Adjust spacing below */
-}
-
-/* Question Area */
-.question-area {
-    text-align: center;
-}
-
-.qsm-question {
-    font-size: clamp(1.3rem, 4vw, 1.7rem); /* Responsive size */
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.4;
-}
-
-/* Text Input Form */
-.answer-form {
-    display: flex;
-    gap: 0.75rem;
-    align-items: stretch; /* Align items vertically */
-    margin-bottom: 1rem; /* Space below text input when options are shown */
-}
-
-.modern-input { /* Text input field */
-    flex-grow: 1;
-    padding: 0.8rem 1rem;
-    border: 1px solid var(--border);
-    border-radius: var(--border-radius-md);
-    font-size: 1rem;
-    background-color: var(--input-bg);
-    color: var(--text);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.modern-input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
-}
-
-.modern-submit-btn { /* Text input submit */
-    padding: 0.8rem 1rem;
-    border-radius: var(--border-radius-md);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    white-space: nowrap;
-    background-color: var(--secondary); /* Use secondary for submit */
-    color: white;
-    border: none;
-    transition: all 0.2s ease; /* Added transition */
-}
-.modern-submit-btn:hover {
-    background-color: var(--secondary-dark);
-    transform: translateY(-2px);
-}
-.modern-submit-btn svg {
-    width: 16px;
-    height: 16px;
-}
-
-
-.options-grid { /* Grid for option buttons */
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Adjusted minmax */
-    gap: 0.75rem;
-    margin-bottom: 1rem; /* Space before action buttons */
-}
-
-.modern-option { /* Option button */
-    display: flex;
-    align-items: center;
-    padding: 0.8rem 1rem;
-    border: 1px solid var(--border);
-    border-radius: var(--border-radius-md);
-    background-color: var(--background-alt); /* Use alt background */
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: left;
-    font-size: 0.95rem;
-    color: var(--text);
-    gap: 0.75rem; /* Space between letter and text */
-}
-
-.modern-option:hover:not(:disabled) {
-    background-color: rgba(var(--primary-rgb), 0.1);
-    border-color: var(--primary);
-    transform: translateY(-2px);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-}
-
-.modern-option:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-    transform: none; /* Reset transform when disabled */
+.game-card.coming-soon-card .play-button:hover {
+    transform: none; /* Disable hover effect */
     box-shadow: none;
+    filter: none;
 }
 
-.modern-option .option-letter {
-    font-weight: 700;
-    color: white;
-    background-color: var(--primary);
-    width: 28px; /* Fixed size */
-    height: 28px;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0; /* Prevent shrinking */
-    font-size: 0.85rem;
-}
-
-.modern-option .option-text {
-    flex-grow: 1;
-    line-height: 1.3; /* Improve readability for longer options */
-}
-
-/* Option feedback styles */
-.modern-option.correct {
-    background-color: rgba(var(--success-rgb), 0.15);
-    border-color: var(--success);
-    color: var(--success);
-}
-.modern-option.correct .option-letter {
-    background-color: var(--success);
-    color: white;
-}
-
-.modern-option.incorrect {
-    background-color: rgba(var(--error-rgb), 0.15);
-    border-color: var(--error);
-    color: var(--error);
-}
-.modern-option.incorrect .option-letter {
-    background-color: var(--error);
-    color: white;
-}
-/* Style for selected option before result */
-.modern-option.selected {
-    background-color: rgba(var(--primary-rgb), 0.2);
-    border-color: var(--primary-light);
-}
-
-/* Action Buttons (Pedir Opciones, 50/50) */
-.action-buttons-qsm {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem; /* Add space above */
-}
-
-.action-btn { /* Shared style for action buttons */
-    padding: 0.6rem 1rem;
-    border-radius: var(--border-radius-md);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.85rem;
-    font-weight: 500;
-    background: var(--background-alt);
-    border: 1px solid var(--border);
-    color: var(--text-light);
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-.action-btn svg {
-    width: 14px;
-    height: 14px;
-}
-
-.action-btn:hover:not(:disabled) {
-    background-color: var(--background); /* Slightly darker background */
-    border-color: var(--text-light);
-    color: var(--text);
-    transform: translateY(-1px);
-}
-
-.action-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.action-btn.used {
-    opacity: 0.5;
-    pointer-events: none; /* Disable clicks */
-    background-color: var(--input-bg); /* Darker indication */
-    border-color: var(--input-bg);
-}
-
-/* Feedback Area */
-.feedback-area {
-    min-height: 24px; /* Space for feedback */
-    text-align: center;
-    font-weight: 600;
-    font-size: 1rem;
-    padding: 0.5rem 0;
-}
-
-.feedback-message.correct {
-    color: var(--success);
-}
-
-.feedback-message.incorrect {
-    color: var(--error);
-}
-
-.feedback-message.error { /* General game errors */
-    color: var(--error);
-    font-weight: bold;
-}
-
-/* Waiting Area */
-.waiting-area {
-    display: none; /* Hidden by default */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 1rem;
-    background-color: rgba(var(--card-bg), 0.8); /* Use card background with alpha */
-    border-radius: var(--border-radius-md);
-    margin-top: 1rem;
-    text-align: center;
-    border: 1px dashed var(--border); /* Dashed border */
-}
-.waiting-area.active {
-    display: flex;
-}
-.waiting-area p {
-    margin-top: 1rem;
-    font-size: 1rem;
-    color: var(--text-light);
-    font-weight: 500;
-}
-
-/* Spinner */
-.waiting-area .spinner {
-    border: 4px solid rgba(var(--text-light-rgb), 0.2); /* Use text-light for base */
-    border-left-color: var(--primary);
-    width: 32px;
-    height: 32px;
-    /* animation: spin 1s linear infinite; */ /* Ensure spin animation is defined */
-}
-
-/* Optional Timer Styles */
-.timer-container-qsm {
-    height: 6px;
-    background-color: var(--input-bg);
-    border-radius: 3px;
-    overflow: hidden;
-    margin-top: 1.5rem;
-    border: 1px solid var(--border);
-    display: none; /* Hide until implemented */
-}
-
-.timer-bar-qsm {
-    height: 100%;
-    width: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--primary));
-    border-radius: 3px;
-    transition: width 0.5s linear;
-}
-
-/* Responsive Adjustments for Dark Theme */
-@media (max-width: 768px) {
-    .game-card {
-        padding: 1.5rem;
-    }
-    .qsm-question {
-        font-size: clamp(1.2rem, 3.5vw, 1.5rem);
-    }
-    .modern-input, .modern-option {
-        font-size: 0.95rem;
-    }
-    .action-buttons-qsm {
-        flex-direction: column; /* Stack action buttons */
+@media (max-width: 992px) { /* Adjust breakpoint as needed */
+    .millionaire-container {
+        flex-direction: column; /* Stack main content and sidebar */
         align-items: center;
     }
-    .action-btn {
+    .question-block {
         width: 100%;
-        max-width: 250px; /* Limit button width */
+        max-width: 600px; /* Limit width of question area */
+        margin-bottom: 2rem;
+    }
+    .progress-sidebar {
+        width: 100%;
+        max-width: 400px; /* Limit width of sidebar */
+        display: flex; /* Arrange levels horizontally */
+        flex-wrap: wrap; /* Allow wrapping */
+        justify-content: center; /* Center levels */
+        gap: 5px;
+        padding: 1rem;
+        max-height: none; /* Remove fixed height */
+        overflow-y: visible;
+    }
+    .progress-sidebar .level {
+        padding: 5px 10px; /* Smaller level indicators */
+        font-size: 0.8rem;
+        flex-grow: 1; /* Allow levels to grow */
+        min-width: 80px; /* Ensure minimum width */
+        text-align: center;
+    }
+    .sidebar-title {
+        display: none; /* Hide sidebar title on mobile */
+    }
+}
+
+@media (max-width: 768px) {
+    .millionaire-container {
+        padding: 1.5rem 1rem;
+    }
+    .millionaire-question {
+        font-size: 1.2rem; /* Smaller question text */
+        margin-bottom: 1rem;
+    }
+    .options-grid {
+        grid-template-columns: 1fr; /* Stack options */
+        gap: 8px;
+    }
+    .option {
+        padding: 12px 15px; /* Adjust padding */
+        font-size: 0.9rem;
+    }
+    .option-letter {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
+        margin-right: 8px;
+    }
+    .lifelines-container {
+        margin-top: 1.5rem;
+        padding: 10px;
+    }
+    .lifelines-title {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    .lifeline {
+        padding: 8px;
+    }
+    .lifeline svg {
+        width: 18px;
+        height: 18px;
+        margin-bottom: 3px;
+    }
+    .lifeline-name {
+        font-size: 0.7rem;
     }
 }
 
 @media (max-width: 576px) {
-     .game-card {
-        padding: 1rem;
-        gap: 1rem;
+    .millionaire-container {
+        padding: 1rem 0.8rem;
+        border-radius: 12px;
     }
-    .game-status {
-        margin: -1rem -1rem 0 -1rem;
-        top: -1rem;
+    .millionaire-question {
+        font-size: 1rem;
+    }
+    .option {
+        padding: 10px 12px;
         font-size: 0.85rem;
     }
-    .qsm-question {
-        font-size: 1.1rem;
+    .lifeline {
+        gap: 5px;
     }
-    .answer-form {
-        flex-direction: column; /* Stack input and button */
+    .lifelines-container {
+        padding: 8px;
     }
-    .modern-submit-btn {
-        width: 100%; /* Full width button */
-    }
-     .options-grid {
-        grid-template-columns: 1fr; /* Single column options */
-        gap: 0.5rem;
-    }
-    .modern-option {
-        padding: 0.7rem 0.8rem;
-        font-size: 0.9rem;
-    }
-    .modern-option .option-letter {
-        width: 26px;
-        height: 26px;
-        font-size: 0.8rem;
-    }
-    .action-buttons-qsm {
-        gap: 0.75rem;
-    }
-    .action-btn {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.8rem;
-    }
-    .feedback-area {
-        font-size: 0.9rem;
-    }
-    .waiting-area p {
-        font-size: 0.9rem;
+     .progress-sidebar .level {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        min-width: 70px;
     }
 }
 
-/* --- Styling for Quien Sabe Más Intro Modal --- */
-#qsmIntroModal .qsm-intro-modal {
-    max-width: 600px; /* Slightly wider modal */
-    background: linear-gradient(140deg, var(--background-alt), #2c2c2c);
-    border: 1px solid var(--border);
-    border-radius: var(--border-radius-lg);
-    padding: 30px 35px; /* More padding */
-    box-shadow: var(--shadow-lg);
+/* ============================================ */
+/* ======= Responsive Quién Sabe Más ======== */
+/* ============================================ */
+
+/* Styles for Coming Soon Game Card */
+.game-card.coming-soon-card {
+    opacity: 0.6;
+    cursor: default;
+    /* filter: grayscale(80%); Optional: Add grayscale effect */
 }
 
-#qsmIntroModal .modal-title {
-    color: var(--primary-light);
-    font-size: 1.6rem;
-    margin-bottom: 20px;
-    text-align: center;
-    border-bottom: 2px solid var(--primary);
-    padding-bottom: 10px;
+.game-card.coming-soon-card:hover {
+    transform: none; /* Disable hover effect */
+    box-shadow: 0 10px 20px rgba(0,0,0, 0.3); /* Reset shadow */
+    border-color: rgba(255, 255, 255, 0.06);
 }
 
-#qsmIntroModal .modal-title i {
-    margin-right: 10px;
-    color: var(--primary);
+.coming-soon-badge-style {
+    background: var(--gradient-accent); /* Use accent color for coming soon */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3), var(--glow-accent);
 }
 
-#qsmIntroModal p {
+.game-card.coming-soon-card .play-button {
+    background: var(--background-alt); /* Grey out button */
     color: var(--text-light);
-    text-align: center;
-    margin-bottom: 25px;
-    font-size: 1.1rem;
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
 }
 
-#qsmIntroModal ul {
-    list-style: none; /* Remove default bullets */
-    padding-left: 0;
-    margin-bottom: 30px;
+.game-card.coming-soon-card .play-button:hover {
+    transform: none; /* Disable hover effect */
+    box-shadow: none;
+    filter: none;
 }
 
-#qsmIntroModal li {
-    background-color: rgba(var(--primary-rgb), 0.05);
-    border-left: 4px solid var(--primary);
-    padding: 12px 15px;
-    margin-bottom: 10px;
-    border-radius: var(--border-radius-sm);
-    color: var(--text);
-    font-size: 0.95rem;
-    transition: background-color var(--transition-speed) var(--transition-func);
-}
-
-#qsmIntroModal li:hover {
-    background-color: rgba(var(--primary-rgb), 0.1);
-}
-
-#qsmIntroModal li strong {
-    color: var(--accent);
-    font-weight: 600;
-}
-
-#qsmIntroModal .modal-footer {
-    text-align: center;
-    margin-top: 15px;
-}
-
-#qsmIntroModal #goToLobbyQSMButton {
-    padding: 12px 25px; /* Larger button */
-    font-size: 1.1rem;
-}
-
-/* Responsive adjustments if needed */
-@media (max-width: 600px) {
-    #qsmIntroModal .qsm-intro-modal {
-        padding: 25px 20px;
+@media (max-width: 992px) { /* Adjust breakpoint as needed */
+    .millionaire-container {
+        flex-direction: column; /* Stack main content and sidebar */
+        align-items: center;
     }
-    #qsmIntroModal .modal-title {
-        font-size: 1.4rem;
+    .question-block {
+        width: 100%;
+        max-width: 600px; /* Limit width of question area */
+        margin-bottom: 2rem;
     }
-    #qsmIntroModal p {
-        font-size: 1rem;
+    .progress-sidebar {
+        width: 100%;
+        max-width: 400px; /* Limit width of sidebar */
+        display: flex; /* Arrange levels horizontally */
+        flex-wrap: wrap; /* Allow wrapping */
+        justify-content: center; /* Center levels */
+        gap: 5px;
+        padding: 1rem;
+        max-height: none; /* Remove fixed height */
+        overflow-y: visible;
     }
-    #qsmIntroModal li {
+    .progress-sidebar .level {
+        padding: 5px 10px; /* Smaller level indicators */
+        font-size: 0.8rem;
+        flex-grow: 1; /* Allow levels to grow */
+        min-width: 80px; /* Ensure minimum width */
+        text-align: center;
+    }
+    .sidebar-title {
+        display: none; /* Hide sidebar title on mobile */
+    }
+}
+
+@media (max-width: 768px) {
+    .millionaire-container {
+        padding: 1.5rem 1rem;
+    }
+    .millionaire-question {
+        font-size: 1.2rem; /* Smaller question text */
+        margin-bottom: 1rem;
+    }
+    .options-grid {
+        grid-template-columns: 1fr; /* Stack options */
+        gap: 8px;
+    }
+    .option {
+        padding: 12px 15px; /* Adjust padding */
         font-size: 0.9rem;
-        padding: 10px 12px;
     }
-     #qsmIntroModal #goToLobbyQSMButton {
-        padding: 10px 20px;
-        font-size: 1rem;
+    .option-letter {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
+        margin-right: 8px;
+    }
+    .lifelines-container {
+        margin-top: 1.5rem;
+        padding: 10px;
+    }
+    .lifelines-title {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    .lifeline {
+        padding: 8px;
+    }
+    .lifeline svg {
+        width: 18px;
+        height: 18px;
+        margin-bottom: 3px;
+    }
+    .lifeline-name {
+        font-size: 0.7rem;
     }
 }
-/* --- End QSM Intro Modal Styling --- */
-
-/* --- Level Highlight Colors --- */
-.level-highlight-1,
-.level-highlight-2,
-.level-highlight-6 {
-    color: var(--error); /* Using error color (red) for levels */
-    font-weight: bold;
-}
-/* --- End Level Highlight Colors --- */
-
-/* --- Specific Text Highlight --- */
-.highlight-consagra {
-    color: var(--accent); /* Using accent color for emphasis */
-    font-weight: bold;
-}
-/* --- End Specific Text Highlight --- */
-
-/* ========================================= */
-/* === Responsive Pasala Che Styles ====== */
-/* ========================================= */
 
 @media (max-width: 576px) {
-    /* Ajustar el contenedor principal del rosco */
-    .rosco-container {
-        padding: 20px 5px; /* Reducir más padding */
-        margin-top: 1px;
+    .millionaire-container {
+        padding: 1rem 0.8rem;
+        border-radius: 12px;
     }
-
-    /* Hacer el círculo del rosco más pequeño */
-    .rosco-circle {
-        width: 95vw; /* Que use casi todo el ancho disponible */
-        max-width: 270px; /* Mantenemos tu último valor */
+    .millionaire-question {
+        font-size: 1rem;
     }
-
-    /* Hacer las letras más pequeñas */
-    .letter {
-        width: clamp(25px, 7vw, 28px); /* Un poco más pequeño */
-        height: clamp(25px, 7vw, 28px);
-        font-size: clamp(0.6rem, 2vw, 0.75rem); /* Fuente más pequeña */
+    .option {
+        padding: 10px 12px;
+        font-size: 0.85rem;
     }
-
-    /* Ajustar la tarjeta de pregunta central */
-    .question-card {
-        width: 95%; 
-        padding: 7px; /* Reducir padding */
-        min-height: 210px; /* Reducir altura mínima */
+    .lifeline {
+        gap: 5px;
     }
-
-    /* Elementos dentro de la tarjeta */
-    .question-header h3 {
-        font-size: 0.6rem; /* Más pequeño */
-        margin-bottom: 3px; /* Menos margen, como editaste */
+    .lifelines-container {
+        padding: 8px;
     }
-
-    .question-text {
-        font-size: 0.54rem; /* Más pequeño, como editaste */
-        line-height: 1.3;
-        margin-bottom: 2px; /* Margen pequeño */
-        padding: 14px;
-        max-height: 75px; /* Ajustar altura */
-    }
-
-    .timer-wrapper {
-        margin-bottom: 5px; /* Margen pequeño */
-    }
-
-    .timer-count {
-        font-size: 0.9rem; /* Más pequeño */
-        margin-bottom: 2px;
-    }
-
-    .timer {
-        height: 4px; /* Fino */
-    }
-
-    .answer-input {
-        padding: 6px 8px;
-        font-size: 0.8rem; /* Más pequeño */
-        height: 30px; /* Más bajo */
-    }
-
-    .submit-answer-icon-btn {
-        width: 30px;
-        height: 30px;
-    }
-    .submit-answer-icon-btn i {
-        font-size: 0.8rem;
-    }
-
-    .input-group {
-        margin-bottom: 4px; /* Margen pequeño, como editaste */
-    }
-
-    .action-buttons {
-        gap: 4px; /* Restaurar gap */
-        margin-top: 0px;
-    }
-
-    .pasapalabra-button,
-    .help-button {
-        padding: 6px 8px;
-        font-size: 0.41rem; /* Más pequeño */
-    }
-
-    .help-button svg {
-        width: 11px;
-        height: 11px;
+     .progress-sidebar .level {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        min-width: 70px;
     }
 }
 
-/* Eliminamos el bloque @media (max-width: 360px) por ahora */
+/* ============================================ */
+/* ======= Responsive Quién Sabe Más ======== */
+/* ============================================ */
 
+/* Styles for Coming Soon Game Card */
+.game-card.coming-soon-card {
+    opacity: 0.6;
+    cursor: default;
+    /* filter: grayscale(80%); Optional: Add grayscale effect */
+}
+
+.game-card.coming-soon-card:hover {
+    transform: none; /* Disable hover effect */
+    box-shadow: 0 10px 20px rgba(0,0,0, 0.3); /* Reset shadow */
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.coming-soon-badge-style {
+    background: var(--gradient-accent); /* Use accent color for coming soon */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3), var(--glow-accent);
+}
+
+.game-card.coming-soon-card .play-button {
+    background: var(--background-alt); /* Grey out button */
+    color: var(--text-light);
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+.game-card.coming-soon-card .play-button:hover {
+    transform: none; /* Disable hover effect */
+    box-shadow: none;
+    filter: none;
+}
+
+@media (max-width: 992px) { /* Adjust breakpoint as needed */
+    .millionaire-container {
+        flex-direction: column; /* Stack main content and sidebar */
+        align-items: center;
+    }
+    .question-block {
+        width: 100%;
+        max-width: 600px; /* Limit width of question area */
+        margin-bottom: 2rem;
+    }
+    .progress-sidebar {
+        width: 100%;
+        max-width: 400px; /* Limit width of sidebar */
+        display: flex; /* Arrange levels horizontally */
+        flex-wrap: wrap; /* Allow wrapping */
+        justify-content: center; /* Center levels */
+        gap: 5px;
+        padding: 1rem;
+        max-height: none; /* Remove fixed height */
+        overflow-y: visible;
+    }
+    .progress-sidebar .level {
+        padding: 5px 10px; /* Smaller level indicators */
+        font-size: 0.8rem;
+        flex-grow: 1; /* Allow levels to grow */
+        min-width: 80px; /* Ensure minimum width */
+        text-align: center;
+    }
+    .sidebar-title {
+        display: none; /* Hide sidebar title on mobile */
+    }
+}
+
+@media (max-width: 768px) {
+    .millionaire-container {
+        padding: 1.5rem 1rem;
+    }
+    .millionaire-question {
+        font-size: 1.2rem; /* Smaller question text */
+        margin-bottom: 1rem;
+    }
+    .options-grid {
+        grid-template-columns: 1fr; /* Stack options */
+        gap: 8px;
+    }
+    .option {
+        padding: 12px 15px; /* Adjust padding */
+        font-size: 0.9rem;
+    }
+    .option-letter {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
+        margin-right: 8px;
+    }
+    .lifelines-container {
+        margin-top: 1.5rem;
+        padding: 10px;
+    }
+    .lifelines-title {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    .lifeline {
+        padding: 8px;
+    }
+    .lifeline svg {
+        width: 18px;
+        height: 18px;
+        margin-bottom: 3px;
+    }
+    .lifeline-name {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .millionaire-container {
+        padding: 1rem 0.8rem;
+        border-radius: 12px;
+    }
+    .millionaire-question {
+        font-size: 1rem;
+    }
+    .option {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+    .lifeline {
+        gap: 5px;
+    }
+    .lifelines-container {
+        padding: 8px;
+    }
+     .progress-sidebar .level {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        min-width: 70px;
+    }
+}
+
+/* ============================================ */
+/* ======= Responsive Quién Sabe Más ======== */
+/* ============================================ */
+
+/* Styles for Coming Soon Game Card */
+.game-card.coming-soon-card {
+    opacity: 0.6;
+    cursor: default;
+    /* filter: grayscale(80%); Optional: Add grayscale effect */
+}
+
+.game-card.coming-soon-card:hover {
+    transform: none; /* Disable hover effect */
+    box-shadow: 0 10px 20px rgba(0,0,0, 0.3); /* Reset shadow */
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.coming-soon-badge-style {
+    background: var(--gradient-accent); /* Use accent color for coming soon */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3), var(--glow-accent);
+}
+
+.game-card.coming-soon-card .play-button {
+    background: var(--background-alt); /* Grey out button */
+    color: var(--text-light);
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+.game-card.coming-soon-card .play-button:hover {
+    transform: none; /* Disable hover effect */
+    box-shadow: none;
+    filter: none;
+}
+
+@media (max-width: 992px) { /* Adjust breakpoint as needed */
+    .millionaire-container {
+        flex-direction: column; /* Stack main content and sidebar */
+        align-items: center;
+    }
+    .question-block {
+        width: 100%;
+        max-width: 600px; /* Limit width of question area */
+        margin-bottom: 2rem;
+    }
+    .progress-sidebar {
+        width: 100%;
+        max-width: 400px; /* Limit width of sidebar */
+        display: flex; /* Arrange levels horizontally */
+        flex-wrap: wrap; /* Allow wrapping */
+        justify-content: center; /* Center levels */
+        gap: 5px;
+        padding: 1rem;
+        max-height: none; /* Remove fixed height */
+        overflow-y: visible;
+    }
+    .progress-sidebar .level {
+        padding: 5px 10px; /* Smaller level indicators */
+        font-size: 0.8rem;
+        flex-grow: 1; /* Allow levels to grow */
+        min-width: 80px; /* Ensure minimum width */
+        text-align: center;
+    }
+    .sidebar-title {
+        display: none; /* Hide sidebar title on mobile */
+    }
+}
+
+@media (max-width: 768px) {
+    .millionaire-container {
+        padding: 1.5rem 1rem;
+    }
+    .millionaire-question {
+        font-size: 1.2rem; /* Smaller question text */
+        margin-bottom: 1rem;
+    }
+    .options-grid {
+        grid-template-columns: 1fr; /* Stack options */
+        gap: 8px;
+    }
+    .option {
+        padding: 12px 15px; /* Adjust padding */
+        font-size: 0.9rem;
+    }
+    .option-letter {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
+        margin-right: 8px;
+    }
+    .lifelines-container {
+        margin-top: 1.5rem;
+        padding: 10px;
+    }
+    .lifelines-title {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    .lifeline {
+        padding: 8px;
+    }
+    .lifeline svg {
+        width: 18px;
+        height: 18px;
+        margin-bottom: 3px;
+    }
+    .lifeline-name {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .millionaire-container {
+        padding: 1rem 0.8rem;
+        border-radius: 12px;
+    }
+    .millionaire-question {
+        font-size: 1rem;
+    }
+    .option {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+    .lifeline {
+        gap: 5px;
+    }
+    .lifelines-container {
+        padding: 8px;
+    }
+     .progress-sidebar .level {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        min-width: 70px;
+    }
+}
+
+/* ============================================ */
+/* ======= Responsive Quién Sabe Más ======== */
+/* ============================================ */
+
+/* Styles for Coming Soon Game Card */
+.game-card.coming-soon-card {
+    opacity: 0.6;
+    cursor: default;
+    /* filter: grayscale(80%); Optional: Add grayscale effect */
+}
+
+.game-card.coming-soon-card:hover {
+    transform: none; /* Disable hover effect */
+    box-shadow: 0 10px 20px rgba(0,0,0, 0.3); /* Reset shadow */
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.coming-soon-badge-style {
+    background: var(--gradient-accent); /* Use accent color for coming soon */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3), var(--glow-accent);
+}
+
+.game-card.coming-soon-card .play-button {
+    background: var(--background-alt); /* Grey out button */
+    color: var(--text-light);
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+.game-card.coming-soon-card .play-button:hover {
+    transform: none; /* Disable hover effect */
+    box-shadow: none;
+    filter: none;
+}
+
+@media (max-width: 992px) { /* Adjust breakpoint as needed */
+    .millionaire-container {
+        flex-direction: column; /* Stack main content and sidebar */
+        align-items: center;
+    }
+    .question-block {
+        width: 100%;
+        max-width: 600px; /* Limit width of question area */
+        margin-bottom: 2rem;
+    }
+    .progress-sidebar {
+        width: 100%;
+        max-width: 400px; /* Limit width of sidebar */
+        display: flex; /* Arrange levels horizontally */
+        flex-wrap: wrap; /* Allow wrapping */
+        justify-content: center; /* Center levels */
+        gap: 5px;
+        padding: 1rem;
+        max-height: none; /* Remove fixed height */
+        overflow-y: visible;
+    }
+    .progress-sidebar .level {
+        padding: 5px 10px; /* Smaller level indicators */
+        font-size: 0.8rem;
+        flex-grow: 1; /* Allow levels to grow */
+        min-width: 80px; /* Ensure minimum width */
+        text-align: center;
+    }
+    .sidebar-title {
+        display: none; /* Hide sidebar title on mobile */
+    }
+}
+
+@media (max-width: 768px) {
+    .millionaire-container {
+        padding: 1.5rem 1rem;
+    }
+    .millionaire-question {
+        font-size: 1.2rem; /* Smaller question text */
+        margin-bottom: 1rem;
+    }
+    .options-grid {
+        grid-template-columns: 1fr; /* Stack options */
+        gap: 8px;
+    }
+    .option {
+        padding: 12px 15px; /* Adjust padding */
+        font-size: 0.9rem;
+    }
+    .option-letter {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
+        margin-right: 8px;
+    }
+    .lifelines-container {
+        margin-top: 1.5rem;
+        padding: 10px;
+    }
+    .lifelines-title {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    .lifeline {
+        padding: 8px;
+    }
+    .lifeline svg {
+        width: 18px;
+        height: 18px;
+        margin-bottom: 3px;
+    }
+    .lifeline-name {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .millionaire-container {
+        padding: 1rem 0.8rem;
+        border-radius: 12px;
+    }
+    .millionaire-question {
+        font-size: 1rem;
+    }
+    .option {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+    .lifeline {
+        gap: 5px;
+    }
+    .lifelines-container {
+        padding: 8px;
+    }
+     .progress-sidebar .level {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        min-width: 70px;
+    }
+}
+
+/* ============================================ */
+/* ======= Responsive Quién Sabe Más ======== */
+/* ============================================ */
+
+/* Styles for Coming Soon Game Card */
+.game-card.coming-soon-card {
+    opacity: 0.6;
+    cursor: default;
+    /* filter: grayscale(80%); Optional: Add grayscale effect */
+}
+
+.game-card.coming-soon-card:hover {
+    transform: none; /* Disable hover effect */
+    box-shadow: 0 10px 20px rgba(0,0,0, 0.3); /* Reset shadow */
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.coming-soon-badge-style {
+    background: var(--gradient-accent); /* Use accent color for coming soon */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3), var(--glow-accent);
+}
+
+.game-card.coming-soon-card .play-button {
+    background: var(--background-alt); /* Grey out button */
+    color: var(--text-light);
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+.game-card.coming-soon-card .play-button:hover {
+    transform: none; /* Disable hover effect */
+    box-shadow: none;
+    filter: none;
+}
+
+@media (max-width: 992px) { /* Adjust breakpoint as needed */
+    .millionaire-container {
+        flex-direction: column; /* Stack main content and sidebar */
+        align-items: center;
+    }
+    .question-block {
+        width: 100%;
+        max-width: 600px; /* Limit width of question area */
+        margin-bottom: 2rem;
+    }
+    .progress-sidebar {
+        width: 100%;
+        max-width: 400px; /* Limit width of sidebar */
+        display: flex; /* Arrange levels horizontally */
+        flex-wrap: wrap; /* Allow wrapping */
+        justify-content: center; /* Center levels */
+        gap: 5px;
+        padding: 1rem;
+        max-height: none; /* Remove fixed height */
+        overflow-y: visible;
+    }
+    .progress-sidebar .level {
+        padding: 5px 10px; /* Smaller level indicators */
+        font-size: 0.8rem;
+        flex-grow: 1; /* Allow levels to grow */
+        min-width: 80px; /* Ensure minimum width */
+        text-align: center;
+    }
+    .sidebar-title {
+        display: none; /* Hide sidebar title on mobile */
+    }
+}
+
+@media (max-width: 768px) {
+    .millionaire-container {
+        padding: 1.5rem 1rem;
+    }
+    .millionaire-question {
+        font-size: 1.2rem; /* Smaller question text */
+        margin-bottom: 1rem;
+    }
+    .options-grid {
+        grid-template-columns: 1fr; /* Stack options */
+        gap: 8px;
+    }
+    .option {
+        padding: 12px 15px; /* Adjust padding */
+        font-size: 0.9rem;
+    }
+    .option-letter {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
+        margin-right: 8px;
+    }
+    .lifelines-container {
+        margin-top: 1.5rem;
+        padding: 10px;
+    }
+    .lifelines-title {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    .lifeline {
+        padding: 8px;
+    }
+    .lifeline svg {
+        width: 18px;
+        height: 18px;
+        margin-bottom: 3px;
+    }
+    .lifeline-name {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .millionaire-container {
+        padding: 1rem 0.8rem;
+        border-radius: 12px;
+    }
+    .millionaire-question {
+        font-size: 1rem;
+    }
+    .option {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+    .lifeline {
+        gap: 5px;
+    }
+    .lifelines-container {
+        padding: 8px;
+    }
+     .progress-sidebar .level {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        min-width: 70px;
+    }
+}
+
+/* ============================================ */
+/* ======= Responsive Quién Sabe Más ======== */
+/* ============================================ */
