@@ -7,6 +7,19 @@ import {
 // --- Game variables (Declare totalTime globally/module scope) ---
 let totalTime = 240; // Default: Normal difficulty (240 seconds)
 let currentPlayerName = 'Jugador Anónimo'; // <-- Variable para guardar el nombre
+let logrosAlInicioDePartida = {}; // <<< NUEVA VARIABLE GLOBAL PARA LOGROS
+
+// <<<--- NUEVAS VARIABLES DE SEGUIMIENTO DE LOGROS POR PARTIDA --- >>>
+let pasapalabraUsadoEnPartida = 0;
+let errorEnLetraAEstaPartida = false;
+let letrasAcertadasSeguidasEstaPartida = 0;
+let maxLetrasAcertadasSeguidasEstaPartida = 0;
+let estuvoAUnErrorDePerderEstaPartida = false;
+let letrasVisitadasEnVueltaActual = new Set();
+let todasLetrasVisitadasAlMenosUnaVez = false;
+let usoAyudaYAciertoEnMismaPregunta = false;
+let ultimaLetraPendienteAntesDeVictoria = false;
+// <<<--- FIN NUEVAS VARIABLES --- >>>
 
 document.addEventListener('DOMContentLoaded', function() {
     // <-- Leer el nombre del jugador UNA VEZ al cargar -->
@@ -218,6 +231,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize the game
     function initGame() {
+        // <<< INICIO: GUARDAR ESTADO INICIAL DE LOGROS >>>
+        if (window.CrackTotalLogrosAPI && typeof window.CrackTotalLogrosAPI.cargarLogros === 'function') {
+            try {
+                logrosAlInicioDePartida = JSON.parse(JSON.stringify(window.CrackTotalLogrosAPI.cargarLogros()));
+                console.log("Estado de logros al inicio de la partida:", logrosAlInicioDePartida);
+            } catch (e) {
+                console.error("Error al clonar logros iniciales:", e);
+                logrosAlInicioDePartida = {}; // Fallback a objeto vacío
+            }
+        } else {
+            console.warn("CrackTotalLogrosAPI no está disponible al iniciar el juego. No se podrán rastrear nuevos logros para esta partida.");
+            logrosAlInicioDePartida = {};
+        }
+        // <<< FIN: GUARDAR ESTADO INICIAL DE LOGROS >>>
+
         // Reset game state
         currentLetterIndex = 0;
         correctAnswers = 0;
@@ -404,6 +432,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const currentLetter = pendingLetters[currentLetterIndex];
+        // <<<--- LÓGICA PARA 'todas_letras_pasadas_una_vuelta' --- >>>
+        if (currentLetter) { // Asegurarse de que currentLetter no es undefined
+            letrasVisitadasEnVueltaActual.add(currentLetter);
+            if (letrasVisitadasEnVueltaActual.size === alphabet.length) {
+                todasLetrasVisitadasAlMenosUnaVez = true;
+            }
+        }
+        // <<<--- FIN LÓGICA --- >>>
         const letterData = questions.find(item => item.letra === currentLetter);
 
         if (letterData && letterData.preguntas && letterData.preguntas.length > 0) {
@@ -522,6 +558,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // Si volvemos al principio, incrementar el contador de vueltas completadas
         if (currentLetterIndex === 0 && pendingLetters.length > 0) {
             completedRounds++;
+            // <<<--- RESET PARA 'todas_letras_pasadas_una_vuelta' (si se quiere por vuelta y no por partida) --- >>>
+            // letrasVisitadasEnVueltaActual.clear(); // Si el logro fuera por *cada* vuelta completa
+            // <<<--- FIN RESET --- >>>
 
             // Al completar una vuelta, limpiar el estado "pending"
             if (completedRounds > 0) {
@@ -585,6 +624,15 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!isCorrect) {
                 // --- INCORRECT --- 
                 incorrectAnswers++; // Increment incorrect count
+                // <<<--- LÓGICA PARA LOGROS DE ERROR --- >>>
+                if (currentLetter === 'A' && correctAnswers === 0 && incorrectAnswers === 1 && passedAnswers === 0) { //Aproximado para primer error en A
+                    errorEnLetraAEstaPartida = true;
+                }
+                if (incorrectAnswers === maxErrors -1) {
+                    estuvoAUnErrorDePerderEstaPartida = true;
+                }
+                letrasAcertadasSeguidasEstaPartida = 0; // Reset racha de aciertos
+                // <<<--- FIN LÓGICA --- >>>
                 profileStats.totalIncorrectAnswers += 1; // Update aggregate stats
                 
                 // Record error details
@@ -615,6 +663,19 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 // --- CORRECT --- 
                 correctAnswers++;
+                // <<<--- LÓGICA PARA LOGROS DE ACIERTO --- >>>
+                letrasAcertadasSeguidasEstaPartida++;
+                if (letrasAcertadasSeguidasEstaPartida > maxLetrasAcertadasSeguidasEstaPartida) {
+                    maxLetrasAcertadasSeguidasEstaPartida = letrasAcertadasSeguidasEstaPartida;
+                }
+                if (hintDisplayed[currentLetter] && letterHints[currentLetter]) { // Si se usó ayuda para esta pregunta
+                    usoAyudaYAciertoEnMismaPregunta = true; // Marcar para logro 'ayuda_sabia'
+                }
+                 // Para 'ultima_letra_victoria'
+                if (pendingLetters.length === 1) {
+                    ultimaLetraPendienteAntesDeVictoria = true;
+                }
+                // <<<--- FIN LÓGICA --- >>>
                 profileStats.totalCorrectAnswers += 1; // Update aggregate stats
 
                 // <<<--- MARK QUESTION AS USED HERE (on correct answer) --- >>>
@@ -879,6 +940,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Marcar que ya se mostró la pista para esta letra
             hintDisplayed[currentLetter] = true;
+            // <<<--- LÓGICA PARA 'ayuda_sabia' (marcar que se usó ayuda) --- >>>
+            // No se resetea usoAyudaYAciertoEnMismaPregunta aquí, se evalúa al acertar.
+            // <<<--- FIN LÓGICA --- >>>
         }
         
         // Obtener la respuesta correcta
@@ -904,6 +968,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mark current letter as "pasapalabra"
     function pasapalabra(silent = false) { // Added silent parameter
         const currentLetter = pendingLetters[currentLetterIndex];
+        // <<<--- LÓGICA PARA LOGROS DE PASAPALABRA --- >>>
+        if (!silent) { // Solo contar pases iniciados por el usuario
+           pasapalabraUsadoEnPartida++;
+           profileStats.totalPassedAnswers +=1; // Actualizar stats globales de pases
+        }
+        letrasAcertadasSeguidasEstaPartida = 0; // Reset racha de aciertos al pasar
+        // <<<--- FIN LÓGICA --- >>>
 
         // Only count as a user pass if not silent
         if (!silent && letterStatuses[currentLetter] === 'unanswered') {
@@ -991,6 +1062,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // --- Fin Deshabilitar Controles ---
         
         const timeSpent = totalTime - timeLeft;
+        // CALCULAR timeFormatted AQUÍ
+        const minutes = Math.floor(timeSpent / 60);
+        const seconds = timeSpent % 60;
+        const timeFormatted = `${minutes}:${seconds.toString().padStart(2, '0')}`;
         
         // --- Actualizar Estadísticas LOCALES --- 
         let profileStats = loadProfileStats();
@@ -1020,89 +1095,167 @@ document.addEventListener('DOMContentLoaded', function() {
         saveProfileStats(profileStats);
         // --- Fin Actualizar Estadísticas LOCALES ---
 
-        // <<<--- INICIO: Guardar en FIRESTORE --- >>>
-        if (db) { // Solo intentar si la DB está inicializada
-            const userId = getCurrentUserId();
-            const userDisplayName = getCurrentDisplayName();
+        // --- INICIO: Guardar Partida en el HISTORIAL ---
+        const gameResultForHistory = {
+            timestamp: new Date().toISOString(), // Usar ISO string para mejor compatibilidad
+            result: result, // 'victory', 'defeat', or 'timeout'
+            difficulty: document.querySelector('.difficulty-btn.active')?.dataset.difficulty || 'normal',
+            correctAnswers: correctAnswers, // Aciertos de la partida actual
+            incorrectAnswers: incorrectAnswers, // Errores de la partida actual
+            timeSpent: timeSpent, // Tiempo en segundos
+            timeSpentFormatted: timeFormatted, // timeFormatted AHORA ESTÁ DEFINIDO
+        };
+        addGameToHistory(gameResultForHistory);
+        // --- FIN: Guardar Partida en el HISTORIAL ---
 
-            // 1. Actualizar Estadísticas GLOBALES en Firestore
-            const userDocRef = doc(db, "users", userId);
-            try {
-                await setDoc(userDocRef, {
-                    displayName: userDisplayName, // Asegurar que el nombre esté actualizado
-                    totalScore: increment(correctAnswers), // Incrementar por los aciertos de ESTA partida
-                    matchesPlayed: increment(1),
-                    wins: increment(isWin ? 1 : 0),
-                    totalLosses: increment(!isWin ? 1 : 0), // <-- AÑADIDO: Incrementar derrotas si no es victoria
-                    totalErrors: increment(incorrectAnswers || 0), // <-- AÑADIDO: Incrementar total de errores
-                    totalPasses: increment(passedAnswers || 0), // <-- AÑADIDO: Incrementar total de pases
-                    // Añade otros campos si los quieres trackear globalmente (ej. errores totales)
-                    // totalErrors: increment(incorrectAnswers)
-                    lastPlayed: serverTimestamp() // Marcar cuándo jugó por última vez
-                }, { merge: true }); // merge:true crea el doc si no existe, o actualiza campos existentes sin borrar otros
-                console.log("User stats updated in Firestore for:", userId);
-            } catch (error) {
-                console.error("Error updating user stats in Firestore:", error);
-                // No detener el flujo del juego, pero registrar el error
+        // <<<--- INICIO: INTENTAR DESBLOQUEAR LOGROS RELEVANTES A LA PARTIDA ACTUAL --- >>>
+        if (window.CrackTotalLogrosAPI && typeof window.CrackTotalLogrosAPI.intentarDesbloquearLogro === 'function') {
+            console.log("PASA: Intentando desbloquear logros...");
+            let desbloqueado; 
+            const dificultadActual = document.querySelector('.difficulty-btn.active')?.dataset.difficulty || 'normal';
+
+            // Logros basados en número de partidas jugadas (profileStats)
+            if (profileStats.gamesPlayed >= 1) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('partida_1');
+            if (profileStats.gamesPlayed >= 5) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('partida_5');
+            if (profileStats.gamesPlayed >= 25) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('partida_25');
+            if (profileStats.gamesPlayed >= 50) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('partida_50'); // NUEVO
+            if (profileStats.gamesPlayed >= 100) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('partida_100');
+            if (profileStats.gamesPlayed >= 250) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('partida_250'); // NUEVO
+
+            // Logros de Victoria (profileStats y resultado partida)
+            if (isWin) { // isWin se define más arriba en tu código existente
+                window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_1');
+                if (profileStats.gamesWon >= 5) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_5'); // NUEVO
+                if (profileStats.gamesWon >= 25) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_25'); // NUEVO
+                if (profileStats.gamesWon >= 50) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_50'); // NUEVO
+                
+                // Logros de racha (requieren que profileStats tenga currentWinStreak, si no, omitir o adaptar)
+                // Asumiendo que se actualiza profileStats.currentWinStreak en algún lado
+                // if (profileStats.currentWinStreak >= 2) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('racha_2');
+                // if (profileStats.currentWinStreak >= 3) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('racha_3'); // NUEVO
+                // if (profileStats.currentWinStreak >= 5) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('racha_5');
+                // if (profileStats.currentWinStreak >= 10) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('racha_10');
             }
 
-            // 2. Guardar Partida en Historial GLOBAL de Firestore
-            const gameDataForFirestore = {
-                timestamp: Timestamp.now(), // Usar Timestamp de Firestore
-                // Guardar info de los jugadores (en este caso, solo uno)
-                players: [
-                    {
-                        userId: userId, // Identificador del usuario
-                        displayName: userDisplayName,
-                        score: correctAnswers,
-                        errors: incorrectAnswers // Guardar errores de esta partida
-                        // No añadimos passes aquí, ya que es una estadística de la partida general
-                    }
-                    // Si hubiera más jugadores, se añadirían aquí
-                ],
-                result: result, // 'victory', 'defeat', 'timeout'
-                timeSpent: timeSpent,
-                difficulty: document.querySelector('.difficulty-btn.active')?.getAttribute('data-difficulty') || 'normal',
-                passes: passedAnswers || 0 // <-- AÑADIDO: Guardar pases de esta partida
-                // Podrías añadir winnerUserId si fuera un juego multijugador
-                // winnerUserId: (isWin ? userId : null)
-            };
+            // Logros de Aciertos en la Partida (correctAnswers)
+            if (correctAnswers >= 5) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('aciertos_5'); // NUEVO
+            if (correctAnswers >= 10) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('aciertos_10');
+            if (correctAnswers >= 15) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('aciertos_15');
+            if (correctAnswers >= 20) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('aciertos_20');
+            if (correctAnswers >= 25) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('aciertos_25');
+            if (correctAnswers === 26) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('rosco_casi_perfecto'); // NUEVO
+            if (isWin && correctAnswers === alphabet.length) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('rosco_completo');
+            if (correctAnswers === 13) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('aciertos_exactos_13'); // NUEVO
+            
+            // Logros de Aciertos Totales (profileStats)
+            if (profileStats.totalCorrectAnswers >= 100) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('total_aciertos_100');
+            if (profileStats.totalCorrectAnswers >= 250) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('total_aciertos_250'); // NUEVO
+            if (profileStats.totalCorrectAnswers >= 500) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('total_aciertos_500');
+            if (profileStats.totalCorrectAnswers >= 1000) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('total_aciertos_1000');
+            if (profileStats.totalCorrectAnswers >= 2000) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('total_aciertos_2000'); // NUEVO
 
-            try {
-                const matchesCollectionRef = collection(db, "matches");
-                await addDoc(matchesCollectionRef, gameDataForFirestore);
-                console.log("Match added to Firestore history");
-            } catch (error) {
-                console.error("Error adding match to Firestore history:", error);
+            // Logro de Precisión
+            if (isWin && accuracy >= 90) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('precision_alta_partida'); // NUEVO
+
+            // Logros de Dificultad y Desafío específicos de la partida
+            if (isWin) {
+                if (dificultadActual === 'facil') window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_facil');
+                if (dificultadActual === 'normal') {
+                    window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_normal');
+                    if (incorrectAnswers === 0) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('dificultad_normal_perfecta'); // NUEVO
+                }
+                if (dificultadActual === 'dificil') {
+                    window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_dificil');
+                    // if (profileStats.gamesWonDificil >= 5) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victorias_dificil_5'); // Necesita gamesWonDificil en profileStats
+                    if (helpUsed === 0) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_dificil_sin_ayuda'); // NUEVO
+                    if (incorrectAnswers === 0) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_sin_errores_dificil'); // NUEVO
+                }
+                if (incorrectAnswers === 0) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('partida_perfecta');
+                if (helpUsed === 0 && incorrectAnswers === 0) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('sin_ayuda_ni_errores'); // NUEVO
+                if (helpUsed === 0) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('sin_ayuda');
+                if (timeSpent < 120) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_rapida');
+                if (timeSpent > 240) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_lenta');
+                if (pasapalabraUsadoEnPartida === 0) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_sin_pasar'); // NUEVO
+                if (estuvoAUnErrorDePerderEstaPartida) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_remontada'); // NUEVO
+                if (completedRounds <= 0 && correctAnswers === alphabet.length) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('rosco_en_primera_vuelta'); // NUEVO (asume completedRounds es 0 en la primera vuelta)
+                if (errorEnLetraAEstaPartida) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('primera_pregunta_error_luego_victoria'); // NUEVO
+                if (ultimaLetraPendienteAntesDeVictoria && pendingLetters.length === 0) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('ultima_letra_victoria'); // NUEVO
+                 if (incorrectAnswers === maxErrors) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_limite');
+                 if (timeLeft < 10 && timeLeft > 0) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_agonica');
+                 if (helpUsed === 1) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('victoria_con_1_ayuda'); // NUEVO
             }
+
+            // Logros Misceláneos (Algunos dependen de stats globales que se actualizan aquí, otros de la partida)
+            // if (profileStats.totalPassedAnswers >= 50) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('pasa_50'); // Necesita que totalPassedAnswers se guarde en profileStats
+            if (pasapalabraUsadoEnPartida > 15) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('pasa_mucho_partida'); // NUEVO
+            // if (profileStats.totalHelpUsed >= 25) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('help_25'); // Ya cubierto por totalHelpUsed en profileStats
+            if (usoAyudaYAciertoEnMismaPregunta) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('ayuda_sabia'); // NUEVO
+            // if (profileStats.answeredCorrectlyWithLetterA >= 10) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('rey_a'); // Necesita contador específico
+            // if (profileStats.gamesLost >= 10) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('corazon_valiente'); // Necesita gamesLost en profileStats
+            if (maxLetrasAcertadasSeguidasEstaPartida >= 5) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('letras_seguidas_5'); // NUEVO
+            if (result === 'defeat' && correctAnswers >= 20) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('derrota_honrosa'); // NUEVO
+            if (result !== 'victory' && timeSpent < 30) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('partida_rapidisima_perdida'); // NUEVO
+            if (timeSpent > 600) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('partida_10_min'); // NUEVO
+            if (incorrectAnswers === 1) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('errores_exactos_1'); // NUEVO
+            if (todasLetrasVisitadasAlMenosUnaVez) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('todas_letras_pasadas_una_vuelta'); // NUEVO
+
+            // --- Logros de racha (necesitan un manejo más específico de 'currentWinStreak' en profileStats) ---
+            // Ejemplo si se añade 'currentWinStreak' a profileStats y se actualiza correctamente:
+            /*
+            if (isWin) {
+                profileStats.currentWinStreak = (profileStats.currentWinStreak || 0) + 1;
+            } else {
+                profileStats.currentWinStreak = 0;
+            }
+            saveProfileStats(profileStats); // Guardar racha actualizada
+
+            if (profileStats.currentWinStreak >= 2) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('racha_2');
+            if (profileStats.currentWinStreak >= 3) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('racha_3');
+            if (profileStats.currentWinStreak >= 5) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('racha_5');
+            if (profileStats.currentWinStreak >= 10) window.CrackTotalLogrosAPI.intentarDesbloquearLogro('racha_10');
+            */
+           // --- Fin ejemplo racha ---
+
 
         } else {
-            console.warn("Firestore DB not initialized. Skipping online save.");
+            console.warn("PASA: CrackTotalLogrosAPI no está disponible al finalizar el juego.");
         }
-        // <<<--- FIN: Guardar en FIRESTORE --- >>>
+        // <<<--- FIN: INTENTAR DESBLOQUEAR LOGROS --- >>>
 
-        // --- Log ANTES de guardar historial local --- 
-        console.log("[History Check] displayName being used for local history:", getCurrentDisplayName()); // Log para el nombre local
+        // <<<--- INICIO: DETECTAR Y MOSTRAR NUEVOS LOGROS --- >>>
+        let nuevosLogrosDesbloqueadosEnEstaPartida = [];
+        if (window.CrackTotalLogrosAPI && typeof window.CrackTotalLogrosAPI.cargarLogros === 'function' && typeof window.CrackTotalLogrosAPI.getTodosLosLogrosDef === 'function') {
+            const logrosDespuesPartida = window.CrackTotalLogrosAPI.cargarLogros();
+            const todosLosLogrosDef = window.CrackTotalLogrosAPI.getTodosLosLogrosDef();
 
-        // --- Guardar Partida en Historial LOCAL --- 
-        const gameDataForHistory = {
-            date: new Date().toISOString(), // Guardar fecha en formato ISO
-            result: result, // 'victory', 'defeat', 'timeout'
-            score: correctAnswers,
-            errors: incorrectAnswers, 
-            time: timeSpent,
-            difficulty: document.querySelector('.difficulty-btn.active')?.getAttribute('data-difficulty') || 'normal' // Guardar dificultad
-        };
-        addGameToHistory(gameDataForHistory);
-        // --- Fin Guardar Partida en Historial LOCAL ---
-        
-        // --- Lógica del Modal (sin cambios) --- 
+            todosLosLogrosDef.forEach(logroDef => {
+                const idLogro = logroDef.id;
+                const estabaDesbloqueadoAntes = logrosAlInicioDePartida[idLogro]?.unlocked === true;
+                const estaDesbloqueadoAhora = logrosDespuesPartida[idLogro]?.unlocked === true;
+
+                if (estaDesbloqueadoAhora && !estabaDesbloqueadoAntes) {
+                    // Usar directamente logroDef que viene de todosLosLogrosDef, que ya es la definición completa
+                    nuevosLogrosDesbloqueadosEnEstaPartida.push(logroDef);
+                }
+            });
+
+            if (nuevosLogrosDesbloqueadosEnEstaPartida.length > 0) {
+                console.log("Nuevos logros desbloqueados en esta partida:", nuevosLogrosDesbloqueadosEnEstaPartida.map(l => l.title));
+                await mostrarModalesDeLogrosSecuencialmente(nuevosLogrosDesbloqueadosEnEstaPartida);
+            }
+        } else {
+            console.warn("CrackTotalLogrosAPI no disponible para verificar nuevos logros.");
+        }
+        // <<<--- FIN: DETECTAR Y MOSTRAR NUEVOS LOGROS --- >>>
+
+        // --- Lógica del Modal de Resultado de Partida (EXISTENTE) --- 
         const totalAnswered = correctAnswers + incorrectAnswers;
         const unanswered = alphabet.length - totalAnswered;
         const accuracy = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
-        const minutes = Math.floor(timeSpent / 60);
-        const seconds = timeSpent % 60;
-        const timeFormatted = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        // Estas variables ya fueron calculadas y están disponibles en este alcance:
+        // const minutes = Math.floor(timeSpent / 60);
+        // const seconds = timeSpent % 60;
+        // const timeFormatted = `${minutes}:${seconds.toString().padStart(2, '0')}`;
         
         let modalType, modalTitle, modalMessage, modalColor, modalIcon;
         
@@ -1626,4 +1779,104 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         return false; // No conflict found
     }
+
+    // <<<--- INICIO: NUEVAS FUNCIONES PARA MODALES DE LOGROS --- >>>
+    async function mostrarModalesDeLogrosSecuencialmente(logrosAMostrar) {
+        console.log("PASA: Logros nuevos para mostrar en modales:", logrosAMostrar); // <<< LOG AÑADIDO
+        const logrosDefGlobales = window.CrackTotalLogrosAPI && typeof window.CrackTotalLogrosAPI.getTodosLosLogrosDef === 'function' 
+            ? window.CrackTotalLogrosAPI.getTodosLosLogrosDef() 
+            : [];
+
+        if (!logrosDefGlobales || logrosDefGlobales.length === 0) {
+            console.warn("PASA: No se pudieron obtener las definiciones de logros. Saltando modales de logros.");
+            return; // Retorna una promesa resuelta si no hay definiciones
+        }
+
+        for (const logroResumido of logrosAMostrar) {
+            // Buscamos la definición completa del logro que incluye el ícono y descripción
+            const logroCompleto = logrosDefGlobales.find(l => l.id === logroResumido.id);
+            if (logroCompleto) {
+                await new Promise(resolve => {
+                    crearModalLogroIndividual(logroCompleto, resolve);
+                });
+            } else {
+                console.warn("No se encontró definición completa para el logro ID:", logroResumido.id);
+            }
+        }
+    }
+
+    function crearModalLogroIndividual(logroInfo, callbackContinuar) {
+        // Remover modal de logro previo si existe
+        const modalPrevio = document.querySelector('.logro-desbloqueado-modal');
+        if (modalPrevio) {
+            modalPrevio.remove();
+        }
+
+        const modalOverlay = document.createElement('div');
+        modalOverlay.className = 'modal-overlay logro-desbloqueado-modal active'; // Nueva clase para este modal
+        // Estilos básicos (pueden mejorarse con CSS dedicado)
+        modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        modalOverlay.style.zIndex = '1200'; // Encima del modal de resultado si algo sale mal
+
+        const modalContent = document.createElement('div');
+        modalContent.className = 'modal-content'; // Reutilizar clase si es apropiado
+        modalContent.style.textAlign = 'center';
+        modalContent.style.padding = '30px';
+        modalContent.style.background = 'var(--background-alt, #2a2d34)';
+        modalContent.style.borderRadius = '12px';
+        modalContent.style.border = '2px solid var(--accent, #FF8E3C)';
+        modalContent.style.maxWidth = '400px';
+
+        // Tratar de obtener la definición completa del logro de `todosLosLogros` (la variable global en `logros.js`)
+        // Esto es un poco hacky. Sería mejor si `getTodosLosLogrosDef` devolviera toda la info.
+        // Por ahora, intentaremos accederla si `logros.js` la expone globalmente o a través de la API.
+        let logroDefCompleta = null;
+        if (window.CrackTotalLogrosAPI && typeof window.CrackTotalLogrosAPI.getTodosLosLogrosDef === 'function') {
+            const todasLasDefs = window.CrackTotalLogrosAPI.getTodosLosLogrosDef();
+             // La API actual solo devuelve id y title. Necesitamos la definición completa que está en `todosLosLogros` en `logros.js`
+             // Esta parte necesita ajuste para acceder al icono y descripción correctos.
+             // Por ahora, usamos lo que tenemos de logroInfo (que ya debería ser la def completa gracias al cambio en mostrarModalesDeLogrosSecuencialmente).
+            logroDefCompleta = logroInfo;
+        }
+
+
+        const iconHtml = logroDefCompleta && logroDefCompleta.icon ? `<i class="fas ${logroDefCompleta.icon} fa-3x" style="color: var(--accent, #FF8E3C); margin-bottom: 15px;"></i>` : '<i class="fas fa-medal fa-3x" style="color: var(--accent, #FF8E3C); margin-bottom: 15px;"></i>'; // Icono por defecto
+        const titleHtml = `<h3 style="color: var(--text-bright, #FFFFFE); margin-top: 0; margin-bottom: 10px; font-size: 1.6em;">¡Logro Desbloqueado!</h3>`;
+        const logroTitleHtml = `<p style="color: var(--accent-light, #FFD166); font-size: 1.3em; margin-bottom: 15px; font-weight: bold;">${logroInfo.title}</p>`;
+        const logroDescriptionHtml = logroDefCompleta && logroDefCompleta.description ? `<p style="color: var(--text, #D1D0C5); font-size: 1em; margin-bottom: 25px;">${logroDefCompleta.description}</p>` : '';
+
+        const continueButton = document.createElement('button');
+        continueButton.className = 'primary-button logro-modal-continue-btn'; // Reutilizar clase de botón y añadir una específica
+        continueButton.textContent = 'Continuar';
+        // Estilos directos para asegurar prominencia y coherencia:
+        continueButton.style.padding = '12px 28px';
+        continueButton.style.fontSize = '1.15em';
+        continueButton.style.fontWeight = '600';
+        continueButton.style.letterSpacing = '0.5px';
+        continueButton.style.marginTop = '20px'; // Más espacio arriba
+        continueButton.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+        continueButton.style.transition = 'background-color 0.3s ease, transform 0.2s ease';
+
+        // Efecto hover simple vía JS (CSS es preferible para esto, pero para mantenerlo aquí)
+        continueButton.onmouseover = () => {
+            // Este estilo debería idealmente venir de una clase :hover en CSS
+            // pero para el ejemplo, si primary-button no lo tiene suficientemente fuerte:
+            // continueButton.style.backgroundColor = 'var(--primary-dark, #6a4fd0)'; // Un tono más oscuro de primary
+        };
+        continueButton.onmouseout = () => {
+            // Revertir al color original si se cambió el fondo en hover
+            // continueButton.style.backgroundColor = 'var(--primary, #7F5AF0)';
+        };
+
+        continueButton.onclick = () => {
+            modalOverlay.remove();
+            callbackContinuar();
+        };
+
+        modalContent.innerHTML = iconHtml + titleHtml + logroTitleHtml + logroDescriptionHtml;
+        modalContent.appendChild(continueButton);
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
+    }
+    // <<<--- FIN: NUEVAS FUNCIONES PARA MODALES DE LOGROS --- >>>
 }); 

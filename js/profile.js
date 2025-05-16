@@ -143,4 +143,149 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Mostrar datos al cargar la página --- 
     displayProfileData();
 
-}); 
+    // Cargar y mostrar estadísticas de Pasala Che
+    loadPasalacheStats();
+    loadPasalacheHistory(); // Cargar historial si existe esa función
+    loadAchievementsCount(); // <<< NUEVA FUNCIÓN PARA CONTAR LOGROS
+
+    const resetStatsButton = document.getElementById('resetStatsButton');
+    if (resetStatsButton) {
+        resetStatsButton.addEventListener('click', function() {
+            // Confirmación antes de borrar
+            if (confirm('¿Estás seguro de que quieres borrar TODAS tus estadísticas de Pasala Che? Esta acción no se puede deshacer.')) {
+                localStorage.removeItem('pasalacheUserStats');
+                localStorage.removeItem('pasalacheGameHistory');
+                // Opcionalmente, también podrías querer resetear los logros aquí:
+                // if (confirm('¿También quieres borrar TODOS tus logros desbloqueados?')) {
+                //     localStorage.removeItem('pasalacheUserAchievements');
+                // }
+                loadPasalacheStats(); // Recargar para mostrar stats reseteados
+                loadPasalacheHistory();
+                loadAchievementsCount(); // Recargar contador de logros
+                alert('Estadísticas de Pasala Che borradas.');
+            }
+        });
+    }
+});
+
+function loadPasalacheStats() {
+    const STATS_KEY = 'pasalacheUserStats';
+    const defaultStats = {
+        gamesPlayed: 0,
+        gamesWon: 0,
+        gamesLostByErrors: 0,
+        gamesLostByTimeout: 0,
+        totalCorrectAnswers: 0,
+        totalIncorrectAnswers: 0,
+        totalPassedAnswers: 0,
+        totalHelpUsed: 0,
+        bestScore: 0,
+        fastestWinTime: null,
+    };
+
+    const statsJson = localStorage.getItem(STATS_KEY);
+    const stats = statsJson ? { ...defaultStats, ...JSON.parse(statsJson) } : { ...defaultStats };
+
+    document.getElementById('stats-gamesPlayed').textContent = stats.gamesPlayed;
+    document.getElementById('stats-gamesWon').textContent = stats.gamesWon;
+    const totalLost = (stats.gamesLostByErrors || 0) + (stats.gamesLostByTimeout || 0);
+    document.getElementById('stats-gamesLost').textContent = totalLost;
+    
+    let averageAccuracy = 0;
+    const totalAnsweredGames = stats.totalCorrectAnswers + stats.totalIncorrectAnswers;
+    if (totalAnsweredGames > 0) {
+        averageAccuracy = Math.round((stats.totalCorrectAnswers / totalAnsweredGames) * 100);
+    }
+    document.getElementById('stats-averageAccuracy').textContent = `${averageAccuracy}%`;
+    
+    document.getElementById('stats-bestScore').textContent = stats.bestScore;
+    
+    if (stats.fastestWinTime !== null && stats.fastestWinTime !== undefined) {
+        const minutes = Math.floor(stats.fastestWinTime / 60);
+        const seconds = stats.fastestWinTime % 60;
+        document.getElementById('stats-fastestWinTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    } else {
+        document.getElementById('stats-fastestWinTime').textContent = '--:--';
+    }
+    
+    document.getElementById('stats-totalCorrect').textContent = stats.totalCorrectAnswers;
+    document.getElementById('stats-totalIncorrect').textContent = stats.totalIncorrectAnswers;
+    document.getElementById('stats-totalHelpUsed').textContent = stats.totalHelpUsed;
+}
+
+// <<<--- INICIO NUEVA FUNCIÓN loadAchievementsCount --- >>>
+function loadAchievementsCount() {
+    const achievementsElement = document.getElementById('stats-totalAchievements');
+    if (!achievementsElement) {
+        console.warn('Elemento stats-totalAchievements no encontrado en profile.html');
+        return;
+    }
+
+    if (window.CrackTotalLogrosAPI && typeof window.CrackTotalLogrosAPI.cargarLogros === 'function') {
+        try {
+            const todosLosLogrosGuardados = window.CrackTotalLogrosAPI.cargarLogros();
+            let unlockedCount = 0;
+            for (const logroId in todosLosLogrosGuardados) {
+                if (todosLosLogrosGuardados[logroId] && todosLosLogrosGuardados[logroId].unlocked) {
+                    unlockedCount++;
+                }
+            }
+            achievementsElement.textContent = unlockedCount;
+        } catch (error) {
+            console.error("Error al cargar o contar los logros:", error);
+            achievementsElement.textContent = 'Error';
+        }
+    } else {
+        console.warn('CrackTotalLogrosAPI no está disponible. No se puede cargar el contador de logros. Asegúrate de que logros.js se carga ANTES que profile.js y en la página profile.html.');
+        achievementsElement.textContent = 'N/A'; 
+        // Podrías intentar cargar logros.js dinámicamente aquí si fuera necesario,
+        // pero es mejor asegurar el orden de carga en el HTML.
+    }
+}
+// <<<--- FIN NUEVA FUNCIÓN loadAchievementsCount --- >>>
+
+function loadPasalacheHistory() {
+    const HISTORY_KEY = 'pasalacheGameHistory';
+    const historyBody = document.getElementById('gameHistoryBody');
+    if (!historyBody) return;
+
+    const historyJson = localStorage.getItem(HISTORY_KEY);
+    const history = historyJson ? JSON.parse(historyJson) : [];
+
+    if (history.length === 0) {
+        historyBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px; color: var(--text-light);">No hay historial de partidas todavía. ¡A jugar!</td></tr>';
+        return;
+    }
+
+    historyBody.innerHTML = ''; // Clear loading/default message
+
+    history.forEach(game => {
+        const row = historyBody.insertRow();
+        
+        const dateCell = row.insertCell();
+        dateCell.textContent = game.timestamp ? new Date(game.timestamp).toLocaleDateString('es-ES') : 'Fecha desc.';
+
+        const resultCell = row.insertCell();
+        resultCell.textContent = game.result || 'Resultado desc.';
+        if (game.result === 'victory') {
+            resultCell.style.color = 'var(--success)'; 
+        } else if (game.result === 'defeat' || game.result === 'timeout') {
+            resultCell.style.color = 'var(--danger)';
+        }
+
+        const difficultyCell = row.insertCell();
+        difficultyCell.textContent = game.difficulty || 'Normal'; 
+
+        const correctCell = row.insertCell();
+        correctCell.textContent = game.correctAnswers !== undefined ? game.correctAnswers : '-';
+
+        const errorsCell = row.insertCell();
+        errorsCell.textContent = game.incorrectAnswers !== undefined ? game.incorrectAnswers : '-';
+
+        const timeCell = row.insertCell();
+        timeCell.textContent = game.timeSpentFormatted || '--:--';
+    });
+}
+
+// Si main.js tiene funciones de utilidad como shareSite, asegúrate de que se cargue o define.
+// window.shareSite = function() { ... } si no está globalmente disponible. 

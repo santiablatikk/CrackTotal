@@ -4851,7 +4851,7 @@ h3:not([class]) {
 @media (max-width: 992px) { /* Adjust breakpoint as needed */
     .millionaire-container {
         flex-direction: column; /* Stack main content and sidebar */
-        align-items: center;
+    align-items: center;
     }
     .question-block {
         width: 100%;
@@ -4927,10 +4927,147 @@ h3:not([class]) {
 @media (max-width: 576px) {
     .millionaire-container {
         padding: 1rem 0.8rem;
-        border-radius: 12px;
+    border-radius: 12px;
     }
     .millionaire-question {
-        font-size: 1rem;
+    font-size: 1rem;
+    }
+    .option {
+        padding: 10px 12px;
+        font-size: 0.85rem;
+    }
+    .lifeline {
+        gap: 5px;
+    }
+    .lifelines-container {
+        padding: 8px;
+    }
+     .progress-sidebar .level {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        min-width: 70px;
+    }
+}
+
+/* ============================================ */
+/* ======= Responsive Quién Sabe Más ======== */
+/* ============================================ */
+
+/* Styles for Coming Soon Game Card */
+.game-card.coming-soon-card {
+    opacity: 0.6;
+    cursor: default;
+    /* filter: grayscale(80%); Optional: Add grayscale effect */
+}
+
+.game-card.coming-soon-card:hover {
+    transform: none; /* Disable hover effect */
+    box-shadow: 0 10px 20px rgba(0,0,0, 0.3); /* Reset shadow */
+    border-color: rgba(255, 255, 255, 0.06);
+}
+
+.coming-soon-badge-style {
+    background: var(--gradient-accent); /* Use accent color for coming soon */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3), var(--glow-accent);
+}
+
+.game-card.coming-soon-card .play-button {
+    background: var(--background-alt); /* Grey out button */
+    color: var(--text-light);
+    cursor: not-allowed;
+    box-shadow: none;
+    opacity: 0.7;
+}
+
+.game-card.coming-soon-card .play-button:hover {
+    transform: none; /* Disable hover effect */
+    box-shadow: none;
+    filter: none;
+}
+
+@media (max-width: 992px) { /* Adjust breakpoint as needed */
+    .millionaire-container {
+        flex-direction: column; /* Stack main content and sidebar */
+    align-items: center;
+    }
+    .question-block {
+        width: 100%;
+        max-width: 600px; /* Limit width of question area */
+        margin-bottom: 2rem;
+    }
+    .progress-sidebar {
+    width: 100%;
+        max-width: 400px; /* Limit width of sidebar */
+        display: flex; /* Arrange levels horizontally */
+        flex-wrap: wrap; /* Allow wrapping */
+        justify-content: center; /* Center levels */
+        gap: 5px;
+        padding: 1rem;
+        max-height: none; /* Remove fixed height */
+        overflow-y: visible;
+    }
+    .progress-sidebar .level {
+        padding: 5px 10px; /* Smaller level indicators */
+        font-size: 0.8rem;
+        flex-grow: 1; /* Allow levels to grow */
+        min-width: 80px; /* Ensure minimum width */
+    text-align: center;
+}
+    .sidebar-title {
+        display: none; /* Hide sidebar title on mobile */
+    }
+}
+
+@media (max-width: 768px) {
+    .millionaire-container {
+        padding: 1.5rem 1rem;
+    }
+    .millionaire-question {
+        font-size: 1.2rem; /* Smaller question text */
+        margin-bottom: 1rem;
+    }
+    .options-grid {
+        grid-template-columns: 1fr; /* Stack options */
+        gap: 8px;
+    }
+    .option {
+        padding: 12px 15px; /* Adjust padding */
+        font-size: 0.9rem;
+    }
+    .option-letter {
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
+        margin-right: 8px;
+    }
+    .lifelines-container {
+        margin-top: 1.5rem;
+        padding: 10px;
+    }
+    .lifelines-title {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    .lifeline {
+        padding: 8px;
+    }
+    .lifeline svg {
+        width: 18px;
+        height: 18px;
+        margin-bottom: 3px;
+    }
+    .lifeline-name {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .millionaire-container {
+        padding: 1rem 0.8rem;
+    border-radius: 12px;
+    }
+    .millionaire-question {
+    font-size: 1rem;
     }
     .option {
         padding: 10px 12px;
@@ -5032,12 +5169,12 @@ h3:not([class]) {
     }
     .option {
         padding: 12px 15px; /* Adjust padding */
-        font-size: 0.9rem;
-    }
+    font-size: 0.9rem;
+}
     .option-letter {
         width: 25px;
         height: 25px;
-        font-size: 0.8rem;
+    font-size: 0.8rem;
         margin-right: 8px;
     }
     .lifelines-container {
@@ -5045,7 +5182,7 @@ h3:not([class]) {
         padding: 10px;
     }
     .lifelines-title {
-        font-size: 0.9rem;
+    font-size: 0.9rem;
         margin-bottom: 8px;
     }
     .lifeline {
@@ -5067,7 +5204,7 @@ h3:not([class]) {
         border-radius: 12px;
     }
     .millionaire-question {
-        font-size: 1rem;
+    font-size: 1rem;
     }
     .option {
         padding: 10px 12px;
@@ -5125,7 +5262,7 @@ h3:not([class]) {
 @media (max-width: 992px) { /* Adjust breakpoint as needed */
     .millionaire-container {
         flex-direction: column; /* Stack main content and sidebar */
-        align-items: center;
+    align-items: center;
     }
     .question-block {
         width: 100%;
@@ -5145,10 +5282,10 @@ h3:not([class]) {
     }
     .progress-sidebar .level {
         padding: 5px 10px; /* Smaller level indicators */
-        font-size: 0.8rem;
+    font-size: 0.8rem;
         flex-grow: 1; /* Allow levels to grow */
         min-width: 80px; /* Ensure minimum width */
-        text-align: center;
+    text-align: center;
     }
     .sidebar-title {
         display: none; /* Hide sidebar title on mobile */
@@ -5201,7 +5338,7 @@ h3:not([class]) {
 @media (max-width: 576px) {
     .millionaire-container {
         padding: 1rem 0.8rem;
-        border-radius: 12px;
+    border-radius: 12px;
     }
     .millionaire-question {
         font-size: 1rem;
@@ -5262,15 +5399,15 @@ h3:not([class]) {
 @media (max-width: 992px) { /* Adjust breakpoint as needed */
     .millionaire-container {
         flex-direction: column; /* Stack main content and sidebar */
-        align-items: center;
+    align-items: center;
     }
     .question-block {
-        width: 100%;
+    width: 100%;
         max-width: 600px; /* Limit width of question area */
         margin-bottom: 2rem;
     }
     .progress-sidebar {
-        width: 100%;
+    width: 100%;
         max-width: 400px; /* Limit width of sidebar */
         display: flex; /* Arrange levels horizontally */
         flex-wrap: wrap; /* Allow wrapping */
@@ -5285,7 +5422,7 @@ h3:not([class]) {
         font-size: 0.8rem;
         flex-grow: 1; /* Allow levels to grow */
         min-width: 80px; /* Ensure minimum width */
-        text-align: center;
+    text-align: center;
     }
     .sidebar-title {
         display: none; /* Hide sidebar title on mobile */
@@ -5306,7 +5443,7 @@ h3:not([class]) {
     }
     .option {
         padding: 12px 15px; /* Adjust padding */
-        font-size: 0.9rem;
+    font-size: 0.9rem;
     }
     .option-letter {
         width: 25px;
@@ -5345,7 +5482,7 @@ h3:not([class]) {
     }
     .option {
         padding: 10px 12px;
-        font-size: 0.85rem;
+    font-size: 0.85rem;
     }
     .lifeline {
         gap: 5px;
@@ -5437,144 +5574,7 @@ h3:not([class]) {
         font-size: 1.2rem; /* Smaller question text */
         margin-bottom: 1rem;
     }
-    .options-grid {
-        grid-template-columns: 1fr; /* Stack options */
-        gap: 8px;
-    }
-    .option {
-        padding: 12px 15px; /* Adjust padding */
-        font-size: 0.9rem;
-    }
-    .option-letter {
-        width: 25px;
-        height: 25px;
-        font-size: 0.8rem;
-        margin-right: 8px;
-    }
-    .lifelines-container {
-        margin-top: 1.5rem;
-        padding: 10px;
-    }
-    .lifelines-title {
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-    }
-    .lifeline {
-        padding: 8px;
-    }
-    .lifeline svg {
-        width: 18px;
-        height: 18px;
-        margin-bottom: 3px;
-    }
-    .lifeline-name {
-        font-size: 0.7rem;
-    }
-}
-
-@media (max-width: 576px) {
-    .millionaire-container {
-        padding: 1rem 0.8rem;
-        border-radius: 12px;
-    }
-    .millionaire-question {
-        font-size: 1rem;
-    }
-    .option {
-        padding: 10px 12px;
-        font-size: 0.85rem;
-    }
-    .lifeline {
-        gap: 5px;
-    }
-    .lifelines-container {
-        padding: 8px;
-    }
-     .progress-sidebar .level {
-        font-size: 0.75rem;
-        padding: 4px 8px;
-        min-width: 70px;
-    }
-}
-
-/* ============================================ */
-/* ======= Responsive Quién Sabe Más ======== */
-/* ============================================ */
-
-/* Styles for Coming Soon Game Card */
-.game-card.coming-soon-card {
-    opacity: 0.6;
-    cursor: default;
-    /* filter: grayscale(80%); Optional: Add grayscale effect */
-}
-
-.game-card.coming-soon-card:hover {
-    transform: none; /* Disable hover effect */
-    box-shadow: 0 10px 20px rgba(0,0,0, 0.3); /* Reset shadow */
-    border-color: rgba(255, 255, 255, 0.06);
-}
-
-.coming-soon-badge-style {
-    background: var(--gradient-accent); /* Use accent color for coming soon */
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3), var(--glow-accent);
-}
-
-.game-card.coming-soon-card .play-button {
-    background: var(--background-alt); /* Grey out button */
-    color: var(--text-light);
-    cursor: not-allowed;
-    box-shadow: none;
-    opacity: 0.7;
-}
-
-.game-card.coming-soon-card .play-button:hover {
-    transform: none; /* Disable hover effect */
-    box-shadow: none;
-    filter: none;
-}
-
-@media (max-width: 992px) { /* Adjust breakpoint as needed */
-    .millionaire-container {
-        flex-direction: column; /* Stack main content and sidebar */
-        align-items: center;
-    }
-    .question-block {
-        width: 100%;
-        max-width: 600px; /* Limit width of question area */
-        margin-bottom: 2rem;
-    }
-    .progress-sidebar {
-        width: 100%;
-        max-width: 400px; /* Limit width of sidebar */
-        display: flex; /* Arrange levels horizontally */
-        flex-wrap: wrap; /* Allow wrapping */
-        justify-content: center; /* Center levels */
-        gap: 5px;
-        padding: 1rem;
-        max-height: none; /* Remove fixed height */
-        overflow-y: visible;
-    }
-    .progress-sidebar .level {
-        padding: 5px 10px; /* Smaller level indicators */
-        font-size: 0.8rem;
-        flex-grow: 1; /* Allow levels to grow */
-        min-width: 80px; /* Ensure minimum width */
-        text-align: center;
-    }
-    .sidebar-title {
-        display: none; /* Hide sidebar title on mobile */
-    }
-}
-
-@media (max-width: 768px) {
-    .millionaire-container {
-        padding: 1.5rem 1rem;
-    }
-    .millionaire-question {
-        font-size: 1.2rem; /* Smaller question text */
-        margin-bottom: 1rem;
-    }
-    .options-grid {
+     .options-grid {
         grid-template-columns: 1fr; /* Stack options */
         gap: 8px;
     }

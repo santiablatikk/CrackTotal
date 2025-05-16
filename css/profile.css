@@ -74,6 +74,26 @@
 .stat-icon.incorrect { background-color: rgba(255, 84, 112, 0.2); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FF5470' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E"); }
 .stat-icon.help { background-color: rgba(171, 139, 250, 0.2); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23AB8BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'%3E%3C/path%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'%3E%3C/line%3E%3C/svg%3E"); }
 
+/* New class for the circular background of the achievements/trophy icon */
+.stat-icon.achievements-icon {
+    background-color: rgba(255, 215, 0, 0.15); /* Light gold background for the circle */
+    background-image: none !important; /* Ensure no other background image is applied */
+}
+
+/* Styling for Font Awesome icons (the <i> tag) when inside a .stat-icon */
+.stat-icon > i.fas,
+.stat-icon > i.fab {
+    font-size: 24px; /* Adjusted size to better fill the 45px circle */
+    line-height: 1; /* Ensure proper vertical alignment */
+    background-image: none !important; /* Remove any inherited background-image from .stat-icon */
+    /* Color will be set by more specific rules or inherited */
+}
+
+/* Specific color for the Font Awesome trophy icon graphic */
+.stat-icon.achievements-icon > i.fa-trophy {
+    color: #FFD700; /* Gold color for the trophy character */
+}
+
 .stat-value {
     font-size: 1.8rem;
     font-weight: 700;
