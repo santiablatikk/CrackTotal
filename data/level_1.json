@@ -4,378 +4,753 @@
     "preguntas": [
       {
         "pregunta": "¿Cuántos jugadores hay en cancha por equipo en un partido de fútbol?",
-        "respuesta_correcta": "11",
-        "opciones": ["9", "10", "11", "12"]
+        "opciones": {
+          "A": "9",
+          "B": "10",
+          "C": "11",
+          "D": "12"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿En qué país se considera que se originó el fútbol moderno?",
-        "respuesta_correcta": "Inglaterra",
-        "opciones": ["Brasil", "Argentina", "Inglaterra", "Alemania"]
+        "opciones": {
+          "A": "Brasil",
+          "B": "Argentina",
+          "C": "Inglaterra",
+          "D": "Alemania"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué significa si el árbitro muestra una tarjeta roja a un jugador?",
-        "respuesta_correcta": "Expulsión",
-        "opciones": ["Amonestación", "Cambio", "Expulsión", "Saque de meta"]
+        "opciones": {
+          "A": "Amonestación",
+          "B": "Cambio",
+          "C": "Expulsión",
+          "D": "Saque de meta"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cómo se llama la estructura con red donde se marcan los goles?",
-        "respuesta_correcta": ["Arco", "Porteria", "Meta"],
-        "opciones": ["Arco", "Bandera de córner", "Palo", "Red"]
+        "opciones": {
+          "A": "Arco",
+          "B": "Bandera de córner",
+          "C": "Palo",
+          "D": "Red"
+        },
+        "respuesta_correcta": "A"
       },
       {
         "pregunta": "¿Quién es la máxima autoridad dentro de la cancha durante un partido?",
-        "respuesta_correcta": ["Arbitro", "Juez", "Referee"],
-        "opciones": ["Entrenador", "Arbitro", "Capitán del equipo", "Juez de línea"]
+        "opciones": {
+          "A": "Entrenador",
+          "B": "Arbitro",
+          "C": "Capitán del equipo",
+          "D": "Juez de línea"
+        },
+        "respuesta_correcta": "B"
       },
       {
         "pregunta": "¿Qué forma geométrica tiene una pelota de fútbol estándar?",
-        "respuesta_correcta": ["Esferica", "Esfera", "Redonda"],
-        "opciones": ["Cúbica", "Ovalada", "Esferica", "Cilíndrica"]
+        "opciones": {
+          "A": "Cúbica",
+          "B": "Ovalada",
+          "C": "Esferica",
+          "D": "Cilíndrica"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿De qué color es la camiseta principal tradicional del Real Madrid?",
-        "respuesta_correcta": "Blanca",
-        "opciones": ["Azul", "Roja", "Blanca", "Negra"]
+        "opciones": {
+          "A": "Azul",
+          "B": "Roja",
+          "C": "Blanca",
+          "D": "Negra"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué país ganó el primer Mundial de Fútbol en 1930?",
-        "respuesta_correcta": "Uruguay",
-        "opciones": ["Argentina", "Brasil", "Uruguay", "Italia"]
+        "opciones": {
+          "A": "Argentina",
+          "B": "Brasil",
+          "C": "Uruguay",
+          "D": "Italia"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cómo se llama el torneo MÁS importante de selecciones nacionales que se juega cada 4 años?",
-        "respuesta_correcta": ["Copa del Mundo", "Mundial", "Copa Mundial"],
-        "opciones": ["Copa América", "Eurocopa", "Copa del Mundo", "Champions League"]
+        "opciones": {
+          "A": "Copa América",
+          "B": "Eurocopa",
+          "C": "Copa del Mundo",
+          "D": "Champions League"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuántos minutos dura el tiempo reglamentario de un partido de fútbol (sin contar tiempo añadido o alargue)?",
-        "respuesta_correcta": "90",
-        "opciones": ["45", "60", "90", "120"]
+        "opciones": {
+          "A": "45",
+          "B": "60",
+          "C": "90",
+          "D": "120"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuál es el torneo de clubes más prestigioso de Europa?",
-        "respuesta_correcta": "Champions League",
-        "opciones": ["Europa League", "Copa Libertadores", "Champions League", "Mundial de Clubes"]
+        "opciones": {
+          "A": "Europa League",
+          "B": "Copa Libertadores",
+          "C": "Champions League",
+          "D": "Mundial de Clubes"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿En qué famoso estadio juega Boca Juniors como local?",
-        "respuesta_correcta": "La Bombonera",
-        "opciones": ["Monumental", "Camp Nou", "La Bombonera", "San Siro"]
+        "opciones": {
+          "A": "Monumental",
+          "B": "Camp Nou",
+          "C": "La Bombonera",
+          "D": "San Siro"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuál es el apodo principal de la selección de fútbol de Brasil?",
-        "respuesta_correcta": "La Canarinha",
-        "opciones": ["La Verdeamarela", "Scratch du Oro", "La Canarinha", "Los Cariocas"]
+        "opciones": {
+          "A": "La Verdeamarela",
+          "B": "Scratch du Oro",
+          "C": "La Canarinha",
+          "D": "Los Cariocas"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cómo se llama el estadio principal del FC Barcelona?",
-        "respuesta_correcta": "Camp Nou",
-        "opciones": ["Santiago Bernabéu", "Allianz Arena", "Camp Nou", "Old Trafford"]
+        "opciones": {
+          "A": "Santiago Bernabéu",
+          "B": "Allianz Arena",
+          "C": "Camp Nou",
+          "D": "Old Trafford"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué selección nacional de fútbol es conocida como 'La Albiceleste'?",
-        "respuesta_correcta": "Argentina",
-        "opciones": ["Uruguay", "Colombia", "Argentina", "Paraguay"]
+        "opciones": {
+          "A": "Uruguay",
+          "B": "Colombia",
+          "C": "Argentina",
+          "D": "Paraguay"
+        },
+        "respuesta_correcta": "C"
       },
-       {
+      {
         "pregunta": "¿Qué significa si el árbitro muestra una tarjeta amarilla a un jugador?",
-        "respuesta_correcta": ["Amonestacion", "Advertencia"],
-        "opciones": ["Expulsión", "Falta leve", "Amonestacion", "Cambio obligatorio"]
+        "opciones": {
+          "A": "Expulsión",
+          "B": "Falta leve",
+          "C": "Amonestacion",
+          "D": "Cambio obligatorio"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Con qué parte del cuerpo se debe realizar un saque lateral?",
-        "respuesta_correcta": "Manos",
-        "opciones": ["Pies", "Cabeza", "Manos", "Rodillas"]
+        "opciones": {
+          "A": "Pies",
+          "B": "Cabeza",
+          "C": "Manos",
+          "D": "Rodillas"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿De qué color es generalmente el pasto de una cancha de fútbol?",
-        "respuesta_correcta": "Verde",
-        "opciones": ["Azul", "Rojo", "Verde", "Amarillo"]
+        "opciones": {
+          "A": "Azul",
+          "B": "Rojo",
+          "C": "Verde",
+          "D": "Amarillo"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cómo se llama comúnmente el calzado especial con tapones que usan los futbolistas?",
-        "respuesta_correcta": ["Botines", "Zapatos de futbol", "Tacos", "Chimpunes"],
-        "opciones": ["Zapatillas", "Sandalias", "Botines", "Mocasines"]
+        "opciones": {
+          "A": "Zapatillas",
+          "B": "Sandalias",
+          "C": "Botines",
+          "D": "Mocasines"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuántos tiempos tiene un partido de fútbol estándar?",
-        "respuesta_correcta": "Dos",
-        "opciones": ["Uno", "Tres", "Dos", "Cuatro"]
+        "opciones": {
+          "A": "Uno",
+          "B": "Tres",
+          "C": "Dos",
+          "D": "Cuatro"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué parte del cuerpo (excepto para el arquero en su área) no se puede usar intencionalmente para tocar la pelota?",
-        "respuesta_correcta": "Manos",
-        "opciones": ["Pies", "Cabeza", "Manos", "Pecho"]
+        "opciones": {
+          "A": "Pies",
+          "B": "Cabeza",
+          "C": "Manos",
+          "D": "Pecho"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Quién dirige tácticamente al equipo desde el banco de suplentes?",
-        "respuesta_correcta": ["Director Tecnico", "Entrenador", "DT"],
-        "opciones": ["Capitán", "Presidente del club", "Director Tecnico", "Aguatero"]
+        "opciones": {
+          "A": "Capitán",
+          "B": "Presidente del club",
+          "C": "Director Tecnico",
+          "D": "Aguatero"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué equipo inglés es conocido popularmente como 'The Blues'?",
-        "respuesta_correcta": "Chelsea",
-        "opciones": ["Arsenal", "Liverpool", "Chelsea", "Manchester City"]
+        "opciones": {
+          "A": "Arsenal",
+          "B": "Liverpool",
+          "C": "Chelsea",
+          "D": "Manchester City"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuántas Copas del Mundo ha ganado la selección de Brasil?",
-        "respuesta_correcta": "5",
-        "opciones": ["3", "4", "5", "6"]
+        "opciones": {
+          "A": "3",
+          "B": "4",
+          "C": "5",
+          "D": "6"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué selección europea es conocida como 'Les Bleus'?",
-        "respuesta_correcta": "Francia",
-        "opciones": ["Alemania", "España", "Francia", "Italia"]
+        "opciones": {
+          "A": "Alemania",
+          "B": "España",
+          "C": "Francia",
+          "D": "Italia"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿En qué liga europea juega principalmente el Liverpool FC?",
-        "respuesta_correcta": "Premier League",
-        "opciones": ["La Liga", "Serie A", "Premier League", "Bundesliga"]
+        "opciones": {
+          "A": "La Liga",
+          "B": "Serie A",
+          "C": "Premier League",
+          "D": "Bundesliga"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué famoso jugador portugués es apodado 'CR7' o 'El Bicho'?",
-        "respuesta_correcta": ["Cristiano Ronaldo", "Ronaldo", "CR7"],
-        "opciones": ["Lionel Messi", "Neymar Jr.", "Cristiano Ronaldo", "Kylian Mbappé"]
+        "opciones": {
+          "A": "Lionel Messi",
+          "B": "Neymar Jr.",
+          "C": "Cristiano Ronaldo",
+          "D": "Kylian Mbappé"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué equipo alemán, conocido por su dominio reciente, viste de rojo?",
-        "respuesta_correcta": ["Bayern Munich", "Bayern Munchen", "Bayern"],
-        "opciones": ["Borussia Dortmund", "RB Leipzig", "Bayern Munich", "Schalke 04"]
+        "opciones": {
+          "A": "Borussia Dortmund",
+          "B": "RB Leipzig",
+          "C": "Bayern Munich",
+          "D": "Schalke 04"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué continente acogió la Copa del Mundo 2022?",
-        "respuesta_correcta": "Asia",
-        "opciones": ["Europa", "América", "Asia", "África"]
+        "opciones": {
+          "A": "Europa",
+          "B": "América",
+          "C": "Asia",
+          "D": "África"
+        },
+        "respuesta_correcta": "C"
       },
-       {
+      {
         "pregunta": "¿Qué país ganó la Copa América en 2021 venciendo a Brasil en la final?",
-        "respuesta_correcta": "Argentina",
-        "opciones": ["Chile", "Uruguay", "Argentina", "Colombia"]
+        "opciones": {
+          "A": "Chile",
+          "B": "Uruguay",
+          "C": "Argentina",
+          "D": "Colombia"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿En qué país se encuentra la liga de fútbol conocida como 'Premier League'?",
-        "respuesta_correcta": "Inglaterra",
-        "opciones": ["España", "Italia", "Inglaterra", "Alemania"]
+        "opciones": {
+          "A": "España",
+          "B": "Italia",
+          "C": "Inglaterra",
+          "D": "Alemania"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué jugador argentino es famoso por haber ganado múltiples Balones de Oro?",
-        "respuesta_correcta": "Lionel Messi",
-        "opciones": ["Diego Maradona", "Alfredo Di Stéfano", "Lionel Messi", "Juan Román Riquelme"]
+        "opciones": {
+          "A": "Diego Maradona",
+          "B": "Alfredo Di Stéfano",
+          "C": "Lionel Messi",
+          "D": "Juan Román Riquelme"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué país fue sede del Mundial de Fútbol 2018?",
-        "respuesta_correcta": "Rusia",
-        "opciones": ["Alemania", "Brasil", "Rusia", "Sudáfrica"]
+        "opciones": {
+          "A": "Alemania",
+          "B": "Brasil",
+          "C": "Rusia",
+          "D": "Sudáfrica"
+        },
+        "respuesta_correcta": "C"
       },
-       {
+      {
         "pregunta": "¿Qué jugador argentino llevó el número 10 en la conquista del Mundial 2022?",
-        "respuesta_correcta": "Lionel Messi",
-        "opciones": ["Ángel Di María", "Lautaro Martínez", "Lionel Messi", "Julián Álvarez"]
+        "opciones": {
+          "A": "Ángel Di María",
+          "B": "Lautaro Martínez",
+          "C": "Lionel Messi",
+          "D": "Julián Álvarez"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué acción ilegal se comete generalmente al hacer caer a un jugador contrario de forma antirreglamentaria?",
-        "respuesta_correcta": ["Falta", "Infraccion"],
-        "opciones": ["Gol", "Saque de arco", "Falta", "Córner"]
+        "opciones": {
+          "A": "Gol",
+          "B": "Saque de arco",
+          "C": "Falta",
+          "D": "Córner"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cómo se llama la remera principal que identifica a los jugadores de un equipo?",
-        "respuesta_correcta": ["Camiseta", "Playera", "Jersey"],
-        "opciones": ["Pantalón", "Medias", "Camiseta", "Canilleras"]
+        "opciones": {
+          "A": "Pantalón",
+          "B": "Medias",
+          "C": "Camiseta",
+          "D": "Canilleras"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuál es el objetivo principal del fútbol para ganar un partido?",
-        "respuesta_correcta": ["Hacer goles", "Marcar goles", "Anotar goles"],
-        "opciones": ["Evitar goles", "Dar más pases", "Hacer goles", "Correr más rápido"]
+        "opciones": {
+          "A": "Evitar goles",
+          "B": "Dar más pases",
+          "C": "Hacer goles",
+          "D": "Correr más rápido"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué famoso equipo inglés es conocido como los 'Red Devils' (Diablos Rojos)?",
-        "respuesta_correcta": "Manchester United",
-        "opciones": ["Liverpool", "Arsenal", "Manchester United", "Manchester City"]
+        "opciones": {
+          "A": "Liverpool",
+          "B": "Arsenal",
+          "C": "Manchester United",
+          "D": "Manchester City"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué país europeo tiene una famosa selección nacional apodada la 'Azzurra'?",
-        "respuesta_correcta": "Italia",
-        "opciones": ["Francia", "España", "Italia", "Portugal"]
+        "opciones": {
+          "A": "Francia",
+          "B": "España",
+          "C": "Italia",
+          "D": "Portugal"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Quién es el único jugador del equipo que puede usar legalmente las manos dentro de su propia área?",
-        "respuesta_correcta": ["Arquero", "Portero", "Guardameta"],
-        "opciones": ["Defensor central", "Delantero", "Arquero", "Mediocampista"]
+        "opciones": {
+          "A": "Defensor central",
+          "B": "Delantero",
+          "C": "Arquero",
+          "D": "Mediocampista"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué famoso club italiano de Turín viste tradicionalmente de negro y blanco?",
-        "respuesta_correcta": "Juventus",
-        "opciones": ["Inter de Milán", "AC Milan", "Juventus", "Napoli"]
+        "opciones": {
+          "A": "Inter de Milán",
+          "B": "AC Milan",
+          "C": "Juventus",
+          "D": "Napoli"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué número suele usar el arquero titular?",
-        "respuesta_correcta": "1",
-        "opciones": ["9", "10", "1", "7"]
+        "opciones": {
+          "A": "9",
+          "B": "10",
+          "C": "1",
+          "D": "7"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cómo se llama el clásico rival de Independiente?",
-        "respuesta_correcta": ["Racing Club", "Racing"],
-        "opciones": ["Boca Juniors", "River Plate", "Racing Club", "San Lorenzo"]
+        "opciones": {
+          "A": "Boca Juniors",
+          "B": "River Plate",
+          "C": "Racing Club",
+          "D": "San Lorenzo"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué país organizó el Mundial de Fútbol 2022?",
-        "respuesta_correcta": "Qatar",
-        "opciones": ["Estados Unidos", "China", "Qatar", "Australia"]
+        "opciones": {
+          "A": "Estados Unidos",
+          "B": "China",
+          "C": "Qatar",
+          "D": "Australia"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿De qué color es la camiseta principal de la selección de Italia?",
-        "respuesta_correcta": "Azul",
-        "opciones": ["Blanca", "Roja", "Azul", "Verde"]
+        "opciones": {
+          "A": "Blanca",
+          "B": "Roja",
+          "C": "Azul",
+          "D": "Verde"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuántos puntos se otorgan por una victoria en la mayoría de las ligas?",
-        "respuesta_correcta": "3",
-        "opciones": ["1", "2", "3", "4"]
+        "opciones": {
+          "A": "1",
+          "B": "2",
+          "C": "3",
+          "D": "4"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿En qué liga juega el Paris Saint-Germain (PSG)?",
-        "respuesta_correcta": ["Ligue 1", "Liga Francesa"],
-        "opciones": ["Premier League", "Serie A", "Ligue 1", "Bundesliga"]
+        "opciones": {
+          "A": "Premier League",
+          "B": "Serie A",
+          "C": "Ligue 1",
+          "D": "Bundesliga"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cómo se llama el área pequeña frente al arco donde se para el arquero para los saques de meta?",
-        "respuesta_correcta": ["Area chica", "Area de meta"],
-        "opciones": ["Área penal", "Medialuna", "Area chica", "Círculo central"]
+        "opciones": {
+          "A": "Área penal",
+          "B": "Medialuna",
+          "C": "Area chica",
+          "D": "Círculo central"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué club italiano es conocido como los 'Rossoneri' por sus colores rojo y negro?",
-        "respuesta_correcta": ["AC Milan", "Milan"],
-        "opciones": ["Inter de Milán", "Juventus", "AC Milan", "Roma"]
+        "opciones": {
+          "A": "Inter de Milán",
+          "B": "Juventus",
+          "C": "AC Milan",
+          "D": "Roma"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué número de camiseta usó Diego Maradona en el Mundial 1986?",
-        "respuesta_correcta": "10",
-        "opciones": ["7", "9", "10", "11"]
+        "opciones": {
+          "A": "7",
+          "B": "9",
+          "C": "10",
+          "D": "11"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuál es el clásico rival del Real Madrid?",
-        "respuesta_correcta": ["Barcelona", "FC Barcelona"],
-        "opciones": ["Atlético de Madrid", "Valencia", "Barcelona", "Sevilla"]
+        "opciones": {
+          "A": "Atlético de Madrid",
+          "B": "Valencia",
+          "C": "Barcelona",
+          "D": "Sevilla"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿En qué país se encuentra la ciudad de Mánchester, hogar de dos famosos equipos?",
-        "respuesta_correcta": "Inglaterra",
-        "opciones": ["Escocia", "Gales", "Inglaterra", "Irlanda"]
+        "opciones": {
+          "A": "Escocia",
+          "B": "Gales",
+          "C": "Inglaterra",
+          "D": "Irlanda"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cómo se llama el descanso entre los dos tiempos de un partido?",
-        "respuesta_correcta": "Entretiepo",
-        "opciones": ["Alargue", "Tiempo muerto", "Entretiepo", "Suplementario"]
+        "opciones": {
+          "A": "Alargue",
+          "B": "Tiempo muerto",
+          "C": "Entretiepo",
+          "D": "Suplementario"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué selección ganó el Mundial de 2018?",
-        "respuesta_correcta": "Francia",
-        "opciones": ["Croacia", "Bélgica", "Francia", "Inglaterra"]
+        "opciones": {
+          "A": "Croacia",
+          "B": "Bélgica",
+          "C": "Francia",
+          "D": "Inglaterra"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuál es el nombre del estadio donde juega como local la selección argentina usualmente?",
-        "respuesta_correcta": ["Monumental", "Estadio Monumental"],
-        "opciones": ["La Bombonera", "Libertadores de América", "Monumental", "El Cilindro"]
+        "opciones": {
+          "A": "La Bombonera",
+          "B": "Libertadores de América",
+          "C": "Monumental",
+          "D": "El Cilindro"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿De qué colores es la camiseta principal de Boca Juniors?",
-        "respuesta_correcta": ["Azul y amarillo", "Azul y oro"],
-        "opciones": ["Blanco y rojo", "Celeste y blanco", "Azul y amarillo", "Negro y rojo"]
+        "opciones": {
+          "A": "Blanco y rojo",
+          "B": "Celeste y blanco",
+          "C": "Azul y amarillo",
+          "D": "Negro y rojo"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué jugador brasileño es conocido mundialmente como 'Neymar'?",
-        "respuesta_correcta": "Neymar Jr.",
-        "opciones": ["Pelé", "Ronaldinho", "Neymar Jr.", "Vinicius Jr."]
+        "opciones": {
+          "A": "Pelé",
+          "B": "Ronaldinho",
+          "C": "Neymar Jr.",
+          "D": "Vinicius Jr."
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuántos minutos dura típicamente el entretiempo?",
-        "respuesta_correcta": "15",
-        "opciones": ["5", "10", "15", "20"]
+        "opciones": {
+          "A": "5",
+          "B": "10",
+          "C": "15",
+          "D": "20"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué equipo es conocido como el 'Rey de Copas' en Argentina por sus 7 Libertadores?",
-        "respuesta_correcta": "Independiente",
-        "opciones": ["Boca Juniors", "River Plate", "Independiente", "Racing Club"]
+        "opciones": {
+          "A": "Boca Juniors",
+          "B": "River Plate",
+          "C": "Independiente",
+          "D": "Racing Club"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿En qué país juega actualmente Lionel Messi (a mediados de 2024)?",
-        "respuesta_correcta": "Estados Unidos",
-        "opciones": ["España", "Francia", "Estados Unidos", "Arabia Saudita"]
+        "opciones": {
+          "A": "España",
+          "B": "Francia",
+          "C": "Estados Unidos",
+          "D": "Arabia Saudita"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuántos jugadores suplentes pueden estar sentados en el banco, como máximo, en competiciones oficiales?",
-        "respuesta_correcta": "12",
-        "opciones": ["7", "9", "12", "15"]
+        "opciones": {
+          "A": "7",
+          "B": "9",
+          "C": "12",
+          "D": "15"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cómo se llama la línea que divide el campo de juego en dos mitades?",
-        "respuesta_correcta": ["Línea de medio campo", "Mitad de cancha"],
-        "opciones": ["Línea de fondo", "Línea lateral", "Línea de medio campo", "Línea de gol"]
+        "opciones": {
+          "A": "Línea de fondo",
+          "B": "Línea lateral",
+          "C": "Línea de medio campo",
+          "D": "Línea de gol"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué equipo inglés tiene como apodo 'The Gunners'?",
-        "respuesta_correcta": "Arsenal",
-        "opciones": ["Tottenham Hotspur", "Chelsea", "Arsenal", "Manchester United"]
+        "opciones": {
+          "A": "Tottenham Hotspur",
+          "B": "Chelsea",
+          "C": "Arsenal",
+          "D": "Manchester United"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿De qué color son las tarjetas que usa el árbitro para sancionar?",
-        "respuesta_correcta": ["Amarilla y Roja", "Roja y Amarilla"],
-        "opciones": ["Verde y Azul", "Negra y Blanca", "Amarilla y Roja", "Naranja y Violeta"]
+        "opciones": {
+          "A": "Verde y Azul",
+          "B": "Negra y Blanca",
+          "C": "Amarilla y Roja",
+          "D": "Naranja y Violeta"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cómo se llama el punto blanco en el centro del campo desde donde se inicia el partido?",
-        "respuesta_correcta": ["Punto central", "Círculo central"],
-        "opciones": ["Punto penal", "Area de esquina", "Punto central", "Punto de saque lateral"]
+        "opciones": {
+          "A": "Punto penal",
+          "B": "Area de esquina",
+          "C": "Punto central",
+          "D": "Punto de saque lateral"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué selección sudamericana es conocida como 'La Celeste'?",
-        "respuesta_correcta": "Uruguay",
-        "opciones": ["Chile", "Perú", "Uruguay", "Ecuador"]
+        "opciones": {
+          "A": "Chile",
+          "B": "Perú",
+          "C": "Uruguay",
+          "D": "Ecuador"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuál es el nombre del torneo de selecciones más importante de Sudamérica?",
-        "respuesta_correcta": "Copa América",
-        "opciones": ["Copa Libertadores", "Copa Sudamericana", "Copa América", "Recopa Sudamericana"]
+        "opciones": {
+          "A": "Copa Libertadores",
+          "B": "Copa Sudamericana",
+          "C": "Copa América",
+          "D": "Recopa Sudamericana"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué parte del cuerpo utiliza principalmente un arquero para atajar?",
-        "respuesta_correcta": "Manos",
-        "opciones": ["Pies", "Cabeza", "Manos", "Hombros"]
+        "opciones": {
+          "A": "Pies",
+          "B": "Cabeza",
+          "C": "Manos",
+          "D": "Hombros"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cómo se llama el tiro que se realiza desde una esquina del campo?",
-        "respuesta_correcta": ["Córner", "Tiro de esquina"],
-        "opciones": ["Saque de meta", "Tiro libre directo", "Córner", "Penal"]
+        "opciones": {
+          "A": "Saque de meta",
+          "B": "Tiro libre directo",
+          "C": "Córner",
+          "D": "Penal"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué equipo de fútbol juega como local en el estadio Anfield?",
-        "respuesta_correcta": "Liverpool",
-        "opciones": ["Everton", "Manchester City", "Liverpool", "Leeds United"]
+        "opciones": {
+          "A": "Everton",
+          "B": "Manchester City",
+          "C": "Liverpool",
+          "D": "Leeds United"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿De qué nacionalidad es el jugador Kylian Mbappé?",
-        "respuesta_correcta": "Francesa",
-        "opciones": ["Belga", "Española", "Francesa", "Portuguesa"]
+        "opciones": {
+          "A": "Belga",
+          "B": "Española",
+          "C": "Francesa",
+          "D": "Portuguesa"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cómo se llama el área grande delimitada frente al arco?",
-        "respuesta_correcta": ["Área penal", "Área grande"],
-        "opciones": ["Área chica", "Área técnica", "Área penal", "Medialuna del área"]
+        "opciones": {
+          "A": "Área chica",
+          "B": "Área técnica",
+          "C": "Área penal",
+          "D": "Medialuna del área"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Qué número usaba habitualmente Pelé?",
-        "respuesta_correcta": "10",
-        "opciones": ["7", "8", "10", "11"]
+        "opciones": {
+          "A": "7",
+          "B": "8",
+          "C": "10",
+          "D": "11"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuál es la capital de España, hogar del Real Madrid y Atlético de Madrid?",
-        "respuesta_correcta": "Madrid",
-        "opciones": ["Barcelona", "Sevilla", "Madrid", "Valencia"]
+        "opciones": {
+          "A": "Barcelona",
+          "B": "Sevilla",
+          "C": "Madrid",
+          "D": "Valencia"
+        },
+        "respuesta_correcta": "C"
       },
       {
         "pregunta": "¿Cuántos puntos obtiene un equipo por empatar un partido?",
-        "respuesta_correcta": "1",
-        "opciones": ["0", "2", "1", "3"]
+        "opciones": {
+          "A": "0",
+          "B": "2",
+          "C": "1",
+          "D": "3"
+        },
+        "respuesta_correcta": "C"
       }
     ]
 }
