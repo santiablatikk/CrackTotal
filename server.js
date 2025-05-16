@@ -32,28 +32,43 @@ server.listen(PORT, () => {
 let allQuestions = {}; // Store questions globally { level: [processedQuestion, ...] }
 
 function processRawQuestion(rawQ, level) {
-    // Ensure basic structure exists
-    if (!rawQ || typeof rawQ.pregunta !== 'string' || typeof rawQ.respuesta_correcta !== 'string' || !rawQ.opciones || typeof rawQ.opciones !== 'object') {
-        console.warn(`Invalid structure (missing question/answer/options object) skipped in Level ${level}:`, rawQ.pregunta);
+    // Ensure basic structure exists based on level
+    if (!rawQ || typeof rawQ.pregunta !== 'string' || typeof rawQ.respuesta_correcta !== 'string') {
+        console.warn(`Invalid basic structure (missing question/answer) skipped in Level ${level}:`, rawQ.pregunta);
         return null;
     }
 
+    let optionsArray = [];
+    let correctIndex = -1;
+    let correctAnswerText = '';
     const optionKeys = ['A', 'B', 'C', 'D'];
-    const optionsArray = optionKeys.map(key => rawQ.opciones[key]).filter(opt => typeof opt === 'string');
 
-    if (optionsArray.length !== 4) {
-        console.warn(`Question in Level ${level} does not have exactly 4 string options in options object:`, rawQ.pregunta);
-        return null; // Skip incomplete questions
+    if (level > 1) {
+        // Levels 2-6 expect options object {A, B, C, D}
+        if (!rawQ.opciones || typeof rawQ.opciones !== 'object') {
+            console.warn(`Missing or invalid 'opciones' object for L > 1 question skipped:`, rawQ.pregunta);
+            return null;
+        }
+        optionsArray = optionKeys.map(key => rawQ.opciones[key]).filter(opt => typeof opt === 'string');
+        if (optionsArray.length !== 4) {
+            console.warn(`Question in Level ${level} does not have exactly 4 string options:`, rawQ.pregunta);
+            return null; // Skip incomplete questions for levels > 1
+        }
+        correctIndex = optionKeys.indexOf(rawQ.respuesta_correcta);
+        if (correctIndex === -1) {
+            console.warn(`Invalid correct answer key ('${rawQ.respuesta_correcta}') for Q: ${rawQ.pregunta} in Level ${level}`);
+            return null; // Skip if correct answer key is wrong
+        }
+        correctAnswerText = optionsArray[correctIndex]; // Get the text of the correct option
+
+    } else {
+        // Level 1 expects answer text directly in respuesta_correcta
+        // No options object is needed or processed for Level 1
+        optionsArray = []; // No multiple choice options for level 1
+        correctIndex = -1;
+        correctAnswerText = rawQ.respuesta_correcta; // The correct answer IS the text itself
+        // No need to check rawQ.opciones here anymore
     }
-
-    const correctKey = rawQ.respuesta_correcta.toUpperCase();
-    const correctIndex = optionKeys.indexOf(correctKey);
-
-    if (correctIndex === -1) {
-        console.warn(`Invalid correct answer key ('${rawQ.respuesta_correcta}') for Q: ${rawQ.pregunta} in Level ${level}. Expected A, B, C, or D.`);
-        return null; // Skip if correct answer key is wrong
-    }
-    const correctAnswerText = optionsArray[correctIndex]; // Get the text of the correct option
 
     // Normalize the extracted correct answer text for comparison
     const normalizedCorrectAnswer = correctAnswerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "");
@@ -65,10 +80,10 @@ function processRawQuestion(rawQ, level) {
 
     return {
         text: rawQ.pregunta,
-        options: optionsArray, // Array of options text [A_text, B_text, C_text, D_text]
-        correctIndex: correctIndex, // Index (0-3) of the correct option
+        options: optionsArray, // Array of options text [A, B, C, D] for levels > 1
+        correctIndex: correctIndex, // Index (0-3) of the correct option for levels > 1
         correctAnswerText: normalizedCorrectAnswer, // Store the processed, normalized correct answer text
-        level: level // Keep level information
+        level: level
     };
 }
 
@@ -668,8 +683,8 @@ function sendNextQuestion(roomId) {
     const questionPayload = {
         level: room.currentQuestion.level,
         text: room.currentQuestion.text,
-        // Send options immediately for all levels
-        options: room.currentQuestion.options
+        // Send options immediately for levels > 1 for simplicity
+        options: room.currentQuestion.level > 1 ? room.currentQuestion.options : []
     };
 
      // Ensure players exist before accessing properties
@@ -731,71 +746,94 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
     const question = room.currentQuestion;
     let isCorrect = false;
     let pointsAwarded = 0;
-    let submittedAnswerIndex = -1;
-    let submittedAnswerTextForDisplay = ''; // For displaying what was typed, if text was used
-    let answerMethod = ''; // 'index' or 'text'
+    let submittedAnswerIndex = -1; // For levels > 1 option clicks
+    let submittedAnswerText = ''; // For level 1 OR level > 1 text input
+    let answerMethod = ''; // Track how the answer was submitted ('text' or 'index')
 
-    // Normalize submitted text answer if present (for text input as an alternative)
-    const playerInputText = payload && typeof payload.answerText === 'string'
+    // Normalize submitted text answer if present
+    const playerAnswerText = payload && typeof payload.answerText === 'string'
         ? payload.answerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "")
         : '';
-    submittedAnswerTextForDisplay = payload?.answerText || '';
+    submittedAnswerText = payload?.answerText || ''; // Keep original for display
 
-    if (payload && typeof payload.selectedIndex === 'number') {
-        // Primary method: Answer by selected index
-        submittedAnswerIndex = payload.selectedIndex;
-        if (submittedAnswerIndex >= 0 && submittedAnswerIndex < question.options.length) {
-            isCorrect = submittedAnswerIndex === question.correctIndex;
-            answerMethod = 'index';
-            console.log(`Room ${roomId} L${question.level} Answer (Index): Submitted Index=${submittedAnswerIndex}, Correct Index=${question.correctIndex}, Result=${isCorrect}`);
+    if (question.level === 1) {
+        // Level 1: Always check text
+        if (playerAnswerText) {
+            isCorrect = playerAnswerText === question.correctAnswerText;
+            answerMethod = 'text';
+            console.log(`Room ${roomId} L1 Answer (Text): Submitted='${playerAnswerText}', Correct='${question.correctAnswerText}', Result=${isCorrect}`); // Keep answer logs for debugging scores
         } else {
-             safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (index out of bounds).' } });
-             return;
+            // console.warn(`Room ${roomId} L1 Answer: No text submitted.`); // Less verbose
+            safeSend(ws, { type: 'errorMessage', payload: { error: 'Answer cannot be empty.' } });
+            return; // Empty submission for Level 1
         }
-    } else if (playerInputText) {
-        // Secondary method: Answer by text input (if it matches an option text)
-        // This is more of a fallback or for accessibility, primary interaction is options.
-        isCorrect = playerInputText === question.correctAnswerText; // Compare with the normalized correct answer text
-        answerMethod = 'text';
-        // If answered by text, find which option index it corresponds to, if any
-        const matchedOptionIndex = question.options.findIndex(opt => opt.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "") === playerInputText);
-        if (isCorrect && matchedOptionIndex !== -1) {
-            submittedAnswerIndex = matchedOptionIndex; // Set this for the result payload
-        }
-        console.log(`Room ${roomId} L${question.level} Answer (Text): Submitted='${playerInputText}', Correct='${question.correctAnswerText}', Result=${isCorrect}`);
     } else {
-        // No valid answer submitted
-        console.warn(`Room ${roomId} L${question.level} Answer: No valid answer submitted. Payload:`, payload);
-        safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format.' } });
-        return;
+        // Levels > 1: Prioritize text input if provided
+        if (playerAnswerText) {
+            isCorrect = playerAnswerText === question.correctAnswerText;
+            answerMethod = 'text';
+            console.log(`Room ${roomId} L>1 Answer (Text): Submitted='${playerAnswerText}', Correct='${question.correctAnswerText}', Result=${isCorrect}`); // Keep answer logs
+        } else if (payload && typeof payload.selectedIndex === 'number') {
+            // If no text, check for selected index (options must have been requested)
+             submittedAnswerIndex = payload.selectedIndex;
+            if (submittedAnswerIndex >= 0 && submittedAnswerIndex < question.options.length) {
+                // Check if options were actually sent before accepting index answer
+                if (!room.optionsSent) {
+                    console.warn(`Room ${roomId} L>1 Answer: Index submitted but options were not requested/sent.`);
+                    safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot answer with index before requesting options.' } });
+                    return;
+                }
+                isCorrect = submittedAnswerIndex === question.correctIndex;
+                answerMethod = 'index';
+                 console.log(`Room ${roomId} L>1 Answer (Index): Submitted Index=${submittedAnswerIndex}, Correct Index=${question.correctIndex}, Result=${isCorrect}`); // Keep answer logs
+            } else {
+                 // console.warn(`Room ${roomId} L>1 Answer: Invalid index submitted:`, payload.selectedIndex); // Less verbose
+                 safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (index out of bounds).' } });
+                 return; // Invalid submission
+            }
+        } else {
+            // Neither text nor valid index provided for Level > 1
+            console.warn(`Room ${roomId} L>1 Answer: No valid answer submitted (neither text nor index). Payload:`, payload);
+            safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format.' } });
+            return; // Invalid submission
+        }
     }
 
-    // --- Score Calculation & Result Payload ---
+    // --- Score Calculation & Result Payload --- 
     const currentPlayer = room.players.player1.id === clientInfo.id ? room.players.player1 : room.players.player2;
     if (isCorrect) {
-        // Scoring: 2 points for text (implies no options/50-50 used), 1 for direct option, 0.5 if 50/50 used with option
-        if (answerMethod === 'text') {
-            pointsAwarded = 2; // Typed answer (assumed no help used, though client might not allow this if options are always shown)
-        } else { // Answered using options index
-            if (room.fiftyFiftyUsed) {
-                pointsAwarded = 0.5;
-            } else {
-                pointsAwarded = 1;
+        // --- New Scoring Logic --- 
+        if (question.level === 1) {
+            pointsAwarded = 1;
+        } else { // Levels 2-6
+            if (answerMethod === 'text') { // Answered without requesting options
+                pointsAwarded = 2;
+            } else { // Answered using options index
+                if (room.fiftyFiftyUsed) {
+                    pointsAwarded = 0.5;
+                } else {
+                    pointsAwarded = 1;
+                }
             }
         }
+        // --- End New Scoring Logic ---
         currentPlayer.score += pointsAwarded;
     } else {
         pointsAwarded = 0; // Explicitly set to 0 if incorrect
     }
 
+    // Correct answer text normalization should happen during question loading now
+    // const normalizedCorrectAnswerText = question.correctAnswerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+
     const resultPayload = {
         isCorrect: isCorrect,
         pointsAwarded: pointsAwarded,
-        correctAnswerText: question.correctAnswerText.toUpperCase(), // Send the normalized correct answer text from the question object, uppercased for display
-        correctIndex: question.correctIndex,
+        // Send the already normalized correctAnswerText from the question object
+        correctAnswerText: question.correctAnswerText.toUpperCase(), 
+        correctIndex: question.correctIndex, // Send correct index (will be -1 for L1)
         forPlayerId: clientInfo.id,
-        submittedAnswerText: answerMethod === 'text' ? submittedAnswerTextForDisplay : null,
-        selectedIndex: submittedAnswerIndex // Will be -1 if answered by text and text didn't match an option
+        submittedAnswerText: answerMethod === 'text' ? submittedAnswerText : null, // Send original submitted text if answered via text
+        selectedIndex: answerMethod === 'index' ? submittedAnswerIndex : -1 // Send submitted index if answered via index
     };
 
     // Send result to everyone in the room
@@ -831,49 +869,42 @@ function handleRequestOptions(ws, clientInfo) {
     const roomId = clientInfo.roomId;
     const room = rooms.get(roomId);
 
-    // This handler is now largely obsolete as options are sent with the question.
-    // Kept for potential future use or if a client somehow calls it.
-    // It should not be callable from the current client logic.
-    if (!room || !room.gameActive || clientInfo.id !== room.currentTurn || !room.currentQuestion) {
-        safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot request options now (deprecated).' } });
+    // Add check for currentQuestion existence
+    if (!room || !room.gameActive || clientInfo.id !== room.currentTurn || !room.currentQuestion || room.currentQuestion.level === 1) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot request options now.' } });
          return;
     }
-    // if (room.optionsSent) { // room.optionsSent flag is also less relevant.
-    //     safeSend(ws, { type: 'errorMessage', payload: { error: 'Options already sent with question.' } });
-    //      return;
-    //  }
+    if (room.optionsSent) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Options already requested/sent.' } });
+         return;
+     }
 
-    // room.optionsSent = true; // Flag is less relevant
-    // Ensure currentQuestion has options before sending (should always be true with new data structure)
+    room.optionsSent = true;
+    // Ensure currentQuestion has options before sending
      if (!room.currentQuestion.options || room.currentQuestion.options.length === 0) {
-          console.error(`Room ${roomId} - Attempt to request options for question without options array (should not happen).`);
-          safeSend(ws, { type: 'errorMessage', payload: { error: 'Error: Question has no options data.' } });
+          console.error(`Room ${roomId} - Cannot provide options for question without options array.`);
+          safeSend(ws, { type: 'errorMessage', payload: { error: 'Error retrieving options for this question.' } });
+          room.optionsSent = false; // Reset flag if failed
         return;
     }
     const optionsPayload = { options: room.currentQuestion.options };
-    console.log(`Room ${roomId} - Responding to (unexpected) requestOptions with options for ${clientInfo.id}`);
-    safeSend(ws, { type: 'optionsProvided', payload: optionsPayload }); // Client will handle this if it still listens
+    // console.log(`Room ${roomId} - Sending options to ${clientInfo.id}`); // Less verbose
+    safeSend(ws, { type: 'optionsProvided', payload: optionsPayload });
 }
 
 function handleRequestFiftyFifty(ws, clientInfo) {
     const roomId = clientInfo.roomId;
     const room = rooms.get(roomId);
 
-    // Check for currentQuestion existence & if it's player's turn
-     if (!room || !room.gameActive || clientInfo.id !== room.currentTurn || !room.currentQuestion || room.fiftyFiftyUsed) {
+    // Add check for currentQuestion existence
+     if (!room || !room.gameActive || clientInfo.id !== room.currentTurn || !room.currentQuestion || room.currentQuestion.level === 1 || !room.optionsSent || room.fiftyFiftyUsed) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot use 50/50 now.' } });
          return;
      }
-     // optionsSent flag is no longer needed for this check as options are always present
-     // if (!room.optionsSent) {
-     //    safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot use 50/50 before options are available (should be auto).' } });
-     //    return;
-     // }
-
-    // Ensure options array exists and has enough elements (should be 4)
-     if (!room.currentQuestion.options || room.currentQuestion.options.length < 2) { // Min 2 to remove some
-          console.error(`Room ${roomId} - Cannot apply 50/50: Invalid options data. Options count: ${room.currentQuestion.options?.length}`);
-          safeSend(ws, { type: 'errorMessage', payload: { error: 'Error applying 50/50 due to insufficient options.' } });
+    // Ensure options array exists and has enough elements
+     if (!room.currentQuestion.options || room.currentQuestion.options.length < 4) {
+          console.error(`Room ${roomId} - Cannot apply 50/50: Invalid options data.`);
+          safeSend(ws, { type: 'errorMessage', payload: { error: 'Error applying 50/50.' } });
          return;
      }
 

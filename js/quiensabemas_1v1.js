@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         questions: {}, // Questions will be managed by the server now
         currentQuestionData: null,
         currentTurn: null,
-        optionsRequested: true, // Options are always considered "requested" or available now
+        optionsRequested: false, // Track if options are visible for levels 2+
         fiftyFiftyUsed: false, // Track if 50/50 power-up is used
         gameActive: false,
         websocket: null
@@ -41,15 +41,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Game Status
     const gameLevelDisplayEl = document.getElementById('gameLevelDisplay');
-    const questionCounterEl = document.getElementById('questionCounter');
+    const questionCounterEl = document.getElementById('questionCounter'); // Might be updated by server messages
+    // const turnIndicatorEl = document.getElementById('turnIndicator'); // No longer used as it's in header
 
     // Question & Answer Areas
     const questionTextEl = document.getElementById('questionText');
-    const level2PlusOptionsAreaEl = document.getElementById('level2PlusOptionsArea'); // This is now the main options area
+    // const level1InputAreaEl = document.getElementById('level1InputArea'); // Removed
+    // const answerFormLevel1 = document.getElementById('answerFormLevel1'); // Removed
+    // const answerInputEl = document.getElementById('answerInput'); // Removed
+    const level2PlusOptionsAreaEl = document.getElementById('level2PlusOptionsArea');
     const optionsContainerEl = document.getElementById('optionsContainer');
     const optionButtons = optionsContainerEl.querySelectorAll('.option'); // NodeList
 
     // Action Buttons
+    // const requestOptionsButtonEl = document.getElementById('requestOptionsButton'); // Removed
     const fiftyFiftyButtonEl = document.getElementById('fiftyFiftyButton');
 
     // Feedback & Waiting Areas
@@ -60,48 +65,53 @@ document.addEventListener('DOMContentLoaded', function() {
     const endGameModalEl = document.getElementById('endGameModal');
     const resultTitleEl = document.getElementById('resultTitle');
     const resultMessageEl = document.getElementById('resultMessage');
+    const finalPlayer1ScoreEl = document.getElementById('finalPlayer1Score');
+    const finalPlayer2ScoreEl = document.getElementById('finalPlayer2Score');
     const resultStatsEl = document.getElementById('resultStats');
     const playAgainButtonQSM = document.getElementById('playAgainButtonQSM');
     const backToLobbyButtonQSM = document.getElementById('backToLobbyButtonQSM');
 
     // Lobby Elements
     const lobbySectionEl = document.getElementById('lobbySection');
-    const lobbyMessageAreaEl = document.getElementById('lobbyMessageArea');
+    const lobbyMessageAreaEl = document.getElementById('lobbyMessageArea'); // To show lobby status/errors
     const createPlayerNameInput = document.getElementById('createPlayerName');
-    const createRoomPasswordInput = document.getElementById('createRoomPassword');
+    const createRoomPasswordInput = document.getElementById('createRoomPassword'); // Optional password
     const createRoomButton = document.getElementById('createRoomButton');
     const joinPlayerNameInput = document.getElementById('joinPlayerName');
     const joinRoomIdInput = document.getElementById('joinRoomId');
-    const joinRoomPasswordInput = document.getElementById('joinRoomPassword');
+    const joinRoomPasswordInput = document.getElementById('joinRoomPassword'); // Optional password
     const joinRoomButton = document.getElementById('joinRoomButton');
-    const joinRandomRoomButton = document.getElementById('joinRandomRoomButton');
-    const gameContentSectionEl = document.getElementById('gameContentSection');
-    const availableRoomsListEl = document.getElementById('availableRoomsList');
-    const playersHeaderInfoEl = document.getElementById('playersHeaderInfo');
+    const joinRandomRoomButton = document.getElementById('joinRandomRoomButton'); // New button
+    const gameContentSectionEl = document.getElementById('gameContentSection'); // Game area container
+    const availableRoomsListEl = document.getElementById('availableRoomsList'); // Container for the room list UL
+    const playersHeaderInfoEl = document.getElementById('playersHeaderInfo'); // Referencia al contenedor de info de jugadores
 
     // --- Initialization ---
     function initializeApp() {
         console.log("Initializing Quien Sabe Más 1v1 App...");
-        showLobby();
+        showLobby(); // Start in the lobby
         setupEventListeners();
         hideEndGameModal();
 
+        // --- Prefill player name from session storage ---
         const savedPlayerName = sessionStorage.getItem('playerName');
         if (savedPlayerName) {
             if (createPlayerNameInput) createPlayerNameInput.value = savedPlayerName;
             if (joinPlayerNameInput) joinPlayerNameInput.value = savedPlayerName;
             console.log(`Prefilled player name: ${savedPlayerName}`);
         }
-        initializeWebSocket();
+        // --- End Prefill ---
+
+        initializeWebSocket(); // Connect WebSocket on app load
     }
 
     // --- Helper function to normalize text ---
-    // function normalizeText(text) { // No longer needed client-side for answer checking
-    //     if (typeof text !== 'string') return '';
-    //     return text.toLowerCase()
-    //                .normalize("NFD")
-    //                .replace(/\u0300-\u036f/g, "");
-    // }
+    function normalizeText(text) {
+        if (typeof text !== 'string') return '';
+        return text.toLowerCase()
+                   .normalize("NFD") // Decompose accented characters
+                   .replace(/\u0300-\u036f/g, ""); // Remove diacritical marks
+    }
     // --- End Helper ---
 
     function showLobby() {
@@ -109,9 +119,10 @@ document.addEventListener('DOMContentLoaded', function() {
         gameContentSectionEl.style.display = 'none';
         lobbySectionEl.classList.add('active');
         gameContentSectionEl.classList.remove('active');
+        // Hide player info in header while in lobby
         if (playersHeaderInfoEl) playersHeaderInfoEl.style.display = 'none';
         clearLobbyMessage();
-        enableLobbyButtons();
+        enableLobbyButtons(); // Ensure buttons are enabled when returning to lobby
     }
 
     function showGameScreen() {
@@ -119,14 +130,16 @@ document.addEventListener('DOMContentLoaded', function() {
         gameContentSectionEl.style.display = 'block';
         lobbySectionEl.classList.remove('active');
         gameContentSectionEl.classList.add('active');
-        if (playersHeaderInfoEl) playersHeaderInfoEl.style.display = 'flex';
+        // Show player info in header
+        if (playersHeaderInfoEl) playersHeaderInfoEl.style.display = 'flex'; // Or 'block' depending on your CSS
     }
 
     function startGame() {
         console.log("Starting game (waiting for server data)...");
-        updatePlayerUI();
+        updatePlayerUI(); // Update with initial player data from server
         showGameScreen();
         gameState.gameActive = true;
+        // Waiting message will be shown based on whose turn it is (from server)
     }
 
     // --- Lobby Logic ---
@@ -134,110 +147,130 @@ document.addEventListener('DOMContentLoaded', function() {
         if (createRoomButton) createRoomButton.addEventListener('click', handleCreateRoom);
         if (joinRoomButton) joinRoomButton.addEventListener('click', handleJoinRoomById);
         if (joinRandomRoomButton) joinRandomRoomButton.addEventListener('click', handleJoinRandomRoom);
+        // Add listener for password inputs to potentially clear errors on input
         [createRoomPasswordInput, joinRoomPasswordInput].forEach(input => {
             if(input) input.addEventListener('input', clearLobbyMessage);
         });
+        // [createPlayerNameInput, joinPlayerNameInput, joinRoomIdInput, answerInputEl].forEach(input => { // answerInputEl removed
         [createPlayerNameInput, joinPlayerNameInput, joinRoomIdInput].forEach(input => {
             if(input) input.addEventListener('input', clearLobbyMessage);
         });
     }
 
     function handleCreateRoom() {
+        // Check if button exists and is already disabled (prevent double click)
         if (!createRoomButton || createRoomButton.disabled) return;
+
         const playerName = createPlayerNameInput.value.trim() || 'Jugador 1';
-        const password = createRoomPasswordInput.value;
+        const password = createRoomPasswordInput.value; // Don't trim password
+        console.log(`Requesting to create room for ${playerName}` + (password ? ' with password.' : '.'));
         showLobbyMessage("Creando sala...", "info");
-        disableLobbyButtons(true);
+        disableLobbyButtons(true); // Disable and show spinner on create button
         sendToServer('createRoom', { playerName, password });
     }
 
     function handleJoinRoomById() {
+        // Check if button exists and is already disabled
         if (!joinRoomButton || joinRoomButton.disabled) return;
+
         const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
         const roomId = joinRoomIdInput.value.trim();
-        const password = joinRoomPasswordInput.value;
+        const password = joinRoomPasswordInput.value; // Don't trim password
+
         if (!roomId) {
             showLobbyMessage("Por favor, poné un ID de sala.", "error");
             return;
         }
+        console.log(`Requesting to join room ${roomId} as ${playerName}` + (password ? ' with password.' : '.'));
         showLobbyMessage(`Uniéndote a la sala ${roomId}...`, "info");
-        disableLobbyButtons(false, true);
+        disableLobbyButtons(false, true); // Disable and show spinner on join by ID button
         sendToServer('joinRoom', { playerName, roomId, password });
     }
 
      function handleJoinRandomRoom() {
+         // Check if button exists and is already disabled
          if (!joinRandomRoomButton || joinRandomRoomButton.disabled) return;
-         const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
+
+         const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2'; // Use the name from the join section
+         console.log(`Searching for random room for ${playerName}...`);
          showLobbyMessage("Buscando una sala disponible...", "info");
-         disableLobbyButtons(false, false, true);
+         disableLobbyButtons(false, false, true); // Disable and show spinner on join random button
          sendToServer('joinRandomRoom', { playerName });
      }
 
-    function showLobbyMessage(message, type = "info", persistent = false) {
+    function showLobbyMessage(message, type = "info", persistent = false) { // type can be 'info', 'success', 'error'
         if (!lobbyMessageAreaEl) return;
         lobbyMessageAreaEl.textContent = message;
-        lobbyMessageAreaEl.className = 'lobby-message';
-        void lobbyMessageAreaEl.offsetWidth;
+        lobbyMessageAreaEl.className = 'lobby-message'; // Reset classes
+        void lobbyMessageAreaEl.offsetWidth; // Force reflow
         lobbyMessageAreaEl.classList.add(type);
         lobbyMessageAreaEl.classList.add('show');
+
+        // Si no es persistente, ocultar después de un tiempo (ej. 5 segundos)
         if (!persistent && (type === 'success' || type === 'info')) {
             setTimeout(() => {
+                // Solo ocultar si sigue siendo el mismo mensaje (evita ocultar un error posterior)
                 if (lobbyMessageAreaEl.textContent === message) {
                     clearLobbyMessage();
                 }
             }, 5000);
         }
+        // Los errores (type === 'error') se quedan visibles hasta la siguiente acción.
     }
 
     function clearLobbyMessage() {
         lobbyMessageAreaEl.classList.remove('show');
+        // Retrasar limpieza de texto y clases para permitir la transición de salida
          setTimeout(() => {
+            // Solo limpiar si no se mostró otro mensaje mientras tanto
              if (!lobbyMessageAreaEl.classList.contains('show')) {
-                lobbyMessageAreaEl.textContent = '';
-                lobbyMessageAreaEl.className = 'lobby-message';
+        lobbyMessageAreaEl.textContent = '';
+        lobbyMessageAreaEl.className = 'lobby-message';
              }
-         }, 500);
+         }, 500); // Debe ser >= duración de transición CSS
     }
 
     function disableLobbyButtons(spinCreate = false, spinJoinId = false, spinJoinRandom = false) {
         if (createRoomButton) {
-            createRoomButton.disabled = true;
+        createRoomButton.disabled = true;
+            // Add spinner logic if needed, assuming spinner element exists or is added via CSS
             createRoomButton.innerHTML = spinCreate ? 'Creando... <span class="spinner-lobby"></span>' : 'Crear Sala';
         }
         if (joinRoomButton) {
-            joinRoomButton.disabled = true;
+        joinRoomButton.disabled = true;
             joinRoomButton.innerHTML = spinJoinId ? 'Uniéndote... <span class="spinner-lobby"></span>' : 'Unirse por ID';
         }
         if (joinRandomRoomButton) {
-            joinRandomRoomButton.disabled = true;
+        joinRandomRoomButton.disabled = true;
             joinRandomRoomButton.innerHTML = spinJoinRandom ? 'Buscando... <span class="spinner-lobby"></span>' : 'Buscar Sala Aleatoria';
         }
     }
 
     function enableLobbyButtons() {
         if (createRoomButton) {
-            createRoomButton.disabled = false;
-            createRoomButton.innerHTML = 'Crear Sala';
+        createRoomButton.disabled = false;
+            createRoomButton.innerHTML = 'Crear Sala'; // Restore original text
         }
         if (joinRoomButton) {
-            joinRoomButton.disabled = false;
+        joinRoomButton.disabled = false;
              joinRoomButton.innerHTML = 'Unirse por ID';
         }
         if (joinRandomRoomButton) {
-            joinRandomRoomButton.disabled = false;
+        joinRandomRoomButton.disabled = false;
             joinRandomRoomButton.innerHTML = 'Buscar Sala Aleatoria';
         }
     }
 
     // --- Game Logic ---
     function updatePlayerUI() {
-        if (!gameState.players || !gameState.myPlayerId) return;
+        if (!gameState.players || !gameState.myPlayerId) return; // Necesitamos saber quiénes somos
 
         const player1 = gameState.players.player1;
         const player2 = gameState.players.player2;
         const localPlayer = player1?.id === gameState.myPlayerId ? player1 : (player2?.id === gameState.myPlayerId ? player2 : null);
         const opponentPlayer = player1?.id !== gameState.myPlayerId ? player1 : (player2?.id !== gameState.myPlayerId ? player2 : null);
 
+        // Actualizar Header
         if (playersHeaderInfoEl && localPlayer && opponentPlayer) {
             const localNameEl = playersHeaderInfoEl.querySelector('.local-player .player-name');
             const localScoreEl = playersHeaderInfoEl.querySelector('.local-player .score');
@@ -249,12 +282,14 @@ document.addEventListener('DOMContentLoaded', function() {
             if (opponentNameEl) opponentNameEl.textContent = opponentPlayer.name || 'Oponente';
             if (opponentScoreEl) opponentScoreEl.textContent = `Score: ${opponentPlayer.score || 0}`;
 
+            // Marcar turno activo en el header
             const localPlayerBox = playersHeaderInfoEl.querySelector('.local-player');
             const opponentPlayerBox = playersHeaderInfoEl.querySelector('.opponent-player');
             if (localPlayerBox) localPlayerBox.classList.toggle('active-turn', localPlayer.id === gameState.currentTurn);
             if (opponentPlayerBox) opponentPlayerBox.classList.toggle('active-turn', opponentPlayer.id === gameState.currentTurn);
 
         } else if (playersHeaderInfoEl) {
+            // Estado inicial o si falta info
              const localNameEl = playersHeaderInfoEl.querySelector('.local-player .player-name');
              const localScoreEl = playersHeaderInfoEl.querySelector('.local-player .score');
              const opponentNameEl = playersHeaderInfoEl.querySelector('.opponent-player .player-name');
@@ -264,6 +299,16 @@ document.addEventListener('DOMContentLoaded', function() {
              if (opponentNameEl) opponentNameEl.textContent = 'Esperando...';
              if (opponentScoreEl) opponentScoreEl.textContent = 'Score: 0';
         }
+
+        // Actualizar Turn Indicator (si existe fuera del header)
+        // if (turnIndicatorEl) { // turnIndicatorEl no longer used directly
+        //      if (!gameState.currentTurn || !gameState.players) {
+        //          turnIndicatorEl.textContent = "Esperando turno...";
+        // } else {
+        //          const currentPlayer = player1?.id === gameState.currentTurn ? player1 : player2;
+        //          turnIndicatorEl.textContent = `Turno de: ${currentPlayer?.name || '...'}`;
+        // }
+        // }
     }
 
     // --- Question Display (Triggered by Server) ---
@@ -274,33 +319,51 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         console.log("Displaying question:", question);
-        gameState.currentQuestionData = question;
+        gameState.currentQuestionData = question; // Store current question data
         questionTextEl.textContent = question.text;
-        feedbackAreaEl.innerHTML = '';
+        feedbackAreaEl.innerHTML = ''; // Clear previous feedback
 
-        gameState.optionsRequested = true; // Always true now
+        // Reset options/input state
+        gameState.optionsRequested = true; // Options are now always implicitly "requested" or rather, available
+        // requestOptionsButtonEl.classList.remove('used'); // Button removed
         fiftyFiftyButtonEl.classList.remove('used');
         gameState.fiftyFiftyUsed = false;
 
-        level2PlusOptionsAreaEl.classList.add('active');
-        optionsContainerEl.style.display = 'grid';
+        // --- Input Area Visibility (Hybrid Logic) --- 
+        // level1InputAreaEl.classList.add('active'); // Area removed
+        // answerInputEl.value = ''; // Input removed
+        // answerInputEl.disabled = true; // Input removed
+        // const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]'); // Form removed
+        // if(submitBtnLvl1) submitBtnLvl1.disabled = true; // Form removed
+
+        // if (question.level === 1) { // Logic simplified, options always shown
+        //     level2PlusOptionsAreaEl.classList.remove('active'); 
+        // } else {
+        level2PlusOptionsAreaEl.classList.add('active'); // Always show L2+ area (which is now the only option area)
+        optionsContainerEl.style.display = 'grid'; // Options are now always shown, ensure container is visible
         optionButtons.forEach(btn => {
-            btn.style.display = 'flex';
+            btn.style.display = 'flex'; // Use flex as per HTML, ensure buttons are visible templates
             btn.disabled = true;
             btn.classList.remove('selected', 'correct', 'incorrect', 'hidden');
             btn.querySelector('.option-text').textContent = '';
         });
-        
-        fiftyFiftyButtonEl.style.display = 'inline-flex';
-        fiftyFiftyButtonEl.disabled = true;
+        // requestOptionsButtonEl.style.display = 'inline-flex'; // Button removed
+        // requestOptionsButtonEl.disabled = true; // Button removed
+        fiftyFiftyButtonEl.style.display = 'inline-flex'; // Ensure button is visible
+        fiftyFiftyButtonEl.disabled = true; // Start disabled
+        // }
 
+        // Populate options directly if available in the question data sent by server
+        // This assumes the server will send `question.opciones` or similar
         if (question.opciones && question.opciones.length > 0) {
             displayOptionsFromServer(question.opciones);
         } else {
+            // Fallback or error if options are not provided with the question
             console.warn("Question received without 'opciones' field. Options will be empty.");
-             optionButtons.forEach((btn) => {
+            // Optionally clear any stale options
+             optionButtons.forEach((btn, index) => {
                 btn.querySelector('.option-text').textContent = '';
-                btn.style.display = 'none';
+                btn.style.display = 'none'; // Hide if no content
             });
         }
     }
@@ -308,11 +371,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Turn & Game Flow Updates (Triggered by Server) ---
     function updateLevelAndQuestionCounter(level, qNum = null, qTotal = null) {
         gameState.currentLevel = level;
-        gameLevelDisplayEl.textContent = `Nivel ${gameState.currentLevel}`;
+        gameLevelDisplayEl.textContent = `Level ${gameState.currentLevel}`;
         if (qNum !== null && qTotal !== null) {
-            questionCounterEl.textContent = `Pregunta ${qNum}/${qTotal}`;
+            questionCounterEl.textContent = `Question ${qNum}/${qTotal}`;
         } else {
-             questionCounterEl.textContent = '';
+             questionCounterEl.textContent = ''; // Clear if no info provided
         }
     }
 
@@ -324,66 +387,109 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         console.log("Submitting answer to server:", answerData);
         sendToServer('submitAnswer', answerData);
-        disablePlayerInput();
-        showWaitingMessage("Respuesta enviada. Esperando oponente/resultado...");
+        disablePlayerInput(); // Disable input after submitting
+        showWaitingMessage("Respuesta enviada. Esperando oponente/resultado..."); // Updated message
     }
 
     function handleOptionClick(event) {
+        // This check might be redundant if buttons are correctly disabled, but good for safety
+        // if (!gameState.optionsRequested || gameState.currentTurn !== gameState.myPlayerId || !gameState.gameActive) return; // gameState.optionsRequested is always true now
+
         if (gameState.currentTurn !== gameState.myPlayerId || !gameState.gameActive) return;
+
 
         const selectedButton = event.target.closest('.option');
         if (!selectedButton || selectedButton.disabled || selectedButton.classList.contains('hidden')) return;
 
         const selectedIndex = parseInt(selectedButton.getAttribute('data-index'));
+
+        // Optional: Visually mark the selected option immediately (can be confirmed/overridden by server)
+        // optionButtons.forEach(btn => btn.classList.remove('selected'));
+        // selectedButton.classList.add('selected');
+
         submitAnswer({ selectedIndex: selectedIndex });
     }
 
     // --- Action Buttons Logic ---
+    /* // Removed: No longer needed as options are always shown
+    function handleRequestOptions() {
+        if (!gameState.gameActive || gameState.currentTurn !== gameState.myPlayerId) return;
+        // if (gameState.currentLevel === 1 || gameState.optionsRequested) return; // Logic changed
+
+        console.log("Requesting options from server..."); // This path should not be hit
+        // sendToServer('requestOptions', {}); // Action removed
+        // requestOptionsButtonEl.disabled = true; // Button removed
+        // requestOptionsButtonEl.classList.add('used'); // Button removed
+    }
+    */
+
     function handleFiftyFifty() {
         if (!gameState.gameActive || gameState.currentTurn !== gameState.myPlayerId) return;
-        if (gameState.fiftyFiftyUsed) return; // fiftyFiftyUsed implies optionsRequested is true
+        // Can only use 50/50 if options are shown (always true now) and it hasn't been used yet for this question
+        // if (!gameState.optionsRequested || gameState.fiftyFiftyUsed) return; // gameState.optionsRequested is always true
+        if (gameState.fiftyFiftyUsed) return;
 
         console.log("Requesting 50/50 from server...");
         sendToServer('requestFiftyFifty', {});
-        fiftyFiftyButtonEl.disabled = true;
-        fiftyFiftyButtonEl.classList.add('used');
+        fiftyFiftyButtonEl.disabled = true; // Disable button while waiting for server response
+        fiftyFiftyButtonEl.classList.add('used'); // Visually indicate it's used/pending
     }
 
     // --- UI Updates & Feedback ---
     function showFeedback(message, type) { // type = 'correct' or 'incorrect'
         feedbackAreaEl.innerHTML = `<span class="feedback-message ${type}">${message}</span>`;
+        // Optionally, clear feedback after a delay
+        // setTimeout(() => { feedbackAreaEl.innerHTML = ''; }, 3000);
     }
 
      function visualizeAnswerOptions(selectedIndex, correctIndex, isLocalPlayerCorrect) {
-         if (gameState.currentQuestionData && gameState.optionsRequested) { // gameState.optionsRequested is always true
+        // Show correctness on options only for levels 2+
+         if (gameState.currentQuestionData && gameState.currentQuestionData.level > 1 && gameState.optionsRequested) {
              optionButtons.forEach((btn, index) => {
+                // Remove previous selection states first
                  btn.classList.remove('selected');
+
                  if (index === correctIndex) {
                      btn.classList.add('correct');
                  }
+                 // If the selecting player selected an option and it was incorrect, mark it incorrect
+                 // We need to know WHO selected the index to apply 'incorrect' correctly for both players viewing
+                 // This function might need adjustment based on whether 'forPlayerId' is available here
+                 // Assuming this function is called for the player who just answered:
                  if (index === selectedIndex && !isLocalPlayerCorrect) {
                      btn.classList.add('incorrect');
                  }
+                 // Ensure all buttons are disabled after revealing the answer
                  btn.disabled = true;
              });
          }
      }
 
+
      function displayOptionsFromServer(options) {
          console.log("Displaying options from server:", options);
-         optionsContainerEl.style.display = 'grid';
+         optionsContainerEl.style.display = 'grid'; // Show the grid
          optionButtons.forEach((btn, index) => {
             if (index < options.length) {
                 btn.querySelector('.option-text').textContent = options[index];
-                btn.style.display = 'flex';
-                btn.disabled = true;
-                btn.classList.remove('hidden', 'correct', 'incorrect', 'selected');
+                btn.style.display = 'flex'; // Show the button (use flex)
+                btn.disabled = true; // Keep disabled until enabled by enablePlayerInput
+                btn.classList.remove('hidden', 'correct', 'incorrect', 'selected'); // Reset classes
             } else {
-                btn.style.display = 'none';
+                btn.style.display = 'none'; // Hide unused buttons
             }
          });
-         gameState.optionsRequested = true; // Remains true
+         gameState.optionsRequested = true; // Mark options as requested/shown (always true now)
+         // requestOptionsButtonEl.disabled = true; // Button removed
+         // requestOptionsButtonEl.classList.add('used'); // Button removed
 
+         // --- Disable text input when options are shown --- 
+         // answerInputEl.disabled = true; // Input removed
+         // const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]'); // Form removed
+         // if(submitBtnLvl1) submitBtnLvl1.disabled = true; // Form removed
+         // --------------------------------------------------
+
+         // Re-evaluate if 50/50 button should be enabled now
          if (gameState.currentTurn === gameState.myPlayerId && gameState.gameActive) {
              fiftyFiftyButtonEl.disabled = gameState.fiftyFiftyUsed;
          }
@@ -393,17 +499,18 @@ document.addEventListener('DOMContentLoaded', function() {
          console.log("Applying 50/50, removing options at indices:", indicesToRemove);
          indicesToRemove.forEach(index => {
              if (optionButtons[index]) {
-                 optionButtons[index].style.display = 'none';
-                 optionButtons[index].classList.add('hidden');
-                 optionButtons[index].disabled = true;
+                 optionButtons[index].style.display = 'none'; // Hide the button
+                 optionButtons.classList.add('hidden'); // Add class for potential styling/logic
+                 optionButtons[index].disabled = true; // Ensure it's disabled
              }
          });
-         gameState.fiftyFiftyUsed = true;
-         fiftyFiftyButtonEl.disabled = true;
-         fiftyFiftyButtonEl.classList.add('used');
+         gameState.fiftyFiftyUsed = true; // Mark 50/50 as used for this question turn
+         fiftyFiftyButtonEl.disabled = true; // Disable 50/50 button permanently for this question
+         fiftyFiftyButtonEl.classList.add('used'); // Visually mark as used
      }
 
     function showError(message) {
+        // Use feedback area for game-related errors shown to user
         feedbackAreaEl.innerHTML = `<span class="feedback-message error">Error: ${message}</span>`;
         console.error("Game Error:", message);
     }
@@ -418,54 +525,94 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function disablePlayerInput() {
+        // Level 1 (Now all levels are options only)
+        // answerInputEl.disabled = true; // Removed
+        // const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]'); // Removed
+        // if(submitBtnLvl1) submitBtnLvl1.disabled = true; // Removed
+
+        // Level 2+ (Now all levels)
         optionButtons.forEach(btn => btn.disabled = true);
+        // requestOptionsButtonEl.disabled = true; // Removed
         fiftyFiftyButtonEl.disabled = true;
     }
 
     function enablePlayerInput() {
+        // Only enable if it's currently this player's turn AND the game is active
         if (gameState.currentTurn !== gameState.myPlayerId || !gameState.gameActive) {
              disablePlayerInput();
              return;
         }
+
         hideWaitingMessage();
 
+        // Enable based on current level and state (Hybrid Logic)
         if (gameState.currentQuestionData) {
-            const optionsAreVisible = gameState.optionsRequested; // Always true
+            // const isLevel1 = gameState.currentQuestionData.level === 1; // Not needed
+            const optionsAreVisible = gameState.optionsRequested; // Always true now
 
-            fiftyFiftyButtonEl.disabled = !optionsAreVisible || gameState.fiftyFiftyUsed;
-            fiftyFiftyButtonEl.classList.toggle('used', gameState.fiftyFiftyUsed);
+            // Enable/Disable Text Input - All removed
+            // answerInputEl.disabled = !isLevel1 && optionsAreVisible; 
+            // const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]');
+            // if(submitBtnLvl1) submitBtnLvl1.disabled = answerInputEl.disabled;
+            // if (!answerInputEl.disabled) {
+            //     answerInputEl.focus(); 
+            // }
+
+            // Enable/Disable L2+ Buttons (Now all levels)
+            // if (!isLevel1) { // Not needed
+            // requestOptionsButtonEl.disabled = optionsAreVisible; // Button Removed
+            // requestOptionsButtonEl.classList.toggle('used', optionsAreVisible); // Button Removed
+
+            fiftyFiftyButtonEl.disabled = !optionsAreVisible || gameState.fiftyFiftyUsed; // Enable only if options shown & not used
+            fiftyFiftyButtonEl.classList.toggle('used', gameState.fiftyFiftyUsed); // Mark used if used
 
             optionButtons.forEach(btn => {
+                // Enable option button if options are visible AND it's not hidden by 50/50
                 btn.disabled = !optionsAreVisible || btn.classList.contains('hidden');
             });
+            // } else {
+                 // Ensure L2+ buttons are disabled for L1 - Not needed
+                 // requestOptionsButtonEl.disabled = true;
+                 // fiftyFiftyButtonEl.disabled = true;
+                 // optionButtons.forEach(btn => btn.disabled = true);
+            // }
         } else {
              console.warn("enablePlayerInput called but no currentQuestionData available.");
              disablePlayerInput();
         }
     }
 
+
     // --- WebSocket Communication ---
     function initializeWebSocket() {
+        // URL definida arriba
         const wsUrl = WEBSOCKET_URL;
+
         console.log(`Attempting to connect WebSocket: ${wsUrl}`);
+
+        // Close existing connection if any (to prevent duplicates on potential re-init)
         if (gameState.websocket && gameState.websocket.readyState !== WebSocket.CLOSED && gameState.websocket.readyState !== WebSocket.CLOSING) {
             console.log("Closing previous WebSocket connection.");
-            gameState.websocket.onclose = null;
+            gameState.websocket.onclose = null; // Prevent old onclose handler from firing unexpectedly
             gameState.websocket.close();
         }
+
         try {
             gameState.websocket = new WebSocket(wsUrl);
         } catch (error) {
              console.error("Failed to create WebSocket:", error);
              showLobbyMessage("Failed to initialize connection. Please check console and refresh.", "error");
              disableLobbyButtons();
-             return;
+             return; // Stop initialization
         }
+
+
         gameState.websocket.onopen = () => {
             console.log('WebSocket Connected!');
             showLobbyMessage("Connected to server. Choose an option.", "success");
             enableLobbyButtons();
         };
+
         gameState.websocket.onmessage = (event) => {
             try {
                 const message = JSON.parse(event.data);
@@ -475,35 +622,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error parsing message from server:', error, event.data);
             }
         };
+
         gameState.websocket.onerror = (error) => {
             console.error('WebSocket Error:', error);
+            // Display different messages based on context
             if (gameState.gameActive) {
                 showError("Connection error. Please return to lobby.");
             } else {
                 showLobbyMessage("Server connection error. Please refresh or try again later.", "error");
             }
-             disableLobbyButtons();
+             disableLobbyButtons(); // Disable lobby actions on error
+             // Consider disabling game input if game was active
              if(gameState.gameActive) disablePlayerInput();
         };
+
         gameState.websocket.onclose = (event) => {
             console.log('WebSocket Disconnected:', event.reason, `Code: ${event.code}`, `WasClean: ${event.wasClean}`);
-            const wasConnected = !!gameState.websocket;
-            gameState.websocket = null;
+            const wasConnected = !!gameState.websocket; // Check if we thought we were connected
+            gameState.websocket = null; // Clear the reference
+
+            // Provide feedback based on whether the game was active and if the close was clean
             if (gameState.gameActive) {
                  showError("Lost connection to the server. Game ended.");
-                 gameState.gameActive = false;
+                 gameState.gameActive = false; // Mark game as inactive
                  disablePlayerInput();
-                 showEndGameModalWithError("Connection Lost");
-            } else if (wasConnected) {
+                 showEndGameModalWithError("Connection Lost"); // Show a modal indicating connection issue
+            } else if (wasConnected) { // Only show lobby error if we were actually connected before closing
+                // If connection closes while in lobby (or before game starts)
                 showLobbyMessage("Disconnected from server. Please refresh to reconnect.", "error");
                  disableLobbyButtons();
             }
+             // If it wasn't clean and not during a game, it might be a connection failure initially.
              else if (!event.wasClean && !gameState.gameActive) {
                  showLobbyMessage("Could not connect to the server. Please ensure it's running and refresh.", "error");
                  disableLobbyButtons();
              }
         };
     }
+
 
     function sendToServer(type, payload) {
         if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN) {
@@ -512,8 +668,10 @@ document.addEventListener('DOMContentLoaded', function() {
             gameState.websocket.send(message);
         } else {
             console.error('WebSocket not connected. Cannot send:', type, payload);
+            // Show error relevant to context
             if (gameState.gameActive) {
                  showError("Not connected to server. Cannot send message.");
+                 // Consider if this error should end the game or prompt reconnect
             } else {
                  showLobbyMessage("Not connected. Please refresh.", "error");
             }
@@ -522,176 +680,272 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Message Handling ---
     function handleServerMessage(message) {
-        if (message.type !== 'playerDisconnect' && message.type !== 'updateState') {
+        // Always hide the main waiting overlay when a message arrives,
+        // specific messages might show it again if needed.
+        // Exception: Don't hide if the message itself indicates waiting state (e.g., playerDisconnect)
+        if (message.type !== 'playerDisconnect' && message.type !== 'updateState' /* add other exceptions if needed */) {
             hideWaitingMessage();
         }
 
+
         switch (message.type) {
-            case 'yourInfo':
+            case 'yourInfo': // Server assigns our ID
                 gameState.myPlayerId = message.payload.playerId;
                 console.log(`Assigned Player ID: ${gameState.myPlayerId}`);
+                // --- Save player name to session storage when assigned ---
                 const creatorPlayerName = createPlayerNameInput?.value || joinPlayerNameInput?.value;
                 if (creatorPlayerName) {
                     sessionStorage.setItem('playerName', creatorPlayerName);
+                    console.log(`Saved player name to session storage: ${creatorPlayerName}`);
                 }
+                // --- End Save ---
                 break;
-            case 'roomCreated':
+
+            case 'roomCreated': // Successfully created a room
                 gameState.roomId = message.payload.roomId;
+                // Update player state with the creator's info (assuming server doesn't send full player list here)
                 gameState.players.player1 = {
                     id: gameState.myPlayerId,
                     name: createPlayerNameInput.value.trim() || 'Jugador 1',
                     score: 0
                 };
-                gameState.players.player2 = null;
-                showGameScreen();
-                updatePlayerUI();
+                gameState.players.player2 = null; // No opponent yet
+
+                showGameScreen(); // Transition UI away from lobby
+                updatePlayerUI(); // Show player 1 info in the header
+                // Hide game elements not needed yet
                 questionTextEl.textContent = '';
                 level2PlusOptionsAreaEl.classList.remove('active');
-                showWaitingMessage(`Room ${gameState.roomId} created. Waiting for opponent...`);
-                disablePlayerInput();
+                showWaitingMessage(`Room ${gameState.roomId} created. Waiting for opponent...`); // Show waiting message in the game screen area
+                disablePlayerInput(); // Ensure inputs are disabled while waiting
                 break;
-            case 'joinSuccess':
+
+            case 'joinSuccess': // Successfully joined a room
                 gameState.roomId = message.payload.roomId;
+                // Update player names if provided by the server upon join
                  if (message.payload.players) {
                     gameState.players = message.payload.players;
+                    // Don't update UI yet, wait for gameStart
                  }
                  showLobbyMessage(`Joined room ${gameState.roomId}! Waiting for game to start...`, "success");
-                 break;
-             case 'joinError':
+                 // Still waiting for game start, keep buttons disabled
+                break;
+
+             case 'joinError': // Failed to join/create room
                  showLobbyMessage(message.payload.error || "Error joining/creating room.", "error");
-                 enableLobbyButtons();
+                 enableLobbyButtons(); // Allow user to try again
                  break;
+
+            // Handle random join results separately for clarity
              case 'randomJoinSuccess':
                  gameState.roomId = message.payload.roomId;
                   if (message.payload.players) {
                      gameState.players = message.payload.players;
                  }
                  showLobbyMessage(`Joined random room ${gameState.roomId}! Waiting for game to start...`, "success");
+                 // Still waiting for game start, keep buttons disabled
                  break;
+
              case 'randomJoinError':
                  showLobbyMessage(message.payload.error || "No suitable random rooms available.", "error");
-                 enableLobbyButtons();
+                 enableLobbyButtons(); // Allow user to try again or create a room
                  break;
-            case 'gameStart':
-                 gameState.players = message.payload.players;
+
+            case 'gameStart': // Both players are ready, game begins
+                 gameState.players = message.payload.players; // Get initial player data { player1: {id, name, score}, player2: {id, name, score} }
                  gameState.currentTurn = message.payload.startingPlayerId;
                  console.log("Received gameStart:", message.payload);
-                 startGame();
+                 startGame(); // Transition to game screen, update UI
+                 // Don't enable input here; wait for the first 'newQuestion' message
                  showWaitingMessage("Game starting! Waiting for first question...");
                  break;
-            case 'newQuestion':
+
+            case 'newQuestion': // Server sends a new question
+                 // Ensure game is marked active if it wasn't already (e.g., reconnect)
                  if (!gameState.gameActive) {
                     console.log("Received newQuestion while game not marked active. Activating game screen.");
-                    showGameScreen();
+                    showGameScreen(); // Ensure game screen is visible
                     gameState.gameActive = true;
                  }
+                 // Update player scores/names if included in the message (optional, based on server design)
                  if(message.payload.players) gameState.players = message.payload.players;
-                 gameState.currentTurn = message.payload.currentTurn;
+                 gameState.currentTurn = message.payload.currentTurn; // Server dictates whose turn it is
                  updatePlayerUI();
-                 displayQuestion(message.payload.question);
+                 displayQuestion(message.payload.question); // Display the new question { level, text }
                  updateLevelAndQuestionCounter(message.payload.question.level, message.payload.questionNumber, message.payload.totalQuestionsInLevel);
+                 updateTurnIndicator();
 
+                 // Handle enabling/disabling input based on whose turn it is
                  if (gameState.currentTurn === gameState.myPlayerId) {
                      console.log("It's my turn. Enabling input.");
-                     enablePlayerInput();
-                     hideWaitingMessage();
+                     enablePlayerInput(); // Enable input if it's our turn
+                     hideWaitingMessage(); // Ensure no waiting message is shown
                  } else {
                      console.log("It's opponent's turn. Disabling input.");
                      showWaitingMessage("Opponent's turn...");
-                     disablePlayerInput();
+                     disablePlayerInput(); // Disable input if it's opponent's turn
                  }
                  break;
-            case 'updateState':
+
+            case 'updateState': // General state update (e.g., after an answer, turn change without new question yet)
                  console.log("Received updateState:", message.payload);
                  gameState.currentTurn = message.payload.currentTurn;
-                 gameState.players = message.payload.players;
+                 gameState.players = message.payload.players; // Update scores primarily
+                 // gameState.currentLevel = message.payload.currentLevel; // Usually level changes with newQuestion
                  updatePlayerUI();
+                 updateTurnIndicator();
+                 // updateLevelAndQuestionCounter(gameState.currentLevel); // Level display usually updates with newQuestion
 
                  if (gameState.gameActive) {
                      if (gameState.currentTurn === gameState.myPlayerId) {
+                         // If it's now our turn (likely after opponent answered, before new question arrives)
+                         // We might still be waiting for the next question, so don't necessarily enable input yet.
+                         // Server should send 'newQuestion' to signal readiness for input.
+                         // However, we can hide the "Opponent's turn" message.
                          hideWaitingMessage();
                          console.log("State updated, now my turn (waiting for new question?)");
+                         // Optional: Show a generic waiting message if needed?
+                         // showWaitingMessage("Waiting for next question...");
                      } else {
-                         disablePlayerInput();
+                         // If it's opponent's turn (likely after we answered)
+                         disablePlayerInput(); // Ensure input is disabled
                          showWaitingMessage("Opponent's turn...");
                          console.log("State updated, now opponent's turn.");
                      }
                  }
                  break;
-            case 'answerResult':
+
+            case 'answerResult': // Server sends result of an answer submission
                  console.log("Received answerResult:", message.payload);
                  const { isCorrect, pointsAwarded, correctAnswerText, forPlayerId, selectedIndex, correctIndex } = message.payload;
 
+                 // Find the player object who answered, ensuring player data exists
                  let answeredPlayer = null;
                  if(gameState.players && gameState.players.player1 && gameState.players.player1.id === forPlayerId) {
                      answeredPlayer = gameState.players.player1;
                  } else if (gameState.players && gameState.players.player2 && gameState.players.player2.id === forPlayerId) {
                      answeredPlayer = gameState.players.player2;
                  }
+
                  const playerName = answeredPlayer ? answeredPlayer.name : 'Player';
                  let feedbackMsg = `${playerName} answered: ${isCorrect ? 'Correct!' : 'Incorrect.'} ${pointsAwarded > 0 ? `(+${pointsAwarded} points)` : ''}`;
-                 
-                 if (!isCorrect && correctAnswerText) {
-                    feedbackMsg += ` Answer: ${correctAnswerText}`;
-                 }
-                 showFeedback(feedbackMsg, isCorrect ? 'correct' : 'incorrect');
+                 let finalIsCorrect = isCorrect; // Use this for feedback display
 
-                 if (gameState.currentQuestionData && gameState.optionsRequested) {
+                 // --- Client-side check for "contains" correctness (Level 1 only) --- // REMOVED
+                 /*
+                 if (!isCorrect && 
+                     gameState.currentQuestionData?.level === 1 && 
+                     correctAnswerText && 
+                     gameState.lastSubmittedNormalizedAnswer) {
+                     
+                     const normalizedCorrect = normalizeText(correctAnswerText);
+                     if (gameState.lastSubmittedNormalizedAnswer.includes(normalizedCorrect)) {
+                         console.log("Client-side override: Answer contains correct text.");
+                         finalIsCorrect = true; // Treat as correct for feedback
+                         feedbackMsg = `${playerName} answered: Correct! (Contained: ${correctAnswerText}) ${pointsAwarded > 0 ? `(+${pointsAwarded} points)` : ''}`;
+                         // NOTE: Score is still based on server's 'isCorrect'
+                     }
+                 }
+                 // Clear the stored answer after checking
+                 delete gameState.lastSubmittedNormalizedAnswer;
+                 */
+                 // --- End Client-side check ---
+
+                 // Show feedback (correct/incorrect message)
+                 if (!finalIsCorrect && correctAnswerText) {
+                     // Show correct answer for Level 1 always, or Level 2+ only if options were shown
+                     // This logic simplifies as options are always shown
+                     // if (gameState.currentQuestionData &&
+                     //     (gameState.currentQuestionData.level === 1 || gameState.optionsRequested)) {
+                     if (gameState.currentQuestionData && gameState.optionsRequested) { // optionsRequested is always true
+                         feedbackMsg += ` Answer: ${correctAnswerText}`;
+                     }
+                 }
+                 // Use finalIsCorrect to determine feedback type class
+                 showFeedback(feedbackMsg, finalIsCorrect ? 'correct' : 'incorrect');
+
+
+                 // Visualize options if level > 1 and options were requested
+                 if (gameState.currentQuestionData && gameState.currentQuestionData.level > 1 && gameState.optionsRequested) {
+                    // Reveal correct/incorrect options
+                    // Pass 'isCorrect' based on the player who answered
                     visualizeAnswerOptions(selectedIndex, correctIndex, isCorrect);
+                    // Ensure all option buttons are disabled after showing result
                     optionButtons.forEach(btn => btn.disabled = true);
                  }
-                 disablePlayerInput();
+
+                 // Input remains disabled, waiting for 'updateState' or 'newQuestion' for next turn/question
+                 disablePlayerInput(); // Explicitly disable here
+                 // Show a brief waiting message before the next update
                  showWaitingMessage("Waiting for next turn...");
                  break;
-            case 'optionsProvided':
-                 console.log("Received (potentially unexpected) optionsProvided:", message.payload);
+
+            case 'optionsProvided': // Server provides options after request
+                 console.log("Received optionsProvided:", message.payload);
+                 // This message might still be used by the server even if client doesn't explicitly request.
+                 // Or, server might always include options in 'newQuestion'.
+                 // Assuming this message means "here are the options to display":
                  displayOptionsFromServer(message.payload.options);
+                 // Input might be enabled here if it's still our turn (and game active)
                  if (gameState.currentTurn === gameState.myPlayerId && gameState.gameActive) {
                      enablePlayerInput();
-                     hideWaitingMessage();
+                     hideWaitingMessage(); // Hide waiting message as options are now interactable
                  }
                  break;
-            case 'fiftyFiftyApplied':
+
+            case 'fiftyFiftyApplied': // Server confirms 50/50 and sends options to remove
                  console.log("Received fiftyFiftyApplied:", message.payload);
                  removeFiftyFiftyOptions(message.payload.optionsToRemove);
+                 // Input might be enabled here if it's still our turn (and game active)
                  if (gameState.currentTurn === gameState.myPlayerId && gameState.gameActive) {
-                     enablePlayerInput();
+                     enablePlayerInput(); // Re-enable input (option buttons) after removing some
                  }
                  break;
-            case 'gameOver':
+
+            case 'gameOver': // Game has ended
                  console.log("Received gameOver:", message.payload);
                  gameState.gameActive = false;
                  disablePlayerInput();
                  hideWaitingMessage();
-                 endGame(message.payload);
+                 endGame(message.payload); // Show final results
                  break;
-            case 'playerDisconnect':
+
+            case 'playerDisconnect': // Opponent disconnected during the game
                  console.log("Received playerDisconnect:", message.payload);
                  showError(`${message.payload.disconnectedPlayerName || 'Opponent'} disconnected.`);
-                 showWaitingMessage("Opponent disconnected. Waiting for server update...");
-                 disablePlayerInput();
+                 // Server should ideally handle game state (e.g., award win, end game)
+                 // Client just shows a waiting message or prepares for game over
+                 showWaitingMessage("Opponent disconnected. Waiting for server update..."); // Inform user
+                 disablePlayerInput(); // Disable input while waiting
+                 // The server might send a 'gameOver' message shortly after this.
                  break;
-            case 'errorMessage':
+
+            case 'errorMessage': // Specific error from server logic
                  console.error("Received errorMessage:", message.payload);
+                 // Display error appropriately based on context
                  if (gameState.gameActive) {
                      showError(message.payload.error || "An error occurred during the game.");
+                     // Decide if the error is fatal for the game
+                     // Maybe disable input, wait for server 'gameOver' or manual exit
                      disablePlayerInput();
                  } else {
                      showLobbyMessage(message.payload.error || "An error occurred.", "error");
-                     enableLobbyButtons();
+                     enableLobbyButtons(); // Allow retry in lobby
                  }
                  break;
-            case 'availableRooms':
+
+            case 'availableRooms': // Server sends the list of available rooms
                 console.log("Received availableRooms:", message.payload.rooms);
                 renderAvailableRooms(message.payload.rooms);
                  break;
+
             default:
                  console.warn('Unknown message type received:', message.type);
         }
     }
 
-    // --- End Game ---
-    function endGame(payload) {
+    // --- End Game --- Reestructurada para 1v1
+    function endGame(payload) { // payload: { finalScores: {playerId1: score, playerId2: score}, winnerId: id | null, draw: boolean, reason?: string }
         console.log("Game Over. Payload:", payload);
         gameState.gameActive = false;
         disablePlayerInput();
@@ -704,6 +958,7 @@ document.addEventListener('DOMContentLoaded', function() {
              return;
          }
 
+        // Identificar mi score y el del oponente
         let myFinalScore = 'N/A';
         let opponentFinalScore = 'N/A';
         let opponentId = null;
@@ -713,10 +968,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 myFinalScore = finalScores[playerId];
             } else {
                 opponentFinalScore = finalScores[playerId];
-                opponentId = playerId;
+                opponentId = playerId; // Guardamos el ID del oponente
             }
         }
 
+        // Obtener nombres (del estado actual del juego)
         let myName = 'Tú';
         let opponentName = 'Oponente';
         const player1 = gameState.players?.player1;
@@ -727,8 +983,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (player1?.id === opponentId) opponentName = player1.name || opponentName;
         else if (player2?.id === opponentId) opponentName = player2.name || opponentName;
 
+
         let title = "";
-        let message = payload.reason || "";
+        let message = payload.reason || ""; // Mostrar razón si la hay (ej. desconexión)
 
         if (payload.draw) {
             title = "¡Es un Empate!";
@@ -741,12 +998,13 @@ document.addEventListener('DOMContentLoaded', function() {
              if (!message) message = "Mejor suerte la próxima vez.";
         } else {
              title = "Juego Terminado";
-             if (!message) message = "La partida ha finalizado.";
+             if (!message) message = "La partida ha finalizado."; // Mensaje por defecto si no hay razón ni ganador claro
         }
 
         resultTitleEl.textContent = title;
         resultMessageEl.textContent = message;
 
+        // Llenar dinámicamente los stats en el modal
         resultStatsEl.innerHTML = `
             <div class="stat-item your-score">
                 <span class="stat-label">${myName} (Tú)</span>
@@ -757,6 +1015,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="stat-value">${opponentFinalScore}</span>
             </div>
         `;
+
         showEndGameModal();
     }
 
@@ -767,6 +1026,8 @@ document.addEventListener('DOMContentLoaded', function() {
      function showEndGameModalWithError(reason) {
          resultTitleEl.textContent = "Juego Interrumpido";
          resultMessageEl.textContent = reason || "Ha ocurrido un error.";
+
+         // Intentar mostrar el último score conocido
          let myLastScore = 'N/A';
          let opponentLastScore = 'N/A';
          let myName = 'Tú';
@@ -789,6 +1050,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  opponentName = player1.name || opponentName;
              }
          }
+
          resultStatsEl.innerHTML = `
             <div class="stat-item your-score">
                 <span class="stat-label">${myName} (Tú)</span>
@@ -808,21 +1070,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Event Listeners Setup ---
     function setupEventListeners() {
-        setupLobbyEventListeners();
+        setupLobbyEventListeners(); // Lobby listeners
 
         // Game Listeners
+        // answerFormLevel1.addEventListener('submit', handleLevel1Submit); // Removed
         optionButtons.forEach(button => {
             button.addEventListener('click', handleOptionClick);
         });
+        // requestOptionsButtonEl.addEventListener('click', handleRequestOptions); // Removed
         fiftyFiftyButtonEl.addEventListener('click', handleFiftyFifty);
 
         // Modal Buttons
         playAgainButtonQSM.addEventListener('click', () => {
             hideEndGameModal();
+            // Enviar mensaje al servidor para buscar nueva partida o crear una?
+            // Por ahora, simplemente vuelve al lobby
             showLobby();
             gameState.gameActive = false;
+            // Considerar enviar 'leaveRoom' al servidor aquí
              if (gameState.roomId) {
-                sendToServer('leaveRoom', { roomId: gameState.roomId });
+                sendToServer('leaveRoom', { roomId: gameState.roomId }); // Asumiendo que existe este mensaje
                 gameState.roomId = null;
              }
         });
@@ -831,7 +1098,7 @@ document.addEventListener('DOMContentLoaded', function() {
             showLobby();
              gameState.gameActive = false;
              if (gameState.roomId) {
-                sendToServer('leaveRoom', { roomId: gameState.roomId });
+                sendToServer('leaveRoom', { roomId: gameState.roomId }); // Asumiendo que existe este mensaje
                 gameState.roomId = null;
              }
         });
@@ -843,7 +1110,9 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Available rooms list element not found.");
             return;
         }
-        availableRoomsListEl.innerHTML = '';
+
+        availableRoomsListEl.innerHTML = ''; // Clear existing list
+
         if (!rooms || rooms.length === 0) {
             const noRoomsMsg = document.createElement('li');
             noRoomsMsg.className = 'no-rooms-message';
@@ -851,33 +1120,48 @@ document.addEventListener('DOMContentLoaded', function() {
             availableRoomsListEl.appendChild(noRoomsMsg);
             return;
         }
+
         rooms.forEach(room => {
             const roomItem = document.createElement('li');
             roomItem.className = 'room-item';
             roomItem.dataset.roomId = room.id;
+
             const roomInfo = document.createElement('div');
             roomInfo.className = 'room-info';
+
+            // Display Room ID (or name if server provides it)
             const roomIdSpan = document.createElement('span');
             roomIdSpan.innerHTML = `ID: <strong>${room.id}</strong>`;
             roomInfo.appendChild(roomIdSpan);
+
+            // Display Player Count
             const playerCountSpan = document.createElement('span');
-            const currentPlayers = room.playerCount || 0;
-            const maxPlayers = room.maxPlayers || 2;
+            // Assuming server sends playerCount like '1/2'
+            const currentPlayers = room.playerCount || 0; // Default to 0 if undefined
+            const maxPlayers = room.maxPlayers || 2; // Default to 2 if undefined
             playerCountSpan.innerHTML = `Players: <strong>${currentPlayers}/${maxPlayers}</strong>`;
             roomInfo.appendChild(playerCountSpan);
+
+             // Display if password required (optional)
             if (room.requiresPassword) {
                  const passwordSpan = document.createElement('span');
                  passwordSpan.innerHTML = `<strong><i class="fas fa-lock"></i> Private</strong>`;
                  roomInfo.appendChild(passwordSpan);
             }
+
             roomItem.appendChild(roomInfo);
+
+            // Add Join Button
             const joinButton = document.createElement('button');
-            joinButton.className = 'secondary-button lobby-button join-room-list-btn';
+            joinButton.className = 'secondary-button lobby-button join-room-list-btn'; // Re-use styling
             joinButton.textContent = 'Join';
-            joinButton.disabled = currentPlayers >= maxPlayers;
+            // Disable join button if room is full or if it's the player's own room (need player ID check)
+            joinButton.disabled = currentPlayers >= maxPlayers; // Basic check for fullness
+
             joinButton.addEventListener('click', () => {
                 handleJoinRoomFromList(room.id, room.requiresPassword);
             });
+
             roomItem.appendChild(joinButton);
             availableRoomsListEl.appendChild(roomItem);
         });
@@ -885,30 +1169,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Join Room from List Logic ---
     function handleJoinRoomFromList(roomId, requiresPassword) {
-        const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
+        const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2'; // Use name from join section
         let password = '';
+
         console.log(`Attempting to join room ${roomId} from list as ${playerName}. Requires Password: ${requiresPassword}`);
+
+        // If password is required, prompt the user or use the dedicated input field
         if (requiresPassword) {
             password = joinRoomPasswordInput.value;
             if (!password) {
+                // Instead of prompt, let's use the input field and show a message if empty
                 showLobbyMessage(`Room ${roomId} requires a password. Please enter it below.`, "error");
                 joinRoomPasswordInput.focus();
+                // Clear the room ID input when focusing on password for a listed room
                 joinRoomIdInput.value = '';
-                return;
+                return; // Stop the joining process until password is entered
             } else {
+                // Clear password field after attempting to use it
                 joinRoomPasswordInput.value = '';
+                 // Optionally, set the Room ID input field for consistency before sending
                  joinRoomIdInput.value = roomId;
             }
         } else {
+             // Clear password field if not needed for this room
              joinRoomPasswordInput.value = '';
+              // Optionally, set the Room ID input field for consistency before sending
               joinRoomIdInput.value = roomId;
         }
+
         showLobbyMessage(`Joining room ${roomId}...`, "info");
         disableLobbyButtons();
+        // Clear the room ID input again after sending, maybe?
+        // joinRoomIdInput.value = '';
+
         sendToServer('joinRoom', { playerName, roomId, password });
     }
 
     // --- Start App ---
-    initializeApp();
+    initializeApp(); // Start with the lobby and WebSocket connection
 
 });
