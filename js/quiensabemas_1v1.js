@@ -541,12 +541,14 @@ document.addEventListener('DOMContentLoaded', function() {
             // requestOptionsButtonEl.disabled = true; // Button Removed
             // requestOptionsButtonEl.classList.toggle('used', true); // Button Removed
 
-            fiftyFiftyButtonEl.disabled = gameState.fiftyFiftyUsed; // Enable only if not used yet for this question
+            const optionsAvailable = gameState.currentQuestionData?.opciones && gameState.currentQuestionData.opciones.length > 0;
+
+            fiftyFiftyButtonEl.disabled = gameState.fiftyFiftyUsed || !optionsAvailable;
             fiftyFiftyButtonEl.classList.toggle('used', gameState.fiftyFiftyUsed);
 
             optionButtons.forEach(btn => {
-                // Enable option button if it's not hidden by 50/50
-                btn.disabled = btn.classList.contains('hidden') || !btn.style.display || btn.style.display === 'none';
+                // Enable option button if it's not hidden by 50/50 AND options are generally available
+                btn.disabled = !optionsAvailable || btn.classList.contains('hidden') || !btn.style.display || btn.style.display === 'none';
             });
         } else {
              console.warn("enablePlayerInput called but no currentQuestionData available.");
