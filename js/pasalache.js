@@ -49,6 +49,16 @@ document.addEventListener('DOMContentLoaded', function() {
         return currentPlayerName; // <-- Devolver el nombre guardado en la variable
     }
 
+    // +++ Nueva función para normalizar respuestas +++
+    function normalizeResponseText(text) {
+        if (typeof text !== 'string') return '';
+        return text.toLowerCase()
+                   .trim()
+                   .normalize("NFD") // Descomponer acentos y diéresis
+                   .replace(/\p{Diacritic}/gu, ""); // Eliminar marcas diacríticas Unicode
+    }
+    // +++ Fin nueva función +++
+
     // Function to get default stats object
     function getDefaultStats() {
         return {
@@ -594,8 +604,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Ensure currentQuestionIndex is valid for the letterData
         if (letterData && letterData.preguntas && currentQuestionIndex < letterData.preguntas.length) {
             const correctAnswerFull = letterData.preguntas[currentQuestionIndex].respuesta;
-            const correctAnswerNorm = correctAnswerFull.toLowerCase().trim();
-            const userAnswerNorm = userAnswer.toLowerCase().trim();
+            
+            // Normalizar ambas respuestas usando la nueva función
+            const correctAnswerNorm = normalizeResponseText(correctAnswerFull);
+            const userAnswerNorm = normalizeResponseText(userAnswer);
+
             let isCorrect = false; // Initialize isCorrect
 
             // Check for incompleteness first...
@@ -682,7 +695,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!gameUsedQuestionIndices[currentLetter].includes(currentQuestionIndex)){
                     gameUsedQuestionIndices[currentLetter].push(currentQuestionIndex);
                 }
-                usedAnswerSignatures.add(correctAnswerNorm); // Add CORRECT answer signature
+                usedAnswerSignatures.add(correctAnswerNorm); // Add CORRECT answer signature (ya normalizada)
                 console.log("Added to used signatures:", correctAnswerNorm, usedAnswerSignatures);
 
                 // Mark letter status
@@ -798,24 +811,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Compare answers with tolerance for minor errors
-    function isAnswerCorrectEnough(userAnswer, correctAnswer) {
+    function isAnswerCorrectEnough(userAnswerNorm, correctAnswerNorm) { // Ambas ya vienen normalizadas
         // Exact match
-        if (userAnswer === correctAnswer) {
+        if (userAnswerNorm === correctAnswerNorm) {
             return true;
         }
         
-        // Si la respuesta del usuario contiene la respuesta correcta completa
-        // (por ejemplo, "Real Madrid Club de Fútbol" cuando la respuesta es "Real Madrid")
-        if (userAnswer.includes(correctAnswer)) {
+        // Si la respuesta del usuario (ya normalizada) contiene la respuesta correcta (ya normalizada) completa
+        // y la respuesta correcta es suficientemente larga para evitar falsos positivos con palabras cortas.
+        if (correctAnswerNorm.length > 3 && userAnswerNorm.includes(correctAnswerNorm)) {
             return true;
         }
         
         // Calculate similarity and distance
-        const similarityResult = calculateStringSimilarity(userAnswer, correctAnswer);
+        const similarityResult = calculateStringSimilarity(userAnswerNorm, correctAnswerNorm);
 
-        // Permitir errores menores si la similitud es alta Y la distancia es mínima (1 error)
-        const similarityThreshold = 0.85;
-        const maxAllowedTypos = 1; 
+        // Permitir errores menores si la similitud es alta Y la distancia es mínima
+        const similarityThreshold = 0.80; // Ajustado de 0.85 a 0.80
+        const maxAllowedTypos = 2;    // Ajustado de 1 a 2
 
         return similarityResult.similarity >= similarityThreshold && similarityResult.distance <= maxAllowedTypos;
     }
@@ -1095,7 +1108,7 @@ document.addEventListener('DOMContentLoaded', function() {
         saveProfileStats(profileStats);
         // --- Fin Actualizar Estadísticas LOCALES ---
 
-        // --- INICIO: Guardar Partida en el HISTORIAL ---
+        // --- INICIO: Guardar Partida en el HISTORIAL LOCAL ---
         const gameResultForHistory = {
             timestamp: new Date().toISOString(), // Usar ISO string para mejor compatibilidad
             result: result, // 'victory', 'defeat', or 'timeout'
@@ -1106,7 +1119,62 @@ document.addEventListener('DOMContentLoaded', function() {
             timeSpentFormatted: timeFormatted, // timeFormatted AHORA ESTÁ DEFINIDO
         };
         addGameToHistory(gameResultForHistory);
-        // --- FIN: Guardar Partida en el HISTORIAL ---
+        // --- FIN: Guardar Partida en el HISTORIAL LOCAL ---
+
+        // --- INICIO: Guardar Resultados en FIREBASE ---
+        try {
+            const userId = getCurrentUserId(); // e.g., 'JugadorAnónimo' or 'PlayerName_NoSpace'
+            const userDisplayName = getCurrentDisplayName(); // e.g., 'Jugador Anónimo' or 'Player Name'
+            const difficultyActual = document.querySelector('.difficulty-btn.active')?.dataset.difficulty || 'normal';
+
+            if (userId && userDisplayName) {
+                // 1. Actualizar/crear el documento del usuario en la colección 'users'
+                const userDocRef = doc(db, "users", userId);
+                const userUpdateData = {
+                    displayName: userDisplayName,
+                    totalScore: increment(correctAnswers),
+                    matchesPlayed: increment(1),
+                    lastPlayed: serverTimestamp()
+                };
+                if (result === 'victory') {
+                    userUpdateData.wins = increment(1);
+                    // Potentially update fastestWinTime if it's a win and better than current
+                    // This needs reading the doc first or a transaction, for simplicity, can be added later
+                } else { // defeat or timeout
+                    userUpdateData.totalLosses = increment(1);
+                }
+                userUpdateData.totalErrors = increment(incorrectAnswers); // Assuming incorrectAnswers is tracked
+
+                await setDoc(userDocRef, userUpdateData, { merge: true });
+                console.log("User stats updated in Firebase for:", userId);
+
+                // 2. Añadir la partida a la colección 'matches'
+                const matchDocData = {
+                    timestamp: serverTimestamp(),
+                    result: result, // 'victory', 'defeat', 'timeout'
+                    difficulty: difficultyActual,
+                    timeSpent: timeSpent,
+                    players: [{
+                        playerId: userId,
+                        displayName: userDisplayName,
+                        score: correctAnswers, // Score for this specific game (correct answers)
+                        errors: incorrectAnswers
+                    }],
+                    passes: passedAnswers, // Pasalache specific
+                    gameMode: "Pasalache" // To distinguish from other games
+                };
+                await addDoc(collection(db, "matches"), matchDocData);
+                console.log("Match data added to Firebase.");
+
+            } else {
+                console.warn("User ID or Display Name not available, cannot save to Firebase.");
+            }
+        } catch (error) {
+            console.error("Error saving game result to Firebase:", error);
+            // Optionally, inform the user via a modal or a non-intrusive message
+            showTemporaryFeedback("Error al guardar el ranking online.", "error", 5000);
+        }
+        // --- FIN: Guardar Resultados en FIREBASE ---
 
         // <<<--- INICIO: INTENTAR DESBLOQUEAR LOGROS RELEVANTES A LA PARTIDA ACTUAL --- >>>
         if (window.CrackTotalLogrosAPI && typeof window.CrackTotalLogrosAPI.intentarDesbloquearLogro === 'function') {
@@ -1752,18 +1820,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Helper Function to Check Answer Conflict ---
     function checkAnswerConflict(potentialAnswer, usedSignatures) {
-        const potentialAnswerNorm = potentialAnswer.toLowerCase().trim();
+        const potentialAnswerNorm = normalizeResponseText(potentialAnswer); // Normalizar la respuesta potencial
         if (!potentialAnswerNorm) return false; // Empty answer is not a conflict
 
         const potentialWords = potentialAnswerNorm.split(' ').filter(w => w.length > 2); // Ignore short words
 
-        for (const usedAnswerNorm of usedSignatures) {
+        for (const usedAnswerSignature of usedSignatures) { // usedSignatures ya contiene respuestas normalizadas
+            // No es necesario normalizar usedAnswerSignature aquí porque ya se añadió normalizada.
+            const usedAnswerNorm = usedAnswerSignature;
+
             // 1. Check full containment (either way)
             if (usedAnswerNorm.includes(potentialAnswerNorm) || potentialAnswerNorm.includes(usedAnswerNorm)) {
-                // Avoid trivial contains like 'a' in 'apple'
+                // Avoid trivial contains like 'a' in 'apple' if correct answer is short
                 if (potentialAnswerNorm.length > 1 && usedAnswerNorm.length > 1) {
-                    console.log(`Conflict (containment): '${potentialAnswerNorm}' vs '${usedAnswerNorm}'`);
-                    return true; // Conflict: One contains the other
+                     // Adicionalmente, verificar que no sea un caso donde una palabra corta esté contenida en una larga
+                     // y que no sean casi idénticas (eso lo cubre Levenshtein)
+                    if (Math.abs(potentialAnswerNorm.length - usedAnswerNorm.length) > 2 || calculateStringSimilarity(potentialAnswerNorm, usedAnswerNorm).similarity < 0.95) {
+                        console.log(`Conflict (containment): '${potentialAnswerNorm}' vs '${usedAnswerNorm}'`);
+                        return true; // Conflict: One contains the other and are sufficiently different
+                    }
                 }
             }
 
