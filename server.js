@@ -668,8 +668,8 @@ function sendNextQuestion(roomId) {
     const questionPayload = {
         level: room.currentQuestion.level,
         text: room.currentQuestion.text,
-        // Send options immediately for levels > 1 for simplicity
-        options: room.currentQuestion.level > 1 ? room.currentQuestion.options : []
+        // Send options immediately for all levels
+        options: room.currentQuestion.options
     };
 
      // Ensure players exist before accessing properties
