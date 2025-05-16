@@ -724,8 +724,10 @@ function sendNextQuestion(roomId) {
         }
     };
 
-    console.log(`Room ${roomId} - Sending Q${room.questionsAnsweredInLevel} L${room.currentLevel}, Turn: ${room.currentTurn}`); // Keep this summary log
-     // console.log(`DEBUG: Broadcasting newQuestion message for room ${roomId}...`); // Less verbose
+    console.log(`Room ${roomId} - Sending Q${room.questionsAnsweredInLevel} L${room.currentLevel}, Turn: ${room.currentTurn}`);
+    
+    console.log('DEBUG: Payload de la pregunta a enviar en newQuestion:', JSON.stringify(message.payload.question, null, 2));
+    
     broadcastToRoom(roomId, message);
     // Also send individually to handle cases where broadcast might miss one? Redundant if broadcast works? Let's rely on broadcast for now.
     // safeSend(room.players.player1.ws, message);
