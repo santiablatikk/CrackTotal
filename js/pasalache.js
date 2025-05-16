@@ -437,7 +437,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         if (pendingLetters.length === 0) {
-            endGame();
+            endGame('victory'); // Victoria si no quedan letras pendientes
+            return;
+        }
+
+        // NUEVA COMPROBACIÓN: Si todas las letras restantes ya fueron respondidas incorrectamente
+        const allRemainingAreIncorrect = pendingLetters.every(letter => letterStatuses[letter] === 'incorrect');
+        if (pendingLetters.length > 0 && allRemainingAreIncorrect) {
+            console.log("Todas las letras pendientes han sido respondidas incorrectamente. Finalizando juego.");
+            // Si se llegó aquí, no se ganó y todas las letras tuvieron su oportunidad y fueron incorrectas.
+            // Se considera una derrota porque el rosco no se completó satisfactoriamente.
+            endGame('defeat'); 
             return;
         }
 
