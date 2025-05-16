@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', function() {
         questions: {}, // Questions will be managed by the server now
         currentQuestionData: null,
         currentTurn: null,
-        optionsRequested: false, // Track if options are visible for levels 2+
         fiftyFiftyUsed: false, // Track if 50/50 power-up is used
         gameActive: false,
         websocket: null
@@ -324,44 +323,28 @@ document.addEventListener('DOMContentLoaded', function() {
         feedbackAreaEl.innerHTML = ''; // Clear previous feedback
 
         // Reset options/input state
-        gameState.optionsRequested = true; // Options are now always implicitly "requested" or rather, available
-        // requestOptionsButtonEl.classList.remove('used'); // Button removed
         fiftyFiftyButtonEl.classList.remove('used');
         gameState.fiftyFiftyUsed = false;
 
-        // --- Input Area Visibility (Hybrid Logic) --- 
-        // level1InputAreaEl.classList.add('active'); // Area removed
-        // answerInputEl.value = ''; // Input removed
-        // answerInputEl.disabled = true; // Input removed
-        // const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]'); // Form removed
-        // if(submitBtnLvl1) submitBtnLvl1.disabled = true; // Form removed
-
-        // if (question.level === 1) { // Logic simplified, options always shown
-        //     level2PlusOptionsAreaEl.classList.remove('active'); 
-        // } else {
-        level2PlusOptionsAreaEl.classList.add('active'); // Always show L2+ area (which is now the only option area)
-        optionsContainerEl.style.display = 'grid'; // Options are now always shown, ensure container is visible
+        // --- Options Area is always active now ---
+        level2PlusOptionsAreaEl.classList.add('active');
+        optionsContainerEl.style.display = 'grid';
         optionButtons.forEach(btn => {
-            btn.style.display = 'flex'; // Use flex as per HTML, ensure buttons are visible templates
+            btn.style.display = 'flex';
             btn.disabled = true;
             btn.classList.remove('selected', 'correct', 'incorrect', 'hidden');
             btn.querySelector('.option-text').textContent = '';
         });
-        // requestOptionsButtonEl.style.display = 'inline-flex'; // Button removed
-        // requestOptionsButtonEl.disabled = true; // Button removed
-        fiftyFiftyButtonEl.style.display = 'inline-flex'; // Ensure button is visible
+        fiftyFiftyButtonEl.style.display = 'inline-flex';
         fiftyFiftyButtonEl.disabled = true; // Start disabled
-        // }
 
         // Populate options directly if available in the question data sent by server
-        // This assumes the server will send `question.opciones` or similar
         if (question.opciones && question.opciones.length > 0) {
             displayOptionsFromServer(question.opciones);
         } else {
             // Fallback or error if options are not provided with the question
             console.warn("Question received without 'opciones' field. Options will be empty.");
-            // Optionally clear any stale options
-             optionButtons.forEach((btn, index) => {
+            optionButtons.forEach((btn) => {
                 btn.querySelector('.option-text').textContent = '';
                 btn.style.display = 'none'; // Hide if no content
             });
@@ -443,8 +426,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
      function visualizeAnswerOptions(selectedIndex, correctIndex, isLocalPlayerCorrect) {
-        // Show correctness on options only for levels 2+
-         if (gameState.currentQuestionData && gameState.currentQuestionData.level > 1 && gameState.optionsRequested) {
+        // Show correctness on options
+         if (gameState.currentQuestionData && gameState.currentQuestionData.opciones) { // Options are always expected now
              optionButtons.forEach((btn, index) => {
                 // Remove previous selection states first
                  btn.classList.remove('selected');
@@ -479,11 +462,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.style.display = 'none'; // Hide unused buttons
             }
          });
-         gameState.optionsRequested = true; // Mark options as requested/shown (always true now)
+         // gameState.optionsRequested = true; // Mark options as requested/shown (always true now) // REMOVED
          // requestOptionsButtonEl.disabled = true; // Button removed
          // requestOptionsButtonEl.classList.add('used'); // Button removed
 
-         // --- Disable text input when options are shown --- 
+         // --- Text input is fully removed ---
          // answerInputEl.disabled = true; // Input removed
          // const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]'); // Form removed
          // if(submitBtnLvl1) submitBtnLvl1.disabled = true; // Form removed
@@ -525,12 +508,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function disablePlayerInput() {
-        // Level 1 (Now all levels are options only)
+        // Text input for Level 1 is removed
         // answerInputEl.disabled = true; // Removed
         // const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]'); // Removed
         // if(submitBtnLvl1) submitBtnLvl1.disabled = true; // Removed
 
-        // Level 2+ (Now all levels)
+        // Options buttons (now for all levels)
         optionButtons.forEach(btn => btn.disabled = true);
         // requestOptionsButtonEl.disabled = true; // Removed
         fiftyFiftyButtonEl.disabled = true;
@@ -545,37 +528,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
         hideWaitingMessage();
 
-        // Enable based on current level and state (Hybrid Logic)
+        // Enable based on current question data (options are always the input method now)
         if (gameState.currentQuestionData) {
-            // const isLevel1 = gameState.currentQuestionData.level === 1; // Not needed
-            const optionsAreVisible = gameState.optionsRequested; // Always true now
+            // const optionsAreVisible = gameState.optionsRequested; // Always true now, so not needed as a variable
 
-            // Enable/Disable Text Input - All removed
-            // answerInputEl.disabled = !isLevel1 && optionsAreVisible; 
+            // Text input is removed
+            // answerInputEl.disabled = true; 
             // const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]');
-            // if(submitBtnLvl1) submitBtnLvl1.disabled = answerInputEl.disabled;
-            // if (!answerInputEl.disabled) {
-            //     answerInputEl.focus(); 
-            // }
+            // if(submitBtnLvl1) submitBtnLvl1.disabled = true;
 
-            // Enable/Disable L2+ Buttons (Now all levels)
-            // if (!isLevel1) { // Not needed
-            // requestOptionsButtonEl.disabled = optionsAreVisible; // Button Removed
-            // requestOptionsButtonEl.classList.toggle('used', optionsAreVisible); // Button Removed
+            // Action Buttons (50/50) and Option Buttons
+            // requestOptionsButtonEl.disabled = true; // Button Removed
+            // requestOptionsButtonEl.classList.toggle('used', true); // Button Removed
 
-            fiftyFiftyButtonEl.disabled = !optionsAreVisible || gameState.fiftyFiftyUsed; // Enable only if options shown & not used
-            fiftyFiftyButtonEl.classList.toggle('used', gameState.fiftyFiftyUsed); // Mark used if used
+            fiftyFiftyButtonEl.disabled = gameState.fiftyFiftyUsed; // Enable only if not used yet for this question
+            fiftyFiftyButtonEl.classList.toggle('used', gameState.fiftyFiftyUsed);
 
             optionButtons.forEach(btn => {
-                // Enable option button if options are visible AND it's not hidden by 50/50
-                btn.disabled = !optionsAreVisible || btn.classList.contains('hidden');
+                // Enable option button if it's not hidden by 50/50
+                btn.disabled = btn.classList.contains('hidden') || !btn.style.display || btn.style.display === 'none';
             });
-            // } else {
-                 // Ensure L2+ buttons are disabled for L1 - Not needed
-                 // requestOptionsButtonEl.disabled = true;
-                 // fiftyFiftyButtonEl.disabled = true;
-                 // optionButtons.forEach(btn => btn.disabled = true);
-            // }
         } else {
              console.warn("enablePlayerInput called but no currentQuestionData available.");
              disablePlayerInput();
@@ -773,7 +745,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  updatePlayerUI();
                  displayQuestion(message.payload.question); // Display the new question { level, text }
                  updateLevelAndQuestionCounter(message.payload.question.level, message.payload.questionNumber, message.payload.totalQuestionsInLevel);
-                 updateTurnIndicator();
+                 // updateTurnIndicator(); // REMOVED - Handled by updatePlayerUI
 
                  // Handle enabling/disabling input based on whose turn it is
                  if (gameState.currentTurn === gameState.myPlayerId) {
@@ -793,7 +765,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  gameState.players = message.payload.players; // Update scores primarily
                  // gameState.currentLevel = message.payload.currentLevel; // Usually level changes with newQuestion
                  updatePlayerUI();
-                 updateTurnIndicator();
+                 // updateTurnIndicator(); // REMOVED - Handled by updatePlayerUI
                  // updateLevelAndQuestionCounter(gameState.currentLevel); // Level display usually updates with newQuestion
 
                  if (gameState.gameActive) {
@@ -853,11 +825,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
                  // Show feedback (correct/incorrect message)
                  if (!finalIsCorrect && correctAnswerText) {
-                     // Show correct answer for Level 1 always, or Level 2+ only if options were shown
-                     // This logic simplifies as options are always shown
+                     // Show correct answer (options are always shown)
                      // if (gameState.currentQuestionData &&
-                     //     (gameState.currentQuestionData.level === 1 || gameState.optionsRequested)) {
-                     if (gameState.currentQuestionData && gameState.optionsRequested) { // optionsRequested is always true
+                     //     (gameState.currentQuestionData.level === 1 || gameState.optionsRequested)) { // optionsRequested is always true
+                     if (gameState.currentQuestionData) { 
                          feedbackMsg += ` Answer: ${correctAnswerText}`;
                      }
                  }
@@ -865,8 +836,8 @@ document.addEventListener('DOMContentLoaded', function() {
                  showFeedback(feedbackMsg, finalIsCorrect ? 'correct' : 'incorrect');
 
 
-                 // Visualize options if level > 1 and options were requested
-                 if (gameState.currentQuestionData && gameState.currentQuestionData.level > 1 && gameState.optionsRequested) {
+                 // Visualize options if question data and options exist
+                 if (gameState.currentQuestionData && gameState.currentQuestionData.opciones) {
                     // Reveal correct/incorrect options
                     // Pass 'isCorrect' based on the player who answered
                     visualizeAnswerOptions(selectedIndex, correctIndex, isCorrect);
@@ -885,6 +856,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  // This message might still be used by the server even if client doesn't explicitly request.
                  // Or, server might always include options in 'newQuestion'.
                  // Assuming this message means "here are the options to display":
+                 // If options are always in newQuestion, this case might become less critical or a fallback.
                  displayOptionsFromServer(message.payload.options);
                  // Input might be enabled here if it's still our turn (and game active)
                  if (gameState.currentTurn === gameState.myPlayerId && gameState.gameActive) {
