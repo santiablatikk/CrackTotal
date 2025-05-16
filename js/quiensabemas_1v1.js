@@ -911,6 +911,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 renderAvailableRooms(message.payload.rooms);
                  break;
 
+            case 'playerJoined': // Handle playerJoined message
+                console.log("Received playerJoined message from server:", message.payload);
+                // Potentially update player UI if payload contains relevant data
+                // For example, if message.payload.players exists:
+                // if (message.payload.players) {
+                //     gameState.players = message.payload.players;
+                //     updatePlayerUI();
+                // }
+                // Or if it signals that the game can start or opponent is ready
+                break;
+
             default:
                  console.warn('Unknown message type received:', message.type);
         }
