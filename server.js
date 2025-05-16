@@ -726,6 +726,7 @@ function sendNextQuestion(roomId) {
 
     console.log(`Room ${roomId} - Sending Q${room.questionsAnsweredInLevel} L${room.currentLevel}, Turn: ${room.currentTurn}`);
     
+    // Ensure this debug log is active to verify the payload being sent
     console.log('DEBUG: Payload de la pregunta a enviar en newQuestion:', JSON.stringify(message.payload.question, null, 2));
     
     broadcastToRoom(roomId, message);

@@ -317,38 +317,34 @@ document.addEventListener('DOMContentLoaded', function() {
             questionTextEl.textContent = "Error loading question.";
             return;
         }
-        console.log("Displaying question:", question);
-        gameState.currentQuestionData = question; // Store current question data
+        console.log("Displaying question:", question); // This log usually shows options if they arrive
+        gameState.currentQuestionData = question; 
         questionTextEl.textContent = question.text;
-        feedbackAreaEl.innerHTML = ''; // Clear previous feedback
+        feedbackAreaEl.innerHTML = ''; 
 
-        // Reset options/input state
         fiftyFiftyButtonEl.classList.remove('used');
         gameState.fiftyFiftyUsed = false;
 
-        // --- Options Area is always active now ---
-        level2PlusOptionsAreaEl.classList.add('active');
-        optionsContainerEl.style.display = 'grid';
-        optionButtons.forEach(btn => {
-            btn.style.display = 'flex';
-            btn.disabled = true;
-            btn.classList.remove('selected', 'correct', 'incorrect', 'hidden');
-            btn.querySelector('.option-text').textContent = '';
-        });
-        fiftyFiftyButtonEl.style.display = 'inline-flex';
-        fiftyFiftyButtonEl.disabled = true; // Start disabled
-
-        // Populate options directly if available in the question data sent by server
+        level2PlusOptionsAreaEl.classList.add('active'); 
+        optionsContainerEl.style.display = 'grid'; 
+        
+        // Assuming options are always sent by the server now.
+        // If `question.opciones` is missing or empty here, it indicates a server-side issue.
         if (question.opciones && question.opciones.length > 0) {
             displayOptionsFromServer(question.opciones);
         } else {
-            // Fallback or error if options are not provided with the question
-            console.warn("Question received without 'opciones' field. Options will be empty.");
+            console.error("CRITICAL CLIENT ERROR: Question object received from server is MISSING 'opciones' field or it's EMPTY!", question);
+            // Display an error in the options area or hide it, to avoid broken UI
             optionButtons.forEach((btn) => {
-                btn.querySelector('.option-text').textContent = '';
-                btn.style.display = 'none'; // Hide if no content
+                btn.querySelector('.option-text').textContent = 'Error';
+                btn.style.display = 'none'; // Hide broken option buttons
             });
         }
+
+        // Ensure action buttons are correctly displayed and then disabled initially
+        // Their enabled state will be managed by enablePlayerInput
+        fiftyFiftyButtonEl.style.display = 'inline-flex'; 
+        fiftyFiftyButtonEl.disabled = true; 
     }
 
     // --- Turn & Game Flow Updates (Triggered by Server) ---
