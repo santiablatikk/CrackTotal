@@ -322,6 +322,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Question Display (Triggered by Server) ---
     function displayQuestion(question) {
+        // +++ MORE DEBUGGING +++
+        console.log("[CLIENT] displayQuestion received raw object:", JSON.parse(JSON.stringify(question))); // Log a deep copy
+        if (question && typeof question === 'object') {
+            console.log("[CLIENT] Keys in received question:", Object.keys(question));
+            console.log("[CLIENT] Has 'options' (no space)?", question.hasOwnProperty('options'));
+            if (question.hasOwnProperty('options')) {
+                console.log("[CLIENT] Value of 'options':", question.options);
+                console.log("[CLIENT] typeof question.options:", typeof question.options);
+                console.log("[CLIENT] Array.isArray(question.options):", Array.isArray(question.options));
+            }
+            console.log("[CLIENT] Has 'options ' (WITH space)?", question.hasOwnProperty('options ')); // Note the space
+            if (question.hasOwnProperty('options ')) {
+                console.log("[CLIENT] Value of 'options ' (WITH space):", question['options ']);
+                console.log("[CLIENT] typeof question['options ']:", typeof question['options ']);
+                console.log("[CLIENT] Array.isArray(question['options ']):", Array.isArray(question['options ']));
+            }
+        }
+        // +++ END MORE DEBUGGING +++
+
         if (!question) {
             console.error("displayQuestion called without question data.");
             questionTextEl.textContent = "Error loading question.";
@@ -351,28 +370,27 @@ document.addEventListener('DOMContentLoaded', function() {
         fiftyFiftyButtonEl.disabled = true; // Start disabled
         // --- End Simplified Input Area Visibility ---
 
-        // +++ DEBUGGING LOGS (MOVED AND ADDED) +++
-        console.log("[DEBUG] Keys in received question object:", Object.keys(question));
-        console.log("[DEBUG] question object (deep copy for inspection):", JSON.parse(JSON.stringify(question)));
-        // console.log("[DEBUG] typeof question['options ']:", typeof question["options "]); // Old check
-        // console.log("[DEBUG] Array.isArray(question['options ']):", Array.isArray(question["options "])); // Old check
-        // +++ END DEBUGGING LOGS +++
-
         // Populate options directly if available in the question data sent by server
-        // Server (server.js) sends 'options' (no space) as the key for an array of strings.
-        const currentOptions = question.options; // Direct access
+        let optionsToShow = null;
+        const directOptions = question ? question.options : null; // Direct access (no space)
 
-        if (currentOptions && Array.isArray(currentOptions) && currentOptions.length > 0) {
-            console.log("[CLIENT] Displaying options from question.options (should be an array).");
-            displayOptionsFromArray(currentOptions); // Call the new function
+        if (directOptions && Array.isArray(directOptions) && directOptions.length > 0) {
+            console.log("[CLIENT] Using 'question.options' (no space). It is a valid array.");
+            optionsToShow = directOptions;
         } else {
-            console.warn("[CLIENT] Question received, but 'question.options' is missing, not a valid array, or empty. Options will be empty.", question);
-            // Add a check for the old problematic key for debugging if direct access fails
-            if (question.hasOwnProperty("options ") && Array.isArray(question["options "])) { // Note the space in "options "
-                console.warn("[CLIENT] Diagnostic: Problematic key 'options ' (with space) was found in question object. Value:", question["options "]);
-            } else if (question.hasOwnProperty("options") && typeof question.options === 'object' && question.options !== null && !Array.isArray(question.options)) {
-                console.warn("[CLIENT] Diagnostic: 'question.options' (no space) exists but is an object, not an array. Keys:", Object.keys(question.options));
+            // Fallback or check for the version with a space, just in case server is inconsistent
+            const optionsWithSpace = question && question['options ']; // Note the space
+            if (optionsWithSpace && Array.isArray(optionsWithSpace) && optionsWithSpace.length > 0) {
+                console.warn("[CLIENT] 'question.options' (no space) was invalid or empty. FALLING BACK to 'options ' (with space).");
+                optionsToShow = optionsWithSpace;
             }
+        }
+
+        if (optionsToShow) {
+            displayOptionsFromArray(optionsToShow);
+        } else {
+            console.warn("[CLIENT] Neither 'question.options' (no space) nor 'options ' (with space) yielded a valid & non-empty options array. Options will be empty.", question);
+            // The detailed logs at the start of the function should provide more insight into the raw question object.
             clearAndHideOptions();
         }
     }
