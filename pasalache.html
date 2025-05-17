@@ -100,7 +100,7 @@
             </div>
         </header>
 
-        <main class="game-content" id="gameContainer">
+        <main class="game-content" id="gameContainer" style="display: none;">
             <div class="container">
                 <div class="rosco-container">
                     <div class="game-instructions">
@@ -150,6 +150,19 @@
                 </div>
             </div>
         </main>
+
+        <!-- NUEVA SECCIÓN: Pantalla de Carga/Inicio del Juego -->
+        <div class="loading-start-screen" id="loadingStartScreen">
+            <div class="container">
+                <h2 class="loading-title">Preparando el Rosco...</h2>
+                <div class="spinner-rosco"></div>
+                <p class="loading-message" id="loadingMessageText">Cargando preguntas, por favor espera.</p>
+                <button id="startGameAfterLoadingButton" class="primary-button" disabled>
+                    Cargando...
+                </button>
+            </div>
+        </div>
+        <!-- FIN NUEVA SECCIÓN -->
         
         <footer class="site-footer"> 
             <div class="footer-content">

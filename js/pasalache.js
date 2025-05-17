@@ -199,6 +199,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const playerNameDisplay = document.querySelector('.player-name');
     // --- End Moved DOM Elements ---
     
+    // --- NUEVOS Elementos DOM para Pantalla de Carga ---
+    const loadingStartScreen = document.getElementById('loadingStartScreen');
+    const loadingMessageText = document.getElementById('loadingMessageText');
+    const startGameAfterLoadingButton = document.getElementById('startGameAfterLoadingButton');
+    // --- FIN NUEVOS Elementos DOM ---
+    
+    // <<< Referencia para el event listener del botón de inicio >>>
+    let startGameClickListener = null;
+    
     // Rules modal elements
     // const gameRulesModal = document.getElementById('gameRulesModal');
     // const startGameButton = document.getElementById('startGameButton');
@@ -213,18 +222,22 @@ document.addEventListener('DOMContentLoaded', function() {
             // Add active class to clicked button
             this.classList.add('active');
             
-            // Set game time based on difficulty
+            // Set game time and maxErrors based on difficulty
             const difficulty = this.getAttribute('data-difficulty');
             switch(difficulty) {
                 case 'facil':
-                    totalTime = 300; // 5 minutes
+                    totalTime = 360; // Antes 300. Usuario indica 360s.
+                    maxErrors = 4;   // Antes 4. Para ganar con hasta 4 errores, se pierde con 5.
                     break;
                 case 'dificil':
-                    totalTime = 180; // 3 minutes
+                    totalTime = 240; // Antes 180. Usuario indica 240s.
+                    maxErrors = 2;   // Antes 2. Para ganar con hasta 2 errores, se pierde con 3.
                     break;
-                default:
-                    totalTime = 240; // 4 minutes (normal)
+                default: // normal (medio)
+                    totalTime = 300; // Antes 240. Usuario indica 300s para MEDIO.
+                    maxErrors = 3;   // Antes 3. Para ganar con hasta 3 errores, se pierde con 4.
             }
+            console.log(`Dificultad seleccionada: ${difficulty}, Tiempo: ${totalTime}s, Errores Máx (umbral de derrota): ${maxErrors}`);
         });
     });
     
@@ -255,6 +268,16 @@ document.addEventListener('DOMContentLoaded', function() {
             logrosAlInicioDePartida = {};
         }
         // <<< FIN: GUARDAR ESTADO INICIAL DE LOGROS >>>
+
+        // --- MOSTRAR PANTALLA DE CARGA, OCULTAR JUEGO --- 
+        if (loadingStartScreen) loadingStartScreen.style.display = 'flex'; // Mostrar pantalla de carga
+        if (gameContainer) gameContainer.style.display = 'none'; // Ocultar contenedor del juego
+        if (startGameAfterLoadingButton) {
+            startGameAfterLoadingButton.disabled = true;
+            startGameAfterLoadingButton.textContent = 'Cargando Preguntas...';
+        }
+        if (loadingMessageText) loadingMessageText.textContent = 'Consultando el VAR de las preguntas...';
+        // --- FIN MOSTRAR PANTALLA DE CARGA ---
 
         // Reset game state
         currentLetterIndex = 0;
@@ -302,26 +325,59 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Check if questions were loaded correctly
                 if (!questions || !Array.isArray(questions) || questions.length === 0) {
                     console.error("Error: No se pudieron cargar las preguntas o el archivo está vacío.");
-                    showTemporaryFeedback("Error al cargar preguntas. Intenta recargar.", 'error', 5000);
+                    if (loadingMessageText) loadingMessageText.textContent = 'Error al cargar preguntas. Intenta recargar la página.';
+                    if (startGameAfterLoadingButton) {
+                        startGameAfterLoadingButton.textContent = 'Error de Carga';
+                        startGameAfterLoadingButton.disabled = true; 
+                    }
+                    // No mostrar el botón de reintento aquí, ya que la lógica de reintento requeriría re-llamar initGame o fetch.
+                    // Es mejor que el usuario recargue la página si esto falla críticamente.
                     return; // Stop game initialization
                 }
                 
                 console.log("Preguntas cargadas y mezcladas.");
 
-                // Setup the game interface
-                setupLetters(); 
-                setupLetterStatuses();
-                
-                // Show the game container and start
-                 document.getElementById('gameContainer').style.display = 'flex'; // Or 'block'
-                 startGame();
+                // --- PREPARAR JUEGO PERO NO INICIAR VISUALMENTE --- 
+                // setupLetters(); 
+                // setupLetterStatuses();
+                // NO LLAMAR A startGame() aquí todavía
+
+                // --- ACTUALIZAR BOTÓN Y MENSAJE DE CARGA --- 
+                if (loadingMessageText) loadingMessageText.textContent = '¡Todo listo para jugar!';
+                if (startGameAfterLoadingButton) {
+                    startGameAfterLoadingButton.textContent = '¡COMENZAR AHORA!';
+                    startGameAfterLoadingButton.disabled = false;
+                    
+                    // Eliminar listener previo si existe para evitar duplicados
+                    if (startGameClickListener) {
+                        startGameAfterLoadingButton.removeEventListener('click', startGameClickListener);
+                    }
+                    
+                    // Definir el nuevo listener
+                    startGameClickListener = () => {
+                        if (loadingStartScreen) loadingStartScreen.style.display = 'none';
+                        if (gameContainer) gameContainer.style.display = 'flex'; // O 'block' según tus CSS para gameContainer
+                        
+                        // Ahora sí, configurar y empezar el juego visualmente
+                        setupLetters(); 
+                        setupLetterStatuses();
+                        startGame(); // Inicia timer y carga la primera pregunta
+                        
+                        // Añadir botón de ayuda después de que el juego es visible y configurado
+                        // setTimeout(addHelpButton, 100); // <-- MOVIDO para después de startGame()
+                    };
+                    
+                    startGameAfterLoadingButton.addEventListener('click', startGameClickListener);
+                }
 
             })
             .catch(error => {
                 console.error('Error loading questions:', error);
-                 showTemporaryFeedback(`Error cargando preguntas: ${error.message}. Revisa la consola.`, 'error', 5000);
-                 // Optionally, display an error message to the user on the page
-                 questionTextElement.textContent = 'Error al cargar las preguntas. Por favor, recarga la página.';
+                if (loadingMessageText) loadingMessageText.textContent = `Error cargando preguntas: ${error.message}. Revisa la consola e intenta recargar.`;
+                if (startGameAfterLoadingButton) {
+                    startGameAfterLoadingButton.textContent = 'Error de Carga';
+                    startGameAfterLoadingButton.disabled = true;
+                }
             });
     }
     
@@ -419,6 +475,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentLetterIndex = 0;
         startTimer();
         loadQuestion();
+        addHelpButton(); // <-- LLAMAR addHelpButton AQUÍ
     }
     
     // Load question for the current letter
@@ -676,6 +733,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     endGame('defeat');
                     return; // Stop execution
                 }
+
+                // --- NUEVA VERIFICACIÓN DE ROSCO COMPLETO (POR RESPUESTAS TOTALES) ---
+                if (correctAnswers + incorrectAnswers === alphabet.length) {
+                    saveProfileStats(profileStats);
+                    // Si llegamos aquí, es porque incorrectAnswers < maxErrors (chequeo previo)
+                    // y el rosco está completo.
+                    endGame('victory');
+                    return; // Juego terminado
+                }
                 
                 // --- Update UI and move to next letter --- 
                 updateScoreDisplays();
@@ -716,7 +782,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateLetterStyles();
                 const indexToRemove = pendingLetters.indexOf(currentLetter);
                 if (indexToRemove > -1) {
-                    pendingLetters.splice(indexToRemove, 1); // Remove from pending
+                    pendingLetters.splice(indexToRemove, 1);
                 }
 
                 // Adjust index for next question load
@@ -724,14 +790,38 @@ document.addEventListener('DOMContentLoaded', function() {
                     currentLetterIndex = 0; 
                 } // No change needed if index is still valid
 
-                // --- Check for VICTORY --- 
-                if (pendingLetters.length === 0) {
-                    saveProfileStats(profileStats); 
-                    endGame('victory');
-                    return; // Stop execution
+                // --- VERIFICACIÓN DE ROSCO COMPLETO (POR RESPUESTAS TOTALES) ---
+                if (correctAnswers + incorrectAnswers === alphabet.length) {
+                    saveProfileStats(profileStats);
+                    if (incorrectAnswers < maxErrors) {
+                        endGame('victory');
+                    } else {
+                        endGame('defeat'); // Se completó, pero con demasiados errores
+                    }
+                    return; // Juego terminado
                 }
 
-                console.log(`Correct answer for ${currentLetter}. Pending letters: [${pendingLetters.join(', ')}]. Next index: ${currentLetterIndex}.`); // Log before timeout
+                // Condición 1: Completar el rosco (todas las letras acertadas) // <-- ESTE BLOQUE SERÁ ELIMINADO POR EL ANTERIOR
+                // if (pendingLetters.length === 0) {
+                //     saveProfileStats(profileStats); // Guardar stats antes de llamar a endGame
+                //     if (incorrectAnswers < maxErrors) { // maxErrors ya depende de la dificultad
+                //         endGame('victory');
+                //     } else {
+                //         endGame('defeat'); // Demasiados errores aunque se haya completado el rosco
+                //     }
+                //     return; // Stop execution
+                // }
+
+                // Condición 2: Victoria anticipada por alto rendimiento
+                // const VICTORIA_ANTICIPADA_ACIERTOS = 22; 
+                // if (correctAnswers >= VICTORIA_ANTICIPADA_ACIERTOS && incorrectAnswers < maxErrors) {
+                //     console.log(`Victoria anticipada: ${correctAnswers} aciertos con ${incorrectAnswers} errores (límite ${maxErrors}).`);
+                //     saveProfileStats(profileStats); 
+                //     endGame('victory');
+                //     return; // Stop execution
+                // }
+
+                console.log(`Correct answer for ${currentLetter}. Pending letters: [${pendingLetters.join(', ')}]}. Next index: ${currentLetterIndex}.`); // Log before timeout
 
                 // --- Load next question after delay --- 
                 setTimeout(() => {
@@ -882,6 +972,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Add help button functionality
     function addHelpButton() {
+        const questionCard = document.querySelector('.question-card'); // Mover la obtención aquí dentro
+        
+        // <<< AÑADIR VERIFICACIÓN DE EXISTENCIA DE questionCard >>>
+        if (!questionCard) {
+            console.warn("addHelpButton: questionCard no encontrado en el DOM. No se pudo añadir/actualizar el botón de ayuda.");
+            return; // Salir si no se encuentra el contenedor
+        }
+        // <<< FIN VERIFICACIÓN >>>
+
         // Check if help button already exists
         if (document.getElementById('helpButton')) {
             // Update help button text
@@ -925,7 +1024,6 @@ document.addEventListener('DOMContentLoaded', function() {
         helpButton.onclick = showHint;
         
         // Insert help button in the right place
-        const questionCard = document.querySelector('.question-card');
         questionCard.appendChild(helpButton);
     }
     
@@ -1089,6 +1187,12 @@ document.addEventListener('DOMContentLoaded', function() {
         const minutes = Math.floor(timeSpent / 60);
         const seconds = timeSpent % 60;
         const timeFormatted = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        // --- MOVER CÁLCULO DE ESTADÍSTICAS AQUÍ ARRIBA ---
+        const totalAnswered = correctAnswers + incorrectAnswers;
+        const unanswered = alphabet.length - totalAnswered; // Se usa alphabet.length que es el total de letras
+        const accuracy = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
+        // --- FIN MOVER CÁLCULO ---
         
         // --- Actualizar Estadísticas LOCALES --- 
         let profileStats = loadProfileStats();
@@ -1327,9 +1431,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // <<<--- FIN: DETECTAR Y MOSTRAR NUEVOS LOGROS --- >>>
 
         // --- Lógica del Modal de Resultado de Partida (EXISTENTE) --- 
-        const totalAnswered = correctAnswers + incorrectAnswers;
-        const unanswered = alphabet.length - totalAnswered;
-        const accuracy = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
+        // const totalAnswered = correctAnswers + incorrectAnswers; // <-- YA DEFINIDO ARRIBA
+        // const unanswered = alphabet.length - totalAnswered; // <-- YA DEFINIDO ARRIBA
+        // const accuracy = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0; // <-- YA DEFINIDO ARRIBA
         // Estas variables ya fueron calculadas y están disponibles en este alcance:
         // const minutes = Math.floor(timeSpent / 60);
         // const seconds = timeSpent % 60;
@@ -1511,10 +1615,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // **MODIFIED:** Go Home button now restarts the game (same page)
         goHomeButton.addEventListener('click', () => {
             modalOverlay.remove(); 
-            // Reiniciar el juego en lugar de ir a games.html
-            const statsModal = document.querySelector('.stats-detail-modal'); // Cierra también el modal de stats si está abierto
-            if (statsModal) statsModal.remove();
-            initGame(); 
+            const resultModal = document.querySelector('.game-result-modal');
+            if (resultModal) {
+                resultModal.remove(); // También cierra el modal principal de resultado si está abierto
+            }
+            // window.location.href = 'games.html'; // Eliminar redirección
+            initGame(); // Llamar a initGame para reiniciar la partida
         });
 
         // --- Event Listener for Twitter Share ---
@@ -1639,16 +1745,8 @@ document.addEventListener('DOMContentLoaded', function() {
             Ver Perfil
         `;
         
-        const goHomeButton = document.createElement('button');
-        goHomeButton.className = 'modal-button primary';
-        goHomeButton.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            Volver a inicio
-        `;
-        
         buttonsContainer.appendChild(closeButton);
         buttonsContainer.appendChild(viewProfileButton);
-        buttonsContainer.appendChild(goHomeButton);
         
         // Assemble modal - Cambiado el orden: errores arriba, estadísticas abajo
         modalContent.appendChild(modalHeader);
@@ -1667,15 +1765,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         viewProfileButton.addEventListener('click', () => {
             window.location.href = 'profile.html';
-        });
-        
-        goHomeButton.addEventListener('click', () => {
-            modalOverlay.remove(); 
-            const resultModal = document.querySelector('.game-result-modal');
-            if (resultModal) {
-                resultModal.remove();
-            }
-            window.location.href = 'games.html';
         });
     }
     
@@ -1797,7 +1886,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (startGameButton) {
         startGameButton.addEventListener('click', function() {
             // Add help button when game starts with a slight delay to ensure DOM is ready
-            setTimeout(addHelpButton, 100);
+            // setTimeout(addHelpButton, 100); // Movido a después de que el usuario hace clic en "COMENZAR AHORA!"
         });
     }
 
