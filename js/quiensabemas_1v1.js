@@ -351,29 +351,29 @@ document.addEventListener('DOMContentLoaded', function() {
         fiftyFiftyButtonEl.disabled = true; // Start disabled
         // --- End Simplified Input Area Visibility ---
 
-        // +++ DEBUGGING LOGS +++
-        console.log("[DEBUG] Just before IF: question object:", JSON.parse(JSON.stringify(question))); // Log a deep copy
-        console.log("[DEBUG] Just before IF: question.opciones:", question.opciones);
-        console.log("[DEBUG] Just before IF: typeof question.opciones:", typeof question.opciones);
-        console.log("[DEBUG] Just before IF: Array.isArray(question.opciones):", Array.isArray(question.opciones));
+        // +++ DEBUGGING LOGS (MOVED AND ADDED) +++
+        console.log("[DEBUG] Keys in received question object:", Object.keys(question));
+        console.log("[DEBUG] question object (deep copy for inspection):", JSON.parse(JSON.stringify(question)));
+        // console.log("[DEBUG] typeof question['options ']:", typeof question["options "]); // Old check
+        // console.log("[DEBUG] Array.isArray(question['options ']):", Array.isArray(question["options "])); // Old check
         // +++ END DEBUGGING LOGS +++
 
         // Populate options directly if available in the question data sent by server
-        if (question.opciones) {
-            if (Array.isArray(question.opciones) && question.opciones.length > 0) {
-                console.log("Displaying options from ARRAY format received from server.");
-                displayOptionsFromArray(question.opciones); // Function to handle array format
-            } else if (typeof question.opciones === 'object' && Object.keys(question.opciones).length > 0) {
-                console.log("Displaying options from OBJECT format received from server.");
-                displayOptionsFromObject(question.opciones); // Function to handle object format
-            } else {
-                console.warn("Question received with 'opciones' field, but it's neither a valid array nor object. Options will be empty.");
-                clearAndHideOptions();
-            }
+        // Server (server.js) sends 'options' (no space) as the key for an array of strings.
+        const currentOptions = question.options; // Direct access
+
+        if (currentOptions && Array.isArray(currentOptions) && currentOptions.length > 0) {
+            console.log("[CLIENT] Displaying options from question.options (should be an array).");
+            displayOptionsFromArray(currentOptions); // Call the new function
         } else {
-            // Fallback or error if options are not provided with the question
-            console.warn("Question received without 'opciones' field. Options will be empty.");
-            clearAndHideOptions(); // Helper to hide/clear options
+            console.warn("[CLIENT] Question received, but 'question.options' is missing, not a valid array, or empty. Options will be empty.", question);
+            // Add a check for the old problematic key for debugging if direct access fails
+            if (question.hasOwnProperty("options ") && Array.isArray(question["options "])) { // Note the space in "options "
+                console.warn("[CLIENT] Diagnostic: Problematic key 'options ' (with space) was found in question object. Value:", question["options "]);
+            } else if (question.hasOwnProperty("options") && typeof question.options === 'object' && question.options !== null && !Array.isArray(question.options)) {
+                console.warn("[CLIENT] Diagnostic: 'question.options' (no space) exists but is an object, not an array. Keys:", Object.keys(question.options));
+            }
+            clearAndHideOptions();
         }
     }
 
@@ -504,7 +504,7 @@ document.addEventListener('DOMContentLoaded', function() {
          indicesToRemove.forEach(index => {
              if (optionButtons[index]) {
                  optionButtons[index].style.display = 'none'; // Hide the button
-                 optionButtons.classList.add('hidden'); // Add class for potential styling/logic
+                 optionButtons[index].classList.add('hidden'); // CORRECT: Apply to individual button
                  optionButtons[index].disabled = true; // Ensure it's disabled
              }
          });
@@ -765,8 +765,14 @@ document.addEventListener('DOMContentLoaded', function() {
                  if(message.payload.players) gameState.players = message.payload.players;
                  gameState.currentTurn = message.payload.currentTurn; // Server dictates whose turn it is
                  updatePlayerUI();
-                 displayQuestion(message.payload.question); // Display the new question { level, text }
-                 updateLevelAndQuestionCounter(message.payload.question.level, message.payload.questionNumber, message.payload.totalQuestionsInLevel);
+
+                 // +++ DEBUG: Log the question object AS RECEIVED from payload +++
+                 console.log("[DEBUG] SERVER PAYLOAD question object:", JSON.parse(JSON.stringify(message.payload.question)));
+                 // Pass a DEEP COPY to displayQuestion to avoid issues with console.log live references or later modifications
+                 const questionCopy = JSON.parse(JSON.stringify(message.payload.question));
+                 displayQuestion(questionCopy); 
+                 // displayQuestion(message.payload.question); // OLD WAY
+                 updateLevelAndQuestionCounter(questionCopy.level, questionCopy.questionNumber, questionCopy.totalQuestionsInLevel);
                  // updateTurnIndicator(); // REMOVED: Function does not exist
 
                  // Handle enabling/disabling input based on whose turn it is
@@ -853,7 +859,14 @@ document.addEventListener('DOMContentLoaded', function() {
                  // This message might still be used by the server even if client doesn't explicitly request.
                  // Or, server might always include options in 'newQuestion'.
                  // Assuming this message means "here are the options to display":
-                 displayOptionsFromObject(message.payload.options);
+                 if (message.payload && message.payload.options && Array.isArray(message.payload.options)) {
+                    console.log("[CLIENT] optionsProvided: Displaying options from message.payload.options array.");
+                    displayOptionsFromArray(message.payload.options);
+                 } else {
+                    console.warn("[CLIENT] optionsProvided: message.payload.options is missing or not an array.", message.payload);
+                    clearAndHideOptions(); // Fallback if options are not in expected format
+                 }
+
                  // Input might be enabled here if it's still our turn (and game active)
                  if (gameState.currentTurn === gameState.myPlayerId && gameState.gameActive) {
                      enablePlayerInput();
@@ -1175,5 +1188,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Start App ---
     initializeApp(); // Start with the lobby and WebSocket connection
+
+    // +++ NEW FUNCTION to display options from an array +++
+    function displayOptionsFromArray(optionsArray) {
+        console.log("[CLIENT] Displaying options from array:", optionsArray);
+        if (!optionsContainerEl) {
+            console.error("[CLIENT] optionsContainerEl is null in displayOptionsFromArray");
+            return;
+        }
+        optionsContainerEl.style.display = 'grid';
+
+        if (!optionButtons || optionButtons.length === 0) {
+            console.error("[CLIENT] optionButtons NodeList is empty or null in displayOptionsFromArray");
+            return;
+        }
+
+        optionButtons.forEach((btn, index) => {
+            if (index < optionsArray.length && typeof optionsArray[index] === 'string') {
+                const optionTextEl = btn.querySelector('.option-text');
+                if (optionTextEl) {
+                    optionTextEl.textContent = optionsArray[index];
+                } else {
+                    console.warn(`[CLIENT] .option-text element not found in button index ${index}`);
+                }
+                btn.style.display = 'flex';
+                btn.disabled = true; // Disabled until enablePlayerInput is called
+                btn.classList.remove('hidden', 'correct', 'incorrect', 'selected');
+            } else {
+                btn.style.display = 'none'; // Hide button if no corresponding option or option is not a string
+                if (index >= optionsArray.length) {
+                    // This is expected if optionsArray has fewer than 4 options, no warning needed
+                } else if (typeof optionsArray[index] !== 'string') {
+                    console.warn(`[CLIENT] Option at index ${index} is not a string:`, optionsArray[index]);
+                }
+            }
+        });
+
+        gameState.optionsRequested = true; // Options are now displayed
+
+        // Update 50/50 button state
+        if (gameState.currentTurn === gameState.myPlayerId && gameState.gameActive) {
+            if(fiftyFiftyButtonEl) fiftyFiftyButtonEl.disabled = gameState.fiftyFiftyUsed;
+        }
+    }
+    // +++ END NEW FUNCTION +++
 
 });
