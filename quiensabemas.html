@@ -202,20 +202,11 @@
                     </div>
 
                     <div class="answer-area">
-                        <!-- Área de respuesta (Texto + Opciones) -->
-                        <!-- <div id="level1InputArea" class="answer-input-container active">
-                             <form id="answerFormLevel1" class="answer-form">
-                                <input type="text" id="answerInput" class="qsm-input modern-input" placeholder="Escribe tu respuesta aquí..." autocomplete="off" required>
-                                <button type="submit" class="primary-button submit-answer-btn modern-submit-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                    <span>Enviar</span>
-                                </button>
-                             </form>
-                        </div> -->
+                        <!-- Área de respuesta por texto ELIMINADA -->
 
-                        <!-- Área específica Nivel 2+ (Botones Pedir Opciones / 50-50) -->
-                        <div id="level2PlusOptionsArea" class="options-container active"> <!-- Ensure this is active -->
-                            <div class="options-grid qsm-options-grid" id="optionsContainer"> <!-- Removed style="display: none;" -->
+                        <!-- Área de Opciones (antes Nivel 2+) ahora para todos los niveles -->
+                        <div id="level2PlusOptionsArea" class="options-container active">
+                            <div class="options-grid qsm-options-grid" id="optionsContainer">
                                 <button class="option modern-option" data-index="0"><span class="option-letter">A</span><span class="option-text"></span></button>
                                 <button class="option modern-option" data-index="1"><span class="option-letter">B</span><span class="option-text"></span></button>
                                 <button class="option modern-option" data-index="2"><span class="option-letter">C</span><span class="option-text"></span></button>
@@ -223,10 +214,7 @@
                             </div>
                             <!-- Grupo de botones de acción -->
                             <div class="action-buttons-qsm">
-                                 <!-- <button id="requestOptionsButton" class="secondary-button action-btn request-options-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.46 10.46 5 19l-1.76-1.76a6 6 0 0 1 8.48-8.48l1.76 1.76Z"></path><path d="m14.58 13.42 5.5-5.5M16 3l5 5"></path></svg>
-                                    <span>Pedir Opciones</span>
-                                </button> -->
+                                 <!-- Botón "Pedir Opciones" ELIMINADO -->
                                 <button id="fiftyFiftyButton" class="secondary-button action-btn fifty-fifty-btn" disabled>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 9h.01"></path><path d="M15 15h.01"></path><path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18Z"></path></svg>
                                     <span>50/50</span>
