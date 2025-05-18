@@ -29,6 +29,7 @@
 
     <!-- CSS Links -->
     <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/layout.css" />
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
@@ -69,7 +70,7 @@
     </script>
     <script src="js/main.js"></script>
   </head>
-  <body>
+  <body class="privacy-page-body">
     <nav class="main-navigation">
         <ul>
             <li><a href="profile.html">Perfil</a></li>
@@ -95,7 +96,16 @@
       <p class="subtitle">Política de Privacidad</p>
     </header>
     
-    <div class="page-container">
+    <div class="breadcrumbs-container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="index.html">Inicio</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Política de Privacidad</li>
+        </ol>
+      </nav>
+    </div>
+    
+    <div class="page-container privacy-container">
       <div class="privacy-container">
         <section class="privacy-section">
           <h2><i class="fas fa-info-circle"></i> Introducción</h2>
