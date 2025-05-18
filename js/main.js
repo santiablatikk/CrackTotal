@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     event.preventDefault();
                     localStorage.setItem('playerName', enteredName);
                     console.log(`Nombre guardado desde index.html: ${enteredName}. Redirigiendo a games.html...`);
-                    window.location.href = 'games.html';
+            window.location.href = 'games.html';
                 } else {
                     console.log("El nombre en index.html no puede estar vacío.");
                     event.preventDefault();
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         qsmIntroModal.classList.add('active');
                     }
                 } else if (gameType) {
-                    window.location.href = `${gameType}.html`;
+                window.location.href = `${gameType}.html`;
                 } 
             });
         });

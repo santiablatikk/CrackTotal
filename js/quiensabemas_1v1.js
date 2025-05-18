@@ -1175,19 +1175,19 @@ document.addEventListener('DOMContentLoaded', function() {
             hideEndGameModal();
             showLobby();
             gameState.gameActive = false;
-            if (gameState.roomId) {
+             if (gameState.roomId) {
                 sendToServer('leaveRoom', { roomId: gameState.roomId });
                 gameState.roomId = null;
-            }
+             }
         });
         backToLobbyButtonQSM.addEventListener('click', () => {
             hideEndGameModal();
             showLobby();
-            gameState.gameActive = false;
-            if (gameState.roomId) {
+             gameState.gameActive = false;
+             if (gameState.roomId) {
                 sendToServer('leaveRoom', { roomId: gameState.roomId });
                 gameState.roomId = null;
-            }
+             }
         });
 
         // Listeners para el Modal de Contraseña de Sala Privada
@@ -1284,7 +1284,7 @@ document.addEventListener('DOMContentLoaded', function() {
             passwordErrorTextEl.style.display = 'none';
             passwordModalInputEl.focus();
             showPasswordPromptModal();
-        } else {
+            } else {
             // Unirse directamente si no requiere contraseña
             joinRoomIdInput.value = roomId; // Actualizar el input general del lobby (opcional, pero consistente)
             joinRoomPasswordInput.value = ''; // Limpiar el input general de contraseña del lobby
@@ -1299,7 +1299,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (privateRoomPasswordModalEl) privateRoomPasswordModalEl.classList.add('active');
         if (passwordModalInputEl) passwordModalInputEl.focus();
          // Deshabilitar botones del lobby mientras el modal de contraseña está activo
-        disableLobbyButtons(); 
+        disableLobbyButtons();
     }
 
     function hidePasswordPromptModal() {

@@ -359,8 +359,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (gameContainer) gameContainer.style.display = 'flex'; // O 'block' según tus CSS para gameContainer
                         
                         // Ahora sí, configurar y empezar el juego visualmente
-                        setupLetters(); 
-                        setupLetterStatuses();
+                setupLetters(); 
+                setupLetterStatuses();
                         startGame(); // Inicia timer y carga la primera pregunta
                         
                         // Añadir botón de ayuda después de que el juego es visible y configurado
@@ -792,9 +792,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // --- VERIFICACIÓN DE ROSCO COMPLETO (POR RESPUESTAS TOTALES) ---
                 if (correctAnswers + incorrectAnswers === alphabet.length) {
-                    saveProfileStats(profileStats);
+                    saveProfileStats(profileStats); 
                     if (incorrectAnswers < maxErrors) {
-                        endGame('victory');
+                    endGame('victory');
                     } else {
                         endGame('defeat'); // Se completó, pero con demasiados errores
                     }
@@ -1556,7 +1556,7 @@ document.addEventListener('DOMContentLoaded', function() {
              <i class="fas fa-trophy"></i>
             Ver Ranking
         `;
-        
+
         actionButtonsWrapper.appendChild(viewStatsButton);
         actionButtonsWrapper.appendChild(viewProfileButton);
         actionButtonsWrapper.appendChild(viewRankingButton);
@@ -1784,6 +1784,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalContent.style.boxShadow = '0 5px 15px rgba(0,0,0,0.3)';
         modalContent.style.transform = 'scale(0.95)';
         modalContent.style.transition = 'transform 0.3s ease';
+        modalContent.style.position = 'relative'; // Necesario para posicionar el botón X
         modalContent.className = 'modal-content feedback-content'; // Add class
 
         // Add icon based on type
@@ -1797,14 +1798,67 @@ document.addEventListener('DOMContentLoaded', function() {
              color = 'var(--primary-light, #AB8BFA)';
         } // Add other types if needed
 
+        // Crear botón de cierre (X)
+        const closeButton = document.createElement('button');
+        closeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+        closeButton.className = 'feedback-close-btn';
+        closeButton.style.position = 'absolute';
+        closeButton.style.top = '8px';
+        closeButton.style.right = '8px';
+        closeButton.style.background = 'transparent';
+        closeButton.style.border = 'none';
+        closeButton.style.color = 'var(--text-light, #94A1B2)';
+        closeButton.style.cursor = 'pointer';
+        closeButton.style.padding = '4px';
+        closeButton.style.borderRadius = '50%';
+        closeButton.style.display = 'flex';
+        closeButton.style.alignItems = 'center';
+        closeButton.style.justifyContent = 'center';
+        closeButton.style.transition = 'background-color 0.2s ease, color 0.2s ease';
+        
+        // Hover state (inline por ahora)
+        closeButton.onmouseover = () => {
+            closeButton.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+            closeButton.style.color = 'white';
+        };
+        closeButton.onmouseout = () => {
+            closeButton.style.backgroundColor = 'transparent';
+            closeButton.style.color = 'var(--text-light, #94A1B2)';
+        };
+
         modalContent.innerHTML = `
             <div style="color: ${color}; margin-bottom: 10px;">${iconHtml}</div>
             <p style="font-size: 1rem; color: var(--text, #FFFFFE); margin: 0;">${message}</p>
         `;
         modalContent.style.border = `2px solid ${color}`;
 
+        // Añadir el botón de cierre al contenido del modal
+        modalContent.appendChild(closeButton);
         modalOverlay.appendChild(modalContent);
         document.body.appendChild(modalOverlay);
+
+        // Función para cerrar el modal
+        const closeModal = () => {
+            clearTimeout(timeoutId); // Detener el cierre automático
+            modalOverlay.style.opacity = '0';
+            modalContent.style.transform = 'scale(0.95)';
+            setTimeout(() => modalOverlay.remove(), 300); // Esperar a que termine la animación
+        };
+
+        // Event listener para el botón de cierre
+        closeButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // Evitar que el clic se propague al overlay
+            closeModal();
+        });
+
+        // Event listener para teclas Escape y Enter
+        const keyHandler = (e) => {
+            if (e.key === 'Escape' || e.key === 'Enter') {
+                closeModal();
+                document.removeEventListener('keydown', keyHandler); // Limpiar el event listener
+            }
+        };
+        document.addEventListener('keydown', keyHandler);
 
         // Trigger fade-in and scale-up animation
         requestAnimationFrame(() => {
@@ -1812,21 +1866,16 @@ document.addEventListener('DOMContentLoaded', function() {
             modalContent.style.transform = 'scale(1)';
         });
 
-
         // Auto-remove after duration
         const timeoutId = setTimeout(() => {
-            modalOverlay.style.opacity = '0';
-            modalContent.style.transform = 'scale(0.95)';
-            // Optional: Add fade-out animation before removing
-            setTimeout(() => modalOverlay.remove(), 300); // Wait for fade animation
+            closeModal();
+            document.removeEventListener('keydown', keyHandler); // Limpiar el event listener
         }, duration);
 
         // Allow clicking overlay to dismiss early
         modalOverlay.addEventListener('click', () => {
-             clearTimeout(timeoutId); // Prevent auto-removal if clicked
-             modalOverlay.style.opacity = '0';
-             modalContent.style.transform = 'scale(0.95)';
-             setTimeout(() => modalOverlay.remove(), 300);
+            closeModal();
+            document.removeEventListener('keydown', keyHandler); // Limpiar el event listener
         });
     }
 

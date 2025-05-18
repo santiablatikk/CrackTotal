@@ -205,11 +205,11 @@ svg {
 
 /* Opcional: Efecto hover sutil para la tarjeta */
 /*
-+.welcome-card:hover {
-+    transform: translateY(-5px) scale(1.01);
-+    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-+}
-+*/
+.welcome-card:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+}
+*/
 
 .welcome-card::before { /* Shimmer effect */
     content: '';
@@ -4404,7 +4404,6 @@ h3:not([class]) {
 /* ============================================ */
 /* ======= Responsive Quién Sabe Más ======== */
 /* ============================================ */
-
 /* Styles for Coming Soon Game Card */
 .game-card.coming-soon-card {
     opacity: 0.6;
@@ -4851,7 +4850,7 @@ h3:not([class]) {
 @media (max-width: 992px) { /* Adjust breakpoint as needed */
     .millionaire-container {
         flex-direction: column; /* Stack main content and sidebar */
-    align-items: center;
+        align-items: center;
     }
     .question-block {
         width: 100%;
@@ -5637,3 +5636,4 @@ h3:not([class]) {
 /* ============================================ */
 /* ======= Responsive Quién Sabe Más ======== */
 /* ============================================ */
+

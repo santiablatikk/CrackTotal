@@ -829,6 +829,78 @@
     }
 }
 
+/* Add specific rules for very narrow screens (340px width) */
+@media (max-width: 375px) {
+    .rosco-circle {
+        max-width: 240px; /* Make circle smaller */
+    }
+    .letter {
+        width: 20px; /* Smaller fixed size */
+        height: 20px;
+        font-size: 0.5rem;
+    }
+    .letter.active {
+        transform: scale(1.1); /* Reduce active scale */
+    }
+    .question-card {
+        width: 90%; /* Aumentar tamaño para que roce las letras */
+        min-height: 180px;
+    }
+    .question-header h3 {
+        font-size: 0.5rem;
+        margin-bottom: 1px;
+    }
+    .question-text {
+        font-size: 0.45rem;
+        padding: 10px;
+        margin-bottom: 1px;
+        max-height: 60px;
+    }
+    .timer-count {
+        font-size: 0.55rem; /* Más pequeño */
+        margin-bottom: 0;
+    }
+    .timer {
+        height: 2px; /* Más delgado */
+        width: 65%; /* Más estrecho */
+        margin: 0 auto; /* Centrado */
+    }
+    .timer-wrapper {
+        margin-bottom: 2px; /* Menos margen */
+    }
+    .input-group {
+        width: 85%;
+    }
+    .answer-input {
+        height: 24px;
+        font-size: 0.7rem;
+        padding: 4px 25px 4px 6px;
+    }
+    .submit-answer-icon-btn {
+        width: 20px;
+        height: 20px;
+        font-size: 0.6rem;
+    }
+    .action-buttons {
+        gap: 2px;
+    }
+    .pasapalabra-button,
+    .help-button {
+        padding: 4px 6px;
+        font-size: 0.35rem;
+    }
+    .help-button svg {
+        width: 7px;
+        height: 7px;
+    }
+    /* Adjust letter hint for smaller size */
+    .letter-hint {
+        font-size: 8px;
+        padding: 0px 2px;
+        margin-top: 2px;
+    }
+}
+
 /* Hint styles for letters */
 .letter-hint {
     position: absolute;

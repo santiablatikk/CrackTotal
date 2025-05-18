@@ -1,0 +1,658 @@
+/* Styles for Mentiroso Game */
+
+:root {
+    --primary-color: #7F5AF0; /* Morado principal */
+    --secondary-color: #2CB67D; /* Verde secundario */
+    --background-color: #16161A; /* Fondo oscuro principal */
+    --card-background-color: #242629; /* Fondo oscuro para tarjetas/secciones */
+    --text-color: #FFFFFE; /* Texto principal blanco */
+    --text-secondary-color: #94A1B2; /* Texto secundario grisáceo */
+    --accent-color: #FF8E3C; /* Naranja para acentos/botones */
+    --error-color: #FF5470; /* Rojo para errores */
+    --success-color: var(--secondary-color);
+    --highlight-bg: rgba(255, 142, 60, 0.1); /* Fondo para highlight con transparencia */
+    --border-color: rgba(255, 255, 255, 0.1);
+    --input-bg-color: #1a1a1f; /* Un poco más claro que el fondo principal */
+    --font-primary: 'Poppins', sans-serif;
+    --font-secondary: 'Roboto', sans-serif;
+    --primary-rgb: 127, 90, 240; /* For use in rgba */
+    --accent-rgb: 255, 142, 60; /* For use in rgba */
+}
+
+/* Base screen and section visibility */
+.game-screen,
+.demonstration-area,
+.round-result-display,
+.player-actions-container,
+.timer-display {
+    display: none; /* Hidden by default */
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out, transform 0.3s ease;
+}
+
+/* Active state for screens and sections */
+.game-screen.active,
+.demonstration-area.active,
+.round-result-display.active,
+.player-actions-container.active,
+.timer-display.active {
+    display: flex; /* Or block, depending on the element's natural display type */
+    flex-direction: column; /* Default for most containers */
+    opacity: 1;
+}
+
+/* Specific display types for active elements if needed */
+#matchmakingScreen.active,
+#gameplayScreen.active,
+#gameOverScreen.active,
+#roundResultScreen.active { /* roundResultScreen is also a main view */
+    display: flex; 
+    flex-direction: column; /* Ensure consistent flex direction */
+}
+
+#playerActions.active {
+    display: flex;
+    flex-direction: row; /* Player actions are typically in a row */
+    align-items: center; /* Align items in the row */
+    justify-content: center; /* Center items in the row */
+}
+
+.timer-display.active {
+    display: block; /* Timer is a block element */
+}
+
+.mentiroso-body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: var(--font-secondary);
+    line-height: 1.6;
+    /* Allow body to grow if content is taller than viewport */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-specific-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--card-background-color);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    flex-grow: 1; /* Allow main content to take available space */
+}
+
+/* Matchmaking Screen */
+#matchmakingScreen {
+    /* display: flex; /* Controlled by .active class */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 300px;
+}
+
+#matchmakingScreen h2 {
+    font-family: var(--font-primary);
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+#matchmakingScreen .spinner {
+    border: 6px solid rgba(255,255,255,0.2);
+    border-left-color: var(--primary-color);
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
+}
+
+/* Gameplay Screen */
+.game-info-bar {
+    background-color: rgba(0,0,0,0.2);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    opacity: 0; /* Start hidden for gameplay screen intro */
+    animation: fadeIn 0.5s 0.3s ease-out forwards; /* Fade in after screen transition */
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.player-info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.player-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.player-info.active-turn {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 15px rgba(var(--accent-rgb, 255, 142, 60), 0.5);
+    transform: scale(1.03);
+    /* Make turn indicator more prominent */
+}
+
+.player-info.active-turn .turn-indicator {
+    /* background-color: var(--secondary-color); /* Example: change color */
+    /* color: white; */
+    transform: scale(1.1);
+    box-shadow: 0 0 10px var(--accent-color), 0 0 20px rgba(var(--accent-rgb), 0.3); /* Enhanced glow */
+}
+
+.player-avatar {
+    width: 30px;
+    height: 30px;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: bold;
+    font-family: var(--font-primary);
+    margin-left: 8px;
+    background-color: var(--accent-color);
+    color: var(--background-color);
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Added transition */
+}
+.player-avatar.p2 {
+    background-color: var(--secondary-color);
+}
+
+.player-name {
+    font-weight: bold;
+    font-family: var(--font-primary);
+}
+
+.player-score {
+    font-weight: 500;
+}
+
+.turn-indicator {
+    font-weight: bold;
+    font-size: 0.8em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+    background-color: var(--accent-color);
+    color: var(--background-color);
+}
+
+.game-round-info {
+    font-family: var(--font-primary);
+    font-size: 1.1em;
+    color: var(--text-secondary-color);
+}
+
+/* Challenge Area */
+.challenge-area {
+    background-color: rgba(0,0,0,0.15);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.challenge-area h3 {
+    font-family: var(--font-primary);
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    animation: slideInFromTop 0.5s 0.5s ease-out forwards; /* Animation for challenge text */
+    opacity: 0;
+}
+
+.challenge-text-display {
+    font-size: 1.2em;
+    color: var(--text-color);
+    min-height: 40px; /* Para evitar saltos de layout */
+    animation: slideInFromTop 0.5s 0.6s ease-out forwards; /* Animation for challenge text */
+    opacity: 0;
+}
+
+@keyframes slideInFromTop {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.challenge-text-display strong {
+    color: var(--accent-color);
+    font-weight: 700; /* Make it bolder */
+}
+.challenge-text-display em {
+    color: var(--secondary-color);
+    font-style: italic; /* Use italic for emphasis */
+    font-weight: 500;
+}
+
+/* Declarations Log */
+.declarations-log {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.declarations-log h4 {
+    margin-top: 0;
+    font-family: var(--font-primary);
+    color: var(--text-secondary-color);
+    margin-bottom: 0.5rem;
+}
+
+#declarationsList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#declarationsList li {
+    padding: 0.5rem 0.2rem;
+    border-bottom: 1px solid var(--border-color); /* Solid but subtle border */
+    font-size: 0.95em;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInFromLeft 0.4s ease-out forwards;
+}
+
+/* Stagger animation for list items */
+#declarationsList li:nth-child(1) { animation-delay: 0.1s; }
+#declarationsList li:nth-child(2) { animation-delay: 0.15s; }
+#declarationsList li:nth-child(3) { animation-delay: 0.2s; }
+#declarationsList li:nth-child(4) { animation-delay: 0.25s; }
+#declarationsList li:nth-child(5) { animation-delay: 0.3s; }
+/* Add more if needed or handle dynamically if list can be very long */
+
+@keyframes slideInFromLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+#declarationsList li:last-child {
+    border-bottom: none;
+}
+#declarationsList .declarer-name {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-right: 5px; /* Space before 'declara' */
+}
+#declarationsList .declared-amount {
+    font-weight: bold;
+    color: var(--background-color); /* Dark text on light bg */
+    padding: 3px 8px; /* Slightly more padding */
+    background-color: var(--accent-color); /* Use accent color for background */
+    border-radius: 4px;
+    margin-left: 5px;
+    display: inline-block; /* Ensure padding is applied correctly */
+    line-height: 1.2; /* Adjust line height for better look */
+}
+
+/* Player Actions */
+.player-actions-container {
+    /* display: flex; /* Controlled by .active class */
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background-color: rgba(0,0,0,0.15);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.declaration-input-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-grow: 1; /* Allow input group to take space */
+    margin-right: 1rem; /* Space before declare button */
+}
+
+.declaration-input-group label {
+    font-size: 0.9em;
+    color: var(--text-secondary-color);
+    white-space: nowrap; /* Prevent label from wrapping */
+}
+
+#declarationAmount {
+    padding: 0.75rem 1rem; /* Increased padding */
+    border: 1px solid var(--border-color);
+    background-color: var(--input-bg-color); /* Custom input background */
+    color: var(--text-color);
+    border-radius: 6px;
+    width: 80px; /* Slightly wider */
+    text-align: center;
+    font-size: 1.1em; /* Larger font */
+    font-family: var(--font-primary); /* Consistent font */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    appearance: textfield; /* Remove spinners for number input in some browsers */
+    -moz-appearance: textfield; /* Firefox */
+}
+#declarationAmount::-webkit-outer-spin-button,
+#declarationAmount::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#declarationAmount:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(var(--primary-rgb, 127,90,240), 0.5);
+    outline: none;
+}
+
+/* Demonstration Area */
+.demonstration-area {
+    padding: 1.5rem;
+    background-color: rgba(var(--accent-rgb, 255,142,60),0.05);
+    border: 1px solid var(--accent-color);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-family: var(--font-secondary);
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Added transition */
+}
+
+.demonstration-area h3 {
+    color: var(--accent-color);
+    font-family: var(--font-primary);
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 1rem; /* More space below title */
+}
+
+.timer-display {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: var(--text-secondary-color);
+    padding: 0.5rem;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 4px;
+    display: inline-block; /* To fit content */
+}
+
+#demonstrationInput, 
+#structuredQuestionsContainer {
+    width: 100%;
+    padding: 1rem; /* More padding */
+    border: 1px solid var(--border-color);
+    background-color: var(--input-bg-color); /* Consistent input bg */
+    color: var(--text-color);
+    border-radius: 8px; /* Slightly more rounded */
+    margin-bottom: 1.5rem; /* More space below */
+    font-family: var(--font-secondary);
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#demonstrationInput:focus,
+#structuredQuestionsContainer:focus-within { 
+    border-color: var(--primary-color);
+    box-shadow: 0 0 8px rgba(var(--primary-rgb, 127,90,240), 0.5);
+    outline: none;
+    min-height: 120px; /* Slightly taller */
+    resize: vertical;
+    line-height: 1.5; /* Better readability */
+}
+
+/* Structured Questions Styling */
+#structuredQuestionsContainer {
+    padding: 1rem; 
+}
+.structured-question-item {
+    margin-bottom: 1.5rem; /* More space between questions */
+    padding: 1.2rem; /* More padding inside item */
+    background-color: rgba(0,0,0,0.25); /* Slightly darker item bg */
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color); /* Accent border */
+}
+.structured-question-item .question-text {
+    font-weight: 600; /* Bolder question text */
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    font-size: 1.05em; /* Slightly larger question text */
+}
+.structured-question-item .answer-options label {
+    display: flex; /* Use flex for better alignment */
+    align-items: center;
+    margin-bottom: 0.75rem; /* More space between options */
+    padding: 0.75rem 1rem; /* More padding for options */
+    background-color: rgba(var(--primary-rgb), 0.08); /* Subtle primary bg */
+    border: 1px solid transparent; /* For transition */
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.structured-question-item .answer-options label:hover {
+    background-color: rgba(var(--primary-rgb), 0.15);
+    border-color: rgba(var(--primary-rgb), 0.4);
+}
+.structured-question-item .answer-options input[type="radio"] {
+    margin-right: 0.75rem;
+    accent-color: var(--primary-color);
+    transform: scale(1.2); /* Make radio button slightly larger */
+    cursor: pointer;
+}
+/* Style for selected radio button's label */
+.structured-question-item .answer-options input[type="radio"]:checked + span {
+    color: var(--secondary-color); /* Or your preferred highlight color */
+    font-weight: bold;
+}
+/* If label text is directly after input, not in a span, this won't work. Adjust JS if needed or style label directly.
+   Assuming label structure is <label><input> Text</label> or <label><input><span>Text</span></label> */
+.structured-question-item .answer-options input[type="radio"]:checked ~ span { /* If span is a sibling after input */
+    color: var(--secondary-color);
+    font-weight: 600;
+}
+.structured-question-item .answer-options label:has(input[type="radio"]:checked) {
+    background-color: rgba(var(--secondary-rgb, 44, 182, 125), 0.2); /* Highlight for checked option's label */
+    border-color: var(--secondary-color);
+}
+
+/* Round Result & Game Over */
+.round-result-display, .game-over-modal .modal-content {
+    padding: 2rem;
+    text-align: center;
+    background-color: var(--card-background-color);
+    border-radius: 8px;
+}
+
+.round-result-display h3, .game-over-modal h2 {
+    font-family: var(--font-primary);
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+}
+.game-over-modal .winner-text {
+    font-size: 1.2em;
+    color: var(--secondary-color);
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+.game-over-modal .modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    animation: fadeIn 0.5s 0.5s ease-out forwards; /* Fade in buttons */
+    opacity: 0;
+}
+
+/* Temporary Feedback */
+#temporaryFeedback {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 1rem 1.5rem;
+    background-color: var(--accent-color);
+    color: var(--background-color);
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    z-index: 1000;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity 0.3s ease, top 0.3s ease;
+    pointer-events: none; /* Initially not interactive */
+}
+#temporaryFeedback.show {
+    opacity: 1;
+    top: 70px; /* Slide down to be visible below header */
+    pointer-events: auto;
+}
+#temporaryFeedback.error {
+    background-color: var(--error-color);
+    color: var(--text-color);
+}
+#temporaryFeedback.success {
+    background-color: var(--success-color);
+    color: var(--background-color);
+}
+#temporaryFeedback.info { /* Renaming highlight to info for clarity */
+    background-color: var(--primary-color); /* Or a dedicated info color if you add one */
+    color: var(--text-color);
+}
+#temporaryFeedback.highlight { /* Keep highlight for actual highlights if distinct from info */
+    background-color: var(--accent-color); /* Using accent for game action highlights */
+    color: var(--background-color);
+}
+
+/* General Button Styles (re-use from layout.css or define here) */
+.button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 6px;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.button.action-button, .button.primary-button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+.button.action-button:hover, .button.primary-button:hover {
+    background-color: #6a4fd0; /* Darker primary */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(127, 90, 240, 0.3);
+}
+
+.button.secondary-button {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 2px solid var(--accent-color);
+}
+.button.secondary-button:hover {
+    background-color: var(--accent-color);
+    color: var(--background-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(255, 142, 60, 0.3);
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Spinner Animation */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .game-specific-container {
+        padding: 1rem;
+        margin: 1rem;
+    }
+    .player-info-container {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .player-info {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .game-round-info {
+        margin: 0.5rem 0;
+    }
+    .player-actions-container {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    #declarationAmount {
+        width: 100px;
+    }
+    .button {
+        width: 100%;
+        max-width: 280px; /* Prevent buttons from becoming too wide */
+        margin: 0 auto;
+    }
+    .declaration-input-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+}
+
+@media (max-width: 480px) {
+    #temporaryFeedback {
+        width: 90%;
+        padding: 0.8rem 1rem;
+        font-size: 0.9em;
+    }
+    .game-info-bar {
+        padding: 0.75rem;
+    }
+    .challenge-area, .player-actions-container, .demonstration-area {
+        padding: 1rem;
+    }
+    .player-avatar{
+        width: 25px;
+        height: 25px;
+        font-size: 0.9em;
+    }
+    .player-name, .player-score {
+        font-size: 0.9em;
+    }
+} 
