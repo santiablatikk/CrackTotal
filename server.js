@@ -167,14 +167,14 @@ function broadcastAvailableRooms() {
     console.log('--- Broadcasting Available Rooms ---');
     const availableRoomsList = [];
     for (const [roomId, room] of rooms.entries()) {
-        // Criteria: Not active, public (no password), waiting for player 2
-        if (!room.gameActive && !room.password && room.players.player1 && !room.players.player2) {
-            console.log(`Room ${roomId} is available (Player: ${room.players.player1.name}).`);
+        // Criteria: Not active, waiting for player 2
+        if (!room.gameActive && room.players.player1 && !room.players.player2) { // NEW CRITERIA: list all non-active rooms with 1 player
+            console.log(`Room ${roomId} is available (Player: ${room.players.player1.name}, Password: ${room.password ? 'Yes' : 'No'}).`);
             availableRoomsList.push({
                 id: roomId,
                 playerCount: 1, // Always 1 if it meets criteria
                 maxPlayers: 2,
-                requiresPassword: false,
+                requiresPassword: !!room.password, // True if room.password is a non-empty string
                 // Optionally add creator's name if needed by client UI
                  creatorName: room.players.player1.name
             });

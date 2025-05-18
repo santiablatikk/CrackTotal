@@ -1557,17 +1557,9 @@ document.addEventListener('DOMContentLoaded', function() {
             Ver Ranking
         `;
         
-        const goHomeButton = document.createElement('button');
-        goHomeButton.className = 'modal-button primary-button'; // Keep primary style
-        goHomeButton.innerHTML = `
-            <i class="fas fa-redo-alt"></i>
-            Jugar de Nuevo
-        `;
-
         actionButtonsWrapper.appendChild(viewStatsButton);
         actionButtonsWrapper.appendChild(viewProfileButton);
         actionButtonsWrapper.appendChild(viewRankingButton);
-        actionButtonsWrapper.appendChild(goHomeButton);
 
         // --- Botones de Compartir --- 
         const shareButtonsWrapper = document.createElement('div');
@@ -1610,17 +1602,6 @@ document.addEventListener('DOMContentLoaded', function() {
         
         viewRankingButton.addEventListener('click', () => {
             window.location.href = 'ranking.html';
-        });
-        
-        // **MODIFIED:** Go Home button now restarts the game (same page)
-        goHomeButton.addEventListener('click', () => {
-            modalOverlay.remove(); 
-            const resultModal = document.querySelector('.game-result-modal');
-            if (resultModal) {
-                resultModal.remove(); // También cierra el modal principal de resultado si está abierto
-            }
-            // window.location.href = 'games.html'; // Eliminar redirección
-            initGame(); // Llamar a initGame para reiniciar la partida
         });
 
         // --- Event Listener for Twitter Share ---
