@@ -1922,33 +1922,48 @@ document.addEventListener('DOMContentLoaded', function() {
         const potentialAnswerNorm = normalizeResponseText(potentialAnswer); // Normalizar la respuesta potencial
         if (!potentialAnswerNorm) return false; // Empty answer is not a conflict
 
-        const potentialWords = potentialAnswerNorm.split(' ').filter(w => w.length > 2); // Ignore short words
+        const potentialWords = potentialAnswerNorm.split(' ').filter(w => w.length > 2); // Defined once for the potentialAnswer
 
         for (const usedAnswerSignature of usedSignatures) { // usedSignatures ya contiene respuestas normalizadas
-            // No es necesario normalizar usedAnswerSignature aquí porque ya se añadió normalizada.
             const usedAnswerNorm = usedAnswerSignature;
 
-            // 1. Check full containment (either way)
+            // 1. Explicitly check for exact normalized match first for clarity and safety
+            if (potentialAnswerNorm === usedAnswerNorm) {
+                console.log(`Conflict (EXACT normalized match): '${potentialAnswerNorm}' vs '${usedAnswerNorm}'`);
+                return true;
+            }
+
+            // 2. Check full containment (if not an exact match)
+            // This logic is from the original file, ensure it's effective.
+            // It aims to catch partial matches like "Messi" vs "Lionel Messi".
             if (usedAnswerNorm.includes(potentialAnswerNorm) || potentialAnswerNorm.includes(usedAnswerNorm)) {
-                // Avoid trivial contains like 'a' in 'apple' if correct answer is short
                 if (potentialAnswerNorm.length > 1 && usedAnswerNorm.length > 1) {
-                     // Adicionalmente, verificar que no sea un caso donde una palabra corta esté contenida en una larga
-                     // y que no sean casi idénticas (eso lo cubre Levenshtein)
+                    // If one contains the other, AND (they are very different in length OR not very similar by string metric)
+                    // then it's a conflict.
                     if (Math.abs(potentialAnswerNorm.length - usedAnswerNorm.length) > 2 || calculateStringSimilarity(potentialAnswerNorm, usedAnswerNorm).similarity < 0.95) {
-                        console.log(`Conflict (containment): '${potentialAnswerNorm}' vs '${usedAnswerNorm}'`);
-                        return true; // Conflict: One contains the other and are sufficiently different
+                        console.log(`Conflict (Containment Rule): '${potentialAnswerNorm}' vs '${usedAnswerNorm}'`);
+                        return true;
                     }
                 }
             }
 
-            // 2. Check for significant word overlap
-            const usedWords = usedAnswerNorm.split(' ').filter(w => w.length > 2);
+            // 3. Check for significant word overlap (if not an exact match and not caught by containment)
+            const usedWords = usedAnswerNorm.split(' ').filter(w => w.length > 2); // Words from the already used answer
             const commonWords = potentialWords.filter(pw => usedWords.includes(pw));
 
-            // Conflict if > 1 common word, or 1 common word and answers are short (<= 2 significant words)
-            if (commonWords.length > 1 || (commonWords.length === 1 && potentialWords.length <= 2 && usedWords.length <= 2)) {
-                 console.log(`Conflict (words): '${potentialAnswerNorm}' vs '${usedAnswerNorm}'`);
+            // Conflict if > 1 common significant word
+            if (commonWords.length > 1) {
+                 console.log(`Conflict (Multiple Common Words): '${potentialAnswerNorm}' vs '${usedAnswerNorm}' (Common: ${commonWords.join(',')})`);
                  return true;
+            }
+            // Conflict if exactly 1 common significant word AND both answers are considered short (e.g., mostly consisting of this one word)
+            if (commonWords.length === 1 && potentialWords.length <= 2 && usedWords.length <= 2) {
+                // This part is to catch "River" vs "River Plate" where "River" is the single common word.
+                // Ensure the common word found is indeed part of both sets after filtering.
+                 if (potentialWords.includes(commonWords[0]) && usedWords.includes(commonWords[0])) {
+                    console.log(`Conflict (Single Common Word in Short Answers): '${potentialAnswerNorm}' vs '${usedAnswerNorm}' (Common: ${commonWords[0]})`);
+                    return true;
+                 }
             }
         }
         return false; // No conflict found
