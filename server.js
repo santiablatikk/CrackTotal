@@ -43,32 +43,24 @@ function processRawQuestion(rawQ, level) {
     let correctAnswerText = '';
     const optionKeys = ['A', 'B', 'C', 'D'];
 
-    if (level > 1) {
-        // Levels 2-6 expect options object {A, B, C, D}
-        if (!rawQ.opciones || typeof rawQ.opciones !== 'object') {
-            console.warn(`Missing or invalid 'opciones' object for L > 1 question skipped:`, rawQ.pregunta);
-            return null;
-        }
-        optionsArray = optionKeys.map(key => rawQ.opciones[key]).filter(opt => typeof opt === 'string');
-        if (optionsArray.length !== 4) {
-            console.warn(`Question in Level ${level} does not have exactly 4 string options:`, rawQ.pregunta);
-            return null; // Skip incomplete questions for levels > 1
-        }
-        correctIndex = optionKeys.indexOf(rawQ.respuesta_correcta);
-        if (correctIndex === -1) {
-            console.warn(`Invalid correct answer key ('${rawQ.respuesta_correcta}') for Q: ${rawQ.pregunta} in Level ${level}`);
-            return null; // Skip if correct answer key is wrong
-        }
-        correctAnswerText = optionsArray[correctIndex]; // Get the text of the correct option
-
-    } else {
-        // Level 1 expects answer text directly in respuesta_correcta
-        // No options object is needed or processed for Level 1
-        optionsArray = []; // No multiple choice options for level 1
-        correctIndex = -1;
-        correctAnswerText = rawQ.respuesta_correcta; // The correct answer IS the text itself
-        // No need to check rawQ.opciones here anymore
+    // ALL LEVELS will now be processed this way:
+    if (!rawQ.opciones || typeof rawQ.opciones !== 'object') {
+        console.warn(`Missing or invalid 'opciones' object for question in Level ${level} skipped:`, rawQ.pregunta);
+        return null;
     }
+    optionsArray = optionKeys.map(key => rawQ.opciones[key]).filter(opt => typeof opt === 'string');
+
+    if (optionsArray.length !== 4) {
+        console.warn(`Question in Level ${level} does not have exactly 4 string options:`, rawQ.pregunta);
+        return null; // Skip incomplete questions
+    }
+
+    correctIndex = optionKeys.indexOf(rawQ.respuesta_correcta); // rawQ.respuesta_correcta MUST be 'A', 'B', 'C', or 'D'
+    if (correctIndex === -1) {
+        console.warn(`Invalid correct answer key ('${rawQ.respuesta_correcta}') for Q: ${rawQ.pregunta} in Level ${level}. Must be A, B, C, or D.`);
+        return null; // Skip if correct answer key is wrong
+    }
+    correctAnswerText = optionsArray[correctIndex]; // Get the text of the correct option
 
     // Normalize the extracted correct answer text for comparison
     const normalizedCorrectAnswer = correctAnswerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "");
@@ -684,7 +676,7 @@ function sendNextQuestion(roomId) {
         level: room.currentQuestion.level,
         text: room.currentQuestion.text,
         // Send options immediately for levels > 1 for simplicity
-        options: room.currentQuestion.level > 1 ? room.currentQuestion.options : []
+        options: room.currentQuestion.options // NEW WAY: Always send processed options
     };
 
      // Ensure players exist before accessing properties

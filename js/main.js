@@ -13,26 +13,76 @@
 
 // Store player name in local storage
 document.addEventListener('DOMContentLoaded', function() {
-    // Check if we're on the home page
     const nameForm = document.getElementById('nameForm');
-    if (nameForm) {
-        // Si ya hay un nombre guardado en localStorage, redirigir directamente a games.html
-        const existingName = localStorage.getItem('playerName');
-        if (existingName) {
-            window.location.href = 'games.html';
-            return;
+    const playerNameInput = document.getElementById('playerName');
+    // const startButton = document.getElementById('startButton'); // No es necesario si el form maneja el submit
+
+    // 1. Al cargar la página, intentar pre-rellenar el nombre
+    const savedPlayerName = localStorage.getItem('playerName');
+    if (savedPlayerName) {
+        if (playerNameInput) {
+            playerNameInput.value = savedPlayerName;
         }
-        
-        nameForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const playerName = document.getElementById('playerName').value.trim();
-            
-            if (playerName) {
-                // Save the name to local storage
-                localStorage.setItem('playerName', playerName);
-                // Redirect to game selection page
-                window.location.href = 'games.html';
+    }
+
+    if (nameForm) {
+        nameForm.addEventListener('submit', function(event) {
+            // event.preventDefault(); // Se previene SOLO si la redirección es 100% por JS
+                                    // Si el form tiene un action o el botón es submit, no siempre es necesario prevenirlo aquí
+                                    // o se hace la redirección manualmente después de guardar.
+
+            if (playerNameInput) {
+                const enteredName = playerNameInput.value.trim();
+                
+                if (enteredName) {
+                    // 2. Guardar el nombre en localStorage
+                    localStorage.setItem('playerName', enteredName);
+                    console.log(`Nombre guardado: ${enteredName}.`);
+                    
+                    // Si el formulario NO tiene un action="games.html" y la redirección debe ser por JS:
+                    // event.preventDefault(); // Descomentar si es necesario
+                    // window.location.href = 'games.html'; // Descomentar y ajustar si es necesario
+                    
+                    // Si el formulario SÍ tiene action="games.html" o el botón es type="submit"
+                    // y naturalmente redirige, el localStorage.setItem se ejecutará ANTES
+                    // de esa redirección. En ese caso, no se necesita event.preventDefault()
+                    // ni window.location.href aquí.
+                    // Por ahora, asumiremos que el form se encarga de la redirección a games.html
+                    // (por ejemplo, si action="games.html" estuviera en el <form>)
+                    // o que el botón submit inicia la navegación.
+
+                } else {
+                    // Opcional: manejar caso de nombre vacío si 'required' no es suficiente
+                    console.log("El nombre no puede estar vacío.");
+                    event.preventDefault(); // Prevenir envío si el nombre está vacío después de trim
+                    if (playerNameInput) {
+                        playerNameInput.focus();
+                    }
+                }
+            } else {
+                event.preventDefault(); // Si no hay input, prevenir.
             }
+        });
+    }
+
+    // --- Manejo de Cookies y Privacidad (ejemplo) ---
+    // Si tienes un banner de cookies con id 'cookieConsentBanner'
+    // y un botón de aceptar con id 'acceptCookieButton'
+    const cookieBanner = document.getElementById('cookieConsentBanner');
+    const acceptButton = document.getElementById('acceptCookieButton');
+
+    if (cookieBanner && acceptButton) {
+        // Comprobar si ya se aceptaron las cookies
+        if (!localStorage.getItem('cookiesAccepted')) {
+            cookieBanner.style.display = 'block'; // o 'flex', según tu CSS
+        }
+
+        acceptButton.addEventListener('click', function() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            cookieBanner.style.display = 'none';
+            // Aquí podrías inicializar scripts de tracking/analíticas que dependen del consentimiento
+            // por ejemplo, reactivar gtag o similar.
+            console.log("Cookies aceptadas.");
         });
     }
 
