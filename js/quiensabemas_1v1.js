@@ -495,10 +495,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
      function displayOptionsFromObject(optionsObject) {
         console.log("Displaying options from object:", optionsObject);
-        optionsContainerEl.style.display = 'grid'; // Show the grid
+         optionsContainerEl.style.display = 'grid'; // Show the grid
         const optionKeys = ['A', 'B', 'C', 'D']; // Expected keys
 
-        optionButtons.forEach((btn, index) => {
+         optionButtons.forEach((btn, index) => {
             const key = optionKeys[index];
             if (optionsObject[key]) {
                 btn.querySelector('.option-text').textContent = optionsObject[key];
@@ -508,14 +508,14 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 btn.style.display = 'none'; // Hide if no option for this key
             }
-        });
-        gameState.optionsRequested = true; // Mark options as requested/shown (always true now)
+         });
+         gameState.optionsRequested = true; // Mark options as requested/shown (always true now)
 
-        // Re-evaluate if 50/50 button should be enabled now
-        if (gameState.currentTurn === gameState.myPlayerId && gameState.gameActive) {
-            fiftyFiftyButtonEl.disabled = gameState.fiftyFiftyUsed;
-        }
-    }
+         // Re-evaluate if 50/50 button should be enabled now
+         if (gameState.currentTurn === gameState.myPlayerId && gameState.gameActive) {
+             fiftyFiftyButtonEl.disabled = gameState.fiftyFiftyUsed;
+         }
+     }
 
      function removeFiftyFiftyOptions(indicesToRemove) {
          console.log("Applying 50/50, removing options at indices:", indicesToRemove);
@@ -850,8 +850,8 @@ document.addEventListener('DOMContentLoaded', function() {
                  let finalIsCorrect = isCorrect; // Use this for feedback display
 
                  // Show feedback (correct/incorrect message)
-                 if (gameState.currentQuestionData && gameState.optionsRequested) { // optionsRequested is always true
-                     feedbackMsg += ` Answer: ${correctAnswerText}`;
+                     if (gameState.currentQuestionData && gameState.optionsRequested) { // optionsRequested is always true
+                         feedbackMsg += ` Answer: ${correctAnswerText}`;
                  }
                  // Use finalIsCorrect to determine feedback type class
                  showFeedback(feedbackMsg, finalIsCorrect ? 'correct' : 'incorrect');

@@ -152,7 +152,7 @@
         },
         "respuesta_correcta": "C"
       },
-      {
+       {
         "pregunta": "¿Qué significa si el árbitro muestra una tarjeta amarilla a un jugador?",
         "opciones": {
           "A": "Expulsión",
@@ -292,7 +292,7 @@
         },
         "respuesta_correcta": "C"
       },
-      {
+       {
         "pregunta": "¿Qué país ganó la Copa América en 2021 venciendo a Brasil en la final?",
         "opciones": {
           "A": "Chile",
@@ -332,7 +332,7 @@
         },
         "respuesta_correcta": "C"
       },
-      {
+       {
         "pregunta": "¿Qué jugador argentino llevó el número 10 en la conquista del Mundial 2022?",
         "opciones": {
           "A": "Ángel Di María",

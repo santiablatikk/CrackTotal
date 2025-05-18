@@ -1,3 +1,16 @@
+(function() { // IIFE para encapsular y ejecutar inmediatamente
+    const playerName = localStorage.getItem('playerName');
+    const currentPagePath = window.location.pathname;
+
+    // Solo permitir el acceso a index.html (raíz o /index.html) si no hay nombre.
+    const isIndexPage = (currentPagePath === '/' || currentPagePath === '/index.html');
+
+    // Si no hay nombre y la página actual NO es index.html, redirigir a la raíz.
+    if (!playerName && !isIndexPage) {
+        window.location.href = '/'; 
+    }
+})();
+
 // Store player name in local storage
 document.addEventListener('DOMContentLoaded', function() {
     // Check if we're on the home page
