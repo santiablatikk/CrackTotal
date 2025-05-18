@@ -739,75 +739,70 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
     let isCorrect = false;
     let pointsAwarded = 0;
     let submittedAnswerIndex = -1; // For levels > 1 option clicks
-    let submittedAnswerText = ''; // For level 1 OR level > 1 text input
-    let answerMethod = ''; // Track how the answer was submitted ('text' or 'index')
 
     // Normalize submitted text answer if present
-    const playerAnswerText = payload && typeof payload.answerText === 'string'
-        ? payload.answerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "")
-        : '';
-    submittedAnswerText = payload?.answerText || ''; // Keep original for display
+    // const playerAnswerText = payload && typeof payload.answerText === 'string'
+    //     ? payload.answerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "")
+    //     : ''; // REMOVED
+    // submittedAnswerText = payload?.answerText || ''; // Keep original for display // REMOVED
 
-    if (question.level === 1) {
-        // Level 1: Always check text
-        if (playerAnswerText) {
-            isCorrect = playerAnswerText === question.correctAnswerText;
-            answerMethod = 'text';
-            console.log(`Room ${roomId} L1 Answer (Text): Submitted='${playerAnswerText}', Correct='${question.correctAnswerText}', Result=${isCorrect}`); // Keep answer logs for debugging scores
+    if (payload && typeof payload.selectedIndex === 'number') {
+        // If no text, check for selected index (options must have been requested)
+         submittedAnswerIndex = payload.selectedIndex;
+        if (submittedAnswerIndex >= 0 && submittedAnswerIndex < question.options.length) {
+            // Check if options were actually sent before accepting index answer
+            // For QSM 1v1, options are always sent with the question now for all levels.
+            // if (!room.optionsSent) { // This check might be less relevant if options are always with question
+            //     console.warn(`Room ${roomId} Answer: Index submitted but options were not requested/sent.`);
+            //     safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot answer with index before requesting options.' } });
+            //     return;
+            // }
+            isCorrect = submittedAnswerIndex === question.correctIndex;
+            // answerMethod = 'index'; // Already set to index
+             console.log(`Room ${roomId} L${question.level} Answer (Index): Submitted Index=${submittedAnswerIndex}, Correct Index=${question.correctIndex}, Result=${isCorrect}`); // Keep answer logs
         } else {
-            // console.warn(`Room ${roomId} L1 Answer: No text submitted.`); // Less verbose
-            safeSend(ws, { type: 'errorMessage', payload: { error: 'Answer cannot be empty.' } });
-            return; // Empty submission for Level 1
+             // console.warn(`Room ${roomId} L>1 Answer: Invalid index submitted:`, payload.selectedIndex); // Less verbose
+             safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (index out of bounds).' } });
+             return; // Invalid submission
         }
     } else {
-        // Levels > 1: Prioritize text input if provided
-        if (playerAnswerText) {
-            isCorrect = playerAnswerText === question.correctAnswerText;
-            answerMethod = 'text';
-            console.log(`Room ${roomId} L>1 Answer (Text): Submitted='${playerAnswerText}', Correct='${question.correctAnswerText}', Result=${isCorrect}`); // Keep answer logs
-        } else if (payload && typeof payload.selectedIndex === 'number') {
-            // If no text, check for selected index (options must have been requested)
-             submittedAnswerIndex = payload.selectedIndex;
-            if (submittedAnswerIndex >= 0 && submittedAnswerIndex < question.options.length) {
-                // Check if options were actually sent before accepting index answer
-                if (!room.optionsSent) {
-                    console.warn(`Room ${roomId} L>1 Answer: Index submitted but options were not requested/sent.`);
-                    safeSend(ws, { type: 'errorMessage', payload: { error: 'Cannot answer with index before requesting options.' } });
-                    return;
-                }
-                isCorrect = submittedAnswerIndex === question.correctIndex;
-                answerMethod = 'index';
-                 console.log(`Room ${roomId} L>1 Answer (Index): Submitted Index=${submittedAnswerIndex}, Correct Index=${question.correctIndex}, Result=${isCorrect}`); // Keep answer logs
-            } else {
-                 // console.warn(`Room ${roomId} L>1 Answer: Invalid index submitted:`, payload.selectedIndex); // Less verbose
-                 safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (index out of bounds).' } });
-                 return; // Invalid submission
-            }
-        } else {
-            // Neither text nor valid index provided for Level > 1
-            console.warn(`Room ${roomId} L>1 Answer: No valid answer submitted (neither text nor index). Payload:`, payload);
-            safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format.' } });
-            return; // Invalid submission
-        }
+        // Neither text nor valid index provided for Level > 1
+        console.warn(`Room ${roomId} L${question.level} Answer: No valid answer submitted (no selectedIndex). Payload:`, payload);
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (missing selectedIndex).' } });
+        return; // Invalid submission
     }
 
     // --- Score Calculation & Result Payload --- 
     const currentPlayer = room.players.player1.id === clientInfo.id ? room.players.player1 : room.players.player2;
     if (isCorrect) {
         // --- New Scoring Logic --- 
-        if (question.level === 1) {
-            pointsAwarded = 1;
-        } else { // Levels 2-6
-            if (answerMethod === 'text') { // Answered without requesting options
-                pointsAwarded = 2;
-            } else { // Answered using options index
-                if (room.fiftyFiftyUsed) {
-                    pointsAwarded = 0.5;
-                } else {
-                    pointsAwarded = 1;
-                }
-            }
+        // if (question.level === 1) { // OLD LEVEL 1 SCORING
+        //     pointsAwarded = 1;
+        // } else { // Levels 2-6 // OLD L>1 SCORING
+        //     if (answerMethod === 'text') { // Answered without requesting options // TEXT METHOD REMOVED
+        //         pointsAwarded = 2;
+        //     } else { // Answered using options index
+        //         if (room.fiftyFiftyUsed) {
+        //             pointsAwarded = 0.5;
+        //         } else {
+        //             pointsAwarded = 1;
+        //         }
+        //     }
+        // }
+
+        // --- UNIFIED SCORING LOGIC FOR ALL LEVELS (ANSWERED BY INDEX) --- 
+        if (room.fiftyFiftyUsed) {
+            pointsAwarded = 0.5; // Half points if 50/50 was used
+        } else {
+            pointsAwarded = 1;   // Full point if answered correctly without 50/50
         }
+        // For QSM 1v1, there's no concept of answering by text *before* options for levels > 1 anymore.
+        // All answers are via selectedIndex.
+        // The `optionsSent` flag might be less critical if options always come with the question.
+        // If we want to re-introduce higher points for answering a hypothetical text input before options are shown for L>1 (not current setup):
+        // We would need a way for the client to submit text for L>1 *instead* of an index, and then handle that path.
+        // Given the current client sends selectedIndex, this scoring is simpler.
+
         // --- End New Scoring Logic ---
         currentPlayer.score += pointsAwarded;
     } else {
@@ -824,8 +819,9 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
         correctAnswerText: question.correctAnswerText.toUpperCase(), 
         correctIndex: question.correctIndex, // Send correct index (will be -1 for L1)
         forPlayerId: clientInfo.id,
-        submittedAnswerText: answerMethod === 'text' ? submittedAnswerText : null, // Send original submitted text if answered via text
-        selectedIndex: answerMethod === 'index' ? submittedAnswerIndex : -1 // Send submitted index if answered via index
+        // submittedAnswerText: answerMethod === 'text' ? submittedAnswerText : null, // REMOVED
+        submittedAnswerText: null, // No text submission method anymore
+        selectedIndex: submittedAnswerIndex // Send submitted index (was always by index)
     };
 
     // Send result to everyone in the room
