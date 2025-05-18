@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const waitingAreaEl = document.getElementById('waitingArea'); // To show waiting messages
 
     // End Game Modal
-    const endGameModalEl = document.getElementById('endGameModal');
+    const endGameModalEl = document.getElementById('gameResultModal');
     const resultTitleEl = document.getElementById('resultTitle');
     const resultMessageEl = document.getElementById('resultMessage');
     const finalPlayer1ScoreEl = document.getElementById('finalPlayer1Score');
@@ -93,12 +93,12 @@ document.addEventListener('DOMContentLoaded', function() {
         setupEventListeners();
         hideEndGameModal();
 
-        // --- Prefill player name from session storage ---
-        const savedPlayerName = sessionStorage.getItem('playerName');
+        // --- Prefill player name from localStorage (MAIN.JS SHOULD HANDLE THIS, BUT AS FALLBACK) ---
+        const savedPlayerName = localStorage.getItem('playerName'); // Changed from sessionStorage
         if (savedPlayerName) {
-            if (createPlayerNameInput) createPlayerNameInput.value = savedPlayerName;
-            if (joinPlayerNameInput) joinPlayerNameInput.value = savedPlayerName;
-            console.log(`Prefilled player name: ${savedPlayerName}`);
+            if (createPlayerNameInput && !createPlayerNameInput.value) createPlayerNameInput.value = savedPlayerName;
+            if (joinPlayerNameInput && !joinPlayerNameInput.value) joinPlayerNameInput.value = savedPlayerName;
+            console.log(`Prefilled player name from localStorage (QSM): ${savedPlayerName}`);
         }
         // --- End Prefill ---
 
@@ -704,11 +704,29 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'yourInfo': // Server assigns our ID
                 gameState.myPlayerId = message.payload.playerId;
                 console.log(`Assigned Player ID: ${gameState.myPlayerId}`);
-                // --- Save player name to session storage when assigned ---
-                const creatorPlayerName = createPlayerNameInput?.value || joinPlayerNameInput?.value;
-                if (creatorPlayerName) {
-                    sessionStorage.setItem('playerName', creatorPlayerName);
-                    console.log(`Saved player name to session storage: ${creatorPlayerName}`);
+                // --- Save player name to localStorage when assigned --- 
+                // Tomar el nombre que el jugador usó en el lobby
+                let currentLobbyPlayerName = '';
+                if (gameState.myPlayerId === gameState.players?.player1?.id) { // Si somos player1 (usualmente el creador)
+                    currentLobbyPlayerName = createPlayerNameInput?.value.trim();
+                } else if (gameState.myPlayerId === gameState.players?.player2?.id) { // Si somos player2 (usualmente el que se une)
+                    currentLobbyPlayerName = joinPlayerNameInput?.value.trim();
+                }
+
+                if (currentLobbyPlayerName && currentLobbyPlayerName !== 'Jugador 1' && currentLobbyPlayerName !== 'Jugador 2') {
+                    localStorage.setItem('playerName', currentLobbyPlayerName);
+                    console.log(`Saved/Updated player name to localStorage (QSM): ${currentLobbyPlayerName}`);
+                } else {
+                    // Si no se pudo obtener de los inputs, intentar con el que ya está en localStorage
+                    const existingName = localStorage.getItem('playerName');
+                    if (existingName) {
+                         // Si el servidor nos dio un nombre (en gameState.players) y es diferente, lo actualizamos
+                        const serverNameForMe = gameState.players?.player1?.id === gameState.myPlayerId ? gameState.players.player1.name : gameState.players?.player2?.name;
+                        if(serverNameForMe && serverNameForMe !== existingName && serverNameForMe !== 'Jugador 1' && serverNameForMe !== 'Jugador 2'){
+                            localStorage.setItem('playerName', serverNameForMe);
+                            console.log(`Updated player name in localStorage from server info (QSM): ${serverNameForMe}`);
+                        }
+                    } // No hacemos nada si no hay nombre en los inputs ni en localStorage
                 }
                 // --- End Save ---
                 break;
