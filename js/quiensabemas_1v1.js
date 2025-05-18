@@ -1073,13 +1073,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Llenar dinámicamente los stats en el modal
+        let player1StatClass = '';
+        let player2StatClass = '';
+
+        if (!payload.draw) {
+            if (payload.winnerId === gameState.myPlayerId) {
+                player1StatClass = 'winner';
+                player2StatClass = 'loser';
+            } else if (opponentId && payload.winnerId === opponentId) {
+                player1StatClass = 'loser';
+                player2StatClass = 'winner';
+            }
+        }
+        // Si es empate, no se añaden clases winner/loser a los items individuales,
+        // el header ya indica el estado de empate (result-header-timeout).
+
         resultStatsEl.innerHTML = `
-            <div class="stat-item your-score">
-                <span class="stat-label">${myName} (Tú)</span>
+            <div class="stat-item your-score ${player1StatClass}">
+                <span class="stat-label"><i class="fas fa-user-shield"></i> ${myName} (Tú)</span>
                 <span class="stat-value">${myFinalScore}</span>
             </div>
-            <div class="stat-item opponent-score">
-                <span class="stat-label">${opponentName}</span>
+            <div class="stat-item opponent-score ${player2StatClass}">
+                <span class="stat-label"><i class="fas fa-user-ninja"></i> ${opponentName}</span>
                 <span class="stat-value">${opponentFinalScore}</span>
             </div>
         `;
