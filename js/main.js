@@ -37,8 +37,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (playerNameInput) {
                 const enteredName = playerNameInput.value.trim();
                 if (enteredName) {
+                    event.preventDefault();
                     localStorage.setItem('playerName', enteredName);
-                    console.log(`Nombre guardado desde index.html: ${enteredName}.`);
+                    console.log(`Nombre guardado desde index.html: ${enteredName}. Redirigiendo a games.html...`);
+                    window.location.href = 'games.html';
                 } else {
                     console.log("El nombre en index.html no puede estar vacío.");
                     event.preventDefault();
