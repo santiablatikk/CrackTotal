@@ -279,16 +279,36 @@
                      -->
                 </div>
                 <div class="result-buttons">
-                    <button id="playAgainButtonQSM" class="primary-button play-again-button">
+                    <button id="playAgainButtonQSM" class="modal-button primary play-again-button">
                          <i class="fas fa-redo-alt"></i>
                          Jugar Otra Vez
                     </button>
-                    <button id="backToLobbyButtonQSM" class="secondary-button back-lobby-button">
+                    <button id="backToLobbyButtonQSM" class="modal-button secondary back-lobby-button">
                         <i class="fas fa-arrow-left"></i>
                         Volver al Lobby
                     </button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal para ingresar contraseña de sala privada -->
+    <div class="modal-overlay" id="privateRoomPasswordModal">
+        <div class="modal-content password-prompt-modal">
+            <h3 class="modal-title" id="passwordModalTitle">Ingresar Contraseña</h3>
+            <p id="passwordModalText">La sala '[Room ID]' es privada. Por favor, ingresá la contraseña:</p>
+            <form id="privateRoomPasswordForm">
+                <div class="form-group">
+                    <label for="passwordModalInput">Contraseña:</label>
+                    <input type="password" id="passwordModalInput" class="lobby-input" required autocomplete="current-password">
+                    <div class="input-focus-border"></div> 
+                </div>
+                <div id="passwordErrorText" class="error-message-inline" style="display: none;"></div>
+                <div class="modal-footer">
+                    <button type="button" id="cancelPasswordSubmit" class="modal-button secondary">Cancelar</button>
+                    <button type="submit" id="submitPasswordButton" class="modal-button primary">Unirse</button>
+                </div>
+            </form>
         </div>
     </div>
 

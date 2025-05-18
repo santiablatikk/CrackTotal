@@ -86,6 +86,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const availableRoomsListEl = document.getElementById('availableRoomsList'); // Container for the room list UL
     const playersHeaderInfoEl = document.getElementById('playersHeaderInfo'); // Referencia al contenedor de info de jugadores
 
+    // --- Modal Contraseña Sala Privada ---
+    const privateRoomPasswordModalEl = document.getElementById('privateRoomPasswordModal');
+    const passwordModalTitleEl = document.getElementById('passwordModalTitle');
+    const passwordModalTextEl = document.getElementById('passwordModalText');
+    const privateRoomPasswordFormEl = document.getElementById('privateRoomPasswordForm');
+    const passwordModalInputEl = document.getElementById('passwordModalInput');
+    const cancelPasswordSubmitEl = document.getElementById('cancelPasswordSubmit');
+    const submitPasswordButtonEl = document.getElementById('submitPasswordButton');
+    const passwordErrorTextEl = document.getElementById('passwordErrorText');
+    let currentJoiningRoomId = null; // Para guardar el ID de la sala a la que se intenta unir con contraseña
+
     // --- Initialization ---
     function initializeApp() {
         console.log("Initializing Quien Sabe Más 1v1 App...");
@@ -752,18 +763,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
             case 'joinSuccess': // Successfully joined a room
                 gameState.roomId = message.payload.roomId;
-                // Update player names if provided by the server upon join
                  if (message.payload.players) {
                     gameState.players = message.payload.players;
-                    // Don't update UI yet, wait for gameStart
+                 }
+                 // Si el modal de contraseña estaba activo, ocultarlo
+                 if (privateRoomPasswordModalEl && privateRoomPasswordModalEl.classList.contains('active')) {
+                    hidePasswordPromptModal();
                  }
                  showLobbyMessage(`Joined room ${gameState.roomId}! Waiting for game to start...`, "success");
-                 // Still waiting for game start, keep buttons disabled
+                 // Los botones del lobby se mantienen deshabilitados, esperando gameStart
+                 // enableLobbyButtons(); // No habilitar aquí, esperar gameStart
+                 // Restaurar texto del botón de submit de contraseña si fue cambiado
+                 if (submitPasswordButtonEl) {
+                    submitPasswordButtonEl.disabled = false;
+                    submitPasswordButtonEl.textContent = 'Unirse';
+                 }
                 break;
 
              case 'joinError': // Failed to join/create room
                  showLobbyMessage(message.payload.error || "Error joining/creating room.", "error");
-                 enableLobbyButtons(); // Allow user to try again
+                 enableLobbyButtons(); 
+
+                 // Manejar error específico en el modal de contraseña
+                 if (privateRoomPasswordModalEl && privateRoomPasswordModalEl.classList.contains('active') && 
+                     message.payload.failedRoomId && message.payload.failedRoomId === currentJoiningRoomId) {
+                     
+                     passwordErrorTextEl.textContent = message.payload.error || "Contraseña incorrecta o error en la sala.";
+                     passwordErrorTextEl.style.display = 'block';
+                     if (submitPasswordButtonEl) {
+                        submitPasswordButtonEl.disabled = false;
+                        submitPasswordButtonEl.textContent = 'Unirse';
+                     }
+                     if (passwordModalInputEl) passwordModalInputEl.focus();
+                 } else {
+                    // Si el error no es del modal de contraseña específico, pero estaba activo, ocultarlo.
+                    if (privateRoomPasswordModalEl && privateRoomPasswordModalEl.classList.contains('active')) {
+                         hidePasswordPromptModal(); 
+                    }
+                 }
                  break;
 
             // Handle random join results separately for clarity
@@ -868,7 +905,7 @@ document.addEventListener('DOMContentLoaded', function() {
                  let finalIsCorrect = isCorrect; // Use this for feedback display
 
                  // Show feedback (correct/incorrect message)
-                     if (gameState.currentQuestionData && gameState.optionsRequested) { // optionsRequested is always true
+                     if (gameState.currentQuestionData && gameState.currentQuestionData.level > 1 && gameState.optionsRequested) { // optionsRequested is always true
                          feedbackMsg += ` Answer: ${correctAnswerText}`;
                  }
                  // Use finalIsCorrect to determine feedback type class
@@ -1003,23 +1040,37 @@ document.addEventListener('DOMContentLoaded', function() {
 
         let title = "";
         let message = payload.reason || ""; // Mostrar razón si la hay (ej. desconexión)
+        let headerClass = ''; // Clase para el header del modal
 
         if (payload.draw) {
             title = "¡Es un Empate!";
             if (!message) message = "Ambos jugadores tienen la misma puntuación.";
+            headerClass = 'result-header-timeout'; // Usar un color neutral o de "tiempo agotado" para empate
         } else if (payload.winnerId === gameState.myPlayerId) {
             title = `¡Has Ganado, ${myName}!`;
             if (!message) message = "¡Felicidades!";
+            headerClass = 'result-header-victory';
         } else if (opponentId && payload.winnerId === opponentId) {
             title = `¡${opponentName} ha Ganado!`;
              if (!message) message = "Mejor suerte la próxima vez.";
+            headerClass = 'result-header-defeat';
         } else {
              title = "Juego Terminado";
              if (!message) message = "La partida ha finalizado."; // Mensaje por defecto si no hay razón ni ganador claro
+             // No specific class, or a default one if you define it in CSS
         }
 
         resultTitleEl.textContent = title;
         resultMessageEl.textContent = message;
+
+        // Aplicar clase al header del modal
+        const modalHeader = endGameModalEl.querySelector('.result-modal-header');
+        if (modalHeader) {
+            modalHeader.classList.remove('result-header-victory', 'result-header-defeat', 'result-header-timeout');
+            if (headerClass) {
+                modalHeader.classList.add(headerClass);
+            }
+        }
 
         // Llenar dinámicamente los stats en el modal
         resultStatsEl.innerHTML = `
@@ -1043,6 +1094,13 @@ document.addEventListener('DOMContentLoaded', function() {
      function showEndGameModalWithError(reason) {
          resultTitleEl.textContent = "Juego Interrumpido";
          resultMessageEl.textContent = reason || "Ha ocurrido un error.";
+
+        // Aplicar clase de error al header del modal
+        const modalHeader = endGameModalEl.querySelector('.result-modal-header');
+        if (modalHeader) {
+            modalHeader.classList.remove('result-header-victory', 'result-header-defeat', 'result-header-timeout');
+            modalHeader.classList.add('result-header-defeat'); // Usar clase de derrota para errores generales
+        }
 
          // Intentar mostrar el último score conocido
          let myLastScore = 'N/A';
@@ -1097,28 +1155,41 @@ document.addEventListener('DOMContentLoaded', function() {
         // requestOptionsButtonEl.addEventListener('click', handleRequestOptions); // REMOVED
         fiftyFiftyButtonEl.addEventListener('click', handleFiftyFifty);
 
-        // Modal Buttons
+        // Modal Buttons (Result Modal)
         playAgainButtonQSM.addEventListener('click', () => {
             hideEndGameModal();
-            // Enviar mensaje al servidor para buscar nueva partida o crear una?
-            // Por ahora, simplemente vuelve al lobby
             showLobby();
             gameState.gameActive = false;
-            // Considerar enviar 'leaveRoom' al servidor aquí
-             if (gameState.roomId) {
-                sendToServer('leaveRoom', { roomId: gameState.roomId }); // Asumiendo que existe este mensaje
+            if (gameState.roomId) {
+                sendToServer('leaveRoom', { roomId: gameState.roomId });
                 gameState.roomId = null;
-             }
+            }
         });
         backToLobbyButtonQSM.addEventListener('click', () => {
             hideEndGameModal();
             showLobby();
-             gameState.gameActive = false;
-             if (gameState.roomId) {
-                sendToServer('leaveRoom', { roomId: gameState.roomId }); // Asumiendo que existe este mensaje
+            gameState.gameActive = false;
+            if (gameState.roomId) {
+                sendToServer('leaveRoom', { roomId: gameState.roomId });
                 gameState.roomId = null;
-             }
+            }
         });
+
+        // Listeners para el Modal de Contraseña de Sala Privada
+        if (privateRoomPasswordFormEl) {
+            privateRoomPasswordFormEl.addEventListener('submit', handleSubmitPasswordModal);
+        }
+        if (cancelPasswordSubmitEl) {
+            cancelPasswordSubmitEl.addEventListener('click', hidePasswordPromptModal);
+        }
+        // Opcional: cerrar modal de contraseña si se clickea fuera del contenido
+        if (privateRoomPasswordModalEl) {
+            privateRoomPasswordModalEl.addEventListener('click', (event) => {
+                if (event.target === privateRoomPasswordModalEl) {
+                    hidePasswordPromptModal();
+                }
+            });
+        }
     }
 
     // --- Lobby Room List Rendering ---
@@ -1186,40 +1257,72 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Join Room from List Logic ---
     function handleJoinRoomFromList(roomId, requiresPassword) {
-        const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2'; // Use name from join section
-        let password = '';
+        const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
 
         console.log(`Attempting to join room ${roomId} from list as ${playerName}. Requires Password: ${requiresPassword}`);
 
-        // If password is required, prompt the user or use the dedicated input field
         if (requiresPassword) {
-            password = joinRoomPasswordInput.value;
-            if (!password) {
-                // Instead of prompt, let's use the input field and show a message if empty
-                showLobbyMessage(`Room ${roomId} requires a password. Please enter it below.`, "error");
-                joinRoomPasswordInput.focus();
-                // Clear the room ID input when focusing on password for a listed room
-                joinRoomIdInput.value = '';
-                return; // Stop the joining process until password is entered
-            } else {
-                // Clear password field after attempting to use it
-                joinRoomPasswordInput.value = '';
-                 // Optionally, set the Room ID input field for consistency before sending
-                 joinRoomIdInput.value = roomId;
-            }
+            currentJoiningRoomId = roomId; // Guardar el ID de la sala actual
+            passwordModalTextEl.textContent = `La sala '${roomId}' es privada. Por favor, ingresá la contraseña:`;
+            passwordModalInputEl.value = ''; // Limpiar input
+            passwordErrorTextEl.textContent = '';
+            passwordErrorTextEl.style.display = 'none';
+            passwordModalInputEl.focus();
+            showPasswordPromptModal();
         } else {
-             // Clear password field if not needed for this room
-             joinRoomPasswordInput.value = '';
-              // Optionally, set the Room ID input field for consistency before sending
-              joinRoomIdInput.value = roomId;
+            // Unirse directamente si no requiere contraseña
+            joinRoomIdInput.value = roomId; // Actualizar el input general del lobby (opcional, pero consistente)
+            joinRoomPasswordInput.value = ''; // Limpiar el input general de contraseña del lobby
+            showLobbyMessage(`Uniéndote a la sala pública ${roomId}...`, "info");
+            disableLobbyButtons();
+            sendToServer('joinRoom', { playerName, roomId, password: '' });
+        }
+    }
+
+    // --- Funciones para el Modal de Contraseña ---
+    function showPasswordPromptModal() {
+        if (privateRoomPasswordModalEl) privateRoomPasswordModalEl.classList.add('active');
+        if (passwordModalInputEl) passwordModalInputEl.focus();
+         // Deshabilitar botones del lobby mientras el modal de contraseña está activo
+        disableLobbyButtons(); 
+    }
+
+    function hidePasswordPromptModal() {
+        if (privateRoomPasswordModalEl) privateRoomPasswordModalEl.classList.remove('active');
+        currentJoiningRoomId = null; // Limpiar el ID de la sala actual
+        // Habilitar botones del lobby nuevamente
+        enableLobbyButtons(); 
+    }
+
+    function handleSubmitPasswordModal(event) {
+        event.preventDefault();
+        const password = passwordModalInputEl.value;
+        const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
+
+        if (!password) {
+            passwordErrorTextEl.textContent = 'La contraseña no puede estar vacía.';
+            passwordErrorTextEl.style.display = 'block';
+            passwordModalInputEl.focus();
+            return;
         }
 
-        showLobbyMessage(`Joining room ${roomId}...`, "info");
-        disableLobbyButtons();
-        // Clear the room ID input again after sending, maybe?
-        // joinRoomIdInput.value = '';
+        if (currentJoiningRoomId) {
+            console.log(`Attempting to join room ${currentJoiningRoomId} with password from modal.`);
+            passwordErrorTextEl.textContent = '';
+            passwordErrorTextEl.style.display = 'none';
+            // Mostrar un feedback de carga en el botón o modal aquí sería ideal
+            submitPasswordButtonEl.disabled = true;
+            submitPasswordButtonEl.textContent = 'Uniéndote...';
 
-        sendToServer('joinRoom', { playerName, roomId, password });
+            sendToServer('joinRoom', { 
+                playerName, 
+                roomId: currentJoiningRoomId, 
+                password 
+            });
+        } else {
+            console.error("No currentJoiningRoomId set when submitting password modal.");
+            hidePasswordPromptModal(); // Cerrar si no hay ID, es un estado inesperado
+        }
     }
 
     // --- Start App ---

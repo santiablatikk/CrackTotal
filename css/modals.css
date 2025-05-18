@@ -445,53 +445,82 @@
 
 .result-title,
 .stats-title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 700;
-    margin: 0 0 3px 0;
+    margin: 0 0 5px 0;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .result-message,
 .stats-subtitle {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--text-light);
-    margin: 0;
+    margin: 0 0 20px 0;
+    line-height: 1.5;
 }
 
 .result-stats,
 .performance-summary {
     padding: 15px;
     display: grid;
-    gap: 10px;
+    gap: 12px;
 }
 
 .result-stats {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
 .stat-item,
 .performance-item {
-    background: rgba(0, 0, 0, 0.15);
-    padding: 8px 10px;
-    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 12px 15px;
+    border-radius: 8px;
     text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInSlideUp 0.5s ease-out forwards;
+}
+
+.stat-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.stat-item.winner {
+    background: rgba(var(--success-rgb), 0.15);
+    border-left: 4px solid var(--success);
+}
+
+.stat-item.loser {
+    background: rgba(var(--error-rgb), 0.1);
+    border-left: 4px solid var(--error);
 }
 
 .stat-label,
 .performance-label {
-    display: block;
-    font-size: 0.65rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 0.7rem;
     color: var(--text-light);
-    margin-bottom: 3px;
+    margin-bottom: 5px;
     text-transform: uppercase;
     font-weight: 500;
+}
+
+.stat-label i {
+    font-size: 0.8rem;
 }
 
 .stat-value,
 .performance-value {
     display: block;
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
 }
 
 .correct-stat { color: var(--success); }
@@ -736,4 +765,78 @@
 @keyframes pulseText {
     0% { opacity: 0.8; }
     100% { opacity: 1; transform: scale(1.05); }
-} 
+}
+
+@keyframes fadeInSlideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Styles for Private Room Password Prompt Modal --- */
+#privateRoomPasswordModal .modal-content {
+    max-width: 380px; /* Más pequeño que el de resultados */
+    padding: 30px; /* Ajustar padding */
+    background: var(--background-alt); /* Mismo fondo que otros modales */
+    /* Hereda el borde redondeado, sombra, etc. de .modal-content general */
+}
+
+#privateRoomPasswordModal .modal-title {
+    font-size: 1.4rem; /* Un poco más pequeño */
+    margin-bottom: 15px;
+    /* Hereda el gradiente de texto y centrado de .modal-title general */
+}
+
+#privateRoomPasswordModal #passwordModalText {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+#privateRoomPasswordModal .form-group {
+    margin-bottom: 15px;
+}
+
+#privateRoomPasswordModal .form-group label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+#privateRoomPasswordModal #passwordModalInput {
+    /* Reutiliza .lobby-input pero con ajustes si es necesario */
+    width: 100%;
+    padding: 10px 12px;
+    background: rgba(var(--darker-bg-rgb), 0.7);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+#privateRoomPasswordModal #passwordModalInput:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
+}
+
+/* Estilo para el mensaje de error de contraseña en el modal */
+#privateRoomPasswordModal #passwordErrorText {
+    font-size: 0.8rem;
+    color: var(--error);
+    text-align: center;
+    margin-top: -10px; /* Para acercarlo al input */
+    margin-bottom: 15px;
+    min-height: 1.2em; /* Para evitar saltos de layout */
+}
+
+#privateRoomPasswordModal .modal-footer {
+    margin-top: 25px; /* Ajustar margen del footer */
+    /* Hereda flex y gap de .modal-footer general */
+}
+
+/* input-focus-border ya está definido globalmente, se aplicará si es relevante */ 
