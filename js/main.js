@@ -12,7 +12,7 @@
 })();
 
 // Lista de palabras prohibidas (ejemplos, puedes ampliarla)
-const BANNED_WORDS = ["palabrota", "insulto", "admin", "moderador", "root"]; // Añade más palabras según necesites
+const BANNED_WORDS = ["pene", "pelotudo", "puto", "gay", "chota"]; // Añade más palabras según necesites
 
 // Función para validar el nombre del jugador
 function isValidPlayerName(name) {

@@ -38,16 +38,14 @@ function loadRanking() {
 
     try {
         const usersRef = collection(db, "users");
-        // Consulta: Ordenar por rendimiento (Victorias DESC, Puntaje DESC, Derrotas ASC, Errores ASC)
+        // Consulta: Ordenar por Victorias DESC, luego Partidas Jugadas DESC
         const q = query(usersRef, 
                         orderBy("wins", "desc"), 
-                        orderBy("totalScore", "desc"), 
-                        orderBy("totalLosses", "asc"), // Añadido totalLosses a la ordenación explícita
-                        orderBy("totalErrors", "asc"), // totalErrors ya estaba
-                        limit(50)); // Límite a 50 como indica el H2
+                        orderBy("matchesPlayed", "desc"), 
+                        limit(50)); 
 
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            console.log("Ranking data received/updated");
+            console.log("Ranking data received/updated with new sorting: Wins -> Matches Played");
             rankingBody.innerHTML = '';
 
             if (querySnapshot.empty) {
