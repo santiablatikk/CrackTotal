@@ -836,4 +836,9 @@ button#startButton:hover::after {
 
 .extra-link-button i {
     font-size: 1.1em;
+}
+
+/* Ocultar placeholders de anuncios en la página de inicio */
+.adsense-placeholder-container {
+    display: none !important;
 } 

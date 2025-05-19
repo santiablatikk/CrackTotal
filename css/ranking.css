@@ -556,3 +556,8 @@ main.game-content > div:first-child {
         gap: 6px;
     }
 } 
+
+/* Ocultar placeholders de anuncios en la página de ranking */
+.adsense-placeholder-container {
+    display: none !important;
+} 

@@ -1,5 +1,23 @@
+/* Estilos Base para todo el sitio web de Crack Total */
+
+/* Reseteo básico y box-sizing */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+/* Regla para ocultar placeholders de anuncios */
+.adsense-placeholder-container {
+    display: none !important;
+}
+
+/* Variables de Color Globales (Paleta Oscura) */
 :root {
-    /* Paleta Moderna Oscura */
+    /* Colores de Fondo */
     --primary: #007bff; --primary-rgb: 0, 123, 255;
     --primary-dark: #0056b3;
     --primary-light: #66aaff;
