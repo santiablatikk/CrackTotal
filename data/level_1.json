@@ -1,3 +1,4 @@
+[
 {
     "nivel": 1,
     "dificultad": "Muy Fácil",
@@ -46,7 +47,7 @@
         "pregunta": "¿Quién es la máxima autoridad dentro de la cancha durante un partido?",
         "opciones": {
           "A": "Entrenador",
-          "B": "Arbitro",
+          "B": "Árbitro",
           "C": "Capitán del equipo",
           "D": "Juez de línea"
         },
@@ -57,7 +58,7 @@
         "opciones": {
           "A": "Cúbica",
           "B": "Ovalada",
-          "C": "Esferica",
+          "C": "Esférica",
           "D": "Cilíndrica"
         },
         "respuesta_correcta": "C"
@@ -157,7 +158,7 @@
         "opciones": {
           "A": "Expulsión",
           "B": "Falta leve",
-          "C": "Amonestacion",
+          "C": "Amonestación",
           "D": "Cambio obligatorio"
         },
         "respuesta_correcta": "C"
@@ -217,7 +218,7 @@
         "opciones": {
           "A": "Capitán",
           "B": "Presidente del club",
-          "C": "Director Tecnico",
+          "C": "Director Técnico",
           "D": "Aguatero"
         },
         "respuesta_correcta": "C"
@@ -277,7 +278,7 @@
         "opciones": {
           "A": "Borussia Dortmund",
           "B": "RB Leipzig",
-          "C": "Bayern Munich",
+          "C": "Bayern Múnich",
           "D": "Schalke 04"
         },
         "respuesta_correcta": "C"
@@ -477,7 +478,7 @@
         "opciones": {
           "A": "Área penal",
           "B": "Medialuna",
-          "C": "Area chica",
+          "C": "Área chica",
           "D": "Círculo central"
         },
         "respuesta_correcta": "C"
@@ -527,7 +528,7 @@
         "opciones": {
           "A": "Alargue",
           "B": "Tiempo muerto",
-          "C": "Entretiepo",
+          "C": "Entretiempo",
           "D": "Suplementario"
         },
         "respuesta_correcta": "C"
@@ -568,7 +569,7 @@
           "A": "Pelé",
           "B": "Ronaldinho",
           "C": "Neymar Jr.",
-          "D": "Vinicius Jr."
+          "D": "Vinícius Jr."
         },
         "respuesta_correcta": "C"
       },
@@ -646,7 +647,7 @@
         "pregunta": "¿Cómo se llama el punto blanco en el centro del campo desde donde se inicia el partido?",
         "opciones": {
           "A": "Punto penal",
-          "B": "Area de esquina",
+          "B": "Área de esquina",
           "C": "Punto central",
           "D": "Punto de saque lateral"
         },
@@ -751,7 +752,517 @@
           "D": "3"
         },
         "respuesta_correcta": "C"
+      },
+       {
+        "pregunta": "¿Cuántos árbitros asistentes (jueces de línea) hay típicamente en un partido profesional?",
+        "opciones": {
+          "A": "Uno",
+          "B": "Dos",
+          "C": "Tres",
+          "D": "Cuatro"
+        },
+        "respuesta_correcta": "B"
+      },
+      {
+        "pregunta": "¿Qué se sanciona cuando un jugador, sin balón, está detrás del último defensor rival al momento que le pasan la pelota?",
+        "opciones": {
+          "A": "Falta",
+          "B": "Penal",
+          "C": "Fuera de juego (Offside)",
+          "D": "Saque de banda"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador es famoso por su apodo 'Dibu' y por ser arquero de Argentina?",
+        "opciones": {
+          "A": "Franco Armani",
+          "B": "Gerónimo Rulli",
+          "C": "Emiliano Martínez",
+          "D": "Sergio Romero"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿De qué país es originario el club Bayern Múnich?",
+        "opciones": {
+          "A": "Inglaterra",
+          "B": "España",
+          "C": "Alemania",
+          "D": "Italia"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cómo se llama la línea que marca los límites largos del campo de juego?",
+        "opciones": {
+          "A": "Línea de fondo",
+          "B": "Línea lateral",
+          "C": "Línea de medio campo",
+          "D": "Línea de meta"
+        },
+        "respuesta_correcta": "B"
+      },
+      {
+        "pregunta": "¿Qué se obtiene si un equipo gana un partido?",
+        "opciones": {
+          "A": "1 Punto",
+          "B": "2 Puntos",
+          "C": "3 Puntos",
+          "D": "0 Puntos"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué país es conocido por su forma de bota en el mapa y su pasión por el fútbol?",
+        "opciones": {
+          "A": "Francia",
+          "B": "Alemania",
+          "C": "Italia",
+          "D": "España"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuántos jugadores componen un equipo de fútbol sala en cancha?",
+        "opciones": {
+          "A": "7",
+          "B": "11",
+          "C": "5",
+          "D": "9"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál de estos colores NO suele estar en una pelota de fútbol tradicional?",
+        "opciones": {
+          "A": "Blanco",
+          "B": "Negro",
+          "C": "Violeta",
+          "D": "Azul"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué parte del cuerpo se usa para hacer un saque de arco?",
+        "opciones": {
+          "A": "Mano",
+          "B": "Cabeza",
+          "C": "Pie",
+          "D": "Rodilla"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el nombre del estadio del Real Madrid?",
+        "opciones": {
+          "A": "Camp Nou",
+          "B": "Anfield",
+          "C": "Santiago Bernabéu",
+          "D": "Old Trafford"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué deporte se utiliza un bate y se corre por bases?",
+        "opciones": {
+          "A": "Fútbol",
+          "B": "Baloncesto",
+          "C": "Béisbol",
+          "D": "Tenis"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cómo se llama el trofeo que se entrega al campeón de la liga española?",
+        "opciones": {
+          "A": "Copa del Rey",
+          "B": "Champions League",
+          "C": "LaLiga",
+          "D": "Supercopa de España"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador brasileño es conocido como 'O Rei'?",
+        "opciones": {
+          "A": "Neymar",
+          "B": "Ronaldinho",
+          "C": "Pelé",
+          "D": "Ronaldo"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué número de camiseta usaba habitualmente Zinedine Zidane?",
+        "opciones": {
+          "A": "10",
+          "B": "7",
+          "C": "5",
+          "D": "9"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el principal color de la camiseta de la selección de Países Bajos (Holanda)?",
+        "opciones": {
+          "A": "Azul",
+          "B": "Verde",
+          "C": "Naranja",
+          "D": "Rojo"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué parte del cuerpo NO está permitido que los jugadores de campo (excepto el arquero) toquen intencionalmente la pelota?",
+        "opciones": {
+          "A": "Pie",
+          "B": "Cabeza",
+          "C": "Brazo/Mano",
+          "D": "Pecho"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cómo se llama el objeto redondo que se usa para jugar al fútbol?",
+        "opciones": {
+          "A": "Disco",
+          "B": "Cubo",
+          "C": "Pelota/Balón",
+          "D": "Raqueta"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál de estos NO es un equipo de fútbol famoso de Inglaterra?",
+        "opciones": {
+          "A": "Manchester United",
+          "B": "Liverpool FC",
+          "C": "Los Angeles Lakers",
+          "D": "Arsenal FC"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuántos equipos juegan un partido de fútbol?",
+        "opciones": {
+          "A": "Uno",
+          "B": "Tres",
+          "C": "Dos",
+          "D": "Cuatro"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué animal es la mascota del Mundial de Fútbol de Qatar 2022?",
+        "opciones": {
+          "A": "Un león",
+          "B": "Un tigre",
+          "C": "La'eeb (un turbante animado)",
+          "D": "Un águila"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué país se encuentra la Torre Eiffel?",
+        "opciones": {
+          "A": "Italia",
+          "B": "Alemania",
+          "C": "Francia",
+          "D": "España"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el resultado si un partido termina 0-0?",
+        "opciones": {
+          "A": "Victoria para el local",
+          "B": "Victoria para el visitante",
+          "C": "Empate",
+          "D": "Se juega de nuevo"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿De qué color es la camiseta tradicional de la selección de Italia?",
+        "opciones": {
+          "A": "Roja",
+          "B": "Verde",
+          "C": "Azul",
+          "D": "Amarilla"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cómo se llama el lugar donde los equipos se cambian antes de un partido?",
+        "opciones": {
+          "A": "Cocina",
+          "B": "Biblioteca",
+          "C": "Vestuario",
+          "D": "Jardín"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador es conocido por celebrar sus goles haciendo una 'Siuuu'?",
+        "opciones": {
+          "A": "Lionel Messi",
+          "B": "Neymar Jr.",
+          "C": "Cristiano Ronaldo",
+          "D": "Kylian Mbappé"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál de estas prendas NO usan los futbolistas durante un partido?",
+        "opciones": {
+          "A": "Camiseta",
+          "B": "Pantalón corto",
+          "C": "Sombrero de copa",
+          "D": "Medias"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué significa cuando el árbitro pita el final del partido?",
+        "opciones": {
+          "A": "Que empieza el segundo tiempo",
+          "B": "Que hay un descanso",
+          "C": "Que el partido ha terminado",
+          "D": "Que hay un penal"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué animal aparece en el escudo del Liverpool FC?",
+        "opciones": {
+          "A": "Un león",
+          "B": "Un dragón",
+          "C": "Un pájaro (Liver Bird)",
+          "D": "Un águila"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuántos lados tiene un hexágono (como los de algunos balones antiguos)?",
+        "opciones": {
+          "A": "Cuatro",
+          "B": "Cinco",
+          "C": "Seis",
+          "D": "Siete"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el nombre del torneo de clubes más importante de Sudamérica?",
+        "opciones": {
+          "A": "Champions League",
+          "B": "Europa League",
+          "C": "Copa Libertadores",
+          "D": "Mundial de Clubes"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué parte de la cancha tiene dos palos y una red donde se marcan los goles?",
+        "opciones": {
+          "A": "El círculo central",
+          "B": "El área de penal",
+          "C": "El arco / La portería",
+          "D": "El banderín de córner"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál de estos NO es un color primario?",
+        "opciones": {
+          "A": "Rojo",
+          "B": "Amarillo",
+          "C": "Verde",
+          "D": "Azul"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuántos dedos tiene normalmente una mano humana?",
+        "opciones": {
+          "A": "Tres",
+          "B": "Cuatro",
+          "C": "Cinco",
+          "D": "Seis"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué animal dice 'muuu'?",
+        "opciones": {
+          "A": "Perro",
+          "B": "Gato",
+          "C": "Vaca",
+          "D": "Pato"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué prenda de vestir se usa en los pies?",
+        "opciones": {
+          "A": "Gorra",
+          "B": "Bufanda",
+          "C": "Calcetines / Medias",
+          "D": "Guantes"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el nombre del actual Papa (a 2024)?",
+        "opciones": {
+          "A": "Benedicto XVI",
+          "B": "Juan Pablo II",
+          "C": "Francisco",
+          "D": "Pío XII"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué país tiene una bandera con una hoja de arce roja?",
+        "opciones": {
+          "A": "Estados Unidos",
+          "B": "México",
+          "C": "Canadá",
+          "D": "Brasil"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cómo se llama el personaje principal de Star Wars que es un joven granjero y se convierte en Jedi?",
+        "opciones": {
+          "A": "Han Solo",
+          "B": "Darth Vader",
+          "C": "Luke Skywalker",
+          "D": "Obi-Wan Kenobi"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué selección de fútbol es conocida como 'La Canarinha'?",
+        "opciones": {
+          "A": "Argentina",
+          "B": "Alemania",
+          "C": "Brasil",
+          "D": "Italia"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es la capital de Argentina?",
+        "opciones": {
+          "A": "Santiago",
+          "B": "Lima",
+          "C": "Buenos Aires",
+          "D": "Bogotá"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuántas ruedas tiene una bicicleta estándar?",
+        "opciones": {
+          "A": "Una",
+          "B": "Tres",
+          "C": "Dos",
+          "D": "Cuatro"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué instrumento musical tiene cuerdas y se toca con un arco o con los dedos?",
+        "opciones": {
+          "A": "Tambor",
+          "B": "Flauta",
+          "C": "Violín",
+          "D": "Piano"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿De qué color es el cielo en un día despejado?",
+        "opciones": {
+          "A": "Verde",
+          "B": "Rojo",
+          "C": "Azul",
+          "D": "Amarillo"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué se usa para escribir en una pizarra tradicional?",
+        "opciones": {
+          "A": "Bolígrafo",
+          "B": "Marcador permanente",
+          "C": "Tiza",
+          "D": "Lápiz de color"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué tipo de profesional cuida los dientes de las personas?",
+        "opciones": {
+          "A": "Panadero",
+          "B": "Bombero",
+          "C": "Dentista",
+          "D": "Carpintero"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál de estos animales es conocido por ser el 'Rey de la Selva'?",
+        "opciones": {
+          "A": "Elefante",
+          "B": "Jirafa",
+          "C": "León",
+          "D": "Tigre"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cómo se llama el deporte que se juega con una raqueta y una pelota pequeña sobre una mesa dividida por una red?",
+        "opciones": {
+          "A": "Tenis",
+          "B": "Bádminton",
+          "C": "Tenis de mesa / Ping Pong",
+          "D": "Squash"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué famoso monumento se encuentra en París y es una torre de hierro?",
+        "opciones": {
+          "A": "Coliseo Romano",
+          "B": "Estatua de la Libertad",
+          "C": "Torre Eiffel",
+          "D": "Big Ben"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuántos días tiene una semana?",
+        "opciones": {
+          "A": "5",
+          "B": "10",
+          "C": "7",
+          "D": "30"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué se celebra el 25 de diciembre en muchos países del mundo?",
+        "opciones": {
+          "A": "Año Nuevo",
+          "B": "Día de la Independencia",
+          "C": "Navidad",
+          "D": "Halloween"
+        },
+        "respuesta_correcta": "C"
       }
     ]
-}
-  
+  }
+]

@@ -1,3 +1,4 @@
+[
 {
     "nivel": 3,
     "dificultad": "Medio",
@@ -75,7 +76,7 @@
       {
         "pregunta": "¿Qué jugador croata ganó el Balón de Oro al mejor jugador del Mundial 2018?",
         "opciones": {
-          "A": "Luka Modric",
+          "A": "Luka Modrić",
           "B": "Ivan Rakitić",
           "C": "Ivan Perišić",
           "D": "Mario Mandžukić"
@@ -120,7 +121,7 @@
           "C": "Copa Stanley",
           "D": "Balón de Oro"
         },
-        "respuesta_correcta": ["Trofeo de la Copa Mundial de la FIFA", "Copa del Mundo", "Copa Mundial", "A"]
+        "respuesta_correcta": "A"
       },
        {
         "pregunta": "¿Qué dos países asiáticos fueron co-anfitriones del Mundial 2002?",
@@ -550,7 +551,7 @@
           "C": "Superclásico",
           "D": "Clásico del Sur"
         },
-        "respuesta_correcta": ["Clásico Porteño", "Clásico de Barrio", "A", "B"]
+        "respuesta_correcta": "A"
       },
       {
         "pregunta": "¿Qué jugador inglés es el máximo goleador histórico de la Premier League?",
@@ -571,7 +572,517 @@
           "D": "4"
         },
         "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Quién es el máximo goleador histórico de la selección de Países Bajos?",
+        "opciones": {
+          "A": "Robin van Persie",
+          "B": "Klaas-Jan Huntelaar",
+          "C": "Patrick Kluivert",
+          "D": "Dennis Bergkamp"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa Sudamericana 2014?",
+        "opciones": {
+          "A": "River Plate",
+          "B": "Atlético Nacional",
+          "C": "Boca Juniors",
+          "D": "Lanús"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador español es el que más partidos ha disputado en la historia del FC Barcelona?",
+        "opciones": {
+          "A": "Lionel Messi",
+          "B": "Xavi Hernández",
+          "C": "Andrés Iniesta",
+          "D": "Sergio Busquets"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué país se juega la liga conocida como 'Ligue 1'?",
+        "opciones": {
+          "A": "Italia",
+          "B": "Alemania",
+          "C": "Francia",
+          "D": "Portugal"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el capitán de la selección argentina campeona del Mundial 2022?",
+        "opciones": {
+          "A": "Lionel Messi",
+          "B": "Ángel Di María",
+          "C": "Nicolás Otamendi",
+          "D": "Emiliano Martínez"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué famoso jugador francés es conocido como 'Tití' y fue figura en el Arsenal?",
+        "opciones": {
+          "A": "Thierry Henry",
+          "B": "Zinedine Zidane",
+          "C": "Antoine Griezmann",
+          "D": "Olivier Giroud"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador inglés es famoso por haber jugado toda su carrera profesional en el Manchester United y ser parte de la 'Clase del 92'?",
+        "opciones": {
+          "A": "Steven Gerrard",
+          "B": "Frank Lampard",
+          "C": "Paul Scholes",
+          "D": "John Terry"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa Libertadores en 2008, siendo el primer y único club ecuatoriano en lograrlo hasta la fecha?",
+        "opciones": {
+          "A": "Barcelona SC",
+          "B": "Emelec",
+          "C": "LDU Quito",
+          "D": "Independiente del Valle"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué Mundial la selección de Senegal sorprendió al vencer al campeón defensor Francia en el partido inaugural?",
+        "opciones": {
+          "A": "1998",
+          "B": "2006",
+          "C": "2002",
+          "D": "2010"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador de la selección de Grecia que ganó la Eurocopa 2004?",
+        "opciones": {
+          "A": "Fernando Santos",
+          "B": "Guus Hiddink",
+          "C": "Otto Rehhagel",
+          "D": "Luiz Felipe Scolari"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador es conocido como 'El Niño' y tuvo un destacado paso por el Atlético de Madrid y Liverpool?",
+        "opciones": {
+          "A": "David Villa",
+          "B": "Raúl González",
+          "C": "Fernando Torres",
+          "D": "Álvaro Morata"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo africano en alcanzar los cuartos de final de un Mundial (Italia 1990)?",
+        "opciones": {
+          "A": "Nigeria",
+          "B": "Ghana",
+          "C": "Camerún",
+          "D": "Senegal"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué club italiano es conocido como los 'Nerazzurri'?",
+        "opciones": {
+          "A": "AC Milan",
+          "B": "AS Roma",
+          "C": "Inter de Milán",
+          "D": "Napoli"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el autor del gol de la victoria de Alemania sobre Argentina en la final del Mundial 1990?",
+        "opciones": {
+          "A": "Jürgen Klinsmann",
+          "B": "Rudi Völler",
+          "C": "Andreas Brehme",
+          "D": "Lothar Matthäus"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la primera edición de la Copa Sudamericana en 2002?",
+        "opciones": {
+          "A": "Boca Juniors",
+          "B": "River Plate",
+          "C": "San Lorenzo",
+          "D": "Cienciano"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué equipo jugaba Ronaldinho cuando ganó el Balón de Oro en 2005?",
+        "opciones": {
+          "A": "AC Milan",
+          "B": "Paris Saint-Germain",
+          "C": "FC Barcelona",
+          "D": "Grêmio"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo alemán ganó la Champions League en 2001 venciendo al Valencia por penales?",
+        "opciones": {
+          "A": "Borussia Dortmund",
+          "B": "Bayer Leverkusen",
+          "C": "Bayern Múnich",
+          "D": "Schalke 04"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador de la selección argentina subcampeona del Mundo en Brasil 2014?",
+        "opciones": {
+          "A": "Gerardo Martino",
+          "B": "Jorge Sampaoli",
+          "C": "Alejandro Sabella",
+          "D": "Diego Maradona"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador brasileño, figura del Santos y Cosmos, es considerado uno de los mejores de todos los tiempos y nunca jugó en Europa?",
+        "opciones": {
+          "A": "Zico",
+          "B": "Sócrates",
+          "C": "Pelé",
+          "D": "Garrincha"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el nombre del estadio del Borussia Dortmund, famoso por su 'Muro Amarillo'?",
+        "opciones": {
+          "A": "Allianz Arena",
+          "B": "Veltins-Arena",
+          "C": "Signal Iduna Park",
+          "D": "Red Bull Arena"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué selección ganó la Eurocopa en 2000 con un gol de oro de David Trezeguet en la final?",
+        "opciones": {
+          "A": "Italia",
+          "B": "Portugal",
+          "C": "Francia",
+          "D": "España"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador uruguayo es el máximo goleador histórico de la selección de Uruguay?",
+        "opciones": {
+          "A": "Edinson Cavani",
+          "B": "Diego Forlán",
+          "C": "Luis Suárez",
+          "D": "Enzo Francescoli"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué año se produjo el desastre aéreo de Múnich que afectó al Manchester United?",
+        "opciones": {
+          "A": "1968",
+          "B": "1948",
+          "C": "1958",
+          "D": "1978"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador es conocido por haber marcado el gol con la mano conocido como 'La Mano de Dios' en el Mundial 1986?",
+        "opciones": {
+          "A": "Lionel Messi",
+          "B": "Gary Lineker",
+          "C": "Diego Maradona",
+          "D": "Jorge Valdano"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el equipo con más títulos de la FA Cup inglesa?",
+        "opciones": {
+          "A": "Manchester United",
+          "B": "Liverpool",
+          "C": "Arsenal",
+          "D": "Chelsea"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué país fue sede de la Copa del Mundo de 1994?",
+        "opciones": {
+          "A": "Francia",
+          "B": "Italia",
+          "C": "Estados Unidos",
+          "D": "Brasil"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién es el máximo goleador histórico de la selección de Brasil?",
+        "opciones": {
+          "A": "Ronaldo Nazário",
+          "B": "Romário",
+          "C": "Pelé / Neymar (disputado)",
+          "D": "Zico"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Champions League en 2012, venciendo al Bayern Múnich en la final por penales?",
+        "opciones": {
+          "A": "Manchester United",
+          "B": "Real Madrid",
+          "C": "Chelsea",
+          "D": "FC Barcelona"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el club más antiguo de Italia?",
+        "opciones": {
+          "A": "Juventus",
+          "B": "AC Milan",
+          "C": "Genoa",
+          "D": "Inter de Milán"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué selección ganó la Copa Africana de Naciones en 2019?",
+        "opciones": {
+          "A": "Senegal",
+          "B": "Egipto",
+          "C": "Argelia",
+          "D": "Nigeria"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cómo se llama el estadio principal de la AS Roma y la SS Lazio?",
+        "opciones": {
+          "A": "San Siro",
+          "B": "Allianz Stadium",
+          "C": "Stadio Olimpico",
+          "D": "Stadio San Paolo (Diego Armando Maradona)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador ganó el Balón de Oro en 1998, el mismo año que ganó el Mundial con Francia?",
+        "opciones": {
+          "A": "Thierry Henry",
+          "B": "Didier Deschamps",
+          "C": "Zinedine Zidane",
+          "D": "Lilian Thuram"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el club con más títulos de la Bundesliga alemana?",
+        "opciones": {
+          "A": "Borussia Dortmund",
+          "B": "Werder Bremen",
+          "C": "Bayern Múnich",
+          "D": "Hamburgo SV"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué equipo inglés se destacó el delantero Didier Drogba?",
+        "opciones": {
+          "A": "Arsenal",
+          "B": "Manchester United",
+          "C": "Chelsea",
+          "D": "Liverpool"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué selección ganó la Copa América Centenario en 2016?",
+        "opciones": {
+          "A": "Argentina",
+          "B": "Brasil",
+          "C": "Chile",
+          "D": "Colombia"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cómo se conoce popularmente al estadio del Club Atlético River Plate?",
+        "opciones": {
+          "A": "La Bombonera",
+          "B": "El Cilindro",
+          "C": "El Monumental",
+          "D": "El Nuevo Gasómetro"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador del Real Madrid que ganó tres Champions League consecutivas entre 2016 y 2018?",
+        "opciones": {
+          "A": "Carlo Ancelotti",
+          "B": "José Mourinho",
+          "C": "Zinedine Zidane",
+          "D": "Vicente del Bosque"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador es conocido como 'El Pibe de Oro'?",
+        "opciones": {
+          "A": "Lionel Messi",
+          "B": "Juan Román Riquelme",
+          "C": "Diego Maradona",
+          "D": "Carlos Valderrama"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué equipo se hizo famoso el tridente 'MSN' (Messi, Suárez, Neymar)?",
+        "opciones": {
+          "A": "Real Madrid",
+          "B": "Paris Saint-Germain",
+          "C": "FC Barcelona",
+          "D": "Liverpool"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el clásico rival del AC Milan en Italia?",
+        "opciones": {
+          "A": "Juventus",
+          "B": "AS Roma",
+          "C": "Inter de Milán",
+          "D": "Napoli"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué selección ganó la Eurocopa 2012, completando un ciclo de Euro-Mundial-Euro?",
+        "opciones": {
+          "A": "Alemania",
+          "B": "Francia",
+          "C": "España",
+          "D": "Italia"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién es el máximo goleador histórico de la selección de Inglaterra?",
+        "opciones": {
+          "A": "Bobby Charlton",
+          "B": "Gary Lineker",
+          "C": "Harry Kane (seguido de cerca por Rooney)",
+          "D": "Michael Owen"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Europa League en 2021 venciendo al Manchester United en la final?",
+        "opciones": {
+          "A": "Sevilla",
+          "B": "Arsenal",
+          "C": "Villarreal",
+          "D": "AS Roma"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el apodo del Club Atlético San Lorenzo de Almagro?",
+        "opciones": {
+          "A": "El Globo",
+          "B": "El Fortín",
+          "C": "El Ciclón",
+          "D": "El Taladro"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué país se encuentra el estadio de Wembley?",
+        "opciones": {
+          "A": "Escocia",
+          "B": "Gales",
+          "C": "Inglaterra",
+          "D": "Irlanda del Norte"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador africano fue Balón de Oro en 1995?",
+        "opciones": {
+          "A": "Samuel Eto'o",
+          "B": "Didier Drogba",
+          "C": "George Weah",
+          "D": "Yaya Touré"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa Libertadores 2019 en una final única contra River Plate?",
+        "opciones": {
+          "A": "Palmeiras",
+          "B": "Grêmio",
+          "C": "Flamengo",
+          "D": "Boca Juniors"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el nombre del premio que se otorga al mejor gol del año por la FIFA?",
+        "opciones": {
+          "A": "Balón de Oro",
+          "B": "Bota de Oro",
+          "C": "Premio Puskás",
+          "D": "The Best Gol"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué selección ganó el Mundial de Fútbol de 1998 siendo local?",
+        "opciones": {
+          "A": "Brasil",
+          "B": "Italia",
+          "C": "Francia",
+          "D": "Alemania"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién es el entrenador actual del Manchester City (a mediados de 2024)?",
+        "opciones": {
+          "A": "Jürgen Klopp",
+          "B": "Mikel Arteta",
+          "C": "Pep Guardiola",
+          "D": "Erik ten Hag"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo de la MLS fichó a Lionel Messi en 2023?",
+        "opciones": {
+          "A": "LA Galaxy",
+          "B": "New York City FC",
+          "C": "Inter Miami CF",
+          "D": "Atlanta United FC"
+        },
+        "respuesta_correcta": "C"
       }
     ]
-}
-  
+  }
+]

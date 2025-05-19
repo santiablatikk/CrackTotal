@@ -1,3 +1,4 @@
+[
 {
     "nivel": 4,
     "dificultad": "Medio/Difícil",
@@ -611,7 +612,537 @@
           "D": "Shakhtar Donetsk"
         },
         "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Quién fue el primer jugador en ganar el Premio Puskás al mejor gol del año (en 2009)?",
+        "opciones": {
+          "A": "Cristiano Ronaldo",
+          "B": "Lionel Messi",
+          "C": "Andrés Iniesta",
+          "D": "Zlatan Ibrahimović"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección ganó la Copa Confederaciones 2017?",
+        "opciones": {
+          "A": "Alemania",
+          "B": "Chile",
+          "C": "Portugal",
+          "D": "México"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuántos títulos de Champions League tiene el Liverpool FC?",
+        "opciones": {
+          "A": "6",
+          "B": "5",
+          "C": "7",
+          "D": "4"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador es el máximo goleador histórico de la Copa Libertadores?",
+        "opciones": {
+          "A": "Alberto Spencer",
+          "B": "Fernando Morena",
+          "C": "Daniel Onega",
+          "D": "Julio Morales"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué estadio jugó sus partidos como local el AC Milan antes de mudarse al San Siro (ahora Giuseppe Meazza)?",
+        "opciones": {
+          "A": "Arena Civica",
+          "B": "Stadio Fornari",
+          "C": "Campo di Via Goldoni",
+          "D": "Velodromo Sempione"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué selección ganó la Copa Africana de Naciones en 2024?",
+        "opciones": {
+          "A": "Costa de Marfil",
+          "B": "Nigeria",
+          "C": "Sudáfrica",
+          "D": "RD del Congo"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué club español ganó tres Europa Leagues consecutivas entre 2014 y 2016?",
+        "opciones": {
+          "A": "Sevilla FC",
+          "B": "Atlético de Madrid",
+          "C": "Valencia CF",
+          "D": "Villarreal CF"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuál es el apodo de la selección nacional de fútbol de Italia?",
+        "opciones": {
+          "A": "Azzurra",
+          "B": "Squadra Azzurra",
+          "C": "La Nazionale",
+          "D": "Todas las anteriores"
+        },
+        "respuesta_correcta": "D"
+      },
+      {
+        "pregunta": "¿Qué jugador neerlandés anotó un famoso gol de volea contra la Unión Soviética en la final de la Eurocopa 1988?",
+        "opciones": {
+          "A": "Ruud Gullit",
+          "B": "Frank Rijkaard",
+          "C": "Marco van Basten",
+          "D": "Ronald Koeman"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el máximo goleador del Mundial 1994, compartido con Oleg Salenko?",
+        "opciones": {
+          "A": "Romário",
+          "B": "Roberto Baggio",
+          "C": "Hristo Stoichkov",
+          "D": "Jürgen Klinsmann"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué club inglés fue el primero en ganar la Copa de Europa (actual Champions League) en 1968?",
+        "opciones": {
+          "A": "Liverpool",
+          "B": "Celtic",
+          "C": "Manchester United",
+          "D": "Nottingham Forest"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué equipo se retiró profesionalmente Johan Cruyff como jugador?",
+        "opciones": {
+          "A": "Ajax",
+          "B": "FC Barcelona",
+          "C": "Feyenoord",
+          "D": "Los Angeles Aztecs"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer país en ganar la Copa del Mundo fuera de su propio continente?",
+        "opciones": {
+          "A": "Uruguay (1950 en Brasil)",
+          "B": "Alemania (1954 en Suiza)",
+          "C": "Brasil (1958 en Suecia)",
+          "D": "Italia (1938 en Francia)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador tiene el récord de más goles en una sola edición de la Copa Libertadores (17 goles en 1971)?",
+        "opciones": {
+          "A": "Pelé",
+          "B": "Alberto Spencer",
+          "C": "Daniel Onega",
+          "D": "Fernando Morena"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el único club que ha ganado la Serie A de Italia siendo de una ciudad no capital de región?",
+        "opciones": {
+          "A": "Hellas Verona",
+          "B": "Sampdoria",
+          "C": "Cagliari",
+          "D": "Todas las anteriores son correctas"
+        },
+        "respuesta_correcta": "D"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador del 'Dream Team' del FC Barcelona a principios de los 90?",
+        "opciones": {
+          "A": "Louis van Gaal",
+          "B": "Bobby Robson",
+          "C": "Johan Cruyff",
+          "D": "Rinus Michels"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué selección africana fue la primera en vencer a un campeón del mundo vigente en un Mundial (Alemania Federal en 1982)?",
+        "opciones": {
+          "A": "Camerún",
+          "B": "Marruecos",
+          "C": "Argelia",
+          "D": "Nigeria"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador italiano es el máximo goleador histórico de la Serie A?",
+        "opciones": {
+          "A": "Francesco Totti",
+          "B": "Gunnar Nordahl",
+          "C": "Silvio Piola",
+          "D": "Giuseppe Meazza"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador fue el primero en ganar el Balón de Oro tres veces consecutivas (1983, 1984, 1985)?",
+        "opciones": {
+          "A": "Johan Cruyff",
+          "B": "Franz Beckenbauer",
+          "C": "Michel Platini",
+          "D": "Marco van Basten"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál fue el resultado de la final del Mundial 1954, conocida como el 'Milagro de Berna' (Alemania Federal vs Hungría)?",
+        "opciones": {
+          "A": "2-1",
+          "B": "4-2",
+          "C": "3-2",
+          "D": "1-0"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Recopa de Europa en 1972, venciendo al Dinamo Moscú en la final?",
+        "opciones": {
+          "A": "AC Milan",
+          "B": "Bayern Múnich",
+          "C": "Rangers",
+          "D": "Chelsea"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién es el único jugador que ha marcado en dos finales de Copa del Mundo para equipos diferentes (considerando autogoles)?",
+        "opciones": {
+          "A": "Pelé",
+          "B": "Zinedine Zidane",
+          "C": "Mario Mandžukić",
+          "D": "Paul Breitner"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué año se implementó la regla del 'pase atrás' al arquero, prohibiéndole tomar el balón con las manos?",
+        "opciones": {
+          "A": "1990",
+          "B": "1994",
+          "C": "1992",
+          "D": "1988"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué selección nacional tiene el récord de más participaciones en Copas del Mundo sin haber ganado nunca el torneo?",
+        "opciones": {
+          "A": "Países Bajos",
+          "B": "Suecia",
+          "C": "México",
+          "D": "España (antes de 2010)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer club africano en llegar a una final del Mundial de Clubes de la FIFA (en 2010)?",
+        "opciones": {
+          "A": "Al-Ahly (Egipto)",
+          "B": "Espérance de Tunis (Túnez)",
+          "C": "TP Mazembe (RD Congo)",
+          "D": "Raja Casablanca (Marruecos)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador inglés tiene el récord de goles en la Premier League para una sola temporada de 38 partidos (32 goles en 2017-18)?",
+        "opciones": {
+          "A": "Harry Kane",
+          "B": "Alan Shearer",
+          "C": "Mohamed Salah (Egipcio, pero récord de la liga)",
+          "D": "Wayne Rooney"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa UEFA en la temporada 1997-98 con Ronaldo Nazário como figura?",
+        "opciones": {
+          "A": "Lazio",
+          "B": "FC Barcelona",
+          "C": "Inter de Milán",
+          "D": "Parma"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué ciudad se encuentra el estadio conocido como 'La Catedral del Fútbol' (San Mamés, antiguo y nuevo)?",
+        "opciones": {
+          "A": "Madrid",
+          "B": "Sevilla",
+          "C": "Bilbao",
+          "D": "Valencia"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer país asiático en participar en una Copa del Mundo (Francia 1938)?",
+        "opciones": {
+          "A": "Japón",
+          "B": "Corea del Sur",
+          "C": "Indias Orientales Neerlandesas (actual Indonesia)",
+          "D": "China"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador tiene el récord de más hat-tricks en la historia de LaLiga española?",
+        "opciones": {
+          "A": "Cristiano Ronaldo",
+          "B": "Telmo Zarra",
+          "C": "Lionel Messi",
+          "D": "Alfredo Di Stéfano"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador del Ajax que ganó la Champions League en 1995 con un equipo muy joven?",
+        "opciones": {
+          "A": "Johan Cruyff",
+          "B": "Rinus Michels",
+          "C": "Louis van Gaal",
+          "D": "Guus Hiddink"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué club posee el récord de más temporadas consecutivas jugando en la Serie A de Italia (desde 1929-30 hasta 2005-06 y desde 2007-08)?",
+        "opciones": {
+          "A": "Juventus",
+          "B": "AC Milan",
+          "C": "Inter de Milán",
+          "D": "AS Roma"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué Mundial se introdujo el sistema de tarjetas amarillas y rojas por primera vez?",
+        "opciones": {
+          "A": "Inglaterra 1966",
+          "B": "Alemania 1974",
+          "C": "México 1970",
+          "D": "Argentina 1978"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador anotó el famoso 'Gol del Siglo' contra Inglaterra en el Mundial de 1986?",
+        "opciones": {
+          "A": "Jorge Valdano",
+          "B": "Claudio Caniggia",
+          "C": "Diego Maradona",
+          "D": "Jorge Burruchaga"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo en ganar la Copa del Mundo de Clubes de la FIFA en su formato actual (desde 2005)?",
+        "opciones": {
+          "A": "Liverpool",
+          "B": "Internacional (Brasil)",
+          "C": "São Paulo FC",
+          "D": "FC Barcelona"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador tiene el récord de más goles en la historia de la selección de fútbol de Alemania?",
+        "opciones": {
+          "A": "Gerd Müller",
+          "B": "Thomas Müller",
+          "C": "Miroslav Klose",
+          "D": "Lukas Podolski"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué año se jugó la primera Copa Mundial Femenina de la FIFA?",
+        "opciones": {
+          "A": "1987",
+          "B": "1995",
+          "C": "1991",
+          "D": "1999"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador del AC Milan que ganó dos Champions League consecutivas en 1989 y 1990?",
+        "opciones": {
+          "A": "Fabio Capello",
+          "B": "Carlo Ancelotti",
+          "C": "Arrigo Sacchi",
+          "D": "Nereo Rocco"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo inglés completó una temporada invicto en la Premier League 2003-04, siendo apodados 'Los Invencibles'?",
+        "opciones": {
+          "A": "Manchester United",
+          "B": "Chelsea",
+          "C": "Arsenal",
+          "D": "Liverpool"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el único jugador que ha ganado el Balón de Oro jugando para un club fuera de Europa (Stanley Matthews en Blackpool, aunque el premio era para europeos)?",
+        "opciones": {
+          "A": "Pelé",
+          "B": "Diego Maradona",
+          "C": "Stanley Matthews (Esta afirmación es parcialmente incorrecta, el premio era para jugadores europeos en clubes europeos. Weah fue el primer no europeo en ganarlo en 1995)",
+          "D": "Alfredo Di Stéfano"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué selección ganó la medalla de oro en fútbol masculino en los Juegos Olímpicos de Barcelona 1992?",
+        "opciones": {
+          "A": "Polonia",
+          "B": "Nigeria",
+          "C": "España",
+          "D": "Argentina"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué equipo se retiró Zlatan Ibrahimović en 2023?",
+        "opciones": {
+          "A": "Manchester United",
+          "B": "LA Galaxy",
+          "C": "AC Milan",
+          "D": "Paris Saint-Germain"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el club con más títulos de la Eredivisie (liga de los Países Bajos)?",
+        "opciones": {
+          "A": "Feyenoord",
+          "B": "PSV Eindhoven",
+          "C": "Ajax de Ámsterdam",
+          "D": "AZ Alkmaar"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador marcó el gol decisivo en la final de la Champions League 2014 para el Real Madrid en el tiempo extra?",
+        "opciones": {
+          "A": "Cristiano Ronaldo",
+          "B": "Sergio Ramos (empató en tiempo reglamentario)",
+          "C": "Gareth Bale",
+          "D": "Karim Benzema"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el primer arquero en ganar el Balón de Oro (Lev Yashin en 1963)?",
+        "opciones": {
+          "A": "Dino Zoff",
+          "B": "Gordon Banks",
+          "C": "Lev Yashin",
+          "D": "Sepp Maier"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa Libertadores 2004 venciendo a Boca Juniors en la final?",
+        "opciones": {
+          "A": "São Paulo",
+          "B": "Santos",
+          "C": "Once Caldas",
+          "D": "Internacional"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el clásico de fútbol más antiguo reconocido oficialmente en el mundo (Sheffield FC vs Hallam FC)?",
+        "opciones": {
+          "A": "El Clásico (Real Madrid vs Barcelona)",
+          "B": "Old Firm (Celtic vs Rangers)",
+          "C": "Rules Derby / Sheffield Derby",
+          "D": "Derby della Madonnina (Inter vs Milan)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué Mundial se vio por primera vez la 'Ola Mexicana' en los estadios?",
+        "opciones": {
+          "A": "Argentina 1978",
+          "B": "España 1982",
+          "C": "México 1986",
+          "D": "Italia 1990"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador tiene el récord de más goles anotados en un solo partido de la Premier League (5 goles)?",
+        "opciones": {
+          "A": "Alan Shearer",
+          "B": "Sergio Agüero",
+          "C": "Andy Cole / Alan Shearer / Jermain Defoe / Dimitar Berbatov / Sergio Agüero (Todos con 5)",
+          "D": "Thierry Henry"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo inglés en ganar la Copa de la UEFA (actual Europa League) en 1972?",
+        "opciones": {
+          "A": "Liverpool FC",
+          "B": "Leeds United",
+          "C": "Tottenham Hotspur",
+          "D": "Arsenal FC"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién es el único jugador que ha ganado la Copa del Mundo como jugador y como entrenador (Mario Zagallo y Franz Beckenbauer)?",
+        "opciones": {
+          "A": "Johan Cruyff",
+          "B": "Didier Deschamps",
+          "C": "Mario Zagallo, Franz Beckenbauer y Didier Deschamps",
+          "D": "Zinedine Zidane"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo de Portugal ganó la Copa de Europa en 1987 con un famoso gol de taco de Rabah Madjer?",
+        "opciones": {
+          "A": "Sporting de Lisboa",
+          "B": "Benfica",
+          "C": "FC Porto",
+          "D": "Boavista"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué año se fundó la UEFA (Unión de Federaciones Europeas de Fútbol)?",
+        "opciones": {
+          "A": "1948",
+          "B": "1960",
+          "C": "1954",
+          "D": "1930"
+        },
+        "respuesta_correcta": "C"
       }
     ]
-}
-  
+  }
+]

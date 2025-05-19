@@ -1,3 +1,4 @@
+[
 {
     "nivel": 5,
     "dificultad": "Difícil",
@@ -73,7 +74,7 @@
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Qué jugador polaco anotó 5 goles en solo 9 minutos tras entrar como suplente / desde el banco en un partido de la Bundesliga en 2015?",
+        "pregunta": "¿Qué jugador polaco anotó 5 goles en solo 9 minutos tras entrar como suplente desde el banco en un partido de la Bundesliga en 2015?",
         "opciones": {
           "A": "Robert Lewandowski",
           "B": "Arkadiusz Milik",
@@ -378,12 +379,12 @@
           "A": "Ronaldo Nazário",
           "B": "Rivaldo",
           "C": "Roberto Carlos",
-          "D": "Romario"
+          "D": "Romário"
         },
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿Contra qué equipo perdió el 'Milan de Sacchi' la final de la Copa Intercontinental 1993 por penales?",
+        "pregunta": "¿Contra qué equipo perdió el 'Milan de Sacchi' la final de la Copa Intercontinental 1993?",
         "opciones": {
           "A": "São Paulo",
           "B": "Vélez Sarsfield",
@@ -445,10 +446,10 @@
       {
         "pregunta": "¿Qué equipo colombiano perdió la final de la Copa Libertadores 1989 por penales contra Atlético Nacional?",
         "opciones": {
-          "A": "Olimpia (Paraguay)",
-          "B": "América de Cali",
-          "C": "Millonarios",
-          "D": "Deportivo Cali"
+          "A": "América de Cali",
+          "B": "Millonarios",
+          "C": "Deportivo Cali",
+          "D": "Santa Fe"
         },
         "respuesta_correcta": "A"
       },
@@ -523,10 +524,10 @@
         "respuesta_correcta": "A"
       },
       {
-        "pregunta": "¿En qué año se introdujo la regla del fuera de juego (offside) en el fútbol?",
+        "pregunta": "¿En qué año se realizó una reforma importante a la regla del fuera de juego (offside), haciéndola similar a la actual?",
         "opciones": {
-          "A": "1863 (Reglas de Cambridge)",
-          "B": "1925 (Reforma importante)",
+          "A": "1863",
+          "B": "1925",
           "C": "1907",
           "D": "1888"
         },
@@ -631,7 +632,517 @@
           "D": "Andorinha"
         },
         "respuesta_correcta": "A"
+      },
+       {
+        "pregunta": "¿Qué selección perdió la final de la Eurocopa 2008 contra España?",
+        "opciones": {
+          "A": "Alemania",
+          "B": "Italia",
+          "C": "Países Bajos",
+          "D": "Rusia"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Cuántas finales de Copa Libertadores perdió Boca Juniors contra equipos brasileños entre 2012 y 2023?",
+        "opciones": {
+          "A": "3",
+          "B": "2",
+          "C": "1",
+          "D": "4"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién fue el autor del gol de Argentina contra Brasil en los octavos de final del Mundial 1990?",
+        "opciones": {
+          "A": "Claudio Caniggia",
+          "B": "Diego Maradona",
+          "C": "Jorge Burruchaga",
+          "D": "Pedro Troglio"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa UEFA 1998-99, la última antes de ser renombrada Europa League?",
+        "opciones": {
+          "A": "Parma",
+          "B": "Lazio",
+          "C": "Marsella",
+          "D": "Atlético de Madrid"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Quién es el máximo goleador histórico del Arsenal FC?",
+        "opciones": {
+          "A": "Thierry Henry",
+          "B": "Ian Wright",
+          "C": "Tony Adams",
+          "D": "Dennis Bergkamp"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿En qué año se fundó el club Boca Juniors?",
+        "opciones": {
+          "A": "1905",
+          "B": "1901",
+          "C": "1899",
+          "D": "1910"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+        "pregunta": "¿Qué jugador anotó el gol de la victoria para el Estrella Roja de Belgrado en la final de la Copa de Europa 1991 contra el Olympique de Marsella (definición por penales)?",
+        "opciones": {
+          "A": "Robert Prosinečki",
+          "B": "Siniša Mihajlović",
+          "C": "Darko Pančev",
+          "D": "Dejan Savićević"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo en ganar la Copa de Ferias (antecesora de la Copa UEFA/Europa League) en 1958?",
+        "opciones": {
+          "A": "Valencia CF",
+          "B": "Inter Milan",
+          "C": "FC Barcelona",
+          "D": "AS Roma"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién es el jugador con más partidos disputados en la historia de la selección de fútbol de Alemania?",
+        "opciones": {
+          "A": "Miroslav Klose",
+          "B": "Bastian Schweinsteiger",
+          "C": "Lothar Matthäus",
+          "D": "Philipp Lahm"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué año se disputó la primera edición de la Copa Intertoto de la UEFA, que daba acceso a la Copa UEFA?",
+        "opciones": {
+          "A": "1961",
+          "B": "1995",
+          "C": "1999",
+          "D": "1988"
+        },
+        "respuesta_correcta": "A" 
+      },
+      {
+        "pregunta": "¿Qué selección ganó la medalla de oro en fútbol masculino en los Juegos Olímpicos de 1924 y 1928, considerados como campeonatos mundiales previos a la Copa del Mundo?",
+        "opciones": {
+          "A": "Argentina",
+          "B": "Italia",
+          "C": "Uruguay",
+          "D": "Hungría"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el autor del gol de la victoria de Dinamarca sobre Alemania en la final de la Eurocopa 1992?",
+        "opciones": {
+          "A": "Brian Laudrup",
+          "B": "Henrik Larsen",
+          "C": "Kim Vilfort",
+          "D": "John Jensen"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el único equipo que ha ganado la Copa Libertadores de América sin recibir goles en condición de local en toda la competición?",
+        "opciones": {
+          "A": "Peñarol (1960)",
+          "B": "Santos (1963)",
+          "C": "Boca Juniors (1978)",
+          "D": "Estudiantes LP (1969)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador tiene el récord de más goles anotados en una sola temporada de la Eredivisie neerlandesa (43 goles en 1956-57)?",
+        "opciones": {
+          "A": "Marco van Basten",
+          "B": "Johan Cruyff",
+          "C": "Coen Dillen",
+          "D": "Ruud Geels"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador de la selección de Checoslovaquia que ganó la Eurocopa 1976, famosa por el penal de Panenka?",
+        "opciones": {
+          "A": "Josef Masopust",
+          "B": "Jozef Vengloš",
+          "C": "Václav Ježek",
+          "D": "Karol Borhy"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa de Campeones de la CONCACAF en más ocasiones?",
+        "opciones": {
+          "A": "Saprissa",
+          "B": "Pachuca",
+          "C": "Club América",
+          "D": "Cruz Azul"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador tiene el récord de más goles en una sola temporada de la liga escocesa (50 goles con el Celtic en 2003-04)?",
+        "opciones": {
+          "A": "Ally McCoist",
+          "B": "Kenny Miller",
+          "C": "Henrik Larsson",
+          "D": "Jimmy McGrory"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo en ganar la Copa de la UEFA (actual Europa League) tres veces consecutivas (1972, 1973, 1974)?",
+        "opciones": {
+          "A": "Juventus",
+          "B": "Borussia Mönchengladbach",
+          "C": "Liverpool FC",
+          "D": "No ha habido un equipo que la gane 3 veces consecutivas"
+        },
+        "respuesta_correcta": "D" 
+      },
+      {
+        "pregunta": "¿Quién fue el árbitro de la final del Mundial 1974 entre Alemania Federal y Países Bajos?",
+        "opciones": {
+          "A": "Gottfried Dienst (Suiza)",
+          "B": "Rudolf Scheurer (Suiza)",
+          "C": "Jack Taylor (Inglaterra)",
+          "D": "Sergio Gonella (Italia)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué año se jugó la primera Copa de Oro de la CONCACAF con ese nombre (anteriormente Campeonato de Naciones)?",
+        "opciones": {
+          "A": "1989",
+          "B": "1993",
+          "C": "1991",
+          "D": "1985"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador ostenta el récord de más goles con la selección de Hungría (84 goles)?",
+        "opciones": {
+          "A": "Sándor Kocsis",
+          "B": "Flórián Albert",
+          "C": "Ferenc Puskás",
+          "D": "Imre Schlosser"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo no europeo en ganar la Copa Intercontinental (1961)?",
+        "opciones": {
+          "A": "Santos (Brasil)",
+          "B": "Independiente (Argentina)",
+          "C": "Peñarol (Uruguay)",
+          "D": "Racing Club (Argentina)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador fue el máximo goleador de la Copa del Mundo de 1970 con 10 goles?",
+        "opciones": {
+          "A": "Pelé",
+          "B": "Jairzinho",
+          "C": "Gerd Müller",
+          "D": "Teófilo Cubillas"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el único jugador que ha ganado la Champions League con tres clubes diferentes (Ajax, Real Madrid, AC Milan)?",
+        "opciones": {
+          "A": "Zlatan Ibrahimović",
+          "B": "Samuel Eto'o",
+          "C": "Clarence Seedorf",
+          "D": "Cristiano Ronaldo"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué estadio se jugó la final de la Eurocopa 1964, ganada por España?",
+        "opciones": {
+          "A": "Camp Nou (Barcelona)",
+          "B": "Estadio Olímpico (Roma)",
+          "C": "Santiago Bernabéu (Madrid)",
+          "D": "Estadio de Wembley (Londres)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la primera edición de la Copa CONMEBOL en 1992?",
+        "opciones": {
+          "A": "São Paulo",
+          "B": "Olimpia",
+          "C": "Atlético Mineiro",
+          "D": "Peñarol"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién es el máximo goleador histórico del 'Clásico' español (Real Madrid vs Barcelona)?",
+        "opciones": {
+          "A": "Alfredo Di Stéfano",
+          "B": "Cristiano Ronaldo",
+          "C": "Lionel Messi",
+          "D": "Raúl González"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa Libertadores en 1985, venciendo en la final al América de Cali?",
+        "opciones": {
+          "A": "Peñarol",
+          "B": "River Plate",
+          "C": "Argentinos Juniors",
+          "D": "Olimpia"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el único país que ha ganado la Copa del Mundo, la Eurocopa y la medalla de oro olímpica en fútbol masculino?",
+        "opciones": {
+          "A": "Alemania",
+          "B": "Italia",
+          "C": "España (No ha ganado Oro Olímpico Masculino como campeón mundial/Eurocopa)",
+          "D": "Francia"
+        },
+        "respuesta_correcta": "D"
+      },
+      {
+        "pregunta": "¿Qué jugador anotó el gol más rápido en la historia de la Premier League (7.69 segundos)?",
+        "opciones": {
+          "A": "Ledley King",
+          "B": "Alan Shearer",
+          "C": "Shane Long",
+          "D": "Dwight Yorke"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué año se disputó el primer partido internacional de fútbol femenino reconocido por la FIFA (Francia vs Países Bajos)?",
+        "opciones": {
+          "A": "1969",
+          "B": "1920",
+          "C": "1971",
+          "D": "1955"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el único jugador que ha marcado en 5 Mundiales diferentes y también ha ganado la Eurocopa?",
+        "opciones": {
+          "A": "Lionel Messi",
+          "B": "Miroslav Klose",
+          "C": "Cristiano Ronaldo",
+          "D": "Pelé (nunca jugó Eurocopa)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa Intercontinental en 1973 tras la renuncia del Ajax (campeón de Europa) a jugarla, enfrentando a Independiente?",
+        "opciones": {
+          "A": "AC Milan",
+          "B": "Bayern Múnich",
+          "C": "Juventus (perdió la final de la Copa de Europa, pero jugó por renuncia del Ajax)",
+          "D": "Liverpool"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador de la selección de Uruguay campeona del mundo en 1950 en el famoso 'Maracanazo'?",
+        "opciones": {
+          "A": "Alberto Suppici",
+          "B": "Óscar Tabárez",
+          "C": "Juan López Fontana",
+          "D": "Hugo Bagnulo"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué año el AC Milan ganó su primera Copa de Europa?",
+        "opciones": {
+          "A": "1958",
+          "B": "1969",
+          "C": "1963",
+          "D": "1989"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador tiene el récord de más apariciones en la historia de la Copa América?",
+        "opciones": {
+          "A": "Javier Zanetti (Argentina)",
+          "B": "Teodoro Fernández (Perú)",
+          "C": "Lionel Messi (Argentina) / Sergio Livingstone (Chile) - récord compartido o muy cercano",
+          "D": "Zizinho (Brasil)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer equipo de la Unión Soviética en ganar una competición europea (Recopa de Europa 1975)?",
+        "opciones": {
+          "A": "Spartak Moscú",
+          "B": "CSKA Moscú",
+          "C": "Dinamo de Kiev",
+          "D": "Dinamo Tbilisi"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador francés fue el máximo goleador de la Eurocopa 1984 con 9 goles?",
+        "opciones": {
+          "A": "Jean-Pierre Papin",
+          "B": "Just Fontaine",
+          "C": "Michel Platini",
+          "D": "Dominique Rocheteau"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el nombre del estadio donde se jugó la final del Mundial 1930 en Montevideo?",
+        "opciones": {
+          "A": "Estadio Gran Parque Central",
+          "B": "Estadio Luis Franzini",
+          "C": "Estadio Centenario",
+          "D": "Estadio Belvedere"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la Copa de Ferias en 1960, venciendo al Birmingham City en la final?",
+        "opciones": {
+          "A": "Valencia CF",
+          "B": "AS Roma",
+          "C": "FC Barcelona",
+          "D": "Inter Milan"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el máximo goleador del Mundial 1958 con el récord de 13 goles en una sola edición?",
+        "opciones": {
+          "A": "Pelé",
+          "B": "Garrincha",
+          "C": "Just Fontaine",
+          "D": "Sándor Kocsis"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué equipo ganó la primera edición de la Liga de Campeones Femenina de la UEFA en 2001-02?",
+        "opciones": {
+          "A": "Umeå IK (Suecia)",
+          "B": "Arsenal LFC (Inglaterra)",
+          "C": "1. FFC Frankfurt (Alemania)",
+          "D": "Olympique Lyonnais (Francia)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál fue el primer país africano en ganar un partido en un Mundial (Argelia 2-1 Alemania Federal, 1982)?",
+        "opciones": {
+          "A": "Camerún",
+          "B": "Marruecos",
+          "C": "Argelia",
+          "D": "Túnez"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador ostenta el récord de más goles en la historia de la selección de fútbol de Italia?",
+        "opciones": {
+          "A": "Roberto Baggio",
+          "B": "Alessandro Del Piero",
+          "C": "Luigi Riva",
+          "D": "Giuseppe Meazza"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué año se fundó el Real Madrid Club de Fútbol?",
+        "opciones": {
+          "A": "1899",
+          "B": "1905",
+          "C": "1902",
+          "D": "1910"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué selección ganó la Copa Asiática de la AFC en 2011?",
+        "opciones": {
+          "A": "Corea del Sur",
+          "B": "Australia",
+          "C": "Japón",
+          "D": "Arabia Saudita"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Quién fue el entrenador del Steaua Bucarest que ganó la Copa de Europa en 1986?",
+        "opciones": {
+          "A": "Mircea Lucescu",
+          "B": "Gheorghe Hagi",
+          "C": "Emerich Jenei",
+          "D": "Anghel Iordănescu"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Cuál es el club con más títulos de la Copa de Portugal?",
+        "opciones": {
+          "A": "FC Porto",
+          "B": "Sporting de Lisboa",
+          "C": "SL Benfica",
+          "D": "Boavista"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador tiene el récord de más partidos jugados con la camiseta del FC Barcelona?",
+        "opciones": {
+          "A": "Xavi Hernández",
+          "B": "Andrés Iniesta",
+          "C": "Lionel Messi",
+          "D": "Carles Puyol"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿En qué país se disputó la Copa del Mundo de 1978, ganada por el anfitrión?",
+        "opciones": {
+          "A": "Alemania Federal",
+          "B": "Brasil",
+          "C": "Argentina",
+          "D": "España"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+        "pregunta": "¿Qué jugador sueco es el máximo goleador histórico del Paris Saint-Germain?",
+        "opciones": {
+          "A": "Edinson Cavani",
+          "B": "Kylian Mbappé (francés, pero lo superó)",
+          "C": "Zlatan Ibrahimović",
+          "D": "Pauleta"
+        },
+        "respuesta_correcta": "C"
       }
     ]
-}
-  
+  }
+]
