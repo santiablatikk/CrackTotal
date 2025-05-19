@@ -39,7 +39,7 @@ let allQuestions = {}; // Store questions globally { level: [processedQuestion, 
 function processRawQuestion(rawQ, level) {
     // Ensure basic structure exists based on level
     if (!rawQ || typeof rawQ.pregunta !== 'string' || typeof rawQ.respuesta_correcta !== 'string') {
-        console.warn(`Invalid basic structure (missing question/answer) skipped in Level ${level}:`, rawQ.pregunta);
+        console.warn(`[L${level} - ERROR FORMATO BASICO] Pregunta saltada. Falta 'pregunta' o 'respuesta_correcta' como string. Pregunta: ${rawQ ? rawQ.pregunta : 'DESCONOCIDA'}`);
         return null;
     }
 
@@ -49,74 +49,120 @@ function processRawQuestion(rawQ, level) {
     const optionKeys = ['A', 'B', 'C', 'D'];
 
     // ALL LEVELS will now be processed this way:
-        if (!rawQ.opciones || typeof rawQ.opciones !== 'object') {
-        console.warn(`Missing or invalid 'opciones' object for question in Level ${level} skipped:`, rawQ.pregunta);
-            return null;
-        }
-        optionsArray = optionKeys.map(key => rawQ.opciones[key]).filter(opt => typeof opt === 'string');
+    if (!rawQ.opciones || typeof rawQ.opciones !== 'object' || rawQ.opciones === null) { // Añadido chequeo de null
+        console.warn(`[L${level} - ERROR OPCIONES] Pregunta saltada. Falta 'opciones' o no es un objeto. Pregunta: ${rawQ.pregunta}`);
+        return null;
+    }
 
-        if (optionsArray.length !== 4) {
-            console.warn(`Question in Level ${level} does not have exactly 4 string options:`, rawQ.pregunta);
-        return null; // Skip incomplete questions
+    optionsArray = optionKeys.map(key => {
+        const optionValue = rawQ.opciones[key];
+        if (typeof optionValue !== 'string') {
+            console.warn(`[L${level} - ERROR OPCION INDIVIDUAL] Opción '${key}' para la pregunta '${rawQ.pregunta}' no es un string. Valor: ${optionValue}`);
+            return undefined; // Marcar como indefinido para filtrarlo luego
         }
+        return optionValue;
+    });
+
+    // Filtrar opciones indefinidas y verificar que queden 4
+    const validOptionsArray = optionsArray.filter(opt => opt !== undefined);
+    if (validOptionsArray.length !== 4) {
+        console.warn(`[L${level} - ERROR NUMERO OPCIONES] Pregunta saltada. No tiene exactamente 4 opciones de texto válidas después de procesar. Pregunta: ${rawQ.pregunta}. Opciones procesadas: [${validOptionsArray.join(', ')}]`);
+        return null;
+    }
+    // Usar validOptionsArray para el resto de la lógica
+    optionsArray = validOptionsArray;
+
 
     correctIndex = optionKeys.indexOf(rawQ.respuesta_correcta); // rawQ.respuesta_correcta MUST be 'A', 'B', 'C', or 'D'
-        if (correctIndex === -1) {
-        console.warn(`Invalid correct answer key ('${rawQ.respuesta_correcta}') for Q: ${rawQ.pregunta} in Level ${level}. Must be A, B, C, or D.`);
-            return null; // Skip if correct answer key is wrong
-        }
-        correctAnswerText = optionsArray[correctIndex]; // Get the text of the correct option
+    if (correctIndex === -1) {
+        console.warn(`[L${level} - ERROR RESPUESTA] Clave de respuesta correcta inválida ('${rawQ.respuesta_correcta}') para P: ${rawQ.pregunta}. Debe ser A, B, C, o D.`);
+        return null;
+    }
+    correctAnswerText = optionsArray[correctIndex];
 
-    // Normalize the extracted correct answer text for comparison
     const normalizedCorrectAnswer = correctAnswerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "");
 
-    if (!normalizedCorrectAnswer) { // Check if after processing we got a valid answer text
-        console.warn(`Could not determine valid correct answer text for Q: ${rawQ.pregunta} in Level ${level}`);
+    if (!normalizedCorrectAnswer) {
+        console.warn(`[L${level} - ERROR TEXTO RESPUESTA] No se pudo determinar texto de respuesta válido para P: ${rawQ.pregunta}`);
         return null;
     }
 
     return {
         text: rawQ.pregunta,
-        options: optionsArray, // Array of options text [A, B, C, D] for levels > 1
-        correctIndex: correctIndex, // Index (0-3) of the correct option for levels > 1
-        correctAnswerText: normalizedCorrectAnswer, // Store the processed, normalized correct answer text
+        options: optionsArray,
+        correctIndex: correctIndex,
+        correctAnswerText: normalizedCorrectAnswer,
         level: level
     };
 }
 
 function loadQuestions() {
-    console.log(`Loading questions from ${DATA_DIR}...`);
-    allQuestions = {}; // Reset
-    let totalLoaded = 0;
+    console.log("===========================================");
+    console.log("       CARGANDO PREGUNTAS - INICIO         ");
+    console.log("===========================================");
+    console.log(`Buscando preguntas en el directorio: ${DATA_DIR}...`);
+    allQuestions = {};
+    let totalLoadedOverall = 0;
+    let totalProcessedOverall = 0;
+
     try {
         for (let level = 1; level <= MAX_LEVELS; level++) {
+            console.log(`--- Cargando Nivel ${level} ---`);
             const filePath = path.join(DATA_DIR, `level_${level}.json`);
+            let questionsForThisLevelProcessed = 0;
+            let questionsForThisLevelValid = 0;
+
             if (fs.existsSync(filePath)) {
                 const fileContent = fs.readFileSync(filePath, 'utf-8');
-                const jsonData = JSON.parse(fileContent);
+                let jsonData;
+                try {
+                    jsonData = JSON.parse(fileContent);
+                } catch (parseError) {
+                    console.error(`[NIVEL ${level}] ERROR FATAL: El archivo JSON está malformado y no se pudo parsear: ${filePath}. Error: ${parseError.message}`);
+                    allQuestions[level] = [];
+                    continue; // Saltar al siguiente nivel
+                }
+                
                 if (jsonData && jsonData.preguntas && Array.isArray(jsonData.preguntas)) {
+                    questionsForThisLevelProcessed = jsonData.preguntas.length;
+                    totalProcessedOverall += questionsForThisLevelProcessed;
+
                     allQuestions[level] = jsonData.preguntas
                                             .map(q => processRawQuestion(q, level))
-                                            .filter(q => q !== null); // Filter out invalid questions
-                    console.log(`Loaded ${allQuestions[level].length} valid questions for Level ${level}`);
-                    totalLoaded += allQuestions[level].length;
+                                            .filter(q => q !== null);
+                    questionsForThisLevelValid = allQuestions[level].length;
+                    totalLoadedOverall += questionsForThisLevelValid;
+                    
+                    if (questionsForThisLevelProcessed === 0) {
+                        console.warn(`[NIVEL ${level}] No se encontraron preguntas en el array 'preguntas' en ${filePath}.`);
+                    } else if (questionsForThisLevelValid === 0 && questionsForThisLevelProcessed > 0) {
+                        console.error(`[NIVEL ${level}] Se procesaron ${questionsForThisLevelProcessed} preguntas, pero NINGUNA fue válida. Revisa los logs de errores para este nivel.`);
+                    } else {
+                        console.log(`[NIVEL ${level}] Procesadas: ${questionsForThisLevelProcessed}, Válidas cargadas: ${questionsForThisLevelValid}.`);
+                    }
                 } else {
-                    console.warn(`Invalid format or missing 'preguntas' array in ${filePath}`);
+                    console.error(`[NIVEL ${level}] ERROR FORMATO: No se encontró el array 'preguntas' o el formato es incorrecto en ${filePath}.`);
                     allQuestions[level] = [];
                 }
             } else {
-                console.warn(`File not found: ${filePath}`);
+                console.warn(`[NIVEL ${level}] ARCHIVO NO ENCONTRADO: ${filePath}`);
                 allQuestions[level] = [];
             }
+            console.log(`--- Fin Carga Nivel ${level} ---`);
         }
-        console.log(`Total valid questions loaded: ${totalLoaded}`);
-        if (totalLoaded === 0) {
-             console.error("CRITICAL: No questions loaded. Game cannot function.");
-             // Optionally, stop the server or enter a safe mode
+        console.log("===========================================");
+        console.log("        CARGANDO PREGUNTAS - FIN           ");
+        console.log(`Total de preguntas procesadas en todos los niveles: ${totalProcessedOverall}`);
+        console.log(`Total de preguntas VÁLIDAS cargadas en todos los niveles: ${totalLoadedOverall}`);
+        console.log("===========================================");
+        if (totalLoadedOverall === 0 && totalProcessedOverall > 0) {
+             console.error("CRITICO: Se procesaron preguntas, pero NINGUNA fue válida globalmente. El juego no funcionará.");
+        } else if (totalLoadedOverall === 0) {
+            console.error("CRITICO: No se cargaron preguntas válidas. El juego no puede funcionar.");
         }
     } catch (error) {
-        console.error("Error loading questions:", error);
-        allQuestions = {}; // Clear potentially partial data
+        console.error("ERROR GENERAL DURANTE LA CARGA DE PREGUNTAS:", error);
+        allQuestions = {};
     }
 }
 
