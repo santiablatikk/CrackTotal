@@ -34,70 +34,63 @@ function loadRanking() {
         return;
     }
 
-    rankingBody.innerHTML = '<tr><td colspan="3">Cargando ranking...</td></tr>'; // Mensaje inicial (asumiendo 3 columnas en móvil)
+    rankingBody.innerHTML = '<tr><td colspan="7">Cargando ranking...</td></tr>'; // Ajustado colspan a 7
 
     try {
         const usersRef = collection(db, "users");
-        // NUEVA Consulta: Ordenar por rendimiento (Victorias DESC, Aciertos DESC, Derrotas ASC, Errores ASC)
+        // Consulta: Ordenar por rendimiento (Victorias DESC, Puntaje DESC, Derrotas ASC, Errores ASC)
         const q = query(usersRef, 
                         orderBy("wins", "desc"), 
                         orderBy("totalScore", "desc"), 
-                        orderBy("totalLosses", "asc"),
-                        orderBy("totalErrors", "asc"),
-                        limit(100));
+                        orderBy("totalLosses", "asc"), // Añadido totalLosses a la ordenación explícita
+                        orderBy("totalErrors", "asc"), // totalErrors ya estaba
+                        limit(50)); // Límite a 50 como indica el H2
 
-        // Usar onSnapshot en lugar de getDocs
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            console.log("Ranking data received/updated"); // Log para ver actualizaciones
-            rankingBody.innerHTML = ''; // Limpiar tabla en cada actualización
+            console.log("Ranking data received/updated");
+            rankingBody.innerHTML = '';
 
-        if (querySnapshot.empty) {
-            rankingBody.innerHTML = '<tr><td colspan="3">Aún no hay datos en el ranking. ¡Juega una partida!</td></tr>'; // (asumiendo 3 cols)
-            return;
-        }
+            if (querySnapshot.empty) {
+                rankingBody.innerHTML = '<tr><td colspan="7">Aún no hay datos en el ranking. ¡Juega una partida!</td></tr>'; // Ajustado colspan a 7
+                return;
+            }
 
-        let position = 1;
-        querySnapshot.forEach((doc) => {
-            const userData = doc.data();
-            const row = document.createElement('tr');
+            let position = 1;
+            querySnapshot.forEach((doc) => {
+                const userData = doc.data();
+                const row = document.createElement('tr');
 
-            // --- Datos necesarios para las columnas --- 
-            const playerName = userData.displayName || 'Jugador Anónimo';
-            const totalScore = userData.totalScore || 0;
-            const matchesPlayed = userData.matchesPlayed || 0;
-            // Calcular precisión si no está guardada directamente
-            // const totalCorrect = userData.totalCorrectAnswers || 0;
-            // const totalIncorrect = userData.totalIncorrectAnswers || 0;
-            // const totalAnswered = totalCorrect + totalIncorrect;
-            // const averageAccuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
-            // const fastestWinTime = userData.fastestWinTime; // Asume que existe en Firestore
-            
-            // Formatear tiempo (usando una función auxiliar si es necesario)
-            // const formattedTime = formatFirestoreTime(fastestWinTime);
+                const playerName = userData.displayName || 'Jugador Anónimo';
+                const totalScore = userData.totalScore || 0;
+                const matchesPlayed = userData.matchesPlayed || 0;
+                const wins = userData.wins || 0;
+                const totalLosses = userData.totalLosses || 0;
+                
+                const totalCorrectAnswers = userData.totalCorrectAnswers || 0;
+                const totalIncorrectAnswers = userData.totalIncorrectAnswers || 0;
+                const totalAnswered = totalCorrectAnswers + totalIncorrectAnswers;
+                const averageAccuracy = totalAnswered > 0 ? Math.round((totalCorrectAnswers / totalAnswered) * 100) : 0;
 
-            // --- Generar HTML para la fila --- 
-            row.innerHTML = `
-                <td>${position}</td>
-                <td class="player-name-rank">${playerName}</td>
-                <td class="score-rank">${totalScore}</td>
-                <td class="matches-cell">${matchesPlayed}</td>
-            `;
-            rankingBody.appendChild(row);
-            position++;
-        });
+                row.innerHTML = `
+                    <td class="rank-cell">${position}</td>
+                    <td class="player-cell">${playerName}</td>
+                    <td class="score-cell">${totalScore}</td>
+                    <td class="matches-cell">${matchesPlayed}</td>
+                    <td class="wins-cell">${wins}</td>
+                    <td class="losses-cell">${totalLosses}</td>
+                    <td class="accuracy-cell">${averageAccuracy}%</td>
+                `;
+                rankingBody.appendChild(row);
+                position++;
+            });
         }, (error) => {
-            // Manejo de errores del listener
             console.error("Error al escuchar el ranking: ", error);
-            rankingBody.innerHTML = '<tr><td colspan="3">Error al cargar el ranking en tiempo real. Inténtalo de nuevo más tarde.</td></tr>'; // (asumiendo 3 cols)
+            rankingBody.innerHTML = '<tr><td colspan="7">Error al cargar el ranking en tiempo real. Inténtalo de nuevo más tarde.</td></tr>'; // Ajustado colspan a 7
         });
-
-        // Podrías guardar 'unsubscribe' si necesitaras detener el listener en algún momento,
-        // pero para una página de ranking generalmente quieres que siga escuchando.
 
     } catch (error) {
-        // Error inicial al configurar la consulta (raro)
         console.error("Error al configurar la consulta del ranking: ", error);
-        rankingBody.innerHTML = '<tr><td colspan="3">Error al configurar la carga del ranking.</td></tr>'; // (asumiendo 3 cols)
+        rankingBody.innerHTML = '<tr><td colspan="7">Error al configurar la carga del ranking.</td></tr>'; // Ajustado colspan a 7
     }
 }
 
@@ -248,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error("Firestore no está inicializado. No se puede cargar el ranking ni el historial.");
         // Podrías mostrar mensajes de error en la UI aquí también si db es null
-        if (rankingBody) rankingBody.innerHTML = '<tr><td colspan="3">Error de conexión con la base de datos.</td></tr>'; // (asumiendo 3 cols)
+        if (rankingBody) rankingBody.innerHTML = '<tr><td colspan="7">Error de conexión con la base de datos.</td></tr>'; // (asumiendo 7 cols)
         if (historyList) historyList.innerHTML = '<p>Error de conexión con la base de datos.</p>';
     }
 }); 
