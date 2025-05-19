@@ -1,10 +1,7 @@
-[
 {
-    "nivel": 2,
-    "dificultad": "Fácil",
     "preguntas": [
       {
-        "pregunta": "¿Con qué nombre se conoce popularmente al estadio de Boca Juniors?", 
+        "pregunta": "¿Con qué nombre se conoce popularmente al estadio de Boca Juniors?",
         "opciones": {
           "A": "La Bombonera",
           "B": "El Monumental",
@@ -1134,5 +1131,4 @@
         "respuesta_correcta": "C"
       }
     ]
-  }
-]
+}

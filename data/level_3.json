@@ -1,7 +1,4 @@
-[
 {
-    "nivel": 3,
-    "dificultad": "Medio",
     "preguntas": [
       {
         "pregunta": "¿Quién marcó el gol con el que Alemania ganó la final del Mundial 2014 en el alargue?",
@@ -1084,5 +1081,4 @@
         "respuesta_correcta": "C"
       }
     ]
-  }
-]
+}

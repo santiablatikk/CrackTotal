@@ -1,7 +1,4 @@
-[
 {
-    "nivel": 4,
-    "dificultad": "Medio/Difícil",
     "preguntas": [
       {
         "pregunta": "¿Quién es el máximo goleador histórico de LaLiga española?",
@@ -1144,5 +1141,4 @@
         "respuesta_correcta": "C"
       }
     ]
-  }
-]
+}

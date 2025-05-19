@@ -1,7 +1,4 @@
-[
 {
-    "nivel": 1,
-    "dificultad": "Muy Fácil",
     "preguntas": [
       {
         "pregunta": "¿Cuántos jugadores hay en cancha por equipo en un partido de fútbol?",
@@ -1265,4 +1262,3 @@
       }
     ]
   }
-]

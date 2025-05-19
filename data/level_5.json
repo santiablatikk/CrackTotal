@@ -1,7 +1,4 @@
-[
 {
-    "nivel": 5,
-    "dificultad": "Difícil",
     "preguntas": [
       {
         "pregunta": "¿Contra qué equipo disputa la Juventus el 'Derby della Mole', el clásico de la ciudad de Turín?",
@@ -1144,5 +1141,4 @@
         "respuesta_correcta": "C"
       }
     ]
-  }
-]
+}
