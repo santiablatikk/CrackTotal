@@ -1,6 +1,25 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
   <head>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'analytics_storage': 'denied',
+        'ad_user_data': 'denied',
+        'ad_personalization': 'denied',
+        'functionality_storage': 'denied',
+        'personalization_storage': 'denied',
+        'security_storage': 'granted',
+        'wait_for_update': 500
+      });
+      gtag('set', 'ads_data_redaction', true);
+      gtag('set', 'url_passthrough', true);
+      
+      // Specify region
+      gtag('set', 'region', 'ES');
+    </script>
     <meta charset="UTF-8" />
     <meta name="description" content="Descubre artículos originales, análisis profundos, historias y las últimas noticias del fútbol argentino y mundial en el blog de Crack Total. ¡Contenido de calidad para verdaderos hinchas!" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -230,6 +249,20 @@
               </div>
             </div>
           </div>
+
+          <div class="blog-card">
+            <div class="blog-img-container">
+              <img src="img/blog/estilos-de-juego.jpg" alt="Tácticas y Estilos de Juego en Fútbol" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Estilos+de+Juego'">
+            </div>
+            <div class="blog-card-content">
+              <h2>Estilos de Juego en el Fútbol: Del Catenaccio al Tiki-Taka</h2>
+              <p>Explora los diferentes estilos de juego que han marcado la historia del fútbol, desde el defensivo Catenaccio italiano hasta el posesivo Tiki-Taka español y el Fútbol Total holandés.</p>
+              <div class="blog-entry-footer">
+                <span class="blog-date"><i class="fas fa-calendar-alt"></i> 30 Julio, 2024</span>
+                <a href="blog-detail-estilos-juego.html" class="primary-button">Leer más <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
         </div>
         
         <div style="text-align: center; margin-top: 2rem;">
@@ -315,6 +348,11 @@
         // No action needed here if shareSite is global from main.js
       </script>
     </div>
+  <!-- Script para gestión de cookies -->
+  <script src="js/cookie-consent.js"></script>
+  
+  <!-- Script para detectar AdBlock -->
+  <script src="js/adblock-detector.js"></script>
   </body>
 </html>
 

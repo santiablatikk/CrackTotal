@@ -855,6 +855,9 @@ function handleClientMessage(ws, message) {
         case 'mentirosoSubmitDemonstration':
             handleMentirosoSubmitDemonstration(ws, clientInfo, message.payload);
             break;
+        case 'mentirosoSubmitValidation':
+            handleMentirosoSubmitValidation(ws, clientInfo, message.payload);
+            break;
         default:
             console.warn(`Unknown message type received from ${clientInfo.id}: ${message.type}`);
             safeSend(ws, { type: 'errorMessage', payload: { error: `Unknown message type: ${message.type}` } });
@@ -2051,6 +2054,60 @@ function normalizeMentirosoText(text) {
         .replace(/[^a-z0-9\s]/gi, ''); // Remove special characters except spaces
 }
 
+// Handler para la validación manual del rival
+function handleMentirosoSubmitValidation(ws, clientInfo, payload) {
+    const room = rooms.get(clientInfo.roomId);
+    if (!room || !room.gameActive || !room.demonstrationState) return;
+
+    // Solo el challenger puede validar
+    if (clientInfo.id !== room.demonstrationState.challengerId) return;
+
+    const validations = payload.validations; // Array de true/false
+    const declaredAmount = room.demonstrationState.declaredAmount;
+    let correctCount = 0;
+    validations.forEach(v => { if (v) correctCount++; });
+
+    // Decide el ganador según la validación
+    let wasSuccessful = correctCount >= declaredAmount;
+    let roundWinnerId, roundLoserId;
+    if (wasSuccessful) {
+        roundWinnerId = room.demonstrationState.demonstratorId;
+        roundLoserId = room.demonstrationState.challengerId;
+        getPlayerById(room, roundWinnerId).score++;
+    } else {
+        roundWinnerId = room.demonstrationState.challengerId;
+        roundLoserId = room.demonstrationState.demonstratorId;
+        getPlayerById(room, roundWinnerId).score++;
+    }
+
+    // Prepara el resultado
+    const resultPayload = {
+        roundWinnerId,
+        roundWinnerName: getPlayerName(room, roundWinnerId),
+        roundLoserId,
+        roundLoserName: getPlayerName(room, roundLoserId),
+        wasSuccessfulDemonstration: wasSuccessful,
+        declaredAmount,
+        actualCorrectAnswers: correctCount,
+        challengeType: room.demonstrationState.challengeData.type,
+        players: getPlayerInfoForClients(room),
+        reason: wasSuccessful
+            ? `${getPlayerName(room, roundWinnerId)} demostró con éxito (${correctCount}/${declaredAmount})`
+            : `${getPlayerName(room, roundLoserId)} no pudo demostrarlo (${correctCount}/${declaredAmount})`,
+        roundNumber: room.roundNumber,
+        validationInfo: `Respuestas validadas como correctas: ${correctCount} de ${declaredAmount}`
+    };
+    broadcastToRoom(room.roomId, { type: 'mentirosoRoundResult', payload: resultPayload });
+
+    // Siguiente ronda o fin
+    room.currentTurn = roundWinnerId;
+    room.demonstrationState = null;
+    if (room.roundNumber >= room.maxRounds) {
+        endMentirosoGame(room.roomId, "Se completaron todas las rondas.");
+    } else {
+        setTimeout(() => startMentirosoRound(room.roomId), 3000);
+    }
+}
 
 // --- End Mentiroso Game Logic Stubs ---
 

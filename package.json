@@ -20,7 +20,7 @@
   "dependencies": {
     "firebase": "^11.6.1",
     "http-server": "^14.1.1",
-    "ws": "^8.18.1"
+    "ws": "^8.18.2"
   },
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^7.0.2",

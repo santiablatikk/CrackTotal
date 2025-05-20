@@ -306,25 +306,271 @@ handleResponsiveChanges();
 // Función para compartir el sitio
 async function shareSite() {
     const shareData = {
-        title: document.title,
+        title: document.title || 'Crack Total - El Juego del Fútbol',
         text: '¡Juega y demuestra tus conocimientos de fútbol en Crack Total!',
         url: window.location.href
     };
 
-    // Prepend console.log to the try block
-    // console.log('Attempting to share:', shareData);
-
+    // Si el navegador soporta compartir nativo (móvil principalmente)
+    if (navigator.share) {
     try {
-        if (navigator.share) {
             await navigator.share(shareData);
             console.log('Contenido compartido exitosamente!');
-        } else {
-            alert('Tu navegador no soporta la función de compartir. Por favor, copia el enlace manualmente: ' + window.location.href);
-        }
-    } catch (err) {
-        console.error('Error al compartir: ', err);
-        if (err.name !== 'AbortError') {
-            alert('Hubo un error al intentar compartir.');
+            return;
+        } catch (err) {
+            console.error('Error al compartir con API nativa: ', err);
+            // Si el usuario cancela, no mostramos el modal de compartir
+            if (err.name === 'AbortError') {
+                return;
+            }
         }
     }
+
+    // Si no podemos usar navigator.share, mostramos un modal con opciones
+    // Primero, verificamos si el modal ya existe
+    let shareModal = document.getElementById('shareModal');
+    
+    if (!shareModal) {
+        // Crear el modal de compartir
+        const modalHTML = `
+            <div id="shareModal" class="share-modal">
+                <div class="share-modal-content">
+                    <span class="share-modal-close">&times;</span>
+                    <h3>Compartir Crack Total</h3>
+                    <p>¡Comparte este sitio con tus amigos!</p>
+                    <div class="social-share-buttons">
+                        <a href="#" class="share-button share-whatsapp" title="Compartir en WhatsApp">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="#" class="share-button share-facebook" title="Compartir en Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="share-button share-twitter" title="Compartir en Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="share-button share-telegram" title="Compartir en Telegram">
+                            <i class="fab fa-telegram-plane"></i>
+                        </a>
+                        <a href="#" class="share-button share-email" title="Compartir por Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                    <div class="copy-link-container">
+                        <input type="text" id="shareUrl" value="${shareData.url}" readonly>
+                        <button id="copyLinkBtn" class="copy-link-btn">
+                            <i class="fas fa-copy"></i> Copiar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Agregar estilos para el modal
+        const modalStyle = document.createElement('style');
+        modalStyle.textContent = `
+            .share-modal {
+                display: none;
+                position: fixed;
+                z-index: 9999;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0,0,0,0.6);
+                animation: fadeIn 0.3s;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            
+            .share-modal-content {
+                background-color: #fff;
+                margin: 15% auto;
+                padding: 25px;
+                border-radius: 10px;
+                width: 90%;
+                max-width: 500px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                position: relative;
+                animation: slideIn 0.3s;
+            }
+            
+            @keyframes slideIn {
+                from { transform: translateY(-50px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+            
+            .share-modal-close {
+                position: absolute;
+                top: 15px;
+                right: 20px;
+                color: #aaa;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: color 0.2s;
+            }
+            
+            .share-modal-close:hover {
+                color: #333;
+            }
+            
+            .share-modal h3 {
+                margin-top: 0;
+                margin-bottom: 15px;
+                color: #333;
+                font-family: 'Montserrat', sans-serif;
+                text-align: center;
+            }
+            
+            .share-modal p {
+                text-align: center;
+                margin-bottom: 20px;
+                color: #666;
+            }
+            
+            .social-share-buttons {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .share-button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                text-decoration: none;
+                color: white;
+                font-size: 20px;
+                transition: transform 0.2s, box-shadow 0.2s;
+            }
+            
+            .share-button:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+            
+            .share-whatsapp { background-color: #25D366; }
+            .share-facebook { background-color: #3b5998; }
+            .share-twitter { background-color: #1DA1F2; }
+            .share-telegram { background-color: #0088cc; }
+            .share-email { background-color: #D44638; }
+            
+            .copy-link-container {
+                display: flex;
+                margin-top: 15px;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                overflow: hidden;
+        }
+            
+            #shareUrl {
+                flex-grow: 1;
+                padding: 10px;
+                border: none;
+                font-size: 14px;
+                color: #333;
+                background: #f5f5f5;
+            }
+            
+            .copy-link-btn {
+                background-color: #3498db;
+                color: white;
+                border: none;
+                padding: 10px 15px;
+                cursor: pointer;
+                font-weight: 500;
+                transition: background-color 0.2s;
+                white-space: nowrap;
+            }
+            
+            .copy-link-btn:hover {
+                background-color: #2980b9;
+            }
+            
+            @media (max-width: 480px) {
+                .social-share-buttons {
+                    gap: 10px;
+                }
+                
+                .share-button {
+                    width: 45px;
+                    height: 45px;
+                    font-size: 18px;
+                }
+            }
+        `;
+        
+        document.head.appendChild(modalStyle);
+        document.body.insertAdjacentHTML('beforeend', modalHTML);
+        shareModal = document.getElementById('shareModal');
+        
+        // Agregar event listeners a los botones de compartir
+        const whatsappBtn = shareModal.querySelector('.share-whatsapp');
+        const facebookBtn = shareModal.querySelector('.share-facebook');
+        const twitterBtn = shareModal.querySelector('.share-twitter');
+        const telegramBtn = shareModal.querySelector('.share-telegram');
+        const emailBtn = shareModal.querySelector('.share-email');
+        const copyLinkBtn = shareModal.querySelector('#copyLinkBtn');
+        const closeBtn = shareModal.querySelector('.share-modal-close');
+        
+        whatsappBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareData.text + ' ' + shareData.url)}`, '_blank');
+        });
+        
+        facebookBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData.url)}`, '_blank');
+        });
+        
+        twitterBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareData.text)}&url=${encodeURIComponent(shareData.url)}`, '_blank');
+        });
+        
+        telegramBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.open(`https://t.me/share/url?url=${encodeURIComponent(shareData.url)}&text=${encodeURIComponent(shareData.text)}`, '_blank');
+        });
+        
+        emailBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = `mailto:?subject=${encodeURIComponent(shareData.title)}&body=${encodeURIComponent(shareData.text + ' ' + shareData.url)}`;
+        });
+        
+        copyLinkBtn.addEventListener('click', () => {
+            const shareUrl = document.getElementById('shareUrl');
+            shareUrl.select();
+            document.execCommand('copy');
+            
+            // Cambiar el texto del botón temporalmente para indicar que se copió
+            const originalText = copyLinkBtn.innerHTML;
+            copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
+            setTimeout(() => {
+                copyLinkBtn.innerHTML = originalText;
+            }, 2000);
+        });
+        
+        closeBtn.addEventListener('click', () => {
+            shareModal.style.display = 'none';
+        });
+        
+        // Cerrar el modal al hacer clic fuera del contenido
+        window.addEventListener('click', (event) => {
+            if (event.target === shareModal) {
+                shareModal.style.display = 'none';
+        }
+        });
+    }
+    
+    // Mostrar el modal
+    shareModal.style.display = 'block';
 } 

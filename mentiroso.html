@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'analytics_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'functionality_storage': 'denied',
+      'personalization_storage': 'denied',
+      'security_storage': 'granted',
+      'wait_for_update': 500
+    });
+    gtag('set', 'ads_data_redaction', true);
+    gtag('set', 'url_passthrough', true);
+    
+    // Specify region
+    gtag('set', 'region', 'ES');
+  </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mentiroso - Crack Total</title>
@@ -232,6 +251,19 @@
                 </div>
                 
                 <button id="submitDemonstrationButton" class="button action-button">Enviar Demostración</button>
+            </div>
+
+            <!-- NEW: Validation Screen (for Player 2 to validate Player 1's answers) -->
+            <div id="validationScreen" class="demonstration-area" style="/* Initially hidden via JS/CSS */">
+                <h3 id="validationInfoText">Validando las respuestas de...</h3>
+                <div id="validationChallengeText" class="challenge-text-display" style="margin-bottom: 1em;"></div>
+                <div id="validatorAnswersContainer" class="structured-questions-container" style="max-height: 250px; overflow-y: auto;">
+                    <!-- Player 1's answers will be listed here by JS with checkboxes -->
+                    <p>Las respuestas del oponente aparecerán aquí para tu validación.</p>
+                </div>
+                <!-- Timer for validation could be added if desired -->
+                <!-- <div id="validationTimerDisplay" class="timer-display">Tiempo restante: <span id="validationTime">60</span>s</div> -->
+                <button id="submitValidationButton" class="button primary-button" style="margin-top: 1em;">Enviar Validación</button>
             </div>
 
             <div id="roundResultScreen" class="round-result-display">

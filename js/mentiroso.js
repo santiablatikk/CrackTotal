@@ -11,10 +11,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // WebSocket connection
     // For local development: 'ws://localhost:8081'
-    // For Render deployment, it will derive from window.location
-    const WS_URL = window.location.protocol === 'https:' ? 
-                   'wss://' + window.location.host.replace(/ ?: \d{4}$/, '') : 
-                   'ws://localhost:8081';
+    // For Render deployment, use the Render WebSocket URL
+    let WS_URL;
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        WS_URL = 'ws://localhost:8081';
+    } else {
+        WS_URL = 'wss://cracktotal-servidor.onrender.com'; // Cambia esto si tu backend tiene otro dominio
+    }
     let ws = null;
 
     // Screen elements - ensure these IDs exist in mentiroso.html
@@ -53,6 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const demonstrationInput = document.getElementById('demonstrationInput'); // Textarea for list type
     const structuredQuestionsContainer = document.getElementById('structuredQuestionsContainer'); // For structured Qs
     const submitDemonstrationButton = document.getElementById('submitDemonstrationButton');
+
+    // NEW: Validation screen elements
+    const validationScreen = document.getElementById('validationScreen');
+    const validationInfoText = document.getElementById('validationInfoText');
+    const validationChallengeText = document.getElementById('validationChallengeText');
+    const validatorAnswersContainer = document.getElementById('validatorAnswersContainer');
+    const submitValidationButton = document.getElementById('submitValidationButton');
 
     const roundResultScreen = document.getElementById('roundResultScreen');
     const roundResultMessageEl = document.getElementById('roundResultMessage');
@@ -142,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Screen Management ---
-    const allScreens = [initialScreen, matchmakingScreen, gameplayScreen, gameOverScreen, roundResultScreen, demonstrationContainer];
+    const allScreens = [initialScreen, matchmakingScreen, gameplayScreen, gameOverScreen, roundResultScreen, demonstrationContainer, validationScreen];
     
     function showScreen(screenToShow) {
         allScreens.forEach(screen => {
@@ -154,11 +164,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Special handling for sections within gameplayScreen
         if (screenToShow === gameplayScreen) {
             if(demonstrationContainer) demonstrationContainer.classList.remove('active');
+            if(validationScreen) validationScreen.classList.remove('active');
             if(roundResultScreen) roundResultScreen.classList.remove('active');
             if(playerActionsContainer) playerActionsContainer.classList.add('active'); // Show player actions by default
-        } else if (screenToShow === demonstrationContainer || screenToShow === roundResultScreen) {
+        } else if (screenToShow === demonstrationContainer || screenToShow === validationScreen || screenToShow === roundResultScreen) {
             if(gameplayScreen) gameplayScreen.classList.add('active'); // Keep gameplay screen as background
-            if(playerActionsContainer) playerActionsContainer.classList.remove('active'); // Hide player actions during demo/result
+            if(playerActionsContainer) playerActionsContainer.classList.remove('active'); // Hide player actions during demo/validation/result
         }
     }
 
@@ -290,6 +301,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
             case 'mentirosoDemonstrationWait':
                 handleDemonstrationWait(message.payload);
+                break;
+            case 'mentirosoValidationRequired':
+                handleValidationRequired(message.payload);
+                break;
+            case 'mentirosoValidationWait':
+                handleValidationWait(message.payload);
                 break;
             case 'mentirosoRoundResult':
                 handleRoundResult(message.payload);
@@ -496,7 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function addDeclarationToLogUI(playerNameText, amount) {
         const listItem = document.createElement('li');
-        listItem.textContent = `${playerNameText} declara que puede nombrar ${amount}.`;
+        listItem.innerHTML = `<span class="declarer-name">${playerNameText}</span> declara que puede nombrar <span class="declared-amount">${amount}</span>`;
         declarationsListEl.appendChild(listItem);
         declarationsListEl.scrollTop = declarationsListEl.scrollHeight; // Auto-scroll
     }
@@ -524,7 +541,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // currentChallengeData.players will be set here if server sends it with the round
         currentChallengeData.players = payload.players; // Explicitly store player data with scores for this round
 
-        currentRoundNumber = payload.roundNumber;
         localDeclarations = []; 
         if(declarationsListEl) declarationsListEl.innerHTML = ''; 
         if(declarationAmountInput) {
@@ -570,13 +586,10 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Handling declaration update:", payload);
         localDeclarations = payload.declarationsLog;
         isMyTurn = payload.currentTurn === playerId;
-
-        // Update declarations log UI
-        declarationsListEl.innerHTML = ''; // Clear and rebuild
+        declarationsListEl.innerHTML = '';
         localDeclarations.forEach(dec => {
             addDeclarationToLogUI(dec.playerId === playerId ? playerName : opponentName, dec.amount);
         });
-        
         if (localDeclarations.length > 0) {
             const lastDeclaredAmount = localDeclarations[localDeclarations.length - 1].amount;
             declarationAmountInput.min = lastDeclaredAmount + 1;
@@ -585,7 +598,6 @@ document.addEventListener('DOMContentLoaded', () => {
             challengeTextEl.textContent = formatChallengeTextForDisplay(currentChallengeData, '_');
             declarationAmountInput.min = '1';
         }
-
         updateTurnIndicatorUI();
     }
 
@@ -742,14 +754,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         sendMessage('mentirosoSubmitDemonstration', { roomId, answers });
         demonstrationContainer.classList.remove('active');
-        // Show a waiting message, server will send roundResult
-        challengeTextEl.textContent = "Esperando resultado de la demostración...";
+        // Show a waiting message for validation
+        challengeTextEl.textContent = "Esperando que tu oponente valide tus respuestas...";
+        showTemporaryFeedback("Respuestas enviadas. Esperando validación...", "info");
     }
 
     function handleRoundResult(payload) {
         console.log("Round Result:", payload);
         let message = `Ronda ${payload.roundNumber}: ${payload.reason}<br>`;
-        message += `Ganador de la ronda: ${payload.roundWinnerName}.<br>`;
+        
+        // Add validation information if available
+        if (payload.validationInfo) {
+            message += `<strong>${payload.validationInfo}</strong><br>`;
+        }
+        
+        message += `Ganador de la ronda: <b>${payload.roundWinnerName}</b>.<br>`;
         
         let p1NameDisplay = "Jugador 1", p2NameDisplay = "Jugador 2";
         let p1ScoreDisplay = 0, p2ScoreDisplay = 0;
@@ -771,13 +790,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(playerNameHeader) playerNameHeader.textContent = `${p2NameDisplay} (Tú): ${p2ScoreDisplay}`;
                 if(opponentNameHeader) opponentNameHeader.textContent = `${p1NameDisplay}: ${p1ScoreDisplay}`;
             }
-            // `playerScores` global object is not strictly needed if headers are updated directly by each relevant message handler.
         }
         message += `Puntajes: ${p1NameDisplay}: ${p1ScoreDisplay} - ${p2NameDisplay}: ${p2ScoreDisplay}`;
         
         if(roundResultMessageEl) roundResultMessageEl.innerHTML = message;
-        
-        // updateScoresUI(); // Headers are already updated directly above
         
         showScreen(roundResultScreen);
     }
@@ -900,6 +916,63 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             feedbackEl.style.opacity = '0';
         }, duration);
+    }
+
+    function handleValidationRequired(payload) {
+        console.log("Validation Required:", payload);
+        const demonstratorName = payload.demonstratorName;
+        const answers = payload.answers;
+        const declaredAmount = payload.declaredAmount;
+        validationInfoText.textContent = `Validando las respuestas de ${demonstratorName}`;
+        validationChallengeText.textContent = formatChallengeTextForDisplay(currentChallengeData, declaredAmount);
+        validatorAnswersContainer.innerHTML = '';
+        answers.forEach((answer, index) => {
+            const answerItem = document.createElement('div');
+            answerItem.className = 'validation-answer-item';
+            const label = document.createElement('label');
+            label.textContent = answer;
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.name = `validate_${index}`;
+            checkbox.checked = true;
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    answerItem.classList.remove('invalid');
+                    answerItem.classList.add('valid');
+                } else {
+                    answerItem.classList.remove('valid');
+                    answerItem.classList.add('invalid');
+                }
+            });
+            answerItem.appendChild(label);
+            answerItem.appendChild(checkbox);
+            answerItem.classList.add('valid');
+            validatorAnswersContainer.appendChild(answerItem);
+        });
+        showScreen(validationScreen);
+    }
+
+    function handleValidationWait(payload) {
+        console.log("Waiting for validation:", payload);
+        challengeTextEl.textContent = "Esperando que tu oponente valide tus respuestas...";
+        showTemporaryFeedback("Esperando validación...", "info");
+    }
+
+    // Add event listener for validation submission
+    if (submitValidationButton) {
+        submitValidationButton.addEventListener('click', submitValidationAnswers);
+    }
+
+    function submitValidationAnswers() {
+        const validations = [];
+        const checkboxes = validatorAnswersContainer.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            validations.push(checkbox.checked);
+        });
+        
+        sendMessage('mentirosoSubmitValidation', { roomId, validations });
+        validationScreen.classList.remove('active');
+        challengeTextEl.textContent = "Esperando resultado de la validación...";
     }
 
     // Initial screen to show

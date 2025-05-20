@@ -1,4 +1,22 @@
 User-agent: *
-Disallow: 
+Allow: /
+Disallow: /js/
+Disallow: /data/
+Disallow: /tmp/
+Disallow: /node_modules/
 
+# Allow Google's ad bots to crawl everything for AdSense
+User-agent: Mediapartners-Google
+Allow: /
+
+# Allow Google's mobile-friendly test bot
+User-agent: Googlebot-Mobile
+Allow: /
+
+# Allow Google Image bot to see images
+User-agent: Googlebot-Image
+Allow: /img/
+Allow: /images/
+
+# Point to XML sitemap
 Sitemap: https://cracktotal.com/sitemap.xml
