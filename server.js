@@ -1619,9 +1619,8 @@ function handleCreateMentirosoRoom(ws, clientInfo, payload) {
         currentChallenge: null,
         currentDeclarations: [],
         roundNumber: 0,
-        maxRounds: 5, // Example, can be configurable
+        maxRounds: 5, // Configurable
         demonstrationState: null,
-        // Mentiroso specific game state to be added
     };
 
     rooms.set(roomId, newMentirosoRoom);
@@ -1703,11 +1702,23 @@ function handleMentirosoDeclare(ws, clientInfo, payload) {
          safeSend(ws, { type: 'errorMessage', payload: { error: 'Debes declarar un número mayor al anterior.' } });
          return;
     }
-     if (room.currentChallenge.type === 'structured' && amount > room.currentChallenge.data.questions.length) {
-        safeSend(ws, { type: 'errorMessage', payload: { error: `No puedes declarar más de ${room.currentChallenge.data.questions.length} preguntas.` } });
+    
+    // Verificar si la cantidad declarada excede el máximo posible para el desafío actual
+    if (room.currentChallenge.type === 'structured' && amount > room.currentChallenge.data.questions.length) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: `No puedes declarar más de ${room.currentChallenge.data.questions.length} para este desafío.` } });
         return;
+    } else if (room.currentChallenge.type === 'list') {
+        // Para desafíos de tipo lista, podríamos poner un límite arbitrario o basado en el tamaño de la lista
+        let validationList = room.currentChallenge.data.validation_list;
+        if (typeof room.currentChallenge.data.get_validation_list === 'function') {
+            validationList = room.currentChallenge.data.get_validation_list(room.currentChallenge.runtime_details || {});
+        }
+        
+        if (amount > validationList.length) {
+            safeSend(ws, { type: 'errorMessage', payload: { error: `Tu declaración de ${amount} excede el máximo posible para este desafío.` } });
+            return;
+        }
     }
-
 
     const declarerName = clientInfo.id === room.players.player1.id ? room.players.player1.name : room.players.player2.name;
     room.currentDeclarations.push({ player: declarerName, playerId: clientInfo.id, amount: amount });
@@ -1721,11 +1732,6 @@ function handleMentirosoDeclare(ws, clientInfo, payload) {
         players: getPlayerInfoForClients(room)
     };
     broadcastToRoom(clientInfo.roomId, { type: 'mentirosoDeclarationUpdate', payload: updatePayload });
-    
-    // If new turn is AI (assuming P2 is AI for now, will need proper 2-player logic)
-    // This AI logic is a placeholder and should be expanded for real multiplayer.
-    // For now, if it's P2's turn (and P2 is human), they will act.
-    // If P2 were AI, this is where AI logic would be triggered.
 }
 
 function handleMentirosoCallLiar(ws, clientInfo, payload) {
@@ -1788,22 +1794,32 @@ function handleMentirosoCallLiar(ws, clientInfo, payload) {
     if (challengerWs) {
         safeSend(challengerWs, {type: 'mentirosoDemonstrationWait', payload: waitingPayload});
     }
-    // Send to other player if they are not the demonstrator or challenger (e.g. spectator, or if P1 calls P2, P2 needs to know)
-    // In a 2-player game, the other player is the demonstrator.
-    const otherPlayerId = (demonstratorId === room.players.player1.id) ? room.players.player2.id : room.players.player1.id;
-    if (otherPlayerId !== challengerId && otherPlayerId !== demonstratorId) { // Should not happen in 2 player
-         const otherPlayerWs = getPlayerWs(room, otherPlayerId);
-         if(otherPlayerWs) safeSend(otherPlayerWs, {type: 'mentirosoDemonstrationWait', payload: waitingPayload});
+    // Send to spectators if any
+    if (room.spectators && room.spectators.length > 0) {
+        room.spectators.forEach(spectatorWs => {
+            safeSend(spectatorWs, {type: 'mentirosoDemonstrationWait', payload: waitingPayload});
+        });
     }
 
+    // Establecer un tiempo límite en el servidor como respaldo
+    room.demonstrationTimeout = setTimeout(() => {
+        if (room.demonstrationState) {
+            console.log(`Mentiroso: Time limit exceeded for demonstration in room ${room.roomId}`);
+            // Si el tiempo expira, asumimos que el demostrador falló
+            const emptyAnswers = room.currentChallenge.type === 'list' ? [] : 
+                                room.currentChallenge.data.questions.slice(0, declaredAmount).map(q => ({ 
+                                    question_id: q.q_id, 
+                                    user_answer: '' 
+                                }));
+            evaluateMentirosoDemonstration(room, emptyAnswers);
+        }
+    }, (room.demonstrationState.timeLimit + 2) * 1000); // 2 segundos extra para latencia
 
-    // TODO: Start server-side timer for demonstration if not AI
-    // For now, client will manage its own timer and submit. Server can have a fallback timeout.
     console.log(`Mentiroso: Room ${room.roomId}, ${getPlayerName(room, challengerId)} called liar on ${getPlayerName(room, demonstratorId)} for ${declaredAmount}`);
 }
 
 function handleMentirosoSubmitDemonstration(ws, clientInfo, payload) {
-    console.log(`Mentiroso: Client ${clientInfo.id} submits demonstration in room ${clientInfo.roomId}:`, payload);
+    console.log(`Mentiroso: Client ${clientInfo.id} submits demonstration in room ${clientInfo.roomId}`);
     const room = rooms.get(clientInfo.roomId);
 
     if (!room || !room.gameActive || room.gameType !== 'mentiroso' || !room.demonstrationState) {
@@ -1819,8 +1835,131 @@ function handleMentirosoSubmitDemonstration(ws, clientInfo, payload) {
         return;
     }
 
-    // Process answers
-    evaluateMentirosoDemonstration(room, payload.answers);
+    // Limpiar el timeout si existe
+    if (room.demonstrationTimeout) {
+        clearTimeout(room.demonstrationTimeout);
+        room.demonstrationTimeout = null;
+    }
+
+    // Process answers based on challenge type
+    if (room.currentChallenge.type === 'list') {
+        // Para desafíos de tipo lista, podemos decidir:
+        // 1. Evaluar automáticamente (usando evaluateMentirosoDemonstration)
+        evaluateMentirosoDemonstration(room, payload.answers);
+    } else if (room.currentChallenge.type === 'structured') {
+        // Para desafíos estructurados, podemos:
+        // 1. Evaluar automáticamente con evaluateMentirosoDemonstration
+        // 2. O enviar al retador para validación manual
+        
+        const challengerId = room.demonstrationState.challengerId;
+        const challengerWs = getPlayerWs(room, challengerId);
+        
+        if (challengerWs) {
+            // Guardar las respuestas en el estado para su posterior uso
+            room.demonstrationState.answersSubmitted = payload.answers;
+            
+            // Enviar al retador para validación
+            safeSend(challengerWs, {
+                type: 'mentirosoValidationRequired',
+                payload: {
+                    demonstratorId: room.demonstrationState.demonstratorId,
+                    demonstratorName: getPlayerName(room, room.demonstrationState.demonstratorId),
+                    declaredAmount: room.demonstrationState.declaredAmount,
+                    answers: payload.answers,
+                    challenge: room.currentChallenge
+                }
+            });
+            
+            // Notificar al demostrador que sus respuestas están siendo validadas
+            safeSend(ws, {
+                type: 'mentirosoWaitingForValidation',
+                payload: {
+                    message: 'Tus respuestas están siendo validadas por tu oponente...'
+                }
+            });
+        } else {
+            // Si no podemos contactar al retador, hacer evaluación automática
+            evaluateMentirosoDemonstration(room, payload.answers);
+        }
+    }
+}
+
+function handleMentirosoSubmitValidation(ws, clientInfo, payload) {
+    console.log(`Mentiroso: Client ${clientInfo.id} submits validation in room ${clientInfo.roomId}`);
+    const room = rooms.get(clientInfo.roomId);
+    
+    if (!room || !room.gameActive || !room.demonstrationState) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No hay una demostración activa para validar.' } });
+        return;
+    }
+    
+    // Verificar que sea el retador quien envía la validación
+    if (clientInfo.id !== room.demonstrationState.challengerId) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No es tu turno de validar respuestas.' } });
+        return;
+    }
+    
+    // Verificar que el payload contenga las validaciones
+    if (!payload || !payload.validations || !Array.isArray(payload.validations)) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Formato de validación inválido.' } });
+        return;
+    }
+    
+    const validations = payload.validations; // Array de true/false
+    const declaredAmount = room.demonstrationState.declaredAmount;
+    let correctCount = 0;
+    
+    // Contar respuestas marcadas como correctas
+    validations.forEach(v => { if (v) correctCount++; });
+    
+    // Decidir el ganador según la validación
+    let wasSuccessful = correctCount >= declaredAmount;
+    let roundWinnerId, roundLoserId;
+    
+    if (wasSuccessful) {
+        roundWinnerId = room.demonstrationState.demonstratorId;
+        roundLoserId = room.demonstrationState.challengerId;
+    } else {
+        roundWinnerId = room.demonstrationState.challengerId;
+        roundLoserId = room.demonstrationState.demonstratorId;
+    }
+    
+    // Incrementar la puntuación del ganador
+    getPlayerById(room, roundWinnerId).score++;
+    
+    // Preparar y enviar el resultado de la ronda
+    const resultPayload = {
+        roundWinnerId,
+        roundWinnerName: getPlayerName(room, roundWinnerId),
+        roundLoserId,
+        roundLoserName: getPlayerName(room, roundLoserId),
+        wasSuccessfulDemonstration: wasSuccessful,
+        declaredAmount,
+        actualCorrectAnswers: correctCount,
+        challengeType: room.demonstrationState.challengeData.type,
+        players: getPlayerInfoForClients(room),
+        reason: wasSuccessful
+            ? `${getPlayerName(room, roundWinnerId)} demostró con éxito (${correctCount}/${declaredAmount})!`
+            : `${getPlayerName(room, roundLoserId)} no pudo demostrarlo (${correctCount}/${declaredAmount}).`,
+        roundNumber: room.roundNumber,
+        validationInfo: `Respuestas validadas como correctas: ${correctCount} de ${validations.length}`
+    };
+    
+    // Enviar resultado a todos los jugadores
+    broadcastToRoom(room.roomId, { type: 'mentirosoRoundResult', payload: resultPayload });
+    
+    // Limpiar el estado de demostración
+    room.demonstrationState = null;
+    
+    // Asignar el siguiente turno al ganador de la ronda
+    room.currentTurn = roundWinnerId;
+    
+    // Verificar si el juego debe terminar o continuar con la siguiente ronda
+    if (room.roundNumber >= room.maxRounds) {
+        endMentirosoGame(room.roomId, "Se completaron todas las rondas.");
+    } else {
+        setTimeout(() => startMentirosoRound(room.roomId), 3000); // 3 segundos de espera
+    }
 }
 
 // --- Mentiroso Game Logic Stubs ---
@@ -1831,8 +1970,6 @@ function startMentirosoGame(roomId) {
         return;
     }
     room.gameActive = true;
-    room.scoreP1 = 0; // Assuming score is tracked on player objects room.players.player1.score
-    room.scoreP2 = 0; // room.players.player2.score
     room.players.player1.score = 0;
     room.players.player2.score = 0;
     room.roundNumber = 0; // Will be incremented by startMentirosoRound
@@ -1842,9 +1979,20 @@ function startMentirosoGame(roomId) {
     // Randomly select starting player
     room.currentTurn = Math.random() < 0.5 ? room.players.player1.id : room.players.player2.id;
     
+    // Enviar mensaje de inicio de juego a ambos jugadores
+    const playersInfo = getPlayerInfoForClients(room);
+    const gameStartPayload = {
+        players: playersInfo,
+        startingPlayerId: room.currentTurn,
+        startingPlayerName: getPlayerName(room, room.currentTurn)
+    };
+    
+    broadcastToRoom(roomId, { type: 'mentirosoGameStart', payload: gameStartPayload });
+    
     console.log(`Mentiroso: Starting game in room ${roomId}. First turn: ${getPlayerName(room, room.currentTurn)}`);
     
-    startMentirosoRound(roomId); // This will send the first challenge
+    // Dar un breve retraso antes de comenzar la primera ronda
+    setTimeout(() => startMentirosoRound(roomId), 1000);
 }
 
 function startMentirosoRound(roomId) {
@@ -1859,15 +2007,34 @@ function startMentirosoRound(roomId) {
 
     room.currentDeclarations = [];
     room.demonstrationState = null;
-    // Select a new challenge (basic random selection for now)
+    
+    // Seleccionar un desafío aleatorio
     if (gameChallengesMentiroso.length === 0) {
         console.error("CRITICAL: No Mentiroso challenges loaded. Cannot start round.");
         endMentirosoGame(roomId, "Error: No hay desafíos disponibles.");
         return;
     }
-    room.currentChallenge = { ...gameChallengesMentiroso[Math.floor(Math.random() * gameChallengesMentiroso.length)] };
     
-    // If challenge has placeholder_details, resolve them
+    // Seleccionar un desafío que no se haya usado antes (si es posible)
+    let availableChallenges = [...gameChallengesMentiroso];
+    if (room.usedChallenges && room.usedChallenges.length > 0) {
+        availableChallenges = availableChallenges.filter(ch => !room.usedChallenges.includes(ch.id));
+    }
+    
+    // Si no quedan desafíos no usados, usar cualquiera
+    if (availableChallenges.length === 0) {
+        availableChallenges = [...gameChallengesMentiroso];
+    }
+    
+    // Seleccionar un desafío aleatorio de los disponibles
+    const selectedChallenge = availableChallenges[Math.floor(Math.random() * availableChallenges.length)];
+    room.currentChallenge = { ...selectedChallenge };
+    
+    // Registrar el desafío como usado
+    if (!room.usedChallenges) room.usedChallenges = [];
+    room.usedChallenges.push(selectedChallenge.id);
+    
+    // Si el desafío tiene detalles de placeholder, procesarlos
     if (room.currentChallenge.placeholder_details) {
         room.currentChallenge.runtime_details = {};
         for (const key in room.currentChallenge.placeholder_details) {
@@ -1879,13 +2046,13 @@ function startMentirosoRound(roomId) {
         }
     }
 
-
     const roundStartPayload = {
         roundNumber: room.roundNumber,
         maxRounds: room.maxRounds,
         challenge: room.currentChallenge,
         challengeText: formatMentirosoChallengeText(room.currentChallenge, "_"), // Initial text
         currentTurn: room.currentTurn,
+        currentTurnPlayerName: getPlayerName(room, room.currentTurn),
         players: getPlayerInfoForClients(room)
     };
     broadcastToRoom(roomId, { type: 'mentirosoNewRound', payload: roundStartPayload });
@@ -1898,6 +2065,7 @@ function evaluateMentirosoDemonstration(room, submittedAnswers) {
     const { demonstratorId, challengerId, declaredAmount, challengeData } = room.demonstrationState;
     let wasSuccessful = false;
     let actualCorrectAnswers = 0;
+    let correctAnswerDetails = []; // Para almacenar las respuestas correctas para mostrar en la UI
 
     if (challengeData.type === 'list') {
         let validationList = challengeData.data.validation_list;
@@ -1911,19 +2079,48 @@ function evaluateMentirosoDemonstration(room, submittedAnswers) {
         uniqueUserAnswers.forEach(userAns => {
             if (normalizedValidationList.includes(userAns)) {
                 actualCorrectAnswers++;
+                // Guardar la respuesta original (no normalizada) para mostrar
+                correctAnswerDetails.push(submittedAnswers[normalizedUserAnswers.indexOf(userAns)]);
             }
         });
         wasSuccessful = actualCorrectAnswers >= declaredAmount;
     } else if (challengeData.type === 'structured') {
-        // Answers should be an array of { question_id, user_answer }
-        const questionsAttempted = challengeData.data.questions.slice(0, declaredAmount);
-        submittedAnswers.forEach(userAnswerObj => {
-            const questionDef = questionsAttempted.find(q => q.q_id === userAnswerObj.question_id);
-            if (questionDef && normalizeMentirosoText(userAnswerObj.user_answer) === normalizeMentirosoText(questionDef.correctAnswer)) {
-                actualCorrectAnswers++;
-            }
-        });
-        wasSuccessful = actualCorrectAnswers >= declaredAmount;
+        // Respuestas para preguntas estructuradas
+        correctAnswerDetails = [];
+        
+        if (Array.isArray(submittedAnswers)) {
+            const questionsAttempted = challengeData.data.questions.slice(0, declaredAmount);
+            
+            submittedAnswers.forEach(userAnswerObj => {
+                const questionDef = questionsAttempted.find(q => q.q_id === userAnswerObj.question_id);
+                if (questionDef) {
+                    const isCorrect = normalizeMentirosoText(userAnswerObj.user_answer) === 
+                                     normalizeMentirosoText(questionDef.correctAnswer);
+                    
+                    if (isCorrect) {
+                        actualCorrectAnswers++;
+                        // Guardar detalles de la respuesta correcta
+                        correctAnswerDetails.push({
+                            questionId: questionDef.q_id,
+                            questionText: questionDef.text,
+                            userAnswer: userAnswerObj.user_answer,
+                            correctAnswer: questionDef.correctAnswer,
+                            isCorrect: true
+                        });
+                    } else {
+                        // También guardar respuestas incorrectas para referencia
+                        correctAnswerDetails.push({
+                            questionId: questionDef.q_id,
+                            questionText: questionDef.text,
+                            userAnswer: userAnswerObj.user_answer,
+                            correctAnswer: questionDef.correctAnswer,
+                            isCorrect: false
+                        });
+                    }
+                }
+            });
+            wasSuccessful = actualCorrectAnswers >= declaredAmount;
+        }
     }
 
     let roundWinnerId, roundLoserId;
@@ -1937,7 +2134,14 @@ function evaluateMentirosoDemonstration(room, submittedAnswers) {
         getPlayerById(room, challengerId).score++;
     }
     
-    room.demonstrationState = null; // Clear demonstration state
+    // Limpiar timeout si existe
+    if (room.demonstrationTimeout) {
+        clearTimeout(room.demonstrationTimeout);
+        room.demonstrationTimeout = null;
+    }
+    
+    // Limpiar estado de demostración
+    room.demonstrationState = null;
 
     const resultPayload = {
         roundWinnerId: roundWinnerId,
@@ -1946,10 +2150,13 @@ function evaluateMentirosoDemonstration(room, submittedAnswers) {
         roundLoserName: getPlayerName(room, roundLoserId),
         wasSuccessfulDemonstration: wasSuccessful,
         declaredAmount: declaredAmount,
-        actualCorrectAnswers: actualCorrectAnswers, // How many they actually got right
+        actualCorrectAnswers: actualCorrectAnswers,
+        correctAnswerDetails: correctAnswerDetails, // Incluir detalles de respuestas correctas
         challengeType: challengeData.type,
-        players: getPlayerInfoForClients(room), // Includes updated scores
-        reason: wasSuccessful ? `${getPlayerName(room, demonstratorId)} demostró con éxito!` : `${getPlayerName(room, demonstratorId)} no pudo demostrarlo.`,
+        players: getPlayerInfoForClients(room),
+        reason: wasSuccessful 
+            ? `${getPlayerName(room, demonstratorId)} demostró con éxito (${actualCorrectAnswers}/${declaredAmount})!` 
+            : `${getPlayerName(room, demonstratorId)} no pudo demostrarlo (${actualCorrectAnswers}/${declaredAmount}).`,
         roundNumber: room.roundNumber
     };
     broadcastToRoom(room.roomId, { type: 'mentirosoRoundResult', payload: resultPayload });
@@ -1958,8 +2165,10 @@ function evaluateMentirosoDemonstration(room, submittedAnswers) {
     room.currentTurn = roundWinnerId;
 
     // Check for game end or start next round
-    if (room.roundNumber >= room.maxRounds) {
-        endMentirosoGame(room.roomId, "Se completaron todas las rondas.");
+    if (room.roundNumber >= room.maxRounds || getPlayerById(room, roundWinnerId).score >= 3) {
+        endMentirosoGame(room.roomId, room.roundNumber >= room.maxRounds 
+                                      ? "Se completaron todas las rondas." 
+                                      : `${getPlayerName(room, roundWinnerId)} ha ganado 3 rondas.`);
     } else {
         // Add a delay before starting next round
         setTimeout(() => startMentirosoRound(room.roomId), 3000); // 3 second delay
@@ -2034,7 +2243,6 @@ function getPlayerById(room, playerId) {
     if (room.players.player2 && room.players.player2.id === playerId) return room.players.player2;
     return null;
 }
-
 
 function formatMentirosoChallengeText(challenge, amount = "X") {
     if (!challenge || !challenge.text_template) return "Error: Desafío no encontrado.";

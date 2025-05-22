@@ -1,980 +1,1241 @@
-// Mentiroso Game Logic
-console.log("Mentiroso JS loaded");
+// mentiroso.js - Lógica para el juego Mentiroso de Crack Total
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Try to get player name from localStorage and prefill
-    const savedPlayerName = localStorage.getItem('playerName');
-    const playerNameMentirosoInput = document.getElementById('playerNameMentiroso');
-    if (savedPlayerName && playerNameMentirosoInput) {
-        playerNameMentirosoInput.value = savedPlayerName;
-    }
+    initializeApp();
+});
 
-    // WebSocket connection
-    // For local development: 'ws://localhost:8081'
-    // For Render deployment, use the Render WebSocket URL
-    let WS_URL;
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        WS_URL = 'ws://localhost:8081';
+// --- Variables Globales ---
+const state = {
+    localPlayerId: null,
+    roomId: null,
+    playerName: '',
+    role: null, // 'player1', 'player2'
+    currentTurn: null,
+    gameActive: false,
+    players: {
+        player1: null,
+        player2: null
+    },
+    roundNumber: 0,
+    maxRounds: 6,
+    currentChallenge: null,
+    declarations: [],
+    demonstrationInProgress: false,
+    validationInProgress: false,
+    demonstrationTimerId: null,
+    timerValue: 0,
+    timerMaxValue: 0
+};
+
+let ws = null; // WebSocket connection
+
+// --- Inicialización ---
+function initializeApp() {
+    setupEventListeners();
+    initializeWebSocket();
+    
+    // Mostrar instrucciones en primera visita
+    if (!localStorage.getItem('mentiroso_instructions_viewed')) {
+        showInstructionsModal();
+    }
+}
+
+// --- Funciones Auxiliares ---
+function generateRandomId() {
+    return Math.random().toString(36).substring(2, 9);
+}
+
+function normalizeText(text) {
+    return text.toString().trim().toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Eliminar acentos
+        .replace(/[^a-z0-9\s]/gi, ''); // Eliminar caracteres especiales
+}
+
+// --- Funciones de UI ---
+function showLobby() {
+    document.getElementById('lobbySection').classList.add('active');
+    document.getElementById('gameContentSection').style.display = 'none';
+    document.getElementById('playersHeaderInfo').style.display = 'none';
+    
+    // Limpiar mensaje del lobby
+    clearLobbyMessage();
+    
+    // Re-habilitar botones del lobby
+    enableLobbyButtons();
+}
+
+function showGameScreen() {
+    document.getElementById('lobbySection').classList.remove('active');
+    document.getElementById('gameContentSection').style.display = 'block';
+    document.getElementById('playersHeaderInfo').style.display = 'flex';
+    
+    // Actualizar UI del juego
+    updateGameUI();
+}
+
+// --- Lobby ---
+function setupEventListeners() {
+    // Botones del lobby
+    document.getElementById('createRoomButton').addEventListener('click', handleCreateRoom);
+    document.getElementById('joinRoomButton').addEventListener('click', handleJoinRoomById);
+    document.getElementById('joinRandomRoomButton').addEventListener('click', handleJoinRandomRoom);
+    
+    // Controles de declaración
+    document.getElementById('decrementDeclare').addEventListener('click', () => {
+        const input = document.getElementById('declareAmount');
+        if (parseInt(input.value) > parseInt(input.min)) {
+            input.value = parseInt(input.value) - 1;
+        }
+    });
+    
+    document.getElementById('incrementDeclare').addEventListener('click', () => {
+        const input = document.getElementById('declareAmount');
+        input.value = parseInt(input.value) + 1;
+    });
+    
+    // Botones de acción durante el juego
+    document.getElementById('submitDeclareButton').addEventListener('click', handleSubmitDeclaration);
+    document.getElementById('callLiarButton').addEventListener('click', handleCallLiar);
+    document.getElementById('acceptDeclareButton').addEventListener('click', handleAcceptDeclaration);
+    document.getElementById('submitDemonstrationButton').addEventListener('click', handleSubmitDemonstration);
+    document.getElementById('submitValidationButton').addEventListener('click', handleSubmitValidation);
+    
+    // Modal de fin de juego
+    document.getElementById('playAgainButton').addEventListener('click', handlePlayAgain);
+    document.getElementById('backToLobbyButton').addEventListener('click', handleBackToLobby);
+    
+    // Modal de contraseña
+    document.getElementById('privateRoomPasswordForm').addEventListener('submit', handleSubmitPasswordModal);
+    document.getElementById('cancelPasswordSubmit').addEventListener('click', hidePasswordPromptModal);
+    
+    // Modal de instrucciones
+    document.getElementById('closeInstructionsButton').addEventListener('click', hideInstructionsModal);
+    
+    // Disponible para clics en la lista de salas
+    document.getElementById('availableRoomsList').addEventListener('click', (e) => {
+        const joinButton = e.target.closest('.join-room-list-btn');
+        if (joinButton) {
+            const roomId = joinButton.dataset.roomId;
+            const requiresPassword = joinButton.dataset.requiresPassword === 'true';
+            handleJoinRoomFromList(roomId, requiresPassword);
+        }
+    });
+}
+
+function handleCreateRoom() {
+    const playerName = document.getElementById('createPlayerName').value.trim() || `Jugador_${generateRandomId().substring(0, 4)}`;
+    const password = document.getElementById('createRoomPassword').value.trim();
+    
+    if (playerName.length < 1) {
+        showLobbyMessage('Ingresa un nombre válido.', 'error');
+        return;
+    }
+    
+    disableLobbyButtons(true, false, false);
+    
+    state.playerName = playerName;
+    
+    sendToServer('createMentirosoRoom', {
+        playerName: playerName,
+        password: password
+    });
+}
+
+function handleJoinRoomById() {
+    const roomId = document.getElementById('joinRoomId').value.trim();
+    const password = document.getElementById('joinRoomPassword').value.trim();
+    const playerName = document.getElementById('joinPlayerName').value.trim() || `Jugador_${generateRandomId().substring(0, 4)}`;
+    
+    if (!roomId) {
+        showLobbyMessage('Ingresa un ID de sala válido.', 'error');
+        return;
+    }
+    
+    if (playerName.length < 1) {
+        showLobbyMessage('Ingresa un nombre válido.', 'error');
+        return;
+    }
+    
+    disableLobbyButtons(false, true, false);
+    
+    state.playerName = playerName;
+    
+    sendToServer('joinMentirosoRoom', {
+        roomId: roomId,
+        playerName: playerName,
+        password: password
+    });
+}
+
+function handleJoinRandomRoom() {
+    const playerName = document.getElementById('joinPlayerName').value.trim() || `Jugador_${generateRandomId().substring(0, 4)}`;
+    
+    if (playerName.length < 1) {
+        showLobbyMessage('Ingresa un nombre válido.', 'error');
+        return;
+    }
+    
+    disableLobbyButtons(false, false, true);
+    
+    state.playerName = playerName;
+    
+    sendToServer('joinRandomRoom', {
+        playerName: playerName,
+        gameType: 'mentiroso'
+    });
+}
+
+function handleJoinRoomFromList(roomId, requiresPassword) {
+    if (requiresPassword) {
+        showPasswordPromptModal(roomId);
+        return;
+    }
+    
+    const playerName = document.getElementById('joinPlayerName').value.trim() || `Jugador_${generateRandomId().substring(0, 4)}`;
+    state.playerName = playerName;
+    
+    disableLobbyButtons(false, false, false);
+    document.querySelectorAll('.join-room-list-btn').forEach(btn => {
+        btn.disabled = true;
+    });
+    
+    sendToServer('joinMentirosoRoom', {
+        roomId: roomId,
+        playerName: playerName,
+        password: ''
+    });
+}
+
+function showLobbyMessage(message, type = 'info', persistent = false) {
+    const messageArea = document.getElementById('lobbyMessageArea');
+    messageArea.textContent = message;
+    messageArea.className = `lobby-message ${type}`;
+    messageArea.style.display = 'block';
+    
+    if (!persistent) {
+        setTimeout(() => {
+            clearLobbyMessage();
+        }, 5000);
+    }
+}
+
+function clearLobbyMessage() {
+    const messageArea = document.getElementById('lobbyMessageArea');
+    messageArea.textContent = '';
+    messageArea.className = 'lobby-message';
+    messageArea.style.display = 'none';
+}
+
+function disableLobbyButtons(spinCreate = false, spinJoinId = false, spinJoinRandom = false) {
+    const createButton = document.getElementById('createRoomButton');
+    const joinIdButton = document.getElementById('joinRoomButton');
+    const joinRandomButton = document.getElementById('joinRandomRoomButton');
+    
+    createButton.disabled = true;
+    joinIdButton.disabled = true;
+    joinRandomButton.disabled = true;
+    
+    if (spinCreate) createButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
+    if (spinJoinId) joinIdButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uniéndose...';
+    if (spinJoinRandom) joinRandomButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+}
+
+function enableLobbyButtons() {
+    const createButton = document.getElementById('createRoomButton');
+    const joinIdButton = document.getElementById('joinRoomButton');
+    const joinRandomButton = document.getElementById('joinRandomRoomButton');
+    
+    createButton.disabled = false;
+    joinIdButton.disabled = false;
+    joinRandomButton.disabled = false;
+    
+    createButton.innerHTML = 'Crear Sala';
+    joinIdButton.innerHTML = 'Unirse por ID';
+    joinRandomButton.innerHTML = 'Buscar Sala Aleatoria';
+    
+    document.querySelectorAll('.join-room-list-btn').forEach(btn => {
+        btn.disabled = false;
+    });
+}
+
+// --- Gestión del Juego ---
+function updateGameUI() {
+    updatePlayersInfo();
+    updateTurnIndicator();
+    updateRoundCounter();
+
+    // Ocultar todas las áreas de acción
+    hideAllActionAreas();
+    
+    // Mostrar área relevante según el estado del juego
+    if (state.demonstrationInProgress) {
+        if (state.localPlayerId === state.demonstrationState?.demonstratorId) {
+            showDemonstrationArea();
+        } else {
+            showWaitingArea('Esperando la demostración del oponente...');
+        }
+    } else if (state.validationInProgress) {
+        if (state.localPlayerId === state.validationState?.challengerId) {
+            showValidationArea();
+        } else {
+            showWaitingArea('Esperando la validación del retador...');
+        }
+    } else if (state.currentTurn === state.localPlayerId) {
+        // Mi turno
+        if (state.declarations.length === 0 || state.declarations[state.declarations.length - 1].playerId !== state.localPlayerId) {
+            showDeclareArea();
+        } else {
+            // No debería llegar aquí normalmente
+            showWaitingArea('Esperando al oponente...');
+        }
     } else {
-        WS_URL = 'wss://cracktotal-servidor.onrender.com'; // Cambia esto si tu backend tiene otro dominio
-    }
-    let ws = null;
-
-    // Screen elements - ensure these IDs exist in mentiroso.html
-    const initialScreen = document.getElementById('initialScreenMentiroso'); // Screen for player name input & connect button
-    const matchmakingScreen = document.getElementById('matchmakingScreenMentiroso'); // Lobby screen
-    const gameplayScreen = document.getElementById('gameplayScreen');
-    const gameOverScreen = document.getElementById('gameOverScreen');
-    
-    // Lobby elements
-    const playerNameInput = document.getElementById('playerNameMentiroso');
-    const connectMentirosoButton = document.getElementById('connectMentirosoButton');
-    const createRoomButton = document.getElementById('createRoomMentiroso');
-    const roomPasswordInput = document.getElementById('roomPasswordMentiroso');
-    const joinRoomByIdButton = document.getElementById('joinRoomByIdMentiroso');
-    const roomIdInput = document.getElementById('roomIdMentiroso');
-    const joinRandomRoomButton = document.getElementById('joinRandomRoomMentiroso');
-    const availableRoomsContainer = document.getElementById('availableRoomsMentiroso');
-    const lobbyErrorContainer = document.getElementById('lobbyErrorMentiroso'); // For displaying lobby errors
-
-    // Gameplay elements
-    const leaveRoomButton = document.getElementById('leaveRoomButtonMentiroso'); // Changed from cancelMatchmakingButton
-    const playerNameHeader = document.getElementById('playerNameHeader');
-    const opponentNameHeader = document.getElementById('opponentNameHeader'); 
-    const turnIndicator = document.getElementById('turnIndicator'); 
-
-    const challengeTextEl = document.getElementById('challengeText');
-    const declarationsListEl = document.getElementById('declarationsList');
-    const declarationAmountInput = document.getElementById('declarationAmount');
-    const declareButton = document.getElementById('declareButton');
-    const liarButton = document.getElementById('liarButton');
-    const playerActionsContainer = document.getElementById('playerActions'); // Container for declare/liar buttons
-
-    const demonstrationContainer = document.getElementById('demonstrationContainer');
-    const timerDisplay = document.getElementById('timerDisplay');
-    const demonstrationChallengeTextEl = document.getElementById('demonstrationChallengeText');
-    const demonstrationInput = document.getElementById('demonstrationInput'); // Textarea for list type
-    const structuredQuestionsContainer = document.getElementById('structuredQuestionsContainer'); // For structured Qs
-    const submitDemonstrationButton = document.getElementById('submitDemonstrationButton');
-
-    // NEW: Validation screen elements
-    const validationScreen = document.getElementById('validationScreen');
-    const validationInfoText = document.getElementById('validationInfoText');
-    const validationChallengeText = document.getElementById('validationChallengeText');
-    const validatorAnswersContainer = document.getElementById('validatorAnswersContainer');
-    const submitValidationButton = document.getElementById('submitValidationButton');
-
-    const roundResultScreen = document.getElementById('roundResultScreen');
-    const roundResultMessageEl = document.getElementById('roundResultMessage');
-    const nextRoundButton = document.getElementById('nextRoundButton'); // May not be needed if server controls flow
-    
-    const gameOverMessageEl = document.getElementById('gameOverMessage');
-    const winnerNameEl = document.getElementById('winnerName');
-    const playAgainButtonMentiroso = document.getElementById('playAgainButtonMentiroso'); 
-    const temporaryFeedbackElement = document.getElementById('temporaryFeedbackMentiroso');
-
-    // --- Global Game State (Client-side) ---
-    let playerId = null;        
-    let roomId = null;          
-    let playerName = "Jugador"; 
-    let opponentName = "Oponente";
-    let isMyTurn = false;
-    let currentChallengeData = null; 
-    let localDeclarations = []; 
-    let demonstrationTimerInterval = null;
-    let demonstrationTimeLeft = 0;
-    let playerScores = { p1: 0, p2: 0 }; // Store player scores locally for UI update
-
-    // --- WebSocket Setup ---
-    function connectWebSocket() {
-        if (ws && ws.readyState === WebSocket.OPEN) {
-            console.log('WebSocket already connected.');
-            showScreen(matchmakingScreen); // Already connected, go to lobby
-            sendMessage('requestAvailableRooms', { gameType: 'mentiroso' }); // Request rooms on re-entry to lobby
-            return;
-        }
-        console.log(`Attempting to connect to WebSocket server at ${WS_URL}...`);
-        ws = new WebSocket(WS_URL);
-
-        ws.onopen = () => {
-            console.log('Connected to WebSocket server.');
-            lobbyErrorContainer.textContent = ''; // Clear any previous connection errors
-            playerName = playerNameInput.value.trim() || "Jugador Anónimo";
-            // Server will send 'yourInfo' with playerId. Then we can request rooms.
-            // showScreen(matchmakingScreen); // Wait for 'yourInfo' before fully entering lobby
-        };
-
-        ws.onmessage = (event) => {
-            try {
-                const message = JSON.parse(event.data);
-                console.log('Message from server:', message);
-                handleServerMessage(message); 
-            } catch (error) {
-                console.error('Error parsing message from server:', error, "Raw data:", event.data);
-                showTemporaryFeedback("Error procesando mensaje del servidor.", "error");
-            }
-        };
-
-        ws.onclose = (event) => {
-            console.log('Disconnected from WebSocket server:', event.code, event.reason);
-            ws = null;
-            showScreen(initialScreen);
-            lobbyErrorContainer.textContent = "Desconectado del servidor. Intenta reconectar.";
-            alert("Desconectado del servidor. Serás devuelto a la pantalla inicial.");
-        };
-
-        ws.onerror = (error) => {
-            console.error('WebSocket error:', error);
-            lobbyErrorContainer.textContent = 'Error de conexión. Asegúrate que el servidor esté corriendo.';
-            if (matchmakingScreen.classList.contains('active') || gameplayScreen.classList.contains('active')) {
-                 alert("Error de conexión con el servidor del juego.");
-            }
-            // Optionally try to close and nullify ws here to allow fresh connect attempt
-            if(ws) { try { ws.close(); } catch(e){} ws = null; }
-            showScreen(initialScreen);
-        };
-    }
-    
-    function sendMessage(type, payload) {
-        if (ws && ws.readyState === WebSocket.OPEN) {
-            const message = { type, payload };
-            ws.send(JSON.stringify(message));
-            console.log('Sent to server:', message);
+        // Turno del oponente
+        if (state.declarations.length > 0 && state.declarations[state.declarations.length - 1].playerId !== state.localPlayerId) {
+            showRespondArea();
         } else {
-            console.warn('WebSocket not connected. Cannot send message:', type, payload);
-            showTemporaryFeedback("No estás conectado al servidor.", "error");
-            // Go to initial screen if ws is broken
-            if (!ws || ws.readyState === WebSocket.CLOSED || ws.readyState === WebSocket.CLOSING) {
-                showScreen(initialScreen);
-                lobbyErrorContainer.textContent = "Conexión perdida. Por favor, reconecta.";
-            }
+            showWaitingArea('Esperando la declaración del oponente...');
         }
     }
+}
 
-    // --- Screen Management ---
-    const allScreens = [initialScreen, matchmakingScreen, gameplayScreen, gameOverScreen, roundResultScreen, demonstrationContainer, validationScreen];
+function updatePlayersInfo() {
+    const player1Info = state.players.player1;
+    const player2Info = state.players.player2;
     
-    function showScreen(screenToShow) {
-        allScreens.forEach(screen => {
-            if (screen) screen.classList.remove('active');
-        });
-        if (screenToShow) {
-            screenToShow.classList.add('active');
+    if (!player1Info || !player2Info) return;
+    
+    // Determinar cuál es el jugador local y el oponente
+    const localPlayerInfo = state.localPlayerId === player1Info.id ? player1Info : player2Info;
+    const opponentInfo = state.localPlayerId === player1Info.id ? player2Info : player1Info;
+    
+    // Actualizar información en el header
+    document.getElementById('player1Name').textContent = localPlayerInfo.name;
+    document.getElementById('player1Score').textContent = `Puntos: ${localPlayerInfo.score}`;
+    
+    document.getElementById('player2Name').textContent = opponentInfo.name;
+    document.getElementById('player2Score').textContent = `Puntos: ${opponentInfo.score}`;
+}
+
+function updateTurnIndicator() {
+    const turnIndicator = document.getElementById('turnIndicator');
+    
+    if (!state.currentTurn) {
+        turnIndicator.textContent = 'Esperando...';
+        return;
+    }
+    
+    const isMyTurn = state.currentTurn === state.localPlayerId;
+    const player1Info = state.players.player1;
+    const player2Info = state.players.player2;
+    
+    if (!player1Info || !player2Info) return;
+    
+    const currentPlayerName = state.currentTurn === player1Info.id ? player1Info.name : player2Info.name;
+    
+    turnIndicator.textContent = isMyTurn ? 'Tu turno' : `Turno de: ${currentPlayerName}`;
+    
+    if (isMyTurn) {
+        turnIndicator.classList.add('my-turn');
+    } else {
+        turnIndicator.classList.remove('my-turn');
+    }
+}
+
+function updateRoundCounter() {
+    document.getElementById('roundCounter').textContent = `Ronda ${state.roundNumber}/${state.maxRounds}`;
+}
+
+function updateDeclarationsList() {
+    const declarationsLog = document.getElementById('declarationsLogList');
+    
+    if (state.declarations.length === 0) {
+        declarationsLog.innerHTML = '<li class="no-declarations">Esperando primera declaración...</li>';
+        return;
+    }
+    
+    declarationsLog.innerHTML = '';
+    
+    state.declarations.forEach(declaration => {
+        const li = document.createElement('li');
+        
+        const playerSpan = document.createElement('span');
+        playerSpan.className = 'player-tag';
+        playerSpan.textContent = declaration.player;
+        
+        const declarationText = document.createElement('span');
+        declarationText.textContent = ': Puedo nombrar ';
+        
+        const amountSpan = document.createElement('span');
+        amountSpan.className = 'amount-tag';
+        amountSpan.textContent = `${declaration.amount}`;
+        
+        li.appendChild(playerSpan);
+        li.appendChild(declarationText);
+        li.appendChild(amountSpan);
+        
+        // Si es la última declaración, marcarla como current
+        if (declaration === state.declarations[state.declarations.length - 1]) {
+            li.classList.add('current');
         }
-        // Special handling for sections within gameplayScreen
-        if (screenToShow === gameplayScreen) {
-            if(demonstrationContainer) demonstrationContainer.classList.remove('active');
-            if(validationScreen) validationScreen.classList.remove('active');
-            if(roundResultScreen) roundResultScreen.classList.remove('active');
-            if(playerActionsContainer) playerActionsContainer.classList.add('active'); // Show player actions by default
-        } else if (screenToShow === demonstrationContainer || screenToShow === validationScreen || screenToShow === roundResultScreen) {
-            if(gameplayScreen) gameplayScreen.classList.add('active'); // Keep gameplay screen as background
-            if(playerActionsContainer) playerActionsContainer.classList.remove('active'); // Hide player actions during demo/validation/result
-        }
-    }
+        
+        declarationsLog.appendChild(li);
+    });
+}
 
-    // --- Initial Setup & Event Listeners for Lobby ---
-    if (connectMentirosoButton) {
-        connectMentirosoButton.addEventListener('click', () => {
-            playerName = playerNameInput.value.trim();
-            if (!playerName) {
-                alert("Por favor, ingresa tu nombre para jugar.");
-                if(lobbyErrorContainer) lobbyErrorContainer.textContent = "Por favor, ingresa tu nombre.";
-                return;
-            }
-            if(lobbyErrorContainer) lobbyErrorContainer.textContent = "Conectando...";
-            connectWebSocket();
-        });
+function updateChallengeText() {
+    const challengeTextElement = document.getElementById('challengeText');
+    
+    if (!state.currentChallenge) {
+        challengeTextElement.textContent = 'Cargando desafío...';
+        return;
     }
+    
+    // Obtener texto con el marcador "X" reemplazado por "_"
+    challengeTextElement.textContent = state.currentChallenge.text;
+}
 
-    if (createRoomButton) {
-        createRoomButton.addEventListener('click', () => {
-            const password = roomPasswordInput.value;
-            // Ensure player name is set (e.g., from previous input or a default)
-            if (!playerName && playerNameInput) playerName = playerNameInput.value.trim() || "Jugador Anónimo";
-            if (!playerId) {
-                showTemporaryFeedback("Aún no estás completamente conectado. Espera un momento.", "info");
-                return;
-            }
-            sendMessage('createMentirosoRoom', { playerName, password });
-        });
+// --- Áreas de acción ---
+function hideAllActionAreas() {
+    document.getElementById('declareArea').classList.remove('active');
+    document.getElementById('respondArea').classList.remove('active');
+    document.getElementById('demonstrationArea').classList.remove('active');
+    document.getElementById('validationArea').classList.remove('active');
+    document.getElementById('waitingArea').classList.remove('active');
+}
+
+function showDeclareArea() {
+    hideAllActionAreas();
+    
+    const declareArea = document.getElementById('declareArea');
+    const lastDeclaration = state.declarations.length > 0 ? state.declarations[state.declarations.length - 1] : null;
+    
+    // Si hay una declaración previa, establecer min y value
+    const declareInput = document.getElementById('declareAmount');
+    
+    if (lastDeclaration) {
+        declareInput.min = lastDeclaration.amount + 1;
+        declareInput.value = lastDeclaration.amount + 1;
+    } else {
+        declareInput.min = 1;
+        declareInput.value = 1;
     }
+    
+    declareArea.classList.add('active');
+}
 
-    if (joinRoomByIdButton) {
-        joinRoomByIdButton.addEventListener('click', () => {
-            const rId = roomIdInput.value.trim();
-            const joinPasswordEl = document.getElementById('joinPasswordInputMentiroso'); // Get the specific join password input element
-            const joinPassword = joinPasswordEl ? joinPasswordEl.value : ''; // Get its value, default to empty string if not found
-            if (!playerName && playerNameInput) playerName = playerNameInput.value.trim() || "Jugador Anónimo";
-            if (!rId) {
-                if(lobbyErrorContainer) lobbyErrorContainer.textContent = "Por favor, ingresa un ID de sala.";
-                return;
-            }
-            if (!playerId) {
-                showTemporaryFeedback("Aún no estás completamente conectado. Espera un momento.", "info");
-                return;
-            }
-            if(lobbyErrorContainer) lobbyErrorContainer.textContent = "";
-            sendMessage('joinMentirosoRoom', { playerName, roomId: rId, password: joinPassword });
-        });
+function showRespondArea() {
+    hideAllActionAreas();
+    document.getElementById('respondArea').classList.add('active');
+}
+
+function showDemonstrationArea() {
+    hideAllActionAreas();
+    
+    const demonstrationArea = document.getElementById('demonstrationArea');
+    const demonstrationCount = document.getElementById('demonstrationCount');
+    const listChallengeInputs = document.getElementById('listChallengeInputs');
+    const structuredChallengeInputs = document.getElementById('structuredChallengeInputs');
+    
+    // Actualizar contador
+    demonstrationCount.textContent = state.demonstrationState.declaredAmount;
+    
+    // Configurar el área según el tipo de desafío
+    if (state.demonstrationState.challengeData.type === 'list') {
+        listChallengeInputs.style.display = 'block';
+        structuredChallengeInputs.style.display = 'none';
+    } else if (state.demonstrationState.challengeData.type === 'structured') {
+        listChallengeInputs.style.display = 'none';
+        structuredChallengeInputs.style.display = 'block';
+        
+        // Generar campos para respuestas estructuradas
+        generateStructuredInputs();
     }
+    
+    demonstrationArea.classList.add('active');
+    
+    // Iniciar el timer
+    startDemonstrationTimer(state.demonstrationState.timeLimit);
+}
 
-    if (joinRandomRoomButton) {
-        joinRandomRoomButton.addEventListener('click', () => {
-            if (!playerName && playerNameInput) playerName = playerNameInput.value.trim() || "Jugador Anónimo";
-            if (!playerId) {
-                showTemporaryFeedback("Aún no estás completamente conectado. Espera un momento.", "info");
-                return;
-            }
-            sendMessage('joinRandomRoom', { playerName, gameType: 'mentiroso' });
-        });
-    }
-
-    // --- Main Server Message Handler ---
-    function handleServerMessage(message) {
-        switch (message.type) {
-            case 'yourInfo':
-                playerId = message.payload.playerId;
-                console.log(`Player ID set to: ${playerId}`);
-                lobbyErrorContainer.textContent = ""; // Clear "Conectando..."
-                showScreen(matchmakingScreen); // Connection successful, show lobby
-                sendMessage('requestAvailableRooms', { gameType: 'mentiroso' }); // Request available rooms for Mentiroso
-                break;
-            case 'availableRooms':
-                 if (message.payload && message.payload.rooms) {
-                    updateAvailableRooms(message.payload.rooms);
-                }
-                break;
-            case 'mentirosoRoomCreated':
-                roomId = message.payload.roomId;
-                if (lobbyErrorContainer) lobbyErrorContainer.textContent = ``; // Clear lobby error
-                showTemporaryFeedback(`Sala ${roomId} creada. Esperando oponente...`, 'success', 5000);
-                if (playerNameHeader) playerNameHeader.textContent = `${playerName} (Tú) - Sala: ${roomId}`;
-                if (opponentNameHeader) opponentNameHeader.textContent = "Esperando Oponente...";
-                if (turnIndicator) turnIndicator.textContent = "Esperando para iniciar...";
-                // UI should reflect waiting state - typically server sends newRound or playerJoined next
-                showScreen(gameplayScreen); // Go to gameplay, but it will show "waiting"
-                // Disable game actions until opponent joins and game starts
-                if(declareButton) declareButton.disabled = true;
-                if(liarButton) liarButton.disabled = true;
-                if(declarationAmountInput) declarationAmountInput.disabled = true;
-                break;
-            case 'mentirosoJoinSuccess': // When current player successfully joins a room
-                roomId = message.payload.roomId;
-                isMyTurn = message.payload.startingPlayerId === playerId;
+function generateStructuredInputs() {
+    const container = document.getElementById('structuredChallengeInputs');
+    container.innerHTML = '';
+    
+    const questions = state.demonstrationState.challengeData.data.questions.slice(0, state.demonstrationState.declaredAmount);
+    
+    questions.forEach((question, index) => {
+        const questionDiv = document.createElement('div');
+        questionDiv.className = 'structured-question';
+        
+        const questionLabel = document.createElement('label');
+        questionLabel.htmlFor = `question_${index}`;
+        questionLabel.textContent = `${index + 1}. ${question.text}`;
+        
+        const inputArea = document.createElement('div');
+        
+        if (question.type === 'VF') {
+            // Verdadero/Falso
+            const radioGroup = document.createElement('div');
+            radioGroup.className = 'radio-group';
+            
+            const trueOption = createRadioOption(`question_${index}`, question.q_id, 'verdadero', 'Verdadero');
+            const falseOption = createRadioOption(`question_${index}`, question.q_id, 'falso', 'Falso');
+            
+            radioGroup.appendChild(trueOption);
+            radioGroup.appendChild(falseOption);
+            
+            inputArea.appendChild(radioGroup);
+        } else if (question.type === 'MC') {
+            // Multiple choice
+            const selectElement = document.createElement('select');
+            selectElement.id = `question_${index}`;
+            selectElement.className = 'structured-select';
+            selectElement.dataset.questionId = question.q_id;
+            
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Selecciona una opción';
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            
+            selectElement.appendChild(defaultOption);
+            
+            question.options.forEach((option, optIndex) => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option;
+                optionElement.textContent = option;
                 
-                if (message.payload.players.player1.id === playerId) {
-                    playerName = message.payload.players.player1.name; // Server might normalize name
-                    opponentName = message.payload.players.player2 ? message.payload.players.player2.name : "Oponente";
-                    playerScores.p1 = message.payload.players.player1.score;
-                    playerScores.p2 = message.payload.players.player2 ? message.payload.players.player2.score : 0;
-                } else {
-                    playerName = message.payload.players.player2.name;
-                    opponentName = message.payload.players.player1.name;
-                    playerScores.p1 = message.payload.players.player1.score; // p1 is opponent
-                    playerScores.p2 = message.payload.players.player2.score; // p2 is me
-                }
-                if (lobbyErrorContainer) lobbyErrorContainer.textContent = ``;
-                console.log(`Unido a la sala ${roomId}. Oponente: ${opponentName}. Mi turno: ${isMyTurn}`);
-                // Server will typically send 'mentirosoNewRound' to start the game.
-                // Gameplay screen is shown by 'mentirosoNewRound'
-                break;
-            case 'mentirosoPlayerJoined': // Sent to P1 when P2 joins P1's room
-                roomId = message.payload.roomId; // Should be the same
-                 if (message.payload.players.player1.id === playerId) { // I am player 1
-                    opponentName = message.payload.players.player2.name;
-                    playerScores.p2 = message.payload.players.player2.score;
-                } else { // Should not happen if I am P1, but good for robustness
-                    opponentName = message.payload.players.player1.name;
-                }
-                showTemporaryFeedback(`${opponentName} se ha unido a la sala!`, 'success');
-                // Server will typically send 'mentirosoNewRound' to start the game.
-                break;
-            case 'mentirosoNewRound':
-                handleNewRound(message.payload);
-                break;
-            case 'mentirosoDeclarationUpdate':
-                handleDeclarationUpdate(message.payload);
-                break;
-            case 'mentirosoDemonstrationRequired':
-                handleDemonstrationRequired(message.payload);
-                break;
-            case 'mentirosoDemonstrationWait':
-                handleDemonstrationWait(message.payload);
-                break;
-            case 'mentirosoValidationRequired':
-                handleValidationRequired(message.payload);
-                break;
-            case 'mentirosoValidationWait':
-                handleValidationWait(message.payload);
-                break;
-            case 'mentirosoRoundResult':
-                handleRoundResult(message.payload);
-                break;
-            case 'mentirosoGameOver':
-                handleGameOver(message.payload);
-                break;
-            case 'errorMessage': // General errors from server
-                console.error('Server error:', message.payload.error, 'Action:', message.payload.forAction);
-                const errorMsg = message.payload.error || "Error desconocido del servidor.";
-                if (message.payload.forAction) {
-                    showTemporaryFeedback(`Error (${message.payload.forAction}): ${errorMsg}`, 'error');
-                } else if (lobbyErrorContainer && matchmakingScreen.classList.contains('active')) {
-                    lobbyErrorContainer.textContent = errorMsg;
-                } else {
-                    alert(`Error del servidor: ${errorMsg}`);
-                }
-                // If error is critical for room (e.g. room full on create), reset roomId
-                if (message.payload.error === 'La sala ya está llena.' || message.payload.error === 'Contraseña incorrecta.') {
-                    // Potentially keep user in lobby but clear their current attempt context.
-                }
-                break;
-             case 'joinError': // Specific join errors (could be merged with errorMessage)
-                console.error('Join error:', message.payload.error);
-                if (lobbyErrorContainer && matchmakingScreen.classList.contains('active')){
-                    lobbyErrorContainer.textContent = `Error al unirse: ${message.payload.error || "Error desconocido."}`;
-                } else {
-                     showTemporaryFeedback(`Error al unirse: ${message.payload.error || "Error desconocido."}`, 'error');
-                }
-                break;
-            case 'opponentLeftLobby': // Opponent left while waiting in an unstarted room
-                 if (roomId && message.payload.roomId === roomId) { // Check if it's about our current room
-                    showTemporaryFeedback(message.payload.message || "El oponente ha dejado la sala.", 'info');
-                    // Reset to lobby, allow creating/joining new room
-                    showScreen(matchmakingScreen);
-                    sendMessage('requestAvailableRooms', { gameType: 'mentiroso' }); // Refresh rooms
-                    roomId = null; // Clear current room ID
-                    if (playerNameHeader) playerNameHeader.textContent = playerName;
-                    if (opponentNameHeader) opponentNameHeader.textContent = "Oponente";
-                    if (turnIndicator) turnIndicator.textContent = "Esperando...";
-                }
-                break;
-             case 'gameOver': // This might be a generic gameOver if server sends for other reasons (e.g. disconnect)
-                if (message.payload.gameType === 'mentiroso' || !message.payload.gameType) { // Assume mentiroso if not specified
-                    handleGameOver(message.payload); // Our specific Mentiroso game over
-                }
-                break;
-            default:
-                console.warn('Unknown message type from server:', message.type, message);
+                selectElement.appendChild(optionElement);
+            });
+            
+            inputArea.appendChild(selectElement);
         }
-    }
-
-    function updateAvailableRooms(rooms) {
-        if (!availableRoomsContainer) return;
-        availableRoomsContainer.innerHTML = ''; // Clear previous list
-        if (rooms.length === 0) {
-            availableRoomsContainer.innerHTML = '<p>No hay salas de Mentiroso disponibles. ¡Crea una!</p>';
-            return;
-        }
-        const ul = document.createElement('ul');
-        rooms.forEach(room => {
-            if (room.gameType === 'mentiroso') { // Only show mentiroso rooms
-                const li = document.createElement('li');
-                li.textContent = `Sala ${room.id} (Creador: ${room.creatorName || 'N/A'}, Jugadores: ${room.playerCount}/2)${room.requiresPassword ? ' (Privada)' : ''}`;
-                const joinButton = document.createElement('button');
-                joinButton.textContent = 'Unirse';
-                joinButton.classList.add('button', 'small-button');
-                joinButton.onclick = () => {
-                    if (room.requiresPassword) {
-                        const pass = prompt("Esta sala requiere contraseña. Ingrésala:");
-                        if (pass !== null) {
-                            sendMessage('joinMentirosoRoom', { playerName, roomId: room.id, password: pass });
-                        }
-                    } else {
-                        sendMessage('joinMentirosoRoom', { playerName, roomId: room.id, password: '' });
-                    }
-                };
-                li.appendChild(joinButton);
-                ul.appendChild(li);
-            }
-        });
-        if (ul.children.length === 0) {
-             availableRoomsContainer.innerHTML = '<p>No hay salas de Mentiroso disponibles en este momento. ¡Crea una o intenta más tarde!</p>';
-        } else {
-            availableRoomsContainer.appendChild(ul);
-        }
-    }
-
-    // --- Gameplay Logic (to be adapted for multiplayer) ---
-    function updateScoresUI() {
-        // Updated by handleNewRound and handleRoundResult based on server payload
-        if(playerNameHeader && opponentNameHeader) { 
-            let myNameForDisplay = playerName || "Tú";
-            let opponentNameForDisplay = opponentName || "Oponente";
-            let myCurrentScore = 0;
-            let opponentCurrentScore = 0;
-
-            // Prioritize scores from a direct payload if available (e.g. from mentirosoNewRound or mentirosoRoundResult)
-            // This logic assumes that functions calling updateScoresUI() will have already updated playerScores object.
-            // We need to determine which player is which in the playerScores object.
-            // This requires knowing if the current `playerId` corresponds to `player1` or `player2` in the `room.players` structure on server.
-            // This info isn't directly stored on client yet, so we rely on server sending identified scores.
-
-            // Best approach: Server always sends player objects with their IDs, names, and scores.
-            // Then, client iterates through them to find self and opponent.
-            // For now, we use the globally updated playerName, opponentName and playerScores which should be set by message handlers.
-
-            // If we assume playerScores.p1 is ME and playerScores.p2 is OPPONENT (this is an UNSAFE assumption without more context from server)
-            // A better way is if handleNewRound, etc. set these explicitly.
-            // Let's refine this based on how `handleNewRound` and `handleRoundResult` structure the data.
-            // Current structure: `handleNewRound` sets `playerScores.p1` and `playerScores.p2` where p1 is the server's player1, p2 is server's player2.
-            // It also sets global `playerName` (me) and `opponentName`.
-
-            // Let's try to derive which score belongs to whom based on `playerName` and `opponentName` matching the names in a hypothetical payload.
-            // This is still a bit indirect. The most robust way is if server payload for scores explicitly states which score belongs to which playerId.
-            // Example: { players: { [playerId1]: { name: "A", score: 1}, [playerId2]: { name: "B", score: 2} } }
-
-            // Given the current structure where handleNewRound sets global `playerName` to *my* name and `playerScores`
-            // such that playerScores.p1 is server.player1 and playerScores.p2 is server.player2.
-            // We need to know if *I* am server.player1 or server.player2 to pick the correct score.
-            // This info is established during 'mentirosoJoinSuccess' or 'mentirosoPlayerJoined'.
-            // Let's assume `amIServerPlayer1` is a boolean set during join. For now, this is missing.
-
-            // Simpler approach for now: `playerNameHeader` shows current player's name (which IS `playerName`) and their score.
-            // `opponentNameHeader` shows `opponentName` and their score.
-            // The challenge is mapping scores from `playerScores.p1` and `playerScores.p2` to `playerName` and `opponentName` correctly.
-
-            // Revised logic in `handleNewRound` and `handleRoundResult` now populates `playerScores` correctly relative to current player.
-            // So, if current player is server's p1, their score will be in `playerScores.p1`. If server's p2, in `playerScores.p2`.
-            // This is NOT how it was implemented. `playerScores.p1` was *always* server.player1's score.
-
-            // Let's stick to what `handleNewRound` and `handleRoundResult` do:
-            // They update `playerNameHeader` and `opponentNameHeader` directly.
-            // So, `updateScoresUI` might just need to re-trigger that logic if called independently,
-            // or rely on those handlers to do the full update.
-
-            // The current `handleNewRound` updates the headers directly.
-            // The current `handleRoundResult` also updates the headers (via its own logic).
-            // So, this function can be simplified or ensure it uses the global `playerScores` that those functions update.
-
-            let myScoreToDisplay = 0;
-            let opponentScoreToDisplay = 0;
-
-            // This assumes `handleNewRound` or `handleRoundResult` has correctly updated `playerScores.p1` to be the score of server's player1,
-            // and `playerScores.p2` to be the score of server's player2.
-            // And that `playerName` is my client's name, and `opponentName` is my opponent's name.
-            // We also need to know if the *current client* is server's player1 or player2.
-            // This link is missing. The `mentirosoJoinSuccess` and `mentirosoPlayerJoined` try to establish this.
-
-            // Fallback if game not fully started, show basic info
-             if (roomId && !currentChallengeData && initialScreen && !initialScreen.classList.contains('active')) { 
-                 // Waiting for opponent or game to start
-                 playerNameHeader.textContent = `${playerName} (Tú) - Sala: ${roomId}`;
-                 opponentNameHeader.textContent = "Esperando Oponente...";
-                 if (turnIndicator) turnIndicator.textContent = "Esperando para iniciar...";
-                 return; // Exit early, no scores to show yet
-             }
-
-            // If in game, try to use the names and scores from the last relevant server message if possible.
-            // The `handleNewRound` and `handleRoundResult` functions are now the primary updaters of these headers.
-            // This function `updateScoresUI` if called standalone, should reflect the latest known state.
-            // The `playerScores` object should hold the canonical scores for player1 and player2 as defined by the server.
-            // We need to know if our `playerId` corresponds to player1 or player2 in that server model.
-
-            // Let's assume that `handleNewRound` or similar has already set `playerNameHeader` and `opponentNameHeader` correctly.
-            // This function then becomes a no-op if those handlers are comprehensive.
-            // However, if we want it to be a generic refresher: 
-            if (currentChallengeData && currentChallengeData.players) {
-                 if (currentChallengeData.players.player1 && currentChallengeData.players.player1.id === playerId) {
-                    myScoreToDisplay = currentChallengeData.players.player1.score;
-                    opponentScoreToDisplay = currentChallengeData.players.player2 ? currentChallengeData.players.player2.score : 0;
-                } else if (currentChallengeData.players.player2 && currentChallengeData.players.player2.id === playerId) {
-                    myScoreToDisplay = currentChallengeData.players.player2.score;
-                    opponentScoreToDisplay = currentChallengeData.players.player1 ? currentChallengeData.players.player1.score : 0;
-                } // Else, if player ID doesn't match either, something is wrong or it's old data.
-
-                playerNameHeader.textContent = `${playerName} (Tú): ${myScoreToDisplay}`;
-                opponentNameHeader.textContent = `${opponentName}: ${opponentScoreToDisplay}`;
-            } else if (roomId) { // In a room, but maybe no current challenge data with scores (e.g., just created room)
-                playerNameHeader.textContent = `${playerName} (Tú): 0 - Sala: ${roomId}`;
-                opponentNameHeader.textContent = `${opponentName}: 0`;
-            }
-        }
-    }
-
-    function updateTurnIndicatorUI() {
-        if (!turnIndicator) return;
-        if (isMyTurn) {
-            turnIndicator.textContent = "Es tu turno";
-            turnIndicator.classList.add('my-turn');
-            turnIndicator.classList.remove('opponent-turn');
-            declareButton.disabled = false;
-            liarButton.disabled = localDeclarations.length === 0 || (localDeclarations.length > 0 && localDeclarations[localDeclarations.length -1].playerId === playerId) ;
-            declarationAmountInput.disabled = false;
-        } else {
-            turnIndicator.textContent = `Turno de ${opponentName}`;
-            turnIndicator.classList.add('opponent-turn');
-            turnIndicator.classList.remove('my-turn');
-            declareButton.disabled = true;
-            liarButton.disabled = true; // Can only call liar on your turn on opponent's declaration
-            declarationAmountInput.disabled = true;
-        }
-    }
-
-    function addDeclarationToLogUI(playerNameText, amount) {
-        const listItem = document.createElement('li');
-        listItem.innerHTML = `<span class="declarer-name">${playerNameText}</span> declara que puede nombrar <span class="declared-amount">${amount}</span>`;
-        declarationsListEl.appendChild(listItem);
-        declarationsListEl.scrollTop = declarationsListEl.scrollHeight; // Auto-scroll
-    }
-
-    function formatChallengeTextForDisplay(challenge, amount = "X") {
-        if (!challenge || !challenge.text_template) return "Error: Desafío no cargado.";
-        let text = challenge.text_template.replace("X", amount.toString());
-        // Replace placeholders like {mundial_year}
-        if (challenge.runtime_details) {
-            for (const key in challenge.runtime_details) {
-                text = text.replace(`{${key}}`, challenge.runtime_details[key]);
-            }
-        }
-        return text;
-    }
-
-    function handleNewRound(payload) {
-        console.log("Handling new round:", payload);
-        showScreen(gameplayScreen); 
-        if(demonstrationContainer) demonstrationContainer.classList.remove('active');
-        if(roundResultScreen) roundResultScreen.classList.remove('active');
-        if(playerActionsContainer) playerActionsContainer.classList.add('active');
-
-        currentChallengeData = payload.challenge; // This is the challenge object itself
-        // currentChallengeData.players will be set here if server sends it with the round
-        currentChallengeData.players = payload.players; // Explicitly store player data with scores for this round
-
-        localDeclarations = []; 
-        if(declarationsListEl) declarationsListEl.innerHTML = ''; 
-        if(declarationAmountInput) {
-            declarationAmountInput.value = '';
-            declarationAmountInput.min = '1'; 
-        }
-
-        if(challengeTextEl) challengeTextEl.textContent = formatChallengeTextForDisplay(currentChallengeData, '_');
         
-        // Update player names and scores based on the specific payload for this round
-        if (payload.players && payload.players.player1 && payload.players.player2) {
-            const p1FromServer = payload.players.player1;
-            const p2FromServer = payload.players.player2;
-
-            if (p1FromServer.id === playerId) {
-                playerName = p1FromServer.name; 
-                opponentName = p2FromServer.name;
-                // Update main headers directly
-                if(playerNameHeader) playerNameHeader.textContent = `${playerName} (Tú): ${p1FromServer.score}`;
-                if(opponentNameHeader) opponentNameHeader.textContent = `${opponentName}: ${p2FromServer.score}`;
-            } else {
-                playerName = p2FromServer.name;
-                opponentName = p1FromServer.name;
-                // Update main headers directly
-                if(playerNameHeader) playerNameHeader.textContent = `${playerName} (Tú): ${p2FromServer.score}`;
-                if(opponentNameHeader) opponentNameHeader.textContent = `${opponentName}: ${p1FromServer.score}`;
-            }
-        } else {
-            // Fallback if player data not in round (should ideally always be there)
-            updateScoresUI(); 
-        }
-
-        isMyTurn = payload.currentTurn === playerId;
-        updateTurnIndicatorUI();
-
-        // Ensure player actions are enabled/disabled correctly at round start
-        if(declareButton) declareButton.disabled = !isMyTurn;
-        if(liarButton) liarButton.disabled = !isMyTurn || localDeclarations.length === 0; // Can only call liar if there are declarations
-        if(declarationAmountInput) declarationAmountInput.disabled = !isMyTurn;
-    }
-
-    function handleDeclarationUpdate(payload) {
-        console.log("Handling declaration update:", payload);
-        localDeclarations = payload.declarationsLog;
-        isMyTurn = payload.currentTurn === playerId;
-        declarationsListEl.innerHTML = '';
-        localDeclarations.forEach(dec => {
-            addDeclarationToLogUI(dec.playerId === playerId ? playerName : opponentName, dec.amount);
-        });
-        if (localDeclarations.length > 0) {
-            const lastDeclaredAmount = localDeclarations[localDeclarations.length - 1].amount;
-            declarationAmountInput.min = lastDeclaredAmount + 1;
-            challengeTextEl.textContent = formatChallengeTextForDisplay(currentChallengeData, lastDeclaredAmount.toString());
-        } else {
-            challengeTextEl.textContent = formatChallengeTextForDisplay(currentChallengeData, '_');
-            declarationAmountInput.min = '1';
-        }
-        updateTurnIndicatorUI();
-    }
-
-    // Event Listeners for Gameplay actions (will send messages to server)
-    if (declareButton) {
-        declareButton.addEventListener('click', () => {
-            const amount = parseInt(declarationAmountInput.value, 10);
-            if (isNaN(amount) || amount <= 0) {
-                showTemporaryFeedback("Ingresa un número válido para declarar.", 'error');
-                return;
-            }
-            const lastDeclaration = localDeclarations.length > 0 ? localDeclarations[localDeclarations.length - 1] : null;
-            if (lastDeclaration && amount <= lastDeclaration.amount) {
-                showTemporaryFeedback("Debes declarar un número mayor al anterior.", 'error');
-                return;
-            }
-            if (currentChallengeData && currentChallengeData.type === 'structured' && amount > currentChallengeData.data.questions.length) {
-                 showTemporaryFeedback(`No puedes declarar más de ${currentChallengeData.data.questions.length} preguntas para este desafío.`, 'error');
-                return;
-            }
-
-            sendMessage('mentirosoDeclare', { roomId, amount });
-            declarationAmountInput.value = ''; // Clear after sending
-        });
-    }
-
-    if (liarButton) {
-        liarButton.addEventListener('click', () => {
-            if (localDeclarations.length === 0) {
-                showTemporaryFeedback("No hay declaraciones para desafiar.", 'info');
-                return;
-            }
-            // Check if the last declarer was the opponent
-            const lastDeclarerId = localDeclarations[localDeclarations.length - 1].playerId;
-            if (lastDeclarerId === playerId) {
-                showTemporaryFeedback("No puedes acusarte a ti mismo.", 'info');
-                return;
-            }
-            sendMessage('mentirosoCallLiar', { roomId });
-        });
-    }
-
-    function startDemonstrationTimer(timeLimitSeconds) {
-        clearInterval(demonstrationTimerInterval);
-        demonstrationTimeLeft = timeLimitSeconds;
-        timerDisplay.textContent = demonstrationTimeLeft;
-        timerDisplay.classList.add('active');
-
-        demonstrationTimerInterval = setInterval(() => {
-            demonstrationTimeLeft--;
-            timerDisplay.textContent = demonstrationTimeLeft;
-            if (demonstrationTimeLeft <= 0) {
-                clearInterval(demonstrationTimerInterval);
-                timerDisplay.classList.remove('active');
-                showTemporaryFeedback("¡Tiempo terminado para la demostración! Enviando automáticamente...", "info");
-                submitDemonstrationAnswers(); // Auto-submit when time is up
-            }
-        }, 1000);
-    }
-
-    function handleDemonstrationRequired(payload) {
-        console.log("Demonstration Required:", payload);
-        currentChallengeData = payload.challenge; 
-        // Ensure player scores from the demonstration payload (if provided) are reflected
-        if (payload.players && payload.players.player1 && payload.players.player2) {
-            currentChallengeData.players = payload.players; // Update with latest scores
-             const p1FromServer = payload.players.player1;
-            const p2FromServer = payload.players.player2;
-            if (p1FromServer.id === playerId) {
-                if(playerNameHeader) playerNameHeader.textContent = `${p1FromServer.name} (Tú): ${p1FromServer.score}`;
-                if(opponentNameHeader) opponentNameHeader.textContent = `${p2FromServer.name}: ${p2FromServer.score}`;
-            } else {
-                if(playerNameHeader) playerNameHeader.textContent = `${p2FromServer.name} (Tú): ${p2FromServer.score}`;
-                if(opponentNameHeader) opponentNameHeader.textContent = `${p1FromServer.name}: ${p1FromServer.score}`;
-            }
-        }
-
-        const declaredAmount = payload.declaredAmount;
-        const timeLimit = payload.timeLimit;
+        questionDiv.appendChild(questionLabel);
+        questionDiv.appendChild(inputArea);
         
-        if(demonstrationChallengeTextEl) demonstrationChallengeTextEl.textContent = `Debes demostrar: "${formatChallengeTextForDisplay(currentChallengeData, declaredAmount)}"`;
+        container.appendChild(questionDiv);
+    });
+}
+
+function createRadioOption(name, questionId, value, label) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'radio-option';
+    
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = name;
+    input.id = `${name}_${value}`;
+    input.value = value;
+    input.dataset.questionId = questionId;
+    
+    const labelElement = document.createElement('label');
+    labelElement.htmlFor = `${name}_${value}`;
+    labelElement.textContent = label;
+    
+    wrapper.appendChild(input);
+    wrapper.appendChild(labelElement);
+    
+    return wrapper;
+}
+
+function showValidationArea() {
+    hideAllActionAreas();
+    
+    const validationArea = document.getElementById('validationArea');
+    const validationList = document.getElementById('validationList');
+    
+    // Limpiar lista y llenarla con respuestas para validar
+    validationList.innerHTML = '';
+    
+    state.demonstrationAnswers.forEach((answer, index) => {
+        const item = document.createElement('div');
+        item.className = 'validation-item';
         
-        // Hide player actions (declare/liar), show demonstration area
-        if(playerActionsContainer) playerActionsContainer.classList.remove('active');
-        showScreen(demonstrationContainer); // This also keeps gameplayScreen active in background
-
-        if(structuredQuestionsContainer) structuredQuestionsContainer.innerHTML = ''; 
-        if(demonstrationInput) {
-            demonstrationInput.value = '';
-            demonstrationInput.style.display = 'none'; // Hide by default
-        }
-        if(submitDemonstrationButton) submitDemonstrationButton.style.display = 'block';
-
-
-        if (currentChallengeData.type === 'list') {
-            if(demonstrationInput) {
-                demonstrationInput.style.display = 'block';
-                demonstrationInput.placeholder = `Escribe tus respuestas (hasta ${declaredAmount} ${currentChallengeData.data.answer_entity || 'elementos'}), una por línea.`;
-                demonstrationInput.rows = Math.min(10, declaredAmount + 1); 
-            }
-        } else if (currentChallengeData.type === 'structured') {
-            renderStructuredQuestionsForDemonstration(currentChallengeData.data.questions.slice(0, declaredAmount));
-        }
-        startDemonstrationTimer(timeLimit);
-    }
-
-    function renderStructuredQuestionsForDemonstration(questionsToRender) {
-        structuredQuestionsContainer.innerHTML = '';
-        questionsToRender.forEach((q, index) => {
-            const questionDiv = document.createElement('div');
-            questionDiv.classList.add('structured-question-item');
-            questionDiv.innerHTML = `<p class="question-text">${index + 1}. ${q.text}</p>`;
-            const answerInput = document.createElement('input');
-            answerInput.type = 'text';
-            answerInput.name = `q_${q.q_id}`;
-            answerInput.placeholder = "Tu respuesta";
-            answerInput.dataset.questionId = q.q_id;
-            questionDiv.appendChild(answerInput);
-            structuredQuestionsContainer.appendChild(questionDiv);
-        });
-    }
-
-    function handleDemonstrationWait(payload) {
-        console.log("Waiting for demonstration:", payload);
-        if(demonstrationChallengeTextEl) demonstrationChallengeTextEl.textContent = `${payload.demonstratorName} está demostrando: "${payload.challengeText}"`;
+        const text = document.createElement('div');
+        text.className = 'validation-text';
+        text.textContent = `${index + 1}. ${answer}`;
         
-        if(playerActionsContainer) playerActionsContainer.classList.remove('active');
-        showScreen(demonstrationContainer);
+        const controls = document.createElement('div');
+        controls.className = 'validation-controls';
+        
+        const validBtn = document.createElement('button');
+        validBtn.className = 'validation-btn valid';
+        validBtn.innerHTML = '<i class="fas fa-check"></i>';
+        validBtn.onclick = () => {
+            toggleValidation(item, true);
+        };
+        
+        const invalidBtn = document.createElement('button');
+        invalidBtn.className = 'validation-btn invalid';
+        invalidBtn.innerHTML = '<i class="fas fa-times"></i>';
+        invalidBtn.onclick = () => {
+            toggleValidation(item, false);
+        };
+        
+        controls.appendChild(validBtn);
+        controls.appendChild(invalidBtn);
+        
+        item.appendChild(text);
+        item.appendChild(controls);
+        item.dataset.index = index;
+        
+        validationList.appendChild(item);
+    });
+    
+    validationArea.classList.add('active');
+}
 
-        if(timerDisplay) timerDisplay.classList.remove('active'); 
-        if(structuredQuestionsContainer) structuredQuestionsContainer.innerHTML = '<p>Esperando que el oponente termine su demostración...</p>';
-        if(demonstrationInput) demonstrationInput.style.display = 'none';
-        if(submitDemonstrationButton) submitDemonstrationButton.style.display = 'none'; 
+function toggleValidation(item, isValid) {
+    const validBtn = item.querySelector('.validation-btn.valid');
+    const invalidBtn = item.querySelector('.validation-btn.invalid');
+    
+    if (isValid) {
+        validBtn.classList.add('selected');
+        invalidBtn.classList.remove('selected');
+        item.dataset.valid = 'true';
+    } else {
+        validBtn.classList.remove('selected');
+        invalidBtn.classList.add('selected');
+        item.dataset.valid = 'false';
     }
+}
 
-    if (submitDemonstrationButton) {
-        submitDemonstrationButton.addEventListener('click', submitDemonstrationAnswers);
+function showWaitingArea(message = 'Esperando al oponente...') {
+    hideAllActionAreas();
+    
+    const waitingArea = document.getElementById('waitingArea');
+    const waitingMessage = document.getElementById('waitingMessage');
+    
+    waitingMessage.textContent = message;
+    waitingArea.classList.add('active');
+}
+
+// --- Timer Management ---
+function startDemonstrationTimer(seconds) {
+    const timerBar = document.getElementById('demonstrationTimerBar');
+    const timerCount = document.getElementById('demonstrationTimerCount');
+    
+    // Detener timer existente si hay
+    if (state.demonstrationTimerId) {
+        clearInterval(state.demonstrationTimerId);
     }
+    
+    // Configurar valor inicial
+    state.timerValue = seconds;
+    state.timerMaxValue = seconds;
+    
+    // Actualizar UI
+    timerBar.style.width = '100%';
+    timerCount.textContent = seconds;
+    
+    // Iniciar timer
+    state.demonstrationTimerId = setInterval(() => {
+        state.timerValue--;
+        
+        // Actualizar UI
+        const percent = (state.timerValue / state.timerMaxValue) * 100;
+        timerBar.style.width = `${percent}%`;
+        timerCount.textContent = state.timerValue;
+        
+        // Verificar si se acabó el tiempo
+        if (state.timerValue <= 0) {
+            clearInterval(state.demonstrationTimerId);
+            handleTimeUp();
+        }
+    }, 1000);
+}
 
-    function submitDemonstrationAnswers() {
-        clearInterval(demonstrationTimerInterval);
-        timerDisplay.classList.remove('active');
-        let answers = [];
-        if (currentChallengeData.type === 'list') {
-            answers = demonstrationInput.value.split('\n').map(ans => ans.trim()).filter(ans => ans !== '');
-        } else if (currentChallengeData.type === 'structured') {
-            const inputs = structuredQuestionsContainer.querySelectorAll('input[type="text"]');
-            inputs.forEach(input => {
-                answers.push({ 
-                    question_id: input.dataset.questionId, 
-                    user_answer: input.value.trim()
+function stopTimer() {
+    if (state.demonstrationTimerId) {
+        clearInterval(state.demonstrationTimerId);
+        state.demonstrationTimerId = null;
+    }
+}
+
+function handleTimeUp() {
+    // Auto-enviar respuestas actuales si es el demostrador
+    if (state.demonstrationInProgress && state.localPlayerId === state.demonstrationState.demonstratorId) {
+        handleSubmitDemonstration();
+    }
+}
+
+// --- Acciones de Juego ---
+function handleSubmitDeclaration() {
+    const declareAmount = parseInt(document.getElementById('declareAmount').value);
+    
+    if (isNaN(declareAmount) || declareAmount < 1) {
+        showError('Ingresa una cantidad válida.');
+        return;
+    }
+    
+    // Si hay una declaración previa, verificar que sea mayor
+    const lastDeclaration = state.declarations.length > 0 ? state.declarations[state.declarations.length - 1] : null;
+    if (lastDeclaration && declareAmount <= lastDeclaration.amount) {
+        showError('La cantidad debe ser mayor que la declaración anterior.');
+        return;
+    }
+    
+    // Deshabilitar botón para evitar doble envío
+    document.getElementById('submitDeclareButton').disabled = true;
+    
+    // Enviar al servidor
+    sendToServer('mentirosoDeclare', {
+        amount: declareAmount
+    });
+    
+    // Mostrar área de espera
+    showWaitingArea();
+}
+
+function handleAcceptDeclaration() {
+    // Mostrar área de declaración
+    showDeclareArea();
+}
+
+function handleCallLiar() {
+    // Deshabilitar botón para evitar doble click
+    document.getElementById('callLiarButton').disabled = true;
+    
+    // Enviar al servidor
+    sendToServer('mentirosoCallLiar', {});
+    
+    // Mostrar área de espera
+    showWaitingArea('Retaste al oponente. Esperando su demostración...');
+}
+
+function handleSubmitDemonstration() {
+    stopTimer();
+    
+    let answers = [];
+    
+    if (state.demonstrationState.challengeData.type === 'list') {
+        // Obtener respuestas del textarea y dividirlas
+        const answersText = document.getElementById('demonstrationAnswers').value;
+        answers = answersText.split(',')
+            .map(answer => answer.trim())
+            .filter(answer => answer.length > 0);
+    } else if (state.demonstrationState.challengeData.type === 'structured') {
+        // Obtener respuestas de inputs estructurados
+        if (state.demonstrationState.challengeData.data.questions[0].type === 'VF') {
+            // Verdadero/Falso
+            const radioInputs = document.querySelectorAll('#structuredChallengeInputs input[type="radio"]:checked');
+            
+            radioInputs.forEach(input => {
+                answers.push({
+                    question_id: input.dataset.questionId,
+                    user_answer: input.value
                 });
             });
-        }
-        sendMessage('mentirosoSubmitDemonstration', { roomId, answers });
-        demonstrationContainer.classList.remove('active');
-        // Show a waiting message for validation
-        challengeTextEl.textContent = "Esperando que tu oponente valide tus respuestas...";
-        showTemporaryFeedback("Respuestas enviadas. Esperando validación...", "info");
-    }
-
-    function handleRoundResult(payload) {
-        console.log("Round Result:", payload);
-        let message = `Ronda ${payload.roundNumber}: ${payload.reason}<br>`;
-        
-        // Add validation information if available
-        if (payload.validationInfo) {
-            message += `<strong>${payload.validationInfo}</strong><br>`;
-        }
-        
-        message += `Ganador de la ronda: <b>${payload.roundWinnerName}</b>.<br>`;
-        
-        let p1NameDisplay = "Jugador 1", p2NameDisplay = "Jugador 2";
-        let p1ScoreDisplay = 0, p2ScoreDisplay = 0;
-
-        if (payload.players && payload.players.player1 && payload.players.player2) {
-            const p1FromServer = payload.players.player1;
-            const p2FromServer = payload.players.player2;
-
-            p1NameDisplay = p1FromServer.name;
-            p1ScoreDisplay = p1FromServer.score;
-            p2NameDisplay = p2FromServer.name;
-            p2ScoreDisplay = p2FromServer.score;
+        } else if (state.demonstrationState.challengeData.data.questions[0].type === 'MC') {
+            // Multiple choice
+            const selects = document.querySelectorAll('#structuredChallengeInputs select');
             
-            // Update main headers for the game screen in the background
-            if (p1FromServer.id === playerId) {
-                if(playerNameHeader) playerNameHeader.textContent = `${p1NameDisplay} (Tú): ${p1ScoreDisplay}`;
-                if(opponentNameHeader) opponentNameHeader.textContent = `${p2NameDisplay}: ${p2ScoreDisplay}`;
-            } else {
-                if(playerNameHeader) playerNameHeader.textContent = `${p2NameDisplay} (Tú): ${p2ScoreDisplay}`;
-                if(opponentNameHeader) opponentNameHeader.textContent = `${p1NameDisplay}: ${p1ScoreDisplay}`;
-            }
-        }
-        message += `Puntajes: ${p1NameDisplay}: ${p1ScoreDisplay} - ${p2NameDisplay}: ${p2ScoreDisplay}`;
-        
-        if(roundResultMessageEl) roundResultMessageEl.innerHTML = message;
-        
-        showScreen(roundResultScreen);
-    }
-
-    // The nextRoundButton might not be needed if server controls flow
-    if (nextRoundButton) {
-        nextRoundButton.addEventListener('click', () => {
-            // This button might be removed or repurposed if server automatically starts next round/game over
-            // For now, it hides the result screen and expects server to send new round or game over.
-            roundResultScreen.classList.remove('active');
-            challengeTextEl.textContent = "Esperando siguiente ronda...";
-            // sendMessage('readyForNextRound', { roomId }); // If explicit ready signal is needed
-        });
-    }
-
-    function handleGameOver(payload) {
-        console.log("Game Over:", payload);
-        let message = `${payload.reason}<br>`;
-        let finalP1Name = "Jugador 1", finalP2Name = "Jugador 2";
-        let finalP1Score = 0, finalP2Score = 0;
-
-        if (payload.finalScores && payload.finalScores.player1 && payload.finalScores.player2) {
-            finalP1Name = payload.finalScores.player1.name;
-            finalP1Score = payload.finalScores.player1.score;
-            finalP2Name = payload.finalScores.player2.name;
-            finalP2Score = payload.finalScores.player2.score;
-        }
-
-
-        if (payload.draw) {
-            message += "¡Es un empate!";
-            if(winnerNameEl) winnerNameEl.textContent = "Empate";
-        } else {
-            message += `Ganador final: ${payload.winnerName || 'Desconocido'}!`;
-            if(winnerNameEl) winnerNameEl.textContent = payload.winnerName || 'Desconocido';
-        }
-        message += `<br>Puntajes Finales: ${finalP1Name}: ${finalP1Score} - ${finalP2Name}: ${finalP2Score}`;
-        if(gameOverMessageEl) gameOverMessageEl.innerHTML = message;
-        
-        showScreen(gameOverScreen);
-        roomId = null; 
-    }
-
-    if (playAgainButtonMentiroso) {
-        playAgainButtonMentiroso.addEventListener('click', () => {
-            // Reset local game state variables if any were purely client-side for display
-            playerScores = { p1: 0, p2: 0 };
-            localDeclarations = [];
-            currentChallengeData = null;
-            // Go back to lobby/matchmaking screen
-            showScreen(matchmakingScreen);
-            // Player name should persist from playerNameInput or be re-confirmed
-            // The WebSocket connection should still be active.
-            // If ws is null, it means disconnected, then initialScreen is better.
-            if (!ws || ws.readyState !== WebSocket.OPEN) {
-                showScreen(initialScreen);
-            } else {
-                // Request available rooms again if needed, or server might send automatically
-                sendMessage('requestAvailableRooms', { gameType: 'mentiroso' }); 
-            }
-        });
-    }
-
-    if(leaveRoomButton) {
-        leaveRoomButton.addEventListener('click', () => {
-            if (roomId) {
-                sendMessage('leaveRoom', { roomId }); // Server will handle cleanup and notify opponent
-                roomId = null; // Clear room ID on client
-                currentChallengeData = null; // Clear current challenge data
-                localDeclarations = [];
-                if(declarationsListEl) declarationsListEl.innerHTML = '';
-            }
-            // Go back to lobby if WS still good, otherwise initial screen
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                showScreen(matchmakingScreen);
-                sendMessage('requestAvailableRooms', { gameType: 'mentiroso' }); // Refresh lobby rooms
-            } else {
-                showScreen(initialScreen);
-                 if(ws) { try { ws.close(); } catch(e){} ws = null; } // Ensure WS is closed and nulled if broken
-            }
-        });
-    }
-
-    function showTemporaryFeedback(message, type = 'info', duration = 3000) {
-        const feedbackEl = document.getElementById('temporaryFeedbackMentiroso') || document.createElement('div');
-        if (!document.getElementById('temporaryFeedbackMentiroso')) {
-            feedbackEl.id = 'temporaryFeedbackMentiroso';
-            feedbackEl.style.position = 'fixed';
-            feedbackEl.style.bottom = '20px';
-            feedbackEl.style.left = '50%';
-            feedbackEl.style.transform = 'translateX(-50%)';
-            feedbackEl.style.padding = '10px 20px';
-            feedbackEl.style.borderRadius = '5px';
-            feedbackEl.style.zIndex = '1000';
-            feedbackEl.style.transition = 'opacity 0.5s ease-in-out';
-            feedbackEl.style.textAlign = 'center';
-            feedbackEl.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-            document.body.appendChild(feedbackEl);
-        }
-
-        feedbackEl.textContent = message;
-        feedbackEl.style.opacity = '1';
-        feedbackEl.className = 'feedback-message '; // Reset classes
-
-        if (type === 'error') {
-            feedbackEl.classList.add('feedback-error');
-            // fallback styles if CSS vars not defined
-            feedbackEl.style.backgroundColor = '#FF5470'; 
-            feedbackEl.style.color = '#FFFFFE';
-        } else if (type === 'success') {
-            feedbackEl.classList.add('feedback-success');
-            feedbackEl.style.backgroundColor = '#2CB67D';
-            feedbackEl.style.color = '#FFFFFE';
-        } else { // info
-            feedbackEl.classList.add('feedback-info');
-            feedbackEl.style.backgroundColor = '#FF8E3C';
-            feedbackEl.style.color = '#16161A';
-        }
-
-        setTimeout(() => {
-            feedbackEl.style.opacity = '0';
-        }, duration);
-    }
-
-    function handleValidationRequired(payload) {
-        console.log("Validation Required:", payload);
-        const demonstratorName = payload.demonstratorName;
-        const answers = payload.answers;
-        const declaredAmount = payload.declaredAmount;
-        validationInfoText.textContent = `Validando las respuestas de ${demonstratorName}`;
-        validationChallengeText.textContent = formatChallengeTextForDisplay(currentChallengeData, declaredAmount);
-        validatorAnswersContainer.innerHTML = '';
-        answers.forEach((answer, index) => {
-            const answerItem = document.createElement('div');
-            answerItem.className = 'validation-answer-item';
-            const label = document.createElement('label');
-            label.textContent = answer;
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.name = `validate_${index}`;
-            checkbox.checked = true;
-            checkbox.addEventListener('change', function() {
-                if (this.checked) {
-                    answerItem.classList.remove('invalid');
-                    answerItem.classList.add('valid');
-                } else {
-                    answerItem.classList.remove('valid');
-                    answerItem.classList.add('invalid');
+            selects.forEach(select => {
+                if (select.value) {
+                    answers.push({
+                        question_id: select.dataset.questionId,
+                        user_answer: select.value
+                    });
                 }
             });
-            answerItem.appendChild(label);
-            answerItem.appendChild(checkbox);
-            answerItem.classList.add('valid');
-            validatorAnswersContainer.appendChild(answerItem);
-        });
-        showScreen(validationScreen);
+        }
     }
-
-    function handleValidationWait(payload) {
-        console.log("Waiting for validation:", payload);
-        challengeTextEl.textContent = "Esperando que tu oponente valide tus respuestas...";
-        showTemporaryFeedback("Esperando validación...", "info");
+    
+    // Verificar que haya suficientes respuestas
+    if (answers.length < state.demonstrationState.declaredAmount) {
+        showError(`Debes proporcionar ${state.demonstrationState.declaredAmount} respuestas.`);
+        startDemonstrationTimer(state.timerValue); // Reiniciar el timer con el tiempo restante
+        return;
     }
+    
+    // Deshabilitar botón para evitar doble envío
+    document.getElementById('submitDemonstrationButton').disabled = true;
+    
+    // Enviar al servidor
+    sendToServer('mentirosoSubmitDemonstration', {
+        answers: answers
+    });
+    
+    // Mostrar área de espera
+    showWaitingArea('Enviando demostración...');
+}
 
-    // Add event listener for validation submission
-    if (submitValidationButton) {
-        submitValidationButton.addEventListener('click', submitValidationAnswers);
+function handleSubmitValidation() {
+    const validationItems = document.querySelectorAll('.validation-item');
+    const validations = [];
+    
+    validationItems.forEach(item => {
+        validations.push(item.dataset.valid === 'true');
+    });
+    
+    // Verificar que todas las respuestas hayan sido validadas
+    if (validations.length !== state.demonstrationAnswers.length) {
+        showError('Debes validar todas las respuestas.');
+        return;
     }
+    
+    // Deshabilitar botón para evitar doble envío
+    document.getElementById('submitValidationButton').disabled = true;
+    
+    // Enviar al servidor
+    sendToServer('mentirosoSubmitValidation', {
+        validations: validations
+    });
+    
+    // Mostrar área de espera
+    showWaitingArea('Enviando validación...');
+}
 
-    function submitValidationAnswers() {
-        const validations = [];
-        const checkboxes = validatorAnswersContainer.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            validations.push(checkbox.checked);
-        });
+// --- Modales ---
+function showPasswordPromptModal(roomId) {
+    const modal = document.getElementById('privateRoomPasswordModal');
+    const modalText = document.getElementById('passwordModalText');
+    const form = document.getElementById('privateRoomPasswordForm');
+    
+    modalText.textContent = `La sala '${roomId}' es privada. Por favor, ingresá la contraseña:`;
+    form.dataset.roomId = roomId;
+    
+    // Limpiar mensaje de error previo
+    document.getElementById('passwordErrorText').style.display = 'none';
+    
+    // Limpiar input
+    document.getElementById('passwordModalInput').value = '';
+    
+    modal.style.display = 'flex';
+    document.getElementById('passwordModalInput').focus();
+}
+
+function hidePasswordPromptModal() {
+    document.getElementById('privateRoomPasswordModal').style.display = 'none';
+}
+
+function handleSubmitPasswordModal(event) {
+    event.preventDefault();
+    
+    const roomId = event.target.dataset.roomId;
+    const password = document.getElementById('passwordModalInput').value;
+    const playerName = document.getElementById('joinPlayerName').value.trim() || `Jugador_${generateRandomId().substring(0, 4)}`;
+    
+    if (!password) {
+        const errorText = document.getElementById('passwordErrorText');
+        errorText.textContent = 'Debes ingresar una contraseña.';
+        errorText.style.display = 'block';
+        return;
+    }
+    
+    state.playerName = playerName;
+    
+    hidePasswordPromptModal();
+    disableLobbyButtons();
+    
+    sendToServer('joinMentirosoRoom', {
+        roomId: roomId,
+        playerName: playerName,
+        password: password
+    });
+}
+
+function showInstructionsModal() {
+    document.getElementById('instructionsModal').style.display = 'flex';
+}
+
+function hideInstructionsModal() {
+    document.getElementById('instructionsModal').style.display = 'none';
+    localStorage.setItem('mentiroso_instructions_viewed', 'true');
+}
+
+function showGameResultModal(payload) {
+    const modal = document.getElementById('gameResultModal');
+    const title = document.getElementById('resultTitle');
+    const message = document.getElementById('resultMessage');
+    const stats = document.getElementById('resultStats');
+    
+    // Configurar título y mensaje
+    if (payload.draw) {
+        title.textContent = '¡Empate!';
+        message.textContent = `${payload.reason || 'El juego terminó en empate.'}`;
+    } else if (payload.winnerId === state.localPlayerId) {
+        title.textContent = '¡Victoria!';
+        message.textContent = `${payload.reason || '¡Ganaste el juego!'}`;
+    } else {
+        title.textContent = 'Derrota';
+        message.textContent = `${payload.reason || 'Tu oponente ganó el juego.'}`;
+    }
+    
+    // Mostrar estadísticas
+    stats.innerHTML = '';
+    
+    // Obtener info de jugadores
+    const player1 = state.players.player1;
+    const player2 = state.players.player2;
+    
+    if (player1 && player2) {
+        const p1Stat = document.createElement('div');
+        p1Stat.className = 'stat-item player1-score';
+        p1Stat.innerHTML = `
+            <span class="stat-label">${player1.name}</span>
+            <span class="stat-value">${player1.score} pts</span>
+        `;
         
-        sendMessage('mentirosoSubmitValidation', { roomId, validations });
-        validationScreen.classList.remove('active');
-        challengeTextEl.textContent = "Esperando resultado de la validación...";
+        const p2Stat = document.createElement('div');
+        p2Stat.className = 'stat-item player2-score';
+        p2Stat.innerHTML = `
+            <span class="stat-label">${player2.name}</span>
+            <span class="stat-value">${player2.score} pts</span>
+        `;
+        
+        stats.appendChild(p1Stat);
+        stats.appendChild(p2Stat);
     }
+    
+    modal.style.display = 'flex';
+}
 
-    // Initial screen to show
-    showScreen(initialScreen);
-}); 
+function hideGameResultModal() {
+    document.getElementById('gameResultModal').style.display = 'none';
+}
+
+function handlePlayAgain() {
+    hideGameResultModal();
+    // Reinicio manual en este nivel: simplemente recargamos la página
+    window.location.reload();
+}
+
+function handleBackToLobby() {
+    hideGameResultModal();
+    showLobby();
+}
+
+function showError(message) {
+    console.error('Error:', message);
+    alert(message);
+}
+
+// --- WebSocket y Comunicación ---
+function initializeWebSocket() {
+    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const host = window.location.hostname;
+    const port = '8081'; // Puerto del servidor WebSocket
+    const wsUrl = `${protocol}//${host}:${port}`;
+    
+    ws = new WebSocket(wsUrl);
+    
+    ws.onopen = () => {
+        console.log('Conexión WebSocket establecida');
+    };
+    
+    ws.onmessage = (event) => {
+        try {
+            const message = JSON.parse(event.data);
+            handleServerMessage(message);
+        } catch (error) {
+            console.error('Error al parsear mensaje:', error);
+        }
+    };
+    
+    ws.onclose = () => {
+        console.log('Conexión WebSocket cerrada');
+        // Intentar reconectar después de un tiempo
+        setTimeout(() => {
+            console.log('Intentando reconectar...');
+            initializeWebSocket();
+        }, 3000);
+    };
+    
+    ws.onerror = (error) => {
+        console.error('Error en WebSocket:', error);
+    };
+}
+
+function sendToServer(type, payload = {}) {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        const message = {
+            type: type,
+            payload: payload
+        };
+        ws.send(JSON.stringify(message));
+    } else {
+        console.error('WebSocket no está conectado');
+        showError('Error de conexión. Intenta recargar la página.');
+    }
+}
+
+function handleServerMessage(message) {
+    console.log('Mensaje recibido:', message);
+    
+    switch (message.type) {
+        case 'yourInfo':
+            state.localPlayerId = message.payload.playerId;
+            break;
+            
+        case 'availableRooms':
+            renderAvailableRooms(message.payload.rooms);
+            break;
+            
+        case 'mentirosoRoomCreated':
+            handleRoomCreated(message.payload);
+            break;
+            
+        case 'mentirosoJoinSuccess':
+            handleJoinSuccess(message.payload);
+            break;
+            
+        case 'mentirosoPlayerJoined':
+            handlePlayerJoined(message.payload);
+            break;
+            
+        case 'joinError':
+            handleJoinError(message.payload);
+            break;
+            
+        case 'mentirosoNewRound':
+            handleNewRound(message.payload);
+            break;
+            
+        case 'mentirosoDeclarationUpdate':
+            handleDeclarationUpdate(message.payload);
+            break;
+            
+        case 'mentirosoDemonstrationRequired':
+            handleDemonstrationRequired(message.payload);
+            break;
+            
+        case 'mentirosoDemonstrationWait':
+            handleDemonstrationWait(message.payload);
+            break;
+            
+        case 'mentirosoRoundResult':
+            handleRoundResult(message.payload);
+            break;
+            
+        case 'mentirosoGameOver':
+            handleGameOver(message.payload);
+            break;
+            
+        case 'errorMessage':
+            showError(message.payload.error);
+            break;
+            
+        default:
+            console.log('Mensaje no manejado:', message.type);
+    }
+}
+
+// --- Manejo de Mensajes del Servidor ---
+function handleRoomCreated(payload) {
+    state.roomId = payload.roomId;
+    state.role = 'player1';
+    
+    showLobbyMessage(`Sala creada con éxito. ID: ${payload.roomId}. Esperando a otro jugador...`, 'success', true);
+    enableLobbyButtons();
+}
+
+function handleJoinSuccess(payload) {
+    state.roomId = payload.roomId;
+    state.role = 'player2';
+    state.players = payload.players;
+    
+    // Ir directamente a la pantalla de juego
+    showGameScreen();
+}
+
+function handlePlayerJoined(payload) {
+    state.players = payload.players;
+    
+    // Si soy el player1, ir a la pantalla de juego
+    if (state.role === 'player1') {
+        showGameScreen();
+    }
+}
+
+function handleJoinError(payload) {
+    showLobbyMessage(payload.error, 'error');
+    enableLobbyButtons();
+}
+
+function handleNewRound(payload) {
+    // Actualizar estado
+    state.roundNumber = payload.roundNumber;
+    state.maxRounds = payload.maxRounds;
+    state.currentTurn = payload.currentTurn;
+    state.currentChallenge = payload.challenge;
+    state.declarations = [];
+    state.demonstrationInProgress = false;
+    state.validationInProgress = false;
+    
+    // Limpiar estados de demostración
+    state.demonstrationState = null;
+    state.validationState = null;
+    
+    // Actualizar UI
+    updateGameUI();
+    updateChallengeText();
+    updateDeclarationsList();
+}
+
+function handleDeclarationUpdate(payload) {
+    // Actualizar estado
+    state.currentTurn = payload.currentTurn;
+    state.declarations = payload.declarationsLog;
+    state.players = payload.players;
+    
+    // Actualizar UI
+    updateGameUI();
+    updateDeclarationsList();
+    updatePlayersInfo();
+}
+
+function handleDemonstrationRequired(payload) {
+    // Soy el demostrador
+    state.demonstrationInProgress = true;
+    state.demonstrationState = {
+        demonstratorId: payload.demonstratorId,
+        challengerId: payload.challengerId,
+        declaredAmount: payload.declaredAmount,
+        challengeData: payload.challenge,
+        timeLimit: payload.timeLimit
+    };
+    
+    // Actualizar UI
+    updateGameUI();
+}
+
+function handleDemonstrationWait(payload) {
+    // Soy el retador/espectador
+    state.demonstrationInProgress = true;
+    // Solo guardar info básica ya que no soy el demostrador
+    state.demonstrationState = {
+        demonstratorId: payload.demonstratorId,
+        challengerId: payload.challengerId,
+        declaredAmount: payload.declaredAmount
+    };
+    
+    // Actualizar UI
+    updateGameUI();
+}
+
+function handleRoundResult(payload) {
+    stopTimer(); // Por si hay un timer activo
+
+    state.demonstrationInProgress = false;
+    state.validationInProgress = false;
+    
+    // Actualizar puntuaciones
+    if (state.players && payload.players) {
+        state.players = payload.players;
+    }
+    
+    // Mostrar resultado de la ronda
+    showRoundResult(payload);
+}
+
+function handleGameOver(payload) {
+    state.gameActive = false;
+    
+    // Actualizar puntuaciones finales
+    if (payload.finalScores) {
+        if (state.players.player1) state.players.player1.score = payload.finalScores.player1?.score || 0;
+        if (state.players.player2) state.players.player2.score = payload.finalScores.player2?.score || 0;
+    }
+    
+    // Mostrar modal de fin de juego
+    showGameResultModal(payload);
+}
+
+function renderAvailableRooms(rooms) {
+    const roomsList = document.getElementById('availableRoomsList');
+    
+    // Filtrar solo salas de tipo "mentiroso"
+    const mentirosoRooms = rooms.filter(room => room.gameType === 'mentiroso');
+    
+    if (mentirosoRooms.length === 0) {
+        roomsList.innerHTML = '<li class="no-rooms-message">No hay salas de Mentiroso disponibles. ¡Crea una!</li>';
+        return;
+    }
+    
+    roomsList.innerHTML = '';
+    
+    mentirosoRooms.forEach(room => {
+        const roomItem = document.createElement('li');
+        roomItem.className = 'room-item';
+        
+        const roomInfo = document.createElement('div');
+        roomInfo.className = 'room-info';
+        
+        const roomName = document.createElement('span');
+        roomName.innerHTML = `Sala: <strong>${room.id}</strong>`;
+        
+        const playerCount = document.createElement('span');
+        playerCount.innerHTML = `<strong>${room.playerCount}/${room.maxPlayers}</strong> jugadores`;
+        
+        roomInfo.appendChild(roomName);
+        
+        if (room.requiresPassword) {
+            const passwordIcon = document.createElement('span');
+            passwordIcon.innerHTML = '<i class="fas fa-lock" title="Requiere contraseña"></i>';
+            roomInfo.appendChild(passwordIcon);
+        }
+        
+        roomInfo.appendChild(playerCount);
+        
+        const joinButton = document.createElement('button');
+        joinButton.className = 'join-room-list-btn';
+        joinButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Unirse';
+        joinButton.dataset.roomId = room.id;
+        joinButton.dataset.requiresPassword = room.requiresPassword;
+        
+        roomItem.appendChild(roomInfo);
+        roomItem.appendChild(joinButton);
+        
+        roomsList.appendChild(roomItem);
+    });
+}
+
+function showRoundResult(payload) {
+    const resultArea = document.getElementById('roundResultArea');
+    
+    // Construir contenido
+    let html = `
+        <h3 class="round-result-title">Resultado de la Ronda ${payload.roundNumber}</h3>
+        <div class="round-winner">${payload.roundWinnerName} gana esta ronda</div>
+        <div class="round-reason">${payload.reason}</div>
+    `;
+    
+    // Si hay respuestas correctas para mostrar
+    if (payload.wasSuccessfulDemonstration && payload.actualCorrectAnswers > 0) {
+        html += `
+            <div class="correct-answers-display">
+                <h4>Respuestas correctas (${payload.actualCorrectAnswers}/${payload.declaredAmount}):</h4>
+                <ul class="answers-list">
+        `;
+        
+        // Esto es un placeholder - en la implementación real, habría que pasar las respuestas correctas
+        for (let i = 0; i < payload.actualCorrectAnswers; i++) {
+            html += `<li>Respuesta ${i+1}</li>`;
+        }
+        
+        html += `
+                </ul>
+            </div>
+        `;
+    }
+    
+    // Botón para continuar
+    html += `
+        <button id="nextRoundButton" class="next-round-btn">
+            <i class="fas fa-arrow-right"></i>
+            Continuar
+        </button>
+    `;
+    
+    // Actualizar contenido y mostrar
+    resultArea.innerHTML = html;
+    resultArea.classList.add('active');
+    
+    // Agregar evento al botón
+    document.getElementById('nextRoundButton').addEventListener('click', () => {
+        resultArea.classList.remove('active');
+        updateGameUI(); // Refrescar UI para mostrar espera de nuevo turno
+    });
+} 

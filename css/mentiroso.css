@@ -1,708 +1,658 @@
-/* Styles for Mentiroso Game */
-
-:root {
-    --primary-color: #7F5AF0; /* Morado principal */
-    --secondary-color: #2CB67D; /* Verde secundario */
-    --background-color: #16161A; /* Fondo oscuro principal */
-    --card-background-color: #242629; /* Fondo oscuro para tarjetas/secciones */
-    --text-color: #FFFFFE; /* Texto principal blanco */
-    --text-secondary-color: #94A1B2; /* Texto secundario grisáceo */
-    --accent-color: #FF8E3C; /* Naranja para acentos/botones */
-    --error-color: #FF5470; /* Rojo para errores */
-    --success-color: var(--secondary-color);
-    --highlight-bg: rgba(255, 142, 60, 0.1); /* Fondo para highlight con transparencia */
-    --border-color: rgba(255, 255, 255, 0.1);
-    --input-bg-color: #1a1a1f; /* Un poco más claro que el fondo principal */
-    --font-primary: 'Poppins', sans-serif;
-    --font-secondary: 'Roboto', sans-serif;
-    --primary-rgb: 127, 90, 240; /* For use in rgba */
-    --accent-rgb: 255, 142, 60; /* For use in rgba */
-}
-
-/* Base screen and section visibility */
-.game-screen,
-.demonstration-area,
-.round-result-display,
-.player-actions-container,
-.timer-display {
-    display: none; /* Hidden by default */
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out, transform 0.3s ease;
-}
-
-/* Active state for screens and sections */
-.game-screen.active,
-.demonstration-area.active,
-.round-result-display.active,
-.player-actions-container.active,
-.timer-display.active {
-    display: flex; /* Or block, depending on the element's natural display type */
-    flex-direction: column; /* Default for most containers */
-    opacity: 1;
-}
-
-/* Specific display types for active elements if needed */
-#matchmakingScreen.active,
-#gameplayScreen.active,
-#gameOverScreen.active,
-#roundResultScreen.active, /* roundResultScreen is also a main view */
-#validationScreen.active { /* Add validationScreen here */
-    display: flex; 
-    flex-direction: column; /* Ensure consistent flex direction */
-}
-
-#playerActions.active {
-    display: flex;
-    flex-direction: row; /* Player actions are typically in a row */
-    align-items: center; /* Align items in the row */
-    justify-content: center; /* Center items in the row */
-}
-
-.timer-display.active {
-    display: block; /* Timer is a block element */
-}
+/* mentiroso.css - Estilos específicos para el juego Mentiroso de Crack Total */
 
 .mentiroso-body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-family: var(--font-secondary);
-    line-height: 1.6;
-    /* Allow body to grow if content is taller than viewport */
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+    --primary-color: #FF5A7A;
+    --primary-color-dark: #D93B5A;
+    --success-color: #31E5B2;
+    --danger-color: #FF5A7A;
+    --warning-color: #FFC107;
+    --neutral-color: #835DFF;
 }
 
-.game-specific-container {
-    max-width: 900px;
-    margin: 2rem auto;
-    padding: 2rem;
-    background-color: var(--card-background-color);
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    flex-grow: 1; /* Allow main content to take available space */
+/* Estilos específicos del juego */
+.mentiroso-content {
+    padding: 20px 0;
 }
 
-/* Matchmaking Screen */
-#matchmakingScreen {
-    /* display: flex; /* Controlled by .active class */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    min-height: 300px;
-}
-
-#matchmakingScreen h2 {
-    font-family: var(--font-primary);
-    color: var(--primary-color);
-    margin-bottom: 1.5rem;
-}
-
-#matchmakingScreen .spinner {
-    border: 6px solid rgba(255,255,255,0.2);
-    border-left-color: var(--primary-color);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-    margin-bottom: 1.5rem;
-}
-
-/* Gameplay Screen */
-.game-info-bar {
-    background-color: rgba(0,0,0,0.2);
-    padding: 1rem;
-    border-radius: 8px;
-    margin-bottom: 2rem;
-    opacity: 0; /* Start hidden for gameplay screen intro */
-    animation: fadeIn 0.5s 0.3s ease-out forwards; /* Fade in after screen transition */
-}
-
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-    }
-}
-
-.player-info-container {
+.game-status {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 15px;
+    padding: 8px 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.player-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    background-color: rgba(0,0,0,0.2);
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-    transition: all 0.3s ease;
-}
-
-.player-info.active-turn {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 15px rgba(var(--accent-rgb, 255, 142, 60), 0.5);
-    transform: scale(1.03);
-    /* Make turn indicator more prominent */
-}
-
-.player-info.active-turn .turn-indicator {
-    /* background-color: var(--secondary-color); /* Example: change color */
-    /* color: white; */
-    transform: scale(1.1);
-    box-shadow: 0 0 10px var(--accent-color), 0 0 20px rgba(var(--accent-rgb), 0.3); /* Enhanced glow */
-}
-
-.player-avatar {
-    width: 30px;
-    height: 30px;
-    background-color: var(--primary-color);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    font-weight: bold;
-    font-family: var(--font-primary);
-    margin-left: 8px;
-    background-color: var(--accent-color);
-    color: var(--background-color);
-    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Added transition */
-}
-.player-avatar.p2 {
-    background-color: var(--secondary-color);
-}
-
-.player-name {
-    font-weight: bold;
-    font-family: var(--font-primary);
-}
-
-.player-score {
-    font-weight: 500;
+#roundCounter {
+    font-weight: 600;
+    color: var(--neutral-color);
+    font-size: 1rem;
 }
 
 .turn-indicator {
-    font-weight: bold;
-    font-size: 0.8em;
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-left: 8px;
-    background-color: var(--accent-color);
-    color: var(--background-color);
+    font-size: 1rem;
+    padding: 5px 12px;
+    background: var(--primary-color);
+    border-radius: 20px;
+    color: white;
+    font-weight: 600;
+    animation: pulse 2s infinite;
+    box-shadow: 0 0 10px rgba(255, 90, 122, 0.5);
 }
 
-.game-round-info {
-    font-family: var(--font-primary);
-    font-size: 1.1em;
-    color: var(--text-secondary-color);
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(255, 90, 122, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 90, 122, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 90, 122, 0); }
 }
 
-/* Challenge Area */
+/* Card del desafío */
+.challenge-card {
+    background: rgba(15, 20, 30, 0.8);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .challenge-area {
-    background-color: rgba(0,0,0,0.15);
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 20px;
     text-align: center;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    position: relative;
 }
 
-.challenge-area h3 {
-    font-family: var(--font-primary);
-    color: var(--primary-color);
-    margin-top: 0;
-    margin-bottom: 0.75rem;
-    animation: slideInFromTop 0.5s 0.5s ease-out forwards; /* Animation for challenge text */
-    opacity: 0;
+.challenge-text {
+    font-size: 1.4rem;
+    color: white;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.4;
+    font-family: 'Montserrat', sans-serif;
 }
 
-.challenge-text-display {
-    font-size: 1.2em;
-    color: var(--text-color);
-    min-height: 40px; /* Para evitar saltos de layout */
-    animation: slideInFromTop 0.5s 0.6s ease-out forwards; /* Animation for challenge text */
-    opacity: 0;
-}
-
-@keyframes slideInFromTop {
-    from {
-        transform: translateY(-20px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-.challenge-text-display strong {
-    color: var(--accent-color);
-    font-weight: 700; /* Make it bolder */
-}
-.challenge-text-display em {
-    color: var(--secondary-color);
-    font-style: italic; /* Use italic for emphasis */
-    font-weight: 500;
-}
-
-/* Declarations Log */
+/* Log de declaraciones */
 .declarations-log {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
-    background-color: rgba(0,0,0,0.1);
-    border-radius: 8px;
-    max-height: 200px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    max-height: 180px;
     overflow-y: auto;
 }
 
 .declarations-log h4 {
     margin-top: 0;
-    font-family: var(--font-primary);
-    color: var(--text-secondary-color);
-    margin-bottom: 0.5rem;
+    margin-bottom: 10px;
+    color: #e0e0e0;
+    font-size: 1.1rem;
 }
 
-#declarationsList {
+.declarations-list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-#declarationsList li {
-    padding: 0.5rem 0.2rem;
-    border-bottom: 1px solid var(--border-color); /* Solid but subtle border */
-    font-size: 0.95em;
-    opacity: 0;
-    transform: translateX(-20px);
-    animation: slideInFromLeft 0.4s ease-out forwards;
-}
-
-/* Stagger animation for list items */
-#declarationsList li:nth-child(1) { animation-delay: 0.1s; }
-#declarationsList li:nth-child(2) { animation-delay: 0.15s; }
-#declarationsList li:nth-child(3) { animation-delay: 0.2s; }
-#declarationsList li:nth-child(4) { animation-delay: 0.25s; }
-#declarationsList li:nth-child(5) { animation-delay: 0.3s; }
-/* Add more if needed or handle dynamically if list can be very long */
-
-@keyframes slideInFromLeft {
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-#declarationsList li:last-child {
-    border-bottom: none;
-}
-#declarationsList .declarer-name {
-    font-weight: bold;
-    color: var(--primary-color);
-    margin-right: 5px; /* Space before 'declara' */
-}
-#declarationsList .declared-amount {
-    font-weight: bold;
-    color: var(--background-color); /* Dark text on light bg */
-    padding: 3px 8px; /* Slightly more padding */
-    background-color: var(--accent-color); /* Use accent color for background */
-    border-radius: 4px;
-    margin-left: 5px;
-    display: inline-block; /* Ensure padding is applied correctly */
-    line-height: 1.2; /* Adjust line height for better look */
-}
-
-/* Player Actions */
-.player-actions-container {
-    /* display: flex; /* Controlled by .active class */
-    gap: 1rem;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-    background-color: rgba(0,0,0,0.15);
+.declarations-list li {
+    padding: 8px 12px;
+    margin-bottom: 8px;
     border-radius: 8px;
-    margin-bottom: 1.5rem;
-}
-
-.declaration-input-group {
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.5rem;
-    flex-grow: 1; /* Allow input group to take space */
-    margin-right: 1rem; /* Space before declare button */
 }
 
-.declaration-input-group label {
-    font-size: 0.9em;
-    color: var(--text-secondary-color);
-    white-space: nowrap; /* Prevent label from wrapping */
+.declarations-list li:last-child {
+    margin-bottom: 0;
 }
 
-#declarationAmount {
-    padding: 0.75rem 1rem; /* Increased padding */
-    border: 1px solid var(--border-color);
-    background-color: var(--input-bg-color); /* Custom input background */
-    color: var(--text-color);
-    border-radius: 6px;
-    width: 80px; /* Slightly wider */
-    text-align: center;
-    font-size: 1.1em; /* Larger font */
-    font-family: var(--font-primary); /* Consistent font */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    appearance: textfield; /* Remove spinners for number input in some browsers */
-    -moz-appearance: textfield; /* Firefox */
-}
-#declarationAmount::-webkit-outer-spin-button,
-#declarationAmount::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.declarations-list li:hover {
+    background: rgba(255, 255, 255, 0.12);
 }
 
-#declarationAmount:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 8px rgba(var(--primary-rgb, 127,90,240), 0.5);
-    outline: none;
+.declarations-list li.current {
+    background: rgba(131, 93, 255, 0.15);
+    border-left: 3px solid var(--neutral-color);
 }
 
-/* Demonstration Area */
-.demonstration-area {
-    padding: 1.5rem;
-    background-color: rgba(var(--accent-rgb, 255,142,60),0.05);
-    border: 1px solid var(--accent-color);
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    background-color: var(--background-color);
-    color: var(--text-color);
-    border-radius: 6px;
-    margin-bottom: 1rem;
-    font-family: var(--font-secondary);
-    font-size: 1em;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Added transition */
-}
-
-.demonstration-area h3 {
-    color: var(--accent-color);
-    font-family: var(--font-primary);
-    text-align: center;
-    margin-top: 0;
-    margin-bottom: 1rem; /* More space below title */
-}
-
-.timer-display {
-    text-align: center;
-    font-size: 1.1em;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    color: var(--text-secondary-color);
-    padding: 0.5rem;
-    background-color: rgba(0,0,0,0.2);
-    border-radius: 4px;
-    display: inline-block; /* To fit content */
-}
-
-#demonstrationInput, 
-#structuredQuestionsContainer {
-    width: 100%;
-    padding: 1rem; /* More padding */
-    border: 1px solid var(--border-color);
-    background-color: var(--input-bg-color); /* Consistent input bg */
-    color: var(--text-color);
-    border-radius: 8px; /* Slightly more rounded */
-    margin-bottom: 1.5rem; /* More space below */
-    font-family: var(--font-secondary);
-    font-size: 1em;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-#demonstrationInput:focus,
-#structuredQuestionsContainer:focus-within { 
-    border-color: var(--primary-color);
-    box-shadow: 0 0 8px rgba(var(--primary-rgb, 127,90,240), 0.5);
-    outline: none;
-    min-height: 120px; /* Slightly taller */
-    resize: vertical;
-    line-height: 1.5; /* Better readability */
-}
-
-/* Structured Questions Styling */
-#structuredQuestionsContainer {
-    padding: 1rem; 
-}
-.structured-question-item {
-    margin-bottom: 1.5rem; /* More space between questions */
-    padding: 1.2rem; /* More padding inside item */
-    background-color: rgba(0,0,0,0.25); /* Slightly darker item bg */
-    border-radius: 8px;
-    border-left: 4px solid var(--primary-color); /* Accent border */
-}
-.structured-question-item .question-text {
-    font-weight: 600; /* Bolder question text */
-    margin-bottom: 1rem;
-    color: var(--text-color);
-    font-size: 1.05em; /* Slightly larger question text */
-}
-.structured-question-item .answer-options label {
-    display: flex; /* Use flex for better alignment */
-    align-items: center;
-    margin-bottom: 0.75rem; /* More space between options */
-    padding: 0.75rem 1rem; /* More padding for options */
-    background-color: rgba(var(--primary-rgb), 0.08); /* Subtle primary bg */
-    border: 1px solid transparent; /* For transition */
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-.structured-question-item .answer-options label:hover {
-    background-color: rgba(var(--primary-rgb), 0.15);
-    border-color: rgba(var(--primary-rgb), 0.4);
-}
-.structured-question-item .answer-options input[type="radio"] {
-    margin-right: 0.75rem;
-    accent-color: var(--primary-color);
-    transform: scale(1.2); /* Make radio button slightly larger */
-    cursor: pointer;
-}
-/* Style for selected radio button's label */
-.structured-question-item .answer-options input[type="radio"]:checked + span {
-    color: var(--secondary-color); /* Or your preferred highlight color */
-    font-weight: bold;
-}
-/* If label text is directly after input, not in a span, this won't work. Adjust JS if needed or style label directly.
-   Assuming label structure is <label><input> Text</label> or <label><input><span>Text</span></label> */
-.structured-question-item .answer-options input[type="radio"]:checked ~ span { /* If span is a sibling after input */
-    color: var(--secondary-color);
+.declarations-list .player-tag {
     font-weight: 600;
-}
-.structured-question-item .answer-options label:has(input[type="radio"]:checked) {
-    background-color: rgba(var(--secondary-rgb, 44, 182, 125), 0.2); /* Highlight for checked option's label */
-    border-color: var(--secondary-color);
-}
-
-/* Round Result & Game Over */
-.round-result-display, .game-over-modal .modal-content {
-    padding: 2rem;
-    text-align: center;
-    background-color: var(--card-background-color);
-    border-radius: 8px;
-}
-
-.round-result-display h3, .game-over-modal h2 {
-    font-family: var(--font-primary);
     color: var(--primary-color);
-    margin-top: 0;
-    margin-bottom: 1.5rem;
+    margin-right: 8px;
 }
-.game-over-modal .winner-text {
-    font-size: 1.2em;
-    color: var(--secondary-color);
-    margin-bottom: 1.5rem;
-    font-weight: 500;
+
+.declarations-list .amount-tag {
+    font-weight: 600;
+    color: var(--success-color);
 }
-.game-over-modal .modal-actions {
+
+.no-declarations {
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+    text-align: center;
+}
+
+/* Áreas de acción */
+.action-area {
+    position: relative;
+}
+
+.declare-area,
+.respond-area,
+.demonstration-area,
+.validation-area,
+.waiting-area {
+    display: none;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.declare-area.active,
+.respond-area.active,
+.demonstration-area.active,
+.validation-area.active,
+.waiting-area.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Controles para declarar */
+.number-input-container {
     display: flex;
-    gap: 1rem;
-    justify-content: center;
-    animation: fadeIn 0.5s 0.5s ease-out forwards; /* Fade in buttons */
-    opacity: 0;
+    align-items: center;
+    max-width: 200px;
+    margin: 0 auto;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 30px;
+    overflow: hidden;
+    padding: 5px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Temporary Feedback */
-#temporaryFeedback {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 1rem 1.5rem;
-    background-color: var(--accent-color);
-    color: var(--background-color);
-    border-radius: 6px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    z-index: 1000;
-    font-weight: 500;
-    opacity: 0;
-    transition: opacity 0.3s ease, top 0.3s ease;
-    pointer-events: none; /* Initially not interactive */
-}
-#temporaryFeedback.show {
-    opacity: 1;
-    top: 70px; /* Slide down to be visible below header */
-    pointer-events: auto;
-}
-#temporaryFeedback.error {
-    background-color: var(--error-color);
-    color: var(--text-color);
-}
-#temporaryFeedback.success {
-    background-color: var(--success-color);
-    color: var(--background-color);
-}
-#temporaryFeedback.info { /* Renaming highlight to info for clarity */
-    background-color: var(--primary-color); /* Or a dedicated info color if you add one */
-    color: var(--text-color);
-}
-#temporaryFeedback.highlight { /* Keep highlight for actual highlights if distinct from info */
-    background-color: var(--accent-color); /* Using accent for game action highlights */
-    color: var(--background-color);
-}
-
-/* General Button Styles (re-use from layout.css or define here) */
-.button {
-    padding: 0.8rem 1.5rem;
+.number-control {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
     border: none;
-    border-radius: 6px;
-    font-family: var(--font-primary);
-    font-weight: 600;
-    font-size: 1em;
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    font-size: 1rem;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.number-control:hover {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.declare-input {
+    flex: 1;
+    height: 40px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 1.4rem;
+    text-align: center;
+    outline: none;
+    -moz-appearance: textfield;
+}
+
+.declare-input::-webkit-inner-spin-button, 
+.declare-input::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Botones de acción */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.respond-buttons {
+    justify-content: space-between;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    min-width: 150px;
+    border: none;
+}
+
+.action-btn i, 
+.action-btn svg {
+    font-size: 1.1rem;
+}
+
+.action-btn.declare-btn {
+    background: var(--primary-color);
+    color: white;
+}
+
+.action-btn.declare-btn:hover {
+    background: var(--primary-color-dark);
+}
+
+.action-btn.liar-btn {
+    background: var(--danger-color);
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+.action-btn.liar-btn:hover {
+    background: #e4485f;
+}
+
+.action-btn.accept-btn {
+    background: var(--success-color);
+    color: #0f1422;
+}
+
+.action-btn.accept-btn:hover {
+    background: #25c99c;
+}
+
+/* Área de demostración */
+.demonstration-area h4,
+.validation-area h4 {
+    text-align: center;
+    color: white;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+.demonstration-instruction {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+#demonstrationCount {
+    font-weight: 700;
+    color: var(--warning-color);
+}
+
+.demonstration-input {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    border-radius: 8px;
+    padding: 12px 15px;
+    font-size: 1rem;
+    height: 120px;
+    resize: none;
+    margin-bottom: 15px;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.demonstration-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(255, 90, 122, 0.3);
+}
+
+/* Área de validación */
+.validation-list {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 10px;
+    max-height: 250px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.validation-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+.validation-item:last-child {
+    margin-bottom: 0;
+}
+
+.validation-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.validation-text {
+    flex: 1;
+    color: white;
+    padding-right: 10px;
+}
+
+.validation-controls {
+    display: flex;
+    gap: 8px;
+}
+
+.validation-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.validation-btn.valid {
+    background: rgba(49, 229, 178, 0.2);
+    color: var(--success-color);
+}
+
+.validation-btn.valid:hover {
+    background: rgba(49, 229, 178, 0.3);
+}
+
+.validation-btn.invalid {
+    background: rgba(255, 90, 122, 0.2);
+    color: var(--danger-color);
+}
+
+.validation-btn.invalid:hover {
+    background: rgba(255, 90, 122, 0.3);
+}
+
+.validation-btn.selected {
+    transform: scale(1.1);
+}
+
+.validation-btn.valid.selected {
+    background: rgba(49, 229, 178, 0.5);
+}
+
+.validation-btn.invalid.selected {
+    background: rgba(255, 90, 122, 0.5);
+}
+
+/* Timer para demostración */
+.timer-container {
+    margin-top: 20px;
+    position: relative;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.timer-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--danger-color), var(--warning-color));
+    width: 100%;
+    transition: width 1s linear;
+}
+
+.timer-count {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: 700;
+    font-size: 1.2rem;
+    z-index: 5;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Área de espera */
+.waiting-area {
+    text-align: center;
+    padding: 30px;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 20px;
+    border: 5px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.waiting-area p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+}
+
+/* Resultados de ronda */
+.round-result {
+    display: none;
+    background: rgba(15, 20, 30, 0.8);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    animation: fadeInUp 0.5s ease;
+}
+
+.round-result.active {
+    display: block;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.round-result-title {
+    font-size: 1.4rem;
+    color: white;
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.round-winner {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.round-reason {
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 20px;
+}
+
+.correct-answers-display {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.correct-answers-display h4 {
+    margin-top: 0;
+    color: var(--primary-color);
+}
+
+.answers-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.answers-list li {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 12px;
+    border-radius: 15px;
+    color: white;
+}
+
+.next-round-btn {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.button.action-button, .button.primary-button {
-    background-color: var(--primary-color);
-    color: var(--text-color);
-}
-.button.action-button:hover, .button.primary-button:hover {
-    background-color: #6a4fd0; /* Darker primary */
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(127, 90, 240, 0.3);
-}
-
-.button.secondary-button {
-    background-color: transparent;
-    color: var(--accent-color);
-    border: 2px solid var(--accent-color);
-}
-.button.secondary-button:hover {
-    background-color: var(--accent-color);
-    color: var(--background-color);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(255, 142, 60, 0.3);
-}
-
-.button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
-}
-
-/* Spinner Animation */
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .game-specific-container {
-        padding: 1rem;
-        margin: 1rem;
-    }
-    .player-info-container {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    .player-info {
-        width: 100%;
-        justify-content: space-between;
-    }
-    .game-round-info {
-        margin: 0.5rem 0;
-    }
-    .player-actions-container {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-    #declarationAmount {
-        width: 100px;
-    }
-    .button {
-        width: 100%;
-        max-width: 280px; /* Prevent buttons from becoming too wide */
-        margin: 0 auto;
-    }
-    .declaration-input-group {
-        width: 100%;
-        justify-content: space-between;
-    }
-
-}
-
-@media (max-width: 480px) {
-    #temporaryFeedback {
-        width: 90%;
-        padding: 0.8rem 1rem;
-        font-size: 0.9em;
-    }
-    .game-info-bar {
-        padding: 0.75rem;
-    }
-    .challenge-area, .player-actions-container, .demonstration-area {
-        padding: 1rem;
-    }
-    .player-avatar{
-        width: 25px;
-        height: 25px;
-        font-size: 0.9em;
-    }
-    .player-name, .player-score {
-        font-size: 0.9em;
-    }
-}
-
-/* Styles for the validation items within validatorAnswersContainer */
-.validation-answer-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Puts checkbox on the right */
-    padding: 0.8rem 1rem;
-    background-color: rgba(var(--primary-rgb), 0.08); /* Subtle primary bg */
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    margin-bottom: 0.75rem;
-    font-size: 0.95em;
-}
-
-.validation-answer-item label {
-    flex-grow: 1; /* Allows label to take up space */
-    margin-right: 1rem; /* Space before checkbox */
+    gap: 8px;
+    padding: 10px 25px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 25px;
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.validation-answer-item input[type="checkbox"] {
-    transform: scale(1.3);
-    accent-color: var(--secondary-color);
-    cursor: pointer;
+.next-round-btn:hover {
+    background: var(--primary-color-dark);
+    transform: translateY(-2px);
 }
 
-.validation-answer-item.valid {
-    background-color: #2CB67D22;
-    border-left: 4px solid #2CB67D;
+/* Modal de instrucciones */
+.instructions-modal {
+    max-width: 600px;
+    width: 90%;
+    background: #1a2235;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color: white;
 }
-.validation-answer-item.invalid {
-    background-color: #FF547022;
-    border-left: 4px solid #FF5470;
-}
-#declarationsList .declarer-name {
-    font-weight: bold;
+
+.instructions-modal .modal-title {
     color: var(--primary-color);
-    margin-right: 5px;
+    font-size: 1.8rem;
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
 }
-#declarationsList .declared-amount {
-    font-weight: bold;
-    color: var(--background-color);
-    padding: 3px 8px;
-    background-color: var(--accent-color);
-    border-radius: 4px;
-    margin-left: 5px;
-    display: inline-block;
-    line-height: 1.2;
+
+.instructions-content {
+    margin-bottom: 30px;
+}
+
+.instructions-content p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.instructions-content h4 {
+    color: var(--success-color);
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.instructions-content ul, 
+.instructions-content ol {
+    padding-left: 20px;
+}
+
+.instructions-content li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .challenge-text {
+        font-size: 1.2rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .action-btn {
+        width: 100%;
+    }
+    
+    .respond-buttons {
+        flex-direction: row;
+    }
+    
+    .action-btn {
+        min-width: unset;
+    }
+    
+    .number-input-container {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .game-status {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .turn-indicator {
+        align-self: stretch;
+        text-align: center;
+    }
+    
+    .challenge-text {
+        font-size: 1.1rem;
+    }
+    
+    .declarations-log {
+        max-height: 150px;
+    }
+    
+    .declaration-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .instructions-modal {
+        padding: 15px;
+    }
+    
+    .instructions-modal .modal-title {
+        font-size: 1.4rem;
+    }
 } 
