@@ -18,5 +18,9 @@ User-agent: Googlebot-Image
 Allow: /img/
 Allow: /images/
 
+# Disallow Googlebot from crawling internal search results
+User-agent: Googlebot
+Disallow: /search
+
 # Point to XML sitemap
 Sitemap: https://cracktotal.com/sitemap.xml
