@@ -1100,4 +1100,123 @@
         right: 6px;
         padding: 3px;
     }
+}
+
+/* Añadir estilos para el modal de Mentiroso al final del archivo */
+
+/* Estilos específicos para el modal de Mentiroso */
+.mentiroso-intro-modal {
+    max-width: 650px;
+    background: linear-gradient(145deg, #1a202c, #2d3748);
+    border: 2px solid #e74c3c;
+    box-shadow: 0 20px 40px rgba(231, 76, 60, 0.3);
+}
+
+.mentiroso-intro-modal .modal-title {
+    color: #f1f1f1;
+    border-bottom: 2px solid #e74c3c;
+    padding-bottom: 12px;
+    margin-bottom: 15px;
+    font-family: 'Oswald', sans-serif;
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.mentiroso-intro-modal .modal-title i {
+    color: #e74c3c;
+    margin-right: 10px;
+    font-size: 1.5em;
+}
+
+.mentiroso-intro-modal p {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #f39c12;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.mentiroso-intro-modal ul {
+    padding-left: 20px;
+    margin-bottom: 25px;
+}
+
+.mentiroso-intro-modal li {
+    margin-bottom: 12px;
+    color: #e2e8f0;
+    line-height: 1.5;
+    font-size: 1.05rem;
+    position: relative;
+    padding-left: 5px;
+}
+
+.mentiroso-intro-modal strong {
+    color: #f39c12;
+    font-weight: 600;
+}
+
+.mentiroso-intro-modal .highlight-consagra {
+    color: #2ecc71;
+    font-weight: 700;
+}
+
+.mentiroso-intro-modal .modal-footer {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+.mentiroso-intro-modal .primary-button {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 6px 12px rgba(231, 76, 60, 0.25);
+}
+
+.mentiroso-intro-modal .primary-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(231, 76, 60, 0.4);
+    background: linear-gradient(135deg, #d63031, #e74c3c);
+}
+
+.mentiroso-intro-modal .primary-button i {
+    font-size: 1.2em;
+}
+
+@media (max-width: 768px) {
+    .mentiroso-intro-modal {
+        width: 90%;
+        padding: 20px 15px;
+    }
+    
+    .mentiroso-intro-modal .modal-title {
+        font-size: 1.4rem;
+    }
+    
+    .mentiroso-intro-modal p {
+        font-size: 1.1rem;
+    }
+    
+    .mentiroso-intro-modal li {
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+    }
+    
+    .mentiroso-intro-modal .primary-button {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
 } 

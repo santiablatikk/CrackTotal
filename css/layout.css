@@ -1330,4 +1330,346 @@ body.about-page-body {
     .about-section {
         padding: 1.5rem;
     }
+}
+
+/* Estilos para la sección de salas disponibles */
+.available-rooms-section {
+    max-width: 900px;
+    margin: 2rem auto;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    padding: 1.5rem;
+    overflow: hidden;
+}
+
+.available-rooms-section .section-title {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 1.2rem;
+    text-align: center;
+    position: relative;
+}
+
+.available-rooms-section .section-title i {
+    color: #3498db;
+    margin-right: 10px;
+}
+
+.game-rooms-tabs {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.room-tab-button {
+    flex: 1;
+    padding: 0.8rem 1rem;
+    background: none;
+    border: none;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #7f8c8d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.room-tab-button:hover {
+    color: #3498db;
+}
+
+.room-tab-button.active {
+    color: #3498db;
+}
+
+.room-tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #3498db;
+}
+
+.game-rooms-container {
+    position: relative;
+    min-height: 200px;
+}
+
+.game-rooms {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.game-rooms.active {
+    display: block;
+    opacity: 1;
+}
+
+.rooms-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.rooms-header h4 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.rooms-header h4 i {
+    color: #3498db;
+    margin-right: 8px;
+}
+
+.refresh-rooms-button {
+    background-color: transparent;
+    border: 1px solid #3498db;
+    border-radius: 20px;
+    color: #3498db;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.refresh-rooms-button i {
+    margin-right: 5px;
+}
+
+.refresh-rooms-button:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+.rooms-list-container {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 1rem;
+    min-height: 150px;
+}
+
+.available-rooms-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.loading-rooms {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #7f8c8d;
+    font-size: 1rem;
+    padding: 2rem 0;
+}
+
+.spinner-lobby {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(52, 152, 219, 0.3);
+    border-radius: 50%;
+    border-top-color: #3498db;
+    animation: spin 1s ease-in-out infinite;
+    margin-right: 10px;
+}
+
+.room-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    margin-bottom: 0.6rem;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.room-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.room-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem 1.5rem;
+}
+
+.room-info span {
+    font-size: 0.9rem;
+    color: #34495e;
+}
+
+.room-info span strong {
+    color: #2c3e50;
+}
+
+.room-info span i {
+    color: #e74c3c;
+    margin-right: 4px;
+}
+
+.join-room-list-btn {
+    padding: 0.5rem 1.2rem;
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.join-room-list-btn:hover {
+    background-color: #2ecc71;
+}
+
+.join-room-list-btn:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.no-rooms-message {
+    text-align: center;
+    padding: 2rem 0;
+    color: #7f8c8d;
+    font-size: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Estilos responsive */
+@media (max-width: 768px) {
+    .room-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .room-info {
+        margin-bottom: 0.8rem;
+    }
+    
+    .join-room-list-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .rooms-header {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .room-tab-button {
+        font-size: 0.9rem;
+        padding: 0.6rem 0.8rem;
+    }
+}
+
+/* Estilos para mensaje de salas vacías y contador de salas */
+.empty-rooms-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.empty-rooms-container i {
+    font-size: 3rem;
+    color: #95a5a6;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+}
+
+.empty-rooms-container p {
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+}
+
+.create-room-button {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 0.8rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 6px rgba(39, 174, 96, 0.2);
+}
+
+.create-room-button:hover {
+    background-color: #2ecc71;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(39, 174, 96, 0.3);
+}
+
+.create-room-button i {
+    font-size: 1.1rem;
+    color: white;
+    margin: 0;
+    opacity: 1;
+}
+
+.rooms-count-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.rooms-count {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #3498db;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.rooms-count i {
+    color: #3498db;
+}
+
+/* Mejora para los room-item */
+.room-item {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.room-item:hover {
+    border-left-color: #3498db;
+    transform: translateX(3px);
+    background-color: #f5f9fc;
+}
+
+.room-info span i {
+    color: #3498db;
+    margin-right: 4px;
+    opacity: 0.8;
 } 

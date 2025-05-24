@@ -10,6 +10,57 @@ const WEBSOCKET_URL = (() => {
     return 'wss://cracktotal-servidor.onrender.com'; // <-- URL real de Render Web Service
 })();
 
+// Comunicación con la página principal para salas disponibles
+window.addEventListener('message', function(event) {
+    // Verificar origen del mensaje
+    if (event.origin !== window.location.origin) return;
+    
+    // Si se solicitan las salas disponibles
+    if (event.data && event.data.type === 'requestRooms' && event.data.gameType === 'quiensabemas') {
+        if (document.readyState === 'complete') {
+            // Si la página ya está cargada, solicitar salas
+            if (window.gameState && window.gameState.websocket && 
+                window.gameState.websocket.readyState === WebSocket.OPEN) {
+                console.log('Solicitando salas de Quien Sabe Más para games.html');
+                window.sendToServer('getRooms', {});
+                
+                // Almacenar el origen para responder cuando recibamos la lista
+                window.roomsRequestSource = event.source;
+                window.roomsRequestOrigin = event.origin;
+            } else {
+                // Si no hay conexión, enviar lista vacía
+                event.source.postMessage({
+                    type: 'availableRooms',
+                    gameType: 'quiensabemas',
+                    rooms: []
+                }, event.origin);
+            }
+        } else {
+            // Si la página aún no está cargada, esperar
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    if (window.gameState && window.gameState.websocket && 
+                        window.gameState.websocket.readyState === WebSocket.OPEN) {
+                        console.log('Solicitando salas de Quien Sabe Más para games.html (después de carga)');
+                        window.sendToServer('getRooms', {});
+                        
+                        // Almacenar el origen para responder cuando recibamos la lista
+                        window.roomsRequestSource = event.source;
+                        window.roomsRequestOrigin = event.origin;
+                    } else {
+                        // Si no hay conexión después de esperar, enviar lista vacía
+                        event.source.postMessage({
+                            type: 'availableRooms',
+                            gameType: 'quiensabemas',
+                            rooms: []
+                        }, event.origin);
+                    }
+                }, 1000); // Esperar 1 segundo para asegurar que la conexión esté establecida
+            });
+        }
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     // --- Game State Variables ---
     let gameState = {
@@ -27,7 +78,8 @@ document.addEventListener('DOMContentLoaded', function() {
         optionsRequested: false, // Track if options are visible for levels 2+
         fiftyFiftyUsed: false, // Track if 50/50 power-up is used
         gameActive: false,
-        websocket: null
+        websocket: null,
+        pendingRoomsRequest: null
     };
 
     // --- DOM Elements ---
@@ -114,6 +166,35 @@ document.addEventListener('DOMContentLoaded', function() {
         // --- End Prefill ---
 
         initializeWebSocket(); // Connect WebSocket on app load
+
+        // Añadir soporte para comunicación de salas disponibles
+        window.addEventListener('message', function(event) {
+            // Verificar origen del mensaje por seguridad
+            if (event.origin !== window.location.origin) return;
+            
+            // Si nos piden las salas disponibles
+            if (event.data && event.data.type === 'requestRooms' && event.data.gameType === 'quiensabemas') {
+                // Verificar si hay conexión WebSocket activa
+                if (!gameState.websocket || gameState.websocket.readyState !== WebSocket.OPEN) {
+                    // Enviar lista vacía si no hay conexión
+                    event.source.postMessage({
+                        type: 'availableRooms',
+                        gameType: 'quiensabemas',
+                        rooms: []
+                    }, event.origin);
+                    return;
+                }
+                
+                // Solicitar salas al servidor
+                sendToServer('getRooms', {});
+                
+                // Guardar el origen para responder cuando recibamos la lista del servidor
+                gameState.pendingRoomsRequest = {
+                    source: event.source,
+                    origin: event.origin
+                };
+            }
+        });
     }
 
     // --- Helper function to normalize text ---
@@ -991,7 +1072,32 @@ document.addEventListener('DOMContentLoaded', function() {
             case 'availableRooms': // Server sends the list of available rooms
                 console.log("Received availableRooms:", message.payload.rooms);
                 renderAvailableRooms(message.payload.rooms);
-                 break;
+                
+                // Si hay una solicitud pendiente desde la página principal, responderla
+                if (gameState.pendingRoomsRequest) {
+                    gameState.pendingRoomsRequest.source.postMessage({
+                        type: 'availableRooms',
+                        gameType: 'quiensabemas',
+                        rooms: message.payload.rooms || []
+                    }, gameState.pendingRoomsRequest.origin);
+                    
+                    // Limpiar la solicitud pendiente
+                    gameState.pendingRoomsRequest = null;
+                }
+                
+                // Si hay una solicitud desde games.html, responderla
+                if (window.roomsRequestSource && window.roomsRequestOrigin) {
+                    window.roomsRequestSource.postMessage({
+                        type: 'availableRooms',
+                        gameType: 'quiensabemas',
+                        rooms: message.payload.rooms || []
+                    }, window.roomsRequestOrigin);
+                    
+                    // Limpiar la solicitud
+                    window.roomsRequestSource = null;
+                    window.roomsRequestOrigin = null;
+                }
+                break;
 
             default:
                  console.warn('Unknown message type received:', message.type);

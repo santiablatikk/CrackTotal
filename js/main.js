@@ -1,13 +1,11 @@
-(function() { // IIFE para encapsular y ejecutar inmediatamente
+// IIFE para encapsular y ejecutar inmediatamente
+(function() {
     const playerName = localStorage.getItem('playerName');
     const currentPagePath = window.location.pathname;
+    const isIndexPage = (currentPagePath === '/' || currentPagePath.endsWith('/index.html'));
 
-    // Solo permitir el acceso a index.html (raíz o /index.html) si no hay nombre.
-    const isIndexPage = (currentPagePath === '/' || currentPagePath === '/index.html');
-
-    // Si no hay nombre y la página actual NO es index.html, redirigir a la raíz.
     if (!playerName && !isIndexPage) {
-        window.location.href = '/'; 
+        window.location.href = '/';
     }
 })();
 
@@ -32,74 +30,192 @@ function isValidPlayerName(name) {
     return { valid: true, message: "Nombre válido." };
 }
 
-// Store player name in local storage
-document.addEventListener('DOMContentLoaded', function() {
+function setupNamePersistence() {
     const nameForm = document.getElementById('nameForm');
     const playerNameInput = document.getElementById('playerName');
     const createPlayerNameLobbyInput = document.getElementById('createPlayerName');
     const joinPlayerNameLobbyInput = document.getElementById('joinPlayerName');
-    const nameErrorDiv = document.getElementById('nameError'); // Para mostrar errores en index.html
+    const nameErrorDiv = document.getElementById('nameError');
 
-    // 1. Al cargar la página, intentar pre-rellenar el nombre
     const savedPlayerName = localStorage.getItem('playerName');
     if (savedPlayerName) {
-        if (playerNameInput) {
-            playerNameInput.value = savedPlayerName;
-        }
-        if (createPlayerNameLobbyInput) {
-            createPlayerNameLobbyInput.value = savedPlayerName;
-        }
-        if (joinPlayerNameLobbyInput) {
-            joinPlayerNameLobbyInput.value = savedPlayerName;
-        }
+        if (playerNameInput) playerNameInput.value = savedPlayerName;
+        if (createPlayerNameLobbyInput) createPlayerNameLobbyInput.value = savedPlayerName;
+        if (joinPlayerNameLobbyInput) joinPlayerNameLobbyInput.value = savedPlayerName;
     }
 
-    if (nameForm) {
+    if (nameForm && playerNameInput) {
         nameForm.addEventListener('submit', function(event) {
-            if (playerNameInput) {
-                const enteredName = playerNameInput.value.trim();
-                const validation = isValidPlayerName(enteredName);
-
-                if (validation.valid) {
-                    event.preventDefault();
-                    localStorage.setItem('playerName', enteredName);
-                    console.log(`Nombre guardado desde index.html: ${enteredName}. Redirigiendo a games.html...`);
-                    if (nameErrorDiv) nameErrorDiv.textContent = ''; // Limpiar error si es válido
-                    window.location.href = 'games.html';
-                } else {
-                    console.log("Validación de nombre fallida en index.html:", validation.message);
-                    event.preventDefault();
-                    if (nameErrorDiv) {
-                        nameErrorDiv.textContent = validation.message;
-                        nameErrorDiv.style.display = 'block';
-                    } else {
-                        alert(validation.message); // Fallback si el div no existe
-                    }
-                    playerNameInput.focus();
-                }
+            const enteredName = playerNameInput.value.trim();
+            const validation = isValidPlayerName(enteredName);
+            if (validation.valid) {
+                event.preventDefault();
+                localStorage.setItem('playerName', enteredName);
+                if (nameErrorDiv) nameErrorDiv.textContent = '';
+                window.location.href = 'games.html';
             } else {
                 event.preventDefault();
+                if (nameErrorDiv) {
+                    nameErrorDiv.textContent = validation.message;
+                    nameErrorDiv.style.display = 'block';
+                } else {
+                    alert(validation.message);
+                }
+                playerNameInput.focus();
             }
         });
     }
+}
 
-    // --- Lógica para actualizar los nombres en los inputs del lobby de QSM si se cambian en la página de juegos ---
-    if (window.location.pathname.includes('quiensabemas.html')) {
-        if (savedPlayerName) {
-            if (createPlayerNameLobbyInput && createPlayerNameLobbyInput.value !== savedPlayerName) {
-                createPlayerNameLobbyInput.value = savedPlayerName;
-            }
-            if (joinPlayerNameLobbyInput && joinPlayerNameLobbyInput.value !== savedPlayerName) {
-                joinPlayerNameLobbyInput.value = savedPlayerName;
-            }
-        }
+function setupPlayerNameDisplayAndChange() {
+    const playerNameDisplay = document.getElementById('playerNameDisplay');
+    const changeNameBtn = document.getElementById('changeNameBtn');
+    const changeNameModal = document.getElementById('changeNameModal');
+    const changeNameForm = document.getElementById('changeNameForm');
+    const cancelNameChange = document.getElementById('cancelNameChange');
+    const newPlayerNameInput = document.getElementById('newPlayerName');
+    const changeNameErrorDiv = document.getElementById('changeNameError');
+    let localPlayerName = localStorage.getItem('playerName') || 'Jugador';
+
+    if (playerNameDisplay) {
+        playerNameDisplay.textContent = localPlayerName;
     }
 
-    // --- Manejo de Cookies y Privacidad (ejemplo) ---
-    // Unificamos la clave a 'adConsent'
-    const AD_CONSENT_KEY = 'adConsent';
+    if (changeNameBtn && changeNameModal && newPlayerNameInput) {
+        changeNameBtn.addEventListener('click', function() {
+            newPlayerNameInput.value = localPlayerName;
+            if (changeNameErrorDiv) changeNameErrorDiv.textContent = '';
+            changeNameModal.classList.add('active');
+        });
+    }
 
-    // Crear y añadir el banner de cookies dinámicamente si no existe
+    if (cancelNameChange && changeNameModal) {
+        cancelNameChange.addEventListener('click', function() {
+            changeNameModal.classList.remove('active');
+        });
+    }
+
+    if (changeNameForm && newPlayerNameInput && changeNameModal && playerNameDisplay) {
+        changeNameForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newName = newPlayerNameInput.value.trim();
+            const validation = isValidPlayerName(newName);
+            const saveButton = changeNameForm.querySelector('.save-button');
+            const cancelButton = changeNameForm.querySelector('.cancel-button');
+
+            if (validation.valid) {
+                if (saveButton) saveButton.disabled = true;
+                if (cancelButton) cancelButton.disabled = true;
+                if (changeNameErrorDiv) changeNameErrorDiv.textContent = '';
+
+                localStorage.setItem('playerName', newName);
+                playerNameDisplay.textContent = newName;
+                localPlayerName = newName; // Update local variable
+                changeNameModal.classList.remove('active');
+
+                document.querySelectorAll('.player-name').forEach(element => {
+                    if (element.tagName !== 'INPUT' || !element.value || element.value === 'Jugador 1' || element.value === 'Jugador 2') {
+                        element.textContent = newName;
+                    }
+                    if (element.id === 'createPlayerName' || element.id === 'joinPlayerName') {
+                        if (element.value !== newName) element.value = newName;
+                    }
+                });
+                setTimeout(() => {
+                    if (saveButton) saveButton.disabled = false;
+                    if (cancelButton) cancelButton.disabled = false;
+                }, 300);
+            } else {
+                if (changeNameErrorDiv) {
+                    changeNameErrorDiv.textContent = validation.message;
+                    changeNameErrorDiv.style.display = 'block';
+                } else {
+                    alert(validation.message);
+                }
+                newPlayerNameInput.focus();
+            }
+        });
+    }
+    
+    // Update player name in various game lobby inputs if on specific game pages
+    if (window.location.pathname.includes('quiensabemas.html') || window.location.pathname.includes('mentiroso.html')) {
+        const createNameInput = document.getElementById('createPlayerName');
+        const joinNameInput = document.getElementById('joinPlayerName');
+        if (createNameInput && createNameInput.value !== localPlayerName) createNameInput.value = localPlayerName;
+        if (joinNameInput && joinNameInput.value !== localPlayerName) joinNameInput.value = localPlayerName;
+    }
+}
+
+function setupGameCardInteractions() {
+    const qsmIntroModal = document.getElementById('qsmIntroModal');
+    const mentirosoIntroModal = document.getElementById('mentirosoIntroModal');
+    const gameCards = document.querySelectorAll('.game-card');
+
+    gameCards.forEach(card => {
+        const playButton = card.querySelector('.play-button');
+        card.addEventListener('click', function(event) {
+            if (playButton && playButton.disabled) {
+                event.stopPropagation();
+                return;
+            }
+            const gameType = this.getAttribute('data-game');
+            if (gameType === 'quiensabemas' && qsmIntroModal) {
+                event.preventDefault();
+                event.stopPropagation();
+                qsmIntroModal.classList.add('active');
+            } else if (gameType === 'mentiroso' && mentirosoIntroModal) {
+                event.preventDefault();
+                event.stopPropagation();
+                mentirosoIntroModal.classList.add('active');
+            } else if (gameType) {
+                window.location.href = `${gameType}.html`;
+            }
+        });
+    });
+}
+
+function setupModalNavigation() {
+    const qsmIntroModal = document.getElementById('qsmIntroModal');
+    const goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
+    const mentirosoIntroModal = document.getElementById('mentirosoIntroModal');
+    const goToLobbyMentirosoButton = document.getElementById('goToLobbyMentirosoButton');
+
+    if (goToLobbyQSMButton && qsmIntroModal) {
+        goToLobbyQSMButton.addEventListener('click', function() {
+            qsmIntroModal.classList.remove('active');
+            window.location.href = 'quiensabemas.html';
+        });
+    }
+    if (qsmIntroModal) {
+        qsmIntroModal.addEventListener('click', function(event) {
+            if (event.target === qsmIntroModal) qsmIntroModal.classList.remove('active');
+        });
+    }
+
+    if (goToLobbyMentirosoButton && mentirosoIntroModal) {
+        goToLobbyMentirosoButton.addEventListener('click', function() {
+            mentirosoIntroModal.classList.remove('active');
+            window.location.href = 'mentiroso.html';
+        });
+    }
+    if (mentirosoIntroModal) {
+        mentirosoIntroModal.addEventListener('click', function(event) {
+            if (event.target === mentirosoIntroModal) mentirosoIntroModal.classList.remove('active');
+        });
+    }
+}
+
+function setupBackButtonNavigation() {
+    const backButtons = document.querySelectorAll('.back-button');
+    backButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            window.location.href = 'games.html';
+        });
+    });
+}
+
+function setupCookieConsentBanner() {
+    const AD_CONSENT_KEY = 'adConsent';
     let cookieBanner = document.getElementById('cookieConsentBanner');
     if (!cookieBanner) {
         const bannerHTML = `
@@ -110,175 +226,95 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
         `;
         document.body.insertAdjacentHTML('beforeend', bannerHTML);
-        cookieBanner = document.getElementById('cookieConsentBanner'); // Re-asignar después de añadirlo
+        cookieBanner = document.getElementById('cookieConsentBanner');
     }
 
     const acceptButton = document.getElementById('acceptCookieButton');
     const rejectButton = document.getElementById('rejectCookieButton');
 
     if (cookieBanner && acceptButton && rejectButton) {
-        if (!localStorage.getItem(AD_CONSENT_KEY)) { // Usar la clave unificada
+        if (!localStorage.getItem(AD_CONSENT_KEY)) {
             cookieBanner.style.display = 'block';
         }
-
         acceptButton.addEventListener('click', function() {
-            localStorage.setItem(AD_CONSENT_KEY, 'true'); // Usar la clave unificada
+            localStorage.setItem(AD_CONSENT_KEY, 'true');
             cookieBanner.style.display = 'none';
-            console.log("Consentimiento de cookies/anuncios ACEPTADO.");
-            // Refrescar anuncios o llamar a función que los carga si es necesario
-            if (typeof window.loadAds === 'function') {
-                window.loadAds(); // Asumiendo que tienes una función para cargar/refrescar anuncios
-            }
+            if (typeof window.loadAds === 'function') window.loadAds();
         });
-
         rejectButton.addEventListener('click', function() {
-            localStorage.setItem(AD_CONSENT_KEY, 'false'); // Guardar rechazo
+            localStorage.setItem(AD_CONSENT_KEY, 'false');
             cookieBanner.style.display = 'none';
-            console.log("Consentimiento de cookies/anuncios RECHAZADO.");
-            // Asegurarse de que los scripts de anuncios no se carguen o se oculten los contenedores
-             const adContainers = document.querySelectorAll(".adsense-container");
-             adContainers.forEach(container => container.style.display = "none");
+            document.querySelectorAll(".adsense-container").forEach(container => container.style.display = "none");
         });
     }
+}
 
-    // Check if we're on the games page
-    const playerNameDisplay = document.getElementById('playerNameDisplay');
-    if (playerNameDisplay) {
-        let playerName = localStorage.getItem('playerName') || 'Jugador';
-        playerNameDisplay.textContent = playerName;
-        
-        // Configurar el cambio de nombre
-        const changeNameBtn = document.getElementById('changeNameBtn');
-        const changeNameModal = document.getElementById('changeNameModal');
-        const changeNameForm = document.getElementById('changeNameForm');
-        const cancelNameChange = document.getElementById('cancelNameChange');
-        const newPlayerNameInput = document.getElementById('newPlayerName');
-        const changeNameErrorDiv = document.getElementById('changeNameError'); // Para errores en el modal
-        
-        if (changeNameBtn && changeNameModal) {
-            changeNameBtn.addEventListener('click', function() {
-                newPlayerNameInput.value = playerName;
-                if(changeNameErrorDiv) changeNameErrorDiv.textContent = ''; // Limpiar errores previos
-                changeNameModal.classList.add('active');
+document.addEventListener('DOMContentLoaded', function() {
+    setupNamePersistence(); // Handles index.html name form and pre-filling lobby inputs
+    
+    if (window.location.pathname.includes('games.html')) {
+        setupPlayerNameDisplayAndChange();
+        setupGameCardInteractions();
+        setupModalNavigation();
+        setupCookieConsentBanner();
+         // Initialize room tabs and fetching for games.html
+        const roomTabs = document.querySelectorAll('.room-tab-button');
+        const gameRoomsContainers = document.querySelectorAll('.game-rooms');
+        const refreshButtons = document.querySelectorAll('.refresh-rooms-button');
+
+        if (roomTabs.length > 0) {
+            roomTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const gameType = this.getAttribute('data-game');
+                    roomTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    gameRoomsContainers.forEach(container => container.classList.remove('active'));
+                    const targetContainer = document.getElementById(`${gameType}-rooms`);
+                    if (targetContainer) targetContainer.classList.add('active');
+                    fetchRooms(gameType); // Fetch rooms when tab is clicked
+                });
             });
-            
-            if (cancelNameChange) {
-                cancelNameChange.addEventListener('click', function() {
-                    changeNameModal.classList.remove('active');
-                });
-            }
-            
-            if (changeNameForm) {
-                changeNameForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const newName = newPlayerNameInput.value.trim();
-                    const validation = isValidPlayerName(newName);
-                    const saveButton = changeNameForm.querySelector('.save-button');
-                    const cancelButton = changeNameForm.querySelector('.cancel-button');
-                    
-                    if (validation.valid) {
-                        if(saveButton) saveButton.disabled = true;
-                        if(cancelButton) cancelButton.disabled = true;
-                        if(changeNameErrorDiv) changeNameErrorDiv.textContent = ''; // Limpiar error
 
-                        localStorage.setItem('playerName', newName);
-                        playerNameDisplay.textContent = newName;
-                        changeNameModal.classList.remove('active');
-                        playerName = newName;
-
-                        document.querySelectorAll('.player-name').forEach(element => {
-                            element.textContent = newName;
-                        });
-                         // Habilitar botones después de un breve retraso para evitar doble submit si algo falla
-                        setTimeout(() => {
-                            if(saveButton) saveButton.disabled = false;
-                            if(cancelButton) cancelButton.disabled = false;
-                        }, 300);
-
-                    } else {
-                        console.log("Validación de cambio de nombre fallida:", validation.message);
-                        if (changeNameErrorDiv) {
-                            changeNameErrorDiv.textContent = validation.message;
-                            changeNameErrorDiv.style.display = 'block';
-                        } else {
-                            alert(validation.message); // Fallback
-                        }
-                        newPlayerNameInput.focus();
-                    }
-                });
+            // Load rooms for the initially active tab
+            const activeTab = document.querySelector('.room-tab-button.active');
+            if (activeTab) {
+                fetchRooms(activeTab.getAttribute('data-game'));
+            } else if (roomTabs.length > 0) {
+                // Default to the first tab if none are active
+                roomTabs[0].classList.add('active');
+                 const initialGameType = roomTabs[0].getAttribute('data-game');
+                 const initialContainer = document.getElementById(`${initialGameType}-rooms`);
+                 if(initialContainer) initialContainer.classList.add('active');
+                fetchRooms(initialGameType);
             }
         }
-    }
 
-    // --- Get Modal Elements --- 
-    const qsmIntroModal = document.getElementById('qsmIntroModal');
-    const goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
-
-    // Handle clicking on game cards
-    const gameCards = document.querySelectorAll('.game-card');
-    if (gameCards.length > 0) {
-        gameCards.forEach(card => {
-            const playButton = card.querySelector('.play-button');
-
-            card.addEventListener('click', function(event) {
-                if (playButton && playButton.disabled) {
-                    event.stopPropagation();
-                    return;
-                }
-
-                const gameType = this.getAttribute('data-game');
-
-                if (gameType === 'quiensabemas') {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    if (qsmIntroModal) {
-                        qsmIntroModal.classList.add('active');
+        if (refreshButtons.length > 0) {
+            refreshButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const gameType = this.getAttribute('data-game');
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        icon.classList.add('fa-spin');
+                        setTimeout(() => icon.classList.remove('fa-spin'), 1000);
                     }
-                } else if (gameType) {
-                window.location.href = `${gameType}.html`;
-                } 
+                    fetchRooms(gameType);
+                });
             });
-        });
+        }
+    } else if (!window.location.pathname.includes('index.html')) {
+        // For other pages like individual game pages
+        setupPlayerNameDisplayAndChange(); // So name change modal works
+        setupBackButtonNavigation();
     }
-
-    if (goToLobbyQSMButton && qsmIntroModal) {
-        goToLobbyQSMButton.addEventListener('click', function() {
-            qsmIntroModal.classList.remove('active');
-            window.location.href = 'quiensabemas.html';
-        });
-    }
-
-    if (qsmIntroModal) {
-        qsmIntroModal.addEventListener('click', function(event) {
-            if (event.target === qsmIntroModal) {
-                qsmIntroModal.classList.remove('active');
-            }
-        });
-    }
-
-    // Handle back buttons
-    const backButtons = document.querySelectorAll('.back-button');
-    if (backButtons.length > 0) {
-        backButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                window.location.href = 'games.html';
-            });
-        });
-    }
-
-    // Update player name in game headers
-    const playerNameElements = document.querySelectorAll('.player-name');
-    if (playerNameElements.length > 0) {
-        const currentSavedPlayerName = localStorage.getItem('playerName') || 'Jugador';
-        playerNameElements.forEach(element => {
-            if (element.tagName !== 'INPUT' || !element.value || element.value === 'Jugador 1' || element.value === 'Jugador 2') {
-                 element.textContent = currentSavedPlayerName;
-            }
-            if (element.id === 'createPlayerName' || element.id === 'joinPlayerName'){
-                if(element.value !== currentSavedPlayerName) element.value = currentSavedPlayerName;
-            }
-        });
-    }
+    
+    // Generic player name update for elements with class 'player-name' (e.g., in game headers)
+    const currentSavedPlayerName = localStorage.getItem('playerName') || 'Jugador';
+    document.querySelectorAll('.player-name').forEach(element => {
+        if (element.tagName !== 'INPUT' || !element.value || element.value === 'Jugador 1' || element.value === 'Jugador 2') {
+             element.textContent = currentSavedPlayerName;
+        }
+    });
 });
 
 // Animation helpers
@@ -286,7 +322,7 @@ function animateElement(element, animationClass) {
     element.classList.add(animationClass);
     element.addEventListener('animationend', () => {
         element.classList.remove(animationClass);
-    });
+    }, { once: true });
 }
 
 // Handle screen size changes
@@ -306,271 +342,245 @@ handleResponsiveChanges();
 // Función para compartir el sitio
 async function shareSite() {
     const shareData = {
-        title: document.title || 'Crack Total - El Juego del Fútbol',
-        text: '¡Juega y demuestra tus conocimientos de fútbol en Crack Total!',
-        url: window.location.href
+        title: 'Crack Total',
+        text: '¡Demostrame cuánto sabés de fútbol! Trivia y juegos de conocimiento futbolero.',
+        url: 'https://cracktotal.com'
     };
 
-    // Si el navegador soporta compartir nativo (móvil principalmente)
-    if (navigator.share) {
     try {
+        if (navigator.share) {
             await navigator.share(shareData);
-            console.log('Contenido compartido exitosamente!');
-            return;
-        } catch (err) {
-            console.error('Error al compartir con API nativa: ', err);
-            // Si el usuario cancela, no mostramos el modal de compartir
-            if (err.name === 'AbortError') {
-                return;
-            }
+        } else {
+            // Fallback: Copiar al portapapeles
+            navigator.clipboard.writeText(`${shareData.title} - ${shareData.text} ${shareData.url}`);
+            alert('¡Enlace copiado al portapapeles! Compartí con tus amigos.');
         }
+    } catch (err) {
+        console.error('Error al compartir:', err);
     }
+}
 
-    // Si no podemos usar navigator.share, mostramos un modal con opciones
-    // Primero, verificamos si el modal ya existe
-    let shareModal = document.getElementById('shareModal');
+// Funciones para gestionar las salas disponibles en games.html
+document.addEventListener('DOMContentLoaded', function() {
+    // Verificar si estamos en la página games.html
+    if (!document.querySelector('.available-rooms-section')) return;
     
-    if (!shareModal) {
-        // Crear el modal de compartir
-        const modalHTML = `
-            <div id="shareModal" class="share-modal">
-                <div class="share-modal-content">
-                    <span class="share-modal-close">&times;</span>
-                    <h3>Compartir Crack Total</h3>
-                    <p>¡Comparte este sitio con tus amigos!</p>
-                    <div class="social-share-buttons">
-                        <a href="#" class="share-button share-whatsapp" title="Compartir en WhatsApp">
-                            <i class="fab fa-whatsapp"></i>
-                        </a>
-                        <a href="#" class="share-button share-facebook" title="Compartir en Facebook">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="share-button share-twitter" title="Compartir en Twitter">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="share-button share-telegram" title="Compartir en Telegram">
-                            <i class="fab fa-telegram-plane"></i>
-                        </a>
-                        <a href="#" class="share-button share-email" title="Compartir por Email">
-                            <i class="fas fa-envelope"></i>
-                        </a>
-                    </div>
-                    <div class="copy-link-container">
-                        <input type="text" id="shareUrl" value="${shareData.url}" readonly>
-                        <button id="copyLinkBtn" class="copy-link-btn">
-                            <i class="fas fa-copy"></i> Copiar
-                        </button>
-                    </div>
+    // Referencias a elementos DOM
+    const roomTabs = document.querySelectorAll('.room-tab-button');
+    const gameRoomsContainers = document.querySelectorAll('.game-rooms');
+    const refreshButtons = document.querySelectorAll('.refresh-rooms-button');
+    
+    // Manejo de pestañas
+    roomTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const gameType = this.getAttribute('data-game');
+            
+            // Actualizar pestañas activas
+            roomTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Cambiar contenedores activos
+            gameRoomsContainers.forEach(container => {
+                container.classList.remove('active');
+            });
+            document.getElementById(`${gameType}-rooms`).classList.add('active');
+            
+            // Cargar salas al cambiar de pestaña
+            fetchRooms(gameType);
+        });
+    });
+    
+    // Manejo de botones de actualización
+    refreshButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const gameType = this.getAttribute('data-game');
+            fetchRooms(gameType);
+            
+            // Efecto visual de rotación
+            const icon = this.querySelector('i');
+            icon.style.transition = 'transform 0.5s ease';
+            icon.style.transform = 'rotate(360deg)';
+            
+            // Restablecer después de la animación
+            setTimeout(() => {
+                icon.style.transition = 'none';
+                icon.style.transform = 'rotate(0deg)';
+            }, 500);
+        });
+    });
+    
+    // Función para obtener salas desde el servidor
+    function fetchRooms(gameType) {
+        const roomsList = document.getElementById(`${gameType}-rooms-list`);
+        
+        // Mostrar cargando
+        roomsList.innerHTML = `
+            <li class="loading-rooms">
+                <span class="spinner-lobby"></span> Cargando salas...
+            </li>
+        `;
+        
+        // Crear un elemento iframe oculto para comunicarse con la página del juego
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = gameType === 'quiensabemas' ? 'quiensabemas.html' : 'mentiroso.html';
+        document.body.appendChild(iframe);
+        
+        // Variables para controlar el timeout
+        let timeoutId;
+        let messageReceived = false;
+        
+        // Esperar a que el iframe cargue
+        iframe.onload = function() {
+            // Crear un timeout de 5 segundos
+            timeoutId = setTimeout(() => {
+                if (!messageReceived) {
+                    console.log(`Timeout al solicitar salas de ${gameType}`);
+                    cleanup();
+                    roomsList.innerHTML = `
+                        <li class="no-rooms-message">
+                            <i class="fas fa-exclamation-circle"></i> No se pudieron cargar las salas. Intenta nuevamente.
+                        </li>
+                    `;
+                }
+            }, 5000);
+            
+            // Escuchar mensaje del iframe con las salas
+            function messageHandler(event) {
+                // Verificar que el mensaje sea de nuestro dominio
+                if (event.origin !== window.location.origin) return;
+                
+                // Verificar que sea el mensaje de salas que esperamos
+                if (event.data && event.data.type === 'availableRooms' && event.data.gameType === gameType) {
+                    messageReceived = true;
+                    clearTimeout(timeoutId);
+                    
+                    const rooms = event.data.rooms || [];
+                    renderRooms(roomsList, rooms, gameType);
+                    
+                    cleanup();
+                }
+            }
+            
+            window.addEventListener('message', messageHandler);
+            
+            // Función para limpiar recursos
+            function cleanup() {
+                clearTimeout(timeoutId);
+                window.removeEventListener('message', messageHandler);
+                if (document.body.contains(iframe)) {
+                    document.body.removeChild(iframe);
+                }
+            }
+            
+            // Pedir las salas al iframe
+            setTimeout(() => {
+                if (iframe.contentWindow) {
+                    console.log(`Solicitando salas de ${gameType}...`);
+                    iframe.contentWindow.postMessage({ type: 'requestRooms', gameType: gameType }, '*');
+                }
+            }, 500); // Pequeño retraso para asegurar que el iframe está listo
+        };
+        
+        // Manejar errores de carga del iframe
+        iframe.onerror = function() {
+            console.error(`Error al cargar iframe para ${gameType}`);
+            document.body.removeChild(iframe);
+            roomsList.innerHTML = `
+                <li class="no-rooms-message">
+                    <i class="fas fa-exclamation-circle"></i> Error al cargar el juego. Intenta nuevamente.
+                </li>
+            `;
+        };
+    }
+    
+    // Función para renderizar salas en la lista
+    function renderRooms(container, rooms, gameType) {
+        if (!container) return;
+        
+        container.innerHTML = '';
+        
+        // Si no hay salas disponibles
+        if (!rooms || rooms.length === 0) {
+            const gameNames = {
+                'quiensabemas': 'Quien Sabe Más',
+                'mentiroso': 'Mentiroso'
+            };
+            
+            const gameName = gameNames[gameType] || gameType;
+            const noRoomsMessage = document.createElement('li');
+            noRoomsMessage.className = 'no-rooms-message';
+            noRoomsMessage.innerHTML = `
+                <div class="empty-rooms-container">
+                    <i class="fas fa-door-closed"></i>
+                    <p>No hay salas de ${gameName} disponibles en este momento</p>
+                    <button class="create-room-button" data-game="${gameType}">
+                        <i class="fas fa-plus-circle"></i> Crear una sala nueva
+                    </button>
                 </div>
+            `;
+            container.appendChild(noRoomsMessage);
+            
+            // Agregar evento al botón de crear sala
+            const createButton = noRoomsMessage.querySelector('.create-room-button');
+            if (createButton) {
+                createButton.addEventListener('click', function() {
+                    window.location.href = `${gameType}.html`;
+                });
+            }
+            
+            return;
+        }
+        
+        // Mostrar el número de salas disponibles
+        const roomCountHeader = document.createElement('li');
+        roomCountHeader.className = 'rooms-count-header';
+        roomCountHeader.innerHTML = `
+            <div class="rooms-count">
+                <i class="fas fa-door-open"></i> 
+                <span>${rooms.length} ${rooms.length === 1 ? 'sala disponible' : 'salas disponibles'}</span>
             </div>
         `;
+        container.appendChild(roomCountHeader);
         
-        // Agregar estilos para el modal
-        const modalStyle = document.createElement('style');
-        modalStyle.textContent = `
-            .share-modal {
-                display: none;
-                position: fixed;
-                z-index: 9999;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgba(0,0,0,0.6);
-                animation: fadeIn 0.3s;
-            }
+        // Mostrar cada sala disponible
+        rooms.forEach(room => {
+            const roomItem = document.createElement('li');
+            roomItem.className = 'room-item';
+            roomItem.dataset.roomId = room.id;
             
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
+            const roomInfo = document.createElement('div');
+            roomInfo.className = 'room-info';
+            roomInfo.innerHTML = `
+                <span><i class="fas fa-hashtag"></i> <strong>${room.id}</strong></span>
+                <span><i class="fas fa-user"></i> <strong>${room.creatorName || 'Anónimo'}</strong></span>
+                <span><i class="fas fa-users"></i> <strong>${room.playerCount || 0}/${room.maxPlayers || 2}</strong></span>
+                ${room.requiresPassword ? '<span><i class="fas fa-lock"></i> <strong>Privada</strong></span>' : ''}
+            `;
             
-            .share-modal-content {
-                background-color: #fff;
-                margin: 15% auto;
-                padding: 25px;
-                border-radius: 10px;
-                width: 90%;
-                max-width: 500px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-                position: relative;
-                animation: slideIn 0.3s;
-            }
+            const joinButton = document.createElement('button');
+            joinButton.className = 'join-room-list-btn';
+            joinButton.disabled = (room.playerCount >= room.maxPlayers);
+            joinButton.innerHTML = room.playerCount >= room.maxPlayers ? 
+                '<i class="fas fa-ban"></i> Llena' : 
+                '<i class="fas fa-sign-in-alt"></i> Unirse';
             
-            @keyframes slideIn {
-                from { transform: translateY(-50px); opacity: 0; }
-                to { transform: translateY(0); opacity: 1; }
-            }
+            joinButton.addEventListener('click', function() {
+                // Guardar el ID de la sala en localStorage para auto-completar en la página del juego
+                localStorage.setItem(`join_${gameType}_room_id`, room.id);
+                window.location.href = `${gameType}.html`;
+            });
             
-            .share-modal-close {
-                position: absolute;
-                top: 15px;
-                right: 20px;
-                color: #aaa;
-                font-size: 28px;
-                font-weight: bold;
-                cursor: pointer;
-                transition: color 0.2s;
-            }
-            
-            .share-modal-close:hover {
-                color: #333;
-            }
-            
-            .share-modal h3 {
-                margin-top: 0;
-                margin-bottom: 15px;
-                color: #333;
-                font-family: 'Montserrat', sans-serif;
-                text-align: center;
-            }
-            
-            .share-modal p {
-                text-align: center;
-                margin-bottom: 20px;
-                color: #666;
-            }
-            
-            .social-share-buttons {
-                display: flex;
-                justify-content: center;
-                gap: 15px;
-                margin-bottom: 20px;
-            }
-            
-            .share-button {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-                text-decoration: none;
-                color: white;
-                font-size: 20px;
-                transition: transform 0.2s, box-shadow 0.2s;
-            }
-            
-            .share-button:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            }
-            
-            .share-whatsapp { background-color: #25D366; }
-            .share-facebook { background-color: #3b5998; }
-            .share-twitter { background-color: #1DA1F2; }
-            .share-telegram { background-color: #0088cc; }
-            .share-email { background-color: #D44638; }
-            
-            .copy-link-container {
-                display: flex;
-                margin-top: 15px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                overflow: hidden;
-        }
-            
-            #shareUrl {
-                flex-grow: 1;
-                padding: 10px;
-                border: none;
-                font-size: 14px;
-                color: #333;
-                background: #f5f5f5;
-            }
-            
-            .copy-link-btn {
-                background-color: #3498db;
-                color: white;
-                border: none;
-                padding: 10px 15px;
-                cursor: pointer;
-                font-weight: 500;
-                transition: background-color 0.2s;
-                white-space: nowrap;
-            }
-            
-            .copy-link-btn:hover {
-                background-color: #2980b9;
-            }
-            
-            @media (max-width: 480px) {
-                .social-share-buttons {
-                    gap: 10px;
-                }
-                
-                .share-button {
-                    width: 45px;
-                    height: 45px;
-                    font-size: 18px;
-                }
-            }
-        `;
-        
-        document.head.appendChild(modalStyle);
-        document.body.insertAdjacentHTML('beforeend', modalHTML);
-        shareModal = document.getElementById('shareModal');
-        
-        // Agregar event listeners a los botones de compartir
-        const whatsappBtn = shareModal.querySelector('.share-whatsapp');
-        const facebookBtn = shareModal.querySelector('.share-facebook');
-        const twitterBtn = shareModal.querySelector('.share-twitter');
-        const telegramBtn = shareModal.querySelector('.share-telegram');
-        const emailBtn = shareModal.querySelector('.share-email');
-        const copyLinkBtn = shareModal.querySelector('#copyLinkBtn');
-        const closeBtn = shareModal.querySelector('.share-modal-close');
-        
-        whatsappBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(shareData.text + ' ' + shareData.url)}`, '_blank');
-        });
-        
-        facebookBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData.url)}`, '_blank');
-        });
-        
-        twitterBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareData.text)}&url=${encodeURIComponent(shareData.url)}`, '_blank');
-        });
-        
-        telegramBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.open(`https://t.me/share/url?url=${encodeURIComponent(shareData.url)}&text=${encodeURIComponent(shareData.text)}`, '_blank');
-        });
-        
-        emailBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.location.href = `mailto:?subject=${encodeURIComponent(shareData.title)}&body=${encodeURIComponent(shareData.text + ' ' + shareData.url)}`;
-        });
-        
-        copyLinkBtn.addEventListener('click', () => {
-            const shareUrl = document.getElementById('shareUrl');
-            shareUrl.select();
-            document.execCommand('copy');
-            
-            // Cambiar el texto del botón temporalmente para indicar que se copió
-            const originalText = copyLinkBtn.innerHTML;
-            copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> ¡Copiado!';
-            setTimeout(() => {
-                copyLinkBtn.innerHTML = originalText;
-            }, 2000);
-        });
-        
-        closeBtn.addEventListener('click', () => {
-            shareModal.style.display = 'none';
-        });
-        
-        // Cerrar el modal al hacer clic fuera del contenido
-        window.addEventListener('click', (event) => {
-            if (event.target === shareModal) {
-                shareModal.style.display = 'none';
-        }
+            roomItem.appendChild(roomInfo);
+            roomItem.appendChild(joinButton);
+            container.appendChild(roomItem);
         });
     }
     
-    // Mostrar el modal
-    shareModal.style.display = 'block';
-} 
+    // Cargar salas iniciales para la pestaña activa
+    const activeTab = document.querySelector('.room-tab-button.active');
+    if (activeTab) {
+        const gameType = activeTab.getAttribute('data-game');
+        fetchRooms(gameType);
+    }
+}); 

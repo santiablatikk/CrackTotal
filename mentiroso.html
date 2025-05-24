@@ -31,27 +31,26 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://www.cracktotal.com/mentiroso.html">
     <meta property="og:title" content="Crack Total - Mentiroso (1v1)">
-    <meta property="og:description" content="Desafiá a otro jugador en Mentiroso, el juego de bluffs y conocimiento de fútbol de Crack Total.">
-    <meta property="og:image" content="https://www.cracktotal.com/images/mentiroso_card.jpg"> 
+    <meta property="og:description" content="Desafiá a otro jugador en Mentiroso, el juego de astucia y conocimiento futbolístico de Crack Total.">
+    <meta property="og:image" content="https://www.cracktotal.com/images/mentiroso_card.jpg"> <!-- Placeholder - Create this image -->
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://www.cracktotal.com/mentiroso.html">
     <meta property="twitter:title" content="Crack Total - Mentiroso (1v1)">
-    <meta property="twitter:description" content="Desafiá a otro jugador en Mentiroso, el juego de bluffs y conocimiento de fútbol.">
-    <meta property="twitter:image" content="https://www.cracktotal.com/images/mentiroso_card.jpg">
+    <meta property="twitter:description" content="Desafiá a otro jugador en Mentiroso, el juego de astucia y conocimiento futbolístico.">
+    <meta property="twitter:image" content="https://www.cracktotal.com/images/mentiroso_card.jpg"> <!-- Placeholder - Create this image -->
     <meta property="twitter:site" content="@cracktotal_">
 
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/qsm.css">
-    <link rel="stylesheet" href="css/mentiroso.css">
+    <link rel="stylesheet" href="css/mentiroso.css"> <!-- Changed from qsm.css -->
     <link rel="stylesheet" href="css/modals.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <meta name="description" content="Mentiroso - Juega 1 contra 1 poniendo a prueba tus conocimientos y capacidad de bluffear sobre fútbol.">
+    <meta name="description" content="Mentiroso - Desafía a tus amigos en este juego de fútbol de astucia y conocimiento.">
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
@@ -72,7 +71,7 @@
       "@context": "https://schema.org",
       "@type": "WebPage", 
       "name": "Mentiroso - Crack Total",
-      "description": "Jugá 1 contra 1 en Mentiroso, el desafío de bluffs y conocimiento sobre fútbol en Crack Total.",
+      "description": "Jugá 1 contra 1 en Mentiroso, el juego de astucia y conocimiento futbolístico en Crack Total.",
       "url": "https://www.cracktotal.com/mentiroso.html",
       "publisher": {
         "@type": "Organization",
@@ -90,9 +89,9 @@
     </script>
     <script type="module" src="js/main.js"></script>
     <script type="module" src="js/firebase-config.js"></script>
-    <script type="module" src="js/mentiroso.js"></script>
+    <script type="module" src="js/mentiroso.js"></script> <!-- Changed from quiensabemas_1v1.js -->
 </head>
-<body class="game-body mentiroso-body">
+<body class="game-body mentiroso-body"> <!-- Changed class -->
     <nav class="main-navigation">
         <ul>
             <li><a href="profile.html">Perfil</a></li>
@@ -107,50 +106,41 @@
         <!-- Header Mejorado -->
         <header class="game-header modern-header">
             <div class="container header-container">
-                <a href="games.html" class="logo-link">
-                    <h1 class="logo">
-                        <span class="logo-text">Crack Total</span>
-                        <i class="fas fa-futbol logo-ball"></i>
-                    </h1>
-                </a>
-                <div class="game-title-header">Mentiroso <span class="game-mode-badge">1v1</span></div>
-                <!-- Info Jugadores (se mostrará cuando estén en juego) -->
-                <div class="players-info-header" id="playersHeaderInfo" style="display: none;">
-                    <div class="player-box local-player" id="player1Info">
-                        <span class="player-avatar">
-                            <i class="fas fa-user"></i>
-                        </span>
-                        <span class="player-details">
-                            <span class="player-name" id="player1Name">Jugador 1</span>
-                            <span class="score" id="player1Score">Score: 0</span>
-                        </span>
-                    </div>
-                    <span class="vs-separator">VS</span>
-                    <div class="player-box opponent-player" id="player2Info">
-                        <span class="player-avatar">
-                            <i class="fas fa-user-secret"></i>
-                        </span>
-                        <span class="player-details">
+                 <a href="games.html" class="logo-link">
+                     <h1 class="logo">
+                         <span class="logo-text">Crack Total</span>
+                         <i class="fas fa-futbol logo-ball"></i>
+                     </h1>
+                 </a>
+                 <div class="game-title-header">Mentiroso <span class="game-mode-badge">1v1</span></div>
+                 <div class="players-info-header" id="playersHeaderInfo" style="display: none;">
+                     <div class="player-box local-player" id="player1Info">
+                         <span class="player-avatar"><i class="fas fa-user"></i></span>
+                         <span class="player-details">
+                             <span class="player-name" id="player1Name">Jugador 1</span>
+                             <span class="score" id="player1Score">Puntos: 0</span>
+                         </span>
+                     </div>
+                     <span class="vs-separator">VS</span>
+                     <div class="player-box opponent-player" id="player2Info">
+                         <span class="player-avatar"><i class="fas fa-user-secret"></i></span>
+                         <span class="player-details">
                             <span class="player-name" id="player2Name">Jugador 2</span>
-                            <span class="score" id="player2Score">Score: 0</span>
+                            <span class="score" id="player2Score">Puntos: 0</span>
                         </span>
-                    </div>
-                </div>
+                     </div>
+                 </div>
             </div>
         </header>
 
-        <!-- Lobby -->
+        <!-- Lobby Section -->
         <section id="lobbySection" class="lobby-container active">
             <div class="container lobby-container-inner">
-                <h2 class="lobby-title">Lobby <i class="fas fa-door-open"></i></h2>
-                <p class="lobby-subtitle">Crea una sala o únete a una existente para jugar a Mentiroso</p>
-
+                <h2 class="lobby-title">Lobby Mentiroso <i class="fas fa-user-secret"></i></h2>
+                <p class="lobby-subtitle">Crea o únete a una sala para jugar Mentiroso.</p>
                 <div id="lobbyMessageArea" class="lobby-message"></div>
-
                 <div class="lobby-grid">
-                    <!-- Columna Izquierda: Crear y Unirse Específico/Aleatorio -->
                     <div class="lobby-column lobby-actions-column">
-                        <!-- Card Crear Sala -->
                         <div class="lobby-card create-room-card">
                             <h3><i class="fas fa-plus-circle"></i> Crear Sala Nueva</h3>
                             <div class="form-group">
@@ -161,15 +151,11 @@
                                 <label for="createRoomPassword">Contraseña (Opcional):</label>
                                 <input type="password" id="createRoomPassword" class="lobby-input" placeholder="Deja vacío para sala pública">
                             </div>
-                            <button id="createRoomButton" class="primary-button lobby-button create-btn">
-                                Crear Sala
-                            </button>
+                            <button id="createRoomButton" class="primary-button lobby-button create-btn">Crear Sala</button>
                         </div>
-
-                        <!-- Card Unirse a Sala -->
                         <div class="lobby-card join-room-card">
                             <h3><i class="fas fa-sign-in-alt"></i> Unirse a Sala</h3>
-                            <div class="form-group">
+                             <div class="form-group">
                                 <label for="joinPlayerName">Tu Nombre:</label>
                                 <input type="text" id="joinPlayerName" class="lobby-input" placeholder="Nombre de Jugador" value="Jugador 2">
                             </div>
@@ -184,26 +170,19 @@
                                         <label for="joinRoomPassword">Contraseña (si aplica):</label>
                                         <input type="password" id="joinRoomPassword" class="lobby-input" placeholder="Contraseña de la sala">
                                     </div>
-                                    <button id="joinRoomButton" class="secondary-button lobby-button join-id-btn">
-                                        Unirse por ID
-                                    </button>
+                                    <button id="joinRoomButton" class="secondary-button lobby-button join-id-btn">Unirse por ID</button>
                                 </div>
                                 <div class="join-random">
                                     <h4><i class="fas fa-random"></i> O unirse a una sala aleatoria</h4>
-                                    <button id="joinRandomRoomButton" class="secondary-button lobby-button join-random-btn">
-                                        Buscar Sala Aleatoria
-                                    </button>
+                                    <button id="joinRandomRoomButton" class="secondary-button lobby-button join-random-btn">Buscar Sala Aleatoria</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Columna Derecha: Salas Disponibles -->
                     <div class="lobby-column available-rooms-column">
                         <div id="availableRoomsSection" class="lobby-card available-rooms-card">
-                            <h3><i class="fas fa-list-ul"></i> Salas Disponibles</h3>
+                            <h3><i class="fas fa-list-ul"></i> Salas Disponibles (Mentiroso)</h3>
                             <ul id="availableRoomsList" class="rooms-list">
-                                <!-- Items generados por JS -->
                                 <li class="no-rooms-message">Buscando salas... <i class="fas fa-spinner fa-spin"></i></li>
                             </ul>
                         </div>
@@ -212,118 +191,88 @@
             </div>
         </section>
 
-        <!-- Contenido Principal del Juego (Inicialmente Oculto) -->
+        <!-- Game Content Section (Mentiroso) -->
         <main id="gameContentSection" class="game-content mentiroso-content" style="display: none;">
             <div class="container game-area">
-                <!-- Game Status -->
                 <div class="game-status">
-                    <span id="roundCounter">Ronda 1/6</span>
-                    <div class="turn-indicator" id="turnIndicator">Turno de: Jugador 1</div>
+                    <span id="gameRoundDisplay">
+                        <i class="fas fa-trophy"></i> 
+                        <span class="round-info">
+                            <span class="category-counter">Categoría 1/6: Fútbol Argentino</span>
+                            <span class="question-counter">Pregunta 1/3</span>
+                            <span class="global-counter">Progreso: 1/18</span>
+                        </span>
+                    </span>
+                </div>
+                
+                <div class="categories-progress">
+                    <div class="category-pill" data-category="0">Fútbol Argentino</div>
+                    <div class="category-pill" data-category="1">Libertadores</div>
+                    <div class="category-pill" data-category="2">Mundiales</div>
+                    <div class="category-pill" data-category="3">Champions</div>
+                    <div class="category-pill" data-category="4">Selección</div>
+                    <div class="category-pill" data-category="5">General</div>
                 </div>
 
-                <!-- Card principal del desafío -->
-                <div class="game-card challenge-card">
+                <div class="game-card mentiroso-card">
                     <div class="challenge-area">
-                        <h3 class="challenge-text" id="challengeText">Cargando desafío...</h3>
+                        <h3 class="mentiroso-challenge-text" id="challengeText">Puedo nombrar X ...</h3>
+                        <p class="current-bid-text" id="currentBidText">Apuesta actual: Ninguna</p>
                     </div>
 
-                    <!-- Historial de declaraciones -->
-                    <div class="declarations-log">
-                        <h4>Declaraciones:</h4>
-                        <ul id="declarationsLogList" class="declarations-list">
-                            <!-- Se llenará dinámicamente -->
-                            <li class="no-declarations">Esperando primera declaración...</li>
-                        </ul>
-                    </div>
-
-                    <!-- Área de acciones según estado de juego -->
-                    <div class="action-area" id="actionArea">
-                        <!-- Área para hacer declaraciones -->
-                        <div id="declareArea" class="declare-area active">
-                            <div class="form-group">
-                                <label for="declareAmount">¿Cuántos puedes nombrar?</label>
-                                <div class="number-input-container">
-                                    <button type="button" id="decrementDeclare" class="number-control"><i class="fas fa-minus"></i></button>
-                                    <input type="number" id="declareAmount" min="1" max="99" value="1" class="declare-input">
-                                    <button type="button" id="incrementDeclare" class="number-control"><i class="fas fa-plus"></i></button>
-                                </div>
-                            </div>
-                            <div class="action-buttons">
-                                <button id="submitDeclareButton" class="primary-button action-btn declare-btn">
-                                    <i class="fas fa-check-circle"></i>
-                                    <span>Declarar</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Área para responder a declaraciones -->
-                        <div id="respondArea" class="respond-area">
-                            <div class="action-buttons respond-buttons">
-                                <button id="callLiarButton" class="danger-button action-btn liar-btn">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    <span>¡MENTIROSO!</span>
-                                </button>
-                                <button id="acceptDeclareButton" class="primary-button action-btn accept-btn">
-                                    <i class="fas fa-plus-circle"></i>
-                                    <span>Superar Declaración</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Área para demostración cuando se acusa de mentiroso -->
-                        <div id="demonstrationArea" class="demonstration-area">
-                            <h4>¡Demuestra que no eres mentiroso!</h4>
-                            <p class="demonstration-instruction" id="demonstrationInstruction">Nombra <span id="demonstrationCount">X</span> elementos:</p>
-                            
-                            <div id="listChallengeInputs" class="list-challenge-inputs">
-                                <div class="form-group">
-                                    <label for="demonstrationAnswers">Escribe tus respuestas (separadas por coma):</label>
-                                    <textarea id="demonstrationAnswers" class="demonstration-input" placeholder="Ej: Messi, Ronaldo, Neymar"></textarea>
-                                </div>
-                            </div>
-                            
-                            <div id="structuredChallengeInputs" class="structured-challenge-inputs" style="display: none;">
-                                <!-- Se generará dinámicamente según el desafío -->
-                            </div>
-                            
-                            <div class="action-buttons">
-                                <button id="submitDemonstrationButton" class="primary-button action-btn">
-                                    <i class="fas fa-paper-plane"></i>
-                                    <span>Enviar Respuestas</span>
-                                </button>
-                            </div>
-
-                            <div class="timer-container" id="demonstrationTimerContainer">
-                                <div class="timer-bar" id="demonstrationTimerBar"></div>
-                                <div class="timer-count" id="demonstrationTimerCount">30</div>
-                            </div>
-                        </div>
-
-                        <!-- Área para validación por parte del retador -->
-                        <div id="validationArea" class="validation-area">
-                            <h4>Valida las respuestas de tu oponente</h4>
-                            <div id="validationList" class="validation-list">
-                                <!-- Se generará dinámicamente -->
-                            </div>
-                            <div class="action-buttons">
-                                <button id="submitValidationButton" class="primary-button action-btn">
-                                    <i class="fas fa-check-double"></i>
-                                    <span>Enviar Validación</span>
-                                </button>
-                            </div>
-                        </div>
+                    <div class="interaction-area" id="interactionArea">
+                        <!-- This area will change based on game phase -->
                         
-                        <!-- Área de espera -->
-                        <div id="waitingArea" class="waiting-area">
-                            <div class="spinner"></div>
-                            <p id="waitingMessage">Esperando al oponente...</p>
+                        <!-- Bidding Phase -->
+                        <div id="biddingPhase" class="phase-active">
+                            <p id="playerTurnBidText">Tu turno para apostar o decir "Mentiroso"</p>
+                            <div class="form-group">
+                                <label for="bidInput">¿Cuántos puedes nombrar?</label>
+                                <input type="number" id="bidInput" class="modern-input" placeholder="Ej: 5" min="1">
+                            </div>
+                            <div class="action-buttons-mentiroso">
+                                <button id="submitBidButton" class="primary-button mentiroso-action-btn">
+                                    <i class="fas fa-gavel"></i> Apostar
+                                </button>
+                                <button id="callMentirosoButton" class="danger-button mentiroso-action-btn">
+                                    <i class="fas fa-comment-slash"></i> ¡Mentiroso!
+                                </button>
+                            </div>
                         </div>
+
+                        <!-- Listing Answers Phase -->
+                        <div id="listingPhase" style="display: none;">
+                            <p id="listingInstructionText">¡Te llamaron Mentiroso! Nombra los <span id="bidToListCount">X</span> ítems:</p>
+                            <div class="form-group">
+                                <textarea id="answerListArea" class="modern-textarea" rows="6" placeholder="Escribe un ítem por línea..."></textarea>
+                            </div>
+                            <button id="submitAnswersButton" class="primary-button mentiroso-action-btn">
+                                <i class="fas fa-list-ol"></i> Enviar Lista
+                            </button>
+                        </div>
+
+                        <!-- Validation Phase -->
+                        <div id="validationPhase" style="display: none;">
+                            <p id="validationInstructionText">Valida las respuestas de tu oponente:</p>
+                            <ul id="answersToValidateList" class="answers-to-validate">
+                                <!-- JS will populate this like:
+                                <li><span>Respuesta 1</span> <button class="validate-correct"><i class="fas fa-check"></i></button> <button class="validate-incorrect"><i class="fas fa-times"></i></button></li>
+                                -->
+                            </ul>
+                            <button id="submitValidationButton" class="primary-button mentiroso-action-btn">
+                                <i class="fas fa-check-double"></i> Confirmar Validación
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="feedback-area" id="feedbackArea">
+                        <!-- Mensajes de feedback -->
                     </div>
                 </div>
 
-                <!-- Feedback y resultados de ronda -->
-                <div class="round-result" id="roundResultArea">
-                    <!-- Se mostrará al finalizar cada ronda -->
+                <div class="waiting-area" id="waitingArea">
+                    <div class="spinner"></div>
+                    <p>Esperando al oponente...</p>
                 </div>
             </div>
         </main>
@@ -346,82 +295,156 @@
             </div>
         </footer>
 
-        <!-- Modal Fin de Juego -->
-        <div class="modal-overlay" id="gameResultModal">
+        <!-- Modal Fin de Juego para Mentiroso -->
+        <div class="modal-overlay" id="gameResultModalMentiroso">
             <div class="modal-content result-modal">
                 <div class="result-modal-header">
-                    <h3 class="modal-title result-title" id="resultTitle">¡Juego Terminado!</h3>
+                    <h3 class="modal-title result-title" id="resultTitleMentiroso">¡Juego Terminado!</h3>
                 </div>
-                <div class="result-message" id="resultMessage">Calculando resultados...</div>
-                <div class="result-stats" id="resultStats">
+                <div class="result-message" id="resultMessageMentiroso">Calculando resultados...</div>
+                <div class="result-stats" id="resultStatsMentiroso">
                     <!-- Stats se llenarán dinámicamente -->
                 </div>
                 <div class="result-buttons">
-                    <button id="playAgainButton" class="modal-button primary play-again-button">
-                         <i class="fas fa-redo-alt"></i>
-                         Jugar Otra Vez
+                    <button id="playAgainButtonMentiroso" class="modal-button primary play-again-button">
+                         <i class="fas fa-redo-alt"></i> Jugar Otra Vez
                     </button>
-                    <button id="backToLobbyButton" class="modal-button secondary back-lobby-button">
-                        <i class="fas fa-arrow-left"></i>
-                        Volver al Lobby
+                    <button id="backToLobbyButtonMentiroso" class="modal-button secondary back-lobby-button">
+                        <i class="fas fa-arrow-left"></i> Volver al Lobby
                     </button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Modal para ingresar contraseña de sala privada -->
-    <div class="modal-overlay" id="privateRoomPasswordModal">
-        <div class="modal-content password-prompt-modal">
-            <h3 class="modal-title" id="passwordModalTitle">Ingresar Contraseña</h3>
-            <p id="passwordModalText">La sala '[Room ID]' es privada. Por favor, ingresá la contraseña:</p>
-            <form id="privateRoomPasswordForm">
-                <div class="form-group">
-                    <label for="passwordModalInput">Contraseña:</label>
-                    <input type="password" id="passwordModalInput" class="lobby-input" required autocomplete="current-password">
-                    <div class="input-focus-border"></div> 
-                </div>
-                <div id="passwordErrorText" class="error-message-inline" style="display: none;"></div>
-                <div class="modal-footer">
-                    <button type="button" id="cancelPasswordSubmit" class="modal-button secondary">Cancelar</button>
-                    <button type="submit" id="submitPasswordButton" class="modal-button primary">Unirse</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal de instrucciones -->
-    <div class="modal-overlay" id="instructionsModal">
-        <div class="modal-content instructions-modal">
-            <h3 class="modal-title">Cómo jugar a Mentiroso</h3>
-            <div class="instructions-content">
-                <p>¡Bienvenido a Mentiroso! Un juego donde pondrás a prueba tu conocimiento futbolístico y tu capacidad de bluffear.</p>
-                
-                <h4>Reglas básicas:</h4>
-                <ul>
-                    <li>Se juega por turnos en rondas con diferentes categorías de fútbol.</li>
-                    <li>En tu turno, debes declarar cuántos elementos de la categoría puedes nombrar.</li>
-                    <li>Cada declaración debe ser mayor que la anterior.</li>
-                    <li>Si crees que tu oponente está mintiendo, puedes acusarlo de "Mentiroso".</li>
-                    <li>El acusado deberá entonces demostrar que puede nombrar tantos elementos como declaró.</li>
-                    <li>Ganas 1 punto si demuestras tu declaración o si acusas correctamente a un mentiroso.</li>
-                    <li>El primero en llegar a 6 puntos gana, o quien tenga más puntos después de 6 rondas.</li>
-                </ul>
-                
-                <h4>Ejemplo de juego:</h4>
-                <p>Categoría: "Puedo nombrar X jugadores argentinos campeones de Champions League"</p>
-                <ol>
-                    <li>Jugador 1: "Puedo nombrar 2 jugadores"</li>
-                    <li>Jugador 2: "Puedo nombrar 3 jugadores"</li>
-                    <li>Jugador 1: "Puedo nombrar 5 jugadores"</li>
-                    <li>Jugador 2: "¡MENTIROSO!"</li>
-                    <li>Jugador 1 debe ahora demostrar que puede nombrar 5 jugadores argentinos campeones de Champions.</li>
-                </ol>
-            </div>
-            <div class="modal-footer">
-                <button id="closeInstructionsButton" class="modal-button primary">¡Entendido!</button>
+        <!-- Modal para ingresar contraseña de sala privada (reutilizado de QSM, podría necesitar ID específicos si hay conflictos) -->
+        <div class="modal-overlay" id="privateRoomPasswordModal">
+            <div class="modal-content password-prompt-modal">
+                <h3 class="modal-title" id="passwordModalTitle">Ingresar Contraseña</h3>
+                <p id="passwordModalText">La sala '[Room ID]' es privada. Por favor, ingresá la contraseña:</p>
+                <form id="privateRoomPasswordForm">
+                    <div class="form-group">
+                        <label for="passwordModalInput">Contraseña:</label>
+                        <input type="password" id="passwordModalInput" class="lobby-input" required autocomplete="current-password">
+                        <div class="input-focus-border"></div> 
+                    </div>
+                    <div id="passwordErrorText" class="error-message-inline" style="display: none;"></div>
+                    <div class="modal-footer">
+                        <button type="button" id="cancelPasswordSubmit" class="modal-button secondary">Cancelar</button>
+                        <button type="submit" id="submitPasswordButton" class="modal-button primary">Unirse</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar el orden de las pills de categorías al inicio
+            const categoryOrder = [
+                "Fútbol Argentino",
+                "Libertadores",
+                "Mundiales", 
+                "Champions League",
+                "Selección Argentina",
+                "Fútbol General"
+            ];
+            
+            // Asegurar que las categorías se resalten correctamente
+            window.addEventListener('mentirosoNextRound', function(e) {
+                if (e.detail) {
+                    const categoryIndex = e.detail.globalCategoryIndex || 0;
+                    
+                    // Obtener la categoría esperada según el índice
+                    const expectedCategory = categoryOrder[categoryIndex];
+                    console.log(`Actualizando UI para categoría ${categoryIndex+1}/6: ${expectedCategory}`);
+                    
+                    // Actualizar pills de categorías
+                    document.querySelectorAll('.category-pill').forEach(pill => {
+                        pill.classList.remove('active', 'completed');
+                        
+                        const pillIndex = parseInt(pill.getAttribute('data-category'));
+                        
+                        if (pillIndex < categoryIndex) {
+                            pill.classList.add('completed');
+                        } else if (pillIndex === categoryIndex) {
+                            pill.classList.add('active');
+                            // Asegurar texto correcto
+                            if (pill.textContent.trim() !== expectedCategory.trim() && 
+                                pill.textContent.trim() !== expectedCategory.split(' ')[0]) {
+                                console.warn(`Texto incorrecto en pill: ${pill.textContent}, debería ser: ${expectedCategory}`);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    
+    <style>
+        .categories-progress {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0 15px;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 5px;
+            background-color: rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+        
+        .category-pill {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .category-pill.active {
+            background-color: #e74c3c;
+            opacity: 1;
+            font-weight: bold;
+            transform: scale(1.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .category-pill.completed {
+            background-color: #2ecc71;
+            opacity: 1;
+        }
+        
+        /* Mejorar la visualización de desafío */
+        .mentiroso-challenge-text {
+            font-size: 1.4rem;
+            text-align: center;
+            padding: 10px 15px;
+            background-color: rgba(44, 62, 80, 0.1);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+        }
+        
+        @media (max-width: 768px) {
+            .categories-progress {
+                justify-content: center;
+            }
+            
+            .category-pill {
+                font-size: 0.75rem;
+                padding: 5px 10px;
+                margin: 2px;
+            }
+            
+            .mentiroso-challenge-text {
+                font-size: 1.2rem;
+                padding: 8px 12px;
+            }
+        }
+    </style>
 </body>
 </html> 
