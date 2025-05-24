@@ -1,11 +1,13 @@
-// IIFE para encapsular y ejecutar inmediatamente
-(function() {
+(function() { // IIFE para encapsular y ejecutar inmediatamente
     const playerName = localStorage.getItem('playerName');
     const currentPagePath = window.location.pathname;
-    const isIndexPage = (currentPagePath === '/' || currentPagePath.endsWith('/index.html'));
 
+    // Solo permitir el acceso a index.html (raíz o /index.html) si no hay nombre.
+    const isIndexPage = (currentPagePath === '/' || currentPagePath === '/index.html');
+
+    // Si no hay nombre y la página actual NO es index.html, redirigir a la raíz.
     if (!playerName && !isIndexPage) {
-        window.location.href = '/';
+        window.location.href = '/'; 
     }
 })();
 
@@ -30,192 +32,74 @@ function isValidPlayerName(name) {
     return { valid: true, message: "Nombre válido." };
 }
 
-function setupNamePersistence() {
+// Store player name in local storage
+document.addEventListener('DOMContentLoaded', function() {
     const nameForm = document.getElementById('nameForm');
     const playerNameInput = document.getElementById('playerName');
     const createPlayerNameLobbyInput = document.getElementById('createPlayerName');
     const joinPlayerNameLobbyInput = document.getElementById('joinPlayerName');
-    const nameErrorDiv = document.getElementById('nameError');
+    const nameErrorDiv = document.getElementById('nameError'); // Para mostrar errores en index.html
 
+    // 1. Al cargar la página, intentar pre-rellenar el nombre
     const savedPlayerName = localStorage.getItem('playerName');
     if (savedPlayerName) {
-        if (playerNameInput) playerNameInput.value = savedPlayerName;
-        if (createPlayerNameLobbyInput) createPlayerNameLobbyInput.value = savedPlayerName;
-        if (joinPlayerNameLobbyInput) joinPlayerNameLobbyInput.value = savedPlayerName;
+        if (playerNameInput) {
+            playerNameInput.value = savedPlayerName;
+        }
+        if (createPlayerNameLobbyInput) {
+            createPlayerNameLobbyInput.value = savedPlayerName;
+        }
+        if (joinPlayerNameLobbyInput) {
+            joinPlayerNameLobbyInput.value = savedPlayerName;
+        }
     }
 
-    if (nameForm && playerNameInput) {
+    if (nameForm) {
         nameForm.addEventListener('submit', function(event) {
-            const enteredName = playerNameInput.value.trim();
-            const validation = isValidPlayerName(enteredName);
-            if (validation.valid) {
-                event.preventDefault();
-                localStorage.setItem('playerName', enteredName);
-                if (nameErrorDiv) nameErrorDiv.textContent = '';
-                window.location.href = 'games.html';
+            if (playerNameInput) {
+                const enteredName = playerNameInput.value.trim();
+                const validation = isValidPlayerName(enteredName);
+
+                if (validation.valid) {
+                    event.preventDefault();
+                    localStorage.setItem('playerName', enteredName);
+                    console.log(`Nombre guardado desde index.html: ${enteredName}. Redirigiendo a games.html...`);
+                    if (nameErrorDiv) nameErrorDiv.textContent = ''; // Limpiar error si es válido
+                    window.location.href = 'games.html';
+                } else {
+                    console.log("Validación de nombre fallida en index.html:", validation.message);
+                    event.preventDefault();
+                    if (nameErrorDiv) {
+                        nameErrorDiv.textContent = validation.message;
+                        nameErrorDiv.style.display = 'block';
+                    } else {
+                        alert(validation.message); // Fallback si el div no existe
+                    }
+                    playerNameInput.focus();
+                }
             } else {
                 event.preventDefault();
-                if (nameErrorDiv) {
-                    nameErrorDiv.textContent = validation.message;
-                    nameErrorDiv.style.display = 'block';
-                } else {
-                    alert(validation.message);
-                }
-                playerNameInput.focus();
             }
         });
     }
-}
 
-function setupPlayerNameDisplayAndChange() {
-    const playerNameDisplay = document.getElementById('playerNameDisplay');
-    const changeNameBtn = document.getElementById('changeNameBtn');
-    const changeNameModal = document.getElementById('changeNameModal');
-    const changeNameForm = document.getElementById('changeNameForm');
-    const cancelNameChange = document.getElementById('cancelNameChange');
-    const newPlayerNameInput = document.getElementById('newPlayerName');
-    const changeNameErrorDiv = document.getElementById('changeNameError');
-    let localPlayerName = localStorage.getItem('playerName') || 'Jugador';
-
-    if (playerNameDisplay) {
-        playerNameDisplay.textContent = localPlayerName;
-    }
-
-    if (changeNameBtn && changeNameModal && newPlayerNameInput) {
-        changeNameBtn.addEventListener('click', function() {
-            newPlayerNameInput.value = localPlayerName;
-            if (changeNameErrorDiv) changeNameErrorDiv.textContent = '';
-            changeNameModal.classList.add('active');
-        });
-    }
-
-    if (cancelNameChange && changeNameModal) {
-        cancelNameChange.addEventListener('click', function() {
-            changeNameModal.classList.remove('active');
-        });
-    }
-
-    if (changeNameForm && newPlayerNameInput && changeNameModal && playerNameDisplay) {
-        changeNameForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const newName = newPlayerNameInput.value.trim();
-            const validation = isValidPlayerName(newName);
-            const saveButton = changeNameForm.querySelector('.save-button');
-            const cancelButton = changeNameForm.querySelector('.cancel-button');
-
-            if (validation.valid) {
-                if (saveButton) saveButton.disabled = true;
-                if (cancelButton) cancelButton.disabled = true;
-                if (changeNameErrorDiv) changeNameErrorDiv.textContent = '';
-
-                localStorage.setItem('playerName', newName);
-                playerNameDisplay.textContent = newName;
-                localPlayerName = newName; // Update local variable
-                changeNameModal.classList.remove('active');
-
-                document.querySelectorAll('.player-name').forEach(element => {
-                    if (element.tagName !== 'INPUT' || !element.value || element.value === 'Jugador 1' || element.value === 'Jugador 2') {
-                        element.textContent = newName;
-                    }
-                    if (element.id === 'createPlayerName' || element.id === 'joinPlayerName') {
-                        if (element.value !== newName) element.value = newName;
-                    }
-                });
-                setTimeout(() => {
-                    if (saveButton) saveButton.disabled = false;
-                    if (cancelButton) cancelButton.disabled = false;
-                }, 300);
-            } else {
-                if (changeNameErrorDiv) {
-                    changeNameErrorDiv.textContent = validation.message;
-                    changeNameErrorDiv.style.display = 'block';
-                } else {
-                    alert(validation.message);
-                }
-                newPlayerNameInput.focus();
+    // --- Lógica para actualizar los nombres en los inputs del lobby de QSM si se cambian en la página de juegos ---
+    if (window.location.pathname.includes('quiensabemas.html')) {
+        if (savedPlayerName) {
+            if (createPlayerNameLobbyInput && createPlayerNameLobbyInput.value !== savedPlayerName) {
+                createPlayerNameLobbyInput.value = savedPlayerName;
             }
-        });
-    }
-    
-    // Update player name in various game lobby inputs if on specific game pages
-    if (window.location.pathname.includes('quiensabemas.html') || window.location.pathname.includes('mentiroso.html')) {
-        const createNameInput = document.getElementById('createPlayerName');
-        const joinNameInput = document.getElementById('joinPlayerName');
-        if (createNameInput && createNameInput.value !== localPlayerName) createNameInput.value = localPlayerName;
-        if (joinNameInput && joinNameInput.value !== localPlayerName) joinNameInput.value = localPlayerName;
-    }
-}
-
-function setupGameCardInteractions() {
-    const qsmIntroModal = document.getElementById('qsmIntroModal');
-    const mentirosoIntroModal = document.getElementById('mentirosoIntroModal');
-    const gameCards = document.querySelectorAll('.game-card');
-
-    gameCards.forEach(card => {
-        const playButton = card.querySelector('.play-button');
-        card.addEventListener('click', function(event) {
-            if (playButton && playButton.disabled) {
-                event.stopPropagation();
-                return;
+            if (joinPlayerNameLobbyInput && joinPlayerNameLobbyInput.value !== savedPlayerName) {
+                joinPlayerNameLobbyInput.value = savedPlayerName;
             }
-            const gameType = this.getAttribute('data-game');
-            if (gameType === 'quiensabemas' && qsmIntroModal) {
-                event.preventDefault();
-                event.stopPropagation();
-                qsmIntroModal.classList.add('active');
-            } else if (gameType === 'mentiroso' && mentirosoIntroModal) {
-                event.preventDefault();
-                event.stopPropagation();
-                mentirosoIntroModal.classList.add('active');
-            } else if (gameType) {
-                window.location.href = `${gameType}.html`;
-            }
-        });
-    });
-}
-
-function setupModalNavigation() {
-    const qsmIntroModal = document.getElementById('qsmIntroModal');
-    const goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
-    const mentirosoIntroModal = document.getElementById('mentirosoIntroModal');
-    const goToLobbyMentirosoButton = document.getElementById('goToLobbyMentirosoButton');
-
-    if (goToLobbyQSMButton && qsmIntroModal) {
-        goToLobbyQSMButton.addEventListener('click', function() {
-            qsmIntroModal.classList.remove('active');
-            window.location.href = 'quiensabemas.html';
-        });
-    }
-    if (qsmIntroModal) {
-        qsmIntroModal.addEventListener('click', function(event) {
-            if (event.target === qsmIntroModal) qsmIntroModal.classList.remove('active');
-        });
+        }
     }
 
-    if (goToLobbyMentirosoButton && mentirosoIntroModal) {
-        goToLobbyMentirosoButton.addEventListener('click', function() {
-            mentirosoIntroModal.classList.remove('active');
-            window.location.href = 'mentiroso.html';
-        });
-    }
-    if (mentirosoIntroModal) {
-        mentirosoIntroModal.addEventListener('click', function(event) {
-            if (event.target === mentirosoIntroModal) mentirosoIntroModal.classList.remove('active');
-        });
-    }
-}
-
-function setupBackButtonNavigation() {
-    const backButtons = document.querySelectorAll('.back-button');
-    backButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            window.location.href = 'games.html';
-        });
-    });
-}
-
-function setupCookieConsentBanner() {
+    // --- Manejo de Cookies y Privacidad (ejemplo) ---
+    // Unificamos la clave a 'adConsent'
     const AD_CONSENT_KEY = 'adConsent';
+
+    // Crear y añadir el banner de cookies dinámicamente si no existe
     let cookieBanner = document.getElementById('cookieConsentBanner');
     if (!cookieBanner) {
         const bannerHTML = `
@@ -226,95 +110,298 @@ function setupCookieConsentBanner() {
             </div>
         `;
         document.body.insertAdjacentHTML('beforeend', bannerHTML);
-        cookieBanner = document.getElementById('cookieConsentBanner');
+        cookieBanner = document.getElementById('cookieConsentBanner'); // Re-asignar después de añadirlo
     }
 
     const acceptButton = document.getElementById('acceptCookieButton');
     const rejectButton = document.getElementById('rejectCookieButton');
 
     if (cookieBanner && acceptButton && rejectButton) {
-        if (!localStorage.getItem(AD_CONSENT_KEY)) {
+        if (!localStorage.getItem(AD_CONSENT_KEY)) { // Usar la clave unificada
             cookieBanner.style.display = 'block';
         }
+
         acceptButton.addEventListener('click', function() {
-            localStorage.setItem(AD_CONSENT_KEY, 'true');
+            localStorage.setItem(AD_CONSENT_KEY, 'true'); // Usar la clave unificada
             cookieBanner.style.display = 'none';
-            if (typeof window.loadAds === 'function') window.loadAds();
+            console.log("Consentimiento de cookies/anuncios ACEPTADO.");
+            // Refrescar anuncios o llamar a función que los carga si es necesario
+            if (typeof window.loadAds === 'function') {
+                window.loadAds(); // Asumiendo que tienes una función para cargar/refrescar anuncios
+            }
         });
+
         rejectButton.addEventListener('click', function() {
-            localStorage.setItem(AD_CONSENT_KEY, 'false');
+            localStorage.setItem(AD_CONSENT_KEY, 'false'); // Guardar rechazo
             cookieBanner.style.display = 'none';
-            document.querySelectorAll(".adsense-container").forEach(container => container.style.display = "none");
+            console.log("Consentimiento de cookies/anuncios RECHAZADO.");
+            // Asegurarse de que los scripts de anuncios no se carguen o se oculten los contenedores
+             const adContainers = document.querySelectorAll(".adsense-container");
+             adContainers.forEach(container => container.style.display = "none");
         });
     }
-}
 
-document.addEventListener('DOMContentLoaded', function() {
-    setupNamePersistence(); // Handles index.html name form and pre-filling lobby inputs
-    
-    if (window.location.pathname.includes('games.html')) {
-        setupPlayerNameDisplayAndChange();
-        setupGameCardInteractions();
-        setupModalNavigation();
-        setupCookieConsentBanner();
-         // Initialize room tabs and fetching for games.html
-        const roomTabs = document.querySelectorAll('.room-tab-button');
-        const gameRoomsContainers = document.querySelectorAll('.game-rooms');
-        const refreshButtons = document.querySelectorAll('.refresh-rooms-button');
-
-        if (roomTabs.length > 0) {
-            roomTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const gameType = this.getAttribute('data-game');
-                    roomTabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    gameRoomsContainers.forEach(container => container.classList.remove('active'));
-                    const targetContainer = document.getElementById(`${gameType}-rooms`);
-                    if (targetContainer) targetContainer.classList.add('active');
-                    fetchRooms(gameType); // Fetch rooms when tab is clicked
-                });
+    // Check if we're on the games page
+    const playerNameDisplay = document.getElementById('playerNameDisplay');
+    if (playerNameDisplay) {
+        let playerName = localStorage.getItem('playerName') || 'Jugador';
+        playerNameDisplay.textContent = playerName;
+        
+        // Configurar el cambio de nombre
+        const changeNameBtn = document.getElementById('changeNameBtn');
+        const changeNameModal = document.getElementById('changeNameModal');
+        const changeNameForm = document.getElementById('changeNameForm');
+        const cancelNameChange = document.getElementById('cancelNameChange');
+        const newPlayerNameInput = document.getElementById('newPlayerName');
+        const changeNameErrorDiv = document.getElementById('changeNameError'); // Para errores en el modal
+        
+        if (changeNameBtn && changeNameModal) {
+            changeNameBtn.addEventListener('click', function() {
+                newPlayerNameInput.value = playerName;
+                if(changeNameErrorDiv) changeNameErrorDiv.textContent = ''; // Limpiar errores previos
+                changeNameModal.classList.add('active');
             });
+            
+            if (cancelNameChange) {
+                cancelNameChange.addEventListener('click', function() {
+                    changeNameModal.classList.remove('active');
+                });
+            }
+            
+            if (changeNameForm) {
+                changeNameForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const newName = newPlayerNameInput.value.trim();
+                    const validation = isValidPlayerName(newName);
+                    const saveButton = changeNameForm.querySelector('.save-button');
+                    const cancelButton = changeNameForm.querySelector('.cancel-button');
+                    
+                    if (validation.valid) {
+                        if(saveButton) saveButton.disabled = true;
+                        if(cancelButton) cancelButton.disabled = true;
+                        if(changeNameErrorDiv) changeNameErrorDiv.textContent = ''; // Limpiar error
 
-            // Load rooms for the initially active tab
-            const activeTab = document.querySelector('.room-tab-button.active');
-            if (activeTab) {
-                fetchRooms(activeTab.getAttribute('data-game'));
-            } else if (roomTabs.length > 0) {
-                // Default to the first tab if none are active
-                roomTabs[0].classList.add('active');
-                 const initialGameType = roomTabs[0].getAttribute('data-game');
-                 const initialContainer = document.getElementById(`${initialGameType}-rooms`);
-                 if(initialContainer) initialContainer.classList.add('active');
-                fetchRooms(initialGameType);
+                        localStorage.setItem('playerName', newName);
+                        playerNameDisplay.textContent = newName;
+                        changeNameModal.classList.remove('active');
+                        playerName = newName;
+
+                        document.querySelectorAll('.player-name').forEach(element => {
+                            element.textContent = newName;
+                        });
+                         // Habilitar botones después de un breve retraso para evitar doble submit si algo falla
+                        setTimeout(() => {
+                            if(saveButton) saveButton.disabled = false;
+                            if(cancelButton) cancelButton.disabled = false;
+                        }, 300);
+
+                    } else {
+                        console.log("Validación de cambio de nombre fallida:", validation.message);
+                        if (changeNameErrorDiv) {
+                            changeNameErrorDiv.textContent = validation.message;
+                            changeNameErrorDiv.style.display = 'block';
+                        } else {
+                            alert(validation.message); // Fallback
+                        }
+                        newPlayerNameInput.focus();
+                    }
+                });
             }
         }
+    }
 
-        if (refreshButtons.length > 0) {
-            refreshButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const gameType = this.getAttribute('data-game');
+    // --- Get Modal Elements --- 
+    const qsmIntroModal = document.getElementById('qsmIntroModal');
+    const goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
+
+    // Handle clicking on game cards
+    const gameCards = document.querySelectorAll('.game-card');
+    if (gameCards.length > 0) {
+        gameCards.forEach(card => {
+            const playButton = card.querySelector('.play-button');
+
+            card.addEventListener('click', function(event) {
+                if (playButton && playButton.disabled) {
+                    event.stopPropagation();
+                    return;
+                }
+
+                const gameType = this.getAttribute('data-game');
+
+                if (gameType === 'quiensabemas') {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    if (qsmIntroModal) {
+                        qsmIntroModal.classList.add('active');
+                    }
+                } else if (gameType) {
+                window.location.href = `${gameType}.html`;
+                } 
+            });
+        });
+    }
+
+    if (goToLobbyQSMButton && qsmIntroModal) {
+        goToLobbyQSMButton.addEventListener('click', function() {
+            qsmIntroModal.classList.remove('active');
+            window.location.href = 'quiensabemas.html';
+        });
+    }
+
+    if (qsmIntroModal) {
+        qsmIntroModal.addEventListener('click', function(event) {
+            if (event.target === qsmIntroModal) {
+                qsmIntroModal.classList.remove('active');
+            }
+        });
+    }
+
+    // Handle back buttons
+    const backButtons = document.querySelectorAll('.back-button');
+    if (backButtons.length > 0) {
+        backButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                window.location.href = 'games.html';
+            });
+        });
+    }
+
+    // Update player name in game headers
+    const playerNameElements = document.querySelectorAll('.player-name');
+    if (playerNameElements.length > 0) {
+        const currentSavedPlayerName = localStorage.getItem('playerName') || 'Jugador';
+        playerNameElements.forEach(element => {
+            if (element.tagName !== 'INPUT' || !element.value || element.value === 'Jugador 1' || element.value === 'Jugador 2') {
+                 element.textContent = currentSavedPlayerName;
+            }
+            if (element.id === 'createPlayerName' || element.id === 'joinPlayerName'){
+                if(element.value !== currentSavedPlayerName) element.value = currentSavedPlayerName;
+            }
+        });
+    }
+
+    // Cargar nombre del jugador desde localStorage
+    savedPlayerName = localStorage.getItem('playerName');
+    if (savedPlayerName) {
+        const playerNameDisplay = document.getElementById('playerNameDisplay');
+        if (playerNameDisplay) playerNameDisplay.textContent = savedPlayerName;
+    }
+
+    // Modal para cambiar nombre
+    const changeNameBtn = document.getElementById('changeNameBtn');
+    const changeNameModal = document.getElementById('changeNameModal');
+    const cancelNameChange = document.getElementById('cancelNameChange');
+    const changeNameForm = document.getElementById('changeNameForm');
+    const newPlayerNameInput = document.getElementById('newPlayerName');
+
+    if (changeNameBtn) {
+        changeNameBtn.addEventListener('click', function() {
+            if (changeNameModal) {
+                if (newPlayerNameInput && savedPlayerName) {
+                    newPlayerNameInput.value = savedPlayerName;
+                }
+                changeNameModal.classList.add('active');
+            }
+        });
+    }
+
+    if (cancelNameChange) {
+        cancelNameChange.addEventListener('click', function() {
+            if (changeNameModal) changeNameModal.classList.remove('active');
+        });
+    }
+
+    if (changeNameForm) {
+        changeNameForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newName = newPlayerNameInput.value.trim();
+            if (newName) {
+                localStorage.setItem('playerName', newName);
+                const playerNameDisplay = document.getElementById('playerNameDisplay');
+                if (playerNameDisplay) playerNameDisplay.textContent = newName;
+                if (changeNameModal) changeNameModal.classList.remove('active');
+            }
+        });
+    }
+
+    // Cerrar modal al hacer clic fuera
+    window.addEventListener('click', function(e) {
+        if (e.target === changeNameModal) {
+            changeNameModal.classList.remove('active');
+        }
+    });
+
+    // Inicializar tabs de salas disponibles
+    const roomTabs = document.querySelectorAll('.room-tab-button');
+    const gameRoomsContainers = document.querySelectorAll('.game-rooms');
+    
+    if (roomTabs.length > 0) {
+        roomTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const gameType = this.getAttribute('data-game');
+                
+                // Cambiar tabs activas
+                roomTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Cambiar contenedores activos
+                gameRoomsContainers.forEach(container => {
+                    container.classList.remove('active');
+                });
+                document.getElementById(`${gameType}-rooms`).classList.add('active');
+            });
+        });
+        
+        // Cargar salas al inicio
+        const initialGameType = roomTabs[0].getAttribute('data-game');
+        fetchRooms(initialGameType);
+        
+        // Si hay más tabs, cargar también las del segundo juego
+        if (roomTabs.length > 1) {
+            const secondGameType = roomTabs[1].getAttribute('data-game');
+            fetchRooms(secondGameType);
+        }
+    }
+    
+    // Botones de actualizar salas
+    const refreshButtons = document.querySelectorAll('.refresh-rooms-button');
+    if (refreshButtons.length > 0) {
+        refreshButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const gameType = this.getAttribute('data-game');
+                if (gameType) {
+                    // Añadir clase de rotación al icono de actualizar
                     const icon = this.querySelector('i');
                     if (icon) {
                         icon.classList.add('fa-spin');
-                        setTimeout(() => icon.classList.remove('fa-spin'), 1000);
+                        setTimeout(() => {
+                            icon.classList.remove('fa-spin');
+                        }, 1000);
                     }
+                    
                     fetchRooms(gameType);
-                });
+                }
             });
-        }
-    } else if (!window.location.pathname.includes('index.html')) {
-        // For other pages like individual game pages
-        setupPlayerNameDisplayAndChange(); // So name change modal works
-        setupBackButtonNavigation();
+        });
     }
     
-    // Generic player name update for elements with class 'player-name' (e.g., in game headers)
-    const currentSavedPlayerName = localStorage.getItem('playerName') || 'Jugador';
-    document.querySelectorAll('.player-name').forEach(element => {
-        if (element.tagName !== 'INPUT' || !element.value || element.value === 'Jugador 1' || element.value === 'Jugador 2') {
-             element.textContent = currentSavedPlayerName;
-        }
-    });
+    // Botón de jugar QSM en el modal
+    goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
+    if (goToLobbyQSMButton) {
+        goToLobbyQSMButton.addEventListener('click', function() {
+            const qsmIntroModal = document.getElementById('qsmIntroModal');
+            if (qsmIntroModal) qsmIntroModal.classList.remove('active');
+            window.location.href = 'quiensabemas.html';
+        });
+    }
+    
+    // Si la URL tiene el parámetro showQSMIntro, mostrar el modal
+    const urlParams = new URLSearchParams(window.location.search);
+    const showQSMIntro = urlParams.get('showQSMIntro');
+    if (showQSMIntro === 'true') {
+        const qsmIntroModal = document.getElementById('qsmIntroModal');
+        if (qsmIntroModal) qsmIntroModal.classList.add('active');
+    }
 });
 
 // Animation helpers
@@ -379,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
             roomTabs.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
             
-            // Cambiar contenedores activos
+            // Mostrar el contenedor correspondiente
             gameRoomsContainers.forEach(container => {
                 container.classList.remove('active');
             });

@@ -1,167 +1,5 @@
 const WebSocket = require('ws');
 const { v4: uuidv4 } = require('uuid');
-const admin = require('firebase-admin');
-const fs = require('fs');
-const path = require('path');
-
-// --- CONFIGURACIÓN DE FIREBASE ADMIN ---
-// Asegúrate de que la ruta al archivo de clave de servicio sea correcta
-// y que el archivo NO esté en un repositorio público.
-// Idealmente, usa variables de entorno para la configuración en producción.
-try {
-  const serviceAccount = require('./firebase-service-account-key.json'); // <--- RUTA A TU ARCHIVO
-  if (!admin.apps.length) {
-    admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount)
-      // databaseURL: "https://TU_PROJECT_ID.firebaseio.com" // Opcional, si usas Realtime Database además de Firestore
-    });
-    console.log('Firebase Admin SDK inicializado correctamente.');
-  } else {
-    console.log('Firebase Admin SDK ya estaba inicializado.');
-  }
-  const db = admin.firestore(); // <--- Instancia de Firestore
-} catch (error) {
-  console.error('ERROR: No se pudo inicializar Firebase Admin SDK. Verifica la ruta a tu firebase-service-account-key.json y su contenido.', error);
-  // Considera terminar el proceso si Firebase es esencial y no se puede inicializar
-  // process.exit(1); 
-}
-// --- FIN CONFIGURACIÓN DE FIREBASE ADMIN ---
-
-// --- CONSTANTES PARA QUIEN SABE MAS (QSM) ---
-const QSM_MAX_LEVELS = 6;
-const QSM_QUESTIONS_PER_LEVEL = 3;
-const QSM_DATA_DIR = path.join(__dirname, '../data'); // Asumiendo que 'data' está en la raíz del proyecto, un nivel arriba de 'server'
-
-// --- Almacenamiento de Preguntas QSM ---
-let qsmAllQuestions = {}; // { level: [processedQuestion, ...] }
-
-// --- Lógica de Carga de Preguntas QSM (traída de server.js raíz) ---
-function qsmProcessRawQuestion(rawQ, level) {
-    // ... (Contenido de la función processRawQuestion de server.js raíz)
-    // Asegurarse de que las referencias a console.warn/error sean claras
-    if (!rawQ || typeof rawQ.pregunta !== 'string' || typeof rawQ.respuesta_correcta !== 'string') {
-        console.warn(`[QSM L${level} - FORMATO BASICO] Pregunta saltada. Falta 'pregunta' o 'respuesta_correcta'. Pregunta: ${rawQ ? rawQ.pregunta : 'DESCONOCIDA'}`);
-        return null;
-    }
-
-    let optionsArray = [];
-    let correctIndex = -1;
-    let correctAnswerText = '';
-    const optionKeys = ['A', 'B', 'C', 'D'];
-
-    if (!rawQ.opciones || typeof rawQ.opciones !== 'object' || rawQ.opciones === null) {
-        console.warn(`[QSM L${level} - OPCIONES] Pregunta saltada. Falta 'opciones' o no es un objeto. Pregunta: ${rawQ.pregunta}`);
-        return null;
-    }
-
-    optionsArray = optionKeys.map(key => {
-        const optionValue = rawQ.opciones[key];
-        if (typeof optionValue !== 'string') {
-            console.warn(`[QSM L${level} - OPCION INDIVIDUAL] Opción '${key}' para P '${rawQ.pregunta}' no es string. Valor: ${optionValue}`);
-            return undefined;
-        }
-        return optionValue;
-    });
-
-    const validOptionsArray = optionsArray.filter(opt => opt !== undefined);
-    if (validOptionsArray.length !== 4) {
-        console.warn(`[QSM L${level} - NUMERO OPCIONES] Pregunta saltada. No tiene 4 opciones válidas. P: ${rawQ.pregunta}. Opciones: [${validOptionsArray.join(', ')}]`);
-        return null;
-    }
-    optionsArray = validOptionsArray;
-
-    correctIndex = optionKeys.indexOf(rawQ.respuesta_correcta);
-    if (correctIndex === -1) {
-        console.warn(`[QSM L${level} - RESPUESTA] Clave de respuesta correcta inválida ('${rawQ.respuesta_correcta}') para P: ${rawQ.pregunta}.`);
-        return null;
-    }
-    correctAnswerText = optionsArray[correctIndex];
-    const normalizedCorrectAnswer = correctAnswerText.toLowerCase().trim().normalize("NFD").replace(/\p{Diacritic}/gu, "");
-
-    if (!normalizedCorrectAnswer) {
-        console.warn(`[QSM L${level} - TEXTO RESPUESTA] No se pudo determinar texto de respuesta para P: ${rawQ.pregunta}`);
-        return null;
-    }
-
-    return {
-        text: rawQ.pregunta,
-        options: optionsArray,
-        correctIndex: correctIndex,
-        correctAnswerText: normalizedCorrectAnswer,
-        level: level
-    };
-}
-
-function qsmLoadQuestions() {
-    console.log("===========================================");
-    console.log("  CARGANDO PREGUNTAS QSM (server/server.js) ");
-    console.log("===========================================");
-    console.log(`Buscando preguntas QSM en: ${QSM_DATA_DIR}...`);
-    qsmAllQuestions = {};
-    let totalLoadedOverall = 0;
-    let totalProcessedOverall = 0;
-
-    try {
-        for (let level = 1; level <= QSM_MAX_LEVELS; level++) {
-            console.log(`--- QSM Cargando Nivel ${level} ---`);
-            const filePath = path.join(QSM_DATA_DIR, `level_${level}.json`);
-            let questionsForThisLevelProcessed = 0;
-            let questionsForThisLevelValid = 0;
-
-            if (fs.existsSync(filePath)) {
-                const fileContent = fs.readFileSync(filePath, 'utf-8');
-                let jsonData;
-                try {
-                    jsonData = JSON.parse(fileContent);
-                } catch (parseError) {
-                    console.error(`[QSM NIVEL ${level}] ERROR FATAL JSON: ${filePath}. Error: ${parseError.message}`);
-                    qsmAllQuestions[level] = [];
-                    continue;
-                }
-                
-                if (jsonData && jsonData.preguntas && Array.isArray(jsonData.preguntas)) {
-                    questionsForThisLevelProcessed = jsonData.preguntas.length;
-                    totalProcessedOverall += questionsForThisLevelProcessed;
-
-                    qsmAllQuestions[level] = jsonData.preguntas
-                                            .map(q => qsmProcessRawQuestion(q, level)) // Usar la función con prefijo
-                                            .filter(q => q !== null);
-                    questionsForThisLevelValid = qsmAllQuestions[level].length;
-                    totalLoadedOverall += questionsForThisLevelValid;
-                    
-                    if (questionsForThisLevelProcessed === 0) {
-                        console.warn(`[QSM NIVEL ${level}] No se encontraron preguntas en 'preguntas' en ${filePath}.`);
-                    } else if (questionsForThisLevelValid === 0 && questionsForThisLevelProcessed > 0) {
-                        console.error(`[QSM NIVEL ${level}] ${questionsForThisLevelProcessed} procesadas, NINGUNA válida.`);
-                    } else {
-                        console.log(`[QSM NIVEL ${level}] Procesadas: ${questionsForThisLevelProcessed}, Válidas: ${questionsForThisLevelValid}.`);
-                    }
-                } else {
-                    console.error(`[QSM NIVEL ${level}] ERROR FORMATO: Falta array 'preguntas' en ${filePath}.`);
-                    qsmAllQuestions[level] = [];
-                }
-            } else {
-                console.warn(`[QSM NIVEL ${level}] ARCHIVO NO ENCONTRADO: ${filePath}`);
-                qsmAllQuestions[level] = [];
-            }
-            console.log(`--- Fin Carga QSM Nivel ${level} ---`);
-        }
-        console.log("===========================================");
-        console.log("     CARGANDO PREGUNTAS QSM - FIN          ");
-        console.log(`Total QSM procesadas: ${totalProcessedOverall}`);
-        console.log(`Total QSM VÁLIDAS cargadas: ${totalLoadedOverall}`);
-        console.log("===========================================");
-        if (totalLoadedOverall === 0 && totalProcessedOverall > 0) {
-             console.error("CRITICO QSM: Ninguna pregunta válida globalmente.");
-        } else if (totalLoadedOverall === 0) {
-            console.error("CRITICO QSM: No se cargaron preguntas. El juego no funcionará.");
-        }
-    } catch (error) {
-        console.error("ERROR GENERAL CARGA PREGUNTAS QSM:", error);
-        qsmAllQuestions = {};
-    }
-}
-// --- FIN Lógica de Carga de Preguntas QSM ---
 
 const PORT = process.env.PORT || 3000;
 const wss = new WebSocket.Server({ port: PORT });
@@ -171,7 +9,6 @@ const rooms = {}; // Almacenará las salas de juego activas
 const clients = new Map(); // Almacenará la información de los clientes conectados (ws -> {id, roomId, etc.})
 
 console.log(`Servidor WebSocket iniciado en el puerto ${PORT}`);
-qsmLoadQuestions();
 
 wss.on('connection', (ws) => {
     const clientId = uuidv4();
@@ -256,82 +93,50 @@ function handleClientMessage(ws, message) {
 
 function handleClientDisconnect(ws) {
     const clientData = clients.get(ws);
-    if (!clientData) {
-        console.warn("[Disconnect] Intento de desconectar cliente no encontrado en `clients` map.");
-        return; // Si no hay clientData, no hay nada que hacer
-    }
-
-    const clientId = clientData.id;
-    const clientName = clientData.name || `Cliente ${clientId.substring(0,4)}`;
-    const currentRoomId = clientData.roomId;
-
-    console.log(`[Disconnect] Cliente ${clientName} (${clientId}) desconectado.`);
+    if (!clientData) return; // Si no hay clientData, no hay nada que hacer
 
     // Si el cliente estaba en una sala, manejar la desconexión de la sala
-    if (currentRoomId) {
-        const room = rooms[currentRoomId];
-        if (room) {
-            console.log(`[Disconnect] Cliente ${clientName} estaba en sala ${currentRoomId} (${room.gameType}).`);
-            
-            const wasPlayerInRoom = room.players.find(p => p.id === clientId);
-            room.players = room.players.filter(player => player.id !== clientId);
-            clientData.roomId = null; // Actualizar clientData para reflejar que ya no está en una sala
+    if (clientData.roomId) {
+        const roomId = clientData.roomId;
+        const room = rooms[roomId];
 
+        if (room) {
+            console.log(`Cliente ${clientData.id} desconectado de la sala ${roomId}`);
+            // Eliminar al jugador de la sala
+            room.players = room.players.filter(player => player.id !== clientData.id);
+            // Actualizar clientData para reflejar que ya no está en una sala
+            clientData.roomId = null;
+
+            // Si la sala queda vacía, eliminarla
             if (room.players.length === 0) {
-                console.log(`[RoomCleanup] Sala ${currentRoomId} vacía tras desconexión de ${clientName}. Eliminándola.`);
-                delete rooms[currentRoomId];
+                console.log(`Sala ${roomId} vacía, eliminándola.`);
+                delete rooms[roomId];
             } else {
                 // Notificar al otro jugador (si queda alguno)
-                const remainingPlayer = room.players[0]; // En juegos 1v1, si queda alguien, es el único.
-                if (remainingPlayer && remainingPlayer.ws && remainingPlayer.ws.readyState === WebSocket.OPEN) {
-                    remainingPlayer.ws.send(JSON.stringify({
+                const otherPlayer = room.players[0]; // Asumimos que solo queda uno en un juego 1v1
+                if (otherPlayer && otherPlayer.ws && otherPlayer.ws.readyState === WebSocket.OPEN) {
+                    otherPlayer.ws.send(JSON.stringify({
                         type: 'playerDisconnect',
                         payload: { 
-                            disconnectedPlayerId: clientId,
-                            disconnectedPlayerName: clientName,
-                            message: `${clientName} se ha desconectado.`
+                            disconnectedPlayerId: clientData.id,
+                            disconnectedPlayerName: clientData.name || 'Un jugador',
+                            message: `${clientData.name || 'Un jugador'} se ha desconectado.`
                         }
                     }));
-                    console.log(`[Notify] Notificado a ${remainingPlayer.name} sobre desconexión de ${clientName} en sala ${currentRoomId}.`);
-                }
-
-                // Si el juego estaba activo, el jugador restante podría ganar por abandono.
-                // La lógica de endGame (Mentiroso o QSM) debería ser llamada por el flujo normal del juego 
-                // o cuando el cliente restante realiza una acción y el servidor nota que el oponente no está.
-                // Sin embargo, podemos forzar el fin del juego aquí para QSM si estaba activo.
-                if (room.gameState && room.gameState.gameActive) {
-                    console.log(`[GameImpact] Juego en sala ${currentRoomId} (${room.gameType}) estaba activo. ${clientName} se desconectó.`);
-                    if (room.gameType === 'quiensabemas') {
-                        // Para QSM, si un jugador se va, el otro gana automáticamente.
-                        // endGameQSM se encarga de las notificaciones y guardado en Firebase.
-                        if (room.players.length === 1) { // Asegurarse que realmente queda 1 jugador
-                           console.log(`[QSM AutoWin] ${remainingPlayer.name} gana por desconexión de ${clientName} en sala ${currentRoomId}.`);
-                           endGameQSM(room, `${clientName} se desconectó. ${remainingPlayer.name} gana.`);
-                        } else {
-                            // Esto no debería pasar si room.players.length no es 0 arriba.
-                             console.warn(`[QSM Disconnect] Juego activo pero número inesperado de jugadores (${room.players.length}) tras desconexión en sala ${currentRoomId}.`);
-                        }
-                    } else if (room.gameType === 'mentiroso') {
-                        // Para Mentiroso, el juego podría continuar o el otro jugador podría ser declarado ganador.
-                        // Por ahora, la lógica de timeouts o acciones del jugador restante manejará esto.
-                        // Si quieres que el jugador restante gane inmediatamente:
-                        // if (room.players.length === 1) {
-                        //    endGameMentiroso(room, `${clientName} se desconectó. ${remainingPlayer.name} gana.`);
-                        // }
-                        console.log(`[Mentiroso Disconnect] ${clientName} se desconectó de un juego activo de Mentiroso en sala ${currentRoomId}. El juego puede terminar o continuar.`);
+                    // Aquí podrías agregar lógica para terminar el juego si está activo
+                    if (room.gameState && room.gameState.gameActive) {
+                         // Lógica para manejar el fin del juego por desconexión
+                         // Por ejemplo, declarar al jugador restante como ganador
+                         console.log(`Juego en sala ${roomId} terminado debido a desconexión.`);
+                         // Esto se detallará más al implementar la lógica del juego
                     }
                 }
             }
-            // Después de modificar el estado de las salas (eliminada o jugador removido),
-            // actualizamos la lista para el lobby.
+            // Actualizar la lista de salas disponibles para todos los clientes en el lobby
             broadcastAvailableRooms(); 
-        } else {
-            console.warn(`[Disconnect] Cliente ${clientName} tenía roomId ${currentRoomId}, pero la sala no se encontró en \`rooms\`.`);
         }
     }
-
     clients.delete(ws); // Eliminar al cliente del mapa global de clientes
-    console.log(`[Disconnect] Cliente ${clientName} (${clientId}) eliminado de \`clients\`. Total clientes: ${clients.size}`);
 }
 
 // --- Funciones de utilidad y lógica del juego (se añadirán aquí) ---
@@ -355,23 +160,18 @@ function handleCreateRoom(ws, payload) {
 
     const roomId = generateRoomId();
     const playerName = payload.playerName || `Jugador ${clientData.id.substring(0, 4)}`;
-    const gameType = payload.gameType; // <<--- OBTENER DE PAYLOAD
-
-    if (!gameType || (gameType !== 'mentiroso' && gameType !== 'quiensabemas')) {
-        ws.send(JSON.stringify({ type: 'joinError', payload: { error: 'Tipo de juego no válido o no especificado.' } }));
-        return;
-    }
+    const gameType = payload.gameType || 'mentiroso'; // Default a mentiroso
 
     rooms[roomId] = {
         id: roomId,
         creatorId: clientData.id,
         creatorName: playerName,
         players: [{ id: clientData.id, name: playerName, ws: ws, score: 0 }],
-        gameType: gameType, // <<--- ALMACENAR gameType
+        gameType: gameType,
         password: payload.password || null,
         isPrivate: !!payload.password,
-        maxPlayers: 2, // Ambos juegos son 1v1 por ahora
-        gameState: null 
+        maxPlayers: 2, // Para Mentiroso 1v1
+        gameState: null // Se inicializará cuando comience el juego
     };
 
     clientData.roomId = roomId;
@@ -381,12 +181,12 @@ function handleCreateRoom(ws, payload) {
         type: 'roomCreated',
         payload: {
             roomId: roomId,
-            gameType: gameType, // Devolver gameType
-            players: rooms[roomId].players.map(p => ({ id: p.id, name: p.name, score: p.score }))
+            players: rooms[roomId].players.map(p => ({ id: p.id, name: p.name, score: p.score })),
+            // Podrías enviar más info de la sala aquí si es necesario
         }
     }));
-    console.log(`Sala ${roomId} (${gameType}) creada por ${playerName} (${clientData.id}).`);
-    broadcastAvailableRooms();
+    console.log(`Sala ${roomId} (${gameType}) creada por ${playerName} (${clientData.id}). Contraseña: ${payload.password ? 'Sí' : 'No'}`);
+    broadcastAvailableRooms(); // Actualizar lista para otros
 }
 
 function handleJoinRoom(ws, payload) {
@@ -396,7 +196,7 @@ function handleJoinRoom(ws, payload) {
         return;
     }
 
-    const { roomId, playerName, password } = payload; // gameType se verifica desde la sala
+    const { roomId, playerName, password, gameType } = payload;
     const room = rooms[roomId];
 
     if (!room) {
@@ -404,11 +204,10 @@ function handleJoinRoom(ws, payload) {
         return;
     }
 
-    // Opcional: verificar si el cliente especificó un gameType y si coincide con el de la sala
-    // if (payload.gameType && room.gameType !== payload.gameType) {
-    //     ws.send(JSON.stringify({ type: 'joinError', payload: { error: `Esta sala es para ${room.gameType}, no para ${payload.gameType}.`, failedRoomId: roomId } }));
-    //     return;
-    // }
+    if (room.gameType !== gameType && gameType) { // gameType es opcional, pero si se provee, debe coincidir
+         ws.send(JSON.stringify({ type: 'joinError', payload: { error: `Esta sala es para ${room.gameType}, no para ${gameType}.`, failedRoomId: roomId } }));
+        return;
+    }
 
     if (room.players.length >= room.maxPlayers) {
         ws.send(JSON.stringify({ type: 'joinError', payload: { error: 'La sala está llena.', failedRoomId: roomId } }));
@@ -427,41 +226,41 @@ function handleJoinRoom(ws, payload) {
     clientData.roomId = roomId;
     clientData.name = pName;
 
+    console.log(`[DEBUG] Jugador ${clientData.id} (${pName}) se unió a sala ${roomId}. Total jugadores: ${room.players.length}`);
+    console.log(`[DEBUG] Lista de jugadores: ${JSON.stringify(room.players.map(p => ({ id: p.id, name: p.name })))}`);
+
     const playerInfoForClient = room.players.map(p => ({ id: p.id, name: p.name, score: p.score }));
 
     ws.send(JSON.stringify({
         type: 'joinSuccess',
         payload: {
             roomId: roomId,
-            gameType: room.gameType, // Enviar el tipo de juego de la sala
             players: playerInfoForClient,
         }
     }));
 
+    // Notificar al otro jugador en la sala
     room.players.forEach(player => {
         if (player.ws && player.ws !== ws && player.ws.readyState === WebSocket.OPEN) {
             player.ws.send(JSON.stringify({
                 type: 'playerJoined',
                 payload: {
                     roomId: roomId,
-                    gameType: room.gameType,
                     newPlayer: { id: newPlayer.id, name: newPlayer.name, score: newPlayer.score },
-                    players: playerInfoForClient 
+                    players: playerInfoForClient // Enviar la lista actualizada de jugadores
                 }
             }));
         }
     });
     
-    console.log(`${pName} (${clientData.id}) se unió a la sala ${roomId} (${room.gameType}).`);
+    console.log(`${pName} (${clientData.id}) se unió a la sala ${roomId}.`);
 
-    if (room.players.length === room.maxPlayers) {
-        if (room.gameType === 'mentiroso') {
-            setTimeout(() => startGameMentiroso(room), 1000);
-        } else if (room.gameType === 'quiensabemas') {
-            setTimeout(() => startGameQSM(room), 1000); // <--- INICIAR JUEGO QSM
-        }
+    // Si la sala está llena (ej. 2 jugadores para 1v1), iniciar el juego Mentiroso
+    if (room.players.length === room.maxPlayers && room.gameType === 'mentiroso') {
+        // Esperar un poco para asegurar que ambos clientes han procesado el evento playerJoined
+        setTimeout(() => startGameMentiroso(room), 1000);
     }
-    broadcastAvailableRooms();
+    broadcastAvailableRooms(); // Actualizar lista para otros
 }
 
 function handleJoinRandomRoom(ws, payload) {
@@ -471,37 +270,32 @@ function handleJoinRandomRoom(ws, payload) {
         return;
     }
 
-    const gameType = payload.gameType; // El cliente DEBE especificar qué juego quiere
-    const playerName = payload.playerName;
-
-    if (!gameType || (gameType !== 'mentiroso' && gameType !== 'quiensabemas')) {
-        ws.send(JSON.stringify({ type: 'joinRandomError', payload: { error: 'Debes especificar un tipo de juego válido (mentiroso o quiensabemas) para unirte a una sala aleatoria.' } }));
-        return;
-    }
-
+    const gameType = payload.gameType || 'mentiroso';
     const availablePublicRooms = Object.values(rooms).filter(
         room => room.gameType === gameType &&
                 !room.isPrivate &&
-                room.players.length < room.maxPlayers &&
-                room.players.every(p => p.id !== clientData.id) // Asegurarse de no unirse a una sala creada por sí mismo si está vacía
+                room.players.length < room.maxPlayers
     );
 
     if (availablePublicRooms.length === 0) {
-        console.log(`No hay salas aleatorias de ${gameType} disponibles. Creando una nueva para ${playerName || clientData.id}`);
+        // No hay salas disponibles, podría crear una nueva o enviar mensaje
+        // Por ahora, creamos una nueva para este jugador
+        console.log(`No hay salas aleatorias de ${gameType} disponibles. Creando una nueva para ${payload.playerName || clientData.id}`);
         handleCreateRoom(ws, { 
-            playerName: playerName, 
+            playerName: payload.playerName, 
             password: null, // Pública
             gameType: gameType 
         });
         return;
     }
 
-    const roomToJoin = availablePublicRooms[0]; // Unirse a la primera disponible
+    // Unirse a la primera sala disponible (se podría añadir lógica más compleja de matchmaking)
+    const roomToJoin = availablePublicRooms[0];
     handleJoinRoom(ws, { 
         roomId: roomToJoin.id, 
-        playerName: playerName, 
+        playerName: payload.playerName, 
         password: null, // Es pública
-        // gameType se infiere de la sala a la que se une
+        gameType: gameType 
     });
 }
 
@@ -594,44 +388,35 @@ function broadcastToRoom(roomId, message, excludeWs = null) {
 // Modificamos el temporizador para llamar a una función separada
 function broadcastAvailableRooms() {
     const availableRoomsInfo = Object.values(rooms)
-        .filter(room => 
-            room.players.length < (room.maxPlayers || 2) && 
-            !room.isPrivate && // Solo públicas
-            (room.gameType === 'mentiroso' || room.gameType === 'quiensabemas') // Mostrar ambos tipos de juego
-        )
+        .filter(room => room.players.length < (room.maxPlayers || 2) && room.gameType === 'mentiroso') // Filtrar solo mentiroso por ahora
         .map(room => ({
             id: room.id,
             creatorName: room.creatorName,
             playerCount: room.players.length,
             maxPlayers: room.maxPlayers || 2,
             requiresPassword: !!room.password,
-            gameType: room.gameType // Incluir el gameType en la info de la sala
+            gameType: room.gameType
         }));    
     
-    // Filtrar clientes que están en el lobby (sin roomId)
-    let lobbyClientCount = 0;
-    clients.forEach((clientInfo, wsClient) => {
-        if (wsClient.readyState === WebSocket.OPEN && !clientInfo.roomId) { 
+    wss.clients.forEach(wsClient => {
+        const clientInfo = clients.get(wsClient); // Obtener clientData usando el ws como clave
+        // DEBUG: Mostrar información sobre cada cliente al intentar transmitir
+        console.log(`[BroadcastCheck] ClientID: ${clientInfo ? clientInfo.id : 'N/A'}, InRoom: ${clientInfo ? clientInfo.roomId : 'N/A'}`);
+
+        // Enviar solo a los que están en el lobby (no tienen roomId) y WebSocket está abierto
+        if (wsClient.readyState === WebSocket.OPEN && clientInfo && !clientInfo.roomId) { 
             try {
+                 // DEBUG: Confirmar a quién se está enviando la lista
+                console.log(`[BroadcastSend] Sending availableRooms to ClientID: ${clientInfo.id}`);
                 wsClient.send(JSON.stringify({ type: 'availableRooms', payload: { rooms: availableRoomsInfo } }));
-                lobbyClientCount++;
             } catch (error) {
-                console.error("Error enviando lista de salas disponibles a " + clientInfo.id, error);
+                console.error("Error enviando lista de salas disponibles:", error);
             }
         }
     });
-    if (lobbyClientCount > 0) {
-      // console.log(`Lista de salas disponibles (${availableRoomsInfo.length}) enviada a ${lobbyClientCount} clientes en el lobby.`);
-    }
 }
 
-// Ya no necesitamos el setInterval aquí si se llama después de crear/unir/salir
-// setInterval(broadcastAvailableRooms, 5000); 
-// En su lugar, llamamos a broadcastAvailableRooms() explícitamente después de cambios en las salas:
-// - Después de handleCreateRoom
-// - Después de handleJoinRoom
-// - Después de handleLeaveRoom
-// - Después de handleClientDisconnect (si afecta a una sala)
+setInterval(broadcastAvailableRooms, 5000); // Llama a la función cada 5 segundos
 
 // --- Lógica específica del Juego Mentiroso ---
 function startGameMentiroso(room) {
@@ -836,23 +621,20 @@ const mentirosoCategories = {
     { template: "¿Puedo nombrar X jugadores que salieron de las inferiores de River?" },
     { template: "¿Puedo nombrar X jugadores que salieron de las inferiores de Boca?" },
     { template: "¿Puedo nombrar X equipos que jugaron copas internacionales siendo de Argentina?" },
-    { template: "¿Puedo nombrar X goleadores históricos de un solo club argentino?" },
+    { template: "¿Puedo nombrar X goleadores históricos del futbol argentino?" },
     { template: "¿Puedo nombrar X futbolistas argentinos que volvieron del exterior al fútbol local?" },
     { template: "¿Puedo nombrar X entrenadores que dirigieron más de 5 equipos argentinos?" },
     { template: "¿Puedo nombrar X jugadores que pasaron por Boca y River?" },
-    { template: "¿Puedo nombrar X equipos que jugaron en el Nacional B y luego ascendieron?" },
+    { template: "¿Puedo nombrar X equipos que jugaron en el Nacional B y luego ascendieron en el ultimo siglo?" },
     { template: "¿Puedo nombrar X futbolistas que jugaron más de 300 partidos en el fútbol argentino?" },
-    { template: "¿Puedo nombrar X presidentes históricos de clubes argentinos?" },
+    { template: "¿Puedo nombrar X presidentes de clubes argentinos?" },
     { template: "¿Puedo nombrar X partidos recordados del fútbol argentino?" },
     { template: "¿Puedo nombrar X apodos de equipos argentinos?" },
-    { template: "¿Puedo nombrar X camisetas clásicas de equipos argentinos?" },
     { template: "¿Puedo nombrar X jugadores que fueron campeones con más de un club argentino?" },
     { template: "¿Puedo nombrar X árbitros reconocidos del fútbol argentino?" },
-    { template: "¿Puedo nombrar X equipos que participaron en liguillas pre-libertadores?" },
     { template: "¿Puedo nombrar X jugadores que se destacaron en torneos cortos?" },
     { template: "¿Puedo nombrar X entrenadores jóvenes del fútbol argentino actual?" },
-    { template: "¿Puedo nombrar X ídolos máximos de diferentes clubes argentinos?" },
-    { template: "¿Puedo nombrar X campeones invictos del fútbol argentino?" },
+    { template: "¿Puedo nombrar X ídolos de diferentes clubes argentinos?" },
     { template: "¿Puedo nombrar X jugadores que fueron goleadores y luego técnicos en Argentina?" }
   ],
   "Libertadores": [
@@ -869,7 +651,7 @@ const mentirosoCategories = {
     { template: "¿Puedo nombrar X clubes que participaron por primera vez desde 2010?" },
     { template: "¿Puedo nombrar X arqueros destacados de la Libertadores?" },
     { template: "¿Puedo nombrar X finales de Libertadores que se definieron por penales?" },
-    { template: "¿Puedo nombrar X partidos entre argentinos y brasileños en Libertadores?" },
+    { template: "¿Puedo nombrar X finales entre argentinos y brasileños en Libertadores?" },
     { template: "¿Puedo nombrar X jugadores extranjeros que ganaron Libertadores con clubes argentinos?" },
     { template: "¿Puedo nombrar X equipos paraguayos que jugaron semifinales?" },
     { template: "¿Puedo nombrar X jugadores que convirtieron goles en finales de Libertadores?" },
@@ -882,30 +664,23 @@ const mentirosoCategories = {
     { template: "¿Puedo nombrar X ediciones ganadas por clubes no argentinos ni brasileños?" },
     { template: "¿Puedo nombrar X partidos de Libertadores con más de 5 goles?" },
     { template: "¿Puedo nombrar X goles recordados en finales de Libertadores?" },
-    { template: "¿Puedo nombrar X equipos que ascendieron y luego jugaron Libertadores?" },
-    { template: "¿Puedo nombrar X ediciones consecutivas jugadas por un mismo club?" },
-    { template: "¿Puedo nombrar X finales jugadas por equipos argentinos?" },
     { template: "¿Puedo nombrar X técnicos que dirigieron más de 20 partidos de Libertadores?" }
   ],
   "Mundiales": [
-    { template: "¿Puedo nombrar X países campeones del mundo?" },
     { template: "¿Puedo nombrar X goleadores históricos de los Mundiales?" },
     { template: "¿Puedo nombrar X jugadores argentinos con al menos 2 mundiales jugados?" },
     { template: "¿Puedo nombrar X países que organizaron un Mundial?" },
     { template: "¿Puedo nombrar X jugadores que jugaron 3 o más mundiales?" },
-    { template: "¿Puedo nombrar X campeones del mundo desde 1970?" },
     { template: "¿Puedo nombrar X jugadores que marcaron goles en finales del Mundial?" },
     { template: "¿Puedo nombrar X arqueros titulares en mundiales?" },
     { template: "¿Puedo nombrar X jugadores expulsados en mundiales?" },
     { template: "¿Puedo nombrar X partidos que terminaron por penales en mundiales?" },
     { template: "¿Puedo nombrar X países que llegaron a semifinales del Mundial?" },
-    { template: "¿Puedo nombrar X mundiales donde jugó Messi?" },
     { template: "¿Puedo nombrar X selecciones africanas que jugaron mundiales?" },
     { template: "¿Puedo nombrar X selecciones asiáticas que participaron en mundiales?" },
     { template: "¿Puedo nombrar X técnicos campeones del mundo?" },
     { template: "¿Puedo nombrar X mundiales donde hubo al menos un jugador expulsado en la final?" },
     { template: "¿Puedo nombrar X jugadores que usaron la 10 en un Mundial?" },
-    { template: "¿Puedo nombrar X países que clasificaron al Mundial 2022?" },
     { template: "¿Puedo nombrar X goles en finales de mundiales?" },
     { template: "¿Puedo nombrar X jugadores que fueron capitanes en un Mundial?" },
     { template: "¿Puedo nombrar X países que hayan eliminado a Argentina en mundiales?" },
@@ -917,7 +692,6 @@ const mentirosoCategories = {
     { template: "¿Puedo nombrar X selecciones que clasificaron a más de 10 mundiales?" },
     { template: "¿Puedo nombrar X jugadores que hicieron doblete en un partido de Mundial?" },
     { template: "¿Puedo nombrar X países que nunca jugaron un Mundial?" },
-    { template: "¿Puedo nombrar X camisetas históricas usadas en mundiales?" }
   ],
   "Champions League": [
     { template: "¿Puedo nombrar X equipos que hayan ganado la Champions League?" },
@@ -928,7 +702,6 @@ const mentirosoCategories = {
     { template: "¿Puedo nombrar X clubes que hayan llegado a la final sin ganarla?" },
     { template: "¿Puedo nombrar X jugadores brasileños que hayan ganado la Champions?" },
     { template: "¿Puedo nombrar X países que tuvieron equipos en semifinales de Champions?" },
-    { template: "¿Puedo nombrar X equipos italianos que hayan jugado la Champions?" },
     { template: "¿Puedo nombrar X equipos que eliminaron al Real Madrid en Champions?" },
     { template: "¿Puedo nombrar X finales que se definieron por penales en Champions?" },
     { template: "¿Puedo nombrar X equipos ingleses que hayan ganado la Champions?" },
@@ -940,10 +713,9 @@ const mentirosoCategories = {
     { template: "¿Puedo nombrar X campeones de Champions entre 1990 y 2020?" },
     { template: "¿Puedo nombrar X defensores que hayan sido titulares en finales de Champions?" },
     { template: "¿Puedo nombrar X jugadores franceses campeones de Champions?" },
-    { template: "¿Puedo nombrar X goles en finales de Champions entre 2010 y 2024?" },
+    { template: "¿Puedo nombrar X goles en finales de Champions entre 2010 y 2025?" },
     { template: "¿Puedo nombrar X partidos de Champions que terminaron con goleada?" },
     { template: "¿Puedo nombrar X arqueros que hayan sido titulares en finales de Champions?" },
-    { template: "¿Puedo nombrar X clubes con más de 10 participaciones en Champions?" },
     { template: "¿Puedo nombrar X jugadores que hayan sido MVP de una final de Champions?" },
     { template: "¿Puedo nombrar X equipos que hayan enfrentado al PSG en Champions?" },
     { template: "¿Puedo nombrar X jugadores sudamericanos que hayan jugado finales de Champions?" },
@@ -961,26 +733,19 @@ const mentirosoCategories = {
     { template: "¿Puedo nombrar X rivales históricos de Argentina en Copas del Mundo?" },
     { template: "¿Puedo nombrar X arqueros que hayan sido titulares en la Selección?" },
     { template: "¿Puedo nombrar X capitanes de la Selección Argentina?" },
-    { template: "¿Puedo nombrar X goles famosos de la Selección Argentina?" },
     { template: "¿Puedo nombrar X jugadores que jugaron más de 50 partidos con la Selección?" },
     { template: "¿Puedo nombrar X campeones del mundo con Argentina?" },
     { template: "¿Puedo nombrar X jugadores que jugaron más de una Copa América?" },
-    { template: "¿Puedo nombrar X jugadores argentinos que jugaron en Europa y fueron convocados?" },
     { template: "¿Puedo nombrar X partidos de eliminatorias en los que jugó Argentina?" },
     { template: "¿Puedo nombrar X títulos ganados por la Selección Argentina?" },
-    { template: "¿Puedo nombrar X juveniles que llegaron a la mayor desde la Sub-20?" },
-    { template: "¿Puedo nombrar X partidos entre Argentina y Brasil?" },
     { template: "¿Puedo nombrar X mediocampistas históricos de la Selección?" },
     { template: "¿Puedo nombrar X delanteros históricos de la Selección?" },
     { template: "¿Puedo nombrar X defensores que fueron titulares en torneos oficiales?" },
     { template: "¿Puedo nombrar X jugadores que compartieron cancha con Messi en la Selección?" },
     { template: "¿Puedo nombrar X equipos contra los que Argentina jugó más de 5 veces?" },
-    { template: "¿Puedo nombrar X goles de Argentina en el Mundial 2022?" },
-    { template: "¿Puedo nombrar X penales pateados por Argentina en Copas del Mundo?" },
     { template: "¿Puedo nombrar X amistosos jugados por Argentina en los últimos 10 años?" },
     { template: "¿Puedo nombrar X goles de tiro libre de jugadores argentinos en la Selección?" },
     { template: "¿Puedo nombrar X estadios donde jugó Argentina de local?" },
-    { template: "¿Puedo nombrar X jugadores de clubes argentinos que fueron convocados?" },
     { template: "¿Puedo nombrar X jugadores de la Scaloneta?" }
   ],
   "Fútbol General": [
@@ -990,21 +755,15 @@ const mentirosoCategories = {
     { template: "¿Puedo nombrar X entrenadores famosos a nivel mundial?" },
     { template: "¿Puedo nombrar X jugadores históricos del fútbol mundial?" },
     { template: "¿Puedo nombrar X clásicos del fútbol mundial?" },
-    { template: "¿Puedo nombrar X camisetas icónicas del fútbol?" },
-    { template: "¿Puedo nombrar X jugadores que hayan jugado en más de 5 países?" },
+    { template: "¿Puedo nombrar X jugadores que hayan jugado en 5 o mas ligas distintas?" },
     { template: "¿Puedo nombrar X arqueros históricos del fútbol mundial?" },
     { template: "¿Puedo nombrar X selecciones con al menos un título internacional?" },
-    { template: "¿Puedo nombrar X jugadores que hayan jugado en el Real Madrid y el Barcelona?" },
-    { template: "¿Puedo nombrar X clubes que hayan ganado copas continentales?" },
-    { template: "¿Puedo nombrar X países que han sido sede de competiciones FIFA?" },
-    { template: "¿Puedo nombrar X ligas nacionales con más de 20 equipos?" },
+    { template: "¿Puedo nombrar X jugadores que hayan jugado en el Real Madrid y el Barcelona?" },    { template: "¿Puedo nombrar X países que han sido sede de competiciones FIFA?" },
     { template: "¿Puedo nombrar X futbolistas que se retiraron en 2020 o después?" },
     { template: "¿Puedo nombrar X jugadores que pasaron de Sudamérica a Europa?" },
     { template: "¿Puedo nombrar X jugadores que fueron capitanes en sus selecciones?" },
     { template: "¿Puedo nombrar X futbolistas que jugaron en equipos árabes?" },
-    { template: "¿Puedo nombrar X delanteros históricos de Europa?" },
     { template: "¿Puedo nombrar X técnicos que dirigieron selecciones y clubes top?" },
-    { template: "¿Puedo nombrar X países que participaron en la Copa Confederaciones?" },
     { template: "¿Puedo nombrar X equipos con más de 100 años de historia?" },
     { template: "¿Puedo nombrar X jugadores que hayan sido campeones olímpicos?" },
     { template: "¿Puedo nombrar X futbolistas que usaron la camiseta número 7 en clubes famosos?" },
@@ -1013,7 +772,6 @@ const mentirosoCategories = {
     { template: "¿Puedo nombrar X entrenadores que ganaron títulos en 3 países distintos?" },
     { template: "¿Puedo nombrar X jugadores que fueron figura en mundiales juveniles?" },
     { template: "¿Puedo nombrar X futbolistas africanos destacados de las últimas décadas?" },
-    { template: "¿Puedo nombrar X defensores históricos a nivel mundial?" }
   ]
 };
 
@@ -1030,12 +788,13 @@ function getChallengeTemplateForCategory(categoryName) {
     return randomChallengeObj.template;
 }
 
-async function endGameMentiroso(room, reason = "Juego finalizado") {
-    if (!room || !room.gameState || !room.gameState.gameActive) return;
-
+function endGameMentiroso(room, reason = "Juego finalizado") {
+    if (!room || !room.gameState || !room.gameState.gameActive) return; // Prevenir múltiples finales
+    
     console.log(`Juego Mentiroso terminado en sala ${room.id}. Razón: ${reason}`);
     room.gameState.gameActive = false;
 
+    // Determinar ganador
     let winnerId = null;
     let draw = false;
     const scores = room.gameState.scores;
@@ -1050,8 +809,9 @@ async function endGameMentiroso(room, reason = "Juego finalizado") {
             draw = true;
         }
     } else if (playerIds.length === 1) {
-        winnerId = playerIds[0];
+        winnerId = playerIds[0]; // Si solo queda uno, es el ganador por defecto
     }
+    // Si no hay jugadores, no hay ganador (esto no debería pasar si el juego empezó)
 
     const finalPayload = {
         gameType: 'mentiroso',
@@ -1064,58 +824,10 @@ async function endGameMentiroso(room, reason = "Juego finalizado") {
 
     broadcastToRoom(room.id, { type: 'gameOver', payload: finalPayload });
 
-    // --- GUARDAR RESULTADOS EN FIREBASE ---
-    try {
-        const db = admin.firestore(); // Obtener instancia de Firestore
-        const batch = db.batch(); // Usar un batch para múltiples escrituras
-
-        // 1. Guardar la partida en la colección 'matches'
-        const matchDocRef = db.collection('matches').doc(); // Nuevo documento con ID automático
-        const matchData = {
-            gameType: "mentiroso",
-            timestamp: admin.firestore.FieldValue.serverTimestamp(),
-            reason: reason,
-            roomId: room.id,
-            players: room.players.map(p => ({
-                playerId: p.id,
-                displayName: p.name,
-                score: scores[p.id] || 0,
-                isWinner: p.id === winnerId && !draw,
-                isDraw: draw
-            })),
-            // Puedes añadir más detalles de la partida si es necesario
-        };
-        batch.set(matchDocRef, matchData);
-        console.log(`[Firebase] Datos de partida Mentiroso preparados para sala ${room.id}`);
-
-        // 2. Actualizar estadísticas de cada jugador en la colección 'users'
-        for (const player of room.players) {
-            const userDocRef = db.collection('users').doc(player.id);
-            const userStatsUpdate = {
-                displayName: player.name, // Asegurar que el nombre esté actualizado
-                lastPlayed: admin.firestore.FieldValue.serverTimestamp(),
-                [`stats.mentiroso.played`]: admin.firestore.FieldValue.increment(1),
-                [`stats.mentiroso.totalScore`]: admin.firestore.FieldValue.increment(scores[player.id] || 0),
-            };
-            if (player.id === winnerId && !draw) {
-                userStatsUpdate[`stats.mentiroso.wins`] = admin.firestore.FieldValue.increment(1);
-            } else if (draw) {
-                userStatsUpdate[`stats.mentiroso.draws`] = admin.firestore.FieldValue.increment(1);
-            } else {
-                userStatsUpdate[`stats.mentiroso.losses`] = admin.firestore.FieldValue.increment(1);
-            }
-            batch.set(userDocRef, userStatsUpdate, { merge: true }); // Usar set con merge para crear si no existe
-            console.log(`[Firebase] Estadísticas de usuario Mentiroso preparadas para ${player.id} (${player.name})`);
-        }
-
-        await batch.commit(); // Ejecutar todas las operaciones en el batch
-        console.log(`[Firebase] Resultados de Mentiroso para sala ${room.id} guardados exitosamente.`);
-
-    } catch (error) {
-        console.error(`[Firebase] ERROR al guardar resultados de Mentiroso para sala ${room.id}:`, error);
-        // Opcional: notificar a los jugadores del error si es crítico, o solo loguearlo
-    }
-    // --- FIN GUARDAR RESULTADOS EN FIREBASE ---
+    // Opcional: Limpiar la sala o marcarla como "post-juego" para que puedan jugar de nuevo o irse
+    // Por ahora, la sala persiste hasta que los jugadores se van y queda vacía.
+    // Podrías resetear el gameState de la sala aquí si quieres permitir revanchas inmediatas sin volver al lobby
+    // room.gameState = null;
 }
 
 // --- Implementación de funciones para manejar mensajes del juego Mentiroso ---
@@ -1509,436 +1221,3 @@ CATEGORY_ORDER.forEach(category => {
     const exampleQuestion = getChallengeTemplateForCategory(category);
     console.log(`${category}: "${exampleQuestion}"`);
 }); 
-
-// --- LÓGICA DEL JUEGO QUIEN SABE MAS (QSM) ---
-
-function startGameQSM(room) {
-    if (!room || room.players.length !== 2) {
-        console.error(`[QSM] Error al iniciar juego en sala ${room.id}: Se requieren 2 jugadores.`);
-        // Podríamos notificar a los jugadores si es necesario
-        return;
-    }
-    if (room.gameState && room.gameState.gameActive) {
-        console.warn(`[QSM] Intento de iniciar juego ya activo en sala ${room.id}`);
-        return;
-    }
-
-    console.log(`[QSM] Iniciando juego en sala ${room.id} con jugadores: ${room.players.map(p => p.name).join(', ')}`);
-
-    room.gameState = {
-        gameType: 'quiensabemas',
-        gameActive: true,
-        currentLevel: 1,
-        questionsAnsweredInLevel: 0,
-        usedQuestionIndices: {}, // { level: [index1, index2] }
-        currentQuestion: null,
-        optionsSent: false, // Para QSM, las opciones se envían con la pregunta o bajo demanda L>1
-        fiftyFiftyUsed: false,
-        questionsPerLevel: QSM_QUESTIONS_PER_LEVEL,
-        scores: { // Inicializar scores aquí, obteniendo los IDs de room.players
-            [room.players[0].id]: 0,
-            [room.players[1].id]: 0
-        },
-        // currentTurn se determinará antes de la primera pregunta
-    };
-
-    for (let l = 1; l <= QSM_MAX_LEVELS; l++) {
-        room.gameState.usedQuestionIndices[l] = [];
-    }
-    
-    // Resetear scores en el objeto player también, aunque gameState.scores es la fuente de verdad durante el juego.
-    room.players.forEach(p => { p.score = 0; });
-
-    // Determinar jugador inicial aleatoriamente
-    room.gameState.currentTurn = Math.random() < 0.5 ? room.players[0].id : room.players[1].id;
-
-    const gameStartPayloadQSM = {
-        gameType: 'quiensabemas',
-        players: room.players.map(p => ({ id: p.id, name: p.name, score: 0 })),
-        startingPlayerId: room.gameState.currentTurn
-    };
-
-    broadcastToRoom(room.id, { type: 'gameStart', payload: gameStartPayloadQSM });
-    console.log(`[QSM] Sala ${room.id}: Juego iniciado. Turno para ${room.gameState.currentTurn}`);
-
-    // Enviar la primera pregunta
-    setTimeout(() => sendNextQuestionQSM(room.id), 50); 
-}
-
-function sendNextQuestionQSM(roomId) {
-    const room = rooms[roomId];
-    if (!room || !room.gameState || !room.gameState.gameActive) {
-        console.log(`[QSM sendNextQuestion] Abortado para sala ${roomId} - no activa o no existe.`);
-        return;
-    }
-    if (!room.players[0] || !room.players[1]) {
-        console.warn(`[QSM sendNextQuestion] Abortado para sala ${roomId} - jugador(es) faltantes.`);
-        if (room.gameState.gameActive) endGameQSM(room, "Un jugador se desconectó.");
-        return;
-    }
-
-    const gs = room.gameState; // gameState
-
-    if (gs.questionsAnsweredInLevel >= gs.questionsPerLevel) {
-        gs.currentLevel++;
-        gs.questionsAnsweredInLevel = 0;
-        console.log(`[QSM] Sala ${roomId} avanzando a Nivel ${gs.currentLevel}`);
-    }
-
-    if (gs.currentLevel > QSM_MAX_LEVELS) {
-        console.log(`[QSM] Sala ${roomId} alcanzó nivel máximo.`);
-        endGameQSM(room, "Se completaron todos los niveles!");
-        return;
-    }
-
-    if (!qsmAllQuestions[gs.currentLevel] || qsmAllQuestions[gs.currentLevel].length === 0) {
-        console.error(`[QSM CRITICO] Sala ${roomId}: No hay preguntas para Nivel ${gs.currentLevel}. Terminando juego.`);
-        endGameQSM(room, "Error: No hay preguntas disponibles para este nivel.");
-        return;
-    }
-
-    const questionsForLevel = qsmAllQuestions[gs.currentLevel];
-    if (!gs.usedQuestionIndices[gs.currentLevel]) {
-        gs.usedQuestionIndices[gs.currentLevel] = [];
-    }
-    const usedIndices = gs.usedQuestionIndices[gs.currentLevel];
-    const availableIndices = questionsForLevel
-        .map((_, index) => index)
-        .filter(index => !usedIndices.includes(index));
-
-    if (availableIndices.length === 0) {
-        console.warn(`[QSM] Sala ${roomId}: No quedan preguntas sin usar para Nivel ${gs.currentLevel}. Terminando juego.`);
-        endGameQSM(room, `Se acabaron las preguntas para el Nivel ${gs.currentLevel}.`);
-        return;
-    }
-
-    const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
-    gs.currentQuestion = { ...questionsForLevel[randomIndex] }; // Copiar la pregunta para evitar mutaciones si es necesario
-    gs.usedQuestionIndices[gs.currentLevel].push(randomIndex);
-    gs.questionsAnsweredInLevel++;
-    gs.optionsSent = false; // Resetear para la nueva pregunta
-    gs.fiftyFiftyUsed = false; // Resetear para la nueva pregunta
-
-    const questionPayload = {
-        level: gs.currentQuestion.level,
-        text: gs.currentQuestion.text,
-        options: gs.currentQuestion.options // En QSM, las opciones siempre se envían con la pregunta
-    };
-
-    const playersCurrentInfo = room.players.map(p => ({ id: p.id, name: p.name, score: gs.scores[p.id] || 0 }));
-
-    const message = {
-        type: 'newQuestion', // El cliente espera 'newQuestion'
-        payload: {
-            gameType: 'quiensabemas',
-            question: questionPayload,
-            questionNumber: gs.questionsAnsweredInLevel,
-            totalQuestionsInLevel: gs.questionsPerLevel,
-            currentTurn: gs.currentTurn,
-            players: playersCurrentInfo
-        }
-    };
-    console.log(`[QSM] Sala ${roomId} - Enviando Q${gs.questionsAnsweredInLevel} L${gs.currentLevel}, Turno: ${gs.currentTurn}`);
-    broadcastToRoom(roomId, message);
-}
-
-// Las funciones handleSubmitAnswerQSM, handleRequestOptionsQSM, handleRequestFiftyFiftyQSM, endGameQSM
-// serán muy similares a las de server.js (raíz), pero adaptadas para usar room.gameState y qsmAllQuestions
-// y la estructura de `rooms` y `clients` de server/server.js
-
-// Implementaremos estas funciones a continuación.
-
-// No olvides actualizar handleClientMessage para dirigir los mensajes de QSM a estas nuevas funciones.
-
-// ... (código existente de Mentiroso, como endGameMentiroso, etc.)
-
-function handleSubmitAnswerQSM(ws, clientData, payload) {
-    const roomId = clientData.roomId;
-    const room = rooms[roomId];
-
-    if (!room || !room.gameState || !room.gameState.gameActive || room.gameState.gameType !== 'quiensabemas') {
-        ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'Juego QSM no activo o sala incorrecta.' } }));
-        return;
-    }
-
-    const gs = room.gameState;
-    if (clientData.id !== gs.currentTurn) {
-        ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'No es tu turno en QSM.' } }));
-        return;
-    }
-    if (!gs.currentQuestion) {
-        ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'No hay pregunta activa en QSM.' } }));
-        return;
-    }
-    if (!room.players[0] || !room.players[1]) {
-        console.warn(`[QSM handleSubmitAnswer] en sala ${roomId} pero falta un jugador.`);
-        if (gs.gameActive) endGameQSM(room, "Un jugador se desconectó antes de responder.");
-        return;
-    }
-
-    const question = gs.currentQuestion;
-    let isCorrect = false;
-    let pointsAwarded = 0;
-    let submittedAnswerIndex = -1;
-
-    if (payload && typeof payload.selectedIndex === 'number') {
-        submittedAnswerIndex = payload.selectedIndex;
-        if (submittedAnswerIndex >= 0 && submittedAnswerIndex < question.options.length) {
-            isCorrect = submittedAnswerIndex === question.correctIndex;
-            console.log(`[QSM] Sala ${roomId} L${question.level} Respuesta (Índice): Enviado=${submittedAnswerIndex}, Correcto=${question.correctIndex}, Resultado=${isCorrect}`);
-        } else {
-            ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'Respuesta QSM inválida (índice fuera de rango).' } }));
-            return;
-        }
-    } else {
-        ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'Respuesta QSM inválida (falta selectedIndex).' } }));
-        return;
-    }
-
-    const currentPlayer = room.players.find(p => p.id === clientData.id);
-    if (isCorrect) {
-        pointsAwarded = gs.fiftyFiftyUsed ? 0.5 : 1;
-        gs.scores[clientData.id] = (gs.scores[clientData.id] || 0) + pointsAwarded;
-        if (currentPlayer) currentPlayer.score = gs.scores[clientData.id]; // Actualizar también el score en el objeto player si se usa
-    }
-
-    const resultPayload = {
-        isCorrect: isCorrect,
-        pointsAwarded: pointsAwarded,
-        correctAnswerText: question.correctAnswerText.toUpperCase(),
-        correctIndex: question.correctIndex,
-        forPlayerId: clientData.id,
-        submittedAnswerText: null, // QSM no usa texto directo para responder aquí
-        selectedIndex: submittedAnswerIndex
-    };
-
-    broadcastToRoom(roomId, { type: 'answerResult', payload: resultPayload });
-
-    // Cambiar turno
-    gs.currentTurn = room.players.find(p => p.id !== clientData.id)?.id;
-    if (!gs.currentTurn) { // Fallback si algo sale mal encontrando al otro jugador
-        console.error("[QSM] No se pudo determinar el siguiente turno, finalizando juego.");
-        endGameQSM(room, "Error al determinar el siguiente turno.");
-        return;
-    }
-
-    const playersCurrentInfo = room.players.map(p => ({ id: p.id, name: p.name, score: gs.scores[p.id] || 0 }));
-    const updatePayload = { currentTurn: gs.currentTurn, players: playersCurrentInfo };
-    broadcastToRoom(roomId, { type: 'updateState', payload: updatePayload });
-
-    setTimeout(() => {
-        const currentRoom = rooms[roomId];
-        if (currentRoom && currentRoom.gameState && currentRoom.gameState.gameActive) {
-            sendNextQuestionQSM(roomId);
-        }
-    }, 1500);
-}
-
-function handleRequestOptionsQSM(ws, clientData) { // Prácticamente deprecada si las opciones van con la pregunta
-    const roomId = clientData.roomId;
-    const room = rooms[roomId];
-    if (!room || !room.gameState || !room.gameState.gameActive || room.gameState.gameType !== 'quiensabemas' || clientData.id !== room.gameState.currentTurn || !room.gameState.currentQuestion || room.gameState.optionsSent) {
-        ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'No se pueden solicitar opciones QSM ahora.' } }));
-        return;
-    }
-    room.gameState.optionsSent = true;
-    if (!room.gameState.currentQuestion.options || room.gameState.currentQuestion.options.length === 0) {
-        ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'Error obteniendo opciones QSM.' } }));
-        room.gameState.optionsSent = false;
-        return;
-    }
-    safeSend(ws, { type: 'optionsProvided', payload: { options: room.gameState.currentQuestion.options } });
-}
-
-function handleRequestFiftyFiftyQSM(ws, clientData) {
-    const roomId = clientData.roomId;
-    const room = rooms[roomId];
-    if (!room || !room.gameState || !room.gameState.gameActive || room.gameState.gameType !== 'quiensabemas' || clientData.id !== room.gameState.currentTurn || !room.gameState.currentQuestion || !room.gameState.currentQuestion.options || room.gameState.currentQuestion.options.length < 4 /*|| !room.gameState.optionsSent*/ || room.gameState.fiftyFiftyUsed) {
-        // Ya no se chequea optionsSent porque las opciones vienen con la pregunta
-        ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'No se puede usar 50/50 QSM ahora.' } }));
-        return;
-    }
-
-    room.gameState.fiftyFiftyUsed = true;
-    const correctIndex = room.gameState.currentQuestion.correctIndex;
-    const optionsCount = room.gameState.currentQuestion.options.length;
-    let indicesToRemove = [];
-    const allIndices = Array.from({ length: optionsCount }, (_, i) => i);
-    const incorrectIndices = allIndices.filter(index => index !== correctIndex);
-    for (let i = incorrectIndices.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [incorrectIndices[i], incorrectIndices[j]] = [incorrectIndices[j], incorrectIndices[i]];
-    }
-    indicesToRemove = incorrectIndices.slice(0, 2); // Tomar 2 incorrectas para remover
-
-    if (indicesToRemove.length === 2) {
-        safeSend(ws, { type: 'fiftyFiftyApplied', payload: { optionsToRemove: indicesToRemove } });
-    } else {
-        room.gameState.fiftyFiftyUsed = false; 
-        ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'Fallo al aplicar 50/50 QSM.' } }));
-    }
-}
-
-async function endGameQSM(room, reason = "Juego QSM finalizado") { // Debe ser async por Firebase
-    if (!room || !room.gameState || !room.gameState.gameActive) {
-        return;
-    }
-    console.log(`[QSM] Terminando juego en sala ${room.id}. Razón: ${reason}`);
-    room.gameState.gameActive = false;
-
-    let winnerId = null;
-    let draw = false;
-    const p1Data = room.players[0];
-    const p2Data = room.players[1];
-    const scores = room.gameState.scores;
-
-    if (p1Data && p2Data) {
-        if (scores[p1Data.id] > scores[p2Data.id]) winnerId = p1Data.id;
-        else if (scores[p2Data.id] > scores[p1Data.id]) winnerId = p2Data.id;
-        else draw = true;
-    } else if (p1Data && !p2Data) {
-        winnerId = p1Data.id;
-        reason = reason || `${p1Data.name} gana! Oponente desconectado.`;
-    } else if (!p1Data && p2Data) {
-        winnerId = p2Data.id;
-        reason = reason || `${p2Data.name} gana! Oponente desconectado.`;
-    } else {
-        console.warn(`[QSM endGame] sala ${room.id} sin jugadores.`);
-    }
-
-    const finalPayload = {
-        gameType: 'quiensabemas',
-        finalScores: scores,
-        winnerId: winnerId,
-        draw: draw,
-        reason: reason,
-        players: room.players.map(p => ({ id: p.id, name: p.name, finalScore: scores[p.id] || 0 }))
-    };
-    broadcastToRoom(room.id, { type: 'gameOver', payload: finalPayload });
-
-    // --- GUARDAR RESULTADOS EN FIREBASE (Quien Sabe Mas) ---
-    try {
-        const db = admin.firestore(); 
-        const batch = db.batch();
-
-        const matchDocRef = db.collection('matches').doc();
-        const matchData = {
-            gameType: "quiensabemas",
-            timestamp: admin.firestore.FieldValue.serverTimestamp(),
-            reason: reason,
-            roomId: room.id,
-            players: room.players.map(p => ({
-                playerId: p.id,
-                displayName: p.name,
-                score: scores[p.id] || 0,
-                isWinner: p.id === winnerId && !draw,
-                isDraw: draw
-            }))
-        };
-        batch.set(matchDocRef, matchData);
-
-        for (const player of room.players) {
-            const userDocRef = db.collection('users').doc(player.id);
-            const userStatsUpdate = {
-                displayName: player.name,
-                lastPlayed: admin.firestore.FieldValue.serverTimestamp(),
-                [`stats.quiensabemas.played`]: admin.firestore.FieldValue.increment(1),
-                [`stats.quiensabemas.totalScore`]: admin.firestore.FieldValue.increment(scores[player.id] || 0),
-            };
-            if (player.id === winnerId && !draw) {
-                userStatsUpdate[`stats.quiensabemas.wins`] = admin.firestore.FieldValue.increment(1);
-            } else if (draw) {
-                userStatsUpdate[`stats.quiensabemas.draws`] = admin.firestore.FieldValue.increment(1);
-            } else if (winnerId && ( (p1Data && p1Data.id === player.id && p2Data) || (p2Data && p2Data.id === player.id && p1Data) ) ) {
-                 // Solo contar derrota si hubo un oponente y no fue empate ni victoria
-                userStatsUpdate[`stats.quiensabemas.losses`] = admin.firestore.FieldValue.increment(1);
-            }
-            batch.set(userDocRef, userStatsUpdate, { merge: true });
-        }
-        await batch.commit();
-        console.log(`[Firebase QSM] Resultados para sala ${room.id} guardados.`);
-    } catch (error) {
-        console.error(`[Firebase QSM] ERROR guardando resultados para sala ${room.id}:`, error);
-    }
-    // --- FIN GUARDAR RESULTADOS ---
-}
-
-
-function handleClientMessage(ws, message) {
-    const clientData = clients.get(ws);
-    if (!clientData) {
-        console.error("Mensaje de cliente no registrado.");
-        return;
-    }
-
-    const { type, payload } = message;
-    const safePayload = payload || {};
-    const roomId = clientData.roomId;
-    const room = roomId ? rooms[roomId] : null;
-    
-    console.log(`[DEBUG] Mensaje de ${clientData.id} (${clientData.name || 'Sin nombre'}), Sala: ${roomId || 'N/A'}, Tipo: ${type}`, safePayload);
-
-    switch (type) {
-        case 'createRoom':
-            handleCreateRoom(ws, safePayload);
-            break;
-        case 'joinRoom':
-            handleJoinRoom(ws, safePayload);
-            break;
-        case 'joinRandomRoom':
-            handleJoinRandomRoom(ws, safePayload); // Necesitará adaptación para gameType
-            break;
-        case 'leaveRoom':
-            handleLeaveRoom(ws);
-            break;
-
-        // Lógica específica del juego basada en room.gameType
-        case 'mentirosoSubmitBid':
-            if (room && room.gameType === 'mentiroso') handleMentirosoSubmitBid(ws, safePayload);
-            else ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'Acción no válida para esta sala/juego.' } }));
-            break;
-        case 'mentirosoCallLiar':
-            if (room && room.gameType === 'mentiroso') handleMentirosoCallLiar(ws, safePayload);
-            else ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'Acción no válida para esta sala/juego.' } }));
-            break;
-        case 'mentirosoSubmitAnswers':
-            if (room && room.gameType === 'mentiroso') handleMentirosoSubmitAnswers(ws, safePayload);
-            else ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'Acción no válida para esta sala/juego.' } }));
-            break;
-        case 'mentirosoSubmitValidation':
-            if (room && room.gameType === 'mentiroso') handleMentirosoSubmitValidation(ws, safePayload);
-            else ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'Acción no válida para esta sala/juego.' } }));
-            break;
-
-        // --- ACCIONES PARA QUIEN SABE MAS ---
-        case 'submitAnswer': // Nombre genérico, usado por QSM
-            if (room && room.gameType === 'quiensabemas') {
-                handleSubmitAnswerQSM(ws, clientData, safePayload);
-            } else if (room) { // Si está en sala pero no es QSM, podría ser un error o para otro juego
-                 ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'submitAnswer no válido para el juego actual de la sala.' } }));
-            } else {
-                 ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'Debes estar en una sala para enviar una respuesta.' } }));
-            }
-            break;
-        case 'requestOptions': // Usado por QSM (aunque opciones ya van con la pregunta)
-            if (room && room.gameType === 'quiensabemas') {
-                handleRequestOptionsQSM(ws, clientData);
-            } else if (room) {
-                ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'requestOptions no válido para el juego actual.' } }));
-            }
-            break;
-        case 'requestFiftyFifty': // Usado por QSM
-            if (room && room.gameType === 'quiensabemas') {
-                handleRequestFiftyFiftyQSM(ws, clientData);
-            } else if (room) {
-                ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: 'requestFiftyFifty no válido para el juego actual.' } }));
-            }
-            break;
-        
-        default:
-            console.log(`Tipo de mensaje desconocido: ${type}`);
-            ws.send(JSON.stringify({ type: 'errorMessage', payload: { error: `Tipo de mensaje desconocido: ${type}` } }));
-    }
-}
-
-// ... (resto del código, incluyendo `broadcastAvailableRooms` y la lógica de Mentiroso)

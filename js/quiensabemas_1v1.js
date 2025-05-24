@@ -1097,7 +1097,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     window.roomsRequestSource = null;
                     window.roomsRequestOrigin = null;
                 }
-                break;
+                 break;
 
             default:
                  console.warn('Unknown message type received:', message.type);
