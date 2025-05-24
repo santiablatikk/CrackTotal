@@ -352,17 +352,24 @@
             // Manejar clicks en los botones de jugar
             const gameCards = document.querySelectorAll('.game-card');
             const mentirosoIntroModal = document.getElementById('mentirosoIntroModal');
+            const qsmIntroModal = document.getElementById('qsmIntroModal');
             const goToLobbyMentirosoButton = document.getElementById('goToLobbyMentirosoButton');
+            const goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
             
             gameCards.forEach(card => {
                 const gameType = card.getAttribute('data-game');
                 const playButton = card.querySelector('.play-button');
                 
                 if (playButton) {
-                    playButton.addEventListener('click', function() {
+                    playButton.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        
                         // Si es Mentiroso, mostrar modal explicativo
                         if (gameType === 'mentiroso') {
                             mentirosoIntroModal.classList.add('active');
+                        } else if (gameType === 'quiensabemas') {
+                            qsmIntroModal.classList.add('active');
                         } else {
                             // Para otros juegos, redireccionar directamente
                             window.location.href = `${gameType}.html`;
@@ -379,10 +386,21 @@
                 });
             }
             
-            // Cerrar modal al hacer clic fuera del contenido
-            mentirosoIntroModal.addEventListener('click', function(event) {
+            // Botón para continuar al lobby de QSM
+            if (goToLobbyQSMButton) {
+                goToLobbyQSMButton.addEventListener('click', function() {
+                    qsmIntroModal.classList.remove('active');
+                    window.location.href = 'quiensabemas.html';
+                });
+            }
+            
+            // Cerrar modales al hacer clic fuera del contenido
+            window.addEventListener('click', function(event) {
                 if (event.target === mentirosoIntroModal) {
                     mentirosoIntroModal.classList.remove('active');
+                }
+                if (event.target === qsmIntroModal) {
+                    qsmIntroModal.classList.remove('active');
                 }
             });
         });

@@ -217,30 +217,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle clicking on game cards
     const gameCards = document.querySelectorAll('.game-card');
     if (gameCards.length > 0) {
-        gameCards.forEach(card => {
-            const playButton = card.querySelector('.play-button');
-
-            card.addEventListener('click', function(event) {
-                if (playButton && playButton.disabled) {
-                    event.stopPropagation();
-                    return;
-                }
-
-                const gameType = this.getAttribute('data-game');
-
-                if (gameType === 'quiensabemas') {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    if (qsmIntroModal) {
-                        qsmIntroModal.classList.add('active');
-                    }
-                } else if (gameType) {
-                window.location.href = `${gameType}.html`;
-                } 
-            });
-        });
+        // Skip adding event listeners here as they're now handled in games.html
+        // This prevents duplicate event handlers
+        console.log("Game cards found, but event handlers are in games.html");
     }
 
+    // These handlers will only trigger if games.html doesn't handle them
     if (goToLobbyQSMButton && qsmIntroModal) {
         goToLobbyQSMButton.addEventListener('click', function() {
             qsmIntroModal.classList.remove('active');
@@ -388,11 +370,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Botón de jugar QSM en el modal
     goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
     if (goToLobbyQSMButton) {
-        goToLobbyQSMButton.addEventListener('click', function() {
-            const qsmIntroModal = document.getElementById('qsmIntroModal');
-            if (qsmIntroModal) qsmIntroModal.classList.remove('active');
-            window.location.href = 'quiensabemas.html';
-        });
+        // Skip adding duplicate event listener - already handled above
+        console.log("QSM button found, using existing event handler");
     }
     
     // Si la URL tiene el parámetro showQSMIntro, mostrar el modal
@@ -670,4 +649,4 @@ document.addEventListener('DOMContentLoaded', function() {
         const gameType = activeTab.getAttribute('data-game');
         fetchRooms(gameType);
     }
-}); 
+});
