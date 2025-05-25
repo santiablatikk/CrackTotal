@@ -263,7 +263,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Cargar nombre del jugador desde localStorage
-    savedPlayerName = localStorage.getItem('playerName');
     if (savedPlayerName) {
         const playerNameDisplay = document.getElementById('playerNameDisplay');
         if (playerNameDisplay) playerNameDisplay.textContent = savedPlayerName;
