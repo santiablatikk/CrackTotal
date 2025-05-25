@@ -1,3 +1,6 @@
+// --- Importaciones ---
+import { saveQuienSabeMasResult } from './firebase-utils.js';
+
 // --- WebSocket URL (¡Configura esto!) ---
 const WEBSOCKET_URL = (() => {
     // Usa 'wss:' si tu sitio está en HTTPS, 'ws:' si está en HTTP
@@ -1104,6 +1107,56 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // --- Función para guardar estadísticas en Firebase ---
+    async function saveQuienSabeMasStats(payload) {
+        try {
+            const finalScores = payload.finalScores;
+            if (!gameState.myPlayerId || !finalScores) return;
+
+            let myFinalScore = 0;
+            let opponentScore = 0;
+            let opponentId = null;
+            let opponentName = 'Oponente';
+            let result = 'defeat';
+            
+            // Determinar mi puntuación y la del oponente
+            for (const playerId in finalScores) {
+                if (playerId === gameState.myPlayerId) {
+                    myFinalScore = finalScores[playerId];
+                } else {
+                    opponentScore = finalScores[playerId];
+                    opponentId = playerId;
+                }
+            }
+            
+            // Obtener nombre del oponente
+            const player1 = gameState.players?.player1;
+            const player2 = gameState.players?.player2;
+            if (player1?.id === opponentId) opponentName = player1.name || opponentName;
+            else if (player2?.id === opponentId) opponentName = player2.name || opponentName;
+            
+            // Determinar resultado
+            if (payload.draw) {
+                result = 'draw';
+            } else if (payload.winnerId === gameState.myPlayerId) {
+                result = 'victory';
+            }
+
+            const gameStats = {
+                result: result,
+                myScore: myFinalScore,
+                opponentId: opponentId,
+                opponentName: opponentName,
+                opponentScore: opponentScore
+            };
+
+            await saveQuienSabeMasResult(gameStats);
+            console.log("Estadísticas de Quién Sabe Más guardadas exitosamente");
+        } catch (error) {
+            console.error("Error guardando estadísticas de Quién Sabe Más:", error);
+        }
+    }
+
     // --- End Game --- Reestructurada para 1v1
     function endGame(payload) { // payload: { finalScores: {playerId1: score, playerId2: score}, winnerId: id | null, draw: boolean, reason?: string }
         console.log("Game Over. Payload:", payload);
@@ -1204,6 +1257,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="stat-value">${opponentFinalScore}</span>
             </div>
         `;
+
+        // Guardar estadísticas en Firebase
+        saveQuienSabeMasStats(payload);
 
         showEndGameModal();
     }

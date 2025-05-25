@@ -116,7 +116,28 @@
 
         <main class="game-content profile-container">
             <div class="container">
-                <h2 class="profile-title">Tu Perfil - Pasala Che</h2>
+                <h2 class="profile-title">Tu Perfil de Jugador</h2>
+                
+                <!-- Enlaces de navegación -->
+                <div style="margin-bottom: 1.5rem; text-align: left; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <a href="ranking.html" class="profile-link small-button">
+                        <i class="fas fa-list"></i>
+                        Ranking Pasala Che
+                    </a>
+                    <a href="ranking-mentiroso.html" class="profile-link small-button">
+                        <i class="fas fa-mask"></i>
+                        Ranking Mentiroso
+                    </a>
+                    <a href="ranking-quiensabemas.html" class="profile-link small-button">
+                        <i class="fas fa-brain"></i>
+                        Ranking Quién Sabe Más
+                    </a>
+                    <a href="logros.html" class="profile-link small-button">
+                        <i class="fas fa-trophy"></i>
+                        Logros
+                    </a>
+                </div>
+
                 <h3 class="profile-subtitle">Estadísticas de Pasala Che</h3>
                 <div class="stats-grid">
                     <!-- Fila 1: Estadísticas Generales -->
@@ -207,6 +228,82 @@
                     </table>
                 </div>
                 <!-- Fin Sección Historial -->
+
+                <!-- === ESTADÍSTICAS DE QUIÉN SABE MÁS === -->
+                <h3 class="profile-subtitle">Estadísticas de Quién Sabe Más</h3>
+                <div class="stats-grid">
+                    <!-- Fila 1: Estadísticas Generales -->
+                    <div class="stat-card">
+                        <div class="stat-icon games"></div>
+                        <div class="stat-value" id="stats-qsm-gamesPlayed">0</div>
+                        <div class="stat-label">Partidas Jugadas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon wins"></div>
+                        <div class="stat-value" id="stats-qsm-gamesWon">0</div>
+                        <div class="stat-label">Victorias</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon losses"></div>
+                        <div class="stat-value" id="stats-qsm-gamesLost">0</div>
+                        <div class="stat-label">Derrotas</div>
+                    </div>
+
+                    <!-- Fila 2: Precisión y Rendimiento -->
+                    <div class="stat-card">
+                        <div class="stat-icon accuracy"></div>
+                        <div class="stat-value" id="stats-qsm-averageAccuracy">0%</div>
+                        <div class="stat-label">% de Victoria</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon score"></div>
+                        <div class="stat-value" id="stats-qsm-bestScore">0</div>
+                        <div class="stat-label">Mejor Puntuación</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon score"></div>
+                        <div class="stat-value" id="stats-qsm-totalScore">0</div>
+                        <div class="stat-label">Puntuación Total</div>
+                    </div>
+                </div>
+
+                <!-- === ESTADÍSTICAS DE MENTIROSO === -->
+                <h3 class="profile-subtitle">Estadísticas de Mentiroso</h3>
+                <div class="stats-grid">
+                    <!-- Fila 1: Estadísticas Generales -->
+                    <div class="stat-card">
+                        <div class="stat-icon games"></div>
+                        <div class="stat-value" id="stats-mentiroso-gamesPlayed">0</div>
+                        <div class="stat-label">Partidas Jugadas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon wins"></div>
+                        <div class="stat-value" id="stats-mentiroso-gamesWon">0</div>
+                        <div class="stat-label">Victorias</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon losses"></div>
+                        <div class="stat-value" id="stats-mentiroso-gamesLost">0</div>
+                        <div class="stat-label">Derrotas</div>
+                    </div>
+
+                    <!-- Fila 2: Precisión y Rendimiento -->
+                    <div class="stat-card">
+                        <div class="stat-icon accuracy"></div>
+                        <div class="stat-value" id="stats-mentiroso-averageAccuracy">0%</div>
+                        <div class="stat-label">% de Victoria</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon score"></div>
+                        <div class="stat-value" id="stats-mentiroso-bestScore">0</div>
+                        <div class="stat-label">Mejor Puntuación</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon score"></div>
+                        <div class="stat-value" id="stats-mentiroso-totalScore">0</div>
+                        <div class="stat-label">Puntuación Total</div>
+                    </div>
+                </div>
 
                 <div class="profile-actions">
                     <a href="ranking.html" class="extra-link-button" style="text-decoration: none;">

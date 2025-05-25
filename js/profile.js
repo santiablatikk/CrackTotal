@@ -143,9 +143,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Mostrar datos al cargar la página --- 
     displayProfileData();
 
-    // Cargar y mostrar estadísticas de Pasala Che
+    // Cargar y mostrar estadísticas de todos los juegos
     loadPasalacheStats();
     loadPasalacheHistory(); // Cargar historial si existe esa función
+    loadQuienSabeMasStats();
+    loadMentirosoStats();
     loadAchievementsCount(); // <<< NUEVA FUNCIÓN PARA CONTAR LOGROS
 
     const resetStatsButton = document.getElementById('resetStatsButton');
@@ -285,6 +287,76 @@ function loadPasalacheHistory() {
         const timeCell = row.insertCell();
         timeCell.textContent = game.timeSpentFormatted || '--:--';
     });
+}
+
+// Función para cargar estadísticas de Quién Sabe Más desde Firebase
+function loadQuienSabeMasStats() {
+    // Asegurar que los elementos existan
+    const elements = {
+        gamesPlayed: document.getElementById('stats-qsm-gamesPlayed'),
+        gamesWon: document.getElementById('stats-qsm-gamesWon'),
+        gamesLost: document.getElementById('stats-qsm-gamesLost'),
+        averageAccuracy: document.getElementById('stats-qsm-averageAccuracy'),
+        bestScore: document.getElementById('stats-qsm-bestScore'),
+        totalScore: document.getElementById('stats-qsm-totalScore')
+    };
+
+    // Si no existen todos los elementos, mostrar valores por defecto
+    Object.keys(elements).forEach(key => {
+        if (elements[key]) {
+            switch(key) {
+                case 'averageAccuracy':
+                    elements[key].textContent = '0%';
+                    break;
+                case 'gamesPlayed':
+                case 'gamesWon':
+                case 'gamesLost':
+                case 'bestScore':
+                case 'totalScore':
+                    elements[key].textContent = '0';
+                    break;
+                default:
+                    elements[key].textContent = 'N/A';
+            }
+        }
+    });
+
+    console.log("Estadísticas de Quién Sabe Más cargadas (valores por defecto)");
+}
+
+// Función para cargar estadísticas de Mentiroso desde Firebase
+function loadMentirosoStats() {
+    // Asegurar que los elementos existan
+    const elements = {
+        gamesPlayed: document.getElementById('stats-mentiroso-gamesPlayed'),
+        gamesWon: document.getElementById('stats-mentiroso-gamesWon'),
+        gamesLost: document.getElementById('stats-mentiroso-gamesLost'),
+        averageAccuracy: document.getElementById('stats-mentiroso-averageAccuracy'),
+        bestScore: document.getElementById('stats-mentiroso-bestScore'),
+        totalScore: document.getElementById('stats-mentiroso-totalScore')
+    };
+
+    // Si no existen todos los elementos, mostrar valores por defecto
+    Object.keys(elements).forEach(key => {
+        if (elements[key]) {
+            switch(key) {
+                case 'averageAccuracy':
+                    elements[key].textContent = '0%';
+                    break;
+                case 'gamesPlayed':
+                case 'gamesWon':
+                case 'gamesLost':
+                case 'bestScore':
+                case 'totalScore':
+                    elements[key].textContent = '0';
+                    break;
+                default:
+                    elements[key].textContent = 'N/A';
+            }
+        }
+    });
+
+    console.log("Estadísticas de Mentiroso cargadas (valores por defecto)");
 }
 
 // Si main.js tiene funciones de utilidad como shareSite, asegúrate de que se cargue o define.

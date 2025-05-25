@@ -1,3 +1,6 @@
+// --- Importaciones ---
+import { saveMentirosoResult } from './firebase-utils.js';
+
 // --- WebSocket URL (¡Configura esto!) ---
 const WEBSOCKET_URL = (() => {
     // Durante desarrollo, usa localhost
@@ -1511,6 +1514,53 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // --- Función para guardar estadísticas en Firebase ---
+    async function saveMentirosoStats(payload) {
+        try {
+            const finalScores = payload.finalScores;
+            if (!gameState.myPlayerId || !finalScores) return;
+
+            let myFinalScore = 0;
+            let result = 'defeat';
+            
+            // Determinar mi puntuación y resultado
+            if (finalScores[gameState.myPlayerId] !== undefined) {
+                myFinalScore = finalScores[gameState.myPlayerId];
+            }
+            
+            if (payload.draw) {
+                result = 'draw';
+            } else if (payload.winnerId === gameState.myPlayerId) {
+                result = 'victory';
+            }
+
+            // Obtener información del oponente
+            const opponents = [];
+            for (const playerId in finalScores) {
+                if (playerId !== gameState.myPlayerId) {
+                    const player = gameState.players?.player1?.id === playerId ? 
+                        gameState.players.player1 : gameState.players?.player2;
+                    opponents.push({
+                        id: playerId,
+                        name: player?.name || 'Oponente',
+                        score: finalScores[playerId] || 0
+                    });
+                }
+            }
+
+            const gameStats = {
+                result: result,
+                myScore: myFinalScore,
+                opponents: opponents
+            };
+
+            await saveMentirosoResult(gameStats);
+            console.log("Estadísticas de Mentiroso guardadas exitosamente");
+        } catch (error) {
+            console.error("Error guardando estadísticas de Mentiroso:", error);
+        }
+    }
+
     // --- End Game (Mentiroso) ---
     function endGame(payload) { 
         console.log("Game Over (Mentiroso). Payload:", payload);
@@ -1572,6 +1622,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="stat-label"><i class="fas fa-user-ninja"></i> ${opponentName}</span>
                 <span class="stat-value">${opponentFinalScore}</span>
             </div>`;
+        
+        // Guardar estadísticas en Firebase
+        saveMentirosoStats(payload);
+        
         showEndGameModal();
     }
 
