@@ -2,9 +2,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Importar la configuración GENERADA durante el despliegue
-// Este archivo será creado por el script 'build-config.js'
-import { firebaseConfig } from './firebase-config-runtime.js';
+// Importar la configuración
+import { firebaseConfig } from './firebase-config.js';
 
 let app;
 let db = null; // Inicializar db como null por defecto
