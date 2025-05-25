@@ -3,14 +3,8 @@ import { saveQuienSabeMasResult } from './firebase-utils.js';
 
 // --- WebSocket URL (¡Configura esto!) ---
 const WEBSOCKET_URL = (() => {
-    // Usa 'wss:' si tu sitio está en HTTPS, 'ws:' si está en HTTP
-    // const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    // Asume que el servidor WebSocket corre en el mismo host y puerto, en la raíz '/'.
-    // ¡AJUSTA ESTO SI TU SERVIDOR ESTÁ EN OTRO LADO!
-    // Ejemplo local: 'ws://localhost:8081'
-    // Ejemplo producción: `${protocol}//${window.location.host}`
-    // return `${protocol}//${window.location.host}`;
-    return 'wss://cracktotal-servidor.onrender.com'; // <-- URL real de Render Web Service
+    // Siempre usar el servidor de producción para evitar problemas de configuración local
+    return 'wss://cracktotal-servidor.onrender.com';
 })();
 
 // Comunicación con la página principal para salas disponibles

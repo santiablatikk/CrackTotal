@@ -3,13 +3,15 @@ import { saveMentirosoResult } from './firebase-utils.js';
 
 // --- WebSocket URL (¡Configura esto!) ---
 const WEBSOCKET_URL = (() => {
-    // Durante desarrollo, usa localhost
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        const port = 8081; // Puerto del servidor unificado
-        return `ws://${window.location.hostname}:${port}`;
-    }
-    // En producción, usa el servidor de Render
+    // Siempre usar el servidor de producción para evitar problemas de configuración local
     return 'wss://cracktotal-servidor.onrender.com';
+    
+    // Código anterior comentado:
+    // if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    //     const port = 8081; // Puerto del servidor unificado
+    //     return `ws://${window.location.hostname}:${port}`;
+    // }
+    // return 'wss://cracktotal-servidor.onrender.com';
 })();
 
 // Agregar después de la declaración de WEBSOCKET_URL, antes de DOMContentLoaded
