@@ -366,12 +366,8 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Botón de jugar QSM en el modal
-    goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
-    if (goToLobbyQSMButton) {
-        // Skip adding duplicate event listener - already handled above
-        console.log("QSM button found, using existing event handler");
-    }
+    // Botón de jugar QSM en el modal ya está manejado arriba
+    // No necesitamos redeclararlo aquí
     
     // Si la URL tiene el parámetro showQSMIntro, mostrar el modal
     const urlParams = new URLSearchParams(window.location.search);
