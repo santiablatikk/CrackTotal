@@ -1240,10 +1240,10 @@ function nextRoundMentiroso(roomId) {
         category: state.currentCategory,
         challengeTemplate: state.challengeTextTemplate,
         currentTurn: room.currentTurn,
-        players: [
-            { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
-            { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
-        ],
+        players: {
+            player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
+            player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
+        },
         isNewCategory: state.categoryRound === 1 && state.currentRound > 1
     };
 
@@ -1469,10 +1469,10 @@ function handleMentirosoSubmitValidation(ws, clientInfo, payload) {
             winnerId: roundWinnerId,
             winnerName: winnerPlayer.name || 'Ganador',
             message: resultMessage,
-            players: [
-                { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
-                { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
-            ]
+            players: {
+                player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
+                player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
+            }
         }
     });
 

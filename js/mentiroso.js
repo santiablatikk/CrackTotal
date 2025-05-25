@@ -958,14 +958,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     gameState.roomId = message.payload.roomId;
                     console.log(`⭐ Unido a sala: ${gameState.roomId}`);
                     
-                    if (message.payload.players && message.payload.players.length > 0) {
+                    // Normalizar players - puede venir como array o como objeto
+                    let normalizedPlayers = [];
+                    if (message.payload.players) {
+                        if (Array.isArray(message.payload.players)) {
+                            normalizedPlayers = message.payload.players;
+                        } else if (message.payload.players.player1 || message.payload.players.player2) {
+                            // Convertir objeto a array
+                            if (message.payload.players.player1) normalizedPlayers.push(message.payload.players.player1);
+                            if (message.payload.players.player2) normalizedPlayers.push(message.payload.players.player2);
+                        }
+                    }
+                    
+                    if (normalizedPlayers.length > 0) {
                         // Si recibimos lista completa de jugadores
-                        const playersList = message.payload.players;
-                        console.log(`⭐ Recibida lista de jugadores: `, playersList);
+                        console.log(`⭐ Recibida lista de jugadores: `, normalizedPlayers);
                         
                         // Determinar quién soy yo y quién es el oponente
-                        const me = playersList.find(p => p.id === gameState.myPlayerId);
-                        const opponent = playersList.find(p => p.id !== gameState.myPlayerId);
+                        const me = normalizedPlayers.find(p => p && p.id === gameState.myPlayerId);
+                        const opponent = normalizedPlayers.find(p => p && p.id !== gameState.myPlayerId);
                         
                         if (me) {
                             gameState.players.player1 = { 
@@ -1007,14 +1018,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Manejar cuando otro jugador se une a nuestra sala
                     console.log("⭐ Otro jugador se unió:", message.payload);
                     
-                    if (message.payload.players && message.payload.players.length > 0) {
+                    // Normalizar players - puede venir como array o como objeto
+                    let normalizedPlayersJoined = [];
+                    if (message.payload.players) {
+                        if (Array.isArray(message.payload.players)) {
+                            normalizedPlayersJoined = message.payload.players;
+                        } else if (message.payload.players.player1 || message.payload.players.player2) {
+                            // Convertir objeto a array
+                            if (message.payload.players.player1) normalizedPlayersJoined.push(message.payload.players.player1);
+                            if (message.payload.players.player2) normalizedPlayersJoined.push(message.payload.players.player2);
+                        }
+                    }
+                    
+                    if (normalizedPlayersJoined.length > 0) {
                         // Actualizar la lista de jugadores completa
-                        const playersList = message.payload.players;
-                        console.log(`⭐ Lista actualizada de jugadores: `, playersList);
+                        console.log(`⭐ Lista actualizada de jugadores: `, normalizedPlayersJoined);
                         
                         // Determinar quién soy yo y quién es el oponente
-                        const me = playersList.find(p => p.id === gameState.myPlayerId);
-                        const opponent = playersList.find(p => p.id !== gameState.myPlayerId);
+                        const me = normalizedPlayersJoined.find(p => p && p.id === gameState.myPlayerId);
+                        const opponent = normalizedPlayersJoined.find(p => p && p.id !== gameState.myPlayerId);
                         
                         if (me) {
                             gameState.players.player1 = { 
@@ -1052,13 +1074,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log("⭐ Inicio de juego Mentiroso:", message.payload);
                     gameState.gameActive = true;
                     
+                    // Normalizar players - puede venir como array o como objeto
+                    let normalizedPlayersStart = [];
                     if (message.payload.players) {
-                        const playersList = message.payload.players;
-                        console.log(`⭐ Lista de jugadores para inicio de juego: `, playersList);
+                        if (Array.isArray(message.payload.players)) {
+                            normalizedPlayersStart = message.payload.players;
+                        } else if (message.payload.players.player1 || message.payload.players.player2) {
+                            // Convertir objeto a array
+                            if (message.payload.players.player1) normalizedPlayersStart.push(message.payload.players.player1);
+                            if (message.payload.players.player2) normalizedPlayersStart.push(message.payload.players.player2);
+                        }
+                    }
+                    
+                    if (normalizedPlayersStart.length > 0) {
+                        console.log(`⭐ Lista de jugadores para inicio de juego: `, normalizedPlayersStart);
                         
                         // Determinar quién soy yo y quién es el oponente
-                        const me = playersList.find(p => p.id === gameState.myPlayerId);
-                        const opponent = playersList.find(p => p.id !== gameState.myPlayerId);
+                        const me = normalizedPlayersStart.find(p => p && p.id === gameState.myPlayerId);
+                        const opponent = normalizedPlayersStart.find(p => p && p.id !== gameState.myPlayerId);
                         
                         if (me) {
                             gameState.players.player1 = { 
@@ -1096,16 +1129,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Verificación de seguridad para players
                     if (message.payload.players) {
-                        const playersList = message.payload.players;
+                        // Normalizar players - puede venir como array o como objeto
+                        let normalizedPlayersRound = [];
+                        if (Array.isArray(message.payload.players)) {
+                            normalizedPlayersRound = message.payload.players;
+                        } else if (message.payload.players.player1 || message.payload.players.player2) {
+                            // Convertir objeto a array
+                            if (message.payload.players.player1) normalizedPlayersRound.push(message.payload.players.player1);
+                            if (message.payload.players.player2) normalizedPlayersRound.push(message.payload.players.player2);
+                        }
                         
                         // Actualizar scores pero mantener las referencias player1/player2
-                        if (gameState.players.player1 && playersList.some(p => p && p.id === gameState.players.player1.id)) {
-                            const p1Updated = playersList.find(p => p && p.id === gameState.players.player1.id);
+                        if (gameState.players.player1 && normalizedPlayersRound.some(p => p && p.id === gameState.players.player1.id)) {
+                            const p1Updated = normalizedPlayersRound.find(p => p && p.id === gameState.players.player1.id);
                             if (p1Updated) gameState.players.player1.score = p1Updated.score || 0;
                         }
                         
-                        if (gameState.players.player2 && playersList.some(p => p && p.id === gameState.players.player2.id)) {
-                            const p2Updated = playersList.find(p => p && p.id === gameState.players.player2.id);
+                        if (gameState.players.player2 && normalizedPlayersRound.some(p => p && p.id === gameState.players.player2.id)) {
+                            const p2Updated = normalizedPlayersRound.find(p => p && p.id === gameState.players.player2.id);
                             if (p2Updated) gameState.players.player2.score = p2Updated.score || 0;
                         }
                     }
@@ -1338,13 +1379,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 case 'mentirosoRoundResult':
                     // Asegurarse de que players exista antes de actualizarlo
                     if (message.payload.players) {
-                        // Mantener la estructura players.player1 y players.player2
-                        const payloadPlayers = Array.isArray(message.payload.players) ? message.payload.players : [];
+                        // Normalizar players - puede venir como array o como objeto
+                        let normalizedPlayersResult = [];
+                        if (Array.isArray(message.payload.players)) {
+                            normalizedPlayersResult = message.payload.players;
+                        } else if (message.payload.players.player1 || message.payload.players.player2) {
+                            // Convertir objeto a array
+                            if (message.payload.players.player1) normalizedPlayersResult.push(message.payload.players.player1);
+                            if (message.payload.players.player2) normalizedPlayersResult.push(message.payload.players.player2);
+                        }
                         
                         // Reconstruir la estructura players de forma segura
-                        if (payloadPlayers.length > 0) {
+                        if (normalizedPlayersResult.length > 0) {
                             // Asegurarse de que los IDs coincidan con la estructura anterior
-                            for (const player of payloadPlayers) {
+                            for (const player of normalizedPlayersResult) {
                                 if (player && player.id) {
                                     if (gameState.players.player1 && gameState.players.player1.id === player.id) {
                                         gameState.players.player1.score = player.score || 0;
@@ -1483,11 +1531,20 @@ document.addEventListener('DOMContentLoaded', function() {
                          console.log('Detectado mensaje playerJoined no manejado directamente:', message);
                          // Actualizar jugadores si es posible
                          if (message.payload && message.payload.players) {
-                             const playersList = Array.isArray(message.payload.players) ? message.payload.players : [];
-                             if (playersList.length > 0 && gameState.players) {
+                             // Normalizar players - puede venir como array o como objeto
+                             let normalizedPlayersDefault = [];
+                             if (Array.isArray(message.payload.players)) {
+                                 normalizedPlayersDefault = message.payload.players;
+                             } else if (message.payload.players.player1 || message.payload.players.player2) {
+                                 // Convertir objeto a array
+                                 if (message.payload.players.player1) normalizedPlayersDefault.push(message.payload.players.player1);
+                                 if (message.payload.players.player2) normalizedPlayersDefault.push(message.payload.players.player2);
+                             }
+                             
+                             if (normalizedPlayersDefault.length > 0 && gameState.players) {
                                  gameState.players = {
-                                     player1: playersList[0],
-                                     player2: playersList.length > 1 ? playersList[1] : null
+                                     player1: normalizedPlayersDefault[0],
+                                     player2: normalizedPlayersDefault.length > 1 ? normalizedPlayersDefault[1] : null
                                  };
                                  updatePlayerUI();
                              }
