@@ -2,7 +2,7 @@
 const WEBSOCKET_URL = (() => {
     // Durante desarrollo, usa localhost
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        const port = 3000; // Puerto por defecto del servidor
+        const port = 8081; // Puerto del servidor unificado
         return `ws://${window.location.hostname}:${port}`;
     }
     // En producción, usa el servidor de Render

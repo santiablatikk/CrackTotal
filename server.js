@@ -349,6 +349,9 @@ function handleClientMessage(ws, message) {
         case 'leaveRoom': // Added leave room handler
             handleLeaveRoom(ws, clientInfo);
             break;
+        case 'getRooms':
+            handleGetRooms(ws, clientInfo, message.payload);
+            break;
         // --- Game Actions (Quien Sabe Mas) ---
         case 'submitAnswer':
              handleSubmitAnswer(ws, clientInfo, message.payload);
@@ -358,6 +361,19 @@ function handleClientMessage(ws, message) {
              break;
         case 'requestFiftyFifty':
             handleRequestFiftyFifty(ws, clientInfo);
+            break;
+        // --- Game Actions (Mentiroso) ---
+        case 'mentirosoSubmitBid':
+            handleMentirosoSubmitBid(ws, clientInfo, message.payload);
+            break;
+        case 'mentirosoCallLiar':
+            handleMentirosoCallLiar(ws, clientInfo, message.payload);
+            break;
+        case 'mentirosoSubmitAnswers':
+            handleMentirosoSubmitAnswers(ws, clientInfo, message.payload);
+            break;
+        case 'mentirosoSubmitValidation':
+            handleMentirosoSubmitValidation(ws, clientInfo, message.payload);
             break;
         default:
             console.warn(`Unknown message type received from ${clientInfo.id}: ${message.type}`);
@@ -375,6 +391,7 @@ function handleCreateRoom(ws, clientInfo, payload) {
     const roomId = generateRoomId();
     const playerName = payload.playerName || `Jugador_${clientInfo.id.substring(0, 4)}`;
     const password = payload.password || ''; // Empty string if no password
+    const gameType = payload.gameType || 'quiensabemas'; // Default to quiensabemas
 
     const player1 = {
         id: clientInfo.id,
@@ -385,7 +402,7 @@ function handleCreateRoom(ws, clientInfo, payload) {
 
     const newRoom = {
         roomId: roomId,
-        gameType: 'quiensabemas', // Explicitly set gameType
+        gameType: gameType,
         players: { player1: player1, player2: null },
         password: password,
         gameActive: false,
@@ -398,13 +415,30 @@ function handleCreateRoom(ws, clientInfo, payload) {
         currentQuestion: null,
         optionsSent: false,
         fiftyFiftyUsed: false,
-        questionsPerLevel: QUESTIONS_PER_LEVEL // Store config per room
+        questionsPerLevel: QUESTIONS_PER_LEVEL, // Store config per room
+        // Mentiroso specific state
+        mentirosoState: gameType === 'mentiroso' ? {
+            currentRound: 1,
+            maxRounds: 18,
+            categoryRound: 1,
+            globalCategoryIndex: 0,
+            currentCategory: null,
+            challengeTextTemplate: "",
+            lastBidder: null,
+            currentBid: 0,
+            playerWhoCalledMentiroso: null,
+            playerToListAnswers: null,
+            answersListed: [],
+            validationResults: [],
+            gamePhase: 'lobby',
+            scores: {}
+        } : null
     };
 
     rooms.set(roomId, newRoom);
     clientInfo.roomId = roomId; // Update client's state
 
-    console.log(`Room ${roomId} created by ${playerName} (${clientInfo.id}). Password: ${password ? 'Yes' : 'No'}`);
+    console.log(`Room ${roomId} (${gameType}) created by ${playerName} (${clientInfo.id}). Password: ${password ? 'Yes' : 'No'}`);
     safeSend(ws, { type: 'roomCreated', payload: { roomId: roomId } });
 
     // Broadcast updated room list to lobby
@@ -607,45 +641,58 @@ function startGame(roomId) {
          return; // Prevent restarting an active game
      }
 
-    console.log(`Starting game in room ${roomId}...`);
+    console.log(`Starting ${room.gameType} game in room ${roomId}...`);
 
     // Initialize game state
     room.gameActive = true;
-    room.currentLevel = 1;
-    room.questionsAnsweredInLevel = 0;
-    room.usedQuestionIndices = {}; // Reset used questions for new game
-    for (let l = 1; l <= MAX_LEVELS; l++) { // Initialize for all potential levels
-        room.usedQuestionIndices[l] = [];
-    }
-    room.currentQuestion = null;
     room.players.player1.score = 0; // Reset scores
     room.players.player2.score = 0;
-    room.optionsSent = false;
-    room.fiftyFiftyUsed = false;
 
     // Randomly select starting player
     room.currentTurn = Math.random() < 0.5 ? room.players.player1.id : room.players.player2.id;
-    // console.log(`Room ${roomId} - Game state initialized. Starting turn: ${room.currentTurn}`); // Less verbose
 
     const playersInfo = {
         player1: { id: room.players.player1.id, name: room.players.player1.name, score: 0 },
         player2: { id: room.players.player2.id, name: room.players.player2.name, score: 0 }
     };
 
-    // Send gameStart message to both players
-    const startMessage = { type: 'gameStart', payload: { players: playersInfo, startingPlayerId: room.currentTurn } };
-    // console.log(`Room ${roomId} - Sending gameStart message...`); // Less verbose
-    safeSend(room.players.player1.ws, startMessage);
-    safeSend(room.players.player2.ws, startMessage);
-    // console.log(`Room ${roomId} - gameStart message sent.`); // Less verbose
+    if (room.gameType === 'mentiroso') {
+        // Initialize Mentiroso specific state
+        room.mentirosoState.gameActive = true;
+        room.mentirosoState.scores = {};
+        room.mentirosoState.scores[room.players.player1.id] = 0;
+        room.mentirosoState.scores[room.players.player2.id] = 0;
+        
+        // Send gameStart message for Mentiroso
+        const startMessage = { type: 'mentirosoGameStart', payload: { players: playersInfo, currentTurn: room.currentTurn } };
+        broadcastToRoom(roomId, startMessage);
+        
+        // Start first round
+        setTimeout(() => {
+            nextRoundMentiroso(roomId);
+        }, 1000);
+    } else {
+        // Initialize Quien Sabe Mas specific state
+        room.currentLevel = 1;
+        room.questionsAnsweredInLevel = 0;
+        room.usedQuestionIndices = {}; // Reset used questions for new game
+        for (let l = 1; l <= MAX_LEVELS; l++) { // Initialize for all potential levels
+            room.usedQuestionIndices[l] = [];
+        }
+        room.currentQuestion = null;
+        room.optionsSent = false;
+        room.fiftyFiftyUsed = false;
 
-    // Send the first question immediately
-    // console.log(`Room ${roomId} - Calling sendNextQuestion for the first time...`); // Less verbose
-    // Add a small delay before sending the first question?
-    setTimeout(() => {
-    sendNextQuestion(roomId);
-        // console.log(`Room ${roomId} - Returned from first call to sendNextQuestion.`); // Less verbose
-    }, 50); // Short delay (50ms)
+        // Send gameStart message to both players
+        const startMessage = { type: 'gameStart', payload: { players: playersInfo, startingPlayerId: room.currentTurn } };
+        safeSend(room.players.player1.ws, startMessage);
+        safeSend(room.players.player2.ws, startMessage);
+
+        // Send the first question immediately
+        setTimeout(() => {
+            sendNextQuestion(roomId);
+        }, 50); // Short delay (50ms)
+    }
 }
 
 function sendNextQuestion(roomId) {
@@ -1098,6 +1145,390 @@ process.on('SIGINT', () => {
         });
     });
 });
+
+// --- Mentiroso Game Functions ---
+
+// Constants for Mentiroso
+const CATEGORY_ORDER = [
+    "Fútbol Argentino",
+    "Libertadores", 
+    "Mundiales",
+    "Champions League",
+    "Selección Argentina",
+    "Fútbol General"
+];
+
+function handleGetRooms(ws, clientInfo, payload) {
+    const gameTypeFilter = payload ? payload.gameType : null;
+    
+    const availableRoomsInfo = [];
+    for (const [roomId, room] of rooms.entries()) {
+        // Only include rooms that are not full and match game type if specified
+        if (room.players.player1 && !room.players.player2 && !room.gameActive) {
+            if (!gameTypeFilter || room.gameType === gameTypeFilter) {
+                availableRoomsInfo.push({
+                    id: room.roomId,
+                    creatorName: room.players.player1.name,
+                    playerCount: 1,
+                    maxPlayers: 2,
+                    requiresPassword: !!room.password,
+                    gameType: room.gameType
+                });
+            }
+        }
+    }
+    
+    safeSend(ws, { 
+        type: 'availableRooms', 
+        payload: { rooms: availableRoomsInfo } 
+    });
+}
+
+function nextRoundMentiroso(roomId) {
+    const room = rooms.get(roomId);
+    if (!room || !room.mentirosoState || !room.mentirosoState.gameActive) {
+        console.error(`nextRoundMentiroso: Room ${roomId} not found or game not active`);
+        return;
+    }
+
+    const state = room.mentirosoState;
+
+    // Check if game should end
+    if (state.currentRound > state.maxRounds) {
+        endGameMentiroso(roomId);
+        return;
+    }
+
+    // Update round info
+    state.categoryRound = ((state.currentRound - 1) % 3) + 1;
+    state.globalCategoryIndex = Math.floor((state.currentRound - 1) / 3);
+    state.currentCategory = CATEGORY_ORDER[state.globalCategoryIndex];
+
+    // Select random challenge template
+    let categoryKey = state.currentCategory.toUpperCase();
+    // Map category names to the keys used in mentirosoCategories
+    if (categoryKey === "FÚTBOL ARGENTINO") categoryKey = "FÚTBOL ARGENTINO";
+    else if (categoryKey === "SELECCIÓN ARGENTINA") categoryKey = "SELECCIÓN ARGENTINA";
+    else if (categoryKey === "FÚTBOL GENERAL") categoryKey = "FÚTBOL GENERAL";
+    
+    const categoryData = mentirosoCategories[categoryKey];
+    if (!categoryData || categoryData.length === 0) {
+        console.error(`No challenges found for category: ${state.currentCategory} (key: ${categoryKey})`);
+        endGameMentiroso(roomId, "Error: No challenges available");
+        return;
+    }
+
+    const randomChallenge = categoryData[Math.floor(Math.random() * categoryData.length)];
+    state.challengeTextTemplate = randomChallenge.template;
+
+    // Reset round state
+    state.currentBid = 0;
+    state.lastBidder = null;
+    state.playerWhoCalledMentiroso = null;
+    state.playerToListAnswers = null;
+    state.answersListed = [];
+    state.validationResults = [];
+    state.gamePhase = 'bidding';
+
+    console.log(`Mentiroso Room ${roomId}: Starting round ${state.currentRound}/18 - Category: ${state.currentCategory} (${state.categoryRound}/3)`);
+
+    // Send new round message
+    const payload = {
+        round: state.currentRound,
+        categoryRound: state.categoryRound,
+        globalCategoryIndex: state.globalCategoryIndex,
+        category: state.currentCategory,
+        challengeTemplate: state.challengeTextTemplate,
+        currentTurn: room.currentTurn,
+        players: [
+            { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
+            { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
+        ],
+        isNewCategory: state.categoryRound === 1 && state.currentRound > 1
+    };
+
+    broadcastToRoom(roomId, { type: 'mentirosoNextRound', payload });
+}
+
+function handleMentirosoSubmitBid(ws, clientInfo, payload) {
+    const roomId = clientInfo.roomId;
+    if (!roomId) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No estás en una sala de juego.' } });
+        return;
+    }
+
+    const room = rooms.get(roomId);
+    if (!room || !room.mentirosoState || !room.mentirosoState.gameActive) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No hay un juego activo en esta sala.' } });
+        return;
+    }
+
+    const state = room.mentirosoState;
+
+    // Verify it's the player's turn
+    if (room.currentTurn !== clientInfo.id) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No es tu turno para apostar.' } });
+        return;
+    }
+
+    // Validate bid
+    const bid = parseInt(payload.bid);
+    if (isNaN(bid) || bid <= state.currentBid) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: `La apuesta debe ser un número mayor que la apuesta actual (${state.currentBid}).` } });
+        return;
+    }
+
+    // Update game state
+    state.currentBid = bid;
+    state.lastBidder = clientInfo.id;
+
+    // Switch turn to other player
+    const otherPlayer = room.players.player1.id === clientInfo.id ? room.players.player2 : room.players.player1;
+    room.currentTurn = otherPlayer.id;
+
+    console.log(`Mentiroso Room ${roomId}: ${clientInfo.name || clientInfo.id} bid ${bid}`);
+
+    // Send confirmation and broadcast update
+    safeSend(ws, { type: 'bidConfirmed', payload: { bid, message: `Tu apuesta de ${bid} fue enviada.` } });
+
+    setTimeout(() => {
+        broadcastToRoom(roomId, {
+            type: 'mentirosoBidUpdate',
+            payload: {
+                newBid: bid,
+                bidderId: clientInfo.id,
+                bidderName: clientInfo.name || 'Jugador',
+                nextTurn: otherPlayer.id
+            }
+        });
+    }, 100);
+}
+
+function handleMentirosoCallLiar(ws, clientInfo, payload) {
+    const roomId = clientInfo.roomId;
+    if (!roomId) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No estás en una sala de juego.' } });
+        return;
+    }
+
+    const room = rooms.get(roomId);
+    if (!room || !room.mentirosoState || !room.mentirosoState.gameActive) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No hay un juego activo en esta sala.' } });
+        return;
+    }
+
+    const state = room.mentirosoState;
+
+    // Verify it's the player's turn
+    if (room.currentTurn !== clientInfo.id) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No es tu turno para llamar Mentiroso.' } });
+        return;
+    }
+
+    // Verify there's a bid to call
+    if (!state.lastBidder || state.currentBid <= 0) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No hay una apuesta activa para llamar Mentiroso.' } });
+        return;
+    }
+
+    // Can't call liar on own bid
+    if (state.lastBidder === clientInfo.id) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No puedes llamar Mentiroso a tu propia apuesta.' } });
+        return;
+    }
+
+    // Update game state
+    state.playerWhoCalledMentiroso = clientInfo.id;
+    state.playerToListAnswers = state.lastBidder;
+    room.currentTurn = state.lastBidder; // The accused player must list answers
+
+    const accusedPlayer = room.players.player1.id === state.lastBidder ? room.players.player1 : room.players.player2;
+
+    console.log(`Mentiroso Room ${roomId}: ${clientInfo.name || clientInfo.id} called liar on ${accusedPlayer.name || accusedPlayer.id}`);
+
+    broadcastToRoom(roomId, {
+        type: 'mentirosoLiarCalled',
+        payload: {
+            callerId: clientInfo.id,
+            callerName: clientInfo.name || 'Jugador',
+            accusedId: state.lastBidder,
+            accusedName: accusedPlayer.name || 'Jugador acusado'
+        }
+    });
+}
+
+function handleMentirosoSubmitAnswers(ws, clientInfo, payload) {
+    const roomId = clientInfo.roomId;
+    if (!roomId) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No estás en una sala de juego.' } });
+        return;
+    }
+
+    const room = rooms.get(roomId);
+    if (!room || !room.mentirosoState || !room.mentirosoState.gameActive) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No hay un juego activo en esta sala.' } });
+        return;
+    }
+
+    const state = room.mentirosoState;
+
+    // Verify this player should list answers
+    if (state.playerToListAnswers !== clientInfo.id) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No te corresponde listar respuestas en este momento.' } });
+        return;
+    }
+
+    // Validate answers
+    const answers = Array.isArray(payload.answers) ? payload.answers : [];
+    if (answers.length < 1) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Debes listar al menos una respuesta.' } });
+        return;
+    }
+
+    if (answers.length < state.currentBid) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: `Debes listar al menos ${state.currentBid} respuestas según tu apuesta.` } });
+        return;
+    }
+
+    // Save answers and change turn to validator
+    state.answersListed = answers;
+    room.currentTurn = state.playerWhoCalledMentiroso;
+
+    const validatorPlayer = room.players.player1.id === state.playerWhoCalledMentiroso ? room.players.player1 : room.players.player2;
+
+    console.log(`Mentiroso Room ${roomId}: ${clientInfo.name || clientInfo.id} submitted ${answers.length} answers`);
+
+    broadcastToRoom(roomId, {
+        type: 'mentirosoAnswersSubmitted',
+        payload: {
+            listerId: clientInfo.id,
+            listerName: clientInfo.name || 'Jugador',
+            answers: answers,
+            validatorId: state.playerWhoCalledMentiroso,
+            validatorName: validatorPlayer.name || 'Validador'
+        }
+    });
+}
+
+function handleMentirosoSubmitValidation(ws, clientInfo, payload) {
+    const roomId = clientInfo.roomId;
+    if (!roomId) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No estás en una sala de juego.' } });
+        return;
+    }
+
+    const room = rooms.get(roomId);
+    if (!room || !room.mentirosoState || !room.mentirosoState.gameActive) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No hay un juego activo en esta sala.' } });
+        return;
+    }
+
+    const state = room.mentirosoState;
+
+    // Verify this player should validate
+    if (state.playerWhoCalledMentiroso !== clientInfo.id) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'No te corresponde validar respuestas en este momento.' } });
+        return;
+    }
+
+    // Validate payload
+    const validations = Array.isArray(payload.validations) ? payload.validations : [];
+    if (validations.length !== state.answersListed.length) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Debes validar todas las respuestas.' } });
+        return;
+    }
+
+    // Save validations and determine round winner
+    state.validationResults = validations;
+    const validAnswersCount = validations.filter(v => v === true).length;
+    const wasMentiroso = validAnswersCount < state.currentBid;
+    const roundWinnerId = wasMentiroso ? state.playerWhoCalledMentiroso : state.playerToListAnswers;
+
+    // Update scores
+    const winnerPlayer = room.players.player1.id === roundWinnerId ? room.players.player1 : room.players.player2;
+    winnerPlayer.score = (winnerPlayer.score || 0) + 1;
+    state.scores[roundWinnerId] = winnerPlayer.score;
+
+    // Prepare result message
+    let resultMessage = '';
+    if (wasMentiroso) {
+        resultMessage = `¡Era MENTIROSO! ${validAnswersCount} respuestas válidas de ${state.currentBid} requeridas.`;
+    } else {
+        resultMessage = `¡NO era mentiroso! Tenía ${validAnswersCount} respuestas válidas de ${state.currentBid} requeridas.`;
+    }
+
+    console.log(`Mentiroso Room ${roomId}: Round ${state.currentRound} finished. Winner: ${winnerPlayer.name || winnerPlayer.id}`);
+
+    // Send round result
+    broadcastToRoom(roomId, {
+        type: 'mentirosoRoundResult',
+        payload: {
+            wasMentiroso: wasMentiroso,
+            validAnswersCount: validAnswersCount,
+            requiredCount: state.currentBid,
+            winnerId: roundWinnerId,
+            winnerName: winnerPlayer.name || 'Ganador',
+            message: resultMessage,
+            players: [
+                { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
+                { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
+            ]
+        }
+    });
+
+    // Move to next round
+    state.currentRound++;
+    setTimeout(() => {
+        nextRoundMentiroso(roomId);
+    }, 3000);
+}
+
+function endGameMentiroso(roomId, reason = "Game completed") {
+    const room = rooms.get(roomId);
+    if (!room || !room.mentirosoState) {
+        console.error(`endGameMentiroso: Room ${roomId} not found`);
+        return;
+    }
+
+    room.gameActive = false;
+    room.mentirosoState.gameActive = false;
+
+    const player1 = room.players.player1;
+    const player2 = room.players.player2;
+
+    if (!player1 || !player2) {
+        console.error(`endGameMentiroso: Missing players in room ${roomId}`);
+        return;
+    }
+
+    // Determine winner
+    let winnerId = null;
+    let draw = false;
+
+    if (player1.score > player2.score) {
+        winnerId = player1.id;
+    } else if (player2.score > player1.score) {
+        winnerId = player2.id;
+    } else {
+        draw = true;
+    }
+
+    const finalScores = {};
+    finalScores[player1.id] = player1.score;
+    finalScores[player2.id] = player2.score;
+
+    console.log(`Mentiroso Game ended in room ${roomId}. Final scores: ${player1.name}: ${player1.score}, ${player2.name}: ${player2.score}`);
+
+    const gameOverPayload = {
+        gameType: 'mentiroso',
+        finalScores: finalScores,
+        winnerId: winnerId,
+        draw: draw,
+        reason: reason
+    };
+
+    broadcastToRoom(roomId, { type: 'gameOver', payload: gameOverPayload });
+}
 
 const mentirosoCategories = {
   "SELECCIÓN ARGENTINA": [
