@@ -8,7 +8,7 @@ import {
     addDoc, 
     serverTimestamp,
     getDoc 
-} from "firebase/firestore";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 export async function getUserId() {
     let anonymousId = localStorage.getItem('anonymousUserId');
