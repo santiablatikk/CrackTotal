@@ -26,6 +26,9 @@ const wss = new WebSocket.Server({ server });
 server.listen(PORT, () => {
     console.log(`Servidor HTTP y WebSocket iniciado en el puerto ${PORT}...`);
     loadQuestions(); // Load questions for Quien Sabe Mas
+    
+    // Set up automatic room broadcasting every 5 seconds
+    setInterval(broadcastAvailableRooms, 5000);
 });
 
 // --- Game Data Loading ---
@@ -1205,13 +1208,19 @@ function nextRoundMentiroso(roomId) {
     state.currentCategory = CATEGORY_ORDER[state.globalCategoryIndex];
 
     // Select random challenge template
-    let categoryKey = state.currentCategory.toUpperCase();
+    let categoryKey = state.currentCategory;
     // Map category names to the keys used in mentirosoCategories
-    if (categoryKey === "FÚTBOL ARGENTINO") categoryKey = "FÚTBOL ARGENTINO";
-    else if (categoryKey === "SELECCIÓN ARGENTINA") categoryKey = "SELECCIÓN ARGENTINA";
-    else if (categoryKey === "FÚTBOL GENERAL") categoryKey = "FÚTBOL GENERAL";
+    const categoryMapping = {
+        "Fútbol Argentino": "FÚTBOL ARGENTINO",
+        "Libertadores": "LIBERTADORES", 
+        "Mundiales": "MUNDIALES",
+        "Champions League": "CHAMPIONS LEAGUE",
+        "Selección Argentina": "SELECCIÓN ARGENTINA",
+        "Fútbol General": "FÚTBOL GENERAL"
+    };
     
-    const categoryData = mentirosoCategories[categoryKey];
+    const mappedKey = categoryMapping[categoryKey] || categoryKey;
+    const categoryData = mentirosoCategories[mappedKey];
     if (!categoryData || categoryData.length === 0) {
         console.error(`No challenges found for category: ${state.currentCategory} (key: ${categoryKey})`);
         endGameMentiroso(roomId, "Error: No challenges available");
