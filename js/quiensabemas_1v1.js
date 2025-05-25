@@ -163,6 +163,9 @@ document.addEventListener('DOMContentLoaded', function() {
         // --- End Prefill ---
 
         initializeWebSocket(); // Connect WebSocket on app load
+        
+        // Configurar polling automático de salas cada 5 segundos cuando estamos en el lobby
+        setupAutomaticRoomPolling();
 
         // Añadir soporte para comunicación de salas disponibles
         window.addEventListener('message', function(event) {
@@ -1494,6 +1497,31 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("No currentJoiningRoomId set when submitting password modal.");
             hidePasswordPromptModal(); // Cerrar si no hay ID, es un estado inesperado
         }
+    }
+
+    // --- Función para polling automático de salas ---
+    function setupAutomaticRoomPolling() {
+        // Solicitar salas inmediatamente al cargar
+        setTimeout(() => {
+            if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN && !gameState.gameActive) {
+                sendToServer('getRooms', {});
+            }
+        }, 1000);
+        
+        // Polling automático cada 3 segundos cuando estamos en el lobby
+        setInterval(() => {
+            // Solo hacer polling si estamos en el lobby, conectados, y no en un juego activo
+            if (gameState.websocket && 
+                gameState.websocket.readyState === WebSocket.OPEN && 
+                !gameState.gameActive && 
+                !gameState.roomId &&
+                lobbySectionEl && 
+                lobbySectionEl.style.display !== 'none') {
+                
+                console.log('🔄 Solicitando actualización automática de salas (Quién Sabe Más)');
+                sendToServer('getRooms', {});
+            }
+        }, 3000); // Cada 3 segundos
     }
 
     // --- Start App ---

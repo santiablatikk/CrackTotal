@@ -280,8 +280,11 @@ wss.on('connection', (ws, req) => {
     clients.set(ws, { id: clientId, roomId: null });
     console.log(`Client connected: ${clientId} (Total: ${clients.size})`);
     safeSend(ws, { type: 'yourInfo', payload: { playerId: clientId } });
-    // Send available rooms to the new client
-    broadcastAvailableRooms();
+    
+    // Send available rooms to the new client immediately
+    setTimeout(() => {
+        broadcastAvailableRooms();
+    }, 200); // Small delay to ensure client is ready to receive
 
     ws.on('message', (message) => {
         let parsedMessage;
@@ -1086,6 +1089,11 @@ function endGame(roomId, reason = "Game finished") {
     // Consider cleanup: Keep room until players disconnect?
     // Let's keep it for now, disconnect logic handles removal.
     console.log(`Game ended for room ${roomId}. Final state sent.`);
+    
+    // Broadcast updated room list since a game ended and room might be available again
+    setTimeout(() => {
+        broadcastAvailableRooms();
+    }, 500); // Small delay to ensure message is sent first
 }
 
 function handleDisconnect(ws, clientId, roomId) {
@@ -1537,6 +1545,11 @@ function endGameMentiroso(roomId, reason = "Game completed") {
     };
 
     broadcastToRoom(roomId, { type: 'gameOver', payload: gameOverPayload });
+    
+    // Broadcast updated room list since a Mentiroso game ended and room might be available again
+    setTimeout(() => {
+        broadcastAvailableRooms();
+    }, 500); // Small delay to ensure message is sent first
 }
 
 const mentirosoCategories = {
