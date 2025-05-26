@@ -491,7 +491,7 @@
     <!-- Skip Link para accesibilidad -->
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
-  <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
+  <nav class="main-navigation" role="navigation" aria-label="NavegaciÃ³n principal" role="navigation" aria-label="Navegación principal">
         <a href="index.html" class="nav-logo" aria-label="Crack Total - Inicio">
             Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
         </a>
@@ -509,12 +509,15 @@
             <li><a href="contact.html" aria-label="Contactar con nosotros"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a></li>
         </ul>
     </nav>
-
-  <a href="index.html" class="home-link">
-    <i class="fas fa-home"></i> Inicio
-  </a>
-
-  <!-- Header Inserted -->
+    <div class="breadcrumbs-container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="blog.html">Blog</a></li>
+                <li class="breadcrumb-item active" aria-current="page">ArtÃ­culo</li>
+            </ol>
+        </nav>
+    </div><!-- Header Inserted -->
   <header class="app-header">
     <div class="logo-animation">
         <i class="fas fa-futbol ball-icon bounce"></i>
