@@ -1500,8 +1500,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     if(!gameState.gameActive) enableLobbyButtons();
                     break;
                 case 'availableRooms': 
-                    // DEBUG: Mostrar qué salas se reciben
-                    console.log('[ClientReceive] Received availableRooms:', message.payload.rooms);
+                    console.log('Received availableRooms for Mentiroso');
                     renderAvailableRooms(message.payload.rooms, 'mentiroso');
                     
                     // Si hay una solicitud pendiente desde la página principal, responderla

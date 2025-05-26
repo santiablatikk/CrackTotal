@@ -87,14 +87,25 @@
     <script src="js/main.js"></script>
 </head>
 <body class="ranking-page-body">
-    <nav class="main-navigation">
+    <!-- Skip Link para accesibilidad -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    
+    <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
+        <a href="index.html" class="nav-logo" aria-label="Crack Total - Inicio">
+            Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
+        </a>
+        <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
         <ul>
-            <li><a href="profile.html">Perfil</a></li>
-            <li><a href="ranking.html">Ranking</a></li>
-            <li><a href="logros.html">Logros</a></li>
-            <li><a href="blog.html">Blog</a></li>
-            <li><a href="about.html">Acerca de</a></li>
-            <li><a href="contact.html">Contacto</a></li>
+            <li><a href="index.html" aria-label="Ir al inicio"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
+            <li><a href="games.html" aria-label="Ir a los juegos"><i class="fas fa-gamepad" aria-hidden="true"></i> Juegos</a></li>
+            <li><a href="profile.html" aria-label="Ver mi perfil"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
+            <li><a href="ranking.html" aria-label="Ver ranking general"><i class="fas fa-trophy" aria-hidden="true"></i> Rankings</a></li>
+            <li><a href="logros.html" aria-label="Ver mis logros"><i class="fas fa-medal" aria-hidden="true"></i> Logros</a></li>
+            <li><a href="blog.html" aria-label="Leer el blog"><i class="fas fa-blog" aria-hidden="true"></i> Blog</a></li>
+            <li><a href="about.html" aria-label="Acerca de nosotros"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a></li>
+            <li><a href="contact.html" aria-label="Contactar con nosotros"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a></li>
         </ul>
     </nav>
 
@@ -114,18 +125,24 @@
     </header>
 
     <!-- Main Content -->
-    <main class="game-content">
-        <!-- Botón Volver (opcional, si no está en el header global) -->
-        <div style="margin-bottom: 1.5rem; text-align: left;">
-            <!-- Remove this link -->
-            <!-- <a href="index.html" class="back-button small-button">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                Volver al Inicio
-            </a> -->
-             <!-- Enlace al Perfil -->
-            <a href="profile.html" class="profile-link small-button" style="margin-left: 0;"> <!-- Remove margin-left: 10px -->
+    <main class="game-content" id="main-content">
+        <!-- Enlaces de navegación -->
+        <div style="margin-bottom: 1.5rem; text-align: left; display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="profile.html" class="profile-link small-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 Mi Perfil
+            </a>
+            <a href="ranking-quiensabemas.html" class="profile-link small-button">
+                <i class="fas fa-brain"></i>
+                Ranking Quién Sabe Más
+            </a>
+            <a href="ranking-mentiroso.html" class="profile-link small-button">
+                <i class="fas fa-mask"></i>
+                Ranking Mentiroso
+            </a>
+            <a href="pasalache.html" class="profile-link small-button">
+                <i class="fas fa-play"></i>
+                Jugar Pasala Che
             </a>
         </div>
 
@@ -191,7 +208,7 @@
                 <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
                 <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
                 <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-                <a href="terminos.html"><i class="fas fa-file-contract"></i> Terminos</a>
+                <a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a>
                 <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
             </div>
             <!-- Botón Compartir Insertado -->

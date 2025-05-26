@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <script>
@@ -470,15 +470,25 @@
   </style>
 </head>
 <body>
-    <nav class="main-navigation">
+    <!-- Skip Link para accesibilidad -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+    <nav class="main-navigation" role="navigation" aria-label="NavegaciÃ³n principal">
+        <a href="index.html" class="nav-logo" aria-label="Crack Total - Inicio">
+            Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
+        </a>
+        <button class="nav-toggle" aria-label="Abrir menÃº de navegaciÃ³n" aria-expanded="false">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
         <ul>
-            <li><a href="/"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="profile.html">Perfil</a></li>
-            <li><a href="ranking.html">Ranking</a></li>
-            <li><a href="logros.html">Logros</a></li>
-            <li><a href="blog.html">Blog</a></li>
-            <li><a href="about.html">Acerca de</a></li>
-            <li><a href="contact.html">Contacto</a></li>
+            <li><a href="index.html" aria-label="Ir al inicio"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
+            <li><a href="games.html" aria-label="Ir a los juegos"><i class="fas fa-gamepad" aria-hidden="true"></i> Juegos</a></li>
+            <li><a href="profile.html" aria-label="Ver mi perfil"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
+            <li><a href="ranking.html" aria-label="Ver ranking general"><i class="fas fa-trophy" aria-hidden="true"></i> Rankings</a></li>
+            <li><a href="logros.html" aria-label="Ver mis logros"><i class="fas fa-medal" aria-hidden="true"></i> Logros</a></li>
+            <li><a href="blog.html" aria-label="Leer el blog"><i class="fas fa-blog" aria-hidden="true"></i> Blog</a></li>
+            <li><a href="about.html" aria-label="Acerca de nosotros"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a></li>
+            <li><a href="contact.html" aria-label="Contactar con nosotros"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a></li>
         </ul>
     </nav>
 
@@ -497,7 +507,7 @@
         <p class="subtitle">Un análisis de las filosofías que moldean el deporte rey.</p>
     </header>
 
-    <main class="page-container blog-detail-container">
+    <main class="page-container blog-detail-container" id="main-content">
         <article class="blog-content">
             <img src="img/blog/estilos-de-juego.jpg" alt="Tácticas de Fútbol" class="blog-main-image" onerror="this.src='https://via.placeholder.com/800x400?text=Estilos+de+Juego'">
             <div class="blog-meta">

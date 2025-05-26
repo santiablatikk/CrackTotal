@@ -233,4 +233,21 @@
 /* .profile-container .history-table {} */
 /* .profile-container .history-table th, .profile-container .history-table td {} */
 /* .profile-container .history-table {} */
-/* .profile-container .history-table th, .profile-container .history-table td {} */ 
+/* .profile-container .history-table th, .profile-container .history-table td {} */
+
+/* Profile Quick Navigation */
+.profile-quick-nav {
+    margin-bottom: 1.5rem;
+    text-align: left;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Responsive adjustments for profile quick nav */
+@media (max-width: 768px) {
+    .profile-quick-nav {
+        justify-content: center;
+        text-align: center;
+    }
+} 

@@ -414,24 +414,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Question Display (Triggered by Server) ---
     function displayQuestion(question) {
-        // +++ MORE DEBUGGING +++
-        console.log("[CLIENT] displayQuestion received raw object:", JSON.parse(JSON.stringify(question))); // Log a deep copy
+        // Validar estructura de pregunta recibida
         if (question && typeof question === 'object') {
-            console.log("[CLIENT] Keys in received question:", Object.keys(question));
-            console.log("[CLIENT] Has 'options' (no space)?", question.hasOwnProperty('options'));
-            if (question.hasOwnProperty('options')) {
-                console.log("[CLIENT] Value of 'options':", question.options);
-                console.log("[CLIENT] typeof question.options:", typeof question.options);
-                console.log("[CLIENT] Array.isArray(question.options):", Array.isArray(question.options));
-            }
-            console.log("[CLIENT] Has 'options ' (WITH space)?", question.hasOwnProperty('options ')); // Note the space
-            if (question.hasOwnProperty('options ')) {
-                console.log("[CLIENT] Value of 'options ' (WITH space):", question['options ']);
-                console.log("[CLIENT] typeof question['options ']:", typeof question['options ']);
-                console.log("[CLIENT] Array.isArray(question['options ']):", Array.isArray(question['options ']));
+            const hasOptions = question.hasOwnProperty('options') && Array.isArray(question.options);
+            if (!hasOptions) {
+                console.warn("Question received without valid options array");
             }
         }
-        // +++ END MORE DEBUGGING +++
 
         if (!question) {
             console.error("displayQuestion called without question data.");

@@ -163,4 +163,8 @@ h3:not([class]) {
 .back-link-container {
     text-align: center;
     margin-top: 2rem;
-} 
+}
+
+/* Importar hojas de estilo adicionales */
+@import 'placeholder-images.css';
+@import 'accessibility.css'; 

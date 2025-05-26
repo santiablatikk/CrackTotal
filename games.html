@@ -70,92 +70,104 @@
     <script src="js/main.js"></script>
 </head>
 <body>
-    <nav class="main-navigation">
+    <!-- Skip Link para accesibilidad -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    
+    <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
+        <a href="index.html" class="nav-logo" aria-label="Crack Total - Inicio">
+            Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
+        </a>
+        <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
         <ul>
-            <li><a href="profile.html">Perfil</a></li>
-            <li><a href="ranking.html">Ranking</a></li>
-            <li><a href="logros.html">Logros</a></li>
-            <li><a href="blog.html">Blog</a></li>
-            <li><a href="about.html">Acerca de</a></li>
-            <li><a href="contact.html">Contacto</a></li>
+            <li><a href="index.html" aria-label="Ir al inicio"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
+            <li><a href="games.html" aria-label="Ir a los juegos"><i class="fas fa-gamepad" aria-hidden="true"></i> Juegos</a></li>
+            <li><a href="profile.html" aria-label="Ver mi perfil"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
+            <li><a href="ranking.html" aria-label="Ver ranking general"><i class="fas fa-trophy" aria-hidden="true"></i> Rankings</a></li>
+            <li><a href="logros.html" aria-label="Ver mis logros"><i class="fas fa-medal" aria-hidden="true"></i> Logros</a></li>
+            <li><a href="blog.html" aria-label="Leer el blog"><i class="fas fa-blog" aria-hidden="true"></i> Blog</a></li>
+            <li><a href="about.html" aria-label="Acerca de nosotros"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a></li>
+            <li><a href="contact.html" aria-label="Contactar con nosotros"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a></li>
         </ul>
     </nav>
+
     <div class="background-elements">
         <div class="floating-ball ball-1"></div>
         <div class="floating-ball ball-2"></div>
         <div class="floating-ball ball-3"></div>
     </div>
     
-    <div class="container games-container">
-        <div class="welcome-user">
+    <main id="main-content" class="container games-container">
+        <header class="welcome-user">
             <div class="logo-container">
-                <a href="games.html" style="text-decoration: none;">
+                <a href="games.html" style="text-decoration: none;" aria-label="Ir a la página principal de juegos">
                     <h1 class="logo">
                         <span class="logo-text">Crack Total</span>
-                        <i class="fas fa-futbol logo-ball"></i>
+                        <i class="fas fa-futbol logo-ball" aria-hidden="true"></i>
                     </h1>
                 </a>
             </div>
             <h2>¡Hola, <span class="player-highlight" id="playerNameDisplay">Jugador</span>!
-                <button class="username-change-btn" id="changeNameBtn">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                <button class="username-change-btn" id="changeNameBtn" aria-label="Cambiar nombre de usuario">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     Cambiar
                 </button>
             </h2>
             <p class="welcome-subtitle">Elige tu juego y demuestra cuánto sabes de fútbol</p>
-        </div>
+        </header>
 
-        <div class="games-grid">
-            <div class="game-card" data-game="pasalache">
+        <section class="games-grid" aria-label="Juegos disponibles">
+            <article class="game-card" data-game="pasalache">
                 <div class="game-badge">ROSCO</div>
                 <img src="images/pasalache_card.jpg" alt="Tarjeta del juego Pasala Che" class="game-image" loading="lazy">
                 <div class="game-info">
                     <h3 class="game-name">Pasala Che</h3>
                     <p class="game-desc">Un rosco de preguntas futboleras. Responde preguntas para cada letra del abecedario y demuestra tu conocimiento enciclopédico del fútbol.</p>
                     <div class="game-features">
-                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>27 Letras</span>
-                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>Contrarreloj</span>
+                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>27 Letras</span>
+                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>Contrarreloj</span>
                     </div>
-                    <button class="play-button">
+                    <button class="play-button" aria-label="Jugar a Pasala Che">
                         <span>Jugar</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16l15-8-15-8z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4v16l15-8-15-8z"></path></svg>
                     </button>
                 </div>
-            </div>
+            </article>
 
-            <div class="game-card" data-game="quiensabemas">
+            <article class="game-card" data-game="quiensabemas">
                 <img src="images/quiensabemas_card.jpg" alt="Tarjeta del juego Quien Sabe Más" class="game-image" loading="lazy">
                 <div class="game-info">
                     <h3 class="game-name">Quien Sabe Más</h3>
                     <p class="game-desc">Responde preguntas de dificultad creciente contra un amigo y compite por el gran premio. ¿Llegarás a ser el más grande conocedor del fútbol?</p>
                     <div class="game-features">
-                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>6 Niveles</span>
-                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>1 vs 1</span>
+                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>6 Niveles</span>
+                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>1 vs 1</span>
                     </div>
-                    <button class="play-button">
+                    <button class="play-button" aria-label="Jugar a Quien Sabe Más">
                         <span>Jugar</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16l15-8-15-8z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4v16l15-8-15-8z"></path></svg>
                     </button>
                 </div>
-            </div>
+            </article>
 
-            <div class="game-card" data-game="mentiroso">
+            <article class="game-card" data-game="mentiroso">
                 <div class="game-badge">BLUFF</div>
                 <img src="images/mentiroso_card.jpg" alt="Tarjeta del juego Mentiroso" class="game-image" loading="lazy">
                 <div class="game-info">
                     <h3 class="game-name">Mentiroso</h3>
                     <p class="game-desc">¿Cuánto sabés de fútbol o cuánto podés aparentar? Decí cuántas respuestas sabés y desafiá a tu rival. ¡Que no te agarren!</p>
                     <div class="game-features">
-                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>1 vs 1</span>
-                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12V8a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v4"></path><path d="M4 12v4a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4v-4"></path><path d="M12 12L8 8"></path><path d="M12 12l4 4"></path><path d="M12 12l4-4"></path><path d="M12 12L8 16"></path></svg>Puro Engaño</span>
+                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>1 vs 1</span>
+                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12V8a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v4"></path><path d="M4 12v4a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4v-4"></path><path d="M12 12L8 8"></path><path d="M12 12l4 4"></path><path d="M12 12l4-4"></path><path d="M12 12L8 16"></path></svg>Puro Engaño</span>
                     </div>
-                    <button class="play-button">
+                    <button class="play-button" aria-label="Jugar a Mentiroso">
                         <span>Jugar</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16l15-8-15-8z"></path></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4v16l15-8-15-8z"></path></svg>
                     </button>
                 </div>
-            </div>
-        </div>
+            </article>
+        </section>
         
         <!-- Placeholder para AdSense después de la grilla de juegos -->
         <div class="adsense-placeholder-container" style="margin: 2rem auto; padding: 1rem; max-width: 750px; text-align: center;">
@@ -177,23 +189,23 @@
         
         <div class="coming-soon">
             <div class="coming-soon-badge">PRÓXIMAMENTE</div>
-            <p>Nuevos juegos y desafíos</p>
+            <p>Nuevos modos de juego y características</p>
             <div class="novedad-item-inline" style="margin-top: 20px; padding-top:20px; border-top: 1px solid #e0e0e0; background-color: #f7f7f7; padding: 20px; border-radius: 8px; text-align: center;">
                 <h4 style="font-family: 'Oswald', sans-serif; font-weight: 700; color: #2c3e50; margin-top: 0; margin-bottom: 10px; font-size: 1.6em;">
-                    <i class="fas fa-dice" style="margin-right: 10px; color: #3498db;"></i>Mentiroso
+                    <i class="fas fa-trophy" style="margin-right: 10px; color: #f39c12;"></i>Torneos Online
                 </h4>
                 <p style="font-family: 'Montserrat', sans-serif; color: #34495e; font-size: 1em; line-height: 1.7; text-align: left; max-width: 600px; margin-left:auto; margin-right:auto;">
-                    ¡Preparate para un juego donde la astucia vale más que la memoria! En <strong>Mentiroso</strong>, vas a tener que demostrar qué tan bueno sos para el chamuyo futbolero. Declarás cuántas sabés de un tema y, si te acusan, ¡a demostrar! ¿Te animás a ser el más pillo de la cancha o te van a pescar en offside? 
-                    <br><em style="display: block; margin-top: 10px; font-size: 0.9em; color: #7f8c8d;">¡Estate atento! Muy pronto en Crack Total.</em>
+                    ¡Preparate para competir en torneos oficiales! Participá en competencias semanales, enfrentá a los mejores jugadores y luchá por llegar a la cima del ranking. Premios especiales, logros exclusivos y la gloria de ser el crack definitivo.
+                    <br><em style="display: block; margin-top: 10px; font-size: 0.9em; color: #7f8c8d;">¡Próximamente en Crack Total!</em>
                 </p>
             </div>
             <div class="novedad-item-inline" style="margin-top: 20px; padding-top:20px; border-top: 1px solid #e0e0e0; background-color: #f7f7f7; padding: 20px; border-radius: 8px; text-align: center; margin-top:15px;">
                 <h4 style="font-family: 'Oswald', sans-serif; font-weight: 700; color: #2c3e50; margin-top: 0; margin-bottom: 10px; font-size: 1.6em;">
-                    <i class="fas fa-brain" style="margin-right: 10px; color: #27ae60;"></i>Quién Sabe Más
+                    <i class="fas fa-users" style="margin-right: 10px; color: #27ae60;"></i>Modo Cooperativo
                 </h4>
                 <p style="font-family: 'Montserrat', sans-serif; color: #34495e; font-size: 1em; line-height: 1.7; text-align: left; max-width: 600px; margin-left:auto; margin-right:auto;">
-                    El clásico juego de preguntas y respuestas, pero bien picante y futbolero. En <strong>Quién Sabe Más</strong>, te enfrentás a niveles de dificultad creciente. Demostrá tu conocimiento, usá los comodines con cabeza y llegá a lo más alto. ¿Serás el que más sabe de fútbol?
-                    <br><em style="display: block; margin-top: 10px; font-size: 0.9em; color: #7f8c8d;">¡Muy pronto la versión 1 vs 1 online!</em>
+                    Juntate con tus amigos para enfrentar desafíos en equipo. Modalidades de 2v2, salas privadas para grupos, y desafíos especiales que requerirán toda la sabiduría futbolera de tu equipo. ¡La unión hace la fuerza!
+                    <br><em style="display: block; margin-top: 10px; font-size: 0.9em; color: #7f8c8d;">¡En desarrollo! Pronto más noticias.</em>
                 </p>
             </div>
         </div>
@@ -225,7 +237,7 @@
                </div>
             </div>
         </footer>
-    </div>
+    </main>
 
     <!-- Modal para cambiar nombre -->
     <div class="modal-overlay" id="changeNameModal">
@@ -270,56 +282,7 @@
     </div>
     <!-- Fin Modal -->
 
-    <!-- Agregar la sección de salas disponibles para ambos juegos -->
-    <div class="available-rooms-section">
-        <h3 class="section-title"><i class="fas fa-door-open"></i> Salas Disponibles</h3>
-        
-        <div class="game-rooms-tabs">
-            <button class="room-tab-button active" data-game="quiensabemas">Quien Sabe Más</button>
-            <button class="room-tab-button" data-game="mentiroso">Mentiroso</button>
-        </div>
-        
-        <div class="game-rooms-container">
-            <div class="game-rooms active" id="quiensabemas-rooms">
-                <div class="rooms-header">
-                    <h4><i class="fas fa-trophy"></i> Salas de Quien Sabe Más</h4>
-                    <button class="refresh-rooms-button" data-game="quiensabemas">
-                        <i class="fas fa-sync-alt"></i> Actualizar
-                    </button>
-                </div>
-                <div class="rooms-list-container">
-                    <ul class="available-rooms-list" id="quiensabemas-rooms-list">
-                        <li class="loading-rooms">
-                            <span class="spinner-lobby"></span> Cargando salas...
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="game-rooms" id="mentiroso-rooms">
-                <div class="rooms-header">
-                    <h4><i class="fas fa-mask"></i> Salas de Mentiroso</h4>
-                    <button class="refresh-rooms-button" data-game="mentiroso">
-                        <i class="fas fa-sync-alt"></i> Actualizar
-                    </button>
-                </div>
-                <div class="rooms-list-container">
-                    <ul class="available-rooms-list" id="mentiroso-rooms-list">
-                        <li class="loading-rooms">
-                            <span class="spinner-lobby"></span> Cargando salas...
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="adsense-placeholder-container" style="margin: 2rem auto; padding: 1rem; max-width: 750px; text-align: center;">
-        <div class="ad-label" style="font-size: 0.8em; color: #7f8c8d; margin-bottom: 5px;">PUBLICIDAD</div>
-        <div class="adsense-placeholder-banner" style="width:100%; max-width:728px; height:90px; background:#e9ecef; border:1px dashed #ced4da; display:flex; align-items:center; justify-content:center; color:#6c757d; font-family: Arial, sans-serif; margin:0 auto;">
-            Espacio para Anuncio (ej. 728x90)
-        </div>
-    </div>
 
     <!-- Añadir el modal para el juego Mentiroso antes de cerrar el body -->
     <div class="modal-overlay" id="mentirosoIntroModal">
@@ -346,7 +309,7 @@
     </div>
     <!-- Fin Modal -->
 
-    <!-- Añadir script para manejar los clicks en los botones de jugar -->
+    <!-- Script para manejar los clicks en los botones de jugar -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Manejar clicks en los botones de jugar

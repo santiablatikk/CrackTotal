@@ -790,27 +790,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     currentLetterIndex = 0; 
                 } // No change needed if index is still valid
 
-                // --- VERIFICACIÓN DE ROSCO COMPLETO (POR RESPUESTAS TOTALES) ---
+                // --- VERIFICACIÓN PRINCIPAL: ROSCO COMPLETO (TODAS LAS LETRAS ACERTADAS) ---
+                if (pendingLetters.length === 0) {
+                    saveProfileStats(profileStats); // Guardar stats antes de llamar a endGame
+                    endGame('victory'); // Victoria al completar el rosco (todas las letras acertadas)
+                    return; // Stop execution
+                }
+
+                // --- VERIFICACIÓN SECUNDARIA: TODAS LAS PREGUNTAS RESPONDIDAS ---
                 if (correctAnswers + incorrectAnswers === alphabet.length) {
                     saveProfileStats(profileStats); 
                     if (incorrectAnswers < maxErrors) {
-                    endGame('victory');
+                        endGame('victory'); // Victoria por límites de error
                     } else {
                         endGame('defeat'); // Se completó, pero con demasiados errores
                     }
                     return; // Juego terminado
                 }
-
-                // Condición 1: Completar el rosco (todas las letras acertadas) // <-- ESTE BLOQUE SERÁ ELIMINADO POR EL ANTERIOR
-                // if (pendingLetters.length === 0) {
-                //     saveProfileStats(profileStats); // Guardar stats antes de llamar a endGame
-                //     if (incorrectAnswers < maxErrors) { // maxErrors ya depende de la dificultad
-                //         endGame('victory');
-                //     } else {
-                //         endGame('defeat'); // Demasiados errores aunque se haya completado el rosco
-                //     }
-                //     return; // Stop execution
-                // }
 
                 // Condición 2: Victoria anticipada por alto rendimiento
                 // const VICTORIA_ANTICIPADA_ACIERTOS = 22; 
@@ -2046,8 +2042,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalContent.style.border = '2px solid var(--accent, #FF8E3C)';
         modalContent.style.maxWidth = '400px';
 
-        // Tratar de obtener la definición completa del logro de `todosLosLogros` (la variable global en `logros.js`)
-        // Esto es un poco hacky. Sería mejor si `getTodosLosLogrosDef` devolviera toda la info.
+        // Obtener la definición completa del logro desde el sistema global de logros
         // Por ahora, intentaremos accederla si `logros.js` la expone globalmente o a través de la API.
         let logroDefCompleta = null;
         if (window.CrackTotalLogrosAPI && typeof window.CrackTotalLogrosAPI.getTodosLosLogrosDef === 'function') {

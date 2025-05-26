@@ -26,35 +26,35 @@
     <meta name="google-adsense-account" content="ca-pub-9579152019412427">
     <title>Mi Perfil - Crack Total</title>
     <link rel="icon" href="/portada.ico" type="image/x-icon">
-    <link rel="canonical" href="https://www.cracktotal.com/profile.html">
-    <link rel="alternate" hreflang="es" href="https://www.cracktotal.com/profile.html" />
+    <link rel="canonical" href="https://cracktotal.com/profile.html">
+    <link rel="alternate" hreflang="es" href="https://cracktotal.com/profile.html" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="profile">
-    <meta property="og:url" content="https://www.cracktotal.com/profile.html">
+    <meta property="og:url" content="https://cracktotal.com/profile.html">
     <meta property="og:title" content="Mi Perfil - Crack Total">
     <meta property="og:description" content="Tu centro de mando en Crack Total: gestioná tu perfil, avatar y mirá tus estadísticas.">
-    <meta property="og:image" content="https://www.cracktotal.com/images/portada.jpg"> <!-- Podrías usar una imagen genérica o idealmente el avatar del usuario si fuera posible -->
+    <meta property="og:image" content="https://cracktotal.com/images/portada.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://www.cracktotal.com/profile.html">
+    <meta property="twitter:url" content="https://cracktotal.com/profile.html">
     <meta property="twitter:title" content="Mi Perfil - Crack Total">
     <meta property="twitter:description" content="Tu centro de mando en Crack Total: gestioná tu perfil, avatar y mirá tus estadísticas.">
-    <meta property="twitter:image" content="https://www.cracktotal.com/images/portada.jpg">
+    <meta property="twitter:image" content="https://cracktotal.com/images/portada.jpg">
     <meta property="twitter:site" content="@cracktotal_">
 
     <!-- CSS Links -->
-    <link rel="stylesheet" href="css/styles.css">
+    <!-- <link rel="stylesheet" href="css/styles.css"> -->
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/profile.css">
-    <link rel="stylesheet" href="css/ranking.css"> <!-- Include ranking for history table styles -->
+    <link rel="stylesheet" href="css/ranking.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <meta name="description" content="Estadísticas del jugador en Pasala Che.">
+    
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
@@ -73,88 +73,103 @@
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebPage", // Podría ser "ProfilePage" si el contenido fuera más rico y público
+      "@type": "ProfilePage",
       "name": "Mi Perfil - Crack Total",
       "description": "Gestioná tu perfil de jugador en Crack Total. Actualizá tu nombre y revisá tus estadísticas y logros en nuestros juegos de fútbol.",
-      "url": "https://www.cracktotal.com/profile.html",
+      "url": "https://cracktotal.com/profile.html",
       "publisher": {
         "@type": "Organization",
         "name": "Crack Total",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://www.cracktotal.com/images/logo.png"
+          "url": "https://cracktotal.com/images/logo.png"
         }
       }
     }
     </script>
     <script src="js/main.js"></script>
 </head>
-<body class="profile-body"> <!-- Clase específica para posible estilo de fondo -->
-    <nav class="main-navigation">
+<body class="profile-body">
+    <!-- Skip Link para accesibilidad -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    
+    <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
+        <a href="index.html" class="nav-logo" aria-label="Crack Total - Inicio">
+            Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
+        </a>
+        <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
         <ul>
-            <li><a href="profile.html">Perfil</a></li>
-            <li><a href="ranking.html">Ranking</a></li>
-            <li><a href="logros.html">Logros</a></li>
-            <li><a href="blog.html">Blog</a></li>
-            <li><a href="about.html">Acerca de</a></li>
-            <li><a href="contact.html">Contacto</a></li>
+            <li><a href="index.html" aria-label="Ir al inicio"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
+            <li><a href="games.html" aria-label="Ir a los juegos"><i class="fas fa-gamepad" aria-hidden="true"></i> Juegos</a></li>
+            <li><a href="profile.html" aria-label="Ver mi perfil"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
+            <li><a href="ranking.html" aria-label="Ver ranking general"><i class="fas fa-trophy" aria-hidden="true"></i> Rankings</a></li>
+            <li><a href="logros.html" aria-label="Ver mis logros"><i class="fas fa-medal" aria-hidden="true"></i> Logros</a></li>
+            <li><a href="blog.html" aria-label="Leer el blog"><i class="fas fa-blog" aria-hidden="true"></i> Blog</a></li>
+            <li><a href="about.html" aria-label="Acerca de nosotros"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a></li>
+            <li><a href="contact.html" aria-label="Contactar con nosotros"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a></li>
         </ul>
     </nav>
-    <div class="game-layout">
-        <header class="game-header">
-            <div class="container">
-                <div class="header-content">
-                    <a href="games.html" style="text-decoration: none;">
-                        <h1 class="logo">
-                            <span class="logo-text">Crack Total</span>
-                            <i class="fas fa-futbol logo-ball"></i>
-                        </h1>
-                    </a>
-                </div>
-            </div>
-        </header>
+    <!-- App Header -->
+    <header class="app-header">
+        <a href="index.html" class="home-link" aria-label="Volver al Inicio">
+            <i class="fas fa-home"></i>
+            <span>Inicio</span>
+        </a>
+        <div class="logo-animation">
+             <i class="fas fa-futbol ball-icon"></i>
+        </div>
+        <a href="games.html" class="title-link">
+             <h1 class="title-text">Crack Total</h1>
+        </a>
+        <p class="subtitle">Tu Perfil de Jugador</p>
+    </header>
 
-        <main class="game-content profile-container">
+    <div class="game-layout">
+
+        <main id="main-content" class="game-content profile-container">
             <div class="container">
                 <h2 class="profile-title">Tu Perfil de Jugador</h2>
                 
-                <!-- Enlaces de navegación -->
-                <div style="margin-bottom: 1.5rem; text-align: left; display: flex; gap: 10px; flex-wrap: wrap;">
-                    <a href="ranking.html" class="profile-link small-button">
-                        <i class="fas fa-list"></i>
+                <!-- Enlaces de navegación rápida -->
+                <nav aria-label="Enlaces rápidos del perfil" class="profile-quick-nav">
+                    <a href="ranking.html" class="profile-link small-button" aria-label="Ver ranking de Pasala Che">
+                        <i class="fas fa-list" aria-hidden="true"></i>
                         Ranking Pasala Che
                     </a>
-                    <a href="ranking-mentiroso.html" class="profile-link small-button">
-                        <i class="fas fa-mask"></i>
+                    <a href="ranking-mentiroso.html" class="profile-link small-button" aria-label="Ver ranking de Mentiroso">
+                        <i class="fas fa-mask" aria-hidden="true"></i>
                         Ranking Mentiroso
                     </a>
-                    <a href="ranking-quiensabemas.html" class="profile-link small-button">
-                        <i class="fas fa-brain"></i>
+                    <a href="ranking-quiensabemas.html" class="profile-link small-button" aria-label="Ver ranking de Quién Sabe Más">
+                        <i class="fas fa-brain" aria-hidden="true"></i>
                         Ranking Quién Sabe Más
                     </a>
-                    <a href="logros.html" class="profile-link small-button">
-                        <i class="fas fa-trophy"></i>
+                    <a href="logros.html" class="profile-link small-button" aria-label="Ver mis logros">
+                        <i class="fas fa-trophy" aria-hidden="true"></i>
                         Logros
                     </a>
-                </div>
+                </nav>
 
-                <h3 class="profile-subtitle">Estadísticas de Pasala Che</h3>
-                <div class="stats-grid">
+                <section aria-labelledby="pasalache-stats-title">
+                    <h3 id="pasalache-stats-title" class="profile-subtitle">Estadísticas de Pasala Che</h3>
+                    <div class="stats-grid" role="group" aria-labelledby="pasalache-stats-title">
                     <!-- Fila 1: Estadísticas Generales -->
-                    <div class="stat-card">
-                        <div class="stat-icon games"></div>
-                        <div class="stat-value" id="stats-gamesPlayed">0</div>
-                        <div class="stat-label">Partidas Jugadas</div>
+                    <div class="stat-card" role="img" aria-labelledby="games-played-label">
+                        <div class="stat-icon games" aria-hidden="true"></div>
+                        <div class="stat-value" id="stats-gamesPlayed" aria-describedby="games-played-label">0</div>
+                        <div class="stat-label" id="games-played-label">Partidas Jugadas</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon wins"></div>
-                        <div class="stat-value" id="stats-gamesWon">0</div>
-                        <div class="stat-label">Victorias (Roscos)</div>
+                    <div class="stat-card" role="img" aria-labelledby="games-won-label">
+                        <div class="stat-icon wins" aria-hidden="true"></div>
+                        <div class="stat-value" id="stats-gamesWon" aria-describedby="games-won-label">0</div>
+                        <div class="stat-label" id="games-won-label">Victorias (Roscos)</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon losses"></div>
-                        <div class="stat-value" id="stats-gamesLost">0</div>
-                        <div class="stat-label">Derrotas (Errores/Tiempo)</div>
+                    <div class="stat-card" role="img" aria-labelledby="games-lost-label">
+                        <div class="stat-icon losses" aria-hidden="true"></div>
+                        <div class="stat-value" id="stats-gamesLost" aria-describedby="games-lost-label">0</div>
+                        <div class="stat-label" id="games-lost-label">Derrotas (Errores/Tiempo)</div>
                     </div>
 
                     <!-- Fila 2: Precisión y Rendimiento -->
@@ -190,48 +205,43 @@
                         <div class="stat-value" id="stats-totalHelpUsed">0</div>
                         <div class="stat-label">Ayudas Usadas (Pasala Che)</div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon achievements-icon"> <i class="fas fa-trophy"></i> </div>
-                        <div class="stat-value" id="stats-totalAchievements">0</div>
-                        <div class="stat-label">Logros Desbloqueados</div>
+                    <div class="stat-card" role="img" aria-labelledby="achievements-label">
+                        <div class="stat-icon achievements-icon" aria-hidden="true"> <i class="fas fa-trophy"></i> </div>
+                        <div class="stat-value" id="stats-totalAchievements" aria-describedby="achievements-label">0</div>
+                        <div class="stat-label" id="achievements-label">Logros Desbloqueados</div>
                     </div>
-                </div>
-
-                <!-- Placeholder para AdSense después de las estadísticas -->
-                <div class="adsense-placeholder-container" style="margin: 2rem auto; padding: 1rem; max-width: 750px; text-align: center;">
-                    <div class="ad-label" style="font-size: 0.8em; color: #7f8c8d; margin-bottom: 5px;">PUBLICIDAD</div>
-                    <div class="adsense-placeholder-profile-stats" style="width:100%; max-width:728px; height:90px; background:#e9ecef; border:1px dashed #ced4da; display:flex; align-items:center; justify-content:center; color:#6c757d; font-family: Arial, sans-serif; margin:0 auto;">
-                        Espacio para Anuncio (ej. 728x90)
                     </div>
-                </div>
+                </section>
 
                 <!-- Sección Historial de Partidas -->
-                <h3 class="profile-subtitle">Historial de Partidas (Pasala Che)</h3>
-                <div class="history-container">
-                    <table class="history-table">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Resultado</th>
-                                <th>Dificultad</th>
-                                <th>Aciertos</th>
-                                <th>Errores</th>
-                                <th>Tiempo</th>
-                            </tr>
-                        </thead>
-                        <tbody id="gameHistoryBody">
-                            <!-- Las filas se llenarán dinámicamente con JS -->
-                            <tr>
-                                <td colspan="6" style="text-align:center; padding: 20px; color: var(--text-light);">Cargando historial... Si no aparece nada, ¡es hora de jugar!</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- Fin Sección Historial -->
+                <section aria-labelledby="history-title">
+                    <h3 id="history-title" class="profile-subtitle">Historial de Partidas (Pasala Che)</h3>
+                    <div class="history-container">
+                        <table class="history-table" role="table" aria-labelledby="history-title">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Fecha</th>
+                                    <th scope="col">Resultado</th>
+                                    <th scope="col">Dificultad</th>
+                                    <th scope="col">Aciertos</th>
+                                    <th scope="col">Errores</th>
+                                    <th scope="col">Tiempo</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gameHistoryBody">
+                                <!-- Las filas se llenarán dinámicamente con JS -->
+                                <tr>
+                                    <td colspan="6" style="text-align:center; padding: 20px; color: var(--text-light);">Cargando historial... Si no aparece nada, ¡es hora de jugar!</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
 
                 <!-- === ESTADÍSTICAS DE QUIÉN SABE MÁS === -->
-                <h3 class="profile-subtitle">Estadísticas de Quién Sabe Más</h3>
-                <div class="stats-grid">
+                <section aria-labelledby="qsm-stats-title">
+                    <h3 id="qsm-stats-title" class="profile-subtitle">Estadísticas de Quién Sabe Más</h3>
+                    <div class="stats-grid" role="group" aria-labelledby="qsm-stats-title">
                     <!-- Fila 1: Estadísticas Generales -->
                     <div class="stat-card">
                         <div class="stat-icon games"></div>
@@ -265,11 +275,13 @@
                         <div class="stat-value" id="stats-qsm-totalScore">0</div>
                         <div class="stat-label">Puntuación Total</div>
                     </div>
-                </div>
+                    </div>
+                </section>
 
                 <!-- === ESTADÍSTICAS DE MENTIROSO === -->
-                <h3 class="profile-subtitle">Estadísticas de Mentiroso</h3>
-                <div class="stats-grid">
+                <section aria-labelledby="mentiroso-stats-title">
+                    <h3 id="mentiroso-stats-title" class="profile-subtitle">Estadísticas de Mentiroso</h3>
+                    <div class="stats-grid" role="group" aria-labelledby="mentiroso-stats-title">
                     <!-- Fila 1: Estadísticas Generales -->
                     <div class="stat-card">
                         <div class="stat-icon games"></div>
@@ -303,44 +315,37 @@
                         <div class="stat-value" id="stats-mentiroso-totalScore">0</div>
                         <div class="stat-label">Puntuación Total</div>
                     </div>
-                </div>
+                    </div>
+                </section>
 
-                <div class="profile-actions">
-                    <a href="ranking.html" class="extra-link-button" style="text-decoration: none;">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg> <!-- Trophy Icon -->
+                <section class="profile-actions" aria-labelledby="profile-actions-title">
+                    <h4 id="profile-actions-title" class="sr-only">Acciones del perfil</h4>
+                    <a href="ranking.html" class="extra-link-button" style="text-decoration: none;" aria-label="Ver ranking general de Pasala Che">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
                         Ver Ranking
                     </a>
-                     <button id="resetStatsButton" class="reset-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                     <button id="resetStatsButton" class="reset-button" aria-label="Borrar todas las estadísticas guardadas">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
                         Borrar Estadísticas
                     </button>
-                </div>
+                </section>
 
             </div>
         </main>
         
-        <!-- Placeholder para AdSense antes del footer -->
-        <div class="adsense-placeholder-container" style="margin: 2rem auto; padding: 1rem; max-width: 750px; text-align: center;">
-            <div class="ad-label" style="font-size: 0.8em; color: #7f8c8d; margin-bottom: 5px;">PUBLICIDAD</div>
-            <div class="adsense-placeholder-profile-footer" style="width:100%; max-width:728px; height:90px; background:#e9ecef; border:1px dashed #ced4da; display:flex; align-items:center; justify-content:center; color:#6c757d; font-family: Arial, sans-serif; margin:0 auto;">
-                Espacio para Anuncio (ej. 728x90)
-            </div>
-        </div>
-        
-        <footer class="site-footer"> 
+        <footer class="site-footer" role="contentinfo"> 
             <div class="footer-content">
               <div class="footer-links">
-                <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
-                <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
-                <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-                <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-                <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-                <a href="terminos.html"><i class="fas fa-file-contract"></i> Terminos</a>
-                <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+                <a href="/"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a>
+                <a href="blog.html"><i class="fas fa-blog" aria-hidden="true"></i> Blog</a>
+                <a href="contact.html"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a>
+                <a href="cookies.html"><i class="fas fa-cookie-bite" aria-hidden="true"></i> Cookies</a>
+                <a href="privacy.html"><i class="fas fa-lock" aria-hidden="true"></i> Privacidad</a>
+                <a href="terminos.html"><i class="fas fa-file-contract" aria-hidden="true"></i> Términos</a>
+                <a href="about.html"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a>
               </div>
-              <!-- Botón Compartir Insertado -->
-              <button class="footer-share-button" onclick="shareSite()"><i class="fas fa-share-alt"></i> Compartir</button>
-              <!-- Fin Botón Compartir -->
+              <!-- Botón Compartir -->
+              <button class="footer-share-button" onclick="shareSite()" aria-label="Compartir sitio web en redes sociales"><i class="fas fa-share-alt" aria-hidden="true"></i> Compartir</button>
                <div class="footer-copyright">
                  &copy; 2025 Crack Total. Todos los derechos reservados. 
                </div>

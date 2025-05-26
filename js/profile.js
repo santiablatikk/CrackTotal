@@ -143,77 +143,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Mostrar datos al cargar la página --- 
     displayProfileData();
 
-    // Cargar y mostrar estadísticas de todos los juegos
-    loadPasalacheStats();
-    loadPasalacheHistory(); // Cargar historial si existe esa función
+    // Cargar estadísticas de todos los juegos
     loadQuienSabeMasStats();
     loadMentirosoStats();
-    loadAchievementsCount(); // <<< NUEVA FUNCIÓN PARA CONTAR LOGROS
-
-    const resetStatsButton = document.getElementById('resetStatsButton');
-    if (resetStatsButton) {
-        resetStatsButton.addEventListener('click', function() {
-            // Confirmación antes de borrar
-            if (confirm('¿Estás seguro de que quieres borrar TODAS tus estadísticas de Pasala Che? Esta acción no se puede deshacer.')) {
-                localStorage.removeItem('pasalacheUserStats');
-                localStorage.removeItem('pasalacheGameHistory');
-                // Opcionalmente, también podrías querer resetear los logros aquí:
-                // if (confirm('¿También quieres borrar TODOS tus logros desbloqueados?')) {
-                //     localStorage.removeItem('pasalacheUserAchievements');
-                // }
-                loadPasalacheStats(); // Recargar para mostrar stats reseteados
-                loadPasalacheHistory();
-                loadAchievementsCount(); // Recargar contador de logros
-                alert('Estadísticas de Pasala Che borradas.');
-            }
-        });
-    }
+    loadAchievementsCount();
 });
 
-function loadPasalacheStats() {
-    const STATS_KEY = 'pasalacheUserStats';
-    const defaultStats = {
-        gamesPlayed: 0,
-        gamesWon: 0,
-        gamesLostByErrors: 0,
-        gamesLostByTimeout: 0,
-        totalCorrectAnswers: 0,
-        totalIncorrectAnswers: 0,
-        totalPassedAnswers: 0,
-        totalHelpUsed: 0,
-        bestScore: 0,
-        fastestWinTime: null,
-    };
-
-    const statsJson = localStorage.getItem(STATS_KEY);
-    const stats = statsJson ? { ...defaultStats, ...JSON.parse(statsJson) } : { ...defaultStats };
-
-    document.getElementById('stats-gamesPlayed').textContent = stats.gamesPlayed;
-    document.getElementById('stats-gamesWon').textContent = stats.gamesWon;
-    const totalLost = (stats.gamesLostByErrors || 0) + (stats.gamesLostByTimeout || 0);
-    document.getElementById('stats-gamesLost').textContent = totalLost;
-    
-    let averageAccuracy = 0;
-    const totalAnsweredGames = stats.totalCorrectAnswers + stats.totalIncorrectAnswers;
-    if (totalAnsweredGames > 0) {
-        averageAccuracy = Math.round((stats.totalCorrectAnswers / totalAnsweredGames) * 100);
-    }
-    document.getElementById('stats-averageAccuracy').textContent = `${averageAccuracy}%`;
-    
-    document.getElementById('stats-bestScore').textContent = stats.bestScore;
-    
-    if (stats.fastestWinTime !== null && stats.fastestWinTime !== undefined) {
-        const minutes = Math.floor(stats.fastestWinTime / 60);
-        const seconds = stats.fastestWinTime % 60;
-        document.getElementById('stats-fastestWinTime').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-    } else {
-        document.getElementById('stats-fastestWinTime').textContent = '--:--';
-    }
-    
-    document.getElementById('stats-totalCorrect').textContent = stats.totalCorrectAnswers;
-    document.getElementById('stats-totalIncorrect').textContent = stats.totalIncorrectAnswers;
-    document.getElementById('stats-totalHelpUsed').textContent = stats.totalHelpUsed;
-}
+// Esta función ya está incluida en displayProfileData()
 
 // <<<--- INICIO NUEVA FUNCIÓN loadAchievementsCount --- >>>
 function loadAchievementsCount() {
@@ -246,51 +182,10 @@ function loadAchievementsCount() {
 }
 // <<<--- FIN NUEVA FUNCIÓN loadAchievementsCount --- >>>
 
-function loadPasalacheHistory() {
-    const HISTORY_KEY = 'pasalacheGameHistory';
-    const historyBody = document.getElementById('gameHistoryBody');
-    if (!historyBody) return;
-
-    const historyJson = localStorage.getItem(HISTORY_KEY);
-    const history = historyJson ? JSON.parse(historyJson) : [];
-
-    if (history.length === 0) {
-        historyBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px; color: var(--text-light);">No hay historial de partidas todavía. ¡A jugar!</td></tr>';
-        return;
-    }
-
-    historyBody.innerHTML = ''; // Clear loading/default message
-
-    history.forEach(game => {
-        const row = historyBody.insertRow();
-        
-        const dateCell = row.insertCell();
-        dateCell.textContent = game.timestamp ? new Date(game.timestamp).toLocaleDateString('es-ES') : 'Fecha desc.';
-
-        const resultCell = row.insertCell();
-        resultCell.textContent = game.result || 'Resultado desc.';
-        if (game.result === 'victory') {
-            resultCell.style.color = 'var(--success)'; 
-        } else if (game.result === 'defeat' || game.result === 'timeout') {
-            resultCell.style.color = 'var(--danger)';
-        }
-
-        const difficultyCell = row.insertCell();
-        difficultyCell.textContent = game.difficulty || 'Normal'; 
-
-        const correctCell = row.insertCell();
-        correctCell.textContent = game.correctAnswers !== undefined ? game.correctAnswers : '-';
-
-        const errorsCell = row.insertCell();
-        errorsCell.textContent = game.incorrectAnswers !== undefined ? game.incorrectAnswers : '-';
-
-        const timeCell = row.insertCell();
-        timeCell.textContent = game.timeSpentFormatted || '--:--';
-    });
-}
+// Esta función ya está incluida en displayProfileData()
 
 // Función para cargar estadísticas de Quién Sabe Más desde Firebase
-function loadQuienSabeMasStats() {
+async function loadQuienSabeMasStats() {
     // Asegurar que los elementos existan
     const elements = {
         gamesPlayed: document.getElementById('stats-qsm-gamesPlayed'),
@@ -301,31 +196,63 @@ function loadQuienSabeMasStats() {
         totalScore: document.getElementById('stats-qsm-totalScore')
     };
 
-    // Si no existen todos los elementos, mostrar valores por defecto
+    // Valores por defecto
+    let defaultStats = {
+        gamesPlayed: 0,
+        gamesWon: 0,
+        gamesLost: 0,
+        averageAccuracy: 0,
+        bestScore: 0,
+        totalScore: 0
+    };
+
+    try {
+        // Intentar cargar desde Firebase
+        const { getUserId } = await import('./firebase-utils.js');
+        const { db } = await import('./firebase-init.js');
+        const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        
+        const userId = await getUserId();
+        if (userId && db) {
+            const userRef = doc(db, "users", userId);
+            const userSnap = await getDoc(userRef);
+            
+            if (userSnap.exists()) {
+                const userData = userSnap.data();
+                const qsmStats = userData.stats?.quiensabemas || {};
+                
+                defaultStats = {
+                    gamesPlayed: qsmStats.played || 0,
+                    gamesWon: qsmStats.wins || 0,
+                    gamesLost: (qsmStats.played || 0) - (qsmStats.wins || 0),
+                    averageAccuracy: qsmStats.played > 0 ? Math.round(((qsmStats.wins || 0) / qsmStats.played) * 100) : 0,
+                    bestScore: qsmStats.score || 0, // Firebase guarda score total, no best score individual
+                    totalScore: qsmStats.score || 0
+                };
+            }
+        }
+    } catch (error) {
+        console.warn("Error cargando estadísticas de Quién Sabe Más desde Firebase:", error);
+    }
+
+    // Actualizar elementos con los datos obtenidos (de Firebase o por defecto)
     Object.keys(elements).forEach(key => {
         if (elements[key]) {
             switch(key) {
                 case 'averageAccuracy':
-                    elements[key].textContent = '0%';
-                    break;
-                case 'gamesPlayed':
-                case 'gamesWon':
-                case 'gamesLost':
-                case 'bestScore':
-                case 'totalScore':
-                    elements[key].textContent = '0';
+                    elements[key].textContent = `${defaultStats[key]}%`;
                     break;
                 default:
-                    elements[key].textContent = 'N/A';
+                    elements[key].textContent = defaultStats[key];
             }
         }
     });
 
-    console.log("Estadísticas de Quién Sabe Más cargadas (valores por defecto)");
+    console.log("Estadísticas de Quién Sabe Más cargadas:", defaultStats);
 }
 
 // Función para cargar estadísticas de Mentiroso desde Firebase
-function loadMentirosoStats() {
+async function loadMentirosoStats() {
     // Asegurar que los elementos existan
     const elements = {
         gamesPlayed: document.getElementById('stats-mentiroso-gamesPlayed'),
@@ -336,27 +263,59 @@ function loadMentirosoStats() {
         totalScore: document.getElementById('stats-mentiroso-totalScore')
     };
 
-    // Si no existen todos los elementos, mostrar valores por defecto
+    // Valores por defecto
+    let defaultStats = {
+        gamesPlayed: 0,
+        gamesWon: 0,
+        gamesLost: 0,
+        averageAccuracy: 0,
+        bestScore: 0,
+        totalScore: 0
+    };
+
+    try {
+        // Intentar cargar desde Firebase
+        const { getUserId } = await import('./firebase-utils.js');
+        const { db } = await import('./firebase-init.js');
+        const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+        
+        const userId = await getUserId();
+        if (userId && db) {
+            const userRef = doc(db, "users", userId);
+            const userSnap = await getDoc(userRef);
+            
+            if (userSnap.exists()) {
+                const userData = userSnap.data();
+                const mentirosoStats = userData.stats?.mentiroso || {};
+                
+                defaultStats = {
+                    gamesPlayed: mentirosoStats.played || 0,
+                    gamesWon: mentirosoStats.wins || 0,
+                    gamesLost: (mentirosoStats.played || 0) - (mentirosoStats.wins || 0),
+                    averageAccuracy: mentirosoStats.played > 0 ? Math.round(((mentirosoStats.wins || 0) / mentirosoStats.played) * 100) : 0,
+                    bestScore: mentirosoStats.score || 0, // Firebase guarda score total, no best score individual
+                    totalScore: mentirosoStats.score || 0
+                };
+            }
+        }
+    } catch (error) {
+        console.warn("Error cargando estadísticas de Mentiroso desde Firebase:", error);
+    }
+
+    // Actualizar elementos con los datos obtenidos (de Firebase o por defecto)
     Object.keys(elements).forEach(key => {
         if (elements[key]) {
             switch(key) {
                 case 'averageAccuracy':
-                    elements[key].textContent = '0%';
-                    break;
-                case 'gamesPlayed':
-                case 'gamesWon':
-                case 'gamesLost':
-                case 'bestScore':
-                case 'totalScore':
-                    elements[key].textContent = '0';
+                    elements[key].textContent = `${defaultStats[key]}%`;
                     break;
                 default:
-                    elements[key].textContent = 'N/A';
+                    elements[key].textContent = defaultStats[key];
             }
         }
     });
 
-    console.log("Estadísticas de Mentiroso cargadas (valores por defecto)");
+    console.log("Estadísticas de Mentiroso cargadas:", defaultStats);
 }
 
 // Si main.js tiene funciones de utilidad como shareSite, asegúrate de que se cargue o define.

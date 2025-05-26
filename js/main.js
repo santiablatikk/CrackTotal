@@ -645,3 +645,93 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchRooms(gameType);
     }
 });
+
+/* ========================================= */
+/* ======= NAVEGACIÓN MOBILE HAMBURGUESA === */
+/* ========================================= */
+
+/**
+ * Inicializar menú de navegación mobile
+ */
+function initMobileNavigation() {
+    const navToggle = document.querySelector('.nav-toggle');
+    const navUl = document.querySelector('.main-navigation ul');
+    
+    if (!navToggle || !navUl) return;
+    
+    // Toggle menu mobile
+    navToggle.addEventListener('click', () => {
+        navUl.classList.toggle('active');
+        navToggle.classList.toggle('active');
+        
+        // Actualizar aria-expanded para accesibilidad
+        const isExpanded = navUl.classList.contains('active');
+        navToggle.setAttribute('aria-expanded', isExpanded);
+        
+        // Prevenir scroll del body cuando el menú está abierto
+        document.body.style.overflow = isExpanded ? 'hidden' : '';
+    });
+    
+    // Cerrar menú al hacer clic en un enlace
+    const navLinks = navUl.querySelectorAll('a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navUl.classList.remove('active');
+            navToggle.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        });
+    });
+    
+    // Cerrar menú con Escape
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navUl.classList.contains('active')) {
+            navUl.classList.remove('active');
+            navToggle.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+            navToggle.focus();
+        }
+    });
+    
+    // Cerrar menú al cambiar tamaño de ventana
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            navUl.classList.remove('active');
+            navToggle.classList.remove('active');
+            navToggle.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+    });
+}
+
+/**
+ * Marcar página actual en navegación
+ */
+function setActiveNavItem() {
+    const currentPage = window.location.pathname;
+    const navLinks = document.querySelectorAll('.main-navigation a');
+    
+    navLinks.forEach(link => {
+        // Remover clases/atributos activos existentes
+        link.classList.remove('active');
+        link.removeAttribute('aria-current');
+        
+        // Obtener el href del enlace
+        const linkPath = new URL(link.href).pathname;
+        
+        // Comparar rutas
+        if (currentPage === linkPath || 
+            (currentPage === '/' && linkPath.endsWith('index.html')) ||
+            (currentPage.endsWith('index.html') && linkPath === '/')) {
+            link.classList.add('active');
+            link.setAttribute('aria-current', 'page');
+        }
+    });
+}
+
+// Inicializar navegación cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', () => {
+    initMobileNavigation();
+    setActiveNavItem();
+});

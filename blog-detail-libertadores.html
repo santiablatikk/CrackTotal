@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <script>
@@ -482,17 +482,27 @@
   </style>
 </head>
 <body>
-  <nav class="main-navigation">
-    <ul>
-      <li><a href="/"><i class="fas fa-home"></i> Inicio</a></li>
-      <li><a href="profile.html">Perfil</a></li>
-      <li><a href="ranking.html">Ranking</a></li>
-      <li><a href="logros.html">Logros</a></li>
-      <li><a href="blog.html">Blog</a></li>
-      <li><a href="about.html">Acerca de</a></li>
-      <li><a href="contact.html">Contacto</a></li>
-    </ul>
-  </nav>
+    <!-- Skip Link para accesibilidad -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+  <nav class="main-navigation" role="navigation" aria-label="NavegaciÃ³n principal">
+        <a href="index.html" class="nav-logo" aria-label="Crack Total - Inicio">
+            Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
+        </a>
+        <button class="nav-toggle" aria-label="Abrir menÃº de navegaciÃ³n" aria-expanded="false">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
+        <ul>
+            <li><a href="index.html" aria-label="Ir al inicio"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
+            <li><a href="games.html" aria-label="Ir a los juegos"><i class="fas fa-gamepad" aria-hidden="true"></i> Juegos</a></li>
+            <li><a href="profile.html" aria-label="Ver mi perfil"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
+            <li><a href="ranking.html" aria-label="Ver ranking general"><i class="fas fa-trophy" aria-hidden="true"></i> Rankings</a></li>
+            <li><a href="logros.html" aria-label="Ver mis logros"><i class="fas fa-medal" aria-hidden="true"></i> Logros</a></li>
+            <li><a href="blog.html" aria-label="Leer el blog"><i class="fas fa-blog" aria-hidden="true"></i> Blog</a></li>
+            <li><a href="about.html" aria-label="Acerca de nosotros"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a></li>
+            <li><a href="contact.html" aria-label="Contactar con nosotros"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a></li>
+        </ul>
+    </nav>
 
   <div class="breadcrumbs-container">
     <nav aria-label="breadcrumb">
@@ -514,7 +524,7 @@
     <p class="subtitle">Análisis, historias y pasión por el fútbol</p>
   </header>
 
-  <main class="blog-detail-screen page-container">
+  <main class="blog-detail-screen page-container" id="main-content">
     <div class="blog-detail-container content-container">
       <div class="blog-detail-img-container">
         <img src="img/blog/libertadores.jpg" alt="Copa Libertadores Trofeo" class="blog-detail-img" loading="lazy">
@@ -715,7 +725,7 @@
             <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
             <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
             <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-            <a href="terminos.html"><i class="fas fa-file-contract"></i> Terminos</a>
+            <a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a>
             <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
           </div>
           <!-- Botón Compartir Insertado -->
@@ -733,3 +743,4 @@
   </main>
 </body>
 </html> 
+
