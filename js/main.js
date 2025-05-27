@@ -735,3 +735,47 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileNavigation();
     setActiveNavItem();
 });
+
+/* ========================================= */
+/* ========== SERVICE WORKER SETUP ========= */
+/* ========================================= */
+
+/**
+ * Registrar Service Worker para funcionalidad PWA
+ */
+function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('✅ Service Worker registrado exitosamente:', registration.scope);
+                
+                // Verificar actualizaciones periódicamente
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            console.log('🆕 Nueva versión del Service Worker disponible');
+                            
+                            // Opcionalmente mostrar notificación de actualización
+                            if (confirm('Hay una nueva versión disponible. ¿Quieres recargar la página?')) {
+                                window.location.reload();
+                            }
+                        }
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('❌ Error al registrar Service Worker:', error);
+            });
+    } else {
+        console.log('⚠️ Service Workers no soportados en este navegador');
+    }
+}
+
+// Registrar Service Worker cuando la página esté cargada
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', registerServiceWorker);
+} else {
+    registerServiceWorker();
+}

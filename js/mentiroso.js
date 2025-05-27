@@ -18,22 +18,27 @@ const WEBSOCKET_URL = (() => {
 
 // Comunicación con la página principal para salas disponibles
 window.addEventListener('message', function(event) {
+    console.log('🔍 [MENTIROSO] Mensaje recibido:', event.data);
+    
     // Verificar origen del mensaje
     if (event.origin !== window.location.origin) return;
     
     // Si se solicitan las salas disponibles
     if (event.data && event.data.type === 'requestRooms' && event.data.gameType === 'mentiroso') {
+        console.log('✅ [MENTIROSO] Solicitud de salas Mentiroso recibida desde games.html');
+        
         if (document.readyState === 'complete') {
             // Si la página ya está cargada, solicitar salas
             if (window.gameState && window.gameState.websocket && 
                 window.gameState.websocket.readyState === WebSocket.OPEN) {
-                console.log('Solicitando salas de Mentiroso para games.html');
-                window.sendToServer('getRooms', {});
+                console.log('📡 [MENTIROSO] Solicitando salas de Mentiroso al servidor');
+                window.sendToServer('getRooms', { gameType: 'mentiroso' });
                 
                 // Almacenar el origen para responder cuando recibamos la lista
                 window.roomsRequestSource = event.source;
                 window.roomsRequestOrigin = event.origin;
             } else {
+                console.warn('⚠️ [MENTIROSO] WebSocket no conectado, enviando lista vacía');
                 // Si no hay conexión, enviar lista vacía
                 event.source.postMessage({
                     type: 'availableRooms',
@@ -42,18 +47,20 @@ window.addEventListener('message', function(event) {
                 }, event.origin);
             }
         } else {
+            console.log('⏳ [MENTIROSO] Página no cargada, esperando...');
             // Si la página aún no está cargada, esperar
             window.addEventListener('load', function() {
                 setTimeout(function() {
                     if (window.gameState && window.gameState.websocket && 
                         window.gameState.websocket.readyState === WebSocket.OPEN) {
-                        console.log('Solicitando salas de Mentiroso para games.html (después de carga)');
-                        window.sendToServer('getRooms', {});
+                        console.log('📡 [MENTIROSO] Solicitando salas de Mentiroso al servidor (después de carga)');
+                        window.sendToServer('getRooms', { gameType: 'mentiroso' });
                         
                         // Almacenar el origen para responder cuando recibamos la lista
                         window.roomsRequestSource = event.source;
                         window.roomsRequestOrigin = event.origin;
                     } else {
+                        console.warn('⚠️ [MENTIROSO] WebSocket no conectado después de esperar, enviando lista vacía');
                         // Si no hay conexión después de esperar, enviar lista vacía
                         event.source.postMessage({
                             type: 'availableRooms',
@@ -64,6 +71,8 @@ window.addEventListener('message', function(event) {
                 }, 1000); // Esperar 1 segundo para asegurar que la conexión esté establecida
             });
         }
+    } else if (event.data && event.data.type === 'requestRooms') {
+        console.log(`❌ [MENTIROSO] Solicitud de salas para ${event.data.gameType} (no es Mentiroso), ignorando`);
     }
 });
 
@@ -1500,11 +1509,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     if(!gameState.gameActive) enableLobbyButtons();
                     break;
                 case 'availableRooms': 
-                    console.log('Received availableRooms for Mentiroso');
+                    console.log('📋 [MENTIROSO] Salas recibidas del servidor:', message.payload.rooms);
                     renderAvailableRooms(message.payload.rooms, 'mentiroso');
                     
                     // Si hay una solicitud pendiente desde la página principal, responderla
                     if (gameState.pendingRoomsRequest) {
+                        console.log("📤 [MENTIROSO] Enviando salas a games.html (pendingRequest):", message.payload.rooms?.length || 0, "salas");
                         gameState.pendingRoomsRequest.source.postMessage({
                             type: 'availableRooms',
                             gameType: 'mentiroso',
@@ -1517,6 +1527,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Si hay una solicitud desde games.html, responderla
                     if (window.roomsRequestSource && window.roomsRequestOrigin) {
+                        console.log("📤 [MENTIROSO] Enviando salas a games.html (roomsRequest):", message.payload.rooms?.length || 0, "salas");
                         window.roomsRequestSource.postMessage({
                             type: 'availableRooms',
                             gameType: 'mentiroso',
@@ -1736,7 +1747,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderAvailableRooms(rooms, gameTypeFilter = null) {
         if (!availableRoomsListEl) return;
         availableRoomsListEl.innerHTML = '';
-        const filteredRooms = gameTypeFilter ? rooms.filter(room => room.gameType === gameTypeFilter) : rooms;
+        console.log(`🔍 [MENTIROSO] Filtrando salas. Total recibidas: ${rooms.length}, Filtro: ${gameTypeFilter}`);
+        const filteredRooms = gameTypeFilter ? rooms.filter(room => {
+            const matches = room.gameType === gameTypeFilter;
+            if (!matches) {
+                console.log(`❌ [MENTIROSO] Sala ${room.id} descartada: tipo '${room.gameType}' ≠ '${gameTypeFilter}'`);
+            }
+            return matches;
+        }) : rooms;
+        console.log(`✅ [MENTIROSO] Salas filtradas para mostrar: ${filteredRooms.length}`);
 
         if (!filteredRooms || filteredRooms.length === 0) {
             const noRoomsMsg = document.createElement('li');
@@ -1834,7 +1853,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Solicitar salas inmediatamente al cargar
         setTimeout(() => {
             if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN && !gameState.gameActive) {
-                sendToServer('getRooms', {});
+                sendToServer('getRooms', { gameType: 'mentiroso' });
             }
         }, 1000);
         
@@ -1849,7 +1868,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 lobbySectionEl.style.display !== 'none') {
                 
                 console.log('🔄 Solicitando actualización automática de salas (Mentiroso)');
-                sendToServer('getRooms', {});
+                sendToServer('getRooms', { gameType: 'mentiroso' });
             }
         }, 3000); // Cada 3 segundos
     }
@@ -1927,7 +1946,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Solicitar salas al servidor
-            sendToServer('getRooms', {});
+            sendToServer('getRooms', { gameType: 'mentiroso' });
             
             // Guardar el origen para responder cuando recibamos la lista del servidor
             gameState.pendingRoomsRequest = {

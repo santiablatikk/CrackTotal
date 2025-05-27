@@ -1,0 +1,40 @@
+{
+  "name": "Crack Total - El Juego del Fútbol",
+  "short_name": "Crack Total",
+  "description": "Demuestra tu conocimiento de fútbol con juegos y trivias desafiantes. ¡El desafío definitivo para hinchas!",
+  "lang": "es-AR",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#007bff",
+  "background_color": "#121212",
+  "categories": ["games", "sports", "entertainment"],
+  "icons": [
+    {
+      "src": "images/portada.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "portada.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "images/portada.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg"
+    }
+  ],
+  "scope": "/",
+  "id": "cracktotal-app",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "related_applications": [],
+  "prefer_related_applications": false
+} 

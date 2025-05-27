@@ -27,8 +27,9 @@ server.listen(PORT, () => {
     console.log(`Servidor HTTP y WebSocket iniciado en el puerto ${PORT}...`);
     loadQuestions(); // Load questions for Quien Sabe Mas
     
-    // Set up automatic room broadcasting every 5 seconds
-    setInterval(broadcastAvailableRooms, 5000);
+    // DISABLED: Automatic room broadcasting to prevent mixing game types
+    // Each client will request rooms specifically with gameType filter
+    // setInterval(broadcastAvailableRooms, 5000);
 });
 
 // --- Game Data Loading ---
@@ -281,10 +282,8 @@ wss.on('connection', (ws, req) => {
     console.log(`Client connected: ${clientId} (Total: ${clients.size})`);
     safeSend(ws, { type: 'yourInfo', payload: { playerId: clientId } });
     
-    // Send available rooms to the new client immediately
-    setTimeout(() => {
-        broadcastAvailableRooms();
-    }, 200); // Small delay to ensure client is ready to receive
+    // REMOVED: Automatic room broadcast on connection
+    // Client will request rooms specifically with gameType filter
 
     ws.on('message', (message) => {
         let parsedMessage;
@@ -447,8 +446,7 @@ function handleCreateRoom(ws, clientInfo, payload) {
     console.log(`Room ${roomId} (${gameType}) created by ${playerName} (${clientInfo.id}). Password: ${password ? 'Yes' : 'No'}`);
     safeSend(ws, { type: 'roomCreated', payload: { roomId: roomId } });
 
-    // Broadcast updated room list to lobby
-    broadcastAvailableRooms();
+    // REMOVED: Automatic broadcast - clients will request rooms with gameType filter
 }
 
 function handleJoinRoom(ws, clientInfo, payload) {
@@ -520,8 +518,7 @@ function handleJoinRoom(ws, clientInfo, payload) {
     // Start the game now that both players are in
     startGame(roomId);
 
-    // Broadcast updated room list (room is now full or private, so might disappear from public list)
-    broadcastAvailableRooms();
+    // REMOVED: Automatic broadcast - clients will request rooms with gameType filter
 }
 
 function handleJoinRandomRoom(ws, clientInfo, payload) {
@@ -624,8 +621,7 @@ function handleLeaveRoom(ws, clientInfo) {
          });
     }
 
-    // Broadcast updated room list (room might become available or be deleted)
-    broadcastAvailableRooms();
+    // REMOVED: Automatic broadcast - clients will request rooms with gameType filter
 }
 
 // --- Game Logic Handlers ---
@@ -1090,10 +1086,7 @@ function endGame(roomId, reason = "Game finished") {
     // Let's keep it for now, disconnect logic handles removal.
     console.log(`Game ended for room ${roomId}. Final state sent.`);
     
-    // Broadcast updated room list since a game ended and room might be available again
-    setTimeout(() => {
-        broadcastAvailableRooms();
-    }, 500); // Small delay to ensure message is sent first
+    // REMOVED: Automatic broadcast - clients will request rooms with gameType filter
 }
 
 function handleDisconnect(ws, clientId, roomId) {
@@ -1134,8 +1127,7 @@ function handleDisconnect(ws, clientId, roomId) {
                 payload: { message: `${disconnectedPlayerName} left the lobby.` }
             });
             }
-            // Broadcast updated room list if needed
-            broadcastAvailableRooms();
+            // REMOVED: Automatic broadcast - clients will request rooms with gameType filter
         } else {
              console.warn(`Disconnect in room ${roomId}, but room not found in rooms map.`);
         }
@@ -1546,10 +1538,7 @@ function endGameMentiroso(roomId, reason = "Game completed") {
 
     broadcastToRoom(roomId, { type: 'gameOver', payload: gameOverPayload });
     
-    // Broadcast updated room list since a Mentiroso game ended and room might be available again
-    setTimeout(() => {
-        broadcastAvailableRooms();
-    }, 500); // Small delay to ensure message is sent first
+    // REMOVED: Automatic broadcast - clients will request rooms with gameType filter
 }
 
 const mentirosoCategories = {

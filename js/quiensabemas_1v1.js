@@ -9,22 +9,27 @@ const WEBSOCKET_URL = (() => {
 
 // Comunicación con la página principal para salas disponibles
 window.addEventListener('message', function(event) {
+    console.log('🔍 [QSM] Mensaje recibido:', event.data);
+    
     // Verificar origen del mensaje
     if (event.origin !== window.location.origin) return;
     
     // Si se solicitan las salas disponibles
     if (event.data && event.data.type === 'requestRooms' && event.data.gameType === 'quiensabemas') {
+        console.log('✅ [QSM] Solicitud de salas QSM recibida desde games.html');
+        
         if (document.readyState === 'complete') {
             // Si la página ya está cargada, solicitar salas
             if (window.gameState && window.gameState.websocket && 
                 window.gameState.websocket.readyState === WebSocket.OPEN) {
-                console.log('Solicitando salas de Quien Sabe Más para games.html');
-                window.sendToServer('getRooms', {});
+                console.log('📡 [QSM] Solicitando salas de Quien Sabe Más al servidor');
+                window.sendToServer('getRooms', { gameType: 'quiensabemas' });
                 
                 // Almacenar el origen para responder cuando recibamos la lista
                 window.roomsRequestSource = event.source;
                 window.roomsRequestOrigin = event.origin;
             } else {
+                console.warn('⚠️ [QSM] WebSocket no conectado, enviando lista vacía');
                 // Si no hay conexión, enviar lista vacía
                 event.source.postMessage({
                     type: 'availableRooms',
@@ -33,18 +38,20 @@ window.addEventListener('message', function(event) {
                 }, event.origin);
             }
         } else {
+            console.log('⏳ [QSM] Página no cargada, esperando...');
             // Si la página aún no está cargada, esperar
             window.addEventListener('load', function() {
                 setTimeout(function() {
                     if (window.gameState && window.gameState.websocket && 
                         window.gameState.websocket.readyState === WebSocket.OPEN) {
-                        console.log('Solicitando salas de Quien Sabe Más para games.html (después de carga)');
-                        window.sendToServer('getRooms', {});
+                        console.log('📡 [QSM] Solicitando salas de Quien Sabe Más al servidor (después de carga)');
+                        window.sendToServer('getRooms', { gameType: 'quiensabemas' });
                         
                         // Almacenar el origen para responder cuando recibamos la lista
                         window.roomsRequestSource = event.source;
                         window.roomsRequestOrigin = event.origin;
                     } else {
+                        console.warn('⚠️ [QSM] WebSocket no conectado después de esperar, enviando lista vacía');
                         // Si no hay conexión después de esperar, enviar lista vacía
                         event.source.postMessage({
                             type: 'availableRooms',
@@ -55,6 +62,8 @@ window.addEventListener('message', function(event) {
                 }, 1000); // Esperar 1 segundo para asegurar que la conexión esté establecida
             });
         }
+    } else if (event.data && event.data.type === 'requestRooms') {
+        console.log(`❌ [QSM] Solicitud de salas para ${event.data.gameType} (no es QSM), ignorando`);
     }
 });
 
@@ -148,7 +157,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Initialization ---
     function initializeApp() {
-        console.log("Initializing Quien Sabe Más 1v1 App...");
+        console.log("🚀 [QSM] Initializing Quien Sabe Más 1v1 App...");
+        console.log("🚀 [QSM] Versión con filtrado de salas implementado");
         showLobby(); // Start in the lobby
         setupEventListeners();
         hideEndGameModal();
@@ -186,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 // Solicitar salas al servidor
-                sendToServer('getRooms', {});
+                sendToServer('getRooms', { gameType: 'quiensabemas' });
                 
                 // Guardar el origen para responder cuando recibamos la lista del servidor
                 gameState.pendingRoomsRequest = {
@@ -224,6 +234,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (playersHeaderInfoEl) playersHeaderInfoEl.style.display = 'none';
         clearLobbyMessage();
         enableLobbyButtons(); // Ensure buttons are enabled when returning to lobby
+        
+        // Limpiar completamente la lista de salas al mostrar el lobby
+        if (availableRoomsListEl) {
+            console.log("🧹 [QSM] Limpiando lista de salas al mostrar lobby");
+            availableRoomsListEl.innerHTML = '<li class="no-rooms-message">Cargando salas disponibles...</li>';
+        }
     }
 
     function showGameScreen() {
@@ -267,7 +283,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(`Requesting to create room for ${playerName}` + (password ? ' with password.' : '.'));
         showLobbyMessage("Creando sala...", "info");
         disableLobbyButtons(true); // Disable and show spinner on create button
-        sendToServer('createRoom', { playerName, password });
+        sendToServer('createRoom', { playerName, password, gameType: 'quiensabemas' });
     }
 
     function handleJoinRoomById() {
@@ -285,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(`Requesting to join room ${roomId} as ${playerName}` + (password ? ' with password.' : '.'));
         showLobbyMessage(`Uniéndote a la sala ${roomId}...`, "info");
         disableLobbyButtons(false, true); // Disable and show spinner on join by ID button
-        sendToServer('joinRoom', { playerName, roomId, password });
+        sendToServer('joinRoom', { playerName, roomId, password, gameType: 'quiensabemas' });
     }
 
      function handleJoinRandomRoom() {
@@ -296,7 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
          console.log(`Searching for random room for ${playerName}...`);
          showLobbyMessage("Buscando una sala disponible...", "info");
          disableLobbyButtons(false, false, true); // Disable and show spinner on join random button
-         sendToServer('joinRandomRoom', { playerName });
+         sendToServer('joinRandomRoom', { playerName, gameType: 'quiensabemas' });
      }
 
     function showLobbyMessage(message, type = "info", persistent = false) { // type can be 'info', 'success', 'error'
@@ -773,6 +789,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Message Handling ---
     function handleServerMessage(message) {
+        console.log("🔔 [QSM] handleServerMessage ejecutándose, tipo:", message.type);
+        
         // Always hide the main waiting overlay when a message arrives,
         // specific messages might show it again if needed.
         // Exception: Don't hide if the message itself indicates waiting state (e.g., playerDisconnect)
@@ -1059,11 +1077,22 @@ document.addEventListener('DOMContentLoaded', function() {
                  break;
 
             case 'availableRooms': // Server sends the list of available rooms
-                console.log("Received availableRooms:", message.payload.rooms);
-                renderAvailableRooms(message.payload.rooms);
+                console.log("📋 [QSM] Payload completo recibido:", JSON.stringify(message.payload, null, 2));
+                console.log("📋 [QSM] Salas recibidas del servidor:", message.payload.rooms);
+                
+                // Verificación de seguridad para el array de salas
+                const rooms = message.payload.rooms || [];
+                if (!Array.isArray(rooms)) {
+                    console.error("❌ [QSM] payload.rooms no es un array:", typeof rooms, rooms);
+                    return;
+                }
+                
+                console.log(`🔍 [QSM] Llamando renderAvailableRooms con ${rooms.length} salas`);
+                renderAvailableRooms(rooms, 'quiensabemas');
                 
                 // Si hay una solicitud pendiente desde la página principal, responderla
                 if (gameState.pendingRoomsRequest) {
+                    console.log("📤 [QSM] Enviando salas a games.html (pendingRequest):", message.payload.rooms?.length || 0, "salas");
                     gameState.pendingRoomsRequest.source.postMessage({
                         type: 'availableRooms',
                         gameType: 'quiensabemas',
@@ -1076,6 +1105,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Si hay una solicitud desde games.html, responderla
                 if (window.roomsRequestSource && window.roomsRequestOrigin) {
+                    console.log("📤 [QSM] Enviando salas a games.html (roomsRequest):", message.payload.rooms?.length || 0, "salas");
                     window.roomsRequestSource.postMessage({
                         type: 'availableRooms',
                         gameType: 'quiensabemas',
@@ -1356,23 +1386,48 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- Lobby Room List Rendering ---
-    function renderAvailableRooms(rooms) {
+    function renderAvailableRooms(rooms, gameTypeFilter = 'quiensabemas') {
+        console.log("🏠 [QSM] renderAvailableRooms llamado con:", {
+            roomsType: typeof rooms,
+            roomsLength: rooms ? rooms.length : 'null/undefined',
+            gameTypeFilter,
+            rooms: rooms
+        });
+        
         if (!availableRoomsListEl) {
             console.error("Available rooms list element not found.");
             return;
         }
 
+        // Verificación adicional de seguridad
+        if (!rooms || !Array.isArray(rooms)) {
+            console.error("❌ [QSM] renderAvailableRooms: rooms no es un array válido:", rooms);
+            availableRoomsListEl.innerHTML = '<li class="no-rooms-message">Error: datos de salas inválidos</li>';
+            return;
+        }
+
         availableRoomsListEl.innerHTML = ''; // Clear existing list
 
-        if (!rooms || rooms.length === 0) {
+        // Filtrar salas por tipo de juego
+        console.log(`🔍 [QSM] Filtrando salas. Total recibidas: ${rooms.length}, Filtro: ${gameTypeFilter}`);
+        const filteredRooms = gameTypeFilter ? rooms.filter(room => {
+            const matches = room.gameType === gameTypeFilter;
+            if (!matches) {
+                console.log(`❌ [QSM] Sala ${room.id} descartada: tipo '${room.gameType}' ≠ '${gameTypeFilter}'`);
+            }
+            return matches;
+        }) : rooms;
+        console.log(`✅ [QSM] Salas filtradas para mostrar: ${filteredRooms.length}`);
+
+        if (!filteredRooms || filteredRooms.length === 0) {
             const noRoomsMsg = document.createElement('li');
             noRoomsMsg.className = 'no-rooms-message';
-            noRoomsMsg.textContent = 'No public rooms available currently.';
+            noRoomsMsg.textContent = 'No hay salas de Quién Sabe Más disponibles.';
             availableRoomsListEl.appendChild(noRoomsMsg);
             return;
         }
 
-        rooms.forEach(room => {
+        filteredRooms.forEach(room => {
             const roomItem = document.createElement('li');
             roomItem.className = 'room-item';
             roomItem.dataset.roomId = room.id;
@@ -1385,12 +1440,19 @@ document.addEventListener('DOMContentLoaded', function() {
             roomIdSpan.innerHTML = `ID: <strong>${room.id}</strong>`;
             roomInfo.appendChild(roomIdSpan);
 
+            // Display Creator Name if available
+            if (room.creatorName) {
+                const creatorSpan = document.createElement('span');
+                creatorSpan.innerHTML = `Creador: <strong>${room.creatorName}</strong>`;
+                roomInfo.appendChild(creatorSpan);
+            }
+
             // Display Player Count
             const playerCountSpan = document.createElement('span');
             // Assuming server sends playerCount like '1/2'
             const currentPlayers = room.playerCount || 0; // Default to 0 if undefined
             const maxPlayers = room.maxPlayers || 2; // Default to 2 if undefined
-            playerCountSpan.innerHTML = `Players: <strong>${currentPlayers}/${maxPlayers}</strong>`;
+            playerCountSpan.innerHTML = `Jugadores: <strong>${currentPlayers}/${maxPlayers}</strong>`;
             roomInfo.appendChild(playerCountSpan);
 
              // Display if password required (optional)
@@ -1422,11 +1484,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleJoinRoomFromList(roomId, requiresPassword) {
         const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
 
-        console.log(`Attempting to join room ${roomId} from list as ${playerName}. Requires Password: ${requiresPassword}`);
+        console.log(`🎯 [QSM] Intentando unirse a sala ${roomId} como ${playerName}. Requiere contraseña: ${requiresPassword}`);
 
         if (requiresPassword) {
             currentJoiningRoomId = roomId; // Guardar el ID de la sala actual
-            passwordModalTextEl.textContent = `La sala '${roomId}' es privada. Por favor, ingresá la contraseña:`;
+            passwordModalTextEl.textContent = `La sala de Quién Sabe Más '${roomId}' es privada. Por favor, ingresá la contraseña:`;
             passwordModalInputEl.value = ''; // Limpiar input
             passwordErrorTextEl.textContent = '';
             passwordErrorTextEl.style.display = 'none';
@@ -1436,9 +1498,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Unirse directamente si no requiere contraseña
             joinRoomIdInput.value = roomId; // Actualizar el input general del lobby (opcional, pero consistente)
             joinRoomPasswordInput.value = ''; // Limpiar el input general de contraseña del lobby
-            showLobbyMessage(`Uniéndote a la sala pública ${roomId}...`, "info");
+            showLobbyMessage(`Uniéndote a la sala pública de QSM ${roomId}...`, "info");
             disableLobbyButtons();
-            sendToServer('joinRoom', { playerName, roomId, password: '' });
+            sendToServer('joinRoom', { playerName, roomId, password: '', gameType: 'quiensabemas' });
         }
     }
 
@@ -1480,7 +1542,8 @@ document.addEventListener('DOMContentLoaded', function() {
             sendToServer('joinRoom', { 
                 playerName, 
                 roomId: currentJoiningRoomId, 
-                password 
+                password,
+                gameType: 'quiensabemas'
             });
         } else {
             console.error("No currentJoiningRoomId set when submitting password modal.");
@@ -1493,7 +1556,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Solicitar salas inmediatamente al cargar
         setTimeout(() => {
             if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN && !gameState.gameActive) {
-                sendToServer('getRooms', {});
+                sendToServer('getRooms', { gameType: 'quiensabemas' });
             }
         }, 1000);
         
@@ -1508,7 +1571,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 lobbySectionEl.style.display !== 'none') {
                 
                 console.log('🔄 Solicitando actualización automática de salas (Quién Sabe Más)');
-                sendToServer('getRooms', {});
+                sendToServer('getRooms', { gameType: 'quiensabemas' });
             }
         }, 3000); // Cada 3 segundos
     }

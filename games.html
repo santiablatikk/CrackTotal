@@ -24,7 +24,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crack Total - Selecciona un Juego</title>
     <meta name="description" content="Elegí tu desafío en Crack Total: Pasala Che (Rosco), Quien Sabe Más y más juegos de fútbol. ¡Demostrá tu conocimiento!">
-    <link rel="icon" href="/portada.ico" type="image/x-icon"> <!-- Asumiendo que quieres el mismo favicon -->
+    <link rel="icon" href="/portada.ico" type="image/x-icon">
     <link rel="canonical" href="https://cracktotal.com/games.html">
     <link rel="alternate" hreflang="es" href="https://cracktotal.com/games.html" />
 
@@ -54,7 +54,6 @@
     </script>
 
     <!-- CSS Links -->
-    <!-- <link rel="stylesheet" href="css/styles.css"> -->
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/landing.css">
@@ -64,6 +63,802 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Revolutionary Games Styling -->
+    <style>
+        /* Variables específicas avanzadas */
+        :root {
+            --games-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --games-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --games-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --games-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --neon-blue: #00d4ff;
+            --neon-purple: #b794f6;
+            --neon-green: #68d391;
+            --neon-pink: #f687b3;
+        }
+
+        /* Background revolucionario con partículas */
+        body {
+            background: radial-gradient(ellipse at top, #1a1a2e 0%, #16213e 50%, #0f172a 100%);
+            overflow-x: hidden;
+        }
+
+        .games-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(2px 2px at 20px 30px, rgba(0, 212, 255, 0.3), transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(183, 148, 246, 0.3), transparent),
+                radial-gradient(1px 1px at 90px 40px, rgba(104, 211, 145, 0.3), transparent),
+                radial-gradient(1px 1px at 130px 80px, rgba(246, 135, 179, 0.3), transparent);
+            background-size: 150px 150px;
+            animation: particleFloat 20s linear infinite;
+        }
+
+        /* Navegación mejorada */
+        .main-navigation {
+            background: rgba(42, 42, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(var(--primary-rgb), 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .main-navigation:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Hero section rediseñado */
+        .games-hero {
+            text-align: center;
+            padding: 60px 0 40px;
+            position: relative;
+        }
+
+        .hero-logo {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(120deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(var(--primary-rgb), 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            letter-spacing: -2px;
+        }
+
+        .hero-logo i {
+            color: var(--accent);
+            animation: spinBall 8s linear infinite;
+            filter: drop-shadow(0 0 10px rgba(var(--accent-rgb), 0.6));
+        }
+
+        .hero-welcome {
+            font-size: 2rem;
+            color: var(--text);
+            margin-bottom: 15px;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .player-highlight {
+            background: linear-gradient(120deg, var(--accent), var(--accent-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .username-change-btn {
+            background: rgba(var(--primary-rgb), 0.1);
+            border: 1px solid rgba(var(--primary-rgb), 0.3);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .username-change-btn:hover {
+            background: rgba(var(--primary-rgb), 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.3);
+        }
+
+        /* Grid de juegos revolucionario */
+        .games-galaxy {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .games-constellation {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 80px;
+        }
+
+        @media (min-width: 1200px) {
+            .games-constellation {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 40px;
+            }
+        }
+
+        /* Game Cards Futuristas */
+        .cosmic-game-card {
+            position: relative;
+            background: rgba(30, 30, 30, 0.6);
+            border-radius: 25px;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+            cursor: pointer;
+            min-height: 280px;
+            perspective: 1000px;
+        }
+
+        .cosmic-game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .cosmic-game-card:hover {
+            transform: translateY(-15px) rotateX(5deg);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 50px rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .cosmic-game-card:hover::before {
+            opacity: 1;
+        }
+
+        .cosmic-game-card:nth-child(1):hover {
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 50px rgba(0, 212, 255, 0.3);
+        }
+
+        .cosmic-game-card:nth-child(2):hover {
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 50px rgba(183, 148, 246, 0.3);
+        }
+
+        .cosmic-game-card:nth-child(3):hover {
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 50px rgba(246, 135, 179, 0.3);
+        }
+
+        .cosmic-game-card:nth-child(4):hover {
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 0 50px rgba(104, 211, 145, 0.3);
+        }
+
+        .game-visual-container {
+            position: relative;
+            height: 120px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+
+        .game-icon {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .cosmic-game-card:hover .game-icon {
+            transform: scale(1.2) rotate(10deg);
+            filter: drop-shadow(0 0 20px currentColor);
+        }
+
+        .cosmic-game-card:nth-child(1) .game-icon { color: var(--neon-blue); }
+        .cosmic-game-card:nth-child(2) .game-icon { color: var(--neon-purple); }
+        .cosmic-game-card:nth-child(3) .game-icon { color: var(--neon-pink); }
+        .cosmic-game-card:nth-child(4) .game-icon { color: var(--neon-green); }
+
+        .stellar-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 2;
+            backdrop-filter: blur(10px);
+        }
+
+        .stellar-badge.rosco {
+            background: rgba(0, 212, 255, 0.2);
+            color: var(--neon-blue);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .stellar-badge.bluff {
+            background: rgba(246, 135, 179, 0.2);
+            color: var(--neon-pink);
+            border: 1px solid rgba(246, 135, 179, 0.3);
+        }
+
+        .stellar-badge.nuevo {
+            background: rgba(104, 211, 145, 0.2);
+            color: var(--neon-green);
+            border: 1px solid rgba(104, 211, 145, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .game-content {
+            padding: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .game-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 12px;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .game-description {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .game-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stat-chip {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-chip:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .quantum-play-btn {
+            width: 100%;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+            border: none;
+            color: white;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .quantum-play-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .quantum-play-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .quantum-play-btn:hover::before {
+            left: 100%;
+        }
+
+        .cosmic-game-card:nth-child(1) .quantum-play-btn {
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.8), rgba(74, 144, 226, 0.8));
+        }
+
+        .cosmic-game-card:nth-child(2) .quantum-play-btn {
+            background: linear-gradient(45deg, rgba(183, 148, 246, 0.8), rgba(147, 112, 219, 0.8));
+        }
+
+        .cosmic-game-card:nth-child(3) .quantum-play-btn {
+            background: linear-gradient(45deg, rgba(246, 135, 179, 0.8), rgba(231, 94, 158, 0.8));
+        }
+
+        .cosmic-game-card:nth-child(4) .quantum-play-btn {
+            background: linear-gradient(45deg, rgba(104, 211, 145, 0.8), rgba(72, 187, 120, 0.8));
+        }
+
+        .room-status {
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .room-status i {
+            color: var(--neon-blue);
+        }
+
+        .room-count {
+            color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        /* Sección de enlaces extra mejorada */
+        .extra-links-section {
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .extra-links-title {
+            font-size: 1.8rem;
+            color: var(--text);
+            margin-bottom: 30px;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .extra-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .extra-link-button {
+            background: linear-gradient(135deg, rgba(var(--secondary-rgb), 0.1), rgba(var(--secondary-rgb), 0.2));
+            color: var(--secondary);
+            padding: 20px 30px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(var(--secondary-rgb), 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .extra-link-button:hover {
+            background: linear-gradient(135deg, rgba(var(--secondary-rgb), 0.2), rgba(var(--secondary-rgb), 0.3));
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(var(--secondary-rgb), 0.2);
+            color: var(--secondary-light);
+        }
+
+        .extra-link-button i {
+            font-size: 1.2rem;
+        }
+
+        /* Sección coming soon rediseñada */
+        .coming-soon-section {
+            margin-top: 80px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(var(--card-bg), 0.5), rgba(var(--background-alt), 0.3));
+            border-radius: 20px;
+            padding: 50px 30px;
+            border: 1px solid rgba(var(--border-rgb), 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .coming-soon-badge {
+            background: var(--gradient-accent);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(var(--accent-rgb), 0.3);
+        }
+
+        .coming-soon-title {
+            font-size: 2rem;
+            color: var(--text);
+            margin-bottom: 15px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .coming-soon-desc {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .coming-soon-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            background: rgba(var(--background-alt), 0.5);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(var(--border-rgb), 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-card h4 {
+            color: var(--primary);
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-family: 'Oswald', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-card h4 i {
+            color: var(--accent);
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* Hub de Exploración */
+        .exploration-hub {
+            margin-top: 80px;
+            text-align: center;
+            background: rgba(30, 30, 30, 0.4);
+            border-radius: 25px;
+            padding: 60px 40px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .exploration-hub::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(246, 135, 179, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .exploration-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            font-family: 'Oswald', sans-serif;
+            background: var(--games-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .exploration-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .portal-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .portal-link {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .portal-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .portal-link:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: rgba(102, 126, 234, 0.5);
+        }
+
+        .portal-link:hover::before {
+            left: 100%;
+        }
+
+        .portal-link i {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--neon-blue);
+        }
+
+        .portal-link:nth-child(2) i {
+            color: var(--neon-purple);
+        }
+
+        .portal-link h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .portal-link p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Futuras Innovaciones */
+        .future-preview {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.8), rgba(45, 45, 45, 0.6));
+            border-radius: 25px;
+            padding: 50px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .future-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                linear-gradient(45deg, transparent, rgba(255,255,255,0.02), transparent),
+                radial-gradient(circle at 30% 30%, rgba(104, 211, 145, 0.1) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .future-badge {
+            display: inline-block;
+            background: var(--games-success);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            animation: pulse 2s infinite;
+        }
+
+        .future-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            font-family: 'Oswald', sans-serif;
+            color: white;
+        }
+
+        .future-description {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 40px;
+            line-height: 1.7;
+        }
+
+        .innovation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .innovation-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .innovation-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .innovation-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: var(--games-accent);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .innovation-card h4 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: white;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .innovation-card p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-logo {
+                font-size: 2.5rem;
+            }
+            
+            .hero-welcome {
+                font-size: 1.6rem;
+            }
+            
+            .games-constellation {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 0 15px;
+            }
+            
+            .cosmic-game-card {
+                min-height: auto;
+            }
+            
+            .cosmic-game-card:hover {
+                transform: translateY(-5px);
+            }
+            
+            .extra-links-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .coming-soon-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animaciones avanzadas */
+        @keyframes particleFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes spinBall {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cosmic-game-card {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .cosmic-game-card:nth-child(1) { animation-delay: 0.1s; }
+        .cosmic-game-card:nth-child(2) { animation-delay: 0.2s; }
+        .cosmic-game-card:nth-child(3) { animation-delay: 0.3s; }
+        .cosmic-game-card:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
@@ -72,6 +867,9 @@
 <body>
     <!-- Skip Link para accesibilidad -->
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    
+    <!-- Partículas de fondo -->
+    <div class="games-particles"></div>
     
     <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
         <a href="index.html" class="nav-logo" aria-label="Crack Total - Inicio">
@@ -82,7 +880,7 @@
         </button>
         <ul>
             <li><a href="index.html" aria-label="Ir al inicio"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
-            <li><a href="games.html" aria-label="Ir a los juegos"><i class="fas fa-gamepad" aria-hidden="true"></i> Juegos</a></li>
+            <li><a href="games.html" class="active" aria-label="Ir a los juegos"><i class="fas fa-gamepad" aria-hidden="true"></i> Juegos</a></li>
             <li><a href="profile.html" aria-label="Ver mi perfil"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
             <li><a href="ranking.html" aria-label="Ver ranking general"><i class="fas fa-trophy" aria-hidden="true"></i> Rankings</a></li>
             <li><a href="logros.html" aria-label="Ver mis logros"><i class="fas fa-medal" aria-hidden="true"></i> Logros</a></li>
@@ -92,131 +890,143 @@
         </ul>
     </nav>
 
-    <div class="background-elements">
-        <div class="floating-ball ball-1"></div>
-        <div class="floating-ball ball-2"></div>
-        <div class="floating-ball ball-3"></div>
-    </div>
-    
-    <main id="main-content" class="container games-container">
-        <header class="welcome-user">
-            <div class="logo-container">
-                <a href="games.html" style="text-decoration: none;" aria-label="Ir a la página principal de juegos">
-                    <h1 class="logo">
-                        <span class="logo-text">Crack Total</span>
-                        <i class="fas fa-futbol logo-ball" aria-hidden="true"></i>
-                    </h1>
-                </a>
-            </div>
-            <h2>¡Hola, <span class="player-highlight" id="playerNameDisplay">Jugador</span>!
+    <main id="main-content" class="container">
+        <!-- Hero Section -->
+        <section class="games-hero">
+            <h1 class="hero-logo">
+                <span class="logo-text">Crack Total</span>
+                <i class="fas fa-futbol" aria-hidden="true"></i>
+            </h1>
+            <h2 class="hero-welcome">
+                ¡Hola, <span class="player-highlight" id="playerNameDisplay">Jugador</span>!
                 <button class="username-change-btn" id="changeNameBtn" aria-label="Cambiar nombre de usuario">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     Cambiar
                 </button>
             </h2>
-            <p class="welcome-subtitle">Elige tu juego y demuestra cuánto sabes de fútbol</p>
-        </header>
+            <p class="hero-subtitle">Elige tu juego y demuestra cuánto sabes de fútbol. ¡Cada partido es una nueva oportunidad de brillar!</p>
+        </section>
 
-        <section class="games-grid" aria-label="Juegos disponibles">
-            <article class="game-card" data-game="pasalache">
-                <div class="game-badge">ROSCO</div>
-                <img src="images/pasalache_card.jpg" alt="Tarjeta del juego Pasala Che" class="game-image" loading="lazy">
-                <div class="game-info">
-                    <h3 class="game-name">Pasala Che</h3>
-                    <p class="game-desc">Un rosco de preguntas futboleras. Responde preguntas para cada letra del abecedario y demuestra tu conocimiento enciclopédico del fútbol.</p>
-                    <div class="game-features">
-                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>27 Letras</span>
-                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>Contrarreloj</span>
+        <!-- Galaxia de Juegos -->
+        <section class="games-galaxy">
+            <div class="games-constellation" aria-label="Juegos disponibles">
+                <!-- Pasala Che -->
+                <article class="cosmic-game-card" data-game="pasalache">
+                    <div class="stellar-badge rosco">ROSCO</div>
+                    <div class="game-visual-container">
+                        <i class="fas fa-circle-notch game-icon" aria-hidden="true"></i>
                     </div>
-                    <button class="play-button" aria-label="Jugar a Pasala Che">
-                        <span>Jugar</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4v16l15-8-15-8z"></path></svg>
-                    </button>
-                </div>
-            </article>
+                                         <div class="game-content">
+                         <h3 class="game-title">Pasala Che</h3>
+                         <p class="game-description">Un rosco de preguntas futboleras. Responde preguntas para cada letra del abecedario y demuestra tu conocimiento enciclopédico del fútbol.</p>
+                         <div class="game-stats">
+                             <span class="stat-chip"><i class="fas fa-font"></i>27 Letras</span>
+                             <span class="stat-chip"><i class="fas fa-clock"></i>Contrarreloj</span>
+                         </div>
+                         <button class="quantum-play-btn" aria-label="Jugar a Pasala Che">
+                             <span>Jugar</span>
+                         </button>
+                     </div>
+                </article>
 
-            <article class="game-card" data-game="quiensabemas">
-                <img src="images/quiensabemas_card.jpg" alt="Tarjeta del juego Quien Sabe Más" class="game-image" loading="lazy">
-                <div class="game-info">
-                    <h3 class="game-name">Quien Sabe Más</h3>
-                    <p class="game-desc">Responde preguntas de dificultad creciente contra un amigo y compite por el gran premio. ¿Llegarás a ser el más grande conocedor del fútbol?</p>
-                    <div class="game-features">
-                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>6 Niveles</span>
-                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>1 vs 1</span>
+                <!-- Quien Sabe Más -->
+                <article class="cosmic-game-card" data-game="quiensabemas">
+                    <div class="game-visual-container">
+                        <i class="fas fa-brain game-icon" aria-hidden="true"></i>
                     </div>
-                    <button class="play-button" aria-label="Jugar a Quien Sabe Más">
-                        <span>Jugar</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4v16l15-8-15-8z"></path></svg>
-                    </button>
-                </div>
-            </article>
+                                         <div class="game-content">
+                         <h3 class="game-title">Quien Sabe Más</h3>
+                         <p class="game-description">Responde preguntas de dificultad creciente contra un amigo y compite por el gran premio. ¿Llegarás a ser el más grande conocedor del fútbol?</p>
+                         <div class="game-stats">
+                             <span class="stat-chip"><i class="fas fa-layer-group"></i>6 Niveles</span>
+                             <span class="stat-chip"><i class="fas fa-users"></i>1 vs 1</span>
+                         </div>
+                         <button class="quantum-play-btn" aria-label="Jugar a Quien Sabe Más">
+                             <span>Jugar</span>
+                         </button>
+                        <div class="room-status" id="quiensabemas-rooms">
+                            <i class="fas fa-satellite-dish" aria-hidden="true"></i>
+                            <span>Salas Activas: <span class="room-count">-/-</span></span>
+                        </div>
+                    </div>
+                </article>
 
-            <article class="game-card" data-game="mentiroso">
-                <div class="game-badge">BLUFF</div>
-                <img src="images/mentiroso_card.jpg" alt="Tarjeta del juego Mentiroso" class="game-image" loading="lazy">
-                <div class="game-info">
-                    <h3 class="game-name">Mentiroso</h3>
-                    <p class="game-desc">¿Cuánto sabés de fútbol o cuánto podés aparentar? Decí cuántas respuestas sabés y desafiá a tu rival. ¡Que no te agarren!</p>
-                    <div class="game-features">
-                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>1 vs 1</span>
-                        <span class="feature"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12V8a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v4"></path><path d="M4 12v4a4 4 0 0 0 4 4h8a4 4 0 0 0 4-4v-4"></path><path d="M12 12L8 8"></path><path d="M12 12l4 4"></path><path d="M12 12l4-4"></path><path d="M12 12L8 16"></path></svg>Puro Engaño</span>
+                <!-- Mentiroso -->
+                <article class="cosmic-game-card" data-game="mentiroso">
+                    <div class="stellar-badge bluff">BLUFF</div>
+                    <div class="game-visual-container">
+                        <i class="fas fa-mask game-icon" aria-hidden="true"></i>
                     </div>
-                    <button class="play-button" aria-label="Jugar a Mentiroso">
-                        <span>Jugar</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4v16l15-8-15-8z"></path></svg>
-                    </button>
-                </div>
-            </article>
+                                         <div class="game-content">
+                         <h3 class="game-title">Mentiroso</h3>
+                         <p class="game-description">¿Cuánto sabés de fútbol o cuánto podés aparentar? Decí cuántas respuestas sabés y desafiá a tu rival. ¡Que no te agarren!</p>
+                         <div class="game-stats">
+                             <span class="stat-chip"><i class="fas fa-users"></i>1 vs 1</span>
+                             <span class="stat-chip"><i class="fas fa-theater-masks"></i>Puro Engaño</span>
+                         </div>
+                         <button class="quantum-play-btn" aria-label="Jugar a Mentiroso">
+                             <span>Jugar</span>
+                         </button>
+                        <div class="room-status" id="mentiroso-rooms">
+                            <i class="fas fa-satellite-dish" aria-hidden="true"></i>
+                            <span>Salas Activas: <span class="room-count">-/-</span></span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Crack Rápido -->
+                <article class="cosmic-game-card" data-game="crack-rapido">
+                    <div class="stellar-badge nuevo">NUEVO</div>
+                    <div class="game-visual-container">
+                        <i class="fas fa-bolt game-icon" aria-hidden="true"></i>
+                    </div>
+                                         <div class="game-content">
+                         <h3 class="game-title">Crack Rápido</h3>
+                         <p class="game-description">¡La trivia más intensa! 20 preguntas, 5 segundos cada una. Solo los más rápidos sobreviven en este desafío de velocidad pura.</p>
+                         <div class="game-stats">
+                             <span class="stat-chip"><i class="fas fa-tachometer-alt"></i>5 Segundos</span>
+                             <span class="stat-chip"><i class="fas fa-rocket"></i>Ultra Rápido</span>
+                         </div>
+                         <button class="quantum-play-btn" aria-label="Jugar a Crack Rápido">
+                             <span>Jugar</span>
+                         </button>
+                     </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Enlaces extra -->
+        <section class="extra-links-section">
+            <h2 class="extra-links-title">Explora más</h2>
+            <div class="extra-links-grid">
+                <a href="profile.html" class="extra-link-button">
+                    <i class="fas fa-user"></i> 
+                    <span>Ver Perfil</span>
+                </a>
+                <a href="ranking.html" class="extra-link-button">
+                    <i class="fas fa-trophy"></i> 
+                    <span>Ver Rankings</span>
+                </a>
+            </div>
         </section>
         
-        <!-- Placeholder para AdSense después de la grilla de juegos -->
-        <div class="adsense-placeholder-container" style="margin: 2rem auto; padding: 1rem; max-width: 750px; text-align: center;">
-            <div class="ad-label" style="font-size: 0.8em; color: #7f8c8d; margin-bottom: 5px;">PUBLICIDAD</div>
-            <div class="adsense-placeholder-banner" style="width:100%; max-width:728px; height:90px; background:#e9ecef; border:1px dashed #ced4da; display:flex; align-items:center; justify-content:center; color:#6c757d; font-family: Arial, sans-serif; margin:0 auto;">
-                Espacio para Anuncio (ej. 728x90)
-            </div>
-        </div>
-        
-        <!-- Nuevos botones de perfil y ranking -->
-        <div class="extra-links-container">
-            <a href="profile.html" class="extra-link-button">
-                <i class="fas fa-user"></i> Ver Perfil
-            </a>
-            <a href="ranking.html" class="extra-link-button">
-                <i class="fas fa-trophy"></i> Ver Ranking
-            </a>
-        </div>
-        
-        <div class="coming-soon">
+        <!-- Coming Soon rediseñado -->
+        <section class="coming-soon-section">
             <div class="coming-soon-badge">PRÓXIMAMENTE</div>
-            <p>Nuevos modos de juego y características</p>
-            <div class="novedad-item-inline" style="margin-top: 20px; padding-top:20px; border-top: 1px solid #e0e0e0; background-color: #f7f7f7; padding: 20px; border-radius: 8px; text-align: center;">
-                <h4 style="font-family: 'Oswald', sans-serif; font-weight: 700; color: #2c3e50; margin-top: 0; margin-bottom: 10px; font-size: 1.6em;">
-                    <i class="fas fa-trophy" style="margin-right: 10px; color: #f39c12;"></i>Torneos Online
-                </h4>
-                <p style="font-family: 'Montserrat', sans-serif; color: #34495e; font-size: 1em; line-height: 1.7; text-align: left; max-width: 600px; margin-left:auto; margin-right:auto;">
-                    ¡Preparate para competir en torneos oficiales! Participá en competencias semanales, enfrentá a los mejores jugadores y luchá por llegar a la cima del ranking. Premios especiales, logros exclusivos y la gloria de ser el crack definitivo.
-                    <br><em style="display: block; margin-top: 10px; font-size: 0.9em; color: #7f8c8d;">¡Próximamente en Crack Total!</em>
-                </p>
+            <h2 class="coming-soon-title">Nuevas Experiencias</h2>
+            <p class="coming-soon-desc">Estamos trabajando en características increíbles que revolucionarán tu experiencia de juego</p>
+            
+            <div class="coming-soon-features">
+                <div class="feature-card">
+                    <h4><i class="fas fa-trophy"></i>Torneos Online</h4>
+                    <p>¡Preparate para competir en torneos oficiales! Participá en competencias semanales, enfrentá a los mejores jugadores y luchá por llegar a la cima del ranking.</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-users"></i>Modo Cooperativo</h4>
+                    <p>Juntate con tus amigos para enfrentar desafíos en equipo. Modalidades de 2v2, salas privadas para grupos, y desafíos especiales que requerirán toda la sabiduría futbolera de tu equipo.</p>
+                </div>
             </div>
-            <div class="novedad-item-inline" style="margin-top: 20px; padding-top:20px; border-top: 1px solid #e0e0e0; background-color: #f7f7f7; padding: 20px; border-radius: 8px; text-align: center; margin-top:15px;">
-                <h4 style="font-family: 'Oswald', sans-serif; font-weight: 700; color: #2c3e50; margin-top: 0; margin-bottom: 10px; font-size: 1.6em;">
-                    <i class="fas fa-users" style="margin-right: 10px; color: #27ae60;"></i>Modo Cooperativo
-                </h4>
-                <p style="font-family: 'Montserrat', sans-serif; color: #34495e; font-size: 1em; line-height: 1.7; text-align: left; max-width: 600px; margin-left:auto; margin-right:auto;">
-                    Juntate con tus amigos para enfrentar desafíos en equipo. Modalidades de 2v2, salas privadas para grupos, y desafíos especiales que requerirán toda la sabiduría futbolera de tu equipo. ¡La unión hace la fuerza!
-                    <br><em style="display: block; margin-top: 10px; font-size: 0.9em; color: #7f8c8d;">¡En desarrollo! Pronto más noticias.</em>
-                </p>
-            </div>
-        </div>
-        
-        <!-- Placeholder para AdSense antes del footer -->
-        <div class="adsense-placeholder-container" style="margin: 2rem auto; padding: 1rem; max-width: 750px; text-align: center;">
-            <div class="ad-label" style="font-size: 0.8em; color: #7f8c8d; margin-bottom: 5px;">PUBLICIDAD</div>
-            <div class="adsense-placeholder-footer-banner" style="width:100%; max-width:728px; height:90px; background:#e9ecef; border:1px dashed #ced4da; display:flex; align-items:center; justify-content:center; color:#6c757d; font-family: Arial, sans-serif; margin:0 auto;">
-                Espacio para Anuncio (ej. 728x90)
-            </div>
-        </div>
+        </section>
         
         <footer class="site-footer"> 
             <div class="footer-content">
@@ -229,10 +1039,8 @@
                 <a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a>
                 <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
               </div>
-              <!-- Botón Compartir Insertado -->
               <button class="footer-share-button" onclick="shareSite()"><i class="fas fa-share-alt"></i> Compartir</button>
-              <!-- Fin Botón Compartir -->
-               <div class="footer-copyright">
+              <div class="footer-copyright">
                  &copy; 2025 Crack Total. Todos los derechos reservados. 
                </div>
             </div>
@@ -280,11 +1088,8 @@
             </div>
         </div>
     </div>
-    <!-- Fin Modal -->
 
-
-
-    <!-- Añadir el modal para el juego Mentiroso antes de cerrar el body -->
+    <!-- Modal Introducción Mentiroso -->
     <div class="modal-overlay" id="mentirosoIntroModal">
         <div class="modal-content mentiroso-intro-modal">
             <h3 class="modal-title"><i class="fas fa-mask"></i> ¿Cómo se juega al Mentiroso?</h3>
@@ -307,13 +1112,147 @@
             </div>
         </div>
     </div>
-    <!-- Fin Modal -->
+
+    <!-- Service Worker Registration -->
+    <script>
+        // Registrar Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('[SW] Service Worker registrado exitosamente:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('[SW] Error al registrar Service Worker:', error);
+                    });
+            });
+        }
+    </script>
 
     <!-- Script para manejar los clicks en los botones de jugar -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Variables para manejar información de salas
+            const gameFrames = new Map();
+            let roomsData = {
+                quiensabemas: { active: 0, available: 0 },
+                mentiroso: { active: 0, available: 0 }
+            };
+
+            // Elementos DOM para mostrar información de salas
+            const quienSabeMasRooms = document.getElementById('quiensabemas-rooms');
+            const mentirosoRooms = document.getElementById('mentiroso-rooms');
+
+            // Función para actualizar la visualización de salas
+            function updateRoomsDisplay() {
+                if (quienSabeMasRooms) {
+                    const qsmCount = quienSabeMasRooms.querySelector('.room-count');
+                    const qsmData = roomsData.quiensabemas;
+                    qsmCount.textContent = `${qsmData.active}/${qsmData.active + qsmData.available}`;
+                }
+
+                if (mentirosoRooms) {
+                    const mentirosoCount = mentirosoRooms.querySelector('.room-count');
+                    const mentirosoData = roomsData.mentiroso;
+                    mentirosoCount.textContent = `${mentirosoData.active}/${mentirosoData.active + mentirosoData.available}`;
+                }
+            }
+
+            // Función para crear iframe oculto y solicitar información de salas
+            function createGameFrame(gameType, gameUrl) {
+                if (gameFrames.has(gameType)) {
+                    const existingFrame = gameFrames.get(gameType);
+                    if (existingFrame.parentNode) {
+                        existingFrame.parentNode.removeChild(existingFrame);
+                    }
+                }
+
+                const iframe = document.createElement('iframe');
+                iframe.src = gameUrl;
+                iframe.style.display = 'none';
+                iframe.style.position = 'absolute';
+                iframe.style.left = '-9999px';
+                iframe.style.width = '1px';
+                iframe.style.height = '1px';
+                
+                document.body.appendChild(iframe);
+                gameFrames.set(gameType, iframe);
+
+                iframe.onload = function() {
+                    setTimeout(() => {
+                        requestRoomsFromGame(gameType);
+                    }, 2000);
+                };
+
+                return iframe;
+            }
+
+            // Función para solicitar salas a un juego específico
+            function requestRoomsFromGame(gameType) {
+                const iframe = gameFrames.get(gameType);
+                if (iframe && iframe.contentWindow) {
+                    try {
+                        iframe.contentWindow.postMessage({
+                            type: 'requestRooms',
+                            gameType: gameType
+                        }, window.location.origin);
+                    } catch (error) {
+                        console.error(`Error solicitando salas de ${gameType}:`, error);
+                    }
+                }
+            }
+
+            // Función para procesar respuesta de salas
+            function processRoomsResponse(data) {
+                if (!data.rooms || !Array.isArray(data.rooms)) {
+                    roomsData[data.gameType] = { active: 0, available: 0 };
+                    updateRoomsDisplay();
+                    return;
+                }
+
+                let active = 0;
+                let available = 0;
+
+                data.rooms.forEach((room) => {
+                    const currentPlayers = room.playerCount || 0;
+                    const maxPlayers = room.maxPlayers || 2;
+                    
+                    if (currentPlayers >= maxPlayers) {
+                        active++;
+                    } else {
+                        available++;
+                    }
+                });
+
+                roomsData[data.gameType] = { active, available };
+                updateRoomsDisplay();
+            }
+
+            // Listener para recibir respuestas de los iframes
+            window.addEventListener('message', function(event) {
+                if (event.origin !== window.location.origin) return;
+                
+                if (event.data && event.data.type === 'availableRooms') {
+                    processRoomsResponse(event.data);
+                }
+            });
+
+            // Inicializar iframes para obtener información de salas
+            function initializeRoomsTracking() {
+                createGameFrame('quiensabemas', 'quiensabemas.html');
+                createGameFrame('mentiroso', 'mentiroso.html');
+            }
+
+            // Función para actualizar salas periódicamente
+            function scheduleRoomsUpdate() {
+                setInterval(() => {
+                    requestRoomsFromGame('quiensabemas');
+                    requestRoomsFromGame('mentiroso');
+                }, 5000);
+            }
+
             // Manejar clicks en los botones de jugar
-            const gameCards = document.querySelectorAll('.game-card');
+            const gameCards = document.querySelectorAll('.cosmic-game-card');
             const mentirosoIntroModal = document.getElementById('mentirosoIntroModal');
             const qsmIntroModal = document.getElementById('qsmIntroModal');
             const goToLobbyMentirosoButton = document.getElementById('goToLobbyMentirosoButton');
@@ -321,20 +1260,18 @@
             
             gameCards.forEach(card => {
                 const gameType = card.getAttribute('data-game');
-                const playButton = card.querySelector('.play-button');
+                const playButton = card.querySelector('.quantum-play-btn');
                 
                 if (playButton) {
                     playButton.addEventListener('click', function(event) {
                         event.preventDefault();
                         event.stopPropagation();
                         
-                        // Si es Mentiroso, mostrar modal explicativo
                         if (gameType === 'mentiroso') {
                             mentirosoIntroModal.classList.add('active');
                         } else if (gameType === 'quiensabemas') {
                             qsmIntroModal.classList.add('active');
                         } else {
-                            // Para otros juegos, redireccionar directamente
                             window.location.href = `${gameType}.html`;
                         }
                     });
@@ -365,6 +1302,22 @@
                 if (event.target === qsmIntroModal) {
                     qsmIntroModal.classList.remove('active');
                 }
+            });
+
+            // Inicializar sistema de tracking de salas
+            setTimeout(() => {
+                initializeRoomsTracking();
+                scheduleRoomsUpdate();
+            }, 1000);
+
+            // Limpiar iframes cuando se vaya a salir de la página
+            window.addEventListener('beforeunload', function() {
+                gameFrames.forEach((iframe, gameType) => {
+                    if (iframe.parentNode) {
+                        iframe.parentNode.removeChild(iframe);
+                    }
+                });
+                gameFrames.clear();
             });
         });
     </script>

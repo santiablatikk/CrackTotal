@@ -1,26 +1,53 @@
 User-agent: *
 Allow: /
-Disallow: /js/
-Disallow: /data/
-Disallow: /tmp/
-Disallow: /node_modules/
 
-# Allow Google's ad bots to crawl everything for AdSense
-User-agent: Mediapartners-Google
-Allow: /
-
-# Allow Google's mobile-friendly test bot
-User-agent: Googlebot-Mobile
-Allow: /
-
-# Allow Google Image bot to see images
-User-agent: Googlebot-Image
-Allow: /img/
-Allow: /images/
-
-# Disallow Googlebot from crawling internal search results
-User-agent: Googlebot
-Disallow: /search
-
-# Point to XML sitemap
+# Sitemap
 Sitemap: https://cracktotal.com/sitemap.xml
+
+# Permitir acceso a recursos estáticos
+Allow: /css/
+Allow: /js/
+Allow: /images/
+Allow: *.css
+Allow: *.js
+Allow: *.jpg
+Allow: *.jpeg
+Allow: *.png
+Allow: *.gif
+Allow: *.webp
+Allow: *.ico
+Allow: *.svg
+
+# Permitir acceso a archivos importantes
+Allow: /manifest.json
+Allow: /sw.js
+Allow: /portada.ico
+
+# No indexar archivos técnicos innecesarios
+Disallow: /.git/
+Disallow: /.venv/
+Disallow: /node_modules/
+Disallow: /__pycache__/
+Disallow: *.pyc
+Disallow: *.log
+Disallow: *.tmp
+Disallow: *.bak
+
+# Configuración específica para diferentes bots
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 2
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+# Rate limiting para otros bots
+User-agent: *
+Crawl-delay: 10

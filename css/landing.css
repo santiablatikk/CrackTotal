@@ -510,6 +510,58 @@
     transform: translateX(4px);
 }
 
+/* Rooms Status Styles */
+.game-rooms-status {
+    margin-top: 10px;
+    padding: 6px 12px;
+    background: rgba(var(--primary-rgb), 0.1);
+    border: 1px solid rgba(var(--primary-rgb), 0.2);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    position: relative;
+    overflow: hidden;
+}
+
+.game-rooms-status i {
+    font-size: 0.8rem;
+    color: var(--primary);
+    opacity: 0.8;
+}
+
+.game-rooms-status .rooms-count {
+    font-weight: 600;
+    color: var(--primary);
+    font-family: 'Oswald', sans-serif;
+}
+
+.game-rooms-status::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(var(--primary-rgb), 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.game-card:hover .game-rooms-status {
+    background: rgba(var(--primary-rgb), 0.15);
+    border-color: rgba(var(--primary-rgb), 0.3);
+    transform: translateY(-1px);
+}
+
+.game-card:hover .game-rooms-status::before {
+    left: 100%;
+}
+
 /* Coming Soon Section (games.html) */
 .coming-soon {
     background: rgba(36, 38, 41, 0.6);
@@ -611,6 +663,17 @@
         padding: 12px 20px;
         font-size: 1rem;
     }
+    
+    /* Responsivo para cartelitos de salas */
+    .game-rooms-status {
+        margin-top: 8px;
+        padding: 5px 10px;
+        font-size: 0.8rem;
+    }
+    
+    .game-rooms-status i {
+        font-size: 0.75rem;
+    }
 }
 
 @media (max-width: 576px) {
@@ -631,6 +694,18 @@
     }
     .floating-ball {
         display: none;
+    }
+    
+    /* Cartelitos de salas más pequeños en móviles */
+    .game-rooms-status {
+        margin-top: 6px;
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        gap: 4px;
+    }
+    
+    .game-rooms-status i {
+        font-size: 0.7rem;
     }
 }
 
