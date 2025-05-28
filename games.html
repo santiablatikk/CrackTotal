@@ -6,11 +6,11 @@
         function gtag(){dataLayer.push(arguments);}
         gtag('consent', 'default', {
           'ad_storage': 'denied',
-          'analytics_storage': 'denied',
+          'analytics_storage': 'granted',
           'ad_user_data': 'denied',
           'ad_personalization': 'denied',
-          'functionality_storage': 'denied',
-          'personalization_storage': 'denied',
+          'functionality_storage': 'granted',
+          'personalization_storage': 'granted',
           'security_storage': 'granted',
           'wait_for_update': 500
         });
@@ -50,7 +50,25 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
     
-      gtag('config', 'G-5XP3T1RTH7');
+      gtag('config', 'G-5XP3T1RTH7', {
+        page_title: 'Games - Crack Total',
+        page_location: 'https://cracktotal.com/games.html',
+        custom_map: {
+          'custom_parameter_1': 'page_type',
+          'custom_parameter_2': 'user_interaction'
+        },
+        send_page_view: true,
+        allow_google_signals: true,
+        allow_ad_personalization_signals: false
+      });
+
+      // Trackear que llegaron a la página de juegos
+      gtag('event', 'page_view', {
+        event_category: 'navigation',
+        event_label: 'games_page',
+        page_type: 'games_selection',
+        value: 1
+      });
     </script>
 
     <!-- CSS Links -->
@@ -1387,11 +1405,46 @@
                         event.preventDefault();
                         event.stopPropagation();
                         
+                        // Analytics tracking para clicks en juegos
+                        if (window.gtag) {
+                            gtag('event', 'game_click', {
+                                event_category: 'games',
+                                event_label: gameType,
+                                game_type: gameType,
+                                value: 1
+                            });
+                        }
+                        
                         if (gameType === 'mentiroso') {
                             mentirosoIntroModal.classList.add('active');
+                            // Track modal opening
+                            if (window.gtag) {
+                                gtag('event', 'modal_open', {
+                                    event_category: 'engagement',
+                                    event_label: 'mentiroso_intro',
+                                    value: 1
+                                });
+                            }
                         } else if (gameType === 'quiensabemas') {
                             qsmIntroModal.classList.add('active');
+                            // Track modal opening
+                            if (window.gtag) {
+                                gtag('event', 'modal_open', {
+                                    event_category: 'engagement',
+                                    event_label: 'qsm_intro',
+                                    value: 1
+                                });
+                            }
                         } else {
+                            // Track direct navigation
+                            if (window.gtag) {
+                                gtag('event', 'game_start', {
+                                    event_category: 'games',
+                                    event_label: gameType,
+                                    navigation_type: 'direct',
+                                    value: 1
+                                });
+                            }
                             window.location.href = `${gameType}.html`;
                         }
                     });
@@ -1402,6 +1455,16 @@
             if (goToLobbyMentirosoButton) {
                 goToLobbyMentirosoButton.addEventListener('click', function() {
                     mentirosoIntroModal.classList.remove('active');
+                    // Track game start from modal
+                    if (window.gtag) {
+                        gtag('event', 'game_start', {
+                            event_category: 'games',
+                            event_label: 'mentiroso',
+                            navigation_type: 'from_modal',
+                            user_engagement: 'high',
+                            value: 2
+                        });
+                    }
                     window.location.href = 'mentiroso.html';
                 });
             }
@@ -1410,6 +1473,16 @@
             if (goToLobbyQSMButton) {
                 goToLobbyQSMButton.addEventListener('click', function() {
                     qsmIntroModal.classList.remove('active');
+                    // Track game start from modal
+                    if (window.gtag) {
+                        gtag('event', 'game_start', {
+                            event_category: 'games',
+                            event_label: 'quiensabemas',
+                            navigation_type: 'from_modal',
+                            user_engagement: 'high',
+                            value: 2
+                        });
+                    }
                     window.location.href = 'quiensabemas.html';
                 });
             }
@@ -1418,9 +1491,27 @@
             window.addEventListener('click', function(event) {
                 if (event.target === mentirosoIntroModal) {
                     mentirosoIntroModal.classList.remove('active');
+                    // Track modal close
+                    if (window.gtag) {
+                        gtag('event', 'modal_close', {
+                            event_category: 'engagement',
+                            event_label: 'mentiroso_intro_outside_click',
+                            engagement_type: 'low',
+                            value: 0
+                        });
+                    }
                 }
                 if (event.target === qsmIntroModal) {
                     qsmIntroModal.classList.remove('active');
+                    // Track modal close
+                    if (window.gtag) {
+                        gtag('event', 'modal_close', {
+                            event_category: 'engagement',
+                            event_label: 'qsm_intro_outside_click',
+                            engagement_type: 'low',
+                            value: 0
+                        });
+                    }
                 }
             });
 
@@ -1439,6 +1530,119 @@
                 });
                 gameFrames.clear();
             });
+
+            // ANALYTICS TRACKING ADICIONAL
+            
+            // Track clicks en el botón de cambiar nombre
+            const changeNameBtn = document.getElementById('changeNameBtn');
+            if (changeNameBtn) {
+                changeNameBtn.addEventListener('click', function() {
+                    if (window.gtag) {
+                        gtag('event', 'username_change_click', {
+                            event_category: 'user_personalization',
+                            event_label: 'change_name_button',
+                            value: 1
+                        });
+                    }
+                });
+            }
+
+            // Track clicks en enlaces de navegación
+            const navLinks = document.querySelectorAll('.main-navigation a, .extra-link-button');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    const linkText = this.textContent.trim();
+                    const linkHref = this.getAttribute('href');
+                    
+                    if (window.gtag) {
+                        gtag('event', 'navigation_click', {
+                            event_category: 'navigation',
+                            event_label: linkText,
+                            link_url: linkHref,
+                            value: 1
+                        });
+                    }
+                });
+            });
+
+            // Track scroll depth
+            let maxScrollDepth = 0;
+            let scrollMilestones = [25, 50, 75, 100];
+            let trackedMilestones = new Set();
+
+            window.addEventListener('scroll', function() {
+                const scrolled = window.scrollY;
+                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                const scrollPercent = Math.round((scrolled / maxScroll) * 100);
+
+                if (scrollPercent > maxScrollDepth) {
+                    maxScrollDepth = scrollPercent;
+                }
+
+                scrollMilestones.forEach(milestone => {
+                    if (scrollPercent >= milestone && !trackedMilestones.has(milestone)) {
+                        trackedMilestones.add(milestone);
+                        if (window.gtag) {
+                            gtag('event', 'scroll_depth', {
+                                event_category: 'engagement',
+                                event_label: `${milestone}%`,
+                                value: milestone
+                            });
+                        }
+                    }
+                });
+            });
+
+            // Track tiempo en página
+            const startTime = Date.now();
+            const timeTracking = [30, 60, 120, 300]; // segundos
+            const trackedTime = new Set();
+
+            setInterval(() => {
+                const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+                
+                timeTracking.forEach(seconds => {
+                    if (timeSpent >= seconds && !trackedTime.has(seconds)) {
+                        trackedTime.add(seconds);
+                        if (window.gtag) {
+                            gtag('event', 'time_on_page', {
+                                event_category: 'engagement',
+                                event_label: `${seconds}s`,
+                                value: seconds
+                            });
+                        }
+                    }
+                });
+            }, 1000);
+
+            // Track card hovers para engagement
+            gameCards.forEach(card => {
+                const gameType = card.getAttribute('data-game');
+                let hoverStartTime = null;
+
+                card.addEventListener('mouseenter', function() {
+                    hoverStartTime = Date.now();
+                });
+
+                card.addEventListener('mouseleave', function() {
+                    if (hoverStartTime) {
+                        const hoverDuration = Date.now() - hoverStartTime;
+                        if (hoverDuration > 1000) { // Solo trackear hovers > 1 segundo
+                            if (window.gtag) {
+                                gtag('event', 'game_card_hover', {
+                                    event_category: 'engagement',
+                                    event_label: gameType,
+                                    duration_ms: hoverDuration,
+                                    value: Math.min(hoverDuration / 1000, 10) // Max 10 points
+                                });
+                            }
+                        }
+                        hoverStartTime = null;
+                    }
+                });
+            });
+
+            console.log('🎯 Analytics tracking configurado para games.html');
         });
     </script>
 </body>
