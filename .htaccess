@@ -1,62 +1,98 @@
 RewriteEngine On
 
-# CONFIGURACIÓN PARA DESARROLLO - SIN CACHE
+# CONFIGURACIÓN PARA CORREGIR PROBLEMAS DE SEO E INDEXACIÓN
 # ========================================
 
-# 1. Redirigir HTTP a HTTPS y www a no-www (solo si es necesario)
-# RewriteCond %{HTTPS} off [OR]
-# RewriteCond %{HTTP_HOST} ^www\.cracktotal\.com [NC]
-# RewriteRule ^(.*)$ https://cracktotal.com/$1 [L,R=301,NE]
+# 1. Forzar HTTPS y canonicalización de dominio
+RewriteCond %{HTTPS} off [OR]
+RewriteCond %{HTTP_HOST} ^www\.cracktotal\.com [NC]
+RewriteRule ^(.*)$ https://cracktotal.com/$1 [L,R=301,NE]
 
-# 2. Redirigir index.html a la raíz /
-RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s(.*)/index\.html\sHTTP [NC]
-RewriteRule ^(.*)/index\.html$ /$1 [L,R=301,NE]
+# 2. Redirigir index.html a la raíz / (CORREGIR PROBLEMA DE CONTENIDO DUPLICADO)
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s(.*)/index\.html[\s\?] [NC]
+RewriteRule ^(.*)index\.html$ /$1 [L,R=301,NE]
 
-# 3. Redirigir terms.html a terminos.html
+# 3. Redirigir terms.html a terminos.html (CORREGIR PROBLEMA ESPECÍFICO GSC)
 RewriteRule ^terms\.html$ /terminos.html [L,R=301,NC]
 
-# Cache Control - TOTALMENTE DESHABILITADO PARA DESARROLLO
+# 4. Evitar problemas con URLs con parámetros de tracking
+RewriteCond %{QUERY_STRING} ^utm_(.*)$ [NC]
+RewriteRule ^(.*)$ /$1? [L,R=301]
+
+RewriteCond %{QUERY_STRING} ^fbclid=(.*)$ [NC]
+RewriteRule ^(.*)$ /$1? [L,R=301]
+
+RewriteCond %{QUERY_STRING} ^gclid=(.*)$ [NC]
+RewriteRule ^(.*)$ /$1? [L,R=301]
+
+# 5. Manejo de trailing slashes para consistencia
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} (.+)/$
+RewriteRule ^(.+)/$ /$1 [L,R=301]
+
+# 6. Redirecciones específicas para páginas problemáticas
+RewriteRule ^search/?$ / [L,R=301]
+
+# Cache Control - CONFIGURACIÓN PARA PRODUCCIÓN
 <IfModule mod_expires.c>
     ExpiresActive On
     
-    # TODO: Sin cache para desarrollo
-    ExpiresDefault "access plus 0 seconds"
-    ExpiresByType text/html "access plus 0 seconds"
-    ExpiresByType text/css "access plus 0 seconds"
-    ExpiresByType application/javascript "access plus 0 seconds"
-    ExpiresByType text/javascript "access plus 0 seconds"
-    ExpiresByType application/json "access plus 0 seconds"
-    ExpiresByType image/jpg "access plus 0 seconds"
-    ExpiresByType image/jpeg "access plus 0 seconds"
-    ExpiresByType image/png "access plus 0 seconds"
-    ExpiresByType image/gif "access plus 0 seconds"
-    ExpiresByType image/webp "access plus 0 seconds"
-    ExpiresByType image/ico "access plus 0 seconds"
-    ExpiresByType image/x-icon "access plus 0 seconds"
+    # Configuración optimizada para SEO
+    ExpiresDefault "access plus 1 day"
+    ExpiresByType text/html "access plus 1 hour"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    ExpiresByType application/json "access plus 1 hour"
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/ico "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
 </IfModule>
 
-# Headers para DESACTIVAR COMPLETAMENTE el cache
+# Headers para SEO y rendimiento optimizados
 <IfModule mod_headers.c>
-    # TODOS los archivos - Sin cache
-    Header always set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
-    Header always set Pragma "no-cache"
-    Header always set Expires "0"
-    Header always set Last-Modified "Thu, 01 Jan 1970 00:00:00 GMT"
+    # Cache headers optimizados para SEO
+    <FilesMatch "\.(html|php)$">
+        Header set Cache-Control "public, max-age=3600, must-revalidate"
+        Header set Vary "Accept-Encoding"
+    </FilesMatch>
     
-    # CORS habilitado
+    <FilesMatch "\.(css|js)$">
+        Header set Cache-Control "public, max-age=2592000"
+        Header append Vary "Accept-Encoding"
+    </FilesMatch>
+    
+    <FilesMatch "\.(jpg|jpeg|png|gif|webp|ico|svg)$">
+        Header set Cache-Control "public, max-age=31536000"
+        Header append Vary "Accept-Encoding"
+    </FilesMatch>
+    
+    # CORS habilitado para recursos
     Header always set Access-Control-Allow-Origin "*"
     Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
     Header always set Access-Control-Allow-Headers "Content-Type"
     
-    # Versioning para desarrollo
-    Header set X-App-Version "DEV-NO-CACHE"
+    # Headers de seguridad mejorados para SEO
+    Header always set X-Frame-Options SAMEORIGIN
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set X-Content-Type-Options nosniff
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Content-Security-Policy "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://www.google-analytics.com"
     
-    # Prevenir cualquier tipo de cache
-    Header always set X-Accel-Expires "0"
-    Header always set Surrogate-Control "no-store"
+    # Versioning para cache busting
+    Header set X-App-Version "v2.1.0-SEO"
 </IfModule>
 
-# Compresión GZIP (opcional en desarrollo)
+# Compresión GZIP optimizada
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/plain
     AddOutputFilterByType DEFLATE text/html
@@ -68,19 +104,30 @@ RewriteRule ^terms\.html$ /terminos.html [L,R=301,NC]
     AddOutputFilterByType DEFLATE application/javascript
     AddOutputFilterByType DEFLATE application/x-javascript
     AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/ld+json
 </IfModule>
 
-# Configuración específica para PWA (sin cache)
+# Configuración específica para PWA y SEO
 <IfModule mod_mime.c>
     AddType application/manifest+json .webmanifest
     AddType application/x-web-app-manifest+json .webapp
     AddType text/cache-manifest .appcache
+    AddType application/ld+json .jsonld
 </IfModule>
 
-# Seguridad básica
-<IfModule mod_headers.c>
-    Header always append X-Frame-Options SAMEORIGIN
-    Header always set X-XSS-Protection "1; mode=block"
-    Header always set X-Content-Type-Options nosniff
-    Header always set Referrer-Policy "strict-origin-when-cross-origin"
-</IfModule> 
+# Error pages personalizadas
+ErrorDocument 404 /404.html
+ErrorDocument 500 /500.html
+
+# Bloquear acceso a archivos sensibles para SEO
+<FilesMatch "(^#.*#|\.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist)|~)$">
+    Require all denied
+</FilesMatch>
+
+# Evitar indexación de archivos no deseados
+<FilesMatch "\.(txt|log|md)$">
+    <IfModule mod_headers.c>
+        Header set X-Robots-Tag "noindex, nofollow"
+    </IfModule>
+</FilesMatch> 

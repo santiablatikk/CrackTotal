@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
     
     <!-- Página principal -->
     <url>
@@ -15,12 +16,17 @@
         </image:image>
     </url>
     
-    <!-- Página de juegos -->
+    <!-- Página de juegos principal -->
     <url>
         <loc>https://cracktotal.com/games.html</loc>
         <lastmod>2025-01-27</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
+        <image:image>
+            <image:loc>https://cracktotal.com/images/games-preview.jpg</image:loc>
+            <image:title>Juegos de Fútbol - Crack Total</image:title>
+            <image:caption>Colección de juegos y trivias de fútbol</image:caption>
+        </image:image>
     </url>
     
     <!-- Juegos individuales -->
@@ -60,11 +66,33 @@
         <priority>0.7</priority>
     </url>
     
+    <!-- Rankings -->
     <url>
         <loc>https://cracktotal.com/ranking.html</loc>
         <lastmod>2025-01-27</lastmod>
         <changefreq>daily</changefreq>
         <priority>0.7</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/ranking-crackrapido.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/ranking-mentiroso.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/ranking-quiensabemas.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.6</priority>
     </url>
     
     <url>
@@ -74,11 +102,94 @@
         <priority>0.6</priority>
     </url>
     
-    <!-- Blog y contenido -->
+    <!-- Blog y contenido editorial -->
     <url>
         <loc>https://cracktotal.com/blog.html</loc>
         <lastmod>2025-01-27</lastmod>
         <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+        <image:image>
+            <image:loc>https://cracktotal.com/images/blog-preview.jpg</image:loc>
+            <image:title>Blog de Fútbol - Crack Total</image:title>
+            <image:caption>Artículos y noticias sobre fútbol</image:caption>
+        </image:image>
+    </url>
+    
+    <!-- Artículos del blog -->
+    <url>
+        <loc>https://cracktotal.com/blog-detail-messi.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/blog-detail-worldcups.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/blog-detail-champions.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/blog-detail-libertadores.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/blog-detail-legends.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/blog-detail-scaloneta.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/blog-detail-tactics-football.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/blog-detail-liga-argentina.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/blog-detail-community.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/blog-detail-historia-mundial.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/blog-detail-estilos-juego.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.6</priority>
     </url>
     
@@ -117,6 +228,13 @@
         <lastmod>2025-01-27</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/ads-policy.html</loc>
+        <lastmod>2025-01-27</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.2</priority>
     </url>
     
 </urlset> 

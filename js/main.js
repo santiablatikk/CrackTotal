@@ -1,3 +1,48 @@
+// Integración del sistema de notificaciones
+window.addEventListener('load', () => {
+    // Verificar que el sistema de notificaciones esté disponible
+    if (typeof window.notifications !== 'undefined') {
+        console.log('[Main] Sistema de notificaciones integrado correctamente');
+        
+        // Mostrar notificación de bienvenida si es la primera visita
+        const isFirstVisit = !localStorage.getItem('hasVisited');
+        if (isFirstVisit) {
+            setTimeout(() => {
+                window.notifications.info(
+                    '¡Bienvenido a Crack Total!', 
+                    'Descubre todo tu conocimiento sobre fútbol en nuestros juegos',
+                    { duration: 6000 }
+                );
+                localStorage.setItem('hasVisited', 'true');
+            }, 2000);
+        }
+        
+        // Notificar actualizaciones del Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'SW_UPDATED') {
+                    window.notifications.info(
+                        'Nueva versión disponible',
+                        'Crack Total se ha actualizado. La página se recargará automáticamente.',
+                        {
+                            persistent: true,
+                            actions: [
+                                {
+                                    id: 'reload',
+                                    label: 'Actualizar ahora',
+                                    handler: () => window.location.reload()
+                                }
+                            ]
+                        }
+                    );
+                }
+            });
+        }
+    } else {
+        console.warn('[Main] Sistema de notificaciones no disponible');
+    }
+});
+
 (function() { // IIFE para encapsular y ejecutar inmediatamente
     const playerName = localStorage.getItem('playerName');
     const currentPagePath = window.location.pathname;

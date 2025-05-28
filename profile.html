@@ -49,6 +49,7 @@
     <link rel="stylesheet" href="css/base.css?v=202505272312">
     <link rel="stylesheet" href="css/layout.css?v=202505272312">
     <link rel="stylesheet" href="css/profile.css?v=202505272312">
+    <link rel="stylesheet" href="css/performance.css?v=202505272312">
     <link rel="stylesheet" href="css/ranking.css?v=202505272312">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -146,177 +147,272 @@
                         <i class="fas fa-brain" aria-hidden="true"></i>
                         Ranking Quién Sabe Más
                     </a>
+                    <a href="ranking-crackrapido.html" class="profile-link small-button" aria-label="Ver ranking de Crack Rápido">
+                        <i class="fas fa-bolt" aria-hidden="true"></i>
+                        Ranking Crack Rápido
+                    </a>
                     <a href="logros.html" class="profile-link small-button" aria-label="Ver mis logros">
                         <i class="fas fa-trophy" aria-hidden="true"></i>
                         Logros
                     </a>
                 </nav>
 
-                <section aria-labelledby="pasalache-stats-title">
-                    <h3 id="pasalache-stats-title" class="profile-subtitle">Estadísticas de Pasala Che</h3>
-                    <div class="stats-grid" role="group" aria-labelledby="pasalache-stats-title">
-                    <!-- Fila 1: Estadísticas Generales -->
-                    <div class="stat-card" role="img" aria-labelledby="games-played-label">
-                        <div class="stat-icon games" aria-hidden="true"></div>
-                        <div class="stat-value" id="stats-gamesPlayed" aria-describedby="games-played-label">0</div>
-                        <div class="stat-label" id="games-played-label">Partidas Jugadas</div>
-                    </div>
-                    <div class="stat-card" role="img" aria-labelledby="games-won-label">
-                        <div class="stat-icon wins" aria-hidden="true"></div>
-                        <div class="stat-value" id="stats-gamesWon" aria-describedby="games-won-label">0</div>
-                        <div class="stat-label" id="games-won-label">Victorias (Roscos)</div>
-                    </div>
-                    <div class="stat-card" role="img" aria-labelledby="games-lost-label">
-                        <div class="stat-icon losses" aria-hidden="true"></div>
-                        <div class="stat-value" id="stats-gamesLost" aria-describedby="games-lost-label">0</div>
-                        <div class="stat-label" id="games-lost-label">Derrotas (Errores/Tiempo)</div>
-                    </div>
+                <!-- Navegación por pestañas de juegos -->
+                <nav class="profile-tabs" aria-label="Pestañas de estadísticas por juego">
+                    <button class="profile-tab active" data-tab="pasalache" aria-label="Ver estadísticas de Pasala Che">
+                        <i class="fas fa-list"></i>
+                        <span>Pasala Che</span>
+                    </button>
+                    <button class="profile-tab" data-tab="quiensabemas" aria-label="Ver estadísticas de Quién Sabe Más">
+                        <i class="fas fa-brain"></i>
+                        <span>Quién Sabe Más</span>
+                    </button>
+                    <button class="profile-tab" data-tab="mentiroso" aria-label="Ver estadísticas de Mentiroso">
+                        <i class="fas fa-mask"></i>
+                        <span>Mentiroso</span>
+                    </button>
+                    <button class="profile-tab" data-tab="crackrapido" aria-label="Ver estadísticas de Crack Rápido">
+                        <i class="fas fa-bolt"></i>
+                        <span>Crack Rápido</span>
+                    </button>
+                    <button class="profile-tab" data-tab="logros" aria-label="Ver logros obtenidos">
+                        <i class="fas fa-trophy"></i>
+                        <span>Logros</span>
+                    </button>
+                </nav>
 
-                    <!-- Fila 2: Precisión y Rendimiento -->
-                    <div class="stat-card">
-                        <div class="stat-icon accuracy"></div>
-                        <div class="stat-value" id="stats-averageAccuracy">0%</div>
-                        <div class="stat-label">Precisión Media</div>
-                    </div>
-                     <div class="stat-card">
-                        <div class="stat-icon score"></div>
-                        <div class="stat-value" id="stats-bestScore">0</div>
-                        <div class="stat-label">Mejor Puntuación</div>
-                    </div>
-                     <div class="stat-card">
-                        <div class="stat-icon time"></div>
-                        <div class="stat-value" id="stats-fastestWinTime">--:--</div>
-                        <div class="stat-label">Mejor Tiempo (Rosco)</div>
-                    </div>
+                <!-- Contenedores de contenido para cada pestaña -->
+                
+                <!-- Pestaña Pasala Che -->
+                <div class="profile-tab-content active" id="tab-pasalache">
+                    <section aria-labelledby="pasalache-stats-title">
+                        <h3 id="pasalache-stats-title" class="profile-subtitle">Estadísticas de Pasala Che</h3>
+                        <div class="stats-grid" role="group" aria-labelledby="pasalache-stats-title">
+                        <!-- Fila 1: Estadísticas Generales -->
+                        <div class="stat-card" role="img" aria-labelledby="games-played-label">
+                            <div class="stat-icon games" aria-hidden="true"></div>
+                            <div class="stat-value" id="stats-gamesPlayed" aria-describedby="games-played-label">0</div>
+                            <div class="stat-label" id="games-played-label">Partidas Jugadas</div>
+                        </div>
+                        <div class="stat-card" role="img" aria-labelledby="games-won-label">
+                            <div class="stat-icon wins" aria-hidden="true"></div>
+                            <div class="stat-value" id="stats-gamesWon" aria-describedby="games-won-label">0</div>
+                            <div class="stat-label" id="games-won-label">Victorias (Roscos)</div>
+                        </div>
+                        <div class="stat-card" role="img" aria-labelledby="games-lost-label">
+                            <div class="stat-icon losses" aria-hidden="true"></div>
+                            <div class="stat-value" id="stats-gamesLost" aria-describedby="games-lost-label">0</div>
+                            <div class="stat-label" id="games-lost-label">Derrotas (Errores/Tiempo)</div>
+                        </div>
 
-                    <!-- Fila 3: Detalles de Respuestas -->
-                    <div class="stat-card">
-                        <div class="stat-icon correct"></div>
-                        <div class="stat-value" id="stats-totalCorrect">0</div>
-                        <div class="stat-label">Aciertos Totales</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon incorrect"></div>
-                        <div class="stat-value" id="stats-totalIncorrect">0</div>
-                        <div class="stat-label">Errores Totales</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon help"></div>
-                        <div class="stat-value" id="stats-totalHelpUsed">0</div>
-                        <div class="stat-label">Ayudas Usadas (Pasala Che)</div>
-                    </div>
-                    <div class="stat-card" role="img" aria-labelledby="achievements-label">
-                        <div class="stat-icon achievements-icon" aria-hidden="true"> <i class="fas fa-trophy"></i> </div>
-                        <div class="stat-value" id="stats-totalAchievements" aria-describedby="achievements-label">0</div>
-                        <div class="stat-label" id="achievements-label">Logros Desbloqueados</div>
-                    </div>
-                    </div>
-                </section>
+                        <!-- Fila 2: Precisión y Rendimiento -->
+                        <div class="stat-card">
+                            <div class="stat-icon accuracy"></div>
+                            <div class="stat-value" id="stats-averageAccuracy">0%</div>
+                            <div class="stat-label">Precisión Media</div>
+                        </div>
+                         <div class="stat-card">
+                            <div class="stat-icon score"></div>
+                            <div class="stat-value" id="stats-bestScore">0</div>
+                            <div class="stat-label">Mejor Puntuación</div>
+                        </div>
+                         <div class="stat-card">
+                            <div class="stat-icon time"></div>
+                            <div class="stat-value" id="stats-fastestWinTime">--:--</div>
+                            <div class="stat-label">Mejor Tiempo (Rosco)</div>
+                        </div>
 
-                <!-- Sección Historial de Partidas -->
-                <section aria-labelledby="history-title">
-                    <h3 id="history-title" class="profile-subtitle">Historial de Partidas (Pasala Che)</h3>
-                    <div class="history-container">
-                        <table class="history-table" role="table" aria-labelledby="history-title">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Fecha</th>
-                                    <th scope="col">Resultado</th>
-                                    <th scope="col">Dificultad</th>
-                                    <th scope="col">Aciertos</th>
-                                    <th scope="col">Errores</th>
-                                    <th scope="col">Tiempo</th>
-                                </tr>
-                            </thead>
-                            <tbody id="gameHistoryBody">
-                                <!-- Las filas se llenarán dinámicamente con JS -->
-                                <tr>
-                                    <td colspan="6" style="text-align:center; padding: 20px; color: var(--text-light);">Cargando historial... Si no aparece nada, ¡es hora de jugar!</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </section>
+                        <!-- Fila 3: Detalles de Respuestas -->
+                        <div class="stat-card">
+                            <div class="stat-icon correct"></div>
+                            <div class="stat-value" id="stats-totalCorrect">0</div>
+                            <div class="stat-label">Aciertos Totales</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon incorrect"></div>
+                            <div class="stat-value" id="stats-totalIncorrect">0</div>
+                            <div class="stat-label">Errores Totales</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon help"></div>
+                            <div class="stat-value" id="stats-totalHelpUsed">0</div>
+                            <div class="stat-label">Ayudas Usadas (Pasala Che)</div>
+                        </div>
+                        </div>
+                    </section>
 
-                <!-- === ESTADÍSTICAS DE QUIÉN SABE MÁS === -->
-                <section aria-labelledby="qsm-stats-title">
-                    <h3 id="qsm-stats-title" class="profile-subtitle">Estadísticas de Quién Sabe Más</h3>
-                    <div class="stats-grid" role="group" aria-labelledby="qsm-stats-title">
-                    <!-- Fila 1: Estadísticas Generales -->
-                    <div class="stat-card">
-                        <div class="stat-icon games"></div>
-                        <div class="stat-value" id="stats-qsm-gamesPlayed">0</div>
-                        <div class="stat-label">Partidas Jugadas</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon wins"></div>
-                        <div class="stat-value" id="stats-qsm-gamesWon">0</div>
-                        <div class="stat-label">Victorias</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon losses"></div>
-                        <div class="stat-value" id="stats-qsm-gamesLost">0</div>
-                        <div class="stat-label">Derrotas</div>
-                    </div>
+                    <!-- Sección Historial de Partidas -->
+                    <section aria-labelledby="history-title">
+                        <h3 id="history-title" class="profile-subtitle">Historial de Partidas</h3>
+                        <div class="history-container">
+                            <table class="history-table" role="table" aria-labelledby="history-title">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Fecha</th>
+                                        <th scope="col">Resultado</th>
+                                        <th scope="col">Dificultad</th>
+                                        <th scope="col">Aciertos</th>
+                                        <th scope="col">Errores</th>
+                                        <th scope="col">Tiempo</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="gameHistoryBody">
+                                    <!-- Las filas se llenarán dinámicamente con JS -->
+                                    <tr>
+                                        <td colspan="6" style="text-align:center; padding: 20px; color: var(--text-light);">Cargando historial... Si no aparece nada, ¡es hora de jugar!</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
 
-                    <!-- Fila 2: Precisión y Rendimiento -->
-                    <div class="stat-card">
-                        <div class="stat-icon accuracy"></div>
-                        <div class="stat-value" id="stats-qsm-averageAccuracy">0%</div>
-                        <div class="stat-label">% de Victoria</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon score"></div>
-                        <div class="stat-value" id="stats-qsm-bestScore">0</div>
-                        <div class="stat-label">Mejor Puntuación</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon score"></div>
-                        <div class="stat-value" id="stats-qsm-totalScore">0</div>
-                        <div class="stat-label">Puntuación Total</div>
-                    </div>
-                    </div>
-                </section>
+                <!-- Pestaña Quién Sabe Más -->
+                <div class="profile-tab-content" id="tab-quiensabemas">
+                    <section aria-labelledby="qsm-stats-title">
+                        <h3 id="qsm-stats-title" class="profile-subtitle">Estadísticas de Quién Sabe Más</h3>
+                        <div class="stats-grid" role="group" aria-labelledby="qsm-stats-title">
+                        <!-- Fila 1: Estadísticas Generales -->
+                        <div class="stat-card">
+                            <div class="stat-icon games"></div>
+                            <div class="stat-value" id="stats-qsm-gamesPlayed">0</div>
+                            <div class="stat-label">Partidas Jugadas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon wins"></div>
+                            <div class="stat-value" id="stats-qsm-gamesWon">0</div>
+                            <div class="stat-label">Victorias</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon losses"></div>
+                            <div class="stat-value" id="stats-qsm-gamesLost">0</div>
+                            <div class="stat-label">Derrotas</div>
+                        </div>
 
-                <!-- === ESTADÍSTICAS DE MENTIROSO === -->
-                <section aria-labelledby="mentiroso-stats-title">
-                    <h3 id="mentiroso-stats-title" class="profile-subtitle">Estadísticas de Mentiroso</h3>
-                    <div class="stats-grid" role="group" aria-labelledby="mentiroso-stats-title">
-                    <!-- Fila 1: Estadísticas Generales -->
-                    <div class="stat-card">
-                        <div class="stat-icon games"></div>
-                        <div class="stat-value" id="stats-mentiroso-gamesPlayed">0</div>
-                        <div class="stat-label">Partidas Jugadas</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon wins"></div>
-                        <div class="stat-value" id="stats-mentiroso-gamesWon">0</div>
-                        <div class="stat-label">Victorias</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon losses"></div>
-                        <div class="stat-value" id="stats-mentiroso-gamesLost">0</div>
-                        <div class="stat-label">Derrotas</div>
-                    </div>
+                        <!-- Fila 2: Precisión y Rendimiento -->
+                        <div class="stat-card">
+                            <div class="stat-icon accuracy"></div>
+                            <div class="stat-value" id="stats-qsm-averageAccuracy">0%</div>
+                            <div class="stat-label">% de Victoria</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon score"></div>
+                            <div class="stat-value" id="stats-qsm-bestScore">0</div>
+                            <div class="stat-label">Mejor Puntuación</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon score"></div>
+                            <div class="stat-value" id="stats-qsm-totalScore">0</div>
+                            <div class="stat-label">Puntuación Total</div>
+                        </div>
+                        </div>
+                    </section>
+                </div>
 
-                    <!-- Fila 2: Precisión y Rendimiento -->
-                    <div class="stat-card">
-                        <div class="stat-icon accuracy"></div>
-                        <div class="stat-value" id="stats-mentiroso-averageAccuracy">0%</div>
-                        <div class="stat-label">% de Victoria</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon score"></div>
-                        <div class="stat-value" id="stats-mentiroso-bestScore">0</div>
-                        <div class="stat-label">Mejor Puntuación</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon score"></div>
-                        <div class="stat-value" id="stats-mentiroso-totalScore">0</div>
-                        <div class="stat-label">Puntuación Total</div>
-                    </div>
-                    </div>
-                </section>
+                <!-- Pestaña Mentiroso -->
+                <div class="profile-tab-content" id="tab-mentiroso">
+                    <section aria-labelledby="mentiroso-stats-title">
+                        <h3 id="mentiroso-stats-title" class="profile-subtitle">Estadísticas de Mentiroso</h3>
+                        <div class="stats-grid" role="group" aria-labelledby="mentiroso-stats-title">
+                        <!-- Fila 1: Estadísticas Generales -->
+                        <div class="stat-card">
+                            <div class="stat-icon games"></div>
+                            <div class="stat-value" id="stats-mentiroso-gamesPlayed">0</div>
+                            <div class="stat-label">Partidas Jugadas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon wins"></div>
+                            <div class="stat-value" id="stats-mentiroso-gamesWon">0</div>
+                            <div class="stat-label">Victorias</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon losses"></div>
+                            <div class="stat-value" id="stats-mentiroso-gamesLost">0</div>
+                            <div class="stat-label">Derrotas</div>
+                        </div>
+
+                        <!-- Fila 2: Precisión y Rendimiento -->
+                        <div class="stat-card">
+                            <div class="stat-icon accuracy"></div>
+                            <div class="stat-value" id="stats-mentiroso-averageAccuracy">0%</div>
+                            <div class="stat-label">% de Victoria</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon score"></div>
+                            <div class="stat-value" id="stats-mentiroso-bestScore">0</div>
+                            <div class="stat-label">Mejor Puntuación</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon score"></div>
+                            <div class="stat-value" id="stats-mentiroso-totalScore">0</div>
+                            <div class="stat-label">Puntuación Total</div>
+                        </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Pestaña Crack Rápido -->
+                <div class="profile-tab-content" id="tab-crackrapido">
+                    <section aria-labelledby="crackrapido-stats-title">
+                        <h3 id="crackrapido-stats-title" class="profile-subtitle">Estadísticas de Crack Rápido</h3>
+                        <div class="stats-grid" role="group" aria-labelledby="crackrapido-stats-title">
+                        <!-- Fila 1: Estadísticas Generales -->
+                        <div class="stat-card">
+                            <div class="stat-icon games"></div>
+                            <div class="stat-value" id="stats-crackrapido-gamesPlayed">0</div>
+                            <div class="stat-label">Partidas Jugadas</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon score"></div>
+                            <div class="stat-value" id="stats-crackrapido-bestScore">0</div>
+                            <div class="stat-label">Mejor Puntuación</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon correct"></div>
+                            <div class="stat-value" id="stats-crackrapido-totalCorrect">0</div>
+                            <div class="stat-label">Aciertos Totales</div>
+                        </div>
+
+                        <!-- Fila 2: Rendimiento y Velocidad -->
+                        <div class="stat-card">
+                            <div class="stat-icon time streak"></div>
+                            <div class="stat-value" id="stats-crackrapido-bestStreak">0</div>
+                            <div class="stat-label">Mejor Racha</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon accuracy"></div>
+                            <div class="stat-value" id="stats-crackrapido-averageAccuracy">0%</div>
+                            <div class="stat-label">Precisión Media</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon speed"></div>
+                            <div class="stat-value" id="stats-crackrapido-averageSpeed">0.0s</div>
+                            <div class="stat-label">Velocidad Media</div>
+                        </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Pestaña Logros -->
+                <div class="profile-tab-content" id="tab-logros">
+                    <section aria-labelledby="achievements-stats-title">
+                        <h3 id="achievements-stats-title" class="profile-subtitle">Mis Logros</h3>
+                        <div class="stats-grid" role="group" aria-labelledby="achievements-stats-title">
+                            <div class="stat-card achievements-summary" role="img" aria-labelledby="achievements-label">
+                                <div class="stat-icon achievements-icon" aria-hidden="true"> <i class="fas fa-trophy"></i> </div>
+                                <div class="stat-value" id="stats-totalAchievements" aria-describedby="achievements-label">0</div>
+                                <div class="stat-label" id="achievements-label">Logros Desbloqueados</div>
+                            </div>
+                        </div>
+                        <div class="achievements-redirect">
+                            <p>¡Descubre todos tus logros y desbloquea nuevos desafíos!</p>
+                            <a href="logros.html" class="achievements-link-button">
+                                <i class="fas fa-medal"></i>
+                                Ver Todos los Logros
+                            </a>
+                        </div>
+                    </section>
+                </div>
 
                 <section class="profile-actions" aria-labelledby="profile-actions-title">
                     <h4 id="profile-actions-title" class="sr-only">Acciones del perfil</h4>

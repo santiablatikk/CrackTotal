@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateScoreDisplays();
         
         // <<<--- START: Fetch questions from the single merged file --- >>>
-        const questionFile = 'data/preguntas_finalisimas_v4.json';
+        const questionFile = 'data/preguntas_combinadas.json';
 
         fetch(questionFile)
             .then(response => {

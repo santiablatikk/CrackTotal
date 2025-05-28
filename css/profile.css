@@ -40,14 +40,23 @@
     text-align: center;
     border: 1px solid var(--border);
     backdrop-filter: blur(10px);
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.3s ease;
     box-shadow: var(--shadow-sm);
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .stat-card:hover {
-    transform: translateY(-6px);
+    transform: translateY(-6px) scale(1.02);
     box-shadow: var(--shadow-lg);
     border-color: var(--primary-light-transparent);
+}
+
+.stat-card:focus-within {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
 }
 
 .stat-icon {
@@ -74,6 +83,11 @@
 .stat-icon.correct { background-color: rgba(49, 229, 178, 0.15); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2331E5B2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E"); }
 .stat-icon.incorrect { background-color: rgba(255, 84, 112, 0.15); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FF5470' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'%3E%3C/line%3E%3Cline x1='6' y1='6' x2='18' y2='18'%3E%3C/line%3E%3C/svg%3E"); }
 .stat-icon.help { background-color: rgba(171, 139, 250, 0.15); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23AB8BFA' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'%3E%3C/circle%3E%3Cpath d='M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3'%3E%3C/path%3E%3Cline x1='12' y1='17' x2='12.01' y2='17'%3E%3C/line%3E%3C/svg%3E"); }
+
+/* New icons for Crack Rápido */
+.stat-icon.streak { background-color: rgba(255, 215, 0, 0.15); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FFD700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'%3E%3C/path%3E%3C/svg%3E"); }
+.stat-icon.speed { background-color: rgba(0, 230, 118, 0.15); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2300E676' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 12l4 4 4-4'%3E%3C/path%3E%3Cpath d='M12 2v20'%3E%3C/path%3E%3Cpath d='M2 12h20'%3E%3C/path%3E%3C/svg%3E"); }
+.stat-icon.time.streak { background-color: rgba(255, 215, 0, 0.15); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FFD700' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13 2L3 14h9l-1 8 10-12h-9l1-8z'%3E%3C/path%3E%3C/svg%3E"); }
 
 /* New class for the circular background of the achievements/trophy icon */
 .stat-icon.achievements-icon {
@@ -113,12 +127,14 @@
     padding: 25px;
     margin-top: 20px;
     box-shadow: var(--shadow-md);
+    overflow-x: auto;
 }
 
 .history-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
+    min-width: 600px;
 }
 
 .history-table thead th {
@@ -128,12 +144,16 @@
     text-align: left;
     font-weight: 600;
     border-bottom: 2px solid var(--primary);
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .history-table tbody td {
     padding: 10px 15px;
     border-bottom: 1px solid var(--border-light);
     color: var(--text-light);
+    transition: background-color 0.2s ease;
 }
 
 .history-table tbody tr:last-child td {
@@ -144,19 +164,102 @@
     background-color: var(--background-hover);
 }
 
+.history-table tbody tr:hover td {
+    color: var(--text);
+}
+
 .history-table .history-result-victory {
     color: var(--success-bright) !important;
     font-weight: 500;
+    position: relative;
+}
+
+.history-table .history-result-victory::before {
+    content: "🏆";
+    margin-right: 6px;
+    font-size: 0.9rem;
 }
 
 .history-table .history-result-defeat,
 .history-table .history-result-timeout {
     color: var(--danger-bright) !important;
     font-weight: 500;
+    position: relative;
+}
+
+.history-table .history-result-defeat::before {
+    content: "❌";
+    margin-right: 6px;
+    font-size: 0.8rem;
+}
+
+.history-table .history-result-timeout::before {
+    content: "⏰";
+    margin-right: 6px;
+    font-size: 0.8rem;
 }
 
 .history-table .history-difficulty {
     text-transform: capitalize;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.history-table .history-difficulty:has-text("facil"),
+.history-table td:nth-child(3):contains("facil") {
+    background-color: rgba(49, 229, 178, 0.2);
+    color: var(--success-bright);
+}
+
+.history-table .history-difficulty:has-text("normal"),
+.history-table td:nth-child(3):contains("normal") {
+    background-color: rgba(127, 90, 248, 0.2);
+    color: var(--primary-light);
+}
+
+.history-table .history-difficulty:has-text("dificil"),
+.history-table td:nth-child(3):contains("dificil") {
+    background-color: rgba(255, 84, 112, 0.2);
+    color: var(--danger-bright);
+}
+
+/* Loading state for history table */
+.history-table.loading tbody {
+    opacity: 0.6;
+}
+
+.history-table.loading tbody::after {
+    content: "Cargando historial...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+/* Empty state styling */
+.history-empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+.history-empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+    display: block;
+}
+
+.history-empty-state p {
+    margin: 0;
+    font-size: 1.1rem;
 }
 
 /* Profile Actions */
@@ -244,10 +347,524 @@
     flex-wrap: wrap;
 }
 
-/* Responsive adjustments for profile quick nav */
+.profile-quick-nav .profile-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--background-alt);
+    color: var(--text);
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+}
+
+.profile-quick-nav .profile-link:hover {
+    background: var(--primary-transparent);
+    border-color: var(--primary);
+    color: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.profile-quick-nav .profile-link:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.profile-quick-nav .profile-link i {
+    font-size: 1rem;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.profile-quick-nav .profile-link:hover i {
+    opacity: 1;
+}
+
+/* Specific icon colors for different game types */
+.profile-quick-nav .profile-link i.fa-list { color: var(--primary-light); }
+.profile-quick-nav .profile-link i.fa-mask { color: #FF6B6B; }
+.profile-quick-nav .profile-link i.fa-brain { color: #4ECDC4; }
+.profile-quick-nav .profile-link i.fa-bolt { color: #FFD93D; }
+.profile-quick-nav .profile-link i.fa-trophy { color: #FFD700; }
+
+/* Profile Tabs Navigation */
+.profile-tabs {
+    display: flex;
+    background: var(--background-alt);
+    border-radius: 12px;
+    padding: 6px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border);
+    gap: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.profile-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.profile-tab {
+    flex: 1;
+    min-width: 120px;
+    background: transparent;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    position: relative;
+    transform: translateZ(0);
+}
+
+.profile-tab i {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.profile-tab span {
+    display: block;
+    line-height: 1.2;
+}
+
+.profile-tab:hover {
+    background: var(--primary-transparent);
+    color: var(--primary-light);
+    transform: translateY(-1px);
+}
+
+.profile-tab.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-md-primary);
+    transform: translateY(-2px);
+}
+
+.profile-tab.active i {
+    transform: scale(1.1);
+}
+
+/* Tab Content */
+.profile-tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.profile-tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Achievements Section Specific Styles */
+.achievements-summary {
+    grid-column: 1 / -1;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.achievements-redirect {
+    text-align: center;
+    margin-top: 2rem;
+    padding: 2rem;
+    background: var(--background-alt);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+.achievements-redirect p {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.achievements-link-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #333;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid transparent;
+}
+
+.achievements-link-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    background: linear-gradient(135deg, #FFA500, #FF8C00);
+    border-color: #FFD700;
+}
+
+.achievements-link-button i {
+    font-size: 1.1rem;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-4px);
+    }
+    60% {
+        transform: translateY(-2px);
+    }
+}
+
+/* Responsive adjustments for profile tabs */
 @media (max-width: 768px) {
     .profile-quick-nav {
         justify-content: center;
         text-align: center;
+    }
+    
+    .profile-tabs {
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 4px;
+        gap: 2px;
+    }
+    
+    .profile-tab {
+        min-width: 100px;
+        padding: 10px 12px;
+        font-size: 0.85rem;
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .profile-tab i {
+        font-size: 1.2rem;
+    }
+    
+    .profile-tab span {
+        font-size: 0.8rem;
+        line-height: 1.1;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-tabs {
+        padding: 3px;
+        gap: 1px;
+    }
+    
+    .profile-tab {
+        min-width: 80px;
+        padding: 8px 6px;
+        font-size: 0.75rem;
+    }
+    
+    .profile-tab span {
+        display: none;
+    }
+    
+    .profile-tab i {
+        font-size: 1.3rem;
+    }
+    
+    .achievements-redirect {
+        padding: 1.5rem;
+    }
+    
+    .achievements-link-button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+/* =============================================================================
+   ENHANCED RESPONSIVE DESIGN & PERFORMANCE
+   ============================================================================= */
+
+/* Enhanced responsive design */
+@media (max-width: 1024px) {
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 20px;
+    }
+    
+    .profile-title {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 20px 10px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+    }
+    
+    .stat-card {
+        padding: 20px 15px;
+    }
+    
+    .stat-value {
+        font-size: 1.6rem;
+    }
+    
+    .stat-label {
+        font-size: 0.8rem;
+    }
+    
+    .profile-title {
+        font-size: 1.6rem;
+        margin-bottom: 15px;
+    }
+    
+    .profile-subtitle {
+        font-size: 1.2rem;
+        margin-top: 35px;
+        margin-bottom: 20px;
+    }
+    
+    .history-table {
+        font-size: 0.8rem;
+        min-width: unset;
+    }
+    
+    .history-table th,
+    .history-table td {
+        padding: 8px 6px;
+        font-size: 0.75rem;
+    }
+    
+    .history-table th:nth-child(4),
+    .history-table th:nth-child(5),
+    .history-table td:nth-child(4),
+    .history-table td:nth-child(5) {
+        display: none; /* Hide aciertos/errores columns on mobile */
+    }
+    
+    .history-empty-state {
+        padding: 30px 15px;
+    }
+    
+    .history-empty-state i {
+        font-size: 2.5rem;
+    }
+    
+    .history-empty-state p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .stat-card {
+        padding: 15px 10px;
+    }
+    
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 12px;
+    }
+    
+    .stat-value {
+        font-size: 1.4rem;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
+        line-height: 1.2;
+    }
+    
+    .profile-actions {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .profile-actions .extra-link-button,
+    .profile-actions .reset-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Loading states for better UX */
+.stat-card.loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    animation: shimmer 1.5s infinite;
+}
+
+.stat-value.loading {
+    background-color: var(--border);
+    color: transparent;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-value.loading::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+    );
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Enhanced focus states for accessibility */
+.stat-card:focus,
+.profile-actions button:focus,
+.profile-actions a:focus {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 8px;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    .stat-card,
+    .stat-card:hover,
+    .profile-actions .extra-link-button,
+    .profile-actions .reset-button {
+        transition: none;
+        transform: none;
+    }
+    
+    .stat-card.loading::before,
+    .stat-value.loading::before {
+        animation: none;
+    }
+}
+
+/* Enhanced contrast for better visibility */
+@media (prefers-contrast: high) {
+    .stat-card {
+        border: 2px solid var(--primary);
+        background: var(--background);
+    }
+    
+    .stat-value {
+        font-weight: 800;
+    }
+    
+    .stat-label {
+        font-weight: 600;
+    }
+}
+
+/* Print styles */
+@media print {
+    .profile-container {
+        max-width: none;
+        padding: 0;
+    }
+    
+    .profile-actions,
+    .profile-quick-nav {
+        display: none;
+    }
+    
+    .stat-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+    
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+}
+
+/* Enhanced performance with GPU acceleration */
+.profile-container {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.stats-grid {
+    transform: translateZ(0);
+}
+
+/* Progressive enhancement */
+@supports (backdrop-filter: blur(10px)) {
+    .stat-card {
+        backdrop-filter: blur(10px);
+    }
+}
+
+@supports not (backdrop-filter: blur(10px)) {
+    .stat-card {
+        background: var(--background-alt);
+        border: 1px solid var(--border);
     }
 } 

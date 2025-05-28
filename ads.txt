@@ -1,1 +1,21 @@
+# ads.txt file for cracktotal.com
+# This file is used to help ensure that digital advertising inventory purchased by advertisers is authentic
+
+# Google AdSense
 google.com, pub-9579152019412427, DIRECT, f08c47fec0942fa0
+
+# Google Ad Manager / DoubleClick for Publishers
+google.com, pub-9579152019412427, DIRECT, f08c47fec0942fa0
+
+# Google AdMob (for mobile apps if applicable)
+google.com, pub-9579152019412427, DIRECT, f08c47fec0942fa0
+
+# Authorized sellers only - this site sells advertising inventory directly
+# Format: <Field #1>, <Field #2>, <Field #3>, <Field #4>
+# Field #1: The domain name of the advertising system
+# Field #2: The publisher's account ID on that advertising system
+# Field #3: The type of relationship (DIRECT or RESELLER)
+# Field #4: The certification authority ID
+
+# Last updated: 2025-01-27
+# Contact: contact@cracktotal.com
