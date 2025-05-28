@@ -1,6 +1,9 @@
 // Crack Rápido - Sistema de Trivia de Velocidad
 // Crack Total - 2025
 
+// Importar función para guardar en Firebase
+import { saveCrackRapidoResult } from './firebase-utils.js';
+
 class CrackRapido {
     constructor() {
         this.questions = [];
@@ -1565,6 +1568,9 @@ class CrackRapido {
             this.newRecordsSection.style.display = 'none';
         }
         
+        // Guardar en Firebase
+        this.saveToFirebase(results);
+        
         this.showScreen('results');
     }
 
@@ -1572,6 +1578,32 @@ class CrackRapido {
         this.resetGameState();
         this.showScreen('start');
         this.gamePanel.classList.remove('active');
+    }
+
+    async saveToFirebase(results) {
+        try {
+            // Preparar datos para Firebase
+            const gameStats = {
+                result: results.correctAnswers === this.totalQuestions ? "completed" : "incomplete",
+                score: results.score,
+                correctAnswers: results.correctAnswers,
+                totalQuestions: this.totalQuestions,
+                maxStreak: results.maxStreak,
+                averageTime: results.averageTime,
+                totalTime: results.totalTime
+            };
+
+            // Guardar en Firebase
+            const success = await saveCrackRapidoResult(gameStats);
+            
+            if (success) {
+                console.log('Partida de Crack Rápido guardada en Firebase');
+            } else {
+                console.log('Error al guardar la partida en Firebase');
+            }
+        } catch (error) {
+            console.error('Error al conectar con Firebase:', error);
+        }
     }
 
     showScreen(screen) {

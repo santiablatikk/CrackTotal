@@ -5,251 +5,389 @@ import {
     query,
     orderBy,
     limit,
-    onSnapshot, // <--- ADDED: For real-time updates
-    Timestamp // Importar Timestamp para formatear fechas
+    onSnapshot,
+    where,
+    Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-console.log('Ranking script loaded and Firebase initialized for real-time updates');
+console.log('Ranking Pasala Che script loaded - Optimizado para móvil');
 
 // --- Elementos del DOM ---
 const rankingBody = document.getElementById('ranking-body');
 const historyList = document.getElementById('history-list');
 
-// --- Función para formatear Timestamps de Firebase ---
-function formatFirebaseTimestamp(firebaseTimestamp) {
-    if (!firebaseTimestamp) return 'Fecha desconocida';
-    // Convertir a objeto Date de JavaScript
+// --- Configuración ---
+const RANKING_LIMIT = 15; // Solo mostrar top 15
+const HISTORY_LIMIT = 10; // Últimas 10 partidas en historial
+
+// --- Función para formatear fecha compacta para móvil ---
+function formatCompactDate(firebaseTimestamp) {
+    if (!firebaseTimestamp) return '---';
     const date = firebaseTimestamp.toDate();
-    // Formatear a un string legible (puedes personalizar el formato)
-    return date.toLocaleString('es-ES', {
-        year: 'numeric', month: 'long', day: 'numeric',
-        hour: '2-digit', minute: '2-digit'
-    });
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    
+    if (diffMins < 60) return `${diffMins}min`;
+    if (diffHours < 24) return `${diffHours}h`;
+    if (diffDays < 7) return `${diffDays}d`;
+    return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
 }
 
-// --- Cargar Ranking Global (AHORA CON onSnapshot) ---
-function loadRanking() {
-    if (!rankingBody) {
-        console.error('Error: Elemento ranking-body no encontrado.');
-        return;
+// --- Función para obtener nivel del jugador ---
+function getPlayerLevel(totalScore, winRate, matches) {
+    if (winRate >= 90 && totalScore >= 5000 && matches >= 20) return { level: "CRACK TOTAL", color: "#3182ce", icon: "👑" };
+    if (winRate >= 85 && totalScore >= 4000 && matches >= 15) return { level: "CRACK", color: "#4299e1", icon: "⭐" };
+    if (winRate >= 80 && totalScore >= 3000 && matches >= 10) return { level: "EXPERTO", color: "#56ab2f", icon: "🔥" };
+    if (winRate >= 75 && totalScore >= 2500 && matches >= 8) return { level: "AVANZADO", color: "#667eea", icon: "💪" };
+    if (winRate >= 70 && totalScore >= 2000 && matches >= 5) return { level: "INTERMEDIO", color: "#764ba2", icon: "📚" };
+    if (winRate >= 60 && totalScore >= 1000 && matches >= 3) return { level: "NOVATO", color: "#ed8936", icon: "🎯" };
+    return { level: "PRINCIPIANTE", color: "#999", icon: "🌱" };
+}
+
+// --- Función para generar HTML del ranking (Top 15) ---
+function generateRankingHTML(usersData) {
+    if (!usersData || usersData.length === 0) {
+        return '<tr><td colspan="7" class="empty-state">No hay datos disponibles</td></tr>';
     }
 
-    rankingBody.innerHTML = '<tr><td colspan="7">Cargando ranking...</td></tr>'; // Ajustado colspan a 7
+    // Filtrar y procesar datos de usuarios de manera más flexible
+    const validUsers = usersData
+        .filter(user => {
+            // Buscar datos de Pasala Che en diferentes ubicaciones posibles
+            const pasalacheData = user.pasalache || user.stats?.pasalache || user.stats?.pasalaChe || user.stats?.PasalaChe;
+            const hasScore = user.totalScore > 0 || user.score > 0 || (pasalacheData && pasalacheData.totalScore > 0);
+            const hasWins = user.wins > 0 || (pasalacheData && pasalacheData.wins > 0);
+            return pasalacheData || hasScore || hasWins;
+        })
+        .map(user => {
+            console.log('[RANKING PC] Procesando usuario:', user);
+            
+            // Intentar obtener datos de diferentes ubicaciones
+            const pasalacheData = user.pasalache || user.stats?.pasalache || user.stats?.pasalaChe || user.stats?.PasalaChe || {};
+            
+            const totalScore = pasalacheData.totalScore || user.totalScore || user.score || 0;
+            const wins = pasalacheData.wins || user.wins || 0;
+            const losses = pasalacheData.losses || user.losses || user.totalLosses || 0;
+            const matches = pasalacheData.matches || user.matchesPlayed || wins + losses || 0;
+            
+            const winRate = matches > 0 ? (wins / matches) * 100 : 0;
+            const avgScore = matches > 0 ? Math.round(totalScore / matches) : totalScore;
+            
+            return {
+                id: user.id,
+                displayName: user.displayName || 'Anónimo',
+                totalScore: totalScore,
+                wins: wins,
+                losses: losses,
+                matches: matches,
+                winRate: winRate,
+                avgScore: avgScore
+            };
+        })
+        .sort((a, b) => {
+            // Ordenar por efectividad primero, luego por victorias, luego por puntaje total
+            if (b.winRate !== a.winRate) return b.winRate - a.winRate;
+            if (b.wins !== a.wins) return b.wins - a.wins;
+            return b.totalScore - a.totalScore;
+        })
+        .slice(0, RANKING_LIMIT); // Limitar a top 15
 
+    if (validUsers.length === 0) {
+        return '<tr><td colspan="7" class="empty-state">No hay jugadores registrados aún</td></tr>';
+    }
+
+    return validUsers.map((user, index) => {
+        const playerLevel = getPlayerLevel(user.totalScore, user.winRate, user.matches);
+        const isTopPlayer = index < 3;
+        const position = index + 1;
+        
+        return `
+            <tr class="ranking-row ${isTopPlayer ? 'top-player' : ''}">
+                <td class="ranking-position">
+                    ${position}
+                    ${position === 1 ? '🥇' : position === 2 ? '🥈' : position === 3 ? '🥉' : ''}
+                </td>
+                <td class="player-info">
+                    <div class="player-name">${user.displayName || 'Anónimo'}</div>
+                    <div class="player-level" style="color: ${playerLevel.color}">
+                        ${playerLevel.icon} ${playerLevel.level}
+                    </div>
+                </td>
+                <td class="score-info">
+                    <div class="main-score">${(user.totalScore / 1000).toFixed(1)}k</div>
+                    <div class="secondary-stat">Prom: ${user.avgScore}</div>
+                </td>
+                <td class="stat-cell hide-mobile">
+                    <div class="primary-stat">${user.matches}</div>
+                    <div class="secondary-stat">partidas</div>
+                </td>
+                <td class="stat-cell">
+                    <div class="primary-stat wins-stat">${user.wins}</div>
+                    <div class="secondary-stat">${user.winRate.toFixed(0)}%</div>
+                </td>
+                <td class="stat-cell hide-mobile">
+                    <div class="primary-stat losses-stat">${user.losses}</div>
+                    <div class="secondary-stat">derrotas</div>
+                </td>
+                <td class="stat-cell hide-mobile">
+                    <div class="primary-stat accuracy-stat">${user.winRate.toFixed(0)}%</div>
+                    <div class="secondary-stat">efectividad</div>
+                </td>
+            </tr>
+        `;
+    }).join('');
+}
+
+// --- Función para generar HTML del historial mejorado ---
+function generateHistoryHTML(matches) {
+    if (!matches || matches.length === 0) {
+        return '<div class="empty-state">No hay historial disponible para este jugador</div>';
+    }
+
+    // Obtener usuario actual (si está logueado)
+    const currentUser = localStorage.getItem('currentUser');
+    let userMatches = matches;
+    
+    // Si hay usuario logueado, filtrar sus partidas
+    if (currentUser) {
+        try {
+            const userData = JSON.parse(currentUser);
+            userMatches = matches.filter(match => 
+                match.playerName === userData.displayName || 
+                match.userId === userData.uid ||
+                (match.players && match.players.some(p => p.displayName === userData.displayName))
+            );
+        } catch (e) {
+            console.log('No se pudo obtener usuario actual');
+        }
+    }
+
+    // Si no hay partidas del usuario, mostrar las más recientes de todos
+    if (userMatches.length === 0) {
+        userMatches = matches.slice(0, HISTORY_LIMIT);
+    }
+
+    // Mostrar las últimas partidas ordenadas por fecha
+    const recentMatches = userMatches
+        .sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds)
+        .slice(0, HISTORY_LIMIT);
+
+    return recentMatches.map(match => {
+        const isVictory = match.result === 'victory' || match.won === true;
+        const isTimeoutDefeat = match.result === 'timeout' || match.timeDefeat === true || match.defeatByTime === true || match.timeOut === true;
+        const score = match.score || (match.players && match.players[0]?.score) || 0;
+        const playerLevel = getPlayerLevel(score, isVictory ? 100 : 0, 1);
+        const playerName = match.playerName || (match.players && match.players[0]?.displayName) || 'Anónimo';
+        const defeatReason = match.defeatReason || (isTimeoutDefeat ? 'Tiempo agotado' : 'Normal');
+        
+        return `
+            <div class="history-item">
+                <div class="history-header">
+                    <span class="history-player-name">${playerName}</span>
+                    <span class="history-date">${formatCompactDate(match.timestamp)}</span>
+                </div>
+                <div class="history-stats">
+                    <div class="stat-group primary-stat-group">
+                        <span class="stat-label">Resultado:</span>
+                        <span class="stat-value result-highlight ${isVictory ? 'wins-stat' : 'losses-stat'}">
+                            ${isVictory ? '🏆 VICTORIA' : (isTimeoutDefeat ? '⏰ TIEMPO AGOTADO' : '❌ DERROTA')}
+                        </span>
+                    </div>
+                    <div class="stat-group primary-stat-group">
+                        <span class="stat-label">Tiempo total:</span>
+                        <span class="stat-value time-highlight">${Math.round(match.timeSpent || match.duration || 0)}s</span>
+                    </div>
+                    <div class="stat-group primary-stat-group">
+                        <span class="stat-label">Letras correctas:</span>
+                        <span class="stat-value accuracy-highlight">${score.toLocaleString()}</span>
+                    </div>
+                    <div class="stat-group">
+                        <span class="stat-label">Dificultad:</span>
+                        <span class="stat-value">${match.difficulty || 'Normal'}</span>
+                    </div>
+                </div>
+                <div class="level-badge" style="background-color: ${playerLevel.color}">
+                    ${playerLevel.icon} ${playerLevel.level}
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+// --- Configurar listener en tiempo real para el ranking ---
+function setupRankingListener() {
     try {
-        const usersRef = collection(db, "users");
-        // Consulta: Ordenar por Victorias DESC, luego Partidas Jugadas DESC
-        const q = query(usersRef, 
-                        orderBy("wins", "desc"), 
-                        orderBy("matchesPlayed", "desc"), 
-                        limit(50)); 
-
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            console.log("Ranking data received/updated with new sorting: Wins -> Matches Played");
-            rankingBody.innerHTML = '';
-
-            if (querySnapshot.empty) {
-                rankingBody.innerHTML = '<tr><td colspan="7">Aún no hay datos en el ranking. ¡Juega una partida!</td></tr>'; // Ajustado colspan a 7
+        const usersRef = collection(db, 'users');
+        
+        const unsubscribe = onSnapshot(usersRef, (snapshot) => {
+            console.log('[RANKING PC] Datos recibidos:', snapshot.size, 'usuarios');
+            
+            if (snapshot.empty) {
+                console.log('[RANKING PC] No hay datos de usuarios');
+                if (rankingBody) {
+                    rankingBody.innerHTML = '<tr><td colspan="7" class="empty-state">No hay jugadores registrados aún</td></tr>';
+                }
                 return;
             }
 
-            let position = 1;
-            querySnapshot.forEach((doc) => {
-                const userData = doc.data();
-                const row = document.createElement('tr');
-
-                const playerName = userData.displayName || 'Jugador Anónimo';
-                const totalScore = userData.totalScore || 0;
-                const matchesPlayed = userData.matchesPlayed || 0;
-                const wins = userData.wins || 0;
-                const totalLosses = userData.totalLosses || 0;
+            const usersData = [];
+            
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                console.log('[RANKING PC] Procesando usuario:', data);
                 
-                const totalCorrectAnswers = userData.totalCorrectAnswers || 0;
-                const totalIncorrectAnswers = userData.totalIncorrectAnswers || 0;
-                const totalAnswered = totalCorrectAnswers + totalIncorrectAnswers;
-                const averageAccuracy = totalAnswered > 0 ? Math.round((totalCorrectAnswers / totalAnswered) * 100) : 0;
-
-                row.innerHTML = `
-                    <td class="rank-cell">${position}</td>
-                    <td class="player-cell">${playerName}</td>
-                    <td class="score-cell">${totalScore}</td>
-                    <td class="matches-cell">${matchesPlayed}</td>
-                    <td class="wins-cell">${wins}</td>
-                    <td class="losses-cell">${totalLosses}</td>
-                    <td class="accuracy-cell">${averageAccuracy}%</td>
-                `;
-                rankingBody.appendChild(row);
-                position++;
+                if (data.displayName) {
+                    usersData.push({
+                        id: doc.id,
+                        displayName: data.displayName,
+                        ...data
+                    });
+                }
             });
+
+            console.log(`[RANKING PC] Usuarios procesados: ${usersData.length}`);
+
+            // Actualizar ranking (Top 15)
+            if (rankingBody) {
+                const rankingHTML = generateRankingHTML(usersData);
+                rankingBody.innerHTML = rankingHTML;
+                console.log('[RANKING PC] Tabla actualizada - Top', RANKING_LIMIT);
+            }
+
         }, (error) => {
-            console.error("Error al escuchar el ranking: ", error);
-            rankingBody.innerHTML = '<tr><td colspan="7">Error al cargar el ranking en tiempo real. Inténtalo de nuevo más tarde.</td></tr>'; // Ajustado colspan a 7
+            console.error('[RANKING PC] Error en el listener:', error);
+            if (rankingBody) {
+                rankingBody.innerHTML = '<tr><td colspan="7" class="empty-state">Error al cargar el ranking. Reintentando...</td></tr>';
+            }
+            
+            setTimeout(() => {
+                console.log('[RANKING PC] Reintentando configuración...');
+                setupRankingListener();
+            }, 3000);
         });
 
+        console.log('[RANKING PC] Listener configurado correctamente');
+        return unsubscribe;
+
     } catch (error) {
-        console.error("Error al configurar la consulta del ranking: ", error);
-        rankingBody.innerHTML = '<tr><td colspan="7">Error al configurar la carga del ranking.</td></tr>'; // Ajustado colspan a 7
+        console.error('[RANKING PC] Error al configurar listener:', error);
+        if (rankingBody) {
+            rankingBody.innerHTML = '<tr><td colspan="7" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+        }
     }
 }
 
-// --- Cargar Historial de Partidas (AHORA CON onSnapshot) ---
-function loadHistory() {
-    if (!historyList) {
-        console.error('Error: Elemento history-list no encontrado.');
-        return;
-    }
-
-    historyList.innerHTML = '<p>Cargando historial...</p>'; // Mensaje inicial
-
+// --- Configurar listener para historial ---
+function setupHistoryListener() {
     try {
-        const matchesRef = collection(db, "matches");
-        const q = query(matchesRef, orderBy("timestamp", "desc"), limit(20));
+        const matchesRef = collection(db, 'matches');
+        const historyQuery = query(
+            matchesRef,
+            orderBy('timestamp', 'desc'),
+            limit(100)
+        );
 
-        // Usar onSnapshot en lugar de getDocs
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-            console.log("History data received/updated"); // Log para ver actualizaciones
-            historyList.innerHTML = ''; // Limpiar lista en cada actualización
-
-        if (querySnapshot.empty) {
-            historyList.innerHTML = '<p>No hay partidas registradas en el historial.</p>';
+        const unsubscribe = onSnapshot(historyQuery, (snapshot) => {
+            console.log('[HISTORY PC] Datos recibidos:', snapshot.size, 'partidas');
+            
+            if (snapshot.empty) {
+                console.log('[HISTORY PC] No hay datos de partidas');
+                if (historyList) {
+                    historyList.innerHTML = '<div class="empty-state">No hay historial disponible</div>';
+                }
             return;
         }
 
-        querySnapshot.forEach((doc) => {
-            const matchData = doc.data();
-            const matchEntry = document.createElement('div');
-            // Añadir clase nueva para el estilo tarjeta
-            matchEntry.classList.add('match-entry', 'match-card'); 
-
-            // --- Preparar datos adicionales (sin cambios) ---
-            let resultIcon = '';
-            let resultText = matchData.result || 'Desconocido';
-            let resultClass = '';
-            switch(matchData.result) {
-                case 'victory':
-                    resultIcon = '<i class="fas fa-trophy result-icon"></i>';
-                    resultText = 'Victoria';
-                    resultClass = 'victory';
-                    break;
-                case 'defeat':
-                    resultIcon = '<i class="fas fa-times-circle result-icon"></i>';
-                    resultText = 'Derrota';
-                    resultClass = 'defeat';
-                    break;
-                case 'timeout':
-                    resultIcon = '<i class="fas fa-clock result-icon"></i>';
-                    resultText = 'Tiempo Agotado';
-                    resultClass = 'timeout';
-                    break;
-                default:
-                     resultIcon = '<i class="fas fa-question-circle result-icon"></i>';
-            }
-
-            let difficultyText = (matchData.difficulty || 'normal').charAt(0).toUpperCase() + (matchData.difficulty || 'normal').slice(1);
+            const matches = [];
             
-            let timeFormatted = 'N/A';
-            if (typeof matchData.timeSpent === 'number') {
-                const minutes = Math.floor(matchData.timeSpent / 60);
-                const seconds = matchData.timeSpent % 60;
-                timeFormatted = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            }
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                console.log('[HISTORY PC] Procesando partida:', data);
 
-            // CORREGIDO: Acceder a los errores dentro del primer jugador
-            let errorsValue = 'N/A';
-            if (matchData.players && Array.isArray(matchData.players) && matchData.players.length > 0 && matchData.players[0].errors !== undefined) {
-                errorsValue = matchData.players[0].errors;
-            }
-            const errorsText = errorsValue;
-            const passesText = matchData.passes !== undefined ? matchData.passes : 'N/A';
-            // --- Fin Preparar datos adicionales ---
-
-
-            let playerInfoHtml = '';
-            if (matchData.players && Array.isArray(matchData.players)) {
-                // Asumimos un solo jugador para PasalaChe por ahora
-                const player = matchData.players[0]; 
-                if(player) {
-                    playerInfoHtml = `
-                        <div class="player-name">${player.displayName || 'Jugador Anónimo'}</div>
-                        <div class="player-score">
-                            <span class="score-value">${player.score !== undefined ? player.score : 'N/A'}</span> Aciertos
-                        </div>
-                    `;
-                } else {
-                     playerInfoHtml = '<p>Datos de jugador no disponibles.</p>';
+                // Filtrar SOLO partidas de Pasala Che
+                if (data.gameMode === 'Pasalache' || data.gameMode === 'pasalache' || 
+                    data.gameType === 'pasalache' || data.gameType === 'pasala-che' || data.gameType === 'PasalaChe') {
+                    matches.push({
+                        id: doc.id,
+                        ...data
+                    });
                 }
-            } else {
-                playerInfoHtml = '<p>Datos de jugadores no disponibles.</p>';
+            });
+
+            console.log(`[HISTORY PC] Partidas procesadas: ${matches.length}`);
+
+            // Actualizar historial
+            if (historyList) {
+                const historyHTML = generateHistoryHTML(matches);
+                historyList.innerHTML = historyHTML;
+                console.log('[HISTORY PC] Historial actualizado');
             }
 
-            // --- NUEVA Estructura HTML para matchEntry (Estilo Tarjeta) --- 
-            matchEntry.innerHTML = `
-                <div class="match-card-header">
-                    <span class="match-date">
-                        <i class="far fa-calendar-alt"></i> <!-- Icono diferente -->
-                        ${formatFirebaseTimestamp(matchData.timestamp)}
-                    </span>
-                    <span class="match-result-badge ${resultClass}">
-                        ${resultIcon} ${resultText}
-                    </span>
-                </div>
-                <div class="match-card-body">
-                    ${playerInfoHtml}
-                </div>
-                <div class="match-card-footer">
-                    <span class="detail-item" title="Dificultad">
-                        <i class="fas fa-cogs"></i> ${difficultyText} <!-- Icono diferente -->
-                    </span>
-                    <span class="detail-item" title="Tiempo Empleado">
-                        <i class="far fa-clock"></i> ${timeFormatted} <!-- Icono diferente -->
-                    </span>
-                     <span class="detail-item error-count" title="Errores">
-                        <i class="fas fa-times"></i> ${errorsText} <!-- Cambiado icono a fa-times -->
-                     </span>
-                     <span class="detail-item" title="Pasadas">
-                        <i class="fas fa-forward"></i> ${passesText} <!-- Añadido pases -->
-                     </span>
-                </div>
-            `;
-            // --- Fin NUEVA Estructura HTML --- 
-
-            historyList.appendChild(matchEntry);
-        });
         }, (error) => {
-            // Manejo de errores del listener
-            console.error("Error al escuchar el historial: ", error);
-            historyList.innerHTML = '<p>Error al cargar el historial en tiempo real. Inténtalo de nuevo más tarde.</p>';
+            console.error('[HISTORY PC] Error en el listener:', error);
+            if (historyList) {
+                historyList.innerHTML = '<div class="empty-state">Error al cargar el historial</div>';
+            }
         });
 
-        // Podrías guardar 'unsubscribe' si fuera necesario detener el listener.
+        console.log('[HISTORY PC] Listener configurado correctamente');
+        return unsubscribe;
 
     } catch (error) {
-        // Error inicial al configurar la consulta (raro)
-        console.error("Error al configurar la consulta del historial: ", error);
-        historyList.innerHTML = '<p>Error al configurar la carga del historial.</p>';
+        console.error('[HISTORY PC] Error al configurar listener:', error);
+        if (historyList) {
+            historyList.innerHTML = '<div class="empty-state">Error de conexión</div>';
+        }
     }
 }
 
-// --- Cargar datos al iniciar la página --- (Sin cambios, llama a las funciones que AHORA configuran listeners)
-document.addEventListener('DOMContentLoaded', () => {
-    // Verificar que db esté inicializado correctamente
-    if (db) {
-    loadRanking();
-    loadHistory();
-    } else {
-        console.error("Firestore no está inicializado. No se puede cargar el ranking ni el historial.");
-        // Podrías mostrar mensajes de error en la UI aquí también si db es null
-        if (rankingBody) rankingBody.innerHTML = '<tr><td colspan="7">Error de conexión con la base de datos.</td></tr>'; // (asumiendo 7 cols)
-        if (historyList) historyList.innerHTML = '<p>Error de conexión con la base de datos.</p>';
+// --- Función para mostrar mensaje de carga inicial ---
+function showLoadingState() {
+    if (rankingBody) {
+        rankingBody.innerHTML = `
+            <tr>
+                <td colspan="7" class="loading-state">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <div style="width: 12px; height: 12px; background: var(--pasalache-primary); border-radius: 50%; animation: pulse 1.5s infinite;"></div>
+                        <span>Buscando a los cracks...</span>
+                    </div>
+                </td>
+            </tr>
+        `;
     }
-}); 
+    
+    if (historyList) {
+        historyList.innerHTML = `
+            <div class="loading-state">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <div style="width: 12px; height: 12px; background: var(--pasalache-primary); border-radius: 50%; animation: pulse 1.5s infinite;"></div>
+                    <span>Revisando tus partidos...</span>
+                </div>
+            </div>
+        `;
+    }
+}
 
-// --- Función auxiliar para formatear tiempo (puede ser null) ---
-// function formatFirestoreTime(totalSeconds) {
-//     if (totalSeconds === null || typeof totalSeconds === 'undefined' || totalSeconds <= 0) {
-//         return '--:--';
-//     }
-//     const minutes = Math.floor(totalSeconds / 60);
-//     const seconds = totalSeconds % 60;
-//     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
-// } 
+// --- Inicializar cuando el DOM esté listo ---
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('[RANKING PC] DOM loaded, configurando ranking optimizado...');
+    
+    // Mostrar estado de carga
+    showLoadingState();
+    
+    // Configurar listeners con demora para asegurar inicialización de Firebase
+    setTimeout(() => {
+    if (db) {
+            setupRankingListener();
+            setupHistoryListener();
+    } else {
+            console.error('[RANKING PC] Firebase no está inicializado');
+            if (rankingBody) {
+                rankingBody.innerHTML = '<tr><td colspan="7" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+            }
+        }
+    }, 1000);
+}); 

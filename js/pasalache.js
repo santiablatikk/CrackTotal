@@ -397,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
             lettersContainer.appendChild(letterElement);
 
-            // Add click event to jump to that letter
+            // Add click event to jump to that letter (solo para letras no contestadas o pendientes)
             letterElement.addEventListener('click', () => {
                 if (letterStatuses[letter] === 'unanswered' || letterStatuses[letter] === 'pending') {
                     goToLetter(letter);
@@ -498,15 +498,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // NUEVA COMPROBACIÓN: Si todas las letras restantes ya fueron respondidas incorrectamente
-        const allRemainingAreIncorrect = pendingLetters.every(letter => letterStatuses[letter] === 'incorrect');
-        if (pendingLetters.length > 0 && allRemainingAreIncorrect) {
-            console.log("Todas las letras pendientes han sido respondidas incorrectamente. Finalizando juego.");
-            // Si se llegó aquí, no se ganó y todas las letras tuvieron su oportunidad y fueron incorrectas.
-            // Se considera una derrota porque el rosco no se completó satisfactoriamente.
-            endGame('defeat'); 
-            return;
-        }
+        // Las letras incorrectas ya no están en pendingLetters, por lo que esta verificación ya no es necesaria
 
         const currentLetter = pendingLetters[currentLetterIndex];
         // <<<--- LÓGICA PARA 'todas_letras_pasadas_una_vuelta' --- >>>
@@ -639,7 +631,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // letrasVisitadasEnVueltaActual.clear(); // Si el logro fuera por *cada* vuelta completa
             // <<<--- FIN RESET --- >>>
 
-            // Al completar una vuelta, limpiar el estado "pending"
+            // Al completar una vuelta, limpiar el estado "pending" para que las letras puedan volver a jugarse
             if (completedRounds > 0) {
                 for (let letter of pendingLetters) {
                     if (letterStatuses[letter] === 'pending') {
@@ -727,6 +719,22 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Mark letter status
                 letterStatuses[currentLetter] = 'incorrect';
                 
+                // --- REMOVER LETRA INCORRECTA DE pendingLetters --- 
+                const indexToRemove = pendingLetters.indexOf(currentLetter);
+                if (indexToRemove > -1) {
+                    pendingLetters.splice(indexToRemove, 1);
+                    
+                    // Ajustar el índice actual para que no se salte la siguiente letra
+                    if (indexToRemove <= currentLetterIndex && currentLetterIndex > 0) {
+                        currentLetterIndex--;
+                    }
+                    
+                    // Si el índice actual está fuera de rango, volver al principio
+                    if (currentLetterIndex >= pendingLetters.length) {
+                        currentLetterIndex = 0;
+                    }
+                }
+                
                 // --- Check for DEFEAT --- 
                 if (incorrectAnswers >= maxErrors) {
                     saveProfileStats(profileStats); 
@@ -734,20 +742,36 @@ document.addEventListener('DOMContentLoaded', function() {
                     return; // Stop execution
                 }
 
-                // --- NUEVA VERIFICACIÓN DE ROSCO COMPLETO (POR RESPUESTAS TOTALES) ---
-                if (correctAnswers + incorrectAnswers === alphabet.length) {
+                // --- VERIFICACIÓN DE ROSCO COMPLETO (TODAS LAS LETRAS CONTESTADAS) ---
+                if (pendingLetters.length === 0) {
                     saveProfileStats(profileStats);
-                    // Si llegamos aquí, es porque incorrectAnswers < maxErrors (chequeo previo)
-                    // y el rosco está completo.
-                    endGame('victory');
+                    // Si no quedan letras pendientes, el rosco está completo
+                    // La victoria depende de si no se superó el máximo de errores
+                    if (incorrectAnswers < maxErrors) {
+                        endGame('victory');
+                    } else {
+                        endGame('defeat');
+                    }
                     return; // Juego terminado
                 }
                 
-                // --- Update UI and move to next letter --- 
+                // --- Update UI --- 
                 updateScoreDisplays();
                 updateLetterStyles();
-                // DO NOT remove from pendingLetters
-                nextLetter(); // Move to the next letter immediately
+                
+                // Si no quedan letras pendientes después de este error, el juego debe terminar
+                if (pendingLetters.length === 0) {
+                    saveProfileStats(profileStats);
+                    if (incorrectAnswers < maxErrors) {
+                        endGame('victory');
+                    } else {
+                        endGame('defeat');
+                    }
+                    return;
+                }
+                
+                // Cargar la siguiente pregunta (el índice ya fue ajustado arriba)
+                loadQuestion();
 
             } else {
                 // --- CORRECT --- 
@@ -790,22 +814,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     currentLetterIndex = 0; 
                 } // No change needed if index is still valid
 
-                // --- VERIFICACIÓN PRINCIPAL: ROSCO COMPLETO (TODAS LAS LETRAS ACERTADAS) ---
+                // --- VERIFICACIÓN: ROSCO COMPLETO (NO QUEDAN LETRAS PENDIENTES) ---
                 if (pendingLetters.length === 0) {
                     saveProfileStats(profileStats); // Guardar stats antes de llamar a endGame
-                    endGame('victory'); // Victoria al completar el rosco (todas las letras acertadas)
+                    endGame('victory'); // Victoria al completar el rosco
                     return; // Stop execution
-                }
-
-                // --- VERIFICACIÓN SECUNDARIA: TODAS LAS PREGUNTAS RESPONDIDAS ---
-                if (correctAnswers + incorrectAnswers === alphabet.length) {
-                    saveProfileStats(profileStats); 
-                    if (incorrectAnswers < maxErrors) {
-                        endGame('victory'); // Victoria por límites de error
-                    } else {
-                        endGame('defeat'); // Se completó, pero con demasiados errores
-                    }
-                    return; // Juego terminado
                 }
 
                 // Condición 2: Victoria anticipada por alto rendimiento
@@ -1101,6 +1114,17 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (letterStatuses[currentLetter] === 'unanswered') {
             // Mark as pending even if silent, so it cycles
             letterStatuses[currentLetter] = 'pending';
+        }
+
+        // Check if game should end (no more letters to play)
+        if (pendingLetters.length === 0) {
+            saveProfileStats(profileStats);
+            if (incorrectAnswers < maxErrors) {
+                endGame('victory');
+            } else {
+                endGame('defeat');
+            }
+            return;
         }
 
         nextLetter();

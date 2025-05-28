@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <script>
@@ -24,7 +24,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crack Total - Selecciona un Juego</title>
     <meta name="description" content="Elegí tu desafío en Crack Total: Pasala Che (Rosco), Quien Sabe Más y más juegos de fútbol. ¡Demostrá tu conocimiento!">
-    <link rel="icon" href="/portada.ico" type="image/x-icon">
+    <link rel="icon" href="/portada.ico?v=202505272312" type="image/x-icon">
     <link rel="canonical" href="https://cracktotal.com/games.html">
     <link rel="alternate" hreflang="es" href="https://cracktotal.com/games.html" />
 
@@ -54,11 +54,11 @@
     </script>
 
     <!-- CSS Links -->
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/landing.css">
-    <link rel="stylesheet" href="css/modals.css">
-    <link rel="stylesheet" href="css/qsm.css">
+    <link rel="stylesheet" href="css/base.css?v=202505272312">
+    <link rel="stylesheet" href="css/layout.css?v=202505272312">
+    <link rel="stylesheet" href="css/landing.css?v=202505272312">
+    <link rel="stylesheet" href="css/modals.css?v=202505272312">
+    <link rel="stylesheet" href="css/qsm.css?v=202505272312">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
@@ -862,7 +862,7 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=202505272312"></script>
 </head>
 <body>
     <!-- Skip Link para accesibilidad -->
@@ -1115,18 +1115,129 @@
 
     <!-- Service Worker Registration -->
     <script>
-        // Registrar Service Worker
+        // Registrar Service Worker con mejor manejo de actualizaciones
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
                     .then(registration => {
                         console.log('[SW] Service Worker registrado exitosamente:', registration.scope);
+                        
+                        // Escuchar actualizaciones del SW
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            console.log('[SW] Nueva versión del Service Worker encontrada');
+                            
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed') {
+                                    if (navigator.serviceWorker.controller) {
+                                        // Nueva versión disponible, mostrar notificación
+                                        console.log('[SW] Nueva versión disponible, actualizando...');
+                                        showUpdateNotification();
+                                    } else {
+                                        // Primera instalación
+                                        console.log('[SW] Service Worker instalado por primera vez');
+                                    }
+                                }
+                            });
+                        });
+                        
+                        // Verificar si hay actualizaciones periódicamente
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // Verificar cada minuto
+                        
                     })
                     .catch(error => {
                         console.log('[SW] Error al registrar Service Worker:', error);
                     });
+                
+                // Escuchar mensajes del Service Worker
+                navigator.serviceWorker.addEventListener('message', event => {
+                    if (event.data && event.data.type === 'SW_UPDATED') {
+                        console.log(`[SW] Service Worker actualizado a versión ${event.data.version}`);
+                        // Opcionalmente recargar la página o mostrar notificación
+                        setTimeout(() => {
+                            if (confirm('¡Nueva versión disponible! ¿Quieres recargar la página para obtener las últimas mejoras?')) {
+                                window.location.reload(true);
+                            }
+                        }, 1000);
+                    }
+                });
             });
         }
+        
+        // Función para mostrar notificación de actualización
+        function showUpdateNotification() {
+            // Crear un elemento de notificación
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4CAF50;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-family: 'Montserrat', sans-serif;
+                max-width: 300px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            `;
+            notification.innerHTML = `
+                <strong>¡Actualización disponible!</strong><br>
+                <small>Haz clic para obtener la última versión</small>
+            `;
+            
+            notification.onclick = () => {
+                window.location.reload(true);
+            };
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remover después de 10 segundos
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 300);
+                }
+            }, 10000);
+        }
+        
+        // Función para limpiar cache manualmente (útil para debugging)
+        function clearSiteCache() {
+            if ('caches' in window) {
+                caches.keys().then(cacheNames => {
+                    return Promise.all(
+                        cacheNames.map(cacheName => {
+                            console.log('[Cache] Eliminando cache:', cacheName);
+                            return caches.delete(cacheName);
+                        })
+                    );
+                }).then(() => {
+                    console.log('[Cache] Todos los caches eliminados');
+                    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+                        navigator.serviceWorker.controller.postMessage({
+                            type: 'CLEAR_CACHE'
+                        });
+                    }
+                    // Recargar la página para obtener contenido fresco
+                    window.location.reload(true);
+                });
+            }
+        }
+        
+        // Agregar evento al ctrl+shift+r para limpiar cache
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === 'R') {
+                e.preventDefault();
+                console.log('[Cache] Limpieza manual de cache solicitada');
+                clearSiteCache();
+            }
+        });
     </script>
 
     <!-- Script para manejar los clicks en los botones de jugar -->

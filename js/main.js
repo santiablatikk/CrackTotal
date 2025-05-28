@@ -757,10 +757,10 @@ function registerServiceWorker() {
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                             console.log('🆕 Nueva versión del Service Worker disponible');
                             
-                            // Opcionalmente mostrar notificación de actualización
-                            if (confirm('Hay una nueva versión disponible. ¿Quieres recargar la página?')) {
-                                window.location.reload();
-                            }
+                            // Comentado: Evitar mostrar diálogo automático en cada recarga
+                            // if (confirm('Hay una nueva versión disponible. ¿Quieres recargar la página?')) {
+                            //     window.location.reload();
+                            // }
                         }
                     });
                 });

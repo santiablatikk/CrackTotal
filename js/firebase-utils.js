@@ -45,7 +45,8 @@ export async function ensureUserProfile() {
         const defaultStats = {
             pasalache: { played: 0, wins: 0, score: 0, correctAnswers: 0, incorrectAnswers: 0 },
             quiensabemas: { played: 0, wins: 0, score: 0 },
-            mentiroso: { played: 0, wins: 0, score: 0 }
+            mentiroso: { played: 0, wins: 0, score: 0 },
+            crackrapido: { played: 0, wins: 0, score: 0, correctAnswers: 0, bestStreak: 0 }
         };
 
         if (!userSnap.exists()) {
@@ -238,6 +239,81 @@ export async function saveMentirosoResult(gameStats) {
         return true;
     } catch (error) {
         console.error("[saveMentirosoResult] CRITICAL ERROR saving El Mentiroso data:", error);
+        return false;
+    }
+}
+
+export async function saveCrackRapidoResult(gameStats) {
+    console.log('[saveCrackRapidoResult] CALLED with gameStats:', gameStats);
+    if (!db) {
+        console.error("[saveCrackRapidoResult] DB is not initialized. Cannot save result.");
+        return false;
+    }
+    try {
+        const userId = await ensureUserProfile();
+        const displayName = getUserDisplayName();
+        console.log(`[saveCrackRapidoResult] User ID: ${userId}, Display Name: ${displayName}`);
+
+        const matchData = {
+            gameType: "crackrapido",
+            playerName: displayName,
+            playerUid: userId,
+            timestamp: serverTimestamp(),
+            result: gameStats.result,
+            score: gameStats.score || 0,
+            correctAnswers: gameStats.correctAnswers || 0,
+            totalQuestions: gameStats.totalQuestions || 20,
+            maxStreak: gameStats.maxStreak || 0,
+            averageTime: gameStats.averageTime || 0,
+            totalTime: gameStats.totalTime || 0,
+            players: [{
+                displayName: displayName,
+                playerId: userId,
+                score: gameStats.score || 0,
+                correctAnswers: gameStats.correctAnswers || 0,
+                maxStreak: gameStats.maxStreak || 0
+            }]
+        };
+        console.log('[saveCrackRapidoResult] Saving match document:', matchData);
+        await addDoc(collection(db, "matches"), matchData);
+        console.log('[saveCrackRapidoResult] Match document saved.');
+
+        const userRef = doc(db, "users", userId);
+        const userStatsUpdate = {
+            "stats.crackrapido.played": increment(1),
+            "stats.crackrapido.score": increment(gameStats.score || 0),
+            "stats.crackrapido.correctAnswers": increment(gameStats.correctAnswers || 0)
+        };
+
+        // Actualizar best streak si es mayor
+        if (gameStats.maxStreak > 0) {
+            const userDoc = await getDoc(userRef);
+            if (userDoc.exists()) {
+                const userData = userDoc.data();
+                const currentBestStreak = userData?.stats?.crackrapido?.bestStreak || 0;
+                if (gameStats.maxStreak > currentBestStreak) {
+                    userStatsUpdate["stats.crackrapido.bestStreak"] = gameStats.maxStreak;
+                    console.log(`[saveCrackRapidoResult] New best streak: ${gameStats.maxStreak}`);
+                }
+            } else {
+                userStatsUpdate["stats.crackrapido.bestStreak"] = gameStats.maxStreak;
+            }
+        }
+
+        console.log('[saveCrackRapidoResult] Updating user stats:', userStatsUpdate);
+        await updateDoc(userRef, userStatsUpdate);
+        console.log('[saveCrackRapidoResult] User stats updated.');
+
+        if (gameStats.result === "completed") {
+            console.log('[saveCrackRapidoResult] Incrementing wins for user.');
+            await updateDoc(userRef, { "stats.crackrapido.wins": increment(1) });
+            console.log('[saveCrackRapidoResult] User wins incremented.');
+        }
+
+        console.log("[saveCrackRapidoResult] COMPLETED successfully for Crack Rápido.");
+        return true;
+    } catch (error) {
+        console.error("[saveCrackRapidoResult] CRITICAL ERROR saving Crack Rápido data:", error);
         return false;
     }
 }

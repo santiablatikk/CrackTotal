@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <script>
@@ -127,20 +127,24 @@
     <!-- Main Content -->
     <main class="game-content" id="main-content">
         <!-- Enlaces de navegación -->
-        <div style="margin-bottom: 1.5rem; text-align: left; display: flex; gap: 10px; flex-wrap: wrap;">
-            <a href="profile.html" class="profile-link small-button">
+        <div class="navigation-buttons">
+            <a href="profile.html" class="nav-button">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 Mi Perfil
             </a>
-            <a href="ranking-quiensabemas.html" class="profile-link small-button">
+            <a href="ranking-quiensabemas.html" class="nav-button quiensabemas">
                 <i class="fas fa-brain"></i>
                 Ranking Quién Sabe Más
             </a>
-            <a href="ranking-mentiroso.html" class="profile-link small-button">
+            <a href="ranking-mentiroso.html" class="nav-button mentiroso">
                 <i class="fas fa-mask"></i>
                 Ranking Mentiroso
             </a>
-            <a href="pasalache.html" class="profile-link small-button">
+            <a href="ranking-crackrapido.html" class="nav-button crackrapido">
+                <i class="fas fa-bolt"></i>
+                Ranking Crack Rápido
+            </a>
+            <a href="pasalache.html" class="nav-button">
                 <i class="fas fa-play"></i>
                 Jugar Pasala Che
             </a>
@@ -148,25 +152,29 @@
 
         <!-- Sección Ranking -->
         <div class="ranking-container">
-            <h2><i class="fas fa-trophy"></i>Ranking Pasala Che (Top 50)</h2>
+            <h2 class="ranking-title">
+                <i class="fas fa-trophy ranking-title-icon"></i>
+                Ranking Pasala Che (TOP 15)
+            </h2>
              <div class="table-responsive-wrapper">
-                <table class="history-table ranking-table">
+                <table class="ranking-table">
                     <thead>
                         <tr>
-                            <th class="rank-cell">#</th>
-                            <th class="player-cell">Jugador/a</th>
-                            <th class="score-cell">Puntaje Total</th>
-                            <th class="matches-cell">Partidas</th>
-                            <th class="wins-cell">Victorias</th>
-                            <th class="losses-cell">Derrotas</th>
-                            <th class="accuracy-cell">Precisión</th>
-                            <!-- <th class="time-cell">Mejor Tiempo (Pasala)</th> -->
+                            <th>Posición</th>
+                            <th>Jugador</th>
+                            <th>Puntaje Total</th>
+                            <th class="hide-mobile">Partidas</th>
+                            <th>Victorias</th>
+                            <th class="hide-mobile">Derrotas</th>
+                            <th class="hide-mobile">Precisión</th>
                         </tr>
                     </thead>
                     <tbody id="ranking-body">
                         <!-- Las filas se llenarán dinámicamente -->
                         <tr>
-                            <td colspan="7" style="text-align:center; padding: 20px;">Buscando a los cracks... Si tarda, ¡quizás sos el primero!</td>
+                            <td colspan="7" class="loading-state">
+                                Buscando a los cracks... Si tarda, ¡quizás sos el primero! 🏆
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -183,10 +191,13 @@
 
         <!-- Sección Historial de Partidas del Usuario Actual -->
          <div class="history-container">
-            <h2><i class="fas fa-history"></i>Tu Historial (Pasala Che)</h2>
-            <div id="history-list" class="match-history-list">
+            <h2 class="history-title">
+                <i class="fas fa-history history-title-icon"></i>
+                HISTORIAL (Pasala Che)
+            </h2>
+            <div id="history-list" class="history-list">
                 <!-- Las tarjetas de partidas se llenarán dinámicamente con JS -->
-                 <p class="loading-message" style="text-align:center; padding: 20px;">Revisando tus partidos... Si no ves nada, ¡mandale mecha a jugar!</p>
+                 <div class="loading-state">Revisando tus partidos... Si no ves nada, ¡mandale mecha a jugar!</div>
             </div>
         </div>
 
