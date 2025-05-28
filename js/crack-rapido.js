@@ -343,6 +343,12 @@ class CrackRapido {
                 options: ["10 metros", "11 metros", "12 metros", "13 metros"],
                 correct: 1
             },
+            {
+                category: "Reglas",
+                question: "¿Cuánto dura el tiempo añadido máximo permitido?",
+                options: ["No hay límite", "10 minutos", "15 minutos", "20 minutos"],
+                correct: 0
+            },
 
             // Historia
             {
@@ -1124,59 +1130,35 @@ class CrackRapido {
                 correct: 2
             },
 
-            // CURIOSIDADES FUTBOLÍSTICAS
+            // CURIOSIDADES Y DATOS ÚNICOS
             {
                 category: "Curiosidades",
-                question: "¿Cuál es el club más antiguo del mundo aún en actividad?",
-                options: ["Sheffield FC", "Notts County", "Hallam FC", "Cambridge University"],
-                correct: 0
-            },
-            {
-                category: "Curiosidades",
-                question: "¿En qué país se inventó el corner?",
-                options: ["Inglaterra", "Escocia", "Gales", "Irlanda"],
+                question: "¿Cuál es el único país que jugó todos los Mundiales?",
+                options: ["Argentina", "Brasil", "Alemania", "Italia"],
                 correct: 1
             },
             {
                 category: "Curiosidades",
-                question: "¿Cuál fue el primer club en usar números en las camisetas?",
+                question: "¿En qué país se inventó el tiro penal?",
+                options: ["Inglaterra", "Escocia", "Irlanda", "Gales"],
+                correct: 2
+            },
+            {
+                category: "Curiosidades",
+                question: "¿Cuál fue el primer club en usar números?",
                 options: ["Arsenal", "Chelsea", "Liverpool", "Manchester United"],
                 correct: 0
             },
             {
                 category: "Curiosidades",
-                question: "¿En qué año se permitió a los arqueros usar las manos?",
-                options: ["1870", "1871", "1872", "1873"],
-                correct: 1
-            },
-            {
-                category: "Curiosidades",
-                question: "¿Cuál es el gol olímpico más famoso de la historia?",
-                options: ["Pelé 1970", "Maradona 1986", "Cesáreo Onzari 1924", "Beckham 1996"],
-                correct: 2
-            },
-            {
-                category: "Curiosidades",
-                question: "¿Qué jugador marcó el primer gol televisado?",
-                options: ["Stanley Matthews", "Tommy Lawton", "Barney Allen", "Alex James"],
-                correct: 2
-            },
-            {
-                category: "Curiosidades",
-                question: "¿En qué Mundial se usó por primera vez la pelota blanca?",
-                options: ["Chile 1962", "Inglaterra 1966", "México 1970", "Alemania 1974"],
-                correct: 2
-            },
-            {
-                category: "Curiosidades",
-                question: "¿Cuál es el club con más socios en el mundo?",
-                options: ["Barcelona", "Real Madrid", "Bayern Munich", "Manchester United"],
+                question: "¿En qué Mundial se usó la pelota blanca por primera vez?",
+                options: ["México 1970", "Alemania 1974", "Argentina 1978", "España 1982"],
                 correct: 0
             },
             {
                 category: "Curiosidades",
-                question: "¿Qué jugador marcó más autogoles en la historia?",
-                options: ["Richard Dunne", "Jamie Carragher", "Frank Sinclair", "Gary Neville"],
+                question: "¿Cuál es el club con más socios del mundo?",
+                options: ["Barcelona", "Real Madrid", "Bayern", "Manchester United"],
                 correct: 0
             },
             {
@@ -1185,67 +1167,883 @@ class CrackRapido {
                 options: ["1925", "1926", "1927", "1928"],
                 correct: 0
             },
-
-            // REGLAS Y ARBITRAJE
             {
-                category: "Reglas",
-                question: "¿Cuánto tiempo tiene un arquero para sacar de puerta?",
-                options: ["6 segundos", "8 segundos", "10 segundos", "12 segundos"],
+                category: "Curiosidades",
+                question: "¿Quién marcó el primer gol olímpico de la historia?",
+                options: ["Cesáreo Onzari", "Carlos Gardel", "Ángel Labruna", "José Moreno"],
                 correct: 0
             },
             {
-                category: "Reglas",
-                question: "¿Desde cuándo existe la regla de los 6 segundos del arquero?",
-                options: ["1995", "1997", "1999", "2001"],
+                category: "Curiosidades",
+                question: "¿Cuál es el derby más antiguo del mundo?",
+                options: ["Real Sociedad vs Athletic", "Sheffield vs Hallam", "Rangers vs Celtic", "Liverpool vs Everton"],
                 correct: 1
             },
             {
-                category: "Reglas",
-                question: "¿Cuántos metros debe estar la barrera en un tiro libre?",
-                options: ["9.15", "9.20", "9.25", "9.30"],
-                correct: 0
-            },
-            {
-                category: "Reglas",
-                question: "¿En qué año se implementó la tarjeta amarilla?",
-                options: ["1968", "1970", "1972", "1974"],
-                correct: 1
-            },
-            {
-                category: "Reglas",
-                question: "¿Cuántos jugadores mínimo debe tener un equipo para jugar?",
-                options: ["6", "7", "8", "9"],
-                correct: 1
-            },
-            {
-                category: "Reglas",
-                question: "¿Desde cuándo se puede hacer el cambio de 5 jugadores?",
-                options: ["2018", "2019", "2020", "2021"],
+                category: "Curiosidades",
+                question: "¿En qué año se permitió jugar a las mujeres en Inglaterra?",
+                options: ["1969", "1970", "1971", "1972"],
                 correct: 2
             },
             {
-                category: "Reglas",
-                question: "¿Cuánto mide un arco de fútbol de ancho?",
-                options: ["7.30m", "7.32m", "7.34m", "7.36m"],
-                correct: 1
+                category: "Curiosidades",
+                question: "¿Cuál fue el primer Mundial transmitido por televisión?",
+                options: ["Uruguay 1930", "Italia 1934", "Francia 1938", "Brasil 1950"],
+                correct: 2
             },
             {
-                category: "Reglas",
-                question: "¿En qué año se implementó el VAR por primera vez?",
-                options: ["2016", "2017", "2018", "2019"],
-                correct: 1
-            },
-            {
-                category: "Reglas",
-                question: "¿Cuándo se puede hacer un saque de banda con las manos?",
-                options: ["Siempre", "Solo el arquero", "En situaciones especiales", "Nunca"],
+                category: "Curiosidades",
+                question: "¿En qué país se jugó el primer partido nocturno?",
+                options: ["Inglaterra", "Argentina", "Brasil", "Uruguay"],
                 correct: 0
             },
             {
-                category: "Reglas",
-                question: "¿Cuánto dura el tiempo añadido máximo permitido?",
-                options: ["No hay límite", "10 minutos", "15 minutos", "20 minutos"],
+                category: "Curiosidades",
+                question: "¿Cuál es el estadio más alto del mundo?",
+                options: ["Estadio Hernando Siles", "Estadio Nacional", "Estadio Atanasio", "Estadio Paz"],
                 correct: 0
+            },
+            {
+                category: "Curiosidades",
+                question: "¿En qué año se creó la FIFA?",
+                options: ["1902", "1904", "1906", "1908"],
+                correct: 1
+            },
+            {
+                category: "Curiosidades",
+                question: "¿Cuál fue el primer equipo en ganar la triple corona?",
+                options: ["Celtic", "Ajax", "Inter", "Barcelona"],
+                correct: 0
+            },
+            {
+                category: "Curiosidades",
+                question: "¿En qué Mundial se usó el VAR por primera vez?",
+                options: ["Brasil 2014", "Rusia 2018", "Qatar 2022", "Francia 1998"],
+                correct: 1
+            },
+
+            // MÁS JUGADORES HISTÓRICOS
+            {
+                category: "Jugadores",
+                question: "¿En qué año se retiró Roberto Baggio?",
+                options: ["2003", "2004", "2005", "2006"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿Cuántos goles marcó Gerd Müller en Mundiales?",
+                options: ["12", "13", "14", "15"],
+                correct: 2
+            },
+            {
+                category: "Jugadores",
+                question: "¿En qué posición jugaba Michel Platini?",
+                options: ["Delantero", "Mediocampista", "Defensor", "Arquero"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿Cuántos Balones de Oro ganó Marco van Basten?",
+                options: ["2", "3", "4", "1"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿En qué club terminó su carrera George Best?",
+                options: ["Manchester United", "Fulham", "Hibernian", "San José Earthquakes"],
+                correct: 3
+            },
+            {
+                category: "Jugadores",
+                question: "¿Cuántos años tenía Pelé cuando ganó su primer Mundial?",
+                options: ["16", "17", "18", "19"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿En qué equipo jugaba Lothar Matthäus cuando ganó el Balón de Oro?",
+                options: ["Bayern", "Inter", "Borussia", "Juventus"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿Cuántos goles marcó Just Fontaine en Francia 1958?",
+                options: ["11", "12", "13", "14"],
+                correct: 2
+            },
+            {
+                category: "Jugadores",
+                question: "¿En qué año Zinedine Zidane ganó su único Balón de Oro?",
+                options: ["1997", "1998", "1999", "2000"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿Cuántas Champions League ganó Paolo Maldini?",
+                options: ["4", "5", "6", "7"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿En qué posición jugaba principalmente Franz Beckenbauer?",
+                options: ["Delantero", "Mediocampista", "Líbero", "Lateral"],
+                correct: 2
+            },
+            {
+                category: "Jugadores",
+                question: "¿Cuántos años jugó Francesco Totti en la Roma?",
+                options: ["23", "24", "25", "26"],
+                correct: 2
+            },
+            {
+                category: "Jugadores",
+                question: "¿En qué Mundial Fabio Cannavaro ganó el Balón de Oro?",
+                options: ["Francia 1998", "Corea-Japón 2002", "Alemania 2006", "Sudáfrica 2010"],
+                correct: 2
+            },
+            {
+                category: "Jugadores",
+                question: "¿Cuántos goles marcó Thierry Henry en Arsenal?",
+                options: ["226", "228", "230", "232"],
+                correct: 0
+            },
+            {
+                category: "Jugadores",
+                question: "¿En qué año Karim Benzema ganó el Balón de Oro?",
+                options: ["2021", "2022", "2023", "2024"],
+                correct: 1
+            },
+
+            // === NUEVAS PREGUNTAS MASIVAS ===
+
+            // JUGADORES CONTEMPORÁNEOS
+            {
+                category: "Jugadores",
+                question: "¿En qué año Bellingham se mudó al Real Madrid?",
+                options: ["2022", "2023", "2024", "2025"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿De qué club fichó el City a Grealish?",
+                options: ["Birmingham", "Aston Villa", "Leicester", "West Ham"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿Cuántos goles hizo Haaland en su debut con el City?",
+                options: ["1", "2", "3", "4"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿En qué posición juega principalmente Tchouaméni?",
+                options: ["Delantero", "Mediocampista", "Defensor", "Arquero"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿De qué país es Gavi?",
+                options: ["Portugal", "España", "Brasil", "Argentina"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿En qué club jugaba Osimhen antes del Napoli?",
+                options: ["Lille", "Ajax", "Porto", "Benfica"],
+                correct: 0
+            },
+            {
+                category: "Jugadores",
+                question: "¿Cuál es el nombre completo de Vini Jr?",
+                options: ["Vinícius José Paixão", "Vinícius Santos Silva", "Vinícius Tobias", "Vinícius José Santos"],
+                correct: 0
+            },
+            {
+                category: "Jugadores",
+                question: "¿En qué año nació Kylian Mbappé?",
+                options: ["1998", "1999", "2000", "2001"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿Qué número usa Pedri en el Barcelona?",
+                options: ["6", "8", "16", "21"],
+                correct: 2
+            },
+            {
+                category: "Jugadores",
+                question: "¿De qué club salió Alphonso Davies?",
+                options: ["Vancouver Whitecaps", "Toronto FC", "Montreal Impact", "Edmonton FC"],
+                correct: 0
+            },
+            {
+                category: "Jugadores",
+                question: "¿En qué año debutó Jamal Musiala con Alemania?",
+                options: ["2020", "2021", "2022", "2023"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿Cuál es la nacionalidad de Aurélien Tchouaméni?",
+                options: ["Camerunesa", "Francesa", "Marfileña", "Senegalesa"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿En qué club debutó profesionalmente Gavi?",
+                options: ["Barcelona B", "Barcelona", "Sevilla", "Real Betis"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿Cuántos años tenía Ansu Fati cuando debutó en el Barcelona?",
+                options: ["15", "16", "17", "18"],
+                correct: 1
+            },
+            {
+                category: "Jugadores",
+                question: "¿En qué posición juega João Félix?",
+                options: ["Mediocampista", "Delantero", "Extremo", "Todas las anteriores"],
+                correct: 3
+            },
+
+            // CLUBES MUNDIALES EXPANDIDO
+            {
+                category: "Clubes",
+                question: "¿En qué año se fundó el Paris Saint-Germain?",
+                options: ["1970", "1971", "1972", "1973"],
+                correct: 0
+            },
+            {
+                category: "Clubes",
+                question: "¿Cuál es el apodo del Atalanta?",
+                options: ["La Dea", "I Nerazzurri", "Gli Orobici", "Ambas A y C"],
+                correct: 3
+            },
+            {
+                category: "Clubes",
+                question: "¿En qué ciudad está el RB Leipzig?",
+                options: ["Leipzig", "Berlín", "Hamburg", "Dresden"],
+                correct: 0
+            },
+            {
+                category: "Clubes",
+                question: "¿Cuántas ligas ganó el Leicester City?",
+                options: ["0", "1", "2", "3"],
+                correct: 1
+            },
+            {
+                category: "Clubes",
+                question: "¿Cuál es el estadio del Napoli?",
+                options: ["San Paolo", "Diego Armando Maradona", "Stadio Napoli", "San Gennaro"],
+                correct: 1
+            },
+            {
+                category: "Clubes",
+                question: "¿En qué año ascendió el Girona a Primera División?",
+                options: ["2016", "2017", "2022", "2023"],
+                correct: 2
+            },
+            {
+                category: "Clubes",
+                question: "¿Cuál es el apodo del Brighton?",
+                options: ["The Seagulls", "The Seagulls", "The Eagles", "The Magpies"],
+                correct: 0
+            },
+            {
+                category: "Clubes",
+                question: "¿En qué liga juega el FC Porto?",
+                options: ["Liga NOS", "Primeira Liga", "Liga Portugal", "Liga Portuguesa"],
+                correct: 2
+            },
+            {
+                category: "Clubes",
+                question: "¿En qué año se fundó el Borussia Dortmund?",
+                options: ["1907", "1908", "1909", "1910"],
+                correct: 2
+            },
+            {
+                category: "Clubes",
+                question: "¿Cuál es el apodo del West Ham?",
+                options: ["The Irons", "The Hammers", "The Clarets", "Todas las anteriores"],
+                correct: 3
+            },
+            {
+                category: "Clubes",
+                question: "¿En qué año el Montpellier ganó la Ligue 1?",
+                options: ["2011", "2012", "2013", "2014"],
+                correct: 1
+            },
+            {
+                category: "Clubes",
+                question: "¿Cuál es el estadio del Eintracht Frankfurt?",
+                options: ["Commerzbank Arena", "Deutsche Bank Park", "Waldstadion", "Todas las anteriores"],
+                correct: 3
+            },
+            {
+                category: "Clubes",
+                question: "¿En qué división juega actualmente el Hamburgo?",
+                options: ["Bundesliga", "2. Bundesliga", "3. Liga", "Regionalliga"],
+                correct: 1
+            },
+            {
+                category: "Clubes",
+                question: "¿Cuántas Premier League ganó el Arsenal?",
+                options: ["3", "4", "5", "6"],
+                correct: 0
+            },
+
+            // MUNDIALES Y COMPETICIONES EXTENDIDO
+            {
+                category: "Mundiales",
+                question: "¿Quién fue el arquero titular de Argentina en Qatar 2022?",
+                options: ["Franco Armani", "Emiliano Martínez", "Juan Musso", "Gerónimo Rulli"],
+                correct: 1
+            },
+            {
+                category: "Mundiales",
+                question: "¿Cuántos penales atajó Emiliano Martínez en toda la Copa del Mundo?",
+                options: ["3", "4", "5", "6"],
+                correct: 1
+            },
+            {
+                category: "Mundiales",
+                question: "¿Qué jugador marcó el primer gol de Argentina en Qatar 2022?",
+                options: ["Messi", "Di María", "Lautaro", "Mac Allister"],
+                correct: 0
+            },
+            {
+                category: "Mundiales",
+                question: "¿Contra qué equipo Argentina perdió en fase de grupos?",
+                options: ["Polonia", "México", "Arabia Saudí", "No perdió"],
+                correct: 2
+            },
+            {
+                category: "Mundiales",
+                question: "¿Cuántos goles marcó Messi en Qatar 2022?",
+                options: ["5", "6", "7", "8"],
+                correct: 2
+            },
+            {
+                category: "Mundiales",
+                question: "¿En qué año Francia ganó su primer Mundial?",
+                options: ["1998", "2018", "1984", "2000"],
+                correct: 0
+            },
+            {
+                category: "Mundiales",
+                question: "¿Cuál fue la sede del Mundial 2010?",
+                options: ["Brasil", "Sudáfrica", "Alemania", "Rusia"],
+                correct: 1
+            },
+            {
+                category: "Mundiales",
+                question: "¿Quién ganó la Bota de Oro en Rusia 2018?",
+                options: ["Lukaku", "Kane", "Griezmann", "Modric"],
+                correct: 1
+            },
+            {
+                category: "Mundiales",
+                question: "¿En qué Mundial debutó el VAR?",
+                options: ["Brasil 2014", "Rusia 2018", "Qatar 2022", "Ninguno"],
+                correct: 1
+            },
+            {
+                category: "Mundiales",
+                question: "¿Cuántas veces Italia ganó el Mundial?",
+                options: ["3", "4", "5", "2"],
+                correct: 1
+            },
+            {
+                category: "Mundiales",
+                question: "¿En qué año se jugó el Mundial de Estados Unidos?",
+                options: ["1992", "1994", "1996", "1998"],
+                correct: 1
+            },
+            {
+                category: "Mundiales",
+                question: "¿Quién fue el goleador del Mundial de Alemania 2006?",
+                options: ["Klose", "Henry", "Villa", "Crespo"],
+                correct: 0
+            },
+            {
+                category: "Mundiales",
+                question: "¿Cuántos equipos participaron en el primer Mundial?",
+                options: ["13", "16", "18", "20"],
+                correct: 0
+            },
+            {
+                category: "Mundiales",
+                question: "¿Qué país será sede del Mundial 2030?",
+                options: ["Argentina-Uruguay-Paraguay", "España-Portugal-Marruecos", "Ambas", "No se decidió"],
+                correct: 2
+            },
+            {
+                category: "Mundiales",
+                question: "¿En qué Mundial se usó la pelota Jabulani?",
+                options: ["Alemania 2006", "Sudáfrica 2010", "Brasil 2014", "Rusia 2018"],
+                correct: 1
+            },
+
+            // ARGENTINA PROFUNDA
+            {
+                category: "Argentina",
+                question: "¿En qué año Independiente ganó su última Copa Libertadores?",
+                options: ["1984", "1985", "1986", "1987"],
+                correct: 0
+            },
+            {
+                category: "Argentina",
+                question: "¿Cuál es el apodo de Defensa y Justicia?",
+                options: ["El Halcón", "El Halcón de Varela", "Los Halcones", "El Halcón Verde"],
+                correct: 0
+            },
+            {
+                category: "Argentina",
+                question: "¿En qué provincia juega Central Córdoba?",
+                options: ["Córdoba", "Santiago del Estero", "La Rioja", "Tucumán"],
+                correct: 1
+            },
+            {
+                category: "Argentina",
+                question: "¿Cuántas veces Newells fue campeón?",
+                options: ["5", "6", "7", "8"],
+                correct: 1
+            },
+            {
+                category: "Argentina",
+                question: "¿En qué año se fundó Talleres de Córdoba?",
+                options: ["1913", "1914", "1915", "1916"],
+                correct: 1
+            },
+            {
+                category: "Argentina",
+                question: "¿Cuál es el estadio de Huracán?",
+                options: ["Tomás Adolfo Ducó", "Presidente Perón", "Nuevo Gasómetro", "Libertadores de América"],
+                correct: 0
+            },
+            {
+                category: "Argentina",
+                question: "¿En qué año descendió Independiente por primera vez?",
+                options: ["2012", "2013", "2014", "Nunca descendió"],
+                correct: 3
+            },
+            {
+                category: "Argentina",
+                question: "¿Cuál es el apodo de Platense?",
+                options: ["El Calamar", "El Pulpo", "Los Calamares", "El Squid"],
+                correct: 0
+            },
+            {
+                category: "Argentina",
+                question: "¿En qué año Argentinos Juniors fue campeón por primera vez?",
+                options: ["1984", "1985", "1986", "1987"],
+                correct: 1
+            },
+            {
+                category: "Argentina",
+                question: "¿Cuál es el estadio de Colón de Santa Fe?",
+                options: ["Estadio Colón", "Brigadier López", "Santa Fe Stadium", "El Sabalero"],
+                correct: 1
+            },
+            {
+                category: "Argentina",
+                question: "¿En qué año se fundó Gimnasia La Plata?",
+                options: ["1887", "1888", "1889", "1890"],
+                correct: 2
+            },
+            {
+                category: "Argentina",
+                question: "¿Cuántas veces Estudiantes ganó el Mundial de Clubes?",
+                options: ["0", "1", "2", "3"],
+                correct: 1
+            },
+            {
+                category: "Argentina",
+                question: "¿En qué división juega actualmente Atlanta?",
+                options: ["Primera", "Primera Nacional", "Primera B", "Primera C"],
+                correct: 2
+            },
+            {
+                category: "Argentina",
+                question: "¿Cuál es el apodo de Tigre?",
+                options: ["El Matador", "Los Tigres", "El Tigre de Victoria", "Los Matadores"],
+                correct: 0
+            },
+            {
+                category: "Argentina",
+                question: "¿En qué año ascendió Barracas Central a Primera?",
+                options: ["2021", "2022", "2023", "2024"],
+                correct: 1
+            },
+
+            // EUROPA EXTENDIDA
+            {
+                category: "Europa",
+                question: "¿En qué año el Leicester ganó la Premier League?",
+                options: ["2015", "2016", "2017", "2018"],
+                correct: 1
+            },
+            {
+                category: "Europa",
+                question: "¿Cuál es el apodo del Crystal Palace?",
+                options: ["The Eagles", "The Crystals", "The Palace", "The Glaziers"],
+                correct: 0
+            },
+            {
+                category: "Europa",
+                question: "¿En qué año el Deportivo La Coruña ganó La Liga?",
+                options: ["1999", "2000", "2001", "2002"],
+                correct: 1
+            },
+            {
+                category: "Europa",
+                question: "¿Cuál es el estadio del Bayer Leverkusen?",
+                options: ["BayArena", "Leverkusen Arena", "Bayer Stadium", "Bay Stadium"],
+                correct: 0
+            },
+            {
+                category: "Europa",
+                question: "¿En qué liga juega el Shakhtar Donetsk actualmente?",
+                options: ["Liga Ucraniana", "Liga Polaca", "No juega", "Liga Rumana"],
+                correct: 0
+            },
+            {
+                category: "Europa",
+                question: "¿Cuántas veces el Benfica ganó la Liga de Campeones?",
+                options: ["1", "2", "3", "4"],
+                correct: 1
+            },
+            {
+                category: "Europa",
+                question: "¿En qué año se fundó el RB Salzburg?",
+                options: ["1933", "2005", "1995", "1960"],
+                correct: 0
+            },
+            {
+                category: "Europa",
+                question: "¿Cuál es el apodo del Wolverhampton?",
+                options: ["Wolves", "The Wolves", "Los Lobos", "Todas las anteriores"],
+                correct: 3
+            },
+            {
+                category: "Europa",
+                question: "¿En qué división juega actualmente el Hamburg?",
+                options: ["Bundesliga", "2. Bundesliga", "3. Liga", "Regionalliga"],
+                correct: 1
+            },
+            {
+                category: "Europa",
+                question: "¿Cuántas Champions ganó el Nottingham Forest?",
+                options: ["1", "2", "3", "0"],
+                correct: 1
+            },
+            {
+                category: "Europa",
+                question: "¿En qué año el Montpellier ganó su única Ligue 1?",
+                options: ["2011", "2012", "2013", "2014"],
+                correct: 1
+            },
+            {
+                category: "Europa",
+                question: "¿Cuál es el estadio del Eintracht Frankfurt?",
+                options: ["Commerzbank Arena", "Deutsche Bank Park", "Waldstadion", "Todas las anteriores"],
+                correct: 3
+            },
+            {
+                category: "Europa",
+                question: "¿En qué año el Kaiserslautern ganó la Bundesliga desde la segunda división?",
+                options: ["1997", "1998", "1999", "2000"],
+                correct: 1
+            },
+            {
+                category: "Europa",
+                question: "¿Cuál es el apodo del Sevilla?",
+                options: ["Los Palanganas", "Los Nervionenses", "Los Sevillistas", "Los Hispalenses"],
+                correct: 0
+            },
+            {
+                category: "Europa",
+                question: "¿En qué liga juega el Galatasaray?",
+                options: ["Liga Turca", "Süper Lig", "Turkish League", "Liga de Turquía"],
+                correct: 1
+            },
+
+            // TÉCNICOS Y PERSONALIDADES
+            {
+                category: "Técnicos",
+                question: "¿Quién dirigió al Chelsea cuando ganó la Champions 2021?",
+                options: ["Lampard", "Tuchel", "Sarri", "Conte"],
+                correct: 1
+            },
+            {
+                category: "Técnicos",
+                question: "¿En qué año Guardiola llegó al Manchester City?",
+                options: ["2015", "2016", "2017", "2018"],
+                correct: 1
+            },
+            {
+                category: "Técnicos",
+                question: "¿Qué técnico argentino dirigió al Atlético Madrid?",
+                options: ["Simeone", "Pochettino", "Bielsa", "Gallardo"],
+                correct: 0
+            },
+            {
+                category: "Técnicos",
+                question: "¿Cuántas Champions ganó Zinedine Zidane como técnico?",
+                options: ["2", "3", "4", "5"],
+                correct: 1
+            },
+            {
+                category: "Técnicos",
+                question: "¿En qué año Klopp llegó al Liverpool?",
+                options: ["2014", "2015", "2016", "2017"],
+                correct: 1
+            },
+            {
+                category: "Técnicos",
+                question: "¿Qué técnico llevó a Grecia a ganar la Eurocopa 2004?",
+                options: ["Rehhagel", "Santos", "Zagorakis", "Dellas"],
+                correct: 0
+            },
+            {
+                category: "Técnicos",
+                question: "¿Cuántos años tenía Nagelsmann cuando llegó al Bayern?",
+                options: ["33", "34", "35", "36"],
+                correct: 1
+            },
+            {
+                category: "Técnicos",
+                question: "¿En qué club debutó como técnico Antonio Conte?",
+                options: ["Juventus", "Arezzo", "Bari", "Siena"],
+                correct: 1
+            },
+            {
+                category: "Técnicos",
+                question: "¿Qué técnico tiene más títulos en la historia?",
+                options: ["Ferguson", "Guardiola", "Mourinho", "Ancelotti"],
+                correct: 0
+            },
+            {
+                category: "Técnicos",
+                question: "¿En qué año Marcelo Bielsa dirigió a Chile?",
+                options: ["2007", "2008", "2009", "2010"],
+                correct: 0
+            },
+            {
+                category: "Técnicos",
+                question: "¿Qué técnico dirigió al Porto cuando ganó la Champions 2004?",
+                options: ["Mourinho", "Villas-Boas", "Jesualdo", "Octavio"],
+                correct: 0
+            },
+            {
+                category: "Técnicos",
+                question: "¿Cuántas Premier League ganó Arsène Wenger?",
+                options: ["2", "3", "4", "5"],
+                correct: 1
+            },
+            {
+                category: "Técnicos",
+                question: "¿En qué año Xavi se convirtió en técnico del Barcelona?",
+                options: ["2020", "2021", "2022", "2023"],
+                correct: 1
+            },
+            {
+                category: "Técnicos",
+                question: "¿Qué técnico llevó a Leicester a ganar la Premier?",
+                options: ["Ranieri", "Pearson", "Rodgers", "Shakespeare"],
+                correct: 0
+            },
+            {
+                category: "Técnicos",
+                question: "¿En qué club Julian Nagelsmann fue técnico más joven de la Bundesliga?",
+                options: ["Hoffenheim", "Leipzig", "Bayern", "Augsburg"],
+                correct: 0
+            },
+
+            // RÉCORDS Y ESTADÍSTICAS EXPANDIDO
+            {
+                category: "Récords",
+                question: "¿Cuál es el traspaso más caro de la historia del fútbol?",
+                options: ["Neymar 222M", "Mbappé 180M", "Coutinho 165M", "Félix 126M"],
+                correct: 0
+            },
+            {
+                category: "Récords",
+                question: "¿Cuántos goles marcó Messi en 2012?",
+                options: ["89", "90", "91", "92"],
+                correct: 2
+            },
+            {
+                category: "Récords",
+                question: "¿Quién tiene el récord de más asistencias en una temporada?",
+                options: ["Messi", "De Bruyne", "Müller", "Özil"],
+                correct: 2
+            },
+            {
+                category: "Récords",
+                question: "¿Cuál es la mayor victoria en un Mundial?",
+                options: ["9-0", "10-1", "11-0", "12-0"],
+                correct: 1
+            },
+            {
+                category: "Récords",
+                question: "¿Quién marcó más goles en una sola edición de Champions?",
+                options: ["Messi", "Cristiano", "Lewandowski", "Benzema"],
+                correct: 1
+            },
+            {
+                category: "Récords",
+                question: "¿Cuál es el estadio con mayor capacidad del mundo?",
+                options: ["Camp Nou", "Maracaná", "Rungrado", "Michigan Stadium"],
+                correct: 2
+            },
+            {
+                category: "Récords",
+                question: "¿Quién tiene más títulos de Champions como jugador?",
+                options: ["Messi", "Cristiano", "Modric", "Marcelo"],
+                correct: 1
+            },
+            {
+                category: "Récords",
+                question: "¿Cuál es la racha invicta más larga en el fútbol?",
+                options: ["104 partidos", "108 partidos", "112 partidos", "120 partidos"],
+                correct: 0
+            },
+            {
+                category: "Récords",
+                question: "¿Quién marcó el gol más rápido en la historia?",
+                options: ["2.8 segundos", "3.2 segundos", "4.1 segundos", "5.0 segundos"],
+                correct: 0
+            },
+            {
+                category: "Récords",
+                question: "¿Cuántos Balones de Oro ganó Messi?",
+                options: ["6", "7", "8", "9"],
+                correct: 2
+            },
+            {
+                category: "Récords",
+                question: "¿Quién tiene más goles en selecciones?",
+                options: ["Messi", "Cristiano", "Pelé", "Puskas"],
+                correct: 1
+            },
+            {
+                category: "Récords",
+                question: "¿Cuál es el club con más títulos internacionales?",
+                options: ["Real Madrid", "Barcelona", "Boca", "Independiente"],
+                correct: 0
+            },
+            {
+                category: "Récords",
+                question: "¿Quién tiene más partidos en Champions League?",
+                options: ["Messi", "Cristiano", "Casillas", "Benzema"],
+                correct: 1
+            },
+            {
+                category: "Récords",
+                question: "¿Cuál es la mayor goleada en Champions?",
+                options: ["8-2", "9-1", "10-2", "12-1"],
+                correct: 0
+            },
+            {
+                category: "Récords",
+                question: "¿Quién marcó más goles en una Premier League?",
+                options: ["Shearer", "Salah", "Suárez", "Kane"],
+                correct: 1
+            },
+
+            // COPAS Y COMPETICIONES SUDAMERICANAS EXTENDIDO
+            {
+                category: "Copas",
+                question: "¿Qué equipo brasileño ganó más Libertadores?",
+                options: ["Santos", "São Paulo", "Flamengo", "Independiente"],
+                correct: 1
+            },
+            {
+                category: "Copas",
+                question: "¿En qué año se creó la Copa Sudamericana?",
+                options: ["2000", "2001", "2002", "2003"],
+                correct: 2
+            },
+            {
+                category: "Copas",
+                question: "¿Cuántas veces Uruguay ganó la Copa América?",
+                options: ["13", "14", "15", "16"],
+                correct: 2
+            },
+            {
+                category: "Copas",
+                question: "¿Qué equipo mexicano llegó más lejos en Libertadores?",
+                options: ["América", "Chivas", "Cruz Azul", "UNAM"],
+                correct: 2
+            },
+            {
+                category: "Copas",
+                question: "¿En qué año Atlético Nacional ganó la Libertadores?",
+                options: ["1989", "1990", "1991", "1992"],
+                correct: 0
+            },
+            {
+                category: "Copas",
+                question: "¿Cuántas Recopas Sudamericanas ganó Boca?",
+                options: ["3", "4", "5", "6"],
+                correct: 1
+            },
+            {
+                category: "Copas",
+                question: "¿Qué país organizó la primera Copa América?",
+                options: ["Argentina", "Uruguay", "Brasil", "Chile"],
+                correct: 0
+            },
+            {
+                category: "Copas",
+                question: "¿En qué año LDU Quito ganó la Libertadores?",
+                options: ["2007", "2008", "2009", "2010"],
+                correct: 1
+            },
+            {
+                category: "Copas",
+                question: "¿Cuántas veces Brasil ganó la Copa América?",
+                options: ["8", "9", "10", "11"],
+                correct: 1
+            },
+            {
+                category: "Copas",
+                question: "¿Qué equipo chileno ganó más Libertadores?",
+                options: ["Colo-Colo", "Universidad de Chile", "Católica", "Cobreloa"],
+                correct: 0
+            },
+            {
+                category: "Copas",
+                question: "¿En qué año se jugó la primera Libertadores?",
+                options: ["1960", "1961", "1962", "1963"],
+                correct: 0
+            },
+            {
+                category: "Copas",
+                question: "¿Cuántas Suruga Bank ganó Independiente?",
+                options: ["0", "1", "2", "3"],
+                correct: 1
+            },
+            {
+                category: "Copas",
+                question: "¿Qué equipo peruano ganó más títulos internacionales?",
+                options: ["Universitario", "Alianza Lima", "Sporting Cristal", "Sport Boys"],
+                correct: 2
+            },
+            {
+                category: "Copas",
+                question: "¿En qué año Once Caldas ganó la Libertadores?",
+                options: ["2003", "2004", "2005", "2006"],
+                correct: 1
+            },
+            {
+                category: "Copas",
+                question: "¿Cuántas veces Argentina fue sede de Copa América?",
+                options: ["8", "9", "10", "11"],
+                correct: 1
             }
         ];
     }

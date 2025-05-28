@@ -208,33 +208,72 @@ export async function saveMentirosoResult(gameStats) {
         const displayName = getUserDisplayName();
         console.log(`[saveMentirosoResult] User ID: ${userId}, Display Name: ${displayName}`);
 
+        // Crear documento de match mejorado
         const matchData = {
             gameType: "mentiroso",
-            playerName: displayName, playerUid: userId, timestamp: serverTimestamp(),
-            result: gameStats.result, score: gameStats.myScore || 0,
-            players: [{ displayName: displayName, playerId: userId, score: gameStats.myScore || 0 }]
+            playerName: displayName,
+            playerUid: userId,
+            timestamp: serverTimestamp(),
+            result: gameStats.result,
+            myScore: gameStats.myScore || 0,
+            opponents: gameStats.opponents || [],
+            duration: gameStats.duration || null,
+            perfectRound: gameStats.myScore === 18 && gameStats.opponents?.[0]?.score === 0,
+            gameResult: gameStats.gameResult || 'Normal',
+            // Estadísticas específicas del juego
+            successfulDeceptions: gameStats.successfulDeceptions || 0,
+            liesDetected: gameStats.liesDetected || 0,
+            timeouts: gameStats.timeouts || 0,
+            falseAccusations: gameStats.falseAccusations || 0
         };
-        if (gameStats.opponents && Array.isArray(gameStats.opponents)) {
-            gameStats.opponents.forEach(op => matchData.players.push({ displayName: op.name || "Oponente", playerId: op.id || "unknown_opponent", score: op.score || 0 }));
-        }
+        
         console.log('[saveMentirosoResult] Saving match document:', matchData);
         await addDoc(collection(db, "matches"), matchData);
         console.log('[saveMentirosoResult] Match document saved.');
 
+        // Obtener estadísticas actuales del usuario para calcular nuevos valores
         const userRef = doc(db, "users", userId);
+        const userDoc = await getDoc(userRef);
+        const currentStats = userDoc.exists() ? userDoc.data()?.mentiroso || {} : {};
+        
+        // Calcular nuevas estadísticas
+        const isWin = gameStats.result === 'victory';
+        const isLoss = gameStats.result === 'defeat';
+        const isPerfectRound = gameStats.myScore === 18 && gameStats.opponents?.[0]?.score === 0;
+        
         const userStatsUpdate = {
-            "stats.mentiroso.played": increment(1),
-            "stats.mentiroso.score": increment(gameStats.myScore || 0)
+            "mentiroso.gamesPlayed": increment(1),
+            "mentiroso.totalPointsWon": increment(gameStats.myScore || 0),
+            "mentiroso.successfulDeceptions": increment(gameStats.successfulDeceptions || 0),
+            "mentiroso.liesDetected": increment(gameStats.liesDetected || 0),
+            "mentiroso.timeouts": increment(gameStats.timeouts || 0),
+            "mentiroso.falseAccusations": increment(gameStats.falseAccusations || 0)
         };
+
+        if (isWin) {
+            userStatsUpdate["mentiroso.wins"] = increment(1);
+        }
+        
+        if (isLoss) {
+            userStatsUpdate["mentiroso.losses"] = increment(1);
+        }
+        
+        if (isPerfectRound) {
+            userStatsUpdate["mentiroso.perfectRounds"] = increment(1);
+        }
+        
+        // Actualizar duración promedio del juego si está disponible
+        if (gameStats.duration) {
+            const currentGames = currentStats.gamesPlayed || 0;
+            const currentAvgDuration = currentStats.avgGameDuration || 0;
+            const newAvgDuration = ((currentAvgDuration * currentGames) + gameStats.duration) / (currentGames + 1);
+            userStatsUpdate["mentiroso.avgGameDuration"] = newAvgDuration;
+        }
+
         console.log('[saveMentirosoResult] Updating user stats:', userStatsUpdate);
         await updateDoc(userRef, userStatsUpdate);
         console.log('[saveMentirosoResult] User stats updated.');
 
-        if (gameStats.result === "victory") {
-            console.log('[saveMentirosoResult] Incrementing wins for user.');
-            await updateDoc(userRef, { "stats.mentiroso.wins": increment(1) });
-            console.log('[saveMentirosoResult] User wins incremented.');
-        }
         console.log("[saveMentirosoResult] COMPLETED successfully for El Mentiroso.");
         return true;
     } catch (error) {

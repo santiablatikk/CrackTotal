@@ -544,7 +544,14 @@ function handleCreateRoom(ws, clientInfo, payload) {
             answersListed: [],
             validationResults: [],
             gamePhase: 'lobby',
-            scores: {}
+            scores: {},
+            // Timer para preguntas de 60 segundos
+            questionTimer: null,
+            timeRemaining: 15, // Cambiado de 60 a 15 segundos para apostar
+            timerActive: false,
+            // Diferentes duraciones según la fase
+            biddingTimerDuration: 15, // 15 segundos para apostar
+            listingTimerDuration: 60  // 60 segundos para listar respuestas
         } : null
     };
 
@@ -1365,6 +1372,181 @@ function nextRoundMentiroso(roomId) {
     };
 
     broadcastToRoom(roomId, { type: 'mentirosoNextRound', payload });
+    
+    // Iniciar timer de 15 segundos para la apuesta
+    setTimeout(() => {
+        startMentirosoQuestionTimer(roomId, 15, 'bidding');
+    }, 2000); // Dar 2 segundos para que se cargue la UI antes de iniciar el timer
+}
+
+// Función para iniciar el timer de Mentiroso con duración específica
+function startMentirosoQuestionTimer(roomId, duration = 15, phase = 'bidding') {
+    const room = rooms.get(roomId);
+    if (!room || !room.mentirosoState || !room.mentirosoState.gameActive) {
+        return;
+    }
+
+    const state = room.mentirosoState;
+    
+    // Limpiar timer anterior si existe
+    if (state.questionTimer) {
+        clearInterval(state.questionTimer);
+    }
+    
+    state.timeRemaining = duration;
+    state.timerActive = true;
+    
+    // Notificar a los clientes que el timer comenzó
+    broadcastToRoom(roomId, {
+        type: 'mentirosoTimerStart',
+        payload: { 
+            timeRemaining: state.timeRemaining,
+            phase: phase, // Indicar la fase del timer
+            duration: duration
+        }
+    });
+    
+    state.questionTimer = setInterval(() => {
+        state.timeRemaining--;
+        
+        // Notificar actualización del timer
+        broadcastToRoom(roomId, {
+            type: 'mentirosoTimerUpdate',
+            payload: { 
+                timeRemaining: state.timeRemaining,
+                phase: phase
+            }
+        });
+        
+        if (state.timeRemaining <= 0) {
+            // Timer agotado
+            clearInterval(state.questionTimer);
+            state.questionTimer = null;
+            state.timerActive = false;
+            
+            broadcastToRoom(roomId, {
+                type: 'mentirosoTimerStop',
+                payload: { reason: 'timeout', phase: phase }
+            });
+            
+            // Manejar timeout según la fase
+            handleMentirosoTimeOut(roomId, phase);
+        }
+    }, 1000);
+}
+
+// Función para detener el timer cuando se llama Mentiroso
+function stopMentirosoQuestionTimer(roomId) {
+    const room = rooms.get(roomId);
+    if (!room || !room.mentirosoState) {
+        return;
+    }
+
+    const state = room.mentirosoState;
+    if (state.questionTimer) {
+        clearInterval(state.questionTimer);
+        state.questionTimer = null;
+        state.timerActive = false;
+        
+        // Notificar a los clientes que el timer se detuvo
+        broadcastToRoom(roomId, {
+            type: 'mentirosoTimerStop',
+            payload: {}
+        });
+    }
+}
+
+// Función para manejar el tiempo agotado
+function handleMentirosoTimeOut(roomId, phase) {
+    const room = rooms.get(roomId);
+    if (!room || !room.mentirosoState || !room.mentirosoState.gameActive) {
+        return;
+    }
+    
+    const state = room.mentirosoState;
+    console.log(`Mentiroso Room ${roomId}: Timer expired for round ${state.currentRound} in phase ${phase}`);
+    
+    if (phase === 'bidding') {
+        // Si se agota el tiempo en la fase de apuesta
+        // El jugador actual pierde automáticamente el punto
+        
+        let winnerId = null;
+        if (state.currentTurn === room.players.player1.id) {
+            winnerId = room.players.player2.id;
+        } else {
+            winnerId = room.players.player1.id;
+        }
+        
+        // Dar punto al otro jugador
+        if (winnerId === room.players.player1.id) {
+            room.players.player1.score++;
+        } else {
+            room.players.player2.score++;
+        }
+        
+        // Actualizar estado para próxima ronda
+        const mentirosoState = room.mentirosoState;
+        mentirosoState.currentRound++;
+        
+        broadcastToRoom(roomId, {
+            type: 'mentirosoRoundResult',
+            payload: {
+                winnerId: winnerId,
+                message: `Tiempo agotado. El punto va para el oponente.`,
+                players: [room.players.player1, room.players.player2],
+                currentRound: mentirosoState.currentRound
+            }
+        });
+        
+        // Verificar si el juego terminó
+        if (mentirosoState.currentRound > mentirosoState.maxRounds) {
+            endGameMentiroso(roomId, "Juego completado");
+            return;
+        }
+        
+        // Continuar con la siguiente ronda después de un breve delay
+        setTimeout(() => {
+            nextRoundMentiroso(roomId);
+        }, 1000);
+        
+    } else if (phase === 'listing') {
+        // Si se agota el tiempo para listar respuestas
+        // El jugador que debía listar pierde automáticamente
+        
+        let winnerId = state.playerWhoCalledMentiroso; // Quien llamó mentiroso gana
+        
+        // Dar punto al que llamó mentiroso
+        if (winnerId === room.players.player1.id) {
+            room.players.player1.score++;
+        } else {
+            room.players.player2.score++;
+        }
+        
+        // Actualizar estado para próxima ronda
+        const mentirosoState = room.mentirosoState;
+        mentirosoState.currentRound++;
+        
+        broadcastToRoom(roomId, {
+            type: 'mentirosoRoundResult',
+            payload: {
+                winnerId: winnerId,
+                message: `Tiempo agotado para listar. El punto va para quien llamó Mentiroso.`,
+                players: [room.players.player1, room.players.player2],
+                currentRound: mentirosoState.currentRound
+            }
+        });
+        
+        // Verificar si el juego terminó
+        if (mentirosoState.currentRound > mentirosoState.maxRounds) {
+            endGameMentiroso(roomId, "Juego completado");
+            return;
+        }
+        
+        // Continuar con la siguiente ronda después de un breve delay
+        setTimeout(() => {
+            nextRoundMentiroso(roomId);
+        }, 1000);
+    }
 }
 
 function handleMentirosoSubmitBid(ws, clientInfo, payload) {
@@ -1459,19 +1641,26 @@ function handleMentirosoCallLiar(ws, clientInfo, payload) {
     state.playerToListAnswers = state.lastBidder;
     room.currentTurn = state.lastBidder; // The accused player must list answers
 
+    // Detener el timer cuando se llama Mentiroso
+    stopMentirosoQuestionTimer(roomId);
+
     const accusedPlayer = room.players.player1.id === state.lastBidder ? room.players.player1 : room.players.player2;
-
-    console.log(`Mentiroso Room ${roomId}: ${clientInfo.name || clientInfo.id} called liar on ${accusedPlayer.name || accusedPlayer.id}`);
-
+    
     broadcastToRoom(roomId, {
         type: 'mentirosoLiarCalled',
         payload: {
             callerId: clientInfo.id,
-            callerName: clientInfo.name || 'Jugador',
             accusedId: state.lastBidder,
-            accusedName: accusedPlayer.name || 'Jugador acusado'
+            callerName: clientInfo.name || 'Jugador',
+            accusedName: accusedPlayer.name || 'Jugador acusado',
+            currentBid: state.currentBid
         }
     });
+    
+    // Iniciar timer de 60 segundos para listar respuestas
+    setTimeout(() => {
+        startMentirosoQuestionTimer(roomId, 60, 'listing');
+    }, 1000); // Dar 1 segundo para que se actualice la UI
 }
 
 function handleMentirosoSubmitAnswers(ws, clientInfo, payload) {
@@ -1597,7 +1786,7 @@ function handleMentirosoSubmitValidation(ws, clientInfo, payload) {
     state.currentRound++;
     setTimeout(() => {
         nextRoundMentiroso(roomId);
-    }, 3000);
+    }, 1000); // Reducido de 3000ms a 1000ms para transiciones más rápidas
 }
 
 function endGameMentiroso(roomId, reason = "Game completed") {

@@ -126,6 +126,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const gameRoundDisplayEl = document.getElementById('gameRoundDisplay');
     const gameCategoryDisplayEl = document.getElementById('gameCategoryDisplay');
 
+    // Timer elements
+    const timerDisplayEl = document.getElementById('timerDisplay');
+    const timerBarEl = document.getElementById('timerBar');
+    const timerTextEl = document.getElementById('timerText');
+
     // Challenge & Interaction Area
     const challengeTextEl = document.getElementById('challengeText');
     const currentBidTextEl = document.getElementById('currentBidText');
@@ -1252,6 +1257,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     updatePlayerUI();
                     updateGameStatusDisplay();
                     
+                    // Inicializar timer para nueva ronda
+                    resetTimer(15, 'bidding');
+                    
                     // Si es nueva categoría, mostrar un mensaje especial
                     if (isNewCategory && gameState.currentRound > 1) {
                         const categoryNumber = gameState.globalCategoryIndex + 1;
@@ -1465,8 +1473,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateGamePhaseUI('roundOver');
                     
                     // Dar tiempo suficiente para ver el resultado antes de mostrar el mensaje de espera
-                    // 5 segundos para ver el resultado cuando completas una categoría, 3 segundos para preguntas normales
-                    const waitTime = isLastQuestionInCategory ? 3000 : 1500; // Tiempos aumentados para mejor experiencia
+                    // Tiempos reducidos para transiciones más rápidas
+                    const waitTime = isLastQuestionInCategory ? 1000 : 800; // Tiempos reducidos para mejor fluidez
                     
                     // Mostrar el waiting message después de un tiempo para no tapar el resultado
                     setTimeout(() => {
@@ -1485,6 +1493,31 @@ document.addEventListener('DOMContentLoaded', function() {
                         endGame(message.payload); // Show final results for Mentiroso
                     }
                     break;
+                    
+                case 'mentirosoTimerStart':
+                    console.log("⭐ Timer iniciado:", message.payload);
+                    showTimer();
+                    updateTimerDisplay(
+                        message.payload.timeRemaining, 
+                        message.payload.phase || 'bidding', 
+                        message.payload.duration || 15
+                    );
+                    break;
+                    
+                case 'mentirosoTimerUpdate':
+                    console.log("⭐ Timer actualizado:", message.payload);
+                    updateTimerDisplay(
+                        message.payload.timeRemaining, 
+                        message.payload.phase || 'bidding', 
+                        message.payload.phase === 'listing' ? 60 : 15
+                    );
+                    break;
+                    
+                case 'mentirosoTimerStop':
+                    console.log("⭐ Timer detenido:", message.payload);
+                    hideTimer();
+                    break;
+                
                 case 'playerDisconnect':
                      showError(`${message.payload.disconnectedPlayerName || 'Oponente'} desconectado.`);
                      showWaitingMessage("Oponente desconectado. Esperando al servidor...");
@@ -1955,4 +1988,66 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         }
     });
+
+    // --- Funciones de manejo del timer ---
+    function updateTimerDisplay(timeRemaining, phase = 'bidding', duration = 15) {
+        if (timerTextEl) {
+            timerTextEl.textContent = timeRemaining;
+        }
+        
+        if (timerBarEl) {
+            const percentage = (timeRemaining / duration) * 100;
+            timerBarEl.style.width = percentage + '%';
+            
+            // Cambiar color según el tiempo restante y la fase
+            const warningThreshold = phase === 'bidding' ? 5 : 15; // 5s para apuesta, 15s para listar
+            const criticalThreshold = phase === 'bidding' ? 3 : 10; // 3s para apuesta, 10s para listar
+            
+            if (timeRemaining <= criticalThreshold) {
+                timerBarEl.style.background = '#ff416c'; // Rojo
+            } else if (timeRemaining <= warningThreshold) {
+                timerBarEl.style.background = '#ffd32a'; // Amarillo
+            } else {
+                timerBarEl.style.background = '#56ab2f'; // Verde
+            }
+        }
+        
+        if (timerDisplayEl) {
+            const warningThreshold = phase === 'bidding' ? 5 : 15;
+            if (timeRemaining <= warningThreshold) {
+                timerDisplayEl.classList.add('timer-warning');
+            } else {
+                timerDisplayEl.classList.remove('timer-warning');
+            }
+        }
+        
+        // Actualizar el texto del timer según la fase
+        const timerLabel = timerDisplayEl?.querySelector('.timer-label');
+        if (timerLabel) {
+            if (phase === 'bidding') {
+                timerLabel.textContent = 'Tiempo para apostar:';
+            } else if (phase === 'listing') {
+                timerLabel.textContent = 'Tiempo para listar:';
+            }
+        }
+    }
+    
+    function showTimer() {
+        if (timerDisplayEl) {
+            timerDisplayEl.style.display = 'block';
+        }
+    }
+    
+    function hideTimer() {
+        if (timerDisplayEl) {
+            timerDisplayEl.style.display = 'none';
+        }
+    }
+    
+    function resetTimer(duration = 15, phase = 'bidding') {
+        updateTimerDisplay(duration, phase, duration);
+        if (timerDisplayEl) {
+            timerDisplayEl.classList.remove('timer-warning');
+        }
+    }
 }); 

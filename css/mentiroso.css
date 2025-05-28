@@ -1387,4 +1387,320 @@ input[type=number] {
         opacity: 1;
         transform: scale(1) translateY(0);
     }
+}
+
+/* Timer Display Styles */
+.timer-display {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+    border: 1px solid rgba(var(--primary-rgb), 0.2);
+    border-radius: 15px;
+    padding: 15px 20px;
+    margin: 15px auto 20px;
+    max-width: 400px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    animation: fadeInScaleUp 0.5s ease-out;
+    display: none; /* Hidden by default, shown by JavaScript */
+}
+
+.timer-display.timer-warning {
+    border-color: rgba(255, 65, 108, 0.4);
+    box-shadow: 0 8px 25px rgba(255, 65, 108, 0.2);
+    animation: pulse 1s infinite;
+}
+
+.timer-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.timer-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    background: var(--gradient-primary);
+    border-radius: 50%;
+    color: white;
+    font-size: 1.1em;
+}
+
+.timer-display.timer-warning .timer-icon {
+    background: linear-gradient(135deg, #ff416c, #ff4757);
+    animation: shake 0.5s ease-in-out infinite;
+}
+
+.timer-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.timer-label {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+.timer-text {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--primary-light);
+}
+
+.timer-display.timer-warning .timer-text {
+    color: #ff416c;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.timer-bar-container {
+    width: 120px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.timer-bar {
+    height: 100%;
+    background: #56ab2f;
+    border-radius: 4px;
+    transition: width 0.5s ease, background 0.3s ease;
+    width: 100%;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-2px); }
+    75% { transform: translateX(2px); }
+}
+
+/* Estilos mejorados para el ranking */
+.ranking-row[data-rating] {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.ranking-row[data-rating]:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+.position-number {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--primary-light);
+}
+
+.position-icon {
+    font-size: 1.2em;
+    margin-top: 2px;
+}
+
+.player-description {
+    font-size: 0.75em;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    margin-top: 2px;
+}
+
+.rating-info {
+    text-align: center;
+}
+
+.main-rating {
+    font-size: 1.3em;
+    font-weight: bold;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.rating-label {
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.win-percentage {
+    font-size: 0.75em;
+    color: var(--success-color);
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+.deception-stat {
+    color: #ff6b6b;
+}
+
+.detection-stat {
+    font-size: 0.75em;
+    color: #4ecdc4;
+    margin-top: 2px;
+}
+
+.efficiency-stat {
+    color: #feca57;
+}
+
+.perfect-rounds {
+    font-size: 0.75em;
+    color: #48dbfb;
+    margin-top: 2px;
+}
+
+/* Estilos para el historial mejorado */
+.history-item {
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.history-item.perfect-victory {
+    border-left-color: #ffd700;
+    background: linear-gradient(90deg, rgba(255, 215, 0, 0.1), transparent);
+}
+
+.history-item.dominant-victory {
+    border-left-color: #28a745;
+    background: linear-gradient(90deg, rgba(40, 167, 69, 0.1), transparent);
+}
+
+.history-item.normal-victory {
+    border-left-color: #17a2b8;
+    background: linear-gradient(90deg, rgba(23, 162, 184, 0.1), transparent);
+}
+
+.history-item.total-defeat {
+    border-left-color: #dc3545;
+    background: linear-gradient(90deg, rgba(220, 53, 69, 0.1), transparent);
+}
+
+.history-item.wide-defeat {
+    border-left-color: #fd7e14;
+    background: linear-gradient(90deg, rgba(253, 126, 20, 0.1), transparent);
+}
+
+.history-item.normal-defeat {
+    border-left-color: #6c757d;
+    background: linear-gradient(90deg, rgba(108, 117, 125, 0.1), transparent);
+}
+
+.match-result {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.result-icon {
+    font-size: 1.2em;
+}
+
+.result-text {
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.score-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin: 10px 0;
+}
+
+.score-section {
+    text-align: center;
+}
+
+.score-value {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--primary-light);
+}
+
+.score-label {
+    font-size: 0.8em;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 2px;
+}
+
+.vs-separator {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: bold;
+}
+
+.match-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 0.8em;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.detail-label {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9em;
+}
+
+.detail-value {
+    color: var(--primary-light);
+    font-weight: 500;
+    margin-top: 2px;
+}
+
+.perfect-indicator {
+    background: linear-gradient(45deg, #ffd700, #ffed4a);
+    color: #000;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.7em;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 5px;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+    }
+    to {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+    }
+}
+
+/* Responsive mejorado */
+@media (max-width: 768px) {
+    .position-number {
+        font-size: 1.2em;
+    }
+    
+    .main-rating {
+        font-size: 1.1em;
+    }
+    
+    .score-value {
+        font-size: 1.5em;
+    }
+    
+    .match-details {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .detail-item {
+        flex-direction: row;
+        gap: 5px;
+    }
 } 
