@@ -1,5 +1,5 @@
 ﻿// Service Worker optimizado para Crack Total
-const APP_VERSION = '2.2.0'; // Updated version to force cache refresh
+const APP_VERSION = '2.3.0'; // Updated version to force cache refresh
 const CACHE_NAME = `crack-total-v${APP_VERSION}`;
 const STATIC_CACHE_NAME = `crack-total-static-v${APP_VERSION}`;
 const DYNAMIC_CACHE_NAME = `crack-total-dynamic-v${APP_VERSION}`;
@@ -155,8 +155,11 @@ self.addEventListener('fetch', event => {
     } else if (isImage(request.url)) {
         // Para imágenes: Cache first con limpieza automática
         event.respondWith(cacheFirstImages(request));
+    } else if (isCssFile(request.url)) {
+        // Para CSS: Network first con cache invalidation
+        event.respondWith(networkFirstWithInvalidation(request));
     } else if (isStaticAsset(request.url)) {
-        // Para recursos estáticos: Cache first con versioning
+        // Para recursos estáticos (excluyendo CSS ahora): Cache first con versioning
         event.respondWith(cacheFirstWithVersioning(request));
     } else if (isDynamicAsset(request.url)) {
         // Para recursos dinámicos: Stale while revalidate
@@ -531,15 +534,23 @@ function isNavigationRequest(request) {
 }
 
 function isStaticAsset(url) {
-    return /\.(css|js|woff|woff2|ttf|eot)(\?.*)?$/.test(url);
+    const path = new URL(url).pathname;
+    return Array.isArray(STATIC_ASSETS) && STATIC_ASSETS.includes(path);
 }
 
 function isDynamicAsset(url) {
-    return DYNAMIC_CACHE_PATTERNS.some(pattern => pattern.test(url));
+    const path = new URL(url).pathname;
+    return DYNAMIC_CACHE_PATTERNS.some(pattern => pattern.test(path));
 }
 
 function isImage(url) {
-    return IMAGE_PATTERNS.some(pattern => pattern.test(url));
+    const path = new URL(url).pathname;
+    return IMAGE_PATTERNS.some(pattern => pattern.test(path));
+}
+
+function isCssFile(url) {
+    const path = new URL(url).pathname;
+    return path.endsWith('.css');
 }
 
 function isApiRequest(url) {
