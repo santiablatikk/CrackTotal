@@ -1,5 +1,5 @@
 ﻿// Service Worker optimizado para Crack Total
-const APP_VERSION = '2.1.0'; // Increment this to force cache updates
+const APP_VERSION = '2.2.0'; // Updated version to force cache refresh
 const CACHE_NAME = `crack-total-v${APP_VERSION}`;
 const STATIC_CACHE_NAME = `crack-total-static-v${APP_VERSION}`;
 const DYNAMIC_CACHE_NAME = `crack-total-dynamic-v${APP_VERSION}`;
@@ -62,7 +62,11 @@ self.addEventListener('install', event => {
             caches.open(STATIC_CACHE_NAME)
                 .then(cache => {
                     console.log('[SW] Cacheando recursos estáticos...');
-                    return cache.addAll(STATIC_ASSETS);
+                    return cache.addAll(STATIC_ASSETS).catch(error => {
+                        console.warn('[SW] Error cacheando algunos recursos estáticos:', error);
+                        // Continue even if some resources fail
+                        return Promise.resolve();
+                    });
                 }),
             // Pre-crear otros caches
             caches.open(DYNAMIC_CACHE_NAME),
@@ -75,6 +79,7 @@ self.addEventListener('install', event => {
             })
             .catch(error => {
                 console.error('[SW] Error cacheando recursos estáticos:', error);
+                return self.skipWaiting(); // Still skip waiting even if caching fails
             })
     );
 });
@@ -124,6 +129,14 @@ self.addEventListener('fetch', event => {
     // Ignorar peticiones que no son GET
     if (request.method !== 'GET') {
         return;
+    }
+    
+    // Ignorar específicamente AdSense y otras APIs externas problemáticas
+    if (url.hostname.includes('googlesyndication.com') ||
+        url.hostname.includes('googletagmanager.com') ||
+        url.hostname.includes('google-analytics.com') ||
+        url.hostname.includes('doubleclick.net')) {
+        return; // Let these requests go through without SW intervention
     }
     
     // Ignorar peticiones a APIs externas que no queremos cachear
@@ -187,7 +200,6 @@ async function networkFirstWithInvalidation(request) {
         const cachedResponse = await caches.match(request);
         if (cachedResponse) {
             const cacheTime = cachedResponse.headers.get('sw-cached-time');
-            const cacheVersion = cachedResponse.headers.get('sw-version');
             
             // Verificar si el cache está muy viejo
             if (cacheTime) {
@@ -211,23 +223,23 @@ async function networkFirstWithInvalidation(request) {
 
 // Estrategia Cache First mejorada para imágenes
 async function cacheFirstImages(request) {
-    const cachedResponse = await caches.match(request);
-    
-    if (cachedResponse) {
-        // Verificar si la imagen no está muy vieja
-        const cacheTime = cachedResponse.headers.get('sw-cached-time');
-        if (cacheTime) {
-            const age = Date.now() - parseInt(cacheTime);
-            if (age < CACHE_CONFIG.maxStaticCacheTime) {
+    try {
+        const cachedResponse = await caches.match(request);
+        
+        if (cachedResponse) {
+            // Verificar si la imagen no está muy vieja
+            const cacheTime = cachedResponse.headers.get('sw-cached-time');
+            if (cacheTime) {
+                const age = Date.now() - parseInt(cacheTime);
+                if (age < CACHE_CONFIG.maxStaticCacheTime) {
+                    return cachedResponse;
+                }
+            } else {
+                // Si no tiene timestamp, asumir que es válida
                 return cachedResponse;
             }
-        } else {
-            // Si no tiene timestamp, asumir que es válida
-            return cachedResponse;
         }
-    }
-    
-    try {
+        
         const networkResponse = await fetchWithTimeout(request, CACHE_CONFIG.networkTimeoutMs);
         
         if (networkResponse && networkResponse.status === 200) {
@@ -257,6 +269,7 @@ async function cacheFirstImages(request) {
         return networkResponse;
     } catch (error) {
         console.log('[SW] Error cargando imagen:', request.url);
+        const cachedResponse = await caches.match(request);
         return cachedResponse || createImagePlaceholder();
     }
 }
@@ -409,7 +422,6 @@ function createOfflineResponse() {
 
 // Crear placeholder para imágenes
 function createImagePlaceholder() {
-    // SVG placeholder simple
     const svg = `<svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
         <rect width="100%" height="100%" fill="#2a2a2a"/>
         <text x="50%" y="50%" text-anchor="middle" dy="0.3em" fill="#666" font-family="Arial">
@@ -429,19 +441,19 @@ function createImagePlaceholder() {
 
 // Estrategia Cache First mejorada con versionado
 async function cacheFirstWithVersioning(request) {
-    const cachedResponse = await caches.match(request);
-    
-    // Verificar si el cache es de la versión actual
-    if (cachedResponse) {
-        const cacheVersion = cachedResponse.headers.get('sw-version');
-        if (cacheVersion === APP_VERSION) {
-            return cachedResponse;
-        } else {
-            console.log('[SW] Cache de versión anterior encontrado, actualizando...');
-        }
-    }
-    
     try {
+        const cachedResponse = await caches.match(request);
+        
+        // Verificar si el cache es de la versión actual
+        if (cachedResponse) {
+            const cacheVersion = cachedResponse.headers.get('sw-version');
+            if (cacheVersion === APP_VERSION) {
+                return cachedResponse;
+            } else {
+                console.log('[SW] Cache de versión anterior encontrado, actualizando...');
+            }
+        }
+        
         const networkResponse = await fetchWithTimeout(request, CACHE_CONFIG.networkTimeoutMs);
         
         if (networkResponse && networkResponse.status === 200) {
@@ -466,50 +478,56 @@ async function cacheFirstWithVersioning(request) {
         return networkResponse;
     } catch (error) {
         console.log('[SW] Error de red, usando cache disponible:', request.url);
+        const cachedResponse = await caches.match(request);
         return cachedResponse || createOfflineResponse();
     }
 }
 
 // Estrategia Stale While Revalidate mejorada
 async function staleWhileRevalidateStrategy(request) {
-    const cachedResponse = await caches.match(request);
-    
-    // Fetch en background para actualizar cache
-    const fetchPromise = fetchWithTimeout(request, CACHE_CONFIG.networkTimeoutMs)
-        .then(async networkResponse => {
-            if (networkResponse && networkResponse.status === 200) {
-                const cache = await caches.open(DYNAMIC_CACHE_NAME);
-                const responseToCache = networkResponse.clone();
-                
-                const headers = new Headers(responseToCache.headers);
-                headers.set('sw-cached-time', Date.now().toString());
-                headers.set('sw-version', APP_VERSION);
-                headers.set('sw-strategy', 'stale-while-revalidate');
-                
-                const cachedResponse = new Response(responseToCache.body, {
-                    status: responseToCache.status,
-                    statusText: responseToCache.statusText,
-                    headers: headers
-                });
-                
-                cache.put(request, cachedResponse);
+    try {
+        const cachedResponse = await caches.match(request);
+        
+        // Fetch en background para actualizar cache
+        const fetchPromise = fetchWithTimeout(request, CACHE_CONFIG.networkTimeoutMs)
+            .then(async networkResponse => {
+                if (networkResponse && networkResponse.status === 200) {
+                    const cache = await caches.open(DYNAMIC_CACHE_NAME);
+                    const responseToCache = networkResponse.clone();
+                    
+                    const headers = new Headers(responseToCache.headers);
+                    headers.set('sw-cached-time', Date.now().toString());
+                    headers.set('sw-version', APP_VERSION);
+                    headers.set('sw-strategy', 'stale-while-revalidate');
+                    
+                    const cachedResponse = new Response(responseToCache.body, {
+                        status: responseToCache.status,
+                        statusText: responseToCache.statusText,
+                        headers: headers
+                    });
+                    
+                    cache.put(request, cachedResponse);
+                    return networkResponse;
+                }
                 return networkResponse;
-            }
-            return networkResponse;
-        })
-        .catch(error => {
-            console.log('[SW] Error actualizando cache en background:', error);
-            return null;
-        });
-    
-    // Devolver cache inmediatamente si existe, sino esperar red
-    return cachedResponse || fetchPromise;
+            })
+            .catch(error => {
+                console.log('[SW] Error actualizando cache en background:', error);
+                return null;
+            });
+        
+        // Devolver cache inmediatamente si existe, sino esperar red
+        return cachedResponse || fetchPromise;
+    } catch (error) {
+        console.log('[SW] Error en stale while revalidate:', error);
+        return fetch(request);
+    }
 }
 
 // Funciones de utilidad
 function isNavigationRequest(request) {
     return request.mode === 'navigate' || 
-           (request.method === 'GET' && request.headers.get('accept').includes('text/html'));
+           (request.method === 'GET' && request.headers.get('accept') && request.headers.get('accept').includes('text/html'));
 }
 
 function isStaticAsset(url) {
@@ -559,4 +577,4 @@ async function clearAllCaches() {
     }
 }
 
-console.log('[SW] Service Worker cargado exitosamente'); 
+console.log(`[SW] Service Worker versión ${APP_VERSION} cargado exitosamente`); 
