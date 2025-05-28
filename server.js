@@ -9,12 +9,114 @@ const MAX_LEVELS = 6;
 const QUESTIONS_PER_LEVEL = 3; // Number of questions per level before advancing
 const DATA_DIR = path.join(__dirname, 'data'); // Assuming 'data' folder is in the same directory as server.js
 
+// Función para obtener el tipo MIME correcto
+function getMimeType(filePath) {
+    const ext = path.extname(filePath).toLowerCase();
+    const mimeTypes = {
+        '.html': 'text/html',
+        '.js': 'text/javascript',
+        '.css': 'text/css',
+        '.json': 'application/json',
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.gif': 'image/gif',
+        '.svg': 'image/svg+xml',
+        '.ico': 'image/x-icon',
+        '.webp': 'image/webp',
+        '.mp3': 'audio/mpeg',
+        '.mp4': 'video/mp4',
+        '.woff': 'font/woff',
+        '.woff2': 'font/woff2',
+        '.ttf': 'font/ttf',
+        '.txt': 'text/plain'
+    };
+    return mimeTypes[ext] || 'application/octet-stream';
+}
+
 // --- Server Setup ---
-// We need an HTTP server primarily to handle the WebSocket upgrade requests.
+// Servidor HTTP que maneja tanto archivos estáticos como WebSocket upgrades
 const server = http.createServer((req, res) => {
-    // Basic response for any HTTP request other than WebSocket upgrade
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('WebSocket server is running.');
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    
+    // Parse URL
+    const parsedUrl = url.parse(req.url, true);
+    let pathname = parsedUrl.pathname;
+    
+    // Redirect /index.html to /
+    if (pathname === '/index.html') {
+        res.writeHead(301, { 'Location': '/' });
+        res.end();
+        return;
+    }
+    
+    // Default to index.html for root
+    if (pathname === '/') {
+        pathname = '/index.html';
+    }
+    
+    // Construir ruta del archivo
+    const filePath = path.join(__dirname, pathname);
+    
+    // Verificar que el archivo esté dentro del directorio del proyecto (seguridad)
+    if (!filePath.startsWith(__dirname)) {
+        res.writeHead(403, { 'Content-Type': 'text/plain' });
+        res.end('Forbidden');
+        return;
+    }
+    
+    // Verificar si el archivo existe
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+        if (err) {
+            // Si no existe, servir index.html para SPA routing
+            if (pathname !== '/index.html') {
+                const indexPath = path.join(__dirname, 'index.html');
+                fs.readFile(indexPath, (indexErr, indexData) => {
+                    if (indexErr) {
+                        res.writeHead(404, { 'Content-Type': 'text/plain' });
+                        res.end('File not found');
+                    } else {
+                        res.writeHead(200, { 
+                            'Content-Type': 'text/html',
+                            'Cache-Control': 'no-cache'
+                        });
+                        res.end(indexData);
+                    }
+                });
+            } else {
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
+                res.end('File not found');
+            }
+            return;
+        }
+        
+        // Leer y servir el archivo
+        fs.readFile(filePath, (readErr, data) => {
+            if (readErr) {
+                res.writeHead(500, { 'Content-Type': 'text/plain' });
+                res.end('Internal server error');
+                return;
+            }
+            
+            const mimeType = getMimeType(filePath);
+            const headers = {
+                'Content-Type': mimeType,
+                'X-Content-Type-Options': 'nosniff',
+                'X-Frame-Options': 'DENY',
+                'X-XSS-Protection': '1; mode=block'
+            };
+            
+            // Cache para archivos estáticos (excepto HTML)
+            if (mimeType !== 'text/html') {
+                headers['Cache-Control'] = 'public, max-age=31536000'; // 1 año
+            } else {
+                headers['Cache-Control'] = 'no-cache';
+            }
+            
+            res.writeHead(200, headers);
+            res.end(data);
+        });
+    });
 });
 
 // Obtener puerto de Render o usar 8081 por defecto
@@ -24,13 +126,19 @@ const PORT = process.env.PORT || 8081;
 const wss = new WebSocket.Server({ server });
 
 server.listen(PORT, () => {
-    console.log(`Servidor HTTP y WebSocket iniciado en el puerto ${PORT}...`);
+    console.log(`🚀 Servidor HTTP y WebSocket iniciado en el puerto ${PORT}`);
+    console.log(`🌐 Servidor listo para servir archivos estáticos y WebSocket`);
+    console.log(`📁 Directorio de trabajo: ${__dirname}`);
+    console.log(`📊 Directorio de datos: ${DATA_DIR}`);
     loadQuestions(); // Load questions for Quien Sabe Mas
     
     // DISABLED: Automatic room broadcasting to prevent mixing game types
     // Each client will request rooms specifically with gameType filter
     // setInterval(broadcastAvailableRooms, 5000);
 });
+
+// Mensaje de inicio
+console.log('🎯 Server script initialized. Waiting for connections...');
 
 // --- Game Data Loading ---
 let allQuestions = {}; // Store questions globally { level: [processedQuestion, ...] }

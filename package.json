@@ -1,0 +1,41 @@
+{
+  "name": "cracktotal",
+  "version": "1.0.0",
+  "description": "Crack Total - El Juego del Fútbol. Plataforma de trivia y juegos de fútbol.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "echo 'Build completed - Static files ready'",
+    "dev": "node server.js",
+    "test": "echo 'No tests specified'",
+    "lint": "echo 'No linting configured'",
+    "clean": "echo 'No clean needed for static files'"
+  },
+  "keywords": [
+    "football",
+    "soccer",
+    "trivia",
+    "quiz",
+    "game",
+    "sports",
+    "argentina",
+    "futbol"
+  ],
+  "author": "Crack Total Team",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.14.2"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/cracktotal.git"
+  },
+  "homepage": "https://cracktotal.com",
+  "bugs": {
+    "url": "https://github.com/yourusername/cracktotal/issues"
+  }
+} 
