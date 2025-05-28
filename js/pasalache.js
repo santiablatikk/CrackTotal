@@ -1,5 +1,5 @@
 // --- Importaciones de Firebase ---
-import { db } from './firebase-init.js'; // Importar la instancia de DB
+import { db, isFirebaseAvailable, safeFirestoreOperation } from './firebase-init.js'; // Importar la instancia de DB y funciones de seguridad
 import {
     collection, doc, setDoc, addDoc, Timestamp, increment, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -1256,12 +1256,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // --- FIN: Guardar Partida en el HISTORIAL LOCAL ---
 
         // --- INICIO: Guardar Resultados en FIREBASE ---
-        try {
+        await safeFirestoreOperation(async () => {
             const userId = getCurrentUserId(); // e.g., 'JugadorAnónimo' or 'PlayerName_NoSpace'
             const userDisplayName = getCurrentDisplayName(); // e.g., 'Jugador Anónimo' or 'Player Name'
             const difficultyActual = document.querySelector('.difficulty-btn.active')?.dataset.difficulty || 'normal';
 
             if (userId && userDisplayName) {
+                console.log("Intentando guardar en Firebase para usuario:", userId, userDisplayName);
+                
                 // 1. Actualizar/crear el documento del usuario en la colección 'users'
                 const userDocRef = doc(db, "users", userId);
                 const userUpdateData = {
@@ -1272,12 +1274,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 };
                 if (result === 'victory') {
                     userUpdateData.wins = increment(1);
-                    // Potentially update fastestWinTime if it's a win and better than current
-                    // This needs reading the doc first or a transaction, for simplicity, can be added later
                 } else { // defeat or timeout
                     userUpdateData.totalLosses = increment(1);
                 }
-                userUpdateData.totalErrors = increment(incorrectAnswers); // Assuming incorrectAnswers is tracked
+                userUpdateData.totalErrors = increment(incorrectAnswers);
 
                 await setDoc(userDocRef, userUpdateData, { merge: true });
                 console.log("User stats updated in Firebase for:", userId);
@@ -1285,17 +1285,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 2. Añadir la partida a la colección 'matches'
                 const matchDocData = {
                     timestamp: serverTimestamp(),
-                    result: result, // 'victory', 'defeat', 'timeout'
+                    result: result,
                     difficulty: difficultyActual,
                     timeSpent: timeSpent,
                     players: [{
                         playerId: userId,
                         displayName: userDisplayName,
-                        score: correctAnswers, // Score for this specific game (correct answers)
+                        score: correctAnswers,
                         errors: incorrectAnswers
                     }],
-                    passes: passedAnswers, // Pasalache specific
-                    gameMode: "Pasalache" // To distinguish from other games
+                    passes: passedAnswers,
+                    gameMode: "Pasalache"
                 };
                 await addDoc(collection(db, "matches"), matchDocData);
                 console.log("Match data added to Firebase.");
@@ -1303,11 +1303,11 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 console.warn("User ID or Display Name not available, cannot save to Firebase.");
             }
-        } catch (error) {
-            console.error("Error saving game result to Firebase:", error);
-            // Optionally, inform the user via a modal or a non-intrusive message
-            showTemporaryFeedback("Error al guardar el ranking online.", "error", 5000);
-        }
+        }, () => {
+            // Fallback action en caso de error
+            console.log("Firebase no disponible, datos guardados solo localmente");
+            showTemporaryFeedback("Ranking guardado localmente. Problema de conexión con el servidor.", "warning", 4000);
+        });
         // --- FIN: Guardar Resultados en FIREBASE ---
 
         // <<<--- INICIO: INTENTAR DESBLOQUEAR LOGROS RELEVANTES A LA PARTIDA ACTUAL --- >>>

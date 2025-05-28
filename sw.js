@@ -59,23 +59,23 @@ self.addEventListener('install', event => {
     event.waitUntil(
         Promise.all([
             // Cache de recursos estáticos
-            caches.open(STATIC_CACHE_NAME)
-                .then(cache => {
-                    console.log('[SW] Cacheando recursos estáticos...');
-                    return cache.addAll(STATIC_ASSETS);
+        caches.open(STATIC_CACHE_NAME)
+            .then(cache => {
+                console.log('[SW] Cacheando recursos estáticos...');
+                return cache.addAll(STATIC_ASSETS);
                 }),
             // Pre-crear otros caches
             caches.open(DYNAMIC_CACHE_NAME),
             caches.open(IMAGE_CACHE_NAME),
             caches.open(API_CACHE_NAME)
         ])
-        .then(() => {
-            console.log('[SW] Recursos estáticos cacheados exitosamente');
-            return self.skipWaiting(); // Force immediate activation
-        })
-        .catch(error => {
-            console.error('[SW] Error cacheando recursos estáticos:', error);
-        })
+            .then(() => {
+                console.log('[SW] Recursos estáticos cacheados exitosamente');
+                return self.skipWaiting(); // Force immediate activation
+            })
+            .catch(error => {
+                console.error('[SW] Error cacheando recursos estáticos:', error);
+            })
     );
 });
 
@@ -207,8 +207,8 @@ async function networkFirstWithInvalidation(request) {
         
         return createOfflineResponse();
     }
-}
-
+        }
+        
 // Estrategia Cache First mejorada para imágenes
 async function cacheFirstImages(request) {
     const cachedResponse = await caches.match(request);
@@ -402,7 +402,7 @@ function createImagePlaceholder() {
             'Content-Type': 'image/svg+xml',
             'Cache-Control': 'no-cache'
         }
-    });
+        });
 }
 
 // Estrategia Cache First mejorada con versionado
@@ -526,7 +526,7 @@ self.addEventListener('message', event => {
 // Función para limpiar todos los caches
 async function clearAllCaches() {
     try {
-        const cacheNames = await caches.keys();
+    const cacheNames = await caches.keys();
         await Promise.all(
             cacheNames.map(cacheName => caches.delete(cacheName))
         );

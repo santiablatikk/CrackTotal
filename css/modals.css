@@ -1,23 +1,43 @@
 /* ========================================= */
-/* ============ Modal Styles =============== */
+/* ============ Modern Modal System ======== */
 /* ========================================= */
 
-/* General modal overlay and content */
+/* Variables refinadas para modales compactos */
+:root {
+    --modal-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    --modal-secondary: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+    --modal-accent: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --modal-error: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    --modal-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    
+    --modal-bg: rgba(15, 23, 42, 0.95);
+    --modal-border: rgba(148, 163, 184, 0.1);
+    --modal-glow: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+    --modal-shadow-light: 0 0 0 1px rgba(255, 255, 255, 0.05);
+    
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+}
+
+/* Overlay optimizado */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.8) 0%,
+        rgba(30, 41, 59, 0.9) 100%
+    );
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     z-index: 1000;
     opacity: 0;
     pointer-events: none;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    backdrop-filter: blur(8px);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modal-overlay.active {
@@ -25,768 +45,972 @@
     pointer-events: all;
 }
 
+/* Modal content compacto y elegante */
 .modal-content {
-    background: var(--background-alt);
-    border-radius: 20px;
-    padding: 40px;
+    background: var(--modal-bg);
+    border: 1px solid var(--modal-border);
+    border-radius: 14px;
+    box-shadow: var(--modal-glow), var(--modal-shadow-light);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     width: 90%;
-    max-width: 420px; /* Default max-width */
-    box-shadow: var(--shadow-lg);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transform: translateY(30px) scale(0.95);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 360px;
+    padding: 20px;
     position: relative;
-    overflow: hidden; /* Hide shimmer overflow */
-}
-
-.modal-content::before { /* Shimmer effect */
-    content: '';
-    position: absolute;
-    top: -75%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-        to bottom right,
-        transparent,
-        rgba(127, 90, 248, 0.05),
-        rgba(127, 90, 248, 0.08),
-        rgba(127, 90, 248, 0.03),
-        transparent
-    );
-    transform: rotate(30deg);
-    animation: shimmerEffect 9s linear infinite;
-    pointer-events: none;
-    opacity: 0.7;
+    transform: translateY(20px) scale(0.95);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modal-overlay.active .modal-content {
     transform: translateY(0) scale(1);
 }
 
+/* Título moderno y más legible */
 .modal-title {
-    font-size: 1.7rem;
-    font-weight: 700;
-    margin-bottom: 30px;
-    color: var(--text);
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0 0 16px 0;
     text-align: center;
-    background: linear-gradient(120deg, var(--primary) 0%, var(--primary-light) 100%);
+    background: var(--modal-primary);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    position: relative;
 }
 
+.modal-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 36px;
+    height: 3px;
+    background: var(--modal-primary);
+    border-radius: 2px;
+    opacity: 0.7;
+}
+
+/* Footer más espaciado */
 .modal-footer {
     display: flex;
+    gap: 12px;
     justify-content: flex-end;
-    gap: 15px;
-    margin-top: 35px;
+    margin-top: 20px;
 }
 
-/* Default Cancel Button */
-.cancel-button {
-    background: transparent;
-    border: 1px solid var(--border);
-    color: var(--text-light);
-    padding: 12px 25px;
-    border-radius: 10px;
-    font-size: 0.95rem;
+/* Botones con mejor tipografía */
+.cancel-button,
+.save-button,
+.modal-button {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
     font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    min-width: 80px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.cancel-button {
+    background: rgba(148, 163, 184, 0.1);
+    color: var(--text-secondary);
+    border: 1px solid rgba(148, 163, 184, 0.2);
 }
 
 .cancel-button:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    color: var(--text);
+    background: rgba(148, 163, 184, 0.2);
+    color: var(--text-primary);
+    transform: translateY(-1px);
 }
 
-.cancel-button:active {
-    transform: translateY(0);
-    background: rgba(255, 255, 255, 0.05);
-    filter: brightness(0.9);
-}
-
-/* Default Save/Confirm Button */
-.save-button {
-    background: var(--gradient-primary);
+.save-button,
+.modal-button.primary {
+    background: var(--modal-primary);
     color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 10px;
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: var(--shadow-sm), var(--glow-primary);
+    box-shadow: 0 3px 8px rgba(99, 102, 241, 0.3);
 }
 
-.save-button:hover {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 8px 20px rgba(127, 90, 248, 0.45);
+.save-button:hover,
+.modal-button.primary:hover {
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    transform: translateY(-1px);
 }
 
-.save-button:active {
-    transform: translateY(0) scale(1);
-    box-shadow: var(--shadow-sm);
-    filter: brightness(0.9);
+.modal-button.secondary {
+    background: var(--modal-error);
+    color: white;
+    box-shadow: 0 3px 8px rgba(239, 68, 68, 0.3);
 }
 
+.modal-button.secondary:hover {
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    transform: translateY(-1px);
+}
 
+/* Formularios con mejor legibilidad */
+.input-group {
+    margin-bottom: 16px;
+}
+
+.input-group label,
 #changeNameForm label {
     display: block;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-    color: var(--text-light);
+    font-size: 0.875rem;
     font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
 }
 
-/* --- Game Rules Modal --- */
+.input-group input {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(148, 163, 184, 0.05);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: rgba(148, 163, 184, 0.08);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+.input-group input::placeholder {
+    color: var(--text-muted);
+}
+
+/* ===== MODAL ESPECÍFICOS ===== */
+
+/* Game Rules Modal - Mejor legibilidad */
 #gameRulesModal .modal-content {
-    max-width: 430px;
-    padding: 15px 15px;
-    background: linear-gradient(135deg, rgba(23, 25, 35, 0.95), rgba(16, 17, 25, 0.97));
-    border: 1px solid rgba(131, 93, 255, 0.3);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(131, 93, 255, 0.1);
-    border-radius: 16px;
-    position: relative;
-    overflow-y: hidden; /* Might need auto if content exceeds */
+    max-width: 400px;
+    padding: 24px;
 }
 
 #gameRulesModal .modal-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    letter-spacing: -0.4px;
-    margin-bottom: 10px;
-    text-align: center;
-    background: linear-gradient(120deg, #835DFF 0%, #b29aff 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 12px rgba(131, 93, 255, 0.2);
-    position: relative;
-}
-
-#gameRulesModal .modal-title::after {
-    content: '';
-    position: absolute;
-    bottom: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #835DFF, transparent);
-    border-radius: 2px;
+    font-size: 1.125rem;
+    margin-bottom: 14px;
 }
 
 .game-promo {
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.875rem;
     text-align: center;
-    margin: 8px 0 12px;
-    background: linear-gradient(120deg, #FF8E3C 0%, #FF5A5A 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 0 0 6px rgba(255, 142, 60, 0.25);
-    animation: pulseText 2.5s infinite alternate;
+    color: var(--text-secondary);
+    margin: 0 0 18px;
+    line-height: 1.5;
+    font-weight: 500;
 }
 
+/* Sección de dificultades más legible */
 .game-options {
-    margin-bottom: 12px;
+    margin-bottom: 20px;
 }
 
 .game-options h4 {
     font-size: 0.8rem;
-    margin-bottom: 6px;
-    color: white;
     font-weight: 600;
+    color: var(--text-secondary);
     text-align: center;
+    margin: 0 0 12px 0;
     text-transform: uppercase;
-    letter-spacing: 0.6px;
+    letter-spacing: 0.5px;
 }
 
 .difficulty-options {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     justify-content: center;
-    margin-top: 8px;
+    margin: 0;
+    flex-wrap: wrap;
 }
 
 .difficulty-btn {
-    background: rgba(13, 14, 26, 0.6);
-    border: 2px solid rgba(131, 93, 255, 0.4);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 10px;
-    font-size: 1.15rem;
-    font-weight: 600;
+    background: rgba(148, 163, 184, 0.08);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    color: var(--text-secondary);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.25s ease-out;
-    min-width: 120px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-    text-shadow: 0 1px 1px rgba(0,0,0,0.2);
-}
-
-.difficulty-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
+    transition: all 0.2s ease;
+    min-width: 85px;
+    text-align: center;
 }
 
 .difficulty-btn:hover {
-    background: rgba(45, 48, 71, 0.7);
-    transform: translateY(-4px) scale(1.03);
-    border-color: #A07FFF;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25), 0 0 15px rgba(131, 93, 255, 0.2);
-}
-
-.difficulty-btn:hover::before {
-    transform: translateX(100%);
+    background: rgba(148, 163, 184, 0.15);
+    border-color: rgba(148, 163, 184, 0.3);
+    transform: translateY(-1px);
 }
 
 .difficulty-btn.active {
-    background: linear-gradient(145deg, #7E57F2, #5E35B1);
-    border-color: #C5B3FF;
-    color: #FFFFFF;
-    font-weight: 700;
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 8px 15px rgba(94, 53, 177, 0.5),
-                inset 0 2px 3px rgba(255, 255, 255, 0.1),
-                inset 0 -2px 3px rgba(0, 0, 0, 0.2),
-                0 0 20px rgba(126, 87, 242, 0.4);
-    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    background: var(--modal-primary);
+    border-color: transparent;
+    color: white;
+    box-shadow: 0 3px 8px rgba(99, 102, 241, 0.3);
 }
 
-.difficulty-btn.active::before {
-    display: none;
-}
-
+/* Grid de reglas con mejor tipografía */
 .rules-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    gap: 6px;
-    margin-bottom: 15px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 10px;
+    margin: 0 0 18px 0;
+    justify-items: center;
 }
 
 .rule-item {
-    background: rgba(13, 14, 26, 0.6);
-    border-radius: 8px;
-    padding: 8px 6px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background: rgba(148, 163, 184, 0.06);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 10px;
+    padding: 12px 10px;
     text-align: center;
-    border: 1px solid rgba(131, 93, 255, 0.15);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.2s ease;
+    width: 100%;
+    max-width: 140px;
+    position: relative;
+    overflow: hidden;
+}
+
+.rule-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--modal-primary);
+    opacity: 0;
+    transition: opacity 0.2s ease;
 }
 
 .rule-item:hover {
-    background: rgba(23, 25, 35, 0.8);
-    transform: translateY(-4px);
-    border-color: rgba(131, 93, 255, 0.3);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 0 10px rgba(131, 93, 255, 0.15);
+    background: rgba(148, 163, 184, 0.12);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rule-item:hover::before {
+    opacity: 1;
 }
 
 .rule-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    margin: 0 auto 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 6px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    position: relative;
-    z-index: 1;
-    overflow: hidden;
+    font-size: 0.7rem;
+    font-weight: 600;
 }
 
-.rule-icon::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
-}
-
-.rule-item:hover .rule-icon::before {
-    transform: translateX(100%);
-}
-
-/* Icon colors */
-.error-icon { background: linear-gradient(135deg, rgba(255, 90, 122, 0.2), rgba(232, 58, 90, 0.3)); color: #FF5A7A; }
-.help-icon { background: linear-gradient(135deg, rgba(49, 229, 178, 0.2), rgba(38, 179, 141, 0.3)); color: #31E5B2; }
-.keyboard-icon { background: linear-gradient(135deg, rgba(131, 93, 255, 0.2), rgba(86, 54, 201, 0.3)); color: #835DFF; }
-.spell-icon { background: linear-gradient(135deg, rgba(255, 183, 75, 0.2), rgba(244, 161, 35, 0.3)); color: #FFB74B; }
-.response-icon { background: linear-gradient(135deg, rgba(84, 187, 255, 0.2), rgba(45, 154, 226, 0.3)); color: #54BBFF; }
+.error-icon { background: var(--modal-error); color: white; }
+.help-icon { background: var(--modal-accent); color: white; }
+.keyboard-icon { background: var(--modal-primary); color: white; }
+.spell-icon { background: var(--modal-warning); color: white; }
+.response-icon { background: var(--modal-secondary); color: white; }
 
 .rule-item h4 {
-    font-size: 0.78rem;
+    font-size: 0.7rem;
     font-weight: 600;
-    margin-bottom: 3px;
-    color: white;
+    color: var(--text-primary);
+    margin: 0 0 5px 0;
+    line-height: 1.3;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
 }
 
-.rule-item p,
-.rule-item ul li {
-    font-size: 0.78rem;
-    color: rgba(255, 255, 255, 0.7);
+.rule-item p {
+    font-size: 0.65rem;
+    color: var(--text-muted);
     line-height: 1.4;
+    margin: 0;
 }
 
-/* Ensure ul within rule-item also has no extra margin if needed */
 .rule-item ul {
-    margin-top: 2px;
-    margin-bottom: 2px;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin: 0;
+    padding-left: 12px;
+    text-align: left;
 }
 
+.rule-item ul li {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin: 0 0 2px 0;
+}
+
+/* Botón principal más legible */
 #gameRulesModal .primary-button {
     width: 100%;
-    justify-content: center;
-    margin-top: 8px;
-    font-size: 0.85rem;
-    padding: 9px 14px;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #835DFF, #5636C9);
-    box-shadow: 0 10px 20px rgba(86, 54, 201, 0.3);
-    position: relative;
-    overflow: hidden;
-    text-transform: uppercase;
-    letter-spacing: 0.7px;
-    border: none;
+    background: var(--modal-primary);
     color: white;
-    font-weight: 700;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#gameRulesModal .primary-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transform: translateX(-100%);
-    transition: transform 0.6s ease;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-top: 0;
+    box-shadow: 0 4px 10px rgba(99, 102, 241, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 #gameRulesModal .primary-button:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 35px rgba(86, 54, 201, 0.5);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    transform: translateY(-1px);
 }
 
-#gameRulesModal .primary-button:hover::before {
-    transform: translateX(100%);
-}
-
-#gameRulesModal .primary-button svg {
-    width: 20px;
-    height: 20px;
-    transition: transform 0.3s ease;
-}
-
-#gameRulesModal .primary-button:hover svg {
-    transform: translateX(6px);
-}
-
-/* --- Game Result & Stats Detail Modals --- */
+/* Game Result Modal - Mejor tipografía */
 #gameResultModal .modal-content,
 #statsDetailModal .modal-content {
-    max-width: 450px;
+    max-width: 380px;
     padding: 0;
     overflow: hidden;
-    border-radius: 12px;
-    background: linear-gradient(135deg, rgba(23, 25, 35, 0.95), rgba(16, 17, 25, 0.97));
 }
 
 .result-modal-header,
 .stats-modal-header {
-    padding: 15px 15px 12px;
+    padding: 18px 18px 16px;
     text-align: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    color: white;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    position: relative;
 }
 
-/* Header background colors based on result */
-.result-header-victory {
-    background: var(--gradient-secondary); /* Green */
-}
-.result-header-defeat {
-    background: var(--gradient-error); /* Red */
-}
-.result-header-timeout {
-    background: var(--gradient-accent); /* Yellow/Orange */
-}
+.result-header-victory { background: var(--modal-accent); }
+.result-header-defeat { background: var(--modal-error); }
+.result-header-timeout { background: var(--modal-warning); }
 
 .result-icon {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
+
 .result-icon svg {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
+    color: white;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .result-title,
 .stats-title {
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin: 0 0 5px 0;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    margin: 0 0 6px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .result-message,
 .stats-subtitle {
-    font-size: 0.95rem;
-    color: var(--text-light);
-    margin: 0 0 20px 0;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
     line-height: 1.5;
 }
 
+/* Stats grid con mejor legibilidad */
 .result-stats,
 .performance-summary {
-    padding: 15px;
+    padding: 18px;
     display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-}
-
-.result-stats {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
 }
 
 .stat-item,
 .performance-item {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 12px 15px;
-    border-radius: 8px;
+    background: rgba(148, 163, 184, 0.06);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 10px;
+    padding: 14px 12px;
     text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.2s ease;
     opacity: 0;
-    transform: translateY(10px);
-    animation: fadeInSlideUp 0.5s ease-out forwards;
+    animation: fadeInSlideUp 0.4s ease-out forwards;
+    position: relative;
 }
 
-.stat-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+.stat-item:hover,
+.performance-item:hover {
+    background: rgba(148, 163, 184, 0.12);
+    transform: translateY(-1px);
 }
 
 .stat-item.winner {
-    background: rgba(var(--success-rgb), 0.15);
-    border-left: 4px solid var(--success);
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
 }
 
 .stat-item.loser {
-    background: rgba(var(--error-rgb), 0.1);
-    border-left: 4px solid var(--error);
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
 }
 
 .stat-label,
 .performance-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    font-size: 0.7rem;
-    color: var(--text-light);
-    margin-bottom: 5px;
-    text-transform: uppercase;
-    font-weight: 500;
+    gap: 4px;
 }
 
 .stat-label i {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
 }
 
 .stat-value,
 .performance-value {
-    display: block;
-    font-size: 1.3rem;
+    font-size: 1.375rem;
     font-weight: 700;
-    color: var(--text);
+    color: var(--text-primary);
+    display: block;
 }
 
-.correct-stat { color: var(--success); }
-.incorrect-stat { color: var(--error); }
+.correct-stat { color: #10b981; }
+.incorrect-stat { color: #ef4444; }
 
 .result-buttons,
 .stats-buttons {
     display: flex;
     justify-content: center;
-    gap: 8px;
-    padding: 0 15px 15px;
+    gap: 10px;
+    padding: 0 18px 18px;
     flex-wrap: wrap;
 }
 
-/* Generic modal button styles (can be reused) */
-.modal-button {
-    flex-grow: 1;
-    min-width: 110px;
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--text-light);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 8px 12px;
-    border-radius: 6px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-}
-
-.modal-button:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: var(--primary-light);
-    color: white;
-    transform: translateY(-2px);
-}
-
-/* Primary action button in modal */
-.modal-button.primary {
-    background: var(--gradient-primary);
-    color: white;
-    border: none;
-    box-shadow: var(--glow-primary);
-}
-
-.modal-button.primary:hover {
-    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
-    border: none;
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 6px 15px rgba(127, 90, 248, 0.4);
-}
-
-/* Close/Cancel action button in modal */
-.modal-button.secondary {
-    background: rgba(255, 84, 112, 0.2);
-    border-color: rgba(255, 84, 112, 0.4);
-    color: #FF5470;
-}
-
-.modal-button.secondary:hover {
-    background: rgba(255, 84, 112, 0.3);
-    border-color: #FF5470;
-    color: white;
-}
-
-/* Styles specific to Stats Detail Modal */
+/* Stats Detail Modal */
 #statsDetailModal .modal-content {
-    max-width: 550px;
+    max-width: 400px;
 }
 
 .errors-container {
-    padding: 15px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    max-height: 180px;
+    padding: 16px 18px;
+    border-top: 1px solid rgba(148, 163, 184, 0.1);
+    max-height: 200px;
     overflow-y: auto;
-    background-color: rgba(0, 0, 0, 0.1);
+    background: rgba(148, 163, 184, 0.02);
 }
 
 .errors-title {
-    font-size: 1rem;
+    font-size: 0.875rem;
     font-weight: 600;
-    color: var(--primary-light);
-    margin: 0 0 10px 0;
+    color: var(--text-secondary);
+    margin: 0 0 12px 0;
     text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .errors-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .error-item {
     display: flex;
-    gap: 8px;
+    gap: 10px;
+    background: rgba(239, 68, 68, 0.05);
+    border: 1px solid rgba(239, 68, 68, 0.1);
+    border-radius: 8px;
+    padding: 10px 12px;
     align-items: flex-start;
-    background: rgba(0, 0, 0, 0.15);
-    padding: 8px 10px;
-    border-radius: 6px;
-    border-left: 3px solid var(--error);
 }
 
 .error-letter {
-    background: var(--error);
+    width: 24px;
+    height: 24px;
+    background: var(--modal-error);
     color: white;
-    border-radius: 50%;
-    width: 26px;
-    height: 26px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
+    font-size: 0.7rem;
+    font-weight: 600;
     flex-shrink: 0;
-    font-size: 0.9rem;
 }
 
 .error-details {
-    flex-grow: 1;
+    flex: 1;
+    min-width: 0;
 }
 
 .error-question {
-    font-size: 0.8rem;
-    margin-bottom: 4px;
-    line-height: 1.3;
-    color: var(--text);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 5px;
+    line-height: 1.4;
+    font-weight: 500;
 }
 
 .error-answers {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
+    color: var(--text-muted);
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
 }
 
-.user-answer { color: var(--text-light); }
-.user-answer strong { color: var(--error); font-weight: 600; }
+.user-answer { color: var(--text-muted); }
+.user-answer strong { color: #ef4444; font-weight: 600; }
 
-.correct-answer { color: var(--text-light); }
-.correct-answer strong { color: var(--success); font-weight: 600; }
+.correct-answer { color: var(--text-muted); }
+.correct-answer strong { color: #10b981; font-weight: 600; }
 
 .no-errors {
-    color: var(--text-light);
+    color: var(--text-muted);
     text-align: center;
-    padding: 10px 0;
+    padding: 18px 0;
+    font-size: 0.875rem;
     font-style: italic;
-    font-size: 0.8rem;
 }
 
 .performance-summary {
-    padding: 15px;
+    padding: 16px 18px;
 }
 
 .performance-stats {
-     display: grid;
-     grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-     gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
 }
 
-/* Responsive Modals */
-@media (max-width: 576px) {
+/* Password Modal */
+#privateRoomPasswordModal .modal-content {
+    max-width: 320px;
+    padding: 22px;
+}
+
+#privateRoomPasswordModal .modal-title {
+    font-size: 1.125rem;
+    margin-bottom: 14px;
+}
+
+#privateRoomPasswordModal #passwordModalText {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 18px;
+    line-height: 1.6;
+}
+
+#privateRoomPasswordModal .form-group {
+    margin-bottom: 16px;
+}
+
+#privateRoomPasswordModal .form-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+#privateRoomPasswordModal #passwordModalInput {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(148, 163, 184, 0.05);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+#privateRoomPasswordModal #passwordModalInput:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: rgba(148, 163, 184, 0.08);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+#privateRoomPasswordModal #passwordModalInput::placeholder {
+    color: var(--text-muted);
+}
+
+#privateRoomPasswordModal #passwordErrorText {
+    font-size: 0.8rem;
+    color: #ef4444;
+    text-align: center;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    min-height: 1.2em;
+}
+
+#privateRoomPasswordModal .modal-footer {
+    margin-top: 18px;
+}
+
+/* Mentiroso Modal */
+.mentiroso-intro-modal {
+    max-width: 380px;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.2);
+}
+
+.mentiroso-intro-modal .modal-title {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.mentiroso-intro-modal .modal-title i {
+    color: #ef4444;
+    font-size: 1.2rem;
+    margin-right: 8px;
+}
+
+.mentiroso-intro-modal p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 16px;
+    line-height: 1.6;
+    font-weight: 600;
+}
+
+.mentiroso-intro-modal ul {
+    padding-left: 18px;
+    margin-bottom: 18px;
+}
+
+.mentiroso-intro-modal li {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.mentiroso-intro-modal strong {
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.mentiroso-intro-modal .highlight-consagra {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.mentiroso-intro-modal .modal-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 18px;
+}
+
+.mentiroso-intro-modal .primary-button {
+    background: var(--modal-error);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.mentiroso-intro-modal .primary-button i {
+    font-size: 1rem;
+}
+
+/* Feedback close button */
+.feedback-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    background: rgba(148, 163, 184, 0.1);
+    border: none;
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.feedback-close-btn:hover {
+    background: rgba(148, 163, 184, 0.2);
+    color: var(--text-secondary);
+}
+
+.feedback-close-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+}
+
+.feedback-close-btn svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+
+@media (max-width: 640px) {
+    .modal-content {
+        max-width: 95%;
+        padding: 16px;
+        margin: 12px;
+    }
+    
+    .modal-title {
+        font-size: 1rem;
+    }
+    
     #gameRulesModal .modal-content {
         max-width: 95%;
-        padding: 12px;
+        padding: 16px;
     }
+    
     #gameRulesModal .modal-title {
-        font-size: 1.3rem;
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+    }
+    
+    .game-promo {
+        font-size: 0.75rem;
+        margin: 0 0 12px;
+    }
+    
+    .game-options h4 {
+        font-size: 0.7rem;
         margin-bottom: 8px;
     }
-    .game-promo {
-        font-size: 0.8rem;
-        margin: 6px 0 10px;
-    }
-    .game-options h4 {
-        font-size: 0.75rem;
-    }
-    .difficulty-btn {
-        padding: 12px 20px;
-        font-size: 1.05rem;
-        min-width: 110px;
-        border-width: 2px;
-    }
-    .rules-grid {
-        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    
+    .difficulty-options {
         gap: 5px;
     }
-    .rule-item {
-        padding: 6px 5px;
+    
+    .difficulty-btn {
+        min-width: 65px;
+        padding: 6px 10px;
+        font-size: 0.7rem;
     }
+    
+    /* Grid 1x6 en móviles para mejor organización */
+    .rules-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(6, auto);
+        gap: 6px;
+        margin: 0 0 12px 0;
+    }
+    
+    .rule-item {
+        padding: 8px 6px;
+        max-width: none;
+    }
+    
     .rule-icon {
-        width: 24px;
-        height: 24px;
+        width: 16px;
+        height: 16px;
         margin-bottom: 4px;
     }
+    
     .rule-item h4 {
-        font-size: 0.72rem;
+        font-size: 0.6rem;
+        margin-bottom: 3px;
     }
+    
     .rule-item p,
     .rule-item ul li {
-        font-size: 0.72rem;
-        line-height: 1.4;
+        font-size: 0.55rem;
+        line-height: 1.2;
     }
+    
     #gameRulesModal .primary-button {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         padding: 8px 12px;
+        margin-top: 12px;
     }
-
+    
     #gameResultModal .modal-content,
     #statsDetailModal .modal-content {
         max-width: 95%;
     }
+    
+    .result-modal-header,
+    .stats-modal-header {
+        padding: 12px 12px 10px;
+    }
+    
     .result-title,
     .stats-title {
-        font-size: 1.5rem;
-    }
-    .stat-value,
-    .performance-value {
-        font-size: 1.2rem;
-    }
-    .modal-button {
-        min-width: 100px;
-        padding: 8px 12px;
-        font-size: 0.8rem;
-    }
-    #statsDetailModal .modal-content {
-        max-width: 95%;
-    }
-    .errors-container {
-        max-height: 200px;
-    }
-}
-
-/* Añadir media query específica para móviles muy pequeños (340px de ancho) */
-@media (max-width: 375px) {
-    /* Ajustes generales para todos los modales */
-    .modal-content {
-        padding: 15px 12px;
-        max-width: 98%;
+        font-size: 1rem;
     }
     
-    .modal-title {
-        font-size: 1.2rem;
-        margin-bottom: 10px;
+    .result-message,
+    .stats-subtitle {
+        font-size: 0.75rem;
     }
     
-    /* Ajustes específicos para el modal de reglas */
-    #gameRulesModal .modal-content {
+    /* Stats grid 1x4 en móviles */
+    .result-stats,
+    .performance-summary {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 12px;
+    }
+    
+    .stat-item,
+    .performance-item {
         padding: 10px 8px;
     }
     
+    .stat-value,
+    .performance-value {
+        font-size: 1.125rem;
+    }
+    
+    .result-buttons,
+    .stats-buttons {
+        padding: 0 12px 12px;
+    }
+    
+    .modal-button {
+        min-width: 60px;
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+    
+    #statsDetailModal .modal-content {
+        max-width: 95%;
+    }
+    
+    .errors-container {
+        padding: 10px 12px;
+        max-height: 150px;
+    }
+    
+    .errors-title {
+        font-size: 0.75rem;
+        margin-bottom: 8px;
+    }
+    
+    .error-item {
+        padding: 6px 8px;
+        gap: 6px;
+    }
+    
+    .error-letter {
+        width: 16px;
+        height: 16px;
+        font-size: 0.6rem;
+    }
+    
+    .error-question {
+        font-size: 0.65rem;
+        margin-bottom: 3px;
+    }
+    
+    .error-answers {
+        font-size: 0.6rem;
+    }
+    
+    .mentiroso-intro-modal {
+        max-width: 95%;
+        padding: 16px;
+    }
+    
+    .mentiroso-intro-modal .modal-title {
+        font-size: 0.95rem;
+        margin-bottom: 10px;
+    }
+    
+    .mentiroso-intro-modal p {
+        font-size: 0.75rem;
+        margin-bottom: 10px;
+    }
+    
+    .mentiroso-intro-modal li {
+        font-size: 0.7rem;
+        margin-bottom: 4px;
+    }
+    
+    .mentiroso-intro-modal .primary-button {
+        padding: 8px 12px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 14px;
+        border-radius: 10px;
+    }
+    
+    .modal-title {
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+    }
+    
+    #gameRulesModal .modal-content {
+        padding: 12px;
+    }
+    
     #gameRulesModal .modal-title {
-        font-size: 1.1rem;
-        margin-bottom: 5px;
+        font-size: 0.85rem;
+        margin-bottom: 8px;
     }
     
     .game-promo {
         font-size: 0.7rem;
-        margin: 4px 0 8px;
+        margin: 0 0 8px;
     }
     
     .game-options h4 {
         font-size: 0.65rem;
-        margin-bottom: 4px;
+        margin-bottom: 6px;
     }
     
     .difficulty-options {
@@ -794,166 +1018,108 @@
     }
     
     .difficulty-btn {
-        padding: 8px 12px;
-        font-size: 0.8rem;
-        min-width: 85px;
-        border-width: 1px;
+        min-width: 55px;
+        padding: 5px 8px;
+        font-size: 0.65rem;
     }
     
     .rules-grid {
-        grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
-        gap: 4px;
+        gap: 5px;
+        margin: 0 0 10px 0;
     }
     
     .rule-item {
-        padding: 4px 3px;
+        padding: 6px 4px;
     }
     
     .rule-icon {
-        width: 18px;
-        height: 18px;
+        width: 14px;
+        height: 14px;
         margin-bottom: 3px;
     }
     
-    .rule-icon svg {
-        width: 12px;
-        height: 12px;
-    }
-    
     .rule-item h4 {
-        font-size: 0.62rem;
+        font-size: 0.55rem;
         margin-bottom: 2px;
     }
     
     .rule-item p,
     .rule-item ul li {
-        font-size: 0.6rem;
-        line-height: 1.3;
+        font-size: 0.5rem;
+        line-height: 1.1;
     }
     
     #gameRulesModal .primary-button {
         font-size: 0.7rem;
         padding: 6px 10px;
-    }
-    
-    #gameRulesModal .primary-button svg {
-        width: 16px;
-        height: 16px;
-    }
-    
-    /* Ajustes para modales de resultado y estadísticas */
-    .result-modal-header,
-    .stats-modal-header {
-        padding: 10px 8px 8px;
-    }
-    
-    .result-icon svg {
-        width: 28px;
-        height: 28px;
-    }
-    
-    .result-title,
-    .stats-title {
-        font-size: 1.2rem;
-        margin-bottom: 3px;
-    }
-    
-    .result-message,
-    .stats-subtitle {
-        font-size: 0.8rem;
-        margin-bottom: 10px;
-    }
-    
-    .result-stats,
-    .performance-summary {
-        padding: 10px 8px;
-        gap: 8px;
+        margin-top: 8px;
     }
     
     .result-stats {
-        grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
+        padding: 10px;
+        gap: 6px;
     }
     
-    .stat-item,
-    .performance-item {
-        padding: 8px 5px;
+    .stat-item {
+        padding: 8px 6px;
     }
     
-    .stat-label,
-    .performance-label {
+    .stat-label {
         font-size: 0.6rem;
         margin-bottom: 3px;
     }
     
-    .stat-value,
-    .performance-value {
+    .stat-value {
         font-size: 1rem;
     }
     
     .result-buttons,
     .stats-buttons {
-        padding: 0 8px 8px;
+        padding: 0 10px 10px;
         gap: 5px;
     }
     
     .modal-button {
-        min-width: 80px;
-        padding: 6px 8px;
+        min-width: 50px;
+        padding: 5px 8px;
         font-size: 0.7rem;
     }
     
-    .modal-button svg {
-        width: 14px;
-        height: 14px;
-    }
-    
-    /* Ajustes para el contenedor de errores */
     .errors-container {
-        padding: 10px 8px;
-        max-height: 170px;
-    }
-    
-    .errors-title {
-        font-size: 0.85rem;
-        margin-bottom: 8px;
-    }
-    
-    .errors-list {
-        gap: 6px;
+        padding: 8px 10px;
+        max-height: 120px;
     }
     
     .error-item {
-        padding: 6px 8px;
+        padding: 4px 6px;
     }
     
     .error-letter {
-        width: 22px;
-        height: 22px;
-        font-size: 0.75rem;
+        width: 14px;
+        height: 14px;
+        font-size: 0.55rem;
     }
     
     .error-question {
-        font-size: 0.7rem;
-        margin-bottom: 3px;
+        font-size: 0.6rem;
     }
     
     .error-answers {
-        font-size: 0.65rem;
+        font-size: 0.55rem;
     }
     
-    /* Ajuste para modal de contraseña */
     #privateRoomPasswordModal .modal-content {
-        padding: 15px;
+        padding: 14px;
     }
     
     #privateRoomPasswordModal .modal-title {
-        font-size: 1.1rem;
-        margin-bottom: 10px;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
     }
     
     #privateRoomPasswordModal #passwordModalText {
         font-size: 0.75rem;
-        margin-bottom: 15px;
+        margin-bottom: 12px;
     }
     
     #privateRoomPasswordModal .form-group label {
@@ -963,7 +1129,7 @@
     
     #privateRoomPasswordModal #passwordModalInput {
         padding: 8px 10px;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
     }
     
     #privateRoomPasswordModal #passwordErrorText {
@@ -971,289 +1137,39 @@
         margin-bottom: 10px;
     }
     
-    #privateRoomPasswordModal .modal-footer {
-        margin-top: 15px;
+    .feedback-close-btn {
+        top: 6px;
+        right: 6px;
+        width: 16px;
+        height: 16px;
+    }
+    
+    .feedback-close-btn svg {
+        width: 8px;
+        height: 8px;
     }
 }
 
-/* Modal Animations */
-@keyframes shimmerEffect {
-    0% { transform: rotate(30deg) translateX(-100%); }
-    100% { transform: rotate(30deg) translateX(100%); }
+/* ===== ANIMATIONS ===== */
+
+@keyframes modalShimmer {
+    0% { opacity: 0; }
+    50% { opacity: 0.03; }
+    100% { opacity: 0; }
 }
 
-@keyframes pulseText {
-    0% { opacity: 0.8; }
-    100% { opacity: 1; transform: scale(1.05); }
-} 
-
 @keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
     to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-/* --- Styles for Private Room Password Prompt Modal --- */
-#privateRoomPasswordModal .modal-content {
-    max-width: 380px; /* Más pequeño que el de resultados */
-    padding: 30px; /* Ajustar padding */
-    background: var(--background-alt); /* Mismo fondo que otros modales */
-    /* Hereda el borde redondeado, sombra, etc. de .modal-content general */
-}
-
-#privateRoomPasswordModal .modal-title {
-    font-size: 1.4rem; /* Un poco más pequeño */
-    margin-bottom: 15px;
-    /* Hereda el gradiente de texto y centrado de .modal-title general */
-}
-
-#privateRoomPasswordModal #passwordModalText {
-    font-size: 0.9rem;
-    color: var(--text-light);
-    margin-bottom: 20px;
-    text-align: center;
-    line-height: 1.5;
-}
-
-#privateRoomPasswordModal .form-group {
-    margin-bottom: 15px;
-}
-
-#privateRoomPasswordModal .form-group label {
-    display: block;
-    font-size: 0.85rem;
-    color: var(--text-light);
-    margin-bottom: 6px;
-    font-weight: 500;
-}
-
-#privateRoomPasswordModal #passwordModalInput {
-    /* Reutiliza .lobby-input pero con ajustes si es necesario */
-    width: 100%;
-    padding: 10px 12px;
-    background: rgba(var(--darker-bg-rgb), 0.7);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 6px;
-    font-size: 0.9rem;
-}
-
-#privateRoomPasswordModal #passwordModalInput:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2);
-}
-
-/* Estilo para el mensaje de error de contraseña en el modal */
-#privateRoomPasswordModal #passwordErrorText {
-    font-size: 0.8rem;
-    color: var(--error);
-    text-align: center;
-    margin-top: -10px; /* Para acercarlo al input */
-    margin-bottom: 15px;
-    min-height: 1.2em; /* Para evitar saltos de layout */
-}
-
-#privateRoomPasswordModal .modal-footer {
-    margin-top: 25px; /* Ajustar margen del footer */
-    /* Hereda flex y gap de .modal-footer general */
-}
-
-/* input-focus-border ya está definido globalmente, se aplicará si es relevante */
-
-/* Estilos para el botón de cierre de notificaciones temporales */
-.feedback-close-btn {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: transparent;
-    border: none;
-    color: var(--text-light, #94A1B2);
-    cursor: pointer;
-    padding: 4px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    z-index: 10;
-}
-
-.feedback-close-btn:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: white;
-}
-
-.feedback-close-btn:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
-}
-
-/* Para pantallas pequeñas, hacer el botón más pequeño */
-@media (max-width: 375px) {
-    .feedback-close-btn svg {
-        width: 16px;
-        height: 16px;
-    }
-    .feedback-close-btn {
-        top: 6px;
-        right: 6px;
-        padding: 3px;
-    }
-} 
-
-/* Añadir estilos para el modal de Mentiroso al final del archivo */
-
-/* Estilos específicos para el modal de Mentiroso */
-.mentiroso-intro-modal {
-    max-width: 500px;
-    background: linear-gradient(145deg, #1a202c, #2d3748);
-    border: 2px solid #e74c3c;
-    box-shadow: 0 20px 40px rgba(231, 76, 60, 0.3);
-}
-
-.mentiroso-intro-modal .modal-title {
-    color: #f1f1f1;
-    border-bottom: 2px solid #e74c3c;
-    padding-bottom: 10px;
-    margin-bottom: 12px;
-    font-family: 'Oswald', sans-serif;
-    display: flex;
-    align-items: center;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-size: 1.5rem;
-}
-
-.mentiroso-intro-modal .modal-title i {
-    color: #e74c3c;
-    margin-right: 10px;
-    font-size: 1.3em;
-}
-
-.mentiroso-intro-modal p {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 15px;
-    color: #f39c12;
-    font-family: 'Montserrat', sans-serif;
-}
-
-.mentiroso-intro-modal ul {
-    padding-left: 15px;
-    margin-bottom: 20px;
-}
-
-.mentiroso-intro-modal li {
-    margin-bottom: 10px;
-    color: #e2e8f0;
-    line-height: 1.4;
-    font-size: 0.95rem;
-    position: relative;
-    padding-left: 5px;
-}
-
-.mentiroso-intro-modal strong {
-    color: #f39c12;
-    font-weight: 600;
-}
-
-.mentiroso-intro-modal .highlight-consagra {
-    color: #2ecc71;
-    font-weight: 700;
-}
-
-.mentiroso-intro-modal .modal-footer {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-}
-
-.mentiroso-intro-modal .primary-button {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 30px;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 6px 12px rgba(231, 76, 60, 0.25);
-}
-
-.mentiroso-intro-modal .primary-button:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(231, 76, 60, 0.4);
-    background: linear-gradient(135deg, #d63031, #e74c3c);
-}
-
-.mentiroso-intro-modal .primary-button i {
-    font-size: 1.1em;
-}
-
-@media (max-width: 768px) {
-    .mentiroso-intro-modal {
-        width: 90%;
-        padding: 15px;
-        max-width: 450px;
-    }
-    
-    .mentiroso-intro-modal .modal-title {
-        font-size: 1.3rem;
-    }
-    
-    .mentiroso-intro-modal p {
-        font-size: 1rem;
-    }
-    
-    .mentiroso-intro-modal li {
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-    }
-    
-    .mentiroso-intro-modal .primary-button {
-        padding: 8px 16px;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .mentiroso-intro-modal {
-        padding: 12px;
-        max-width: 95%;
-    }
-    
-    .mentiroso-intro-modal .modal-title {
-        font-size: 1.1rem;
-        padding-bottom: 8px;
-        margin-bottom: 10px;
-    }
-    
-    .mentiroso-intro-modal p {
-        font-size: 0.9rem;
-        margin-bottom: 12px;
-    }
-    
-    .mentiroso-intro-modal ul {
-        padding-left: 12px;
-        margin-bottom: 15px;
-    }
-    
-    .mentiroso-intro-modal li {
-        font-size: 0.8rem;
-        margin-bottom: 6px;
-        line-height: 1.3;
-    }
-    
-    .mentiroso-intro-modal .primary-button {
-        padding: 8px 12px;
-        font-size: 0.8rem;
-        border-radius: 20px;
-    }
+@keyframes pulseGlow {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
 } 

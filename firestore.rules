@@ -1,0 +1,24 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Reglas para la colección de usuarios
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+    
+    // Reglas para la colección de partidas
+    match /matches/{matchId} {
+      allow read, write: if true;
+    }
+    
+    // Reglas para la colección de rankings
+    match /rankings/{rankingId} {
+      allow read, write: if true;
+    }
+    
+    // Reglas para otras colecciones que puedan necesitarse
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+} 
