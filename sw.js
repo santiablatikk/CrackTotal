@@ -59,10 +59,10 @@ self.addEventListener('install', event => {
     event.waitUntil(
         Promise.all([
             // Cache de recursos estáticos
-        caches.open(STATIC_CACHE_NAME)
-            .then(cache => {
-                console.log('[SW] Cacheando recursos estáticos...');
-                return cache.addAll(STATIC_ASSETS);
+            caches.open(STATIC_CACHE_NAME)
+                .then(cache => {
+                    console.log('[SW] Cacheando recursos estáticos...');
+                    return cache.addAll(STATIC_ASSETS);
                 }),
             // Pre-crear otros caches
             caches.open(DYNAMIC_CACHE_NAME),
@@ -207,8 +207,8 @@ async function networkFirstWithInvalidation(request) {
         
         return createOfflineResponse();
     }
-        }
-        
+}
+
 // Estrategia Cache First mejorada para imágenes
 async function cacheFirstImages(request) {
     const cachedResponse = await caches.match(request);
@@ -251,28 +251,30 @@ async function cacheFirstImages(request) {
             });
             
             cache.put(request, cachedResponse);
+            return networkResponse;
         }
         
         return networkResponse;
     } catch (error) {
-        console.log('[SW] Error cargando imagen, usando cache si existe:', request.url);
+        console.log('[SW] Error cargando imagen:', request.url);
         return cachedResponse || createImagePlaceholder();
     }
 }
 
-// Estrategia para APIs con timeout
+// Estrategia Network First con timeout para APIs
 async function networkFirstWithTimeout(request) {
     try {
         const networkResponse = await fetchWithTimeout(request, CACHE_CONFIG.networkTimeoutMs);
         
         if (networkResponse && networkResponse.status === 200) {
             const cache = await caches.open(API_CACHE_NAME);
-            const responseToCache = networkResponse.clone();
             
-            // Para APIs, usar TTL más corto
+            // Agregar headers de metadata para APIs
+            const responseToCache = networkResponse.clone();
             const headers = new Headers(responseToCache.headers);
             headers.set('sw-cached-time', Date.now().toString());
-            headers.set('sw-ttl', CACHE_CONFIG.maxApiCacheTime.toString());
+            headers.set('sw-version', APP_VERSION);
+            headers.set('sw-strategy', 'network-first-api');
             
             const cachedResponse = new Response(responseToCache.body, {
                 status: responseToCache.status,
@@ -285,73 +287,71 @@ async function networkFirstWithTimeout(request) {
         
         return networkResponse;
     } catch (error) {
-        // Para APIs, verificar TTL antes de devolver cache
+        console.log('[SW] Error en API, usando cache si está disponible:', request.url);
+        
         const cachedResponse = await caches.match(request);
         if (cachedResponse) {
+            // Verificar si el cache de API no está muy viejo
             const cacheTime = cachedResponse.headers.get('sw-cached-time');
-            const ttl = cachedResponse.headers.get('sw-ttl');
-            
-            if (cacheTime && ttl) {
+            if (cacheTime) {
                 const age = Date.now() - parseInt(cacheTime);
-                if (age < parseInt(ttl)) {
+                if (age < CACHE_CONFIG.maxApiCacheTime) {
                     return cachedResponse;
                 }
             }
         }
         
-        throw error; // Re-throw para que la aplicación maneje el error
+        // Si no hay cache válido, crear respuesta de error controlada
+        return new Response(JSON.stringify({ error: 'API no disponible' }), {
+            status: 503,
+            statusText: 'Service Unavailable',
+            headers: { 'Content-Type': 'application/json' }
+        });
     }
 }
 
-// Función para fetch con timeout
+// Función de timeout para fetch
 async function fetchWithTimeout(request, timeout) {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    const id = setTimeout(() => controller.abort(), timeout);
     
     try {
-        const response = await fetch(request, {
-            signal: controller.signal
-        });
-        clearTimeout(timeoutId);
+        const response = await fetch(request, { signal: controller.signal });
+        clearTimeout(id);
         return response;
     } catch (error) {
-        clearTimeout(timeoutId);
+        clearTimeout(id);
         throw error;
     }
 }
 
-// Limpiar cache de imágenes cuando está muy lleno
+// Limpiar cache de imágenes cuando esté muy lleno
 async function cleanupImageCache() {
     try {
         const cache = await caches.open(IMAGE_CACHE_NAME);
         const requests = await cache.keys();
         
         if (requests.length > CACHE_CONFIG.maxImageCacheSize) {
-            // Ordenar por tiempo de cache y eliminar las más antiguas
+            console.log(`[SW] Limpiando cache de imágenes: ${requests.length} elementos`);
+            
+            // Ordenar por tiempo de cache y eliminar los más antiguos
             const requestsWithTime = await Promise.all(
-                requests.map(async (request) => {
+                requests.map(async request => {
                     const response = await cache.match(request);
-                    const cacheTime = response?.headers.get('sw-cached-time');
-                    return {
-                        request,
-                        time: cacheTime ? parseInt(cacheTime) : 0
-                    };
+                    const cacheTime = response?.headers.get('sw-cached-time') || '0';
+                    return { request, cacheTime: parseInt(cacheTime) };
                 })
             );
             
-            requestsWithTime.sort((a, b) => a.time - b.time);
+            requestsWithTime.sort((a, b) => a.cacheTime - b.cacheTime);
             
-            // Eliminar el 25% más antiguo
-            const toDelete = requestsWithTime.slice(0, Math.floor(requests.length * 0.25));
+            const toDelete = requestsWithTime.slice(0, requestsWithTime.length - CACHE_CONFIG.maxImageCacheSize);
+            await Promise.all(toDelete.map(item => cache.delete(item.request)));
             
-            await Promise.all(
-                toDelete.map(({ request }) => cache.delete(request))
-            );
-            
-            console.log(`[SW] Limpieza de cache de imágenes: eliminadas ${toDelete.length} imágenes`);
+            console.log(`[SW] Eliminadas ${toDelete.length} imágenes del cache`);
         }
     } catch (error) {
-        console.error('[SW] Error en limpieza de cache de imágenes:', error);
+        console.error('[SW] Error limpiando cache de imágenes:', error);
     }
 }
 
@@ -359,14 +359,36 @@ async function cleanupImageCache() {
 function createOfflineResponse() {
     return new Response(
         `<!DOCTYPE html>
-        <html>
+        <html lang="es">
         <head>
-            <title>Crack Total - Offline</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Crack Total - Sin conexión</title>
             <style>
-                body { font-family: 'Montserrat', sans-serif; text-align: center; padding: 50px; background: #121212; color: #e0e0e0; }
-                .offline-icon { font-size: 4rem; margin-bottom: 20px; }
-                .offline-title { font-size: 2rem; margin-bottom: 10px; }
-                .offline-message { font-size: 1.2rem; opacity: 0.8; }
+                body {
+                    font-family: 'Montserrat', sans-serif;
+                    background: linear-gradient(135deg, #1e3c72, #2a5298);
+                    color: white;
+                    text-align: center;
+                    padding: 2rem;
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                }
+                .offline-icon {
+                    font-size: 4rem;
+                    margin-bottom: 1rem;
+                }
+                .offline-title {
+                    font-size: 2rem;
+                    margin-bottom: 1rem;
+                }
+                .offline-message {
+                    font-size: 1.1rem;
+                    opacity: 0.8;
+                }
             </style>
         </head>
         <body>
@@ -402,7 +424,7 @@ function createImagePlaceholder() {
             'Content-Type': 'image/svg+xml',
             'Cache-Control': 'no-cache'
         }
-        });
+    });
 }
 
 // Estrategia Cache First mejorada con versionado
@@ -454,31 +476,30 @@ async function staleWhileRevalidateStrategy(request) {
     
     // Fetch en background para actualizar cache
     const fetchPromise = fetchWithTimeout(request, CACHE_CONFIG.networkTimeoutMs)
-        .then(networkResponse => {
+        .then(async networkResponse => {
             if (networkResponse && networkResponse.status === 200) {
-                const cache = caches.open(DYNAMIC_CACHE_NAME);
-                return cache.then(cache => {
-                    const responseToCache = networkResponse.clone();
-                    
-                    const headers = new Headers(responseToCache.headers);
-                    headers.set('sw-cached-time', Date.now().toString());
-                    headers.set('sw-version', APP_VERSION);
-                    headers.set('sw-strategy', 'stale-while-revalidate');
-                    
-                    const cachedResponse = new Response(responseToCache.body, {
-                        status: responseToCache.status,
-                        statusText: responseToCache.statusText,
-                        headers: headers
-                    });
-                    
-                    cache.put(request, cachedResponse);
-                    return networkResponse;
+                const cache = await caches.open(DYNAMIC_CACHE_NAME);
+                const responseToCache = networkResponse.clone();
+                
+                const headers = new Headers(responseToCache.headers);
+                headers.set('sw-cached-time', Date.now().toString());
+                headers.set('sw-version', APP_VERSION);
+                headers.set('sw-strategy', 'stale-while-revalidate');
+                
+                const cachedResponse = new Response(responseToCache.body, {
+                    status: responseToCache.status,
+                    statusText: responseToCache.statusText,
+                    headers: headers
                 });
+                
+                cache.put(request, cachedResponse);
+                return networkResponse;
             }
             return networkResponse;
         })
         .catch(error => {
             console.log('[SW] Error actualizando cache en background:', error);
+            return null;
         });
     
     // Devolver cache inmediatamente si existe, sino esperar red
@@ -526,7 +547,7 @@ self.addEventListener('message', event => {
 // Función para limpiar todos los caches
 async function clearAllCaches() {
     try {
-    const cacheNames = await caches.keys();
+        const cacheNames = await caches.keys();
         await Promise.all(
             cacheNames.map(cacheName => caches.delete(cacheName))
         );
@@ -536,33 +557,6 @@ async function clearAllCaches() {
         console.error('[SW] Error eliminando caches:', error);
         return false;
     }
-}
-
-// Monitoreo de performance
-self.addEventListener('fetch', event => {
-    const startTime = performance.now();
-    
-    event.respondWith(
-        event.respondWith(handleRequest(event.request))
-            .then(response => {
-                const endTime = performance.now();
-                const duration = endTime - startTime;
-                
-                // Log performance metrics para debugging
-                if (duration > 1000) { // Solo log si toma más de 1 segundo
-                    console.log(`[SW] Request slow: ${event.request.url} took ${duration.toFixed(2)}ms`);
-                }
-                
-                return response;
-            })
-    );
-});
-
-// Handler principal de requests
-async function handleRequest(request) {
-    // Esta función debería ser llamada desde el event listener principal
-    // Es un placeholder para mantener la estructura
-    return fetch(request);
 }
 
 console.log('[SW] Service Worker cargado exitosamente'); 
