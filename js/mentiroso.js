@@ -1340,10 +1340,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     hideWaitingMessage();
                     
                     // Mostrar mensaje de quién apostó
-                    showFeedback(`${bidderName} apostó ${message.payload.newBid}`, 'info');
-                    
-                    // Actualizar mensaje de turno
-                    console.log(`⭐ Mi turno ahora?: ${gameState.currentTurn === gameState.myPlayerId}, Mi ID: ${gameState.myPlayerId}, Turno actual: ${gameState.currentTurn}`);
+                    showFeedback(`${bidderName} apostó ${message.payload.newBid}. Turno renovado: 15 segundos para el siguiente jugador.`, 'info');
                     
                     // Esperar un momento para que el usuario vea el feedback antes de actualizar la interfaz
                     setTimeout(() => {
@@ -1351,12 +1348,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         
                         // Verificar si es nuestro turno ahora
                         if (gameState.currentTurn === gameState.myPlayerId) {
-                            console.log("⭐ Ahora es mi turno!");
+                            console.log("⭐ Ahora es mi turno con timer renovado!");
                             // Restablecemos el campo de apuesta y le damos foco
                             if (bidInputEl) {
                                 bidInputEl.value = '';
                                 bidInputEl.disabled = false;
-                                setTimeout(() => bidInputEl.focus(), 300);
+                                setTimeout(() => bidInputEl.focus(), 200);
                             }
                             
                             // Habilitamos botones
@@ -1365,9 +1362,6 @@ document.addEventListener('DOMContentLoaded', function() {
                                 callMentirosoButtonEl.disabled = !(gameState.currentBid > 0 && 
                                                                      gameState.lastBidder !== gameState.myPlayerId);
                             }
-                            
-                            // Resaltar que es mi turno
-                            showFeedback("¡Es tu turno ahora!", "info");
                         } else {
                             console.log("Ahora es turno del otro jugador:", gameState.currentTurn);
                             // Deshabilitamos campos y botones
@@ -1379,7 +1373,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Actualizar indicadores visuales
                         updateChallengeArea();
                         updatePlayerUI();
-                    }, 300);
+                    }, 500); // Reducido de 800ms a 500ms para mayor responsividad
                     
                     break;
 
@@ -1496,12 +1490,23 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                 case 'mentirosoTimerStart':
                     console.log("⭐ Timer iniciado:", message.payload);
+                    
+                    // Mostrar timer inmediatamente
                     showTimer();
                     updateTimerDisplay(
                         message.payload.timeRemaining, 
                         message.payload.phase || 'bidding', 
                         message.payload.duration || 15
                     );
+                    
+                    // Si es timer renovado durante bidding, mostrar mensaje especial
+                    if (message.payload.phase === 'bidding' && gameState.currentBid > 0) {
+                        const isMyTurn = gameState.currentTurn === gameState.myPlayerId;
+                        const turnMessage = isMyTurn ? 
+                            "¡Es tu turno! Timer renovado: 15 segundos." : 
+                            "Turno del oponente. Timer renovado: 15 segundos.";
+                        showFeedback(turnMessage, 'info');
+                    }
                     break;
                     
                 case 'mentirosoTimerUpdate':

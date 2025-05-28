@@ -1600,6 +1600,11 @@ function handleMentirosoSubmitBid(ws, clientInfo, payload) {
                 nextTurn: otherPlayer.id
             }
         });
+        
+        // Reiniciar timer de 15 segundos para el siguiente jugador
+        setTimeout(() => {
+            startMentirosoQuestionTimer(roomId, 15, 'bidding');
+        }, 300); // Reducido de 500ms a 300ms para mayor fluidez
     }, 100);
 }
 
