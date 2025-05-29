@@ -294,15 +294,12 @@
         }
 
         .game-subtitle {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2rem;
+            text-align: center;
             font-weight: 500;
-            background: linear-gradient(120deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.6));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         .speed-stats {
@@ -650,33 +647,37 @@
             }
         }
 
-        /* Botones de control más pequeños */
+        /* Botones de control mejorados */
         .control-buttons {
             display: flex;
+            flex-direction: column;
             gap: 1rem;
-            justify-content: center;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
+            margin-top: 2rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .speed-btn {
-            background: var(--speed-primary);
+            background: linear-gradient(135deg, var(--speed-primary));
             color: white;
             border: none;
             padding: 1rem 2rem;
-            border-radius: 15px;
-            font-size: 1rem;
-            font-weight: 800;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-family: 'Oswald', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(15px);
-            border: 2px solid rgba(255, 107, 53, 0.3);
-            min-width: 150px;
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+            border: 2px solid rgba(255, 107, 53, 0.4);
         }
 
         .speed-btn::before {
@@ -686,29 +687,13 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.6s ease;
         }
 
-        .speed-btn::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 0;
-            height: 0;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
-            border-radius: 50%;
-            transition: all 0.4s ease;
-            z-index: -1;
-        }
-
         .speed-btn:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 
-                0 15px 40px rgba(255, 107, 53, 0.5),
-                0 0 30px rgba(255, 107, 53, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.5);
             border-color: rgba(255, 107, 53, 0.6);
         }
 
@@ -716,38 +701,26 @@
             left: 100%;
         }
 
-        .speed-btn:hover::after {
-            width: 300px;
-            height: 300px;
-        }
-
-        .speed-btn i {
-            transition: all 0.3s ease;
-            margin-right: 0.5rem;
-        }
-
-        .speed-btn:hover i {
-            transform: translateX(3px) scale(1.1);
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+        .speed-btn:active {
+            transform: translateY(-1px);
         }
 
         .speed-btn.secondary {
-            background: var(--speed-cosmic);
-            border-color: rgba(102, 126, 234, 0.3);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            color: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
 
         .speed-btn.secondary:hover {
-            box-shadow: 
-                0 15px 40px rgba(102, 126, 234, 0.5),
-                0 0 30px rgba(102, 126, 234, 0.3);
-            border-color: rgba(102, 126, 234, 0.6);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.1));
+            border-color: rgba(255, 255, 255, 0.4);
+            color: white;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .speed-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
+        .speed-btn i {
+            font-size: 1.2rem;
         }
 
         /* Pantalla de inicio */
@@ -833,22 +806,52 @@
             font-size: 0.9rem;
         }
 
-        /* Records más compactos */
+        /* Records más prominentes y centrados */
         .records-section {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 20px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            border: 1px solid rgba(255, 107, 53, 0.2);
-            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 25px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            backdrop-filter: blur(20px);
             position: relative;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.3),
+                0 0 25px rgba(255, 107, 53, 0.1);
+        }
+
+        .records-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(255, 107, 53, 0.05) 0%, 
+                rgba(255, 211, 42, 0.05) 50%, 
+                rgba(255, 65, 108, 0.05) 100%);
+            border-radius: 25px;
+            z-index: -1;
+        }
+
+        .records-section h3 {
+            text-align: center;
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 0 15px rgba(255, 107, 53, 0.5);
         }
 
         .record-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.8rem 0;
+            padding: 1rem 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
@@ -857,18 +860,25 @@
             border-bottom: none;
         }
 
+        .record-item:hover {
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 10px;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
         .record-label {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
 
         .record-value {
             color: var(--neon-orange);
             font-weight: 900;
             font-family: 'Oswald', sans-serif;
-            font-size: 1.1rem;
-            filter: drop-shadow(0 0 5px rgba(255, 107, 53, 0.5));
+            font-size: 1.3rem;
+            filter: drop-shadow(0 0 8px rgba(255, 107, 53, 0.6));
         }
 
         /* Efectos especiales */
@@ -968,20 +978,57 @@
         /* Diseño responsivo más compacto */
         @media (max-width: 768px) {
             .speed-game-panel {
-                padding: 1.2rem 1rem;
+                padding: 1.5rem 1rem;
                 margin: 0.5rem;
                 transform: none;
                 border-radius: 20px;
             }
 
-            .speed-game-panel:hover {
-                transform: translateY(-3px);
+            .game-title {
+                font-size: 2.2rem;
+                flex-direction: column;
+                gap: 0.5rem;
             }
 
-            .game-title {
-                font-size: 2rem;
-                flex-direction: column;
-                gap: 0.3rem;
+            .game-subtitle {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .records-section {
+                padding: 1.5rem;
+                margin: 1.5rem 0;
+                max-width: 100%;
+            }
+
+            .records-section h3 {
+                font-size: 1.2rem;
+            }
+
+            .record-item {
+                padding: 0.8rem 0;
+            }
+
+            .record-label {
+                font-size: 0.9rem;
+            }
+
+            .record-value {
+                font-size: 1.1rem;
+            }
+
+            .control-buttons {
+                margin-top: 1.5rem;
+                max-width: 100%;
+            }
+
+            .speed-btn {
+                padding: 0.9rem 1.5rem;
+                font-size: 1rem;
+            }
+
+            .speed-btn i {
+                font-size: 1.1rem;
             }
 
             .options-grid {
@@ -1021,12 +1068,6 @@
 
             .question-text {
                 font-size: 1.1rem;
-            }
-
-            .control-buttons {
-                flex-direction: column;
-                align-items: center;
-                gap: 0.8rem;
             }
 
             .speed-btn {
@@ -1193,25 +1234,6 @@
                         Crack Rápido
                     </h1>
                     <p class="game-subtitle">¡El desafío más veloz de Crack Total!</p>
-                </div>
-
-                <div class="start-instructions">
-                    <div class="instruction-item">
-                        <i class="fas fa-lightning-bolt"></i>
-                        <span><strong>20 preguntas</strong> de fútbol a máxima velocidad</span>
-                    </div>
-                    <div class="instruction-item">
-                        <i class="fas fa-stopwatch"></i>
-                        <span><strong>5 segundos máximo</strong> por pregunta</span>
-                    </div>
-                    <div class="instruction-item">
-                        <i class="fas fa-rocket"></i>
-                        <span><strong>Puntuación por velocidad:</strong> más rápido = más puntos</span>
-                    </div>
-                    <div class="instruction-item">
-                        <i class="fas fa-trophy"></i>
-                        <span><strong>Record personal:</strong> supera tu mejor puntuación</span>
-                    </div>
                 </div>
 
                 <div class="records-section" id="recordsSection">

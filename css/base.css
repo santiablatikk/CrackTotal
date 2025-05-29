@@ -562,4 +562,68 @@ pre code {
     .welcome-card {
         background: var(--card-bg) !important;
     }
+}
+
+/* Critical CSS - Optimizaciones de velocidad de carga */
+@font-display: swap;
+
+/* Preload y optimización de fuentes */
+.font-preload {
+    font-display: swap;
+}
+
+/* Optimización de imágenes */
+img {
+    max-width: 100%;
+    height: auto;
+    loading: lazy;
+}
+
+/* Imágenes críticas above-the-fold */
+.hero-image,
+.critical-image {
+    loading: eager;
+}
+
+/* Optimización de renderizado */
+* {
+    box-sizing: border-box;
+}
+
+/* Reduce layout shifts */
+.blog-img,
+.game-image {
+    aspect-ratio: 16/9;
+    object-fit: cover;
+}
+
+/* Optimización de scroll */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Performance optimizations */
+.will-change {
+    will-change: transform;
+}
+
+/* Reduce paint complexity */
+.simple-gradient {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+}
+
+/* CSS Containment for better performance */
+.blog-card,
+.game-card {
+    contain: layout style paint;
+}
+
+/* Lazy loading optimization */
+.lazy-section {
+    content-visibility: auto;
+}
+
+/* Minimize reflows */
+.no-reflow {
+    transform: translateZ(0);
 } 

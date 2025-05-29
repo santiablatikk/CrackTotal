@@ -193,6 +193,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const gameRulesModal = document.getElementById('gameRulesModal');
     const startGameButton = document.getElementById('startGameButton');
     const difficultyButtons = document.querySelectorAll('.difficulty-btn');
+    const difficultyCards = document.querySelectorAll('.difficulty-card');
     const helpButton = document.getElementById('helpButton');
     const timerCount = document.getElementById('timerCount');
     const gameContainer = document.getElementById('gameContainer');
@@ -213,31 +214,45 @@ document.addEventListener('DOMContentLoaded', function() {
     // const startGameButton = document.getElementById('startGameButton');
     // const difficultyButtons = document.querySelectorAll('.difficulty-btn');
     
-    // Handle difficulty selection
+    // Handle difficulty selection - Updated to support both buttons and cards
+    function handleDifficultySelection(difficulty, element) {
+        // Remove active class from all buttons and cards
+        difficultyButtons.forEach(btn => btn.classList.remove('active'));
+        difficultyCards.forEach(card => card.classList.remove('active'));
+        
+        // Add active class to clicked element
+        element.classList.add('active');
+        
+        // Set game time and maxErrors based on difficulty
+        switch(difficulty) {
+            case 'facil':
+                totalTime = 360; // Antes 300. Usuario indica 360s.
+                maxErrors = 4;   // Antes 4. Para ganar con hasta 4 errores, se pierde con 5.
+                break;
+            case 'dificil':
+                totalTime = 240; // Antes 180. Usuario indica 240s.
+                maxErrors = 2;   // Antes 2. Para ganar con hasta 2 errores, se pierde con 3.
+                break;
+            default: // normal (medio)
+                totalTime = 300; // Antes 240. Usuario indica 300s para MEDIO.
+                maxErrors = 3;   // Antes 3. Para ganar con hasta 3 errores, se pierde con 4.
+        }
+        console.log(`Dificultad seleccionada: ${difficulty}, Tiempo: ${totalTime}s, Errores Máx (umbral de derrota): ${maxErrors}`);
+    }
+    
+    // Add event listeners for difficulty buttons (legacy support)
     difficultyButtons.forEach(button => {
         button.addEventListener('click', function() {
-            // Remove active class from all buttons
-            difficultyButtons.forEach(btn => btn.classList.remove('active'));
-            
-            // Add active class to clicked button
-            this.classList.add('active');
-            
-            // Set game time and maxErrors based on difficulty
             const difficulty = this.getAttribute('data-difficulty');
-            switch(difficulty) {
-                case 'facil':
-                    totalTime = 360; // Antes 300. Usuario indica 360s.
-                    maxErrors = 4;   // Antes 4. Para ganar con hasta 4 errores, se pierde con 5.
-                    break;
-                case 'dificil':
-                    totalTime = 240; // Antes 180. Usuario indica 240s.
-                    maxErrors = 2;   // Antes 2. Para ganar con hasta 2 errores, se pierde con 3.
-                    break;
-                default: // normal (medio)
-                    totalTime = 300; // Antes 240. Usuario indica 300s para MEDIO.
-                    maxErrors = 3;   // Antes 3. Para ganar con hasta 3 errores, se pierde con 4.
-            }
-            console.log(`Dificultad seleccionada: ${difficulty}, Tiempo: ${totalTime}s, Errores Máx (umbral de derrota): ${maxErrors}`);
+            handleDifficultySelection(difficulty, this);
+        });
+    });
+    
+    // Add event listeners for difficulty cards (new design)
+    difficultyCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const difficulty = this.getAttribute('data-difficulty');
+            handleDifficultySelection(difficulty, this);
         });
     });
     
@@ -1505,12 +1520,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Create modal container
         const modalOverlay = document.createElement('div');
         modalOverlay.className = 'modal-overlay game-result-modal active';
+        modalOverlay.id = 'gameResultModal';
         
         // Create modal content
         const modalContent = document.createElement('div');
         modalContent.className = 'modal-content result-modal';
-        modalContent.style.background = 'linear-gradient(135deg, rgba(23, 25, 35, 0.95), rgba(16, 17, 25, 0.97))';
-        modalContent.style.borderColor = color.split(',')[0].replace('linear-gradient(', '').trim();
         
         // Create modal header with icon
         const modalHeader = document.createElement('div');
@@ -1522,89 +1536,128 @@ document.addEventListener('DOMContentLoaded', function() {
             <p class="result-message">${message}</p>
         `;
         
-        // Create stats container
+        // Create horizontal layout container
+        const horizontalLayout = document.createElement('div');
+        horizontalLayout.className = 'modal-horizontal-layout';
+        
+        // Create stats container (left side)
         const statsContainer = document.createElement('div');
         statsContainer.className = 'result-stats';
         statsContainer.innerHTML = `
             <div class="stat-item">
-                <span class="stat-label">Aciertos</span>
+                <span class="stat-label"><i class="fas fa-check-circle"></i> Aciertos</span>
                 <span class="stat-value correct-stat">${stats.correctAnswers}</span>
             </div>
             <div class="stat-item">
-                <span class="stat-label">Errores</span>
+                <span class="stat-label"><i class="fas fa-times-circle"></i> Errores</span>
                 <span class="stat-value incorrect-stat">${stats.incorrectAnswers}</span>
             </div>
             <div class="stat-item">
-                <span class="stat-label">Sin responder</span>
+                <span class="stat-label"><i class="fas fa-question-circle"></i> Sin responder</span>
                 <span class="stat-value">${stats.unanswered}</span>
             </div>
             <div class="stat-item">
-                <span class="stat-label">Tiempo usado</span>
+                <span class="stat-label"><i class="fas fa-clock"></i> Tiempo usado</span>
                 <span class="stat-value">${stats.timeFormatted}</span>
             </div>
             <div class="stat-item">
-                <span class="stat-label">Precisión</span>
+                <span class="stat-label"><i class="fas fa-bullseye"></i> Precisión</span>
                 <span class="stat-value">${stats.accuracy}%</span>
             </div>
         `;
         
+        // Create sidebar for additional info (right side)
+        const sidebar = document.createElement('div');
+        sidebar.className = 'modal-sidebar';
+        
+        // Quick stats summary for sidebar
+        const quickStats = document.createElement('div');
+        quickStats.className = 'errors-container';
+        
+        let sidebarContent = `<h3 class="errors-title">Resumen Rápido</h3>`;
+        
+        if (gameErrors.length > 0) {
+            sidebarContent += `
+                <div class="quick-summary">
+                    <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.875rem; margin-bottom: 16px; text-align: center;">
+                        Has cometido <strong>${gameErrors.length}</strong> error${gameErrors.length > 1 ? 'es' : ''} durante la partida.
+                    </p>
+                </div>
+                <div class="errors-list">
+            `;
+            gameErrors.slice(0, 3).forEach(error => { // Show only first 3 errors
+                sidebarContent += `
+                    <div class="error-item">
+                        <div class="error-letter">${error.letter}</div>
+                        <div class="error-details">
+                            <div class="error-question">${error.question.substring(0, 80)}...</div>
+                            <div class="error-answers">
+                                <span class="user-answer">Tu respuesta: <strong>${error.userAnswer}</strong></span>
+                                <span class="correct-answer">Correcta: <strong>${error.correctAnswer}</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            sidebarContent += `</div>`;
+            
+            if (gameErrors.length > 3) {
+                sidebarContent += `
+                    <div style="text-align: center; margin-top: 16px;">
+                        <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.8rem;">
+                            Y ${gameErrors.length - 3} error${gameErrors.length - 3 > 1 ? 'es' : ''} más...
+                        </p>
+                    </div>
+                `;
+            }
+        } else {
+            sidebarContent += `
+                <div class="no-errors">
+                    <i class="fas fa-trophy" style="font-size: 2rem; color: #31E5B2; margin-bottom: 12px;"></i>
+                    <p>¡Perfecto!</p>
+                    <p style="font-size: 0.875rem; margin-top: 8px;">No has cometido ningún error.</p>
+                </div>
+            `;
+        }
+        
+        quickStats.innerHTML = sidebarContent;
+        sidebar.appendChild(quickStats);
+        
+        // Assemble horizontal layout
+        horizontalLayout.appendChild(statsContainer);
+        horizontalLayout.appendChild(sidebar);
+        
         // --- Create buttons Container --- 
         const buttonsContainer = document.createElement('div');
-        buttonsContainer.className = 'result-buttons'; // Use a general class
+        buttonsContainer.className = 'result-buttons';
 
-        // --- Botones de Acción (Estadísticas, Perfil, Ranking, Inicio) ---
-        const actionButtonsWrapper = document.createElement('div');
-        actionButtonsWrapper.className = 'result-action-buttons'; // Wrapper for non-share buttons
-        
-        const viewStatsButton = document.createElement('button');
-        viewStatsButton.className = 'modal-button secondary-button'; // Style adjustment
-        viewStatsButton.innerHTML = `
-            <i class="fas fa-chart-bar"></i>
-            Ver Errores
-        `;
-
+        // --- Botones de Acción ---
         const viewProfileButton = document.createElement('button');
-        viewProfileButton.className = 'modal-button secondary-button'; // Style adjustment
+        viewProfileButton.className = 'modal-button secondary-button';
         viewProfileButton.innerHTML = `
             <i class="fas fa-user"></i>
             Ver Perfil
         `;
         
-        const viewRankingButton = document.createElement('button');
-        viewRankingButton.className = 'modal-button secondary-button'; // Style adjustment
-        viewRankingButton.innerHTML = `
-             <i class="fas fa-trophy"></i>
-            Ver Ranking
-        `;
-
-        actionButtonsWrapper.appendChild(viewStatsButton);
-        actionButtonsWrapper.appendChild(viewProfileButton);
-        actionButtonsWrapper.appendChild(viewRankingButton);
-
-        // --- Botones de Compartir --- 
-        const shareButtonsWrapper = document.createElement('div');
-        shareButtonsWrapper.className = 'result-share-buttons'; // Wrapper for share buttons
-
         const shareTwitterButton = document.createElement('button');
-        shareTwitterButton.className = 'modal-button share-button twitter-share-button';
+        shareTwitterButton.className = 'modal-button share-button';
         shareTwitterButton.innerHTML = `
-            <i class="fab fa-twitter"></i> Compartir en Twitter
+            <i class="fab fa-twitter"></i> Compartir
         `;
 
         const shareWhatsAppButton = document.createElement('button');
-        shareWhatsAppButton.className = 'modal-button share-button whatsapp-share-button';
+        shareWhatsAppButton.className = 'modal-button share-button';
         shareWhatsAppButton.innerHTML = `
-            <i class="fab fa-whatsapp"></i> Compartir en WhatsApp
+            <i class="fab fa-whatsapp"></i> Compartir
         `;
 
-        shareButtonsWrapper.appendChild(shareTwitterButton);
-        shareButtonsWrapper.appendChild(shareWhatsAppButton);
+        buttonsContainer.appendChild(viewProfileButton);
+        buttonsContainer.appendChild(shareTwitterButton);
+        buttonsContainer.appendChild(shareWhatsAppButton);
         
         // Assemble modal
         modalContent.appendChild(modalHeader);
-        modalContent.appendChild(statsContainer);
-        buttonsContainer.appendChild(actionButtonsWrapper); // Add action buttons first
-        buttonsContainer.appendChild(shareButtonsWrapper); // Add share buttons below
+        modalContent.appendChild(horizontalLayout);
         modalContent.appendChild(buttonsContainer);
         modalOverlay.appendChild(modalContent);
         
@@ -1612,19 +1665,10 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(modalOverlay);
         
         // --- Add event listeners --- 
-        viewStatsButton.addEventListener('click', () => {
-            showStatsDetailModal(); // This function should already exist
-        });
-
         viewProfileButton.addEventListener('click', () => {
             window.location.href = 'profile.html';
         });
-        
-        viewRankingButton.addEventListener('click', () => {
-            window.location.href = 'ranking.html';
-        });
 
-        // --- Event Listener for Twitter Share ---
         shareTwitterButton.addEventListener('click', () => {
             const score = stats.correctAnswers;
             const total = alphabet.length;
@@ -1636,7 +1680,6 @@ document.addEventListener('DOMContentLoaded', function() {
             window.open(twitterUrl, '_blank');
         });
 
-        // --- Event Listener for WhatsApp Share ---
         shareWhatsAppButton.addEventListener('click', () => {
             const score = stats.correctAnswers;
             const total = alphabet.length;
@@ -1646,7 +1689,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappText)}`;
             window.open(whatsappUrl, '_blank');
         });
-
     }
     
     // Show detailed statistics modal
@@ -1660,6 +1702,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Create modal container
         const modalOverlay = document.createElement('div');
         modalOverlay.className = 'modal-overlay stats-detail-modal active';
+        modalOverlay.id = 'statsDetailModal';
         
         // Create modal content
         const modalContent = document.createElement('div');
@@ -1673,11 +1716,45 @@ document.addEventListener('DOMContentLoaded', function() {
             <p class="stats-subtitle">Resumen de tu partida</p>
         `;
         
-        // Create errors list - Ahora primero
+        // Create horizontal layout container
+        const horizontalLayout = document.createElement('div');
+        horizontalLayout.className = 'modal-horizontal-layout';
+        
+        // Create performance summary (left side)
+        const performanceSummary = document.createElement('div');
+        performanceSummary.className = 'performance-summary';
+        
+        // Calculate stats
+        const accuracy = (correctAnswers + incorrectAnswers) > 0 ? Math.round((correctAnswers / (correctAnswers + incorrectAnswers)) * 100) : 0;
+        const completionPercentage = Math.round((correctAnswers / alphabet.length) * 100);
+        
+        performanceSummary.innerHTML = `
+            <div class="performance-item">
+                <span class="performance-label"><i class="fas fa-percentage"></i> Completado</span>
+                <span class="performance-value">${completionPercentage}%</span>
+            </div>
+            <div class="performance-item">
+                <span class="performance-label"><i class="fas fa-bullseye"></i> Precisión</span>
+                <span class="performance-value">${accuracy}%</span>
+            </div>
+            <div class="performance-item">
+                <span class="performance-label"><i class="fas fa-lightbulb"></i> Pistas usadas</span>
+                <span class="performance-value">${helpUsed}/${maxHelp}</span>
+            </div>
+            <div class="performance-item">
+                <span class="performance-label"><i class="fas fa-forward"></i> Pasapalabras</span>
+                <span class="performance-value">${passedAnswers || 0}</span>
+            </div>
+        `;
+        
+        // Create errors container (right side - sidebar)
+        const sidebar = document.createElement('div');
+        sidebar.className = 'modal-sidebar';
+        
         const errorsContainer = document.createElement('div');
         errorsContainer.className = 'errors-container';
         
-        let errorsHTML = `<h3 class="errors-title">Errores cometidos</h3>`;
+        let errorsHTML = `<h3 class="errors-title">Errores Cometidos</h3>`;
         
         if (gameErrors.length > 0) {
             errorsHTML += `<div class="errors-list">`;
@@ -1697,36 +1774,15 @@ document.addEventListener('DOMContentLoaded', function() {
             });
             errorsHTML += `</div>`;
         } else {
-            errorsHTML += `<p class="no-errors">¡No has cometido ningún error! ¡Excelente!</p>`;
+            errorsHTML += `<div class="no-errors">¡No has cometido ningún error! ¡Excelente!</div>`;
         }
         
         errorsContainer.innerHTML = errorsHTML;
+        sidebar.appendChild(errorsContainer);
         
-        // Create performance summary - Ahora después de los errores
-        const performanceSummary = document.createElement('div');
-        performanceSummary.className = 'performance-summary';
-        
-        // Calculate stats
-        const accuracy = (correctAnswers + incorrectAnswers) > 0 ? Math.round((correctAnswers / (correctAnswers + incorrectAnswers)) * 100) : 0;
-        const completionPercentage = Math.round((correctAnswers / alphabet.length) * 100);
-        
-        performanceSummary.innerHTML = `
-            <h3 class="stats-subtitle" style="margin-bottom: 15px; text-align: center;">Resumen de Rendimiento</h3>
-            <div class="performance-stats">
-                <div class="performance-item">
-                    <span class="performance-value">${completionPercentage}%</span>
-                    <span class="performance-label">Completado</span>
-                </div>
-                <div class="performance-item">
-                    <span class="performance-value">${accuracy}%</span>
-                    <span class="performance-label">Precisión</span>
-                </div>
-                <div class="performance-item">
-                    <span class="performance-value">${helpUsed}/${maxHelp}</span>
-                    <span class="performance-label">Pistas usadas</span>
-                </div>
-            </div>
-        `;
+        // Assemble horizontal layout
+        horizontalLayout.appendChild(performanceSummary);
+        horizontalLayout.appendChild(sidebar);
         
         // Create buttons
         const buttonsContainer = document.createElement('div');
@@ -1749,10 +1805,9 @@ document.addEventListener('DOMContentLoaded', function() {
         buttonsContainer.appendChild(closeButton);
         buttonsContainer.appendChild(viewProfileButton);
         
-        // Assemble modal - Cambiado el orden: errores arriba, estadísticas abajo
+        // Assemble modal
         modalContent.appendChild(modalHeader);
-        modalContent.appendChild(errorsContainer);
-        modalContent.appendChild(performanceSummary);
+        modalContent.appendChild(horizontalLayout);
         modalContent.appendChild(buttonsContainer);
         modalOverlay.appendChild(modalContent);
         
@@ -1957,6 +2012,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (playerNameDisplay) {
             playerNameDisplay.textContent = playerName;
         }
+        
+        // Add click outside modal functionality to return to games.html
+        gameRulesModal.addEventListener('click', function(e) {
+            // Si el click fue en el overlay (fondo) y no en el contenido del modal
+            if (e.target === gameRulesModal) {
+                window.location.href = 'games.html';
+            }
+        });
     } else {
         // If no rules modal, maybe initialize game directly or show error
         console.error("Game rules modal not found. Cannot start game.");

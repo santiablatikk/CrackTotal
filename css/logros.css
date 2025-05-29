@@ -1,168 +1,291 @@
 /* css/logros.css */
 
 body {
-    background-color: var(--background-alt, #1a1c23);
+    background: 
+        radial-gradient(circle at 25% 25%, rgba(131, 93, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(255, 184, 108, 0.08) 0%, transparent 50%),
+        linear-gradient(135deg, #1a1c23 0%, #16181d 50%, #1a1c23 100%);
+    background-attachment: fixed;
 }
 
 .logros-section {
-    padding: 2rem 1rem;
+    padding: 2.5rem 1rem;
     max-width: 1200px;
     margin: 0 auto;
+    position: relative;
+}
+
+.logros-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--accent, #FFB86C), transparent);
+    transform: translateX(-50%);
+    opacity: 0.6;
 }
 
 .logros-section h2 {
     font-family: 'Oswald', sans-serif;
     font-size: clamp(1.8rem, 5vw, 2.5rem);
-    color: var(--primary-light, #ab8bfa);
+    background: linear-gradient(135deg, var(--primary-light, #ab8bfa), var(--accent, #FFB86C));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     text-align: center;
     margin-bottom: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+    position: relative;
+    padding-top: 1rem;
 }
 
 .logros-section h2 .fas {
-    margin-right: 10px;
-    color: var(--accent, #FFB86C);
+    margin-right: 12px;
+    background: linear-gradient(135deg, #FFB86C, #FF8E3C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: pulse 2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
 
 .logros-description {
     text-align: center;
     color: var(--text-light, #b0b8c4);
-    margin-bottom: 2rem;
-    font-size: 1rem;
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
+    line-height: 1.6;
+    font-weight: 500;
 }
 
 .logros-filters {
     display: flex;
     justify-content: center;
-    gap: 1rem;
-    margin-bottom: 2.5rem;
+    gap: 1.2rem;
+    margin-bottom: 3rem;
+    padding: 0.5rem;
+    background: rgba(44, 47, 59, 0.3);
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 3rem;
 }
 
 .filter-btn {
-    background-color: var(--card-bg, #2c2f3b);
+    background: rgba(44, 47, 59, 0.6);
     color: var(--text-light, #b0b8c4);
-    border: 1px solid var(--border, #383a47);
-    padding: 0.6rem 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.7rem 1.5rem;
     border-radius: 20px;
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    font-weight: 600;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     font-size: 0.9rem;
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.filter-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.filter-btn:hover::before {
+    left: 100%;
 }
 
 .filter-btn:hover {
-    background-color: var(--primary, #7f5af8);
+    background: rgba(127, 90, 248, 0.3);
     color: var(--text, #FFFFFE);
     border-color: var(--primary, #7f5af8);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(127, 90, 248, 0.3);
 }
 
 .filter-btn.active {
-    background-color: var(--accent, #FFB86C);
+    background: linear-gradient(135deg, var(--accent, #FFB86C), #FF8E3C);
     color: var(--background, #16181d);
-    border-color: var(--accent, #FFB86C);
+    border-color: transparent;
     font-weight: 700;
+    box-shadow: 
+        0 8px 25px rgba(255, 184, 108, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .logros-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem; /* Espacio entre tarjetas */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2rem;
 }
 
 .logro-card {
-    background: var(--card-bg, #2c2f3b);
-    border-radius: 12px;
-    padding: 1.5rem;
-    border: 1px solid var(--border, #383a47);
-    box-shadow: var(--shadow-light, 0 5px 15px rgba(0, 0, 0, 0.1));
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: 
+        rgba(44, 47, 59, 0.4),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 50%);
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.logro-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent, #FFB86C), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.logro-card:hover::before {
+    transform: translateX(100%);
 }
 
 .logro-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-strong, 0 8px 25px rgba(0,0,0,0.15));
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 
+        0 15px 40px rgba(0, 0, 0, 0.4),
+        0 0 30px rgba(255, 184, 108, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 184, 108, 0.3);
 }
 
 .logro-icon {
-    font-size: 3rem; /* Tamaño del icono */
-    margin-bottom: 1rem;
-    color: var(--accent, #FFB86C);
+    font-size: 3.5rem;
+    margin-bottom: 1.2rem;
+    background: linear-gradient(135deg, var(--accent, #FFB86C), #FF8E3C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.logro-card:hover .logro-icon {
+    transform: scale(1.1) rotate(5deg);
 }
 
 .logro-card.locked .logro-icon {
-    color: var(--text-muted, #6c757d);
+    background: linear-gradient(135deg, #6c757d, #5a6270);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .logro-title {
     font-family: 'Oswald', sans-serif;
-    font-size: 1.3rem;
-    color: var(--text, #FFFFFE);
-    margin-bottom: 0.5rem;
-    font-weight: 600;
+    font-size: 1.4rem;
+    background: linear-gradient(135deg, var(--text, #FFFFFE), var(--text-light, #b0b8c4));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .logro-description {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--text-light, #b0b8c4);
-    line-height: 1.5;
-    margin-bottom: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
     flex-grow: 1;
+    font-weight: 500;
 }
 
 .logro-status {
     font-size: 0.8rem;
     font-weight: 700;
-    padding: 0.3rem 0.8rem;
-    border-radius: 15px;
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    backdrop-filter: blur(10px);
 }
 
 .logro-card.unlocked .logro-status {
-    background-color: rgba(var(--success-rgb, 49, 208, 170), 0.2);
+    background: 
+        linear-gradient(135deg, rgba(49, 208, 170, 0.2), rgba(49, 208, 170, 0.1)),
+        rgba(49, 208, 170, 0.1);
     color: var(--success, #31D0AA);
+    border: 1px solid rgba(49, 208, 170, 0.3);
+    box-shadow: 0 4px 15px rgba(49, 208, 170, 0.2);
 }
 
 .logro-card.locked .logro-status {
-    background-color: rgba(var(--text-muted-rgb, 108, 117, 125), 0.2);
+    background: 
+        linear-gradient(135deg, rgba(108, 117, 125, 0.2), rgba(108, 117, 125, 0.1)),
+        rgba(108, 117, 125, 0.1);
     color: var(--text-muted, #6c757d);
+    border: 1px solid rgba(108, 117, 125, 0.3);
 }
 
 .logro-card.locked {
-    opacity: 0.7;
-    background: repeating-linear-gradient(
-        45deg,
-        var(--card-bg, #2c2f3b),
-        var(--card-bg, #2c2f3b) 10px,
-        rgba(var(--border-rgb, 56, 58, 71), 0.5) 10px,
-        rgba(var(--border-rgb, 56, 58, 71), 0.5) 20px
-    );
+    opacity: 0.6;
+    background: 
+        rgba(44, 47, 59, 0.2),
+        repeating-linear-gradient(
+            45deg,
+            transparent,
+            transparent 15px,
+            rgba(255, 255, 255, 0.02) 15px,
+            rgba(255, 255, 255, 0.02) 30px
+        );
 }
 
 .loading-logros {
     color: var(--text-light, #b0b8c4);
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     text-align: center;
-    padding: 2rem;
-    grid-column: 1 / -1; /* Ocupa todo el ancho del grid */
+    padding: 3rem;
+    grid-column: 1 / -1;
+    font-weight: 500;
+    opacity: 0.8;
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .logros-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
     }
 
     .logro-card {
-        padding: 1.2rem;
+        padding: 1.5rem;
     }
 
     .logros-section h2 {
@@ -170,22 +293,33 @@ body {
     }
 
     .logros-filters {
-        flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
-        gap: 0.5rem;
-        margin-bottom: 2rem;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-bottom: 2.5rem;
+        padding: 0.4rem;
     }
 
     .filter-btn {
-        padding: 0.5rem 1rem;
+        padding: 0.6rem 1.2rem;
         font-size: 0.85rem;
     }
 }
 
 @media (max-width: 480px) {
     .logros-grid {
-        grid-template-columns: 1fr; /* Una columna en pantallas muy pequeñas */
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
     }
+    
     .logros-section {
-        padding: 1.5rem 0.5rem;
+        padding: 2rem 0.8rem;
+    }
+    
+    .logro-card {
+        padding: 1.2rem;
+    }
+    
+    .logro-icon {
+        font-size: 3rem;
     }
 } 

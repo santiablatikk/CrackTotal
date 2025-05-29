@@ -1140,6 +1140,33 @@
         </div>
     </div>
 
+    <!-- Modal Introducción Crack Rápido -->
+    <div class="modal-overlay" id="crackRapidoIntroModal">
+        <div class="modal-content crack-rapido-intro-modal">
+            <h3 class="modal-title"><i class="fas fa-bolt"></i> ¿Cómo se juega al Crack Rápido?</h3>
+            <p>¡El desafío más intenso de Crack Total!</p>
+            <ul>
+                <li>Son <strong>20 preguntas</strong> de fútbol a toda velocidad.</li>
+                <li>Tenés solo <strong>5 segundos</strong> para responder cada pregunta.</li>
+                <li>Todas las preguntas son de <strong>múltiple opción</strong> (4 opciones).</li>
+                <li><strong>Sistema de Puntuación:</strong><br>
+                    &nbsp;&nbsp;- Respuesta correcta: <span class="highlight-consagra"><strong>100 puntos base</strong></span><br>
+                    &nbsp;&nbsp;- Bonus de velocidad: <span class="highlight-consagra">hasta <strong>50 puntos extra</strong></span><br>
+                    &nbsp;&nbsp;- Bonus de racha: <span class="highlight-consagra">hasta <strong>100 puntos extra</strong></span>
+                </li>
+                <li>Mientras <strong>más rápido respondas</strong>, más puntos ganás.</li>
+                <li>Si hacés una <strong>racha de respuestas correctas</strong>, obtenés bonus adicionales.</li>
+                <li>Si no respondés a tiempo, <strong>se corta tu racha</strong> y perdés la pregunta.</li>
+                <li>Al final, <span class="highlight-consagra">¡luchá por el mejor puntaje!</span></li>
+            </ul>
+            <div class="modal-footer">
+                <button type="button" class="primary-button" id="goToCrackRapidoButton">
+                    <i class="fas fa-rocket"></i> EMPEZAR EL DESAFÍO
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Service Worker Registration -->
     <script>
         // Registrar Service Worker con mejor manejo de actualizaciones
@@ -1393,8 +1420,10 @@
             const gameCards = document.querySelectorAll('.cosmic-game-card');
             const mentirosoIntroModal = document.getElementById('mentirosoIntroModal');
             const qsmIntroModal = document.getElementById('qsmIntroModal');
+            const crackRapidoIntroModal = document.getElementById('crackRapidoIntroModal');
             const goToLobbyMentirosoButton = document.getElementById('goToLobbyMentirosoButton');
             const goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
+            const goToCrackRapidoButton = document.getElementById('goToCrackRapidoButton');
             
             gameCards.forEach(card => {
                 const gameType = card.getAttribute('data-game');
@@ -1432,6 +1461,16 @@
                                 gtag('event', 'modal_open', {
                                     event_category: 'engagement',
                                     event_label: 'qsm_intro',
+                                    value: 1
+                                });
+                            }
+                        } else if (gameType === 'crack-rapido') {
+                            crackRapidoIntroModal.classList.add('active');
+                            // Track modal opening
+                            if (window.gtag) {
+                                gtag('event', 'modal_open', {
+                                    event_category: 'engagement',
+                                    event_label: 'crack_rapido_intro',
                                     value: 1
                                 });
                             }
@@ -1487,6 +1526,24 @@
                 });
             }
             
+            // Botón para continuar al lobby de Crack Rápido
+            if (goToCrackRapidoButton) {
+                goToCrackRapidoButton.addEventListener('click', function() {
+                    crackRapidoIntroModal.classList.remove('active');
+                    // Track game start from modal
+                    if (window.gtag) {
+                        gtag('event', 'game_start', {
+                            event_category: 'games',
+                            event_label: 'crack_rapido',
+                            navigation_type: 'from_modal',
+                            user_engagement: 'high',
+                            value: 2
+                        });
+                    }
+                    window.location.href = 'crack-rapido.html';
+                });
+            }
+            
             // Cerrar modales al hacer clic fuera del contenido
             window.addEventListener('click', function(event) {
                 if (event.target === mentirosoIntroModal) {
@@ -1508,6 +1565,18 @@
                         gtag('event', 'modal_close', {
                             event_category: 'engagement',
                             event_label: 'qsm_intro_outside_click',
+                            engagement_type: 'low',
+                            value: 0
+                        });
+                    }
+                }
+                if (event.target === crackRapidoIntroModal) {
+                    crackRapidoIntroModal.classList.remove('active');
+                    // Track modal close
+                    if (window.gtag) {
+                        gtag('event', 'modal_close', {
+                            event_category: 'engagement',
+                            event_label: 'crack_rapido_intro_outside_click',
                             engagement_type: 'low',
                             value: 0
                         });
