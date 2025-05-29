@@ -1520,7 +1520,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                 case 'mentirosoTimerStop':
                     console.log("⭐ Timer detenido:", message.payload);
-                    hideTimer();
+                    // Solo ocultar timer si NO es un reinicio
+                    if (message.payload.reason !== 'restart') {
+                        hideTimer();
+                    }
                     break;
                 
                 case 'playerDisconnect':

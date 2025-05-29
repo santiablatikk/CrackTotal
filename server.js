@@ -1436,7 +1436,7 @@ function startMentirosoQuestionTimer(roomId, duration = 15, phase = 'bidding') {
 }
 
 // Función para detener el timer cuando se llama Mentiroso
-function stopMentirosoQuestionTimer(roomId) {
+function stopMentirosoQuestionTimer(roomId, reason = 'stop') {
     const room = rooms.get(roomId);
     if (!room || !room.mentirosoState) {
         return;
@@ -1451,7 +1451,7 @@ function stopMentirosoQuestionTimer(roomId) {
         // Notificar a los clientes que el timer se detuvo
         broadcastToRoom(roomId, {
             type: 'mentirosoTimerStop',
-            payload: {}
+            payload: { reason: reason, phase: state.gamePhase || 'bidding' }
         });
     }
 }
@@ -1603,8 +1603,13 @@ function handleMentirosoSubmitBid(ws, clientInfo, payload) {
         
         // Reiniciar timer de 15 segundos para el siguiente jugador
         setTimeout(() => {
-            startMentirosoQuestionTimer(roomId, 15, 'bidding');
-        }, 300); // Reducido de 500ms a 300ms para mayor fluidez
+            // Detener timer actual antes de iniciar uno nuevo
+            stopMentirosoQuestionTimer(roomId, 'restart');
+            // Iniciar nuevo timer
+            setTimeout(() => {
+                startMentirosoQuestionTimer(roomId, 15, 'bidding');
+            }, 100);
+        }, 300);
     }, 100);
 }
 
@@ -1647,7 +1652,7 @@ function handleMentirosoCallLiar(ws, clientInfo, payload) {
     room.currentTurn = state.lastBidder; // The accused player must list answers
 
     // Detener el timer cuando se llama Mentiroso
-    stopMentirosoQuestionTimer(roomId);
+    stopMentirosoQuestionTimer(roomId, 'mentiroso_called');
 
     const accusedPlayer = room.players.player1.id === state.lastBidder ? room.players.player1 : room.players.player2;
     
