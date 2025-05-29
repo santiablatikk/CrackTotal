@@ -237,4 +237,19 @@
         <priority>0.2</priority>
     </url>
     
+    <!-- Páginas adicionales requeridas para AdSense -->
+    <url>
+        <loc>https://cracktotal.com/disclaimer.html</loc>
+        <lastmod>2025-01-28</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.3</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/500.html</loc>
+        <lastmod>2025-01-28</lastmod>
+        <changefreq>yearly</changefreq>
+        <priority>0.1</priority>
+    </url>
+    
 </urlset> 
