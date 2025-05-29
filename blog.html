@@ -515,34 +515,6 @@
               </div>
             </div>
           </div>
-
-          <div class="blog-card">
-            <div class="blog-img-container">
-              <img src="img/blog/promesas.jpg" alt="Top 20 jóvenes talentos 2025" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Top+Jóvenes+Talentos'">
-            </div>
-            <div class="blog-card-content">
-              <h2>Top 20 Jóvenes Talentos 2025</h2>
-              <p>Los mejores jugadores sub-23 del mundo según Transfermarkt. Descubre las futuras estrellas que dominarán el fútbol en los próximos años.</p>
-              <div class="blog-entry-footer">
-                <span class="blog-date"><i class="fas fa-calendar-alt"></i> 28 Diciembre, 2024</span>
-                <a href="blog-detail-jungblut-top.html" class="primary-button">Leer más <i class="fas fa-arrow-right"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="blog-card">
-            <div class="blog-img-container">
-              <img src="img/blog/messi.jpg" alt="Transferencias más caras de la historia" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Transferencias+Caras'">
-            </div>
-            <div class="blog-card-content">
-              <h2>Las Transferencias Más Caras de la Historia</h2>
-              <p>Un repaso por los fichajes que rompieron el mercado: desde Neymar hasta Mbappé, las operaciones que cambiaron para siempre el fútbol mundial.</p>
-              <div class="blog-entry-footer">
-                <span class="blog-date"><i class="fas fa-calendar-alt"></i> 26 Diciembre, 2024</span>
-                <a href="blog-detail-transferencias-caras.html" class="primary-button">Leer más <i class="fas fa-arrow-right"></i></a>
-              </div>
-            </div>
-          </div>
         </div>
         
         <div style="text-align: center; margin-top: 2rem;">
@@ -586,21 +558,21 @@
         document.addEventListener('DOMContentLoaded', function() {
           // Imágenes que requieren censura por posibles problemas de copyright
           const imagesToCensor = [
-            'scaloni.jpg', // Imagen oficial FIFA/CONMEBOL (cambió de .png a .jpg)
+            'scaloni.png', // Imagen oficial FIFA/CONMEBOL
             'copa america.jpg', // Logo oficial CONMEBOL
-            'championss.jpg', // Logo UEFA (cambió de champions.jpg a championss.jpg)
-            'messi.jpg' // Posibles imágenes de Getty/Reuters (cambió de messi-evolution.jpg a messi.jpg)
+            'champions.jpg', // Logo UEFA
+            'messi-evolution.jpg' // Posibles imágenes de Getty/Reuters
           ];
           
           // Configuración de calidad de imágenes basada en tamaño
           const imageQualityConfig = {
-            'messi.jpg': 'hd', // Actualizado nombre
+            'messi-evolution.jpg': 'hd',
             'legends.jpg': 'hd', 
-            'championss.jpg': 'hd', // Actualizado nombre
+            'champions.jpg': 'hd',
             'worldcup.jpg': 'sd',
             'libertadores.jpg': 'hd',
             'escudos.png': 'hd',
-            'scaloni.jpg': 'hd', // Actualizado nombre
+            'scaloni.png': 'hd',
             'tacticas.jpg': 'sd',
             'estadios.jpg': 'sd',
             'catenaccio.png': 'hd',
