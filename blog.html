@@ -154,22 +154,83 @@
       
       /* Censura para imágenes con posibles problemas de copyright */
       .blog-img.censored {
-        filter: blur(8px) brightness(0.7);
+        filter: blur(2px) brightness(0.8) contrast(1.2) saturate(0.7);
+        opacity: 0.85;
+        position: relative;
+      }
+      
+      .blog-img.censored::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          transparent 25%,
+          rgba(255, 255, 255, 0.1) 25%,
+          rgba(255, 255, 255, 0.1) 50%,
+          transparent 50%,
+          transparent 75%,
+          rgba(255, 255, 255, 0.1) 75%
+        );
+        background-size: 20px 20px;
+        opacity: 0.3;
+        z-index: 1;
+        pointer-events: none;
+        animation: censorPattern 8s linear infinite;
       }
       
       .blog-img.censored::after {
-        content: '© PROTEGIDO';
+        content: '';
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 5px 10px;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        font-weight: bold;
+        width: 60px;
+        height: 60px;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         z-index: 2;
+        pointer-events: none;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+      }
+      
+      @keyframes censorPattern {
+        0% { transform: translateX(-20px); }
+        100% { transform: translateX(20px); }
+      }
+      
+      /* Efecto hover para imágenes censuradas */
+      .blog-card:hover .blog-img.censored {
+        filter: blur(1px) brightness(0.9) contrast(1.1) saturate(0.8);
+        opacity: 0.95;
+      }
+      
+      /* Indicador sutil de censura */
+      .censorship-indicator {
+        position: absolute;
+        bottom: 8px;
+        left: 8px;
+        background: rgba(0, 0, 0, 0.7);
+        color: rgba(255, 255, 255, 0.9);
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        z-index: 3;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        backdrop-filter: blur(10px);
+      }
+      
+      .blog-card:hover .censorship-indicator {
+        opacity: 1;
       }
       
       /* Indicador de calidad de imagen */
@@ -558,21 +619,21 @@
         document.addEventListener('DOMContentLoaded', function() {
           // Imágenes que requieren censura por posibles problemas de copyright
           const imagesToCensor = [
-            'scaloni.png', // Imagen oficial FIFA/CONMEBOL
+            'scaloni.jpg', // Imagen oficial FIFA/CONMEBOL (cambió de .png a .jpg)
             'copa america.jpg', // Logo oficial CONMEBOL
-            'champions.jpg', // Logo UEFA
-            'messi-evolution.jpg' // Posibles imágenes de Getty/Reuters
+            'championss.jpg', // Logo UEFA (cambió a championss.jpg)
+            'messi.jpg' // Posibles imágenes de Getty/Reuters (cambió de messi-evolution.jpg)
           ];
           
           // Configuración de calidad de imágenes basada en tamaño
           const imageQualityConfig = {
-            'messi-evolution.jpg': 'hd',
+            'messi.jpg': 'hd', // Actualizado
             'legends.jpg': 'hd', 
-            'champions.jpg': 'hd',
+            'championss.jpg': 'hd', // Actualizado
             'worldcup.jpg': 'sd',
             'libertadores.jpg': 'hd',
             'escudos.png': 'hd',
-            'scaloni.png': 'hd',
+            'scaloni.jpg': 'hd', // Actualizado
             'tacticas.jpg': 'sd',
             'estadios.jpg': 'sd',
             'catenaccio.png': 'hd',
@@ -592,28 +653,20 @@
             return src.split('/').pop();
           }
           
-          // Función para censurar imagen
+          // Función para censurar imagen con efecto sutil
           function applyCensorship(img) {
             img.classList.add('censored');
-            // Crear overlay de copyright
-            const overlay = document.createElement('div');
-            overlay.style.cssText = `
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-              background: rgba(0, 0, 0, 0.8);
-              color: white;
-              padding: 8px 12px;
-              border-radius: 4px;
-              font-size: 0.8rem;
-              font-weight: bold;
-              z-index: 3;
-              pointer-events: none;
-            `;
-            overlay.textContent = '© CONTENIDO PROTEGIDO';
-            img.parentElement.style.position = 'relative';
-            img.parentElement.appendChild(overlay);
+            
+            // Crear indicador sutil de censura
+            const indicator = document.createElement('div');
+            indicator.className = 'censorship-indicator';
+            indicator.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            
+            const container = img.closest('.blog-img-container');
+            if (container) {
+              container.style.position = 'relative';
+              container.appendChild(indicator);
+            }
           }
           
           // Función para agregar indicador de calidad
