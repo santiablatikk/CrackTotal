@@ -457,6 +457,17 @@
     .rule-text {
         font-size: 0.7rem;
     }
+    
+    .result-buttons {
+        gap: 8px;
+        padding: 12px;
+    }
+    
+    .result-buttons .modal-button {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        min-width: 70px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -490,6 +501,16 @@
     #gameRulesModal .primary-button.enhanced {
         font-size: 0.875rem;
         padding: 14px 20px;
+    }
+    
+    .result-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .result-buttons .modal-button {
+        width: 100%;
+        padding: 10px;
     }
 }
 
@@ -647,8 +668,8 @@
 .performance-summary {
     padding: 18px;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    grid-template-columns: 1fr;
+    gap: 8px;
     background: 
         linear-gradient(135deg, rgba(13, 14, 26, 0.6), rgba(22, 24, 38, 0.8)),
         radial-gradient(circle at 70% 30%, rgba(131, 93, 255, 0.05), transparent 60%);
@@ -966,6 +987,67 @@
         linear-gradient(135deg, rgba(13, 14, 26, 0.8), rgba(22, 24, 38, 0.9));
     border-top: 1px solid rgba(131, 93, 255, 0.15);
     position: relative;
+}
+
+.result-buttons .modal-button {
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 80px;
+}
+
+.result-buttons .primary-button {
+    background: var(--modal-primary);
+    color: white;
+    box-shadow: 0 3px 8px rgba(99, 102, 241, 0.3);
+}
+
+.result-buttons .primary-button:hover {
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    transform: translateY(-1px);
+}
+
+.result-buttons .secondary-button {
+    background: rgba(148, 163, 184, 0.1);
+    color: var(--text-secondary);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.result-buttons .secondary-button:hover {
+    background: rgba(148, 163, 184, 0.2);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+.result-buttons .share-button {
+    background: var(--modal-accent);
+    color: white;
+    box-shadow: 0 3px 8px rgba(16, 185, 129, 0.3);
+}
+
+.result-buttons .share-button:hover {
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    transform: translateY(-1px);
+}
+
+.result-buttons .twitter-x-button {
+    background: #000000;
+    color: white;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+}
+
+.result-buttons .twitter-x-button:hover {
+    background: #1a1a1a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    transform: translateY(-1px);
 }
 
 /* Responsive para modales horizontales compactos */
@@ -1402,7 +1484,7 @@
     .result-stats,
     .performance-summary {
         grid-template-columns: 1fr;
-        gap: 8px;
+        gap: 6px;
         padding: 12px;
     }
     

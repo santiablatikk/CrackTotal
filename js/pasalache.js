@@ -1640,9 +1640,9 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         
         const shareTwitterButton = document.createElement('button');
-        shareTwitterButton.className = 'modal-button share-button';
+        shareTwitterButton.className = 'modal-button share-button twitter-x-button';
         shareTwitterButton.innerHTML = `
-            <i class="fab fa-twitter"></i> Compartir
+            <i class="fab fa-x-twitter"></i> Compartir
         `;
 
         const shareWhatsAppButton = document.createElement('button');
