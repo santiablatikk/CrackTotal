@@ -87,6 +87,122 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
     <script src="js/main.js?v=202505272312"></script>
+    
+    <!-- Estilos mejorados para imágenes del blog -->
+    <style>
+      /* Mejoras para el centrado y calidad de imágenes del blog */
+      .blog-img-container {
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #1a1a2e, #16213e);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .blog-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center center;
+        transition: transform 0.4s ease, filter 0.3s ease;
+        border-radius: 8px;
+        display: block;
+      }
+      
+      .blog-card:hover .blog-img {
+        transform: scale(1.1);
+      }
+      
+      /* Mejora la calidad de imagen en pantallas de alta densidad */
+      @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        .blog-img {
+          image-rendering: -webkit-optimize-contrast;
+          image-rendering: crisp-edges;
+        }
+      }
+      
+      /* Efecto de carga suave para imágenes */
+      .blog-img[src] {
+        opacity: 1;
+        transition: opacity 0.3s ease;
+      }
+      
+      .blog-img:not([src]) {
+        opacity: 0;
+      }
+      
+      /* Placeholder mejorado para imágenes que no cargan */
+      .blog-img-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 1;
+      }
+      
+      .blog-img-container:hover::before {
+        opacity: 1;
+      }
+      
+      /* Censura para imágenes con posibles problemas de copyright */
+      .blog-img.censored {
+        filter: blur(8px) brightness(0.7);
+      }
+      
+      .blog-img.censored::after {
+        content: '© PROTEGIDO';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        z-index: 2;
+      }
+      
+      /* Indicador de calidad de imagen */
+      .image-quality-indicator {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-size: 0.7rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 2;
+      }
+      
+      .blog-card:hover .image-quality-indicator {
+        opacity: 1;
+      }
+      
+      .image-quality-indicator.hd {
+        background: rgba(0, 255, 0, 0.7);
+      }
+      
+      .image-quality-indicator.sd {
+        background: rgba(255, 165, 0, 0.7);
+      }
+      
+      .image-quality-indicator.low {
+        background: rgba(255, 0, 0, 0.7);
+      }
+    </style>
   </head>
   <body>
     <!-- Skip Link para accesibilidad -->
@@ -164,7 +280,7 @@
 
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/scaloni.png" alt="Lionel Scaloni con la Copa del Mundo" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Scaloneta'">
+              <img src="img/blog/scaloni.jpg" alt="Lionel Scaloni con la Copa del Mundo" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Scaloneta'">
             </div>
             <div class="blog-card-content">
               <h2>La Scaloneta: Así se Forjó la Argentina Campeona</h2>
@@ -178,7 +294,7 @@
 
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/champions.jpg" alt="Champions League Trophy" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Champions+League'">
+              <img src="img/blog/championss.jpg" alt="Champions League Trophy" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Champions+League'">
             </div>
             <div class="blog-card-content">
               <h2>Historia de la Champions League</h2>
@@ -220,7 +336,7 @@
           
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/messi-evolution.jpg" alt="Evolución de Messi" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Evolución+de+Messi'">
+              <img src="img/blog/messi.jpg" alt="Evolución de Messi" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Evolución+de+Messi'">
             </div>
             <div class="blog-card-content">
               <h2>La Evolución de Lionel Messi</h2>
@@ -248,20 +364,6 @@
         
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/estadios.jpg" alt="Vista aérea de un estadio de fútbol con público" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Estadios+Icónicos'">
-            </div>
-            <div class="blog-card-content">
-              <h2>Estadios Icónicos del Fútbol</h2>
-              <p>Un recorrido por los templos del fútbol mundial: arquitectura, historia y experiencias inolvidables en los escenarios más emblemáticos.</p>
-              <div class="blog-entry-footer">
-                <span class="blog-date"><i class="fas fa-calendar-alt"></i> 8 Abril, 2023</span>
-                <a href="blog-detail-community.html" class="primary-button">Leer más <i class="fas fa-arrow-right"></i></a>
-              </div>
-            </div>
-          </div>
-
-          <div class="blog-card">
-            <div class="blog-img-container">
               <img src="img/blog/catenaccio.png" alt="Tácticas y Estilos de Juego en Fútbol" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Estilos+de+Juego'">
             </div>
             <div class="blog-card-content">
@@ -274,10 +376,9 @@
             </div>
           </div>
 
-          <!-- Nuevos artículos para alcanzar 20-30 artículos -->
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/argentinos-europa.jpg" alt="Jugadores argentinos en Europa" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Argentinos+en+Europa'">
+              <img src="img/blog/argentinos-en-europa.png" alt="Jugadores argentinos en Europa" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Argentinos+en+Europa'">
             </div>
             <div class="blog-card-content">
               <h2>Argentinos que Brillan en Europa</h2>
@@ -291,7 +392,7 @@
 
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/futbol-femenino.jpg" alt="Fútbol femenino argentino" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Fútbol+Femenino'">
+              <img src="img/blog/futbol femenino.png" alt="Fútbol femenino argentino" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Fútbol+Femenino'">
             </div>
             <div class="blog-card-content">
               <h2>El Crecimiento del Fútbol Femenino</h2>
@@ -305,7 +406,7 @@
 
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/estadios-iconicos.jpg" alt="Estadios icónicos del fútbol" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Estadios+Icónicos'">
+              <img src="img/blog/estadios.jpg" alt="Estadios icónicos del fútbol" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Estadios+Icónicos'">
             </div>
             <div class="blog-card-content">
               <h2>Los Estadios Más Icónicos del Mundo</h2>
@@ -319,7 +420,7 @@
 
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/tecnologia-futbol.jpg" alt="Tecnología en el fútbol" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Tecnología+VAR'">
+              <img src="img/blog/var.png" alt="Tecnología en el fútbol" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Tecnología+VAR'">
             </div>
             <div class="blog-card-content">
               <h2>La Revolución Tecnológica en el Fútbol</h2>
@@ -333,7 +434,7 @@
 
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/juventud-futbol.jpg" alt="Jóvenes promesas del fútbol" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Jóvenes+Promesas'">
+              <img src="img/blog/promesas.jpg" alt="Jóvenes promesas del fútbol" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Jóvenes+Promesas'">
             </div>
             <div class="blog-card-content">
               <h2>Las Jóvenes Promesas del Fútbol Mundial</h2>
@@ -347,7 +448,7 @@
 
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/copa-america.jpg" alt="Historia Copa América" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Copa+América'">
+              <img src="img/blog/copa america.jpg" alt="Historia Copa América" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Copa+América'">
             </div>
             <div class="blog-card-content">
               <h2>Historia de la Copa América</h2>
@@ -361,7 +462,7 @@
 
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/entrenadores-argentinos.jpg" alt="Entrenadores argentinos exitosos" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=DTs+Argentinos'">
+              <img src="img/blog/dt arg.jpg" alt="Entrenadores argentinos exitosos" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=DTs+Argentinos'">
             </div>
             <div class="blog-card-content">
               <h2>Los Grandes Entrenadores Argentinos</h2>
@@ -375,7 +476,7 @@
 
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/rivalidades-clasicas.jpg" alt="Clásicos del fútbol mundial" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Clásicos+Mundiales'">
+              <img src="img/blog/clasicos.jpg" alt="Clásicos del fútbol mundial" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Clásicos+Mundiales'">
             </div>
             <div class="blog-card-content">
               <h2>Las Rivalidades Más Épicas del Fútbol</h2>
@@ -389,7 +490,7 @@
 
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/futbol-sudamericano.jpg" alt="Fútbol sudamericano" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Fútbol+Sudamericano'">
+              <img src="img/blog/sudamericano.jpg" alt="Fútbol sudamericano" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Fútbol+Sudamericano'">
             </div>
             <div class="blog-card-content">
               <h2>La Magia del Fútbol Sudamericano</h2>
@@ -403,7 +504,7 @@
 
           <div class="blog-card">
             <div class="blog-img-container">
-              <img src="img/blog/mercado-pases.jpg" alt="Mercado de pases fútbol" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Mercado+de+Pases'">
+              <img src="img/blog/Mercado Europeo.jpg" alt="Mercado de pases fútbol" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Mercado+de+Pases'">
             </div>
             <div class="blog-card-content">
               <h2>Análisis del Mercado de Pases Actual</h2>
@@ -411,6 +512,34 @@
               <div class="blog-entry-footer">
                 <span class="blog-date"><i class="fas fa-calendar-alt"></i> 30 Diciembre, 2024</span>
                 <a href="blog-detail-mercado-pases.html" class="primary-button">Leer más <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="blog-card">
+            <div class="blog-img-container">
+              <img src="img/blog/promesas.jpg" alt="Top 20 jóvenes talentos 2025" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Top+Jóvenes+Talentos'">
+            </div>
+            <div class="blog-card-content">
+              <h2>Top 20 Jóvenes Talentos 2025</h2>
+              <p>Los mejores jugadores sub-23 del mundo según Transfermarkt. Descubre las futuras estrellas que dominarán el fútbol en los próximos años.</p>
+              <div class="blog-entry-footer">
+                <span class="blog-date"><i class="fas fa-calendar-alt"></i> 28 Diciembre, 2024</span>
+                <a href="blog-detail-jungblut-top.html" class="primary-button">Leer más <i class="fas fa-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="blog-card">
+            <div class="blog-img-container">
+              <img src="img/blog/messi.jpg" alt="Transferencias más caras de la historia" class="blog-img" loading="lazy" onerror="this.src='https://via.placeholder.com/400x225?text=Transferencias+Caras'">
+            </div>
+            <div class="blog-card-content">
+              <h2>Las Transferencias Más Caras de la Historia</h2>
+              <p>Un repaso por los fichajes que rompieron el mercado: desde Neymar hasta Mbappé, las operaciones que cambiaron para siempre el fútbol mundial.</p>
+              <div class="blog-entry-footer">
+                <span class="blog-date"><i class="fas fa-calendar-alt"></i> 26 Diciembre, 2024</span>
+                <a href="blog-detail-transferencias-caras.html" class="primary-button">Leer más <i class="fas fa-arrow-right"></i></a>
               </div>
             </div>
           </div>
@@ -455,13 +584,160 @@
         checkCookieConsent();
 
         document.addEventListener('DOMContentLoaded', function() {
-          // Check if images don't exist and use placeholders
+          // Imágenes que requieren censura por posibles problemas de copyright
+          const imagesToCensor = [
+            'scaloni.jpg', // Imagen oficial FIFA/CONMEBOL (cambió de .png a .jpg)
+            'copa america.jpg', // Logo oficial CONMEBOL
+            'championss.jpg', // Logo UEFA (cambió de champions.jpg a championss.jpg)
+            'messi.jpg' // Posibles imágenes de Getty/Reuters (cambió de messi-evolution.jpg a messi.jpg)
+          ];
+          
+          // Configuración de calidad de imágenes basada en tamaño
+          const imageQualityConfig = {
+            'messi.jpg': 'hd', // Actualizado nombre
+            'legends.jpg': 'hd', 
+            'championss.jpg': 'hd', // Actualizado nombre
+            'worldcup.jpg': 'sd',
+            'libertadores.jpg': 'hd',
+            'escudos.png': 'hd',
+            'scaloni.jpg': 'hd', // Actualizado nombre
+            'tacticas.jpg': 'sd',
+            'estadios.jpg': 'sd',
+            'catenaccio.png': 'hd',
+            'argentinos-en-europa.png': 'hd',
+            'futbol femenino.png': 'hd',
+            'var.png': 'low',
+            'promesas.jpg': 'hd',
+            'copa america.jpg': 'hd',
+            'dt arg.jpg': 'low',
+            'clasicos.jpg': 'hd',
+            'sudamericano.jpg': 'hd',
+            'Mercado Europeo.jpg': 'low'
+          };
+          
+          // Función para obtener el nombre del archivo de una URL
+          function getFileName(src) {
+            return src.split('/').pop();
+          }
+          
+          // Función para censurar imagen
+          function applyCensorship(img) {
+            img.classList.add('censored');
+            // Crear overlay de copyright
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              background: rgba(0, 0, 0, 0.8);
+              color: white;
+              padding: 8px 12px;
+              border-radius: 4px;
+              font-size: 0.8rem;
+              font-weight: bold;
+              z-index: 3;
+              pointer-events: none;
+            `;
+            overlay.textContent = '© CONTENIDO PROTEGIDO';
+            img.parentElement.style.position = 'relative';
+            img.parentElement.appendChild(overlay);
+          }
+          
+          // Función para agregar indicador de calidad
+          function addQualityIndicator(container, fileName) {
+            const quality = imageQualityConfig[fileName] || 'sd';
+            const indicator = document.createElement('div');
+            indicator.className = `image-quality-indicator ${quality}`;
+            indicator.textContent = quality.toUpperCase();
+            container.appendChild(indicator);
+          }
+          
+          // Procesar todas las imágenes del blog
           const images = document.querySelectorAll('.blog-img');
-          images.forEach(img => {
+          images.forEach((img, index) => {
+            const fileName = getFileName(img.src);
+            const container = img.closest('.blog-img-container');
+            
+            // Agregar indicador de calidad
+            if (container) {
+              addQualityIndicator(container, fileName);
+            }
+            
+            // Aplicar censura si es necesario
+            if (imagesToCensor.includes(fileName)) {
+              // Delay para permitir que la imagen cargue primero
+              setTimeout(() => {
+                applyCensorship(img);
+              }, 1000 + (index * 200)); // Stagger the censorship application
+            }
+            
+            // Mejorar el manejo de errores de carga
             img.onerror = function() {
-              this.src = 'https://via.placeholder.com/400x225?text=Fútbol+Blog';
+              this.src = `https://via.placeholder.com/400x225/1a1a2e/ffffff?text=${encodeURIComponent('Imagen no disponible')}`;
+              this.alt = 'Imagen no disponible';
+              // Remover indicador de calidad si la imagen falla
+              const qualityIndicator = container?.querySelector('.image-quality-indicator');
+              if (qualityIndicator) {
+                qualityIndicator.remove();
+              }
             };
+            
+            // Optimización para lazy loading
+            img.loading = 'lazy';
+            
+            // Mejorar accesibilidad
+            if (!img.alt || img.alt.trim() === '') {
+              img.alt = `Imagen del artículo: ${img.closest('.blog-card')?.querySelector('h2')?.textContent || 'Artículo de fútbol'}`;
+            }
           });
+          
+          // Optimización para rendimiento: Intersection Observer para carga progresiva
+          if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  const img = entry.target;
+                  if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    observer.unobserve(img);
+                  }
+                }
+              });
+            });
+            
+            // Observar imágenes que tengan data-src (para lazy loading futuro)
+            document.querySelectorAll('img[data-src]').forEach(img => {
+              imageObserver.observe(img);
+            });
+          }
+          
+          // Función para analizar automáticamente imágenes sospechosas de copyright
+          function analyzeImageForCopyright(img) {
+            const fileName = getFileName(img.src).toLowerCase();
+            const suspiciousTerms = [
+              'getty', 'reuters', 'afp', 'epa', 'ap photo', 'fifa', 'uefa', 'conmebol',
+              'official', 'logo', 'brand', 'trademark', 'copyright', '©'
+            ];
+            
+            return suspiciousTerms.some(term => 
+              fileName.includes(term) || 
+              img.alt.toLowerCase().includes(term) ||
+              img.title?.toLowerCase().includes(term)
+            );
+          }
+          
+          // Aplicar análisis automático de copyright a todas las imágenes
+          images.forEach(img => {
+            if (analyzeImageForCopyright(img)) {
+              setTimeout(() => {
+                applyCensorship(img);
+              }, 2000);
+            }
+          });
+          
+          console.log('✅ Blog images optimized:', images.length + ' images processed');
         });
       </script>
       
