@@ -85,7 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
         fiftyFiftyUsed: false, // Track if 50/50 power-up is used
         gameActive: false,
         websocket: null,
-        pendingRoomsRequest: null
+        roundStartTime: null,
+        pendingRoomsRequest: null, // Para almacenar solicitud pendiente de salas
+        isRoomCreator: false, // Para saber si este jugador creó la sala
+        playNotificationSound: null // Para la función de sonido de notificación
     };
 
     // --- DOM Elements ---
@@ -832,6 +835,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             case 'roomCreated': // Successfully created a room
                 gameState.roomId = message.payload.roomId;
+                gameState.isRoomCreator = true; // Marcar que somos el creador
+                console.log(`⭐ Sala creada: ${gameState.roomId} - Soy el creador`);
+                
                 // Update player state with the creator's info (assuming server doesn't send full player list here)
                 gameState.players.player1 = {
                     id: gameState.myPlayerId,
@@ -851,6 +857,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
             case 'joinSuccess': // Successfully joined a room
                 gameState.roomId = message.payload.roomId;
+                gameState.isRoomCreator = false; // No somos el creador
+                console.log(`⭐ Unido a sala: ${gameState.roomId} - No soy el creador`);
+                
                  if (message.payload.players) {
                     gameState.players = message.payload.players;
                  }
@@ -910,6 +919,21 @@ document.addEventListener('DOMContentLoaded', function() {
                  gameState.players = message.payload.players; // Get initial player data { player1: {id, name, score}, player2: {id, name, score} }
                  gameState.currentTurn = message.payload.startingPlayerId;
                  console.log("Received gameStart:", message.payload);
+                 
+                 // Si somos el creador de la sala, notificar que se unió un oponente
+                 if (gameState.isRoomCreator && gameState.players) {
+                     // Encontrar al oponente
+                     let opponentName = 'Oponente';
+                     if (gameState.players.player1 && gameState.players.player1.id !== gameState.myPlayerId) {
+                         opponentName = gameState.players.player1.name || 'Oponente';
+                     } else if (gameState.players.player2 && gameState.players.player2.id !== gameState.myPlayerId) {
+                         opponentName = gameState.players.player2.name || 'Oponente';
+                     }
+                     
+                     // Notificar que el oponente se unió
+                     notifyOpponentJoined(opponentName);
+                 }
+                 
                  startGame(); // Transition to game screen, update UI
                  // Don't enable input here; wait for the first 'newQuestion' message
                  showWaitingMessage("Game starting! Waiting for first question...");
@@ -1622,5 +1646,132 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     // +++ END NEW FUNCTION +++
+
+    // Start the app
+    initializeApp();
+
+    // --- Soporte para comunicación de salas disponibles ---
+    window.addEventListener('message', function(event) {
+        // Verificar origen del mensaje por seguridad
+        if (event.origin !== window.location.origin) return;
+        
+        // Si nos piden las salas disponibles
+        if (event.data && event.data.type === 'requestRooms' && event.data.gameType === 'quiensabemas') {
+            console.log('✅ [QSM] Solicitud de salas QSM recibida desde games.html');
+            
+            // Verificar si hay conexión WebSocket activa
+            if (!gameState.websocket || gameState.websocket.readyState !== WebSocket.OPEN) {
+                console.warn('⚠️ [QSM] WebSocket no conectado, enviando lista vacía');
+                // Enviar lista vacía si no hay conexión
+                event.source.postMessage({
+                    type: 'availableRooms',
+                    gameType: 'quiensabemas',
+                    rooms: []
+                }, event.origin);
+                return;
+            }
+            
+            // Solicitar salas al servidor
+            console.log('📡 [QSM] Solicitando salas de QSM al servidor');
+            sendToServer('getRooms', { gameType: 'quiensabemas' });
+            
+            // Guardar el origen para responder cuando recibamos la lista del servidor
+            gameState.pendingRoomsRequest = {
+                source: event.source,
+                origin: event.origin
+            };
+        }
+    });
+
+    // --- Inicializar sistema de notificaciones ---
+    function initializeNotificationSystem() {
+        // Solicitar permisos de notificación
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission().then(permission => {
+                console.log('Permisos de notificación:', permission);
+            });
+        }
+        
+        // Crear función de sonido sintetizado usando Web Audio API
+        gameState.playNotificationSound = function() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Crear un sonido de notificación agradable (tono más cerebral para QSM)
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Configurar las frecuencias para un sonido más "intelectual"
+                oscillator.frequency.setValueAtTime(660, audioContext.currentTime);
+                oscillator.frequency.setValueAtTime(880, audioContext.currentTime + 0.1);
+                oscillator.frequency.setValueAtTime(1100, audioContext.currentTime + 0.2);
+                
+                // Envelope para que suene natural
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                
+                oscillator.type = 'triangle';
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.4);
+                
+                console.log('🔊 Sonido de notificación reproducido');
+            } catch (error) {
+                console.log('No se pudo reproducir el sonido de notificación:', error);
+            }
+        };
+    }
+
+    // --- Función para notificar cuando se une un oponente ---
+    function notifyOpponentJoined(opponentName) {
+        console.log('🔔 Notificando unión de oponente:', opponentName);
+        
+        // 1. Reproducir sonido
+        if (gameState.playNotificationSound) {
+            gameState.playNotificationSound();
+        }
+        
+        // 2. Notificación del navegador (solo si la ventana no está activa)
+        if (!document.hasFocus() && 'Notification' in window && Notification.permission === 'granted') {
+            const notification = new Notification('¡Oponente conectado! - Quien Sabe Más', {
+                body: `${opponentName} se unió a tu sala. ¡La partida está lista!`,
+                icon: '/favicon.ico',
+                badge: '/favicon.ico',
+                tag: 'quiensabemas-opponent-joined',
+                requireInteraction: true
+            });
+            
+            notification.onclick = function() {
+                window.focus();
+                notification.close();
+            };
+            
+            // Auto-cerrar después de 8 segundos
+            setTimeout(() => notification.close(), 8000);
+        }
+        
+        // 3. Enfocar la ventana si está en segundo plano
+        if (!document.hasFocus()) {
+            window.focus();
+            
+            // Hacer que la pestaña parpadee si el navegador lo soporta
+            let originalTitle = document.title;
+            let flashCount = 0;
+            const flashInterval = setInterval(() => {
+                document.title = flashCount % 2 === 0 ? '🧠 ¡OPONENTE CONECTADO!' : originalTitle;
+                flashCount++;
+                if (flashCount >= 10 || document.hasFocus()) {
+                    clearInterval(flashInterval);
+                    document.title = originalTitle;
+                }
+            }, 500);
+        }
+        
+        // 4. Alerta visual mejorada en el juego
+        showOpponentJoinedAlert(opponentName);
+    }
 
 });

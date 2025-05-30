@@ -101,7 +101,9 @@ document.addEventListener('DOMContentLoaded', function() {
         currentTurn: null, // Player ID for the current action
         gameActive: false,
         websocket: null,
-        pendingRoomsRequest: null // Para almacenar solicitud pendiente de salas
+        pendingRoomsRequest: null, // Para almacenar solicitud pendiente de salas
+        isRoomCreator: false, // Para saber si este jugador creó la sala
+        playNotificationSound: null // Para la función de sonido de notificación
     };
 
     // Orden fijo de categorías para el juego (debe coincidir con el servidor)
@@ -215,6 +217,9 @@ document.addEventListener('DOMContentLoaded', function() {
         showLobby();
         setupEventListeners();
         hideEndGameModal();
+        
+        // Inicializar el sistema de notificaciones
+        initializeNotificationSystem();
         
         // Inicializar la conexión WebSocket después de preparar la UI
         initializeWebSocket();
@@ -975,7 +980,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 case 'roomCreated':
                 case 'joinSuccess': // Server might send full player list or just confirmation
                     gameState.roomId = message.payload.roomId;
-                    console.log(`⭐ Unido a sala: ${gameState.roomId}`);
+                    
+                    // Marcar si somos el creador de la sala
+                    if (message.type === 'roomCreated') {
+                        gameState.isRoomCreator = true;
+                        console.log(`⭐ Sala creada: ${gameState.roomId} - Soy el creador`);
+                    } else {
+                        gameState.isRoomCreator = false;
+                        console.log(`⭐ Unido a sala: ${gameState.roomId} - No soy el creador`);
+                    }
                     
                     // Normalizar players - puede venir como array o como objeto
                     let normalizedPlayers = [];
@@ -1049,6 +1062,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }
                     
+                    let opponentName = 'Otro jugador';
+                    
                     if (normalizedPlayersJoined.length > 0) {
                         // Actualizar la lista de jugadores completa
                         console.log(`⭐ Lista actualizada de jugadores: `, normalizedPlayersJoined);
@@ -1071,6 +1086,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 name: opponent.name || 'Oponente', 
                                 score: opponent.score || 0 
                             };
+                            opponentName = opponent.name || 'Oponente';
                         }
                         
                     } else if (message.payload.newPlayer) {
@@ -1081,10 +1097,17 @@ document.addEventListener('DOMContentLoaded', function() {
                             name: newPlayer.name || 'Oponente', 
                             score: newPlayer.score || 0 
                         };
+                        opponentName = newPlayer.name || 'Oponente';
                     }
                     
                     updatePlayerUI();
-                    showFeedback(`${message.payload.newPlayer ? message.payload.newPlayer.name : 'Otro jugador'} se unió a la sala.`, 'info');
+                    
+                    // Solo notificar si somos el creador de la sala (estábamos esperando)
+                    if (gameState.isRoomCreator) {
+                        notifyOpponentJoined(opponentName);
+                    }
+                    
+                    showFeedback(`${opponentName} se unió a la sala.`, 'info');
                     break;
                 
                 case 'gameStart':
@@ -1912,6 +1935,191 @@ document.addEventListener('DOMContentLoaded', function() {
                 sendToServer('getRooms', { gameType: 'mentiroso' });
             }
         }, 3000); // Cada 3 segundos
+    }
+
+    // --- Inicializar sistema de notificaciones ---
+    function initializeNotificationSystem() {
+        // Solicitar permisos de notificación
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission().then(permission => {
+                console.log('Permisos de notificación:', permission);
+            });
+        }
+        
+        // Crear función de sonido sintetizado usando Web Audio API
+        gameState.playNotificationSound = function() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Crear un sonido de notificación agradable
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Configurar las frecuencias para un sonido de "ding" agradable
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
+                oscillator.frequency.setValueAtTime(400, audioContext.currentTime + 0.2);
+                
+                // Envelope para que suene natural
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                
+                oscillator.type = 'sine';
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.4);
+                
+                console.log('🔊 Sonido de notificación reproducido');
+            } catch (error) {
+                console.log('No se pudo reproducir el sonido de notificación:', error);
+            }
+        };
+    }
+
+    // --- Función para notificar cuando se une un oponente ---
+    function notifyOpponentJoined(opponentName) {
+        console.log('🔔 Notificando unión de oponente:', opponentName);
+        
+        // 1. Reproducir sonido
+        if (gameState.playNotificationSound) {
+            gameState.playNotificationSound();
+        }
+        
+        // 2. Notificación del navegador (solo si la ventana no está activa)
+        if (!document.hasFocus() && 'Notification' in window && Notification.permission === 'granted') {
+            const notification = new Notification('¡Oponente conectado! - Mentiroso', {
+                body: `${opponentName} se unió a tu sala. ¡La partida está lista!`,
+                icon: '/favicon.ico',
+                badge: '/favicon.ico',
+                tag: 'mentiroso-opponent-joined',
+                requireInteraction: true
+            });
+            
+            notification.onclick = function() {
+                window.focus();
+                notification.close();
+            };
+            
+            // Auto-cerrar después de 8 segundos
+            setTimeout(() => notification.close(), 8000);
+        }
+        
+        // 3. Enfocar la ventana si está en segundo plano
+        if (!document.hasFocus()) {
+            window.focus();
+            
+            // Hacer que la pestaña parpadee si el navegador lo soporta
+            let originalTitle = document.title;
+            let flashCount = 0;
+            const flashInterval = setInterval(() => {
+                document.title = flashCount % 2 === 0 ? '🔥 ¡OPONENTE CONECTADO!' : originalTitle;
+                flashCount++;
+                if (flashCount >= 10 || document.hasFocus()) {
+                    clearInterval(flashInterval);
+                    document.title = originalTitle;
+                }
+            }, 500);
+        }
+        
+        // 4. Alerta visual mejorada en el juego
+        showOpponentJoinedAlert(opponentName);
+    }
+
+    // --- Función para mostrar alerta visual especial ---
+    function showOpponentJoinedAlert(opponentName) {
+        // Crear elemento de alerta especial
+        const alertContainer = document.createElement('div');
+        alertContainer.className = 'opponent-joined-alert';
+        alertContainer.innerHTML = `
+            <div class="alert-content">
+                <div class="alert-icon">🎮</div>
+                <div class="alert-text">
+                    <div class="alert-title">¡Oponente Conectado!</div>
+                    <div class="alert-subtitle">${opponentName} está listo para jugar</div>
+                </div>
+                <div class="alert-animation">⚡</div>
+            </div>
+        `;
+        
+        // Agregar estilos dinámicamente
+        const style = document.createElement('style');
+        style.textContent = `
+            .opponent-joined-alert {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 10000;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border: 3px solid #fff;
+                border-radius: 15px;
+                padding: 20px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                animation: slideInBounce 0.6s ease-out;
+                max-width: 300px;
+            }
+            
+            .alert-content {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                color: white;
+            }
+            
+            .alert-icon {
+                font-size: 2.5rem;
+                animation: bounce 1s infinite;
+            }
+            
+            .alert-title {
+                font-size: 1.2rem;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+            
+            .alert-subtitle {
+                font-size: 0.9rem;
+                opacity: 0.9;
+            }
+            
+            .alert-animation {
+                font-size: 1.5rem;
+                animation: flash 0.8s infinite;
+            }
+            
+            @keyframes slideInBounce {
+                0% { transform: translateX(100%) scale(0.8); opacity: 0; }
+                60% { transform: translateX(-10px) scale(1.05); }
+                100% { transform: translateX(0) scale(1); opacity: 1; }
+            }
+            
+            @keyframes bounce {
+                0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+                40% { transform: translateY(-10px); }
+                60% { transform: translateY(-5px); }
+            }
+            
+            @keyframes flash {
+                0%, 50%, 100% { opacity: 1; }
+                25%, 75% { opacity: 0.3; }
+            }
+        `;
+        
+        document.head.appendChild(style);
+        document.body.appendChild(alertContainer);
+        
+        // Remover la alerta después de 5 segundos
+        setTimeout(() => {
+            if (alertContainer.parentNode) {
+                alertContainer.style.animation = 'slideInBounce 0.3s ease-in reverse';
+                setTimeout(() => {
+                    alertContainer.remove();
+                    style.remove();
+                }, 300);
+            }
+        }, 5000);
     }
 
     // --- Start App ---
