@@ -521,8 +521,8 @@
     
     .difficulty-card {
         padding: 12px 8px;
-    }
-    
+}
+
     .difficulty-card h3 {
         font-size: 0.85rem;
     }
@@ -535,12 +535,12 @@
     .difficulty-errors {
         font-size: 0.75rem;
         margin: 0 0 4px;
-    }
-    
+}
+
     .difficulty-description {
         font-size: 0.65rem;
-    }
-    
+}
+
     .rules-horizontal {
         grid-template-columns: 1fr;
         gap: 5px;
@@ -555,106 +555,106 @@
     .rule-compact .rule-icon {
         width: 16px;
         height: 16px;
-    }
-    
+}
+
     .rule-text {
         font-size: 0.6rem;
         line-height: 1.2;
-    }
-    
+}
+
     #gameRulesModal .primary-button.enhanced {
         font-size: 0.8rem;
         padding: 12px 16px;
         margin-top: 4px;
-    }
-    
+}
+
     /* Game Result and Stats Modals - More compact */
-    #gameResultModal .modal-content,
-    #statsDetailModal .modal-content {
+#gameResultModal .modal-content,
+#statsDetailModal .modal-content {
         max-width: 95%;
         width: 95%;
         margin: 4px;
     }
     
-    .result-modal-header,
-    .stats-modal-header {
+.result-modal-header,
+.stats-modal-header {
         padding: 10px 12px 8px;
-    }
-    
-    .result-title,
-    .stats-title {
+}
+
+.result-title,
+.stats-title {
         font-size: 0.95rem;
-    }
-    
-    .result-message,
-    .stats-subtitle {
+}
+
+.result-message,
+.stats-subtitle {
         font-size: 0.7rem;
     }
     
     .result-icon svg {
         width: 28px;
         height: 28px;
-    }
-    
-    .result-stats,
-    .performance-summary {
+}
+
+.result-stats,
+.performance-summary {
         padding: 10px;
         gap: 6px;
     }
     
-    .stat-item,
-    .performance-item {
+.stat-item,
+.performance-item {
         padding: 8px 6px;
-    }
-    
-    .stat-label,
-    .performance-label {
+}
+
+.stat-label,
+.performance-label {
         font-size: 0.55rem;
         margin-bottom: 3px;
-    }
-    
-    .stat-value,
-    .performance-value {
+}
+
+.stat-value,
+.performance-value {
         font-size: 1.1rem;
-    }
-    
-    .errors-container {
+}
+
+.errors-container {
         padding: 8px 10px;
         max-height: 120px;
-    }
-    
-    .errors-title {
+}
+
+.errors-title {
         font-size: 0.7rem;
         margin-bottom: 5px;
-    }
-    
-    .error-item {
+}
+
+.error-item {
         padding: 4px 6px;
         gap: 5px;
-    }
-    
-    .error-letter {
+}
+
+.error-letter {
         width: 16px;
         height: 16px;
         font-size: 0.6rem;
-    }
-    
-    .error-question {
+}
+
+.error-question {
         font-size: 0.55rem;
         margin-bottom: 2px;
-    }
-    
-    .error-answers {
+}
+
+.error-answers {
         font-size: 0.5rem;
-    }
-    
-    .result-buttons,
-    .stats-buttons {
+}
+
+.result-buttons,
+.stats-buttons {
         padding: 8px 10px;
         gap: 6px;
-    }
-    
-    .result-buttons .modal-button {
+}
+
+.result-buttons .modal-button {
         min-width: 60px;
         padding: 6px 10px;
         font-size: 0.75rem;
@@ -663,28 +663,28 @@
     #privateRoomPasswordModal .modal-content {
         padding: 12px;
         margin: 6px;
-    }
-    
+}
+
     #privateRoomPasswordModal .modal-title {
         font-size: 0.85rem;
         margin-bottom: 6px;
-    }
-    
+}
+
     #privateRoomPasswordModal #passwordModalText {
         font-size: 0.7rem;
         margin-bottom: 10px;
-    }
-    
+}
+
     #privateRoomPasswordModal .form-group label {
         font-size: 0.7rem;
         margin-bottom: 4px;
-    }
-    
+}
+
     #privateRoomPasswordModal #passwordModalInput {
         padding: 8px 10px;
         font-size: 0.7rem;
-    }
-    
+}
+
     #privateRoomPasswordModal #passwordErrorText {
         font-size: 0.65rem;
         margin-bottom: 8px;
@@ -1076,8 +1076,116 @@
         margin-top: 12px;
     }
     
-    #gameResultModal .modal-content,
-    #statsDetailModal .modal-content {
+    /* Pasala Che Result Modal Responsive */
+    .game-result-modal .modal-content.result-modal {
+        max-width: 95%;
+        width: 95%;
+        margin: 8px;
+    }
+    
+    .result-modal-header {
+        padding: 16px 16px 14px;
+    }
+    
+    .result-title {
+        font-size: 1.125rem;
+    }
+    
+    .result-message {
+        font-size: 0.875rem;
+    }
+    
+    .result-icon {
+        font-size: 2.25rem;
+        margin-bottom: 8px;
+    }
+    
+    .result-icon svg {
+        width: 36px;
+        height: 36px;
+    }
+    
+    .modal-horizontal-layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 16px;
+        min-height: auto;
+    }
+    
+    .modal-sidebar {
+        order: 2;
+    }
+    
+    .result-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        order: 1;
+    }
+    
+    .stat-item {
+        padding: 12px 8px;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+        margin-bottom: 4px;
+    }
+    
+    .stat-value {
+        font-size: 1.25rem;
+    }
+    
+    .errors-container {
+        padding: 12px;
+        max-height: 180px;
+    }
+    
+    .errors-title {
+        font-size: 0.875rem;
+        margin-bottom: 10px;
+    }
+    
+    .error-item {
+        padding: 8px;
+        gap: 8px;
+    }
+    
+    .error-letter {
+        width: 20px;
+        height: 20px;
+        font-size: 0.65rem;
+    }
+    
+    .error-question {
+        font-size: 0.7rem;
+        margin-bottom: 4px;
+    }
+    
+    .error-answers {
+        gap: 1px;
+    }
+    
+    .user-answer,
+    .correct-answer {
+        font-size: 0.65rem;
+    }
+    
+    .result-buttons {
+        padding: 16px 16px 16px;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .result-buttons .modal-button {
+        min-width: 80px;
+        padding: 8px 12px;
+        font-size: 0.75rem;
+        flex: 1;
+        min-width: calc(50% - 4px);
+    }
+    
+    #statsDetailModal .modal-content,
+    #gameResultModal .modal-content {
         max-width: 95%;
     }
     
@@ -1159,29 +1267,45 @@
         font-size: 0.6rem;
     }
     
-    .mentiroso-intro-modal {
-        max-width: 95%;
-        padding: 16px;
+    #privateRoomPasswordModal .modal-content {
+        padding: 14px;
     }
     
-    .mentiroso-intro-modal .modal-title {
-        font-size: 0.95rem;
-        margin-bottom: 10px;
+    #privateRoomPasswordModal .modal-title {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
     }
     
-    .mentiroso-intro-modal p {
+    #privateRoomPasswordModal #passwordModalText {
         font-size: 0.75rem;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
     }
     
-    .mentiroso-intro-modal li {
-        font-size: 0.7rem;
+    #privateRoomPasswordModal .form-group label {
+        font-size: 0.75rem;
         margin-bottom: 4px;
     }
     
-    .mentiroso-intro-modal .primary-button {
-        padding: 8px 12px;
+    #privateRoomPasswordModal #passwordModalInput {
+        padding: 8px 10px;
         font-size: 0.75rem;
+    }
+    
+    #privateRoomPasswordModal #passwordErrorText {
+        font-size: 0.7rem;
+        margin-bottom: 10px;
+    }
+    
+    .feedback-close-btn {
+        top: 6px;
+        right: 6px;
+        width: 16px;
+        height: 16px;
+    }
+    
+    .feedback-close-btn svg {
+        width: 8px;
+        height: 8px;
     }
 }
 
@@ -1255,6 +1379,103 @@
         font-size: 0.7rem;
         padding: 6px 10px;
         margin-top: 8px;
+    }
+    
+    /* Pasala Che Result Modal - Ultra Mobile */
+    .game-result-modal .modal-content.result-modal {
+        max-width: 98%;
+        width: 98%;
+        margin: 4px;
+    }
+    
+    .result-modal-header {
+        padding: 12px 12px 10px;
+    }
+    
+    .result-title {
+        font-size: 1rem;
+    }
+    
+    .result-message {
+        font-size: 0.8rem;
+    }
+    
+    .result-icon {
+        font-size: 2rem;
+        margin-bottom: 6px;
+    }
+    
+    .result-icon svg {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .modal-horizontal-layout {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding: 12px;
+    }
+    
+    .result-stats {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    
+    .stat-item {
+        padding: 10px 6px;
+    }
+    
+    .stat-label {
+        font-size: 0.65rem;
+        margin-bottom: 3px;
+    }
+    
+    .stat-value {
+        font-size: 1.1rem;
+    }
+    
+    .errors-container {
+        padding: 10px;
+        max-height: 150px;
+    }
+    
+    .errors-title {
+        font-size: 0.8rem;
+        margin-bottom: 8px;
+    }
+    
+    .error-item {
+        padding: 6px;
+        gap: 6px;
+    }
+    
+    .error-letter {
+        width: 18px;
+        height: 18px;
+        font-size: 0.6rem;
+    }
+    
+    .error-question {
+        font-size: 0.65rem;
+        margin-bottom: 3px;
+    }
+    
+    .user-answer,
+    .correct-answer {
+        font-size: 0.6rem;
+    }
+    
+    .result-buttons {
+        padding: 12px 12px 12px;
+        gap: 6px;
+        flex-direction: column;
+    }
+    
+    .result-buttons .modal-button {
+        width: 100%;
+        min-width: auto;
+        padding: 10px 12px;
+        font-size: 0.75rem;
     }
     
     .result-stats {
@@ -1374,4 +1595,928 @@
 @keyframes pulseGlow {
     0%, 100% { opacity: 0.8; }
     50% { opacity: 1; }
+}
+
+/* ===== PASALA CHE RESULT MODAL ===== */
+
+/* Game Result Modal específico para Pasala Che */
+.game-result-modal {
+    z-index: 1100; /* Asegurar que aparezca sobre otros elementos */
+}
+
+.game-result-modal .modal-content.result-modal {
+    max-width: 700px;
+    width: 90%;
+    padding: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, 
+        rgba(15, 23, 42, 0.95) 0%, 
+        rgba(30, 41, 59, 0.98) 100%);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Result Modal Header */
+.result-modal-header {
+    background: linear-gradient(135deg, var(--modal-primary), rgba(99, 102, 241, 0.8));
+    padding: 24px 24px 20px;
+    border-radius: 16px 16px 0 0;
+    text-align: center;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.result-icon {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.result-icon svg {
+    width: 48px;
+    height: 48px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.result-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 8px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.result-message {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Header variants by result type */
+.result-header-victory {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.result-header-defeat {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.result-header-timeout {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+/* Horizontal Layout Container */
+.modal-horizontal-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+    padding: 24px;
+    min-height: 280px;
+}
+
+/* Result Stats Container */
+.result-stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+}
+
+.stat-item {
+    background: rgba(148, 163, 184, 0.08);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 10px;
+    padding: 16px 14px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.stat-item:hover {
+    background: rgba(148, 163, 184, 0.12);
+    transform: translateY(-1px);
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.stat-label i {
+    margin-right: 4px;
+    width: 12px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+/* Stat value variants */
+.stat-value.correct-stat {
+    color: #10b981;
+}
+
+.stat-value.incorrect-stat {
+    color: #ef4444;
+}
+
+/* Modal Sidebar */
+.modal-sidebar {
+    background: rgba(148, 163, 184, 0.06);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 12px;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Errors Container */
+.errors-container {
+    padding: 16px;
+    height: 100%;
+    overflow-y: auto;
+    max-height: 240px;
+}
+
+.errors-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 16px 0;
+    text-align: center;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+/* Quick Summary */
+.quick-summary p {
+    color: var(--text-secondary) !important;
+    font-size: 0.875rem !important;
+    margin-bottom: 16px !important;
+    text-align: center !important;
+    line-height: 1.5;
+}
+
+/* Errors List */
+.errors-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.error-item {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.error-letter {
+    background: #ef4444;
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.error-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.error-question {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.error-answers {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.user-answer,
+.correct-answer {
+    font-size: 0.7rem;
+    line-height: 1.2;
+}
+
+.user-answer {
+    color: #ef4444;
+}
+
+.correct-answer {
+    color: #10b981;
+}
+
+.user-answer strong,
+.correct-answer strong {
+    font-weight: 600;
+}
+
+/* No Errors State */
+.no-errors {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-secondary);
+}
+
+.no-errors i {
+    font-size: 2rem !important;
+    color: #10b981 !important;
+    margin-bottom: 12px !important;
+    display: block;
+}
+
+.no-errors p {
+    margin: 0;
+    font-weight: 600;
+}
+
+.no-errors p:first-of-type {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+.no-errors p:last-of-type {
+    font-size: 0.875rem !important;
+    margin-top: 8px !important;
+    color: var(--text-secondary);
+}
+
+/* Result Buttons */
+.result-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px 24px 24px;
+    border-top: 1px solid rgba(148, 163, 184, 0.1);
+    background: rgba(148, 163, 184, 0.02);
+    border-radius: 0 0 16px 16px;
+}
+
+.result-buttons .modal-button {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 100px;
+}
+
+.result-buttons .secondary-button {
+    background: rgba(148, 163, 184, 0.1);
+    color: var(--text-secondary);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.result-buttons .secondary-button:hover {
+    background: rgba(148, 163, 184, 0.2);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+.result-buttons .share-button {
+    background: var(--modal-secondary);
+    color: white;
+    box-shadow: 0 3px 8px rgba(6, 182, 212, 0.3);
+}
+
+.result-buttons .share-button:hover {
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+    transform: translateY(-1px);
+}
+
+.result-buttons .twitter-x-button {
+    background: linear-gradient(135deg, #1DA1F2 0%, #1a91da 100%);
+    box-shadow: 0 3px 8px rgba(29, 161, 242, 0.3);
+}
+
+.result-buttons .twitter-x-button:hover {
+    box-shadow: 0 4px 12px rgba(29, 161, 242, 0.4);
+}
+
+/* Stats Detail Modal */
+.stats-detail-modal .modal-content.stats-modal {
+    max-width: 600px;
+    width: 90%;
+    padding: 0;
+    border-radius: 16px;
+}
+
+.stats-modal-header {
+    background: var(--modal-secondary);
+    padding: 20px 24px;
+    border-radius: 16px 16px 0 0;
+    text-align: center;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.stats-title {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 6px 0;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.stats-subtitle {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Performance Summary */
+.performance-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    padding: 24px;
+}
+
+.performance-item {
+    background: rgba(148, 163, 184, 0.08);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    border-radius: 10px;
+    padding: 16px 14px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.performance-item:hover {
+    background: rgba(148, 163, 184, 0.12);
+    transform: translateY(-1px);
+}
+
+.performance-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.performance-value {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+/* Stats Buttons */
+.stats-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px 24px 24px;
+    border-top: 1px solid rgba(148, 163, 184, 0.1);
+    background: rgba(148, 163, 184, 0.02);
+    border-radius: 0 0 16px 16px;
+}
+
+/* ===== ULTRA MOBILE - 320px to 360px ===== */
+@media (max-width: 360px) {
+    /* Game Rules Modal - Ultra Small */
+    #gameRulesModal .modal-content.horizontal-modal {
+        max-width: 98%;
+        width: 98%;
+        padding: 8px;
+        margin: 2px;
+    }
+    
+    #gameRulesModal .modal-title {
+        font-size: 0.8rem;
+        margin-bottom: 6px;
+        line-height: 1.2;
+    }
+    
+    .game-promo {
+        font-size: 0.65rem;
+        margin: 0 0 6px;
+        line-height: 1.3;
+    }
+    
+    .difficulty-main-title {
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+    }
+    
+    .difficulty-cards {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+    
+    .difficulty-card {
+        padding: 8px 6px;
+    }
+    
+    .difficulty-card h3 {
+        font-size: 0.8rem;
+    }
+    
+    .difficulty-time {
+        font-size: 0.9rem;
+        margin: 4px 0 2px;
+    }
+    
+    .difficulty-errors {
+        font-size: 0.7rem;
+        margin: 0 0 4px;
+    }
+    
+    .difficulty-description {
+        font-size: 0.6rem;
+    }
+    
+    .rules-horizontal {
+        grid-template-columns: 1fr;
+        gap: 4px;
+        margin: 0 0 6px 0;
+    }
+    
+    .rule-compact {
+        padding: 4px 3px;
+        gap: 2px;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .rule-compact .rule-icon {
+        width: 14px;
+        height: 14px;
+    }
+    
+    .rule-text {
+        font-size: 0.55rem;
+        line-height: 1.1;
+    }
+    
+    #gameRulesModal .primary-button.enhanced {
+        font-size: 0.75rem;
+        padding: 8px 12px;
+        margin-top: 4px;
+    }
+    
+    /* Pasala Che Result Modal - Ultra Small (340px) */
+    .game-result-modal .modal-content.result-modal {
+        max-width: 99%;
+        width: 99%;
+        margin: 1px;
+        border-radius: 12px;
+    }
+    
+    .result-modal-header {
+        padding: 8px 8px 6px;
+        border-radius: 12px 12px 0 0;
+    }
+    
+    .result-title {
+        font-size: 0.9rem;
+        margin-bottom: 3px;
+        line-height: 1.1;
+    }
+    
+    .result-message {
+        font-size: 0.7rem;
+        line-height: 1.2;
+    }
+    
+    .result-icon {
+        font-size: 1.75rem;
+        margin-bottom: 4px;
+    }
+    
+    .result-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .modal-horizontal-layout {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        padding: 8px;
+        min-height: auto;
+    }
+    
+    /* Stats en columna única para pantallas muy pequeñas */
+    .result-stats {
+        grid-template-columns: 1fr;
+        gap: 4px;
+        order: 1;
+    }
+    
+    .stat-item {
+        padding: 6px 4px;
+        border-radius: 6px;
+    }
+    
+    .stat-label {
+        font-size: 0.6rem;
+        margin-bottom: 2px;
+    }
+    
+    .stat-label i {
+        margin-right: 2px;
+        width: 10px;
+    }
+    
+    .stat-value {
+        font-size: 0.95rem;
+        line-height: 1.1;
+    }
+    
+    /* Sidebar más compacto */
+    .modal-sidebar {
+        order: 2;
+        border-radius: 8px;
+    }
+    
+    .errors-container {
+        padding: 6px;
+        max-height: 120px;
+    }
+    
+    .errors-title {
+        font-size: 0.7rem;
+        margin-bottom: 6px;
+        padding-bottom: 4px;
+    }
+    
+    .quick-summary p {
+        font-size: 0.65rem !important;
+        margin-bottom: 8px !important;
+        line-height: 1.3 !important;
+    }
+    
+    .error-item {
+        padding: 4px;
+        gap: 4px;
+        border-radius: 4px;
+    }
+    
+    .error-letter {
+        width: 16px;
+        height: 16px;
+        font-size: 0.55rem;
+        border-radius: 4px;
+    }
+    
+    .error-question {
+        font-size: 0.6rem;
+        margin-bottom: 2px;
+        line-height: 1.2;
+    }
+    
+    .user-answer,
+    .correct-answer {
+        font-size: 0.55rem;
+        line-height: 1.1;
+    }
+    
+    .no-errors {
+        padding: 12px;
+    }
+    
+    .no-errors i {
+        font-size: 1.5rem !important;
+        margin-bottom: 6px !important;
+    }
+    
+    .no-errors p:first-of-type {
+        font-size: 0.9rem;
+        margin-bottom: 2px;
+    }
+    
+    .no-errors p:last-of-type {
+        font-size: 0.7rem !important;
+        margin-top: 4px !important;
+    }
+    
+    /* Botones más compactos en columna */
+    .result-buttons {
+        padding: 8px 8px 8px;
+        gap: 4px;
+        flex-direction: column;
+        border-radius: 0 0 12px 12px;
+    }
+    
+    .result-buttons .modal-button {
+        width: 100%;
+        min-width: auto;
+        padding: 8px 10px;
+        font-size: 0.7rem;
+        border-radius: 6px;
+        gap: 4px;
+    }
+    
+    .result-buttons .modal-button i {
+        font-size: 0.8rem;
+    }
+    
+    /* Stats Detail Modal - Ultra Small */
+    .stats-detail-modal .modal-content.stats-modal {
+        max-width: 99%;
+        width: 99%;
+        margin: 1px;
+        border-radius: 12px;
+    }
+    
+    .stats-modal-header {
+        padding: 8px 8px 6px;
+        border-radius: 12px 12px 0 0;
+    }
+    
+    .stats-title {
+        font-size: 0.9rem;
+        margin-bottom: 2px;
+        line-height: 1.1;
+    }
+    
+    .stats-subtitle {
+        font-size: 0.7rem;
+        line-height: 1.2;
+    }
+    
+    .performance-summary {
+        grid-template-columns: 1fr;
+        gap: 4px;
+        padding: 8px;
+    }
+    
+    .performance-item {
+        padding: 6px 4px;
+        border-radius: 6px;
+    }
+    
+    .performance-label {
+        font-size: 0.6rem;
+        margin-bottom: 2px;
+    }
+    
+    .performance-value {
+        font-size: 0.95rem;
+        line-height: 1.1;
+    }
+    
+    .stats-buttons {
+        padding: 8px 8px 8px;
+        gap: 4px;
+        flex-direction: column;
+        border-radius: 0 0 12px 12px;
+    }
+    
+    .stats-buttons .modal-button {
+        width: 100%;
+        padding: 8px 10px;
+        font-size: 0.7rem;
+        border-radius: 6px;
+    }
+    
+    /* Password Modal - Ultra Small */
+    #privateRoomPasswordModal .modal-content {
+        max-width: 99%;
+        width: 99%;
+        padding: 8px;
+        margin: 1px;
+        border-radius: 12px;
+    }
+    
+    #privateRoomPasswordModal .modal-title {
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+    }
+    
+    #privateRoomPasswordModal #passwordModalText {
+        font-size: 0.7rem;
+        margin-bottom: 8px;
+        line-height: 1.3;
+    }
+    
+    #privateRoomPasswordModal .form-group label {
+        font-size: 0.7rem;
+        margin-bottom: 3px;
+    }
+    
+    #privateRoomPasswordModal #passwordModalInput {
+        padding: 6px 8px;
+        font-size: 0.7rem;
+        border-radius: 6px;
+    }
+    
+    #privateRoomPasswordModal #passwordErrorText {
+        font-size: 0.65rem;
+        margin-bottom: 8px;
+    }
+    
+    #privateRoomPasswordModal .modal-footer {
+        margin-top: 8px;
+        gap: 4px;
+    }
+    
+    #privateRoomPasswordModal .modal-button {
+        padding: 6px 10px;
+        font-size: 0.7rem;
+        border-radius: 6px;
+    }
+    
+    /* Mentiroso Modal - Ultra Small */
+    .mentiroso-intro-modal {
+        max-width: 99%;
+        width: 99%;
+        padding: 8px;
+        margin: 1px;
+        border-radius: 12px;
+    }
+    
+    .mentiroso-intro-modal .modal-title {
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+        padding-bottom: 6px;
+    }
+    
+    .mentiroso-intro-modal p {
+        font-size: 0.7rem;
+        margin-bottom: 6px;
+        line-height: 1.3;
+    }
+    
+    .mentiroso-intro-modal ul {
+        padding-left: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .mentiroso-intro-modal li {
+        font-size: 0.65rem;
+        margin-bottom: 3px;
+        line-height: 1.3;
+    }
+    
+    .mentiroso-intro-modal .primary-button {
+        padding: 6px 10px;
+        font-size: 0.7rem;
+        border-radius: 6px;
+    }
+    
+    /* Crack Rápido Modal - Ultra Small */
+    .crack-rapido-intro-modal {
+        max-width: 99%;
+        width: 99%;
+        padding: 8px;
+        margin: 1px;
+        border-radius: 12px;
+    }
+    
+    .crack-rapido-intro-modal .modal-title {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        line-height: 1.2;
+    }
+    
+    .crack-rapido-intro-modal p {
+        font-size: 0.75rem;
+        margin-bottom: 8px;
+        line-height: 1.3;
+    }
+    
+    .crack-rapido-intro-modal ul {
+        padding-left: 12px;
+        margin-bottom: 10px;
+    }
+    
+    .crack-rapido-intro-modal li {
+        font-size: 0.7rem;
+        margin-bottom: 4px;
+        line-height: 1.3;
+    }
+    
+    .crack-rapido-intro-modal .primary-button {
+        padding: 8px 12px;
+        font-size: 0.75rem;
+        border-radius: 8px;
+    }
+    
+    /* Feedback close button - Ultra Small */
+    .feedback-close-btn {
+        top: 4px;
+        right: 4px;
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+    }
+    
+    .feedback-close-btn svg {
+        width: 7px;
+        height: 7px;
+    }
+}
+
+/* ===== EXTRA SMALL - 320px and below ===== */
+@media (max-width: 320px) {
+    /* Pasala Che Result Modal - Extra Small */
+    .game-result-modal .modal-content.result-modal {
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+        max-height: 100vh;
+        overflow-y: auto;
+    }
+    
+    .result-modal-header {
+        border-radius: 0;
+        padding: 6px 6px 4px;
+    }
+    
+    .result-title {
+        font-size: 0.85rem;
+        margin-bottom: 2px;
+    }
+    
+    .result-message {
+        font-size: 0.65rem;
+    }
+    
+    .result-icon {
+        font-size: 1.5rem;
+        margin-bottom: 3px;
+    }
+    
+    .result-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .modal-horizontal-layout {
+        padding: 6px;
+        gap: 6px;
+    }
+    
+    .result-stats {
+        gap: 3px;
+    }
+    
+    .stat-item {
+        padding: 5px 3px;
+    }
+    
+    .stat-label {
+        font-size: 0.55rem;
+        margin-bottom: 1px;
+    }
+    
+    .stat-value {
+        font-size: 0.85rem;
+    }
+    
+    .errors-container {
+        padding: 4px;
+        max-height: 100px;
+    }
+    
+    .errors-title {
+        font-size: 0.65rem;
+        margin-bottom: 4px;
+        padding-bottom: 2px;
+    }
+    
+    .result-buttons {
+        padding: 6px 6px 6px;
+        gap: 3px;
+        border-radius: 0;
+    }
+    
+    .result-buttons .modal-button {
+        padding: 6px 8px;
+        font-size: 0.65rem;
+        border-radius: 4px;
+    }
 } 
