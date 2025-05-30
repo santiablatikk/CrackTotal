@@ -309,7 +309,7 @@
       },
       {
         "pregunta": "¿Cuál es el club argentino del barrio de La Ribera, cuyo estadio es la Bombonera?",
-        "respuesta": "Boca Juniors"
+        "respuesta": "Boca"
       },
       {
         "pregunta": "¿Cuál es el club alemán más ganador de la Bundesliga, hexacampeón de Europa?",
@@ -401,7 +401,7 @@
       },
       {
         "pregunta": "¿Cuál es el campeón de la Libertadores 2007?",
-        "respuesta": "Boca Juniors"
+        "respuesta": "Boca"
       },
       {
         "pregunta": "Campeón de la Copa América 2019",
@@ -437,7 +437,7 @@
       },
       {
         "pregunta": "Club argentino de La Bombonera",
-        "respuesta": "Boca Juniors"
+        "respuesta": "Boca"
       },
       {
         "pregunta": "Club español con 5 Champions",
@@ -761,7 +761,7 @@
         "respuesta": "Colombia"
       },
       {
-        "pregunta": "arquero belga del Real Madrid",
+        "pregunta": "Arquero belga del Real Madrid",
         "respuesta": "Courtois"
       },
       {
@@ -906,7 +906,7 @@
       },
       {
         "pregunta": "CONTIENE C: Club argentino de Avellaneda, rival de Independiente.",
-        "respuesta": "Racing Club"
+        "respuesta": "Racing"
       },
       {
         "pregunta": "¿Apellido del legendario futbolista neerlandés, ícono del Ajax y del FC Barcelona, conocido por revolucionar el fútbol con el concepto de 'Fútbol Total'?",
@@ -946,7 +946,7 @@
       },
       {
         "pregunta": "CONTIENE C: ¿Club de Avellaneda cuyo apodo es 'La Academia'?",
-        "respuesta": "Racing Club"
+        "respuesta": "Racing"
       },
       {
         "pregunta": "¿Apellido del ex defensor italiano, Balón de Oro en 2006 y capitán de la Italia campeona del mundo ese año?",
@@ -2580,7 +2580,7 @@
       },
       {
         "pregunta": "Club italiano de Milán apodado 'Nerazzurri'",
-        "respuesta": "Inter de Milan"
+        "respuesta": "Inter"
       },
       {
         "pregunta": "Selección nacional conocida como 'La Azzurra'",
@@ -2680,7 +2680,7 @@
       },
       {
         "pregunta": "¿Cuál es el club italiano de la ciudad de Milán que viste de azul y negro (nerazzurri) y juega en el estadio San Siro/Giuseppe Meazza?",
-        "respuesta": "Inter de Milán"
+        "respuesta": "Inter"
       },
       {
         "pregunta": "¿Apellido del ex mediocampista español, leyenda del FC Barcelona, autor del gol que le dio a España el Mundial de 2010?",
@@ -4118,7 +4118,7 @@
         "respuesta": "Portugal"
       },
       {
-        "pregunta": "defensor francés campeón del mundo 2018, jugador del Inter de Milán.",
+        "pregunta": "Defensor francés campeón del mundo 2018, jugador del Inter de Milán.",
         "respuesta": "Pavard"
       },
       {
@@ -4399,10 +4399,6 @@
         "respuesta": "Marquinhos"
       },
       {
-        "pregunta": "¿Qué palabra se utiliza para describir a un jugador que tiene una habilidad especial para quitar el balón limpiamente a los adversarios?",
-        "respuesta": "Quite"
-      },
-      {
         "pregunta": "CONTIENE Q: ¿Apellido del ex director técnico español que ganó el Mundial 2010 y la Eurocopa 2012 con España?",
         "respuesta": "Del Bosque"
       }
@@ -4425,7 +4421,7 @@
       },
       {
         "pregunta": "Club argentino de Núñez, máximo rival de Boca Juniors.",
-        "respuesta": "River Plate"
+        "respuesta": "River"
       },
       {
         "pregunta": "Apodo del exfutbolista brasileño, Balón de Oro 2005, famoso por su sonrisa y habilidad.",
@@ -4461,7 +4457,7 @@
       },
       {
         "pregunta": "Club argentino de Avellaneda, rival de Independiente, apodado 'La Academia'.",
-        "respuesta": "Racing Club"
+        "respuesta": "Racing"
       },
       {
         "pregunta": "Apellido del ex mediocampista de Boca y Villarreal, ídolo Xeneize.",
@@ -4497,7 +4493,7 @@
       },
       {
         "pregunta": "Club argentino de Avellaneda, campeón de la primera Copa Intercontinental para Argentina.",
-        "respuesta": "Racing Club"
+        "respuesta": "Racing"
       },
       {
         "pregunta": "Apellido del ex futbolista brasileño. Balon de oro 1999.",
@@ -4529,7 +4525,7 @@
       },
       {
         "pregunta": "Club argentino con más títulos locales",
-        "respuesta": "River Plate"
+        "respuesta": "River"
       },
       {
         "pregunta": "¿Cómo se conoce al ganador del Balón de Oro 2024?",
@@ -4541,7 +4537,7 @@
       },
       {
         "pregunta": "¿Cuál es el club de Núñez rival de Boca?",
-        "respuesta": "River Plate"
+        "respuesta": "River"
       },
       {
         "pregunta": "¿Cuál es el nombre completo del DT de River en la Libertadores 1996?",
@@ -4617,7 +4613,7 @@
       },
       {
         "pregunta": "¿Cuál es el club argentino del barrio de Núñez, Buenos Aires, máximo rival de Boca Juniors y uno de los más grandes de Sudamérica?",
-        "respuesta": "River Plate"
+        "respuesta": "River"
       },
       {
         "pregunta": "¿Apodo del ex futbolista brasileño, Balón de Oro en 2005, conocido por su sonrisa, habilidad y magia con el balón, leyenda del FC Barcelona?",
@@ -4653,7 +4649,7 @@
       },
       {
         "pregunta": "¿Cuál es el club argentino de Avellaneda, rival de Independiente, apodado 'La Academia' y primer campeón del mundo argentino?",
-        "respuesta": "Racing Club"
+        "respuesta": "Racing"
       },
       {
         "pregunta": "¿Apellido del ex defensor argentino, campeón del mundo en 1986, conocido como 'El Cabezón', que jugó en River Plate, Boca Juniors y Real Madrid?",
@@ -5071,7 +5067,7 @@
       },
       {
         "pregunta": "¿Cuál es el club inglés del norte de Londres, cuyo estadio es el Tottenham Hotspur Stadium y es el clásico rival del Arsenal?",
-        "respuesta": "Tottenham Hotspur"
+        "respuesta": "Tottenham"
       },
       {
         "pregunta": "¿Apellido del arquero alemán del FC Barcelona, conocido por su habilidad con los pies y sus reflejos? (Marc-André...)",

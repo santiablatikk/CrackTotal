@@ -1215,6 +1215,150 @@
     100% { background-position: -100% 0; }
 }
 
+/* Hint styles for letters - ENHANCED */
+.letter-hint {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(10px, 2.5vw, 13px);
+    background: linear-gradient(135deg, #FF8E3C, #FF5A5A);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin-top: 6px;
+    white-space: nowrap;
+    display: none;
+    z-index: 12;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    box-shadow: 
+        0 4px 12px rgba(255, 142, 60, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    animation: hintPulse 2s ease-in-out infinite alternate;
+    backdrop-filter: blur(10px);
+}
+
+.letter-hint::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 4px solid #FF8E3C;
+    filter: drop-shadow(0 -1px 1px rgba(0, 0, 0, 0.2));
+}
+
+@keyframes hintPulse {
+    0% {
+        box-shadow: 
+            0 4px 12px rgba(255, 142, 60, 0.4),
+            0 0 0 1px rgba(255, 255, 255, 0.2),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        transform: translateX(-50%) scale(1);
+    }
+    100% {
+        box-shadow: 
+            0 6px 16px rgba(255, 142, 60, 0.6),
+            0 0 0 1px rgba(255, 255, 255, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transform: translateX(-50%) scale(1.05);
+    }
+}
+
+.letter.with-hint .letter-hint {
+    display: block;
+    animation: hintAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes hintAppear {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0) scale(1);
+    }
+}
+
+/* Enhanced Incomplete Modal Styles */
+.enhanced-incomplete-modal {
+    backdrop-filter: blur(8px);
+}
+
+.enhanced-incomplete-content {
+    position: relative;
+    overflow: hidden;
+}
+
+.enhanced-incomplete-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    animation: shimmerIncomplete 3s infinite;
+}
+
+@keyframes shimmerIncomplete {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.enhanced-incomplete-button {
+    position: relative;
+    overflow: hidden;
+}
+
+.enhanced-incomplete-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s ease, height 0.4s ease;
+}
+
+.enhanced-incomplete-button:hover::before {
+    width: 200px;
+    height: 200px;
+}
+
+/* Responsive adjustments for hints */
+@media (max-width: 768px) {
+    .letter-hint {
+        font-size: clamp(8px, 2vw, 11px);
+        padding: 3px 6px;
+        margin-top: 4px;
+        border-radius: 4px;
+    }
+    
+    .letter-hint::before {
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-bottom: 3px solid #FF8E3C;
+        top: -3px;
+    }
+}
+
 /* Responsive Pasalache */
 @media (max-width: 768px) {
     .rosco-container {
@@ -1357,6 +1501,22 @@
         width: 9px;
         height: 9px;
     }
+    
+    /* Ajustes para pistas en pantallas pequeñas */
+    .letter-hint {
+        font-size: 7px;
+        padding: 2px 4px;
+        margin-top: 2px;
+        border-radius: 3px;
+        letter-spacing: 0.4px;
+    }
+    
+    .letter-hint::before {
+        border-left: 3px solid transparent;
+        border-right: 3px solid transparent;
+        border-bottom: 2px solid #FF8E3C;
+        top: -2px;
+    }
 }
 
 /* Add specific rules for very narrow screens (340px width) */
@@ -1423,30 +1583,20 @@
         width: 7px;
         height: 7px;
     }
-    /* Adjust letter hint for smaller size */
+    
+    /* Ajustar pistas para pantallas extra pequeñas */
     .letter-hint {
-        font-size: 8px;
-        padding: 0px 2px;
-        margin-top: 2px;
+        font-size: 6px;
+        padding: 1px 3px;
+        margin-top: 1px;
+        border-radius: 2px;
+        letter-spacing: 0.2px;
     }
-}
-
-/* Hint styles for letters */
-.letter-hint {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 10px; /* Smaller hint font */
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 1px 4px;
-    border-radius: 3px;
-    margin-top: 3px; /* Closer to letter */
-    white-space: nowrap;
-    display: none;
-    z-index: 11; /* Ensure hint is above letters */
-}
-.letter.with-hint .letter-hint {
-    display: block;
+    
+    .letter-hint::before {
+        border-left: 2px solid transparent;
+        border-right: 2px solid transparent;
+        border-bottom: 1px solid #FF8E3C;
+        top: -1px;
+    }
 } 

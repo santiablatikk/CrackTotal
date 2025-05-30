@@ -156,6 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let questions = [];
     let currentLetterIndex = 0;
     let currentQuestionIndex = 0; // This will now store the index *within* the letter's questions array
+    let currentQuestionData = null; // NEW: Store current question data for validation
     let correctAnswers = 0;
     let incorrectAnswers = 0;
     let passedAnswers = 0;
@@ -296,6 +297,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Reset game state
         currentLetterIndex = 0;
+        currentQuestionIndex = 0;
+        currentQuestionData = null; // Clear question data
         correctAnswers = 0;
         incorrectAnswers = 0;
         passedAnswers = 0;
@@ -528,7 +531,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (letterData && letterData.preguntas && letterData.preguntas.length > 0) {
             let question = null;
-            let currentQuestionIndex = -1; // Keep track of the index being shown
+            let testQuestionIndex = -1; // Keep track of the index being tested
             let foundQuestion = false;
             let potentialQuestion = null;
             let potentialAnswer = null;
@@ -551,8 +554,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 // Found a suitable question (not answered correctly yet, no answer conflict)
-                currentQuestionIndex = testIndex; // Store the index we are showing
-                // DO NOT mark as used here anymore -> gameUsedQuestionIndices[currentLetter].push(currentQuestionIndex); 
+                testQuestionIndex = testIndex; // Store the index we are showing
+                // DO NOT mark as used here anymore -> gameUsedQuestionIndices[currentLetter].push(testQuestionIndex); 
                 question = potentialQuestion;
                 letterHints[currentLetter] = potentialAnswer.substring(0, 3); // Prepare hint
                 foundQuestion = true;
@@ -566,6 +569,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 pasapalabra(true); 
                 return; 
             }
+
+            // --- Store question data globally for validation --- 
+            currentQuestionIndex = testQuestionIndex;
+            currentQuestionData = {
+                letter: currentLetter,
+                question: question,
+                answer: potentialAnswer,
+                fullQuestion: question.pregunta
+            };
+            console.log(`Question loaded for ${currentLetter} at index ${currentQuestionIndex}:`, question.pregunta.substring(0,50) + '...');
 
             // --- Display the found question --- 
             console.log(`Displaying question for letter: ${currentLetter}. Question: ${question.pregunta.substring(0,30)}...`); // Log before display update
@@ -605,6 +618,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Update letter styles based on status
     function updateLetterStyles() {
+        const currentLetter = pendingLetters[currentLetterIndex];
+        
         document.querySelectorAll('.letter').forEach(element => {
             const letter = element.dataset.letter;
             element.className = 'letter'; // Reset classes
@@ -619,16 +634,23 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Highlight current letter
-            if (letter === pendingLetters[currentLetterIndex]) {
+            if (letter === currentLetter) {
                 element.classList.add('active');
-            }
-            
-            // Mostrar pista si ya fue revelada
-            if (hintDisplayed[letter]) {
-                element.classList.add('with-hint');
+                
+                // Mostrar pista solo si ya fue revelada y ES la letra activa
+                if (hintDisplayed[letter]) {
+                    element.classList.add('with-hint');
+                    const hintElement = element.querySelector(`#hint-${letter}`);
+                    if (hintElement) {
+                        hintElement.textContent = letterHints[letter];
+                    }
+                }
+            } else {
+                // Si no es la letra activa, ocultar la pista
+                element.classList.remove('with-hint');
                 const hintElement = element.querySelector(`#hint-${letter}`);
                 if (hintElement) {
-                    hintElement.textContent = letterHints[letter];
+                    hintElement.textContent = '';
                 }
             }
         });
@@ -636,6 +658,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Move to the next available letter
     function nextLetter() {
+        // Clear current question data when moving to next letter
+        currentQuestionData = null;
+        
         // Incrementar el índice para ir a la siguiente letra
         currentLetterIndex = (currentLetterIndex + 1) % pendingLetters.length;
         
@@ -665,6 +690,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function goToLetter(letter) {
         const index = pendingLetters.indexOf(letter);
         if (index !== -1) {
+            // Clear current question data when jumping to specific letter
+            currentQuestionData = null;
             currentLetterIndex = index;
             loadQuestion();
         }
@@ -673,11 +700,29 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check the user's answer
     function checkAnswer(userAnswer) {
         const currentLetter = pendingLetters[currentLetterIndex];
+        
+        // Validate that we have current question data and it matches current letter
+        if (!currentQuestionData || currentQuestionData.letter !== currentLetter) {
+            console.error(`Question data mismatch! Expected ${currentLetter}, got ${currentQuestionData?.letter || 'null'}`);
+            // Try to reload question
+            loadQuestion();
+            return;
+        }
+
         const letterData = questions.find(item => item.letra === currentLetter);
 
-        // Ensure currentQuestionIndex is valid for the letterData
+        // Ensure currentQuestionIndex is valid for the letterData and matches stored data
         if (letterData && letterData.preguntas && currentQuestionIndex < letterData.preguntas.length) {
-            const correctAnswerFull = letterData.preguntas[currentQuestionIndex].respuesta;
+            // Double-check that the stored question matches what's in the array
+            const actualQuestion = letterData.preguntas[currentQuestionIndex];
+            if (actualQuestion.pregunta !== currentQuestionData.fullQuestion) {
+                console.error(`Question index mismatch! Stored question doesn't match array question.`);
+                // Try to reload question
+                loadQuestion();
+                return;
+            }
+
+            const correctAnswerFull = currentQuestionData.answer; // Use stored answer
             
             // Normalizar ambas respuestas usando la nueva función
             const correctAnswerNorm = normalizeResponseText(correctAnswerFull);
@@ -690,8 +735,8 @@ document.addEventListener('DOMContentLoaded', function() {
                  if (incompleteAnswersUsed < maxIncompleteAnswers) {
                     incompleteAnswersUsed++;
                     const remainingAttempts = maxIncompleteAnswers - incompleteAnswersUsed;
-                    // Show specific feedback for incomplete answer
-                    showIncompleteFeedback(`Respuesta incompleta. Te ${remainingAttempts === 1 ? 'queda 1 intento' : 'quedan ' + remainingAttempts + ' intentos'} para respuestas incompletas.`);
+                    // Show specific feedback for incomplete answer with enhanced modal
+                    showEnhancedIncompleteFeedback(`Respuesta incompleta. Te ${remainingAttempts === 1 ? 'queda 1 intento' : 'quedan ' + remainingAttempts + ' intentos'} para respuestas incompletas.`, remainingAttempts);
                     // DO NOT clear input here, let user edit
                     // answerInput.value = '';
                     answerInput.focus();
@@ -723,7 +768,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 profileStats.totalIncorrectAnswers += 1; // Update aggregate stats
                 
                 // Record error details
-                const questionText = letterData.preguntas[currentQuestionIndex].pregunta;
+                const questionText = currentQuestionData.fullQuestion; // Use stored question
                 gameErrors.push({
                     letter: currentLetter,
                     question: questionText,
@@ -737,17 +782,30 @@ document.addEventListener('DOMContentLoaded', function() {
                 // --- REMOVER LETRA INCORRECTA DE pendingLetters --- 
                 const indexToRemove = pendingLetters.indexOf(currentLetter);
                 if (indexToRemove > -1) {
+                    // Guardar información antes de remover
+                    const letterToRemove = pendingLetters[indexToRemove];
+                    
+                    // Remover la letra incorrecta
                     pendingLetters.splice(indexToRemove, 1);
                     
-                    // Ajustar el índice actual para que no se salte la siguiente letra
-                    if (indexToRemove <= currentLetterIndex && currentLetterIndex > 0) {
+                    // NUEVA LÓGICA SIMPLIFICADA: 
+                    // Después de remover una letra, ajustar índice para no volver hacia atrás
+                    
+                    if (indexToRemove < currentLetterIndex) {
+                        // Si removimos una letra ANTES de donde estábamos, decrementar para compensar
                         currentLetterIndex--;
+                    } else if (indexToRemove === currentLetterIndex) {
+                        // Si removimos la letra actual, el índice ya apunta a la siguiente
+                        // No hacer nada, ya que splice automáticamente "desplaza" las letras
+                    }
+                    // Si removimos una letra DESPUÉS, no afecta nuestro índice actual
+                    
+                    // Verificar límites del array
+                    if (currentLetterIndex >= pendingLetters.length) {
+                        currentLetterIndex = 0; // Solo volver al principio si ya no hay letras adelante
                     }
                     
-                    // Si el índice actual está fuera de rango, volver al principio
-                    if (currentLetterIndex >= pendingLetters.length) {
-                        currentLetterIndex = 0;
-                    }
+                    console.log(`Letra ${letterToRemove} removida. Índice ajustado a: ${currentLetterIndex}. Letras restantes: [${pendingLetters.join(', ')}]`);
                 }
                 
                 // --- Check for DEFEAT --- 
@@ -785,7 +843,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                // Cargar la siguiente pregunta (el índice ya fue ajustado arriba)
+                // Cargar la siguiente pregunta directamente (no usar nextLetter para evitar incrementar el índice)
                 loadQuestion();
 
             } else {
@@ -1113,6 +1171,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Mark current letter as "pasapalabra"
     function pasapalabra(silent = false) { // Added silent parameter
         const currentLetter = pendingLetters[currentLetterIndex];
+        
+        // Clear current question data when passing
+        currentQuestionData = null;
+        
         // <<<--- LÓGICA PARA LOGROS DE PASAPALABRA --- >>>
         if (!silent) { // Solo contar pases iniciados por el usuario
            pasapalabraUsadoEnPartida++;
@@ -2180,4 +2242,139 @@ document.addEventListener('DOMContentLoaded', function() {
         document.body.appendChild(modalOverlay);
     }
     // <<<--- FIN: NUEVAS FUNCIONES PARA MODALES DE LOGROS --- >>>
+
+    // Enhanced function for incomplete feedback with better UX
+    function showEnhancedIncompleteFeedback(message, remainingAttempts) {
+        // Remove existing incomplete feedback
+        const existingFeedback = document.querySelector('.enhanced-incomplete-modal');
+        if (existingFeedback) {
+            existingFeedback.remove();
+        }
+
+        const modalOverlay = document.createElement('div');
+        modalOverlay.className = 'modal-overlay enhanced-incomplete-modal';
+        modalOverlay.style.position = 'fixed';
+        modalOverlay.style.top = '0';
+        modalOverlay.style.left = '0';
+        modalOverlay.style.right = '0';
+        modalOverlay.style.bottom = '0';
+        modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        modalOverlay.style.display = 'flex';
+        modalOverlay.style.justifyContent = 'center';
+        modalOverlay.style.alignItems = 'center';
+        modalOverlay.style.zIndex = '1200';
+        modalOverlay.style.opacity = '0';
+        modalOverlay.style.transition = 'opacity 0.3s ease';
+
+        const modalContent = document.createElement('div');
+        modalContent.className = 'enhanced-incomplete-content';
+        modalContent.style.background = 'linear-gradient(135deg, rgba(255, 142, 60, 0.15), rgba(255, 193, 7, 0.1))';
+        modalContent.style.backdropFilter = 'blur(20px)';
+        modalContent.style.padding = '30px';
+        modalContent.style.borderRadius = '16px';
+        modalContent.style.maxWidth = '420px';
+        modalContent.style.textAlign = 'center';
+        modalContent.style.color = 'white';
+        modalContent.style.boxShadow = '0 15px 35px rgba(0,0,0,0.4), 0 0 0 1px rgba(255, 142, 60, 0.3)';
+        modalContent.style.border = '2px solid rgba(255, 142, 60, 0.4)';
+        modalContent.style.transform = 'scale(0.9) translateY(20px)';
+        modalContent.style.transition = 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        modalContent.style.position = 'relative';
+
+        const iconHtml = `
+            <div style="color: #FF8E3C; margin-bottom: 15px; font-size: 3rem;">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+        `;
+
+        const titleHtml = `
+            <h3 style="color: #FFD166; margin: 0 0 15px 0; font-size: 1.4rem; font-weight: 700;">
+                ¡Respuesta Incompleta!
+            </h3>
+        `;
+
+        const messageHtml = `
+            <p style="color: rgba(255,255,255,0.95); margin: 0 0 20px 0; font-size: 1rem; line-height: 1.5;">
+                ${message}
+            </p>
+        `;
+
+        const attemptsIndicator = remainingAttempts > 0 ? `
+            <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 25px;">
+                ${Array.from({length: maxIncompleteAnswers}, (_, i) => {
+                    const isUsed = i < (maxIncompleteAnswers - remainingAttempts);
+                    return `<div style="
+                        width: 12px; 
+                        height: 12px; 
+                        border-radius: 50%; 
+                        background: ${isUsed ? '#FF5A5A' : '#31E5B2'};
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+                    "></div>`;
+                }).join('')}
+            </div>
+        ` : '';
+
+        const instructionHtml = `
+            <p style="color: rgba(255,255,255,0.8); margin: 0 0 25px 0; font-size: 0.9rem; font-style: italic;">
+                Edita tu respuesta y presiona <strong>Enter<strong> para continuar
+            </p>
+        `;
+
+        modalContent.innerHTML = iconHtml + titleHtml + messageHtml + attemptsIndicator + instructionHtml;
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
+
+        // Función para cerrar el modal
+        const closeModal = () => {
+            modalOverlay.style.opacity = '0';
+            modalContent.style.transform = 'scale(0.9) translateY(20px)';
+            setTimeout(() => {
+                if (modalOverlay.parentNode) {
+                    modalOverlay.remove();
+                }
+                // Re-focus input after modal is closed
+                if (answerInput) {
+                    answerInput.focus();
+                }
+            }, 300);
+        };
+
+        // Close on Enter key or Escape
+        const keyHandler = (e) => {
+            if (e.key === 'Enter' || e.key === 'Escape') {
+                e.preventDefault();
+                e.stopPropagation();
+                closeModal();
+                document.removeEventListener('keydown', keyHandler);
+            }
+        };
+        document.addEventListener('keydown', keyHandler);
+
+        // Close on overlay click
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+                document.removeEventListener('keydown', keyHandler);
+            }
+        });
+
+        // Auto-close after 4 seconds
+        setTimeout(() => {
+            if (modalOverlay.parentNode) {
+                closeModal();
+                document.removeEventListener('keydown', keyHandler);
+            }
+        }, 4000);
+
+        // Trigger fade-in animation
+        requestAnimationFrame(() => {
+            modalOverlay.style.opacity = '1';
+            modalContent.style.transform = 'scale(1) translateY(0)';
+        });
+    }
+
+    // Simple alias for the specific incomplete feedback
+    function showIncompleteFeedback(message) {
+        showTemporaryFeedback(message, 'warning', 2000); // Show for 2 seconds (changed from 3000)
+    }
 }); 
