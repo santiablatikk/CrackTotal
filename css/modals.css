@@ -429,17 +429,37 @@
 /* Responsive Design para el modal horizontal */
 @media (max-width: 768px) {
     #gameRulesModal .modal-content.horizontal-modal {
-        max-width: 95%;
-        padding: 20px;
+        max-width: 92%;
+        width: 92%;
+        padding: 16px;
+        margin: 8px;
     }
     
     .difficulty-cards {
         grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 10px;
     }
     
     .difficulty-card {
-        padding: 16px 12px;
+        padding: 14px 10px;
+    }
+    
+    .difficulty-card h3 {
+        font-size: 0.9rem;
+    }
+    
+    .difficulty-time {
+        font-size: 1rem;
+        margin: 6px 0 3px;
+    }
+    
+    .difficulty-errors {
+        font-size: 0.8rem;
+        margin: 0 0 6px;
+    }
+    
+    .difficulty-description {
+        font-size: 0.7rem;
     }
     
     .rules-horizontal {
@@ -451,639 +471,235 @@
         flex-direction: column;
         text-align: center;
         gap: 4px;
-        padding: 8px 4px;
+        padding: 8px 6px;
     }
     
     .rule-text {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
     
-    .result-buttons {
-        gap: 8px;
-        padding: 12px;
-    }
-    
-    .result-buttons .modal-button {
-        padding: 8px 12px;
-        font-size: 0.8rem;
-        min-width: 70px;
+    #gameRulesModal .primary-button.enhanced {
+        font-size: 0.9rem;
+        padding: 14px 20px;
+        margin-top: 6px;
     }
 }
 
 @media (max-width: 480px) {
+    .modal-content {
+        padding: 12px;
+        border-radius: 10px;
+        margin: 6px;
+    }
+    
+    .modal-title {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+    }
+    
     #gameRulesModal .modal-content.horizontal-modal {
-        padding: 16px;
+        padding: 12px;
+        max-width: 95%;
+        width: 95%;
+        margin: 4px;
+    }
+    
+    #gameRulesModal .modal-title {
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+    }
+    
+    .game-promo {
+        font-size: 0.7rem;
+        margin: 0 0 8px;
     }
     
     .difficulty-main-title {
-        font-size: 1rem;
-        margin-bottom: 16px;
+        font-size: 0.9rem;
+        margin-bottom: 12px;
+    }
+    
+    .difficulty-card {
+        padding: 12px 8px;
     }
     
     .difficulty-card h3 {
-        font-size: 0.875rem;
+        font-size: 0.85rem;
     }
     
     .difficulty-time {
-        font-size: 1rem;
+        font-size: 0.95rem;
+        margin: 5px 0 2px;
+    }
+    
+    .difficulty-errors {
+        font-size: 0.75rem;
+        margin: 0 0 4px;
+    }
+    
+    .difficulty-description {
+        font-size: 0.65rem;
     }
     
     .rules-horizontal {
         grid-template-columns: 1fr;
-        gap: 6px;
+        gap: 5px;
+        margin: 0 0 8px 0;
     }
     
     .rule-compact {
-        flex-direction: row;
-        padding: 8px;
+        padding: 6px 4px;
+        gap: 3px;
+    }
+    
+    .rule-compact .rule-icon {
+        width: 16px;
+        height: 16px;
+    }
+    
+    .rule-text {
+        font-size: 0.6rem;
+        line-height: 1.2;
     }
     
     #gameRulesModal .primary-button.enhanced {
-        font-size: 0.875rem;
-        padding: 14px 20px;
+        font-size: 0.8rem;
+        padding: 12px 16px;
+        margin-top: 4px;
     }
     
-    .result-buttons {
-        flex-direction: column;
-        gap: 8px;
-    }
-    
-    .result-buttons .modal-button {
-        width: 100%;
-        padding: 10px;
-    }
-}
-
-/* Sección de dificultades más legible - VERSIÓN ANTERIOR MANTENIDA PARA COMPATIBILIDAD */
-.game-options {
-    margin-bottom: 20px;
-}
-
-.game-options h4 {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    text-align: center;
-    margin: 0 0 12px 0;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.difficulty-options {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-    margin: 0;
-    flex-wrap: wrap;
-}
-
-.difficulty-btn {
-    background: rgba(148, 163, 184, 0.08);
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    color: var(--text-secondary);
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-width: 85px;
-    text-align: center;
-}
-
-.difficulty-btn:hover {
-    background: rgba(148, 163, 184, 0.15);
-    border-color: rgba(148, 163, 184, 0.3);
-    transform: translateY(-1px);
-}
-
-.difficulty-btn.active {
-    background: var(--modal-primary);
-    border-color: transparent;
-    color: white;
-    box-shadow: 0 3px 8px rgba(99, 102, 241, 0.3);
-}
-
-/* Game Result Modal - Diseño horizontal ultra compacto para pantallas 15" */
-#gameResultModal .modal-content,
-#statsDetailModal .modal-content {
-    max-width: 520px;
-    width: 82%;
-    padding: 0;
-    overflow: hidden;
-    border-radius: 14px;
-    backdrop-filter: blur(20px);
-    background: 
-        linear-gradient(135deg, rgba(22, 24, 38, 0.95), rgba(13, 14, 26, 0.98)),
-        radial-gradient(circle at 30% 30%, rgba(131, 93, 255, 0.08), transparent 70%);
-    box-shadow: 
-        0 25px 50px rgba(0, 0, 0, 0.6),
-        0 0 0 1px rgba(131, 93, 255, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-/* Header compacto para modales horizontales */
-.result-modal-header,
-.stats-modal-header {
-    padding: 14px 20px;
-    text-align: center;
-    border-bottom: 1px solid rgba(131, 93, 255, 0.15);
-    position: relative;
-    background: 
-        linear-gradient(135deg, rgba(131, 93, 255, 0.1), transparent 50%),
-        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.03), transparent 60%);
-}
-
-.result-header-victory { 
-    background: 
-        linear-gradient(135deg, rgba(49, 229, 178, 0.15), transparent 50%),
-        radial-gradient(circle at 50% 0%, rgba(49, 229, 178, 0.08), transparent 60%);
-    border-bottom-color: rgba(49, 229, 178, 0.25);
-}
-
-.result-header-defeat { 
-    background: 
-        linear-gradient(135deg, rgba(255, 90, 122, 0.15), transparent 50%),
-        radial-gradient(circle at 50% 0%, rgba(255, 90, 122, 0.08), transparent 60%);
-    border-bottom-color: rgba(255, 90, 122, 0.25);
-}
-
-.result-header-timeout { 
-    background: 
-        linear-gradient(135deg, rgba(255, 142, 60, 0.15), transparent 50%),
-        radial-gradient(circle at 50% 0%, rgba(255, 142, 60, 0.08), transparent 60%);
-    border-bottom-color: rgba(255, 142, 60, 0.25);
-}
-
-.result-icon {
-    margin-bottom: 6px;
-    position: relative;
-}
-
-.result-icon svg {
-    width: 32px;
-    height: 32px;
-    color: white;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
-    animation: iconGlow 2s ease-in-out infinite alternate;
-}
-
-@keyframes iconGlow {
-    0% { transform: scale(1); filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4)); }
-    100% { transform: scale(1.05); filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.6)); }
-}
-
-.result-title,
-.stats-title {
-    font-size: 1.35rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #fff 0%, #e2e8f0 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    margin: 0 0 4px 0;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    letter-spacing: -0.5px;
-}
-
-.result-message,
-.stats-subtitle {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.85);
-    margin: 0;
-    line-height: 1.3;
-    font-weight: 500;
-}
-
-/* Layout horizontal principal - Grid más compacto */
-.modal-horizontal-layout {
-    display: grid;
-    grid-template-columns: 1fr 200px;
-    gap: 0;
-    min-height: 220px;
-}
-
-/* Sección principal de estadísticas (lado izquierdo) */
-.result-stats,
-.performance-summary {
-    padding: 18px;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 8px;
-    background: 
-        linear-gradient(135deg, rgba(13, 14, 26, 0.6), rgba(22, 24, 38, 0.8)),
-        radial-gradient(circle at 70% 30%, rgba(131, 93, 255, 0.05), transparent 60%);
-    position: relative;
-    align-content: start;
-}
-
-.result-stats::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        linear-gradient(45deg, transparent 40%, rgba(131, 93, 255, 0.03) 50%, transparent 60%);
-    pointer-events: none;
-    animation: shimmerMove 4s ease-in-out infinite;
-}
-
-@keyframes shimmerMove {
-    0%, 100% { transform: translateX(-100%); opacity: 0; }
-    50% { transform: translateX(100%); opacity: 1; }
-}
-
-/* Tarjetas de estadísticas más compactas */
-.stat-item,
-.performance-item {
-    background: 
-        linear-gradient(135deg, rgba(45, 48, 71, 0.6), rgba(35, 38, 61, 0.8)),
-        radial-gradient(circle at 30% 30%, rgba(131, 93, 255, 0.1), transparent 70%);
-    border: 1px solid rgba(131, 93, 255, 0.2);
-    border-radius: 10px;
-    padding: 12px;
-    text-align: center;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    opacity: 0;
-    animation: fadeInSlideUp 0.6s ease-out forwards;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-    box-shadow: 
-        0 5px 18px rgba(0, 0, 0, 0.3),
-        0 0 0 1px rgba(255, 255, 255, 0.05),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.stat-item::before,
-.performance-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 50%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.stat-item:hover,
-.performance-item:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 
-        0 15px 35px rgba(0, 0, 0, 0.4),
-        0 0 0 1px rgba(131, 93, 255, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.12);
-}
-
-.stat-item:hover::before,
-.performance-item:hover::before {
-    opacity: 1;
-}
-
-.stat-item.winner {
-    background: 
-        linear-gradient(135deg, rgba(49, 229, 178, 0.15), rgba(16, 185, 129, 0.2)),
-        radial-gradient(circle at 30% 30%, rgba(49, 229, 178, 0.1), transparent 70%);
-    border-color: rgba(49, 229, 178, 0.3);
-    box-shadow: 
-        0 8px 25px rgba(49, 229, 178, 0.2),
-        0 0 0 1px rgba(49, 229, 178, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.stat-item.loser {
-    background: 
-        linear-gradient(135deg, rgba(255, 90, 122, 0.15), rgba(239, 68, 68, 0.2)),
-        radial-gradient(circle at 30% 30%, rgba(255, 90, 122, 0.1), transparent 70%);
-    border-color: rgba(255, 90, 122, 0.3);
-    box-shadow: 
-        0 8px 25px rgba(255, 90, 122, 0.2),
-        0 0 0 1px rgba(255, 90, 122, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.08);
-}
-
-.stat-label,
-.performance-label {
-    font-size: 0.65rem;
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 5px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-}
-
-.stat-label i {
-    font-size: 0.7rem;
-    opacity: 0.8;
-}
-
-.stat-value,
-.performance-value {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: white;
-    display: block;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    line-height: 1;
-}
-
-.correct-stat { 
-    background: linear-gradient(135deg, #31E5B2, #10b981);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-.incorrect-stat { 
-    background: linear-gradient(135deg, #FF5A7A, #ef4444);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-}
-
-/* Panel lateral más compacto */
-.modal-sidebar {
-    background: 
-        linear-gradient(135deg, rgba(35, 38, 61, 0.9), rgba(22, 24, 38, 0.95)),
-        radial-gradient(circle at 50% 50%, rgba(131, 93, 255, 0.08), transparent 60%);
-    border-left: 1px solid rgba(131, 93, 255, 0.15);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-}
-
-.modal-sidebar::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        linear-gradient(180deg, rgba(131, 93, 255, 0.05) 0%, transparent 50%, rgba(49, 229, 178, 0.03) 100%);
-    pointer-events: none;
-}
-
-/* Sección de errores más compacta */
-.errors-container {
-    padding: 14px;
-    flex: 1;
-    overflow-y: auto;
-    position: relative;
-    z-index: 1;
-}
-
-.errors-title {
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0 0 10px 0;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    position: relative;
-    padding-bottom: 6px;
-}
-
-.errors-title::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 25px;
-    height: 2px;
-    background: linear-gradient(90deg, #835DFF, #31E5B2);
-    border-radius: 1px;
-}
-
-.errors-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.error-item {
-    display: flex;
-    gap: 6px;
-    background: 
-        linear-gradient(135deg, rgba(255, 90, 122, 0.08), rgba(239, 68, 68, 0.12)),
-        radial-gradient(circle at 90% 10%, rgba(255, 90, 122, 0.05), transparent 60%);
-    border: 1px solid rgba(255, 90, 122, 0.2);
-    border-radius: 6px;
-    padding: 8px 10px;
-    align-items: flex-start;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(10px);
-}
-
-.error-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent 50%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.error-item:hover {
-    transform: translateX(4px);
-    border-color: rgba(255, 90, 122, 0.3);
-    box-shadow: 0 4px 12px rgba(255, 90, 122, 0.15);
-}
-
-.error-item:hover::before {
-    opacity: 1;
-}
-
-.error-letter {
-    width: 20px;
-    height: 20px;
-    background: linear-gradient(135deg, #FF5A7A, #ef4444);
-    color: white;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 700;
-    flex-shrink: 0;
-    box-shadow: 
-        0 3px 10px rgba(255, 90, 122, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.error-details {
-    flex: 1;
-    min-width: 0;
-}
-
-.error-question {
-    font-size: 0.65rem;
-    color: rgba(255, 255, 255, 0.85);
-    margin-bottom: 4px;
-    line-height: 1.2;
-    font-weight: 500;
-}
-
-.error-answers {
-    font-size: 0.6rem;
-    color: rgba(255, 255, 255, 0.7);
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-}
-
-.user-answer { color: rgba(255, 255, 255, 0.7); }
-.user-answer strong { 
-    color: #FF5A7A; 
-    font-weight: 700;
-    text-shadow: 0 0 8px rgba(255, 90, 122, 0.4);
-}
-
-.correct-answer { color: rgba(255, 255, 255, 0.7); }
-.correct-answer strong { 
-    color: #31E5B2; 
-    font-weight: 700;
-    text-shadow: 0 0 8px rgba(49, 229, 178, 0.4);
-}
-
-.no-errors {
-    color: rgba(255, 255, 255, 0.6);
-    text-align: center;
-    padding: 18px 10px;
-    font-size: 0.8rem;
-    font-style: italic;
-    background: 
-        radial-gradient(circle at 50% 50%, rgba(49, 229, 178, 0.1), transparent 60%);
-    border-radius: 6px;
-    border: 1px solid rgba(49, 229, 178, 0.2);
-}
-
-/* Botones del modal más compactos */
-.result-buttons,
-.stats-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    padding: 14px 20px;
-    flex-wrap: wrap;
-    background: 
-        linear-gradient(135deg, rgba(13, 14, 26, 0.8), rgba(22, 24, 38, 0.9));
-    border-top: 1px solid rgba(131, 93, 255, 0.15);
-    position: relative;
-}
-
-.result-buttons .modal-button {
-    padding: 10px 16px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    min-width: 80px;
-}
-
-.result-buttons .primary-button {
-    background: var(--modal-primary);
-    color: white;
-    box-shadow: 0 3px 8px rgba(99, 102, 241, 0.3);
-}
-
-.result-buttons .primary-button:hover {
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-    transform: translateY(-1px);
-}
-
-.result-buttons .secondary-button {
-    background: rgba(148, 163, 184, 0.1);
-    color: var(--text-secondary);
-    border: 1px solid rgba(148, 163, 184, 0.2);
-}
-
-.result-buttons .secondary-button:hover {
-    background: rgba(148, 163, 184, 0.2);
-    color: var(--text-primary);
-    transform: translateY(-1px);
-}
-
-.result-buttons .share-button {
-    background: var(--modal-accent);
-    color: white;
-    box-shadow: 0 3px 8px rgba(16, 185, 129, 0.3);
-}
-
-.result-buttons .share-button:hover {
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
-    transform: translateY(-1px);
-}
-
-.result-buttons .twitter-x-button {
-    background: #000000;
-    color: white;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
-}
-
-.result-buttons .twitter-x-button:hover {
-    background: #1a1a1a;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
-    transform: translateY(-1px);
-}
-
-/* Responsive para modales horizontales compactos */
-@media (max-width: 768px) {
+    /* Game Result and Stats Modals - More compact */
     #gameResultModal .modal-content,
     #statsDetailModal .modal-content {
         max-width: 95%;
-        flex-direction: column;
+        width: 95%;
+        margin: 4px;
     }
     
-    .modal-horizontal-layout {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
-        min-height: auto;
+    .result-modal-header,
+    .stats-modal-header {
+        padding: 10px 12px 8px;
     }
     
-    .modal-sidebar {
-        border-left: none;
-        border-top: 1px solid rgba(131, 93, 255, 0.15);
-        max-height: 200px;
+    .result-title,
+    .stats-title {
+        font-size: 0.95rem;
+    }
+    
+    .result-message,
+    .stats-subtitle {
+        font-size: 0.7rem;
+    }
+    
+    .result-icon svg {
+        width: 28px;
+        height: 28px;
     }
     
     .result-stats,
     .performance-summary {
-        padding: 16px;
-        gap: 10px;
+        padding: 10px;
+        gap: 6px;
     }
     
     .stat-item,
     .performance-item {
-        padding: 12px;
+        padding: 8px 6px;
+    }
+    
+    .stat-label,
+    .performance-label {
+        font-size: 0.55rem;
+        margin-bottom: 3px;
     }
     
     .stat-value,
     .performance-value {
-        font-size: 1.5rem;
+        font-size: 1.1rem;
+    }
+    
+    .errors-container {
+        padding: 8px 10px;
+        max-height: 120px;
+    }
+    
+    .errors-title {
+        font-size: 0.7rem;
+        margin-bottom: 5px;
+    }
+    
+    .error-item {
+        padding: 4px 6px;
+        gap: 5px;
+    }
+    
+    .error-letter {
+        width: 16px;
+        height: 16px;
+        font-size: 0.6rem;
+    }
+    
+    .error-question {
+        font-size: 0.55rem;
+        margin-bottom: 2px;
+    }
+    
+    .error-answers {
+        font-size: 0.5rem;
+    }
+    
+    .result-buttons,
+    .stats-buttons {
+        padding: 8px 10px;
+        gap: 6px;
+    }
+    
+    .result-buttons .modal-button {
+        min-width: 60px;
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+    
+    #privateRoomPasswordModal .modal-content {
+        padding: 12px;
+        margin: 6px;
+    }
+    
+    #privateRoomPasswordModal .modal-title {
+        font-size: 0.85rem;
+        margin-bottom: 6px;
+    }
+    
+    #privateRoomPasswordModal #passwordModalText {
+        font-size: 0.7rem;
+        margin-bottom: 10px;
+    }
+    
+    #privateRoomPasswordModal .form-group label {
+        font-size: 0.7rem;
+        margin-bottom: 4px;
+    }
+    
+    #privateRoomPasswordModal #passwordModalInput {
+        padding: 8px 10px;
+        font-size: 0.7rem;
+    }
+    
+    #privateRoomPasswordModal #passwordErrorText {
+        font-size: 0.65rem;
+        margin-bottom: 8px;
+    }
+    
+    .feedback-close-btn {
+        top: 5px;
+        right: 5px;
+        width: 18px;
+        height: 18px;
+    }
+    
+    .feedback-close-btn svg {
+        width: 10px;
+        height: 10px;
     }
 }
 
