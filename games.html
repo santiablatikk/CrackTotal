@@ -881,6 +881,176 @@
         .cosmic-game-card:nth-child(2) { animation-delay: 0.2s; }
         .cosmic-game-card:nth-child(3) { animation-delay: 0.3s; }
         .cosmic-game-card:nth-child(4) { animation-delay: 0.4s; }
+
+        /* Modal Crack Rápido mejorado */
+        .crack-rapido-intro-modal {
+            max-width: 800px;
+            max-height: 85vh;
+            overflow-y: auto;
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.95), rgba(45, 45, 45, 0.95));
+            border: 2px solid rgba(var(--neon-blue), 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(var(--neon-blue), 0.2);
+        }
+
+        .crack-rapido-intro-modal .modal-title {
+            font-size: 1.8rem;
+            color: var(--neon-blue);
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(var(--neon-blue), 0.5);
+        }
+
+        .intro-section {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 3px solid var(--neon-blue);
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .intro-section h4 {
+            color: var(--neon-green);
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .intro-section h4 i {
+            color: var(--neon-purple);
+            font-size: 1.1rem;
+        }
+
+        .intro-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .intro-section li {
+            padding: 8px 0;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .intro-section li::before {
+            content: '⚡';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            color: var(--neon-yellow);
+            font-size: 0.8rem;
+        }
+
+        .intro-section li strong {
+            color: var(--neon-blue);
+            font-weight: 700;
+        }
+
+        .intro-highlight {
+            background: linear-gradient(135deg, rgba(var(--neon-orange), 0.1), rgba(var(--neon-pink), 0.1));
+            border: 1px solid rgba(var(--neon-orange), 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+            animation: pulse 2s infinite alternate;
+        }
+
+        .intro-highlight p {
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .crack-rapido-intro-modal .primary-button {
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(var(--neon-blue), 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .crack-rapido-intro-modal .primary-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .crack-rapido-intro-modal .primary-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(var(--neon-blue), 0.5);
+            filter: brightness(1.1);
+        }
+
+        .crack-rapido-intro-modal .primary-button:hover::before {
+            left: 100%;
+        }
+
+        /* Scroll personalizado para el modal */
+        .crack-rapido-intro-modal::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .crack-rapido-intro-modal::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .crack-rapido-intro-modal::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--neon-blue), var(--neon-purple));
+            border-radius: 4px;
+        }
+
+        .crack-rapido-intro-modal::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--neon-purple), var(--neon-blue));
+        }
+
+        /* Responsive para el modal */
+        @media (max-width: 768px) {
+            .crack-rapido-intro-modal {
+                max-width: 95vw;
+                max-height: 90vh;
+                margin: 20px auto;
+            }
+
+            .intro-section {
+                margin: 15px 0;
+                padding: 15px;
+            }
+
+            .intro-section h4 {
+                font-size: 1.1rem;
+            }
+
+            .intro-section li {
+                font-size: 0.9rem;
+                padding: 6px 0;
+            }
+        }
     </style>
 
     <!-- Google AdSense -->
@@ -957,21 +1127,23 @@
 
                 <!-- Crack Rápido -->
                 <article class="cosmic-game-card" data-game="crack-rapido">
-                    <div class="stellar-badge nuevo">NUEVO</div>
+                    <div class="stellar-badge nuevo">MEGA</div>
                     <div class="game-visual-container">
                         <i class="fas fa-bolt game-icon" aria-hidden="true"></i>
                     </div>
-                                         <div class="game-content">
-                         <h3 class="game-title">Crack Rápido</h3>
-                         <p class="game-description">¡La trivia más intensa! 20 preguntas, 5 segundos cada una. Solo los más rápidos sobreviven en este desafío de velocidad pura.</p>
-                         <div class="game-stats">
-                             <span class="stat-chip"><i class="fas fa-tachometer-alt"></i>5 Segundos</span>
-                             <span class="stat-chip"><i class="fas fa-rocket"></i>Ultra Rápido</span>
-                         </div>
-                         <button class="quantum-play-btn" aria-label="Jugar a Crack Rápido">
-                             <span>Jugar</span>
-                         </button>
-                     </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Crack Rápido MEGA</h3>
+                        <p class="game-description">¡La trivia definitiva perfeccionada! 4 modos épicos, 7 categorías, 200+ preguntas y sistema de puntuación revolucionario. ¿Tenés la velocidad y conocimiento para ser un Dios del Crack Rápido?</p>
+                        <div class="game-stats">
+                            <span class="stat-chip"><i class="fas fa-gamepad"></i>4 Modos</span>
+                            <span class="stat-chip"><i class="fas fa-brain"></i>200+ Preguntas</span>
+                            <span class="stat-chip"><i class="fas fa-medal"></i>17 Logros</span>
+                            <span class="stat-chip"><i class="fas fa-rocket"></i>Power-Ups</span>
+                        </div>
+                        <button class="quantum-play-btn" aria-label="Jugar a Crack Rápido MEGA">
+                            <span>Jugar</span>
+                        </button>
+                    </div>
                 </article>
 
                 <!-- Quien Sabe Más -->
@@ -1143,25 +1315,93 @@
     <!-- Modal Introducción Crack Rápido -->
     <div class="modal-overlay" id="crackRapidoIntroModal">
         <div class="modal-content crack-rapido-intro-modal">
-            <h3 class="modal-title"><i class="fas fa-bolt"></i> ¿Cómo se juega al Crack Rápido?</h3>
-            <p>¡El desafío más intenso de Crack Total!</p>
-            <ul>
-                <li>Son <strong>20 preguntas</strong> de fútbol a toda velocidad.</li>
-                <li>Tenés solo <strong>5 segundos</strong> para responder cada pregunta.</li>
-                <li>Todas las preguntas son de <strong>múltiple opción</strong> (4 opciones).</li>
-                <li><strong>Sistema de Puntuación:</strong><br>
-                    &nbsp;&nbsp;- Respuesta correcta: <span class="highlight-consagra"><strong>100 puntos base</strong></span><br>
-                    &nbsp;&nbsp;- Bonus de velocidad: <span class="highlight-consagra">hasta <strong>50 puntos extra</strong></span><br>
-                    &nbsp;&nbsp;- Bonus de racha: <span class="highlight-consagra">hasta <strong>100 puntos extra</strong></span>
-                </li>
-                <li>Mientras <strong>más rápido respondas</strong>, más puntos ganás.</li>
-                <li>Si hacés una <strong>racha de respuestas correctas</strong>, obtenés bonus adicionales.</li>
-                <li>Si no respondés a tiempo, <strong>se corta tu racha</strong> y perdés la pregunta.</li>
-                <li>Al final, <span class="highlight-consagra">¡luchá por el mejor puntaje!</span></li>
-            </ul>
+            <h3 class="modal-title"><i class="fas fa-bolt"></i> ¡Crack Rápido MEGA - La Trivia Definitiva!</h3>
+            <p><strong>¡El desafío de velocidad más intenso de Crack Total!</strong></p>
+            
+            <div class="intro-section">
+                <h4><i class="fas fa-gamepad"></i> 4 Modos de Juego Épicos</h4>
+                <ul>
+                    <li><strong>CLÁSICO:</strong> 20 preguntas mixtas - El modo tradicional perfeccionado</li>
+                    <li><strong>SUPERVIVENCIA:</strong> Hasta que falles - ¿Cuánto resistís?</li>
+                    <li><strong>CATEGORÍA:</strong> Especializate en tu tema favorito</li>
+                    <li><strong>TORNEO:</strong> 5 rondas épicas con multiplicador x1.5 - ¡El desafío supremo!</li>
+                </ul>
+            </div>
+
+            <div class="intro-section">
+                <h4><i class="fas fa-brain"></i> 7 Categorías con 200+ Preguntas Verificadas</h4>
+                <ul>
+                    <li><strong>MESSI:</strong>
+                    <li><strong>BOCA JUNIORS:</strong>
+                    <li><strong>RIVER PLATE:</strong>
+                    <li><strong>MUNDIAL:</strong>
+                    <li><strong>CHAMPIONS LEAGUE:</strong>
+                    <li><strong>SELECCIÓN ARGENTINA:</strong>
+                    <li><strong>GENERAL:</strong>
+                </ul>
+            </div>
+
+            <div class="intro-section">
+                <h4><i class="fas fa-trophy"></i> Sistema de Puntuación Revolucionario</h4>
+                <ul>
+                    <li><strong>Puntos Base:</strong> 100 puntos por respuesta correcta</li>
+                    <li><strong>Bonus de Velocidad:</strong> Hasta 75 puntos extra por rapidez</li>
+                    <li><strong>Bonus de Racha:</strong> Hasta 150 puntos por respuestas consecutivas</li>
+                    <li><strong>Bonus de Combo:</strong> Hasta 100 puntos por cadenas perfectas</li>
+                    <li><strong>Respuesta Perfecta:</strong> +50 puntos (<2 segundos)</li>
+                    <li><strong>Ultra Rápido:</strong> +75 puntos (<1.5 segundos)</li>
+                    <li><strong>Multiplicadores Dinámicos:</strong> Basados en dificultad y modo</li>
+                </ul>
+            </div>
+
+            <div class="intro-section">
+                <h4><i class="fas fa-rocket"></i> Power-Ups Estratégicos</h4>
+                <ul>
+                    <li><strong>50/50:</strong> Elimina 2 opciones incorrectas</li>
+                    <li><strong>Tiempo Extra:</strong> +3 segundos para la pregunta</li>
+                    <li><strong>Multiplicador x2:</strong> Duplica puntos por 3 preguntas</li>
+                    <li><strong>Segunda Oportunidad:</strong> Una vida extra en Supervivencia</li>
+                </ul>
+            </div>
+
+            <div class="intro-section">
+                <h4><i class="fas fa-medal"></i> 17 Logros Desbloqueables</h4>
+                <ul>
+                    <li><strong>Velocista:</strong> 10 respuestas en menos de 2 segundos</li>
+                    <li><strong>Superviviente Elite:</strong> 50+ respuestas en modo Supervivencia</li>
+                    <li><strong>Rayo:</strong> Respuesta ultra-rápida (<1.5s)</li>
+                    <li><strong>Dios del Crack Rápido:</strong> 5000+ puntos en una partida</li>
+                    <li>Y 13 logros más por descubrir...</li>
+                </ul>
+            </div>
+
+            <div class="intro-section">
+                <h4><i class="fas fa-cog"></i> Dificultades Personalizables</h4>
+                <ul>
+                    <li><strong>Fácil:</strong> 6 segundos por pregunta (x0.8 multiplicador)</li>
+                    <li><strong>Normal:</strong> 5 segundos por pregunta (x1.0 multiplicador)</li>
+                    <li><strong>Difícil:</strong> 4 segundos por pregunta (x1.3 multiplicador)</li>
+                    <li><strong>Extremo:</strong> 3 segundos por pregunta (x1.6 multiplicador)</li>
+                </ul>
+            </div>
+
+            <div class="intro-section">
+                <h4><i class="fas fa-chart-line"></i> Estadísticas Avanzadas</h4>
+                <ul>
+                    <li>Rankings por categoría y modo de juego</li>
+                    <li>Análisis de rendimiento por dificultad</li>
+                    <li>Historial de puntuaciones y mejores rachas</li>
+                    <li>Tiempo promedio de respuesta y precision</li>
+                </ul>
+            </div>
+
+            <div class="intro-highlight">
+                <p><strong>🔥 ¡NOVEDAD!</strong> Todas las preguntas están verificadas con fuentes oficiales (FIFA, UEFA, CONMEBOL, AFA) para garantizar precisión y calidad suprema.</p>
+            </div>
+
             <div class="modal-footer">
                 <button type="button" class="primary-button" id="goToCrackRapidoButton">
-                    <i class="fas fa-rocket"></i> EMPEZAR EL DESAFÍO
+                    <i class="fas fa-rocket"></i> ¡EMPEZAR EL DESAFÍO DEFINITIVO!
                 </button>
             </div>
         </div>

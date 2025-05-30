@@ -1850,7 +1850,7 @@ function endGameMentiroso(roomId, reason = "Game completed") {
 
 const mentirosoCategories = {
   "FÚTBOL ARGENTINO": [
-    { template: "Puedo nombrar X jugadores que hayan salido de la cantera de River Plate y ganado algo importante en Europa." },
+    { template: "Puedo nombrar X jugadores que hayan salido de River Plate y ganado algo importante en Europa." },
     { template: "Puedo nombrar X futbolistas que hayan jugado en Boca Juniors y en la Selección Argentina en el mismo año." },
     { template: "Puedo nombrar X directores técnicos que hayan dirigido al menos dos de los 'cinco grandes' del fútbol argentino." },
     { template: "Puedo nombrar X futbolistas que, después de ser estrellas en Argentina, fracasaron en Europa y volvieron." },
@@ -1865,9 +1865,7 @@ const mentirosoCategories = {
     { template: "Puedo nombrar X apodos raros o poco comunes de jugadores argentinos." },
     { template: "Puedo nombrar X jugadores que hayan jugado en el fútbol argentino y en la Liga MX de México." },
     { template: "Puedo nombrar X hinchadas de fútbol argentino que se consideren de las más 'picantes' de Sudamérica." },
-    { template: "Puedo nombrar X jugadores que, después de brillar acá, se fueron a Europa y volvieron con el pase en la mano sin pena ni gloria." },
     { template: "Puedo nombrar X técnicos que agarraron un fierro caliente en un grande y lo sacaron campeón contra todos los pronósticos." },
-    { template: "Puedo nombrar X estadios del fútbol argentino (sin contar los de los 5 grandes) que meten una presión terrible y donde es jodido ganar." },
     { template: "Puedo nombrar X jugadores que metieron un golazo de tiro libre en un clásico que quedó para la historia." },
     { template: "Puedo nombrar X equipos 'chicos' que le ganaron una final o un partido definitorio a un grande y fue un batacazo." },
     { template: "Puedo nombrar X apodos de jugadores del fútbol argentino que son más conocidos que su propio nombre." },

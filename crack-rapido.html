@@ -1191,6 +1191,634 @@
                 transform: translateY(0);
             }
         }
+
+        /* Estilos para Selección de Modo de Juego */
+        .mode-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .mode-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(255, 107, 53, 0.05) 0%, 
+                rgba(255, 211, 42, 0.05) 50%, 
+                rgba(255, 65, 108, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mode-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 107, 53, 0.6);
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.4),
+                0 0 30px rgba(255, 107, 53, 0.3);
+        }
+
+        .mode-card:hover::before {
+            opacity: 1;
+        }
+
+        .mode-icon {
+            font-size: 3rem;
+            color: var(--neon-orange);
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 15px rgba(255, 107, 53, 0.6));
+        }
+
+        .mode-card h3 {
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .mode-card p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            margin: 0.5rem 0;
+        }
+
+        .mode-detail {
+            color: var(--neon-orange);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Estilos para Selección de Categoría */
+        .category-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.2rem;
+            margin: 2rem 0;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 18px;
+            padding: 1.8rem 1.2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(102, 126, 234, 0.05) 0%, 
+                rgba(118, 75, 162, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(102, 126, 234, 0.6);
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.4),
+                0 0 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .category-card:hover::before {
+            opacity: 1;
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            color: var(--neon-blue);
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 15px rgba(102, 126, 234, 0.6));
+        }
+
+        .category-card h3 {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+            font-family: 'Oswald', sans-serif;
+        }
+
+        .category-card p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            margin: 0.5rem 0;
+        }
+
+        .category-detail {
+            color: var(--neon-blue);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Panel de Power-ups */
+        .powerups-panel {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(183, 148, 246, 0.3);
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .powerups-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+        }
+
+        .powerup-btn {
+            background: linear-gradient(135deg, rgba(183, 148, 246, 0.2), rgba(118, 75, 162, 0.2));
+            border: 1px solid rgba(183, 148, 246, 0.4);
+            border-radius: 12px;
+            color: white;
+            padding: 0.7rem 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(183, 148, 246, 0.2);
+        }
+
+        .powerup-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, rgba(183, 148, 246, 0.3), rgba(118, 75, 162, 0.3));
+            border-color: rgba(183, 148, 246, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(183, 148, 246, 0.3);
+        }
+
+        .powerup-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: rgba(100, 100, 100, 0.2);
+            border-color: rgba(100, 100, 100, 0.3);
+        }
+
+        .powerup-btn i {
+            font-size: 1.2rem;
+            color: var(--neon-purple);
+        }
+
+        /* Responsivo para las nuevas pantallas */
+        @media (max-width: 768px) {
+            .mode-selection {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                margin: 1.5rem 0;
+            }
+
+            .mode-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .mode-icon {
+                font-size: 2.5rem;
+            }
+
+            .category-selection {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+                margin: 1.5rem 0;
+            }
+
+            .category-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .category-icon {
+                font-size: 2rem;
+            }
+
+            .powerups-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.6rem;
+            }
+
+            .powerup-btn {
+                padding: 0.6rem 0.4rem;
+                font-size: 0.8rem;
+            }
+
+            .powerup-btn i {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .category-selection {
+                grid-template-columns: 1fr;
+            }
+
+            .powerups-panel {
+                padding: 0.8rem;
+            }
+
+            .powerups-grid {
+                gap: 0.5rem;
+            }
+
+            .powerup-btn {
+                padding: 0.5rem 0.3rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* NUEVAS ANIMACIONES AVANZADAS */
+        
+        @keyframes achievementSlide {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            15% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            85% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes particleExplosion {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(
+                    calc(-50% + cos(var(--angle)) * var(--distance)), 
+                    calc(-50% + sin(var(--angle)) * var(--distance))
+                ) scale(0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes comboGlow {
+            0%, 100% { 
+                box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes perfectPulse {
+            0%, 100% {
+                background: linear-gradient(135deg, #ffd700, #ff8c00);
+                transform: scale(1);
+            }
+            50% {
+                background: linear-gradient(135deg, #ffff00, #ffd700);
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes powerUpActivation {
+            0% {
+                transform: scale(1) rotateZ(0deg);
+                filter: brightness(1);
+            }
+            50% {
+                transform: scale(1.2) rotateZ(180deg);
+                filter: brightness(1.5);
+            }
+            100% {
+                transform: scale(1) rotateZ(360deg);
+                filter: brightness(1);
+            }
+        }
+
+        /* Efectos especiales para combos y rachas */
+        .speed-game-panel.combo-active {
+            animation: comboGlow 1s ease-in-out infinite;
+        }
+
+        .option-btn.perfect-answer {
+            animation: perfectPulse 0.6s ease-in-out;
+        }
+
+        .powerup-btn.activated {
+            animation: powerUpActivation 0.5s ease-in-out;
+        }
+
+        /* Notificaciones en tiempo real */
+        .speed-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            z-index: 1500;
+            pointer-events: none;
+            animation: notificationFade 2s ease-out forwards;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+
+        @keyframes notificationFade {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.5);
+            }
+            20% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.1);
+            }
+            80% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -70%) scale(0.9);
+            }
+        }
+
+        /* Efectos de streak y combo mejorados */
+        .streak-effect {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff6b35, #ffd32a);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 10;
+            animation: streakBounce 0.5s ease-out;
+        }
+
+        @keyframes streakBounce {
+            0% {
+                transform: translateX(-50%) scale(0) translateY(20px);
+                opacity: 0;
+            }
+            60% {
+                transform: translateX(-50%) scale(1.2) translateY(-5px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-50%) scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Mejoras responsivas para nuevos elementos */
+        @media (max-width: 768px) {
+            .speed-notification {
+                font-size: 1.2rem;
+                padding: 0.8rem 1.5rem;
+                max-width: 90%;
+                text-align: center;
+            }
+
+            .streak-effect {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.6rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .speed-notification {
+                font-size: 1rem;
+                padding: 0.6rem 1rem;
+            }
+        }
+
+        /* Estilos para Panel de Configuración */
+        .settings-panel {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .settings-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .setting-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .setting-item label {
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* Toggle Switch Styles */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            margin: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.2);
+            transition: 0.3s;
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 2px;
+            bottom: 2px;
+            background: white;
+            transition: 0.3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        input:checked + .toggle-slider {
+            background: linear-gradient(135deg, var(--neon-green), var(--neon-blue));
+            border-color: var(--neon-green);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+
+        /* Difficulty Select Styles */
+        .difficulty-select {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 140px;
+        }
+
+        .difficulty-select:hover, .difficulty-select:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--neon-orange);
+            outline: none;
+        }
+
+        .difficulty-select option {
+            background: #1a1a2e;
+            color: white;
+            padding: 0.5rem;
+        }
+
+        .settings-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        /* Efectos especiales para configuración */
+        .settings-panel.active {
+            animation: settingsSlideIn 0.5s ease-out;
+        }
+
+        @keyframes settingsSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+                max-height: 0;
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+                max-height: 500px;
+            }
+        }
+
+        /* Responsivo para configuración */
+        @media (max-width: 768px) {
+            .settings-panel {
+                margin: 1rem 0;
+                padding: 1rem;
+            }
+
+            .setting-item {
+                padding: 0.8rem;
+                flex-direction: column;
+                gap: 0.8rem;
+                text-align: center;
+            }
+
+            .toggle-switch {
+                width: 50px;
+                height: 26px;
+            }
+
+            .toggle-slider:before {
+                height: 18px;
+                width: 18px;
+            }
+
+            input:checked + .toggle-slider:before {
+                transform: translateX(24px);
+            }
+
+            .difficulty-select {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
     </style>
 
     <!-- Google AdSense -->
@@ -1231,15 +1859,71 @@
                 <div class="game-header">
                     <h1 class="game-title">
                         <i class="fas fa-bolt" style="color: var(--neon-orange);"></i>
-                        Crack Rápido
+                        Crack Rápido MEGA
                     </h1>
-                    <p class="game-subtitle">¡El desafío más veloz de Crack Total!</p>
+                    <p class="game-subtitle">¡El desafío más veloz con nuevos modos!</p>
                 </div>
 
-                <div class="records-section" id="recordsSection">
+                <!-- Panel de Configuración -->
+                <div class="settings-panel" id="settingsPanel" style="display: none;">
                     <h3 style="color: var(--neon-orange); margin-bottom: 1rem; font-family: 'Oswald', sans-serif;">
-                        <i class="fas fa-medal"></i> Tus Records
+                        <i class="fas fa-cog"></i> Configuración
                     </h3>
+                    <div class="settings-grid">
+                        <div class="setting-item">
+                            <label for="soundToggle">🔊 Sonidos:</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="soundToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label for="animationToggle">✨ Animaciones:</label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="animationToggle" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <label for="difficultySelect">⚡ Dificultad:</label>
+                            <select id="difficultySelect" class="difficulty-select">
+                                <option value="easy">Fácil (6s)</option>
+                                <option value="normal" selected>Normal (5s)</option>
+                                <option value="hard">Difícil (4s)</option>
+                                <option value="extreme">Extrema (3s)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="settings-buttons">
+                        <button class="speed-btn secondary" onclick="toggleSettings()">
+                            <i class="fas fa-check"></i>
+                            Guardar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="start-instructions">
+                    <div class="instruction-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Tienes <strong>5 segundos</strong> por pregunta (configurable)</span>
+                    </div>
+                    <div class="instruction-item">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Usa <strong>1-4</strong> en teclado o toca las opciones</span>
+                    </div>
+                    <div class="instruction-item">
+                        <i class="fas fa-magic"></i>
+                        <span>Hotkeys: <strong>Q</strong> (tiempo), <strong>W</strong> (50/50), <strong>E</strong> (x2)</span>
+                    </div>
+                    <div class="instruction-item">
+                        <i class="fas fa-trophy"></i>
+                        <span>¡Alcanza el puntaje más alto posible!</span>
+                    </div>
+                </div>
+
+                <!-- Records Section Mejorada -->
+                <div class="records-section">
+                    <h3><i class="fas fa-medal"></i> Tus Records</h3>
                     <div class="record-item">
                         <span class="record-label">Mejor Puntuación:</span>
                         <span class="record-value" id="bestScore">0</span>
@@ -1253,23 +1937,166 @@
                         <span class="record-value" id="totalCorrect">0</span>
                     </div>
                     <div class="record-item">
-                        <span class="record-label">Racha Máxima:</span>
+                        <span class="record-label">Mejor Racha:</span>
                         <span class="record-value" id="bestStreak">0</span>
+                    </div>
+                    <div class="record-item" id="achievementsCount" style="display: none;">
+                        <span class="record-label">🏆 Logros Desbloqueados:</span>
+                        <span class="record-value" id="totalAchievements">0/4</span>
                     </div>
                 </div>
 
                 <div class="control-buttons">
                     <button class="speed-btn" id="startGameBtn">
                         <i class="fas fa-play"></i>
-                        ¡Comenzar Desafío!
+                        Comenzar Juego
                     </button>
-                    <button class="speed-btn secondary" onclick="window.location.href='games.html'">
-                        <i class="fas fa-arrow-left"></i>
-                        Volver a Juegos
+                    <button class="speed-btn secondary" onclick="toggleSettings()">
+                        <i class="fas fa-cog"></i>
+                        Configuración
                     </button>
-                    <button class="speed-btn secondary" onclick="window.location.href='ranking-crackrapido.html'">
+                    <button class="speed-btn secondary" onclick="showAchievements()">
                         <i class="fas fa-trophy"></i>
-                        Ver Ranking
+                        Ver Logros
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pantalla de Selección de Modo de Juego -->
+            <div id="gameModeScreen" class="start-screen hidden">
+                <div class="game-header">
+                    <h1 class="game-title">
+                        <i class="fas fa-gamepad" style="color: var(--neon-orange);"></i>
+                        Selecciona tu Modo
+                    </h1>
+                    <p class="game-subtitle">¿Cómo quieres jugar hoy?</p>
+                </div>
+
+                <div class="mode-selection">
+                    <div class="mode-card" onclick="selectGameMode('classic')">
+                        <div class="mode-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <h3>Modo Clásico</h3>
+                        <p>20 preguntas de velocidad</p>
+                        <span class="mode-detail">5 segundos por pregunta</span>
+                    </div>
+                    
+                    <div class="mode-card" onclick="selectGameMode('survival')">
+                        <div class="mode-icon">
+                            <i class="fas fa-heart-pulse"></i>
+                        </div>
+                        <h3>Supervivencia</h3>
+                        <p>Preguntas infinitas con 3 vidas</p>
+                        <span class="mode-detail">¡Hasta que falles!</span>
+                    </div>
+
+                    <div class="mode-card" onclick="selectGameMode('tournament')">
+                        <div class="mode-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Torneo MEGA</h3>
+                        <p>5 rondas épicas de diferentes categorías</p>
+                        <span class="mode-detail">Multiplicador x1.5 + Bonus</span>
+                    </div>
+                    
+                    <div class="mode-card" onclick="selectGameMode('category')">
+                        <div class="mode-icon">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                        <h3>Categorías</h3>
+                        <p>Especialízate en un tema</p>
+                        <span class="mode-detail">7 categorías disponibles</span>
+                    </div>
+                </div>
+
+                <div class="control-buttons">
+                    <button class="speed-btn secondary" onclick="resetGame()">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pantalla de Selección de Categoría -->
+            <div id="categoryScreen" class="start-screen hidden">
+                <div class="game-header">
+                    <h1 class="game-title">
+                        <i class="fas fa-tags" style="color: var(--neon-orange);"></i>
+                        Elige tu Categoría
+                    </h1>
+                    <p class="game-subtitle">¿En qué tema eres experto?</p>
+                </div>
+
+                <div class="category-selection">
+                    <div class="category-card" onclick="selectCategory('messi')">
+                        <div class="category-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3>Solo Messi</h3>
+                        <p>Todo sobre Leo Messi</p>
+                        <span class="category-detail">25 preguntas verificadas</span>
+                    </div>
+                    
+                    <div class="category-card" onclick="selectCategory('boca')">
+                        <div class="category-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3>Solo Boca</h3>
+                        <p>Historia de Boca Juniors</p>
+                        <span class="category-detail">30 preguntas oficiales</span>
+                    </div>
+                    
+                    <div class="category-card" onclick="selectCategory('river')">
+                        <div class="category-icon">
+                            <i class="fas fa-crown"></i>
+                        </div>
+                        <h3>Solo River</h3>
+                        <p>Historia de River Plate</p>
+                        <span class="category-detail">35 preguntas verificadas</span>
+                    </div>
+                    
+                    <div class="category-card" onclick="selectCategory('mundial')">
+                        <div class="category-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3>Solo Mundial</h3>
+                        <p>Historia de los Mundiales</p>
+                        <span class="category-detail">40 preguntas FIFA</span>
+                    </div>
+
+                    <div class="category-card" onclick="selectCategory('champions')">
+                        <div class="category-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                        <h3>Champions League</h3>
+                        <p>La máxima competición europea</p>
+                        <span class="category-detail">15 preguntas UEFA</span>
+                    </div>
+
+                    <div class="category-card" onclick="selectCategory('argentina')">
+                        <div class="category-icon">
+                            <i class="fas fa-flag"></i>
+                        </div>
+                        <h3>Selección Argentina</h3>
+                        <p>La Albiceleste campeona</p>
+                        <span class="category-detail">10 preguntas AFA</span>
+                    </div>
+                    
+                    <div class="category-card" onclick="selectCategory('general')">
+                        <div class="category-icon">
+                            <i class="fas fa-futbol"></i>
+                        </div>
+                        <h3>General</h3>
+                        <p>Preguntas variadas</p>
+                        <span class="category-detail">30 preguntas mix</span>
+                    </div>
+                </div>
+
+                <div class="control-buttons">
+                    <button class="speed-btn secondary" onclick="showGameModeSelection()">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver a Modos
                     </button>
                 </div>
             </div>
@@ -1299,6 +2126,33 @@
                             <div class="stat-value" id="currentStreak" style="color: var(--neon-yellow);">0</div>
                             <div class="stat-label">Racha</div>
                         </div>
+                        <div class="stat-item" id="livesDisplay" style="display: none;">
+                            <div class="stat-value" style="color: var(--neon-red);">❤️❤️❤️</div>
+                            <div class="stat-label">Vidas</div>
+                        </div>
+                        <div class="stat-item" id="multiplierDisplay" style="display: none;">
+                            <div class="stat-value" style="color: var(--neon-purple);">x2</div>
+                            <div class="stat-label">Multiplicador</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Power-ups Panel -->
+                <div class="powerups-panel">
+                    <h4 style="color: var(--neon-orange); margin-bottom: 0.5rem; font-size: 0.9rem;">Power-ups</h4>
+                    <div class="powerups-grid">
+                        <button class="powerup-btn" id="powerUpTimeExtra" title="Agregar 3 segundos">
+                            <i class="fas fa-clock-plus"></i>
+                            +3s (3)
+                        </button>
+                        <button class="powerup-btn" id="powerUpRemoveOption" title="Eliminar 2 opciones incorrectas">
+                            <i class="fas fa-eye-slash"></i>
+                            50/50 (3)
+                        </button>
+                        <button class="powerup-btn" id="powerUpMultiplier" title="Multiplicador x2 por 3 preguntas">
+                            <i class="fas fa-times"></i>
+                            x2 (2)
+                        </button>
                     </div>
                 </div>
 
