@@ -91,9 +91,11 @@
 
   <style>
     body {
-      background: linear-gradient(135deg, #0a0f1a 0%, #101726 100%); /* Darker, more sophisticated gradient */
-      color: #e2e8f0; /* Lighter text color for better contrast */
+      background: linear-gradient(135deg, #0d1421 0%, #1a1a2e 50%, #16213e 100%);
+      color: #e8eaed;
       font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      background-attachment: fixed;
     }
     
     .blog-detail-header {
@@ -107,380 +109,394 @@
         overflow: hidden;
     }
 
+    .blog-detail-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(231, 76, 60, 0.05) 0%, transparent 100%);
+        pointer-events: none;
+    }
+
     .blog-detail-header .title-text {
         color: #fff;
         font-family: 'Oswald', sans-serif;
-        font-size: 3rem; /* Slightly larger */
-        margin-bottom: 0.75rem; /* Increased margin */
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.6); /* Enhanced shadow */
+        font-size: 3rem;
+        margin-bottom: 0.75rem;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        position: relative;
+        z-index: 1;
     }
 
     .blog-detail-header .subtitle {
-        color: #bac8d3; /* Slightly adjusted color */
-        font-size: 1.2rem; /* Slightly larger */
+        color: #b3b8bd;
+        font-size: 1.2rem;
+        position: relative;
+        z-index: 1;
     }
     
     .blog-detail-container {
       max-width: 900px;
-      margin: 2.5rem auto; /* Increased margin */
-      padding: 2.5rem; /* Increased padding */
-      background: linear-gradient(150deg, rgba(16, 23, 38, 0.9), rgba(10, 15, 26, 0.98)); /* Adjusted gradient */
-      border-radius: 15px; /* More pronounced rounding */
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); /* Softer, deeper shadow */
-      backdrop-filter: blur(10px); /* Increased blur */
-      border: 1px solid rgba(255, 255, 255, 0.08); /* More subtle border */
+        margin: 2.5rem auto;
+        padding: 2.5rem;
+        background: linear-gradient(150deg, rgba(26, 26, 46, 0.95), rgba(13, 20, 33, 0.98));
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(231, 76, 60, 0.15);
       position: relative;
+        overflow: hidden;
     }
-    
-    .blog-main-image {
-      width: 100%;
-      max-height: 480px; /* Increased max-height */
-      object-fit: cover;
-      border-radius: 12px; /* More pronounced rounding */
-      margin-bottom: 2rem; /* Increased margin */
-      box-shadow: 0 10px 20px rgba(0,0,0,0.25); /* Enhanced shadow */
+
+    .blog-detail-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #e74c3c, transparent);
+        opacity: 0.6;
     }
     
     .blog-meta {
         display: flex;
-        flex-wrap: wrap; /* Allow wrapping on smaller screens */
-        gap: 15px 25px; /* Adjusted gap */
-        color: #a0aec0; /* Adjusted color */
-        font-size: 0.95em; /* Slightly larger */
-        margin-bottom: 2rem; /* Increased margin */
-        padding-bottom: 1.5rem; /* Increased padding */
-        border-bottom: 1px solid rgba(255,255,255,0.12); /* Slightly more visible border */
+        flex-wrap: wrap;
+        gap: 15px 25px;
+        color: #8a92a6;
+        font-size: 0.95em;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(231, 76, 60, 0.2);
+    }
+
+    .blog-meta span {
+        background: rgba(231, 76, 60, 0.05);
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .blog-meta span:hover {
+        background: rgba(231, 76, 60, 0.1);
+        transform: translateY(-1px);
     }
     
     .blog-meta span i {
-        margin-right: 8px; /* Increased margin */
-        color: var(--primary-light, #f0627a); /* Adjusted color */
+        margin-right: 8px;
+        color: #e74c3c;
+    }
+
+    .blog-main-image {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease;
+    }
+
+    .blog-main-image:hover {
+        transform: scale(1.02);
     }
     
-    .blog-content p {
-      margin-bottom: 1.5rem; /* Increased margin */
-      line-height: 1.8; /* Improved readability */
-      color: #cdd7e1; /* Adjusted text color */
-      font-size: 1.05rem; /* Slightly larger base font for content */
-    }
-    
-    /* Estilos para h2, h3, h4 en blog-content */
-    .blog-content h2, .blog-content h3, .blog-content h4 {
-      font-family: 'Oswald', sans-serif;
-      margin: 2.5rem 0 1.25rem; /* Adjusted margins */
-      color: #f8fafc; /* Brighter heading color */
-      position: relative;
-      padding-bottom: 0.75rem; /* Increased padding */
-      text-transform: uppercase;
-      letter-spacing: 1px; /* Increased letter spacing */
-    }
-    .blog-content h2 { font-size: 2.1rem; } /* Adjusted sizes */
-    .blog-content h3 { font-size: 1.8rem; }
-    .blog-content h4 { font-size: 1.5rem; }
-    
-    .blog-content h2::after, .blog-content h3::after, .blog-content h4::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 60px; /* Slightly wider */
-      height: 4px; /* Thicker */
-      background: linear-gradient(90deg, var(--primary, #c71a3f), var(--primary-light, #f0627a)); /* Adjusted gradient */
-      border-radius: 3px; /* Rounded ends */
+    .content-section {
+        margin-bottom: 2.5rem;
+        padding: 2rem;
+        border-radius: 12px;
+        transition: all 0.3s ease;
     }
 
-    .blog-content strong {
-        color: var(--primary-light, #f0627a); /* Adjusted color */
-        font-weight: 700; /* Bolder */
+    .modern-card {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(13, 20, 33, 0.8));
+        border: 1px solid rgba(231, 76, 60, 0.1);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     }
 
-    .blog-content ul {
-        list-style: none;
-        padding-left: 0;
-        margin-bottom: 1.5rem; /* Increased margin */
+    .modern-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
     }
 
-    .blog-content ul li {
-        padding-left: 1.8em; /* Increased padding */
-        position: relative;
-        margin-bottom: 0.6em; /* Adjusted margin */
-        color: #cdd7e1; /* Adjusted text color */
-        line-height: 1.7; /* Improved line height for list items */
+    .highlight-section {
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.08), rgba(26, 26, 46, 0.6));
+        border-left: 4px solid #e74c3c;
+        border-radius: 0 12px 12px 0;
     }
 
-    .blog-content ul li::before {
-        content: '\f105'; /* FontAwesome right arrow */
-        font-family: 'Font Awesome 6 Free'; /* Ensure correct font family for new FontAwesome versions */
-        font-weight: 900;
-        position: absolute;
-        left: 0;
-        top: 2px; /* Fine-tune alignment */
-        color: var(--primary, #c71a3f); /* Adjusted color */
-        font-size: 1.1em; /* Slightly larger icon */
+    .stats-section {
+        background: linear-gradient(135deg, rgba(13, 20, 33, 0.9), rgba(26, 26, 46, 0.7));
+        border: 1px solid rgba(231, 76, 60, 0.2);
     }
 
-    .blog-image-container {
-        margin: 2rem 0; /* Increased margin */
-        text-align: center;
-    }
-
-    .blog-inline-image {
-        max-width: 100%;
-        height: auto;
-        border-radius: 10px; /* More pronounced rounding */
-        box-shadow: 0 6px 12px rgba(0,0,0,0.25); /* Enhanced shadow */
-        margin-bottom: 0.75rem; /* Increased margin */
-    }
-
-    .blog-image-container figcaption {
-        font-size: 0.9em; /* Slightly larger */
-        color: #a0aec0; /* Adjusted color */
-        font-style: italic;
-    }
-
-    .blog-share-buttons {
-        margin-top: 2.5rem; /* Increased margin */
-        padding-top: 2rem; /* Increased padding */
-        border-top: 1px solid rgba(255,255,255,0.12); /* Slightly more visible border */
-        text-align: center;
-    }
-    
-    .blog-share-buttons h4 {
+    .section-title {
         font-family: 'Oswald', sans-serif;
-        margin-bottom: 1.25rem; /* Increased margin */
-        color: #f8fafc; /* Brighter text */
-        font-size: 1.4rem; /* Slightly larger */
-    }
-
-    .social-button {
-        margin: 0.4rem 0.5rem; /* Adjusted margin */
-        padding: 0.7rem 1.2rem; /* Increased padding */
-        border: none;
-        border-radius: 6px; /* Slightly more rounded */
-        color: white;
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 600; /* Bolder */
-        cursor: pointer;
-        transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s; /* Added box-shadow transition */
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow */
-    }
-    .social-button:hover {
-        opacity: 0.85;
-        transform: translateY(-3px); /* Increased hover effect */
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Enhanced shadow on hover */
-    }
-    .social-button.facebook { background-color: #3b5998; }
-    .social-button.twitter { background-color: #1da1f2; }
-    .social-button.whatsapp { background-color: #25d366; }
-    .social-button.copy-link { background-color: #5a6874; } /* Darker gray */
-    
-    .sidebar {
-        background-color: rgba(10, 15, 26, 0.7); /* Darker, more integrated sidebar */
-        padding: 2rem; /* Increased padding */
-        border-radius: 10px; /* Rounded corners */
-        margin-top: 2rem; 
-        border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border */
-    }
-
-    @media (min-width: 992px) { /* Changed breakpoint for sidebar */
-        .blog-detail-container {
-            grid-template-columns: 2.5fr 1fr; /* Adjusted column ratio */
-            gap: 2.5rem; /* Increased gap */
-        }
-        .sidebar {
-            margin-top: 0; 
-        }
-    }
-
-    .sidebar-widget h3 {
-        font-family: 'Oswald', sans-serif;
-        font-size: 1.5rem; /* Larger title */
-        color: #f8fafc; /* Brighter title */
-        margin-bottom: 1.25rem; /* Increased margin */
-        padding-bottom: 0.75rem; /* Increased padding */
-        border-bottom: 2px solid var(--primary, #c71a3f); /* Thicker border */
-    }
-
-    .sidebar-widget ul {
-        list-style: none;
-        padding: 0;
-    }
-
-    .sidebar-widget ul li a {
-        color: #bac8d3; /* Adjusted link color */
-        text-decoration: none;
-        display: block;
-        padding: 0.6rem 0; /* Increased padding */
-        transition: color 0.2s, padding-left 0.2s; /* Added padding transition */
-        border-bottom: 1px dashed rgba(255,255,255,0.08); /* More subtle border */
-    }
-    .sidebar-widget ul li:last-child a {
-        border-bottom: none;
-    }
-
-    .sidebar-widget ul li a:hover {
-        color: var(--primary-light, #f0627a); /* Brighter hover color */
-        padding-left: 8px; /* Indent on hover */
-    }
-
-    #copyFeedback {
-        color: var(--success-light, #22c55e) !important; /* Brighter success color */
-        font-weight: bold;
-        margin-top: 0.5rem; /* Added margin */
-        display: inline-block; /* To allow margin */
-    }
-
-    /* ESTILOS DE TABLA ESPECÍFICOS PARA ESTE BLOG (Libertadores) */
-    .blog-content table {
-      width: 100%;
-      margin: 2rem 0; /* Increased margin */
-      border-collapse: separate; /* Changed to separate for border-spacing */
-      border-spacing: 0; /* Reset spacing, use padding in cells */
-      background-color: rgba(255, 255, 255, 0.02); /* Slightly more subtle background */
-      border-radius: 10px; /* Rounded corners */
-      overflow: hidden; 
-      box-shadow: 0 5px 15px rgba(0,0,0,0.25); /* Enhanced shadow */
-      border: 1px solid rgba(255, 255, 255, 0.07); /* Subtle border around table */
-    }
-    .blog-content th, .blog-content td {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Only bottom border for rows */
-      padding: 0.9rem 1.1rem; /* Adjusted padding */
-      text-align: left;
-      vertical-align: middle;
-    }
-    .blog-content th {
-      background-color: rgba(var(--primary-rgb, 199, 26, 63), 0.35); /* Adjusted RGB and opacity */
-      color: #f8fafc; /* Brighter text */
-      font-family: 'Oswald', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.8px; /* Increased spacing */
-      border-top: none; /* Remove top border for th */
-      border-bottom-width: 2px; /* Thicker bottom border for header */
-      border-bottom-color: rgba(var(--primary-rgb, 199, 26, 63), 0.5);
-    }
-     .blog-content td {
-      border-left: 1px solid rgba(255, 255, 255, 0.05); /* Add subtle left border for cells */
-     }
-     .blog-content td:first-child {
-      border-left: none; /* No left border for first cell */
-     }
-    .blog-content tr:nth-child(even) td { 
-      background-color: rgba(255, 255, 255, 0.015); /* More subtle striping */
-    }
-    .blog-content tr:hover td { 
-      background-color: rgba(var(--primary-rgb, 199, 26, 63), 0.15); /* Enhanced hover */
-    }
-    .blog-content table a { /* Targeting links within table specifically */
-      color: var(--primary-light, #f0627a);
-      text-decoration: none;
-      font-weight: 600; /* Bolder */
-    }
-    .blog-content table a:hover {
-      text-decoration: underline;
-      color: var(--primary, #c71a3f);
-    }
-
-    /* Related Articles Styling */
-    .blog-related {
-        margin-top: 3rem;
-        padding-top: 2rem;
-        border-top: 1px solid rgba(255,255,255,0.12);
-    }
-    .blog-related-title {
-        font-family: 'Oswald', sans-serif;
-        font-size: 1.8rem; /* Adjusted size */
-        color: #f8fafc;
+        font-size: 1.8rem;
+        color: #fff;
         margin-bottom: 1.5rem;
-        text-align: center;
         text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        padding-bottom: 0.5rem;
     }
-    .blog-related-articles {
-      display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
-      gap: 1.5rem;
+
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, #e74c3c, #c0392b);
+        border-radius: 2px;
     }
-    .related-article-card {
-        background-color: rgba(22, 30, 46, 0.7); /* Card background */
-        border-radius: 10px;
-      overflow: hidden;
-      text-decoration: none;
-        color: #e2e8f0;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        display: flex; /* Use flex for better content alignment */
-        flex-direction: column;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .related-article-card:hover {
-      transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.25);
-    }
-    .related-article-img {
-      width: 100%;
-        height: 180px; /* Fixed height */
-      object-fit: cover;
-    }
-    .related-article-content {
-      padding: 1rem;
-        flex-grow: 1; /* Allow content to grow */
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between; /* Push date to bottom */
-    }
-    .related-article-title {
+
+    .highlight-title {
         font-family: 'Oswald', sans-serif;
-        font-size: 1.25rem; /* Adjusted size */
-        color: #f8fafc;
-      margin-bottom: 0.5rem;
-        line-height: 1.3;
+        font-size: 1.5rem;
+        color: #e74c3c;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
-    .related-article-date {
-      font-size: 0.85rem;
-        color: #a0aec0;
-        margin-top: auto; /* Pushes date to bottom */
+
+    .content-section p {
+        margin-bottom: 1.2rem;
+        line-height: 1.8;
+        color: #c4c7cc;
+        font-size: 1.05rem;
+        text-align: justify;
     }
-    .related-article-date i {
-        margin-right: 5px;
-        color: var(--primary-light, #f0627a);
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin: 1.5rem 0;
     }
-    
-    /* Footer buttons and share */
-    .blog-footer {
-        margin-top: 2.5rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid rgba(255,255,255,0.12);
+
+    .stat-card {
+        background: rgba(231, 76, 60, 0.05);
+        padding: 1.5rem;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid rgba(231, 76, 60, 0.1);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #e74c3c, transparent);
+        transition: left 0.6s ease;
+    }
+
+    .stat-card:hover::before {
+        left: 100%;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(231, 76, 60, 0.2);
+        border-color: rgba(231, 76, 60, 0.3);
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #e74c3c;
+        font-family: 'Oswald', sans-serif;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #b3b8bd;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .timeline-grid {
+        display: grid;
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .timeline-item {
+        background: rgba(13, 20, 33, 0.6);
+        padding: 1.5rem;
+        border-radius: 10px;
+        border-left: 4px solid #e74c3c;
+        transition: all 0.3s ease;
+    }
+
+    .timeline-item:hover {
+        transform: translateX(5px);
+        background: rgba(13, 20, 33, 0.8);
+    }
+
+    .timeline-item h4 {
+        color: #e74c3c;
+        font-family: 'Oswald', sans-serif;
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+    }
+
+    .champions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .champion-card {
+        background: rgba(26, 26, 46, 0.6);
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid rgba(231, 76, 60, 0.1);
+        transition: all 0.3s ease;
+        text-align: center;
+    }
+
+    .champion-card:hover {
+        transform: scale(1.03);
+        border-color: rgba(231, 76, 60, 0.3);
+        box-shadow: 0 8px 20px rgba(231, 76, 60, 0.15);
+    }
+
+    .champion-card h4 {
+        color: #e74c3c;
+        font-family: 'Oswald', sans-serif;
+        margin-bottom: 0.5rem;
+    }
+
+    .navigation-buttons {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        flex-wrap: wrap; /* Allow wrapping */
-        gap: 1rem; /* Add gap for wrapped items */
+        margin-top: 3rem;
+        gap: 1rem;
     }
-    .back-to-blog-btn {
-        background-color: var(--primary, #c71a3f);
-        color: white;
-        padding: 0.75rem 1.5rem;
+
+    .btn-back, .btn-games {
+        padding: 12px 24px;
+        border-radius: 8px;
         text-decoration: none;
-        border-radius: 6px;
-        font-weight: 500;
-        transition: background-color 0.2s, transform 0.2s;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
-    .back-to-blog-btn:hover {
-        background-color: var(--primary-dark, #a61232); /* Darken on hover */
+
+    .btn-back {
+        background: rgba(231, 76, 60, 0.1);
+        color: #e74c3c;
+        border: 2px solid rgba(231, 76, 60, 0.3);
+    }
+
+    .btn-back:hover {
+        background: rgba(231, 76, 60, 0.2);
+        transform: translateX(-3px);
+    }
+
+    .btn-games {
+        background: linear-gradient(135deg, #e74c3c, #c0392b);
+        color: white;
+        border: 2px solid transparent;
+    }
+
+    .btn-games:hover {
+        background: linear-gradient(135deg, #c0392b, #a93226);
         transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(231, 76, 60, 0.3);
     }
-    .back-to-blog-btn i {
-        margin-right: 8px;
+
+    .related-articles {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid rgba(231, 76, 60, 0.2);
     }
-    .social-share-btn {
-        color: #bac8d3;
-        font-size: 1.5rem; /* Larger icons */
-        margin-left: 0.75rem;
-        transition: color 0.2s, transform 0.2s;
+
+    .related-articles h3 {
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.5rem;
+        color: #f8fafc;
+        margin-bottom: 1.25rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
-    .social-share-btn:hover {
-        color: var(--primary-light, #f0627a);
-      transform: scale(1.1);
+
+    .related-grid {
+      display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+        margin-top: 1.5rem;
     }
-    
+
+    .related-card {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(13, 20, 33, 0.8));
+        padding: 1.5rem;
+        border-radius: 10px;
+        border: 1px solid rgba(231, 76, 60, 0.2);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        position: relative;
+      overflow: hidden;
+    }
+
+    .related-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+      width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(231, 76, 60, 0.05), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .related-card:hover::before {
+        left: 100%;
+    }
+
+    .related-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        border-color: #e74c3c;
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.15), rgba(26, 26, 46, 0.9));
+    }
+
+    @media (max-width: 768px) {
+        .blog-detail-container {
+            margin: 1rem;
+            padding: 1.5rem;
+        }
+
+        .blog-detail-header .title-text {
+            font-size: 2rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .navigation-buttons {
+            flex-direction: column;
+        }
+    }
   </style>
 </head>
 <body>
@@ -510,186 +526,210 @@
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Inicio</a></li>
-        <li class="breadcrumb-item"><a href="/blog.html">Blog</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Historia de la Copa Libertadores</li>
+        <li class="breadcrumb-item"><a href="blog.html">Blog</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Copa Libertadores</li>
       </ol>
     </nav>
   </div>
 
-  <header class="app-header">
-    <div class="logo-animation">
-        <i class="fas fa-newspaper ball-icon bounce"></i>
-    </div>
-    <a href="/blog.html" class="title-link">
-        <h1 class="title-text">Blog Crack Total</h1>
-    </a>
-    <p class="subtitle">Análisis, historias y pasión por el fútbol</p>
+  <header class="blog-detail-header">
+    <h1 class="title-text">Copa Libertadores</h1>
+    <p class="subtitle">El Torneo Más Prestigioso de América</p>
   </header>
 
-  <main class="blog-detail-screen page-container" id="main-content">
-    <div class="blog-detail-container content-container">
-      <div class="blog-detail-img-container">
-        <img src="img/blog/libertadores.jpg" alt="Copa Libertadores Trofeo" class="blog-detail-img" loading="lazy">
+  <main id="main-content" class="blog-detail-container">
+    <div class="blog-meta">
+        <span><i class="fas fa-calendar-alt"></i> 30 Enero, 2025</span>
+        <span><i class="fas fa-clock"></i> 10 min lectura</span>
+        <span><i class="fas fa-tag"></i> Copa Libertadores</span>
+        <span><i class="fas fa-user"></i> Por Crack Total</span>
       </div>
       
-      <article class="blog-detail-content">
-        <p>Si hablamos de fútbol en Sudamérica, hay un nombre que lo dice todo: ¡Copa Libertadores! Esto no es un torneíto más, es pura obsesión, es la sangre que corre por las venas de millones. Es donde la pasión se desborda, el drama te tiene al borde del asiento y la gloria... bueno, la gloria es eterna. Desde que arrancó allá por 1960, la Libertadores ha visto nacer leyendas y coronado a gigantes que hicieron historia. Agarrate fuerte, porque acá en Crack Total te llevamos de viaje por cada capítulo épico, esos momentos que no se olvidan más y te contamos por qué esta Copa mueve multitudes.</p>
+    <div class="blog-content">
+        <img src="img/blog/libertadores.jpg" alt="Copa Libertadores" class="blog-main-image" onerror="this.src='https://via.placeholder.com/800x400?text=Copa+Libertadores'">
         
-        <h2><i class="fas fa-trophy"></i> El Sueño Continental Toma Forma: ¡Nace la Leyenda!</h2>
-        <p>Imaginate la escena: Europa ya tenía sus copas de campeones y acá en Sudamérica la idea de un torneo continental picaba fuerte desde los años 30. ¡Había que tener la nuestra! Y así fue como en 1959, en un Congreso de la CONMEBOL en Caracas, se dio el sí: nacía la "Copa de Campeones de América". ¡Qué momento! Al año siguiente, en 1960, rodó la pelota por primera vez con siete pioneros, los campeones de cada liga: Bahía de Brasil, los bolivianos de Jorge Wilstermann, Millonarios de Colombia, el Olimpia paraguayo, la U de Chile, San Lorenzo por Argentina y un tal Peñarol de Uruguay. ¿Y quién se llevó la primera? ¡Los manyas! Peñarol, con un Alberto Spencer intratable que se cansó de hacer goles, le ganó la final a Olimpia y escribió la primera página dorada.</p>
-        <p>Los primeros años fueron cosa seria entre uruguayos y argentinos. Peñarol no se conformó y repitió en el 61. Pero ojo, que el Santos de un tal Pelé (sí, ESE Pelé) metió un bicampeonato en el 62 y 63 que dejó a todos con la boca abierta. Después, el Rojo de Avellaneda, Independiente, dijo presente y se convirtió en el primer argentino en levantarla en el 64, ¡y también en el 65! La cosa se ponía buena.</p>
-        
-        <h2><i class="fas fa-shield-alt"></i> Hegemonías, Batallas Épicas y Nuevos Gigantes</h2>
-        <p>Si los 60 y 70 tuvieran DNI, sería uruguayo o argentino, ¡sin dudas! Estudiantes de La Plata, con la mística de Osvaldo Zubeldía, armó un equipo que era una pesadilla para cualquiera y se llevó tres Copas al hilo (1968, 1969, 1970). ¡Una máquina de ganar! Nacional de Montevideo también gritó campeón en 1971. Pero si hablamos de reyes, Independiente se ganó el apodo de "Rey de Copas" con justicia: ¡cuatro Libertadores seguidas entre 1972 y 1975! Una bestialidad que nadie pudo igualar. Para cerrar los 70, el Boca del Toto Lorenzo, con el Loco Gatti en el arco y un equipo lleno de figuras, metió su primer doblete (1977, 1978) para delirio de la mitad más uno.</p>
-        <p>Llegaron los 80 y el mapa de la Copa empezó a tener más colores. No solo aparecieron nuevos protagonistas, sino que los equipos brasileños volvieron a pisar fuerte. El Flamengo de Zico en el 81, Grêmio en el 83, y ojo, que Argentinos Juniors, con un pibe llamado Claudio Borghi que la rompía toda, se quedó con la gloria en 1985. River Plate, ¡por fin!, tuvo su primera alegría en 1986 con un equipazo comandado por el Príncipe Enzo Francescoli y el Bambino Veira en el banco. Nacional y Peñarol volvieron a festejar, y atención, que Colombia sacó chapa con Atlético Nacional de Medellín en 1989: Maturana en el banco, Higuita y sus locuras en el arco, ¡y la primera para los cafeteros!</p>
-        <p>Los 90 fueron una repartija tremenda, ¡hubo para todos! Campeones argentinos como River y el Vélez de Bianchi, brasileños a montones (São Paulo, Grêmio, Palmeiras, Vasco da Gama) y hasta Chile tuvo su festejo con el Colo-Colo en 1991, ¡el único campeón chileno hasta hoy! El São Paulo de Telê Santana era un equipazo que daba gusto ver, y por eso se llevó dos seguidas (1992, 1993).</p>
-        <p>Con el nuevo siglo, la cosa se concentró bastante entre Argentina y Brasil. El Boca de Carlos Bianchi fue una aplanadora: 2000, 2001, 2003 y 2007, ¡casi nada! River también sumó alegrías importantes en 2015 y, claro, la inolvidable final de Madrid contra Boca en 2018. Del lado brasileño, Internacional, Santos, Corinthians, Atlético Mineiro, Grêmio, Flamengo, Palmeiras... todos levantaron la Copa y demostraron que el fútbol de Brasil a nivel clubes es cosa seria.</p>
+        <section class="content-section">
+            <h2><i class="fas fa-trophy"></i> La Gloria Continental</h2>
+            <p>La <strong>Copa Libertadores de América</strong> representa la máxima competición de clubes en Sudamérica, donde los mejores equipos del continente luchan por la gloria eterna. Desde 1960, este torneo ha sido testigo de las páginas más épicas del fútbol sudamericano.</p>
 
-        <div class="palmares-table-container">
-          <h3><i class="fas fa-trophy"></i> Los Dueños de América: Clubes con Más Libertadores</h3>
-          <table class="palmares-table">
-            <thead>
-              <tr>
-                <th>Club</th>
-                <th>País</th>
-                <th>Títulos</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Independiente</td>
-                <td>Argentina</td>
-                <td>7</td>
-              </tr>
-              <tr>
-                <td>Boca Juniors</td>
-                <td>Argentina</td>
-                <td>6</td>
-              </tr>
-              <tr>
-                <td>Peñarol</td>
-                <td>Uruguay</td>
-                <td>5</td>
-              </tr>
-              <tr>
-                <td>River Plate</td>
-                <td>Argentina</td>
-                <td>4</td>
-              </tr>
-              <tr>
-                <td>Estudiantes (LP)</td>
-                <td>Argentina</td>
-                <td>4</td>
-              </tr>
-               <tr>
-                <td>Palmeiras</td>
-                <td>Brasil</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <td>Nacional</td>
-                <td>Uruguay</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <td>São Paulo</td>
-                <td>Brasil</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <td>Grêmio</td>
-                <td>Brasil</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <td>Santos</td>
-                <td>Brasil</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <td>Flamengo</td>
-                <td>Brasil</td>
-                <td>3</td>
-              </tr>
-              <tr>
-                <td>Olimpia</td>
-                <td>Paraguay</td>
-                <td>3</td>
-              </tr>
-              <!-- Puedes añadir más filas si lo deseas -->
-            </tbody>
-          </table>
+            <div class="highlight-box">
+                <h3>Copa Libertadores 2025</h3>
+                <p>La edición 2025 está en marcha con <strong>47 equipos</strong> de las 10 confederaciones sudamericanas. Botafogo de Brasil es el campeón defensor, buscando revalidar su título continental.</p>
         </div>
-        
-        <h2><i class="fas fa-star"></i> Noches de Gloria: Finales que Hicieron Historia</h2>
-        <p>¡Uf, si la Copa Libertadores hablara! Está llena de finales que son pura emoción, de esas que te acordás toda la vida. Acá te tiro algunas que quedaron en el Olimpo del fútbol sudamericano:</p>
-        <ul>
-          <li><strong>Peñarol vs. Olimpia (1960):</strong> La primera, la que abrió el camino. ¡Historia pura!</li>
-          <li><strong>Santos vs. Peñarol (1962):</strong> Pelé y su magia llevando al Santos a la cima en un desempate de infarto.</li>
-          <li><strong>Independiente vs. São Paulo (1974):</strong> El "Rey de Copas" metiendo su cuarta al hilo. ¡Qué locura!</li>
-          <li><strong>Boca Juniors vs. Cruzeiro (1977):</strong> La primera del Xeneize, con definición por penales en Montevideo. ¡Para el infarto!</li>
-          <li><strong>Flamengo vs. Cobreloa (1981):</strong> El maestro Zico llevando al Mengão a la gloria en una final que tuvo de todo.</li>
-          <li><strong>Atlético Nacional vs. Olimpia (1989):</strong> Colombia en lo más alto por primera vez, con Higuita atajando hasta el viento en los penales.</li>
-          <li><strong>Vélez Sarsfield vs. São Paulo (1994):</strong> El "Fortín" del Virrey Bianchi bajando al poderoso equipo brasileño. ¡Batacazo!</li>
-          <li><strong>Palmeiras vs. Deportivo Cali (1999):</strong> El "Verdão" festejando en una definición por penales no apta para cardíacos.</li>
-          <li><strong>Boca Juniors vs. Palmeiras (2000):</strong> El inicio de la era dorada de Bianchi en Boca, con un Óscar Córdoba inmenso en los penales.</li>
-          <li><strong>Once Caldas vs. Boca Juniors (2004):</strong> El humilde equipo colombiano dejando con las manos vacías al gigante argentino. ¡Sorpresón!</li>
-          <li><strong>River Plate vs. Boca Juniors (2018):</strong> La "Final del Siglo", la que se jugó en Madrid y que ningún hincha olvidará jamás. ¡Épica!</li>
-          <li><strong>Flamengo vs. River Plate (2019):</strong> Una remontada increíble de Flamengo en los últimos suspiros en la primera final única en Lima. ¡De no creer!</li>
-          <li><strong>Palmeiras vs. Santos (2020) y Palmeiras vs. Flamengo (2021):</strong> Dos finales 100% brasileñas en la nueva era, ¡y las dos para Palmeiras!</li>
-        </ul>
-        
-        <h2><i class="fas fa-users"></i> Cracks que Dejaron su Huella y Equipos de Leyenda</h2>
-        <p>La Libertadores es una fábrica de ídolos, una pasarela de jugadores que la rompieron toda y equipos que son leyenda pura. Nombres como Alberto Spencer (el terror de los arqueros, ¡máximo goleador!), Pelé, el Bocha Bochini, el Príncipe Francescoli, Zico, Román Riquelme y su magia, Pedro Rocha, Fernando Morena, Cafú, Neymar, Ronaldinho... ¡y la lista sigue! Son tipos que entendieron cómo se juega esta Copa.</p>
-        <p>Y qué decir de los equipos... El Santos de Pelé era poesía en movimiento. El Estudiantes de Zubeldía, pura garra y astucia. El Independiente multicampeón de los 70, una máquina. El Boca de Bianchi, imbatible. El River de Gallardo, pura mística. El São Paulo de Telê Santana, fútbol del bueno. O el Flamengo de Jorge Jesus, un vendaval. Son solo algunos ejemplos de equipazos que hicieron historia y se ganaron el respeto de todo un continente.</p>
+        </section>
 
-        <h2><i class="fas fa-globe-americas"></i> Más que Fútbol: Un Sentimiento que Une al Continente</h2>
-        <p>Para nosotros los sudamericanos, la Copa Libertadores es mucho más que un torneo. Es parte de nuestra cultura, es una pasión que nos une y nos divide con la misma intensidad. Cada partido es una fiesta, las tribunas explotan con los cantitos, las banderas, un fervor que no se encuentra en ningún otro lado. Los equipos son nuestros barrios, nuestras ciudades, nuestra identidad. Y levantar "La Obsesión", como le dicen muchos, es el sueño de todo hincha.</p>
-        <p>Además, la Copa es la gran vidriera del talento sudamericano. De acá salen los pibes que después la rompen en Europa. La mística de la Libertadores, con esas canchas difíciles, los viajes eternos y la presión de la historia, te curte como jugador y te prepara para cualquier cosa. ¡Es una escuela de cracks!</p>
+        <section class="content-section">
+            <h2><i class="fas fa-history"></i> Historia y Tradición</h2>
+            <p>Inspirada en la Copa de Europa, la Copa Libertadores nació con el objetivo de coronar al mejor equipo de Sudamérica. Su nombre honra a los <strong>libertadores</strong> que lucharon por la independencia del continente.</p>
 
-        <h2><i class="fas fa-chart-line"></i> La Copa Hoy: Misma Pasión, Nuevos Desafíos</h2>
-        <p>Desde 2019, la final se juega a partido único en una cancha neutral, bien a lo europeo. Pero que no te engañen, la Copa sigue siendo una carnicería hermosa, súper competitiva y con un nivel que atrae a todo el planeta fútbol. Es verdad que los equipos brasileños andan con billetera gorda y marcan tendencia últimamente, pero la garra y la historia de los demás siempre los hacen candidatos de peso. ¡Acá nadie se rinde fácil!</p>
-        <p>La Copa Libertadores sigue siendo eso: el sueño máximo de cualquier club de Sudamérica. Es EL trofeo que todos quieren tener en sus vitrinas para escribir su nombre con letras de oro en la historia del fútbol continental. La "Gloria Eterna", la "Obsesión"... llamala como quieras, ¡pero la pasión sigue más viva que nunca!</p>
-      </article>
-      
-      <div class="blog-related">
-        <h3 class="blog-related-title">Artículos relacionados</h3>
-        <div class="blog-related-articles">
-          <a href="blog-detail-liga-argentina.html" class="related-article-card">
-            <img src="img/blog/escudos.png" alt="Liga Profesional de Fútbol Argentino" class="related-article-img" onerror="this.src='https://via.placeholder.com/300x150?text=Liga+Argentina'">
-            <div class="related-article-content">
-              <h4 class="related-article-title">Historia de la Liga Argentina</h4>
-              <div class="related-article-date"><i class="fas fa-calendar-alt"></i> 27 Julio, 2024</div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>1960</h3>
+                    <p>Primera edición ganada por Peñarol</p>
+                </div>
+                <div class="stat-card">
+                    <h3>27</h3>
+                    <p>Clubes diferentes han sido campeones</p>
+                </div>
+                <div class="stat-card">
+                    <h3>7</h3>
+                    <p>Títulos de Independiente (récord)</p>
+                </div>
+                <div class="stat-card">
+                    <h3>6</h3>
+                    <p>Libertadores consecutivas de Brasil (2019-2024)</p>
+                </div>
             </div>
-          </a>
-          
-          <a href="blog-detail-scaloneta.html" class="related-article-card">
-            <img src="img/blog/scaloni.png" alt="Selección Argentina - La Scaloneta" class="related-article-img" onerror="this.src='https://via.placeholder.com/300x150?text=La+Scaloneta'">
-            <div class="related-article-content">
-              <h4 class="related-article-title">La Scaloneta: Campeones del Mundo</h4>
-              <div class="related-article-date"><i class="fas fa-calendar-alt"></i> 27 Julio, 2024</div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fas fa-globe"></i> Formato Actual 2025</h2>
+            <p>El torneo 2025 mantiene su estructura competitiva con múltiples fases:</p>
+
+            <div class="format-timeline">
+                <div class="timeline-item">
+                    <h4>Fases Preliminares</h4>
+                    <p><strong>Primera Fase:</strong> 6 equipos (febrero)<br>
+                    <strong>Segunda Fase:</strong> 16 equipos (febrero-marzo)<br>
+                    <strong>Tercera Fase:</strong> 8 equipos (marzo)</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Fase de Grupos</h4>
+                    <p>32 equipos divididos en 8 grupos de 4 equipos cada uno (abril-mayo)</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Fase Final</h4>
+                    <p>Octavos, cuartos, semifinales y final (agosto-noviembre)</p>
+                </div>
             </div>
-          </a>
-          
-          <a href="blog-detail-worldcups.html" class="related-article-card">
-            <img src="img/blog/worldcup.jpg" alt="Trofeo de la Copa Mundial de la FIFA" class="related-article-img" onerror="this.src='https://via.placeholder.com/300x150?text=Mundiales+de+Fútbol'">
-            <div class="related-article-content">
-              <h4 class="related-article-title">Historia de los Mundiales</h4>
-              <div class="related-article-date"><i class="fas fa-calendar-alt"></i> 5 Mayo, 2023</div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fas fa-flag"></i> Representación por País 2025</h2>
+            <div class="country-representation">
+                <div class="country-info">
+                    <h4><i class="flag-icon flag-icon-br"></i> Brasil (8 equipos)</h4>
+                    <p>Botafogo (campeón defensor), Flamengo, Palmeiras, Fortaleza, Internacional, São Paulo, Corinthians, Bahia</p>
+                </div>
+                <div class="country-info">
+                    <h4><i class="flag-icon flag-icon-ar"></i> Argentina (7 equipos)</h4>
+                    <p>Racing (campeón Sudamericana), Vélez Sarsfield, Estudiantes, Central Córdoba, Talleres, River Plate, Boca Juniors</p>
+                </div>
+                <div class="country-info">
+                    <h4><i class="flag-icon flag-icon-cl"></i> Chile (4 equipos)</h4>
+                    <p>Colo-Colo, Universidad de Chile, Deportes Iquique, Ñublense</p>
+                </div>
+                <div class="country-info">
+                    <h4><i class="flag-icon flag-icon-co"></i> Colombia (4 equipos)</h4>
+                    <p>Atlético Bucaramanga, Atlético Nacional, Deportes Tolima, Santa Fe</p>
+                </div>
             </div>
-          </a>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fas fa-star"></i> Máximos Ganadores</h2>
+            <div class="champions-list">
+                <div class="champion-item">
+                    <h4>Independiente (Argentina) - 7 títulos</h4>
+                    <p>1964, 1965, 1972, 1973, 1974, 1975, 1984</p>
+                </div>
+                <div class="champion-item">
+                    <h4>Boca Juniors (Argentina) - 6 títulos</h4>
+                    <p>1977, 1978, 2000, 2001, 2003, 2007</p>
+                </div>
+                <div class="champion-item">
+                    <h4>Peñarol (Uruguay) - 5 títulos</h4>
+                    <p>1960, 1961, 1966, 1982, 1987</p>
+                </div>
+                <div class="champion-item">
+                    <h4>River Plate (Argentina) - 4 títulos</h4>
+                    <p>1986, 1996, 2015, 2018</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fas fa-chart-line"></i> Tendencias Actuales</h2>
+            <p>El fútbol sudamericano en la Libertadores ha evolucionado significativamente:</p>
+
+            <div class="trends-grid">
+                <div class="trend-card">
+                    <h4>Dominio Brasileño Reciente</h4>
+                    <p>Brasil ha ganado 6 Libertadores consecutivas (2019-2024), demostrando la fortaleza de su fútbol</p>
+                </div>
+                <div class="trend-card">
+                    <h4>Inversión en Infraestructura</h4>
+                    <p>Los clubes han mejorado sus estadios y centros de entrenamiento para competir al máximo nivel</p>
+                </div>
+                <div class="trend-card">
+                    <h4>Desarrollo de Juveniles</h4>
+                    <p>Mayor énfasis en las divisiones menores para formar talentos que brillen en el torneo</p>
+                </div>
+                <div class="trend-card">
+                    <h4>Tecnología y Análisis</h4>
+                    <p>Uso del VAR y análisis de datos para mejorar el rendimiento y la justicia deportiva</p>
         </div>
       </div>
-      
-      <div class="blog-footer">
-        <a href="blog.html" class="back-to-blog-btn"><i class="fas fa-arrow-left"></i> Volver al Blog</a>
-        <div class="social-share">
-          <a href="https://www.facebook.com/sharer/sharer.php?u=https://cracktotal.com/blog-detail-libertadores.html" target="_blank" rel="noopener noreferrer" class="social-share-btn" title="Compartir en Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://twitter.com/intent/tweet?url=https://cracktotal.com/blog-detail-libertadores.html&text=Historia%20de%20la%20Copa%20Libertadores%20-%20Crack%20Total%20https://cracktotal.com/blog-detail-libertadores.html" target="_blank" rel="noopener noreferrer" class="social-share-btn" title="Compartir en Twitter"><i class="fab fa-twitter"></i></a>
-          <a href="https://api.whatsapp.com/send?text=Historia%20de%20la%20Copa%20Libertadores%20-%20Crack%20Total%20https://cracktotal.com/blog-detail-libertadores.html" target="_blank" rel="noopener noreferrer" class="social-share-btn" title="Compartir en WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fas fa-calendar"></i> Calendario 2025</h2>
+            <div class="calendar-info">
+                <div class="calendar-phase">
+                    <h4>Febrero-Marzo: Fases Preliminares</h4>
+                    <p>Los equipos luchan por clasificar a la fase de grupos en emocionantes eliminatorias</p>
+                </div>
+                <div class="calendar-phase">
+                    <h4>Abril-Mayo: Fase de Grupos</h4>
+                    <p>32 equipos divididos en 8 grupos buscan su lugar en octavos de final</p>
+                </div>
+                <div class="calendar-phase">
+                    <h4>Agosto-Noviembre: Fase Final</h4>
+                    <p>Las llaves eliminatorias culminan con la gran final en Lima, Perú</p>
         </div>
       </div>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fas fa-trophy"></i> Premios y Reconocimientos</h2>
+            <p>El campeón de la Copa Libertadores 2025 obtendrá:</p>
+            <ul class="rewards-list">
+                <li><strong>Premio económico:</strong> $18 millones de dólares</li>
+                <li><strong>Copa FIFA Intercontinental 2025</strong></li>
+                <li><strong>Mundial de Clubes FIFA 2029</strong></li>
+                <li><strong>Recopa Sudamericana 2026</strong></li>
+                <li><strong>Clasificación directa a Libertadores 2026</strong></li>
+            </ul>
+        </section>
+
+        <section class="content-section">
+            <h2><i class="fas fa-heart"></i> Pasión Continental</h2>
+            <p>La Copa Libertadores trasciende el deporte. Es pasión, historia, tradición y el sueño de millones de hinchas sudamericanos. Cada gol, cada victoria, cada título escriben páginas doradas en la historia del fútbol continental.</p>
+
+            <div class="final-message">
+                <p><strong>"La Copa se mira y se toca"</strong> - después de décadas donde parecía exclusiva del Atlántico, equipos del Pacífico como Colo-Colo, Atlético Nacional y LDU también la han conquistado, demostrando que la gloria continental es para toda Sudamérica.</p>
+            </div>
+        </section>
     </div>
+
+    <div class="related-articles">
+        <h3><i class="fas fa-newspaper"></i> Artículos Relacionados</h3>
+        <div class="related-grid">
+            <a href="blog-detail-liga-argentina.html" class="related-card">
+                <h4>Historia de la Liga Argentina</h4>
+                <p>El desarrollo del fútbol profesional argentino</p>
+            </a>
+            <a href="blog-detail-scaloneta.html" class="related-card">
+                <h4>La Scaloneta: Campeones del Mundo</h4>
+                <p>El camino hacia la gloria mundial</p>
+            </a>
+            <a href="blog-detail-estilos-juego.html" class="related-card">
+                <h4>Estilos de Juego en el Fútbol</h4>
+                <p>Del Catenaccio al Tiki-Taka</p>
+            </a>
+        </div>
+    </div>
+  </main>
     
     <div class="adsense-container">
       <div class="ad-label">PUBLICIDAD</div>
@@ -730,9 +770,7 @@
             <a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a>
             <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
           </div>
-          <!-- Botón Compartir Insertado -->
           <button class="footer-share-button" onclick="shareSite()"><i class="fas fa-share-alt"></i> Compartir</button>
-          <!-- Fin Botón Compartir -->
            <div class="footer-copyright">
              &copy; 2025 Crack Total. Todos los derechos reservados. 
            </div>
@@ -742,7 +780,6 @@
         // Placeholder for potential future share button logic at footer
         // const shareButton = document.getElementById('footer-share-button');
     </script>
-  </main>
 </body>
 </html> 
 

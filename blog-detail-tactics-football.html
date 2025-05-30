@@ -94,244 +94,331 @@
     </script>
 
   <style>
-    .blog-detail-screen {
-      background: linear-gradient(135deg, #0b132b 0%, #1c2a5a 100%);
+    body {
+        background: linear-gradient(135deg, #0d1421 0%, #1a1a2e 50%, #16213e 100%);
+        color: #e8eaed;
+        font-family: 'Montserrat', sans-serif;
       min-height: 100vh;
-      padding: 40px 0;
+        background-attachment: fixed;
+    }
+    
+    .blog-detail-header {
+        text-align: center;
+        padding: 2.5rem 1rem;
+        background: linear-gradient(rgba(12, 20, 38, 0.92), rgba(26, 26, 46, 0.95)), url('img/blog/tacticas.jpg');
+        background-size: cover;
+        background-position: center;
+        border-bottom: 4px solid #27ae60;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .blog-detail-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(231, 76, 60, 0.05) 0%, transparent 100%);
+        pointer-events: none;
+    }
+
+    .blog-detail-header .title-text {
+        color: #fff;
+        font-family: 'Oswald', sans-serif;
+        font-size: 3rem;
+        margin-bottom: 0.75rem;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        position: relative;
+        z-index: 1;
+    }
+
+    .blog-detail-header .subtitle {
+        color: #b3b8bd;
+        font-size: 1.2rem;
+        position: relative;
+        z-index: 1;
     }
     
     .blog-detail-container {
       max-width: 900px;
-      margin: 0 auto;
-      padding: 40px;
-      background: rgba(15, 23, 42, 0.8);
-      border-radius: 20px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(59, 130, 246, 0.2);
-      color: white;
+        margin: 2.5rem auto;
+        padding: 2.5rem;
+        background: linear-gradient(150deg, rgba(26, 26, 46, 0.95), rgba(13, 20, 33, 0.98));
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(231, 76, 60, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .blog-detail-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #e74c3c, transparent);
+        opacity: 0.6;
     }
     
-    .blog-detail-img-container {
-      width: 100%;
-      height: 400px;
-      overflow: hidden;
-      border-radius: 15px;
-      margin: 0 0 30px;
+    .blog-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px 25px;
+        color: #8a92a6;
+        font-size: 0.95em;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(231, 76, 60, 0.2);
+    }
+
+    .blog-meta span {
+        background: rgba(231, 76, 60, 0.05);
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .blog-meta span:hover {
+        background: rgba(231, 76, 60, 0.1);
+        transform: translateY(-1px);
     }
     
-    .blog-detail-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: all 0.5s ease;
+    .blog-meta span i {
+        margin-right: 8px;
+        color: #e74c3c;
     }
     
-    .blog-detail-img:hover {
-      transform: none;
-    }
-    
-    .blog-detail-content {
+    .blog-content p {
+        margin-bottom: 1.5rem;
       line-height: 1.8;
-      margin-bottom: 40px;
-      font-size: 17px;
+        color: #c4c7cc;
+        font-size: 1.05rem;
+        text-align: justify;
     }
     
-    .blog-detail-content p {
-      margin-bottom: 20px;
-      color: rgba(255, 255, 255, 0.9);
+    .blog-content h2, .blog-content h3, .blog-content h4 {
+        font-family: 'Oswald', sans-serif;
+        margin: 2.5rem 0 1.25rem;
+        color: #f1f3f4;
+        position: relative;
+        padding-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: color 0.3s ease;
     }
-    
-    .blog-detail-content h2 {
-      font-size: 26px;
-      font-weight: 700;
-      margin: 40px 0 20px;
-      color: #ffffff;
-      position: relative;
-      padding-bottom: 10px;
+
+    .blog-content h2:hover, .blog-content h3:hover, .blog-content h4:hover {
+        color: #e74c3c;
     }
+
+    .blog-content h2 { font-size: 2.1rem; }
+    .blog-content h3 { font-size: 1.8rem; }
+    .blog-content h4 { font-size: 1.5rem; }
     
-    .blog-detail-content h2::after {
+    .blog-content h2::after, .blog-content h3::after, .blog-content h4::after {
       content: '';
       position: absolute;
       bottom: 0;
       left: 0;
       width: 60px;
-      height: 3px;
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-      border-radius: 2px;
+        height: 4px;
+        background: linear-gradient(90deg, #e74c3c, #f39c12);
+        border-radius: 3px;
+        box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+        transition: width 0.3s ease;
     }
-    
-    .blog-detail-content ul, .blog-detail-content ol {
-      margin-bottom: 20px;
-      padding-left: 20px;
+
+    .blog-content h2:hover::after, .blog-content h3:hover::after, .blog-content h4:hover::after {
+        width: 80px;
     }
-    
-    .blog-detail-content li {
-      margin-bottom: 10px;
-      color: rgba(255, 255, 255, 0.9);
+
+    .blog-content strong {
+        color: #e74c3c;
+        font-weight: 700;
+        text-shadow: 0 1px 3px rgba(231, 76, 60, 0.3);
     }
-    
-    .blog-detail-content a {
-      color: #3b82f6;
-      text-decoration: none;
-      transition: color 0.3s ease;
+
+    .tactical-era, .formation-section, .modern-trends, .coach-spotlight, .trend-analysis {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
     }
-    
-    .blog-detail-content a:hover {
-      color: #1d4ed8;
-      text-decoration: underline;
+
+    .tactical-era:hover, .formation-section:hover, .modern-trends:hover, .coach-spotlight:hover, .trend-analysis:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
     }
-    
-    .tactical-diagram {
-      background-color: rgba(0, 30, 60, 0.6);
-      border: 1px solid rgba(100, 150, 255, 0.3);
-      border-radius: 10px;
-      padding: 20px;
-      margin: 30px 0;
+
+    .tactical-era {
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.12), rgba(243, 156, 18, 0.08));
+        border-left: 4px solid #e74c3c;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
-    
-    .tactical-diagram img {
-      display: block;
-      max-width: 100%;
-      margin: 0 auto;
+
+    .formation-section {
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(26, 26, 46, 0.15));
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border: 1px solid rgba(46, 204, 113, 0.25);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
-    
-    .tactical-diagram figcaption {
-      text-align: center;
-      font-style: italic;
-      color: rgba(255, 255, 255, 0.7);
-      font-size: 14px;
-      margin-top: 10px;
+
+    .modern-trends {
+        background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(26, 26, 46, 0.15));
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border: 1px solid rgba(155, 89, 182, 0.25);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
-    
-    .tactics-comparison {
+
+    .trend-analysis {
+        background: linear-gradient(135deg, rgba(241, 196, 15, 0.1), rgba(26, 26, 46, 0.15));
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border: 1px solid rgba(241, 196, 15, 0.25);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .coach-spotlight {
+        background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(26, 26, 46, 0.15));
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border: 1px solid rgba(52, 152, 219, 0.25);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .stats-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin: 30px 0;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
     }
-    
-    .blog-related-articles {
-      margin-top: 50px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 30px;
-    }
-    
-    .related-article-title {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 30px;
-      color: white;
+
+    .stat-card {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(13, 20, 33, 0.9));
+        padding: 1rem;
+        border-radius: 8px;
       text-align: center;
+        border: 1px solid rgba(231, 76, 60, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
-    
-    .related-article-card {
-      background: rgba(30, 41, 59, 0.7);
-      border-radius: 15px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(59, 130, 246, 0.2);
+
+    .stat-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        border-color: #e74c3c;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
       height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(231, 76, 60, 0.1), transparent);
+        transition: left 0.5s ease;
     }
-    
-    .related-article-card:hover {
-      transform: none;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+
+    .stat-card:hover::before {
+        left: 100%;
     }
-    
-    .related-article-img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
+
+    .stat-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #e74c3c;
+        text-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+        position: relative;
+        z-index: 1;
+        margin-bottom: 0.5rem;
     }
-    
-    .related-article-content {
-      padding: 20px;
+
+    .stat-description {
+        color: #b3b8bd;
+        font-size: 0.9rem;
     }
-    
-    .related-article-content h3 {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: white;
+
+    .related-articles {
+        margin-top: 3rem;
+        padding-top: 2rem;
+        border-top: 2px solid rgba(231, 76, 60, 0.2);
     }
-    
-    .related-article-content p {
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.7);
-      margin-bottom: 15px;
+
+    .related-articles h3 {
+        font-family: 'Oswald', sans-serif;
+        font-size: 1.5rem;
+        color: #f8fafc;
+        margin-bottom: 1.25rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
-    
-    .related-article-date {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.6);
-      display: flex;
-      align-items: center;
-      gap: 5px;
+
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
     }
-    
-    .back-to-blog-btn {
-      background: linear-gradient(90deg, #3b82f6, #2563eb);
-      color: white;
-      padding: 12px 25px;
+
+    .related-card {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(13, 20, 33, 0.8));
+        padding: 1.5rem;
       border-radius: 10px;
-      font-size: 16px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: none;
-      cursor: pointer;
+        border: 1px solid rgba(231, 76, 60, 0.2);
       transition: all 0.3s ease;
       text-decoration: none;
-      margin: 40px auto 0;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        color: inherit;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        position: relative;
+        overflow: hidden;
     }
-    
-    .back-to-blog-btn:hover {
-      background: linear-gradient(90deg, #2563eb, #1d4ed8);
-      transform: none;
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+
+    .related-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(231, 76, 60, 0.05), transparent);
+        transition: left 0.6s ease;
+    }
+
+    .related-card:hover::before {
+        left: 100%;
+    }
+
+    .related-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        border-color: #e74c3c;
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.15), rgba(26, 26, 46, 0.9));
     }
     
     @media (max-width: 768px) {
-      .tactics-comparison {
-        grid-template-columns: 1fr;
+        .blog-detail-header .title-text {
+            font-size: 2.2rem;
       }
       
       .blog-detail-container {
-        padding: 25px;
-        margin: 0 15px;
-      }
-      
-      .blog-detail-title {
-        font-size: 30px;
-      }
-      
-      .blog-detail-img-container {
-        height: 250px;
-      }
-      
-      .blog-detail-content {
-        font-size: 16px;
-      }
-      
-      .blog-related-articles {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .blog-detail-header {
-      text-align: center;
-      padding: 2.5rem 1rem;
-      background: linear-gradient(rgba(12, 20, 38, 0.92), rgba(26, 26, 46, 0.95)), url('img/blog/tacticas.jpg');
-      background-size: cover;
-      background-position: center;
-      border-bottom: 4px solid #9b59b6;
-      position: relative;
-      overflow: hidden;
+            margin: 1rem;
+            padding: 1.5rem;
+        }
     }
   </style>
 </head>
@@ -339,11 +426,11 @@
     <!-- Skip Link para accesibilidad -->
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
-  <nav class="main-navigation" role="navigation" aria-label="NavegaciÃ³n principal">
+    <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
         <a href="index.html" class="nav-logo" aria-label="Crack Total - Inicio">
             Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
         </a>
-        <button class="nav-toggle" aria-label="Abrir menÃº de navegaciÃ³n" aria-expanded="false">
+        <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
             <i class="fas fa-bars" aria-hidden="true"></i>
         </button>
         <ul>
@@ -357,132 +444,261 @@
             <li><a href="contact.html" aria-label="Contactar con nosotros"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a></li>
         </ul>
     </nav>
+    
     <div class="breadcrumbs-container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Inicio</a></li>
-                <li class="breadcrumb-item"><a href="blog.html">Blog</a></li>
-                <li class="breadcrumb-item active" aria-current="page">ArtÃ­culo</li>
+                <li class="breadcrumb-item"><a href="/blog.html">Blog</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Evolución Táctica del Fútbol</li>
             </ol>
         </nav>
-    </div><!-- Header Inserted -->
-  <header class="app-header">
-    <div class="logo-animation">
-        <i class="fas fa-futbol ball-icon bounce"></i>
     </div>
-    <a href="games.html" class="title-link">
-        <p class="title-text">Crack Total</p>
-    </a>
-    <p class="subtitle">Noticias, artículos y curiosidades sobre el mundo del fútbol</p>
+
+    <header class="blog-detail-header">
+        <h1 class="title-text">La Evolución Táctica del Fútbol</h1>
+        <p class="subtitle">Del WM al Tiki-Taka y las Tendencias Modernas de 2025</p>
   </header>
 
-  <main class="blog-detail-screen page-container" id="main-content">
-    <div class="blog-detail-container content-container">
-      <div class="blog-detail-img-container">
-        <img src="img/blog/tacticas.jpg" alt="Pizarrón con tácticas de fútbol" class="blog-detail-img" loading="lazy" onerror="this.src='https://via.placeholder.com/800x400?text=Tácticas+de+Fútbol'">
+    <main id="main-content" class="blog-detail-container">
+        <div class="blog-meta">
+            <span><i class="fas fa-calendar-alt"></i> 30 Enero, 2025</span>
+            <span><i class="fas fa-clock"></i> 12 min de lectura</span>
+            <span><i class="fas fa-tag"></i> Tácticas</span>
+            <span><i class="fas fa-user"></i> Por Crack Total</span>
       </div>
       
-      <article class="blog-detail-content">
-        <p>El fútbol, como cualquier otro deporte, ha experimentado una profunda evolución a lo largo de su historia. Desde sus inicios como un juego relativamente desorganizado hasta convertirse en una disciplina altamente estratégica y táctica, los sistemas de juego han ido transformándose para adaptarse a nuevas filosofías, contextos y necesidades competitivas.</p>
-        
-        <h2>El origen: la Pirámide (2-3-5)</h2>
-        <p>A finales del siglo XIX y principios del XX, la formación dominante era la llamada "Pirámide" o 2-3-5. Como su nombre indica, consistía en dos defensores, tres mediocampistas y cinco delanteros. Esta disposición ofensiva reflejaba la mentalidad de la época: el fútbol era primordialmente un deporte de ataque y espectáculo.</p>
-        
-        <p>Este sistema fue utilizado con éxito por equipos como el Preston North End, que en 1889 se convirtió en el primer equipo en lograr el "doblete" (liga y copa) en Inglaterra sin perder un solo partido.</p>
-        
-        <h2>La revolución del WM (3-2-2-3)</h2>
-        <p>La siguiente gran revolución táctica llegó de la mano de Herbert Chapman, entrenador del Arsenal en los años 20 y 30. Chapman desarrolló el sistema "WM" (3-2-2-3) como respuesta a un cambio en la regla del fuera de juego en 1925.</p>
-        
-        <p>La modificación de esta regla (pasó de requerirse tres defensores a solo dos para habilitar a un atacante) hizo que el sistema 2-3-5 fuera demasiado vulnerable. Chapman retrasó a un delantero para formar una línea de tres mediocampistas defensivos, creando así la formación que, vista desde arriba, parecía formar las letras W y M.</p>
-        
-        <p>Este sistema dominó el fútbol durante casi tres décadas y fue la base del éxito del Arsenal, que conquistó cinco ligas y dos copas entre 1930 y 1938.</p>
-        
-        <h2>El Catenaccio (1-3-3-3)</h2>
-        <p>En los años 50 y 60, el fútbol italiano desarrolló el "Catenaccio" (cerrojo en italiano), un sistema ultra defensivo caracterizado por el uso del "libero" o defensa libre que se situaba por detrás de la línea defensiva.</p>
-        
-        <p>Helenio Herrera perfeccionó este sistema en el Inter de Milán, creando un equipo que priorizaba la solidez defensiva y los contraataques rápidos. El Inter ganó dos Copas de Europa consecutivas (1964 y 1965) con este enfoque táctico que muchos criticaron por ser demasiado conservador, pero que resultó tremendamente efectivo.</p>
-        
-        <h2>Fútbol Total (4-3-3)</h2>
-        <p>La siguiente revolución vino de los Países Bajos en los años 70. El Ajax de Ámsterdam y la selección holandesa, liderados por Johan Cruyff como jugador y Rinus Michels como entrenador, desarrollaron el concepto de "Fútbol Total".</p>
-        
-        <p>Este estilo, basado en el 4-3-3, se caracterizaba por la flexibilidad posicional, la presión alta y la constante rotación de jugadores. La idea era que cualquier jugador podía asumir el rol de cualquier otro durante el partido, creando un sistema fluido y difícil de defender.</p>
-        
-        <p>Aunque la selección holandesa no ganó el Mundial (perdieron las finales de 1974 y 1978), su estilo revolucionó el fútbol y sentó las bases para muchos sistemas modernos.</p>
-        
-        <h2>La era del 4-4-2</h2>
-        <p>Durante los años 80 y 90, el 4-4-2 se convirtió en la formación dominante a nivel mundial. Este sistema, balanceado entre defensa y ataque, ofrecía solidez defensiva sin renunciar a la capacidad ofensiva.</p>
-        
-        <p>El AC Milan de Arrigo Sacchi perfeccionó este sistema con su famosa defensa de cuatro (Tassotti, Costacurta, Baresi y Maldini) y su presión coordinada en todo el campo. El Milan ganó dos Copas de Europa consecutivas (1989 y 1990) con un fútbol que combinaba excelencia defensiva con una presión alta y ataques verticales.</p>
-        
-        <h2>Tiki-Taka y Posesión (4-3-3 / 4-5-1)</h2>
-        <p>A principios del siglo XXI, el Barcelona de Pep Guardiola revolucionó nuevamente el fútbol con el llamado "Tiki-Taka", un estilo basado en la posesión extrema, pases cortos y la presión inmediata tras perder el balón.</p>
-        
-        <p>Con un 4-3-3 que a menudo funcionaba como un 4-5-1 en fase defensiva, el Barcelona dominó el fútbol europeo entre 2008 y 2012, ganando dos tripletes históricos. La selección española adaptó este estilo para ganar de forma consecutiva la Eurocopa 2008, el Mundial 2010 y la Eurocopa 2012.</p>
-        
-        <p>Este sistema, que privilegiaba el control del partido a través de la posesión del balón, cambió la forma de entender el juego y elevó la importancia de mediocampistas técnicos como Xavi e Iniesta.</p>
-        
-        <p>Este estilo ha evolucionado a formaciones como el 4-3-3 o el 4-2-3-1, pero su esencia está en la intensidad, la presión alta y las transiciones verticales rápidas una vez recuperado el balón.</p>
-        
-        <h2>Gegenpressing y Transiciones Rápidas</h2>
-        <p>La más reciente evolución táctica ha sido el "Gegenpressing" o contrapresión, popularizado por entrenadores alemanes como Jürgen Klopp. Este sistema se basa en recuperar el balón inmediatamente después de perderlo, cuando el rival está aún desorganizado.</p>
-        
-        <p>El Borussia Dortmund de Klopp utilizó este enfoque para ganar dos Bundesligas consecutivas (2011 y 2012) contra el poderoso Bayern Múnich. Posteriormente, Klopp llevó esta filosofía al Liverpool, ganando la Champions League en 2019 y la Premier League en 2020.</p>
-        
-        <h2>La Actualidad: Flexibilidad y Adaptación</h2>
-        <p>El fútbol contemporáneo se caracteriza por su flexibilidad táctica. Los mejores equipos ya no se ciñen a un solo sistema, sino que adaptan su formación y estilo según el rival, el momento del partido o las circunstancias.</p>
-        
-        <p>Entrenadores como Pep Guardiola, Jürgen Klopp, Carlo Ancelotti o Diego Simeone representan diferentes filosofías tácticas, pero todos comparten la capacidad de adaptar sus sistemas y encontrar soluciones específicas para cada desafío.</p>
-        
-        <p>La evolución táctica del fútbol es un proceso continuo que refleja los cambios en la preparación física, la tecnología, las reglas y la comprensión del juego. Lo que no cambia es la búsqueda constante de la ventaja competitiva a través de la innovación táctica y estratégica.</p>
-      </article>
-      
-      <div class="blog-related-articles">
-        <h3 class="related-article-title">Artículos Relacionados</h3>
-        
-        <div class="related-article-card">
-          <img src="img/blog/legends.jpg" alt="Leyendas del Fútbol" class="related-article-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x150?text=Leyendas+del+Fútbol'">
-          <div class="related-article-content">
-            <h3>Leyendas del Fútbol</h3>
-            <p>Un recorrido por las carreras de los mejores jugadores de todos los tiempos.</p>
-            <span class="related-article-date"><i class="fas fa-calendar-alt"></i> 28 Abril, 2023</span>
+        <div class="blog-content">
+            <p>El <strong>fútbol moderno de 2025</strong> representa la culminación de más de un siglo de evolución táctica, donde las estrategias han evolucionado desde formaciones primitivas hasta sistemas complejos que integran análisis de datos, inteligencia artificial y filosofías revolucionarias. Esta fascinante transformación nos lleva desde los orígenes del juego hasta las tendencias más innovadoras que definen el deporte rey en la actualidad.</p>
+
+            <p>Desde la histórica formación WM hasta el <strong>gegenpressing de Klopp</strong> y el <strong>juego posicional de Guardiola</strong>, cada era ha aportado elementos únicos que continúan influyendo en el fútbol contemporáneo, creando un tapiz táctico rico y diverso que se renueva constantemente.</p>
+
+            <h2>Los Pioneros: Formaciones Históricas y su Legado</h2>
+
+            <div class="tactical-era">
+                <h3>La Pirámide (2-3-5): Los Cimientos del Fútbol Moderno</h3>
+                <p>La formación piramidal de finales del siglo XIX estableció los fundamentos tácticos del fútbol. Con <strong>dos defensores, tres mediocampistas y cinco delanteros</strong>, esta formación priorizaba el ataque directo y la superioridad numérica ofensiva.</p>
+                
+                <h4>Características Principales:</h4>
+                <ul>
+                    <li><strong>Filosofía ofensiva:</strong> Máxima prioridad al ataque con cinco delanteros</li>
+                    <li><strong>Simplicidad táctica:</strong> Roles definidos sin rotaciones complejas</li>
+                    <li><strong>Dominio físico:</strong> Basada en la fuerza y velocidad individual</li>
+                    <li><strong>Legado:</strong> Estableció la importancia del balance numérico</li>
+                </ul>
+            </div>
+
+            <div class="formation-section">
+                <h3>El Sistema WM (3-2-2-3): La Primera Revolución</h3>
+                <p>Desarrollada por <strong>Herbert Chapman</strong> en el Arsenal de los años 1920, la formación WM revolucionó el fútbol al introducir conceptos de equilibrio táctico y especialización posicional que perduran hasta hoy.</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-title">3 Defensores</div>
+                        <div class="stat-description">Mayor solidez defensiva</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">2 Mediocentros</div>
+                        <div class="stat-description">Control del centro del campo</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">5 Atacantes</div>
+                        <div class="stat-description">Versatilidad ofensiva</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>La Era del Catenaccio: Revolución Defensiva Italiana</h2>
+
+            <div class="tactical-era">
+                <h3>Helenio Herrera y la Filosofía del "Cerrojo"</h3>
+                <p>El <strong>Catenaccio</strong> de los años 1960 transformó la mentalidad futbolística al demostrar que la solidez defensiva podía ser tan espectacular como el ataque. <strong>Helenio Herrera</strong> en el Inter de Milán perfeccionó este sistema que influyó profundamente en el fútbol italiano.</p>
+
+                <h4>Innovaciones del Catenaccio:</h4>
+                <ul>
+                    <li><strong>El Líbero:</strong> Defensor libre detrás de la línea defensiva</li>
+                    <li><strong>Marcaje individual:</strong> Cada atacante rival tenía un marcador asignado</li>
+                    <li><strong>Contraataques letales:</strong> Transiciones rápidas tras recuperar el balón</li>
+                    <li><strong>Disciplina táctica:</strong> Movimientos coordinados y precisos</li>
+                </ul>
+            </div>
+
+            <h2>El Fútbol Total: La Revolución Holandesa</h2>
+
+            <div class="coach-spotlight">
+                <h3>Rinus Michels y Johan Cruyff: Visionarios del Juego Moderno</h3>
+                <p>El <strong>Fútbol Total</strong> holandés de los años 1970 revolucionó el deporte al introducir conceptos de <strong>intercambio posicional</strong>, <strong>pressing coordinado</strong> y <strong>polivalencia técnica</strong> que siguen siendo fundamentales en 2025.</p>
+
+                <h4>Principios del Fútbol Total:</h4>
+                <p><strong>Intercambio de posiciones:</strong> Cualquier jugador podía ocupar cualquier posición según las necesidades del juego, creando superioridades numéricas constantes.</p>
+                <p><strong>Pressing colectivo:</strong> Recuperación inmediata del balón tras pérdida, antecedente directo del gegenpressing moderno.</p>
+                <p><strong>Uso del espacio:</strong> Amplitud y profundidad calculadas para estirar las defensas rivales.</p>
+            </div>
+
+            <h2>La Era Moderna: Guardiola, Klopp y la Síntesis Táctica</h2>
+
+            <div class="modern-trends">
+                <h3>Pep Guardiola: El Maestro del Juego Posicional</h3>
+                <p>La filosofía de <strong>Guardiola</strong> ha definido la última década del fútbol mundial, estableciendo el <strong>juego posicional</strong> como el paradigma dominante. Su evolución desde el Barcelona hasta el Manchester City ha marcado tendencias globales.</p>
+
+                <div class="tactical-era">
+                    <h4>Principios Guardiolistas 2025:</h4>
+                    <ul>
+                        <li><strong>Superioriades numéricas:</strong> Crear ventajas de 2v1 en zonas específicas</li>
+                        <li><strong>Amplitud controlada:</strong> Estiramiento horizontal sin perder compacidad</li>
+                        <li><strong>Rotaciones dinámicas:</strong> Intercambios posicionales para desequilibrar</li>
+                        <li><strong>Pressing inteligente:</strong> Presión selectiva según contexto del partido</li>
+                    </ul>
+                </div>
+
+                <h3>Jürgen Klopp: El Revolucionario del Gegenpressing</h3>
+                <p>El <strong>gegenpressing</strong> de Klopp ha demostrado que la intensidad puede coexistir con la técnica, creando un estilo que combina recuperación inmediata con transiciones explosivas.</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-title">6 Segundos</div>
+                        <div class="stat-description">Tiempo límite para pressing tras pérdida</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">3 Jugadores</div>
+                        <div class="stat-description">Mínimo para pressing efectivo</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">40% Más</div>
+                        <div class="stat-description">Recuperaciones en campo rival vs. sistemas tradicionales</div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Tendencias Tácticas de 2025: La Nueva Era</h2>
+
+            <div class="trend-analysis">
+                <h3>El Fin de los Ideólogos: Pragmatismo y Flexibilidad</h3>
+                <p>Según los análisis más recientes, <strong>2025 marca el fin de la era de los ideólogos tácticos</strong>. Los entrenadores exitosos ahora priorizan la <strong>adaptabilidad</strong> y el <strong>pragmatismo</strong> sobre la rigidez doctrinal.</p>
+
+                <h4>Características del Fútbol 2025:</h4>
+                <ul>
+                    <li><strong>Síntesis táctica:</strong> Combinación de elementos guardiolistas y kloppistas</li>
+                    <li><strong>Variaciones menores:</strong> Ajustes específicos del modelo base</li>
+                    <li><strong>Flexibilidad adaptativa:</strong> Cambios tácticos según el rival</li>
+                    <li><strong>Dominio español:</strong> Entrenadores hispanos lideran las principales ligas</li>
+                </ul>
+            </div>
+
+            <div class="coach-spotlight">
+                <h3>Los Nuevos Maestros: Arteta, Iraola, Emery</h3>
+                <p>La nueva generación de entrenadores españoles ha tomado el relevo, desarrollando <strong>variaciones sofisticadas</strong> del modelo Guardiola que integran elementos pragmáticos modernos.</p>
+
+                <h4>Mikel Arteta (Arsenal):</h4>
+                <p>Evolución del guardiolismo con mayor directividad y eficacia en balones parados.</p>
+
+                <h4>Andoni Iraola (Bournemouth):</h4>
+                <p>Pressing inteligente combinado con transiciones rápidas y juego vertical.</p>
+
+                <h4>Unai Emery (Aston Villa):</h4>
+                <p>Adaptabilidad táctica extrema con sistemas múltiples según contexto.</p>
           </div>
+
+            <h2>Innovaciones Tácticas Contemporáneas</h2>
+
+            <div class="modern-trends">
+                <h3>La Crisis del Juego Desde Atrás</h3>
+                <p>Una de las tendencias más significativas de 2025 es el <strong>cuestionamiento del juego desde atrás</strong>. Los equipos han desarrollado trampas de pressing tan sofisticadas que la salida corta se ha vuelto contraproducente para muchos equipos.</p>
+
+                <div class="tactical-era">
+                    <h4>Problemas Identificados:</h4>
+                    <ul>
+                        <li><strong>Pressing traps:</strong> Equipos rival inducen pases para crear pressing</li>
+                        <li><strong>Pérdidas costosas:</strong> Balones perdidos cerca del área propia</li>
+                        <li><strong>Falta de alternativas:</strong> Dificultad para variar según contexto</li>
+                        <li><strong>Previsibilidad:</strong> Patrones repetitivos fáciles de leer</li>
+                    </ul>
         </div>
         
-        <div class="related-article-card">
-          <img src="img/blog/worldcup.jpg" alt="Mundiales de Fútbol" class="related-article-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x150?text=Mundiales+de+Fútbol'">
-          <div class="related-article-content">
-            <h3>Historia de los Mundiales</h3>
-            <p>Momentos legendarios de la Copa del Mundo desde 1930 hasta 2022.</p>
-            <span class="related-article-date"><i class="fas fa-calendar-alt"></i> 5 Mayo, 2023</span>
+                <h3>El Regreso de los "Grandes Nueves"</h3>
+                <p>Paradójicamente, <strong>2025 está presenciando el regreso de los delanteros tradicionales</strong>. Jugadores como Chris Wood, antes considerados anacronismos, ahora representan el futuro por su eficacia ante defensas ultra-organizadas.</p>
           </div>
+
+            <div class="formation-section">
+                <h3>Rotaciones de Centrales al Mediocampo</h3>
+                <p>Una innovación táctica fascinante de 2025 es la <strong>rotación dinámica de defensores centrales hacia el mediocampo</strong>, popularizada por equipos como Bologna de Thiago Motta.</p>
+
+                <h4>Ventajas de esta Innovación:</h4>
+                <ul>
+                    <li><strong>Superioridad numérica:</strong> Creación de ventajas en el centro del campo</li>
+                    <li><strong>Jugador libre:</strong> Central sin marca en zona media</li>
+                    <li><strong>Apertura de líneas:</strong> Espacios para pases progresivos</li>
+                    <li><strong>Dinamismo:</strong> Movimientos impredecibles para el rival</li>
+                </ul>
         </div>
         
-        <div class="related-article-card">
-          <img src="img/blog/messi-evolution.jpg" alt="Evolución de Messi" class="related-article-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x150?text=Evolución+de+Messi'">
-          <div class="related-article-content">
-            <h3>La Evolución de Lionel Messi</h3>
-            <p>El camino del astro argentino desde La Masía hasta Qatar 2022.</p>
-            <span class="related-article-date"><i class="fas fa-calendar-alt"></i> 20 Abril, 2023</span>
+            <h2>El Futuro del Fútbol: Hacia Dónde Vamos</h2>
+
+            <div class="trend-analysis">
+                <h3>Integración de Datos e Inteligencia Artificial</h3>
+                <p>El <strong>análisis de datos</strong> ha revolucionado la toma de decisiones tácticas, permitiendo ajustes precisos basados en métricas avanzadas que van más allá de la posesión tradicional.</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-title">Expected Goals</div>
+                        <div class="stat-description">Calidad real de las ocasiones</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Progressive Passes</div>
+                        <div class="stat-description">Pases que acercan al gol</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">PPDA</div>
+                        <div class="stat-description">Intensidad del pressing defensivo</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Field Tilt</div>
+                        <div class="stat-description">Control territorial avanzado</div>
           </div>
         </div>
       </div>
       
-      <div class="blog-footer">
-        <a href="blog.html" class="back-to-blog-btn"><i class="fas fa-arrow-left"></i> Volver al Blog</a>
-        <div class="social-share">
-          <a href="https://www.facebook.com/sharer/sharer.php?u=https://cracktotal.com/blog-detail-tactics-football.html" target="_blank" rel="noopener noreferrer" class="social-share-btn" title="Compartir en Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://twitter.com/intent/tweet?url=https://cracktotal.com/blog-detail-tactics-football.html&text=Evoluci%C3%B3n%20t%C3%A1ctica%20del%20f%C3%BAtbol%20moderno%20-%20Crack%20Total%20https://cracktotal.com/blog-detail-tactics-football.html" target="_blank" rel="noopener noreferrer" class="social-share-btn" title="Compartir en Twitter"><i class="fab fa-twitter"></i></a>
-          <a href="https://api.whatsapp.com/send?text=Evoluci%C3%B3n%20t%C3%A1ctica%20del%20f%C3%BAtbol%20moderno%20-%20Crack%20Total%20https://cracktotal.com/blog-detail-tactics-football.html" target="_blank" rel="noopener noreferrer" class="social-share-btn" title="Compartir en WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <div class="coach-spotlight">
+                <h3>La Globalización Táctica</h3>
+                <p>El fútbol de 2025 se caracteriza por la <strong>globalización de conceptos tácticos</strong>. Desde las ligas amateur hasta los niveles profesionales más altos, los principios modernos se han extendido universalmente.</p>
+
+                <h4>Factores de esta Globalización:</h4>
+                <p><strong>Mejora de las superficies:</strong> Canchas de mejor calidad en todos los niveles permiten juego técnico.</p>
+                <p><strong>Formación especializada:</strong> Entrenadores mejor preparados tácticamente.</p>
+                <p><strong>Acceso a información:</strong> Análisis tácticos disponibles para todos.</p>
+                <p><strong>Estándares universales:</strong> Principios tácticos similares en todo el mundo.</p>
+            </div>
+
+            <h2>Conclusión: La Evolución Continúa</h2>
+
+            <p>La evolución táctica del fútbol demuestra que el deporte rey se encuentra en <strong>constante transformación</strong>. Cada era ha aportado elementos únicos que se integran en la síntesis moderna, creando un juego más rico, complejo y fascinante.</p>
+
+            <p>El fútbol de 2025 representa la culminación de más de un siglo de innovación, pero también el inicio de nuevas revoluciones que seguramente sorprenderán en los próximos años. La única constante en el fútbol es el cambio, y esa es precisamente la belleza de este deporte universal.</p>
         </div>
+
+        <div class="related-articles">
+            <h3><i class="fas fa-newspaper"></i> Artículos Relacionados</h3>
+            <div class="related-grid">
+                <a href="blog-detail-scaloneta.html" class="related-card">
+                    <h4>La Era Scaloni: Argentina y la Nueva Generación</h4>
+                    <p>Descubre cómo Lionel Scaloni revolucionó la selección argentina con tácticas modernas.</p>
+                </a>
+                <a href="blog-detail-estilos-juego.html" class="related-card">
+                    <h4>Estilos de Juego en el Fútbol Moderno</h4>
+                    <p>Análisis profundo de los diferentes enfoques tácticos en el fútbol actual.</p>
+                </a>
+                <a href="blog-detail-liga-argentina.html" class="related-card">
+                    <h4>Historia de la Liga Argentina</h4>
+                    <p>El desarrollo del fútbol profesional argentino a través de la historia.</p>
+                </a>
       </div>
     </div>
   </main>
   
-  <!-- Footer -->
   <footer class="site-footer"> 
       <div class="footer-content">
         <div class="footer-links">
-          <a href="/"><i class="fas fa-home"></i> Inicio</a>
+                <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
           <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
           <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
           <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
@@ -490,18 +706,14 @@
           <a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a>
           <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
         </div>
-        <!-- Botón Compartir Insertado -->
         <button class="footer-share-button" onclick="shareSite()"><i class="fas fa-share-alt"></i> Compartir</button>
-        <!-- Fin Botón Compartir -->
          <div class="footer-copyright">
            &copy; 2025 Crack Total. Todos los derechos reservados. 
          </div>
       </div>
   </footer>
   
-  <!-- Scripts -->
   <script src="js/main.js"></script>
-  <script src="js/utils.js"></script>
 </body>
 </html> 
 

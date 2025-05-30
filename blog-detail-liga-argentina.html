@@ -97,9 +97,11 @@
 
   <style>
     body {
-      background: linear-gradient(135deg, #0a0f1a 0%, #101726 100%); /* Darker, more sophisticated gradient */
-      color: #e2e8f0; /* Lighter text color for better contrast */
+      background: linear-gradient(135deg, #0d1421 0%, #1a1a2e 50%, #16213e 100%);
+      color: #e8eaed;
       font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      background-attachment: fixed;
     }
     
     .blog-detail-header {
@@ -113,74 +115,119 @@
         overflow: hidden;
     }
 
+    .blog-detail-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(52, 152, 219, 0.05) 0%, transparent 100%);
+        pointer-events: none;
+    }
+
     .blog-detail-header .title-text {
         color: #fff;
         font-family: 'Oswald', sans-serif;
-        font-size: 3rem; /* Slightly larger */
-        margin-bottom: 0.75rem; /* Increased margin */
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.6); /* Enhanced shadow */
+        font-size: 3rem;
+        margin-bottom: 0.75rem;
+        text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+        position: relative;
+        z-index: 1;
     }
 
     .blog-detail-header .subtitle {
-        color: #bac8d3; /* Slightly adjusted color */
-        font-size: 1.2rem; /* Slightly larger */
+        color: #b3b8bd;
+        font-size: 1.2rem;
+        position: relative;
+        z-index: 1;
     }
     
     .blog-detail-container {
       max-width: 900px;
-      margin: 2.5rem auto; /* Increased margin */
-      padding: 2.5rem; /* Increased padding */
-      background: linear-gradient(150deg, rgba(16, 23, 38, 0.9), rgba(10, 15, 26, 0.98)); /* Adjusted gradient */
-      border-radius: 15px; /* More pronounced rounding */
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); /* Softer, deeper shadow */
-      backdrop-filter: blur(10px); /* Increased blur */
-      border: 1px solid rgba(255, 255, 255, 0.08); /* More subtle border */
+        margin: 2.5rem auto;
+        padding: 2.5rem;
+        background: linear-gradient(150deg, rgba(26, 26, 46, 0.95), rgba(13, 20, 33, 0.98));
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(52, 152, 219, 0.15);
       position: relative;
+        overflow: hidden;
+    }
+
+    .blog-detail-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #3498db, transparent);
+        opacity: 0.6;
     }
 
     .blog-main-image {
       width: 100%;
-      max-height: 480px; /* Increased max-height */
+        max-height: 480px;
       object-fit: cover;
-      border-radius: 12px; /* More pronounced rounding */
-      margin-bottom: 2rem; /* Increased margin */
-      box-shadow: 0 10px 20px rgba(0,0,0,0.25); /* Enhanced shadow */
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.4);
     }
 
     .blog-meta {
         display: flex;
-        flex-wrap: wrap; /* Allow wrapping on smaller screens */
-        gap: 15px 25px; /* Adjusted gap */
-        color: #a0aec0; /* Adjusted color */
-        font-size: 0.95em; /* Slightly larger */
-        margin-bottom: 2rem; /* Increased margin */
-        padding-bottom: 1.5rem; /* Increased padding */
-        border-bottom: 1px solid rgba(255,255,255,0.12); /* Slightly more visible border */
+        flex-wrap: wrap;
+        gap: 15px 25px;
+        color: #8a92a6;
+        font-size: 0.95em;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(52, 152, 219, 0.2);
+    }
+
+    .blog-meta span {
+        background: rgba(52, 152, 219, 0.05);
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .blog-meta span:hover {
+        background: rgba(52, 152, 219, 0.1);
+        transform: translateY(-1px);
     }
 
     .blog-meta span i {
-        margin-right: 8px; /* Increased margin */
-        color: var(--primary-light, #f0627a); /* Adjusted color */
+        margin-right: 8px;
+        color: #3498db;
     }
     
     .blog-content p {
-      margin-bottom: 1.5rem; /* Increased margin */
-      line-height: 1.8; /* Improved readability */
-      color: #cdd7e1; /* Adjusted text color */
-      font-size: 1.05rem; /* Slightly larger base font for content */
+        margin-bottom: 1.5rem;
+        line-height: 1.8;
+        color: #c4c7cc;
+        font-size: 1.05rem;
+        text-align: justify;
     }
     
-    /* Estilos para h2, h3, h4 en blog-content */
     .blog-content h2, .blog-content h3, .blog-content h4 {
       font-family: 'Oswald', sans-serif;
-      margin: 2.5rem 0 1.25rem; /* Adjusted margins */
-      color: #f8fafc; /* Brighter heading color */
+        margin: 2.5rem 0 1.25rem;
+        color: #f1f3f4;
       position: relative;
-      padding-bottom: 0.75rem; /* Increased padding */
+        padding-bottom: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 1px; /* Increased letter spacing */
+        letter-spacing: 1px;
+        transition: color 0.3s ease;
     }
-    .blog-content h2 { font-size: 2.1rem; } /* Adjusted sizes */
+
+    .blog-content h2:hover, .blog-content h3:hover, .blog-content h4:hover {
+        color: #3498db;
+    }
+
+    .blog-content h2 { font-size: 2.1rem; }
     .blog-content h3 { font-size: 1.8rem; }
     .blog-content h4 { font-size: 1.5rem; }
     
@@ -189,304 +236,294 @@
       position: absolute;
       bottom: 0;
       left: 0;
-      width: 60px; /* Slightly wider */
-      height: 4px; /* Thicker */
-      background: linear-gradient(90deg, var(--primary, #c71a3f), var(--primary-light, #f0627a)); /* Adjusted gradient */
-      border-radius: 3px; /* Rounded ends */
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #3498db, #9b59b6);
+        border-radius: 3px;
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+        transition: width 0.3s ease;
+    }
+
+    .blog-content h2:hover::after, .blog-content h3:hover::after, .blog-content h4:hover::after {
+        width: 80px;
     }
 
     .blog-content strong {
-        color: var(--primary-light, #f0627a); /* Adjusted color */
-        font-weight: 700; /* Bolder */
+        color: #3498db;
+        font-weight: 700;
+        text-shadow: 0 1px 3px rgba(52, 152, 219, 0.3);
     }
 
     .blog-content ul {
         list-style: none;
         padding-left: 0;
-        margin-bottom: 1.5rem; /* Increased margin */
+        margin-bottom: 1.5rem;
     }
 
     .blog-content ul li {
-        padding-left: 1.8em; /* Increased padding */
+        padding-left: 1.8em;
         position: relative;
-        margin-bottom: 0.6em; /* Adjusted margin */
-        color: #cdd7e1; /* Adjusted text color */
-        line-height: 1.7; /* Improved line height for list items */
+        margin-bottom: 0.6em;
+        color: #c4c7cc;
+        line-height: 1.7;
     }
 
     .blog-content ul li::before {
-        content: '\f105'; /* FontAwesome right arrow */
-        font-family: 'Font Awesome 6 Free'; /* Ensure correct font family for new FontAwesome versions */
+        content: '\f105';
+        font-family: 'Font Awesome 6 Free';
         font-weight: 900;
         position: absolute;
         left: 0;
-        top: 2px; /* Fine-tune alignment */
-        color: var(--primary, #c71a3f); /* Adjusted color */
-        font-size: 1.1em; /* Slightly larger icon */
+        color: #3498db;
+        font-size: 0.8em;
+        top: 0.1em;
     }
 
-    .blog-image-container {
-        margin: 2rem 0; /* Increased margin */
-        text-align: center;
+    .history-highlight, .era-section, .modern-section, .championship-analysis, .league-evolution, .club-spotlight {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
     }
 
-    .blog-inline-image {
-        max-width: 100%;
-        height: auto;
-        border-radius: 10px; /* More pronounced rounding */
-        box-shadow: 0 6px 12px rgba(0,0,0,0.25); /* Enhanced shadow */
-        margin-bottom: 0.75rem; /* Increased margin */
+    .history-highlight:hover, .era-section:hover, .modern-section:hover, .championship-analysis:hover, .league-evolution:hover, .club-spotlight:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
     }
 
-    .blog-image-container figcaption {
-        font-size: 0.9em; /* Slightly larger */
-        color: #a0aec0; /* Adjusted color */
-        font-style: italic;
+    .history-highlight {
+        background: linear-gradient(135deg, rgba(52, 152, 219, 0.12), rgba(155, 89, 182, 0.08));
+        border-left: 4px solid #3498db;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
 
-    .blog-share-buttons {
-        margin-top: 2.5rem; /* Increased margin */
-        padding-top: 2rem; /* Increased padding */
-        border-top: 1px solid rgba(255,255,255,0.12); /* Slightly more visible border */
-        text-align: center;
+    .era-section {
+        background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(26, 26, 46, 0.15));
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border: 1px solid rgba(46, 204, 113, 0.25);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
 
-    .blog-share-buttons h4 {
-        font-family: 'Oswald', sans-serif;
-        margin-bottom: 1.25rem; /* Increased margin */
-        color: #f8fafc; /* Brighter text */
-        font-size: 1.4rem; /* Slightly larger */
+    .modern-section {
+        background: linear-gradient(135deg, rgba(231, 76, 60, 0.1), rgba(26, 26, 46, 0.15));
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border: 1px solid rgba(231, 76, 60, 0.25);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
 
-    .social-button {
-        margin: 0.4rem 0.5rem; /* Adjusted margin */
-        padding: 0.7rem 1.2rem; /* Increased padding */
-        border: none;
-        border-radius: 6px; /* Slightly more rounded */
-        color: white;
-        font-family: 'Montserrat', sans-serif;
-        font-weight: 600; /* Bolder */
-        cursor: pointer;
-        transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s; /* Added box-shadow transition */
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow */
-    }
-    .social-button:hover {
-        opacity: 0.85;
-        transform: translateY(-3px); /* Increased hover effect */
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Enhanced shadow on hover */
-    }
-    .social-button.facebook { background-color: #3b5998; }
-    .social-button.twitter { background-color: #1da1f2; }
-    .social-button.whatsapp { background-color: #25d366; }
-    .social-button.copy-link { background-color: #5a6874; } /* Darker gray */
-    
-    .sidebar {
-        background-color: rgba(10, 15, 26, 0.7); /* Darker, more integrated sidebar */
-        padding: 2rem; /* Increased padding */
-        border-radius: 10px; /* Rounded corners */
-        margin-top: 2rem; 
-        border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border */
+    .championship-analysis {
+        background: linear-gradient(135deg, rgba(241, 196, 15, 0.1), rgba(26, 26, 46, 0.15));
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border: 1px solid rgba(241, 196, 15, 0.25);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     }
 
-    @media (min-width: 992px) { /* Changed breakpoint for sidebar */
-        .blog-detail-container {
-            grid-template-columns: 2.5fr 1fr; /* Adjusted column ratio */
-            gap: 2.5rem; /* Increased gap */
-        }
-        .sidebar {
+    .league-evolution {
+        background: linear-gradient(135deg, rgba(155, 89, 182, 0.1), rgba(26, 26, 46, 0.15));
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border: 1px solid rgba(155, 89, 182, 0.25);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .club-spotlight {
+        background: linear-gradient(135deg, rgba(52, 152, 219, 0.08), rgba(26, 26, 46, 0.12));
+        border-radius: 8px;
+        padding: 1.2rem;
+        margin: 1.5rem 0;
+        border-left: 3px solid #3498db;
+        transition: all 0.3s ease;
+    }
+
+    .club-spotlight h4 {
+        color: #3498db;
             margin-top: 0; 
-        }
+        margin-bottom: 0.8rem;
+        font-size: 1.1rem;
     }
 
-    .sidebar-widget h3 {
-        font-family: 'Oswald', sans-serif;
-        font-size: 1.5rem; /* Larger title */
-        color: #f8fafc; /* Brighter title */
-        margin-bottom: 1.25rem; /* Increased margin */
-        padding-bottom: 0.75rem; /* Increased padding */
-        border-bottom: 2px solid var(--primary, #c71a3f); /* Thicker border */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin: 2rem 0;
     }
 
-    .sidebar-widget ul {
-        list-style: none;
-        padding: 0;
+    .stat-card {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.8), rgba(13, 20, 33, 0.9));
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        border: 1px solid rgba(52, 152, 219, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
 
-    .sidebar-widget ul li a {
-        color: #bac8d3; /* Adjusted link color */
-        text-decoration: none;
-        display: block;
-        padding: 0.6rem 0; /* Increased padding */
-        transition: color 0.2s, padding-left 0.2s; /* Added padding transition */
-        border-bottom: 1px dashed rgba(255,255,255,0.08); /* More subtle border */
-    }
-    .sidebar-widget ul li:last-child a {
-        border-bottom: none;
+    .stat-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        border-color: #3498db;
     }
 
-    .sidebar-widget ul li a:hover {
-        color: var(--primary-light, #f0627a); /* Brighter hover color */
-        padding-left: 8px; /* Indent on hover */
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.1), transparent);
+        transition: left 0.5s ease;
     }
 
-    #copyFeedback {
-        color: var(--success-light, #22c55e) !important; /* Brighter success color */
-        font-weight: bold;
-        margin-top: 0.5rem; /* Added margin */
-        display: inline-block; /* To allow margin */
+    .stat-card:hover::before {
+        left: 100%;
     }
 
-    /* ESTILOS DE TABLA ESPECÍFICOS PARA ESTE BLOG (Libertadores) - These might need adjustment per blog */
-    .blog-content table {
-      width: 100%;
-      margin: 2rem 0; /* Increased margin */
-      border-collapse: separate; /* Changed to separate for border-spacing */
-      border-spacing: 0; /* Reset spacing, use padding in cells */
-      background-color: rgba(255, 255, 255, 0.02); /* Slightly more subtle background */
-      border-radius: 10px; /* Rounded corners */
-      overflow: hidden; 
-      box-shadow: 0 5px 15px rgba(0,0,0,0.25); /* Enhanced shadow */
-      border: 1px solid rgba(255, 255, 255, 0.07); /* Subtle border around table */
-    }
-    .blog-content th, .blog-content td {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Only bottom border for rows */
-      padding: 0.9rem 1.1rem; /* Adjusted padding */
-      text-align: left;
-      vertical-align: middle;
-    }
-    .blog-content th {
-      background-color: rgba(var(--primary-rgb, 199, 26, 63), 0.35); /* Adjusted RGB and opacity */
-      color: #f8fafc; /* Brighter text */
-      font-family: 'Oswald', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.8px; /* Increased spacing */
-      border-top: none; /* Remove top border for th */
-      border-bottom-width: 2px; /* Thicker bottom border for header */
-      border-bottom-color: rgba(var(--primary-rgb, 199, 26, 63), 0.5);
-    }
-     .blog-content td {
-      border-left: 1px solid rgba(255, 255, 255, 0.05); /* Add subtle left border for cells */
-     }
-     .blog-content td:first-child {
-      border-left: none; /* No left border for first cell */
-     }
-    .blog-content tr:nth-child(even) td { 
-      background-color: rgba(255, 255, 255, 0.015); /* More subtle striping */
-    }
-    .blog-content tr:hover td { 
-      background-color: rgba(var(--primary-rgb, 199, 26, 63), 0.15); /* Enhanced hover */
-    }
-    .blog-content table a { /* Targeting links within table specifically */
-      color: var(--primary-light, #f0627a);
-      text-decoration: none;
-      font-weight: 600; /* Bolder */
-    }
-    .blog-content table a:hover {
-      text-decoration: underline;
-      color: var(--primary, #c71a3f);
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #3498db;
+        text-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+        position: relative;
+        z-index: 1;
     }
 
-    /* Related Articles Styling */
-    .blog-related {
+    .stat-description {
+        color: #b3b8bd;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .team-card {
+        background: linear-gradient(135deg, rgba(52, 152, 219, 0.08), rgba(26, 26, 46, 0.15));
+        border-radius: 8px;
+        padding: 1.5rem;
+        border: 1px solid rgba(52, 152, 219, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .team-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(52, 152, 219, 0.2);
+        border-color: rgba(52, 152, 219, 0.4);
+    }
+
+    .team-card h4 {
+        color: #3498db;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    .related-articles {
         margin-top: 3rem;
         padding-top: 2rem;
-        border-top: 1px solid rgba(255,255,255,0.12);
+        border-top: 2px solid rgba(52, 152, 219, 0.2);
     }
-    .blog-related-title {
+
+    .related-articles h3 {
         font-family: 'Oswald', sans-serif;
-        font-size: 1.8rem; /* Adjusted size */
+        font-size: 1.5rem;
         color: #f8fafc;
-        margin-bottom: 1.5rem;
-        text-align: center;
+        margin-bottom: 1.25rem;
         text-transform: uppercase;
+        letter-spacing: 1px;
     }
-    .blog-related-articles {
+
+    .related-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 1.5rem;
+        margin-top: 1.5rem;
     }
-    .related-article-card {
-        background-color: rgba(22, 30, 46, 0.7); /* Card background */
+
+    .related-card {
+        background: linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(13, 20, 33, 0.8));
+        padding: 1.5rem;
         border-radius: 10px;
+        border: 1px solid rgba(52, 152, 219, 0.2);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        position: relative;
         overflow: hidden;
-        text-decoration: none;
-        color: #e2e8f0;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        display: flex; /* Use flex for better content alignment */
-        flex-direction: column;
-        border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .related-article-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.25);
-    }
-    .related-article-img {
+
+    .related-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
         width: 100%;
-        height: 180px; /* Fixed height */
-        object-fit: cover;
-    }
-    .related-article-content {
-        padding: 1rem;
-        flex-grow: 1; /* Allow content to grow */
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between; /* Push date to bottom */
-    }
-    .related-article-title {
-        font-family: 'Oswald', sans-serif;
-        font-size: 1.25rem; /* Adjusted size */
-        color: #f8fafc;
-        margin-bottom: 0.5rem;
-        line-height: 1.3;
-    }
-    .related-article-date {
-        font-size: 0.85rem;
-        color: #a0aec0;
-        margin-top: auto; /* Pushes date to bottom */
-    }
-    .related-article-date i {
-        margin-right: 5px;
-        color: var(--primary-light, #f0627a);
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(52, 152, 219, 0.05), transparent);
+        transition: left 0.6s ease;
     }
 
-    /* Footer buttons and share */
-    .blog-footer {
-        margin-top: 2.5rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid rgba(255,255,255,0.12);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap; /* Allow wrapping */
-        gap: 1rem; /* Add gap for wrapped items */
-    }
-    .back-to-blog-btn {
-        background-color: var(--primary, #c71a3f);
-        color: white;
-        padding: 0.75rem 1.5rem;
-        text-decoration: none;
-        border-radius: 6px;
-        font-weight: 500;
-        transition: background-color 0.2s, transform 0.2s;
-    }
-    .back-to-blog-btn:hover {
-        background-color: var(--primary-dark, #a61232); /* Darken on hover */
-        transform: translateY(-2px);
-    }
-    .back-to-blog-btn i {
-        margin-right: 8px;
-    }
-    .social-share-btn {
-        color: #bac8d3;
-        font-size: 1.5rem; /* Larger icons */
-        margin-left: 0.75rem;
-        transition: color 0.2s, transform 0.2s;
-    }
-    .social-share-btn:hover {
-        color: var(--primary-light, #f0627a);
-        transform: scale(1.1);
+    .related-card:hover::before {
+        left: 100%;
     }
 
+    .related-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        border-color: #3498db;
+        background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(26, 26, 46, 0.9));
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .blog-detail-container {
+            margin: 1rem;
+            padding: 1.5rem;
+        }
+        
+        .blog-detail-header .title-text {
+            font-size: 2.2rem;
+        }
+        
+        .blog-content h2 { font-size: 1.8rem; }
+        .blog-content h3 { font-size: 1.5rem; }
+        .blog-content h4 { font-size: 1.3rem; }
+        
+        .team-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .blog-detail-header .title-text {
+            font-size: 1.8rem;
+        }
+        
+        .blog-detail-header .subtitle {
+            font-size: 1rem;
+        }
+        
+        .blog-meta {
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
   </style>
 </head>
 <body>
@@ -516,172 +553,150 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Inicio</a></li>
                 <li class="breadcrumb-item"><a href="blog.html">Blog</a></li>
-                <li class="breadcrumb-item active" aria-current="page">ArtÃ­culo</li>
+                <li class="breadcrumb-item active" aria-current="page">Liga Argentina</li>
             </ol>
         </nav>
-    </div><header class="app-header">
-    <div class="logo-animation">
-        <img src="img/blog/escudos.png" alt="Escudos Liga Argentina" class="ball-icon bounce" style="width: 50px; height: auto;"> 
     </div>
-    <a href="games.html" class="title-link">
-        <h1 class="title-text">Crack Total</h1>
-    </a>
-    <p class="subtitle">Historia de la Liga Argentina</p>
+
+    <header class="blog-detail-header">
+        <h1 class="title-text">Liga Argentina</h1>
+        <p class="subtitle">Historia del Fútbol Profesional</p>
   </header>
 
-  <main class="blog-detail-screen page-container" id="main-content">
-    <div class="blog-detail-container content-container">
-      <div class="blog-detail-img-container">
-        <img src="img/blog/escudos.png" alt="Escudos de equipos de la Liga Argentina" class="blog-detail-img" loading="lazy">
-      </div>
-      
-      <article class="blog-detail-content">
-        <p>La liga argentina de fútbol es mucho más que una simple competencia deportiva. Es un fenómeno cultural arraigado en el corazón de la sociedad, una fuente inagotable de pasión, rivalidades históricas y talentos que han brillado en el escenario mundial. Desde sus humildes comienzos a finales del siglo XIX hasta convertirse en una de las ligas más competitivas y observadas del planeta, su historia es un reflejo de la evolución del país y de su amor incondicional por el fútbol.</p>
-        
-        <h2><i class="fas fa-history"></i> Era Amateur y los Pioneros (1891-1930)</h2>
-        <p>El fútbol llegó a Argentina a mediados del siglo XIX de la mano de inmigrantes británicos, principalmente trabajadores ferroviarios y estudiantes. El primer partido oficial se disputó en 1867, y en 1891 se fundó la Argentine Association Football League, antecesora de la actual AFA, siendo la cuarta liga más antigua del mundo. Los primeros torneos fueron dominados por equipos de la comunidad británica como St. Andrew's y Lomas Athletic. Alumni, fundado por estudiantes del Buenos Aires English High School y liderado por el legendario Jorge Brown, fue el primer gran dominador, cosechando 10 títulos entre 1900 y 1911. Racing Club de Avellaneda tomó la posta, logrando un heptacampeonato inédito entre 1913 y 1919, una hazaña que le valió el apodo de "La Academia". Durante esta era, también surgieron clubes criollos que se convertirían en gigantes, como River Plate, Boca Juniors, Independiente y San Lorenzo.</p>
-        
-        <h2><i class="fas fa-money-check-alt"></i> Profesionalización y los Cinco Grandes (1931-1966)</h2>
-        <p>El 31 de mayo de 1931 marcó un antes y un después: 18 clubes decidieron separarse de la asociación amateur para formar la Liga Argentina de Football, dando inicio a la era profesional. Esta decisión fue impulsada por la necesidad de regularizar la situación de los jugadores, que ya recibían pagos encubiertos ("amateurismo marrón"). Los "Cinco Grandes" (Boca Juniors, River Plate, Independiente, Racing Club y San Lorenzo de Almagro) comenzaron a consolidar su poderío deportivo y económico, acaparando la mayoría de los títulos. River Plate, con su famosa delantera "La Máquina" en los años 40 (Muñoz, Moreno, Pedernera, Labruna, Loustau), desplegó un fútbol de alto vuelo. Boca Juniors se hizo fuerte con su garra y el apoyo popular. Independiente y Racing también sumaron estrellas a sus escudos, mientras San Lorenzo aportaba su mística. Esta etapa vio brillar a enormes figuras como Bernabé Ferreyra, Arsenio Erico (máximo goleador histórico del fútbol argentino), José Manuel Moreno, Adolfo Pedernera y Ángel Labruna.</p>
-        
-        <h2><i class="fas fa-medal"></i> Décadas de Oro y Figuras Emblemáticas (1967-1990)</h2>
-        <p>A partir de 1967, con la creación de los Torneos Metropolitanos y Nacionales, se rompió parcialmente la hegemonía de los Cinco Grandes. Estudiantes de La Plata, dirigido por Osvaldo Zubeldía, fue el primero en desafiar el orden establecido, ganando el Metropolitano 1967 y luego un tricampeonato de Copa Libertadores. Equipos del interior como Rosario Central y Newell's Old Boys de Rosario también lograron campeonatos nacionales, demostrando la federalización del fútbol. La década del 70 y 80 fue prolífica en talentos: Diego Armando Maradona surgió en Argentinos Juniors para luego brillar en Boca antes de su partida a Europa. Ricardo Bochini fue el emblema de un Independiente multicampeón de América. Mario Alberto Kempes, Daniel Passarella, Norberto Alonso, Enzo Francescoli y Ricardo Gareca fueron otras de las estrellas que deslumbraron en las canchas argentinas. River Plate y Boca Juniors continuaron siendo animadores constantes, y Ferro Carril Oeste, bajo la dirección de Carlos Griguol, sorprendió con dos títulos en los 80 con un fútbol sólido y efectivo.</p>
-
-        <div class="palmares-table-container">
-          <h3><i class="fas fa-trophy"></i> Máximos Ganadores de la Liga Argentina (Era Profesional)</h3>
-          <table class="palmares-table">
-            <thead>
-              <tr>
-                <th>Club</th>
-                <th>Títulos</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>River Plate</td>
-                <td>38</td>
-              </tr>
-              <tr>
-                <td>Boca Juniors</td>
-                <td>35</td>
-              </tr>
-              <tr>
-                <td>Racing Club</td>
-                <td>18</td>
-              </tr>
-              <tr>
-                <td>Independiente</td>
-                <td>16</td>
-              </tr>
-              <tr>
-                <td>San Lorenzo</td>
-                <td>15</td>
-              </tr>
-              <tr>
-                <td>Vélez Sarsfield</td>
-                <td>10</td>
-              </tr>
-              <tr>
-                <td>Alumni (Era Amateur)</td>
-                <td>10</td>
-              </tr>
-              <tr>
-                <td>Estudiantes (LP)</td>
-                <td>6</td>
-              </tr>
-              <tr>
-                <td>Newell's Old Boys</td>
-                <td>6</td>
-              </tr>
-              <tr>
-                 <td>Huracán</td>
-                 <td>5</td>
-               </tr>
-               <tr>
-                 <td>Lomas Athletic (Era Amateur)</td>
-                 <td>5</td>
-               </tr>
-              <!-- Nota: Incluye títulos de liga de la era profesional. Se incluye Alumni y Lomas por su relevancia histórica en el amateurismo. -->
-            </tbody>
-          </table>
+    <main id="main-content" class="blog-detail-container">
+        <div class="blog-meta">
+            <span><i class="fas fa-calendar-alt"></i> 30 de Enero, 2025</span>
+            <span><i class="fas fa-clock"></i> 8 min de lectura</span>
+            <span><i class="fas fa-tag"></i> Historia</span>
+            <span><i class="fas fa-user"></i> Por Crack Total</span>
         </div>
 
-        <h2><i class="fas fa-cogs"></i> Formatos de Torneo y Evolución (1991-Actualidad)</h2>
-        <p>En 1990/91 se instauraron los torneos cortos con el formato Apertura y Clausura, coronando dos campeones por temporada. Este sistema buscó mayor competitividad y emoción, aunque también fue criticado por su falta de continuidad en los proyectos. Vélez Sarsfield, bajo la conducción de Carlos Bianchi, fue uno de los grandes protagonistas de los 90, ganando múltiples títulos locales e internacionales. River Plate, con Ramón Díaz y luego con Marcelo Gallardo, y Boca Juniors, con Carlos Bianchi y luego con otros técnicos, mantuvieron su protagonismo. En los últimos años, la AFA ha experimentado con diversos formatos: torneos de 30 equipos, la Superliga, la Copa de la Liga y el regreso a un torneo de liga más largo. Estos cambios han generado debate sobre la organización y la identidad del campeonato. Lanús, Banfield, Arsenal de Sarandí y más recientemente Colón de Santa Fe y Defensa y Justicia, han sido algunos de los equipos que lograron romper la hegemonía y sumar estrellas, demostrando una mayor paridad en ciertos períodos.</p>
+        <div class="blog-content">
+            <img src="img/blog/liga-argentina.jpg" alt="Liga Argentina de Fútbol" class="blog-main-image" onerror="this.src='https://via.placeholder.com/800x400?text=Liga+Argentina'">
+            
+            <div class="content-section modern-card">
+                <h2 class="section-title">🏆 La Liga Argentina: Cuna del Fútbol Sudamericano</h2>
+                <p>La Liga Argentina de Fútbol representa una de las competiciones más antiguas y prestigiosas del mundo. Desde sus inicios en 1891, ha sido el escenario donde se han forjado las leyendas del fútbol argentino y sudamericano.</p>
+            </div>
 
-        <h2><i class="fas fa-fire"></i> Rivalidades Clásicas</h2>
-        <p>El fútbol argentino se nutre de sus intensas rivalidades. El Superclásico entre Boca Juniors y River Plate es uno de los espectáculos deportivos más vibrantes y reconocidos del mundo, paralizando al país cada vez que se enfrentan. El Clásico de Avellaneda entre Independiente y Racing Club tiene una rica historia de enfrentamientos apasionados. Otros clásicos de gran convocatoria incluyen el Newell's Old Boys vs. Rosario Central (Clásico Rosarino), San Lorenzo vs. Huracán, Estudiantes vs. Gimnasia y Esgrima La Plata (Clásico Platense), y muchos otros duelos provinciales y barriales que se viven con una intensidad única, reflejando la profunda conexión cultural del fútbol con la identidad argentina.</p>
+            <div class="content-section highlight-section">
+                <h3 class="highlight-title">📅 Cronología del Profesionalismo</h3>
+                <div class="timeline-grid">
+                    <div class="timeline-item">
+                        <h4>1891-1930: Era Amateur</h4>
+                        <p>Fundación de la Argentine Association Football League. Los clubes pioneros como Alumni, Quilmes y River Plate establecen las bases del fútbol argentino.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>1931: Profesionalización</h4>
+                        <p>Se inicia la era profesional con la creación de la Liga Argentina de Football. River Plate conquista el primer campeonato profesional.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>1967-1985: Era Metropolitano-Nacional</h4>
+                        <p>División en dos torneos anuales que permitió mayor competitividad y el surgimiento de nuevos campeones.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>1985-presente: Sistema Actual</h4>
+                        <p>Evolución hacia el formato actual con Liga Profesional, manteniendo la tradición e incorporando innovaciones.</p>
+                    </div>
+                </div>
+            </div>
 
-        <h2><i class="fas fa-lightbulb"></i> La Liga en la Actualidad y su Impacto Global</h2>
-        <p>Hoy, la Liga Profesional de Fútbol Argentino sigue siendo un semillero inagotable de talentos que nutren a las principales ligas del mundo. A pesar de los desafíos económicos y organizativos, la pasión de los hinchas se mantiene intacta y la competitividad es una constante. Jugadores jóvenes con enorme proyección siguen surgiendo y el torneo es una vidriera fundamental. El fútbol argentino no solo exporta jugadores, sino también una forma de sentir y vivir el deporte que es admirada globalmente. La liga argentina es más que un campeonato; es una expresión cultural, un motor de sueños y una fuente inagotable de historias épicas.</p>
-      </article>
-      
-      <div class="blog-related">
-        <h3 class="blog-related-title">Artículos relacionados</h3>
-        <div class="blog-related-articles">
-          <a href="blog-detail-libertadores.html" class="related-article-card">
-            <img src="img/blog/libertadores.jpg" alt="Trofeo Copa Libertadores" class="related-article-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x150?text=Copa+Libertadores'">
-            <div class="related-article-content">
-              <h4 class="related-article-title">Historia de la Copa Libertadores</h4>
-              <div class="related-article-date"><i class="fas fa-calendar-alt"></i> 27 Julio, 2024</div>
+            <div class="content-section stats-section">
+                <h3 class="section-title">📊 Datos y Récords Históricos</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">133</div>
+                        <div class="stat-label">Años de Historia</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">37</div>
+                        <div class="stat-label">Títulos de River Plate</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">34</div>
+                        <div class="stat-label">Títulos de Boca Juniors</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">28</div>
+                        <div class="stat-label">Equipos en Primera División</div>
+                    </div>
+                </div>
             </div>
-          </a>
-          
-          <a href="blog-detail-scaloneta.html" class="related-article-card">
-            <img src="img/blog/scaloni.png" alt="Lionel Scaloni con la Copa del Mundo" class="related-article-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x150?text=Scaloneta'">
-            <div class="related-article-content">
-              <h4 class="related-article-title">La Scaloneta: Campeones del Mundo</h4>
-              <div class="related-article-date"><i class="fas fa-calendar-alt"></i> 27 Julio, 2024</div>
-            </div>
-          </a>
-          
-          <a href="blog-detail-legends.html" class="related-article-card">
-            <img src="img/blog/legends.jpg" alt="Leyendas del Fútbol" class="related-article-img" loading="lazy" onerror="this.src='https://via.placeholder.com/300x150?text=Leyendas+del+Fútbol'">
-            <div class="related-article-content">
-              <h4 class="related-article-title">Leyendas del Fútbol</h4>
-              <div class="related-article-date"><i class="fas fa-calendar-alt"></i> 28 Abril, 2023</div>
-            </div>
-          </a>
+
+            <div class="content-section modern-card">
+                <h3 class="section-title">🌟 Los Grandes del Fútbol Argentino</h3>
+                <div class="teams-showcase">
+                    <div class="team-highlight">
+                        <h4>River Plate - "Los Millonarios"</h4>
+                        <p>El club más exitoso de Argentina con 37 títulos locales y 4 Copas Libertadores. Su estadio Monumental es un templo del fútbol mundial.</p>
+                    </div>
+                    <div class="team-highlight">
+                        <h4>Boca Juniors - "El Xeneize"</h4>
+                        <p>Con 34 títulos locales y 6 Copas Libertadores, La Bombonera es considerada uno de los estadios con mejor ambiente del mundo.</p>
+                    </div>
+                    <div class="team-highlight">
+                        <h4>Independiente - "El Rey de Copas"</h4>
+                        <p>Récord mundial con 7 Copas Libertadores. Su legado internacional es incomparable en el fútbol sudamericano.</p>
+                    </div>
+                    <div class="team-highlight">
+                        <h4>Racing Club - "La Academia"</h4>
+                        <p>Primera institución sudamericana en ganar un título intercontinental (1967), marcando un hito en la historia del fútbol.</p>
+                    </div>
         </div>
       </div>
       
-      <div class="blog-footer">
-        <a href="blog.html" class="back-to-blog-btn"><i class="fas fa-arrow-left"></i> Volver al Blog</a>
-        <div class="social-share">
-          <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.cracktotal.com/blog-detail-liga-argentina.html" target="_blank" rel="noopener noreferrer" class="social-share-btn" title="Compartir en Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="https://twitter.com/intent/tweet?url=https://www.cracktotal.com/blog-detail-liga-argentina.html&text=Historia%20de%20la%20Liga%20Argentina%20-%20Crack%20Total&via=cracktotal_" target="_blank" rel="noopener noreferrer" class="social-share-btn" title="Compartir en Twitter"><i class="fab fa-twitter"></i></a>
-          <a href="https://api.whatsapp.com/send?text=Historia%20de%20la%20Liga%20Argentina%20-%20Crack%20Total%20https://www.cracktotal.com/blog-detail-liga-argentina.html" target="_blank" rel="noopener noreferrer" class="social-share-btn" title="Compartir en WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <div class="content-section highlight-section">
+                <h3 class="highlight-title">⚽ Legado Mundial</h3>
+                <p>La Liga Argentina ha sido la formadora de algunos de los mejores futbolistas de la historia: Diego Maradona, Lionel Messi, Alfredo Di Stéfano, Daniel Passarella, Gabriel Batistuta, Juan Román Riquelme, y muchos otros que han llevado el nombre del fútbol argentino por todo el mundo.</p>
+                
+                <div class="impact-stats">
+                    <div class="impact-item">
+                        <h4>🏆 Impacto Internacional</h4>
+                        <p>Más de 200 jugadores formados en la liga han jugado en Europa, siendo Argentina el país que más futbolistas exporta al Viejo Continente.</p>
+                    </div>
+                    <div class="impact-item">
+                        <h4>🎯 Estilo de Juego Único</h4>
+                        <p>La liga ha desarrollado un estilo técnico distintivo, combinando habilidad individual, pasión y táctica que es reconocido mundialmente.</p>
         </div>
       </div>
     </div>
     
-    <div class="adsense-container">
-      <div class="ad-label">PUBLICIDAD</div>
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-9579152019412427" 
-           data-ad-slot="3690800126" 
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      </script>
+            <div class="content-section modern-card">
+                <h3 class="section-title">🔮 La Liga del Futuro</h3>
+                <p>Con más de 130 años de historia, la Liga Argentina continúa evolucionando. La implementación de nuevas tecnologías, la mejora de infraestructuras y la continua formación de talentos aseguran que siga siendo una de las ligas más competitivas y respetadas del mundo.</p>
+                
+                <div class="future-vision">
+                    <div class="vision-point">
+                        <strong>Modernización:</strong> Incorporación de VAR y tecnologías avanzadas para mejorar el espectáculo.
+                    </div>
+                    <div class="vision-point">
+                        <strong>Desarrollo Juvenil:</strong> Inversión continua en divisiones formativas para mantener el nivel competitivo.
+                    </div>
+                    <div class="vision-point">
+                        <strong>Proyección Internacional:</strong> Fortalecimiento de lazos con ligas europeas y competiciones continentales.
+                    </div>
+                </div>
+            </div>
     </div>
     
-    <script>
-      function checkCookieConsent() {
-        const hasConsent = localStorage.getItem("adConsent") === "true";
-        const adElements = document.querySelectorAll(".adsbygoogle");
-        
-        adElements.forEach(ad => {
-          if (!hasConsent) {
-            ad.style.display = "none";
-            ad.closest(".adsense-container").style.display = "none";
-          }
-        });
-      }
-      checkCookieConsent();
-    </script>
+        <div class="related-articles">
+            <h3><i class="fas fa-newspaper"></i> Artículos Relacionados</h3>
+            <div class="related-grid">
+                <a href="blog-detail-libertadores.html" class="related-card">
+                    <h4>Historia de la Copa Libertadores</h4>
+                    <p>El torneo más prestigioso de Sudamérica</p>
+                </a>
+                <a href="blog-detail-scaloneta.html" class="related-card">
+                    <h4>La Scaloneta: Campeones del Mundo</h4>
+                    <p>El camino hacia la gloria mundial</p>
+                </a>
+                <a href="blog-detail-estilos-juego.html" class="related-card">
+                    <h4>Estilos de Juego en el Fútbol</h4>
+                    <p>Del Catenaccio al Tiki-Taka</p>
+                </a>
+            </div>
+        </div>
+    </main>
     
     <footer class="site-footer"> 
         <div class="footer-content">
@@ -694,18 +709,12 @@
             <a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a>
             <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
           </div>
-          <!-- Botón Compartir Insertado -->
           <button class="footer-share-button" onclick="shareSite()"><i class="fas fa-share-alt"></i> Compartir</button>
-          <!-- Fin Botón Compartir -->
            <div class="footer-copyright">
              &copy; 2025 Crack Total. Todos los derechos reservados. 
            </div>
         </div>
     </footer>
-    <script>
-        // Placeholder for potential future share button logic at footer
-    </script>
-  </main>
   
   <!-- Script para gestión de cookies -->
   <script src="js/cookie-consent.js"></script>

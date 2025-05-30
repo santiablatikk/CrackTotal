@@ -79,9 +79,11 @@
 
     <style>
     body {
-      background: linear-gradient(135deg, #0a0f1a 0%, #101726 100%); /* Darker, more sophisticated gradient */
-      color: #e2e8f0; /* Lighter text color for better contrast */
+            background: linear-gradient(135deg, #0d1421 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e8eaed;
       font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            background-attachment: fixed;
     }
     
     .blog-detail-header {
@@ -95,74 +97,119 @@
         overflow: hidden;
     }
 
+        .blog-detail-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(155, 89, 182, 0.05) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
     .blog-detail-header .title-text {
         color: #fff;
         font-family: 'Oswald', sans-serif;
-        font-size: 3rem; /* Slightly larger */
-        margin-bottom: 0.75rem; /* Increased margin */
-        text-shadow: 2px 2px 6px rgba(0,0,0,0.6); /* Enhanced shadow */
+            font-size: 3rem;
+            margin-bottom: 0.75rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+            position: relative;
+            z-index: 1;
     }
 
     .blog-detail-header .subtitle {
-        color: #bac8d3; /* Slightly adjusted color */
-        font-size: 1.2rem; /* Slightly larger */
+            color: #b3b8bd;
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 1;
     }
     
     .blog-detail-container {
       max-width: 900px;
-      margin: 2.5rem auto; /* Increased margin */
-      padding: 2.5rem; /* Increased padding */
-      background: linear-gradient(150deg, rgba(16, 23, 38, 0.9), rgba(10, 15, 26, 0.98)); /* Adjusted gradient */
-      border-radius: 15px; /* More pronounced rounding */
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4); /* Softer, deeper shadow */
-      backdrop-filter: blur(10px); /* Increased blur */
-      border: 1px solid rgba(255, 255, 255, 0.08); /* More subtle border */
+            margin: 2.5rem auto;
+            padding: 2.5rem;
+            background: linear-gradient(150deg, rgba(26, 26, 46, 0.95), rgba(13, 20, 33, 0.98));
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(155, 89, 182, 0.15);
       position: relative;
+            overflow: hidden;
+        }
+
+        .blog-detail-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #9b59b6, transparent);
+            opacity: 0.6;
     }
 
     .blog-main-image {
       width: 100%;
-      max-height: 480px; /* Increased max-height */
+            max-height: 480px;
       object-fit: cover;
-      border-radius: 12px; /* More pronounced rounding */
-      margin-bottom: 2rem; /* Increased margin */
-      box-shadow: 0 10px 20px rgba(0,0,0,0.25); /* Enhanced shadow */
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
     }
 
     .blog-meta {
         display: flex;
-        flex-wrap: wrap; /* Allow wrapping on smaller screens */
-        gap: 15px 25px; /* Adjusted gap */
-        color: #a0aec0; /* Adjusted color */
-        font-size: 0.95em; /* Slightly larger */
-        margin-bottom: 2rem; /* Increased margin */
-        padding-bottom: 1.5rem; /* Increased padding */
-        border-bottom: 1px solid rgba(255,255,255,0.12); /* Slightly more visible border */
+            flex-wrap: wrap;
+            gap: 15px 25px;
+            color: #8a92a6;
+            font-size: 0.95em;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(155, 89, 182, 0.2);
+        }
+
+        .blog-meta span {
+            background: rgba(155, 89, 182, 0.05);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .blog-meta span:hover {
+            background: rgba(155, 89, 182, 0.1);
+            transform: translateY(-1px);
     }
 
     .blog-meta span i {
-        margin-right: 8px; /* Increased margin */
-        color: var(--primary-light, #f0627a); /* Adjusted color */
+            margin-right: 8px;
+            color: #9b59b6;
     }
     
     .blog-content p {
-      margin-bottom: 1.5rem; /* Increased margin */
-      line-height: 1.8; /* Improved readability */
-      color: #cdd7e1; /* Adjusted text color */
-      font-size: 1.05rem; /* Slightly larger base font for content */
-    }
-    
-    /* Estilos para h2, h3, h4 en blog-content */
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            color: #c4c7cc;
+            font-size: 1.05rem;
+            text-align: justify;
+        }
+        
     .blog-content h2, .blog-content h3, .blog-content h4 {
       font-family: 'Oswald', sans-serif;
-      margin: 2.5rem 0 1.25rem; /* Adjusted margins */
-      color: #f8fafc; /* Brighter heading color */
+            margin: 2.5rem 0 1.25rem;
+            color: #f1f3f4;
       position: relative;
-      padding-bottom: 0.75rem; /* Increased padding */
+            padding-bottom: 0.75rem;
       text-transform: uppercase;
-      letter-spacing: 1px; /* Increased letter spacing */
-    }
-    .blog-content h2 { font-size: 2.1rem; } /* Adjusted sizes */
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .blog-content h2:hover, .blog-content h3:hover, .blog-content h4:hover {
+            color: #9b59b6;
+        }
+
+        .blog-content h2 { font-size: 2.1rem; }
     .blog-content h3 { font-size: 1.8rem; }
     .blog-content h4 { font-size: 1.5rem; }
     
@@ -171,109 +218,130 @@
       position: absolute;
       bottom: 0;
       left: 0;
-      width: 60px; /* Slightly wider */
-      height: 4px; /* Thicker */
-      background: linear-gradient(90deg, var(--primary, #c71a3f), var(--primary-light, #f0627a)); /* Adjusted gradient */
-      border-radius: 3px; /* Rounded ends */
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #9b59b6, #e67e22);
+            border-radius: 3px;
+            box-shadow: 0 2px 8px rgba(155, 89, 182, 0.3);
+            transition: width 0.3s ease;
+        }
+
+        .blog-content h2:hover::after, .blog-content h3:hover::after, .blog-content h4:hover::after {
+            width: 80px;
     }
 
     .blog-content strong {
-        color: var(--primary-light, #f0627a); /* Adjusted color */
-        font-weight: 700; /* Bolder */
+            color: #9b59b6;
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(155, 89, 182, 0.3);
     }
 
     .blog-content ul {
         list-style: none;
         padding-left: 0;
-        margin-bottom: 1.5rem; /* Increased margin */
+            margin-bottom: 1.5rem;
     }
 
     .blog-content ul li {
-        padding-left: 1.8em; /* Increased padding */
+            padding-left: 1.8em;
         position: relative;
-        margin-bottom: 0.6em; /* Adjusted margin */
-        color: #cdd7e1; /* Adjusted text color */
-        line-height: 1.7; /* Improved line height for list items */
+            margin-bottom: 0.6em;
+            color: #c4c7cc;
+            line-height: 1.7;
     }
 
     .blog-content ul li::before {
-        content: '\f105'; /* FontAwesome right arrow */
-        font-family: 'Font Awesome 6 Free'; /* Ensure correct font family for new FontAwesome versions */
+            content: '\f105';
+            font-family: 'Font Awesome 6 Free';
         font-weight: 900;
         position: absolute;
         left: 0;
-        top: 2px; /* Fine-tune alignment */
-        color: var(--primary, #c71a3f); /* Adjusted color */
-        font-size: 1.1em; /* Slightly larger icon */
+            color: #9b59b6;
+            font-size: 0.8em;
+            top: 0.1em;
     }
 
     .blog-image-container {
-        margin: 2rem 0; /* Increased margin */
+            margin: 2rem 0;
         text-align: center;
     }
 
     .blog-inline-image {
         max-width: 100%;
         height: auto;
-        border-radius: 10px; /* More pronounced rounding */
-        box-shadow: 0 6px 12px rgba(0,0,0,0.25); /* Enhanced shadow */
-        margin-bottom: 0.75rem; /* Increased margin */
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+            margin-bottom: 0.75rem;
     }
 
     .blog-image-container figcaption {
-        font-size: 0.9em; /* Slightly larger */
-        color: #a0aec0; /* Adjusted color */
+            font-size: 0.9em;
+            color: #a0aec0;
         font-style: italic;
     }
 
+        .blog-section {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.08), rgba(26, 26, 46, 0.12));
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-left: 3px solid #9b59b6;
+            transition: all 0.3s ease;
+        }
+
+        .blog-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
     .blog-share-buttons {
-        margin-top: 2.5rem; /* Increased margin */
-        padding-top: 2rem; /* Increased padding */
-        border-top: 1px solid rgba(255,255,255,0.12); /* Slightly more visible border */
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(155, 89, 182, 0.2);
         text-align: center;
     }
 
     .blog-share-buttons h4 {
         font-family: 'Oswald', sans-serif;
-        margin-bottom: 1.25rem; /* Increased margin */
-        color: #f8fafc; /* Brighter text */
-        font-size: 1.4rem; /* Slightly larger */
+            margin-bottom: 1.25rem;
+            color: #f8fafc;
+            font-size: 1.4rem;
     }
 
     .social-button {
-        margin: 0.4rem 0.5rem; /* Adjusted margin */
-        padding: 0.7rem 1.2rem; /* Increased padding */
+            margin: 0.4rem 0.5rem;
+            padding: 0.7rem 1.2rem;
         border: none;
-        border-radius: 6px; /* Slightly more rounded */
+            border-radius: 6px;
         color: white;
         font-family: 'Montserrat', sans-serif;
-        font-weight: 600; /* Bolder */
+            font-weight: 600;
         cursor: pointer;
-        transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s; /* Added box-shadow transition */
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Subtle shadow */
+            transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     }
     .social-button:hover {
         opacity: 0.85;
-        transform: translateY(-3px); /* Increased hover effect */
-        box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Enhanced shadow on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
     .social-button.facebook { background-color: #3b5998; }
     .social-button.twitter { background-color: #1da1f2; }
     .social-button.whatsapp { background-color: #25d366; }
-    .social-button.copy-link { background-color: #5a6874; } /* Darker gray */
+        .social-button.copy-link { background-color: #5a6874; }
     
     .sidebar {
-        background-color: rgba(10, 15, 26, 0.7); /* Darker, more integrated sidebar */
-        padding: 2rem; /* Increased padding */
-        border-radius: 10px; /* Rounded corners */
+            background-color: rgba(26, 26, 46, 0.7);
+            padding: 2rem;
+            border-radius: 10px;
         margin-top: 2rem; 
-        border: 1px solid rgba(255, 255, 255, 0.05); /* Subtle border */
+            border: 1px solid rgba(155, 89, 182, 0.15);
     }
 
-    @media (min-width: 992px) { /* Changed breakpoint for sidebar */
+        @media (min-width: 992px) {
         .blog-detail-container {
-            grid-template-columns: 2.5fr 1fr; /* Adjusted column ratio */
-            gap: 2.5rem; /* Increased gap */
+                grid-template-columns: 2.5fr 1fr;
+                gap: 2.5rem;
         }
         .sidebar {
             margin-top: 0; 
@@ -282,11 +350,11 @@
 
     .sidebar-widget h3 {
         font-family: 'Oswald', sans-serif;
-        font-size: 1.5rem; /* Larger title */
-        color: #f8fafc; /* Brighter title */
-        margin-bottom: 1.25rem; /* Increased margin */
-        padding-bottom: 0.75rem; /* Increased padding */
-        border-bottom: 2px solid var(--primary, #c71a3f); /* Thicker border */
+            font-size: 1.5rem;
+            color: #f8fafc;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #9b59b6;
     }
 
     .sidebar-widget ul {
@@ -295,180 +363,107 @@
     }
 
     .sidebar-widget ul li a {
-        color: #bac8d3; /* Adjusted link color */
+            color: #bac8d3;
         text-decoration: none;
         display: block;
-        padding: 0.6rem 0; /* Increased padding */
-        transition: color 0.2s, padding-left 0.2s; /* Added padding transition */
-        border-bottom: 1px dashed rgba(255,255,255,0.08); /* More subtle border */
+            padding: 0.6rem 0;
+            transition: color 0.2s, padding-left 0.2s;
+            border-bottom: 1px dashed rgba(155, 89, 182, 0.08);
     }
     .sidebar-widget ul li:last-child a {
         border-bottom: none;
     }
 
     .sidebar-widget ul li a:hover {
-        color: var(--primary-light, #f0627a); /* Brighter hover color */
-        padding-left: 8px; /* Indent on hover */
+            color: #9b59b6;
+            padding-left: 8px;
     }
 
     #copyFeedback {
-        color: var(--success-light, #22c55e) !important; /* Brighter success color */
+            color: #22c55e !important;
         font-weight: bold;
-        margin-top: 0.5rem; /* Added margin */
-        display: inline-block; /* To allow margin */
-    }
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
 
-    /* ESTILOS DE TABLA ESPECÍFICOS PARA ESTE BLOG (Libertadores) - These might need adjustment per blog */
-    .blog-content table {
-      width: 100%;
-      margin: 2rem 0; /* Increased margin */
-      border-collapse: separate; /* Changed to separate for border-spacing */
-      border-spacing: 0; /* Reset spacing, use padding in cells */
-      background-color: rgba(255, 255, 255, 0.02); /* Slightly more subtle background */
-      border-radius: 10px; /* Rounded corners */
-      overflow: hidden; 
-      box-shadow: 0 5px 15px rgba(0,0,0,0.25); /* Enhanced shadow */
-      border: 1px solid rgba(255, 255, 255, 0.07); /* Subtle border around table */
-    }
-    .blog-content th, .blog-content td {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Only bottom border for rows */
-      padding: 0.9rem 1.1rem; /* Adjusted padding */
-      text-align: left;
-      vertical-align: middle;
-    }
-    .blog-content th {
-      background-color: rgba(var(--primary-rgb, 199, 26, 63), 0.35); /* Adjusted RGB and opacity */
-      color: #f8fafc; /* Brighter text */
-      font-family: 'Oswald', sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 0.8px; /* Increased spacing */
-      border-top: none; /* Remove top border for th */
-      border-bottom-width: 2px; /* Thicker bottom border for header */
-      border-bottom-color: rgba(var(--primary-rgb, 199, 26, 63), 0.5);
-    }
-     .blog-content td {
-      border-left: 1px solid rgba(255, 255, 255, 0.05); /* Add subtle left border for cells */
-     }
-     .blog-content td:first-child {
-      border-left: none; /* No left border for first cell */
-     }
-    .blog-content tr:nth-child(even) td { 
-      background-color: rgba(255, 255, 255, 0.015); /* More subtle striping */
-    }
-    .blog-content tr:hover td { 
-      background-color: rgba(var(--primary-rgb, 199, 26, 63), 0.15); /* Enhanced hover */
-    }
-    .blog-content table a { /* Targeting links within table specifically */
-      color: var(--primary-light, #f0627a);
-      text-decoration: none;
-      font-weight: 600; /* Bolder */
-    }
-    .blog-content table a:hover {
-      text-decoration: underline;
-      color: var(--primary, #c71a3f);
-    }
-
-    /* Related Articles Styling */
-    .blog-related {
+        .related-articles {
         margin-top: 3rem;
         padding-top: 2rem;
-        border-top: 1px solid rgba(255,255,255,0.12);
-    }
-    .blog-related-title {
-        font-family: 'Oswald', sans-serif;
-        font-size: 1.8rem; /* Adjusted size */
-        color: #f8fafc;
-        margin-bottom: 1.5rem;
-        text-align: center;
-        text-transform: uppercase;
-    }
-    .blog-related-articles {
+            border-top: 2px solid rgba(155, 89, 182, 0.2);
+        }
+
+        .related-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 1.5rem;
-    }
-    .related-article-card {
-        background-color: rgba(22, 30, 46, 0.7); /* Card background */
+            margin-top: 1.5rem;
+        }
+
+        .related-card {
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(13, 20, 33, 0.8));
+            padding: 1.5rem;
         border-radius: 10px;
+            border: 1px solid rgba(155, 89, 182, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            position: relative;
         overflow: hidden;
-        text-decoration: none;
-        color: #e2e8f0;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        display: flex; /* Use flex for better content alignment */
-        flex-direction: column;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-    .related-article-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 20px rgba(0,0,0,0.25);
-    }
-    .related-article-img {
+        }
+
+        .related-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
         width: 100%;
-        height: 180px; /* Fixed height */
-        object-fit: cover;
-    }
-    .related-article-content {
-        padding: 1rem;
-        flex-grow: 1; /* Allow content to grow */
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between; /* Push date to bottom */
-    }
-    .related-article-title {
-        font-family: 'Oswald', sans-serif;
-        font-size: 1.25rem; /* Adjusted size */
-        color: #f8fafc;
-        margin-bottom: 0.5rem;
-        line-height: 1.3;
-    }
-    .related-article-date {
-        font-size: 0.85rem;
-        color: #a0aec0;
-        margin-top: auto; /* Pushes date to bottom */
-    }
-    .related-article-date i {
-        margin-right: 5px;
-        color: var(--primary-light, #f0627a);
-    }
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(155, 89, 182, 0.05), transparent);
+            transition: left 0.6s ease;
+        }
 
-    /* Footer buttons and share */
-    .blog-footer {
-        margin-top: 2.5rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid rgba(255,255,255,0.12);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap; /* Allow wrapping */
-        gap: 1rem; /* Add gap for wrapped items */
-    }
-    .back-to-blog-btn {
-        background-color: var(--primary, #c71a3f);
-        color: white;
-        padding: 0.75rem 1.5rem;
-        text-decoration: none;
-        border-radius: 6px;
-        font-weight: 500;
-        transition: background-color 0.2s, transform 0.2s;
-    }
-    .back-to-blog-btn:hover {
-        background-color: var(--primary-dark, #a61232); /* Darken on hover */
-        transform: translateY(-2px);
-    }
-    .back-to-blog-btn i {
-        margin-right: 8px;
-    }
-    .social-share-btn {
-        color: #bac8d3;
-        font-size: 1.5rem; /* Larger icons */
-        margin-left: 0.75rem;
-        transition: color 0.2s, transform 0.2s;
-    }
-    .social-share-btn:hover {
-        color: var(--primary-light, #f0627a);
-        transform: scale(1.1);
-    }
+        .related-card:hover::before {
+            left: 100%;
+        }
 
+        .related-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border-color: #9b59b6;
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.15), rgba(26, 26, 46, 0.9));
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .blog-detail-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .blog-detail-header .title-text {
+                font-size: 2.2rem;
+            }
+            
+            .blog-content h2 { font-size: 1.8rem; }
+            .blog-content h3 { font-size: 1.5rem; }
+            .blog-content h4 { font-size: 1.3rem; }
+        }
+
+        @media (max-width: 480px) {
+            .blog-detail-header .title-text {
+                font-size: 1.8rem;
+            }
+            
+            .blog-detail-header .subtitle {
+                font-size: 1rem;
+            }
+            
+            .blog-meta {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
   </style>
 </head>
 <body>
@@ -504,30 +499,41 @@
         </nav>
     </div>
 
-    <header class="app-header">
-        <div class="logo-animation">
-            <i class="fas fa-futbol ball-icon bounce"></i>
-        </div>
-        <a href="games.html" class="title-link">
-            <h1 class="title-text">Crack Total</h1>
-        </a>
-        <p class="subtitle">Estilos de Juego en el Fútbol</p>
+    <header class="blog-detail-header">
+        <h1 class="title-text">Estilos de Juego en el Fútbol</h1>
+        <p class="subtitle">Del Catenaccio al Tiki-Taka</p>
     </header>
 
-    <main class="page-container blog-detail-container" id="main-content">
-        <article class="blog-content">
-            <img src="img/blog/catenaccio.png" alt="Tácticas de Fútbol" class="blog-main-image" onerror="this.src='https://via.placeholder.com/800x400?text=Estilos+de+Juego'">
+    <main id="main-content" class="blog-detail-container">
             <div class="blog-meta">
-                <span><i class="fas fa-calendar-alt"></i> 30 de Julio, 2024</span>
-                <span><i class="fas fa-user"></i> Por Equipo Crack Total</span>
+            <span><i class="fas fa-calendar-alt"></i> 30 de Enero, 2025</span>
+            <span><i class="fas fa-clock"></i> 12 min de lectura</span>
+            <span><i class="fas fa-tag"></i> Tácticas</span>
+            <span><i class="fas fa-user"></i> Por Crack Total</span>
             </div>
 
-            <p>El fútbol es un deporte de pasiones, pero también de profundas reflexiones tácticas. A lo largo de su historia, han surgido diversos <strong>estilos de juego</strong> que no solo buscan la victoria, sino que también expresan una filosofía sobre cómo se debe jugar. Desde la solidez defensiva hasta la creatividad ofensiva, cada estilo tiene su encanto y sus detractores.</p>
+        <div class="blog-content">
+            <img src="img/blog/estilos-de-juego.jpg" alt="Estilos de juego en el fútbol" class="blog-main-image" onerror="this.src='https://via.placeholder.com/800x400?text=Estilos+de+Juego'">
+
+            <p>El fútbol es un deporte en constante evolución, donde las <strong>tácticas y estilos de juego</strong> han ido transformándose a lo largo de las décadas. Desde las formaciones defensivas más conservadoras hasta los sistemas de posesión más elaborados, cada época ha aportado su propio sello distintivo al juego más bello del mundo.</p>
+
+            <p>En <strong>2025</strong>, el fútbol ha alcanzado nuevos niveles de sofisticación táctica. Los equipos de la Premier League rompieron récords históricos con 1,246 goles marcados en la temporada 2023-24, estableciendo una tasa de 3.28 goles por partido, la más alta desde 1964-65. Esta explosión ofensiva refleja la evolución hacia estilos más agresivos y arriesgados.</p>
 
             <section class="blog-section">
-                <h2>El Catenaccio Italiano: El Arte de Defender</h2>
-                <p>Nacido en Italia en los años 30 y popularizado por equipos como el Inter de Milán de Helenio Herrera en los 60, el <strong>Catenaccio</strong> (literalmente "cerrojo") es sinónimo de una defensa férrea. Su principal característica era el uso de un líbero, un defensor libre detrás de la línea defensiva principal, cuya misión era interceptar cualquier balón que superara a sus compañeros y despejar el peligro.</p>
-                <p>Este estilo prioriza el resultado sobre el espectáculo, buscando mantener la portería a cero y aprovechar cualquier oportunidad para contraatacar. Aunque a menudo criticado por ser "anti-fútbol", su efectividad es innegable y ha influenciado a generaciones de entrenadores.</p>
+                <h2>Los Fundamentos Históricos</h2>
+                
+                <h3>El Catenaccio Italiano: La Fortaleza Defensiva</h3>
+                <p>Surgido en la década de 1960, el <strong>Catenaccio</strong> representó la máxima expresión del fútbol defensivo. Desarrollado por el entrenador argentino Helenio Herrera en el Inter de Milán, este sistema se caracterizaba por:</p>
+                
+                <ul>
+                    <li>Una defensa ultra-organizada con un libero o "sweeper"</li>
+                    <li>Máxima disciplina táctica y sacrificio colectivo</li>
+                    <li>Contraataques rápidos y letales</li>
+                    <li>El concepto de "cerrojo" que daba nombre al sistema</li>
+                </ul>
+                
+                <p>El Catenaccio llevó al Inter a conquistar <strong>tres títulos de Serie A</strong> (1963, 1965, 1966) y dos Copas de Europa consecutivas, estableciendo las bases del fútbol italiano moderno.</p>
+                
                 <div class="blog-image-container">
                     <img src="img/blog/catenaccio.jpg" alt="Esquema táctico del Catenaccio" class="blog-inline-image" onerror="this.src='https://via.placeholder.com/600x350?text=Catenaccio'">
                     <figcaption>El Catenaccio enfatizaba una defensa organizada y difícil de superar.</figcaption>
@@ -535,15 +541,30 @@
             </section>
 
             <section class="blog-section">
-                <h2>Fútbol Total Holandés: La Revolución Naranja</h2>
-                <p>En la década de 1970, la selección holandesa y el Ajax de Ámsterdam, bajo la batuta de Rinus Michels y con Johan Cruyff como su máximo exponente en el campo, maravillaron al mundo con el <strong>Fútbol Total</strong>. Esta filosofía se basaba en la fluidez posicional: cualquier jugador podía ocupar cualquier posición en el campo. Si un defensor se sumaba al ataque, un compañero debía cubrir su lugar.</p>
-                <p>El Fútbol Total requería jugadores tácticamente inteligentes, técnicamente dotados y con una gran capacidad física. Presión alta, juego de posesión y una constante búsqueda del espacio eran sus señas de identidad. Aunque no siempre se tradujo en títulos (la "Naranja Mecánica" perdió dos finales de Copa del Mundo), su influencia en el fútbol moderno es inmensa.</p>
+                <h2>El Fútbol Total Holandés: Revolución de los 70</h2>
+                <p>Los Países Bajos de los años 70, bajo la dirección de <strong>Rinus Michels</strong> y con Johan Cruyff como figura emblemática, introdujeron el concepto revolucionario del <strong>Fútbol Total</strong>:</p>
+                
+                <h4>Principios del Fútbol Total</h4>
+                <p>Intercambiabilidad posicional total, donde cualquier jugador podía ocupar cualquier posición en el campo, confundiendo a los rivales y creando superioridades numéricas constantes.</p>
+                
+                <p>Este sistema requería futbolistas de <strong>extraordinaria inteligencia táctica</strong> y habilidad técnica, capaces de interpretar múltiples roles durante un mismo partido. El Ajax de Amsterdam dominó Europa con tres Copas de Europa consecutivas (1971-1973) aplicando estos principios.</p>
             </section>
 
             <section class="blog-section">
-                <h2>El Tiki-Taka Español: Dominar a Través de la Posesión</h2>
-                <p>Inspirado en parte por el Fútbol Total, el <strong>Tiki-Taka</strong> es un estilo que se popularizó con el FC Barcelona de Pep Guardiola y la selección española campeona del mundo y de Europa. Su esencia radica en la posesión prolongada del balón, con pases cortos y precisos, buscando desgastar al rival y encontrar espacios para generar ocasiones de gol.</p>
-                <p>Este estilo no solo requiere una técnica individual exquisita, sino también una gran comprensión del juego colectivo. La paciencia, el movimiento constante sin balón y la presión tras pérdida son fundamentales. Xavi Hernández, Andrés Iniesta y Lionel Messi fueron algunos de los intérpretes magistrales de esta sinfonía futbolística.</p>
+                <h2>La Era del Tiki-Taka Español</h2>
+                
+                <h3>La Perfección del Pase</h3>
+                <p>El <strong>Tiki-Taka</strong>, perfeccionado por el Barcelona de Pep Guardiola y la Selección Española de Vicente del Bosque, representó la evolución natural del Fútbol Total adaptado a la mentalidad ibérica:</p>
+                
+                <ul>
+                    <li>Posesión obsesiva del balón (a menudo superior al 70%)</li>
+                    <li>Pases cortos y precisos en espacios reducidos</li>
+                    <li>Presión alta inmediata tras pérdida</li>
+                    <li>Movimiento constante sin balón</li>
+                </ul>
+                
+                <p>España conquistó la <strong>Eurocopa 2008, Mundial 2010 y Eurocopa 2012</strong> con este estilo, mientras el Barcelona coleccionaba títulos continentales bajo la batuta de maestros como Xavi, Iniesta y Busquets.</p>
+                
                 <div class="blog-image-container">
                     <img src="img/blog/tiki-taka.jpg" alt="Jugadores practicando el Tiki-Taka" class="blog-inline-image" onerror="this.src='https://via.placeholder.com/600x350?text=Tiki-Taka'">
                     <figcaption>El Tiki-Taka se basa en la posesión y el pase corto y preciso.</figcaption>
@@ -551,17 +572,101 @@
             </section>
 
             <section class="blog-section">
-                <h2>Otros Estilos y Tendencias Actuales</h2>
-                <p>Más allá de estos estilos icónicos, existen muchas otras variantes y aproximaciones al juego:</p>
+                <h2>Tendencias Tácticas del Fútbol Actual (2025)</h2>
+                
+                <h3>El Gegenpressing: La Presión Alemana</h3>
+                <p>Desarrollado inicialmente por <strong>Ralf Rangnick</strong> y perfeccionado por Jürgen Klopp, el Gegenpressing se ha convertido en el estilo dominante del fútbol moderno:</p>
+                
+                <h4>Principios del Gegenpressing</h4>
                 <ul>
-                    <li><strong>El "Gegenpressing" o Contrapresión:</strong> Popularizado por entrenadores alemanes como Jürgen Klopp, consiste en presionar intensamente al rival justo después de perder el balón, buscando recuperarlo rápidamente en campo contrario.</li>
-                    <li><strong>Juego Directo:</strong> Un estilo más vertical que busca llegar al área rival con pocos pases, a menudo utilizando balones largos y segundas jugadas.</li>
-                    <li><strong>Fútbol de Contraataque:</strong> Ceder la iniciativa al rival para luego explotar los espacios dejados a su espalda con transiciones rápidas.</li>
+                    <li><strong>Presión Inmediata:</strong> Recuperación del balón en los primeros 6 segundos tras pérdida</li>
+                    <li><strong>Intensidad Física:</strong> Demandas físicas extremas que requieren rotaciones constantes</li>
+                    <li><strong>Recuperaciones Altas:</strong> En 2023-24, hubo 2,895 recuperaciones en campo rival, un aumento del 35% respecto a 2018-19</li>
                 </ul>
-                <p>Hoy en día, muchos equipos combinan elementos de diferentes estilos, adaptándose a las características de sus jugadores y a las exigencias de cada partido. La evolución táctica es constante, y lo que hoy es tendencia, mañana puede ser historia.</p>
             </section>
 
-            <p>El debate sobre qué estilo es "mejor" es interminable y, en última instancia, subjetivo. Lo que sí es cierto es que la diversidad de estilos enriquece el fútbol, ofreciendo un espectáculo variado y fascinante para los aficionados. ¿Cuál es tu estilo de juego favorito?</p>
+            <section class="blog-section">
+                <h2>El Retorno del "9" Clásico</h2>
+                <p>Contrario a las predicciones sobre la extinción del delantero centro tradicional, el fútbol de 2025 ha visto un <strong>renacimiento del "9" clásico</strong>:</p>
+                
+                <h4>Datos de la Premier League 2023-24</h4>
+                <p>Por primera vez desde 2019-20, los siete primeros equipos tuvieron un jugador con 15+ goles. Los goles de cabeza en juego abierto aumentaron a 95, frente a los 75 de temporadas anteriores.</p>
+                
+                <ul>
+                    <li><strong>Erling Haaland</strong> - Manchester City: Físico y velocidad letal</li>
+                    <li><strong>Dominic Solanke</strong> - Bournemouth: 19 goles como referencia física</li>
+                    <li><strong>Ollie Watkins</strong> - Aston Villa: Versatilidad en el área</li>
+                </ul>
+            </section>
+
+            <section class="blog-section">
+                <h2>Innovaciones Tecnológicas en las Tácticas Actuales</h2>
+                
+                <h3>Análisis de Datos y IA</h3>
+                <p>El fútbol de 2025 integra <strong>inteligencia artificial</strong> y análisis masivo de datos para:</p>
+                
+                <ul>
+                    <li>Scouting automatizado global, detectando talentos en regiones remotas</li>
+                    <li>Análisis predictivo de lesiones y rendimiento</li>
+                    <li>Optimización táctica en tiempo real durante partidos</li>
+                    <li>Personalización de entrenamientos basada en métricas individuales</li>
+                </ul>
+                
+                <h4>Wearable Technology</h4>
+                <p>Los dispositivos de seguimiento proporcionan métricas en tiempo real sobre velocidad, aceleración, distancia recorrida y carga de trabajo, permitiendo ajustes tácticos precisos.</p>
+            </section>
+
+            <section class="blog-section">
+                <h2>Estilos Tácticos Híbridos Modernos</h2>
+                
+                <h3>La Adaptabilidad Como Filosofía</h3>
+                <p>Los equipos más exitosos de 2025 han adoptado <strong>sistemas híbridos</strong> que cambian según la fase del juego:</p>
+                
+                <ul>
+                    <li><strong>4-3-3 Posicional:</strong> Evolución de Guardiola con extremos convertidos en mediocampistas</li>
+                    <li><strong>3-4-3 Dinámico:</strong> Legado de Conte con defensores centrales que avanzan al mediocampo</li>
+                    <li><strong>Falso 9 2.0:</strong> Evolución del concepto original con delanteros que atacan espacios verticales</li>
+                </ul>
+            </section>
+
+            <section class="blog-section">
+                <h2>Tendencias Emergentes para el Futuro</h2>
+                
+                <h3>El Fin de los Dogmas Tácticos</h3>
+                <p>Según analistas especializados, 2025 marca <strong>el fin de los ideólogos tácticos</strong> puros. Los entrenadores más exitosos ahora priorizan:</p>
+                
+                <ul>
+                    <li><strong>Pragmatismo adaptativo</strong> sobre filosofías rígidas</li>
+                    <li><strong>Rotaciones de centrales</strong> hacia el mediocampo como nuevo estándar</li>
+                    <li><strong>Crisis del juego desde atrás</strong> - equipos vuelven al juego directo selectivo</li>
+                    <li><strong>Resurgimiento del delantero tradicional</strong> en detrimento del falso 9</li>
+                </ul>
+                
+                <h3>La Democratización del Fútbol de Posesión</h3>
+                <p>Una de las transformaciones más significativas ha sido la <strong>universalización del juego de posesión</strong>. Equipos como Fulham, Brighton y Newcastle ahora construyen desde atrás con la misma sofisticación que tradicionalmente mostraban solo los "Big Six".</p>
+                
+                <h4>Estadística Reveladora</h4>
+                <p>El Manchester City se convirtió en el primer equipo de la Premier League en promediar más del 90% de precisión en el pase durante una temporada completa (2023-24).</p>
+            </section>
+
+            <section class="blog-section">
+                <h2>El Futuro de los Estilos de Juego</h2>
+                <p>El fútbol continuará evolucionando hacia una <strong>mayor fluidez táctica</strong>, donde la especialización absoluta dará paso a la versatilidad inteligente. Los equipos del futuro serán:</p>
+                
+                <ul>
+                    <li>Más adaptativos según el contexto del partido</li>
+                    <li>Dependientes de datos en tiempo real para decisiones tácticas</li>
+                    <li>Enfocados en la sostenibilidad física de los jugadores</li>
+                    <li>Integrados con tecnologías de realidad aumentada para entrenamientos</li>
+                </ul>
+                
+                <p>La <strong>belleza del fútbol</strong> seguirá residiendo en su capacidad infinita de reinventarse, manteniendo la emoción que ha cautivado a generaciones mientras abraza las innovaciones que definirán su futuro.</p>
+            </section>
+
+            <h3>Reflexión Final</h3>
+            <p>Desde el Catenaccio defensivo hasta el Tiki-Taka posesivo, desde el Fútbol Total hasta el Gegenpressing moderno, cada estilo ha dejado su huella indeleble en la historia del fútbol. En 2025, presenciamos una síntesis de todas estas influencias, creando un fútbol más rico, variado y emocionante que nunca.</p>
+            
+            <p>La constante será siempre el cambio, y la única certeza es que el fútbol seguirá sorprendiéndonos con nuevas formas de entender y practicar el deporte más hermoso del mundo.</p>
 
             <div class="blog-share-buttons">
                 <h4>Comparte este artículo:</h4>
@@ -571,34 +676,31 @@
                  <button onclick="copyLink()" class="social-button copy-link"><i class="fas fa-copy"></i> Copiar Enlace</button>
             </div>
              <div id="copyFeedback" style="display:none; margin-top:10px; color:green;">¡Enlace copiado al portapapeles!</div>
-        </article>
+        </div>
 
-        <aside class="sidebar">
-            <div class="sidebar-widget">
-                <h3>Artículos Recientes</h3>
-                <ul>
-                    <li><a href="blog-detail-libertadores.html">Historia de la Copa Libertadores</a></li>
-                    <li><a href="blog-detail-liga-argentina.html">Historia de la Liga Argentina</a></li>
-                    <li><a href="blog-detail-scaloneta.html">La Scaloneta: Campeona del Mundo</a></li>
-                    <li><a href="blog-detail-messi.html">La Evolución de Lionel Messi</a></li>
-                </ul>
+        <div class="related-articles">
+            <h3><i class="fas fa-newspaper"></i> Artículos Relacionados</h3>
+            <div class="related-grid">
+                <a href="blog-detail-tactics-football.html" class="related-card">
+                    <h4>La Evolución Táctica del Fútbol</h4>
+                    <p>Análisis profundo de las tácticas modernas del fútbol</p>
+                </a>
+                <a href="blog-detail-scaloneta.html" class="related-card">
+                    <h4>La Scaloneta: Campeones del Mundo</h4>
+                    <p>La historia del éxito de la Selección Argentina</p>
+                </a>
+                <a href="blog-detail-liga-argentina.html" class="related-card">
+                    <h4>Historia de la Liga Argentina</h4>
+                    <p>El desarrollo del fútbol profesional argentino</p>
+                </a>
             </div>
-             <div class="sidebar-widget">
-                 <h3>Categorías</h3>
-                 <ul>
-                    <li><a href="#">Análisis Táctico</a></li>
-                    <li><a href="#">Historia del Fútbol</a></li>
-                    <li><a href="#">Grandes Jugadores</a></li>
-                    <li><a href="#">Torneos</a></li>
-                </ul>
             </div>
-        </aside>
     </main>
 
     <footer class="site-footer">
         <div class="footer-content">
           <div class="footer-links">
-            <a href="/"><i class="fas fa-home"></i> Inicio</a>
+                <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
             <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
             <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
             <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
@@ -608,7 +710,7 @@
           </div>
            <button class="footer-share-button" onclick="shareSite()"><i class="fas fa-share-alt"></i> Compartir</button>
            <div class="footer-copyright">
-             &copy; <span id="currentYear"></span> Crack Total. Todos los derechos reservados. 
+                &copy; 2025 Crack Total. Todos los derechos reservados. 
            </div>
         </div>
     </footer>
@@ -641,11 +743,6 @@
                 alert("No se pudo copiar el enlace.");
             });
         }
-    </script>
-    <script src="js/main.js"></script>
-    <script src="js/adblock-detector.js"></script> 
-  <!-- Script para gestión de cookies -->  <script src="js/cookie-consent.js"></script>    <!-- Script para detectar AdBlock -->  <script src="js/adblock-detector.js"></script></body></html>  
-
     </script>
     <script src="js/main.js"></script>
     <script src="js/adblock-detector.js"></script> 
