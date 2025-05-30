@@ -1778,8 +1778,9 @@ body.about-page-body {
 }
 
 .room-info span i {
-    color: #e74c3c;
+    color: #3498db;
     margin-right: 4px;
+    opacity: 0.8;
 }
 
 .join-room-list-btn {
@@ -1927,8 +1928,71 @@ body.about-page-body {
     background-color: #f5f9fc;
 }
 
-.room-info span i {
-    color: #3498db;
-    margin-right: 4px;
-    opacity: 0.8;
+/* ========================================= */
+/* ===== Estilos para Badge de Juegos ===== */
+/* ========================================= */
+
+/* Badge ACTUALIZANDO para Crack Rápido */
+.stellar-badge.actualizando {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, #ff6b35, #ff8e3c);
+    color: white;
+    font-size: 0.65rem;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    z-index: 10;
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.4);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    backdrop-filter: blur(3px);
+    animation: badgeUpdatePulse 2s infinite ease-in-out;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes badgeUpdatePulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(255, 107, 53, 0.4);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.6);
+    }
+}
+
+/* Botón deshabilitado para juegos en actualización */
+.quantum-play-btn.disabled {
+    background: linear-gradient(135deg, #6c757d, #495057) !important;
+    color: #adb5bd !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.quantum-play-btn.disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    background: linear-gradient(135deg, #6c757d, #495057) !important;
+}
+
+.quantum-play-btn.disabled span {
+    color: #adb5bd !important;
+}
+
+.quantum-play-btn.disabled span i {
+    color: #adb5bd !important;
+    animation: wrenchRotate 1.5s infinite linear;
+}
+
+@keyframes wrenchRotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 } 
