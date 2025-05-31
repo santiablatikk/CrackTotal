@@ -54,7 +54,7 @@ function calculateMentirosoRating(stats) {
     const falseAccusationPenalty = (stats.falseAccusations || 0) * 20; // Acusaciones falsas
     
     // Multiplicador por consistencia (win rate)
-    const winRate = stats.wins / stats.gamesPlayed;
+    const winRate = stats.gamesPlayed > 0 ? (stats.wins / stats.gamesPlayed) * 100 : 0;
     const consistencyMultiplier = 1 + (winRate * 0.5); // Hasta 50% bonus por consistencia
     
     // Multiplicador por experiencia (más juegos = ligeramente mejor rating)
@@ -155,9 +155,9 @@ function generateRankingHTML(usersData) {
             };
         })
         .sort((a, b) => {
-            // Ordenar por rating, luego por win rate, luego por balance de habilidades
+            // Ordenar por win rate primero, luego por rating, luego por balance de habilidades
+            if (Math.abs(b.winRate - a.winRate) > 1) return b.winRate - a.winRate;
             if (b.rating !== a.rating) return b.rating - a.rating;
-            if (Math.abs(b.winRate - a.winRate) > 5) return b.winRate - a.winRate;
             return b.skillBalance - a.skillBalance;
         })
         .slice(0, RANKING_LIMIT);

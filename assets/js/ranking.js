@@ -90,10 +90,10 @@ function generateRankingHTML(usersData) {
             };
         })
         .sort((a, b) => {
-            // Ordenar por total score primero (letras acumuladas), luego por wins, luego por win rate
+            // Ordenar por win rate primero, luego por total score, luego por wins
+            if (Math.abs(b.winRate - a.winRate) > 1) return b.winRate - a.winRate;
             if (b.totalScore !== a.totalScore) return b.totalScore - a.totalScore;
-            if (b.wins !== a.wins) return b.wins - a.wins;
-            return b.winRate - a.winRate;
+            return b.wins - a.wins;
         })
         .slice(0, RANKING_LIMIT); // Limitar a top 15
 

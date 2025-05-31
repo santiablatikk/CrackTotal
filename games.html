@@ -1556,392 +1556,6 @@
         </div>
     </div>
 
-    <!-- Modal Introducción Quien Sabe MáS -->
-    <div class="modal-overlay" id="qsmIntroModal">
-        <div class="modal-content qsm-intro-modal-compact">
-    
-            <div class="qsm-header-compact">
-                <div class="qsm-logo-compact">
-                    <i class="fas fa-brain qsm-brain-icon-compact"></i>
-                    <div class="title-compact">
-                        <h3 class="modal-title-compact">¿Quién Sabe MáS?</h3>
-                        <span class="subtitle-compact">Duelo de Conocimiento Futbolero 1v1</span>
-                    </div>
-                </div>
-                <div class="badges-compact">
-                    <span class="badge-compact">6 NIVELES</span>
-                    <span class="badge-compact">400+ PREGUNTAS</span>
-                    <span class="badge-compact">RANKING ELO</span>
-                </div>
-            </div>
-
-            <div class="qsm-modal-scrollable">
-                <div class="qsm-content-compact">
-                    <div class="intro-compact">
-                        🧠 <strong>Enfréntate 1v1</strong> en 6 niveles de dificultad progresiva. 5 preguntas por nivel para cada jugador (30 total), respuestas alternadas por turnos, comodín 50/50 disponible.
-                    </div>
-
-                    <div class="info-grid-compact">
-                        <div class="info-card-compact">
-                            <div class="card-header-compact">
-                                <i class="fas fa-gamepad"></i>
-                                <span>Mecánica</span>
-                            </div>
-                            <ul class="info-list-compact">
-                                <li>• Duelo por turnos 1v1</li>
-                                <li>• 4 opciones múltiple choice</li>
-                                <li>• Comodín 50/50 una vez por pregunta</li>
-                                <li>• Progresión: Básico → Leyenda</li>
-                            </ul>
-                        </div>
-
-                        <div class="info-card-compact">
-                            <div class="card-header-compact">
-                                <i class="fas fa-trophy"></i>
-                                <span>Puntuación</span>
-                            </div>
-                            <ul class="info-list-compact">
-                                <li>• <span class="points-good">Correcta: +2 pts</span></li>
-                                <li>• <span class="points-ok">Con 50/50: +1 pt</span></li>
-                                <li>• <span class="points-bad">Incorrecta: 0 pts</span></li>
-                                <li>• Ranking ELO por victorias</li>
-                            </ul>
-                        </div>
-
-                        <div class="info-card-compact">
-                            <div class="card-header-compact">
-                                <i class="fas fa-layer-group"></i>
-                                <span>Dificultad</span>
-                            </div>
-                            <div class="difficulty-compact">
-                                <div class="diff-item">
-                                    <span class="diff-levels">1-2</span>
-                                    <span class="diff-name">Básico/Intermedio</span>
-                                    <span class="diff-indicator basic">🟢</span>
-                                </div>
-                                <div class="diff-item">
-                                    <span class="diff-levels">3-4</span>
-                                    <span class="diff-name">Avanzado/Experto</span>
-                                    <span class="diff-indicator advanced">🟠</span>
-                                </div>
-                                <div class="diff-item">
-                                    <span class="diff-levels">5-6</span>
-                                    <span class="diff-name">Maestro/Leyenda</span>
-                                    <span class="diff-indicator legend">🔴</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="info-card-compact">
-                            <div class="card-header-compact">
-                                <i class="fas fa-lightbulb"></i>
-                                <span>Tips Clave</span>
-                            </div>
-                            <ul class="info-list-compact">
-                                <li>🎯 Conserva el 50/50 para niveles altos</li>
-                                <li>⚡ Primera impresión suele ser correcta</li>
-                                <li>🏆 Cada victoria sube tu ELO</li>
-                                <li>🧠 Estudia estadísticas específicas</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="stats-compact">
-                        <div class="stat-compact">
-                            <span class="stat-number" id="qsmPlayersOnline">-</span>
-                            <span class="stat-label">Jugadores</span>
-                        </div>
-                        <div class="stat-compact">
-                            <span class="stat-number" id="qsmActiveMatches">-</span>
-                            <span class="stat-label">Duelos</span>
-                        </div>
-                        <div class="stat-compact">
-                            <span class="stat-number">400+</span>
-                            <span class="stat-label">Preguntas</span>
-                        </div>
-                        <div class="stat-compact">
-                            <span class="stat-number">6</span>
-                            <span class="stat-label">Niveles</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="qsm-footer-compact">
-                <div class="warning-compact">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span>¿Listo para el desafío definitivo?</span>
-                </div>
-                <button type="button" class="qsm-button-compact" id="goToLobbyQSMButton">
-                    <i class="fas fa-rocket"></i>
-                    <span>¡ACEPTO EL DESAFÍO!</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Introducción Mentiroso -->
-    <div class="modal-overlay" id="mentirosoIntroModal">
-        <div class="modal-content mentiroso-intro-modal">
-            <h3 class="modal-title"><i class="fas fa-mask"></i> ¿Cómo se juega al Mentiroso?</h3>
-            <p><strong>¡El juego del farol futbolero!</strong></p>
-            
-            <div class="mentiroso-rules">
-                <div class="rule-card">
-                    <h4><i class="fas fa-gamepad"></i> Mecánica</h4>
-                    <ul>
-                        <li><strong>Duelo 1v1</strong> - 18 preguntas en 6 categorías</li>
-                        <li><strong>Decís cuántas sabés:</strong> "Yo me sé 7 jugadores"</li>
-                        <li><strong>El rival puede:</strong> Subir la apuesta o gritar "¡MENTIROSO!"</li>
-                        <li><strong>Si te desafían:</strong> Tenés que demostrar lo que dijiste</li>
-                    </ul>
-                </div>
-
-                <div class="rule-card">
-                    <h4><i class="fas fa-trophy"></i> Puntuación</h4>
-                    <ul>
-                        <li><strong>Demostrás:</strong> +Puntos según dificultad</li>
-                        <li><strong>Mentís:</strong> -Puntos de penalización</li>
-                        <li><strong>Gana:</strong> Quien más puntos acumule</li>
-                        <li><strong>Turnos alternados</strong> cada pregunta</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="mentiroso-tips">
-                <h4><i class="fas fa-lightbulb"></i> Estrategia</h4>
-                <p>🎭 <strong>El farol es parte del juego.</strong> Calculá bien cuánto sabés vs. cuánto podés arriesgar. Vale todo lo relacionado con la consigna.</p>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="primary-button" id="goToLobbyMentirosoButton">
-                    <i class="fas fa-door-open"></i> ¡DALE, VAMOS A JUGAR!
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Introducción Crack Rápido -->
-    <div class="modal-overlay" id="crackRapidoIntroModal">
-        <div class="modal-content crack-rapido-intro-modal">
-            <h3 class="modal-title"><i class="fas fa-bolt"></i> Crack Rápido MEGA</h3>
-            <p><strong>¡La trivia de velocidad más intensa!</strong></p>
-
-            <div class="intro-section">
-                <h4><i class="fas fa-gamepad"></i> 4 Modos Épicos</h4>
-                <ul>
-                    <li><strong>CLÁSICO:</strong> 20 preguntas mixtas</li>
-                    <li><strong>SUPERVIVENCIA:</strong> Hasta que falles</li>
-                    <li><strong>CATEGORÍA:</strong> Tema específico</li>
-                    <li><strong>TORNEO:</strong> 5 rondas con multiplicador x1.5</li>
-                </ul>
-            </div>
-
-            <div class="intro-section">
-                <h4><i class="fas fa-brain"></i> 7 Categorías - 200+ Preguntas</h4>
-                <div class="categories-grid">
-                    <span class="category-tag">MESSI</span>
-                    <span class="category-tag">BOCA</span>
-                    <span class="category-tag">RIVER</span>
-                    <span class="category-tag">MUNDIAL</span>
-                    <span class="category-tag">CHAMPIONS</span>
-                    <span class="category-tag">SELECCIÓN</span>
-                    <span class="category-tag">GENERAL</span>
-                </div>
-            </div>
-
-            <div class="intro-section">
-                <h4><i class="fas fa-trophy"></i> Sistema de Puntuación</h4>
-                <ul>
-                    <li><strong>Base:</strong> 100 puntos + Bonus de velocidad y racha</li>
-                    <li><strong>Respuesta Perfecta:</strong> +50 pts (<2s)</li>
-                    <li><strong>Ultra Rápido:</strong> +75 pts (<1.5s)</li>
-                    <li><strong>Power-Ups:</strong> 50/50, Tiempo Extra, Multiplicador x2</li>
-                </ul>
-            </div>
-
-            <div class="intro-section">
-                <h4><i class="fas fa-medal"></i> 17 Logros & Dificultades</h4>
-                <ul>
-                    <li><strong>Fácil:</strong> 6s (x0.8) | <strong>Normal:</strong> 5s (x1.0)</li>
-                    <li><strong>Difícil:</strong> 4s (x1.3) | <strong>Extremo:</strong> 3s (x1.6)</li>
-                    <li><strong>Logros:</strong> Velocista, Superviviente, Dios del Crack Rápido</li>
-                </ul>
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="primary-button" id="goToCrackRapidoButton">
-                    <i class="fas fa-rocket"></i> ¡EMPEZAR EL DESAFÍO!
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Service Worker Registration -->
-    <script>
-        // Registrar Service Worker con mejor manejo de actualizaciones
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('[SW] Service Worker registrado exitosamente:', registration.scope);
-                        
-                        // DISABLED: Constant update checking causing annoying popups
-                        /*
-                        // Escuchar actualizaciones del SW
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
-                            console.log('[SW] Nueva versión del Service Worker encontrada');
-                            
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'installed') {
-                                    if (navigator.serviceWorker.controller) {
-                                        // Nueva versión disponible, mostrar notificación
-                                        console.log('[SW] Nueva versión disponible, actualizando...');
-                                        showUpdateNotification();
-                                    } else {
-                                        // Primera instalación
-                                        console.log('[SW] Service Worker instalado por primera vez');
-                                    }
-                                }
-                            });
-                        });
-                        
-                        // Verificar si hay actualizaciones periódicamente
-                        setInterval(() => {
-                            registration.update();
-                        }, 60000); // Verificar cada minuto
-                        */
-                        
-                    })
-                    .catch(error => {
-                        console.log('[SW] Error al registrar Service Worker:', error);
-                    });
-                
-                // DISABLED: Annoying update messages
-                /*
-                // Escuchar mensajes del Service Worker
-                navigator.serviceWorker.addEventListener('message', event => {
-                    if (event.data && event.data.type === 'SW_UPDATED') {
-                        console.log(`[SW] Service Worker actualizado a versión ${event.data.version}`);
-                        // Opcionalmente recargar la página o mostrar notificación
-                        setTimeout(() => {
-                            if (confirm('¡Nueva versión disponible! ¿Quieres recargar la página para obtener las últimas mejoras?')) {
-                                window.location.reload(true);
-                            }
-                        }, 1000);
-                    }
-                });
-                */
-            });
-        }
-        
-        // DISABLED: Annoying update notifications
-        /*
-        // Función para mostrar notificación de actualización
-        function showUpdateNotification() {
-            // Crear un elemento de notificación
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #4CAF50;
-                color: white;
-                padding: 15px 20px;
-                border-radius: 5px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-                z-index: 10000;
-                font-family: 'Montserrat', sans-serif;
-                max-width: 300px;
-                cursor: pointer;
-                transition: all 0.3s ease;
-            `;
-            notification.innerHTML = `
-                <strong>¡Actualización disponible!</strong><br>
-                <small>Haz clic para obtener la última versión</small>
-            `;
-            
-            notification.onclick = () => {
-                window.location.reload(true);
-            };
-            
-            document.body.appendChild(notification);
-            
-            // Auto-remover después de 10 segundos
-            setTimeout(() => {
-                if (notification.parentNode) {
-                    notification.style.opacity = '0';
-                    setTimeout(() => {
-                        notification.remove();
-                    }, 300);
-                }
-            }, 10000);
-        }
-        */
-        
-        // Función para limpiar cache manualmente (útil para debugging)
-        function clearSiteCache() {
-            if ('caches' in window) {
-                caches.keys().then(cacheNames => {
-                    return Promise.all(
-                        cacheNames.map(cacheName => {
-                            console.log('[Cache] Eliminando cache:', cacheName);
-                            return caches.delete(cacheName);
-                        })
-                    );
-                }).then(() => {
-                    console.log('[Cache] Todos los caches eliminados');
-                    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-                        navigator.serviceWorker.controller.postMessage({
-                            type: 'CLEAR_CACHE'
-                        });
-                    }
-                    // Recargar la página para obtener contenido fresco
-                    window.location.reload(true);
-                });
-            }
-        }
-        
-        // Agregar evento al ctrl+shift+r para limpiar cache
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.shiftKey && e.key === 'R') {
-                e.preventDefault();
-                console.log('[Cache] Limpieza manual de cache solicitada');
-                clearSiteCache();
-            }
-        });
-    </script>
-
-    <!-- Load essential functions first to prevent script conflicts -->
-    <script src="assets/js/essential.js?v=202505272312"></script>
-    
-    <!-- Load main.js for player name functionality FIRST -->
-    <script src="assets/js/main.js?v=202505272312"></script>
-    
-    <!-- Debug script to ensure player name loads correctly -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Debug info
-            const playerName = localStorage.getItem('playerName');
-            console.log('[Debug] Player name from localStorage:', playerName);
-            
-            // Double-check that the player name display is working
-            setTimeout(() => {
-                const playerNameDisplay = document.getElementById('playerNameDisplay');
-                if (playerNameDisplay) {
-                    const currentText = playerNameDisplay.textContent;
-                    console.log('[Debug] Current player name display:', currentText);
-                    
-                    if (currentText === 'Jugador' && playerName) {
-                        console.log('[Debug] Fixing player name display...');
-                        playerNameDisplay.textContent = playerName;
-                    }
-                }
-            }, 200);
-        });
-    </script>
-    
     <!-- Script para manejar los clicks en los botones de jugar -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1962,14 +1576,18 @@
                 function updateRoomsDisplay() {
                     if (quienSabeMasRooms) {
                         const qsmCount = quienSabeMasRooms.querySelector('.room-count');
-                        const qsmData = roomsData.quiensabemas;
-                        qsmCount.textContent = `${qsmData.active}/${qsmData.active + qsmData.available}`;
+                        if (qsmCount) {
+                            const qsmData = roomsData.quiensabemas;
+                            qsmCount.textContent = `${qsmData.active}/${qsmData.active + qsmData.available}`;
+                        }
                     }
 
                     if (mentirosoRooms) {
                         const mentirosoCount = mentirosoRooms.querySelector('.room-count');
-                        const mentirosoData = roomsData.mentiroso;
-                        mentirosoCount.textContent = `${mentirosoData.active}/${mentirosoData.active + mentirosoData.available}`;
+                        if (mentirosoCount) {
+                            const mentirosoData = roomsData.mentiroso;
+                            mentirosoCount.textContent = `${mentirosoData.active}/${mentirosoData.active + mentirosoData.available}`;
+                        }
                     }
                 }
 
@@ -2075,6 +1693,17 @@
                 const goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
                 const goToCrackRapidoButton = document.getElementById('goToCrackRapidoButton');
                 
+                // Debug: Log which elements were found
+                console.log('=== DEBUGGING DOM ELEMENTS ===');
+                console.log('Game cards found:', gameCards.length);
+                console.log('Mentiroso modal:', !!mentirosoIntroModal);
+                console.log('QSM modal:', !!qsmIntroModal);
+                console.log('Crack Rapido modal:', !!crackRapidoIntroModal);
+                console.log('Mentiroso button:', !!goToLobbyMentirosoButton);
+                console.log('QSM button:', !!goToLobbyQSMButton);
+                console.log('Crack Rapido button:', !!goToCrackRapidoButton);
+                console.log('=============================');
+                
                 gameCards.forEach(card => {
                     const gameType = card.getAttribute('data-game');
                     const playButton = card.querySelector('.quantum-play-btn');
@@ -2095,34 +1724,49 @@
                             }
                             
                             if (gameType === 'mentiroso') {
-                                mentirosoIntroModal.classList.add('active');
-                                // Track modal opening
-                                if (window.gtag) {
-                                    gtag('event', 'modal_open', {
-                                        event_category: 'engagement',
-                                        event_label: 'mentiroso_intro',
-                                        value: 1
-                                    });
+                                if (mentirosoIntroModal) {
+                                    mentirosoIntroModal.classList.add('active');
+                                    // Track modal opening
+                                    if (window.gtag) {
+                                        gtag('event', 'modal_open', {
+                                            event_category: 'engagement',
+                                            event_label: 'mentiroso_intro',
+                                            value: 1
+                                        });
+                                    }
+                                } else {
+                                    console.error('Mentiroso modal not found');
+                                    window.location.href = 'mentiroso.html';
                                 }
                             } else if (gameType === 'quiensabemas') {
-                                qsmIntroModal.classList.add('active');
-                                // Track modal opening
-                                if (window.gtag) {
-                                    gtag('event', 'modal_open', {
-                                        event_category: 'engagement',
-                                        event_label: 'qsm_intro',
-                                        value: 1
-                                    });
+                                if (qsmIntroModal) {
+                                    qsmIntroModal.classList.add('active');
+                                    // Track modal opening
+                                    if (window.gtag) {
+                                        gtag('event', 'modal_open', {
+                                            event_category: 'engagement',
+                                            event_label: 'qsm_intro',
+                                            value: 1
+                                        });
+                                    }
+                                } else {
+                                    console.error('QSM modal not found');
+                                    window.location.href = 'quiensabemas.html';
                                 }
                             } else if (gameType === 'crack-rapido') {
-                                crackRapidoIntroModal.classList.add('active');
-                                // Track modal opening
-                                if (window.gtag) {
-                                    gtag('event', 'modal_open', {
-                                        event_category: 'engagement',
-                                        event_label: 'crack_rapido_intro',
-                                        value: 1
-                                    });
+                                if (crackRapidoIntroModal) {
+                                    crackRapidoIntroModal.classList.add('active');
+                                    // Track modal opening
+                                    if (window.gtag) {
+                                        gtag('event', 'modal_open', {
+                                            event_category: 'engagement',
+                                            event_label: 'crack_rapido_intro',
+                                            value: 1
+                                        });
+                                    }
+                                } else {
+                                    console.error('Crack Rapido modal not found');
+                                    window.location.href = 'crack-rapido.html';
                                 }
                             } else {
                                 // Track direct navigation
@@ -2143,7 +1787,9 @@
                 // Botón para continuar al lobby de Mentiroso
                 if (goToLobbyMentirosoButton) {
                     goToLobbyMentirosoButton.addEventListener('click', function() {
-                        mentirosoIntroModal.classList.remove('active');
+                        if (mentirosoIntroModal) {
+                            mentirosoIntroModal.classList.remove('active');
+                        }
                         // Track game start from modal
                         if (window.gtag) {
                             gtag('event', 'game_start', {
@@ -2156,12 +1802,16 @@
                         }
                         window.location.href = 'mentiroso.html';
                     });
+                } else {
+                    console.warn('goToLobbyMentirosoButton not found');
                 }
                 
                 // Botón para continuar al lobby de QSM
                 if (goToLobbyQSMButton) {
                     goToLobbyQSMButton.addEventListener('click', function() {
-                        qsmIntroModal.classList.remove('active');
+                        if (qsmIntroModal) {
+                            qsmIntroModal.classList.remove('active');
+                        }
                         // Track game start from modal
                         if (window.gtag) {
                             gtag('event', 'game_start', {
@@ -2174,12 +1824,16 @@
                         }
                         window.location.href = 'quiensabemas.html';
                     });
+                } else {
+                    console.warn('goToLobbyQSMButton not found');
                 }
                 
                 // Botón para continuar al lobby de Crack Rápido
                 if (goToCrackRapidoButton) {
                     goToCrackRapidoButton.addEventListener('click', function() {
-                        crackRapidoIntroModal.classList.remove('active');
+                        if (crackRapidoIntroModal) {
+                            crackRapidoIntroModal.classList.remove('active');
+                        }
                         // Track game start from modal
                         if (window.gtag) {
                             gtag('event', 'game_start', {
@@ -2192,11 +1846,13 @@
                         }
                         window.location.href = 'crack-rapido.html';
                     });
+                } else {
+                    console.warn('goToCrackRapidoButton not found');
                 }
                 
                 // Cerrar modales al hacer clic fuera del contenido
                 window.addEventListener('click', function(event) {
-                    if (event.target === mentirosoIntroModal) {
+                    if (mentirosoIntroModal && event.target === mentirosoIntroModal) {
                         mentirosoIntroModal.classList.remove('active');
                         // Track modal close
                         if (window.gtag) {
@@ -2208,7 +1864,7 @@
                             });
                         }
                     }
-                    if (event.target === qsmIntroModal) {
+                    if (qsmIntroModal && event.target === qsmIntroModal) {
                         qsmIntroModal.classList.remove('active');
                         // Track modal close
                         if (window.gtag) {
@@ -2220,7 +1876,7 @@
                             });
                         }
                     }
-                    if (event.target === crackRapidoIntroModal) {
+                    if (crackRapidoIntroModal && event.target === crackRapidoIntroModal) {
                         crackRapidoIntroModal.classList.remove('active');
                         // Track modal close
                         if (window.gtag) {

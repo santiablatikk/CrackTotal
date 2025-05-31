@@ -144,10 +144,13 @@ function generateRankingHTML(matches) {
             return player;
         })
         .sort((a, b) => {
-            // Ordenar por mejor score, luego por mejor accuracy, luego por completion rate
+            // Ordenar por winRate primero, luego por mejor score, luego por mejor accuracy
+            const aWinRate = a.totalGames > 0 ? (a.completedGames / a.totalGames) * 100 : 0;
+            const bWinRate = b.totalGames > 0 ? (b.completedGames / b.totalGames) * 100 : 0;
+            
+            if (Math.abs(bWinRate - aWinRate) > 1) return bWinRate - aWinRate;
             if (b.bestScore !== a.bestScore) return b.bestScore - a.bestScore;
-            if (Math.abs(b.bestAccuracy - a.bestAccuracy) > 5) return b.bestAccuracy - a.bestAccuracy;
-            return b.completionRate - a.completionRate;
+            return b.bestAccuracy - a.bestAccuracy;
         })
         .slice(0, RANKING_LIMIT);
 

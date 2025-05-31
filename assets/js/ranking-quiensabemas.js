@@ -443,7 +443,7 @@ class AdvancedRankingSystem {
     }
     
     // Obtener ranking completo ordenado
-    getRankings(sortBy = 'currentElo', limit = 50) {
+    getRankings(sortBy = 'winRate', limit = 50) {
         const players = Object.values(this.playerStats);
         
         // Filtrar jugadores con al menos 1 partida
@@ -465,7 +465,7 @@ class AdvancedRankingSystem {
                 case 'averageResponseTime':
                     return a.averageResponseTime - b.averageResponseTime; // Menor es mejor
                 default:
-                    return b.currentElo - a.currentElo;
+                    return b.winRate - a.winRate; // Default cambiado a winRate
             }
         });
         
@@ -478,7 +478,7 @@ class AdvancedRankingSystem {
     }
     
     // Obtener posición en ranking
-    getPlayerRankPosition(playerName, sortBy = 'currentElo') {
+    getPlayerRankPosition(playerName, sortBy = 'winRate') {
         const rankings = this.getRankings(sortBy, 1000);
         const position = rankings.findIndex(player => player.playerName === playerName);
         return position >= 0 ? position + 1 : null;
@@ -635,9 +635,9 @@ function generateRankingHTML(usersData) {
             };
         })
         .sort((a, b) => {
-            // Ordenar por ELO primero, luego por win rate, luego por total de wins
+            // Ordenar por win rate primero, luego por ELO, luego por total de wins
+            if (Math.abs(b.winRate - a.winRate) > 1) return b.winRate - a.winRate;
             if (b.elo !== a.elo) return b.elo - a.elo;
-            if (Math.abs(b.winRate - a.winRate) > 5) return b.winRate - a.winRate;
             return b.wins - a.wins;
         })
         .slice(0, RANKING_LIMIT);

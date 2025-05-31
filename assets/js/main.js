@@ -273,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
 
     // Handle clicking on game cards
-    const gameCards = document.querySelectorAll('.game-card');
+    const gameCards = document.querySelectorAll('.cosmic-game-card, .game-card');
     if (gameCards.length > 0) {
         // Skip adding event listeners here as they're now handled in games.html
         // This prevents duplicate event handlers
@@ -384,6 +384,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const qsmIntroModal = document.getElementById('qsmIntroModal');
         if (qsmIntroModal) qsmIntroModal.classList.add('active');
     }
+
+    // Cargar salas iniciales para la pestaña activa
+    const activeTab = document.querySelector('.room-tab-button.active');
+    if (activeTab) {
+        const gameType = activeTab.getAttribute('data-game');
+        fetchRooms(gameType);
+    }
 });
 
 // Animation helpers
@@ -430,6 +437,7 @@ async function shareSite() {
 }
 
 // Funciones para gestionar las salas disponibles en games.html
+/* COMENTADO PARA EVITAR CONFLICTOS CON games.html
 document.addEventListener('DOMContentLoaded', function() {
     // Verificar si estamos en la página games.html
     if (!document.querySelector('.available-rooms-section')) return;
@@ -653,6 +661,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchRooms(gameType);
     }
 });
+*/ // FIN COMENTADO PARA EVITAR CONFLICTOS CON games.html
 
 /* ========================================= */
 /* ======= NAVEGACIÓN MOBILE HAMBURGUESA === */
