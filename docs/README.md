@@ -37,9 +37,15 @@
 
 El proyecto está configurado para deployment automático en Render con:
 
-- **`config/package.json`**: Dependencias y scripts
+- **`package.json`**: Dependencies y scripts (DEBE estar en root)
 - **`config/render.yaml`**: Configuración de servicio
 - **Servidor HTTP**: Sirve archivos estáticos y WebSocket
+
+### Archivos Críticos en Root
+⚠️ **IMPORTANTE**: Estos archivos DEBEN permanecer en la raíz para que Render funcione:
+- `package.json` - Render lo necesita para `npm install`
+- `package-lock.json` - Para versiones exactas de dependencies
+- `server.js` - Archivo principal del servidor
 
 ### Variables de Entorno
 

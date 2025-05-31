@@ -219,9 +219,17 @@ cracktotal/
 - ✅ `sw.js` - Service Worker
 
 ### Configuración de Deploy
-- ✅ `config/package.json` - Dependencies
+- ✅ `package.json` - Dependencies (DEBE estar en root para Render)
 - ✅ `config/render.yaml` - Render config
 - ✅ `server.js` actualizado para nueva estructura
+
+## ⚠️ **CORRECCIÓN IMPORTANTE - DEPLOY**
+
+**Después de la reorganización inicial**, se detectó que **Render requiere** que `package.json` y `package-lock.json` **estén en la raíz del proyecto** para poder ejecutar `npm install`. Por esto:
+
+- ✅ `package.json` **movido de vuelta** de `config/` a root
+- ✅ `package-lock.json` **movido de vuelta** de `config/` a root  
+- ✅ Documentación actualizada con esta información crítica
 
 ---
 
