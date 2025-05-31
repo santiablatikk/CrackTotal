@@ -58,9 +58,10 @@ function generateRankingHTML(usersData) {
         .filter(user => {
             // Buscar datos de Pasala Che en diferentes ubicaciones posibles
             const pasalacheData = user.pasalache || user.stats?.pasalache || user.stats?.pasalaChe || user.stats?.PasalaChe;
-            const hasScore = user.totalScore > 0 || user.score > 0 || (pasalacheData && pasalacheData.totalScore > 0);
+            const hasScore = user.totalScore > 0 || user.score > 0 || (pasalacheData && (pasalacheData.totalScore > 0 || pasalacheData.score > 0));
             const hasWins = user.wins > 0 || (pasalacheData && pasalacheData.wins > 0);
-            return pasalacheData || hasScore || hasWins;
+            const hasPlayed = (pasalacheData && pasalacheData.played > 0);
+            return pasalacheData || hasScore || hasWins || hasPlayed;
         })
         .map(user => {
             console.log('[RANKING PC] Procesando usuario:', user);
@@ -68,10 +69,11 @@ function generateRankingHTML(usersData) {
             // Intentar obtener datos de diferentes ubicaciones
             const pasalacheData = user.pasalache || user.stats?.pasalache || user.stats?.pasalaChe || user.stats?.PasalaChe || {};
             
-            const totalScore = pasalacheData.totalScore || user.totalScore || user.score || 0;
+            // Datos específicos de Pasala Che: score acumulativo de letras, wins, partidas jugadas
+            const totalScore = pasalacheData.score || user.totalScore || user.score || 0;
             const wins = pasalacheData.wins || user.wins || 0;
             const losses = pasalacheData.losses || user.losses || user.totalLosses || 0;
-            const matches = pasalacheData.matches || user.matchesPlayed || wins + losses || 0;
+            const matches = pasalacheData.played || user.matchesPlayed || Math.max(wins + losses, pasalacheData.matches || 0);
             
             const winRate = matches > 0 ? (wins / matches) * 100 : 0;
             const avgScore = matches > 0 ? Math.round(totalScore / matches) : totalScore;
@@ -88,10 +90,10 @@ function generateRankingHTML(usersData) {
             };
         })
         .sort((a, b) => {
-            // Ordenar por efectividad primero, luego por victorias, luego por puntaje total
-            if (b.winRate !== a.winRate) return b.winRate - a.winRate;
+            // Ordenar por total score primero (letras acumuladas), luego por wins, luego por win rate
+            if (b.totalScore !== a.totalScore) return b.totalScore - a.totalScore;
             if (b.wins !== a.wins) return b.wins - a.wins;
-            return b.totalScore - a.totalScore;
+            return b.winRate - a.winRate;
         })
         .slice(0, RANKING_LIMIT); // Limitar a top 15
 
@@ -118,7 +120,7 @@ function generateRankingHTML(usersData) {
                 </td>
                 <td class="score-info">
                     <div class="main-score">${(user.totalScore / 1000).toFixed(1)}k</div>
-                    <div class="secondary-stat">Prom: ${user.avgScore}</div>
+                    <div class="secondary-stat">letras total</div>
                 </td>
                 <td class="stat-cell hide-mobile">
                     <div class="primary-stat">${user.matches}</div>
@@ -126,22 +128,22 @@ function generateRankingHTML(usersData) {
                 </td>
                 <td class="stat-cell">
                     <div class="primary-stat wins-stat">${user.wins}</div>
-                    <div class="secondary-stat">${user.winRate.toFixed(0)}%</div>
+                    <div class="secondary-stat">${user.winRate.toFixed(0)}% éxito</div>
                 </td>
                 <td class="stat-cell hide-mobile">
                     <div class="primary-stat losses-stat">${user.losses}</div>
                     <div class="secondary-stat">derrotas</div>
                 </td>
                 <td class="stat-cell hide-mobile">
-                    <div class="primary-stat accuracy-stat">${user.winRate.toFixed(0)}%</div>
-                    <div class="secondary-stat">efectividad</div>
+                    <div class="primary-stat accuracy-stat">${user.avgScore.toLocaleString()}</div>
+                    <div class="secondary-stat">prom/partida</div>
                 </td>
             </tr>
         `;
     }).join('');
 }
 
-// --- Función para generar HTML del historial mejorado ---
+// --- Función para generar HTML del historial mejorado y compacto ---
 function generateHistoryHTML(matches) {
     if (!matches || matches.length === 0) {
         return '<div class="empty-state">No hay historial disponible para este jugador</div>';
@@ -181,37 +183,100 @@ function generateHistoryHTML(matches) {
         const score = match.score || (match.players && match.players[0]?.score) || 0;
         const playerLevel = getPlayerLevel(score, isVictory ? 100 : 0, 1);
         const playerName = match.playerName || (match.players && match.players[0]?.displayName) || 'Anónimo';
-        const defeatReason = match.defeatReason || (isTimeoutDefeat ? 'Tiempo agotado' : 'Normal');
+        const duration = Math.round(match.timeSpent || match.duration || 0);
+        const difficulty = match.difficulty || 'Normal';
+        const passes = match.passes || 0; // Específico de Pasala Che
+        
+        // Determinar resultado y color
+        let resultData;
+        if (isVictory) {
+            resultData = { text: 'VICTORIA', icon: '🏆', class: 'victory', color: '#10b981' };
+        } else if (isTimeoutDefeat) {
+            resultData = { text: 'TIEMPO', icon: '⏰', class: 'timeout', color: '#f59e0b' };
+        } else {
+            resultData = { text: 'DERROTA', icon: '❌', class: 'defeat', color: '#ef4444' };
+        }
+        
+        // Calcular velocidad (letras por segundo)
+        const lettersPerSecond = duration > 0 ? Math.round(score / duration) : 0;
         
         return `
             <div class="history-item">
+                <!-- Header compacto -->
                 <div class="history-header">
-                    <span class="history-player-name">${playerName}</span>
+                    <span class="history-player-name">🏈 ${playerName}</span>
                     <span class="history-date">${formatCompactDate(match.timestamp)}</span>
                 </div>
-                <div class="history-stats">
-                    <div class="stat-group primary-stat-group">
-                        <span class="stat-label">Resultado:</span>
-                        <span class="stat-value result-highlight ${isVictory ? 'wins-stat' : 'losses-stat'}">
-                            ${isVictory ? '🏆 VICTORIA' : (isTimeoutDefeat ? '⏰ TIEMPO AGOTADO' : '❌ DERROTA')}
-                        </span>
+
+                <!-- Resultado principal -->
+                <div class="main-summary">
+                    <div class="player-section">
+                        <div class="result-indicator" style="color: ${resultData.color}; border-color: ${resultData.color}40; background: ${resultData.color}20;">
+                            <span class="result-icon">${resultData.icon}</span>
+                            <span class="result-text">${resultData.text}</span>
+                        </div>
                     </div>
-                    <div class="stat-group primary-stat-group">
-                        <span class="stat-label">Tiempo total:</span>
-                        <span class="stat-value time-highlight">${Math.round(match.timeSpent || match.duration || 0)}s</span>
+                    
+                    <div class="vs-section">
+                        <div class="player-score" style="color: ${resultData.color}">${score.toLocaleString()}</div>
+                        <div style="font-size: 0.6rem; color: var(--ranking-text-muted);">letras</div>
                     </div>
-                    <div class="stat-group primary-stat-group">
-                        <span class="stat-label">Letras correctas:</span>
-                        <span class="stat-value accuracy-highlight">${score.toLocaleString()}</span>
-                    </div>
-                    <div class="stat-group">
-                        <span class="stat-label">Dificultad:</span>
-                        <span class="stat-value">${match.difficulty || 'Normal'}</span>
+                    
+                    <div class="player-section">
+                        <div class="level-badge" style="background-color: ${playerLevel.color}">
+                            ${playerLevel.icon} ${playerLevel.level}
+                        </div>
                     </div>
                 </div>
-                <div class="level-badge" style="background-color: ${playerLevel.color}">
-                    ${playerLevel.icon} ${playerLevel.level}
+
+                <!-- Estadísticas clave -->
+                <div class="key-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-value">${duration}s</div>
+                        <div class="stat-label">Tiempo</div>
+                        <div class="stat-detail">${duration < 60 ? 'Rápido' : duration < 120 ? 'Normal' : 'Lento'}</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value">${lettersPerSecond}</div>
+                        <div class="stat-label">Velocidad</div>
+                        <div class="stat-detail">letras/seg</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-value">${difficulty}</div>
+                        <div class="stat-label">Dificultad</div>
+                        <div class="stat-detail">${isVictory ? 'Completado' : 'Fallido'}</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon">🔄</div>
+                        <div class="stat-value">${passes}</div>
+                        <div class="stat-label">Pases</div>
+                        <div class="stat-detail">${passes === 0 ? 'Sin pases' : passes === 1 ? '1 pase' : `${passes} pases`}</div>
+                    </div>
                 </div>
+
+                <!-- Análisis simplificado -->
+                ${(isVictory || score >= 1000 || lettersPerSecond >= 10) ? `
+                <div class="performance-insight">
+                    <div class="insight-text">
+                        ${isVictory && lettersPerSecond >= 15 ? 
+                            '<span class="insight-highlight">¡Velocidad increíble!</span> Completaste muy rápido.' :
+                        isVictory ? 
+                            '<span class="insight-highlight">¡Excelente!</span> Completaste la palabra exitosamente.' :
+                        lettersPerSecond >= 20 ? 
+                            '<span class="insight-highlight">Máquina de escribir</span> - Velocidad excepcional.' :
+                        score >= 2000 ? 
+                            '<span class="insight-highlight">Gran progreso</span> - Muchas letras antes del final.' :
+                            `<span class="insight-highlight">Buen intento</span> - Conseguiste ${score.toLocaleString()} letras.`
+                        }
+                    </div>
+                </div>
+                ` : ''}
             </div>
         `;
     }).join('');

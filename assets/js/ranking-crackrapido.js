@@ -71,10 +71,10 @@ function getPlayerLevel(score, accuracy) {
 // --- Función para generar HTML del ranking (Top 15) ---
 function generateRankingHTML(matches) {
     if (!matches || matches.length === 0) {
-        return '<tr><td colspan="8" class="empty-state">No hay datos disponibles</td></tr>';
+        return '<tr><td colspan="5" class="empty-state">No hay datos disponibles</td></tr>';
     }
 
-    // Agrupar por jugador para obtener sus mejores estadísticas
+    // Agrupar por jugador para obtener sus mejores estadísticas de Crack Rápido
     const playerStats = {};
     
     matches.forEach(match => {
@@ -86,7 +86,6 @@ function generateRankingHTML(matches) {
         const averageTime = match.averageTime || 5;
         const accuracy = match.accuracy || ((correctAnswers / totalQuestions) * 100);
         const completed = match.completed || match.result === 'completed';
-        const effectiveScore = calculateEffectiveScore({ score, correctAnswers, totalQuestions, maxStreak, averageTime, accuracy, completed });
         
         if (!playerStats[playerName]) {
             playerStats[playerName] = {
@@ -100,7 +99,7 @@ function generateRankingHTML(matches) {
                 totalScore: 0,
                 totalCorrectAnswers: 0,
                 totalQuestions: 0,
-                effectiveRating: 0,
+                totalTime: 0,
                 lastPlayed: null
             };
         }
@@ -125,9 +124,7 @@ function generateRankingHTML(matches) {
         stats.totalScore += score;
         stats.totalCorrectAnswers += correctAnswers;
         stats.totalQuestions += totalQuestions;
-        
-        // Calcular rating efectivo (tomar el mejor)
-        stats.effectiveRating = Math.max(stats.effectiveRating, effectiveScore);
+        stats.totalTime += match.totalTime || 0;
         
         // Actualizar última fecha jugada
         if (!stats.lastPlayed || (match.timestamp && match.timestamp.seconds > stats.lastPlayed.seconds)) {
@@ -142,34 +139,29 @@ function generateRankingHTML(matches) {
             player.averageScore = player.totalGames > 0 ? Math.round(player.totalScore / player.totalGames) : 0;
             player.overallAccuracy = player.totalQuestions > 0 ? (player.totalCorrectAnswers / player.totalQuestions) * 100 : 0;
             player.completionRate = player.totalGames > 0 ? (player.completedGames / player.totalGames) * 100 : 0;
-            
-            // Rating final considerando múltiples factores
-            const consistencyBonus = player.completionRate >= 70 ? 1.2 : player.completionRate >= 50 ? 1.1 : 1.0;
-            const experienceBonus = Math.min(1 + (player.totalGames * 0.02), 1.3); // Hasta 30% bonus por experiencia
-            
-            player.finalRating = player.effectiveRating * consistencyBonus * experienceBonus;
+            player.averageGameTime = player.totalGames > 0 ? Math.round(player.totalTime / player.totalGames) : 0;
             
             return player;
         })
         .sort((a, b) => {
-            // Ordenar por rating final, luego por mejor accuracy, luego por mejores rachas
-            if (Math.abs(b.finalRating - a.finalRating) > 50) return b.finalRating - a.finalRating;
+            // Ordenar por mejor score, luego por mejor accuracy, luego por completion rate
+            if (b.bestScore !== a.bestScore) return b.bestScore - a.bestScore;
             if (Math.abs(b.bestAccuracy - a.bestAccuracy) > 5) return b.bestAccuracy - a.bestAccuracy;
-            return b.bestStreak - a.bestStreak;
+            return b.completionRate - a.completionRate;
         })
         .slice(0, RANKING_LIMIT);
 
     if (validPlayers.length === 0) {
-        return '<tr><td colspan="8" class="empty-state">No hay jugadores registrados aún</td></tr>';
+        return '<tr><td colspan="5" class="empty-state">No hay jugadores registrados aún</td></tr>';
     }
 
     return validPlayers.map((player, index) => {
-        const playerLevel = getPlayerLevel(player.finalRating, player.bestAccuracy);
+        const playerLevel = getPlayerLevel(player.bestScore, player.bestAccuracy);
         const isTopPlayer = index < 3;
         const position = index + 1;
         
         return `
-            <tr class="ranking-row ${isTopPlayer ? 'top-player' : ''}" data-rating="${Math.round(player.finalRating)}">
+            <tr class="ranking-row ${isTopPlayer ? 'top-player' : ''}" data-score="${player.bestScore}">
                 <td class="ranking-position">
                     <div class="position-number">${position}</div>
                     <div class="position-icon">
@@ -184,9 +176,9 @@ function generateRankingHTML(matches) {
                     <div class="player-stats-summary">${player.totalGames} partidas • ${player.completionRate.toFixed(0)}% completadas</div>
                 </td>
                 <td class="score-info">
-                    <div class="main-score">${Math.round(player.finalRating).toLocaleString()}</div>
-                    <div class="secondary-stat">Rating</div>
-                    <div class="score-breakdown">Mejor: ${player.bestScore.toLocaleString()}</div>
+                    <div class="main-score">${player.bestScore.toLocaleString()}</div>
+                    <div class="secondary-stat">Mejor Score</div>
+                    <div class="score-breakdown">Prom: ${player.averageScore.toLocaleString()}</div>
                 </td>
                 <td class="stat-cell">
                     <div class="primary-stat accuracy-stat">${player.bestAccuracy.toFixed(0)}%</div>
@@ -200,28 +192,12 @@ function generateRankingHTML(matches) {
                       player.bestStreak >= 10 ? '<div class="streak-badge">🔥 FUEGO</div>' : 
                       player.bestStreak >= 5 ? '<div class="streak-badge">⚡ RÁPIDO</div>' : ''}
                 </td>
-                <td class="stat-cell hide-mobile">
-                    <div class="primary-stat time-stat">${player.bestAverageTime === Infinity ? '---' : player.bestAverageTime.toFixed(1)}s</div>
-                    <div class="secondary-stat">Tiempo mejor</div>
-                    ${player.bestAverageTime <= 2 ? '<div class="speed-badge">🚀 SONIC</div>' :
-                      player.bestAverageTime <= 3 ? '<div class="speed-badge">⚡ RÁPIDO</div>' : ''}
-                </td>
-                <td class="game-status hide-mobile">
-                    <div class="completion-rate" style="color: ${player.completionRate >= 70 ? '#10b981' : player.completionRate >= 50 ? '#f59e0b' : '#ef4444'}">
-                        ${player.completionRate.toFixed(0)}%
-                    </div>
-                    <div class="secondary-stat">Completadas</div>
-                </td>
-                <td class="match-date hide-mobile">
-                    ${formatCompactDate(player.lastPlayed)}
-                    <div class="secondary-stat">${player.totalGames} juegos</div>
-                </td>
             </tr>
         `;
     }).join('');
 }
 
-// --- Función para generar HTML del historial mejorado ---
+// --- Función para generar HTML del historial mejorado y compacto ---
 function generateHistoryHTML(matches) {
     if (!matches || matches.length === 0) {
         return '<div class="empty-state">No hay historial disponible para este jugador</div>';
@@ -275,164 +251,128 @@ function generateHistoryHTML(matches) {
         const isTimeoutDefeat = match.result === 'timeout' || match.timeOut === true || (!completed && totalTime >= 120);
         
         // Determinar tipo de finalización
-        let gameStatus = '';
-        let statusIcon = '';
-        let statusClass = '';
-        
+        let resultData;
         if (completed) {
             if (accuracy >= 95 && maxStreak >= 15 && averageTime <= 2) {
-                gameStatus = 'ACTUACIÓN PERFECTA';
-                statusIcon = '🚀';
-                statusClass = 'perfect-performance';
+                resultData = { text: 'PERFECTO', icon: '🚀', class: 'perfect-performance', color: '#10b981' };
             } else if (accuracy >= 90 && maxStreak >= 10) {
-                gameStatus = 'GRAN ACTUACIÓN';
-                statusIcon = '🔥';
-                statusClass = 'great-performance';
+                resultData = { text: 'EXCELENTE', icon: '🔥', class: 'great-performance', color: '#059669' };
             } else if (accuracy >= 80) {
-                gameStatus = 'BIEN COMPLETADO';
-                statusIcon = '✅';
-                statusClass = 'good-completion';
+                resultData = { text: 'COMPLETADO', icon: '✅', class: 'good-completion', color: '#0d9488' };
             } else {
-                gameStatus = 'COMPLETADO';
-                statusIcon = '☑️';
-                statusClass = 'completed';
+                resultData = { text: 'TERMINADO', icon: '☑️', class: 'completed', color: '#3b82f6' };
             }
         } else {
             if (isTimeoutDefeat) {
-                gameStatus = 'TIEMPO AGOTADO';
-                statusIcon = '⏰';
-                statusClass = 'timeout-defeat';
-            } else if (correctAnswers === 0) {
-                gameStatus = 'ABANDONO TEMPRANO';
-                statusIcon = '🚪';
-                statusClass = 'early-quit';
+                resultData = { text: 'TIEMPO', icon: '⏰', class: 'timeout-defeat', color: '#f59e0b' };
             } else {
-                gameStatus = 'INCOMPLETO';
-                statusIcon = '⏸️';
-                statusClass = 'incomplete';
+                resultData = { text: 'INCOMPLETO', icon: '⏸️', class: 'incomplete', color: '#ef4444' };
             }
         }
 
-        // Calcular power-ups usados
-        const powerUpsUsed = match.powerUpsUsed || { timeExtra: 0, removeOption: 0, scoreMultiplier: 0 };
-        const totalPowerUps = Object.values(powerUpsUsed).reduce((sum, count) => sum + count, 0);
-        
+        // Determinar especialización
+        let specialization = { icon: '⚖️', type: 'EQUILIBRADO', color: '#6b7280' };
+        if (averageTime <= 2 && accuracy >= 85) {
+            specialization = { icon: '🚀', type: 'VELOCISTA', color: '#8b5cf6' };
+        } else if (accuracy >= 95) {
+            specialization = { icon: '🎯', type: 'PRECISO', color: '#10b981' };
+        } else if (maxStreak >= 15) {
+            specialization = { icon: '🔥', type: 'STREAKER', color: '#f59e0b' };
+        }
+
         return `
-            <div class="history-item ${statusClass}">
+            <div class="history-item">
+                <!-- Header compacto -->
                 <div class="history-header">
-                    <div class="player-info">
-                        <span class="history-player-name">${match.playerName || 'Anónimo'}</span>
-                        <span class="game-mode-tag">${gameMode.toUpperCase()}</span>
-                    </div>
-                    <div class="date-and-status">
-                        <span class="history-date">${formatCompactDate(match.timestamp)}</span>
-                        <span class="game-status ${statusClass}">
-                            ${statusIcon} ${gameStatus}
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="score-summary">
-                    <div class="main-score-display">
-                        <div class="effective-score" style="color: ${playerLevel.color}">
-                            ${(effectiveScore / 1000).toFixed(1)}k pts
-                        </div>
-                        <div class="raw-score">Base: ${score.toLocaleString()}</div>
-                    </div>
-                    <div class="level-indicator" style="background: ${playerLevel.color}">
-                        ${playerLevel.icon} ${playerLevel.level}
-                    </div>
+                    <span class="history-player-name">⚡ ${match.playerName || 'Anónimo'}</span>
+                    <span class="history-date">${formatCompactDate(match.timestamp)}</span>
                 </div>
 
-                <div class="performance-grid">
-                    <div class="perf-stat accuracy-focus">
-                        <div class="stat-header">
-                            <span class="stat-icon">🎯</span>
-                            <span class="stat-title">Precisión</span>
-                        </div>
-                        <div class="stat-main">${accuracy.toFixed(0)}%</div>
-                        <div class="stat-detail">${correctAnswers}/${totalQuestions} correctas</div>
-                        ${accuracy >= 95 ? '<div class="achievement-badge perfect">PERFECTO</div>' :
-                          accuracy >= 90 ? '<div class="achievement-badge excellent">EXCELENTE</div>' :
-                          accuracy >= 80 ? '<div class="achievement-badge good">BUENO</div>' : ''}
-                    </div>
-
-                    <div class="perf-stat speed-focus">
-                        <div class="stat-header">
-                            <span class="stat-icon">⚡</span>
-                            <span class="stat-title">Velocidad</span>
-                        </div>
-                        <div class="stat-main">${averageTime.toFixed(1)}s</div>
-                        <div class="stat-detail">por pregunta</div>
-                        ${averageTime <= 1.5 ? '<div class="achievement-badge perfect">SONIC</div>' :
-                          averageTime <= 2.5 ? '<div class="achievement-badge excellent">RÁPIDO</div>' :
-                          averageTime <= 4 ? '<div class="achievement-badge good">ÁGIL</div>' : ''}
-                    </div>
-
-                    <div class="perf-stat streak-focus">
-                        <div class="stat-header">
-                            <span class="stat-icon">🔥</span>
-                            <span class="stat-title">Racha Máx.</span>
-                        </div>
-                        <div class="stat-main">${maxStreak}</div>
-                        <div class="stat-detail">consecutivas</div>
-                        ${maxStreak >= 20 ? '<div class="achievement-badge perfect">ÉPICO</div>' :
-                          maxStreak >= 15 ? '<div class="achievement-badge excellent">INCREÍBLE</div>' :
-                          maxStreak >= 10 ? '<div class="achievement-badge good">GENIAL</div>' : ''}
-                    </div>
-
-                    <div class="perf-stat completion-focus">
-                        <div class="stat-header">
-                            <span class="stat-icon">⏱️</span>
-                            <span class="stat-title">Duración</span>
-                        </div>
-                        <div class="stat-main">${Math.round(totalTime)}s</div>
-                        <div class="stat-detail">tiempo total</div>
-                        ${completed ? '<div class="achievement-badge good">TERMINADO</div>' : 
-                          '<div class="achievement-badge incomplete">INCOMPLETO</div>'}
-                    </div>
-                </div>
-
-                <div class="game-details">
-                    <div class="detail-row">
-                        <div class="detail-item">
-                            <span class="detail-label">Categoría:</span>
-                            <span class="detail-value category-tag">${category === 'general' ? 'General' : category}</span>
-                        </div>
-                        <div class="detail-item">
-                            <span class="detail-label">Dificultad:</span>
-                            <span class="detail-value difficulty-tag">${difficulty}</span>
+                <!-- Resultado principal -->
+                <div class="main-summary">
+                    <div class="player-section">
+                        <div class="result-indicator" style="color: ${resultData.color}; border-color: ${resultData.color}40; background: ${resultData.color}20;">
+                            <span class="result-icon">${resultData.icon}</span>
+                            <span class="result-text">${resultData.text}</span>
                         </div>
                     </div>
                     
-                    ${totalPowerUps > 0 ? `
-                    <div class="powerups-used">
-                        <span class="powerups-label">Power-ups utilizados:</span>
-                        <div class="powerups-list">
-                            ${powerUpsUsed.timeExtra > 0 ? `<span class="powerup-tag">⏰ Tiempo x${powerUpsUsed.timeExtra}</span>` : ''}
-                            ${powerUpsUsed.removeOption > 0 ? `<span class="powerup-tag">❌ Quitar x${powerUpsUsed.removeOption}</span>` : ''}
-                            ${powerUpsUsed.scoreMultiplier > 0 ? `<span class="powerup-tag">⭐ Doble x${powerUpsUsed.scoreMultiplier}</span>` : ''}
-                        </div>
+                    <div class="vs-section">
+                        <div class="player-score" style="color: ${resultData.color}">${(effectiveScore / 1000).toFixed(1)}k</div>
+                        <div style="font-size: 0.6rem; color: var(--ranking-text-muted);">rating</div>
                     </div>
-                    ` : ''}
                     
-                    <div class="performance-summary">
-                        <div class="summary-item">
-                            <span class="summary-label">Rating de Actuación:</span>
-                            <span class="summary-value performance-rating" style="color: ${
-                                effectiveScore >= 4000 ? '#ff6b35' : 
-                                effectiveScore >= 3000 ? '#fbbf24' : 
-                                effectiveScore >= 2000 ? '#10b981' : 
-                                effectiveScore >= 1000 ? '#3b82f6' : '#6b7280'
-                            }">
-                                ${effectiveScore >= 4000 ? 'LEGENDARIO' :
-                                  effectiveScore >= 3000 ? 'EXCELENTE' :
-                                  effectiveScore >= 2000 ? 'MUY BUENO' :
-                                  effectiveScore >= 1000 ? 'BUENO' : 'PROMEDIO'}
-                            </span>
+                    <div class="player-section">
+                        <div class="level-badge" style="background-color: ${playerLevel.color}">
+                            ${playerLevel.icon} ${playerLevel.level}
                         </div>
                     </div>
                 </div>
+
+                <!-- Estadísticas clave -->
+                <div class="key-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-value">${accuracy.toFixed(0)}%</div>
+                        <div class="stat-label">Precisión</div>
+                        <div class="stat-detail">${correctAnswers}/${totalQuestions}</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-value">${averageTime.toFixed(1)}s</div>
+                        <div class="stat-label">Velocidad</div>
+                        <div class="stat-detail">${averageTime <= 2 ? 'Sonic' : averageTime <= 3 ? 'Rápido' : 'Normal'}</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-value">${maxStreak}</div>
+                        <div class="stat-label">Racha</div>
+                        <div class="stat-detail">${maxStreak >= 15 ? 'Épico' : maxStreak >= 10 ? 'Genial' : 'Bueno'}</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon">⏱️</div>
+                        <div class="stat-value">${Math.round(totalTime)}s</div>
+                        <div class="stat-label">Tiempo</div>
+                        <div class="stat-detail">${completed ? 'Terminado' : 'Incompleto'}</div>
+                    </div>
+                </div>
+
+                <!-- Especialización -->
+                <div class="game-specific">
+                    <div class="specific-label">
+                        <span style="color: ${specialization.color}">${specialization.icon}</span>
+                        Especialización
+                    </div>
+                    <div class="specific-content">
+                        <div class="specific-tag" style="color: ${specialization.color}; border-color: ${specialization.color}40">
+                            ${specialization.type}
+                        </div>
+                        ${accuracy >= 95 ? '<div class="specific-tag" style="color: #10b981; border-color: #10b98140;">🎯 PERFECCIÓN</div>' : ''}
+                        ${averageTime <= 2 ? '<div class="specific-tag" style="color: #8b5cf6; border-color: #8b5cf640;">🚀 VELOCIDAD</div>' : ''}
+                        ${maxStreak >= 15 ? '<div class="specific-tag" style="color: #f59e0b; border-color: #f59e0b40;">🔥 RACHA ÉPICA</div>' : ''}
+                    </div>
+                </div>
+
+                <!-- Análisis simplificado -->
+                ${(accuracy >= 90 || maxStreak >= 10 || averageTime <= 2.5) ? `
+                <div class="performance-insight">
+                    <div class="insight-text">
+                        ${accuracy >= 95 && averageTime <= 2 ? 
+                            '<span class="insight-highlight">¡Actuación perfecta!</span> Velocidad y precisión máximas.' :
+                        accuracy >= 90 ? 
+                            '<span class="insight-highlight">Precisión excelente</span> - Gran dominio del juego.' :
+                        maxStreak >= 15 ? 
+                            '<span class="insight-highlight">Racha épica</span> - Impresionante consistencia.' :
+                        averageTime <= 2 ? 
+                            '<span class="insight-highlight">Velocidad extrema</span> - Respuestas ultrarrápidas.' :
+                            `<span class="insight-highlight">Buen rendimiento</span> - Especialidad ${specialization.type.toLowerCase()}.`
+                        }
+                    </div>
+                </div>
+                ` : ''}
             </div>
         `;
     }).join('');
@@ -454,7 +394,7 @@ function setupRankingListener() {
             if (snapshot.empty) {
                 console.log('[RANKING CR] No hay datos de matches');
                 if (rankingBody) {
-                    rankingBody.innerHTML = '<tr><td colspan="8" class="empty-state">No hay partidas registradas aún</td></tr>';
+                    rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">No hay partidas registradas aún</td></tr>';
                 }
                 if (historyList) {
                     historyList.innerHTML = '<div class="empty-state">No hay historial disponible</div>';
@@ -500,7 +440,7 @@ function setupRankingListener() {
         }, (error) => {
             console.error('[RANKING CR] Error en el listener:', error);
             if (rankingBody) {
-                rankingBody.innerHTML = '<tr><td colspan="8" class="empty-state">Error al cargar el ranking. Reintentando...</td></tr>';
+                rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">Error al cargar el ranking. Reintentando...</td></tr>';
             }
             
             // Reintentar después de 3 segundos
@@ -516,7 +456,7 @@ function setupRankingListener() {
     } catch (error) {
         console.error('[RANKING CR] Error al configurar listener:', error);
         if (rankingBody) {
-            rankingBody.innerHTML = '<tr><td colspan="8" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+            rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
         }
     }
 }
@@ -526,7 +466,7 @@ function showLoadingState() {
     if (rankingBody) {
         rankingBody.innerHTML = `
             <tr>
-                <td colspan="8" class="loading-state">
+                <td colspan="5" class="loading-state">
                     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                         <div style="width: 12px; height: 12px; background: var(--crackrapido-primary); border-radius: 50%; animation: pulse 1.5s infinite;"></div>
                         <span>Buscando a los cracks más rápidos...</span>
@@ -562,7 +502,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             console.error('[RANKING CR] Firebase no está inicializado');
             if (rankingBody) {
-                rankingBody.innerHTML = '<tr><td colspan="8" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+                rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
             }
         }
     }, 1000);

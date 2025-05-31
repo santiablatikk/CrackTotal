@@ -2,9 +2,9 @@
 /* ============= RANKING SYSTEM STYLES =============== */
 /* ==================================================== */
 
-/* Variables CSS para el sistema unificado - Versión Sutil */
+/* Variables CSS - Sistema Unificado */
 :root {
-    /* Colores base más sutiles */
+    /* Colores base */
     --ranking-bg: #0f1419;
     --ranking-card: #1a202c;
     --ranking-card-hover: #2d3748;
@@ -13,37 +13,32 @@
     --ranking-text-muted: #94a3b8;
     --ranking-text-secondary: #cbd5e0;
     
-    /* Colores de juegos más sutiles */
+    /* Colores de juegos */
     --pasalache-primary: #3182ce;
-    --pasalache-secondary: #4299e1;
     --quiensabemas-primary: #805ad5;
-    --quiensabemas-secondary: #9f7aea;
     --mentiroso-primary: #e53e3e;
-    --mentiroso-secondary: #f56565;
     --crackrapido-primary: #dd6b20;
-    --crackrapido-secondary: #ed8936;
     
-    /* Gradientes más sutiles */
+    /* Gradientes */
     --pasalache-gradient: linear-gradient(135deg, #3182ce 0%, #2c5aa0 100%);
     --quiensabemas-gradient: linear-gradient(135deg, #805ad5 0%, #6b46c1 100%);
     --mentiroso-gradient: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
     --crackrapido-gradient: linear-gradient(135deg, #dd6b20 0%, #c05621 100%);
     
-    /* Efectos más sutiles */
+    /* Efectos */
     --ranking-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
     --ranking-shadow-hover: 0 8px 20px -4px rgba(0, 0, 0, 0.4);
     --ranking-border-radius: 12px;
     --ranking-transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     
-    /* Espaciado optimizado para móvil */
+    /* Espaciado móvil */
     --mobile-padding: 1rem;
     --mobile-margin: 0.5rem;
     --mobile-font-base: 0.9rem;
     --mobile-font-small: 0.75rem;
-    --mobile-font-large: 1.1rem;
 }
 
-/* Reset y base optimizado para móvil */
+/* === BASE STYLES === */
 .ranking-page-body {
     background: var(--ranking-bg);
     color: var(--ranking-text);
@@ -55,7 +50,7 @@
     font-size: var(--mobile-font-base);
 }
 
-/* Contenedores principales optimizados para 340px */
+/* === CONTENEDORES PRINCIPALES === */
 .ranking-container,
 .history-container {
     background: var(--ranking-card);
@@ -76,7 +71,7 @@
     box-shadow: var(--ranking-shadow-hover);
 }
 
-/* Líneas de acento más sutiles */
+/* Líneas de acento por juego */
 .ranking-container::before {
     content: '';
     position: absolute;
@@ -88,19 +83,11 @@
     opacity: 0.8;
 }
 
-.ranking-container.quiensabemas::before {
-    background: var(--quiensabemas-gradient);
-}
+.ranking-container.quiensabemas::before { background: var(--quiensabemas-gradient); }
+.ranking-container.mentiroso::before { background: var(--mentiroso-gradient); }
+.ranking-container.crackrapido::before { background: var(--crackrapido-gradient); }
 
-.ranking-container.mentiroso::before {
-    background: var(--mentiroso-gradient);
-}
-
-.ranking-container.crackrapido::before {
-    background: var(--crackrapido-gradient);
-}
-
-/* Títulos optimizados para móvil */
+/* === TÍTULOS === */
 .ranking-title,
 .history-title {
     font-family: 'Oswald', sans-serif;
@@ -108,7 +95,6 @@
     font-weight: 700;
     margin-bottom: 1rem;
     text-align: center;
-    position: relative;
     text-transform: uppercase;
     letter-spacing: 1px;
     background: var(--pasalache-gradient);
@@ -119,7 +105,6 @@
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0 0.5rem;
 }
 
 .ranking-title.quiensabemas,
@@ -154,1256 +139,25 @@
 }
 
 .quiensabemas .ranking-title-icon,
-.quiensabemas .history-title-icon {
-    color: var(--quiensabemas-primary);
-}
-
+.quiensabemas .history-title-icon { color: var(--quiensabemas-primary); }
 .mentiroso .ranking-title-icon,
-.mentiroso .history-title-icon {
-    color: var(--mentiroso-primary);
-}
-
+.mentiroso .history-title-icon { color: var(--mentiroso-primary); }
 .crackrapido .ranking-title-icon,
-.crackrapido .history-title-icon {
-    color: var(--crackrapido-primary);
-}
+.crackrapido .history-title-icon { color: var(--crackrapido-primary); }
 
 @keyframes iconPulse {
     0%, 100% { transform: scale(1); opacity: 0.8; }
     50% { transform: scale(1.05); opacity: 1; }
 }
 
-/* Wrapper de tabla más compacto */
-.table-responsive-wrapper {
-    overflow-x: auto;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    background: rgba(26, 32, 44, 0.5);
-    border: 1px solid var(--ranking-border);
-    backdrop-filter: blur(5px);
-}
-
-/* Tabla optimizada para móvil */
-.ranking-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: transparent;
-    font-size: var(--mobile-font-small);
-    position: relative;
-    min-width: 300px;
-}
-
-/* Headers más compactos */
-.ranking-table thead th {
-    background: var(--pasalache-gradient);
-    color: white;
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    letter-spacing: 0.5px;
-    padding: 0.8rem 0.4rem;
-    text-align: center;
-    border: none;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
-}
-
-.quiensabemas .ranking-table thead th {
-    background: var(--quiensabemas-gradient);
-}
-
-.mentiroso .ranking-table thead th {
-    background: var(--mentiroso-gradient);
-}
-
-.crackrapido .ranking-table thead th {
-    background: var(--crackrapido-gradient);
-}
-
-.ranking-table thead th:first-child {
-    border-top-left-radius: 8px;
-}
-
-.ranking-table thead th:last-child {
-    border-top-right-radius: 8px;
-}
-
-/* Filas más compactas */
-.ranking-table tbody tr {
-    background: var(--ranking-card);
-    transition: var(--ranking-transition);
-    border-bottom: 1px solid var(--ranking-border);
-    position: relative;
-}
-
-.ranking-table tbody tr:hover {
-    background: var(--ranking-card-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.ranking-table tbody tr:last-child {
-    border-bottom: none;
-}
-
-.ranking-table tbody tr:last-child td:first-child {
-    border-bottom-left-radius: 8px;
-}
-
-.ranking-table tbody tr:last-child td:last-child {
-    border-bottom-right-radius: 8px;
-}
-
-/* Celdas más compactas */
-.ranking-table td {
-    padding: 0.6rem 0.3rem;
-    vertical-align: middle;
-    border: none;
-    position: relative;
-    font-size: var(--mobile-font-small);
-}
-
-/* Posición más sutil */
-.ranking-position {
-    text-align: center; 
-    font-weight: 800;
-    font-size: 0.9rem;
-    width: 40px;
-    color: var(--ranking-text);
-    position: relative;
-}
-
-.top-player .ranking-position {
-    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-size: 1rem;
-}
-
-/* Información del jugador más compacta */
-.player-info {
-    min-width: 120px;
-    padding-left: 0.5rem;
-}
-
-.player-name {
-    font-weight: 600; 
-    font-size: var(--mobile-font-base);
-    color: var(--ranking-text);
-    margin-bottom: 0.2rem;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100px;
-}
-
-.player-level,
-.player-badge {
-    font-size: 0.65rem;
-    font-weight: 500;
-    padding: 0.2rem 0.4rem;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    display: inline-block;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    backdrop-filter: blur(3px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    white-space: nowrap;
-}
-
-/* Estadísticas más sutiles */
-.score-info,
-.stat-cell {
-    text-align: center; 
-    min-width: 60px; 
-    max-width: 80px;
-}
-
-.main-score,
-.primary-stat {
-    font-weight: 700;
-    font-size: var(--mobile-font-base);
-    color: var(--pasalache-primary);
-    margin-bottom: 0.1rem;
-    text-shadow: none;
-}
-
-.quiensabemas .main-score,
-.quiensabemas .primary-stat {
-    color: var(--quiensabemas-primary);
-}
-
-.mentiroso .main-score,
-.mentiroso .primary-stat {
-    color: var(--mentiroso-primary);
-}
-
-.crackrapido .main-score,
-.crackrapido .primary-stat {
-    color: var(--crackrapido-primary);
-}
-
-.secondary-stat {
-    font-size: 0.65rem;
-    color: var(--ranking-text-muted);
-    font-weight: 400;
-    white-space: nowrap;
-}
-
-/* Estadísticas específicas más sutiles */
-.wins-stat {
-    color: #48bb78;
-    font-weight: 600;
-}
-
-.losses-stat {
-    color: #f56565;
-    font-weight: 600;
-}
-
-.accuracy-stat {
-    color: #4299e1;
-    font-weight: 600;
-}
-
-.time-stat {
-    color: #ed8936;
-    font-weight: 600;
-}
-
-/* Estados de juego más compactos */
-.game-status {
-    text-align: center;
-    min-width: 80px;
-    font-size: 0.7rem;
-}
-
-.status-complete {
-    color: #48bb78;
-    font-weight: 500;
-}
-
-.status-incomplete {
-    color: #ed8936;
-    font-weight: 500;
-}
-
-/* Fechas más compactas */
-.match-date {
-    text-align: center;
-    color: var(--ranking-text-muted);
-    font-size: 0.65rem;
-    min-width: 80px;
-    white-space: nowrap;
-}
-
-/* === ESTILOS GENERALES PARA HISTORIAL (PASALA CHE - ORIGINAL) === */
-
-/* Historial optimizado para móvil */
-.history-container {
-    margin-top: 1rem;
-}
-
-.history-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
-    margin-top: 1rem;
-}
-
-.history-item {
-    background: rgba(26, 32, 44, 0.6);
-    border-radius: var(--ranking-border-radius);
-    padding: 1rem;
-    border: 1px solid var(--ranking-border);
-    transition: var(--ranking-transition);
-    position: relative;
-    overflow: hidden;
-    backdrop-filter: blur(5px);
-}
-
-.history-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--pasalache-gradient);
-    opacity: 0.8;
-}
-
-.quiensabemas .history-item::before {
-    background: var(--quiensabemas-gradient);
-}
-
-.mentiroso .history-item::before {
-    background: var(--mentiroso-gradient);
-}
-
-.crackrapido .history-item::before {
-    background: var(--crackrapido-gradient);
-}
-
-.history-item:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--ranking-shadow-hover);
-    border-color: var(--pasalache-primary);
-}
-
-.quiensabemas .history-item:hover {
-    border-color: var(--quiensabemas-primary);
-}
-
-.mentiroso .history-item:hover {
-    border-color: var(--mentiroso-primary);
-}
-
-.crackrapido .history-item:hover {
-    border-color: var(--crackrapido-primary);
-}
-
-/* === ESTILOS ESPECÍFICOS PARA CRACK RÁPIDO (SUTILES) === */
-
-.crackrapido .history-item .player-info {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.crackrapido .game-mode-tag {
-    background: rgba(221, 107, 32, 0.15);
-    color: var(--crackrapido-primary);
-    padding: 0.15rem 0.3rem;
-    border-radius: 4px;
-    font-size: 0.65rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    border: 1px solid rgba(221, 107, 32, 0.2);
-}
-
-.crackrapido .date-and-status {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.2rem;
-}
-
-.crackrapido .game-status {
-    font-size: 0.65rem;
-    font-weight: 500;
-    padding: 0.15rem 0.4rem;
-    border-radius: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.2px;
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--ranking-text-muted);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.crackrapido .perfect-performance { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3); }
-.crackrapido .great-performance { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.3); }
-.crackrapido .good-completion { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.3); }
-.crackrapido .completed { background: rgba(107, 114, 128, 0.15); color: #6b7280; border-color: rgba(107, 114, 128, 0.3); }
-.crackrapido .timeout-defeat { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
-.crackrapido .early-quit { background: rgba(156, 163, 175, 0.15); color: #9ca3af; border-color: rgba(156, 163, 175, 0.3); }
-.crackrapido .incomplete { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border-color: rgba(245, 158, 11, 0.3); }
-
-.crackrapido .score-summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 0.8rem 0;
-    padding: 0.6rem;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.crackrapido .main-score-display {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-}
-
-.crackrapido .effective-score {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--ranking-text);
-}
-
-.crackrapido .raw-score {
-    font-size: 0.7rem;
-    color: var(--ranking-text-muted);
-}
-
-.crackrapido .level-indicator {
-    padding: 0.3rem 0.6rem;
-    border-radius: 12px;
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: var(--ranking-text-muted);
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.crackrapido .performance-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.6rem;
-    margin: 0.8rem 0;
-}
-
-.crackrapido .perf-stat {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 6px;
-    padding: 0.6rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    text-align: center;
-}
-
-.crackrapido .stat-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    margin-bottom: 0.4rem;
-}
-
-.crackrapido .stat-icon {
-    font-size: 1rem;
-    opacity: 0.7;
-}
-
-.crackrapido .stat-title {
-    font-size: 0.65rem;
-    color: var(--ranking-text-muted);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.2px;
-}
-
-.crackrapido .stat-main {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--ranking-text);
-    margin-bottom: 0.2rem;
-}
-
-.crackrapido .stat-detail {
-    font-size: 0.6rem;
-    color: var(--ranking-text-muted);
-    margin-bottom: 0.25rem;
-}
-
-.crackrapido .achievement-badge {
-    font-size: 0.55rem;
-    padding: 0.15rem 0.3rem;
-    border-radius: 6px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.2px;
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--ranking-text-muted);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.crackrapido .achievement-badge.perfect { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.2); }
-.crackrapido .achievement-badge.excellent { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
-.crackrapido .achievement-badge.good { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.2); }
-.crackrapido .achievement-badge.incomplete { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); }
-
-.crackrapido .game-details {
-    margin-top: 0.8rem;
-    padding-top: 0.8rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.crackrapido .detail-row {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 0.6rem;
-}
-
-.crackrapido .detail-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    flex: 1;
-}
-
-.crackrapido .detail-label {
-    font-size: 0.6rem;
-    color: var(--ranking-text-muted);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.2px;
-}
-
-.crackrapido .detail-value {
-    font-size: 0.75rem;
-    color: var(--ranking-text);
-    font-weight: 500;
-}
-
-.crackrapido .category-tag,
-.crackrapido .difficulty-tag {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.15rem 0.3rem;
-    border-radius: 4px;
-    font-size: 0.65rem;
-    width: fit-content;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.crackrapido .powerups-used {
-    margin: 0.6rem 0;
-}
-
-.crackrapido .powerups-label {
-    font-size: 0.65rem;
-    color: var(--ranking-text-muted);
-    margin-bottom: 0.3rem;
-    display: block;
-}
-
-.crackrapido .powerups-list {
-    display: flex;
-    gap: 0.25rem;
-    flex-wrap: wrap;
-}
-
-.crackrapido .powerup-tag {
-    background: rgba(139, 92, 246, 0.15);
-    color: #8b5cf6;
-    padding: 0.15rem 0.3rem;
-    border-radius: 4px;
-    font-size: 0.6rem;
-    font-weight: 500;
-    border: 1px solid rgba(139, 92, 246, 0.2);
-}
-
-.crackrapido .performance-summary {
-    margin-top: 0.8rem;
-    padding: 0.6rem;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.crackrapido .summary-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.crackrapido .summary-label {
-    font-size: 0.7rem;
-    color: var(--ranking-text-muted);
-}
-
-.crackrapido .summary-value {
-    font-size: 0.75rem;
-    font-weight: 500;
-}
-
-.crackrapido .performance-rating {
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    font-weight: 600;
-}
-
-/* === ESTILOS ESPECÍFICOS PARA QUIÉN SABE MÁS (SUTILES) === */
-
-.quiensabemas .match-title {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 0.4rem;
-}
-
-.quiensabemas .result-indicator {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-
-.quiensabemas .result-icon {
-    font-size: 1.3rem;
-    opacity: 0.8;
-}
-
-.quiensabemas .result-text {
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    color: var(--ranking-text);
-}
-
-.quiensabemas .match-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.15rem;
-}
-
-.quiensabemas .elo-change {
-    font-size: 0.65rem;
-    font-weight: 500;
-    padding: 0.15rem 0.3rem;
-    border-radius: 4px;
-    border: 1px solid;
-}
-
-.quiensabemas .elo-change.positive {
-    background: rgba(16, 185, 129, 0.15);
-    color: #10b981;
-    border-color: rgba(16, 185, 129, 0.3);
-}
-
-.quiensabemas .elo-change.negative {
-    background: rgba(239, 68, 68, 0.15);
-    color: #ef4444;
-    border-color: rgba(239, 68, 68, 0.3);
-}
-
-.quiensabemas .result-description {
-    font-size: 0.7rem;
-    color: var(--ranking-text-muted);
-    font-style: italic;
-}
-
-.quiensabemas .duel-summary {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 0.6rem;
-    align-items: center;
-    margin: 0.8rem 0;
-    padding: 0.8rem;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.quiensabemas .player-section {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-
-.quiensabemas .player-avatar {
-    font-size: 1.5rem;
-    width: 2.5rem;
-    height: 2.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 50%;
-    opacity: 0.8;
-}
-
-.quiensabemas .player-details {
-    flex: 1;
-}
-
-.quiensabemas .player-name {
-    font-size: 0.75rem;
-    color: var(--ranking-text-muted);
-    margin-bottom: 0.15rem;
-}
-
-.quiensabemas .player-score {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 0.15rem;
-    color: var(--ranking-text);
-}
-
-.quiensabemas .performance-metrics {
-    display: flex;
-    gap: 0.25rem;
-    flex-wrap: wrap;
-}
-
-.quiensabemas .accuracy-badge,
-.quiensabemas .questions-badge {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.1rem 0.25rem;
-    border-radius: 4px;
-    font-size: 0.6rem;
-    color: var(--ranking-text-muted);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.quiensabemas .vs-section {
-    text-align: center;
-}
-
-.quiensabemas .vs-indicator {
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: var(--ranking-text-muted);
-    margin-bottom: 0.25rem;
-}
-
-.quiensabemas .score-difference {
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 0.25rem 0.4rem;
-    border-radius: 4px;
-    border: 1px solid;
-}
-
-.quiensabemas .score-difference.positive {
-    background: rgba(16, 185, 129, 0.15);
-    color: #10b981;
-    border-color: rgba(16, 185, 129, 0.3);
-}
-
-.quiensabemas .score-difference.negative {
-    background: rgba(239, 68, 68, 0.15);
-    color: #ef4444;
-    border-color: rgba(239, 68, 68, 0.3);
-}
-
-.quiensabemas .opponent-type {
-    font-size: 0.6rem;
-    color: var(--ranking-text-muted);
-    font-style: italic;
-}
-
-.quiensabemas .match-analytics {
-    margin: 0.8rem 0;
-}
-
-.quiensabemas .analytics-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.6rem;
-}
-
-.quiensabemas .analytic-item {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 6px;
-    padding: 0.6rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    text-align: center;
-}
-
-.quiensabemas .analytic-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    margin-bottom: 0.4rem;
-}
-
-.quiensabemas .analytic-icon {
-    font-size: 1rem;
-    opacity: 0.7;
-}
-
-.quiensabemas .analytic-title {
-    font-size: 0.65rem;
-    color: var(--ranking-text-muted);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.2px;
-}
-
-.quiensabemas .analytic-main {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--ranking-text);
-    margin-bottom: 0.15rem;
-}
-
-.quiensabemas .analytic-detail {
-    font-size: 0.6rem;
-    color: var(--ranking-text-muted);
-    margin-bottom: 0.25rem;
-}
-
-.quiensabemas .expertise-badge,
-.quiensabemas .speed-badge,
-.quiensabemas .challenge-badge,
-.quiensabemas .duration-badge {
-    font-size: 0.55rem;
-    padding: 0.15rem 0.3rem;
-    border-radius: 6px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.2px;
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--ranking-text-muted);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.quiensabemas .performance-analysis {
-    margin: 0.8rem 0;
-    padding: 0.6rem;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.quiensabemas .analysis-header {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--ranking-text);
-    margin-bottom: 0.6rem;
-    text-align: center;
-}
-
-.quiensabemas .analysis-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-}
-
-.quiensabemas .strength-indicator,
-.quiensabemas .improvement-indicator {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-}
-
-.quiensabemas .indicator-label {
-    font-size: 0.65rem;
-    color: var(--ranking-text-muted);
-    font-weight: 500;
-}
-
-.quiensabemas .indicator-value {
-    font-size: 0.7rem;
-    color: var(--ranking-text);
-}
-
-.quiensabemas .level-progression {
-    margin-top: 0.8rem;
-    text-align: center;
-}
-
-.quiensabemas .level-badge {
-    padding: 0.4rem 0.8rem;
-    border-radius: 12px;
-    font-weight: 500;
-    font-size: 0.7rem;
-    color: var(--ranking-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    margin-bottom: 0.4rem;
-    display: inline-block;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.quiensabemas .progression-text {
-    font-size: 0.6rem;
-    color: var(--ranking-text-muted);
-    font-style: italic;
-}
-
-/* === ESTILOS ESPECÍFICOS PARA MENTIROSO (SUTILES) === */
-
-.mentiroso .match-result-section {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 0.4rem;
-}
-
-.mentiroso .result-main {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-
-.mentiroso .result-text-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-}
-
-.mentiroso .result-title {
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    color: var(--ranking-text);
-}
-
-.mentiroso .result-subtitle {
-    font-size: 0.65rem;
-    color: var(--ranking-text-muted);
-    font-style: italic;
-}
-
-.mentiroso .match-metadata {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.15rem;
-}
-
-.mentiroso .game-type-tag {
-    background: rgba(229, 62, 62, 0.15);
-    color: var(--mentiroso-primary);
-    padding: 0.15rem 0.3rem;
-    border-radius: 4px;
-    font-size: 0.6rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    border: 1px solid rgba(229, 62, 62, 0.2);
-}
-
-.mentiroso .score-duel {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 0.6rem;
-    align-items: center;
-    margin: 0.8rem 0;
-    padding: 0.8rem;
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.mentiroso .player-score-section {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-
-.mentiroso .score-details {
-    flex: 1;
-}
-
-.mentiroso .player-label {
-    font-size: 0.75rem;
-    color: var(--ranking-text-muted);
-    margin-bottom: 0.15rem;
-}
-
-.mentiroso .score-value {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin-bottom: 0.15rem;
-    color: var(--ranking-text);
-}
-
-.mentiroso .score-quality {
-    font-size: 0.6rem;
-    color: var(--ranking-text-muted);
-    font-style: italic;
-}
-
-.mentiroso .vs-display {
-    text-align: center;
-}
-
-.mentiroso .vs-text {
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: var(--ranking-text-muted);
-    margin-bottom: 0.25rem;
-}
-
-.mentiroso .score-difference.advantage {
-    background: rgba(16, 185, 129, 0.15);
-    color: #10b981;
-    border-color: rgba(16, 185, 129, 0.3);
-}
-
-.mentiroso .score-difference.disadvantage {
-    background: rgba(239, 68, 68, 0.15);
-    color: #ef4444;
-    border-color: rgba(239, 68, 68, 0.3);
-}
-
-.mentiroso .deception-analysis {
-    margin: 0.8rem 0;
-}
-
-.mentiroso .analysis-title {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--ranking-text);
-    margin-bottom: 0.6rem;
-    text-align: center;
-}
-
-.mentiroso .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.6rem;
-}
-
-.mentiroso .skill-metric {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 6px;
-    padding: 0.6rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    text-align: center;
-}
-
-.mentiroso .metric-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.25rem;
-    margin-bottom: 0.4rem;
-}
-
-.mentiroso .metric-icon {
-    font-size: 1rem;
-    opacity: 0.7;
-}
-
-.mentiroso .metric-title {
-    font-size: 0.65rem;
-    color: var(--ranking-text-muted);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.2px;
-}
-
-.mentiroso .metric-value {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--ranking-text);
-    margin-bottom: 0.15rem;
-}
-
-.mentiroso .metric-description {
-    font-size: 0.6rem;
-    color: var(--ranking-text-muted);
-    margin-bottom: 0.25rem;
-}
-
-.mentiroso .metric-percentage {
-    font-size: 0.55rem;
-    color: var(--mentiroso-primary);
-    font-weight: 500;
-}
-
-.mentiroso .metric-detail {
-    font-size: 0.55rem;
-    color: var(--ranking-text-muted);
-}
-
-.mentiroso .specialization-showcase {
-    margin: 0.8rem 0;
-    padding: 0.6rem;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    text-align: center;
-}
-
-.mentiroso .specialization-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    margin-bottom: 0.25rem;
-}
-
-.mentiroso .spec-icon {
-    font-size: 1.2rem;
-    opacity: 0.8;
-}
-
-.mentiroso .spec-title {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    color: var(--ranking-text);
-}
-
-.mentiroso .specialization-description {
-    font-size: 0.65rem;
-    color: var(--ranking-text-muted);
-    font-style: italic;
-}
-
-.mentiroso .perfect-round-highlight {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin: 0.8rem 0;
-    padding: 0.8rem;
-    background: rgba(139, 92, 246, 0.08);
-    border-radius: 6px;
-    border: 1px solid rgba(139, 92, 246, 0.15);
-}
-
-.mentiroso .perfect-icon {
-    font-size: 1.5rem;
-    opacity: 0.8;
-}
-
-.mentiroso .perfect-text {
-    flex: 1;
-}
-
-.mentiroso .perfect-title {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #8b5cf6;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    margin-bottom: 0.15rem;
-}
-
-.mentiroso .perfect-description {
-    font-size: 0.65rem;
-    color: var(--ranking-text-muted);
-}
-
-.mentiroso .performance-insights {
-    margin: 0.8rem 0;
-    padding: 0.6rem;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-.mentiroso .insights-header {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--ranking-text);
-    margin-bottom: 0.6rem;
-    text-align: center;
-}
-
-.mentiroso .insights-content {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-}
-
-.mentiroso .insight-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-}
-
-.mentiroso .insight-label {
-    font-size: 0.65rem;
-    color: var(--ranking-text-muted);
-    font-weight: 500;
-}
-
-.mentiroso .insight-value {
-    font-size: 0.7rem;
-    color: var(--ranking-text);
-}
-
-/* === RESPONSIVE PARA MÓVIL === */
-
-@media (max-width: 340px) {
-    .performance-grid,
-    .analytics-grid,
-    .skills-grid {
-        grid-template-columns: 1fr;
-        gap: 0.6rem;
-    }
-    
-    .duel-summary,
-    .score-duel {
-        grid-template-columns: 1fr;
-        gap: 0.6rem;
-        text-align: center;
-    }
-    
-    .vs-section,
-    .vs-display {
-        order: -1;
-    }
-    
-    .detail-row {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .powerups-list {
-        justify-content: center;
-    }
-    
-    .perfect-round-highlight {
-        flex-direction: column;
-        text-align: center;
-        gap: 0.5rem;
-    }
-    
-    .analysis-content,
-    .insights-content {
-        gap: 0.4rem;
-    }
-    
-    .match-title,
-    .match-result-section {
-        flex-direction: column;
-        gap: 0.3rem;
-    }
-    
-    .match-info,
-    .match-metadata {
-        align-items: flex-start;
-    }
-}
-
-/* === ESTILOS COMUNES PARA TODOS LOS HISTORIALES === */
-
-/* Header del historial más compacto */
-.history-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.8rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--ranking-border);
-}
-
-.history-player-name {
-    font-weight: 600;
-    font-size: var(--mobile-font-base);
-    color: var(--ranking-text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 150px;
-}
-
-.history-date {
-    font-size: var(--mobile-font-small);
-    color: var(--ranking-text-muted);
-    white-space: nowrap;
-}
-
-/* Botones de navegación más compactos */
+/* === NAVEGACIÓN === */
 .navigation-buttons {
     margin-bottom: 1rem;
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
     justify-content: center;
-   padding: 0 0.5rem;
+    padding: 0 0.5rem;
 }
 
 .nav-button {
@@ -1432,27 +186,673 @@
     background: var(--pasalache-gradient);
 }
 
-.nav-button.quiensabemas:hover {
-    background: var(--quiensabemas-gradient);
+.nav-button.quiensabemas:hover { background: var(--quiensabemas-gradient); }
+.nav-button.mentiroso:hover { background: var(--mentiroso-gradient); }
+.nav-button.crackrapido:hover { background: var(--crackrapido-gradient); }
+
+/* === TABLAS === */
+.table-responsive-wrapper {
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    background: rgba(26, 32, 44, 0.5);
+    border: 1px solid var(--ranking-border);
+    backdrop-filter: blur(5px);
 }
 
-.nav-button.mentiroso:hover {
-    background: var(--mentiroso-gradient);
+.ranking-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: transparent;
+    font-size: var(--mobile-font-small);
+    position: relative;
+    min-width: 300px;
 }
 
-.nav-button.crackrapido:hover {
-    background: var(--crackrapido-gradient);
+/* Headers */
+.ranking-table thead th {
+    background: var(--pasalache-gradient);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+    padding: 0.8rem 0.4rem;
+    text-align: center;
+    border: none;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Estados vacíos más sutiles */
+.quiensabemas .ranking-table thead th { background: var(--quiensabemas-gradient); }
+.mentiroso .ranking-table thead th { background: var(--mentiroso-gradient); }
+.crackrapido .ranking-table thead th { background: var(--crackrapido-gradient); }
+
+.ranking-table thead th:first-child { border-top-left-radius: 8px; }
+.ranking-table thead th:last-child { border-top-right-radius: 8px; }
+
+/* Filas */
+.ranking-table tbody tr {
+    background: var(--ranking-card);
+    transition: var(--ranking-transition);
+    border-bottom: 1px solid var(--ranking-border);
+    position: relative;
+}
+
+.ranking-table tbody tr:hover {
+    background: var(--ranking-card-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-table tbody tr:last-child { border-bottom: none; }
+.ranking-table tbody tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+.ranking-table tbody tr:last-child td:last-child { border-bottom-right-radius: 8px; }
+
+/* Celdas */
+.ranking-table td {
+    padding: 0.6rem 0.3rem;
+    vertical-align: middle;
+    border: none;
+    position: relative;
+    font-size: var(--mobile-font-small);
+}
+
+/* Posición */
+.ranking-position {
+    text-align: center;
+    font-weight: 800;
+    font-size: 0.9rem;
+    width: 40px;
+    color: var(--ranking-text);
+}
+
+.top-player .ranking-position {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 1rem;
+}
+
+/* Información del jugador */
+.player-info {
+    min-width: 120px;
+    padding-left: 0.5rem;
+}
+
+.player-name {
+    font-weight: 600;
+    font-size: var(--mobile-font-base);
+    color: var(--ranking-text);
+    margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+}
+
+.player-level,
+.player-badge {
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 0.2rem 0.4rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    backdrop-filter: blur(3px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+}
+
+/* Estadísticas */
+.score-info,
+.stat-cell {
+    text-align: center;
+    min-width: 60px;
+    max-width: 80px;
+}
+
+.main-score,
+.primary-stat {
+    font-weight: 700;
+    font-size: var(--mobile-font-base);
+    color: var(--pasalache-primary);
+    margin-bottom: 0.1rem;
+}
+
+.quiensabemas .main-score,
+.quiensabemas .primary-stat { color: var(--quiensabemas-primary); }
+.mentiroso .main-score,
+.mentiroso .primary-stat { color: var(--mentiroso-primary); }
+.crackrapido .main-score,
+.crackrapido .primary-stat { color: var(--crackrapido-primary); }
+
+.secondary-stat {
+    font-size: 0.65rem;
+    color: var(--ranking-text-muted);
+    font-weight: 400;
+    white-space: nowrap;
+}
+
+/* Estadísticas coloreadas */
+.wins-stat { color: #48bb78; font-weight: 600; }
+.losses-stat { color: #f56565; font-weight: 600; }
+.accuracy-stat { color: #4299e1; font-weight: 600; }
+.time-stat { color: #ed8936; font-weight: 600; }
+
+/* === HISTORIAL COMPACTO Y BONITO === */
+.history-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    margin-top: 0.8rem;
+}
+
+.history-item {
+    background: linear-gradient(135deg, rgba(26, 32, 44, 0.8) 0%, rgba(45, 55, 72, 0.6) 100%);
+    border-radius: 8px;
+    padding: 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.history-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        rgba(59, 130, 246, 0.8) 0%, 
+        rgba(147, 51, 234, 0.8) 33%, 
+        rgba(239, 68, 68, 0.8) 66%, 
+        rgba(245, 158, 11, 0.8) 100%
+    );
+    opacity: 0.6;
+}
+
+.history-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, rgba(26, 32, 44, 0.9) 0%, rgba(45, 55, 72, 0.7) 100%);
+}
+
+.history-item:hover::before {
+    opacity: 1;
+    height: 3px;
+}
+
+/* Header del historial - más compacto */
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.history-player-name {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--ranking-text);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+.history-date {
+    font-size: 0.7rem;
+    color: var(--ranking-text-muted);
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0.2rem 0.4rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    white-space: nowrap;
+    backdrop-filter: blur(3px);
+}
+
+/* Información del juego - compacta */
+.game-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.6rem;
+    gap: 0.5rem;
+}
+
+.result-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border: 1px solid;
+    backdrop-filter: blur(3px);
+    white-space: nowrap;
+}
+
+.result-text {
+    display: none; /* Oculto en móvil */
+}
+
+.result-icon {
+    font-size: 0.9rem;
+}
+
+.game-mode-tag {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.1) 100%);
+    color: #60a5fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    white-space: nowrap;
+}
+
+.game-status {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.2rem 0.4rem;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    border: 1px solid;
+    backdrop-filter: blur(3px);
+    white-space: nowrap;
+}
+
+/* Resumen principal - más compacto */
+.main-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.6rem 0;
+    padding: 0.6rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+}
+
+.player-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    min-width: 0;
+    flex: 1;
+}
+
+.player-name {
+    font-size: 0.7rem;
+    color: var(--ranking-text-muted);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80px;
+}
+
+.player-score {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--ranking-text);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.vs-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+}
+
+.score-difference {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    border: 1px solid;
+}
+
+/* Estadísticas clave - grid compacto */
+.key-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 0.5rem;
+    margin: 0.6rem 0;
+}
+
+.stat-item {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border-radius: 6px;
+    padding: 0.5rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.2s ease;
+    backdrop-filter: blur(5px);
+}
+
+.stat-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.stat-icon {
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+    display: block;
+    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.stat-value {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ranking-text);
+    margin-bottom: 0.2rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.stat-label {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    font-weight: 500;
+    margin-bottom: 0.1rem;
+}
+
+.stat-detail {
+    font-size: 0.55rem;
+    color: var(--ranking-text-muted);
+    opacity: 0.8;
+}
+
+/* Performance grid - más compacto */
+.performance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+    gap: 0.5rem;
+    margin: 0.6rem 0;
+}
+
+.perf-stat {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border-radius: 6px;
+    padding: 0.5rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.2s ease;
+}
+
+.stat-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    margin-bottom: 0.3rem;
+}
+
+.stat-title {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.stat-main {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--ranking-text);
+    margin-bottom: 0.2rem;
+}
+
+/* Detalles del juego - compactos */
+.game-details {
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    flex: 1;
+}
+
+.detail-label {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.detail-value {
+    font-size: 0.7rem;
+    color: var(--ranking-text);
+    font-weight: 600;
+}
+
+/* Especialización y tags */
+.game-specific {
+    margin-top: 0.5rem;
+}
+
+.specific-label {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.specific-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.specific-tag {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    border: 1px solid;
+    background: rgba(255, 255, 255, 0.05);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+}
+
+/* Badges y achievements */
+.achievement-badge,
+.level-badge {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    margin-top: 0.2rem;
+    display: inline-block;
+}
+
+.achievement-badge.perfect { 
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%); 
+    color: #10b981; 
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.achievement-badge.excellent { 
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%); 
+    color: #3b82f6; 
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.achievement-badge.good { 
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.1) 100%); 
+    color: #f59e0b; 
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Performance insight */
+.performance-insight {
+    margin-top: 0.5rem;
+    padding: 0.4rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.05) 100%);
+    border-radius: 6px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.insight-text {
+    font-size: 0.65rem;
+    color: var(--ranking-text);
+    text-align: center;
+    line-height: 1.3;
+}
+
+.insight-highlight {
+    color: #60a5fa;
+    font-weight: 600;
+}
+
+/* === RESPONSIVE PARA HISTORIAL === */
+@media (max-width: 480px) {
+    .history-item {
+        padding: 0.6rem;
+    }
+    
+    .key-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.4rem;
+    }
+    
+    .performance-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.4rem;
+    }
+    
+    .main-summary {
+        padding: 0.5rem;
+        margin: 0.5rem 0;
+    }
+    
+    .player-name {
+        max-width: 60px;
+        font-size: 0.65rem;
+    }
+    
+    .result-text {
+        display: none;
+    }
+    
+    .game-info-row {
+        flex-direction: column;
+        gap: 0.3rem;
+        align-items: flex-start;
+    }
+    
+    .specific-content {
+        justify-content: center;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+}
+
+@media (max-width: 340px) {
+    .history-item {
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .key-stats,
+    .performance-grid {
+        grid-template-columns: 1fr;
+        gap: 0.3rem;
+    }
+    
+    .main-summary {
+        flex-direction: column;
+        gap: 0.4rem;
+        text-align: center;
+    }
+    
+    .vs-section {
+        flex-direction: row;
+        gap: 0.4rem;
+    }
+    
+    .stat-item {
+        padding: 0.4rem;
+    }
+    
+    .player-score {
+        font-size: 1rem;
+    }
+    
+    .stat-value {
+        font-size: 0.75rem;
+    }
+}
+
+/* === ANIMACIONES OPTIMIZADAS === */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.history-item {
+    animation: fadeInUp 0.2s ease forwards;
+}
+
+/* === ESTADOS MEJORADOS === */
 .empty-state,
 .loading-state {
     text-align: center;
-    padding: 2rem 1rem;
+    padding: 1.5rem 1rem;
     color: var(--ranking-text-muted);
-    font-size: var(--mobile-font-base);
+    font-size: 0.85rem;
     background: rgba(26, 32, 44, 0.3);
-    border-radius: var(--ranking-border-radius);
+    border-radius: 8px;
     border: 1px dashed var(--ranking-border);
     font-style: italic;
 }
@@ -1460,333 +860,4 @@
 .loading-state {
     background: rgba(26, 32, 44, 0.5);
     border-style: solid;
-}
-
-/* Animaciones más sutiles */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.ranking-table tbody tr {
-    animation: fadeInUp 0.3s ease forwards;
-}
-
-.history-item {
-    animation: slideInRight 0.3s ease forwards;
-}
-
-.navigation-buttons .nav-button {
-    animation: fadeInUp 0.2s ease forwards;
-} 
-
-/* Efectos especiales más sutiles */
-.ranking-container {
-    animation: fadeInUp 0.4s ease forwards;
-}
-
-.history-container {
-    animation: fadeInUp 0.4s ease forwards 0.1s;
-    opacity: 0;
-    animation-fill-mode: both;
-}
-
-/* === RESPONSIVE ADICIONAL PARA MÓVIL PEQUEÑO === */
-
-@media (max-width: 340px) {
-    :root {
-        --mobile-padding: 0.8rem;
-        --mobile-margin: 0.3rem;
-        --mobile-font-base: 0.8rem;
-        --mobile-font-small: 0.7rem;
-        --mobile-font-large: 1rem;
-    }
-    
-    .ranking-container,
-    .history-container {
-        margin: var(--mobile-margin);
-        padding: var(--mobile-padding);
-    }
-
-    .ranking-title,
-    .history-title {
-        font-size: 1.3rem;
-        letter-spacing: 0.5px;
-        gap: 0.3rem;
-    }
-    
-    .ranking-table {
-        font-size: 0.65rem;
-    }
-    
-    .ranking-table thead th {
-        padding: 0.6rem 0.2rem;
-        font-size: 0.6rem;
-    }
-    
-    .ranking-table td {
-        padding: 0.4rem 0.2rem;
-    }
-
-    .player-name {
-        max-width: 80px;
-        font-size: 0.75rem;
-    }
-
-    .player-level {
-        font-size: 0.6rem;
-        padding: 0.1rem 0.3rem;
-    }
-    
-    .main-score,
-    .primary-stat {
-        font-size: 0.8rem;
-    }
-    
-    .secondary-stat {
-        font-size: 0.6rem;
-    }
-    
-    .nav-button {
-        padding: 0.4rem 0.6rem;
-        font-size: 0.7rem;
-        gap: 0.2rem;
-    }
-    
-    .history-item {
-        padding: 0.8rem;
-    }
-    
-    .level-badge {
-        font-size: 0.7rem;
-        padding: 0.4rem 0.8rem;
-    }
-    
-    /* Ocultar columnas menos importantes en móvil muy pequeño */
-    .ranking-table .hide-mobile {
-        display: none;
-    }
-    
-    /* Hacer scroll horizontal más suave */
-    .table-responsive-wrapper {
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: thin;
-    }
-    
-    .table-responsive-wrapper::-webkit-scrollbar {
-        height: 3px;
-    }
-    
-    .table-responsive-wrapper::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, 0.1);
-    }
-    
-    .table-responsive-wrapper::-webkit-scrollbar-thumb {
-        background: var(--ranking-border);
-        border-radius: 2px;
-    }
-}
-
-/* Nuevos estilos para rankings mejorados */
-.position-number {
-    font-weight: bold;
-    font-size: 1.1em;
-}
-
-.position-icon {
-    font-size: 1.2em;
-    margin-top: 2px;
-}
-
-.player-stats-summary {
-    font-size: 0.8em;
-    color: #6b7280;
-    margin-top: 2px;
-}
-
-.score-breakdown {
-    font-size: 0.8em;
-    color: #6b7280;
-    margin-top: 2px;
-}
-
-.avg-accuracy {
-    font-size: 0.8em;
-    color: #6b7280;
-    margin-top: 2px;
-}
-
-.streak-badge,
-.speed-badge {
-    font-size: 0.7em;
-    padding: 2px 6px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.2);
-    margin-top: 2px;
-    font-weight: bold;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.completion-rate {
-    font-weight: bold;
-    font-size: 1.1em;
-}
-
-.streak-stat {
-    color: #f59e0b !important;
-}
-
-.time-stat {
-    color: #06b6d4 !important;
-}
-
-/* Estilos específicos para Crack Rápido */
-.crackrapido .streak-badge {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    color: white;
-}
-
-.crackrapido .speed-badge {
-    background: linear-gradient(135deg, #06b6d4, #0891b2);
-    color: white;
-}
-
-/* Estilos específicos para Quién Sabe Más */
-.player-tier {
-    font-size: 0.8em;
-    font-weight: bold;
-    margin-top: 2px;
-}
-
-.draws-stat,
-.losses-stat {
-    font-size: 0.75em;
-    color: #6b7280;
-    margin-top: 1px;
-}
-
-.losses-stat {
-    color: #ef4444;
-}
-
-.draws-stat {
-    color: #f59e0b;
-}
-
-.performance-badge {
-    font-size: 0.7em;
-    padding: 2px 6px;
-    border-radius: 10px;
-    margin-top: 2px;
-    font-weight: bold;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.performance-badge.excellent {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    color: white;
-}
-
-.performance-badge.good {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-}
-
-.performance-badge.average {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    color: white;
-}
-
-.efficiency-stat {
-    color: #10b981 !important;
-}
-
-/* Estilos específicos para Mentiroso */
-.player-specialization {
-    font-size: 0.8em;
-    font-weight: bold;
-    margin-top: 2px;
-}
-
-.rating-info {
-    text-align: center;
-}
-
-.main-rating {
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #374151;
-}
-
-.rating-label {
-    font-size: 0.8em;
-    color: #6b7280;
-    margin-top: 2px;
-}
-
-.points-avg {
-    font-size: 0.75em;
-    color: #6b7280;
-    margin-top: 1px;
-}
-
-.deception-stat {
-    color: #ef4444 !important;
-}
-
-.detection-stat {
-    font-size: 0.8em;
-    color: #3b82f6;
-    margin-top: 2px;
-}
-
-.reliability-stat {
-    color: #10b981 !important;
-}
-
-.perfect-badge,
-.skill-badge {
-    font-size: 0.7em;
-    padding: 2px 6px;
-    border-radius: 10px;
-    margin-top: 2px;
-    font-weight: bold;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.perfect-badge {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-    color: white;
-}
-
-.skill-badge.excellent {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    color: white;
-}
-
-.skill-badge.good {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-}
-
-.skill-badge.average {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    color: white;
 } 
