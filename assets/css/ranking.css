@@ -403,6 +403,8 @@
     white-space: nowrap;
 }
 
+/* === ESTILOS GENERALES PARA HISTORIAL (PASALA CHE - ORIGINAL) === */
+
 /* Historial optimizado para móvil */
 .history-container {
     margin-top: 1rem;
@@ -467,17 +469,16 @@
     border-color: var(--crackrapido-primary);
 }
 
-/* === ESTILOS ESPECÍFICOS PARA CRACK RÁPIDO === */
+/* === ESTILOS ESPECÍFICOS PARA CRACK RÁPIDO (SUTILES) === */
 
-/* Header mejorado - más sutil */
-.history-item .player-info {
+.crackrapido .history-item .player-info {
     display: flex;
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 0.5rem;
 }
 
-.game-mode-tag {
+.crackrapido .game-mode-tag {
     background: rgba(221, 107, 32, 0.15);
     color: var(--crackrapido-primary);
     padding: 0.15rem 0.3rem;
@@ -489,14 +490,14 @@
     border: 1px solid rgba(221, 107, 32, 0.2);
 }
 
-.date-and-status {
+.crackrapido .date-and-status {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 0.2rem;
 }
 
-.game-status {
+.crackrapido .game-status {
     font-size: 0.65rem;
     font-weight: 500;
     padding: 0.15rem 0.4rem;
@@ -508,16 +509,15 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.perfect-performance { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3); }
-.great-performance { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.3); }
-.good-completion { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.3); }
-.completed { background: rgba(107, 114, 128, 0.15); color: #6b7280; border-color: rgba(107, 114, 128, 0.3); }
-.timeout-defeat { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
-.early-quit { background: rgba(156, 163, 175, 0.15); color: #9ca3af; border-color: rgba(156, 163, 175, 0.3); }
-.incomplete { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border-color: rgba(245, 158, 11, 0.3); }
+.crackrapido .perfect-performance { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3); }
+.crackrapido .great-performance { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.3); }
+.crackrapido .good-completion { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.3); }
+.crackrapido .completed { background: rgba(107, 114, 128, 0.15); color: #6b7280; border-color: rgba(107, 114, 128, 0.3); }
+.crackrapido .timeout-defeat { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
+.crackrapido .early-quit { background: rgba(156, 163, 175, 0.15); color: #9ca3af; border-color: rgba(156, 163, 175, 0.3); }
+.crackrapido .incomplete { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border-color: rgba(245, 158, 11, 0.3); }
 
-/* Score summary - más discreto */
-.score-summary {
+.crackrapido .score-summary {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -528,24 +528,24 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.main-score-display {
+.crackrapido .main-score-display {
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
 }
 
-.effective-score {
+.crackrapido .effective-score {
     font-size: 1.2rem;
     font-weight: 600;
     color: var(--ranking-text);
 }
 
-.raw-score {
+.crackrapido .raw-score {
     font-size: 0.7rem;
     color: var(--ranking-text-muted);
 }
 
-.level-indicator {
+.crackrapido .level-indicator {
     padding: 0.3rem 0.6rem;
     border-radius: 12px;
     font-size: 0.7rem;
@@ -558,15 +558,14 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Performance grid - más compacto */
-.performance-grid {
+.crackrapido .performance-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.6rem;
     margin: 0.8rem 0;
 }
 
-.perf-stat {
+.crackrapido .perf-stat {
     background: rgba(255, 255, 255, 0.03);
     border-radius: 6px;
     padding: 0.6rem;
@@ -574,7 +573,7 @@
     text-align: center;
 }
 
-.stat-header {
+.crackrapido .stat-header {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -582,12 +581,12 @@
     margin-bottom: 0.4rem;
 }
 
-.stat-icon {
+.crackrapido .stat-icon {
     font-size: 1rem;
     opacity: 0.7;
 }
 
-.stat-title {
+.crackrapido .stat-title {
     font-size: 0.65rem;
     color: var(--ranking-text-muted);
     font-weight: 500;
@@ -595,20 +594,20 @@
     letter-spacing: 0.2px;
 }
 
-.stat-main {
+.crackrapido .stat-main {
     font-size: 1rem;
     font-weight: 600;
     color: var(--ranking-text);
     margin-bottom: 0.2rem;
 }
 
-.stat-detail {
+.crackrapido .stat-detail {
     font-size: 0.6rem;
     color: var(--ranking-text-muted);
     margin-bottom: 0.25rem;
 }
 
-.achievement-badge {
+.crackrapido .achievement-badge {
     font-size: 0.55rem;
     padding: 0.15rem 0.3rem;
     border-radius: 6px;
@@ -620,32 +619,31 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.achievement-badge.perfect { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.2); }
-.achievement-badge.excellent { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
-.achievement-badge.good { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.2); }
-.achievement-badge.incomplete { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); }
+.crackrapido .achievement-badge.perfect { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.2); }
+.crackrapido .achievement-badge.excellent { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
+.crackrapido .achievement-badge.good { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.2); }
+.crackrapido .achievement-badge.incomplete { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); }
 
-/* Game details - más minimalista */
-.game-details {
+.crackrapido .game-details {
     margin-top: 0.8rem;
     padding-top: 0.8rem;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.detail-row {
+.crackrapido .detail-row {
     display: flex;
     gap: 1rem;
     margin-bottom: 0.6rem;
 }
 
-.detail-item {
+.crackrapido .detail-item {
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
     flex: 1;
 }
 
-.detail-label {
+.crackrapido .detail-label {
     font-size: 0.6rem;
     color: var(--ranking-text-muted);
     font-weight: 500;
@@ -653,14 +651,14 @@
     letter-spacing: 0.2px;
 }
 
-.detail-value {
+.crackrapido .detail-value {
     font-size: 0.75rem;
     color: var(--ranking-text);
     font-weight: 500;
 }
 
-.category-tag,
-.difficulty-tag {
+.crackrapido .category-tag,
+.crackrapido .difficulty-tag {
     background: rgba(255, 255, 255, 0.05);
     padding: 0.15rem 0.3rem;
     border-radius: 4px;
@@ -669,25 +667,24 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Power-ups - más discreto */
-.powerups-used {
+.crackrapido .powerups-used {
     margin: 0.6rem 0;
 }
 
-.powerups-label {
+.crackrapido .powerups-label {
     font-size: 0.65rem;
     color: var(--ranking-text-muted);
     margin-bottom: 0.3rem;
     display: block;
 }
 
-.powerups-list {
+.crackrapido .powerups-list {
     display: flex;
     gap: 0.25rem;
     flex-wrap: wrap;
 }
 
-.powerup-tag {
+.crackrapido .powerup-tag {
     background: rgba(139, 92, 246, 0.15);
     color: #8b5cf6;
     padding: 0.15rem 0.3rem;
@@ -697,8 +694,7 @@
     border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
-/* Performance summary - más sutil */
-.performance-summary {
+.crackrapido .performance-summary {
     margin-top: 0.8rem;
     padding: 0.6rem;
     background: rgba(255, 255, 255, 0.02);
@@ -706,50 +702,49 @@
     border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.summary-item {
+.crackrapido .summary-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.summary-label {
+.crackrapido .summary-label {
     font-size: 0.7rem;
     color: var(--ranking-text-muted);
 }
 
-.summary-value {
+.crackrapido .summary-value {
     font-size: 0.75rem;
     font-weight: 500;
 }
 
-.performance-rating {
+.crackrapido .performance-rating {
     text-transform: uppercase;
     letter-spacing: 0.3px;
     font-weight: 600;
 }
 
-/* === ESTILOS ESPECÍFICOS PARA QUIÉN SABE MÁS === */
+/* === ESTILOS ESPECÍFICOS PARA QUIÉN SABE MÁS (SUTILES) === */
 
-/* Match title - más discreto */
-.match-title {
+.quiensabemas .match-title {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 0.4rem;
 }
 
-.result-indicator {
+.quiensabemas .result-indicator {
     display: flex;
     align-items: center;
     gap: 0.4rem;
 }
 
-.result-icon {
+.quiensabemas .result-icon {
     font-size: 1.3rem;
     opacity: 0.8;
 }
 
-.result-text {
+.quiensabemas .result-text {
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -757,14 +752,14 @@
     color: var(--ranking-text);
 }
 
-.match-info {
+.quiensabemas .match-info {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 0.15rem;
 }
 
-.elo-change {
+.quiensabemas .elo-change {
     font-size: 0.65rem;
     font-weight: 500;
     padding: 0.15rem 0.3rem;
@@ -772,26 +767,25 @@
     border: 1px solid;
 }
 
-.elo-change.positive {
+.quiensabemas .elo-change.positive {
     background: rgba(16, 185, 129, 0.15);
     color: #10b981;
     border-color: rgba(16, 185, 129, 0.3);
 }
 
-.elo-change.negative {
+.quiensabemas .elo-change.negative {
     background: rgba(239, 68, 68, 0.15);
     color: #ef4444;
     border-color: rgba(239, 68, 68, 0.3);
 }
 
-.result-description {
+.quiensabemas .result-description {
     font-size: 0.7rem;
     color: var(--ranking-text-muted);
     font-style: italic;
 }
 
-/* Duel summary - más minimalista */
-.duel-summary {
+.quiensabemas .duel-summary {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     gap: 0.6rem;
@@ -803,13 +797,13 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.player-section {
+.quiensabemas .player-section {
     display: flex;
     align-items: center;
     gap: 0.4rem;
 }
 
-.player-avatar {
+.quiensabemas .player-avatar {
     font-size: 1.5rem;
     width: 2.5rem;
     height: 2.5rem;
@@ -821,31 +815,31 @@
     opacity: 0.8;
 }
 
-.player-details {
+.quiensabemas .player-details {
     flex: 1;
 }
 
-.player-name {
+.quiensabemas .player-name {
     font-size: 0.75rem;
     color: var(--ranking-text-muted);
     margin-bottom: 0.15rem;
 }
 
-.player-score {
+.quiensabemas .player-score {
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 0.15rem;
     color: var(--ranking-text);
 }
 
-.performance-metrics {
+.quiensabemas .performance-metrics {
     display: flex;
     gap: 0.25rem;
     flex-wrap: wrap;
 }
 
-.accuracy-badge,
-.questions-badge {
+.quiensabemas .accuracy-badge,
+.quiensabemas .questions-badge {
     background: rgba(255, 255, 255, 0.05);
     padding: 0.1rem 0.25rem;
     border-radius: 4px;
@@ -854,18 +848,18 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.vs-section {
+.quiensabemas .vs-section {
     text-align: center;
 }
 
-.vs-indicator {
+.quiensabemas .vs-indicator {
     font-size: 0.7rem;
     font-weight: 500;
     color: var(--ranking-text-muted);
     margin-bottom: 0.25rem;
 }
 
-.score-difference {
+.quiensabemas .score-difference {
     font-size: 0.9rem;
     font-weight: 600;
     padding: 0.25rem 0.4rem;
@@ -873,36 +867,35 @@
     border: 1px solid;
 }
 
-.score-difference.positive {
+.quiensabemas .score-difference.positive {
     background: rgba(16, 185, 129, 0.15);
     color: #10b981;
     border-color: rgba(16, 185, 129, 0.3);
 }
 
-.score-difference.negative {
+.quiensabemas .score-difference.negative {
     background: rgba(239, 68, 68, 0.15);
     color: #ef4444;
     border-color: rgba(239, 68, 68, 0.3);
 }
 
-.opponent-type {
+.quiensabemas .opponent-type {
     font-size: 0.6rem;
     color: var(--ranking-text-muted);
     font-style: italic;
 }
 
-/* Match analytics - más compacto */
-.match-analytics {
+.quiensabemas .match-analytics {
     margin: 0.8rem 0;
 }
 
-.analytics-grid {
+.quiensabemas .analytics-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.6rem;
 }
 
-.analytic-item {
+.quiensabemas .analytic-item {
     background: rgba(255, 255, 255, 0.03);
     border-radius: 6px;
     padding: 0.6rem;
@@ -910,7 +903,7 @@
     text-align: center;
 }
 
-.analytic-header {
+.quiensabemas .analytic-header {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -918,12 +911,12 @@
     margin-bottom: 0.4rem;
 }
 
-.analytic-icon {
+.quiensabemas .analytic-icon {
     font-size: 1rem;
     opacity: 0.7;
 }
 
-.analytic-title {
+.quiensabemas .analytic-title {
     font-size: 0.65rem;
     color: var(--ranking-text-muted);
     font-weight: 500;
@@ -931,23 +924,23 @@
     letter-spacing: 0.2px;
 }
 
-.analytic-main {
+.quiensabemas .analytic-main {
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--ranking-text);
     margin-bottom: 0.15rem;
 }
 
-.analytic-detail {
+.quiensabemas .analytic-detail {
     font-size: 0.6rem;
     color: var(--ranking-text-muted);
     margin-bottom: 0.25rem;
 }
 
-.expertise-badge,
-.speed-badge,
-.challenge-badge,
-.duration-badge {
+.quiensabemas .expertise-badge,
+.quiensabemas .speed-badge,
+.quiensabemas .challenge-badge,
+.quiensabemas .duration-badge {
     font-size: 0.55rem;
     padding: 0.15rem 0.3rem;
     border-radius: 6px;
@@ -959,8 +952,7 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Performance analysis - más sutil */
-.performance-analysis {
+.quiensabemas .performance-analysis {
     margin: 0.8rem 0;
     padding: 0.6rem;
     background: rgba(255, 255, 255, 0.02);
@@ -968,7 +960,7 @@
     border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.analysis-header {
+.quiensabemas .analysis-header {
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--ranking-text);
@@ -976,37 +968,36 @@
     text-align: center;
 }
 
-.analysis-content {
+.quiensabemas .analysis-content {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
 }
 
-.strength-indicator,
-.improvement-indicator {
+.quiensabemas .strength-indicator,
+.quiensabemas .improvement-indicator {
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
 }
 
-.indicator-label {
+.quiensabemas .indicator-label {
     font-size: 0.65rem;
     color: var(--ranking-text-muted);
     font-weight: 500;
 }
 
-.indicator-value {
+.quiensabemas .indicator-value {
     font-size: 0.7rem;
     color: var(--ranking-text);
 }
 
-/* Level progression - más discreto */
-.level-progression {
+.quiensabemas .level-progression {
     margin-top: 0.8rem;
     text-align: center;
 }
 
-.level-badge {
+.quiensabemas .level-badge {
     padding: 0.4rem 0.8rem;
     border-radius: 12px;
     font-weight: 500;
@@ -1020,35 +1011,34 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.progression-text {
+.quiensabemas .progression-text {
     font-size: 0.6rem;
     color: var(--ranking-text-muted);
     font-style: italic;
 }
 
-/* === ESTILOS ESPECÍFICOS PARA MENTIROSO === */
+/* === ESTILOS ESPECÍFICOS PARA MENTIROSO (SUTILES) === */
 
-/* Match result section - más discreto */
-.match-result-section {
+.mentiroso .match-result-section {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 0.4rem;
 }
 
-.result-main {
+.mentiroso .result-main {
     display: flex;
     align-items: center;
     gap: 0.4rem;
 }
 
-.result-text-group {
+.mentiroso .result-text-group {
     display: flex;
     flex-direction: column;
     gap: 0.1rem;
 }
 
-.result-title {
+.mentiroso .result-title {
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -1056,20 +1046,20 @@
     color: var(--ranking-text);
 }
 
-.result-subtitle {
+.mentiroso .result-subtitle {
     font-size: 0.65rem;
     color: var(--ranking-text-muted);
     font-style: italic;
 }
 
-.match-metadata {
+.mentiroso .match-metadata {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 0.15rem;
 }
 
-.game-type-tag {
+.mentiroso .game-type-tag {
     background: rgba(229, 62, 62, 0.15);
     color: var(--mentiroso-primary);
     padding: 0.15rem 0.3rem;
@@ -1080,8 +1070,7 @@
     border: 1px solid rgba(229, 62, 62, 0.2);
 }
 
-/* Score duel - más minimalista */
-.score-duel {
+.mentiroso .score-duel {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     gap: 0.6rem;
@@ -1093,64 +1082,63 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.player-score-section {
+.mentiroso .player-score-section {
     display: flex;
     align-items: center;
     gap: 0.4rem;
 }
 
-.score-details {
+.mentiroso .score-details {
     flex: 1;
 }
 
-.player-label {
+.mentiroso .player-label {
     font-size: 0.75rem;
     color: var(--ranking-text-muted);
     margin-bottom: 0.15rem;
 }
 
-.score-value {
+.mentiroso .score-value {
     font-size: 1.3rem;
     font-weight: 600;
     margin-bottom: 0.15rem;
     color: var(--ranking-text);
 }
 
-.score-quality {
+.mentiroso .score-quality {
     font-size: 0.6rem;
     color: var(--ranking-text-muted);
     font-style: italic;
 }
 
-.vs-display {
+.mentiroso .vs-display {
     text-align: center;
 }
 
-.vs-text {
+.mentiroso .vs-text {
     font-size: 0.7rem;
     font-weight: 500;
     color: var(--ranking-text-muted);
     margin-bottom: 0.25rem;
 }
 
-.score-difference.advantage {
+.mentiroso .score-difference.advantage {
     background: rgba(16, 185, 129, 0.15);
     color: #10b981;
     border-color: rgba(16, 185, 129, 0.3);
 }
 
-.score-difference.disadvantage {
+.mentiroso .score-difference.disadvantage {
     background: rgba(239, 68, 68, 0.15);
     color: #ef4444;
     border-color: rgba(239, 68, 68, 0.3);
 }
 
-/* Deception analysis - más sutil */
-.deception-analysis {
+.mentiroso .deception-analysis {
     margin: 0.8rem 0;
 }
 
-.analysis-title {
+.mentiroso .analysis-title {
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--ranking-text);
@@ -1158,13 +1146,13 @@
     text-align: center;
 }
 
-.skills-grid {
+.mentiroso .skills-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 0.6rem;
 }
 
-.skill-metric {
+.mentiroso .skill-metric {
     background: rgba(255, 255, 255, 0.03);
     border-radius: 6px;
     padding: 0.6rem;
@@ -1172,7 +1160,7 @@
     text-align: center;
 }
 
-.metric-header {
+.mentiroso .metric-header {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1180,12 +1168,12 @@
     margin-bottom: 0.4rem;
 }
 
-.metric-icon {
+.mentiroso .metric-icon {
     font-size: 1rem;
     opacity: 0.7;
 }
 
-.metric-title {
+.mentiroso .metric-title {
     font-size: 0.65rem;
     color: var(--ranking-text-muted);
     font-weight: 500;
@@ -1193,32 +1181,31 @@
     letter-spacing: 0.2px;
 }
 
-.metric-value {
+.mentiroso .metric-value {
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--ranking-text);
     margin-bottom: 0.15rem;
 }
 
-.metric-description {
+.mentiroso .metric-description {
     font-size: 0.6rem;
     color: var(--ranking-text-muted);
     margin-bottom: 0.25rem;
 }
 
-.metric-percentage {
+.mentiroso .metric-percentage {
     font-size: 0.55rem;
     color: var(--mentiroso-primary);
     font-weight: 500;
 }
 
-.metric-detail {
+.mentiroso .metric-detail {
     font-size: 0.55rem;
     color: var(--ranking-text-muted);
 }
 
-/* Specialization showcase - más discreto */
-.specialization-showcase {
+.mentiroso .specialization-showcase {
     margin: 0.8rem 0;
     padding: 0.6rem;
     background: rgba(255, 255, 255, 0.02);
@@ -1227,7 +1214,7 @@
     text-align: center;
 }
 
-.specialization-header {
+.mentiroso .specialization-header {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1235,12 +1222,12 @@
     margin-bottom: 0.25rem;
 }
 
-.spec-icon {
+.mentiroso .spec-icon {
     font-size: 1.2rem;
     opacity: 0.8;
 }
 
-.spec-title {
+.mentiroso .spec-title {
     font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
@@ -1248,14 +1235,13 @@
     color: var(--ranking-text);
 }
 
-.specialization-description {
+.mentiroso .specialization-description {
     font-size: 0.65rem;
     color: var(--ranking-text-muted);
     font-style: italic;
 }
 
-/* Perfect round highlight - más sutil */
-.perfect-round-highlight {
+.mentiroso .perfect-round-highlight {
     display: flex;
     align-items: center;
     gap: 0.6rem;
@@ -1266,16 +1252,16 @@
     border: 1px solid rgba(139, 92, 246, 0.15);
 }
 
-.perfect-icon {
+.mentiroso .perfect-icon {
     font-size: 1.5rem;
     opacity: 0.8;
 }
 
-.perfect-text {
+.mentiroso .perfect-text {
     flex: 1;
 }
 
-.perfect-title {
+.mentiroso .perfect-title {
     font-size: 0.8rem;
     font-weight: 600;
     color: #8b5cf6;
@@ -1284,13 +1270,12 @@
     margin-bottom: 0.15rem;
 }
 
-.perfect-description {
+.mentiroso .perfect-description {
     font-size: 0.65rem;
     color: var(--ranking-text-muted);
 }
 
-/* Performance insights - más discreto */
-.performance-insights {
+.mentiroso .performance-insights {
     margin: 0.8rem 0;
     padding: 0.6rem;
     background: rgba(255, 255, 255, 0.02);
@@ -1298,7 +1283,7 @@
     border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.insights-header {
+.mentiroso .insights-header {
     font-size: 0.75rem;
     font-weight: 600;
     color: var(--ranking-text);
@@ -1306,25 +1291,25 @@
     text-align: center;
 }
 
-.insights-content {
+.mentiroso .insights-content {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
 }
 
-.insight-item {
+.mentiroso .insight-item {
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
 }
 
-.insight-label {
+.mentiroso .insight-label {
     font-size: 0.65rem;
     color: var(--ranking-text-muted);
     font-weight: 500;
 }
 
-.insight-value {
+.mentiroso .insight-value {
     font-size: 0.7rem;
     color: var(--ranking-text);
 }
