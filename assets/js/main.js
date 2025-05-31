@@ -186,11 +186,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Check if we're on the games page
+    // Check if we're on the games page and setup player name display
     const playerNameDisplay = document.getElementById('playerNameDisplay');
     if (playerNameDisplay) {
-        let playerName = localStorage.getItem('playerName') || 'Jugador';
-        playerNameDisplay.textContent = playerName;
+        // Get current player name from localStorage, use 'Jugador' as fallback only if no name exists
+        const currentPlayerName = localStorage.getItem('playerName');
+        let displayName = currentPlayerName || 'Jugador';
+        
+        // Always display the actual saved name
+        playerNameDisplay.textContent = displayName;
         
         // Configurar el cambio de nombre
         const changeNameBtn = document.getElementById('changeNameBtn');
@@ -202,7 +206,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (changeNameBtn && changeNameModal) {
             changeNameBtn.addEventListener('click', function() {
-                newPlayerNameInput.value = playerName;
+                if (newPlayerNameInput) {
+                    newPlayerNameInput.value = displayName;
+                }
                 if(changeNameErrorDiv) changeNameErrorDiv.textContent = ''; // Limpiar errores previos
                 changeNameModal.classList.add('active');
             });
@@ -229,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         localStorage.setItem('playerName', newName);
                         playerNameDisplay.textContent = newName;
                         changeNameModal.classList.remove('active');
-                        playerName = newName;
+                        displayName = newName; // Update local variable
 
                         document.querySelectorAll('.player-name').forEach(element => {
                             element.textContent = newName;
@@ -252,6 +258,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                 });
             }
+            
+            // Close modal when clicking outside - move this inside the scope where changeNameModal is defined
+            window.addEventListener('click', function(e) {
+                if (e.target === changeNameModal) {
+                    changeNameModal.classList.remove('active');
+                }
+            });
         }
     }
 
@@ -306,18 +319,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
-    // Cargar nombre del jugador desde localStorage
-    if (savedPlayerName) {
-        const playerNameDisplay = document.getElementById('playerNameDisplay');
-        if (playerNameDisplay) playerNameDisplay.textContent = savedPlayerName;
-    }
-
-    window.addEventListener('click', function(e) {
-        if (e.target === changeNameModal) {
-            changeNameModal.classList.remove('active');
-        }
-    });
 
     // Inicializar tabs de salas disponibles
     const roomTabs = document.querySelectorAll('.room-tab-button');

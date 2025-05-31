@@ -573,7 +573,7 @@
 
     <!-- Progressive Web App optimizations -->
     <meta name="theme-color" content="#007bff">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Crack Total">
 
@@ -676,6 +676,8 @@
                     .then(registration => {
                         console.log('[SW] Service Worker registrado exitosamente:', registration.scope);
                         
+                        // DISABLED: Constant update checking causing annoying popups
+                        /*
                         // Escuchar actualizaciones del SW
                         registration.addEventListener('updatefound', () => {
                             const newWorker = registration.installing;
@@ -699,12 +701,15 @@
                         setInterval(() => {
                             registration.update();
                         }, 60000); // Verificar cada minuto
+                        */
                         
                     })
                     .catch(error => {
                         console.log('[SW] Error al registrar Service Worker:', error);
                     });
                 
+                // DISABLED: Annoying update messages
+                /*
                 // Escuchar mensajes del Service Worker
                 navigator.serviceWorker.addEventListener('message', event => {
                     if (event.data && event.data.type === 'SW_UPDATED') {
@@ -717,9 +722,12 @@
                         }, 1000);
                     }
                 });
+                */
             });
         }
         
+        // DISABLED: Annoying update notifications
+        /*
         // Función para mostrar notificación de actualización
         function showUpdateNotification() {
             // Crear un elemento de notificación
@@ -760,6 +768,7 @@
                 }
             }, 10000);
         }
+        */
         
         // Función para limpiar cache manualmente (útil para debugging)
         function clearSiteCache() {
@@ -794,21 +803,27 @@
         });
     </script>
     
-    <script type="module" src="assets/js/notifications.js?v=202505272312"></script>
-    <script type="module" src="assets/js/seo-manager.js?v=202505272312"></script>
-    <script type="module" src="assets/js/seo-monitor.js?v=202505272312"></script>
-    <script type="module" src="assets/js/seo-auto-fix.js?v=202505272312"></script>
-    <script type="module" src="assets/js/performance-optimizer.js?v=202505272312"></script>
-    <script type="module" src="assets/js/advanced-analytics.js?v=202505272312"></script>
-    <script type="module" src="assets/js/smart-notifications.js?v=202505272312"></script>
-    <script type="module" src="assets/js/state-manager.js?v=202505272312"></script>
-    <script type="module" src="assets/js/security-manager.js?v=202505272312"></script>
-    <script type="module" src="assets/js/cache-manager.js?v=202505272312"></script>
-    <script type="module" src="assets/js/analytics-manager.js?v=202505272312"></script>
-    <script type="module" src="assets/js/logger-manager.js?v=202505272312"></script>
-    <script type="module" src="assets/js/image-optimizer.js?v=202505272312"></script>
+    <!-- Load essential functions first -->
+    <script src="assets/js/essential.js?v=202505272312"></script>
+    <!-- Basic notifications only -->
+    <!-- <script type="module" src="assets/js/notifications.js?v=202505272312"></script> -->
+    <!-- Temporarily disabled to fix loading issues -->
+    <!-- <script type="module" src="assets/js/seo-manager.js?v=202505272312"></script> -->
+    <!-- <script type="module" src="assets/js/seo-monitor.js?v=202505272312"></script> -->
+    <!-- <script type="module" src="assets/js/seo-auto-fix.js?v=202505272312"></script> -->
+    <!-- <script type="module" src="assets/js/performance-optimizer.js?v=202505272312"></script> -->
+    <!-- <script type="module" src="assets/js/advanced-analytics.js?v=202505272312"></script> -->
+    <!-- <script type="module" src="assets/js/smart-notifications.js?v=202505272312"></script> -->
+    <!-- <script type="module" src="assets/js/state-manager.js?v=202505272312"></script> -->
+    <!-- <script type="module" src="assets/js/security-manager.js?v=202505272312"></script> -->
+    <!-- Disabled due to infinite loop causing stack overflow -->
+    <!-- <script type="module" src="assets/js/cache-manager.js?v=202505272312"></script> -->
+    <!-- <script type="module" src="assets/js/analytics-manager.js?v=202505272312"></script> -->
+    <!-- <script type="module" src="assets/js/logger-manager.js?v=202505272312"></script> -->
+    <!-- <script type="module" src="assets/js/image-optimizer.js?v=202505272312"></script> -->
     <script src="assets/js/main.js?v=202505272312"></script>
-    <script src="assets/js/firebase-config.js"></script>
-    <script src="assets/js/firebase-init.js"></script>
+    <!-- Firebase scripts disabled temporarily to fix module errors -->
+    <!-- <script type="module" src="assets/js/firebase-config.js"></script> -->
+    <!-- <script type="module" src="assets/js/firebase-init.js"></script> -->
 </body>
 </html> 

@@ -1547,6 +1547,7 @@
                     <input type="text" id="newPlayerName" placeholder="Tu nombre" required autocomplete="off">
                     <div class="input-focus-border"></div>
                 </div>
+                <div id="changeNameError" style="display: none; color: var(--error); font-size: 0.9rem; margin-top: 0.5rem; min-height: 1.2rem; text-align: center; font-weight: 500;"></div>
                 <div class="modal-footer">
                     <button type="button" class="cancel-button" id="cancelNameChange">Cancelar</button>
                     <button type="submit" class="save-button">Guardar</button>
@@ -1577,7 +1578,7 @@
             <div class="qsm-modal-scrollable">
                 <div class="qsm-content-compact">
                     <div class="intro-compact">
-                        🧠 <strong>Enfréntate 1v1</strong> en 6 niveles de dificultad progresiva. Respuestas alternadas por turnos, comodín 50/50 disponible.
+                        🧠 <strong>Enfréntate 1v1</strong> en 6 niveles de dificultad progresiva. 5 preguntas por nivel para cada jugador (30 total), respuestas alternadas por turnos, comodín 50/50 disponible.
                     </div>
 
                     <div class="info-grid-compact">
@@ -1785,53 +1786,61 @@
                     .then(registration => {
                         console.log('[SW] Service Worker registrado exitosamente:', registration.scope);
                         
+                        // DISABLED: Constant update checking causing annoying popups
+                        /*
                         // Escuchar actualizaciones del SW
                         registration.addEventListener('updatefound', () => {
                             const newWorker = registration.installing;
-                            console.log('[SW] Nueva versiï¿½n del Service Worker encontrada');
+                            console.log('[SW] Nueva versión del Service Worker encontrada');
                             
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed') {
                                     if (navigator.serviceWorker.controller) {
-                                        // Nueva versiï¿½n disponible, mostrar notificaciï¿½n
-                                        console.log('[SW] Nueva versiï¿½n disponible, actualizando...');
+                                        // Nueva versión disponible, mostrar notificación
+                                        console.log('[SW] Nueva versión disponible, actualizando...');
                                         showUpdateNotification();
                                     } else {
-                                        // Primera instalaciï¿½n
+                                        // Primera instalación
                                         console.log('[SW] Service Worker instalado por primera vez');
                                     }
                                 }
                             });
                         });
                         
-                        // Verificar si hay actualizaciones periï¿½dicamente
+                        // Verificar si hay actualizaciones periódicamente
                         setInterval(() => {
                             registration.update();
                         }, 60000); // Verificar cada minuto
+                        */
                         
                     })
                     .catch(error => {
                         console.log('[SW] Error al registrar Service Worker:', error);
                     });
                 
+                // DISABLED: Annoying update messages
+                /*
                 // Escuchar mensajes del Service Worker
                 navigator.serviceWorker.addEventListener('message', event => {
                     if (event.data && event.data.type === 'SW_UPDATED') {
-                        console.log(`[SW] Service Worker actualizado a versiï¿½n ${event.data.version}`);
-                        // Opcionalmente recargar la pï¿½gina o mostrar notificaciï¿½n
+                        console.log(`[SW] Service Worker actualizado a versión ${event.data.version}`);
+                        // Opcionalmente recargar la página o mostrar notificación
                         setTimeout(() => {
-                            if (confirm('ï¿½Nueva versiï¿½n disponible! ï¿½Quieres recargar la pï¿½gina para obtener las ï¿½ltimas mejoras?')) {
+                            if (confirm('¡Nueva versión disponible! ¿Quieres recargar la página para obtener las últimas mejoras?')) {
                                 window.location.reload(true);
                             }
                         }, 1000);
                     }
                 });
+                */
             });
         }
         
-        // Funciï¿½n para mostrar notificaciï¿½n de actualizaciï¿½n
+        // DISABLED: Annoying update notifications
+        /*
+        // Función para mostrar notificación de actualización
         function showUpdateNotification() {
-            // Crear un elemento de notificaciï¿½n
+            // Crear un elemento de notificación
             const notification = document.createElement('div');
             notification.style.cssText = `
                 position: fixed;
@@ -1849,8 +1858,8 @@
                 transition: all 0.3s ease;
             `;
             notification.innerHTML = `
-                <strong>ï¿½Actualizaciï¿½n disponible!</strong><br>
-                <small>Haz clic para obtener la ï¿½ltima versiï¿½n</small>
+                <strong>¡Actualización disponible!</strong><br>
+                <small>Haz clic para obtener la última versión</small>
             `;
             
             notification.onclick = () => {
@@ -1859,7 +1868,7 @@
             
             document.body.appendChild(notification);
             
-            // Auto-remover despuï¿½s de 10 segundos
+            // Auto-remover después de 10 segundos
             setTimeout(() => {
                 if (notification.parentNode) {
                     notification.style.opacity = '0';
@@ -1869,8 +1878,9 @@
                 }
             }, 10000);
         }
+        */
         
-        // Funciï¿½n para limpiar cache manualmente (ï¿½til para debugging)
+        // Función para limpiar cache manualmente (útil para debugging)
         function clearSiteCache() {
             if ('caches' in window) {
                 caches.keys().then(cacheNames => {
@@ -1887,7 +1897,7 @@
                             type: 'CLEAR_CACHE'
                         });
                     }
-                    // Recargar la pï¿½gina para obtener contenido fresco
+                    // Recargar la página para obtener contenido fresco
                     window.location.reload(true);
                 });
             }
@@ -1903,424 +1913,442 @@
         });
     </script>
 
+    <!-- Load essential functions first to prevent script conflicts -->
+    <script src="assets/js/essential.js?v=202505272312"></script>
+    
+    <!-- Load main.js for player name functionality FIRST -->
+    <script src="assets/js/main.js?v=202505272312"></script>
+    
+    <!-- Debug script to ensure player name loads correctly -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Debug info
+            const playerName = localStorage.getItem('playerName');
+            console.log('[Debug] Player name from localStorage:', playerName);
+            
+            // Double-check that the player name display is working
+            setTimeout(() => {
+                const playerNameDisplay = document.getElementById('playerNameDisplay');
+                if (playerNameDisplay) {
+                    const currentText = playerNameDisplay.textContent;
+                    console.log('[Debug] Current player name display:', currentText);
+                    
+                    if (currentText === 'Jugador' && playerName) {
+                        console.log('[Debug] Fixing player name display...');
+                        playerNameDisplay.textContent = playerName;
+                    }
+                }
+            }, 200);
+        });
+    </script>
+    
     <!-- Script para manejar los clicks en los botones de jugar -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Variables para manejar informaciï¿½n de salas
-            const gameFrames = new Map();
-            let roomsData = {
-                quiensabemas: { active: 0, available: 0 },
-                mentiroso: { active: 0, available: 0 }
-            };
-
-            // Elementos DOM para mostrar informaciï¿½n de salas
-            const quienSabeMasRooms = document.getElementById('quiensabemas-rooms');
-            const mentirosoRooms = document.getElementById('mentiroso-rooms');
-
-            // Funciï¿½n para actualizar la visualizaciï¿½n de salas
-            function updateRoomsDisplay() {
-                if (quienSabeMasRooms) {
-                    const qsmCount = quienSabeMasRooms.querySelector('.room-count');
-                    const qsmData = roomsData.quiensabemas;
-                    qsmCount.textContent = `${qsmData.active}/${qsmData.active + qsmData.available}`;
-                }
-
-                if (mentirosoRooms) {
-                    const mentirosoCount = mentirosoRooms.querySelector('.room-count');
-                    const mentirosoData = roomsData.mentiroso;
-                    mentirosoCount.textContent = `${mentirosoData.active}/${mentirosoData.active + mentirosoData.available}`;
-                }
-            }
-
-            // Funciï¿½n para crear iframe oculto y solicitar informaciï¿½n de salas
-            function createGameFrame(gameType, gameUrl) {
-                if (gameFrames.has(gameType)) {
-                    const existingFrame = gameFrames.get(gameType);
-                    if (existingFrame.parentNode) {
-                        existingFrame.parentNode.removeChild(existingFrame);
-                    }
-                }
-
-                const iframe = document.createElement('iframe');
-                iframe.src = gameUrl;
-                iframe.style.display = 'none';
-                iframe.style.position = 'absolute';
-                iframe.style.left = '-9999px';
-                iframe.style.width = '1px';
-                iframe.style.height = '1px';
-                
-                document.body.appendChild(iframe);
-                gameFrames.set(gameType, iframe);
-
-                iframe.onload = function() {
-                    setTimeout(() => {
-                        requestRoomsFromGame(gameType);
-                    }, 2000);
+            // Wait a bit to ensure main.js has executed first
+            setTimeout(() => {
+                // Variables para manejar información de salas
+                const gameFrames = new Map();
+                let roomsData = {
+                    quiensabemas: { active: 0, available: 0 },
+                    mentiroso: { active: 0, available: 0 }
                 };
 
-                return iframe;
-            }
+                // Elementos DOM para mostrar información de salas
+                const quienSabeMasRooms = document.getElementById('quiensabemas-rooms');
+                const mentirosoRooms = document.getElementById('mentiroso-rooms');
 
-            // Funciï¿½n para solicitar salas a un juego especï¿½fico
-            function requestRoomsFromGame(gameType) {
-                const iframe = gameFrames.get(gameType);
-                if (iframe && iframe.contentWindow) {
-                    try {
-                        iframe.contentWindow.postMessage({
-                            type: 'requestRooms',
-                            gameType: gameType
-                        }, window.location.origin);
-                    } catch (error) {
-                        console.error(`Error solicitando salas de ${gameType}:`, error);
+                // Función para actualizar la visualización de salas
+                function updateRoomsDisplay() {
+                    if (quienSabeMasRooms) {
+                        const qsmCount = quienSabeMasRooms.querySelector('.room-count');
+                        const qsmData = roomsData.quiensabemas;
+                        qsmCount.textContent = `${qsmData.active}/${qsmData.active + qsmData.available}`;
+                    }
+
+                    if (mentirosoRooms) {
+                        const mentirosoCount = mentirosoRooms.querySelector('.room-count');
+                        const mentirosoData = roomsData.mentiroso;
+                        mentirosoCount.textContent = `${mentirosoData.active}/${mentirosoData.active + mentirosoData.available}`;
                     }
                 }
-            }
 
-            // Funciï¿½n para procesar respuesta de salas
-            function processRoomsResponse(data) {
-                if (!data.rooms || !Array.isArray(data.rooms)) {
-                    roomsData[data.gameType] = { active: 0, available: 0 };
-                    updateRoomsDisplay();
-                    return;
+                // Función para crear iframe oculto y solicitar información de salas
+                function createGameFrame(gameType, gameUrl) {
+                    if (gameFrames.has(gameType)) {
+                        const existingFrame = gameFrames.get(gameType);
+                        if (existingFrame.parentNode) {
+                            existingFrame.parentNode.removeChild(existingFrame);
+                        }
+                    }
+
+                    const iframe = document.createElement('iframe');
+                    iframe.src = gameUrl;
+                    iframe.style.display = 'none';
+                    iframe.style.position = 'absolute';
+                    iframe.style.left = '-9999px';
+                    iframe.style.width = '1px';
+                    iframe.style.height = '1px';
+                    
+                    document.body.appendChild(iframe);
+                    gameFrames.set(gameType, iframe);
+
+                    iframe.onload = function() {
+                        setTimeout(() => {
+                            requestRoomsFromGame(gameType);
+                        }, 2000);
+                    };
+
+                    return iframe;
                 }
 
-                let active = 0;
-                let available = 0;
+                // Función para solicitar salas a un juego específico
+                function requestRoomsFromGame(gameType) {
+                    const iframe = gameFrames.get(gameType);
+                    if (iframe && iframe.contentWindow) {
+                        try {
+                            iframe.contentWindow.postMessage({
+                                type: 'requestRooms',
+                                gameType: gameType
+                            }, window.location.origin);
+                        } catch (error) {
+                            console.error(`Error solicitando salas de ${gameType}:`, error);
+                        }
+                    }
+                }
 
-                data.rooms.forEach((room) => {
-                    const currentPlayers = room.playerCount || 0;
-                    const maxPlayers = room.maxPlayers || 2;
+                // Función para procesar respuesta de salas
+                function processRoomsResponse(data) {
+                    if (!data.rooms || !Array.isArray(data.rooms)) {
+                        roomsData[data.gameType] = { active: 0, available: 0 };
+                        updateRoomsDisplay();
+                        return;
+                    }
+
+                    let active = 0;
+                    let available = 0;
+
+                    data.rooms.forEach((room) => {
+                        const currentPlayers = room.playerCount || 0;
+                        const maxPlayers = room.maxPlayers || 2;
+                        
+                        if (currentPlayers >= maxPlayers) {
+                            active++;
+                        } else {
+                            available++;
+                        }
+                    });
+
+                    roomsData[data.gameType] = { active, available };
+                    updateRoomsDisplay();
+                }
+
+                // Listener para recibir respuestas de los iframes
+                window.addEventListener('message', function(event) {
+                    if (event.origin !== window.location.origin) return;
                     
-                    if (currentPlayers >= maxPlayers) {
-                        active++;
-                    } else {
-                        available++;
+                    if (event.data && event.data.type === 'availableRooms') {
+                        processRoomsResponse(event.data);
                     }
                 });
 
-                roomsData[data.gameType] = { active, available };
-                updateRoomsDisplay();
-            }
-
-            // Listener para recibir respuestas de los iframes
-            window.addEventListener('message', function(event) {
-                if (event.origin !== window.location.origin) return;
-                
-                if (event.data && event.data.type === 'availableRooms') {
-                    processRoomsResponse(event.data);
+                // Inicializar iframes para obtener información de salas
+                function initializeRoomsTracking() {
+                    createGameFrame('quiensabemas', 'quiensabemas.html');
+                    createGameFrame('mentiroso', 'mentiroso.html');
                 }
-            });
 
-            // Inicializar iframes para obtener informaciï¿½n de salas
-            function initializeRoomsTracking() {
-                createGameFrame('quiensabemas', 'quiensabemas.html');
-                createGameFrame('mentiroso', 'mentiroso.html');
-            }
+                // Función para actualizar salas periódicamente
+                function scheduleRoomsUpdate() {
+                    setInterval(() => {
+                        requestRoomsFromGame('quiensabemas');
+                        requestRoomsFromGame('mentiroso');
+                    }, 5000);
+                }
 
-            // Funciï¿½n para actualizar salas periï¿½dicamente
-            function scheduleRoomsUpdate() {
-                setInterval(() => {
-                    requestRoomsFromGame('quiensabemas');
-                    requestRoomsFromGame('mentiroso');
-                }, 5000);
-            }
-
-            // Manejar clicks en los botones de jugar
-            const gameCards = document.querySelectorAll('.cosmic-game-card');
-            const mentirosoIntroModal = document.getElementById('mentirosoIntroModal');
-            const qsmIntroModal = document.getElementById('qsmIntroModal');
-            const crackRapidoIntroModal = document.getElementById('crackRapidoIntroModal');
-            const goToLobbyMentirosoButton = document.getElementById('goToLobbyMentirosoButton');
-            const goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
-            const goToCrackRapidoButton = document.getElementById('goToCrackRapidoButton');
-            
-            gameCards.forEach(card => {
-                const gameType = card.getAttribute('data-game');
-                const playButton = card.querySelector('.quantum-play-btn');
+                // Manejar clicks en los botones de jugar
+                const gameCards = document.querySelectorAll('.cosmic-game-card');
+                const mentirosoIntroModal = document.getElementById('mentirosoIntroModal');
+                const qsmIntroModal = document.getElementById('qsmIntroModal');
+                const crackRapidoIntroModal = document.getElementById('crackRapidoIntroModal');
+                const goToLobbyMentirosoButton = document.getElementById('goToLobbyMentirosoButton');
+                const goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
+                const goToCrackRapidoButton = document.getElementById('goToCrackRapidoButton');
                 
-                if (playButton) {
-                    playButton.addEventListener('click', function(event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        
-                        // Analytics tracking para clicks en juegos
+                gameCards.forEach(card => {
+                    const gameType = card.getAttribute('data-game');
+                    const playButton = card.querySelector('.quantum-play-btn');
+                    
+                    if (playButton) {
+                        playButton.addEventListener('click', function(event) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                            
+                            // Analytics tracking para clicks en juegos
+                            if (window.gtag) {
+                                gtag('event', 'game_click', {
+                                    event_category: 'games',
+                                    event_label: gameType,
+                                    game_type: gameType,
+                                    value: 1
+                                });
+                            }
+                            
+                            if (gameType === 'mentiroso') {
+                                mentirosoIntroModal.classList.add('active');
+                                // Track modal opening
+                                if (window.gtag) {
+                                    gtag('event', 'modal_open', {
+                                        event_category: 'engagement',
+                                        event_label: 'mentiroso_intro',
+                                        value: 1
+                                    });
+                                }
+                            } else if (gameType === 'quiensabemas') {
+                                qsmIntroModal.classList.add('active');
+                                // Track modal opening
+                                if (window.gtag) {
+                                    gtag('event', 'modal_open', {
+                                        event_category: 'engagement',
+                                        event_label: 'qsm_intro',
+                                        value: 1
+                                    });
+                                }
+                            } else if (gameType === 'crack-rapido') {
+                                crackRapidoIntroModal.classList.add('active');
+                                // Track modal opening
+                                if (window.gtag) {
+                                    gtag('event', 'modal_open', {
+                                        event_category: 'engagement',
+                                        event_label: 'crack_rapido_intro',
+                                        value: 1
+                                    });
+                                }
+                            } else {
+                                // Track direct navigation
+                                if (window.gtag) {
+                                    gtag('event', 'game_start', {
+                                        event_category: 'games',
+                                        event_label: gameType,
+                                        navigation_type: 'direct',
+                                        value: 1
+                                    });
+                                }
+                                window.location.href = `${gameType}.html`;
+                            }
+                        });
+                    }
+                });
+                
+                // Botón para continuar al lobby de Mentiroso
+                if (goToLobbyMentirosoButton) {
+                    goToLobbyMentirosoButton.addEventListener('click', function() {
+                        mentirosoIntroModal.classList.remove('active');
+                        // Track game start from modal
                         if (window.gtag) {
-                            gtag('event', 'game_click', {
+                            gtag('event', 'game_start', {
                                 event_category: 'games',
-                                event_label: gameType,
-                                game_type: gameType,
+                                event_label: 'mentiroso',
+                                navigation_type: 'from_modal',
+                                user_engagement: 'high',
+                                value: 2
+                            });
+                        }
+                        window.location.href = 'mentiroso.html';
+                    });
+                }
+                
+                // Botón para continuar al lobby de QSM
+                if (goToLobbyQSMButton) {
+                    goToLobbyQSMButton.addEventListener('click', function() {
+                        qsmIntroModal.classList.remove('active');
+                        // Track game start from modal
+                        if (window.gtag) {
+                            gtag('event', 'game_start', {
+                                event_category: 'games',
+                                event_label: 'quiensabemas',
+                                navigation_type: 'from_modal',
+                                user_engagement: 'high',
+                                value: 2
+                            });
+                        }
+                        window.location.href = 'quiensabemas.html';
+                    });
+                }
+                
+                // Botón para continuar al lobby de Crack Rápido
+                if (goToCrackRapidoButton) {
+                    goToCrackRapidoButton.addEventListener('click', function() {
+                        crackRapidoIntroModal.classList.remove('active');
+                        // Track game start from modal
+                        if (window.gtag) {
+                            gtag('event', 'game_start', {
+                                event_category: 'games',
+                                event_label: 'crack_rapido',
+                                navigation_type: 'from_modal',
+                                user_engagement: 'high',
+                                value: 2
+                            });
+                        }
+                        window.location.href = 'crack-rapido.html';
+                    });
+                }
+                
+                // Cerrar modales al hacer clic fuera del contenido
+                window.addEventListener('click', function(event) {
+                    if (event.target === mentirosoIntroModal) {
+                        mentirosoIntroModal.classList.remove('active');
+                        // Track modal close
+                        if (window.gtag) {
+                            gtag('event', 'modal_close', {
+                                event_category: 'engagement',
+                                event_label: 'mentiroso_intro_outside_click',
+                                engagement_type: 'low',
+                                value: 0
+                            });
+                        }
+                    }
+                    if (event.target === qsmIntroModal) {
+                        qsmIntroModal.classList.remove('active');
+                        // Track modal close
+                        if (window.gtag) {
+                            gtag('event', 'modal_close', {
+                                event_category: 'engagement',
+                                event_label: 'qsm_intro_outside_click',
+                                engagement_type: 'low',
+                                value: 0
+                            });
+                        }
+                    }
+                    if (event.target === crackRapidoIntroModal) {
+                        crackRapidoIntroModal.classList.remove('active');
+                        // Track modal close
+                        if (window.gtag) {
+                            gtag('event', 'modal_close', {
+                                event_category: 'engagement',
+                                event_label: 'crack_rapido_intro_outside_click',
+                                engagement_type: 'low',
+                                value: 0
+                            });
+                        }
+                    }
+                });
+
+                // Inicializar sistema de tracking de salas
+                setTimeout(() => {
+                    initializeRoomsTracking();
+                    scheduleRoomsUpdate();
+                }, 1000);
+
+                // Limpiar iframes cuando se vaya a salir de la página
+                window.addEventListener('beforeunload', function() {
+                    gameFrames.forEach((iframe, gameType) => {
+                        if (iframe.parentNode) {
+                            iframe.parentNode.removeChild(iframe);
+                        }
+                    });
+                    gameFrames.clear();
+                });
+
+                // ANALYTICS TRACKING ADICIONAL
+                
+                // Track clicks en enlaces de navegación
+                const navLinks = document.querySelectorAll('.main-navigation a, .extra-link-button');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        const linkText = this.textContent.trim();
+                        const linkHref = this.getAttribute('href');
+                        
+                        if (window.gtag) {
+                            gtag('event', 'navigation_click', {
+                                event_category: 'navigation',
+                                event_label: linkText,
+                                link_url: linkHref,
                                 value: 1
                             });
                         }
-                        
-                        if (gameType === 'mentiroso') {
-                            mentirosoIntroModal.classList.add('active');
-                            // Track modal opening
+                    });
+                });
+
+                // Track scroll depth
+                let maxScrollDepth = 0;
+                let scrollMilestones = [25, 50, 75, 100];
+                let trackedMilestones = new Set();
+
+                window.addEventListener('scroll', function() {
+                    const scrolled = window.scrollY;
+                    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                    const scrollPercent = Math.round((scrolled / maxScroll) * 100);
+
+                    if (scrollPercent > maxScrollDepth) {
+                        maxScrollDepth = scrollPercent;
+                    }
+
+                    scrollMilestones.forEach(milestone => {
+                        if (scrollPercent >= milestone && !trackedMilestones.has(milestone)) {
+                            trackedMilestones.add(milestone);
                             if (window.gtag) {
-                                gtag('event', 'modal_open', {
+                                gtag('event', 'scroll_depth', {
                                     event_category: 'engagement',
-                                    event_label: 'mentiroso_intro',
-                                    value: 1
+                                    event_label: `${milestone}%`,
+                                    value: milestone
                                 });
                             }
-                        } else if (gameType === 'quiensabemas') {
-                            qsmIntroModal.classList.add('active');
-                            // Track modal opening
-                            if (window.gtag) {
-                                gtag('event', 'modal_open', {
-                                    event_category: 'engagement',
-                                    event_label: 'qsm_intro',
-                                    value: 1
-                                });
-                            }
-                        } else if (gameType === 'crack-rapido') {
-                            crackRapidoIntroModal.classList.add('active');
-                            // Track modal opening
-                            if (window.gtag) {
-                                gtag('event', 'modal_open', {
-                                    event_category: 'engagement',
-                                    event_label: 'crack_rapido_intro',
-                                    value: 1
-                                });
-                            }
-                        } else {
-                            // Track direct navigation
-                            if (window.gtag) {
-                                gtag('event', 'game_start', {
-                                    event_category: 'games',
-                                    event_label: gameType,
-                                    navigation_type: 'direct',
-                                    value: 1
-                                });
-                            }
-                            window.location.href = `${gameType}.html`;
                         }
                     });
-                }
-            });
-            
-            // Botï¿½n para continuar al lobby de Mentiroso
-            if (goToLobbyMentirosoButton) {
-                goToLobbyMentirosoButton.addEventListener('click', function() {
-                    mentirosoIntroModal.classList.remove('active');
-                    // Track game start from modal
-                    if (window.gtag) {
-                        gtag('event', 'game_start', {
-                            event_category: 'games',
-                            event_label: 'mentiroso',
-                            navigation_type: 'from_modal',
-                            user_engagement: 'high',
-                            value: 2
-                        });
-                    }
-                    window.location.href = 'mentiroso.html';
                 });
-            }
-            
-            // Botï¿½n para continuar al lobby de QSM
-            if (goToLobbyQSMButton) {
-                goToLobbyQSMButton.addEventListener('click', function() {
-                    qsmIntroModal.classList.remove('active');
-                    // Track game start from modal
-                    if (window.gtag) {
-                        gtag('event', 'game_start', {
-                            event_category: 'games',
-                            event_label: 'quiensabemas',
-                            navigation_type: 'from_modal',
-                            user_engagement: 'high',
-                            value: 2
-                        });
-                    }
-                    window.location.href = 'quiensabemas.html';
-                });
-            }
-            
-            // Botï¿½n para continuar al lobby de Crack Rï¿½pido
-            if (goToCrackRapidoButton) {
-                goToCrackRapidoButton.addEventListener('click', function() {
-                    crackRapidoIntroModal.classList.remove('active');
-                    // Track game start from modal
-                    if (window.gtag) {
-                        gtag('event', 'game_start', {
-                            event_category: 'games',
-                            event_label: 'crack_rapido',
-                            navigation_type: 'from_modal',
-                            user_engagement: 'high',
-                            value: 2
-                        });
-                    }
-                    window.location.href = 'crack-rapido.html';
-                });
-            }
-            
-            // Cerrar modales al hacer clic fuera del contenido
-            window.addEventListener('click', function(event) {
-                if (event.target === mentirosoIntroModal) {
-                    mentirosoIntroModal.classList.remove('active');
-                    // Track modal close
-                    if (window.gtag) {
-                        gtag('event', 'modal_close', {
-                            event_category: 'engagement',
-                            event_label: 'mentiroso_intro_outside_click',
-                            engagement_type: 'low',
-                            value: 0
-                        });
-                    }
-                }
-                if (event.target === qsmIntroModal) {
-                    qsmIntroModal.classList.remove('active');
-                    // Track modal close
-                    if (window.gtag) {
-                        gtag('event', 'modal_close', {
-                            event_category: 'engagement',
-                            event_label: 'qsm_intro_outside_click',
-                            engagement_type: 'low',
-                            value: 0
-                        });
-                    }
-                }
-                if (event.target === crackRapidoIntroModal) {
-                    crackRapidoIntroModal.classList.remove('active');
-                    // Track modal close
-                    if (window.gtag) {
-                        gtag('event', 'modal_close', {
-                            event_category: 'engagement',
-                            event_label: 'crack_rapido_intro_outside_click',
-                            engagement_type: 'low',
-                            value: 0
-                        });
-                    }
-                }
-            });
 
-            // Inicializar sistema de tracking de salas
-            setTimeout(() => {
-                initializeRoomsTracking();
-                scheduleRoomsUpdate();
-            }, 1000);
+                // Track tiempo en página
+                const startTime = Date.now();
+                const timeTracking = [30, 60, 120, 300]; // segundos
+                const trackedTime = new Set();
 
-            // Limpiar iframes cuando se vaya a salir de la pï¿½gina
-            window.addEventListener('beforeunload', function() {
-                gameFrames.forEach((iframe, gameType) => {
-                    if (iframe.parentNode) {
-                        iframe.parentNode.removeChild(iframe);
-                    }
-                });
-                gameFrames.clear();
-            });
-
-            // ANALYTICS TRACKING ADICIONAL
-            
-            // Track clicks en el botï¿½n de cambiar nombre
-            const changeNameBtn = document.getElementById('changeNameBtn');
-            if (changeNameBtn) {
-                changeNameBtn.addEventListener('click', function() {
-                    if (window.gtag) {
-                        gtag('event', 'username_change_click', {
-                            event_category: 'user_personalization',
-                            event_label: 'change_name_button',
-                            value: 1
-                        });
-                    }
-                });
-            }
-
-            // Track clicks en enlaces de navegaciï¿½n
-            const navLinks = document.querySelectorAll('.main-navigation a, .extra-link-button');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    const linkText = this.textContent.trim();
-                    const linkHref = this.getAttribute('href');
+                setInterval(() => {
+                    const timeSpent = Math.floor((Date.now() - startTime) / 1000);
                     
-                    if (window.gtag) {
-                        gtag('event', 'navigation_click', {
-                            event_category: 'navigation',
-                            event_label: linkText,
-                            link_url: linkHref,
-                            value: 1
-                        });
-                    }
-                });
-            });
-
-            // Track scroll depth
-            let maxScrollDepth = 0;
-            let scrollMilestones = [25, 50, 75, 100];
-            let trackedMilestones = new Set();
-
-            window.addEventListener('scroll', function() {
-                const scrolled = window.scrollY;
-                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-                const scrollPercent = Math.round((scrolled / maxScroll) * 100);
-
-                if (scrollPercent > maxScrollDepth) {
-                    maxScrollDepth = scrollPercent;
-                }
-
-                scrollMilestones.forEach(milestone => {
-                    if (scrollPercent >= milestone && !trackedMilestones.has(milestone)) {
-                        trackedMilestones.add(milestone);
-                        if (window.gtag) {
-                            gtag('event', 'scroll_depth', {
-                                event_category: 'engagement',
-                                event_label: `${milestone}%`,
-                                value: milestone
-                            });
-                        }
-                    }
-                });
-            });
-
-            // Track tiempo en pï¿½gina
-            const startTime = Date.now();
-            const timeTracking = [30, 60, 120, 300]; // segundos
-            const trackedTime = new Set();
-
-            setInterval(() => {
-                const timeSpent = Math.floor((Date.now() - startTime) / 1000);
-                
-                timeTracking.forEach(seconds => {
-                    if (timeSpent >= seconds && !trackedTime.has(seconds)) {
-                        trackedTime.add(seconds);
-                        if (window.gtag) {
-                            gtag('event', 'time_on_page', {
-                                event_category: 'engagement',
-                                event_label: `${seconds}s`,
-                                value: seconds
-                            });
-                        }
-                    }
-                });
-            }, 1000);
-
-            // Track card hovers para engagement
-            gameCards.forEach(card => {
-                const gameType = card.getAttribute('data-game');
-                let hoverStartTime = null;
-
-                card.addEventListener('mouseenter', function() {
-                    hoverStartTime = Date.now();
-                });
-
-                card.addEventListener('mouseleave', function() {
-                    if (hoverStartTime) {
-                        const hoverDuration = Date.now() - hoverStartTime;
-                        if (hoverDuration > 1000) { // Solo trackear hovers > 1 segundo
+                    timeTracking.forEach(seconds => {
+                        if (timeSpent >= seconds && !trackedTime.has(seconds)) {
+                            trackedTime.add(seconds);
                             if (window.gtag) {
-                                gtag('event', 'game_card_hover', {
+                                gtag('event', 'time_on_page', {
                                     event_category: 'engagement',
-                                    event_label: gameType,
-                                    duration_ms: hoverDuration,
-                                    value: Math.min(hoverDuration / 1000, 10) // Max 10 points
+                                    event_label: `${seconds}s`,
+                                    value: seconds
                                 });
                             }
                         }
-                        hoverStartTime = null;
-                    }
-                });
-            });
+                    });
+                }, 1000);
 
-            console.log('?? Analytics tracking configurado para games.html');
+                // Track card hovers para engagement
+                gameCards.forEach(card => {
+                    const gameType = card.getAttribute('data-game');
+                    let hoverStartTime = null;
+
+                    card.addEventListener('mouseenter', function() {
+                        hoverStartTime = Date.now();
+                    });
+
+                    card.addEventListener('mouseleave', function() {
+                        if (hoverStartTime) {
+                            const hoverDuration = Date.now() - hoverStartTime;
+                            if (hoverDuration > 1000) { // Solo trackear hovers > 1 segundo
+                                if (window.gtag) {
+                                    gtag('event', 'game_card_hover', {
+                                        event_category: 'engagement',
+                                        event_label: gameType,
+                                        duration_ms: hoverDuration,
+                                        value: Math.min(hoverDuration / 1000, 10) // Max 10 points
+                                    });
+                                }
+                            }
+                            hoverStartTime = null;
+                        }
+                    });
+                });
+
+                console.log('✓ Analytics tracking configurado para games.html');
+            }, 100); // Wait 100ms for main.js to execute
         });
     </script>
 </body>

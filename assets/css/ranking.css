@@ -467,6 +467,924 @@
     border-color: var(--crackrapido-primary);
 }
 
+/* === ESTILOS ESPECÍFICOS PARA CRACK RÁPIDO === */
+
+/* Header mejorado - más sutil */
+.history-item .player-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.game-mode-tag {
+    background: rgba(221, 107, 32, 0.15);
+    color: var(--crackrapido-primary);
+    padding: 0.15rem 0.3rem;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border: 1px solid rgba(221, 107, 32, 0.2);
+}
+
+.date-and-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+}
+
+.game-status {
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 0.15rem 0.4rem;
+    border-radius: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--ranking-text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.perfect-performance { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.3); }
+.great-performance { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.3); }
+.good-completion { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.3); }
+.completed { background: rgba(107, 114, 128, 0.15); color: #6b7280; border-color: rgba(107, 114, 128, 0.3); }
+.timeout-defeat { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.3); }
+.early-quit { background: rgba(156, 163, 175, 0.15); color: #9ca3af; border-color: rgba(156, 163, 175, 0.3); }
+.incomplete { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border-color: rgba(245, 158, 11, 0.3); }
+
+/* Score summary - más discreto */
+.score-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.8rem 0;
+    padding: 0.6rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.main-score-display {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.effective-score {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ranking-text);
+}
+
+.raw-score {
+    font-size: 0.7rem;
+    color: var(--ranking-text-muted);
+}
+
+.level-indicator {
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--ranking-text-muted);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Performance grid - más compacto */
+.performance-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+    margin: 0.8rem 0;
+}
+
+.perf-stat {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    padding: 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: center;
+}
+
+.stat-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-bottom: 0.4rem;
+}
+
+.stat-icon {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.stat-title {
+    font-size: 0.65rem;
+    color: var(--ranking-text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+}
+
+.stat-main {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ranking-text);
+    margin-bottom: 0.2rem;
+}
+
+.stat-detail {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.achievement-badge {
+    font-size: 0.55rem;
+    padding: 0.15rem 0.3rem;
+    border-radius: 6px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--ranking-text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.achievement-badge.perfect { background: rgba(16, 185, 129, 0.15); color: #10b981; border-color: rgba(16, 185, 129, 0.2); }
+.achievement-badge.excellent { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
+.achievement-badge.good { background: rgba(139, 92, 246, 0.15); color: #8b5cf6; border-color: rgba(139, 92, 246, 0.2); }
+.achievement-badge.incomplete { background: rgba(239, 68, 68, 0.15); color: #ef4444; border-color: rgba(239, 68, 68, 0.2); }
+
+/* Game details - más minimalista */
+.game-details {
+    margin-top: 0.8rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.detail-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.6rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    flex: 1;
+}
+
+.detail-label {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+}
+
+.detail-value {
+    font-size: 0.75rem;
+    color: var(--ranking-text);
+    font-weight: 500;
+}
+
+.category-tag,
+.difficulty-tag {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.15rem 0.3rem;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    width: fit-content;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Power-ups - más discreto */
+.powerups-used {
+    margin: 0.6rem 0;
+}
+
+.powerups-label {
+    font-size: 0.65rem;
+    color: var(--ranking-text-muted);
+    margin-bottom: 0.3rem;
+    display: block;
+}
+
+.powerups-list {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+}
+
+.powerup-tag {
+    background: rgba(139, 92, 246, 0.15);
+    color: #8b5cf6;
+    padding: 0.15rem 0.3rem;
+    border-radius: 4px;
+    font-size: 0.6rem;
+    font-weight: 500;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+/* Performance summary - más sutil */
+.performance-summary {
+    margin-top: 0.8rem;
+    padding: 0.6rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.summary-label {
+    font-size: 0.7rem;
+    color: var(--ranking-text-muted);
+}
+
+.summary-value {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.performance-rating {
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    font-weight: 600;
+}
+
+/* === ESTILOS ESPECÍFICOS PARA QUIÉN SABE MÁS === */
+
+/* Match title - más discreto */
+.match-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.4rem;
+}
+
+.result-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.result-icon {
+    font-size: 1.3rem;
+    opacity: 0.8;
+}
+
+.result-text {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--ranking-text);
+}
+
+.match-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.15rem;
+}
+
+.elo-change {
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 0.15rem 0.3rem;
+    border-radius: 4px;
+    border: 1px solid;
+}
+
+.elo-change.positive {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.elo-change.negative {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.result-description {
+    font-size: 0.7rem;
+    color: var(--ranking-text-muted);
+    font-style: italic;
+}
+
+/* Duel summary - más minimalista */
+.duel-summary {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.6rem;
+    align-items: center;
+    margin: 0.8rem 0;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.player-section {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.player-avatar {
+    font-size: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+.player-details {
+    flex: 1;
+}
+
+.player-name {
+    font-size: 0.75rem;
+    color: var(--ranking-text-muted);
+    margin-bottom: 0.15rem;
+}
+
+.player-score {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+    color: var(--ranking-text);
+}
+
+.performance-metrics {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+}
+
+.accuracy-badge,
+.questions-badge {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.1rem 0.25rem;
+    border-radius: 4px;
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.vs-section {
+    text-align: center;
+}
+
+.vs-indicator {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--ranking-text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.score-difference {
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.25rem 0.4rem;
+    border-radius: 4px;
+    border: 1px solid;
+}
+
+.score-difference.positive {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.score-difference.negative {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.opponent-type {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    font-style: italic;
+}
+
+/* Match analytics - más compacto */
+.match-analytics {
+    margin: 0.8rem 0;
+}
+
+.analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+}
+
+.analytic-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    padding: 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: center;
+}
+
+.analytic-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-bottom: 0.4rem;
+}
+
+.analytic-icon {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.analytic-title {
+    font-size: 0.65rem;
+    color: var(--ranking-text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+}
+
+.analytic-main {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ranking-text);
+    margin-bottom: 0.15rem;
+}
+
+.analytic-detail {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.expertise-badge,
+.speed-badge,
+.challenge-badge,
+.duration-badge {
+    font-size: 0.55rem;
+    padding: 0.15rem 0.3rem;
+    border-radius: 6px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--ranking-text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Performance analysis - más sutil */
+.performance-analysis {
+    margin: 0.8rem 0;
+    padding: 0.6rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.analysis-header {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ranking-text);
+    margin-bottom: 0.6rem;
+    text-align: center;
+}
+
+.analysis-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.strength-indicator,
+.improvement-indicator {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.indicator-label {
+    font-size: 0.65rem;
+    color: var(--ranking-text-muted);
+    font-weight: 500;
+}
+
+.indicator-value {
+    font-size: 0.7rem;
+    color: var(--ranking-text);
+}
+
+/* Level progression - más discreto */
+.level-progression {
+    margin-top: 0.8rem;
+    text-align: center;
+}
+
+.level-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 0.7rem;
+    color: var(--ranking-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.4rem;
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.progression-text {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    font-style: italic;
+}
+
+/* === ESTILOS ESPECÍFICOS PARA MENTIROSO === */
+
+/* Match result section - más discreto */
+.match-result-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.4rem;
+}
+
+.result-main {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.result-text-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.result-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--ranking-text);
+}
+
+.result-subtitle {
+    font-size: 0.65rem;
+    color: var(--ranking-text-muted);
+    font-style: italic;
+}
+
+.match-metadata {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.15rem;
+}
+
+.game-type-tag {
+    background: rgba(229, 62, 62, 0.15);
+    color: var(--mentiroso-primary);
+    padding: 0.15rem 0.3rem;
+    border-radius: 4px;
+    font-size: 0.6rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    border: 1px solid rgba(229, 62, 62, 0.2);
+}
+
+/* Score duel - más minimalista */
+.score-duel {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0.6rem;
+    align-items: center;
+    margin: 0.8rem 0;
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.player-score-section {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.score-details {
+    flex: 1;
+}
+
+.player-label {
+    font-size: 0.75rem;
+    color: var(--ranking-text-muted);
+    margin-bottom: 0.15rem;
+}
+
+.score-value {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 0.15rem;
+    color: var(--ranking-text);
+}
+
+.score-quality {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    font-style: italic;
+}
+
+.vs-display {
+    text-align: center;
+}
+
+.vs-text {
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: var(--ranking-text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.score-difference.advantage {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.score-difference.disadvantage {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Deception analysis - más sutil */
+.deception-analysis {
+    margin: 0.8rem 0;
+}
+
+.analysis-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ranking-text);
+    margin-bottom: 0.6rem;
+    text-align: center;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem;
+}
+
+.skill-metric {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    padding: 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    text-align: center;
+}
+
+.metric-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-bottom: 0.4rem;
+}
+
+.metric-icon {
+    font-size: 1rem;
+    opacity: 0.7;
+}
+
+.metric-title {
+    font-size: 0.65rem;
+    color: var(--ranking-text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+}
+
+.metric-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--ranking-text);
+    margin-bottom: 0.15rem;
+}
+
+.metric-description {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.metric-percentage {
+    font-size: 0.55rem;
+    color: var(--mentiroso-primary);
+    font-weight: 500;
+}
+
+.metric-detail {
+    font-size: 0.55rem;
+    color: var(--ranking-text-muted);
+}
+
+/* Specialization showcase - más discreto */
+.specialization-showcase {
+    margin: 0.8rem 0;
+    padding: 0.6rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    text-align: center;
+}
+
+.specialization-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-bottom: 0.25rem;
+}
+
+.spec-icon {
+    font-size: 1.2rem;
+    opacity: 0.8;
+}
+
+.spec-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    color: var(--ranking-text);
+}
+
+.specialization-description {
+    font-size: 0.65rem;
+    color: var(--ranking-text-muted);
+    font-style: italic;
+}
+
+/* Perfect round highlight - más sutil */
+.perfect-round-highlight {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0.8rem 0;
+    padding: 0.8rem;
+    background: rgba(139, 92, 246, 0.08);
+    border-radius: 6px;
+    border: 1px solid rgba(139, 92, 246, 0.15);
+}
+
+.perfect-icon {
+    font-size: 1.5rem;
+    opacity: 0.8;
+}
+
+.perfect-text {
+    flex: 1;
+}
+
+.perfect-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #8b5cf6;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.15rem;
+}
+
+.perfect-description {
+    font-size: 0.65rem;
+    color: var(--ranking-text-muted);
+}
+
+/* Performance insights - más discreto */
+.performance-insights {
+    margin: 0.8rem 0;
+    padding: 0.6rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.insights-header {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--ranking-text);
+    margin-bottom: 0.6rem;
+    text-align: center;
+}
+
+.insights-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.insight-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.insight-label {
+    font-size: 0.65rem;
+    color: var(--ranking-text-muted);
+    font-weight: 500;
+}
+
+.insight-value {
+    font-size: 0.7rem;
+    color: var(--ranking-text);
+}
+
+/* === RESPONSIVE PARA MÓVIL === */
+
+@media (max-width: 340px) {
+    .performance-grid,
+    .analytics-grid,
+    .skills-grid {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+    }
+    
+    .duel-summary,
+    .score-duel {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+        text-align: center;
+    }
+    
+    .vs-section,
+    .vs-display {
+        order: -1;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .powerups-list {
+        justify-content: center;
+    }
+    
+    .perfect-round-highlight {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .analysis-content,
+    .insights-content {
+        gap: 0.4rem;
+    }
+    
+    .match-title,
+    .match-result-section {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+    
+    .match-info,
+    .match-metadata {
+        align-items: flex-start;
+    }
+}
+
+/* === ESTILOS COMUNES PARA TODOS LOS HISTORIALES === */
+
 /* Header del historial más compacto */
 .history-header {
     display: flex;
@@ -491,157 +1409,6 @@
     font-size: var(--mobile-font-small);
     color: var(--ranking-text-muted);
     white-space: nowrap;
-}
-
-/* Stats del historial más compactos */
-.history-stats {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.8rem;
-    margin-bottom: 0.8rem;
-}
-
-/* Hacer que las estadísticas principales ocupen una fila completa cuando hay muchas */
-.history-stats .primary-stat-group:first-child {
-    grid-column: 1 / -1;
-}
-
-.history-stats .primary-stat-group:nth-child(2),
-.history-stats .primary-stat-group:nth-child(3) {
-    grid-column: span 1;
-}
-
-.stat-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-}
-
-/* Estadísticas principales destacadas */
-.primary-stat-group {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.6rem;
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(3px);
-    position: relative;
-    overflow: hidden;
-}
-
-.primary-stat-group::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--pasalache-gradient);
-    opacity: 0.8;
-}
-
-.quiensabemas .primary-stat-group::before {
-    background: var(--quiensabemas-gradient);
-}
-
-.mentiroso .primary-stat-group::before {
-    background: var(--mentiroso-gradient);
-}
-
-.crackrapido .primary-stat-group::before {
-    background: var(--crackrapido-gradient);
-}
-
-.stat-label {
-    font-size: 0.65rem;
-    color: var(--ranking-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 500;
-}
-
-.primary-stat-group .stat-label {
-    font-weight: 600;
-    color: var(--ranking-text-secondary);
-    font-size: 0.7rem;
-}
-
-.stat-value {
-    font-weight: 600;
-    font-size: var(--mobile-font-base);
-    color: var(--ranking-text);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-/* Valores destacados */
-.result-highlight {
-    font-weight: 700;
-    font-size: 1.1rem;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-    animation: resultPulse 2s ease-in-out infinite;
-}
-
-.time-highlight {
-    font-weight: 700;
-    color: var(--crackrapido-primary);
-    font-size: 1rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.accuracy-highlight {
-    font-weight: 700;
-    color: var(--pasalache-primary);
-    font-size: 1rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.quiensabemas .accuracy-highlight {
-    color: var(--quiensabemas-primary);
-}
-
-.mentiroso .accuracy-highlight {
-    color: var(--mentiroso-primary);
-}
-
-.crackrapido .accuracy-highlight {
-    color: var(--crackrapido-primary);
-}
-
-@keyframes resultPulse {
-    0%, 100% { transform: scale(1); opacity: 0.9; }
-    50% { transform: scale(1.02); opacity: 1; }
-}
-
-/* Badge de nivel más sutil */
-.level-badge {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-weight: 600;
-    font-size: 0.75rem;
-    color: white;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-top: 0.5rem;
-    background: var(--pasalache-gradient);
-    box-shadow: 0 2px 8px rgba(49, 130, 206, 0.3);
-}
-
-.quiensabemas .level-badge {
-    background: var(--quiensabemas-gradient);
-    box-shadow: 0 2px 8px rgba(128, 90, 213, 0.3);
-}
-
-.mentiroso .level-badge {
-    background: var(--mentiroso-gradient);
-    box-shadow: 0 2px 8px rgba(229, 62, 62, 0.3);
-}
-
-.crackrapido .level-badge {
-    background: var(--crackrapido-gradient);
-    box-shadow: 0 2px 8px rgba(221, 107, 32, 0.3);
 }
 
 /* Botones de navegación más compactos */
@@ -708,9 +1475,56 @@
 .loading-state {
     background: rgba(26, 32, 44, 0.5);
     border-style: solid;
-    }
+}
 
-/* Responsive específico para 340x844 */
+/* Animaciones más sutiles */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.ranking-table tbody tr {
+    animation: fadeInUp 0.3s ease forwards;
+}
+
+.history-item {
+    animation: slideInRight 0.3s ease forwards;
+}
+
+.navigation-buttons .nav-button {
+    animation: fadeInUp 0.2s ease forwards;
+} 
+
+/* Efectos especiales más sutiles */
+.ranking-container {
+    animation: fadeInUp 0.4s ease forwards;
+}
+
+.history-container {
+    animation: fadeInUp 0.4s ease forwards 0.1s;
+    opacity: 0;
+    animation-fill-mode: both;
+}
+
+/* === RESPONSIVE ADICIONAL PARA MÓVIL PEQUEÑO === */
+
 @media (max-width: 340px) {
     :root {
         --mobile-padding: 0.8rem;
@@ -771,46 +1585,8 @@
         gap: 0.2rem;
     }
     
-    .history-stats {
-        grid-template-columns: 1fr;
-        gap: 0.6rem;
-    }
-    
-    /* En móvil, todas las estadísticas ocupan el ancho completo */
-    .history-stats .primary-stat-group:first-child,
-    .history-stats .primary-stat-group:nth-child(2),
-    .history-stats .primary-stat-group:nth-child(3) {
-        grid-column: 1 / -1;
-    }
-    
     .history-item {
         padding: 0.8rem;
-    }
-    
-    .primary-stat-group {
-        padding: 0.5rem;
-        margin-bottom: 0.3rem;
-    }
-    
-    .stat-label {
-        font-size: 0.6rem;
-    }
-    
-    .primary-stat-group .stat-label {
-        font-size: 0.65rem;
-    }
-    
-    .stat-value {
-        font-size: 0.8rem;
-    }
-    
-    .result-highlight {
-        font-size: 1rem;
-    }
-    
-    .time-highlight,
-    .accuracy-highlight {
-        font-size: 0.9rem;
     }
     
     .level-badge {
@@ -843,48 +1619,189 @@
     }
 }
 
-/* Animaciones más sutiles */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Nuevos estilos para rankings mejorados */
+.position-number {
+    font-weight: bold;
+    font-size: 1.1em;
 }
 
-@keyframes slideInRight {
-    from {
-        opacity: 0;
-        transform: translateX(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-    }
-
-.ranking-table tbody tr {
-    animation: fadeInUp 0.3s ease forwards;
-    }
-
-.history-item {
-    animation: slideInRight 0.3s ease forwards;
-    }
-
-.navigation-buttons .nav-button {
-    animation: fadeInUp 0.2s ease forwards;
-} 
-
-/* Efectos especiales más sutiles */
-.ranking-container {
-    animation: fadeInUp 0.4s ease forwards;
+.position-icon {
+    font-size: 1.2em;
+    margin-top: 2px;
 }
 
-.history-container {
-    animation: fadeInUp 0.4s ease forwards 0.1s;
-    opacity: 0;
-    animation-fill-mode: both;
+.player-stats-summary {
+    font-size: 0.8em;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+.score-breakdown {
+    font-size: 0.8em;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+.avg-accuracy {
+    font-size: 0.8em;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+.streak-badge,
+.speed-badge {
+    font-size: 0.7em;
+    padding: 2px 6px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    margin-top: 2px;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.completion-rate {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.streak-stat {
+    color: #f59e0b !important;
+}
+
+.time-stat {
+    color: #06b6d4 !important;
+}
+
+/* Estilos específicos para Crack Rápido */
+.crackrapido .streak-badge {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.crackrapido .speed-badge {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+    color: white;
+}
+
+/* Estilos específicos para Quién Sabe Más */
+.player-tier {
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-top: 2px;
+}
+
+.draws-stat,
+.losses-stat {
+    font-size: 0.75em;
+    color: #6b7280;
+    margin-top: 1px;
+}
+
+.losses-stat {
+    color: #ef4444;
+}
+
+.draws-stat {
+    color: #f59e0b;
+}
+
+.performance-badge {
+    font-size: 0.7em;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-top: 2px;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.performance-badge.excellent {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.performance-badge.good {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.performance-badge.average {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+}
+
+.efficiency-stat {
+    color: #10b981 !important;
+}
+
+/* Estilos específicos para Mentiroso */
+.player-specialization {
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-top: 2px;
+}
+
+.rating-info {
+    text-align: center;
+}
+
+.main-rating {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #374151;
+}
+
+.rating-label {
+    font-size: 0.8em;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+.points-avg {
+    font-size: 0.75em;
+    color: #6b7280;
+    margin-top: 1px;
+}
+
+.deception-stat {
+    color: #ef4444 !important;
+}
+
+.detection-stat {
+    font-size: 0.8em;
+    color: #3b82f6;
+    margin-top: 2px;
+}
+
+.reliability-stat {
+    color: #10b981 !important;
+}
+
+.perfect-badge,
+.skill-badge {
+    font-size: 0.7em;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-top: 2px;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.perfect-badge {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+}
+
+.skill-badge.excellent {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+}
+
+.skill-badge.good {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+.skill-badge.average {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
 } 

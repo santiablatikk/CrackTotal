@@ -6,7 +6,7 @@ const path = require('path'); // Added for constructing file paths
 
 // --- Constants ---
 const MAX_LEVELS = 6;
-const QUESTIONS_PER_LEVEL = 3; // Number of questions per level before advancing
+const QUESTIONS_PER_LEVEL = 10; // 5 preguntas por jugador por nivel (total 10 preguntas por nivel)
 const DATA_DIR = path.join(__dirname, 'assets/data'); // Updated to new assets/data directory structure
 
 // Función para obtener el tipo MIME correcto

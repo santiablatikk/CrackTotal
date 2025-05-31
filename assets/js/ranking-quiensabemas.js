@@ -600,7 +600,7 @@ function generateRankingHTML(usersData) {
         return '<tr><td colspan="6" class="empty-state">No hay datos disponibles</td></tr>';
     }
 
-    // Filtrar y procesar datos de usuarios de manera más flexible
+    // Filtrar y procesar datos de usuarios de manera más inteligente
     const validUsers = usersData
         .filter(user => {
             // Buscar datos de Quién Sabe Más en diferentes ubicaciones posibles
@@ -619,10 +619,23 @@ function generateRankingHTML(usersData) {
             const totalScore = quiensabemasData.totalScore || quiensabemasData.score || user.totalScore || user.score || 0;
             const wins = quiensabemasData.wins || user.wins || 0;
             const losses = quiensabemasData.losses || user.losses || user.totalLosses || 0;
-            const matches = quiensabemasData.matches || quiensabemasData.played || user.matchesPlayed || wins + losses || 0;
+            const draws = quiensabemasData.draws || 0;
+            const matches = quiensabemasData.matches || quiensabemasData.played || user.matchesPlayed || wins + losses + draws || 0;
             
             const winRate = matches > 0 ? (wins / matches) * 100 : 0;
             const avgScore = matches > 0 ? Math.round(totalScore / matches) : totalScore;
+            
+            // Calcular ELO/Rating aproximado basado en rendimiento
+            const baseElo = 1200;
+            const eloGainPerWin = 25;
+            const eloLossPerDefeat = 15;
+            const estimatedElo = baseElo + (wins * eloGainPerWin) - (losses * eloLossPerDefeat);
+            
+            // Bonificaciones por consistencia
+            const consistencyBonus = winRate >= 80 ? 1.3 : winRate >= 70 ? 1.2 : winRate >= 60 ? 1.1 : 1.0;
+            const experienceBonus = Math.min(1 + (matches * 0.01), 1.2); // Hasta 20% bonus por experiencia
+            
+            const finalRating = Math.round(estimatedElo * consistencyBonus * experienceBonus);
             
             return {
                 id: user.id,
@@ -630,16 +643,20 @@ function generateRankingHTML(usersData) {
                 totalScore: totalScore,
                 wins: wins,
                 losses: losses,
+                draws: draws,
                 matches: matches,
                 winRate: winRate,
-                avgScore: avgScore
+                avgScore: avgScore,
+                estimatedElo: estimatedElo,
+                finalRating: finalRating,
+                lastPlayed: user.lastPlayed || quiensabemasData.lastPlayed
             };
         })
         .sort((a, b) => {
-            // Ordenar por efectividad primero, luego por victorias, luego por puntaje total
-            if (b.winRate !== a.winRate) return b.winRate - a.winRate;
-            if (b.wins !== a.wins) return b.wins - a.wins;
-            return b.totalScore - a.totalScore;
+            // Ordenar por rating final, luego por win rate, luego por victorias totales
+            if (Math.abs(b.finalRating - a.finalRating) > 25) return b.finalRating - a.finalRating;
+            if (Math.abs(b.winRate - a.winRate) > 5) return b.winRate - a.winRate;
+            return b.wins - a.wins;
         })
         .slice(0, RANKING_LIMIT); // Limitar a top 15
 
@@ -652,33 +669,51 @@ function generateRankingHTML(usersData) {
         const isTopPlayer = index < 3;
         const position = index + 1;
         
+        // Determinar tier basado en ELO
+        let tier = { name: "BRONCE", color: "#cd7f32", icon: "🥉" };
+        if (user.finalRating >= 1800) tier = { name: "LEYENDA", color: "#ff6b35", icon: "👑" };
+        else if (user.finalRating >= 1600) tier = { name: "DIAMANTE", color: "#9333ea", icon: "💎" };
+        else if (user.finalRating >= 1450) tier = { name: "ORO", color: "#fbbf24", icon: "🥇" };
+        else if (user.finalRating >= 1300) tier = { name: "PLATA", color: "#6b7280", icon: "🥈" };
+        
         return `
-            <tr class="ranking-row ${isTopPlayer ? 'top-player' : ''}">
+            <tr class="ranking-row ${isTopPlayer ? 'top-player' : ''}" data-rating="${user.finalRating}">
                 <td class="ranking-position">
-                    ${position}
-                    ${position === 1 ? '🥇' : position === 2 ? '🥈' : position === 3 ? '🥉' : ''}
+                    <div class="position-number">${position}</div>
+                    <div class="position-icon">
+                        ${position === 1 ? '🥇' : position === 2 ? '🥈' : position === 3 ? '🥉' : ''}
+                    </div>
                 </td>
                 <td class="player-info">
                     <div class="player-name">${user.displayName || 'Anónimo'}</div>
                     <div class="player-level" style="color: ${playerLevel.color}">
                         ${playerLevel.icon} ${playerLevel.level}
                     </div>
+                    <div class="player-tier" style="color: ${tier.color}">
+                        ${tier.icon} ${tier.name} (${user.finalRating} ELO)
+                    </div>
                 </td>
                 <td class="score-info">
                     <div class="main-score">${(user.totalScore / 1000).toFixed(1)}k</div>
-                    <div class="secondary-stat">Prom: ${user.avgScore}</div>
+                    <div class="secondary-stat">Puntos totales</div>
+                    <div class="score-breakdown">Prom: ${user.avgScore}/duelo</div>
                 </td>
                 <td class="stat-cell hide-mobile">
                     <div class="primary-stat">${user.matches}</div>
                     <div class="secondary-stat">duelos</div>
+                    ${user.draws > 0 ? `<div class="draws-stat">${user.draws} empates</div>` : ''}
                 </td>
                 <td class="stat-cell">
                     <div class="primary-stat wins-stat">${user.wins}</div>
-                    <div class="secondary-stat">${user.winRate.toFixed(0)}%</div>
+                    <div class="secondary-stat">${user.winRate.toFixed(0)}% victorias</div>
+                    ${user.losses > 0 ? `<div class="losses-stat">${user.losses} derrotas</div>` : ''}
                 </td>
                 <td class="stat-cell hide-mobile">
-                    <div class="primary-stat accuracy-stat">${user.winRate.toFixed(0)}%</div>
-                    <div class="secondary-stat">de éxito</div>
+                    <div class="primary-stat efficiency-stat">${user.winRate.toFixed(0)}%</div>
+                    <div class="secondary-stat">efectividad</div>
+                    ${user.winRate >= 80 ? '<div class="performance-badge excellent">🔥 DOMINANTE</div>' :
+                      user.winRate >= 70 ? '<div class="performance-badge good">⚡ SÓLIDO</div>' :
+                      user.winRate >= 60 ? '<div class="performance-badge average">📈 CRECIENDO</div>' : ''}
                 </td>
             </tr>
         `;
@@ -721,50 +756,238 @@ function generateHistoryHTML(matches) {
 
     return recentMatches.map(match => {
         const isVictory = match.result === 'victory';
+        const isDraw = match.result === 'draw' || match.result === 'tie';
         const isTimeoutDefeat = match.result === 'timeout' || match.timeDefeat === true || match.defeatByTime === true || match.timeOut === true;
         const score = match.score || (match.players && match.players[0]?.score) || 0;
+        const opponentScore = match.opponentScore || (match.players && match.players[1]?.score) || 0;
         const correctAnswers = match.correctAnswers || 0;
         const totalQuestions = match.totalQuestions || 10;
         const accuracy = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
-        const playerLevel = getPlayerLevel(score, accuracy, 1);
+        const duration = match.duration || match.gameTime || 0;
+        const category = match.category || match.topic || 'General';
+        const difficulty = match.difficulty || 'Normal';
         const playerName = match.playerName || (match.players && match.players[0]?.displayName) || 'Anónimo';
+        const opponentName = match.opponentName || (match.players && match.players[1]?.displayName) || 'Oponente';
+        
+        // Calcular datos específicos de Quién Sabe Más
+        const scoreDifference = score - opponentScore;
+        const averageTimePerQuestion = duration && totalQuestions > 0 ? duration / totalQuestions : 0;
+        const playerLevel = getPlayerLevel(score, accuracy, 1);
+        
+        // Determinar tipo de resultado
+        let resultDetails = {
+            text: '',
+            icon: '',
+            class: '',
+            description: ''
+        };
+        
+        if (isVictory) {
+            if (scoreDifference >= 500) {
+                resultDetails = {
+                    text: 'VICTORIA DOMINANTE',
+                    icon: '👑',
+                    class: 'dominant-victory',
+                    description: 'Aplastaste a tu oponente'
+                };
+            } else if (scoreDifference >= 200) {
+                resultDetails = {
+                    text: 'VICTORIA SÓLIDA',
+                    icon: '🏆',
+                    class: 'solid-victory',
+                    description: 'Victoria clara y convincente'
+                };
+            } else if (scoreDifference >= 50) {
+                resultDetails = {
+                    text: 'VICTORIA AJUSTADA',
+                    icon: '⚡',
+                    class: 'close-victory',
+                    description: 'Victoria por poco margen'
+                };
+            } else {
+                resultDetails = {
+                    text: 'VICTORIA ÉPICA',
+                    icon: '🔥',
+                    class: 'epic-victory',
+                    description: 'Victoria en el último momento'
+                };
+            }
+        } else if (isDraw) {
+            resultDetails = {
+                text: 'EMPATE',
+                icon: '🤝',
+                class: 'draw-result',
+                description: 'Conocimientos equilibrados'
+            };
+        } else {
+            if (isTimeoutDefeat) {
+                resultDetails = {
+                    text: 'DERROTA POR TIEMPO',
+                    icon: '⏰',
+                    class: 'timeout-defeat',
+                    description: 'Se acabó el tiempo'
+                };
+            } else if (Math.abs(scoreDifference) >= 500) {
+                resultDetails = {
+                    text: 'DERROTA APLASTANTE',
+                    icon: '💀',
+                    class: 'crushing-defeat',
+                    description: 'Necesitas estudiar más'
+                };
+            } else if (Math.abs(scoreDifference) >= 200) {
+                resultDetails = {
+                    text: 'DERROTA CLARA',
+                    icon: '😞',
+                    class: 'clear-defeat',
+                    description: 'El rival fue mejor'
+                };
+            } else {
+                resultDetails = {
+                    text: 'DERROTA AJUSTADA',
+                    icon: '😤',
+                    class: 'close-defeat',
+                    description: 'Estuviste muy cerca'
+                };
+            }
+        }
+
+        // Calcular ELO estimado ganado/perdido
+        const baseEloChange = isVictory ? 25 : (isDraw ? 0 : -15);
+        const difficultyMultiplier = difficulty === 'Hard' ? 1.2 : difficulty === 'Easy' ? 0.8 : 1.0;
+        const estimatedEloChange = Math.round(baseEloChange * difficultyMultiplier);
         
         return `
-            <div class="history-item">
+            <div class="history-item ${resultDetails.class}">
                 <div class="history-header">
-                    <span class="history-player-name">${playerName}</span>
-                    <span class="history-date">${formatCompactDate(match.timestamp)}</span>
+                    <div class="match-title">
+                        <div class="result-indicator">
+                            <span class="result-icon">${resultDetails.icon}</span>
+                            <span class="result-text">${resultDetails.text}</span>
+                        </div>
+                        <div class="match-info">
+                            <span class="history-date">${formatCompactDate(match.timestamp)}</span>
+                            <span class="elo-change ${estimatedEloChange >= 0 ? 'positive' : 'negative'}">
+                                ${estimatedEloChange >= 0 ? '+' : ''}${estimatedEloChange} ELO
+                            </span>
+                        </div>
+                    </div>
+                    <div class="result-description">${resultDetails.description}</div>
                 </div>
-                <div class="history-stats">
-                    <div class="stat-group">
-                        <span class="stat-label">Resultado:</span>
-                        <span class="stat-value ${isVictory ? 'wins-stat' : 'losses-stat'}">
-                            ${isVictory ? '🧠 VICTORIA' : (isTimeoutDefeat ? '⏰ TIEMPO AGOTADO' : '😞 DERROTA')}
-                        </span>
+
+                <div class="duel-summary">
+                    <div class="player-section my-performance">
+                        <div class="player-avatar">🧠</div>
+                        <div class="player-details">
+                            <div class="player-name">${playerName}</div>
+                            <div class="player-score main-score">${score.toLocaleString()}</div>
+                            <div class="performance-metrics">
+                                <span class="accuracy-badge">${accuracy.toFixed(0)}% precisión</span>
+                                <span class="questions-badge">${correctAnswers}/${totalQuestions} correctas</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="stat-group">
-                        <span class="stat-label">Puntuación:</span>
-                        <span class="stat-value">${score.toLocaleString()} pts</span>
+
+                    <div class="vs-section">
+                        <div class="vs-indicator">VS</div>
+                        <div class="score-difference ${scoreDifference >= 0 ? 'positive' : 'negative'}">
+                            ${scoreDifference >= 0 ? '+' : ''}${scoreDifference}
+                        </div>
                     </div>
-                    <div class="stat-group">
-                        <span class="stat-label">Precisión:</span>
-                        <span class="stat-value">${accuracy.toFixed(0)}% (${correctAnswers}/${totalQuestions})</span>
-                    </div>
-                    <div class="stat-group">
-                        <span class="stat-label">Oponente:</span>
-                        <span class="stat-value">${match.opponentName || (match.players && match.players[1]?.displayName) || 'IA'}</span>
-                    </div>
-                    <div class="stat-group">
-                        <span class="stat-label">Tema:</span>
-                        <span class="stat-value">${match.category || 'General'}</span>
-                    </div>
-                    <div class="stat-group">
-                        <span class="stat-label">Duración:</span>
-                        <span class="stat-value">${Math.round(match.duration || 0)}s</span>
+
+                    <div class="player-section opponent-performance">
+                        <div class="player-avatar">🤖</div>
+                        <div class="player-details">
+                            <div class="player-name">${opponentName}</div>
+                            <div class="player-score opponent-score">${opponentScore.toLocaleString()}</div>
+                            <div class="opponent-type">
+                                ${opponentName.includes('IA') || opponentName.includes('Bot') ? 'Inteligencia Artificial' : 'Jugador humano'}
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="level-badge" style="background-color: ${playerLevel.color}">
-                    ${playerLevel.icon} ${playerLevel.level}
+
+                <div class="match-analytics">
+                    <div class="analytics-grid">
+                        <div class="analytic-item knowledge-focus">
+                            <div class="analytic-header">
+                                <span class="analytic-icon">📚</span>
+                                <span class="analytic-title">Conocimiento</span>
+                            </div>
+                            <div class="analytic-main">${category}</div>
+                            <div class="analytic-detail">Categoría</div>
+                            ${accuracy >= 90 ? '<div class="expertise-badge">EXPERTO</div>' :
+                              accuracy >= 75 ? '<div class="expertise-badge">CONOCEDOR</div>' :
+                              accuracy >= 60 ? '<div class="expertise-badge">INTERMEDIO</div>' : 
+                              '<div class="expertise-badge">APRENDIZ</div>'}
+                        </div>
+
+                        <div class="analytic-item speed-focus">
+                            <div class="analytic-header">
+                                <span class="analytic-icon">⚡</span>
+                                <span class="analytic-title">Velocidad</span>
+                            </div>
+                            <div class="analytic-main">${averageTimePerQuestion > 0 ? averageTimePerQuestion.toFixed(1) + 's' : 'N/A'}</div>
+                            <div class="analytic-detail">por pregunta</div>
+                            ${averageTimePerQuestion > 0 && averageTimePerQuestion <= 3 ? '<div class="speed-badge">RÁPIDO</div>' :
+                              averageTimePerQuestion > 0 && averageTimePerQuestion <= 5 ? '<div class="speed-badge">NORMAL</div>' : 
+                              averageTimePerQuestion > 0 ? '<div class="speed-badge">PENSATIVO</div>' : ''}
+                        </div>
+
+                        <div class="analytic-item difficulty-focus">
+                            <div class="analytic-header">
+                                <span class="analytic-icon">🎯</span>
+                                <span class="analytic-title">Dificultad</span>
+                            </div>
+                            <div class="analytic-main">${difficulty}</div>
+                            <div class="analytic-detail">nivel</div>
+                            ${difficulty === 'Hard' ? '<div class="challenge-badge">DESAFÍO</div>' :
+                              difficulty === 'Normal' ? '<div class="challenge-badge">ESTÁNDAR</div>' :
+                              '<div class="challenge-badge">PRINCIPIANTE</div>'}
+                        </div>
+
+                        <div class="analytic-item duration-focus">
+                            <div class="analytic-header">
+                                <span class="analytic-icon">⏱️</span>
+                                <span class="analytic-title">Duración</span>
+                            </div>
+                            <div class="analytic-main">${Math.round(duration)}s</div>
+                            <div class="analytic-detail">total</div>
+                            ${duration <= 60 ? '<div class="duration-badge">RÁPIDO</div>' :
+                              duration <= 120 ? '<div class="duration-badge">NORMAL</div>' :
+                              '<div class="duration-badge">EXTENSO</div>'}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="performance-analysis">
+                    <div class="analysis-header">📊 Análisis de Rendimiento</div>
+                    <div class="analysis-content">
+                        <div class="strength-indicator">
+                            <span class="indicator-label">Fortaleza:</span>
+                            <span class="indicator-value">
+                                ${accuracy >= 90 ? 'Conocimiento excepcional' :
+                                  averageTimePerQuestion <= 3 ? 'Respuestas muy rápidas' :
+                                  isVictory ? 'Estrategia ganadora' : 'Buena participación'}
+                            </span>
+                        </div>
+                        <div class="improvement-indicator">
+                            <span class="indicator-label">Área de mejora:</span>
+                            <span class="indicator-value">
+                                ${accuracy < 60 ? 'Estudiar más sobre ' + category :
+                                  averageTimePerQuestion > 8 ? 'Tomar decisiones más rápidas' :
+                                  !isVictory ? 'Mantener la concentración' : 'Seguir así de bien'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="level-progression">
+                    <div class="level-badge" style="background: ${playerLevel.color}">
+                        ${playerLevel.icon} ${playerLevel.level}
+                    </div>
+                    <div class="progression-text">
+                        Nivel alcanzado en esta partida
+                    </div>
                 </div>
             </div>
         `;

@@ -2071,7 +2071,7 @@
                         </div>
                         <h3>Champions League</h3>
                         <p>La máxima competición europea</p>
-                        <span class="category-detail">15 preguntas UEFA</span>
+                        <span class="category-detail">Preguntas UEFA</span>
                     </div>
 
                     <div class="category-card" onclick="selectCategory('argentina')">
@@ -2080,7 +2080,7 @@
                         </div>
                         <h3>Selección Argentina</h3>
                         <p>La Albiceleste campeona</p>
-                        <span class="category-detail">10 preguntas AFA</span>
+                        <span class="category-detail">Preguntas AFA</span>
                     </div>
                     
                     <div class="category-card" onclick="selectCategory('general')">
@@ -2089,7 +2089,7 @@
                         </div>
                         <h3>General</h3>
                         <p>Preguntas variadas</p>
-                        <span class="category-detail">30 preguntas mix</span>
+                        <span class="category-detail">Preguntas mixtas</span>
                     </div>
                 </div>
 
@@ -2143,15 +2143,15 @@
                     <div class="powerups-grid">
                         <button class="powerup-btn" id="powerUpTimeExtra" title="Agregar 3 segundos">
                             <i class="fas fa-clock-plus"></i>
-                            +3s (3)
+                            +3s (2)
                         </button>
                         <button class="powerup-btn" id="powerUpRemoveOption" title="Eliminar 2 opciones incorrectas">
                             <i class="fas fa-eye-slash"></i>
-                            50/50 (3)
+                            50/50 (2)
                         </button>
                         <button class="powerup-btn" id="powerUpMultiplier" title="Multiplicador x2 por 3 preguntas">
                             <i class="fas fa-times"></i>
-                            x2 (2)
+                            x2 (1)
                         </button>
                     </div>
                 </div>
@@ -2266,6 +2266,50 @@
     <script src="assets/js/firebase-config.js"></script>
     <script src="assets/js/firebase-init.js"></script>
     <script type="module" src="assets/js/logros.js?v=202505272312"></script>
-    <script type="module" src="assets/js/crack-rapido.js?v=202505272312"></script>
+    <script src="assets/js/crack-rapido.js?v=202505272312"></script>
+    
+    <!-- Funciones globales para los onclick -->
+    <script>
+        let crackRapidoGame;
+        
+        // Funciones globales para los onclick del HTML
+        function selectGameMode(mode) {
+            if (crackRapidoGame) crackRapidoGame.selectGameMode(mode);
+        }
+        
+        function selectCategory(category) {
+            if (crackRapidoGame) crackRapidoGame.selectCategory(category);
+        }
+        
+        function toggleSettings() {
+            if (crackRapidoGame) crackRapidoGame.toggleSettings();
+        }
+        
+        function usePowerUp(type) {
+            if (crackRapidoGame) crackRapidoGame.usePowerUp(type);
+        }
+        
+        function selectAnswer(index) {
+            if (crackRapidoGame) crackRapidoGame.selectAnswer(index);
+        }
+        
+        // Inicializar el juego cuando la página esté lista
+        document.addEventListener('DOMContentLoaded', function() {
+            // Esperar un poco para asegurar que todos los scripts estén cargados
+            setTimeout(() => {
+                try {
+                    if (typeof CrackRapido !== 'undefined') {
+                        console.log('Inicializando Crack Rápido...');
+                        crackRapidoGame = new CrackRapido();
+                        console.log('Crack Rápido inicializado correctamente');
+                    } else {
+                        console.error('CrackRapido class not found');
+                    }
+                } catch (error) {
+                    console.error('Error inicializando Crack Rápido:', error);
+                }
+            }, 100);
+        });
+    </script>
 </body>
 </html> 

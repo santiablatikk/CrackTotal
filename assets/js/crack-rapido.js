@@ -5,18 +5,23 @@ let saveCrackRapidoResult = async (data) => {
     console.log('Fallback: Datos que se guardarían en Firebase:', data);
     return Promise.resolve();
 };
+
 // Intentar cargar Firebase de forma asíncrona
 async function loadFirebaseUtils() {
     try {
-        const firebaseModule = await import('./firebase-utils.js');
-        saveCrackRapidoResult = firebaseModule.saveCrackRapidoResult;
-        console.log('Firebase utilities loaded successfully');
+        // Intentar acceder a la función desde el contexto global
+        if (window.firebase && window.firebase.auth && window.firebase.firestore) {
+            console.log('Firebase utilities detected from global context');
+            // Aquí podrías definir saveCrackRapidoResult usando las funciones globales de Firebase
+        }
     } catch (error) {
         console.warn('Firebase utilities not available, using fallback');
     }
 }
+
 // Cargar Firebase utilities
 loadFirebaseUtils();
+
 class CrackRapido {
     constructor() {
         this.questions = [];
@@ -31,14 +36,14 @@ class CrackRapido {
         this.questionStartTime = 0;
         this.answerTimes = [];
         this.isGameActive = false;
-        this.totalQuestions = 20;
+        this.totalQuestions = 20; // Default value, will be adjusted by game mode
         // Nuevas propiedades para los modos de juego
         this.gameMode = 'classic'; // classic, survival, category
         this.selectedCategory = 'general';
         this.powerUps = {
-            timeExtra: 3,
-            removeOption: 3,
-            scoreMultiplier: 2
+            timeExtra: 2, // Reducido de 3 a 2 para mayor desafío
+            removeOption: 2, // Reducido de 3 a 2
+            scoreMultiplier: 1 // Reducido de 2 a 1 para mayor balance
         };
         this.survivalLives = 3;
         this.currentMultiplier = 1;
@@ -149,1606 +154,2481 @@ class CrackRapido {
     loadQuestions() {
         this.questionBank = {
             // CATEGORÍA: MESSI
-            messi: [
-                {
-                    category: "Messi",
-                    question: "¿Cuántos Balones de Oro ganó Messi hasta 2024?",
-                    options: ["7", "8", "9", "6"],
-                    correct: 1,
-                    difficulty: "easy"
-                },
-                {
-                    category: "Messi",
-                    question: "¿En qué fecha exacta nació Lionel Messi?",
-                    options: ["24 de junio de 1987", "24 de junio de 1986", "25 de junio de 1987", "23 de junio de 1987"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos goles oficiales marcó Messi en 2012?",
-                    options: ["89", "90", "91", "92"],
-                    correct: 2,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿A qué edad debutó Messi en Primera División con Barcelona?",
-                    options: ["16 años", "17 años", "18 años", "15 años"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Contra qué equipo marcó Messi su primer gol en Barcelona?",
-                    options: ["Real Madrid", "Albacete", "Athletic Bilbao", "Valencia"],
-                    correct: 1,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos goles marcó Messi en el Mundial de Qatar 2022?",
-                    options: ["6", "7", "8", "5"],
-                    correct: 1,
-                    difficulty: "easy"
-                },
-                {
-                    category: "Messi",
-                    question: "¿En qué año Messi ganó su primera Copa América?",
-                    options: ["2019", "2021", "2022", "2020"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos hat-tricks oficiales tiene Messi en su carrera hasta 2024?",
-                    options: ["54", "56", "58", "60"],
-                    correct: 1,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Qué dorsal usa Messi en Inter Miami?",
-                    options: ["9", "10", "30", "19"],
-                    correct: 1,
-                    difficulty: "easy"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos Champions League ganó Messi con Barcelona?",
-                    options: ["3", "4", "5", "6"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿En qué ciudad argentina nació Lionel Messi?",
-                    options: ["Buenos Aires", "Rosario", "Córdoba", "Mendoza"],
-                    correct: 1,
-                    difficulty: "easy"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos goles marcó Messi en LaLiga española?",
-                    options: ["472", "474", "476", "478"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Contra qué equipo Messi hizo su debut en la Selección Argentina?",
-                    options: ["Brasil", "Uruguay", "Hungría", "Paraguay"],
-                    correct: 2,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿En qué año Messi fichó por el PSG?",
-                    options: ["2020", "2021", "2022", "2019"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos goles de tiro libre tiene Messi en su carrera?",
-                    options: ["65", "67", "69", "71"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Qué problema de crecimiento tuvo Messi de niño?",
-                    options: ["Déficit de hormona del crecimiento", "Problema óseo", "Deficiencia nutricional", "Problema muscular"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos partidos jugó Messi con Barcelona?",
-                    options: ["778", "780", "782", "784"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿En qué año Messi superó el récord de goles de Pelé?",
-                    options: ["2020", "2021", "2022", "2019"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos años tenía Messi cuando se mudó a Barcelona?",
-                    options: ["11", "12", "13", "14"],
-                    correct: 2,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos goles marcó Messi en su mejor temporada (2011-12)?",
-                    options: ["72", "73", "74", "75"],
-                    correct: 1,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Contra qué portero Messi marcó más goles?",
-                    options: ["Iker Casillas", "Diego López", "Keylor Navas", "Thibaut Courtois"],
-                    correct: 1,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿En qué posición jugaba Messi originalmente en las inferiores?",
-                    options: ["Extremo derecho", "Mediocampista", "Delantero centro", "Media punta"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos títulos ganó Messi con Barcelona?",
-                    options: ["34", "35", "36", "37"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿En qué Copa del Mundo Messi fue el Mejor Jugador Joven?",
-                    options: ["Alemania 2006", "Sudáfrica 2010", "Brasil 2014", "Rusia 2018"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos penales falló Messi en su carrera profesional?",
-                    options: ["29", "31", "33", "35"],
-                    correct: 1,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuál fue el primer equipo profesional de Messi?",
-                    options: ["Newell's Old Boys", "Barcelona", "Grandoli", "Barcelona B"],
-                    correct: 2,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántas Ligas españolas ganó Messi?",
-                    options: ["10", "11", "12", "13"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Qué jugador asistió más a Messi en su carrera?",
-                    options: ["Xavi", "Iniesta", "Dani Alves", "Jordi Alba"],
-                    correct: 2,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuál es el récord de Messi de goles en un año calendario?",
-                    options: ["89", "90", "91", "92"],
-                    correct: 2,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos Mundiales de Clubes ganó Messi?",
-                    options: ["2", "3", "4", "5"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿En qué minuto marcó Messi su gol más rápido en Champions?",
-                    options: ["14 segundos", "8 segundos", "22 segundos", "5 segundos"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos años consecutivos Messi fue máximo goleador de LaLiga?",
-                    options: ["4", "5", "6", "7"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Qué edad tenía Messi cuando ganó su primer Balón de Oro?",
-                    options: ["21", "22", "23", "24"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Messi",
-                    question: "¿Cuántos goles marcó Messi en su última temporada en Barcelona?",
-                    options: ["30", "32", "34", "36"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Messi",
-                    question: "¿En qué año Messi debutó en Primera División?",
-                    options: ["2003", "2004", "2005", "2006"],
-                    correct: 1,
-                    difficulty: "medium"
-                }
-            ],
-            // CATEGORÍA: BOCA JUNIORS
-            boca: [
-                {
-                    category: "Boca",
-                    question: "¿En qué año se fundó Boca Juniors exactamente?",
-                    options: ["3 de abril de 1905", "3 de abril de 1904", "3 de mayo de 1905", "3 de abril de 1906"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Cuántas Copas Libertadores ganó Boca Juniors oficialmente?",
-                    options: ["5", "6", "7", "8"],
-                    correct: 1,
-                    difficulty: "easy"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Quién es el máximo goleador histórico de Boca Juniors?",
-                    options: ["Diego Maradona", "Martín Palermo", "Juan Román Riquelme", "Carlos Tevez"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Cuántos goles marcó Martín Palermo en Boca?",
-                    options: ["236", "238", "240", "242"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Cuál es la capacidad oficial de La Bombonera?",
-                    options: ["49.000", "54.000", "57.395", "60.000"],
-                    correct: 2,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿En qué año se inauguró La Bombonera?",
-                    options: ["1939", "1940", "1941", "1942"],
-                    correct: 1,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿De qué color era originalmente la camiseta de Boca?",
-                    options: ["Azul y oro", "Blanca", "Rosa y negro", "Roja y blanca"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Cuántos Mundial de Clubes ganó Boca Juniors?",
-                    options: ["2", "3", "4", "1"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Contra qué equipo jugó Boca su primer partido oficial?",
-                    options: ["River Plate", "Mariano Moreno", "Barracas Athletic", "Quilmes"],
-                    correct: 1,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿En qué año Boca descendió por única vez en su historia?",
-                    options: ["1979", "1980", "1981", "Nunca descendió"],
-                    correct: 3,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Quién es el jugador con más partidos en Boca Juniors?",
-                    options: ["Roberto Mouzo", "Hugo Gatti", "Silvio Marzolini", "Antonio Rattín"],
-                    correct: 0,
-                    difficulty: "hard"
-                },                
-                {
-                    category: "Boca",
-                    question: "¿En qué año Juan Román Riquelme debutó en Boca?",
-                    options: ["1995", "1996", "1997", "1998"],
-                    correct: 2,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Cuál es el apodo más famoso de Boca Juniors?",
-                    options: ["Los Xeneizes", "Los Bosteros", "Los Azul y Oro", "Todas las anteriores"],
-                    correct: 3,
-                    difficulty: "easy"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Quién marcó el gol del título en la Libertadores 2007?",
-                    options: ["Martín Palermo", "Guillermo Barros Schelotto", "Juan Román Riquelme", "Rodrigo Palacio"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿En qué década Boca ganó más títulos de Primera División?",
-                    options: ["1990-1999", "2000-2009", "1940-1949", "1960-1969"],
-                    correct: 2,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Cuál fue el primer estadio de Boca Juniors?",
-                    options: ["Dársena Sud", "Wilde", "La Bombonera", "Brandsen y Del Crucero"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Qué significa 'Xeneize'?",
-                    options: ["Genovés", "Italiano", "Marinero", "Trabajador"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿En qué año Carlos Tevez debutó en Boca?",
-                    options: ["2001", "2002", "2003", "2004"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Cuántas Recopa Sudamericanas ganó Boca?",
-                    options: ["3", "4", "5", "6"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Quién fue el entrenador de Boca en la Libertadores 2001?",
-                    options: ["Carlos Bianchi", "Miguel Ángel Russo", "Oscar Tabárez", "Héctor Veira"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿En qué barrio se encuentra La Bombonera?",
-                    options: ["La Boca", "Barracas", "San Telmo", "Puerto Madero"],
-                    correct: 0,
-                    difficulty: "easy"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Cuántos campeonatos locales ganó Boca hasta 2024?",
-                    options: ["34", "35", "36", "37"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Quién fue el fundador principal de Boca Juniors?",
-                    options: ["Esteban Baglietto", "Alfredo Scarpati", "Santiago Sana", "Teodoro Farenga"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿En qué año Diego Maradona debutó en Boca?",
-                    options: ["1980", "1981", "1982", "1983"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Cuántas Copas Intercontinentales ganó Boca?",
-                    options: ["2", "3", "4", "5"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Contra qué equipo europeo Boca perdió su primera Intercontinental?",
-                    options: ["Real Madrid", "AC Milan", "Bayern Munich", "Manchester United"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿En qué año se construyó el primer estadio en La Boca?",
-                    options: ["1924", "1925", "1926", "1927"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Cuál es el récord de asistencia en La Bombonera?",
-                    options: ["57.395", "58.000", "59.000", "60.000"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Quién es el jugador más joven en debutar en Boca?",
-                    options: ["Diego Maradona", "Juan Román Riquelme", "Cristian Pavón", "Julio Falcioni"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿En qué año Boca ganó su primera Copa Libertadores?",
-                    options: ["1977", "1978", "1979", "1980"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Cuántas Supercopa Sudamericanas ganó Boca?",
-                    options: ["1", "2", "3", "4"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Qué jugador de Boca ganó más Balones de Oro?",
-                    options: ["Diego Maradona", "Juan Román Riquelme", "Carlos Tevez", "Ninguno ganó"],
-                    correct: 3,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿En qué año se renovó por última vez La Bombonera?",
-                    options: ["1996", "1998", "2000", "2002"],
-                    correct: 1,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Cuál fue la mayor goleada de Boca en un Superclásico?",
-                    options: ["6-0", "5-0", "4-0", "5-1"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Quién fue el primer entrenador de Boca Juniors?",
-                    options: ["Jack Greenwell", "Patricio Hernández", "Juan Domingo Perón", "No se registra"],
-                    correct: 3,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿En qué año Carlos Bianchi llegó por primera vez a Boca?",
-                    options: ["1997", "1998", "1999", "2000"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Cuántas finales de Libertadores perdió Boca?",
-                    options: ["3", "4", "5", "6"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Contra qué equipo Boca jugó su primera final de Libertadores?",
-                    options: ["Deportivo Cali", "Cruzeiro", "Olimpia", "Independiente Medellín"],
-                    correct: 1,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿Qué presidente de Boca estuvo más tiempo en el cargo?",
-                    options: ["Mauricio Macri", "Pedro Pompilio", "Jorge Amor Ameal", "Daniel Angelici"],
-                    correct: 1,
-                    difficulty: "hard"
-                },
-                {
-                    category: "Boca",
-                    question: "¿En qué año Boca participó por primera vez en una competencia internacional?",
-                    options: ["1963", "1964", "1965", "1966"],
-                    correct: 0,
-                    difficulty: "hard"
-                }
-            ],
-            // CATEGORÍA: RIVER PLATE
-            river: [
-                {
-                    category: "River",
-                    question: "¿En qué año se fundó River Plate?",
-                    options: ["25 de mayo de 1901", "25 de mayo de 1900", "25 de mayo de 1902", "25 de mayo de 1903"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "River",
-                    question: "¿Quién es el máximo goleador histórico de River?",
-                    options: ["Ángel Labruna", "Marcelo Salas", "Hernán Crespo", "Gonzalo Higuaín"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "River",
-                    question: "¿Cuántos goles marcó Ángel Labruna en River?",
-                    options: ["293", "295", "297", "299"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "River",
-                    question: "¿Cuál es la capacidad del Estadio Monumental?",
-                    options: ["83.196", "82.196", "84.196", "81.196"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "River",
-                    question: "¿En qué año River ganó su primera Copa Libertadores?",
-                    options: ["1985", "1986", "1987", "1984"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "River",
-                    question: "¿Cuántos títulos oficiales tiene River Plate hasta 2024?",
-                    options: ["68", "70", "72", "74"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                {
-                    category: "River",
-                    question: "¿Contra qué equipo River ganó la final de la Libertadores 2018?",
-                    options: ["Boca Juniors", "Grêmio", "Palmeiras", "Flamengo"],
-                    correct: 0,
-                    difficulty: "easy"
-                },
-                {
-                    category: "River",
-                    question: "¿En qué año se inauguró el Estadio Monumental?",
-                    options: ["1937", "1938", "1939", "1940"],
-                    correct: 0,
-                    difficulty: "hard"
-                },
-                {
-                    category: "River",
-                    question: "¿Cuál es el apodo más famoso de River Plate?",
-                    options: ["Los Millonarios", "Los Ángeles", "Los Galácticos", "Los Reyes"],
-                    correct: 0,
-                    difficulty: "easy"
-                },
-                {
-                    category: "River",
-                    question: "¿Cuántas Copas Libertadores ganó River hasta 2024?",
-                    options: ["4", "5", "6", "3"],
-                    correct: 0,
-                    difficulty: "medium"
-                },
-                // NUEVAS PREGUNTAS RIVER (25 más)
-                {
-                    category: "River",
-                    question: "¿En qué barrio se encuentra el Estadio Monumental?",
-                    options: ["Belgrano", "Núñez", "Palermo", "Vicente López"],
-                    correct: 1,
-                    difficulty: "easy"
-                },
-                {
-                    category: "River",
-                    question: "¿Quién fue el fundador de River Plate?",
-                    options: ["Leopoldo Bard", "Carlos Peucelle", "Martiniano Leguizamón", "No se conoce"],
-                    correct: 3,
-                    difficulty: "hard"
-                },
-                {
-                    category: "River",
-                    question: "¿En qué año River descendió a la B Nacional?",
-                    options: ["2010", "2011", "2012", "2013"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "River",
-                    question: "¿Quién entrenaba a River cuando descendió?",
-                    options: ["Ángel Cappa", "J.J. López", "Claudio Vivas", "Matías Almeyda"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "River",
-                    question: "¿En qué año River ascendió de vuelta a Primera?",
-                    options: ["2011", "2012", "2013", "2014"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "River",
-                    question: "¿Cuántas Copas Argentina ganó River Plate?",
-                    options: ["2", "3", "4", "5"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "River",
-                    question: "¿En qué año Marcelo Gallardo debutó como entrenador de River?",
-                    options: ["2013", "2014", "2015", "2016"],
-                    correct: 1,
-                    difficulty: "medium"
-                },
-                {
-                    category: "River",
-                    question: "¿Cuántos títulos ganó Gallardo como DT de River?",
-                    options: ["12", "13", "14", "15"],
-                    correct: 2,
-                    difficulty: "hard"
-                },
-                {
-                    category: "River",
-                    question: "¿En qué estadio River jugó durante la construcción del Monumental?",
-                    options: ["Gasómetro", "La Bombonera", "Racing Club", "Chacarita"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "River",
-                    question: "¿Cuál fue el primer nombre del club?",
-                    options: ["River Plate", "Club Atlético River", "River Plate Football Club", "Club de Football River Plate"],
-                    correct: 2,
-                    difficulty: "hard",
-                },
-                {
-                    category: "River",
-                    question: "¿En qué año River ganó su primera Copa Intercontinental?",
-                    options: ["1985", "1986", "1987", "1996"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "River",
-                    question: "¿Cuántos Mundial de Clubes ganó River?",
-                    options: ["0", "1", "2", "3"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "River",
-                    question: "¿Quién es el jugador con más partidos en River?",
-                    options: ["Amadeo Carrizo", "Ángel Labruna", "Daniel Passarella", "Marcelo Gallardo"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "River",
-                    question: "¿En qué década River ganó más títulos locales?",
-                    options: ["1940-1949", "1950-1959", "1990-1999", "2010-2019"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "River",
-                    question: "¿Cuántos clásicos contra Boca ganó River históricamente?",
-                    options: ["89", "91", "93", "95"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "River",
-                    question: "¿En qué año se jugó el primer Superclásico?",
-                    options: ["1913", "1914", "1915", "1916"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "River",
-                    question: "¿Cuál es el resultado más abultado de River contra Boca?",
-                    options: ["5-0", "6-0", "6-1", "7-1"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "River",
-                    question: "¿En qué año River ganó la Libertadores por primera vez?",
-                    options: ["1985", "1986", "1987", "1988"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "River",
-                    question: "¿Contra qué equipo River jugó la final de la Libertadores 1986?",
-                    options: ["América de Cali", "Atlético Nacional", "Independiente", "Olimpia"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "River",
-                    question: "¿Quién marcó el gol del título en la Libertadores 2015?",
-                    options: ["Lucas Alario", "Rodrigo Mora", "Carlos Sánchez", "Ramiro Funes Mori"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "River",
-                    question: "¿En qué país River ganó su segunda Libertadores?",
-                    options: ["Argentina", "Colombia", "México", "Perú"],
-                    correct: 2,
-                    difficulty: "medium",
-                },
-                {
-                    category: "River",
-                    question: "¿Cuántas Supercopa Sudamericanas ganó River?",
-                    options: ["0", "1", "2", "3"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "River",
-                    question: "¿En qué año River ganó su último título de liga?",
-                    options: ["2021", "2022", "2023", "2024"],
-                    correct: 0,
-                    difficulty: "easy",
-                },
-                {
-                    category: "River",
-                    question: "¿Cuál es el nombre completo oficial del club?",
-                    options: ["Club Atlético River Plate", "River Plate Football Club", "Club de Football River Plate", "Asociación River Plate"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "River",
-                    question: "¿Quién diseñó el Estadio Monumental?",
-                    options: ["José Aslan", "Viktor Sulčič", "Raúl Bes", "Antonio Bonet"],
-                    correct: 0,
-                    difficulty: "hard",
-                }
-            ],
-            // CATEGORÍA: MUNDIALES (Datos FIFA verificados)
-            mundial: [
-                {
-                    category: "Mundial",
-                    question: "¿Cuántos Mundiales de fútbol se han disputado hasta 2022?",
-                    options: ["21", "22", "23", "20"],
-                    correct: 1,
-                    difficulty: "easy",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Qué país ha ganado más Mundiales de fútbol?",
-                    options: ["Alemania", "Argentina", "Brasil", "Italia"],
-                    correct: 2,
-                    difficulty: "easy",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Quién es el máximo goleador de Mundiales de la historia?",
-                    options: ["Pelé", "Miroslav Klose", "Ronaldo", "Gerd Müller"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuántos goles marcó Miroslav Klose en Mundiales?",
-                    options: ["14", "15", "16", "17"],
-                    correct: 2,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿En qué país se jugó el primer Mundial?",
-                    options: ["Brasil", "Uruguay", "Argentina", "Chile"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Qué tecnología se usó por primera vez en Qatar 2022?",
-                    options: ["VAR", "Línea de gol", "Fuera de juego automático", "Chip en balón"],
-                    correct: 2,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuál fue el marcador de la final del Mundial 2022?",
-                    options: ["Argentina 3 - 3 Francia (4-2 pen.)", "Argentina 2 - 1 Francia", "Argentina 4 - 2 Francia", "Argentina 1 - 0 Francia"],
-                    correct: 0,
-                    difficulty: "easy",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Quién ganó la Bota de Oro en Qatar 2022?",
-                    options: ["Lionel Messi", "Kylian Mbappé", "Olivier Giroud", "Julián Álvarez"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Qué país fue sede del Mundial 2018?",
-                    options: ["Brasil", "Rusia", "Qatar", "Alemania"],
-                    correct: 1,
-                    difficulty: "easy",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuándo será el próximo Mundial de fútbol?",
-                    options: ["2025", "2026", "2027", "2028"],
-                    correct: 1,
-                    difficulty: "easy",
-                },
-                // NUEVAS PREGUNTAS MUNDIAL (30 más)
-                {
-                    category: "Mundial",
-                    question: "¿En qué año se disputó el primer Mundial de fútbol?",
-                    options: ["1928", "1930", "1932", "1934"],
-                    correct: 1,
-                    difficulty: "easy",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuántos equipos participaron en el primer Mundial?",
-                    options: ["13", "14", "15", "16"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Quién marcó el primer gol en la historia de los Mundiales?",
-                    options: ["Lucien Laurent", "Héctor Castro", "Guillermo Stábile", "Pedro Cea"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Qué países organizaron el Mundial 2002?",
-                    options: ["Japón y China", "Japón y Corea del Sur", "Corea del Sur y China", "Solo Japón"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuál fue la mayor goleada en un Mundial?",
-                    options: ["Hungría 10-1 El Salvador (1982)", "Hungría 9-0 Corea del Sur (1954)", "Yugoslavia 9-0 Zaire (1974)", "Alemania 8-0 Arabia Saudí (2002)"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Quién es el jugador más joven en marcar en un Mundial?",
-                    options: ["Pelé", "Kylian Mbappé", "Michael Owen", "Landon Donovan"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuántos años tenía Pelé cuando ganó su primer Mundial?",
-                    options: ["16", "17", "18", "19"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿En qué Mundial se usó por primera vez el VAR?",
-                    options: ["Brasil 2014", "Rusia 2018", "Qatar 2022", "No se ha usado"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Qué selección tiene más subcampeonatos mundiales?",
-                    options: ["Argentina", "Alemania", "Holanda", "Brasil"],
-                    correct: 2,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿En qué Mundial Diego Maradona hizo el gol con la mano?",
-                    options: ["España 1982", "México 1986", "Italia 1990", "Estados Unidos 1994"],
-                    correct: 1,
-                    difficulty: "easy",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuál es el Mundial con más goles anotados?",
-                    options: ["Francia 1998 (171)", "Brasil 2014 (171)", "Rusia 2018 (169)", "Estados Unidos 1994 (141)"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Qué portero tiene más partidos jugados en Mundiales?",
-                    options: ["Buffon", "Casillas", "Neuer", "Lloris"],
-                    correct: 1,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿En qué Mundial Italia no participó por no clasificar?",
-                    options: ["Rusia 2018", "Sudáfrica 2010", "Alemania 2006", "Corea-Japón 2002"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuál fue el primer Mundial transmitido por televisión?",
-                    options: ["Suiza 1954", "Suecia 1958", "Chile 1962", "Inglaterra 1966"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿En qué Mundial se jugó por primera vez en África?",
-                    options: ["Sudáfrica 2010", "Egipto 1990", "Marruecos 1998", "Nigeria 2006"],
-                    correct: 0,
-                    difficulty: "easy",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuántos hat-tricks se marcaron en Qatar 2022?",
-                    options: ["1", "2", "3", "4"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Quién marcó el hat-trick en Qatar 2022?",
-                    options: ["Kylian Mbappé", "Lionel Messi", "Harry Kane", "Cody Gakpo"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuál fue el Mundial con más espectadores en total?",
-                    options: ["Estados Unidos 1994", "Brasil 2014", "Alemania 2006", "Rusia 2018"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿En qué Mundial se introdujo la tarjeta amarilla y roja?",
-                    options: ["Inglaterra 1966", "México 1970", "Alemania 1974", "Argentina 1978"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuántos países diferentes han ganado el Mundial?",
-                    options: ["7", "8", "9", "10"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Qué país organizará el Mundial 2026?",
-                    options: ["Estados Unidos", "Canadá", "México", "Estados Unidos, Canadá y México"],
-                    correct: 3,
-                    difficulty: "easy",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿En qué Mundial participó por primera vez Croacia como país independiente?",
-                    options: ["Estados Unidos 1994", "Francia 1998", "Corea-Japón 2002", "Alemania 2006"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuál es el Mundial donde más penales se cobraron?",
-                    options: ["Rusia 2018", "Qatar 2022", "Brasil 2014", "Francia 1998"],
-                    correct: 1,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Qué jugador tiene más asistencias en un solo Mundial?",
-                    options: ["Diego Maradona", "Pelé", "Xavi", "Kevin De Bruyne"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿En qué Mundial no participó Brasil por primera vez?",
-                    options: ["Suiza 1954", "Nunca faltó", "Francia 1938", "Suecia 1958"],
-                    correct: 1,
-                    difficulty: "easy",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuál fue el primer Mundial con 32 equipos?",
-                    options: ["Estados Unidos 1994", "Francia 1998", "Corea-Japón 2002", "Alemania 2006"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Qué jugador marcó el gol número 1000 en la historia de los Mundiales?",
-                    options: ["Robbie Fowler", "Oleg Salenko", "Marcelo Balboa", "No se registra"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿En qué Mundial Zinedine Zidane recibió la tarjeta roja en la final?",
-                    options: ["Francia 1998", "Alemania 2006", "Corea-Japón 2002", "No recibió roja en final"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Cuántos autogoles se marcaron en Qatar 2022?",
-                    options: ["1", "2", "3", "4"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Mundial",
-                    question: "¿Qué selección debutó en Qatar 2022?",
-                    options: ["Qatar", "Ninguna", "Australia", "Dinamarca"],
-                    correct: 0,
-                    difficulty: "medium",
-                }
-            ],
-            // CATEGORÍA: GENERAL (Preguntas variadas de fuentes verificadas)
-            general: [
-                {
-                    category: "General",
-                    question: "¿En qué año se creó la UEFA Champions League?",
-                    options: ["1992", "1993", "1991", "1994"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "General",
-                    question: "¿Qué club tiene más Champions League?",
-                    options: ["Barcelona", "Real Madrid", "AC Milan", "Liverpool"],
-                    correct: 1,
-                    difficulty: "easy",
-                },
-                {
-                    category: "General",
-                    question: "¿Cuándo se fundó la FIFA?",
-                    options: ["21 de mayo de 1904", "21 de mayo de 1903", "21 de mayo de 1905", "21 de mayo de 1906"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "General",
-                    question: "¿Quién inventó el fútbol moderno?",
-                    options: ["Francia", "Inglaterra", "Brasil", "Argentina"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "General",
-                    question: "¿Cuántos jugadores tiene un equipo de fútbol en el campo?",
-                    options: ["10", "11", "12", "9"],
-                    correct: 1,
-                    difficulty: "easy",
-                },
-                // NUEVAS PREGUNTAS GENERAL (25 más)
-                {
-                    category: "General",
-                    question: "¿Cuánto dura oficialmente un partido de fútbol?",
-                    options: ["80 minutos", "90 minutos", "100 minutos", "85 minutos"],
-                    correct: 1,
-                    difficulty: "easy",
-                },
-                {
-                    category: "General",
-                    question: "¿Cuántas sustituciones se pueden hacer en un partido oficial?",
-                    options: ["3", "4", "5", "6"],
-                    correct: 2,
-                    difficulty: "medium",
-                },
-                {
-                    category: "General",
-                    question: "¿Cuál es la dimensión mínima de un campo de fútbol?",
-                    options: ["90x45 metros", "100x50 metros", "110x60 metros", "120x70 metros"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "General",
-                    question: "¿En qué año se fundó la CONMEBOL?",
-                    options: ["1914", "1916", "1918", "1920"],
-                    correct: 1,
-                    difficulty: "hard",
-                },
-                {
-                    category: "General",
-                    question: "¿Cuál fue el primer club de fútbol del mundo?",
-                    options: ["Sheffield FC", "Notts County", "Cambridge University", "Real Madrid"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "General",
-                    question: "¿Qué significa UEFA?",
-                    options: ["United European Football Association", "Union of European Football Associations", "United European Football Alliance", "Union European Football Alliance"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "General",
-                    question: "¿En qué país se jugó la primera Copa del Mundo femenina?",
-                    options: ["Estados Unidos", "China", "Suecia", "Alemania"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "General",
-                    question: "¿Cuántos continentes tiene FIFA?",
-                    options: ["5", "6", "7", "4"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "General",
-                    question: "¿Qué altura tiene el arco de fútbol?",
-                    options: ["2.34 metros", "2.44 metros", "2.54 metros", "2.64 metros"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "General",
-                    question: "¿Cuál es la velocidad récord de un tiro en fútbol?",
-                    options: ["131 km/h", "151 km/h", "171 km/h", "191 km/h"],
-                    correct: 2,
-                    difficulty: "hard",
-                },
-                {
-                    category: "General",
-                    question: "¿En qué año se permitió el pase hacia atrás al portero?",
-                    options: ["1990", "1992", "1994", "Siempre se permitió"],
-                    correct: 3,
-                    difficulty: "hard",
-                },
-                {
-                    category: "General",
-                    question: "¿Qué club tiene más títulos de liga en Europa?",
-                    options: ["Real Madrid", "Rangers", "Celtic", "Juventus"],
-                    correct: 1,
-                    difficulty: "hard",
-                },
-                {
-                    category: "General",
-                    question: "¿Cuál es el estadio de fútbol más grande del mundo?",
-                    options: ["Camp Nou", "Wembley", "Rungrado 1st of May Stadium", "Estadio Azteca"],
-                    correct: 2,
-                    difficulty: "hard",
-                },
-                {
-                    category: "General",
-                    question: "¿En qué año se introdujo el fuera de juego?",
-                    options: ["1863", "1870", "1880", "1890"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "General",
-                    question: "¿Cuántos países miembros tiene FIFA actualmente?",
-                    options: ["209", "211", "213", "215"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "General",
-                    question: "¿Qué país organizó la primera Copa América?",
-                    options: ["Argentina", "Uruguay", "Brasil", "Chile"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "General",
-                    question: "¿En qué año se creó la Copa Libertadores?",
-                    options: ["1958", "1960", "1962", "1964"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "General",
-                    question: "¿Cuál es el jugador más caro de la historia?",
-                    options: ["Neymar", "Kylian Mbappé", "Philippe Coutinho", "Gareth Bale"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "General",
-                    question: "¿En qué liga juega el Manchester City?",
-                    options: ["Championship", "Premier League", "League One", "League Two"],
-                    correct: 1,
-                    difficulty: "easy",
-                },
-                {
-                    category: "General",
-                    question: "¿Cuál es el club más antiguo de Argentina?",
-                    options: ["Buenos Aires FC", "Alumni", "Quilmes", "Buenos Aires Cricket Club"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "General",
-                    question: "¿Qué significa VAR?",
-                    options: ["Video Assistant Referee", "Video Analysis Review", "Video Assistant Review", "Virtual Assistant Referee"],
-                    correct: 0,
-                    difficulty: "easy",
-                },
-                {
-                    category: "General",
-                    question: "¿Cuántas confederaciones tiene FIFA?",
-                    options: ["4", "5", "6", "7"],
-                    correct: 2,
-                    difficulty: "medium",
-                },
-                {
-                    category: "General",
-                    question: "¿En qué año se fundó el FC Barcelona?",
-                    options: ["1899", "1900", "1901", "1902"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "General",
-                    question: "¿Cuál es el récord de goles en una temporada europea?",
-                    options: ["85", "91", "95", "100"],
-                    correct: 1,
-                    difficulty: "hard",
-                },
-                {
-                    category: "General",
-                    question: "¿Qué jugador tiene más Champions League ganadas?",
-                    options: ["Cristiano Ronaldo", "Lionel Messi", "Karim Benzema", "Luka Modrić"],
-                    correct: 0,
-                    difficulty: "medium",
-                }
-            ],
-            // NUEVA CATEGORÍA: CHAMPIONS LEAGUE
-            champions: [
-                {
-                    category: "Champions",
-                    question: "¿Qué equipo ha ganado más Champions League?",
-                    options: ["Real Madrid", "Barcelona", "AC Milan", "Liverpool"],
-                    correct: 0,
-                    difficulty: "easy",
-                },
-                {
-                    category: "Champions",
-                    question: "¿En qué año se cambió el nombre a Champions League?",
-                    options: ["1991", "1992", "1993", "1994"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Cuántas Champions League ganó el Real Madrid hasta 2024?",
-                    options: ["14", "15", "16", "17"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Quién es el máximo goleador histórico de la Champions?",
-                    options: ["Lionel Messi", "Cristiano Ronaldo", "Robert Lewandowski", "Karim Benzema"],
-                    correct: 1,
-                    difficulty: "easy",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Cuántos goles marcó Cristiano Ronaldo en Champions?",
-                    options: ["140", "142", "144", "146"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Qué equipo ganó la primera Champions League (1992-93)?",
-                    options: ["AC Milan", "Barcelona", "Olympique de Marsella", "Bayern Munich"],
-                    correct: 2,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Cuál fue la mayor remontada en la historia de la Champions?",
-                    options: ["Barcelona 6-1 PSG", "Liverpool 4-0 Barcelona", "Real Madrid 3-1 Juventus", "Roma 3-0 Barcelona"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Champions",
-                    question: "¿En qué estadio se jugó la final de 2005 (Liverpool vs AC Milan)?",
-                    options: ["Estambul", "Atenas", "Madrid", "París"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Qué jugador marcó en 3 finales consecutivas de Champions?",
-                    options: ["Cristiano Ronaldo", "Gareth Bale", "Sergio Ramos", "Karim Benzema"],
-                    correct: 1,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Cuántas veces ganó la Champions el AC Milan?",
-                    options: ["6", "7", "8", "9"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Qué portero tiene más finales jugadas en Champions?",
-                    options: ["Iker Casillas", "Gianluigi Buffon", "Manuel Neuer", "Petr Čech"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Champions",
-                    question: "¿En qué año el Leicester City llegó a cuartos de final?",
-                    options: ["2016", "2017", "2018", "2019"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Qué equipo inglés ganó por primera vez en 2005?",
-                    options: ["Manchester United", "Chelsea", "Liverpool", "Arsenal"],
-                    correct: 2,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Cuál es el récord de goles en una edición de Champions?",
-                    options: ["16", "17", "18", "19"],
-                    correct: 1,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Qué entrenador ganó más Champions League?",
-                    options: ["Carlo Ancelotti", "Zinedine Zidane", "Pep Guardiola", "Bob Paisley"],
-                    correct: 3,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Champions",
-                    question: "¿En qué año Ajax ganó por última vez?",
-                    options: ["1994", "1995", "1996", "1997"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Qué jugador debutó más joven en una final de Champions?",
-                    options: ["Kylian Mbappé", "Pedri", "Ansu Fati", "Owen Hargreaves"],
-                    correct: 3,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Cuántas finales perdió el Bayern Munich en la década del 2010?",
-                    options: ["1", "2", "3", "4"],
-                    correct: 1,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Qué club fue el primero en ganar 3 Champions consecutivas?",
-                    options: ["Real Madrid (1956-58)", "Real Madrid (2016-18)", "AC Milan", "Ajax"],
-                    correct: 0,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Champions",
-                    question: "¿En qué final se marcaron más goles (6 en total)?",
-                    options: ["Real Madrid 4-2 Atletico (2014)", "Liverpool 3-3 AC Milan (2005)", "Barcelona 3-1 Juventus (2015)", "Manchester United 2-1 Chelsea (2008)"],
-                    correct: 1,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Qué país nunca tuvo un campeón de Champions League?",
-                    options: ["Francia", "Bélgica", "Rusia", "Turquía"],
-                    correct: 3,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Cuántas Champions ganó Pep Guardiola como entrenador?",
-                    options: ["1", "2", "3", "4"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Qué jugador marcó el gol más rápido en una final?",
-                    options: ["Paolo Maldini", "Mario Mandžukić", "Sergio Ramos", "Fernando Torres"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Champions",
-                    question: "¿En qué minuto Paolo Maldini marcó en la final de 2007?",
-                    options: ["50 segundos", "52 segundos", "56 segundos", "1 minuto"],
-                    correct: 0,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Champions",
-                    question: "¿Qué equipo perdió 3 finales en 4 años (2014-2018)?",
-                    options: ["Atletico Madrid", "Juventus", "Liverpool", "Bayern Munich"],
-                    correct: 0,
-                    difficulty: "medium",
-                }
-            ],
-            // NUEVA CATEGORÍA: SELECCIÓN ARGENTINA
-            argentina: [
-            {
-                category: "Argentina",
-                    question: "¿Cuántas Copas del Mundo ganó Argentina?",
-                    options: ["2", "3", "4", "1"],
-                    correct: 1,
-                    difficulty: "easy",
-            },
-            {
-                category: "Argentina",
-                    question: "¿En qué años Argentina ganó el Mundial?",
-                    options: ["1978, 1986, 2022", "1978, 1986, 2018", "1982, 1986, 2022", "1978, 1990, 2022"],
-                    correct: 0,
-                    difficulty: "medium",
-            },
-            {
-                category: "Argentina",
-                    question: "¿Cuántas Copas América ganó Argentina hasta 2024?",
-                    options: ["14", "15", "16", "17"],
-                    correct: 1,
-                    difficulty: "medium",
-            },
-            {
-                category: "Argentina",
-                    question: "¿Quién es el máximo goleador histórico de Argentina?",
-                    options: ["Diego Maradona", "Gabriel Batistuta", "Lionel Messi", "Hernán Crespo"],
-                    correct: 2,
-                    difficulty: "easy",
-            },
-            {
-                category: "Argentina",
-                    question: "¿Cuántos goles marcó Messi con la Selección hasta 2024?",
-                    options: ["106", "108", "110", "112"],
-                    correct: 1,
-                    difficulty: "hard",
-            },
-            {
-                category: "Argentina",
-                    question: "¿En qué estadio Argentina jugó la final del Mundial 1978?",
-                    options: ["Estadio Monumental", "La Bombonera", "Estadio Olimpico", "Rosario Central"],
-                    correct: 0,
-                    difficulty: "medium",
-            },
-            {
-                category: "Argentina",
-                    question: "¿Contra qué selección Argentina perdió la final de Brasil 2014?",
-                    options: ["Brasil", "Alemania", "Holanda", "España"],
-                    correct: 1,
-                    difficulty: "easy",
-            },
-            {
-                category: "Argentina",
-                    question: "¿Quién fue el entrenador de Argentina en Qatar 2022?",
-                    options: ["Jorge Sampaoli", "Lionel Scaloni", "Diego Simeone", "Mauricio Pochettino"],
-                    correct: 1,
-                    difficulty: "easy",
-            },
-            {
-                category: "Argentina",
-                    question: "¿En qué año Argentina ganó la Copa América por última vez antes de 2021?",
-                    options: ["1991", "1993", "1995", "1999"],
-                    correct: 1,
-                    difficulty: "medium",
-            },
-            {
-                category: "Argentina",
-                    question: "¿Cuántos partidos invicto tuvo Argentina hasta Qatar 2022?",
-                    options: ["35", "36", "37", "38"],
-                    correct: 1,
-                    difficulty: "hard",
-            },
-            {
-                category: "Argentina",
-                    question: "¿Quién marcó el gol de la victoria en la final de Qatar 2022?",
-                    options: ["Lionel Messi", "Ángel Di María", "Julián Álvarez", "Lautaro Martínez"],
-                    correct: 1,
-                    difficulty: "medium",
-            },
-            {
-                category: "Argentina",
-                    question: "¿En qué Copa del Mundo Argentina llegó a la final por primera vez?",
-                    options: ["Uruguay 1930", "Italia 1934", "Francia 1938", "Brasil 1950"],
-                    correct: 0,
-                    difficulty: "medium",
-            },
-            {
-                category: "Argentina",
-                    question: "¿Cuántas finales mundiales perdió Argentina?",
-                    options: ["2", "3", "4", "5"],
-                    correct: 1,
-                    difficulty: "medium",
-            },
-            {
-                category: "Argentina",
-                    question: "¿Quién fue el primer técnico de Argentina en ganar un Mundial?",
-                    options: ["César Luis Menotti", "Carlos Bilardo", "Alfio Basile", "Daniel Passarella"],
-                    correct: 0,
-                    difficulty: "medium",
-            },
-            {
-                category: "Argentina",
-                    question: "¿En qué año se fundó la AFA?",
-                    options: ["1891", "1893", "1895", "1897"],
-                    correct: 1,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Argentina",
-                    question: "¿Contra qué selección jugó Argentina su primer partido oficial?",
-                    options: ["Brasil", "Uruguay", "Chile", "Paraguay"],
-                    correct: 1,
-                    difficulty: "hard",
-                },
-                {
-                    category: "Argentina",
-                    question: "¿Quién es el jugador con más partidos en la Selección?",
-                    options: ["Diego Maradona", "Javier Zanetti", "Lionel Messi", "Gabriel Batistuta"],
-                    correct: 2,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Argentina",
-                    question: "¿En qué Mundial Argentina no participó?",
-                    options: ["Inglaterra 1966", "Nunca faltó", "Suecia 1958", "Chile 1962"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Argentina",
-                    question: "¿Cuántas medallas olímpicas de oro ganó Argentina en fútbol?",
-                options: ["1", "2", "3", "0"],
-                    correct: 1,
-                    difficulty: "medium",
-                },
-                {
-                    category: "Argentina",
-                    question: "¿En qué años Argentina ganó el oro olímpico en fútbol?",
-                    options: ["2004, 2008", "2008, 2012", "2000, 2004", "1996, 2004"],
-                    correct: 0,
-                    difficulty: "hard",
-                }
-            ]
-        };
+            
+                "messi": [
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos Balones de Oro había ganado Messi hasta finales de 2024?",
+                    "options": ["7", "8", "9", "6"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿En qué fecha exacta nació Lionel Messi?",
+                    "options": ["24 de junio de 1987", "24 de junio de 1986", "25 de junio de 1987", "23 de junio de 1987"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos goles oficiales marcó Messi en el año calendario 2012, estableciendo un récord mundial?",
+                    "options": ["89", "90", "91", "92"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿A qué edad debutó Messi en Primera División con Barcelona?",
+                    "options": ["16 años", "17 años", "18 años", "15 años"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Contra qué equipo marcó Messi su primer gol oficial con Barcelona?",
+                    "options": ["Real Madrid", "Albacete", "Athletic Bilbao", "Valencia"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos goles marcó Messi en el Mundial de Qatar 2022, donde Argentina fue campeona?",
+                    "options": ["6", "7", "8", "5"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿En qué año Messi ganó su primera Copa América con la selección mayor, rompiendo una larga sequía para Argentina?",
+                    "options": ["2019", "2021", "2024", "2016"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos hat-tricks oficiales tenía Messi en su carrera hasta finales de 2024?",
+                    "options": ["55", "57", "59", "61"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Qué dorsal usa Messi en Inter Miami CF?",
+                    "options": ["9", "10", "30", "19"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántas UEFA Champions League ganó Messi con el FC Barcelona?",
+                    "options": ["3", "4", "5", "2"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿En qué ciudad argentina nació Lionel Messi?",
+                    "options": ["Buenos Aires", "Rosario", "Córdoba", "Mendoza"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos goles marcó Messi en LaLiga española durante toda su carrera allí, siendo el máximo goleador histórico?",
+                    "options": ["472", "474", "476", "470"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Contra qué equipo Messi hizo su debut oficial en la Selección Argentina mayor, siendo expulsado pocos minutos después?",
+                    "options": ["Brasil", "Uruguay", "Hungría", "Paraguay"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿En qué año Messi fichó por el Paris Saint-Germain (PSG) tras su salida del Barcelona?",
+                    "options": ["2020", "2021", "2022", "2019"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos goles de tiro libre directo había marcado Messi en su carrera hasta finales de 2024?",
+                    "options": ["65", "62", "68", "70"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Qué problema de salud relacionado con el crecimiento tuvo Messi de niño, requiriendo tratamiento?",
+                    "options": ["Déficit de hormona del crecimiento", "Problema óseo congénito", "Deficiencia nutricional severa", "Problema muscular degenerativo"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos partidos oficiales jugó Messi con el FC Barcelona, siendo el jugador con más apariciones en la historia del club?",
+                    "options": ["778", "780", "768", "788"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿En qué año Messi superó el récord de Pelé de más goles con un solo club?",
+                    "options": ["2020", "2021", "2019", "2022"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos años tenía Messi cuando se mudó a Barcelona para unirse a La Masia?",
+                    "options": ["11", "12", "13", "14"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos goles marcó Messi para el FC Barcelona en su temporada más goleadora (2011-12, todas las competiciones)?",
+                    "options": ["72", "73", "74", "75"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "De estos porteros, ¿contra cuál había marcado Messi más goles en su carrera hasta finales de 2024?",
+                    "options": ["Iker Casillas", "Diego López", "Thibaut Courtois", "Jan Oblak"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿En qué posición solía jugar Messi en las categorías inferiores del FC Barcelona antes de ser extremo derecho en el primer equipo?",
+                    "options": ["Mediocentro defensivo", "Delantero centro (9)", "Mediapunta o enganche", "Lateral izquierdo"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos títulos oficiales ganó Messi con el FC Barcelona en total?",
+                    "options": ["34", "35", "36", "33"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿En qué Copa del Mundo Messi fue galardonado con el Balón de Oro del torneo por primera vez?",
+                    "options": ["Alemania 2006", "Sudáfrica 2010", "Brasil 2014", "Rusia 2018"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos penales había fallado Messi en su carrera profesional (club y selección) hasta finales de 2024?",
+                    "options": ["Aprox. 29", "Aprox. 31", "Aprox. 33", "Aprox. 27"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuál fue el primer club profesional en el que Messi jugó (considerando equipo filial)?",
+                    "options": ["Newell's Old Boys", "Grandoli", "FC Barcelona C", "FC Barcelona B"],
+                    "correct": 3,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántas Ligas españolas (LaLiga) ganó Messi con el FC Barcelona?",
+                    "options": ["10", "11", "9", "12"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Qué jugador dio más asistencias a Messi en el FC Barcelona?",
+                    "options": ["Xavi Hernández", "Andrés Iniesta", "Luis Suárez", "Dani Alves"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuál es el récord de Messi de goles en un año calendario (2012)?",
+                    "options": ["89", "90", "91", "92"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos Mundiales de Clubes de la FIFA ganó Messi con el FC Barcelona?",
+                    "options": ["2", "3", "4", "1"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuál fue el primer club NO argentino de Messi?",
+                    "options": ["FC Barcelona", "PSG", "Inter Miami CF", "AS Monaco"],
+                    "correct": 0,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos años consecutivos fue Messi el máximo goleador de LaLiga (Trofeo Pichichi) en su racha más larga?",
+                    "options": ["3", "5", "4", "6"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Qué edad tenía Messi cuando ganó su primer Balón de Oro en 2009?",
+                    "options": ["21", "22", "23", "20"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántos goles marcó Messi en LaLiga en su última temporada en Barcelona (2020-21)?",
+                    "options": ["30", "32", "28", "35"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿En qué año Messi debutó oficialmente en la Primera División con el FC Barcelona?",
+                    "options": ["2003", "2004", "2005", "2006"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿En qué club argentino jugó Messi en categorías inferiores antes de ir a Barcelona?",
+                    "options": ["River Plate", "Boca Juniors", "Newell's Old Boys", "Rosario Central"],
+                    "correct": 2,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Qué premio individual importante ganó Messi en el Mundial Sub-20 de 2005, además del título con Argentina?",
+                    "options": ["Bota de Oro y Balón de Oro", "Solo Bota de Oro", "Solo Balón de Oro", "Mejor Jugador Joven del Torneo"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿En qué año Messi ganó la medalla de oro olímpica con Argentina en Pekín?",
+                    "options": ["2004", "2008", "2012", "2016"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Messi",
+                    "question": "¿Cuántas veces había ganado Messi el premio The Best FIFA al mejor jugador del mundo hasta finales de 2024?",
+                    "options": ["1", "2", "3", "4"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Cuál es el apodo más conocido de Lionel Messi?",
+                      "options": ["El Matador", "La Pulga", "El Pibe", "El Mago"],
+                      "correct": 1,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Cuántos goles había marcado Messi con la Selección Argentina hasta finales de 2024, incluyendo la Copa América 2024?",
+                      "options": ["106", "108", "111", "115"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Cuántas Botas de Oro europeas había ganado Messi hasta finales de 2024?",
+                      "options": ["4", "5", "6", "7"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Quién fue el entrenador que hizo debutar a Messi en el primer equipo del FC Barcelona?",
+                      "options": ["Pep Guardiola", "Tito Vilanova", "Frank Rijkaard", "Louis van Gaal"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Cuál fue el marcador del partido en el que Messi anotó su primer hat-trick con el Barcelona (contra Real Madrid)?",
+                      "options": ["2-2", "3-3", "4-3", "3-2"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Cuántas Copas del Rey ganó Messi con el FC Barcelona?",
+                      "options": ["5", "6", "7", "8"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿En qué año Messi dejó el FC Barcelona?",
+                      "options": ["2020", "2021", "2022", "2019"],
+                      "correct": 1,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Cuántos Mundiales de la FIFA había disputado Messi hasta finales de 2024?",
+                      "options": ["3", "4", "5", "6"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Cuál es el récord de goles de Messi en una sola temporada de LaLiga?",
+                      "options": ["45 goles", "50 goles", "55 goles", "48 goles"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Contra qué selección Messi marcó su primer gol en un Mundial (Alemania 2006)?",
+                      "options": ["Países Bajos", "Costa de Marfil", "Serbia y Montenegro", "México"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿En qué año Messi ganó el premio Laureus al Mejor Deportista Masculino Internacional del Año (compartido)?",
+                      "options": ["2019", "2020", "2023", "2015"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Cuántos goles anotó Messi en la final del Mundial de Qatar 2022 contra Francia?",
+                      "options": ["1", "2", "3", "Ninguno, solo en penales"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Cuántas Supercopas de España ganó Messi con el FC Barcelona?",
+                      "options": ["6", "7", "8", "9"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Quién fue el primer entrenador de Messi en la Selección Argentina absoluta?",
+                      "options": ["Diego Maradona", "José Pekerman", "Alfio Basile", "Marcelo Bielsa"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿En qué año Messi ganó el premio Golden Boy?",
+                      "options": ["2004", "2005", "2006", "2007"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Cuántos goles aproximadamente marcó Messi para el PSG en todas las competiciones?",
+                      "options": ["22", "32", "42", "52"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Contra qué equipo Messi marcó su famoso gol 'maradoniano' en la Copa del Rey 2007?",
+                      "options": ["Real Madrid", "Sevilla", "Getafe", "Valencia"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Cuántas veces fue Messi el máximo goleador de la UEFA Champions League?",
+                      "options": ["4", "5", "6", "7"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Quién asistió a Messi en su primer gol oficial con el FC Barcelona?",
+                      "options": ["Xavi Hernández", "Andrés Iniesta", "Samuel Eto'o", "Ronaldinho"],
+                      "correct": 3,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿Cuántos goles había marcado Messi en 'El Clásico' contra el Real Madrid hasta su salida del Barcelona?",
+                      "options": ["20", "23", "26", "29"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Messi",
+                      "question": "¿En qué liga juega Messi desde que se unió al Inter Miami CF?",
+                      "options": ["USL Championship", "MLS (Major League Soccer)", "Liga MX (México)", "NWSL"],
+                      "correct": 1,
+                      "difficulty": "easy"
+                  }
+                ],
+                "boca": [
+                  {
+                    "category": "Boca",
+                    "question": "¿En qué fecha exacta se fundó el Club Atlético Boca Juniors?",
+                    "options": ["3 de abril de 1905", "3 de mayo de 1905", "3 de abril de 1904", "1 de abril de 1905"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Cuántas Copas Libertadores de América había ganado Boca Juniors hasta finales de 2024?",
+                    "options": ["5", "6", "7", "8"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Quién es el máximo goleador histórico de Boca Juniors?",
+                    "options": ["Francisco Varallo", "Martín Palermo", "Juan Román Riquelme", "Roberto Cherro"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Cuántos goles oficiales marcó Martín Palermo en Boca Juniors?",
+                    "options": ["236", "238", "234", "240"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Cuál es la capacidad habilitada aproximada y oficial de La Bombonera a finales de 2024?",
+                    "options": ["49.000", "54.000", "60.000", "57.000"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿En qué año se inauguró oficialmente el estadio La Bombonera?",
+                    "options": ["1938", "1940", "1941", "1939"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Cuál de estos colores usó Boca Juniors en sus primeras camisetas antes del azul y oro, inspirado por la Juventus?",
+                    "options": ["Verde y blanco", "Rosa", "Blanca con tiras negras finas", "Celeste"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Cuántas Copas Intercontinentales (formato anterior al Mundial de Clubes FIFA) ganó Boca Juniors?",
+                    "options": ["2", "3", "4", "1"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Contra qué equipo jugó Boca Juniors su primer partido oficial en la era profesional de AFA (1931)?",
+                    "options": ["River Plate", "Atlanta", "San Lorenzo", "Quilmes"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Ha descendido Boca Juniors alguna vez de la Primera División del fútbol argentino?",
+                    "options": ["Sí, en 1949", "Sí, en 1980", "Sí, dos veces", "Nunca descendió"],
+                    "correct": 3,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Quién es el jugador con más partidos disputados en la historia de Boca Juniors?",
+                    "options": ["Roberto Mouzo", "Hugo Gatti", "Silvio Marzolini", "Juan Román Riquelme"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿En qué año Juan Román Riquelme debutó oficialmente en la primera de Boca?",
+                    "options": ["1995", "1996", "1997", "1998"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Cuál es el apodo más tradicional y conocido de Boca Juniors, relacionado con sus fundadores?",
+                    "options": ["Los Xeneizes", "Los Bosteros", "El Ciclón", "La Academia"],
+                    "correct": 0,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Quién fue una figura clave y goleador en la final de la Copa Libertadores 2007 que ganó Boca?",
+                    "options": ["Martín Palermo", "Guillermo Barros Schelotto", "Juan Román Riquelme", "Rodrigo Palacio"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿En qué década Boca Juniors ganó más títulos de Primera División Argentina?",
+                    "options": ["1990-1999", "2000-2009", "1960-1969", "1940-1949"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Dónde tuvo Boca Juniors su primera cancha antes de establecerse definitivamente en La Boca?",
+                    "options": ["Dársena Sud", "Wilde", "Isla Demarchi", "Sarandí"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "El apodo 'Xeneize' hace referencia al origen de los fundadores del club, que eran principalmente inmigrantes de:",
+                    "options": ["Génova (Italia)", "Nápoles (Italia)", "Galicia (España)", "País Vasco (España)"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿En qué año Carlos Tevez debutó oficialmente en la primera de Boca Juniors?",
+                    "options": ["2001", "2002", "2000", "2003"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Cuántas Recopas Sudamericanas había ganado Boca Juniors hasta finales de 2024?",
+                    "options": ["3", "4", "2", "5"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Quién fue el director técnico de Boca Juniors durante la conquista de la Copa Libertadores 2000 y 2001?",
+                    "options": ["Carlos Bianchi", "Miguel Ángel Russo", "Alfio Basile", "Oscar Tabárez"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿En qué barrio de Buenos Aires se encuentra el estadio La Bombonera?",
+                    "options": ["La Boca", "Barracas", "San Telmo", "Puerto Madero"],
+                    "correct": 0,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Cuántos campeonatos de Primera División del fútbol argentino (ligas) había ganado Boca Juniors hasta finales de 2024?",
+                    "options": ["34", "35", "36", "33"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Quién fue el primer presidente de Boca Juniors?",
+                    "options": ["Esteban Baglietto", "Alfredo Scarpati", "Santiago Sana", "Juan Rafael Brichetto"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿En qué año Diego Armando Maradona tuvo su primer ciclo como jugador en Boca Juniors, ganando el Metropolitano?",
+                    "options": ["1980", "1981", "1982", "1979"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Contra qué equipo europeo Boca Juniors perdió la final de la Copa Intercontinental 2001?",
+                    "options": ["Real Madrid", "AC Milan", "Bayern Munich", "Manchester United"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿En qué año se construyó la primera estructura de madera del estadio de Boca en Brandsen y Del Crucero?",
+                    "options": ["1924", "1922", "1926", "1920"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Cuál fue el apodo del exitoso entrenador Carlos Bianchi en Boca Juniors?",
+                    "options": ["El Virrey", "El Bambino", "El Flaco", "El Loco"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿En qué año Boca Juniors ganó su primera Copa Libertadores?",
+                    "options": ["1977", "1978", "1976", "1979"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Cuántas Supercopas Sudamericanas (ya extinta) ganó Boca Juniors?",
+                    "options": ["1 (1989)", "2", "0", "3"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Algún jugador de Boca Juniors ha ganado el Balón de Oro mientras jugaba en el club?",
+                    "options": ["Sí, Maradona en 1981", "Sí, Riquelme en 2001", "Sí, Tevez en 2003", "Ninguno lo ganó jugando en Boca"],
+                    "correct": 3,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Cuál fue la importante reforma que se realizó en La Bombonera en 1996, incluyendo la construcción de palcos?",
+                    "options": ["Construcción de los palcos VIP y plateas preferenciales", "Instalación de la iluminación artificial", "Ampliación de la tercera bandeja popular", "Cambio total del césped a sintético"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Cuál es la mayor goleada histórica de Boca Juniors sobre River Plate en el profesionalismo?",
+                    "options": ["6-0 (Amateur)", "5-0", "5-1 (en 1959 y 1982)", "4-0"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Quién fue el entrenador durante el primer ciclo de Carlos Bianchi en Boca (1998-2001)?",
+                    "options": ["Carlos Bianchi", "Oscar Tabárez", "Jorge Griffa", "Silvio Marzolini"],
+                    "correct": 0,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Cuántas finales de Copa Libertadores había perdido Boca Juniors hasta finales de 2024?",
+                    "options": ["4", "5", "6", "3"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿Contra qué equipo Boca Juniors jugó y ganó su primera final de Copa Libertadores en 1977?",
+                    "options": ["Deportivo Cali", "Cruzeiro", "Olimpia", "Santos"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "De los siguientes, ¿qué presidente de Boca Juniors tuvo un mandato más largo y exitoso en términos de títulos internacionales en los 2000s?",
+                    "options": ["Mauricio Macri", "Pedro Pompilio", "Jorge Amor Ameal", "Daniel Angelici"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Boca",
+                    "question": "¿En qué año Boca Juniors participó por primera vez en la Copa Libertadores de América?",
+                    "options": ["1963", "1960", "1965", "1962"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿Cuál es el nombre completo oficial del estadio de Boca Juniors?",
+                      "options": ["Estadio Alberto J. Armando", "Estadio Camilo Cichero", "La Bombonera de Buenos Aires", "Estadio Brandsen y Del Crucero"],
+                      "correct": 0,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿Qué jugador de Boca fue famoso por celebrar sus goles como 'El Topo Gigio'?",
+                      "options": ["Martín Palermo", "Carlos Tevez", "Juan Román Riquelme", "Guillermo Barros Schelotto"],
+                      "correct": 2,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿Qué colores de barco inspiraron la camiseta azul y oro de Boca Juniors?",
+                      "options": ["Un barco griego", "Un barco sueco", "Un barco italiano", "Un barco inglés"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿Quién fue el autor del famoso 'Muletazo' en un Superclásico de 2000, jugando lesionado?",
+                      "options": ["Juan Román Riquelme", "Guillermo Barros Schelotto", "Martín Palermo", "Marcelo Delgado"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿En qué año Boca Juniors ganó la Copa Sudamericana por primera vez?",
+                      "options": ["2003", "2004", "2005", "2006"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿Quién es conocido como 'El Mellizo' y fue un ídolo de Boca Juniors?",
+                      "options": ["Gustavo Barros Schelotto", "Guillermo Barros Schelotto", "Ambos", "Ninguno"],
+                      "correct": 1,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿Cuál fue el resultado global de la final de la Copa Intercontinental 2000 que Boca le ganó al Real Madrid?",
+                      "options": ["1-0", "2-0", "2-1", "3-1"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿Qué apodo recibe la hinchada de Boca Juniors?",
+                      "options": ["La Guardia Imperial", "Los Borrachos del Tablón", "La Número 12", "La Gloriosa Butteler"],
+                      "correct": 2,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿Qué característica arquitectónica hace única a una de las tribunas de La Bombonera, dándole su forma peculiar?",
+                      "options": ["Es completamente circular", "Tiene una tribuna recta y muy vertical", "No tiene techo en una popular", "Está construida sobre el Riachuelo"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿Quién fue el arquero titular de Boca en la obtención de las Libertadores 2000 y 2001?",
+                      "options": ["Roberto Abbondanzieri", "Carlos Navarro Montoya", "Óscar Córdoba", "Agustín Orión"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿Quién es el actual presidente de Boca Juniors (a finales de 2024)?",
+                      "options": ["Jorge Amor Ameal", "Daniel Angelici", "Juan Román Riquelme", "Mauricio Macri"],
+                      "correct": 2,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿Qué famoso jugador uruguayo, conocido como 'El Manteca', fue ídolo en Boca en los 90?",
+                      "options": ["Rubén Sosa", "Sergio Martínez", "Enzo Francescoli", "Carlos Aguilera"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿Cuántas Copas Argentina había ganado Boca Juniors hasta finales de 2024?",
+                      "options": ["2", "3", "4", "5"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿Cuál de estos jugadores NO es considerado uno de los '5 fundadores principales' de Boca Juniors?",
+                      "options": ["Esteban Baglietto", "Alfredo Scarpati", "Santiago Sana", "Juan Román Riquelme"],
+                      "correct": 3,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Boca",
+                      "question": "¿En qué año se produjo el 'Superclásico de la pimienta' en la Copa Libertadores?",
+                      "options": ["2013", "2014", "2015", "2016"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  }
+                ],
+                "river": [
+                  {
+                    "category": "River",
+                    "question": "¿En qué fecha exacta se fundó el Club Atlético River Plate?",
+                    "options": ["25 de mayo de 1901", "25 de mayo de 1900", "26 de mayo de 1901", "25 de mayo de 1904"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Quién es el máximo goleador histórico de River Plate en el profesionalismo?",
+                    "options": ["Ángel Labruna", "Bernabé Ferreyra", "Enzo Francescoli", "Oscar Más"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Cuántos goles marcó Ángel Labruna en campeonatos de liga para River Plate?",
+                    "options": ["293", "295", "290", "301"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Cuál es la capacidad aproximada del Estadio Monumental tras sus últimas remodelaciones a finales de 2024?",
+                    "options": ["83.000", "84.500", "86.000", "81.000"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿En qué año River Plate ganó su primera Copa Libertadores de América?",
+                    "options": ["1985", "1986", "1996", "1976"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Cuántos títulos de Primera División Argentina (ligas) había ganado River Plate hasta finales de 2024?",
+                    "options": ["36", "37", "38", "35"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Contra qué equipo River Plate ganó la histórica final de la Copa Libertadores 2018 en Madrid?",
+                    "options": ["Boca Juniors", "Grêmio", "Palmeiras", "Flamengo"],
+                    "correct": 0,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿En qué año se inauguró oficialmente el Estadio Monumental?",
+                    "options": ["1937", "1938", "1939", "1936"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Cuál es el apodo más tradicional y conocido de River Plate, relacionado con una importante compra de jugadores en los años 30?",
+                    "options": ["Los Millonarios", "Las Gallinas", "La Máquina", "El Más Grande"],
+                    "correct": 0,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Cuántas Copas Libertadores de América había ganado River Plate hasta finales de 2024?",
+                    "options": ["4", "5", "3", "6"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿En qué barrio de Buenos Aires se encuentra principalmente el Estadio Monumental?",
+                    "options": ["Belgrano", "Núñez", "Saavedra", "Palermo"],
+                    "correct": 0,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Quién fue el primer presidente de River Plate?",
+                    "options": ["Leopoldo Bard", "Antonio Vespucio Liberti", "Enrique Salvarezza", "José Bacigaluppi"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿En qué año River Plate descendió a la Primera B Nacional?",
+                    "options": ["2010", "2011", "2009", "Nunca descendió"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Quién era el director técnico de River Plate cuando el equipo descendió?",
+                    "options": ["Ángel Cappa", "Juan José López", "Daniel Passarella", "Matías Almeyda"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿En qué año River Plate logró el ascenso y regresó a la Primera División?",
+                    "options": ["2011", "2012", "2013", "2010"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Cuántas Copas Argentina había ganado River Plate hasta finales de 2024?",
+                    "options": ["2", "3", "4", "1"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿En qué año Marcelo Gallardo asumió como director técnico de River Plate?",
+                    "options": ["2013", "2014", "2015", "2012"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Cuántos títulos oficiales ganó Marcelo Gallardo como director técnico de River Plate?",
+                    "options": ["12", "13", "14", "15"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Cómo se conoció a la famosa delantera de River Plate de la década de 1940?",
+                    "options": ["La Máquina", "El Ballet Azul", "Los Carasucias", "El Equipo de José"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Cuál es el nombre completo oficial del club?",
+                    "options": ["Club Atlético River Plate", "River Plate Football Club", "Asociación Atlética River Plate", "Real River Plate Club"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿En qué año River Plate ganó su única Copa Intercontinental?",
+                    "options": ["1985", "1986", "1996", "1997"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Cuántos Mundiales de Clubes de la FIFA ha ganado River Plate?",
+                    "options": ["0", "1", "2", "3"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Quién es el jugador con más partidos disputados en la historia de River Plate?",
+                    "options": ["Reinaldo Merlo", "Ángel Labruna", "Amadeo Carrizo", "Ubaldo Fillol"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿En qué década River Plate ganó más títulos de Primera División Argentina?",
+                    "options": ["1940-1949", "1950-1959", "1990-1999", "1970-1979"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "River",
+                    "question": "Considerando el historial profesional en torneos de AFA, ¿cuál es el número aproximado de Superclásicos ganados por River Plate sobre Boca Juniors hasta finales de 2024?",
+                    "options": ["Alrededor de 80", "Alrededor de 86", "Alrededor de 92", "Alrededor de 75"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿En qué año se disputó el primer Superclásico oficial entre River Plate y Boca Juniors?",
+                    "options": ["1913", "1908", "1915", "1928"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Cuál es una de las mayores goleadas de River Plate a Boca Juniors en la era profesional?",
+                    "options": ["5-1 (1941)", "6-0 (Amateur)", "4-1 (1942)", "7-0"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Contra qué equipo River Plate jugó la final de la Copa Libertadores 1986, ganando su primer título?",
+                    "options": ["América de Cali", "Peñarol", "Olimpia", "Cobreloa"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Quién marcó el primer gol para River Plate en la final de la Copa Libertadores 2015 contra Tigres UANL?",
+                    "options": ["Lucas Alario", "Rodrigo Mora", "Carlos Sánchez", "Ramiro Funes Mori"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿En qué país River Plate ganó su segunda Copa Libertadores en 1996, jugando la final de vuelta en casa?",
+                    "options": ["Argentina", "Colombia", "Chile", "Uruguay"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Cuántas Supercopas Sudamericanas (ya extinta) ganó River Plate?",
+                    "options": ["0", "1 (1997)", "2", "3"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿En qué año River Plate ganó su más reciente título de liga argentina (Liga Profesional) hasta finales de 2024?",
+                    "options": ["2021", "2022", "2023", "No ganó en esos años"],
+                    "correct": 2,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Quiénes fueron los arquitectos principales del Estadio Monumental?",
+                    "options": ["Aslan y Ezcurra", "Mario Roberto Álvarez y Macedonio Ruiz", "Antonio Vespucio Liberti", "Viktor Sulčič y Raúl Bes"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "River",
+                    "question": "¿Qué club se fusionó con 'La Rosales' para dar origen a River Plate?",
+                    "options": ["Santa Rosa", "Estudiantes de Buenos Aires", "Defensores de Belgrano", "Atlanta"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Cuál es el nombre completo del estadio de River Plate?",
+                      "options": ["Estadio Monumental Antonio Vespucio Liberti", "Estadio Monumental de Núñez", "Estadio Ángel Labruna", "Estadio Monumental José Fierro"],
+                      "correct": 0,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Qué ídolo de River Plate es conocido como 'El Príncipe'?",
+                      "options": ["Ariel Ortega", "Norberto Alonso", "Enzo Francescoli", "Marcelo Salas"],
+                      "correct": 2,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Cuántas Recopas Sudamericanas había ganado River Plate hasta finales de 2024?",
+                      "options": ["1", "2", "3", "4"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Cuál de estos jugadores NO formó parte de la famosa delantera 'La Máquina'?",
+                      "options": ["Juan Carlos Muñoz", "José Manuel Moreno", "Adolfo Pedernera", "Bernabé Ferreyra"],
+                      "correct": 3,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Contra qué equipo River Plate jugó la Promoción en 2011 que definió su descenso?",
+                      "options": ["Rosario Central", "Instituto de Córdoba", "Belgrano de Córdoba", "Chacarita Juniors"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Quién fue el presidente de River Plate durante el exitoso ciclo de Marcelo Gallardo?",
+                      "options": ["Daniel Passarella", "Rodolfo D'Onofrio", "José María Aguilar", "Jorge Brito"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Qué apodo despectivo suelen usar los hinchas rivales para referirse a River Plate?",
+                      "options": ["Xeneizes", "Gallinas", "Bosteros", "Cuervos"],
+                      "correct": 1,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿En qué año River Plate logró un 'Tricampeonato' de liga argentina en la década de 1990?",
+                      "options": ["1991-1992-1993", "1996-1997-1998 (Apertura '96, Clausura '97, Apertura '97)", "1994-1995-1996", "1998-1999-2000"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Qué histórico jugador de River Plate es conocido como 'El Beto'?",
+                      "options": ["Norberto Alonso", "Enzo Francescoli", "Ariel Ortega", "Ángel Labruna"],
+                      "correct": 0,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Quién fue el arquero titular de River Plate en la Copa Libertadores ganada en 2018?",
+                      "options": ["Marcelo Barovero", "Germán Lux", "Franco Armani", "Augusto Batalla"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Cuál fue la primera camiseta de River Plate antes de la banda roja?",
+                      "options": ["Totalmente blanca", "A rayas verticales rojas y blancas", "Azul con banda blanca", "Roja con detalles blancos"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Quién es el actual entrenador de River Plate (a finales de 2024)?",
+                      "options": ["Marcelo Gallardo", "Ramón Díaz", "Martín Demichelis", "Hernán Crespo"],
+                      "correct": 2,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Contra qué equipo River Plate ganó la final de la Copa Intercontinental 1986?",
+                      "options": ["Juventus FC", "Steaua Bucarest", "AC Milan", "FC Porto"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Cuál de estos jugadores NO es considerado uno de los grandes ídolos de la historia de River Plate?",
+                      "options": ["Enzo Francescoli", "Ángel Labruna", "Diego Maradona", "Norberto Alonso"],
+                      "correct": 2,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Cuál fue el último año en que River Plate ganó la Copa Sudamericana hasta 2024?",
+                      "options": ["2014", "2015", "2018", "Nunca la ganó"],
+                      "correct": 0,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "River",
+                      "question": "¿Qué jugador de River fue transferido al FC Barcelona y se convirtió en una estrella mundial?",
+                      "options": ["Javier Saviola", "Pablo Aimar", "Hernán Crespo", "Marcelo Salas"],
+                      "correct": 0,
+                      "difficulty": "medium"
+                  }
+                ],
+                "mundial": [
+                  {
+                    "category": "Mundial",
+                    "question": "¿Cuántos Mundiales de fútbol masculino organizados por la FIFA se habían disputado hasta el de Qatar 2022 inclusive?",
+                    "options": ["21", "22", "23", "20"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Qué país ha ganado más Copas del Mundo de fútbol masculino?",
+                    "options": ["Alemania", "Italia", "Brasil", "Argentina"],
+                    "correct": 2,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Quién es el máximo goleador en la historia de los Mundiales de fútbol masculino?",
+                    "options": ["Pelé", "Miroslav Klose", "Ronaldo Nazário", "Gerd Müller"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Cuántos goles marcó Miroslav Klose en Copas del Mundo?",
+                    "options": ["14", "15", "16", "17"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿En qué país se disputó la primera Copa del Mundo de fútbol en 1930?",
+                    "options": ["Italia", "Uruguay", "Brasil", "Francia"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Qué importante tecnología de arbitraje relacionada con el fuera de juego se implementó por primera vez en Qatar 2022?",
+                    "options": ["VAR (Video Assistant Referee)", "Goal-line technology", "Sistema de detección semiautomática del fuera de juego", "Comunicadores en banderines"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Cuál fue el marcador final (tras la prórroga, antes de penales) de la final del Mundial 2022 entre Argentina y Francia?",
+                    "options": ["Argentina 3 - 3 Francia", "Argentina 2 - 2 Francia", "Argentina 3 - 2 Francia", "Argentina 2 - 1 Francia"],
+                    "correct": 0,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Quién ganó la Bota de Oro al máximo goleador en el Mundial de Qatar 2022?",
+                    "options": ["Lionel Messi", "Kylian Mbappé", "Olivier Giroud", "Julián Álvarez"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Qué país fue la sede de la Copa del Mundo de fútbol 2018?",
+                    "options": ["Alemania", "Rusia", "Brasil", "Sudáfrica"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿En qué año se disputará la próxima Copa del Mundo de fútbol masculino (después de Qatar 2022)?",
+                    "options": ["2025", "2026", "2027", "2030"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Cuántos equipos participaron en la primera Copa del Mundo de 1930?",
+                    "options": ["13", "16", "12", "8"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Quién marcó el primer gol en la historia de los Mundiales de fútbol?",
+                    "options": ["Lucien Laurent (Francia)", "Héctor Castro (Uruguay)", "Guillermo Stábile (Argentina)", "Bert Patenaude (EEUU)"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Qué dos países fueron co-anfitriones del Mundial de fútbol 2002?",
+                    "options": ["Japón y China", "Corea del Sur y Japón", "China y Corea del Sur", "Tailandia y Japón"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Cuál es considerada la mayor goleada en un partido de la Copa del Mundo?",
+                    "options": ["Hungría 10-1 El Salvador (1982)", "Alemania 8-0 Arabia Saudita (2002)", "Suecia 8-0 Cuba (1938)", "Uruguay 8-0 Bolivia (1950)"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Quién es el jugador más joven en marcar un gol en una Copa del Mundo?",
+                    "options": ["Pelé (Brasil)", "Manuel Rosas (México)", "Michael Owen (Inglaterra)", "Lionel Messi (Argentina)"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Cuántos años tenía Pelé cuando ganó su primera Copa del Mundo en 1958?",
+                    "options": ["16", "17", "18", "19"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿En qué Copa del Mundo se utilizó por primera vez el sistema VAR (Video Assistant Referee)?",
+                    "options": ["Brasil 2014", "Rusia 2018", "Qatar 2022", "Sudáfrica 2010"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Qué selección nacional tiene el récord de más subcampeonatos en Mundiales masculinos?",
+                    "options": ["Argentina", "Alemania", "Países Bajos", "Italia"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿En qué Mundial Diego Maradona marcó el famoso gol conocido como 'La Mano de Dios'?",
+                    "options": ["España 1982", "México 1986", "Italia 1990", "Estados Unidos 1994"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Qué edición de la Copa del Mundo ostenta el récord de más goles anotados en total?",
+                    "options": ["Francia 1998 (171)", "Brasil 2014 (171)", "Qatar 2022 (172)", "Rusia 2018 (169)"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "De estos porteros, ¿quién había jugado más partidos en Copas del Mundo hasta finales de 2024?",
+                    "options": ["Gianluigi Buffon (Italia)", "Iker Casillas (España)", "Manuel Neuer (Alemania)", "Hugo Lloris (Francia)"],
+                    "correct": 3,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿En qué Mundial reciente Italia no logró clasificarse, causando gran sorpresa?",
+                    "options": ["Rusia 2018", "Sudáfrica 2010", "Brasil 2014", "Alemania 2006"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Cuál fue el primer Mundial de fútbol transmitido por televisión a varios países?",
+                    "options": ["Suiza 1954", "Suecia 1958", "Chile 1962", "Inglaterra 1966"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿En qué país se disputó la primera Copa del Mundo de fútbol en el continente africano?",
+                    "options": ["Sudáfrica (2010)", "Egipto (propuesto)", "Nigeria (propuesto)", "Marruecos (propuesto)"],
+                    "correct": 0,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Cuántos hat-tricks (tres goles por un jugador en un partido) se marcaron en el Mundial de Qatar 2022?",
+                    "options": ["1", "2", "3", "0"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Quién marcó el único hat-trick en la final de un Mundial (Qatar 2022)?",
+                    "options": ["Kylian Mbappé", "Lionel Messi", "Geoff Hurst", "Pelé"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Cuál Copa del Mundo tuvo el mayor promedio de asistencia de espectadores por partido?",
+                    "options": ["Estados Unidos 1994", "Brasil 2014", "Alemania 2006", "México 1970"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿En qué Copa del Mundo se introdujeron por primera vez las tarjetas amarilla y roja?",
+                    "options": ["Inglaterra 1966", "México 1970", "Alemania 1974", "Argentina 1978"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Cuántos países diferentes habían ganado la Copa del Mundo de fútbol masculino hasta finales de 2024?",
+                    "options": ["7", "8", "9", "6"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Qué tres países serán co-anfitriones de la Copa del Mundo 2026?",
+                    "options": ["EEUU, México, Costa Rica", "Canadá, EEUU, Bahamas", "México, Canadá, Cuba", "Estados Unidos, Canadá y México"],
+                    "correct": 3,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿En qué Copa del Mundo Croacia participó por primera vez como nación independiente, logrando el tercer puesto?",
+                    "options": ["Estados Unidos 1994", "Francia 1998", "Corea-Japón 2002", "Alemania 2006"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Qué edición de la Copa del Mundo tuvo el mayor número de penales sancionados?",
+                    "options": ["Rusia 2018", "Qatar 2022", "Brasil 2014", "Corea-Japón 2002"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Qué jugador es ampliamente reconocido por haber dado un gran número de asistencias clave en el Mundial de México 1986?",
+                    "options": ["Diego Maradona", "Pelé", "Jorge Valdano", "Michel Platini"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Ha faltado alguna vez Brasil a una Copa del Mundo de fútbol masculino?",
+                    "options": ["Sí, en 1938", "Nunca ha faltado", "Sí, en 1954", "Sí, en 1930"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Cuál fue el primer Mundial de fútbol masculino en contar con la participación de 32 equipos?",
+                    "options": ["Estados Unidos 1994", "Francia 1998", "Corea-Japón 2002", "Alemania 2006"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Qué jugador es famoso por haber marcado el 'Gol del Siglo' en un Mundial?",
+                    "options": ["Diego Maradona", "Pelé", "Lionel Messi", "Johan Cruyff"],
+                    "correct": 0,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿En qué final de Copa del Mundo Zinedine Zidane fue expulsado tras un cabezazo?",
+                    "options": ["Francia 1998", "Alemania 2006", "Corea-Japón 2002", "No fue expulsado en una final"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Cuántos goles en propia puerta (autogoles) se marcaron en el Mundial de Qatar 2022?",
+                    "options": ["1", "2", "3", "0"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Mundial",
+                    "question": "¿Qué selección anfitriona debutó en una Copa del Mundo en Qatar 2022?",
+                    "options": ["Qatar", "Canadá", "Arabia Saudita", "Ninguna, todas habían participado antes"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Quién fue el primer jugador en ganar tres Copas del Mundo?",
+                      "options": ["Mario Zagallo", "Franz Beckenbauer", "Pelé", "Cafú"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Cómo se llamó la mascota oficial del Mundial de Argentina 1978?",
+                      "options": ["Gauchito Mundialito", "Pique", "Naranjito", "Juanito"],
+                      "correct": 0,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Cuál fue el nombre del balón oficial del Mundial de México 1970, el primero con diseño de paneles blancos y negros?",
+                      "options": ["Telstar", "Tango", "Azteca", "Questra"],
+                      "correct": 0,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Qué jugador ostenta el récord de más partidos jugados en la historia de los Mundiales masculinos hasta finales de 2024?",
+                      "options": ["Paolo Maldini", "Lothar Matthäus", "Lionel Messi", "Miroslav Klose"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Qué selección africana fue la primera en llegar a cuartos de final de un Mundial (Italia 1990)?",
+                      "options": ["Nigeria", "Camerún", "Senegal", "Ghana"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Cómo se llamó el trofeo original de la Copa del Mundo, antes de ser reemplazado por el actual?",
+                      "options": ["Copa Stanley", "Trofeo Jules Rimet", "Copa de la Victoria", "Trofeo de la FIFA"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Qué país ganó el Mundial de 1966, jugando como local?",
+                      "options": ["Alemania Occidental", "Brasil", "Italia", "Inglaterra"],
+                      "correct": 3,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Quién fue el máximo goleador del Mundial de España 1982?",
+                      "options": ["Karl-Heinz Rummenigge", "Zbigniew Boniek", "Paolo Rossi", "Zico"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Cuál de estas selecciones NUNCA ha ganado una Copa del Mundo masculina hasta finales de 2024?",
+                      "options": ["Uruguay", "Países Bajos", "España", "Francia"],
+                      "correct": 1,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Qué selección asiática fue la primera en alcanzar las semifinales de un Mundial (Corea/Japón 2002)?",
+                      "options": ["Japón", "Arabia Saudita", "Corea del Sur", "Irán"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Cuál fue la mascota del Mundial de Estados Unidos 1994?",
+                      "options": ["Striker, el perro futbolista", "Footix, el gallo", "Ciao, una figura abstracta", "Pique, un chile jalapeño"],
+                      "correct": 0,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Quién es el jugador más viejo en haber marcado un gol en un Mundial?",
+                      "options": ["Roger Milla", "Stanley Matthews", "Dino Zoff", "Faryd Mondragón"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿En qué Mundial se permitió por primera vez la sustitución de jugadores?",
+                      "options": ["Suecia 1958", "Chile 1962", "Inglaterra 1966", "México 1970"],
+                      "correct": 3,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Qué país ha llegado a más finales de Copa del Mundo hasta finales de 2024?",
+                      "options": ["Brasil", "Alemania", "Italia", "Argentina"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Quién es el jugador con más asistencias registradas en la historia de los Mundiales?",
+                      "options": ["Lionel Messi", "Diego Maradona", "Pelé", "Johan Cruyff"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Cuál es la mayor goleada en una final de Copa del Mundo?",
+                      "options": ["Brasil 5-2 Suecia (1958)", "Uruguay 4-2 Argentina (1930)", "Francia 3-0 Brasil (1998)", "Alemania 4-2 Hungría (1954)"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Mundial",
+                      "question": "¿Qué jugador fue el primero en recibir una tarjeta roja en una final de Copa del Mundo?",
+                      "options": ["Pedro Monzón (Argentina, 1990)", "Marcel Desailly (Francia, 1998)", "Zinedine Zidane (Francia, 2006)", "John Heitinga (Países Bajos, 2010)"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  }
+                ],
+                "general": [
+                  {
+                    "category": "General",
+                    "question": "¿En qué año la Copa de Campeones de Europa fue renombrada oficialmente a UEFA Champions League?",
+                    "options": ["1992", "1993", "1991", "1994"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Qué club de fútbol tenía más títulos de UEFA Champions League (y Copa de Europa) hasta finales de 2024?",
+                    "options": ["FC Barcelona", "Real Madrid CF", "AC Milan", "Liverpool FC"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿En qué fecha se fundó la FIFA (Fédération Internationale de Football Association)?",
+                    "options": ["21 de mayo de 1904", "15 de junio de 1902", "28 de abril de 1905", "4 de julio de 1903"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿A qué país se le atribuye la codificación moderna del fútbol (association football)?",
+                    "options": ["Francia", "Inglaterra", "Brasil", "Escocia"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Cuántos jugadores componen un equipo de fútbol en el campo de juego durante un partido oficial?",
+                    "options": ["10", "11", "12", "9"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Cuánto dura reglamentariamente un partido de fútbol profesional, sin contar el tiempo añadido ni prórrogas?",
+                    "options": ["80 minutos", "90 minutos", "100 minutos", "85 minutos"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Cuántas sustituciones (cambios de jugadores) se permiten por equipo en la mayoría de las competiciones oficiales de fútbol (regla post-pandemia)?",
+                    "options": ["3", "4", "5", "6"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Cuáles son las dimensiones mínimas permitidas para un campo de fútbol en partidos internacionales de adultos (largo x ancho)?",
+                    "options": ["100m x 64m", "90m x 45m", "110m x 70m", "95m x 60m"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿En qué año se fundó la CONMEBOL (Confederación Sudamericana de Fútbol)?",
+                    "options": ["1914", "1916", "1918", "1920"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Cuál es considerado el club de fútbol más antiguo del mundo reconocido por la FIFA?",
+                    "options": ["Sheffield FC", "Notts County", "Cambridge University AFC", "Hallam FC"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Qué significa la sigla UEFA?",
+                    "options": ["United European Football Association", "Union of European Football Associations", "Universal European Football Alliance", "Union of Elite Football Assemblies"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿En qué país se disputó la primera Copa Mundial Femenina de la FIFA en 1991?",
+                    "options": ["Estados Unidos", "China", "Suecia", "Alemania"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Cuántas confederaciones continentales componen la FIFA?",
+                    "options": ["5", "6", "7", "4"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Cuál es la altura reglamentaria de una portería de fútbol (desde el suelo hasta el borde inferior del larguero)?",
+                    "options": ["2.34 metros", "2.44 metros", "2.50 metros", "2.40 metros"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Cuál es la velocidad aproximada del disparo de fútbol más potente registrado oficialmente (Ronny Heberson)?",
+                    "options": ["181 km/h", "198 km/h", "211 km/h", "225 km/h"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿En qué año se implementó la regla que prohíbe a los porteros tomar con las manos un pase deliberado de un compañero de equipo?",
+                    "options": ["1990", "1992", "1994", "1988"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "General",
+                    "question": "Entre las ligas europeas, ¿qué club escocés ostenta uno de los récords de más títulos de liga nacionales ganados a nivel mundial?",
+                    "options": ["Celtic FC", "Rangers FC", "Aberdeen FC", "Heart of Midlothian FC"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Cuál es el estadio de fútbol con mayor capacidad oficial del mundo a finales de 2024?",
+                    "options": ["Camp Nou (España)", "Wembley Stadium (Inglaterra)", "Rungrado Primero de Mayo (Corea del Norte)", "Michigan Stadium (EE.UU.)"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿En qué año se establecieron las primeras reglas formalizadas del fuera de juego (offside) por la Football Association inglesa?",
+                    "options": ["1863", "1870", "1888", "1857"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Cuántas federaciones nacionales de fútbol son miembros de la FIFA aproximadamente (a finales de 2024)?",
+                    "options": ["209", "211", "207", "215"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Qué país fue el anfitrión de la primera Copa América en 1916 (entonces Campeonato Sudamericano)?",
+                    "options": ["Argentina", "Uruguay", "Brasil", "Chile"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿En qué año se disputó la primera edición de la Copa Libertadores de América?",
+                    "options": ["1958", "1960", "1962", "1955"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Cuál es el traspaso de futbolista más caro de la historia hasta finales de 2024?",
+                    "options": ["Neymar Jr. (Barcelona a PSG)", "Kylian Mbappé (Mónaco a PSG)", "Philippe Coutinho (Liverpool a Barcelona)", "João Félix (Benfica a Atlético Madrid)"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿En qué liga nacional juega el Manchester City FC?",
+                    "options": ["EFL Championship", "Premier League", "Serie A", "Ligue 1"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "General",
+                    "question": "De los siguientes, ¿cuál es uno de los clubes de fútbol profesional más antiguos de Argentina con existencia continua?",
+                    "options": ["Gimnasia y Esgrima La Plata (1887)", "Alumni (histórico)", "Quilmes AC (1887)", "Rosario Central (1889)"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Qué significa la sigla VAR en el contexto del fútbol?",
+                    "options": ["Video Assistant Referee", "Video Analysis Review", "Verified Action Replay", "Virtual Assessment Rules"],
+                    "correct": 0,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿En qué año se fundó el FC Barcelona?",
+                    "options": ["1899", "1902", "1897", "1905"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "General",
+                    "question": "¿Quién ganó el Balón de Oro en el año 2008?",
+                    "options": ["Lionel Messi", "Kaká", "Cristiano Ronaldo", "Fernando Torres"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "General",
+                    "question": "De estos jugadores, ¿quién había ganado más veces la UEFA Champions League/Copa de Europa como jugador hasta finales de 2024?",
+                    "options": ["Cristiano Ronaldo", "Lionel Messi", "Paolo Maldini", "Francisco Gento"],
+                    "correct": 3,
+                    "difficulty": "medium"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Qué selección ganó la Eurocopa 2024?",
+                      "options": ["Inglaterra", "Italia", "España", "Francia"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Cuál es el torneo de clubes más prestigioso de Sudamérica?",
+                      "options": ["Copa Sudamericana", "Recopa Sudamericana", "Copa Libertadores", "Suruga Bank Championship"],
+                      "correct": 2,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Qué jugador es conocido como 'CR7'?",
+                      "options": ["Cristiano Ronaldo", "Ronaldo Nazário", "Ronaldinho", "Lionel Messi"],
+                      "correct": 0,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Cuántos puntos se otorgan por una victoria en la mayoría de las ligas de fútbol?",
+                      "options": ["1", "2", "3", "4"],
+                      "correct": 2,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿En qué país se encuentra la sede de la FIFA?",
+                      "options": ["Francia (París)", "Suiza (Zúrich)", "Bélgica (Bruselas)", "Alemania (Múnich)"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Qué organismo rige el fútbol en Asia?",
+                      "options": ["CAF", "AFC", "OFC", "CONCACAF"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Cuál es la circunferencia reglamentaria de un balón de fútbol talla 5?",
+                      "options": ["60-62 cm", "64-66 cm", "68-70 cm", "72-74 cm"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Quién fue la primera ganadora del Balón de Oro Femenino en 2018?",
+                      "options": ["Megan Rapinoe", "Ada Hegerberg", "Alexia Putellas", "Sam Kerr"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Cómo se llama la principal competición de clubes de fútbol en Norteamérica, Centroamérica y el Caribe?",
+                      "options": ["MLS Cup", "Liga de Campeones de la CONCACAF", "Copa Oro", "Leagues Cup"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿En qué año se jugó el primer partido internacional oficial de fútbol?",
+                      "options": ["1863", "1872", "1888", "1901"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Qué es el IFAB?",
+                      "options": ["Federación Internacional de Árbitros de Fútbol", "Instituto Financiero del Fútbol Asociado", "International Football Association Board (encargado de las reglas del juego)", "Asociación de Fútbol Amateur Internacional"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Cuál de estos clubes NO es de la ciudad de Milán?",
+                      "options": ["AC Milan", "Inter de Milán", "Juventus FC", "Atalanta BC (cercano, pero no Milán)"],
+                      "correct": 2,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Cuántos tiempos tiene un partido de fútbol estándar?",
+                      "options": ["Uno", "Dos", "Tres", "Cuatro"],
+                      "correct": 1,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Qué significa la sigla CAF en el fútbol?",
+                      "options": ["Confederación Asiática de Fútbol", "Confederación Africana de Fútbol", "Comité Arbitral de Fútbol", "Campeonato Anual de Federaciones"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Qué famosa regla del fútbol fue significativamente alterada por el 'caso Bosman' en 1995?",
+                      "options": ["Regla del fuera de juego", "Reglas de traspaso de jugadores y cuotas de extranjeros", "Uso de tarjetas amarillas y rojas", "Duración de los partidos"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Cuál es el peso reglamentario de un balón de fútbol talla 5 al inicio del partido?",
+                      "options": ["350-390 gramos", "400-440 gramos", "410-450 gramos", "460-500 gramos"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿En qué ciudad se encuentra el famoso estadio Maracaná?",
+                      "options": ["São Paulo", "Buenos Aires", "Río de Janeiro", "Montevideo"],
+                      "correct": 2,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Qué es un 'gol olímpico'?",
+                      "options": ["Un gol anotado en los Juegos Olímpicos", "Un gol anotado directamente desde un saque de esquina", "Un gol anotado desde medio campo", "Un gol de chilena"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Cuál de estos NO es un tipo de sanción disciplinaria con tarjeta en el fútbol?",
+                      "options": ["Tarjeta amarilla", "Tarjeta roja", "Tarjeta azul", "Ninguna de las anteriores es incorrecta"],
+                      "correct": 2,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿Qué significa OFC en el mundo del fútbol?",
+                      "options": ["Organización de Fútbol del Caribe", "Oficina Federal de Campeonatos", "Confederación de Fútbol de Oceanía", "Organización de Fútbol Centroamericano"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "General",
+                      "question": "¿En qué año se celebró la primera Copa Africana de Naciones?",
+                      "options": ["1957", "1960", "1963", "1954"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  }
+                ],
+                "champions": [
+                  {
+                    "category": "Champions",
+                    "question": "¿Qué equipo había ganado más veces la UEFA Champions League (incluyendo la Copa de Europa) hasta finales de 2024?",
+                    "options": ["AC Milan", "Real Madrid", "Liverpool FC", "FC Barcelona"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿En qué temporada la Copa de Europa fue renombrada oficialmente a UEFA Champions League?",
+                    "options": ["1991-92", "1992-93", "1993-94", "1990-91"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿Cuántas UEFA Champions League (incluyendo Copa de Europa) había ganado el Real Madrid hasta finales de 2024?",
+                    "options": ["13", "14", "15", "16"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿Quién es el máximo goleador histórico de la UEFA Champions League hasta finales de 2024?",
+                    "options": ["Lionel Messi", "Cristiano Ronaldo", "Robert Lewandowski", "Karim Benzema"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿Cuántos goles aproximadamente había marcado Cristiano Ronaldo en la UEFA Champions League hasta el final de su participación en el torneo?",
+                    "options": ["140", "135", "145", "130"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿Qué equipo ganó la primera edición bajo el nombre de UEFA Champions League en la temporada 1992-93?",
+                    "options": ["AC Milan", "FC Barcelona", "Olympique de Marsella", "Manchester United"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿Cuál es una de las remontadas más famosas en la historia de la Champions League, conocida como 'La Remontada' del Barcelona al PSG?",
+                    "options": ["Barcelona 6-1 PSG (2017)", "Liverpool 4-0 Barcelona (2019)", "AS Roma 3-0 Barcelona (2018)", "Deportivo 4-0 AC Milan (2004)"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿En qué ciudad se jugó la famosa final de la Champions League de 2005, conocida como 'El Milagro de Estambul'?",
+                    "options": ["Estambul", "Atenas", "Moscú", "Roma"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Qué equipo ganó la UEFA Champions League en la temporada 2022-2023?",
+                      "options": ["Real Madrid", "Manchester City", "Inter de Milán", "Bayern de Múnich"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿Cuántas veces había ganado el AC Milan la Champions League (incluyendo Copa de Europa) hasta finales de 2024?",
+                    "options": ["6", "7", "5", "8"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Qué país cuenta con más equipos diferentes que han ganado la Champions League/Copa de Europa hasta finales de 2024?",
+                      "options": ["España", "Inglaterra", "Italia", "Alemania"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿En qué temporada el Leicester City FC llegó sorprendentemente a los cuartos de final de la Champions League?",
+                    "options": ["2015-16", "2016-17", "2017-18", "2014-15"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿Qué equipo inglés protagonizó 'El Milagro de Estambul' ganando la Champions en 2005?",
+                    "options": ["Manchester United", "Chelsea FC", "Liverpool FC", "Arsenal FC"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿Cuál es el récord de goles marcados por un jugador en una sola edición de la Champions League?",
+                    "options": ["15 (Lionel Messi)", "17 (Cristiano Ronaldo)", "16 (Robert Lewandowski)", "14 (Ruud van Nistelrooy)"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Qué entrenador había ganado más títulos de Champions League hasta finales de 2024?",
+                      "options": ["Carlo Ancelotti (5)", "Zinedine Zidane (3)", "Pep Guardiola (3)", "Bob Paisley (3)"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿En qué año el Ajax de Ámsterdam ganó por última vez la Champions League?",
+                    "options": ["1994", "1995", "1996", "1993"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Cuántos equipos ingleses diferentes habían ganado la Champions League/Copa de Europa hasta finales de 2024?",
+                      "options": ["4", "5", "6", "3"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿Cuántas finales de Champions League perdió el Bayern Múnich en la década de 2010 (2010-2019)?",
+                    "options": ["1", "2", "3", "0"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿Qué club fue el primero en ganar la Copa de Europa en tres ocasiones consecutivas en la década de 1950?",
+                    "options": ["Real Madrid CF", "AC Milan", "SL Benfica", "Ajax"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "Considerando las finales modernas, ¿cuál de estas finales de Champions League tuvo un total de 6 goles (sin contar tandas de penales)?",
+                    "options": ["Real Madrid 4-1 Atlético (2014, tras prórroga)", "Liverpool 3-3 AC Milan (2005)", "Barcelona 3-1 Juventus (2015)", "Bayern 2-1 Dortmund (2013)"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "De estos países, ¿cuál nunca ha tenido un club campeón de la Champions League/Copa de Europa hasta finales de 2024?",
+                    "options": ["Francia", "Escocia", "Rumanía", "Turquía"],
+                    "correct": 3,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿Cuántas Champions League había ganado Pep Guardiola como entrenador hasta finales de 2024?",
+                    "options": ["2", "3", "4", "1"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿Qué jugador marcó el gol más rápido en una final de la UEFA Champions League?",
+                    "options": ["Paolo Maldini", "Gaizka Mendieta", "Mohamed Salah", "Lars Ricken"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿En qué minuto Paolo Maldini marcó su famoso gol tempranero en la final de la Champions League 2005?",
+                      "options": ["Alrededor de los 50 segundos", "Al minuto y 10 segundos", "A los 2 minutos", "A los 45 segundos"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  },
+                  {
+                    "category": "Champions",
+                    "question": "¿Qué equipo perdió dos finales de Champions League contra el Real Madrid en la década de 2010 (2014 y 2016)?",
+                    "options": ["Atlético de Madrid", "Juventus FC", "Liverpool FC", "Borussia Dortmund"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Quién fue el primer entrenador en ganar la Copa de Europa/Champions League con dos clubes diferentes?",
+                      "options": ["Ernst Happel", "Ottmar Hitzfeld", "José Mourinho", "Carlo Ancelotti"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Qué jugador tiene el récord de más apariciones en la UEFA Champions League hasta finales de 2024?",
+                      "options": ["Iker Casillas", "Lionel Messi", "Cristiano Ronaldo", "Xavi Hernández"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Cuál fue el primer equipo en ganar la Copa de Europa (actual Champions League) en 1956?",
+                      "options": ["AC Milan", "FC Barcelona", "Real Madrid CF", "Manchester United"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿En qué ciudad se jugó la final de la Champions League 2024?",
+                      "options": ["París", "Múnich", "Londres", "Estambul"],
+                      "correct": 2,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Qué equipo ganó la Champions League 2024?",
+                      "options": ["Borussia Dortmund", "Bayern de Múnich", "Paris Saint-Germain", "Real Madrid"],
+                      "correct": 3,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Qué ciudad ha albergado más finales de la Champions League/Copa de Europa hasta 2024?",
+                      "options": ["Londres", "París", "Madrid", "Roma"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Cuál es el único equipo que ha ganado la Champions League con una plantilla compuesta exclusivamente por jugadores de su propio país?",
+                      "options": ["Ajax (1995)", "Steaua Bucarest (1986)", "Celtic (1967)", "Estrella Roja (1991)"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Quién es el jugador más joven en haber marcado un gol en la historia de la Champions League?",
+                      "options": ["Ansu Fati", "Bojan Krkić", "Cesc Fàbregas", "Peter Ofori-Quaye"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Cuál de estos equipos nunca ha ganado la Champions League/Copa de Europa?",
+                      "options": ["Borussia Dortmund", "Olympique de Marsella", "Atlético de Madrid", "Feyenoord"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Quién marcó el gol de la victoria para el Manchester United en la final de 1999 contra el Bayern Múnich en el tiempo de descuento?",
+                      "options": ["Teddy Sheringham", "Dwight Yorke", "Ole Gunnar Solskjær", "Andy Cole"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Qué equipo tiene el récord de más finales de Champions League/Copa de Europa perdidas?",
+                      "options": ["Bayern Múnich", "Juventus FC", "SL Benfica", "Atlético de Madrid"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿En qué año se disputó la primera final de Champions League entre dos equipos del mismo país?",
+                      "options": ["1998 (Real Madrid vs Juventus)", "2000 (Real Madrid vs Valencia)", "2003 (AC Milan vs Juventus)", "2008 (Manchester Utd vs Chelsea)"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Cuál es el jugador con más goles en finales de Champions League (formato moderno)?",
+                      "options": ["Lionel Messi", "Cristiano Ronaldo", "Gareth Bale", "Didier Drogba"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Qué jugador es el único en haber ganado la Champions League con tres clubes diferentes?",
+                      "options": ["Cristiano Ronaldo", "Samuel Eto'o", "Clarence Seedorf", "Xabi Alonso"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Cuál es el equipo que ganó la Champions League de forma invicta más recientemente (hasta 2024)?",
+                      "options": ["Bayern Múnich (2020)", "Real Madrid (2022)", "Manchester City (2023)", "FC Barcelona (2015)"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Quién es el portero con más partidos sin encajar goles (clean sheets) en la historia de la Champions League?",
+                      "options": ["Manuel Neuer", "Gianluigi Buffon", "Petr Čech", "Iker Casillas"],
+                      "correct": 3,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Qué entrenador ha ganado la Champions League tanto como jugador como entrenador con el mismo club?",
+                      "options": ["Pep Guardiola (Barcelona)", "Zinedine Zidane (Real Madrid)", "Carlo Ancelotti (AC Milan)", "Todos los anteriores"],
+                      "correct": 3,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Cuál es el resultado más abultado en un partido de eliminación directa de la Champions League (un solo partido)?",
+                      "options": ["Barcelona 2-8 Bayern Múnich", "Liverpool 7-0 Spartak Moscú", "Real Madrid 8-0 Malmö FF", "AS Roma 1-7 Bayern Múnich"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Champions",
+                      "question": "¿Cuál fue el primer club no europeo en ser invitado a jugar la Copa de Europa (antecesora de la Champions League)?",
+                      "options": ["Peñarol (Uruguay)", "Santos (Brasil)", "No hubo invitados no europeos", "Boca Juniors (Argentina)"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  }
+                ],
+                "argentina": [
+                  {
+                    "category": "Argentina",
+                    "question": "¿Cuántas Copas del Mundo de la FIFA había ganado la Selección Argentina de fútbol masculino hasta finales de 2024?",
+                    "options": ["2", "3", "4", "1"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿En qué años Argentina ganó la Copa del Mundo?",
+                    "options": ["1978, 1986, 2022", "1978, 1990, 2014", "1986, 1994, 2022", "1974, 1982, 2018"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿Cuántas Copas América había ganado la Selección Argentina hasta finales de 2024, incluyendo la edición de 2024?",
+                    "options": ["14", "15", "16", "17"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿Quién es el máximo goleador histórico de la Selección Argentina de fútbol masculino hasta finales de 2024?",
+                    "options": ["Diego Maradona", "Gabriel Batistuta", "Lionel Messi", "Hernán Crespo"],
+                    "correct": 2,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿Cuántos goles aproximadamente había marcado Lionel Messi con la Selección Argentina mayor hasta finales de 2024?",
+                    "options": ["106", "108", "111", "115"],
+                    "correct": 2,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿En qué estadio Argentina jugó y ganó la final del Mundial 1978?",
+                    "options": ["Estadio Monumental (River Plate)", "La Bombonera (Boca Juniors)", "Estadio José Amalfitani (Vélez)", "Estadio Gigante de Arroyito (Rosario Central)"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿Contra qué selección Argentina perdió la final del Mundial de Brasil 2014?",
+                    "options": ["Brasil", "Alemania", "Países Bajos", "España"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿Quién fue el director técnico de la Selección Argentina que ganó el Mundial de Qatar 2022?",
+                    "options": ["Jorge Sampaoli", "Lionel Scaloni", "Gerardo Martino", "Alejandro Sabella"],
+                    "correct": 1,
+                    "difficulty": "easy"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿En qué año Argentina ganó la Copa América rompiendo una sequía de 28 años sin títulos mayores (antes de la de 2024)?",
+                    "options": ["2019", "2021", "2016", "2015"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿Cuántos partidos invicta estuvo la Selección Argentina bajo la dirección de Lionel Scaloni antes de perder con Arabia Saudita en Qatar 2022?",
+                    "options": ["35", "36", "37", "34"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Quién fue el capitán de la Selección Argentina en la conquista del Mundial 2022?",
+                      "options": ["Ángel Di María", "Lionel Messi", "Emiliano Martínez", "Nicolás Otamendi"],
+                      "correct": 1,
+                      "difficulty": "easy"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿En qué Copa del Mundo Argentina llegó a la final por primera vez en su historia?",
+                    "options": ["Uruguay 1930", "Italia 1934", "Brasil 1950", "Suecia 1958"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿Cuántas finales de Copa del Mundo había perdido la Selección Argentina hasta finales de 2024?",
+                    "options": ["2", "3", "4", "1"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿Quién fue el primer director técnico en llevar a Argentina a ganar una Copa del Mundo (1978)?",
+                    "options": ["César Luis Menotti", "Carlos Bilardo", "Alfio Basile", "Juan Carlos Lorenzo"],
+                    "correct": 0,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿En qué año se fundó la Asociación del Fútbol Argentino (AFA), o su precursora directa con nombre similar?",
+                    "options": ["1891", "1893", "1901", "1888"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿Contra qué selección se considera que Argentina jugó su primer partido internacional oficial?",
+                    "options": ["Brasil", "Uruguay", "Chile", "Paraguay"],
+                    "correct": 1,
+                    "difficulty": "hard"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿Quién es el jugador con más partidos disputados en la historia de la Selección Argentina hasta finales de 2024?",
+                    "options": ["Diego Maradona", "Javier Zanetti", "Lionel Messi", "Javier Mascherano"],
+                    "correct": 2,
+                    "difficulty": "medium"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿En qué Mundial Argentina NO logró clasificarse, siendo una de sus ausencias más notorias?",
+                      "options": ["México 1970", "España 1982", "Suecia 1958", "Chile 1962"],
+                      "correct": 0,
+                      "difficulty": "medium"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿Cuántas medallas de oro olímpicas había ganado la Selección Argentina de fútbol masculino hasta finales de 2024?",
+                    "options": ["1", "2", "3", "Ninguna"],
+                    "correct": 1,
+                    "difficulty": "medium"
+                  },
+                  {
+                    "category": "Argentina",
+                    "question": "¿En qué años la Selección Argentina ganó la medalla de oro en fútbol masculino en los Juegos Olímpicos?",
+                    "options": ["Atenas 2004 y Pekín 2008", "Sídney 2000 y Atenas 2004", "Pekín 2008 y Londres 2012", "Atlanta 1996 y Atenas 2004"],
+                    "correct": 0,
+                    "difficulty": "hard"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Qué apodo tenía Diego Armando Maradona?",
+                      "options": ["El Pibe de Oro", "El Matador", "El Príncipe", "El Burrito"],
+                      "correct": 0,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Quién marcó el gol de la victoria para Argentina en la final de la Copa América 2021 contra Brasil?",
+                      "options": ["Lionel Messi", "Lautaro Martínez", "Ángel Di María", "Rodrigo De Paul"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Cuál es el color principal de la camiseta titular de la Selección Argentina?",
+                      "options": ["Azul oscuro", "Blanco", "Celeste y blanco a rayas verticales", "Amarillo"],
+                      "correct": 2,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Quién fue el entrenador de Argentina en el Mundial de México 1986?",
+                      "options": ["César Luis Menotti", "Carlos Salvador Bilardo", "Alfio Basile", "Marcelo Bielsa"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Qué importante torneo internacional de selecciones (CONMEBOL-UEFA) ganó Argentina en 2022, venciendo a Italia?",
+                      "options": ["Copa Confederaciones", "Finalissima", "Copa Artemio Franchi", "No ganó otro torneo mayor de ese tipo"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Quién fue el arquero titular de Argentina en la conquista del Mundial de Qatar 2022?",
+                      "options": ["Franco Armani", "Gerónimo Rulli", "Juan Musso", "Emiliano Martínez"],
+                      "correct": 3,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Cuál es el máximo goleador argentino en la historia de los Mundiales hasta finales de 2024?",
+                      "options": ["Diego Maradona", "Gabriel Batistuta", "Lionel Messi", "Mario Kempes"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿En qué Mundial Mario Kempes fue la figura y goleador, llevando a Argentina al título?",
+                      "options": ["México 1970", "Alemania 1974", "Argentina 1978", "España 1982"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Cuál fue el primer Mundial que jugó Diego Maradona?",
+                      "options": ["Argentina 1978", "España 1982", "México 1986", "Italia 1990"],
+                      "correct": 1,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Qué jugador argentino fue conocido como 'El Matador' y fue Bota de Oro en el Mundial 1978?",
+                      "options": ["Leopoldo Luque", "Daniel Bertoni", "Mario Kempes", "René Houseman"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Cuántas veces fue Argentina subcampeona de la Copa América hasta finales de 2024?",
+                      "options": ["10", "12", "14", "16"],
+                      "correct": 2,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Quién anotó el gol decisivo en la final de la Copa América 2024 para Argentina?",
+                      "options": ["Lionel Messi", "Julián Álvarez", "Ángel Di María", "Lautaro Martínez"],
+                      "correct": 3,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Contra qué equipo Argentina ganó la final de la Copa América 2024?",
+                      "options": ["Brasil", "Uruguay", "Colombia", "Chile"],
+                      "correct": 2,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Quién fue el máximo goleador de Argentina en el Mundial de 1986?",
+                      "options": ["Diego Maradona", "Jorge Valdano", "Jorge Burruchaga", "Claudio Caniggia"],
+                      "correct": 0,
+                      "difficulty": "medium"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Cuál es la mayor goleada recibida por la Selección Argentina en un Mundial?",
+                      "options": ["1-6 vs Checoslovaquia (1958)", "0-5 vs Colombia (Eliminatorias 1993)", "0-4 vs Alemania (2010)", "1-5 vs Países Bajos (1974)"],
+                      "correct": 0,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Qué arquero argentino es famoso por atajar penales decisivos en el Mundial 2014 y 2022?",
+                      "options": ["Ubaldo Fillol", "Nery Pumpido", "Sergio Goycochea", "Emiliano Martínez"],
+                      "correct": 3,
+                      "difficulty": "easy"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿En qué año Argentina ganó el Campeonato Sudamericano (actual Copa América) por primera vez?",
+                      "options": ["1916", "1921", "1925", "1929"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Quién es el director técnico con más partidos dirigidos en la historia de la Selección Argentina hasta finales de 2024?",
+                      "options": ["César Luis Menotti", "Carlos Bilardo", "Marcelo Bielsa", "Guillermo Stábile"],
+                      "correct": 3,
+                      "difficulty": "hard"
+                  },
+                  {
+                      "category": "Argentina",
+                      "question": "¿Qué número de camiseta usó Mario Kempes en el Mundial 1978?",
+                      "options": ["9", "10", "11", "7"],
+                      "correct": 1,
+                      "difficulty": "hard"
+                  }
+                ]
+              };
     }
+
     setupEventListeners() {
         // Verificar elementos principales antes de agregar event listeners
         if (this.startGameBtn) {
@@ -1933,12 +2813,18 @@ class CrackRapido {
     selectQuestions() {
         if (this.gameMode === 'category' && this.questionBank[this.selectedCategory]) {
             this.questions = [...this.questionBank[this.selectedCategory]];
+            // En modo categoría, el total de preguntas es el número disponible en esa categoría
+            this.totalQuestions = Math.min(this.questions.length, 20); // Máximo 20 preguntas por categoría
         } else {
             // Modo clásico o supervivencia: mezcla de todas las categorías
             this.questions = [];
             Object.values(this.questionBank).forEach(categoryQuestions => {
                 this.questions = this.questions.concat(categoryQuestions);
             });
+            // En modo clásico: 20 preguntas
+            if (this.gameMode === 'classic') {
+                this.totalQuestions = 20;
+            }
         }
         // Shuffle questions
         for (let i = this.questions.length - 1; i > 0; i--) {
@@ -1962,14 +2848,18 @@ class CrackRapido {
         if (this.gameMode === 'survival') {
             this.survivalLives = 3;
             this.totalQuestions = Infinity;
+        } else if (this.gameMode === 'category') {
+            // En modo categoría, el total se determina cuando se seleccionan las preguntas
+            this.totalQuestions = 20; // Valor por defecto, se ajustará en selectQuestions
         } else {
+            // Modo clásico: 20 preguntas
             this.totalQuestions = 20;
         }
         // Reset power-ups
         this.powerUps = {
-            timeExtra: 3,
-            removeOption: 3,
-            scoreMultiplier: 2
+            timeExtra: 2, // Consistente con la configuración inicial
+            removeOption: 2, // Consistente con la configuración inicial  
+            scoreMultiplier: 1 // Consistente con la configuración inicial
         };
         if (this.timer) {
             clearInterval(this.timer);
@@ -2049,16 +2939,27 @@ class CrackRapido {
             this.selectQuestions();
             this.currentQuestion = 0;
         }
-        if (this.gameMode === 'classic' && this.currentQuestion >= this.totalQuestions) {
+        
+        // Verificar si el juego debe terminar en cualquier modo (classic o category)
+        if ((this.gameMode === 'classic' || this.gameMode === 'category') && this.currentQuestion >= this.totalQuestions) {
             this.endGame();
             return;
         }
+        
         // Verificar que tenemos preguntas disponibles
         if (!this.questions || this.questions.length === 0) {
             console.error('No questions available');
             this.endGame();
             return;
         }
+        
+        // En modo categoría, también verificar si nos hemos quedado sin preguntas de esa categoría
+        if (this.gameMode === 'category' && this.currentQuestion >= this.questions.length) {
+            console.log(`Category mode: completed ${this.currentQuestion} questions out of ${this.questions.length} available`);
+            this.endGame();
+            return;
+        }
+        
         if (this.currentQuestion >= this.questions.length) {
             console.error('Question index out of bounds');
             this.endGame();
@@ -2388,9 +3289,11 @@ class CrackRapido {
                 'boca': 'Boca Juniors',
                 'river': 'River Plate',
                 'mundial': 'Mundiales',
+                'champions': 'Champions League',
+                'argentina': 'Argentina',
                 'general': 'General'
             };
-            message = `¡Categoría ${categoryNames[this.selectedCategory]}! ${results.correctAnswers}/20 correctas`;
+            message = `¡Categoría ${categoryNames[this.selectedCategory]}! ${results.correctAnswers}/${results.totalQuestions} correctas`;
         } else {
             const percentage = (results.correctAnswers / results.totalQuestions) * 100;
             if (percentage >= 90) message = '¡Eres un crack total!';
@@ -2467,25 +3370,36 @@ class CrackRapido {
     async saveToFirebase(results) {
         try {
             if (typeof saveCrackRapidoResult === 'function') {
-                await saveCrackRapidoResult({
-                score: results.score,
-                correctAnswers: results.correctAnswers,
+                const gameData = {
+                    result: results.completed ? 'completed' : 'incomplete',
+                    score: results.score,
+                    correctAnswers: results.correctAnswers,
                     totalQuestions: results.totalQuestions,
-                    totalTime: results.totalTime,
-                averageTime: results.averageTime,
                     maxStreak: results.maxStreak,
-                    gameMode: results.gameMode,
-                    category: results.category,
-                    timestamp: new Date().toISOString(),
-                    userAgent: navigator.userAgent,
-                    language: navigator.language
-                });
-                console.log('Datos guardados exitosamente');
+                    averageTime: results.averageTime,
+                    totalTime: results.totalTime,
+                    accuracy: results.accuracy,
+                    gameMode: this.currentMode,
+                    category: this.selectedCategory || 'general',
+                    difficulty: this.currentDifficulty,
+                    powerUpsUsed: {
+                        timeExtra: this.powerUps.timeExtra.maxUses - this.powerUps.timeExtra.uses,
+                        removeOption: this.powerUps.removeOption.maxUses - this.powerUps.removeOption.uses,
+                        scoreMultiplier: this.powerUps.scoreMultiplier.maxUses - this.powerUps.scoreMultiplier.uses
+                    },
+                    responseTimes: results.responseTimes || [],
+                    streaks: results.streaks || [],
+                    completed: results.completed,
+                    timestamp: new Date().toISOString()
+                };
+
+                await saveCrackRapidoResult(gameData);
+                console.log('Crack Rápido data saved to Firebase successfully');
             } else {
-                console.warn('Firebase save function not available');
+                console.log('saveCrackRapidoResult function not available');
             }
         } catch (error) {
-            console.error('Error saving to Firebase:', error);
+            console.error('Error saving Crack Rápido data to Firebase:', error);
         }
     }
     resetGame() {

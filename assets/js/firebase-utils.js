@@ -293,6 +293,7 @@ export async function saveCrackRapidoResult(gameStats) {
         const displayName = getUserDisplayName();
         console.log(`[saveCrackRapidoResult] User ID: ${userId}, Display Name: ${displayName}`);
 
+        // Crear documento de match completo con todas las estadísticas
         const matchData = {
             gameType: "crackrapido",
             playerName: displayName,
@@ -305,48 +306,91 @@ export async function saveCrackRapidoResult(gameStats) {
             maxStreak: gameStats.maxStreak || 0,
             averageTime: gameStats.averageTime || 0,
             totalTime: gameStats.totalTime || 0,
+            accuracy: gameStats.accuracy || 0,
+            gameMode: gameStats.gameMode || 'classic',
+            category: gameStats.category || 'general',
+            difficulty: gameStats.difficulty || 'normal',
+            powerUpsUsed: gameStats.powerUpsUsed || {
+                timeExtra: 0,
+                removeOption: 0,
+                scoreMultiplier: 0
+            },
+            responseTimes: gameStats.responseTimes || [],
+            streaks: gameStats.streaks || [],
+            completed: gameStats.completed || false,
             players: [{
                 displayName: displayName,
                 playerId: userId,
                 score: gameStats.score || 0,
                 correctAnswers: gameStats.correctAnswers || 0,
-                maxStreak: gameStats.maxStreak || 0
+                maxStreak: gameStats.maxStreak || 0,
+                accuracy: gameStats.accuracy || 0
             }]
         };
+        
         console.log('[saveCrackRapidoResult] Saving match document:', matchData);
         await addDoc(collection(db, "matches"), matchData);
         console.log('[saveCrackRapidoResult] Match document saved.');
 
+        // Actualizar estadísticas del usuario
         const userRef = doc(db, "users", userId);
+        const userDoc = await getDoc(userRef);
+        const currentStats = userDoc.exists() ? userDoc.data()?.stats?.crackrapido || {} : {};
+
         const userStatsUpdate = {
             "stats.crackrapido.played": increment(1),
-            "stats.crackrapido.score": increment(gameStats.score || 0),
-            "stats.crackrapido.correctAnswers": increment(gameStats.correctAnswers || 0)
+            "stats.crackrapido.totalScore": increment(gameStats.score || 0),
+            "stats.crackrapido.totalCorrectAnswers": increment(gameStats.correctAnswers || 0),
+            "stats.crackrapido.totalQuestions": increment(gameStats.totalQuestions || 20),
+            "stats.crackrapido.totalTime": increment(gameStats.totalTime || 0)
         };
 
         // Actualizar best streak si es mayor
-        if (gameStats.maxStreak > 0) {
-            const userDoc = await getDoc(userRef);
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                const currentBestStreak = userData?.stats?.crackrapido?.bestStreak || 0;
-                if (gameStats.maxStreak > currentBestStreak) {
-                    userStatsUpdate["stats.crackrapido.bestStreak"] = gameStats.maxStreak;
-                    console.log(`[saveCrackRapidoResult] New best streak: ${gameStats.maxStreak}`);
-                }
-            } else {
-                userStatsUpdate["stats.crackrapido.bestStreak"] = gameStats.maxStreak;
-            }
+        const currentBestStreak = currentStats.bestStreak || 0;
+        if ((gameStats.maxStreak || 0) > currentBestStreak) {
+            userStatsUpdate["stats.crackrapido.bestStreak"] = gameStats.maxStreak;
+            console.log(`[saveCrackRapidoResult] New best streak: ${gameStats.maxStreak}`);
+        }
+
+        // Actualizar mejor accuracy si es mayor
+        const currentBestAccuracy = currentStats.bestAccuracy || 0;
+        if ((gameStats.accuracy || 0) > currentBestAccuracy) {
+            userStatsUpdate["stats.crackrapido.bestAccuracy"] = gameStats.accuracy;
+            console.log(`[saveCrackRapidoResult] New best accuracy: ${gameStats.accuracy}%`);
+        }
+
+        // Actualizar mejor tiempo promedio (menor es mejor)
+        const currentBestAvgTime = currentStats.bestAverageTime || Infinity;
+        if ((gameStats.averageTime || Infinity) < currentBestAvgTime && gameStats.averageTime > 0) {
+            userStatsUpdate["stats.crackrapido.bestAverageTime"] = gameStats.averageTime;
+            console.log(`[saveCrackRapidoResult] New best average time: ${gameStats.averageTime}s`);
+        }
+
+        // Actualizar contadores por modo de juego
+        if (gameStats.gameMode) {
+            userStatsUpdate[`stats.crackrapido.modes.${gameStats.gameMode}`] = increment(1);
+        }
+
+        // Actualizar contadores por categoría
+        if (gameStats.category && gameStats.category !== 'general') {
+            userStatsUpdate[`stats.crackrapido.categories.${gameStats.category}`] = increment(1);
+        }
+
+        // Contar power-ups usados
+        if (gameStats.powerUpsUsed) {
+            const totalPowerUpsUsed = Object.values(gameStats.powerUpsUsed).reduce((sum, count) => sum + count, 0);
+            userStatsUpdate["stats.crackrapido.totalPowerUpsUsed"] = increment(totalPowerUpsUsed);
         }
 
         console.log('[saveCrackRapidoResult] Updating user stats:', userStatsUpdate);
         await updateDoc(userRef, userStatsUpdate);
         console.log('[saveCrackRapidoResult] User stats updated.');
 
-        if (gameStats.result === "completed") {
-            console.log('[saveCrackRapidoResult] Incrementing wins for user.');
-            await updateDoc(userRef, { "stats.crackrapido.wins": increment(1) });
-            console.log('[saveCrackRapidoResult] User wins incremented.');
+        // Contar como victoria si completó el juego
+        if (gameStats.completed || gameStats.result === "completed") {
+            console.log('[saveCrackRapidoResult] Incrementing completed games for user.');
+            await updateDoc(userRef, { "stats.crackrapido.completedGames": increment(1) });
+            console.log('[saveCrackRapidoResult] Completed games incremented.');
         }
 
         console.log("[saveCrackRapidoResult] COMPLETED successfully for Crack Rápido.");

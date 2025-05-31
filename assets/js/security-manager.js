@@ -70,12 +70,12 @@ class CrackTotalSecurityManager {
      */
     setupXSSProtection() {
         // Sanitize all user inputs
-        this.originalSetAttribute = Element.prototype.setAttribute;
+        const originalSetAttribute = Element.prototype.setAttribute;
         Element.prototype.setAttribute = function(name, value) {
             if (typeof value === 'string') {
                 value = CrackTotalSecurityManager.sanitizeInput(value);
             }
-            return this.originalSetAttribute.call(this, name, value);
+            return originalSetAttribute.call(this, name, value);
         };
 
         // Protect innerHTML

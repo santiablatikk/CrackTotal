@@ -3,292 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página No Encontrada - Crack Total</title>
-    <meta name="description" content="La página que buscas no existe. Descubre todos nuestros juegos de fútbol y contenido en Crack Total.">
-    <link rel="canonical" href="https://cracktotal.com/404.html">
-    <link rel="icon" href="/portada.ico" type="image/x-icon">
-    <meta name="robots" content="noindex, follow">
-    
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://cracktotal.com/404.html">
-    <meta property="og:title" content="Página No Encontrada - Crack Total">
-    <meta property="og:description" content="La página que buscas no existe. Descubre todos nuestros juegos de fútbol y contenido en Crack Total.">
-    <meta property="og:image" content="https://cracktotal.com/assets/images/portada.jpg">
-    
-    <!-- Estilos básicos -->
+    <title>404 - Página no encontrada | Crack Total</title>
     <style>
-        * {
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Montserrat', Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f172a 100%);
-            color: #ffffff;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
         }
-        
         .error-container {
             text-align: center;
-            max-width: 600px;
-            background: rgba(42, 42, 42, 0.9);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 500px;
+            padding: 40px;
         }
-        
         .error-code {
-            font-size: 6rem;
+            font-size: 8rem;
             font-weight: 800;
-            color: #00d4ff;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+            margin: 0;
+            background: linear-gradient(120deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
-        
-        .error-title {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: #ffffff;
+        .error-message {
+            font-size: 1.5rem;
+            margin: 20px 0;
         }
-        
-        .error-description {
-            font-size: 1.1rem;
-            color: #cccccc;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 2rem;
-        }
-        
-        .btn {
-            padding: 12px 24px;
+        .back-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(45deg, #00d4ff, #0099cc);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4);
-        }
-        
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-        
-        .popular-links {
-            margin-top: 2rem;
-        }
-        
-        .popular-links h3 {
-            color: #00d4ff;
-            margin-bottom: 1rem;
-        }
-        
-        .links-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .link-item {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 1rem;
-            border-radius: 8px;
             text-decoration: none;
-            color: #cccccc;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: inline-block;
+            margin-top: 20px;
+            transition: transform 0.3s ease;
         }
-        
-        .link-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            transform: translateY(-2px);
-        }
-        
-        .search-box {
-            margin: 2rem 0;
-        }
-        
-        .search-input {
-            width: 100%;
-            max-width: 400px;
-            padding: 12px 16px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-        
-        @media (max-width: 768px) {
-            .error-code {
-                font-size: 4rem;
-            }
-            
-            .error-title {
-                font-size: 1.5rem;
-            }
-            
-            .error-container {
-                padding: 2rem;
-            }
-            
-            .action-buttons {
-                flex-direction: column;
-            }
+        .back-button:hover {
+            transform: translateY(-3px);
         }
     </style>
 </head>
 <body>
     <div class="error-container">
-        <div class="error-code">404</div>
-        <h1 class="error-title">¡Ups! Página no encontrada</h1>
-        <p class="error-description">
-            La página que buscas no existe o ha sido movida. 
-            Pero no te preocupes, tenemos mucho contenido increíble esperándote.
-        </p>
-        
-        <div class="action-buttons">
-            <a href="/" class="btn btn-primary">
-                🏠 Ir al Inicio
-            </a>
-            <a href="/games.html" class="btn btn-secondary">
-                🎮 Ver Juegos
-            </a>
-            <a href="javascript:history.back()" class="btn btn-secondary">
-                ← Volver Atrás
-            </a>
-        </div>
-        
-        <div class="search-box">
-            <input type="text" id="searchInput" class="search-input" placeholder="Buscar en el sitio...">
-            <button onclick="performSearch()" class="btn btn-primary">🔍 Buscar</button>
-        </div>
-        
-        <div class="popular-links">
-            <h3>Páginas Populares</h3>
-            <div class="links-grid">
-                <a href="/pasalache.html" class="link-item">
-                    <strong>Pasalache</strong><br>
-                    <small>Juego de preguntas rápidas</small>
-                </a>
-                <a href="/quiensabemas.html" class="link-item">
-                    <strong>¿Quién Sabe Más?</strong><br>
-                    <small>Competencia de conocimiento</small>
-                </a>
-                <a href="/mentiroso.html" class="link-item">
-                    <strong>El Mentiroso</strong><br>
-                    <small>Descubre la mentira</small>
-                </a>
-                <a href="/crack-rapido.html" class="link-item">
-                    <strong>Crack Rápido</strong><br>
-                    <small>Preguntas contra reloj</small>
-                </a>
-                <a href="/blog.html" class="link-item">
-                    <strong>Blog</strong><br>
-                    <small>Artículos de fútbol</small>
-                </a>
-                <a href="/ranking.html" class="link-item">
-                    <strong>Rankings</strong><br>
-                    <small>Ver clasificaciones</small>
-                </a>
-            </div>
-        </div>
+        <h1 class="error-code">404</h1>
+        <p class="error-message">¡Ups! No encontramos lo que buscás</p>
+        <p>Es posible que el archivo no exista o la URL sea incorrecta.</p>
+        <a href="/" class="back-button">🏠 Volver al inicio</a>
     </div>
-    
-    <script>
-        function performSearch() {
-            const query = document.getElementById('searchInput').value.trim();
-            if (query) {
-                // Redirigir a la página principal con el término de búsqueda
-                window.location.href = `/?search=${encodeURIComponent(query)}`;
-            }
-        }
-        
-        // Permitir búsqueda con Enter
-        document.getElementById('searchInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performSearch();
-            }
-        });
-        
-        // Analizar la URL para sugerir contenido relacionado
-        window.addEventListener('load', function() {
-            const path = window.location.pathname;
-            const suggestions = {
-                'game': '/games.html',
-                'blog': '/blog.html',
-                'ranking': '/ranking.html',
-                'profile': '/profile.html',
-                'about': '/about.html',
-                'contact': '/contact.html'
-            };
-            
-            for (const [keyword, url] of Object.entries(suggestions)) {
-                if (path.includes(keyword)) {
-                    const suggestion = document.createElement('div');
-                    suggestion.innerHTML = `
-                        <p style="margin-top: 1rem; padding: 1rem; background: rgba(0, 212, 255, 0.1); border-radius: 8px; border-left: 4px solid #00d4ff;">
-                            ¿Buscabas algo relacionado con <strong>${keyword}</strong>? 
-                            <a href="${url}" style="color: #00d4ff; text-decoration: none; font-weight: 600;">Ir aquí</a>
-                        </p>
-                    `;
-                    document.querySelector('.error-container').appendChild(suggestion);
-                    break;
-                }
-            }
-        });
-        
-        // Analytics para 404
-        if (typeof gtag !== 'undefined') {
-            gtag('event', 'page_view', {
-                page_title: '404 - Page Not Found',
-                page_location: window.location.href,
-                custom_parameter: 'error_page'
-            });
-        }
-    </script>
 </body>
 </html> 
