@@ -40,7 +40,7 @@
     <meta property="og:url" content="https://cracktotal.com/{{PAGE_URL}}">
     <meta property="og:title" content="{{PAGE_TITLE}} - Crack Total">
     <meta property="og:description" content="{{PAGE_DESCRIPTION}}">
-    <meta property="og:image" content="https://cracktotal.com/images/{{OG_IMAGE}}">
+    <meta property="og:image" content="https://cracktotal.com/assets/images/{{OG_IMAGE}}">
     <meta property="og:site_name" content="Crack Total">
     <meta property="og:locale" content="es_AR">
 
@@ -50,12 +50,12 @@
     <meta name="twitter:creator" content="@cracktotal_">
     <meta name="twitter:title" content="{{PAGE_TITLE}} - Crack Total">
     <meta name="twitter:description" content="{{PAGE_DESCRIPTION}}">
-    <meta name="twitter:image" content="https://cracktotal.com/images/{{OG_IMAGE}}">
+    <meta name="twitter:image" content="https://cracktotal.com/assets/images/{{OG_IMAGE}}">
 
     <!-- ===== FAVICONS & PWA ===== -->
     <link rel="icon" href="/portada.ico?v=202505272312" type="image/x-icon">
-    <link rel="apple-touch-icon" sizes="180x180" href="/images/portada.jpg">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/portada.jpg">
+    <link rel="manifest" href="/config/manifest.json">
     
     <!-- ===== PRELOAD CRITICAL RESOURCES ===== -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -165,11 +165,11 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap"></noscript>
 
     <!-- ===== NON-CRITICAL CSS (ASYNC LOADED) ===== -->
-    <link rel="preload" href="css/critical.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="css/base.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="css/layout.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="css/performance.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="css/{{PAGE_SPECIFIC_CSS}}.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/css/critical.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/css/base.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/css/layout.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/css/performance.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/css/{{PAGE_SPECIFIC_CSS}}.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
     
     <!-- ===== FONT AWESOME (ASYNC) ===== -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -188,7 +188,7 @@
             "name": "Crack Total",
             "logo": {
                 "@type": "ImageObject",
-                "url": "https://cracktotal.com/images/logo.png"
+                "url": "https://cracktotal.com/assets/images/logo.png"
             }
         },
         "mainEntity": {
@@ -458,9 +458,9 @@
     <!-- ===== CORE JAVASCRIPT MODULES ===== -->
     <script type="module">
         // Load core systems
-        import './js/state-manager.js';
-        import './js/security-manager.js';
-        import './js/theme-manager.js';
+        import './assets/js/state-manager.js';
+        import './assets/js/security-manager.js';
+        import './assets/js/theme-manager.js';
         
         // Mark systems loaded
         window.CrackTotalPerf.mark('systems_loaded');
@@ -576,19 +576,19 @@
         window.addEventListener('load', function() {
             // Load main application script
             const mainScript = document.createElement('script');
-            mainScript.src = 'js/main.js?v=202505272312';
+            mainScript.src = 'assets/js/main.js?v=202505272312';
             mainScript.async = true;
             document.head.appendChild(mainScript);
             
             // Load notifications system
             const notificationScript = document.createElement('script');
-            notificationScript.src = 'js/notifications.js?v=202505272312';
+            notificationScript.src = 'assets/js/notifications.js?v=202505272312';
             notificationScript.async = true;
             document.head.appendChild(notificationScript);
             
             // Load cookie consent
             const cookieScript = document.createElement('script');
-            cookieScript.src = 'js/cookie-consent.js?v=202505272312';
+            cookieScript.src = 'assets/js/cookie-consent.js?v=202505272312';
             cookieScript.async = true;
             document.head.appendChild(cookieScript);
             
@@ -596,7 +596,7 @@
             const pageScript = '{{PAGE_SPECIFIC_JS}}';
             if (pageScript && pageScript !== '{{PAGE_SPECIFIC_JS}}') {
                 const script = document.createElement('script');
-                script.src = `js/${pageScript}.js?v=202505272312`;
+                script.src = `assets/js/${pageScript}.js?v=202505272312`;
                 script.async = true;
                 document.head.appendChild(script);
             }

@@ -37,8 +37,8 @@
 
 El proyecto está configurado para deployment automático en Render con:
 
-- **`package.json`**: Dependencias y scripts
-- **`render.yaml`**: Configuración de servicio
+- **`config/package.json`**: Dependencias y scripts
+- **`config/render.yaml`**: Configuración de servicio
 - **Servidor HTTP**: Sirve archivos estáticos y WebSocket
 
 ### Variables de Entorno
@@ -58,20 +58,57 @@ npm install
 npm start
 ```
 
-## 🏗️ Estructura del Proyecto
+## 🏗️ Estructura del Proyecto (REORGANIZADA)
 
 ```
 cracktotal/
-├── 📁 css/              # Estilos CSS modulares
-├── 📁 data/             # Archivos JSON con preguntas
-├── 📁 images/           # Recursos de imagen
-├── 📁 js/               # JavaScript modular
-├── 📄 index.html        # Página principal
-├── 📄 server.js         # Servidor WebSocket + HTTP
-├── 📄 package.json      # Configuración Node.js
-├── 📄 render.yaml       # Configuración Render
-└── 📄 manifest.json     # PWA Manifest
+├── 📁 assets/           # Recursos del proyecto
+│   ├── 📁 css/          # Estilos CSS modulares
+│   ├── 📁 js/           # JavaScript modular
+│   ├── 📁 images/       # Recursos de imagen
+│   └── 📁 data/         # Archivos JSON con preguntas
+├── 📁 config/           # Archivos de configuración
+│   ├── 📄 package.json  # Configuración Node.js
+│   ├── 📄 manifest.json # PWA Manifest
+│   ├── 📄 render.yaml   # Configuración Render
+│   ├── 📄 netlify.toml  # Configuración Netlify
+│   ├── 📄 vite.config.js # Configuración Vite
+│   └── 📄 firestore.rules # Reglas Firestore
+├── 📁 docs/             # Documentación
+│   ├── 📄 README.md     # Este archivo
+│   ├── 📄 SERVIDOR_LOCAL.md
+│   └── 📄 *.md          # Otros documentos
+├── 📁 server/           # Servidor Node.js adicional
+├── 📄 *.html            # Páginas HTML del sitio
+├── 📄 server.js         # Servidor WebSocket + HTTP principal
+├── 📄 sw.js             # Service Worker
+├── 📄 .htaccess         # Configuración Apache
+├── 📄 robots.txt        # SEO robots
+├── 📄 sitemap.xml       # Mapa del sitio
+└── 📄 ads.txt           # Configuración AdSense
 ```
+
+## 🧹 Limpieza Realizada
+
+### Archivos Eliminados
+- ✅ **Archivos vacíos**: `analytics-manager.js`, `ADSENSE-OPTIMIZATION-REPORT.md`, `guia-principiantes.html`
+- ✅ **Archivos de backup**: `crack-rapido-backup.js`
+- ✅ **Scripts de desarrollo**: `*.bat`, `*.py` (servidores de desarrollo)
+- ✅ **Duplicados**: `.htaccess_production`
+- ✅ **Entorno virtual**: `.venv/` (no debe estar en el repositorio)
+
+### Reorganización
+- ✅ **CSS**: Movido de `css/` a `assets/css/`
+- ✅ **JavaScript**: Movido de `js/` a `assets/js/`
+- ✅ **Imágenes**: Consolidado `images/` e `img/` en `assets/images/`
+- ✅ **Datos JSON**: Movido de `data/` a `assets/data/`
+- ✅ **Configuración**: Movido a `config/`
+- ✅ **Documentación**: Movido a `docs/`
+
+### Referencias Actualizadas
+- ✅ **Todos los archivos HTML** actualizados con las nuevas rutas
+- ✅ **server.js** actualizado para usar `assets/data/`
+- ✅ **Rutas de CSS, JS, imágenes y datos** corregidas
 
 ## 🎮 Modalidades de Juego
 
@@ -123,17 +160,19 @@ El sitio incluye un sistema avanzado de analytics que mide:
 
 ## 🚦 Estado del Deployment
 
-✅ **Archivos de configuración creados**  
+✅ **Estructura reorganizada**  
+✅ **Archivos de configuración organizados**  
 ✅ **Servidor HTTP configurado**  
 ✅ **Dependencies resueltas**  
 ✅ **WebSocket funcionando**  
 ✅ **Archivos estáticos servidos**  
+✅ **Referencias actualizadas**  
 
 ## 📝 Pasos para Deploy en Render
 
 1. **Conectar repositorio** a Render
 2. **Seleccionar** "Web Service"
-3. **Configuración automática** desde `render.yaml`
+3. **Configuración automática** desde `config/render.yaml`
 4. **Build Command**: `npm install`
 5. **Start Command**: `npm start`
 6. **Deploy** automático
@@ -141,13 +180,16 @@ El sitio incluye un sistema avanzado de analytics que mide:
 ## 🐛 Solución de Errores Comunes
 
 ### Error: "package.json not found"
-- ✅ **Solucionado**: `package.json` creado en root
+- ✅ **Solucionado**: `package.json` movido a `config/package.json`
 
 ### Error: "Build failed"
 - ✅ **Solucionado**: Dependencies correctas en package.json
 
 ### Error: "Cannot serve static files"
 - ✅ **Solucionado**: Servidor HTTP configurado para archivos estáticos
+
+### Error: "CSS/JS not loading"
+- ✅ **Solucionado**: Todas las referencias actualizadas a `assets/`
 
 ## 📞 Soporte
 
@@ -161,3 +203,25 @@ Para problemas de deployment o configuración, verificar:
 ---
 
 **Desarrollado con ❤️ para los fanáticos del fútbol** ⚽
+
+## 📋 Checklist de Mantenimiento
+
+### Estructura de Archivos
+- [ ] Verificar que no hay archivos duplicados
+- [ ] Confirmar que todas las rutas están actualizadas
+- [ ] Revisar que no hay archivos de desarrollo en producción
+
+### Performance
+- [ ] Verificar tiempos de carga
+- [ ] Comprobar que el cache funciona correctamente
+- [ ] Revisar métricas de Core Web Vitals
+
+### SEO
+- [ ] Verificar que todas las páginas tienen meta tags
+- [ ] Comprobar sitemap.xml actualizado
+- [ ] Revisar robots.txt
+
+### Funcionalidad
+- [ ] Probar todos los juegos
+- [ ] Verificar WebSocket connections
+- [ ] Comprobar sistema de rankings

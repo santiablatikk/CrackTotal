@@ -1,0 +1,664 @@
+{
+    "preguntas": [
+      {
+            "pregunta": "¿En qué año ganó Messi su primer Balón de Oro?",
+        "opciones": {
+                "A": "2008",
+                "B": "2009",
+                "C": "2010",
+                "D": "2007"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántas Champions League consecutivas ganó el Real Madrid entre 2016-2018?",
+        "opciones": {
+                "A": "2",
+                "B": "3",
+                "C": "4",
+                "D": "1"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué selección ganó la Copa América 2021?",
+        "opciones": {
+                "A": "Brasil",
+                "B": "Argentina",
+                "C": "Uruguay",
+                "D": "Chile"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué club jugaba Neymar antes de llegar al PSG?",
+        "opciones": {
+                "A": "Real Madrid",
+                "B": "Barcelona",
+                "C": "Santos",
+                "D": "AC Milan"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos goles mundialistas tiene Pelé?",
+        "opciones": {
+                "A": "10",
+                "B": "12",
+                "C": "14",
+                "D": "16"
+        },
+        "respuesta_correcta": "B"
+      },
+      {
+            "pregunta": "¿Qué país ganó la Eurocopa 2021?",
+        "opciones": {
+                "A": "Inglaterra",
+          "B": "España",
+                "C": "Italia",
+                "D": "Francia"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué posición juega principalmente Sergio Busquets?",
+        "opciones": {
+                "A": "Defensa central",
+                "B": "Mediocampo defensivo",
+                "C": "Mediocampo ofensivo",
+                "D": "Lateral"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es el apodo de la selección de Italia?",
+        "opciones": {
+                "A": "Gli Azzurri",
+                "B": "La Nazionale",
+                "C": "I Rossi",
+                "D": "I Bianchi"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Qué club inglés es conocido como 'The Red Devils'?",
+        "opciones": {
+                "A": "Liverpool",
+                "B": "Arsenal",
+                "C": "Manchester United",
+                "D": "Chelsea"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué año se introdujo el VAR en los Mundiales?",
+        "opciones": {
+                "A": "2014",
+                "B": "2018",
+                "C": "2022",
+                "D": "2010"
+        },
+        "respuesta_correcta": "B"
+      },
+      {
+            "pregunta": "¿Cuántas Copas Libertadores ganó Pelé con Santos?",
+        "opciones": {
+                "A": "1",
+                "B": "2",
+                "C": "3",
+                "D": "0"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué jugador marcó el gol de la victoria para España en la final del Mundial 2010?",
+        "opciones": {
+                "A": "David Villa",
+                "B": "Fernando Torres",
+                "C": "Andrés Iniesta",
+                "D": "Xavi Hernández"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué liga juega el Bayern Munich?",
+        "opciones": {
+                "A": "Premier League",
+                "B": "Bundesliga",
+                "C": "Serie A",
+                "D": "Ligue 1"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos Mundiales ganó Maradona como jugador?",
+        "opciones": {
+                "A": "0",
+                "B": "1",
+                "C": "2",
+                "D": "3"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué selección eliminó a Brasil en el Mundial de Rusia 2018?",
+        "opciones": {
+                "A": "Alemania",
+                "B": "Francia",
+                "C": "Bélgica",
+                "D": "Argentina"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué año se fundó la UEFA Champions League (antes Copa de Europa)?",
+        "opciones": {
+                "A": "1955",
+                "B": "1960",
+                "C": "1950",
+                "D": "1965"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuál es el estadio del Manchester City?",
+        "opciones": {
+                "A": "Old Trafford",
+                "B": "Etihad Stadium",
+          "C": "Anfield",
+          "D": "Stamford Bridge"
+        },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué jugador argentino marcó el gol número 1000 de la selección argentina?",
+        "opciones": {
+          "A": "Lionel Messi",
+                "B": "Sergio Agüero",
+                "C": "Gonzalo Higuaín",
+          "D": "Ángel Di María"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿En qué Mundial debutó Pelé?",
+        "opciones": {
+                "A": "Suecia 1958",
+                "B": "Chile 1962",
+                "C": "Brasil 1950",
+                "D": "Suiza 1954"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuántos goles marcó Cristiano Ronaldo en la Eurocopa 2016?",
+        "opciones": {
+                "A": "2",
+                "B": "3",
+                "C": "4",
+                "D": "5"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué país organizó el Mundial de 2014?",
+        "opciones": {
+                "A": "Argentina",
+                "B": "Brasil",
+                "C": "Sudáfrica",
+                "D": "Alemania"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué club europeo jugó Carlos Tévez?",
+        "opciones": {
+                "A": "Manchester United y Manchester City",
+                "B": "Real Madrid y Barcelona",
+                "C": "AC Milan y Inter",
+                "D": "Liverpool y Arsenal"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuál es el récord de goles en una temporada de La Liga española?",
+        "opciones": {
+                "A": "50 goles",
+                "B": "48 goles",
+                "C": "50 goles",
+                "D": "52 goles"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Qué selección ganó la primera Copa del Mundo femenina en 1991?",
+        "opciones": {
+                "A": "Brasil",
+                "B": "Estados Unidos",
+          "C": "Alemania",
+                "D": "Suecia"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año River Plate fue relegado a la Primera B Nacional?",
+        "opciones": {
+                "A": "2010",
+                "B": "2011",
+                "C": "2012",
+                "D": "2009"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántas Champions League ganó AC Milan?",
+        "opciones": {
+                "A": "6",
+                "B": "7",
+                "C": "8",
+                "D": "5"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué jugador francés ganó el Balón de Oro en 2022?",
+        "opciones": {
+                "A": "Kylian Mbappé",
+                "B": "Karim Benzema",
+                "C": "Antoine Griezmann",
+                "D": "N'Golo Kanté"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué posición juega principalmente Virgil van Dijk?",
+        "opciones": {
+                "A": "Mediocampo",
+                "B": "Defensa central",
+                "C": "Lateral izquierdo",
+                "D": "Mediocampo defensivo"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es el apodo del Napoli?",
+        "opciones": {
+                "A": "Gli Azzurri",
+                "B": "I Partenopei",
+                "C": "I Rossoneri",
+                "D": "La Vecchia Signora"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué torneo continental se disputa en África?",
+        "opciones": {
+                "A": "Copa África",
+                "B": "Copa Africana de Naciones",
+                "C": "Copa de África",
+                "D": "CAF Champions League"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año ganó Francia su primer Mundial?",
+        "opciones": {
+                "A": "1996",
+                "B": "1998",
+                "C": "2000",
+                "D": "2018"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es el estadio del Liverpool?",
+        "opciones": {
+          "A": "Anfield",
+                "B": "Goodison Park",
+          "C": "Old Trafford",
+                "D": "Etihad Stadium"
+            },
+            "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuántos Balones de Oro ganó Cristiano Ronaldo?",
+        "opciones": {
+                "A": "4",
+                "B": "5",
+                "C": "6",
+                "D": "3"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año se creó la FIFA?",
+        "opciones": {
+                "A": "1904",
+                "B": "1905",
+                "C": "1900",
+                "D": "1910"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué club ganó la primera Premier League en 1992-93?",
+        "opciones": {
+                "A": "Arsenal",
+                "B": "Manchester United",
+                "C": "Liverpool",
+                "D": "Chelsea"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántas Eurocopas ha ganado España?",
+        "opciones": {
+                "A": "2",
+                "B": "3",
+                "C": "1",
+                "D": "4"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué estadio juega el Arsenal?",
+        "opciones": {
+                "A": "Emirates Stadium",
+                "B": "Highbury",
+                "C": "Wembley",
+                "D": "White Hart Lane"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué entrenador ganó más Champions League?",
+        "opciones": {
+                "A": "Alex Ferguson",
+                "B": "Carlo Ancelotti",
+                "C": "Bob Paisley",
+                "D": "Zinedine Zidane"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos goles marcó Ronaldinho en el Barcelona?",
+        "opciones": {
+                "A": "94",
+                "B": "95",
+                "C": "96",
+                "D": "93"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué año se fundó el FC Barcelona?",
+        "opciones": {
+                "A": "1899",
+                "B": "1900",
+                "C": "1898",
+                "D": "1901"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuál es el apodo de Thierry Henry?",
+        "opciones": {
+                "A": "The King",
+                "B": "The Professor",
+                "C": "The Gunner",
+                "D": "The Captain"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué país ganó la Copa del Mundo de 2006?",
+        "opciones": {
+                "A": "Francia",
+                "B": "Italia",
+                "C": "Alemania",
+                "D": "Brasil"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año se fundó el Real Madrid?",
+        "opciones": {
+                "A": "1902",
+                "B": "1900",
+                "C": "1901",
+                "D": "1903"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuántas temporadas jugó Zinedine Zidane en el Real Madrid?",
+        "opciones": {
+                "A": "4",
+                "B": "5",
+                "C": "6",
+                "D": "3"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué selección ganó la Copa Confederaciones 2013?",
+        "opciones": {
+                "A": "España",
+                "B": "Brasil",
+                "C": "Italia",
+                "D": "Uruguay"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año Leicester City ganó la Premier League?",
+        "opciones": {
+                "A": "2015-16",
+                "B": "2014-15",
+                "C": "2016-17",
+                "D": "2013-14"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuántos goles marcó David Villa en Mundiales?",
+        "opciones": {
+                "A": "8",
+                "B": "9",
+                "C": "7",
+                "D": "10"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué club tiene el apodo de 'The Citizens'?",
+        "opciones": {
+                "A": "Manchester United",
+                "B": "Manchester City",
+                "C": "Chelsea",
+                "D": "Arsenal"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año ganó Kaká el Balón de Oro?",
+        "opciones": {
+                "A": "2006",
+                "B": "2007",
+                "C": "2008",
+                "D": "2005"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántas veces ganó Brasil la Copa América en el siglo XXI?",
+        "opciones": {
+                "A": "4",
+                "B": "5",
+                "C": "3",
+                "D": "6"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿En qué equipo debutó profesionalmente Messi?",
+        "opciones": {
+                "A": "Newell's Old Boys",
+                "B": "Barcelona",
+                "C": "Barcelona B",
+                "D": "Argentina Sub-20"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es el apodo de la Juventus?",
+        "opciones": {
+                "A": "I Bianconeri",
+                "B": "La Vecchia Signora",
+                "C": "I Gobbi",
+                "D": "Todas las anteriores"
+            },
+            "respuesta_correcta": "D"
+        },
+        {
+            "pregunta": "¿Qué portero ganó la Bota de Oro en 2018?",
+        "opciones": {
+                "A": "Thibaut Courtois",
+                "B": "Luka Modric",
+                "C": "Nunca un portero",
+                "D": "Hugo Lloris"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué año se jugó el primer Clásico Español?",
+        "opciones": {
+                "A": "1902",
+                "B": "1929",
+                "C": "1916",
+                "D": "1910"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuántos goles marcó Ronaldo (R9) en Mundiales?",
+        "opciones": {
+                "A": "14",
+                "B": "15",
+                "C": "16",
+                "D": "13"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué equipo eliminó al Real Madrid en la Champions 2019?",
+        "opciones": {
+                "A": "Liverpool",
+                "B": "Manchester City",
+                "C": "Ajax",
+                "D": "Tottenham"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué año se fundó la Premier League?",
+        "opciones": {
+                "A": "1990",
+                "B": "1992",
+                "C": "1991",
+                "D": "1993"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántas veces ganó Boca la Copa Libertadores?",
+        "opciones": {
+                "A": "5",
+                "B": "6",
+                "C": "7",
+                "D": "4"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué selección ganó la primera Eurocopa en 1960?",
+        "opciones": {
+                "A": "Francia",
+                "B": "URSS",
+                "C": "España",
+                "D": "Italia"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué club jugó Francesco Totti toda su carrera?",
+        "opciones": {
+                "A": "Lazio",
+                "B": "AC Milan",
+                "C": "Roma",
+                "D": "Juventus"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuántos hat-tricks tiene Messi en Champions League?",
+        "opciones": {
+                "A": "7",
+                "B": "8",
+                "C": "9",
+                "D": "6"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué entrenador dirigió a España en el Mundial 2010?",
+        "opciones": {
+                "A": "Luis Aragonés",
+                "B": "Vicente del Bosque",
+                "C": "José Antonio Camacho",
+                "D": "Fernando Hierro"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año se creó la Copa Libertadores?",
+        "opciones": {
+                "A": "1959",
+                "B": "1960",
+                "C": "1961",
+                "D": "1958"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál fue el primer equipo en ganar 5 Champions consecutivas?",
+        "opciones": {
+                "A": "Ajax",
+                "B": "Bayern Munich",
+                "C": "Real Madrid",
+                "D": "Nunca pasó"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Qué posición ocupa históricamente Gianluigi Buffon?",
+        "opciones": {
+                "A": "Defensa central",
+                "B": "Portero",
+                "C": "Mediocampo",
+                "D": "Lateral"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué Mundial Maradona hizo el gol del siglo?",
+        "opciones": {
+                "A": "España 1982",
+                "B": "México 1986",
+                "C": "Italia 1990",
+                "D": "Argentina 1978"
+            },
+            "respuesta_correcta": "B"
+        }
+    ]
+}

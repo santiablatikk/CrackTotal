@@ -33,14 +33,14 @@
     <meta property="og:url" content="https://cracktotal.com/games.html">
     <meta property="og:title" content="Crack Total - Juegos de Fútbol">
     <meta property="og:description" content="Elegí tu desafío: Pasala Che, Quien Sabe Más y más. ¡Demostrá cuánto sabés de fútbol!">
-    <meta property="og:image" content="https://cracktotal.com/images/portada.jpg">
+    <meta property="og:image" content="https://cracktotal.com/assets/images/portada.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://cracktotal.com/games.html">
     <meta property="twitter:title" content="Crack Total - Juegos de Fútbol">
     <meta property="twitter:description" content="Elegí tu desafío: Pasala Che, Quien Sabe Más y más. ¡Demostrá cuánto sabés de fútbol!">
-    <meta property="twitter:image" content="https://cracktotal.com/images/portada.jpg">
+    <meta property="twitter:image" content="https://cracktotal.com/assets/images/portada.jpg">
     <meta property="twitter:site" content="@cracktotal_">
 
     <!-- Google tag (gtag.js) -->
@@ -72,11 +72,11 @@
     </script>
 
     <!-- CSS Links -->
-    <link rel="stylesheet" href="css/base.css?v=202505272312">
-    <link rel="stylesheet" href="css/layout.css?v=202505272312">
-    <link rel="stylesheet" href="css/landing.css?v=202505272312">
-    <link rel="stylesheet" href="css/modals.css?v=202505272312">
-    <link rel="stylesheet" href="css/qsm.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/landing.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/modals.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/qsm.css?v=202505272312">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
@@ -534,7 +534,7 @@
             font-size: 1.2rem;
         }
 
-        /* Sección coming soon rediseñada */
+        /* Sección coming soon rediseñado */
         .coming-soon-section {
             margin-top: 80px;
             text-align: center;
@@ -941,7 +941,7 @@
         }
 
         .intro-section li::before {
-            content: '⚡';
+            content: '?';
             position: absolute;
             left: 0;
             top: 8px;
@@ -954,124 +954,415 @@
             font-weight: 700;
         }
 
-        .intro-highlight {
-            background: linear-gradient(135deg, rgba(var(--neon-orange), 0.1), rgba(var(--neon-pink), 0.1));
-            border: 1px solid rgba(var(--neon-orange), 0.3);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 25px 0;
-            text-align: center;
-            animation: pulse 2s infinite alternate;
+        /* === ESTILOS MEJORADOS PARA QSM MODAL === */
+        .qsm-intro-modal-compact {
+            max-width: 720px;
+            max-height: 85vh;
+            background: linear-gradient(135deg, rgba(20, 20, 30, 0.98), rgba(30, 30, 45, 0.98));
+            border: 2px solid rgba(var(--neon-blue), 0.4);
+            box-shadow: 
+                0 25px 60px rgba(0, 0, 0, 0.6),
+                0 0 40px rgba(var(--neon-blue), 0.3);
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
         }
 
-        .intro-highlight p {
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 600;
+        .qsm-intro-modal-compact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(var(--neon-blue), 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(var(--neon-purple), 0.08) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        /* Scrollable content container */
+        .qsm-modal-scrollable {
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 5px;
+        }
+
+        /* Custom scrollbar */
+        .qsm-modal-scrollable::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .qsm-modal-scrollable::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        .qsm-modal-scrollable::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(var(--neon-blue), 0.3);
+        }
+
+        .qsm-modal-scrollable::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-blue));
+            box-shadow: 0 0 15px rgba(var(--neon-blue), 0.5);
+        }
+
+        /* Firefox scrollbar */
+        .qsm-modal-scrollable {
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon-blue) rgba(255, 255, 255, 0.05);
+        }
+
+        /* Header compacto - Fixed */
+        .qsm-header-compact {
+            padding: 20px 25px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+        }
+
+        .qsm-logo-compact {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .qsm-brain-icon-compact {
+            font-size: 2.2rem;
+            color: var(--neon-blue);
+            filter: drop-shadow(0 0 15px rgba(var(--neon-blue), 0.6));
+            animation: brainPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes brainPulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        .title-compact h3.modal-title-compact {
+            font-size: 1.5rem;
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px rgba(var(--neon-blue), 0.5);
             margin: 0;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .crack-rapido-intro-modal .primary-button {
-            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple));
+        .subtitle-compact {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+        }
+
+        .badges-compact {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge-compact {
+            background: rgba(var(--neon-blue), 0.2);
+            color: var(--neon-blue);
+            border: 1px solid rgba(var(--neon-blue), 0.4);
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-compact:nth-child(2) {
+            background: rgba(var(--neon-green), 0.2);
+            color: var(--neon-green);
+            border-color: rgba(var(--neon-green), 0.4);
+        }
+
+        .badge-compact:nth-child(3) {
+            background: rgba(var(--neon-purple), 0.2);
+            color: var(--neon-purple);
+            border-color: rgba(var(--neon-purple), 0.4);
+        }
+
+        /* Contenido compacto - Scrollable */
+        .qsm-content-compact {
+            padding: 20px 25px;
+        }
+
+        .intro-compact {
+            text-align: center;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 18px;
+            line-height: 1.4;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid var(--neon-blue);
+        }
+
+        /* Grid de información compacto */
+        .info-grid-compact {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .info-card-compact {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .info-card-compact:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(var(--neon-blue), 0.3);
+            transform: translateY(-1px);
+        }
+
+        .card-header-compact {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+            color: var(--neon-blue);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .card-header-compact i {
+            font-size: 1rem;
+        }
+
+        .info-list-compact {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .info-list-compact li {
+            padding: 2px 0;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.3;
+        }
+
+        .points-good {
+            color: var(--neon-green);
+            font-weight: 600;
+        }
+
+        .points-ok {
+            color: var(--neon-blue);
+            font-weight: 600;
+        }
+
+        .points-bad {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+        }
+
+        /* Dificultad compacta */
+        .difficulty-compact {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .diff-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 6px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 4px;
+            font-size: 0.75rem;
+        }
+
+        .diff-levels {
+            background: var(--neon-blue);
+            color: white;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+            font-size: 0.7rem;
+            min-width: 22px;
+            text-align: center;
+        }
+
+        .diff-name {
+            color: white;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .diff-indicator {
+            font-size: 0.9rem;
+        }
+
+        /* Stats compactas */
+        .stats-compact {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(var(--neon-purple), 0.2);
+            margin-bottom: 15px;
+        }
+
+        .stat-compact {
+            text-align: center;
+        }
+
+        .stat-compact .stat-number {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--neon-blue);
+            margin-bottom: 2px;
+        }
+
+        .stat-compact .stat-label {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Footer compacto - Fixed */
+        .qsm-footer-compact {
+            padding: 15px 25px 18px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+        }
+
+        .warning-compact {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 12px;
+            padding: 8px;
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 6px;
+            color: var(--neon-yellow);
+            font-size: 0.85rem;
+        }
+
+        .qsm-button-compact {
+            background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple));
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 1.1rem;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 0.95rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(var(--neon-blue), 0.3);
-            position: relative;
-            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin: 0 auto;
         }
 
-        .crack-rapido-intro-modal .primary-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: left 0.6s ease;
+        .qsm-button-compact:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(var(--neon-blue), 0.4);
         }
 
-        .crack-rapido-intro-modal .primary-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(var(--neon-blue), 0.5);
-            filter: brightness(1.1);
-        }
-
-        .crack-rapido-intro-modal .primary-button:hover::before {
-            left: 100%;
-        }
-
-        /* Scroll personalizado para el modal */
-        .crack-rapido-intro-modal::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .crack-rapido-intro-modal::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-
-        .crack-rapido-intro-modal::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, var(--neon-blue), var(--neon-purple));
-            border-radius: 4px;
-        }
-
-        .crack-rapido-intro-modal::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(180deg, var(--neon-purple), var(--neon-blue));
-        }
-
-        /* Responsive para el modal */
+        /* Responsive para pantallas pequeñas */
         @media (max-width: 768px) {
-            .crack-rapido-intro-modal {
+            .qsm-intro-modal-compact {
                 max-width: 95vw;
+                margin: 10px;
                 max-height: 90vh;
-                margin: 20px auto;
             }
 
-            .intro-section {
-                margin: 15px 0;
-                padding: 15px;
+            .qsm-logo-compact {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
             }
 
-            .intro-section h4 {
-                font-size: 1.1rem;
+            .info-grid-compact {
+                grid-template-columns: 1fr;
+                gap: 10px;
             }
 
-            .intro-section li {
+            .stats-compact {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .badges-compact {
+                justify-content: center;
+            }
+
+            .title-compact h3.modal-title-compact {
+                font-size: 1.3rem;
+            }
+
+            .qsm-header-compact,
+            .qsm-content-compact,
+            .qsm-footer-compact {
+                padding-left: 18px;
+                padding-right: 18px;
+            }
+        }
+
+        /* Pantallas muy pequeñas */
+        @media (max-width: 480px) {
+            .stats-compact {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+
+            .qsm-header-compact,
+            .qsm-content-compact,
+            .qsm-footer-compact {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+
+            .intro-compact {
                 font-size: 0.9rem;
-                padding: 6px 0;
+                padding: 10px;
+            }
+
+            .info-list-compact li {
+                font-size: 0.75rem;
             }
         }
     </style>
-
-    <!-- Google AdSense -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
-     crossorigin="anonymous"></script>
-    <script src="js/main.js?v=202505272312"></script>
-    <script src="js/firebase-config.js"></script>
-    <script src="js/firebase-init.js"></script>
 </head>
 <body>
-    <!-- Skip Link para accesibilidad -->
-    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
-    
-    <!-- Partículas de fondo -->
-    <div class="games-particles"></div>
-    
     <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
         <a href="index.html" class="nav-logo" aria-label="Crack Total - Inicio">
             Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
         </a>
-        <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+        <button class="nav-toggle" aria-label="Abrir men de navegación" aria-expanded="false">
             <i class="fas fa-bars" aria-hidden="true"></i>
         </button>
         <ul>
@@ -1114,7 +1405,7 @@
                     </div>
                                          <div class="game-content">
                          <h3 class="game-title">Pasala Che</h3>
-                         <p class="game-description">Un rosco de preguntas futboleras. Responde preguntas para cada letra del abecedario y demuestra tu conocimiento enciclopédico del fútbol.</p>
+                         <p class="game-description">Un rosco de preguntas futboleras. Responde preguntas para cada letra del abecedario y demuestra tu conocimiento enciclopídico del fútbol.</p>
                          <div class="game-stats">
                              <span class="stat-chip"><i class="fas fa-font"></i>27 Letras</span>
                              <span class="stat-chip"><i class="fas fa-clock"></i>Contrarreloj</span>
@@ -1127,39 +1418,39 @@
 
                 <!-- Crack Rápido -->
                 <article class="cosmic-game-card" data-game="crack-rapido">
-                    <div class="stellar-badge actualizando">ACTUALIZANDO</div>
+                    <div class="stellar-badge nuevo">NUEVO</div>
                     <div class="game-visual-container">
                         <i class="fas fa-bolt game-icon" aria-hidden="true"></i>
                     </div>
                     <div class="game-content">
                         <h3 class="game-title">Crack Rápido MEGA</h3>
-                        <p class="game-description">¡La trivia definitiva perfeccionada! 4 modos épicos, 7 categorías, 200+ preguntas y sistema de puntuación revolucionario. ¿Tenés la velocidad y conocimiento para ser un Dios del Crack Rápido?</p>
+                        <p class="game-description">¡La trivia definitiva perfeccionada! 4 modos picos, 7 categorías, 200+ preguntas y sistema de puntuación revolucionario. ¡Tenés la velocidad y conocimiento para ser un Dios del Crack Rápido?</p>
                         <div class="game-stats">
                             <span class="stat-chip"><i class="fas fa-gamepad"></i>4 Modos</span>
                             <span class="stat-chip"><i class="fas fa-brain"></i>200+ Preguntas</span>
                             <span class="stat-chip"><i class="fas fa-medal"></i>17 Logros</span>
                             <span class="stat-chip"><i class="fas fa-rocket"></i>Power-Ups</span>
                         </div>
-                        <button class="quantum-play-btn disabled" aria-label="Crack Rápido MEGA en actualización" disabled>
-                            <span><i class="fas fa-wrench"></i> Actualizando...</span>
+                        <button class="quantum-play-btn" aria-label="Jugar a Crack Rápido MEGA">
+                            <span>Jugar</span>
                         </button>
                     </div>
                 </article>
 
-                <!-- Quien Sabe Más -->
+                <!-- Quien Sabe MáS -->
                 <article class="cosmic-game-card" data-game="quiensabemas">
                     <div class="stellar-badge duelo">DUELO</div>
                     <div class="game-visual-container">
                         <i class="fas fa-brain game-icon" aria-hidden="true"></i>
                     </div>
                                          <div class="game-content">
-                         <h3 class="game-title">Quien Sabe Más</h3>
-                         <p class="game-description">Responde preguntas de dificultad creciente contra un amigo y compite por el gran premio. ¿Llegarás a ser el más grande conocedor del fútbol?</p>
+                         <h3 class="game-title">Quien Sabe MáS</h3>
+                         <p class="game-description">Responde preguntas de dificultad creciente contra un amigo y compite por el gran premio. ¡Llegarás a ser el más grande conocedor del fútbol?</p>
                          <div class="game-stats">
                              <span class="stat-chip"><i class="fas fa-layer-group"></i>6 Niveles</span>
                              <span class="stat-chip"><i class="fas fa-users"></i>1 vs 1</span>
                          </div>
-                         <button class="quantum-play-btn" aria-label="Jugar a Quien Sabe Más">
+                         <button class="quantum-play-btn" aria-label="Jugar a Quien Sabe MáS">
                              <span>Jugar</span>
                          </button>
                         <div class="room-status" id="quiensabemas-rooms">
@@ -1177,7 +1468,7 @@
                     </div>
                                          <div class="game-content">
                          <h3 class="game-title">Mentiroso</h3>
-                         <p class="game-description">¿Cuánto sabés de fútbol o cuánto podés aparentar? Decí cuántas respuestas sabés y desafiá a tu rival. ¡Que no te agarren!</p>
+                         <p class="game-description">¡Cuánto sabés de fútbol o cuánto podés aparentar? Decí cuántas respuestas sabés y desafí a tu rival. ¡Que no te agarren!</p>
                          <div class="game-stats">
                              <span class="stat-chip"><i class="fas fa-users"></i>1 vs 1</span>
                              <span class="stat-chip"><i class="fas fa-theater-masks"></i>Puro Engaño</span>
@@ -1218,7 +1509,7 @@
             <div class="coming-soon-features">
                 <div class="feature-card">
                     <h4><i class="fas fa-trophy"></i>Torneos Online</h4>
-                    <p>¡Preparate para competir en torneos oficiales! Participá en competencias semanales, enfrentá a los mejores jugadores y luchá por llegar a la cima del ranking.</p>
+                    <p>¡Prepárate para competir en torneos oficiales! Participá en competencias semanales, enfrentá a los mejores jugadores y luchá por llegar a la cima del ranking.</p>
                 </div>
                 <div class="feature-card">
                     <h4><i class="fas fa-users"></i>Modo Cooperativo</h4>
@@ -1235,7 +1526,7 @@
                 <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
                 <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
                 <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-                <a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a>
+                <a href="terminos.html"><i class="fas fa-file-contract"></i> Tï¿½rminos</a>
                 <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
               </div>
               <button class="footer-share-button" onclick="shareSite()"><i class="fas fa-share-alt"></i> Compartir</button>
@@ -1264,25 +1555,125 @@
         </div>
     </div>
 
-    <!-- Modal Introducción Quien Sabe Más -->
+    <!-- Modal Introducción Quien Sabe MáS -->
     <div class="modal-overlay" id="qsmIntroModal">
-        <div class="modal-content qsm-intro-modal">
-            <h3 class="modal-title"><i class="fas fa-question-circle"></i> ¿Cómo se juega al Quien Sabe Más?</h3>
-            <p>¡Dale, mostrá lo que sabés de fulbo!</p>
-            <ul>
-                <li>Vas a jugar <strong>mano a mano</strong> contra otro crack.</li>
-                <li>Son <strong>6 niveles</strong> de preguntas, cada vez más picantes.</li>
-                <li>Todas las preguntas son con <strong>4 opciones</strong>.</li>
-                <li><strong>Puntaje:</strong><br>
-                    &nbsp;&nbsp;- Respuesta correcta: <span class="highlight-consagra"><strong>2 Puntos</strong></span><br>
-                    &nbsp;&nbsp;- Respuesta correcta usando 50/50: <span class="highlight-consagra"><strong>1 Punto</strong></span>
-                </li>
-                <li>Tenés un comodín <strong>50/50</strong> por pregunta para eliminar dos opciones incorrectas.</li>
-                <li>El que suma más puntos al final <span class="highlight-consagra">¡se consagra!</span></li>
-            </ul>
-            <div class="modal-footer">
-                <button type="button" class="primary-button" id="goToLobbyQSMButton">
-                    <i class="fas fa-door-open"></i> IR AL LOBBY QUIEN SABE MAS
+        <div class="modal-content qsm-intro-modal-compact">
+    
+            <div class="qsm-header-compact">
+                <div class="qsm-logo-compact">
+                    <i class="fas fa-brain qsm-brain-icon-compact"></i>
+                    <div class="title-compact">
+                        <h3 class="modal-title-compact">¿Quién Sabe MáS?</h3>
+                        <span class="subtitle-compact">Duelo de Conocimiento Futbolero 1v1</span>
+                    </div>
+                </div>
+                <div class="badges-compact">
+                    <span class="badge-compact">6 NIVELES</span>
+                    <span class="badge-compact">400+ PREGUNTAS</span>
+                    <span class="badge-compact">RANKING ELO</span>
+                </div>
+            </div>
+
+            <div class="qsm-modal-scrollable">
+                <div class="qsm-content-compact">
+                    <div class="intro-compact">
+                        🧠 <strong>Enfréntate 1v1</strong> en 6 niveles de dificultad progresiva. Respuestas alternadas por turnos, comodín 50/50 disponible.
+                    </div>
+
+                    <div class="info-grid-compact">
+                        <div class="info-card-compact">
+                            <div class="card-header-compact">
+                                <i class="fas fa-gamepad"></i>
+                                <span>Mecánica</span>
+                            </div>
+                            <ul class="info-list-compact">
+                                <li>• Duelo por turnos 1v1</li>
+                                <li>• 4 opciones múltiple choice</li>
+                                <li>• Comodín 50/50 una vez por pregunta</li>
+                                <li>• Progresión: Básico → Leyenda</li>
+                            </ul>
+                        </div>
+
+                        <div class="info-card-compact">
+                            <div class="card-header-compact">
+                                <i class="fas fa-trophy"></i>
+                                <span>Puntuación</span>
+                            </div>
+                            <ul class="info-list-compact">
+                                <li>• <span class="points-good">Correcta: +2 pts</span></li>
+                                <li>• <span class="points-ok">Con 50/50: +1 pt</span></li>
+                                <li>• <span class="points-bad">Incorrecta: 0 pts</span></li>
+                                <li>• Ranking ELO por victorias</li>
+                            </ul>
+                        </div>
+
+                        <div class="info-card-compact">
+                            <div class="card-header-compact">
+                                <i class="fas fa-layer-group"></i>
+                                <span>Dificultad</span>
+                            </div>
+                            <div class="difficulty-compact">
+                                <div class="diff-item">
+                                    <span class="diff-levels">1-2</span>
+                                    <span class="diff-name">Básico/Intermedio</span>
+                                    <span class="diff-indicator basic">🟢</span>
+                                </div>
+                                <div class="diff-item">
+                                    <span class="diff-levels">3-4</span>
+                                    <span class="diff-name">Avanzado/Experto</span>
+                                    <span class="diff-indicator advanced">🟠</span>
+                                </div>
+                                <div class="diff-item">
+                                    <span class="diff-levels">5-6</span>
+                                    <span class="diff-name">Maestro/Leyenda</span>
+                                    <span class="diff-indicator legend">🔴</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-card-compact">
+                            <div class="card-header-compact">
+                                <i class="fas fa-lightbulb"></i>
+                                <span>Tips Clave</span>
+                            </div>
+                            <ul class="info-list-compact">
+                                <li>🎯 Conserva el 50/50 para niveles altos</li>
+                                <li>⚡ Primera impresión suele ser correcta</li>
+                                <li>🏆 Cada victoria sube tu ELO</li>
+                                <li>🧠 Estudia estadísticas específicas</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="stats-compact">
+                        <div class="stat-compact">
+                            <span class="stat-number" id="qsmPlayersOnline">-</span>
+                            <span class="stat-label">Jugadores</span>
+                        </div>
+                        <div class="stat-compact">
+                            <span class="stat-number" id="qsmActiveMatches">-</span>
+                            <span class="stat-label">Duelos</span>
+                        </div>
+                        <div class="stat-compact">
+                            <span class="stat-number">400+</span>
+                            <span class="stat-label">Preguntas</span>
+                        </div>
+                        <div class="stat-compact">
+                            <span class="stat-number">6</span>
+                            <span class="stat-label">Niveles</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="qsm-footer-compact">
+                <div class="warning-compact">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>¿Listo para el desafío definitivo?</span>
+                </div>
+                <button type="button" class="qsm-button-compact" id="goToLobbyQSMButton">
+                    <i class="fas fa-rocket"></i>
+                    <span>¡ACEPTO EL DESAFÍO!</span>
                 </button>
             </div>
         </div>
@@ -1292,21 +1683,38 @@
     <div class="modal-overlay" id="mentirosoIntroModal">
         <div class="modal-content mentiroso-intro-modal">
             <h3 class="modal-title"><i class="fas fa-mask"></i> ¿Cómo se juega al Mentiroso?</h3>
-            <p>¡Che, escuchame bien la movida!</p>
-            <ul>
-                <li>Te vas a <strong>batir a duelo</strong> mano a mano contra otro crack del fulbo.</li>
-                <li>Van a tener <strong>18 preguntas</strong> divididas en <strong>6 categorías</strong> distintas, cada una más picante que la otra.</li>
-                <li>¿Cómo funciona? Es fácil: te toca una pregunta del estilo <strong>"¿Puedo nombrar X jugadores que ganaron la Champions?"</strong></li>
-                <li>Ahí decís cuántos podés nombrar, por ejemplo: <strong>"Yo me sé 7"</strong>.</li>
-                <li>El rival puede <strong>aumentar la apuesta</strong> ("Yo me sé 9") o <strong>desconfiar</strong> y gritar "¡MENTIROSO!"</li>
-                <li>Si te dicen mentiroso, tenés que <strong>listar tus respuestas</strong>. Si eran posta, <span class="highlight-consagra"><strong>ganás el punto</strong></span>. Si chamuyaste, <strong>pierde puntos</strong>.</li>
-                <li>Después de cada pregunta, <strong>cambia el turno</strong> sin importar quién ganó.</li>
-                <li>Para las respuestas vale <strong>todo lo que tenga que ver con la consigna</strong>, si no tiene sentido, tu rival puede marcarla como incorrecta.</li>
-                <li>El que suma más puntos en total <span class="highlight-consagra">¡se lleva la gloria!</span></li>
-            </ul>
+            <p><strong>¡El juego del farol futbolero!</strong></p>
+            
+            <div class="mentiroso-rules">
+                <div class="rule-card">
+                    <h4><i class="fas fa-gamepad"></i> Mecánica</h4>
+                    <ul>
+                        <li><strong>Duelo 1v1</strong> - 18 preguntas en 6 categorías</li>
+                        <li><strong>Decís cuántas sabés:</strong> "Yo me sé 7 jugadores"</li>
+                        <li><strong>El rival puede:</strong> Subir la apuesta o gritar "¡MENTIROSO!"</li>
+                        <li><strong>Si te desafían:</strong> Tenés que demostrar lo que dijiste</li>
+                    </ul>
+                </div>
+
+                <div class="rule-card">
+                    <h4><i class="fas fa-trophy"></i> Puntuación</h4>
+                    <ul>
+                        <li><strong>Demostrás:</strong> +Puntos según dificultad</li>
+                        <li><strong>Mentís:</strong> -Puntos de penalización</li>
+                        <li><strong>Gana:</strong> Quien más puntos acumule</li>
+                        <li><strong>Turnos alternados</strong> cada pregunta</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mentiroso-tips">
+                <h4><i class="fas fa-lightbulb"></i> Estrategia</h4>
+                <p>🎭 <strong>El farol es parte del juego.</strong> Calculá bien cuánto sabés vs. cuánto podés arriesgar. Vale todo lo relacionado con la consigna.</p>
+            </div>
+
             <div class="modal-footer">
                 <button type="button" class="primary-button" id="goToLobbyMentirosoButton">
-                    <i class="fas fa-door-open"></i> DALE, VAMOS A JUGAR
+                    <i class="fas fa-door-open"></i> ¡DALE, VAMOS A JUGAR!
                 </button>
             </div>
         </div>
@@ -1315,93 +1723,54 @@
     <!-- Modal Introducción Crack Rápido -->
     <div class="modal-overlay" id="crackRapidoIntroModal">
         <div class="modal-content crack-rapido-intro-modal">
-            <h3 class="modal-title"><i class="fas fa-bolt"></i> ¡Crack Rápido MEGA - La Trivia Definitiva!</h3>
-            <p><strong>¡El desafío de velocidad más intenso de Crack Total!</strong></p>
-            
+            <h3 class="modal-title"><i class="fas fa-bolt"></i> Crack Rápido MEGA</h3>
+            <p><strong>¡La trivia de velocidad más intensa!</strong></p>
+
             <div class="intro-section">
-                <h4><i class="fas fa-gamepad"></i> 4 Modos de Juego Épicos</h4>
+                <h4><i class="fas fa-gamepad"></i> 4 Modos Épicos</h4>
                 <ul>
-                    <li><strong>CLÁSICO:</strong> 20 preguntas mixtas - El modo tradicional perfeccionado</li>
-                    <li><strong>SUPERVIVENCIA:</strong> Hasta que falles - ¿Cuánto resistís?</li>
-                    <li><strong>CATEGORÍA:</strong> Especializate en tu tema favorito</li>
-                    <li><strong>TORNEO:</strong> 5 rondas épicas con multiplicador x1.5 - ¡El desafío supremo!</li>
+                    <li><strong>CLÁSICO:</strong> 20 preguntas mixtas</li>
+                    <li><strong>SUPERVIVENCIA:</strong> Hasta que falles</li>
+                    <li><strong>CATEGORÍA:</strong> Tema específico</li>
+                    <li><strong>TORNEO:</strong> 5 rondas con multiplicador x1.5</li>
                 </ul>
             </div>
 
             <div class="intro-section">
-                <h4><i class="fas fa-brain"></i> 7 Categorías con 200+ Preguntas Verificadas</h4>
+                <h4><i class="fas fa-brain"></i> 7 Categorías - 200+ Preguntas</h4>
+                <div class="categories-grid">
+                    <span class="category-tag">MESSI</span>
+                    <span class="category-tag">BOCA</span>
+                    <span class="category-tag">RIVER</span>
+                    <span class="category-tag">MUNDIAL</span>
+                    <span class="category-tag">CHAMPIONS</span>
+                    <span class="category-tag">SELECCIÓN</span>
+                    <span class="category-tag">GENERAL</span>
+                </div>
+            </div>
+
+            <div class="intro-section">
+                <h4><i class="fas fa-trophy"></i> Sistema de Puntuación</h4>
                 <ul>
-                    <li><strong>MESSI:</strong>
-                    <li><strong>BOCA JUNIORS:</strong>
-                    <li><strong>RIVER PLATE:</strong>
-                    <li><strong>MUNDIAL:</strong>
-                    <li><strong>CHAMPIONS LEAGUE:</strong>
-                    <li><strong>SELECCIÓN ARGENTINA:</strong>
-                    <li><strong>GENERAL:</strong>
+                    <li><strong>Base:</strong> 100 puntos + Bonus de velocidad y racha</li>
+                    <li><strong>Respuesta Perfecta:</strong> +50 pts (<2s)</li>
+                    <li><strong>Ultra Rápido:</strong> +75 pts (<1.5s)</li>
+                    <li><strong>Power-Ups:</strong> 50/50, Tiempo Extra, Multiplicador x2</li>
                 </ul>
             </div>
 
             <div class="intro-section">
-                <h4><i class="fas fa-trophy"></i> Sistema de Puntuación Revolucionario</h4>
+                <h4><i class="fas fa-medal"></i> 17 Logros & Dificultades</h4>
                 <ul>
-                    <li><strong>Puntos Base:</strong> 100 puntos por respuesta correcta</li>
-                    <li><strong>Bonus de Velocidad:</strong> Hasta 75 puntos extra por rapidez</li>
-                    <li><strong>Bonus de Racha:</strong> Hasta 150 puntos por respuestas consecutivas</li>
-                    <li><strong>Bonus de Combo:</strong> Hasta 100 puntos por cadenas perfectas</li>
-                    <li><strong>Respuesta Perfecta:</strong> +50 puntos (<2 segundos)</li>
-                    <li><strong>Ultra Rápido:</strong> +75 puntos (<1.5 segundos)</li>
-                    <li><strong>Multiplicadores Dinámicos:</strong> Basados en dificultad y modo</li>
+                    <li><strong>Fácil:</strong> 6s (x0.8) | <strong>Normal:</strong> 5s (x1.0)</li>
+                    <li><strong>Difícil:</strong> 4s (x1.3) | <strong>Extremo:</strong> 3s (x1.6)</li>
+                    <li><strong>Logros:</strong> Velocista, Superviviente, Dios del Crack Rápido</li>
                 </ul>
-            </div>
-
-            <div class="intro-section">
-                <h4><i class="fas fa-rocket"></i> Power-Ups Estratégicos</h4>
-                <ul>
-                    <li><strong>50/50:</strong> Elimina 2 opciones incorrectas</li>
-                    <li><strong>Tiempo Extra:</strong> +3 segundos para la pregunta</li>
-                    <li><strong>Multiplicador x2:</strong> Duplica puntos por 3 preguntas</li>
-                    <li><strong>Segunda Oportunidad:</strong> Una vida extra en Supervivencia</li>
-                </ul>
-            </div>
-
-            <div class="intro-section">
-                <h4><i class="fas fa-medal"></i> 17 Logros Desbloqueables</h4>
-                <ul>
-                    <li><strong>Velocista:</strong> 10 respuestas en menos de 2 segundos</li>
-                    <li><strong>Superviviente Elite:</strong> 50+ respuestas en modo Supervivencia</li>
-                    <li><strong>Rayo:</strong> Respuesta ultra-rápida (<1.5s)</li>
-                    <li><strong>Dios del Crack Rápido:</strong> 5000+ puntos en una partida</li>
-                    <li>Y 13 logros más por descubrir...</li>
-                </ul>
-            </div>
-
-            <div class="intro-section">
-                <h4><i class="fas fa-cog"></i> Dificultades Personalizables</h4>
-                <ul>
-                    <li><strong>Fácil:</strong> 6 segundos por pregunta (x0.8 multiplicador)</li>
-                    <li><strong>Normal:</strong> 5 segundos por pregunta (x1.0 multiplicador)</li>
-                    <li><strong>Difícil:</strong> 4 segundos por pregunta (x1.3 multiplicador)</li>
-                    <li><strong>Extremo:</strong> 3 segundos por pregunta (x1.6 multiplicador)</li>
-                </ul>
-            </div>
-
-            <div class="intro-section">
-                <h4><i class="fas fa-chart-line"></i> Estadísticas Avanzadas</h4>
-                <ul>
-                    <li>Rankings por categoría y modo de juego</li>
-                    <li>Análisis de rendimiento por dificultad</li>
-                    <li>Historial de puntuaciones y mejores rachas</li>
-                    <li>Tiempo promedio de respuesta y precision</li>
-                </ul>
-            </div>
-
-            <div class="intro-highlight">
-                <p><strong>🔥 ¡NOVEDAD!</strong> Todas las preguntas están verificadas con fuentes oficiales (FIFA, UEFA, CONMEBOL, AFA) para garantizar precisión y calidad suprema.</p>
             </div>
 
             <div class="modal-footer">
                 <button type="button" class="primary-button" id="goToCrackRapidoButton">
-                    <i class="fas fa-rocket"></i> ¡EMPEZAR EL DESAFÍO DEFINITIVO!
+                    <i class="fas fa-rocket"></i> ¡EMPEZAR EL DESAFÍO!
                 </button>
             </div>
         </div>
@@ -1419,23 +1788,23 @@
                         // Escuchar actualizaciones del SW
                         registration.addEventListener('updatefound', () => {
                             const newWorker = registration.installing;
-                            console.log('[SW] Nueva versión del Service Worker encontrada');
+                            console.log('[SW] Nueva versiï¿½n del Service Worker encontrada');
                             
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed') {
                                     if (navigator.serviceWorker.controller) {
-                                        // Nueva versión disponible, mostrar notificación
-                                        console.log('[SW] Nueva versión disponible, actualizando...');
+                                        // Nueva versiï¿½n disponible, mostrar notificaciï¿½n
+                                        console.log('[SW] Nueva versiï¿½n disponible, actualizando...');
                                         showUpdateNotification();
                                     } else {
-                                        // Primera instalación
+                                        // Primera instalaciï¿½n
                                         console.log('[SW] Service Worker instalado por primera vez');
                                     }
                                 }
                             });
                         });
                         
-                        // Verificar si hay actualizaciones periódicamente
+                        // Verificar si hay actualizaciones periï¿½dicamente
                         setInterval(() => {
                             registration.update();
                         }, 60000); // Verificar cada minuto
@@ -1448,10 +1817,10 @@
                 // Escuchar mensajes del Service Worker
                 navigator.serviceWorker.addEventListener('message', event => {
                     if (event.data && event.data.type === 'SW_UPDATED') {
-                        console.log(`[SW] Service Worker actualizado a versión ${event.data.version}`);
-                        // Opcionalmente recargar la página o mostrar notificación
+                        console.log(`[SW] Service Worker actualizado a versiï¿½n ${event.data.version}`);
+                        // Opcionalmente recargar la pï¿½gina o mostrar notificaciï¿½n
                         setTimeout(() => {
-                            if (confirm('¡Nueva versión disponible! ¿Quieres recargar la página para obtener las últimas mejoras?')) {
+                            if (confirm('ï¿½Nueva versiï¿½n disponible! ï¿½Quieres recargar la pï¿½gina para obtener las ï¿½ltimas mejoras?')) {
                                 window.location.reload(true);
                             }
                         }, 1000);
@@ -1460,9 +1829,9 @@
             });
         }
         
-        // Función para mostrar notificación de actualización
+        // Funciï¿½n para mostrar notificaciï¿½n de actualizaciï¿½n
         function showUpdateNotification() {
-            // Crear un elemento de notificación
+            // Crear un elemento de notificaciï¿½n
             const notification = document.createElement('div');
             notification.style.cssText = `
                 position: fixed;
@@ -1480,8 +1849,8 @@
                 transition: all 0.3s ease;
             `;
             notification.innerHTML = `
-                <strong>¡Actualización disponible!</strong><br>
-                <small>Haz clic para obtener la última versión</small>
+                <strong>ï¿½Actualizaciï¿½n disponible!</strong><br>
+                <small>Haz clic para obtener la ï¿½ltima versiï¿½n</small>
             `;
             
             notification.onclick = () => {
@@ -1490,7 +1859,7 @@
             
             document.body.appendChild(notification);
             
-            // Auto-remover después de 10 segundos
+            // Auto-remover despuï¿½s de 10 segundos
             setTimeout(() => {
                 if (notification.parentNode) {
                     notification.style.opacity = '0';
@@ -1501,7 +1870,7 @@
             }, 10000);
         }
         
-        // Función para limpiar cache manualmente (útil para debugging)
+        // Funciï¿½n para limpiar cache manualmente (ï¿½til para debugging)
         function clearSiteCache() {
             if ('caches' in window) {
                 caches.keys().then(cacheNames => {
@@ -1518,7 +1887,7 @@
                             type: 'CLEAR_CACHE'
                         });
                     }
-                    // Recargar la página para obtener contenido fresco
+                    // Recargar la pï¿½gina para obtener contenido fresco
                     window.location.reload(true);
                 });
             }
@@ -1537,18 +1906,18 @@
     <!-- Script para manejar los clicks en los botones de jugar -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Variables para manejar información de salas
+            // Variables para manejar informaciï¿½n de salas
             const gameFrames = new Map();
             let roomsData = {
                 quiensabemas: { active: 0, available: 0 },
                 mentiroso: { active: 0, available: 0 }
             };
 
-            // Elementos DOM para mostrar información de salas
+            // Elementos DOM para mostrar informaciï¿½n de salas
             const quienSabeMasRooms = document.getElementById('quiensabemas-rooms');
             const mentirosoRooms = document.getElementById('mentiroso-rooms');
 
-            // Función para actualizar la visualización de salas
+            // Funciï¿½n para actualizar la visualizaciï¿½n de salas
             function updateRoomsDisplay() {
                 if (quienSabeMasRooms) {
                     const qsmCount = quienSabeMasRooms.querySelector('.room-count');
@@ -1563,7 +1932,7 @@
                 }
             }
 
-            // Función para crear iframe oculto y solicitar información de salas
+            // Funciï¿½n para crear iframe oculto y solicitar informaciï¿½n de salas
             function createGameFrame(gameType, gameUrl) {
                 if (gameFrames.has(gameType)) {
                     const existingFrame = gameFrames.get(gameType);
@@ -1592,7 +1961,7 @@
                 return iframe;
             }
 
-            // Función para solicitar salas a un juego específico
+            // Funciï¿½n para solicitar salas a un juego especï¿½fico
             function requestRoomsFromGame(gameType) {
                 const iframe = gameFrames.get(gameType);
                 if (iframe && iframe.contentWindow) {
@@ -1607,7 +1976,7 @@
                 }
             }
 
-            // Función para procesar respuesta de salas
+            // Funciï¿½n para procesar respuesta de salas
             function processRoomsResponse(data) {
                 if (!data.rooms || !Array.isArray(data.rooms)) {
                     roomsData[data.gameType] = { active: 0, available: 0 };
@@ -1642,13 +2011,13 @@
                 }
             });
 
-            // Inicializar iframes para obtener información de salas
+            // Inicializar iframes para obtener informaciï¿½n de salas
             function initializeRoomsTracking() {
                 createGameFrame('quiensabemas', 'quiensabemas.html');
                 createGameFrame('mentiroso', 'mentiroso.html');
             }
 
-            // Función para actualizar salas periódicamente
+            // Funciï¿½n para actualizar salas periï¿½dicamente
             function scheduleRoomsUpdate() {
                 setInterval(() => {
                     requestRoomsFromGame('quiensabemas');
@@ -1730,7 +2099,7 @@
                 }
             });
             
-            // Botón para continuar al lobby de Mentiroso
+            // Botï¿½n para continuar al lobby de Mentiroso
             if (goToLobbyMentirosoButton) {
                 goToLobbyMentirosoButton.addEventListener('click', function() {
                     mentirosoIntroModal.classList.remove('active');
@@ -1748,7 +2117,7 @@
                 });
             }
             
-            // Botón para continuar al lobby de QSM
+            // Botï¿½n para continuar al lobby de QSM
             if (goToLobbyQSMButton) {
                 goToLobbyQSMButton.addEventListener('click', function() {
                     qsmIntroModal.classList.remove('active');
@@ -1766,7 +2135,7 @@
                 });
             }
             
-            // Botón para continuar al lobby de Crack Rápido
+            // Botï¿½n para continuar al lobby de Crack Rï¿½pido
             if (goToCrackRapidoButton) {
                 goToCrackRapidoButton.addEventListener('click', function() {
                     crackRapidoIntroModal.classList.remove('active');
@@ -1830,7 +2199,7 @@
                 scheduleRoomsUpdate();
             }, 1000);
 
-            // Limpiar iframes cuando se vaya a salir de la página
+            // Limpiar iframes cuando se vaya a salir de la pï¿½gina
             window.addEventListener('beforeunload', function() {
                 gameFrames.forEach((iframe, gameType) => {
                     if (iframe.parentNode) {
@@ -1842,7 +2211,7 @@
 
             // ANALYTICS TRACKING ADICIONAL
             
-            // Track clicks en el botón de cambiar nombre
+            // Track clicks en el botï¿½n de cambiar nombre
             const changeNameBtn = document.getElementById('changeNameBtn');
             if (changeNameBtn) {
                 changeNameBtn.addEventListener('click', function() {
@@ -1856,7 +2225,7 @@
                 });
             }
 
-            // Track clicks en enlaces de navegación
+            // Track clicks en enlaces de navegaciï¿½n
             const navLinks = document.querySelectorAll('.main-navigation a, .extra-link-button');
             navLinks.forEach(link => {
                 link.addEventListener('click', function() {
@@ -1902,7 +2271,7 @@
                 });
             });
 
-            // Track tiempo en página
+            // Track tiempo en pï¿½gina
             const startTime = Date.now();
             const timeTracking = [30, 60, 120, 300]; // segundos
             const trackedTime = new Set();
@@ -1951,7 +2320,7 @@
                 });
             });
 
-            console.log('🎯 Analytics tracking configurado para games.html');
+            console.log('?? Analytics tracking configurado para games.html');
         });
     </script>
 </body>

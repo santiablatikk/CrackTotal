@@ -32,20 +32,20 @@
     <meta property="og:url" content="https://www.cracktotal.com/quiensabemas.html">
     <meta property="og:title" content="Crack Total - Quien Sabe Más (1v1)">
     <meta property="og:description" content="Desafiá a otro jugador en Quien Sabe Más, el juego de preguntas y respuestas de fútbol de Crack Total.">
-    <meta property="og:image" content="https://www.cracktotal.com/images/quiensabemas_card.jpg"> 
+    <meta property="og:image" content="https://www.cracktotal.com/assets/images/quiensabemas_card.jpg"> 
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://www.cracktotal.com/quiensabemas.html">
     <meta property="twitter:title" content="Crack Total - Quien Sabe Más (1v1)">
     <meta property="twitter:description" content="Desafiá a otro jugador en Quien Sabe Más, el juego de preguntas y respuestas de fútbol.">
-    <meta property="twitter:image" content="https://www.cracktotal.com/images/quiensabemas_card.jpg">
+    <meta property="twitter:image" content="https://www.cracktotal.com/assets/images/quiensabemas_card.jpg">
     <meta property="twitter:site" content="@cracktotal_">
 
-    <link rel="stylesheet" href="css/base.css?v=202505272312">
-    <link rel="stylesheet" href="css/layout.css?v=202505272312">
-    <link rel="stylesheet" href="css/qsm.css?v=202505272312">
-    <link rel="stylesheet" href="css/modals.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/qsm.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/modals.css?v=202505272312">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
@@ -78,7 +78,7 @@
         "name": "Crack Total",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://www.cracktotal.com/images/portada.jpg"
+          "url": "https://www.cracktotal.com/assets/images/portada.jpg"
         }
       },
       "inLanguage": "es-AR",
@@ -87,11 +87,11 @@
       "operatingSystem": "All"
     }
     </script>
-    <script src="js/main.js?v=202505272312"></script>
-    <script src="js/firebase-config.js"></script>
-    <script src="js/firebase-init.js"></script>
-    <script type="module" src="js/logros.js?v=202505272312"></script>
-    <script type="module" src="js/quiensabemas.js?v=202505272312"></script>
+    <script src="assets/js/main.js?v=202505272312"></script>
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/firebase-init.js"></script>
+    <script type="module" src="assets/js/logros.js?v=202505272312"></script>
+    <script type="module" src="assets/js/quiensabemas.js?v=202505272312"></script>
 </head>
 <body class="game-body qsm-1v1-body">
     <!-- Skip Link para accesibilidad -->
@@ -350,6 +350,116 @@
             </form>
         </div>
     </div>
+
+    <!-- Timer Container -->
+    <div id="streakIndicator" class="streak-indicator" style="display: none;">
+        <span class="streak-text">Racha: </span>
+        <span class="streak-count">0</span>
+        <span class="streak-fire">🔥</span>
+    </div>
+
+    <!-- Combo Indicator -->
+    <div id="comboIndicator" class="combo-indicator" style="display: none;">
+        <span class="combo-text">Combo x</span>
+        <span class="combo-multiplier">1</span>
+    </div>
+
+    <!-- Game Statistics Panel -->
+    <div id="gameStatsPanel" class="game-stats-panel" style="display: none;">
+        <h4>Estadísticas del Juego</h4>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-label">Tiempo de Respuesta</span>
+                <span class="stat-value" id="avgResponseTime">0s</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Precisión</span>
+                <span class="stat-value" id="accuracyRate">0%</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Mejor Racha</span>
+                <span class="stat-value" id="bestStreak">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Respuestas Perfectas</span>
+                <span class="stat-value" id="perfectAnswers">0</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Mode Selector -->
+    <div id="gameModeSelector" class="game-mode-selector" style="display: none;">
+        <h4>Seleccionar Modo de Juego</h4>
+        <div class="mode-buttons">
+            <button class="mode-btn" data-mode="classic">Clásico</button>
+            <button class="mode-btn" data-mode="speed">Velocidad</button>
+            <button class="mode-btn" data-mode="extreme">Extremo</button>
+            <button class="mode-btn" data-mode="sudden_death">Muerte Súbita</button>
+        </div>
+    </div>
+
+    <!-- Audio Controls -->
+    <div id="audioControls" class="audio-controls" style="display: none;">
+        <button id="audioToggle" class="audio-btn">🔊</button>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.7" class="volume-slider">
+    </div>
+
+    <!-- Achievement Notifications -->
+    <div id="achievementNotifications" class="achievement-notifications"></div>
+
+    <!-- Connection Status -->
+    <div id="connectionStatus" class="connection-status" style="display: none;">
+        <span id="connectionText">Conectando...</span>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3>Cargando ¿Quién Sabe Más?</h3>
+            <p>Preparando la experiencia de trivia definitiva...</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="assets/js/shared-utils.js"></script>
+    <script type="module" src="assets/js/quiensabemas_1v1.js"></script>
+    
+    <!-- Notification scripts -->
+    <script>
+        // Funciones de notificación compartidas
+        function showNotification(message, type = 'info', duration = 3000) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Trigger animation
+            setTimeout(() => notification.classList.add('show'), 100);
+            
+            // Remove after duration
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, duration);
+        }
+
+        // Share functionality
+        function shareSite() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Crack Total - ¿Quién Sabe Más?',
+                    text: '¡Reta a tus amigos en el mejor juego de trivia de fútbol!',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback
+                navigator.clipboard.writeText(window.location.href);
+                showNotification('¡Enlace copiado al portapapeles!', 'success');
+            }
+        }
+    </script>
 </body>
 </html> 
 

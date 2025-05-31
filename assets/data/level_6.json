@@ -1,0 +1,324 @@
+{
+    "preguntas": [
+        {
+            "pregunta": "¿Qué árbitro pitó la primera final de Copa de Europa (1956) entre Real Madrid y Stade de Reims?",
+            "opciones": {
+                "A": "Arthur Ellis (Inglaterra)",
+                "B": "Leo Horn (Países Bajos)",
+                "C": "Gottfried Dienst (Suiza)",
+                "D": "Károly Palotai (Hungría)"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuál fue el primer jugador en marcar un gol olímpico en una Copa del Mundo?",
+            "opciones": {
+                "A": "Cesáreo Onzari (Argentina 1924)",
+                "B": "Marcos Coll (Colombia 1962)",
+                "C": "Antonio Carbajal (México 1962)",
+                "D": "Nunca se marcó uno en un Mundial"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué jugador tiene el récord de más partidos consecutivos marcando goles en Champions League?",
+            "opciones": {
+                "A": "Lionel Messi (8 partidos)",
+                "B": "Filippo Inzaghi (9 partidos)",
+                "C": "Ruud van Nistelrooy (9 partidos)",
+                "D": "Karim Benzema (10 partidos)"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué minuto exacto marcó Fabio Grosso el gol que clasificó a Italia a la final del Mundial 2006?",
+            "opciones": {
+                "A": "Minuto 119",
+                "B": "Minuto 118",
+                "C": "Minuto 120",
+                "D": "Minuto 117"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuál es el único jugador que ganó el Balón de Oro siendo portero?",
+            "opciones": {
+                "A": "Gordon Banks (1966)",
+                "B": "Lev Yashin (1963)",
+                "C": "Dino Zoff (1973)",
+                "D": "Sepp Maier (1974)"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué técnico dirigió al AC Milan en la final de Champions League perdida ante el Liverpool en 2005?",
+            "opciones": {
+                "A": "Carlo Ancelotti",
+                "B": "Fatih Terim",
+                "C": "Alberto Zaccheroni",
+                "D": "Arrigo Sacchi"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuántos goles marcó Just Fontaine en el Mundial de Suecia 1958?",
+            "opciones": {
+                "A": "11 goles",
+                "B": "12 goles",
+                "C": "13 goles",
+                "D": "14 goles"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Qué club fue el primer equipo no inglés en ganar la Copa de Europa/Champions League?",
+            "opciones": {
+                "A": "Real Madrid (España)",
+                "B": "Benfica (Portugal)",
+                "C": "Inter de Milán (Italia)",
+                "D": "Ajax (Países Bajos)"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿En qué año se introdujo la regla del fuera de juego 'moderno' (dos jugadores entre atacante y gol)?",
+            "opciones": {
+                "A": "1925",
+                "B": "1920",
+                "C": "1930",
+                "D": "1935"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuál fue la primera selección africana en llegar a cuartos de final de un Mundial?",
+            "opciones": {
+                "A": "Nigeria (1994)",
+                "B": "Camerún (1990)",
+                "C": "Marruecos (1986)",
+                "D": "Ghana (2010)"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué jugador marcó el primer gol en la historia de la Copa del Mundo UEFA-CONMEBOL?",
+            "opciones": {
+                "A": "Roberto Dinamite (Brasil)",
+                "B": "Osvaldo Ardiles (Argentina)",
+                "C": "Michel Platini (Francia)",
+                "D": "Diego Forlán (Uruguay)"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuántos penales falló Roberto Baggio en toda su carrera profesional?",
+            "opciones": {
+                "A": "28 penales",
+                "B": "31 penales",
+                "C": "25 penales",
+                "D": "34 penales"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué entrenador llevó al Montpellier a ganar su único título de Ligue 1 en 2012?",
+            "opciones": {
+                "A": "Laurent Blanc",
+                "B": "René Girard",
+                "C": "Rolland Courbis",
+                "D": "Jean Fernandez"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál fue el resultado del partido entre Brasil y Uruguay en el Maracanazo de 1950?",
+            "opciones": {
+                "A": "Uruguay 2-0 Brasil",
+                "B": "Uruguay 2-1 Brasil",
+                "C": "Uruguay 1-0 Brasil",
+                "D": "Uruguay 3-1 Brasil"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué estadio jugó Alfredo Di Stéfano su último partido oficial?",
+            "opciones": {
+                "A": "Santiago Bernabéu",
+                "B": "Camp Nou",
+                "C": "Estadio Vicente Calderón",
+                "D": "Estadio de los Cármenes"
+            },
+            "respuesta_correcta": "D"
+        },
+        {
+            "pregunta": "¿Qué equipo fue el último en ganar la Recopa de Europa antes de su desaparición?",
+            "opciones": {
+                "A": "Chelsea (1998)",
+                "B": "Real Madrid (1999)",
+                "C": "Arsenal (1994)",
+                "D": "Lazio (1999)"
+            },
+            "respuesta_correcta": "D"
+        },
+        {
+            "pregunta": "¿Cuántos jugadores diferentes han marcado más de 200 goles en la historia del Real Madrid?",
+            "opciones": {
+                "A": "7 jugadores",
+                "B": "9 jugadores",
+                "C": "6 jugadores",
+                "D": "8 jugadores"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Qué portero tiene el récord de más penales detenidos en la historia de la Premier League?",
+            "opciones": {
+                "A": "Pepe Reina (23)",
+                "B": "David James (13)",
+                "C": "Edwin van der Sar (11)",
+                "D": "Brad Friedel (9)"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿En qué año se disputó el primer partido de fútbol televisado en directo en Argentina?",
+            "opciones": {
+                "A": "1951",
+                "B": "1954",
+                "C": "1949",
+                "D": "1956"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuál fue el primer club en ganar la Copa Libertadores tres veces consecutivas?",
+            "opciones": {
+                "A": "Estudiantes (1968-1970)",
+                "B": "Independiente (1972-1975)",
+                "C": "Santos (1962-1963)",
+                "D": "Olimpia (1979-1990)"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué jugador marcó el gol número 1000 en la historia de la Liga Argentina de Primera División?",
+            "opciones": {
+                "A": "Angel Labruna",
+                "B": "Arsenio Erico",
+                "C": "Herminio Masantonio",
+                "D": "José Manuel Moreno"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuántas veces enfrentaron River Plate y Boca Juniors en finales oficiales hasta 2023?",
+            "opciones": {
+                "A": "5 veces",
+                "B": "3 veces",
+                "C": "4 veces",
+                "D": "6 veces"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Qué técnico dirigió al Leicester City en su histórica campaña de Premier League 2015-16?",
+            "opciones": {
+                "A": "Nigel Pearson",
+                "B": "Claudio Ranieri",
+                "C": "Craig Shakespeare",
+                "D": "Brendan Rodgers"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué Mundial se implementó por primera vez el sistema de tarjetas amarillas y rojas?",
+            "opciones": {
+                "A": "México 1970",
+                "B": "Inglaterra 1966",
+                "C": "Alemania 1974",
+                "D": "Argentina 1978"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué club tiene el récord de más finales de Copa Libertadores jugadas?",
+            "opciones": {
+                "A": "Boca Juniors (11)",
+                "B": "Independiente (9)",
+                "C": "Peñarol (10)",
+                "D": "River Plate (8)"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuál fue el primer estadio en tener techo retráctil en el mundo?",
+            "opciones": {
+                "A": "Olympic Stadium (Montreal)",
+                "B": "SkyDome (Toronto)",
+                "C": "Millennium Stadium (Cardiff)",
+                "D": "Estadio Único (La Plata)"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué jugador argentino marcó el primer gol en la historia de la J-League japonesa?",
+            "opciones": {
+                "A": "Gary Lineker",
+                "B": "Pierre Littbarski",
+                "C": "Zico",
+                "D": "Osvaldo Ardiles"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué año se fundó la CONMEBOL?",
+            "opciones": {
+                "A": "1914",
+                "B": "1916",
+                "C": "1918",
+                "D": "1920"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál fue el resultado del primer partido oficial entre Argentina y Uruguay en 1901?",
+            "opciones": {
+                "A": "Argentina 3-2 Uruguay",
+                "B": "Argentina 2-3 Uruguay",
+                "C": "Argentina 1-0 Uruguay",
+                "D": "Uruguay 3-2 Argentina"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué equipo inglés fue el último en ganar la Copa de Ferias antes de convertirse en Copa UEFA?",
+            "opciones": {
+                "A": "Arsenal (1970)",
+                "B": "Leeds United (1968)",
+                "C": "Newcastle United (1969)",
+                "D": "Tottenham (1972)"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuántos equipos participaron en la primera edición de la Copa de Europa en 1955-56?",
+            "opciones": {
+                "A": "15 equipos",
+                "B": "16 equipos",
+                "C": "18 equipos",
+                "D": "20 equipos"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué portero tiene el récord de más partidos consecutivos sin recibir goles en torneos FIFA?",
+            "opciones": {
+                "A": "Walter Zenga (517 minutos)",
+                "B": "Gianluigi Buffon (460 minutos)",
+                "C": "Claudio Taffarel (481 minutos)",
+                "D": "Iker Casillas (509 minutos)"
+            },
+            "respuesta_correcta": "A"
+        }
+    ]
+}

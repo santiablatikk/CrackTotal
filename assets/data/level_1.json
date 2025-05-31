@@ -1,0 +1,1134 @@
+{
+    "preguntas": [
+        {
+            "pregunta": "¿Cuántos jugadores hay en cancha por equipo en un partido de fútbol?",
+            "opciones": {
+                "A": "10",
+                "B": "11",
+                "C": "12",
+                "D": "9"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos minutos dura un partido de fútbol (sin tiempo adicional)?",
+            "opciones": {
+                "A": "80 minutos",
+                "B": "90 minutos",
+                "C": "100 minutos",
+                "D": "120 minutos"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué significa una tarjeta roja del árbitro?",
+            "opciones": {
+                "A": "Amonestación",
+                "B": "Cambio de jugador",
+                "C": "Expulsión",
+                "D": "Gol anulado"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuántos tiempos tiene un partido de fútbol?",
+            "opciones": {
+                "A": "1",
+                "B": "2",
+                "C": "3",
+                "D": "4"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Con qué parte del cuerpo NO se puede tocar el balón (excepto el arquero)?",
+            "opciones": {
+                "A": "Cabeza",
+                "B": "Pecho",
+                "C": "Manos",
+                "D": "Rodillas"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuál es el torneo de selecciones más importante del mundo?",
+            "opciones": {
+                "A": "Copa América",
+                "B": "Eurocopa",
+                "C": "Copa del Mundo",
+                "D": "Copa Confederaciones"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Qué selección ganó el Mundial de Qatar 2022?",
+            "opciones": {
+                "A": "Francia",
+                "B": "Brasil",
+                "C": "Argentina",
+                "D": "España"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuál es el apodo de la selección argentina?",
+            "opciones": {
+                "A": "La Celeste",
+                "B": "La Albiceleste",
+                "C": "La Roja",
+                "D": "La Verde"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué número tradicionalmente usa Lionel Messi?",
+            "opciones": {
+                "A": "9",
+                "B": "10",
+                "C": "7",
+                "D": "11"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué estadio juega el FC Barcelona?",
+            "opciones": {
+                "A": "Santiago Bernabéu",
+                "B": "Camp Nou",
+                "C": "Wanda Metropolitano",
+                "D": "San Mamés"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿De qué color es tradicionalmente la camiseta del Real Madrid?",
+            "opciones": {
+                "A": "Azul",
+                "B": "Roja",
+                "C": "Blanca",
+                "D": "Verde"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué estadio juega Boca Juniors?",
+            "opciones": {
+                "A": "Monumental",
+                "B": "La Bombonera",
+                "C": "Cilindro",
+                "D": "Libertadores de América"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué estadio juega River Plate?",
+            "opciones": {
+                "A": "La Bombonera",
+                "B": "Monumental",
+                "C": "Cilindro",
+                "D": "Estadio Único"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es el torneo de clubes más prestigioso de Europa?",
+            "opciones": {
+                "A": "Europa League",
+                "B": "Champions League",
+                "C": "Conference League",
+                "D": "Copa del Rey"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué país se originó el fútbol moderno?",
+            "opciones": {
+                "A": "Brasil",
+                "B": "Argentina",
+                "C": "Inglaterra",
+                "D": "España"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Qué club tiene más Champions League en la historia?",
+            "opciones": {
+                "A": "Barcelona",
+                "B": "AC Milan",
+                "C": "Real Madrid",
+                "D": "Liverpool"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué país se jugó el primer Mundial de fútbol en 1930?",
+            "opciones": {
+                "A": "Argentina",
+                "B": "Brasil",
+                "C": "Uruguay",
+                "D": "Chile"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuántas Copas del Mundo ganó Brasil?",
+            "opciones": {
+                "A": "4",
+                "B": "5",
+                "C": "3",
+                "D": "6"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué jugador es conocido como 'CR7'?",
+            "opciones": {
+                "A": "Lionel Messi",
+                "B": "Neymar",
+                "C": "Cristiano Ronaldo",
+                "D": "Karim Benzema"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuál es la medida más grande permitida para una cancha de fútbol según FIFA?",
+            "opciones": {
+                "A": "100 x 64 metros",
+                "B": "110 x 75 metros",
+                "C": "120 x 80 metros",
+                "D": "105 x 68 metros"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué significa una tarjeta amarilla?",
+            "opciones": {
+                "A": "Expulsión",
+                "B": "Amonestación",
+                "C": "Gol",
+                "D": "Falta grave"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántas Copas del Mundo ganó Argentina?",
+            "opciones": {
+                "A": "2",
+                "B": "1",
+                "C": "3",
+                "D": "4"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué posición juega tradicionalmente el arquero?",
+            "opciones": {
+                "A": "Defensa",
+                "B": "Mediocampo",
+                "C": "Delantero",
+                "D": "Portería"
+            },
+            "respuesta_correcta": "D"
+        },
+        {
+            "pregunta": "¿Cuál es el clásico más famoso del fútbol argentino?",
+            "opciones": {
+                "A": "Racing vs Independiente",
+                "B": "San Lorenzo vs Huracán",
+                "C": "Boca vs River",
+                "D": "Estudiantes vs Gimnasia"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Qué selección es conocida como 'La Celeste'?",
+            "opciones": {
+                "A": "Argentina",
+                "B": "Uruguay",
+                "C": "Chile",
+                "D": "Paraguay"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos jugadores pueden hacer cambios cada equipo en un partido oficial?",
+            "opciones": {
+                "A": "3",
+                "B": "5",
+                "C": "4",
+                "D": "6"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué copa se disputa anualmente entre los campeones de Sudamérica y Europa?",
+            "opciones": {
+                "A": "Copa Intercontinental",
+                "B": "Copa Mundial de Clubes",
+                "C": "Supercopa",
+                "D": "Copa de Campeones"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es el estadio más grande del mundo por capacidad?",
+            "opciones": {
+                "A": "Maracaná",
+                "B": "Camp Nou",
+                "C": "Estadio 1 de Mayo (Pyongyang)",
+                "D": "Wembley"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué país se juega la Premier League?",
+            "opciones": {
+                "A": "España",
+                "B": "Inglaterra",
+                "C": "Italia",
+                "D": "Francia"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué equipo español es conocido como 'Los Merengues'?",
+            "opciones": {
+                "A": "Barcelona",
+                "B": "Atlético Madrid",
+                "C": "Real Madrid",
+                "D": "Valencia"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuántas veces se puede tocar el balón consecutivamente con la cabeza?",
+            "opciones": {
+                "A": "Máximo 3 veces",
+                "B": "Máximo 2 veces",
+                "C": "No hay límite",
+                "D": "Solo 1 vez"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuál es el torneo continental de selecciones de Sudamérica?",
+            "opciones": {
+                "A": "Copa del Mundo",
+                "B": "Copa América",
+                "C": "Copa Oro",
+                "D": "Copa Confederaciones"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué jugador brasileño es conocido como 'O Rei' (El Rey)?",
+            "opciones": {
+                "A": "Ronaldinho",
+                "B": "Pelé",
+                "C": "Ronaldo",
+                "D": "Romário"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos metros mide la distancia del punto penal a la línea de gol?",
+            "opciones": {
+                "A": "10 metros",
+                "B": "11 metros",
+                "C": "12 metros",
+                "D": "9 metros"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué liga juega el Paris Saint-Germain?",
+            "opciones": {
+                "A": "Premier League",
+                "B": "Bundesliga",
+                "C": "Ligue 1",
+                "D": "Serie A"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuál es el apodo del FC Barcelona?",
+            "opciones": {
+                "A": "Los Blancos",
+                "B": "Los Culés",
+                "C": "Los Rojiblancos",
+                "D": "Los Merengues"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué selección ganó la primera Copa del Mundo en 1930?",
+            "opciones": {
+                "A": "Brasil",
+                "B": "Argentina",
+                "C": "Uruguay",
+                "D": "Italia"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuántos minutos dura cada tiempo en un partido de fútbol?",
+            "opciones": {
+                "A": "40 minutos",
+                "B": "45 minutos",
+                "C": "50 minutos",
+                "D": "60 minutos"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué continente se encuentra la FIFA?",
+            "opciones": {
+                "A": "América",
+                "B": "Europa",
+                "C": "Asia",
+                "D": "África"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué significa VAR?",
+            "opciones": {
+                "A": "Video Assistant Referee",
+                "B": "Virtual Assistant Referee",
+                "C": "Video Advanced Review",
+                "D": "Verification Assistant Review"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuál es el diámetro de un balón de fútbol?",
+            "opciones": {
+                "A": "68-70 cm",
+                "B": "70-72 cm",
+                "C": "66-68 cm",
+                "D": "72-74 cm"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿En qué estadio se jugó la final del Mundial 2018?",
+            "opciones": {
+                "A": "Estadio Luzhniki",
+                "B": "Estadio Olímpico",
+                "C": "Estadio Nacional",
+                "D": "Estadio Central"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué selección tiene más participaciones en Mundiales?",
+            "opciones": {
+                "A": "Argentina",
+                "B": "Brasil",
+                "C": "Alemania",
+                "D": "Italia"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es la altura del arco de fútbol?",
+            "opciones": {
+                "A": "2.44 metros",
+                "B": "2.40 metros",
+                "C": "2.50 metros",
+                "D": "2.35 metros"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿En qué año se creó la Champions League?",
+            "opciones": {
+                "A": "1955",
+                "B": "1992",
+                "C": "1960",
+                "D": "1970"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué color tiene la camiseta de la selección de Brasil?",
+            "opciones": {
+                "A": "Azul",
+                "B": "Amarilla",
+                "C": "Verde",
+                "D": "Roja"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántas Copas del Mundo ha ganado Alemania?",
+            "opciones": {
+                "A": "3",
+                "B": "4",
+                "C": "2",
+                "D": "5"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué liga italiana juega la Juventus?",
+            "opciones": {
+                "A": "Serie A",
+                "B": "Serie B",
+                "C": "Primera División",
+                "D": "Liga Italiana"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuál es el ancho del arco de fútbol?",
+            "opciones": {
+                "A": "7.30 metros",
+                "B": "7.32 metros",
+                "C": "7.20 metros",
+                "D": "7.40 metros"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué selección ganó la Eurocopa 2020 (jugada en 2021)?",
+            "opciones": {
+                "A": "Francia",
+                "B": "Inglaterra",
+                "C": "Italia",
+                "D": "España"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué ciudad está ubicado el estadio Maracaná?",
+            "opciones": {
+                "A": "São Paulo",
+                "B": "Río de Janeiro",
+                "C": "Brasilia",
+                "D": "Salvador"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos equipos participan en la Champions League en fase de grupos?",
+            "opciones": {
+                "A": "32",
+                "B": "24",
+                "C": "36",
+                "D": "28"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué club inglés juega en Anfield?",
+            "opciones": {
+                "A": "Manchester United",
+                "B": "Arsenal",
+                "C": "Liverpool",
+                "D": "Chelsea"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuál es el máximo de jugadores que puede tener un equipo en el banco de suplentes?",
+            "opciones": {
+                "A": "5",
+                "B": "7",
+                "C": "9",
+                "D": "12"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué año se disputó el primer Mundial femenino?",
+            "opciones": {
+                "A": "1989",
+                "B": "1991",
+                "C": "1995",
+                "D": "1987"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué selección es conocida como 'Les Bleus'?",
+            "opciones": {
+                "A": "Italia",
+                "B": "Francia",
+                "C": "Bélgica",
+                "D": "Países Bajos"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántas Champions League ha ganado el AC Milan?",
+            "opciones": {
+                "A": "6",
+                "B": "7",
+                "C": "8",
+                "D": "5"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué país se encuentra la sede de la UEFA?",
+            "opciones": {
+                "A": "Francia",
+                "B": "Suiza",
+                "C": "Alemania",
+                "D": "Inglaterra"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué jugador tiene más goles en la historia de los Mundiales?",
+            "opciones": {
+                "A": "Pelé",
+                "B": "Miroslav Klose",
+                "C": "Diego Maradona",
+                "D": "Ronaldo"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es el área del área chica en metros cuadrados?",
+            "opciones": {
+                "A": "110.88 m²",
+                "B": "100.5 m²",
+                "C": "120.32 m²",
+                "D": "95.76 m²"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿En qué Mundial debutó como jugador Diego Maradona?",
+            "opciones": {
+                "A": "Argentina 1978",
+                "B": "España 1982",
+                "C": "México 1986",
+                "D": "Italia 1990"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos minutos de descuento se pueden agregar como máximo?",
+            "opciones": {
+                "A": "No hay límite",
+                "B": "15 minutos",
+                "C": "10 minutos",
+                "D": "5 minutos"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué club tiene el apodo de 'Los Millonarios'?",
+            "opciones": {
+                "A": "Boca Juniors",
+                "B": "River Plate",
+                "C": "Racing",
+                "D": "Independiente"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué liga alemana juega el Bayern Munich?",
+            "opciones": {
+                "A": "Bundesliga",
+                "B": "2. Bundesliga",
+                "C": "Liga Alemana",
+                "D": "Primera División"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cómo se llama la competición europea más importante de clubes?",
+            "opciones": {
+                "A": "Champions League",
+                "B": "Europa League",
+                "C": "Liga Europea",
+                "D": "Copa de Europa"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuántas sustituciones se pueden hacer por equipo en un partido?",
+            "opciones": {
+                "A": "3",
+                "B": "5",
+                "C": "4",
+                "D": "6"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué significan las siglas VAR?",
+            "opciones": {
+                "A": "Video Assistant Referee",
+                "B": "Video Arbitro Referente",
+                "C": "Variable Arbitral Review",
+                "D": "Verificación Arbitral Reglamentaria"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿En qué país se inventó el fútbol moderno?",
+            "opciones": {
+                "A": "Brasil",
+                "B": "Argentina",
+                "C": "Inglaterra",
+                "D": "España"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuál es el apodo de la selección de Brasil?",
+            "opciones": {
+                "A": "La Verde",
+                "B": "La Canarinha",
+                "C": "Los Brasileños",
+                "D": "La Samba"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué club argentino es conocido como 'La Máquina'?",
+            "opciones": {
+                "A": "Boca Juniors",
+                "B": "River Plate",
+                "C": "Independiente",
+                "D": "San Lorenzo"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es el estadio más grande del mundo?",
+            "opciones": {
+                "A": "Maracaná",
+                "B": "Wembley",
+                "C": "Rungrado 1º de Mayo",
+                "D": "Camp Nou"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Qué color de tarjeta significa expulsión?",
+            "opciones": {
+                "A": "Amarilla",
+                "B": "Roja",
+                "C": "Verde",
+                "D": "Azul"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántas Champions League ganó el Real Madrid hasta 2023?",
+            "opciones": {
+                "A": "13",
+                "B": "14",
+                "C": "15",
+                "D": "12"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué ciudad española está el Camp Nou?",
+            "opciones": {
+                "A": "Madrid",
+                "B": "Barcelona",
+                "C": "Sevilla",
+                "D": "Valencia"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es el apodo de Lionel Messi?",
+            "opciones": {
+                "A": "El Pibe",
+                "B": "La Pulga",
+                "C": "El Crack",
+                "D": "El Genio"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué equipo italiano es conocido como 'La Juventus'?",
+            "opciones": {
+                "A": "AC Milan",
+                "B": "Inter de Milán",
+                "C": "Juventus de Turín",
+                "D": "AS Roma"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuántos equipos participan en la Premier League inglesa?",
+            "opciones": {
+                "A": "18",
+                "B": "20",
+                "C": "22",
+                "D": "16"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué selección ganó el Mundial de Fútbol 2022?",
+            "opciones": {
+                "A": "Brasil",
+                "B": "Francia",
+                "C": "Argentina",
+                "D": "España"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cómo se llama el estadio del Manchester United?",
+            "opciones": {
+                "A": "Old Trafford",
+                "B": "Etihad Stadium",
+                "C": "Anfield",
+                "D": "Stamford Bridge"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué país organizó el Mundial de Fútbol 2018?",
+            "opciones": {
+                "A": "Brasil",
+                "B": "Alemania",
+                "C": "Rusia",
+                "D": "Francia"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuál es el máximo goleador histórico de la Champions League?",
+            "opciones": {
+                "A": "Lionel Messi",
+                "B": "Cristiano Ronaldo",
+                "C": "Robert Lewandowski",
+                "D": "Karim Benzema"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año se jugó el primer Mundial de Fútbol?",
+            "opciones": {
+                "A": "1928",
+                "B": "1930",
+                "C": "1932",
+                "D": "1934"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es el color tradicional de la camiseta del FC Barcelona?",
+            "opciones": {
+                "A": "Blanco y negro",
+                "B": "Azul y granate",
+                "C": "Rojo y azul",
+                "D": "Verde y amarillo"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué significa ser 'offside' en el fútbol?",
+            "opciones": {
+                "A": "Estar en posición adelantada",
+                "B": "Estar fuera del campo",
+                "C": "Hacer una falta",
+                "D": "Estar lesionado"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuántas veces puede tocar el balón un portero con las manos?",
+            "opciones": {
+                "A": "Las que quiera en su área",
+                "B": "Solo una vez por jugada",
+                "C": "Máximo 3 toques",
+                "D": "No puede tocarlo con las manos"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué equipo francés es conocido como PSG?",
+            "opciones": {
+                "A": "Paris Saint-Germain",
+                "B": "Olympique de Marsella",
+                "C": "AS Monaco",
+                "D": "Olympique de Lyon"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿En qué continente está la Copa América?",
+            "opciones": {
+                "A": "Europa",
+                "B": "África",
+                "C": "América del Sur",
+                "D": "Asia"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuántos minutos dura cada tiempo de un partido?",
+            "opciones": {
+                "A": "40 minutos",
+                "B": "45 minutos",
+                "C": "50 minutos",
+                "D": "35 minutos"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué club alemán es conocido como Bayern?",
+            "opciones": {
+                "A": "Bayern Munich",
+                "B": "Borussia Dortmund",
+                "C": "RB Leipzig",
+                "D": "Bayer Leverkusen"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuál es la competición de selecciones más importante de Europa?",
+            "opciones": {
+                "A": "Nations League",
+                "B": "Eurocopa",
+                "C": "Confederaciones",
+                "D": "Mundial"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿De qué color es tradicionalmente la camiseta del Real Madrid?",
+            "opciones": {
+                "A": "Blanca",
+                "B": "Azul",
+                "C": "Roja",
+                "D": "Negra"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué jugador brasileño es conocido como 'Ronaldinho'?",
+            "opciones": {
+                "A": "Ronaldo Nazário",
+                "B": "Ronaldinho Gaúcho",
+                "C": "Cristiano Ronaldo",
+                "D": "Ronaldão"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos Mundial de Fútbol ha ganado Brasil?",
+            "opciones": {
+                "A": "4",
+                "B": "5",
+                "C": "6",
+                "D": "3"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué club inglés juega en Anfield?",
+            "opciones": {
+                "A": "Manchester United",
+                "B": "Liverpool",
+                "C": "Chelsea",
+                "D": "Arsenal"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es el nombre del balón de fútbol oficial?",
+            "opciones": {
+                "A": "Pelota",
+                "B": "Esférico",
+                "C": "Balón",
+                "D": "Todas son correctas"
+            },
+            "respuesta_correcta": "D"
+        },
+        {
+            "pregunta": "¿En qué país se encuentra la Liga Premier?",
+            "opciones": {
+                "A": "España",
+                "B": "Inglaterra",
+                "C": "Italia",
+                "D": "Francia"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos árbitros hay en un partido de fútbol profesional?",
+            "opciones": {
+                "A": "1 árbitro principal",
+                "B": "1 árbitro y 2 asistentes",
+                "C": "1 árbitro, 2 asistentes y 1 cuarto árbitro",
+                "D": "Depende del torneo"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Qué significa 'Hat-trick' en el fútbol?",
+            "opciones": {
+                "A": "Tres goles en un partido",
+                "B": "Tres asistencias",
+                "C": "Tres faltas",
+                "D": "Tres cambios"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuál es el apodo de la selección argentina?",
+            "opciones": {
+                "A": "Los Gauchos",
+                "B": "La Albiceleste",
+                "C": "Los Pamperos",
+                "D": "Los Tangueros"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué ciudad italiana juega la Juventus?",
+            "opciones": {
+                "A": "Roma",
+                "B": "Milán",
+                "C": "Turín",
+                "D": "Nápoles"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuántos metros mide el largo de un campo de fútbol estándar?",
+            "opciones": {
+                "A": "90-120 metros",
+                "B": "100-110 metros",
+                "C": "105 metros exactos",
+                "D": "80-100 metros"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué club español es conocido como 'Los Colchoneros'?",
+            "opciones": {
+                "A": "Real Madrid",
+                "B": "Barcelona",
+                "C": "Atlético de Madrid",
+                "D": "Valencia"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuál es la liga de fútbol más importante de España?",
+            "opciones": {
+                "A": "Primera División",
+                "B": "La Liga",
+                "C": "Liga Española",
+                "D": "Todas son correctas"
+            },
+            "respuesta_correcta": "D"
+        },
+        {
+            "pregunta": "¿Qué selección ganó la primera Copa del Mundo?",
+            "opciones": {
+                "A": "Brasil",
+                "B": "Argentina",
+                "C": "Uruguay",
+                "D": "Italia"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuántas Copas del Mundo ha ganado Alemania?",
+            "opciones": {
+                "A": "3",
+                "B": "4",
+                "C": "5",
+                "D": "2"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año nació Lionel Messi?",
+            "opciones": {
+                "A": "1986",
+                "B": "1987",
+                "C": "1988",
+                "D": "1985"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es el club más exitoso de Inglaterra?",
+            "opciones": {
+                "A": "Manchester United",
+                "B": "Liverpool",
+                "C": "Arsenal",
+                "D": "Chelsea"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué significan las siglas FIFA?",
+            "opciones": {
+                "A": "Federación Internacional de Fútbol Asociado",
+                "B": "Federación Intercontinental de Fútbol Amateur",
+                "C": "Fédération Internationale de Football Association",
+                "D": "A y C son correctas"
+            },
+            "respuesta_correcta": "D"
+        },
+        {
+            "pregunta": "¿Cada cuántos años se juega la Copa del Mundo?",
+            "opciones": {
+                "A": "2 años",
+                "B": "3 años",
+                "C": "4 años",
+                "D": "5 años"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuál es el estadio donde juega el Paris Saint-Germain?",
+            "opciones": {
+                "A": "Parc des Princes",
+                "B": "Stade de France",
+                "C": "Allianz Riviera",
+                "D": "Orange Vélodrome"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué club brasileño es conocido mundialmente por sus colores amarillo y verde?",
+            "opciones": {
+                "A": "Flamengo",
+                "B": "Santos",
+                "C": "Corinthians",
+                "D": "Palmeiras"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántas tarjetas amarillas resultan en una roja?",
+            "opciones": {
+                "A": "1",
+                "B": "2",
+                "C": "3",
+                "D": "Depende del árbitro"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué país se jugó el Mundial de Fútbol 2014?",
+            "opciones": {
+                "A": "Argentina",
+                "B": "Brasil",
+                "C": "Alemania",
+                "D": "España"
+            },
+            "respuesta_correcta": "B"
+        }
+    ]
+}

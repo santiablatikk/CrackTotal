@@ -1,0 +1,324 @@
+{
+    "preguntas": [
+      {
+            "pregunta": "¿En qué minuto exacto marcó Sergio Agüero el gol del título del Manchester City en 2012?",
+        "opciones": {
+                "A": "93:20",
+                "B": "93:15",
+                "C": "94:05",
+                "D": "93:45"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuál fue el xG (Expected Goals) de Messi en la temporada 2018-19?",
+        "opciones": {
+                "A": "31.9",
+                "B": "33.4",
+                "C": "29.8",
+                "D": "35.1"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos segundos duró el gol más rápido en la historia de La Liga?",
+        "opciones": {
+                "A": "7.69",
+                "B": "8.1",
+                "C": "6.9",
+                "D": "9.12"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Qué jugador tiene el récord de más sprints de alta intensidad en una temporada de Premier League?",
+        "opciones": {
+                "A": "N'Golo Kanté (2016-17)",
+                "B": "Jamie Vardy (2015-16)",
+                "C": "Son Heung-min (2020-21)",
+                "D": "Mohamed Salah (2017-18)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuál fue el valor exacto del traspaso de Mbappé al Real Madrid en 2024?",
+        "opciones": {
+                "A": "Transferencia gratuita",
+                "B": "35 millones de euros",
+                "C": "50 millones de euros",
+                "D": "60 millones de euros"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuántos pases completó Xavi en la final del Mundial 2010?",
+        "opciones": {
+                "A": "102",
+                "B": "103",
+                "C": "104",
+                "D": "101"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué portero tiene el récord de más penales atajados en Champions League?",
+        "opciones": {
+                "A": "Gianluigi Buffon (12)",
+                "B": "Manuel Neuer (15)",
+                "C": "Iker Casillas (11)",
+                "D": "Pepe Reina (8)"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué temporada Thierry Henry marcó exactamente 39 goles en Premier League?",
+        "opciones": {
+                "A": "2003-04",
+                "B": "2002-03",
+                "C": "2004-05",
+                "D": "2001-02"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuál es el récord de pases consecutivos sin perder el balón en un partido de élite?",
+        "opciones": {
+                "A": "178 (Busquets)",
+                "B": "156 (Xavi)",
+                "C": "184 (Kroos)",
+                "D": "162 (Modric)"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuántos metros exactos corrió Kanté contra el Arsenal en abril de 2017?",
+        "opciones": {
+                "A": "13.8 km",
+                "B": "13.2 km",
+                "C": "14.1 km",
+                "D": "12.9 km"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Qué jugador tiene el récord de cambios de dirección en un partido de Champions League?",
+        "opciones": {
+                "A": "Messi vs Bayern (2015)",
+                "B": "Iniesta vs Chelsea (2009)",
+                "C": "Hazard vs Barcelona (2018)",
+                "D": "Neymar vs Real Madrid (2017)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuál fue la precisión exacta de pases de Kroos en la final de la Champions League 2018?",
+        "opciones": {
+                "A": "96.7%",
+                "B": "97.1%",
+                "C": "95.8%",
+                "D": "98.2%"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos duelos aéreos ganó Virgil van Dijk en su primera temporada en Liverpool?",
+        "opciones": {
+                "A": "89",
+                "B": "94",
+                "C": "86",
+                "D": "91"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué entrenador tiene el mayor porcentaje de victorias en finales de Champions League?",
+        "opciones": {
+                "A": "Zinedine Zidane (100% - 3/3)",
+                "B": "Bob Paisley (100% - 3/3)",
+                "C": "Carlo Ancelotti (80% - 4/5)",
+                "D": "Pep Guardiola (100% - 2/2)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuál es el récord de velocidad de remate de Cristiano Ronaldo?",
+        "opciones": {
+                "A": "130.8 km/h",
+                "B": "132.5 km/h",
+                "C": "129.4 km/h",
+                "D": "131.2 km/h"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos toques necesitó Messi para marcar su gol contra el Getafe en 2007?",
+        "opciones": {
+                "A": "23",
+                "B": "22",
+                "C": "24",
+                "D": "21"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué jugador corrió la mayor distancia en el Mundial 2022?",
+        "opciones": {
+                "A": "Luka Modric (Croatia)",
+                "B": "Sofyan Amrabat (Marruecos)",
+                "C": "Enzo Fernández (Argentina)",
+                "D": "Declan Rice (Inglaterra)"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál fue el porcentaje exacto de efectividad en penales de Messi en 2022?",
+        "opciones": {
+                "A": "85.7%",
+                "B": "84.2%",
+                "C": "86.9%",
+                "D": "83.5%"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+            "pregunta": "¿Cuántos regates completó Messi en el partido Argentina vs Australia en el Mundial 2022?",
+        "opciones": {
+                "A": "9",
+                "B": "11",
+                "C": "8",
+                "D": "10"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué portero tiene el mejor ratio de goles esperados concedidos vs goles reales en 2023?",
+        "opciones": {
+                "A": "Emiliano Martínez (-8.7 xGA)",
+                "B": "Alisson Becker (-7.2 xGA)",
+                "C": "Marc-André ter Stegen (-6.8 xGA)",
+                "D": "Jan Oblak (-9.1 xGA)"
+            },
+            "respuesta_correcta": "D"
+        },
+        {
+            "pregunta": "¿Cuántas faltas recibió Neymar en su mejor temporada en cuanto a faltas sufridas?",
+        "opciones": {
+                "A": "187",
+                "B": "192",
+                "C": "178",
+                "D": "201"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál es el récord de pases largos completados en un partido de La Liga?",
+        "opciones": {
+                "A": "47 (Sergio Ramos)",
+                "B": "52 (Gerard Piqué)",
+                "C": "44 (Raphaël Varane)",
+                "D": "49 (Karim Benzema)"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué jugador tiene el mayor número de asistencias con el pie débil en una temporada?",
+        "opciones": {
+                "A": "Kevin De Bruyne (7 con la izquierda)",
+                "B": "David Silva (6 con la derecha)",
+                "C": "Angel Di María (8 con la derecha)",
+                "D": "Mesut Özil (5 con la derecha)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+            "pregunta": "¿Cuántos segundos tardó el gol más rápido tras un saque de banda en competición europea?",
+        "opciones": {
+                "A": "4.8 segundos",
+                "B": "3.9 segundos",
+                "C": "5.2 segundos",
+                "D": "4.1 segundos"
+        },
+        "respuesta_correcta": "B"
+      },
+      {
+            "pregunta": "¿Qué defensa completó más intercepciones en la Champions League 2019-20?",
+        "opciones": {
+                "A": "Joshua Kimmich (42)",
+                "B": "Casemiro (38)",
+                "C": "Sergio Ramos (35)",
+                "D": "Virgil van Dijk (41)"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuál fue el tiempo exacto de posesión de Barcelona vs Bayern Munich 8-2?",
+        "opciones": {
+                "A": "64.2% Barcelona",
+                "B": "58.7% Barcelona",
+                "C": "61.3% Barcelona",
+                "D": "55.9% Barcelona"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+            "pregunta": "¿Cuántos toques en el área rival tuvo Messi en la temporada 2018-19?",
+        "opciones": {
+                "A": "847",
+                "B": "923",
+                "C": "776",
+                "D": "894"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué jugador tiene el récord de más córners generados en una temporada de Premier League?",
+        "opciones": {
+                "A": "Riyad Mahrez (89)",
+                "B": "Eden Hazard (76)",
+                "C": "Mohamed Salah (82)",
+                "D": "Raheem Sterling (71)"
+        },
+        "respuesta_correcta": "A" 
+      },
+      {
+            "pregunta": "¿Cuál es la distancia exacta del tiro libre más lejano convertido en Champions League?",
+        "opciones": {
+                "A": "38.7 metros",
+                "B": "41.2 metros",
+                "C": "36.9 metros",
+                "D": "39.5 metros"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos headers a puerta tuvo Cristiano Ronaldo en la temporada 2016-17?",
+        "opciones": {
+                "A": "47",
+                "B": "52",
+                "C": "44",
+                "D": "49"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué portero completó más pases largos en el Mundial 2022?",
+        "opciones": {
+                "A": "Emiliano Martínez (78)",
+                "B": "Hugo Lloris (82)",
+                "C": "Dominik Livaković (89)",
+                "D": "Alisson Becker (71)"
+        },
+        "respuesta_correcta": "C"
+      },
+      {
+            "pregunta": "¿Cuál fue el mayor número de recuperaciones en un partido de Champions League?",
+        "opciones": {
+                "A": "18 (Casemiro vs Juventus 2018)",
+                "B": "16 (Kanté vs Real Madrid 2021)",
+                "C": "17 (Busquets vs Bayern 2020)",
+                "D": "19 (Fabinho vs Barcelona 2019)"
+            },
+            "respuesta_correcta": "A"
+      }
+    ]
+}

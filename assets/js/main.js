@@ -313,44 +313,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (playerNameDisplay) playerNameDisplay.textContent = savedPlayerName;
     }
 
-    // Modal para cambiar nombre
-    const changeNameBtn = document.getElementById('changeNameBtn');
-    const changeNameModal = document.getElementById('changeNameModal');
-    const cancelNameChange = document.getElementById('cancelNameChange');
-    const changeNameForm = document.getElementById('changeNameForm');
-    const newPlayerNameInput = document.getElementById('newPlayerName');
-
-    if (changeNameBtn) {
-        changeNameBtn.addEventListener('click', function() {
-            if (changeNameModal) {
-                if (newPlayerNameInput && savedPlayerName) {
-                    newPlayerNameInput.value = savedPlayerName;
-                }
-                changeNameModal.classList.add('active');
-            }
-        });
-    }
-
-    if (cancelNameChange) {
-        cancelNameChange.addEventListener('click', function() {
-            if (changeNameModal) changeNameModal.classList.remove('active');
-        });
-    }
-
-    if (changeNameForm) {
-        changeNameForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const newName = newPlayerNameInput.value.trim();
-            if (newName) {
-                localStorage.setItem('playerName', newName);
-                const playerNameDisplay = document.getElementById('playerNameDisplay');
-                if (playerNameDisplay) playerNameDisplay.textContent = newName;
-                if (changeNameModal) changeNameModal.classList.remove('active');
-            }
-        });
-    }
-
-    // Cerrar modal al hacer clic fuera
     window.addEventListener('click', function(e) {
         if (e.target === changeNameModal) {
             changeNameModal.classList.remove('active');

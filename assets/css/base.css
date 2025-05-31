@@ -565,7 +565,7 @@ pre code {
 }
 
 /* Critical CSS - Optimizaciones de velocidad de carga */
-@font-display: swap;
+/* Font display optimization moved to font-face declarations */
 
 /* Preload y optimización de fuentes */
 .font-preload {
@@ -576,13 +576,6 @@ pre code {
 img {
     max-width: 100%;
     height: auto;
-    loading: lazy;
-}
-
-/* Imágenes críticas above-the-fold */
-.hero-image,
-.critical-image {
-    loading: eager;
 }
 
 /* Optimización de renderizado */

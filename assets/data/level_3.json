@@ -1,0 +1,614 @@
+{
+    "preguntas": [
+      {
+            "pregunta": "¿Cuántos goles marcó Messi en la temporada 2011-12?",
+        "opciones": {
+                "A": "73",
+                "B": "91",
+                "C": "85",
+                "D": "69"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año River Plate fue relegado a la Primera B Nacional?",
+        "opciones": {
+                "A": "2010",
+                "B": "2011",
+                "C": "2012",
+                "D": "2009"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuánto pagó el PSG por Neymar en 2017?",
+        "opciones": {
+                "A": "200 millones de euros",
+                "B": "222 millones de euros",
+                "C": "250 millones de euros",
+                "D": "180 millones de euros"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año se introdujo el VAR en La Liga española?",
+        "opciones": {
+                "A": "2017-18",
+                "B": "2018-19",
+                "C": "2019-20",
+                "D": "2016-17"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos goles marcó Robert Lewandowski en un partido contra Wolfsburgo en 2015?",
+        "opciones": {
+                "A": "4",
+                "B": "5",
+                "C": "6",
+                "D": "3"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué club fichó a Cristiano Ronaldo del Manchester United en 2009?",
+        "opciones": {
+          "A": "Real Madrid",
+                "B": "Barcelona",
+                "C": "Juventus",
+                "D": "AC Milan"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿En qué minuto marcó Sergio Ramos su gol en la final de la Champions League 2014?",
+        "opciones": {
+                "A": "90+3",
+                "B": "92'",
+                "C": "93'",
+                "D": "90+1"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuántas Champions League consecutivas ganó el Real Madrid entre 2016-2018?",
+        "opciones": {
+                "A": "2",
+                "B": "3",
+                "C": "4",
+                "D": "1"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué entrenador dirigió al Leicester City cuando ganó la Premier League?",
+        "opciones": {
+                "A": "Claudio Ranieri",
+                "B": "Nigel Pearson",
+                "C": "Brendan Rodgers",
+                "D": "Steve Cooper"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿En qué Copa del Mundo Maradona marcó el gol con la 'Mano de Dios'?",
+        "opciones": {
+                "A": "España 1982",
+                "B": "México 1986",
+                "C": "Italia 1990",
+                "D": "USA 1994"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos penales atajó Emiliano Martínez en la final del Mundial 2022?",
+        "opciones": {
+                "A": "1",
+                "B": "2",
+                "C": "3",
+                "D": "0"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Qué estadio albergó la final de la Champions League 2019?",
+        "opciones": {
+                "A": "Wanda Metropolitano",
+                "B": "Allianz Arena",
+                "C": "Wembley",
+                "D": "Santiago Bernabéu"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuántos goles marcó Pelé en Mundiales?",
+        "opciones": {
+                "A": "10",
+                "B": "12",
+                "C": "14",
+                "D": "16"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año Juventus llegó por última vez a una final de Champions League?",
+        "opciones": {
+                "A": "2015",
+                "B": "2017",
+                "C": "2019",
+                "D": "2021"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál fue el marcador del Barcelona vs PSG en la remontada de 2017?",
+        "opciones": {
+                "A": "6-1",
+                "B": "6-2",
+                "C": "5-1",
+                "D": "7-1"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Qué selección ganó la Copa América 2019?",
+        "opciones": {
+                "A": "Argentina",
+                "B": "Brasil",
+                "C": "Uruguay",
+                "D": "Chile"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año se fundó la Premier League inglesa?",
+        "opciones": {
+                "A": "1990",
+                "B": "1992",
+                "C": "1994",
+                "D": "1988"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos goles mundialistas tiene Miroslav Klose?",
+        "opciones": {
+                "A": "14",
+                "B": "15",
+                "C": "16",
+                "D": "13"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Qué club ganó la primera Copa de Europa en 1956?",
+        "opciones": {
+                "A": "Real Madrid",
+                "B": "AC Milan",
+                "C": "Barcelona",
+                "D": "Manchester United"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿En qué minuto marcó Götze el gol de la final del Mundial 2014?",
+        "opciones": {
+                "A": "110'",
+                "B": "113'",
+                "C": "115'",
+                "D": "117'"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos títulos de Champions League tiene el AC Milan?",
+        "opciones": {
+                "A": "6",
+          "B": "7",
+                "C": "8",
+                "D": "5"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué entrenador dirigió al Porto cuando ganó la Champions League 2004?",
+        "opciones": {
+                "A": "José Mourinho",
+                "B": "André Villas-Boas",
+                "C": "Carlos Queiroz",
+                "D": "Fernando Santos"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿En qué estadio jugó Maradona la final del Mundial 1986?",
+        "opciones": {
+                "A": "Estadio Azteca",
+                "B": "Estadio Azteca (Ciudad de México)",
+                "C": "Estadio Olímpico Universitario",
+                "D": "Estadio Nou Camp"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuántos Balones de Oro ganó Kaká?",
+        "opciones": {
+                "A": "0",
+                "B": "1",
+                "C": "2",
+                "D": "3"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año se jugó la primera Copa del Mundo?",
+        "opciones": {
+                "A": "1928",
+                "B": "1930",
+                "C": "1932",
+                "D": "1934"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos goles marcó Ronaldo Nazário en Mundiales?",
+        "opciones": {
+                "A": "13",
+                "B": "14",
+                "C": "15",
+                "D": "16"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Qué club vendió a Neymar al Barcelona en 2013?",
+        "opciones": {
+                "A": "Santos",
+                "B": "São Paulo",
+                "C": "Palmeiras",
+                "D": "Flamengo"
+        },
+        "respuesta_correcta": "A"
+      },
+       {
+            "pregunta": "¿En qué año el Arsenal tuvo su temporada invicta en la Premier League?",
+        "opciones": {
+                "A": "2003-04",
+                "B": "2002-03",
+                "C": "2004-05",
+                "D": "2001-02"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Cuántos hat-tricks marcó Messi en la Champions League?",
+        "opciones": {
+                "A": "8",
+                "B": "9",
+                "C": "10",
+                "D": "7"
+        },
+        "respuesta_correcta": "A"
+      },
+      {
+            "pregunta": "¿Qué selección ganó la Copa Confederaciones 2017?",
+        "opciones": {
+                "A": "Brasil",
+          "B": "Alemania",
+                "C": "Chile",
+          "D": "Portugal"
+        },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año Boca Juniors ganó su última Copa Libertadores?",
+        "opciones": {
+                "A": "2005",
+                "B": "2007",
+                "C": "2003",
+                "D": "2001"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos goles marcó Higuaín en la temporada 2015-16 con Napoli?",
+        "opciones": {
+                "A": "34",
+                "B": "36",
+                "C": "38",
+                "D": "32"
+            },
+            "respuesta_correcta": "B"
+      },
+      {
+            "pregunta": "¿Cuánto pagó el Manchester United por Paul Pogba en 2016?",
+        "opciones": {
+                "A": "89 millones de euros",
+                "B": "105 millones de euros",
+                "C": "120 millones de euros",
+                "D": "95 millones de euros"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué minuto marcó Ramos el gol del empate en la final de Champions 2014?",
+        "opciones": {
+                "A": "92'",
+                "B": "93'",
+                "C": "94'",
+                "D": "91'"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos goles marcó Harry Kane en el Mundial 2018?",
+        "opciones": {
+                "A": "5",
+                "B": "6",
+                "C": "7",
+                "D": "4"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué equipo eliminó al Barcelona en la Champions League 2020?",
+        "opciones": {
+                "A": "PSG",
+                "B": "Bayern Munich",
+                "C": "Liverpool",
+                "D": "Manchester City"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año se jugó la final de Champions más vista de la historia?",
+        "opciones": {
+                "A": "2009",
+                "B": "2019",
+                "C": "2017",
+                "D": "2022"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuántos minutos duró el partido más largo de la historia oficial del fútbol?",
+        "opciones": {
+                "A": "194 minutos",
+                "B": "202 minutos",
+                "C": "186 minutos",
+                "D": "210 minutos"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué jugador marcó el primer hat-trick en una final de Mundial?",
+        "opciones": {
+                "A": "Geoff Hurst",
+                "B": "Pelé",
+                "C": "Garrincha",
+                "D": "Nunca pasó"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuál fue el resultado del Milan vs Liverpool en la final de Champions 2005?",
+        "opciones": {
+                "A": "3-3 (Liverpool ganó por penales)",
+                "B": "3-2 Liverpool",
+                "C": "4-3 Liverpool",
+                "D": "3-1 Milan"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿En qué año se introdujo la regla del gol de visitante?",
+        "opciones": {
+                "A": "1965",
+                "B": "1970",
+                "C": "1975",
+                "D": "1960"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuántos penales erró Francesco Totti en su carrera?",
+        "opciones": {
+                "A": "12",
+                "B": "14",
+                "C": "16",
+                "D": "10"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué entrenador llevó al Atlético Madrid a la final de Champions 2014?",
+        "opciones": {
+                "A": "Diego Simeone",
+                "B": "Quique Sánchez Flores",
+                "C": "Gregorio Manzano",
+                "D": "Abel Resino"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuántos goles marcó Suárez en su mejor temporada en el Liverpool?",
+        "opciones": {
+                "A": "29",
+                "B": "31",
+                "C": "33",
+                "D": "27"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año se eliminó la regla del pase hacia atrás al portero?",
+        "opciones": {
+                "A": "1990",
+                "B": "1992",
+                "C": "1994",
+                "D": "1988"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál fue el primer club en ganar la Premier League sin perder en casa?",
+        "opciones": {
+                "A": "Arsenal",
+                "B": "Manchester United",
+                "C": "Chelsea",
+                "D": "Liverpool"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Qué jugador tiene más asistencias en la historia de La Liga?",
+        "opciones": {
+                "A": "Xavi",
+                "B": "Messi",
+                "C": "Iniesta",
+                "D": "Cristiano Ronaldo"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué Mundial se introdujo por primera vez el VAR?",
+        "opciones": {
+                "A": "Brasil 2014",
+                "B": "Rusia 2018",
+                "C": "Qatar 2022",
+                "D": "Nunca se usó"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos años tenía Pelé cuando ganó su primer Mundial?",
+        "opciones": {
+                "A": "16",
+                "B": "17",
+                "C": "18",
+                "D": "19"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué entrenador dirigió al Chelsea en su primera Champions League?",
+        "opciones": {
+                "A": "José Mourinho",
+                "B": "Roberto Di Matteo",
+                "C": "Carlo Ancelotti",
+                "D": "André Villas-Boas"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál fue el primer equipo africano en llegar a cuartos de final?",
+        "opciones": {
+                "A": "Nigeria",
+                "B": "Camerún",
+                "C": "Marruecos",
+                "D": "Ghana"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿En qué año Bosman ganó el caso que cambió las transferencias?",
+        "opciones": {
+                "A": "1993",
+                "B": "1995",
+                "C": "1997",
+                "D": "1991"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos goles marcó Gerd Müller en el Mundial 1970?",
+        "opciones": {
+                "A": "8",
+                "B": "10",
+                "C": "12",
+                "D": "6"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué club ganó la primera Europa League en 2009?",
+        "opciones": {
+                "A": "Shakhtar Donetsk",
+                "B": "Werder Bremen",
+                "C": "Fulham",
+                "D": "Atletico Madrid"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿En qué año se introdujo la tarjeta amarilla y roja?",
+        "opciones": {
+                "A": "1968",
+                "B": "1970",
+                "C": "1972",
+                "D": "1966"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuál fue el marcador de la final de Champions entre Milan y Liverpool en 2007?",
+        "opciones": {
+                "A": "2-1 Milan",
+                "B": "1-0 Milan",
+                "C": "2-0 Milan",
+                "D": "3-2 Milan"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué portero detuvo el penal de Messi en la final de Copa América 2016?",
+        "opciones": {
+                "A": "Claudio Bravo",
+                "B": "Fernando Muslera",
+                "C": "Willy Caballero",
+                "D": "David Ospina"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿En qué minuto exacto marcó Eder el gol de la final de la Eurocopa 2016?",
+        "opciones": {
+                "A": "107'",
+                "B": "109'",
+                "C": "111'",
+                "D": "105'"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Cuántos equipos diferentes han ganado la Premier League?",
+        "opciones": {
+                "A": "6",
+                "B": "7",
+                "C": "5",
+                "D": "8"
+            },
+            "respuesta_correcta": "B"
+        },
+        {
+            "pregunta": "¿Qué jugador tiene el récord de más goles en una temporada de Serie A?",
+        "opciones": {
+                "A": "Gonzalo Higuaín (36)",
+                "B": "Ciro Immobile (36)",
+                "C": "Francesco Totti (32)",
+                "D": "Roberto Baggio (27)"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿En qué año Independiente ganó 4 Copas Libertadores consecutivas?",
+        "opciones": {
+                "A": "1972-1975",
+                "B": "1973-1976",
+                "C": "1974-1977",
+                "D": "1971-1974"
+            },
+            "respuesta_correcta": "A"
+        }
+    ]
+}
