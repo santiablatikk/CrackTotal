@@ -619,4 +619,278 @@ html {
 /* Minimize reflows */
 .no-reflow {
     transform: translateZ(0);
-} 
+}
+
+/* *** OPTIMIZACIONES DE RENDIMIENTO RESPONSIVO *** */
+
+/* Reducir animaciones en dispositivos móviles */
+.device-mobile.reduced-motion * {
+    animation-duration: 0.1s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.1s !important;
+}
+
+/* Optimizaciones específicas por dispositivo */
+.device-mobile {
+    --animation-speed: 0.2s;
+    --transition-speed: 0.15s;
+}
+
+.device-tablet {
+    --animation-speed: 0.3s;
+    --transition-speed: 0.2s;
+}
+
+.device-desktop {
+    --animation-speed: 0.4s;
+    --transition-speed: 0.3s;
+}
+
+/* *** MEJORAS PARA COMPATIBILIDAD CROSS-BROWSER *** */
+
+/* Fallbacks para navegadores antiguos */
+.logro-card {
+    background: #2c2f3b; /* Fallback para navegadores sin soporte de CSS variables */
+    background: var(--surface, #2c2f3b);
+}
+
+/* Prefijos para mejor compatibilidad */
+.loading-spinner {
+    -webkit-animation: spin 1s linear infinite;
+    -moz-animation: spin 1s linear infinite;
+    -o-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+}
+
+/* Soporte para transform en navegadores antiguos */
+.logro-card {
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+    
+    /* Hardware acceleration para mejor rendimiento */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
+}
+
+/* *** OPTIMIZACIONES DE RENDIMIENTO GENERALES *** */
+
+/* Lazy loading para imágenes */
+img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity var(--transition-speed, 0.3s) ease;
+}
+
+img[loading="lazy"].loaded {
+    opacity: 1;
+}
+
+/* Contenedores con scroll optimizado */
+.scroll-container {
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+}
+
+/* Optimización para elementos con hover en móviles */
+@media (hover: none) and (pointer: coarse) {
+    .hover-effect:hover {
+        transform: none !important;
+        scale: none !important;
+    }
+}
+
+/* *** INDICADORES DE RENDIMIENTO *** */
+
+/* Skeleton loading para mejor UX */
+.skeleton {
+    background: linear-gradient(90deg, 
+        rgba(255,255,255,0.1) 25%, 
+        rgba(255,255,255,0.2) 50%, 
+        rgba(255,255,255,0.1) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Indicador de carga global mejorado */
+.global-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    backdrop-filter: blur(4px);
+}
+
+.global-loading .loading-content {
+    text-align: center;
+    color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    background: rgba(44, 47, 59, 0.9);
+}
+
+/* *** MEJORAS DE ACCESIBILIDAD *** */
+
+/* Mejor contraste para usuarios con problemas visuales */
+@media (prefers-contrast: high) {
+    :root {
+        --text: #ffffff;
+        --text-light: #e0e0e0;
+        --primary: #00ff00;
+        --background: #000000;
+        --surface: #1a1a1a;
+    }
+}
+
+/* Soporte para motion reduce */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* *** OPTIMIZACIONES ESPECÍFICAS PARA MOBILE *** */
+
+@media (max-width: 480px) {
+    /* Reducir complejidad visual en móviles */
+    .complex-gradient {
+        background: var(--surface) !important;
+    }
+    
+    /* Optimizar espaciado para pantallas pequeñas */
+    .container {
+        padding: 1rem 0.5rem;
+    }
+    
+    /* Simplificar sombras en móviles */
+    .card-shadow {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+    }
+    
+    /* Reducir border-radius en móviles para mejor rendimiento */
+    .rounded {
+        border-radius: 4px !important;
+    }
+}
+
+/* *** OPTIMIZACIONES PARA TABLET *** */
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .tablet-optimized {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+}
+
+/* *** OPTIMIZACIONES PARA DESKTOP *** */
+
+@media (min-width: 769px) {
+    /* Aprovechar el espacio extra en desktop */
+    .desktop-enhanced {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    /* Efectos hover solo en desktop */
+    .hover-desktop:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+}
+
+/* *** COMPATIBILIDAD CON BROWSERS ANTIGUOS *** */
+
+/* Fallback para CSS Grid */
+@supports not (display: grid) {
+    .grid-container {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    
+    .grid-item {
+        flex: 1 1 300px;
+        margin: 0.5rem;
+    }
+}
+
+/* Fallback para Flexbox */
+@supports not (display: flex) {
+    .flex-container {
+        display: block;
+    }
+    
+    .flex-item {
+        display: inline-block;
+        vertical-align: top;
+        width: 48%;
+        margin: 1%;
+    }
+}
+
+/* *** ERROR STATES MEJORADOS *** */
+
+.error-boundary {
+    padding: 2rem;
+    background: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    border-radius: 8px;
+    color: var(--error, #e74c3c);
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.error-boundary .error-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    opacity: 0.8;
+}
+
+.error-boundary .error-message {
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.error-boundary .error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.error-boundary .error-actions button {
+    padding: 0.5rem 1rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.error-boundary .error-actions button:hover {
+    background: var(--primary-dark, #1976d2);
+}
+
+/* *** CONTENIDO EXISTENTE *** */
+/* ... existing CSS code ... 

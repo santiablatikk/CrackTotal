@@ -43,6 +43,262 @@ window.addEventListener('load', () => {
     }
 });
 
+// *** SISTEMA DE OPTIMIZACIÓN DE RENDIMIENTO ***
+window.PerformanceManager = {
+    // Cache para datos pesados
+    cache: new Map(),
+    
+    // Indicadores de carga globales
+    showLoadingIndicator: function(containerId, message = 'Cargando...') {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        const loadingHTML = `
+            <div class="loading-indicator" style="
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                padding: 2rem; 
+                text-align: center;
+                animation: fadeIn 0.3s ease-in;
+            ">
+                <div class="loading-spinner" style="
+                    border: 3px solid rgba(255,255,255,0.1);
+                    border-top: 3px solid var(--primary);
+                    border-radius: 50%;
+                    width: 32px;
+                    height: 32px;
+                    animation: spin 1s linear infinite;
+                    margin-right: 15px;
+                "></div>
+                <span style="color: var(--text-light); font-weight: 500;">${message}</span>
+            </div>
+            <style>
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+            </style>
+        `;
+        container.innerHTML = loadingHTML;
+    },
+    
+    hideLoadingIndicator: function(containerId) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        const loadingIndicator = container.querySelector('.loading-indicator');
+        if (loadingIndicator) {
+            loadingIndicator.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => {
+                if (loadingIndicator.parentNode) {
+                    loadingIndicator.remove();
+                }
+            }, 300);
+        }
+    },
+    
+    // Lazy loading para contenido pesado
+    lazyLoad: function(callback, delay = 100) {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const result = callback();
+                resolve(result);
+            }, delay);
+        });
+    },
+    
+    // Debounce para optimizar eventos
+    debounce: function(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    },
+    
+    // Throttle para scroll y resize
+    throttle: function(func, limit) {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        }
+    }
+};
+
+// Agregar CSS para fadeOut
+const fadeOutCSS = `
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+`;
+const style = document.createElement('style');
+style.textContent = fadeOutCSS;
+document.head.appendChild(style);
+
+// *** OPTIMIZACIÓN PARA LOGROS Y RANKINGS ***
+window.addEventListener('DOMContentLoaded', () => {
+    // Optimizar carga de logros
+    const logrosContainer = document.getElementById('logrosContainer');
+    if (logrosContainer) {
+        window.PerformanceManager.showLoadingIndicator('logrosContainer', 'Cargando tus logros...');
+    }
+    
+    // Optimizar carga de rankings
+    const rankingContainer = document.querySelector('.ranking-container, .leaderboard-container');
+    if (rankingContainer && rankingContainer.id) {
+        window.PerformanceManager.showLoadingIndicator(rankingContainer.id, 'Cargando clasificaciones...');
+    }
+});
+
+// *** DETECCIÓN DE COMPATIBILIDAD ***
+window.BrowserCompatibility = {
+    // Detectar navegador y versión
+    detectBrowser: function() {
+        const userAgent = navigator.userAgent;
+        let browserName = "Unknown";
+        let browserVersion = "Unknown";
+        
+        if (userAgent.indexOf("Chrome") > -1) {
+            browserName = "Chrome";
+            browserVersion = userAgent.match(/Chrome\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Firefox") > -1) {
+            browserName = "Firefox";
+            browserVersion = userAgent.match(/Firefox\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") === -1) {
+            browserName = "Safari";
+            browserVersion = userAgent.match(/Version\/([0-9.]+)/)[1];
+        } else if (userAgent.indexOf("Edge") > -1) {
+            browserName = "Edge";
+            browserVersion = userAgent.match(/Edge\/([0-9.]+)/)[1];
+        }
+        
+        return { name: browserName, version: browserVersion };
+    },
+    
+    // Verificar características soportadas
+    checkFeatureSupport: function() {
+        const features = {
+            localStorage: typeof(Storage) !== "undefined",
+            fetch: typeof fetch !== "undefined",
+            promises: typeof Promise !== "undefined",
+            css3: this.supportsCSSProperty('transform'),
+            flexbox: this.supportsCSSProperty('display', 'flex'),
+            grid: this.supportsCSSProperty('display', 'grid'),
+            webp: this.supportsWebP(),
+            serviceWorker: 'serviceWorker' in navigator
+        };
+        
+        return features;
+    },
+    
+    supportsCSSProperty: function(property, value = null) {
+        const testElement = document.createElement('div');
+        if (value) {
+            testElement.style[property] = value;
+            return testElement.style[property] === value;
+        } else {
+            return property in testElement.style;
+        }
+    },
+    
+    supportsWebP: function() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1;
+        canvas.height = 1;
+        return canvas.toDataURL('image/webp').indexOf('webp') > -1;
+    },
+    
+    // Mostrar advertencia si hay problemas de compatibilidad
+    checkCompatibilityAndWarn: function() {
+        const browser = this.detectBrowser();
+        const features = this.checkFeatureSupport();
+        
+        console.log('Browser detected:', browser);
+        console.log('Feature support:', features);
+        
+        // Advertir sobre navegadores muy antiguos
+        if (browser.name === "Chrome" && parseInt(browser.version) < 70) {
+            this.showCompatibilityWarning("Tu versión de Chrome es antigua. Actualiza para una mejor experiencia.");
+        } else if (browser.name === "Firefox" && parseInt(browser.version) < 65) {
+            this.showCompatibilityWarning("Tu versión de Firefox es antigua. Actualiza para una mejor experiencia.");
+        } else if (browser.name === "Safari" && parseInt(browser.version) < 12) {
+            this.showCompatibilityWarning("Tu versión de Safari es antigua. Actualiza para una mejor experiencia.");
+        }
+        
+        // Advertir sobre características no soportadas
+        if (!features.localStorage) {
+            this.showCompatibilityWarning("Tu navegador no soporta almacenamiento local. Algunas funciones pueden no funcionar.");
+        }
+    },
+    
+    showCompatibilityWarning: function(message) {
+        if (typeof window.notifications !== 'undefined') {
+            window.notifications.warning('Compatibilidad', message, { duration: 8000 });
+        } else {
+            console.warn('Compatibility warning:', message);
+        }
+    }
+};
+
+// Ejecutar verificación de compatibilidad al cargar
+window.addEventListener('load', () => {
+    window.BrowserCompatibility.checkCompatibilityAndWarn();
+});
+
+// *** RESPONSIVE PERFORMANCE MONITORING ***
+window.ResponsiveManager = {
+    // Detectar tipo de dispositivo
+    getDeviceType: function() {
+        const width = window.innerWidth;
+        if (width <= 480) return 'mobile';
+        if (width <= 768) return 'tablet';
+        return 'desktop';
+    },
+    
+    // Optimizar según dispositivo
+    optimizeForDevice: function() {
+        const deviceType = this.getDeviceType();
+        document.body.classList.add(`device-${deviceType}`);
+        
+        // Reducir animaciones en móviles para mejor rendimiento
+        if (deviceType === 'mobile') {
+            document.body.classList.add('reduced-motion');
+        }
+        
+        console.log('Device optimized for:', deviceType);
+    },
+    
+    // Monitor de rendimiento responsivo
+    monitorResponsivePerformance: window.PerformanceManager.throttle(function() {
+        const deviceType = window.ResponsiveManager.getDeviceType();
+        document.body.className = document.body.className.replace(/device-(mobile|tablet|desktop)/g, '');
+        document.body.classList.add(`device-${deviceType}`);
+    }, 250)
+};
+
+// Aplicar optimizaciones responsivas
+window.addEventListener('DOMContentLoaded', () => {
+    window.ResponsiveManager.optimizeForDevice();
+});
+
+window.addEventListener('resize', window.ResponsiveManager.monitorResponsivePerformance);
+
 (function() { // IIFE para encapsular y ejecutar inmediatamente
     const playerName = localStorage.getItem('playerName');
     const currentPagePath = window.location.pathname;
