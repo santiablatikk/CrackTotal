@@ -38,13 +38,6 @@
     </url>
     
     <url>
-        <loc>https://cracktotal.com/quiensabemas.html</loc>
-        <lastmod>2025-01-25</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
         <loc>https://cracktotal.com/mentiroso.html</loc>
         <lastmod>2025-01-25</lastmod>
         <changefreq>weekly</changefreq>
@@ -56,43 +49,6 @@
         <lastmod>2025-01-25</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
-    </url>
-    
-    <!-- Páginas de usuario -->
-    <url>
-        <loc>https://cracktotal.com/profile.html</loc>
-        <lastmod>2025-01-25</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <!-- Rankings -->
-    <url>
-        <loc>https://cracktotal.com/ranking.html</loc>
-        <lastmod>2025-01-25</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.7</priority>
-    </url>
-    
-    <url>
-        <loc>https://cracktotal.com/ranking-crackrapido.html</loc>
-        <lastmod>2025-01-25</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.6</priority>
-    </url>
-    
-    <url>
-        <loc>https://cracktotal.com/ranking-mentiroso.html</loc>
-        <lastmod>2025-01-25</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.6</priority>
-    </url>
-    
-    <url>
-        <loc>https://cracktotal.com/ranking-quiensabemas.html</loc>
-        <lastmod>2025-01-25</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.6</priority>
     </url>
     
     <url>
@@ -167,13 +123,6 @@
     
     <url>
         <loc>https://cracktotal.com/blog-detail-liga-argentina.html</loc>
-        <lastmod>2025-01-25</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
-    <url>
-        <loc>https://cracktotal.com/blog-detail-community.html</loc>
         <lastmod>2025-01-25</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
@@ -259,6 +208,20 @@
     
     <url>
         <loc>https://cracktotal.com/blog-detail-mercado-pases.html</loc>
+        <lastmod>2025-01-25</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/blog-detail-jungblut-top.html</loc>
+        <lastmod>2025-01-25</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    
+    <url>
+        <loc>https://cracktotal.com/blog-detail-transferencias-caras.html</loc>
         <lastmod>2025-01-25</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
