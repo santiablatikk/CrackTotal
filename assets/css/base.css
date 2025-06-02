@@ -619,7 +619,7 @@ html {
 /* Minimize reflows */
 .no-reflow {
     transform: translateZ(0);
-}
+} 
 
 /* *** OPTIMIZACIONES DE RENDIMIENTO RESPONSIVO *** */
 

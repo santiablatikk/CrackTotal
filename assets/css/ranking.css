@@ -25,15 +25,6 @@
     --mentiroso-gradient: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
     --crackrapido-gradient: linear-gradient(135deg, #dd6b20 0%, #c05621 100%);
     
-    /* Variables neón para Mentiroso */
-    --mentiroso-neon-red: 229, 62, 62;
-    --mentiroso-neon-pink: 236, 72, 153;
-    --mentiroso-neon-purple: 147, 51, 234;
-    --mentiroso-neon-orange: 251, 146, 60;
-    --mentiroso-glow-intensity: 0 0 20px;
-    --mentiroso-glow-strong: 0 0 30px;
-    --mentiroso-glow-subtle: 0 0 10px;
-    
     /* Efectos */
     --ranking-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
     --ranking-shadow-hover: 0 8px 20px -4px rgba(0, 0, 0, 0.4);
@@ -62,62 +53,22 @@
 /* === CONTENEDORES PRINCIPALES === */
 .ranking-container,
 .history-container {
-    background: rgba(26, 32, 44, 0.85);
-    border-radius: 20px;
-    padding: clamp(1.5rem, 4vw, 2rem);
+    background: var(--ranking-card);
+    border-radius: var(--ranking-border-radius);
+    padding: var(--mobile-padding);
     margin: var(--mobile-margin);
-    border: 2px solid var(--ranking-border);
+    border: 1px solid var(--ranking-border);
     box-shadow: var(--ranking-shadow);
     color: var(--ranking-text);
     max-width: 100%;
     position: relative;
     overflow: hidden;
     transition: var(--ranking-transition);
-    backdrop-filter: blur(15px);
 }
 
 .ranking-container:hover,
 .history-container:hover {
     box-shadow: var(--ranking-shadow-hover);
-    transform: translateY(-2px);
-}
-
-/* Efectos específicos para Mentiroso */
-.ranking-container.mentiroso,
-.history-container.mentiroso {
-    border-color: rgba(var(--mentiroso-neon-red), 0.3);
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.4),
-        var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-red), 0.2);
-    background: rgba(30, 30, 30, 0.9);
-}
-
-.ranking-container.mentiroso:hover,
-.history-container.mentiroso:hover {
-    border-color: rgba(var(--mentiroso-neon-red), 0.6);
-    box-shadow: 
-        0 15px 40px rgba(0, 0, 0, 0.5),
-        var(--mentiroso-glow-intensity) rgba(var(--mentiroso-neon-red), 0.3);
-    transform: translateY(-3px);
-}
-
-.ranking-container.mentiroso::after,
-.history-container.mentiroso::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: radial-gradient(circle at 30% 20%, rgba(var(--mentiroso-neon-red), 0.05), transparent 50%);
-    pointer-events: none;
-    z-index: 1;
-    animation: mentirosoAmbientGlow 6s ease-in-out infinite;
-}
-
-@keyframes mentirosoAmbientGlow {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
 }
 
 /* Líneas de acento por juego */
@@ -127,38 +78,25 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
+    height: 2px;
     background: var(--pasalache-gradient);
     opacity: 0.8;
-    z-index: 2;
 }
 
 .ranking-container.quiensabemas::before { background: var(--quiensabemas-gradient); }
-.ranking-container.mentiroso::before { 
-    background: linear-gradient(90deg, 
-        rgba(var(--mentiroso-neon-red), 0.8), 
-        rgba(var(--mentiroso-neon-pink), 0.6), 
-        rgba(var(--mentiroso-neon-red), 0.8)
-    );
-    animation: mentirosoTopGlow 3s ease-in-out infinite;
-}
+.ranking-container.mentiroso::before { background: var(--mentiroso-gradient); }
 .ranking-container.crackrapido::before { background: var(--crackrapido-gradient); }
-
-@keyframes mentirosoTopGlow {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 1; }
-}
 
 /* === TÍTULOS === */
 .ranking-title,
 .history-title {
     font-family: 'Oswald', sans-serif;
-    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    font-size: 1.3rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.8rem;
     text-align: center;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
+    letter-spacing: 1px;
     background: var(--pasalache-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -166,47 +104,33 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
-    position: relative;
-    z-index: 3;
-    transition: all 0.3s ease;
+    gap: 0.4rem;
 }
 
-.ranking-title.quiensabemas,
-.history-title.quiensabemas {
+/* Historial aún más compacto */
+.history-title {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.history-title.quiensabemas,
+.ranking-title.quiensabemas {
     background: var(--quiensabemas-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-.ranking-title.mentiroso,
-.history-title.mentiroso {
-    background: linear-gradient(135deg, 
-        rgba(var(--mentiroso-neon-red), 1) 0%, 
-        rgba(var(--mentiroso-neon-pink), 1) 50%, 
-        rgba(var(--mentiroso-neon-red), 1) 100%
-    );
+.history-title.mentiroso,
+.ranking-title.mentiroso {
+    background: var(--mentiroso-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-red), 0.5);
-    animation: mentirosoTitlePulse 4s ease-in-out infinite;
 }
 
-@keyframes mentirosoTitlePulse {
-    0%, 100% { 
-        filter: brightness(1);
-        transform: scale(1);
-    }
-    50% { 
-        filter: brightness(1.2);
-        transform: scale(1.02);
-    }
-}
-
-.ranking-title.crackrapido,
-.history-title.crackrapido {
+.history-title.crackrapido,
+.ranking-title.crackrapido {
     background: var(--crackrapido-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -215,35 +139,20 @@
 
 .ranking-title-icon,
 .history-title-icon {
-    font-size: 1.2em;
+    font-size: 1em;
     color: var(--pasalache-primary);
     animation: iconPulse 4s ease-in-out infinite;
-    transition: all 0.3s ease;
+}
+
+/* Iconos del historial más pequeños */
+.history-title-icon {
+    font-size: 0.9em;
 }
 
 .quiensabemas .ranking-title-icon,
 .quiensabemas .history-title-icon { color: var(--quiensabemas-primary); }
-
 .mentiroso .ranking-title-icon,
-.mentiroso .history-title-icon { 
-    color: rgba(var(--mentiroso-neon-red), 1);
-    text-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-red), 0.6);
-    animation: mentirosoIconGlow 3s ease-in-out infinite;
-}
-
-@keyframes mentirosoIconGlow {
-    0%, 100% { 
-        color: rgba(var(--mentiroso-neon-red), 1);
-        text-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-red), 0.6);
-        transform: rotate(0deg);
-    }
-    50% { 
-        color: rgba(var(--mentiroso-neon-pink), 1);
-        text-shadow: var(--mentiroso-glow-intensity) rgba(var(--mentiroso-neon-pink), 0.8);
-        transform: rotate(5deg);
-    }
-}
-
+.mentiroso .history-title-icon { color: var(--mentiroso-primary); }
 .crackrapido .ranking-title-icon,
 .crackrapido .history-title-icon { color: var(--crackrapido-primary); }
 
@@ -295,101 +204,81 @@
 /* === TABLAS === */
 .table-responsive-wrapper {
     overflow-x: auto;
-    margin-bottom: 1.5rem;
-    border-radius: 15px;
-    background: rgba(26, 32, 44, 0.6);
-    border: 2px solid var(--ranking-border);
-    backdrop-filter: blur(10px);
-    position: relative;
-    z-index: 2;
-}
-
-.mentiroso .table-responsive-wrapper {
-    border-color: rgba(var(--mentiroso-neon-red), 0.3);
-    box-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-red), 0.2);
-    background: rgba(30, 30, 30, 0.7);
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    background: rgba(26, 32, 44, 0.5);
+    border: 1px solid var(--ranking-border);
+    backdrop-filter: blur(5px);
 }
 
 .ranking-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     background: transparent;
-    color: var(--ranking-text);
-    font-size: var(--mobile-font-base);
+    font-size: var(--mobile-font-small);
     position: relative;
+    min-width: 300px;
 }
 
+/* Headers */
 .ranking-table thead th {
     background: var(--pasalache-gradient);
     color: white;
-    padding: 1rem 0.75rem;
-    text-align: left;
-    font-weight: 700;
-    font-size: 0.85rem;
+    font-weight: 600;
     text-transform: uppercase;
+    font-size: 0.7rem;
     letter-spacing: 0.5px;
+    padding: 0.8rem 0.4rem;
+    text-align: center;
     border: none;
-    position: relative;
-    z-index: 1;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
 }
 
 .quiensabemas .ranking-table thead th { background: var(--quiensabemas-gradient); }
-.mentiroso .ranking-table thead th { 
-    background: linear-gradient(135deg, 
-        rgba(var(--mentiroso-neon-red), 0.9) 0%, 
-        rgba(var(--mentiroso-neon-pink), 0.8) 50%, 
-        rgba(var(--mentiroso-neon-red), 0.9) 100%
-    );
-    text-shadow: var(--mentiroso-glow-subtle) rgba(0, 0, 0, 0.8);
-    box-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-red), 0.3);
-}
+.mentiroso .ranking-table thead th { background: var(--mentiroso-gradient); }
 .crackrapido .ranking-table thead th { background: var(--crackrapido-gradient); }
 
-.ranking-table thead th:first-child { border-top-left-radius: 12px; }
-.ranking-table thead th:last-child { border-top-right-radius: 12px; }
+.ranking-table thead th:first-child { border-top-left-radius: 8px; }
+.ranking-table thead th:last-child { border-top-right-radius: 8px; }
 
+/* Filas */
 .ranking-table tbody tr {
-    background: rgba(26, 32, 44, 0.4);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
+    background: var(--ranking-card);
+    transition: var(--ranking-transition);
+    border-bottom: 1px solid var(--ranking-border);
     position: relative;
 }
 
 .ranking-table tbody tr:hover {
-    background: rgba(45, 55, 72, 0.6);
-    transform: translateX(3px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.mentiroso .ranking-table tbody tr:hover {
-    background: rgba(var(--mentiroso-neon-red), 0.1);
-    box-shadow: 
-        0 4px 15px rgba(0, 0, 0, 0.3),
-        var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-red), 0.2);
-    border-color: rgba(var(--mentiroso-neon-red), 0.3);
+    background: var(--ranking-card-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .ranking-table tbody tr:last-child { border-bottom: none; }
-.ranking-table tbody tr:last-child td:first-child { border-bottom-left-radius: 12px; }
-.ranking-table tbody tr:last-child td:last-child { border-bottom-right-radius: 12px; }
+.ranking-table tbody tr:last-child td:first-child { border-bottom-left-radius: 8px; }
+.ranking-table tbody tr:last-child td:last-child { border-bottom-right-radius: 8px; }
 
 /* Celdas */
 .ranking-table td {
-    padding: 1rem 0.75rem;
-    text-align: left;
+    padding: 0.6rem 0.3rem;
     vertical-align: middle;
     border: none;
-    font-size: var(--mobile-font-base);
     position: relative;
+    font-size: var(--mobile-font-small);
 }
 
-/* Posición en ranking */
+/* Posición */
 .ranking-position {
-    font-weight: 800;
-    font-size: 1.2rem;
-    color: var(--ranking-text-secondary);
     text-align: center;
-    min-width: 40px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    width: 40px;
+    color: var(--ranking-text);
 }
 
 .top-player .ranking-position {
@@ -397,154 +286,91 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-    font-size: 1.4rem;
-    animation: goldShimmer 2s ease-in-out infinite;
-}
-
-@keyframes goldShimmer {
-    0%, 100% { filter: brightness(1); }
-    50% { filter: brightness(1.3); }
+    font-size: 1rem;
 }
 
 /* Información del jugador */
 .player-info {
-    min-width: 180px;
+    min-width: 120px;
+    padding-left: 0.5rem;
 }
 
 .player-name {
-    font-weight: 700;
-    font-size: 1.05rem;
+    font-weight: 600;
+    font-size: var(--mobile-font-base);
     color: var(--ranking-text);
-    margin-bottom: 0.25rem;
-    transition: all 0.3s ease;
-}
-
-.mentiroso .player-name {
-    color: rgba(var(--mentiroso-neon-red), 1);
-    text-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-red), 0.3);
-}
-
-.mentiroso .ranking-table tbody tr:hover .player-name {
-    color: rgba(var(--mentiroso-neon-pink), 1);
-    text-shadow: var(--mentiroso-glow-intensity) rgba(var(--mentiroso-neon-pink), 0.5);
+    margin-bottom: 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
 }
 
 .player-level,
-.player-specialization {
-    font-size: 0.8rem;
-    font-weight: 600;
-    margin: 0.15rem 0;
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
+.player-badge {
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 0.2rem 0.4rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    backdrop-filter: blur(3px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
 }
 
-/* Información de rating/puntuación */
+/* Estadísticas */
 .score-info,
-.rating-info {
+.stat-cell {
     text-align: center;
-    min-width: 100px;
+    min-width: 60px;
+    max-width: 80px;
 }
 
 .main-score,
-.main-rating {
-    font-weight: 800;
-    font-size: 1.3rem;
+.primary-stat {
+    font-weight: 700;
+    font-size: var(--mobile-font-base);
     color: var(--pasalache-primary);
-    margin-bottom: 0.25rem;
-    text-shadow: 0 0 8px rgba(49, 130, 206, 0.3);
+    margin-bottom: 0.1rem;
 }
 
 .quiensabemas .main-score,
-.quiensabemas .main-rating {
-    color: var(--quiensabemas-primary);
-    text-shadow: 0 0 8px rgba(128, 90, 213, 0.3);
-}
-
+.quiensabemas .primary-stat { color: var(--quiensabemas-primary); }
 .mentiroso .main-score,
-.mentiroso .main-rating {
-    color: rgba(var(--mentiroso-neon-red), 1);
-    text-shadow: var(--mentiroso-glow-intensity) rgba(var(--mentiroso-neon-red), 0.4);
-    animation: mentirosoScorePulse 3s ease-in-out infinite;
-}
-
-@keyframes mentirosoScorePulse {
-    0%, 100% { 
-        transform: scale(1);
-        filter: brightness(1);
-    }
-    50% { 
-        transform: scale(1.05);
-        filter: brightness(1.2);
-    }
-}
-
+.mentiroso .primary-stat { color: var(--mentiroso-primary); }
 .crackrapido .main-score,
-.crackrapido .main-rating {
-    color: var(--crackrapido-primary);
-    text-shadow: 0 0 8px rgba(221, 107, 32, 0.3);
-}
+.crackrapido .primary-stat { color: var(--crackrapido-primary); }
 
 .secondary-stat {
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     color: var(--ranking-text-muted);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-weight: 400;
+    white-space: nowrap;
 }
 
-/* Estadísticas específicas */
+/* Estadísticas coloreadas */
 .wins-stat { color: #48bb78; font-weight: 600; }
 .losses-stat { color: #f56565; font-weight: 600; }
 .accuracy-stat { color: #4299e1; font-weight: 600; }
 .time-stat { color: #ed8936; font-weight: 600; }
 
-/* Estadísticas específicas de Mentiroso */
-.deception-stat { 
-    color: rgba(var(--mentiroso-neon-pink), 1); 
-    font-weight: 700;
-    text-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-pink), 0.4);
-}
-.detection-stat { 
-    color: rgba(var(--mentiroso-neon-purple), 1); 
-    font-weight: 700;
-    text-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-purple), 0.4);
-}
-.reliability-stat { 
-    color: rgba(var(--mentiroso-neon-orange), 1); 
-    font-weight: 700;
-    text-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-orange), 0.4);
-}
-
-/* === HISTORIAL COMPACTO Y BONITO === */
-.history-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-height: 600px;
-    overflow-y: auto;
-    padding-right: 0.5rem;
-    position: relative;
-    z-index: 2;
-}
-
+/* === HISTORIAL GENERAL (PASALA CHE) === */
+/* Estilo base para history-item que cubre tanto Mentiroso como Pasala Che */
 .history-item {
-    background: rgba(26, 32, 44, 0.7);
-    border-radius: 15px;
-    padding: 1.25rem;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.4s ease;
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(10px);
-    animation: fadeInUp 0.6s ease-out;
-}
-
-.mentiroso .history-item {
-    border-color: rgba(var(--mentiroso-neon-red), 0.2);
-    background: rgba(30, 30, 30, 0.8);
-    box-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-red), 0.1);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    margin-bottom: 1rem;
+    animation: fadeInUp 0.3s ease forwards;
 }
 
 .history-item::before {
@@ -552,492 +378,265 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--pasalache-gradient);
-    opacity: 0.8;
-    transition: all 0.3s ease;
-}
-
-.mentiroso .history-item::before {
-    background: linear-gradient(180deg, 
-        rgba(var(--mentiroso-neon-red), 0.8), 
-        rgba(var(--mentiroso-neon-pink), 0.6), 
-        rgba(var(--mentiroso-neon-red), 0.8)
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, 
+        rgba(59, 130, 246, 0.8) 0%, 
+        rgba(147, 51, 234, 0.8) 50%, 
+        rgba(239, 68, 68, 0.8) 100%
     );
-    width: 5px;
-    animation: mentirosoHistoryGlow 4s ease-in-out infinite;
-}
-
-@keyframes mentirosoHistoryGlow {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 1; }
+    opacity: 0.7;
 }
 
 .history-item:hover {
-    transform: translateY(-3px) scale(1.02);
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-}
-
-.mentiroso .history-item:hover {
-    border-color: rgba(var(--mentiroso-neon-red), 0.5);
-    box-shadow: 
-        0 10px 30px rgba(0, 0, 0, 0.4),
-        var(--mentiroso-glow-intensity) rgba(var(--mentiroso-neon-red), 0.3);
-    transform: translateY(-4px) scale(1.03);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    border-color: rgba(255, 255, 255, 0.2);
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 1));
 }
 
 .history-item:hover::before {
-    width: 6px;
     opacity: 1;
+    height: 4px;
 }
 
-.mentiroso .history-item:hover::before {
-    width: 8px;
-    box-shadow: var(--mentiroso-glow-intensity) rgba(var(--mentiroso-neon-red), 0.6);
-}
-
-/* Header del historial */
+/* Header para historial general */
 .history-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     margin-bottom: 1rem;
-    gap: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .history-player-name {
+    font-size: 1rem;
     font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--ranking-text);
-    margin: 0;
-    flex: 1;
-}
-
-.mentiroso .history-player-name {
-    color: rgba(var(--mentiroso-neon-red), 1);
-    text-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-red), 0.4);
+    color: rgba(255, 255, 255, 0.95);
+    background: var(--pasalache-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .history-date {
-    font-size: 0.8rem;
-    color: var(--ranking-text-muted);
-    font-weight: 500;
-    white-space: nowrap;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
     background: rgba(255, 255, 255, 0.05);
     padding: 0.3rem 0.6rem;
-    border-radius: 8px;
-    backdrop-filter: blur(5px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(3px);
 }
 
-.mentiroso .history-date {
-    background: rgba(var(--mentiroso-neon-red), 0.1);
-    border: 1px solid rgba(var(--mentiroso-neon-red), 0.2);
-    color: rgba(var(--mentiroso-neon-red), 0.8);
-}
-
-/* Información del juego */
+/* Información del juego para ranking general */
 .game-info-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
     gap: 1rem;
-    flex-wrap: wrap;
 }
 
-/* Indicador de resultado */
 .result-indicator {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.5rem 0.8rem;
-    border-radius: 12px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
     font-weight: 700;
-    font-size: 0.9rem;
-    backdrop-filter: blur(10px);
-    border: 2px solid transparent;
-    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 1px solid;
+    backdrop-filter: blur(5px);
 }
 
 .result-indicator.victory {
-    background: rgba(72, 187, 120, 0.2);
-    border-color: rgba(72, 187, 120, 0.4);
-    color: #68d391;
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 185, 129, 0.1));
+    color: #22c55e;
+    border-color: rgba(34, 197, 94, 0.3);
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
 }
 
 .result-indicator.defeat {
-    background: rgba(245, 101, 101, 0.2);
-    border-color: rgba(245, 101, 101, 0.4);
-    color: #fc8181;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 53, 69, 0.1));
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
 }
 
-.mentiroso .result-indicator.victory {
-    background: rgba(var(--mentiroso-neon-red), 0.15);
-    border-color: rgba(var(--mentiroso-neon-red), 0.4);
-    color: rgba(var(--mentiroso-neon-red), 1);
-    box-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-red), 0.3);
-}
-
-.mentiroso .result-indicator.defeat {
-    background: rgba(var(--mentiroso-neon-purple), 0.15);
-    border-color: rgba(var(--mentiroso-neon-purple), 0.4);
-    color: rgba(var(--mentiroso-neon-purple), 1);
-    box-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-purple), 0.3);
-}
-
-.result-text {
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+.result-indicator.timeout {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(217, 119, 6, 0.1));
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.3);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.2);
 }
 
 .result-icon {
-    font-size: 1.1em;
-    animation: resultIconPulse 2s ease-in-out infinite;
+    font-size: 1.1rem;
 }
 
-@keyframes resultIconPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+.result-text {
+    font-weight: 700;
+    font-size: 0.8rem;
 }
 
 .game-mode-tag {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--ranking-text-muted);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(37, 99, 235, 0.08));
+    color: #60a5fa;
     padding: 0.3rem 0.6rem;
-    border-radius: 8px;
-    font-size: 0.75rem;
+    border-radius: 12px;
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    letter-spacing: 0.3px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
-.mentiroso .game-mode-tag {
-    background: rgba(var(--mentiroso-neon-orange), 0.1);
-    border-color: rgba(var(--mentiroso-neon-orange), 0.3);
-    color: rgba(var(--mentiroso-neon-orange), 1);
-}
-
-/* Estado del juego */
-.game-status {
+/* Resumen principal para ranking general */
+.main-summary {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
-    padding: 0.75rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.mentiroso .game-status {
-    background: rgba(var(--mentiroso-neon-red), 0.08);
-    border-color: rgba(var(--mentiroso-neon-red), 0.2);
-}
-
-/* Resumen principal */
-.main-summary {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
+    margin: 1rem 0;
     padding: 1rem;
-    background: rgba(255, 255, 255, 0.03);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
     border-radius: 12px;
-    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
 }
 
-.mentiroso .main-summary {
-    background: rgba(var(--mentiroso-neon-red), 0.05);
-    border: 1px solid rgba(var(--mentiroso-neon-red), 0.15);
-}
-
-/* Sección del jugador */
 .player-section {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
 }
 
 .player-section .player-name {
-    font-weight: 700;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: var(--ranking-text);
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.2rem;
 }
 
-.mentiroso .player-section .player-name {
-    color: rgba(var(--mentiroso-neon-red), 1);
-    text-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-red), 0.4);
-}
-
-.player-score {
+.player-section .player-score {
     font-size: 1.8rem;
     font-weight: 800;
-    color: var(--pasalache-primary);
-    text-shadow: 0 0 10px rgba(49, 130, 206, 0.4);
+    background: var(--pasalache-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
-.mentiroso .player-score {
-    color: rgba(var(--mentiroso-neon-red), 1);
-    text-shadow: var(--mentiroso-glow-intensity) rgba(var(--mentiroso-neon-red), 0.5);
-    animation: mentirosoScoreGlow 3s ease-in-out infinite;
-}
-
-@keyframes mentirosoScoreGlow {
-    0%, 100% { 
-        filter: brightness(1);
-        transform: scale(1);
-    }
-    50% { 
-        filter: brightness(1.3);
-        transform: scale(1.05);
-    }
-}
-
-/* VS Section */
 .vs-section {
-    text-align: center;
-    font-weight: 800;
-    font-size: 1.2rem;
-    color: var(--ranking-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
 }
 
-.mentiroso .vs-section {
-    color: rgba(var(--mentiroso-neon-pink), 0.8);
-    text-shadow: var(--mentiroso-glow-subtle) rgba(var(--mentiroso-neon-pink), 0.4);
+.vs-section .vs-text {
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--pasalache-primary);
+    text-shadow: 0 0 10px rgba(49, 130, 206, 0.5);
 }
 
-.score-difference {
-    font-size: 0.8rem;
-    margin-top: 0.3rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 8px;
-    backdrop-filter: blur(5px);
-}
-
-.score-difference.positive {
-    background: rgba(72, 187, 120, 0.2);
-    color: #68d391;
-}
-
-.score-difference.negative {
-    background: rgba(245, 101, 101, 0.2);
-    color: #fc8181;
-}
-
-/* Estadísticas clave - grid compacto */
+/* Estadísticas clave para ranking general */
 .key-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-    gap: 0.5rem;
-    margin: 0.6rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 0.8rem;
+    margin: 1rem 0;
 }
 
 .stat-item {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
-    border-radius: 6px;
-    padding: 0.5rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+    border-radius: 10px;
+    padding: 0.8rem;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     backdrop-filter: blur(5px);
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--pasalache-gradient);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .stat-item:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
     border-color: rgba(255, 255, 255, 0.15);
 }
 
+.stat-item:hover::before {
+    opacity: 1;
+}
+
 .stat-icon {
-    font-size: 0.9rem;
-    margin-bottom: 0.2rem;
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
     display: block;
-    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
+    background: var(--pasalache-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 .stat-value {
-    font-size: 0.85rem;
+    font-size: 1.3rem;
     font-weight: 700;
-    color: var(--ranking-text);
-    margin-bottom: 0.2rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 0.3rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .stat-label {
-    font-size: 0.6rem;
-    color: var(--ranking-text-muted);
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.7);
     text-transform: uppercase;
-    letter-spacing: 0.2px;
-    font-weight: 500;
-    margin-bottom: 0.1rem;
-}
-
-.stat-detail {
-    font-size: 0.55rem;
-    color: var(--ranking-text-muted);
-    opacity: 0.8;
-}
-
-/* Performance grid - más compacto */
-.performance-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
-    gap: 0.5rem;
-    margin: 0.6rem 0;
-}
-
-.perf-stat {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-    border-radius: 6px;
-    padding: 0.5rem;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.2s ease;
-}
-
-.stat-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.2rem;
-    margin-bottom: 0.3rem;
-}
-
-.stat-title {
-    font-size: 0.6rem;
-    color: var(--ranking-text-muted);
-    text-transform: uppercase;
-    font-weight: 500;
-}
-
-.stat-main {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: var(--ranking-text);
+    font-weight: 600;
+    letter-spacing: 0.3px;
     margin-bottom: 0.2rem;
 }
 
-/* Detalles del juego - compactos */
-.game-details {
-    margin-top: 0.6rem;
-    padding-top: 0.6rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.detail-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.5rem;
-    margin-bottom: 0.4rem;
-}
-
-.detail-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-    flex: 1;
-}
-
-.detail-label {
+.stat-detail {
     font-size: 0.6rem;
-    color: var(--ranking-text-muted);
-    text-transform: uppercase;
-    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.3;
 }
 
-.detail-value {
-    font-size: 0.7rem;
-    color: var(--ranking-text);
-    font-weight: 600;
-}
-
-/* Especialización y tags */
-.game-specific {
-    margin-top: 0.5rem;
-}
-
-.specific-label {
-    font-size: 0.6rem;
-    color: var(--ranking-text-muted);
-    margin-bottom: 0.3rem;
-    display: flex;
-    align-items: center;
-    gap: 0.2rem;
-}
-
-.specific-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.3rem;
-}
-
-.specific-tag {
-    font-size: 0.6rem;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    border: 1px solid;
-    background: rgba(255, 255, 255, 0.05);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.2px;
-}
-
-/* Badges y achievements */
-.achievement-badge,
-.level-badge {
-    font-size: 0.6rem;
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.2px;
-    margin-top: 0.2rem;
-    display: inline-block;
-}
-
-.achievement-badge.perfect { 
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%); 
-    color: #10b981; 
-    border: 1px solid rgba(16, 185, 129, 0.3);
-}
-
-.achievement-badge.excellent { 
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%); 
-    color: #3b82f6; 
-    border: 1px solid rgba(59, 130, 246, 0.3);
-}
-
-.achievement-badge.good { 
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.1) 100%); 
-    color: #f59e0b; 
-    border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-/* Performance insight */
+/* Performance insight para ranking general */
 .performance-insight {
-    margin-top: 0.5rem;
-    padding: 0.4rem;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.05) 100%);
-    border-radius: 6px;
-    border: 1px solid rgba(59, 130, 246, 0.2);
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(37, 99, 235, 0.03));
+    border-radius: 10px;
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    backdrop-filter: blur(5px);
 }
 
 .insight-text {
-    font-size: 0.65rem;
-    color: var(--ranking-text);
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
     text-align: center;
-    line-height: 1.3;
+    line-height: 1.4;
+    font-style: italic;
 }
 
 .insight-highlight {
@@ -1045,85 +644,67 @@
     font-weight: 600;
 }
 
-/* === RESPONSIVE PARA HISTORIAL === */
-@media (max-width: 480px) {
+/* Responsive para historial general */
+@media (max-width: 768px) {
     .history-item {
-        padding: 0.6rem;
+        padding: 0.8rem;
+        margin-bottom: 0.8rem;
     }
     
-    .key-stats {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.4rem;
-    }
-    
-    .performance-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.4rem;
-    }
-    
-    .main-summary {
-        padding: 0.5rem;
-        margin: 0.5rem 0;
-    }
-    
-    .player-name {
-        max-width: 60px;
-        font-size: 0.65rem;
-    }
-    
-    .result-text {
-        display: none;
+    .history-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
     }
     
     .game-info-row {
         flex-direction: column;
-        gap: 0.3rem;
-        align-items: flex-start;
-    }
-    
-    .specific-content {
-        justify-content: center;
-    }
-    
-    .detail-row {
-        flex-direction: column;
-        gap: 0.3rem;
-    }
-}
-
-@media (max-width: 340px) {
-    .history-item {
-        padding: 0.5rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .key-stats,
-    .performance-grid {
-        grid-template-columns: 1fr;
-        gap: 0.3rem;
+        gap: 0.5rem;
+        align-items: stretch;
     }
     
     .main-summary {
         flex-direction: column;
-        gap: 0.4rem;
+        gap: 0.8rem;
         text-align: center;
     }
     
-    .vs-section {
-        flex-direction: row;
-        gap: 0.4rem;
+    .key-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem;
+    }
+    
+    .player-section .player-score {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .history-item {
+        padding: 0.6rem;
+        margin-bottom: 0.6rem;
+    }
+    
+    .key-stats {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .player-section .player-score {
+        font-size: 1.3rem;
+    }
+    
+    .result-indicator {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
     }
     
     .stat-item {
-        padding: 0.4rem;
+        padding: 0.6rem;
     }
     
-    .player-score {
-        font-size: 1rem;
-    }
-    
-    .stat-value {
-        font-size: 0.75rem;
+    .performance-insight {
+        padding: 0.6rem;
     }
 }
 
@@ -1153,4 +734,437 @@
 .loading-state {
     background: rgba(26, 32, 44, 0.5);
     border-style: solid;
+}
+
+/* === HISTORIAL GENERAL Y ESPECÍFICO === */
+.history-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    margin-top: 0.6rem;
+}
+
+/* === ESTILOS ESPECÍFICOS PARA MENTIROSO === */
+/* Header principal de la partida - específico para Mentiroso */
+.match-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    gap: 1rem;
+}
+
+.match-info {
+    flex: 1;
+}
+
+.match-result-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    border: 1px solid;
+    backdrop-filter: blur(5px);
+}
+
+.match-result-badge.victory {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 185, 129, 0.1));
+    color: #22c55e;
+    border-color: rgba(34, 197, 94, 0.3);
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
+}
+
+.match-result-badge.defeat {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 53, 69, 0.1));
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+}
+
+.match-result-badge.draw {
+    background: linear-gradient(135deg, rgba(156, 163, 175, 0.2), rgba(107, 114, 128, 0.1));
+    color: #9ca3af;
+    border-color: rgba(156, 163, 175, 0.3);
+    box-shadow: 0 0 15px rgba(156, 163, 175, 0.2);
+}
+
+.match-type {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+}
+
+.match-description {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.4;
+}
+
+.match-date {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+    backdrop-filter: blur(3px);
+}
+
+/* Sección de jugadores mejorada - específico para Mentiroso */
+.players-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin: 1rem 0;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    position: relative;
+}
+
+.players-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+.player-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    min-width: 0;
+    flex: 1;
+    position: relative;
+}
+
+.player-card .player-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
+    margin-bottom: 0.2rem;
+}
+
+.player-card .player-score {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    position: relative;
+}
+
+.player-card.winner .player-score {
+    background: linear-gradient(135deg, #ffd700, #ffed4a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.player-card.winner::after {
+    content: '👑';
+    position: absolute;
+    top: -10px;
+    right: -5px;
+    font-size: 1.2rem;
+    animation: crownBounce 2s ease-in-out infinite;
+}
+
+@keyframes crownBounce {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-3px) rotate(5deg); }
+}
+
+.vs-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.6);
+    position: relative;
+}
+
+.vs-text {
+    font-size: 1rem;
+    font-weight: bold;
+    color: rgba(239, 68, 68, 1);
+    text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    animation: vsGlow 3s ease-in-out infinite;
+}
+
+@keyframes vsGlow {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+}
+
+.score-difference {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.score-difference.positive {
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
+}
+
+.score-difference.negative {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Estadísticas de rendimiento - específico para Mentiroso */
+.performance-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.8rem;
+    margin: 1rem 0;
+}
+
+.performance-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
+    border-radius: 10px;
+    padding: 0.8rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+    position: relative;
+    overflow: hidden;
+}
+
+.performance-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        rgba(59, 130, 246, 0.6) 0%, 
+        rgba(147, 51, 234, 0.6) 50%, 
+        rgba(239, 68, 68, 0.6) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.performance-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.performance-card:hover::before {
+    opacity: 1;
+}
+
+.performance-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.performance-icon {
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.performance-title {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.performance-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 0.3rem;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.performance-detail {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.3;
+}
+
+/* Especialización del juego - específico para Mentiroso */
+.game-specialty {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 53, 69, 0.05));
+    border-radius: 10px;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.specialty-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+}
+
+.specialty-icon {
+    font-size: 1rem;
+    color: #ef4444;
+}
+
+.specialty-title {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.specialty-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.specialty-stat {
+    text-align: center;
+    flex: 1;
+}
+
+.specialty-stat-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ef4444;
+    margin-bottom: 0.2rem;
+}
+
+.specialty-stat-label {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+}
+
+/* Análisis de partida - específico para Mentiroso */
+.match-analysis {
+    margin-top: 1rem;
+    padding: 0.8rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(37, 99, 235, 0.03));
+    border-radius: 10px;
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    backdrop-filter: blur(5px);
+}
+
+.analysis-text {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    line-height: 1.4;
+    font-style: italic;
+}
+
+.analysis-highlight {
+    color: #60a5fa;
+    font-weight: 600;
+}
+
+/* Responsive para Mentiroso */
+@media (max-width: 768px) {
+    .match-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .players-section {
+        gap: 1rem;
+        padding: 0.8rem;
+    }
+    
+    .player-card .player-score {
+        font-size: 1.5rem;
+    }
+    
+    .performance-section {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem;
+    }
+    
+    .specialty-content {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .players-section {
+        flex-direction: column;
+        gap: 0.8rem;
+        text-align: center;
+    }
+    
+    .vs-divider {
+        flex-direction: row;
+        gap: 0.5rem;
+    }
+    
+    .performance-section {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .player-card .player-score {
+        font-size: 1.3rem;
+    }
+    
+    .match-result-badge {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .performance-card {
+        padding: 0.6rem;
+    }
+    
+    .game-specialty {
+        padding: 0.6rem;
+    }
+    
+    .match-analysis {
+        padding: 0.6rem;
+    }
 } 

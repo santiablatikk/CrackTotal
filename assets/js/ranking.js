@@ -267,7 +267,7 @@ function generateHistoryHTML(matches) {
                         ${isVictory && lettersPerSecond >= 15 ? 
                             '<span class="insight-highlight">¡Velocidad increíble!</span> Completaste muy rápido.' :
                         isVictory ? 
-                            '<span class="insight-highlight">¡Excelente!</span> Completaste la palabra exitosamente.' :
+                            '<span class="insight-highlight">¡Excelente!</span> Completaste el juego exitosamente.' :
                         lettersPerSecond >= 20 ? 
                             '<span class="insight-highlight">Máquina de escribir</span> - Velocidad excepcional.' :
                         score >= 2000 ? 

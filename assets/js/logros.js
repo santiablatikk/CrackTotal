@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Usar requestAnimationFrame para renderizado suave
         requestAnimationFrame(() => {
             try {
-                const estadoActualLogros = cargarLogros();
+        const estadoActualLogros = cargarLogros();
                 
                 // Actualizar cache
                 logrosCache = {
@@ -313,10 +313,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 renderizarLogros(currentFilter);
             }, 150) : 
             () => {
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                currentFilter = button.dataset.filter;
-                renderizarLogros(currentFilter);
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            currentFilter = button.dataset.filter;
+            renderizarLogros(currentFilter);
             }
         );
     });
@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Inicialización OPTIMIZADA ---
     // Usar setTimeout para permitir que otros elementos críticos se carguen primero
     setTimeout(() => {
-        renderizarLogros(currentFilter);
+    renderizarLogros(currentFilter);
     }, 100);
 
     // --- Escuchar cambios en localStorage OPTIMIZADO ---
@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 500) : 
         (event) => {
-            if (event.key === LOGROS_KEY) {
+        if (event.key === LOGROS_KEY) {
                 console.log('Detectado cambio en localStorage de logros. Re-renderizando...');
                 renderizarLogros(currentFilter);
             }
