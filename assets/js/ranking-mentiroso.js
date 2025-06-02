@@ -268,7 +268,18 @@ function generateHistoryHTML(matches) {
         const isVictory = match.result === 'victory';
         const myScore = match.myScore || 0;
         const opponentScore = match.opponents?.[0]?.score || 0;
-        const opponentName = match.opponents?.[0]?.name || 'Oponente';
+        
+        // Mejorar la obtención del nombre del oponente
+        let opponentName = 'Oponente';
+        if (match.opponents && match.opponents.length > 0) {
+            const opponent = match.opponents[0];
+            opponentName = opponent.displayName || opponent.name || opponent.playerName || 'Oponente';
+        } else if (match.opponentName) {
+            opponentName = match.opponentName;
+        } else if (match.opponent) {
+            opponentName = match.opponent.displayName || match.opponent.name || 'Oponente';
+        }
+        
         const scoreDiff = myScore - opponentScore;
         const gameType = match.gameResult || 'Normal';
         const duration = match.duration || 0;

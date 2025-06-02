@@ -1537,7 +1537,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateTimerDisplay(
                         message.payload.timeRemaining, 
                         message.payload.phase || 'bidding', 
-                        message.payload.phase === 'listing' ? 60 : 15
+                        message.payload.phase === 'listing' ? 60 : (message.payload.phase === 'validating' ? 30 : 15)
                     );
                     break;
                     
@@ -2216,8 +2216,8 @@ document.addEventListener('DOMContentLoaded', function() {
             timerBarEl.style.width = percentage + '%';
             
             // Cambiar color según el tiempo restante y la fase
-            const warningThreshold = phase === 'bidding' ? 5 : 15; // 5s para apuesta, 15s para listar
-            const criticalThreshold = phase === 'bidding' ? 3 : 10; // 3s para apuesta, 10s para listar
+            const warningThreshold = phase === 'bidding' ? 5 : (phase === 'validating' ? 10 : 15); // 5s para apuesta, 10s para validar, 15s para listar
+            const criticalThreshold = phase === 'bidding' ? 3 : (phase === 'validating' ? 5 : 10); // 3s para apuesta, 5s para validar, 10s para listar
             
             if (timeRemaining <= criticalThreshold) {
                 timerBarEl.style.background = '#ff416c'; // Rojo
@@ -2229,7 +2229,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (timerDisplayEl) {
-            const warningThreshold = phase === 'bidding' ? 5 : 15;
+            const warningThreshold = phase === 'bidding' ? 5 : (phase === 'validating' ? 10 : 15);
             if (timeRemaining <= warningThreshold) {
                 timerDisplayEl.classList.add('timer-warning');
             } else {
@@ -2244,6 +2244,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 timerLabel.textContent = 'Tiempo para apostar:';
             } else if (phase === 'listing') {
                 timerLabel.textContent = 'Tiempo para listar:';
+            } else if (phase === 'validating') {
+                timerLabel.textContent = 'Tiempo para validar:';
             }
         }
     }
@@ -2261,6 +2263,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function resetTimer(duration = 15, phase = 'bidding') {
+        // Si no se especifica duración, usar la duración estándar para la fase
+        if (duration === 15 && phase !== 'bidding') {
+            if (phase === 'listing') {
+                duration = 60;
+            } else if (phase === 'validating') {
+                duration = 30;
+            }
+        }
+        
         updateTimerDisplay(duration, phase, duration);
         if (timerDisplayEl) {
             timerDisplayEl.classList.remove('timer-warning');
