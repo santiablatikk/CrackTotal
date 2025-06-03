@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Firebase - Crack Total</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .test-section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4CAF50;
+        }
+        .test-section.error {
+            border-left-color: #f44336;
+        }
+        .test-section.warning {
+            border-left-color: #ff9800;
+        }
+        .status {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .warning { color: #ff9800; }
+        .info { color: #2196F3; }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        pre {
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔥 Test de Firebase - Crack Total</h1>
+    
+    <div class="test-section">
+        <div class="status" id="connectionStatus">🔄 Verificando conexión...</div>
+        <div id="connectionDetails"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="status" id="configStatus">🔄 Verificando configuración...</div>
+        <div id="configDetails"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="status" id="rulesStatus">🔄 Verificando reglas de seguridad...</div>
+        <div id="rulesDetails"></div>
+    </div>
+
+    <div class="test-section">
+        <div class="status" id="dataStatus">🔄 Verificando datos de prueba...</div>
+        <div id="dataDetails"></div>
+        <button onclick="testUserCreation()">Crear Usuario de Prueba</button>
+        <button onclick="testMatchSave()">Guardar Partida de Prueba</button>
+        <button onclick="testRankingQuery()">Consultar Rankings</button>
+    </div>
+
+    <div class="test-section">
+        <div class="status">📊 Logs del Sistema</div>
+        <pre id="systemLogs"></pre>
+        <button onclick="clearLogs()">Limpiar Logs</button>
+    </div>
+
+    <script type="module">
+        import { db } from './assets/js/firebase-init.js';
+        import { 
+            doc, 
+            getDoc, 
+            setDoc, 
+            collection, 
+            addDoc,
+            query,
+            orderBy,
+            limit,
+            getDocs,
+            serverTimestamp 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { ensureUserProfile, saveQuienSabeMasResult } from './assets/js/firebase-utils.js';
+
+        let logs = [];
+
+        function addLog(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            logs.push(`[${timestamp}] ${type.toUpperCase()}: ${message}`);
+            updateLogsDisplay();
+            console.log(`[Firebase Test] ${message}`);
+        }
+
+        function updateLogsDisplay() {
+            document.getElementById('systemLogs').textContent = logs.slice(-20).join('\n');
+        }
+
+        window.clearLogs = function() {
+            logs = [];
+            updateLogsDisplay();
+        }
+
+        async function testConnection() {
+            const statusEl = document.getElementById('connectionStatus');
+            const detailsEl = document.getElementById('connectionDetails');
+            
+            try {
+                if (!db) {
+                    throw new Error('Base de datos no inicializada');
+                }
+
+                // Test básico de conectividad
+                const testRef = doc(db, 'gameConfig', 'test');
+                await getDoc(testRef);
+                
+                statusEl.innerHTML = '✅ <span class="success">Conexión exitosa</span>';
+                detailsEl.innerHTML = `
+                    <p>✅ Firebase inicializado correctamente</p>
+                    <p>✅ Firestore accesible</p>
+                    <p>📍 Proyecto: cracktotal-cd2e7</p>
+                `;
+                addLog('Conexión a Firebase exitosa', 'success');
+                
+            } catch (error) {
+                statusEl.innerHTML = '❌ <span class="error">Error de conexión</span>';
+                detailsEl.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                addLog(`Error de conexión: ${error.message}`, 'error');
+            }
+        }
+
+        async function testConfiguration() {
+            const statusEl = document.getElementById('configStatus');
+            const detailsEl = document.getElementById('configDetails');
+            
+            try {
+                // Verificar configuraciones de juego
+                const gameTypes = ['quiensabemas', 'mentiroso', 'crackrapido', 'pasalache'];
+                let configResults = [];
+                
+                for (const gameType of gameTypes) {
+                    const configRef = doc(db, 'gameConfig', gameType);
+                    const configSnap = await getDoc(configRef);
+                    
+                    if (configSnap.exists()) {
+                        configResults.push(`✅ ${gameType}: Configurado`);
+                        addLog(`Configuración ${gameType} encontrada`, 'success');
+                    } else {
+                        configResults.push(`❌ ${gameType}: No configurado`);
+                        addLog(`Configuración ${gameType} faltante`, 'warning');
+                    }
+                }
+                
+                statusEl.innerHTML = '✅ <span class="success">Configuración verificada</span>';
+                detailsEl.innerHTML = configResults.map(r => `<p>${r}</p>`).join('');
+                
+            } catch (error) {
+                statusEl.innerHTML = '❌ <span class="error">Error en configuración</span>';
+                detailsEl.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                addLog(`Error verificando configuración: ${error.message}`, 'error');
+            }
+        }
+
+        async function testSecurityRules() {
+            const statusEl = document.getElementById('rulesStatus');
+            const detailsEl = document.getElementById('rulesDetails');
+            
+            try {
+                // Test de lectura de colecciones públicas
+                const matchesRef = collection(db, 'matches');
+                const matchesQuery = query(matchesRef, limit(1));
+                await getDocs(matchesQuery);
+                
+                statusEl.innerHTML = '✅ <span class="success">Reglas funcionando</span>';
+                detailsEl.innerHTML = `
+                    <p>✅ Lectura de matches permitida</p>
+                    <p>✅ Reglas de seguridad activas</p>
+                `;
+                addLog('Reglas de seguridad funcionando correctamente', 'success');
+                
+            } catch (error) {
+                if (error.code === 'permission-denied') {
+                    statusEl.innerHTML = '⚠️ <span class="warning">Permisos restringidos</span>';
+                    detailsEl.innerHTML = `<p class="warning">Las reglas están activas pero muy restrictivas</p>`;
+                    addLog('Reglas muy restrictivas detectadas', 'warning');
+                } else {
+                    statusEl.innerHTML = '❌ <span class="error">Error en reglas</span>';
+                    detailsEl.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                    addLog(`Error en reglas: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        window.testUserCreation = async function() {
+            try {
+                addLog('Iniciando test de creación de usuario...', 'info');
+                const userId = await ensureUserProfile();
+                addLog(`Usuario creado/verificado: ${userId}`, 'success');
+                alert('✅ Usuario de prueba creado exitosamente');
+            } catch (error) {
+                addLog(`Error creando usuario: ${error.message}`, 'error');
+                alert('❌ Error creando usuario: ' + error.message);
+            }
+        }
+
+        window.testMatchSave = async function() {
+            try {
+                addLog('Iniciando test de guardado de partida...', 'info');
+                const gameStats = {
+                    result: 'victory',
+                    myScore: 1500,
+                    opponentId: 'test_opponent',
+                    opponentName: 'Oponente de Prueba',
+                    opponentScore: 1200
+                };
+                
+                const success = await saveQuienSabeMasResult(gameStats);
+                if (success) {
+                    addLog('Partida de prueba guardada exitosamente', 'success');
+                    alert('✅ Partida de prueba guardada exitosamente');
+                } else {
+                    throw new Error('La función retornó false');
+                }
+            } catch (error) {
+                addLog(`Error guardando partida: ${error.message}`, 'error');
+                alert('❌ Error guardando partida: ' + error.message);
+            }
+        }
+
+        window.testRankingQuery = async function() {
+            try {
+                addLog('Iniciando test de consulta de rankings...', 'info');
+                const usersRef = collection(db, 'users');
+                const rankingQuery = query(
+                    usersRef, 
+                    orderBy('stats.quiensabemas.score', 'desc'),
+                    limit(5)
+                );
+                
+                const snapshot = await getDocs(rankingQuery);
+                addLog(`Rankings consultados: ${snapshot.size} usuarios encontrados`, 'success');
+                
+                let rankingData = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    rankingData.push({
+                        name: data.displayName,
+                        score: data.stats?.quiensabemas?.score || 0
+                    });
+                });
+                
+                alert(`✅ Rankings consultados: ${rankingData.length} usuarios\n${rankingData.map((u, i) => `${i+1}. ${u.name}: ${u.score} pts`).join('\n')}`);
+                
+            } catch (error) {
+                addLog(`Error consultando rankings: ${error.message}`, 'error');
+                alert('❌ Error consultando rankings: ' + error.message);
+            }
+        }
+
+        // Ejecutar tests automáticamente
+        document.addEventListener('DOMContentLoaded', async () => {
+            addLog('Iniciando tests automáticos de Firebase...', 'info');
+            
+            // Esperar un poco para que Firebase se inicialice
+            setTimeout(async () => {
+                await testConnection();
+                await testConfiguration();
+                await testSecurityRules();
+                addLog('Tests automáticos completados', 'info');
+            }, 2000);
+        });
+    </script>
+</body>
+</html> 

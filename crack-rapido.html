@@ -224,7 +224,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .timer-display::before {
             content: '';
             position: absolute;
@@ -274,7 +274,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .score-display::before {
             content: '';
             position: absolute;
@@ -323,7 +323,7 @@
             overflow: hidden;
             animation: slideInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         .question-container::before {
             content: '';
             position: absolute;
@@ -390,7 +390,7 @@
             transform: translateX(0);
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
-        
+
         .option-btn::before {
             content: '';
             position: absolute;
@@ -401,18 +401,18 @@
             background: linear-gradient(90deg, transparent, rgba(var(--primary-rgb), 0.05), transparent);
             transition: left 0.5s ease;
         }
-        
+
         .option-btn:hover {
             background: var(--surface);
             border-color: var(--primary);
             transform: translateX(8px) scale(1.02);
             box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.15);
         }
-        
+
         .option-btn:hover::before {
             left: 100%;
         }
-        
+
         .option-btn:active {
             transform: translateX(8px) scale(0.98);
         }
@@ -557,7 +557,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .stat-card::before {
             content: '';
             position: absolute;
@@ -580,7 +580,7 @@
         }
         
         .stat-value {
-            font-size: 2.2rem;
+                font-size: 2.2rem;
             font-weight: 900;
             background: var(--gradient);
             background-clip: text;
@@ -639,7 +639,7 @@
         
         .final-subtitle {
             color: var(--text-light);
-            font-size: 1rem;
+                font-size: 1rem;
             margin-bottom: 35px;
             font-weight: 600;
         }
@@ -825,7 +825,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .topic-item::before {
             content: '';
             position: absolute;
@@ -932,8 +932,8 @@
             }
             
             .action-buttons {
-                flex-direction: column;
-                align-items: center;
+            flex-direction: column;
+            align-items: center;
             }
             
             .primary-button, .secondary-button, .tertiary-button {
@@ -944,7 +944,7 @@
             .game-logo h2 {
                 font-size: 2.5rem;
             }
-            
+
             .game-logo i {
                 font-size: 3rem;
             }
@@ -969,7 +969,7 @@
                 margin: 0 auto;
             }
         }
-        
+
         @media (max-width: 480px) {
             .game-interface {
                 padding: 0 10px;
@@ -982,9 +982,9 @@
             
             .option-btn {
                 padding: 18px 20px;
-                font-size: 1rem;
-            }
-            
+            font-size: 1rem;
+        }
+
             .timer-value {
                 font-size: 1.4rem;
             }
@@ -1206,11 +1206,11 @@
                         <button class="tertiary-button" onclick="goToGames()">
                             <i class="fas fa-gamepad"></i>
                             Volver a Juegos
-                        </button>
+                    </button>
                     </div>
                 </div>
+                </div>
             </div>
-        </div>
 
         <!-- Pantalla de Instrucciones -->
         <div id="instructionsScreen" class="game-instructions-screen" style="display: none;">

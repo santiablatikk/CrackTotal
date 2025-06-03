@@ -1586,6 +1586,152 @@
             color: #ffd700;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
         }
+
+        /* Estilos específicos para 100 Futboleros Dicen */
+        .cosmic-game-card[data-game="100-futboleros-dicen"] {
+            background: radial-gradient(ellipse at center, rgba(255, 107, 53, 0.15) 0%, rgba(78, 205, 196, 0.1) 70%, transparent 100%);
+            border: 2px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"]::before {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(78, 205, 196, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 217, 61, 0.3) 0%, transparent 50%);
+            mix-blend-mode: overlay;
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"]:hover::before {
+            opacity: 1;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.6) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(78, 205, 196, 0.6) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 217, 61, 0.5) 0%, transparent 50%);
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"]:hover {
+            border-color: rgba(255, 107, 53, 0.6);
+            box-shadow: 
+                0 20px 40px rgba(255, 107, 53, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"] .stellar-badge.nuevo {
+            background: linear-gradient(135deg, #ff6b35, #ff8c66);
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            box-shadow: 
+                0 0 20px rgba(255, 107, 53, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            animation: newGamePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes newGamePulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 20px rgba(255, 107, 53, 0.6),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 30px rgba(255, 107, 53, 0.8),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"] .game-icon {
+            background: linear-gradient(135deg, #ff6b35, #ffd93d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: none;
+            position: relative;
+            animation: microphoneBounce 3s ease-in-out infinite;
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"] .game-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            animation: iconGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes microphoneBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            25% { transform: translateY(-5px) scale(1.05); }
+            50% { transform: translateY(0) scale(1); }
+            75% { transform: translateY(-3px) scale(1.02); }
+        }
+
+        @keyframes iconGlow {
+            0% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"] .game-title {
+            background: linear-gradient(120deg, #ff6b35 0%, #ffd93d 50%, #4ecdc4 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: none;
+            font-weight: 800;
+            font-size: 1.4rem;
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"] .quantum-play-btn {
+            background: linear-gradient(135deg, #ff6b35, #ff8c66);
+            border: 2px solid #ffd93d;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"] .quantum-play-btn::after {
+            background: linear-gradient(135deg, #ffd93d, #4ecdc4);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"] .quantum-play-btn:hover {
+            border-color: #4ecdc4;
+            box-shadow: 
+                0 10px 30px rgba(255, 107, 53, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"] .quantum-play-btn:hover::after {
+            opacity: 1;
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"] .stat-chip {
+            border-color: rgba(255, 107, 53, 0.4);
+            color: rgba(255, 107, 53, 0.9);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"] .stat-chip:hover {
+            background: rgba(255, 107, 53, 0.2);
+            border-color: rgba(255, 107, 53, 0.6);
+            color: #ff6b35;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"] .room-status {
+            color: rgba(78, 205, 196, 0.9);
+        }
+
+        .cosmic-game-card[data-game="100-futboleros-dicen"] .room-status i {
+            color: #4ecdc4;
+        }
     </style>
 </head>
 <body>
@@ -1727,6 +1873,31 @@
                                 <span>Jugar</span>
                             </button>
                             <div class="room-status" id="mentiroso-rooms">
+                                <i class="fas fa-satellite-dish" aria-hidden="true"></i>
+                                <span>Salas Activas: <span class="room-count">-/-</span></span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- 100 Futboleros Dicen -->
+                    <article class="cosmic-game-card" data-game="100-futboleros-dicen">
+                        <div class="stellar-badge nuevo">NUEVO</div>
+                        <div class="game-visual-container">
+                            <i class="fas fa-microphone-alt game-icon" aria-hidden="true"></i>
+                        </div>
+                        <div class="game-content">
+                            <h3 class="game-title">🎤 100 Futboleros Dicen</h3>
+                            <p class="game-description">¡El clásico juego de encuestas con temática futbolística! Adivina las respuestas más populares y compite con hasta 8 amigos. ¿Podrás pensar como los demás futboleros?</p>
+                            <div class="game-stats">
+                                <span class="stat-chip"><i class="fas fa-users"></i>2-8 Jugadores</span>
+                                <span class="stat-chip"><i class="fas fa-poll"></i>Encuestas Reales</span>
+                                <span class="stat-chip"><i class="fas fa-clock"></i>15-20 min</span>
+                                <span class="stat-chip"><i class="fas fa-trophy"></i>Por Equipos</span>
+                            </div>
+                            <button class="quantum-play-btn" aria-label="Jugar a 100 Futboleros Dicen">
+                                <span>Jugar</span>
+                            </button>
+                            <div class="room-status" id="futboleros-dicen-rooms">
                                 <i class="fas fa-satellite-dish" aria-hidden="true"></i>
                                 <span>Salas Activas: <span class="room-count">-/-</span></span>
                             </div>
@@ -2020,12 +2191,14 @@
                 const gameFrames = new Map();
                 let roomsData = {
                     quiensabemas: { active: 0, available: 0 },
-                    mentiroso: { active: 0, available: 0 }
+                    mentiroso: { active: 0, available: 0 },
+                    "100-futboleros-dicen": { active: 0, available: 0 }
                 };
 
                 // Elementos DOM para mostrar información de salas
                 const quienSabeMasRooms = document.getElementById('quiensabemas-rooms');
                 const mentirosoRooms = document.getElementById('mentiroso-rooms');
+                const futbolerosDicenRooms = document.getElementById('futboleros-dicen-rooms');
 
                 // Función para actualizar la visualización de salas
                 function updateRoomsDisplay() {
@@ -2042,6 +2215,14 @@
                         if (mentirosoCount) {
                             const mentirosoData = roomsData.mentiroso;
                             mentirosoCount.textContent = `${mentirosoData.active}/${mentirosoData.active + mentirosoData.available}`;
+                        }
+                    }
+
+                    if (futbolerosDicenRooms) {
+                        const futbolerosDicenCount = futbolerosDicenRooms.querySelector('.room-count');
+                        if (futbolerosDicenCount) {
+                            const futbolerosDicenData = roomsData["100-futboleros-dicen"];
+                            futbolerosDicenCount.textContent = `${futbolerosDicenData.active}/${futbolerosDicenData.active + futbolerosDicenData.available}`;
                         }
                     }
                 }
@@ -2129,6 +2310,7 @@
                 function initializeRoomsTracking() {
                     createGameFrame('quiensabemas', 'quiensabemas.html');
                     createGameFrame('mentiroso', 'mentiroso.html');
+                    createGameFrame('100-futboleros-dicen', '100-futboleros-dicen.html');
                 }
 
                 // Función para actualizar salas periódicamente
@@ -2136,6 +2318,7 @@
                     setInterval(() => {
                         requestRoomsFromGame('quiensabemas');
                         requestRoomsFromGame('mentiroso');
+                        requestRoomsFromGame('100-futboleros-dicen');
                     }, 5000);
                 }
 
@@ -2222,6 +2405,21 @@
                                 } else {
                                     console.error('Crack Rapido modal not found');
                                     window.location.href = 'crack-rapido.html';
+                                }
+                            } else if (gameType === '100-futboleros-dicen') {
+                                if (qsmIntroModal) {
+                                    qsmIntroModal.classList.add('active');
+                                    // Track modal opening
+                                    if (window.gtag) {
+                                        gtag('event', 'modal_open', {
+                                            event_category: 'engagement',
+                                            event_label: 'qsm_intro',
+                                            value: 1
+                                        });
+                                    }
+                                } else {
+                                    console.error('QSM modal not found');
+                                    window.location.href = '100-futboleros-dicen.html';
                                 }
                             } else {
                                 // Track direct navigation

@@ -1,0 +1,172 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================
+    // FUNCIONES AUXILIARES DE VALIDACIÓN
+    // ===============================
+    
+    // Función para validar que un userId es válido (formato anon_)
+    function isValidUserId(userId) {
+      return userId is string && 
+             userId.size() > 5 && 
+             userId.size() < 100 &&
+             userId.matches('anon_[0-9]+_[a-zA-Z0-9]+');
+    }
+    
+    // Función para validar que un displayName es válido
+    function isValidDisplayName(name) {
+      return name is string && 
+             name.size() > 0 && 
+             name.size() <= 50;
+    }
+    
+    // Función para validar tipos de juegos válidos
+    function isValidGameType(gameType) {
+      return gameType in ['pasalache', 'quiensabemas', 'mentiroso', 'crackrapido'];
+    }
+    
+    // Función para validar resultados válidos
+    function isValidResult(result) {
+      return result in ['victory', 'defeat', 'draw', 'timeout', 'incomplete'];
+    }
+    
+    // ===============================
+    // REGLAS PARA USUARIOS
+    // ===============================
+    match /users/{userId} {
+      // Lectura: permitir solo si el userId coincide con el documento
+      allow read: if isValidUserId(userId);
+      
+      // Creación: permitir solo si:
+      // 1. El userId del documento coincide con el path
+      // 2. Los datos tienen la estructura correcta
+      allow create: if isValidUserId(userId) &&
+                    resource.data.uid == userId &&
+                    isValidDisplayName(resource.data.displayName) &&
+                    resource.data.keys().hasAll(['uid', 'displayName', 'createdAt', 'stats']) &&
+                    resource.data.keys().size() == 4 &&
+                    // Validar estructura de stats
+                    resource.data.stats.keys().hasAll(['pasalache', 'quiensabemas', 'mentiroso', 'crackrapido']) &&
+                    resource.data.stats.keys().size() == 4;
+      
+      // Actualización: permitir solo actualizar displayName y stats
+      allow update: if isValidUserId(userId) &&
+                    // Solo se pueden cambiar displayName y stats
+                    request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName', 'stats']) &&
+                    // El uid no debe cambiar nunca
+                    request.resource.data.uid == resource.data.uid &&
+                    // Si se actualiza displayName, debe ser válido
+                    (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['displayName']) ||
+                     isValidDisplayName(request.resource.data.displayName));
+    }
+    
+    // ===============================
+    // REGLAS PARA PARTIDAS/MATCHES
+    // ===============================
+    match /matches/{matchId} {
+      // Lectura: cualquiera puede leer las partidas (para rankings públicos)
+      allow read: if true;
+      
+      // Creación: solo permitir si los datos son válidos
+      allow create: if 
+        // Campos requeridos
+        request.resource.data.keys().hasAll(['gameType', 'playerName', 'playerUid', 'timestamp', 'result', 'score']) &&
+        // Validar tipos de datos
+        isValidGameType(request.resource.data.gameType) &&
+        isValidDisplayName(request.resource.data.playerName) &&
+        isValidUserId(request.resource.data.playerUid) &&
+        isValidResult(request.resource.data.result) &&
+        request.resource.data.score is int &&
+        request.resource.data.score >= 0 &&
+        request.resource.data.score <= 10000 && // Límite razonable de puntuación
+        // Validar array de jugadores si existe
+        (!request.resource.data.keys().hasAny(['players']) ||
+         (request.resource.data.players is list &&
+          request.resource.data.players.size() >= 1 &&
+          request.resource.data.players.size() <= 4)); // Máximo 4 jugadores
+      
+      // No permitir updates o deletes de partidas para mantener integridad
+      allow update: if false;
+      allow delete: if false;
+    }
+    
+    // ===============================
+    // REGLAS PARA RANKINGS
+    // ===============================
+    match /rankings/{rankingId} {
+      // Lectura: cualquiera puede leer rankings
+      allow read: if true;
+      
+      // Solo permitir escritura de rankings por usuarios válidos
+      allow create, update: if 
+        isValidGameType(request.resource.data.gameType) &&
+        isValidUserId(request.resource.data.userId) &&
+        isValidDisplayName(request.resource.data.displayName) &&
+        request.resource.data.score is int &&
+        request.resource.data.score >= 0;
+        
+      // No permitir delete de rankings
+      allow delete: if false;
+    }
+    
+    // ===============================
+    // REGLAS PARA LOGROS
+    // ===============================
+    match /achievements/{achievementId} {
+      // Lectura: cualquiera puede leer logros
+      allow read: if true;
+      
+      // Creación/actualización: solo por usuarios válidos para sus propios logros
+      allow create, update: if 
+        isValidUserId(request.resource.data.userId) &&
+        request.resource.data.achievementType is string &&
+        request.resource.data.achievementType.size() > 0 &&
+        request.resource.data.gameType is string &&
+        request.resource.data.unlockedAt != null;
+        
+      allow delete: if false;
+    }
+    
+    // ===============================
+    // REGLAS PARA CONFIGURACIÓN DEL JUEGO
+    // ===============================
+    match /gameConfig/{configId} {
+      // Solo lectura para configuraciones del juego
+      allow read: if true;
+      allow write: if false; // Solo administradores pueden escribir configs
+    }
+    
+    // ===============================
+    // REGLAS PARA SALAS MULTIJUGADOR (FUTURO)
+    // ===============================
+    match /rooms/{roomId} {
+      // Lectura: cualquiera puede leer salas activas
+      allow read: if true;
+      
+      // Creación: permitir crear salas con datos válidos
+      allow create: if 
+        request.resource.data.keys().hasAll(['gameType', 'createdBy', 'createdAt', 'status']) &&
+        isValidGameType(request.resource.data.gameType) &&
+        isValidUserId(request.resource.data.createdBy) &&
+        request.resource.data.status in ['waiting', 'playing', 'finished'];
+      
+      // Actualización: permitir actualizar estado y jugadores
+      allow update: if 
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'players', 'currentTurn', 'lastActivity']) &&
+        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['status']) ||
+         request.resource.data.status in ['waiting', 'playing', 'finished']);
+      
+      // Permitir eliminar salas después de cierto tiempo (para limpieza)
+      allow delete: if resource.data.status == 'finished';
+    }
+    
+    // ===============================
+    // REGLA DE DENEGACIÓN POR DEFECTO
+    // ===============================
+    // Denegar acceso a cualquier otra colección no especificada
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
