@@ -2,13 +2,13 @@
 
 ## Resumen de Cambios
 
-El juego **Quién Sabe Más 1v1** ha sido actualizado para funcionar con **6 niveles** y **10 preguntas por nivel** (5 preguntas para cada jugador).
+El juego **Quién Sabe Más 1v1** ha sido actualizado para funcionar con **6 niveles** y **6 preguntas por nivel** (3 preguntas para cada jugador).
 
 ## Configuración Actualizada
 
 ### Servidor (server.js)
 - ✅ `MAX_LEVELS = 6` - 6 niveles de dificultad
-- ✅ `QUESTIONS_PER_LEVEL = 10` - 10 preguntas por nivel (5 para cada jugador)
+- ✅ `QUESTIONS_PER_LEVEL = 6` - 6 preguntas por nivel (3 para cada jugador)
 - ✅ Sistema de carga de preguntas optimizado para 6 niveles
 - ✅ Lógica de juego actualizada para manejar 6 niveles
 
@@ -28,14 +28,14 @@ El juego **Quién Sabe Más 1v1** ha sido actualizado para funcionar con **6 niv
 - **Nivel 6**: 37 preguntas disponibles ✅ (ampliado con 5 preguntas adicionales)
 
 ### Total: 371 preguntas disponibles
-**Mínimo requerido**: 60 preguntas (6 niveles × 10 preguntas)
+**Mínimo requerido**: 36 preguntas (6 niveles × 6 preguntas)
 
 ## Mecánica del Juego
 
 ### Estructura por Nivel:
 - **6 niveles** de dificultad creciente
-- **10 preguntas por nivel** en total
-- **5 preguntas por jugador** en cada nivel
+- **6 preguntas por nivel** en total
+- **3 preguntas por jugador** en cada nivel
 - **Alternancia de turnos** entre jugadores
 
 ### Progresión:
@@ -61,7 +61,7 @@ El juego **Quién Sabe Más 1v1** ha sido actualizado para funcionar con **6 niv
 
 1. **server.js**
    - Actualización de comentarios de configuración
-   - Verificación de que la lógica soporte 6 niveles
+   - Configuración: 6 preguntas por nivel (3 por jugador)
 
 2. **assets/js/quiensabemas_1v1.js**
    - Actualización del comentario de `maxLevel`
@@ -89,11 +89,11 @@ El sistema ha sido verificado y confirmado que:
 
 El juego Quién Sabe Más 1v1 está completamente actualizado y funcional con:
 - 6 niveles de dificultad
-- 10 preguntas por nivel (5 por jugador)
+- 6 preguntas por nivel (3 por jugador)
 - 371 preguntas totales disponibles
 - Sistema robusto y escalable
 
 ---
 
 *Actualización completada el: $(date)*
-*Versión: 2.0 - 6 Niveles* 
+*Versión: 2.0 - 6 Niveles, 36 Preguntas Total* 
