@@ -451,6 +451,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Always display the actual saved name
         playerNameDisplay.textContent = displayName;
+        console.log('🏷️ Nombre de usuario actualizado en playerNameDisplay:', displayName);
+        
+        // Si no hay nombre guardado y estamos en games.html, redirigir a index
+        if (!currentPlayerName && window.location.pathname.includes('games.html')) {
+            console.log('⚠️ No hay nombre de usuario, redirigiendo a index.html');
+            window.location.href = 'index.html';
+            return;
+        }
         
         // Configurar el cambio de nombre
         const changeNameBtn = document.getElementById('changeNameBtn');

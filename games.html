@@ -2460,7 +2460,48 @@
 
                 console.log('✓ Analytics tracking configurado para games.html');
             }, 100); // Wait 100ms for main.js to execute
+
+            // ACTUALIZAR NOMBRE DE USUARIO - ASEGURAR QUE SE MUESTRE EL NOMBRE CORRECTO
+            function updatePlayerName() {
+                const playerNameDisplay = document.getElementById('playerNameDisplay');
+                const savedPlayerName = localStorage.getItem('playerName');
+                
+                if (playerNameDisplay && savedPlayerName) {
+                    playerNameDisplay.textContent = savedPlayerName;
+                    console.log('✓ Nombre de usuario actualizado:', savedPlayerName);
+                } else if (playerNameDisplay && !savedPlayerName) {
+                    // Si no hay nombre guardado, redirigir a index
+                    window.location.href = 'index.html';
+                }
+                
+                // También actualizar otros elementos con class player-name
+                const playerNameElements = document.querySelectorAll('.player-name');
+                if (savedPlayerName) {
+                    playerNameElements.forEach(element => {
+                        if (element.tagName !== 'INPUT' || !element.value || element.value === 'Jugador' || element.value === 'Jugador 1' || element.value === 'Jugador 2') {
+                            if (element.tagName === 'INPUT') {
+                                element.value = savedPlayerName;
+                            } else {
+                                element.textContent = savedPlayerName;
+                            }
+                        }
+                    });
+                }
+            }
+            
+            // Llamar inmediatamente
+            updatePlayerName();
+            
+            // También llamar cuando cambie el localStorage (por si se actualiza desde otra pestaña)
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'playerName') {
+                    updatePlayerName();
+                }
+            });
         });
     </script>
+    
+    <!-- Cargar main.js para funcionalidad completa -->
+    <script src="assets/js/main.js?v=202505272312"></script>
 </body>
 </html> 

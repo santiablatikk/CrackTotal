@@ -5,6 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "build": "node validate-deploy.js && echo 'Build completed successfully - all files validated' && exit 0",
+    "validate": "node validate-deploy.js",
     "dev": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,10 +26,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/cracktotal.git"
+    "url": "https://github.com/santiablatikk/CrackTotal.git"
   },
   "homepage": "https://cracktotal.com",
   "bugs": {
-    "url": "https://github.com/yourusername/cracktotal/issues"
+    "url": "https://github.com/santiablatikk/CrackTotal/issues"
   }
 } 
