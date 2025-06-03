@@ -319,6 +319,56 @@
                 "D": "19 (Fabinho vs Barcelona 2019)"
             },
             "respuesta_correcta": "A"
-      }
+      },
+      {
+            "pregunta": "¿Cuántos metros exactos corrió Luka Modrić en la final del Mundial 2018?",
+            "opciones": {
+                "A": "16.32 km",
+                "B": "15.87 km", 
+                "C": "17.01 km",
+                "D": "16.78 km"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuál fue el xG (Expected Goals) más alto registrado por un jugador en un solo partido de Champions League?",
+            "opciones": {
+                "A": "3.47 (Lewandowski vs Real Madrid 2013)",
+                "B": "3.82 (Messi vs Arsenal 2016)",
+                "C": "3.21 (Suárez vs Roma 2018)",
+                "D": "3.95 (Haaland vs Sevilla 2021)"
+            },
+            "respuesta_correcta": "D"
+        },
+        {
+            "pregunta": "¿Qué jugador completó más pases hacia adelante en una temporada de Premier League?",
+            "opciones": {
+                "A": "Kevin De Bruyne (1,247)",
+                "B": "Bruno Fernandes (1,189)",
+                "C": "Jordan Henderson (1,298)",
+                "D": "Thiago Alcántara (1,156)"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿Cuál es el récord de distancia total corrida por un equipo en un partido de Champions League?",
+            "opciones": {
+                "A": "117.8 km (Liverpool vs Barcelona 2019)",
+                "B": "119.2 km (Bayern vs PSG 2020)",
+                "C": "115.6 km (Real Madrid vs City 2022)",
+                "D": "120.3 km (Atalanta vs PSG 2020)"
+            },
+            "respuesta_correcta": "D"
+        },
+        {
+            "pregunta": "¿Cuántos centros completó Trent Alexander-Arnold en su mejor temporada?",
+            "opciones": {
+                "A": "267",
+                "B": "289",
+                "C": "254",
+                "D": "301"
+            },
+            "respuesta_correcta": "B"
+        }
     ]
 }

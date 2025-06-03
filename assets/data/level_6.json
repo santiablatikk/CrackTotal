@@ -319,6 +319,56 @@
                 "D": "Iker Casillas (509 minutos)"
             },
             "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Quién fue el primer presidente de la FIFA cuando se fundó en 1904?",
+            "opciones": {
+                "A": "Robert Guérin (Francia)",
+                "B": "Daniel Burley Woolfall (Inglaterra)", 
+                "C": "Jules Rimet (Francia)",
+                "D": "Carl Anton Wilhelm Hirschman (Países Bajos)"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Cuál fue el primer club en ganar todos los torneos nacionales e internacionales en una misma temporada?",
+            "opciones": {
+                "A": "Ajax (1971-72)",
+                "B": "Bayern Munich (1976-77)",
+                "C": "Celtic (1966-67)",
+                "D": "Barcelona (2008-09)"
+            },
+            "respuesta_correcta": "C"
+        },
+        {
+            "pregunta": "¿En qué año se disputó el primer partido intercontinental oficial entre Europa y Sudamérica?",
+            "opciones": {
+                "A": "1960 (Real Madrid vs Peñarol)",
+                "B": "1963 (AC Milan vs Santos)",
+                "C": "1961 (Benfica vs Santos)",
+                "D": "1962 (Santos vs AC Milan)"
+            },
+            "respuesta_correcta": "A"
+        },
+        {
+            "pregunta": "¿Qué árbitro dirigió la mayor cantidad de finales de Copa del Mundo en la historia?",
+            "opciones": {
+                "A": "Pierluigi Collina (1)",
+                "B": "Howard Webb (1)",
+                "C": "Néstor Pitana (1)",
+                "D": "Todos dirigieron solo 1 final"
+            },
+            "respuesta_correcta": "D"
+        },
+        {
+            "pregunta": "¿Cuál fue el primer estadio en superar la capacidad de 100,000 espectadores?",
+            "opciones": {
+                "A": "Maracaná (Brasil, 1950)",
+                "B": "Wembley (Inglaterra, 1923)",
+                "C": "Rose Bowl (Estados Unidos, 1922)",
+                "D": "Estadio Centenario (Uruguay, 1930)"
+            },
+            "respuesta_correcta": "C"
         }
     ]
 }

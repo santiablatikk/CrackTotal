@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         roomId: null,
         myPlayerId: null,
         currentLevel: 1,
-        maxLevel: 6, // 6 niveles con 5 preguntas por jugador cada uno (total 10 preguntas por nivel)
+        maxLevel: 6, // 6 niveles con 10 preguntas por nivel (5 para cada jugador)
         questions: {}, // Questions will be managed by the server now
         currentQuestionData: null,
         currentTurn: null,
