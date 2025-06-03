@@ -729,16 +729,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
+            showLobbyMessage("Conectando al servidor...", "info");
             gameState.websocket = new WebSocket(wsUrl);
         } catch (error) {
              console.error("Failed to create WebSocket:", error);
-             showLobbyMessage("Failed to initialize connection. Please check console and refresh.", "error");
+             showLobbyMessage(`Error de conexión: ${error.message}. Refresca la página.`, "error");
              disableLobbyButtons();
              return; // Stop initialization
         }
 
+        // Establecer tiempo máximo de conexión (10 segundos)
+        const connectionTimeout = setTimeout(() => {
+            if (gameState.websocket && gameState.websocket.readyState === WebSocket.CONNECTING) {
+                console.error("Tiempo de conexión agotado (QSM)");
+                showLobbyMessage("No se pudo conectar al servidor. Comprueba que esté en funcionamiento.", "error");
+                gameState.websocket.close();
+                disableLobbyButtons();
+            }
+        }, 10000); // 10 segundos
 
         gameState.websocket.onopen = () => {
+            clearTimeout(connectionTimeout);
             console.log('WebSocket Connected!');
             showLobbyMessage("Connected to server. Choose an option.", "success");
             enableLobbyButtons();
@@ -755,6 +766,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         gameState.websocket.onerror = (error) => {
+            clearTimeout(connectionTimeout);
             console.error('WebSocket Error:', error);
             // Display different messages based on context
             if (gameState.gameActive) {
@@ -768,6 +780,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         gameState.websocket.onclose = (event) => {
+            clearTimeout(connectionTimeout);
             console.log('WebSocket Disconnected:', event.reason, `Code: ${event.code}`, `WasClean: ${event.wasClean}`);
             const wasConnected = !!gameState.websocket; // Check if we thought we were connected
             gameState.websocket = null; // Clear the reference
