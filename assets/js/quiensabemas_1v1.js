@@ -3,8 +3,14 @@ import { saveQuienSabeMasResult } from './firebase-utils.js';
 
 // --- WebSocket URL (¡Configura esto!) ---
 const WEBSOCKET_URL = (() => {
-    // Siempre usar el servidor de producción para evitar problemas de configuración local
-    return 'wss://cracktotal-servidor.onrender.com';
+    // Probar primero localhost y luego el servidor de producción
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
+    if (isLocalhost) {
+        return 'ws://localhost:3000';
+    } else {
+        return 'wss://cracktotal-servidor.onrender.com';
+    }
 })();
 
 // Comunicación con la página principal para salas disponibles
@@ -131,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultStatsEl = document.getElementById('resultStats');
     const playAgainButtonQSM = document.getElementById('playAgainButtonQSM');
     const backToLobbyButtonQSM = document.getElementById('backToLobbyButtonQSM');
+    const backToGamesButtonQSM = document.getElementById('backToGamesButtonQSM');
 
     // Lobby Elements
     const lobbySectionEl = document.getElementById('lobbySection');
@@ -255,11 +262,15 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function startGame() {
-        console.log("Starting game (waiting for server data)...");
-        updatePlayerUI(); // Update with initial player data from server
-        showGameScreen();
-        gameState.gameActive = true;
-        // Waiting message will be shown based on whose turn it is (from server)
+        // Reproducir sonido de inicio del juego
+        if (window.soundManager) {
+            window.soundManager.playSound('gameStart');
+        }
+        
+        console.log("🚀 Starting game!");
+        clearAndHideOptions(); 
+        showGameScreen(); 
+        updatePlayerUI(); 
     }
 
     // --- Lobby Logic ---
@@ -564,9 +575,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- UI Updates & Feedback ---
     function showFeedback(message, type) { // type = 'correct' or 'incorrect'
-        feedbackAreaEl.innerHTML = `<span class="feedback-message ${type}">${message}</span>`;
-        // Optionally, clear feedback after a delay
-        // setTimeout(() => { feedbackAreaEl.innerHTML = ''; }, 3000);
+        // Reproducir sonido según el tipo de feedback
+        if (window.soundManager) {
+            if (type === 'correct') {
+                window.soundManager.playSound('correct');
+            } else if (type === 'incorrect') {
+                window.soundManager.playSound('incorrect');
+            }
+        }
+        
+        console.log(`Feedback: ${message} (${type})`);
+        // Add visual feedback here if needed
     }
 
      function visualizeAnswerOptions(selectedIndex, correctIndex, isLocalPlayerCorrect) {
@@ -1204,6 +1223,17 @@ document.addEventListener('DOMContentLoaded', function() {
         disablePlayerInput();
         hideWaitingMessage();
 
+        // Reproducir sonido según el resultado del juego
+        if (window.soundManager) {
+            if (payload.draw) {
+                window.soundManager.playSound('timeout'); // Empate se considera timeout
+            } else if (payload.winnerId === gameState.myPlayerId) {
+                window.soundManager.playSound('victory');
+            } else {
+                window.soundManager.playSound('defeat');
+            }
+        }
+
         const finalScores = payload.finalScores;
         if (!gameState.myPlayerId || !finalScores || typeof finalScores !== 'object') {
             console.error("Cannot determine final scores.", gameState, payload);
@@ -1256,269 +1286,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
              title = "Juego Terminado";
              if (!message) message = "La partida ha finalizado."; // Mensaje por defecto si no hay razón ni ganador claro
-             // No specific class, or a default one if you define it in CSS
-        }
-
-        resultTitleEl.textContent = title;
-        resultMessageEl.textContent = message;
-
-        // Aplicar clase al header del modal
-        const modalHeader = endGameModalEl.querySelector('.result-modal-header');
-        if (modalHeader) {
-            modalHeader.classList.remove('result-header-victory', 'result-header-defeat', 'result-header-timeout');
-            if (headerClass) {
-                modalHeader.classList.add(headerClass);
-            }
-        }
-
-        // Llenar dinámicamente los stats en el modal
-        let player1StatClass = '';
-        let player2StatClass = '';
-
-        if (!payload.draw) {
-            if (payload.winnerId === gameState.myPlayerId) {
-                player1StatClass = 'winner';
-                player2StatClass = 'loser';
-            } else if (opponentId && payload.winnerId === opponentId) {
-                player1StatClass = 'loser';
-                player2StatClass = 'winner';
-            }
-        }
-        // Si es empate, no se añaden clases winner/loser a los items individuales,
-        // el header ya indica el estado de empate (result-header-timeout).
-
-        resultStatsEl.innerHTML = `
-            <div class="stat-item your-score ${player1StatClass}">
-                <span class="stat-label"><i class="fas fa-user-shield"></i> ${myName} (Tú)</span>
-                <span class="stat-value">${myFinalScore}</span>
-            </div>
-            <div class="stat-item opponent-score ${player2StatClass}">
-                <span class="stat-label"><i class="fas fa-user-ninja"></i> ${opponentName}</span>
-                <span class="stat-value">${opponentFinalScore}</span>
-            </div>
-        `;
-
-        // Guardar estadísticas en Firebase
-        saveQuienSabeMasStats(payload);
-
-        showEndGameModal();
-    }
-
-    function showEndGameModal() {
-        endGameModalEl.classList.add('active');
-    }
-
-     function showEndGameModalWithError(reason) {
-         resultTitleEl.textContent = "Juego Interrumpido";
-         resultMessageEl.textContent = reason || "Ha ocurrido un error.";
-
-        // Aplicar clase de error al header del modal
-        const modalHeader = endGameModalEl.querySelector('.result-modal-header');
-        if (modalHeader) {
-            modalHeader.classList.remove('result-header-victory', 'result-header-defeat', 'result-header-timeout');
-            modalHeader.classList.add('result-header-defeat'); // Usar clase de derrota para errores generales
-        }
-
-         // Intentar mostrar el último score conocido
-         let myLastScore = 'N/A';
-         let opponentLastScore = 'N/A';
-         let myName = 'Tú';
-         let opponentName = 'Oponente';
-         const player1 = gameState.players?.player1;
-         const player2 = gameState.players?.player2;
-
-         if (player1?.id === gameState.myPlayerId) {
-             myLastScore = player1.score;
-             myName = player1.name || myName;
-             if(player2) {
-                 opponentLastScore = player2.score;
-                 opponentName = player2.name || opponentName;
-             }
-         } else if (player2?.id === gameState.myPlayerId) {
-             myLastScore = player2.score;
-             myName = player2.name || myName;
-              if(player1) {
-                 opponentLastScore = player1.score;
-                 opponentName = player1.name || opponentName;
-             }
-         }
-
-         resultStatsEl.innerHTML = `
-            <div class="stat-item your-score">
-                <span class="stat-label">${myName} (Tú)</span>
-                <span class="stat-value">${myLastScore}</span>
-            </div>
-            <div class="stat-item opponent-score">
-                <span class="stat-label">${opponentName}</span>
-                <span class="stat-value">${opponentLastScore}</span>
-            </div>
-        `;
-         showEndGameModal();
-     }
-
-    function hideEndGameModal() {
-        endGameModalEl.classList.remove('active');
-    }
-
-    // --- Event Listeners Setup ---
-    function setupEventListeners() {
-        setupLobbyEventListeners(); // Lobby listeners
-
-        // Game Listeners
-        // answerFormLevel1.addEventListener('submit', handleLevel1Submit); // REMOVED
-        optionButtons.forEach(button => {
-            button.addEventListener('click', handleOptionClick);
-        });
-        // requestOptionsButtonEl.addEventListener('click', handleRequestOptions); // REMOVED
-        fiftyFiftyButtonEl.addEventListener('click', handleFiftyFifty);
-
-        // Modal Buttons (Result Modal)
-        playAgainButtonQSM.addEventListener('click', () => {
-            hideEndGameModal();
-            showLobby();
-            gameState.gameActive = false;
-             if (gameState.roomId) {
-                sendToServer('leaveRoom', { roomId: gameState.roomId });
-                gameState.roomId = null;
-             }
-        });
-        backToLobbyButtonQSM.addEventListener('click', () => {
-            hideEndGameModal();
-            showLobby();
-             gameState.gameActive = false;
-             if (gameState.roomId) {
-                sendToServer('leaveRoom', { roomId: gameState.roomId });
-                gameState.roomId = null;
-             }
-        });
-
-        // Listeners para el Modal de Contraseña de Sala Privada
-        if (privateRoomPasswordFormEl) {
-            privateRoomPasswordFormEl.addEventListener('submit', handleSubmitPasswordModal);
-        }
-        if (cancelPasswordSubmitEl) {
-            cancelPasswordSubmitEl.addEventListener('click', hidePasswordPromptModal);
-        }
-        // Opcional: cerrar modal de contraseña si se clickea fuera del contenido
-        if (privateRoomPasswordModalEl) {
-            privateRoomPasswordModalEl.addEventListener('click', (event) => {
-                if (event.target === privateRoomPasswordModalEl) {
-                    hidePasswordPromptModal();
-                }
-            });
-        }
-    }
-
-    // --- Lobby Room List Rendering ---
-    function renderAvailableRooms(rooms, gameTypeFilter = 'quiensabemas') {
-        console.log("🏠 [QSM] renderAvailableRooms llamado con:", {
-            roomsType: typeof rooms,
-            roomsLength: rooms ? rooms.length : 'null/undefined',
-            gameTypeFilter,
-            rooms: rooms
-        });
-        
-        if (!availableRoomsListEl) {
-            console.error("Available rooms list element not found.");
-            return;
-        }
-
-        // Verificación adicional de seguridad
-        if (!rooms || !Array.isArray(rooms)) {
-            console.error("❌ [QSM] renderAvailableRooms: rooms no es un array válido:", rooms);
-            availableRoomsListEl.innerHTML = '<li class="no-rooms-message">Error: datos de salas inválidos</li>';
-            return;
-        }
-
-        availableRoomsListEl.innerHTML = ''; // Clear existing list
-
-        // Filtrar salas por tipo de juego
-        console.log(`🔍 [QSM] Filtrando salas. Total recibidas: ${rooms.length}, Filtro: ${gameTypeFilter}`);
-        const filteredRooms = gameTypeFilter ? rooms.filter(room => {
-            const matches = room.gameType === gameTypeFilter;
-            if (!matches) {
-                console.log(`❌ [QSM] Sala ${room.id} descartada: tipo '${room.gameType}' ≠ '${gameTypeFilter}'`);
-            }
-            return matches;
-        }) : rooms;
-        console.log(`✅ [QSM] Salas filtradas para mostrar: ${filteredRooms.length}`);
-
-        if (!filteredRooms || filteredRooms.length === 0) {
-            const noRoomsMsg = document.createElement('li');
-            noRoomsMsg.className = 'no-rooms-message';
-            noRoomsMsg.textContent = 'No hay salas de Quién Sabe Más disponibles.';
-            availableRoomsListEl.appendChild(noRoomsMsg);
-            return;
-        }
-
-        filteredRooms.forEach(room => {
-            const roomItem = document.createElement('li');
-            roomItem.className = 'room-item';
-            roomItem.dataset.roomId = room.id;
-
-            const roomInfo = document.createElement('div');
-            roomInfo.className = 'room-info';
-
-            // Display Room ID (or name if server provides it)
-            const roomIdSpan = document.createElement('span');
-            roomIdSpan.innerHTML = `ID: <strong>${room.id}</strong>`;
-            roomInfo.appendChild(roomIdSpan);
-
-            // Display Creator Name if available
-            if (room.creatorName) {
-                const creatorSpan = document.createElement('span');
-                creatorSpan.innerHTML = `Creador: <strong>${room.creatorName}</strong>`;
-                roomInfo.appendChild(creatorSpan);
-            }
-
-            // Display Player Count
-            const playerCountSpan = document.createElement('span');
-            // Assuming server sends playerCount like '1/2'
-            const currentPlayers = room.playerCount || 0; // Default to 0 if undefined
-            const maxPlayers = room.maxPlayers || 2; // Default to 2 if undefined
-            playerCountSpan.innerHTML = `Jugadores: <strong>${currentPlayers}/${maxPlayers}</strong>`;
-            roomInfo.appendChild(playerCountSpan);
-
-             // Display if password required (optional)
-            if (room.requiresPassword) {
-                 const passwordSpan = document.createElement('span');
-                 passwordSpan.innerHTML = `<strong><i class="fas fa-lock"></i> Private</strong>`;
-                 roomInfo.appendChild(passwordSpan);
-            }
-
-            roomItem.appendChild(roomInfo);
-
-            // Add Join Button
-            const joinButton = document.createElement('button');
-            joinButton.className = 'secondary-button lobby-button join-room-list-btn'; // Re-use styling
-            joinButton.textContent = 'Join';
-            // Disable join button if room is full or if it's the player's own room (need player ID check)
-            joinButton.disabled = currentPlayers >= maxPlayers; // Basic check for fullness
-
-            joinButton.addEventListener('click', () => {
-                handleJoinRoomFromList(room.id, room.requiresPassword);
-            });
-
-            roomItem.appendChild(joinButton);
-            availableRoomsListEl.appendChild(roomItem);
-        });
-    }
-
-    // --- Join Room from List Logic ---
-    function handleJoinRoomFromList(roomId, requiresPassword) {
-        const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
-
-        console.log(`🎯 [QSM] Intentando unirse a sala ${roomId} como ${playerName}. Requiere contraseña: ${requiresPassword}`);
-
-        if (requiresPassword) {
-            currentJoiningRoomId = roomId; // Guardar el ID de la sala actual
-            passwordModalTextEl.textContent = `La sala de Quién Sabe Más '${roomId}' es privada. Por favor, ingresá la contraseña:`;
-            passwordModalInputEl.value = ''; // Limpiar input
-            passwordErrorTextEl.textContent = '';
-            passwordErrorTextEl.style.display = 'none';
-            passwordModalInputEl.focus();
-            showPasswordPromptModal();
-            } else {
             // Unirse directamente si no requiere contraseña
             joinRoomIdInput.value = roomId; // Actualizar el input general del lobby (opcional, pero consistente)
             joinRoomPasswordInput.value = ''; // Limpiar el input general de contraseña del lobby
@@ -1598,6 +1365,64 @@ document.addEventListener('DOMContentLoaded', function() {
                 sendToServer('getRooms', { gameType: 'quiensabemas' });
             }
         }, 3000); // Cada 3 segundos
+    }
+
+    // --- Setup Event Listeners ---
+    function setupEventListeners() {
+        // Configurar event listeners del lobby
+        setupLobbyEventListeners();
+        
+        // Configurar event listeners de los botones del modal de resultados
+        if (playAgainButtonQSM) {
+            playAgainButtonQSM.addEventListener('click', () => {
+                hideEndGameModal();
+                // Reiniciar el juego manteniendo la misma sala
+                if (gameState.roomId) {
+                    console.log("🔄 Reiniciando juego en la misma sala");
+                    sendToServer('restartGame', { roomId: gameState.roomId });
+                }
+            });
+        }
+
+        if (backToLobbyButtonQSM) {
+            backToLobbyButtonQSM.addEventListener('click', () => {
+                hideEndGameModal();
+                // Salir de la sala actual y volver al lobby
+                if (gameState.roomId) {
+                    sendToServer('leaveRoom', { roomId: gameState.roomId });
+                }
+                // Resetear estado del juego
+                gameState.roomId = null;
+                gameState.myPlayerId = null;
+                gameState.gameActive = false;
+                showLobby();
+            });
+        }
+
+        if (backToGamesButtonQSM) {
+            backToGamesButtonQSM.addEventListener('click', () => {
+                window.location.href = 'games.html';
+            });
+        }
+
+        // Configurar event listeners del modal de contraseña
+        if (cancelPasswordSubmitEl) {
+            cancelPasswordSubmitEl.addEventListener('click', hidePasswordPromptModal);
+        }
+
+        if (privateRoomPasswordFormEl) {
+            privateRoomPasswordFormEl.addEventListener('submit', handleSubmitPasswordModal);
+        }
+
+        // Configurar event listeners de opciones de respuesta
+        optionButtons.forEach((button, index) => {
+            button.addEventListener('click', handleOptionClick);
+        });
+
+        // Configurar event listener del botón 50/50
+        if (fiftyFiftyButtonEl) {
+            fiftyFiftyButtonEl.addEventListener('click', handleFiftyFifty);
+        }
     }
 
     // --- Start App ---
@@ -1774,4 +1599,196 @@ document.addEventListener('DOMContentLoaded', function() {
         showOpponentJoinedAlert(opponentName);
     }
 
+    // ========================================= 
+    // ======== SISTEMA DE SONIDO COMPLETO ======== 
+    // ========================================= 
+    
+    class SoundManager {
+        constructor() {
+            this.audioContext = null;
+            this.sounds = {};
+            this.volume = 0.7; // Volumen por defecto 70%
+            this.isMuted = false;
+            this.currentBackgroundMusic = null;
+            this.soundEnabled = true;
+            
+            // Cargar configuración guardada
+            this.loadSoundSettings();
+            
+            // Inicializar Web Audio API
+            this.initAudioContext();
+            
+            // Crear sonidos usando osciladores y síntesis
+            this.createSounds();
+        }
+        
+        initAudioContext() {
+            try {
+                // Crear contexto de audio compatible con navegadores
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                console.log("Audio context initialized successfully");
+            } catch (error) {
+                console.warn("Web Audio API not supported:", error);
+                this.soundEnabled = false;
+            }
+        }
+        
+        createSounds() {
+            if (!this.audioContext || !this.soundEnabled) return;
+            
+            // Definir configuraciones de sonidos
+            this.soundConfigs = {
+                correct: {
+                    type: 'success',
+                    frequency: [523, 659, 784], // Do-Mi-Sol mayor
+                    duration: 0.3,
+                    volume: 0.4
+                },
+                incorrect: {
+                    type: 'error', 
+                    frequency: [196, 165], // Sol-Mi descendente
+                    duration: 0.4,
+                    volume: 0.3
+                },
+                tick: {
+                    type: 'tick',
+                    frequency: [800],
+                    duration: 0.05,
+                    volume: 0.15
+                },
+                victory: {
+                    type: 'celebration',
+                    frequency: [523, 659, 784, 1047], // Do-Mi-Sol-Do mayor
+                    duration: 0.6,
+                    volume: 0.5
+                },
+                defeat: {
+                    type: 'sad',
+                    frequency: [220, 196, 175], // La-Sol-Fa descendente
+                    duration: 0.8,
+                    volume: 0.4
+                },
+                timeout: {
+                    type: 'warning',
+                    frequency: [300, 250, 200], // Frecuencias descendentes
+                    duration: 0.7,
+                    volume: 0.4
+                },
+                gameStart: {
+                    type: 'start',
+                    frequency: [440, 554, 659], // La-Do#-Mi
+                    duration: 0.4,
+                    volume: 0.3
+                }
+            };
+        }
+        
+        playSound(soundName, options = {}) {
+            if (!this.audioContext || !this.soundEnabled || this.isMuted) return;
+            
+            const config = this.soundConfigs[soundName];
+            if (!config) {
+                console.warn(`Sound "${soundName}" not found`);
+                return;
+            }
+            
+            try {
+                // Reanudar contexto si está suspendido
+                if (this.audioContext.state === 'suspended') {
+                    this.audioContext.resume();
+                }
+                
+                const { frequency, duration, volume: baseVolume } = config;
+                const finalVolume = (baseVolume * this.volume * (options.volume || 1));
+                
+                // Crear osciladores para cada frecuencia
+                frequency.forEach((freq, index) => {
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    // Configurar oscilador
+                    oscillator.frequency.setValueAtTime(freq, this.audioContext.currentTime);
+                    oscillator.type = this.getOscillatorType(config.type);
+                    
+                    // Configurar ganancia con envelope
+                    const startTime = this.audioContext.currentTime + (index * 0.1);
+                    const endTime = startTime + duration;
+                    
+                    gainNode.gain.setValueAtTime(0, startTime);
+                    gainNode.gain.linearRampToValueAtTime(finalVolume, startTime + 0.01);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, endTime);
+                    
+                    // Conectar nodos
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    // Programar reproducción
+                    oscillator.start(startTime);
+                    oscillator.stop(endTime);
+                });
+                
+            } catch (error) {
+                console.error("Error playing sound:", error);
+            }
+        }
+        
+        getOscillatorType(soundType) {
+            const types = {
+                success: 'sine',
+                error: 'triangle', 
+                tick: 'square',
+                celebration: 'sine',
+                sad: 'sawtooth',
+                warning: 'triangle',
+                start: 'sine'
+            };
+            return types[soundType] || 'sine';
+        }
+        
+        setVolume(newVolume) {
+            this.volume = Math.max(0, Math.min(1, newVolume));
+            this.saveSoundSettings();
+        }
+        
+        toggleMute() {
+            this.isMuted = !this.isMuted;
+            this.saveSoundSettings();
+        }
+        
+        saveSoundSettings() {
+            const settings = {
+                volume: this.volume,
+                isMuted: this.isMuted
+            };
+            localStorage.setItem('quienSabeMasSoundSettings', JSON.stringify(settings));
+        }
+        
+        loadSoundSettings() {
+            try {
+                const settings = JSON.parse(localStorage.getItem('quienSabeMasSoundSettings'));
+                if (settings) {
+                    this.volume = settings.volume !== undefined ? settings.volume : 0.7;
+                    this.isMuted = settings.isMuted || false;
+                }
+            } catch (error) {
+                console.warn("Error loading sound settings:", error);
+            }
+        }
+        
+        // Método de limpieza
+        destroy() {
+            if (this.audioContext) {
+                this.audioContext.close();
+            }
+        }
+    }
+    
+    // Crear instancia global del manager de sonido
+    window.soundManager = new SoundManager();
+    
+    console.log("Sound system initialized for Quien Sabe Más");
+    
+    // ========================================= 
+    // ======== FIN SISTEMA DE SONIDO ======== 
+    // =========================================
 });

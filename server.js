@@ -119,8 +119,8 @@ const server = http.createServer((req, res) => {
     });
 });
 
-// Obtener puerto de Render o usar 8081 por defecto
-const PORT = process.env.PORT || 8081;
+// Obtener puerto de Render o usar 3000 por defecto
+const PORT = process.env.PORT || 3000;
 
 // Attach WebSocket server to the HTTP server
 const wss = new WebSocket.Server({ server });

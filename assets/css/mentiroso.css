@@ -2243,7 +2243,7 @@ input[type=number] {
     background: linear-gradient(135deg, #28a745, #34ce57);
     color: white;
     box-shadow: 0 3px 10px rgba(40, 167, 69, 0.4);
-}
+    }
 
 .normal-victory .result-type-badge {
     background: linear-gradient(135deg, #17a2b8, #20c0d7);

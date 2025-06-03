@@ -270,184 +270,96 @@ function generateHistoryHTML(matches) {
         const opponentScore = match.opponents?.[0]?.score || 0;
         const opponentName = match.opponents?.[0]?.name || 'Oponente';
         const scoreDiff = myScore - opponentScore;
-        const gameType = match.gameResult || 'Normal';
-        const duration = match.duration || 0;
         const playerName = match.playerName || 'Anónimo';
         
-        // Extraer estadísticas específicas de Mentiroso
-        const successfulDeceptions = match.successfulDeceptions || 0;
-        const liesDetected = match.liesDetected || 0;
-        const timeouts = match.timeouts || 0;
-        const falseAccusations = match.falseAccusations || 0;
-        const isPerfectRound = match.perfectRound || (myScore === 18 && opponentScore === 0);
-        
-        // Calcular métricas de la partida
-        const totalTurns = Math.max(myScore + opponentScore, 10);
-        const deceptionRate = totalTurns > 0 ? (successfulDeceptions / totalTurns) * 100 : 0;
-        const detectionRate = totalTurns > 0 ? (liesDetected / totalTurns) * 100 : 0;
-        const accuracy = Math.max(0, 100 - ((timeouts + falseAccusations) / Math.max(totalTurns, 1)) * 100);
-        
-        // Determinar resultado con mejor clasificación
-        let resultBadge = {
-            text: '',
-            icon: '',
-            class: '',
-            description: ''
-        };
-        
+        // Determinar resultado
+        let resultData;
         if (isVictory) {
-            if (isPerfectRound) {
-                resultBadge = {
-                    text: 'VICTORIA PERFECTA',
-                    icon: '👑',
-                    class: 'victory',
-                    description: 'Dominación absoluta sin errores'
-                };
-            } else if (scoreDiff >= 10) {
-                resultBadge = {
-                    text: 'VICTORIA APLASTANTE',
-                    icon: '🔥',
-                    class: 'victory',
-                    description: 'Superioridad total sobre el rival'
-                };
-            } else if (scoreDiff >= 5) {
-                resultBadge = {
-                    text: 'VICTORIA SÓLIDA',
-                    icon: '💪',
-                    class: 'victory',
-                    description: 'Victoria convincente y controlada'
-                };
+            if (scoreDiff >= 10) {
+                resultData = { text: 'VICTORIA', icon: '👑', class: 'dominant-win', color: '#10b981' };
             } else {
-                resultBadge = {
-                    text: 'VICTORIA AJUSTADA',
-                    icon: '⚡',
-                    class: 'victory',
-                    description: 'Victoria por el mínimo margen'
-                };
+                resultData = { text: 'GANÓ', icon: '🎯', class: 'close-win', color: '#059669' };
             }
         } else {
-            if (Math.abs(scoreDiff) <= 2) {
-                resultBadge = {
-                    text: 'DERROTA AJUSTADA',
-                    icon: '😤',
-                    class: 'defeat',
-                    description: 'Muy cerca de ganar'
-                };
-            } else if (Math.abs(scoreDiff) <= 5) {
-                resultBadge = {
-                    text: 'DERROTA CLARA',
-                    icon: '😞',
-                    class: 'defeat',
-                    description: 'El rival fue superior'
-                };
+            if (Math.abs(scoreDiff) >= 10) {
+                resultData = { text: 'DERROTA', icon: '😓', class: 'clear-loss', color: '#ef4444' };
             } else {
-                resultBadge = {
-                    text: 'DERROTA APLASTANTE',
-                    icon: '😵',
-                    class: 'defeat',
-                    description: 'Necesitas más práctica'
-                };
+                resultData = { text: 'PERDIÓ', icon: '😤', class: 'close-loss', color: '#dc2626' };
             }
         }
         
         return `
             <div class="history-item">
-                <!-- Header de la partida -->
-                <div class="match-header">
-                    <div class="match-info">
-                        <div class="match-result-badge ${resultBadge.class}">
-                            <span class="result-icon">${resultBadge.icon}</span>
-                            <span class="result-text">${resultBadge.text}</span>
-                        </div>
-                        <div class="match-type">${gameType}</div>
-                        <div class="match-description">${resultBadge.description}</div>
-                    </div>
-                    <div class="match-date">${formatCompactDate(match.timestamp)}</div>
+                <!-- Header compacto -->
+                <div class="history-header">
+                    <span class="history-player-name">🎭 ${playerName}</span>
+                    <span class="history-date">${formatCompactDate(match.timestamp)}</span>
                 </div>
 
-                <!-- Sección de jugadores mejorada -->
-                <div class="players-section">
-                    <div class="player-card ${isVictory ? 'winner' : ''}">
-                        <div class="player-name">${playerName}</div>
-                        <div class="player-score">${myScore}</div>
+                <!-- Duelo principal -->
+                <div class="main-summary">
+                    <div class="player-section">
+                        <div class="player-name">🎭 ${playerName}</div>
+                        <div class="player-score" style="color: ${isVictory ? '#10b981' : '#ef4444'}">${myScore}</div>
                     </div>
                     
-                    <div class="vs-divider">
-                        <div class="vs-text">VS</div>
-                        <div class="score-difference ${scoreDiff > 0 ? 'positive' : 'negative'}">
-                            ${scoreDiff > 0 ? '+' : ''}${scoreDiff}
+                    <div class="vs-section">
+                        <div style="font-size: 0.6rem; margin-bottom: 0.2rem; color: var(--ranking-text-muted);">VS</div>
+                        <div class="result-indicator" style="color: ${resultData.color}; border-color: ${resultData.color}40; background: ${resultData.color}20;">
+                            <span class="result-icon">${resultData.icon}</span>
+                            <span class="result-text">${resultData.text}</span>
                         </div>
                     </div>
                     
-                    <div class="player-card ${!isVictory ? 'winner' : ''}">
-                        <div class="player-name">${opponentName}</div>
+                    <div class="player-section">
+                        <div class="player-name">🤖 ${opponentName}</div>
                         <div class="player-score">${opponentScore}</div>
                     </div>
                 </div>
 
-                <!-- Estadísticas de rendimiento -->
-                <div class="performance-section">
-                    <div class="performance-card">
-                        <div class="performance-header">
-                            <span class="performance-icon">🎭</span>
-                            <span class="performance-title">Engaños</span>
-                        </div>
-                        <div class="performance-value">${successfulDeceptions}</div>
-                        <div class="performance-detail">${deceptionRate.toFixed(0)}% efectividad</div>
+                <!-- Estadísticas clave simplificadas -->
+                <div class="key-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-value" style="color: ${scoreDiff >= 0 ? '#10b981' : '#ef4444'}">${scoreDiff >= 0 ? '+' : ''}${scoreDiff}</div>
+                        <div class="stat-label">Diferencia</div>
+                        <div class="stat-detail">${Math.abs(scoreDiff) >= 10 ? 'Amplia' : Math.abs(scoreDiff) >= 5 ? 'Buena' : 'Reñida'}</div>
                     </div>
                     
-                    <div class="performance-card">
-                        <div class="performance-header">
-                            <span class="performance-icon">🕵️</span>
-                            <span class="performance-title">Detección</span>
-                        </div>
-                        <div class="performance-value">${liesDetected}</div>
-                        <div class="performance-detail">mentiras detectadas</div>
+                    <div class="stat-item">
+                        <div class="stat-icon">🎭</div>
+                        <div class="stat-value">${(match.successfulDeceptions || 0)}</div>
+                        <div class="stat-label">Engaños</div>
+                        <div class="stat-detail">exitosos</div>
                     </div>
                     
-                    <div class="performance-card">
-                        <div class="performance-header">
-                            <span class="performance-icon">🎯</span>
-                            <span class="performance-title">Precisión</span>
-                        </div>
-                        <div class="performance-value">${accuracy.toFixed(0)}%</div>
-                        <div class="performance-detail">confiabilidad</div>
+                    <div class="stat-item">
+                        <div class="stat-icon">🕵️</div>
+                        <div class="stat-value">${(match.liesDetected || 0)}</div>
+                        <div class="stat-label">Detecciones</div>
+                        <div class="stat-detail">de mentiras</div>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <div class="stat-icon">💪</div>
+                        <div class="stat-value">${myScore > opponentScore ? 'SUPERIOR' : myScore === opponentScore ? 'IGUAL' : 'INFERIOR'}</div>
+                        <div class="stat-label">Rendimiento</div>
+                        <div class="stat-detail">${isVictory ? 'Ganador' : 'Perdedor'}</div>
                     </div>
                 </div>
 
-                <!-- Especialización del juego -->
-                <div class="game-specialty">
-                    <div class="specialty-header">
-                        <span class="specialty-icon">🎪</span>
-                        <span class="specialty-title">Análisis de Habilidades</span>
+                <!-- Resultado simplificado -->
+                <div class="game-specific">
+                    <div class="specific-label">
+                        <span style="color: ${resultData.color}">🎭</span>
+                        Resultado del engaño
                     </div>
-                    <div class="specialty-content">
-                        <div class="specialty-stat">
-                            <div class="specialty-stat-value">${successfulDeceptions}</div>
-                            <div class="specialty-stat-label">Engaños</div>
+                    <div class="specific-content">
+                        <div class="specific-tag" style="color: ${resultData.color}; border-color: ${resultData.color}40">
+                            ${resultData.text}
                         </div>
-                        <div class="specialty-stat">
-                            <div class="specialty-stat-value">${liesDetected}</div>
-                            <div class="specialty-stat-label">Detecciones</div>
-                        </div>
-                        <div class="specialty-stat">
-                            <div class="specialty-stat-value">${timeouts + falseAccusations}</div>
-                            <div class="specialty-stat-label">Errores</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Análisis de la partida -->
-                <div class="match-analysis">
-                    <div class="analysis-text">
-                        ${isPerfectRound ? 
-                            `🏆 <span class="analysis-highlight">Partida perfecta</span> - Dominaste completamente sin cometer errores` :
-                            successfulDeceptions > liesDetected ?
-                                `🎭 <span class="analysis-highlight">Maestro del engaño</span> - Excelente capacidad para mentir convincentemente` :
-                                liesDetected > successfulDeceptions ?
-                                    `🕵️ <span class="analysis-highlight">Detective astuto</span> - Gran habilidad para detectar mentiras` :
-                                    `⚖️ <span class="analysis-highlight">Jugador equilibrado</span> - Buen balance entre engañar y detectar`
-                        }
+                        ${Math.abs(scoreDiff) >= 10 ? '<div class="specific-tag" style="color: #8b5cf6; border-color: #8b5cf640;">🔥 DOMINANTE</div>' : ''}
+                        ${Math.abs(scoreDiff) <= 2 ? '<div class="specific-tag" style="color: #f59e0b; border-color: #f59e0b40;">⚡ REÑIDO</div>' : ''}
                     </div>
                 </div>
             </div>

@@ -1,5 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const logrosContainer = document.getElementById('logrosContainer');
+    
+    // Si el contenedor principal de logros no existe en esta página, no hacer nada más.
+    if (!logrosContainer) {
+        console.log('[Logros.js] No se encontró logrosContainer. El script no se ejecutará en esta página.');
+        return;
+    }
+
     const filterButtons = document.querySelectorAll('.filter-button');
     const LOGROS_KEY = 'pasalacheUserAchievements';
     let currentFilter = 'all';

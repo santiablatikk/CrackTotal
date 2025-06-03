@@ -26,6 +26,313 @@ document.addEventListener('DOMContentLoaded', function() {
     currentPlayerName = localStorage.getItem('playerName') || 'Jugador Anónimo';
     console.log("Player name loaded on init:", currentPlayerName);
 
+    // ========================================= 
+    // ======== SISTEMA DE SONIDO COMPLETO ======== 
+    // ========================================= 
+    
+    class SoundManager {
+        constructor() {
+            this.audioContext = null;
+            this.sounds = {};
+            this.volume = 0.7; // Volumen por defecto 70%
+            this.isMuted = false;
+            this.currentBackgroundMusic = null;
+            this.soundEnabled = true;
+            
+            // Cargar configuración guardada
+            this.loadSoundSettings();
+            
+            // Inicializar Web Audio API
+            this.initAudioContext();
+            
+            // Crear sonidos usando osciladores y síntesis
+            this.createSounds();
+            
+            // Configurar controles UI
+            this.setupSoundControls();
+        }
+        
+        initAudioContext() {
+            try {
+                // Crear contexto de audio compatible con navegadores
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                console.log("Audio context initialized successfully");
+            } catch (error) {
+                console.warn("Web Audio API not supported:", error);
+                this.soundEnabled = false;
+            }
+        }
+        
+        createSounds() {
+            if (!this.audioContext || !this.soundEnabled) return;
+            
+            // Definir configuraciones de sonidos
+            this.soundConfigs = {
+                correct: {
+                    type: 'success',
+                    frequency: [523, 659, 784], // Do-Mi-Sol mayor
+                    duration: 0.3,
+                    volume: 0.4
+                },
+                incorrect: {
+                    type: 'error', 
+                    frequency: [196, 165], // Sol-Mi descendente
+                    duration: 0.4,
+                    volume: 0.3
+                },
+                pasapalabra: {
+                    type: 'neutral',
+                    frequency: [440, 523], // La-Do
+                    duration: 0.2,
+                    volume: 0.25
+                },
+                tick: {
+                    type: 'tick',
+                    frequency: [800],
+                    duration: 0.05,
+                    volume: 0.15
+                },
+                victory: {
+                    type: 'celebration',
+                    frequency: [523, 659, 784, 1047], // Do-Mi-Sol-Do mayor
+                    duration: 0.6,
+                    volume: 0.5
+                },
+                defeat: {
+                    type: 'sad',
+                    frequency: [220, 196, 175], // La-Sol-Fa descendente
+                    duration: 0.8,
+                    volume: 0.4
+                },
+                buttonClick: {
+                    type: 'click',
+                    frequency: [600],
+                    duration: 0.1,
+                    volume: 0.2
+                },
+                gameStart: {
+                    type: 'start',
+                    frequency: [440, 554, 659], // La-Do#-Mi
+                    duration: 0.4,
+                    volume: 0.3
+                }
+            };
+        }
+        
+        playSound(soundName, options = {}) {
+            if (!this.audioContext || !this.soundEnabled || this.isMuted) return;
+            
+            const config = this.soundConfigs[soundName];
+            if (!config) {
+                console.warn(`Sound "${soundName}" not found`);
+                return;
+            }
+            
+            try {
+                // Reanudar contexto si está suspendido
+                if (this.audioContext.state === 'suspended') {
+                    this.audioContext.resume();
+                }
+                
+                const { frequency, duration, volume: baseVolume } = config;
+                const finalVolume = (baseVolume * this.volume * (options.volume || 1));
+                
+                // Crear osciladores para cada frecuencia
+                frequency.forEach((freq, index) => {
+                    const oscillator = this.audioContext.createOscillator();
+                    const gainNode = this.audioContext.createGain();
+                    
+                    // Configurar oscilador
+                    oscillator.frequency.setValueAtTime(freq, this.audioContext.currentTime);
+                    oscillator.type = this.getOscillatorType(config.type);
+                    
+                    // Configurar ganancia con envelope
+                    const startTime = this.audioContext.currentTime + (index * 0.1);
+                    const endTime = startTime + duration;
+                    
+                    gainNode.gain.setValueAtTime(0, startTime);
+                    gainNode.gain.linearRampToValueAtTime(finalVolume, startTime + 0.01);
+                    gainNode.gain.exponentialRampToValueAtTime(0.001, endTime);
+                    
+                    // Conectar nodos
+                    oscillator.connect(gainNode);
+                    gainNode.connect(this.audioContext.destination);
+                    
+                    // Programar reproducción
+                    oscillator.start(startTime);
+                    oscillator.stop(endTime);
+                });
+                
+                // Efecto visual en el botón de sonido
+                this.triggerSoundWaveEffect();
+                
+            } catch (error) {
+                console.error("Error playing sound:", error);
+            }
+        }
+        
+        getOscillatorType(soundType) {
+            const types = {
+                success: 'sine',
+                error: 'triangle', 
+                neutral: 'square',
+                tick: 'square',
+                celebration: 'sine',
+                sad: 'sawtooth',
+                click: 'square',
+                start: 'sine'
+            };
+            return types[soundType] || 'sine';
+        }
+        
+        triggerSoundWaveEffect() {
+            const soundButton = document.getElementById('soundButton');
+            if (soundButton) {
+                soundButton.classList.add('playing');
+                setTimeout(() => soundButton.classList.remove('playing'), 600);
+            }
+        }
+        
+        setVolume(newVolume) {
+            this.volume = Math.max(0, Math.min(1, newVolume));
+            this.saveSoundSettings();
+            this.updateVolumeDisplay();
+            
+            // Cambiar ícono según el volumen
+            this.updateSoundIcon();
+        }
+        
+        toggleMute() {
+            this.isMuted = !this.isMuted;
+            this.updateSoundIcon();
+            this.saveSoundSettings();
+        }
+        
+        updateSoundIcon() {
+            const soundIcon = document.getElementById('soundIcon');
+            const soundButton = document.getElementById('soundButton');
+            
+            if (!soundIcon || !soundButton) return;
+            
+            soundButton.classList.remove('muted');
+            
+            if (this.isMuted || this.volume === 0) {
+                soundIcon.className = 'fas fa-volume-mute';
+                soundButton.classList.add('muted');
+            } else if (this.volume < 0.3) {
+                soundIcon.className = 'fas fa-volume-down';
+            } else if (this.volume < 0.7) {
+                soundIcon.className = 'fas fa-volume-up';
+            } else {
+                soundIcon.className = 'fas fa-volume-up';
+            }
+        }
+        
+        updateVolumeDisplay() {
+            const volumeSlider = document.getElementById('volumeSlider');
+            const volumePercentage = document.getElementById('volumePercentage');
+            
+            if (volumeSlider) {
+                volumeSlider.value = this.volume * 100;
+            }
+            
+            if (volumePercentage) {
+                volumePercentage.textContent = Math.round(this.volume * 100) + '%';
+            }
+        }
+        
+        setupSoundControls() {
+            const soundButton = document.getElementById('soundButton');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const soundControl = document.getElementById('soundControl');
+            
+            if (soundButton) {
+                soundButton.addEventListener('click', () => {
+                    this.toggleMute();
+                    soundControl?.classList.toggle('active');
+                });
+            }
+            
+            if (volumeSlider) {
+                volumeSlider.addEventListener('input', (e) => {
+                    const newVolume = parseFloat(e.target.value) / 100;
+                    this.setVolume(newVolume);
+                    
+                    // Si el volumen cambia, des-mutear automáticamente
+                    if (this.isMuted && newVolume > 0) {
+                        this.isMuted = false;
+                        this.updateSoundIcon();
+                    }
+                });
+                
+                volumeSlider.addEventListener('change', () => {
+                    // No reproducir sonido al cambiar volumen
+                });
+            }
+            
+            // Cerrar slider al hacer click fuera
+            document.addEventListener('click', (e) => {
+                if (soundControl && !soundControl.contains(e.target)) {
+                    soundControl.classList.remove('active');
+                }
+            });
+            
+            // Inicializar displays
+            this.updateSoundIcon();
+            this.updateVolumeDisplay();
+        }
+        
+        saveSoundSettings() {
+            const settings = {
+                volume: this.volume,
+                isMuted: this.isMuted
+            };
+            localStorage.setItem('pasalacheSoundSettings', JSON.stringify(settings));
+        }
+        
+        loadSoundSettings() {
+            try {
+                const settings = JSON.parse(localStorage.getItem('pasalacheSoundSettings'));
+                if (settings) {
+                    this.volume = settings.volume !== undefined ? settings.volume : 0.7;
+                    this.isMuted = settings.isMuted || false;
+                }
+            } catch (error) {
+                console.warn("Error loading sound settings:", error);
+            }
+        }
+        
+        // Método para reproducir música de fondo (opcional)
+        playBackgroundMusic() {
+            // Implementar si se desea música de fondo
+            // Por ahora, solo efectos de sonido
+        }
+        
+        stopBackgroundMusic() {
+            if (this.currentBackgroundMusic) {
+                this.currentBackgroundMusic.stop();
+                this.currentBackgroundMusic = null;
+            }
+        }
+        
+        // Método de limpieza
+        destroy() {
+            this.stopBackgroundMusic();
+            if (this.audioContext) {
+                this.audioContext.close();
+            }
+        }
+    }
+    
+    // Crear instancia global del manager de sonido
+    window.soundManager = new SoundManager();
+    
+    console.log("Sound system initialized");
+    
+    // ========================================= 
+    // ======== FIN SISTEMA DE SONIDO ======== 
+    // =========================================
+
     // Stats Profile Keys
     const STATS_KEY = 'pasalacheUserStats';
     const HISTORY_KEY = 'pasalacheGameHistory'; // Nueva clave para el historial
@@ -491,6 +798,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Start the game logic
     function startGame() {
         currentLetterIndex = 0;
+        
+        // Reproducir sonido de inicio del juego
+        if (window.soundManager) {
+            window.soundManager.playSound('gameStart');
+        }
+        
         startTimer();
         loadQuestion();
         addHelpButton(); // <-- LLAMAR addHelpButton AQUÍ
@@ -756,6 +1069,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!isCorrect) {
                 // --- INCORRECT --- 
                 incorrectAnswers++; // Increment incorrect count
+                
+                // Reproducir sonido de respuesta incorrecta
+                if (window.soundManager) {
+                    window.soundManager.playSound('incorrect');
+                }
+                
                 // <<<--- LÓGICA PARA LOGROS DE ERROR --- >>>
                 if (currentLetter === 'A' && correctAnswers === 0 && incorrectAnswers === 1 && passedAnswers === 0) { //Aproximado para primer error en A
                     errorEnLetraAEstaPartida = true;
@@ -849,6 +1168,12 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 // --- CORRECT --- 
                 correctAnswers++;
+                
+                // Reproducir sonido de respuesta correcta
+                if (window.soundManager) {
+                    window.soundManager.playSound('correct');
+                }
+                
                 // <<<--- LÓGICA PARA LOGROS DE ACIERTO --- >>>
                 letrasAcertadasSeguidasEstaPartida++;
                 if (letrasAcertadasSeguidasEstaPartida > maxLetrasAcertadasSeguidasEstaPartida) {
@@ -1111,7 +1436,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Función para mostrar pista
     function showHint() {
-                const currentLetter = pendingLetters[currentLetterIndex];
+        const currentLetter = pendingLetters[currentLetterIndex];
         
         // Si ya se mostró la pista para esta letra, no consumir un HELP adicional
         if (!hintDisplayed[currentLetter]) {
@@ -1175,6 +1500,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear current question data when passing
         currentQuestionData = null;
         
+        // Reproducir sonido de pasapalabra (solo si no es silencioso)
+        if (!silent && window.soundManager) {
+            window.soundManager.playSound('pasapalabra');
+        }
+        
         // <<<--- LÓGICA PARA LOGROS DE PASAPALABRA --- >>>
         if (!silent) { // Solo contar pases iniciados por el usuario
            pasapalabraUsadoEnPartida++;
@@ -1233,6 +1563,11 @@ document.addEventListener('DOMContentLoaded', function() {
             timeLeft--;
             updateTimerDisplay();
             
+            // Reproducir sonido de tick cuando quedan pocos segundos
+            if (timeLeft <= 10 && timeLeft > 0 && window.soundManager) {
+                window.soundManager.playSound('tick', { volume: 0.5 });
+            }
+            
             if (timeLeft <= 0) {
                 clearInterval(timerInterval);
                 endGame('timeout');
@@ -1270,6 +1605,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // End the game
     async function endGame(result = 'timeout') { // <--- Convertida a async
         clearInterval(timerInterval);
+
+        // Reproducir sonido según el resultado
+        if (window.soundManager) {
+            if (result === 'victory') {
+                window.soundManager.playSound('victory');
+            } else {
+                window.soundManager.playSound('defeat');
+            }
+        }
 
         // --- Deshabilitar Controles INMEDIATAMENTE ---
         if (answerInput) answerInput.disabled = true;
@@ -1693,7 +2037,22 @@ document.addEventListener('DOMContentLoaded', function() {
         const buttonsContainer = document.createElement('div');
         buttonsContainer.className = 'result-buttons';
 
-        // --- Botones de Acción ---
+        // --- Botones principales de acción ---
+        const playAgainButton = document.createElement('button');
+        playAgainButton.className = 'modal-button primary play-again-button';
+        playAgainButton.innerHTML = `
+            <i class="fas fa-redo-alt"></i>
+            Jugar Otra Vez
+        `;
+
+        const backToGamesButton = document.createElement('button');
+        backToGamesButton.className = 'modal-button tertiary back-games-button';
+        backToGamesButton.innerHTML = `
+            <i class="fas fa-gamepad"></i>
+            Volver a Juegos
+        `;
+
+        // --- Botones secundarios ---
         const viewProfileButton = document.createElement('button');
         viewProfileButton.className = 'modal-button secondary-button';
         viewProfileButton.innerHTML = `
@@ -1713,6 +2072,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <i class="fab fa-whatsapp"></i> Compartir
         `;
 
+        // Añadir botones al contenedor
+        buttonsContainer.appendChild(playAgainButton);
+        buttonsContainer.appendChild(backToGamesButton);
         buttonsContainer.appendChild(viewProfileButton);
         buttonsContainer.appendChild(shareTwitterButton);
         buttonsContainer.appendChild(shareWhatsAppButton);
@@ -1750,6 +2112,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappText)}`;
             window.open(whatsappUrl, '_blank');
+        });
+
+        // --- Add event listeners --- 
+        playAgainButton.addEventListener('click', () => {
+            modalOverlay.remove();
+            location.reload(); // Recargar la página para empezar una nueva partida
+        });
+
+        backToGamesButton.addEventListener('click', () => {
+            window.location.href = 'games.html';
+        });
+
+        viewProfileButton.addEventListener('click', () => {
+            window.location.href = 'profile.html';
+        });
+
+        shareTwitterButton.addEventListener('click', () => {
+            const score = stats.correctAnswers;
+            const total = alphabet.length;
+            const gameUrl = 'https://www.cracktotal.com/pasalache.html'; 
+            const twitterHandle = '@cracktotal_';
+            let tweetText = `¡Hice ${score}/${total} en el #PasalaChe de #CrackTotal! ⚽️🇦🇷 ¿Te animás a superarme? ${twitterHandle}`; 
+            
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(gameUrl)}`;
+            window.open(twitterUrl, '_blank');
         });
     }
     
