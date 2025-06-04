@@ -164,6 +164,177 @@ window.addEventListener('DOMContentLoaded', () => {
     if (rankingContainer && rankingContainer.id) {
         window.PerformanceManager.showLoadingIndicator(rankingContainer.id, 'Cargando clasificaciones...');
     }
+
+    // Integración específica para 100 Futboleros Dicen
+    if (window.location.pathname.includes('100-futboleros-dicen.html')) {
+        console.log('[Main] Inicializando integración para 100 Futboleros Dicen');
+        
+        // Wait for game to be available
+        const waitForGame = () => {
+            if (window.game) {
+                console.log('[Main] Game instance found, setting up integration');
+                setupGameIntegration();
+            } else {
+                setTimeout(waitForGame, 100);
+            }
+        };
+        
+        const setupGameIntegration = () => {
+            // Configurar eventos específicos del juego
+            window.addEventListener('gameStateChanged', (event) => {
+                const { state, data } = event.detail;
+                
+                switch (state) {
+                    case 'roomCreated':
+                        if (window.notifications) {
+                            window.notifications.success(
+                                'Sala creada',
+                                `Código de sala: ${data.roomId}`,
+                                { duration: 5000 }
+                            );
+                        }
+                        break;
+                        
+                    case 'playerJoined':
+                        if (window.notifications) {
+                            window.notifications.info(
+                                'Nuevo jugador',
+                                `${data.playerName} se unió a la sala`,
+                                { duration: 3000 }
+                            );
+                        }
+                        break;
+                        
+                    case 'gameStarted':
+                        if (window.notifications) {
+                            window.notifications.success(
+                                '¡Juego iniciado!',
+                                'Que comience la diversión',
+                                { duration: 3000 }
+                            );
+                        }
+                        break;
+                        
+                    case 'gameEnded':
+                        // Registrar estadísticas del juego
+                        if (data.results) {
+                            const gameStats = {
+                                gameType: '100-futboleros-dicen',
+                                duration: data.duration || 0,
+                                score: data.finalScore || 0,
+                                playedAt: new Date().toISOString()
+                            };
+                            
+                            // Guardar en localStorage para estadísticas
+                            const existingStats = JSON.parse(localStorage.getItem('gameStats') || '[]');
+                            existingStats.push(gameStats);
+                            localStorage.setItem('gameStats', JSON.stringify(existingStats));
+                        }
+                        break;
+                        
+                    case 'connectionLost':
+                        if (window.notifications) {
+                            window.notifications.warning(
+                                'Conexión perdida',
+                                'Intentando reconectar...',
+                                { duration: 5000 }
+                            );
+                        }
+                        break;
+                        
+                    case 'connectionRestored':
+                        if (window.notifications) {
+                            window.notifications.success(
+                                'Conexión restaurada',
+                                'Ya puedes continuar jugando',
+                                { duration: 3000 }
+                            );
+                        }
+                        break;
+                }
+            });
+            
+            // Configurar manejo de errores específicos
+            window.addEventListener('gameError', (event) => {
+                const { error, context } = event.detail;
+                
+                if (window.notifications) {
+                    window.notifications.error(
+                        'Error en el juego',
+                        error.message || 'Ha ocurrido un error inesperado',
+                        { duration: 5000 }
+                    );
+                }
+                
+                console.error('[100 Futboleros Dicen] Error:', error, 'Context:', context);
+            });
+            
+            // Configurar auto-guardado de progreso
+            setInterval(() => {
+                if (window.game && window.game.gameState) {
+                    const gameState = {
+                        roomId: window.game.gameState.roomId,
+                        playerId: window.game.gameState.playerId,
+                        playerName: window.game.gameState.playerName,
+                        lastSaved: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('futbolerosDicen_lastSession', JSON.stringify(gameState));
+                }
+            }, 30000); // Guardar cada 30 segundos
+            
+            // Intentar restaurar sesión anterior
+            const lastSession = localStorage.getItem('futbolerosDicen_lastSession');
+            if (lastSession) {
+                try {
+                    const sessionData = JSON.parse(lastSession);
+                    const timeDiff = new Date() - new Date(sessionData.lastSaved);
+                    
+                    // Si la sesión es de menos de 10 minutos, ofrecer restaurar
+                    if (timeDiff < 10 * 60 * 1000 && sessionData.roomId) {
+                        setTimeout(() => {
+                            if (window.notifications) {
+                                window.notifications.info(
+                                    'Sesión anterior encontrada',
+                                    '¿Quieres intentar reconectar a tu última sala?',
+                                    {
+                                        persistent: true,
+                                        actions: [
+                                            {
+                                                id: 'reconnect',
+                                                label: 'Reconectar',
+                                                handler: () => {
+                                                    if (window.game) {
+                                                        const joinRoomIdInput = document.getElementById('joinRoomId');
+                                                        const joinPlayerNameInput = document.getElementById('joinPlayerName');
+                                                        if (joinRoomIdInput) joinRoomIdInput.value = sessionData.roomId;
+                                                        if (joinPlayerNameInput) joinPlayerNameInput.value = sessionData.playerName;
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                id: 'dismiss',
+                                                label: 'Ignorar',
+                                                handler: () => {
+                                                    localStorage.removeItem('futbolerosDicen_lastSession');
+                                                }
+                                            }
+                                        ]
+                                    }
+                                );
+                            }
+                        }, 2000);
+                    }
+                } catch (e) {
+                    console.warn('[Main] Error al restaurar sesión:', e);
+                    localStorage.removeItem('futbolerosDicen_lastSession');
+                }
+            }
+        };
+        
+        // Start checking for game instance
+        waitForGame();
+    }
 });
 
 // *** DETECCIÓN DE COMPATIBILIDAD ***

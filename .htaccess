@@ -1,42 +1,68 @@
 RewriteEngine On
 
-# CONFIGURACIÓN PARA CORREGIR PROBLEMAS DE SEO E INDEXACIÓN
-# ========================================
+# CONFIGURACIÓN CRÍTICA PARA CORREGIR PROBLEMAS DE SEO E INDEXACIÓN
+# ================================================================
+# SOLUCIONANDO: Multiple domain variations being indexed by Google
 
-# 1. Forzar HTTPS y canonicalización de dominio
-RewriteCond %{HTTPS} off [OR]
+# 1. CANONICALIZACIÓN DE DOMINIO - Forzar HTTPS y sin WWW
+# Forzar HTTPS primero
+RewriteCond %{HTTPS} off [NC]
+RewriteRule ^(.*)$ https://cracktotal.com/$1 [L,R=301,NE]
+
+# Eliminar www. para evitar contenido duplicado
 RewriteCond %{HTTP_HOST} ^www\.cracktotal\.com [NC]
 RewriteRule ^(.*)$ https://cracktotal.com/$1 [L,R=301,NE]
 
-# 2. Redirigir index.html a la raíz
-RewriteCond %{THE_REQUEST} /index\.html[\s\?] [NC]
+# Forzar dominio específico (por si hay subdominios o dominios alternativos)
+RewriteCond %{HTTP_HOST} !^cracktotal\.com$ [NC]
+RewriteRule ^(.*)$ https://cracktotal.com/$1 [L,R=301,NE]
+
+# 2. CANONICALIZACIÓN DE ARCHIVOS - Eliminar extensiones problemáticas
+# Redirigir index.html a la raíz
+RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.html[\s\?] [NC]
 RewriteRule ^(.*)index\.html$ /$1 [L,R=301,NE]
 
-# 3. Redirigir terms.html a terminos.html
-RewriteRule ^terms\.html$ /terminos.html [L,R=301,NC]
+# Redirigir cualquier .html duplicado de páginas principales
+RewriteCond %{THE_REQUEST} \s/+(.*/)?home\.html[\s\?] [NC]
+RewriteRule ^(.*)home\.html$ / [L,R=301,NE]
 
-# 4. Evitar problemas con URLs con parámetros de tracking
-RewriteCond %{QUERY_STRING} ^(utm_|fbclid=|gclid=)(.*)$ [NC]
+# 3. LIMPIEZA DE PARÁMETROS UTM Y TRACKING
+# Eliminar parámetros de tracking para evitar contenido duplicado en GSC
+RewriteCond %{QUERY_STRING} ^(.*&)?(utm_source|utm_medium|utm_campaign|utm_term|utm_content|fbclid|gclid)=[^&]*(&.*)?$ [NC]
 RewriteRule ^(.*)$ /$1? [L,R=301]
 
-# 5. Manejo de trailing slashes para consistencia
-RewriteCond %{REQUEST_FILENAME} !-f
+# 4. NORMALIZACIÓN DE TRAILING SLASHES
+# Eliminar trailing slash de URLs que no son directorios
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI} (.+)/$
 RewriteRule ^(.+)/$ /$1 [L,R=301]
 
-# 6. Redirecciones específicas para páginas problemáticas
+# 5. REDIRECCIONES ESPECÍFICAS PARA PÁGINAS PROBLEMÁTICAS
+# Redirigir terms.html a terminos.html (consistencia de idioma)
+RewriteRule ^terms\.html$ /terminos.html [L,R=301,NC]
+
+# Eliminar parámetros de búsqueda interna duplicada
 RewriteRule ^search/?$ / [L,R=301]
 
-# Cache Control - CONFIGURACIÓN PARA PRODUCCIÓN
+# 6. BLOQUEAR INDEXACIÓN DE URLs PROBLEMÁTICAS
+# Bloquear URLs con parámetros de sesión o técnicos
+RewriteCond %{QUERY_STRING} (^|&)(sid|session|PHPSESSID|jsessionid)= [NC]
+RewriteRule .* - [R=404,L]
+
+# Cache Control - CONFIGURACIÓN OPTIMIZADA PARA SEO
 <IfModule mod_expires.c>
     ExpiresActive On
     ExpiresDefault "access plus 1 day"
+    
+    # HTML con cache corto para permitir actualizaciones de contenido
     ExpiresByType text/html "access plus 1 hour"
+    
+    # CSS y JS con cache largo
     ExpiresByType text/css "access plus 1 month"
     ExpiresByType application/javascript "access plus 1 month"
     ExpiresByType text/javascript "access plus 1 month"
-    ExpiresByType application/json "access plus 1 hour"
+    
+    # Imágenes con cache muy largo
     ExpiresByType image/jpg "access plus 1 year"
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/png "access plus 1 year"
@@ -44,15 +70,27 @@ RewriteRule ^search/?$ / [L,R=301]
     ExpiresByType image/webp "access plus 1 year"
     ExpiresByType image/ico "access plus 1 year"
     ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    
+    # Fuentes con cache largo
     ExpiresByType font/woff "access plus 1 year"
     ExpiresByType font/woff2 "access plus 1 year"
     ExpiresByType application/font-woff "access plus 1 year"
     ExpiresByType application/font-woff2 "access plus 1 year"
+    
+    # Archivos específicos para SEO
+    ExpiresByType application/xml "access plus 1 hour"
+    ExpiresByType text/xml "access plus 1 hour"
+    ExpiresByType application/json "access plus 1 hour"
 </IfModule>
 
-# Headers para SEO y rendimiento optimizados
+# Headers optimizados para SEO y rendimiento
 <IfModule mod_headers.c>
-    # CORS habilitado para recursos
+    # Headers de canonicalización
+    Header always set X-Canonical-Domain "cracktotal.com"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    
+    # CORS optimizado para recursos
     Header always set Access-Control-Allow-Origin "*"
     Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
     Header always set Access-Control-Allow-Headers "Content-Type"
@@ -62,13 +100,21 @@ RewriteRule ^search/?$ / [L,R=301]
     Header always set X-XSS-Protection "1; mode=block"
     Header always set X-Content-Type-Options nosniff
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    Header always set Content-Security-Policy "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://www.google-analytics.com"
+    
+    # CSP optimizado para AdSense y rendimiento
+    Header always set Content-Security-Policy "default-src 'self' https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com https://fonts.googleapis.com https://partner.googleadservices.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com; frame-src https://googleads.g.doubleclick.net https://tpc.googlesyndication.com"
+    
+    # Headers específicos para archivos HTML
+    <FilesMatch "\.(html|htm)$">
+        Header always set X-UA-Compatible "IE=edge"
+        Header always set X-SEO-Optimized "true"
+    </FilesMatch>
     
     # Versioning para cache busting
-    Header set X-App-Version "v2.1.0-SEO"
+    Header set X-App-Version "v2.2.0-SEO-FIXED"
 </IfModule>
 
-# Compresión GZIP optimizada
+# Compresión GZIP optimizada para SEO
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/plain
     AddOutputFilterByType DEFLATE text/html
@@ -82,6 +128,7 @@ RewriteRule ^search/?$ / [L,R=301]
     AddOutputFilterByType DEFLATE application/json
     AddOutputFilterByType DEFLATE text/javascript
     AddOutputFilterByType DEFLATE application/ld+json
+    AddOutputFilterByType DEFLATE image/svg+xml
 </IfModule>
 
 # Configuración específica para PWA y SEO
@@ -90,15 +137,47 @@ RewriteRule ^search/?$ / [L,R=301]
     AddType application/x-web-app-manifest+json .webapp
     AddType text/cache-manifest .appcache
     AddType application/ld+json .jsonld
+    AddType image/x-icon .ico
 </IfModule>
 
-# MANEJO DE ERRORES OPTIMIZADO
+# MANEJO DE ERRORES OPTIMIZADO PARA SEO
 ErrorDocument 404 /404.html
 ErrorDocument 500 /500.html
 
 # BLOQUEAR ACCESO A ARCHIVOS TÉCNICOS Y SENSIBLES
-<IfModule mod_authz_core.c>
-    <RequireAll>
-        Require all denied
-    </RequireAll>
-</IfModule> 
+<Files "*.config">
+    Require all denied
+</Files>
+
+<Files "*.log">
+    Require all denied
+</Files>
+
+<Files ".htaccess">
+    Require all denied
+</Files>
+
+<Files "web.config">
+    Require all denied
+</Files>
+
+# Permitir archivos necesarios para verificación de sitio
+<Files "google-site-verification.html">
+    Require all granted
+</Files>
+
+<Files "BingSiteAuth.xml">
+    Require all granted
+</Files>
+
+<Files "robots.txt">
+    Require all granted
+</Files>
+
+<Files "sitemap.xml">
+    Require all granted
+</Files>
+
+<Files "ads.txt">
+    Require all granted
+</Files> 

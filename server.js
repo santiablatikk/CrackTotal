@@ -34,10 +34,68 @@ function getMimeType(filePath) {
     return mimeTypes[ext] || 'application/octet-stream';
 }
 
+// Función para canonicalizar URLs - CRÍTICO PARA SEO
+function canonicalizeUrl(req, res) {
+    const host = req.headers.host || 'cracktotal.com';
+    const protocol = req.headers['x-forwarded-proto'] || 'http';
+    const url = req.url;
+    
+    // 1. Forzar HTTPS
+    if (protocol !== 'https') {
+        const canonicalUrl = `https://cracktotal.com${url}`;
+        console.log(`🔒 Redirecting HTTP to HTTPS: ${req.url} -> ${canonicalUrl}`);
+        res.writeHead(301, { 
+            'Location': canonicalUrl,
+            'Cache-Control': 'public, max-age=31536000'
+        });
+        res.end();
+        return true;
+    }
+    
+    // 2. Eliminar www y forzar dominio principal
+    if (host.startsWith('www.') || host !== 'cracktotal.com') {
+        const canonicalUrl = `https://cracktotal.com${url}`;
+        console.log(`🌐 Redirecting domain variation: ${host}${url} -> ${canonicalUrl}`);
+        res.writeHead(301, { 
+            'Location': canonicalUrl,
+            'Cache-Control': 'public, max-age=31536000'
+        });
+        res.end();
+        return true;
+    }
+    
+    // 3. Eliminar parámetros UTM y tracking para evitar contenido duplicado
+    const parsedUrl = new URL(`https://cracktotal.com${url}`);
+    const hasTrackingParams = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'fbclid', 'gclid'].some(param => parsedUrl.searchParams.has(param));
+    
+    if (hasTrackingParams) {
+        // Eliminar todos los parámetros de tracking
+        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'fbclid', 'gclid'].forEach(param => {
+            parsedUrl.searchParams.delete(param);
+        });
+        
+        const cleanUrl = parsedUrl.pathname + (parsedUrl.search || '');
+        console.log(`🧹 Removing tracking parameters: ${url} -> ${cleanUrl}`);
+        res.writeHead(301, { 
+            'Location': cleanUrl,
+            'Cache-Control': 'public, max-age=31536000'
+        });
+        res.end();
+        return true;
+    }
+    
+    return false; // No redirect needed
+}
+
 // --- Server Setup ---
 // Servidor HTTP que maneja tanto archivos estáticos como WebSocket upgrades
 const server = http.createServer((req, res) => {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url} - Host: ${req.headers.host}`);
+    
+    // CRÍTICO: Canonicalización de URLs antes de cualquier procesamiento
+    if (canonicalizeUrl(req, res)) {
+        return; // Redirect ejecutado
+    }
     
     // Parse URL
     const parsedUrl = url.parse(req.url, true);
@@ -45,7 +103,11 @@ const server = http.createServer((req, res) => {
     
     // Redirect /index.html to /
     if (pathname === '/index.html') {
-        res.writeHead(301, { 'Location': '/' });
+        console.log(`📄 Redirecting index.html to root: ${pathname} -> /`);
+        res.writeHead(301, { 
+            'Location': '/',
+            'Cache-Control': 'public, max-age=31536000'
+        });
         res.end();
         return;
     }
@@ -78,7 +140,8 @@ const server = http.createServer((req, res) => {
                     } else {
                         res.writeHead(200, { 
                             'Content-Type': 'text/html',
-                            'Cache-Control': 'no-cache'
+                            'Cache-Control': 'no-cache',
+                            'X-Canonical-URL': 'https://cracktotal.com/'
                         });
                         res.end(indexData);
                     }
@@ -106,11 +169,13 @@ const server = http.createServer((req, res) => {
                 'X-XSS-Protection': '1; mode=block'
             };
             
-            // Cache para archivos estáticos (excepto HTML)
-            if (mimeType !== 'text/html') {
-                headers['Cache-Control'] = 'public, max-age=31536000'; // 1 año
-            } else {
+            // Añadir header canónico para archivos HTML
+            if (mimeType === 'text/html') {
+                const canonicalPath = req.url === '/' || req.url === '/index.html' ? '/' : req.url;
+                headers['X-Canonical-URL'] = `https://cracktotal.com${canonicalPath}`;
                 headers['Cache-Control'] = 'no-cache';
+            } else {
+                headers['Cache-Control'] = 'public, max-age=31536000'; // 1 año para archivos estáticos
             }
             
             res.writeHead(200, headers);

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <script>
@@ -24,22 +24,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>100 Futboleros Dicen - Crack Total</title>
     <link rel="icon" href="/portada.ico?v=202505272312" type="image/x-icon">
-    <link rel="canonical" href="https://www.cracktotal.com/100-futboleros-dicen.html">
-    <link rel="alternate" hreflang="es" href="https://www.cracktotal.com/100-futboleros-dicen.html" />
+    <link rel="canonical" href="https://cracktotal.com/100-futboleros-dicen.html">
+    <link rel="alternate" hreflang="es" href="https://cracktotal.com/100-futboleros-dicen.html" />
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.cracktotal.com/100-futboleros-dicen.html">
+    <meta property="og:url" content="https://cracktotal.com/100-futboleros-dicen.html">
     <meta property="og:title" content="Crack Total - 100 Futboleros Dicen (Multijugador)">
     <meta property="og:description" content="¡Adivina las respuestas más populares! Juega con hasta 8 jugadores en el clásico juego de encuestas con temática futbolística.">
-    <meta property="og:image" content="https://www.cracktotal.com/assets/images/100_futboleros_dicen_card.jpg">
+    <meta property="og:image" content="https://cracktotal.com/assets/images/100_futboleros_dicen_card.jpg">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://www.cracktotal.com/100-futboleros-dicen.html">
+    <meta property="twitter:url" content="https://cracktotal.com/100-futboleros-dicen.html">
     <meta property="twitter:title" content="Crack Total - 100 Futboleros Dicen (Multijugador)">
     <meta property="twitter:description" content="¡Adivina las respuestas más populares! Juega con hasta 8 jugadores en el clásico juego de encuestas con temática futbolística.">
-    <meta property="twitter:image" content="https://www.cracktotal.com/assets/images/100_futboleros_dicen_card.jpg">
+    <meta property="twitter:image" content="https://cracktotal.com/assets/images/100_futboleros_dicen_card.jpg">
     <meta property="twitter:site" content="@cracktotal_">
 
     <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
@@ -73,13 +73,13 @@
       "@type": "WebPage", 
       "name": "100 Futboleros Dicen - Crack Total",
       "description": "Juega con hasta 8 amigos en 100 Futboleros Dicen, el emocionante juego de encuestas futbolísticas en Crack Total.",
-      "url": "https://www.cracktotal.com/100-futboleros-dicen.html",
+      "url": "https://cracktotal.com/100-futboleros-dicen.html",
       "publisher": {
         "@type": "Organization",
         "name": "Crack Total",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://www.cracktotal.com/assets/images/portada.jpg"
+          "url": "https://cracktotal.com/assets/images/portada.jpg"
         }
       },
       "inLanguage": "es-AR",
@@ -91,9 +91,21 @@
     
     <script src="assets/js/main.js?v=202505272312"></script>
     <script src="assets/js/firebase-config.js"></script>
-    <script src="assets/js/firebase-init.js"></script>
+    <script type="module" src="assets/js/firebase-init.js"></script>
     <script type="module" src="assets/js/logros.js?v=202505272312"></script>
     <script type="module" src="assets/js/100-futboleros-dicen.js?v=202505272312"></script>
+
+    <!-- Fallback CSS to ensure lobby is visible -->
+    <style>
+        #lobbySection { 
+            display: block !important; 
+        }
+        #waitingRoomSection,
+        #gameSection,
+        #resultsSection {
+            display: none !important;
+        }
+    </style>
 </head>
 <body class="game-body futboleros-dicen-body">
     <!-- Skip Link para accesibilidad -->
@@ -143,7 +155,7 @@
         </header>
 
         <!-- Lobby Section -->
-        <section id="lobbySection" class="lobby-container active">
+        <section id="lobbySection" class="lobby-container">
             <div class="container lobby-container-inner">
                 <div class="lobby-hero">
                     <div class="hero-content">
