@@ -3,24 +3,13 @@ import { saveQuienSabeMasResult } from './firebase-utils.js';
 
 // --- WebSocket URL (¡Configura esto!) ---
 const WEBSOCKET_URL = (() => {
-    // Configuración mejorada para mejor conectividad online
+    // Probar primero localhost y luego el servidor de producción
     const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     
     if (isLocalhost) {
-        console.log('🌐 [QSM] Configurando WebSocket para localhost');
         return 'ws://localhost:3000';
     } else {
-        console.log('🌐 [QSM] Configurando WebSocket para producción');
-        // Intentar múltiples URLs de servidor
-        const servers = [
-            'wss://cracktotal-servidor.onrender.com',
-            'wss://qsm-server.herokuapp.com',
-            'wss://quiensabemas.onrender.com'
-        ];
-        
-        // Por ahora usar el primero, en el futuro se puede implementar failover
-        return servers[0];
+        return 'wss://cracktotal-servidor.onrender.com';
     }
 })();
 
@@ -179,51 +168,53 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Initialization ---
     function initializeApp() {
         console.log("🚀 [QSM] Initializing Quien Sabe Más 1v1 App...");
-        console.log("🚀 [QSM] Versión mejorada con mejor conectividad online");
+        console.log("🚀 [QSM] Versión con filtrado de salas implementado");
         showLobby(); // Start in the lobby
         setupEventListeners();
         hideEndGameModal();
 
-        // --- Prefill player name from localStorage ---
-        const savedPlayerName = localStorage.getItem('playerName');
+        // --- Prefill player name from localStorage (MAIN.JS SHOULD HANDLE THIS, BUT AS FALLBACK) ---
+        const savedPlayerName = localStorage.getItem('playerName'); // Changed from sessionStorage
         if (savedPlayerName) {
             if (createPlayerNameInput && !createPlayerNameInput.value) createPlayerNameInput.value = savedPlayerName;
             if (joinPlayerNameInput && !joinPlayerNameInput.value) joinPlayerNameInput.value = savedPlayerName;
-            console.log(`✅ [QSM] Prefilled player name from localStorage: ${savedPlayerName}`);
+            console.log(`Prefilled player name from localStorage (QSM): ${savedPlayerName}`);
         }
+        // --- End Prefill ---
 
-        // Inicializar WebSocket con reintentos automáticos
-        initializeWebSocketWithRetry();
+        initializeWebSocket(); // Connect WebSocket on app load
         
         // Configurar polling automático de salas cada 5 segundos cuando estamos en el lobby
         setupAutomaticRoomPolling();
 
-        // Inicializar sistema de notificaciones mejorado
-        initializeNotificationSystem();
-    }
-
-    // Nueva función para manejo de WebSocket con reintentos
-    function initializeWebSocketWithRetry(retryCount = 0) {
-        const maxRetries = 3;
-        const retryDelay = 2000 * (retryCount + 1); // Incrementar delay con cada reintento
-        
-        console.log(`🔄 [QSM] Intento de conexión WebSocket ${retryCount + 1}/${maxRetries + 1}`);
-        
-        if (retryCount > maxRetries) {
-            console.error(`❌ [QSM] Máximo de reintentos alcanzado. Modo offline activado.`);
-            showLobbyMessage("Servidor no disponible. Funcionando en modo offline.", "error", true);
-            return;
-        }
-        
-        initializeWebSocket(retryCount);
-        
-        // Si falla la conexión, reintentar después del delay
-        setTimeout(() => {
-            if (!gameState.websocket || gameState.websocket.readyState !== WebSocket.OPEN) {
-                console.warn(`⚠️ [QSM] Reintentando conexión en ${retryDelay}ms...`);
-                initializeWebSocketWithRetry(retryCount + 1);
+        // Añadir soporte para comunicación de salas disponibles
+        window.addEventListener('message', function(event) {
+            // Verificar origen del mensaje por seguridad
+            if (event.origin !== window.location.origin) return;
+            
+            // Si nos piden las salas disponibles
+            if (event.data && event.data.type === 'requestRooms' && event.data.gameType === 'quiensabemas') {
+                // Verificar si hay conexión WebSocket activa
+                if (!gameState.websocket || gameState.websocket.readyState !== WebSocket.OPEN) {
+                    // Enviar lista vacía si no hay conexión
+                    event.source.postMessage({
+                        type: 'availableRooms',
+                        gameType: 'quiensabemas',
+                        rooms: []
+                    }, event.origin);
+                    return;
+                }
+                
+                // Solicitar salas al servidor
+                sendToServer('getRooms', { gameType: 'quiensabemas' });
+                
+                // Guardar el origen para responder cuando recibamos la lista del servidor
+                gameState.pendingRoomsRequest = {
+                    source: event.source,
+                    origin: event.origin
+                };
             }
-        }, retryDelay);
+        });
     }
 
     // --- Helper function to normalize text ---
@@ -724,15 +715,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     // --- WebSocket Communication ---
-    function initializeWebSocket(retryCount = 0) {
+    function initializeWebSocket() {
         // URL definida arriba
         const wsUrl = WEBSOCKET_URL;
 
-        console.log(`🔌 [QSM] Attempting WebSocket connection to: ${wsUrl} (attempt ${retryCount + 1})`);
+        console.log(`Attempting to connect WebSocket: ${wsUrl}`);
 
         // Close existing connection if any (to prevent duplicates on potential re-init)
         if (gameState.websocket && gameState.websocket.readyState !== WebSocket.CLOSED && gameState.websocket.readyState !== WebSocket.CLOSING) {
-            console.log("🔄 [QSM] Closing previous WebSocket connection.");
+            console.log("Closing previous WebSocket connection.");
             gameState.websocket.onclose = null; // Prevent old onclose handler from firing unexpectedly
             gameState.websocket.close();
         }
@@ -741,52 +732,47 @@ document.addEventListener('DOMContentLoaded', function() {
             showLobbyMessage("Conectando al servidor...", "info");
             gameState.websocket = new WebSocket(wsUrl);
         } catch (error) {
-             console.error("❌ [QSM] Failed to create WebSocket:", error);
-             showLobbyMessage(`Error de conexión: ${error.message}. Reintentando...`, "error");
+             console.error("Failed to create WebSocket:", error);
+             showLobbyMessage(`Error de conexión: ${error.message}. Refresca la página.`, "error");
              disableLobbyButtons();
              return; // Stop initialization
         }
 
-        // Establecer tiempo máximo de conexión (15 segundos)
+        // Establecer tiempo máximo de conexión (10 segundos)
         const connectionTimeout = setTimeout(() => {
             if (gameState.websocket && gameState.websocket.readyState === WebSocket.CONNECTING) {
-                console.error("⏰ [QSM] Connection timeout reached");
-                showLobbyMessage("Tiempo de conexión agotado. Reintentando...", "error");
+                console.error("Tiempo de conexión agotado (QSM)");
+                showLobbyMessage("No se pudo conectar al servidor. Comprueba que esté en funcionamiento.", "error");
                 gameState.websocket.close();
                 disableLobbyButtons();
             }
-        }, 15000); // 15 segundos
+        }, 10000); // 10 segundos
 
         gameState.websocket.onopen = () => {
             clearTimeout(connectionTimeout);
-            console.log('✅ [QSM] WebSocket Connected successfully!');
-            showLobbyMessage("Conectado al servidor. ¡Listo para jugar online!", "success");
+            console.log('WebSocket Connected!');
+            showLobbyMessage("Connected to server. Choose an option.", "success");
             enableLobbyButtons();
-            
-            // Solicitar salas disponibles inmediatamente
-            setTimeout(() => {
-                sendToServer('getRooms', { gameType: 'quiensabemas' });
-            }, 500);
         };
 
         gameState.websocket.onmessage = (event) => {
             try {
                 const message = JSON.parse(event.data);
-                console.log('📨 [QSM] Message received from server:', message.type);
+                console.log('Message received from server:', message);
                 handleServerMessage(message);
             } catch (error) {
-                console.error('🚫 [QSM] Error parsing message from server:', error, event.data);
+                console.error('Error parsing message from server:', error, event.data);
             }
         };
 
         gameState.websocket.onerror = (error) => {
             clearTimeout(connectionTimeout);
-            console.error('🚫 [QSM] WebSocket Error:', error);
+            console.error('WebSocket Error:', error);
             // Display different messages based on context
             if (gameState.gameActive) {
-                showError("Error de conexión durante el juego. Regresando al lobby.");
+                showError("Connection error. Please return to lobby.");
             } else {
-                showLobbyMessage("Error de conexión al servidor. Reintentando...", "error");
+                showLobbyMessage("Server connection error. Please refresh or try again later.", "error");
             }
              disableLobbyButtons(); // Disable lobby actions on error
              // Consider disabling game input if game was active
@@ -795,24 +781,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
         gameState.websocket.onclose = (event) => {
             clearTimeout(connectionTimeout);
-            console.log(`🔌 [QSM] WebSocket Disconnected: ${event.reason}, Code: ${event.code}, WasClean: ${event.wasClean}`);
+            console.log('WebSocket Disconnected:', event.reason, `Code: ${event.code}`, `WasClean: ${event.wasClean}`);
             const wasConnected = !!gameState.websocket; // Check if we thought we were connected
             gameState.websocket = null; // Clear the reference
 
             // Provide feedback based on whether the game was active and if the close was clean
             if (gameState.gameActive) {
-                 showError("Conexión perdida durante el juego. Juego terminado.");
+                 showError("Lost connection to the server. Game ended.");
                  gameState.gameActive = false; // Mark game as inactive
                  disablePlayerInput();
-                 showEndGameModalWithError("Conexión Perdida"); // Show a modal indicating connection issue
+                 showEndGameModalWithError("Connection Lost"); // Show a modal indicating connection issue
             } else if (wasConnected) { // Only show lobby error if we were actually connected before closing
                 // If connection closes while in lobby (or before game starts)
-                showLobbyMessage("Desconectado del servidor. Reintentando conexión...", "error");
+                showLobbyMessage("Disconnected from server. Please refresh to reconnect.", "error");
                  disableLobbyButtons();
             }
              // If it wasn't clean and not during a game, it might be a connection failure initially.
              else if (!event.wasClean && !gameState.gameActive) {
-                 showLobbyMessage("No se pudo conectar al servidor. Verificando conexión...", "error");
+                 showLobbyMessage("Could not connect to the server. Please ensure it's running and refresh.", "error");
                  disableLobbyButtons();
              }
         };

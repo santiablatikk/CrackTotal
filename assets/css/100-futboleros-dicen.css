@@ -1,1285 +1,994 @@
-/* 100 Futboleros Dicen - Estilos Específicos - Versión Compacta */
+/* ========================================= */
+/* === 100 Futboleros Dicen Game Styles === */
+/* ========================================= */
 
-/* Container and Section Layout */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
-
-.lobby-container {
-    min-height: 80vh;
-    padding: 2rem 0;
-}
-
-.lobby-container-inner {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-}
-
-.waiting-room-container,
-.game-container,
-.results-container {
-    min-height: 80vh;
-    padding: 2rem 0;
-}
-
-/* Variables específicas del juego */
 :root {
-    --game-primary: #ff6b35;
-    --game-primary-dark: #e55a2b;
-    --game-primary-light: #ff8c66;
-    --game-secondary: #4ecdc4;
-    --game-secondary-dark: #3db8b0;
-    --game-accent: #ffd93d;
-    --game-accent-dark: #f4c542;
-    --game-success: #6bcf7a;
-    --game-danger: #ff5757;
-    --game-purple: #a855f7;
-    --game-blue: #3b82f6;
-    
-    /* Gradientes específicos */
-    --game-gradient-primary: linear-gradient(135deg, var(--game-primary), var(--game-primary-light));
-    --game-gradient-secondary: linear-gradient(135deg, var(--game-secondary), #5ce1db);
-    --game-gradient-accent: linear-gradient(135deg, var(--game-accent), #ffe066);
-    --game-gradient-danger: linear-gradient(135deg, var(--game-danger), #ff7979);
-    --game-gradient-success: linear-gradient(135deg, var(--game-success), #81e89e);
-    
-    /* Efectos de glow - reducidos */
-    --game-glow-primary: 0 0 10px rgba(255, 107, 53, 0.2);
-    --game-glow-secondary: 0 0 10px rgba(78, 205, 196, 0.2);
-    --game-glow-accent: 0 0 10px rgba(255, 217, 61, 0.2);
-    --game-glow-success: 0 0 10px rgba(107, 207, 122, 0.2);
-    --game-glow-danger: 0 0 10px rgba(255, 87, 87, 0.2);
+  /* Colores específicos para 100 Futboleros Dicen */
+  --futboleros-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --futboleros-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --futboleros-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --futboleros-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  --futboleros-warning: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  --futboleros-danger: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
+  --futboleros-gold: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+  
+  /* Colores neón para efectos */
+  --futboleros-neon-blue: 102, 126, 234;
+  --futboleros-neon-purple: 118, 75, 162;
+  --futboleros-neon-pink: 240, 147, 251;
+  --futboleros-neon-green: 67, 233, 123;
+  --futboleros-neon-yellow: 254, 225, 64;
+  --futboleros-neon-orange: 255, 65, 108;
+  --futboleros-neon-gold: 255, 215, 0;
+  
+  /* Intensidad del glow */
+  --futboleros-glow-intensity: 0 0 20px;
+  --futboleros-card-glow: 0 0 25px rgba(102, 126, 234, 0.3);
+  --futboleros-answer-glow: 0 0 15px rgba(67, 233, 123, 0.4);
 }
 
-/* Body específico del juego */
-.futboleros-dicen-body {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+/* --- Body y Layout Principal --- */
+.futboleros-body {
+    background: linear-gradient(135deg, #0c0e1a 0%, #1a1f3a 100%);
+    min-height: 100vh;
+    position: relative;
     overflow-x: hidden;
 }
 
-/* Header específico - más compacto */
-.game-header.modern-header {
-    background: linear-gradient(135deg, var(--game-primary), var(--game-primary-dark));
-    border-bottom: 2px solid var(--game-accent);
-    box-shadow: 0 4px 16px rgba(255, 107, 53, 0.15);
-    padding: 0.8rem 0;
+.futboleros-body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(240, 147, 251, 0.05) 0%, transparent 50%);
+    z-index: -1;
+    animation: futbolerosBackgroundShift 15s ease-in-out infinite;
 }
 
-.game-title-header {
-    color: white;
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.4rem;
+@keyframes futbolerosBackgroundShift {
+    0%, 100% { 
+        opacity: 1;
+        transform: translateX(0) translateY(0);
+    }
+    50% { 
+        opacity: 0.8;
+        transform: translateX(-10px) translateY(-5px);
+    }
+}
+
+/* --- Header Moderno --- */
+.game-header.modern-header {
+    padding: 12px 0;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(var(--primary-rgb), 0.2);
+    background: linear-gradient(135deg, rgba(22, 24, 38, 0.95), rgba(13, 14, 26, 1));
+    position: relative;
+    z-index: 10;
+}
+
+.modern-header .header-container { 
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.modern-header .game-title-header {
+    font-size: 1.3rem;
+    font-family: var(--font-family-headings);
     font-weight: 700;
+    color: var(--text);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    gap: 0.6rem; 
+    flex: 1; 
+    justify-content: center; 
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    background: var(--futboleros-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: futbolerosHeaderGlow 3s ease-in-out infinite;
 }
 
-.game-title-header i {
-    color: var(--game-accent);
-    font-size: 1.1rem;
-    animation: pulse 2s infinite;
+@keyframes futbolerosHeaderGlow {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.2) drop-shadow(0 0 10px rgba(102, 126, 234, 0.5)); }
 }
 
-.game-mode-badge {
-    background: var(--game-gradient-accent);
-    color: var(--background);
-    padding: 0.2rem 0.6rem;
-    border-radius: 15px;
+.modern-header .game-mode-badge {
     font-size: 0.7rem;
     font-weight: 600;
-    text-transform: uppercase;
-    box-shadow: 0 1px 4px rgba(255, 217, 61, 0.2);
+    background: var(--futboleros-gold);
+    color: #1a1f3a;
+    padding: 3px 8px;
+    border-radius: 10px;
+    line-height: 1;
+    text-transform: none; 
+    letter-spacing: normal;
+    box-shadow: 0 2px 5px rgba(255, 215, 0, 0.4);
+    animation: futbolerosBadgePulse 2s ease-in-out infinite;
 }
 
-.game-stats-header {
-    color: white;
-    font-weight: 600;
-    font-size: 0.9rem;
+@keyframes futbolerosBadgePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
 }
 
-.round-info {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 3px;
-}
-
-/* Lobby Hero Section - más compacto */
-.lobby-hero {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding: 2rem 1.5rem;
-    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(78, 205, 196, 0.1));
-    border-radius: 15px;
-    border: 2px solid rgba(255, 107, 53, 0.2);
+/* --- Contenido Principal del Juego --- */
+.futboleros-content {
+    padding: 2rem 1rem;
+    max-width: 1400px;
+    margin: 0 auto;
     position: relative;
+    z-index: 1;
+}
+
+/* --- Game Status --- */
+.futboleros-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1rem 2rem;
+    background: rgba(var(--darker-bg-rgb), 0.6);
+    border-radius: 15px;
+    border: 1px solid rgba(var(--border-rgb), 0.3);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--futboleros-card-glow);
+}
+
+.round-display, .category-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.round-display i, .category-display i {
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+/* --- Timer Display --- */
+.timer-display {
+    margin-bottom: 1.5rem;
+    background: rgba(var(--darker-bg-rgb), 0.8);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid rgba(var(--border-rgb), 0.4);
+    backdrop-filter: blur(10px);
+    animation: futbolerosTimerEntrance 0.5s ease-out;
+}
+
+@keyframes futbolerosTimerEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.timer-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.timer-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--futboleros-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    animation: futbolerosTimerIconPulse 1s ease-in-out infinite;
+}
+
+@keyframes futbolerosTimerIconPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.timer-text {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.timer-bar-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(var(--border-rgb), 0.3);
+    border-radius: 3px;
     overflow: hidden;
 }
 
-.lobby-hero::before {
+.timer-bar {
+    height: 100%;
+    background: var(--futboleros-success);
+    border-radius: 3px;
+    transition: width 1s linear;
+    box-shadow: 0 0 10px rgba(67, 233, 123, 0.5);
+}
+
+/* --- Game Card Principal --- */
+.futboleros-card {
+    background: rgba(var(--darker-bg-rgb), 0.7);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 1px solid rgba(var(--border-rgb), 0.3);
+    backdrop-filter: blur(15px);
+    box-shadow: var(--futboleros-card-glow);
+    position: relative;
+    overflow: hidden;
+    animation: futbolerosCardEntrance 0.8s ease-out;
+}
+
+@keyframes futbolerosCardEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.futboleros-card::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 30%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(78, 205, 196, 0.15) 0%, transparent 50%);
-    z-index: -1;
+    height: 3px;
+    background: var(--futboleros-primary);
+    border-radius: 20px 20px 0 0;
 }
 
-.hero-icon {
-    font-size: 2.5rem;
-    color: var(--game-primary);
+/* --- Question Area --- */
+.question-area {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: rgba(var(--bg-rgb), 0.3);
+    border-radius: 15px;
+    border: 1px solid rgba(var(--border-rgb), 0.2);
+}
+
+.question-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text);
     margin-bottom: 0.8rem;
-    animation: bounceIn 1s ease-out;
-    filter: drop-shadow(0 2px 4px rgba(255, 107, 53, 0.2));
+    line-height: 1.3;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
-.lobby-title {
-    font-family: 'Oswald', sans-serif;
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: var(--game-primary);
-    margin-bottom: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-    animation: slideInDown 0.8s ease-out;
-}
-
-.lobby-subtitle {
-    font-size: 1rem;
-    color: var(--text-light);
-    margin-bottom: 1.5rem;
-    font-weight: 500;
-    animation: slideInUp 0.8s ease-out 0.2s both;
-}
-
-.game-features {
+.survey-info {
     display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-    animation: slideInUp 0.8s ease-out 0.4s both;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-style: italic;
 }
 
-.feature-item {
+.survey-info i {
+    color: var(--primary);
+    animation: futbolerosSurveyIconBounce 2s ease-in-out infinite;
+}
+
+@keyframes futbolerosSurveyIconBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* --- Scoreboard Area --- */
+.scoreboard-area {
+    margin-bottom: 2rem;
+}
+
+.score-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: rgba(var(--bg-rgb), 0.4);
+    border-radius: 15px;
+    border: 1px solid rgba(var(--border-rgb), 0.3);
+}
+
+.player-score {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.3rem;
-    padding: 0.8rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 107, 53, 0.2);
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
+    gap: 0.5rem;
+    min-width: 120px;
 }
 
-.feature-item:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--game-glow-primary);
-    border-color: var(--game-primary);
-}
-
-.feature-item i {
-    font-size: 1.2rem;
-    color: var(--game-accent);
-}
-
-.feature-item span {
-    font-weight: 600;
-    color: var(--text);
-    font-size: 0.8rem;
-}
-
-/* Lobby Cards - más compacto */
-.lobby-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-}
-
-.lobby-card {
-    background: linear-gradient(135deg, rgba(42, 42, 42, 0.8), rgba(30, 30, 30, 0.8));
-    border-radius: 15px;
-    border: 2px solid rgba(255, 107, 53, 0.2);
-    overflow: hidden;
-    backdrop-filter: blur(15px);
-    transition: all 0.3s ease;
-    animation: fadeInUp 0.6s ease-out;
-}
-
-.lobby-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--game-glow-primary);
-    border-color: var(--game-primary);
-}
-
-.card-header {
-    background: var(--game-gradient-primary);
-    padding: 1rem;
+.score-header {
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    color: white;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
 }
 
-.card-header i {
-    font-size: 1.2rem;
-    color: var(--game-accent);
+.score-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    animation: futbolerosScorePulse 2s ease-in-out infinite;
 }
 
-.card-header h3 {
-    margin: 0;
-    font-family: 'Oswald', sans-serif;
+@keyframes futbolerosScorePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.local-score .score-value {
+    background: var(--futboleros-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.opponent-score .score-value {
+    background: var(--futboleros-secondary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.round-info {
+    text-align: center;
     font-size: 1.1rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.card-body {
-    padding: 1.5rem;
-}
-
-.form-group {
-    margin-bottom: 1rem;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.3rem;
-    color: var(--game-accent);
-    font-weight: 600;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
-
-.lobby-input, .lobby-select {
-    width: 100%;
-    padding: 0.6rem 0.8rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 107, 53, 0.3);
-    border-radius: 8px;
     color: var(--text);
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    padding: 0.8rem 1.5rem;
+    background: var(--futboleros-accent);
+    border-radius: 25px;
+    color: white;
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+    animation: futbolerosRoundInfoGlow 3s ease-in-out infinite;
 }
 
-.lobby-input:focus, .lobby-select:focus {
-    outline: none;
-    border-color: var(--game-primary);
-    box-shadow: var(--game-glow-primary);
-    background: rgba(255, 255, 255, 0.08);
+@keyframes futbolerosRoundInfoGlow {
+    0%, 100% { box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3); }
+    50% { box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5); }
 }
 
-.lobby-input::placeholder {
-    color: var(--text-muted);
+/* --- Answers Board --- */
+.answers-board {
+    margin-bottom: 2rem;
 }
 
-.lobby-button {
-    width: 100%;
-    padding: 0.8rem 1.2rem;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Oswald', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+.answers-header {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+    padding: 0 0.5rem;
+}
+
+.answers-header h4 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.answers-counter {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.answers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    min-height: 200px;
+}
+
+.answer-slot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: rgba(var(--bg-rgb), 0.3);
+    border: 2px solid rgba(var(--border-rgb), 0.2);
+    border-radius: 12px;
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
 }
 
-.lobby-button::before {
+.answer-slot.empty {
+    border-style: dashed;
+    opacity: 0.6;
+}
+
+.answer-slot.revealed {
+    background: var(--futboleros-success);
+    border-color: rgba(67, 233, 123, 0.6);
+    color: white;
+    transform: scale(1.02);
+    box-shadow: var(--futboleros-answer-glow);
+    animation: futbolerosAnswerReveal 0.6s ease-out;
+}
+
+@keyframes futbolerosAnswerReveal {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) rotateY(90deg);
+    }
+    50% {
+        transform: scale(1.1) rotateY(0deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1.02) rotateY(0deg);
+    }
+}
+
+.answer-slot.revealed::before {
     content: '';
     position: absolute;
     top: 0;
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: futbolerosShimmer 2s ease-in-out;
 }
 
-.lobby-button:hover::before {
-    left: 100%;
-}
-
-.primary-button {
-    background: var(--game-gradient-primary);
-    color: white;
-    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
-}
-
-.primary-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
-}
-
-.primary-button:active {
-    transform: translateY(0);
-}
-
-.secondary-button {
-    background: var(--game-gradient-secondary);
-    color: white;
-    box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
-}
-
-.secondary-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
-}
-
-/* Join Options */
-.join-options {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.join-by-id h4, .join-random h4 {
-    color: var(--game-secondary);
-    font-size: 1.1rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* Available Rooms */
-.refresh-btn {
-    background: none;
-    border: 2px solid var(--game-accent);
-    color: var(--game-accent);
-    padding: 0.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.refresh-btn:hover {
-    background: var(--game-accent);
-    color: var(--background);
-    box-shadow: var(--game-glow-accent);
-}
-
-.rooms-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.room-item {
-    padding: 1rem;
-    margin-bottom: 0.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 107, 53, 0.2);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.room-item:hover {
-    background: rgba(255, 107, 53, 0.1);
-    border-color: var(--game-primary);
-    transform: translateX(5px);
-}
-
-.room-info {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.room-name {
-    font-weight: 600;
-    color: var(--text);
-}
-
-.room-players {
-    color: var(--game-accent);
-    font-size: 0.9rem;
-}
-
-.no-rooms-message {
-    text-align: center;
-    color: var(--text-muted);
-    padding: 2rem;
-    font-style: italic;
-}
-
-/* Game Rules */
-.rules-list {
-    padding-left: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.rules-list li {
-    margin-bottom: 0.8rem;
-    color: var(--text-light);
-    line-height: 1.5;
-}
-
-.points-info h4 {
-    color: var(--game-accent);
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
-}
-
-.points-info ul {
-    list-style: none;
-    padding: 0;
-}
-
-.points-info li {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid rgba(255, 107, 53, 0.2);
-    color: var(--text-light);
-}
-
-.points-info strong {
-    color: var(--game-primary);
-}
-
-/* Waiting Room - más compacto */
-.waiting-room-container {
-    padding: 1.5rem 0;
-    min-height: 60vh;
-}
-
-.waiting-room-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.waiting-room-header h2 {
-    color: var(--game-primary);
-    font-family: 'Oswald', sans-serif;
-    font-size: 2rem;
-    margin-bottom: 1rem;
-}
-
-.room-info {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.room-id {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.8rem 1.2rem;
-    border-radius: 12px;
-    border: 2px solid var(--game-accent);
-}
-
-.room-id span {
-    color: var(--text-light);
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.room-id code {
-    background: var(--game-gradient-accent);
-    color: var(--background);
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    font-family: 'Courier New', monospace;
-}
-
-.copy-btn {
-    background: none;
-    border: none;
-    color: var(--game-accent);
-    cursor: pointer;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-}
-
-.copy-btn:hover {
-    color: var(--game-accent-dark);
-    transform: scale(1.1);
-}
-
-.player-count {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    color: var(--game-secondary);
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.players-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-
-.player-card {
-    background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(78, 205, 196, 0.1));
-    border: 2px solid rgba(255, 107, 53, 0.3);
-    border-radius: 12px;
-    padding: 1rem;
-    text-align: center;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-.player-card.host {
-    border-color: var(--game-accent);
-    box-shadow: var(--game-glow-accent);
-}
-
-.player-card.host::before {
-    content: '👑';
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    font-size: 1.2rem;
-}
-
-.player-avatar-large {
-    width: 45px;
-    height: 45px;
-    background: var(--game-gradient-primary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 0.8rem;
-    font-size: 1.2rem;
-    color: white;
-    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
-}
-
-.player-name-large {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 0.3rem;
-}
-
-.player-status {
-    font-size: 0.8rem;
-    color: var(--game-secondary);
-    font-weight: 500;
-}
-
-.empty-slot {
-    background: rgba(255, 255, 255, 0.03);
-    border: 2px dashed rgba(255, 107, 53, 0.3);
-    color: var(--text-muted);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-style: italic;
-}
-
-.waiting-room-actions {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-}
-
-/* Game Board - más compacto */
-.game-container {
-    padding: 1.5rem 0;
-    min-height: 70vh;
-}
-
-.game-board {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.question-panel {
-    background: linear-gradient(135deg, rgba(42, 42, 42, 0.9), rgba(30, 30, 30, 0.9));
-    border-radius: 15px;
-    border: 3px solid var(--game-primary);
-    padding: 1.5rem;
-    box-shadow: var(--game-glow-primary);
-    backdrop-filter: blur(15px);
-}
-
-.question-header {
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-
-.question-header h3 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.4rem;
-    color: var(--game-accent);
-    margin-bottom: 0.8rem;
-    line-height: 1.2;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.question-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--text-light);
-    font-size: 0.8rem;
-    font-weight: 500;
-}
-
-.survey-text {
-    color: var(--game-secondary);
-    font-style: italic;
-}
-
-.round-indicator {
-    color: var(--game-primary);
-    font-weight: 600;
-}
-
-/* Answers Board - más compacto */
-.answers-board {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    margin-bottom: 1.5rem;
-}
-
-.answer-slot {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 0.8rem 1.2rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 107, 53, 0.2);
-    border-radius: 10px;
-    transition: all 0.3s ease;
-    min-height: 50px;
-}
-
-.answer-slot.revealed {
-    background: var(--game-gradient-success);
-    border-color: var(--game-success);
-    color: white;
-    animation: revealAnswer 0.8s ease-out;
-}
-
-.answer-number {
-    width: 32px;
-    height: 32px;
-    background: var(--game-gradient-primary);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    color: white;
-    font-size: 1rem;
-    box-shadow: 0 1px 4px rgba(255, 107, 53, 0.2);
-}
-
-.answer-slot.revealed .answer-number {
-    background: var(--game-gradient-accent);
-    color: var(--background);
-    animation: pulse 0.5s ease-out;
+@keyframes futbolerosShimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
 }
 
 .answer-text {
-    font-size: 1rem;
     font-weight: 600;
-    color: var(--text);
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
-
-.answer-slot.revealed .answer-text {
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    font-size: 1rem;
+    flex: 1;
 }
 
 .answer-points {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--game-accent);
-    font-family: 'Oswald', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    background: var(--futboleros-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 5px rgba(255, 215, 0, 0.3);
 }
 
 .answer-slot.revealed .answer-points {
     color: white;
-    animation: bounceIn 0.6s ease-out 0.2s both;
+    -webkit-text-fill-color: white;
 }
 
-/* Game Status - más compacto */
-.game-status {
+/* --- Interaction Area --- */
+.interaction-area {
+    margin-bottom: 2rem;
+}
+
+.phase-container {
+    background: rgba(var(--bg-rgb), 0.4);
+    border-radius: 15px;
+    padding: 2rem;
+    border: 1px solid rgba(var(--border-rgb), 0.3);
+    text-align: center;
+}
+
+.waiting-message {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    border: 2px solid rgba(78, 205, 196, 0.3);
+    gap: 1rem;
+    color: var(--text-muted);
 }
 
-.strikes-display {
+.waiting-message i {
+    font-size: 2rem;
+    color: var(--primary);
+    animation: spin 2s linear infinite;
+}
+
+/* --- Guessing Phase --- */
+.guess-input-area {
     display: flex;
-    align-items: center;
-    gap: 0.8rem;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
-.strikes-display span {
-    color: var(--text-light);
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.strikes-icons {
-    display: flex;
-    gap: 0.4rem;
-}
-
-.strike-icon {
-    font-size: 1.2rem;
-    color: rgba(255, 87, 87, 0.3);
-    transition: all 0.3s ease;
-}
-
-.strike-icon.active {
-    color: var(--game-danger);
-    animation: strikeActive 0.5s ease-out;
-}
-
-.round-score {
-    color: var(--game-accent);
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-/* Input Panel - más compacto */
-.input-panel {
-    background: linear-gradient(135deg, rgba(42, 42, 42, 0.9), rgba(30, 30, 30, 0.9));
-    border-radius: 12px;
-    border: 2px solid var(--game-secondary);
-    padding: 1.2rem;
-    backdrop-filter: blur(15px);
-}
-
-.current-player-info {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    margin-bottom: 1.2rem;
-    padding: 0.8rem;
-    background: rgba(78, 205, 196, 0.1);
-    border-radius: 8px;
-    border: 1px solid var(--game-secondary);
-}
-
-.player-avatar {
-    width: 40px;
-    height: 40px;
-    background: var(--game-gradient-secondary);
-    border-radius: 50%;
+.turn-indicator {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    font-size: 1rem;
-    box-shadow: 0 2px 6px rgba(78, 205, 196, 0.2);
-}
-
-.player-details {
-    flex: 1;
-}
-
-.turn-label {
-    display: block;
-    color: var(--text-muted);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
-
-.player-name {
-    display: block;
-    color: var(--text);
-    font-size: 1rem;
+    gap: 0.8rem;
+    font-size: 1.2rem;
     font-weight: 600;
+    color: var(--text);
+    padding: 1rem;
+    background: var(--futboleros-primary);
+    border-radius: 12px;
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    animation: futbolerosTurnIndicatorPulse 2s ease-in-out infinite;
 }
 
-.timer-display {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    color: var(--game-accent);
-    font-size: 1rem;
-    font-weight: 700;
-    font-family: 'Oswald', sans-serif;
+@keyframes futbolerosTurnIndicatorPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
 }
 
-.timer-display.warning {
-    color: var(--game-danger);
-    animation: timerWarning 1s infinite;
+.turn-indicator i {
+    animation: futbolerosArrowBounce 1s ease-in-out infinite;
 }
 
-.answer-input-container {
-    margin-bottom: 1rem;
+@keyframes futbolerosArrowBounce {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
 }
 
 .input-group {
     display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.futboleros-form-input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+    border: 2px solid rgba(var(--border-rgb), 0.3);
+    border-radius: 12px;
+    background: rgba(var(--bg-rgb), 0.7);
+    color: var(--text);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.futboleros-form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+    transform: translateY(-2px);
+}
+
+.futboleros-form-input::placeholder {
+    color: var(--text-muted);
+}
+
+.futboleros-action-btn {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+}
+
+.futboleros-action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.futboleros-action-btn:hover::before {
+    left: 100%;
+}
+
+.futboleros-action-btn.primary-button {
+    background: var(--futboleros-primary);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.futboleros-action-btn.primary-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.futboleros-action-btn.steal-button {
+    background: var(--futboleros-warning);
+    color: white;
+    box-shadow: 0 4px 15px rgba(250, 112, 154, 0.3);
+}
+
+.futboleros-action-btn.steal-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(250, 112, 154, 0.4);
+}
+
+.futboleros-action-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.guess-hints {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(var(--primary-rgb), 0.1);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary);
+}
+
+.guess-hints p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* --- Steal Phase --- */
+.steal-message {
+    text-align: center;
+}
+
+.steal-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.steal-header i {
+    font-size: 2rem;
+    color: #ff6b6b;
+    animation: futbolerosWarningPulse 1s ease-in-out infinite;
+}
+
+@keyframes futbolerosWarningPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.steal-header h4 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+/* --- Strikes Display --- */
+.strikes-display {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: rgba(var(--bg-rgb), 0.3);
+    border-radius: 12px;
+    border: 1px solid rgba(var(--border-rgb), 0.2);
+    margin-bottom: 1rem;
+}
+
+.strikes-header {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.strikes-counter {
+    display: flex;
     gap: 0.5rem;
 }
 
-.answer-input {
-    flex: 1;
-    padding: 0.8rem 1.2rem;
-    background: rgba(255, 255, 255, 0.08);
-    border: 2px solid rgba(78, 205, 196, 0.3);
-    border-radius: 10px;
-    color: var(--text);
-    font-size: 1rem;
+.strike {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(var(--border-rgb), 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.8rem;
     transition: all 0.3s ease;
 }
 
-.answer-input:focus {
-    outline: none;
-    border-color: var(--game-secondary);
-    box-shadow: 0 0 20px rgba(78, 205, 196, 0.2);
-    background: rgba(255, 255, 255, 0.12);
-}
-
-.submit-answer-btn {
-    padding: 0.8rem 1.2rem;
-    background: var(--game-gradient-secondary);
-    border: none;
-    border-radius: 10px;
+.strike.active {
+    background: var(--futboleros-danger);
     color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(78, 205, 196, 0.2);
+    transform: scale(1.1);
+    animation: futbolerosStrikeError 0.5s ease-out;
 }
 
-.submit-answer-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(78, 205, 196, 0.4);
+@keyframes futbolerosStrikeError {
+    0% { transform: scale(1) rotate(0deg); }
+    25% { transform: scale(1.2) rotate(-5deg); }
+    75% { transform: scale(1.2) rotate(5deg); }
+    100% { transform: scale(1.1) rotate(0deg); }
 }
 
-.submit-answer-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
+/* --- Feedback Area --- */
+.feedback-area {
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
 }
 
-.input-hints {
+.feedback-message {
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-weight: 600;
+    text-align: center;
+    animation: futbolerosFeedbackSlide 0.5s ease-out;
+}
+
+@keyframes futbolerosFeedbackSlide {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feedback-message.correct {
+    background: var(--futboleros-success);
+    color: white;
+    box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+}
+
+.feedback-message.incorrect {
+    background: var(--futboleros-danger);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 65, 108, 0.3);
+}
+
+.feedback-message.info {
+    background: var(--futboleros-accent);
+    color: white;
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+}
+
+.feedback-message.steal-success {
+    background: var(--futboleros-gold);
+    color: #1a1f3a;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    animation: futbolerosStealSuccess 1s ease-out;
+}
+
+@keyframes futbolerosStealSuccess {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* --- Lobby Styles (Heredados y Adaptados) --- */
+.lobby-container-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1rem;
+    background: rgba(var(--darker-bg-rgb), 0.6);
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(var(--border-rgb), 0.2);
+    box-shadow: var(--futboleros-card-glow);
+    animation: futbolerosLobbyEntrance 0.8s ease-out;
+}
+
+@keyframes futbolerosLobbyEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.lobby-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    background: var(--futboleros-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    animation: futbolerosLobbyTitleGlow 3s ease-in-out infinite;
+}
+
+@keyframes futbolerosLobbyTitleGlow {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.2) drop-shadow(0 0 15px rgba(102, 126, 234, 0.5)); }
+}
+
+.lobby-subtitle {
+    text-align: center;
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    animation: futbolerosLobbySubtitleFade 1s ease-out 0.3s both;
+}
+
+@keyframes futbolerosLobbySubtitleFade {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+    .futboleros-content {
+        padding: 1rem 0.5rem;
+    }
+    
+    .futboleros-card {
+        padding: 1.5rem;
+        border-radius: 15px;
+    }
+    
+    .question-header h3 {
+        font-size: 1.3rem;
+    }
+    
+    .score-display {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .score-value {
+        font-size: 2rem;
+    }
+    
+    .answers-grid {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+    
+    .input-group {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .futboleros-action-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .timer-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .strikes-display {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .lobby-title {
+        font-size: 2rem;
+    }
+    
+    .futboleros-status {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .answers-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+    
+    .answer-slot {
+        padding: 0.8rem 1rem;
+    }
+    
+    .answer-text {
+        font-size: 0.9rem;
+    }
+    
+    .answer-points {
+        font-size: 1rem;
+    }
+}
+
+/* --- Waiting Area (Heredado) --- */
+.waiting-area {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.waiting-area.active {
+    display: flex;
+}
+
+.waiting-area p {
+    color: var(--text);
+    font-size: 1.2rem;
     margin-top: 1rem;
     text-align: center;
 }
 
-.input-hints p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    font-style: italic;
-}
-
-.spectator-mode {
-    text-align: center;
-    padding: 2rem;
-}
-
-.spectator-info {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    color: var(--text-light);
-    font-size: 1.1rem;
-    font-weight: 500;
-}
-
-.spectator-info i {
-    color: var(--game-secondary);
-    font-size: 1.3rem;
-}
-
-/* Teams Panel - más compacto */
-.teams-panel {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
-
-.team-card {
-    background: linear-gradient(135deg, rgba(42, 42, 42, 0.8), rgba(30, 30, 30, 0.8));
-    border-radius: 12px;
-    border: 2px solid rgba(255, 107, 53, 0.3);
-    padding: 1.2rem;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-}
-
-.team-card.team-a {
-    border-color: var(--game-primary);
-}
-
-.team-card.team-b {
-    border-color: var(--game-secondary);
-}
-
-.team-card.winning {
-    box-shadow: var(--game-glow-success);
-    border-color: var(--game-success);
-}
-
-.team-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.8rem;
-    padding-bottom: 0.8rem;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
-}
-
-.team-header h4 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin: 0;
-}
-
-.team-a .team-header h4 {
-    color: var(--game-primary);
-}
-
-.team-b .team-header h4 {
-    color: var(--game-secondary);
-}
-
-.team-score {
-    font-size: 1.5rem;
-    font-weight: 700;
-    font-family: 'Oswald', sans-serif;
-    color: var(--game-accent);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.team-players {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-}
-
-.team-player {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.6rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 6px;
-    transition: all 0.3s ease;
-}
-
-.team-player.active {
-    background: rgba(255, 217, 61, 0.2);
-    border: 1px solid var(--game-accent);
-}
-
-.team-player-avatar {
-    width: 28px;
-    height: 28px;
-    background: var(--game-gradient-primary);
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(var(--primary-rgb), 0.3);
+    border-top: 4px solid var(--primary);
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 0.8rem;
-}
-
-.team-b .team-player-avatar {
-    background: var(--game-gradient-secondary);
-}
-
-.team-player-name {
-    color: var(--text);
-    font-weight: 500;
-    font-size: 0.8rem;
-}
-
-/* Results Section - más compacto */
-.results-container {
-    padding: 2rem 0;
-    text-align: center;
-}
-
-.results-header {
-    margin-bottom: 2rem;
-}
-
-.results-icon {
-    font-size: 3rem;
-    color: var(--game-accent);
-    margin-bottom: 0.8rem;
-    animation: bounceIn 1s ease-out;
-}
-
-.results-header h2 {
-    font-family: 'Oswald', sans-serif;
-    font-size: 2.2rem;
-    color: var(--game-primary);
-    margin-bottom: 1.5rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.final-scores {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
-}
-
-.score-team {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.team-label {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--text-light);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.team-final-score {
-    font-size: 2.2rem;
-    font-weight: 700;
-    font-family: 'Oswald', sans-serif;
-    color: var(--game-accent);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.vs-divider {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-}
-
-.results-details {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.mvp-section, .round-summary {
-    background: linear-gradient(135deg, rgba(42, 42, 42, 0.8), rgba(30, 30, 30, 0.8));
-    border-radius: 12px;
-    padding: 1.5rem;
-    border: 2px solid rgba(255, 107, 53, 0.2);
-    backdrop-filter: blur(10px);
-}
-
-.mvp-section h3, .round-summary h3 {
-    color: var(--game-accent);
-    font-family: 'Oswald', sans-serif;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-}
-
-.mvp-card {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 1.2rem;
-    background: var(--game-gradient-success);
-    border-radius: 10px;
-    color: white;
-}
-
-.mvp-avatar {
-    width: 45px;
-    height: 45px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-}
-
-.mvp-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-}
-
-.mvp-name {
-    font-size: 1.2rem;
-    font-weight: 700;
-}
-
-.mvp-stats {
-    font-size: 0.9rem;
-    opacity: 0.9;
-}
-
-.rounds-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.round-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 107, 53, 0.2);
-}
-
-.round-question {
-    color: var(--text);
-    font-weight: 500;
-    font-size: 0.9rem;
-}
-
-.round-points {
-    color: var(--game-accent);
-    font-weight: 700;
-    font-family: 'Oswald', sans-serif;
-}
-
-.results-actions {
-    display: flex;
-    justify-content: center;
-    gap: 1.5rem;
-    flex-wrap: wrap;
-}
-
-/* Loading Overlay */
-.loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    backdrop-filter: blur(5px);
-}
-
-.loading-content {
-    text-align: center;
-    color: white;
-}
-
-.loading-spinner {
-    font-size: 3rem;
-    color: var(--game-primary);
-    margin-bottom: 1rem;
-    animation: spin 2s linear infinite;
-}
-
-.loading-text {
-    font-size: 1.2rem;
-    font-weight: 500;
-    color: var(--text-light);
-}
-
-/* Animations */
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
-}
-
-@keyframes bounceIn {
-    0% { transform: scale(0.3); opacity: 0; }
-    50% { transform: scale(1.05); }
-    70% { transform: scale(0.9); }
-    100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes slideInDown {
-    0% { transform: translateY(-30px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes slideInUp {
-    0% { transform: translateY(30px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes fadeInUp {
-    0% { transform: translateY(20px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes revealAnswer {
-    0% { transform: scale(1) rotateY(0deg); }
-    50% { transform: scale(1.05) rotateY(180deg); }
-    100% { transform: scale(1) rotateY(360deg); }
-}
-
-@keyframes strikeActive {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.3); }
-    100% { transform: scale(1); }
-}
-
-@keyframes timerWarning {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -1287,129 +996,59 @@
     100% { transform: rotate(360deg); }
 }
 
-/* Responsive Design - ajustado para versión compacta */
-@media (max-width: 1200px) {
-    .game-board {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+/* --- Animaciones Adicionales --- */
+@keyframes futbolerosGlowPulse {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(var(--futboleros-neon-blue), 0.5);
     }
-    
-    .teams-panel {
-        grid-template-columns: 1fr;
-        gap: 0.8rem;
-    }
-    
-    .results-details {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+    50% {
+        box-shadow: 0 0 20px rgba(var(--futboleros-neon-blue), 0.8);
     }
 }
 
-@media (max-width: 768px) {
-    .lobby-title {
-        font-size: 1.8rem;
+@keyframes futbolerosSuccess {
+    0% {
+        transform: scale(1);
     }
-    
-    .lobby-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+    50% {
+        transform: scale(1.05);
     }
-    
-    .players-grid {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-        gap: 0.8rem;
-    }
-    
-    .question-header h3 {
-        font-size: 1.2rem;
-    }
-    
-    .answer-slot {
-        padding: 0.6rem 0.8rem;
-        gap: 0.6rem;
-        min-height: 40px;
-    }
-    
-    .answer-number {
-        width: 28px;
-        height: 28px;
-        font-size: 0.9rem;
-    }
-    
-    .current-player-info {
-        flex-direction: column;
-        text-align: center;
-        gap: 0.6rem;
+    100% {
+        transform: scale(1);
     }
 }
 
-@media (max-width: 480px) {
-    .lobby-hero {
-        padding: 1.5rem 1rem;
-    }
-    
-    .lobby-title {
-        font-size: 1.5rem;
-    }
-    
-    .hero-icon {
-        font-size: 2rem;
-    }
-    
-    .results-header h2 {
-        font-size: 1.8rem;
-    }
-    
-    .team-final-score {
-        font-size: 1.8rem;
-    }
+/* --- Efectos de Hover Mejorados --- */
+.answer-slot:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(var(--primary-rgb), 0.2);
 }
 
-/* High contrast mode */
-@media (prefers-contrast: high) {
-    :root {
-        --game-primary: #ff8c66;
-        --game-secondary: #66e6dd;
-        --game-accent: #ffeb3b;
-        --background: #000000;
-        --text: #ffffff;
-    }
+.futboleros-action-btn:hover {
+    transform: translateY(-2px);
 }
 
-/* Reduced motion */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
+.futboleros-action-btn:active {
+    transform: translateY(0);
 }
 
-/* Dark mode enhancements */
-@media (prefers-color-scheme: dark) {
-    .lobby-card, .team-card, .question-panel, .input-panel {
-        box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
+/* --- Estados de Carga --- */
+.loading-state {
+    opacity: 0.7;
+    pointer-events: none;
+    position: relative;
 }
 
-/* Print styles */
-@media print {
-    .game-layout {
-        background: white !important;
-        color: black !important;
-    }
-    
-    .lobby-hero, .waiting-room-container, .game-container {
-        display: none !important;
-    }
-    
-    .results-container {
-        display: block !important;
-        background: white !important;
-        color: black !important;
-    }
+.loading-state::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(var(--primary-rgb), 0.3);
+    border-top: 3px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 } 

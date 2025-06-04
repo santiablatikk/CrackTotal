@@ -141,32 +141,12 @@ class FirebaseSetupManager {
             lastUpdated: serverTimestamp()
         };
 
-        // Configuración del juego 100 Futboleros Dicen
-        const futbolerosDicenConfig = {
-            gameType: "100-futboleros-dicen",
-            maxPlayers: 8,
-            minPlayers: 2,
-            maxRounds: 5,
-            timePerTurn: 30000, // 30 segundos
-            maxStrikes: 3,
-            pointsPerAnswer: {
-                1: 100,  // Respuesta más popular
-                2: 80,   // Segunda respuesta
-                3: 60,   // Tercera respuesta
-                4: 40,   // Cuarta respuesta
-                5: 20    // Quinta respuesta
-            },
-            teamAssignment: "alternating", // Asignación alternada de equipos
-            lastUpdated: serverTimestamp()
-        };
-
         // Crear documentos de configuración
         const configs = [
             { id: "quiensabemas", data: quienSabeMasConfig },
             { id: "mentiroso", data: mentirosoConfig },
             { id: "crackrapido", data: crackRapidoConfig },
-            { id: "pasalache", data: pasalaCheConfig },
-            { id: "100-futboleros-dicen", data: futbolerosDicenConfig }
+            { id: "pasalache", data: pasalaCheConfig }
         ];
 
         for (const config of configs) {
