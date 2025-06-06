@@ -1,5 +1,4 @@
-// Importar funciones de Firestore y la instancia db inicializada
-import { db } from './firebase-init.js';
+// Importar funciones de Firestore
 import {
     collection,
     query,
@@ -885,7 +884,15 @@ function generateHistoryHTML(matches) {
 // --- Configurar listener en tiempo real para el ranking ---
 function setupRankingListener() {
     try {
-        const usersRef = collection(db, 'users');
+        if (!window.db) {
+            console.error('[RANKING QSM] Firebase no está inicializado para ranking');
+            if (rankingBody) {
+                rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+            }
+            return;
+        }
+
+        const usersRef = collection(window.db, 'users');
         
         const unsubscribe = onSnapshot(usersRef, (snapshot) => {
             console.log('[RANKING QSM] Datos recibidos:', snapshot.size, 'usuarios');
@@ -948,7 +955,15 @@ function setupRankingListener() {
 // --- Configurar listener para historial ---
 function setupHistoryListener() {
     try {
-        const matchesRef = collection(db, 'matches');
+        if (!window.db) {
+            console.error('[RANKING QSM] Firebase no está inicializado para historial');
+            if (historyList) {
+                historyList.innerHTML = '<div class="empty-state">Error de conexión. Recargá la página.</div>';
+            }
+            return;
+        }
+
+        const matchesRef = collection(window.db, 'matches');
         const historyQuery = query(
             matchesRef,
             orderBy('timestamp', 'desc'),
@@ -1043,16 +1058,109 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mostrar estado de carga
     showLoadingState();
     
-    // Configurar listeners con demora para asegurar inicialización de Firebase
-    setTimeout(() => {
-    if (db) {
+    // Intentar importar Firebase de forma robusta
+    import('./firebase-init.js')
+        .then(module => {
+            // Asegurarse de que Firebase esté completamente inicializado
+            return module.ensureFirebaseInitialized();
+        })
+        .then(({ db: firebaseDb, auth, user, readOnly }) => {
+            console.log('[RANKING QSM] Firebase inicializado correctamente:', 
+                        readOnly ? '(modo solo lectura)' : '(modo completo)');
+            
+            // Usar la instancia db recibida
+            window.db = firebaseDb;
+            
+            // Configurar listeners para el ranking y el historial
             setupRankingListener();
             setupHistoryListener();
-    } else {
-            console.error('[RANKING QSM] Firebase no está inicializado');
+        })
+        .catch(error => {
+            console.error('[RANKING QSM] Error inicializando Firebase:', error);
+            
+            // Mostrar mensaje de error
             if (rankingBody) {
-                rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+                rankingBody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="error-state">
+                            <div class="error-icon">⚠️</div>
+                            <div class="error-message">Error de conexión</div>
+                            <div class="error-detail">No se pudo conectar con la base de datos</div>
+                            <button onclick="location.reload()" class="retry-button">Reintentar</button>
+                        </td>
+                    </tr>
+                `;
             }
-        }
-    }, 1000);
+            
+            if (historyList) {
+                historyList.innerHTML = `
+                    <div class="error-state">
+                        <div class="error-icon">⚠️</div>
+                        <div class="error-message">Error de conexión</div>
+                        <div class="error-detail">No se pudo conectar con la base de datos</div>
+                    </div>
+                `;
+            }
+            
+            // Después de un tiempo, mostrar datos de fallback
+            setTimeout(() => {
+                // Crear algunos datos de demo para mostrar
+                const mockUsers = [
+                    { displayName: 'BrainMaster', elo: 1800, wins: 25, losses: 5, winRate: 83, level: "MAESTRO" },
+                    { displayName: 'QuizChamp', elo: 1650, wins: 18, losses: 4, winRate: 82, level: "EXPERTO" },
+                    { displayName: 'GeniusPlayer', elo: 1520, wins: 15, losses: 6, winRate: 71, level: "ESPECIALISTA" },
+                    { displayName: 'TriviaKing', elo: 1480, wins: 12, losses: 5, winRate: 70, level: "AVANZADO" },
+                    { displayName: 'MindWizard', elo: 1350, wins: 10, losses: 7, winRate: 59, level: "INTERMEDIO" }
+                ];
+                
+                if (rankingBody) {
+                    rankingBody.innerHTML = generateRankingHTML(mockUsers);
+                }
+                
+                const mockMatches = [
+                    { 
+                        playerName: 'BrainMaster',
+                        opponentName: 'QuizChamp', 
+                        myScore: 7,
+                        opponentScore: 3,
+                        result: 'victory',
+                        totalQuestions: 10,
+                        timestamp: { toDate: () => new Date(Date.now() - 3600000) } // 1 hour ago
+                    },
+                    { 
+                        playerName: 'QuizChamp',
+                        opponentName: 'GeniusPlayer', 
+                        myScore: 6,
+                        opponentScore: 6,
+                        result: 'draw',
+                        totalQuestions: 12,
+                        timestamp: { toDate: () => new Date(Date.now() - 7200000) } // 2 hours ago
+                    },
+                    { 
+                        playerName: 'TriviaKing',
+                        opponentName: 'BrainMaster', 
+                        myScore: 4,
+                        opponentScore: 8,
+                        result: 'defeat',
+                        totalQuestions: 12,
+                        timestamp: { toDate: () => new Date(Date.now() - 86400000) } // 1 day ago
+                    }
+                ];
+                
+                if (historyList) {
+                    historyList.innerHTML = generateHistoryHTML(mockMatches);
+                }
+                
+                // Mostrar mensaje de modo demo
+                const demoNotice = document.createElement('div');
+                demoNotice.className = 'demo-notice';
+                demoNotice.style.cssText = 'background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 15px; border-radius: 5px; text-align: center; font-weight: bold;';
+                demoNotice.innerHTML = '⚠️ Mostrando datos de demostración (modo offline)';
+                
+                const containers = document.querySelectorAll('.ranking-container, .history-container');
+                containers.forEach(container => {
+                    container.insertBefore(demoNotice.cloneNode(true), container.firstChild);
+                });
+            }, 3000);
+        });
 }); 

@@ -39,7 +39,7 @@
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://cracktotal.com/games.html">
     <meta property="twitter:title" content="Crack Total - Juegos de Fútbol">
-    <meta property="twitter:description" content="Elegí tu desafío: Pasala Che, Quien Sabe MáS y más. ¡Demostrá cuánto sabés de fútbol!">
+    <meta property="twitter:description" content="Elegí tu desafío: Pasala Che, Quien Sabe Más y más. ¡Demostrá cuánto sabés de fútbol!">
     <meta property="twitter:image" content="https://cracktotal.com/assets/images/portada.jpg">
     <meta property="twitter:site" content="@cracktotal_">
 
@@ -218,48 +218,11 @@
             position: relative;
         }
 
-        .games-section {
-            margin-bottom: 80px;
-        }
-
-        .games-section-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 15px;
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            justify-content: center;
-            background: linear-gradient(120deg, var(--primary) 0%, var(--accent) 50%, var(--primary-light) 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 30px rgba(var(--primary-rgb), 0.5);
-        }
-
-        .games-section-title i {
-            color: var(--accent);
-            font-size: 2rem;
-            filter: drop-shadow(0 0 15px rgba(var(--accent-rgb), 0.6));
-        }
-
-        .games-section-subtitle {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            text-align: center;
-            margin-bottom: 50px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-
         .games-constellation {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
-            margin-bottom: 40px;
+            margin-bottom: 80px;
         }
 
         @media (min-width: 1200px) {
@@ -395,193 +358,6 @@
             color: var(--neon-green);
             border: 1px solid rgba(104, 211, 145, 0.3);
             animation: pulse 2s infinite;
-        }
-
-        .stellar-badge.mejorando {
-            background: rgba(255, 193, 7, 0.2);
-            color: #ffc107;
-            border: 1px solid rgba(255, 193, 7, 0.4);
-            animation: improvePulse 3s ease-in-out infinite;
-        }
-
-        .stellar-badge.proximamente {
-            background: rgba(158, 158, 158, 0.2);
-            color: #9e9e9e;
-            border: 1px solid rgba(158, 158, 158, 0.4);
-            animation: comingSoonPulse 4s ease-in-out infinite;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .stellar-badge.proximamente::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: comingSoonShimmer 3s ease-in-out infinite;
-        }
-
-        @keyframes improvePulse {
-            0%, 100% {
-                background: rgba(255, 193, 7, 0.2);
-                box-shadow: 0 0 15px rgba(255, 193, 7, 0.3);
-                transform: scale(1);
-            }
-            50% {
-                background: rgba(255, 193, 7, 0.3);
-                box-shadow: 0 0 25px rgba(255, 193, 7, 0.5);
-                transform: scale(1.05);
-            }
-        }
-
-        @keyframes comingSoonPulse {
-            0%, 100% {
-                background: rgba(158, 158, 158, 0.2);
-                box-shadow: 0 0 10px rgba(158, 158, 158, 0.2);
-            }
-            50% {
-                background: rgba(158, 158, 158, 0.3);
-                box-shadow: 0 0 20px rgba(158, 158, 158, 0.4);
-            }
-        }
-
-        @keyframes comingSoonShimmer {
-            0% { left: -100%; }
-            50% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        /* Estilos específicos para card de próximamente */
-        .cosmic-game-card[data-game="100-futboleros-dicen-coming-soon"] {
-            position: relative;
-            opacity: 0.9;
-        }
-
-        .cosmic-game-card[data-game="100-futboleros-dicen-coming-soon"]::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(158, 158, 158, 0.05), rgba(189, 189, 189, 0.05));
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .cosmic-game-card[data-game="100-futboleros-dicen-coming-soon"]:hover {
-            transform: translateY(-8px) rotateX(3deg);
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.3),
-                0 0 30px rgba(158, 158, 158, 0.2);
-        }
-
-        .cosmic-game-card[data-game="100-futboleros-dicen-coming-soon"] .game-icon {
-            color: #9e9e9e;
-            animation: comingSoonIconFloat 4s ease-in-out infinite;
-        }
-
-        @keyframes comingSoonIconFloat {
-            0%, 100% { 
-                transform: scale(1) translateY(0px);
-                opacity: 0.8;
-            }
-            50% { 
-                transform: scale(1.1) translateY(-5px);
-                opacity: 1;
-            }
-        }
-
-        .coming-soon-btn {
-            background: linear-gradient(45deg, rgba(158, 158, 158, 0.6), rgba(117, 117, 117, 0.6)) !important;
-            color: #fff !important;
-            cursor: not-allowed !important;
-            opacity: 0.8;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .coming-soon-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: comingSoonButtonShimmer 5s ease-in-out infinite;
-        }
-
-        @keyframes comingSoonButtonShimmer {
-            0% { left: -100%; }
-            20% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        .coming-soon-btn:hover {
-            transform: none !important;
-            box-shadow: 0 8px 20px rgba(158, 158, 158, 0.3) !important;
-        }
-
-        .coming-soon-info {
-            margin-top: 15px;
-            padding: 12px;
-            background: rgba(158, 158, 158, 0.1);
-            border: 1px solid rgba(158, 158, 158, 0.2);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.7);
-            text-align: center;
-        }
-
-        .coming-soon-info i {
-            color: #9e9e9e;
-            font-size: 1rem;
-            flex-shrink: 0;
-        }
-
-        /* Estilos específicos para card de mejorando */
-        .cosmic-game-card[data-game="quiensabemas"]:hover {
-            box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.4),
-                0 0 50px rgba(255, 193, 7, 0.3);
-            border-color: rgba(255, 193, 7, 0.5);
-        }
-
-        .cosmic-game-card[data-game="quiensabemas"] .game-icon {
-            color: #ffc107;
-        }
-
-        .cosmic-game-card[data-game="quiensabemas"] .quantum-play-btn {
-            background: linear-gradient(45deg, rgba(255, 193, 7, 0.8), rgba(255, 152, 0, 0.8));
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cosmic-game-card[data-game="quiensabemas"] .quantum-play-btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: improvingButtonGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes improvingButtonGlow {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
-        }
-
-        .cosmic-game-card[data-game="quiensabemas"] .quantum-play-btn:hover {
-            box-shadow: 0 15px 35px rgba(255, 193, 7, 0.4);
         }
 
         .game-content {
@@ -1046,22 +822,6 @@
             .hero-welcome {
                 font-size: 1.6rem;
             }
-
-            .games-section-title {
-                font-size: 2rem;
-                gap: 15px;
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .games-section-title i {
-                font-size: 1.8rem;
-            }
-
-            .games-section-subtitle {
-                font-size: 1rem;
-                margin-bottom: 30px;
-            }
             
             .games-constellation {
                 grid-template-columns: 1fr;
@@ -1113,41 +873,14 @@
             }
         }
 
-        .games-section {
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .games-section:nth-child(1) { animation-delay: 0.1s; }
-        .games-section:nth-child(2) { animation-delay: 0.3s; }
-
         .cosmic-game-card {
             animation: fadeInUp 0.8s ease-out;
         }
 
-        .cosmic-game-card:nth-child(1) { animation-delay: 0.2s; }
-        .cosmic-game-card:nth-child(2) { animation-delay: 0.4s; }
-
-        /* Efectos especiales para secciones */
-        .games-section::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 0;
-            width: 2px;
-            height: 60px;
-            background: linear-gradient(180deg, transparent, var(--accent), transparent);
-            transform: translateX(-50%);
-            margin-top: -30px;
-            opacity: 0.6;
-        }
-
-        .games-section:first-child::before {
-            display: none;
-        }
-
-        .games-section {
-            position: relative;
-        }
+        .cosmic-game-card:nth-child(1) { animation-delay: 0.1s; }
+        .cosmic-game-card:nth-child(2) { animation-delay: 0.2s; }
+        .cosmic-game-card:nth-child(3) { animation-delay: 0.3s; }
+        .cosmic-game-card:nth-child(4) { animation-delay: 0.4s; }
 
         /* Modal Crack Rápido mejorado */
         .crack-rapido-intro-modal {
@@ -1622,192 +1355,6 @@
                 font-size: 0.75rem;
             }
         }
-
-        /* Estilos especiales para Crack Rápido */
-        .cosmic-game-card[data-game="crack-rapido"] {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cosmic-game-card[data-game="crack-rapido"]::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: 
-                linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent),
-                radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.15) 0%, transparent 50%);
-            z-index: 1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .cosmic-game-card[data-game="crack-rapido"]:hover::before {
-            opacity: 1;
-        }
-
-        .cosmic-game-card[data-game="crack-rapido"]:hover {
-            box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.4),
-                0 0 50px rgba(255, 215, 0, 0.3),
-                inset 0 0 20px rgba(255, 215, 0, 0.1);
-            border-color: rgba(255, 215, 0, 0.6);
-            animation: lightningPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes lightningPulse {
-            0%, 100% { 
-                box-shadow: 
-                    0 30px 60px rgba(0, 0, 0, 0.4),
-                    0 0 50px rgba(255, 215, 0, 0.3),
-                    inset 0 0 20px rgba(255, 215, 0, 0.1);
-            }
-            50% { 
-                box-shadow: 
-                    0 35px 70px rgba(0, 0, 0, 0.5),
-                    0 0 60px rgba(255, 215, 0, 0.5),
-                    inset 0 0 30px rgba(255, 215, 0, 0.2);
-            }
-        }
-
-        .cosmic-game-card[data-game="crack-rapido"] .stellar-badge.nuevo {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 193, 7, 0.9));
-            color: #1a1a1a;
-            font-weight: 800;
-            text-shadow: none;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-            animation: extremeBadgePulse 3s ease-in-out infinite;
-        }
-
-        @keyframes extremeBadgePulse {
-            0%, 100% { 
-                background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 193, 7, 0.9));
-                box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-            }
-            50% { 
-                background: linear-gradient(135deg, rgba(255, 235, 59, 0.9), rgba(255, 215, 0, 0.9));
-                box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
-            }
-        }
-
-        .cosmic-game-card[data-game="crack-rapido"] .game-icon {
-            color: #ffd700;
-            filter: drop-shadow(0 0 20px #ffd700);
-            animation: lightningIcon 4s ease-in-out infinite;
-        }
-
-        @keyframes lightningIcon {
-            0%, 100% { 
-                transform: scale(1) rotate(0deg);
-                filter: drop-shadow(0 0 20px #ffd700);
-            }
-            25% { 
-                transform: scale(1.1) rotate(-5deg);
-                filter: drop-shadow(0 0 30px #ffd700);
-            }
-            50% { 
-                transform: scale(1.2) rotate(0deg);
-                filter: drop-shadow(0 0 40px #ffd700);
-            }
-            75% { 
-                transform: scale(1.1) rotate(5deg);
-                filter: drop-shadow(0 0 30px #ffd700);
-            }
-        }
-
-        .cosmic-game-card[data-game="crack-rapido"] .game-title {
-            background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            animation: titleGlow 3s ease-in-out infinite;
-        }
-
-        @keyframes titleGlow {
-            0%, 100% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-            50% { text-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
-        }
-
-        .cosmic-game-card[data-game="crack-rapido"] .quantum-play-btn {
-            background: linear-gradient(45deg, rgba(255, 215, 0, 0.9), rgba(255, 193, 7, 0.9));
-            color: #1a1a1a;
-            font-weight: 800;
-            text-shadow: none;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cosmic-game-card[data-game="crack-rapido"] .quantum-play-btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .cosmic-game-card[data-game="crack-rapido"] .quantum-play-btn:hover {
-            background: linear-gradient(45deg, rgba(255, 235, 59, 0.9), rgba(255, 215, 0, 0.9));
-            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.6);
-            transform: translateY(-3px) scale(1.05);
-        }
-
-        .cosmic-game-card[data-game="crack-rapido"] .quantum-play-btn:hover::after {
-            left: 100%;
-        }
-
-        .cosmic-game-card[data-game="crack-rapido"] .stat-chip {
-            border-color: rgba(255, 215, 0, 0.3);
-            background: rgba(255, 215, 0, 0.1);
-            color: rgba(255, 215, 0, 0.9);
-        }
-
-        .cosmic-game-card[data-game="crack-rapido"] .stat-chip:hover {
-            background: rgba(255, 215, 0, 0.2);
-            border-color: rgba(255, 215, 0, 0.5);
-            color: #ffd700;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-        }
-
-        .cosmic-game-card:nth-child(4) .game-icon { color: var(--neon-green); }
-
-        /* Estilos específicos para la sección JUGAR ONLINE con nuevo orden */
-        .games-section:nth-child(2) .cosmic-game-card:nth-child(1) .game-icon { color: var(--neon-pink); }
-        .games-section:nth-child(2) .cosmic-game-card:nth-child(2) .game-icon { color: #ffc107; }
-        .games-section:nth-child(2) .cosmic-game-card:nth-child(3) .game-icon { color: #9e9e9e; }
-
-        .games-section:nth-child(2) .cosmic-game-card:nth-child(1):hover {
-            box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.4),
-                0 0 50px rgba(246, 135, 179, 0.3);
-            border-color: rgba(246, 135, 179, 0.5);
-        }
-
-        .games-section:nth-child(2) .cosmic-game-card:nth-child(2):hover {
-            box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.4),
-                0 0 50px rgba(255, 193, 7, 0.3);
-            border-color: rgba(255, 193, 7, 0.5);
-        }
-
-        .games-section:nth-child(2) .cosmic-game-card:nth-child(3):hover {
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.3),
-                0 0 30px rgba(158, 158, 158, 0.2);
-        }
-
-        .games-section:nth-child(2) .cosmic-game-card:nth-child(1) .quantum-play-btn {
-            background: linear-gradient(45deg, rgba(246, 135, 179, 0.8), rgba(231, 94, 158, 0.8));
-        }
-
-        .games-section:nth-child(2) .cosmic-game-card:nth-child(2) .quantum-play-btn {
-            background: linear-gradient(45deg, rgba(255, 193, 7, 0.8), rgba(255, 152, 0, 0.8));
-        }
     </style>
 </head>
 <body>
@@ -1849,139 +1396,92 @@
 
         <!-- Galaxia de Juegos -->
         <section class="games-galaxy">
-            <!-- Sección JUGAR SOLO -->
-            <div class="games-section">
-                <h2 class="games-section-title">
-                    <i class="fas fa-user"></i>
-                    JUGAR SOLO
-                </h2>
-                <p class="games-section-subtitle">Desafiá tus conocimientos a tu propio ritmo</p>
-                
-                <div class="games-constellation" aria-label="Juegos para un jugador">
-                    <!-- Pasala Che -->
-                    <article class="cosmic-game-card" data-game="pasalache">
-                        <div class="stellar-badge rosco">ROSCO</div>
-                        <div class="game-visual-container">
-                            <i class="fas fa-circle-notch game-icon" aria-hidden="true"></i>
-                        </div>
-                        <div class="game-content">
-                            <h3 class="game-title">Pasala Che</h3>
-                            <p class="game-description">Un rosco de preguntas futboleras. Responde preguntas para cada letra del abecedario y demuestra tu conocimiento enciclopédico del fútbol.</p>
-                            <div class="game-stats">
-                                <span class="stat-chip"><i class="fas fa-font"></i>27 Letras</span>
-                                <span class="stat-chip"><i class="fas fa-clock"></i>Contrarreloj</span>
-                            </div>
-                            <button class="quantum-play-btn" aria-label="Jugar a Pasala Che">
-                                <span>Jugar</span>
-                            </button>
-                        </div>
-                    </article>
+            <div class="games-constellation" aria-label="Juegos disponibles">
+                <!-- Pasala Che -->
+                <article class="cosmic-game-card" data-game="pasalache">
+                    <div class="stellar-badge rosco">ROSCO</div>
+                    <div class="game-visual-container">
+                        <i class="fas fa-circle-notch game-icon" aria-hidden="true"></i>
+                    </div>
+                                         <div class="game-content">
+                         <h3 class="game-title">Pasala Che</h3>
+                         <p class="game-description">Un rosco de preguntas futboleras. Responde preguntas para cada letra del abecedario y demuestra tu conocimiento enciclopídico del fútbol.</p>
+                         <div class="game-stats">
+                             <span class="stat-chip"><i class="fas fa-font"></i>27 Letras</span>
+                             <span class="stat-chip"><i class="fas fa-clock"></i>Contrarreloj</span>
+                         </div>
+                         <button class="quantum-play-btn" aria-label="Jugar a Pasala Che">
+                             <span>Jugar</span>
+                         </button>
+                     </div>
+                </article>
 
-                    <!-- Crack Rápido -->
-                    <article class="cosmic-game-card" data-game="crack-rapido">
-                        <div class="stellar-badge nuevo">EXTREMO</div>
-                        <div class="game-visual-container">
-                            <i class="fas fa-bolt game-icon" aria-hidden="true"></i>
+                <!-- Crack Rápido -->
+                <article class="cosmic-game-card" data-game="crack-rapido">
+                    <div class="stellar-badge nuevo">NUEVO</div>
+                    <div class="game-visual-container">
+                        <i class="fas fa-bolt game-icon" aria-hidden="true"></i>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Crack Rápido MEGA</h3>
+                        <p class="game-description">¡La trivia definitiva perfeccionada! 4 modos picos, 7 categorías, 200+ preguntas y sistema de puntuación revolucionario. ¡Tenés la velocidad y conocimiento para ser un Dios del Crack Rápido?</p>
+                        <div class="game-stats">
+                            <span class="stat-chip"><i class="fas fa-gamepad"></i>4 Modos</span>
+                            <span class="stat-chip"><i class="fas fa-brain"></i>200+ Preguntas</span>
+                            <span class="stat-chip"><i class="fas fa-medal"></i>17 Logros</span>
+                            <span class="stat-chip"><i class="fas fa-rocket"></i>Power-Ups</span>
                         </div>
-                        <div class="game-content">
-                            <h3 class="game-title">⚡ Crack Rápido</h3>
-                            <p class="game-description">¡El modo más extremo de trivia futbolera! Solo tenés 5 segundos por pregunta en este desafío definitivo. ¿Podés mantener la velocidad y precisión bajo presión?</p>
-                            <div class="game-stats">
-                                <span class="stat-chip"><i class="fas fa-bolt"></i>5 Segundos</span>
-                                <span class="stat-chip"><i class="fas fa-target"></i>20 Preguntas</span>
-                                <span class="stat-chip"><i class="fas fa-brain"></i>300+ Preguntas</span>
-                                <span class="stat-chip"><i class="fas fa-fire"></i>Modo Extremo</span>
-                            </div>
-                            <button class="quantum-play-btn" aria-label="Jugar a Crack Rápido">
-                                <span>Jugar</span>
-                            </button>
-                        </div>
-                    </article>
-                </div>
-            </div>
+                        <button class="quantum-play-btn" aria-label="Jugar a Crack Rápido MEGA">
+                            <span>Jugar</span>
+                        </button>
+                    </div>
+                </article>
 
-            <!-- Sección JUGAR ONLINE -->
-            <div class="games-section">
-                <h2 class="games-section-title">
-                    <i class="fas fa-users"></i>
-                    JUGAR ONLINE
-                </h2>
-                <p class="games-section-subtitle">Enfrentá a otros jugadores en duelos épicos</p>
-                
-                <div class="games-constellation" aria-label="Juegos multijugador">
-                    <!-- Mentiroso -->
-                    <article class="cosmic-game-card" data-game="mentiroso">
-                        <div class="stellar-badge bluff">BLUFF</div>
-                        <div class="game-visual-container">
-                            <i class="fas fa-mask game-icon" aria-hidden="true"></i>
+                <!-- Quien Sabe MáS -->
+                <article class="cosmic-game-card" data-game="quiensabemas">
+                    <div class="stellar-badge duelo">DUELO</div>
+                    <div class="game-visual-container">
+                        <i class="fas fa-brain game-icon" aria-hidden="true"></i>
+                    </div>
+                                         <div class="game-content">
+                         <h3 class="game-title">Quien Sabe MáS</h3>
+                         <p class="game-description">Responde preguntas de dificultad creciente contra un amigo y compite por el gran premio. ¡Llegarás a ser el más grande conocedor del fútbol?</p>
+                         <div class="game-stats">
+                             <span class="stat-chip"><i class="fas fa-layer-group"></i>6 Niveles</span>
+                             <span class="stat-chip"><i class="fas fa-users"></i>1 vs 1</span>
+                         </div>
+                         <button class="quantum-play-btn" aria-label="Jugar a Quien Sabe MáS">
+                             <span>Jugar</span>
+                         </button>
+                        <div class="room-status" id="quiensabemas-rooms">
+                            <i class="fas fa-satellite-dish" aria-hidden="true"></i>
+                            <span>Salas Activas: <span class="room-count">-/-</span></span>
                         </div>
-                        <div class="game-content">
-                            <h3 class="game-title">Mentiroso</h3>
-                            <p class="game-description">¡Cuánto sabés de fútbol o cuánto podés aparentar? Decí cuántas respuestas sabés y desafí a tu rival. ¡Que no te agarren!</p>
-                            <div class="game-stats">
-                                <span class="stat-chip"><i class="fas fa-users"></i>1 vs 1</span>
-                                <span class="stat-chip"><i class="fas fa-theater-masks"></i>Puro Engaño</span>
-                            </div>
-                            <button class="quantum-play-btn" aria-label="Jugar a Mentiroso">
-                                <span>Jugar</span>
-                            </button>
-                            <div class="room-status" id="mentiroso-rooms">
-                                <i class="fas fa-satellite-dish" aria-hidden="true"></i>
-                                <span>Salas Activas: <span class="room-count">-/-</span></span>
-                            </div>
-                        </div>
-                    </article>
+                    </div>
+                </article>
 
-                    <!-- Quien Sabe MáS -->
-                    <article class="cosmic-game-card" data-game="quiensabemas">
-                        <div class="stellar-badge mejorando">MEJORANDO</div>
-                        <div class="game-visual-container">
-                            <i class="fas fa-brain game-icon" aria-hidden="true"></i>
+                <!-- Mentiroso -->
+                <article class="cosmic-game-card" data-game="mentiroso">
+                    <div class="stellar-badge bluff">BLUFF</div>
+                    <div class="game-visual-container">
+                        <i class="fas fa-mask game-icon" aria-hidden="true"></i>
+                    </div>
+                                         <div class="game-content">
+                         <h3 class="game-title">Mentiroso</h3>
+                         <p class="game-description">¡Cuánto sabés de fútbol o cuánto podés aparentar? Decí cuántas respuestas sabés y desafí a tu rival. ¡Que no te agarren!</p>
+                         <div class="game-stats">
+                             <span class="stat-chip"><i class="fas fa-users"></i>1 vs 1</span>
+                             <span class="stat-chip"><i class="fas fa-theater-masks"></i>Puro Engaño</span>
+                         </div>
+                         <button class="quantum-play-btn" aria-label="Jugar a Mentiroso">
+                             <span>Jugar</span>
+                         </button>
+                        <div class="room-status" id="mentiroso-rooms">
+                            <i class="fas fa-satellite-dish" aria-hidden="true"></i>
+                            <span>Salas Activas: <span class="room-count">-/-</span></span>
                         </div>
-                        <div class="game-content">
-                            <h3 class="game-title">Quien Sabe MáS</h3>
-                            <p class="game-description">Responde preguntas de dificultad creciente contra un amigo y compite por el gran premio. ¡Llegarás a ser el más grande conocedor del fútbol?</p>
-                            <div class="game-stats">
-                                <span class="stat-chip"><i class="fas fa-layer-group"></i>6 Niveles</span>
-                                <span class="stat-chip"><i class="fas fa-users"></i>1 vs 1</span>
-                                <span class="stat-chip"><i class="fas fa-wrench"></i>En desarrollo</span>
-                            </div>
-                            <button class="quantum-play-btn" aria-label="Jugar a Quien Sabe MáS">
-                                <span>Jugar</span>
-                            </button>
-                            <div class="room-status" id="quiensabemas-rooms">
-                                <i class="fas fa-satellite-dish" aria-hidden="true"></i>
-                                <span>Salas Activas: <span class="room-count">-/-</span></span>
-                            </div>
-                        </div>
-                    </article>
-
-                    <!-- 100 Futboleros Dicen -->
-                    <article class="cosmic-game-card" data-game="100-futboleros-dicen-coming-soon">
-                        <div class="stellar-badge proximamente">PRÓXIMAMENTE</div>
-                        <div class="game-visual-container">
-                            <i class="fas fa-users-cog game-icon" aria-hidden="true"></i>
-                        </div>
-                        <div class="game-content">
-                            <h3 class="game-title">100 Futboleros Dicen</h3>
-                            <p class="game-description">¡El clásico juego estilo Family Feud con temática futbolera! Adiviná las respuestas más populares de 100 futboleros y competí contra tu rival en duelos épicos.</p>
-                            <div class="game-stats">
-                                <span class="stat-chip"><i class="fas fa-users"></i>1 vs 1</span>
-                                <span class="stat-chip"><i class="fas fa-poll"></i>Encuestas</span>
-                                <span class="stat-chip"><i class="fas fa-fire"></i>5 Rondas</span>
-                                <span class="stat-chip"><i class="fas fa-trophy"></i>Épico</span>
-                            </div>
-                            <button class="quantum-play-btn coming-soon-btn" aria-label="100 Futboleros Dicen - Próximamente" disabled>
-                                <i class="fas fa-clock"></i>
-                                <span>Próximamente</span>
-                            </button>
-                            <div class="coming-soon-info">
-                                <i class="fas fa-info-circle" aria-hidden="true"></i>
-                                <span>¡Estamos trabajando para traerte esta increíble experiencia pronto!</span>
-                            </div>
-                        </div>
-                    </article>
-                </div>
+                    </div>
+                </article>
             </div>
         </section>
 
@@ -2053,285 +1553,6 @@
                     <button type="submit" class="save-button">Guardar</button>
                 </div>
             </form>
-        </div>
-    </div>
-
-    <!-- Modal de introducción a Crack Rápido -->
-    <div class="modal-overlay" id="crackRapidoIntroModal">
-        <div class="modal-content crack-rapido-intro-modal">
-            <h3 class="modal-title">⚡ CRACK RÁPIDO - MODO EXTREMO ⚡</h3>
-            
-            <p style="text-align: center; color: rgba(255, 255, 255, 0.9); font-size: 1.1rem; margin-bottom: 25px; background: rgba(255, 215, 0, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(255, 215, 0, 0.3);">
-                🔥 <strong>El desafío de trivia más extremo: solo 5 segundos por pregunta</strong> 🔥
-            </p>
-            
-            <div class="intro-section">
-                <h4><i class="fas fa-fire"></i> Reglas del Juego</h4>
-                <div style="display: grid; gap: 8px;">
-                    <div style="padding: 8px; background: rgba(255, 255, 255, 0.05); border-radius: 6px; border-left: 3px solid var(--neon-blue);">
-                        ⏱️ <strong>5 segundos</strong> por pregunta - Sin excepción
-                    </div>
-                    <div style="padding: 8px; background: rgba(255, 255, 255, 0.05); border-radius: 6px; border-left: 3px solid var(--neon-green);">
-                        🎯 <strong>20 preguntas</strong> por partida completa
-                    </div>
-                    <div style="padding: 8px; background: rgba(255, 255, 255, 0.05); border-radius: 6px; border-left: 3px solid var(--neon-purple);">
-                        💎 <strong>100 puntos base</strong> + bonus de velocidad
-                    </div>
-                </div>
-            </div>
-
-            <div class="intro-section">
-                <h4><i class="fas fa-brain"></i> 7 Categorías Disponibles</h4>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; margin-top: 15px;">
-                    <div style="background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 6px; text-align: center; font-size: 0.9rem;">
-                        🐐 Messi
-                    </div>
-                    <div style="background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 6px; text-align: center; font-size: 0.9rem;">
-                        💙💛 Boca
-                    </div>
-                    <div style="background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 6px; text-align: center; font-size: 0.9rem;">
-                        ⚪🔴 River
-                    </div>
-                    <div style="background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 6px; text-align: center; font-size: 0.9rem;">
-                        🏆 Mundiales
-                    </div>
-                    <div style="background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 6px; text-align: center; font-size: 0.9rem;">
-                        ⭐ Champions
-                    </div>
-                    <div style="background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 6px; text-align: center; font-size: 0.9rem;">
-                        🇦🇷 Argentina
-                    </div>
-                    <div style="background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 6px; text-align: center; font-size: 0.9rem;">
-                        ⚽ General
-                    </div>
-                </div>
-            </div>
-
-            <div style="text-align: center; background: rgba(255, 51, 102, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 51, 102, 0.3); margin: 15px 0;">
-                <strong style="color: #ff3366;">⚠️ MODO EXTREMO</strong>
-                <p style="margin: 5px 0 0 0; color: rgba(255, 255, 255, 0.9); font-size: 0.9rem;">
-                    Requiere reflejos rápidos y conocimiento profundo. ¿Estás preparado?
-                </p>
-            </div>
-            
-            <button id="goToCrackRapidoButton" class="primary-button enhanced" style="width: 100%; margin-top: 15px; background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); box-shadow: 0 5px 20px rgba(var(--neon-blue), 0.4);">
-                <i class="fas fa-bolt"></i>
-                ¡ACEPTO EL DESAFÍO!
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal de introducción a Mentiroso -->
-    <div class="modal-overlay" id="mentirosoIntroModal">
-        <div class="modal-content crack-rapido-intro-modal">
-            <h3 class="modal-title">🎭 MENTIROSO - JUEGO DE ESTRATEGIA</h3>
-            
-            <p style="text-align: center; color: rgba(255, 255, 255, 0.9); font-size: 1.1rem; margin-bottom: 25px; background: rgba(246, 135, 179, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(246, 135, 179, 0.3);">
-                🎭 <strong>Donde la astucia es más importante que el conocimiento</strong> 🎭
-            </p>
-            
-            <div class="intro-section">
-                <h4><i class="fas fa-gamepad"></i> Cómo Jugar</h4>
-                <div style="display: grid; gap: 12px;">
-                    <div style="display: flex; align-items: center; gap: 15px; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border-left: 3px solid var(--neon-pink);">
-                        <div style="font-size: 1.5rem;">🎯</div>
-                        <div>
-                            <strong style="color: var(--neon-pink);">1. Declarás:</strong> 
-                            <span style="color: rgba(255, 255, 255, 0.9);">Cuántas preguntas podés responder bien</span>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 15px; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border-left: 3px solid var(--neon-blue);">
-                        <div style="font-size: 1.5rem;">🤔</div>
-                        <div>
-                            <strong style="color: var(--neon-blue);">2. Tu rival decide:</strong> 
-                            <span style="color: rgba(255, 255, 255, 0.9);">¿Te cree o piensa que mentís?</span>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 15px; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border-left: 3px solid var(--neon-green);">
-                        <div style="font-size: 1.5rem;">📝</div>
-                        <div>
-                            <strong style="color: var(--neon-green);">3. Demostrás:</strong> 
-                            <span style="color: rgba(255, 255, 255, 0.9);">Respondés y se revela la verdad</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="intro-section">
-                <h4><i class="fas fa-trophy"></i> Formas de Ganar</h4>
-                <div style="display: grid; gap: 8px;">
-                    <div style="padding: 10px; background: rgba(0, 255, 136, 0.1); border-radius: 6px; border-left: 3px solid var(--neon-green); display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.2rem;">✅</span>
-                        <span><strong style="color: var(--neon-green);">Cumplís tu declaración:</strong> Ganás puntos por honestidad</span>
-                    </div>
-                    <div style="padding: 10px; background: rgba(0, 212, 255, 0.1); border-radius: 6px; border-left: 3px solid var(--neon-blue); display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.2rem;">🕵️</span>
-                        <span><strong style="color: var(--neon-blue);">Desenmascarás una mentira:</strong> Ganás puntos por astucia</span>
-                    </div>
-                </div>
-            </div>
-
-            <div style="text-align: center; background: rgba(246, 135, 179, 0.1); padding: 12px; border-radius: 8px; border: 1px solid rgba(246, 135, 179, 0.3); margin: 15px 0;">
-                <strong style="color: var(--neon-pink);">🎭 CONSEJO CLAVE</strong>
-                <p style="margin: 5px 0 0 0; color: rgba(255, 255, 255, 0.9); font-size: 0.9rem;">
-                    Conocé tus límites, leé a tu rival y jugá psicológico. ¡A veces una mentira calculada vale la pena!
-                </p>
-            </div>
-            
-            <button id="goToLobbyMentirosoButton" class="primary-button enhanced" style="width: 100%; margin-top: 15px; background: linear-gradient(135deg, var(--neon-pink), #e91e63); box-shadow: 0 5px 20px rgba(246, 135, 179, 0.4);">
-                <i class="fas fa-mask"></i>
-                ¡ENTRAR AL LOBBY!
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal de introducción a Quien Sabe MáS -->
-    <div class="modal-overlay" id="qsmIntroModal">
-        <div class="modal-content qsm-intro-modal-compact">
-            <div class="qsm-header-compact">
-                <div class="qsm-logo-compact">
-                    <i class="fas fa-brain qsm-brain-icon-compact"></i>
-                    <div class="title-compact">
-                        <h3 class="modal-title-compact">🧠 QUIEN SABE MÁS</h3>
-                        <div class="subtitle-compact">El duelo de conocimiento definitivo</div>
-                    </div>
-                </div>
-                <div class="badges-compact">
-                    <span class="badge-compact">1 VS 1</span>
-                    <span class="badge-compact">6 NIVELES</span>
-                    <span class="badge-compact">DUELO</span>
-                </div>
-            </div>
-
-            <div class="qsm-modal-scrollable">
-                <div class="qsm-content-compact">
-                    <div class="intro-compact">
-                        Enfrentate a otro jugador en un duelo de preguntas de dificultad creciente. 
-                        Solo el verdadero conocedor del fútbol llegará hasta el final.
-                    </div>
-
-                    <div class="info-grid-compact">
-                        <div class="info-card-compact">
-                            <div class="card-header-compact">
-                                <i class="fas fa-trophy"></i> Sistema de Puntos
-                            </div>
-                            <ul class="info-list-compact">
-                                <li><span class="points-good">100pts</span> - Respuesta correcta</li>
-                                <li><span class="points-bad">0pts</span> - Respuesta incorrecta</li>
-                            </ul>
-                        </div>
-
-                        <div class="info-card-compact">
-                            <div class="card-header-compact">
-                                <i class="fas fa-layer-group"></i> Dificultad
-                            </div>
-                            <div class="difficulty-compact">
-                                <div class="diff-item">
-                                    <span class="diff-levels">1-2</span>
-                                    <span class="diff-name">Fácil</span>
-                                    <span class="diff-indicator">🟢</span>
-                                </div>
-                                <div class="diff-item">
-                                    <span class="diff-levels">3-4</span>
-                                    <span class="diff-name">Medio</span>
-                                    <span class="diff-indicator">🟡</span>
-                                </div>
-                                <div class="diff-item">
-                                    <span class="diff-levels">5-6</span>
-                                    <span class="diff-name">Difícil</span>
-                                    <span class="diff-indicator">🔴</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="qsm-footer-compact">
-                <div class="warning-compact">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    ¡Preparate para el duelo más intenso de conocimiento futbolero!
-                </div>
-                <button id="goToLobbyQSMButton" class="qsm-button-compact">
-                    <i class="fas fa-brain"></i>
-                    ¡ENTRAR AL DUELO!
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para 100 Futboleros Dicen - Próximamente -->
-    <div class="modal-overlay" id="futbolerosComingSoonModal">
-        <div class="modal-content crack-rapido-intro-modal">
-            <h3 class="modal-title">🏆 100 FUTBOLEROS DICEN - PRÓXIMAMENTE</h3>
-            
-            <p style="text-align: center; color: rgba(255, 255, 255, 0.9); font-size: 1.1rem; margin-bottom: 25px; background: rgba(158, 158, 158, 0.1); padding: 15px; border-radius: 10px; border: 1px solid rgba(158, 158, 158, 0.3);">
-                ⚽ <strong>¡El juego estilo Family Feud que vas a amar!</strong> ⚽
-            </p>
-            
-            <div class="intro-section">
-                <h4><i class="fas fa-gamepad"></i> ¿Cómo Será el Juego?</h4>
-                <div style="display: grid; gap: 12px;">
-                    <div style="display: flex; align-items: center; gap: 15px; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border-left: 3px solid var(--neon-blue);">
-                        <div style="font-size: 1.5rem;">📊</div>
-                        <div>
-                            <strong style="color: var(--neon-blue);">Encuestas Reales:</strong> 
-                            <span style="color: rgba(255, 255, 255, 0.9);">Respuestas de 100 futboleros argentinos</span>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 15px; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border-left: 3px solid var(--neon-green);">
-                        <div style="font-size: 1.5rem;">🎯</div>
-                        <div>
-                            <strong style="color: var(--neon-green);">Duelos 1v1:</strong> 
-                            <span style="color: rgba(255, 255, 255, 0.9);">Competí contra otro jugador en tiempo real</span>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 15px; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 8px; border-left: 3px solid var(--neon-purple);">
-                        <div style="font-size: 1.5rem;">🔥</div>
-                        <div>
-                            <strong style="color: var(--neon-purple);">Sistema de Strikes:</strong> 
-                            <span style="color: rgba(255, 255, 255, 0.9);">3 errores y tu oponente puede robar</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="intro-section">
-                <h4><i class="fas fa-star"></i> Características Épicas</h4>
-                <div style="display: grid; gap: 8px;">
-                    <div style="padding: 10px; background: rgba(255, 193, 7, 0.1); border-radius: 6px; border-left: 3px solid #ffc107; display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.2rem;">⚡</span>
-                        <span><strong style="color: #ffc107;">5 Rondas Intensas:</strong> Cada ronda, nueva categoría y mayor tensión</span>
-                    </div>
-                    <div style="padding: 10px; background: rgba(0, 212, 255, 0.1); border-radius: 6px; border-left: 3px solid var(--neon-blue); display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.2rem;">🏆</span>
-                        <span><strong style="color: var(--neon-blue);">20+ Categorías:</strong> Desde Messi hasta mundiales</span>
-                    </div>
-                    <div style="padding: 10px; background: rgba(104, 211, 145, 0.1); border-radius: 6px; border-left: 3px solid var(--neon-green); display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.2rem;">🎭</span>
-                        <span><strong style="color: var(--neon-green);">Modo Robo:</strong> Oportunidades de robar todos los puntos</span>
-                    </div>
-                </div>
-            </div>
-
-            <div style="text-align: center; background: rgba(158, 158, 158, 0.1); padding: 15px; border-radius: 8px; border: 1px solid rgba(158, 158, 158, 0.3); margin: 20px 0;">
-                <strong style="color: #9e9e9e; font-size: 1.1rem;">🚧 EN DESARROLLO</strong>
-                <p style="margin: 8px 0 0 0; color: rgba(255, 255, 255, 0.8); font-size: 0.95rem; line-height: 1.4;">
-                    Estamos puliendo cada detalle para ofrecerte la mejor experiencia. 
-                    <br><strong>¡Muy pronto estará disponible!</strong>
-                </p>
-            </div>
-            
-            <div style="display: flex; gap: 10px; margin-top: 20px;">
-                <button id="closeFutbolerosModalButton" class="secondary-button" style="flex: 1;">
-                    <i class="fas fa-arrow-left"></i>
-                    Volver
-                </button>
-                <button id="notifyMeFutbolerosButton" class="primary-button enhanced" style="flex: 2; background: linear-gradient(135deg, var(--neon-blue), var(--neon-purple)); box-shadow: 0 5px 20px rgba(var(--neon-blue), 0.4);">
-                    <i class="fas fa-bell"></i>
-                    ¡Avisame cuando esté listo!
-                </button>
-            </div>
         </div>
     </div>
 
@@ -2468,12 +1689,9 @@
                 const mentirosoIntroModal = document.getElementById('mentirosoIntroModal');
                 const qsmIntroModal = document.getElementById('qsmIntroModal');
                 const crackRapidoIntroModal = document.getElementById('crackRapidoIntroModal');
-                const futbolerosComingSoonModal = document.getElementById('futbolerosComingSoonModal');
                 const goToLobbyMentirosoButton = document.getElementById('goToLobbyMentirosoButton');
                 const goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
                 const goToCrackRapidoButton = document.getElementById('goToCrackRapidoButton');
-                const closeFutbolerosModalButton = document.getElementById('closeFutbolerosModalButton');
-                const notifyMeFutbolerosButton = document.getElementById('notifyMeFutbolerosButton');
                 
                 // Debug: Log which elements were found
                 console.log('=== DEBUGGING DOM ELEMENTS ===');
@@ -2481,12 +1699,9 @@
                 console.log('Mentiroso modal:', !!mentirosoIntroModal);
                 console.log('QSM modal:', !!qsmIntroModal);
                 console.log('Crack Rapido modal:', !!crackRapidoIntroModal);
-                console.log('Futboleros modal:', !!futbolerosComingSoonModal);
                 console.log('Mentiroso button:', !!goToLobbyMentirosoButton);
                 console.log('QSM button:', !!goToLobbyQSMButton);
                 console.log('Crack Rapido button:', !!goToCrackRapidoButton);
-                console.log('Close Futboleros button:', !!closeFutbolerosModalButton);
-                console.log('Notify Futboleros button:', !!notifyMeFutbolerosButton);
                 console.log('=============================');
                 
                 gameCards.forEach(card => {
@@ -2552,21 +1767,6 @@
                                 } else {
                                     console.error('Crack Rapido modal not found');
                                     window.location.href = 'crack-rapido.html';
-                                }
-                            } else if (gameType === '100-futboleros-dicen-coming-soon') {
-                                if (futbolerosComingSoonModal) {
-                                    futbolerosComingSoonModal.classList.add('active');
-                                    // Track modal opening
-                                    if (window.gtag) {
-                                        gtag('event', 'modal_open', {
-                                            event_category: 'engagement',
-                                            event_label: 'futboleros_coming_soon',
-                                            value: 1
-                                        });
-                                    }
-                                } else {
-                                    console.error('Futboleros modal not found');
-                                    window.location.href = '100-futboleros-dicen-coming-soon.html';
                                 }
                             } else {
                                 // Track direct navigation
@@ -2683,18 +1883,6 @@
                             gtag('event', 'modal_close', {
                                 event_category: 'engagement',
                                 event_label: 'crack_rapido_intro_outside_click',
-                                engagement_type: 'low',
-                                value: 0
-                            });
-                        }
-                    }
-                    if (futbolerosComingSoonModal && event.target === futbolerosComingSoonModal) {
-                        futbolerosComingSoonModal.classList.remove('active');
-                        // Track modal close
-                        if (window.gtag) {
-                            gtag('event', 'modal_close', {
-                                event_category: 'engagement',
-                                event_label: 'futboleros_coming_soon_outside_click',
                                 engagement_type: 'low',
                                 value: 0
                             });
@@ -2817,50 +2005,7 @@
 
                 console.log('✓ Analytics tracking configurado para games.html');
             }, 100); // Wait 100ms for main.js to execute
-
-            // ACTUALIZAR NOMBRE DE USUARIO - ASEGURAR QUE SE MUESTRE EL NOMBRE CORRECTO
-            function updatePlayerName() {
-                const playerNameDisplay = document.getElementById('playerNameDisplay');
-                const savedPlayerName = localStorage.getItem('playerName');
-                
-                if (playerNameDisplay && savedPlayerName) {
-                    playerNameDisplay.textContent = savedPlayerName;
-                    console.log('✓ Nombre de usuario actualizado:', savedPlayerName);
-                } else if (playerNameDisplay && !savedPlayerName) {
-                    // Si no hay nombre guardado, redirigir a index
-                    window.location.href = 'index.html';
-                }
-                
-                // También actualizar otros elementos con class player-name
-                const playerNameElements = document.querySelectorAll('.player-name');
-                if (savedPlayerName) {
-                    playerNameElements.forEach(element => {
-                        if (element.tagName !== 'INPUT' || !element.value || element.value === 'Jugador' || element.value === 'Jugador 1' || element.value === 'Jugador 2') {
-                            if (element.tagName === 'INPUT') {
-                                element.value = savedPlayerName;
-                            } else {
-                                element.textContent = savedPlayerName;
-                            }
-                        }
-                    });
-                }
-            }
-            
-            // Llamar inmediatamente
-            updatePlayerName();
-            
-            // También llamar cuando cambie el localStorage (por si se actualiza desde otra pestaña)
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'playerName') {
-                    updatePlayerName();
-                }
-            });
         });
     </script>
-    
-    <!-- Cargar main.js para funcionalidad completa -->
-    <script src="assets/js/main.js?v=202505272312"></script>
 </body>
 </html> 
-
-

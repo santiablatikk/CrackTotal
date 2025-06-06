@@ -661,7 +661,27 @@
         </div>
     </footer>
 
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/firebase-init.js"></script>
+    <script src="assets/js/notifications.js"></script>
+    <script src="assets/js/cookie-consent.js"></script>
+    <script>
+        function shareOnTwitter() {
+            const text = 'La Scaloneta 2025: Campeona del Mundo - Análisis de una Leyenda - Crack Total';
+            const url = window.location.href;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+        }
+
+        function shareOnFacebook() {
+            const url = window.location.href;
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+        }
+
+        function shareOnWhatsApp() {
+            const text = 'La Scaloneta 2025: Campeona del Mundo - Análisis de una Leyenda - Crack Total';
+            const url = window.location.href;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+        }
+    </script>
 </body>
 </html> 
 

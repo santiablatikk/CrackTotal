@@ -1,5 +1,4 @@
-// Importar funciones de Firestore y la instancia db inicializada
-import { db } from './firebase-init.js';
+// Importar funciones de Firestore 
 import {
     collection,
     query,
@@ -267,7 +266,7 @@ function generateHistoryHTML(matches) {
                         ${isVictory && lettersPerSecond >= 15 ? 
                             '<span class="insight-highlight">¡Velocidad increíble!</span> Completaste muy rápido.' :
                         isVictory ? 
-                            '<span class="insight-highlight">¡Excelente!</span> Completaste el juego exitosamente.' :
+                            '<span class="insight-highlight">¡Excelente!</span> Completaste la palabra exitosamente.' :
                         lettersPerSecond >= 20 ? 
                             '<span class="insight-highlight">Máquina de escribir</span> - Velocidad excepcional.' :
                         score >= 2000 ? 
@@ -285,7 +284,15 @@ function generateHistoryHTML(matches) {
 // --- Configurar listener en tiempo real para el ranking ---
 function setupRankingListener() {
     try {
-        const usersRef = collection(db, 'users');
+        if (!window.db) {
+            console.error('[RANKING PC] Firebase no está inicializado para ranking');
+            if (rankingBody) {
+                rankingBody.innerHTML = '<tr><td colspan="7" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+            }
+            return;
+        }
+
+        const usersRef = collection(window.db, 'users');
         
         const unsubscribe = onSnapshot(usersRef, (snapshot) => {
             console.log('[RANKING PC] Datos recibidos:', snapshot.size, 'usuarios');
@@ -348,7 +355,15 @@ function setupRankingListener() {
 // --- Configurar listener para historial ---
 function setupHistoryListener() {
     try {
-        const matchesRef = collection(db, 'matches');
+        if (!window.db) {
+            console.error('[RANKING PC] Firebase no está inicializado para historial');
+            if (historyList) {
+                historyList.innerHTML = '<div class="empty-state">Error de conexión. Recargá la página.</div>';
+            }
+            return;
+        }
+
+        const matchesRef = collection(window.db, 'matches');
         const historyQuery = query(
             matchesRef,
             orderBy('timestamp', 'desc'),
@@ -363,8 +378,8 @@ function setupHistoryListener() {
                 if (historyList) {
                     historyList.innerHTML = '<div class="empty-state">No hay historial disponible</div>';
                 }
-            return;
-        }
+                return;
+            }
 
             const matches = [];
             
@@ -443,16 +458,106 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mostrar estado de carga
     showLoadingState();
     
-    // Configurar listeners con demora para asegurar inicialización de Firebase
-    setTimeout(() => {
-    if (db) {
+    // Intentar importar Firebase de forma robusta
+    import('./firebase-init.js')
+        .then(module => {
+            // Asegurarse de que Firebase esté completamente inicializado
+            return module.ensureFirebaseInitialized();
+        })
+        .then(({ db: firebaseDb, auth, user, readOnly }) => {
+            console.log('[RANKING PC] Firebase inicializado correctamente:', 
+                        readOnly ? '(modo solo lectura)' : '(modo completo)');
+            
+            // Usar la instancia db recibida
+            window.db = firebaseDb;
+            
+            // Configurar listeners para el ranking y el historial
             setupRankingListener();
             setupHistoryListener();
-    } else {
-            console.error('[RANKING PC] Firebase no está inicializado');
+        })
+        .catch(error => {
+            console.error('[RANKING PC] Error inicializando Firebase:', error);
+            
+            // Mostrar mensaje de error
             if (rankingBody) {
-                rankingBody.innerHTML = '<tr><td colspan="7" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+                rankingBody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="error-state">
+                            <div class="error-icon">⚠️</div>
+                            <div class="error-message">Error de conexión</div>
+                            <div class="error-detail">No se pudo conectar con la base de datos</div>
+                            <button onclick="location.reload()" class="retry-button">Reintentar</button>
+                        </td>
+                    </tr>
+                `;
             }
-        }
-    }, 1000);
+            
+            if (historyList) {
+                historyList.innerHTML = `
+                    <div class="error-state">
+                        <div class="error-icon">⚠️</div>
+                        <div class="error-message">Error de conexión</div>
+                        <div class="error-detail">No se pudo conectar con la base de datos</div>
+                    </div>
+                `;
+            }
+            
+            // Después de un tiempo, mostrar datos de fallback
+            setTimeout(() => {
+                // Crear algunos datos de demo para mostrar
+                const mockUsers = [
+                    { displayName: 'CrackDemo1', totalScore: 4500, wins: 12, losses: 3, matches: 15, winRate: 80, avgScore: 300 },
+                    { displayName: 'FutbolFan22', totalScore: 3800, wins: 10, losses: 2, matches: 12, winRate: 83, avgScore: 316 },
+                    { displayName: 'ArgentinoTop', totalScore: 3200, wins: 8, losses: 3, matches: 11, winRate: 72, avgScore: 290 },
+                    { displayName: 'PeloteroMax', totalScore: 2900, wins: 7, losses: 2, matches: 9, winRate: 77, avgScore: 322 },
+                    { displayName: 'Golazo10', totalScore: 2500, wins: 6, losses: 3, matches: 9, winRate: 66, avgScore: 277 }
+                ];
+                
+                if (rankingBody) {
+                    rankingBody.innerHTML = generateRankingHTML(mockUsers);
+                }
+                
+                const mockMatches = [
+                    { 
+                        playerName: 'CrackDemo1', 
+                        score: 520, 
+                        result: 'victory', 
+                        timeSpent: 95,
+                        difficulty: 'Difícil',
+                        timestamp: { toDate: () => new Date(Date.now() - 3600000) } // 1 hour ago
+                    },
+                    { 
+                        playerName: 'FutbolFan22', 
+                        score: 480, 
+                        result: 'victory',
+                        timeSpent: 85,
+                        difficulty: 'Normal',
+                        timestamp: { toDate: () => new Date(Date.now() - 7200000) } // 2 hours ago
+                    },
+                    { 
+                        playerName: 'ArgentinoTop', 
+                        score: 320, 
+                        result: 'defeat',
+                        timeSpent: 75,
+                        difficulty: 'Normal',
+                        timestamp: { toDate: () => new Date(Date.now() - 86400000) } // 1 day ago
+                    }
+                ];
+                
+                if (historyList) {
+                    historyList.innerHTML = generateHistoryHTML(mockMatches);
+                }
+                
+                // Mostrar mensaje de modo demo
+                const demoNotice = document.createElement('div');
+                demoNotice.className = 'demo-notice';
+                demoNotice.style.cssText = 'background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 15px; border-radius: 5px; text-align: center; font-weight: bold;';
+                demoNotice.innerHTML = '⚠️ Mostrando datos de demostración (modo offline)';
+                
+                const containers = document.querySelectorAll('.ranking-container, .history-container');
+                containers.forEach(container => {
+                    container.insertBefore(demoNotice.cloneNode(true), container.firstChild);
+                });
+            }, 3000);
+        });
 }); 

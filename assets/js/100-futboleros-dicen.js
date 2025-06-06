@@ -13,6 +13,12 @@ const WEBSOCKET_URL = (() => {
     }
 })();
 
+// --- Variables de reconexión ---
+let reconnectAttempts = 0;
+const MAX_RECONNECT_ATTEMPTS = 5;
+const RECONNECT_DELAY = 3000; // 3 segundos
+let reconnectTimeout = null;
+
 // Comunicación con la página principal para salas disponibles
 window.addEventListener('message', function(event) {
     console.log('🔍 [100-FUTBOLEROS] Mensaje recibido:', event.data);
@@ -942,77 +948,137 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- WebSocket Communication ---
     function initializeWebSocket() {
         const wsUrl = WEBSOCKET_URL;
-        console.log(`Intentando conectar WebSocket (100 Futboleros): ${wsUrl}`);
+        console.log(`[100-FUTBOLEROS] Intentando conectar WebSocket: ${wsUrl}`);
+        
+        // Limpiar timeout de reconexión si existe
+        if (reconnectTimeout) {
+            clearTimeout(reconnectTimeout);
+            reconnectTimeout = null;
+        }
         
         if (gameState.websocket && gameState.websocket.readyState !== WebSocket.CLOSED) {
-            console.log("Cerrando conexión WebSocket anterior...");
+            console.log("[100-FUTBOLEROS] Cerrando conexión WebSocket anterior...");
             gameState.websocket.onclose = null;
             gameState.websocket.close();
         }
         
         try {
-            showLobbyMessage("Conectando al servidor...", "info");
+            showLobbyMessage(`Conectando al servidor... (Intento ${reconnectAttempts + 1}/${MAX_RECONNECT_ATTEMPTS})`, "info");
             gameState.websocket = new WebSocket(wsUrl);
         } catch (error) {
-            console.error("Error al crear WebSocket:", error);
-            showLobbyMessage(`Error de conexión: ${error.message}. Refresca la página.`, "error");
-            disableLobbyButtons();
+            console.error("[100-FUTBOLEROS] Error al crear WebSocket:", error);
+            handleConnectionError();
             return;
         }
         
         const connectionTimeout = setTimeout(() => {
             if (gameState.websocket && gameState.websocket.readyState === WebSocket.CONNECTING) {
-                console.error("Tiempo de conexión agotado");
-                showLobbyMessage("No se pudo conectar al servidor. Comprueba que esté en funcionamiento.", "error");
+                console.error("[100-FUTBOLEROS] Tiempo de conexión agotado");
                 gameState.websocket.close();
-                disableLobbyButtons();
+                handleConnectionError();
             }
         }, 10000);
         
         gameState.websocket.onopen = () => {
             clearTimeout(connectionTimeout);
-            console.log('WebSocket Conectado! (100 Futboleros)');
-            showLobbyMessage("Conectado al servidor. Elige una opción.", "success");
+            console.log('[100-FUTBOLEROS] WebSocket Conectado!');
+            reconnectAttempts = 0; // Reset intentos de reconexión
+            showLobbyMessage("✅ Conectado al servidor. ¡Listo para jugar!", "success");
             enableLobbyButtons();
+            
+            // Solicitar salas disponibles al conectar
+            setTimeout(() => {
+                if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN) {
+                    sendToServer('getRooms', { gameType: '100-futboleros-dicen' });
+                }
+            }, 500);
         };
         
         gameState.websocket.onmessage = (event) => {
             try {
                 const message = JSON.parse(event.data);
-                console.log('Mensaje recibido del servidor (100 Futboleros):', message);
+                console.log('[100-FUTBOLEROS] Mensaje recibido:', message);
                 handleServerMessage(message);
             } catch (error) {
-                console.error('Error analizando mensaje del servidor (100 Futboleros):', error, event.data);
+                console.error('[100-FUTBOLEROS] Error analizando mensaje:', error, event.data);
             }
         };
         
         gameState.websocket.onerror = (error) => {
             clearTimeout(connectionTimeout);
-            console.error('Error de WebSocket (100 Futboleros):', error);
-            if (gameState.gameActive) showError("Error de conexión. Vuelve al lobby.");
-            else showLobbyMessage("Error de conexión con el servidor. Verifica que el servidor esté funcionando.", "error");
-            disableLobbyButtons();
-            if(gameState.gameActive) updateGamePhaseUI('waiting');
+            console.error('[100-FUTBOLEROS] Error de WebSocket:', error);
         };
         
         gameState.websocket.onclose = (event) => {
             clearTimeout(connectionTimeout);
-            console.log('WebSocket Desconectado (100 Futboleros):', event.reason, `Código: ${event.code}`);
-            const wasConnected = !!gameState.websocket;
+            console.log('[100-FUTBOLEROS] WebSocket Desconectado:', event.code, event.reason);
             gameState.websocket = null;
             
             if (gameState.gameActive) {
-                showError("Conexión perdida con el servidor. Juego terminado.");
+                showError("❌ Conexión perdida con el servidor. Juego terminado.");
                 gameState.gameActive = false;
                 showEndGameModalWithError("Conexión Perdida");
-            } else if (wasConnected) {
-                showLobbyMessage("Desconectado del servidor. Por favor refresca para reconectar.", "error");
-                disableLobbyButtons();
-            } else if (!event.wasClean) {
-                showLobbyMessage("No se pudo conectar al servidor. Asegúrate que esté corriendo y refresca.", "error");
-                disableLobbyButtons();
+            } else {
+                // Intentar reconectar si no hemos alcanzado el límite
+                if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+                    showLobbyMessage(`⚠️ Conexión perdida. Reintentando en ${RECONNECT_DELAY/1000} segundos...`, "warning");
+                    disableLobbyButtons();
+                    
+                    reconnectTimeout = setTimeout(() => {
+                        reconnectAttempts++;
+                        initializeWebSocket();
+                    }, RECONNECT_DELAY);
+                } else {
+                    showLobbyMessage("❌ No se pudo conectar al servidor. Por favor verifica tu conexión o intenta más tarde.", "error");
+                    showOfflineOptions();
+                }
             }
         };
+    }
+    
+    function handleConnectionError() {
+        if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
+            showLobbyMessage(`⚠️ No se pudo conectar. Reintentando en ${RECONNECT_DELAY/1000} segundos...`, "warning");
+            disableLobbyButtons();
+            
+            reconnectTimeout = setTimeout(() => {
+                reconnectAttempts++;
+                initializeWebSocket();
+            }, RECONNECT_DELAY);
+        } else {
+            showLobbyMessage("❌ No se pudo conectar al servidor después de varios intentos.", "error");
+            showOfflineOptions();
+        }
+    }
+    
+    function showOfflineOptions() {
+        // Mostrar opciones para jugar offline o instrucciones
+        const offlineMessage = document.createElement('div');
+        offlineMessage.className = 'offline-options';
+        offlineMessage.innerHTML = `
+            <div class="offline-message">
+                <h3>⚠️ Modo Offline</h3>
+                <p>No se pudo conectar al servidor de juego.</p>
+                <p>Posibles soluciones:</p>
+                <ul>
+                    <li>Verifica tu conexión a internet</li>
+                    <li>Intenta refrescar la página (F5)</li>
+                    <li>El servidor podría estar en mantenimiento</li>
+                </ul>
+                <div class="offline-actions">
+                    <button onclick="location.reload()" class="primary-button">
+                        <i class="fas fa-redo"></i> Reintentar
+                    </button>
+                    <button onclick="location.href='games.html'" class="secondary-button">
+                        <i class="fas fa-gamepad"></i> Otros Juegos
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        if (lobbyMessageAreaEl && !document.querySelector('.offline-options')) {
+            lobbyMessageAreaEl.appendChild(offlineMessage);
+        }
     }
 
     function sendToServer(type, payload) {

@@ -538,7 +538,9 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/firebase-init.js"></script>
+    <script src="assets/js/notifications.js"></script>
+    <script src="assets/js/cookie-consent.js"></script>
     <script>
         function shareOnTwitter() {
             const text = 'Estadios Icónicos del Fútbol Mundial - Crack Total';
@@ -549,6 +551,12 @@
         function shareOnFacebook() {
             const url = window.location.href;
             window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+        }
+
+        function shareOnWhatsApp() {
+            const text = 'Estadios Icónicos del Fútbol Mundial - Crack Total';
+            const url = window.location.href;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
         }
     </script>
 </body>

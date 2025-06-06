@@ -1,25 +1,10 @@
+import { doc, setDoc, getDoc, updateDoc, increment, serverTimestamp, collection, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 document.addEventListener('DOMContentLoaded', () => {
     const logrosContainer = document.getElementById('logrosContainer');
-    
-    // Si el contenedor principal de logros no existe en esta página, no hacer nada más.
-    if (!logrosContainer) {
-        console.log('[Logros.js] No se encontró logrosContainer. El script no se ejecutará en esta página.');
-        return;
-    }
-
-    const filterButtons = document.querySelectorAll('.filter-button');
+    const filterButtons = document.querySelectorAll('.filter-btn');
     const LOGROS_KEY = 'pasalacheUserAchievements';
     let currentFilter = 'all';
-
-    // *** OPTIMIZACIÓN DE RENDIMIENTO ***
-    // Mostrar indicador de carga inmediatamente
-    if (window.PerformanceManager) {
-        window.PerformanceManager.showLoadingIndicator('logrosContainer', 'Cargando tus logros...');
-    }
-
-    // Cache para evitar recálculos constantes
-    let logrosCache = null;
-    let lastRenderTime = 0;
 
     // --- Definición de Logros ---
     const todosLosLogros = [
@@ -126,70 +111,14 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(LOGROS_KEY, JSON.stringify(estadoLogros));
     }
 
-    // --- Renderizar Logros OPTIMIZADO ---
+    // --- Renderizar Logros ---
     function renderizarLogros(filtro = 'all') {
         if (!logrosContainer) {
             console.warn("El contenedor de logros no se encontró en la página.");
             return;
         }
-
-        // Usar cache si es reciente (menos de 5 segundos)
-        const now = Date.now();
-        if (logrosCache && (now - lastRenderTime) < 5000) {
-            console.log('Usando cache de logros para mejor rendimiento');
-            displayLogros(logrosCache, filtro);
-            return;
-        }
-
-        // Mostrar indicador de carga mientras procesamos
-        if (window.PerformanceManager) {
-            window.PerformanceManager.showLoadingIndicator('logrosContainer', 'Procesando logros...');
-        }
-
-        // Usar requestAnimationFrame para renderizado suave
-        requestAnimationFrame(() => {
-            try {
+        logrosContainer.innerHTML = ''; 
         const estadoActualLogros = cargarLogros();
-                
-                // Actualizar cache
-                logrosCache = {
-                    estado: estadoActualLogros,
-                    todos: todosLosLogros
-                };
-                lastRenderTime = now;
-
-                displayLogros(logrosCache, filtro);
-                
-            } catch (error) {
-                console.error('Error renderizando logros:', error);
-                logrosContainer.innerHTML = `
-                    <div class="error-message" style="
-                        text-align: center; 
-                        padding: 2rem; 
-                        color: var(--error, #e74c3c);
-                        background: rgba(231, 76, 60, 0.1);
-                        border-radius: 8px;
-                        margin: 1rem;
-                    ">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-                        <p>Error cargando logros. <a href="#" onclick="location.reload()" style="color: var(--primary);">Intenta recargar</a></p>
-                    </div>
-                `;
-            } finally {
-                // Ocultar indicador de carga
-                if (window.PerformanceManager) {
-                    setTimeout(() => {
-                        window.PerformanceManager.hideLoadingIndicator('logrosContainer');
-                    }, 300);
-                }
-            }
-        });
-    }
-
-    // Función separada para mostrar logros (optimizada)
-    function displayLogros(cacheData, filtro) {
-        const { estado: estadoActualLogros, todos: todosLosLogros } = cacheData;
-        
         let logrosFiltrados = todosLosLogros;
 
         if (filtro === 'unlocked') {
@@ -199,177 +128,89 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (logrosFiltrados.length === 0 && filtro !== 'all') {
-            logrosContainer.innerHTML = `
-                <div class="no-results" style="
-                    text-align: center; 
-                    padding: 3rem; 
-                    color: var(--text-light);
-                    grid-column: 1 / -1;
-                ">
-                    <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                    <p>No hay logros que coincidan con este filtro.</p>
-                    <button onclick="document.querySelector('[data-filter=\"all\"]').click()" 
-                            style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;">
-                        Ver todos los logros
-                    </button>
-                </div>
-            `;
+            logrosContainer.innerHTML = `<p class="loading-logros">No hay logros que coincidan con este filtro.</p>`;
             return;
         }
-        
         if (logrosFiltrados.length === 0 && filtro === 'all') { 
-            logrosContainer.innerHTML = `
-                <div class="error-message" style="
-                    text-align: center; 
-                    padding: 3rem; 
-                    color: var(--text-light);
-                    grid-column: 1 / -1;
-                ">
-                    <i class="fas fa-trophy" style="font-size: 2rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                    <p>No se encontraron logros. <a href="#" onclick="location.reload()" style="color: var(--primary);">Intenta recargar</a></p>
-                </div>
-            `;
+            logrosContainer.innerHTML = `<p class="loading-logros">No se encontraron logros. Intenta recargar.</p>`;
             return;
         }
 
-        // Renderizado por lotes para mejor rendimiento
-        logrosContainer.innerHTML = '';
-        const batchSize = 10;
-        let currentBatch = 0;
+        logrosFiltrados.forEach(logroDef => {
+            const logroData = estadoActualLogros[logroDef.id] || { unlocked: false, unlocked_at: null };
+            const isUnlocked = logroData.unlocked;
+            const card = document.createElement('div');
+            card.className = `logro-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+            card.dataset.logroId = logroDef.id;
 
-        function renderBatch() {
-            const start = currentBatch * batchSize;
-            const end = Math.min(start + batchSize, logrosFiltrados.length);
-            
-            for (let i = start; i < end; i++) {
-                const logroDef = logrosFiltrados[i];
-                const logroData = estadoActualLogros[logroDef.id] || { unlocked: false, unlocked_at: null };
-                const card = createLogroCard(logroDef, logroData);
-                logrosContainer.appendChild(card);
-            }
+            const iconElement = document.createElement('div'); // Renombrado para evitar conflicto con logroDef.icon
+            iconElement.className = 'logro-icon';
+            iconElement.innerHTML = `<i class="fas ${logroDef.icon}"></i>`;
 
-            currentBatch++;
+            const title = document.createElement('h3');
+            title.className = 'logro-title';
+            title.textContent = logroDef.title;
+
+            const description = document.createElement('p');
+            description.className = 'logro-description';
+            description.textContent = logroDef.description;
+
+            const status = document.createElement('div');
+            status.className = 'logro-status';
+            status.textContent = isUnlocked ? 'Desbloqueado' : 'Bloqueado';
             
-            // Si hay más elementos, continuar en el próximo frame
-            if (end < logrosFiltrados.length) {
-                requestAnimationFrame(renderBatch);
-            } else {
-                // Animación de entrada suave para las cards
-                const cards = logrosContainer.querySelectorAll('.logro-card');
-                cards.forEach((card, index) => {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(20px)';
-                    setTimeout(() => {
-                        card.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                        card.style.opacity = '1';
-                        card.style.transform = 'translateY(0)';
-                    }, index * 50);
+            if (isUnlocked && logroData.unlocked_at) {
+                const unlockedDate = new Date(logroData.unlocked_at).toLocaleDateString('es-ES', {
+                    year: 'numeric', month: 'long', day: 'numeric'
                 });
+                const dateP = document.createElement('p');
+                dateP.className = 'logro-unlock-date';
+                dateP.style.fontSize = '0.75rem';
+                dateP.style.color = 'var(--text-muted)';
+                dateP.style.marginTop = '0.5rem';
+                dateP.innerHTML = `<i class="fas fa-check-circle"></i> ${unlockedDate}`;
+                status.appendChild(dateP);
             }
-        }
 
-        renderBatch();
+            card.appendChild(iconElement); // Usar iconElement
+            card.appendChild(title);
+            card.appendChild(description);
+            card.appendChild(status);
+            logrosContainer.appendChild(card);
+        });
+
+        if (logrosContainer.innerHTML === '' && filtro === 'all') {
+            logrosContainer.innerHTML = `<p class="loading-logros">Cargando tus hazañas...</p>`;
+        }
     }
 
-    // Función optimizada para crear cards de logros
-    function createLogroCard(logroDef, logroData) {
-        const card = document.createElement('div');
-        card.className = `logro-card ${logroData.unlocked ? 'unlocked' : 'locked'}`;
-        
-        // Formatear fecha de manera eficiente
-        let fechaTexto = '';
-        if (logroData.unlocked && logroData.unlocked_at) {
-            try {
-                const fecha = new Date(logroData.unlocked_at);
-                fechaTexto = fecha.toLocaleDateString('es-ES', { 
-                    year: 'numeric', 
-                    month: 'short', 
-                    day: 'numeric' 
-                });
-            } catch (e) {
-                fechaTexto = 'Fecha no disponible';
-            }
-        }
-
-        card.innerHTML = `
-            <div class="logro-icon">
-                <i class="fas ${logroDef.icon}"></i>
-            </div>
-            <div class="logro-content">
-                <h3 class="logro-title">${logroDef.title}</h3>
-                <p class="logro-description">${logroDef.description}</p>
-                <div class="logro-status">
-                    ${logroData.unlocked ? 
-                        `<span>✓ Desbloqueado</span>${fechaTexto ? `<small style="display: block; margin-top: 4px; opacity: 0.8;">${fechaTexto}</small>` : ''}` : 
-                        '<span>🔒 Bloqueado</span>'
-                    }
-                </div>
-            </div>
-        `;
-
-        return card;
-    }
-
-    // --- Manejo de Filtros OPTIMIZADO ---
+    // --- Manejo de Filtros ---
     filterButtons.forEach(button => {
-        button.addEventListener('click', window.PerformanceManager ? 
-            window.PerformanceManager.debounce(() => {
-                filterButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                currentFilter = button.dataset.filter;
-                renderizarLogros(currentFilter);
-            }, 150) : 
-            () => {
+        button.addEventListener('click', () => {
             filterButtons.forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
             currentFilter = button.dataset.filter;
             renderizarLogros(currentFilter);
-            }
-        );
+        });
     });
 
-    // --- Inicialización OPTIMIZADA ---
-    // Usar setTimeout para permitir que otros elementos críticos se carguen primero
-    setTimeout(() => {
+    // --- Inicialización ---
     renderizarLogros(currentFilter);
-    }, 100);
 
-    // --- Escuchar cambios en localStorage OPTIMIZADO ---
-    const handleStorageChange = window.PerformanceManager ? 
-        window.PerformanceManager.debounce((event) => {
-            if (event.key === LOGROS_KEY) {
-                console.log('Detectado cambio en localStorage de logros. Re-renderizando...');
-                logrosCache = null; // Invalidar cache
-                renderizarLogros(currentFilter);
-            }
-        }, 500) : 
-        (event) => {
+    // --- Escuchar cambios en localStorage para actualizar la vista ---
+    window.addEventListener('storage', function(event) {
         if (event.key === LOGROS_KEY) {
-                console.log('Detectado cambio en localStorage de logros. Re-renderizando...');
-                renderizarLogros(currentFilter);
-            }
-        };
-    
-    window.addEventListener('storage', handleStorageChange);
-
-    // --- Escuchar cuando la ventana/pestaña gana foco OPTIMIZADO ---
-    const handleFocus = window.PerformanceManager ? 
-        window.PerformanceManager.debounce(() => {
-            console.log('Logros page ganó foco. Verificando cambios...');
-            logrosCache = null; // Invalidar cache para forzar actualización
+            console.log('Detectado cambio en localStorage de logros (evento storage). Re-renderizando...');
             renderizarLogros(currentFilter);
-        }, 1000) : 
-        () => {
-            console.log('Logros page ganó foco. Re-renderizando...');
-            renderizarLogros(currentFilter);
-        };
-    
-    window.addEventListener('focus', handleFocus);
+        }
+    });
 
-    // Limpieza al descargar la página
-    window.addEventListener('beforeunload', () => {
-        window.removeEventListener('storage', handleStorageChange);
-        window.removeEventListener('focus', handleFocus);
+    // --- Escuchar cuando la ventana/pestaña gana foco --- 
+    window.addEventListener('focus', function() {
+        console.log('Logros page a ganado foco. Re-renderizando por si hay cambios...');
+        // Podríamos verificar si realmente hubo cambios antes de re-renderizar para optimizar,
+        // pero un re-render simple es más directo por ahora.
+        renderizarLogros(currentFilter);
     });
 });
 
@@ -485,3 +326,138 @@ window.CrackTotalLogrosAPI = {
     cargarLogros: cargarLogrosGlobal,
     getTodosLosLogrosDef: () => JSON.parse(JSON.stringify(todosLosLogrosDefGlobal)) // Exponer copia profunda de definiciones completas
 }; 
+
+// --- Funciones de Interacción con Firebase para Logros y Estadísticas ---
+
+/**
+ * Registra un evento para un usuario.
+ * @param {object} db - Instancia de Firestore.
+ * @param {string} userId - ID del usuario de Firebase.
+ * @param {string} eventName - Nombre del evento.
+ * @param {object} eventData - Datos adicionales del evento.
+ */
+export async function trackEvent(db, userId, eventName, eventData = {}) {
+    if (!db || !userId) {
+        console.warn("trackEvent: db o userId no proporcionados. Evento no registrado:", eventName);
+        return;
+    }
+    try {
+        const eventRecord = {
+            eventName,
+            ...eventData,
+            timestamp: serverTimestamp(),
+            userId // Opcional, si quieres redundancia o diferentes colecciones
+        };
+        // Considera una colección específica para eventos si son muchos
+        // Por ejemplo, colecciones anidadas: users/{userId}/events/{eventId}
+        // O una colección de nivel superior: userEvents/{eventId} con userId como campo
+        const eventRef = doc(collection(db, `users/${userId}/events`));
+        await setDoc(eventRef, eventRecord);
+        // console.log(`Evento '${eventName}' rastreado para usuario ${userId}`);
+    } catch (error) {
+        console.error(`Error rastreando evento '${eventName}' para usuario ${userId}:`, error);
+    }
+}
+
+/**
+ * Actualiza las estadísticas de un usuario.
+ * @param {object} db - Instancia de Firestore.
+ * @param {string} userId - ID del usuario de Firebase.
+ * @param {object} statsToUpdate - Objeto con las estadísticas a actualizar (ej: { gamesPlayed: increment(1) }).
+ */
+export async function updateUserStats(db, userId, statsToUpdate) {
+    if (!db || !userId) {
+        console.warn("updateUserStats: db o userId no proporcionados. Estadísticas no actualizadas.");
+        return;
+    }
+    try {
+        const userStatsRef = doc(db, 'userStats', userId);
+        await setDoc(userStatsRef, statsToUpdate, { merge: true }); // Usar setDoc con merge para crear si no existe o actualizar
+        // console.log(`Estadísticas actualizadas para usuario ${userId}:`, statsToUpdate);
+    } catch (error) {
+        console.error(`Error actualizando estadísticas para usuario ${userId}:`, error);
+    }
+}
+
+/**
+ * Verifica y otorga una medalla/logro a un usuario si cumple el criterio.
+ * Esta función asume que tienes una lista 'todosLosLogrosDefGlobal' disponible en este scope
+ * y que la lógica de desbloqueo se maneja aquí o se llama desde aquí.
+ * @param {object} db - Instancia de Firestore.
+ * @param {string} userId - ID del usuario de Firebase.
+ * @param {string} badgeId - ID del logro a verificar.
+ * @param {any} currentValue - Valor actual del usuario para el criterio del logro (ej: número de victorias).
+ */
+export async function checkAndAwardBadge(db, userId, badgeId, currentValue) {
+    if (!db || !userId) {
+        console.warn("checkAndAwardBadge: db o userId no proporcionados. Logro no verificado:", badgeId);
+        return;
+    }
+
+    // Asegúrate de que todosLosLogrosDefGlobal esté accesible aquí.
+    // Puedes pasarlo como parámetro o importarlo si está en otro módulo.
+    // Por ahora, asumiré que es accesible globalmente en este script como estaba antes.
+    const achievement = todosLosLogrosDefGlobal.find(a => a.id === badgeId);
+
+    if (!achievement) {
+        console.warn(`Logro con ID '${badgeId}' no encontrado en las definiciones.`);
+        return;
+    }
+
+    // Lógica para determinar si el logro se desbloquea.
+    // Esto es un ejemplo, necesitas adaptarlo a la condición específica de cada logro.
+    // Esta función podría necesitar ser más genérica o tener sub-funciones por tipo de logro.
+    let shouldUnlock = false;
+    const threshold = achievement.threshold || 1; // Asume un umbral, ej: victorias necesarias. Añade 'threshold' a tus defs.
+
+    // Ejemplo de condición (necesitarás una lógica más robusta basada en 'achievement.condition' o similar)
+    if (achievement.category === 'victoria' || achievement.category === 'progreso' || achievement.id === 'qsm_victories') { // Simplificado
+        if (currentValue >= threshold) {
+            shouldUnlock = true;
+        }
+    }
+    // Añade más lógica de condiciones aquí para otros tipos de logros.
+    // Ejemplo: if (achievement.type === 'score_based' && currentValue >= achievement.targetScore) { shouldUnlock = true; }
+
+
+    if (shouldUnlock) {
+        try {
+            const userAchievementsRef = doc(db, `users/${userId}/achievements`, badgeId);
+            const achievementDoc = await getDoc(userAchievementsRef);
+
+            if (!achievementDoc.exists()) {
+                await setDoc(userAchievementsRef, {
+                    unlocked: true,
+                    unlockedAt: serverTimestamp(),
+                    title: achievement.title,
+                    description: achievement.description,
+                    icon: achievement.icon,
+                    category: achievement.category
+                });
+                console.log(`🎉 Logro DESBLOQUEADO para ${userId}: '${achievement.title}'`);
+
+                // Aquí podrías querer notificar al usuario en la UI.
+                // Por ejemplo, disparando un evento personalizado.
+                window.dispatchEvent(new CustomEvent('achievementUnlocked', {
+                    detail: {
+                        id: badgeId,
+                        title: achievement.title,
+                        icon: achievement.icon
+                    }
+                }));
+
+                // Opcional: Actualizar un contador general de logros en userStats
+                const userStatsRef = doc(db, 'userStats', userId);
+                await updateDoc(userStatsRef, {
+                    achievementsUnlocked: increment(1),
+                    lastAchievementDate: serverTimestamp()
+                }).catch(err => console.warn("Advertencia: No se pudo actualizar el contador de logros en userStats", err));
+
+            } else {
+                // console.log(`Logro '${badgeId}' ya estaba desbloqueado para ${userId}.`);
+            }
+        } catch (error) {
+            console.error(`Error otorgando logro '${badgeId}' a ${userId}:`, error);
+        }
+    }
+} 

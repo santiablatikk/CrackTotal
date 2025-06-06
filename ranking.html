@@ -85,8 +85,8 @@
     </script>
 
     <script src="assets/js/main.js?v=202505272312"></script>
-    <script src="assets/js/firebase-config.js"></script>
-    <script src="assets/js/firebase-init.js"></script>
+    <script type="module" src="assets/js/firebase-config.js"></script>
+    <script type="module" src="assets/js/firebase-init.js"></script>
     <script type="module" src="assets/js/ranking.js?v=202505272312"></script>
     <script type="module" src="assets/js/firebase-utils.js"></script>
 </head>
@@ -237,27 +237,8 @@
 
     <!-- Scripts -->
     <script type="module" src="assets/js/firebase-init.js"></script>
-    <script type="module" src="assets/js/ranking.js"></script>
     <!-- Script para el botón compartir (si lo necesitas) -->
-    <script>
-        const shareButton = document.getElementById('shareButton');
-        if (shareButton && navigator.share) {
-            shareButton.addEventListener('click', async () => {
-                try {
-                    await navigator.share({
-                        title: document.title,
-                        text: '¡Mira el ranking y el historial de CrackTotal!',
-                        url: window.location.href
-                    });
-                    console.log('Contenido compartido con éxito');
-                } catch (err) {
-                    console.error('Error al compartir:', err);
-                }
-            });
-        } else if (shareButton) {
-            shareButton.style.display = 'none'; // Ocultar si la API no está soportada
-        }
-    </script>
+    
 
 </body>
 </html> 

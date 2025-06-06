@@ -796,5 +796,26 @@
          </div>
       </div>
   </footer>
+    <script src="assets/js/firebase-init.js"></script>
+    <script src="assets/js/notifications.js"></script>
+    <script src="assets/js/cookie-consent.js"></script>
+    <script>
+        function shareOnTwitter() {
+            const text = 'Historia de los Mundiales: De Uruguay 1930 a Qatar 2022 y Rumbo a 2026 - Crack Total';
+            const url = window.location.href;
+            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+        }
+
+        function shareOnFacebook() {
+            const url = window.location.href;
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+        }
+
+        function shareOnWhatsApp() {
+            const text = 'Historia de los Mundiales: De Uruguay 1930 a Qatar 2022 y Rumbo a 2026 - Crack Total';
+            const url = window.location.href;
+            window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+        }
+    </script>
 </body>
 </html> 

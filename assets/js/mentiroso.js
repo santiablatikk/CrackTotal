@@ -3,14 +3,15 @@ import { saveMentirosoResult } from './firebase-utils.js';
 
 // --- WebSocket URL (¡Configura esto!) ---
 const WEBSOCKET_URL = (() => {
-    // Probar primero localhost y luego el servidor de producción
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    // Siempre usar el servidor de producción para evitar problemas de configuración local
+    return 'wss://cracktotal-servidor.onrender.com';
     
-    if (isLocalhost) {
-        return 'ws://localhost:3000';
-    } else {
-        return 'wss://cracktotal-servidor.onrender.com';
-    }
+    // Código anterior comentado:
+    // if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    //     const port = 8081; // Puerto del servidor unificado
+    //     return `ws://${window.location.hostname}:${port}`;
+    // }
+    // return 'wss://cracktotal-servidor.onrender.com';
 })();
 
 // Agregar después de la declaración de WEBSOCKET_URL, antes de DOMContentLoaded
@@ -76,199 +77,6 @@ window.addEventListener('message', function(event) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    // ========================================= 
-    // ======== SISTEMA DE SONIDO COMPLETO ======== 
-    // ========================================= 
-    
-    class SoundManager {
-        constructor() {
-            this.audioContext = null;
-            this.sounds = {};
-            this.volume = 0.7; // Volumen por defecto 70%
-            this.isMuted = false;
-            this.currentBackgroundMusic = null;
-            this.soundEnabled = true;
-            
-            // Cargar configuración guardada
-            this.loadSoundSettings();
-            
-            // Inicializar Web Audio API
-            this.initAudioContext();
-            
-            // Crear sonidos usando osciladores y síntesis
-            this.createSounds();
-        }
-        
-        initAudioContext() {
-            try {
-                // Crear contexto de audio compatible con navegadores
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                console.log("Audio context initialized successfully");
-            } catch (error) {
-                console.warn("Web Audio API not supported:", error);
-                this.soundEnabled = false;
-            }
-        }
-        
-        createSounds() {
-            if (!this.audioContext || !this.soundEnabled) return;
-            
-            // Definir configuraciones de sonidos
-            this.soundConfigs = {
-                correct: {
-                    type: 'success',
-                    frequency: [523, 659, 784], // Do-Mi-Sol mayor
-                    duration: 0.3,
-                    volume: 0.4
-                },
-                incorrect: {
-                    type: 'error', 
-                    frequency: [196, 165], // Sol-Mi descendente
-                    duration: 0.4,
-                    volume: 0.3
-                },
-                tick: {
-                    type: 'tick',
-                    frequency: [800],
-                    duration: 0.05,
-                    volume: 0.15
-                },
-                victory: {
-                    type: 'celebration',
-                    frequency: [523, 659, 784, 1047], // Do-Mi-Sol-Do mayor
-                    duration: 0.6,
-                    volume: 0.5
-                },
-                defeat: {
-                    type: 'sad',
-                    frequency: [220, 196, 175], // La-Sol-Fa descendente
-                    duration: 0.8,
-                    volume: 0.4
-                },
-                timeout: {
-                    type: 'warning',
-                    frequency: [300, 250, 200], // Frecuencias descendentes
-                    duration: 0.7,
-                    volume: 0.4
-                },
-                gameStart: {
-                    type: 'start',
-                    frequency: [440, 554, 659], // La-Do#-Mi
-                    duration: 0.4,
-                    volume: 0.3
-                }
-            };
-        }
-        
-        playSound(soundName, options = {}) {
-            if (!this.audioContext || !this.soundEnabled || this.isMuted) return;
-            
-            const config = this.soundConfigs[soundName];
-            if (!config) {
-                console.warn(`Sound "${soundName}" not found`);
-                return;
-            }
-            
-            try {
-                // Reanudar contexto si está suspendido
-                if (this.audioContext.state === 'suspended') {
-                    this.audioContext.resume();
-                }
-                
-                const { frequency, duration, volume: baseVolume } = config;
-                const finalVolume = (baseVolume * this.volume * (options.volume || 1));
-                
-                // Crear osciladores para cada frecuencia
-                frequency.forEach((freq, index) => {
-                    const oscillator = this.audioContext.createOscillator();
-                    const gainNode = this.audioContext.createGain();
-                    
-                    // Configurar oscilador
-                    oscillator.frequency.setValueAtTime(freq, this.audioContext.currentTime);
-                    oscillator.type = this.getOscillatorType(config.type);
-                    
-                    // Configurar ganancia con envelope
-                    const startTime = this.audioContext.currentTime + (index * 0.1);
-                    const endTime = startTime + duration;
-                    
-                    gainNode.gain.setValueAtTime(0, startTime);
-                    gainNode.gain.linearRampToValueAtTime(finalVolume, startTime + 0.01);
-                    gainNode.gain.exponentialRampToValueAtTime(0.001, endTime);
-                    
-                    // Conectar nodos
-                    oscillator.connect(gainNode);
-                    gainNode.connect(this.audioContext.destination);
-                    
-                    // Programar reproducción
-                    oscillator.start(startTime);
-                    oscillator.stop(endTime);
-                });
-                
-            } catch (error) {
-                console.error("Error playing sound:", error);
-            }
-        }
-        
-        getOscillatorType(soundType) {
-            const types = {
-                success: 'sine',
-                error: 'triangle', 
-                tick: 'square',
-                celebration: 'sine',
-                sad: 'sawtooth',
-                warning: 'triangle',
-                start: 'sine'
-            };
-            return types[soundType] || 'sine';
-        }
-        
-        setVolume(newVolume) {
-            this.volume = Math.max(0, Math.min(1, newVolume));
-            this.saveSoundSettings();
-        }
-        
-        toggleMute() {
-            this.isMuted = !this.isMuted;
-            this.saveSoundSettings();
-        }
-        
-        saveSoundSettings() {
-            const settings = {
-                volume: this.volume,
-                isMuted: this.isMuted
-            };
-            localStorage.setItem('mentirosoSoundSettings', JSON.stringify(settings));
-        }
-        
-        loadSoundSettings() {
-            try {
-                const settings = JSON.parse(localStorage.getItem('mentirosoSoundSettings'));
-                if (settings) {
-                    this.volume = settings.volume !== undefined ? settings.volume : 0.7;
-                    this.isMuted = settings.isMuted || false;
-                }
-            } catch (error) {
-                console.warn("Error loading sound settings:", error);
-            }
-        }
-        
-        // Método de limpieza
-        destroy() {
-            if (this.audioContext) {
-                this.audioContext.close();
-            }
-        }
-    }
-    
-    // Crear instancia global del manager de sonido
-    window.soundManager = new SoundManager();
-    
-    console.log("Sound system initialized for Mentiroso");
-    
-    // ========================================= 
-    // ======== FIN SISTEMA DE SONIDO ======== 
-    // =========================================
-
     // --- Game State Variables (Mentiroso) ---
     let gameState = {
         players: {
@@ -324,8 +132,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const timerDisplayEl = document.getElementById('timerDisplay');
     const timerBarEl = document.getElementById('timerBar');
     const timerTextEl = document.getElementById('timerText');
-    const timerCountdownEl = document.getElementById('timerCountdown');
-    const timerProgressBarEl = document.getElementById('timerProgressBar');
 
     // Challenge & Interaction Area
     const challengeTextEl = document.getElementById('challengeText');
@@ -360,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultStatsEl = document.getElementById('resultStatsMentiroso');
     const playAgainButtonMentirosoEl = document.getElementById('playAgainButtonMentiroso');
     const backToLobbyButtonMentirosoEl = document.getElementById('backToLobbyButtonMentiroso');
-    const backToGamesButtonMentirosoEl = document.getElementById('backToGamesButtonMentiroso');
 
     // Lobby Elements (Reused IDs from QSM where applicable)
     const lobbySectionEl = document.getElementById('lobbySection');
@@ -931,24 +736,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- Funciones de feedback y error dentro del alcance del DOM ---
     // Función para mostrar feedback durante el juego
     function showFeedback(message, type = "info") {
-        // Reproducir sonido según el tipo de feedback
-        if (window.soundManager) {
-            if (type === 'correct' || type === 'success') {
-                window.soundManager.playSound('correct');
-            } else if (type === 'error' || type === 'incorrect') {
-                window.soundManager.playSound('incorrect');
-            }
+        if (!feedbackAreaEl) {
+            console.error("feedbackAreaEl no está disponible");
+            return;
         }
-        
-        const feedbackModalOverlay = document.getElementById('feedbackModalOverlay');
-        const feedbackModalText = document.getElementById('feedbackModalText');
-        
-        feedbackModalText.textContent = message;
-        feedbackModalOverlay.classList.add('active');
-        
-        setTimeout(() => {
-            feedbackModalOverlay.classList.remove('active');
-        }, 3000);
+        feedbackAreaEl.innerHTML = `<span class="feedback-message ${type}">${message}</span>`;
+        console.log(`Feedback (${type}): ${message}`);
     }
     
     function showError(message) {
@@ -1744,7 +1537,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateTimerDisplay(
                         message.payload.timeRemaining, 
                         message.payload.phase || 'bidding', 
-                        message.payload.phase === 'listing' ? 60 : (message.payload.phase === 'validating' ? 30 : 15)
+                        message.payload.phase === 'listing' ? 60 : 15
                     );
                     break;
                     
@@ -1911,17 +1704,6 @@ document.addEventListener('DOMContentLoaded', function() {
         updateGamePhaseUI('gameOver');
         hideWaitingMessage();
 
-        // Reproducir sonido según el resultado del juego
-        if (window.soundManager) {
-            if (payload.draw) {
-                window.soundManager.playSound('timeout'); // Empate se considera timeout
-            } else if (payload.winnerId === gameState.myPlayerId) {
-                window.soundManager.playSound('victory');
-            } else {
-                window.soundManager.playSound('defeat');
-            }
-        }
-
         const finalScores = payload.finalScores;
         if (!gameState.myPlayerId || !finalScores || typeof finalScores !== 'object') {
             showEndGameModalWithError("Error calculando resultados.");
@@ -2015,10 +1797,6 @@ document.addEventListener('DOMContentLoaded', function() {
             gameState.gameActive = false;
             if (gameState.roomId) sendToServer('leaveRoom', { roomId: gameState.roomId });
             gameState.roomId = null;
-        });
-
-        if(backToGamesButtonMentirosoEl) backToGamesButtonMentirosoEl.addEventListener('click', () => {
-            window.location.href = 'games.html';
         });
         
         // Password Modal Listeners (reused)
@@ -2429,45 +2207,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Funciones de manejo del timer ---
     function updateTimerDisplay(timeRemaining, phase = 'bidding', duration = 15) {
-        if (!timerCountdownEl) return;
-        
-        // Reproducir sonido de tick cuando quedan pocos segundos
-        if (timeRemaining <= 5 && timeRemaining > 0 && window.soundManager) {
-            window.soundManager.playSound('tick', { volume: 0.5 });
+        if (timerTextEl) {
+            timerTextEl.textContent = timeRemaining;
         }
         
-        // Mostrar tiempo con formateo (ej: "5s")
-        timerCountdownEl.textContent = `${timeRemaining}s`;
-        
-        // Cambiar color según el tiempo restante
-        if (timeRemaining <= 3) {
-            timerCountdownEl.style.color = '#ff4444'; // Rojo urgente
-        } else if (timeRemaining <= 7) {
-            timerCountdownEl.style.color = '#ff8800'; // Naranja advertencia
-        } else {
-            timerCountdownEl.style.color = '#ffffff'; // Blanco normal
-        }
-        
-        // Actualizar barra de progreso del timer
-        if (timerProgressBarEl) {
+        if (timerBarEl) {
             const percentage = (timeRemaining / duration) * 100;
-            timerProgressBarEl.style.width = `${Math.max(0, percentage)}%`;
+            timerBarEl.style.width = percentage + '%';
             
-            // Cambiar color de la barra también
-            if (timeRemaining <= 3) {
-                timerProgressBarEl.style.backgroundColor = '#ff4444';
-            } else if (timeRemaining <= 7) {
-                timerProgressBarEl.style.backgroundColor = '#ff8800';
+            // Cambiar color según el tiempo restante y la fase
+            const warningThreshold = phase === 'bidding' ? 5 : 15; // 5s para apuesta, 15s para listar
+            const criticalThreshold = phase === 'bidding' ? 3 : 10; // 3s para apuesta, 10s para listar
+            
+            if (timeRemaining <= criticalThreshold) {
+                timerBarEl.style.background = '#ff416c'; // Rojo
+            } else if (timeRemaining <= warningThreshold) {
+                timerBarEl.style.background = '#ffd32a'; // Amarillo
             } else {
-                timerProgressBarEl.style.backgroundColor = '#2ECC71';
+                timerBarEl.style.background = '#56ab2f'; // Verde
             }
         }
         
-        // Efecto de pulsación en los últimos segundos
-        if (timeRemaining <= 3 && timerDisplayEl) {
-            timerDisplayEl.classList.add('timer-urgent');
-        } else if (timerDisplayEl) {
-            timerDisplayEl.classList.remove('timer-urgent');
+        if (timerDisplayEl) {
+            const warningThreshold = phase === 'bidding' ? 5 : 15;
+            if (timeRemaining <= warningThreshold) {
+                timerDisplayEl.classList.add('timer-warning');
+            } else {
+                timerDisplayEl.classList.remove('timer-warning');
+            }
+        }
+        
+        // Actualizar el texto del timer según la fase
+        const timerLabel = timerDisplayEl?.querySelector('.timer-label');
+        if (timerLabel) {
+            if (phase === 'bidding') {
+                timerLabel.textContent = 'Tiempo para apostar:';
+            } else if (phase === 'listing') {
+                timerLabel.textContent = 'Tiempo para listar:';
+            }
         }
     }
     
@@ -2484,15 +2261,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function resetTimer(duration = 15, phase = 'bidding') {
-        // Si no se especifica duración, usar la duración estándar para la fase
-        if (duration === 15 && phase !== 'bidding') {
-            if (phase === 'listing') {
-                duration = 60;
-            } else if (phase === 'validating') {
-                duration = 30;
-            }
-        }
-        
         updateTimerDisplay(duration, phase, duration);
         if (timerDisplayEl) {
             timerDisplayEl.classList.remove('timer-warning');

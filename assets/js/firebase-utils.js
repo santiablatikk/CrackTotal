@@ -1,4 +1,4 @@
-import { db } from './firebase-init.js';
+// import { db } from './firebase-init.js'; // db will be passed as a parameter to relevant functions
 import { 
     doc, 
     setDoc, 
@@ -28,18 +28,29 @@ export function getUserDisplayName() {
     return name;
 }
 
-export async function ensureUserProfile() {
-    const userId = await getUserId();
-    const displayName = getUserDisplayName();
-    console.log(`[ensureUserProfile] START - userId: ${userId}, displayName: ${displayName}`);
+/**
+ * Ensures a user profile document exists in Firestore.
+ * @param {object} dbInstance - The Firestore instance.
+ * @param {string} userIdToEnsure - The Firebase User ID (auth.currentUser.uid).
+ * @param {string} displayNameToEnsure - The display name for the user.
+ * @returns {Promise<string>} The user ID that was ensured.
+ */
+export async function ensureUserProfile(dbInstance, userIdToEnsure, displayNameToEnsure) {
+    console.log(`[ensureUserProfile] START - userId: ${userIdToEnsure}, displayName: ${displayNameToEnsure}`);
 
-    if (!db) {
-        console.error("[ensureUserProfile] DB is not initialized. Cannot ensure user profile.");
-        return userId; // Devuelve el ID para que la función que llama no falle completamente
+    if (!dbInstance) {
+        console.error("[ensureUserProfile] DB instance is not provided. Cannot ensure user profile.");
+        // Decide on fallback behavior. Throw error or return userIdToEnsure?
+        // Returning userIdToEnsure allows the caller to potentially proceed if this is non-critical.
+        return userIdToEnsure; 
+    }
+    if (!userIdToEnsure) {
+        console.error("[ensureUserProfile] userIdToEnsure is not provided. Cannot ensure user profile.");
+        return null; // Or throw error
     }
 
     try {
-        const userRef = doc(db, "users", userId);
+        const userRef = doc(dbInstance, "users", userIdToEnsure);
         const userSnap = await getDoc(userRef);
         
         const defaultStats = {
@@ -50,48 +61,50 @@ export async function ensureUserProfile() {
         };
 
         if (!userSnap.exists()) {
-            console.log(`[ensureUserProfile] User ${userId} does NOT exist. CREATING...`);
+            console.log(`[ensureUserProfile] User ${userIdToEnsure} does NOT exist. CREATING...`);
             await setDoc(userRef, {
-                uid: userId,
-                displayName: displayName,
+                uid: userIdToEnsure,
+                displayName: displayNameToEnsure || 'Jugador Anónimo', // Use provided name or fallback
                 createdAt: serverTimestamp(),
                 stats: defaultStats
             });
-            console.log(`[ensureUserProfile] User ${userId} CREATED successfully.`);
+            console.log(`[ensureUserProfile] User ${userIdToEnsure} CREATED successfully.`);
         } else {
-            console.log(`[ensureUserProfile] User ${userId} EXISTS. Checking displayName and stats structure.`);
+            console.log(`[ensureUserProfile] User ${userIdToEnsure} EXISTS. Checking displayName and stats structure.`);
             const userData = userSnap.data();
             let updates = {};
-            if (userData.displayName !== displayName) {
-                updates.displayName = displayName;
-                console.log(`[ensureUserProfile] Queuing update for displayName for ${userId} from "${userData.displayName}" to "${displayName}".`);
+            if (displayNameToEnsure && userData.displayName !== displayNameToEnsure) {
+                updates.displayName = displayNameToEnsure;
+                console.log(`[ensureUserProfile] Queuing update for displayName for ${userIdToEnsure} from "${userData.displayName}" to "${displayNameToEnsure}".`);
             }
 
-            // Asegurar que la estructura de stats existe
-            if (!userData.stats) {
-                updates.stats = defaultStats;
-                console.log(`[ensureUserProfile] Queuing creation of full stats structure for ${userId}.`);
-            } else {
-                for (const game in defaultStats) {
-                    if (!userData.stats[game]) {
-                        updates[`stats.${game}`] = defaultStats[game];
-                        console.log(`[ensureUserProfile] Queuing creation of stats for game ${game} for user ${userId}.`);
-                    }
+            // Ensure the stats structure exists and all game stats are present
+            let currentStats = userData.stats || {};
+            let statsNeedUpdate = !userData.stats;
+
+            for (const game in defaultStats) {
+                if (!currentStats[game]) {
+                    currentStats[game] = defaultStats[game];
+                    statsNeedUpdate = true;
+                    console.log(`[ensureUserProfile] Queuing creation of stats for game ${game} for user ${userIdToEnsure}.`);
                 }
+            }
+            if (statsNeedUpdate) {
+                updates.stats = currentStats;
             }
 
             if (Object.keys(updates).length > 0) {
-                console.log(`[ensureUserProfile] Applying updates for user ${userId}:`, updates);
+                console.log(`[ensureUserProfile] Applying updates for user ${userIdToEnsure}:`, updates);
                 await updateDoc(userRef, updates);
-                console.log(`[ensureUserProfile] User ${userId} UPDATED successfully.`);
+                console.log(`[ensureUserProfile] User ${userIdToEnsure} UPDATED successfully.`);
             } else {
-                console.log(`[ensureUserProfile] No updates needed for user ${userId}.`);
+                console.log(`[ensureUserProfile] No updates needed for user ${userIdToEnsure}.`);
             }
         }
-        return userId;
+        return userIdToEnsure;
     } catch (error) {
-        console.error(`[ensureUserProfile] CRITICAL ERROR for userId ${userId}:`, error);
-        return userId;
+        console.error(`[ensureUserProfile] CRITICAL ERROR for userId ${userIdToEnsure}:`, error);
+        return userIdToEnsure; // Or rethrow, depending on desired error handling
     }
 }
 
@@ -151,48 +164,89 @@ export async function savePasalacheResult(gameStats) {
     }
 }
 
-export async function saveQuienSabeMasResult(gameStats) {
-    console.log('[saveQuienSabeMasResult] CALLED with gameStats:', gameStats);
-    if (!db) {
-        console.error("[saveQuienSabeMasResult] DB is not initialized. Cannot save result.");
+/**
+ * Saves the result of a Quien Sabe Mas game.
+ * @param {object} dbInstance - The Firestore instance.
+ * @param {string} currentUserId - The Firebase User ID (auth.currentUser.uid) of the player.
+ * @param {object} gameData - The game data to save (structure defined in quiensabemas_1v1.js).
+ */
+export async function saveQSMResult(dbInstance, currentUserId, gameData) {
+    console.log('[saveQSMResult] CALLED with gameData:', gameData, 'for user:', currentUserId);
+    if (!dbInstance) {
+        console.error("[saveQSMResult] DB instance is not provided. Cannot save result.");
         return false;
     }
+    if (!currentUserId) {
+        console.error("[saveQSMResult] currentUserId is not provided. Cannot save result.");
+        return false;
+    }
+
     try {
-        const userId = await ensureUserProfile();
-        const displayName = getUserDisplayName();
-        console.log(`[saveQuienSabeMasResult] User ID: ${userId}, Display Name: ${displayName}`);
+        // The calling context (quiensabemas_1v1.js) should provide the correct display name if available
+        // For simplicity, we assume gameData might contain player names, or we use a generic one.
+        const displayName = localStorage.getItem('playerName') || 'Jugador Desconocido'; // Fallback, ideally comes from auth or game state
 
-        const matchData = {
-            gameType: "quiensabemas",
-            playerName: displayName, playerUid: userId, timestamp: serverTimestamp(),
-            result: gameStats.result, score: gameStats.myScore || 0,
-            players: [{ displayName: displayName, playerId: userId, score: gameStats.myScore || 0 }]
+        // Ensure user profile exists, using the Firebase UID
+        await ensureUserProfile(dbInstance, currentUserId, displayName); 
+
+        const matchDocPayload = {
+            gameType: 'quiensabemas_1v1',
+            timestamp: gameData.timestamp || serverTimestamp(), // Use timestamp from gameData or generate new
+            // Store all players involved, using their Firebase UID if available, or WebSocket ID as fallback
+            players: [], 
+            // Include all scores and winner information from gameData
+            // This assumes gameData.scores is an object like { playerId1: score1, playerId2: score2 }
+            // And gameData.myPlayerId is the WebSocket ID of the current user.
+            rawScores: gameData.scores, 
+            winnerId: gameData.winnerId, // WebSocket ID of the winner
+            isDraw: gameData.draw,
+            // Store which player this record is for, using their Firebase UID
+            recordForPlayerUid: currentUserId 
         };
-        if (gameStats.opponentName) {
-            matchData.players.push({ displayName: gameStats.opponentName, playerId: gameStats.opponentId || "unknown_opponent", score: gameStats.opponentScore || 0 });
-        }
-        console.log('[saveQuienSabeMasResult] Saving match document:', matchData);
-        await addDoc(collection(db, "matches"), matchData);
-        console.log('[saveQuienSabeMasResult] Match document saved.');
 
-        const userRef = doc(db, "users", userId);
+        // Populate players array for the match document
+        // We need a way to map WebSocket player IDs from gameData.scores to display names or Firebase UIDs if known
+        // For now, let's assume gameData.scores has the WebSocket IDs as keys
+        if (gameData.scores) {
+            Object.keys(gameData.scores).forEach(wsPlayerId => {
+                let playerInfo = {
+                    wsPlayerId: wsPlayerId,
+                    score: gameData.scores[wsPlayerId],
+                    // If this wsPlayerId is the current user, we know their Firebase UID and display name
+                    isCurrentUser: wsPlayerId === gameData.myPlayerId 
+                };
+                if (playerInfo.isCurrentUser) {
+                    playerInfo.firebaseUid = currentUserId;
+                    playerInfo.displayName = displayName;
+                }
+                // TODO: If we have a mapping of opponent wsPlayerId to their Firebase UID or name, add it here
+                matchDocPayload.players.push(playerInfo);
+            });
+        }
+
+        console.log('[saveQSMResult] Saving match document:', matchDocPayload);
+        await addDoc(collection(dbInstance, "matches"), matchDocPayload);
+        console.log('[saveQSMResult] Match document saved.');
+
+        // Update user's personal game statistics
+        const userStatsRef = doc(dbInstance, "userStats", currentUserId);
         const userStatsUpdate = {
             "stats.quiensabemas.played": increment(1),
-            "stats.quiensabemas.score": increment(gameStats.myScore || 0)
+            "stats.quiensabemas.score": increment(gameData.myScore || 0)
         };
-        console.log('[saveQuienSabeMasResult] Updating user stats:', userStatsUpdate);
-        await updateDoc(userRef, userStatsUpdate);
-        console.log('[saveQuienSabeMasResult] User stats updated.');
-
-        if (gameStats.result === "victory") {
-            console.log('[saveQuienSabeMasResult] Incrementing wins for user.');
-            await updateDoc(userRef, { "stats.quiensabemas.wins": increment(1) });
-            console.log('[saveQuienSabeMasResult] User wins incremented.');
+        if (gameData.winnerId === gameData.myPlayerId && !gameData.draw) {
+            userStatsUpdate["stats.quiensabemas.wins"] = increment(1);
         }
-        console.log("[saveQuienSabeMasResult] COMPLETED successfully for Quién Sabe Más.");
+
+        console.log('[saveQSMResult] Updating user stats for:', currentUserId, userStatsUpdate);
+        // Using set with merge:true to create userStats doc if it doesn't exist, or update if it does.
+        await setDoc(userStatsRef, userStatsUpdate, { merge: true }); 
+        console.log('[saveQSMResult] User stats updated for', currentUserId);
+        
+        console.log("[saveQSMResult] COMPLETED successfully for Quién Sabe Más.");
         return true;
     } catch (error) {
-        console.error("[saveQuienSabeMasResult] CRITICAL ERROR saving Quién Sabe Más data:", error);
+        console.error("[saveQSMResult] CRITICAL ERROR saving Quién Sabe Más data:", error);
         return false;
     }
 }

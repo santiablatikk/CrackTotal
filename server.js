@@ -184,8 +184,9 @@ const server = http.createServer((req, res) => {
     });
 });
 
-// Obtener puerto de Render o usar 3000 por defecto
-const PORT = process.env.PORT || 3000;
+// Obtener puerto de Render o usar un puerto aleatorio entre 3001-3999 por defecto
+// para evitar conflictos con otros servidores
+const PORT = process.env.PORT || (3001 + Math.floor(Math.random() * 999));
 
 // Attach WebSocket server to the HTTP server
 const wss = new WebSocket.Server({ server });
@@ -199,7 +200,6 @@ server.listen(PORT, () => {
     
     // DISABLED: Automatic room broadcasting to prevent mixing game types
     // Each client will request rooms specifically with gameType filter
-    // setInterval(broadcastAvailableRooms, 5000);
 });
 
 // Mensaje de inicio
@@ -269,17 +269,17 @@ function processRawQuestion(rawQ, level) {
 }
 
 function loadQuestions() {
-    console.log("===========================================");
-    console.log("       CARGANDO PREGUNTAS - INICIO         ");
-    console.log("===========================================");
-    console.log(`Buscando preguntas en el directorio: ${DATA_DIR}...`);
+    // // console.log("==========================================="); // Asegurarse de eliminar esta
+    // // console.log("       CARGANDO PREGUNTAS - INICIO         "); // Asegurarse de eliminar esta
+    // // console.log("==========================================="); // Asegurarse de eliminar esta
+    // // console.log(`Buscando preguntas en el directorio: ${DATA_DIR}...`); // Esta la comentaremos luego, no eliminar ahora
     allQuestions = {};
     let totalLoadedOverall = 0;
     let totalProcessedOverall = 0;
 
     try {
         for (let level = 1; level <= MAX_LEVELS; level++) {
-            console.log(`--- Cargando Nivel ${level} ---`);
+            // // console.log(`--- Cargando Nivel ${level} ---`); // Esta la comentaremos luego, no eliminar ahora
             const filePath = path.join(DATA_DIR, `level_${level}.json`);
             let questionsForThisLevelProcessed = 0;
             let questionsForThisLevelValid = 0;
@@ -320,13 +320,13 @@ function loadQuestions() {
                 console.warn(`[NIVEL ${level}] ARCHIVO NO ENCONTRADO: ${filePath}`);
                 allQuestions[level] = [];
             }
-            console.log(`--- Fin Carga Nivel ${level} ---`);
+            // // console.log(`--- Fin Carga Nivel ${level} ---`); // Esta la comentaremos luego, no eliminar ahora
         }
-        console.log("===========================================");
-        console.log("        CARGANDO PREGUNTAS - FIN           ");
-        console.log(`Total de preguntas procesadas en todos los niveles: ${totalProcessedOverall}`);
-        console.log(`Total de preguntas VÁLIDAS cargadas en todos los niveles: ${totalLoadedOverall}`);
-        console.log("===========================================");
+        // // console.log("==========================================="); // Asegurarse de eliminar esta
+        // // console.log("        CARGANDO PREGUNTAS - FIN           "); // Asegurarse de eliminar esta
+        // // console.log(`Total de preguntas procesadas en todos los niveles: ${totalProcessedOverall}`); // Comentar luego
+        // // console.log(`Total de preguntas VÁLIDAS cargadas en todos los niveles: ${totalLoadedOverall}`); // Comentar luego
+        // // console.log("==========================================="); // Asegurarse de eliminar esta
         if (totalLoadedOverall === 0 && totalProcessedOverall > 0) {
              console.error("CRITICO: Se procesaron preguntas, pero NINGUNA fue válida globalmente. El juego no funcionará.");
         } else if (totalLoadedOverall === 0) {
@@ -378,42 +378,42 @@ function generateRoomId() {
 }
 
 // NEW FUNCTION: Broadcast available rooms to lobby clients
-function broadcastAvailableRooms() {
-    console.log('--- Broadcasting Available Rooms ---');
-    const availableRoomsList = [];
-    for (const [roomId, room] of rooms.entries()) {
-        // Criteria: Not active, waiting for player 2
-        if (!room.gameActive && room.players.player1 && !room.players.player2) { // NEW CRITERIA: list all non-active rooms with 1 player
-            console.log(`Room ${roomId} is available (Player: ${room.players.player1.name}, Password: ${room.password ? 'Yes' : 'No'}, Type: ${room.gameType || 'default'})`);
-            availableRoomsList.push({
-                id: roomId,
-                playerCount: 1, // Always 1 if it meets criteria
-                maxPlayers: 2,
-                requiresPassword: !!room.password, // True if room.password is a non-empty string
-                // Optionally add creator's name if needed by client UI
-                 creatorName: room.players.player1.name,
-                 gameType: room.gameType || 'quiensabemas' // Default to quiensabemas if not specified
-            });
-        }
-    }
+// function broadcastAvailableRooms() {
+//     console.log('--- Broadcasting Available Rooms ---');
+//     const availableRoomsList = [];
+//     for (const [roomId, room] of rooms.entries()) {
+//         // Criteria: Not active, waiting for player 2
+//         if (!room.gameActive && room.players.player1 && !room.players.player2) { // NEW CRITERIA: list all non-active rooms with 1 player
+//             console.log(`Room ${roomId} is available (Player: ${room.players.player1.name}, Password: ${room.password ? 'Yes' : 'No'}, Type: ${room.gameType || 'default'})`);
+//             availableRoomsList.push({
+//                 id: roomId,
+//                 playerCount: 1, // Always 1 if it meets criteria
+//                 maxPlayers: 2,
+//                 requiresPassword: !!room.password, // True if room.password is a non-empty string
+//                 // Optionally add creator's name if needed by client UI
+//                  creatorName: room.players.player1.name,
+//                  gameType: room.gameType || 'quiensabemas' // Default to quiensabemas if not specified
+//             });
+//         }
+//     }
 
-    const message = {
-        type: 'availableRooms',
-        payload: { rooms: availableRoomsList }
-    };
-    const messageString = JSON.stringify(message);
-    let lobbyCount = 0;
+//     const message = {
+//         type: 'availableRooms',
+//         payload: { rooms: availableRoomsList }
+//     };
+//     const messageString = JSON.stringify(message);
+//     let lobbyCount = 0;
 
-    // Send to clients in the lobby (roomId is null)
-    clients.forEach((clientInfo, ws) => {
-        if (clientInfo.roomId === null && ws.readyState === WebSocket.OPEN) {
-            ws.send(messageString);
-            lobbyCount++;
-        }
-    });
-    console.log(`Sent available rooms list to ${lobbyCount} client(s) in lobby.`);
-    console.log('--- Finished Broadcasting Rooms ---');
-}
+//     // Send to clients in the lobby (roomId is null)
+//     clients.forEach((clientInfo, ws) => {
+//         if (clientInfo.roomId === null && ws.readyState === WebSocket.OPEN) {
+//             ws.send(messageString);
+//             lobbyCount++;
+//         }
+//     });
+//     console.log(`Sent available rooms list to ${lobbyCount} client(s) in lobby.`);
+//     console.log('--- Finished Broadcasting Rooms ---');
+// }
 
 // Broadcast to everyone IN THE ROOM (players and spectators)
 function broadcastToRoom(roomId, message, senderWs = null) {
@@ -421,7 +421,7 @@ function broadcastToRoom(roomId, message, senderWs = null) {
     if (!room) return;
 
     const messageString = JSON.stringify(message);
-    // console.log(`Broadcasting to room ${roomId}:`, messageString); // Verbose
+    // // console.log(`Broadcasting to room ${roomId}:`, messageString); // ELIMINAR ESTA LÍNEA
 
     const players = [room.players.player1, room.players.player2].filter(p => p);
     players.forEach(player => {
@@ -444,7 +444,7 @@ function safeSend(ws, message) {
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify(message));
     } else {
-        // console.warn("Attempted to send message to a closed or invalid WebSocket."); // Can be noisy
+        // // console.warn("Attempted to send message to a closed or invalid WebSocket."); // ELIMINAR ESTA LÍNEA
     }
 }
 
@@ -469,7 +469,7 @@ wss.on('connection', (ws, req) => {
                 return;
             }
             parsedMessage = JSON.parse(messageString);
-            // console.log(`Received from ${clientId}:`, parsedMessage); // Less verbose logging
+            // // console.log(`Received from ${clientId}:`, parsedMessage); // ELIMINAR ESTA LÍNEA
             handleClientMessage(ws, parsedMessage);
         } catch (error) {
             console.error(`Failed to parse message or handle: ${message}`, error);
@@ -480,12 +480,12 @@ wss.on('connection', (ws, req) => {
     ws.on('close', () => {
         const clientInfo = clients.get(ws);
         if (clientInfo) {
-            console.log(`Client disconnected: ${clientInfo.id}`);
+            // // console.log(`Client disconnected: ${clientInfo.id}`);
             handleDisconnect(ws, clientInfo.id, clientInfo.roomId);
             clients.delete(ws);
-            console.log(`Client removed. Total clients: ${clients.size}`);
+            // // console.log(`Client removed. Total clients: ${clients.size}`); // Comentar luego
         } else {
-            // console.log('Unknown client disconnected.'); // Less verbose
+            // // console.log('Unknown client disconnected.'); // ELIMINAR ESTA LÍNEA
         }
     });
 
@@ -497,7 +497,7 @@ wss.on('connection', (ws, req) => {
         if (clientInfo) {
             handleDisconnect(ws, clientInfo.id, clientInfo.roomId); // Try cleanup
             clients.delete(ws);
-            console.log(`Client removed after error. Total clients: ${clients.size}`);
+            // // console.log(`Client removed after error. Total clients: ${clients.size}`); // Comentar luego
         }
         // Terminate the connection if it's still open
         if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
@@ -511,8 +511,7 @@ function handleClientMessage(ws, message) {
     const clientInfo = clients.get(ws);
     if (!clientInfo) { return; } // Should not happen if client is connected
 
-    // Log message type and player ID for debugging
-    // console.log(`Handling message type: ${message.type} from player ${clientInfo.id}`);
+    // // console.log(`Handling message type: ${message.type} from player ${clientInfo.id}`); // ELIMINAR ESTA LÍNEA
 
     switch (message.type) {
         case 'createRoom':
@@ -529,6 +528,9 @@ function handleClientMessage(ws, message) {
             break;
         case 'getRooms':
             handleGetRooms(ws, clientInfo, message.payload);
+            break;
+        case 'checkRoom':
+            handleCheckRoom(ws, clientInfo, message.payload);
             break;
         // --- Game Actions (Quien Sabe Mas) ---
         case 'submitAnswer':
@@ -878,10 +880,10 @@ function startGame(roomId) {
 }
 
 function sendNextQuestion(roomId) {
-    // console.log(`DEBUG: sendNextQuestion called for room ${roomId}`); // Less verbose
+    // // console.log(`DEBUG: sendNextQuestion called for room ${roomId}`); // ELIMINAR ESTA LÍNEA
     const room = rooms.get(roomId);
     if (!room || !room.gameActive) {
-         // console.log(`DEBUG: sendNextQuestion aborted for room ${roomId} - Room not found or game not active.`); // Less verbose
+         // // console.log(`DEBUG: sendNextQuestion aborted for room ${roomId} - Room not found or game not active.`); // ELIMINAR ESTA LÍNEA
         return;
     }
     // Ensure players are still present
@@ -909,13 +911,13 @@ function sendNextQuestion(roomId) {
     }
 
     // Ensure the level exists in loaded questions
-     // console.log(`DEBUG: Checking questions for Level ${room.currentLevel}...`); // Less verbose
+     // // console.log(`DEBUG: Checking questions for Level ${room.currentLevel}...`); // ELIMINAR ESTA LÍNEA
     if (!allQuestions[room.currentLevel] || allQuestions[room.currentLevel].length === 0) {
         console.error(`CRITICAL: No questions available for Level ${room.currentLevel} in room ${roomId}. Ending game.`); // Keep critical error
         endGame(roomId, "Error: No questions available for this level.");
         return;
     }
-     // console.log(`DEBUG: Found ${allQuestions[room.currentLevel].length} questions for Level ${room.currentLevel}.`); // Less verbose
+     // // console.log(`DEBUG: Found ${allQuestions[room.currentLevel].length} questions for Level ${room.currentLevel}.`); // ELIMINAR ESTA LÍNEA
 
     // Select a random, unused question for the current level
     const questionsForLevel = allQuestions[room.currentLevel];
@@ -928,7 +930,7 @@ function sendNextQuestion(roomId) {
         .map((_, index) => index)
         .filter(index => !usedIndices.includes(index));
 
-     // console.log(`DEBUG: Level ${room.currentLevel} - Used Indices: [${usedIndices.join(', ')}, Available Indices: [${availableIndices.join(', ')}]`); // Less verbose
+     // // console.log(`DEBUG: Level ${room.currentLevel} - Used Indices: [${usedIndices.join(', ')}], Available Indices: [${availableIndices.join(', ')}]`); // ELIMINAR ESTA LÍNEA
 
     if (availableIndices.length === 0) {
         console.warn(`No unused questions left for Level ${room.currentLevel} in room ${roomId}. Ending game.`);
@@ -938,7 +940,7 @@ function sendNextQuestion(roomId) {
 
     const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
     room.currentQuestion = questionsForLevel[randomIndex];
-     // console.log(`DEBUG: Selected question index ${randomIndex} for Level ${room.currentLevel}. Text: ${room.currentQuestion.text}`); // Less verbose
+     // // console.log(`DEBUG: Selected question index ${randomIndex} for Level ${room.currentLevel}. Text: ${room.currentQuestion.text}`); // ELIMINAR ESTA LÍNEA
 
     // Mark question as used for this room and level
     room.usedQuestionIndices[room.currentLevel].push(randomIndex);
@@ -982,12 +984,12 @@ function sendNextQuestion(roomId) {
     };
 
     console.log(`Room ${roomId} - Sending Q${room.questionsAnsweredInLevel} L${room.currentLevel}, Turn: ${room.currentTurn}`); // Keep this summary log
-     // console.log(`DEBUG: Broadcasting newQuestion message for room ${roomId}...`); // Less verbose
+     // // console.log(`DEBUG: Broadcasting newQuestion message for room ${roomId}...`); // Less verbose
     broadcastToRoom(roomId, message);
     // Also send individually to handle cases where broadcast might miss one? Redundant if broadcast works? Let's rely on broadcast for now.
     // safeSend(room.players.player1.ws, message);
     // safeSend(room.players.player2.ws, message);
-     // console.log(`DEBUG: newQuestion message sent for room ${roomId}.`); // Less verbose
+     // // console.log(`DEBUG: newQuestion message sent for room ${roomId}.`); // Less verbose
 }
 
 function handleSubmitAnswer(ws, clientInfo, payload) {
@@ -1038,9 +1040,9 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
             // }
                 isCorrect = submittedAnswerIndex === question.correctIndex;
             // answerMethod = 'index'; // Already set to index
-             console.log(`Room ${roomId} L${question.level} Answer (Index): Submitted Index=${submittedAnswerIndex}, Correct Index=${question.correctIndex}, Result=${isCorrect}`); // Keep answer logs
+             // // console.log(`Room ${roomId} L${question.level} Answer (Index): Submitted Index=${submittedAnswerIndex}, Correct Index=${question.correctIndex}, Result=${isCorrect}`); // Comentar luego
             } else {
-                 // console.warn(`Room ${roomId} L>1 Answer: Invalid index submitted:`, payload.selectedIndex); // Less verbose
+                 // // console.warn(`Room ${roomId} L>1 Answer: Invalid index submitted:`, payload.selectedIndex); // ELIMINAR ESTA LÍNEA
                  safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (index out of bounds).' } });
                  return; // Invalid submission
             }
@@ -1127,7 +1129,7 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
          if (currentRoom && currentRoom.gameActive) {
             sendNextQuestion(roomId);
          } else {
-              // console.log(`DEBUG: Skipping sendNextQuestion for room ${roomId} as it no longer exists or game is inactive.`); // Less verbose
+              // // console.log(`DEBUG: Skipping sendNextQuestion for room ${roomId} as it no longer exists or game is inactive.`); // ELIMINAR ESTA LÍNEA
          }
     }, 1500); // Adjust delay as needed (e.g., 1.5 seconds)
 }
@@ -1155,7 +1157,7 @@ function handleRequestOptions(ws, clientInfo) {
         return;
     }
     const optionsPayload = { options: room.currentQuestion.options };
-    // console.log(`Room ${roomId} - Sending options to ${clientInfo.id}`); // Less verbose
+    // // console.log(`Room ${roomId} - Sending options to ${clientInfo.id}`); // ELIMINAR ESTA LÍNEA
     safeSend(ws, { type: 'optionsProvided', payload: optionsPayload });
 }
 
@@ -1197,7 +1199,7 @@ function handleRequestFiftyFifty(ws, clientInfo) {
 
     if (indicesToRemove.length === 2) {
         const fiftyFiftyPayload = { optionsToRemove: indicesToRemove };
-        // console.log(`Room ${roomId} - Sending 50/50 removal indices ${indicesToRemove} to ${clientInfo.id}`); // Less verbose
+        // // console.log(`Room ${roomId} - Sending 50/50 removal indices ${indicesToRemove} to ${clientInfo.id}`); // ELIMINAR ESTA LÍNEA
         safeSend(ws, { type: 'fiftyFiftyApplied', payload: fiftyFiftyPayload });
     } else {
         // Fallback logic (should ideally not be reached with 4 options)
@@ -1215,12 +1217,12 @@ function endGame(roomId, reason = "Game finished") {
     if (!room) return;
      // Check if game is already inactive to prevent double execution
      if (!room.gameActive) {
-          // console.log(`Game in room ${roomId} is already inactive. Ignoring endGame call.`); // Less verbose
+          // // console.log(`Game in room ${roomId} is already inactive. Ignoring endGame call.`); // ELIMINAR ESTA LÍNEA
           return;
       }
 
 
-    console.log(`Ending game in room ${roomId}. Reason: ${reason}`);
+    // // console.log(`Ending game in room ${roomId}. Reason: ${reason}`); // Comentar luego
     room.gameActive = false;
 
     let winnerId = null;
@@ -1264,7 +1266,7 @@ function endGame(roomId, reason = "Game finished") {
 
     // Consider cleanup: Keep room until players disconnect?
     // Let's keep it for now, disconnect logic handles removal.
-    console.log(`Game ended for room ${roomId}. Final state sent.`);
+    // // console.log(`Game ended for room ${roomId}. Final state sent.`);
     
     // REMOVED: Automatic broadcast - clients will request rooms with gameType filter
 }
@@ -1315,7 +1317,7 @@ function handleDisconnect(ws, clientId, roomId) {
     // Client record is deleted in the main 'close' handler AFTER this function runs
 }
 
-console.log("Server script initialized. Waiting for connections...");
+// // console.log("Server script initialized. Waiting for connections..."); // ELIMINAR ESTA LÍNEA (Duplicado)
 
 // Graceful shutdown (optional but good practice)
 process.on('SIGINT', () => {
@@ -2120,3 +2122,62 @@ const mentirosoCategories = {
     { template: "Puedo nombrar X goles de volea espectaculares que quedaron en la retina de los hinchas." }
   ]
 }; 
+
+// Función para verificar una sala antes de unirse
+function handleCheckRoom(ws, clientInfo, payload) {
+    if (!payload || !payload.roomId) {
+        safeSend(ws, { 
+            type: 'roomCheckResult', 
+            payload: { 
+                exists: false, 
+                error: 'ID de sala no proporcionado' 
+            } 
+        });
+        return;
+    }
+
+    const roomId = payload.roomId;
+    const room = rooms.get(roomId);
+
+    if (!room) {
+        safeSend(ws, { 
+            type: 'roomCheckResult', 
+            payload: { 
+                exists: false, 
+                error: `La sala ${roomId} no existe.` 
+            } 
+        });
+        return;
+    }
+
+    // Verificar si la sala es del juego solicitado
+    if (payload.gameType && room.gameType !== payload.gameType) {
+        safeSend(ws, { 
+            type: 'roomCheckResult', 
+            payload: { 
+                exists: false, 
+                error: `La sala ${roomId} es para otro juego.` 
+            } 
+        });
+        return;
+    }
+
+    // Verificar si la sala está llena
+    const isFull = room.players.player1 && room.players.player2;
+    
+    // Responder con la información de la sala
+    safeSend(ws, { 
+        type: 'roomCheckResult', 
+        payload: { 
+            exists: true,
+            roomId: roomId,
+            roomName: room.roomName || `Sala de ${room.players.player1?.name || 'Anónimo'}`,
+            needsPassword: !!room.password && room.password.length > 0,
+            isFull: isFull,
+            playerCount: (room.players.player1 ? 1 : 0) + (room.players.player2 ? 1 : 0),
+            gameType: room.gameType
+        } 
+    });
+    
+    console.log(`Room check for ${roomId} by ${clientInfo.id}. Result: exists, needs password: ${!!room.password && room.password.length > 0}`);
+}

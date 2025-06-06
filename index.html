@@ -34,7 +34,6 @@
     <link rel="alternate" hreflang="es-AR" href="https://cracktotal.com/" />
     <link rel="alternate" hreflang="x-default" href="https://cracktotal.com/" />
     <link rel="manifest" href="/config/manifest.json?v=202505272312">
-    <!-- <link rel="stylesheet" href="assets/css/styles.css?v=202505272312"> -->
     <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/landing.css?v=202505272312">
@@ -66,38 +65,23 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "Crack Total",
-      "alternateName": "Crack Total - El Juego del Fútbol",
       "url": "https://cracktotal.com/",
       "description": "Crack Total: Demuestra tu conocimiento de fútbol con juegos y trivias desafiantes. Lee artículos originales en nuestro blog y compite con otros hinchas. ¡El desafío te espera!",
       "image": "https://cracktotal.com/assets/images/portada.jpg",
-      "sameAs": [
-        "https://twitter.com/cracktotal_"
-      ],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://cracktotal.com/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      },
       "publisher": {
         "@type": "Organization",
         "name": "Crack Total",
-        "url": "https://cracktotal.com/",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://cracktotal.com/assets/images/portada.jpg",
-          "width": 400,
-          "height": 400
+          "url": "https://cracktotal.com/assets/images/portada.jpg" 
         }
       },
-      "mainEntity": {
-        "@type": "Game",
-        "name": "Crack Total",
-        "description": "Juegos de trivia de fútbol en línea",
-        "genre": "Trivia",
-        "gamePlatform": "Web Browser",
-        "applicationCategory": "GameApplication"
-      },
-      "inLanguage": "es-AR",
-      "about": {
-        "@type": "Thing",
-        "name": "Fútbol",
-        "description": "Conocimiento y trivia sobre fútbol"
-      }
+      "inLanguage": "es-AR"
     }
     </script>
 
@@ -577,7 +561,6 @@
     <!-- Preload critical resources -->
     <link rel="preload" href="/assets/images/portada.jpg" as="image" type="image/jpeg">
     <link rel="preload" href="/assets/js/main.js" as="script">
-    <link rel="preload" href="/assets/js/notifications.js" as="script">
 
     <!-- DNS prefetch for external resources -->
     <link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -638,7 +621,7 @@
             
             <!-- Imagen mejorada -->
             <div class="main-image-container">
-                <img src="assets/images/portada.jpg" alt="Imagen de bienvenida de Crack Total Fútbol" loading="eager">
+                <img src="assets/images/portada.jpg" alt="Imagen de bienvenida de Crack Total Fútbol" loading="lazy">
             </div>
 
             <div class="intro-text">
@@ -821,24 +804,8 @@
     <!-- Load essential functions first -->
     <script src="assets/js/essential.js?v=202505272312"></script>
     <!-- Basic notifications only -->
-    <!-- <script type="module" src="assets/js/notifications.js?v=202505272312"></script> -->
     <!-- Temporarily disabled to fix loading issues -->
-    <!-- <script type="module" src="assets/js/seo-manager.js?v=202505272312"></script> -->
-    <!-- <script type="module" src="assets/js/seo-monitor.js?v=202505272312"></script> -->
-    <!-- <script type="module" src="assets/js/seo-auto-fix.js?v=202505272312"></script> -->
-    <!-- <script type="module" src="assets/js/performance-optimizer.js?v=202505272312"></script> -->
-    <!-- <script type="module" src="assets/js/advanced-analytics.js?v=202505272312"></script> -->
-    <!-- <script type="module" src="assets/js/smart-notifications.js?v=202505272312"></script> -->
-    <!-- <script type="module" src="assets/js/state-manager.js?v=202505272312"></script> -->
-    <!-- <script type="module" src="assets/js/security-manager.js?v=202505272312"></script> -->
-    <!-- Disabled due to infinite loop causing stack overflow -->
-    <!-- <script type="module" src="assets/js/cache-manager.js?v=202505272312"></script> -->
-    <!-- <script type="module" src="assets/js/analytics-manager.js?v=202505272312"></script> -->
-    <!-- <script type="module" src="assets/js/logger-manager.js?v=202505272312"></script> -->
-    <!-- <script type="module" src="assets/js/image-optimizer.js?v=202505272312"></script> -->
     <script src="assets/js/main.js?v=202505272312"></script>
     <!-- Firebase scripts disabled temporarily to fix module errors -->
-    <!-- <script type="module" src="assets/js/firebase-config.js"></script> -->
-    <!-- <script type="module" src="assets/js/firebase-init.js"></script> -->
 </body>
 </html> 

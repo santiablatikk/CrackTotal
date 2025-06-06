@@ -22,6 +22,465 @@
   </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quien Sabe Más - Crack Total</title>
-    <link rel="icon" href="/portada.ico?v=202505272312" type="image/x-icon">
+    <title>¿Quién Sabe Más? - Crack Total</title>
+    <meta name="description" content="Jugá ¿Quién Sabe Más? en Crack Total y demostrá tus conocimientos de fútbol.">
+    <link rel="icon" href="/portada.ico?v=202506012312" type="image/x-icon">
     <link rel="canonical" href="https://cracktotal.com/quiensabemas.html">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://cracktotal.com/quiensabemas.html">
+    <meta property="og:title" content="¿Quién Sabe Más? - Crack Total">
+    <meta property="og:description" content="Desafiá a tus amigos en ¿Quién Sabe Más?, el juego de preguntas y respuestas de Crack Total.">
+    <meta property="og:image" content="https://cracktotal.com/assets/images/portada.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://cracktotal.com/quiensabemas.html">
+    <meta property="twitter:title" content="¿Quién Sabe Más? - Crack Total">
+    <meta property="twitter:description" content="Demostrá quién es el que más sabe de fútbol en Crack Total.">
+    <meta property="twitter:image" content="https://cracktotal.com/assets/images/portada.jpg">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/base.css?v=202506012312">
+    <link rel="stylesheet" href="assets/css/layout.css?v=202506012312">
+    <link rel="stylesheet" href="assets/css/modals.css?v=202506012312">
+    <link rel="stylesheet" href="assets/css/qsm.css?v=202506012312">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XP3T1RTH7"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-5XP3T1RTH7');
+    </script>
+    
+    <!-- Estilo adicional para área de juego -->
+    <style>
+        /* Estilos para el área de juego para hacer más visible el nombre de los jugadores */
+        .game-status {
+            background: rgba(30, 32, 45, 0.9);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(166, 81, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .player-box {
+            background: rgba(16, 17, 26, 0.8);
+            padding: 12px 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .player-box.active-turn {
+            background: rgba(48, 209, 88, 0.15);
+            border-color: rgba(48, 209, 88, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(48, 209, 88, 0.2);
+        }
+        
+        .player-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(79, 156, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+        
+        .current-player .player-avatar {
+            background: rgba(48, 209, 88, 0.2);
+        }
+        
+        .opponent-player .player-avatar {
+            background: rgba(166, 81, 255, 0.2);
+        }
+        
+        .player-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .player-name {
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
+            margin-bottom: 3px;
+        }
+        
+        .score {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+        }
+        
+        .vs-separator {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 700;
+            margin: 0 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 8px;
+        }
+        
+        .turn-indicator, .question-counter {
+            background: rgba(16, 17, 26, 0.7);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .turn-indicator i, .question-counter i {
+            color: var(--qsm-purple, #a651ff);
+            font-size: 0.95rem;
+        }
+        
+        /* Para pantallas más pequeñas */
+        @media (max-width: 768px) {
+            .game-status {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .vs-separator {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body class="qsm-1v1-body">
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v19.0&appId=YOUR_FACEBOOK_APP_ID" nonce="IBRLz45P"></script>
+
+    <div id="cookieConsentContainer" class="cookie-consent-container"></div>
+
+    <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
+        <a href="index.html" class="nav-logo" aria-label="Crack Total - Inicio">
+            Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
+        </a>
+        <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
+        <ul>
+            <li><a href="index.html" aria-label="Ir al inicio"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
+            <li><a href="games.html" aria-label="Ir a los juegos"><i class="fas fa-gamepad" aria-hidden="true"></i> Juegos</a></li>
+            <li><a href="profile.html" aria-label="Ver mi perfil"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
+            <li><a href="ranking.html" aria-label="Ver ranking general"><i class="fas fa-trophy" aria-hidden="true"></i> Rankings</a></li>
+            <li><a href="logros.html" aria-label="Ver mis logros"><i class="fas fa-medal" aria-hidden="true"></i> Logros</a></li>
+            <li><a href="blog.html" aria-label="Leer el blog"><i class="fas fa-blog" aria-hidden="true"></i> Blog</a></li>
+            <li><a href="about.html" aria-label="Acerca de nosotros"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a></li>
+            <li><a href="contact.html" aria-label="Contactar con nosotros"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a></li>
+        </ul>
+    </nav>
+
+    <!-- Contenido principal -->
+    <main class="qsm-1v1-content">
+        <div id="lobbyContainer" class="lobby-container-inner">
+            <div class="lobby-header-section">
+                <h2 class="lobby-title">¿Quién Sabe Más?</h2>
+                <p class="lobby-subtitle">Demostrá tus conocimientos en este duelo de preguntas y respuestas</p>
+                <div id="lobbyMessage" class="lobby-message info" style="display: none;"></div>
+            </div>
+
+            <div class="lobby-content-wrapper">
+                <!-- Panel izquierdo - Crear sala -->
+                <div class="lobby-panel create-panel">
+                    <div class="panel-header">
+                        <i class="fas fa-plus-circle"></i>
+                        <h3>Crear Sala</h3>
+                    </div>
+                    <div class="panel-content">
+                        <div class="form-group">
+                            <label for="createPlayerName">Tu Nombre</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="createPlayerName" class="lobby-input" placeholder="Ingresá tu nombre">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="createRoomName">Nombre de la Sala</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-gamepad"></i>
+                                <input type="text" id="createRoomName" class="lobby-input" placeholder="Ej: Sala de Futboleros">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="createRoomPassword">Contraseña (opcional)</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="createRoomPassword" class="lobby-input" placeholder="Dejar vacío para sala pública">
+                            </div>
+                        </div>
+                        <button id="createRoomBtn" class="lobby-button primary-button">
+                            <i class="fas fa-plus"></i> Crear Sala
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Panel derecho - Unirse a sala -->
+                <div class="lobby-panel join-panel">
+                    <div class="panel-header">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <h3>Unirse a Sala</h3>
+                    </div>
+                    <div class="panel-content">
+                        <div class="form-group">
+                            <label for="joinPlayerName">Tu Nombre</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="joinPlayerName" class="lobby-input" placeholder="Ingresá tu nombre">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="joinRoomId">ID de la Sala</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-hashtag"></i>
+                                <input type="text" id="joinRoomId" class="lobby-input" placeholder="Ingresá el ID de la sala">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="joinRoomPassword">Contraseña (si es requerida)</label>
+                            <div class="input-wrapper">
+                                <i class="fas fa-key"></i>
+                                <input type="password" id="joinRoomPassword" class="lobby-input" placeholder="Contraseña de la sala">
+                            </div>
+                        </div>
+                        <button id="joinRoomBtn" class="lobby-button secondary-button">
+                            <i class="fas fa-door-open"></i> Unirse por ID
+                        </button>
+                        
+                        <div class="quick-join-section">
+                            <div class="section-divider">
+                                <span>O busca una partida rápida</span>
+                            </div>
+                            <button id="joinRandomRoomBtn" class="lobby-button accent-button">
+                                <i class="fas fa-bolt"></i> Partida Rápida
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de salas disponibles -->
+            <div class="available-rooms-section" id="availableRoomsSection">
+                <div class="section-header">
+                    <h3><i class="fas fa-list"></i> Salas Disponibles</h3>
+                    <button id="refreshRoomsBtn" class="refresh-button" title="Actualizar salas">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div class="rooms-list-container">
+                    <ul id="roomsList" class="rooms-list">
+                        <li class="no-rooms-message">
+                            <i class="fas fa-spinner fa-spin"></i> Buscando salas disponibles...
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameArea" class="game-area" style="display: none;">
+            <div class="game-card">
+                <!-- Cabecera del juego con los jugadores -->
+                <div class="players-info-header">
+                    <div class="player-box current-player">
+                        <div class="player-avatar" id="player1Avatar"><i class="fas fa-user"></i></div>
+                        <div class="player-details">
+                            <span class="player-name" id="player1Name">Jugador 1</span>
+                            <span class="score" id="player1Score">0</span>
+                        </div>
+                    </div>
+                    <span class="vs-separator">VS</span>
+                    <div class="player-box opponent-player">
+                        <div class="player-avatar" id="player2Avatar"><i class="fas fa-user-friends"></i></div>
+                        <div class="player-details">
+                            <span class="player-name" id="player2Name">Jugador 2</span>
+                            <span class="score" id="player2Score">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="game-status">
+                    <span id="turnIndicator" class="turn-indicator"><i class="fas fa-user-clock"></i> Turno de: Jugador 1</span>
+                    <span id="questionNumber" class="question-counter"><i class="fas fa-question-circle"></i> Pregunta 1/10</span>
+                </div>
+
+                <div class="timer-container-qsm">
+                    <div class="timer-bar-qsm"><div id="timerProgress"></div></div>
+                </div>
+
+                <div class="question-area">
+                    <p class="qsm-question" id="qsmQuestionText">Cargando pregunta...</p>
+                </div>
+
+                <div class="answer-area">
+                    <div class="options-grid" id="optionsGrid">
+                        <!-- Las opciones se generan aquí por JS -->
+                    </div>
+                </div>
+                
+                <div class="action-buttons-qsm" id="lifelinesContainer" style="display: none;">
+                    <!-- Los comodines (lifelines) se podrían agregar aquí si el juego los usa -->
+                </div>
+
+                <div class="feedback-area">
+                    <span class="feedback-message" id="feedbackMessage" style="display:none;"></span>
+                </div>
+
+                <div class="waiting-area" id="waitingArea">
+                    <div class="spinner"></div>
+                    <p id="waitingMessage">Esperando al oponente...</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="qsmIntroModal" class="modal-overlay" style="display:none;">
+        <div class="modal-content">
+            <span class="modal-close-btn" onclick="document.getElementById('qsmIntroModal').style.display='none'">&times;</span>
+            <h2 class="modal-title"><i class="fas fa-trophy"></i> ¿Quién Sabe Más?</h2>
+            <div class="modal-intro-content">
+                <p>¡Demostrá tus conocimientos de fútbol en este emocionante duelo 1v1!</p>
+                <div class="intro-features">
+                    <div class="intro-feature">
+                        <i class="fas fa-users"></i>
+                        <h3>Modo 1v1</h3>
+                        <p>Desafiá a un amigo o a un oponente aleatorio.</p>
+                    </div>
+                    <div class="intro-feature">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>Preguntas Desafiantes</h3>
+                        <p>Pon a prueba tu conocimiento del fútbol nacional e internacional.</p>
+                    </div>
+                    <div class="intro-feature">
+                        <i class="fas fa-stopwatch"></i>
+                        <h3>Tiempo Límite</h3>
+                        <p>Responde rápido para ganar más puntos.</p>
+                    </div>
+                    <div class="intro-feature">
+                        <i class="fas fa-medal"></i>
+                        <h3>Ranking</h3>
+                        <p>Sube en la tabla de posiciones y conviértete en el mejor.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="goToLobbyQSMButton" class="modal-button primary"><i class="fas fa-play"></i> ¡A Jugar!</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="qsmResultModal" class="modal-overlay" style="display:none;">
+        <div class="modal-content result-modal">
+            <div class="result-modal-header">
+                <h2 id="resultTitle" class="result-title">¡Fin del Juego!</h2>
+            </div>
+            <p id="resultMessage" class="result-message">¡Excelente partida!</p>
+            <div class="result-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Tu Puntuación</span>
+                    <span class="stat-value" id="playerFinalScore">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Puntuación Oponente</span>
+                    <span class="stat-value" id="opponentFinalScore">0</span>
+                </div>
+            </div>
+            <div class="result-buttons">
+                <button id="playAgainQSMBtn" class="modal-button primary"><i class="fas fa-redo"></i> Jugar Otra Vez</button>
+                <button id="goToLobbyFromResultsBtn" class="modal-button secondary"><i class="fas fa-home"></i> Volver al Lobby</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="connection-status" id="connectionStatus" style="display:none;">Conectado</div>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+                <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+                <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+                <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+                <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+                <a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a>
+                <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+            </div>
+            <button class="footer-share-button" onclick="shareSite()"><i class="fas fa-share-alt"></i> Compartir</button>
+            <div class="footer-copyright">
+                &copy; 2024 Crack Total. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js?v=202506012312"></script>
+    <script type="module" src="assets/js/firebase-config.js"></script>
+    <script type="module" src="assets/js/firebase-init.js?v=202506012312"></script>
+    <script type="module" src="assets/js/logros.js?v=202506012312"></script>
+    <script type="module" src="assets/js/quiensabemas_1v1.js?v=202506012312"></script>
+    <script type="module" src="assets/js/firebase-utils.js?v=202506012312"></script>
+    <script type="module" src="assets/js/cookie-consent.js?v=202506012312"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+        
+        // Simulación básica de temporizador (para reemplazar game-timer.js que no existe)
+        window.GameTimer = {
+            start: function(duration, onUpdate, onComplete) {
+                let timer = duration;
+                const interval = setInterval(() => {
+                    if (timer <= 0) {
+                        clearInterval(interval);
+                        if (onComplete) onComplete();
+                        return;
+                    }
+                    
+                    timer--;
+                    if (onUpdate) onUpdate(timer, duration);
+                }, 1000);
+                
+                return {
+                    stop: function() {
+                        clearInterval(interval);
+                    }
+                };
+            }
+        };
+    </script>
+</body>
+</html>

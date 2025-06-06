@@ -91,9 +91,9 @@
 .ranking-title,
 .history-title {
     font-family: 'Oswald', sans-serif;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: 0.8rem;
+    margin-bottom: 1rem;
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -104,33 +104,27 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.4rem;
+    gap: 0.5rem;
 }
 
-/* Historial aún más compacto */
-.history-title {
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-}
-
-.history-title.quiensabemas,
-.ranking-title.quiensabemas {
+.ranking-title.quiensabemas,
+.history-title.quiensabemas {
     background: var(--quiensabemas-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-.history-title.mentiroso,
-.ranking-title.mentiroso {
+.ranking-title.mentiroso,
+.history-title.mentiroso {
     background: var(--mentiroso-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-.history-title.crackrapido,
-.ranking-title.crackrapido {
+.ranking-title.crackrapido,
+.history-title.crackrapido {
     background: var(--crackrapido-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -142,11 +136,6 @@
     font-size: 1em;
     color: var(--pasalache-primary);
     animation: iconPulse 4s ease-in-out infinite;
-}
-
-/* Iconos del historial más pequeños */
-.history-title-icon {
-    font-size: 0.9em;
 }
 
 .quiensabemas .ranking-title-icon,
@@ -357,24 +346,24 @@
 .accuracy-stat { color: #4299e1; font-weight: 600; }
 .time-stat { color: #ed8936; font-weight: 600; }
 
-/* === HISTORIAL MENTIROSO MEJORADO === */
+/* === HISTORIAL COMPACTO Y BONITO === */
 .history-list {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.8rem;
-    margin-top: 0.6rem;
+    margin-top: 0.8rem;
 }
 
 .history-item {
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
-    border-radius: 12px;
-    padding: 1rem;
+    background: linear-gradient(135deg, rgba(26, 32, 44, 0.8) 0%, rgba(45, 55, 72, 0.6) 100%);
+    border-radius: 8px;
+    padding: 0.8rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .history-item::before {
@@ -383,466 +372,465 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 3px;
+    height: 2px;
     background: linear-gradient(90deg, 
-        rgba(239, 68, 68, 0.8) 0%, 
-        rgba(147, 51, 234, 0.8) 50%, 
-        rgba(59, 130, 246, 0.8) 100%
+        rgba(59, 130, 246, 0.8) 0%, 
+        rgba(147, 51, 234, 0.8) 33%, 
+        rgba(239, 68, 68, 0.8) 66%, 
+        rgba(245, 158, 11, 0.8) 100%
     );
-    opacity: 0.7;
+    opacity: 0.6;
 }
 
 .history-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     border-color: rgba(255, 255, 255, 0.2);
-    background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 1));
+    background: linear-gradient(135deg, rgba(26, 32, 44, 0.9) 0%, rgba(45, 55, 72, 0.7) 100%);
 }
 
 .history-item:hover::before {
     opacity: 1;
-    height: 4px;
+    height: 3px;
 }
 
-/* Header principal de la partida */
-.match-header {
+/* Header del historial - más compacto */
+.history-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 1rem;
-    gap: 1rem;
-}
-
-.match-info {
-    flex: 1;
-}
-
-.match-result-badge {
-    display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 0.5rem;
-    border: 1px solid;
-    backdrop-filter: blur(5px);
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.match-result-badge.victory {
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(16, 185, 129, 0.1));
-    color: #22c55e;
-    border-color: rgba(34, 197, 94, 0.3);
-    box-shadow: 0 0 15px rgba(34, 197, 94, 0.2);
-}
-
-.match-result-badge.defeat {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 53, 69, 0.1));
-    color: #ef4444;
-    border-color: rgba(239, 68, 68, 0.3);
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
-}
-
-.match-result-badge.draw {
-    background: linear-gradient(135deg, rgba(156, 163, 175, 0.2), rgba(107, 114, 128, 0.1));
-    color: #9ca3af;
-    border-color: rgba(156, 163, 175, 0.3);
-    box-shadow: 0 0 15px rgba(156, 163, 175, 0.2);
-}
-
-.result-icon {
-    font-size: 1rem;
-}
-
-.result-text {
-    font-weight: 700;
-    font-size: 0.75rem;
-}
-
-.match-type {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.7);
+.history-player-name {
     font-weight: 600;
-    margin-bottom: 0.3rem;
-}
-
-.match-description {
     font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.4;
+    color: var(--ranking-text);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
 }
 
-.match-date {
+.history-date {
     font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.05);
-    padding: 0.3rem 0.6rem;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--ranking-text-muted);
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0.2rem 0.4rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     white-space: nowrap;
     backdrop-filter: blur(3px);
 }
 
-/* Sección de jugadores mejorada */
-.players-section {
+/* Información del juego - compacta */
+.game-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.6rem;
+    gap: 0.5rem;
+}
+
+.result-indicator {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 1.5rem;
-    margin: 1rem 0;
-    padding: 1rem;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
-    border-radius: 12px;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border: 1px solid;
+    backdrop-filter: blur(3px);
+    white-space: nowrap;
+}
+
+.result-text {
+    display: none; /* Oculto en móvil */
+}
+
+.result-icon {
+    font-size: 0.9rem;
+}
+
+.game-mode-tag {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(147, 51, 234, 0.1) 100%);
+    color: #60a5fa;
+    padding: 0.2rem 0.4rem;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    white-space: nowrap;
+}
+
+.game-status {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.2rem 0.4rem;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    border: 1px solid;
+    backdrop-filter: blur(3px);
+    white-space: nowrap;
+}
+
+/* Resumen principal - más compacto */
+.main-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.6rem 0;
+    padding: 0.6rem;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    position: relative;
+    backdrop-filter: blur(8px);
 }
 
-.players-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-}
-
-.player-card {
+.player-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.2rem;
     min-width: 0;
     flex: 1;
-    position: relative;
 }
 
-.player-card .player-name {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
+.player-name {
+    font-size: 0.7rem;
+    color: var(--ranking-text-muted);
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 100px;
-    margin-bottom: 0.2rem;
+    max-width: 80px;
 }
 
-.player-card .player-score {
-    font-size: 1.8rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: none;
-    position: relative;
-}
-
-.player-card.winner .player-score {
-    background: linear-gradient(135deg, #ffd700, #ffed4a);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.player-card.winner::after {
-    content: '👑';
-    position: absolute;
-    top: -10px;
-    right: -5px;
+.player-score {
     font-size: 1.2rem;
-    animation: crownBounce 2s ease-in-out infinite;
+    font-weight: 700;
+    color: var(--ranking-text);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
-@keyframes crownBounce {
-    0%, 100% { transform: translateY(0) rotate(-5deg); }
-    50% { transform: translateY(-3px) rotate(5deg); }
-}
-
-.vs-divider {
+.vs-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.3rem;
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.6);
-    position: relative;
-}
-
-.vs-text {
-    font-size: 1rem;
-    font-weight: bold;
-    color: rgba(239, 68, 68, 1);
-    text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
-    animation: vsGlow 3s ease-in-out infinite;
-}
-
-@keyframes vsGlow {
-    0%, 100% { opacity: 0.8; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.1); }
+    gap: 0.2rem;
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
 }
 
 .score-difference {
     font-size: 0.7rem;
     font-weight: 600;
-    padding: 0.2rem 0.5rem;
-    border-radius: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    border: 1px solid;
 }
 
-.score-difference.positive {
-    color: #22c55e;
-    background: rgba(34, 197, 94, 0.1);
-    border-color: rgba(34, 197, 94, 0.3);
-}
-
-.score-difference.negative {
-    color: #ef4444;
-    background: rgba(239, 68, 68, 0.1);
-    border-color: rgba(239, 68, 68, 0.3);
-}
-
-/* Estadísticas de rendimiento */
-.performance-section {
+/* Estadísticas clave - grid compacto */
+.key-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 0.8rem;
-    margin: 1rem 0;
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    gap: 0.5rem;
+    margin: 0.6rem 0;
 }
 
-.performance-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-    border-radius: 10px;
-    padding: 0.8rem;
+.stat-item {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border-radius: 6px;
+    padding: 0.5rem;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     backdrop-filter: blur(5px);
-    position: relative;
-    overflow: hidden;
 }
 
-.performance-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, 
-        rgba(59, 130, 246, 0.6) 0%, 
-        rgba(147, 51, 234, 0.6) 50%, 
-        rgba(239, 68, 68, 0.6) 100%
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.performance-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+.stat-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     border-color: rgba(255, 255, 255, 0.15);
 }
 
-.performance-card:hover::before {
-    opacity: 1;
-}
-
-.performance-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.4rem;
-    margin-bottom: 0.5rem;
-}
-
-.performance-icon {
-    font-size: 1.1rem;
-    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+.stat-icon {
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+    display: block;
+    background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-.performance-title {
-    font-size: 0.75rem;
-    color: rgba(255, 255, 255, 0.7);
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
-
-.performance-value {
-    font-size: 1.2rem;
+.stat-value {
+    font-size: 0.85rem;
     font-weight: 700;
-    color: rgba(255, 255, 255, 0.95);
-    margin-bottom: 0.3rem;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    color: var(--ranking-text);
+    margin-bottom: 0.2rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
-.performance-detail {
-    font-size: 0.65rem;
-    color: rgba(255, 255, 255, 0.5);
-    line-height: 1.3;
+.stat-label {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    font-weight: 500;
+    margin-bottom: 0.1rem;
 }
 
-/* Especialización del juego */
-.game-specialty {
-    margin-top: 1rem;
-    padding: 0.8rem;
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 53, 69, 0.05));
-    border-radius: 10px;
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    backdrop-filter: blur(5px);
+.stat-detail {
+    font-size: 0.55rem;
+    color: var(--ranking-text-muted);
+    opacity: 0.8;
 }
 
-.specialty-header {
+/* Performance grid - más compacto */
+.performance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(85px, 1fr));
+    gap: 0.5rem;
+    margin: 0.6rem 0;
+}
+
+.perf-stat {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border-radius: 6px;
+    padding: 0.5rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: all 0.2s ease;
+}
+
+.stat-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.6rem;
+    justify-content: center;
+    gap: 0.2rem;
+    margin-bottom: 0.3rem;
 }
 
-.specialty-icon {
-    font-size: 1rem;
-    color: #ef4444;
-}
-
-.specialty-title {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.8);
-    font-weight: 600;
+.stat-title {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    font-weight: 500;
 }
 
-.specialty-content {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-}
-
-.specialty-stat {
-    text-align: center;
-    flex: 1;
-}
-
-.specialty-stat-value {
-    font-size: 1.1rem;
+.stat-main {
+    font-size: 0.9rem;
     font-weight: 700;
-    color: #ef4444;
+    color: var(--ranking-text);
     margin-bottom: 0.2rem;
 }
 
-.specialty-stat-label {
-    font-size: 0.65rem;
-    color: rgba(255, 255, 255, 0.6);
+/* Detalles del juego - compactos */
+.game-details {
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    flex: 1;
+}
+
+.detail-label {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.detail-value {
+    font-size: 0.7rem;
+    color: var(--ranking-text);
+    font-weight: 600;
+}
+
+/* Especialización y tags */
+.game-specific {
+    margin-top: 0.5rem;
+}
+
+.specific-label {
+    font-size: 0.6rem;
+    color: var(--ranking-text-muted);
+    margin-bottom: 0.3rem;
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.specific-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+}
+
+.specific-tag {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    border: 1px solid;
+    background: rgba(255, 255, 255, 0.05);
+    font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.2px;
 }
 
-/* Análisis de partida */
-.match-analysis {
-    margin-top: 1rem;
-    padding: 0.8rem;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(37, 99, 235, 0.03));
-    border-radius: 10px;
-    border: 1px solid rgba(59, 130, 246, 0.15);
-    backdrop-filter: blur(5px);
+/* Badges y achievements */
+.achievement-badge,
+.level-badge {
+    font-size: 0.6rem;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    margin-top: 0.2rem;
+    display: inline-block;
 }
 
-.analysis-text {
-    font-size: 0.8rem;
-    color: rgba(255, 255, 255, 0.8);
+.achievement-badge.perfect { 
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.1) 100%); 
+    color: #10b981; 
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.achievement-badge.excellent { 
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(37, 99, 235, 0.1) 100%); 
+    color: #3b82f6; 
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.achievement-badge.good { 
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.1) 100%); 
+    color: #f59e0b; 
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+/* Performance insight */
+.performance-insight {
+    margin-top: 0.5rem;
+    padding: 0.4rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(147, 51, 234, 0.05) 100%);
+    border-radius: 6px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.insight-text {
+    font-size: 0.65rem;
+    color: var(--ranking-text);
     text-align: center;
-    line-height: 1.4;
-    font-style: italic;
+    line-height: 1.3;
 }
 
-.analysis-highlight {
-    color: #ffd700;
+.insight-highlight {
+    color: #60a5fa;
     font-weight: 600;
 }
 
-/* Responsive mejorado */
-@media (max-width: 768px) {
-    .history-item {
-        padding: 0.8rem;
-    }
-    
-    .match-header {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    
-    .players-section {
-        gap: 1rem;
-        padding: 0.8rem;
-    }
-    
-    .player-card .player-score {
-        font-size: 1.5rem;
-    }
-    
-    .performance-section {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.6rem;
-    }
-    
-    .specialty-content {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-}
-
+/* === RESPONSIVE PARA HISTORIAL === */
 @media (max-width: 480px) {
     .history-item {
         padding: 0.6rem;
-        margin-bottom: 0.6rem;
     }
     
-    .players-section {
+    .key-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.4rem;
+    }
+    
+    .performance-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.4rem;
+    }
+    
+    .main-summary {
+        padding: 0.5rem;
+        margin: 0.5rem 0;
+    }
+    
+    .player-name {
+        max-width: 60px;
+        font-size: 0.65rem;
+    }
+    
+    .result-text {
+        display: none;
+    }
+    
+    .game-info-row {
         flex-direction: column;
-        gap: 0.8rem;
+        gap: 0.3rem;
+        align-items: flex-start;
+    }
+    
+    .specific-content {
+        justify-content: center;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+}
+
+@media (max-width: 340px) {
+    .history-item {
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .key-stats,
+    .performance-grid {
+        grid-template-columns: 1fr;
+        gap: 0.3rem;
+    }
+    
+    .main-summary {
+        flex-direction: column;
+        gap: 0.4rem;
         text-align: center;
     }
     
-    .vs-divider {
+    .vs-section {
         flex-direction: row;
-        gap: 0.5rem;
+        gap: 0.4rem;
     }
     
-    .performance-section {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
+    .stat-item {
+        padding: 0.4rem;
     }
     
-    .player-card .player-score {
-        font-size: 1.3rem;
+    .player-score {
+        font-size: 1rem;
     }
     
-    .match-result-badge {
-        font-size: 0.7rem;
-        padding: 0.3rem 0.6rem;
-    }
-    
-    .performance-card {
-        padding: 0.6rem;
-    }
-    
-    .game-specialty {
-        padding: 0.6rem;
-    }
-    
-    .match-analysis {
-        padding: 0.6rem;
+    .stat-value {
+        font-size: 0.75rem;
     }
 }
 
@@ -872,253 +860,4 @@
 .loading-state {
     background: rgba(26, 32, 44, 0.5);
     border-style: solid;
-}
-
-/* =========== ESTILOS PARA HISTORIAL SIMPLIFICADO =========== */
-
-/* Header del historial */
-.history-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.8rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid var(--ranking-border);
-}
-
-.history-player-name {
-    font-weight: 600;
-    color: var(--ranking-text);
-    font-size: 0.9rem;
-}
-
-.history-date {
-    font-size: 0.7rem;
-    color: var(--ranking-text-muted);
-    opacity: 0.8;
-}
-
-/* Resumen principal del duelo */
-.main-summary {
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    gap: 0.8rem;
-    align-items: center;
-    margin-bottom: 1rem;
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 8px;
-    padding: 0.8rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.player-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.3rem;
-}
-
-.player-section .player-name {
-    font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--ranking-text-secondary);
-    text-align: center;
-}
-
-.player-section .player-score {
-    font-size: 1.4rem;
-    font-weight: 700;
-    font-family: 'Oswald', sans-serif;
-}
-
-.vs-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.3rem;
-}
-
-.result-indicator {
-    padding: 0.3rem 0.6rem;
-    border-radius: 12px;
-    border: 1px solid;
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-size: 0.7rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.result-icon {
-    font-size: 0.8rem;
-}
-
-.result-text {
-    font-size: 0.65rem;
-    font-weight: 700;
-}
-
-/* Estadísticas clave */
-.key-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-    gap: 0.5rem;
-    margin-bottom: 0.8rem;
-}
-
-.stat-item {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 6px;
-    padding: 0.4rem;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: var(--ranking-transition);
-}
-
-.stat-item:hover {
-    background: rgba(255, 255, 255, 0.05);
-    transform: translateY(-1px);
-}
-
-.stat-icon {
-    font-size: 0.9rem;
-    margin-bottom: 0.2rem;
-    opacity: 0.8;
-}
-
-.stat-value {
-    font-size: 0.8rem;
-    font-weight: 700;
-    font-family: 'Oswald', sans-serif;
-    margin-bottom: 0.1rem;
-}
-
-.stat-label {
-    font-size: 0.6rem;
-    color: var(--ranking-text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 0.1rem;
-}
-
-.stat-detail {
-    font-size: 0.55rem;
-    color: var(--ranking-text-muted);
-    opacity: 0.7;
-}
-
-/* Especificaciones del juego */
-.game-specific {
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 6px;
-    padding: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.specific-label {
-    font-size: 0.7rem;
-    color: var(--ranking-text-muted);
-    margin-bottom: 0.4rem;
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-weight: 500;
-}
-
-.specific-content {
-    display: flex;
-    gap: 0.3rem;
-    flex-wrap: wrap;
-}
-
-.specific-tag {
-    padding: 0.2rem 0.4rem;
-    border-radius: 10px;
-    font-size: 0.6rem;
-    font-weight: 600;
-    border: 1px solid;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
-
-/* Insight de rendimiento */
-.performance-insight {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
-    border-radius: 6px;
-    padding: 0.5rem;
-    margin-top: 0.5rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.insight-text {
-    font-size: 0.7rem;
-    color: var(--ranking-text-secondary);
-    line-height: 1.4;
-}
-
-.insight-highlight {
-    color: #ffd700;
-    font-weight: 600;
-}
-
-/* Responsividad para historial simplificado */
-@media (max-width: 768px) {
-    .main-summary {
-        gap: 0.5rem;
-        padding: 0.6rem;
-    }
-    
-    .player-section .player-score {
-        font-size: 1.2rem;
-    }
-    
-    .key-stats {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.4rem;
-    }
-    
-    .stat-item {
-        padding: 0.3rem;
-    }
-    
-    .specific-content {
-        justify-content: center;
-    }
-    
-    .history-header {
-        flex-direction: column;
-        gap: 0.3rem;
-        text-align: center;
-    }
-}
-
-@media (max-width: 480px) {
-    .main-summary {
-        grid-template-columns: 1fr;
-        gap: 0.8rem;
-        text-align: center;
-    }
-    
-    .vs-section {
-        order: -1;
-    }
-    
-    .key-stats {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 0.3rem;
-    }
-    
-    .stat-item {
-        padding: 0.25rem;
-    }
-    
-    .stat-value {
-        font-size: 0.7rem;
-    }
-    
-    .stat-label {
-        font-size: 0.55rem;
-    }
 } 

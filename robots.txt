@@ -1,4 +1,3 @@
-# ROBOTS.TXT OPTIMIZADO PARA INDEXACIÓN
 User-agent: *
 Allow: /
 
@@ -29,7 +28,7 @@ Allow: /manifest.json
 Allow: /sw.js
 Allow: /portada.ico
 
-# Bloquear archivos técnicos y directorios problemáticos
+# Solo bloquear archivos técnicos realmente problemáticos
 Disallow: /.git/
 Disallow: /.venv/
 Disallow: /node_modules/
@@ -50,7 +49,7 @@ Allow: /*?gclid*
 # Solo bloquear búsquedas internas duplicadas
 Disallow: /search?*
 
-# CONFIGURACIÓN ESPECÍFICA PARA GOOGLEBOT
+# ADSENSE OPTIMIZATION: Configuración específica para Googlebot
 User-agent: Googlebot
 Allow: /
 Crawl-delay: 1
@@ -85,7 +84,11 @@ User-agent: Bingbot
 Allow: /
 Crawl-delay: 2
 
-# Bloquear bots problemáticos para crawl budget
+# Rate limiting para bots menos importantes
+User-agent: *
+Crawl-delay: 5
+
+# Bloquear solo bots verdaderamente problemáticos
 User-agent: AhrefsBot
 Disallow: /
 

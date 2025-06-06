@@ -1,1807 +1,1720 @@
+// Juego: ¿Quién Sabe Más? (1v1) - Lógica del Cliente (WebSocket)
+// Versión renovada - Junio 2024
+
 // --- Importaciones ---
-import { saveQuienSabeMasResult } from './firebase-utils.js';
+import { ensureFirebaseInitialized } from './firebase-init.js';
+import { 
+    serverTimestamp, doc, setDoc, updateDoc, getDoc, 
+    collection, query, where, getDocs, arrayUnion, 
+    onSnapshot, increment, runTransaction 
+} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { trackEvent, updateUserStats, checkAndAwardBadge } from './logros.js';
+import { saveQSMResult } from './firebase-utils.js';
 
-// --- WebSocket URL (¡Configura esto!) ---
-const WEBSOCKET_URL = (() => {
-    // Probar primero localhost y luego el servidor de producción
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+console.log("✨ quiensabemas_1v1.js cargado (v3 Renovada - Junio 2024)");
+
+// --- Configuración ---
+const CONFIG = {
+    WEBSOCKET_URL: 'wss://cracktotal-servidor.onrender.com',
+    RECONNECT_DELAY: 3000,
+    MAX_RECONNECT_ATTEMPTS: 5,
+    TIME_PER_QUESTION: 20,
+    TOTAL_QUESTIONS: 10,
+    STORAGE_KEYS: {
+        PLAYER_NAME: 'playerName',
+        INTRO_SHOWN: 'qsmIntroShown'
+    }
+};
+
+// --- DOM Elements ---
+const DOM = {
+    // Lobby
+    lobbyContainer: document.getElementById('lobbyContainer'),
+    createRoomNameInput: document.getElementById('createRoomName'),
+    createRoomPasswordInput: document.getElementById('createRoomPassword'),
+    createRoomBtn: document.getElementById('createRoomBtn'),
+    joinRoomIdInput: document.getElementById('joinRoomId'),
+    joinRoomPasswordInput: document.getElementById('joinRoomPassword'),
+    joinRoomBtn: document.getElementById('joinRoomBtn'),
+    joinRandomRoomBtn: document.getElementById('joinRandomRoomBtn'),
+    roomsListElement: document.getElementById('roomsList'),
+    lobbyMessage: document.getElementById('lobbyMessage'),
+
+    // Game Area
+    gameArea: document.getElementById('gameArea'),
+    qsmQuestionText: document.getElementById('qsmQuestionText'),
+    optionsGrid: document.getElementById('optionsGrid'),
+    feedbackMessage: document.getElementById('feedbackMessage'),
+    waitingArea: document.getElementById('waitingArea'),
+    waitingMessage: document.getElementById('waitingMessage'),
+
+    // Header Info
+    player1NameHeader: document.getElementById('player1Name'),
+    player1ScoreHeader: document.getElementById('player1Score'),
+    player2NameHeader: document.getElementById('player2Name'),
+    player2ScoreHeader: document.getElementById('player2Score'),
+    turnIndicator: document.getElementById('turnIndicator'),
+    questionNumberDisplay: document.getElementById('questionNumber'),
+    timerProgress: document.getElementById('timerProgress'),
+
+    // Modals
+    qsmIntroModal: document.getElementById('qsmIntroModal'),
+    goToLobbyQSMButton: document.getElementById('goToLobbyQSMButton'),
+    qsmResultModal: document.getElementById('qsmResultModal'),
+    resultTitle: document.getElementById('resultTitle'),
+    resultMessageModal: document.getElementById('resultMessage'),
+    playerFinalScoreDisplay: document.getElementById('playerFinalScore'),
+    opponentFinalScoreDisplay: document.getElementById('opponentFinalScore'),
+    playAgainQSMBtn: document.getElementById('playAgainQSMBtn'),
+    goToLobbyFromResultsBtn: document.getElementById('goToLobbyFromResultsBtn'),
+
+    // Connection Status
+    connectionStatus: document.getElementById('connectionStatus')
+};
+
+// --- Game State ---
+const gameState = {
+    websocket: null,
+    myPlayerId: null,
+    playerName: localStorage.getItem(CONFIG.STORAGE_KEYS.PLAYER_NAME) || 'Jugador Anónimo',
+    roomId: null,
+    isRoomCreator: false,
+    gameActive: false,
+    gamePhase: 'lobby', // lobby, waitingForOpponent, playing, roundOver, gameOver
     
-    if (isLocalhost) {
-        return 'ws://localhost:3000';
+    players: {}, // { playerId1: { name: 'P1', score: 0, avatar: 'P1' }, playerId2: { name: 'P2', score: 0, avatar: 'P2' } }
+    currentTurn: null,
+    
+    currentQuestion: null, // { text: "...", options: ["","","",""], correctAnswer: "..." }
+    currentQuestionIndex: 0,
+    totalQuestions: CONFIG.TOTAL_QUESTIONS,
+    
+    timerInterval: null,
+    timePerQuestion: CONFIG.TIME_PER_QUESTION,
+    timeLeft: CONFIG.TIME_PER_QUESTION,
+
+    pendingRoomsRequest: null,
+    firebaseInstances: null,
+    
+    // Nuevas propiedades para reconexión
+    reconnectAttempts: 0,
+    reconnectTimer: null,
+    lastMessageTimestamp: Date.now()
+};
+
+// --- Initialization ---
+document.addEventListener('DOMContentLoaded', initializeQSMApp);
+
+async function initializeQSMApp() {
+    console.log("🎮 Inicializando App ¿Quién Sabe Más?...");
+
+    try {
+        const firebase = await ensureFirebaseInitialized();
+        gameState.firebaseInstances = firebase;
+        console.log("🔒 Firebase inicializado para QSM", 
+            gameState.firebaseInstances.user ? 
+            `Usuario: ${gameState.firebaseInstances.user.displayName || gameState.firebaseInstances.user.uid}` : 
+            "Modo invitado");
+    } catch (error) {
+        console.error("❌ Error inicializando Firebase en QSM:", error);
+        showLobbyMessage("Error conectando con los servicios de juego. Algunas funciones estarán limitadas.", "error", false);
+    }
+
+    loadPlayerName();
+    updatePlayerNameInUI();
+    initializeWebSocket();
+    setupEventListeners();
+    showLobbyView();
+    updateConnectionStatusUI(false, 'Conectando al servidor...');
+
+    // Mostrar modal de introducción si es la primera vez
+    if (DOM.qsmIntroModal && !localStorage.getItem(CONFIG.STORAGE_KEYS.INTRO_SHOWN)) {
+        DOM.qsmIntroModal.style.display = 'flex';
+    }
+}
+
+function loadPlayerName() {
+    const nameFromStorage = localStorage.getItem('playerName');
+    if (nameFromStorage) {
+        gameState.playerName = nameFromStorage;
+        console.log(`🏷️ Nombre de jugador cargado: ${gameState.playerName}`);
     } else {
-        return 'wss://cracktotal-servidor.onrender.com';
-    }
-})();
-
-// Comunicación con la página principal para salas disponibles
-window.addEventListener('message', function(event) {
-    console.log('🔍 [QSM] Mensaje recibido:', event.data);
-    
-    // Verificar origen del mensaje
-    if (event.origin !== window.location.origin) return;
-    
-    // Si se solicitan las salas disponibles
-    if (event.data && event.data.type === 'requestRooms' && event.data.gameType === 'quiensabemas') {
-        console.log('✅ [QSM] Solicitud de salas QSM recibida desde games.html');
-        
-        if (document.readyState === 'complete') {
-            // Si la página ya está cargada, solicitar salas
-            if (window.gameState && window.gameState.websocket && 
-                window.gameState.websocket.readyState === WebSocket.OPEN) {
-                console.log('📡 [QSM] Solicitando salas de Quien Sabe Más al servidor');
-                window.sendToServer('getRooms', { gameType: 'quiensabemas' });
-                
-                // Almacenar el origen para responder cuando recibamos la lista
-                window.roomsRequestSource = event.source;
-                window.roomsRequestOrigin = event.origin;
-            } else {
-                console.warn('⚠️ [QSM] WebSocket no conectado, enviando lista vacía');
-                // Si no hay conexión, enviar lista vacía
-                event.source.postMessage({
-                    type: 'availableRooms',
-                    gameType: 'quiensabemas',
-                    rooms: []
-                }, event.origin);
-            }
-        } else {
-            console.log('⏳ [QSM] Página no cargada, esperando...');
-            // Si la página aún no está cargada, esperar
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    if (window.gameState && window.gameState.websocket && 
-                        window.gameState.websocket.readyState === WebSocket.OPEN) {
-                        console.log('📡 [QSM] Solicitando salas de Quien Sabe Más al servidor (después de carga)');
-                        window.sendToServer('getRooms', { gameType: 'quiensabemas' });
-                        
-                        // Almacenar el origen para responder cuando recibamos la lista
-                        window.roomsRequestSource = event.source;
-                        window.roomsRequestOrigin = event.origin;
-                    } else {
-                        console.warn('⚠️ [QSM] WebSocket no conectado después de esperar, enviando lista vacía');
-                        // Si no hay conexión después de esperar, enviar lista vacía
-                        event.source.postMessage({
-                            type: 'availableRooms',
-                            gameType: 'quiensabemas',
-                            rooms: []
-                        }, event.origin);
-                    }
-                }, 1000); // Esperar 1 segundo para asegurar que la conexión esté establecida
-            });
+        gameState.playerName = 'Jugador Anónimo';
+        console.warn('⚠️ No se encontró nombre de jugador en localStorage. Usando nombre por defecto.');
+        // Redirigir al usuario a la página principal para establecer un nombre
+        if (window.location.pathname !== '/' && window.location.pathname !== '/index.html') {
+            window.location.href = '/';
         }
-    } else if (event.data && event.data.type === 'requestRooms') {
-        console.log(`❌ [QSM] Solicitud de salas para ${event.data.gameType} (no es QSM), ignorando`);
     }
-});
+}
 
-document.addEventListener('DOMContentLoaded', function() {
-    // --- Game State Variables ---
-    let gameState = {
-        players: {
-            player1: { id: null, name: 'Jugador 1', score: 0 },
-            player2: { id: null, name: 'Jugador 2', score: 0 }
-        },
-        roomId: null,
-        myPlayerId: null,
-        currentLevel: 1,
-        maxLevel: 6, // 6 niveles con 6 preguntas por nivel (3 para cada jugador)
-        questions: {}, // Questions will be managed by the server now
-        currentQuestionData: null,
-        currentTurn: null,
-        optionsRequested: false, // Track if options are visible for levels 2+
-        fiftyFiftyUsed: false, // Track if 50/50 power-up is used
-        gameActive: false,
-        websocket: null,
-        roundStartTime: null,
-        pendingRoomsRequest: null, // Para almacenar solicitud pendiente de salas
-        isRoomCreator: false, // Para saber si este jugador creó la sala
-        playNotificationSound: null // Para la función de sonido de notificación
+function updatePlayerNameInUI() {
+    // Actualizar el nombre del jugador en los campos de creación de sala
+    const createPlayerNameInput = document.getElementById('createPlayerName');
+    const joinPlayerNameInput = document.getElementById('joinPlayerName');
+    
+    if (createPlayerNameInput) {
+        createPlayerNameInput.value = gameState.playerName;
+    }
+    
+    if (joinPlayerNameInput) {
+        joinPlayerNameInput.value = gameState.playerName;
+    }
+    
+    // Actualizar el nombre en el encabezado del juego si existe
+    if (DOM.player1NameHeader) {
+        DOM.player1NameHeader.textContent = gameState.playerName;
+    }
+    
+    console.log(`Nombre de jugador actualizado en la UI: ${gameState.playerName}`);
+}
+
+function updateConnectionStatusUI(connected, message = '') {
+    if (!DOM.connectionStatus) return;
+    
+    DOM.connectionStatus.style.display = 'block';
+    const statusText = message || (connected ? 'Conectado' : 'Desconectado');
+    DOM.connectionStatus.textContent = statusText;
+    
+    if (connected) {
+        DOM.connectionStatus.className = 'connection-status connected';
+        // Ocultar después de 3 segundos si está conectado
+        setTimeout(() => {
+            if (DOM.connectionStatus.classList.contains('connected')) {
+                DOM.connectionStatus.style.display = 'none';
+            }
+        }, 3000);
+    } else {
+        DOM.connectionStatus.className = `connection-status ${statusText.toLowerCase().includes('conectando') ? 'connecting' : 'disconnected'}`;
+    }
+}
+
+// --- WebSocket Communication ---
+function initializeWebSocket() {
+    // Limpiar cualquier intento de reconexión pendiente
+    if (gameState.reconnectTimer) {
+        clearTimeout(gameState.reconnectTimer);
+        gameState.reconnectTimer = null;
+    }
+
+    if (gameState.websocket && gameState.websocket.readyState !== WebSocket.CLOSED) {
+        console.log("🔄 Cerrando conexión WebSocket anterior...");
+        gameState.websocket.onclose = null; // Evitar que se dispare el evento onclose
+        gameState.websocket.close();
+    }
+
+    console.log(`🔌 Conectando a: ${CONFIG.WEBSOCKET_URL}`);
+    updateConnectionStatusUI(false, 'Conectando...');
+    showLobbyMessage('Conectando al servidor de juego...', 'info', false);
+
+    try {
+        gameState.websocket = new WebSocket(CONFIG.WEBSOCKET_URL);
+    } catch (error) {
+        console.error("❌ Error creando conexión WebSocket:", error);
+        showLobbyMessage(`Error de conexión: ${error.message}. Intenta refrescar la página.`, "error", true);
+        updateConnectionStatusUI(false, 'Error de conexión');
+        disableLobbyButtons();
+        scheduleReconnect();
+        return;
+    }
+    
+    const connectionTimeout = setTimeout(() => {
+        if (gameState.websocket && gameState.websocket.readyState === WebSocket.CONNECTING) {
+            console.error("⏰ Timeout de conexión WebSocket.");
+            showLobbyMessage("No se pudo conectar al servidor. Verificá tu conexión a internet.", "error", true);
+            updateConnectionStatusUI(false, 'Timeout de conexión');
+            gameState.websocket.close();
+            scheduleReconnect();
+        }
+    }, 10000); // 10 segundos de timeout
+
+    gameState.websocket.onopen = () => {
+        clearTimeout(connectionTimeout);
+        console.log('✅ WebSocket Conectado!');
+        updateConnectionStatusUI(true, 'Conectado');
+        showLobbyMessage('¡Conectado! Listo para jugar.', 'success', true);
+        enableLobbyButtons();
+        gameState.reconnectAttempts = 0; // Resetear intentos de reconexión
+        
+        // Solicitar salas disponibles inmediatamente después de conectar
+        setTimeout(() => {
+            if (gameState.gamePhase === 'lobby') {
+                refreshAvailableRooms();
+            }
+        }, 500); // Pequeño retraso para asegurar que todo esté listo
     };
 
-    // --- DOM Elements ---
-    // Player Info
-    const player1InfoEl = document.getElementById('player1Info');
-    const player1NameEl = document.getElementById('player1Name');
-    const player1ScoreEl = document.getElementById('player1Score');
-    const player2InfoEl = document.getElementById('player2Info');
-    const player2NameEl = document.getElementById('player2Name');
-    const player2ScoreEl = document.getElementById('player2Score');
-
-    // Game Status
-    const gameLevelDisplayEl = document.getElementById('gameLevelDisplay');
-    const questionCounterEl = document.getElementById('questionCounter'); // Might be updated by server messages
-    // const turnIndicatorEl = document.getElementById('turnIndicator'); // No longer used as it's in header
-
-    // Question & Answer Areas
-    const questionTextEl = document.getElementById('questionText');
-    // const level1InputAreaEl = document.getElementById('level1InputArea'); // REMOVED
-    // const answerFormLevel1 = document.getElementById('answerFormLevel1'); // REMOVED
-    // const answerInputEl = document.getElementById('answerInput'); // REMOVED
-    const level2PlusOptionsAreaEl = document.getElementById('level2PlusOptionsArea');
-    const optionsContainerEl = document.getElementById('optionsContainer');
-    const optionButtons = optionsContainerEl.querySelectorAll('.option'); // NodeList
-
-    // Action Buttons
-    // const requestOptionsButtonEl = document.getElementById('requestOptionsButton'); // REMOVED
-    const fiftyFiftyButtonEl = document.getElementById('fiftyFiftyButton');
-
-    // Feedback & Waiting Areas
-    const feedbackAreaEl = document.getElementById('feedbackArea');
-    const waitingAreaEl = document.getElementById('waitingArea'); // To show waiting messages
-
-    // End Game Modal
-    const endGameModalEl = document.getElementById('gameResultModal');
-    const resultTitleEl = document.getElementById('resultTitle');
-    const resultMessageEl = document.getElementById('resultMessage');
-    const finalPlayer1ScoreEl = document.getElementById('finalPlayer1Score');
-    const finalPlayer2ScoreEl = document.getElementById('finalPlayer2Score');
-    const resultStatsEl = document.getElementById('resultStats');
-    const playAgainButtonQSM = document.getElementById('playAgainButtonQSM');
-    const backToLobbyButtonQSM = document.getElementById('backToLobbyButtonQSM');
-    const backToGamesButtonQSM = document.getElementById('backToGamesButtonQSM');
-
-    // Lobby Elements
-    const lobbySectionEl = document.getElementById('lobbySection');
-    const lobbyMessageAreaEl = document.getElementById('lobbyMessageArea'); // To show lobby status/errors
-    const createPlayerNameInput = document.getElementById('createPlayerName');
-    const createRoomPasswordInput = document.getElementById('createRoomPassword'); // Optional password
-    const createRoomButton = document.getElementById('createRoomButton');
-    const joinPlayerNameInput = document.getElementById('joinPlayerName');
-    const joinRoomIdInput = document.getElementById('joinRoomId');
-    const joinRoomPasswordInput = document.getElementById('joinRoomPassword'); // Optional password
-    const joinRoomButton = document.getElementById('joinRoomButton');
-    const joinRandomRoomButton = document.getElementById('joinRandomRoomButton'); // New button
-    const gameContentSectionEl = document.getElementById('gameContentSection'); // Game area container
-    const availableRoomsListEl = document.getElementById('availableRoomsList'); // Container for the room list UL
-    const playersHeaderInfoEl = document.getElementById('playersHeaderInfo'); // Referencia al contenedor de info de jugadores
-
-    // --- Modal Contraseña Sala Privada ---
-    const privateRoomPasswordModalEl = document.getElementById('privateRoomPasswordModal');
-    const passwordModalTitleEl = document.getElementById('passwordModalTitle');
-    const passwordModalTextEl = document.getElementById('passwordModalText');
-    const privateRoomPasswordFormEl = document.getElementById('privateRoomPasswordForm');
-    const passwordModalInputEl = document.getElementById('passwordModalInput');
-    const cancelPasswordSubmitEl = document.getElementById('cancelPasswordSubmit');
-    const submitPasswordButtonEl = document.getElementById('submitPasswordButton');
-    const passwordErrorTextEl = document.getElementById('passwordErrorText');
-    let currentJoiningRoomId = null; // Para guardar el ID de la sala a la que se intenta unir con contraseña
-
-    // --- Initialization ---
-    function initializeApp() {
-        console.log("🚀 [QSM] Initializing Quien Sabe Más 1v1 App...");
-        console.log("🚀 [QSM] Versión con filtrado de salas implementado");
-        showLobby(); // Start in the lobby
-        setupEventListeners();
-        hideEndGameModal();
-
-        // --- Prefill player name from localStorage (MAIN.JS SHOULD HANDLE THIS, BUT AS FALLBACK) ---
-        const savedPlayerName = localStorage.getItem('playerName'); // Changed from sessionStorage
-        if (savedPlayerName) {
-            if (createPlayerNameInput && !createPlayerNameInput.value) createPlayerNameInput.value = savedPlayerName;
-            if (joinPlayerNameInput && !joinPlayerNameInput.value) joinPlayerNameInput.value = savedPlayerName;
-            console.log(`Prefilled player name from localStorage (QSM): ${savedPlayerName}`);
-        }
-        // --- End Prefill ---
-
-        initializeWebSocket(); // Connect WebSocket on app load
-        
-        // Configurar polling automático de salas cada 5 segundos cuando estamos en el lobby
-        setupAutomaticRoomPolling();
-
-        // Añadir soporte para comunicación de salas disponibles
-        window.addEventListener('message', function(event) {
-            // Verificar origen del mensaje por seguridad
-            if (event.origin !== window.location.origin) return;
-            
-            // Si nos piden las salas disponibles
-            if (event.data && event.data.type === 'requestRooms' && event.data.gameType === 'quiensabemas') {
-                // Verificar si hay conexión WebSocket activa
-                if (!gameState.websocket || gameState.websocket.readyState !== WebSocket.OPEN) {
-                    // Enviar lista vacía si no hay conexión
-                    event.source.postMessage({
-                        type: 'availableRooms',
-                        gameType: 'quiensabemas',
-                        rooms: []
-                    }, event.origin);
-                    return;
-                }
-                
-                // Solicitar salas al servidor
-                sendToServer('getRooms', { gameType: 'quiensabemas' });
-                
-                // Guardar el origen para responder cuando recibamos la lista del servidor
-                gameState.pendingRoomsRequest = {
-                    source: event.source,
-                    origin: event.origin
-                };
-            }
-        });
-    }
-
-    // --- Helper function to normalize text ---
-    function normalizeText(text) {
-        if (typeof text !== 'string') return '';
-        return text.toLowerCase()
-                   .normalize("NFD") // Decompose accented characters
-                   .replace(/\u0300-\u036f/g, ""); // Remove diacritical marks
-    }
-    // --- End Helper ---
-
-    function clearAndHideOptions() {
-        optionButtons.forEach((btn) => {
-            btn.querySelector('.option-text').textContent = '';
-            btn.style.display = 'none';
-            btn.classList.remove('hidden', 'correct', 'incorrect', 'selected');
-        });
-        // optionsContainerEl.style.display = 'none'; // Optionally hide the whole container
-    }
-
-    function showLobby() {
-        lobbySectionEl.style.display = 'block';
-        gameContentSectionEl.style.display = 'none';
-        lobbySectionEl.classList.add('active');
-        gameContentSectionEl.classList.remove('active');
-        // Hide player info in header while in lobby
-        if (playersHeaderInfoEl) playersHeaderInfoEl.style.display = 'none';
-        clearLobbyMessage();
-        enableLobbyButtons(); // Ensure buttons are enabled when returning to lobby
-        
-        // Limpiar completamente la lista de salas al mostrar el lobby
-        if (availableRoomsListEl) {
-            console.log("🧹 [QSM] Limpiando lista de salas al mostrar lobby");
-            availableRoomsListEl.innerHTML = '<li class="no-rooms-message">Cargando salas disponibles...</li>';
-        }
-    }
-
-    function showGameScreen() {
-        lobbySectionEl.style.display = 'none';
-        gameContentSectionEl.style.display = 'block';
-        lobbySectionEl.classList.remove('active');
-        gameContentSectionEl.classList.add('active');
-        // Show player info in header
-        if (playersHeaderInfoEl) playersHeaderInfoEl.style.display = 'flex'; // Or 'block' depending on your CSS
-    }
-
-    function startGame() {
-        // Reproducir sonido de inicio del juego
-        if (window.soundManager) {
-            window.soundManager.playSound('gameStart');
-        }
-        
-        console.log("🚀 Starting game!");
-        clearAndHideOptions(); 
-        showGameScreen(); 
-        updatePlayerUI(); 
-    }
-
-    // --- Lobby Logic ---
-    function setupLobbyEventListeners() {
-        if (createRoomButton) createRoomButton.addEventListener('click', handleCreateRoom);
-        if (joinRoomButton) joinRoomButton.addEventListener('click', handleJoinRoomById);
-        if (joinRandomRoomButton) joinRandomRoomButton.addEventListener('click', handleJoinRandomRoom);
-        // Add listener for password inputs to potentially clear errors on input
-        [createRoomPasswordInput, joinRoomPasswordInput].forEach(input => {
-            if(input) input.addEventListener('input', clearLobbyMessage);
-        });
-        // [createPlayerNameInput, joinPlayerNameInput, joinRoomIdInput, answerInputEl].forEach(input => { // answerInputEl removed
-        [createPlayerNameInput, joinPlayerNameInput, joinRoomIdInput].forEach(input => {
-            if(input) input.addEventListener('input', clearLobbyMessage);
-        });
-    }
-
-    function handleCreateRoom() {
-        // Check if button exists and is already disabled (prevent double click)
-        if (!createRoomButton || createRoomButton.disabled) return;
-
-        const playerName = createPlayerNameInput.value.trim() || 'Jugador 1';
-        const password = createRoomPasswordInput.value; // Don't trim password
-        console.log(`Requesting to create room for ${playerName}` + (password ? ' with password.' : '.'));
-        showLobbyMessage("Creando sala...", "info");
-        disableLobbyButtons(true); // Disable and show spinner on create button
-        sendToServer('createRoom', { playerName, password, gameType: 'quiensabemas' });
-    }
-
-    function handleJoinRoomById() {
-        // Check if button exists and is already disabled
-        if (!joinRoomButton || joinRoomButton.disabled) return;
-
-        const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
-        const roomId = joinRoomIdInput.value.trim();
-        const password = joinRoomPasswordInput.value; // Don't trim password
-
-        if (!roomId) {
-            showLobbyMessage("Por favor, poné un ID de sala.", "error");
-            return;
-        }
-        console.log(`Requesting to join room ${roomId} as ${playerName}` + (password ? ' with password.' : '.'));
-        showLobbyMessage(`Uniéndote a la sala ${roomId}...`, "info");
-        disableLobbyButtons(false, true); // Disable and show spinner on join by ID button
-        sendToServer('joinRoom', { playerName, roomId, password, gameType: 'quiensabemas' });
-    }
-
-     function handleJoinRandomRoom() {
-         // Check if button exists and is already disabled
-         if (!joinRandomRoomButton || joinRandomRoomButton.disabled) return;
-
-         const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2'; // Use the name from the join section
-         console.log(`Searching for random room for ${playerName}...`);
-         showLobbyMessage("Buscando una sala disponible...", "info");
-         disableLobbyButtons(false, false, true); // Disable and show spinner on join random button
-         sendToServer('joinRandomRoom', { playerName, gameType: 'quiensabemas' });
-     }
-
-    function showLobbyMessage(message, type = "info", persistent = false) { // type can be 'info', 'success', 'error'
-        if (!lobbyMessageAreaEl) return;
-        lobbyMessageAreaEl.textContent = message;
-        lobbyMessageAreaEl.className = 'lobby-message'; // Reset classes
-        void lobbyMessageAreaEl.offsetWidth; // Force reflow
-        lobbyMessageAreaEl.classList.add(type);
-        lobbyMessageAreaEl.classList.add('show');
-
-        // Si no es persistente, ocultar después de un tiempo (ej. 5 segundos)
-        if (!persistent && (type === 'success' || type === 'info')) {
-            setTimeout(() => {
-                // Solo ocultar si sigue siendo el mismo mensaje (evita ocultar un error posterior)
-                if (lobbyMessageAreaEl.textContent === message) {
-                    clearLobbyMessage();
-                }
-            }, 5000);
-        }
-        // Los errores (type === 'error') se quedan visibles hasta la siguiente acción.
-    }
-
-    function clearLobbyMessage() {
-        lobbyMessageAreaEl.classList.remove('show');
-        // Retrasar limpieza de texto y clases para permitir la transición de salida
-         setTimeout(() => {
-            // Solo limpiar si no se mostró otro mensaje mientras tanto
-             if (!lobbyMessageAreaEl.classList.contains('show')) {
-        lobbyMessageAreaEl.textContent = '';
-        lobbyMessageAreaEl.className = 'lobby-message';
-             }
-         }, 500); // Debe ser >= duración de transición CSS
-    }
-
-    function disableLobbyButtons(spinCreate = false, spinJoinId = false, spinJoinRandom = false) {
-        if (createRoomButton) {
-        createRoomButton.disabled = true;
-            // Add spinner logic if needed, assuming spinner element exists or is added via CSS
-            createRoomButton.innerHTML = spinCreate ? 'Creando... <span class="spinner-lobby"></span>' : 'Crear Sala';
-        }
-        if (joinRoomButton) {
-        joinRoomButton.disabled = true;
-            joinRoomButton.innerHTML = spinJoinId ? 'Uniéndote... <span class="spinner-lobby"></span>' : 'Unirse por ID';
-        }
-        if (joinRandomRoomButton) {
-        joinRandomRoomButton.disabled = true;
-            joinRandomRoomButton.innerHTML = spinJoinRandom ? 'Buscando... <span class="spinner-lobby"></span>' : 'Buscar Sala Aleatoria';
-        }
-    }
-
-    function enableLobbyButtons() {
-        if (createRoomButton) {
-        createRoomButton.disabled = false;
-            createRoomButton.innerHTML = 'Crear Sala'; // Restore original text
-        }
-        if (joinRoomButton) {
-        joinRoomButton.disabled = false;
-             joinRoomButton.innerHTML = 'Unirse por ID';
-        }
-        if (joinRandomRoomButton) {
-        joinRandomRoomButton.disabled = false;
-            joinRandomRoomButton.innerHTML = 'Buscar Sala Aleatoria';
-        }
-    }
-
-    // --- Game Logic ---
-    function updatePlayerUI() {
-        if (!gameState.players || !gameState.myPlayerId) return; // Necesitamos saber quiénes somos
-
-        const player1 = gameState.players.player1;
-        const player2 = gameState.players.player2;
-        const localPlayer = player1?.id === gameState.myPlayerId ? player1 : (player2?.id === gameState.myPlayerId ? player2 : null);
-        const opponentPlayer = player1?.id !== gameState.myPlayerId ? player1 : (player2?.id !== gameState.myPlayerId ? player2 : null);
-
-        // Actualizar Header
-        if (playersHeaderInfoEl && localPlayer && opponentPlayer) {
-            const localNameEl = playersHeaderInfoEl.querySelector('.local-player .player-name');
-            const localScoreEl = playersHeaderInfoEl.querySelector('.local-player .score');
-            const opponentNameEl = playersHeaderInfoEl.querySelector('.opponent-player .player-name');
-            const opponentScoreEl = playersHeaderInfoEl.querySelector('.opponent-player .score');
-
-            if (localNameEl) localNameEl.textContent = localPlayer.name || 'Tú';
-            if (localScoreEl) localScoreEl.textContent = `Score: ${localPlayer.score || 0}`;
-            if (opponentNameEl) opponentNameEl.textContent = opponentPlayer.name || 'Oponente';
-            if (opponentScoreEl) opponentScoreEl.textContent = `Score: ${opponentPlayer.score || 0}`;
-
-            // Marcar turno activo en el header
-            const localPlayerBox = playersHeaderInfoEl.querySelector('.local-player');
-            const opponentPlayerBox = playersHeaderInfoEl.querySelector('.opponent-player');
-            if (localPlayerBox) localPlayerBox.classList.toggle('active-turn', localPlayer.id === gameState.currentTurn);
-            if (opponentPlayerBox) opponentPlayerBox.classList.toggle('active-turn', opponentPlayer.id === gameState.currentTurn);
-
-        } else if (playersHeaderInfoEl) {
-            // Estado inicial o si falta info
-             const localNameEl = playersHeaderInfoEl.querySelector('.local-player .player-name');
-             const localScoreEl = playersHeaderInfoEl.querySelector('.local-player .score');
-             const opponentNameEl = playersHeaderInfoEl.querySelector('.opponent-player .player-name');
-             const opponentScoreEl = playersHeaderInfoEl.querySelector('.opponent-player .score');
-             if (localNameEl) localNameEl.textContent = 'Esperando...';
-             if (localScoreEl) localScoreEl.textContent = 'Score: 0';
-             if (opponentNameEl) opponentNameEl.textContent = 'Esperando...';
-             if (opponentScoreEl) opponentScoreEl.textContent = 'Score: 0';
-        }
-
-        // Actualizar Turn Indicator (si existe fuera del header)
-        // if (turnIndicatorEl) { // turnIndicatorEl no longer used directly
-        //      if (!gameState.currentTurn || !gameState.players) {
-        //          turnIndicatorEl.textContent = "Esperando turno...";
-        // } else {
-        //          const currentPlayer = player1?.id === gameState.currentTurn ? player1 : player2;
-        //          turnIndicatorEl.textContent = `Turno de: ${currentPlayer?.name || '...'}`;
-        // }
-        // }
-    }
-
-    // --- Question Display (Triggered by Server) ---
-    function displayQuestion(question) {
-        // Validar estructura de pregunta recibida
-        if (question && typeof question === 'object') {
-            const hasOptions = question.hasOwnProperty('options') && Array.isArray(question.options);
-            if (!hasOptions) {
-                console.warn("Question received without valid options array");
-            }
-        }
-
-        if (!question) {
-            console.error("displayQuestion called without question data.");
-            questionTextEl.textContent = "Error loading question.";
-            return;
-        }
-        console.log("Displaying question:", question);
-        gameState.currentQuestionData = question; // Store current question data
-        questionTextEl.textContent = question.text;
-        feedbackAreaEl.innerHTML = ''; // Clear previous feedback
-
-        // Reset options/input state
-        gameState.optionsRequested = true; // Options are now always implicitly "requested" or rather, available
-        // requestOptionsButtonEl.classList.remove('used'); // Button removed
-        fiftyFiftyButtonEl.classList.remove('used');
-        gameState.fiftyFiftyUsed = false;
-
-        // --- Input Area Visibility (Simplified: Options always shown) --- 
-        level2PlusOptionsAreaEl.classList.add('active'); // Always show L2+ area (which is now the only option area)
-        optionsContainerEl.style.display = 'grid'; // Options are now always shown, ensure container is visible
-        optionButtons.forEach(btn => {
-            btn.style.display = 'flex'; // Use flex as per HTML, ensure buttons are visible templates
-            btn.disabled = true;
-            btn.classList.remove('selected', 'correct', 'incorrect', 'hidden');
-            btn.querySelector('.option-text').textContent = '';
-        });
-        fiftyFiftyButtonEl.style.display = 'inline-flex'; // Ensure button is visible
-        fiftyFiftyButtonEl.disabled = true; // Start disabled
-        // --- End Simplified Input Area Visibility ---
-
-        // Populate options directly if available in the question data sent by server
-        let optionsToShow = null;
-        const directOptions = question ? question.options : null; // Direct access (no space)
-
-        if (directOptions && Array.isArray(directOptions) && directOptions.length > 0) {
-            console.log("[CLIENT] Using 'question.options' (no space). It is a valid array.");
-            optionsToShow = directOptions;
-        } else {
-            // Fallback or check for the version with a space, just in case server is inconsistent
-            const optionsWithSpace = question && question['options ']; // Note the space
-            if (optionsWithSpace && Array.isArray(optionsWithSpace) && optionsWithSpace.length > 0) {
-                console.warn("[CLIENT] 'question.options' (no space) was invalid or empty. FALLING BACK to 'options ' (with space).");
-                optionsToShow = optionsWithSpace;
-            }
-        }
-
-        if (optionsToShow) {
-            displayOptionsFromArray(optionsToShow);
-        } else {
-            console.warn("[CLIENT] Neither 'question.options' (no space) nor 'options ' (with space) yielded a valid & non-empty options array. Options will be empty.", question);
-            // The detailed logs at the start of the function should provide more insight into the raw question object.
-            clearAndHideOptions();
-        }
-    }
-
-    // --- Turn & Game Flow Updates (Triggered by Server) ---
-    function updateLevelAndQuestionCounter(level, qNum = null, qTotal = null) {
-        gameState.currentLevel = level;
-        gameLevelDisplayEl.textContent = `Level ${gameState.currentLevel}`;
-        if (qNum !== null && qTotal !== null) {
-            questionCounterEl.textContent = `Question ${qNum}/${qTotal}`;
-        } else {
-             questionCounterEl.textContent = ''; // Clear if no info provided
-        }
-    }
-
-    // --- Answer Handling & Submission ---
-    function submitAnswer(answerData) {
-        if (!gameState.gameActive || gameState.currentTurn !== gameState.myPlayerId) {
-            console.warn("Attempted to submit answer when not allowed.");
-            return;
-        }
-        console.log("Submitting answer to server:", answerData);
-        sendToServer('submitAnswer', answerData);
-        disablePlayerInput(); // Disable input after submitting
-        showWaitingMessage("Respuesta enviada. Esperando oponente/resultado..."); // Updated message
-    }
-
-    function handleOptionClick(event) {
-        // This check might be redundant if buttons are correctly disabled, but good for safety
-        // if (!gameState.optionsRequested || gameState.currentTurn !== gameState.myPlayerId || !gameState.gameActive) return; // gameState.optionsRequested is always true now
-
-        if (gameState.currentTurn !== gameState.myPlayerId || !gameState.gameActive) return;
-
-
-        const selectedButton = event.target.closest('.option');
-        if (!selectedButton || selectedButton.disabled || selectedButton.classList.contains('hidden')) return;
-
-        const selectedIndex = parseInt(selectedButton.getAttribute('data-index'));
-
-        // Optional: Visually mark the selected option immediately (can be confirmed/overridden by server)
-        // optionButtons.forEach(btn => btn.classList.remove('selected'));
-        // selectedButton.classList.add('selected');
-
-        submitAnswer({ selectedIndex: selectedIndex });
-    }
-
-    // --- Action Buttons Logic ---
-    /* // REMOVED: handleRequestOptions function
-    function handleRequestOptions() {
-        if (!gameState.gameActive || gameState.currentTurn !== gameState.myPlayerId) return;
-        // if (gameState.currentLevel === 1 || gameState.optionsRequested) return; // Logic changed
-
-        console.log("Requesting options from server..."); // This path should not be hit
-        // sendToServer('requestOptions', {}); // Action removed
-        // requestOptionsButtonEl.disabled = true; // Button removed
-        // requestOptionsButtonEl.classList.add('used'); // Button removed
-    }
-    */
-
-    function handleFiftyFifty() {
-        if (!gameState.gameActive || gameState.currentTurn !== gameState.myPlayerId) return;
-        // Can only use 50/50 if options are shown (always true now) and it hasn't been used yet for this question
-        // if (!gameState.optionsRequested || gameState.fiftyFiftyUsed) return; // gameState.optionsRequested is always true
-        if (gameState.fiftyFiftyUsed) return;
-
-        console.log("Requesting 50/50 from server...");
-        sendToServer('requestFiftyFifty', {});
-        fiftyFiftyButtonEl.disabled = true; // Disable button while waiting for server response
-        fiftyFiftyButtonEl.classList.add('used'); // Visually indicate it's used/pending
-    }
-
-    // --- UI Updates & Feedback ---
-    function showFeedback(message, type) { // type = 'correct' or 'incorrect'
-        // Reproducir sonido según el tipo de feedback
-        if (window.soundManager) {
-            if (type === 'correct') {
-                window.soundManager.playSound('correct');
-            } else if (type === 'incorrect') {
-                window.soundManager.playSound('incorrect');
-            }
-        }
-        
-        console.log(`Feedback: ${message} (${type})`);
-        // Add visual feedback here if needed
-    }
-
-     function visualizeAnswerOptions(selectedIndex, correctIndex, isLocalPlayerCorrect) {
-        // Show correctness on options only for levels 2+
-         if (gameState.currentQuestionData && gameState.currentQuestionData.level > 1 && gameState.optionsRequested) {
-             optionButtons.forEach((btn, index) => {
-                // Remove previous selection states first
-                 btn.classList.remove('selected');
-
-                 if (index === correctIndex) {
-                     btn.classList.add('correct');
-                 }
-                 // If the selecting player selected an option and it was incorrect, mark it incorrect
-                 // We need to know WHO selected the index to apply 'incorrect' correctly for both players viewing
-                 // This function might need adjustment based on whether 'forPlayerId' is available here
-                 // Assuming this function is called for the player who just answered:
-                 if (index === selectedIndex && !isLocalPlayerCorrect) {
-                     btn.classList.add('incorrect');
-                 }
-                 // Ensure all buttons are disabled after revealing the answer
-                 btn.disabled = true;
-             });
-         }
-     }
-
-
-     function displayOptionsFromObject(optionsObject) {
-        console.log("Displaying options from object:", optionsObject);
-         optionsContainerEl.style.display = 'grid'; // Show the grid
-        const optionKeys = ['A', 'B', 'C', 'D']; // Expected keys
-
-         optionButtons.forEach((btn, index) => {
-            const key = optionKeys[index];
-            if (optionsObject[key]) {
-                btn.querySelector('.option-text').textContent = optionsObject[key];
-                btn.style.display = 'flex'; // Show the button (use flex)
-                btn.disabled = true; // Keep disabled until enabled by enablePlayerInput
-                btn.classList.remove('hidden', 'correct', 'incorrect', 'selected'); // Reset classes
-            } else {
-                btn.style.display = 'none'; // Hide if no option for this key
-            }
-         });
-         gameState.optionsRequested = true; // Mark options as requested/shown (always true now)
-
-         // Re-evaluate if 50/50 button should be enabled now
-         if (gameState.currentTurn === gameState.myPlayerId && gameState.gameActive) {
-             fiftyFiftyButtonEl.disabled = gameState.fiftyFiftyUsed;
-         }
-     }
-
-     function removeFiftyFiftyOptions(indicesToRemove) {
-         console.log("Applying 50/50, removing options at indices:", indicesToRemove);
-         indicesToRemove.forEach(index => {
-             if (optionButtons[index]) {
-                 optionButtons[index].style.display = 'none'; // Hide the button
-                 optionButtons[index].classList.add('hidden'); // CORRECT: Apply to individual button
-                 optionButtons[index].disabled = true; // Ensure it's disabled
-             }
-         });
-         gameState.fiftyFiftyUsed = true; // Mark 50/50 as used for this question turn
-         fiftyFiftyButtonEl.disabled = true; // Disable 50/50 button permanently for this question
-         fiftyFiftyButtonEl.classList.add('used'); // Visually mark as used
-     }
-
-    function showError(message) {
-        // Use feedback area for game-related errors shown to user
-        feedbackAreaEl.innerHTML = `<span class="feedback-message error">Error: ${message}</span>`;
-        console.error("Game Error:", message);
-    }
-
-    function showWaitingMessage(message = "Waiting for opponent...") {
-        waitingAreaEl.querySelector('p').textContent = message;
-        waitingAreaEl.classList.add('active');
-    }
-
-    function hideWaitingMessage() {
-        waitingAreaEl.classList.remove('active');
-    }
-
-    function disablePlayerInput() {
-        // Level 1 (Now all levels are options only)
-        // answerInputEl.disabled = true; // REMOVED
-        // const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]'); // REMOVED
-        // if(submitBtnLvl1) submitBtnLvl1.disabled = true; // REMOVED
-
-        // Level 2+ (Now all levels)
-        optionButtons.forEach(btn => btn.disabled = true);
-        // requestOptionsButtonEl.disabled = true; // REMOVED
-        fiftyFiftyButtonEl.disabled = true;
-    }
-
-    function enablePlayerInput() {
-        // Only enable if it's currently this player's turn AND the game is active
-        if (gameState.currentTurn !== gameState.myPlayerId || !gameState.gameActive) {
-             disablePlayerInput();
-             return;
-        }
-
-        hideWaitingMessage();
-
-        // Enable based on current level and state (Hybrid Logic)
-        if (gameState.currentQuestionData) {
-            // const isLevel1 = gameState.currentQuestionData.level === 1; // Not needed
-            const optionsAreVisible = gameState.optionsRequested; // Always true now
-
-            // Enable/Disable Text Input - All removed
-            // answerInputEl.disabled = !isLevel1 && optionsAreVisible; 
-            // const submitBtnLvl1 = answerFormLevel1.querySelector('button[type="submit"]');
-            // if(submitBtnLvl1) submitBtnLvl1.disabled = answerInputEl.disabled;
-            // if (!answerInputEl.disabled) {
-            //     answerInputEl.focus(); 
-            // }
-
-            // Enable/Disable L2+ Buttons (Now all levels) - Simplified
-            fiftyFiftyButtonEl.disabled = !optionsAreVisible || gameState.fiftyFiftyUsed; 
-            fiftyFiftyButtonEl.classList.toggle('used', gameState.fiftyFiftyUsed);
-
-            optionButtons.forEach(btn => {
-                // Enable option button if options are visible AND it's not hidden by 50/50
-                btn.disabled = !optionsAreVisible || btn.classList.contains('hidden');
-            });
-        } else {
-             console.warn("enablePlayerInput called but no currentQuestionData available.");
-             disablePlayerInput();
-        }
-    }
-
-
-    // --- WebSocket Communication ---
-    function initializeWebSocket() {
-        // URL definida arriba
-        const wsUrl = WEBSOCKET_URL;
-
-        console.log(`Attempting to connect WebSocket: ${wsUrl}`);
-
-        // Close existing connection if any (to prevent duplicates on potential re-init)
-        if (gameState.websocket && gameState.websocket.readyState !== WebSocket.CLOSED && gameState.websocket.readyState !== WebSocket.CLOSING) {
-            console.log("Closing previous WebSocket connection.");
-            gameState.websocket.onclose = null; // Prevent old onclose handler from firing unexpectedly
-            gameState.websocket.close();
-        }
-
+    gameState.websocket.onmessage = (event) => {
         try {
-            showLobbyMessage("Conectando al servidor...", "info");
-            gameState.websocket = new WebSocket(wsUrl);
+            const message = JSON.parse(event.data);
+            // Filtrar mensajes que no son para QSM
+            if (message.game && message.game !== 'qsm') {
+                return;
+            }
+            console.log('📥 Mensaje recibido:', message.type);
+            gameState.lastMessageTimestamp = Date.now(); // Actualizar timestamp del último mensaje
+            handleServerMessage(message);
         } catch (error) {
-             console.error("Failed to create WebSocket:", error);
-             showLobbyMessage(`Error de conexión: ${error.message}. Refresca la página.`, "error");
-             disableLobbyButtons();
-             return; // Stop initialization
+            console.error('❌ Error analizando mensaje:', error, event.data);
         }
+    };
 
-        // Establecer tiempo máximo de conexión (10 segundos)
-        const connectionTimeout = setTimeout(() => {
-            if (gameState.websocket && gameState.websocket.readyState === WebSocket.CONNECTING) {
-                console.error("Tiempo de conexión agotado (QSM)");
-                showLobbyMessage("No se pudo conectar al servidor. Comprueba que esté en funcionamiento.", "error");
-                gameState.websocket.close();
-                disableLobbyButtons();
-            }
-        }, 10000); // 10 segundos
-
-        gameState.websocket.onopen = () => {
-            clearTimeout(connectionTimeout);
-            console.log('WebSocket Connected!');
-            showLobbyMessage("Connected to server. Choose an option.", "success");
-            enableLobbyButtons();
-        };
-
-        gameState.websocket.onmessage = (event) => {
-            try {
-                const message = JSON.parse(event.data);
-                console.log('Message received from server:', message);
-                handleServerMessage(message);
-            } catch (error) {
-                console.error('Error parsing message from server:', error, event.data);
-            }
-        };
-
-        gameState.websocket.onerror = (error) => {
-            clearTimeout(connectionTimeout);
-            console.error('WebSocket Error:', error);
-            // Display different messages based on context
-            if (gameState.gameActive) {
-                showError("Connection error. Please return to lobby.");
-            } else {
-                showLobbyMessage("Server connection error. Please refresh or try again later.", "error");
-            }
-             disableLobbyButtons(); // Disable lobby actions on error
-             // Consider disabling game input if game was active
-             if(gameState.gameActive) disablePlayerInput();
-        };
-
-        gameState.websocket.onclose = (event) => {
-            clearTimeout(connectionTimeout);
-            console.log('WebSocket Disconnected:', event.reason, `Code: ${event.code}`, `WasClean: ${event.wasClean}`);
-            const wasConnected = !!gameState.websocket; // Check if we thought we were connected
-            gameState.websocket = null; // Clear the reference
-
-            // Provide feedback based on whether the game was active and if the close was clean
-            if (gameState.gameActive) {
-                 showError("Lost connection to the server. Game ended.");
-                 gameState.gameActive = false; // Mark game as inactive
-                 disablePlayerInput();
-                 showEndGameModalWithError("Connection Lost"); // Show a modal indicating connection issue
-            } else if (wasConnected) { // Only show lobby error if we were actually connected before closing
-                // If connection closes while in lobby (or before game starts)
-                showLobbyMessage("Disconnected from server. Please refresh to reconnect.", "error");
-                 disableLobbyButtons();
-            }
-             // If it wasn't clean and not during a game, it might be a connection failure initially.
-             else if (!event.wasClean && !gameState.gameActive) {
-                 showLobbyMessage("Could not connect to the server. Please ensure it's running and refresh.", "error");
-                 disableLobbyButtons();
-             }
-        };
-    }
-
-
-    function sendToServer(type, payload) {
-        if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN) {
-            const message = JSON.stringify({ type, payload });
-            console.log('Sending message to server:', message);
-            gameState.websocket.send(message);
-        } else {
-            console.error('WebSocket not connected. Cannot send:', type, payload);
-            // Show error relevant to context
-            if (gameState.gameActive) {
-                 showError("Not connected to server. Cannot send message.");
-                 // Consider if this error should end the game or prompt reconnect
-            } else {
-                 showLobbyMessage("Not connected. Please refresh.", "error");
-            }
-        }
-    }
-
-    // --- Message Handling ---
-    function handleServerMessage(message) {
-        console.log("🔔 [QSM] handleServerMessage ejecutándose, tipo:", message.type);
-        
-        // Always hide the main waiting overlay when a message arrives,
-        // specific messages might show it again if needed.
-        // Exception: Don't hide if the message itself indicates waiting state (e.g., playerDisconnect)
-        if (message.type !== 'playerDisconnect' && message.type !== 'updateState' /* add other exceptions if needed */) {
-            hideWaitingMessage();
-        }
-
-
-        switch (message.type) {
-            case 'yourInfo': // Server assigns our ID
-                gameState.myPlayerId = message.payload.playerId;
-                console.log(`Assigned Player ID: ${gameState.myPlayerId}`);
-                // --- Save player name to localStorage when assigned --- 
-                // Tomar el nombre que el jugador usó en el lobby
-                let currentLobbyPlayerName = '';
-                if (gameState.myPlayerId === gameState.players?.player1?.id) { // Si somos player1 (usualmente el creador)
-                    currentLobbyPlayerName = createPlayerNameInput?.value.trim();
-                } else if (gameState.myPlayerId === gameState.players?.player2?.id) { // Si somos player2 (usualmente el que se une)
-                    currentLobbyPlayerName = joinPlayerNameInput?.value.trim();
-                }
-
-                if (currentLobbyPlayerName && currentLobbyPlayerName !== 'Jugador 1' && currentLobbyPlayerName !== 'Jugador 2') {
-                    localStorage.setItem('playerName', currentLobbyPlayerName);
-                    console.log(`Saved/Updated player name to localStorage (QSM): ${currentLobbyPlayerName}`);
-                } else {
-                    // Si no se pudo obtener de los inputs, intentar con el que ya está en localStorage
-                    const existingName = localStorage.getItem('playerName');
-                    if (existingName) {
-                         // Si el servidor nos dio un nombre (en gameState.players) y es diferente, lo actualizamos
-                        const serverNameForMe = gameState.players?.player1?.id === gameState.myPlayerId ? gameState.players.player1.name : gameState.players?.player2?.name;
-                        if(serverNameForMe && serverNameForMe !== existingName && serverNameForMe !== 'Jugador 1' && serverNameForMe !== 'Jugador 2'){
-                            localStorage.setItem('playerName', serverNameForMe);
-                            console.log(`Updated player name in localStorage from server info (QSM): ${serverNameForMe}`);
-                        }
-                    } // No hacemos nada si no hay nombre en los inputs ni en localStorage
-                }
-                // --- End Save ---
-                break;
-
-            case 'roomCreated': // Successfully created a room
-                gameState.roomId = message.payload.roomId;
-                gameState.isRoomCreator = true; // Marcar que somos el creador
-                console.log(`⭐ Sala creada: ${gameState.roomId} - Soy el creador`);
-                
-                // Update player state with the creator's info (assuming server doesn't send full player list here)
-                gameState.players.player1 = {
-                    id: gameState.myPlayerId,
-                    name: createPlayerNameInput.value.trim() || 'Jugador 1',
-                    score: 0
-                };
-                gameState.players.player2 = null; // No opponent yet
-
-                showGameScreen(); // Transition UI away from lobby
-                updatePlayerUI(); // Show player 1 info in the header
-                // Hide game elements not needed yet
-                questionTextEl.textContent = '';
-                level2PlusOptionsAreaEl.classList.remove('active');
-                showWaitingMessage(`Room ${gameState.roomId} created. Waiting for opponent...`); // Show waiting message in the game screen area
-                disablePlayerInput(); // Ensure inputs are disabled while waiting
-                break;
-
-            case 'joinSuccess': // Successfully joined a room
-                gameState.roomId = message.payload.roomId;
-                gameState.isRoomCreator = false; // No somos el creador
-                console.log(`⭐ Unido a sala: ${gameState.roomId} - No soy el creador`);
-                
-                 if (message.payload.players) {
-                    gameState.players = message.payload.players;
-                 }
-                 // Si el modal de contraseña estaba activo, ocultarlo
-                 if (privateRoomPasswordModalEl && privateRoomPasswordModalEl.classList.contains('active')) {
-                    hidePasswordPromptModal();
-                 }
-                 showLobbyMessage(`Joined room ${gameState.roomId}! Waiting for game to start...`, "success");
-                 // Los botones del lobby se mantienen deshabilitados, esperando gameStart
-                 // enableLobbyButtons(); // No habilitar aquí, esperar gameStart
-                 // Restaurar texto del botón de submit de contraseña si fue cambiado
-                 if (submitPasswordButtonEl) {
-                    submitPasswordButtonEl.disabled = false;
-                    submitPasswordButtonEl.textContent = 'Unirse';
-                 }
-                break;
-
-             case 'joinError': // Failed to join/create room
-                 showLobbyMessage(message.payload.error || "Error joining/creating room.", "error");
-                 enableLobbyButtons(); 
-
-                 // Manejar error específico en el modal de contraseña
-                 if (privateRoomPasswordModalEl && privateRoomPasswordModalEl.classList.contains('active') && 
-                     message.payload.failedRoomId && message.payload.failedRoomId === currentJoiningRoomId) {
-                     
-                     passwordErrorTextEl.textContent = message.payload.error || "Contraseña incorrecta o error en la sala.";
-                     passwordErrorTextEl.style.display = 'block';
-                     if (submitPasswordButtonEl) {
-                        submitPasswordButtonEl.disabled = false;
-                        submitPasswordButtonEl.textContent = 'Unirse';
-                     }
-                     if (passwordModalInputEl) passwordModalInputEl.focus();
-                 } else {
-                    // Si el error no es del modal de contraseña específico, pero estaba activo, ocultarlo.
-                    if (privateRoomPasswordModalEl && privateRoomPasswordModalEl.classList.contains('active')) {
-                         hidePasswordPromptModal(); 
-                    }
-                 }
-                 break;
-
-            // Handle random join results separately for clarity
-             case 'randomJoinSuccess':
-                 gameState.roomId = message.payload.roomId;
-                  if (message.payload.players) {
-                     gameState.players = message.payload.players;
-                 }
-                 showLobbyMessage(`Joined random room ${gameState.roomId}! Waiting for game to start...`, "success");
-                 // Still waiting for game start, keep buttons disabled
-                 break;
-
-             case 'randomJoinError':
-                 showLobbyMessage(message.payload.error || "No suitable random rooms available.", "error");
-                 enableLobbyButtons(); // Allow user to try again or create a room
-                 break;
-
-            case 'gameStart': // Both players are ready, game begins
-                 gameState.players = message.payload.players; // Get initial player data { player1: {id, name, score}, player2: {id, name, score} }
-                 gameState.currentTurn = message.payload.startingPlayerId;
-                 console.log("Received gameStart:", message.payload);
-                 
-                 // Si somos el creador de la sala, notificar que se unió un oponente
-                 if (gameState.isRoomCreator && gameState.players) {
-                     // Encontrar al oponente
-                     let opponentName = 'Oponente';
-                     if (gameState.players.player1 && gameState.players.player1.id !== gameState.myPlayerId) {
-                         opponentName = gameState.players.player1.name || 'Oponente';
-                     } else if (gameState.players.player2 && gameState.players.player2.id !== gameState.myPlayerId) {
-                         opponentName = gameState.players.player2.name || 'Oponente';
-                     }
-                     
-                     // Notificar que el oponente se unió
-                     notifyOpponentJoined(opponentName);
-                 }
-                 
-                 startGame(); // Transition to game screen, update UI
-                 // Don't enable input here; wait for the first 'newQuestion' message
-                 showWaitingMessage("Game starting! Waiting for first question...");
-                 break;
-
-            case 'newQuestion': // Server sends a new question
-                 // Ensure game is marked active if it wasn't already (e.g., reconnect)
-                 if (!gameState.gameActive) {
-                    console.log("Received newQuestion while game not marked active. Activating game screen.");
-                    showGameScreen(); // Ensure game screen is visible
-                    gameState.gameActive = true;
-                 }
-                 // Update player scores/names if included in the message (optional, based on server design)
-                 if(message.payload.players) gameState.players = message.payload.players;
-                 gameState.currentTurn = message.payload.currentTurn; // Server dictates whose turn it is
-                 updatePlayerUI();
-
-                 // +++ DEBUG: Log the question object AS RECEIVED from payload +++
-                 console.log("[DEBUG] SERVER PAYLOAD question object:", JSON.parse(JSON.stringify(message.payload.question)));
-                 // Pass a DEEP COPY to displayQuestion to avoid issues with console.log live references or later modifications
-                 const questionCopy = JSON.parse(JSON.stringify(message.payload.question));
-                 displayQuestion(questionCopy); 
-                 // displayQuestion(message.payload.question); // OLD WAY
-                 updateLevelAndQuestionCounter(questionCopy.level, questionCopy.questionNumber, questionCopy.totalQuestionsInLevel);
-                 // updateTurnIndicator(); // REMOVED: Function does not exist
-
-                 // Handle enabling/disabling input based on whose turn it is
-                 if (gameState.currentTurn === gameState.myPlayerId) {
-                     console.log("It's my turn. Enabling input.");
-                     enablePlayerInput(); // Enable input if it's our turn
-                     hideWaitingMessage(); // Ensure no waiting message is shown
-                 } else {
-                     console.log("It's opponent's turn. Disabling input.");
-                     showWaitingMessage("Opponent's turn...");
-                     disablePlayerInput(); // Disable input if it's opponent's turn
-                 }
-                 break;
-
-            case 'updateState': // General state update (e.g., after an answer, turn change without new question yet)
-                 console.log("Received updateState:", message.payload);
-                 gameState.currentTurn = message.payload.currentTurn;
-                 gameState.players = message.payload.players; // Update scores primarily
-                 // gameState.currentLevel = message.payload.currentLevel; // Usually level changes with newQuestion
-                 updatePlayerUI();
-                 // updateTurnIndicator(); // REMOVED: Function does not exist
-                 // updateLevelAndQuestionCounter(gameState.currentLevel); // Level display usually updates with newQuestion
-
-                 if (gameState.gameActive) {
-                     if (gameState.currentTurn === gameState.myPlayerId) {
-                         // If it's now our turn (likely after opponent answered, before new question arrives)
-                         // We might still be waiting for the next question, so don't necessarily enable input yet.
-                         // Server should send 'newQuestion' to signal readiness for input.
-                         // However, we can hide the "Opponent's turn" message.
-                         hideWaitingMessage();
-                         console.log("State updated, now my turn (waiting for new question?)");
-                         // Optional: Show a generic waiting message if needed?
-                         // showWaitingMessage("Waiting for next question...");
-                     } else {
-                         // If it's opponent's turn (likely after we answered)
-                         disablePlayerInput(); // Ensure input is disabled
-                         showWaitingMessage("Opponent's turn...");
-                         console.log("State updated, now opponent's turn.");
-                     }
-                 }
-                 break;
-
-            case 'answerResult': // Server sends result of an answer submission
-                 console.log("Received answerResult:", message.payload);
-                 const { isCorrect, pointsAwarded, correctAnswerText, forPlayerId, selectedIndex, correctIndex } = message.payload;
-
-                 // Find the player object who answered, ensuring player data exists
-                 let answeredPlayer = null;
-                 if(gameState.players && gameState.players.player1 && gameState.players.player1.id === forPlayerId) {
-                     answeredPlayer = gameState.players.player1;
-                 } else if (gameState.players && gameState.players.player2 && gameState.players.player2.id === forPlayerId) {
-                     answeredPlayer = gameState.players.player2;
-                 }
-
-                 const playerName = answeredPlayer ? answeredPlayer.name : 'Player';
-                 let feedbackMsg = `${playerName} answered: ${isCorrect ? 'Correct!' : 'Incorrect.'} ${pointsAwarded > 0 ? `(+${pointsAwarded} points)` : ''}`;
-                 let finalIsCorrect = isCorrect; // Use this for feedback display
-
-                 // Show feedback (correct/incorrect message)
-                     if (gameState.currentQuestionData && gameState.currentQuestionData.level > 1 && gameState.optionsRequested) { // optionsRequested is always true
-                         feedbackMsg += ` Answer: ${correctAnswerText}`;
-                 }
-                 // Use finalIsCorrect to determine feedback type class
-                 showFeedback(feedbackMsg, finalIsCorrect ? 'correct' : 'incorrect');
-
-
-                 // Visualize options if level > 1 and options were requested
-                 if (gameState.currentQuestionData && gameState.currentQuestionData.level > 1 && gameState.optionsRequested) {
-                    // Reveal correct/incorrect options
-                    // Pass 'isCorrect' based on the player who answered
-                    visualizeAnswerOptions(selectedIndex, correctIndex, isCorrect);
-                    // Ensure all option buttons are disabled after showing result
-                    optionButtons.forEach(btn => btn.disabled = true);
-                 }
-
-                 // Input remains disabled, waiting for 'updateState' or 'newQuestion' for next turn/question
-                 disablePlayerInput(); // Explicitly disable here
-                 // Show a brief waiting message before the next update
-                 showWaitingMessage("Waiting for next turn...");
-                 break;
-
-            case 'optionsProvided': // Server provides options after request
-                 console.log("Received optionsProvided:", message.payload);
-                 // This message might still be used by the server even if client doesn't explicitly request.
-                 // Or, server might always include options in 'newQuestion'.
-                 // Assuming this message means "here are the options to display":
-                 if (message.payload && message.payload.options && Array.isArray(message.payload.options)) {
-                    console.log("[CLIENT] optionsProvided: Displaying options from message.payload.options array.");
-                    displayOptionsFromArray(message.payload.options);
-                 } else {
-                    console.warn("[CLIENT] optionsProvided: message.payload.options is missing or not an array.", message.payload);
-                    clearAndHideOptions(); // Fallback if options are not in expected format
-                 }
-
-                 // Input might be enabled here if it's still our turn (and game active)
-                 if (gameState.currentTurn === gameState.myPlayerId && gameState.gameActive) {
-                     enablePlayerInput();
-                     hideWaitingMessage(); // Hide waiting message as options are now interactable
-                 }
-                 break;
-
-            case 'fiftyFiftyApplied': // Server confirms 50/50 and sends options to remove
-                 console.log("Received fiftyFiftyApplied:", message.payload);
-                 removeFiftyFiftyOptions(message.payload.optionsToRemove);
-                 // Input might be enabled here if it's still our turn (and game active)
-                 if (gameState.currentTurn === gameState.myPlayerId && gameState.gameActive) {
-                     enablePlayerInput(); // Re-enable input (option buttons) after removing some
-                 }
-                 break;
-
-            case 'gameOver': // Game has ended
-                 console.log("Received gameOver:", message.payload);
-                 gameState.gameActive = false;
-                 disablePlayerInput();
-                 hideWaitingMessage();
-                 endGame(message.payload); // Show final results
-                 break;
-
-            case 'playerDisconnect': // Opponent disconnected during the game
-                 console.log("Received playerDisconnect:", message.payload);
-                 showError(`${message.payload.disconnectedPlayerName || 'Opponent'} disconnected.`);
-                 // Server should ideally handle game state (e.g., award win, end game)
-                 // Client just shows a waiting message or prepares for game over
-                 showWaitingMessage("Opponent disconnected. Waiting for server update..."); // Inform user
-                 disablePlayerInput(); // Disable input while waiting
-                 // The server might send a 'gameOver' message shortly after this.
-                 break;
-
-            case 'errorMessage': // Specific error from server logic
-                 console.error("Received errorMessage:", message.payload);
-                 // Display error appropriately based on context
-                 if (gameState.gameActive) {
-                     showError(message.payload.error || "An error occurred during the game.");
-                     // Decide if the error is fatal for the game
-                     // Maybe disable input, wait for server 'gameOver' or manual exit
-                     disablePlayerInput();
-                 } else {
-                     showLobbyMessage(message.payload.error || "An error occurred.", "error");
-                     enableLobbyButtons(); // Allow retry in lobby
-                 }
-                 break;
-
-            case 'availableRooms': // Server sends the list of available rooms
-                console.log("📋 [QSM] Payload completo recibido:", JSON.stringify(message.payload, null, 2));
-                console.log("📋 [QSM] Salas recibidas del servidor:", message.payload.rooms);
-                
-                // Verificación de seguridad para el array de salas
-                const rooms = message.payload.rooms || [];
-                if (!Array.isArray(rooms)) {
-                    console.error("❌ [QSM] payload.rooms no es un array:", typeof rooms, rooms);
-                    return;
-                }
-                
-                console.log(`🔍 [QSM] Llamando renderAvailableRooms con ${rooms.length} salas`);
-                renderAvailableRooms(rooms, 'quiensabemas');
-                
-                // Si hay una solicitud pendiente desde la página principal, responderla
-                if (gameState.pendingRoomsRequest) {
-                    console.log("📤 [QSM] Enviando salas a games.html (pendingRequest):", message.payload.rooms?.length || 0, "salas");
-                    gameState.pendingRoomsRequest.source.postMessage({
-                        type: 'availableRooms',
-                        gameType: 'quiensabemas',
-                        rooms: message.payload.rooms || []
-                    }, gameState.pendingRoomsRequest.origin);
-                    
-                    // Limpiar la solicitud pendiente
-                    gameState.pendingRoomsRequest = null;
-                }
-                
-                // Si hay una solicitud desde games.html, responderla
-                if (window.roomsRequestSource && window.roomsRequestOrigin) {
-                    console.log("📤 [QSM] Enviando salas a games.html (roomsRequest):", message.payload.rooms?.length || 0, "salas");
-                    window.roomsRequestSource.postMessage({
-                        type: 'availableRooms',
-                        gameType: 'quiensabemas',
-                        rooms: message.payload.rooms || []
-                    }, window.roomsRequestOrigin);
-                    
-                    // Limpiar la solicitud
-                    window.roomsRequestSource = null;
-                    window.roomsRequestOrigin = null;
-                }
-                 break;
-
-            default:
-                 console.warn('Unknown message type received:', message.type);
-        }
-    }
-
-    // --- Función para guardar estadísticas en Firebase ---
-    async function saveQuienSabeMasStats(payload) {
-        try {
-            const finalScores = payload.finalScores;
-            if (!gameState.myPlayerId || !finalScores) return;
-
-            let myFinalScore = 0;
-            let opponentScore = 0;
-            let opponentId = null;
-            let opponentName = 'Oponente';
-            let result = 'defeat';
-            
-            // Determinar mi puntuación y la del oponente
-            for (const playerId in finalScores) {
-                if (playerId === gameState.myPlayerId) {
-                    myFinalScore = finalScores[playerId];
-                } else {
-                    opponentScore = finalScores[playerId];
-                    opponentId = playerId;
-                }
-            }
-            
-            // Obtener nombre del oponente
-            const player1 = gameState.players?.player1;
-            const player2 = gameState.players?.player2;
-            if (player1?.id === opponentId) opponentName = player1.name || opponentName;
-            else if (player2?.id === opponentId) opponentName = player2.name || opponentName;
-            
-            // Determinar resultado
-            if (payload.draw) {
-                result = 'draw';
-            } else if (payload.winnerId === gameState.myPlayerId) {
-                result = 'victory';
-            }
-
-            const gameStats = {
-                result: result,
-                myScore: myFinalScore,
-                opponentId: opponentId,
-                opponentName: opponentName,
-                opponentScore: opponentScore
-            };
-
-            await saveQuienSabeMasResult(gameStats);
-            console.log("Estadísticas de Quién Sabe Más guardadas exitosamente");
-        } catch (error) {
-            console.error("Error guardando estadísticas de Quién Sabe Más:", error);
-        }
-    }
-
-    // --- End Game --- Reestructurada para 1v1
-    function endGame(payload) { // payload: { finalScores: {playerId1: score, playerId2: score}, winnerId: id | null, draw: boolean, reason?: string }
-        console.log("Game Over. Payload:", payload);
-        gameState.gameActive = false;
-        disablePlayerInput();
-        hideWaitingMessage();
-
-        // Reproducir sonido según el resultado del juego
-        if (window.soundManager) {
-            if (payload.draw) {
-                window.soundManager.playSound('timeout'); // Empate se considera timeout
-            } else if (payload.winnerId === gameState.myPlayerId) {
-                window.soundManager.playSound('victory');
-            } else {
-                window.soundManager.playSound('defeat');
-            }
-        }
-
-        const finalScores = payload.finalScores;
-        if (!gameState.myPlayerId || !finalScores || typeof finalScores !== 'object') {
-            console.error("Cannot determine final scores.", gameState, payload);
-            showEndGameModalWithError("Error calculando resultados.");
-             return;
-         }
-
-        // Identificar mi score y el del oponente
-        let myFinalScore = 'N/A';
-        let opponentFinalScore = 'N/A';
-        let opponentId = null;
-
-        for (const playerId in finalScores) {
-            if (playerId === gameState.myPlayerId) {
-                myFinalScore = finalScores[playerId];
-            } else {
-                opponentFinalScore = finalScores[playerId];
-                opponentId = playerId; // Guardamos el ID del oponente
-            }
-        }
-
-        // Obtener nombres (del estado actual del juego)
-        let myName = 'Tú';
-        let opponentName = 'Oponente';
-        const player1 = gameState.players?.player1;
-        const player2 = gameState.players?.player2;
-        if (player1?.id === gameState.myPlayerId) myName = player1.name || myName;
-        else if (player2?.id === gameState.myPlayerId) myName = player2.name || myName;
-
-        if (player1?.id === opponentId) opponentName = player1.name || opponentName;
-        else if (player2?.id === opponentId) opponentName = player2.name || opponentName;
-
-
-        let title = "";
-        let message = payload.reason || ""; // Mostrar razón si la hay (ej. desconexión)
-        let headerClass = ''; // Clase para el header del modal
-
-        if (payload.draw) {
-            title = "¡Es un Empate!";
-            if (!message) message = "Ambos jugadores tienen la misma puntuación.";
-            headerClass = 'result-header-timeout'; // Usar un color neutral o de "tiempo agotado" para empate
-        } else if (payload.winnerId === gameState.myPlayerId) {
-            title = `¡Has Ganado, ${myName}!`;
-            if (!message) message = "¡Felicidades!";
-            headerClass = 'result-header-victory';
-        } else if (opponentId && payload.winnerId === opponentId) {
-            title = `¡${opponentName} ha Ganado!`;
-             if (!message) message = "Mejor suerte la próxima vez.";
-            headerClass = 'result-header-defeat';
-        } else {
-             title = "Juego Terminado";
-             if (!message) message = "La partida ha finalizado."; // Mensaje por defecto si no hay razón ni ganador claro
-            // Unirse directamente si no requiere contraseña
-            joinRoomIdInput.value = roomId; // Actualizar el input general del lobby (opcional, pero consistente)
-            joinRoomPasswordInput.value = ''; // Limpiar el input general de contraseña del lobby
-            showLobbyMessage(`Uniéndote a la sala pública de QSM ${roomId}...`, "info");
-            disableLobbyButtons();
-            sendToServer('joinRoom', { playerName, roomId, password: '', gameType: 'quiensabemas' });
-        }
-    }
-
-    // --- Funciones para el Modal de Contraseña ---
-    function showPasswordPromptModal() {
-        if (privateRoomPasswordModalEl) privateRoomPasswordModalEl.classList.add('active');
-        if (passwordModalInputEl) passwordModalInputEl.focus();
-         // Deshabilitar botones del lobby mientras el modal de contraseña está activo
+    gameState.websocket.onerror = (error) => {
+        clearTimeout(connectionTimeout);
+        console.error('❌ Error de WebSocket:', error);
+        updateConnectionStatusUI(false, 'Error de conexión');
+        showLobbyMessage('Error de conexión con el servidor de juego.', 'error', true);
+        if (gameState.gameActive) showErrorInGame("Se ha producido un error de conexión.");
         disableLobbyButtons();
-    }
+    };
 
-    function hidePasswordPromptModal() {
-        if (privateRoomPasswordModalEl) privateRoomPasswordModalEl.classList.remove('active');
-        currentJoiningRoomId = null; // Limpiar el ID de la sala actual
-        // Habilitar botones del lobby nuevamente
-        enableLobbyButtons(); 
-    }
-
-    function handleSubmitPasswordModal(event) {
-        event.preventDefault();
-        const password = passwordModalInputEl.value;
-        const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
-
-        if (!password) {
-            passwordErrorTextEl.textContent = 'La contraseña no puede estar vacía.';
-            passwordErrorTextEl.style.display = 'block';
-            passwordModalInputEl.focus();
-            return;
-        }
-
-        if (currentJoiningRoomId) {
-            console.log(`Attempting to join room ${currentJoiningRoomId} with password from modal.`);
-            passwordErrorTextEl.textContent = '';
-            passwordErrorTextEl.style.display = 'none';
-            // Mostrar un feedback de carga en el botón o modal aquí sería ideal
-            submitPasswordButtonEl.disabled = true;
-            submitPasswordButtonEl.textContent = 'Uniéndote...';
-
-            sendToServer('joinRoom', { 
-                playerName, 
-                roomId: currentJoiningRoomId, 
-                password,
-                gameType: 'quiensabemas'
-            });
+    gameState.websocket.onclose = (event) => {
+        clearTimeout(connectionTimeout);
+        const wasClean = event.wasClean;
+        const reason = event.reason || (wasClean ? 'Desconexión normal' : 'Conexión interrumpida');
+        console.log(`🔌 WebSocket Desconectado: ${reason} (Código: ${event.code})`);
+        
+        updateConnectionStatusUI(false, wasClean ? 'Desconectado' : 'Conexión perdida');
+        gameState.websocket = null;
+        
+        if (gameState.gameActive) {
+            showErrorInGame("Conexión perdida. La partida ha terminado.");
+            handleGameEnd({ reason: "Conexión perdida. Intenta jugar de nuevo." });
         } else {
-            console.error("No currentJoiningRoomId set when submitting password modal.");
-            hidePasswordPromptModal(); // Cerrar si no hay ID, es un estado inesperado
+            showLobbyMessage('Desconectado del servidor. Intentando reconectar...', 'error', true);
         }
-    }
-
-    // --- Función para polling automático de salas ---
-    function setupAutomaticRoomPolling() {
-        // Solicitar salas inmediatamente al cargar
-        setTimeout(() => {
-            if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN && !gameState.gameActive) {
-                sendToServer('getRooms', { gameType: 'quiensabemas' });
-            }
-        }, 1000);
         
-        // Polling automático cada 3 segundos cuando estamos en el lobby
-        setInterval(() => {
-            // Solo hacer polling si estamos en el lobby, conectados, y no en un juego activo
-            if (gameState.websocket && 
-                gameState.websocket.readyState === WebSocket.OPEN && 
-                !gameState.gameActive && 
-                !gameState.roomId &&
-                lobbySectionEl && 
-                lobbySectionEl.style.display !== 'none') {
-                
-                console.log('🔄 Solicitando actualización automática de salas (Quién Sabe Más)');
-                sendToServer('getRooms', { gameType: 'quiensabemas' });
-            }
-        }, 3000); // Cada 3 segundos
+        disableLobbyButtons();
+        gameState.gameActive = false;
+        scheduleReconnect();
+    };
+
+    // Ping para mantener la conexión activa
+    setupPingInterval();
+}
+
+function scheduleReconnect() {
+    if (gameState.reconnectTimer) {
+        clearTimeout(gameState.reconnectTimer);
     }
-
-    // --- Setup Event Listeners ---
-    function setupEventListeners() {
-        // Configurar event listeners del lobby
-        setupLobbyEventListeners();
-        
-        // Configurar event listeners de los botones del modal de resultados
-        if (playAgainButtonQSM) {
-            playAgainButtonQSM.addEventListener('click', () => {
-                hideEndGameModal();
-                // Reiniciar el juego manteniendo la misma sala
-                if (gameState.roomId) {
-                    console.log("🔄 Reiniciando juego en la misma sala");
-                    sendToServer('restartGame', { roomId: gameState.roomId });
-                }
-            });
-        }
-
-        if (backToLobbyButtonQSM) {
-            backToLobbyButtonQSM.addEventListener('click', () => {
-                hideEndGameModal();
-                // Salir de la sala actual y volver al lobby
-                if (gameState.roomId) {
-                    sendToServer('leaveRoom', { roomId: gameState.roomId });
-                }
-                // Resetear estado del juego
-                gameState.roomId = null;
-                gameState.myPlayerId = null;
-                gameState.gameActive = false;
-                showLobby();
-            });
-        }
-
-        if (backToGamesButtonQSM) {
-            backToGamesButtonQSM.addEventListener('click', () => {
-                window.location.href = 'games.html';
-            });
-        }
-
-        // Configurar event listeners del modal de contraseña
-        if (cancelPasswordSubmitEl) {
-            cancelPasswordSubmitEl.addEventListener('click', hidePasswordPromptModal);
-        }
-
-        if (privateRoomPasswordFormEl) {
-            privateRoomPasswordFormEl.addEventListener('submit', handleSubmitPasswordModal);
-        }
-
-        // Configurar event listeners de opciones de respuesta
-        optionButtons.forEach((button, index) => {
-            button.addEventListener('click', handleOptionClick);
-        });
-
-        // Configurar event listener del botón 50/50
-        if (fiftyFiftyButtonEl) {
-            fiftyFiftyButtonEl.addEventListener('click', handleFiftyFifty);
-        }
+    
+    if (gameState.reconnectAttempts >= CONFIG.MAX_RECONNECT_ATTEMPTS) {
+        console.warn(`⚠️ Máximo de intentos de reconexión (${CONFIG.MAX_RECONNECT_ATTEMPTS}) alcanzado.`);
+        showLobbyMessage('No se pudo reconectar al servidor. Por favor, recarga la página.', 'error', false);
+        updateConnectionStatusUI(false, 'Reconexión fallida');
+        return;
     }
+    
+    const delay = CONFIG.RECONNECT_DELAY * Math.pow(1.5, gameState.reconnectAttempts);
+    gameState.reconnectAttempts++;
+    
+    console.log(`🔄 Reintentando conexión en ${delay/1000} segundos (intento ${gameState.reconnectAttempts}/${CONFIG.MAX_RECONNECT_ATTEMPTS})...`);
+    updateConnectionStatusUI(false, `Reconectando en ${Math.round(delay/1000)}s...`);
+    
+    gameState.reconnectTimer = setTimeout(() => {
+        if (!gameState.websocket || gameState.websocket.readyState === WebSocket.CLOSED) {
+            initializeWebSocket();
+        }
+    }, delay);
+}
 
-    // --- Start App ---
-    initializeApp(); // Start with the lobby and WebSocket connection
-
-    // +++ NEW FUNCTION to display options from an array +++
-    function displayOptionsFromArray(optionsArray) {
-        console.log("[CLIENT] Displaying options from array:", optionsArray);
-        if (!optionsContainerEl) {
-            console.error("[CLIENT] optionsContainerEl is null in displayOptionsFromArray");
+function setupPingInterval() {
+    // Enviar ping cada 30 segundos para mantener la conexión viva
+    const pingInterval = setInterval(() => {
+        if (!gameState.websocket || gameState.websocket.readyState !== WebSocket.OPEN) {
+            clearInterval(pingInterval);
             return;
         }
-        optionsContainerEl.style.display = 'grid';
-
-        if (!optionButtons || optionButtons.length === 0) {
-            console.error("[CLIENT] optionButtons NodeList is empty or null in displayOptionsFromArray");
-            return;
+        
+        // Si no hubo mensajes en los últimos 25 segundos, enviar ping
+        const timeSinceLastMessage = Date.now() - gameState.lastMessageTimestamp;
+        if (timeSinceLastMessage > 25000) {
+            sendToServer('ping');
         }
+    }, 30000);
+}
 
-        optionButtons.forEach((btn, index) => {
-            if (index < optionsArray.length && typeof optionsArray[index] === 'string') {
-                const optionTextEl = btn.querySelector('.option-text');
-                if (optionTextEl) {
-                    optionTextEl.textContent = optionsArray[index];
-                } else {
-                    console.warn(`[CLIENT] .option-text element not found in button index ${index}`);
-                }
-                btn.style.display = 'flex';
-                btn.disabled = true; // Disabled until enablePlayerInput is called
-                btn.classList.remove('hidden', 'correct', 'incorrect', 'selected');
-            } else {
-                btn.style.display = 'none'; // Hide button if no corresponding option or option is not a string
-                if (index >= optionsArray.length) {
-                    // This is expected if optionsArray has fewer than 4 options, no warning needed
-                } else if (typeof optionsArray[index] !== 'string') {
-                    console.warn(`[CLIENT] Option at index ${index} is not a string:`, optionsArray[index]);
-                }
-            }
-        });
-
-        gameState.optionsRequested = true; // Options are now displayed
-
-        // Update 50/50 button state
-        if (gameState.currentTurn === gameState.myPlayerId && gameState.gameActive) {
-            if(fiftyFiftyButtonEl) fiftyFiftyButtonEl.disabled = gameState.fiftyFiftyUsed;
+function sendToServer(type, payload = {}) {
+    if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN) {
+        const message = JSON.stringify({ type, payload });
+        console.log('📤 Enviando al servidor:', type, payload);
+        gameState.websocket.send(message);
+    } else {
+        console.error('🔌 WebSocket no conectado. No se puede enviar:', type, payload);
+        if (type !== 'ping') { // No mostrar error para pings
+            showLobbyMessage('No estás conectado al servidor. Intenta reconectar.', 'error', true);
         }
     }
-    // +++ END NEW FUNCTION +++
+}
 
-    // Start the app
-    initializeApp();
-
-    // --- Soporte para comunicación de salas disponibles ---
-    window.addEventListener('message', function(event) {
-        // Verificar origen del mensaje por seguridad
-        if (event.origin !== window.location.origin) return;
-        
-        // Si nos piden las salas disponibles
-        if (event.data && event.data.type === 'requestRooms' && event.data.gameType === 'quiensabemas') {
-            console.log('✅ [QSM] Solicitud de salas QSM recibida desde games.html');
+// --- Server Message Handling ---
+function handleServerMessage(message) {
+    const { type, payload } = message;
+    
+    switch (type) {
+        case 'ping':
+        case 'pong':
+            // Responder al ping con un pong o ignorar el pong
+            if (type === 'ping') sendToServer('pong');
+            break;
             
-            // Verificar si hay conexión WebSocket activa
-            if (!gameState.websocket || gameState.websocket.readyState !== WebSocket.OPEN) {
-                console.warn('⚠️ [QSM] WebSocket no conectado, enviando lista vacía');
-                // Enviar lista vacía si no hay conexión
-                event.source.postMessage({
-                    type: 'availableRooms',
-                    gameType: 'quiensabemas',
-                    rooms: []
-                }, event.origin);
+        case 'yourInfo':
+            gameState.myPlayerId = payload.playerId;
+            console.log(`🆔 ID de jugador: ${gameState.myPlayerId}`);
+            if (payload.playerName && payload.playerName !== gameState.playerName) {
+                gameState.playerName = payload.playerName;
+                localStorage.setItem(CONFIG.STORAGE_KEYS.PLAYER_NAME, gameState.playerName);
+                console.log(`🏷️ Nombre actualizado: ${gameState.playerName}`);
+            }
+            break;
+            
+        case 'availableRooms':
+            console.log('📋 Salas disponibles recibidas:', payload.rooms);
+            // Asegurarse de que todas las salas tengan la información necesaria
+            if (payload.rooms && Array.isArray(payload.rooms)) {
+                payload.rooms.forEach(room => {
+                    if (!room.name && room.roomName) {
+                        room.name = room.roomName; // Asegurarse de que name esté disponible
+                    }
+                });
+            }
+            renderAvailableRooms(payload.rooms);
+            if (gameState.pendingRoomsRequest) {
+                gameState.pendingRoomsRequest.source.postMessage({
+                    type: 'availableRooms', 
+                    gameType: 'quiensabemas', 
+                    rooms: payload.rooms || []
+                }, gameState.pendingRoomsRequest.origin);
+                gameState.pendingRoomsRequest = null;
+            }
+            break;
+        
+        case 'roomCheckResult':
+            // Este caso se maneja en el listener específico creado en checkRoomBeforeJoining
+            // No es necesario procesarlo aquí, pero lo documentamos para referencia
+            console.log('ℹ️ Resultado de verificación de sala recibido:', payload);
+            break;
+            
+        case 'roomCreated':
+            gameState.roomId = payload.roomId;
+            gameState.isRoomCreator = true;
+            gameState.players = {
+                [gameState.myPlayerId]: { 
+                    name: gameState.playerName, 
+                    score: 0,
+                    isHost: true
+                }
+            };
+            showLobbyMessage(`¡Sala creada! ID: ${gameState.roomId}. Esperando oponente...`, 'success', true);
+            switchToGameView("Esperando a que un oponente se una...");
+            updatePlayersHeaderUI();
+            break;
+            
+        case 'joinSuccess':
+            gameState.roomId = payload.roomId;
+            gameState.isRoomCreator = false;
+            gameState.players = payload.players;
+            showLobbyMessage(`¡Te has unido a la sala ${gameState.roomId}!`, 'success', true);
+            switchToGameView(
+                Object.keys(gameState.players).length < 2 ? 
+                "Esperando a que el otro jugador se una..." : 
+                "Esperando a que comience el juego..."
+            );
+            updatePlayersHeaderUI();
+            console.log('Unido exitosamente a la sala:', gameState.roomId, 'Jugadores:', gameState.players);
+            break;
+            
+        case 'joinError':
+            console.error("❌ Error al unirse a la sala:", payload.error);
+            showLobbyMessage(payload.error || "Error al unirse a la sala", 'error', true);
+            enableLobbyButtons();
+            break;
+            
+        case 'playerJoined':
+            gameState.players = payload.players;
+            updatePlayersHeaderUI();
+            const newPlayerName = Object.values(gameState.players).find(p => p.name !== gameState.playerName)?.name || 'Un oponente';
+            showFeedbackInGame(`${newPlayerName} se unió a la sala. ${gameState.isRoomCreator ? '¡Iniciando pronto!' : 'Preparándose para comenzar.'}`, 'info');
+            if (Object.keys(gameState.players).length === 2) {
+                hideWaitingStateInGame();
+            }
+            break;
+            
+        case 'gameStart':
+            gameState.gameActive = true;
+            gameState.gamePhase = 'playing';
+            gameState.players = payload.players;
+            gameState.currentTurn = payload.startingPlayerId;
+            hideWaitingStateInGame();
+            updatePlayersHeaderUI();
+            showFeedbackInGame("¡El juego ha comenzado!", "success");
+            // La primera pregunta llegará con el mensaje 'newQuestion'
+            break;
+            
+        case 'newQuestion':
+            gameState.currentQuestion = payload.question;
+            gameState.currentQuestionIndex = payload.questionNumber - 1;
+            gameState.totalQuestions = payload.totalQuestionsInLevel;
+            gameState.currentTurn = payload.currentTurn;
+            gameState.players = payload.players;
+            
+            displayQuestionInUI();
+            updatePlayersHeaderUI();
+            showFeedbackInGame(
+                `Pregunta ${payload.questionNumber}/${payload.totalQuestionsInLevel}. Turno de ${gameState.players[gameState.currentTurn]?.name || 'alguien'}.`,
+                 "info"
+            );
+            break;
+            
+        case 'updateState':
+            gameState.currentTurn = payload.currentTurn;
+            gameState.players = payload.players;
+            updatePlayersHeaderUI();
+            break;
+            
+        case 'answerResult':
+            const { 
+                isCorrect, 
+                correctAnswerText, 
+                pointsAwarded, 
+                correctIndex, 
+                forPlayerId, 
+                submittedAnswerText, 
+                selectedIndex: playerSelectedIndex 
+            } = payload;
+            
+            // Actualizar UI con el resultado
+            let actualPlayerAnswerText = "";
+            if (gameState.currentQuestion?.options && 
+                playerSelectedIndex >= 0 && 
+                playerSelectedIndex < gameState.currentQuestion.options.length) {
+                actualPlayerAnswerText = gameState.currentQuestion.options[playerSelectedIndex];
+            }
+            
+            highlightAnswerUI(
+                isCorrect, 
+                gameState.currentQuestion.options[correctIndex], 
+                actualPlayerAnswerText
+            );
+            
+            const feedbackText = isCorrect ? 
+                `¡Correcto! ${pointsAwarded ? ` (+${pointsAwarded} pts)` : ''}` : 
+                `Incorrecto. La respuesta correcta era: ${correctAnswerText}`;
+                
+            showFeedbackInGame(
+                feedbackText,
+                isCorrect ? 'correct' : 'incorrect'
+            );
+            break;
+            
+        case 'gameOver':
+            gameState.gameActive = false;
+            gameState.gamePhase = 'gameOver';
+            handleGameEnd(payload);
+            break;
+            
+        case 'errorMessage':
+            console.error("❌ Error del servidor:", payload.error);
+            if (gameState.gamePhase !== 'lobby') {
+                showErrorInGame(payload.error);
+            } else {
+                showLobbyMessage(payload.error, 'error', true);
+            }
+            
+            enableLobbyButtons();
+            if (gameState.gameActive && payload.kickToLobby) {
+                 showLobbyView();
+                 gameState.gameActive = false;
+                 gameState.roomId = null;
+            }
+            break;
+            
+        case 'opponentLeftLobby':
+            showLobbyMessage(payload.message || 'El oponente abandonó la sala.', 'warning', true);
+            if (gameState.gamePhase !== 'lobby' && gameState.roomId) {
+                const opponentId = Object.keys(gameState.players).find(id => id !== gameState.myPlayerId);
+                if (opponentId) {
+                    delete gameState.players[opponentId];
+                }
+                updatePlayersHeaderUI();
+                showWaitingStateInGame("El oponente abandonó. Esperando a un nuevo jugador o vuelve al lobby.");
+            }
+            break;
+            
+        default:
+            console.warn('⚠️ Tipo de mensaje desconocido:', type);
+    }
+}
+
+// --- Lobby Logic ---
+function showLobbyView() {
+    if (DOM.lobbyContainer) DOM.lobbyContainer.style.display = 'block';
+    if (DOM.gameArea) DOM.gameArea.style.display = 'none';
+    if (DOM.qsmIntroModal && 
+        DOM.qsmIntroModal.style.display !== 'none' && 
+        localStorage.getItem(CONFIG.STORAGE_KEYS.INTRO_SHOWN)) {
+        DOM.qsmIntroModal.style.display = 'none';
+    }
+    
+    gameState.gamePhase = 'lobby';
+    clearLobbyMessage();
+    enableLobbyButtons();
+    
+    // Solicitar lista de salas disponibles
+    if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN) {
+        console.log('Solicitando lista de salas disponibles...');
+        sendToServer('getRooms', { gameType: 'quiensabemas' });
+        
+        // Si no hay salas cargadas después de 2 segundos, mostrar mensaje
+        setTimeout(() => {
+            if (DOM.roomsListElement && DOM.roomsListElement.children.length === 0) {
+                DOM.roomsListElement.innerHTML = '<li class="no-rooms-message"><i class="fas fa-info-circle"></i> No hay salas disponibles o hay un problema de conexión. Intenta refrescar.</li>';
+            }
+        }, 2000);
+    } else {
+        console.warn('WebSocket no está conectado. No se pueden solicitar salas.');
+        if (DOM.roomsListElement) {
+            DOM.roomsListElement.innerHTML = '<li class="no-rooms-message"><i class="fas fa-exclamation-circle"></i> No hay conexión con el servidor. Recarga la página.</li>';
+        }
+    }
+}
+
+function switchToGameView(initialMessage = "Preparando el juego...") {
+    if (DOM.lobbyContainer) DOM.lobbyContainer.style.display = 'none';
+    if (DOM.gameArea) DOM.gameArea.style.display = 'block';
+    gameState.gamePhase = 'waitingForOpponent';
+    showWaitingStateInGame(initialMessage);
+}
+
+function showLobbyMessage(message, type = 'info', autoDismiss = true) {
+    if (!DOM.lobbyMessage) return;
+    
+    DOM.lobbyMessage.textContent = message;
+    DOM.lobbyMessage.className = `lobby-message ${type}`;
+    DOM.lobbyMessage.style.display = 'block';
+    
+    if (autoDismiss && type !== 'error') {
+        setTimeout(() => {
+            if (DOM.lobbyMessage.textContent === message) {
+                clearLobbyMessage();
+            }
+        }, 5000);
+    }
+}
+
+function clearLobbyMessage() {
+    if (DOM.lobbyMessage) DOM.lobbyMessage.style.display = 'none';
+}
+
+function disableLobbyButtons(isCreating = false, isJoiningById = false, isJoiningRandom = false) {
+    // Mostrar indicadores visuales de carga
+    if (DOM.createRoomBtn) {
+        DOM.createRoomBtn.disabled = true;
+        if (isCreating) {
+            DOM.createRoomBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
+        }
+    }
+    
+    if (DOM.joinRoomBtn) {
+        DOM.joinRoomBtn.disabled = true;
+        if (isJoiningById) {
+            DOM.joinRoomBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uniéndose...';
+        }
+    }
+    
+    if (DOM.joinRandomRoomBtn) {
+        DOM.joinRandomRoomBtn.disabled = true;
+        if (isJoiningRandom) {
+            DOM.joinRandomRoomBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+        }
+    }
+}
+
+function enableLobbyButtons() {
+    // Restaurar botones a su estado normal
+    if (DOM.createRoomBtn) {
+        DOM.createRoomBtn.disabled = false;
+        DOM.createRoomBtn.innerHTML = '<i class="fas fa-plus"></i> Crear Sala';
+    }
+    
+    if (DOM.joinRoomBtn) {
+        DOM.joinRoomBtn.disabled = false;
+        DOM.joinRoomBtn.innerHTML = '<i class="fas fa-door-open"></i> Unirse por ID';
+    }
+    
+    if (DOM.joinRandomRoomBtn) {
+        DOM.joinRandomRoomBtn.disabled = false;
+        DOM.joinRandomRoomBtn.innerHTML = '<i class="fas fa-bolt"></i> Partida Rápida';
+    }
+}
+
+function handleCreateRoom() {
+    // Verificar si hay un campo de entrada de nombre en la sala y usarlo si existe
+    const createPlayerNameInput = document.getElementById('createPlayerName');
+    const roomName = DOM.createRoomNameInput?.value.trim() || `Sala de ${gameState.playerName}`;
+    const password = DOM.createRoomPasswordInput?.value || null;
+    
+    // Si hay un campo de entrada de nombre específico para la sala, usar ese valor
+    let playerName = gameState.playerName;
+    if (createPlayerNameInput && createPlayerNameInput.value.trim()) {
+        playerName = createPlayerNameInput.value.trim();
+        // Actualizar el nombre en localStorage y en el estado
+        localStorage.setItem('playerName', playerName);
+        gameState.playerName = playerName;
+    }
+    
+    if (!playerName || playerName === 'Jugador Anónimo') {
+        showLobbyMessage('Por favor, establece un nombre de jugador válido primero (desde Inicio o Perfil).', 'error', false);
+        return;
+    }
+    
+    sendToServer('createRoom', { 
+        playerName: playerName, 
+        roomName, 
+        password, 
+        gameType: 'quiensabemas' 
+    });
+    
+    showLobbyMessage(`Creando sala para ${playerName}...`, 'info', false);
+    disableLobbyButtons(true);
+}
+
+function handleJoinRoomById() {
+    // Verificar si hay un campo de entrada de nombre en la sala y usarlo si existe
+    const joinPlayerNameInput = document.getElementById('joinPlayerName');
+    const roomIdToJoin = DOM.joinRoomIdInput?.value.trim();
+    
+    // Si hay un campo de entrada de nombre específico para unirse, usar ese valor
+    let playerName = gameState.playerName;
+    if (joinPlayerNameInput && joinPlayerNameInput.value.trim()) {
+        playerName = joinPlayerNameInput.value.trim();
+        // Actualizar el nombre en localStorage y en el estado
+        localStorage.setItem('playerName', playerName);
+        gameState.playerName = playerName;
+    }
+    
+    if (!roomIdToJoin) {
+        showLobbyMessage('Ingresa un ID de sala válido.', 'error', false);
+        return;
+    }
+    
+    if (!playerName || playerName === 'Jugador Anónimo') {
+        showLobbyMessage('Establece un nombre de jugador válido primero.', 'error', false);
+        return;
+    }
+    
+    console.log(`Intentando unirse a la sala: ${roomIdToJoin} con nombre: ${playerName}`);
+    
+    // Verificar si la sala existe y si requiere contraseña
+    checkRoomBeforeJoining(roomIdToJoin, playerName);
+    
+    showLobbyMessage(`Verificando sala ${roomIdToJoin}...`, 'info', false);
+    disableLobbyButtons(false, true);
+}
+
+// Nueva función para verificar si una sala existe y si requiere contraseña
+function checkRoomBeforeJoining(roomId, playerName) {
+    // Enviar solicitud al servidor para obtener información de la sala
+    sendToServer('checkRoom', { 
+        roomId: roomId, 
+        gameType: 'quiensabemas' 
+    });
+    
+    // Establecer un timeout para la respuesta
+    const checkTimeout = setTimeout(() => {
+        showLobbyMessage(`No se pudo verificar la sala. Intentando unirse directamente...`, 'warning', true);
+        joinRoomDirectly(roomId, playerName, DOM.joinRoomPasswordInput?.value || null);
+    }, 3000);
+    
+    // Configurar un listener único para la respuesta del servidor
+    const handleRoomCheckResponse = (event) => {
+        try {
+            const message = JSON.parse(event.data);
+            // Solo procesar mensajes de verificación de sala
+            if (message.type === 'roomCheckResult') {
+                clearTimeout(checkTimeout);
+                gameState.websocket.removeEventListener('message', handleRoomCheckResponse);
+                
+                const { exists, needsPassword, roomName } = message.payload;
+                
+                if (!exists) {
+                    showLobbyMessage(`La sala ${roomId} no existe.`, 'error', true);
+                    enableLobbyButtons();
+                    return;
+                }
+                
+                if (needsPassword) {
+                    // Mostrar modal para contraseña
+                    promptForRoomPassword(roomName || `Sala ${roomId}`, (password) => {
+                        if (password === null) {
+                            // Usuario canceló
+                            showLobbyMessage('Unión a sala cancelada.', 'info', true);
+                            enableLobbyButtons();
+                            return;
+                        }
+                        
+                        // Actualizar el campo de contraseña visible
+                        if (DOM.joinRoomPasswordInput) {
+                            DOM.joinRoomPasswordInput.value = password;
+                        }
+                        
+                        // Unirse a la sala con la contraseña
+                        joinRoomDirectly(roomId, playerName, password);
+                    });
+                } else {
+                    // Sala sin contraseña, unirse directamente
+                    joinRoomDirectly(roomId, playerName, null);
+                }
+            }
+        } catch (error) {
+            console.error('Error procesando respuesta de verificación de sala:', error);
+            clearTimeout(checkTimeout);
+            gameState.websocket.removeEventListener('message', handleRoomCheckResponse);
+            // Intentar unirse directamente como fallback
+            joinRoomDirectly(roomId, playerName, DOM.joinRoomPasswordInput?.value || null);
+        }
+    };
+    
+    // Agregar el listener para la respuesta
+    gameState.websocket.addEventListener('message', handleRoomCheckResponse);
+}
+
+// Función auxiliar para unirse directamente a una sala
+function joinRoomDirectly(roomId, playerName, password) {
+    sendToServer('joinRoom', { 
+        playerName: playerName, 
+        roomId: roomId, 
+        password: password, 
+        gameType: 'quiensabemas' 
+    });
+    
+    showLobbyMessage(`Uniéndote a la sala ${roomId}...`, 'info', false);
+    disableLobbyButtons(false, true);
+}
+
+function handleJoinRandomRoom() {
+    // Verificar si hay un campo de entrada de nombre en la sala y usarlo si existe
+    const joinPlayerNameInput = document.getElementById('joinPlayerName');
+    
+    // Si hay un campo de entrada de nombre específico para unirse, usar ese valor
+    let playerName = gameState.playerName;
+    if (joinPlayerNameInput && joinPlayerNameInput.value.trim()) {
+        playerName = joinPlayerNameInput.value.trim();
+        // Actualizar el nombre en localStorage y en el estado
+        localStorage.setItem('playerName', playerName);
+        gameState.playerName = playerName;
+    }
+    
+    if (!playerName || playerName === 'Jugador Anónimo') {
+        showLobbyMessage('Establece un nombre de jugador válido primero.', 'error', false);
+        return;
+    }
+    
+    sendToServer('joinRandomRoom', { 
+        playerName: playerName, 
+        gameType: 'quiensabemas' 
+    });
+    
+    showLobbyMessage(`Buscando sala disponible para ${playerName}...`, 'info', false);
+    disableLobbyButtons(false, false, true);
+}
+
+// Nueva función para manejar el clic en unirse a sala desde la lista
+function handleJoinRoomFromListClick(room) {
+    const roomId = room.id;
+    const roomName = room.name || room.roomName || `Sala ${roomId}`;
+    // Asegurar que needsPassword sea un valor booleano utilizando doble negación
+    const needsPassword = !!room.needsPassword;
+    
+    console.log(`Intentando unirse a sala desde lista: ${roomId} (${roomName}), Requiere contraseña: ${needsPassword}`);
+    
+    // Verificar si hay un campo de entrada de nombre en la sala y usarlo si existe
+    const joinPlayerNameInput = document.getElementById('joinPlayerName');
+    
+    // Si hay un campo de entrada de nombre específico para unirse, usar ese valor
+    let playerName = gameState.playerName;
+    if (joinPlayerNameInput && joinPlayerNameInput.value.trim()) {
+        playerName = joinPlayerNameInput.value.trim();
+        // Actualizar el nombre en localStorage y en el estado
+        localStorage.setItem('playerName', playerName);
+        gameState.playerName = playerName;
+    }
+    
+    if (!playerName || playerName === 'Jugador Anónimo') {
+        showLobbyMessage('Establece un nombre de jugador válido primero.', 'error', false);
+        return;
+    }
+    
+    // Actualizar el campo de ID de sala en el formulario principal
+    if (DOM.joinRoomIdInput) {
+        DOM.joinRoomIdInput.value = roomId;
+    }
+    
+    // Si la sala requiere contraseña, mostrar el modal
+    if (needsPassword) {
+        promptForRoomPassword(roomName, (password) => {
+            if (password === null) {
+                // Usuario canceló
+                showLobbyMessage('Unión a sala cancelada.', 'info', true);
                 return;
             }
             
-            // Solicitar salas al servidor
-            console.log('📡 [QSM] Solicitando salas de QSM al servidor');
-            sendToServer('getRooms', { gameType: 'quiensabemas' });
+            // Actualizar campo de contraseña visible
+            if (DOM.joinRoomPasswordInput) {
+                DOM.joinRoomPasswordInput.value = password;
+            }
             
-            // Guardar el origen para responder cuando recibamos la lista del servidor
-            gameState.pendingRoomsRequest = {
-                source: event.source,
-                origin: event.origin
-            };
+            // Enviar solicitud al servidor
+            sendToServer('joinRoom', { 
+                playerName: playerName, 
+                roomId: roomId, 
+                password: password, 
+                gameType: 'quiensabemas' 
+            });
+            
+            showLobbyMessage(`Uniéndote a la sala ${roomName}...`, 'info', false);
+            disableLobbyButtons(false, true);
+        });
+    } else {
+        // Sala sin contraseña, unirse directamente
+        // Limpiar campo de contraseña
+        if (DOM.joinRoomPasswordInput) {
+            DOM.joinRoomPasswordInput.value = '';
+        }
+        
+        // Enviar solicitud al servidor
+        sendToServer('joinRoom', { 
+            playerName: playerName, 
+            roomId: roomId, 
+            password: null, 
+            gameType: 'quiensabemas' 
+        });
+        
+        showLobbyMessage(`Uniéndote a la sala ${roomName}...`, 'info', false);
+        disableLobbyButtons(false, true);
+    }
+}
+
+// Función para solicitar contraseña de sala mediante un modal o prompt
+function promptForRoomPassword(roomName, callback) {
+    // Crear un modal personalizado para la contraseña
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'modal-overlay password-prompt-modal';
+    modalOverlay.style.display = 'flex';
+    modalOverlay.style.position = 'fixed';
+    modalOverlay.style.top = '0';
+    modalOverlay.style.left = '0';
+    modalOverlay.style.width = '100%';
+    modalOverlay.style.height = '100%';
+    modalOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    modalOverlay.style.justifyContent = 'center';
+    modalOverlay.style.alignItems = 'center';
+    modalOverlay.style.zIndex = '1000';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content password-prompt';
+    modalContent.style.background = 'var(--qsm-panel-bg, #1e2028)';
+    modalContent.style.borderRadius = '16px';
+    modalContent.style.padding = '25px';
+    modalContent.style.width = '90%';
+    modalContent.style.maxWidth = '400px';
+    modalContent.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.3)';
+    modalContent.style.border = '1px solid var(--qsm-border, rgba(255, 255, 255, 0.1))';
+    modalContent.style.position = 'relative';
+    
+    // Título del modal
+    const modalTitle = document.createElement('h3');
+    modalTitle.style.marginTop = '0';
+    modalTitle.style.marginBottom = '20px';
+    modalTitle.style.color = 'var(--qsm-text, white)';
+    modalTitle.style.textAlign = 'center';
+    modalTitle.innerHTML = `<i class="fas fa-lock"></i> Sala protegida`;
+    
+    // Texto descriptivo
+    const modalText = document.createElement('p');
+    modalText.style.color = 'var(--qsm-text-muted, rgba(255, 255, 255, 0.7))';
+    modalText.style.marginBottom = '20px';
+    modalText.style.textAlign = 'center';
+    modalText.textContent = `Ingresa la contraseña para unirte a "${roomName}"`;
+    
+    // Campo de contraseña
+    const passwordInput = document.createElement('input');
+    passwordInput.type = 'password';
+    passwordInput.placeholder = 'Contraseña de la sala';
+    passwordInput.style.width = '100%';
+    passwordInput.style.padding = '12px 15px';
+    passwordInput.style.marginBottom = '20px';
+    passwordInput.style.backgroundColor = 'var(--qsm-input-bg, rgba(16, 17, 26, 0.6))';
+    passwordInput.style.border = '1px solid var(--qsm-border, rgba(255, 255, 255, 0.1))';
+    passwordInput.style.borderRadius = '8px';
+    passwordInput.style.color = 'var(--qsm-text, white)';
+    passwordInput.style.fontSize = '1rem';
+    passwordInput.style.outline = 'none';
+    passwordInput.style.transition = 'border-color 0.3s ease';
+    
+    // Estilo de foco
+    passwordInput.addEventListener('focus', () => {
+        passwordInput.style.borderColor = 'var(--qsm-purple, #a651ff)';
+    });
+    
+    passwordInput.addEventListener('blur', () => {
+        passwordInput.style.borderColor = 'var(--qsm-border, rgba(255, 255, 255, 0.1))';
+    });
+    
+    // Botones
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.style.display = 'flex';
+    buttonsContainer.style.justifyContent = 'space-between';
+    buttonsContainer.style.gap = '10px';
+    
+    const confirmButton = document.createElement('button');
+    confirmButton.textContent = 'Unirse';
+    confirmButton.style.flex = '1';
+    confirmButton.style.padding = '10px';
+    confirmButton.style.backgroundColor = 'var(--qsm-purple, #a651ff)';
+    confirmButton.style.color = 'white';
+    confirmButton.style.border = 'none';
+    confirmButton.style.borderRadius = '8px';
+    confirmButton.style.cursor = 'pointer';
+    confirmButton.style.fontSize = '0.95rem';
+    confirmButton.style.fontWeight = '600';
+    confirmButton.style.transition = 'all 0.3s ease';
+    
+    confirmButton.addEventListener('mouseover', () => {
+        confirmButton.style.backgroundColor = 'var(--qsm-purple-dark, #9040dc)';
+        confirmButton.style.transform = 'translateY(-2px)';
+    });
+    
+    confirmButton.addEventListener('mouseout', () => {
+        confirmButton.style.backgroundColor = 'var(--qsm-purple, #a651ff)';
+        confirmButton.style.transform = 'translateY(0)';
+    });
+    
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Cancelar';
+    cancelButton.style.flex = '1';
+    cancelButton.style.padding = '10px';
+    cancelButton.style.backgroundColor = 'var(--qsm-input-bg, rgba(16, 17, 26, 0.6))';
+    cancelButton.style.color = 'var(--qsm-text-muted, rgba(255, 255, 255, 0.7))';
+    cancelButton.style.border = '1px solid var(--qsm-border, rgba(255, 255, 255, 0.1))';
+    cancelButton.style.borderRadius = '8px';
+    cancelButton.style.cursor = 'pointer';
+    cancelButton.style.fontSize = '0.95rem';
+    cancelButton.style.fontWeight = '600';
+    cancelButton.style.transition = 'all 0.3s ease';
+    
+    cancelButton.addEventListener('mouseover', () => {
+        cancelButton.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+    });
+    
+    cancelButton.addEventListener('mouseout', () => {
+        cancelButton.style.backgroundColor = 'var(--qsm-input-bg, rgba(16, 17, 26, 0.6))';
+    });
+    
+    // Armar el modal
+    buttonsContainer.appendChild(cancelButton);
+    buttonsContainer.appendChild(confirmButton);
+    
+    modalContent.appendChild(modalTitle);
+    modalContent.appendChild(modalText);
+    modalContent.appendChild(passwordInput);
+    modalContent.appendChild(buttonsContainer);
+    
+    modalOverlay.appendChild(modalContent);
+    document.body.appendChild(modalOverlay);
+    
+    // Enfocar el input de contraseña después de un breve retraso
+    setTimeout(() => passwordInput.focus(), 100);
+    
+    // Manejar eventos de teclado
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            confirmButton.click();
+        } else if (e.key === 'Escape') {
+            cancelButton.click();
+        }
+    };
+    
+    document.addEventListener('keydown', handleKeyDown);
+    
+    // Configurar botones
+    confirmButton.addEventListener('click', () => {
+        const password = passwordInput.value.trim();
+        if (!password) {
+            // Destacar el campo de contraseña en rojo si está vacío
+            passwordInput.style.borderColor = 'var(--qsm-red, #ff453a)';
+            passwordInput.style.backgroundColor = 'rgba(255, 69, 58, 0.1)';
+            passwordInput.placeholder = 'Debes ingresar una contraseña';
+            
+            // Restaurar después de un momento
+            setTimeout(() => {
+                passwordInput.style.borderColor = 'var(--qsm-border, rgba(255, 255, 255, 0.1))';
+                passwordInput.style.backgroundColor = 'var(--qsm-input-bg, rgba(16, 17, 26, 0.6))';
+                passwordInput.placeholder = 'Contraseña de la sala';
+            }, 1500);
+            
+            return;
+        }
+        
+        document.removeEventListener('keydown', handleKeyDown);
+        modalOverlay.remove();
+        callback(password);
+    });
+    
+    cancelButton.addEventListener('click', () => {
+        document.removeEventListener('keydown', handleKeyDown);
+        modalOverlay.remove();
+        callback(null);
+    });
+    
+    // Cerrar al hacer clic fuera del modal
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            cancelButton.click();
         }
     });
+}
 
-    // --- Inicializar sistema de notificaciones ---
-    function initializeNotificationSystem() {
-        // Solicitar permisos de notificación
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission().then(permission => {
-                console.log('Permisos de notificación:', permission);
-            });
-        }
-        
-        // Crear función de sonido sintetizado usando Web Audio API
-        gameState.playNotificationSound = function() {
-            try {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                
-                // Crear un sonido de notificación agradable (tono más cerebral para QSM)
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                // Configurar las frecuencias para un sonido más "intelectual"
-                oscillator.frequency.setValueAtTime(660, audioContext.currentTime);
-                oscillator.frequency.setValueAtTime(880, audioContext.currentTime + 0.1);
-                oscillator.frequency.setValueAtTime(1100, audioContext.currentTime + 0.2);
-                
-                // Envelope para que suene natural
-                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-                gainNode.gain.linearRampToValueAtTime(0.2, audioContext.currentTime + 0.01);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
-                
-                oscillator.type = 'triangle';
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.4);
-                
-                console.log('🔊 Sonido de notificación reproducido');
-            } catch (error) {
-                console.log('No se pudo reproducir el sonido de notificación:', error);
-            }
-        };
-    }
-
-    // --- Función para notificar cuando se une un oponente ---
-    function notifyOpponentJoined(opponentName) {
-        console.log('🔔 Notificando unión de oponente:', opponentName);
-        
-        // 1. Reproducir sonido
-        if (gameState.playNotificationSound) {
-            gameState.playNotificationSound();
-        }
-        
-        // 2. Notificación del navegador (solo si la ventana no está activa)
-        if (!document.hasFocus() && 'Notification' in window && Notification.permission === 'granted') {
-            const notification = new Notification('¡Oponente conectado! - Quien Sabe Más', {
-                body: `${opponentName} se unió a tu sala. ¡La partida está lista!`,
-                icon: '/favicon.ico',
-                badge: '/favicon.ico',
-                tag: 'quiensabemas-opponent-joined',
-                requireInteraction: true
-            });
-            
-            notification.onclick = function() {
-                window.focus();
-                notification.close();
-            };
-            
-            // Auto-cerrar después de 8 segundos
-            setTimeout(() => notification.close(), 8000);
-        }
-        
-        // 3. Enfocar la ventana si está en segundo plano
-        if (!document.hasFocus()) {
-            window.focus();
-            
-            // Hacer que la pestaña parpadee si el navegador lo soporta
-            let originalTitle = document.title;
-            let flashCount = 0;
-            const flashInterval = setInterval(() => {
-                document.title = flashCount % 2 === 0 ? '🧠 ¡OPONENTE CONECTADO!' : originalTitle;
-                flashCount++;
-                if (flashCount >= 10 || document.hasFocus()) {
-                    clearInterval(flashInterval);
-                    document.title = originalTitle;
-                }
-            }, 500);
-        }
-        
-        // 4. Alerta visual mejorada en el juego
-        showOpponentJoinedAlert(opponentName);
-    }
-
-    // ========================================= 
-    // ======== SISTEMA DE SONIDO COMPLETO ======== 
-    // ========================================= 
+function renderAvailableRooms(rooms) {
+    if (!DOM.roomsListElement) return;
     
-    class SoundManager {
-        constructor() {
-            this.audioContext = null;
-            this.sounds = {};
-            this.volume = 0.7; // Volumen por defecto 70%
-            this.isMuted = false;
-            this.currentBackgroundMusic = null;
-            this.soundEnabled = true;
-            
-            // Cargar configuración guardada
-            this.loadSoundSettings();
-            
-            // Inicializar Web Audio API
-            this.initAudioContext();
-            
-            // Crear sonidos usando osciladores y síntesis
-            this.createSounds();
-        }
+    DOM.roomsListElement.innerHTML = '';
+    
+    if (!rooms || rooms.length === 0) {
+        DOM.roomsListElement.innerHTML = '<li class="no-rooms-message"><i class="fas fa-info-circle"></i> No hay salas disponibles. ¡Crea una nueva sala para comenzar!</li>';
+        return;
+    }
+    
+    console.log('Renderizando salas:', rooms);
+    
+    rooms.forEach(room => {
+        const li = document.createElement('li');
+        li.className = 'room-item';
         
-        initAudioContext() {
-            try {
-                // Crear contexto de audio compatible con navegadores
-                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                console.log("Audio context initialized successfully");
-            } catch (error) {
-                console.warn("Web Audio API not supported:", error);
-                this.soundEnabled = false;
-            }
-        }
+        const isRoomFull = room.playerCount >= (room.maxPlayers || 2);
         
-        createSounds() {
-            if (!this.audioContext || !this.soundEnabled) return;
-            
-            // Definir configuraciones de sonidos
-            this.soundConfigs = {
-                correct: {
-                    type: 'success',
-                    frequency: [523, 659, 784], // Do-Mi-Sol mayor
-                    duration: 0.3,
-                    volume: 0.4
-                },
-                incorrect: {
-                    type: 'error', 
-                    frequency: [196, 165], // Sol-Mi descendente
-                    duration: 0.4,
-                    volume: 0.3
-                },
-                tick: {
-                    type: 'tick',
-                    frequency: [800],
-                    duration: 0.05,
-                    volume: 0.15
-                },
-                victory: {
-                    type: 'celebration',
-                    frequency: [523, 659, 784, 1047], // Do-Mi-Sol-Do mayor
-                    duration: 0.6,
-                    volume: 0.5
-                },
-                defeat: {
-                    type: 'sad',
-                    frequency: [220, 196, 175], // La-Sol-Fa descendente
-                    duration: 0.8,
-                    volume: 0.4
-                },
-                timeout: {
-                    type: 'warning',
-                    frequency: [300, 250, 200], // Frecuencias descendentes
-                    duration: 0.7,
-                    volume: 0.4
-                },
-                gameStart: {
-                    type: 'start',
-                    frequency: [440, 554, 659], // La-Do#-Mi
-                    duration: 0.4,
-                    volume: 0.3
-                }
+        // Asegurar que se muestre el nombre de la sala (si no tiene, usar el ID)
+        const roomDisplayName = room.name || room.roomName || `Sala ${room.id}`;
+        const creatorName = room.creatorName || 'Anónimo';
+        
+        // Asegurar que needsPassword es un booleano
+        const needsPassword = !!room.needsPassword;
+        
+        li.innerHTML = `
+            <div class="room-info">
+                <div class="room-name">
+                    <i class="fas fa-${needsPassword ? 'lock' : 'door-open'}"></i>
+                    <strong>${roomDisplayName}</strong>
+                </div>
+                <div class="room-details">
+                    <span class="room-creator"><i class="fas fa-user"></i> ${creatorName}</span>
+                    <span class="room-players"><i class="fas fa-users"></i> ${room.playerCount || 0}/${room.maxPlayers || 2}</span>
+                    <span class="room-id"><i class="fas fa-hashtag"></i> ${room.id}</span>
+                </div>
+            </div>
+            <button class="join-room-list-btn ${isRoomFull ? 'disabled' : ''}" 
+                    data-roomid="${room.id}"
+                    data-needspassword="${needsPassword ? 'true' : 'false'}"
+                    data-roomname="${roomDisplayName}"
+                    ${isRoomFull ? 'disabled' : ''}>
+                ${isRoomFull ? '<i class="fas fa-ban"></i> Llena' : '<i class="fas fa-sign-in-alt"></i> Unirse'}
+            </button>`;
+        
+        DOM.roomsListElement.appendChild(li);
+        
+        // Si la sala no está llena, permitir hacer clic en toda la sala
+        if (!isRoomFull) {
+            // Crear una copia del objeto room con needsPassword como booleano para pasar a handleJoinRoomFromListClick
+            const roomData = {
+                ...room,
+                needsPassword: needsPassword
             };
-        }
-        
-        playSound(soundName, options = {}) {
-            if (!this.audioContext || !this.soundEnabled || this.isMuted) return;
             
-            const config = this.soundConfigs[soundName];
-            if (!config) {
-                console.warn(`Sound "${soundName}" not found`);
-                return;
-            }
-            
-            try {
-                // Reanudar contexto si está suspendido
-                if (this.audioContext.state === 'suspended') {
-                    this.audioContext.resume();
-                }
-                
-                const { frequency, duration, volume: baseVolume } = config;
-                const finalVolume = (baseVolume * this.volume * (options.volume || 1));
-                
-                // Crear osciladores para cada frecuencia
-                frequency.forEach((freq, index) => {
-                    const oscillator = this.audioContext.createOscillator();
-                    const gainNode = this.audioContext.createGain();
-                    
-                    // Configurar oscilador
-                    oscillator.frequency.setValueAtTime(freq, this.audioContext.currentTime);
-                    oscillator.type = this.getOscillatorType(config.type);
-                    
-                    // Configurar ganancia con envelope
-                    const startTime = this.audioContext.currentTime + (index * 0.1);
-                    const endTime = startTime + duration;
-                    
-                    gainNode.gain.setValueAtTime(0, startTime);
-                    gainNode.gain.linearRampToValueAtTime(finalVolume, startTime + 0.01);
-                    gainNode.gain.exponentialRampToValueAtTime(0.001, endTime);
-                    
-                    // Conectar nodos
-                    oscillator.connect(gainNode);
-                    gainNode.connect(this.audioContext.destination);
-                    
-                    // Programar reproducción
-                    oscillator.start(startTime);
-                    oscillator.stop(endTime);
+            // Hacer que la información de la sala sea clickeable
+            const roomInfo = li.querySelector('.room-info');
+            if (roomInfo) {
+                roomInfo.style.cursor = 'pointer';
+                roomInfo.addEventListener('click', function() {
+                    handleJoinRoomFromListClick(roomData);
                 });
-                
-            } catch (error) {
-                console.error("Error playing sound:", error);
+            }
+            
+            // También mantener el evento en el botón
+            const joinButton = li.querySelector('.join-room-list-btn');
+            if (joinButton) {
+                joinButton.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Evitar doble activación
+                    handleJoinRoomFromListClick(roomData);
+                });
             }
         }
-        
-        getOscillatorType(soundType) {
-            const types = {
-                success: 'sine',
-                error: 'triangle', 
-                tick: 'square',
-                celebration: 'sine',
-                sad: 'sawtooth',
-                warning: 'triangle',
-                start: 'sine'
-            };
-            return types[soundType] || 'sine';
-        }
-        
-        setVolume(newVolume) {
-            this.volume = Math.max(0, Math.min(1, newVolume));
-            this.saveSoundSettings();
-        }
-        
-        toggleMute() {
-            this.isMuted = !this.isMuted;
-            this.saveSoundSettings();
-        }
-        
-        saveSoundSettings() {
-            const settings = {
-                volume: this.volume,
-                isMuted: this.isMuted
-            };
-            localStorage.setItem('quienSabeMasSoundSettings', JSON.stringify(settings));
-        }
-        
-        loadSoundSettings() {
-            try {
-                const settings = JSON.parse(localStorage.getItem('quienSabeMasSoundSettings'));
-                if (settings) {
-                    this.volume = settings.volume !== undefined ? settings.volume : 0.7;
-                    this.isMuted = settings.isMuted || false;
-                }
-            } catch (error) {
-                console.warn("Error loading sound settings:", error);
-            }
-        }
-        
-        // Método de limpieza
-        destroy() {
-            if (this.audioContext) {
-                this.audioContext.close();
-            }
-        }
+    });
+}
+
+// Función de actualización de salas
+function refreshAvailableRooms() {
+    console.log('Actualizando lista de salas disponibles...');
+    
+    // Mostrar animación de carga en el botón de refrescar
+    const refreshIcon = document.querySelector('#refreshRoomsBtn i');
+    if (refreshIcon) {
+        refreshIcon.classList.add('fa-spin');
+        setTimeout(() => {
+            refreshIcon.classList.remove('fa-spin');
+        }, 1000);
     }
     
-    // Crear instancia global del manager de sonido
-    window.soundManager = new SoundManager();
+    // Mostrar mensaje de carga en la lista de salas
+    if (DOM.roomsListElement) {
+        DOM.roomsListElement.innerHTML = '<li class="loading-rooms"><i class="fas fa-spinner fa-spin"></i> Actualizando lista de salas...</li>';
+    }
     
-    console.log("Sound system initialized for Quien Sabe Más");
+    // Solicitar las salas al servidor
+    if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN) {
+        sendToServer('getRooms', { gameType: 'quiensabemas' });
+    } else {
+        // Si no hay conexión, mostrar error
+        if (DOM.roomsListElement) {
+            DOM.roomsListElement.innerHTML = '<li class="no-rooms-message"><i class="fas fa-exclamation-triangle"></i> No hay conexión con el servidor. Intenta recargar la página.</li>';
+        }
+        showLobbyMessage('No hay conexión con el servidor de juego. Intenta recargar la página.', 'error', true);
+    }
+}
+
+// --- Game Logic & UI ---
+function updatePlayersHeaderUI() {
+    const playerIds = Object.keys(gameState.players);
+    let p1Id = null, p2Id = null;
+
+    if (playerIds.includes(gameState.myPlayerId)) {
+        p1Id = gameState.myPlayerId;
+        p2Id = playerIds.find(id => id !== gameState.myPlayerId);
+    } else if (playerIds.length > 0) {
+        p1Id = playerIds[0];
+        if (playerIds.length > 1) p2Id = playerIds[1];
+    }
     
-    // ========================================= 
-    // ======== FIN SISTEMA DE SONIDO ======== 
-    // =========================================
-});
+    const p1Box = DOM.player1NameHeader?.closest('.player-box');
+    const p2Box = DOM.player2NameHeader?.closest('.player-box');
+    
+    // Avatar updates with FontAwesome icons
+    const p1Avatar = document.getElementById('player1Avatar');
+    const p2Avatar = document.getElementById('player2Avatar');
+
+    if (p1Id && gameState.players[p1Id]) {
+        if (DOM.player1NameHeader) DOM.player1NameHeader.textContent = gameState.players[p1Id].name || 'Jugador 1';
+        if (DOM.player1ScoreHeader) DOM.player1ScoreHeader.textContent = gameState.players[p1Id].score || 0;
+        if (p1Box) p1Box.classList.toggle('active-turn', gameState.currentTurn === p1Id);
+        if (p1Avatar) p1Avatar.innerHTML = '<i class="fas fa-user"></i>';
+    } else {
+        if (DOM.player1NameHeader) DOM.player1NameHeader.textContent = gameState.playerName || 'Tú';
+        if (DOM.player1ScoreHeader) DOM.player1ScoreHeader.textContent = 0;
+        if (p1Box) p1Box.classList.remove('active-turn');
+        if (p1Avatar) p1Avatar.innerHTML = '<i class="fas fa-user"></i>';
+    }
+
+    if (p2Id && gameState.players[p2Id]) {
+        if (DOM.player2NameHeader) DOM.player2NameHeader.textContent = gameState.players[p2Id].name || 'Oponente';
+        if (DOM.player2ScoreHeader) DOM.player2ScoreHeader.textContent = gameState.players[p2Id].score || 0;
+        if (p2Box) p2Box.classList.toggle('active-turn', gameState.currentTurn === p2Id);
+        if (p2Avatar) p2Avatar.innerHTML = '<i class="fas fa-user-friends"></i>';
+    } else {
+        if (DOM.player2NameHeader) DOM.player2NameHeader.textContent = "Esperando...";
+        if (DOM.player2ScoreHeader) DOM.player2ScoreHeader.textContent = 0;
+        if (p2Box) p2Box.classList.remove('active-turn');
+        if (p2Avatar) p2Avatar.innerHTML = '<i class="fas fa-user-clock"></i>';
+    }
+    
+    if (DOM.turnIndicator && gameState.gameActive) {
+        const turnPlayerName = gameState.currentTurn && gameState.players[gameState.currentTurn] ?
+            gameState.players[gameState.currentTurn].name : "Esperando";
+        DOM.turnIndicator.innerHTML = `<i class="fas fa-user-clock"></i> Turno de: ${turnPlayerName}`;
+    } else if (DOM.turnIndicator) {
+        DOM.turnIndicator.innerHTML = '<i class="fas fa-hourglass-half"></i> Esperando inicio...';
+    }
+}
+
+function displayQuestionInUI() {
+    if (!DOM.qsmQuestionText || !DOM.optionsGrid || !gameState.currentQuestion) {
+        console.error("❌ Elementos de UI o pregunta faltantes.");
+        return;
+    }
+    
+    hideWaitingStateInGame();
+
+    // Mostrar texto de la pregunta con animación
+    DOM.qsmQuestionText.textContent = '';
+    DOM.qsmQuestionText.classList.add('question-appear');
+    
+    setTimeout(() => {
+        DOM.qsmQuestionText.textContent = gameState.currentQuestion.text;
+        setTimeout(() => {
+            DOM.qsmQuestionText.classList.remove('question-appear');
+        }, 300);
+    }, 300);
+    
+    // Generar opciones de respuesta
+    DOM.optionsGrid.innerHTML = '';
+    const optionLetters = ['A', 'B', 'C', 'D'];
+    
+    gameState.currentQuestion.options.forEach((optionText, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'modern-option';
+        btn.dataset.optionText = optionText;
+        btn.dataset.optionIndex = index;
+        
+        btn.innerHTML = `
+            <span class="option-letter">${optionLetters[index]}</span>
+            <span class="option-text">${optionText}</span>
+        `;
+        
+        btn.onclick = () => submitAnswerToAPI(optionText, index, btn);
+        DOM.optionsGrid.appendChild(btn);
+        
+        // Pequeña animación de aparición escalonada
+        setTimeout(() => {
+            btn.classList.add('option-appear');
+        }, 100 * (index + 1));
+    });
+
+    if (DOM.questionNumberDisplay) {
+        DOM.questionNumberDisplay.innerHTML = `<i class="fas fa-question-circle"></i> Pregunta ${gameState.currentQuestionIndex + 1}/${gameState.totalQuestions}`;
+    }
+    
+    clearFeedbackInGame();
+
+    if (gameState.currentTurn === gameState.myPlayerId) {
+        enableAnswerOptions();
+        startQuestionTimer();
+    } else {
+        disableAnswerOptions();
+        stopQuestionTimer(); // Timer solo para el jugador activo
+    }
+}
+
+function submitAnswerToAPI(selectedOptionText, selectedIndex, optionButton) {
+    if (gameState.currentTurn !== gameState.myPlayerId || !gameState.gameActive) {
+        showErrorInGame(gameState.gameActive ? "No es tu turno." : "El juego no ha comenzado.");
+        return;
+    }
+    
+    stopQuestionTimer();
+    disableAnswerOptions();
+    
+    if (optionButton) {
+        optionButton.classList.add('selected');
+        // Añadir efecto visual para la selección
+        optionButton.classList.add('pulse-select');
+    }
+
+    sendToServer('submitAnswer', {
+        selectedIndex: selectedIndex
+    });
+    
+    showFeedbackInGame("Respuesta enviada...", "info");
+}
+
+function highlightAnswerUI(wasCorrect, correctAnswerText, playerAnswerText) {
+    Array.from(DOM.optionsGrid.children).forEach(button => {
+        button.classList.remove('pulse-select'); // Quitar cualquier animación previa
+        
+        const optText = button.dataset.optionText;
+        
+        if (optText === correctAnswerText) {
+            button.classList.add('correct');
+            // Añadir pequeña animación para respuesta correcta
+            button.classList.add('correct-reveal');
+        }
+        
+        if (optText === playerAnswerText && !wasCorrect) {
+            button.classList.add('incorrect');
+            // Añadir pequeña animación para respuesta incorrecta
+            button.classList.add('incorrect-shake');
+        }
+        
+        if (optText === playerAnswerText) {
+            button.classList.add('selected');
+        }
+    });
+}
+
+function enableAnswerOptions() {
+    Array.from(DOM.optionsGrid.children).forEach(button => {
+        button.disabled = false;
+        button.classList.remove('correct', 'incorrect', 'selected', 'correct-reveal', 'incorrect-shake', 'pulse-select');
+    });
+}
+
+function disableAnswerOptions() {
+    Array.from(DOM.optionsGrid.children).forEach(button => {
+        button.disabled = true;
+    });
+}
+
+function showFeedbackInGame(message, type = 'info') {
+    if (!DOM.feedbackMessage) return;
+    
+    DOM.feedbackMessage.textContent = message;
+    DOM.feedbackMessage.className = `feedback-message ${type}`;
+    DOM.feedbackMessage.style.display = 'block';
+    
+    // Añadir animación al mostrar feedback
+    DOM.feedbackMessage.classList.add('feedback-appear');
+    setTimeout(() => {
+        DOM.feedbackMessage.classList.remove('feedback-appear');
+    }, 300);
+    
+    // Auto-ocultar feedback informativo después de 5 segundos
+    if (type === 'info') {
+        setTimeout(() => {
+            if (DOM.feedbackMessage.textContent === message) {
+                clearFeedbackInGame();
+            }
+        }, 5000);
+    }
+}
+
+function clearFeedbackInGame() {
+    if (DOM.feedbackMessage) DOM.feedbackMessage.style.display = 'none';
+}
+
+function showErrorInGame(message) {
+    showFeedbackInGame(message, 'error');
+}
+
+function startQuestionTimer() {
+    stopQuestionTimer();
+    gameState.timeLeft = gameState.timePerQuestion;
+    
+    if (DOM.timerProgress) {
+        DOM.timerProgress.style.width = '100%';
+        DOM.timerProgress.style.backgroundColor = ''; // Reset to default color
+    }
+
+    gameState.timerInterval = setInterval(() => {
+        gameState.timeLeft--;
+        
+        if (DOM.timerProgress) {
+            const percentage = Math.max(0, (gameState.timeLeft / gameState.timePerQuestion) * 100);
+            DOM.timerProgress.style.width = `${percentage}%`;
+            
+            // Cambiar color según tiempo restante
+            if (gameState.timeLeft <= 5 && gameState.timeLeft > 2) {
+                DOM.timerProgress.style.backgroundColor = 'orange';
+                // Añadir animación de pulso en tiempo bajo
+                DOM.timerProgress.classList.add('timer-pulse');
+            } else if (gameState.timeLeft <= 2) {
+                DOM.timerProgress.style.backgroundColor = 'red';
+                DOM.timerProgress.classList.add('timer-pulse-fast');
+            } else {
+                DOM.timerProgress.style.backgroundColor = '';
+                DOM.timerProgress.classList.remove('timer-pulse', 'timer-pulse-fast');
+            }
+        }
+        
+        if (gameState.timeLeft <= 0) {
+            stopQuestionTimer();
+            showFeedbackInGame('¡Tiempo agotado!', 'error');
+            disableAnswerOptions();
+            // Enviar timeOut al servidor
+            sendToServer('timeOut');
+        }
+    }, 1000);
+}
+
+function stopQuestionTimer() {
+    clearInterval(gameState.timerInterval);
+    gameState.timerInterval = null;
+    
+    if (DOM.timerProgress) {
+        DOM.timerProgress.classList.remove('timer-pulse', 'timer-pulse-fast');
+    }
+}
+
+function showWaitingStateInGame(message) {
+    if (DOM.waitingArea) { 
+        DOM.waitingArea.style.display = 'flex'; 
+        if (DOM.waitingMessage) DOM.waitingMessage.textContent = message; 
+    }
+    
+    if (DOM.qsmQuestionText) DOM.qsmQuestionText.textContent = '';
+    if (DOM.optionsGrid) DOM.optionsGrid.innerHTML = '';
+    
+    clearFeedbackInGame();
+    stopQuestionTimer();
+}
+
+function hideWaitingStateInGame() {
+    if (DOM.waitingArea) DOM.waitingArea.style.display = 'none';
+}
+
+// --- Game End ---
+async function handleGameEnd(payload) {
+    console.log("🏁 Juego terminado:", payload);
+    stopQuestionTimer();
+    gameState.gameActive = false;
+    gameState.gamePhase = 'gameOver';
+
+    const myPlayerId = gameState.myPlayerId;
+    const finalScores = payload.finalScores || {};
+    const myScore = finalScores[myPlayerId] || 0;
+    let opponentScore = 0;
+    let opponentId = null;
+
+    // Encontrar el ID y puntaje del oponente
+    for (const playerId in finalScores) {
+        if (playerId !== myPlayerId) {
+            opponentId = playerId;
+            opponentScore = finalScores[playerId];
+            break;
+        }
+    }
+
+    // Determinar resultado para el jugador actual
+    let resultText = "Juego Terminado";
+    let resultTitleText = "Fin del Juego";
+    let resultIcon = "fas fa-check-circle";
+    
+    if (payload.draw) {
+        resultTitleText = "¡Empate!";
+        resultText = payload.reason || "Ambos jugadores empataron en puntuación.";
+        resultIcon = "fas fa-balance-scale";
+    } else if (payload.winnerId === myPlayerId) {
+        resultTitleText = "¡Victoria!";
+        resultText = payload.reason || "¡Felicitaciones! Has ganado la partida.";
+        resultIcon = "fas fa-trophy";
+    } else if (payload.winnerId && payload.winnerId !== myPlayerId) {
+        resultTitleText = "Derrota";
+        resultText = payload.reason || "Mejor suerte la próxima vez.";
+        resultIcon = "fas fa-award";
+    } else if (payload.reason) {
+        resultTitleText = "Juego Interrumpido";
+        resultText = payload.reason;
+        resultIcon = "fas fa-exclamation-triangle";
+    }
+
+    // Actualizar UI del modal de resultados
+    if (DOM.resultTitle) DOM.resultTitle.innerHTML = `<i class="${resultIcon}"></i> ${resultTitleText}`;
+    if (DOM.resultMessageModal) DOM.resultMessageModal.textContent = resultText;
+    if (DOM.playerFinalScoreDisplay) DOM.playerFinalScoreDisplay.textContent = myScore;
+    if (DOM.opponentFinalScoreDisplay) DOM.opponentFinalScoreDisplay.textContent = opponentScore;
+    if (DOM.qsmResultModal) {
+        // Añadir una pequeña demora para que el jugador vea el estado final del juego
+        setTimeout(() => {
+            DOM.qsmResultModal.style.display = 'flex';
+        }, 1500);
+    }
+
+    // Guardar resultados y logros (solo si Firebase está disponible)
+    if (gameState.firebaseInstances?.user && gameState.firebaseInstances?.db) {
+        const { db, user } = gameState.firebaseInstances;
+        const userId = user.uid;
+        
+        const gameData = {
+            scores: finalScores,
+            winnerId: payload.winnerId,
+            draw: payload.draw || false,
+            timestamp: serverTimestamp(),
+            gameType: 'quiensabemas_1v1',
+            myScore: myScore,
+            opponentScore: opponentScore,
+            opponentId: opponentId,
+            playerId: myPlayerId
+        };
+
+        try {
+            await saveQSMResult(db, userId, gameData);
+            trackEvent(db, userId, 'qsm_game_completed');
+            
+            if (payload.winnerId === myPlayerId && !payload.draw) {
+                trackEvent(db, userId, 'qsm_game_won');
+                updateUserStats(db, userId, { qsmGamesWon: increment(1) });
+                checkAndAwardBadge(db, userId, 'qsm_victories', myScore);
+            } else if (payload.draw) {
+                trackEvent(db, userId, 'qsm_game_draw');
+            }
+            
+            updateUserStats(db, userId, { qsmGamesPlayed: increment(1) });
+        } catch (error) {
+            console.error("Error guardando resultados o logros:", error);
+        }
+    } else {
+        console.warn("Firebase no disponible. No se guardarán resultados ni logros.");
+    }
+}
+
+// --- Event Listeners Setup ---
+function setupEventListeners() {
+    console.log("⚙️ Configurando event listeners...");
+    
+    // Botones del lobby
+    if (DOM.createRoomBtn) DOM.createRoomBtn.addEventListener('click', handleCreateRoom);
+    if (DOM.joinRoomBtn) DOM.joinRoomBtn.addEventListener('click', handleJoinRoomById);
+    if (DOM.joinRandomRoomBtn) DOM.joinRandomRoomBtn.addEventListener('click', handleJoinRandomRoom);
+    
+    // Input fields para nombres de jugadores
+    const createPlayerNameInput = document.getElementById('createPlayerName');
+    const joinPlayerNameInput = document.getElementById('joinPlayerName');
+    
+    // Botón para refrescar la lista de salas
+    const refreshRoomsBtn = document.getElementById('refreshRoomsBtn');
+    if (refreshRoomsBtn) {
+        console.log('Configurando botón de refrescar salas...');
+        refreshRoomsBtn.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevenir comportamiento por defecto
+            console.log('Botón de refrescar salas clickeado');
+            refreshAvailableRooms();
+        });
+    } else {
+        console.warn('⚠️ No se encontró el botón de refrescar salas (refreshRoomsBtn)');
+    }
+    
+    // Inicializar lista de salas
+    setTimeout(() => {
+        if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN) {
+            console.log('Solicitando lista inicial de salas...');
+            refreshAvailableRooms();
+        }
+    }, 1000);
+    
+    // Sincronizar nombres de jugador entre los campos de formulario
+    if (createPlayerNameInput) {
+        createPlayerNameInput.addEventListener('input', () => {
+            if (createPlayerNameInput.value.trim() && joinPlayerNameInput) {
+                joinPlayerNameInput.value = createPlayerNameInput.value.trim();
+            }
+        });
+        
+        createPlayerNameInput.addEventListener('change', () => {
+            if (createPlayerNameInput.value.trim()) {
+                localStorage.setItem('playerName', createPlayerNameInput.value.trim());
+                gameState.playerName = createPlayerNameInput.value.trim();
+                updatePlayerNameInUI();
+            }
+        });
+    }
+    
+    if (joinPlayerNameInput) {
+        joinPlayerNameInput.addEventListener('input', () => {
+            if (joinPlayerNameInput.value.trim() && createPlayerNameInput) {
+                createPlayerNameInput.value = joinPlayerNameInput.value.trim();
+            }
+        });
+        
+        joinPlayerNameInput.addEventListener('change', () => {
+            if (joinPlayerNameInput.value.trim()) {
+                localStorage.setItem('playerName', joinPlayerNameInput.value.trim());
+                gameState.playerName = joinPlayerNameInput.value.trim();
+                updatePlayerNameInUI();
+            }
+        });
+    }
+
+    // Modal de introducción
+    if (DOM.qsmIntroModal && DOM.goToLobbyQSMButton) {
+        DOM.goToLobbyQSMButton.addEventListener('click', () => {
+            DOM.qsmIntroModal.style.display = 'none';
+            localStorage.setItem(CONFIG.STORAGE_KEYS.INTRO_SHOWN, 'true');
+            showLobbyView();
+        });
+        
+        // Cerrar modal al hacer clic fuera
+        DOM.qsmIntroModal.addEventListener('click', (e) => {
+            if (e.target === DOM.qsmIntroModal) DOM.goToLobbyQSMButton.click();
+        });
+    }
+    
+    // Modal de resultados
+    if (DOM.qsmResultModal) {
+        if (DOM.playAgainQSMBtn) {
+            DOM.playAgainQSMBtn.addEventListener('click', () => {
+                DOM.qsmResultModal.style.display = 'none';
+                showLobbyView();
+            });
+        }
+        
+        if (DOM.goToLobbyFromResultsBtn) {
+            DOM.goToLobbyFromResultsBtn.addEventListener('click', () => {
+                DOM.qsmResultModal.style.display = 'none';
+                showLobbyView();
+            });
+        }
+        
+        // Cerrar modal al hacer clic fuera
+        DOM.qsmResultModal.addEventListener('click', (e) => {
+            if (e.target === DOM.qsmResultModal) {
+                DOM.qsmResultModal.style.display = 'none';
+                showLobbyView();
+            }
+        });
+    }
+
+    // Comunicación con games.html
+    window.addEventListener('message', function(event) {
+        if (event.origin !== window.location.origin) return;
+        
+        if (event.data?.type === 'requestRooms' && event.data?.gameType === 'quiensabemas') {
+            console.log('💬 Solicitud de salas recibida desde games.html');
+            
+            if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN) {
+                sendToServer('getRooms', { gameType: 'quiensabemas' });
+                gameState.pendingRoomsRequest = { source: event.source, origin: event.origin };
+            } else {
+                event.source.postMessage({ 
+                    type: 'availableRooms', 
+                    gameType: 'quiensabemas', 
+                    rooms: [] 
+                }, event.origin);
+            }
+        }
+    });
+    
+    // Teclas de acceso rápido
+    document.addEventListener('keydown', (e) => {
+        // Responder con teclas A, B, C, D si es nuestro turno y el juego está activo
+        if (gameState.gameActive && gameState.currentTurn === gameState.myPlayerId) {
+            const optionButtons = DOM.optionsGrid?.children;
+            if (!optionButtons || optionButtons.length === 0) return;
+            
+            let optionIndex = -1;
+            
+            switch (e.key.toLowerCase()) {
+                case 'a': optionIndex = 0; break;
+                case 'b': optionIndex = 1; break;
+                case 'c': optionIndex = 2; break;
+                case 'd': optionIndex = 3; break;
+            }
+            
+            if (optionIndex >= 0 && optionIndex < optionButtons.length) {
+                const button = optionButtons[optionIndex];
+                if (!button.disabled) {
+                    button.click();
+                }
+            }
+        }
+        
+        // Escape para cerrar modales
+        if (e.key === 'Escape') {
+            if (DOM.qsmResultModal && DOM.qsmResultModal.style.display === 'flex') {
+                DOM.qsmResultModal.style.display = 'none';
+                showLobbyView();
+            }
+            
+            if (DOM.qsmIntroModal && DOM.qsmIntroModal.style.display === 'flex' && 
+                localStorage.getItem(CONFIG.STORAGE_KEYS.INTRO_SHOWN)) {
+                DOM.qsmIntroModal.style.display = 'none';
+            }
+        }
+    });
+}
+
+// Nota: La lógica del servidor (server.js) DEBE ser actualizada para manejar los nuevos tipos de mensajes
+// qsmGetPlayerInfo, qsmRequestRoomList, qsmCreateRoom, qsmJoinRoomById, qsmJoinRandomRoom, qsmSubmitAnswer, qsmTimeOut, etc.
+// y para gestionar el estado completo del juego QSM (preguntas, turnos, scores).
+
+// Nota: Este es un esqueleto. Faltan muchas validaciones, manejo de errores robusto,
+// lógica de reconexión, seguridad de Firestore rules, y posiblemente una 
+// integración más profunda con un backend o Cloud Functions para operaciones sensibles
+// como la creación de salas o la gestión de turnos complejos.
+// La carga de preguntas desde `assets/data/level_X.json` es simulada y debe
+// ser implementada correctamente según cómo se sirvan esos archivos o si se mueven a Firestore. 
