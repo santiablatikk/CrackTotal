@@ -1,8 +1,9 @@
 User-agent: *
 Allow: /
 
-# Sitemap
+# Sitemaps
 Sitemap: https://cracktotal.com/sitemap.xml
+Sitemap: https://cracktotal.com/sitemap-simplificado.xml
 
 # CRÍTICO PARA ADSENSE: Permitir acceso completo a recursos estáticos
 Allow: /css/
