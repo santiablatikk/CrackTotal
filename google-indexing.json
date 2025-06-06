@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "site_name": "Crack Total",
+  "updated": "2025-06-07T12:00:00+00:00",
+  "content": {
+    "pages": [
+      {
+        "path": "/",
+        "priority": "high",
+        "change_frequency": "daily",
+        "last_updated": "2025-06-07T12:00:00+00:00"
+      },
+      {
+        "path": "/games.html",
+        "priority": "high",
+        "change_frequency": "weekly",
+        "last_updated": "2025-06-07T12:00:00+00:00"
+      },
+      {
+        "path": "/pasalache.html",
+        "priority": "high",
+        "change_frequency": "weekly",
+        "last_updated": "2025-06-07T12:00:00+00:00"
+      },
+      {
+        "path": "/quiensabemas.html",
+        "priority": "high",
+        "change_frequency": "weekly",
+        "last_updated": "2025-06-07T12:00:00+00:00"
+      },
+      {
+        "path": "/mentiroso.html",
+        "priority": "high",
+        "change_frequency": "weekly",
+        "last_updated": "2025-06-07T12:00:00+00:00"
+      },
+      {
+        "path": "/crack-rapido.html",
+        "priority": "high",
+        "change_frequency": "weekly",
+        "last_updated": "2025-06-07T12:00:00+00:00"
+      },
+      {
+        "path": "/blog.html",
+        "priority": "high",
+        "change_frequency": "daily",
+        "last_updated": "2025-06-07T12:00:00+00:00"
+      }
+    ],
+    "exclude_patterns": [
+      "*/404.html",
+      "*/500.html",
+      "*/test-*",
+      "*/debug-*"
+    ],
+    "site_structure": {
+      "main_content_selectors": [".main-content", ".game-container", ".blog-content"],
+      "navigation_selectors": [".main-navigation", ".footer-navigation"],
+      "updated_time_selectors": [".last-updated", ".published-date"]
+    },
+    "site_metadata": {
+      "primary_language": "es-AR",
+      "regional_content": true,
+      "business_type": "Gaming",
+      "adult_content": false,
+      "has_ecommerce": false,
+      "needs_indexing_api": true
+    }
+  }
+} 
