@@ -55,25 +55,33 @@ function generateRankingHTML(usersData) {
     // Filtrar y procesar datos de usuarios de manera más flexible
     const validUsers = usersData
         .filter(user => {
-            // Buscar datos de Pasala Che en diferentes ubicaciones posibles
-            const pasalacheData = user.pasalache || user.stats?.pasalache || user.stats?.pasalaChe || user.stats?.PasalaChe;
-            const hasScore = user.totalScore > 0 || user.score > 0 || (pasalacheData && (pasalacheData.totalScore > 0 || pasalacheData.score > 0));
-            const hasWins = user.wins > 0 || (pasalacheData && pasalacheData.wins > 0);
-            const hasPlayed = (pasalacheData && pasalacheData.played > 0);
-            return pasalacheData || hasScore || hasWins || hasPlayed;
+            // Verificar si hay datos en la estructura esperada por pasalache.js
+            // Intentar múltiples rutas de datos para compatibilidad
+            
+            // Nueva estructura revisada para compatibilidad con pasalache.js
+            const hasScore = user.totalScore > 0 || user.score > 0;
+            const hasWins = user.wins > 0;
+            const hasGameData = Boolean(user.stats || user.pasalache);
+            
+            // Comprobar si hay datos válidos para mostrar
+            return hasScore || hasWins || hasGameData;
         })
         .map(user => {
             console.log('[RANKING PC] Procesando usuario:', user);
             
-            // Intentar obtener datos de diferentes ubicaciones
-            const pasalacheData = user.pasalache || user.stats?.pasalache || user.stats?.pasalaChe || user.stats?.PasalaChe || {};
+            // Extraer datos independientemente de la estructura
+            let totalScore = 0;
+            let wins = 0;
+            let losses = 0;
+            let matches = 0;
             
-            // Datos específicos de Pasala Che: score acumulativo de letras, wins, partidas jugadas
-            const totalScore = pasalacheData.score || user.totalScore || user.score || 0;
-            const wins = pasalacheData.wins || user.wins || 0;
-            const losses = pasalacheData.losses || user.losses || user.totalLosses || 0;
-            const matches = pasalacheData.played || user.matchesPlayed || Math.max(wins + losses, pasalacheData.matches || 0);
+            // Obtener datos de la raíz (formato pasalache.js)
+            totalScore = user.totalScore || user.score || 0;
+            wins = user.wins || 0;
+            losses = user.losses || user.totalLosses || 0;
+            matches = user.matchesPlayed || Math.max(wins + losses, 0);
             
+            // Asegurar que haya al menos un partido jugado para calcular el win rate
             const winRate = matches > 0 ? (wins / matches) * 100 : 0;
             const avgScore = matches > 0 ? Math.round(totalScore / matches) : totalScore;
             
@@ -89,9 +97,9 @@ function generateRankingHTML(usersData) {
             };
         })
         .sort((a, b) => {
-            // Ordenar por win rate primero, luego por total score, luego por wins
-            if (Math.abs(b.winRate - a.winRate) > 1) return b.winRate - a.winRate;
+            // Ordenar por puntuación total primero, luego por win rate
             if (b.totalScore !== a.totalScore) return b.totalScore - a.totalScore;
+            if (Math.abs(b.winRate - a.winRate) > 1) return b.winRate - a.winRate;
             return b.wins - a.wins;
         })
         .slice(0, RANKING_LIMIT); // Limitar a top 15
@@ -171,18 +179,60 @@ function generateHistoryHTML(matches) {
         userMatches = matches.slice(0, HISTORY_LIMIT);
     }
 
+    // Filtrar partidas de Pasala Che
+    userMatches = userMatches.filter(match => 
+        match.gameMode === 'Pasalache' || 
+        match.gameMode === 'pasalache' || 
+        match.gameType === 'pasalache' || 
+        match.gameType === 'pasala-che' || 
+        match.gameType === 'PasalaChe'
+    );
+
     // Mostrar las últimas partidas ordenadas por fecha
     const recentMatches = userMatches
-        .sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds)
+        .sort((a, b) => {
+            // Manejar tanto objetos Timestamp como strings ISO
+            const timestampA = a.timestamp?.seconds ? a.timestamp : 
+                               a.timestamp instanceof Date ? a.timestamp : 
+                               typeof a.timestamp === 'string' ? new Date(a.timestamp) : 
+                               new Date(0);
+            
+            const timestampB = b.timestamp?.seconds ? b.timestamp : 
+                               b.timestamp instanceof Date ? b.timestamp : 
+                               typeof b.timestamp === 'string' ? new Date(b.timestamp) : 
+                               new Date(0);
+                               
+            if (timestampA.seconds && timestampB.seconds) {
+                return timestampB.seconds - timestampA.seconds;
+            } else if (timestampA instanceof Date && timestampB instanceof Date) {
+                return timestampB - timestampA;
+            } else {
+                return 0; // Si no se puede comparar, mantener el orden
+            }
+        })
         .slice(0, HISTORY_LIMIT);
 
     return recentMatches.map(match => {
+        // Extraer datos con compatibilidad para diferentes estructuras
         const isVictory = match.result === 'victory' || match.won === true;
         const isTimeoutDefeat = match.result === 'timeout' || match.timeDefeat === true || match.defeatByTime === true || match.timeOut === true;
-        const score = match.score || (match.players && match.players[0]?.score) || 0;
+        
+        // Obtener puntuación (score) con múltiples rutas posibles
+        const score = match.score || 
+                     (match.players && match.players[0]?.score) || 
+                     match.correctAnswers || 0;
+                     
         const playerLevel = getPlayerLevel(score, isVictory ? 100 : 0, 1);
-        const playerName = match.playerName || (match.players && match.players[0]?.displayName) || 'Anónimo';
+        
+        // Obtener nombre del jugador con múltiples rutas posibles
+        const playerName = match.playerName || 
+                          (match.players && match.players[0]?.displayName) || 
+                          'Anónimo';
+                          
+        // Obtener duración con múltiples rutas posibles
         const duration = Math.round(match.timeSpent || match.duration || 0);
+        
+        // Obtener otros datos
         const difficulty = match.difficulty || 'Normal';
         const passes = match.passes || 0; // Específico de Pasala Che
         
@@ -196,6 +246,38 @@ function generateHistoryHTML(matches) {
             resultData = { text: 'DERROTA', icon: '❌', class: 'defeat', color: '#ef4444' };
         }
         
+        // Manejar formato de fecha dependiendo del tipo de timestamp
+        let formattedDate;
+        if (match.timestamp?.seconds) {
+            formattedDate = formatCompactDate(match.timestamp);
+        } else if (match.timestamp instanceof Date) {
+            const now = new Date();
+            const diffMs = now - match.timestamp;
+            const diffMins = Math.floor(diffMs / 60000);
+            
+            if (diffMins < 60) return `${diffMins}min`;
+            if (diffMins < 1440) return `${Math.floor(diffMins/60)}h`;
+            if (diffMins < 10080) return `${Math.floor(diffMins/1440)}d`;
+            
+            formattedDate = match.timestamp.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+        } else if (typeof match.timestamp === 'string') {
+            try {
+                const date = new Date(match.timestamp);
+                const now = new Date();
+                const diffMs = now - date;
+                const diffMins = Math.floor(diffMs / 60000);
+                
+                if (diffMins < 60) formattedDate = `${diffMins}min`;
+                else if (diffMins < 1440) formattedDate = `${Math.floor(diffMins/60)}h`;
+                else if (diffMins < 10080) formattedDate = `${Math.floor(diffMins/1440)}d`;
+                else formattedDate = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+            } catch (e) {
+                formattedDate = '---';
+            }
+        } else {
+            formattedDate = '---';
+        }
+        
         // Calcular velocidad (letras por segundo)
         const lettersPerSecond = duration > 0 ? Math.round(score / duration) : 0;
         
@@ -204,7 +286,7 @@ function generateHistoryHTML(matches) {
                 <!-- Header compacto -->
                 <div class="history-header">
                     <span class="history-player-name">🏈 ${playerName}</span>
-                    <span class="history-date">${formatCompactDate(match.timestamp)}</span>
+                    <span class="history-date">${formattedDate}</span>
                 </div>
 
                 <!-- Resultado principal -->
@@ -309,8 +391,8 @@ function setupRankingListener() {
             
             snapshot.forEach(doc => {
                 const data = doc.data();
-                console.log('[RANKING PC] Procesando usuario:', data);
                 
+                // Incluir solo usuarios con displayName válido
                 if (data.displayName) {
                     usersData.push({
                         id: doc.id,
@@ -387,9 +469,12 @@ function setupHistoryListener() {
                 const data = doc.data();
                 console.log('[HISTORY PC] Procesando partida:', data);
 
-                // Filtrar SOLO partidas de Pasala Che
-                if (data.gameMode === 'Pasalache' || data.gameMode === 'pasalache' || 
-                    data.gameType === 'pasalache' || data.gameType === 'pasala-che' || data.gameType === 'PasalaChe') {
+                // Filtrar SOLO partidas de Pasala Che (con múltiples posibles valores)
+                if (data.gameMode === 'Pasalache' || 
+                    data.gameMode === 'pasalache' || 
+                    data.gameType === 'pasalache' || 
+                    data.gameType === 'pasala-che' || 
+                    data.gameType === 'PasalaChe') {
                     matches.push({
                         id: doc.id,
                         ...data
@@ -458,106 +543,127 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mostrar estado de carga
     showLoadingState();
     
-    // Intentar importar Firebase de forma robusta
-    import('./firebase-init.js')
-        .then(module => {
-            // Asegurarse de que Firebase esté completamente inicializado
-            return module.ensureFirebaseInitialized();
-        })
-        .then(({ db: firebaseDb, auth, user, readOnly }) => {
-            console.log('[RANKING PC] Firebase inicializado correctamente:', 
-                        readOnly ? '(modo solo lectura)' : '(modo completo)');
-            
-            // Usar la instancia db recibida
-            window.db = firebaseDb;
-            
-            // Configurar listeners para el ranking y el historial
+    // Intentar usar Firebase de forma compatible con ambos scripts
+    try {
+        // Verificar si Firebase ya está inicializado (por pasalache.js)
+        if (window.db) {
+            console.log('[RANKING PC] Firebase ya inicializado, usando instancia existente');
             setupRankingListener();
             setupHistoryListener();
-        })
-        .catch(error => {
-            console.error('[RANKING PC] Error inicializando Firebase:', error);
-            
-            // Mostrar mensaje de error
-            if (rankingBody) {
-                rankingBody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="error-state">
-                            <div class="error-icon">⚠️</div>
-                            <div class="error-message">Error de conexión</div>
-                            <div class="error-detail">No se pudo conectar con la base de datos</div>
-                            <button onclick="location.reload()" class="retry-button">Reintentar</button>
-                        </td>
-                    </tr>
-                `;
-            }
-            
-            if (historyList) {
-                historyList.innerHTML = `
-                    <div class="error-state">
+        } else {
+            // Intentar importar Firebase de forma robusta
+            import('./firebase-init.js')
+                .then(module => {
+                    // Asegurarse de que Firebase esté completamente inicializado
+                    return module.ensureFirebaseInitialized ? 
+                           module.ensureFirebaseInitialized() : 
+                           { db: module.db, auth: module.auth, user: null, readOnly: true };
+                })
+                .then(({ db: firebaseDb, auth, user, readOnly }) => {
+                    console.log('[RANKING PC] Firebase inicializado correctamente:', 
+                                readOnly ? '(modo solo lectura)' : '(modo completo)');
+                    
+                    // Usar la instancia db recibida
+                    window.db = firebaseDb;
+                    
+                    // Configurar listeners para el ranking y el historial
+                    setupRankingListener();
+                    setupHistoryListener();
+                })
+                .catch(error => {
+                    console.error('[RANKING PC] Error inicializando Firebase:', error);
+                    mostrarErrorYFallback();
+                });
+        }
+    } catch (error) {
+        console.error('[RANKING PC] Error al inicializar ranking:', error);
+        mostrarErrorYFallback();
+    }
+    
+    function mostrarErrorYFallback() {
+        // Mostrar mensaje de error
+        if (rankingBody) {
+            rankingBody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="error-state">
                         <div class="error-icon">⚠️</div>
                         <div class="error-message">Error de conexión</div>
                         <div class="error-detail">No se pudo conectar con la base de datos</div>
-                    </div>
-                `;
+                        <button onclick="location.reload()" class="retry-button">Reintentar</button>
+                    </td>
+                </tr>
+            `;
+        }
+        
+        if (historyList) {
+            historyList.innerHTML = `
+                <div class="error-state">
+                    <div class="error-icon">⚠️</div>
+                    <div class="error-message">Error de conexión</div>
+                    <div class="error-detail">No se pudo conectar con la base de datos</div>
+                </div>
+            `;
+        }
+        
+        // Después de un tiempo, mostrar datos de fallback
+        setTimeout(() => {
+            // Crear algunos datos de demo para mostrar
+            const mockUsers = [
+                { displayName: 'CrackDemo1', totalScore: 4500, wins: 12, losses: 3, matches: 15, winRate: 80, avgScore: 300 },
+                { displayName: 'FutbolFan22', totalScore: 3800, wins: 10, losses: 2, matches: 12, winRate: 83, avgScore: 316 },
+                { displayName: 'ArgentinoTop', totalScore: 3200, wins: 8, losses: 3, matches: 11, winRate: 72, avgScore: 290 },
+                { displayName: 'PeloteroMax', totalScore: 2900, wins: 7, losses: 2, matches: 9, winRate: 77, avgScore: 322 },
+                { displayName: 'Golazo10', totalScore: 2500, wins: 6, losses: 3, matches: 9, winRate: 66, avgScore: 277 }
+            ];
+            
+            if (rankingBody) {
+                rankingBody.innerHTML = generateRankingHTML(mockUsers);
             }
             
-            // Después de un tiempo, mostrar datos de fallback
-            setTimeout(() => {
-                // Crear algunos datos de demo para mostrar
-                const mockUsers = [
-                    { displayName: 'CrackDemo1', totalScore: 4500, wins: 12, losses: 3, matches: 15, winRate: 80, avgScore: 300 },
-                    { displayName: 'FutbolFan22', totalScore: 3800, wins: 10, losses: 2, matches: 12, winRate: 83, avgScore: 316 },
-                    { displayName: 'ArgentinoTop', totalScore: 3200, wins: 8, losses: 3, matches: 11, winRate: 72, avgScore: 290 },
-                    { displayName: 'PeloteroMax', totalScore: 2900, wins: 7, losses: 2, matches: 9, winRate: 77, avgScore: 322 },
-                    { displayName: 'Golazo10', totalScore: 2500, wins: 6, losses: 3, matches: 9, winRate: 66, avgScore: 277 }
-                ];
-                
-                if (rankingBody) {
-                    rankingBody.innerHTML = generateRankingHTML(mockUsers);
+            const mockMatches = [
+                { 
+                    playerName: 'CrackDemo1', 
+                    score: 520, 
+                    result: 'victory', 
+                    timeSpent: 95,
+                    difficulty: 'Difícil',
+                    gameMode: 'Pasalache',
+                    timestamp: { toDate: () => new Date(Date.now() - 3600000) } // 1 hour ago
+                },
+                { 
+                    playerName: 'FutbolFan22', 
+                    score: 480, 
+                    result: 'victory',
+                    timeSpent: 85,
+                    difficulty: 'Normal',
+                    gameMode: 'Pasalache',
+                    timestamp: { toDate: () => new Date(Date.now() - 7200000) } // 2 hours ago
+                },
+                { 
+                    playerName: 'ArgentinoTop', 
+                    score: 320, 
+                    result: 'defeat',
+                    timeSpent: 75,
+                    difficulty: 'Normal',
+                    gameMode: 'Pasalache',
+                    timestamp: { toDate: () => new Date(Date.now() - 86400000) } // 1 day ago
                 }
-                
-                const mockMatches = [
-                    { 
-                        playerName: 'CrackDemo1', 
-                        score: 520, 
-                        result: 'victory', 
-                        timeSpent: 95,
-                        difficulty: 'Difícil',
-                        timestamp: { toDate: () => new Date(Date.now() - 3600000) } // 1 hour ago
-                    },
-                    { 
-                        playerName: 'FutbolFan22', 
-                        score: 480, 
-                        result: 'victory',
-                        timeSpent: 85,
-                        difficulty: 'Normal',
-                        timestamp: { toDate: () => new Date(Date.now() - 7200000) } // 2 hours ago
-                    },
-                    { 
-                        playerName: 'ArgentinoTop', 
-                        score: 320, 
-                        result: 'defeat',
-                        timeSpent: 75,
-                        difficulty: 'Normal',
-                        timestamp: { toDate: () => new Date(Date.now() - 86400000) } // 1 day ago
-                    }
-                ];
-                
-                if (historyList) {
-                    historyList.innerHTML = generateHistoryHTML(mockMatches);
-                }
-                
-                // Mostrar mensaje de modo demo
-                const demoNotice = document.createElement('div');
-                demoNotice.className = 'demo-notice';
-                demoNotice.style.cssText = 'background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 15px; border-radius: 5px; text-align: center; font-weight: bold;';
-                demoNotice.innerHTML = '⚠️ Mostrando datos de demostración (modo offline)';
-                
-                const containers = document.querySelectorAll('.ranking-container, .history-container');
-                containers.forEach(container => {
-                    container.insertBefore(demoNotice.cloneNode(true), container.firstChild);
-                });
-            }, 3000);
-        });
+            ];
+            
+            if (historyList) {
+                historyList.innerHTML = generateHistoryHTML(mockMatches);
+            }
+            
+            // Mostrar mensaje de modo demo
+            const demoNotice = document.createElement('div');
+            demoNotice.className = 'demo-notice';
+            demoNotice.style.cssText = 'background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 15px; border-radius: 5px; text-align: center; font-weight: bold;';
+            demoNotice.innerHTML = '⚠️ Mostrando datos de demostración (modo offline)';
+            
+            const containers = document.querySelectorAll('.ranking-container, .history-container');
+            containers.forEach(container => {
+                container.insertBefore(demoNotice.cloneNode(true), container.firstChild);
+            });
+        }, 3000);
+    }
 }); 
