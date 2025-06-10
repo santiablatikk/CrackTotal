@@ -97,9 +97,9 @@ function generateRankingHTML(usersData) {
             };
         })
         .sort((a, b) => {
-            // Ordenar por puntuación total primero, luego por win rate
+            // Ordenar por winrate primero, luego por total score si el winrate es igual
+            if (Math.abs(b.winRate - a.winRate) > 0.1) return b.winRate - a.winRate;
             if (b.totalScore !== a.totalScore) return b.totalScore - a.totalScore;
-            if (Math.abs(b.winRate - a.winRate) > 1) return b.winRate - a.winRate;
             return b.wins - a.wins;
         })
         .slice(0, RANKING_LIMIT); // Limitar a top 15
@@ -156,6 +156,10 @@ function generateHistoryHTML(matches) {
         return '<div class="empty-state">No hay historial disponible para este jugador</div>';
     }
 
+    console.log('[HISTORY DEBUG] Total de partidas recibidas:', matches.length);
+    // Mostrar los primeros objetos en la consola para depuración
+    console.log('[HISTORY DEBUG] Muestra de partidas:', matches.slice(0, 3));
+
     // Obtener usuario actual (si está logueado)
     const currentUser = localStorage.getItem('currentUser');
     let userMatches = matches;
@@ -169,72 +173,102 @@ function generateHistoryHTML(matches) {
                 match.userId === userData.uid ||
                 (match.players && match.players.some(p => p.displayName === userData.displayName))
             );
+            console.log('[HISTORY DEBUG] Partidas filtradas por usuario:', userMatches.length);
         } catch (e) {
-            console.log('No se pudo obtener usuario actual');
+            console.log('No se pudo obtener usuario actual:', e);
         }
     }
 
     // Si no hay partidas del usuario, mostrar las más recientes de todos
     if (userMatches.length === 0) {
         userMatches = matches.slice(0, HISTORY_LIMIT);
+        console.log('[HISTORY DEBUG] Usando partidas generales:', userMatches.length);
     }
 
-    // Filtrar partidas de Pasala Che
-    userMatches = userMatches.filter(match => 
-        match.gameMode === 'Pasalache' || 
-        match.gameMode === 'pasalache' || 
-        match.gameType === 'pasalache' || 
-        match.gameType === 'pasala-che' || 
-        match.gameType === 'PasalaChe'
-    );
+    // SIMPLIFICADO: Ahora filtramos de manera menos restrictiva
+    // Solo filtramos partidas con puntuación 0, pero aceptamos todos los tipos de juego
+    userMatches = userMatches.filter(match => {
+        // Obtener puntuación con cualquiera de estas propiedades
+        const score = 
+            match.score || 
+            match.correctAnswers || 
+            (match.players && match.players[0]?.score) || 
+            (match.stats && match.stats.score) || 
+            0;
+        
+        const hasPasalaCheData = 
+            match.gameMode === 'Pasalache' || 
+            match.gameMode === 'pasalache' || 
+            match.gameType === 'pasalache' || 
+            match.gameType === 'pasala-che' || 
+            match.gameType === 'PasalaChe' ||
+            // Nueva condición: también aceptar si no tiene gameType pero tiene score
+            (!match.gameType && score > 0);
+        
+        // Mostrar más información para depuración
+        if (score > 0) {
+            console.log(`[HISTORY DEBUG] Partida con score ${score}, gameType: ${match.gameType || 'N/A'}, gameMode: ${match.gameMode || 'N/A'}`);
+        }
+        
+        return hasPasalaCheData && score > 0;
+    });
+
+    console.log('[HISTORY DEBUG] Partidas filtradas finales:', userMatches.length);
 
     // Mostrar las últimas partidas ordenadas por fecha
     const recentMatches = userMatches
         .sort((a, b) => {
             // Manejar tanto objetos Timestamp como strings ISO
-            const timestampA = a.timestamp?.seconds ? a.timestamp : 
-                               a.timestamp instanceof Date ? a.timestamp : 
-                               typeof a.timestamp === 'string' ? new Date(a.timestamp) : 
-                               new Date(0);
+            const getTime = (timestamp) => {
+                if (timestamp?.seconds) return timestamp.seconds * 1000;
+                if (timestamp instanceof Date) return timestamp.getTime();
+                if (typeof timestamp === 'string') {
+                    try { return new Date(timestamp).getTime(); } 
+                    catch (e) { return 0; }
+                }
+                return 0;
+            };
             
-            const timestampB = b.timestamp?.seconds ? b.timestamp : 
-                               b.timestamp instanceof Date ? b.timestamp : 
-                               typeof b.timestamp === 'string' ? new Date(b.timestamp) : 
-                               new Date(0);
-                               
-            if (timestampA.seconds && timestampB.seconds) {
-                return timestampB.seconds - timestampA.seconds;
-            } else if (timestampA instanceof Date && timestampB instanceof Date) {
-                return timestampB - timestampA;
-            } else {
-                return 0; // Si no se puede comparar, mantener el orden
-            }
+            const timeA = getTime(a.timestamp);
+            const timeB = getTime(b.timestamp);
+            
+            return timeB - timeA; // Orden descendente (más reciente primero)
         })
         .slice(0, HISTORY_LIMIT);
 
+    if (recentMatches.length === 0) {
+        console.log('[HISTORY DEBUG] No hay partidas válidas después del filtrado');
+        return '<div class="empty-state">No hay partidas válidas en el historial</div>';
+    }
+
+    console.log('[HISTORY DEBUG] Partidas a mostrar:', recentMatches.length);
+
     return recentMatches.map(match => {
         // Extraer datos con compatibilidad para diferentes estructuras
-        const isVictory = match.result === 'victory' || match.won === true;
+        const isVictory = match.result === 'victory' || match.won === true || match.success === true;
         const isTimeoutDefeat = match.result === 'timeout' || match.timeDefeat === true || match.defeatByTime === true || match.timeOut === true;
         
         // Obtener puntuación (score) con múltiples rutas posibles
         const score = match.score || 
+                     match.correctAnswers || 
                      (match.players && match.players[0]?.score) || 
-                     match.correctAnswers || 0;
+                     (match.stats && match.stats.score) || 
+                     0;
                      
         const playerLevel = getPlayerLevel(score, isVictory ? 100 : 0, 1);
         
         // Obtener nombre del jugador con múltiples rutas posibles
         const playerName = match.playerName || 
                           (match.players && match.players[0]?.displayName) || 
+                          match.displayName ||
                           'Anónimo';
                           
         // Obtener duración con múltiples rutas posibles
-        const duration = Math.round(match.timeSpent || match.duration || 0);
+        const duration = Math.round(match.timeSpent || match.duration || match.time || 0);
         
         // Obtener otros datos
         const difficulty = match.difficulty || 'Normal';
-        const passes = match.passes || 0; // Específico de Pasala Che
+        const passes = match.passes || match.passedAnswers || match.skips || 0;
         
         // Determinar resultado y color
         let resultData;
@@ -247,21 +281,21 @@ function generateHistoryHTML(matches) {
         }
         
         // Manejar formato de fecha dependiendo del tipo de timestamp
-        let formattedDate;
-        if (match.timestamp?.seconds) {
-            formattedDate = formatCompactDate(match.timestamp);
-        } else if (match.timestamp instanceof Date) {
-            const now = new Date();
-            const diffMs = now - match.timestamp;
-            const diffMins = Math.floor(diffMs / 60000);
-            
-            if (diffMins < 60) return `${diffMins}min`;
-            if (diffMins < 1440) return `${Math.floor(diffMins/60)}h`;
-            if (diffMins < 10080) return `${Math.floor(diffMins/1440)}d`;
-            
-            formattedDate = match.timestamp.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
-        } else if (typeof match.timestamp === 'string') {
-            try {
+        let formattedDate = '---';
+        
+        try {
+            if (match.timestamp?.seconds) {
+                formattedDate = formatCompactDate(match.timestamp);
+            } else if (match.timestamp instanceof Date) {
+                const now = new Date();
+                const diffMs = now - match.timestamp;
+                const diffMins = Math.floor(diffMs / 60000);
+                
+                if (diffMins < 60) formattedDate = `${diffMins}min`;
+                else if (diffMins < 1440) formattedDate = `${Math.floor(diffMins/60)}h`;
+                else if (diffMins < 10080) formattedDate = `${Math.floor(diffMins/1440)}d`;
+                else formattedDate = match.timestamp.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+            } else if (typeof match.timestamp === 'string') {
                 const date = new Date(match.timestamp);
                 const now = new Date();
                 const diffMs = now - date;
@@ -271,14 +305,13 @@ function generateHistoryHTML(matches) {
                 else if (diffMins < 1440) formattedDate = `${Math.floor(diffMins/60)}h`;
                 else if (diffMins < 10080) formattedDate = `${Math.floor(diffMins/1440)}d`;
                 else formattedDate = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
-            } catch (e) {
-                formattedDate = '---';
             }
-        } else {
+        } catch (e) {
+            console.log('[HISTORY DEBUG] Error al formatear fecha:', e);
             formattedDate = '---';
         }
         
-        // Calcular velocidad (letras por segundo)
+        // Calcular velocidad (letras por segundo) con protección
         const lettersPerSecond = duration > 0 ? Math.round(score / duration) : 0;
         
         return `
@@ -446,10 +479,11 @@ function setupHistoryListener() {
         }
 
         const matchesRef = collection(window.db, 'matches');
+        // Consulta menos restrictiva para traer más datos
         const historyQuery = query(
             matchesRef,
             orderBy('timestamp', 'desc'),
-            limit(100)
+            limit(30) // Aumentar el límite para tener más partidas disponibles
         );
 
         const unsubscribe = onSnapshot(historyQuery, (snapshot) => {
@@ -467,19 +501,11 @@ function setupHistoryListener() {
             
             snapshot.forEach(doc => {
                 const data = doc.data();
-                console.log('[HISTORY PC] Procesando partida:', data);
-
-                // Filtrar SOLO partidas de Pasala Che (con múltiples posibles valores)
-                if (data.gameMode === 'Pasalache' || 
-                    data.gameMode === 'pasalache' || 
-                    data.gameType === 'pasalache' || 
-                    data.gameType === 'pasala-che' || 
-                    data.gameType === 'PasalaChe') {
-                    matches.push({
-                        id: doc.id,
-                        ...data
-                    });
-                }
+                // Añadir todas las partidas y dejar que el filtro en generateHistoryHTML haga su trabajo
+                matches.push({
+                    id: doc.id,
+                    ...data
+                });
             });
 
             console.log(`[HISTORY PC] Partidas procesadas: ${matches.length}`);
@@ -551,29 +577,34 @@ document.addEventListener('DOMContentLoaded', () => {
             setupRankingListener();
             setupHistoryListener();
         } else {
-            // Intentar importar Firebase de forma robusta
-            import('./firebase-init.js')
-                .then(module => {
-                    // Asegurarse de que Firebase esté completamente inicializado
-                    return module.ensureFirebaseInitialized ? 
-                           module.ensureFirebaseInitialized() : 
-                           { db: module.db, auth: module.auth, user: null, readOnly: true };
-                })
-                .then(({ db: firebaseDb, auth, user, readOnly }) => {
-                    console.log('[RANKING PC] Firebase inicializado correctamente:', 
-                                readOnly ? '(modo solo lectura)' : '(modo completo)');
-                    
-                    // Usar la instancia db recibida
-                    window.db = firebaseDb;
-                    
-                    // Configurar listeners para el ranking y el historial
-                    setupRankingListener();
-                    setupHistoryListener();
-                })
-                .catch(error => {
-                    console.error('[RANKING PC] Error inicializando Firebase:', error);
-                    mostrarErrorYFallback();
-                });
+            // Intentar inicializar Firebase anónimamente si es necesario
+            const initFirebaseAnonymously = () => {
+                import('./firebase-init.js')
+                    .then(module => {
+                        // Asegurarse de que Firebase esté completamente inicializado
+                        return module.ensureFirebaseInitialized ? 
+                            module.ensureFirebaseInitialized() : 
+                            { db: module.db, auth: module.auth, user: null, readOnly: true };
+                    })
+                    .then(({ db: firebaseDb, auth, user, readOnly }) => {
+                        console.log('[RANKING PC] Firebase inicializado correctamente:', 
+                                    readOnly ? '(modo solo lectura)' : '(modo completo)');
+                        
+                        // Usar la instancia db recibida
+                        window.db = firebaseDb;
+                        
+                        // Configurar listeners para el ranking y el historial
+                        setupRankingListener();
+                        setupHistoryListener();
+                    })
+                    .catch(error => {
+                        console.error('[RANKING PC] Error inicializando Firebase:', error);
+                        mostrarErrorYFallback();
+                    });
+            };
+            
+            // Intentar inicializar Firebase
+            initFirebaseAnonymously();
         }
     } catch (error) {
         console.error('[RANKING PC] Error al inicializar ranking:', error);
