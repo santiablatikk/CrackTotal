@@ -12,12 +12,12 @@ class AdSenseContentValidator {
     constructor(options = {}) {
         // Opciones por defecto
         this.options = Object.assign({
-            minTextLength: 400, // Mínimo de caracteres de texto en la página
-            minParagraphs: 3,    // Mínimo de párrafos en la página
+            minTextLength: 300, // Mínimo de caracteres de texto en la página (reducido de 400)
+            minParagraphs: 2,    // Mínimo de párrafos en la página (reducido de 3)
             minHeadings: 1,      // Mínimo de encabezados en la página
             ignoreNavigation: true, // Ignorar texto en elementos de navegación
             ignoreFooter: true,     // Ignorar texto en pies de página
-            contentSelectors: ['main', 'article', '.content', '.page-content'], // Selectores de contenido principal
+            contentSelectors: ['main', 'article', '.content', '.page-content', '.policy-content', '.container'], // Selectores de contenido principal
             enableLogging: false,    // Habilitar registro en consola
             adSlots: [],            // IDs de slots de anuncios para desactivar si es necesario
             autoDisableAds: true    // Desactivar automáticamente los anuncios si no hay suficiente contenido
@@ -220,8 +220,15 @@ class AdSenseContentValidator {
         
         // Evitar que se carguen más anuncios
         window.adsbygoogle = window.adsbygoogle || [];
-        if (window.adsbygoogle.pauseAdRequests) {
-            window.adsbygoogle.pauseAdRequests = true;
+        window.adsbygoogle.pauseAdRequests = 1;
+        
+        // También intentar detener futuros anuncios
+        if (window.adsbygoogle.push) {
+            window.adsbygoogle.push(() => {
+                if (window.adsbygoogle && window.adsbygoogle.pauseAdRequests !== undefined) {
+                    window.adsbygoogle.pauseAdRequests = 1;
+                }
+            });
         }
     }
     

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es" data-theme="dark">
 <head>
     <!-- ===== GOOGLE ANALYTICS & CONSENT ===== -->
@@ -165,14 +165,14 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap"></noscript>
 
     <!-- ===== NON-CRITICAL CSS (ASYNC LOADED) ===== -->
-    <link rel="preload" href="assets/css/critical.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="assets/css/base.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="assets/css/layout.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="assets/css/performance.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/css/critical.?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/css/base.?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/css/layout.?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/css/performance.?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="assets/css/{{PAGE_SPECIFIC_CSS}}.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
     
     <!-- ===== FONT AWESOME (ASYNC) ===== -->
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all." as="style" onload="this.onload=null;this.rel='stylesheet'">
 
     <!-- ===== SCHEMA.ORG MARKUP ===== -->
     <script type="application/ld+json">
@@ -204,6 +204,10 @@
     </script>
 
     <!-- ===== GOOGLE ADSENSE ===== -->
+    <!-- AdSense Early Blocker - DEBE cargarse ANTES que AdSense -->
+
+    <script src="assets/js/adsense-early-blocker.?v=202506072312"></script>
+
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427" crossorigin="anonymous"></script>
 
     <!-- ===== GOOGLE ANALYTICS ===== -->
@@ -229,7 +233,7 @@
             },
             measure: function(name, startMark) {
                 const duration = performance.now() - this.marks[startMark];
-                console.log(`📊 ${name}: ${duration.toFixed(2)}ms`);
+                console.log(`ðŸ“Š ${name}: ${duration.toFixed(2)}ms`);
                 return duration;
             }
         };
@@ -245,19 +249,20 @@
                     const themeData = JSON.parse(savedTheme);
                     document.documentElement.setAttribute('data-theme', themeData.currentTheme || 'dark');
                 } catch (e) {
-                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.removeItem('crackTotalTheme');
                 }
             }
         })();
 
         // Service Worker registration
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
+            window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
+                    .then(registration => {
                         console.log('✅ SW registered successfully');
+                        window.CrackTotalPerf.measure('Service Worker Registration', 'page_start');
                     })
-                    .catch(function(error) {
+                    .catch(error => {
                         console.log('❌ SW registration failed:', error);
                     });
             });
@@ -271,7 +276,7 @@
                     fatal: false
                 });
             }
-            console.error('🚨 Global error:', event.error);
+            console.error('ðŸš¨ Global error:', event.error);
         });
 
         // Unhandled promise rejections
@@ -282,7 +287,7 @@
                     fatal: false
                 });
             }
-            console.error('🚨 Unhandled promise rejection:', event.reason);
+            console.error('ðŸš¨ Unhandled promise rejection:', event.reason);
         });
     </script>
 </head>
@@ -458,9 +463,9 @@
     <!-- ===== CORE JAVASCRIPT MODULES ===== -->
     <script type="module">
         // Load core systems
-        import './assets/js/state-manager.js';
-        import './assets/js/security-manager.js';
-        import './assets/js/theme-manager.js';
+        import './assets/js/state-manager.';
+        import './assets/js/security-manager.';
+        import './assets/js/theme-manager.';
         
         // Mark systems loaded
         window.CrackTotalPerf.mark('systems_loaded');
@@ -533,7 +538,7 @@
                         deferredPrompt.prompt();
                         const { outcome } = await deferredPrompt.userChoice;
                         if (outcome === 'accepted') {
-                            console.log('✅ PWA installed');
+                            console.log('✅ PWA installed'); 
                         }
                         deferredPrompt = null;
                         installBtn.style.display = 'none';
@@ -576,19 +581,19 @@
         window.addEventListener('load', function() {
             // Load main application script
             const mainScript = document.createElement('script');
-            mainScript.src = 'assets/js/main.js?v=202505272312';
+            mainScript.src = 'assets/js/main.?v=202505272312';
             mainScript.async = true;
             document.head.appendChild(mainScript);
             
             // Load notifications system
             const notificationScript = document.createElement('script');
-            notificationScript.src = 'assets/js/notifications.js?v=202505272312';
+            notificationScript.src = 'assets/js/notifications.?v=202505272312';
             notificationScript.async = true;
             document.head.appendChild(notificationScript);
             
             // Load cookie consent
             const cookieScript = document.createElement('script');
-            cookieScript.src = 'assets/js/cookie-consent.js?v=202505272312';
+            cookieScript.src = 'assets/js/cookie-consent.?v=202505272312';
             cookieScript.async = true;
             document.head.appendChild(cookieScript);
             
@@ -628,3 +633,10 @@
     </noscript>
 </body>
 </html> 
+
+
+
+
+
+
+

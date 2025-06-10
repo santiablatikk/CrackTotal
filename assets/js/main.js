@@ -796,3 +796,12 @@ if (document.readyState === 'loading') {
 } else {
     registerServiceWorker();
 }
+
+// Mostrar tiempo jugado al usuario
+let sessionTime = 0;
+setInterval(() => {
+    sessionTime++;
+    if (sessionTime % 60 === 0) {
+        console.log(`🎮 Llevas ${sessionTime/60} minutos jugando!`);
+    }
+}, 1000);
