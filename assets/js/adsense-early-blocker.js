@@ -10,6 +10,10 @@
     
     // Lista de páginas donde NO se deben mostrar anuncios
     const blockedPages = [
+        '/google-site-verification.html',
+        '/google-search-console-site-properties.html',
+        '/adsense-verification.html',
+        '/test-firebase.html',
         '/under-construction.html',
         '/coming-soon.html',
         '/404.html',

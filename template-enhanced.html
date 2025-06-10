@@ -165,14 +165,14 @@
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap"></noscript>
 
     <!-- ===== NON-CRITICAL CSS (ASYNC LOADED) ===== -->
-    <link rel="preload" href="assets/css/critical.?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="assets/css/base.?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="assets/css/layout.?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="assets/css/performance.?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/css/critical.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/css/base.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/css/layout.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="assets/css/performance.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="assets/css/{{PAGE_SPECIFIC_CSS}}.css?v=202505272312" as="style" onload="this.onload=null;this.rel='stylesheet'">
     
     <!-- ===== FONT AWESOME (ASYNC) ===== -->
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all." as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
     <!-- ===== SCHEMA.ORG MARKUP ===== -->
     <script type="application/ld+json">
@@ -206,7 +206,7 @@
     <!-- ===== GOOGLE ADSENSE ===== -->
     <!-- AdSense Early Blocker - DEBE cargarse ANTES que AdSense -->
 
-    <script src="assets/js/adsense-early-blocker.?v=202506072312"></script>
+    <script src="assets/js/adsense-early-blocker.min.js?v=202506072312"></script>
 
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427" crossorigin="anonymous"></script>
 
@@ -249,21 +249,20 @@
                     const themeData = JSON.parse(savedTheme);
                     document.documentElement.setAttribute('data-theme', themeData.currentTheme || 'dark');
                 } catch (e) {
-                    localStorage.removeItem('crackTotalTheme');
+                    document.documentElement.setAttribute('data-theme', 'dark');
                 }
             }
         })();
 
         // Service Worker registration
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
+            window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('✅ SW registered successfully');
-                        window.CrackTotalPerf.measure('Service Worker Registration', 'page_start');
+                    .then(function(registration) {
+                        console.log('âœ… SW registered successfully');
                     })
-                    .catch(error => {
-                        console.log('❌ SW registration failed:', error);
+                    .catch(function(error) {
+                        console.log('âŒ SW registration failed:', error);
                     });
             });
         }
@@ -305,18 +304,18 @@
     <!-- ===== OFFLINE INDICATOR ===== -->
     <div id="offline-indicator" class="offline-indicator" style="display: none;">
         <i class="fas fa-wifi-slash"></i>
-        <span>Sin conexión a internet</span>
+        <span>Sin conexié³n a internet</span>
     </div>
 
     <!-- ===== MAIN NAVIGATION ===== -->
-    <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
+    <nav class="main-navigation" role="navigation" aria-label="Navegacié³n principal">
         <div class="nav-container">
             <a href="index.html" class="nav-logo" aria-label="Crack Total - Inicio">
                 <span class="logo-text">Crack Total</span>
                 <i class="fas fa-futbol logo-icon" aria-hidden="true"></i>
             </a>
             
-            <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
+            <button class="nav-toggle" aria-label="Abrir menú de navegacié³n" aria-expanded="false">
                 <span class="hamburger"></span>
                 <span class="hamburger"></span>
                 <span class="hamburger"></span>
@@ -356,7 +355,7 @@
                 </button>
                 
                 <!-- Settings Button -->
-                <button class="settings-btn" id="settings-toggle" aria-label="Configuración">
+                <button class="settings-btn" id="settings-toggle" aria-label="Configuracié³n">
                     <i class="fas fa-cog" aria-hidden="true"></i>
                 </button>
             </div>
@@ -384,7 +383,7 @@
             
             <div class="header-actions">
                 <!-- Online Status -->
-                <div class="online-status" id="online-status" aria-label="Estado de conexión">
+                <div class="online-status" id="online-status" aria-label="Estado de conexié³n">
                     <i class="fas fa-wifi"></i>
                 </div>
                 
@@ -418,7 +417,7 @@
                 <a href="contact.html"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a>
                 <a href="cookies.html"><i class="fas fa-cookie-bite" aria-hidden="true"></i> Cookies</a>
                 <a href="privacy.html"><i class="fas fa-lock" aria-hidden="true"></i> Privacidad</a>
-                <a href="terminos.html"><i class="fas fa-file-contract" aria-hidden="true"></i> Términos</a>
+                <a href="terminos.html"><i class="fas fa-file-contract" aria-hidden="true"></i> Té©rminos</a>
                 <a href="about.html"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a>
             </div>
             
@@ -430,7 +429,7 @@
                 </button>
                 
                 <!-- Install PWA Button -->
-                <button class="install-pwa-btn" id="install-pwa" style="display: none;" aria-label="Instalar aplicación">
+                <button class="install-pwa-btn" id="install-pwa" style="display: none;" aria-label="Instalar aplicacié³n">
                     <i class="fas fa-download" aria-hidden="true"></i>
                     <span>Instalar App</span>
                 </button>
@@ -452,7 +451,7 @@
     <!-- ===== COOKIE CONSENT BANNER ===== -->
     <div id="cookie-consent" class="cookie-consent" style="display: none;" role="banner">
         <div class="cookie-content">
-            <p>Utilizamos cookies para mejorar tu experiencia. <a href="cookies.html">Más información</a></p>
+            <p>Utilizamos cookies para mejorar tu experiencia. <a href="cookies.html">Más informacié³n</a></p>
             <div class="cookie-actions">
                 <button id="accept-cookies" class="btn-accept">Aceptar</button>
                 <button id="reject-cookies" class="btn-reject">Rechazar</button>
@@ -463,9 +462,9 @@
     <!-- ===== CORE JAVASCRIPT MODULES ===== -->
     <script type="module">
         // Load core systems
-        import './assets/js/state-manager.';
-        import './assets/js/security-manager.';
-        import './assets/js/theme-manager.';
+        import './assets/js/state-manager.min.js';
+        import './assets/js/security-manager.min.js';
+        import './assets/js/theme-manager.min.js';
         
         // Mark systems loaded
         window.CrackTotalPerf.mark('systems_loaded');
@@ -538,7 +537,7 @@
                         deferredPrompt.prompt();
                         const { outcome } = await deferredPrompt.userChoice;
                         if (outcome === 'accepted') {
-                            console.log('✅ PWA installed'); 
+                            console.log('âœ… PWA installed');
                         }
                         deferredPrompt = null;
                         installBtn.style.display = 'none';
@@ -581,19 +580,19 @@
         window.addEventListener('load', function() {
             // Load main application script
             const mainScript = document.createElement('script');
-            mainScript.src = 'assets/js/main.?v=202505272312';
+            mainScript.src = 'assets/js/main.min.js?v=202505272312';
             mainScript.async = true;
             document.head.appendChild(mainScript);
             
             // Load notifications system
             const notificationScript = document.createElement('script');
-            notificationScript.src = 'assets/js/notifications.?v=202505272312';
+            notificationScript.src = 'assets/js/notifications.min.js?v=202505272312';
             notificationScript.async = true;
             document.head.appendChild(notificationScript);
             
             // Load cookie consent
             const cookieScript = document.createElement('script');
-            cookieScript.src = 'assets/js/cookie-consent.?v=202505272312';
+            cookieScript.src = 'assets/js/cookie-consent.min.js?v=202505272312';
             cookieScript.async = true;
             document.head.appendChild(cookieScript);
             
@@ -615,7 +614,7 @@
     <noscript>
         <div class="no-js-warning">
             <h2>JavaScript Requerido</h2>
-            <p>Esta aplicación requiere JavaScript para funcionar correctamente. Por favor habilítalo en tu navegador.</p>
+            <p>Esta aplicacié³n requiere JavaScript para funcionar correctamente. Por favor habilé­talo en tu navegador.</p>
         </div>
         <style>
             .no-js-warning {
@@ -633,9 +632,6 @@
     </noscript>
 </body>
 </html> 
-
-
-
 
 
 

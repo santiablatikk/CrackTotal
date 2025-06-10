@@ -27,5 +27,6 @@ Fecha: 2025-06-10 13:20:58
 cwebp -q 80 imagen.jpg -o imagen.webp
 
 # Servir archivos minificados en produccion
-# Actualizar .htaccess para servir .min.css y .min.js automaticamente
-`
+# Actualizar .htaccess para servir .css y .min.js automaticamente
+`
+

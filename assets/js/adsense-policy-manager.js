@@ -20,8 +20,12 @@ class AdSensePolicyManager {
             enableAudit: true,                 // Activar auditoría de cumplimiento
             adContainerClass: 'adsbygoogle',   // Clase CSS para contenedores de anuncios
             pagesInConstruction: [             // Páginas conocidas en construcción
+                '/adsense-verification.html',
                 '/under-construction.html',
                 '/coming-soon.html',
+                '/google-site-verification.html',
+                '/google-search-console-site-properties.html',
+                '/test-firebase.html',
                 '/logros.html'  // Temporalmente hasta que tenga más contenido
             ],
             exemptPages: [                     // Páginas exentas de verificación de contenido
@@ -201,7 +205,7 @@ class AdSensePolicyManager {
             window.adsbygoogle.push(() => {
                 // Pausar solicitudes de anuncios
                 if (window.adsbygoogle && window.adsbygoogle.pauseAdRequests !== undefined) {
-            window.adsbygoogle.pauseAdRequests = 1;
+                    window.adsbygoogle.pauseAdRequests = 1;
                 }
             });
         }
