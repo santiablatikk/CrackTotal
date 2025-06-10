@@ -28,22 +28,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crack Total - El Juego del Fútbol</title>
     <meta name="description" content="Crack Total: Demuestra tu conocimiento de fútbol con juegos y trivias desafiantes. Lee artículos originales en nuestro blog y compite con otros hinchas. ¡El desafío te espera!">
-    <link rel="icon" href="/portada.ico?v=202505272312" type="image/x-icon">
+    <link rel="icon" href="/portada.ico?v=202506272312" type="image/x-icon">
     <link rel="canonical" href="https://cracktotal.com/">
     <link rel="alternate" hreflang="es" href="https://cracktotal.com/" />
     <link rel="alternate" hreflang="es-AR" href="https://cracktotal.com/" />
     <link rel="alternate" hreflang="x-default" href="https://cracktotal.com/" />
-    <link rel="manifest" href="/config/manifest.json?v=202505272312">
-    <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
-    <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
-    <link rel="stylesheet" href="assets/css/landing.css?v=202505272312">
-    <link rel="stylesheet" href="assets/css/performance.css?v=202505272312">
+    <link rel="manifest" href="/config/manifest.json?v=202506272312">
+    <link rel="stylesheet" href="assets/css/base.css?v=202506272312">
+    <link rel="stylesheet" href="assets/css/layout.css?v=202506272312">
+    <link rel="stylesheet" href="assets/css/landing.css?v=202506272312">
+    <link rel="stylesheet" href="assets/css/performance.css?v=202506272312">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css">
     <!-- AdSense Early Blocker - DEBE cargarse ANTES que AdSense -->
-    <script src="assets/js/adsense-early-blocker.js?v=202506072312"></script>
+    <script src="assets/js/adsense-early-blocker.js?v=202506272312"></script>
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427"
      crossorigin="anonymous"></script>
@@ -107,10 +107,10 @@
             console.warn('Promise rechazada:', e.reason);
         });
     </script>
-    <script src="assets/js/adblock-detector.js?v=202505272312"></script>
-    <script src="assets/js/adsense-content-validator.js?v=202506072312"></script>
-    <script src="assets/js/adsense-policy-manager.js?v=202506072312"></script>
-    <script src="assets/js/google-indexing-api.js?v=202506072312"></script>
+    <script src="assets/js/adblock-detector.js?v=202506272312"></script>
+    <script src="assets/js/adsense-content-validator.js?v=202506272312"></script>
+    <script src="assets/js/adsense-policy-manager.js?v=202506272312"></script>
+    <script src="assets/js/google-indexing-api.js?v=202506272312"></script>
 
     <!-- Modern Landing Styling -->
     <style>
@@ -666,6 +666,7 @@
                 <div class="footer-copyright">
                     &copy; 2025 Crack Total. Todos los derechos reservados.
                 </div>
+                <button onclick="clearSiteCache()" style="margin-top: 10px; padding: 5px 10px; background: #333; color: #fff; border: none; border-radius: 4px; cursor: pointer;">Forzar actualización</button>
             </div>
         </footer>
     </div>
@@ -679,8 +680,9 @@
                     .then(registration => {
                         console.log('[SW] Service Worker registrado exitosamente:', registration.scope);
                         
-                        // DISABLED: Constant update checking causing annoying popups
-                        /*
+                        // Forzar actualización del Service Worker inmediatamente
+                        registration.update();
+                        
                         // Escuchar actualizaciones del SW
                         registration.addEventListener('updatefound', () => {
                             const newWorker = registration.installing;
@@ -691,7 +693,9 @@
                                     if (navigator.serviceWorker.controller) {
                                         // Nueva versión disponible, mostrar notificación
                                         console.log('[SW] Nueva versión disponible, actualizando...');
-                                        showUpdateNotification();
+                                        if (confirm('Hay una nueva versión disponible. ¿Deseas actualizar ahora?')) {
+                                            window.location.reload();
+                                        }
                                     } else {
                                         // Primera instalación
                                         console.log('[SW] Service Worker instalado por primera vez');
@@ -704,7 +708,6 @@
                         setInterval(() => {
                             registration.update();
                         }, 60000); // Verificar cada minuto
-                        */
                         
                     })
                     .catch(error => {
@@ -807,10 +810,10 @@
     </script>
     
     <!-- Load essential functions first -->
-    <script src="assets/js/essential.js?v=202505272312"></script>
+    <script src="assets/js/essential.js?v=202506272312"></script>
     <!-- Basic notifications only -->
     <!-- Temporarily disabled to fix loading issues -->
-    <script src="assets/js/main.js?v=202505272312"></script>
+    <script src="assets/js/main.js?v=202506272312"></script>
     <!-- Firebase scripts disabled temporarily to fix module errors -->
 </body>
 </html> 
