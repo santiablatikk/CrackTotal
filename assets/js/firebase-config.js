@@ -1,8 +1,8 @@
 // Configuración de Firebase para Crack Total
-// Este archivo redirige a la configuración apropiada
+// Este archivo utiliza el objeto global window para compartir la configuración
 
 // Configuración de Firebase obtenida de tu consola de Firebase
-const firebaseCredentials = {
+window.firebaseConfig = {
   apiKey: "AIzaSyAwdugL_lfSMpDgDCV50dMRf4lFc8NQyCM", // API Key completa
   authDomain: "cracktotal-cd2e7.firebaseapp.com", // Reemplazado
   projectId: "cracktotal-cd2e7", // Reemplazado
@@ -13,23 +13,23 @@ const firebaseCredentials = {
 };
 
 /**
- * Devuelve la configuración de Firebase.
- * @returns {Promise<object>} La configuración de Firebase.
+ * Inicializa Firebase automáticamente si está disponible
  */
-export async function getFirebaseConfig() {
-  // Por ahora, usamos la misma configuración para local y producción.
-  // Si necesitas configuraciones diferentes más adelante, podemos modificar esta lógica.
-  console.log("Usando configuración de Firebase proporcionada.");
-  return firebaseCredentials;
+if (window.firebase && !window.firebase.apps?.length) {
+  console.log("Inicializando Firebase desde firebase-config.js");
+  try {
+    window.firebase.initializeApp(window.firebaseConfig);
+  } catch (error) {
+    console.error("Error al inicializar Firebase:", error);
+  }
 }
 
-// ESTE ARCHIVO NO DEBE LLAMAR A initializeApp().
-// La inicialización se hará en firebase-init.js.
+// Este archivo ahora inicializa Firebase automáticamente
+// Proporciona la configuración a través de window.firebaseConfig
+// Y hace disponible la instancia de Firebase a través de window.firebase
 
-// Exporta únicamente la función getFirebaseConfig
-// ¡NO inicialices Firebase aquí!
-// Esto evita duplicar la inicialización y conflictos en otros archivos.
+// Para acceder a Firestore: window.firebase.firestore()
+// Para acceder a Auth: window.firebase.auth()
 
-// Si tienes otras variables o funciones que exportar, asegúrate de que la sintaxis sea:
-// export const miVariable = ...;
-// export function miFuncion() { ... }; 
+// Al usar window, evitamos problemas con los módulos ES6
+// Cuando cargamos el script con una etiqueta <script> normal 

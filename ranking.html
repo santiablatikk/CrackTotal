@@ -85,10 +85,16 @@
     </script>
 
     <script src="assets/js/main.js?v=202505272312"></script>
-    <script type="module" src="assets/js/firebase-config.js"></script>
-    <script type="module" src="assets/js/firebase-init.js"></script>
-    <script type="module" src="assets/js/ranking.js?v=202505272312"></script>
-    <script type="module" src="assets/js/firebase-utils.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <!-- Firebase Config -->
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/firebase-init.js"></script>
+    <script src="assets/js/firebase-utils.js"></script>
+    <!-- Ranking Script -->
+    <script src="assets/js/ranking.js?v=202505272312"></script>
 </head>
 <body class="ranking-page-body">
     <!-- Skip Link para accesibilidad -->
@@ -236,8 +242,21 @@
     </footer>
 
     <!-- Scripts -->
-    <script type="module" src="assets/js/firebase-init.js"></script>
-    <!-- Script para el botón compartir (si lo necesitas) -->
+    <!-- Script para el botón compartir -->
+    <script>
+    function shareSite() {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Ranking - Crack Total',
+                text: '¡Mirá el Ranking de Crack Total y comprobá quiénes son los mejores jugadores!',
+                url: window.location.href
+            })
+            .catch(err => console.log('Error al compartir:', err));
+        } else {
+            alert('Tu navegador no soporta la API de Compartir. Copiá el enlace manualmente.');
+        }
+    }
+    </script>
     
 
 </body>

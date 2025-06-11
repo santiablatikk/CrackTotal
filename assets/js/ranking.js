@@ -1,14 +1,5 @@
-// Importar funciones de Firestore 
-import {
-    collection,
-    query,
-    orderBy,
-    limit,
-    onSnapshot,
-    where,
-    Timestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
+// Usamos Firebase cargado globalmente en lugar de importaciones ES6
+// Estas funciones estarán disponibles a través de window.firebase.firestore
 console.log('Ranking Pasala Che script loaded - Optimizado para móvil');
 
 // --- Elementos del DOM ---
@@ -407,9 +398,9 @@ function setupRankingListener() {
             return;
         }
 
-        const usersRef = collection(window.db, 'users');
+        const usersRef = window.firebase.firestore.collection(window.db, 'users');
         
-        const unsubscribe = onSnapshot(usersRef, (snapshot) => {
+        const unsubscribe = window.firebase.firestore.onSnapshot(usersRef, (snapshot) => {
             console.log('[RANKING PC] Datos recibidos:', snapshot.size, 'usuarios');
             
             if (snapshot.empty) {
@@ -478,15 +469,15 @@ function setupHistoryListener() {
             return;
         }
 
-        const matchesRef = collection(window.db, 'matches');
+        const matchesRef = window.firebase.firestore.collection(window.db, 'matches');
         // Consulta menos restrictiva para traer más datos
-        const historyQuery = query(
+        const historyQuery = window.firebase.firestore.query(
             matchesRef,
-            orderBy('timestamp', 'desc'),
-            limit(30) // Aumentar el límite para tener más partidas disponibles
+            window.firebase.firestore.orderBy('timestamp', 'desc'),
+            window.firebase.firestore.limit(30) // Aumentar el límite para tener más partidas disponibles
         );
 
-        const unsubscribe = onSnapshot(historyQuery, (snapshot) => {
+        const unsubscribe = window.firebase.firestore.onSnapshot(historyQuery, (snapshot) => {
             console.log('[HISTORY PC] Datos recibidos:', snapshot.size, 'partidas');
             
             if (snapshot.empty) {
@@ -572,39 +563,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Intentar usar Firebase de forma compatible con ambos scripts
     try {
         // Verificar si Firebase ya está inicializado (por pasalache.js)
-        if (window.db) {
+        if (window.firebase && window.firebase.firestore) {
             console.log('[RANKING PC] Firebase ya inicializado, usando instancia existente');
+            // Usar la instancia de Firestore
+            if (!window.db) {
+                window.db = window.firebase.firestore();
+            }
             setupRankingListener();
             setupHistoryListener();
         } else {
-            // Intentar inicializar Firebase anónimamente si es necesario
-            const initFirebaseAnonymously = () => {
-                import('./firebase-init.js')
-                    .then(module => {
-                        // Asegurarse de que Firebase esté completamente inicializado
-                        return module.ensureFirebaseInitialized ? 
-                            module.ensureFirebaseInitialized() : 
-                            { db: module.db, auth: module.auth, user: null, readOnly: true };
-                    })
-                    .then(({ db: firebaseDb, auth, user, readOnly }) => {
-                        console.log('[RANKING PC] Firebase inicializado correctamente:', 
-                                    readOnly ? '(modo solo lectura)' : '(modo completo)');
-                        
-                        // Usar la instancia db recibida
-                        window.db = firebaseDb;
-                        
-                        // Configurar listeners para el ranking y el historial
-                        setupRankingListener();
-                        setupHistoryListener();
-                    })
-                    .catch(error => {
-                        console.error('[RANKING PC] Error inicializando Firebase:', error);
-                        mostrarErrorYFallback();
-                    });
-            };
-            
-            // Intentar inicializar Firebase
-            initFirebaseAnonymously();
+            console.error('[RANKING PC] Firebase no está disponible. Cargando datos de ejemplo.');
+            setTimeout(mostrarErrorYFallback, 1000);
         }
     } catch (error) {
         console.error('[RANKING PC] Error al inicializar ranking:', error);

@@ -1,15 +1,10 @@
 // Juego: ¿Quién Sabe Más? (1v1) - Lógica del Cliente (WebSocket)
 // Versión renovada - Junio 2024
 
-// --- Importaciones ---
-import { ensureFirebaseInitialized } from './firebase-init.js';
-import { 
-    serverTimestamp, doc, setDoc, updateDoc, getDoc, 
-    collection, query, where, getDocs, arrayUnion, 
-    onSnapshot, increment, runTransaction 
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-import { trackEvent, updateUserStats, checkAndAwardBadge } from './logros.js';
-import { saveQSMResult } from './firebase-utils.js';
+// Las funciones que usamos se cargan desde:
+// - firebase-init.js: ensureFirebaseInitialized
+// - logros.js: trackEvent, updateUserStats, checkAndAwardBadge
+// - firebase-utils.js: saveQSMResult
 
 console.log("✨ quiensabemas_1v1.js cargado (v3 Renovada - Junio 2024)");
 

@@ -1420,7 +1420,7 @@
       },
       {
         "pregunta": "Delantero noruego del Manchester City",
-        "respuesta": "Haaland"
+        "respuesta": "Erling Haaland"
       },
       {
         "pregunta": "Campeón de la Eurocopa 2024",
@@ -1432,7 +1432,7 @@
       },
       {
         "pregunta": "Nombre completo del delantero noruego del Manchester City, conocido por su potencia y capacidad goleadora",
-        "respuesta": "Haaland"
+        "respuesta": "Erling Haaland"
       },
       {
         "pregunta": "¿Qué selección fue campeona del Mundial 2010?",
@@ -2049,7 +2049,7 @@
         "respuesta": "Gotze"
       },
       {
-        "pregunta": "Apellido del delantero francés campeón del mundo en 2018",
+        "pregunta": "Apellido del delantero francés campeón del mundo en 2018. El principito.",
         "respuesta": "Griezmann"
       },
       {
@@ -2290,20 +2290,12 @@
         "respuesta": "Heynckes"
       },
       {
-        "pregunta": "Apellido del ex delantero neerlandés que jugó en Chelsea y Atlético Madrid.",
-        "respuesta": "Hasselbaink"
-      },
-      {
-        "pregunta": "Club escocés de Edimburgo, rival del Hearts.",
-        "respuesta": "Hibernian"
-      },
-      {
         "pregunta": "Apellido del futbolista noruego del Manchester City.",
         "respuesta": "Haaland"
       },
       {
         "pregunta": "Club alemán que ganó la Champions en 1983",
-        "respuesta": "Hamburger SV"
+        "respuesta": "Hamburgo"
       },
       {
         "pregunta": "Delantero brasileño que jugó en el Porto y el Atletico Mineiro",
@@ -4409,7 +4401,7 @@
     "preguntas": [
       {
         "pregunta": "CONTIENE R: Nombre y Apellido del delantero noruego del Manchester City.",
-        "respuesta": "Haaland"
+        "respuesta": "Erling Haaland"
       },
       {
         "pregunta": "Club español con más títulos de Champions League (15 hasta 2024).",
@@ -4910,7 +4902,7 @@
         "respuesta": "Atletico de Madrid"
       },
       {
-        "pregunta": "CONTIENE T: Apellido del ex delantero argentino máximo goleador histórico de la selección.",
+        "pregunta": "CONTIENE T: Apellido del ex delantero argentino máximo goleador histórico de la selección despues de Messi.",
         "respuesta": "Batistuta"
       },
       {
@@ -4962,7 +4954,7 @@
         "respuesta": "Tuchel"
       },
       {
-        "pregunta": "Lateral derecho inglés del Liverpool.",
+        "pregunta": "Lateral derecho inglés del Real Madrid. Ex Liverpool.",
         "respuesta": "Trent Alexander-Arnold"
       },
       {
@@ -5030,7 +5022,7 @@
         "respuesta": "Tchouameni"
       },
       {
-        "pregunta": "¿Cuál es el nombre completo del lateral derecho del Liverpool?",
+        "pregunta": "¿Cuál es el nombre completo del lateral derecho del Real Madrid. Ex liverpool?",
         "respuesta": "Trent Alexander-Arnold"
       },
       {
@@ -5102,7 +5094,7 @@
         "respuesta": "Martínez"
       },
       {
-        "pregunta": "¿Nombre completo del lateral derecho inglés del Liverpool FC, conocido por su capacidad ofensiva y precisión en los centros?",
+        "pregunta": "¿Nombre completo del nuevo lateral derecho inglés del Real Madrid, conocido por su capacidad ofensiva y precisión en los centros?",
         "respuesta": "Trent Alexander-Arnold"
       },
       {
@@ -5638,7 +5630,7 @@
         "respuesta": "Alex Telles"
       },
       {
-        "pregunta": "CONTIENE X: Apellido del lateral inglés del Liverpool.",
+        "pregunta": "CONTIENE X: Apellido del lateral inglés del Real Madrid. Ex Liverpool.",
         "respuesta": "Alexander-Arnold"
       },
       {
@@ -5770,7 +5762,7 @@
         "respuesta": "Luxemburgo"
       },
       {
-        "pregunta": "CONTIENE X: ¿Apellido del lateral inglés del Liverpool, conocido por sus precisos centros?",
+        "pregunta": "CONTIENE X: ¿Apellido del lateral inglés Ex Liverpool, hoy en Real Madrid. Conocido por sus precisos centros?",
         "respuesta": "Alexander-Arnold"
       }
     ]

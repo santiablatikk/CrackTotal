@@ -1,7 +1,5 @@
-// --- Importaciones ---
-import { saveMentirosoResult } from './firebase-utils.js';
-
 // --- WebSocket URL (¡Configura esto!) ---
+// Usamos la función saveMentirosoResult de firebase-utils.js que se carga como script
 const WEBSOCKET_URL = (() => {
     // Siempre usar el servidor de producción para evitar problemas de configuración local
     return 'wss://cracktotal-servidor.onrender.com';
