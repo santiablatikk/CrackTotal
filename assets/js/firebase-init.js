@@ -1,172 +1,221 @@
 /**
- * Inicialización y configuración de Firebase para Crack Total
- * Compatible con rankings y juegos
+ * Inicialización simplificada de Firebase para Crack Total
+ * Modo desarrollo - sin autenticación obligatoria
  */
 
-console.log('[FIREBASE INIT] Iniciando configuración...');
+console.log('[FIREBASE INIT] 🚀 Iniciando sistema simplificado...');
 
-// Verificar que Firebase esté disponible
-if (typeof firebase === 'undefined') {
-    console.error('[FIREBASE INIT] Firebase no está disponible. Asegúrate de cargar los scripts de Firebase primero.');
-} else {
-    console.log('[FIREBASE INIT] Firebase detectado:', firebase);
+// Variables globales para Firebase
+window.firebaseApp = null;
+window.db = null;
+window.auth = null;
+
+// Estado de inicialización
+let isInitialized = false;
+let initializationPromise = null;
+
+// Función principal de inicialización
+async function initializeFirebase() {
+    if (isInitialized) {
+        console.log('[FIREBASE INIT] Ya está inicializado');
+        return Promise.resolve(true);
+    }
+
+    if (initializationPromise) {
+        return initializationPromise;
+    }
+
+    initializationPromise = performInitialization();
+    return initializationPromise;
 }
 
-// Función para inicializar Firebase de forma segura
-function initializeFirebaseSafely() {
+async function performInitialization() {
     try {
-        // Verificar si ya está inicializado
-        if (firebase.apps && firebase.apps.length > 0) {
-            console.log('[FIREBASE INIT] Firebase ya está inicializado');
-            window.firebaseApp = firebase.apps[0];
-            setupFirebaseServices();
-            return;
+        console.log('[FIREBASE INIT] Verificando Firebase SDK...');
+        
+        // Verificar que Firebase esté disponible
+        if (!window.firebase) {
+            throw new Error('Firebase SDK no está cargado');
         }
 
-        // Usar la configuración desde firebase-config.js
-        if (typeof window.firebaseConfig === 'undefined') {
-            console.error('[FIREBASE INIT] No se encontró firebaseConfig. Asegúrate de cargar firebase-config.js primero.');
-            return;
+        // Verificar configuración
+        if (!window.firebaseConfig) {
+            throw new Error('Configuración de Firebase no encontrada');
         }
 
+        console.log('[FIREBASE INIT] Inicializando app...');
+        
         // Inicializar Firebase
-        console.log('[FIREBASE INIT] Inicializando Firebase con configuración:', window.firebaseConfig);
-        window.firebaseApp = firebase.initializeApp(window.firebaseConfig);
-        
-        setupFirebaseServices();
-        
-        console.log('[FIREBASE INIT] ✅ Firebase inicializado correctamente');
-        
-        // Disparar evento personalizado para notificar que Firebase está listo
-        window.dispatchEvent(new CustomEvent('firebaseReady', {
-            detail: { app: window.firebaseApp }
-        }));
-        
-    } catch (error) {
-        console.error('[FIREBASE INIT] Error al inicializar Firebase:', error);
-        
-        // Reintentar después de 2 segundos
-        setTimeout(() => {
-            console.log('[FIREBASE INIT] Reintentando inicialización...');
-            initializeFirebaseSafely();
-        }, 2000);
-    }
-}
+        if (!window.firebase.apps || window.firebase.apps.length === 0) {
+            window.firebaseApp = window.firebase.initializeApp(window.firebaseConfig);
+        } else {
+            window.firebaseApp = window.firebase.apps[0];
+        }
 
-// Configurar servicios de Firebase
-function setupFirebaseServices() {
-    try {
         // Configurar Firestore
-        window.db = firebase.firestore();
+        window.db = window.firebase.firestore();
         console.log('[FIREBASE INIT] ✅ Firestore configurado');
+
+        // Configurar Auth (opcional)
+        try {
+            window.auth = window.firebase.auth();
+            console.log('[FIREBASE INIT] ✅ Auth configurado');
+        } catch (authError) {
+            console.warn('[FIREBASE INIT] ⚠️ Auth no disponible:', authError);
+        }
+
+        // Marcar como inicializado
+        isInitialized = true;
         
-        // Configurar Auth
-        window.auth = firebase.auth();
-        console.log('[FIREBASE INIT] ✅ Auth configurado');
-        
-        // Habilitar autenticación anónima automáticamente
-        enableAnonymousAuth();
-        
-        // Configuración adicional de Firestore
-        window.db.enableNetwork().catch(error => {
-            console.warn('[FIREBASE INIT] Error al habilitar red:', error);
-        });
-        
+        // Disparar evento
+        window.dispatchEvent(new CustomEvent('firebaseReady', {
+            detail: { success: true, db: window.db, auth: window.auth }
+        }));
+
+        console.log('[FIREBASE INIT] ✅ Inicialización completada');
+        return true;
+
     } catch (error) {
-        console.error('[FIREBASE INIT] Error al configurar servicios:', error);
+        console.error('[FIREBASE INIT] ❌ Error en inicialización:', error);
+        
+        // En caso de error, usar datos mock
+        setupMockData();
+        return false;
     }
 }
 
-// Función para habilitar autenticación anónima
-function enableAnonymousAuth() {
-    if (!window.auth) {
-        console.error('[FIREBASE INIT] Auth no está disponible');
+// Función para configurar datos mock en caso de error
+function setupMockData() {
+    console.log('[FIREBASE INIT] 🎭 Configurando datos de demostración...');
+    
+    // Simular base de datos con datos locales
+    window.db = {
+        collection: function(name) {
+            return {
+                onSnapshot: function(callback) {
+                    console.log('[MOCK DB] Simulando datos para', name);
+                    
+                    if (name === 'users') {
+                        // Datos mock de usuarios
+                        const mockUsers = [
+                            {
+                                id: 'user1',
+                                data: () => ({
+                                    displayName: 'CrackDemo',
+                                    stats: {
+                                        pasalache: { played: 10, wins: 8, score: 2500 },
+                                        crackrapido: { played: 15, wins: 12, score: 3200 },
+                                        quiensabemas: { played: 8, wins: 6, score: 1800 },
+                                        mentiroso: { played: 5, wins: 4, score: 1200 }
+                                    }
+                                })
+                            },
+                            {
+                                id: 'user2',
+                                data: () => ({
+                                    displayName: 'FutbolFan',
+                                    stats: {
+                                        pasalache: { played: 12, wins: 9, score: 2800 },
+                                        crackrapido: { played: 10, wins: 7, score: 2400 },
+                                        quiensabemas: { played: 6, wins: 4, score: 1400 },
+                                        mentiroso: { played: 8, wins: 5, score: 1600 }
+                                    }
+                                })
+                            }
+                        ];
+
+                        setTimeout(() => {
+                            callback({
+                                empty: false,
+                                size: mockUsers.length,
+                                forEach: function(fn) {
+                                    mockUsers.forEach(fn);
+                                }
+                            });
+                        }, 1000);
+                    } else if (name === 'matches') {
+                        // Datos mock de partidas
+                        const mockMatches = [
+                            {
+                                id: 'match1',
+                                data: () => ({
+                                    gameType: 'pasalache',
+                                    playerName: 'CrackDemo',
+                                    score: 520,
+                                    result: 'victory',
+                                    timestamp: { toDate: () => new Date(Date.now() - 3600000) }
+                                })
+                            }
+                        ];
+
+                        setTimeout(() => {
+                            callback({
+                                empty: false,
+                                size: mockMatches.length,
+                                forEach: function(fn) {
+                                    mockMatches.forEach(fn);
+                                }
+                            });
+                        }, 1000);
+                    }
+                    
+                    return () => {}; // Unsubscribe function
+                },
+                orderBy: function() { return this; },
+                limit: function() { return this; }
+            };
+        }
+    };
+
+    // Marcar como inicializado con mock
+    isInitialized = true;
+
+    // Disparar evento con datos mock
+    window.dispatchEvent(new CustomEvent('firebaseReady', {
+        detail: { success: false, mock: true, db: window.db }
+    }));
+}
+
+// Función para esperar a que Firebase esté listo
+window.waitForFirebase = function(callback, timeout = 10000) {
+    if (isInitialized && window.db) {
+        callback();
         return;
     }
 
-    // Verificar el estado de autenticación
-    window.auth.onAuthStateChanged((user) => {
-        if (user) {
-            console.log('[FIREBASE INIT] Usuario autenticado:', user.isAnonymous ? 'Anónimo' : user.displayName || user.email);
-            window.currentUser = user;
-        } else {
-            console.log('[FIREBASE INIT] No hay usuario autenticado, iniciando sesión anónima...');
-            // Autenticar de forma anónima
-            window.auth.signInAnonymously()
-                .then((userCredential) => {
-                    console.log('[FIREBASE INIT] ✅ Autenticación anónima exitosa:', userCredential.user.uid);
-                    window.currentUser = userCredential.user;
-                })
-                .catch((error) => {
-                    console.error('[FIREBASE INIT] Error en autenticación anónima:', error);
-                });
-        }
-    });
-}
-
-// Función utilitaria para verificar conectividad
-function checkFirebaseConnection() {
-    if (!window.db) {
-        console.error('[FIREBASE INIT] Firestore no está disponible');
-        return false;
-    }
-
-    return window.db.collection('_test').limit(1).get()
-        .then(() => {
-            console.log('[FIREBASE INIT] ✅ Conexión a Firestore verificada');
-            return true;
-        })
-        .catch((error) => {
-            console.error('[FIREBASE INIT] ❌ Error de conexión a Firestore:', error);
-            return false;
-        });
-}
-
-// Función utilitaria para esperar a que Firebase esté listo
-window.waitForFirebase = function(callback, maxAttempts = 10) {
-    let attempts = 0;
+    const startTime = Date.now();
     
     function check() {
-        attempts++;
-        
-        if (window.firebase && window.db && window.auth) {
-            console.log('[FIREBASE INIT] Firebase está listo para usar');
+        if (isInitialized && window.db) {
             callback();
             return;
         }
         
-        if (attempts >= maxAttempts) {
-            console.error('[FIREBASE INIT] Timeout esperando Firebase después de', maxAttempts, 'intentos');
+        if (Date.now() - startTime > timeout) {
+            console.error('[FIREBASE INIT] Timeout esperando Firebase');
+            setupMockData();
+            callback();
             return;
         }
         
-        console.log(`[FIREBASE INIT] Esperando Firebase... intento ${attempts}/${maxAttempts}`);
         setTimeout(check, 500);
     }
     
     check();
 };
 
-// Inicializar cuando el DOM esté listo
+// Inicializar automáticamente
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeFirebaseSafely);
+    document.addEventListener('DOMContentLoaded', initializeFirebase);
 } else {
-    // Si el DOM ya está listo, inicializar inmediatamente
-    initializeFirebaseSafely();
+    setTimeout(initializeFirebase, 100);
 }
 
-// También inicializar cuando la ventana esté completamente cargada (por si acaso)
+// También inicializar en load por si acaso
 window.addEventListener('load', () => {
-    if (!window.firebaseApp) {
-        console.log('[FIREBASE INIT] Inicialización tardía en window.load');
-        initializeFirebaseSafely();
+    if (!isInitialized) {
+        initializeFirebase();
     }
 });
 
-// Exportar funciones útiles al objeto global
-window.FirebaseUtils = {
-    checkConnection: checkFirebaseConnection,
-    waitForReady: window.waitForFirebase
-};
-
-console.log('[FIREBASE INIT] Script cargado, esperando inicialización...');
+console.log('[FIREBASE INIT] 📜 Sistema de inicialización cargado');

@@ -297,16 +297,20 @@ function generateHistoryHTML(matches) {
 // --- Configurar listener en tiempo real para el ranking ---
 function setupRankingListener() {
     try {
-        if (!window.firebase || !window.firebase.firestore) {
-            console.error('[RANKING PC] Firebase no está inicializado para ranking');
+        console.log('[RANKING PC] Configurando listener del ranking...');
+        
+        if (!window.db) {
+            console.error('[RANKING PC] Base de datos no disponible');
             if (rankingBody) {
-                rankingBody.innerHTML = '<tr><td colspan="7" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+                rankingBody.innerHTML = '<tr><td colspan="7" class="empty-state">Conectando a la base de datos...</td></tr>';
             }
+            
+            // Reintentar en 2 segundos
+            setTimeout(setupRankingListener, 2000);
             return;
         }
 
-        const db = window.firebase.firestore();
-        const usersRef = db.collection('users');
+        const usersRef = window.db.collection('users');
         
         const unsubscribe = usersRef.onSnapshot((snapshot) => {
             console.log('[RANKING PC] Datos recibidos:', snapshot.size, 'usuarios');
@@ -363,22 +367,29 @@ function setupRankingListener() {
         if (rankingBody) {
             rankingBody.innerHTML = '<tr><td colspan="7" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
         }
+        
+        // Reintentar
+        setTimeout(setupRankingListener, 3000);
     }
 }
 
 // --- Configurar listener para historial ---
 function setupHistoryListener() {
     try {
-        if (!window.firebase || !window.firebase.firestore) {
-            console.error('[RANKING PC] Firebase no está inicializado para historial');
+        console.log('[RANKING PC] Configurando listener del historial...');
+        
+        if (!window.db) {
+            console.error('[RANKING PC] Base de datos no disponible para historial');
             if (historyList) {
-                historyList.innerHTML = '<div class="empty-state">Error de conexión. Recargá la página.</div>';
+                historyList.innerHTML = '<div class="empty-state">Conectando al historial...</div>';
             }
+            
+            // Reintentar en 2 segundos
+            setTimeout(setupHistoryListener, 2000);
             return;
         }
 
-        const db = window.firebase.firestore();
-        const matchesRef = db.collection('matches');
+        const matchesRef = window.db.collection('matches');
         // Consulta menos restrictiva para traer más datos
         const historyQuery = matchesRef
             .orderBy('timestamp', 'desc')
@@ -420,6 +431,9 @@ function setupHistoryListener() {
             if (historyList) {
                 historyList.innerHTML = '<div class="empty-state">Error al cargar el historial</div>';
             }
+            
+            // Reintentar
+            setTimeout(setupHistoryListener, 3000);
         });
 
         console.log('[HISTORY PC] Listener configurado correctamente');
@@ -430,6 +444,9 @@ function setupHistoryListener() {
         if (historyList) {
             historyList.innerHTML = '<div class="empty-state">Error de conexión</div>';
         }
+        
+        // Reintentar
+        setTimeout(setupHistoryListener, 3000);
     }
 }
 
@@ -475,55 +492,89 @@ function initializeRanking() {
     
     console.log('[RANKING PC] ✅ Elementos del DOM encontrados');
     
-    // Función para inicializar Firebase y configurar listeners
-    function setupFirebaseListeners() {
-        if (!window.firebase || !window.firebase.firestore) {
-            console.log('[RANKING PC] ⏳ Esperando Firebase...');
-            setTimeout(setupFirebaseListeners, 1000);
-            return;
-        }
+    // Mostrar estado de carga inicial
+    if (rankingBody) {
+        rankingBody.innerHTML = '<tr><td colspan="7" class="loading-state">🔄 Iniciando conexión...</td></tr>';
+    }
+    if (historyList) {
+        historyList.innerHTML = '<div class="loading-state">🔄 Cargando historial...</div>';
+    }
+    
+    // Función para configurar Firebase
+    function setupFirebaseAndListeners() {
+        console.log('[RANKING PC] Verificando estado de Firebase...');
         
-        console.log('[RANKING PC] 🔥 Firebase disponible, configurando listeners...');
-        
-        try {
-            // Configurar listener del ranking
-            setupRankingListener();
+        // Usar waitForFirebase si está disponible
+        if (window.waitForFirebase) {
+            console.log('[RANKING PC] Usando waitForFirebase...');
+            window.waitForFirebase(() => {
+                console.log('[RANKING PC] Firebase listo, configurando listeners...');
+                setupRankingListener();
+                if (historyList) {
+                    setupHistoryListener();
+                }
+            });
+        } else {
+            // Fallback manual
+            console.log('[RANKING PC] Esperando Firebase manualmente...');
+            let attempts = 0;
+            const maxAttempts = 20;
             
-            // Configurar listener del historial
-            if (historyList) {
-                setupHistoryListener();
+            function checkFirebase() {
+                attempts++;
+                
+                if (window.db) {
+                    console.log('[RANKING PC] ✅ Firebase disponible, configurando listeners...');
+                    setupRankingListener();
+                    if (historyList) {
+                        setupHistoryListener();
+                    }
+                    return;
+                }
+                
+                if (attempts >= maxAttempts) {
+                    console.error('[RANKING PC] ❌ Timeout esperando Firebase');
+                    if (rankingBody) {
+                        rankingBody.innerHTML = '<tr><td colspan="7" class="empty-state">Error de conexión. <button onclick="location.reload()">Reintentar</button></td></tr>';
+                    }
+                    if (historyList) {
+                        historyList.innerHTML = '<div class="empty-state">Error de conexión. <button onclick="location.reload()">Reintentar</button></div>';
+                    }
+                    return;
+                }
+                
+                console.log(`[RANKING PC] ⏳ Esperando Firebase... (${attempts}/${maxAttempts})`);
+                setTimeout(checkFirebase, 500);
             }
             
-            console.log('[RANKING PC] ✅ Todos los listeners configurados');
-            
-        } catch (error) {
-            console.error('[RANKING PC] ❌ Error al configurar listeners:', error);
-            
-            // Mostrar mensaje de error en la tabla
-            if (rankingBody) {
-                rankingBody.innerHTML = '<tr><td colspan="7" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
-            }
+            checkFirebase();
         }
     }
     
     // Iniciar configuración
-    setupFirebaseListeners();
+    setupFirebaseAndListeners();
 }
 
 // Inicializar cuando el documento esté listo
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeRanking);
 } else {
-    initializeRanking();
+    // Si el DOM ya está listo, inicializar con delay para que los scripts se carguen
+    setTimeout(initializeRanking, 100);
 }
 
 // También escuchar el evento personalizado de Firebase
-window.addEventListener('firebaseReady', () => {
-    console.log('[RANKING PC] 🔥 Evento firebaseReady recibido, reiniciando listeners...');
+window.addEventListener('firebaseReady', (event) => {
+    console.log('[RANKING PC] 🔥 Evento firebaseReady recibido:', event.detail);
+    
+    // Esperar un poco y luego configurar los listeners
     setTimeout(() => {
-        setupRankingListener();
-        if (historyList) {
-            setupHistoryListener();
+        if (rankingBody && window.db) {
+            console.log('[RANKING PC] Reconfigurando listeners por evento firebaseReady...');
+            setupRankingListener();
+            if (historyList) {
+                setupHistoryListener();
+            }
         }
     }, 500);
 });
