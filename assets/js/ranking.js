@@ -1,6 +1,6 @@
 // Usamos Firebase cargado globalmente en lugar de importaciones ES6
 // Estas funciones estarán disponibles a través de window.firebase.firestore
-console.log('Ranking Pasala Che script loaded - Optimizado para móvil');
+console.log('Ranking Pasala Che script loaded - Sistema corregido v2.0');
 
 // --- Elementos del DOM ---
 const rankingBody = document.getElementById('ranking-body');
@@ -8,12 +8,21 @@ const historyList = document.getElementById('history-list');
 
 // --- Configuración ---
 const RANKING_LIMIT = 15; // Solo mostrar top 15
-const HISTORY_LIMIT = 10; // Últimas 10 partidas en historial
+const HISTORY_LIMIT = 20; // Más partidas en historial
 
 // --- Función para formatear fecha compacta para móvil ---
 function formatCompactDate(firebaseTimestamp) {
     if (!firebaseTimestamp) return '---';
-    const date = firebaseTimestamp.toDate();
+    
+    let date;
+    if (firebaseTimestamp.toDate) {
+        date = firebaseTimestamp.toDate();
+    } else if (firebaseTimestamp.seconds) {
+        date = new Date(firebaseTimestamp.seconds * 1000);
+    } else {
+        date = new Date(firebaseTimestamp);
+    }
+    
     const now = new Date();
     const diffMs = now - date;
     const diffMins = Math.floor(diffMs / 60000);
@@ -26,78 +35,117 @@ function formatCompactDate(firebaseTimestamp) {
     return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
 }
 
-// --- Función para obtener nivel del jugador ---
+// --- Función para obtener nivel del jugador basado en winrate ---
 function getPlayerLevel(totalScore, winRate, matches) {
-    if (winRate >= 90 && totalScore >= 5000 && matches >= 20) return { level: "CRACK TOTAL", color: "#3182ce", icon: "👑" };
-    if (winRate >= 85 && totalScore >= 4000 && matches >= 15) return { level: "CRACK", color: "#4299e1", icon: "⭐" };
-    if (winRate >= 80 && totalScore >= 3000 && matches >= 10) return { level: "EXPERTO", color: "#56ab2f", icon: "🔥" };
-    if (winRate >= 75 && totalScore >= 2500 && matches >= 8) return { level: "AVANZADO", color: "#667eea", icon: "💪" };
-    if (winRate >= 70 && totalScore >= 2000 && matches >= 5) return { level: "INTERMEDIO", color: "#764ba2", icon: "📚" };
-    if (winRate >= 60 && totalScore >= 1000 && matches >= 3) return { level: "NOVATO", color: "#ed8936", icon: "🎯" };
+    // Priorizar winrate sobre score total
+    if (winRate >= 95 && matches >= 10) return { level: "CRACK TOTAL", color: "#ff6b35", icon: "👑" };
+    if (winRate >= 90 && matches >= 8) return { level: "CRACK SUPREMO", color: "#ffd32a", icon: "⭐" };
+    if (winRate >= 85 && matches >= 6) return { level: "CRACK", color: "#4299e1", icon: "🔥" };
+    if (winRate >= 80 && matches >= 5) return { level: "EXPERTO", color: "#56ab2f", icon: "💪" };
+    if (winRate >= 75 && matches >= 4) return { level: "AVANZADO", color: "#667eea", icon: "📚" };
+    if (winRate >= 70 && matches >= 3) return { level: "INTERMEDIO", color: "#764ba2", icon: "🎯" };
+    if (winRate >= 60 && matches >= 2) return { level: "NOVATO", color: "#ed8936", icon: "📈" };
     return { level: "PRINCIPIANTE", color: "#999", icon: "🌱" };
 }
 
-// --- Función para generar HTML del ranking (Top 15) ---
+// --- Función para generar HTML del ranking (Top 15) - CORREGIDA ---
 function generateRankingHTML(usersData) {
     if (!usersData || usersData.length === 0) {
         return '<tr><td colspan="7" class="empty-state">No hay datos disponibles</td></tr>';
     }
 
-    // Filtrar y procesar datos de usuarios de manera más flexible
+    console.log('[RANKING PC] Procesando datos de', usersData.length, 'usuarios');
+
+    // Filtrar y procesar datos con mayor flexibilidad
     const validUsers = usersData
         .filter(user => {
-            // Verificar si hay datos en la estructura esperada por pasalache.js
-            // Intentar múltiples rutas de datos para compatibilidad
+            // Verificar múltiples fuentes de datos
+            const hasValidData = 
+                user.wins > 0 || 
+                user.matchesPlayed > 0 || 
+                user.totalScore > 0 ||
+                (user.pasalache && user.pasalache.wins > 0) ||
+                (user.stats && user.stats.wins > 0);
             
-            // Nueva estructura revisada para compatibilidad con pasalache.js
-            const hasScore = user.totalScore > 0 || user.score > 0;
-            const hasWins = user.wins > 0;
-            const hasGameData = Boolean(user.stats || user.pasalache);
-            
-            // Comprobar si hay datos válidos para mostrar
-            return hasScore || hasWins || hasGameData;
+            return hasValidData && user.displayName;
         })
         .map(user => {
-            console.log('[RANKING PC] Procesando usuario:', user);
+            console.log('[RANKING PC] Procesando usuario:', user.displayName);
             
-            // Extraer datos independientemente de la estructura
-            let totalScore = 0;
+            // Extraer datos de múltiples fuentes posibles
             let wins = 0;
             let losses = 0;
             let matches = 0;
+            let totalScore = 0;
             
-            // Obtener datos de la raíz (formato pasalache.js)
-            totalScore = user.totalScore || user.score || 0;
+            // Datos de la raíz del usuario
             wins = user.wins || 0;
             losses = user.losses || user.totalLosses || 0;
-            matches = user.matchesPlayed || Math.max(wins + losses, 0);
+            matches = user.matchesPlayed || 0;
+            totalScore = user.totalScore || user.score || 0;
             
-            // Asegurar que haya al menos un partido jugado para calcular el win rate
+            // Datos del objeto pasalache
+            if (user.pasalache) {
+                wins = Math.max(wins, user.pasalache.wins || 0);
+                losses = Math.max(losses, user.pasalache.losses || 0);
+                matches = Math.max(matches, user.pasalache.matchesPlayed || user.pasalache.gamesPlayed || 0);
+                totalScore = Math.max(totalScore, user.pasalache.totalScore || 0);
+            }
+            
+            // Datos del objeto stats
+            if (user.stats && user.stats.pasalache) {
+                wins = Math.max(wins, user.stats.pasalache.wins || 0);
+                losses = Math.max(losses, user.stats.pasalache.losses || 0);
+                matches = Math.max(matches, user.stats.pasalache.matchesPlayed || 0);
+                totalScore = Math.max(totalScore, user.stats.pasalache.totalScore || 0);
+            }
+            
+            // Asegurar coherencia en los datos
+            if (matches < wins + losses) {
+                matches = wins + losses;
+            }
+            
+            // Calcular winrate correctamente
             const winRate = matches > 0 ? (wins / matches) * 100 : 0;
             const avgScore = matches > 0 ? Math.round(totalScore / matches) : totalScore;
+            const lossRate = matches > 0 ? (losses / matches) * 100 : 0;
+            
+            console.log(`[RANKING PC] ${user.displayName}: ${wins}W/${losses}L/${matches}P - WinRate: ${winRate.toFixed(1)}%`);
             
             return {
                 id: user.id,
-                displayName: user.displayName || 'Anónimo',
+                displayName: user.displayName,
                 totalScore: totalScore,
                 wins: wins,
                 losses: losses,
                 matches: matches,
                 winRate: winRate,
-                avgScore: avgScore
+                lossRate: lossRate,
+                avgScore: avgScore,
+                lastPlayed: user.lastPlayed || user.updatedAt
             };
         })
+        .filter(user => user.matches > 0) // Solo usuarios con al menos 1 partida
         .sort((a, b) => {
-            // Ordenar por winrate primero, luego por total score si el winrate es igual
-            if (Math.abs(b.winRate - a.winRate) > 0.1) return b.winRate - a.winRate;
-            if (b.totalScore !== a.totalScore) return b.totalScore - a.totalScore;
-            return b.wins - a.wins;
+            // ORDEN CORREGIDO: Por winrate primero (descendente), luego por partidas jugadas (más es mejor), luego por score total
+            const winRateDiff = b.winRate - a.winRate;
+            if (Math.abs(winRateDiff) > 0.1) return winRateDiff;
+            
+            const matchesDiff = b.matches - a.matches;
+            if (matchesDiff !== 0) return matchesDiff;
+            
+            return b.totalScore - a.totalScore;
         })
-        .slice(0, RANKING_LIMIT); // Limitar a top 15
+        .slice(0, RANKING_LIMIT);
 
     if (validUsers.length === 0) {
         return '<tr><td colspan="7" class="empty-state">No hay jugadores registrados aún</td></tr>';
     }
+
+    console.log('[RANKING PC] Top usuarios ordenados por winrate:');
+    validUsers.slice(0, 5).forEach((user, i) => {
+        console.log(`${i + 1}. ${user.displayName}: ${user.winRate.toFixed(1)}% (${user.wins}/${user.matches})`);
+    });
 
     return validUsers.map((user, index) => {
         const playerLevel = getPlayerLevel(user.totalScore, user.winRate, user.matches);
@@ -111,13 +159,13 @@ function generateRankingHTML(usersData) {
                     ${position === 1 ? '🥇' : position === 2 ? '🥈' : position === 3 ? '🥉' : ''}
                 </td>
                 <td class="player-info">
-                    <div class="player-name">${user.displayName || 'Anónimo'}</div>
+                    <div class="player-name">${user.displayName}</div>
                     <div class="player-level" style="color: ${playerLevel.color}">
                         ${playerLevel.icon} ${playerLevel.level}
                     </div>
                 </td>
                 <td class="score-info">
-                    <div class="main-score">${(user.totalScore / 1000).toFixed(1)}k</div>
+                    <div class="main-score">${Math.round(user.totalScore / 1000 * 10) / 10}k</div>
                     <div class="secondary-stat">letras total</div>
                 </td>
                 <td class="stat-cell hide-mobile">
@@ -126,7 +174,7 @@ function generateRankingHTML(usersData) {
                 </td>
                 <td class="stat-cell">
                     <div class="primary-stat wins-stat">${user.wins}</div>
-                    <div class="secondary-stat">${user.winRate.toFixed(0)}% éxito</div>
+                    <div class="secondary-stat">${user.winRate.toFixed(1)}% éxito</div>
                 </td>
                 <td class="stat-cell hide-mobile">
                     <div class="primary-stat losses-stat">${user.losses}</div>
@@ -141,21 +189,19 @@ function generateRankingHTML(usersData) {
     }).join('');
 }
 
-// --- Función para generar HTML del historial mejorado y compacto ---
+// --- Función para generar HTML del historial mejorado ---
 function generateHistoryHTML(matches) {
     if (!matches || matches.length === 0) {
-        return '<div class="empty-state">No hay historial disponible para este jugador</div>';
+        return '<div class="empty-state">No hay historial disponible</div>';
     }
 
     console.log('[HISTORY DEBUG] Total de partidas recibidas:', matches.length);
-    // Mostrar los primeros objetos en la consola para depuración
-    console.log('[HISTORY DEBUG] Muestra de partidas:', matches.slice(0, 3));
 
-    // Obtener usuario actual (si está logueado)
+    // Obtener usuario actual
     const currentUser = localStorage.getItem('currentUser');
     let userMatches = matches;
     
-    // Si hay usuario logueado, filtrar sus partidas
+    // Filtrar por usuario si está logueado
     if (currentUser) {
         try {
             const userData = JSON.parse(currentUser);
@@ -170,218 +216,79 @@ function generateHistoryHTML(matches) {
         }
     }
 
-    // Si no hay partidas del usuario, mostrar las más recientes de todos
+    // Si no hay partidas del usuario, mostrar las más recientes generales
     if (userMatches.length === 0) {
         userMatches = matches.slice(0, HISTORY_LIMIT);
         console.log('[HISTORY DEBUG] Usando partidas generales:', userMatches.length);
     }
 
-    // SIMPLIFICADO: Ahora filtramos de manera menos restrictiva
-    // Solo filtramos partidas con puntuación 0, pero aceptamos todos los tipos de juego
-    userMatches = userMatches.filter(match => {
-        // Obtener puntuación con cualquiera de estas propiedades
-        const score = 
-            match.score || 
-            match.correctAnswers || 
-            (match.players && match.players[0]?.score) || 
-            (match.stats && match.stats.score) || 
-            0;
-        
-        const hasPasalaCheData = 
-            match.gameMode === 'Pasalache' || 
-            match.gameMode === 'pasalache' || 
-            match.gameType === 'pasalache' || 
-            match.gameType === 'pasala-che' || 
-            match.gameType === 'PasalaChe' ||
-            // Nueva condición: también aceptar si no tiene gameType pero tiene score
-            (!match.gameType && score > 0);
-        
-        // Mostrar más información para depuración
-        if (score > 0) {
-            console.log(`[HISTORY DEBUG] Partida con score ${score}, gameType: ${match.gameType || 'N/A'}, gameMode: ${match.gameMode || 'N/A'}`);
-        }
-        
-        return hasPasalaCheData && score > 0;
+    // Filtros más permisivos para mostrar más partidas
+    const validMatches = userMatches.filter(match => {
+        // Aceptar cualquier partida que tenga datos básicos
+        const hasBasicData = 
+            match.score !== undefined || 
+            match.correctAnswers !== undefined ||
+            match.result !== undefined ||
+            match.playerName !== undefined;
+            
+        return hasBasicData;
     });
 
-    console.log('[HISTORY DEBUG] Partidas filtradas finales:', userMatches.length);
+    console.log('[HISTORY DEBUG] Partidas válidas después del filtro:', validMatches.length);
 
-    // Mostrar las últimas partidas ordenadas por fecha
-    const recentMatches = userMatches
-        .sort((a, b) => {
-            // Manejar tanto objetos Timestamp como strings ISO
-            const getTime = (timestamp) => {
-                if (timestamp?.seconds) return timestamp.seconds * 1000;
-                if (timestamp instanceof Date) return timestamp.getTime();
-                if (typeof timestamp === 'string') {
-                    try { return new Date(timestamp).getTime(); } 
-                    catch (e) { return 0; }
-                }
-                return 0;
-            };
-            
-            const timeA = getTime(a.timestamp);
-            const timeB = getTime(b.timestamp);
-            
-            return timeB - timeA; // Orden descendente (más reciente primero)
-        })
-        .slice(0, HISTORY_LIMIT);
-
-    if (recentMatches.length === 0) {
-        console.log('[HISTORY DEBUG] No hay partidas válidas después del filtrado');
+    if (validMatches.length === 0) {
         return '<div class="empty-state">No hay partidas válidas en el historial</div>';
     }
 
-    console.log('[HISTORY DEBUG] Partidas a mostrar:', recentMatches.length);
+    const recentMatches = validMatches
+        .sort((a, b) => {
+            const getTime = (timestamp) => {
+                if (!timestamp) return 0;
+                if (timestamp.seconds) return timestamp.seconds;
+                if (timestamp.toDate) return timestamp.toDate().getTime() / 1000;
+                if (typeof timestamp === 'number') return timestamp;
+                return new Date(timestamp).getTime() / 1000;
+            };
+            return getTime(b.timestamp) - getTime(a.timestamp);
+        })
+        .slice(0, HISTORY_LIMIT);
 
     return recentMatches.map(match => {
-        // Extraer datos con compatibilidad para diferentes estructuras
-        const isVictory = match.result === 'victory' || match.won === true || match.success === true;
-        const isTimeoutDefeat = match.result === 'timeout' || match.timeDefeat === true || match.defeatByTime === true || match.timeOut === true;
+        const isVictory = match.result === 'victory' || match.result === 'win' || match.won === true;
+        const score = match.score || match.correctAnswers || 0;
+        const opponentName = match.opponent || match.opponentName || 'Oponente';
+        const gameType = match.gameMode || match.gameType || 'Pasala Che';
+        const duration = match.duration || match.gameTime || 0;
+        const playerName = match.playerName || 'Usuario';
         
-        // Obtener puntuación (score) con múltiples rutas posibles
-        const score = match.score || 
-                     match.correctAnswers || 
-                     (match.players && match.players[0]?.score) || 
-                     (match.stats && match.stats.score) || 
-                     0;
-                     
-        const playerLevel = getPlayerLevel(score, isVictory ? 100 : 0, 1);
-        
-        // Obtener nombre del jugador con múltiples rutas posibles
-        const playerName = match.playerName || 
-                          (match.players && match.players[0]?.displayName) || 
-                          match.displayName ||
-                          'Anónimo';
-                          
-        // Obtener duración con múltiples rutas posibles
-        const duration = Math.round(match.timeSpent || match.duration || match.time || 0);
-        
-        // Obtener otros datos
-        const difficulty = match.difficulty || 'Normal';
-        const passes = match.passes || match.passedAnswers || match.skips || 0;
-        
-        // Determinar resultado y color
-        let resultData;
-        if (isVictory) {
-            resultData = { text: 'VICTORIA', icon: '🏆', class: 'victory', color: '#10b981' };
-        } else if (isTimeoutDefeat) {
-            resultData = { text: 'TIEMPO', icon: '⏰', class: 'timeout', color: '#f59e0b' };
-        } else {
-            resultData = { text: 'DERROTA', icon: '❌', class: 'defeat', color: '#ef4444' };
-        }
-        
-        // Manejar formato de fecha dependiendo del tipo de timestamp
-        let formattedDate = '---';
-        
-        try {
-            if (match.timestamp?.seconds) {
-                formattedDate = formatCompactDate(match.timestamp);
-            } else if (match.timestamp instanceof Date) {
-                const now = new Date();
-                const diffMs = now - match.timestamp;
-                const diffMins = Math.floor(diffMs / 60000);
-                
-                if (diffMins < 60) formattedDate = `${diffMins}min`;
-                else if (diffMins < 1440) formattedDate = `${Math.floor(diffMins/60)}h`;
-                else if (diffMins < 10080) formattedDate = `${Math.floor(diffMins/1440)}d`;
-                else formattedDate = match.timestamp.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
-            } else if (typeof match.timestamp === 'string') {
-                const date = new Date(match.timestamp);
-                const now = new Date();
-                const diffMs = now - date;
-                const diffMins = Math.floor(diffMs / 60000);
-                
-                if (diffMins < 60) formattedDate = `${diffMins}min`;
-                else if (diffMins < 1440) formattedDate = `${Math.floor(diffMins/60)}h`;
-                else if (diffMins < 10080) formattedDate = `${Math.floor(diffMins/1440)}d`;
-                else formattedDate = date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
-            }
-        } catch (e) {
-            console.log('[HISTORY DEBUG] Error al formatear fecha:', e);
-            formattedDate = '---';
-        }
-        
-        // Calcular velocidad (letras por segundo) con protección
-        const lettersPerSecond = duration > 0 ? Math.round(score / duration) : 0;
-        
+        // Formatear duración
+        const formatDuration = (duration) => {
+            if (!duration || duration < 60) return `${duration || 0}s`;
+            const minutes = Math.floor(duration / 60);
+            const seconds = duration % 60;
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        };
+
         return `
-            <div class="history-item">
-                <!-- Header compacto -->
-                <div class="history-header">
-                    <span class="history-player-name">🏈 ${playerName}</span>
-                    <span class="history-date">${formattedDate}</span>
+            <div class="history-match ${isVictory ? 'victory' : 'defeat'}">
+                <div class="match-header">
+                    <div class="match-result ${isVictory ? 'victory' : 'defeat'}">
+                        <span class="result-icon">${isVictory ? '🏆' : '💔'}</span>
+                        <span class="result-text">${isVictory ? 'VICTORIA' : 'DERROTA'}</span>
+                    </div>
+                    <div class="match-time">${formatCompactDate(match.timestamp)}</div>
                 </div>
-
-                <!-- Resultado principal -->
-                <div class="main-summary">
-                    <div class="player-section">
-                        <div class="result-indicator" style="color: ${resultData.color}; border-color: ${resultData.color}40; background: ${resultData.color}20;">
-                            <span class="result-icon">${resultData.icon}</span>
-                            <span class="result-text">${resultData.text}</span>
-                        </div>
+                <div class="match-details">
+                    <div class="match-score">
+                        <div class="score-value">${score.toLocaleString()}</div>
+                        <div class="score-label">letras</div>
                     </div>
-                    
-                    <div class="vs-section">
-                        <div class="player-score" style="color: ${resultData.color}">${score.toLocaleString()}</div>
-                        <div style="font-size: 0.6rem; color: var(--ranking-text-muted);">letras</div>
-                    </div>
-                    
-                    <div class="player-section">
-                        <div class="level-badge" style="background-color: ${playerLevel.color}">
-                            ${playerLevel.icon} ${playerLevel.level}
-                        </div>
+                    <div class="match-info">
+                        <div class="game-type">${gameType}</div>
+                        <div class="opponent">vs ${opponentName}</div>
+                        ${duration > 0 ? `<div class="duration">${formatDuration(duration)}</div>` : ''}
                     </div>
                 </div>
-
-                <!-- Estadísticas clave -->
-                <div class="key-stats">
-                    <div class="stat-item">
-                        <div class="stat-icon">⏱️</div>
-                        <div class="stat-value">${duration}s</div>
-                        <div class="stat-label">Tiempo</div>
-                        <div class="stat-detail">${duration < 60 ? 'Rápido' : duration < 120 ? 'Normal' : 'Lento'}</div>
-                    </div>
-                    
-                    <div class="stat-item">
-                        <div class="stat-icon">🔥</div>
-                        <div class="stat-value">${lettersPerSecond}</div>
-                        <div class="stat-label">Velocidad</div>
-                        <div class="stat-detail">letras/seg</div>
-                    </div>
-                    
-                    <div class="stat-item">
-                        <div class="stat-icon">🎯</div>
-                        <div class="stat-value">${difficulty}</div>
-                        <div class="stat-label">Dificultad</div>
-                        <div class="stat-detail">${isVictory ? 'Completado' : 'Fallido'}</div>
-                    </div>
-                    
-                    <div class="stat-item">
-                        <div class="stat-icon">🔄</div>
-                        <div class="stat-value">${passes}</div>
-                        <div class="stat-label">Pases</div>
-                        <div class="stat-detail">${passes === 0 ? 'Sin pases' : passes === 1 ? '1 pase' : `${passes} pases`}</div>
-                    </div>
-                </div>
-
-                <!-- Análisis simplificado -->
-                ${(isVictory || score >= 1000 || lettersPerSecond >= 10) ? `
-                <div class="performance-insight">
-                    <div class="insight-text">
-                        ${isVictory && lettersPerSecond >= 15 ? 
-                            '<span class="insight-highlight">¡Velocidad increíble!</span> Completaste muy rápido.' :
-                        isVictory ? 
-                            '<span class="insight-highlight">¡Excelente!</span> Completaste la palabra exitosamente.' :
-                        lettersPerSecond >= 20 ? 
-                            '<span class="insight-highlight">Máquina de escribir</span> - Velocidad excepcional.' :
-                        score >= 2000 ? 
-                            '<span class="insight-highlight">Gran progreso</span> - Muchas letras antes del final.' :
-                            `<span class="insight-highlight">Buen intento</span> - Conseguiste ${score.toLocaleString()} letras.`
-                        }
-                    </div>
-                </div>
-                ` : ''}
             </div>
         `;
     }).join('');
@@ -390,7 +297,7 @@ function generateHistoryHTML(matches) {
 // --- Configurar listener en tiempo real para el ranking ---
 function setupRankingListener() {
     try {
-        if (!window.db) {
+        if (!window.firebase || !window.firebase.firestore) {
             console.error('[RANKING PC] Firebase no está inicializado para ranking');
             if (rankingBody) {
                 rankingBody.innerHTML = '<tr><td colspan="7" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
@@ -398,9 +305,10 @@ function setupRankingListener() {
             return;
         }
 
-        const usersRef = window.firebase.firestore.collection(window.db, 'users');
+        const db = window.firebase.firestore();
+        const usersRef = db.collection('users');
         
-        const unsubscribe = window.firebase.firestore.onSnapshot(usersRef, (snapshot) => {
+        const unsubscribe = usersRef.onSnapshot((snapshot) => {
             console.log('[RANKING PC] Datos recibidos:', snapshot.size, 'usuarios');
             
             if (snapshot.empty) {
@@ -461,7 +369,7 @@ function setupRankingListener() {
 // --- Configurar listener para historial ---
 function setupHistoryListener() {
     try {
-        if (!window.db) {
+        if (!window.firebase || !window.firebase.firestore) {
             console.error('[RANKING PC] Firebase no está inicializado para historial');
             if (historyList) {
                 historyList.innerHTML = '<div class="empty-state">Error de conexión. Recargá la página.</div>';
@@ -469,15 +377,14 @@ function setupHistoryListener() {
             return;
         }
 
-        const matchesRef = window.firebase.firestore.collection(window.db, 'matches');
+        const db = window.firebase.firestore();
+        const matchesRef = db.collection('matches');
         // Consulta menos restrictiva para traer más datos
-        const historyQuery = window.firebase.firestore.query(
-            matchesRef,
-            window.firebase.firestore.orderBy('timestamp', 'desc'),
-            window.firebase.firestore.limit(30) // Aumentar el límite para tener más partidas disponibles
-        );
+        const historyQuery = matchesRef
+            .orderBy('timestamp', 'desc')
+            .limit(30); // Aumentar el límite para tener más partidas disponibles
 
-        const unsubscribe = window.firebase.firestore.onSnapshot(historyQuery, (snapshot) => {
+        const unsubscribe = historyQuery.onSnapshot((snapshot) => {
             console.log('[HISTORY PC] Datos recibidos:', snapshot.size, 'partidas');
             
             if (snapshot.empty) {
@@ -553,117 +460,72 @@ function showLoadingState() {
     }
 }
 
-// --- Inicializar cuando el DOM esté listo ---
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('[RANKING PC] DOM loaded, configurando ranking optimizado...');
+// --- Función de inicialización principal ---
+function initializeRanking() {
+    console.log('[RANKING PC] 🏁 Inicializando ranking de Pasala Che...');
     
-    // Mostrar estado de carga
-    showLoadingState();
+    // Elementos del DOM
+    rankingBody = document.getElementById('ranking-body');
+    historyList = document.getElementById('history-list');
     
-    // Intentar usar Firebase de forma compatible con ambos scripts
-    try {
-        // Verificar si Firebase ya está inicializado (por pasalache.js)
-        if (window.firebase && window.firebase.firestore) {
-            console.log('[RANKING PC] Firebase ya inicializado, usando instancia existente');
-            // Usar la instancia de Firestore
-            if (!window.db) {
-                window.db = window.firebase.firestore();
-            }
+    if (!rankingBody) {
+        console.error('[RANKING PC] ❌ No se encontró el elemento ranking-body');
+        return;
+    }
+    
+    console.log('[RANKING PC] ✅ Elementos del DOM encontrados');
+    
+    // Función para inicializar Firebase y configurar listeners
+    function setupFirebaseListeners() {
+        if (!window.firebase || !window.firebase.firestore) {
+            console.log('[RANKING PC] ⏳ Esperando Firebase...');
+            setTimeout(setupFirebaseListeners, 1000);
+            return;
+        }
+        
+        console.log('[RANKING PC] 🔥 Firebase disponible, configurando listeners...');
+        
+        try {
+            // Configurar listener del ranking
             setupRankingListener();
-            setupHistoryListener();
-        } else {
-            console.error('[RANKING PC] Firebase no está disponible. Cargando datos de ejemplo.');
-            setTimeout(mostrarErrorYFallback, 1000);
+            
+            // Configurar listener del historial
+            if (historyList) {
+                setupHistoryListener();
+            }
+            
+            console.log('[RANKING PC] ✅ Todos los listeners configurados');
+            
+        } catch (error) {
+            console.error('[RANKING PC] ❌ Error al configurar listeners:', error);
+            
+            // Mostrar mensaje de error en la tabla
+            if (rankingBody) {
+                rankingBody.innerHTML = '<tr><td colspan="7" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+            }
         }
-    } catch (error) {
-        console.error('[RANKING PC] Error al inicializar ranking:', error);
-        mostrarErrorYFallback();
     }
     
-    function mostrarErrorYFallback() {
-        // Mostrar mensaje de error
-        if (rankingBody) {
-            rankingBody.innerHTML = `
-                <tr>
-                    <td colspan="7" class="error-state">
-                        <div class="error-icon">⚠️</div>
-                        <div class="error-message">Error de conexión</div>
-                        <div class="error-detail">No se pudo conectar con la base de datos</div>
-                        <button onclick="location.reload()" class="retry-button">Reintentar</button>
-                    </td>
-                </tr>
-            `;
-        }
-        
+    // Iniciar configuración
+    setupFirebaseListeners();
+}
+
+// Inicializar cuando el documento esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeRanking);
+} else {
+    initializeRanking();
+}
+
+// También escuchar el evento personalizado de Firebase
+window.addEventListener('firebaseReady', () => {
+    console.log('[RANKING PC] 🔥 Evento firebaseReady recibido, reiniciando listeners...');
+    setTimeout(() => {
+        setupRankingListener();
         if (historyList) {
-            historyList.innerHTML = `
-                <div class="error-state">
-                    <div class="error-icon">⚠️</div>
-                    <div class="error-message">Error de conexión</div>
-                    <div class="error-detail">No se pudo conectar con la base de datos</div>
-                </div>
-            `;
+            setupHistoryListener();
         }
-        
-        // Después de un tiempo, mostrar datos de fallback
-        setTimeout(() => {
-            // Crear algunos datos de demo para mostrar
-            const mockUsers = [
-                { displayName: 'CrackDemo1', totalScore: 4500, wins: 12, losses: 3, matches: 15, winRate: 80, avgScore: 300 },
-                { displayName: 'FutbolFan22', totalScore: 3800, wins: 10, losses: 2, matches: 12, winRate: 83, avgScore: 316 },
-                { displayName: 'ArgentinoTop', totalScore: 3200, wins: 8, losses: 3, matches: 11, winRate: 72, avgScore: 290 },
-                { displayName: 'PeloteroMax', totalScore: 2900, wins: 7, losses: 2, matches: 9, winRate: 77, avgScore: 322 },
-                { displayName: 'Golazo10', totalScore: 2500, wins: 6, losses: 3, matches: 9, winRate: 66, avgScore: 277 }
-            ];
-            
-            if (rankingBody) {
-                rankingBody.innerHTML = generateRankingHTML(mockUsers);
-            }
-            
-            const mockMatches = [
-                { 
-                    playerName: 'CrackDemo1', 
-                    score: 520, 
-                    result: 'victory', 
-                    timeSpent: 95,
-                    difficulty: 'Difícil',
-                    gameMode: 'Pasalache',
-                    timestamp: { toDate: () => new Date(Date.now() - 3600000) } // 1 hour ago
-                },
-                { 
-                    playerName: 'FutbolFan22', 
-                    score: 480, 
-                    result: 'victory',
-                    timeSpent: 85,
-                    difficulty: 'Normal',
-                    gameMode: 'Pasalache',
-                    timestamp: { toDate: () => new Date(Date.now() - 7200000) } // 2 hours ago
-                },
-                { 
-                    playerName: 'ArgentinoTop', 
-                    score: 320, 
-                    result: 'defeat',
-                    timeSpent: 75,
-                    difficulty: 'Normal',
-                    gameMode: 'Pasalache',
-                    timestamp: { toDate: () => new Date(Date.now() - 86400000) } // 1 day ago
-                }
-            ];
-            
-            if (historyList) {
-                historyList.innerHTML = generateHistoryHTML(mockMatches);
-            }
-            
-            // Mostrar mensaje de modo demo
-            const demoNotice = document.createElement('div');
-            demoNotice.className = 'demo-notice';
-            demoNotice.style.cssText = 'background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 15px; border-radius: 5px; text-align: center; font-weight: bold;';
-            demoNotice.innerHTML = '⚠️ Mostrando datos de demostración (modo offline)';
-            
-            const containers = document.querySelectorAll('.ranking-container, .history-container');
-            containers.forEach(container => {
-                container.insertBefore(demoNotice.cloneNode(true), container.firstChild);
-            });
-        }, 3000);
-    }
-}); 
+    }, 500);
+});
+
+console.log('[RANKING PC] 📜 Script de ranking cargado'); 

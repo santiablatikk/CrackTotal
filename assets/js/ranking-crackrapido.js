@@ -1,16 +1,5 @@
-// Importar funciones de Firestore y la instancia db inicializada
-import { db } from './firebase-init.js';
-import {
-    collection,
-    query,
-    orderBy,
-    limit,
-    onSnapshot,
-    where,
-    Timestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-console.log('Ranking Crack Rápido script loaded - Optimizado para móvil');
+// Sistema de Ranking para Crack Rápido - Versión compatible
+console.log('Ranking Crack Rápido script loaded - Sistema corregido v2.0');
 
 // --- Elementos del DOM ---
 const rankingBody = document.getElementById('ranking-body');
@@ -18,12 +7,21 @@ const historyList = document.getElementById('history-list');
 
 // --- Configuración ---
 const RANKING_LIMIT = 15; // Solo mostrar top 15
-const HISTORY_LIMIT = 10; // Últimas 10 partidas en historial
+const HISTORY_LIMIT = 20; // Más partidas en historial
 
-// --- Función para formatear fecha compacta para móvil ---
+// --- Función para formatear fecha compacta ---
 function formatCompactDate(firebaseTimestamp) {
     if (!firebaseTimestamp) return '---';
-    const date = firebaseTimestamp.toDate();
+    
+    let date;
+    if (firebaseTimestamp.toDate) {
+        date = firebaseTimestamp.toDate();
+    } else if (firebaseTimestamp.seconds) {
+        date = new Date(firebaseTimestamp.seconds * 1000);
+    } else {
+        date = new Date(firebaseTimestamp);
+    }
+    
     const now = new Date();
     const diffMs = now - date;
     const diffMins = Math.floor(diffMs / 60000);
@@ -57,114 +55,128 @@ function calculateEffectiveScore(match) {
     return Math.round(effectiveScore);
 }
 
-// --- Función para obtener nivel del jugador ---
-function getPlayerLevel(score, accuracy) {
-    if (accuracy >= 95 && score >= 4000) return { level: "CRACK TOTAL", color: "#ff6b35", icon: "👑" };
-    if (accuracy >= 90 && score >= 3500) return { level: "CRACK", color: "#ffd32a", icon: "⭐" };
-    if (accuracy >= 85 && score >= 3000) return { level: "EXPERTO", color: "#56ab2f", icon: "🔥" };
-    if (accuracy >= 80 && score >= 2500) return { level: "AVANZADO", color: "#667eea", icon: "💪" };
-    if (accuracy >= 70 && score >= 2000) return { level: "INTERMEDIO", color: "#764ba2", icon: "📚" };
-    if (accuracy >= 60 && score >= 1500) return { level: "NOVATO", color: "#ed8936", icon: "🎯" };
+// --- Función para obtener nivel del jugador basado en winrate ---
+function getPlayerLevel(score, accuracy, winRate) {
+    // Priorizar winrate, luego accuracy y score
+    if (winRate >= 95 && accuracy >= 90) return { level: "CRACK TOTAL", color: "#ff6b35", icon: "👑" };
+    if (winRate >= 90 && accuracy >= 85) return { level: "VELOCISTA", color: "#ffd32a", icon: "⭐" };
+    if (winRate >= 85 && accuracy >= 80) return { level: "CRACK", color: "#4299e1", icon: "🔥" };
+    if (winRate >= 80 && accuracy >= 75) return { level: "EXPERTO", color: "#56ab2f", icon: "💪" };
+    if (winRate >= 75 && accuracy >= 70) return { level: "AVANZADO", color: "#667eea", icon: "🎯" };
+    if (winRate >= 70 && accuracy >= 65) return { level: "INTERMEDIO", color: "#764ba2", icon: "📚" };
+    if (winRate >= 60 && accuracy >= 60) return { level: "NOVATO", color: "#ed8936", icon: "📈" };
     return { level: "PRINCIPIANTE", color: "#999", icon: "🌱" };
 }
 
-// --- Función para generar HTML del ranking (Top 15) ---
-function generateRankingHTML(matches) {
-    if (!matches || matches.length === 0) {
+// --- Función para generar HTML del ranking corregida ---
+function generateRankingHTML(usersData) {
+    if (!usersData || usersData.length === 0) {
         return '<tr><td colspan="5" class="empty-state">No hay datos disponibles</td></tr>';
     }
 
-    // Agrupar por jugador para obtener sus mejores estadísticas de Crack Rápido
-    const playerStats = {};
-    
-    matches.forEach(match => {
-        const playerName = match.playerName || 'Anónimo';
-        const score = match.score || 0;
-        const correctAnswers = match.correctAnswers || 0;
-        const totalQuestions = match.totalQuestions || 20;
-        const maxStreak = match.maxStreak || 0;
-        const averageTime = match.averageTime || 5;
-        const accuracy = match.accuracy || ((correctAnswers / totalQuestions) * 100);
-        const completed = match.completed || match.result === 'completed';
-        
-        if (!playerStats[playerName]) {
-            playerStats[playerName] = {
-                playerName: playerName,
-                totalGames: 0,
-                completedGames: 0,
-                bestScore: 0,
-                bestAccuracy: 0,
-                bestStreak: 0,
-                bestAverageTime: Infinity,
-                totalScore: 0,
-                totalCorrectAnswers: 0,
-                totalQuestions: 0,
-                totalTime: 0,
-                lastPlayed: null
-            };
-        }
-        
-        const stats = playerStats[playerName];
-        stats.totalGames++;
-        
-        if (completed) {
-            stats.completedGames++;
-        }
-        
-        // Actualizar mejores estadísticas
-        stats.bestScore = Math.max(stats.bestScore, score);
-        stats.bestAccuracy = Math.max(stats.bestAccuracy, accuracy);
-        stats.bestStreak = Math.max(stats.bestStreak, maxStreak);
-        
-        if (averageTime > 0 && averageTime < stats.bestAverageTime) {
-            stats.bestAverageTime = averageTime;
-        }
-        
-        // Acumular totales
-        stats.totalScore += score;
-        stats.totalCorrectAnswers += correctAnswers;
-        stats.totalQuestions += totalQuestions;
-        stats.totalTime += match.totalTime || 0;
-        
-        // Actualizar última fecha jugada
-        if (!stats.lastPlayed || (match.timestamp && match.timestamp.seconds > stats.lastPlayed.seconds)) {
-            stats.lastPlayed = match.timestamp;
-        }
-    });
+    console.log('[RANKING CR] Procesando datos de', usersData.length, 'usuarios');
 
-    // Convertir a array y calcular estadísticas finales
-    const validPlayers = Object.values(playerStats)
-        .filter(player => player.totalGames > 0)
-        .map(player => {
-            player.averageScore = player.totalGames > 0 ? Math.round(player.totalScore / player.totalGames) : 0;
-            player.overallAccuracy = player.totalQuestions > 0 ? (player.totalCorrectAnswers / player.totalQuestions) * 100 : 0;
-            player.completionRate = player.totalGames > 0 ? (player.completedGames / player.totalGames) * 100 : 0;
-            player.averageGameTime = player.totalGames > 0 ? Math.round(player.totalTime / player.totalGames) : 0;
+    // Filtrar y procesar datos con mayor flexibilidad
+    const validUsers = usersData
+        .filter(user => {
+            // Verificar múltiples fuentes de datos
+            const crackRapidoData = user.crackrapido || user.stats?.crackrapido || {};
+            const hasValidData = 
+                crackRapidoData.gamesPlayed > 0 || 
+                crackRapidoData.wins > 0 || 
+                crackRapidoData.completedGames > 0 ||
+                user.wins > 0 ||
+                user.matchesPlayed > 0;
             
-            return player;
+            return hasValidData && user.displayName;
         })
-        .sort((a, b) => {
-            // Ordenar por winRate primero, luego por mejor score, luego por mejor accuracy
-            const aWinRate = a.totalGames > 0 ? (a.completedGames / a.totalGames) * 100 : 0;
-            const bWinRate = b.totalGames > 0 ? (b.completedGames / b.totalGames) * 100 : 0;
+        .map(user => {
+            console.log('[RANKING CR] Procesando usuario:', user.displayName);
             
-            if (Math.abs(bWinRate - aWinRate) > 1) return bWinRate - aWinRate;
-            if (b.bestScore !== a.bestScore) return b.bestScore - a.bestScore;
+            // Extraer datos de múltiples fuentes
+            const crackRapidoData = user.crackrapido || user.stats?.crackrapido || {};
+            const rootData = user;
+            
+            // Unificar estadísticas
+            let totalGames = Math.max(
+                crackRapidoData.gamesPlayed || 0,
+                crackRapidoData.totalGames || 0,
+                rootData.matchesPlayed || 0
+            );
+            let completedGames = Math.max(
+                crackRapidoData.completedGames || 0,
+                crackRapidoData.wins || 0,
+                rootData.wins || 0
+            );
+            let bestScore = Math.max(
+                crackRapidoData.bestScore || 0,
+                crackRapidoData.highScore || 0,
+                rootData.totalScore || 0
+            );
+            let bestAccuracy = Math.max(
+                crackRapidoData.bestAccuracy || 0,
+                crackRapidoData.accuracy || 0
+            );
+            let totalScore = Math.max(
+                crackRapidoData.totalScore || 0,
+                rootData.totalScore || 0
+            );
+            
+            // Ajustar coherencia
+            if (totalGames < completedGames) {
+                totalGames = completedGames;
+            }
+            
+            // Calcular métricas
+            const winRate = totalGames > 0 ? (completedGames / totalGames) * 100 : 0;
+            const avgScore = totalGames > 0 ? Math.round(totalScore / totalGames) : bestScore;
+            const losses = totalGames - completedGames;
+            
+            console.log(`[RANKING CR] ${user.displayName}: ${completedGames}W/${losses}L/${totalGames}P - WinRate: ${winRate.toFixed(1)}%`);
+            
+            return {
+                id: user.id,
+                displayName: user.displayName,
+                totalGames: totalGames,
+                completedGames: completedGames,
+                losses: losses,
+                bestScore: bestScore,
+                bestAccuracy: bestAccuracy,
+                totalScore: totalScore,
+                avgScore: avgScore,
+                winRate: winRate,
+                lastPlayed: user.lastPlayed || crackRapidoData.lastPlayed
+            };
+        })
+        .filter(user => user.totalGames > 0) // Solo usuarios con al menos 1 partida
+        .sort((a, b) => {
+            // ORDEN CORREGIDO: Por winrate primero, luego por best score, luego por accuracy
+            const winRateDiff = b.winRate - a.winRate;
+            if (Math.abs(winRateDiff) > 0.1) return winRateDiff;
+            
+            const scoreDiff = b.bestScore - a.bestScore;
+            if (scoreDiff !== 0) return scoreDiff;
+            
             return b.bestAccuracy - a.bestAccuracy;
         })
         .slice(0, RANKING_LIMIT);
 
-    if (validPlayers.length === 0) {
+    if (validUsers.length === 0) {
         return '<tr><td colspan="5" class="empty-state">No hay jugadores registrados aún</td></tr>';
     }
 
-    return validPlayers.map((player, index) => {
-        const playerLevel = getPlayerLevel(player.bestScore, player.bestAccuracy);
+    console.log('[RANKING CR] Top usuarios ordenados por winrate:');
+    validUsers.slice(0, 5).forEach((user, i) => {
+        console.log(`${i + 1}. ${user.displayName}: ${user.winRate.toFixed(1)}% (${user.completedGames}/${user.totalGames})`);
+    });
+
+    return validUsers.map((user, index) => {
+        const playerLevel = getPlayerLevel(user.bestScore, user.bestAccuracy, user.winRate);
         const isTopPlayer = index < 3;
         const position = index + 1;
         
         return `
-            <tr class="ranking-row ${isTopPlayer ? 'top-player' : ''}" data-score="${player.bestScore}">
+            <tr class="ranking-row ${isTopPlayer ? 'top-player' : ''}" data-score="${user.bestScore}">
                 <td class="ranking-position">
                     <div class="position-number">${position}</div>
                     <div class="position-icon">
@@ -172,28 +184,26 @@ function generateRankingHTML(matches) {
                     </div>
                 </td>
                 <td class="player-info">
-                    <div class="player-name">${player.playerName}</div>
+                    <div class="player-name">${user.displayName}</div>
                     <div class="player-level" style="color: ${playerLevel.color}">
                         ${playerLevel.icon} ${playerLevel.level}
                     </div>
-                    <div class="player-stats-summary">${player.totalGames} partidas • ${player.completionRate.toFixed(0)}% completadas</div>
+                    <div class="player-stats-summary">${user.totalGames} partidas • ${user.winRate.toFixed(1)}% completadas</div>
                 </td>
                 <td class="score-info">
-                    <div class="main-score">${player.bestScore.toLocaleString()}</div>
+                    <div class="main-score">${user.bestScore.toLocaleString()}</div>
                     <div class="secondary-stat">Mejor Score</div>
-                    <div class="score-breakdown">Prom: ${player.averageScore.toLocaleString()}</div>
+                    <div class="score-breakdown">Prom: ${user.avgScore.toLocaleString()}</div>
                 </td>
                 <td class="stat-cell">
-                    <div class="primary-stat accuracy-stat">${player.bestAccuracy.toFixed(0)}%</div>
+                    <div class="primary-stat accuracy-stat">${user.bestAccuracy.toFixed(0)}%</div>
                     <div class="secondary-stat">Precisión máx.</div>
-                    <div class="avg-accuracy">Prom: ${player.overallAccuracy.toFixed(0)}%</div>
+                    <div class="wins-stat">${user.completedGames} completadas</div>
                 </td>
                 <td class="stat-cell hide-mobile">
-                    <div class="primary-stat streak-stat">${player.bestStreak}</div>
-                    <div class="secondary-stat">Racha máx.</div>
-                    ${player.bestStreak >= 15 ? '<div class="streak-badge">🚀 ÉPICO</div>' :
-                      player.bestStreak >= 10 ? '<div class="streak-badge">🔥 FUEGO</div>' : 
-                      player.bestStreak >= 5 ? '<div class="streak-badge">⚡ RÁPIDO</div>' : ''}
+                    <div class="primary-stat games-stat">${user.totalGames}</div>
+                    <div class="secondary-stat">partidas</div>
+                    <div class="completion-rate">${user.winRate.toFixed(1)}% éxito</div>
                 </td>
             </tr>
         `;
@@ -250,7 +260,7 @@ function generateHistoryHTML(matches) {
         const effectiveScore = calculateEffectiveScore({
             score, correctAnswers, totalQuestions, maxStreak, averageTime, accuracy, completed
         });
-        const playerLevel = getPlayerLevel(effectiveScore, accuracy);
+        const playerLevel = getPlayerLevel(effectiveScore, accuracy, (completed ? 100 : 0));
         const isTimeoutDefeat = match.result === 'timeout' || match.timeOut === true || (!completed && totalTime >= 120);
         
         // Determinar tipo de finalización
@@ -384,60 +394,50 @@ function generateHistoryHTML(matches) {
 // --- Configurar listener en tiempo real para el ranking ---
 function setupRankingListener() {
     try {
-        const matchesRef = collection(db, 'matches');
-        const rankingQuery = query(
-            matchesRef,
-            orderBy('timestamp', 'desc'),
-            limit(200) // Obtener más datos para mejor selección
-        );
+        if (!window.firebase || !window.firebase.firestore) {
+            console.error('[RANKING CR] Firebase no está disponible');
+            if (rankingBody) {
+                rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+            }
+            return;
+        }
 
-        const unsubscribe = onSnapshot(rankingQuery, (snapshot) => {
-            console.log('[RANKING CR] Datos recibidos:', snapshot.size, 'documentos');
+        const db = window.firebase.firestore();
+        const usersRef = db.collection('users');
+        
+        const unsubscribe = usersRef.onSnapshot((snapshot) => {
+            console.log('[RANKING CR] Datos recibidos:', snapshot.size, 'usuarios');
             
             if (snapshot.empty) {
-                console.log('[RANKING CR] No hay datos de matches');
+                console.log('[RANKING CR] No hay datos de usuarios');
                 if (rankingBody) {
-                    rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">No hay partidas registradas aún</td></tr>';
-                }
-                if (historyList) {
-                    historyList.innerHTML = '<div class="empty-state">No hay historial disponible</div>';
+                    rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">No hay jugadores registrados aún</td></tr>';
                 }
                 return;
             }
 
-            const matches = [];
+            const usersData = [];
             
             snapshot.forEach(doc => {
                 const data = doc.data();
-                console.log('[RANKING CR] Procesando documento:', data);
                 
-                // Filtrar SOLO los matches de Crack Rápido
-                if (data.gameType === 'crackrapido' || data.gameType === 'crack-rapido' || data.gameType === 'CrackRapido' ||
-                    data.gameMode === 'CrackRapido' || data.gameMode === 'crackrapido' || data.gameMode === 'crack-rapido') {
-                    const processedMatch = {
-                        ...data,
-                        playerName: data.playerName || data.displayName || 'Anónimo'
-                    };
-                    
-                    matches.push(processedMatch);
-                    console.log('[RANKING CR] Match agregado:', processedMatch);
+                // Incluir solo usuarios con displayName válido
+                if (data.displayName) {
+                    usersData.push({
+                        id: doc.id,
+                        displayName: data.displayName,
+                        ...data
+                    });
                 }
             });
 
-            console.log(`[RANKING CR] Matches procesados: ${matches.length}`);
+            console.log(`[RANKING CR] Usuarios procesados: ${usersData.length}`);
 
             // Actualizar ranking (Top 15)
             if (rankingBody) {
-                const rankingHTML = generateRankingHTML(matches);
+                const rankingHTML = generateRankingHTML(usersData);
                 rankingBody.innerHTML = rankingHTML;
                 console.log('[RANKING CR] Tabla actualizada - Top', RANKING_LIMIT);
-            }
-
-            // Actualizar historial
-            if (historyList) {
-                const historyHTML = generateHistoryHTML(matches);
-                historyList.innerHTML = historyHTML;
-                console.log('[RANKING CR] Historial actualizado');
             }
 
         }, (error) => {
@@ -446,7 +446,6 @@ function setupRankingListener() {
                 rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">Error al cargar el ranking. Reintentando...</td></tr>';
             }
             
-            // Reintentar después de 3 segundos
             setTimeout(() => {
                 console.log('[RANKING CR] Reintentando configuración...');
                 setupRankingListener();
@@ -464,6 +463,71 @@ function setupRankingListener() {
     }
 }
 
+// --- Configurar listener para historial ---
+function setupHistoryListener() {
+    try {
+        if (!window.firebase || !window.firebase.firestore) {
+            console.error('[RANKING CR] Firebase no está disponible para historial');
+            if (historyList) {
+                historyList.innerHTML = '<div class="empty-state">Error de conexión. Recargá la página.</div>';
+            }
+            return;
+        }
+
+        const db = window.firebase.firestore();
+        const matchesRef = db.collection('matches');
+        const historyQuery = matchesRef
+            .orderBy('timestamp', 'desc')
+            .limit(HISTORY_LIMIT);
+
+        const unsubscribe = historyQuery.onSnapshot((snapshot) => {
+            console.log('[HISTORY CR] Datos recibidos:', snapshot.size, 'partidas');
+            
+            if (snapshot.empty) {
+                console.log('[HISTORY CR] No hay datos de partidas');
+                if (historyList) {
+                    historyList.innerHTML = '<div class="empty-state">No hay historial disponible</div>';
+                }
+                return;
+            }
+
+            const matches = [];
+            
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                matches.push({
+                    id: doc.id,
+                    ...data
+                });
+            });
+
+            console.log(`[HISTORY CR] Partidas procesadas: ${matches.length}`);
+
+            // Actualizar historial
+            if (historyList) {
+                const historyHTML = generateHistoryHTML(matches);
+                historyList.innerHTML = historyHTML;
+                console.log('[HISTORY CR] Historial actualizado');
+            }
+
+        }, (error) => {
+            console.error('[HISTORY CR] Error en el listener:', error);
+            if (historyList) {
+                historyList.innerHTML = '<div class="empty-state">Error al cargar el historial</div>';
+            }
+        });
+
+        console.log('[HISTORY CR] Listener configurado correctamente');
+        return unsubscribe;
+
+    } catch (error) {
+        console.error('[HISTORY CR] Error al configurar listener:', error);
+        if (historyList) {
+            historyList.innerHTML = '<div class="empty-state">Error de conexión</div>';
+        }
+    }
+}
+
 // --- Función para mostrar mensaje de carga inicial ---
 function showLoadingState() {
     if (rankingBody) {
@@ -472,7 +536,7 @@ function showLoadingState() {
                 <td colspan="5" class="loading-state">
                     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                         <div style="width: 12px; height: 12px; background: var(--crackrapido-primary); border-radius: 50%; animation: pulse 1.5s infinite;"></div>
-                        <span>Buscando a los cracks más rápidos...</span>
+                        <span>Buscando a los más veloces...</span>
                     </div>
                 </td>
             </tr>
@@ -484,7 +548,7 @@ function showLoadingState() {
             <div class="loading-state">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                     <div style="width: 12px; height: 12px; background: var(--crackrapido-primary); border-radius: 50%; animation: pulse 1.5s infinite;"></div>
-                    <span>Revisando tus partidas más veloces...</span>
+                    <span>Revisando récords...</span>
                 </div>
             </div>
         `;
@@ -498,15 +562,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mostrar estado de carga
     showLoadingState();
     
-    // Configurar listener con demora para asegurar inicialización de Firebase
-    setTimeout(() => {
-        if (db) {
+    // Esperar a que Firebase esté disponible
+    function initializeWhenReady() {
+        if (window.firebase && window.firebase.firestore) {
+            console.log('[RANKING CR] Firebase disponible, configurando listeners...');
             setupRankingListener();
+            setupHistoryListener();
         } else {
-            console.error('[RANKING CR] Firebase no está inicializado');
-            if (rankingBody) {
-                rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
-            }
+            console.log('[RANKING CR] Esperando Firebase...');
+            setTimeout(initializeWhenReady, 1000);
         }
-    }, 1000);
+    }
+    
+    initializeWhenReady();
 });

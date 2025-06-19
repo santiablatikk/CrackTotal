@@ -1,16 +1,5 @@
-// Importar funciones de Firestore y la instancia db inicializada
-import { db } from './firebase-init.js';
-import {
-    collection,
-    query,
-    orderBy,
-    limit,
-    onSnapshot,
-    where,
-    Timestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-console.log('Ranking Mentiroso script loaded - Sistema mejorado');
+// Importar funciones de Firestore - Versión compatible
+console.log('Ranking Mentiroso script loaded - Sistema mejorado v2.0');
 
 // --- Elementos del DOM ---
 const rankingBody = document.getElementById('ranking-body');
@@ -18,65 +7,73 @@ const historyList = document.getElementById('history-list');
 
 // --- Configuración ---
 const RANKING_LIMIT = 15; // Solo mostrar top 15
-const HISTORY_LIMIT = 15; // Últimas 15 partidas en historial
+const HISTORY_LIMIT = 20; // Más partidas en historial
 
-// --- Función para formatear fecha compacta para móvil ---
+// --- Función para formatear fecha compacta ---
 function formatCompactDate(firebaseTimestamp) {
     if (!firebaseTimestamp) return '---';
-    const date = firebaseTimestamp.toDate();
+    
+    let date;
+    if (firebaseTimestamp.toDate) {
+        date = firebaseTimestamp.toDate();
+    } else if (firebaseTimestamp.seconds) {
+        date = new Date(firebaseTimestamp.seconds * 1000);
+    } else {
+        date = new Date(firebaseTimestamp);
+    }
+    
     const now = new Date();
     const diffMs = now - date;
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
     
-    if (diffMins < 1) return 'Ahora';
     if (diffMins < 60) return `${diffMins}min`;
     if (diffHours < 24) return `${diffHours}h`;
     if (diffDays < 7) return `${diffDays}d`;
     return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
 }
 
-// --- Sistema de puntuación mejorado para Mentiroso ---
+// --- Sistema de Rating Mejorado para Mentiroso ---
 function calculateMentirosoRating(stats) {
-    if (!stats.gamesPlayed || stats.gamesPlayed === 0) return 0;
+    const baseRating = 1000;
+    const gamesPlayed = stats.gamesPlayed || 0;
+    const wins = stats.wins || 0;
+    const losses = stats.losses || 0;
+    const successfulDeceptions = stats.successfulDeceptions || 0;
+    const liesDetected = stats.liesDetected || 0;
+    const perfectRounds = stats.perfectRounds || 0;
+    const timeouts = stats.timeouts || 0;
+    const falseAccusations = stats.falseAccusations || 0;
+    const totalPointsWon = stats.totalPointsWon || 0;
     
-    // Puntos base por victoria/derrota
-    const baseScore = (stats.wins * 100) - (stats.losses * 50);
+    if (gamesPlayed === 0) return baseRating;
     
-    // Bonificaciones por habilidades específicas de Mentiroso
-    const deceptionBonus = (stats.successfulDeceptions || 0) * 25; // Engaños exitosos
-    const detectionBonus = (stats.liesDetected || 0) * 30; // Mentiras detectadas
-    const perfectRoundsBonus = (stats.perfectRounds || 0) * 50; // Rondas perfectas (18/18)
+    // Factores de cálculo mejorados
+    const winRateBonus = (wins / gamesPlayed) * 2000;
+    const deceptionBonus = gamesPlayed > 0 ? (successfulDeceptions / gamesPlayed) * 800 : 0;
+    const detectionBonus = gamesPlayed > 0 ? (liesDetected / gamesPlayed) * 800 : 0;
+    const perfectBonus = gamesPlayed > 0 ? (perfectRounds / gamesPlayed) * 1000 : 0;
+    const experienceBonus = Math.min(gamesPlayed * 50, 1000);
+    const pointsBonus = Math.min(totalPointsWon * 2, 2000);
     
     // Penalizaciones
-    const timeoutPenalty = (stats.timeouts || 0) * 15; // Penalización por timeout
-    const falseAccusationPenalty = (stats.falseAccusations || 0) * 20; // Acusaciones falsas
+    const timeoutPenalty = timeouts * 100;
+    const falseAccusationPenalty = falseAccusations * 50;
     
-    // Multiplicador por consistencia (win rate)
-    const winRate = stats.gamesPlayed > 0 ? (stats.wins / stats.gamesPlayed) * 100 : 0;
-    const consistencyMultiplier = 1 + (winRate * 0.5); // Hasta 50% bonus por consistencia
-    
-    // Multiplicador por experiencia (más juegos = ligeramente mejor rating)
-    const experienceMultiplier = 1 + Math.min(stats.gamesPlayed * 0.01, 0.3); // Hasta 30% bonus
-    
-    const finalRating = Math.max(0, 
-        (baseScore + deceptionBonus + detectionBonus + perfectRoundsBonus - timeoutPenalty - falseAccusationPenalty) 
-        * consistencyMultiplier * experienceMultiplier
+    const finalRating = Math.max(
+        baseRating + winRateBonus + deceptionBonus + detectionBonus + perfectBonus + experienceBonus + pointsBonus - timeoutPenalty - falseAccusationPenalty,
+        500
     );
     
     return Math.round(finalRating);
 }
 
-// --- Función para obtener nivel del jugador basado en rating y estadísticas ---
+// --- Función para obtener nivel del jugador ---
 function getPlayerLevel(rating, stats) {
     const winRate = stats.gamesPlayed > 0 ? (stats.wins / stats.gamesPlayed) * 100 : 0;
-    const avgPerfection = stats.gamesPlayed > 0 ? ((stats.perfectRounds || 0) / stats.gamesPlayed) * 100 : 0;
+    const avgPerfection = stats.gamesPlayed > 0 ? (stats.perfectRounds / stats.gamesPlayed) * 100 : 0;
     
-    // Niveles basados en rating y performance
-    if (rating >= 8000 && winRate >= 85 && avgPerfection >= 30) {
-        return { level: "MAESTRO DEL ENGAÑO", color: "#ff6b6b", icon: "👑", description: "Domina el arte del engaño" };
-    }
     if (rating >= 6000 && winRate >= 80 && avgPerfection >= 20) {
         return { level: "GRAN EMBAUCADOR", color: "#ff8e53", icon: "🎭", description: "Experto en mentiras y detección" };
     }
@@ -101,20 +98,44 @@ function generateRankingHTML(usersData) {
         return '<tr><td colspan="6" class="empty-state">No hay datos disponibles</td></tr>';
     }
 
+    console.log('[RANKING MENTIROSO] Procesando datos de', usersData.length, 'usuarios');
+
     // Procesar datos de usuarios con el nuevo sistema mejorado
     const validUsers = usersData
         .filter(user => {
+            // Verificar múltiples fuentes de datos
             const mentirosoData = user.mentiroso || user.stats?.mentiroso || {};
-            return mentirosoData.gamesPlayed > 0 || mentirosoData.wins > 0;
+            const hasValidData = 
+                mentirosoData.gamesPlayed > 0 || 
+                mentirosoData.wins > 0 || 
+                user.wins > 0 ||
+                user.matchesPlayed > 0;
+            
+            return hasValidData && user.displayName;
         })
         .map(user => {
-            const mentirosoData = user.mentiroso || user.stats?.mentiroso || {};
+            console.log('[RANKING MENTIROSO] Procesando usuario:', user.displayName);
             
-            // Extraer estadísticas completas
+            // Extraer datos de múltiples fuentes
+            const mentirosoData = user.mentiroso || user.stats?.mentiroso || {};
+            const rootData = user;
+            
+            // Unificar estadísticas
             const stats = {
-                gamesPlayed: mentirosoData.gamesPlayed || mentirosoData.matches || 0,
-                wins: mentirosoData.wins || 0,
-                losses: mentirosoData.losses || 0,
+                gamesPlayed: Math.max(
+                    mentirosoData.gamesPlayed || 0,
+                    mentirosoData.matches || 0,
+                    rootData.matchesPlayed || 0,
+                    (rootData.wins || 0) + (rootData.losses || 0)
+                ),
+                wins: Math.max(
+                    mentirosoData.wins || 0,
+                    rootData.wins || 0
+                ),
+                losses: Math.max(
+                    mentirosoData.losses || 0,
+                    rootData.losses || 0
+                ),
                 successfulDeceptions: mentirosoData.successfulDeceptions || 0,
                 liesDetected: mentirosoData.liesDetected || 0,
                 perfectRounds: mentirosoData.perfectRounds || 0,
@@ -124,23 +145,28 @@ function generateRankingHTML(usersData) {
                 avgGameDuration: mentirosoData.avgGameDuration || 0
             };
             
-            // Calcular rating usando el sistema mejorado
+            // Ajustar coherencia
+            if (stats.gamesPlayed < stats.wins + stats.losses) {
+                stats.gamesPlayed = stats.wins + stats.losses;
+            }
+            
+            // Calcular métricas
             const rating = calculateMentirosoRating(stats);
             const winRate = stats.gamesPlayed > 0 ? (stats.wins / stats.gamesPlayed) * 100 : 0;
             const playerLevel = getPlayerLevel(rating, stats);
             
-            // Calcular estadísticas derivadas específicas del juego
             const deceptionRate = stats.gamesPlayed > 0 ? (stats.successfulDeceptions / stats.gamesPlayed) * 100 : 0;
             const detectionRate = stats.gamesPlayed > 0 ? (stats.liesDetected / stats.gamesPlayed) * 100 : 0;
             const perfectRate = stats.gamesPlayed > 0 ? (stats.perfectRounds / stats.gamesPlayed) * 100 : 0;
             const reliability = stats.gamesPlayed > 0 ? Math.max(0, 100 - ((stats.timeouts + stats.falseAccusations) / stats.gamesPlayed) * 100) : 100;
-            
-            // Calcular promedio de puntos por juego
             const avgPointsPerGame = stats.gamesPlayed > 0 ? Math.round(stats.totalPointsWon / stats.gamesPlayed) : 0;
+            const skillBalance = Math.round((deceptionRate + detectionRate) / 2);
+            
+            console.log(`[RANKING MENTIROSO] ${user.displayName}: ${stats.wins}W/${stats.losses}L/${stats.gamesPlayed}P - WinRate: ${winRate.toFixed(1)}%`);
             
             return {
                 id: user.id,
-                displayName: user.displayName || 'Anónimo',
+                displayName: user.displayName,
                 rating: rating,
                 stats: stats,
                 winRate: winRate,
@@ -150,14 +176,19 @@ function generateRankingHTML(usersData) {
                 perfectRate: perfectRate,
                 reliability: reliability,
                 avgPointsPerGame: avgPointsPerGame,
-                skillBalance: Math.round((deceptionRate + detectionRate) / 2), // Balance entre engañar y detectar
+                skillBalance: skillBalance,
                 lastPlayed: user.lastPlayed || mentirosoData.lastPlayed
             };
         })
+        .filter(user => user.stats.gamesPlayed > 0) // Solo usuarios con al menos 1 partida
         .sort((a, b) => {
-            // Ordenar por win rate primero, luego por rating, luego por balance de habilidades
-            if (Math.abs(b.winRate - a.winRate) > 1) return b.winRate - a.winRate;
-            if (b.rating !== a.rating) return b.rating - a.rating;
+            // ORDEN CORREGIDO: Por win rate primero, luego por rating, luego por balance de habilidades
+            const winRateDiff = b.winRate - a.winRate;
+            if (Math.abs(winRateDiff) > 0.1) return winRateDiff;
+            
+            const ratingDiff = b.rating - a.rating;
+            if (ratingDiff !== 0) return ratingDiff;
+            
             return b.skillBalance - a.skillBalance;
         })
         .slice(0, RANKING_LIMIT);
@@ -165,6 +196,11 @@ function generateRankingHTML(usersData) {
     if (validUsers.length === 0) {
         return '<tr><td colspan="6" class="empty-state">No hay jugadores registrados aún</td></tr>';
     }
+
+    console.log('[RANKING MENTIROSO] Top usuarios ordenados por winrate:');
+    validUsers.slice(0, 5).forEach((user, i) => {
+        console.log(`${i + 1}. ${user.displayName}: ${user.winRate.toFixed(1)}% (${user.stats.wins}/${user.stats.gamesPlayed})`);
+    });
 
     return validUsers.map((user, index) => {
         const isTopPlayer = index < 3;
@@ -214,7 +250,7 @@ function generateRankingHTML(usersData) {
                 <td class="stat-cell">
                     <div class="primary-stat">${user.stats.gamesPlayed}</div>
                     <div class="secondary-stat">juegos</div>
-                    <div class="win-percentage">${user.winRate.toFixed(0)}% wins</div>
+                    <div class="win-percentage">${user.winRate.toFixed(1)}% wins</div>
                 </td>
                 <td class="stat-cell hide-mobile">
                     <div class="primary-stat deception-stat">${user.stats.successfulDeceptions}</div>
@@ -580,9 +616,18 @@ function generateHistoryHTML(matches) {
 // --- Configurar listener en tiempo real para el ranking ---
 function setupRankingListener() {
     try {
-        const usersRef = collection(db, 'users');
+        if (!window.firebase || !window.firebase.firestore) {
+            console.error('[RANKING MENTIROSO] Firebase no está disponible');
+            if (rankingBody) {
+                rankingBody.innerHTML = '<tr><td colspan="6" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+            }
+            return;
+        }
+
+        const db = window.firebase.firestore();
+        const usersRef = db.collection('users');
         
-        const unsubscribe = onSnapshot(usersRef, (snapshot) => {
+        const unsubscribe = usersRef.onSnapshot((snapshot) => {
             console.log('[RANKING MENTIROSO] Datos recibidos:', snapshot.size, 'usuarios');
             
             if (snapshot.empty) {
@@ -597,8 +642,8 @@ function setupRankingListener() {
             
             snapshot.forEach(doc => {
                 const data = doc.data();
-                console.log('[RANKING MENTIROSO] Procesando usuario:', data);
                 
+                // Incluir solo usuarios con displayName válido
                 if (data.displayName) {
                     usersData.push({
                         id: doc.id,
@@ -643,14 +688,21 @@ function setupRankingListener() {
 // --- Configurar listener para historial ---
 function setupHistoryListener() {
     try {
-        const matchesRef = collection(db, 'matches');
-        const historyQuery = query(
-            matchesRef,
-            orderBy('timestamp', 'desc'),
-            limit(100)
-        );
+        if (!window.firebase || !window.firebase.firestore) {
+            console.error('[RANKING MENTIROSO] Firebase no está disponible para historial');
+            if (historyList) {
+                historyList.innerHTML = '<div class="empty-state">Error de conexión. Recargá la página.</div>';
+            }
+            return;
+        }
 
-        const unsubscribe = onSnapshot(historyQuery, (snapshot) => {
+        const db = window.firebase.firestore();
+        const matchesRef = db.collection('matches');
+        const historyQuery = matchesRef
+            .orderBy('timestamp', 'desc')
+            .limit(HISTORY_LIMIT);
+
+        const unsubscribe = historyQuery.onSnapshot((snapshot) => {
             console.log('[HISTORY MENTIROSO] Datos recibidos:', snapshot.size, 'partidas');
             
             if (snapshot.empty) {
@@ -665,16 +717,10 @@ function setupHistoryListener() {
             
             snapshot.forEach(doc => {
                 const data = doc.data();
-                console.log('[HISTORY MENTIROSO] Procesando partida:', data);
-                
-                // Filtrar SOLO partidas de Mentiroso
-                if (data.gameType === 'mentiroso' || data.gameType === 'Mentiroso' || 
-                    data.gameMode === 'Mentiroso' || data.gameMode === 'mentiroso') {
-                    matches.push({
-                        id: doc.id,
-                        ...data
-                    });
-                }
+                matches.push({
+                    id: doc.id,
+                    ...data
+                });
             });
 
             console.log(`[HISTORY MENTIROSO] Partidas procesadas: ${matches.length}`);
@@ -712,7 +758,7 @@ function showLoadingState() {
                 <td colspan="6" class="loading-state">
                     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                         <div style="width: 12px; height: 12px; background: var(--mentiroso-primary); border-radius: 50%; animation: pulse 1.5s infinite;"></div>
-                        <span>Buscando a los mejores mentirosos...</span>
+                        <span>Buscando a los embaucadores...</span>
                     </div>
                 </td>
             </tr>
@@ -724,7 +770,7 @@ function showLoadingState() {
             <div class="loading-state">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                     <div style="width: 12px; height: 12px; background: var(--mentiroso-primary); border-radius: 50%; animation: pulse 1.5s infinite;"></div>
-                    <span>Revisando las últimas mentiras...</span>
+                    <span>Revisando partidas...</span>
                 </div>
             </div>
         `;
@@ -738,16 +784,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mostrar estado de carga
     showLoadingState();
     
-    // Configurar listeners con demora para asegurar inicialización de Firebase
-    setTimeout(() => {
-    if (db) {
+    // Esperar a que Firebase esté disponible
+    function initializeWhenReady() {
+        if (window.firebase && window.firebase.firestore) {
+            console.log('[RANKING MENTIROSO] Firebase disponible, configurando listeners...');
             setupRankingListener();
             setupHistoryListener();
-    } else {
-            console.error('[RANKING MENTIROSO] Firebase no está inicializado');
-            if (rankingBody) {
-                rankingBody.innerHTML = '<tr><td colspan="6" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
-            }
+        } else {
+            console.log('[RANKING MENTIROSO] Esperando Firebase...');
+            setTimeout(initializeWhenReady, 1000);
         }
-    }, 1000);
+    }
+    
+    initializeWhenReady();
 }); 

@@ -580,7 +580,7 @@
         "respuesta": "Bayer Leverkusen"
       },
       {
-        "pregunta": "¿Apellido del mediocampista portugués que juega en el Manchester City, conocido por su creatividad y visión de juego?",
+        "pregunta": "¿Mediocampista portugués que juega en el Manchester City, conocido por su creatividad y visión de juego?",
         "respuesta": "Bernardo Silva"
       },
       {
@@ -3171,7 +3171,7 @@
     "preguntas": [
       {
         "pregunta": "CONTIENE L: Mediocampista portugués del Man City.",
-        "respuesta": "Bernardo Silva"
+        "respuesta": ""
       },
       {
         "pregunta": "CONTIENE L: Futbolista portugués, figura histórica del Real Madrid, juega en Al Nassr.",

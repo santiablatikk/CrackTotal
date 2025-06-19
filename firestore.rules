@@ -3,140 +3,96 @@ service cloud.firestore {
   match /databases/{database}/documents {
     
     // ===============================
-    // FUNCIONES AUXILIARES DE VALIDACIÓN
+    // FUNCIONES AUXILIARES DE VALIDACIÓN SIMPLIFICADAS
     // ===============================
     
-    // Función para validar que un userId es válido (formato más flexible)
+    // Función para validar que un userId es válido
     function isValidUserId(userId) {
-      return userId is string && 
-             userId.size() > 2 && 
-             userId.size() < 100;
-      // Removimos la restricción de formato para ser más flexibles con diferentes tipos de IDs
+      return userId is string && userId.size() > 0 && userId.size() < 200;
     }
     
     // Función para validar que un displayName es válido
     function isValidDisplayName(name) {
-      return name is string && 
-             name.size() > 0 && 
-             name.size() <= 50;
+      return name is string && name.size() > 0 && name.size() <= 100;
     }
     
     // Función para validar tipos de juegos válidos
     function isValidGameType(gameType) {
-      return gameType in ['pasalache', 'quiensabemas', 'mentiroso', 'crackrapido'];
-    }
-    
-    // Función para validar resultados válidos
-    function isValidResult(result) {
-      return result in ['victory', 'defeat', 'draw', 'timeout', 'incomplete', 'completed'];
+      return gameType in ['pasalache', 'quiensabemas', 'mentiroso', 'crackrapido', 'pasala-che', 'quien-sabe-mas', 'crack-rapido'];
     }
     
     // ===============================
-    // REGLAS PARA USUARIOS
+    // REGLAS PARA USUARIOS - MÁS PERMISIVAS
     // ===============================
     match /users/{userId} {
-      // Permitir lectura para el ranking y acceso público a perfiles
+      // Permitir lectura completa para rankings públicos
       allow read: if true;
       
-      // Permitir escritura más amplia para manejar diferentes formatos de IDs y actualización de estadísticas
-      allow create, update: if request.resource.data.keys().hasAny(['displayName', 'totalScore', 'wins', 'matchesPlayed']);
+      // Permitir escritura amplia para estadísticas de juegos
+      allow create, update: if true;
       allow delete: if false;
     }
     
     // ===============================
-    // REGLAS PARA PARTIDAS/MATCHES
+    // REGLAS PARA PARTIDAS/MATCHES - MÁS PERMISIVAS
     // ===============================
     match /matches/{matchId} {
-      // Permitir lectura para el historial y rankings
+      // Permitir lectura completa para historiales
       allow read: if true;
       
-      // Permitir escritura de matches - más permisivo para permitir guardar partidas
-      // desde diversos juegos con diferentes formatos
-      allow create, update: if request.resource.data.keys().hasAny(['gameMode', 'result', 'score']);
+      // Permitir escritura amplia para guardar partidas
+      allow create, update: if true;
       allow delete: if false;
     }
     
     // ===============================
-    // REGLAS PARA RANKINGS
+    // REGLAS PARA RANKINGS - COMPLETAMENTE PERMISIVAS
     // ===============================
     match /rankings/{rankingId} {
-      // Lectura: cualquiera puede leer rankings
-      allow read: if true;
-      
-      // Solo permitir escritura de rankings por usuarios válidos
-      allow create, update: if 
-        isValidGameType(request.resource.data.gameType) &&
-        request.resource.data.userId is string &&
-        isValidDisplayName(request.resource.data.displayName) &&
-        request.resource.data.score is int &&
-        request.resource.data.score >= 0;
-        
-      // No permitir delete de rankings
-      allow delete: if false;
+      allow read, write: if true;
     }
     
-    // Ranking específico para cada juego
+    // Rankings específicos por juego - más permisivos
     match /rankings_mentiroso/{rankingId} {
-      allow read: if true;
-      allow create, update: if request.auth != null;
-      allow delete: if false;
+      allow read, write: if true;
     }
     
     match /rankings_quiensabemas/{rankingId} {
-      allow read: if true;
-      allow create, update: if request.auth != null;
-      allow delete: if false;
+      allow read, write: if true;
     }
     
     match /rankings_crackrapido/{rankingId} {
-      allow read: if true;
-      allow create, update: if request.auth != null;
-      allow delete: if false;
+      allow read, write: if true;
+    }
+    
+    match /rankings_pasalache/{rankingId} {
+      allow read, write: if true;
     }
     
     // ===============================
-    // REGLAS PARA HISTORIAL DE PARTIDAS POR JUEGO
+    // REGLAS PARA HISTORIAL DE PARTIDAS - PERMISIVAS
     // ===============================
     match /history_mentiroso/{historyId} {
-      allow read: if true;
-      allow create, update: if request.auth != null;
-      allow delete: if false;
+      allow read, write: if true;
     }
     
     match /history_quiensabemas/{historyId} {
-      allow read: if true;
-      allow create, update: if request.auth != null;
-      allow delete: if false;
+      allow read, write: if true;
     }
     
     match /history_crackrapido/{historyId} {
-      allow read: if true;
-      allow create, update: if request.auth != null;
-      allow delete: if false;
+      allow read, write: if true;
     }
     
     match /history_pasalache/{historyId} {
-      allow read: if true;
-      allow create, update: if request.auth != null;
-      allow delete: if false;
+      allow read, write: if true;
     }
     
     // ===============================
-    // REGLAS PARA LOGROS
+    // REGLAS PARA LOGROS - PERMISIVAS
     // ===============================
     match /achievements/{achievementId} {
-      // Lectura: cualquiera puede leer logros
-      allow read: if true;
-      
-      // Creación/actualización: solo por usuarios válidos para sus propios logros
-      allow create, update: if 
-        request.resource.data.userId is string &&
-        request.resource.data.achievementType is string &&
-        request.resource.data.achievementType.size() > 0 &&
-        request.resource.data.gameType is string &&
-        request.resource.data.unlockedAt != null;
-        
-      allow delete: if false;
+      allow read, write: if true;
     }
     
     // ===============================
@@ -144,60 +100,50 @@ service cloud.firestore {
     // ===============================
     match /gameConfig/{configId} {
       allow read: if true;
-      allow write: if false; // Solo administradores deberían escribir aquí
+      allow write: if true; // Más permisivo para desarrollo
     }
     
     // ===============================
-    // REGLAS PARA SALAS MULTIJUGADOR
+    // REGLAS PARA SALAS MULTIJUGADOR - PERMISIVAS
     // ===============================
     match /rooms/{roomId} {
-      // Lectura: cualquiera puede leer salas activas
-      allow read: if true;
-      
-      // Creación: permitir crear salas con datos válidos
-      allow create: if 
-        request.resource.data.keys().hasAll(['gameType', 'createdBy', 'createdAt', 'status']) &&
-        isValidGameType(request.resource.data.gameType) &&
-        request.resource.data.createdBy is string &&
-        request.resource.data.status in ['waiting', 'playing', 'finished'];
-      
-      // Actualización: permitir actualizar estado y jugadores
-      allow update: if 
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'players', 'currentTurn', 'lastActivity']) &&
-        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['status']) ||
-         request.resource.data.status in ['waiting', 'playing', 'finished']);
-      
-      // Permitir eliminar salas después de cierto tiempo (para limpieza)
-      allow delete: if resource.data.status == 'finished';
+      allow read, write: if true;
     }
     
     // ===============================
-    // REGLA DE DENEGACIÓN POR DEFECTO
+    // REGLAS PARA ESTADÍSTICAS DE JUEGOS
     // ===============================
-    // Reglas más permisivas para permitir operaciones en desarrollo
-    match /{document=**} {
-      allow read: if true;
-      // Permitir escritura a cualquier colección no especificada (más permisivo)
-      allow write: if true;
+    match /game_stats/{statId} {
+      allow read, write: if true;
     }
-  }
-}
-
-// INSTRUCCIONES PARA APLICAR ESTAS REGLAS:
-// 1. Copiar este contenido
-// 2. Ir a Firebase Console > Firestore Database > Rules
-// 3. Pegar estas reglas y hacer "Publish"
-// 4. También habilitar "Authentication" > "Sign-in method" > "Anonymous" (habilitado)
-
-// REGLAS MÁS PERMISIVAS PARA DESARROLLO (opcional):
-// Si sigues teniendo problemas, puedes usar temporalmente estas reglas:
-/*
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
+    
+    // Estadísticas por usuario
+    match /user_stats/{userId} {
+      allow read, write: if true;
+    }
+    
+    // ===============================
+    // REGLAS PARA SESIONES Y DATOS TEMPORALES
+    // ===============================
+    match /sessions/{sessionId} {
+      allow read, write: if true;
+    }
+    
+    match /temp_data/{dataId} {
+      allow read, write: if true;
+    }
+    
+    // ===============================
+    // REGLA GENERAL MUY PERMISIVA PARA DESARROLLO
+    // ===============================
     match /{document=**} {
       allow read, write: if true;
     }
   }
 }
-*/
+
+// NOTAS PARA IMPLEMENTACIÓN:
+// 1. Estas reglas son muy permisivas para facilitar el desarrollo
+// 2. En producción, se recomienda ser más restrictivo
+// 3. La autenticación anónima debe estar habilitada en Firebase Console
+// 4. Para aplicar: Firebase Console > Firestore Database > Rules > Copiar y Publicar

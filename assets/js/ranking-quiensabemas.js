@@ -1,15 +1,5 @@
-// Importar funciones de Firestore
-import {
-    collection,
-    query,
-    orderBy,
-    limit,
-    onSnapshot,
-    where,
-    Timestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-console.log('Ranking Quién Sabe Más script loaded - Optimizado para móvil');
+// Sistema de Ranking mejorado para Quién Sabe Más - Versión compatible
+console.log('Ranking Quién Sabe Más script loaded - Sistema corregido v2.0');
 
 // --- Elementos del DOM ---
 const rankingBody = document.getElementById('ranking-body');
@@ -17,7 +7,7 @@ const historyList = document.getElementById('history-list');
 
 // --- Configuración ---
 const RANKING_LIMIT = 15; // Solo mostrar top 15
-const HISTORY_LIMIT = 10; // Últimas 10 partidas en historial
+const HISTORY_LIMIT = 20; // Más partidas en historial
 
 // --- Sistema de Ranking Mejorado para Quien Sabe Más ---
 
@@ -64,37 +54,6 @@ const ACHIEVEMENTS_SYSTEM = {
             condition: (stats) => stats.bestWinStreak >= 5,
             points: 150
         },
-        'comeback_master': {
-            id: 'comeback_master',
-            name: 'Maestro de las Remontadas',
-            description: 'Gana 3 partidas estando perdiendo por 3+ puntos',
-            icon: '🚀',
-            category: 'victorias',
-            condition: (stats) => stats.comebacks >= 3,
-            points: 200
-        },
-        
-        // Logros de velocidad
-        'speed_demon': {
-            id: 'speed_demon',
-            name: 'Demonio de la Velocidad',
-            description: 'Responde 10 preguntas en menos de 2 segundos',
-            icon: '⚡',
-            category: 'velocidad',
-            condition: (stats) => stats.fastAnswers >= 10,
-            points: 100
-        },
-        'lightning_round': {
-            id: 'lightning_round',
-            name: 'Ronda Relámpago',
-            description: 'Completa una partida con tiempo promedio < 3s',
-            icon: '🌩️',
-            category: 'velocidad',
-            condition: (stats) => stats.bestGameAvgTime > 0 && stats.bestGameAvgTime < 3,
-            points: 175
-        },
-        
-        // Logros de precisión
         'perfectionist': {
             id: 'perfectionist',
             name: 'Perfeccionista',
@@ -104,17 +63,6 @@ const ACHIEVEMENTS_SYSTEM = {
             condition: (stats) => stats.highAccuracyGames >= 10,
             points: 250
         },
-        'flawless_victory': {
-            id: 'flawless_victory',
-            name: 'Victoria Impecable',
-            description: 'Gana una partida sin respuestas incorrectas',
-            icon: '💎',
-            category: 'precision',
-            condition: (stats) => stats.perfectGames >= 1,
-            points: 300
-        },
-        
-        // Logros de conocimiento
         'trivia_master': {
             id: 'trivia_master',
             name: 'Maestro del Trivia',
@@ -123,35 +71,6 @@ const ACHIEVEMENTS_SYSTEM = {
             category: 'conocimiento',
             condition: (stats) => stats.totalCorrectAnswers >= 100,
             points: 200
-        },
-        'football_expert': {
-            id: 'football_expert',
-            name: 'Experto en Fútbol',
-            description: 'Alcanza 1500+ puntos de ELO',
-            icon: '⚽',
-            category: 'conocimiento',
-            condition: (stats) => stats.currentElo >= 1500,
-            points: 400
-        },
-        
-        // Logros de dedicación
-        'dedicated_player': {
-            id: 'dedicated_player',
-            name: 'Jugador Dedicado',
-            description: 'Juega 50 partidas',
-            icon: '💪',
-            category: 'dedicacion',
-            condition: (stats) => stats.gamesPlayed >= 50,
-            points: 150
-        },
-        'marathon_player': {
-            id: 'marathon_player',
-            name: 'Maratonista',
-            description: 'Juega durante 7 días consecutivos',
-            icon: '🏃',
-            category: 'dedicacion',
-            condition: (stats) => stats.consecutiveDays >= 7,
-            points: 300
         }
     },
     
@@ -161,7 +80,6 @@ const ACHIEVEMENTS_SYSTEM = {
         const currentAchievements = this.getPlayerAchievements(playerStats.playerName);
         
         Object.values(this.achievements).forEach(achievement => {
-            // Si no está desbloqueado y cumple la condición
             if (!currentAchievements[achievement.id] && achievement.condition(playerStats)) {
                 unlockedAchievements.push(achievement);
                 this.unlockAchievement(playerStats.playerName, achievement);
@@ -185,8 +103,6 @@ const ACHIEVEMENTS_SYSTEM = {
         };
         
         localStorage.setItem(RANKING_CONFIG.ACHIEVEMENTS_KEY, JSON.stringify(achievements));
-        
-        // Mostrar notificación
         this.showAchievementNotification(achievement);
     },
     
@@ -198,25 +114,7 @@ const ACHIEVEMENTS_SYSTEM = {
     
     // Mostrar notificación de logro
     showAchievementNotification(achievement) {
-        const notification = document.createElement('div');
-        notification.className = 'achievement-notification';
-        notification.innerHTML = `
-            <div class="achievement-icon">${achievement.icon}</div>
-            <div class="achievement-content">
-                <div class="achievement-title">¡Logro Desbloqueado!</div>
-                <div class="achievement-name">${achievement.name}</div>
-                <div class="achievement-desc">${achievement.description}</div>
-                <div class="achievement-points">+${achievement.points} puntos</div>
-            </div>
-        `;
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => notification.classList.add('show'), 100);
-        setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => notification.remove(), 500);
-        }, 5000);
+        console.log(`🏆 ¡Logro desbloqueado! ${achievement.name}: ${achievement.description}`);
     }
 };
 
@@ -566,10 +464,19 @@ if (typeof module !== 'undefined' && module.exports) {
     };
 }
 
-// --- Función para formatear fecha compacta para móvil ---
+// --- Función para formatear fecha compacta ---
 function formatCompactDate(firebaseTimestamp) {
     if (!firebaseTimestamp) return '---';
-    const date = firebaseTimestamp.toDate();
+    
+    let date;
+    if (firebaseTimestamp.toDate) {
+        date = firebaseTimestamp.toDate();
+    } else if (firebaseTimestamp.seconds) {
+        date = new Date(firebaseTimestamp.seconds * 1000);
+    } else {
+        date = new Date(firebaseTimestamp);
+    }
+    
     const now = new Date();
     const diffMs = now - date;
     const diffMins = Math.floor(diffMs / 60000);
@@ -582,90 +489,124 @@ function formatCompactDate(firebaseTimestamp) {
     return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
 }
 
-// --- Función para obtener nivel del jugador ---
+// --- Función para obtener nivel del jugador basado en winrate ---
 function getPlayerLevel(totalScore, winRate, matches) {
-    if (winRate >= 95 && totalScore >= 6000 && matches >= 25) return { level: "GENIO TOTAL", color: "#9f7aea", icon: "🧠" };
-    if (winRate >= 90 && totalScore >= 5000 && matches >= 20) return { level: "GENIO", color: "#b794f6", icon: "🎓" };
-    if (winRate >= 85 && totalScore >= 4000 && matches >= 15) return { level: "ERUDITO", color: "#56ab2f", icon: "📚" };
-    if (winRate >= 80 && totalScore >= 3000 && matches >= 10) return { level: "SABIO", color: "#667eea", icon: "🔬" };
-    if (winRate >= 75 && totalScore >= 2500 && matches >= 8) return { level: "INTELECTUAL", color: "#764ba2", icon: "💡" };
-    if (winRate >= 70 && totalScore >= 2000 && matches >= 5) return { level: "ESTUDIANTE", color: "#ed8936", icon: "📖" };
-    return { level: "NOVATO", color: "#999", icon: "🌱" };
+    // Priorizar winrate sobre score total
+    if (winRate >= 95 && matches >= 10) return { level: "CEREBRO TOTAL", color: "#ff6b35", icon: "👑" };
+    if (winRate >= 90 && matches >= 8) return { level: "GENIO", color: "#ffd32a", icon: "⭐" };
+    if (winRate >= 85 && matches >= 6) return { level: "EXPERTO", color: "#4299e1", icon: "🧠" };
+    if (winRate >= 80 && matches >= 5) return { level: "CONOCEDOR", color: "#56ab2f", icon: "💡" };
+    if (winRate >= 75 && matches >= 4) return { level: "INTELIGENTE", color: "#667eea", icon: "🎯" };
+    if (winRate >= 70 && matches >= 3) return { level: "ESTUDIADO", color: "#764ba2", icon: "📚" };
+    if (winRate >= 60 && matches >= 2) return { level: "AFICIONADO", color: "#ed8936", icon: "📈" };
+    return { level: "PRINCIPIANTE", color: "#999", icon: "🌱" };
 }
 
-// --- Función para generar HTML del ranking (Top 15) ---
+// --- Función para generar HTML del ranking corregida ---
 function generateRankingHTML(usersData) {
     if (!usersData || usersData.length === 0) {
-        return '<tr><td colspan="5" class="empty-state">No hay datos disponibles</td></tr>';
+        return '<tr><td colspan="6" class="empty-state">No hay datos disponibles</td></tr>';
     }
 
-    // Filtrar y procesar datos de usuarios de Quién Sabe Más
+    console.log('[RANKING QSM] Procesando datos de', usersData.length, 'usuarios');
+
+    // Filtrar y procesar datos con mayor flexibilidad
     const validUsers = usersData
         .filter(user => {
+            // Verificar múltiples fuentes de datos
             const quienSabeMasData = user.quiensabemas || user.stats?.quiensabemas || {};
-            return quienSabeMasData.played > 0 || quienSabeMasData.wins > 0 || quienSabeMasData.score > 0;
+            const hasValidData = 
+                quienSabeMasData.gamesPlayed > 0 || 
+                quienSabeMasData.wins > 0 || 
+                user.wins > 0 ||
+                user.matchesPlayed > 0;
+            
+            return hasValidData && user.displayName;
         })
         .map(user => {
+            console.log('[RANKING QSM] Procesando usuario:', user.displayName);
+            
+            // Extraer datos de múltiples fuentes
             const quienSabeMasData = user.quiensabemas || user.stats?.quiensabemas || {};
+            const rootData = user;
             
-            // Estadísticas específicas de Quién Sabe Más: ELO, wins, losses, score acumulado
-            const totalScore = quienSabeMasData.score || 0;
-            const wins = quienSabeMasData.wins || 0;
-            const losses = quienSabeMasData.losses || 0;
-            const matches = quienSabeMasData.played || Math.max(wins + losses, 0);
-            const elo = quienSabeMasData.elo || 1500; // ELO inicial estándar
+            // Unificar estadísticas
+            let wins = Math.max(
+                quienSabeMasData.wins || 0,
+                rootData.wins || 0
+            );
+            let losses = Math.max(
+                quienSabeMasData.losses || 0,
+                rootData.losses || 0
+            );
+            let matches = Math.max(
+                quienSabeMasData.gamesPlayed || 0,
+                quienSabeMasData.matches || 0,
+                rootData.matchesPlayed || 0,
+                wins + losses
+            );
+            let totalScore = Math.max(
+                quienSabeMasData.totalScore || 0,
+                rootData.totalScore || 0
+            );
             
+            // Ajustar coherencia
+            if (matches < wins + losses) {
+                matches = wins + losses;
+            }
+            
+            // Calcular métricas
             const winRate = matches > 0 ? (wins / matches) * 100 : 0;
-            const lossRate = matches > 0 ? (losses / matches) * 100 : 0;
-            const avgScorePerGame = matches > 0 ? Math.round(totalScore / matches) : 0;
+            const avgScore = matches > 0 ? Math.round(totalScore / matches) : totalScore;
+            const correctAnswers = quienSabeMasData.correctAnswers || 0;
+            const totalQuestions = quienSabeMasData.totalQuestions || matches * 10; // Estimación
+            const accuracy = totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0;
+            
+            console.log(`[RANKING QSM] ${user.displayName}: ${wins}W/${losses}L/${matches}P - WinRate: ${winRate.toFixed(1)}%`);
             
             return {
                 id: user.id,
-                displayName: user.displayName || 'Anónimo',
-                elo: elo,
+                displayName: user.displayName,
                 wins: wins,
                 losses: losses,
                 matches: matches,
                 totalScore: totalScore,
                 winRate: winRate,
-                lossRate: lossRate,
-                avgScorePerGame: avgScorePerGame,
-                winLossRatio: losses > 0 ? (wins / losses).toFixed(1) : wins > 0 ? '∞' : '0'
+                avgScore: avgScore,
+                correctAnswers: correctAnswers,
+                accuracy: accuracy,
+                lastPlayed: user.lastPlayed || quienSabeMasData.lastPlayed
             };
         })
+        .filter(user => user.matches > 0) // Solo usuarios con al menos 1 partida
         .sort((a, b) => {
-            // Ordenar por win rate primero, luego por ELO, luego por total de wins
-            if (Math.abs(b.winRate - a.winRate) > 1) return b.winRate - a.winRate;
-            if (b.elo !== a.elo) return b.elo - a.elo;
-            return b.wins - a.wins;
+            // ORDEN CORREGIDO: Por winrate primero, luego por partidas jugadas, luego por score total
+            const winRateDiff = b.winRate - a.winRate;
+            if (Math.abs(winRateDiff) > 0.1) return winRateDiff;
+            
+            const matchesDiff = b.matches - a.matches;
+            if (matchesDiff !== 0) return matchesDiff;
+            
+            return b.totalScore - a.totalScore;
         })
         .slice(0, RANKING_LIMIT);
 
     if (validUsers.length === 0) {
-        return '<tr><td colspan="5" class="empty-state">No hay jugadores registrados aún</td></tr>';
+        return '<tr><td colspan="6" class="empty-state">No hay jugadores registrados aún</td></tr>';
     }
+
+    console.log('[RANKING QSM] Top usuarios ordenados por winrate:');
+    validUsers.slice(0, 5).forEach((user, i) => {
+        console.log(`${i + 1}. ${user.displayName}: ${user.winRate.toFixed(1)}% (${user.wins}/${user.matches})`);
+    });
 
     return validUsers.map((user, index) => {
         const playerLevel = getPlayerLevel(user.totalScore, user.winRate, user.matches);
         const isTopPlayer = index < 3;
         const position = index + 1;
         
-        // Determinar rango basado en ELO
-        let eloRank = { name: "NOVATO", color: "#94a3b8", icon: "🌱" };
-        if (user.elo >= 2200) {
-            eloRank = { name: "GRAN MAESTRO", color: "#8b5cf6", icon: "👑" };
-        } else if (user.elo >= 2000) {
-            eloRank = { name: "MAESTRO", color: "#6366f1", icon: "🏆" };
-        } else if (user.elo >= 1800) {
-            eloRank = { name: "EXPERTO", color: "#3b82f6", icon: "🎯" };
-        } else if (user.elo >= 1600) {
-            eloRank = { name: "AVANZADO", color: "#10b981", icon: "📚" };
-        } else if (user.elo >= 1400) {
-            eloRank = { name: "INTERMEDIO", color: "#f59e0b", icon: "🧠" };
-        }
-        
         return `
-            <tr class="ranking-row ${isTopPlayer ? 'top-player' : ''}" data-elo="${user.elo}">
+            <tr class="ranking-row ${isTopPlayer ? 'top-player' : ''}" data-score="${user.totalScore}">
                 <td class="ranking-position">
                     <div class="position-number">${position}</div>
                     <div class="position-icon">
@@ -674,27 +615,30 @@ function generateRankingHTML(usersData) {
                 </td>
                 <td class="player-info">
                     <div class="player-name">${user.displayName}</div>
-                    <div class="player-level" style="color: ${eloRank.color}">
-                        ${eloRank.icon} ${eloRank.name}
+                    <div class="player-level" style="color: ${playerLevel.color}">
+                        ${playerLevel.icon} ${playerLevel.level}
                     </div>
-                    <div class="player-stats-summary">${user.matches} duelos • ${user.winRate.toFixed(0)}% éxito</div>
+                    <div class="player-stats-summary">${user.matches} partidas</div>
                 </td>
-                <td class="elo-info">
-                    <div class="main-elo">${user.elo}</div>
-                    <div class="secondary-stat">ELO Rating</div>
-                    <div class="elo-breakdown">Prom: ${user.avgScorePerGame}</div>
+                <td class="score-info">
+                    <div class="main-score">${user.totalScore.toLocaleString()}</div>
+                    <div class="secondary-stat">puntos total</div>
+                    <div class="score-breakdown">Prom: ${user.avgScore.toLocaleString()}</div>
                 </td>
                 <td class="stat-cell">
                     <div class="primary-stat wins-stat">${user.wins}</div>
-                    <div class="secondary-stat">/${user.losses} (${user.winLossRatio})</div>
-                    <div class="win-loss-detail">${user.winRate.toFixed(0)}% / ${user.lossRate.toFixed(0)}%</div>
+                    <div class="secondary-stat">${user.winRate.toFixed(1)}% wins</div>
+                    <div class="losses-stat">${user.losses} derrotas</div>
                 </td>
                 <td class="stat-cell hide-mobile">
-                    <div class="primary-stat knowledge-stat">${eloRank.name}</div>
-                    <div class="secondary-stat">Nivel</div>
-                    ${user.elo >= 2000 ? '<div class="master-badge">🎓 MAESTRO</div>' :
-                      user.elo >= 1800 ? '<div class="expert-badge">🔥 EXPERTO</div>' : 
-                      user.elo >= 1600 ? '<div class="advanced-badge">⚡ AVANZADO</div>' : ''}
+                    <div class="primary-stat accuracy-stat">${user.accuracy.toFixed(0)}%</div>
+                    <div class="secondary-stat">precisión</div>
+                    <div class="correct-answers">${user.correctAnswers} correctas</div>
+                </td>
+                <td class="stat-cell hide-mobile">
+                    <div class="match-count">${user.matches}</div>
+                    <div class="secondary-stat">partidas</div>
+                    <div class="last-played">${formatCompactDate(user.lastPlayed)}</div>
                 </td>
             </tr>
         `;
@@ -884,23 +828,24 @@ function generateHistoryHTML(matches) {
 // --- Configurar listener en tiempo real para el ranking ---
 function setupRankingListener() {
     try {
-        if (!window.db) {
-            console.error('[RANKING QSM] Firebase no está inicializado para ranking');
+        if (!window.firebase || !window.firebase.firestore) {
+            console.error('[RANKING QSM] Firebase no está disponible');
             if (rankingBody) {
-                rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+                rankingBody.innerHTML = '<tr><td colspan="6" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
             }
             return;
         }
 
-        const usersRef = collection(window.db, 'users');
+        const db = window.firebase.firestore();
+        const usersRef = db.collection('users');
         
-        const unsubscribe = onSnapshot(usersRef, (snapshot) => {
+        const unsubscribe = usersRef.onSnapshot((snapshot) => {
             console.log('[RANKING QSM] Datos recibidos:', snapshot.size, 'usuarios');
             
             if (snapshot.empty) {
                 console.log('[RANKING QSM] No hay datos de usuarios');
                 if (rankingBody) {
-                    rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">No hay jugadores registrados aún</td></tr>';
+                    rankingBody.innerHTML = '<tr><td colspan="6" class="empty-state">No hay jugadores registrados aún</td></tr>';
                 }
                 return;
             }
@@ -909,8 +854,8 @@ function setupRankingListener() {
             
             snapshot.forEach(doc => {
                 const data = doc.data();
-                console.log('[RANKING QSM] Procesando usuario:', data);
                 
+                // Incluir solo usuarios con displayName válido
                 if (data.displayName) {
                     usersData.push({
                         id: doc.id,
@@ -932,7 +877,7 @@ function setupRankingListener() {
         }, (error) => {
             console.error('[RANKING QSM] Error en el listener:', error);
             if (rankingBody) {
-                rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">Error al cargar el ranking. Reintentando...</td></tr>';
+                rankingBody.innerHTML = '<tr><td colspan="6" class="empty-state">Error al cargar el ranking. Reintentando...</td></tr>';
             }
             
             setTimeout(() => {
@@ -947,7 +892,7 @@ function setupRankingListener() {
     } catch (error) {
         console.error('[RANKING QSM] Error al configurar listener:', error);
         if (rankingBody) {
-            rankingBody.innerHTML = '<tr><td colspan="5" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
+            rankingBody.innerHTML = '<tr><td colspan="6" class="empty-state">Error de conexión. Recargá la página.</td></tr>';
         }
     }
 }
@@ -955,22 +900,21 @@ function setupRankingListener() {
 // --- Configurar listener para historial ---
 function setupHistoryListener() {
     try {
-        if (!window.db) {
-            console.error('[RANKING QSM] Firebase no está inicializado para historial');
+        if (!window.firebase || !window.firebase.firestore) {
+            console.error('[RANKING QSM] Firebase no está disponible para historial');
             if (historyList) {
                 historyList.innerHTML = '<div class="empty-state">Error de conexión. Recargá la página.</div>';
             }
             return;
         }
 
-        const matchesRef = collection(window.db, 'matches');
-        const historyQuery = query(
-            matchesRef,
-            orderBy('timestamp', 'desc'),
-            limit(100)
-        );
+        const db = window.firebase.firestore();
+        const matchesRef = db.collection('matches');
+        const historyQuery = matchesRef
+            .orderBy('timestamp', 'desc')
+            .limit(HISTORY_LIMIT);
 
-        const unsubscribe = onSnapshot(historyQuery, (snapshot) => {
+        const unsubscribe = historyQuery.onSnapshot((snapshot) => {
             console.log('[HISTORY QSM] Datos recibidos:', snapshot.size, 'partidas');
             
             if (snapshot.empty) {
@@ -985,16 +929,10 @@ function setupHistoryListener() {
             
             snapshot.forEach(doc => {
                 const data = doc.data();
-                console.log('[HISTORY QSM] Procesando partida:', data);
-                
-                // Filtrar SOLO partidas de Quién Sabe Más
-                if (data.gameType === 'quiensabemas' || data.gameType === 'quien-sabe-mas' || data.gameType === 'QuienSabeMas' ||
-                    data.gameMode === 'QuienSabeMas' || data.gameMode === 'quiensabemas' || data.gameMode === 'quien-sabe-mas') {
-                    matches.push({
-                        id: doc.id,
-                        ...data
-                    });
-                }
+                matches.push({
+                    id: doc.id,
+                    ...data
+                });
             });
 
             console.log(`[HISTORY QSM] Partidas procesadas: ${matches.length}`);
@@ -1029,7 +967,7 @@ function showLoadingState() {
     if (rankingBody) {
         rankingBody.innerHTML = `
             <tr>
-                <td colspan="5" class="loading-state">
+                <td colspan="6" class="loading-state">
                     <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                         <div style="width: 12px; height: 12px; background: var(--quiensabemas-primary); border-radius: 50%; animation: pulse 1.5s infinite;"></div>
                         <span>Buscando a los más inteligentes...</span>
@@ -1044,7 +982,7 @@ function showLoadingState() {
             <div class="loading-state">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
                     <div style="width: 12px; height: 12px; background: var(--quiensabemas-primary); border-radius: 50%; animation: pulse 1.5s infinite;"></div>
-                    <span>Revisando los últimos duelos de conocimiento...</span>
+                    <span>Revisando duelos...</span>
                 </div>
             </div>
         `;
@@ -1058,109 +996,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mostrar estado de carga
     showLoadingState();
     
-    // Intentar importar Firebase de forma robusta
-    import('./firebase-init.js')
-        .then(module => {
-            // Asegurarse de que Firebase esté completamente inicializado
-            return module.ensureFirebaseInitialized();
-        })
-        .then(({ db: firebaseDb, auth, user, readOnly }) => {
-            console.log('[RANKING QSM] Firebase inicializado correctamente:', 
-                        readOnly ? '(modo solo lectura)' : '(modo completo)');
-            
-            // Usar la instancia db recibida
-            window.db = firebaseDb;
-            
-            // Configurar listeners para el ranking y el historial
+    // Esperar a que Firebase esté disponible
+    function initializeWhenReady() {
+        if (window.firebase && window.firebase.firestore) {
+            console.log('[RANKING QSM] Firebase disponible, configurando listeners...');
             setupRankingListener();
             setupHistoryListener();
-        })
-        .catch(error => {
-            console.error('[RANKING QSM] Error inicializando Firebase:', error);
-            
-            // Mostrar mensaje de error
-            if (rankingBody) {
-                rankingBody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="error-state">
-                            <div class="error-icon">⚠️</div>
-                            <div class="error-message">Error de conexión</div>
-                            <div class="error-detail">No se pudo conectar con la base de datos</div>
-                            <button onclick="location.reload()" class="retry-button">Reintentar</button>
-                        </td>
-                    </tr>
-                `;
-            }
-            
-            if (historyList) {
-                historyList.innerHTML = `
-                    <div class="error-state">
-                        <div class="error-icon">⚠️</div>
-                        <div class="error-message">Error de conexión</div>
-                        <div class="error-detail">No se pudo conectar con la base de datos</div>
-                    </div>
-                `;
-            }
-            
-            // Después de un tiempo, mostrar datos de fallback
-            setTimeout(() => {
-                // Crear algunos datos de demo para mostrar
-                const mockUsers = [
-                    { displayName: 'BrainMaster', elo: 1800, wins: 25, losses: 5, winRate: 83, level: "MAESTRO" },
-                    { displayName: 'QuizChamp', elo: 1650, wins: 18, losses: 4, winRate: 82, level: "EXPERTO" },
-                    { displayName: 'GeniusPlayer', elo: 1520, wins: 15, losses: 6, winRate: 71, level: "ESPECIALISTA" },
-                    { displayName: 'TriviaKing', elo: 1480, wins: 12, losses: 5, winRate: 70, level: "AVANZADO" },
-                    { displayName: 'MindWizard', elo: 1350, wins: 10, losses: 7, winRate: 59, level: "INTERMEDIO" }
-                ];
-                
-                if (rankingBody) {
-                    rankingBody.innerHTML = generateRankingHTML(mockUsers);
-                }
-                
-                const mockMatches = [
-                    { 
-                        playerName: 'BrainMaster',
-                        opponentName: 'QuizChamp', 
-                        myScore: 7,
-                        opponentScore: 3,
-                        result: 'victory',
-                        totalQuestions: 10,
-                        timestamp: { toDate: () => new Date(Date.now() - 3600000) } // 1 hour ago
-                    },
-                    { 
-                        playerName: 'QuizChamp',
-                        opponentName: 'GeniusPlayer', 
-                        myScore: 6,
-                        opponentScore: 6,
-                        result: 'draw',
-                        totalQuestions: 12,
-                        timestamp: { toDate: () => new Date(Date.now() - 7200000) } // 2 hours ago
-                    },
-                    { 
-                        playerName: 'TriviaKing',
-                        opponentName: 'BrainMaster', 
-                        myScore: 4,
-                        opponentScore: 8,
-                        result: 'defeat',
-                        totalQuestions: 12,
-                        timestamp: { toDate: () => new Date(Date.now() - 86400000) } // 1 day ago
-                    }
-                ];
-                
-                if (historyList) {
-                    historyList.innerHTML = generateHistoryHTML(mockMatches);
-                }
-                
-                // Mostrar mensaje de modo demo
-                const demoNotice = document.createElement('div');
-                demoNotice.className = 'demo-notice';
-                demoNotice.style.cssText = 'background: #fff3cd; color: #856404; padding: 10px; margin-bottom: 15px; border-radius: 5px; text-align: center; font-weight: bold;';
-                demoNotice.innerHTML = '⚠️ Mostrando datos de demostración (modo offline)';
-                
-                const containers = document.querySelectorAll('.ranking-container, .history-container');
-                containers.forEach(container => {
-                    container.insertBefore(demoNotice.cloneNode(true), container.firstChild);
-                });
-            }, 3000);
-        });
+        } else {
+            console.log('[RANKING QSM] Esperando Firebase...');
+            setTimeout(initializeWhenReady, 1000);
+        }
+    }
+    
+    initializeWhenReady();
 }); 
