@@ -49,8 +49,9 @@
     <link rel="stylesheet" href="assets/css/base.css">
     <link rel="stylesheet" href="assets/css/layout.css">
     <link rel="stylesheet" href="assets/css/ranking.css">
+    <link rel="stylesheet" href="assets/css/ranking-modern.css">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://www.google-analytics.com/analytics.js" async></script>
@@ -89,12 +90,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <!-- Firebase Config -->
-    <script src="assets/js/firebase-config.js"></script>
-    <script src="assets/js/firebase-init.js"></script>
-    <script src="assets/js/firebase-utils.js"></script>
-    <!-- Ranking Script -->
-    <script src="assets/js/ranking.js?v=202505272312"></script>
+    <!-- Firebase Unificado -->
+    <script src="assets/js/firebase-unified.js"></script>
 </head>
 <body class="ranking-page-body">
     <!-- Skip Link para accesibilidad -->
@@ -170,19 +167,17 @@
                 <table class="ranking-table">
                     <thead>
                         <tr>
-                            <th>Posición</th>
+                            <th>Pos</th>
                             <th>Jugador</th>
-                            <th>Puntaje Total</th>
-                            <th class="hide-mobile">Partidas</th>
-                            <th>Victorias</th>
-                            <th class="hide-mobile">Derrotas</th>
+                            <th>Puntos</th>
+                            <th>Partidas</th>
                             <th class="hide-mobile">Precisión</th>
                         </tr>
                     </thead>
                     <tbody id="ranking-body">
                         <!-- Las filas se llenarán dinámicamente -->
                         <tr>
-                            <td colspan="7" class="loading-state">
+                            <td colspan="5" class="loading-state">
                                 Buscando a los cracks... Si tarda, ¡quizás sos el primero! 🏆
                             </td>
                         </tr>
@@ -256,8 +251,249 @@
             alert('Tu navegador no soporta la API de Compartir. Copiá el enlace manualmente.');
         }
     }
-    </script>
     
+    // Sistema de Ranking Unificado
+    async function loadPasalacheRanking() {
+        try {
+            console.log('🏆 Cargando ranking Pasala Che...');
+            
+            // Esperar a que CrackTotal esté listo
+            await new Promise((resolve) => {
+                if (window.CrackTotal && window.CrackTotal.initialized) {
+                    resolve();
+                } else {
+                    window.addEventListener('crackTotalReady', resolve);
+                    // Fallback timeout
+                    setTimeout(resolve, 3000);
+                }
+            });
+            
+            // Cargar ranking
+            const ranking = await window.CrackTotal.getRanking('pasalache', 15);
+            console.log('✅ Ranking obtenido:', ranking);
+            
+            const tbody = document.getElementById('ranking-body');
+            if (!tbody) return;
+            
+            if (ranking.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="no-data">
+                            🏆 ¡Sé el primero en jugar Pasala Che!
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = ranking.map((user, index) => {
+                const position = index + 1;
+                const winRate = user.winRate || 0;
+                
+                return `
+                    <tr class="ranking-row ${position <= 3 ? 'top-three' : ''}">
+                        <td class="position">${position <= 3 ? '🏆' : position}</td>
+                        <td class="player-name">${user.displayName}</td>
+                        <td class="total-score">${user.totalScore.toLocaleString()}</td>
+                        <td class="games-played">${user.played}</td>
+                        <td class="accuracy hide-mobile">${winRate}%</td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Cargar historial mejorado
+            const history = await window.CrackTotal.getHistory('pasalache', 20);
+            const historyList = document.getElementById('history-list');
+            
+            if (historyList && history.length > 0) {
+                historyList.innerHTML = history.map((match, index) => {
+                    // Extraer datos básicos
+                    const timestamp = match.timestamp || null;
+                    const date = timestamp ? 
+                        new Date(timestamp.toDate()).toLocaleDateString('es-ES', {
+                            day: '2-digit',
+                            month: '2-digit', 
+                            year: 'numeric'
+                        }) : 'Sin fecha';
+                    const time = timestamp ? 
+                        new Date(timestamp.toDate()).toLocaleTimeString('es-ES', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }) : '';
+                    
+                    // Datos del jugador
+                    const playerName = match.players && match.players.length > 0 ? 
+                        match.players[0].displayName : 'Jugador';
+                    const score = match.players && match.players.length > 0 ? 
+                        match.players[0].score || 0 : 0;
+                    const errors = match.players && match.players.length > 0 ? 
+                        match.players[0].errors || 0 : 0;
+                    const correct = match.players && match.players.length > 0 ? 
+                        match.players[0].correct || 0 : 0;
+                    const timeUsed = match.players && match.players.length > 0 ? 
+                        match.players[0].timeUsed || match.duration || 0 : 0;
+                    
+                    // Calcular métricas específicas de Pasala Che
+                    const totalQuestions = correct + errors;
+                    const accuracy = totalQuestions > 0 ? Math.round((correct / totalQuestions) * 100) : 0;
+                    const result = match.result === 'victory' ? 'victory' : 'defeat';
+                    
+                    // Determinar rendimiento y categoría
+                    let performance = 'Principiante';
+                    let performanceClass = 'beginner';
+                    let performanceIcon = '📚';
+                    
+                    if (score >= 20 && accuracy >= 90) {
+                        performance = 'Crack Total';
+                        performanceClass = 'crack-total';
+                        performanceIcon = '👑';
+                    } else if (score >= 15 && accuracy >= 80) {
+                        performance = 'Experto';
+                        performanceClass = 'expert';
+                        performanceIcon = '🎯';
+                    } else if (score >= 10 && accuracy >= 70) {
+                        performance = 'Intermedio';
+                        performanceClass = 'intermediate';
+                        performanceIcon = '⚡';
+                    } else if (score >= 5 && accuracy >= 60) {
+                        performance = 'En Progreso';
+                        performanceClass = 'progress';
+                        performanceIcon = '📈';
+                    }
+                    
+                    // Formatear tiempo usado
+                    const timeFormatted = timeUsed > 0 ? 
+                        timeUsed >= 60 ? 
+                            `${Math.floor(timeUsed / 60)}:${(timeUsed % 60).toString().padStart(2, '0')}` : 
+                            `${timeUsed}s` 
+                        : 'N/A';
+                    
+                    // Determinar el tipo de partida basado en rendimiento
+                    let matchType = 'Partida Estándar';
+                    let matchClass = 'standard';
+                    
+                    if (result === 'victory') {
+                        if (accuracy >= 95) {
+                            matchType = 'Partida Perfecta';
+                            matchClass = 'perfect';
+                        } else if (accuracy >= 85) {
+                            matchType = 'Gran Partida';
+                            matchClass = 'great';
+                        } else if (accuracy >= 75) {
+                            matchType = 'Buena Partida';
+                            matchClass = 'good';
+                        } else {
+                            matchType = 'Partida Exitosa';
+                            matchClass = 'success';
+                        }
+                    } else {
+                        if (accuracy >= 70) {
+                            matchType = 'Derrota Digna';
+                            matchClass = 'close-defeat';
+                        } else if (accuracy >= 50) {
+                            matchType = 'Derrota';
+                            matchClass = 'defeat';
+                        } else {
+                            matchType = 'Derrota Difícil';
+                            matchClass = 'tough-defeat';
+                        }
+                    }
+                    
+                    return `
+                        <div class="history-item ${result} ${matchClass}">
+                            <div class="match-header">
+                                <div class="match-result-info">
+                                    <span class="result-icon ${result}">
+                                        ${result === 'victory' ? '🏆' : '💪'}
+                                    </span>
+                                    <div class="player-info">
+                                        <span class="player-name">${playerName}</span>
+                                        <span class="match-type">${matchType}</span>
+                                    </div>
+                                </div>
+                                <div class="match-date-time">
+                                    <span class="date">${date}</span>
+                                    <span class="time">${time}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="match-stats">
+                                <div class="stat-group score-group">
+                                    <div class="stat-item primary">
+                                        <span class="stat-label">Puntos</span>
+                                        <span class="stat-value score">${score}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Precisión</span>
+                                        <span class="stat-value accuracy ${accuracy >= 80 ? 'excellent' : accuracy >= 60 ? 'good' : 'poor'}">
+                                            ${accuracy}%
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <div class="stat-group performance-group">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Aciertos</span>
+                                        <span class="stat-value correct">${correct}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Errores</span>
+                                        <span class="stat-value errors">${errors}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Tiempo</span>
+                                        <span class="stat-value time">${timeFormatted}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="match-footer">
+                                <div class="performance-badge ${performanceClass}">
+                                    <span class="badge-icon">${performanceIcon}</span>
+                                    <span class="badge-text">${performance}</span>
+                                </div>
+                                <div class="match-summary">
+                                    <span class="summary-text">
+                                        ${totalQuestions} preguntas • ${correct}/${totalQuestions} correctas
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else if (historyList) {
+                historyList.innerHTML = `
+                    <div class="no-data-enhanced">
+                        <div class="no-data-icon">🎮</div>
+                        <div class="no-data-title">¡Aún no hay partidas!</div>
+                        <div class="no-data-text">
+                            Jugá tu primera partida de Pasala Che para ver tu historial aquí
+                        </div>
+                        <a href="pasalache.html" class="play-now-btn">
+                            <i class="fas fa-play"></i> Jugar Ahora
+                        </a>
+                    </div>
+                `;
+            }
+            
+        } catch (error) {
+            console.error('❌ Error cargando ranking:', error);
+            const tbody = document.getElementById('ranking-body');
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="error-state">
+                            ⚠️ Error al cargar el ranking. Refresca la página.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+    }
+    
+    // Inicializar cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', loadPasalacheRanking);
+    </script>
 
 </body>
 </html> 

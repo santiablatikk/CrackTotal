@@ -77,6 +77,38 @@ function isValidPlayerName(name) {
     return { valid: true, message: "Nombre válido." };
 }
 
+// Función global para actualizar todos los elementos de nombre de jugador
+function updateAllPlayerNameElements() {
+    const playerName = localStorage.getItem('playerName') || 'Jugador';
+    console.log(`Actualizando todos los elementos de nombre con: ${playerName}`);
+    
+    // Actualizar playerNameDisplay específicamente
+    const playerNameDisplay = document.getElementById('playerNameDisplay');
+    if (playerNameDisplay) {
+        playerNameDisplay.textContent = playerName;
+        console.log(`✓ playerNameDisplay actualizado: ${playerName}`);
+    }
+    
+    // Actualizar otros elementos con clase player-name
+    const playerNameElements = document.querySelectorAll('.player-name');
+    playerNameElements.forEach(element => {
+        if (element.tagName !== 'INPUT' || !element.value || element.value === 'Jugador' || element.value === 'Jugador 1' || element.value === 'Jugador 2') {
+            element.textContent = playerName;
+        }
+        if (element.id === 'createPlayerName' || element.id === 'joinPlayerName'){
+            element.value = playerName;
+        }
+    });
+    
+    // Actualizar span con clase player-highlight (por si acaso)
+    const playerHighlightElements = document.querySelectorAll('.player-highlight');
+    playerHighlightElements.forEach(element => {
+        if (element.id === 'playerNameDisplay' || !element.textContent || element.textContent === 'Jugador') {
+            element.textContent = playerName;
+        }
+    });
+}
+
 // Store player name in local storage
 document.addEventListener('DOMContentLoaded', function() {
     const nameForm = document.getElementById('nameForm');
@@ -195,6 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Always display the actual saved name
         playerNameDisplay.textContent = displayName;
+        console.log(`Nombre actualizado en playerNameDisplay: ${displayName}`);
         
         // Configurar el cambio de nombre
         const changeNameBtn = document.getElementById('changeNameBtn');
@@ -233,13 +266,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         if(changeNameErrorDiv) changeNameErrorDiv.textContent = ''; // Limpiar error
 
                         localStorage.setItem('playerName', newName);
-                        playerNameDisplay.textContent = newName;
+                        console.log(`Nombre cambiado a: ${newName}`);
+                        
+                        // Usar la función de actualización centralizada
+                        updateAllPlayerNameElements();
+                        
                         changeNameModal.classList.remove('active');
                         displayName = newName; // Update local variable
-
-                        document.querySelectorAll('.player-name').forEach(element => {
-                            element.textContent = newName;
-                        });
                          // Habilitar botones después de un breve retraso para evitar doble submit si algo falla
                         setTimeout(() => {
                             if(saveButton) saveButton.disabled = false;
@@ -319,6 +352,36 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+
+
+
+    // Ejecutar actualización después de que todo esté cargado
+    setTimeout(() => {
+        updateAllPlayerNameElements();
+    }, 100);
+
+    // También actualizar cuando el DOM esté completamente listo
+    if (document.readyState === 'complete') {
+        setTimeout(updateAllPlayerNameElements, 50);
+    } else {
+        window.addEventListener('load', () => {
+            setTimeout(updateAllPlayerNameElements, 50);
+        });
+    }
+
+    // Actualización adicional al final de DOMContentLoaded
+    setTimeout(() => {
+        console.log('Ejecutando actualización final de nombre de jugador...');
+        updateAllPlayerNameElements();
+    }, 200);
+
+    // Listener para cambios en localStorage (por si se actualiza desde otra pestaña)
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'playerName') {
+            console.log('Detectado cambio en playerName desde otra pestaña:', e.newValue);
+            updateAllPlayerNameElements();
+        }
+    });
 
     // Inicializar tabs de salas disponibles
     const roomTabs = document.querySelectorAll('.room-tab-button');

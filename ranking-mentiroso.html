@@ -49,8 +49,9 @@
     <link rel="stylesheet" href="assets/css/base.css">
     <link rel="stylesheet" href="assets/css/layout.css">
     <link rel="stylesheet" href="assets/css/ranking.css">
+    <link rel="stylesheet" href="assets/css/ranking-modern.css">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://www.google-analytics.com/analytics.js" async></script>
@@ -84,16 +85,15 @@
     }
     </script>
 
-    <script src="assets/js/main.js?v=202505272312"></script>
+    <script src="assets/js/main.js"></script>
     
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <!-- Firebase Config -->
-    <script src="assets/js/firebase-config.js"></script>
-    <script src="assets/js/firebase-init.js"></script>
-    <script src="assets/js/firebase-utils.js"></script>
+    
+    <!-- Firebase Unificado -->
+    <script src="assets/js/firebase-unified.js"></script>
 </head>
 <body class="ranking-page-body">
     <!-- Skip Link para accesibilidad -->
@@ -215,7 +215,270 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="assets/js/ranking-mentiroso.js"></script>
+    <script>
+    // Sistema de Ranking Mentiroso
+    async function loadMentirosoRanking() {
+        try {
+            console.log('🎭 Cargando ranking Mentiroso...');
+            
+            // Esperar a que CrackTotal esté listo
+            await new Promise((resolve) => {
+                if (window.CrackTotal && window.CrackTotal.initialized) {
+                    resolve();
+                } else {
+                    window.addEventListener('crackTotalReady', resolve);
+                    // Fallback timeout
+                    setTimeout(resolve, 3000);
+                }
+            });
+            
+            // Cargar ranking usando sistema unificado
+            const ranking = await window.CrackTotal.getRanking('mentiroso', 15);
+            console.log('✅ Ranking obtenido:', ranking);
+            
+            const tbody = document.getElementById('ranking-body');
+            if (!tbody) return;
+            
+            if (ranking.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="no-data">
+                            🎭 ¡Sé el primero en jugar Mentiroso!
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = ranking.map((user, index) => {
+                const position = index + 1;
+                const winRate = user.winRate || 0;
+                const avgScore = user.avgScore || 0;
+                
+                // Rating simplificado para Mentiroso
+                const baseRating = 1000 + (user.wins * 50) + (avgScore * 10) + (winRate * 5);
+                const rating = Math.round(baseRating);
+                
+                // Especialidad simplificada
+                let speciality = 'Novato 🎭';
+                if (rating >= 2000 && winRate >= 75) {
+                    speciality = 'Gran Maestro 👑';
+                } else if (rating >= 1800 && winRate >= 70) {
+                    speciality = 'Experto 🎯';
+                } else if (rating >= 1600 && winRate >= 60) {
+                    speciality = 'Veterano 🎪';
+                } else if (rating >= 1400 && user.played >= 10) {
+                    speciality = 'Intermedio 🃏';
+                } else if (user.played >= 5) {
+                    speciality = 'Principiante 🌟';
+                }
+                
+                return `
+                    <tr class="ranking-row ${position <= 3 ? 'top-three' : ''}">
+                        <td class="position">${position <= 3 ? '🏆' : position}</td>
+                        <td class="player-name">${user.displayName}</td>
+                        <td class="rating">${rating}</td>
+                        <td class="games">${user.played} (${winRate}%)</td>
+                        <td class="speciality hide-mobile">${speciality}</td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Cargar historial usando sistema unificado
+            const history = await window.CrackTotal.getHistory('mentiroso', 20);
+            const historyList = document.getElementById('history-list');
+            
+            if (historyList && history.length > 0) {
+                historyList.innerHTML = history.map((match, index) => {
+                    // Extraer datos básicos
+                    const timestamp = match.timestamp || null;
+                    const date = timestamp ? 
+                        new Date(timestamp.toDate()).toLocaleDateString('es-ES', {
+                            day: '2-digit',
+                            month: '2-digit', 
+                            year: 'numeric'
+                        }) : 'Sin fecha';
+                    const time = timestamp ? 
+                        new Date(timestamp.toDate()).toLocaleTimeString('es-ES', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        }) : '';
+                    
+                    // Datos del jugador
+                    const playerName = match.players && match.players.length > 0 ? 
+                        match.players[0].displayName : 'Jugador';
+                    const score = match.players && match.players.length > 0 ? 
+                        match.players[0].score || 0 : 0;
+                    const opponents = match.players ? match.players.length - 1 : 0;
+                    const result = match.result === 'victory' ? 'victory' : 
+                                 match.result === 'draw' ? 'draw' : 'defeat';
+                    
+                    // Métricas específicas de Mentiroso
+                    const lies = match.players && match.players.length > 0 ? 
+                        match.players[0].lies || 0 : 0;
+                    const detected = match.players && match.players.length > 0 ? 
+                        match.players[0].detected || 0 : 0;
+                    const deceptionRate = lies > 0 ? Math.round((lies / (lies + detected)) * 100) : 0;
+                    const accuracy = detected > 0 ? Math.round((detected / (detected + lies)) * 100) : 0;
+                    
+                    // Determinar especialidad de la partida
+                    let performance = 'Novato';
+                    let performanceClass = 'beginner';
+                    let performanceIcon = '🎭';
+                    
+                    if (score >= 25 && deceptionRate >= 80) {
+                        performance = 'Maestro del Engaño';
+                        performanceClass = 'master-deception';
+                        performanceIcon = '🎪';
+                    } else if (score >= 20 && accuracy >= 80) {
+                        performance = 'Detective Experto';
+                        performanceClass = 'expert-detective';
+                        performanceIcon = '🕵️‍♂️';
+                    } else if (score >= 15 && (deceptionRate >= 70 || accuracy >= 70)) {
+                        performance = 'Estratega';
+                        performanceClass = 'strategist';
+                        performanceIcon = '🧠';
+                    } else if (score >= 10) {
+                        performance = 'Embaucador';
+                        performanceClass = 'trickster';
+                        performanceIcon = '🃏';
+                    }
+                    
+                    // Determinar tipo de partida
+                    let matchType = 'Partida Estándar';
+                    let matchClass = 'standard';
+                    
+                    if (result === 'victory') {
+                        if (score >= 25) {
+                            matchType = 'Dominación Total';
+                            matchClass = 'domination';
+                        } else if (score >= 20) {
+                            matchType = 'Victoria Convincente';
+                            matchClass = 'convincing';
+                        } else {
+                            matchType = 'Victoria Astuta';
+                            matchClass = 'clever';
+                        }
+                    } else if (result === 'draw') {
+                        matchType = 'Empate Estratégico';
+                        matchClass = 'strategic-draw';
+                    } else {
+                        if (score >= 15) {
+                            matchType = 'Derrota Honorable';
+                            matchClass = 'honorable';
+                        } else {
+                            matchType = 'Derrota';
+                            matchClass = 'defeat';
+                        }
+                    }
+                    
+                    return `
+                        <div class="history-item ${result} ${matchClass}">
+                            <div class="match-header">
+                                <div class="match-result-info">
+                                    <span class="result-icon ${result}">
+                                        ${result === 'victory' ? '🏆' : result === 'draw' ? '🤝' : '💪'}
+                                    </span>
+                                    <div class="player-info">
+                                        <span class="player-name">${playerName}</span>
+                                        <span class="match-type">${matchType}</span>
+                                    </div>
+                                </div>
+                                <div class="match-date-time">
+                                    <span class="date">${date}</span>
+                                    <span class="time">${time}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="match-stats">
+                                <div class="stat-group score-group">
+                                    <div class="stat-item primary">
+                                        <span class="stat-label">Puntos</span>
+                                        <span class="stat-value score">${score}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Oponentes</span>
+                                        <span class="stat-value opponents">${opponents}</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="stat-group performance-group">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Engaños</span>
+                                        <span class="stat-value lies">${lies}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Detectados</span>
+                                        <span class="stat-value detected">${detected}</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Astucia</span>
+                                        <span class="stat-value deception">${deceptionRate}%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="match-footer">
+                                <div class="performance-badge ${performanceClass}">
+                                    <span class="badge-icon">${performanceIcon}</span>
+                                    <span class="badge-text">${performance}</span>
+                                </div>
+                                <div class="match-summary">
+                                    <span class="summary-text">
+                                        ${lies + detected} jugadas • ${deceptionRate}% astucia
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else if (historyList) {
+                historyList.innerHTML = `
+                    <div class="no-data-enhanced">
+                        <div class="no-data-icon">🎭</div>
+                        <div class="no-data-title">¡Aún no hay partidas!</div>
+                        <div class="no-data-text">
+                            Jugá tu primera partida de Mentiroso para ver tu historial aquí
+                        </div>
+                        <a href="mentiroso.html" class="play-now-btn">
+                            <i class="fas fa-mask"></i> Jugar Ahora
+                        </a>
+                    </div>
+                `;
+            }
+            
+        } catch (error) {
+            console.error('❌ Error cargando ranking:', error);
+            const tbody = document.getElementById('ranking-body');
+            if (tbody) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="error-state">
+                            ⚠️ Error al cargar el ranking. Refresca la página.
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+    }
+    
+    // Función para compartir sitio
+    function shareSite() {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Ranking Mentiroso - Crack Total',
+                text: '¡Mirá el Ranking de Mentiroso y comprobá quiénes son los mejores engañadores!',
+                url: window.location.href
+            })
+            .catch(err => console.log('Error al compartir:', err));
+        } else {
+            alert('Tu navegador no soporta la API de Compartir. Copiá el enlace manualmente.');
+        }
+    }
+    
+    // Inicializar cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', loadMentirosoRanking);
+    </script>
 
 </body>
 </html> 

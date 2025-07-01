@@ -3171,7 +3171,7 @@
     "preguntas": [
       {
         "pregunta": "CONTIENE L: Mediocampista portugués del Man City.",
-        "respuesta": ""
+        "respuesta": "Bernardo Silva"
       },
       {
         "pregunta": "CONTIENE L: Futbolista portugués, figura histórica del Real Madrid, juega en Al Nassr.",
@@ -4323,8 +4323,8 @@
         "respuesta": "Quique Setien"
       },
       {
-        "pregunta": "Club inglés que juega en Loftus Road.",
-        "respuesta": "Queens Park Rangers"
+        "pregunta": "Siglas del club inglés que juega en Loftus Road.",
+        "respuesta": "QPR"
       },
       {
         "pregunta": "Club argentino del sur del Gran Buenos Aires, apodado 'El Cervecero'.",
@@ -4367,10 +4367,6 @@
         "respuesta": "Quique Setién"
       },
       {
-        "pregunta": "¿Cuál es el club inglés del oeste de Londres cuyo estadio es Loftus Road y ha tenido varias etapas en la Premier League?",
-        "respuesta": "Queens Park Rangers"
-      },
-      {
         "pregunta": "¿Cuál es el club argentino del sur del Gran Buenos Aires, apodado 'El Cervecero', con una larga historia en el fútbol argentino?",
         "respuesta": "Quilmes Atlético Club"
       },
@@ -4381,10 +4377,6 @@
       {
         "pregunta": "¿Apellido del ex delantero italiano, conocido por su longevidad y capacidad goleadora en clubes como Sampdoria, Juventus y Udinese?",
         "respuesta": "Quagliarella"
-      },
-      {
-        "pregunta": "¿Término que se usa para la fase de un torneo donde quedan ocho equipos o competidores?",
-        "respuesta": "Cuartos de final"
       },
       {
         "pregunta": "CONTIENE Q: ¿Nombre del futbolista brasileño del West Ham United, ex Lyon y Flamengo?",
@@ -4409,7 +4401,7 @@
     "preguntas": [
       {
         "pregunta": "CONTIENE R: Nombre y Apellido del delantero noruego del Manchester City.",
-        "respuesta": "Haaland"
+        "respuesta": "Erling Haaland"
       },
       {
         "pregunta": "Club español con más títulos de Champions League (15 hasta 2024).",
@@ -5253,10 +5245,6 @@
       {
         "pregunta": "¿Cuál es el club de fútbol de la ciudad de Santa Fe, Argentina, cuyo clásico rival es Colón y viste de rojo y blanco?",
         "respuesta": "Unión de Santa Fe"
-      },
-      {
-        "pregunta": "¿Qué prenda distintiva utilizan los jugadores de cada equipo para identificarse en el campo de juego?",
-        "respuesta": "Uniforme"
       },
       {
         "pregunta": "¿Cuál es el club de fútbol de la Premier League que juega sus partidos de local en el estadio Old Trafford?",

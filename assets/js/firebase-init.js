@@ -1,221 +1,160 @@
-/**
- * Inicialización simplificada de Firebase para Crack Total
- * Modo desarrollo - sin autenticación obligatoria
- */
+// Asumimos que firebase ya está cargado globalmente a través de la carga de scripts
 
-console.log('[FIREBASE INIT] 🚀 Iniciando sistema simplificado...');
-
-// Variables globales para Firebase
+// Variables globales
 window.firebaseApp = null;
-window.db = null;
-window.auth = null;
+window.firebaseDb = null;
+window.firebaseAuth = null;
+window.firebaseUser = null;
 
-// Estado de inicialización
-let isInitialized = false;
-let initializationPromise = null;
+// Flag para controlar la inicialización
+let isFirebaseInitializing = false;
+let firebaseInitializationPromise = null;
 
-// Función principal de inicialización
+// Función para inicializar Firebase
 async function initializeFirebase() {
-    if (isInitialized) {
-        console.log('[FIREBASE INIT] Ya está inicializado');
-        return Promise.resolve(true);
-    }
-
-    if (initializationPromise) {
-        return initializationPromise;
-    }
-
-    initializationPromise = performInitialization();
-    return initializationPromise;
-}
-
-async function performInitialization() {
+  if (isFirebaseInitializing) {
+    return firebaseInitializationPromise;
+  }
+  
+  isFirebaseInitializing = true;
+  
+  firebaseInitializationPromise = (async () => {
     try {
-        console.log('[FIREBASE INIT] Verificando Firebase SDK...');
+      console.log("🔥 Inicializando Firebase...");
+      
+      // Verificar si Firebase está disponible globalmente
+      if (!window.firebase) {
+        console.error("❌ Firebase no está disponible. Asegúrese de cargar los scripts de Firebase primero.");
+        return {
+          success: false,
+          error: "Firebase no disponible"
+        };
+      }
+      
+      // Inicializar Firestore (usando API compat)
+      if (!window.firebaseDb && window.firebase.firestore) {
+        window.firebaseDb = window.firebase.firestore();
+        console.log("📊 Firestore inicializado");
+      }
+      
+      // Inicializar Auth (usando API compat)
+      if (!window.firebaseAuth && window.firebase.auth) {
+        window.firebaseAuth = window.firebase.auth();
+        console.log("🔐 Auth inicializado");
         
-        // Verificar que Firebase esté disponible
-        if (!window.firebase) {
-            throw new Error('Firebase SDK no está cargado');
-        }
-
-        // Verificar configuración
-        if (!window.firebaseConfig) {
-            throw new Error('Configuración de Firebase no encontrada');
-        }
-
-        console.log('[FIREBASE INIT] Inicializando app...');
-        
-        // Inicializar Firebase
-        if (!window.firebase.apps || window.firebase.apps.length === 0) {
-            window.firebaseApp = window.firebase.initializeApp(window.firebaseConfig);
-        } else {
-            window.firebaseApp = window.firebase.apps[0];
-        }
-
-        // Configurar Firestore
-        window.db = window.firebase.firestore();
-        console.log('[FIREBASE INIT] ✅ Firestore configurado');
-
-        // Configurar Auth (opcional)
-        try {
-            window.auth = window.firebase.auth();
-            console.log('[FIREBASE INIT] ✅ Auth configurado');
-        } catch (authError) {
-            console.warn('[FIREBASE INIT] ⚠️ Auth no disponible:', authError);
-        }
-
-        // Marcar como inicializado
-        isInitialized = true;
-        
-        // Disparar evento
-        window.dispatchEvent(new CustomEvent('firebaseReady', {
-            detail: { success: true, db: window.db, auth: window.auth }
-        }));
-
-        console.log('[FIREBASE INIT] ✅ Inicialización completada');
-        return true;
-
-    } catch (error) {
-        console.error('[FIREBASE INIT] ❌ Error en inicialización:', error);
-        
-        // En caso de error, usar datos mock
-        setupMockData();
-        return false;
-    }
-}
-
-// Función para configurar datos mock en caso de error
-function setupMockData() {
-    console.log('[FIREBASE INIT] 🎭 Configurando datos de demostración...');
-    
-    // Simular base de datos con datos locales
-    window.db = {
-        collection: function(name) {
-            return {
-                onSnapshot: function(callback) {
-                    console.log('[MOCK DB] Simulando datos para', name);
-                    
-                    if (name === 'users') {
-                        // Datos mock de usuarios
-                        const mockUsers = [
-                            {
-                                id: 'user1',
-                                data: () => ({
-                                    displayName: 'CrackDemo',
-                                    stats: {
-                                        pasalache: { played: 10, wins: 8, score: 2500 },
-                                        crackrapido: { played: 15, wins: 12, score: 3200 },
-                                        quiensabemas: { played: 8, wins: 6, score: 1800 },
-                                        mentiroso: { played: 5, wins: 4, score: 1200 }
-                                    }
-                                })
-                            },
-                            {
-                                id: 'user2',
-                                data: () => ({
-                                    displayName: 'FutbolFan',
-                                    stats: {
-                                        pasalache: { played: 12, wins: 9, score: 2800 },
-                                        crackrapido: { played: 10, wins: 7, score: 2400 },
-                                        quiensabemas: { played: 6, wins: 4, score: 1400 },
-                                        mentiroso: { played: 8, wins: 5, score: 1600 }
-                                    }
-                                })
-                            }
-                        ];
-
-                        setTimeout(() => {
-                            callback({
-                                empty: false,
-                                size: mockUsers.length,
-                                forEach: function(fn) {
-                                    mockUsers.forEach(fn);
-                                }
-                            });
-                        }, 1000);
-                    } else if (name === 'matches') {
-                        // Datos mock de partidas
-                        const mockMatches = [
-                            {
-                                id: 'match1',
-                                data: () => ({
-                                    gameType: 'pasalache',
-                                    playerName: 'CrackDemo',
-                                    score: 520,
-                                    result: 'victory',
-                                    timestamp: { toDate: () => new Date(Date.now() - 3600000) }
-                                })
-                            }
-                        ];
-
-                        setTimeout(() => {
-                            callback({
-                                empty: false,
-                                size: mockMatches.length,
-                                forEach: function(fn) {
-                                    mockMatches.forEach(fn);
-                                }
-                            });
-                        }, 1000);
-                    }
-                    
-                    return () => {}; // Unsubscribe function
-                },
-                orderBy: function() { return this; },
-                limit: function() { return this; }
+        // Intentar autenticación anónima si no hay usuario
+        if (!window.firebaseAuth.currentUser) {
+          try {
+            const userCredential = await window.firebaseAuth.signInAnonymously();
+            window.firebaseUser = userCredential.user;
+            console.log("👤 Usuario anónimo autenticado:", window.firebaseUser.uid);
+          } catch (authError) {
+            console.error("❌ Error en autenticación anónima:", authError);
+            // Crear usuario simulado para evitar errores
+            window.firebaseUser = {
+              uid: 'guest_' + Date.now(),
+              isAnonymous: true,
+              displayName: 'Invitado',
+              readOnly: true
             };
+          }
+        } else {
+          window.firebaseUser = window.firebaseAuth.currentUser;
+          console.log("👤 Usuario existente:", window.firebaseUser.uid);
         }
-    };
-
-    // Marcar como inicializado con mock
-    isInitialized = true;
-
-    // Disparar evento con datos mock
-    window.dispatchEvent(new CustomEvent('firebaseReady', {
-        detail: { success: false, mock: true, db: window.db }
-    }));
+      }
+      
+      return {
+        success: true,
+        app: window.firebaseApp,
+        db: window.firebaseDb,
+        auth: window.firebaseAuth,
+        user: window.firebaseUser
+      };
+      
+    } catch (error) {
+      console.error("❌ Error inicializando Firebase:", error);
+      
+      // Crear objetos mock para mantener la funcionalidad básica
+      window.firebaseUser = {
+        uid: 'mock_user_' + Date.now(),
+        isAnonymous: true,
+        displayName: 'Usuario Demo'
+      };
+      
+      return {
+        success: false,
+        error: error,
+        isMock: true,
+        user: window.firebaseUser
+      };
+    }
+  })();
+  
+  return firebaseInitializationPromise;
 }
 
-// Función para esperar a que Firebase esté listo
-window.waitForFirebase = function(callback, timeout = 10000) {
-    if (isInitialized && window.db) {
-        callback();
-        return;
-    }
-
-    const startTime = Date.now();
-    
-    function check() {
-        if (isInitialized && window.db) {
-            callback();
-            return;
-        }
-        
-        if (Date.now() - startTime > timeout) {
-            console.error('[FIREBASE INIT] Timeout esperando Firebase');
-            setupMockData();
-            callback();
-            return;
-        }
-        
-        setTimeout(check, 500);
-    }
-    
-    check();
+// Funciones útiles expuestas globalmente
+window.ensureFirebaseInitialized = async function() {
+  if (!window.firebaseDb || !window.firebaseAuth) {
+    return initializeFirebase();
+  }
+  return Promise.resolve({
+    success: true,
+    app: window.firebaseApp,
+    db: window.firebaseDb,
+    auth: window.firebaseAuth,
+    user: window.firebaseUser
+  });
 };
 
-// Inicializar automáticamente
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeFirebase);
-} else {
-    setTimeout(initializeFirebase, 100);
-}
+window.isFirebaseAvailable = function() {
+  return window.firebase && window.firebaseDb && window.firebaseAuth;
+};
 
-// También inicializar en load por si acaso
-window.addEventListener('load', () => {
-    if (!isInitialized) {
-        initializeFirebase();
+window.isUserAuthenticated = function() {
+  return window.firebaseUser !== null;
+};
+
+window.getCurrentUser = function() {
+  return window.firebaseUser;
+};
+
+window.safeFirestoreOperation = async function(operation, fallbackAction = null) {
+  if (!window.isFirebaseAvailable()) {
+    console.warn("Firebase no disponible para esta operación");
+    if (fallbackAction) {
+      return fallbackAction();
     }
-});
+    return null;
+  }
 
-console.log('[FIREBASE INIT] 📜 Sistema de inicialización cargado');
+  try {
+    return await operation();
+  } catch (error) {
+    console.error("Error en operación de Firestore:", error);
+    if (fallbackAction) {
+      return fallbackAction();
+    }
+    return null;
+  }
+};
+
+// Inicializar Firebase al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("🔄 Inicializando Firebase automáticamente...");
+  window.ensureFirebaseInitialized()
+    .then(function(result) {
+      console.log("✅ Firebase inicializado:", result.success ? "exitosamente" : "con errores");
+      
+      // Asegurar que db está disponible globalmente para ranking.js
+      if (result.success && result.db) {
+        window.db = result.db;
+      } else if (window.firebase && window.firebase.firestore) {
+        window.db = window.firebase.firestore();
+      }
+    })
+    .catch(function(error) {
+      console.error("❌ Error al inicializar Firebase:", error);
+    });
+});
