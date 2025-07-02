@@ -233,7 +233,7 @@
             },
             measure: function(name, startMark) {
                 const duration = performance.now() - this.marks[startMark];
-                console.log(`ðŸ“Š ${name}: ${duration.toFixed(2)}ms`);
+                console.log(`📊 ${name}: ${duration.toFixed(2)}ms`);
                 return duration;
             }
         };
@@ -259,10 +259,10 @@
             window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js')
                     .then(function(registration) {
-                        console.log('âœ… SW registered successfully');
+                        console.log('✅ SW registered successfully');
                     })
                     .catch(function(error) {
-                        console.log('âŒ SW registration failed:', error);
+                        console.log('🚨 SW registration failed:', error);
                     });
             });
         }
@@ -275,7 +275,7 @@
                     fatal: false
                 });
             }
-            console.error('ðŸš¨ Global error:', event.error);
+            console.error('🚨 Global error:', event.error);
         });
 
         // Unhandled promise rejections
@@ -286,7 +286,7 @@
                     fatal: false
                 });
             }
-            console.error('ðŸš¨ Unhandled promise rejection:', event.reason);
+            console.error('🚨 Unhandled promise rejection:', event.reason);
         });
     </script>
 </head>
@@ -448,7 +448,7 @@
     <!-- ===== COOKIE CONSENT BANNER ===== -->
     <div id="cookie-consent" class="cookie-consent" style="display: none;" role="banner">
         <div class="cookie-content">
-            <p>Utilizamos cookies para mejorar tu experiencia. <a href="cookies.html">Más información</a></p>
+            <p>Utilizamos cookies para mejorar tu experiencia. <a href="cookies.html">más información</a></p>
             <div class="cookie-actions">
                 <button id="accept-cookies" class="btn-accept">Aceptar</button>
                 <button id="reject-cookies" class="btn-reject">Rechazar</button>
@@ -534,7 +534,7 @@
                         deferredPrompt.prompt();
                         const { outcome } = await deferredPrompt.userChoice;
                         if (outcome === 'accepted') {
-                            console.log('âœ… PWA installed');
+                            console.log('✅ PWA installed');
                         }
                         deferredPrompt = null;
                         installBtn.style.display = 'none';
