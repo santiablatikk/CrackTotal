@@ -21,7 +21,13 @@
     gtag('set', 'region', 'ES');
   </script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#835DFF">
+    <meta name="msapplication-navbutton-color" content="#835DFF">
+    <meta name="apple-mobile-web-app-title" content="Pasala Che">
     <title>Pasala Che - Crack Total</title>
     <meta name="description" content="Jugá al rosco de fútbol Pasala Che en Crack Total. ¿Podés completar el abecedario futbolero? Demostrá tu sabiduría.">
     <link rel="icon" href="/portada.ico?v=202505272312" type="image/x-icon">
@@ -216,21 +222,43 @@
 
                             <form id="answerForm" class="answer-form">
                                 <div class="input-group">
-                                    <input type="text" id="answerInput" class="answer-input" placeholder="Tu respuesta..." autocomplete="off">
-                                    <button type="button" id="submitAnswerBtnIcon" class="submit-answer-icon-btn" aria-label="Enviar respuesta">
-                                        <i class="fas fa-check"></i>
+                                    <input type="text" 
+                                           id="answerInput" 
+                                           class="answer-input" 
+                                           placeholder="Tu respuesta..." 
+                                           autocomplete="off"
+                                           autocorrect="off"
+                                           autocapitalize="off"
+                                           spellcheck="false"
+                                           inputmode="text"
+                                           aria-label="Campo de respuesta"
+                                           role="textbox">
+                                    <button type="button" 
+                                            id="submitAnswerBtnIcon" 
+                                            class="submit-answer-icon-btn" 
+                                            aria-label="Enviar respuesta"
+                                            tabindex="0">
+                                        <i class="fas fa-check" aria-hidden="true"></i>
                                     </button>
                                     <div class="input-focus-border"></div>
                                 </div>
                                
                             </form>
                             <div class="action-buttons">
-                                <button type="button" id="pasapalabraButton" class="pasapalabra-button">
+                                <button type="button" 
+                                        id="pasapalabraButton" 
+                                        class="pasapalabra-button"
+                                        aria-label="Pasar palabra y continuar con la siguiente letra"
+                                        tabindex="0">
                                     PASALA CHE
                                 </button>
-                                <button type="button" id="helpButton" class="help-button">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-                                    HELP (2)
+                                <button type="button" 
+                                        id="helpButton" 
+                                        class="help-button"
+                                        aria-label="Solicitar ayuda para la pregunta actual"
+                                        tabindex="0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                    <span>HELP (2)</span>
                                 </button>
                             </div>
                         </div>
@@ -245,8 +273,12 @@
                 <h2 class="loading-title">Preparando el Rosco...</h2>
                 <div class="spinner-rosco"></div>
                 <p class="loading-message" id="loadingMessageText">Cargando preguntas, por favor espera.</p>
-                <button id="startGameAfterLoadingButton" class="primary-button" disabled>
-                    Cargando...
+                <button id="startGameAfterLoadingButton" 
+                        class="primary-button" 
+                        disabled
+                        aria-label="Comenzar juego cuando termine de cargar"
+                        tabindex="0">
+                    <span>Cargando...</span>
                 </button>
             </div>
         </div>
@@ -291,27 +323,40 @@
             <div class="difficulty-selection-section">
                 <h4 class="difficulty-main-title">Selecciona tu Dificultad</h4>
                 <div class="difficulty-cards">
-                    <div class="difficulty-card" data-difficulty="facil">
+                    <div class="difficulty-card" 
+                         data-difficulty="facil"
+                         role="button"
+                         tabindex="0"
+                         aria-label="Seleccionar dificultad fácil: 360 segundos, máximo 4 errores">
                         <div class="difficulty-header">
-                            <span class="difficulty-icon">🟢</span>
+                            <span class="difficulty-icon" aria-hidden="true">🟢</span>
                             <h3>Fácil</h3>
                         </div>
                         <div class="difficulty-time">360s</div>
                         <div class="difficulty-errors">Máximo 4 errores</div>
                         <p class="difficulty-description">Perfecto para empezar</p>
                         </div>
-                    <div class="difficulty-card active" data-difficulty="normal">
+                    <div class="difficulty-card active" 
+                         data-difficulty="normal"
+                         role="button"
+                         tabindex="0"
+                         aria-label="Seleccionar dificultad normal: 300 segundos, máximo 3 errores"
+                         aria-pressed="true">
                         <div class="difficulty-header">
-                            <span class="difficulty-icon">🟡</span>
+                            <span class="difficulty-icon" aria-hidden="true">🟡</span>
                             <h3>Normal</h3>
                         </div>
                         <div class="difficulty-time">300s</div>
                         <div class="difficulty-errors">Máximo 3 errores</div>
                         <p class="difficulty-description">Equilibrio perfecto</p>
                     </div>
-                    <div class="difficulty-card" data-difficulty="dificil">
+                    <div class="difficulty-card" 
+                         data-difficulty="dificil"
+                         role="button"
+                         tabindex="0"
+                         aria-label="Seleccionar dificultad difícil: 240 segundos, máximo 2 errores">
                         <div class="difficulty-header">
-                            <span class="difficulty-icon">🔴</span>
+                            <span class="difficulty-icon" aria-hidden="true">🔴</span>
                             <h3>Difícil</h3>
                         </div>
                         <div class="difficulty-time">240s</div>
@@ -360,9 +405,12 @@
                 </div>
             </div>
             
-            <button id="startGameButton" class="primary-button enhanced">
-                <i class="fas fa-play"></i>
-                ¡COMENZAR PARTIDA!
+            <button id="startGameButton" 
+                    class="primary-button enhanced"
+                    aria-label="Comenzar partida con la dificultad seleccionada"
+                    tabindex="0">
+                <i class="fas fa-play" aria-hidden="true"></i>
+                <span>¡COMENZAR PARTIDA!</span>
             </button>
         </div>
     </div>

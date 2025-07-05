@@ -1911,4 +1911,203 @@
 
 .volume-slider:active::-moz-range-thumb {
     animation: volumeChange 0.2s ease;
-} 
+}
+
+/* ========================================= */
+/* ======== OPTIMIZACIONES MÓVIL ========== */
+/* ========================================= */
+
+/* Optimizaciones para dispositivos táctiles */
+.letter.mobile-letter {
+    min-width: 28px;
+    min-height: 28px;
+    touch-action: manipulation; /* Optimizar para eventos táctiles */
+    -webkit-tap-highlight-color: transparent; /* Eliminar highlight azul en iOS */
+}
+
+.letter.small-mobile-letter {
+    min-width: 24px;
+    min-height: 24px;
+}
+
+/* Mejorar área táctil de botones */
+.submit-answer-icon-btn,
+.pasapalabra-button,
+.help-button {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+}
+
+/* Añadir área táctil más grande para elementos pequeños en móvil */
+@media (max-width: 768px) {
+    .submit-answer-icon-btn::after,
+    .help-button::after {
+        content: '';
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        right: -8px;
+        bottom: -8px;
+        z-index: -1;
+    }
+    
+    /* Optimizar input para teclado virtual */
+    .answer-input {
+        font-size: 16px !important; /* Prevenir zoom en iOS */
+        -webkit-appearance: none;
+        -webkit-border-radius: 0;
+        border-radius: 8px;
+    }
+    
+    /* Mejorar visibilidad del placeholder en móvil */
+    .answer-input::placeholder {
+        opacity: 0.7;
+        font-size: 0.9em;
+    }
+    
+    /* Estilos para el foco del input en móvil */
+    .answer-input:focus {
+        transform: none; /* Evitar animaciones que puedan interferir con el teclado virtual */
+        box-shadow: 0 0 0 3px rgba(131, 93, 255, 0.3);
+    }
+}
+
+/* Optimizaciones específicas para pantallas táctiles pequeñas */
+@media (max-width: 480px) and (pointer: coarse) {
+    .letter {
+        min-width: 32px;
+        min-height: 32px;
+        touch-action: manipulation;
+    }
+    
+    .pasapalabra-button,
+    .help-button {
+        min-height: 36px;
+        padding: 8px 12px;
+    }
+}
+
+/* Mejoras para orientación landscape en móviles */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+    .game-content {
+        padding: 10px 0;
+    }
+    
+    .rosco-container {
+        padding: 10px 5px;
+        margin-top: 5px;
+    }
+    
+    .rosco-circle {
+        max-width: 280px;
+        max-height: 280px;
+    }
+    
+    .question-card {
+        width: 70%;
+        min-height: 140px;
+        padding: 8px;
+    }
+    
+    .question-text {
+        font-size: 0.7rem;
+        max-height: 50px;
+        padding: 8px;
+        line-height: 1.2;
+    }
+    
+    .timer-wrapper {
+        margin-bottom: 4px;
+    }
+    
+    .action-buttons {
+        gap: 6px;
+        margin-top: 4px;
+    }
+}
+
+/* Prevenir selección de texto en elementos interactivos */
+.letter,
+.pasapalabra-button,
+.help-button,
+.submit-answer-icon-btn,
+.difficulty-card {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* Optimizar scrolling en modales para móvil */
+.modal-content {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+}
+
+/* Mejorar feedback visual para elementos táctiles */
+.letter:active,
+.pasapalabra-button:active,
+.help-button:active,
+.submit-answer-icon-btn:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
+/* Añadir clases de utilidad para mobile */
+.mobile-only {
+    display: none;
+}
+
+.desktop-only {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .mobile-only {
+        display: block;
+    }
+    
+    .desktop-only {
+        display: none;
+    }
+    
+    /* Mejorar contraste en móvil */
+    .question-text {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+    }
+    
+    /* Optimizar área táctil de letras */
+    .letter {
+        margin: 2px; /* Añadir espaciado entre letras para evitar toques accidentales */
+    }
+}
+
+/* Estilos para foco del teclado en elementos interactivos */
+.keyboard-focused {
+    outline: 3px solid rgba(131, 93, 255, 0.6) !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 3px rgba(131, 93, 255, 0.3) !important;
+}
+
+/* Optimizaciones específicas para modales en móvil */
+@media (max-width: 768px) {
+    .modal-overlay {
+        padding: 10px;
+    }
+    
+    .modal-content {
+        max-height: 90vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Mejorar botones en modales para móvil */
+    .modal-button {
+        min-height: 44px; /* Tamaño mínimo recomendado para elementos táctiles */
+        font-size: 1rem;
+        padding: 12px 20px;
+    }
+}
