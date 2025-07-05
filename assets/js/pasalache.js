@@ -897,26 +897,65 @@ document.addEventListener('DOMContentLoaded', function() {
                     startGameAfterLoadingButton.textContent = '¡COMENZAR AHORA!';
                     startGameAfterLoadingButton.disabled = false;
                     
-                    // Eliminar listener previo si existe para evitar duplicados
+                    // Eliminar listeners previos si existen para evitar duplicados
                     if (startGameClickListener) {
                         startGameAfterLoadingButton.removeEventListener('click', startGameClickListener);
+                        startGameAfterLoadingButton.removeEventListener('touchend', startGameClickListener);
                     }
                     
                     // Definir el nuevo listener
-                    startGameClickListener = () => {
+                    startGameClickListener = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Haptic feedback
+                        if (window.navigator && window.navigator.vibrate) {
+                            window.navigator.vibrate(100);
+                        }
+                        
                         if (loadingStartScreen) loadingStartScreen.style.display = 'none';
                         if (gameContainer) gameContainer.style.display = 'flex'; // O 'block' según tus CSS para gameContainer
                         
                         // Ahora sí, configurar y empezar el juego visualmente
-                setupLetters(); 
-                setupLetterStatuses();
+                        setupLetters(); 
+                        setupLetterStatuses();
                         startGame(); // Inicia timer y carga la primera pregunta
                         
                         // Añadir botón de ayuda después de que el juego es visible y configurado
                         // setTimeout(addHelpButton, 100); // <-- MOVIDO para después de startGame()
                     };
                     
+                    // Agregar event listeners para click y touch
                     startGameAfterLoadingButton.addEventListener('click', startGameClickListener);
+                    
+                    // Touch events para móvil
+                    startGameAfterLoadingButton.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        this.classList.add('active');
+                    });
+                    
+                    startGameAfterLoadingButton.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.classList.remove('active');
+                        startGameClickListener(e);
+                    });
+                    
+                    startGameAfterLoadingButton.addEventListener('touchcancel', function(e) {
+                        e.preventDefault();
+                        this.classList.remove('active');
+                    });
+                    
+                    // Keyboard support
+                    startGameAfterLoadingButton.addEventListener('keydown', function(e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            startGameClickListener(e);
+                        }
+                    });
+                    
+                    // Agregar CSS touch-action
+                    startGameAfterLoadingButton.style.touchAction = 'manipulation';
                 }
 
             })
@@ -2606,13 +2645,7 @@ document.addEventListener('DOMContentLoaded', function() {
         pasapalabraButton.addEventListener('click', pasapalabra);
     }
 
-    // Add help button when game starts
-    if (startGameButton) {
-        startGameButton.addEventListener('click', function() {
-            // Add help button when game starts with a slight delay to ensure DOM is ready
-            // setTimeout(addHelpButton, 100); // Movido a después de que el usuario hace clic en "COMENZAR AHORA!"
-        });
-    }
+    // Note: startGameButton event listeners are handled in the main initialization section above
 
     // Add debounced resize listener
     const debouncedPositionLetters = debounce(positionLetters, 250); // Adjust debounce time (ms) as needed

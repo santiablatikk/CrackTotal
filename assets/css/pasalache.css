@@ -362,6 +362,33 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
+/* Estado active para touch events en móvil */
+#startGameAfterLoadingButton:not(:disabled).active {
+    transform: translateY(-2px) scale(1.02);
+    background: linear-gradient(135deg, #6a4fd0 0%, #9b7ff7 50%, #835DFF 100%);
+    box-shadow: 
+        0 8px 20px rgba(131, 93, 255, 0.6),
+        0 0 10px rgba(131, 93, 255, 0.4),
+        0 0 0 1px rgba(131, 93, 255, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.1s ease;
+}
+
+/* Mejoras específicas para touch en móvil */
+#startGameAfterLoadingButton {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
 /* Responsive para la pantalla de carga mejorada */
 @media (max-width: 768px) {
     .loading-start-screen .container {
