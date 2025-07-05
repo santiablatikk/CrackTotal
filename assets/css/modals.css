@@ -38,6 +38,8 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 .modal-overlay.active {
@@ -59,6 +61,9 @@
     position: relative;
     transform: translateY(20px) scale(0.95);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 90vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .modal-overlay.active .modal-content {
@@ -108,7 +113,7 @@
     font-family: 'Inter', sans-serif;
     font-size: 0.875rem;
     font-weight: 500;
-    padding: 10px 16px;
+    padding: 12px 16px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
@@ -120,6 +125,10 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    /* Mejorar tap targets para móvil */
+    min-height: 44px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .cancel-button {
@@ -202,6 +211,9 @@
     max-width: 800px;
     width: 90%;
     padding: 24px;
+    max-height: 95vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 #gameRulesModal .modal-title {
@@ -251,81 +263,92 @@
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    /* Mejorar tap targets para móvil */
+    min-height: 120px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .difficulty-card::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--modal-primary);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(148, 163, 184, 0.05) 0%,
+        rgba(148, 163, 184, 0.1) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-.difficulty-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--modal-primary);
-    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+.difficulty-card:hover,
+.difficulty-card:focus,
+.difficulty-card:active {
+    border-color: #6366f1;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.2);
 }
 
-.difficulty-card:hover::before {
-    transform: scaleX(1);
+.difficulty-card:hover::before,
+.difficulty-card:focus::before,
+.difficulty-card:active::before {
+    opacity: 1;
 }
 
 .difficulty-card.active {
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(99, 102, 241, 0.05));
-    border-color: var(--modal-primary);
-    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.2);
+    border-color: #6366f1;
+    background: rgba(99, 102, 241, 0.1);
     transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
 }
 
 .difficulty-card.active::before {
-    transform: scaleX(1);
+    opacity: 1;
 }
 
 .difficulty-header {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 8px;
     margin-bottom: 12px;
 }
 
 .difficulty-icon {
     font-size: 1.5rem;
-    line-height: 1;
+    margin-bottom: 4px;
 }
 
 .difficulty-card h3 {
-    font-size: 1rem;
-    font-weight: 700;
     margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
     color: var(--text-primary);
-    letter-spacing: 0.5px;
 }
 
 .difficulty-time {
     font-size: 1.125rem;
-    font-weight: 600;
-    color: var(--modal-primary);
-    margin: 8px 0 4px;
+    font-weight: 700;
+    color: #6366f1;
+    margin-bottom: 4px;
 }
 
 .difficulty-errors {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     color: var(--text-secondary);
-    margin: 0 0 8px;
-    font-weight: 500;
+    margin-bottom: 8px;
 }
 
 .difficulty-description {
     font-size: 0.75rem;
     color: var(--text-muted);
-    line-height: 1.4;
-    margin: 0;
     font-style: italic;
 }
 
@@ -336,44 +359,48 @@
     background: var(--modal-accent);
     color: white;
     font-size: 0.625rem;
-    font-weight: 600;
     padding: 4px 8px;
     border-radius: 12px;
+    font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-/* Reglas horizontales compactas */
 .rules-horizontal {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-    margin: 0 0 24px 0;
+    margin-bottom: 24px;
 }
 
 .rule-compact {
-    background: rgba(148, 163, 184, 0.06);
-    border: 1px solid rgba(148, 163, 184, 0.12);
-    border-radius: 8px;
-    padding: 12px 8px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(148, 163, 184, 0.05);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+    border-radius: 8px;
     transition: all 0.2s ease;
+    /* Mejorar tap targets para móvil */
+    min-height: 48px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .rule-compact:hover {
-    background: rgba(148, 163, 184, 0.12);
-    transform: translateY(-1px);
+    background: rgba(148, 163, 184, 0.1);
+    border-color: rgba(148, 163, 184, 0.2);
 }
 
 .rule-compact .rule-icon {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 0.875rem;
     flex-shrink: 0;
 }
 
@@ -384,1192 +411,183 @@
 
 .rule-text {
     font-size: 0.75rem;
-    line-height: 1.3;
     color: var(--text-secondary);
+    line-height: 1.4;
 }
 
 .rule-text strong {
     color: var(--text-primary);
-    font-weight: 600;
 }
 
-/* Botón principal mejorado */
 #gameRulesModal .primary-button.enhanced {
-    width: 100%;
-    background: linear-gradient(135deg, var(--modal-primary), #5b21b6);
+    background: var(--modal-primary);
     color: white;
-    border: none;
-    padding: 16px 24px;
-    border-radius: 12px;
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 600;
+    padding: 16px 32px;
+    border-radius: 12px;
+    border: none;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-top: 8px;
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    /* Mejorar tap targets para móvil */
+    min-height: 56px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 #gameRulesModal .primary-button.enhanced:hover {
-    background: linear-gradient(135deg, #5b21b6, var(--modal-primary));
-    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
     transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
 }
 
 #gameRulesModal .primary-button.enhanced:active {
-    transform: translateY(0);
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
-/* Responsive Design para el modal horizontal */
+/* ===== RESPONSIVE DESIGN MEJORADO ===== */
 @media (max-width: 768px) {
-    #gameRulesModal .modal-content.horizontal-modal {
-        max-width: 92%;
-        width: 92%;
+    .modal-overlay {
         padding: 16px;
-        margin: 8px;
+        align-items: flex-start;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
-    
+
+    #gameRulesModal .modal-content.horizontal-modal {
+        max-width: 100%;
+        width: 100%;
+        padding: 20px;
+        margin: 20px 0;
+        max-height: none;
+        min-height: auto;
+    }
+
     .difficulty-cards {
         grid-template-columns: 1fr;
-        gap: 10px;
+        gap: 12px;
     }
-    
+
     .difficulty-card {
-        padding: 14px 10px;
-    }
-    
-    .difficulty-card h3 {
-        font-size: 0.9rem;
-    }
-    
-    .difficulty-time {
-        font-size: 1rem;
-        margin: 6px 0 3px;
-    }
-    
-    .difficulty-errors {
-        font-size: 0.8rem;
-        margin: 0 0 6px;
-    }
-    
-    .difficulty-description {
-        font-size: 0.7rem;
-    }
-    
-    .rules-horizontal {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-    }
-    
-    .rule-compact {
-        flex-direction: column;
-        text-align: center;
-        gap: 4px;
-        padding: 8px 6px;
-    }
-    
-    .rule-text {
-        font-size: 0.65rem;
-    }
-    
-    #gameRulesModal .primary-button.enhanced {
-        font-size: 0.9rem;
-        padding: 14px 20px;
-        margin-top: 6px;
-    }
-}
-
-@media (max-width: 480px) {
-    .modal-content {
-        padding: 12px;
-        border-radius: 10px;
-        margin: 6px;
-    }
-    
-    .modal-title {
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-    }
-    
-    #gameRulesModal .modal-content.horizontal-modal {
-        padding: 12px;
-        max-width: 95%;
-        width: 95%;
-        margin: 4px;
-    }
-    
-    #gameRulesModal .modal-title {
-        font-size: 0.85rem;
-        margin-bottom: 6px;
-    }
-    
-    .game-promo {
-        font-size: 0.7rem;
-        margin: 0 0 8px;
-    }
-    
-    .difficulty-main-title {
-        font-size: 0.9rem;
-        margin-bottom: 12px;
-    }
-    
-    .difficulty-card {
-        padding: 12px 8px;
-}
-
-    .difficulty-card h3 {
-        font-size: 0.85rem;
-    }
-    
-    .difficulty-time {
-        font-size: 0.95rem;
-        margin: 5px 0 2px;
-    }
-    
-    .difficulty-errors {
-        font-size: 0.75rem;
-        margin: 0 0 4px;
-}
-
-    .difficulty-description {
-        font-size: 0.65rem;
-}
-
-    .rules-horizontal {
-        grid-template-columns: 1fr;
-        gap: 5px;
-        margin: 0 0 8px 0;
-    }
-    
-    .rule-compact {
-        padding: 6px 4px;
-        gap: 3px;
-    }
-    
-    .rule-compact .rule-icon {
-        width: 16px;
-        height: 16px;
-}
-
-    .rule-text {
-        font-size: 0.6rem;
-        line-height: 1.2;
-}
-
-    #gameRulesModal .primary-button.enhanced {
-        font-size: 0.8rem;
-        padding: 12px 16px;
-        margin-top: 4px;
-}
-
-    /* Game Result and Stats Modals - More compact */
-#gameResultModal .modal-content,
-#statsDetailModal .modal-content {
-        max-width: 95%;
-        width: 95%;
-        margin: 4px;
-    }
-    
-.result-modal-header,
-.stats-modal-header {
-        padding: 10px 12px 8px;
-}
-
-.result-title,
-.stats-title {
-        font-size: 0.95rem;
-}
-
-.result-message,
-.stats-subtitle {
-        font-size: 0.7rem;
-    }
-    
-    .result-icon svg {
-        width: 28px;
-        height: 28px;
-}
-
-.result-stats,
-.performance-summary {
-        padding: 10px;
-        gap: 6px;
-    }
-    
-.stat-item,
-.performance-item {
-        padding: 8px 6px;
-}
-
-.stat-label,
-.performance-label {
-        font-size: 0.55rem;
-        margin-bottom: 3px;
-}
-
-.stat-value,
-.performance-value {
-        font-size: 1.1rem;
-}
-
-.errors-container {
-        padding: 8px 10px;
-        max-height: 120px;
-}
-
-.errors-title {
-        font-size: 0.7rem;
-        margin-bottom: 5px;
-}
-
-.error-item {
-        padding: 4px 6px;
-        gap: 5px;
-}
-
-.error-letter {
-        width: 16px;
-        height: 16px;
-        font-size: 0.6rem;
-}
-
-.error-question {
-        font-size: 0.55rem;
-        margin-bottom: 2px;
-}
-
-.error-answers {
-        font-size: 0.5rem;
-}
-
-.result-buttons,
-.stats-buttons {
-        padding: 8px 10px;
-        gap: 6px;
-}
-
-.result-buttons .modal-button {
-        min-width: 60px;
-        padding: 6px 10px;
-        font-size: 0.75rem;
-    }
-    
-    #privateRoomPasswordModal .modal-content {
-        padding: 12px;
-        margin: 6px;
-}
-
-    #privateRoomPasswordModal .modal-title {
-        font-size: 0.85rem;
-        margin-bottom: 6px;
-}
-
-    #privateRoomPasswordModal #passwordModalText {
-        font-size: 0.7rem;
-        margin-bottom: 10px;
-}
-
-    #privateRoomPasswordModal .form-group label {
-        font-size: 0.7rem;
-        margin-bottom: 4px;
-}
-
-    #privateRoomPasswordModal #passwordModalInput {
-        padding: 8px 10px;
-        font-size: 0.7rem;
-}
-
-    #privateRoomPasswordModal #passwordErrorText {
-        font-size: 0.65rem;
-        margin-bottom: 8px;
-    }
-    
-    .feedback-close-btn {
-        top: 5px;
-        right: 5px;
-        width: 18px;
-        height: 18px;
-    }
-    
-    .feedback-close-btn svg {
-        width: 10px;
-        height: 10px;
-    }
-}
-
-/* Password Modal */
-#privateRoomPasswordModal .modal-content {
-    max-width: 320px;
-    padding: 22px;
-}
-
-#privateRoomPasswordModal .modal-title {
-    font-size: 1.125rem;
-    margin-bottom: 14px;
-}
-
-#privateRoomPasswordModal #passwordModalText {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    text-align: center;
-    margin-bottom: 18px;
-    line-height: 1.6;
-}
-
-#privateRoomPasswordModal .form-group {
-    margin-bottom: 16px;
-}
-
-#privateRoomPasswordModal .form-group label {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-}
-
-#privateRoomPasswordModal #passwordModalInput {
-    width: 100%;
-    padding: 12px 14px;
-    background: rgba(148, 163, 184, 0.05);
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    border-radius: 8px;
-    color: var(--text-primary);
-    font-size: 0.875rem;
-    transition: all 0.2s ease;
-}
-
-#privateRoomPasswordModal #passwordModalInput:focus {
-    outline: none;
-    border-color: #6366f1;
-    background: rgba(148, 163, 184, 0.08);
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
-}
-
-#privateRoomPasswordModal #passwordModalInput::placeholder {
-    color: var(--text-muted);
-}
-
-#privateRoomPasswordModal #passwordErrorText {
-    font-size: 0.8rem;
-    color: #ef4444;
-    text-align: center;
-    margin-top: 8px;
-    margin-bottom: 16px;
-    min-height: 1.2em;
-}
-
-#privateRoomPasswordModal .modal-footer {
-    margin-top: 18px;
-}
-
-/* Mentiroso Modal */
-.mentiroso-intro-modal {
-    max-width: 380px;
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.2);
-}
-
-.mentiroso-intro-modal .modal-title {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    font-size: 1.25rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    border-bottom: 1px solid rgba(239, 68, 68, 0.2);
-    padding-bottom: 12px;
-    margin-bottom: 16px;
-}
-
-.mentiroso-intro-modal .modal-title i {
-    color: #ef4444;
-    font-size: 1.2rem;
-    margin-right: 8px;
-}
-
-.mentiroso-intro-modal p {
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    text-align: center;
-    margin-bottom: 16px;
-    line-height: 1.6;
-    font-weight: 600;
-}
-
-.mentiroso-intro-modal ul {
-    padding-left: 18px;
-    margin-bottom: 18px;
-}
-
-.mentiroso-intro-modal li {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    margin-bottom: 8px;
-    line-height: 1.5;
-}
-
-.mentiroso-intro-modal strong {
-    color: #f59e0b;
-    font-weight: 600;
-}
-
-.mentiroso-intro-modal .highlight-consagra {
-    color: #10b981;
-    font-weight: 600;
-}
-
-.mentiroso-intro-modal .modal-footer {
-    display: flex;
-    justify-content: center;
-    margin-top: 18px;
-}
-
-.mentiroso-intro-modal .primary-button {
-    background: var(--modal-error);
-    color: white;
-    border: none;
-    padding: 12px 18px;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.mentiroso-intro-modal .primary-button i {
-    font-size: 1rem;
-}
-
-/* Feedback close button */
-.feedback-close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 24px;
-    height: 24px;
-    background: rgba(148, 163, 184, 0.1);
-    border: none;
-    border-radius: 6px;
-    color: var(--text-muted);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    z-index: 10;
-}
-
-.feedback-close-btn:hover {
-    background: rgba(148, 163, 184, 0.2);
-    color: var(--text-secondary);
-}
-
-.feedback-close-btn:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
-}
-
-.feedback-close-btn svg {
-    width: 12px;
-    height: 12px;
-}
-
-/* Crack Rápido Intro Modal */
-.crack-rapido-intro-modal {
-    max-width: 600px;
-    width: 90%;
-    background: linear-gradient(135deg, rgba(22, 24, 38, 0.95), rgba(13, 14, 26, 0.98));
-    backdrop-filter: blur(20px);
-}
-
-.crack-rapido-intro-modal .modal-title {
-    font-size: 1.5rem;
-    font-weight: 800;
-    text-align: center;
-    margin-bottom: 20px;
-    color: #00d4ff;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
-}
-
-.crack-rapido-intro-modal .modal-title i {
-    margin-right: 12px;
-    color: #ffd32a;
-    animation: pulse 2s infinite;
-}
-
-.crack-rapido-intro-modal p {
-    text-align: center;
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 25px;
-    font-weight: 600;
-}
-
-.crack-rapido-intro-modal ul {
-    padding-left: 20px;
-    margin-bottom: 30px;
-}
-
-.crack-rapido-intro-modal li {
-    margin-bottom: 12px;
-    line-height: 1.6;
-    color: rgba(255, 255, 255, 0.85);
-}
-
-.crack-rapido-intro-modal strong {
-    color: #00d4ff;
-    font-weight: 700;
-}
-
-.crack-rapido-intro-modal .highlight-consagra {
-    color: #ffd32a !important;
-    text-shadow: 0 0 10px rgba(255, 211, 42, 0.3);
-}
-
-.crack-rapido-intro-modal .modal-footer {
-    display: flex;
-    justify-content: center;
-    padding-top: 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.crack-rapido-intro-modal .primary-button {
-    background: linear-gradient(135deg, #00d4ff 0%, #4a90e2 100%);
-    color: white;
-    padding: 15px 30px;
-    border: none;
-    border-radius: 25px;
-    font-size: 1rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
-    letter-spacing: 1px;
-    position: relative;
-    overflow: hidden;
-}
-
-.crack-rapido-intro-modal .primary-button i {
-    margin-right: 10px;
-    animation: pulse 1.5s infinite;
-}
-
-.crack-rapido-intro-modal .primary-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5);
-    background: linear-gradient(135deg, #4a90e2 0%, #00d4ff 100%);
-}
-
-.crack-rapido-intro-modal .primary-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.6s ease;
-}
-
-.crack-rapido-intro-modal .primary-button:hover::before {
-    left: 100%;
-}
-
-.feedback-close-btn {
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-
-@media (max-width: 640px) {
-    .modal-content {
-        max-width: 95%;
-        padding: 16px;
-        margin: 12px;
-    }
-    
-    .modal-title {
-        font-size: 1rem;
-    }
-    
-    #gameRulesModal .modal-content {
-        max-width: 95%;
-        padding: 16px;
-    }
-    
-    #gameRulesModal .modal-title {
-        font-size: 0.95rem;
-        margin-bottom: 10px;
-    }
-    
-    .game-promo {
-        font-size: 0.75rem;
-        margin: 0 0 12px;
-    }
-    
-    .game-options h4 {
-        font-size: 0.7rem;
-        margin-bottom: 8px;
-    }
-    
-    .difficulty-options {
-        gap: 5px;
-    }
-    
-    .difficulty-btn {
-        min-width: 65px;
-        padding: 6px 10px;
-        font-size: 0.7rem;
-    }
-    
-    /* Grid 1x6 en móviles para mejor organización */
-    .rules-grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: repeat(6, auto);
-        gap: 6px;
-        margin: 0 0 12px 0;
-    }
-    
-    .rule-item {
-        padding: 8px 6px;
-        max-width: none;
-    }
-    
-    .rule-icon {
-        width: 16px;
-        height: 16px;
-        margin-bottom: 4px;
-    }
-    
-    .rule-item h4 {
-        font-size: 0.6rem;
-        margin-bottom: 3px;
-    }
-    
-    .rule-item p,
-    .rule-item ul li {
-        font-size: 0.55rem;
-        line-height: 1.2;
-    }
-    
-    #gameRulesModal .primary-button {
-        font-size: 0.75rem;
-        padding: 8px 12px;
-        margin-top: 12px;
-    }
-    
-    /* Pasala Che Result Modal Responsive */
-    .game-result-modal .modal-content.result-modal {
-        max-width: 95%;
-        width: 95%;
-        margin: 8px;
-    }
-    
-    .result-modal-header {
-        padding: 16px 16px 14px;
-    }
-    
-    .result-title {
-        font-size: 1.125rem;
-    }
-    
-    .result-message {
-        font-size: 0.875rem;
-    }
-    
-    .result-icon {
-        font-size: 2.25rem;
-        margin-bottom: 8px;
-    }
-    
-    .result-icon svg {
-        width: 36px;
-        height: 36px;
-    }
-    
-    .modal-horizontal-layout {
-        grid-template-columns: 1fr;
-        gap: 16px;
         padding: 16px;
         min-height: auto;
     }
-    
-    .modal-sidebar {
-        order: 2;
-    }
-    
-    .result-stats {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-        order: 1;
-    }
-    
-    .stat-item {
-        padding: 12px 8px;
-    }
-    
-    .stat-label {
-        font-size: 0.7rem;
-        margin-bottom: 4px;
-    }
-    
-    .stat-value {
-        font-size: 1.25rem;
-    }
-    
-    .errors-container {
-        padding: 12px;
-        max-height: 180px;
-    }
-    
-    .errors-title {
-        font-size: 0.875rem;
-        margin-bottom: 10px;
-    }
-    
-    .error-item {
-        padding: 8px;
-        gap: 8px;
-    }
-    
-    .error-letter {
-        width: 20px;
-        height: 20px;
-        font-size: 0.65rem;
-    }
-    
-    .error-question {
-        font-size: 0.7rem;
-        margin-bottom: 4px;
-    }
-    
-    .error-answers {
-        gap: 1px;
-    }
-    
-    .user-answer,
-    .correct-answer {
-        font-size: 0.65rem;
-    }
-    
-    .result-buttons {
-        padding: 16px 16px 16px;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-    
-    .result-buttons .modal-button {
-        min-width: 80px;
-        padding: 8px 12px;
-        font-size: 0.75rem;
-        flex: 1;
-        min-width: calc(50% - 4px);
-    }
-    
-    #statsDetailModal .modal-content,
-    #gameResultModal .modal-content {
-        max-width: 95%;
-    }
-    
-    .result-modal-header,
-    .stats-modal-header {
-        padding: 12px 12px 10px;
-    }
-    
-    .result-title,
-    .stats-title {
-        font-size: 1rem;
-    }
-    
-    .result-message,
-    .stats-subtitle {
-        font-size: 0.75rem;
-    }
-    
-    /* Stats grid 1x4 en móviles */
-    .result-stats,
-    .performance-summary {
-        grid-template-columns: 1fr;
-        gap: 6px;
-        padding: 12px;
-    }
-    
-    .stat-item,
-    .performance-item {
-        padding: 10px 8px;
-    }
-    
-    .stat-value,
-    .performance-value {
+
+    .difficulty-card h3 {
         font-size: 1.125rem;
     }
-    
-    .result-buttons,
-    .stats-buttons {
-        padding: 0 12px 12px;
+
+    .difficulty-time {
+        font-size: 1.25rem;
     }
-    
-    .modal-button {
-        min-width: 60px;
-        padding: 6px 10px;
-        font-size: 0.75rem;
+
+    .difficulty-errors {
+        font-size: 0.875rem;
     }
-    
-    #statsDetailModal .modal-content {
-        max-width: 95%;
+
+    .difficulty-description {
+        font-size: 0.875rem;
     }
-    
-    .errors-container {
-        padding: 10px 12px;
-        max-height: 150px;
+
+    .rules-horizontal {
+        grid-template-columns: 1fr;
+        gap: 10px;
     }
-    
-    .errors-title {
-        font-size: 0.75rem;
-        margin-bottom: 8px;
+
+    .rule-compact {
+        padding: 12px;
+        min-height: 52px;
     }
-    
-    .error-item {
-        padding: 6px 8px;
-        gap: 6px;
+
+    .rule-text {
+        font-size: 0.875rem;
     }
-    
-    .error-letter {
-        width: 16px;
-        height: 16px;
-        font-size: 0.6rem;
-    }
-    
-    .error-question {
-        font-size: 0.65rem;
-        margin-bottom: 3px;
-    }
-    
-    .error-answers {
-        font-size: 0.6rem;
-    }
-    
-    #privateRoomPasswordModal .modal-content {
-        padding: 14px;
-    }
-    
-    #privateRoomPasswordModal .modal-title {
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-    }
-    
-    #privateRoomPasswordModal #passwordModalText {
-        font-size: 0.75rem;
-        margin-bottom: 12px;
-    }
-    
-    #privateRoomPasswordModal .form-group label {
-        font-size: 0.75rem;
-        margin-bottom: 4px;
-    }
-    
-    #privateRoomPasswordModal #passwordModalInput {
-        padding: 8px 10px;
-        font-size: 0.75rem;
-    }
-    
-    #privateRoomPasswordModal #passwordErrorText {
-        font-size: 0.7rem;
-        margin-bottom: 10px;
-    }
-    
-    .feedback-close-btn {
-        top: 6px;
-        right: 6px;
-        width: 16px;
-        height: 16px;
-    }
-    
-    .feedback-close-btn svg {
-        width: 8px;
-        height: 8px;
+
+    #gameRulesModal .primary-button.enhanced {
+        font-size: 1.125rem;
+        padding: 18px 24px;
+        min-height: 60px;
     }
 }
 
 @media (max-width: 480px) {
     .modal-content {
-        padding: 14px;
-        border-radius: 10px;
+        padding: 16px;
+        border-radius: 12px;
+        margin: 10px 0;
     }
-    
+
     .modal-title {
-        font-size: 0.9rem;
-        margin-bottom: 10px;
+        font-size: 1.125rem;
     }
-    
-    #gameRulesModal .modal-content {
-        padding: 12px;
+
+    #gameRulesModal .modal-content.horizontal-modal {
+        padding: 16px;
+        margin: 10px 0;
+        border-radius: 12px;
     }
-    
+
     #gameRulesModal .modal-title {
-        font-size: 0.85rem;
-        margin-bottom: 8px;
+        font-size: 1.25rem;
     }
-    
+
     .game-promo {
-        font-size: 0.7rem;
-        margin: 0 0 8px;
+        font-size: 0.875rem;
     }
-    
-    .game-options h4 {
-        font-size: 0.65rem;
-        margin-bottom: 6px;
-    }
-    
-    .difficulty-options {
-        gap: 4px;
-    }
-    
-    .difficulty-btn {
-        min-width: 55px;
-        padding: 5px 8px;
-        font-size: 0.65rem;
-    }
-    
-    .rules-grid {
-        gap: 5px;
-        margin: 0 0 10px 0;
-    }
-    
-    .rule-item {
-        padding: 6px 4px;
-    }
-    
-    .rule-icon {
-        width: 14px;
-        height: 14px;
-        margin-bottom: 3px;
-    }
-    
-    .rule-item h4 {
-        font-size: 0.55rem;
-        margin-bottom: 2px;
-    }
-    
-    .rule-item p,
-    .rule-item ul li {
-        font-size: 0.5rem;
-        line-height: 1.1;
-    }
-    
-    #gameRulesModal .primary-button {
-        font-size: 0.7rem;
-        padding: 6px 10px;
-        margin-top: 8px;
-    }
-    
-    /* Pasala Che Result Modal - Ultra Mobile */
-    .game-result-modal .modal-content.result-modal {
-        max-width: 98%;
-        width: 98%;
-        margin: 4px;
-    }
-    
-    .result-modal-header {
-        padding: 12px 12px 10px;
-    }
-    
-    .result-title {
+
+    .difficulty-main-title {
         font-size: 1rem;
     }
-    
-    .result-message {
-        font-size: 0.8rem;
+
+    .difficulty-card {
+        padding: 16px 12px;
+        min-height: auto;
     }
-    
-    .result-icon {
-        font-size: 2rem;
-        margin-bottom: 6px;
-    }
-    
-    .result-icon svg {
-        width: 32px;
-        height: 32px;
-    }
-    
-    .modal-horizontal-layout {
-        grid-template-columns: 1fr;
-        gap: 12px;
-        padding: 12px;
-    }
-    
-    .result-stats {
-        grid-template-columns: 1fr;
-        gap: 6px;
-    }
-    
-    .stat-item {
-        padding: 10px 6px;
-    }
-    
-    .stat-label {
-        font-size: 0.65rem;
-        margin-bottom: 3px;
-    }
-    
-    .stat-value {
-        font-size: 1.1rem;
-    }
-    
-    .errors-container {
-        padding: 10px;
-        max-height: 150px;
-    }
-    
-    .errors-title {
-        font-size: 0.8rem;
-        margin-bottom: 8px;
-    }
-    
-    .error-item {
-        padding: 6px;
-        gap: 6px;
-    }
-    
-    .error-letter {
-        width: 18px;
-        height: 18px;
-        font-size: 0.6rem;
-    }
-    
-    .error-question {
-        font-size: 0.65rem;
-        margin-bottom: 3px;
-    }
-    
-    .user-answer,
-    .correct-answer {
-        font-size: 0.6rem;
-    }
-    
-    .result-buttons {
-        padding: 12px 12px 12px;
-        gap: 6px;
-        flex-direction: column;
-    }
-    
-    .result-buttons .modal-button {
-        width: 100%;
-        min-width: auto;
-        padding: 10px 12px;
-        font-size: 0.75rem;
-    }
-    
-    .result-stats {
-        padding: 10px;
-        gap: 6px;
-    }
-    
-    .stat-item {
-        padding: 8px 6px;
-    }
-    
-    .stat-label {
-        font-size: 0.6rem;
-        margin-bottom: 3px;
-    }
-    
-    .stat-value {
+
+    .difficulty-card h3 {
         font-size: 1rem;
     }
-    
-    .result-buttons,
-    .stats-buttons {
-        padding: 0 10px 10px;
-        gap: 5px;
+
+    .difficulty-time {
+        font-size: 1.125rem;
     }
-    
-    .modal-button {
-        min-width: 50px;
-        padding: 5px 8px;
-        font-size: 0.7rem;
+
+    .difficulty-errors {
+        font-size: 0.8125rem;
     }
-    
-    .errors-container {
-        padding: 8px 10px;
-        max-height: 120px;
+
+    .difficulty-description {
+        font-size: 0.8125rem;
     }
-    
-    .error-item {
-        padding: 4px 6px;
+
+    .rules-horizontal {
+        grid-template-columns: 1fr;
+        gap: 8px;
     }
-    
-    .error-letter {
-        width: 14px;
-        height: 14px;
-        font-size: 0.55rem;
+
+    .rule-compact {
+        padding: 10px;
+        gap: 10px;
+        min-height: 48px;
     }
-    
-    .error-question {
-        font-size: 0.6rem;
+
+    .rule-compact .rule-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8125rem;
     }
-    
-    .error-answers {
-        font-size: 0.55rem;
+
+    .rule-text {
+        font-size: 0.8125rem;
     }
-    
-    #privateRoomPasswordModal .modal-content {
-        padding: 14px;
-    }
-    
-    #privateRoomPasswordModal .modal-title {
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-    }
-    
-    #privateRoomPasswordModal #passwordModalText {
-        font-size: 0.75rem;
-        margin-bottom: 12px;
-    }
-    
-    #privateRoomPasswordModal .form-group label {
-        font-size: 0.75rem;
-        margin-bottom: 4px;
-    }
-    
-    #privateRoomPasswordModal #passwordModalInput {
-        padding: 8px 10px;
-        font-size: 0.75rem;
-    }
-    
-    #privateRoomPasswordModal #passwordErrorText {
-        font-size: 0.7rem;
-        margin-bottom: 10px;
-    }
-    
-    .feedback-close-btn {
-        top: 6px;
-        right: 6px;
-        width: 16px;
-        height: 16px;
-    }
-    
-    .feedback-close-btn svg {
-        width: 8px;
-        height: 8px;
+
+    #gameRulesModal .primary-button.enhanced {
+        font-size: 1rem;
+        padding: 16px 20px;
+        min-height: 56px;
     }
 }
 
@@ -2006,517 +1024,1165 @@
 
 /* ===== ULTRA MOBILE - 320px to 360px ===== */
 @media (max-width: 360px) {
-    /* Game Rules Modal - Ultra Small */
+    .modal-overlay {
+        padding: 12px;
+    }
+
     #gameRulesModal .modal-content.horizontal-modal {
-        max-width: 98%;
-        width: 98%;
-        padding: 8px;
-        margin: 2px;
+        padding: 12px;
+        margin: 5px 0;
+        border-radius: 10px;
     }
-    
+
     #gameRulesModal .modal-title {
-        font-size: 0.8rem;
+        font-size: 1.125rem;
         margin-bottom: 6px;
-        line-height: 1.2;
     }
-    
+
     .game-promo {
-        font-size: 0.65rem;
-        margin: 0 0 6px;
-        line-height: 1.3;
+        font-size: 0.8125rem;
+        margin-bottom: 16px;
     }
-    
+
     .difficulty-main-title {
-        font-size: 0.85rem;
-        margin-bottom: 8px;
+        font-size: 0.9375rem;
     }
-    
+
     .difficulty-cards {
+        gap: 8px;
+    }
+
+    .difficulty-card {
+        padding: 12px 8px;
+        min-height: auto;
+    }
+
+    .difficulty-card h3 {
+        font-size: 0.9375rem;
+    }
+
+    .difficulty-time {
+        font-size: 1rem;
+    }
+
+    .difficulty-errors {
+        font-size: 0.75rem;
+    }
+
+    .difficulty-description {
+        font-size: 0.75rem;
+    }
+
+    .rules-horizontal {
         grid-template-columns: 1fr;
         gap: 6px;
     }
-    
-    .difficulty-card {
-        padding: 8px 6px;
-    }
-    
-    .difficulty-card h3 {
-        font-size: 0.8rem;
-    }
-    
-    .difficulty-time {
-        font-size: 0.9rem;
-        margin: 4px 0 2px;
-    }
-    
-    .difficulty-errors {
-        font-size: 0.7rem;
-        margin: 0 0 4px;
-    }
-    
-    .difficulty-description {
-        font-size: 0.6rem;
-    }
-    
-    .rules-horizontal {
-        grid-template-columns: 1fr;
-        gap: 4px;
-        margin: 0 0 6px 0;
-    }
-    
+
     .rule-compact {
-        padding: 4px 3px;
-        gap: 2px;
-        flex-direction: column;
-        text-align: center;
+        padding: 8px;
+        gap: 8px;
+        min-height: 44px;
     }
-    
+
     .rule-compact .rule-icon {
-        width: 14px;
-        height: 14px;
-    }
-    
-    .rule-text {
-        font-size: 0.55rem;
-        line-height: 1.1;
-    }
-    
-    #gameRulesModal .primary-button.enhanced {
+        width: 24px;
+        height: 24px;
         font-size: 0.75rem;
-        padding: 8px 12px;
-        margin-top: 4px;
     }
-    
-    /* Pasala Che Result Modal - Ultra Small (340px) */
+
+    .rule-text {
+        font-size: 0.75rem;
+    }
+
+    #gameRulesModal .primary-button.enhanced {
+        font-size: 0.9375rem;
+        padding: 14px 18px;
+        min-height: 52px;
+    }
+
+    /* Result modal adjustments */
     .game-result-modal .modal-content.result-modal {
-        max-width: 99%;
-        width: 99%;
-        margin: 1px;
-        border-radius: 12px;
+        padding: 12px;
+        margin: 5px 0;
+        border-radius: 10px;
     }
-    
+
     .result-modal-header {
-        padding: 8px 8px 6px;
-        border-radius: 12px 12px 0 0;
+        padding: 10px;
     }
-    
+
     .result-title {
-        font-size: 0.9rem;
-        margin-bottom: 3px;
-        line-height: 1.1;
+        font-size: 1.125rem;
     }
-    
+
     .result-message {
-        font-size: 0.7rem;
-        line-height: 1.2;
+        font-size: 0.8125rem;
     }
-    
+
     .result-icon {
-        font-size: 1.75rem;
-        margin-bottom: 4px;
+        margin-bottom: 8px;
     }
-    
+
     .result-icon svg {
         width: 28px;
         height: 28px;
     }
-    
+
     .modal-horizontal-layout {
-        grid-template-columns: 1fr;
         gap: 8px;
         padding: 8px;
-        min-height: auto;
     }
-    
-    /* Stats en columna única para pantallas muy pequeñas */
+
     .result-stats {
-        grid-template-columns: 1fr;
-        gap: 4px;
-        order: 1;
+        gap: 6px;
     }
-    
+
     .stat-item {
-        padding: 6px 4px;
-        border-radius: 6px;
+        padding: 8px 6px;
     }
-    
+
     .stat-label {
-        font-size: 0.6rem;
-        margin-bottom: 2px;
+        font-size: 0.6875rem;
     }
-    
+
     .stat-label i {
-        margin-right: 2px;
-        width: 10px;
+        font-size: 0.75rem;
     }
-    
+
     .stat-value {
-        font-size: 0.95rem;
-        line-height: 1.1;
+        font-size: 1.125rem;
     }
-    
-    /* Sidebar más compacto */
+
     .modal-sidebar {
-        order: 2;
-        border-radius: 8px;
+        padding: 8px;
     }
-    
+
     .errors-container {
-        padding: 6px;
+        padding: 8px;
         max-height: 120px;
     }
-    
+
     .errors-title {
-        font-size: 0.7rem;
+        font-size: 0.8125rem;
         margin-bottom: 6px;
-        padding-bottom: 4px;
     }
-    
+
     .quick-summary p {
-        font-size: 0.65rem !important;
-        margin-bottom: 8px !important;
-        line-height: 1.3 !important;
+        font-size: 0.75rem;
+        margin-bottom: 8px;
     }
-    
+
     .error-item {
-        padding: 4px;
-        gap: 4px;
-        border-radius: 4px;
+        padding: 6px;
+        gap: 6px;
     }
-    
+
     .error-letter {
         width: 16px;
         height: 16px;
-        font-size: 0.55rem;
-        border-radius: 4px;
+        font-size: 0.625rem;
     }
-    
+
     .error-question {
-        font-size: 0.6rem;
+        font-size: 0.6875rem;
         margin-bottom: 2px;
-        line-height: 1.2;
     }
-    
+
     .user-answer,
     .correct-answer {
-        font-size: 0.55rem;
-        line-height: 1.1;
+        font-size: 0.625rem;
     }
-    
+
     .no-errors {
-        padding: 12px;
+        padding: 8px;
     }
-    
+
     .no-errors i {
-        font-size: 1.5rem !important;
-        margin-bottom: 6px !important;
+        font-size: 1.5rem;
+        margin-bottom: 6px;
     }
-    
+
     .no-errors p:first-of-type {
-        font-size: 0.9rem;
-        margin-bottom: 2px;
+        font-size: 0.9375rem;
     }
-    
+
     .no-errors p:last-of-type {
-        font-size: 0.7rem !important;
-        margin-top: 4px !important;
-    }
-    
-    /* Botones más compactos en columna */
-    .result-buttons {
-        padding: 8px 8px 8px;
-        gap: 4px;
-        flex-direction: column;
-        border-radius: 0 0 12px 12px;
-    }
-    
-    .result-buttons .modal-button {
-        width: 100%;
-        min-width: auto;
-        padding: 8px 10px;
-        font-size: 0.7rem;
-        border-radius: 6px;
-        gap: 4px;
-    }
-    
-    .result-buttons .modal-button i {
-        font-size: 0.8rem;
-    }
-    
-    /* Stats Detail Modal - Ultra Small */
-    .stats-detail-modal .modal-content.stats-modal {
-        max-width: 99%;
-        width: 99%;
-        margin: 1px;
-        border-radius: 12px;
-    }
-    
-    .stats-modal-header {
-        padding: 8px 8px 6px;
-        border-radius: 12px 12px 0 0;
-    }
-    
-    .stats-title {
-        font-size: 0.9rem;
-        margin-bottom: 2px;
-        line-height: 1.1;
-    }
-    
-    .stats-subtitle {
-        font-size: 0.7rem;
-        line-height: 1.2;
-    }
-    
-    .performance-summary {
-        grid-template-columns: 1fr;
-        gap: 4px;
-        padding: 8px;
-    }
-    
-    .performance-item {
-        padding: 6px 4px;
-        border-radius: 6px;
-    }
-    
-    .performance-label {
-        font-size: 0.6rem;
-        margin-bottom: 2px;
-    }
-    
-    .performance-value {
-        font-size: 0.95rem;
-        line-height: 1.1;
-    }
-    
-    .stats-buttons {
-        padding: 8px 8px 8px;
-        gap: 4px;
-        flex-direction: column;
-        border-radius: 0 0 12px 12px;
-    }
-    
-    .stats-buttons .modal-button {
-        width: 100%;
-        padding: 8px 10px;
-        font-size: 0.7rem;
-        border-radius: 6px;
-    }
-    
-    /* Password Modal - Ultra Small */
-    #privateRoomPasswordModal .modal-content {
-        max-width: 99%;
-        width: 99%;
-        padding: 8px;
-        margin: 1px;
-        border-radius: 12px;
-    }
-    
-    #privateRoomPasswordModal .modal-title {
-        font-size: 0.85rem;
-        margin-bottom: 6px;
-    }
-    
-    #privateRoomPasswordModal #passwordModalText {
-        font-size: 0.7rem;
-        margin-bottom: 8px;
-        line-height: 1.3;
-    }
-    
-    #privateRoomPasswordModal .form-group label {
-        font-size: 0.7rem;
-        margin-bottom: 3px;
-    }
-    
-    #privateRoomPasswordModal #passwordModalInput {
-        padding: 6px 8px;
-        font-size: 0.7rem;
-        border-radius: 6px;
-    }
-    
-    #privateRoomPasswordModal #passwordErrorText {
-        font-size: 0.65rem;
-        margin-bottom: 8px;
-    }
-    
-    #privateRoomPasswordModal .modal-footer {
-        margin-top: 8px;
-        gap: 4px;
-    }
-    
-    #privateRoomPasswordModal .modal-button {
-        padding: 6px 10px;
-        font-size: 0.7rem;
-        border-radius: 6px;
-    }
-    
-    /* Mentiroso Modal - Ultra Small */
-    .mentiroso-intro-modal {
-        max-width: 99%;
-        width: 99%;
-        padding: 8px;
-        margin: 1px;
-        border-radius: 12px;
-    }
-    
-    .mentiroso-intro-modal .modal-title {
-        font-size: 0.85rem;
-        margin-bottom: 6px;
-        padding-bottom: 6px;
-    }
-    
-    .mentiroso-intro-modal p {
-        font-size: 0.7rem;
-        margin-bottom: 6px;
-        line-height: 1.3;
-    }
-    
-    .mentiroso-intro-modal ul {
-        padding-left: 12px;
-        margin-bottom: 8px;
-    }
-    
-    .mentiroso-intro-modal li {
-        font-size: 0.65rem;
-        margin-bottom: 3px;
-        line-height: 1.3;
-    }
-    
-    .mentiroso-intro-modal .primary-button {
-        padding: 6px 10px;
-        font-size: 0.7rem;
-        border-radius: 6px;
-    }
-    
-    /* Crack Rápido Modal - Ultra Small */
-    .crack-rapido-intro-modal {
-        max-width: 99%;
-        width: 99%;
-        padding: 8px;
-        margin: 1px;
-        border-radius: 12px;
-    }
-    
-    .crack-rapido-intro-modal .modal-title {
-        font-size: 0.9rem;
-        margin-bottom: 8px;
-        line-height: 1.2;
-    }
-    
-    .crack-rapido-intro-modal p {
         font-size: 0.75rem;
-        margin-bottom: 8px;
-        line-height: 1.3;
     }
-    
-    .crack-rapido-intro-modal ul {
-        padding-left: 12px;
+
+    .result-buttons {
+        gap: 6px;
+        padding: 8px;
+    }
+
+    .result-buttons .modal-button {
+        padding: 10px 12px;
+        font-size: 0.8125rem;
+        min-height: 44px;
+    }
+
+    .result-buttons .modal-button i {
+        font-size: 0.875rem;
+    }
+
+    /* Stats detail modal adjustments */
+    .stats-detail-modal .modal-content.stats-modal {
+        padding: 12px;
+        margin: 5px 0;
+    }
+
+    .stats-modal-header {
+        padding: 8px;
+    }
+
+    .stats-title {
+        font-size: 1.125rem;
+    }
+
+    .stats-subtitle {
+        font-size: 0.8125rem;
+    }
+
+    .performance-summary {
+        gap: 6px;
+    }
+
+    .performance-item {
+        padding: 8px 6px;
+    }
+
+    .performance-label {
+        font-size: 0.6875rem;
+    }
+
+    .performance-value {
+        font-size: 1.125rem;
+    }
+
+    .stats-buttons {
+        gap: 6px;
+        padding: 8px;
+    }
+
+    .stats-buttons .modal-button {
+        padding: 10px 12px;
+        font-size: 0.8125rem;
+        min-height: 44px;
+    }
+
+    /* Other modals */
+    #privateRoomPasswordModal .modal-content {
+        padding: 12px;
+        margin: 5px 0;
+    }
+
+    #privateRoomPasswordModal .modal-title {
+        font-size: 1rem;
+    }
+
+    #privateRoomPasswordModal #passwordModalText {
+        font-size: 0.8125rem;
+        margin-bottom: 12px;
+    }
+
+    #privateRoomPasswordModal .form-group label {
+        font-size: 0.8125rem;
+        margin-bottom: 6px;
+    }
+
+    #privateRoomPasswordModal #passwordModalInput {
+        padding: 10px 12px;
+        font-size: 0.8125rem;
+        min-height: 44px;
+    }
+
+    #privateRoomPasswordModal #passwordErrorText {
+        font-size: 0.75rem;
         margin-bottom: 10px;
     }
-    
-    .crack-rapido-intro-modal li {
-        font-size: 0.7rem;
-        margin-bottom: 4px;
-        line-height: 1.3;
+
+    #privateRoomPasswordModal .modal-footer {
+        gap: 8px;
     }
-    
-    .crack-rapido-intro-modal .primary-button {
-        padding: 8px 12px;
+
+    #privateRoomPasswordModal .modal-button {
+        padding: 10px 14px;
+        font-size: 0.8125rem;
+        min-height: 44px;
+    }
+
+    .mentiroso-intro-modal {
+        margin: 5px 0;
+        padding: 12px;
+    }
+
+    .mentiroso-intro-modal .modal-title {
+        font-size: 1.125rem;
+    }
+
+    .mentiroso-intro-modal p {
+        font-size: 0.8125rem;
+        margin-bottom: 12px;
+    }
+
+    .mentiroso-intro-modal ul {
+        padding-left: 16px;
+        margin-bottom: 16px;
+    }
+
+    .mentiroso-intro-modal li {
         font-size: 0.75rem;
-        border-radius: 8px;
+        margin-bottom: 6px;
     }
-    
-    /* Feedback close button - Ultra Small */
+
+    .mentiroso-intro-modal .primary-button {
+        padding: 12px 16px;
+        font-size: 0.8125rem;
+        min-height: 44px;
+    }
+
+    .crack-rapido-intro-modal {
+        margin: 5px 0;
+        padding: 12px;
+    }
+
+    .crack-rapido-intro-modal .modal-title {
+        font-size: 1.25rem;
+    }
+
+    .crack-rapido-intro-modal p {
+        font-size: 0.9375rem;
+        margin-bottom: 16px;
+    }
+
+    .crack-rapido-intro-modal ul {
+        padding-left: 16px;
+        margin-bottom: 20px;
+    }
+
+    .crack-rapido-intro-modal li {
+        font-size: 0.8125rem;
+        margin-bottom: 8px;
+    }
+
+    .crack-rapido-intro-modal .primary-button {
+        padding: 12px 20px;
+        font-size: 0.9375rem;
+        min-height: 48px;
+    }
+
     .feedback-close-btn {
-        top: 4px;
-        right: 4px;
-        width: 14px;
-        height: 14px;
-        border-radius: 4px;
+        top: 6px;
+        right: 6px;
+        width: 20px;
+        height: 20px;
+        min-height: 20px;
     }
-    
+
     .feedback-close-btn svg {
-        width: 7px;
-        height: 7px;
+        width: 10px;
+        height: 10px;
     }
 }
 
-/* ===== EXTRA SMALL - 320px and below ===== */
 @media (max-width: 320px) {
-    /* Pasala Che Result Modal - Extra Small */
+    /* Ultra small devices */
     .game-result-modal .modal-content.result-modal {
-        margin: 0;
-        border-radius: 0;
-        min-height: 100vh;
-        max-height: 100vh;
-        overflow-y: auto;
+        padding: 10px;
+        margin: 3px 0;
+        border-radius: 8px;
     }
-    
+
     .result-modal-header {
-        border-radius: 0;
-        padding: 6px 6px 4px;
+        padding: 8px;
     }
-    
+
     .result-title {
-        font-size: 0.85rem;
-        margin-bottom: 2px;
+        font-size: 1rem;
     }
-    
+
     .result-message {
-        font-size: 0.65rem;
+        font-size: 0.75rem;
     }
-    
+
     .result-icon {
-        font-size: 1.5rem;
-        margin-bottom: 3px;
+        margin-bottom: 6px;
     }
-    
+
     .result-icon svg {
         width: 24px;
         height: 24px;
     }
-    
+
     .modal-horizontal-layout {
+        gap: 6px;
+        padding: 6px;
+    }
+
+    .result-stats {
+        gap: 4px;
+    }
+
+    .stat-item {
+        padding: 6px 4px;
+    }
+
+    .stat-label {
+        font-size: 0.625rem;
+    }
+
+    .stat-value {
+        font-size: 1rem;
+    }
+
+    .errors-container {
+        padding: 6px;
+        max-height: 100px;
+    }
+
+    .errors-title {
+        font-size: 0.75rem;
+        margin-bottom: 4px;
+    }
+
+    .result-buttons {
+        gap: 4px;
+        padding: 6px;
+    }
+
+    .result-buttons .modal-button {
+        padding: 8px 10px;
+        font-size: 0.75rem;
+        min-height: 40px;
+    }
+}
+
+/* ===== ELEMENTOS ESPECÍFICOS PARA PASALA CHE ===== */
+
+/* Password Modal */
+#privateRoomPasswordModal .modal-content {
+    max-width: 320px;
+    padding: 22px;
+}
+
+#privateRoomPasswordModal .modal-title {
+    font-size: 1.125rem;
+    margin-bottom: 14px;
+}
+
+#privateRoomPasswordModal #passwordModalText {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 18px;
+    line-height: 1.6;
+}
+
+#privateRoomPasswordModal .form-group {
+    margin-bottom: 16px;
+}
+
+#privateRoomPasswordModal .form-group label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+#privateRoomPasswordModal #passwordModalInput {
+    width: 100%;
+    padding: 12px 14px;
+    background: rgba(148, 163, 184, 0.05);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+#privateRoomPasswordModal #passwordModalInput:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: rgba(148, 163, 184, 0.08);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+}
+
+#privateRoomPasswordModal #passwordModalInput::placeholder {
+    color: var(--text-muted);
+}
+
+#privateRoomPasswordModal #passwordErrorText {
+    font-size: 0.8rem;
+    color: #ef4444;
+    text-align: center;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    min-height: 1.2em;
+}
+
+#privateRoomPasswordModal .modal-footer {
+    margin-top: 18px;
+}
+
+/* Mentiroso Modal */
+.mentiroso-intro-modal {
+    max-width: 380px;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.2);
+}
+
+.mentiroso-intro-modal .modal-title {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(239, 68, 68, 0.2);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.mentiroso-intro-modal .modal-title i {
+    color: #ef4444;
+    font-size: 1.2rem;
+    margin-right: 8px;
+}
+
+.mentiroso-intro-modal p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 16px;
+    line-height: 1.6;
+    font-weight: 600;
+}
+
+.mentiroso-intro-modal ul {
+    padding-left: 18px;
+    margin-bottom: 18px;
+}
+
+.mentiroso-intro-modal li {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.mentiroso-intro-modal strong {
+    color: #f59e0b;
+    font-weight: 600;
+}
+
+.mentiroso-intro-modal .highlight-consagra {
+    color: #10b981;
+    font-weight: 600;
+}
+
+.mentiroso-intro-modal .modal-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 18px;
+}
+
+.mentiroso-intro-modal .primary-button {
+    background: var(--modal-error);
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.mentiroso-intro-modal .primary-button i {
+    font-size: 1rem;
+}
+
+/* Feedback close button */
+.feedback-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    background: rgba(148, 163, 184, 0.1);
+    border: none;
+    border-radius: 6px;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.feedback-close-btn:hover {
+    background: rgba(148, 163, 184, 0.2);
+    color: var(--text-secondary);
+}
+
+.feedback-close-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+}
+
+.feedback-close-btn svg {
+    width: 12px;
+    height: 12px;
+}
+
+/* Crack Rápido Intro Modal */
+.crack-rapido-intro-modal {
+    max-width: 600px;
+    width: 90%;
+    background: linear-gradient(135deg, rgba(22, 24, 38, 0.95), rgba(13, 14, 26, 0.98));
+    backdrop-filter: blur(20px);
+}
+
+.crack-rapido-intro-modal .modal-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #00d4ff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+.crack-rapido-intro-modal .modal-title i {
+    margin-right: 12px;
+    color: #ffd32a;
+    animation: pulse 2s infinite;
+}
+
+.crack-rapido-intro-modal p {
+    text-align: center;
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.crack-rapido-intro-modal ul {
+    padding-left: 20px;
+    margin-bottom: 30px;
+}
+
+.crack-rapido-intro-modal li {
+    margin-bottom: 12px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.crack-rapido-intro-modal strong {
+    color: #00d4ff;
+    font-weight: 700;
+}
+
+.crack-rapido-intro-modal .highlight-consagra {
+    color: #ffd32a !important;
+    text-shadow: 0 0 10px rgba(255, 211, 42, 0.3);
+}
+
+.crack-rapido-intro-modal .modal-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.crack-rapido-intro-modal .primary-button {
+    background: linear-gradient(135deg, #00d4ff 0%, #4a90e2 100%);
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.crack-rapido-intro-modal .primary-button i {
+    margin-right: 10px;
+    animation: pulse 1.5s infinite;
+}
+
+.crack-rapido-intro-modal .primary-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5);
+    background: linear-gradient(135deg, #4a90e2 0%, #00d4ff 100%);
+}
+
+.crack-rapido-intro-modal .primary-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s ease;
+}
+
+.crack-rapido-intro-modal .primary-button:hover::before {
+    left: 100%;
+}
+
+/* ===== MEDIA QUERIES ADICIONALES ===== */
+
+/* Ajustes para pantallas muy pequeñas */
+@media (max-width: 360px) {
+    .modal-overlay {
+        padding: 12px;
+    }
+
+    #gameRulesModal .modal-content.horizontal-modal {
+        padding: 12px;
+        margin: 5px 0;
+        border-radius: 10px;
+    }
+
+    #gameRulesModal .modal-title {
+        font-size: 1.125rem;
+        margin-bottom: 6px;
+    }
+
+    .game-promo {
+        font-size: 0.8125rem;
+        margin-bottom: 16px;
+    }
+
+    .difficulty-main-title {
+        font-size: 0.9375rem;
+    }
+
+    .difficulty-cards {
+        gap: 8px;
+    }
+
+    .difficulty-card {
+        padding: 12px 8px;
+        min-height: auto;
+    }
+
+    .difficulty-card h3 {
+        font-size: 0.9375rem;
+    }
+
+    .difficulty-time {
+        font-size: 1rem;
+    }
+
+    .difficulty-errors {
+        font-size: 0.75rem;
+    }
+
+    .difficulty-description {
+        font-size: 0.75rem;
+    }
+
+    .rules-horizontal {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .rule-compact {
+        padding: 8px;
+        gap: 8px;
+        min-height: 44px;
+    }
+
+    .rule-compact .rule-icon {
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
+    }
+
+    .rule-text {
+        font-size: 0.75rem;
+    }
+
+    #gameRulesModal .primary-button.enhanced {
+        font-size: 0.9375rem;
+        padding: 14px 18px;
+        min-height: 52px;
+    }
+
+    /* Result modal adjustments */
+    .game-result-modal .modal-content.result-modal {
+        padding: 12px;
+        margin: 5px 0;
+        border-radius: 10px;
+    }
+
+    .result-modal-header {
+        padding: 10px;
+    }
+
+    .result-title {
+        font-size: 1.125rem;
+    }
+
+    .result-message {
+        font-size: 0.8125rem;
+    }
+
+    .result-icon {
+        margin-bottom: 8px;
+    }
+
+    .result-icon svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .modal-horizontal-layout {
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .result-stats {
+        gap: 6px;
+    }
+
+    .stat-item {
+        padding: 8px 6px;
+    }
+
+    .stat-label {
+        font-size: 0.6875rem;
+    }
+
+    .stat-label i {
+        font-size: 0.75rem;
+    }
+
+    .stat-value {
+        font-size: 1.125rem;
+    }
+
+    .modal-sidebar {
+        padding: 8px;
+    }
+
+    .errors-container {
+        padding: 8px;
+        max-height: 120px;
+    }
+
+    .errors-title {
+        font-size: 0.8125rem;
+        margin-bottom: 6px;
+    }
+
+    .quick-summary p {
+        font-size: 0.75rem;
+        margin-bottom: 8px;
+    }
+
+    .error-item {
         padding: 6px;
         gap: 6px;
     }
-    
+
+    .error-letter {
+        width: 16px;
+        height: 16px;
+        font-size: 0.625rem;
+    }
+
+    .error-question {
+        font-size: 0.6875rem;
+        margin-bottom: 2px;
+    }
+
+    .user-answer,
+    .correct-answer {
+        font-size: 0.625rem;
+    }
+
+    .no-errors {
+        padding: 8px;
+    }
+
+    .no-errors i {
+        font-size: 1.5rem;
+        margin-bottom: 6px;
+    }
+
+    .no-errors p:first-of-type {
+        font-size: 0.9375rem;
+    }
+
+    .no-errors p:last-of-type {
+        font-size: 0.75rem;
+    }
+
+    .result-buttons {
+        gap: 6px;
+        padding: 8px;
+    }
+
+    .result-buttons .modal-button {
+        padding: 10px 12px;
+        font-size: 0.8125rem;
+        min-height: 44px;
+    }
+
+    .result-buttons .modal-button i {
+        font-size: 0.875rem;
+    }
+
+    /* Stats detail modal adjustments */
+    .stats-detail-modal .modal-content.stats-modal {
+        padding: 12px;
+        margin: 5px 0;
+    }
+
+    .stats-modal-header {
+        padding: 8px;
+    }
+
+    .stats-title {
+        font-size: 1.125rem;
+    }
+
+    .stats-subtitle {
+        font-size: 0.8125rem;
+    }
+
+    .performance-summary {
+        gap: 6px;
+    }
+
+    .performance-item {
+        padding: 8px 6px;
+    }
+
+    .performance-label {
+        font-size: 0.6875rem;
+    }
+
+    .performance-value {
+        font-size: 1.125rem;
+    }
+
+    .stats-buttons {
+        gap: 6px;
+        padding: 8px;
+    }
+
+    .stats-buttons .modal-button {
+        padding: 10px 12px;
+        font-size: 0.8125rem;
+        min-height: 44px;
+    }
+
+    /* Other modals */
+    #privateRoomPasswordModal .modal-content {
+        padding: 12px;
+        margin: 5px 0;
+    }
+
+    #privateRoomPasswordModal .modal-title {
+        font-size: 1rem;
+    }
+
+    #privateRoomPasswordModal #passwordModalText {
+        font-size: 0.8125rem;
+        margin-bottom: 12px;
+    }
+
+    #privateRoomPasswordModal .form-group label {
+        font-size: 0.8125rem;
+        margin-bottom: 6px;
+    }
+
+    #privateRoomPasswordModal #passwordModalInput {
+        padding: 10px 12px;
+        font-size: 0.8125rem;
+        min-height: 44px;
+    }
+
+    #privateRoomPasswordModal #passwordErrorText {
+        font-size: 0.75rem;
+        margin-bottom: 10px;
+    }
+
+    #privateRoomPasswordModal .modal-footer {
+        gap: 8px;
+    }
+
+    #privateRoomPasswordModal .modal-button {
+        padding: 10px 14px;
+        font-size: 0.8125rem;
+        min-height: 44px;
+    }
+
+    .mentiroso-intro-modal {
+        margin: 5px 0;
+        padding: 12px;
+    }
+
+    .mentiroso-intro-modal .modal-title {
+        font-size: 1.125rem;
+    }
+
+    .mentiroso-intro-modal p {
+        font-size: 0.8125rem;
+        margin-bottom: 12px;
+    }
+
+    .mentiroso-intro-modal ul {
+        padding-left: 16px;
+        margin-bottom: 16px;
+    }
+
+    .mentiroso-intro-modal li {
+        font-size: 0.75rem;
+        margin-bottom: 6px;
+    }
+
+    .mentiroso-intro-modal .primary-button {
+        padding: 12px 16px;
+        font-size: 0.8125rem;
+        min-height: 44px;
+    }
+
+    .crack-rapido-intro-modal {
+        margin: 5px 0;
+        padding: 12px;
+    }
+
+    .crack-rapido-intro-modal .modal-title {
+        font-size: 1.25rem;
+    }
+
+    .crack-rapido-intro-modal p {
+        font-size: 0.9375rem;
+        margin-bottom: 16px;
+    }
+
+    .crack-rapido-intro-modal ul {
+        padding-left: 16px;
+        margin-bottom: 20px;
+    }
+
+    .crack-rapido-intro-modal li {
+        font-size: 0.8125rem;
+        margin-bottom: 8px;
+    }
+
+    .crack-rapido-intro-modal .primary-button {
+        padding: 12px 20px;
+        font-size: 0.9375rem;
+        min-height: 48px;
+    }
+
+    .feedback-close-btn {
+        top: 6px;
+        right: 6px;
+        width: 20px;
+        height: 20px;
+        min-height: 20px;
+    }
+
+    .feedback-close-btn svg {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+@media (max-width: 320px) {
+    /* Ultra small devices */
+    .game-result-modal .modal-content.result-modal {
+        padding: 10px;
+        margin: 3px 0;
+        border-radius: 8px;
+    }
+
+    .result-modal-header {
+        padding: 8px;
+    }
+
+    .result-title {
+        font-size: 1rem;
+    }
+
+    .result-message {
+        font-size: 0.75rem;
+    }
+
+    .result-icon {
+        margin-bottom: 6px;
+    }
+
+    .result-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .modal-horizontal-layout {
+        gap: 6px;
+        padding: 6px;
+    }
+
     .result-stats {
-        gap: 3px;
+        gap: 4px;
     }
-    
+
     .stat-item {
-        padding: 5px 3px;
+        padding: 6px 4px;
     }
-    
+
     .stat-label {
-        font-size: 0.55rem;
-        margin-bottom: 1px;
+        font-size: 0.625rem;
     }
-    
+
     .stat-value {
-        font-size: 0.85rem;
+        font-size: 1rem;
     }
-    
+
     .errors-container {
-        padding: 4px;
+        padding: 6px;
         max-height: 100px;
     }
-    
+
     .errors-title {
-        font-size: 0.65rem;
+        font-size: 0.75rem;
         margin-bottom: 4px;
-        padding-bottom: 2px;
     }
-    
+
     .result-buttons {
-        padding: 6px 6px 6px;
-        gap: 3px;
-        border-radius: 0;
+        gap: 4px;
+        padding: 6px;
     }
-    
+
     .result-buttons .modal-button {
-        padding: 6px 8px;
-        font-size: 0.65rem;
-        border-radius: 4px;
+        padding: 8px 10px;
+        font-size: 0.75rem;
+        min-height: 40px;
     }
 } 

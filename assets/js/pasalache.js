@@ -530,6 +530,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // Add active class to clicked element
         element.classList.add('active');
         
+        // Haptic feedback for mobile devices
+        if (window.navigator && window.navigator.vibrate) {
+            window.navigator.vibrate(50);
+        }
+        
         // Set game time and maxErrors based on difficulty
         switch(difficulty) {
             case 'facil':
@@ -547,33 +552,253 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log(`Dificultad seleccionada: ${difficulty}, Tiempo: ${totalTime}s, Errores Máx (umbral de derrota): ${maxErrors}`);
     }
     
-    // Add event listeners for difficulty buttons (legacy support) con soporte táctil
+    // Enhanced event listeners for difficulty buttons (legacy support)
     difficultyButtons.forEach(button => {
-        addTouchAndClickListeners(button, function() {
+        // Click event
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             const difficulty = this.getAttribute('data-difficulty');
             handleDifficultySelection(difficulty, this);
         });
+        
+        // Touch events for mobile
+        button.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.classList.add('active');
+        });
+        
+        button.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const difficulty = this.getAttribute('data-difficulty');
+            handleDifficultySelection(difficulty, this);
+        });
+        
+        // Keyboard support
+        button.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const difficulty = this.getAttribute('data-difficulty');
+                handleDifficultySelection(difficulty, this);
+            }
+        });
     });
     
-    // Add event listeners for difficulty cards (new design) con soporte táctil
+    // Enhanced event listeners for difficulty cards (new design)
     difficultyCards.forEach(card => {
-        addTouchAndClickListeners(card, function() {
+        // Click event
+        card.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             const difficulty = this.getAttribute('data-difficulty');
             handleDifficultySelection(difficulty, this);
         });
+        
+        // Touch events for mobile
+        card.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.classList.add('active');
+        });
+        
+        card.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const difficulty = this.getAttribute('data-difficulty');
+            handleDifficultySelection(difficulty, this);
+        });
+        
+        card.addEventListener('touchcancel', function(e) {
+            e.preventDefault();
+            this.classList.remove('active');
+        });
+        
+        // Keyboard support
+        card.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const difficulty = this.getAttribute('data-difficulty');
+                handleDifficultySelection(difficulty, this);
+            }
+        });
+        
+        // Focus events for keyboard navigation
+        card.addEventListener('focus', function() {
+            this.classList.add('focused');
+        });
+        
+        card.addEventListener('blur', function() {
+            this.classList.remove('focused');
+        });
     });
     
-    // Start button click handler
+    // Enhanced start button click handler
     if (startGameButton) {
-        startGameButton.addEventListener('click', function() {
+        startGameButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Check if a difficulty is selected
+            const selectedCard = document.querySelector('.difficulty-card.active');
+            const selectedButton = document.querySelector('.difficulty-btn.active');
+            
+            if (!selectedCard && !selectedButton) {
+                // If no difficulty selected, select normal by default
+                const normalCard = document.querySelector('.difficulty-card[data-difficulty="normal"]');
+                const normalButton = document.querySelector('.difficulty-btn[data-difficulty="normal"]');
+                
+                if (normalCard) {
+                    handleDifficultySelection('normal', normalCard);
+                } else if (normalButton) {
+                    handleDifficultySelection('normal', normalButton);
+                }
+            }
+            
+            // Haptic feedback
+            if (window.navigator && window.navigator.vibrate) {
+                window.navigator.vibrate(100);
+            }
+            
             // Hide the modal
             gameRulesModal.classList.remove('active');
             
             // Initialize the game
             initGame();
         });
+        
+        // Touch events for start button
+        startGameButton.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            this.classList.add('active');
+        });
+        
+        startGameButton.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.remove('active');
+            
+            // Check if a difficulty is selected
+            const selectedCard = document.querySelector('.difficulty-card.active');
+            const selectedButton = document.querySelector('.difficulty-btn.active');
+            
+            if (!selectedCard && !selectedButton) {
+                // If no difficulty selected, select normal by default
+                const normalCard = document.querySelector('.difficulty-card[data-difficulty="normal"]');
+                const normalButton = document.querySelector('.difficulty-btn[data-difficulty="normal"]');
+                
+                if (normalCard) {
+                    handleDifficultySelection('normal', normalCard);
+                } else if (normalButton) {
+                    handleDifficultySelection('normal', normalButton);
+                }
+            }
+            
+            // Haptic feedback
+            if (window.navigator && window.navigator.vibrate) {
+                window.navigator.vibrate(100);
+            }
+            
+            // Hide the modal
+            gameRulesModal.classList.remove('active');
+            
+            // Initialize the game
+            initGame();
+        });
+        
+        // Keyboard support for start button
+        startGameButton.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+            }
+        });
     }
     
+    // Add mobile-specific improvements
+    function addMobileSupport() {
+        // Prevent zoom on double tap for game elements
+        const gameElements = document.querySelectorAll('.difficulty-card, .difficulty-btn, .primary-button, .modal-button');
+        
+        gameElements.forEach(element => {
+            element.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+            });
+            
+            // Add touch-action CSS property
+            element.style.touchAction = 'manipulation';
+        });
+        
+        // Improve scroll behavior on mobile
+        const modal = document.getElementById('gameRulesModal');
+        if (modal) {
+            modal.addEventListener('touchmove', function(e) {
+                e.stopPropagation();
+            });
+        }
+        
+        // Add focus indicators for keyboard navigation
+        const style = document.createElement('style');
+        style.textContent = `
+            .difficulty-card:focus,
+            .difficulty-btn:focus,
+            .primary-button:focus,
+            .modal-button:focus {
+                outline: 2px solid #6366f1;
+                outline-offset: 2px;
+            }
+            
+            .difficulty-card.focused {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+            }
+            
+            @media (max-width: 768px) {
+                .modal-overlay {
+                    overflow-y: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+                
+                .modal-content {
+                    transform: none !important;
+                    position: relative;
+                    margin: 20px 0;
+                }
+                
+                .modal-overlay.active .modal-content {
+                    transform: none !important;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    // Initialize mobile support when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', addMobileSupport);
+    } else {
+        addMobileSupport();
+    }
+    
+    // Handle modal scrolling for mobile
+    function handleModalScrolling() {
+        const modal = document.getElementById('gameRulesModal');
+        if (modal) {
+            const modalOverlay = modal.querySelector('.modal-overlay');
+            if (modalOverlay) {
+                modalOverlay.addEventListener('touchmove', function(e) {
+                    // Allow scrolling within modal content
+                    const target = e.target.closest('.modal-content');
+                    if (!target) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        }
+    }
+    
+    // Initialize modal scrolling
+    handleModalScrolling();
+
     // Initialize the game
     function initGame() {
         // <<< INICIO: GUARDAR ESTADO INICIAL DE LOGROS >>>
@@ -721,8 +946,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             lettersContainer.appendChild(letterElement);
 
-            // Add touch and click events to jump to that letter (solo para letras no contestadas o pendientes)
-            addTouchAndClickListeners(letterElement, () => {
+            // Add click event to jump to that letter (solo para letras no contestadas o pendientes)
+            letterElement.addEventListener('click', () => {
                 if (letterStatuses[letter] === 'unanswered' || letterStatuses[letter] === 'pending') {
                     goToLetter(letter);
                 }
@@ -752,21 +977,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 .letter.with-hint .letter-hint {
                     display: block;
                 }
-                /* Estilos adicionales para móvil */
-                @media (max-width: 768px) {
-                    .letter-hint {
-                        font-size: 10px;
-                        padding: 1px 3px;
-                        margin-top: 3px;
-                    }
-                }
-                @media (max-width: 480px) {
-                    .letter-hint {
-                        font-size: 8px;
-                        padding: 1px 2px;
-                        margin-top: 2px;
-                    }
-                }
             `;
             document.head.appendChild(style);
         }
@@ -780,21 +990,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!allLetterElements || allLetterElements.length === 0) return; // Exit if no letters
 
         const containerWidth = lettersContainer.offsetWidth;
-        const containerHeight = lettersContainer.offsetHeight;
-        
-        // Detectar si es móvil
-        const isMobile = window.innerWidth <= 768;
-        const isSmallMobile = window.innerWidth <= 480;
-        
-        // Calcular radio basado en el dispositivo
-        let radius;
-        if (isSmallMobile) {
-            radius = Math.min(containerWidth, containerHeight) / 2.8; // Más pequeño para móviles pequeños
-        } else if (isMobile) {
-            radius = Math.min(containerWidth, containerHeight) / 2.5; // Moderado para tablets
-        } else {
-            radius = containerWidth / 2; // Tamaño completo para desktop
-        }
+        const radius = containerWidth / 2;
 
         // Get letter size dynamically from the first letter element
         const firstLetterStyle = window.getComputedStyle(allLetterElements[0]);
@@ -811,13 +1007,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const angleRadians = (index / alphabet.length) * 2 * Math.PI;
             const posX = adjustedRadius * Math.sin(angleRadians);
             const posY = -adjustedRadius * Math.cos(angleRadians);
-            
-            // Aplicar transform con mejor rendimiento para móviles
-            letterElement.style.transform = `translate3d(${posX}px, ${posY}px, 0)`;
-            
-            // Añadir clases para mejor styling responsive
-            letterElement.classList.toggle('mobile-letter', isMobile);
-            letterElement.classList.toggle('small-mobile-letter', isSmallMobile);
+            letterElement.style.transform = `translate(${posX}px, ${posY}px)`;
         });
     }
 
@@ -1472,10 +1662,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 helpButton.classList.remove('disabled');
             }
             
-            // Asegurar que el botón tenga el evento táctil optimizado
-            // Remover listeners previos si existen
-            helpButton.onclick = null;
-            addTouchAndClickListeners(helpButton, showHint);
+            // Asegurar que el botón tenga el evento click
+            helpButton.onclick = showHint;
             return;
         }
         
@@ -1495,8 +1683,8 @@ document.addEventListener('DOMContentLoaded', function() {
             helpButton.classList.add('disabled');
         }
         
-        // Add help functionality con soporte táctil
-        addTouchAndClickListeners(helpButton, showHint);
+        // Add help functionality
+        helpButton.onclick = showHint;
         
         // Insert help button in the right place
         questionCard.appendChild(helpButton);
@@ -2404,8 +2592,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (submitAnswerBtnIcon) {
-        // Usar función mejorada para eventos táctiles
-        addTouchAndClickListeners(submitAnswerBtnIcon, function() {
+        submitAnswerBtnIcon.addEventListener('click', function() {
             const userAnswer = answerInput.value.trim();
             if (userAnswer === '') { // Si la respuesta está vacía
                 pasapalabra();      // Ejecutar pasapalabra
@@ -2416,29 +2603,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (pasapalabraButton) {
-        // Usar función mejorada para eventos táctiles
-        addTouchAndClickListeners(pasapalabraButton, pasapalabra);
+        pasapalabraButton.addEventListener('click', pasapalabra);
     }
 
     // Add help button when game starts
     if (startGameButton) {
-        addTouchAndClickListeners(startGameButton, function() {
+        startGameButton.addEventListener('click', function() {
             // Add help button when game starts with a slight delay to ensure DOM is ready
             // setTimeout(addHelpButton, 100); // Movido a después de que el usuario hace clic en "COMENZAR AHORA!"
         });
     }
 
-    // Add debounced resize listener con mejor rendimiento
-    const debouncedHandleResize = debounce(handleResize, 250);
-    window.addEventListener('resize', debouncedHandleResize);
-    
-    // Optimizaciones para móvil
-    optimizeInputForMobile();
-    
-    // Prevenir bounce en iOS
-    if (isTouchDevice()) {
-        preventBounce();
-    }
+    // Add debounced resize listener
+    const debouncedPositionLetters = debounce(positionLetters, 250); // Adjust debounce time (ms) as needed
+    window.addEventListener('resize', debouncedPositionLetters);
 
     // --- Initial Setup ---
     // Display rules modal on load
@@ -2755,113 +2933,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // Simple alias for the specific incomplete feedback
     function showIncompleteFeedback(message) {
         showTemporaryFeedback(message, 'warning', 2000); // Show for 2 seconds (changed from 3000)
-    }
-
-    // Función mejorada para detectar capacidades táctiles
-    function isTouchDevice() {
-        return (('ontouchstart' in window) ||
-                (navigator.maxTouchPoints > 0) ||
-                (navigator.msMaxTouchPoints > 0));
-    }
-
-    // Función para añadir event listeners táctiles y de mouse
-    function addTouchAndClickListeners(element, callback) {
-        let touchStarted = false;
-        
-        // Eventos táctiles
-        element.addEventListener('touchstart', (e) => {
-            touchStarted = true;
-            e.preventDefault(); // Prevenir comportamiento por defecto
-        }, { passive: false });
-        
-        element.addEventListener('touchend', (e) => {
-            if (touchStarted) {
-                touchStarted = false;
-                e.preventDefault();
-                callback(e);
-            }
-        }, { passive: false });
-        
-        // Eventos de mouse para dispositivos no táctiles
-        element.addEventListener('click', (e) => {
-            if (!touchStarted) { // Solo si no hubo evento táctil
-                callback(e);
-            }
-        });
-        
-        // Eventos de teclado para accesibilidad
-        element.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                callback(e);
-            }
-        });
-        
-        // Mejorar feedback visual para foco del teclado
-        element.addEventListener('focus', () => {
-            element.classList.add('keyboard-focused');
-        });
-        
-        element.addEventListener('blur', () => {
-            element.classList.remove('keyboard-focused');
-        });
-    }
-
-    // Función para mejorar el input en móviles
-    function optimizeInputForMobile() {
-        if (!answerInput) return;
-        
-        const isMobile = window.innerWidth <= 768;
-        
-        if (isMobile) {
-            // Optimizar atributos del input para móvil
-            answerInput.setAttribute('autocomplete', 'off');
-            answerInput.setAttribute('autocorrect', 'off');
-            answerInput.setAttribute('autocapitalize', 'off');
-            answerInput.setAttribute('spellcheck', 'false');
-            
-            // Mejorar el comportamiento del teclado virtual
-            answerInput.addEventListener('focus', () => {
-                // Scroll hacia el input cuando se enfoque en móvil
-                setTimeout(() => {
-                    answerInput.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'center' 
-                    });
-                }, 300); // Delay para que el teclado virtual se abra
-            });
-            
-            // Prevenir zoom en iOS
-            answerInput.style.fontSize = '16px';
-        }
-    }
-
-    // Función para manejar el resize con mejor rendimiento
-    function handleResize() {
-        // Usar requestAnimationFrame para mejor rendimiento
-        requestAnimationFrame(() => {
-            positionLetters();
-            optimizeInputForMobile();
-        });
-    }
-
-    // Función para prevenir el bounce en iOS
-    function preventBounce() {
-        document.addEventListener('touchmove', function(e) {
-            // Permitir scroll solo en elementos scrollables
-            const scrollableElements = ['input', 'textarea', '.modal-content', '.scrollable'];
-            let isScrollable = false;
-            
-            for (let element of scrollableElements) {
-                if (e.target.closest(element)) {
-                    isScrollable = true;
-                    break;
-                }
-            }
-            
-            if (!isScrollable) {
-                e.preventDefault();
-            }
-        }, { passive: false });
     }
 }); 

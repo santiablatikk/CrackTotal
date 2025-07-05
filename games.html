@@ -360,6 +360,13 @@
             animation: pulse 2s infinite;
         }
 
+        .stellar-badge.próximamente {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            animation: pulse 2s infinite;
+        }
+
         .game-content {
             padding: 25px;
             position: relative;
@@ -460,6 +467,31 @@
 
         .cosmic-game-card:nth-child(4) .quantum-play-btn {
             background: linear-gradient(45deg, rgba(104, 211, 145, 0.8), rgba(72, 187, 120, 0.8));
+        }
+
+        /* Estilos para juegos próximamente */
+        .cosmic-game-card.coming-soon {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .cosmic-game-card.coming-soon:hover {
+            transform: translateY(-5px) rotateX(2deg);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(255, 193, 7, 0.2);
+        }
+
+        .cosmic-game-card.coming-soon .quantum-play-btn.disabled {
+            background: linear-gradient(45deg, rgba(255, 193, 7, 0.4), rgba(255, 152, 0, 0.4));
+            cursor: not-allowed;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .cosmic-game-card.coming-soon .quantum-play-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
         }
 
         .room-status {
@@ -1417,22 +1449,22 @@
                 </article>
 
                 <!-- Crack Rápido -->
-                <article class="cosmic-game-card" data-game="crack-rapido">
-                    <div class="stellar-badge nuevo">NUEVO</div>
+                <article class="cosmic-game-card coming-soon" data-game="crack-rapido">
+                    <div class="stellar-badge próximamente">PRÓXIMAMENTE</div>
                     <div class="game-visual-container">
                         <i class="fas fa-bolt game-icon" aria-hidden="true"></i>
                     </div>
                     <div class="game-content">
                         <h3 class="game-title">Crack Rápido MEGA</h3>
-                        <p class="game-description">¡La trivia definitiva perfeccionada! 4 modos picos, 7 categorías, 200+ preguntas y sistema de puntuación revolucionario. ¡Tenés la velocidad y conocimiento para ser un Dios del Crack Rápido?</p>
+                        <p class="game-description">¡La trivia definitiva está en desarrollo! Pronto tendrás 4 modos épicos, 7 categorías, 200+ preguntas y un sistema de puntuación revolucionario. ¡Prepárate para ser un Dios del Crack Rápido!</p>
                         <div class="game-stats">
                             <span class="stat-chip"><i class="fas fa-gamepad"></i>4 Modos</span>
                             <span class="stat-chip"><i class="fas fa-brain"></i>200+ Preguntas</span>
                             <span class="stat-chip"><i class="fas fa-medal"></i>17 Logros</span>
                             <span class="stat-chip"><i class="fas fa-rocket"></i>Power-Ups</span>
                         </div>
-                        <button class="quantum-play-btn" aria-label="Jugar a Crack Rápido MEGA">
-                            <span>Jugar</span>
+                        <button class="quantum-play-btn disabled" disabled aria-label="Crack Rápido MEGA - Próximamente">
+                            <span>Próximamente</span>
                         </button>
                     </div>
                 </article>
@@ -1715,6 +1747,21 @@
                         playButton.addEventListener('click', function(event) {
                             event.preventDefault();
                             event.stopPropagation();
+                            
+                            // Verificar si el juego está deshabilitado
+                            if (playButton.disabled || playButton.classList.contains('disabled')) {
+                                // Analytics tracking para clicks en juegos deshabilitados
+                                if (window.gtag) {
+                                    gtag('event', 'disabled_game_click', {
+                                        event_category: 'games',
+                                        event_label: gameType,
+                                        game_type: gameType,
+                                        status: 'coming_soon',
+                                        value: 0
+                                    });
+                                }
+                                return false;
+                            }
                             
                             // Analytics tracking para clicks en juegos
                             if (window.gtag) {
