@@ -557,8 +557,10 @@
             }
         }
 
-        /* Ocultar elementos publicitarios innecesarios */
-        .adsense-placeholder-container {
+        /* Ocultar elementos publicitarios durante estados de carga */
+        .loading-state + .adsense-container,
+        .cargando + .adsense-container,
+        .error-state + .adsense-container {
             display: none !important;
         }
     </style>

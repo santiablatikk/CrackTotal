@@ -49,7 +49,7 @@
     <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/contact.css?v=202505272312">
-    <link rel="stylesheet" href="assets/css/mobile-340.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/mobile-340.csscss?v=202505272312">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <!-- <link rel="stylesheet" href="assets/css/pages.csscss?v=202505272312" /> -->
     <!-- <link rel="stylesheet" href="assets/css/footer-styles.csscss?v=202505272312" /> -->
@@ -234,11 +234,20 @@
       </footer>
     </div>
     
-    <div class="adsense-placeholder-container" style="margin: 2rem auto; padding: 1rem; max-width: 750px; text-align: center;">
+    <!-- AdSense Real (Reemplazado placeholder que violaba políticas) -->
+    <div class="adsense-container" style="margin: 2rem auto; padding: 1rem; max-width: 750px; text-align: center;">
         <div class="ad-label" style="font-size: 0.8em; color: #7f8c8d; margin-bottom: 5px;">PUBLICIDAD</div>
-        <div class="adsense-placeholder-contact-footer" style="width:100%; max-width:728px; height:90px; background:#e9ecef; border:1px dashed #ced4da; display:flex; align-items:center; justify-content:center; color:#6c757d; font-family: Arial, sans-serif; margin:0 auto;">
-            Espacio para Anuncio (ej. 728x90)
-        </div>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-9579152019412427"
+             data-ad-slot="3690800126"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+            if (localStorage.getItem("adConsent") === "true") {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            }
+        </script>
     </div>
     
     <script>
@@ -293,6 +302,25 @@
           spinner.style.display = 'none';
         });
       });
+    </script>
+    
+    <!-- AdSense Loading Blocker -->
+    <script src="assets/js/adsense-loading-blocker.js"></script>
+    
+    <!-- Función para compartir -->
+    <script>
+      function shareSite() {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Contacto - Crack Total',
+                text: '¡Contactate con Crack Total para preguntas y sugerencias!',
+                url: window.location.href
+            })
+            .catch(err => console.log('Error al compartir:', err));
+        } else {
+            alert('Tu navegador no soporta la API de Compartir. Copiá el enlace manualmente.');
+        }
+      }
     </script>
   </body>
 </html>
