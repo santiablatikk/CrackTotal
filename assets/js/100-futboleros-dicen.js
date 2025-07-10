@@ -1,5 +1,5 @@
-// --- Importaciones ---
-import { save100FutbolerosResult } from './firebase-utils.js';
+// --- Firebase Integration ---
+// Usamos el servicio global de Firebase (window.firebaseService)
 
 // --- WebSocket URL (¡Configura esto!) ---
 const WEBSOCKET_URL = (() => {
@@ -1498,18 +1498,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 2000);
         
         // Guardar resultado en Firebase si está disponible
-        if (typeof save100FutbolerosResult === 'function') {
+        if (window.firebaseService && typeof window.firebaseService.saveMatch === 'function') {
+            const playerData = gameState.players[gameState.currentPlayer] || {};
+            const score = playerData.score || 0;
+            const completedRounds = gameState.currentRound - 1;
+            
             const gameResult = {
-                isWinner,
-                isDraw,
-                finalScore: gameState.players,
-                completedRounds: gameState.currentRound - 1,
-                timestamp: Date.now()
+                playerName: playerData.name || 'Jugador',
+                score: score,
+                correctAnswers: score, // En este juego, el score es equivalente a respuestas correctas
+                totalQuestions: completedRounds,
+                accuracy: completedRounds > 0 ? Math.round((score / completedRounds) * 100) : 0,
+                duration: Math.floor((Date.now() - gameState.gameStartTime) / 1000) || 0
             };
             
-            save100FutbolerosResult(gameResult).catch(error => {
-                console.warn('Error guardando resultado:', error);
-            });
+            window.firebaseService.saveMatch('100futboleros', gameResult)
+                .then(() => {
+                    console.log('✅ [100-FUTBOLEROS] Resultado guardado en Firebase');
+                })
+                .catch(error => {
+                    console.warn('⚠️ [100-FUTBOLEROS] Error guardando resultado:', error);
+                });
         }
     }
 

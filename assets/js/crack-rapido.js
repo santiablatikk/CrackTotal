@@ -1,26 +1,6 @@
 // Crack Rápido - Sistema de Trivia de Velocidad MEGA EDITION
 // Crack Total - 2025
-// Fallback temporal para Firebase hasta que se resuelvan los módulos
-let saveCrackRapidoResult = async (data) => {
-    console.log('Fallback: Datos que se guardarían en Firebase:', data);
-    return Promise.resolve();
-};
-
-// Intentar cargar Firebase de forma asíncrona
-async function loadFirebaseUtils() {
-    try {
-        // Intentar acceder a la función desde el contexto global
-        if (window.firebase && window.firebase.auth && window.firebase.firestore) {
-            console.log('Firebase utilities detected from global context');
-            // Aquí podrías definir saveCrackRapidoResult usando las funciones globales de Firebase
-        }
-    } catch (error) {
-        console.warn('Firebase utilities not available, using fallback');
-    }
-}
-
-// Cargar Firebase utilities
-loadFirebaseUtils();
+// Firebase Integration - Usa window.firebaseService
 
 class CrackRapido {
     constructor() {
@@ -3518,37 +3498,28 @@ class CrackRapido {
     }
     async saveToFirebase(results) {
         try {
-            if (typeof saveCrackRapidoResult === 'function') {
+            if (window.firebaseService && typeof window.firebaseService.saveMatch === 'function') {
+                // Obtener nombre del jugador (de localStorage o generar uno)
+                const playerName = localStorage.getItem('playerName') || 
+                                 window.firebaseService.generatePlayerName() || 
+                                 'CrackPlayer';
+
                 const gameData = {
-                    result: results.completed ? 'completed' : 'incomplete',
-                    score: results.score,
-                    correctAnswers: results.correctAnswers,
-                    totalQuestions: results.totalQuestions,
-                    maxStreak: results.maxStreak,
-                    averageTime: results.averageTime,
-                    totalTime: results.totalTime,
-                    accuracy: results.accuracy,
-                    gameMode: this.currentMode,
-                    category: this.selectedCategory || 'general',
-                    difficulty: this.currentDifficulty,
-                    powerUpsUsed: {
-                        timeExtra: this.powerUps.timeExtra.maxUses - this.powerUps.timeExtra.uses,
-                        removeOption: this.powerUps.removeOption.maxUses - this.powerUps.removeOption.uses,
-                        scoreMultiplier: this.powerUps.scoreMultiplier.maxUses - this.powerUps.scoreMultiplier.uses
-                    },
-                    responseTimes: results.responseTimes || [],
-                    streaks: results.streaks || [],
-                    completed: results.completed,
-                    timestamp: new Date().toISOString()
+                    playerName: playerName,
+                    score: results.score || 0,
+                    correctAnswers: results.correctAnswers || 0,
+                    totalQuestions: results.totalQuestions || 0,
+                    accuracy: results.accuracy || 0,
+                    duration: results.totalTime || 0
                 };
 
-                await saveCrackRapidoResult(gameData);
-                console.log('Crack Rápido data saved to Firebase successfully');
+                await window.firebaseService.saveMatch('crackrapido', gameData);
+                console.log('✅ [CRACK-RAPIDO] Resultado guardado en Firebase');
             } else {
-                console.log('saveCrackRapidoResult function not available');
+                console.warn('⚠️ [CRACK-RAPIDO] Firebase Service no disponible');
             }
         } catch (error) {
-            console.error('Error saving Crack Rápido data to Firebase:', error);
+            console.error('❌ [CRACK-RAPIDO] Error guardando en Firebase:', error);
         }
     }
     resetGame() {

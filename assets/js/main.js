@@ -140,6 +140,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (validation.valid) {
                     event.preventDefault();
                     localStorage.setItem('playerName', enteredName);
+                    
+                    // -- NUEVO: Actualizar perfil de Firebase --
+                    if (window.CrackTotalFirebase) {
+                        window.CrackTotalFirebase.updateUserProfile(enteredName);
+                    }
+                    // -- FIN NUEVO --
+
                     console.log(`Nombre guardado desde index.html: ${enteredName}. Redirigiendo a games.html...`);
                     if (nameErrorDiv) nameErrorDiv.textContent = ''; // Limpiar error si es válido
                     window.location.href = 'games.html';
@@ -266,6 +273,13 @@ document.addEventListener('DOMContentLoaded', function() {
                         if(changeNameErrorDiv) changeNameErrorDiv.textContent = ''; // Limpiar error
 
                         localStorage.setItem('playerName', newName);
+                        
+                        // -- NUEVO: Actualizar perfil de Firebase --
+                        if (window.CrackTotalFirebase) {
+                            window.CrackTotalFirebase.updateUserProfile(newName);
+                        }
+                        // -- FIN NUEVO --
+
                         console.log(`Nombre cambiado a: ${newName}`);
                         
                         // Usar la función de actualización centralizada
@@ -868,3 +882,25 @@ setInterval(() => {
         console.log(`🎮 Llevas ${sessionTime/60} minutos jugando!`);
     }
 }, 1000);
+
+// Inicialización del Service Worker (DESACTIVADO PERMANENTEMENTE)
+/*
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+                console.log('Service Worker de limpieza registrado:', registration);
+            })
+            .catch(error => {
+                console.error('Error al registrar el Service Worker de limpieza:', error);
+            });
+    });
+}
+*/
+
+class NotificationManager {
+    constructor() {
+        this.notificationButton = document.getElementById('notificationButton');
+        // ... existing code ... -->
+    }
+}

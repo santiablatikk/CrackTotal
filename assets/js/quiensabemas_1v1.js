@@ -1,10 +1,7 @@
 // Juego: ¿Quién Sabe Más? (1v1) - Lógica del Cliente (WebSocket)
 // Versión renovada - Junio 2024
 
-// Las funciones que usamos se cargan desde:
-// - firebase-init.js: ensureFirebaseInitialized
-// - logros.js: trackEvent, updateUserStats, checkAndAwardBadge
-// - firebase-utils.js: saveQSMResult
+// Firebase Integration - Usa window.firebaseService
 
 console.log("✨ quiensabemas_1v1.js cargado (v3 Renovada - Junio 2024)");
 
@@ -103,16 +100,11 @@ document.addEventListener('DOMContentLoaded', initializeQSMApp);
 async function initializeQSMApp() {
     console.log("🎮 Inicializando App ¿Quién Sabe Más?...");
 
-    try {
-        const firebase = await ensureFirebaseInitialized();
-        gameState.firebaseInstances = firebase;
-        console.log("🔒 Firebase inicializado para QSM", 
-            gameState.firebaseInstances.user ? 
-            `Usuario: ${gameState.firebaseInstances.user.displayName || gameState.firebaseInstances.user.uid}` : 
-            "Modo invitado");
-    } catch (error) {
-        console.error("❌ Error inicializando Firebase en QSM:", error);
-        showLobbyMessage("Error conectando con los servicios de juego. Algunas funciones estarán limitadas.", "error", false);
+    // Firebase se inicializa automáticamente a través de window.firebaseService
+    if (window.firebaseService) {
+        console.log("🔒 Firebase Service disponible para QSM");
+    } else {
+        console.warn("⚠️ Firebase Service no disponible para QSM");
     }
 
     loadPlayerName();
@@ -1500,41 +1492,30 @@ async function handleGameEnd(payload) {
         }, 1500);
     }
 
-    // Guardar resultados y logros (solo si Firebase está disponible)
-    if (gameState.firebaseInstances?.user && gameState.firebaseInstances?.db) {
-        const { db, user } = gameState.firebaseInstances;
-        const userId = user.uid;
-        
-        const gameData = {
-            scores: finalScores,
-            winnerId: payload.winnerId,
-            draw: payload.draw || false,
-            timestamp: serverTimestamp(),
-            gameType: 'quiensabemas_1v1',
-            myScore: myScore,
-            opponentScore: opponentScore,
-            opponentId: opponentId,
-            playerId: myPlayerId
-        };
-
+    // Guardar resultados usando el servicio de Firebase
+    if (window.firebaseService && typeof window.firebaseService.saveMatch === 'function') {
         try {
-            await saveQSMResult(db, userId, gameData);
-            trackEvent(db, userId, 'qsm_game_completed');
-            
-            if (payload.winnerId === myPlayerId && !payload.draw) {
-                trackEvent(db, userId, 'qsm_game_won');
-                updateUserStats(db, userId, { qsmGamesWon: increment(1) });
-                checkAndAwardBadge(db, userId, 'qsm_victories', myScore);
-            } else if (payload.draw) {
-                trackEvent(db, userId, 'qsm_game_draw');
-            }
-            
-            updateUserStats(db, userId, { qsmGamesPlayed: increment(1) });
+            const playerName = gameState.playerName || 
+                             localStorage.getItem('playerName') || 
+                             window.firebaseService.generatePlayerName() || 
+                             'QSMPlayer';
+
+            const matchData = {
+                playerName: playerName,
+                score: myScore,
+                correctAnswers: myScore, // En QSM, el score es directamente las respuestas correctas
+                totalQuestions: gameState.totalQuestions || 10,
+                accuracy: Math.round((myScore / (gameState.totalQuestions || 10)) * 100),
+                duration: Math.floor((Date.now() - (gameState.gameStartTime || Date.now())) / 1000)
+            };
+
+            await window.firebaseService.saveMatch('quiensabemas', matchData);
+            console.log("✅ [QUIENSABEMAS] Resultado guardado en Firebase");
         } catch (error) {
-            console.error("Error guardando resultados o logros:", error);
+            console.error("❌ [QUIENSABEMAS] Error guardando resultado:", error);
         }
     } else {
-        console.warn("Firebase no disponible. No se guardarán resultados ni logros.");
+        console.warn("⚠️ [QUIENSABEMAS] Firebase Service no disponible");
     }
 }
 

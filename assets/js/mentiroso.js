@@ -1,5 +1,5 @@
 // --- WebSocket URL (¡Configura esto!) ---
-// Usamos la función saveMentirosoResult de firebase-utils.js que se carga como script
+// Firebase Integration - Usa window.firebaseService
 const WEBSOCKET_URL = (() => {
     // Siempre usar el servidor de producción para evitar problemas de configuración local
     return 'wss://cracktotal-servidor.onrender.com';
@@ -1688,8 +1688,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 opponents: opponents
             };
 
-            await saveMentirosoResult(gameStats);
-            console.log("Estadísticas de Mentiroso guardadas exitosamente");
+            // Guardar usando el servicio de Firebase
+            if (window.firebaseService && typeof window.firebaseService.saveMatch === 'function') {
+                const playerName = localStorage.getItem('playerName') || 
+                                 window.firebaseService.generatePlayerName() || 
+                                 'MentirosoPlayer';
+
+                const matchData = {
+                    playerName: playerName,
+                    score: myFinalScore,
+                    correctAnswers: myFinalScore, // En Mentiroso, el score refleja los aciertos
+                    totalQuestions: (gameState.currentRound || 1) * 10, // Aproximadamente 10 preguntas por ronda
+                    accuracy: myFinalScore > 0 ? Math.round((myFinalScore / ((gameState.currentRound || 1) * 10)) * 100) : 0,
+                    duration: Math.floor((Date.now() - (gameState.gameStartTime || Date.now())) / 1000)
+                };
+
+                await window.firebaseService.saveMatch('mentiroso', matchData);
+                console.log("✅ [MENTIROSO] Estadísticas guardadas en Firebase");
+            } else {
+                console.warn("⚠️ [MENTIROSO] Firebase Service no disponible");
+            }
         } catch (error) {
             console.error("Error guardando estadísticas de Mentiroso:", error);
         }

@@ -1898,10 +1898,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // End the game
-    function endGame(result = 'timeout') { // Quitamos async para evitar bloqueos
+    function endGame(result = 'timeout') {
         clearInterval(timerInterval);
-
-        // Reproducir sonido según el resultado
+    
         if (window.soundManager) {
             if (result === 'victory') {
                 window.soundManager.playSound('victory');
@@ -1909,72 +1908,119 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.soundManager.playSound('defeat');
             }
         }
-
-        // --- Deshabilitar Controles INMEDIATAMENTE ---
+    
         if (answerInput) answerInput.disabled = true;
         if (pasapalabraButton) pasapalabraButton.disabled = true;
         if (submitAnswerBtnIcon) submitAnswerBtnIcon.disabled = true;
         const helpButton = document.getElementById('helpButton');
         if (helpButton) helpButton.disabled = true;
-        // --- Fin Deshabilitar Controles ---
-        
+    
         const timeSpent = totalTime - timeLeft;
-        // CALCULAR timeFormatted AQUÍ
         const minutes = Math.floor(timeSpent / 60);
         const seconds = timeSpent % 60;
         const timeFormatted = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        
-        // --- MOVER CÁLCULO DE ESTADÍSTICAS AQUÍ ARRIBA ---
+    
         const totalAnswered = correctAnswers + incorrectAnswers;
-        const unanswered = alphabet.length - totalAnswered; // Se usa alphabet.length que es el total de letras
-        const accuracy = totalAnswered > 0 ? Math.round((correctAnswers / totalAnswered) * 100) : 0;
-        // --- FIN MOVER CÁLCULO ---
-        
-        // --- Actualizar Estadísticas LOCALES --- 
+        const unanswered = alphabet.length - totalAnswered;
+        // CORRECCIÓN: La precisión debe calcularse sobre el total de letras del alfabeto (26), no solo las respondidas
+        const accuracy = Math.round((correctAnswers / alphabet.length) * 100);
+    
         let profileStats = loadProfileStats();
         profileStats.gamesPlayed += 1;
         profileStats.totalCorrectAnswers += correctAnswers;
         profileStats.totalIncorrectAnswers += incorrectAnswers;
-        profileStats.totalPassedAnswers += passedAnswers; // Assuming you track this
+        profileStats.totalPassedAnswers += passedAnswers;
         profileStats.totalHelpUsed += helpUsed;
-
-        let isWin = false;
+    
         if (result === 'victory') {
             profileStats.gamesWon += 1;
-            isWin = true;
             if (profileStats.fastestWinTime === null || timeSpent < profileStats.fastestWinTime) {
                 profileStats.fastestWinTime = timeSpent;
             }
         } else if (result === 'defeat') {
             profileStats.gamesLostByErrors += 1;
-        } else { // timeout
+        } else {
             profileStats.gamesLostByTimeout += 1;
         }
-
+    
         if (correctAnswers > profileStats.bestScore) {
             profileStats.bestScore = correctAnswers;
         }
-
         saveProfileStats(profileStats);
-        // --- Fin Actualizar Estadísticas LOCALES ---
-
-        // --- INICIO: Guardar Partida en el HISTORIAL LOCAL ---
+    
         const gameResultForHistory = {
-            timestamp: new Date().toISOString(), // Usar ISO string para mejor compatibilidad
-            result: result, // 'victory', 'defeat', or 'timeout'
-            difficulty: document.querySelector('.difficulty-btn.active')?.dataset.difficulty || 'normal',
-            correctAnswers: correctAnswers, // Aciertos de la partida actual
-            incorrectAnswers: incorrectAnswers, // Errores de la partida actual
-            timeSpent: timeSpent, // Tiempo en segundos
-            timeSpentFormatted: timeFormatted, // timeFormatted AHORA ESTÁ DEFINIDO
+            timestamp: new Date().toISOString(),
+            result: result,
+            difficulty: document.querySelector('.difficulty-card.active')?.dataset.difficulty || document.querySelector('.difficulty-btn.active')?.dataset.difficulty || 'normal',
+            correctAnswers: correctAnswers,
+            incorrectAnswers: incorrectAnswers,
+            timeSpent: timeSpent,
+            timeSpentFormatted: timeFormatted,
         };
         addGameToHistory(gameResultForHistory);
-        // --- FIN: Guardar Partida en el HISTORIAL LOCAL ---
-
-        // --- MOSTRAR MODAL DE RESULTADO INMEDIATAMENTE ---
-        // --- Create modal for the game result ---
-        let modalType, modalTitle, modalMessage, modalColor, modalIcon;
         
+        // <<<--- LLAMADA CORRECTA A FIREBASE --- >>>
+        if (window.firebaseService && typeof window.firebaseService.saveMatch === 'function') {
+            console.log("%c[Pasalache] Preparando para guardar partida en Firebase...", "color: #3b82f6; font-weight: bold;");
+            
+            // Obtener dificultad actual
+            const difficulty = document.querySelector('.difficulty-card.active')?.dataset.difficulty || 
+                             document.querySelector('.difficulty-btn.active')?.dataset.difficulty || 'normal';
+            
+            // Determinar resultado detallado
+            let resultType = result;
+            let resultDescription = '';
+            if (result === 'victory') {
+                resultDescription = 'Rosco completado';
+            } else if (result === 'defeat') {
+                resultDescription = 'Superaste el máximo de errores';
+            } else {
+                resultDescription = 'Se agotó el tiempo';
+            }
+            
+            const gameDataForService = {
+                // Datos básicos del jugador
+                playerName: currentPlayerName,
+                
+                // Resultados principales
+                score: correctAnswers,
+                correctAnswers: correctAnswers,
+                incorrectAnswers: incorrectAnswers,
+                totalQuestions: alphabet.length,
+                accuracy: accuracy,
+                
+                // Información de tiempo
+                duration: timeSpent, // en segundos
+                timeFormatted: timeFormatted, // formato legible
+                
+                // Información del juego
+                gameResult: resultType, // 'victory', 'defeat', 'timeout'
+                resultDescription: resultDescription,
+                difficulty: difficulty,
+                
+                // Información adicional
+                passedAnswers: passedAnswers,
+                helpUsed: helpUsed,
+                maxErrors: maxErrors,
+                totalErrors: gameErrors.length,
+                
+                // Metadatos
+                gameDate: new Date().toISOString(),
+                gameVersion: '2.0'
+            };
+            
+            window.firebaseService.saveMatch('pasalache', gameDataForService)
+                .then(() => {
+                    console.log("%c[Pasalache] Partida enviada a Firebase con éxito.", "color: #16a34a;");
+                })
+                .catch(error => {
+                    console.error("%c[Pasalache] Error al guardar partida en Firebase:", "color: #ef4444;", error);
+                });
+        } else {
+            console.warn("[Pasalache] window.firebaseService.saveMatch no está disponible. La partida no se guardará en el ranking.");
+        }
+        
+        let modalType, modalTitle, modalMessage, modalColor, modalIcon;
         switch (result) {
             case 'victory':
                 modalType = 'victory';
@@ -1990,7 +2036,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 modalColor = 'var(--gradient-accent)';
                 modalIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>`;
                 break;
-            default: // timeout
+            default:
                 modalType = 'timeout';
                 modalTitle = '¡TIEMPO AGOTADO!';
                 modalMessage = `Se acabó el tiempo.`;
@@ -1998,7 +2044,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 modalIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>`;
                 break;
         }
-        
+    
         try {
             createResultModal(modalType, modalTitle, modalMessage, modalColor, modalIcon, {
                 correctAnswers,
@@ -2009,119 +2055,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } catch (error) {
             console.error("Error al mostrar modal de resultado:", error);
-            alert(`¡${modalTitle} ${modalMessage}`); // Fallback simple si falla el modal
+            alert(`¡${modalTitle} ${modalMessage}`);
         }
-
-        // --- INICIO: Guardar Resultados en FIREBASE ---
-        // Intentar guardar en Firebase usando la versión compat
-        setTimeout(() => {
-            try {
-                if (window.firebase && window.firebase.firestore) {
-                    const userId = getCurrentUserId(); 
-                    const userDisplayName = getCurrentDisplayName();
-                    const difficultyActual = document.querySelector('.difficulty-btn.active')?.dataset.difficulty || 'normal';
-                    const db = window.firebase.firestore();
-                    
-                    console.log("Guardando partida en Firebase:", {
-                        userId,
-                        userDisplayName,
-                        result,
-                        correctAnswers,
-                        incorrectAnswers,
-                        timeSpent
-                    });
-                    
-                    // 1. Actualizar el documento del usuario
-                    db.collection("users").doc(userId).set({
-                        displayName: userDisplayName,
-                        totalScore: window.firebase.firestore.FieldValue.increment(correctAnswers),
-                        matchesPlayed: window.firebase.firestore.FieldValue.increment(1),
-                        lastPlayed: window.firebase.firestore.FieldValue.serverTimestamp(),
-                        totalErrors: window.firebase.firestore.FieldValue.increment(incorrectAnswers),
-                        ...(result === 'victory' 
-                            ? { wins: window.firebase.firestore.FieldValue.increment(1) } 
-                            : { totalLosses: window.firebase.firestore.FieldValue.increment(1) })
-                    }, { merge: true })
-                    .then(() => console.log("Datos de usuario guardados exitosamente"))
-                    .catch(error => console.error("Error al guardar datos de usuario:", error));
-                    
-                    // 2. Añadir la partida a matches
-                    db.collection("matches").add({
-                        timestamp: window.firebase.firestore.FieldValue.serverTimestamp(),
-                        gameMode: "Pasalache",
-                        result: result,
-                        difficulty: difficultyActual,
-                        timeSpent: timeSpent,
-                        score: correctAnswers,
-                        incorrectAnswers: incorrectAnswers,
-                        passes: passedAnswers,
-                        playerName: userDisplayName,
-                        userId: userId
-                    })
-                    .then(() => console.log("Partida guardada exitosamente"))
-                    .catch(error => console.error("Error al guardar partida:", error));
-                } else {
-                    console.log("Firebase no disponible, guardando solo localmente");
-                }
-            } catch (error) {
-                console.error("Error al guardar en Firebase:", error);
-            }
-        }, 0);
-        // --- FIN: Guardar Resultados en FIREBASE ---
-
-        // <<<--- INICIO: INTENTAR DESBLOQUEAR LOGROS RELEVANTES A LA PARTIDA ACTUAL --- >>>
-        // Desactivamos temporalmente los logros para evitar errores
+    
         console.log("Procesamiento de logros desactivado temporalmente");
-        
-        /*
-        if (window.CrackTotalLogrosAPI && typeof window.CrackTotalLogrosAPI.intentarDesbloquearLogro === 'function') {
-            // Código desactivado temporalmente
-        } else {
-            console.warn("PASA: CrackTotalLogrosAPI no está disponible al finalizar el juego.");
-        }
-        */
-        // <<<--- FIN: INTENTAR DESBLOQUEAR LOGROS --- >>>
-
-        // <<<--- INICIO: DETECTAR Y MOSTRAR NUEVOS LOGROS --- >>>
-        // Desactivamos temporalmente los logros para evitar errores
-        console.log("Procesamiento de logros desactivado temporalmente");
-        
-        /*
-        setTimeout(() => {
-            try {
-                let nuevosLogrosDesbloqueadosEnEstaPartida = [];
-                if (window.CrackTotalLogrosAPI && typeof window.CrackTotalLogrosAPI.cargarLogros === 'function' && typeof window.CrackTotalLogrosAPI.getTodosLosLogrosDef === 'function') {
-                    const logrosDespuesPartida = window.CrackTotalLogrosAPI.cargarLogros();
-                    const todosLosLogrosDef = window.CrackTotalLogrosAPI.getTodosLosLogrosDef();
-
-                    todosLosLogrosDef.forEach(logroDef => {
-                        const idLogro = logroDef.id;
-                        const estabaDesbloqueadoAntes = logrosAlInicioDePartida[idLogro]?.unlocked === true;
-                        const estaDesbloqueadoAhora = logrosDespuesPartida[idLogro]?.unlocked === true;
-
-                        if (estaDesbloqueadoAhora && !estabaDesbloqueadoAntes) {
-                            // Usar directamente logroDef que viene de todosLosLogrosDef, que ya es la definición completa
-                            nuevosLogrosDesbloqueadosEnEstaPartida.push(logroDef);
-                        }
-                    });
-
-                    if (nuevosLogrosDesbloqueadosEnEstaPartida.length > 0) {
-                        console.log("Nuevos logros desbloqueados en esta partida:", nuevosLogrosDesbloqueadosEnEstaPartida.map(l => l.title));
-                        mostrarModalesDeLogrosSecuencialmente(nuevosLogrosDesbloqueadosEnEstaPartida);
-                    }
-                } else {
-                    console.warn("CrackTotalLogrosAPI no disponible para verificar nuevos logros.");
-                }
-            } catch (error) {
-                console.error("Error al procesar logros:", error);
-            }
-        }, 100);
-        */
-        // <<<--- FIN: DETECTAR Y MOSTRAR NUEVOS LOGROS --- >>>
-
-        // --- Lógica del Modal de Resultado de Partida (EXISTENTE) --- 
-        // Ya movimos la creación del modal para que se muestre antes de cualquier operación asíncrona
-        // El modal ya se está mostrando en este punto, así que no necesitamos llamar a createResultModal nuevamente
     }
     
     // Create a modal for the game result
@@ -2383,7 +2320,8 @@ document.addEventListener('DOMContentLoaded', function() {
         performanceSummary.className = 'performance-summary';
         
         // Calculate stats
-        const accuracy = (correctAnswers + incorrectAnswers) > 0 ? Math.round((correctAnswers / (correctAnswers + incorrectAnswers)) * 100) : 0;
+        // CORRECCIÓN: La precisión debe calcularse sobre las 26 letras del alfabeto, no solo las respondidas
+        const accuracy = Math.round((correctAnswers / alphabet.length) * 100);
         const completionPercentage = Math.round((correctAnswers / alphabet.length) * 100);
         
         performanceSummary.innerHTML = `
@@ -2966,5 +2904,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Simple alias for the specific incomplete feedback
     function showIncompleteFeedback(message) {
         showTemporaryFeedback(message, 'warning', 2000); // Show for 2 seconds (changed from 3000)
+    }
+
+    // Calculate accuracy
+    function calculateAccuracy(correctAnswers, incorrectAnswers) {
+        // CORRECCIÓN: En Pasalache hay 26 letras del alfabeto, no solo las respondidas
+        const totalQuestions = 26; // alphabet.length = 26
+        const accuracy = Math.round((correctAnswers / totalQuestions) * 100);
+        return accuracy;
     }
 }); 

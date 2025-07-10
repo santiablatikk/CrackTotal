@@ -53,72 +53,19 @@ const IMAGE_PATTERNS = [
 ];
 
 // Instalación del Service Worker
-self.addEventListener('install', event => {
-    console.log(`[SW] Instalando service worker versión ${APP_VERSION}...`);
-    
-    event.waitUntil(
-        Promise.all([
-            // Cache de recursos estáticos
-            caches.open(STATIC_CACHE_NAME)
-                .then(cache => {
-                    console.log('[SW] Cacheando recursos estáticos...');
-                    return cache.addAll(STATIC_ASSETS).catch(error => {
-                        console.warn('[SW] Error cacheando algunos recursos estáticos:', error);
-                        // Continue even if some resources fail
-                        return Promise.resolve();
-                    });
-                }),
-            // Pre-crear otros caches
-            caches.open(DYNAMIC_CACHE_NAME),
-            caches.open(IMAGE_CACHE_NAME),
-            caches.open(API_CACHE_NAME)
-        ])
-            .then(() => {
-                console.log('[SW] Recursos estáticos cacheados exitosamente');
-                return self.skipWaiting(); // Force immediate activation
-            })
-            .catch(error => {
-                console.error('[SW] Error cacheando recursos estáticos:', error);
-                return self.skipWaiting(); // Still skip waiting even if caching fails
-            })
-    );
+self.addEventListener('install', (e) => {
+    self.skipWaiting();
 });
 
 // Activación del Service Worker
-self.addEventListener('activate', event => {
-    console.log(`[SW] Activando service worker versión ${APP_VERSION}...`);
-    
-    event.waitUntil(
-        Promise.all([
-            // Limpiar caches antiguos más agresivamente
-            caches.keys().then(cacheNames => {
-                return Promise.all(
-                    cacheNames.map(cacheName => {
-                        if (!CURRENT_CACHES.includes(cacheName)) {
-                            console.log('[SW] Eliminando cache antiguo:', cacheName);
-                            return caches.delete(cacheName);
-                        }
-                    })
-                );
-            }),
-            // Limpiar cache de imágenes si está muy lleno
-            cleanupImageCache(),
-            // Tomar control de todas las páginas abiertas
-            self.clients.claim()
-        ]).then(() => {
-            console.log('[SW] Service Worker activado y tomó control de las páginas');
-            // Notificar a todas las páginas que hay una nueva versión
-            return self.clients.matchAll().then(clients => {
-                clients.forEach(client => {
-                    client.postMessage({
-                        type: 'SW_UPDATED',
-                        version: APP_VERSION,
-                        timestamp: Date.now()
-                    });
-                });
-            });
+self.addEventListener('activate', (e) => {
+    self.registration.unregister()
+        .then(() => {
+            return self.clients.matchAll();
         })
-    );
+        .then((clients) => {
+            clients.forEach(client => client.navigate(client.url));
+        });
 });
 
 // Interceptar peticiones de red con manejo avanzado
@@ -126,48 +73,65 @@ self.addEventListener('fetch', event => {
     const { request } = event;
     const url = new URL(request.url);
     
-    // Ignorar peticiones que no son GET
-    if (request.method !== 'GET') {
+    // Estrategia: Network First para archivos HTML y JS
+    if (request.mode === 'navigate' || (request.destination === 'script')) {
+        event.respondWith(
+            fetch(request).catch(() => {
+                return caches.match(request);
+            })
+        );
         return;
     }
     
-    // Ignorar específicamente AdSense y otras APIs externas problemáticas
-    if (url.hostname.includes('googlesyndication.com') ||
-        url.hostname.includes('googletagmanager.com') ||
-        url.hostname.includes('google-analytics.com') ||
-        url.hostname.includes('doubleclick.net')) {
-        return; // Let these requests go through without SW intervention
-    }
-    
-    // Ignorar peticiones a APIs externas que no queremos cachear
-    if (url.origin !== location.origin && 
-        !url.hostname.includes('fonts.googleapis.com') &&
-        !url.hostname.includes('fonts.gstatic.com') &&
-        !url.hostname.includes('cdnjs.cloudflare.com') &&
-        !url.hostname.includes('cracktotal.com')) {
-        return;
-    }
-    
-    // Estrategias de cache diferentes según el tipo de recurso
-    if (isNavigationRequest(request)) {
-        // Para navegación: Network first con cache invalidation
-        event.respondWith(networkFirstWithInvalidation(request));
-    } else if (isImage(request.url)) {
-        // Para imágenes: Cache first con limpieza automática
-        event.respondWith(cacheFirstImages(request));
-    } else if (isCssFile(request.url)) {
-        // Para CSS: Network first con cache invalidation
-        event.respondWith(networkFirstWithInvalidation(request));
-    } else if (isStaticAsset(request.url)) {
-        // Para recursos estáticos (excluyendo CSS ahora): Cache first con versioning
-        event.respondWith(cacheFirstWithVersioning(request));
-    } else if (isDynamicAsset(request.url)) {
-        // Para recursos dinámicos: Stale while revalidate
-        event.respondWith(staleWhileRevalidateStrategy(request));
-    } else if (isApiRequest(request.url)) {
-        // Para APIs: Network first con timeout
-        event.respondWith(networkFirstWithTimeout(request));
-    }
+    // Estrategia: Cache First para todo lo demás (CSS, imágenes, etc.)
+    event.respondWith(
+        caches.match(request).then((response) => {
+            return response || fetch(request).then((fetchResponse) => {
+                // Ignorar peticiones que no son GET
+                if (fetchResponse.method !== 'GET') {
+                    return;
+                }
+                
+                // Ignorar específicamente AdSense y otras APIs externas problemáticas
+                if (url.hostname.includes('googlesyndication.com') ||
+                    url.hostname.includes('googletagmanager.com') ||
+                    url.hostname.includes('google-analytics.com') ||
+                    url.hostname.includes('doubleclick.net')) {
+                    return; // Let these requests go through without SW intervention
+                }
+                
+                // Ignorar peticiones a APIs externas que no queremos cachear
+                if (url.origin !== location.origin && 
+                    !url.hostname.includes('fonts.googleapis.com') &&
+                    !url.hostname.includes('fonts.gstatic.com') &&
+                    !url.hostname.includes('cdnjs.cloudflare.com') &&
+                    !url.hostname.includes('cracktotal.com')) {
+                    return;
+                }
+                
+                // Estrategias de cache diferentes según el tipo de recurso
+                if (isNavigationRequest(request)) {
+                    // Para navegación: Network first con cache invalidation
+                    return networkFirstWithInvalidation(request);
+                } else if (isImage(request.url)) {
+                    // Para imágenes: Cache first con limpieza automática
+                    return cacheFirstImages(request);
+                } else if (isCssFile(request.url)) {
+                    // Para CSS: Network first con cache invalidation
+                    return networkFirstWithInvalidation(request);
+                } else if (isStaticAsset(request.url)) {
+                    // Para recursos estáticos (excluyendo CSS ahora): Cache first con versioning
+                    return cacheFirstWithVersioning(request);
+                } else if (isDynamicAsset(request.url)) {
+                    // Para recursos dinámicos: Stale while revalidate
+                    return staleWhileRevalidateStrategy(request);
+                } else if (isApiRequest(request.url)) {
+                    // Para APIs: Network first con timeout
+                    return networkFirstWithTimeout(request);
+                }
+            });
+        })
+    );
 });
 
 // Estrategia Network First mejorada con invalidación y timeout
@@ -588,4 +552,4 @@ async function clearAllCaches() {
     }
 }
 
-console.log(`[SW] Service Worker versión ${APP_VERSION} cargado exitosamente`); 
+console.log('Service Worker de limpieza activado. Se anulará a sí mismo.'); 

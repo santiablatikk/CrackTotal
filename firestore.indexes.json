@@ -9,18 +9,8 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "timestamp",
+          "fieldPath": "score",
           "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "matches",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "playerUid",
-          "order": "ASCENDING"
         },
         {
           "fieldPath": "timestamp",
@@ -33,12 +23,12 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "gameType",
+          "fieldPath": "playerId",
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "score",
-          "order": "DESCENDING"
+          "fieldPath": "gameType",
+          "order": "ASCENDING"
         },
         {
           "fieldPath": "timestamp",
@@ -47,119 +37,7 @@
       ]
     },
     {
-      "collectionGroup": "users",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stats.quiensabemas.wins",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "stats.quiensabemas.played",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "users",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stats.quiensabemas.score",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "stats.quiensabemas.played",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "users",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stats.mentiroso.wins",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "stats.mentiroso.played",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "users",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stats.mentiroso.score",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "stats.mentiroso.played",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "users",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stats.crackrapido.score",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "stats.crackrapido.played",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "users",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stats.crackrapido.bestStreak",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "stats.crackrapido.played",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "users",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stats.pasalache.score",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "stats.pasalache.played",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "users",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "stats.pasalache.wins",
-          "order": "DESCENDING"
-        },
-        {
-          "fieldPath": "stats.pasalache.played",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "rankings",
+      "collectionGroup": "matches",
       "queryScope": "COLLECTION",
       "fields": [
         {
@@ -167,43 +45,11 @@
           "order": "ASCENDING"
         },
         {
-          "fieldPath": "score",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "rooms",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "gameType",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "status",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "lastActivity",
-          "order": "DESCENDING"
-        }
-      ]
-    },
-    {
-      "collectionGroup": "achievements",
-      "queryScope": "COLLECTION",
-      "fields": [
-        {
-          "fieldPath": "userId",
-          "order": "ASCENDING"
-        },
-        {
-          "fieldPath": "unlockedAt",
+          "fieldPath": "timestamp",
           "order": "DESCENDING"
         }
       ]
     }
   ],
   "fieldOverrides": []
-}
+} 

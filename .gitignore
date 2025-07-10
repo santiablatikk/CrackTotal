@@ -51,9 +51,30 @@ build/
 # Temporary files
 temp/
 tmp/
+*.tmp
+*.bak
+*.backup
 
 # Local development
 .local
 
 # Firebase config local - NO SUBIR
 js/firebase-config-local.js
+
+# Python virtual environment
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Test files
+test-*.html
+*-test.js
+*.test.js
+
+# Backup files
+*-backup.*
+*.backup
+
+# Development templates
+template-*.html

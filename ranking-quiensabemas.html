@@ -88,12 +88,12 @@
     <script src="assets/js/main.js"></script>
     
     <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    
-    <!-- Firebase Unificado -->
-    <script src="assets/js/firebase-unified.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/firebase-service.js"></script>
+    <script src="assets/js/ranking-helper.js"></script>
 </head>
 <body class="ranking-page-body">
     <!-- Skip Link para accesibilidad -->
@@ -216,269 +216,25 @@
 
     <!-- Scripts -->
     <script>
-    // Sistema de Ranking Quién Sabe más
-    async function loadQuienSabeMasRanking() {
+    // Inicialización simplificada para Quién Sabe más
+    document.addEventListener('DOMContentLoaded', async () => {
+        console.log('🧠 Inicializando ranking Quién Sabe más...');
+        
         try {
-            console.log('🧠 Cargando ranking Quién Sabe más...');
+            const rankingHelper = new RankingHelper();
             
-            // Esperar a que CrackTotal esté listo
-            await new Promise((resolve) => {
-                if (window.CrackTotal && window.CrackTotal.initialized) {
-                    resolve();
-                } else {
-                    window.addEventListener('crackTotalReady', resolve);
-                    // Fallback timeout
-                    setTimeout(resolve, 3000);
-                }
-            });
+            // Cargar ranking y historial en paralelo
+            await Promise.all([
+                rankingHelper.loadGameRanking('quiensabemas', 15, 'ranking-body'),
+                rankingHelper.loadUserHistory('quiensabemas', 20, 'history-list')
+            ]);
             
-            // Cargar ranking usando sistema unificado
-            const ranking = await window.CrackTotal.getRanking('quiensabemas', 15);
-            console.log('✅ Ranking obtenido:', ranking);
-            
-            const tbody = document.getElementById('ranking-body');
-            if (!tbody) return;
-            
-            if (ranking.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="no-data">
-                            🧠 ¡Sé el primero en jugar Quién Sabe más!
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-            
-            tbody.innerHTML = ranking.map((user, index) => {
-                const position = index + 1;
-                const winRate = user.winRate || 0;
-                const losses = user.played - user.wins;
-                const avgScore = user.avgScore || 0;
-                
-                // ELO simplificado para duelos 1v1
-                const baseElo = 1200 + (user.wins * 30) + (winRate * 8) + (avgScore * 5);
-                const elo = Math.round(baseElo);
-                
-                // Nivel simplificado
-                let level = 'Novato 🌟';
-                if (elo >= 2000 && winRate >= 80) {
-                    level = 'Gran Maestro 👑';
-                } else if (elo >= 1800 && winRate >= 75) {
-                    level = 'Maestro 🏆';
-                } else if (elo >= 1600 && winRate >= 65) {
-                    level = 'Experto 🎯';
-                } else if (elo >= 1400 && winRate >= 55) {
-                    level = 'Avanzado 📚';
-                } else if (elo >= 1300 && user.played >= 10) {
-                    level = 'Intermedio 🧠';
-                } else if (user.played >= 5) {
-                    level = 'Principiante 🔰';
-                }
-                
-                return `
-                    <tr class="ranking-row ${position <= 3 ? 'top-three' : ''}">
-                        <td class="position">${position <= 3 ? '🏆' : position}</td>
-                        <td class="player-name">${user.displayName}</td>
-                        <td class="elo">${elo}</td>
-                        <td class="win-loss">${user.wins}W/${losses}L</td>
-                        <td class="level hide-mobile">${level}</td>
-                    </tr>
-                `;
-            }).join('');
-            
-            // Cargar historial usando sistema unificado
-            const history = await window.CrackTotal.getHistory('quiensabemas', 20);
-            const historyList = document.getElementById('history-list');
-            
-            if (historyList && history.length > 0) {
-                historyList.innerHTML = history.map((match, index) => {
-                    // Extraer datos básicos
-                    const timestamp = match.timestamp || null;
-                    const date = timestamp ? 
-                        new Date(timestamp.toDate()).toLocaleDateString('es-ES', {
-                            day: '2-digit',
-                            month: '2-digit', 
-                            year: 'numeric'
-                        }) : 'Sin fecha';
-                    const time = timestamp ? 
-                        new Date(timestamp.toDate()).toLocaleTimeString('es-ES', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                        }) : '';
-                    
-                    // Datos del jugador y oponente
-                    const playerName = match.players && match.players.length > 0 ? 
-                        match.players[0].displayName : 'Jugador';
-                    const myScore = match.players && match.players.length > 0 ? 
-                        match.players[0].score || 0 : 0;
-                    const opponentScore = match.players && match.players.length > 1 ? 
-                        match.players[1].score || 0 : 0;
-                    const opponentName = match.players && match.players.length > 1 ? 
-                        match.players[1].displayName || 'Oponente' : 'Oponente';
-                    const result = match.result === 'victory' ? 'victory' : 
-                                 match.result === 'draw' ? 'draw' : 'defeat';
-                    
-                    // Métricas específicas de Quién Sabe más
-                    const scoreDifference = myScore - opponentScore;
-                    const totalQuestions = match.totalQuestions || 10;
-                    const accuracy = totalQuestions > 0 ? Math.round((myScore / totalQuestions) * 100) : 0;
-                    const category = match.category || 'General';
-                    
-                    // Determinar nivel de conocimiento mostrado
-                    let performance = 'Estudiante';
-                    let performanceClass = 'student';
-                    let performanceIcon = '📚';
-                    
-                    if (myScore >= 9 && result === 'victory') {
-                        performance = 'Gran Maestro';
-                        performanceClass = 'grandmaster';
-                        performanceIcon = '👑';
-                    } else if (myScore >= 8 && accuracy >= 80) {
-                        performance = 'Experto';
-                        performanceClass = 'expert';
-                        performanceIcon = '🎯';
-                    } else if (myScore >= 7 && accuracy >= 70) {
-                        performance = 'Conocedor';
-                        performanceClass = 'knowledgeable';
-                        performanceIcon = '🧠';
-                    } else if (myScore >= 6) {
-                        performance = 'Competente';
-                        performanceClass = 'competent';
-                        performanceIcon = '⚡';
-                    } else if (myScore >= 4) {
-                        performance = 'Aprendiz';
-                        performanceClass = 'apprentice';
-                        performanceIcon = '📖';
-                    }
-                    
-                    // Determinar tipo de duelo
-                    let matchType = 'Duelo Estándar';
-                    let matchClass = 'standard';
-                    
-                    if (result === 'victory') {
-                        if (Math.abs(scoreDifference) >= 5) {
-                            matchType = 'Victoria Aplastante';
-                            matchClass = 'crushing';
-                        } else if (Math.abs(scoreDifference) >= 3) {
-                            matchType = 'Victoria Sólida';
-                            matchClass = 'solid';
-                        } else {
-                            matchType = 'Victoria Ajustada';
-                            matchClass = 'close';
-                        }
-                    } else if (result === 'draw') {
-                        matchType = 'Empate Épico';
-                        matchClass = 'epic-draw';
-                    } else {
-                        if (Math.abs(scoreDifference) <= 2) {
-                            matchType = 'Derrota Heroica';
-                            matchClass = 'heroic';
-                        } else {
-                            matchType = 'Derrota';
-                            matchClass = 'defeat';
-                        }
-                    }
-                    
-                    // Calcular ELO estimado ganado/perdido
-                    const eloChange = result === 'victory' ? 
-                        Math.round(20 + (scoreDifference * 3)) : 
-                        result === 'draw' ? 0 :
-                        Math.round(-20 + (scoreDifference * 3));
-                    
-                    return `
-                        <div class="history-item ${result} ${matchClass}">
-                            <div class="match-header">
-                                <div class="match-result-info">
-                                    <span class="result-icon ${result}">
-                                        ${result === 'victory' ? '🏆' : result === 'draw' ? '🤝' : '💪'}
-                                    </span>
-                                    <div class="player-info">
-                                        <span class="player-name">${playerName}</span>
-                                        <span class="match-type">${matchType}</span>
-                                    </div>
-                                </div>
-                                <div class="match-date-time">
-                                    <span class="date">${date}</span>
-                                    <span class="time">${time}</span>
-                                </div>
-                            </div>
-                            
-                            <div class="match-stats">
-                                <div class="stat-group score-group">
-                                    <div class="stat-item primary">
-                                        <span class="stat-label">Mi Score</span>
-                                        <span class="stat-value score">${myScore}</span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-label">Oponente</span>
-                                        <span class="stat-value opponent-score">${opponentScore}</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="stat-group performance-group">
-                                    <div class="stat-item">
-                                        <span class="stat-label">Precisión</span>
-                                        <span class="stat-value accuracy ${accuracy >= 80 ? 'excellent' : accuracy >= 60 ? 'good' : 'poor'}">${accuracy}%</span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-label">Diferencia</span>
-                                        <span class="stat-value difference ${scoreDifference > 0 ? 'positive' : scoreDifference < 0 ? 'negative' : 'neutral'}">
-                                            ${scoreDifference > 0 ? '+' : ''}${scoreDifference}
-                                        </span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-label">ELO</span>
-                                        <span class="stat-value elo ${eloChange > 0 ? 'positive' : eloChange < 0 ? 'negative' : 'neutral'}">
-                                            ${eloChange > 0 ? '+' : ''}${eloChange}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="match-footer">
-                                <div class="performance-badge ${performanceClass}">
-                                    <span class="badge-icon">${performanceIcon}</span>
-                                    <span class="badge-text">${performance}</span>
-                                </div>
-                                <div class="match-summary">
-                                    <span class="summary-text">
-                                        vs ${opponentName} • ${category} • ${totalQuestions} preguntas
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            } else if (historyList) {
-                historyList.innerHTML = `
-                    <div class="no-data-enhanced">
-                        <div class="no-data-icon">🧠</div>
-                        <div class="no-data-title">¡Aún no hay duelos!</div>
-                        <div class="no-data-text">
-                            Jugá tu primer duelo de Quién Sabe más para ver tu historial aquí
-                        </div>
-                        <a href="quiensabemas.html" class="play-now-btn">
-                            <i class="fas fa-brain"></i> Jugar Ahora
-                        </a>
-                    </div>
-                `;
-            }
+            console.log('✅ Ranking Quién Sabe más cargado exitosamente');
             
         } catch (error) {
-            console.error('❌ Error cargando ranking:', error);
-            const tbody = document.getElementById('ranking-body');
-            if (tbody) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="5" class="error-state">
-                            ⚠️ Error al cargar el ranking. Refresca la página.
-                        </td>
-                    </tr>
-                `;
-            }
+            console.error('❌ Error inicializando ranking Quién Sabe más:', error);
         }
-    }
+    });
     
     // Función para compartir sitio
     function shareSite() {
@@ -493,9 +249,6 @@
             alert('Tu navegador no soporta la API de Compartir. Copiá el enlace manualmente.');
         }
     }
-    
-    // Inicializar cuando el DOM esté listo
-    document.addEventListener('DOMContentLoaded', loadQuienSabeMasRanking);
     </script>
 
 </body>
