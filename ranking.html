@@ -93,6 +93,7 @@
     <script src="assets/js/firebase-config.js"></script>
     <script src="assets/js/firebase-service.js"></script>
     <script src="assets/js/ranking-helper.js"></script>
+    <script src="assets/js/ranking-init.js"></script>
     <script src="assets/js/adsense-loading-blocker.js"></script>
 </head>
 <body class="ranking-page-body">
@@ -292,7 +293,8 @@
                         console.log('🔄 Usando rankingHelper directamente');
                         window.rankingHelper.initializeElements();
                         window.rankingHelper.loadGameRanking('pasalache', 15);
-                        window.rankingHelper.loadUserHistory('pasalache');
+                        // MOSTRAR TODOS LOS JUGADORES por defecto para ver las partidas de Cami
+                        window.rankingHelper.loadUserHistory('pasalache', 20, 'history-list', true);
                     }
                 }
             }, 2000);

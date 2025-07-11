@@ -135,25 +135,49 @@ class RankingHelper {
         }
     }
 
-    // Cargar historial del usuario
-    async loadUserHistory(gameType, limit = 20, containerId = 'history-list') {
-        console.log(`📜 Cargando historial ${gameType}...`);
+    // Cargar historial del usuario (con opción para mostrar todos los jugadores)
+    async loadUserHistory(gameType, limit = 20, containerId = 'history-list', showAllPlayers = false) {
+        console.log(`📜 Cargando historial ${gameType}... (Todos: ${showAllPlayers})`);
         const historyContainer = document.getElementById(containerId);
         if (!historyContainer) {
             console.warn('❌ No se encontró contenedor de historial:', containerId);
             return;
         }
 
-        historyContainer.innerHTML = '<div class="loading-history" style="text-align: center; padding: 20px; color: #6c757d;"><span>📜</span> Revisando tus partidos...</div>';
+        const loadingText = showAllPlayers ? 'Cargando partidas de todos los jugadores...' : 'Revisando tus partidos...';
+        historyContainer.innerHTML = `<div class="loading-history" style="text-align: center; padding: 20px; color: #6c757d;"><span>📜</span> ${loadingText}</div>`;
 
         try {
             // Esperar a que el servicio esté listo
             await this.waitForFirebaseService();
             
-            const historyData = await window.firebaseService.getUserHistory(gameType, limit);
+            let historyData;
+            if (showAllPlayers) {
+                // Obtener historial de TODOS los jugadores
+                historyData = await this.getAllPlayersHistory(gameType, limit);
+            } else {
+                // Obtener solo del usuario actual
+                historyData = await window.firebaseService.getUserHistory(gameType, limit);
+            }
 
             if (historyData && historyData.length > 0) {
-                historyContainer.innerHTML = historyData.map((match, index) => {
+                // Crear botones de toggle
+                const toggleButtons = `
+                    <div class="history-toggle" style="margin-bottom: 20px; text-align: center;">
+                        <button class="toggle-btn ${!showAllPlayers ? 'active' : ''}" 
+                                onclick="window.rankingHelper.loadUserHistory('${gameType}', ${limit}, '${containerId}', false)"
+                                style="background: ${!showAllPlayers ? '#28a745' : '#6c757d'}; color: white; border: none; padding: 8px 16px; margin: 0 5px; border-radius: 5px; cursor: pointer;">
+                            <i class="fas fa-user"></i> Mi Historial
+                        </button>
+                        <button class="toggle-btn ${showAllPlayers ? 'active' : ''}" 
+                                onclick="window.rankingHelper.loadUserHistory('${gameType}', ${limit}, '${containerId}', true)"
+                                style="background: ${showAllPlayers ? '#28a745' : '#6c757d'}; color: white; border: none; padding: 8px 16px; margin: 0 5px; border-radius: 5px; cursor: pointer;">
+                            <i class="fas fa-users"></i> Todos los Jugadores
+                        </button>
+                    </div>
+                `;
+
+                const historyHTML = historyData.map((match, index) => {
                     // Información básica
                     const score = match.score || 0;
                     const correctAnswers = match.correctAnswers || 0;
@@ -292,6 +316,7 @@ class RankingHelper {
                                     <div>
                                         <h4 style="margin: 0; color: #ecf0f1; font-size: 1em;">
                                             👤 ${playerName} - ${difficultyDisplay}
+                                            ${showAllPlayers ? `<span style="font-size: 0.7em; color: #777; margin-left: 8px;">(${(match.playerId || '').substring(0, 8)}...)</span>` : ''}
                                         </h4>
                                         <p style="margin: 4px 0 0 0; color: #bdc3c7; font-size: 0.85em;">
                                             📅 ${gameDate}
@@ -361,8 +386,30 @@ class RankingHelper {
                         </div>
                     `;
                 }).join('');
+
+                historyContainer.innerHTML = toggleButtons + historyHTML;
             } else {
-                historyContainer.innerHTML = `
+                // Crear botones de toggle incluso cuando no hay datos
+                const toggleButtons = `
+                    <div class="history-toggle" style="margin-bottom: 20px; text-align: center;">
+                        <button class="toggle-btn ${!showAllPlayers ? 'active' : ''}" 
+                                onclick="window.rankingHelper.loadUserHistory('${gameType}', ${limit}, '${containerId}', false)"
+                                style="background: ${!showAllPlayers ? '#28a745' : '#6c757d'}; color: white; border: none; padding: 8px 16px; margin: 0 5px; border-radius: 5px; cursor: pointer;">
+                            <i class="fas fa-user"></i> Mi Historial
+                        </button>
+                        <button class="toggle-btn ${showAllPlayers ? 'active' : ''}" 
+                                onclick="window.rankingHelper.loadUserHistory('${gameType}', ${limit}, '${containerId}', true)"
+                                style="background: ${showAllPlayers ? '#28a745' : '#6c757d'}; color: white; border: none; padding: 8px 16px; margin: 0 5px; border-radius: 5px; cursor: pointer;">
+                            <i class="fas fa-users"></i> Todos los Jugadores
+                        </button>
+                    </div>
+                `;
+
+                const noDataMessage = showAllPlayers ? 
+                    '¡No hay partidas registradas aún en este juego!' : 
+                    '¡Jugá algunas partidas para ver tu historial aquí!';
+
+                historyContainer.innerHTML = toggleButtons + `
                     <div class="no-data-history" style="
                         text-align: center; 
                         padding: 30px; 
@@ -372,7 +419,7 @@ class RankingHelper {
                         margin: 12px 0;
                     ">
                         <span style="font-size: 2em;">🎮</span>
-                        <p style="margin: 10px 0;">¡Jugá algunas partidas para ver tu historial aquí!</p>
+                        <p style="margin: 10px 0;">${noDataMessage}</p>
                     </div>
                 `;
             }
@@ -390,6 +437,66 @@ class RankingHelper {
                     <span>⚠️</span> No se pudo cargar tu historial.
                 </div>
             `;
+        }
+    }
+
+    // Obtener historial de TODOS los jugadores (sin filtrar por UID)
+    async getAllPlayersHistory(gameType, limit = 20) {
+        try {
+            console.log(`🌍 Obteniendo historial global de ${gameType}...`);
+            
+            const snapshot = await window.db.collection('matches')
+                .where('gameType', '==', gameType)
+                .orderBy('timestamp', 'desc')
+                .limit(limit)
+                .get();
+
+            const history = [];
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                history.push({
+                    id: doc.id,
+                    ...data
+                });
+            });
+
+            console.log(`✅ Historial global obtenido: ${history.length} partidas`);
+            return history;
+
+        } catch (error) {
+            console.error('❌ Error obteniendo historial global:', error);
+            
+            // Si falla el orderBy, intentar sin ordenamiento
+            try {
+                console.log('🔄 Intentando consulta sin ordenamiento...');
+                const fallbackSnapshot = await window.db.collection('matches')
+                    .where('gameType', '==', gameType)
+                    .limit(limit)
+                    .get();
+
+                const history = [];
+                fallbackSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    history.push({
+                        id: doc.id,
+                        ...data
+                    });
+                });
+
+                // Ordenar manualmente por fecha
+                history.sort((a, b) => {
+                    const dateA = a.timestamp ? (a.timestamp.seconds ? a.timestamp.seconds : new Date(a.timestamp).getTime()) : 0;
+                    const dateB = b.timestamp ? (b.timestamp.seconds ? b.timestamp.seconds : new Date(b.timestamp).getTime()) : 0;
+                    return dateB - dateA;
+                });
+
+                console.log(`✅ Historial fallback obtenido: ${history.length} partidas`);
+                return history;
+
+            } catch (fallbackError) {
+                console.error('❌ Error en consulta fallback:', fallbackError);
+                return [];
+            }
         }
     }
 

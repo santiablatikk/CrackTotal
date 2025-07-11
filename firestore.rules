@@ -13,7 +13,7 @@ service cloud.firestore {
       // Permitir escritura solo si el usuario está autenticado
       // y es el mismo usuario que aparece en playerId
       allow create: if request.auth != null 
-        && request.auth.uid == resource.data.playerId;
+        && request.auth.uid == request.resource.data.playerId;
         
       // No permitir actualizaciones ni eliminaciones
       allow update, delete: if false;

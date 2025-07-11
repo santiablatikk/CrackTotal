@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diagnóstico Completo Firebase - Crack Total</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .section {
+            background: #2a2a2a;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 2px solid #ff6b6b;
+        }
+        .title {
+            color: #ff6b6b;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .subtitle {
+            color: #feca57;
+            font-size: 18px;
+            margin: 15px 0;
+        }
+        .data {
+            background: #000;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            font-size: 11px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 5px;
+            font-size: 14px;
+        }
+        .button:hover {
+            background: #ff5252;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff6b6b; }
+        .warning { color: #feca57; }
+        .info { color: #74b9ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <div class="title">🔍 DIAGNÓSTICO COMPLETO FIREBASE</div>
+            <p>Búsqueda exhaustiva de TODAS las partidas, incluyendo las de "Cami" que aparecen en el ranking.</p>
+            
+            <button class="button" onclick="findAllMatches()">🎯 Buscar TODAS las Partidas</button>
+            <button class="button" onclick="findHiddenData()">🕵️ Buscar Datos Ocultos</button>
+            <button class="button" onclick="analyzePlayerUIDs()">👥 Analizar UIDs de Jugadores</button>
+            <button class="button" onclick="compareRankingVsHistory()">⚖️ Comparar Ranking vs Historial</button>
+        </div>
+
+        <div class="section">
+            <div class="subtitle">📊 Todas las Partidas (Sin Filtros)</div>
+            <div id="all-matches" class="data">Presiona "Buscar TODAS las Partidas" para empezar...</div>
+        </div>
+
+        <div class="section">
+            <div class="subtitle">👤 Análisis de Jugadores por UID</div>
+            <div id="player-analysis" class="data">Datos aparecerán aquí...</div>
+        </div>
+
+        <div class="section">
+            <div class="subtitle">🔍 Datos Específicos de "Cami"</div>
+            <div id="cami-data" class="data">Buscando partidas de Cami...</div>
+        </div>
+
+        <div class="section">
+            <div class="subtitle">🆚 Comparación: Ranking Global vs Historial Personal</div>
+            <div id="comparison" class="data">Análisis aparecerá aquí...</div>
+        </div>
+
+        <div class="section">
+            <div class="subtitle">🔧 Solución Recomendada</div>
+            <div id="solution" class="data">Las soluciones aparecerán después del análisis...</div>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    
+    <!-- Configuración Firebase -->
+    <script src="assets/js/firebase-config.js"></script>
+
+    <script>
+        async function findAllMatches() {
+            const allMatchesDiv = document.getElementById('all-matches');
+            allMatchesDiv.textContent = "🔍 Buscando TODAS las partidas sin filtros...\n\n";
+
+            try {
+                // Buscar TODAS las partidas sin ningún filtro
+                const allSnapshot = await window.db.collection('matches').get();
+                
+                let output = `📦 TOTAL DE DOCUMENTOS ENCONTRADOS: ${allSnapshot.size}\n\n`;
+                
+                if (allSnapshot.size === 0) {
+                    output += "❌ No se encontraron partidas\n";
+                } else {
+                    output += "📋 LISTADO COMPLETO DE PARTIDAS:\n";
+                    output += "=" .repeat(60) + "\n\n";
+                    
+                    const allMatches = [];
+                    allSnapshot.forEach(doc => {
+                        const data = doc.data();
+                        allMatches.push({
+                            id: doc.id,
+                            ...data
+                        });
+                    });
+
+                    // Ordenar por fecha (más recientes primero)
+                    allMatches.sort((a, b) => {
+                        const dateA = a.timestamp ? a.timestamp.toDate() : new Date(a.createdAt || 0);
+                        const dateB = b.timestamp ? b.timestamp.toDate() : new Date(b.createdAt || 0);
+                        return dateB - dateA;
+                    });
+
+                    allMatches.forEach((match, index) => {
+                        output += `${index + 1}. 📋 ID: ${match.id}\n`;
+                        output += `   🎮 Juego: ${match.gameType || 'NO DEFINIDO'}\n`;
+                        output += `   👤 Jugador: ${match.playerName || 'SIN NOMBRE'}\n`;
+                        output += `   🆔 UID: ${match.playerId || 'SIN UID'}\n`;
+                        output += `   🏆 Puntos: ${match.score || 0}\n`;
+                        output += `   ✅ Aciertos: ${match.correctAnswers || 0}\n`;
+                        output += `   📊 Total: ${match.totalQuestions || 0}\n`;
+                        output += `   🎯 Precisión: ${match.accuracy || 0}%\n`;
+                        
+                        // Fecha
+                        let fecha = 'SIN FECHA';
+                        if (match.timestamp && match.timestamp.toDate) {
+                            fecha = match.timestamp.toDate().toLocaleString();
+                        } else if (match.createdAt) {
+                            fecha = new Date(match.createdAt).toLocaleString();
+                        }
+                        output += `   📅 Fecha: ${fecha}\n`;
+                        
+                        output += `   📝 Datos raw: ${JSON.stringify(match, null, 2).substring(0, 200)}...\n`;
+                        output += "-".repeat(50) + "\n\n";
+                    });
+
+                    // Resumen por jugador
+                    output += "\n" + "=".repeat(60) + "\n";
+                    output += "📊 RESUMEN POR JUGADOR:\n\n";
+                    
+                    const playerStats = {};
+                    allMatches.forEach(match => {
+                        const playerName = match.playerName || 'SIN NOMBRE';
+                        const playerId = match.playerId || 'SIN UID';
+                        const key = `${playerName} (${playerId})`;
+                        
+                        if (!playerStats[key]) {
+                            playerStats[key] = {
+                                partidas: 0,
+                                totalPuntos: 0,
+                                maxPuntos: 0,
+                                juegos: new Set()
+                            };
+                        }
+                        
+                        playerStats[key].partidas++;
+                        playerStats[key].totalPuntos += (match.score || 0);
+                        playerStats[key].maxPuntos = Math.max(playerStats[key].maxPuntos, match.score || 0);
+                        playerStats[key].juegos.add(match.gameType || 'INDEFINIDO');
+                    });
+
+                    Object.entries(playerStats).forEach(([player, stats]) => {
+                        output += `👤 ${player}:\n`;
+                        output += `   📊 Partidas: ${stats.partidas}\n`;
+                        output += `   🏆 Puntos totales: ${stats.totalPuntos}\n`;
+                        output += `   🥇 Mejor puntuación: ${stats.maxPuntos}\n`;
+                        output += `   🎮 Juegos: ${Array.from(stats.juegos).join(', ')}\n\n`;
+                    });
+                }
+
+                allMatchesDiv.textContent = output;
+
+            } catch (error) {
+                allMatchesDiv.textContent = `❌ Error: ${error.message}\n\nDetalles: ${JSON.stringify(error, null, 2)}`;
+            }
+        }
+
+        async function findHiddenData() {
+            const camiDiv = document.getElementById('cami-data');
+            camiDiv.textContent = "🕵️ Buscando específicamente partidas de 'Cami'...\n\n";
+
+            try {
+                let output = "🔍 BÚSQUEDA ESPECÍFICA DE 'CAMI':\n\n";
+
+                // Buscar por diferentes variaciones del nombre
+                const nameVariations = ['Cami', 'cami', 'CAMI', 'Gami', 'gami', 'GAMI'];
+                
+                for (const name of nameVariations) {
+                    const snapshot = await window.db.collection('matches')
+                        .where('playerName', '==', name)
+                        .get();
+                    
+                    output += `🔍 Buscando '${name}': ${snapshot.size} resultados\n`;
+                    
+                    if (snapshot.size > 0) {
+                        snapshot.forEach(doc => {
+                            const data = doc.data();
+                            output += `  ✅ Encontrado: ${JSON.stringify(data, null, 2)}\n\n`;
+                        });
+                    }
+                }
+
+                // Buscar en todos los documentos que contengan "ami" en el nombre
+                const allDocs = await window.db.collection('matches').get();
+                output += "\n🔍 BÚSQUEDA MANUAL POR CONTENIDO 'ami':\n";
+                
+                allDocs.forEach(doc => {
+                    const data = doc.data();
+                    const playerName = (data.playerName || '').toLowerCase();
+                    if (playerName.includes('ami')) {
+                        output += `✅ Contiene 'ami': ${JSON.stringify(data, null, 2)}\n\n`;
+                    }
+                });
+
+                camiDiv.textContent = output;
+
+            } catch (error) {
+                camiDiv.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function analyzePlayerUIDs() {
+            const playerDiv = document.getElementById('player-analysis');
+            playerDiv.textContent = "👥 Analizando UIDs de jugadores...\n\n";
+
+            try {
+                const allDocs = await window.db.collection('matches').get();
+                const playerMap = new Map();
+
+                allDocs.forEach(doc => {
+                    const data = doc.data();
+                    const uid = data.playerId || 'SIN_UID';
+                    const name = data.playerName || 'SIN_NOMBRE';
+                    
+                    if (!playerMap.has(uid)) {
+                        playerMap.set(uid, {
+                            names: new Set(),
+                            partidas: 0,
+                            puntos: []
+                        });
+                    }
+                    
+                    playerMap.get(uid).names.add(name);
+                    playerMap.get(uid).partidas++;
+                    playerMap.get(uid).puntos.push(data.score || 0);
+                });
+
+                let output = "👥 ANÁLISIS POR UID:\n\n";
+                
+                playerMap.forEach((info, uid) => {
+                    output += `🆔 UID: ${uid}\n`;
+                    output += `   👤 Nombres: ${Array.from(info.names).join(', ')}\n`;
+                    output += `   📊 Partidas: ${info.partidas}\n`;
+                    output += `   🏆 Puntos: [${info.puntos.join(', ')}]\n`;
+                    output += `   📈 Max: ${Math.max(...info.puntos)}\n\n`;
+                });
+
+                // Usuario actual
+                const currentUser = window.auth?.currentUser;
+                if (currentUser) {
+                    output += `\n🔑 USUARIO ACTUAL:\n`;
+                    output += `   UID: ${currentUser.uid}\n`;
+                    output += `   Anónimo: ${currentUser.isAnonymous}\n\n`;
+                    
+                    if (playerMap.has(currentUser.uid)) {
+                        output += `   ✅ Tiene partidas registradas\n`;
+                    } else {
+                        output += `   ❌ NO tiene partidas registradas\n`;
+                    }
+                }
+
+                playerDiv.textContent = output;
+
+            } catch (error) {
+                playerDiv.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        async function compareRankingVsHistory() {
+            const comparisonDiv = document.getElementById('comparison');
+            comparisonDiv.textContent = "⚖️ Comparando ranking global vs historial personal...\n\n";
+
+            try {
+                // Simular consulta del ranking global (sin filtros)
+                const globalSnapshot = await window.db.collection('matches')
+                    .orderBy('score', 'desc')
+                    .limit(15)
+                    .get();
+
+                let output = "🏆 RANKING GLOBAL (lo que se ve en ranking.html):\n\n";
+                
+                globalSnapshot.forEach((doc, index) => {
+                    const data = doc.data();
+                    output += `${index + 1}. ${data.playerName || 'SIN NOMBRE'} - ${data.score || 0} puntos\n`;
+                    output += `   UID: ${data.playerId || 'SIN UID'}\n`;
+                    output += `   Juego: ${data.gameType || 'SIN TIPO'}\n\n`;
+                });
+
+                // Simular consulta del historial personal
+                const currentUser = window.auth?.currentUser;
+                if (currentUser) {
+                    output += "\n👤 HISTORIAL PERSONAL (filtrado por UID actual):\n\n";
+                    
+                    const personalSnapshot = await window.db.collection('matches')
+                        .where('playerId', '==', currentUser.uid)
+                        .orderBy('timestamp', 'desc')
+                        .limit(10)
+                        .get();
+
+                    if (personalSnapshot.size === 0) {
+                        output += "❌ No hay partidas para el usuario actual\n";
+                        output += `   Tu UID: ${currentUser.uid}\n`;
+                    } else {
+                        personalSnapshot.forEach((doc, index) => {
+                            const data = doc.data();
+                            output += `${index + 1}. ${data.playerName || 'SIN NOMBRE'} - ${data.score || 0} puntos\n`;
+                        });
+                    }
+                }
+
+                output += "\n" + "=".repeat(50) + "\n";
+                output += "💡 EXPLICACIÓN DEL PROBLEMA:\n\n";
+                output += "• El RANKING GLOBAL muestra todas las partidas de todos los jugadores\n";
+                output += "• El HISTORIAL PERSONAL solo muestra partidas del UID actual\n";
+                output += "• Cada sesión anónima genera un UID diferente\n";
+                output += "• Las partidas de 'Cami' tienen un UID diferente al tuyo actual\n";
+                output += "• Por eso aparecen en el ranking pero no en tu historial\n";
+
+                comparisonDiv.textContent = output;
+
+                // Generar solución
+                generateSolution();
+
+            } catch (error) {
+                comparisonDiv.textContent = `❌ Error: ${error.message}`;
+            }
+        }
+
+        function generateSolution() {
+            const solutionDiv = document.getElementById('solution');
+            
+            let solution = "🔧 SOLUCIÓN RECOMENDADA:\n\n";
+            
+            solution += "1. 🔍 PROBLEMA IDENTIFICADO:\n";
+            solution += "   • Las partidas de 'Cami' existen en Firebase\n";
+            solution += "   • Pero tienen un UID diferente al usuario actual\n";
+            solution += "   • El historial personal está filtrado por UID\n\n";
+            
+            solution += "2. 💡 OPCIONES DE SOLUCIÓN:\n\n";
+            
+            solution += "   A) 👤 MOSTRAR HISTORIAL GLOBAL:\n";
+            solution += "      • Modificar la consulta del historial\n";
+            solution += "      • Mostrar partidas de todos los jugadores\n";
+            solution += "      • Agregar filtro opcional por jugador\n\n";
+            
+            solution += "   B) 🔗 UNIFICAR USUARIOS:\n";
+            solution += "      • Crear sistema de nombres persistentes\n";
+            solution += "      • Asociar partidas por nombre en lugar de UID\n";
+            solution += "      • Migrar datos existentes\n\n";
+            
+            solution += "   C) 🎯 FILTRO INTELIGENTE:\n";
+            solution += "      • Permitir ver historial de cualquier jugador\n";
+            solution += "      • Agregar selector de jugador\n";
+            solution += "      • Mantener funcionalidad actual\n\n";
+            
+            solution += "3. 🚀 IMPLEMENTACIÓN INMEDIATA:\n";
+            solution += "   • Modificar ranking-helper.js\n";
+            solution += "   • Cambiar consulta de historial personal\n";
+            solution += "   • Agregar opción 'Ver todos los jugadores'\n";
+            solution += "   • Preservar datos existentes\n\n";
+            
+            solution += "4. ✅ RESULTADO ESPERADO:\n";
+            solution += "   • Historial mostrará partidas de Cami\n";
+            solution += "   • Datos sincronizados entre ranking e historial\n";
+            solution += "   • Sin pérdida de información\n";
+
+            solutionDiv.textContent = solution;
+        }
+
+        // Auto-ejecutar al cargar
+        window.addEventListener('load', async () => {
+            console.log('🔍 Diagnóstico completo cargado');
+            
+            // Esperar a Firebase y ejecutar automáticamente
+            setTimeout(async () => {
+                if (window.db) {
+                    console.log('🚀 Ejecutando análisis automático...');
+                    await findAllMatches();
+                    await findHiddenData();
+                    await analyzePlayerUIDs();
+                    await compareRankingVsHistory();
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html> 

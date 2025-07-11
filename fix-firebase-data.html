@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reparación Firebase - Crack Total</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0f0f0f;
+            color: #00ff00;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section {
+            background: #1a1a1a;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border: 2px solid #ff6b6b;
+        }
+        .title {
+            color: #ff6b6b;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .subtitle {
+            color: #feca57;
+            font-size: 20px;
+            margin: 20px 0;
+        }
+        .log {
+            background: #000;
+            padding: 20px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            max-height: 400px;
+            font-size: 13px;
+            border: 1px solid #333;
+        }
+        .button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 10px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+        .button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .progress {
+            background: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        .progress-bar {
+            background: linear-gradient(90deg, #00ff00, #feca57);
+            height: 25px;
+            width: 0%;
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: bold;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff6b6b; }
+        .warning { color: #feca57; }
+        .info { color: #74b9ff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section">
+            <div class="title">🔧 REPARACIÓN FIREBASE - CRACK TOTAL</div>
+            <p class="info">Esta herramienta ayuda a migrar y normalizar las partidas existentes en Firebase para que aparezcan correctamente en el ranking.</p>
+            
+            <div class="subtitle">🎯 Opciones de Reparación</div>
+            <button class="button" onclick="scanAllData()">🔍 Escanear Todos los Datos</button>
+            <button class="button" onclick="migrateOldStructure()">📦 Migrar Estructura Antigua</button>
+            <button class="button" onclick="fixPlayerAssociation()">👤 Reparar Asociación de Jugadores</button>
+            <button class="button" onclick="createMissingIndexes()">📊 Crear Índices Faltantes</button>
+            <button class="button" onclick="fullRepair()">🚀 Reparación Completa</button>
+        </div>
+
+        <div class="section">
+            <div class="subtitle">📊 Progreso de Reparación</div>
+            <div class="progress">
+                <div id="progress-bar" class="progress-bar">0%</div>
+            </div>
+            <div id="status" class="info">Listo para iniciar...</div>
+        </div>
+
+        <div class="section">
+            <div class="subtitle">📝 Log de Actividad</div>
+            <div id="activity-log" class="log">🔧 Herramienta de reparación Firebase cargada.
+Selecciona una opción para comenzar...</div>
+        </div>
+
+        <div class="section">
+            <div class="subtitle">📈 Resultados del Escaneo</div>
+            <div id="scan-results" class="log">No hay resultados aún...</div>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    
+    <!-- Configuración Firebase -->
+    <script src="assets/js/firebase-config.js"></script>
+
+    <script>
+        let repairLog = [];
+        let totalOperations = 0;
+        let completedOperations = 0;
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logMessage = `[${timestamp}] ${message}`;
+            repairLog.push(logMessage);
+            
+            const logDiv = document.getElementById('activity-log');
+            const colorClass = type === 'error' ? 'error' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : 'info';
+            
+            logDiv.innerHTML += `\n<span class="${colorClass}">${logMessage}</span>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            
+            console.log(logMessage);
+        }
+
+        function updateProgress(percentage, status) {
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-bar').textContent = Math.round(percentage) + '%';
+            document.getElementById('status').textContent = status;
+        }
+
+        async function scanAllData() {
+            log("🔍 Iniciando escaneo completo de datos...", 'info');
+            updateProgress(0, "Iniciando escaneo...");
+
+            try {
+                // Verificar conexión
+                if (!window.db) {
+                    throw new Error("Firebase no está conectado");
+                }
+
+                let scanResults = "🔍 RESULTADOS DEL ESCANEO:\n\n";
+                
+                updateProgress(10, "Verificando colecciones...");
+                
+                // Escanear colección matches
+                log("📊 Escaneando colección 'matches'...");
+                const matchesSnapshot = await window.db.collection('matches').get();
+                scanResults += `🎮 PARTIDAS:\n`;
+                scanResults += `  Total: ${matchesSnapshot.size} documentos\n\n`;
+
+                updateProgress(30, "Analizando partidas...");
+
+                // Analizar estructura de partidas
+                const gameTypes = new Map();
+                const playerIds = new Set();
+                const dateFields = new Set();
+                let withoutGameType = 0;
+                let withoutPlayerId = 0;
+                let withoutTimestamp = 0;
+
+                matchesSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    
+                    // Contar por tipo de juego
+                    if (data.gameType) {
+                        gameTypes.set(data.gameType, (gameTypes.get(data.gameType) || 0) + 1);
+                    } else {
+                        withoutGameType++;
+                    }
+                    
+                    // Recolectar IDs de jugadores
+                    if (data.playerId) {
+                        playerIds.add(data.playerId);
+                    } else {
+                        withoutPlayerId++;
+                    }
+                    
+                    // Verificar campos de fecha
+                    if (data.timestamp) dateFields.add('timestamp');
+                    if (data.createdAt) dateFields.add('createdAt');
+                    if (data.date) dateFields.add('date');
+                    if (!data.timestamp && !data.createdAt && !data.date) {
+                        withoutTimestamp++;
+                    }
+                });
+
+                updateProgress(50, "Generando estadísticas...");
+
+                scanResults += `📊 POR TIPO DE JUEGO:\n`;
+                for (const [gameType, count] of gameTypes) {
+                    scanResults += `  ${gameType}: ${count} partidas\n`;
+                }
+                
+                scanResults += `\n👥 JUGADORES:\n`;
+                scanResults += `  Únicos: ${playerIds.size}\n`;
+                
+                scanResults += `\n📅 CAMPOS DE FECHA:\n`;
+                for (const field of dateFields) {
+                    scanResults += `  ${field}: presente\n`;
+                }
+                
+                scanResults += `\n⚠️ PROBLEMAS DETECTADOS:\n`;
+                if (withoutGameType > 0) scanResults += `  Sin gameType: ${withoutGameType}\n`;
+                if (withoutPlayerId > 0) scanResults += `  Sin playerId: ${withoutPlayerId}\n`;
+                if (withoutTimestamp > 0) scanResults += `  Sin fecha: ${withoutTimestamp}\n`;
+
+                updateProgress(70, "Verificando estadísticas de usuarios...");
+
+                // Escanear user_stats
+                const statsSnapshot = await window.db.collection('user_stats').get();
+                scanResults += `\n📈 ESTADÍSTICAS DE USUARIOS:\n`;
+                scanResults += `  Total: ${statsSnapshot.size} documentos\n`;
+
+                updateProgress(90, "Finalizando escaneo...");
+
+                // Mostrar resultados
+                document.getElementById('scan-results').textContent = scanResults;
+                
+                updateProgress(100, "Escaneo completado");
+                log("✅ Escaneo completado exitosamente", 'success');
+
+            } catch (error) {
+                log(`❌ Error durante el escaneo: ${error.message}`, 'error');
+                updateProgress(0, "Error en el escaneo");
+            }
+        }
+
+        async function migrateOldStructure() {
+            log("📦 Iniciando migración de estructura antigua...", 'info');
+            updateProgress(0, "Preparando migración...");
+
+            try {
+                const snapshot = await window.db.collection('matches').get();
+                totalOperations = snapshot.size;
+                completedOperations = 0;
+
+                log(`📊 Encontradas ${totalOperations} partidas para revisar`);
+
+                for (const doc of snapshot.docs) {
+                    const data = doc.data();
+                    let needsUpdate = false;
+                    const updates = {};
+
+                    // Verificar y normalizar gameType
+                    if (!data.gameType && data.game) {
+                        updates.gameType = data.game;
+                        needsUpdate = true;
+                    }
+
+                    // Verificar y agregar timestamp si falta
+                    if (!data.timestamp && data.createdAt) {
+                        const date = new Date(data.createdAt);
+                        updates.timestamp = firebase.firestore.Timestamp.fromDate(date);
+                        needsUpdate = true;
+                    }
+
+                    // Verificar playerName
+                    if (!data.playerName && data.player) {
+                        updates.playerName = data.player;
+                        needsUpdate = true;
+                    }
+
+                    // Aplicar actualizaciones si es necesario
+                    if (needsUpdate) {
+                        await doc.ref.update(updates);
+                        log(`✅ Actualizado documento ${doc.id}`, 'success');
+                    }
+
+                    completedOperations++;
+                    const progress = (completedOperations / totalOperations) * 100;
+                    updateProgress(progress, `Migrando... ${completedOperations}/${totalOperations}`);
+                }
+
+                log("✅ Migración completada exitosamente", 'success');
+                updateProgress(100, "Migración completada");
+
+            } catch (error) {
+                log(`❌ Error durante la migración: ${error.message}`, 'error');
+                updateProgress(0, "Error en la migración");
+            }
+        }
+
+        async function fixPlayerAssociation() {
+            log("👤 Reparando asociación de jugadores...", 'info');
+            updateProgress(0, "Analizando jugadores...");
+
+            try {
+                // Esta función ayudaría a asociar partidas huérfanas con usuarios actuales
+                // Por ahora, solo analizamos la situación
+                
+                const snapshot = await window.db.collection('matches').get();
+                const playerCounts = new Map();
+                
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.playerId) {
+                        playerCounts.set(data.playerId, (playerCounts.get(data.playerId) || 0) + 1);
+                    }
+                });
+
+                log(`📊 Encontrados ${playerCounts.size} jugadores únicos`);
+                
+                // Mostrar top jugadores
+                const topPlayers = Array.from(playerCounts.entries())
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 10);
+
+                for (const [playerId, count] of topPlayers) {
+                    log(`👤 ${playerId}: ${count} partidas`);
+                }
+
+                updateProgress(100, "Análisis completado");
+                log("✅ Análisis de jugadores completado", 'success');
+
+            } catch (error) {
+                log(`❌ Error en análisis de jugadores: ${error.message}`, 'error');
+                updateProgress(0, "Error en el análisis");
+            }
+        }
+
+        async function createMissingIndexes() {
+            log("📊 Verificando índices necesarios...", 'info');
+            
+            // Los índices se deben crear desde Firebase Console
+            log("ℹ️ Los índices compuestos deben crearse desde Firebase Console:");
+            log("  - matches: gameType + score (desc) + timestamp (desc)");
+            log("  - matches: playerId + gameType + timestamp (desc)");
+            log("  - matches: timestamp (desc)");
+            
+            updateProgress(100, "Verificación completada");
+        }
+
+        async function fullRepair() {
+            log("🚀 Iniciando reparación completa...", 'info');
+            
+            await scanAllData();
+            await migrateOldStructure();
+            await fixPlayerAssociation();
+            await createMissingIndexes();
+            
+            log("🎉 Reparación completa finalizada!", 'success');
+        }
+
+        // Inicialización
+        window.addEventListener('load', () => {
+            log("🔧 Herramienta de reparación Firebase cargada");
+            
+            // Verificar conexión al cargar
+            setTimeout(() => {
+                if (window.db) {
+                    log("✅ Conexión Firebase establecida", 'success');
+                } else {
+                    log("❌ Sin conexión a Firebase", 'error');
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html> 
