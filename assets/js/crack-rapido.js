@@ -87,8 +87,12 @@ class CrackRapido {
             
             console.log('[CRACK RAPIDO CONSTRUCTOR] Calling loadQuestions...');
             try {
-                this.loadQuestions();
-                console.log('[CRACK RAPIDO CONSTRUCTOR] ✅ loadQuestions completed');
+                // Cargar preguntas de forma asíncrona después de la construcción
+                this.loadQuestions().then(() => {
+                    console.log('[CRACK RAPIDO CONSTRUCTOR] ✅ loadQuestions completed');
+                }).catch(error => {
+                    console.error('[CRACK RAPIDO CONSTRUCTOR] ❌ Error in loadQuestions:', error);
+                });
             } catch (error) {
                 console.error('[CRACK RAPIDO CONSTRUCTOR] ❌ Error in loadQuestions:', error);
             }
@@ -233,7 +237,28 @@ class CrackRapido {
             }, 1000);
         }
     }
-    loadQuestions() {
+    async loadQuestions() {
+        console.log('🚀 [CRACK RAPIDO MEGA] Cargando banco de preguntas épico...');
+        
+        try {
+            // Cargar preguntas desde archivo JSON externo
+            const response = await fetch('assets/data/crack-rapido-mega-questions.json');
+            const questionData = await response.json();
+            
+            if (questionData && questionData.questionBank) {
+                this.questionBank = questionData.questionBank;
+                console.log(`✅ [CRACK RAPIDO MEGA] ${questionData.totalQuestions} preguntas cargadas!`);
+                console.log(`🎯 [CRACK RAPIDO MEGA] ${questionData.categories} categorías disponibles`);
+                console.log(`⚡ [CRACK RAPIDO MEGA] Distribución: ${questionData.difficultyDistribution.easy} fáciles, ${questionData.difficultyDistribution.medium} medias, ${questionData.difficultyDistribution.hard} difíciles por categoría`);
+                this.showQuestionBankStats();
+                return;
+            }
+        } catch (error) {
+            console.error('❌ [CRACK RAPIDO MEGA] Error cargando preguntas externas:', error);
+            console.log('🔄 [CRACK RAPIDO MEGA] Cargando preguntas de respaldo...');
+        }
+        
+        // Banco de preguntas de respaldo
         this.questionBank = {
             // CATEGORÍA: MESSI
             
@@ -3937,6 +3962,51 @@ class CrackRapido {
             });
             this.startGameBtn.setAttribute('data-crack-listener', 'true');
         }
+    }
+    
+    // Nueva función para mostrar estadísticas del banco de preguntas
+    showQuestionBankStats() {
+        if (!this.questionBank) {
+            console.warn('📊 [CRACK RAPIDO MEGA] No hay banco de preguntas cargado');
+            return;
+        }
+        
+        console.log('📊 [CRACK RAPIDO MEGA] Estadísticas del banco de preguntas:');
+        
+        let totalQuestions = 0;
+        let categoryStats = {};
+        
+        Object.keys(this.questionBank).forEach(category => {
+            const questions = this.questionBank[category];
+            const categoryCount = questions.length;
+            totalQuestions += categoryCount;
+            
+            // Contar por dificultad
+            let easy = 0, medium = 0, hard = 0;
+            questions.forEach(q => {
+                if (q.difficulty === 'easy') easy++;
+                else if (q.difficulty === 'medium') medium++;
+                else if (q.difficulty === 'hard') hard++;
+            });
+            
+            categoryStats[category] = {
+                total: categoryCount,
+                easy: easy,
+                medium: medium,
+                hard: hard
+            };
+            
+            console.log(`🎯 ${category.toUpperCase()}: ${categoryCount} preguntas (${easy} fáciles, ${medium} medias, ${hard} difíciles)`);
+        });
+        
+        console.log(`🚀 TOTAL: ${totalQuestions} preguntas en ${Object.keys(this.questionBank).length} categorías`);
+        
+        // Guardar estadísticas para uso posterior
+        this.questionBankStats = {
+            totalQuestions: totalQuestions,
+            totalCategories: Object.keys(this.questionBank).length,
+            categoryStats: categoryStats
+        };
     }
 }
 // Funciones globales para los botones

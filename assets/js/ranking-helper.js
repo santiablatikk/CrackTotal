@@ -85,15 +85,52 @@ class RankingHelper {
                 (position === 1 ? '🥇' : position === 2 ? '🥈' : '🥉') : 
                 position;
             
-            return `
-                <tr class="ranking-row ${position <= 3 ? 'top-three' : ''}">
-                    <td class="position">${positionDisplay}</td>
-                    <td class="player-name">${player.playerName || 'Anónimo'}</td>
-                    <td class="total-score">${(player.score || 0).toLocaleString()}</td>
-                    <td class="games-played">${player.totalQuestions || player.correctAnswers || 'N/A'}</td>
-                    <td class="accuracy hide-mobile">${player.accuracy || 0}%</td>
-                </tr>
-            `;
+            // Verificar si es dato agregado o individual
+            const isAggregated = player.totalGames !== undefined;
+            
+            if (isAggregated) {
+                // Mostrar datos agregados
+                return `
+                    <tr class="ranking-row ${position <= 3 ? 'top-three' : ''}">
+                        <td class="position">${positionDisplay}</td>
+                        <td class="player-name">
+                            ${player.playerName || 'Anónimo'}
+                            <div style="font-size: 0.7em; color: #888; margin-top: 2px;">
+                                ${player.victories}V - ${player.defeats}D - ${player.timeouts}T
+                            </div>
+                        </td>
+                        <td class="total-score">
+                            <strong>${player.bestScore}</strong>
+                            <div style="font-size: 0.7em; color: #888;">
+                                Mejor: ${player.bestScore} | Prom: ${player.averageScore}
+                            </div>
+                        </td>
+                        <td class="games-played">
+                            <strong>${player.totalGames}</strong>
+                            <div style="font-size: 0.7em; color: #888;">
+                                ${player.winRate}% victorias
+                            </div>
+                        </td>
+                        <td class="accuracy hide-mobile">
+                            ${player.bestAccuracy}%
+                            <div style="font-size: 0.7em; color: #888;">
+                                Prom: ${player.averageAccuracy}%
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                // Mostrar datos individuales (formato anterior)
+                return `
+                    <tr class="ranking-row ${position <= 3 ? 'top-three' : ''}">
+                        <td class="position">${positionDisplay}</td>
+                        <td class="player-name">${player.playerName || 'Anónimo'}</td>
+                        <td class="total-score">${(player.score || 0).toLocaleString()}</td>
+                        <td class="games-played">${player.totalQuestions || player.correctAnswers || 'N/A'}</td>
+                        <td class="accuracy hide-mobile">${player.accuracy || 0}%</td>
+                    </tr>
+                `;
+            }
         }).join('');
 
         console.log('✅ Tabla poblada exitosamente');
@@ -119,8 +156,8 @@ class RankingHelper {
             // Esperar a que el servicio esté listo
             await this.waitForFirebaseService();
             
-            console.log('🔍 Obteniendo datos del ranking...');
-            const rankingData = await window.firebaseService.getRanking(gameType, limit);
+            console.log('🔍 Obteniendo datos del ranking agregado...');
+            const rankingData = await window.firebaseService.getAggregatedRanking(gameType, limit);
             
             if (rankingData && rankingData.length > 0) {
                 this.populateRankingTable(rankingData, tableBodyId);
@@ -527,12 +564,33 @@ class RankingHelper {
         const incorrectAnswers = match.incorrectAnswers || 0;
         const difficulty = match.difficulty || 'normal';
         const gameResult = match.gameResult || 'unknown';
+        const score = match.score || 0;
+        
+        // LOG DETALLADO PARA DEBUG
+        console.log(`🔍 [DEBUG] Analizando partida de ${match.playerName || 'Anónimo'}:`, {
+            correctAnswers,
+            incorrectAnswers,
+            difficulty,
+            gameResult,
+            score,
+            'Datos completos del match': match
+        });
         
         if (gameType === 'pasalache') {
-            // Reglas de Pasalache:
-            // Victoria: Completar el rosco (26 respuestas correctas)
-            // Derrota: Superar máximo de errores según dificultad
-            // Timeout: Se agota el tiempo
+            // Primero: Si tenemos gameResult explícito de Firebase, usarlo (es más confiable)
+            if (gameResult === 'victory') {
+                console.log(`✅ [DEBUG] ${match.playerName}: Victoria por gameResult explícito`);
+                return { type: 'victory', text: 'Victoria' };
+            } else if (gameResult === 'defeat') {
+                console.log(`❌ [DEBUG] ${match.playerName}: Derrota por gameResult explícito`);
+                return { type: 'defeat', text: 'Derrota' };
+            } else if (gameResult === 'timeout') {
+                console.log(`⏰ [DEBUG] ${match.playerName}: Timeout por gameResult explícito`);
+                return { type: 'timeout', text: 'Tiempo agotado' };
+            }
+            
+            // Segundo: Lógica de respaldo para partidas viejas sin gameResult
+            console.log(`🔄 [DEBUG] ${match.playerName}: No hay gameResult explícito, usando lógica de respaldo`);
             
             const maxErrors = {
                 'easy': 4,
@@ -542,16 +600,62 @@ class RankingHelper {
             };
             
             const maxErrorsForDifficulty = maxErrors[difficulty] || 3;
+            console.log(`📊 [DEBUG] ${match.playerName}: Máximo de errores para ${difficulty}: ${maxErrorsForDifficulty}`);
             
-            if (correctAnswers === 26) {
+            // Caso 1: Victoria clara - Completó el rosco (26 respuestas correctas)
+            // Verificar tanto correctAnswers como score por si acaso
+            if (correctAnswers === 26 || score === 26) {
+                console.log(`🏆 [DEBUG] ${match.playerName}: Victoria - Completó el rosco (${correctAnswers || score}/26)`);
                 return { type: 'victory', text: 'Victoria' };
-            } else if (incorrectAnswers >= maxErrorsForDifficulty) {
+            }
+            
+            // Caso 2: Derrota clara - Alcanzó o superó el máximo de errores
+            if (incorrectAnswers >= maxErrorsForDifficulty) {
+                console.log(`💥 [DEBUG] ${match.playerName}: Derrota - Errores: ${incorrectAnswers} >= ${maxErrorsForDifficulty}`);
                 return { type: 'defeat', text: 'Derrota' };
-            } else if (gameResult === 'timeout') {
+            }
+            
+            // Caso 3: Análisis más detallado para partidas viejas
+            console.log(`🤔 [DEBUG] ${match.playerName}: Analizando caso intermedio - Correctas: ${correctAnswers}, Errores: ${incorrectAnswers}`);
+            
+            // Revisar si tenemos datos de incorrectAnswers
+            if (incorrectAnswers === 0 && correctAnswers < 26) {
+                console.log(`⚠️ [DEBUG] ${match.playerName}: Sin datos de errores, probablemente partida vieja`);
+                
+                // Para partidas viejas sin datos de errores, usar solo correctAnswers
+                // Lógica más estricta basada en los datos reales
+                if (correctAnswers >= 25) {
+                    // Santy con 25 puntos podría haber completado el rosco
+                    console.log(`🏆 [DEBUG] ${match.playerName}: Victoria - Score muy alto, probablemente completó rosco (${correctAnswers}/26)`);
+                    return { type: 'victory', text: 'Victoria' };
+                } else if (correctAnswers >= 20) {
+                    console.log(`⏰ [DEBUG] ${match.playerName}: Timeout - Score alto sin completar (${correctAnswers}/26)`);
+                    return { type: 'timeout', text: 'Tiempo agotado' };
+                } else if (correctAnswers <= 10) {
+                    // Franco con 8/26 y Chiara con 9/26 deben ser derrota
+                    console.log(`❌ [DEBUG] ${match.playerName}: Derrota - Score bajo (${correctAnswers}/26)`);
+                    return { type: 'defeat', text: 'Derrota' };
+                } else if (correctAnswers <= 15) {
+                    // Casos entre 11-15 correctas también pueden ser derrota
+                    console.log(`❌ [DEBUG] ${match.playerName}: Derrota - Score medio-bajo (${correctAnswers}/26)`);
+                    return { type: 'defeat', text: 'Derrota' };
+                } else {
+                    // Solo casos con 16-19 correctas sin completar son timeout
+                    console.log(`⏰ [DEBUG] ${match.playerName}: Timeout - Score medio-alto (${correctAnswers}/26)`);
+                    return { type: 'timeout', text: 'Tiempo agotado' };
+                }
+            }
+            
+            // Si tenemos datos de errores pero no alcanzó el máximo
+            if (correctAnswers >= 20) {
+                console.log(`⏰ [DEBUG] ${match.playerName}: Timeout - Score alto (${correctAnswers}/26) con ${incorrectAnswers} errores`);
                 return { type: 'timeout', text: 'Tiempo agotado' };
-            } else {
-                // Si no es victoria, derrota clara, ni timeout, probablemente sea derrota
+            } else if (correctAnswers <= 8 && incorrectAnswers >= 2) {
+                console.log(`❌ [DEBUG] ${match.playerName}: Derrota - Score bajo (${correctAnswers}/26) con ${incorrectAnswers} errores`);
                 return { type: 'defeat', text: 'Derrota' };
+            } else {
+                console.log(`⏰ [DEBUG] ${match.playerName}: Timeout - Caso por defecto (${correctAnswers}/26) con ${incorrectAnswers} errores`);
+                return { type: 'timeout', text: 'Tiempo agotado' };
             }
         }
         
@@ -563,7 +667,18 @@ class RankingHelper {
         } else if (gameResult === 'timeout') {
             return { type: 'timeout', text: 'Tiempo agotado' };
         } else {
-            return { type: 'defeat', text: 'Derrota' };
+            // Lógica de respaldo para otros juegos basada en score
+            const thresholds = {
+                'mentiroso': 60,
+                'crackrapido': 50,
+                'quiensabemas': 7,
+                '100futboleros': 30
+            };
+            
+            const threshold = thresholds[gameType] || 50;
+            return score >= threshold ? 
+                { type: 'victory', text: 'Victoria' } : 
+                { type: 'defeat', text: 'Derrota' };
         }
     }
 

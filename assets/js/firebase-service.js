@@ -90,11 +90,24 @@ class FirebaseService {
         // Resultados
         score: matchData.score || 0,
         correctAnswers: matchData.correctAnswers || 0,
+        incorrectAnswers: matchData.incorrectAnswers || 0,
         totalQuestions: matchData.totalQuestions || 0,
         accuracy: matchData.accuracy || 0,
         duration: matchData.duration || 0,
         
+        // Datos específicos del juego (especialmente importante para Pasalache)
+        gameResult: matchData.gameResult || 'unknown', // 'victory', 'defeat', 'timeout'
+        difficulty: matchData.difficulty || 'normal',
+        resultDescription: matchData.resultDescription || '',
+        
+        // Datos adicionales si están disponibles
+        passedAnswers: matchData.passedAnswers || 0,
+        helpUsed: matchData.helpUsed || 0,
+        maxErrors: matchData.maxErrors || 0,
+        totalErrors: matchData.totalErrors || 0,
+        
         // Metadatos
+        gameVersion: matchData.gameVersion || '1.0',
         createdAt: new Date().toISOString()
       };
 
@@ -105,11 +118,11 @@ class FirebaseService {
       // Actualizar estadísticas del usuario
       await this.updateUserStats(gameType, matchData);
 
-                return true;
-            } catch (error) {
+      return true;
+    } catch (error) {
       console.error('❌ Error guardando partida:', error);
-                return false;
-            }
+      return false;
+    }
   }
 
   // Actualizar estadísticas del usuario
@@ -176,12 +189,204 @@ class FirebaseService {
       });
 
       console.log(`🏆 Ranking de ${gameType} obtenido:`, ranking.length, 'entradas');
-                return ranking;
+      return ranking;
 
-            } catch (error) {
+    } catch (error) {
       console.error('❌ Error obteniendo ranking:', error);
-                return [];
-            }
+      return [];
+    }
+  }
+
+  // Obtener ranking agregado por jugador (nuevo método)
+  async getAggregatedRanking(gameType, limit = 20) {
+    try {
+      console.log(`🏆 Obteniendo ranking agregado de ${gameType}...`);
+      
+      // Obtener todas las partidas del juego
+      const snapshot = await window.db.collection('matches')
+        .where('gameType', '==', gameType)
+        .get();
+
+      const playerStats = {};
+      
+      // Procesar cada partida
+      snapshot.forEach(doc => {
+        const match = doc.data();
+        const playerName = match.playerName || 'Anónimo';
+        const playerId = match.playerId || 'unknown';
+        const playerKey = `${playerName}_${playerId}`;
+        
+        if (!playerStats[playerKey]) {
+          playerStats[playerKey] = {
+            playerName: playerName,
+            playerId: playerId,
+            totalGames: 0,
+            bestScore: 0,
+            totalScore: 0,
+            victories: 0,
+            defeats: 0,
+            timeouts: 0,
+            totalCorrectAnswers: 0,
+            totalIncorrectAnswers: 0,
+            bestAccuracy: 0,
+            averageAccuracy: 0,
+            lastPlayed: null
+          };
+        }
+        
+        const stats = playerStats[playerKey];
+        stats.totalGames++;
+        stats.totalScore += match.score || 0;
+        stats.bestScore = Math.max(stats.bestScore, match.score || 0);
+        stats.totalCorrectAnswers += match.correctAnswers || 0;
+        stats.totalIncorrectAnswers += match.incorrectAnswers || 0;
+        
+        // Determinar resultado de la partida
+        const result = this.determineMatchResult(match, gameType);
+        if (result === 'victory') {
+          stats.victories++;
+        } else if (result === 'timeout') {
+          stats.timeouts++;
+        } else {
+          stats.defeats++;
+        }
+        
+        // Actualizar mejor precisión
+        if (match.accuracy > stats.bestAccuracy) {
+          stats.bestAccuracy = match.accuracy;
+        }
+        
+        // Actualizar fecha de última partida
+        const matchDate = match.timestamp ? 
+          (match.timestamp.seconds ? new Date(match.timestamp.seconds * 1000) : new Date(match.timestamp)) :
+          new Date(match.createdAt || 0);
+        
+        if (!stats.lastPlayed || matchDate > stats.lastPlayed) {
+          stats.lastPlayed = matchDate;
+        }
+      });
+      
+      // Calcular estadísticas finales y convertir a array
+      const aggregatedRanking = Object.values(playerStats).map(stats => {
+        stats.averageAccuracy = stats.totalGames > 0 ? 
+          Math.round((stats.totalCorrectAnswers / (stats.totalCorrectAnswers + stats.totalIncorrectAnswers)) * 100) : 0;
+        stats.winRate = stats.totalGames > 0 ? 
+          Math.round((stats.victories / stats.totalGames) * 100) : 0;
+        stats.averageScore = stats.totalGames > 0 ? 
+          Math.round(stats.totalScore / stats.totalGames) : 0;
+        
+        return stats;
+      });
+      
+      // Ordenar por mejor puntaje, luego por total de victorias, luego por total de partidas
+      aggregatedRanking.sort((a, b) => {
+        if (b.bestScore !== a.bestScore) return b.bestScore - a.bestScore;
+        if (b.victories !== a.victories) return b.victories - a.victories;
+        return b.totalGames - a.totalGames;
+      });
+      
+      // Limitar resultados
+      const limitedRanking = aggregatedRanking.slice(0, limit);
+      
+      console.log(`✅ Ranking agregado de ${gameType} obtenido:`, limitedRanking.length, 'jugadores únicos');
+      return limitedRanking;
+
+    } catch (error) {
+      console.error('❌ Error obteniendo ranking agregado:', error);
+      return [];
+    }
+  }
+
+  // Función auxiliar para determinar resultado de partida
+  determineMatchResult(match, gameType) {
+    const correctAnswers = match.correctAnswers || 0;
+    const incorrectAnswers = match.incorrectAnswers || 0;
+    const difficulty = match.difficulty || 'normal';
+    const gameResult = match.gameResult || 'unknown';
+    const score = match.score || 0;
+    
+    console.log(`🎮 [Firebase] Determinando resultado para ${gameType}:`, {
+      correctAnswers,
+      incorrectAnswers,
+      difficulty,
+      gameResult,
+      score
+    });
+    
+    if (gameType === 'pasalache') {
+      // Primero: Si tenemos gameResult explícito de Firebase, usarlo (es más confiable)
+      if (gameResult === 'victory') {
+        return 'victory';
+      } else if (gameResult === 'defeat') {
+        return 'defeat';
+      } else if (gameResult === 'timeout') {
+        return 'timeout';
+      }
+      
+      // Segundo: Lógica de respaldo para partidas viejas sin gameResult
+      console.log('⚠️ [Firebase] No hay gameResult explícito, usando lógica de respaldo mejorada');
+      
+      const maxErrors = {
+        'easy': 4,
+        'normal': 3,
+        'hard': 2,
+        'expert': 1
+      };
+      
+      const maxErrorsForDifficulty = maxErrors[difficulty] || 3;
+      
+      // Caso 1: Victoria clara - Completó el rosco (26 respuestas correctas)
+      // Verificar tanto correctAnswers como score por si acaso
+      if (correctAnswers === 26 || score === 26) {
+        console.log(`🏆 [DEBUG Firebase] ${match.playerName}: Victoria - Completó el rosco (${correctAnswers || score}/26)`);
+        return 'victory';
+      }
+      
+      // Caso 2: Derrota clara - Alcanzó o superó el máximo de errores
+      if (incorrectAnswers >= maxErrorsForDifficulty) {
+        console.log(`💥 [DEBUG Firebase] ${match.playerName}: Derrota - Errores: ${incorrectAnswers} >= ${maxErrorsForDifficulty}`);
+        return 'defeat';
+      }
+      
+      // Caso 3: Para partidas viejas, usar el score como indicador
+      if (incorrectAnswers === 0 && correctAnswers < 26) {
+        console.log(`⚠️ [DEBUG Firebase] ${match.playerName}: Sin datos de errores, probablemente partida vieja`);
+        
+        if (correctAnswers >= 25) {
+          // Santy con 25 puntos podría haber completado el rosco
+          console.log(`🏆 [DEBUG Firebase] ${match.playerName}: Victoria - Score muy alto, probablemente completó rosco (${correctAnswers}/26)`);
+          return 'victory';
+        } else if (correctAnswers >= 20) {
+          return 'timeout';
+        } else if (correctAnswers <= 10) {
+          return 'defeat';
+        } else if (correctAnswers <= 15) {
+          return 'defeat';
+        } else {
+          return 'timeout';
+        }
+      }
+    }
+    
+    // Para otros juegos, usar lógica actual
+    if (gameResult === 'victory') {
+      return 'victory';
+    } else if (gameResult === 'defeat') {
+      return 'defeat';
+    } else if (gameResult === 'timeout') {
+      return 'timeout';
+    } else {
+      // Lógica de respaldo para otros juegos basada en score
+      const thresholds = {
+        'mentiroso': 60,
+        'crackrapido': 50,
+        'quiensabemas': 7,
+        '100futboleros': 30
+      };
+      
+      const threshold = thresholds[gameType] || 50;
+      return score >= threshold ? 'victory' : 'defeat';
+    }
   }
 
   // Obtener historial de partidas del usuario actual
