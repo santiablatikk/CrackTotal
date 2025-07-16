@@ -226,7 +226,7 @@
             // Cargar ranking y historial en paralelo
             await Promise.all([
                 rankingHelper.loadGameRanking('mentiroso', 15, 'ranking-body'),
-                rankingHelper.loadUserHistory('mentiroso', 20, 'history-list')
+                rankingHelper.loadUserHistory('mentiroso', 20, 'history-list', true)
             ]);
             
             console.log('✅ Ranking Mentiroso cargado exitosamente');

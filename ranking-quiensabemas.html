@@ -226,7 +226,7 @@
             // Cargar ranking y historial en paralelo
             await Promise.all([
                 rankingHelper.loadGameRanking('quiensabemas', 15, 'ranking-body'),
-                rankingHelper.loadUserHistory('quiensabemas', 20, 'history-list')
+                rankingHelper.loadUserHistory('quiensabemas', 20, 'history-list', true)
             ]);
             
             console.log('✅ Ranking Quién Sabe más cargado exitosamente');

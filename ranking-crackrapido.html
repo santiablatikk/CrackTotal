@@ -224,7 +224,7 @@
             // Cargar ranking y historial en paralelo
             await Promise.all([
                 rankingHelper.loadGameRanking('crackrapido', 15, 'ranking-body'),
-                rankingHelper.loadUserHistory('crackrapido', 20, 'history-list')
+                rankingHelper.loadUserHistory('crackrapido', 20, 'history-list', true)
             ]);
             
             console.log('✅ Ranking Crack Rápido cargado exitosamente');

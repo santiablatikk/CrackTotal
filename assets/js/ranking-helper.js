@@ -37,16 +37,16 @@ class RankingHelper {
     waitForFirebaseService(maxWait = 15000) {
         console.log('⏳ Esperando Firebase Service...');
         return new Promise((resolve, reject) => {
-            if (window.firebaseService && window.firebaseService.isServiceReady()) {
-                console.log('✅ Firebase Service ya está listo');
+            if (window.firebaseService && window.firebaseService.isReadyForReading()) {
+                console.log('✅ Firebase Service ya está listo para lectura');
                 resolve();
                 return;
             }
 
             const startTime = Date.now();
             const checkService = () => {
-                if (window.firebaseService && window.firebaseService.isServiceReady()) {
-                    console.log('✅ Firebase Service listo después de esperar');
+                if (window.firebaseService && window.firebaseService.isReadyForReading()) {
+                    console.log('✅ Firebase Service listo para lectura después de esperar');
                     resolve();
                 } else if (Date.now() - startTime > maxWait) {
                     reject(new Error('Firebase Service no se inicializó en el tiempo esperado'));
@@ -482,12 +482,20 @@ class RankingHelper {
         try {
             console.log(`🌍 Obteniendo historial global de ${gameType}...`);
             
+            // Verificar que la base de datos esté disponible
+            if (!window.db) {
+                throw new Error('Base de datos no disponible');
+            }
+            
+            console.log(`🔍 Consultando historial con gameType: "${gameType}"`);
             const snapshot = await window.db.collection('matches')
                 .where('gameType', '==', gameType)
                 .orderBy('timestamp', 'desc')
                 .limit(limit)
                 .get();
 
+            console.log(`📊 Encontradas ${snapshot.size} partidas en historial de ${gameType}`);
+            
             const history = [];
             snapshot.forEach(doc => {
                 const data = doc.data();
@@ -511,6 +519,8 @@ class RankingHelper {
                     .limit(limit)
                     .get();
 
+                console.log(`📊 Consulta fallback encontró ${fallbackSnapshot.size} partidas`);
+                
                 const history = [];
                 fallbackSnapshot.forEach(doc => {
                     const data = doc.data();
@@ -703,6 +713,53 @@ class RankingHelper {
         const remainingSeconds = seconds % 60;
         return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
     }
+
+    // ================================
+    // MÉTODO DE DIAGNÓSTICO
+    // ================================
+
+    // Diagnosticar problemas de ranking
+    async diagnoseProblem() {
+        console.log('🔧 DIAGNÓSTICO DE RANKING');
+        
+        try {
+            // Verificar disponibilidad de dependencias
+            console.log('📋 Verificando dependencias...');
+            console.log('- window.db:', !!window.db);
+            console.log('- window.firebaseService:', !!window.firebaseService);
+            console.log('- firebaseService.isReadyForReading():', window.firebaseService?.isReadyForReading());
+            console.log('- firebaseService.isServiceReady():', window.firebaseService?.isServiceReady());
+            
+            if (window.firebaseService?.diagnoseDatabase) {
+                console.log('🔍 Ejecutando diagnóstico de base de datos...');
+                await window.firebaseService.diagnoseDatabase();
+            }
+            
+            // Intentar consultas de prueba
+            console.log('🧪 Probando consultas específicas...');
+            const testGames = ['mentiroso', 'crackrapido', 'quiensabemas'];
+            
+            for (const gameType of testGames) {
+                try {
+                    const ranking = await window.firebaseService.getAggregatedRanking(gameType, 5);
+                    console.log(`✅ ${gameType}: ${ranking.length} jugadores en ranking`);
+                } catch (error) {
+                    console.error(`❌ ${gameType}: Error en ranking -`, error.message);
+                }
+                
+                try {
+                    const history = await this.getAllPlayersHistory(gameType, 5);
+                    console.log(`✅ ${gameType}: ${history.length} partidas en historial`);
+                } catch (error) {
+                    console.error(`❌ ${gameType}: Error en historial -`, error.message);
+                }
+            }
+            
+        } catch (error) {
+            console.error('❌ Error en diagnóstico:', error);
+        }
+    }
+
 }
 
 // Instancia global

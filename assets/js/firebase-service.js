@@ -202,10 +202,23 @@ class FirebaseService {
     try {
       console.log(`🏆 Obteniendo ranking agregado de ${gameType}...`);
       
+      // Verificar que la base de datos esté disponible
+      if (!window.db) {
+        throw new Error('Base de datos no disponible');
+      }
+      
       // Obtener todas las partidas del juego
+      console.log(`🔍 Consultando matches con gameType: "${gameType}"`);
       const snapshot = await window.db.collection('matches')
         .where('gameType', '==', gameType)
         .get();
+
+      console.log(`📊 Encontradas ${snapshot.size} partidas de ${gameType}`);
+      
+      if (snapshot.empty) {
+        console.warn(`⚠️ No se encontraron partidas para el juego: ${gameType}`);
+        return [];
+      }
 
       const playerStats = {};
       
@@ -451,10 +464,71 @@ class FirebaseService {
   }
 
   // ================================
+  // MÉTODOS DE DIAGNÓSTICO
+  // ================================
+
+  // Diagnosticar contenido de la base de datos
+  async diagnoseDatabase() {
+    try {
+      console.log('🔍 DIAGNÓSTICO DE BASE DE DATOS');
+      
+      if (!window.db) {
+        console.error('❌ window.db no está disponible');
+        return;
+      }
+      
+      // Obtener todas las partidas para análisis
+      const snapshot = await window.db.collection('matches').get();
+      
+      console.log(`📊 Total de partidas en la base de datos: ${snapshot.size}`);
+      
+      if (snapshot.empty) {
+        console.warn('⚠️ No hay partidas en la base de datos');
+        return;
+      }
+      
+      // Agrupar por gameType
+      const gameTypes = {};
+      const players = new Set();
+      
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const gameType = data.gameType || 'unknown';
+        const playerName = data.playerName || 'Anónimo';
+        
+        if (!gameTypes[gameType]) {
+          gameTypes[gameType] = 0;
+        }
+        gameTypes[gameType]++;
+        players.add(playerName);
+      });
+      
+      console.log('🎮 Partidas por tipo de juego:', gameTypes);
+      console.log(`👥 Total de jugadores únicos: ${players.size}`);
+      console.log('👥 Jugadores:', Array.from(players));
+      
+      return {
+        totalMatches: snapshot.size,
+        gameTypes,
+        uniquePlayers: players.size,
+        players: Array.from(players)
+      };
+      
+    } catch (error) {
+      console.error('❌ Error en diagnóstico:', error);
+    }
+  }
+
+  // ================================
   // MÉTODOS AUXILIARES
   // ================================
 
-  // Verificar si el servicio está listo
+  // Verificar si el servicio está listo para consultas de solo lectura (rankings públicos)
+  isReadyForReading() {
+    return window.db !== undefined;
+  }
+
+  // Verificar si el servicio está listo para operaciones que requieren autenticación
   isServiceReady() {
     return this.isReady && this.currentUser;
   }
