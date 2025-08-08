@@ -55,7 +55,7 @@
     <!-- AdSense Early Blocker - DEBE cargarse ANTES que AdSense -->
 
     
-    <script src="assets/js/adsense-early-blocker.min.js?v=202506072312"></script>
+    <script src="assets/js/adsense-early-blocker.js?v=202506072312"></script>
 
     
     <!-- Google AdSense -->
@@ -95,10 +95,17 @@
     }
     </script>
     <script src="assets/js/main.min.js?v=202505272312"></script>
-    <script src="assets/js/firebase-config.min.js"></script>
-    <script src="assets/js/firebase-init.min.js"></script>
-    <script type="module" src="assets/js/logros.min.js?v=202505272312"></script>
-    <script type="module" src="assets/js/100-futboleros-dicen.min.js?v=202505272312"></script>
+    <!-- Firebase SDKs (necesarios para rankings) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <!-- Config e init -->
+    <script src="assets/js/firebase-config.js?v=202505272312"></script>
+    <script src="assets/js/firebase-init.js?v=202505272312"></script>
+    <!-- Servicio de partidas/ranking -->
+    <script src="assets/js/firebase-service.js?v=202505272312"></script>
+    <script src="assets/js/logros.js?v=202505272312"></script>
+    <script src="assets/js/100-futboleros-dicen.js?v=202505272312"></script>
 </head>
 <body class="game-body futboleros-body">
     <!-- Skip Link para accesibilidad -->

@@ -196,19 +196,11 @@ class AdSensePolicyManager {
             container.dataset.adStatus = 'disabled';
         });
         
-        // Evitar que se carguen nuevos anuncios
-        window.adsbygoogle = window.adsbygoogle || [];
-        window.adsbygoogle.pauseAdRequests = 1;
-        
-        // También intentar con el método push
-        if (window.adsbygoogle.push) {
-            window.adsbygoogle.push(() => {
-                // Pausar solicitudes de anuncios
-                if (window.adsbygoogle && window.adsbygoogle.pauseAdRequests !== undefined) {
-                    window.adsbygoogle.pauseAdRequests = 1;
-                }
-            });
-        }
+        // Evitar cargar visualmente anuncios sin tocar la API global
+        // (solo ocultamos contenedores; AdSense decidirá según Consent Mode y políticas)
+        this.adContainers.forEach(container => {
+            container.style.display = 'none';
+        });
         
         if (this.options.enableLogging) {
             console.warn('AdSense Policy Manager: Anuncios desactivados debido a violaciones de política', 
@@ -220,9 +212,9 @@ class AdSensePolicyManager {
      * Habilita los anuncios en la página
      */
     enableAds() {
-        // Mostrar todos los contenedores de anuncios
+        // Mostrar contenedores (AdSense se encargará de rellenarlos si corresponde)
         this.adContainers.forEach(container => {
-            container.style.display = 'block';
+            container.style.display = '';
             container.dataset.adStatus = 'enabled';
         });
         

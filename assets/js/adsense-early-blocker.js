@@ -28,15 +28,8 @@
         console.log('[AdSense Early Blocker] Bloqueando anuncios en página:', currentPath);
         
         // Prevenir la carga de AdSense completamente
-        window.adsbygoogle = window.adsbygoogle || [];
-        window.adsbygoogle.pauseAdRequests = 1;
-        
-        // Sobrescribir el método push para prevenir cualquier intento de cargar anuncios
-        const originalPush = window.adsbygoogle.push;
-        window.adsbygoogle.push = function() {
-            console.log('[AdSense Early Blocker] Intento de cargar anuncio bloqueado');
-            return;
-        };
+        // No forzar pausa global ni sobrescribir push; solo ocultar contenedores cuando corresponda
+        window.__adsense_blocked = true;
         
         // Agregar estilo CSS para ocultar cualquier contenedor de anuncios
         const style = document.createElement('style');
@@ -78,8 +71,6 @@
         // Si la página tiene menos de 50 palabras, bloquear anuncios
         if (wordCount < 50) {
             console.log('[AdSense Early Blocker] Página con contenido insuficiente, bloqueando anuncios');
-            window.adsbygoogle = window.adsbygoogle || [];
-            window.adsbygoogle.pauseAdRequests = 1;
             window.__adsense_blocked = true;
             
             // Ocultar cualquier contenedor de anuncios existente

@@ -850,7 +850,12 @@ document.addEventListener('DOMContentLoaded', function() {
         updateScoreDisplays();
         
         // <<<--- START: Fetch questions from the single merged file --- >>>
-        const questionFile = 'assets/data/preguntas_combinadas.json';
+        // Permite alternar dataset por query param (?dataset=2025)
+        const params = new URLSearchParams(window.location.search);
+        const dataset = params.get('dataset');
+        const questionFile = dataset === '2025' 
+            ? 'assets/data/pasalache_2025.json' 
+            : 'assets/data/preguntas_combinadas.json';
 
         fetch(questionFile)
             .then(response => {
