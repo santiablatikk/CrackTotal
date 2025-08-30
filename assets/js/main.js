@@ -47,17 +47,25 @@ window.addEventListener('load', () => {
     const playerName = localStorage.getItem('playerName');
     const currentPagePath = window.location.pathname;
 
-    // Solo permitir el acceso a index.html (raíz o /index.html) si no hay nombre.
-    const isIndexPage = (currentPagePath === '/' || currentPagePath === '/index.html');
+    // Solo exigir nombre en páginas de juego para no bloquear SEO/legales/blog
+    const gamePages = [
+        '/games.html',
+        '/pasalache.html',
+        '/mentiroso.html',
+        '/quiensabemas.html',
+        '/ranking.html',
+        '/ranking-mentiroso.html',
+        '/ranking-quiensabemas.html'
+    ];
+    const requiresName = gamePages.includes(currentPagePath);
 
-    // Si no hay nombre y la página actual NO es index.html, redirigir a la raíz.
-    if (!playerName && !isIndexPage) {
-        window.location.href = '/'; 
+    if (!playerName && requiresName) {
+        window.location.href = '/';
     }
 })();
 
 // Lista de palabras prohibidas (ejemplos, puedes ampliarla)
-const BANNED_WORDS = ["pene", "pelotudo", "puto", "gay", "chota"]; // Añade más palabras según necesites
+const BANNED_WORDS = ["pene", "pelotudo", "puto", "chota"]; // Ajuste de lista para evitar términos sensibles
 
 // Función para validar el nombre del jugador
 function isValidPlayerName(name) {

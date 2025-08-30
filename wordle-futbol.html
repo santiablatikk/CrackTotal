@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}        
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'analytics_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'functionality_storage': 'denied',
+      'personalization_storage': 'denied',
+      'security_storage': 'granted',
+      'wait_for_update': 500
+    });
+    gtag('set', 'ads_data_redaction', true);
+    gtag('set', 'url_passthrough', true);
+    gtag('set', 'region', 'ES');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="google-adsense-account" content="ca-pub-9579152019412427">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wordle Futbolero - Crack Total</title>
+  <meta name="description" content="Adiviná el apellido del futbolista/DT en 6 intentos. Teclado virtual y tablero dinámico.">
+  <link rel="icon" href="/portada.ico" type="image/x-icon">
+  <link rel="canonical" href="https://cracktotal.com/wordle-futbol.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
+  <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
+  <link rel="stylesheet" href="assets/css/wordle.css?v=202505272312">
+  <link rel="stylesheet" href="assets/css/modals.css?v=202505272312">
+  <script src="assets/js/adsense-early-blocker.js?v=202506072312"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427" crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XP3T1RTH7"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}        
+    gtag('js', new Date());
+    gtag('config', 'G-5XP3T1RTH7');
+  </script>
+</head>
+<body class="wordle-body">
+  <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+  <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
+    <a href="index.html" class="nav-logo" aria-label="Crack Total - Inicio">Crack Total <i class="fas fa-futbol" aria-hidden="true"></i></a>
+    <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+    <ul>
+      <li><a href="index.html"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
+      <li><a href="games.html" class="active"><i class="fas fa-gamepad" aria-hidden="true"></i> Juegos</a></li>
+      <li><a href="profile.html"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
+      <li><a href="ranking.html"><i class="fas fa-trophy" aria-hidden="true"></i> Rankings</a></li>
+      <li><a href="logros.html"><i class="fas fa-medal" aria-hidden="true"></i> Logros</a></li>
+      <li><a href="blog.html"><i class="fas fa-blog" aria-hidden="true"></i> Blog</a></li>
+      <li><a href="about.html"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a></li>
+      <li><a href="contact.html"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a></li>
+    </ul>
+  </nav>
+
+  <div class="breadcrumbs-container">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+        <li class="breadcrumb-item"><a href="/games.html">Juegos</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Wordle Futbolero</li>
+      </ol>
+    </nav>
+  </div>
+
+  <main class="wordle-container" id="main-content">
+    <header class="wordle-header">
+      <h1 class="wordle-title">Wordle Futbolero</h1>
+      <div class="wordle-subtitle">Adiviná el <strong>apellido</strong> en 6 intentos</div>
+      <div class="wordle-subtitle" id="streakDisplay">Racha: 0 | Mejor: 0</div>
+      <div class="wordle-subtitle" id="dailyInfo">Juego #<span id="gameNumber">-</span> • Próximo en <span id="nextCountdown">--:--:--</span></div>
+      <div class="wordle-controls" style="text-align:center; margin-top:6px;">
+        <button class="save-button" id="openRulesBtn" style="padding:6px 12px;">¿Cómo jugar?</button>
+      </div>
+      <div class="message" id="message"></div>
+    </header>
+
+    <div class="wordle-card">
+      <section id="board" class="board" aria-label="Tablero de letras"></section>
+
+      <section class="keyboard" aria-label="Teclado virtual">
+        <div class="key-row" id="row1"></div>
+        <div class="key-row" id="row2"></div>
+        <div class="key-row" id="row3"></div>
+      </section>
+      <div class="daily-overlay" id="dailyOverlay" style="display:none;">
+        <div class="overlay-card">
+          <div class="overlay-title">Juego diario completado</div>
+          <div class="overlay-sub">Vuelve mañana para un nuevo desafío</div>
+          <div class="overlay-count">Próximo en <span id="nextCountdownOverlay">--:--:--</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wordle-footer">Hecho con pasión futbolera en Crack Total</div>
+  </main>
+
+  <script src="assets/js/essential.js?v=202505272312"></script>
+  <script src="assets/js/main.js?v=202505272312" defer></script>
+  <script src="assets/js/wordle-futbol.js?v=202505272312" defer></script>
+  
+  <!-- Modal de resultado -->
+  <div class="modal-overlay" id="wordleResultModal">
+    <div class="modal-content" id="wordleResultContent">
+      <div class="result-badge" id="resultBadge">Resultado</div>
+      <h3 class="modal-title" id="resultTitle">Resultado</h3>
+      <p id="resultMessage" style="text-align:center; opacity:.9; margin:6px 0 10px;">Mensaje</p>
+      <p style="text-align:center; opacity:.8; margin:2px 0 10px;">Próximo juego en <strong id="nextCountdownModal">--:--:--</strong></p>
+      <div class="stats-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 10px 0;">
+        <div class="stat-box"><div class="stat-number" id="statPlayed">0</div><div class="stat-label">Jugadas</div></div>
+        <div class="stat-box"><div class="stat-number" id="statStreak">0</div><div class="stat-label">Racha</div></div>
+        <div class="stat-box"><div class="stat-number" id="statBest">0</div><div class="stat-label">Mejor</div></div>
+      </div>
+      <div class="modal-footer">
+        <button class="save-button" id="shareWordleBtn">Compartir</button>
+        <button class="cancel-button" id="closeResultModal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de reglas -->
+  <div class="modal-overlay" id="wordleRulesModal">
+    <div class="modal-content">
+      <h3 class="modal-title">Cómo jugar</h3>
+      <p style="opacity:.9">Adiviná el <strong>apellido</strong> del futbolista/DT en 6 intentos. Cada intento debe tener la misma cantidad de letras que el objetivo diario.</p>
+      <div style="display:flex; gap:8px; justify-content:center; margin:12px 0;">
+        <div class="tile correct" style="width:38px;height:38px;">M</div>
+        <div class="tile present" style="width:38px;height:38px;">E</div>
+        <div class="tile absent" style="width:38px;height:38px;">S</div>
+      </div>
+      <ul style="margin:6px 0 12px; line-height:1.6;">
+        <li><strong>Verde</strong>: letra correcta en la posición correcta.</li>
+        <li><strong>Amarillo</strong>: letra existente pero en otra posición.</li>
+        <li><strong>Gris</strong>: letra no está en el apellido.</li>
+      </ul>
+      <p style="opacity:.85">Es un <strong>juego diario</strong>: sólo una partida por día. ¡Vuelve mañana para un nuevo desafío!</p>
+      <div class="modal-footer">
+        <button class="save-button" id="closeRulesBtn">Entendido</button>
+      </div>
+    </div>
+  </div>
+  <footer class="site-footer"> 
+    <div class="footer-content">
+      <div class="footer-links">
+        <a href="/"><i class="fas fa-home"></i> Inicio</a>
+        <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
+        <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
+        <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
+        <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
+        <a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a>
+        <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
+      </div>
+      <button class="footer-share-button" onclick="shareSite()"><i class="fas fa-share-alt"></i> Compartir</button>
+      <div class="footer-copyright">
+        &copy; 2025 Crack Total. Todos los derechos reservados. 
+      </div>
+    </div>
+  </footer>
+  <script src="assets/js/cookie-consent.js?v=202505272312"></script>
+  <script src="assets/js/adblock-detector.js?v=202505272312"></script>
+</body>
+</html>

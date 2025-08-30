@@ -15,6 +15,16 @@
   to = "/.netlify/functions/:splat"
   status = 200
 
+[[redirects]]
+  from = "/crack-rapido.html"
+  to = "/games.html"
+  status = 301
+
+[[redirects]]
+  from = "/ranking-crackrapido.html"
+  to = "/ranking.html"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]
@@ -22,7 +32,7 @@
     X-Content-Type-Options = "nosniff"
     X-XSS-Protection = "1; mode=block"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Feature-Policy = "geolocation 'none'; microphone 'none'; camera 'none'"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
 
 [[headers]]
   for = "*.css"

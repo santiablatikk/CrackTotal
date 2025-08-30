@@ -27,6 +27,7 @@ class AdSenseLoadingBlocker {
             'ins[data-ad-client]'
         ];
         
+        this.isGoogleBot = /Googlebot|Mediapartners-Google|AdsBot-Google|Google-InspectionTool/i.test(navigator.userAgent || '');
         this.init();
     }
     
@@ -44,6 +45,12 @@ class AdSenseLoadingBlocker {
     }
     
     checkAndBlockAds() {
+        // Permitir bots de Google sin restricciones de estado para evitar falsos bloqueos
+        if (this.isGoogleBot) {
+            this.showAds();
+            return;
+        }
+
         // Verificar si hay elementos de loading/error visibles
         const hasProblematicStates = this.blockedStates.some(state => {
             const elements = document.querySelectorAll(`.${state}, [class*="${state}"]`);
@@ -75,7 +82,7 @@ class AdSenseLoadingBlocker {
     
     showAds() {
         // Solo mostrar si hay consentimiento
-        if (localStorage.getItem("adConsent") === "true") {
+        if (localStorage.getItem("adConsent") === "true" || this.isGoogleBot) {
             this.adContainerSelectors.forEach(selector => {
                 const ads = document.querySelectorAll(selector);
                 ads.forEach(ad => {

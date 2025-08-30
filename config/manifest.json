@@ -11,24 +11,24 @@
   "categories": ["games", "sports", "entertainment", "social"],
   "icons": [
     {
-      "src": "images/portada.jpg",
+      "src": "/assets/images/portada.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "any maskable"
     },
     {
-      "src": "portada.ico",
+      "src": "/portada.ico",
       "sizes": "48x48 32x32 16x16",
       "type": "image/x-icon"
     },
     {
-      "src": "images/portada.jpg",
+      "src": "/assets/images/portada.jpg",
       "sizes": "192x192",
       "type": "image/jpeg",
       "purpose": "any"
     },
     {
-      "src": "images/portada.jpg",
+      "src": "/assets/images/portada.jpg",
       "sizes": "256x256",
       "type": "image/jpeg",
       "purpose": "maskable"
@@ -36,14 +36,14 @@
   ],
   "screenshots": [
     {
-      "src": "images/portada.jpg",
+      "src": "/assets/images/portada.jpg",
       "sizes": "1280x720",
       "type": "image/jpeg",
       "platform": "wide",
       "label": "Página principal de Crack Total"
     },
     {
-      "src": "images/portada.jpg",
+      "src": "/assets/images/portada.jpg",
       "sizes": "750x1334",
       "type": "image/jpeg",
       "platform": "narrow",
@@ -64,7 +64,7 @@
       "url": "/games.html",
       "icons": [
         {
-          "src": "images/portada.jpg",
+          "src": "/assets/images/portada.jpg",
           "sizes": "192x192",
           "type": "image/jpeg"
         }
@@ -77,7 +77,7 @@
       "url": "/profile.html",
       "icons": [
         {
-          "src": "images/portada.jpg",
+          "src": "/assets/images/portada.jpg",
           "sizes": "192x192",
           "type": "image/jpeg"
         }
@@ -90,7 +90,7 @@
       "url": "/ranking.html",
       "icons": [
         {
-          "src": "images/portada.jpg",
+          "src": "/assets/images/portada.jpg",
           "sizes": "192x192",
           "type": "image/jpeg"
         }

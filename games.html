@@ -80,7 +80,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Revolutionary Games Styling -->
     <style>
@@ -1448,26 +1448,7 @@
                      </div>
                 </article>
 
-                <!-- Crack Rápido MEGA -->
-                <article class="cosmic-game-card" data-game="crack-rapido">
-                    <div class="stellar-badge nuevo">MEGA EDITION</div>
-                    <div class="game-visual-container">
-                        <i class="fas fa-bolt game-icon" aria-hidden="true"></i>
-                    </div>
-                    <div class="game-content">
-                        <h3 class="game-title">Crack Rápido MEGA</h3>
-                        <p class="game-description">¡La trivia definitiva ya está aquí! 7 categorías épicas, 350+ preguntas perfectamente equilibradas, 4 modos de juego, power-ups estratégicos y un sistema de puntuación revolucionario. ¡Conviértete en el Dios del Crack Rápido!</p>
-                        <div class="game-stats">
-                            <span class="stat-chip"><i class="fas fa-gamepad"></i>4 Modos</span>
-                            <span class="stat-chip"><i class="fas fa-brain"></i>350+ Preguntas</span>
-                            <span class="stat-chip"><i class="fas fa-medal"></i>17 Logros</span>
-                            <span class="stat-chip"><i class="fas fa-rocket"></i>Power-Ups</span>
-                        </div>
-                        <button class="quantum-play-btn" onclick="window.location.href='crack-rapido.html'" aria-label="Jugar Crack Rápido MEGA">
-                            <span>🚀 JUGAR MEGA</span>
-                        </button>
-                    </div>
-                </article>
+                <!-- Crack Rápido removido -->
 
                 <!-- Quien Sabe MáS -->
                 <article class="cosmic-game-card" data-game="quiensabemas">
@@ -1512,6 +1493,44 @@
                             <i class="fas fa-satellite-dish" aria-hidden="true"></i>
                             <span>Salas Activas: <span class="room-count">-/-</span></span>
                         </div>
+                    </div>
+                </article>
+
+                <!-- Wordle Futbolero (Nuevo) -->
+                <article class="cosmic-game-card" data-game="wordle-futbol">
+                    <div class="stellar-badge nuevo">NUEVO</div>
+                    <div class="game-visual-container">
+                        <i class="fas fa-th game-icon" aria-hidden="true"></i>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Wordle Futbolero</h3>
+                        <p class="game-description">Adiviná el futbolista o DT en 6 intentos con pistas por club, nacionalidad, posición y edad. Modo diario con ranking.</p>
+                        <div class="game-stats">
+                            <span class="stat-chip"><i class="fas fa-dice-six"></i>6 Intentos</span>
+                            <span class="stat-chip"><i class="fas fa-calendar-day"></i>Desafío Diario</span>
+                        </div>
+                        <button class="quantum-play-btn" onclick="window.location.href='wordle-futbol.html'" aria-label="Jugar Wordle Futbolero">
+                            <span>Jugar</span>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Top 10 (Nuevo Diario) -->
+                <article class="cosmic-game-card" data-game="top10">
+                    <div class="stellar-badge nuevo">DIARIO</div>
+                    <div class="game-visual-container">
+                        <i class="fas fa-list-ol game-icon" aria-hidden="true"></i>
+                    </div>
+                    <div class="game-content">
+                        <h3 class="game-title">Top 10</h3>
+                        <p class="game-description">Adiviná los 10 apellidos del tema diario. Historia, mundiales, ligas y más.</p>
+                        <div class="game-stats">
+                            <span class="stat-chip"><i class="fas fa-calendar-day"></i>Diario</span>
+                            <span class="stat-chip"><i class="fas fa-list-ol"></i>10 Respuestas</span>
+                        </div>
+                        <button class="quantum-play-btn" onclick="window.location.href='top10.html'" aria-label="Jugar Top 10">
+                            <span>Jugar</span>
+                        </button>
                     </div>
                 </article>
             </div>
@@ -1589,7 +1608,7 @@
     </div>
 
     <!-- Load main.js first for player name functionality -->
-    <script src="assets/js/main.js?v=202505272312"></script>
+    <script src="assets/js/main.js?v=202505272312" defer></script>
     
     <!-- Script para manejar los clicks en los botones de jugar -->
     <script>

@@ -29,6 +29,7 @@ try {
   console.log('✅ Firebase inicializado correctamente');
   
   // Exponer a window para uso global
+  window.firebaseConfig = firebaseConfig;
   window.firebaseApp = firebaseApp;
   window.db = db;
   window.auth = auth;
@@ -37,9 +38,17 @@ try {
   console.error('❌ Error al inicializar Firebase:', error);
 }
 
-// Configurar settings de Firestore
+// Configurar settings de Firestore: evitar settings inválidos y asegurar timestamps
 if (db) {
-  db.settings({
-    merge: true
-  });
-} 
+  try {
+    // En SDK 8, settings comunes son cacheSizeBytes y host/ssl; 'merge' no es válido
+    db.settings({});
+    // Habilitar timestamps en snapshots (compatibilidad)
+    if (firebase && firebase.firestore && firebase.firestore.Timestamp) {
+      // No requiere configuración extra en v8; mantener bloque por compatibilidad futura
+    }
+    console.log('✅ Firestore settings aplicados');
+  } catch (e) {
+    console.warn('⚠️ No se pudieron aplicar Firestore settings:', e.message);
+  }
+}

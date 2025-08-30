@@ -1,0 +1,230 @@
+/* Wordle Futbolero Styles */
+:root {
+    --tile-size: 52px;
+    --tile-gap: 6px;
+    --color-bg: #0f172a;
+    --color-board: #1e293b;
+    --color-text: #e2e8f0;
+    --color-correct: #22c55e; /* green */
+    --color-present: #f59e0b; /* yellow */
+    --color-absent: #475569; /* gray */
+    --color-border: #334155;
+    --color-key: #334155;
+    --color-key-text: #e2e8f0;
+}
+
+body.wordle-body {
+    background: radial-gradient(ellipse at top, #1a1a2e 0%, #16213e 50%, #0f172a 100%);
+    color: var(--color-text);
+}
+
+.wordle-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+}
+
+.wordle-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 18px 12px 16px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 15px 45px rgba(0,0,0,0.25);
+}
+
+.daily-overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(15,23,42,0.6);
+    backdrop-filter: blur(4px);
+    border-radius: 16px;
+}
+.overlay-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 14px;
+    padding: 16px 18px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+.overlay-title { font-weight: 800; letter-spacing: .5px; margin-bottom: 6px; }
+.overlay-sub { opacity: .85; margin-bottom: 8px; }
+.overlay-count { opacity: .9; font-weight: 700; }
+
+.wordle-header {
+    text-align: center;
+    margin: 20px 0 10px;
+}
+
+.wordle-title {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.8rem;
+}
+.wordle-controls .save-button { border-radius:10px; }
+
+.wordle-subtitle {
+    text-align: center;
+    opacity: 0.8;
+    margin-bottom: 16px;
+}
+
+.board {
+    display: grid;
+    gap: var(--tile-gap);
+    justify-content: center;
+    margin: 18px 0 24px;
+}
+
+.board-row {
+    display: grid;
+    gap: var(--tile-gap);
+}
+
+.tile {
+    width: var(--tile-size);
+    height: var(--tile-size);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--color-border);
+    border-radius: 6px;
+    background: rgba(255,255,255,0.02);
+    color: var(--color-text);
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    user-select: none;
+}
+
+.tile.filled {
+    border-color: var(--color-key);
+}
+
+.tile.correct { background: var(--color-correct); border-color: var(--color-correct); color: #0b1b11; }
+.tile.present { background: var(--color-present); border-color: var(--color-present); color: #1f1303; }
+.tile.absent  { background: var(--color-absent);  border-color: var(--color-absent);  color: #0f172a; }
+
+/* flip animation */
+@keyframes flip {
+    0% { transform: rotateX(0); }
+    50% { transform: rotateX(90deg); }
+    100% { transform: rotateX(0); }
+}
+.tile.revealing { animation: flip 420ms ease; }
+
+/* pop on input */
+@keyframes pop {
+    0% { transform: scale(0.9); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+.tile.pop { animation: pop 120ms ease; }
+
+/* shake on invalid */
+@keyframes shake {
+    10%, 90% { transform: translateX(-2px); }
+    20%, 80% { transform: translateX(4px); }
+    30%, 50%, 70% { transform: translateX(-6px); }
+    40%, 60% { transform: translateX(6px); }
+}
+.tile.shake { animation: shake 420ms ease; }
+
+.keyboard {
+    display: grid;
+    gap: 8px;
+    justify-content: center;
+}
+
+.key-row { display: flex; gap: 6px; justify-content: center; }
+
+.key {
+    background: var(--color-key);
+    color: var(--color-key-text);
+    border: none;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    min-width: 36px;
+    transition: transform 0.05s ease;
+    user-select: none;
+}
+
+.key.wide { min-width: 64px; }
+
+.key:active { transform: scale(0.98); }
+
+.key.correct { background: var(--color-correct); color: #0b1b11; }
+.key.present { background: var(--color-present); color: #1f1303; }
+.key.absent  { background: var(--color-absent);  color: #0f172a; }
+
+.message {
+    text-align: center;
+    min-height: 24px;
+    margin-bottom: 12px;
+    opacity: 0.9;
+    font-weight: 600;
+}
+
+.wordle-footer {
+    text-align: center;
+    margin-top: 14px;
+    opacity: 0.7;
+    font-size: 0.9rem;
+}
+
+/* Confetti canvas overlay */
+.confetti-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+/* Resultado - Modal look & feel */
+.modal-content .stat-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+}
+.modal-content .stat-number {
+    font-weight: 800;
+    font-size: 1.3rem;
+    color: var(--color-text);
+}
+.modal-content .stat-label {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* Ganaste/Pediste variantes */
+#wordleResultModal .modal-content.win {
+    border: 2px solid rgba(34,197,94,0.35);
+    box-shadow: 0 10px 40px rgba(34,197,94,0.15);
+}
+#wordleResultModal .modal-content.lose {
+    border: 2px solid rgba(239,68,68,0.35);
+    box-shadow: 0 10px 40px rgba(239,68,68,0.12);
+}
+.result-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    margin-bottom: 10px;
+}
+.result-badge.win { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid rgba(34,197,94,0.35); }
+.result-badge.lose { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid rgba(239,68,68,0.35); }
+
+@media (max-width: 420px) {
+    :root { --tile-size: 44px; }
+}

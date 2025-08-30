@@ -48,12 +48,14 @@ class CrackTotalSecurityManager {
 
         const csp = [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://www.google-analytics.com https://www.googletagmanager.com https://pagead2.googlesyndication.com",
+            // Permitir dominios de Google Ads/Analytics necesarios
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://www.google-analytics.com https://www.googletagmanager.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://adservice.google.com https://adservice.google.com.ar",
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",
             "font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com",
             "img-src 'self' data: https: blob:",
-            "connect-src 'self' https://firestore.googleapis.com https://www.google-analytics.com wss: ws:",
-            "frame-src 'self' https://www.google.com",
+            "connect-src 'self' https://firestore.googleapis.com https://www.google-analytics.com https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://adservice.google.com https://adservice.google.com.ar wss: ws:",
+            // AdSense usa iframes desde estos orígenes
+            "frame-src 'self' https://www.google.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://pagead2.googlesyndication.com",
             "object-src 'none'",
             "base-uri 'self'",
             "form-action 'self'"
@@ -69,28 +71,10 @@ class CrackTotalSecurityManager {
      * XSS Protection
      */
     setupXSSProtection() {
-        // Sanitize all user inputs
-        const originalSetAttribute = Element.prototype.setAttribute;
-        Element.prototype.setAttribute = function(name, value) {
-            if (typeof value === 'string') {
-                value = CrackTotalSecurityManager.sanitizeInput(value);
-            }
-            return originalSetAttribute.call(this, name, value);
-        };
-
-        // Protect innerHTML
-        Object.defineProperty(Element.prototype, 'innerHTML', {
-            set: function(value) {
-                if (typeof value === 'string') {
-                    value = CrackTotalSecurityManager.sanitizeHTML(value);
-                }
-                this.textContent = ''; // Clear existing content
-                this.insertAdjacentHTML('afterbegin', value);
-            },
-            get: function() {
-                return this.textContent;
-            }
-        });
+        // No se sobreescriben prototipos globales para evitar romper scripts de terceros (AdSense, Analytics, etc.)
+        // La validación se maneja a nivel de formularios/inputs en setupInputValidation().
+        // Si se requiere sanitización de HTML dinámico, usar utilidades explícitas en el punto de inserción.
+        return;
     }
 
     /**

@@ -50,7 +50,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XP3T1RTH7"></script>
@@ -61,117 +61,93 @@
       gtag('config', 'G-5XP3T1RTH7');
     </script>
     
-    <!-- Estilo adicional para área de juego -->
+    <!-- Estilo adicional para lobby y juego -->
     <style>
-        /* Estilos para el área de juego para hacer más visible el nombre de los jugadores */
-        .game-status {
-            background: rgba(30, 32, 45, 0.9);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 1px solid rgba(166, 81, 255, 0.2);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        :root {
+            --qsm-purple: #a651ff;
+            --qsm-purple-2: #7a3bff;
+            --qsm-accent: #30d158;
+            --qsm-bg: #0f1220;
+            --qsm-card: rgba(20, 22, 35, 0.9);
+            --qsm-border: rgba(166, 81, 255, 0.25);
+            --qsm-shadow: 0 10px 25px rgba(0,0,0,.35);
         }
-        
-        .player-box {
-            background: rgba(16, 17, 26, 0.8);
-            padding: 12px 15px;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .player-box.active-turn {
-            background: rgba(48, 209, 88, 0.15);
-            border-color: rgba(48, 209, 88, 0.3);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(48, 209, 88, 0.2);
-        }
-        
-        .player-avatar {
-            width: 40px;
-            height: 40px;
-            background: rgba(79, 156, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-        }
-        
-        .current-player .player-avatar {
-            background: rgba(48, 209, 88, 0.2);
-        }
-        
-        .opponent-player .player-avatar {
-            background: rgba(166, 81, 255, 0.2);
-        }
-        
-        .player-details {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .player-name {
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.95rem;
-            margin-bottom: 3px;
-        }
-        
-        .score {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 3px 8px;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 600;
-        }
-        
-        .vs-separator {
-            color: rgba(255, 255, 255, 0.5);
-            font-weight: 700;
-            margin: 0 10px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 5px 10px;
-            border-radius: 8px;
-        }
-        
-        .turn-indicator, .question-counter {
-            background: rgba(16, 17, 26, 0.7);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.8);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        
-        .turn-indicator i, .question-counter i {
-            color: var(--qsm-purple, #a651ff);
-            font-size: 0.95rem;
-        }
-        
-        /* Para pantallas más pequeñas */
+
+        /* Layout lobby */
+        .lobby-container-inner { max-width: 1100px; margin: 0 auto; }
+        .lobby-header-section { text-align: center; margin: 20px 0 28px; }
+        .lobby-title { font-size: 2rem; letter-spacing: .5px; }
+        .lobby-subtitle { color: rgba(255,255,255,.75); margin-top: 6px; }
+
+        .lobby-content-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+        .lobby-panel { background: var(--qsm-card); border: 1px solid var(--qsm-border); border-radius: 14px; box-shadow: var(--qsm-shadow); overflow: hidden; }
+        .panel-header { display:flex; align-items:center; gap:10px; padding:14px 16px; background: linear-gradient(135deg, rgba(166,81,255,.15), rgba(48,209,88,.12)); border-bottom: 1px solid rgba(255,255,255,.06); }
+        .panel-header i { color: var(--qsm-purple); }
+        .panel-content { padding: 16px; }
+
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display:block; margin-bottom:6px; font-weight:600; color: rgba(255,255,255,.85); }
+        .input-wrapper { position: relative; }
+        .input-wrapper i { position:absolute; left:12px; top:50%; transform: translateY(-50%); color: rgba(255,255,255,.5); }
+        .lobby-input { width: 100%; padding: 12px 12px 12px 36px; border-radius: 10px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05); color: #fff; outline: none; transition: .2s; }
+        .lobby-input:focus { border-color: var(--qsm-purple); box-shadow: 0 0 0 3px rgba(166,81,255,.2); }
+
+        .lobby-button { display:inline-flex; align-items:center; gap:8px; border:0; border-radius:12px; padding:12px 16px; cursor:pointer; transition:.2s; font-weight:700; letter-spacing:.3px; }
+        .primary-button { background: linear-gradient(135deg, var(--qsm-purple), var(--qsm-purple-2)); color:#fff; }
+        .secondary-button { background: linear-gradient(135deg, #374151, #2d3748); color:#e6e6e6; }
+        .accent-button { background: linear-gradient(135deg, #22c55e, #16a34a); color:#06210f; }
+        .lobby-button:hover { transform: translateY(-1px); filter: brightness(1.05); }
+
+        .quick-join-section .section-divider { display:flex; align-items:center; justify-content:center; margin: 10px 0 14px; }
+        .section-divider span { font-size:.85rem; color: rgba(255,255,255,.65); background: rgba(255,255,255,.06); padding:6px 10px; border-radius: 999px; border:1px solid rgba(255,255,255,.08) }
+
+        .available-rooms-section { background: var(--qsm-card); border: 1px solid var(--qsm-border); border-radius: 14px; margin-top: 18px; box-shadow: var(--qsm-shadow); }
+        .available-rooms-section .section-header { display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.06); }
+        .refresh-button { background: rgba(166,81,255,.18); border:1px solid var(--qsm-border); color:#fff; padding:8px 10px; border-radius:10px; cursor:pointer; transition:.2s; }
+        .refresh-button:hover { background: rgba(166,81,255,.28); }
+        .rooms-list { list-style:none; margin:0; padding: 14px; }
+        .no-rooms-message { color: rgba(255,255,255,.7); padding: 8px; }
+
+        /* Header jugadores y estado */
+        .players-info-header { display:flex; align-items:center; justify-content: center; gap: 10px; margin-bottom: 10px; }
+        .game-status { background: rgba(30,32,45,.9); padding: 14px; border-radius: 12px; margin-bottom: 14px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--qsm-border); box-shadow: var(--qsm-shadow); }
+        .player-box { background: rgba(16,17,26,.8); padding: 10px 12px; border-radius: 10px; transition: .2s; border:1px solid rgba(255,255,255,.1); box-shadow: 0 4px 8px rgba(0,0,0,.2); display:flex; align-items:center; gap:10px; }
+        .player-box.active-turn { background: rgba(48,209,88,.15); border-color: rgba(48,209,88,.3); transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,.3), 0 0 0 1px rgba(48,209,88,.2); }
+        .player-avatar { width: 40px; height: 40px; background: rgba(79,156,255,.18); border-radius: 50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.1rem; }
+        .current-player .player-avatar { background: rgba(48,209,88,.22); }
+        .opponent-player .player-avatar { background: rgba(166,81,255,.22); }
+        .player-details { display:flex; flex-direction:column; }
+        .player-name { font-weight:700; color: rgba(255,255,255,.92); font-size:.95rem; margin-bottom: 2px; }
+        .score { background: rgba(255,255,255,.09); padding: 3px 8px; border-radius: 999px; font-size:.8rem; color: rgba(255,255,255,.85); font-weight:700; }
+        .vs-separator { color: rgba(255,255,255,.6); font-weight:800; margin:0 8px; background: rgba(255,255,255,.12); padding: 4px 10px; border-radius: 10px; }
+        .turn-indicator, .question-counter { background: rgba(16,17,26,.7); padding: 8px 10px; border-radius: 10px; font-size:.85rem; color: rgba(255,255,255,.85); display:flex; align-items:center; gap:8px; margin-top: 6px; border:1px solid rgba(255,255,255,.06); }
+        .turn-indicator i, .question-counter i { color: var(--qsm-purple); font-size:.95rem; }
+
+        /* Pregunta y opciones */
+        .game-card { background: var(--qsm-card); border: 1px solid var(--qsm-border); border-radius: 16px; box-shadow: var(--qsm-shadow); padding: 16px; }
+        .qsm-question { font-size: 1.1rem; font-weight:700; color:#fff; text-align:center; background: radial-gradient(100% 100% at 50% 0%, rgba(166,81,255,.15), rgba(0,0,0,0)); padding: 12px; border-radius: 12px; border:1px solid rgba(255,255,255,.06); }
+        .options-grid { display:grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 12px; }
+        .options-grid .option-btn { background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 12px; color:#eaeaea; font-weight:600; cursor:pointer; transition:.15s; }
+        .options-grid .option-btn:hover { transform: translateY(-1px); background: rgba(166,81,255,.14); border-color: var(--qsm-border); }
+        .options-grid .option-btn.correct { background: rgba(34,197,94,.2); border-color: rgba(34,197,94,.5); color:#eaffef; }
+        .options-grid .option-btn.wrong { background: rgba(239,68,68,.18); border-color: rgba(239,68,68,.45); color:#ffecec; }
+
+        /* Temporizador */
+        .timer-container-qsm { margin: 10px 0 6px; }
+        .timer-bar-qsm { height: 10px; background: rgba(255,255,255,.06); border-radius: 999px; overflow:hidden; border:1px solid rgba(255,255,255,.08); }
+        #timerProgress { height: 100%; width: 0%; background: linear-gradient(90deg, var(--qsm-accent), #22c55e, #a7f3d0); transition: width .3s linear; }
+
+        /* Modales */
+        .modal-overlay .modal-content { background: var(--qsm-card); border:1px solid var(--qsm-border); border-radius: 16px; box-shadow: var(--qsm-shadow); }
+        .modal-title { display:flex; align-items:center; gap:8px; }
+        .modal-button.primary { background: linear-gradient(135deg, var(--qsm-purple), var(--qsm-purple-2)); color:#fff; }
+
+        /* Responsive */
+        @media (max-width: 900px){ .lobby-content-wrapper { grid-template-columns: 1fr; } }
         @media (max-width: 768px) {
-            .game-status {
-                flex-direction: column;
-                gap: 15px;
-            }
-            
-            .vs-separator {
-                margin: 5px 0;
-            }
+            .game-status { flex-direction: column; gap: 12px; }
+            .vs-separator { margin: 4px 0; }
+            .options-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -440,7 +416,7 @@
         </div>
     </footer>
 
-    <script src="assets/js/main.js?v=202506012312"></script>
+    <script src="assets/js/main.js?v=202506012312" defer></script>
     <!-- Firebase SDKs (necesarios para guardar partidas y rankings) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>

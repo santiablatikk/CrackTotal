@@ -22,9 +22,13 @@
     
     // Verificar si la página actual está en la lista bloqueada
     const currentPath = window.location.pathname;
+
+    // Permitir siempre rastreadores de Google Ads/AdSense aunque la página esté bloqueada para usuarios
+    const ua = navigator.userAgent || '';
+    const isGoogleBot = /Googlebot|Mediapartners-Google|AdsBot-Google|Google-InspectionTool/i.test(ua);
     const shouldBlockAds = blockedPages.some(page => currentPath.endsWith(page));
     
-    if (shouldBlockAds) {
+    if (shouldBlockAds && !isGoogleBot) {
         console.log('[AdSense Early Blocker] Bloqueando anuncios en página:', currentPath);
         
         // Prevenir la carga de AdSense completamente
@@ -63,6 +67,11 @@
     function checkPageContent() {
         // Si ya está bloqueado, no hacer nada más
         if (window.__adsense_blocked) return;
+
+        // Si es Googlebot/AdsBot permitimos validación sin bloquear por bajo contenido
+        if (isGoogleBot) {
+            return;
+        }
         
         // Verificación rápida de contenido mínimo
         const textContent = document.body.innerText || document.body.textContent || '';

@@ -224,7 +224,7 @@ class FirebaseService {
       
       // Procesar cada partida
       snapshot.forEach(doc => {
-        const match = doc.data();
+        const match = doc.data() || {};
         const playerName = match.playerName || 'Anónimo';
         const playerId = match.playerId || 'unknown';
         const playerKey = `${playerName}_${playerId}`;
@@ -248,11 +248,15 @@ class FirebaseService {
         }
         
         const stats = playerStats[playerKey];
-        stats.totalGames++;
-        stats.totalScore += match.score || 0;
-        stats.bestScore = Math.max(stats.bestScore, match.score || 0);
-        stats.totalCorrectAnswers += match.correctAnswers || 0;
-        stats.totalIncorrectAnswers += match.incorrectAnswers || 0;
+        const score = Number(match.score) || 0;
+        const correct = Number(match.correctAnswers) || 0;
+        const incorrect = Number(match.incorrectAnswers) || 0;
+
+        stats.totalGames += 1;
+        stats.totalScore += score;
+        stats.bestScore = Math.max(stats.bestScore, score);
+        stats.totalCorrectAnswers += correct;
+        stats.totalIncorrectAnswers += incorrect;
         
         // Determinar resultado de la partida
         const result = this.determineMatchResult(match, gameType);
@@ -270,9 +274,19 @@ class FirebaseService {
         }
         
         // Actualizar fecha de última partida
-        const matchDate = match.timestamp ? 
-          (match.timestamp.seconds ? new Date(match.timestamp.seconds * 1000) : new Date(match.timestamp)) :
-          new Date(match.createdAt || 0);
+        let matchDate = new Date(0);
+        if (match.timestamp) {
+          if (match.timestamp.seconds) {
+            matchDate = new Date(match.timestamp.seconds * 1000);
+          } else if (typeof match.timestamp === 'string' || typeof match.timestamp === 'number') {
+            matchDate = new Date(match.timestamp);
+          } else if (match.timestamp.toDate) {
+            // Firestore Timestamp
+            matchDate = match.timestamp.toDate();
+          }
+        } else if (match.createdAt) {
+          matchDate = new Date(match.createdAt);
+        }
         
         if (!stats.lastPlayed || matchDate > stats.lastPlayed) {
           stats.lastPlayed = matchDate;
@@ -281,8 +295,8 @@ class FirebaseService {
       
       // Calcular estadísticas finales y convertir a array
       const aggregatedRanking = Object.values(playerStats).map(stats => {
-        stats.averageAccuracy = stats.totalGames > 0 ? 
-          Math.round((stats.totalCorrectAnswers / (stats.totalCorrectAnswers + stats.totalIncorrectAnswers)) * 100) : 0;
+        const denom = (stats.totalCorrectAnswers + stats.totalIncorrectAnswers);
+        stats.averageAccuracy = denom > 0 ? Math.round((stats.totalCorrectAnswers / denom) * 100) : 0;
         stats.winRate = stats.totalGames > 0 ? 
           Math.round((stats.victories / stats.totalGames) * 100) : 0;
         stats.averageScore = stats.totalGames > 0 ? 
@@ -339,19 +353,21 @@ class FirebaseService {
       // Segundo: Lógica de respaldo para partidas viejas sin gameResult
       console.log('⚠️ [Firebase] No hay gameResult explícito, usando lógica de respaldo mejorada');
       
-      const maxErrors = {
-        'easy': 4,
-        'normal': 3,
-        'hard': 2,
-        'expert': 1
-      };
+      // Mapear dificultades en ES/EN a los máximos permitidos
+      const difficultyKey = String(difficulty).toLowerCase();
+      let maxErrorsForDifficulty = 3; // default normal/medio
+      if (difficultyKey.includes('facil') || difficultyKey.includes('fácil') || difficultyKey === 'easy') {
+        maxErrorsForDifficulty = 4;
+      } else if (difficultyKey.includes('dificil') || difficultyKey.includes('difícil') || difficultyKey === 'hard') {
+        maxErrorsForDifficulty = 2;
+      } else if (difficultyKey.includes('expert')) {
+        maxErrorsForDifficulty = 1;
+      }
       
-      const maxErrorsForDifficulty = maxErrors[difficulty] || 3;
-      
-      // Caso 1: Victoria clara - Completó el rosco (26 respuestas correctas)
+      // Caso 1: Victoria clara - Completó el rosco (27 respuestas correctas)
       // Verificar tanto correctAnswers como score por si acaso
-      if (correctAnswers === 26 || score === 26) {
-        console.log(`🏆 [DEBUG Firebase] ${match.playerName}: Victoria - Completó el rosco (${correctAnswers || score}/26)`);
+      if (correctAnswers === 27 || score === 27) {
+        console.log(`🏆 [DEBUG Firebase] ${match.playerName}: Victoria - Completó el rosco (${correctAnswers || score}/27)`);
         return 'victory';
       }
       
@@ -362,12 +378,11 @@ class FirebaseService {
       }
       
       // Caso 3: Para partidas viejas, usar el score como indicador
-      if (incorrectAnswers === 0 && correctAnswers < 26) {
+      if (incorrectAnswers === 0 && correctAnswers < 27) {
         console.log(`⚠️ [DEBUG Firebase] ${match.playerName}: Sin datos de errores, probablemente partida vieja`);
         
-        if (correctAnswers >= 25) {
-          // Santy con 25 puntos podría haber completado el rosco
-          console.log(`🏆 [DEBUG Firebase] ${match.playerName}: Victoria - Score muy alto, probablemente completó rosco (${correctAnswers}/26)`);
+        if (correctAnswers >= 26) {
+          console.log(`🏆 [DEBUG Firebase] ${match.playerName}: Victoria - Score muy alto, probablemente completó rosco (${correctAnswers}/27)`);
           return 'victory';
         } else if (correctAnswers >= 20) {
           return 'timeout';
