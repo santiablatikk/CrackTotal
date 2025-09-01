@@ -423,6 +423,20 @@
     </style>
 </head>
 <body>
+    <!-- AdSense content block (consent dependent) -->
+    <div class="adsense-container" style="margin: 24px 0; text-align:center;">
+      <ins class="adsbygoogle"
+           style="display:block; min-height: 280px"
+           data-ad-client="ca-pub-9579152019412427"
+           data-ad-slot="1234567893"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+    <script>
+      if (window.adsbygoogle && localStorage.getItem('adConsent') === 'true') {
+        try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
+      }
+    </script>
     <!-- Skip Link para accesibilidad -->
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     
@@ -509,27 +523,27 @@
 
                 <div class="timeline">
                     <div class="timeline-item">
-                        <h4>???? Brasil - 5 Títulos (1958, 1962, 1970, 1994, 2002)</h4>
+                        <h4> Brasil - 5 Títulos (1958, 1962, 1970, 1994, 2002)</h4>
                         <p>El único país que participó en todos los Mundiales. Máximo campeón histórico con el fútbol más vistoso del planeta.</p>
           </div>
                     <div class="timeline-item">
-                        <h4>???? Alemania - 4 Títulos (1954, 1974, 1990, 2014)</h4>
+                        <h4> Alemania - 4 Títulos (1954, 1974, 1990, 2014)</h4>
                         <p>La máquina teutona, sinónimo de eficiencia y constancia. Subcampeón en 4 ocasiones adicionales.</p>
           </div>
                     <div class="timeline-item">
-                        <h4>???? Italia - 4 Títulos (1934, 1938, 1982, 2006)</h4>
+                        <h4> Italia - 4 Títulos (1934, 1938, 1982, 2006)</h4>
                         <p>La Azzurra, con su tradicional catenaccio y clase italiana. Campeón más reciente de la Eurocopa 2021.</p>
           </div>
                     <div class="timeline-item">
-                        <h4>???? Argentina - 3 Títulos (1978, 1986, 2022)</h4>
+                        <h4> Argentina - 3 Títulos (1978, 1986, 2022)</h4>
                         <p>La Albiceleste coronada en Qatar 2022 con Messi como estrella máxima. Subcampeón en 3 ocasiones.</p>
         </div>
                     <div class="timeline-item">
-                        <h4>???? Francia - 2 Títulos (1998, 2018)</h4>
+                        <h4> Francia - 2 Títulos (1998, 2018)</h4>
                         <p>Les Bleus, campeón defensor hasta Qatar 2022. Subcampeón en la última final contra Argentina.</p>
           </div>
                     <div class="timeline-item">
-                        <h4>???? Uruguay - 2 Títulos (1930, 1950)</h4>
+                        <h4> Uruguay - 2 Títulos (1930, 1950)</h4>
                         <p>La Celeste, pionero del fútbol mundial. Organizador y ganador del primer Mundial de la historia.</p>
           </div>
           </div>
@@ -542,11 +556,11 @@
                 
                 <div class="stats-grid">
                     <div class="stat-item">
-                        <div class="stat-number">????</div>
+                        <div class="stat-number"></div>
                         <div class="stat-label">Campeón</div>
                     </div>
                     <div class="stat-item">
-                        <div class="stat-number">????</div>
+                        <div class="stat-number"></div>
                         <div class="stat-label">Subcampeón</div>
                     </div>
                     <div class="stat-item">

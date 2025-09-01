@@ -701,7 +701,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 answerSlot.classList.add('empty');
                 answerSlot.innerHTML = `
-                    <span class="answer-text">???</span>
+                    <span class="answer-text">?</span>
                     <span class="answer-points">?</span>
                 `;
             }
