@@ -2,7 +2,7 @@
   { "id": 1, "title": "Máximos goleadores Mundial 2014", "source": "transfermarkt", "answers": ["rodriguez (COL)", "müller (GER)", "neymar (BRA)", "messi (ARG)", "van persie (NED)", "benzema (FRA)", "robben (NED)", "klose (GER)", "shaquiri (SUI)", "enner (ECU)" ] },
   { "id": 2, "title": "Top asistencias Mundial 2014", "source": "transfermarkt", "answers": ["kroos (GER)", "müller (GER)", "james (COL)", "de bruyne (BEL)", "oscar (BRA)", "di maria (ARG)", "lahm (GER)", "rodríguez (URU)", "mascherano (ARG)", "griezmann (FRA)" ] },
   { "id": 3, "title": "Goleadores Champions 2015/16", "source": "transfermarkt", "answers": ["ronaldo (POR)", "lewandowski (POL)", "messi (ARG)", "griezmann (FRA)", "müller (GER)", "neymar (BRA)", "suárez (URU)", "benzema (FRA)", "aguero (ARG)", "ibrahimovic (SWE)" ] },
-  { "id": 4, "title": "Goleadores Liga Argentina 2019/20 (aprox)", "source": "transfermarkt", "answers": ["fernández (ARG)", "borre (COL)", "soldano (ARG)", "tevez (ARG)", "zárate (ARG)", "suárez (PAR)", "romero (PAR)", "silva (URU)", "lotti (ARG)", "dayro (COL)" ] },
+  { "id": 4, "title": "Goleadores Liga Argentina 2019/20", "source": "transfermarkt", "answers": ["fernández (ARG)", "borre (COL)", "soldano (ARG)", "tevez (ARG)", "zárate (ARG)", "suárez (PAR)", "romero (PAR)", "silva (URU)", "lotti (ARG)", "dayro (COL)" ] },
   { "id": 5, "title": "DT con más títulos UEFA (históricos)", "source": "transfermarkt", "answers": ["ancelotti (ITA)", "ferguson (SCO)", "guardiola (ESP)", "mourinho (POR)", "wenger (FRA)", "zidane (FRA)", "cruyff (NED)", "heynckes (GER)", "simeone (ARG)", "benítez (ESP)" ] }
 ]
 

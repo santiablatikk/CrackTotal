@@ -51,12 +51,7 @@
         <priority>0.8</priority>
     </url>
     
-    <url>
-        <!-- crack-rapido eliminado -->
-        <lastmod>2025-06-07</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
+    <!-- crack-rapido eliminado: se remueve nodo inválido sin <loc> -->
     
     <!-- Páginas de usuario -->
     <url>
@@ -74,12 +69,7 @@
         <priority>0.7</priority>
     </url>
     
-    <url>
-        <!-- ranking-crackrapido eliminado -->
-        <lastmod>2025-06-07</lastmod>
-        <changefreq>daily</changefreq>
-        <priority>0.6</priority>
-    </url>
+    <!-- ranking-crackrapido eliminado: se remueve nodo inválido sin <loc> -->
     
     <url>
         <loc>https://cracktotal.com/ranking-mentiroso.html</loc>

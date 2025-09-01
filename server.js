@@ -1943,7 +1943,16 @@ const mentirosoCategories = {
     { template: "Puedo nombrar X cánticos de hinchadas argentinas que se escuchan en todo el mundo." },
     { template: "Puedo nombrar X hermanos que hayan jugado juntos en un mismo equipo de Primera División argentina." },
     { template: "Puedo nombrar X equipos que hayan llenado su cancha jugando en el Ascenso." },
-    { template: "Puedo nombrar X futbolistas que fueron ídolos en un club 'chico' y rechazaron ofertas de los grandes." }
+    { template: "Puedo nombrar X futbolistas que fueron ídolos en un club 'chico' y rechazaron ofertas de los grandes." },
+    { template: "Puedo nombrar X equipos que descendieron a la B Nacional/Primera Nacional en el siglo XXI." },
+    { template: "Puedo nombrar X jugadores que fueron ídolos en Boca Juniors (todas las eras)." },
+    { template: "Puedo nombrar X jugadores que fueron ídolos en River Plate (todas las eras)." },
+    { template: "Puedo nombrar X directores técnicos campeones con Boca Juniors (liga o copas)." },
+    { template: "Puedo nombrar X directores técnicos campeones con River Plate (liga o copas)." },
+    { template: "Puedo nombrar X equipos que jugaron en Primera División y hoy no están en la máxima categoría." },
+    { template: "Puedo nombrar X goleadores históricos del fútbol argentino (torneos de liga)." },
+    { template: "Puedo nombrar X futbolistas surgidos de las inferiores de Newell's Old Boys que fueron figuras en Primera." },
+    { template: "Puedo nombrar X futbolistas surgidos de las inferiores de River Plate que llegaron a la Selección Argentina." }
   ],
   "SELECCIÓN ARGENTINA": [
     { template: "Puedo nombrar X jugadores argentinos que ganaron la Copa del Mundo en el '78 o el '86 o el '22." },
@@ -1977,7 +1986,12 @@ const mentirosoCategories = {
     { template: "Puedo nombrar X goles de Argentina en Mundiales que se gritaron con el alma." },
     { template: "Puedo nombrar X jugadores de la Selección Argentina que hayan metido un gol en el Maracaná contra Brasil." },
     { template: "Puedo nombrar X jugadores que hayan sido figuras de la Selección Argentina en los años 90." },
-    { template: "Puedo nombrar X apodos de jugadores históricos de la Selección Argentina." }
+    { template: "Puedo nombrar X apodos de jugadores históricos de la Selección Argentina." },
+    { template: "Puedo nombrar X jugadores argentinos que disputaron Mundiales pero no fueron campeones del mundo." },
+    { template: "Puedo nombrar X defensores que fueron titulares en una final del Mundial con Argentina." },
+    { template: "Puedo nombrar X jugadores argentinos que marcaron goles en partidos de Mundiales." },
+    { template: "Puedo nombrar X delanteros históricos de la Selección Argentina." },
+    { template: "Puedo nombrar X jugadores argentinos que triunfaron en Europa y fueron convocados a la Selección Argentina." }
   ],
   "MUNDIALES": [
     { template: "Puedo nombrar X países que hayan ganado la Copa del Mundo al menos una vez." },
@@ -2010,7 +2024,11 @@ const mentirosoCategories = {
     { template: "Puedo nombrar X jugadores que hayan sido los más jóvenes en ganar un Mundial." },
     { template: "Puedo nombrar X selecciones que ganaron el Mundial tras haber perdido su primer partido del torneo." },
     { template: "Puedo nombrar X futbolistas que fueron transferencias récord después de brillar en un Mundial." },
-    { template: "Puedo nombrar X mascotas de Mundiales que la gente todavía recuerda." }
+    { template: "Puedo nombrar X mascotas de Mundiales que la gente todavía recuerda." },
+    { template: "Puedo nombrar X selecciones que participaron en el Mundial de 2022 (fase final)." },
+    { template: "Puedo nombrar X árbitros que dirigieron finales de la Copa del Mundo." },
+    { template: "Puedo nombrar X jugadores argentinos que disputaron una final del Mundial (como titulares o suplentes que ingresaron)." },
+    { template: "Puedo nombrar X selecciones que eliminaron a Brasil en Copas del Mundo." }
   ],
   "LIBERTADORES": [
     { template: "Puedo nombrar X clubes que hayan ganado la Copa Libertadores al menos una vez." },
@@ -2044,7 +2062,12 @@ const mentirosoCategories = {
     { template: "Puedo nombrar X goles de cabeza memorables en finales de Copa Libertadores." },
     { template: "Puedo nombrar X futbolistas del River de Gallardo que hicieron historia en la Libertadores." },
     { template: "Puedo nombrar X equipos que hayan ganado la Libertadores remontando un resultado adverso en la final." },
-    { template: "Puedo nombrar X jugadores 'desconocidos' que se convirtieron en héroes inesperados en una campaña de Libertadores." }
+    { template: "Puedo nombrar X jugadores 'desconocidos' que se convirtieron en héroes inesperados en una campaña de Libertadores." },
+    { template: "Puedo nombrar X finales de Copa Libertadores disputadas entre equipos del mismo país." },
+    { template: "Puedo nombrar X equipos uruguayos que fueron campeones de la Copa Libertadores." },
+    { template: "Puedo nombrar X equipos paraguayos que llegaron a la final de la Copa Libertadores." },
+    { template: "Puedo nombrar X equipos que perdieron finales de Libertadores contra Boca Juniors." },
+    { template: "Puedo nombrar X equipos que perdieron finales de Libertadores contra River Plate." }
   ],
   "CHAMPIONS LEAGUE": [
     { template: "Puedo nombrar X clubes que hayan ganado la Champions League al menos una vez." },
@@ -2078,7 +2101,12 @@ const mentirosoCategories = {
     { template: "Puedo nombrar X equipos que hayan disputado la final de la Champions League contra un equipo de su mismo país." },
     { template: "Puedo nombrar X futbolistas que jugaron en el Milan de Sacchi o Capello y dominaron Europa." },
     { template: "Puedo nombrar X equipos que ganaron la Champions League en su primera participación." },
-    { template: "Puedo nombrar X goles de cabeza memorables en finales de Champions League." }
+    { template: "Puedo nombrar X goles de cabeza memorables en finales de Champions League." },
+    { template: "Puedo nombrar X finales de Champions disputadas entre equipos del mismo país." },
+    { template: "Puedo nombrar X jugadores que disputaron finales de Champions con dos clubes distintos." },
+    { template: "Puedo nombrar X clubes ingleses que fueron campeones de la Champions League." },
+    { template: "Puedo nombrar X futbolistas brasileños que ganaron la Champions League." },
+    { template: "Puedo nombrar X equipos que eliminaron al Real Madrid en fases eliminatorias de Champions." }
   ],
   "FÚTBOL GENERAL": [
     { template: "Puedo nombrar X jugadores que hayan ganado el Balón de Oro al menos una vez." },
@@ -2119,7 +2147,40 @@ const mentirosoCategories = {
     { template: "Puedo nombrar X goles 'fantasma' que generaron polémica mundial." },
     { template: "Puedo nombrar X futbolistas que hayan jugado más de 800 partidos oficiales en su carrera." },
     { template: "Puedo nombrar X selecciones que hayan tenido una generación dorada y no hayan podido ganar un título importante." },
-    { template: "Puedo nombrar X goles de volea espectaculares que quedaron en la retina de los hinchas." }
+    { template: "Puedo nombrar X goles de volea espectaculares que quedaron en la retina de los hinchas." },
+    { template: "Puedo nombrar X campeones de la Eurocopa (selecciones)." },
+    { template: "Puedo nombrar X subcampeones de la Eurocopa (selecciones)." },
+    { template: "Puedo nombrar X futbolistas campeones de Eurocopa con España." },
+    { template: "Puedo nombrar X futbolistas campeones de Eurocopa con Italia." },
+    { template: "Puedo nombrar X futbolistas campeones de Eurocopa con Alemania." },
+    { template: "Puedo nombrar X goleadores históricos de la Eurocopa (fase final)." },
+    { template: "Puedo nombrar X equipos campeones del Mundial de Clubes (desde 2000)." },
+    { template: "Puedo nombrar X equipos campeones de la Copa Intercontinental." },
+    { template: "Puedo nombrar X campeones de la Copa Sudamericana (clubes)." },
+    { template: "Puedo nombrar X campeones de la Recopa Sudamericana (clubes)." },
+    { template: "Puedo nombrar X jugadores que jugaron en Boca Juniors y River Plate." },
+    { template: "Puedo nombrar X jugadores que jugaron en Barcelona y Real Madrid." },
+    { template: "Puedo nombrar X jugadores que jugaron en Inter y Milan." },
+    { template: "Puedo nombrar X jugadores que jugaron en Manchester United y Manchester City." },
+    { template: "Puedo nombrar X jugadores que jugaron en Chelsea y Arsenal." },
+    { template: "Puedo nombrar X jugadores que jugaron en Juventus y AC Milan." },
+    { template: "Puedo nombrar X jugadores que jugaron en Bayern Múnich y Borussia Dortmund." },
+    { template: "Puedo nombrar X jugadores que jugaron en PSG y Barcelona." },
+    { template: "Puedo nombrar X jugadores que jugaron en Real Madrid y Juventus." },
+    { template: "Puedo nombrar X jugadores que jugaron en Atlético de Madrid y Real Madrid." },
+    { template: "Puedo nombrar X campeones de la Premier League (clubes, desde 1992)." },
+    { template: "Puedo nombrar X campeones de LaLiga de España (clubes, era moderna)." },
+    { template: "Puedo nombrar X campeones de la Serie A de Italia (clubes, era moderna)." },
+    { template: "Puedo nombrar X campeones de la Bundesliga de Alemania (clubes, era moderna)." },
+    { template: "Puedo nombrar X campeones de la Ligue 1 de Francia (clubes, era moderna)." },
+    { template: "Puedo nombrar X futbolistas que fueron transferencias récord mundiales en su momento." },
+    { template: "Puedo nombrar X jugadores que ganaron el premio The Best de la FIFA." },
+    { template: "Puedo nombrar X entrenadores que ganaron la Premier League." },
+    { template: "Puedo nombrar X futbolistas sudamericanos que jugaron en la MLS." },
+    { template: "Puedo nombrar X futbolistas europeos que jugaron en la MLS." },
+    { template: "Puedo nombrar X futbolistas que jugaron más de 3 Mundiales." },
+    { template: "Puedo nombrar X jugadores campeones de Champions League y de la Copa del Mundo." },
+    { template: "Puedo nombrar X jugadores campeones de Copa Libertadores y de la Copa del Mundo." }
   ]
 }; 
 

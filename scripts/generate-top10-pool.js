@@ -156,17 +156,35 @@ async function generate(){
       }
     }
 
-    // Si aún faltan, duplicar con variantes nominales
+    // Si aún faltan, duplicar manteniendo el mismo título (sin sufijo "variante")
     while (out.length < 220 && out.length > 0) {
       const base = out[out.length % Math.max(1, SYNTHETIC_TOPICS.length)];
-      out.push({ id: idCounter++, title: `${base.title} (variante ${out.length})`, source: base.source, answers: base.answers });
+      out.push({ id: idCounter++, title: base.title, source: base.source, answers: base.answers });
     }
   }
 
+  // Filtrar sólo títulos objetivos (estadísticos)
+  const isObjectiveTitle = (title) => {
+    const t = (title || '').toLowerCase();
+    if (/^leyendas\b/.test(t)) return false;
+    if (/\(clubes\)/.test(t)) return false;
+    if (/\(aprox\)/.test(t)) return false;
+    if (/[?]/.test(t)) return false;
+    return (
+      /^goleadores/.test(t) ||
+      /^máximos goleadores/.test(t) ||
+      /^top asistencias/.test(t) ||
+      /^top valores/.test(t)
+    );
+  };
+
+  const filtered = out.filter(item => isObjectiveTitle(item.title));
+  const removedCount = out.length - filtered.length;
+
   // Guardar
   fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true });
-  fs.writeFileSync(OUT_FILE, JSON.stringify(out, null, 2), 'utf8');
-  console.log(`✔ Generado ${out.length} temas en ${OUT_FILE}`);
+  fs.writeFileSync(OUT_FILE, JSON.stringify(filtered, null, 2), 'utf8');
+  console.log(`✔ Generado ${filtered.length} temas en ${OUT_FILE} (removidos subjetivos: ${removedCount})`);
 }
 
 generate().catch(err=>{

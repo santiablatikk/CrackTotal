@@ -34,11 +34,7 @@
         <priority>0.8</priority>
     </url>
     
-    <url>
-        <!-- crack-rapido eliminado -->
-        <lastmod>2025-06-07</lastmod>
-        <priority>0.8</priority>
-    </url>
+    <!-- crack-rapido eliminado: se remueve nodo inválido sin <loc> -->
     
     <!-- Perfil y Rankings -->
     <url>

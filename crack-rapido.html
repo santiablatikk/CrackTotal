@@ -575,20 +575,7 @@
         </footer>
     </main>
 
-    <!-- Service Worker Registration -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('[SW] Service Worker registrado exitosamente:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('[SW] Error al registrar Service Worker:', error);
-                    });
-            });
-        }
-    </script>
+    <!-- Service Worker Registration movido a assets/js/main.js para evitar duplicados -->
 
     <!-- Scripts -->
     <script src="assets/js/main.js?v=202505272312" defer></script>

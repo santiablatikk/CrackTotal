@@ -1,5 +1,5 @@
 ﻿// Service Worker optimizado para Crack Total
-const APP_VERSION = '2.3.0'; // Updated version to force cache refresh
+const APP_VERSION = '2.4.0'; // Updated version to force cache refresh
 const CACHE_NAME = `crack-total-v${APP_VERSION}`;
 const STATIC_CACHE_NAME = `crack-total-static-v${APP_VERSION}`;
 const DYNAMIC_CACHE_NAME = `crack-total-dynamic-v${APP_VERSION}`;
@@ -20,16 +20,16 @@ const STATIC_ASSETS = [
     '/',
     '/index.html',
     '/games.html',
-    '/css/base.css',
-    '/css/layout.css',
-    '/css/landing.css',
-    '/css/modals.css',
-    '/js/main.js',
-    '/js/firebase-init.js',
-    '/js/cookie-consent.js',
-    '/images/portada.jpg',
+    '/assets/css/base.css',
+    '/assets/css/layout.css',
+    '/assets/css/landing.css',
+    '/assets/css/modals.css',
+    '/assets/js/main.js',
+    '/assets/js/firebase-init.js',
+    '/assets/js/cookie-consent.js',
+    '/assets/images/portada.jpg',
     '/portada.ico',
-    '/manifest.json',
+    '/config/manifest.json',
     'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css'
 ];
@@ -54,83 +54,93 @@ const IMAGE_PATTERNS = [
 
 // Instalación del Service Worker
 self.addEventListener('install', (e) => {
+    e.waitUntil(
+        caches.open(STATIC_CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
+    );
     self.skipWaiting();
 });
 
 // Activación del Service Worker
 self.addEventListener('activate', (e) => {
-    self.registration.unregister()
-        .then(() => {
-            return self.clients.matchAll();
+    e.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames
+                    .filter((name) => !CURRENT_CACHES.includes(name))
+                    .map((name) => caches.delete(name))
+            );
         })
-        .then((clients) => {
-            clients.forEach(client => client.navigate(client.url));
+    );
+    self.clients.claim();
+    // Notificar a los clientes que hay una versión nueva activa
+    self.clients.matchAll({ type: 'window' }).then((clients) => {
+        clients.forEach((client) => {
+            client.postMessage({ type: 'SW_UPDATED', version: APP_VERSION });
         });
+    });
 });
 
 // Interceptar peticiones de red con manejo avanzado
 self.addEventListener('fetch', event => {
-    const { request } = event;
+    const request = event.request;
     const url = new URL(request.url);
-    
-    // Estrategia: Network First para archivos HTML y JS
-    if (request.mode === 'navigate' || (request.destination === 'script')) {
-        event.respondWith(
-            fetch(request).catch(() => {
-                return caches.match(request);
-            })
-        );
+
+    // Ignorar específicamente AdSense y otras APIs externas problemáticas
+    if (url.hostname.includes('googlesyndication.com') ||
+        url.hostname.includes('googletagmanager.com') ||
+        url.hostname.includes('google-analytics.com') ||
+        url.hostname.includes('doubleclick.net')) {
+        return; // Deja pasar sin intervención del SW
+    }
+
+    // Ignorar APIs externas no deseadas (permitir fuentes y cdnjs)
+    if (url.origin !== location.origin &&
+        !url.hostname.includes('fonts.googleapis.com') &&
+        !url.hostname.includes('fonts.gstatic.com') &&
+        !url.hostname.includes('cdnjs.cloudflare.com') &&
+        !url.hostname.includes('cracktotal.com')) {
         return;
     }
-    
-    // Estrategia: Cache First para todo lo demás (CSS, imágenes, etc.)
+
+    // Ruteo por tipo de recurso
+    if (request.mode === 'navigate') {
+        event.respondWith(networkFirstWithInvalidation(request));
+        return;
+    }
+
+    if (request.destination === 'script') {
+        event.respondWith(networkFirstWithInvalidation(request));
+        return;
+    }
+
+    if (isCssFile(request.url)) {
+        event.respondWith(networkFirstWithInvalidation(request));
+        return;
+    }
+
+    if (isImage(request.url)) {
+        event.respondWith(cacheFirstImages(request));
+        return;
+    }
+
+    if (isApiRequest(request.url)) {
+        event.respondWith(networkFirstWithTimeout(request));
+        return;
+    }
+
+    if (isStaticAsset(request.url)) {
+        event.respondWith(cacheFirstWithVersioning(request));
+        return;
+    }
+
+    if (isDynamicAsset(request.url)) {
+        event.respondWith(staleWhileRevalidateStrategy(request));
+        return;
+    }
+
+    // Fallback: intenta red, si falla usa cache
     event.respondWith(
-        caches.match(request).then((response) => {
-            return response || fetch(request).then((fetchResponse) => {
-                // Ignorar peticiones que no son GET
-                if (fetchResponse.method !== 'GET') {
-                    return;
-                }
-                
-                // Ignorar específicamente AdSense y otras APIs externas problemáticas
-                if (url.hostname.includes('googlesyndication.com') ||
-                    url.hostname.includes('googletagmanager.com') ||
-                    url.hostname.includes('google-analytics.com') ||
-                    url.hostname.includes('doubleclick.net')) {
-                    return; // Let these requests go through without SW intervention
-                }
-                
-                // Ignorar peticiones a APIs externas que no queremos cachear
-                if (url.origin !== location.origin && 
-                    !url.hostname.includes('fonts.googleapis.com') &&
-                    !url.hostname.includes('fonts.gstatic.com') &&
-                    !url.hostname.includes('cdnjs.cloudflare.com') &&
-                    !url.hostname.includes('cracktotal.com')) {
-                    return;
-                }
-                
-                // Estrategias de cache diferentes según el tipo de recurso
-                if (isNavigationRequest(request)) {
-                    // Para navegación: Network first con cache invalidation
-                    return networkFirstWithInvalidation(request);
-                } else if (isImage(request.url)) {
-                    // Para imágenes: Cache first con limpieza automática
-                    return cacheFirstImages(request);
-                } else if (isCssFile(request.url)) {
-                    // Para CSS: Network first con cache invalidation
-                    return networkFirstWithInvalidation(request);
-                } else if (isStaticAsset(request.url)) {
-                    // Para recursos estáticos (excluyendo CSS ahora): Cache first con versioning
-                    return cacheFirstWithVersioning(request);
-                } else if (isDynamicAsset(request.url)) {
-                    // Para recursos dinámicos: Stale while revalidate
-                    return staleWhileRevalidateStrategy(request);
-                } else if (isApiRequest(request.url)) {
-                    // Para APIs: Network first con timeout
-                    return networkFirstWithTimeout(request);
-                }
-            });
-        })
+        fetch(request).catch(() => caches.match(request) || (isNavigationRequest(request) ? caches.match('/index.html') : createOfflineResponse()))
     );
 });
 

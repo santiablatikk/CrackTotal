@@ -254,18 +254,7 @@
             }
         })();
 
-        // Service Worker registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                        console.log('✅ SW registered successfully');
-                    })
-                    .catch(function(error) {
-                        console.log('🚨 SW registration failed:', error);
-                    });
-            });
-        }
+        // Service Worker registration centralizado en assets/js/main.js
 
         // Error tracking
         window.addEventListener('error', function(event) {

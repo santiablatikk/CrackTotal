@@ -204,125 +204,6 @@
     ]
   },
   {
-    "id": 1012,
-    "title": "Leyendas del Real Madrid",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "raúl (esp)",
-      "di stéfano (arg)",
-      "puskás (hun)",
-      "gento (esp)",
-      "casillas (esp)",
-      "zidane (fra)",
-      "ramos (esp)",
-      "cristiano (por)",
-      "benzema (fra)"
-    ]
-  },
-  {
-    "id": 1013,
-    "title": "Leyendas del Barcelona",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "messi (arg)",
-      "xavi (esp)",
-      "iniesta (esp)",
-      "cruyff (ned)",
-      "ronaldinho (bra)",
-      "puyol (esp)",
-      "suárez (uru)",
-      "eto o (cmr)",
-      "neymar (bra)",
-      "stoichkov (bul)"
-    ]
-  },
-  {
-    "id": 1014,
-    "title": "Leyendas del Bayern",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "müller (ger)",
-      "beckenbauer (ger)",
-      "rummenigge (ger)",
-      "robben (ned)",
-      "ribéry (fra)",
-      "lewandowski (pol)",
-      "kahn (ger)",
-      "schweinsteiger (ger)",
-      "lahm (ger)",
-      "neuer (ger)"
-    ]
-  },
-  {
-    "id": 1015,
-    "title": "Leyendas del Manchester United",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "giggs (wal)",
-      "scholes (eng)",
-      "rooney (eng)",
-      "cantona (fra)",
-      "keane (irl)",
-      "ronaldo (por)",
-      "van nistelrooy (ned)",
-      "beckham (eng)",
-      "yorke (tto)",
-      "cole (eng)"
-    ]
-  },
-  {
-    "id": 1016,
-    "title": "Leyendas del Liverpool",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "gerrard (eng)",
-      "dalglish (sco)",
-      "suárez (uru)",
-      "torres (esp)",
-      "rush (wal)",
-      "fowler (eng)",
-      "salah (egy)",
-      "mane (sen)",
-      "keegan (eng)",
-      "barnes (eng)"
-    ]
-  },
-  {
-    "id": 1017,
-    "title": "Leyendas de la Juventus",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "del piero (ita)",
-      "buffon (ita)",
-      "nedved (cze)",
-      "platini (fra)",
-      "trezeguet (fra)",
-      "tardelli (ita)",
-      "baggio (ita)",
-      "chiellini (ita)",
-      "bonucci (ita)",
-      "conte (ita)"
-    ]
-  },
-  {
-    "id": 1018,
-    "title": "Leyendas del AC Milan",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "maldini (ita)",
-      "baresi (ita)",
-      "shevchenko (ukr)",
-      "kaká (bra)",
-      "inzaghi (ita)",
-      "van basten (ned)",
-      "gullit (ned)",
-      "pirlo (ita)",
-      "seedorf (ned)",
-      "donadoni (ita)"
-    ]
-  },
-  {
     "id": 1019,
     "title": "Goleadores históricos de Portugal (selección)",
     "source": "transfermarkt-approx",
@@ -405,142 +286,6 @@
       "altobelli (ita)",
       "zola (ita)",
       "rivera (ita)"
-    ]
-  },
-  {
-    "id": 1024,
-    "title": "Leyendas del Atlético de Madrid",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "griezmann (fra)",
-      "falcao (col)",
-      "aguero (arg)",
-      "godín (uru)",
-      "gabi (esp)",
-      "luís aragonés (esp)",
-      "torres (esp)",
-      "koke (esp)",
-      "oblak (svn)",
-      "simão (por)"
-    ]
-  },
-  {
-    "id": 1025,
-    "title": "Leyendas del Borussia Dortmund",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "reus (ger)",
-      "zorc (ger)",
-      "sammer (ger)",
-      "koller (cze)",
-      "aubameyang (gab)",
-      "lewandowski (pol)",
-      "gotze (ger)",
-      "weidenfeller (ger)",
-      "kagaw a (jpn)",
-      "ricken (ger)"
-    ]
-  },
-  {
-    "id": 1026,
-    "title": "Leyendas del PSG",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ibrahimovic (swe)",
-      "cavani (uru)",
-      "mbappé (fra)",
-      "neymar (bra)",
-      "ronaldinho (bra)",
-      "maxwell (bra)",
-      "thiago silva (bra)",
-      "marquinhos (bra)",
-      "pauleta (por)",
-      "saf et (fra)"
-    ]
-  },
-  {
-    "id": 1027,
-    "title": "Leyendas del Chelsea",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "lampard (eng)",
-      "terry (eng)",
-      "drogba (civ)",
-      "zola (ita)",
-      "cech (cze)",
-      "hazard (bel)",
-      "cole (eng)",
-      "essien (gha)",
-      "costa (esp)",
-      "kante (fra)"
-    ]
-  },
-  {
-    "id": 1028,
-    "title": "Leyendas del Arsenal",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "henry (fra)",
-      "bergkamp (ned)",
-      "pires (fra)",
-      "vieira (fra)",
-      "adams (eng)",
-      "seaman (eng)",
-      "wright (eng)",
-      "sanchez (chi)",
-      "fabregas (esp)",
-      "oxlade (eng)"
-    ]
-  },
-  {
-    "id": 1029,
-    "title": "Leyendas del Inter",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "zanetti (arg)",
-      "milito (arg)",
-      "eto o (cmr)",
-      "messi? (arg)",
-      "materazzi (ita)",
-      "zanetti? (arg)",
-      "cambiasso (arg)",
-      "sneijder (ned)",
-      "ibrahimovic (swe)",
-      "adriano (bra)"
-    ]
-  },
-  {
-    "id": 1030,
-    "title": "Leyendas del River Plate",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "francescoli (uru)",
-      "ortega (arg)",
-      "pratto (arg)",
-      "gallardo (arg)",
-      "cavenaghi (arg)",
-      "alario (arg)",
-      "borré (col)",
-      "dalessandro (arg)",
-      "pinola (arg)",
-      "enzo perez (arg)"
-    ]
-  },
-  {
-    "id": 1031,
-    "title": "Leyendas de Boca Juniors",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "riquelme (arg)",
-      "palermo (arg)",
-      "tevez (arg)",
-      "schelotto (arg)",
-      "battaglia (arg)",
-      "guille (arg)",
-      "delgado (arg)",
-      "carlos bianchi (arg)",
-      "maradona (arg)",
-      "barrios (col)"
     ]
   },
   {
@@ -646,74 +391,6 @@
     ]
   },
   {
-    "id": 1038,
-    "title": "Leyendas del Sevilla",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "kanouté (mli)",
-      "navas (esp)",
-      "banega (arg)",
-      "rakitic (cro)",
-      "negredo (esp)",
-      "adriano (bra)",
-      "bacca (col)",
-      "reyes (esp)",
-      "en-nesyri (mar)",
-      "poulsen (den)"
-    ]
-  },
-  {
-    "id": 1039,
-    "title": "Leyendas del Valencia",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "villa (esp)",
-      "mendieta (esp)",
-      "ayala (arg)",
-      "albelda (esp)",
-      "canizares (esp)",
-      "silva (esp)",
-      "mista (esp)",
-      "baraja (esp)",
-      "pablo aimar (arg)",
-      "soldado (esp)"
-    ]
-  },
-  {
-    "id": 1040,
-    "title": "Leyendas del Napoli",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "maradona (arg)",
-      "hamsik (svk)",
-      "mertens (bel)",
-      "cavani (uru)",
-      "careca (bra)",
-      "insigne (ita)",
-      "kvaratskhelia (geo)",
-      "osimhen (nga)",
-      "koulibaly (sen)",
-      "zielinski (pol)"
-    ]
-  },
-  {
-    "id": 1041,
-    "title": "Leyendas del Roma",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "totti (ita)",
-      "de rossi (ita)",
-      "batistuta (arg)",
-      "montella (ita)",
-      "conti (ita)",
-      "falcão (bra)",
-      "nainggolan (bel)",
-      "cassano (ita)",
-      "emerson (bra)",
-      "alisson (bra)"
-    ]
-  },
-  {
     "id": 1042,
     "title": "Goleadores históricos Eredivisie",
     "source": "transfermarkt-approx",
@@ -782,25 +459,8 @@
     ]
   },
   {
-    "id": 1046,
-    "title": "Goleadores históricos de Uruguay (clubes)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "peñarol (uru)",
-      "nacional (uru)",
-      "suárez (uru)",
-      "francescoli (uru)",
-      "forlán (uru)",
-      "recoba (uru)",
-      "ruben sosa (uru)",
-      "luis romero (uru)",
-      "pantera (uru)",
-      "silva (uru)"
-    ]
-  },
-  {
     "id": 1047,
-    "title": "Goleadores históricos Champions League (variante 47)",
+    "title": "Goleadores históricos Champions League",
     "source": "transfermarkt-approx",
     "answers": [
       "ronaldo (por)",
@@ -817,7 +477,7 @@
   },
   {
     "id": 1048,
-    "title": "Goleadores históricos Premier League (variante 48)",
+    "title": "Goleadores históricos Premier League",
     "source": "transfermarkt-approx",
     "answers": [
       "shearer (eng)",
@@ -834,7 +494,7 @@
   },
   {
     "id": 1049,
-    "title": "Goleadores históricos LaLiga (variante 49)",
+    "title": "Goleadores históricos LaLiga",
     "source": "transfermarkt-approx",
     "answers": [
       "messi (arg)",
@@ -851,7 +511,7 @@
   },
   {
     "id": 1050,
-    "title": "Goleadores históricos Serie A (variante 50)",
+    "title": "Goleadores históricos Serie A",
     "source": "transfermarkt-approx",
     "answers": [
       "piola (ita)",
@@ -868,7 +528,7 @@
   },
   {
     "id": 1051,
-    "title": "Goleadores históricos Bundesliga (variante 51)",
+    "title": "Goleadores históricos Bundesliga",
     "source": "transfermarkt-approx",
     "answers": [
       "müller (ger)",
@@ -885,7 +545,7 @@
   },
   {
     "id": 1052,
-    "title": "Goleadores históricos Ligue 1 (variante 52)",
+    "title": "Goleadores históricos Ligue 1",
     "source": "transfermarkt-approx",
     "answers": [
       "delio onnis (arg)",
@@ -902,7 +562,7 @@
   },
   {
     "id": 1053,
-    "title": "Goleadores históricos de Argentina (selección) (variante 53)",
+    "title": "Goleadores históricos de Argentina (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "messi (arg)",
@@ -919,7 +579,7 @@
   },
   {
     "id": 1054,
-    "title": "Goleadores históricos de Brasil (selección) (variante 54)",
+    "title": "Goleadores históricos de Brasil (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "neymar (bra)",
@@ -936,7 +596,7 @@
   },
   {
     "id": 1055,
-    "title": "Goleadores históricos de Alemania (selección) (variante 55)",
+    "title": "Goleadores históricos de Alemania (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "klose (ger)",
@@ -953,7 +613,7 @@
   },
   {
     "id": 1056,
-    "title": "Goleadores históricos de España (selección) (variante 56)",
+    "title": "Goleadores históricos de España (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "villa (esp)",
@@ -970,7 +630,7 @@
   },
   {
     "id": 1057,
-    "title": "Goleadores históricos de Francia (selección) (variante 57)",
+    "title": "Goleadores históricos de Francia (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "giroud (fra)",
@@ -987,7 +647,7 @@
   },
   {
     "id": 1058,
-    "title": "Goleadores históricos de Inglaterra (selección) (variante 58)",
+    "title": "Goleadores históricos de Inglaterra (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "kane (eng)",
@@ -1003,127 +663,8 @@
     ]
   },
   {
-    "id": 1059,
-    "title": "Leyendas del Real Madrid (variante 59)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "raúl (esp)",
-      "di stéfano (arg)",
-      "puskás (hun)",
-      "gento (esp)",
-      "casillas (esp)",
-      "zidane (fra)",
-      "ramos (esp)",
-      "cristiano (por)",
-      "benzema (fra)"
-    ]
-  },
-  {
-    "id": 1060,
-    "title": "Leyendas del Barcelona (variante 60)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "messi (arg)",
-      "xavi (esp)",
-      "iniesta (esp)",
-      "cruyff (ned)",
-      "ronaldinho (bra)",
-      "puyol (esp)",
-      "suárez (uru)",
-      "eto o (cmr)",
-      "neymar (bra)",
-      "stoichkov (bul)"
-    ]
-  },
-  {
-    "id": 1061,
-    "title": "Leyendas del Bayern (variante 61)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "müller (ger)",
-      "beckenbauer (ger)",
-      "rummenigge (ger)",
-      "robben (ned)",
-      "ribéry (fra)",
-      "lewandowski (pol)",
-      "kahn (ger)",
-      "schweinsteiger (ger)",
-      "lahm (ger)",
-      "neuer (ger)"
-    ]
-  },
-  {
-    "id": 1062,
-    "title": "Leyendas del Manchester United (variante 62)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "giggs (wal)",
-      "scholes (eng)",
-      "rooney (eng)",
-      "cantona (fra)",
-      "keane (irl)",
-      "ronaldo (por)",
-      "van nistelrooy (ned)",
-      "beckham (eng)",
-      "yorke (tto)",
-      "cole (eng)"
-    ]
-  },
-  {
-    "id": 1063,
-    "title": "Leyendas del Liverpool (variante 63)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "gerrard (eng)",
-      "dalglish (sco)",
-      "suárez (uru)",
-      "torres (esp)",
-      "rush (wal)",
-      "fowler (eng)",
-      "salah (egy)",
-      "mane (sen)",
-      "keegan (eng)",
-      "barnes (eng)"
-    ]
-  },
-  {
-    "id": 1064,
-    "title": "Leyendas de la Juventus (variante 64)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "del piero (ita)",
-      "buffon (ita)",
-      "nedved (cze)",
-      "platini (fra)",
-      "trezeguet (fra)",
-      "tardelli (ita)",
-      "baggio (ita)",
-      "chiellini (ita)",
-      "bonucci (ita)",
-      "conte (ita)"
-    ]
-  },
-  {
-    "id": 1065,
-    "title": "Leyendas del AC Milan (variante 65)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "maldini (ita)",
-      "baresi (ita)",
-      "shevchenko (ukr)",
-      "kaká (bra)",
-      "inzaghi (ita)",
-      "van basten (ned)",
-      "gullit (ned)",
-      "pirlo (ita)",
-      "seedorf (ned)",
-      "donadoni (ita)"
-    ]
-  },
-  {
     "id": 1066,
-    "title": "Goleadores históricos de Portugal (selección) (variante 66)",
+    "title": "Goleadores históricos de Portugal (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "ronaldo (por)",
@@ -1140,7 +681,7 @@
   },
   {
     "id": 1067,
-    "title": "Goleadores históricos de Países Bajos (selección) (variante 67)",
+    "title": "Goleadores históricos de Países Bajos (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "van persie (ned)",
@@ -1157,7 +698,7 @@
   },
   {
     "id": 1068,
-    "title": "Goleadores históricos de Uruguay (selección) (variante 68)",
+    "title": "Goleadores históricos de Uruguay (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "suárez (uru)",
@@ -1174,7 +715,7 @@
   },
   {
     "id": 1069,
-    "title": "Goleadores históricos de México (selección) (variante 69)",
+    "title": "Goleadores históricos de México (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "chicharito (mex)",
@@ -1191,7 +732,7 @@
   },
   {
     "id": 1070,
-    "title": "Goleadores históricos de Italia (selección) (variante 70)",
+    "title": "Goleadores históricos de Italia (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "immobile (ita)",
@@ -1207,144 +748,8 @@
     ]
   },
   {
-    "id": 1071,
-    "title": "Leyendas del Atlético de Madrid (variante 71)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "griezmann (fra)",
-      "falcao (col)",
-      "aguero (arg)",
-      "godín (uru)",
-      "gabi (esp)",
-      "luís aragonés (esp)",
-      "torres (esp)",
-      "koke (esp)",
-      "oblak (svn)",
-      "simão (por)"
-    ]
-  },
-  {
-    "id": 1072,
-    "title": "Leyendas del Borussia Dortmund (variante 72)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "reus (ger)",
-      "zorc (ger)",
-      "sammer (ger)",
-      "koller (cze)",
-      "aubameyang (gab)",
-      "lewandowski (pol)",
-      "gotze (ger)",
-      "weidenfeller (ger)",
-      "kagaw a (jpn)",
-      "ricken (ger)"
-    ]
-  },
-  {
-    "id": 1073,
-    "title": "Leyendas del PSG (variante 73)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ibrahimovic (swe)",
-      "cavani (uru)",
-      "mbappé (fra)",
-      "neymar (bra)",
-      "ronaldinho (bra)",
-      "maxwell (bra)",
-      "thiago silva (bra)",
-      "marquinhos (bra)",
-      "pauleta (por)",
-      "saf et (fra)"
-    ]
-  },
-  {
-    "id": 1074,
-    "title": "Leyendas del Chelsea (variante 74)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "lampard (eng)",
-      "terry (eng)",
-      "drogba (civ)",
-      "zola (ita)",
-      "cech (cze)",
-      "hazard (bel)",
-      "cole (eng)",
-      "essien (gha)",
-      "costa (esp)",
-      "kante (fra)"
-    ]
-  },
-  {
-    "id": 1075,
-    "title": "Leyendas del Arsenal (variante 75)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "henry (fra)",
-      "bergkamp (ned)",
-      "pires (fra)",
-      "vieira (fra)",
-      "adams (eng)",
-      "seaman (eng)",
-      "wright (eng)",
-      "sanchez (chi)",
-      "fabregas (esp)",
-      "oxlade (eng)"
-    ]
-  },
-  {
-    "id": 1076,
-    "title": "Leyendas del Inter (variante 76)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "zanetti (arg)",
-      "milito (arg)",
-      "eto o (cmr)",
-      "messi? (arg)",
-      "materazzi (ita)",
-      "zanetti? (arg)",
-      "cambiasso (arg)",
-      "sneijder (ned)",
-      "ibrahimovic (swe)",
-      "adriano (bra)"
-    ]
-  },
-  {
-    "id": 1077,
-    "title": "Leyendas del River Plate (variante 77)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "francescoli (uru)",
-      "ortega (arg)",
-      "pratto (arg)",
-      "gallardo (arg)",
-      "cavenaghi (arg)",
-      "alario (arg)",
-      "borré (col)",
-      "dalessandro (arg)",
-      "pinola (arg)",
-      "enzo perez (arg)"
-    ]
-  },
-  {
-    "id": 1078,
-    "title": "Leyendas de Boca Juniors (variante 78)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "riquelme (arg)",
-      "palermo (arg)",
-      "tevez (arg)",
-      "schelotto (arg)",
-      "battaglia (arg)",
-      "guille (arg)",
-      "delgado (arg)",
-      "carlos bianchi (arg)",
-      "maradona (arg)",
-      "barrios (col)"
-    ]
-  },
-  {
     "id": 1079,
-    "title": "Goleadores históricos MLS (variante 79)",
+    "title": "Goleadores históricos MLS",
     "source": "transfermarkt-approx",
     "answers": [
       "wondolowski (usa)",
@@ -1361,7 +766,7 @@
   },
   {
     "id": 1080,
-    "title": "Goleadores históricos Liga MX (variante 80)",
+    "title": "Goleadores históricos Liga MX",
     "source": "transfermarkt-approx",
     "answers": [
       "cardozo (par)",
@@ -1378,7 +783,7 @@
   },
   {
     "id": 1081,
-    "title": "Goleadores históricos Brasileirão (variante 81)",
+    "title": "Goleadores históricos Brasileirão",
     "source": "transfermarkt-approx",
     "answers": [
       "roberto dinamit e (bra)",
@@ -1395,7 +800,7 @@
   },
   {
     "id": 1082,
-    "title": "Goleadores históricos Copa Libertadores (variante 82)",
+    "title": "Goleadores históricos Copa Libertadores",
     "source": "transfermarkt-approx",
     "answers": [
       "aristizábal (col)",
@@ -1412,7 +817,7 @@
   },
   {
     "id": 1083,
-    "title": "Goleadores históricos Copa América (variante 83)",
+    "title": "Goleadores históricos Copa América",
     "source": "transfermarkt-approx",
     "answers": [
       "zizinho (bra)",
@@ -1429,7 +834,7 @@
   },
   {
     "id": 1084,
-    "title": "Goleadores históricos Eurocopa (variante 84)",
+    "title": "Goleadores históricos Eurocopa",
     "source": "transfermarkt-approx",
     "answers": [
       "ronaldo (por)",
@@ -1445,76 +850,8 @@
     ]
   },
   {
-    "id": 1085,
-    "title": "Leyendas del Sevilla (variante 85)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "kanouté (mli)",
-      "navas (esp)",
-      "banega (arg)",
-      "rakitic (cro)",
-      "negredo (esp)",
-      "adriano (bra)",
-      "bacca (col)",
-      "reyes (esp)",
-      "en-nesyri (mar)",
-      "poulsen (den)"
-    ]
-  },
-  {
-    "id": 1086,
-    "title": "Leyendas del Valencia (variante 86)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "villa (esp)",
-      "mendieta (esp)",
-      "ayala (arg)",
-      "albelda (esp)",
-      "canizares (esp)",
-      "silva (esp)",
-      "mista (esp)",
-      "baraja (esp)",
-      "pablo aimar (arg)",
-      "soldado (esp)"
-    ]
-  },
-  {
-    "id": 1087,
-    "title": "Leyendas del Napoli (variante 87)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "maradona (arg)",
-      "hamsik (svk)",
-      "mertens (bel)",
-      "cavani (uru)",
-      "careca (bra)",
-      "insigne (ita)",
-      "kvaratskhelia (geo)",
-      "osimhen (nga)",
-      "koulibaly (sen)",
-      "zielinski (pol)"
-    ]
-  },
-  {
-    "id": 1088,
-    "title": "Leyendas del Roma (variante 88)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "totti (ita)",
-      "de rossi (ita)",
-      "batistuta (arg)",
-      "montella (ita)",
-      "conti (ita)",
-      "falcão (bra)",
-      "nainggolan (bel)",
-      "cassano (ita)",
-      "emerson (bra)",
-      "alisson (bra)"
-    ]
-  },
-  {
     "id": 1089,
-    "title": "Goleadores históricos Eredivisie (variante 89)",
+    "title": "Goleadores históricos Eredivisie",
     "source": "transfermarkt-approx",
     "answers": [
       "willy van der kuijlen (ned)",
@@ -1531,7 +868,7 @@
   },
   {
     "id": 1090,
-    "title": "Goleadores históricos Primeira Liga (variante 90)",
+    "title": "Goleadores históricos Primeira Liga",
     "source": "transfermarkt-approx",
     "answers": [
       "fernando peyroteo (por)",
@@ -1548,7 +885,7 @@
   },
   {
     "id": 1091,
-    "title": "Goleadores históricos de Chile (selección) (variante 91)",
+    "title": "Goleadores históricos de Chile (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "sánchez (chi)",
@@ -1565,7 +902,7 @@
   },
   {
     "id": 1092,
-    "title": "Goleadores históricos de Colombia (selección) (variante 92)",
+    "title": "Goleadores históricos de Colombia (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "falcao (col)",
@@ -1581,25 +918,8 @@
     ]
   },
   {
-    "id": 1093,
-    "title": "Goleadores históricos de Uruguay (clubes) (variante 93)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "peñarol (uru)",
-      "nacional (uru)",
-      "suárez (uru)",
-      "francescoli (uru)",
-      "forlán (uru)",
-      "recoba (uru)",
-      "ruben sosa (uru)",
-      "luis romero (uru)",
-      "pantera (uru)",
-      "silva (uru)"
-    ]
-  },
-  {
     "id": 1094,
-    "title": "Goleadores históricos Champions League (variante 94)",
+    "title": "Goleadores históricos Champions League",
     "source": "transfermarkt-approx",
     "answers": [
       "ronaldo (por)",
@@ -1616,7 +936,7 @@
   },
   {
     "id": 1095,
-    "title": "Goleadores históricos Premier League (variante 95)",
+    "title": "Goleadores históricos Premier League",
     "source": "transfermarkt-approx",
     "answers": [
       "shearer (eng)",
@@ -1633,7 +953,7 @@
   },
   {
     "id": 1096,
-    "title": "Goleadores históricos LaLiga (variante 96)",
+    "title": "Goleadores históricos LaLiga",
     "source": "transfermarkt-approx",
     "answers": [
       "messi (arg)",
@@ -1650,7 +970,7 @@
   },
   {
     "id": 1097,
-    "title": "Goleadores históricos Serie A (variante 97)",
+    "title": "Goleadores históricos Serie A",
     "source": "transfermarkt-approx",
     "answers": [
       "piola (ita)",
@@ -1667,7 +987,7 @@
   },
   {
     "id": 1098,
-    "title": "Goleadores históricos Bundesliga (variante 98)",
+    "title": "Goleadores históricos Bundesliga",
     "source": "transfermarkt-approx",
     "answers": [
       "müller (ger)",
@@ -1684,7 +1004,7 @@
   },
   {
     "id": 1099,
-    "title": "Goleadores históricos Ligue 1 (variante 99)",
+    "title": "Goleadores históricos Ligue 1",
     "source": "transfermarkt-approx",
     "answers": [
       "delio onnis (arg)",
@@ -1701,7 +1021,7 @@
   },
   {
     "id": 1100,
-    "title": "Goleadores históricos de Argentina (selección) (variante 100)",
+    "title": "Goleadores históricos de Argentina (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "messi (arg)",
@@ -1718,7 +1038,7 @@
   },
   {
     "id": 1101,
-    "title": "Goleadores históricos de Brasil (selección) (variante 101)",
+    "title": "Goleadores históricos de Brasil (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "neymar (bra)",
@@ -1735,7 +1055,7 @@
   },
   {
     "id": 1102,
-    "title": "Goleadores históricos de Alemania (selección) (variante 102)",
+    "title": "Goleadores históricos de Alemania (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "klose (ger)",
@@ -1752,7 +1072,7 @@
   },
   {
     "id": 1103,
-    "title": "Goleadores históricos de España (selección) (variante 103)",
+    "title": "Goleadores históricos de España (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "villa (esp)",
@@ -1769,7 +1089,7 @@
   },
   {
     "id": 1104,
-    "title": "Goleadores históricos de Francia (selección) (variante 104)",
+    "title": "Goleadores históricos de Francia (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "giroud (fra)",
@@ -1786,7 +1106,7 @@
   },
   {
     "id": 1105,
-    "title": "Goleadores históricos de Inglaterra (selección) (variante 105)",
+    "title": "Goleadores históricos de Inglaterra (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "kane (eng)",
@@ -1802,127 +1122,8 @@
     ]
   },
   {
-    "id": 1106,
-    "title": "Leyendas del Real Madrid (variante 106)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "raúl (esp)",
-      "di stéfano (arg)",
-      "puskás (hun)",
-      "gento (esp)",
-      "casillas (esp)",
-      "zidane (fra)",
-      "ramos (esp)",
-      "cristiano (por)",
-      "benzema (fra)"
-    ]
-  },
-  {
-    "id": 1107,
-    "title": "Leyendas del Barcelona (variante 107)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "messi (arg)",
-      "xavi (esp)",
-      "iniesta (esp)",
-      "cruyff (ned)",
-      "ronaldinho (bra)",
-      "puyol (esp)",
-      "suárez (uru)",
-      "eto o (cmr)",
-      "neymar (bra)",
-      "stoichkov (bul)"
-    ]
-  },
-  {
-    "id": 1108,
-    "title": "Leyendas del Bayern (variante 108)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "müller (ger)",
-      "beckenbauer (ger)",
-      "rummenigge (ger)",
-      "robben (ned)",
-      "ribéry (fra)",
-      "lewandowski (pol)",
-      "kahn (ger)",
-      "schweinsteiger (ger)",
-      "lahm (ger)",
-      "neuer (ger)"
-    ]
-  },
-  {
-    "id": 1109,
-    "title": "Leyendas del Manchester United (variante 109)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "giggs (wal)",
-      "scholes (eng)",
-      "rooney (eng)",
-      "cantona (fra)",
-      "keane (irl)",
-      "ronaldo (por)",
-      "van nistelrooy (ned)",
-      "beckham (eng)",
-      "yorke (tto)",
-      "cole (eng)"
-    ]
-  },
-  {
-    "id": 1110,
-    "title": "Leyendas del Liverpool (variante 110)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "gerrard (eng)",
-      "dalglish (sco)",
-      "suárez (uru)",
-      "torres (esp)",
-      "rush (wal)",
-      "fowler (eng)",
-      "salah (egy)",
-      "mane (sen)",
-      "keegan (eng)",
-      "barnes (eng)"
-    ]
-  },
-  {
-    "id": 1111,
-    "title": "Leyendas de la Juventus (variante 111)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "del piero (ita)",
-      "buffon (ita)",
-      "nedved (cze)",
-      "platini (fra)",
-      "trezeguet (fra)",
-      "tardelli (ita)",
-      "baggio (ita)",
-      "chiellini (ita)",
-      "bonucci (ita)",
-      "conte (ita)"
-    ]
-  },
-  {
-    "id": 1112,
-    "title": "Leyendas del AC Milan (variante 112)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "maldini (ita)",
-      "baresi (ita)",
-      "shevchenko (ukr)",
-      "kaká (bra)",
-      "inzaghi (ita)",
-      "van basten (ned)",
-      "gullit (ned)",
-      "pirlo (ita)",
-      "seedorf (ned)",
-      "donadoni (ita)"
-    ]
-  },
-  {
     "id": 1113,
-    "title": "Goleadores históricos de Portugal (selección) (variante 113)",
+    "title": "Goleadores históricos de Portugal (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "ronaldo (por)",
@@ -1939,7 +1140,7 @@
   },
   {
     "id": 1114,
-    "title": "Goleadores históricos de Países Bajos (selección) (variante 114)",
+    "title": "Goleadores históricos de Países Bajos (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "van persie (ned)",
@@ -1956,7 +1157,7 @@
   },
   {
     "id": 1115,
-    "title": "Goleadores históricos de Uruguay (selección) (variante 115)",
+    "title": "Goleadores históricos de Uruguay (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "suárez (uru)",
@@ -1973,7 +1174,7 @@
   },
   {
     "id": 1116,
-    "title": "Goleadores históricos de México (selección) (variante 116)",
+    "title": "Goleadores históricos de México (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "chicharito (mex)",
@@ -1990,7 +1191,7 @@
   },
   {
     "id": 1117,
-    "title": "Goleadores históricos de Italia (selección) (variante 117)",
+    "title": "Goleadores históricos de Italia (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "immobile (ita)",
@@ -2006,144 +1207,8 @@
     ]
   },
   {
-    "id": 1118,
-    "title": "Leyendas del Atlético de Madrid (variante 118)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "griezmann (fra)",
-      "falcao (col)",
-      "aguero (arg)",
-      "godín (uru)",
-      "gabi (esp)",
-      "luís aragonés (esp)",
-      "torres (esp)",
-      "koke (esp)",
-      "oblak (svn)",
-      "simão (por)"
-    ]
-  },
-  {
-    "id": 1119,
-    "title": "Leyendas del Borussia Dortmund (variante 119)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "reus (ger)",
-      "zorc (ger)",
-      "sammer (ger)",
-      "koller (cze)",
-      "aubameyang (gab)",
-      "lewandowski (pol)",
-      "gotze (ger)",
-      "weidenfeller (ger)",
-      "kagaw a (jpn)",
-      "ricken (ger)"
-    ]
-  },
-  {
-    "id": 1120,
-    "title": "Leyendas del PSG (variante 120)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ibrahimovic (swe)",
-      "cavani (uru)",
-      "mbappé (fra)",
-      "neymar (bra)",
-      "ronaldinho (bra)",
-      "maxwell (bra)",
-      "thiago silva (bra)",
-      "marquinhos (bra)",
-      "pauleta (por)",
-      "saf et (fra)"
-    ]
-  },
-  {
-    "id": 1121,
-    "title": "Leyendas del Chelsea (variante 121)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "lampard (eng)",
-      "terry (eng)",
-      "drogba (civ)",
-      "zola (ita)",
-      "cech (cze)",
-      "hazard (bel)",
-      "cole (eng)",
-      "essien (gha)",
-      "costa (esp)",
-      "kante (fra)"
-    ]
-  },
-  {
-    "id": 1122,
-    "title": "Leyendas del Arsenal (variante 122)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "henry (fra)",
-      "bergkamp (ned)",
-      "pires (fra)",
-      "vieira (fra)",
-      "adams (eng)",
-      "seaman (eng)",
-      "wright (eng)",
-      "sanchez (chi)",
-      "fabregas (esp)",
-      "oxlade (eng)"
-    ]
-  },
-  {
-    "id": 1123,
-    "title": "Leyendas del Inter (variante 123)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "zanetti (arg)",
-      "milito (arg)",
-      "eto o (cmr)",
-      "messi? (arg)",
-      "materazzi (ita)",
-      "zanetti? (arg)",
-      "cambiasso (arg)",
-      "sneijder (ned)",
-      "ibrahimovic (swe)",
-      "adriano (bra)"
-    ]
-  },
-  {
-    "id": 1124,
-    "title": "Leyendas del River Plate (variante 124)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "francescoli (uru)",
-      "ortega (arg)",
-      "pratto (arg)",
-      "gallardo (arg)",
-      "cavenaghi (arg)",
-      "alario (arg)",
-      "borré (col)",
-      "dalessandro (arg)",
-      "pinola (arg)",
-      "enzo perez (arg)"
-    ]
-  },
-  {
-    "id": 1125,
-    "title": "Leyendas de Boca Juniors (variante 125)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "riquelme (arg)",
-      "palermo (arg)",
-      "tevez (arg)",
-      "schelotto (arg)",
-      "battaglia (arg)",
-      "guille (arg)",
-      "delgado (arg)",
-      "carlos bianchi (arg)",
-      "maradona (arg)",
-      "barrios (col)"
-    ]
-  },
-  {
     "id": 1126,
-    "title": "Goleadores históricos MLS (variante 126)",
+    "title": "Goleadores históricos MLS",
     "source": "transfermarkt-approx",
     "answers": [
       "wondolowski (usa)",
@@ -2160,7 +1225,7 @@
   },
   {
     "id": 1127,
-    "title": "Goleadores históricos Liga MX (variante 127)",
+    "title": "Goleadores históricos Liga MX",
     "source": "transfermarkt-approx",
     "answers": [
       "cardozo (par)",
@@ -2177,7 +1242,7 @@
   },
   {
     "id": 1128,
-    "title": "Goleadores históricos Brasileirão (variante 128)",
+    "title": "Goleadores históricos Brasileirão",
     "source": "transfermarkt-approx",
     "answers": [
       "roberto dinamit e (bra)",
@@ -2194,7 +1259,7 @@
   },
   {
     "id": 1129,
-    "title": "Goleadores históricos Copa Libertadores (variante 129)",
+    "title": "Goleadores históricos Copa Libertadores",
     "source": "transfermarkt-approx",
     "answers": [
       "aristizábal (col)",
@@ -2211,7 +1276,7 @@
   },
   {
     "id": 1130,
-    "title": "Goleadores históricos Copa América (variante 130)",
+    "title": "Goleadores históricos Copa América",
     "source": "transfermarkt-approx",
     "answers": [
       "zizinho (bra)",
@@ -2228,7 +1293,7 @@
   },
   {
     "id": 1131,
-    "title": "Goleadores históricos Eurocopa (variante 131)",
+    "title": "Goleadores históricos Eurocopa",
     "source": "transfermarkt-approx",
     "answers": [
       "ronaldo (por)",
@@ -2244,76 +1309,8 @@
     ]
   },
   {
-    "id": 1132,
-    "title": "Leyendas del Sevilla (variante 132)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "kanouté (mli)",
-      "navas (esp)",
-      "banega (arg)",
-      "rakitic (cro)",
-      "negredo (esp)",
-      "adriano (bra)",
-      "bacca (col)",
-      "reyes (esp)",
-      "en-nesyri (mar)",
-      "poulsen (den)"
-    ]
-  },
-  {
-    "id": 1133,
-    "title": "Leyendas del Valencia (variante 133)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "villa (esp)",
-      "mendieta (esp)",
-      "ayala (arg)",
-      "albelda (esp)",
-      "canizares (esp)",
-      "silva (esp)",
-      "mista (esp)",
-      "baraja (esp)",
-      "pablo aimar (arg)",
-      "soldado (esp)"
-    ]
-  },
-  {
-    "id": 1134,
-    "title": "Leyendas del Napoli (variante 134)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "maradona (arg)",
-      "hamsik (svk)",
-      "mertens (bel)",
-      "cavani (uru)",
-      "careca (bra)",
-      "insigne (ita)",
-      "kvaratskhelia (geo)",
-      "osimhen (nga)",
-      "koulibaly (sen)",
-      "zielinski (pol)"
-    ]
-  },
-  {
-    "id": 1135,
-    "title": "Leyendas del Roma (variante 135)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "totti (ita)",
-      "de rossi (ita)",
-      "batistuta (arg)",
-      "montella (ita)",
-      "conti (ita)",
-      "falcão (bra)",
-      "nainggolan (bel)",
-      "cassano (ita)",
-      "emerson (bra)",
-      "alisson (bra)"
-    ]
-  },
-  {
     "id": 1136,
-    "title": "Goleadores históricos Eredivisie (variante 136)",
+    "title": "Goleadores históricos Eredivisie",
     "source": "transfermarkt-approx",
     "answers": [
       "willy van der kuijlen (ned)",
@@ -2330,7 +1327,7 @@
   },
   {
     "id": 1137,
-    "title": "Goleadores históricos Primeira Liga (variante 137)",
+    "title": "Goleadores históricos Primeira Liga",
     "source": "transfermarkt-approx",
     "answers": [
       "fernando peyroteo (por)",
@@ -2347,7 +1344,7 @@
   },
   {
     "id": 1138,
-    "title": "Goleadores históricos de Chile (selección) (variante 138)",
+    "title": "Goleadores históricos de Chile (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "sánchez (chi)",
@@ -2364,7 +1361,7 @@
   },
   {
     "id": 1139,
-    "title": "Goleadores históricos de Colombia (selección) (variante 139)",
+    "title": "Goleadores históricos de Colombia (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "falcao (col)",
@@ -2380,25 +1377,8 @@
     ]
   },
   {
-    "id": 1140,
-    "title": "Goleadores históricos de Uruguay (clubes) (variante 140)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "peñarol (uru)",
-      "nacional (uru)",
-      "suárez (uru)",
-      "francescoli (uru)",
-      "forlán (uru)",
-      "recoba (uru)",
-      "ruben sosa (uru)",
-      "luis romero (uru)",
-      "pantera (uru)",
-      "silva (uru)"
-    ]
-  },
-  {
     "id": 1141,
-    "title": "Goleadores históricos Champions League (variante 141)",
+    "title": "Goleadores históricos Champions League",
     "source": "transfermarkt-approx",
     "answers": [
       "ronaldo (por)",
@@ -2415,7 +1395,7 @@
   },
   {
     "id": 1142,
-    "title": "Goleadores históricos Premier League (variante 142)",
+    "title": "Goleadores históricos Premier League",
     "source": "transfermarkt-approx",
     "answers": [
       "shearer (eng)",
@@ -2432,7 +1412,7 @@
   },
   {
     "id": 1143,
-    "title": "Goleadores históricos LaLiga (variante 143)",
+    "title": "Goleadores históricos LaLiga",
     "source": "transfermarkt-approx",
     "answers": [
       "messi (arg)",
@@ -2449,7 +1429,7 @@
   },
   {
     "id": 1144,
-    "title": "Goleadores históricos Serie A (variante 144)",
+    "title": "Goleadores históricos Serie A",
     "source": "transfermarkt-approx",
     "answers": [
       "piola (ita)",
@@ -2466,7 +1446,7 @@
   },
   {
     "id": 1145,
-    "title": "Goleadores históricos Bundesliga (variante 145)",
+    "title": "Goleadores históricos Bundesliga",
     "source": "transfermarkt-approx",
     "answers": [
       "müller (ger)",
@@ -2483,7 +1463,7 @@
   },
   {
     "id": 1146,
-    "title": "Goleadores históricos Ligue 1 (variante 146)",
+    "title": "Goleadores históricos Ligue 1",
     "source": "transfermarkt-approx",
     "answers": [
       "delio onnis (arg)",
@@ -2500,7 +1480,7 @@
   },
   {
     "id": 1147,
-    "title": "Goleadores históricos de Argentina (selección) (variante 147)",
+    "title": "Goleadores históricos de Argentina (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "messi (arg)",
@@ -2517,7 +1497,7 @@
   },
   {
     "id": 1148,
-    "title": "Goleadores históricos de Brasil (selección) (variante 148)",
+    "title": "Goleadores históricos de Brasil (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "neymar (bra)",
@@ -2534,7 +1514,7 @@
   },
   {
     "id": 1149,
-    "title": "Goleadores históricos de Alemania (selección) (variante 149)",
+    "title": "Goleadores históricos de Alemania (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "klose (ger)",
@@ -2551,7 +1531,7 @@
   },
   {
     "id": 1150,
-    "title": "Goleadores históricos de España (selección) (variante 150)",
+    "title": "Goleadores históricos de España (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "villa (esp)",
@@ -2568,7 +1548,7 @@
   },
   {
     "id": 1151,
-    "title": "Goleadores históricos de Francia (selección) (variante 151)",
+    "title": "Goleadores históricos de Francia (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "giroud (fra)",
@@ -2585,7 +1565,7 @@
   },
   {
     "id": 1152,
-    "title": "Goleadores históricos de Inglaterra (selección) (variante 152)",
+    "title": "Goleadores históricos de Inglaterra (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "kane (eng)",
@@ -2601,127 +1581,8 @@
     ]
   },
   {
-    "id": 1153,
-    "title": "Leyendas del Real Madrid (variante 153)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "raúl (esp)",
-      "di stéfano (arg)",
-      "puskás (hun)",
-      "gento (esp)",
-      "casillas (esp)",
-      "zidane (fra)",
-      "ramos (esp)",
-      "cristiano (por)",
-      "benzema (fra)"
-    ]
-  },
-  {
-    "id": 1154,
-    "title": "Leyendas del Barcelona (variante 154)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "messi (arg)",
-      "xavi (esp)",
-      "iniesta (esp)",
-      "cruyff (ned)",
-      "ronaldinho (bra)",
-      "puyol (esp)",
-      "suárez (uru)",
-      "eto o (cmr)",
-      "neymar (bra)",
-      "stoichkov (bul)"
-    ]
-  },
-  {
-    "id": 1155,
-    "title": "Leyendas del Bayern (variante 155)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "müller (ger)",
-      "beckenbauer (ger)",
-      "rummenigge (ger)",
-      "robben (ned)",
-      "ribéry (fra)",
-      "lewandowski (pol)",
-      "kahn (ger)",
-      "schweinsteiger (ger)",
-      "lahm (ger)",
-      "neuer (ger)"
-    ]
-  },
-  {
-    "id": 1156,
-    "title": "Leyendas del Manchester United (variante 156)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "giggs (wal)",
-      "scholes (eng)",
-      "rooney (eng)",
-      "cantona (fra)",
-      "keane (irl)",
-      "ronaldo (por)",
-      "van nistelrooy (ned)",
-      "beckham (eng)",
-      "yorke (tto)",
-      "cole (eng)"
-    ]
-  },
-  {
-    "id": 1157,
-    "title": "Leyendas del Liverpool (variante 157)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "gerrard (eng)",
-      "dalglish (sco)",
-      "suárez (uru)",
-      "torres (esp)",
-      "rush (wal)",
-      "fowler (eng)",
-      "salah (egy)",
-      "mane (sen)",
-      "keegan (eng)",
-      "barnes (eng)"
-    ]
-  },
-  {
-    "id": 1158,
-    "title": "Leyendas de la Juventus (variante 158)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "del piero (ita)",
-      "buffon (ita)",
-      "nedved (cze)",
-      "platini (fra)",
-      "trezeguet (fra)",
-      "tardelli (ita)",
-      "baggio (ita)",
-      "chiellini (ita)",
-      "bonucci (ita)",
-      "conte (ita)"
-    ]
-  },
-  {
-    "id": 1159,
-    "title": "Leyendas del AC Milan (variante 159)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "maldini (ita)",
-      "baresi (ita)",
-      "shevchenko (ukr)",
-      "kaká (bra)",
-      "inzaghi (ita)",
-      "van basten (ned)",
-      "gullit (ned)",
-      "pirlo (ita)",
-      "seedorf (ned)",
-      "donadoni (ita)"
-    ]
-  },
-  {
     "id": 1160,
-    "title": "Goleadores históricos de Portugal (selección) (variante 160)",
+    "title": "Goleadores históricos de Portugal (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "ronaldo (por)",
@@ -2738,7 +1599,7 @@
   },
   {
     "id": 1161,
-    "title": "Goleadores históricos de Países Bajos (selección) (variante 161)",
+    "title": "Goleadores históricos de Países Bajos (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "van persie (ned)",
@@ -2755,7 +1616,7 @@
   },
   {
     "id": 1162,
-    "title": "Goleadores históricos de Uruguay (selección) (variante 162)",
+    "title": "Goleadores históricos de Uruguay (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "suárez (uru)",
@@ -2772,7 +1633,7 @@
   },
   {
     "id": 1163,
-    "title": "Goleadores históricos de México (selección) (variante 163)",
+    "title": "Goleadores históricos de México (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "chicharito (mex)",
@@ -2789,7 +1650,7 @@
   },
   {
     "id": 1164,
-    "title": "Goleadores históricos de Italia (selección) (variante 164)",
+    "title": "Goleadores históricos de Italia (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "immobile (ita)",
@@ -2805,144 +1666,8 @@
     ]
   },
   {
-    "id": 1165,
-    "title": "Leyendas del Atlético de Madrid (variante 165)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "griezmann (fra)",
-      "falcao (col)",
-      "aguero (arg)",
-      "godín (uru)",
-      "gabi (esp)",
-      "luís aragonés (esp)",
-      "torres (esp)",
-      "koke (esp)",
-      "oblak (svn)",
-      "simão (por)"
-    ]
-  },
-  {
-    "id": 1166,
-    "title": "Leyendas del Borussia Dortmund (variante 166)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "reus (ger)",
-      "zorc (ger)",
-      "sammer (ger)",
-      "koller (cze)",
-      "aubameyang (gab)",
-      "lewandowski (pol)",
-      "gotze (ger)",
-      "weidenfeller (ger)",
-      "kagaw a (jpn)",
-      "ricken (ger)"
-    ]
-  },
-  {
-    "id": 1167,
-    "title": "Leyendas del PSG (variante 167)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ibrahimovic (swe)",
-      "cavani (uru)",
-      "mbappé (fra)",
-      "neymar (bra)",
-      "ronaldinho (bra)",
-      "maxwell (bra)",
-      "thiago silva (bra)",
-      "marquinhos (bra)",
-      "pauleta (por)",
-      "saf et (fra)"
-    ]
-  },
-  {
-    "id": 1168,
-    "title": "Leyendas del Chelsea (variante 168)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "lampard (eng)",
-      "terry (eng)",
-      "drogba (civ)",
-      "zola (ita)",
-      "cech (cze)",
-      "hazard (bel)",
-      "cole (eng)",
-      "essien (gha)",
-      "costa (esp)",
-      "kante (fra)"
-    ]
-  },
-  {
-    "id": 1169,
-    "title": "Leyendas del Arsenal (variante 169)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "henry (fra)",
-      "bergkamp (ned)",
-      "pires (fra)",
-      "vieira (fra)",
-      "adams (eng)",
-      "seaman (eng)",
-      "wright (eng)",
-      "sanchez (chi)",
-      "fabregas (esp)",
-      "oxlade (eng)"
-    ]
-  },
-  {
-    "id": 1170,
-    "title": "Leyendas del Inter (variante 170)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "zanetti (arg)",
-      "milito (arg)",
-      "eto o (cmr)",
-      "messi? (arg)",
-      "materazzi (ita)",
-      "zanetti? (arg)",
-      "cambiasso (arg)",
-      "sneijder (ned)",
-      "ibrahimovic (swe)",
-      "adriano (bra)"
-    ]
-  },
-  {
-    "id": 1171,
-    "title": "Leyendas del River Plate (variante 171)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "francescoli (uru)",
-      "ortega (arg)",
-      "pratto (arg)",
-      "gallardo (arg)",
-      "cavenaghi (arg)",
-      "alario (arg)",
-      "borré (col)",
-      "dalessandro (arg)",
-      "pinola (arg)",
-      "enzo perez (arg)"
-    ]
-  },
-  {
-    "id": 1172,
-    "title": "Leyendas de Boca Juniors (variante 172)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "riquelme (arg)",
-      "palermo (arg)",
-      "tevez (arg)",
-      "schelotto (arg)",
-      "battaglia (arg)",
-      "guille (arg)",
-      "delgado (arg)",
-      "carlos bianchi (arg)",
-      "maradona (arg)",
-      "barrios (col)"
-    ]
-  },
-  {
     "id": 1173,
-    "title": "Goleadores históricos MLS (variante 173)",
+    "title": "Goleadores históricos MLS",
     "source": "transfermarkt-approx",
     "answers": [
       "wondolowski (usa)",
@@ -2959,7 +1684,7 @@
   },
   {
     "id": 1174,
-    "title": "Goleadores históricos Liga MX (variante 174)",
+    "title": "Goleadores históricos Liga MX",
     "source": "transfermarkt-approx",
     "answers": [
       "cardozo (par)",
@@ -2976,7 +1701,7 @@
   },
   {
     "id": 1175,
-    "title": "Goleadores históricos Brasileirão (variante 175)",
+    "title": "Goleadores históricos Brasileirão",
     "source": "transfermarkt-approx",
     "answers": [
       "roberto dinamit e (bra)",
@@ -2993,7 +1718,7 @@
   },
   {
     "id": 1176,
-    "title": "Goleadores históricos Copa Libertadores (variante 176)",
+    "title": "Goleadores históricos Copa Libertadores",
     "source": "transfermarkt-approx",
     "answers": [
       "aristizábal (col)",
@@ -3010,7 +1735,7 @@
   },
   {
     "id": 1177,
-    "title": "Goleadores históricos Copa América (variante 177)",
+    "title": "Goleadores históricos Copa América",
     "source": "transfermarkt-approx",
     "answers": [
       "zizinho (bra)",
@@ -3027,7 +1752,7 @@
   },
   {
     "id": 1178,
-    "title": "Goleadores históricos Eurocopa (variante 178)",
+    "title": "Goleadores históricos Eurocopa",
     "source": "transfermarkt-approx",
     "answers": [
       "ronaldo (por)",
@@ -3043,76 +1768,8 @@
     ]
   },
   {
-    "id": 1179,
-    "title": "Leyendas del Sevilla (variante 179)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "kanouté (mli)",
-      "navas (esp)",
-      "banega (arg)",
-      "rakitic (cro)",
-      "negredo (esp)",
-      "adriano (bra)",
-      "bacca (col)",
-      "reyes (esp)",
-      "en-nesyri (mar)",
-      "poulsen (den)"
-    ]
-  },
-  {
-    "id": 1180,
-    "title": "Leyendas del Valencia (variante 180)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "villa (esp)",
-      "mendieta (esp)",
-      "ayala (arg)",
-      "albelda (esp)",
-      "canizares (esp)",
-      "silva (esp)",
-      "mista (esp)",
-      "baraja (esp)",
-      "pablo aimar (arg)",
-      "soldado (esp)"
-    ]
-  },
-  {
-    "id": 1181,
-    "title": "Leyendas del Napoli (variante 181)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "maradona (arg)",
-      "hamsik (svk)",
-      "mertens (bel)",
-      "cavani (uru)",
-      "careca (bra)",
-      "insigne (ita)",
-      "kvaratskhelia (geo)",
-      "osimhen (nga)",
-      "koulibaly (sen)",
-      "zielinski (pol)"
-    ]
-  },
-  {
-    "id": 1182,
-    "title": "Leyendas del Roma (variante 182)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "totti (ita)",
-      "de rossi (ita)",
-      "batistuta (arg)",
-      "montella (ita)",
-      "conti (ita)",
-      "falcão (bra)",
-      "nainggolan (bel)",
-      "cassano (ita)",
-      "emerson (bra)",
-      "alisson (bra)"
-    ]
-  },
-  {
     "id": 1183,
-    "title": "Goleadores históricos Eredivisie (variante 183)",
+    "title": "Goleadores históricos Eredivisie",
     "source": "transfermarkt-approx",
     "answers": [
       "willy van der kuijlen (ned)",
@@ -3129,7 +1786,7 @@
   },
   {
     "id": 1184,
-    "title": "Goleadores históricos Primeira Liga (variante 184)",
+    "title": "Goleadores históricos Primeira Liga",
     "source": "transfermarkt-approx",
     "answers": [
       "fernando peyroteo (por)",
@@ -3146,7 +1803,7 @@
   },
   {
     "id": 1185,
-    "title": "Goleadores históricos de Chile (selección) (variante 185)",
+    "title": "Goleadores históricos de Chile (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "sánchez (chi)",
@@ -3163,7 +1820,7 @@
   },
   {
     "id": 1186,
-    "title": "Goleadores históricos de Colombia (selección) (variante 186)",
+    "title": "Goleadores históricos de Colombia (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "falcao (col)",
@@ -3179,25 +1836,8 @@
     ]
   },
   {
-    "id": 1187,
-    "title": "Goleadores históricos de Uruguay (clubes) (variante 187)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "peñarol (uru)",
-      "nacional (uru)",
-      "suárez (uru)",
-      "francescoli (uru)",
-      "forlán (uru)",
-      "recoba (uru)",
-      "ruben sosa (uru)",
-      "luis romero (uru)",
-      "pantera (uru)",
-      "silva (uru)"
-    ]
-  },
-  {
     "id": 1188,
-    "title": "Goleadores históricos Champions League (variante 188)",
+    "title": "Goleadores históricos Champions League",
     "source": "transfermarkt-approx",
     "answers": [
       "ronaldo (por)",
@@ -3214,7 +1854,7 @@
   },
   {
     "id": 1189,
-    "title": "Goleadores históricos Premier League (variante 189)",
+    "title": "Goleadores históricos Premier League",
     "source": "transfermarkt-approx",
     "answers": [
       "shearer (eng)",
@@ -3231,7 +1871,7 @@
   },
   {
     "id": 1190,
-    "title": "Goleadores históricos LaLiga (variante 190)",
+    "title": "Goleadores históricos LaLiga",
     "source": "transfermarkt-approx",
     "answers": [
       "messi (arg)",
@@ -3248,7 +1888,7 @@
   },
   {
     "id": 1191,
-    "title": "Goleadores históricos Serie A (variante 191)",
+    "title": "Goleadores históricos Serie A",
     "source": "transfermarkt-approx",
     "answers": [
       "piola (ita)",
@@ -3265,7 +1905,7 @@
   },
   {
     "id": 1192,
-    "title": "Goleadores históricos Bundesliga (variante 192)",
+    "title": "Goleadores históricos Bundesliga",
     "source": "transfermarkt-approx",
     "answers": [
       "müller (ger)",
@@ -3282,7 +1922,7 @@
   },
   {
     "id": 1193,
-    "title": "Goleadores históricos Ligue 1 (variante 193)",
+    "title": "Goleadores históricos Ligue 1",
     "source": "transfermarkt-approx",
     "answers": [
       "delio onnis (arg)",
@@ -3299,7 +1939,7 @@
   },
   {
     "id": 1194,
-    "title": "Goleadores históricos de Argentina (selección) (variante 194)",
+    "title": "Goleadores históricos de Argentina (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "messi (arg)",
@@ -3316,7 +1956,7 @@
   },
   {
     "id": 1195,
-    "title": "Goleadores históricos de Brasil (selección) (variante 195)",
+    "title": "Goleadores históricos de Brasil (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "neymar (bra)",
@@ -3333,7 +1973,7 @@
   },
   {
     "id": 1196,
-    "title": "Goleadores históricos de Alemania (selección) (variante 196)",
+    "title": "Goleadores históricos de Alemania (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "klose (ger)",
@@ -3350,7 +1990,7 @@
   },
   {
     "id": 1197,
-    "title": "Goleadores históricos de España (selección) (variante 197)",
+    "title": "Goleadores históricos de España (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "villa (esp)",
@@ -3367,7 +2007,7 @@
   },
   {
     "id": 1198,
-    "title": "Goleadores históricos de Francia (selección) (variante 198)",
+    "title": "Goleadores históricos de Francia (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "giroud (fra)",
@@ -3384,7 +2024,7 @@
   },
   {
     "id": 1199,
-    "title": "Goleadores históricos de Inglaterra (selección) (variante 199)",
+    "title": "Goleadores históricos de Inglaterra (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "kane (eng)",
@@ -3400,127 +2040,8 @@
     ]
   },
   {
-    "id": 1200,
-    "title": "Leyendas del Real Madrid (variante 200)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "raúl (esp)",
-      "di stéfano (arg)",
-      "puskás (hun)",
-      "gento (esp)",
-      "casillas (esp)",
-      "zidane (fra)",
-      "ramos (esp)",
-      "cristiano (por)",
-      "benzema (fra)"
-    ]
-  },
-  {
-    "id": 1201,
-    "title": "Leyendas del Barcelona (variante 201)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "messi (arg)",
-      "xavi (esp)",
-      "iniesta (esp)",
-      "cruyff (ned)",
-      "ronaldinho (bra)",
-      "puyol (esp)",
-      "suárez (uru)",
-      "eto o (cmr)",
-      "neymar (bra)",
-      "stoichkov (bul)"
-    ]
-  },
-  {
-    "id": 1202,
-    "title": "Leyendas del Bayern (variante 202)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "müller (ger)",
-      "beckenbauer (ger)",
-      "rummenigge (ger)",
-      "robben (ned)",
-      "ribéry (fra)",
-      "lewandowski (pol)",
-      "kahn (ger)",
-      "schweinsteiger (ger)",
-      "lahm (ger)",
-      "neuer (ger)"
-    ]
-  },
-  {
-    "id": 1203,
-    "title": "Leyendas del Manchester United (variante 203)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "giggs (wal)",
-      "scholes (eng)",
-      "rooney (eng)",
-      "cantona (fra)",
-      "keane (irl)",
-      "ronaldo (por)",
-      "van nistelrooy (ned)",
-      "beckham (eng)",
-      "yorke (tto)",
-      "cole (eng)"
-    ]
-  },
-  {
-    "id": 1204,
-    "title": "Leyendas del Liverpool (variante 204)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "gerrard (eng)",
-      "dalglish (sco)",
-      "suárez (uru)",
-      "torres (esp)",
-      "rush (wal)",
-      "fowler (eng)",
-      "salah (egy)",
-      "mane (sen)",
-      "keegan (eng)",
-      "barnes (eng)"
-    ]
-  },
-  {
-    "id": 1205,
-    "title": "Leyendas de la Juventus (variante 205)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "del piero (ita)",
-      "buffon (ita)",
-      "nedved (cze)",
-      "platini (fra)",
-      "trezeguet (fra)",
-      "tardelli (ita)",
-      "baggio (ita)",
-      "chiellini (ita)",
-      "bonucci (ita)",
-      "conte (ita)"
-    ]
-  },
-  {
-    "id": 1206,
-    "title": "Leyendas del AC Milan (variante 206)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "maldini (ita)",
-      "baresi (ita)",
-      "shevchenko (ukr)",
-      "kaká (bra)",
-      "inzaghi (ita)",
-      "van basten (ned)",
-      "gullit (ned)",
-      "pirlo (ita)",
-      "seedorf (ned)",
-      "donadoni (ita)"
-    ]
-  },
-  {
     "id": 1207,
-    "title": "Goleadores históricos de Portugal (selección) (variante 207)",
+    "title": "Goleadores históricos de Portugal (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "ronaldo (por)",
@@ -3537,7 +2058,7 @@
   },
   {
     "id": 1208,
-    "title": "Goleadores históricos de Países Bajos (selección) (variante 208)",
+    "title": "Goleadores históricos de Países Bajos (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "van persie (ned)",
@@ -3554,7 +2075,7 @@
   },
   {
     "id": 1209,
-    "title": "Goleadores históricos de Uruguay (selección) (variante 209)",
+    "title": "Goleadores históricos de Uruguay (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "suárez (uru)",
@@ -3571,7 +2092,7 @@
   },
   {
     "id": 1210,
-    "title": "Goleadores históricos de México (selección) (variante 210)",
+    "title": "Goleadores históricos de México (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "chicharito (mex)",
@@ -3588,7 +2109,7 @@
   },
   {
     "id": 1211,
-    "title": "Goleadores históricos de Italia (selección) (variante 211)",
+    "title": "Goleadores históricos de Italia (selección)",
     "source": "transfermarkt-approx",
     "answers": [
       "immobile (ita)",
@@ -3601,142 +2122,6 @@
       "altobelli (ita)",
       "zola (ita)",
       "rivera (ita)"
-    ]
-  },
-  {
-    "id": 1212,
-    "title": "Leyendas del Atlético de Madrid (variante 212)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "griezmann (fra)",
-      "falcao (col)",
-      "aguero (arg)",
-      "godín (uru)",
-      "gabi (esp)",
-      "luís aragonés (esp)",
-      "torres (esp)",
-      "koke (esp)",
-      "oblak (svn)",
-      "simão (por)"
-    ]
-  },
-  {
-    "id": 1213,
-    "title": "Leyendas del Borussia Dortmund (variante 213)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "reus (ger)",
-      "zorc (ger)",
-      "sammer (ger)",
-      "koller (cze)",
-      "aubameyang (gab)",
-      "lewandowski (pol)",
-      "gotze (ger)",
-      "weidenfeller (ger)",
-      "kagaw a (jpn)",
-      "ricken (ger)"
-    ]
-  },
-  {
-    "id": 1214,
-    "title": "Leyendas del PSG (variante 214)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ibrahimovic (swe)",
-      "cavani (uru)",
-      "mbappé (fra)",
-      "neymar (bra)",
-      "ronaldinho (bra)",
-      "maxwell (bra)",
-      "thiago silva (bra)",
-      "marquinhos (bra)",
-      "pauleta (por)",
-      "saf et (fra)"
-    ]
-  },
-  {
-    "id": 1215,
-    "title": "Leyendas del Chelsea (variante 215)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "lampard (eng)",
-      "terry (eng)",
-      "drogba (civ)",
-      "zola (ita)",
-      "cech (cze)",
-      "hazard (bel)",
-      "cole (eng)",
-      "essien (gha)",
-      "costa (esp)",
-      "kante (fra)"
-    ]
-  },
-  {
-    "id": 1216,
-    "title": "Leyendas del Arsenal (variante 216)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "henry (fra)",
-      "bergkamp (ned)",
-      "pires (fra)",
-      "vieira (fra)",
-      "adams (eng)",
-      "seaman (eng)",
-      "wright (eng)",
-      "sanchez (chi)",
-      "fabregas (esp)",
-      "oxlade (eng)"
-    ]
-  },
-  {
-    "id": 1217,
-    "title": "Leyendas del Inter (variante 217)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "zanetti (arg)",
-      "milito (arg)",
-      "eto o (cmr)",
-      "messi? (arg)",
-      "materazzi (ita)",
-      "zanetti? (arg)",
-      "cambiasso (arg)",
-      "sneijder (ned)",
-      "ibrahimovic (swe)",
-      "adriano (bra)"
-    ]
-  },
-  {
-    "id": 1218,
-    "title": "Leyendas del River Plate (variante 218)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "francescoli (uru)",
-      "ortega (arg)",
-      "pratto (arg)",
-      "gallardo (arg)",
-      "cavenaghi (arg)",
-      "alario (arg)",
-      "borré (col)",
-      "dalessandro (arg)",
-      "pinola (arg)",
-      "enzo perez (arg)"
-    ]
-  },
-  {
-    "id": 1219,
-    "title": "Leyendas de Boca Juniors (variante 219)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "riquelme (arg)",
-      "palermo (arg)",
-      "tevez (arg)",
-      "schelotto (arg)",
-      "battaglia (arg)",
-      "guille (arg)",
-      "delgado (arg)",
-      "carlos bianchi (arg)",
-      "maradona (arg)",
-      "barrios (col)"
     ]
   }
 ]

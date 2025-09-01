@@ -6,19 +6,18 @@
         function gtag(){dataLayer.push(arguments);}
         gtag('consent', 'default', {
           'ad_storage': 'denied',
-          'analytics_storage': 'granted',
+          'analytics_storage': 'denied',
           'ad_user_data': 'denied',
           'ad_personalization': 'denied',
-          'functionality_storage': 'granted',
-          'personalization_storage': 'granted',
+          'functionality_storage': 'denied',
+          'personalization_storage': 'denied',
           'security_storage': 'granted',
           'wait_for_update': 500
         });
         gtag('set', 'ads_data_redaction', true);
         gtag('set', 'url_passthrough', true);
         
-        // Specify region
-        gtag('set', 'region', 'ES');
+        
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,13 +61,7 @@
         allow_ad_personalization_signals: false
       });
 
-      // Trackear que llegaron a la página de juegos
-      gtag('event', 'page_view', {
-        event_category: 'navigation',
-        event_label: 'games_page',
-        page_type: 'games_selection',
-        value: 1
-      });
+      // page_view se envía automáticamente por GA4 via send_page_view
     </script>
 
     <!-- CSS Links -->
@@ -220,16 +213,31 @@
 
         .games-constellation {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
             margin-bottom: 80px;
         }
 
         @media (min-width: 1200px) {
             .games-constellation {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 40px;
+                gap: 36px;
             }
+        }
+
+        /* Grupos de juegos (Online / Un jugador) */
+        .games-group {
+            margin: 30px 0 40px;
+        }
+
+        .group-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text);
+            margin: 0 0 15px 5px;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         /* Game Cards Futuristas */
@@ -242,7 +250,7 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
             cursor: pointer;
-            min-height: 280px;
+            min-height: 240px;
             perspective: 1000px;
         }
 
@@ -297,7 +305,7 @@
 
         .game-visual-container {
             position: relative;
-            height: 120px;
+            height: 100px;
             overflow: hidden;
             display: flex;
             align-items: center;
@@ -306,7 +314,7 @@
         }
 
         .game-icon {
-            font-size: 3rem;
+            font-size: 2.5rem;
             color: rgba(255, 255, 255, 0.8);
             transition: all 0.3s ease;
         }
@@ -360,6 +368,18 @@
             animation: pulse 2s infinite;
         }
 
+        .stellar-badge.online {
+            background: rgba(0, 200, 83, 0.2);
+            color: #00c853;
+            border: 1px solid rgba(0, 200, 83, 0.35);
+        }
+
+        .stellar-badge.solo {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196f3;
+            border: 1px solid rgba(33, 150, 243, 0.35);
+        }
+
         .stellar-badge.próximamente {
             background: rgba(255, 193, 7, 0.2);
             color: #ffc107;
@@ -367,17 +387,28 @@
             animation: pulse 2s infinite;
         }
 
+        .stellar-badge.principal {
+            background: rgba(255, 215, 64, 0.2);
+            color: #ffd740;
+            border: 1px solid rgba(255, 215, 64, 0.35);
+        }
+
+        .stellar-badge.left {
+            left: 15px;
+            right: auto;
+        }
+
         .game-content {
-            padding: 25px;
+            padding: 18px;
             position: relative;
             z-index: 2;
         }
 
         .game-title {
-            font-size: 1.4rem;
+            font-size: 1.25rem;
             font-weight: 700;
             color: white;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             font-family: 'Oswald', sans-serif;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -385,24 +416,24 @@
 
         .game-description {
             color: rgba(255, 255, 255, 0.7);
-            line-height: 1.6;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
         }
 
         .game-stats {
             display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 10px;
+            margin-bottom: 18px;
             flex-wrap: wrap;
         }
 
         .stat-chip {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 12px;
+            font-size: 0.78rem;
             color: rgba(255, 255, 255, 0.8);
             display: flex;
             align-items: center;
@@ -420,9 +451,9 @@
             background: linear-gradient(45deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
             border: none;
             color: white;
-            padding: 15px;
-            border-radius: 15px;
-            font-size: 1rem;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.95rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -1428,111 +1459,116 @@
 
         <!-- Galaxia de Juegos -->
         <section class="games-galaxy">
-            <div class="games-constellation" aria-label="Juegos disponibles">
-                <!-- Pasala Che -->
-                <article class="cosmic-game-card" data-game="pasalache">
-                    <div class="stellar-badge rosco">ROSCO</div>
-                    <div class="game-visual-container">
-                        <i class="fas fa-circle-notch game-icon" aria-hidden="true"></i>
-                    </div>
-                                         <div class="game-content">
-                         <h3 class="game-title">Pasala Che</h3>
-                         <p class="game-description">Un rosco de preguntas futboleras. Responde preguntas para cada letra del abecedario y demuestra tu conocimiento enciclopídico del fútbol.</p>
-                         <div class="game-stats">
-                             <span class="stat-chip"><i class="fas fa-font"></i>27 Letras</span>
-                             <span class="stat-chip"><i class="fas fa-clock"></i>Contrarreloj</span>
-                         </div>
-                         <button class="quantum-play-btn" aria-label="Jugar a Pasala Che">
-                             <span>Jugar</span>
-                         </button>
-                     </div>
-                </article>
-
-                <!-- Crack Rápido removido -->
-
-                <!-- Quien Sabe MáS -->
-                <article class="cosmic-game-card" data-game="quiensabemas">
-                    <div class="stellar-badge duelo">DUELO</div>
-                    <div class="game-visual-container">
-                        <i class="fas fa-brain game-icon" aria-hidden="true"></i>
-                    </div>
-                                         <div class="game-content">
-                         <h3 class="game-title">Quién Sabe Más</h3>
-                         <p class="game-description">Responde preguntas de dificultad creciente contra un amigo y compite por el gran premio. ¡Llegarás a ser el más grande conocedor del fútbol?</p>
-                         <div class="game-stats">
-                             <span class="stat-chip"><i class="fas fa-layer-group"></i>6 Niveles</span>
-                             <span class="stat-chip"><i class="fas fa-users"></i>1 vs 1</span>
-                         </div>
-                         <button class="quantum-play-btn" aria-label="Jugar a Quién Sabe Más">
-                             <span>Jugar</span>
-                         </button>
-                        <div class="room-status" id="quiensabemas-rooms">
-                            <i class="fas fa-satellite-dish" aria-hidden="true"></i>
-                            <span>Salas Activas: <span class="room-count">-/-</span></span>
+            <!-- Juegos de un jugador -->
+            <div class="games-group" aria-label="Juegos de un jugador">
+                <h3 class="group-title"><i class="fas fa-user" aria-hidden="true"></i> Un jugador</h3>
+                <div class="games-constellation" aria-label="Juegos de un jugador disponibles">
+                    <!-- Pasala Che (Principal) -->
+                    <article class="cosmic-game-card" data-game="pasalache">
+                        <div class="stellar-badge principal left">PRINCIPAL</div>
+                        <div class="stellar-badge rosco">ROSCO</div>
+                        <div class="game-visual-container">
+                            <i class="fas fa-circle-notch game-icon" aria-hidden="true"></i>
                         </div>
-                    </div>
-                </article>
-
-                <!-- Mentiroso -->
-                <article class="cosmic-game-card" data-game="mentiroso">
-                    <div class="stellar-badge bluff">BLUFF</div>
-                    <div class="game-visual-container">
-                        <i class="fas fa-mask game-icon" aria-hidden="true"></i>
-                    </div>
-                                         <div class="game-content">
-                         <h3 class="game-title">Mentiroso</h3>
-                         <p class="game-description">¡Cuánto sabés de fútbol o cuánto podés aparentar? Decí cuántas respuestas sabés y desafí a tu rival. ¡Que no te agarren!</p>
-                         <div class="game-stats">
-                             <span class="stat-chip"><i class="fas fa-users"></i>1 vs 1</span>
-                             <span class="stat-chip"><i class="fas fa-theater-masks"></i>Puro Engaño</span>
-                         </div>
-                         <button class="quantum-play-btn" aria-label="Jugar a Mentiroso">
-                             <span>Jugar</span>
-                         </button>
-                        <div class="room-status" id="mentiroso-rooms">
-                            <i class="fas fa-satellite-dish" aria-hidden="true"></i>
-                            <span>Salas Activas: <span class="room-count">-/-</span></span>
+                        <div class="game-content">
+                            <h3 class="game-title">Pasala Che</h3>
+                            <p class="game-description">Un rosco de preguntas futboleras. Responde preguntas para cada letra del abecedario y demuestra tu conocimiento enciclopídico del fútbol.</p>
+                            <div class="game-stats">
+                                <span class="stat-chip"><i class="fas fa-font"></i>27 Letras</span>
+                                <span class="stat-chip"><i class="fas fa-clock"></i>Contrarreloj</span>
+                            </div>
+                            <button class="quantum-play-btn" aria-label="Jugar a Pasala Che">
+                                <span>Jugar</span>
+                            </button>
                         </div>
-                    </div>
-                </article>
-
-                <!-- Wordle Futbolero (Nuevo) -->
-                <article class="cosmic-game-card" data-game="wordle-futbol">
-                    <div class="stellar-badge nuevo">NUEVO</div>
-                    <div class="game-visual-container">
-                        <i class="fas fa-th game-icon" aria-hidden="true"></i>
-                    </div>
-                    <div class="game-content">
-                        <h3 class="game-title">Wordle Futbolero</h3>
-                        <p class="game-description">Adiviná el futbolista o DT en 6 intentos con pistas por club, nacionalidad, posición y edad. Modo diario con ranking.</p>
-                        <div class="game-stats">
-                            <span class="stat-chip"><i class="fas fa-dice-six"></i>6 Intentos</span>
-                            <span class="stat-chip"><i class="fas fa-calendar-day"></i>Desafío Diario</span>
+                    </article>
+                    <!-- Top 10 (Diario) -->
+                    <article class="cosmic-game-card" data-game="top10">
+                        <div class="stellar-badge nuevo">DIARIO</div>
+                        <div class="game-visual-container">
+                            <i class="fas fa-list-ol game-icon" aria-hidden="true"></i>
                         </div>
-                        <button class="quantum-play-btn" onclick="window.location.href='wordle-futbol.html'" aria-label="Jugar Wordle Futbolero">
-                            <span>Jugar</span>
-                        </button>
-                    </div>
-                </article>
-
-                <!-- Top 10 (Nuevo Diario) -->
-                <article class="cosmic-game-card" data-game="top10">
-                    <div class="stellar-badge nuevo">DIARIO</div>
-                    <div class="game-visual-container">
-                        <i class="fas fa-list-ol game-icon" aria-hidden="true"></i>
-                    </div>
-                    <div class="game-content">
-                        <h3 class="game-title">Top 10</h3>
-                        <p class="game-description">Adiviná los 10 apellidos del tema diario. Historia, mundiales, ligas y más.</p>
-                        <div class="game-stats">
-                            <span class="stat-chip"><i class="fas fa-calendar-day"></i>Diario</span>
-                            <span class="stat-chip"><i class="fas fa-list-ol"></i>10 Respuestas</span>
+                        <div class="game-content">
+                            <h3 class="game-title">Top 10</h3>
+                            <p class="game-description">Adiviná los 10 apellidos del tema diario. Historia, mundiales, ligas y más.</p>
+                            <div class="game-stats">
+                                <span class="stat-chip"><i class="fas fa-calendar-day"></i>Diario</span>
+                                <span class="stat-chip"><i class="fas fa-list-ol"></i>10 Respuestas</span>
+                            </div>
+                            <button class="quantum-play-btn" aria-label="Jugar Top 10">
+                                <span>Jugar</span>
+                            </button>
                         </div>
-                        <button class="quantum-play-btn" onclick="window.location.href='top10.html'" aria-label="Jugar Top 10">
-                            <span>Jugar</span>
-                        </button>
-                    </div>
-                </article>
+                    </article>
+                    <!-- Wordle Futbolero (Nuevo) -->
+                    <article class="cosmic-game-card" data-game="wordle-futbol">
+                        <div class="stellar-badge nuevo">NUEVO</div>
+                        <div class="game-visual-container">
+                            <i class="fas fa-th game-icon" aria-hidden="true"></i>
+                        </div>
+                        <div class="game-content">
+                            <h3 class="game-title">Wordle Futbolero</h3>
+                            <p class="game-description">Adiviná el futbolista o DT en 6 intentos con pistas por club, nacionalidad, posición y edad. Modo diario con ranking.</p>
+                            <div class="game-stats">
+                                <span class="stat-chip"><i class="fas fa-dice-six"></i>6 Intentos</span>
+                                <span class="stat-chip"><i class="fas fa-calendar-day"></i>Desafío Diario</span>
+                            </div>
+                            <button class="quantum-play-btn" aria-label="Jugar Wordle Futbolero">
+                                <span>Jugar</span>
+                            </button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <!-- Juegos Online -->
+            <div class="games-group" aria-label="Juegos Online">
+                <h3 class="group-title"><i class="fas fa-signal" aria-hidden="true"></i> Juegos Online</h3>
+                <div class="games-constellation" aria-label="Juegos Online disponibles">
+                    <!-- Quien Sabe Más (Online) -->
+                    <article class="cosmic-game-card" data-game="quiensabemas">
+                        <div class="stellar-badge online">ONLINE</div>
+                        <div class="game-visual-container">
+                            <i class="fas fa-brain game-icon" aria-hidden="true"></i>
+                        </div>
+                        <div class="game-content">
+                            <h3 class="game-title">Quién Sabe Más</h3>
+                            <p class="game-description">Responde preguntas de dificultad creciente contra un amigo y compite por el gran premio. ¡Llegarás a ser el más grande conocedor del fútbol?</p>
+                            <div class="game-stats">
+                                <span class="stat-chip"><i class="fas fa-layer-group"></i>6 Niveles</span>
+                                <span class="stat-chip"><i class="fas fa-users"></i>1 vs 1</span>
+                            </div>
+                            <button class="quantum-play-btn" aria-label="Jugar a Quién Sabe Más">
+                                <span>Jugar</span>
+                            </button>
+                            <div class="room-status" id="quiensabemas-rooms">
+                                <i class="fas fa-satellite-dish" aria-hidden="true"></i>
+                                <span>Salas Activas: <span class="room-count">-/-</span></span>
+                            </div>
+                        </div>
+                    </article>
+                    <!-- Mentiroso (Online) -->
+                    <article class="cosmic-game-card" data-game="mentiroso">
+                        <div class="stellar-badge online">ONLINE</div>
+                        <div class="game-visual-container">
+                            <i class="fas fa-mask game-icon" aria-hidden="true"></i>
+                        </div>
+                        <div class="game-content">
+                            <h3 class="game-title">Mentiroso</h3>
+                            <p class="game-description">¡Cuánto sabés de fútbol o cuánto podés aparentar? Decí cuántas respuestas sabés y desafí a tu rival. ¡Que no te agarren!</p>
+                            <div class="game-stats">
+                                <span class="stat-chip"><i class="fas fa-users"></i>1 vs 1</span>
+                                <span class="stat-chip"><i class="fas fa-theater-masks"></i>Puro Engaño</span>
+                            </div>
+                            <button class="quantum-play-btn" aria-label="Jugar a Mentiroso">
+                                <span>Jugar</span>
+                            </button>
+                            <div class="room-status" id="mentiroso-rooms">
+                                <i class="fas fa-satellite-dish" aria-hidden="true"></i>
+                                <span>Salas Activas: <span class="room-count">-/-</span></span>
+                            </div>
+                        </div>
+                    </article>
+                </div>
             </div>
         </section>
 

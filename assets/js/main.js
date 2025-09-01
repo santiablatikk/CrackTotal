@@ -21,20 +21,10 @@ window.addEventListener('load', () => {
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.addEventListener('message', (event) => {
                 if (event.data && event.data.type === 'SW_UPDATED') {
-                    window.notifications.info(
-                        'Nueva versión disponible',
-                        'Crack Total se ha actualizado. La página se recargará automáticamente.',
-                        {
-                            persistent: true,
-                            actions: [
-                                {
-                                    id: 'reload',
-                                    label: 'Actualizar ahora',
-                                    handler: () => window.location.reload()
-                                }
-                            ]
-                        }
-                    );
+                    // Auto-reload suave para tomar la última versión
+                    const currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.set('v', Date.now().toString());
+                    window.location.replace(currentUrl.toString());
                 }
             });
         }
@@ -187,51 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- Manejo de Cookies y Privacidad (ejemplo) ---
-    // Unificamos la clave a 'adConsent'
-    const AD_CONSENT_KEY = 'adConsent';
-
-    // Crear y añadir el banner de cookies dinámicamente si no existe
-    let cookieBanner = document.getElementById('cookieConsentBanner');
-    if (!cookieBanner) {
-        const bannerHTML = `
-            <div id="cookieConsentBanner" style="display: none; position: fixed; bottom: 0; left: 0; width: 100%; background-color: #2c3e50; color: white; padding: 15px; text-align: center; z-index: 10000; border-top: 3px solid var(--primary); box-shadow: 0 -2px 10px rgba(0,0,0,0.2);">
-                <p style="margin: 0 0 10px 0; font-size: 0.9em;">Utilizamos cookies para mejorar tu experiencia y mostrar anuncios personalizados. Al continuar navegando, aceptas nuestro uso de cookies. Consulta nuestra <a href="cookies.html" style="color: var(--primary-light); text-decoration: underline;">Política de Cookies</a> y <a href="privacy.html" style="color: var(--primary-light); text-decoration: underline;">Política de Privacidad</a>.</p>
-                <button id="acceptCookieButton" style="background-color: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.3s ease;">ACEPTAR</button>
-                <button id="rejectCookieButton" style="background-color: #7f8c8d; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-left: 10px; transition: background-color 0.3s ease;">RECHAZAR</button>
-            </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', bannerHTML);
-        cookieBanner = document.getElementById('cookieConsentBanner'); // Re-asignar después de añadirlo
-    }
-
-    const acceptButton = document.getElementById('acceptCookieButton');
-    const rejectButton = document.getElementById('rejectCookieButton');
-
-    if (cookieBanner && acceptButton && rejectButton) {
-        if (!localStorage.getItem(AD_CONSENT_KEY)) { // Usar la clave unificada
-            cookieBanner.style.display = 'block';
-        }
-
-        acceptButton.addEventListener('click', function() {
-            localStorage.setItem(AD_CONSENT_KEY, 'true'); // Usar la clave unificada
-            cookieBanner.style.display = 'none';
-            console.log("Consentimiento de cookies/anuncios ACEPTADO.");
-            // Refrescar anuncios o llamar a función que los carga si es necesario
-            if (typeof window.loadAds === 'function') {
-                window.loadAds(); // Asumiendo que tienes una función para cargar/refrescar anuncios
-            }
-        });
-
-        rejectButton.addEventListener('click', function() {
-            localStorage.setItem(AD_CONSENT_KEY, 'false'); // Guardar rechazo
-            cookieBanner.style.display = 'none';
-            console.log("Consentimiento de cookies/anuncios RECHAZADO.");
-            // Asegurarse de que los scripts de anuncios no se carguen o se oculten los contenedores
-             const adContainers = document.querySelectorAll(".adsense-container");
-             adContainers.forEach(container => container.style.display = "none");
-        });
-    }
+    // Consentimiento y cookies gestionado por assets/js/cookie-consent.js (se elimina banner duplicado)
 
     // Check if we're on the games page and setup player name display
     const playerNameDisplay = document.getElementById('playerNameDisplay');
@@ -906,9 +852,4 @@ if ('serviceWorker' in navigator) {
 }
 */
 
-class NotificationManager {
-    constructor() {
-        this.notificationButton = document.getElementById('notificationButton');
-        // ... existing code ... -->
-    }
-}
+// Limpieza de snippet incompleto que causaba errores de parseo

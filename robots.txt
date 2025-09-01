@@ -5,23 +5,9 @@ Allow: /
 Sitemap: https://cracktotal.com/sitemap.xml
 Sitemap: https://cracktotal.com/sitemap-simplificado.xml
 
-# CRÍTICO PARA ADSENSE: Permitir acceso completo a recursos estáticos
-Allow: /css/
-Allow: /js/
-Allow: /images/
-Allow: /img/
-Allow: *.css
-Allow: *.js
-Allow: *.jpg
-Allow: *.jpeg
-Allow: *.png
-Allow: *.gif
-Allow: *.webp
-Allow: *.ico
-Allow: *.svg
-Allow: *.woff
-Allow: *.woff2
-Allow: *.ttf
+# Permitir acceso a recursos estáticos
+Allow: /assets/
+Allow: /config/
 
 # CRÍTICO PARA ADSENSE: Permitir archivos de publicidad
 Allow: /ads.txt

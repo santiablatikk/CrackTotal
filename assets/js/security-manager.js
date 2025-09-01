@@ -101,13 +101,19 @@ class CrackTotalSecurityManager {
      * Rate Limiting
      */
     setupRateLimiting() {
-        // Monitor API calls
+        // Monitor API calls (solo same-origin)
         const originalFetch = window.fetch;
-        window.fetch = (...args) => {
-            if (!this.checkRateLimit()) {
-                return Promise.reject(new Error('Rate limit exceeded'));
+        window.fetch = (input, init) => {
+            try {
+                const url = typeof input === 'string' ? new URL(input, window.location.origin) : new URL(input.url, window.location.origin);
+                const isSameOrigin = url.origin === window.location.origin;
+                if (isSameOrigin && !this.checkRateLimit('api')) {
+                    return Promise.reject(new Error('Rate limit exceeded'));
+                }
+            } catch (_) {
+                // Si falla el parsing, no bloqueamos
             }
-            return originalFetch.apply(this, args);
+            return originalFetch.call(window, input, init);
         };
 
         // Monitor user actions
