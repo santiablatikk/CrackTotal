@@ -162,12 +162,7 @@
         <priority>0.8</priority>
     </url>
     
-    <url>
-        <loc>https://cracktotal.com/blog-detail-community.html</loc>
-        <lastmod>2025-06-07</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
+    <!-- Removed: blog-detail-community.html (no existe) -->
     
     <url>
         <loc>https://cracktotal.com/blog-detail-historia-mundial.html</loc>
@@ -254,13 +249,7 @@
         <priority>0.8</priority>
     </url>
     
-    <!-- Nueva Guía para Principiantes -->
-    <url>
-        <loc>https://cracktotal.com/guia-principiantes.html</loc>
-        <lastmod>2025-06-07</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.9</priority>
-    </url>
+    <!-- Removed: guia-principiantes.html (no existe) -->
     
     <!-- Páginas institucionales -->
     <url>
