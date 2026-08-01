@@ -12,7 +12,15 @@ body.discover-page {
 }
 
 body.discover-page.ranking-page-body,
-body.discover-page.logros-page {
+body.discover-page.logros-page,
+body.discover-page.profile-body,
+body.discover-page.about-page-body,
+body.discover-page.contact-page-body,
+body.discover-page.privacy-page-body,
+body.discover-page.cookies-page-body,
+body.discover-page.terms-page-body,
+body.discover-page.disclaimer-page-body,
+body.discover-page.ads-policy-page-body {
     background:
         radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.14), transparent 32rem),
         radial-gradient(circle at 88% 30%, rgba(34, 197, 94, 0.1), transparent 28rem),
@@ -28,6 +36,65 @@ body.discover-page.logros-page {
 
 .discover-page .app-header {
     display: none !important;
+}
+
+/* Legacy floating home links (pages that duplicated nav) */
+body.discover-page > a.home-link {
+    display: none !important;
+}
+
+.discover-hero--compact {
+    padding: clamp(1.75rem, 4vw, 2.75rem) 0 clamp(1.25rem, 3vw, 1.75rem);
+}
+
+.discover-hero--compact h1 {
+    max-width: 22ch;
+    font-size: clamp(1.75rem, 4.2vw, 2.6rem);
+}
+
+.discover-hero--compact .discover-hero-lead {
+    margin-bottom: 0;
+}
+
+.discover-page .breadcrumbs-container {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto 1rem;
+}
+
+.discover-page .breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    color: var(--home-muted);
+    font-size: 0.85rem;
+}
+
+.discover-page .breadcrumb a {
+    color: var(--home-primary);
+    text-decoration: none;
+}
+
+.discover-page .profile-title {
+    display: none;
+}
+
+.discover-page .profile-container,
+.discover-page .profile-container .container {
+    width: min(1180px, calc(100% - 40px));
+    margin-inline: auto;
+    max-width: none;
+}
+
+.discover-page .page-container.about-container,
+.discover-page .page-container.privacy-container,
+.discover-page .page-container,
+.discover-page .blog-screen.page-container {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 0 0 clamp(2rem, 5vw, 3.5rem);
 }
 
 .discover-main {
@@ -520,8 +587,8 @@ body.discover-page.logros-page {
     border-radius: var(--ct-radius-pill);
 }
 
-.discover-page .page-container,
-.discover-page .content-container {
+.discover-page.logros-page .page-container,
+.discover-page.logros-page .content-container {
     max-width: none;
     padding: 0;
     margin: 0;

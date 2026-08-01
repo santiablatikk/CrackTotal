@@ -48,7 +48,7 @@
     <link rel="stylesheet" href="assets/css/styles.css" />
     <link rel="stylesheet" href="assets/css/base.css">
     <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801b">
-    <link rel="stylesheet" href="assets/css/layout.css">
+<link rel="stylesheet" href="assets/css/layout.css">
     <link rel="stylesheet" href="assets/css/ranking.css">
     <link rel="stylesheet" href="assets/css/ranking-modern.css">
     <!-- Font Awesome -->
@@ -95,31 +95,33 @@
     <script src="assets/js/firebase-config.js"></script>
     <script src="assets/js/firebase-service.js"></script>
     <script src="assets/js/ranking-helper.js"></script>
+    <link rel="stylesheet" href="assets/css/home.css?v=20260801">
+    <link rel="stylesheet" href="assets/css/discover.css?v=20260801j">
 </head>
-<body class="ranking-page-body ct-ds">
+<body class="discover-page ranking-page-body ct-ds">
     <!-- Skip Link para accesibilidad -->
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     
     <div data-ct-navbar data-active="ranking"></div>
-    
 
-    <!-- App Header -->
-    <header class="app-header">
-        <a href="/" class="home-link" aria-label="Volver al Inicio">
-            <i class="fas fa-home"></i>
-            <span>Inicio</span>
-        </a>
-        <div class="logo-animation">
-             <i class="fas fa-brain ball-icon"></i>
+    <header class="discover-hero" aria-labelledby="ranking-hero-title">
+        <div class="home-shell">
+            <a class="discover-hero-brand" href="/" aria-label="Crack Total, inicio">
+                <i class="fas fa-futbol" aria-hidden="true"></i>
+                Crack Total
+            </a>
+            <p class="home-eyebrow"><i class="fas fa-trophy" aria-hidden="true"></i> Competencia</p>
+            <h1 id="ranking-hero-title">Ranking <span>Quién Sabe Más</span></h1>
+            <p class="discover-hero-lead">El duelo de 10 preguntas. Mirá quién lidera y desafiá a un rival.</p>
+            <div class="discover-hero-actions">
+                <a class="home-button home-button-primary" href="quiensabemas.html">Jugar QSM</a>
+                <a class="home-button home-button-secondary" href="ranking.html">Otros rankings</a>
+            </div>
         </div>
-        <a href="games.html" class="title-link">
-             <h1 class="title-text">Crack Total</h1>
-        </a>
-        <p class="subtitle">🧠 Ranking Quién Sabe más - Los más Inteligentes</p>
     </header>
 
     <!-- Main Content -->
-    <main class="game-content" id="main-content">
+    <main class="game-content discover-main discover-content" id="main-content">
         <!-- Navegación entre rankings -->
         <div class="navigation-buttons">
             <a href="profile.html" class="nav-button">

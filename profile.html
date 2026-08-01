@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <script>
@@ -48,7 +48,7 @@
     <!-- <link rel="stylesheet" href="assets/css/styles.css?v=202505272312"> -->
     <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801b">
-    <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
+<link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/profile.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/gamification.css?v=20260801e">
     <link rel="stylesheet" href="assets/css/performance.css?v=202505272312">
@@ -116,30 +116,34 @@
     <script src="assets/js/main.js?v=20260801" defer></script>
     <script type="module" src="assets/js/firebase-config.js"></script>
     <script type="module" src="assets/js/firebase-init.js"></script>
+    <link rel="stylesheet" href="assets/css/home.css?v=20260801">
+    <link rel="stylesheet" href="assets/css/discover.css?v=20260801j">
 </head>
-<body class="profile-body ct-ds">
+<body class="discover-page profile-body ct-ds">
     <!-- Skip Link para accesibilidad -->
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     
     <div data-ct-navbar data-active="profile"></div>
-    <!-- App Header -->
-    <header class="app-header">
-        <a href="/" class="home-link" aria-label="Volver al Inicio">
-            <i class="fas fa-home"></i>
-            <span>Inicio</span>
-        </a>
-        <div class="logo-animation">
-             <i class="fas fa-futbol ball-icon"></i>
+
+    <header class="discover-hero" aria-labelledby="profile-hero-title">
+        <div class="home-shell">
+            <a class="discover-hero-brand" href="/" aria-label="Crack Total, inicio">
+                <i class="fas fa-futbol" aria-hidden="true"></i>
+                Crack Total
+            </a>
+            <p class="home-eyebrow"><i class="fas fa-user" aria-hidden="true"></i> Perfil</p>
+            <h1 id="profile-hero-title">Tu centro de <span>jugador</span></h1>
+            <p class="discover-hero-lead">Identidad local, progreso y accesos rápidos. Jugá libre; publicá cuando quieras.</p>
+            <div class="discover-hero-actions">
+                <a class="home-button home-button-primary" href="games.html">Ver juegos</a>
+                <a class="home-button home-button-secondary" href="ranking.html">Rankings</a>
+            </div>
         </div>
-        <a href="games.html" class="title-link">
-             <h1 class="title-text">Crack Total</h1>
-        </a>
-        <p class="subtitle">Tu Perfil de Jugador</p>
     </header>
 
     <div class="game-layout">
 
-        <main id="main-content" class="game-content profile-container">
+        <main id="main-content" class="game-content profile-container discover-main">
             <div class="container">
                 <h2 class="profile-title">Tu Perfil de Jugador</h2>
 

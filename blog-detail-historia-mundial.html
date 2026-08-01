@@ -101,8 +101,10 @@
       gtag('config', 'G-5XP3T1RTH7');
     </script>
     <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801b">
+    <link rel="stylesheet" href="assets/css/home.css?v=20260801">
+    <link rel="stylesheet" href="assets/css/discover.css?v=20260801j">
 </head>
-<body class="ct-ds">
+<body class="discover-page ct-ds">
     <!-- Skip Link para accesibilidad -->
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
 
@@ -118,14 +120,20 @@
         </nav>
     </div>
 
-    <header class="app-header">
-        <div class="logo-animation">
-            <i class="fas fa-globe ball-icon bounce"></i>
-        </div>
-        <a href="games.html" class="title-link">
-            <h1 class="title-text">Crack Total</h1>
+    <header class="discover-hero discover-hero--compact" aria-labelledby="article-hero-title">
+      <div class="home-shell">
+        <a class="discover-hero-brand" href="/" aria-label="Crack Total, inicio">
+          <i class="fas fa-futbol" aria-hidden="true"></i>
+          Crack Total
         </a>
-        <p class="subtitle">Historia Completa de los Mundiales de Fútbol</p>
+        <p class="home-eyebrow"><i class="fas fa-newspaper" aria-hidden="true"></i> Artículo</p>
+        <h1 id="article-hero-title">Historia del <span>Mundial</span></h1>
+        <p class="discover-hero-lead">Volvé al blog o saltá a un juego cuando termines de leer.</p>
+        <div class="discover-hero-actions">
+          <a class="home-button home-button-secondary" href="blog.html">Volver al blog</a>
+          <a class="home-button home-button-primary" href="games.html">Jugar</a>
+        </div>
+      </div>
     </header>
 
     <div class="page-container blog-detail-container" id="main-content">
