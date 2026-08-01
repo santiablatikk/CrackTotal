@@ -1,0 +1,101 @@
+/**
+ * Crack Total Design System — Utilities
+ */
+
+.ct-shell {
+    width: min(100% - (var(--ct-shell-gutter) * 2), var(--ct-shell-max));
+    margin-inline: auto;
+}
+
+.ct-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--ct-space-md);
+}
+
+.ct-stack-sm { gap: var(--ct-space-sm); }
+.ct-stack-lg { gap: var(--ct-space-lg); }
+
+.ct-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ct-space-sm);
+}
+
+.ct-grid {
+    display: grid;
+    gap: var(--ct-space-lg);
+}
+
+.ct-text-muted { color: var(--ct-text-muted); }
+.ct-text-subtle { color: var(--ct-text-subtle); }
+.ct-text-primary { color: var(--ct-primary); }
+.ct-text-danger { color: var(--ct-danger); }
+.ct-text-center { text-align: center; }
+
+.ct-mt-sm { margin-top: var(--ct-space-sm); }
+.ct-mt-md { margin-top: var(--ct-space-md); }
+.ct-mt-lg { margin-top: var(--ct-space-lg); }
+.ct-mb-sm { margin-bottom: var(--ct-space-sm); }
+.ct-mb-md { margin-bottom: var(--ct-space-md); }
+.ct-mb-lg { margin-bottom: var(--ct-space-lg); }
+
+.ct-p-md { padding: var(--ct-space-md); }
+.ct-p-lg { padding: var(--ct-space-lg); }
+
+.ct-sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+.ct-focus:focus-visible,
+.ct-focus-ring:focus-visible {
+    outline: 2px solid var(--ct-accent);
+    outline-offset: 3px;
+    box-shadow: var(--ct-shadow-focus);
+}
+
+/* Global focus ring on pages that opt into the Design System */
+.ct-ds :where(
+    a,
+    button,
+    input,
+    select,
+    textarea,
+    summary,
+    [role="button"],
+    [tabindex]:not([tabindex="-1"])
+):focus-visible {
+    outline: 2px solid var(--ct-accent);
+    outline-offset: 3px;
+}
+
+.ct-hide { display: none !important; }
+
+.ct-visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+@media (max-width: 720px) {
+    .ct-hide-sm { display: none !important; }
+}
+
+@media (min-width: 721px) {
+    .ct-hide-md-up { display: none !important; }
+}

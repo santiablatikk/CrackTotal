@@ -926,8 +926,9 @@
 }
 
 .profile-identity-button:focus-visible {
-    outline: 3px solid #fff;
+    outline: 2px solid var(--ct-accent, #60a5fa);
     outline-offset: 3px;
+    box-shadow: var(--ct-shadow-focus, 0 0 0 6px rgba(96, 165, 250, 0.42));
 }
 
 @media (max-width: 720px) {

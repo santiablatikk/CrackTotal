@@ -1,20 +1,4 @@
-:root {
-    --home-bg: #050b14;
-    --home-surface: #0b1524;
-    --home-surface-strong: #101d30;
-    --home-text: #f7f9fc;
-    --home-muted: #aebbd0;
-    --home-line: rgba(255, 255, 255, 0.12);
-    --home-primary: #79f2a6;
-    --home-primary-strong: #22c55e;
-    --home-accent: #60a5fa;
-    --home-warm: #fbbf24;
-    --home-danger: #fb7185;
-    --home-radius-sm: 12px;
-    --home-radius: 20px;
-    --home-radius-lg: 32px;
-    --home-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
-}
+/* Home tokens (--home-*) viven en design-system/tokens.css */
 
 html {
     scroll-behavior: smooth;

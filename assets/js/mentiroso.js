@@ -98,6 +98,8 @@ document.addEventListener('DOMContentLoaded', function() {
         gamePhase: 'lobby', // lobby, bidding, listing, validating, roundOver, gameOver
         currentTurn: null, // Player ID for the current action
         gameActive: false,
+        gameStartTime: null,
+        resultPublished: false,
         websocket: null,
         pendingRoomsRequest: null, // Para almacenar solicitud pendiente de salas
         isRoomCreator: false, // Para saber si este jugador creó la sala
@@ -1134,6 +1136,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     // El servidor inicia el juego
                     console.log("⭐ Inicio de juego Mentiroso:", message.payload);
                     gameState.gameActive = true;
+                    gameState.gameStartTime = Date.now();
+                    gameState.resultPublished = false;
                     
                     // Normalizar players - puede venir como array o como objeto
                     let normalizedPlayersStart = [];
@@ -1674,6 +1678,8 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const finalScores = payload.finalScores;
             if (!gameState.myPlayerId || !finalScores) return;
+            if (gameState.resultPublished) return;
+            gameState.resultPublished = true;
 
             let myFinalScore = 0;
             let result = 'defeat';

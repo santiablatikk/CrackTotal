@@ -1,0 +1,32 @@
+{
+  "updatedAt": "2026-08-01T16:45:00.000Z",
+  "items": [
+    {
+      "id": "news-1",
+      "title": "La Scaloneta define la lista preliminar rumbo a la próxima ventana",
+      "summary": "El cuerpo técnico evalúa nombres de Europa y la Liga Profesional.",
+      "category": "Selecciones",
+      "href": "blog-detail-scaloneta.html",
+      "image": "assets/images/blog/messi.jpg",
+      "publishedAt": "2026-08-01T12:00:00.000Z"
+    },
+    {
+      "id": "news-2",
+      "title": "Champions: claves tácticas del cruce entre gigantes europeos",
+      "summary": "Presión alta, laterales ofensivos y el duelo en el mediocampo.",
+      "category": "Análisis",
+      "href": "blog-detail-champions.html",
+      "image": "assets/images/blog/championss.jpg",
+      "publishedAt": "2026-07-31T15:30:00.000Z"
+    },
+    {
+      "id": "news-3",
+      "title": "Mundiales que marcaron una generación de hinchas",
+      "summary": "Momentos, finalistas y narrativas que todavía se discuten.",
+      "category": "Historia",
+      "href": "blog-detail-worldcups.html",
+      "image": "assets/images/blog/worldcup.jpg",
+      "publishedAt": "2026-07-30T10:00:00.000Z"
+    }
+  ]
+}

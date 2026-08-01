@@ -1,0 +1,15 @@
+{
+  "updatedAt": "2026-08-01T16:45:00.000Z",
+  "item": {
+    "id": "god-1",
+    "gameId": "top10",
+    "title": "Top 10",
+    "eyebrow": "Juego recomendado del día",
+    "description": "Diez apellidos. Un tema. Dos minutos. El desafío diario perfecto para entrar en ritmo.",
+    "href": "top10.html",
+    "cta": "Jugar ahora",
+    "badge": "Diario",
+    "image": "assets/images/blog/championss.jpg",
+    "facts": ["1 jugador", "10 respuestas", "2 minutos"]
+  }
+}

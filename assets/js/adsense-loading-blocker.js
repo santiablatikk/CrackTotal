@@ -27,7 +27,8 @@ class AdSenseLoadingBlocker {
             'ins[data-ad-client]'
         ];
         
-        this.isGoogleBot = /Googlebot|Mediapartners-Google|AdsBot-Google|Google-InspectionTool/i.test(navigator.userAgent || '');
+        // No tratamos distinto a Googlebot para evitar aparentar cloaking
+        this.isGoogleBot = false;
         this.init();
     }
     

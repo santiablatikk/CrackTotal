@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <script>
@@ -44,8 +44,8 @@
     <meta property="og:title" content="Crack Total - El desafío definitivo para futboleros">
     <meta property="og:description" content="Jugá, competí y demostrá cuánto sabés de fútbol. Entrá sin registro y elegí tu desafío.">
     <meta property="og:image" content="https://cracktotal.com/assets/images/portada.jpg">
-    <meta property="og:image:width" content="1280">
-    <meta property="og:image:height" content="853">
+    <meta property="og:image:width" content="1024">
+    <meta property="og:image:height" content="682">
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://cracktotal.com/">
     <meta property="twitter:title" content="Crack Total - El desafío definitivo para futboleros">
@@ -79,7 +79,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/base.css?v=20260801">
+    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801">
     <link rel="stylesheet" href="assets/css/home.css?v=20260801">
+    <link rel="stylesheet" href="assets/css/football-hub.css?v=20260801c">
     <link rel="preload" href="/assets/images/portada.jpg" as="image" type="image/jpeg" fetchpriority="high">
 
     <script src="assets/js/adsense-early-blocker.js?v=202506072312"></script>
@@ -95,7 +97,7 @@
     <script src="assets/js/adsense-content-validator.js?v=202506072312" defer></script>
     <script src="assets/js/adsense-policy-manager.js?v=202506072312" defer></script>
 </head>
-<body class="home-v2">
+<body class="home-v2 ct-ds">
     <a class="home-skip-link" href="#main-content">Saltar al contenido principal</a>
 
     <header class="home-header" aria-label="Cabecera principal">
@@ -108,6 +110,7 @@
             <ul class="home-nav-list" id="homeNavMenu">
                 <li><a class="home-nav-link" href="/" aria-current="page">Inicio</a></li>
                 <li><a class="home-nav-link" href="#juegos">Juegos</a></li>
+                <li><a class="home-nav-link" href="#centro-futbol">Centro</a></li>
                 <li><a class="home-nav-link" href="ranking.html">Rankings</a></li>
                 <li><a class="home-nav-link" href="logros.html">Logros</a></li>
                 <li><a class="home-nav-link" href="profile.html" data-profile-label>Perfil</a></li>
@@ -132,7 +135,7 @@
     <main id="main-content">
         <section class="home-hero" aria-labelledby="hero-title">
             <div class="home-hero-media" aria-hidden="true">
-                <img src="assets/images/portada.jpg" alt="" width="1280" height="853" loading="eager" decoding="async" fetchpriority="high">
+                <img src="assets/images/portada.jpg" alt="" width="1024" height="682" loading="eager" decoding="async" fetchpriority="high">
             </div>
             <div class="home-hero-content home-shell">
                 <div class="home-hero-copy">
@@ -185,6 +188,64 @@
                         <span class="home-feature-link">Resolver el Top 10 <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                     </div>
                 </a>
+            </div>
+        </section>
+
+        <section class="football-hub home-reveal" id="centro-futbol" aria-labelledby="hub-title">
+            <div class="home-shell" id="footballHub">
+                <div class="home-section-heading">
+                    <div>
+                        <p class="home-eyebrow">Centro de Fútbol</p>
+                        <h2 id="hub-title">Todo el pulso del juego, en un solo lugar.</h2>
+                    </div>
+                    <p>Partidos, noticias y el desafío del día — listos para conectar con datos en vivo más adelante.</p>
+                </div>
+
+                <div class="hub-grid">
+                    <article class="hub-card hub-card--live" aria-labelledby="hub-live-title">
+                        <header class="hub-card__header">
+                            <h3 class="hub-card__title" id="hub-live-title"><i class="fas fa-broadcast-tower" aria-hidden="true"></i> En vivo</h3>
+                            <span class="ct-badge ct-badge--danger">Live</span>
+                        </header>
+                        <div class="hub-card__body" id="hubLive" aria-live="polite"></div>
+                    </article>
+
+                    <article class="hub-card hub-card--upcoming" aria-labelledby="hub-upcoming-title">
+                        <header class="hub-card__header">
+                            <h3 class="hub-card__title" id="hub-upcoming-title"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Próximos</h3>
+                        </header>
+                        <div class="hub-card__body" id="hubUpcoming" aria-live="polite"></div>
+                    </article>
+
+                    <article class="hub-card hub-card--results" aria-labelledby="hub-results-title">
+                        <header class="hub-card__header">
+                            <h3 class="hub-card__title" id="hub-results-title"><i class="fas fa-check-circle" aria-hidden="true"></i> Resultados</h3>
+                        </header>
+                        <div class="hub-card__body" id="hubResults" aria-live="polite"></div>
+                    </article>
+
+                    <article class="hub-card hub-card--news" aria-labelledby="hub-news-title">
+                        <header class="hub-card__header">
+                            <h3 class="hub-card__title" id="hub-news-title"><i class="fas fa-newspaper" aria-hidden="true"></i> Noticias</h3>
+                            <a class="hub-card__more" href="blog.html">Ver blog</a>
+                        </header>
+                        <div class="hub-card__body" id="hubNews" aria-live="polite"></div>
+                    </article>
+
+                    <article class="hub-card hub-card--game" aria-labelledby="hub-game-title">
+                        <header class="hub-card__header">
+                            <h3 class="hub-card__title" id="hub-game-title"><i class="fas fa-star" aria-hidden="true"></i> Del día</h3>
+                        </header>
+                        <div class="hub-card__body" id="hubGameDay" aria-live="polite"></div>
+                    </article>
+
+                    <article class="hub-card hub-card--ranking" aria-labelledby="hub-rank-title">
+                        <header class="hub-card__header">
+                            <h3 class="hub-card__title" id="hub-rank-title"><i class="fas fa-trophy" aria-hidden="true"></i> Ranking</h3>
+                        </header>
+                        <div class="hub-card__body" id="hubRanking" aria-live="polite"></div>
+                    </article>
+                </div>
             </div>
         </section>
 
@@ -249,6 +310,7 @@
                                 <li><i class="fas fa-user" aria-hidden="true"></i> 1 jugador</li>
                                 <li><i class="fas fa-list-ol" aria-hidden="true"></i> 10 respuestas</li>
                                 <li><i class="fas fa-clock" aria-hidden="true"></i> 2 minutos</li>
+                                <li><i class="fas fa-signal" aria-hidden="true"></i> Dificultad media</li>
                             </ul>
                             <span class="home-game-action">Jugar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                         </div>
@@ -267,6 +329,7 @@
                                 <li><i class="fas fa-user" aria-hidden="true"></i> 1 jugador</li>
                                 <li><i class="fas fa-dice-six" aria-hidden="true"></i> 6 intentos</li>
                                 <li><i class="fas fa-calendar-day" aria-hidden="true"></i> Diario</li>
+                                <li><i class="fas fa-signal" aria-hidden="true"></i> Dificultad media</li>
                             </ul>
                             <span class="home-game-action">Jugar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                         </div>
@@ -274,7 +337,7 @@
 
                     <a class="home-game-card home-reveal" href="quiensabemas.html" data-categories="trivias desafios mundiales clubes jugadores selecciones" data-search="quien sabe mas online duelo preguntas uno contra uno">
                         <div class="home-game-media">
-                            <img src="assets/images/portada.jpg" alt="" width="1280" height="853" loading="lazy" decoding="async">
+                            <img src="assets/images/portada.jpg" alt="" width="1024" height="682" loading="lazy" decoding="async">
                             <span class="home-game-icon" aria-hidden="true"><i class="fas fa-brain"></i></span>
                             <span class="home-game-badge">Online</span>
                         </div>
@@ -285,6 +348,7 @@
                                 <li><i class="fas fa-users" aria-hidden="true"></i> 1 vs 1</li>
                                 <li><i class="fas fa-question" aria-hidden="true"></i> 10 preguntas</li>
                                 <li><i class="fas fa-wifi" aria-hidden="true"></i> Online</li>
+                                <li><i class="fas fa-signal" aria-hidden="true"></i> Dificultad variable</li>
                             </ul>
                             <span class="home-game-action">Entrar al lobby <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                         </div>
@@ -303,15 +367,17 @@
                                 <li><i class="fas fa-users" aria-hidden="true"></i> 1 vs 1</li>
                                 <li><i class="fas fa-layer-group" aria-hidden="true"></i> 6 categorías</li>
                                 <li><i class="fas fa-wifi" aria-hidden="true"></i> Online</li>
+                                <li><i class="fas fa-signal" aria-hidden="true"></i> Dificultad estratégica</li>
                             </ul>
                             <span class="home-game-action">Entrar al lobby <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                         </div>
                     </a>
                 </div>
 
-                <div class="home-empty-state" id="catalogEmptyState" hidden>
-                    <i class="fas fa-futbol" aria-hidden="true"></i>
-                    <p>No encontramos juegos con ese filtro. Probá otra categoría o búsqueda.</p>
+                <div class="home-empty-state ct-empty" id="catalogEmptyState" hidden role="status">
+                    <div class="ct-empty__icon" aria-hidden="true"><i class="fas fa-futbol"></i></div>
+                    <p class="ct-empty__title">Sin resultados</p>
+                    <p class="ct-empty__text">No encontramos juegos con ese filtro. Probá otra categoría o búsqueda.</p>
                 </div>
             </div>
         </section>
@@ -367,6 +433,7 @@
                     <h2>Competí</h2>
                     <ul class="home-footer-links">
                         <li><a href="#juegos">Juegos</a></li>
+                        <li><a href="#centro-futbol">Centro de Fútbol</a></li>
                         <li><a href="ranking.html">Rankings</a></li>
                         <li><a href="logros.html">Logros</a></li>
                         <li><a href="profile.html">Perfil</a></li>
@@ -398,8 +465,22 @@
         </div>
     </footer>
 
+    <script src="assets/js/config/app-config.js?v=20260801c"></script>
+    <script src="assets/js/services/http-client.js?v=20260801"></script>
+    <script src="assets/js/services/cache.js?v=20260801"></script>
+    <script src="assets/js/utils/errors.js?v=20260801"></script>
+    <script src="assets/js/utils/hub-format.js?v=20260801c"></script>
+    <script src="assets/js/services/hub-service.js?v=20260801c"></script>
+    <script src="assets/js/services/index.js?v=20260801"></script>
+    <script src="assets/js/components/loader.js?v=20260801"></script>
+    <script src="assets/js/components/empty-state.js?v=20260801"></script>
+    <script src="assets/js/components/error-state.js?v=20260801b"></script>
     <script src="assets/js/essential.js?v=202505272312"></script>
+    <script src="assets/js/components/toast.js?v=20260801"></script>
+    <script src="assets/js/components/modal.js?v=20260801"></script>
+    <script src="assets/js/components/hub/hub-renderers.js?v=20260801c"></script>
     <script src="assets/js/player-profile.js?v=20260801"></script>
+    <script src="assets/js/football-hub.js?v=20260801c" defer></script>
     <script src="assets/js/home.js?v=20260801" defer></script>
     <script src="assets/js/main.js?v=20260801" defer></script>
 </body>

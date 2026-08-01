@@ -43,6 +43,7 @@
     <meta property="twitter:site" content="@cracktotal_">
 
     <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801b">
     <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/100-futboleros-dicen.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/modals.css?v=202505272312">
@@ -107,28 +108,11 @@
     <script src="assets/js/logros.js?v=202505272312"></script>
     <script src="assets/js/100-futboleros-dicen.js?v=202505272312"></script>
 </head>
-<body class="game-body futboleros-body">
+<body class="game-body futboleros-body ct-ds">
     <!-- Skip Link para accesibilidad -->
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     
-    <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
-        <a href="/" class="nav-logo" aria-label="Crack Total - Inicio">
-            Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
-        </a>
-        <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
-            <i class="fas fa-bars" aria-hidden="true"></i>
-        </button>
-        <ul>
-            <li><a href="/" aria-label="Ir al inicio"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
-            <li><a href="games.html" aria-label="Ir a los juegos"><i class="fas fa-gamepad" aria-hidden="true"></i> Juegos</a></li>
-            <li><a href="profile.html" aria-label="Ver mi perfil"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
-            <li><a href="ranking.html" aria-label="Ver ranking general"><i class="fas fa-trophy" aria-hidden="true"></i> Rankings</a></li>
-            <li><a href="logros.html" aria-label="Ver mis logros"><i class="fas fa-medal" aria-hidden="true"></i> Logros</a></li>
-            <li><a href="blog.html" aria-label="Leer el blog"><i class="fas fa-blog" aria-hidden="true"></i> Blog</a></li>
-            <li><a href="about.html" aria-label="Acerca de nosotros"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a></li>
-            <li><a href="contact.html" aria-label="Contactar con nosotros"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a></li>
-        </ul>
-    </nav>
+    <div data-ct-navbar data-active="games"></div>
     
     <div class="game-layout">
         <!-- Header Mejorado -->
@@ -430,6 +414,9 @@
             </div>
         </div>
     </div>
+    <script src="assets/js/components/navbar.js?v=20260801b"></script>
+    <script src="assets/js/components/footer.js?v=20260801b"></script>
+    <script src="assets/js/components/shell.js?v=20260801b"></script>
 </body>
 </html> 
 

@@ -26,7 +26,11 @@ class AdSensePolicyManager {
                 '/google-site-verification.html',
                 '/google-search-console-site-properties.html',
                 '/test-firebase.html',
-                '/logros.html'  // Temporalmente hasta que tenga más contenido
+                '/logros.html',  // Temporalmente hasta que tenga más contenido
+                '/contact.html', // Nunca mostrar anuncios en contacto
+                '/privacy.html',
+                '/cookies.html',
+                '/terminos.html'
             ],
             exemptPages: [                     // Páginas exentas de verificación de contenido
                 '/',

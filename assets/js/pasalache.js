@@ -472,6 +472,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let letterHints = {};
     let gameErrors = [];
     let usedAnswerSignatures = new Set(); // <--- Track used answers for the current game
+    let gameEnded = false;
     let gameUsedQuestionIndices = {}; // <<<--- Reset used QUESTIONS for new game
     alphabet.split('').forEach(letter => { gameUsedQuestionIndices[letter] = []; }); // Initialize arrays
     let timeLeft = totalTime;
@@ -1065,6 +1066,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Start the game logic
     function startGame() {
+        gameEnded = false;
         currentLetterIndex = 0;
         
         // Reproducir sonido de inicio del juego
@@ -1904,6 +1906,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // End the game
     function endGame(result = 'timeout') {
+        if (gameEnded) return;
+        gameEnded = true;
         clearInterval(timerInterval);
     
         if (window.soundManager) {

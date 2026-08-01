@@ -16,6 +16,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 : 'Podés explorar y jugar libremente. Creá un perfil cuando quieras publicar puntuaciones o entrar a una sala online.';
         }
         if (profileIdentityButton) profileIdentityButton.textContent = playerName ? 'Cambiar nombre' : 'Crear perfil';
+        const avatar = document.getElementById('profileIdentityAvatar');
+        if (avatar) {
+            const initials = window.CrackTotalUI?.avatar?.initialsFrom
+                ? window.CrackTotalUI.avatar.initialsFrom(playerName || 'Invitado')
+                : (playerName || 'IN').slice(0, 2).toUpperCase();
+            avatar.textContent = initials;
+            avatar.setAttribute('aria-hidden', 'true');
+        }
     }
 
     profileIdentityButton?.addEventListener('click', async () => {
@@ -196,7 +204,7 @@ document.addEventListener('DOMContentLoaded', function() {
         historyTableBody.innerHTML = ''; 
 
         if (history.length === 0) {
-            historyTableBody.innerHTML = '<tr><td colspan="6" class="history-empty-state"><i class="fas fa-gamepad"></i><p>No hay partidas en el historial.<br>¡Es hora de comenzar a jugar!</p></td></tr>';
+            historyTableBody.innerHTML = '<tr><td colspan="6" class="history-empty-state ct-empty" role="status"><div class="ct-empty__icon" aria-hidden="true"><i class="fas fa-gamepad"></i></div><p class="ct-empty__title">Sin partidas</p><p class="ct-empty__text">No hay partidas en el historial. ¡Es hora de comenzar a jugar!</p></td></tr>';
         } else {
             history.forEach(game => {
                 const row = historyTableBody.insertRow();
@@ -335,9 +343,6 @@ document.addEventListener('DOMContentLoaded', function() {
     loadMentirosoStats();
     loadAchievementsCount();
     
-    // Cargar estadísticas de Crack Rápido (Firebase + localStorage)
-    loadCrackRapidoFirebaseStats();
-
     // Performance optimization: Remove loading states after all data is loaded
     setTimeout(() => {
         hideLoadingStates();

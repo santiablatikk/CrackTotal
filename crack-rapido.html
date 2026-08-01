@@ -51,6 +51,7 @@
 
     <!-- CSS Links -->
     <link rel="stylesheet" href="assets/css/base.css">
+    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801b">
     <link rel="stylesheet" href="assets/css/layout.css">
     <link rel="stylesheet" href="assets/css/crack-rapido.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -64,31 +65,14 @@
     <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427" crossorigin="anonymous"></script>
 </head>
-<body>
+<body class="ct-ds">
     <!-- Skip Link para accesibilidad -->
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     
     <!-- Partículas de fondo -->
     <div class="speed-particles" aria-hidden="true"></div>
     
-    <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
-        <a href="index.html" class="nav-logo" aria-label="Crack Total - Inicio">
-            Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
-        </a>
-        <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
-            <i class="fas fa-bars" aria-hidden="true"></i>
-        </button>
-        <ul>
-            <li><a href="index.html" aria-label="Ir al inicio"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
-            <li><a href="games.html" aria-label="Ir a los juegos"><i class="fas fa-gamepad" aria-hidden="true"></i> Juegos</a></li>
-            <li><a href="profile.html" aria-label="Ver mi perfil"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
-            <li><a href="ranking.html" aria-label="Ver ranking general"><i class="fas fa-trophy" aria-hidden="true"></i> Rankings</a></li>
-            <li><a href="logros.html" aria-label="Ver mis logros"><i class="fas fa-medal" aria-hidden="true"></i> Logros</a></li>
-            <li><a href="blog.html" aria-label="Leer el blog"><i class="fas fa-blog" aria-hidden="true"></i> Blog</a></li>
-            <li><a href="about.html" aria-label="Acerca de nosotros"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a></li>
-            <li><a href="contact.html" aria-label="Contactar con nosotros"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a></li>
-        </ul>
-    </nav>
+    <div data-ct-navbar data-active="games"></div>
 
     <main id="main-content" class="game-container">
         <article class="speed-game-panel" id="gamePanel">
@@ -554,25 +538,7 @@
 
         </article>
         
-        <footer class="site-footer"> 
-            <div class="footer-content">
-                <div class="footer-links">
-                    <a href="/"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a>
-                    <a href="blog.html"><i class="fas fa-blog" aria-hidden="true"></i> Blog</a>
-                    <a href="contact.html"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a>
-                    <a href="cookies.html"><i class="fas fa-cookie-bite" aria-hidden="true"></i> Cookies</a>
-                    <a href="privacy.html"><i class="fas fa-lock" aria-hidden="true"></i> Privacidad</a>
-                    <a href="terminos.html"><i class="fas fa-file-contract" aria-hidden="true"></i> Términos</a>
-                    <a href="about.html"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a>
-                </div>
-                <button class="footer-share-button" onclick="shareSite()">
-                    <i class="fas fa-share-alt" aria-hidden="true"></i> Compartir
-                </button>
-                <div class="footer-copyright">
-                    &copy; 2025 Crack Total. Todos los derechos reservados.
-                </div>
-            </div>
-        </footer>
+        <div data-ct-footer></div>
     </main>
 
     <!-- Service Worker Registration movido a assets/js/main.js para evitar duplicados -->
@@ -591,6 +557,9 @@
     <script src="assets/js/firebase-service.js?v=202505272312"></script>
     <script src="assets/js/logros.js?v=202505272312"></script>
     <script src="assets/js/crack-rapido.js?v=202505272312"></script>
+    <script src="assets/js/components/navbar.js?v=20260801b"></script>
+    <script src="assets/js/components/footer.js?v=20260801b"></script>
+    <script src="assets/js/components/shell.js?v=20260801b"></script>
 </body>
 </html> 
 

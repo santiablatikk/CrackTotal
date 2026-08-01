@@ -73,6 +73,8 @@ const gameState = {
     isRoomCreator: false,
     gameActive: false,
     gamePhase: 'lobby', // lobby, waitingForOpponent, playing, roundOver, gameOver
+    gameStartTime: null,
+    resultPublished: false,
     
     players: {}, // { playerId1: { name: 'P1', score: 0, avatar: 'P1' }, playerId2: { name: 'P2', score: 0, avatar: 'P2' } }
     currentTurn: null,
@@ -447,6 +449,8 @@ function handleServerMessage(message) {
         case 'gameStart':
             gameState.gameActive = true;
             gameState.gamePhase = 'playing';
+            gameState.gameStartTime = Date.now();
+            gameState.resultPublished = false;
             gameState.players = payload.players;
             gameState.currentTurn = payload.startingPlayerId;
             hideWaitingStateInGame();
@@ -1462,6 +1466,8 @@ async function handleGameEnd(payload) {
 
     // Guardar resultados usando el servicio de Firebase
     if (window.firebaseService && typeof window.firebaseService.saveMatch === 'function') {
+        if (gameState.resultPublished) return;
+        gameState.resultPublished = true;
         try {
             const playerName = gameState.playerName || 
                              localStorage.getItem('playerName') ||

@@ -43,6 +43,7 @@
 
     <!-- CSS Links -->
     <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801b">
     <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -278,25 +279,8 @@
         }
     </style>
 </head>
-<body>
-    <nav class="main-navigation" role="navigation" aria-label="Navegacién principal">
-        <a href="/" class="nav-logo" aria-label="Crack Total - Inicio">
-            Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
-        </a>
-        <button class="nav-toggle" aria-label="Abrir menú de navegacién" aria-expanded="false">
-            <i class="fas fa-bars" aria-hidden="true"></i>
-        </button>
-        <ul>
-            <li><a href="/"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="games.html"><i class="fas fa-gamepad"></i> Juegos</a></li>
-            <li><a href="profile.html"><i class="fas fa-user"></i> Perfil</a></li>
-            <li><a href="ranking.html"><i class="fas fa-trophy"></i> Rankings</a></li>
-            <li><a href="logros.html"><i class="fas fa-medal"></i> Logros</a></li>
-            <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
-            <li><a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a></li>
-            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a></li>
-        </ul>
-    </nav>
+<body class="ct-ds">
+    <div data-ct-navbar data-active="blog"></div>
     
     <div class="breadcrumbs-container">
         <nav aria-label="breadcrumb">
@@ -565,22 +549,7 @@
     </main>
     
     <!-- Footer -->
-    <footer class="site-footer"> 
-        <div class="footer-content">
-            <div class="footer-links">
-                <a href="/"><i class="fas fa-home"></i> Inicio</a>
-                <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
-                <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-                <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-                <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-                <a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a>
-                <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
-            </div>
-            <div class="footer-copyright">
-                &copy; 2025 Crack Total. Todos los derechos reservados. 
-            </div>
-        </div>
-    </footer>
+    <div data-ct-footer></div>
     <script src="assets/js/firebase-init.min.js"></script>
     <script src="assets/js/notifications.min.js"></script>
     <script src="assets/js/cookie-consent.min.js"></script>
@@ -602,6 +571,9 @@
             window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
         }
     </script>
+    <script src="assets/js/components/navbar.js?v=20260801b"></script>
+    <script src="assets/js/components/footer.js?v=20260801b"></script>
+    <script src="assets/js/components/shell.js?v=20260801b"></script>
 </body>
 </html> 
 

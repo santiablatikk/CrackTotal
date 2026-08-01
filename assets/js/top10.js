@@ -19,6 +19,7 @@
   let attempts = 0;
   let startTime = Date.now();
   let savedOnce = false;
+  let publishingResult = false;
 
   function normalize(s){
     return (s||'').toString().toLowerCase()
@@ -155,7 +156,8 @@
       document.getElementById('statTime').textContent = `${mm}:${ss}`;
       showResult(true);
       lockForToday();
-      if (!savedOnce && window.firebaseService){
+      if (!savedOnce && !publishingResult && window.firebaseService){
+        publishingResult = true;
         try{
           const playerName = window.CrackTotalProfile
             ? await window.CrackTotalProfile.ensurePlayerName({ reason: 'publish-score' })

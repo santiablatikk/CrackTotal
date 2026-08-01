@@ -1,0 +1,12 @@
+{
+  "updatedAt": "2026-08-01T16:45:00.000Z",
+  "game": "Pasala Che",
+  "href": "ranking.html",
+  "items": [
+    { "rank": 1, "name": "El Diez", "score": 980, "meta": "Modo Difícil" },
+    { "rank": 2, "name": "Scaloneta", "score": 940, "meta": "Modo Medio" },
+    { "rank": 3, "name": "Bombonera", "score": 905, "meta": "Modo Difícil" },
+    { "rank": 4, "name": "Orsai", "score": 870, "meta": "Modo Fácil" },
+    { "rank": 5, "name": "Pared", "score": 840, "meta": "Modo Medio" }
+  ]
+}

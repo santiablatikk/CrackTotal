@@ -35,6 +35,7 @@
     
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801b">
     <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/static.css?v=202505272312">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -58,23 +59,9 @@
       gtag('config', 'G-5XP3T1RTH7');
     </script>
 </head>
-<body class="disclaimer-page-body">
+<body class="disclaimer-page-body ct-ds">
     <!-- Navigation -->
-    <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
-        <a href="/" class="nav-logo" aria-label="Crack Total - Inicio">
-            Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
-        </a>
-        <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
-            <i class="fas fa-bars" aria-hidden="true"></i>
-        </button>
-        <ul>
-            <li><a href="/"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="games.html"><i class="fas fa-gamepad"></i> Juegos</a></li>
-            <li><a href="blog.html"><i class="fas fa-blog"></i> Blog</a></li>
-            <li><a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a></li>
-            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a></li>
-        </ul>
-    </nav>
+    <div data-ct-navbar></div>
     
     <a href="/" class="home-link">
         <i class="fas fa-home"></i> Inicio
@@ -189,23 +176,12 @@
     </div>
     
     <!-- Footer -->
-    <footer class="site-footer">
-        <div class="footer-content">
-            <div class="footer-links">
-                <a href="/"><i class="fas fa-home"></i> Inicio</a>
-                <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-                <a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a>
-                <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-                <a href="disclaimer.html" class="active"><i class="fas fa-exclamation-triangle"></i> Descargo</a>
-                <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-            </div>
-            <div class="footer-copyright">
-                &copy; 2025 Crack Total. Todos los derechos reservados.
-            </div>
-        </div>
-    </footer>
+    <div data-ct-footer></div>
     
     <script src="assets/js/main.min.js?v=202505272312"></script>
+    <script src="assets/js/components/navbar.js?v=20260801b"></script>
+    <script src="assets/js/components/footer.js?v=20260801b"></script>
+    <script src="assets/js/components/shell.js?v=20260801b"></script>
 </body>
 </html> 
 

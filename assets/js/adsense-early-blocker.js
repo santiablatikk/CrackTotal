@@ -25,8 +25,12 @@
 
     // Permitir siempre rastreadores de Google Ads/AdSense aunque la página esté bloqueada para usuarios
     const ua = navigator.userAgent || '';
-    const isGoogleBot = /Googlebot|Mediapartners-Google|AdsBot-Google|Google-InspectionTool/i.test(ua);
-    const shouldBlockAds = blockedPages.some(page => currentPath.endsWith(page));
+    const isGoogleBot = false; // Evitar excepciones por bot que puedan parecer cloaking
+    const shouldBlockAds = blockedPages.some(page => currentPath.endsWith(page)) ||
+                           currentPath.endsWith('/contact.html') ||
+                           currentPath.endsWith('/privacy.html') ||
+                           currentPath.endsWith('/cookies.html') ||
+                           currentPath.endsWith('/terminos.html');
     
     if (shouldBlockAds && !isGoogleBot) {
         console.log('[AdSense Early Blocker] Bloqueando anuncios en página:', currentPath);

@@ -66,6 +66,7 @@
 
     <!-- CSS Links -->
     <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801b">
     <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/landing.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/modals.css?v=202505272312">
@@ -1420,25 +1421,8 @@
         }
     </style>
 </head>
-<body>
-    <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
-        <a href="/" class="nav-logo" aria-label="Crack Total - Inicio">
-            Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
-        </a>
-        <button class="nav-toggle" aria-label="Abrir men de navegación" aria-expanded="false">
-            <i class="fas fa-bars" aria-hidden="true"></i>
-        </button>
-        <ul>
-            <li><a href="/" aria-label="Ir al inicio"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
-            <li><a href="games.html" class="active" aria-label="Ir a los juegos"><i class="fas fa-gamepad" aria-hidden="true"></i> Juegos</a></li>
-            <li><a href="profile.html" aria-label="Ver mi perfil"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
-            <li><a href="ranking.html" aria-label="Ver ranking general"><i class="fas fa-trophy" aria-hidden="true"></i> Rankings</a></li>
-            <li><a href="logros.html" aria-label="Ver mis logros"><i class="fas fa-medal" aria-hidden="true"></i> Logros</a></li>
-            <li><a href="blog.html" aria-label="Leer el blog"><i class="fas fa-blog" aria-hidden="true"></i> Blog</a></li>
-            <li><a href="about.html" aria-label="Acerca de nosotros"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a></li>
-            <li><a href="contact.html" aria-label="Contactar con nosotros"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a></li>
-        </ul>
-    </nav>
+<body class="ct-ds">
+    <div data-ct-navbar data-active="games"></div>
 
     <main id="main-content" class="container">
         <!-- Hero Section -->
@@ -1449,7 +1433,7 @@
             </h1>
             <h2 class="hero-welcome">
                 ¡Hola, <span class="player-highlight" id="playerNameDisplay">Jugador</span>!
-                <button class="username-change-btn" id="changeNameBtn" aria-label="Cambiar nombre de usuario">
+                <button class="username-change-btn ct-button ct-button--secondary ct-button--sm" id="changeNameBtn" type="button" aria-label="Cambiar nombre de usuario">
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
                     Cambiar
                 </button>
@@ -1605,23 +1589,7 @@
             </div>
         </section>
         
-        <footer class="site-footer"> 
-            <div class="footer-content">
-              <div class="footer-links">
-                <a href="/"><i class="fas fa-home"></i> Inicio</a>
-                <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
-                <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-                <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-                <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-                <a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a>
-                <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
-              </div>
-              <button class="footer-share-button" onclick="shareSite()"><i class="fas fa-share-alt"></i> Compartir</button>
-              <div class="footer-copyright">
-                 &copy; 2025 Crack Total. Todos los derechos reservados. 
-               </div>
-            </div>
-        </footer>
+        <div data-ct-footer></div>
     </main>
 
     <!-- Modal para cambiar nombre -->
@@ -1643,6 +1611,15 @@
         </div>
     </div>
 
+    <script src="assets/js/config/app-config.js?v=20260801"></script>
+    <script src="assets/js/services/http-client.js?v=20260801"></script>
+    <script src="assets/js/services/cache.js?v=20260801"></script>
+    <script src="assets/js/utils/errors.js?v=20260801"></script>
+    <script src="assets/js/services/index.js?v=20260801"></script>
+    <script src="assets/js/components/loader.js?v=20260801"></script>
+    <script src="assets/js/components/empty-state.js?v=20260801"></script>
+    <script src="assets/js/components/toast.js?v=20260801"></script>
+    <script src="assets/js/components/modal.js?v=20260801"></script>
     <script src="assets/js/player-profile.js?v=20260801"></script>
     <!-- Load main.js first for player name functionality -->
     <script src="assets/js/main.js?v=202505272312" defer></script>
@@ -1777,23 +1754,6 @@
 
                 // Manejar clicks en los botones de jugar
                 const gameCards = document.querySelectorAll('.cosmic-game-card');
-                const mentirosoIntroModal = document.getElementById('mentirosoIntroModal');
-                const qsmIntroModal = document.getElementById('qsmIntroModal');
-                const crackRapidoIntroModal = document.getElementById('crackRapidoIntroModal');
-                const goToLobbyMentirosoButton = document.getElementById('goToLobbyMentirosoButton');
-                const goToLobbyQSMButton = document.getElementById('goToLobbyQSMButton');
-                const goToCrackRapidoButton = document.getElementById('goToCrackRapidoButton');
-                
-                // Debug: Log which elements were found
-                console.log('=== DEBUGGING DOM ELEMENTS ===');
-                console.log('Game cards found:', gameCards.length);
-                console.log('Mentiroso modal:', !!mentirosoIntroModal);
-                console.log('QSM modal:', !!qsmIntroModal);
-                console.log('Crack Rapido modal:', !!crackRapidoIntroModal);
-                console.log('Mentiroso button:', !!goToLobbyMentirosoButton);
-                console.log('QSM button:', !!goToLobbyQSMButton);
-                console.log('Crack Rapido button:', !!goToCrackRapidoButton);
-                console.log('=============================');
                 
                 gameCards.forEach(card => {
                     const gameType = card.getAttribute('data-game');
@@ -1829,170 +1789,16 @@
                                 });
                             }
                             
-                            if (gameType === 'mentiroso') {
-                                if (mentirosoIntroModal) {
-                                    mentirosoIntroModal.classList.add('active');
-                                    // Track modal opening
-                                    if (window.gtag) {
-                                        gtag('event', 'modal_open', {
-                                            event_category: 'engagement',
-                                            event_label: 'mentiroso_intro',
-                                            value: 1
-                                        });
-                                    }
-                                } else {
-                                    console.error('Mentiroso modal not found');
-                                    window.location.href = 'mentiroso.html';
-                                }
-                            } else if (gameType === 'quiensabemas') {
-                                if (qsmIntroModal) {
-                                    qsmIntroModal.classList.add('active');
-                                    // Track modal opening
-                                    if (window.gtag) {
-                                        gtag('event', 'modal_open', {
-                                            event_category: 'engagement',
-                                            event_label: 'qsm_intro',
-                                            value: 1
-                                        });
-                                    }
-                                } else {
-                                    console.error('QSM modal not found');
-                                    window.location.href = 'quiensabemas.html';
-                                }
-                            } else if (gameType === 'crack-rapido') {
-                                if (crackRapidoIntroModal) {
-                                    crackRapidoIntroModal.classList.add('active');
-                                    // Track modal opening
-                                    if (window.gtag) {
-                                        gtag('event', 'modal_open', {
-                                            event_category: 'engagement',
-                                            event_label: 'crack_rapido_intro',
-                                            value: 1
-                                        });
-                                    }
-                                } else {
-                                    console.error('Crack Rapido modal not found');
-                                    window.location.href = 'crack-rapido.html';
-                                }
-                            } else {
-                                // Track direct navigation
-                                if (window.gtag) {
-                                    gtag('event', 'game_start', {
-                                        event_category: 'games',
-                                        event_label: gameType,
-                                        navigation_type: 'direct',
-                                        value: 1
-                                    });
-                                }
-                                window.location.href = `${gameType}.html`;
+                            if (window.gtag) {
+                                gtag('event', 'game_start', {
+                                    event_category: 'games',
+                                    event_label: gameType,
+                                    navigation_type: 'direct',
+                                    value: 1
+                                });
                             }
+                            window.location.href = `${gameType}.html`;
                         });
-                    }
-                });
-                
-                // Botón para continuar al lobby de Mentiroso
-                if (goToLobbyMentirosoButton) {
-                    goToLobbyMentirosoButton.addEventListener('click', function() {
-                        if (mentirosoIntroModal) {
-                            mentirosoIntroModal.classList.remove('active');
-                        }
-                        // Track game start from modal
-                        if (window.gtag) {
-                            gtag('event', 'game_start', {
-                                event_category: 'games',
-                                event_label: 'mentiroso',
-                                navigation_type: 'from_modal',
-                                user_engagement: 'high',
-                                value: 2
-                            });
-                        }
-                        window.location.href = 'mentiroso.html';
-                    });
-                } else {
-                    console.warn('goToLobbyMentirosoButton not found');
-                }
-                
-                // Botón para continuar al lobby de QSM
-                if (goToLobbyQSMButton) {
-                    goToLobbyQSMButton.addEventListener('click', function() {
-                        if (qsmIntroModal) {
-                            qsmIntroModal.classList.remove('active');
-                        }
-                        // Track game start from modal
-                        if (window.gtag) {
-                            gtag('event', 'game_start', {
-                                event_category: 'games',
-                                event_label: 'quiensabemas',
-                                navigation_type: 'from_modal',
-                                user_engagement: 'high',
-                                value: 2
-                            });
-                        }
-                        window.location.href = 'quiensabemas.html';
-                    });
-                } else {
-                    console.warn('goToLobbyQSMButton not found');
-                }
-                
-                // Botón para continuar al lobby de Crack Rápido
-                if (goToCrackRapidoButton) {
-                    goToCrackRapidoButton.addEventListener('click', function() {
-                        if (crackRapidoIntroModal) {
-                            crackRapidoIntroModal.classList.remove('active');
-                        }
-                        // Track game start from modal
-                        if (window.gtag) {
-                            gtag('event', 'game_start', {
-                                event_category: 'games',
-                                event_label: 'crack_rapido',
-                                navigation_type: 'from_modal',
-                                user_engagement: 'high',
-                                value: 2
-                            });
-                        }
-                        window.location.href = 'crack-rapido.html';
-                    });
-                } else {
-                    console.warn('goToCrackRapidoButton not found');
-                }
-                
-                // Cerrar modales al hacer clic fuera del contenido
-                window.addEventListener('click', function(event) {
-                    if (mentirosoIntroModal && event.target === mentirosoIntroModal) {
-                        mentirosoIntroModal.classList.remove('active');
-                        // Track modal close
-                        if (window.gtag) {
-                            gtag('event', 'modal_close', {
-                                event_category: 'engagement',
-                                event_label: 'mentiroso_intro_outside_click',
-                                engagement_type: 'low',
-                                value: 0
-                            });
-                        }
-                    }
-                    if (qsmIntroModal && event.target === qsmIntroModal) {
-                        qsmIntroModal.classList.remove('active');
-                        // Track modal close
-                        if (window.gtag) {
-                            gtag('event', 'modal_close', {
-                                event_category: 'engagement',
-                                event_label: 'qsm_intro_outside_click',
-                                engagement_type: 'low',
-                                value: 0
-                            });
-                        }
-                    }
-                    if (crackRapidoIntroModal && event.target === crackRapidoIntroModal) {
-                        crackRapidoIntroModal.classList.remove('active');
-                        // Track modal close
-                        if (window.gtag) {
-                            gtag('event', 'modal_close', {
-                                event_category: 'engagement',
-                                event_label: 'crack_rapido_intro_outside_click',
-                                engagement_type: 'low',
-                                value: 0
-                            });
-                        }
                     }
                 });
 
@@ -2113,6 +1919,9 @@
             }, 100); // Wait 100ms for main.js to execute
         });
     </script>
+    <script src="assets/js/components/navbar.js?v=20260801b"></script>
+    <script src="assets/js/components/footer.js?v=20260801b"></script>
+    <script src="assets/js/components/shell.js?v=20260801b"></script>
 </body>
 </html> 
 

@@ -1,0 +1,279 @@
+/**
+ * Crack Total Design System — Tokens
+ * Canonical language: Home premium (navy + mint).
+ * Legacy aliases keep game pages visually stable.
+ */
+
+:root {
+    /* ========== Canonical surfaces ========== */
+    --ct-bg: #050b14;
+    --ct-bg-rgb: 5, 11, 20;
+    --ct-surface: #0b1524;
+    --ct-surface-rgb: 11, 21, 36;
+    --ct-surface-strong: #101d30;
+    --ct-surface-elevated: #17243a;
+    --ct-surface-hover: #1d2d47;
+
+    /* ========== Canonical text ========== */
+    --ct-text: #f7f9fc;
+    --ct-text-rgb: 247, 249, 252;
+    --ct-text-muted: #aebbd0;
+    --ct-text-subtle: #8493aa;
+    --ct-text-inverse: #04120a;
+
+    /* ========== Brand / actions ========== */
+    --ct-primary: #79f2a6;
+    --ct-primary-rgb: 121, 242, 166;
+    --ct-primary-strong: #22c55e;
+    --ct-primary-soft: #a5f7c3;
+    --ct-accent: #60a5fa;
+    --ct-accent-rgb: 96, 165, 250;
+    --ct-warm: #fbbf24;
+    --ct-warm-rgb: 251, 191, 36;
+    --ct-danger: #fb7185;
+    --ct-danger-rgb: 251, 113, 133;
+    --ct-success: #22c55e;
+    --ct-success-rgb: 34, 197, 94;
+    --ct-warning: #fbbf24;
+    --ct-info: #38bdf8;
+    --ct-line: rgba(255, 255, 255, 0.12);
+    --ct-line-strong: rgba(255, 255, 255, 0.22);
+
+    /* ========== Neon accents (games) ========== */
+    --ct-neon-blue: #00d4ff;
+    --ct-neon-purple: #b794f6;
+    --ct-neon-green: #68d391;
+    --ct-neon-pink: #f687b3;
+
+    /* ========== Typography ========== */
+    --ct-font-sans: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    --ct-font-display: "Oswald", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --ct-font-size-xs: 0.75rem;
+    --ct-font-size-sm: 0.875rem;
+    --ct-font-size-md: 1rem;
+    --ct-font-size-lg: 1.125rem;
+    --ct-font-size-xl: 1.25rem;
+    --ct-font-size-2xl: 1.5rem;
+    --ct-font-size-3xl: clamp(1.75rem, 3vw, 2.5rem);
+    --ct-font-size-4xl: clamp(2rem, 4vw, 3.5rem);
+    --ct-font-size-hero: clamp(3.25rem, 8vw, 7.4rem);
+    --ct-font-weight-normal: 400;
+    --ct-font-weight-medium: 500;
+    --ct-font-weight-semibold: 600;
+    --ct-font-weight-bold: 700;
+    --ct-font-weight-extrabold: 800;
+    --ct-font-weight-black: 900;
+    --ct-line-height-tight: 1.05;
+    --ct-line-height-snug: 1.35;
+    --ct-line-height-normal: 1.6;
+    --ct-letter-tight: -0.03em;
+    --ct-letter-wide: 0.08em;
+
+    /* ========== Spacing ========== */
+    --ct-space-2xs: 0.25rem;
+    --ct-space-xs: 0.5rem;
+    --ct-space-sm: 0.75rem;
+    --ct-space-md: 1rem;
+    --ct-space-lg: 1.5rem;
+    --ct-space-xl: 2rem;
+    --ct-space-2xl: 3rem;
+    --ct-space-3xl: 4rem;
+    --ct-space-section: clamp(4.5rem, 10vw, 8rem);
+
+    /* ========== Radii ========== */
+    --ct-radius-xs: 8px;
+    --ct-radius-sm: 12px;
+    --ct-radius-md: 16px;
+    --ct-radius-lg: 20px;
+    --ct-radius-xl: 24px;
+    --ct-radius-2xl: 32px;
+    --ct-radius-pill: 999px;
+
+    /* ========== Shadows ========== */
+    --ct-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.22);
+    --ct-shadow-md: 0 10px 30px rgba(0, 0, 0, 0.28);
+    --ct-shadow-lg: 0 16px 45px rgba(0, 0, 0, 0.32);
+    --ct-shadow-xl: 0 24px 80px rgba(0, 0, 0, 0.38);
+    --ct-shadow-primary: 0 12px 35px rgba(34, 197, 94, 0.2);
+    --ct-shadow-focus: 0 0 0 6px rgba(96, 165, 250, 0.42);
+
+    /* ========== Motion ========== */
+    --ct-duration-fast: 160ms;
+    --ct-duration-base: 220ms;
+    --ct-duration-slow: 420ms;
+    --ct-ease: ease;
+    --ct-ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+    --ct-ease-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    /* ========== Layout ========== */
+    --ct-shell-max: 1180px;
+    --ct-shell-gutter: 20px;
+    --ct-header-height: 76px;
+    --ct-touch-min: 44px;
+
+    /* ========== Breakpoints (reference for JS/docs) ========== */
+    --ct-bp-sm: 480px;
+    --ct-bp-md: 720px;
+    --ct-bp-lg: 1050px;
+    --ct-bp-xl: 1280px;
+
+    /* ========== Z-index ========== */
+    --ct-z-base: 1;
+    --ct-z-dropdown: 1000;
+    --ct-z-sticky: 1020;
+    --ct-z-fixed: 1030;
+    --ct-z-overlay: 1040;
+    --ct-z-modal: 1050;
+    --ct-z-toast: 10000;
+    --ct-z-skip: 10050;
+
+    /* ========== Gradients ========== */
+    --ct-gradient-surface: linear-gradient(160deg, rgba(16, 29, 48, 0.98), rgba(8, 17, 29, 0.98));
+    --ct-gradient-cta: linear-gradient(135deg, #13253d, #0a1422);
+    --ct-gradient-hero-scrim:
+        linear-gradient(90deg, rgba(3, 8, 15, 0.96) 0%, rgba(3, 8, 15, 0.72) 44%, rgba(3, 8, 15, 0.18) 75%),
+        linear-gradient(0deg, var(--ct-bg) 0%, transparent 42%),
+        linear-gradient(180deg, rgba(3, 8, 15, 0.55), transparent 30%);
+
+    /* ========== Home aliases → canonical ========== */
+    --home-bg: var(--ct-bg);
+    --home-surface: var(--ct-surface);
+    --home-surface-strong: var(--ct-surface-strong);
+    --home-text: var(--ct-text);
+    --home-muted: var(--ct-text-muted);
+    --home-line: var(--ct-line);
+    --home-primary: var(--ct-primary);
+    --home-primary-strong: var(--ct-primary-strong);
+    --home-accent: var(--ct-accent);
+    --home-warm: var(--ct-warm);
+    --home-danger: var(--ct-danger);
+    --home-radius-sm: var(--ct-radius-sm);
+    --home-radius: var(--ct-radius-lg);
+    --home-radius-lg: var(--ct-radius-2xl);
+    --home-shadow: var(--ct-shadow-xl);
+
+    /* ========== Legacy aliases (stable for games) ========== */
+    --primary: #007bff;
+    --primary-rgb: 0, 123, 255;
+    --primary-dark: #0056b3;
+    --primary-light: #66aaff;
+    --secondary: #28a745;
+    --secondary-rgb: 40, 167, 69;
+    --secondary-dark: #1e7e34;
+    --secondary-light: #5cb85c;
+    --accent: #ffc107;
+    --accent-rgb: 255, 193, 7;
+    --accent-dark: #d39e00;
+
+    --background: #121212;
+    --background-rgb: 18, 18, 18;
+    --background-alt: #1e1e1e;
+    --background-alt-rgb: 30, 30, 30;
+    --card-bg: #2a2a2a;
+    --card-bg-rgb: 42, 42, 42;
+    --card-bg-light: #333333;
+
+    --text: #e0e0e0;
+    --text-rgb: 224, 224, 224;
+    --text-light: #b0b0b0;
+    --text-light-rgb: 176, 176, 176;
+    --text-muted: #888888;
+
+    --border: #444444;
+    --border-rgb: 68, 68, 68;
+    --border-light: #555555;
+    --input-bg: #333333;
+    --input-bg-rgb: 51, 51, 51;
+
+    --success: #28a745;
+    --success-rgb: 40, 167, 69;
+    --error: #dc3545;
+    --error-rgb: 220, 53, 69;
+    --warning: #ffc107;
+    --warning-rgb: 255, 193, 7;
+    --info: #17a2b8;
+    --info-rgb: 23, 162, 184;
+
+    --dark-bg-rgb: var(--background-alt-rgb);
+    --darker-bg-rgb: var(--background-rgb);
+    --light-text: var(--text);
+    --medium-text: var(--text-light);
+    --danger: var(--error);
+    --danger-rgb: var(--error-rgb);
+    --danger-dark: #b02a37;
+    --success-dark: #1e7e34;
+    --warning-dark: var(--accent-dark);
+
+    --neon-blue: var(--ct-neon-blue);
+    --neon-purple: var(--ct-neon-purple);
+    --neon-green: var(--ct-neon-green);
+    --neon-pink: var(--ct-neon-pink);
+
+    --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-light));
+    --gradient-secondary: linear-gradient(135deg, var(--secondary), #55c57a);
+    --gradient-accent: linear-gradient(135deg, var(--accent), #ffd54f);
+    --gradient-dark: linear-gradient(135deg, var(--background-alt), var(--background));
+    --gradient-error: linear-gradient(135deg, var(--error), #ff5470);
+    --gradient-success: linear-gradient(135deg, var(--success), var(--neon-green));
+
+    --shadow-sm: var(--ct-shadow-sm);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.4);
+    --shadow-xl: var(--ct-shadow-xl);
+    --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-glow: 0 0 20px rgba(var(--primary-rgb), 0.3);
+
+    --glow-primary: 0 0 15px rgba(var(--primary-rgb), 0.3);
+    --glow-secondary: 0 0 15px rgba(var(--secondary-rgb), 0.3);
+    --glow-accent: 0 0 15px rgba(var(--accent-rgb), 0.3);
+    --glow-error: 0 0 15px rgba(var(--error-rgb), 0.3);
+    --glow-neon-blue: 0 0 20px rgba(0, 212, 255, 0.4);
+
+    --font-family: var(--ct-font-sans);
+    --font-family-headings: var(--ct-font-display);
+    --font-size-base: 16px;
+    --font-size-sm: var(--ct-font-size-sm);
+    --font-size-lg: var(--ct-font-size-lg);
+    --font-size-xl: var(--ct-font-size-xl);
+    --font-weight-normal: var(--ct-font-weight-normal);
+    --font-weight-medium: var(--ct-font-weight-medium);
+    --font-weight-semibold: var(--ct-font-weight-semibold);
+    --font-weight-bold: var(--ct-font-weight-bold);
+    --font-weight-black: var(--ct-font-weight-black);
+
+    --border-radius-sm: 0.2rem;
+    --border-radius-md: 0.375rem;
+    --border-radius-lg: 0.5rem;
+    --border-radius-xl: 1rem;
+    --border-radius-full: 50px;
+
+    --transition-speed: var(--ct-duration-fast);
+    --transition-speed-slow: var(--ct-duration-base);
+    --transition-func: ease-in-out;
+    --transition-bounce: var(--ct-ease-bounce);
+
+    --spacing-xs: var(--ct-space-2xs);
+    --spacing-sm: var(--ct-space-xs);
+    --spacing-md: var(--ct-space-md);
+    --spacing-lg: var(--ct-space-lg);
+    --spacing-xl: var(--ct-space-xl);
+    --spacing-2xl: var(--ct-space-2xl);
+
+    --z-dropdown: var(--ct-z-dropdown);
+    --z-sticky: var(--ct-z-sticky);
+    --z-fixed: var(--ct-z-fixed);
+    --z-modal-backdrop: var(--ct-z-overlay);
+    --z-modal: var(--ct-z-modal);
+    --z-popover: 1060;
+    --z-tooltip: 1070;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :root {
+        --ct-duration-fast: 0.01ms;
+        --ct-duration-base: 0.01ms;
+        --ct-duration-slow: 0.01ms;
+        --transition-speed: 0.01ms;
+        --transition-speed-slow: 0.01ms;
+    }
+}

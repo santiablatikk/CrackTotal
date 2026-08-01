@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <script>
@@ -43,6 +43,7 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/base.css?v=202506012312">
+    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801b">
     <link rel="stylesheet" href="assets/css/layout.css?v=202506012312">
     <link rel="stylesheet" href="assets/css/modals.css?v=202506012312">
     <link rel="stylesheet" href="assets/css/base.css?v=202506012312">
@@ -151,30 +152,13 @@
         }
     </style>
 </head>
-<body class="qsm-1v1-body">
+<body class="qsm-1v1-body ct-ds">
     <div id="fb-root"></div>
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/es_LA/sdk.js#xfbml=1&version=v19.0&appId=YOUR_FACEBOOK_APP_ID" nonce="IBRLz45P"></script>
 
     <div id="cookieConsentContainer" class="cookie-consent-container"></div>
 
-    <nav class="main-navigation" role="navigation" aria-label="Navegación principal">
-        <a href="/" class="nav-logo" aria-label="Crack Total - Inicio">
-            Crack Total <i class="fas fa-futbol" aria-hidden="true"></i>
-        </a>
-        <button class="nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false">
-            <i class="fas fa-bars" aria-hidden="true"></i>
-        </button>
-        <ul>
-            <li><a href="/" aria-label="Ir al inicio"><i class="fas fa-home" aria-hidden="true"></i> Inicio</a></li>
-            <li><a href="games.html" aria-label="Ir a los juegos"><i class="fas fa-gamepad" aria-hidden="true"></i> Juegos</a></li>
-            <li><a href="profile.html" aria-label="Ver mi perfil"><i class="fas fa-user" aria-hidden="true"></i> Perfil</a></li>
-            <li><a href="ranking.html" aria-label="Ver ranking general"><i class="fas fa-trophy" aria-hidden="true"></i> Rankings</a></li>
-            <li><a href="logros.html" aria-label="Ver mis logros"><i class="fas fa-medal" aria-hidden="true"></i> Logros</a></li>
-            <li><a href="blog.html" aria-label="Leer el blog"><i class="fas fa-blog" aria-hidden="true"></i> Blog</a></li>
-            <li><a href="about.html" aria-label="Acerca de nosotros"><i class="fas fa-info-circle" aria-hidden="true"></i> Acerca de</a></li>
-            <li><a href="contact.html" aria-label="Contactar con nosotros"><i class="fas fa-envelope" aria-hidden="true"></i> Contacto</a></li>
-        </ul>
-    </nav>
+    <div data-ct-navbar data-active="games"></div>
 
     <!-- Contenido principal -->
     <main class="qsm-1v1-content">
@@ -398,23 +382,7 @@
     
     <div class="connection-status" id="connectionStatus" style="display:none;">Conectado</div>
 
-    <footer class="site-footer">
-        <div class="footer-content">
-            <div class="footer-links">
-                <a href="/"><i class="fas fa-home"></i> Inicio</a>
-                <a href="blog.html"><i class="fas fa-blog"></i> Blog</a>
-                <a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a>
-                <a href="cookies.html"><i class="fas fa-cookie-bite"></i> Cookies</a>
-                <a href="privacy.html"><i class="fas fa-lock"></i> Privacidad</a>
-                <a href="terminos.html"><i class="fas fa-file-contract"></i> Términos</a>
-                <a href="about.html"><i class="fas fa-info-circle"></i> Acerca de</a>
-            </div>
-            <button class="footer-share-button" onclick="shareSite()"><i class="fas fa-share-alt"></i> Compartir</button>
-            <div class="footer-copyright">
-                &copy; 2024 Crack Total. Todos los derechos reservados.
-            </div>
-        </div>
-    </footer>
+    <div data-ct-footer></div>
 
     <script src="assets/js/player-profile.js?v=20260801"></script>
     <script src="assets/js/main.js?v=20260801" defer></script>
@@ -457,6 +425,9 @@
             }
         };
     </script>
+    <script src="assets/js/components/navbar.js?v=20260801b"></script>
+    <script src="assets/js/components/footer.js?v=20260801b"></script>
+    <script src="assets/js/components/shell.js?v=20260801b"></script>
 </body>
 </html>
 
