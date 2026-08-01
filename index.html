@@ -81,7 +81,7 @@
     <link rel="stylesheet" href="assets/css/base.css?v=20260801">
     <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801">
     <link rel="stylesheet" href="assets/css/home.css?v=20260801">
-    <link rel="stylesheet" href="assets/css/football-hub.css?v=20260801g">
+    <link rel="stylesheet" href="assets/css/football-hub.css?v=20260801h">
     <link rel="preload" href="/assets/images/portada.jpg" as="image" type="image/jpeg" fetchpriority="high">
 
     <script src="assets/js/adsense-early-blocker.js?v=202506072312"></script>
@@ -213,16 +213,17 @@
 
                 <div class="hub-controls">
                     <div class="hub-tabs" role="tablist" aria-label="Vistas de partidos">
-                        <button class="hub-tab is-active" type="button" role="tab" data-hub-tab="hoy" aria-selected="true">Hoy</button>
-                        <button class="hub-tab" type="button" role="tab" data-hub-tab="vivo" aria-selected="false">En Vivo</button>
-                        <button class="hub-tab" type="button" role="tab" data-hub-tab="resultados" aria-selected="false">Resultados</button>
-                        <button class="hub-tab" type="button" role="tab" data-hub-tab="proximos" aria-selected="false">Próximos</button>
+                        <button class="hub-tab is-active" type="button" role="tab" id="hubTabHoy" data-hub-tab="hoy" aria-controls="hubMatchBoard" aria-selected="true" tabindex="0">Hoy</button>
+                        <button class="hub-tab" type="button" role="tab" id="hubTabVivo" data-hub-tab="vivo" aria-controls="hubMatchBoard" aria-selected="false" tabindex="-1">En Vivo</button>
+                        <button class="hub-tab" type="button" role="tab" id="hubTabResultados" data-hub-tab="resultados" aria-controls="hubMatchBoard" aria-selected="false" tabindex="-1">Resultados</button>
+                        <button class="hub-tab" type="button" role="tab" id="hubTabProximos" data-hub-tab="proximos" aria-controls="hubMatchBoard" aria-selected="false" tabindex="-1">Próximos</button>
                     </div>
-                    <div class="hub-filters" id="hubCompFilters" aria-label="Filtrar por competición"></div>
+                    <div class="hub-filters" id="hubCompFilters" role="group" aria-label="Filtrar por competición"></div>
+                    <p id="hubBoardStatus" class="sr-only" aria-live="polite"></p>
                 </div>
 
                 <section class="hub-board-block" aria-label="Partidos">
-                    <div id="hubMatchBoard" class="hub-board" aria-live="polite"></div>
+                    <div id="hubMatchBoard" class="hub-board" role="tabpanel" aria-labelledby="hubTabHoy" aria-live="polite" tabindex="0"></div>
                 </section>
 
                 <!-- Staging mounts (kept for existing panel pipeline; visually hidden) -->
@@ -505,9 +506,9 @@
     <script src="assets/js/essential.js?v=202505272312"></script>
     <script src="assets/js/components/toast.js?v=20260801"></script>
     <script src="assets/js/components/modal.js?v=20260801"></script>
-    <script src="assets/js/components/hub/hub-renderers.js?v=20260801g"></script>
+    <script src="assets/js/components/hub/hub-renderers.js?v=20260801h"></script>
     <script src="assets/js/player-profile.js?v=20260801"></script>
-    <script src="assets/js/football-hub.js?v=20260801g" defer></script>
+    <script src="assets/js/football-hub.js?v=20260801h" defer></script>
     <script src="assets/js/home.js?v=20260801" defer></script>
     <script src="assets/js/main.js?v=20260801" defer></script>
 </body>

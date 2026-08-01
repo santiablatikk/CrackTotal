@@ -116,13 +116,16 @@
         all.className = 'hub-filter-chip' + (activeCompetitions.size === 0 ? ' is-active' : '');
         all.textContent = 'Todas';
         all.dataset.comp = '';
+        all.setAttribute('aria-pressed', activeCompetitions.size === 0 ? 'true' : 'false');
         host.appendChild(all);
         comps.forEach((name) => {
             const btn = document.createElement('button');
             btn.type = 'button';
-            btn.className = 'hub-filter-chip' + (activeCompetitions.has(name) ? ' is-active' : '');
+            const on = activeCompetitions.has(name);
+            btn.className = 'hub-filter-chip' + (on ? ' is-active' : '');
             btn.textContent = name;
             btn.dataset.comp = name;
+            btn.setAttribute('aria-pressed', on ? 'true' : 'false');
             host.appendChild(btn);
         });
     }
@@ -163,6 +166,10 @@
         return filterByCompetition(mix).slice(0, 6);
     }
 
+    function prefersReducedMotion() {
+        return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
     function bindCarousel(root) {
         const track = root.querySelector('.hub-carousel__track');
         if (!track) return;
@@ -170,14 +177,32 @@
         const next = root.querySelector('.hub-carousel__nav--next');
         const scrollBy = (dir) => {
             const amount = Math.max(280, track.clientWidth * 0.85) * dir;
-            track.scrollBy({ left: amount, behavior: 'smooth' });
+            track.scrollBy({
+                left: amount,
+                behavior: prefersReducedMotion() ? 'auto' : 'smooth'
+            });
         };
         if (prev) prev.onclick = () => scrollBy(-1);
         if (next) next.onclick = () => scrollBy(1);
 
         if (carouselTimerId) window.clearInterval(carouselTimerId);
+        if (prefersReducedMotion()) return;
+
+        let paused = false;
+        const pause = () => {
+            paused = true;
+        };
+        const resume = () => {
+            paused = false;
+        };
+        root.addEventListener('mouseenter', pause);
+        root.addEventListener('mouseleave', resume);
+        root.addEventListener('focusin', pause);
+        root.addEventListener('focusout', resume);
+        track.addEventListener('pointerdown', pause);
+
         carouselTimerId = window.setInterval(() => {
-            if (document.hidden) return;
+            if (document.hidden || paused) return;
             const max = track.scrollWidth - track.clientWidth - 8;
             if (track.scrollLeft >= max) track.scrollTo({ left: 0, behavior: 'smooth' });
             else scrollBy(1);
@@ -254,9 +279,30 @@
 
         const featuredHost = document.getElementById('hubFeatured');
         if (featuredHost && R.renderFeatured) {
-            R.renderFeatured(featuredHost, featuredItems(bundle));
+            const featured = featuredItems(bundle);
+            R.renderFeatured(featuredHost, featured, {
+                title: activeCompetitions.size ? 'Sin destacados para ese filtro' : 'Sin destacados',
+                text: activeCompetitions.size
+                    ? 'Probá otra competición o volvé a Todas.'
+                    : 'Cuando haya partidos en vivo o próximos, aparecerán acá.',
+                actions: activeCompetitions.size
+                    ? [
+                          {
+                              label: 'Ver todas',
+                              variant: 'secondary',
+                              onClick: function () {
+                                  activeCompetitions.clear();
+                                  if (lastBundle) {
+                                      paintFilters(lastBundle);
+                                      paintExperience(lastBundle);
+                                  }
+                              }
+                          }
+                      ]
+                    : [{ label: 'Jugar ahora', href: 'games.html', variant: 'primary' }]
+            });
             featuredHost.removeAttribute('aria-busy');
-            bindCarousel(featuredHost);
+            if (featured.length) bindCarousel(featuredHost);
         }
 
         paintFilters(bundle);
@@ -272,8 +318,51 @@
                       : activeTab === 'proximos'
                         ? 'upcoming'
                         : null;
-            R.renderBoard(board, list, mode, 'Sin partidos');
+            const emptyCopy = {
+                hoy: {
+                    title: 'Nada para hoy',
+                    text: 'Todavía no hay partidos para esta vista. Mirá Próximos o jugá una partida.'
+                },
+                vivo: {
+                    title: 'Sin partidos en vivo',
+                    text: 'No hay encuentros live ahora. Revisá Próximos o entrá a un juego.'
+                },
+                resultados: {
+                    title: 'Sin resultados',
+                    text: 'Cuando cierren partidos, vas a verlos acá.'
+                },
+                proximos: {
+                    title: 'Agenda vacía',
+                    text: 'No hay próximos partidos en este filtro.'
+                }
+            };
+            const copy = emptyCopy[activeTab] || emptyCopy.hoy;
+            R.renderBoard(board, list, mode, copy.title, {
+                text: activeCompetitions.size
+                    ? 'Ningún partido coincide con la competición elegida.'
+                    : copy.text,
+                actions: activeCompetitions.size
+                    ? [
+                          {
+                              label: 'Limpiar filtros',
+                              variant: 'secondary',
+                              onClick: function () {
+                                  activeCompetitions.clear();
+                                  if (lastBundle) {
+                                      paintFilters(lastBundle);
+                                      paintExperience(lastBundle);
+                                  }
+                              }
+                          },
+                          { label: 'Jugar ahora', href: 'games.html', variant: 'primary' }
+                      ]
+                    : [
+                          { label: 'Ver juegos', href: 'games.html', variant: 'primary' },
+                          { label: 'Ver blog', href: 'blog.html', variant: 'secondary' }
+                      ]
+            });
             board.removeAttribute('aria-busy');
+            board.setAttribute('aria-label', 'Partidos · ' + (activeTab || 'hoy'));
         }
 
         const mostRead = document.getElementById('hubMostRead');
@@ -312,10 +401,12 @@
     }
 
     function updateTabUi() {
-        document.querySelectorAll('[data-hub-tab]').forEach((btn) => {
+        const tabs = Array.from(document.querySelectorAll('[data-hub-tab]'));
+        tabs.forEach((btn) => {
             const on = btn.getAttribute('data-hub-tab') === activeTab;
             btn.classList.toggle('is-active', on);
             btn.setAttribute('aria-selected', on ? 'true' : 'false');
+            btn.setAttribute('tabindex', on ? '0' : '-1');
         });
         const liveCount = lastBundle ? itemsOf(lastBundle, 'liveMatches').length : 0;
         const liveBadge = document.getElementById('hubLiveCount');
@@ -323,18 +414,60 @@
             liveBadge.textContent = String(liveCount);
             liveBadge.hidden = liveCount === 0;
         }
+        const status = document.getElementById('hubBoardStatus');
+        if (status) {
+            const labels = {
+                hoy: 'Vista de hoy',
+                vivo: 'Vista en vivo',
+                resultados: 'Vista de resultados',
+                proximos: 'Vista de próximos'
+            };
+            status.textContent = labels[activeTab] || 'Partidos actualizados';
+        }
+        const board = document.getElementById('hubMatchBoard');
+        const activeBtn = document.querySelector('[data-hub-tab="' + activeTab + '"]');
+        if (board && activeBtn && activeBtn.id) {
+            board.setAttribute('aria-labelledby', activeBtn.id);
+        }
+    }
+
+    function selectTab(tabId, focus) {
+        activeTab = tabId || 'hoy';
+        if (lastBundle) paintExperience(lastBundle);
+        else updateTabUi();
+        if (focus) {
+            const active = document.querySelector('[data-hub-tab="' + activeTab + '"]');
+            if (active) active.focus();
+        }
     }
 
     function bindUi() {
         if (uiBound) return;
         uiBound = true;
 
-        document.querySelectorAll('[data-hub-tab]').forEach((btn) => {
+        const tablist = document.querySelector('.hub-tabs');
+        const tabs = Array.from(document.querySelectorAll('[data-hub-tab]'));
+
+        tabs.forEach((btn) => {
             btn.addEventListener('click', () => {
-                activeTab = btn.getAttribute('data-hub-tab') || 'hoy';
-                if (lastBundle) paintExperience(lastBundle);
+                selectTab(btn.getAttribute('data-hub-tab') || 'hoy', false);
             });
         });
+
+        if (tablist) {
+            tablist.addEventListener('keydown', (event) => {
+                const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
+                if (keys.indexOf(event.key) === -1) return;
+                event.preventDefault();
+                const current = tabs.findIndex((t) => t.getAttribute('data-hub-tab') === activeTab);
+                let next = current;
+                if (event.key === 'ArrowRight') next = (current + 1) % tabs.length;
+                if (event.key === 'ArrowLeft') next = (current - 1 + tabs.length) % tabs.length;
+                if (event.key === 'Home') next = 0;
+                if (event.key === 'End') next = tabs.length - 1;
+                selectTab(tabs[next].getAttribute('data-hub-tab'), true);
+            });
+        }
 
         const filters = document.getElementById('hubCompFilters');
         if (filters) {

@@ -41,10 +41,16 @@
         return frag;
     }
 
-    function renderEmpty(container, title, text) {
+    function renderEmpty(container, title, text, actions) {
         container.textContent = '';
         if (UI.emptyState) {
-            UI.emptyState.render(container, { title: title, text: text, icon: '○' });
+            UI.emptyState.render(container, {
+                title: title,
+                text: text,
+                icon: '○',
+                actions: actions || [],
+                className: 'hub-empty'
+            });
             return;
         }
         container.appendChild(el('p', 'hub-fallback-empty', text));
@@ -62,6 +68,41 @@
         container.appendChild(el('p', 'hub-fallback-error', message || 'Error al cargar'));
     }
 
+    function matchLabel(match, mode) {
+        const home = (match.home && match.home.name) || 'Local';
+        const away = (match.away && match.away.name) || 'Visitante';
+        const comp = match.competition || 'Partido';
+        if (mode === 'live') {
+            return (
+                comp +
+                ' en vivo: ' +
+                home +
+                ' ' +
+                (match.home && match.home.score != null ? match.home.score : '-') +
+                ' - ' +
+                (match.away && match.away.score != null ? match.away.score : '-') +
+                ' ' +
+                away +
+                (match.minute != null ? ', minuto ' + match.minute : '')
+            );
+        }
+        if (mode === 'result') {
+            return (
+                'Resultado ' +
+                comp +
+                ': ' +
+                home +
+                ' ' +
+                (match.home && match.home.score != null ? match.home.score : '-') +
+                ' - ' +
+                (match.away && match.away.score != null ? match.away.score : '-') +
+                ' ' +
+                away
+            );
+        }
+        return 'Próximo ' + comp + ': ' + home + ' vs ' + away;
+    }
+
     function matchCard(match, mode, options) {
         const opts = options || {};
         const featured = Boolean(opts.featured);
@@ -71,6 +112,7 @@
         );
         row.dataset.matchId = match.id || '';
         if (match.competition) row.dataset.competition = match.competition;
+        row.setAttribute('aria-label', matchLabel(match, mode));
 
         const top = el('div', 'hub-match__meta');
         top.appendChild(compBadge(match.competition));
@@ -165,10 +207,16 @@
         container.appendChild(list);
     }
 
-    function renderFeatured(container, matches) {
+    function renderFeatured(container, matches, emptyOptions) {
         container.textContent = '';
         if (!matches || !matches.length) {
-            renderEmpty(container, 'Sin destacados', 'Cuando haya partidos, aparecerán acá.');
+            const empty = emptyOptions || {};
+            renderEmpty(
+                container,
+                empty.title || 'Sin destacados',
+                empty.text || 'Cuando haya partidos, aparecerán acá.',
+                empty.actions || [{ label: 'Jugar ahora', href: 'games.html', variant: 'primary' }]
+            );
             return;
         }
         const wrap = el('div', 'hub-carousel');
@@ -195,10 +243,16 @@
         container.appendChild(wrap);
     }
 
-    function renderBoard(container, items, mode, emptyTitle) {
+    function renderBoard(container, items, mode, emptyTitle, emptyOptions) {
         container.textContent = '';
         if (!items || !items.length) {
-            renderEmpty(container, emptyTitle, 'No hay partidos en esta vista.');
+            const empty = emptyOptions || {};
+            renderEmpty(
+                container,
+                emptyTitle || 'Sin partidos',
+                empty.text || 'No hay partidos en esta vista.',
+                empty.actions || [{ label: 'Jugar ahora', href: 'games.html', variant: 'primary' }]
+            );
             return;
         }
         const list = el('div', 'hub-match-list hub-match-list--board');
@@ -233,12 +287,13 @@
                 const media = el('div', 'hub-news-card__media');
                 const img = document.createElement('img');
                 img.src = item.image;
-                img.alt = '';
+                img.alt = item.title || 'Noticia';
                 img.loading = 'lazy';
                 img.decoding = 'async';
                 media.appendChild(img);
                 link.appendChild(media);
             }
+            link.setAttribute('aria-label', item.title || 'Leer noticia');
             const body = el('div', 'hub-news-card__body');
             if (item.category) body.appendChild(el('span', 'ct-badge ct-badge--primary', item.category));
             body.appendChild(el('h4', 'hub-news-card__title', item.title));
