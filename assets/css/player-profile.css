@@ -1,0 +1,149 @@
+.ct-profile-dialog[hidden] {
+    display: none;
+}
+
+.ct-profile-dialog {
+    position: fixed;
+    inset: 0;
+    z-index: 10050;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+}
+
+.ct-profile-dialog__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 7, 13, 0.82);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
+.ct-profile-dialog__panel {
+    position: relative;
+    width: min(100%, 480px);
+    max-height: min(720px, calc(100vh - 40px));
+    overflow-y: auto;
+    padding: clamp(24px, 5vw, 38px);
+    color: #f8fafc;
+    background:
+        radial-gradient(circle at 100% 0, rgba(121, 242, 166, 0.13), transparent 17rem),
+        #0b1524;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 24px;
+    box-shadow: 0 28px 90px rgba(0, 0, 0, 0.58);
+}
+
+.ct-profile-dialog__icon {
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 20px;
+    color: #04120a;
+    background: #79f2a6;
+    border-radius: 15px;
+    font-size: 1.2rem;
+}
+
+.ct-profile-dialog h2 {
+    margin: 0;
+    color: #fff;
+    font-family: "Oswald", sans-serif;
+    font-size: clamp(1.8rem, 6vw, 2.5rem);
+    line-height: 1.05;
+}
+
+.ct-profile-dialog__description {
+    margin: 12px 0 24px;
+    color: #b7c4d8;
+    line-height: 1.65;
+}
+
+.ct-profile-dialog label {
+    display: block;
+    margin-bottom: 8px;
+    color: #e5ebf4;
+    font-size: 0.88rem;
+    font-weight: 800;
+}
+
+.ct-profile-dialog input {
+    width: 100%;
+    min-height: 52px;
+    padding: 0.85rem 1rem;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    font: inherit;
+}
+
+.ct-profile-dialog input::placeholder {
+    color: #8796ad;
+}
+
+.ct-profile-dialog input[aria-invalid="true"] {
+    border-color: #fb7185;
+}
+
+.ct-profile-dialog__error {
+    min-height: 1.4rem;
+    margin: 8px 0 0;
+    color: #fda4af;
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.ct-profile-dialog__actions {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.ct-profile-dialog button {
+    min-height: 50px;
+    padding: 0.8rem 1rem;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font: inherit;
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.ct-profile-dialog__cancel {
+    color: #e8edf5;
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+.ct-profile-dialog__submit {
+    color: #04120a;
+    background: #79f2a6;
+}
+
+.ct-profile-dialog :where(button, input):focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px rgba(96, 165, 250, 0.42);
+}
+
+body.ct-profile-dialog-open {
+    overflow: hidden !important;
+}
+
+@media (max-width: 420px) {
+    .ct-profile-dialog__actions {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ct-profile-dialog *,
+    .ct-profile-dialog *::before,
+    .ct-profile-dialog *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

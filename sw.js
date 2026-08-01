@@ -1,5 +1,5 @@
 ﻿// Service Worker optimizado para Crack Total
-const APP_VERSION = '2.4.0'; // Updated version to force cache refresh
+const APP_VERSION = '3.0.0';
 const CACHE_NAME = `crack-total-v${APP_VERSION}`;
 const STATIC_CACHE_NAME = `crack-total-static-v${APP_VERSION}`;
 const DYNAMIC_CACHE_NAME = `crack-total-dynamic-v${APP_VERSION}`;
@@ -24,14 +24,17 @@ const STATIC_ASSETS = [
     '/assets/css/layout.css',
     '/assets/css/landing.css',
     '/assets/css/modals.css',
+    '/assets/css/home.css',
+    '/assets/css/player-profile.css',
     '/assets/js/main.js',
+    '/assets/js/home.js',
+    '/assets/js/player-profile.js',
+    '/assets/js/firebase-utils.js',
     '/assets/js/firebase-init.js',
     '/assets/js/cookie-consent.js',
     '/assets/images/portada.jpg',
     '/portada.ico',
-    '/config/manifest.json',
-    'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.css'
+    '/config/manifest.json'
 ];
 
 // Recursos que se cachearán dinámicamente cuando se soliciten

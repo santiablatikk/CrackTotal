@@ -33,32 +33,15 @@ window.addEventListener('load', () => {
     }
 });
 
-(function() { // IIFE para encapsular y ejecutar inmediatamente
-    const playerName = localStorage.getItem('playerName');
-    const currentPagePath = window.location.pathname;
-
-    // Solo exigir nombre en páginas de juego para no bloquear SEO/legales/blog
-    const gamePages = [
-        '/games.html',
-        '/pasalache.html',
-        '/mentiroso.html',
-        '/quiensabemas.html',
-        '/ranking.html',
-        '/ranking-mentiroso.html',
-        '/ranking-quiensabemas.html'
-    ];
-    const requiresName = gamePages.includes(currentPagePath);
-
-    if (!playerName && requiresName) {
-        window.location.href = '/';
-    }
-})();
-
 // Lista de palabras prohibidas (ejemplos, puedes ampliarla)
 const BANNED_WORDS = ["pene", "pelotudo", "puto", "chota"]; // Ajuste de lista para evitar términos sensibles
 
 // Función para validar el nombre del jugador
 function isValidPlayerName(name) {
+    if (window.CrackTotalProfile?.validatePlayerName) {
+        const validation = window.CrackTotalProfile.validatePlayerName(name);
+        return { valid: validation.valid, message: validation.message };
+    }
     if (!name || name.trim() === "") {
         return { valid: false, message: "El nombre no puede estar vacío." };
     }
@@ -77,7 +60,8 @@ function isValidPlayerName(name) {
 
 // Función global para actualizar todos los elementos de nombre de jugador
 function updateAllPlayerNameElements() {
-    const playerName = localStorage.getItem('playerName') || 'Jugador';
+    const savedPlayerName = localStorage.getItem('playerName');
+    const playerName = savedPlayerName || 'Invitado';
     console.log(`Actualizando todos los elementos de nombre con: ${playerName}`);
     
     // Actualizar playerNameDisplay específicamente
@@ -93,7 +77,7 @@ function updateAllPlayerNameElements() {
         if (element.tagName !== 'INPUT' || !element.value || element.value === 'Jugador' || element.value === 'Jugador 1' || element.value === 'Jugador 2') {
             element.textContent = playerName;
         }
-        if (element.id === 'createPlayerName' || element.id === 'joinPlayerName'){
+        if (savedPlayerName && (element.id === 'createPlayerName' || element.id === 'joinPlayerName')){
             element.value = playerName;
         }
     });
@@ -101,68 +85,25 @@ function updateAllPlayerNameElements() {
     // Actualizar span con clase player-highlight (por si acaso)
     const playerHighlightElements = document.querySelectorAll('.player-highlight');
     playerHighlightElements.forEach(element => {
-        if (element.id === 'playerNameDisplay' || !element.textContent || element.textContent === 'Jugador') {
+        if (element.id === 'playerNameDisplay' || !element.textContent || element.textContent === 'Jugador' || element.textContent === 'Invitado') {
             element.textContent = playerName;
         }
     });
 }
 
-// Store player name in local storage
+// Synchronize the optional player profile across pages.
 document.addEventListener('DOMContentLoaded', function() {
-    const nameForm = document.getElementById('nameForm');
-    const playerNameInput = document.getElementById('playerName');
     const createPlayerNameLobbyInput = document.getElementById('createPlayerName');
     const joinPlayerNameLobbyInput = document.getElementById('joinPlayerName');
-    const nameErrorDiv = document.getElementById('nameError'); // Para mostrar errores en index.html
 
-    // 1. Al cargar la página, intentar pre-rellenar el nombre
     const savedPlayerName = localStorage.getItem('playerName');
     if (savedPlayerName) {
-        if (playerNameInput) {
-            playerNameInput.value = savedPlayerName;
-        }
         if (createPlayerNameLobbyInput) {
             createPlayerNameLobbyInput.value = savedPlayerName;
         }
         if (joinPlayerNameLobbyInput) {
             joinPlayerNameLobbyInput.value = savedPlayerName;
         }
-    }
-
-    if (nameForm) {
-        nameForm.addEventListener('submit', function(event) {
-            if (playerNameInput) {
-                const enteredName = playerNameInput.value.trim();
-                const validation = isValidPlayerName(enteredName);
-
-                if (validation.valid) {
-                    event.preventDefault();
-                    localStorage.setItem('playerName', enteredName);
-                    
-                    // -- NUEVO: Actualizar perfil de Firebase --
-                    if (window.CrackTotalFirebase) {
-                        window.CrackTotalFirebase.updateUserProfile(enteredName);
-                    }
-                    // -- FIN NUEVO --
-
-                    console.log(`Nombre guardado desde index.html: ${enteredName}. Redirigiendo a games.html...`);
-                    if (nameErrorDiv) nameErrorDiv.textContent = ''; // Limpiar error si es válido
-                    window.location.href = 'games.html';
-                } else {
-                    console.log("Validación de nombre fallida en index.html:", validation.message);
-                    event.preventDefault();
-                    if (nameErrorDiv) {
-                        nameErrorDiv.textContent = validation.message;
-                        nameErrorDiv.style.display = 'block';
-                    } else {
-                        alert(validation.message); // Fallback si el div no existe
-                    }
-                    playerNameInput.focus();
-                }
-            } else {
-                event.preventDefault();
-            }
-        });
     }
 
     // --- Lógica para actualizar los nombres en los inputs del lobby de QSM si se cambian en la página de juegos ---
@@ -184,7 +125,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (playerNameDisplay) {
         // Get current player name from localStorage, use 'Jugador' as fallback only if no name exists
         const currentPlayerName = localStorage.getItem('playerName');
-        let displayName = currentPlayerName || 'Jugador';
+        let displayName = currentPlayerName || 'Invitado';
         
         // Always display the actual saved name
         playerNameDisplay.textContent = displayName;
@@ -197,9 +138,28 @@ document.addEventListener('DOMContentLoaded', function() {
         const cancelNameChange = document.getElementById('cancelNameChange');
         const newPlayerNameInput = document.getElementById('newPlayerName');
         const changeNameErrorDiv = document.getElementById('changeNameError'); // Para errores en el modal
+
+        if (changeNameBtn && !currentPlayerName) {
+            const textNode = Array.from(changeNameBtn.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
+            if (textNode) textNode.textContent = ' Crear perfil';
+        }
         
         if (changeNameBtn && changeNameModal) {
-            changeNameBtn.addEventListener('click', function() {
+            changeNameBtn.addEventListener('click', async function() {
+                if (window.CrackTotalProfile) {
+                    const hasProfile = Boolean(window.CrackTotalProfile.getPlayerName());
+                    const name = await window.CrackTotalProfile.ensurePlayerName({
+                        reason: hasProfile ? 'change-name' : 'create-profile',
+                        force: hasProfile
+                    });
+                    if (name) {
+                        displayName = name;
+                        updateAllPlayerNameElements();
+                        const textNode = Array.from(changeNameBtn.childNodes).find(node => node.nodeType === Node.TEXT_NODE);
+                        if (textNode) textNode.textContent = ' Cambiar';
+                    }
+                    return;
+                }
                 if (newPlayerNameInput) {
                     newPlayerNameInput.value = displayName;
                 }
@@ -310,12 +270,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Update player name in game headers
     const playerNameElements = document.querySelectorAll('.player-name');
     if (playerNameElements.length > 0) {
-        const currentSavedPlayerName = localStorage.getItem('playerName') || 'Jugador';
+        const currentSavedPlayerName = localStorage.getItem('playerName') || 'Invitado';
+        const hasSavedPlayerName = Boolean(localStorage.getItem('playerName'));
         playerNameElements.forEach(element => {
             if (element.tagName !== 'INPUT' || !element.value || element.value === 'Jugador 1' || element.value === 'Jugador 2') {
                  element.textContent = currentSavedPlayerName;
             }
-            if (element.id === 'createPlayerName' || element.id === 'joinPlayerName'){
+            if (hasSavedPlayerName && (element.id === 'createPlayerName' || element.id === 'joinPlayerName')){
                 if(element.value !== currentSavedPlayerName) element.value = currentSavedPlayerName;
             }
         });

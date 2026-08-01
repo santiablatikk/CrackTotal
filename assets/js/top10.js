@@ -145,7 +145,7 @@
     c.prepend(b);
   }
 
-  function checkCompletion(){
+  async function checkCompletion(){
     if (foundSet.size === 10){
       const elapsed = Math.max(1, Math.floor((Date.now()-startTime)/1000));
       const mm = Math.floor(elapsed/60);
@@ -156,10 +156,14 @@
       showResult(true);
       lockForToday();
       if (!savedOnce && window.firebaseService){
-        savedOnce = true; saveState();
         try{
-          window.firebaseService.saveMatch('top10', {
-            playerName: localStorage.getItem('playerName') || 'Anónimo',
+          const playerName = window.CrackTotalProfile
+            ? await window.CrackTotalProfile.ensurePlayerName({ reason: 'publish-score' })
+            : localStorage.getItem('playerName');
+          if (!playerName) return;
+
+          const saved = await window.firebaseService.saveMatch('top10', {
+            playerName,
             score: 10,
             correctAnswers: 10,
             totalQuestions: 10,
@@ -169,6 +173,10 @@
             resultDescription: topic.title,
             gameVersion: '1.0'
           });
+          if (saved !== false) {
+            savedOnce = true;
+            saveState();
+          }
         }catch(e){ console.warn('Top10 saveMatch error', e); }
       }
     }

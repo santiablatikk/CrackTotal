@@ -1964,15 +1964,10 @@ document.addEventListener('DOMContentLoaded', function() {
         };
         addGameToHistory(gameResultForHistory);
         
-        // <<<--- LLAMADA CORRECTA A FIREBASE --- >>>
+        // Publicar en el ranking es opcional: la partida local ya quedó guardada.
         if (window.firebaseService && typeof window.firebaseService.saveMatch === 'function') {
-            console.log("%c[Pasalache] Preparando para guardar partida en Firebase...", "color: #3b82f6; font-weight: bold;");
-            
-            // Obtener dificultad actual
             const difficulty = document.querySelector('.difficulty-card.active')?.dataset.difficulty || 
                              document.querySelector('.difficulty-btn.active')?.dataset.difficulty || 'normal';
-            
-            // Determinar resultado detallado
             let resultType = result;
             let resultDescription = '';
             if (result === 'victory') {
@@ -1984,43 +1979,41 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             const gameDataForService = {
-                // Datos básicos del jugador
-                playerName: currentPlayerName,
-                
-                // Resultados principales
                 score: correctAnswers,
                 correctAnswers: correctAnswers,
                 incorrectAnswers: incorrectAnswers,
                 totalQuestions: alphabet.length,
                 accuracy: accuracy,
-                
-                // Información de tiempo
-                duration: timeSpent, // en segundos
-                timeFormatted: timeFormatted, // formato legible
-                
-                // Información del juego
-                gameResult: resultType, // 'victory', 'defeat', 'timeout'
+                duration: timeSpent,
+                timeFormatted: timeFormatted,
+                gameResult: resultType,
                 resultDescription: resultDescription,
                 difficulty: difficulty,
-                
-                // Información adicional
                 passedAnswers: passedAnswers,
                 helpUsed: helpUsed,
                 maxErrors: maxErrors,
                 totalErrors: gameErrors.length,
-                
-                // Metadatos
                 gameDate: new Date().toISOString(),
                 gameVersion: '2.0'
             };
-            
-            window.firebaseService.saveMatch('pasalache', gameDataForService)
-                .then(() => {
+
+            window.setTimeout(async () => {
+                const playerName = window.CrackTotalProfile
+                    ? await window.CrackTotalProfile.ensurePlayerName({ reason: 'publish-score' })
+                    : localStorage.getItem('playerName');
+                if (!playerName) return;
+
+                currentPlayerName = playerName;
+                try {
+                    await window.firebaseService.saveMatch('pasalache', {
+                        ...gameDataForService,
+                        playerName
+                    });
                     console.log("%c[Pasalache] Partida enviada a Firebase con éxito.", "color: #16a34a;");
-                })
-                .catch(error => {
+                } catch (error) {
                     console.error("%c[Pasalache] Error al guardar partida en Firebase:", "color: #ef4444;", error);
-                });
+                }
+            }, 0);
         } else {
             console.warn("[Pasalache] window.firebaseService.saveMatch no está disponible. La partida no se guardará en el ranking.");
         }

@@ -94,7 +94,8 @@
       }
     }
     </script>
-    <script src="assets/js/main.js?v=202505272312" defer></script>
+    <script src="assets/js/player-profile.js?v=20260801"></script>
+    <script src="assets/js/main.js?v=20260801" defer></script>
     <script type="module" src="assets/js/firebase-config.js"></script>
     <script type="module" src="assets/js/firebase-init.js"></script>
 </head>
@@ -140,6 +141,20 @@
         <main id="main-content" class="game-content profile-container">
             <div class="container">
                 <h2 class="profile-title">Tu Perfil de Jugador</h2>
+
+                <section class="profile-identity-card" aria-labelledby="profile-identity-title">
+                    <div class="profile-identity-icon" aria-hidden="true">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-identity-copy">
+                        <p class="profile-identity-eyebrow">Identidad local</p>
+                        <h3 id="profile-identity-title">Jugás como <span id="profileIdentityName">Invitado</span></h3>
+                        <p id="profileIdentityDescription">Podés explorar y jugar libremente. Creá un perfil cuando quieras publicar puntuaciones o entrar a una sala online.</p>
+                    </div>
+                    <button class="profile-identity-button" id="profileIdentityButton" type="button">
+                        Crear perfil
+                    </button>
+                </section>
                 
                 <!-- Enlaces de navegación rápida -->
                 <nav aria-label="Enlaces rápidos del perfil" class="profile-quick-nav">

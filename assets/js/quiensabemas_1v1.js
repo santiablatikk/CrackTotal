@@ -126,12 +126,8 @@ function loadPlayerName() {
         gameState.playerName = nameFromStorage;
         console.log(`🏷️ Nombre de jugador cargado: ${gameState.playerName}`);
     } else {
-        gameState.playerName = 'Jugador Anónimo';
-        console.warn('⚠️ No se encontró nombre de jugador en localStorage. Usando nombre por defecto.');
-        // Redirigir al usuario a la página principal para establecer un nombre
-        if (window.location.pathname !== '/' && window.location.pathname !== '/index.html') {
-            window.location.href = '/';
-        }
+        gameState.playerName = '';
+        console.log('Modo invitado activo. El nombre se solicitará al entrar a una sala.');
     }
 }
 
@@ -140,20 +136,41 @@ function updatePlayerNameInUI() {
     const createPlayerNameInput = document.getElementById('createPlayerName');
     const joinPlayerNameInput = document.getElementById('joinPlayerName');
     
-    if (createPlayerNameInput) {
+    if (createPlayerNameInput && gameState.playerName) {
         createPlayerNameInput.value = gameState.playerName;
     }
     
-    if (joinPlayerNameInput) {
+    if (joinPlayerNameInput && gameState.playerName) {
         joinPlayerNameInput.value = gameState.playerName;
     }
     
     // Actualizar el nombre en el encabezado del juego si existe
     if (DOM.player1NameHeader) {
-        DOM.player1NameHeader.textContent = gameState.playerName;
+        DOM.player1NameHeader.textContent = gameState.playerName || 'Invitado';
     }
     
     console.log(`Nombre de jugador actualizado en la UI: ${gameState.playerName}`);
+}
+
+async function ensureLobbyPlayerName(preferredName = '') {
+    const candidate = preferredName.trim();
+    const validation = window.CrackTotalProfile?.validatePlayerName(candidate);
+
+    if (candidate && (!validation || validation.valid)) {
+        localStorage.setItem('playerName', candidate);
+        gameState.playerName = candidate;
+        return candidate;
+    }
+
+    const playerName = window.CrackTotalProfile
+        ? await window.CrackTotalProfile.ensurePlayerName({ reason: 'join-game' })
+        : localStorage.getItem('playerName');
+
+    if (playerName) {
+        gameState.playerName = playerName;
+        updatePlayerNameInUI();
+    }
+    return playerName || '';
 }
 
 function updateConnectionStatusUI(connected, message = '') {
@@ -635,25 +652,12 @@ function enableLobbyButtons() {
     }
 }
 
-function handleCreateRoom() {
-    // Verificar si hay un campo de entrada de nombre en la sala y usarlo si existe
+async function handleCreateRoom() {
     const createPlayerNameInput = document.getElementById('createPlayerName');
-    const roomName = DOM.createRoomNameInput?.value.trim() || `Sala de ${gameState.playerName}`;
     const password = DOM.createRoomPasswordInput?.value || null;
-    
-    // Si hay un campo de entrada de nombre específico para la sala, usar ese valor
-    let playerName = gameState.playerName;
-    if (createPlayerNameInput && createPlayerNameInput.value.trim()) {
-        playerName = createPlayerNameInput.value.trim();
-        // Actualizar el nombre en localStorage y en el estado
-        localStorage.setItem('playerName', playerName);
-        gameState.playerName = playerName;
-    }
-    
-    if (!playerName || playerName === 'Jugador Anónimo') {
-        showLobbyMessage('Por favor, establece un nombre de jugador válido primero (desde Inicio o Perfil).', 'error', false);
-        return;
-    }
+    const playerName = await ensureLobbyPlayerName(createPlayerNameInput?.value || '');
+    if (!playerName) return;
+    const roomName = DOM.createRoomNameInput?.value.trim() || `Sala de ${playerName}`;
     
     sendToServer('createRoom', { 
         playerName: playerName, 
@@ -666,29 +670,17 @@ function handleCreateRoom() {
     disableLobbyButtons(true);
 }
 
-function handleJoinRoomById() {
-    // Verificar si hay un campo de entrada de nombre en la sala y usarlo si existe
+async function handleJoinRoomById() {
     const joinPlayerNameInput = document.getElementById('joinPlayerName');
     const roomIdToJoin = DOM.joinRoomIdInput?.value.trim();
-    
-    // Si hay un campo de entrada de nombre específico para unirse, usar ese valor
-    let playerName = gameState.playerName;
-    if (joinPlayerNameInput && joinPlayerNameInput.value.trim()) {
-        playerName = joinPlayerNameInput.value.trim();
-        // Actualizar el nombre en localStorage y en el estado
-        localStorage.setItem('playerName', playerName);
-        gameState.playerName = playerName;
-    }
     
     if (!roomIdToJoin) {
         showLobbyMessage('Ingresa un ID de sala válido.', 'error', false);
         return;
     }
     
-    if (!playerName || playerName === 'Jugador Anónimo') {
-        showLobbyMessage('Establece un nombre de jugador válido primero.', 'error', false);
-        return;
-    }
+    const playerName = await ensureLobbyPlayerName(joinPlayerNameInput?.value || '');
+    if (!playerName) return;
     
     console.log(`Intentando unirse a la sala: ${roomIdToJoin} con nombre: ${playerName}`);
     
@@ -779,23 +771,10 @@ function joinRoomDirectly(roomId, playerName, password) {
     disableLobbyButtons(false, true);
 }
 
-function handleJoinRandomRoom() {
-    // Verificar si hay un campo de entrada de nombre en la sala y usarlo si existe
+async function handleJoinRandomRoom() {
     const joinPlayerNameInput = document.getElementById('joinPlayerName');
-    
-    // Si hay un campo de entrada de nombre específico para unirse, usar ese valor
-    let playerName = gameState.playerName;
-    if (joinPlayerNameInput && joinPlayerNameInput.value.trim()) {
-        playerName = joinPlayerNameInput.value.trim();
-        // Actualizar el nombre en localStorage y en el estado
-        localStorage.setItem('playerName', playerName);
-        gameState.playerName = playerName;
-    }
-    
-    if (!playerName || playerName === 'Jugador Anónimo') {
-        showLobbyMessage('Establece un nombre de jugador válido primero.', 'error', false);
-        return;
-    }
+    const playerName = await ensureLobbyPlayerName(joinPlayerNameInput?.value || '');
+    if (!playerName) return;
     
     sendToServer('joinRandomRoom', { 
         playerName: playerName, 
@@ -807,7 +786,7 @@ function handleJoinRandomRoom() {
 }
 
 // Nueva función para manejar el clic en unirse a sala desde la lista
-function handleJoinRoomFromListClick(room) {
+async function handleJoinRoomFromListClick(room) {
     const roomId = room.id;
     const roomName = room.name || room.roomName || `Sala ${roomId}`;
     // Asegurar que needsPassword sea un valor booleano utilizando doble negación
@@ -818,19 +797,8 @@ function handleJoinRoomFromListClick(room) {
     // Verificar si hay un campo de entrada de nombre en la sala y usarlo si existe
     const joinPlayerNameInput = document.getElementById('joinPlayerName');
     
-    // Si hay un campo de entrada de nombre específico para unirse, usar ese valor
-    let playerName = gameState.playerName;
-    if (joinPlayerNameInput && joinPlayerNameInput.value.trim()) {
-        playerName = joinPlayerNameInput.value.trim();
-        // Actualizar el nombre en localStorage y en el estado
-        localStorage.setItem('playerName', playerName);
-        gameState.playerName = playerName;
-    }
-    
-    if (!playerName || playerName === 'Jugador Anónimo') {
-        showLobbyMessage('Establece un nombre de jugador válido primero.', 'error', false);
-        return;
-    }
+    const playerName = await ensureLobbyPlayerName(joinPlayerNameInput?.value || '');
+    if (!playerName) return;
     
     // Actualizar el campo de ID de sala en el formulario principal
     if (DOM.joinRoomIdInput) {
@@ -1496,9 +1464,11 @@ async function handleGameEnd(payload) {
     if (window.firebaseService && typeof window.firebaseService.saveMatch === 'function') {
         try {
             const playerName = gameState.playerName || 
-                             localStorage.getItem('playerName') || 
-                             window.firebaseService.generatePlayerName() || 
-                             'QSMPlayer';
+                             localStorage.getItem('playerName') ||
+                             (window.CrackTotalProfile
+                                ? await window.CrackTotalProfile.ensurePlayerName({ reason: 'publish-score' })
+                                : '');
+            if (!playerName) return;
 
             const matchData = {
                 playerName: playerName,
@@ -1560,28 +1530,12 @@ function setupEventListeners() {
                 joinPlayerNameInput.value = createPlayerNameInput.value.trim();
             }
         });
-        
-        createPlayerNameInput.addEventListener('change', () => {
-            if (createPlayerNameInput.value.trim()) {
-                localStorage.setItem('playerName', createPlayerNameInput.value.trim());
-                gameState.playerName = createPlayerNameInput.value.trim();
-                updatePlayerNameInUI();
-            }
-        });
     }
     
     if (joinPlayerNameInput) {
         joinPlayerNameInput.addEventListener('input', () => {
             if (joinPlayerNameInput.value.trim() && createPlayerNameInput) {
                 createPlayerNameInput.value = joinPlayerNameInput.value.trim();
-            }
-        });
-        
-        joinPlayerNameInput.addEventListener('change', () => {
-            if (joinPlayerNameInput.value.trim()) {
-                localStorage.setItem('playerName', joinPlayerNameInput.value.trim());
-                gameState.playerName = joinPlayerNameInput.value.trim();
-                updatePlayerNameInUI();
             }
         });
     }

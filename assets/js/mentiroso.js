@@ -240,6 +240,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    async function ensureLobbyPlayerName(preferredName = '') {
+        const candidate = preferredName.trim();
+        const validation = window.CrackTotalProfile?.validatePlayerName(candidate);
+
+        if (candidate && (!validation || validation.valid)) {
+            localStorage.setItem('playerName', candidate);
+            if (createPlayerNameInput) createPlayerNameInput.value = candidate;
+            if (joinPlayerNameInput) joinPlayerNameInput.value = candidate;
+            return candidate;
+        }
+
+        const playerName = window.CrackTotalProfile
+            ? await window.CrackTotalProfile.ensurePlayerName({ reason: 'join-game' })
+            : localStorage.getItem('playerName');
+        if (playerName) {
+            if (createPlayerNameInput) createPlayerNameInput.value = playerName;
+            if (joinPlayerNameInput) joinPlayerNameInput.value = playerName;
+        }
+        return playerName || '';
+    }
+
     function showLobby() {
         gameState.gamePhase = 'lobby';
         lobbySectionEl.style.display = 'block';
@@ -280,35 +301,35 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function handleCreateRoom() {
+    async function handleCreateRoom() {
         if (!createRoomButton || createRoomButton.disabled) return;
-        const playerName = createPlayerNameInput.value.trim() || 'Jugador 1';
-        localStorage.setItem('playerName', playerName); // Save name
+        const playerName = await ensureLobbyPlayerName(createPlayerNameInput?.value || '');
+        if (!playerName) return;
         const password = createRoomPasswordInput.value;
         showLobbyMessage("Creando sala de Mentiroso...", "info");
         disableLobbyButtons(true);
         sendToServer('createRoom', { playerName, password, gameType: 'mentiroso' });
     }
 
-    function handleJoinRoomById() {
+    async function handleJoinRoomById() {
         if (!joinRoomButton || joinRoomButton.disabled) return;
-        const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
-        localStorage.setItem('playerName', playerName); // Save name
         const roomId = joinRoomIdInput.value.trim();
         const password = joinRoomPasswordInput.value;
         if (!roomId) {
             showLobbyMessage("Por favor, poné un ID de sala.", "error");
             return;
         }
+        const playerName = await ensureLobbyPlayerName(joinPlayerNameInput?.value || '');
+        if (!playerName) return;
         showLobbyMessage(`Uniéndote a la sala ${roomId}...`, "info");
         disableLobbyButtons(false, true);
         sendToServer('joinRoom', { playerName, roomId, password, gameType: 'mentiroso' });
     }
 
-     function handleJoinRandomRoom() {
+     async function handleJoinRandomRoom() {
          if (!joinRandomRoomButton || joinRandomRoomButton.disabled) return;
-         const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
-         localStorage.setItem('playerName', playerName); // Save name
+         const playerName = await ensureLobbyPlayerName(joinPlayerNameInput?.value || '');
+         if (!playerName) return;
          showLobbyMessage("Buscando una sala de Mentiroso...", "info");
          disableLobbyButtons(false, false, true);
          sendToServer('joinRandomRoom', { playerName, gameType: 'mentiroso' });
@@ -1690,9 +1711,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Guardar usando el servicio de Firebase
             if (window.firebaseService && typeof window.firebaseService.saveMatch === 'function') {
-                const playerName = localStorage.getItem('playerName') || 
-                                 window.firebaseService.generatePlayerName() || 
-                                 'MentirosoPlayer';
+                const playerName = localStorage.getItem('playerName') ||
+                    (window.CrackTotalProfile
+                        ? await window.CrackTotalProfile.ensurePlayerName({ reason: 'publish-score' })
+                        : '');
+                if (!playerName) return;
 
                 const matchData = {
                     playerName: playerName,
@@ -1865,9 +1888,9 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function handleJoinRoomFromList(roomId, requiresPassword) {
-        const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
-        localStorage.setItem('playerName', playerName);
+    async function handleJoinRoomFromList(roomId, requiresPassword) {
+        const playerName = await ensureLobbyPlayerName(joinPlayerNameInput?.value || '');
+        if (!playerName) return;
         if (requiresPassword) {
             currentJoiningRoomId = roomId;
             passwordModalTextEl.textContent = `La sala de Mentiroso '${roomId}' es privada. Ingresa la contraseña:`;
@@ -1895,17 +1918,17 @@ document.addEventListener('DOMContentLoaded', function() {
         currentJoiningRoomId = null;
         enableLobbyButtons(); 
     }
-    function handleSubmitPasswordModal(event) {
+    async function handleSubmitPasswordModal(event) {
         event.preventDefault();
         const password = passwordModalInputEl.value;
-        const playerName = joinPlayerNameInput.value.trim() || 'Jugador 2';
-        localStorage.setItem('playerName', playerName);
         if (!password) {
             passwordErrorTextEl.textContent = 'La contraseña no puede estar vacía.';
             passwordErrorTextEl.style.display = 'block';
             passwordModalInputEl.focus();
             return;
         }
+        const playerName = await ensureLobbyPlayerName(joinPlayerNameInput?.value || '');
+        if (!playerName) return;
         if (currentJoiningRoomId) {
             passwordErrorTextEl.textContent = '';
             passwordErrorTextEl.style.display = 'none';

@@ -1,7 +1,34 @@
 document.addEventListener('DOMContentLoaded', function() {
     const STATS_KEY = 'pasalacheUserStats';
     const HISTORY_KEY = 'pasalacheGameHistory'; // Clave del historial
-    const CRACK_RAPIDO_STATS_KEY = 'crackRapido_stats'; // Nueva clave para Crack Rápido
+    const CRACK_RAPIDO_STATS_KEY = 'crackRapidoStats';
+
+    const profileIdentityName = document.getElementById('profileIdentityName');
+    const profileIdentityDescription = document.getElementById('profileIdentityDescription');
+    const profileIdentityButton = document.getElementById('profileIdentityButton');
+
+    function renderProfileIdentity() {
+        const playerName = window.CrackTotalProfile?.getPlayerName() || localStorage.getItem('playerName') || '';
+        if (profileIdentityName) profileIdentityName.textContent = playerName || 'Invitado';
+        if (profileIdentityDescription) {
+            profileIdentityDescription.textContent = playerName
+                ? 'Este alias se usará en tus próximas partidas y puntuaciones publicadas.'
+                : 'Podés explorar y jugar libremente. Creá un perfil cuando quieras publicar puntuaciones o entrar a una sala online.';
+        }
+        if (profileIdentityButton) profileIdentityButton.textContent = playerName ? 'Cambiar nombre' : 'Crear perfil';
+    }
+
+    profileIdentityButton?.addEventListener('click', async () => {
+        if (!window.CrackTotalProfile) return;
+        const hasProfile = Boolean(window.CrackTotalProfile.getPlayerName());
+        await window.CrackTotalProfile.ensurePlayerName({
+            reason: hasProfile ? 'change-name' : 'create-profile',
+            force: hasProfile
+        });
+        renderProfileIdentity();
+    });
+    window.addEventListener('cracktotal:profile-updated', renderProfileIdentity);
+    renderProfileIdentity();
 
     // Show loading states initially
     showLoadingStates();
@@ -316,93 +343,6 @@ document.addEventListener('DOMContentLoaded', function() {
         hideLoadingStates();
     }, 1200);
 
-    // === DEVELOPMENT: Add sample history data for testing ===
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        addDebugButton();
-    }
-
-    function addDebugButton() {
-        const debugButton = document.createElement('button');
-        debugButton.textContent = 'DEBUG: Agregar Historia de Prueba';
-        debugButton.style.cssText = `
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 9999;
-            padding: 8px 12px;
-            background: #ff4444;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-        `;
-        
-        debugButton.addEventListener('click', () => {
-            addSampleHistoryData();
-            displayProfileData(); // Refresh display
-        });
-        
-        document.body.appendChild(debugButton);
-    }
-
-    function addSampleHistoryData() {
-        const sampleHistory = [
-            {
-                timestamp: new Date().toISOString(),
-                result: 'victory',
-                difficulty: 'normal',
-                correctAnswers: 25,
-                incorrectAnswers: 2,
-                timeSpent: 280
-            },
-            {
-                timestamp: new Date(Date.now() - 24*60*60*1000).toISOString(),
-                result: 'defeat',
-                difficulty: 'dificil',
-                correctAnswers: 18,
-                incorrectAnswers: 3,
-                timeSpent: 195
-            },
-            {
-                timestamp: new Date(Date.now() - 2*24*60*60*1000).toISOString(),
-                result: 'timeout',
-                difficulty: 'facil',
-                correctAnswers: 20,
-                incorrectAnswers: 1,
-                timeSpent: 360
-            },
-            // Formato anterior para probar compatibilidad
-            {
-                date: new Date(Date.now() - 3*24*60*60*1000),
-                result: 'victory',
-                difficulty: 'normal',
-                score: 22, // Formato anterior
-                errors: 1, // Formato anterior
-                time: 245   // Formato anterior
-            }
-        ];
-        
-        localStorage.setItem(HISTORY_KEY, JSON.stringify(sampleHistory));
-        console.log("Datos de historial de prueba agregados:", sampleHistory);
-        
-        // También agregar algunas estadísticas de muestra
-        const sampleStats = {
-            gamesPlayed: 15,
-            gamesWon: 8,
-            gamesLostByErrors: 4,
-            gamesLostByTimeout: 3,
-            totalCorrectAnswers: 285,
-            totalIncorrectAnswers: 45,
-            totalPassedAnswers: 12,
-            totalHelpUsed: 8,
-            bestScore: 26,
-            fastestWinTime: 180
-        };
-        
-        localStorage.setItem(STATS_KEY, JSON.stringify(sampleStats));
-        console.log("Estadísticas de prueba agregadas:", sampleStats);
-    }
 });
 
 // Esta función ya está incluida en displayProfileData()
@@ -463,29 +403,18 @@ async function loadQuienSabeMasStats() {
     };
 
     try {
-        // Intentar cargar desde Firebase
-        const { getUserId } = await import('./firebase-utils.js');
-        const { db } = await import('./firebase-init.js');
-        const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-        
-        const userId = await getUserId();
-        if (userId && db) {
-            const userRef = doc(db, "users", userId);
-            const userSnap = await getDoc(userRef);
-            
-            if (userSnap.exists()) {
-                const userData = userSnap.data();
-                const qsmStats = userData.stats?.quiensabemas || {};
-                
-                defaultStats = {
-                    gamesPlayed: qsmStats.played || 0,
-                    gamesWon: qsmStats.wins || 0,
-                    gamesLost: (qsmStats.played || 0) - (qsmStats.wins || 0),
-                    averageAccuracy: qsmStats.played > 0 ? Math.round(((qsmStats.wins || 0) / qsmStats.played) * 100) : 0,
-                    bestScore: qsmStats.score || 0, // Firebase guarda score total, no best score individual
-                    totalScore: qsmStats.score || 0
-                };
-            }
+        const qsmStats = await window.firebaseService?.getUserStats('quiensabemas');
+        if (qsmStats) {
+            defaultStats = {
+                gamesPlayed: qsmStats.totalPlayed || 0,
+                gamesWon: qsmStats.totalWins || 0,
+                gamesLost: Math.max(0, (qsmStats.totalPlayed || 0) - (qsmStats.totalWins || 0)),
+                averageAccuracy: qsmStats.totalQuestions > 0
+                    ? Math.round(((qsmStats.totalCorrect || 0) / qsmStats.totalQuestions) * 100)
+                    : 0,
+                bestScore: qsmStats.bestScore || 0,
+                totalScore: qsmStats.totalScore || 0
+            };
         }
     } catch (error) {
         console.warn("Error cargando estadísticas de Quién Sabe Más desde Firebase:", error);
@@ -530,29 +459,18 @@ async function loadMentirosoStats() {
     };
 
     try {
-        // Intentar cargar desde Firebase
-        const { getUserId } = await import('./firebase-utils.js');
-        const { db } = await import('./firebase-init.js');
-        const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-        
-        const userId = await getUserId();
-        if (userId && db) {
-            const userRef = doc(db, "users", userId);
-            const userSnap = await getDoc(userRef);
-            
-            if (userSnap.exists()) {
-                const userData = userSnap.data();
-                const mentirosoStats = userData.stats?.mentiroso || {};
-                
-                defaultStats = {
-                    gamesPlayed: mentirosoStats.played || 0,
-                    gamesWon: mentirosoStats.wins || 0,
-                    gamesLost: (mentirosoStats.played || 0) - (mentirosoStats.wins || 0),
-                    averageAccuracy: mentirosoStats.played > 0 ? Math.round(((mentirosoStats.wins || 0) / mentirosoStats.played) * 100) : 0,
-                    bestScore: mentirosoStats.score || 0, // Firebase guarda score total, no best score individual
-                    totalScore: mentirosoStats.score || 0
-                };
-            }
+        const mentirosoStats = await window.firebaseService?.getUserStats('mentiroso');
+        if (mentirosoStats) {
+            defaultStats = {
+                gamesPlayed: mentirosoStats.totalPlayed || 0,
+                gamesWon: mentirosoStats.totalWins || 0,
+                gamesLost: Math.max(0, (mentirosoStats.totalPlayed || 0) - (mentirosoStats.totalWins || 0)),
+                averageAccuracy: mentirosoStats.totalQuestions > 0
+                    ? Math.round(((mentirosoStats.totalCorrect || 0) / mentirosoStats.totalQuestions) * 100)
+                    : 0,
+                bestScore: mentirosoStats.bestScore || 0,
+                totalScore: mentirosoStats.totalScore || 0
+            };
         }
     } catch (error) {
         console.warn("Error cargando estadísticas de Mentiroso desde Firebase:", error);
@@ -715,28 +633,14 @@ async function loadCrackRapidoFirebaseStats() {
     let defaultStats = loadCrackRapidoStats();
 
     try {
-        // Intentar cargar desde Firebase
-        const { getUserId } = await import('./firebase-utils.js');
-        const { db } = await import('./firebase-init.js');
-        const { doc, getDoc } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
-        
-        const userId = await getUserId();
-        if (userId && db) {
-            const userRef = doc(db, "users", userId);
-            const userSnap = await getDoc(userRef);
-            
-            if (userSnap.exists()) {
-                const userData = userSnap.data();
-                const crackRapidoStats = userData.stats?.crackrapido || {};
-                
-                // Combinar datos de Firebase con localStorage (priorizar el máximo)
-                defaultStats = {
-                    gamesPlayed: Math.max(defaultStats.gamesPlayed, crackRapidoStats.played || 0),
-                    bestScore: Math.max(defaultStats.bestScore, crackRapidoStats.score || 0),
-                    totalCorrect: Math.max(defaultStats.totalCorrect, crackRapidoStats.totalCorrect || 0),
-                    bestStreak: Math.max(defaultStats.bestStreak, crackRapidoStats.bestStreak || 0)
-                };
-            }
+        const crackRapidoStats = await window.firebaseService?.getUserStats('crackrapido');
+        if (crackRapidoStats) {
+            defaultStats = {
+                gamesPlayed: Math.max(defaultStats.gamesPlayed, crackRapidoStats.totalPlayed || 0),
+                bestScore: Math.max(defaultStats.bestScore, crackRapidoStats.bestScore || 0),
+                totalCorrect: Math.max(defaultStats.totalCorrect, crackRapidoStats.totalCorrect || 0),
+                bestStreak: defaultStats.bestStreak
+            };
         }
     } catch (error) {
         console.warn("Error cargando estadísticas de Crack Rápido desde Firebase:", error);
