@@ -1,0 +1,578 @@
+/* Discovery pages chrome — aligns games / ranking / logros with Home */
+
+body.discover-page {
+    margin: 0;
+    color: var(--home-text);
+    background:
+        radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.14), transparent 32rem),
+        radial-gradient(circle at 88% 30%, rgba(34, 197, 94, 0.1), transparent 28rem),
+        var(--home-bg);
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+body.discover-page.ranking-page-body,
+body.discover-page.logros-page {
+    background:
+        radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.14), transparent 32rem),
+        radial-gradient(circle at 88% 30%, rgba(34, 197, 94, 0.1), transparent 28rem),
+        var(--home-bg);
+    color: var(--home-text);
+}
+
+.discover-page *,
+.discover-page *::before,
+.discover-page *::after {
+    box-sizing: border-box;
+}
+
+.discover-page .app-header {
+    display: none !important;
+}
+
+.discover-main {
+    padding-bottom: var(--ct-space-3xl);
+}
+
+.discover-hero {
+    position: relative;
+    padding: clamp(2.5rem, 6vw, 4.5rem) 0 clamp(1.75rem, 4vw, 2.5rem);
+    overflow: hidden;
+}
+
+.discover-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgba(5, 11, 20, 0.15) 0%, var(--home-bg) 100%),
+        radial-gradient(ellipse at 70% 0%, rgba(121, 242, 166, 0.12), transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.discover-hero .home-shell {
+    position: relative;
+    z-index: 1;
+}
+
+.discover-hero-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 0 0 0.75rem;
+    color: var(--home-text);
+    font-family: var(--ct-font-display);
+    font-size: clamp(1.75rem, 4vw, 2.35rem);
+    font-weight: 700;
+    letter-spacing: var(--ct-letter-tight);
+    text-decoration: none;
+}
+
+.discover-hero-brand i {
+    color: var(--home-primary);
+}
+
+.discover-hero h1 {
+    margin: 0 0 0.75rem;
+    max-width: 16ch;
+    font-family: var(--ct-font-display);
+    font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+    font-weight: 700;
+    line-height: var(--ct-line-height-tight);
+    letter-spacing: var(--ct-letter-tight);
+    color: var(--home-text);
+}
+
+.discover-hero h1 span {
+    color: var(--home-primary);
+}
+
+.discover-hero-lead {
+    margin: 0 0 1.25rem;
+    max-width: 38rem;
+    color: var(--home-muted);
+    font-size: clamp(1rem, 2.2vw, 1.15rem);
+    line-height: var(--ct-line-height-normal);
+}
+
+.discover-greeting {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem 0.85rem;
+    margin: 0 0 1.5rem;
+    color: var(--home-text);
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.discover-greeting strong {
+    color: var(--home-primary);
+    font-weight: 800;
+}
+
+.discover-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.discover-section {
+    padding: clamp(1.5rem, 4vw, 2.75rem) 0;
+}
+
+.discover-section-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.35rem;
+}
+
+.discover-section-heading h2 {
+    margin: 0;
+    font-family: var(--ct-font-display);
+    font-size: clamp(1.45rem, 3.2vw, 2rem);
+    font-weight: 700;
+    letter-spacing: var(--ct-letter-tight);
+    color: var(--home-text);
+}
+
+.discover-section-heading p {
+    margin: 0;
+    max-width: 40rem;
+    color: var(--home-muted);
+    line-height: var(--ct-line-height-normal);
+}
+
+.discover-games-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .discover-games-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .discover-games-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.discover-game-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: 1.25rem;
+    color: inherit;
+    text-decoration: none;
+    background: linear-gradient(160deg, rgba(23, 36, 58, 0.92), rgba(11, 21, 36, 0.96));
+    border: 1px solid var(--home-line);
+    border-radius: var(--home-radius);
+    box-shadow: var(--ct-shadow-md);
+    transition:
+        transform var(--ct-duration-base) var(--ct-ease),
+        border-color var(--ct-duration-base) var(--ct-ease),
+        box-shadow var(--ct-duration-base) var(--ct-ease);
+    cursor: pointer;
+}
+
+.discover-game-card:hover,
+.discover-game-card:focus-visible {
+    transform: translateY(-4px);
+    border-color: rgba(var(--ct-primary-rgb), 0.45);
+    box-shadow: var(--ct-shadow-primary);
+    outline: none;
+}
+
+.discover-game-card:focus-visible {
+    box-shadow: var(--ct-shadow-focus), var(--ct-shadow-primary);
+}
+
+.discover-game-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.discover-game-icon {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--ct-radius-sm);
+    background: rgba(var(--ct-primary-rgb), 0.12);
+    color: var(--home-primary);
+    font-size: 1.25rem;
+}
+
+.discover-game-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.4rem;
+}
+
+.discover-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.28rem 0.65rem;
+    border-radius: var(--ct-radius-pill);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--home-line);
+    color: var(--home-muted);
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.discover-badge--primary {
+    background: rgba(var(--ct-primary-rgb), 0.16);
+    border-color: rgba(var(--ct-primary-rgb), 0.35);
+    color: var(--home-primary);
+}
+
+.discover-badge--warm {
+    background: rgba(var(--ct-warm-rgb), 0.14);
+    border-color: rgba(var(--ct-warm-rgb), 0.35);
+    color: var(--home-warm);
+}
+
+.discover-badge--accent {
+    background: rgba(var(--ct-accent-rgb), 0.14);
+    border-color: rgba(var(--ct-accent-rgb), 0.35);
+    color: var(--home-accent);
+}
+
+.discover-game-card h3 {
+    margin: 0 0 0.5rem;
+    font-family: var(--ct-font-display);
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: var(--ct-letter-tight);
+    color: var(--home-text);
+}
+
+.discover-game-card p {
+    margin: 0 0 1rem;
+    flex: 1;
+    color: var(--home-muted);
+    font-size: 0.95rem;
+    line-height: var(--ct-line-height-normal);
+}
+
+.discover-game-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-bottom: 1rem;
+}
+
+.discover-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: var(--ct-radius-pill);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--home-line);
+    color: var(--ct-text-subtle);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.discover-play {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    width: 100%;
+    margin-top: auto;
+    padding: 0.75rem 1rem;
+    border: 0;
+    border-radius: var(--ct-radius-sm);
+    background: var(--home-primary);
+    color: var(--ct-text-inverse);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: background var(--ct-duration-fast) var(--ct-ease), transform var(--ct-duration-fast) var(--ct-ease);
+}
+
+.discover-play:hover {
+    background: var(--home-primary-strong);
+}
+
+.discover-game-card:hover .discover-play {
+    transform: translateY(-1px);
+}
+
+.discover-room-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.65rem;
+    color: var(--ct-text-subtle);
+    font-size: 0.8rem;
+}
+
+.discover-room-status .room-count {
+    color: var(--home-primary);
+    font-weight: 700;
+}
+
+.discover-cta {
+    margin-top: 0.5rem;
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+    border: 1px solid var(--home-line);
+    border-radius: var(--home-radius-lg);
+    background:
+        linear-gradient(135deg, rgba(var(--ct-primary-rgb), 0.1), transparent 55%),
+        var(--home-surface);
+}
+
+.discover-cta h2 {
+    margin: 0 0 0.5rem;
+    font-family: var(--ct-font-display);
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+}
+
+.discover-cta p {
+    margin: 0 0 1.25rem;
+    max-width: 36rem;
+    color: var(--home-muted);
+}
+
+.discover-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.discover-soon {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--home-line);
+}
+
+.discover-soon h2 {
+    margin: 0 0 0.5rem;
+    font-family: var(--ct-font-display);
+    font-size: 1.35rem;
+}
+
+.discover-soon > p {
+    margin: 0 0 1.25rem;
+    color: var(--home-muted);
+}
+
+.discover-soon-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+@media (min-width: 700px) {
+    .discover-soon-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.discover-soon-item {
+    padding: 1.15rem;
+    border: 1px solid var(--home-line);
+    border-radius: var(--home-radius);
+    background: rgba(11, 21, 36, 0.7);
+}
+
+.discover-soon-item h3 {
+    margin: 0 0 0.45rem;
+    font-size: 1.05rem;
+    color: var(--home-text);
+}
+
+.discover-soon-item p {
+    margin: 0;
+    color: var(--home-muted);
+    font-size: 0.92rem;
+    line-height: var(--ct-line-height-normal);
+}
+
+.discover-content {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+}
+
+.discover-page .navigation-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin: 0 0 1.5rem;
+    padding: 0;
+}
+
+.discover-page .nav-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.65rem 0.95rem;
+    border-radius: var(--ct-radius-sm);
+    border: 1px solid var(--home-line);
+    background: var(--home-surface);
+    color: var(--home-text);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 600;
+    transition: border-color var(--ct-duration-fast) var(--ct-ease), background var(--ct-duration-fast) var(--ct-ease);
+}
+
+.discover-page .nav-button:hover {
+    border-color: rgba(var(--ct-primary-rgb), 0.4);
+    background: var(--ct-surface-elevated);
+}
+
+.discover-page .ranking-container,
+.discover-page .history-container {
+    background: var(--home-surface);
+    border: 1px solid var(--home-line);
+    border-radius: var(--home-radius);
+    box-shadow: var(--ct-shadow-md);
+    margin: 0 0 1.5rem;
+    max-width: none;
+}
+
+.discover-page .ranking-title,
+.discover-page .history-title {
+    background: none;
+    -webkit-text-fill-color: unset;
+    color: var(--home-text);
+    font-family: var(--ct-font-display);
+}
+
+.discover-page .ranking-title-icon,
+.discover-page .history-title-icon {
+    color: var(--home-primary);
+}
+
+.discover-page .adsense-container {
+    margin: 1.5rem auto;
+    padding: 1rem;
+    max-width: 750px;
+    text-align: center;
+}
+
+.discover-page .ad-label {
+    font-size: 0.8em;
+    color: var(--ct-text-subtle);
+    margin-bottom: 5px;
+}
+
+.discover-page .logros-section {
+    padding-top: 0.5rem;
+}
+
+.discover-page .logros-section::before {
+    display: none;
+}
+
+.discover-page .logros-section h2 {
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+    background-clip: unset;
+    color: var(--home-text);
+    text-align: left;
+    padding-top: 0;
+}
+
+.discover-page .logros-section h2 .fas {
+    background: none;
+    -webkit-background-clip: unset;
+    -webkit-text-fill-color: unset;
+    color: var(--home-primary);
+    animation: none;
+}
+
+.discover-page .logros-description {
+    text-align: left;
+    margin-left: 0;
+    color: var(--home-muted);
+}
+
+.discover-page .logros-filters {
+    justify-content: flex-start;
+    background: rgba(11, 21, 36, 0.65);
+    border: 1px solid var(--home-line);
+    border-radius: var(--ct-radius-pill);
+}
+
+.discover-page .filter-btn {
+    border-radius: var(--ct-radius-pill);
+}
+
+.discover-page .page-container,
+.discover-page .content-container {
+    max-width: none;
+    padding: 0;
+    margin: 0;
+}
+
+.discover-modal .modal-content {
+    background: var(--home-surface-strong, var(--ct-surface-strong));
+    border: 1px solid var(--home-line);
+    border-radius: var(--home-radius);
+    color: var(--home-text);
+}
+
+.discover-modal .modal-title {
+    font-family: var(--ct-font-display);
+    color: var(--home-text);
+}
+
+.discover-modal .input-group input {
+    background: var(--ct-surface);
+    border: 1px solid var(--home-line);
+    color: var(--home-text);
+    border-radius: var(--ct-radius-sm);
+}
+
+.discover-modal .save-button {
+    background: var(--home-primary);
+    color: var(--ct-text-inverse);
+    border: 0;
+    border-radius: var(--ct-radius-sm);
+    font-weight: 800;
+}
+
+.discover-modal .cancel-button {
+    background: transparent;
+    border: 1px solid var(--home-line);
+    color: var(--home-text);
+    border-radius: var(--ct-radius-sm);
+}
+
+@media (max-width: 640px) {
+    .discover-hero h1 {
+        max-width: none;
+    }
+
+    .discover-greeting {
+        font-size: 0.98rem;
+    }
+
+    .discover-cta-actions .home-button,
+    .discover-cta-actions .ct-button {
+        width: 100%;
+        justify-content: center;
+    }
+}
