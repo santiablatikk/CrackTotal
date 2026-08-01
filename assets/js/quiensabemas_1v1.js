@@ -1464,6 +1464,21 @@ async function handleGameEnd(payload) {
         }, 1500);
     }
 
+    // Gamification (local) — independent from Firebase publish
+    if (!gameState.progressReported && window.CrackTotalProgressBridge) {
+        gameState.progressReported = true;
+        const won = Boolean(!payload.draw && payload.winnerId === myPlayerId);
+        window.CrackTotalProgressBridge.reportMatch({
+            gameId: 'quiensabemas',
+            gameName: 'Quién Sabe Más',
+            won: won,
+            result: payload.draw ? 'draw' : (won ? 'victory' : 'defeat'),
+            score: myScore,
+            correctAnswers: myScore,
+            durationSec: Math.floor((Date.now() - (gameState.gameStartTime || Date.now())) / 1000)
+        });
+    }
+
     // Guardar resultados usando el servicio de Firebase
     if (window.firebaseService && typeof window.firebaseService.saveMatch === 'function') {
         if (gameState.resultPublished) return;

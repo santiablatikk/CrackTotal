@@ -304,6 +304,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 localStorage.removeItem(STATS_KEY);
                 localStorage.removeItem(HISTORY_KEY);
                 localStorage.removeItem(CRACK_RAPIDO_STATS_KEY);
+                if (window.CrackTotalProgress && typeof window.CrackTotalProgress.resetProgress === 'function') {
+                    window.CrackTotalProgress.resetProgress();
+                }
                 
                 // Reset Firebase stats for other games (if possible)
                 try {
@@ -319,6 +322,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     loadQuienSabeMasStats();
                     loadMentirosoStats();
                     loadAchievementsCount();
+                    if (window.CrackTotalProfileGamification && window.CrackTotalProfileGamification.remount) {
+                        window.CrackTotalProfileGamification.remount();
+                    }
                     hideLoadingStates();
                     
                     // Show success notification

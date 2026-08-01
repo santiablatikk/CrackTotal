@@ -1,7 +1,6 @@
 /**
- * Football Hub data service.
- * Today: mock JSON. Tomorrow: flip CrackTotalConfig.hub.source to "api".
- * UI components must only consume the normalized shapes returned here.
+ * Hub facade — same normalized shapes as before for UI renderers.
+ * Routes MOCK vs API via FootballApiConfig.MODE and falls back to mock JSON.
  */
 (function () {
     'use strict';
@@ -17,87 +16,31 @@
         userRanking: 'user-ranking'
     };
 
-    function hubConfig() {
-        const cfg = window.CrackTotalConfig || {};
-        return Object.assign(
-            {
-                enabled: true,
-                source: 'mock',
-                mockBasePath: 'assets/data/hub',
-                apiBasePath: '',
-                simulateLatencyMs: 420,
-                cacheTtlMs: 60 * 1000
-            },
-            cfg.hub || {}
-        );
-    }
+    const API_KEYS = {
+        liveMatches: 'getLiveMatches',
+        upcomingMatches: 'getUpcomingMatches',
+        recentResults: 'getRecentResults'
+    };
 
-    function resourceUrl(key) {
-        const hub = hubConfig();
-        const file = RESOURCES[key];
-        if (!file) throw new Error('Unknown hub resource: ' + key);
-
-        if (hub.source === 'api' && hub.apiBasePath) {
-            return String(hub.apiBasePath).replace(/\/$/, '') + '/' + file;
-        }
-        return String(hub.mockBasePath).replace(/\/$/, '') + '/' + file + '.json';
+    function footballConfig() {
+        return window.CrackTotalFootballApiConfig || {
+            MODE: 'MOCK',
+            isMock: true,
+            isApi: false,
+            canUseApi() { return false; },
+            mock: { basePath: 'assets/data/hub', simulateLatencyMs: 420 },
+            features: { fallbackToMockOnError: true, newsFromMock: true, gameOfDayFromMock: true, userRankingFromMock: true }
+        };
     }
 
     function sleep(ms) {
         return new Promise((resolve) => window.setTimeout(resolve, ms));
     }
 
-    async function fetchJson(url) {
-        if (window.CrackTotalServices && window.CrackTotalServices.http) {
-            const result = await window.CrackTotalServices.http.get(url, { retries: 1 });
-            return result.data;
-        }
-        const response = await fetch(url, { credentials: 'same-origin' });
-        if (!response.ok) {
-            const error = new Error('HTTP ' + response.status);
-            error.status = response.status;
-            throw error;
-        }
-        return response.json();
-    }
-
-    async function loadResource(key) {
-        const hub = hubConfig();
-        const cacheKey = 'hub_' + key;
-        const cache = window.CrackTotalServices && window.CrackTotalServices.cache;
-
-        if (cache) {
-            const cached = cache.get(cacheKey);
-            if (cached) {
-                return { ok: true, data: cached, fromCache: true };
-            }
-        }
-
-        try {
-            if (hub.source === 'mock' && hub.simulateLatencyMs > 0) {
-                await sleep(hub.simulateLatencyMs);
-            }
-            const raw = await fetchJson(resourceUrl(key));
-            const data = normalize(key, raw);
-            if (cache) cache.set(cacheKey, data, hub.cacheTtlMs);
-            return { ok: true, data, fromCache: false };
-        } catch (error) {
-            return {
-                ok: false,
-                data: emptyShape(key),
-                error: error,
-                message:
-                    (window.CrackTotalServices &&
-                        window.CrackTotalServices.errors &&
-                        window.CrackTotalServices.errors.toFriendlyMessage(error)) ||
-                    'No pudimos cargar esta sección.'
-            };
-        }
-    }
-
     function emptyShape(key) {
         if (key === 'gameOfDay') return { updatedAt: null, item: null };
         if (key === 'userRanking') return { updatedAt: null, game: '', href: 'ranking.html', items: [] };
+        if (key === 'competitions') return { updatedAt: null, items: [] };
         return { updatedAt: null, items: [] };
     }
 
@@ -180,21 +123,214 @@
         return normalizeMatchList(raw);
     }
 
-    async function loadHubBundle() {
+    function mockUrl(key) {
+        const cfg = footballConfig();
+        const file = RESOURCES[key];
+        const base = (cfg.mock && cfg.mock.basePath) || 'assets/data/hub';
+        return String(base).replace(/\/$/, '') + '/' + file + '.json';
+    }
+
+    async function fetchMockJson(key) {
+        const cfg = footballConfig();
+        const latency = (cfg.mock && cfg.mock.simulateLatencyMs) || 0;
+        if (latency > 0 && cfg.isMock) await sleep(latency);
+
+        const url = mockUrl(key);
+        if (Services.http) {
+            const result = await Services.http.get(url, { retries: 1, requestId: 'mock-' + key });
+            return normalize(key, result.data);
+        }
+        const response = await fetch(url, { credentials: 'same-origin' });
+        if (!response.ok) {
+            const error = new Error('HTTP ' + response.status);
+            error.status = response.status;
+            throw error;
+        }
+        return normalize(key, await response.json());
+    }
+
+    async function loadMockResource(key, meta) {
+        const cache = Services.CacheManager;
+        const cacheKey = 'mock_' + key;
+        if (cache) {
+            const hit = cache.get(cacheKey);
+            if (hit) {
+                return Object.assign(
+                    {
+                        ok: true,
+                        data: hit,
+                        fromCache: true,
+                        fromStored: Boolean(meta && meta.fromStored),
+                        isFallback: Boolean(meta && meta.isFallback),
+                        source: 'mock'
+                    },
+                    meta || {}
+                );
+            }
+        }
+
+        try {
+            const data = await fetchMockJson(key);
+            if (cache) cache.set(cacheKey, data, cache.defaultTtl('mock'));
+            return Object.assign(
+                {
+                    ok: true,
+                    data: data,
+                    fromCache: false,
+                    fromStored: Boolean(meta && meta.isFallback),
+                    isFallback: Boolean(meta && meta.isFallback),
+                    source: 'mock'
+                },
+                meta || {}
+            );
+        } catch (error) {
+            const failure = Services.ErrorManager
+                ? Services.ErrorManager.wrapFailure(error, 'mock:' + key)
+                : { message: 'No pudimos cargar esta sección.' };
+            if (cache) {
+                const stale = cache.getStale(cacheKey);
+                if (stale && stale.value) {
+                    return {
+                        ok: true,
+                        data: stale.value,
+                        fromCache: true,
+                        fromStored: true,
+                        isFallback: true,
+                        source: 'mock',
+                        message: failure.message
+                    };
+                }
+            }
+            return {
+                ok: true,
+                data: emptyShape(key),
+                fromCache: false,
+                fromStored: true,
+                isFallback: true,
+                source: 'mock',
+                message: failure.message
+            };
+        }
+    }
+
+    function alwaysMock(key) {
+        const features = footballConfig().features || {};
+        if (key === 'news') return features.newsFromMock !== false;
+        if (key === 'gameOfDay') return features.gameOfDayFromMock !== false;
+        if (key === 'userRanking') return features.userRankingFromMock !== false;
+        return false;
+    }
+
+    async function loadApiResource(key) {
+        const football = Services.FootballService;
+        const methodName = API_KEYS[key];
+        if (!football || !methodName || typeof football[methodName] !== 'function') {
+            return loadMockResource(key, { isFallback: true, message: 'Servicio API no disponible' });
+        }
+
+        const result = await football[methodName]();
+        if (result.ok && result.data && Array.isArray(result.data.items) && result.data.items.length) {
+            return Object.assign({ source: 'api' }, result);
+        }
+
+        // Empty API payload or soft failure → mock fallback so Home never looks broken
+        if (footballConfig().features && footballConfig().features.fallbackToMockOnError !== false) {
+            const mock = await loadMockResource(key, {
+                isFallback: true,
+                fromStored: true,
+                message: (result && result.message) || 'Mostrando datos almacenados'
+            });
+            return mock;
+        }
+
+        return Object.assign(
+            {
+                ok: true,
+                data: (result && result.data) || emptyShape(key),
+                source: 'api',
+                fromStored: Boolean(result && result.fromStored),
+                isFallback: Boolean(result && result.isFallback)
+            },
+            result || {}
+        );
+    }
+
+    async function loadResource(key) {
+        if (!RESOURCES[key] && key !== 'competitions') {
+            throw new Error('Unknown hub resource: ' + key);
+        }
+
+        const cfg = footballConfig();
+
+        if (key === 'competitions') {
+            if (cfg.canUseApi && cfg.canUseApi() && Services.FootballService) {
+                return Services.FootballService.getCompetitions();
+            }
+            return { ok: true, data: emptyShape('competitions'), source: 'mock' };
+        }
+
+        if (alwaysMock(key) || !cfg.canUseApi || !cfg.canUseApi()) {
+            return loadMockResource(key);
+        }
+
+        try {
+            return await loadApiResource(key);
+        } catch (error) {
+            if (error && error.name === 'AbortError') {
+                return {
+                    ok: false,
+                    data: emptyShape(key),
+                    source: 'api',
+                    aborted: true,
+                    message: 'Solicitud cancelada'
+                };
+            }
+            if (Services.ErrorManager) Services.ErrorManager.wrapFailure(error, key);
+            return loadMockResource(key, {
+                isFallback: true,
+                fromStored: true,
+                message: 'Mostrando datos almacenados'
+            });
+        }
+    }
+
+    async function loadHubBundle(options) {
+        const opts = options || {};
         const keys = Object.keys(RESOURCES);
+        const quiet = Boolean(opts.quiet);
+
+        if (!quiet && Services.ApiClient) {
+            // Cancel stale in-flight API calls before a full reload
+            Services.ApiClient.abort('fixtures-live');
+            Services.ApiClient.abort('fixtures-upcoming');
+            Services.ApiClient.abort('fixtures-results');
+        }
+
         const entries = await Promise.all(
             keys.map(async (key) => {
                 const result = await loadResource(key);
                 return [key, result];
             })
         );
-        return Object.fromEntries(entries);
+
+        const bundle = Object.fromEntries(entries);
+        const liveItems = (bundle.liveMatches && bundle.liveMatches.data && bundle.liveMatches.data.items) || [];
+        bundle._meta = {
+            mode: footballConfig().MODE,
+            hasLive: liveItems.length > 0,
+            // Only show the stored indicator on real fallbacks (API failure / empty / stale),
+            // not on healthy cache hits.
+            showingStored: Object.values(bundle).some(
+                (item) => item && typeof item === 'object' && item.isFallback
+            )
+        };
+        return bundle;
     }
 
     Services.hub = {
         RESOURCES,
         loadResource,
         loadHubBundle,
-        resourceUrl
+        mockUrl
     };
 })();

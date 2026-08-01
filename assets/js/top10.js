@@ -184,11 +184,28 @@
     }
   }
 
+  let progressReported = false;
   function showResult(won){
     const modal = document.getElementById('resultModal');
     document.getElementById('resultTitle').textContent = won? '¡Completado!' : 'Fin del intento';
     document.getElementById('resultMessage').textContent = won? '¡Top 10 completo!': 'Vuelve mañana para otro desafío.';
     modal.style.display = 'flex';
+    if (!progressReported && window.CrackTotalProgressBridge) {
+      progressReported = true;
+      const elapsed = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
+      window.CrackTotalProgressBridge.reportMatch({
+        gameId: 'top10',
+        gameName: 'Top 10',
+        won: Boolean(won),
+        result: won ? 'victory' : 'defeat',
+        score: foundSet.size,
+        correctAnswers: foundSet.size,
+        incorrectAnswers: Math.max(0, attempts - foundSet.size),
+        durationSec: elapsed,
+        perfect: Boolean(won),
+        dailyChallenge: true
+      });
+    }
   }
 
   function lockForToday(){

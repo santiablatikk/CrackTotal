@@ -1,0 +1,14 @@
+{
+  "updatedAt": "2026-08-01T12:00:00.000Z",
+  "scope": "global",
+  "items": [
+    { "rank": 1, "name": "El Diez", "score": 4280, "meta": "Leyenda" },
+    { "rank": 2, "name": "Scaloneta", "score": 3910, "meta": "Ídolo" },
+    { "rank": 3, "name": "Bombonera", "score": 3540, "meta": "Ídolo" },
+    { "rank": 4, "name": "Orsai", "score": 2860, "meta": "Capitán" },
+    { "rank": 5, "name": "Pared", "score": 2410, "meta": "Capitán" },
+    { "rank": 6, "name": "TikiTaka", "score": 1980, "meta": "Titular" },
+    { "rank": 7, "name": "Córner", "score": 1620, "meta": "Titular" },
+    { "rank": 8, "name": "VarCheck", "score": 1240, "meta": "Promesa" }
+  ]
+}

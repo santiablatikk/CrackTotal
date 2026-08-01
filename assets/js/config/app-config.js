@@ -7,7 +7,7 @@
 
     const AppConfig = {
         appName: 'Crack Total',
-        version: '3.3.0',
+        version: '3.5.0',
         env: 'browser',
 
         urls: {
@@ -32,9 +32,8 @@
         },
 
         /**
-         * Football Hub data source.
-         * source: "mock" reads assets/data/hub/*.json
-         * source: "api" uses apiBasePath + resource name (no UI changes needed)
+         * Football Hub — source of truth for MODE is football-api-config.js
+         * (synced on load). Keep this object for backwards compatibility.
          */
         hub: {
             enabled: true,
@@ -49,28 +48,25 @@
             designSystem: true,
             playerProfileModal: true,
             footballHub: true,
+            gamification: true,
             liveMatches: false,
             sportsNews: false,
             sportsRankings: false,
             apiFootball: false
         },
 
-        /**
-         * Placeholders for future data providers.
-         * Do not call these until a real integration is added.
-         */
         providers: {
             footballApi: {
                 enabled: false,
                 name: 'api-football',
-                baseUrl: '',
-                notes: 'Reserved. Set hub.source="api" and hub.apiBasePath when ready.'
+                baseUrl: 'https://v3.football.api-sports.io',
+                notes: 'Configure via assets/js/config/football-api-config.js (MODE + CrackTotalEnv.API_FOOTBALL_KEY).'
             },
             news: {
                 enabled: false,
                 name: 'news-stub',
                 baseUrl: '',
-                notes: 'Reserved. Not connected.'
+                notes: 'Hub news remains on local mock JSON.'
             }
         },
 

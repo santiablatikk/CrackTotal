@@ -1967,6 +1967,21 @@ document.addEventListener('DOMContentLoaded', function() {
             timeSpentFormatted: timeFormatted,
         };
         addGameToHistory(gameResultForHistory);
+
+        // Gamification bridge (non-blocking; does not alter game flow)
+        if (window.CrackTotalProgressBridge) {
+            window.CrackTotalProgressBridge.reportMatch({
+                gameId: 'pasalache',
+                gameName: 'Pasala Che',
+                won: result === 'victory',
+                result: result,
+                score: correctAnswers,
+                correctAnswers: correctAnswers,
+                incorrectAnswers: incorrectAnswers,
+                durationSec: timeSpent,
+                perfect: result === 'victory' && incorrectAnswers === 0
+            });
+        }
         
         // Publicar en el ranking es opcional: la partida local ya quedó guardada.
         if (window.firebaseService && typeof window.firebaseService.saveMatch === 'function') {

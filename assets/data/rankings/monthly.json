@@ -1,0 +1,12 @@
+{
+  "updatedAt": "2026-08-01T12:00:00.000Z",
+  "scope": "monthly",
+  "items": [
+    { "rank": 1, "name": "Scaloneta", "score": 2100, "meta": "Mes" },
+    { "rank": 2, "name": "El Diez", "score": 1980, "meta": "Mes" },
+    { "rank": 3, "name": "Bombonera", "score": 1760, "meta": "Mes" },
+    { "rank": 4, "name": "TikiTaka", "score": 1540, "meta": "Mes" },
+    { "rank": 5, "name": "VarCheck", "score": 1210, "meta": "Mes" },
+    { "rank": 6, "name": "Pared", "score": 980, "meta": "Mes" }
+  ]
+}

@@ -1,0 +1,451 @@
+/**
+ * Gamification UI — uses Design System tokens. Does not modify the DS itself.
+ */
+
+.ct-gamification {
+    display: grid;
+    gap: var(--ct-space-lg);
+    margin: 0 0 var(--ct-space-xl);
+}
+
+.ct-profile-card {
+    display: grid;
+    gap: var(--ct-space-lg);
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border: 1px solid var(--ct-line);
+    border-radius: var(--ct-radius-md, 1rem);
+    background:
+        radial-gradient(120% 80% at 0% 0%, rgba(var(--ct-primary-rgb), 0.12), transparent 55%),
+        radial-gradient(90% 70% at 100% 0%, rgba(var(--ct-accent-rgb), 0.1), transparent 50%),
+        var(--ct-surface);
+}
+
+.ct-profile-card__identity {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ct-space-md);
+}
+
+.ct-profile-card__avatar {
+    background: linear-gradient(145deg, rgba(var(--ct-primary-rgb), 0.25), rgba(var(--ct-accent-rgb), 0.2));
+    border: 1px solid var(--ct-line-strong);
+    font-weight: var(--ct-font-weight-extrabold);
+}
+
+.ct-profile-card__eyebrow {
+    margin: 0 0 0.35rem;
+}
+
+.ct-profile-card__name {
+    margin: 0;
+    font-family: var(--ct-font-display);
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    letter-spacing: var(--ct-letter-tight);
+    line-height: var(--ct-line-height-tight);
+}
+
+.ct-profile-card__joined {
+    margin: 0.35rem 0 0;
+    color: var(--ct-text-muted);
+    font-size: var(--ct-font-size-sm);
+}
+
+.ct-profile-card__widgets {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ct-space-md);
+}
+
+.ct-level-card,
+.ct-streak {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.95rem 1rem;
+    border-radius: var(--ct-radius-sm, 0.75rem);
+    border: 1px solid var(--ct-line);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.ct-level-card__icon,
+.ct-streak__icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    background: rgba(var(--ct-primary-rgb), 0.14);
+    color: var(--ct-level-accent, var(--ct-primary));
+    font-size: 1.15rem;
+}
+
+.ct-streak.is-hot .ct-streak__icon {
+    color: #fb923c;
+    background: rgba(251, 146, 60, 0.16);
+    animation: ct-streak-pulse 1.8s ease-in-out infinite;
+}
+
+.ct-level-card__eyebrow,
+.ct-streak__eyebrow {
+    margin: 0;
+    color: var(--ct-text-subtle);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: var(--ct-font-weight-bold);
+}
+
+.ct-level-card__name,
+.ct-streak__value {
+    margin: 0.15rem 0 0;
+    font-family: var(--ct-font-display);
+    font-size: 1.35rem;
+}
+
+.ct-level-card__xp,
+.ct-streak__best {
+    margin: 0.2rem 0 0;
+    color: var(--ct-text-muted);
+    font-size: var(--ct-font-size-sm);
+}
+
+.ct-xp-bar {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.ct-xp-bar__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    color: var(--ct-text-muted);
+    font-size: var(--ct-font-size-sm);
+    font-weight: var(--ct-font-weight-semibold);
+}
+
+.ct-xp-bar__track {
+    height: 0.7rem;
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--ct-line);
+}
+
+.ct-xp-bar__fill {
+    height: 100%;
+    width: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--ct-primary), var(--ct-accent));
+    transition: width 700ms var(--ct-ease, ease);
+}
+
+.ct-xp-bar__fill.is-animated {
+    box-shadow: 0 0 16px rgba(var(--ct-primary-rgb), 0.35);
+}
+
+.ct-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--ct-space-sm);
+}
+
+.ct-stat--gamified {
+    padding: 0.95rem;
+    border: 1px solid var(--ct-line);
+    border-radius: var(--ct-radius-sm, 0.75rem);
+    background: var(--ct-surface-strong);
+}
+
+.ct-stat--gamified .ct-stat__icon {
+    color: var(--ct-primary);
+    margin-bottom: 0.45rem;
+    font-size: 1rem;
+}
+
+.ct-stat--gamified .ct-stat__value {
+    font-family: var(--ct-font-display);
+    font-size: 1.4rem;
+}
+
+.ct-stat--gamified .ct-stat__label {
+    color: var(--ct-text-muted);
+    font-size: 0.8rem;
+    margin-top: 0.2rem;
+}
+
+.ct-gamification__panel {
+    display: grid;
+    gap: var(--ct-space-md);
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+    border: 1px solid var(--ct-line);
+    border-radius: var(--ct-radius-md, 1rem);
+    background: var(--ct-surface);
+}
+
+.ct-gamification__panel > h3,
+.ct-history-card__title,
+.ct-activity-feed__title,
+.ct-ranking-card__head h3 {
+    margin: 0;
+    font-family: var(--ct-font-display);
+    font-size: 1.25rem;
+    letter-spacing: var(--ct-letter-tight);
+}
+
+.ct-achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--ct-space-sm);
+}
+
+.ct-achievement {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.85rem;
+    padding: 0.9rem;
+    border: 1px solid var(--ct-line);
+    border-radius: var(--ct-radius-sm, 0.75rem);
+    background: rgba(255, 255, 255, 0.02);
+    opacity: 0.72;
+    transition: transform 220ms ease, border-color 220ms ease, opacity 220ms ease;
+}
+
+.ct-achievement.is-unlocked {
+    opacity: 1;
+    border-color: rgba(var(--ct-primary-rgb), 0.45);
+    background: rgba(var(--ct-primary-rgb), 0.08);
+}
+
+.ct-achievement.is-unlocked.ct-achievement--pop {
+    animation: ct-unlock-pop 560ms var(--ct-ease, ease);
+}
+
+.ct-achievement__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.7rem;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--ct-warm);
+}
+
+.ct-achievement__title {
+    margin: 0;
+    font-size: 0.98rem;
+}
+
+.ct-achievement__desc,
+.ct-achievement__meta {
+    margin: 0.25rem 0 0;
+    color: var(--ct-text-muted);
+    font-size: 0.8rem;
+}
+
+.ct-achievement__progress {
+    margin-top: 0.55rem;
+    height: 0.35rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+}
+
+.ct-achievement__progress > span {
+    display: block;
+    height: 100%;
+    background: var(--ct-primary);
+}
+
+.ct-badges-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.ct-game-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid var(--ct-line);
+    background: rgba(255, 255, 255, 0.03);
+    font-size: 0.82rem;
+    font-weight: var(--ct-font-weight-semibold);
+}
+
+.ct-game-badge.is-locked {
+    opacity: 0.45;
+    filter: grayscale(0.7);
+}
+
+.ct-game-badge.is-earned {
+    border-color: rgba(var(--ct-warm-rgb), 0.5);
+    color: var(--ct-warm);
+}
+
+.ct-history-card__list,
+.ct-activity-feed ul {
+    list-style: none;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.55rem;
+}
+
+.ct-history-card__item,
+.ct-activity-feed__item {
+    display: grid;
+    grid-template-columns: 1.2fr auto auto auto;
+    gap: 0.55rem;
+    align-items: center;
+    padding: 0.7rem 0.8rem;
+    border-radius: var(--ct-radius-sm, 0.7rem);
+    border: 1px solid var(--ct-line);
+    background: rgba(255, 255, 255, 0.02);
+    font-size: 0.86rem;
+}
+
+.ct-activity-feed__item {
+    grid-template-columns: 1fr auto;
+}
+
+.ct-history-card__when,
+.ct-activity-feed__when,
+.ct-history-card__empty,
+.ct-activity-feed__empty {
+    color: var(--ct-text-subtle);
+}
+
+.ct-ranking-card__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.ct-ranking-card__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+}
+
+.ct-ranking-card__tabs [aria-selected='true'] {
+    background: rgba(var(--ct-primary-rgb), 0.16);
+    border-color: rgba(var(--ct-primary-rgb), 0.45);
+    color: var(--ct-primary);
+}
+
+.ct-ranking-card__list {
+    list-style: none;
+    margin: 0.85rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+}
+
+.ct-ranking-card__row {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr auto auto;
+    gap: 0.55rem;
+    align-items: center;
+    padding: 0.65rem 0.75rem;
+    border-radius: var(--ct-radius-sm, 0.7rem);
+    border: 1px solid var(--ct-line);
+    background: rgba(255, 255, 255, 0.02);
+    font-size: 0.88rem;
+}
+
+.ct-ranking-card__row.is-you {
+    border-color: rgba(var(--ct-primary-rgb), 0.5);
+    background: rgba(var(--ct-primary-rgb), 0.1);
+}
+
+.ct-ranking-card__rank {
+    font-weight: var(--ct-font-weight-extrabold);
+    color: var(--ct-warm);
+}
+
+.ct-ranking-card__meta {
+    color: var(--ct-text-subtle);
+    font-size: 0.78rem;
+}
+
+.ct-ranking-card__score {
+    font-family: var(--ct-font-display);
+}
+
+.ct-gamification__grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--ct-space-md);
+}
+
+.ct-xp-toast-float {
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 1200;
+    padding: 0.65rem 0.9rem;
+    border-radius: 999px;
+    background: rgba(var(--ct-primary-rgb), 0.92);
+    color: var(--ct-text-inverse);
+    font-weight: var(--ct-font-weight-extrabold);
+    font-size: 0.85rem;
+    pointer-events: none;
+    animation: ct-xp-float 1.1s ease forwards;
+}
+
+@keyframes ct-xp-float {
+    0% { opacity: 0; transform: translateY(12px); }
+    20% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-18px); }
+}
+
+@keyframes ct-unlock-pop {
+    0% { transform: scale(0.96); }
+    45% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+@keyframes ct-streak-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+}
+
+@media (max-width: 960px) {
+    .ct-gamification__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ct-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .ct-achievements-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .ct-profile-card__widgets {
+        grid-template-columns: 1fr;
+    }
+
+    .ct-stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .ct-history-card__item {
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "game badge"
+            "score when";
+    }
+
+    .ct-history-card__game { grid-area: game; }
+    .ct-history-card__score { grid-area: score; }
+    .ct-history-card__when { grid-area: when; }
+}

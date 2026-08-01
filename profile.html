@@ -50,6 +50,7 @@
     <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801b">
     <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/profile.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/gamification.css?v=20260801e">
     <link rel="stylesheet" href="assets/css/performance.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/ranking.css?v=202505272312">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -95,15 +96,22 @@
       }
     }
     </script>
-    <script src="assets/js/config/app-config.js?v=20260801"></script>
+    <script src="assets/js/config/app-config.js?v=20260801e"></script>
+    <script src="assets/js/config/gamification-config.js?v=20260801e"></script>
     <script src="assets/js/services/http-client.js?v=20260801"></script>
     <script src="assets/js/services/cache.js?v=20260801"></script>
     <script src="assets/js/utils/errors.js?v=20260801"></script>
     <script src="assets/js/services/index.js?v=20260801"></script>
+    <script src="assets/js/services/progress/storage-adapter.js?v=20260801e"></script>
+    <script src="assets/js/services/progress/progress-service.js?v=20260801f"></script>
+    <script src="assets/js/services/progress/ranking-service.js?v=20260801e"></script>
+    <script src="assets/js/services/progress/progress-bridge.js?v=20260801e"></script>
     <script src="assets/js/components/loader.js?v=20260801"></script>
     <script src="assets/js/components/empty-state.js?v=20260801"></script>
     <script src="assets/js/components/toast.js?v=20260801"></script>
     <script src="assets/js/components/modal.js?v=20260801"></script>
+    <script src="assets/js/components/avatar.js?v=20260801b"></script>
+    <script src="assets/js/components/gamification/gamification-ui.js?v=20260801e"></script>
     <script src="assets/js/player-profile.js?v=20260801"></script>
     <script src="assets/js/main.js?v=20260801" defer></script>
     <script type="module" src="assets/js/firebase-config.js"></script>
@@ -148,6 +156,9 @@
                         Crear perfil
                     </button>
                 </section>
+
+                <!-- Gamification dashboard (XP, levels, achievements, rankings) -->
+                <div id="ctGamificationRoot" class="ct-gamification" aria-live="polite"></div>
                 
                 <!-- Enlaces de navegación rápida -->
                 <nav aria-label="Enlaces rápidos del perfil" class="profile-quick-nav">
@@ -402,7 +413,7 @@
     <script type="module" src="assets/js/logros.js?v=202505272312"></script>
     <script type="module" src="assets/js/profile.js?v=202505272312"></script>
     <script type="module" src="assets/js/firebase-utils.js"></script>
-    <script src="assets/js/components/avatar.js?v=20260801b"></script>
+    <script src="assets/js/profile-gamification.js?v=20260801f"></script>
     <script src="assets/js/components/navbar.js?v=20260801b"></script>
     <script src="assets/js/components/footer.js?v=20260801b"></script>
     <script src="assets/js/components/shell.js?v=20260801b"></script>

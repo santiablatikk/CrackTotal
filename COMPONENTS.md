@@ -69,6 +69,9 @@ Bridges legacy (solo en páginas `.ct-ds`): [`bridges.css`](assets/css/design-sy
 | `avatar` | `components/avatar.js` |
 | `rankingItem` | `components/ranking-item.js` |
 | `statCard` | `components/stat-card.js` |
+| `gamification.*` | `components/gamification/gamification-ui.js` — ProfileCard, XPBar, AchievementCard, Badge, LevelCard, StatsGrid, HistoryCard, RankingCard, ActivityFeed, StreakWidget |
+
+Gamificación: ver [`GAMIFICATION.md`](GAMIFICATION.md). Persistencia vía `CrackTotalProgress` (LocalStorage); UI no lee storage directo.
 
 Ejemplos:
 
@@ -104,11 +107,16 @@ Sección `#centro-futbol` en [`index.html`](index.html). Arquitectura desacoplad
 | Capa | Archivos |
 |------|----------|
 | Datos mock | `assets/data/hub/*.json` |
-| Config | `CrackTotalConfig.hub` (`source: "mock" \| "api"`) |
-| Servicio | `assets/js/services/hub-service.js` → `CrackTotalServices.hub` |
-| Formato | `assets/js/utils/hub-format.js` |
-| Render | `assets/js/components/hub/hub-renderers.js` (solo datos normalizados) |
-| Orquestación | `assets/js/football-hub.js` |
-| Estilos | `assets/css/football-hub.css` |
+| Config única | `assets/js/config/football-api-config.js` (`MODE: 'MOCK' \| 'API'`) |
+| API key | `window.CrackTotalEnv.API_FOOTBALL_KEY` vía `env.local.js` (gitignored; ver `env.example.js`) |
+| ApiClient | `services/api-client.js` |
+| FootballService | `services/football-service.js` |
+| Mapper | `services/mappers/api-football-mapper.js` |
+| CacheManager | `services/cache-manager.js` |
+| ErrorManager | `services/error-manager.js` |
+| RefreshManager | `services/refresh-manager.js` (60s si hay live, 15m si no) |
+| Facade UI | `services/hub-service.js` → mismos shapes que los JSON |
+| Render | `components/hub/hub-renderers.js` (**no** conoce API-Football) |
+| Orquestación | `football-hub.js` |
 
-Para API real: setear `hub.source = "api"` y `hub.apiBasePath` — **sin cambiar renderers**.
+Activar API: `MODE = 'API'` + key en `env.local.js`. Si la API falla → mock/caché + indicador “Mostrando datos almacenados”.

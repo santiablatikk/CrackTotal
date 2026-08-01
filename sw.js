@@ -1,5 +1,5 @@
 // Service Worker optimizado para Crack Total
-const APP_VERSION = '3.3.0';
+const APP_VERSION = '3.5.0';
 const CACHE_NAME = `crack-total-v${APP_VERSION}`;
 const STATIC_CACHE_NAME = `crack-total-static-v${APP_VERSION}`;
 const DYNAMIC_CACHE_NAME = `crack-total-dynamic-v${APP_VERSION}`;
@@ -40,8 +40,15 @@ const STATIC_ASSETS = [
     '/assets/js/firebase-init.js',
     '/assets/js/cookie-consent.js',
     '/assets/js/config/app-config.js',
+    '/assets/js/config/football-api-config.js',
     '/assets/js/services/http-client.js',
     '/assets/js/services/cache.js',
+    '/assets/js/services/cache-manager.js',
+    '/assets/js/services/error-manager.js',
+    '/assets/js/services/api-client.js',
+    '/assets/js/services/mappers/api-football-mapper.js',
+    '/assets/js/services/football-service.js',
+    '/assets/js/services/refresh-manager.js',
     '/assets/js/services/hub-service.js',
     '/assets/js/services/index.js',
     '/assets/js/utils/errors.js',
@@ -64,6 +71,7 @@ const STATIC_ASSETS = [
     '/assets/data/hub/news.json',
     '/assets/data/hub/game-of-day.json',
     '/assets/data/hub/user-ranking.json',
+    '/assets/data/hub/spotlight.json',
     '/assets/images/portada.jpg',
     '/portada.ico',
     '/config/manifest.json'

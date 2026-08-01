@@ -1,0 +1,10 @@
+{
+  "updatedAt": "2026-08-01T12:00:00.000Z",
+  "scope": "friends",
+  "items": [
+    { "rank": 1, "name": "TuAmigo10", "score": 920, "meta": "Amigo" },
+    { "rank": 2, "name": "VecinoGol", "score": 760, "meta": "Amigo" },
+    { "rank": 3, "name": "SalaVip", "score": 540, "meta": "Amigo" },
+    { "rank": 4, "name": "CrackLocal", "score": 410, "meta": "Amigo" }
+  ]
+}

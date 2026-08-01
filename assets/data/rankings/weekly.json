@@ -1,0 +1,12 @@
+{
+  "updatedAt": "2026-08-01T12:00:00.000Z",
+  "scope": "weekly",
+  "items": [
+    { "rank": 1, "name": "Sprint10", "score": 640, "meta": "Semana" },
+    { "rank": 2, "name": "El Diez", "score": 580, "meta": "Semana" },
+    { "rank": 3, "name": "FútbolIQ", "score": 510, "meta": "Semana" },
+    { "rank": 4, "name": "Pared", "score": 440, "meta": "Semana" },
+    { "rank": 5, "name": "Córner", "score": 390, "meta": "Semana" },
+    { "rank": 6, "name": "Orsai", "score": 320, "meta": "Semana" }
+  ]
+}

@@ -81,7 +81,7 @@
     <link rel="stylesheet" href="assets/css/base.css?v=20260801">
     <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801">
     <link rel="stylesheet" href="assets/css/home.css?v=20260801">
-    <link rel="stylesheet" href="assets/css/football-hub.css?v=20260801c">
+    <link rel="stylesheet" href="assets/css/football-hub.css?v=20260801g">
     <link rel="preload" href="/assets/images/portada.jpg" as="image" type="image/jpeg" fetchpriority="high">
 
     <script src="assets/js/adsense-early-blocker.js?v=202506072312"></script>
@@ -191,59 +191,77 @@
             </div>
         </section>
 
-        <section class="football-hub home-reveal" id="centro-futbol" aria-labelledby="hub-title">
+        <section class="football-hub hub-pro home-reveal" id="centro-futbol" aria-labelledby="hub-title">
             <div class="home-shell" id="footballHub">
-                <div class="home-section-heading">
+                <div class="hub-hero-heading">
                     <div>
                         <p class="home-eyebrow">Centro de Fútbol</p>
-                        <h2 id="hub-title">Todo el pulso del juego, en un solo lugar.</h2>
+                        <h2 id="hub-title">La portada del fútbol.</h2>
+                        <p class="hub-hero-copy">Partidos, historias y el pulso del día — pensado para volver siempre.</p>
+                        <p id="hubDataStatus" class="hub-data-status" hidden role="status" aria-live="polite"></p>
                     </div>
-                    <p>Partidos, noticias y el desafío del día — listos para conectar con datos en vivo más adelante.</p>
+                    <a class="ct-button ct-button--primary hub-hero-cta" href="games.html">Jugar ahora</a>
                 </div>
 
-                <div class="hub-grid">
-                    <article class="hub-card hub-card--live" aria-labelledby="hub-live-title">
-                        <header class="hub-card__header">
-                            <h3 class="hub-card__title" id="hub-live-title"><i class="fas fa-broadcast-tower" aria-hidden="true"></i> En vivo</h3>
-                            <span class="ct-badge ct-badge--danger">Live</span>
-                        </header>
-                        <div class="hub-card__body" id="hubLive" aria-live="polite"></div>
-                    </article>
+                <section class="hub-featured-block" aria-label="Partidos destacados">
+                    <div class="hub-panel-head">
+                        <h3 class="hub-panel__title"><i class="fas fa-bolt" aria-hidden="true"></i> Destacados</h3>
+                        <span class="hub-live-pill">EN VIVO <span id="hubLiveCount" hidden>0</span></span>
+                    </div>
+                    <div id="hubFeatured" class="hub-featured" aria-live="polite"></div>
+                </section>
 
-                    <article class="hub-card hub-card--upcoming" aria-labelledby="hub-upcoming-title">
-                        <header class="hub-card__header">
-                            <h3 class="hub-card__title" id="hub-upcoming-title"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Próximos</h3>
-                        </header>
-                        <div class="hub-card__body" id="hubUpcoming" aria-live="polite"></div>
-                    </article>
+                <div class="hub-controls">
+                    <div class="hub-tabs" role="tablist" aria-label="Vistas de partidos">
+                        <button class="hub-tab is-active" type="button" role="tab" data-hub-tab="hoy" aria-selected="true">Hoy</button>
+                        <button class="hub-tab" type="button" role="tab" data-hub-tab="vivo" aria-selected="false">En Vivo</button>
+                        <button class="hub-tab" type="button" role="tab" data-hub-tab="resultados" aria-selected="false">Resultados</button>
+                        <button class="hub-tab" type="button" role="tab" data-hub-tab="proximos" aria-selected="false">Próximos</button>
+                    </div>
+                    <div class="hub-filters" id="hubCompFilters" aria-label="Filtrar por competición"></div>
+                </div>
 
-                    <article class="hub-card hub-card--results" aria-labelledby="hub-results-title">
-                        <header class="hub-card__header">
-                            <h3 class="hub-card__title" id="hub-results-title"><i class="fas fa-check-circle" aria-hidden="true"></i> Resultados</h3>
-                        </header>
-                        <div class="hub-card__body" id="hubResults" aria-live="polite"></div>
-                    </article>
+                <section class="hub-board-block" aria-label="Partidos">
+                    <div id="hubMatchBoard" class="hub-board" aria-live="polite"></div>
+                </section>
 
-                    <article class="hub-card hub-card--news" aria-labelledby="hub-news-title">
-                        <header class="hub-card__header">
-                            <h3 class="hub-card__title" id="hub-news-title"><i class="fas fa-newspaper" aria-hidden="true"></i> Noticias</h3>
+                <!-- Staging mounts (kept for existing panel pipeline; visually hidden) -->
+                <div class="hub-staging" hidden>
+                    <div id="hubLive"></div>
+                    <div id="hubUpcoming"></div>
+                    <div id="hubResults"></div>
+                </div>
+
+                <div class="hub-editorial">
+                    <article class="hub-panel hub-panel--news" aria-labelledby="hub-news-title">
+                        <header class="hub-panel-head">
+                            <h3 class="hub-panel__title" id="hub-news-title"><i class="fas fa-newspaper" aria-hidden="true"></i> Noticias</h3>
                             <a class="hub-card__more" href="blog.html">Ver blog</a>
                         </header>
-                        <div class="hub-card__body" id="hubNews" aria-live="polite"></div>
+                        <div id="hubNews" aria-live="polite"></div>
                     </article>
+                    <aside class="hub-panel hub-panel--most" id="hubMostRead" aria-label="Lo más leído"></aside>
+                </div>
 
-                    <article class="hub-card hub-card--game" aria-labelledby="hub-game-title">
-                        <header class="hub-card__header">
-                            <h3 class="hub-card__title" id="hub-game-title"><i class="fas fa-star" aria-hidden="true"></i> Del día</h3>
+                <div class="hub-spotlight-grid">
+                    <div id="hubPlayerDay" class="hub-panel hub-panel--spot" aria-live="polite"></div>
+                    <div id="hubTeamDay" class="hub-panel hub-panel--spot" aria-live="polite"></div>
+                    <div id="hubFunFact" class="hub-panel hub-panel--spot" aria-live="polite"></div>
+                    <div id="hubTrivia" class="hub-panel hub-panel--trivia" aria-live="polite"></div>
+                </div>
+
+                <div class="hub-secondary">
+                    <article class="hub-panel hub-panel--game" aria-labelledby="hub-game-title">
+                        <header class="hub-panel-head">
+                            <h3 class="hub-panel__title" id="hub-game-title"><i class="fas fa-star" aria-hidden="true"></i> Del día</h3>
                         </header>
-                        <div class="hub-card__body" id="hubGameDay" aria-live="polite"></div>
+                        <div id="hubGameDay" aria-live="polite"></div>
                     </article>
-
-                    <article class="hub-card hub-card--ranking" aria-labelledby="hub-rank-title">
-                        <header class="hub-card__header">
-                            <h3 class="hub-card__title" id="hub-rank-title"><i class="fas fa-trophy" aria-hidden="true"></i> Ranking</h3>
+                    <article class="hub-panel hub-panel--ranking" aria-labelledby="hub-rank-title">
+                        <header class="hub-panel-head">
+                            <h3 class="hub-panel__title" id="hub-rank-title"><i class="fas fa-trophy" aria-hidden="true"></i> Ranking</h3>
                         </header>
-                        <div class="hub-card__body" id="hubRanking" aria-live="polite"></div>
+                        <div id="hubRanking" aria-live="polite"></div>
                     </article>
                 </div>
             </div>
@@ -465,12 +483,21 @@
         </div>
     </footer>
 
-    <script src="assets/js/config/app-config.js?v=20260801c"></script>
+    <!-- Optional private key (gitignored). Uncomment after copying env.example.js → env.local.js -->
+    <!-- <script src="assets/js/config/env.local.js"></script> -->
+    <script src="assets/js/config/app-config.js?v=20260801d"></script>
+    <script src="assets/js/config/football-api-config.js?v=20260801d"></script>
     <script src="assets/js/services/http-client.js?v=20260801"></script>
     <script src="assets/js/services/cache.js?v=20260801"></script>
+    <script src="assets/js/services/cache-manager.js?v=20260801d"></script>
+    <script src="assets/js/services/error-manager.js?v=20260801d"></script>
+    <script src="assets/js/services/api-client.js?v=20260801d"></script>
+    <script src="assets/js/services/mappers/api-football-mapper.js?v=20260801d"></script>
+    <script src="assets/js/services/football-service.js?v=20260801d"></script>
+    <script src="assets/js/services/refresh-manager.js?v=20260801d"></script>
     <script src="assets/js/utils/errors.js?v=20260801"></script>
-    <script src="assets/js/utils/hub-format.js?v=20260801c"></script>
-    <script src="assets/js/services/hub-service.js?v=20260801c"></script>
+    <script src="assets/js/utils/hub-format.js?v=20260801g"></script>
+    <script src="assets/js/services/hub-service.js?v=20260801d"></script>
     <script src="assets/js/services/index.js?v=20260801"></script>
     <script src="assets/js/components/loader.js?v=20260801"></script>
     <script src="assets/js/components/empty-state.js?v=20260801"></script>
@@ -478,9 +505,9 @@
     <script src="assets/js/essential.js?v=202505272312"></script>
     <script src="assets/js/components/toast.js?v=20260801"></script>
     <script src="assets/js/components/modal.js?v=20260801"></script>
-    <script src="assets/js/components/hub/hub-renderers.js?v=20260801c"></script>
+    <script src="assets/js/components/hub/hub-renderers.js?v=20260801g"></script>
     <script src="assets/js/player-profile.js?v=20260801"></script>
-    <script src="assets/js/football-hub.js?v=20260801c" defer></script>
+    <script src="assets/js/football-hub.js?v=20260801g" defer></script>
     <script src="assets/js/home.js?v=20260801" defer></script>
     <script src="assets/js/main.js?v=20260801" defer></script>
 </body>

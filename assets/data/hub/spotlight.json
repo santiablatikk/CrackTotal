@@ -1,0 +1,31 @@
+{
+  "updatedAt": "2026-08-01T16:45:00.000Z",
+  "player": {
+    "name": "Lionel Messi",
+    "role": "Jugador destacado",
+    "team": "Inter Miami",
+    "stat": "12 goles en 10 partidos",
+    "blurb": "La referencia ofensiva que define partidos con un toque.",
+    "image": "assets/images/blog/messi.jpg"
+  },
+  "team": {
+    "name": "Real Madrid",
+    "role": "Equipo destacado",
+    "competition": "Champions League",
+    "stat": "Invicto de local",
+    "blurb": "Presión alta y laterales ofensivos como firma de juego.",
+    "image": "assets/images/blog/championss.jpg"
+  },
+  "funFact": {
+    "eyebrow": "Dato curioso",
+    "title": "¿Sabías que…?",
+    "text": "Ningún equipo sudamericano ganó la Champions, pero sí dominó la Copa Libertadores con más títulos históricos que cualquier liga europea equivalente."
+  },
+  "trivia": {
+    "question": "¿Quién tiene más Balones de Oro?",
+    "options": ["Cristiano Ronaldo", "Lionel Messi", "Michel Platini"],
+    "answerIndex": 1,
+    "ctaHref": "pasalache.html",
+    "ctaLabel": "Jugar ahora"
+  }
+}

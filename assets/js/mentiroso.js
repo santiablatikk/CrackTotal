@@ -1806,6 +1806,20 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Guardar estadísticas en Firebase
         saveMentirosoStats(payload);
+
+        if (window.CrackTotalProgressBridge) {
+            const won = Boolean(payload.winnerId === gameState.myPlayerId && !payload.draw);
+            const scoreNum = typeof myFinalScore === 'number' ? myFinalScore : Number(myFinalScore) || 0;
+            window.CrackTotalProgressBridge.reportMatch({
+                gameId: 'mentiroso',
+                gameName: 'Mentiroso',
+                won: won,
+                result: payload.draw ? 'draw' : (won ? 'victory' : 'defeat'),
+                score: scoreNum,
+                correctAnswers: scoreNum,
+                durationSec: Math.floor((Date.now() - (gameState.gameStartTime || Date.now())) / 1000)
+            });
+        }
         
         showEndGameModal();
     }

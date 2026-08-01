@@ -1,5 +1,5 @@
 /**
- * Presentational renderers for Football Hub cards.
+ * Presentational renderers for Football Hub (premium sports cover).
  * Accept normalized data only — never fetch.
  */
 (function () {
@@ -15,13 +15,26 @@
         return node;
     }
 
+    function crest(team) {
+        const short = (team && (team.short || Format().initials(team.name))) || '?';
+        const node = el('span', 'hub-crest', String(short).slice(0, 3).toUpperCase());
+        node.setAttribute('aria-hidden', 'true');
+        return node;
+    }
+
+    function compBadge(name) {
+        const tone = Format().competitionTone ? Format().competitionTone(name) : 'default';
+        const badge = el('span', 'hub-comp hub-comp--' + tone, name || 'Competición');
+        return badge;
+    }
+
     function skeletonRows(count) {
         const frag = document.createDocumentFragment();
         for (let i = 0; i < count; i += 1) {
-            const row = el('div', 'hub-skeleton-row');
+            const row = el('div', 'hub-skeleton-row hub-skeleton-row--rich');
             row.innerHTML =
                 '<span class="ct-skeleton ct-skeleton--title"></span>' +
-                '<span class="ct-skeleton"></span>' +
+                '<span class="ct-skeleton hub-skeleton-block"></span>' +
                 '<span class="ct-skeleton"></span>';
             frag.appendChild(row);
         }
@@ -31,7 +44,7 @@
     function renderEmpty(container, title, text) {
         container.textContent = '';
         if (UI.emptyState) {
-            UI.emptyState.render(container, { title, text, icon: '○' });
+            UI.emptyState.render(container, { title: title, text: text, icon: '○' });
             return;
         }
         container.appendChild(el('p', 'hub-fallback-empty', text));
@@ -49,36 +62,88 @@
         container.appendChild(el('p', 'hub-fallback-error', message || 'Error al cargar'));
     }
 
-    function matchRow(match, mode) {
-        const row = el('article', 'hub-match');
-        const top = el('div', 'hub-match__meta');
-        top.appendChild(el('span', 'hub-match__comp', match.competition));
+    function matchCard(match, mode, options) {
+        const opts = options || {};
+        const featured = Boolean(opts.featured);
+        const row = el(
+            'article',
+            'hub-match hub-match--' + mode + (featured ? ' hub-match--featured' : '')
+        );
+        row.dataset.matchId = match.id || '';
+        if (match.competition) row.dataset.competition = match.competition;
 
-        if (mode === 'live' && match.minute != null) {
+        const top = el('div', 'hub-match__meta');
+        top.appendChild(compBadge(match.competition));
+
+        if (mode === 'live') {
             const live = el('span', 'hub-match__live');
-            live.innerHTML = '<i class="fas fa-circle" aria-hidden="true"></i> ' + match.minute + "'";
+            const minute = match.minute != null ? Number(match.minute) : 0;
+            live.innerHTML =
+                '<i class="fas fa-circle" aria-hidden="true"></i> <span data-live-minute="' +
+                minute +
+                '">' +
+                minute +
+                "'</span>";
             top.appendChild(live);
         } else if (mode === 'upcoming') {
-            top.appendChild(el('span', 'hub-match__time', Format().formatKickoff(match.kickoff) || ''));
+            const time = el('span', 'hub-match__time');
+            time.textContent = Format().formatKickoff(match.kickoff) || '';
+            top.appendChild(time);
+            if (match.kickoff) {
+                const cd = el('span', 'hub-match__countdown');
+                cd.dataset.kickoff = match.kickoff;
+                cd.textContent = Format().formatCountdown
+                    ? Format().formatCountdown(match.kickoff)
+                    : '';
+                top.appendChild(cd);
+            }
         } else if (mode === 'result') {
-            top.appendChild(el('span', 'hub-match__time', Format().formatRelativeDay(match.finishedAt) || ''));
+            top.appendChild(
+                el('span', 'hub-match__time', Format().formatRelativeDay(match.finishedAt) || 'FT')
+            );
         }
 
-        const teams = el('div', 'hub-match__teams');
-        const home = el('div', 'hub-match__team');
-        home.appendChild(el('span', 'hub-match__name', match.home.name));
-        const away = el('div', 'hub-match__team');
-        away.appendChild(el('span', 'hub-match__name', match.away.name));
+        const stage = el('div', 'hub-match__stage');
+        const home = el('div', 'hub-match__side');
+        home.appendChild(crest(match.home));
+        home.appendChild(el('span', 'hub-match__name', (match.home && match.home.name) || ''));
 
+        const scoreBox = el('div', 'hub-match__scoreboard');
         if (mode === 'live' || mode === 'result') {
-            home.appendChild(el('span', 'hub-match__score', String(match.home.score ?? '-')));
-            away.appendChild(el('span', 'hub-match__score', String(match.away.score ?? '-')));
+            scoreBox.appendChild(
+                el(
+                    'span',
+                    'hub-match__score hub-match__score--big',
+                    String(match.home && match.home.score != null ? match.home.score : '-')
+                )
+            );
+            scoreBox.appendChild(el('span', 'hub-match__sep', '–'));
+            scoreBox.appendChild(
+                el(
+                    'span',
+                    'hub-match__score hub-match__score--big',
+                    String(match.away && match.away.score != null ? match.away.score : '-')
+                )
+            );
+        } else {
+            scoreBox.appendChild(el('span', 'hub-match__vs', 'VS'));
         }
 
-        teams.appendChild(home);
-        teams.appendChild(away);
+        const away = el('div', 'hub-match__side hub-match__side--away');
+        away.appendChild(crest(match.away));
+        away.appendChild(el('span', 'hub-match__name', (match.away && match.away.name) || ''));
+
+        stage.appendChild(home);
+        stage.appendChild(scoreBox);
+        stage.appendChild(away);
+
         row.appendChild(top);
-        row.appendChild(teams);
+        row.appendChild(stage);
+
+        if (match.venue) {
+            row.appendChild(el('p', 'hub-match__venue', match.venue));
+        }
+
         return row;
     }
 
@@ -94,7 +159,57 @@
             return;
         }
         const list = el('div', 'hub-match-list');
-        items.forEach((item) => list.appendChild(matchRow(item, mode)));
+        items.forEach((item, index) => {
+            list.appendChild(matchCard(item, mode, { featured: index === 0 && mode === 'live' }));
+        });
+        container.appendChild(list);
+    }
+
+    function renderFeatured(container, matches) {
+        container.textContent = '';
+        if (!matches || !matches.length) {
+            renderEmpty(container, 'Sin destacados', 'Cuando haya partidos, aparecerán acá.');
+            return;
+        }
+        const wrap = el('div', 'hub-carousel');
+        const track = el('div', 'hub-carousel__track');
+        track.setAttribute('tabindex', '0');
+        matches.slice(0, 6).forEach((item, index) => {
+            const slide = el('div', 'hub-carousel__slide');
+            const mode = item._mode || (item.status === 'live' ? 'live' : item.status === 'finished' ? 'result' : 'upcoming');
+            slide.appendChild(matchCard(item, mode, { featured: true }));
+            slide.style.setProperty('--hub-delay', index * 40 + 'ms');
+            track.appendChild(slide);
+        });
+        const prev = el('button', 'hub-carousel__nav hub-carousel__nav--prev');
+        prev.type = 'button';
+        prev.setAttribute('aria-label', 'Partido anterior');
+        prev.innerHTML = '<i class="fas fa-chevron-left" aria-hidden="true"></i>';
+        const next = el('button', 'hub-carousel__nav hub-carousel__nav--next');
+        next.type = 'button';
+        next.setAttribute('aria-label', 'Partido siguiente');
+        next.innerHTML = '<i class="fas fa-chevron-right" aria-hidden="true"></i>';
+        wrap.appendChild(prev);
+        wrap.appendChild(track);
+        wrap.appendChild(next);
+        container.appendChild(wrap);
+    }
+
+    function renderBoard(container, items, mode, emptyTitle) {
+        container.textContent = '';
+        if (!items || !items.length) {
+            renderEmpty(container, emptyTitle, 'No hay partidos en esta vista.');
+            return;
+        }
+        const list = el('div', 'hub-match-list hub-match-list--board');
+        items.forEach((item, index) => {
+            const card = matchCard(item, mode || item._mode || 'upcoming', {
+                featured: index === 0
+            });
+            card.classList.add('hub-reveal-item');
+            card.style.setProperty('--hub-delay', Math.min(index, 8) * 45 + 'ms');
+            list.appendChild(card);
+        });
         container.appendChild(list);
     }
 
@@ -109,12 +224,13 @@
             renderEmpty(container, 'Sin noticias', 'Todavía no hay notas destacadas.');
             return;
         }
-        const list = el('div', 'hub-news-list');
-        items.forEach((item) => {
-            const link = el('a', 'hub-news-item');
+
+        const layout = el('div', 'hub-news-visual');
+        items.forEach((item, index) => {
+            const link = el('a', 'hub-news-card' + (index === 0 ? ' hub-news-card--hero' : ''));
             link.href = item.href || 'blog.html';
             if (item.image) {
-                const media = el('div', 'hub-news-item__media');
+                const media = el('div', 'hub-news-card__media');
                 const img = document.createElement('img');
                 img.src = item.image;
                 img.alt = '';
@@ -123,14 +239,115 @@
                 media.appendChild(img);
                 link.appendChild(media);
             }
-            const body = el('div', 'hub-news-item__body');
+            const body = el('div', 'hub-news-card__body');
             if (item.category) body.appendChild(el('span', 'ct-badge ct-badge--primary', item.category));
-            body.appendChild(el('h4', 'hub-news-item__title', item.title));
-            body.appendChild(el('p', 'hub-news-item__summary', item.summary));
+            body.appendChild(el('h4', 'hub-news-card__title', item.title));
+            body.appendChild(el('p', 'hub-news-card__summary', item.summary));
             link.appendChild(body);
-            list.appendChild(link);
+            layout.appendChild(link);
         });
-        container.appendChild(list);
+        container.appendChild(layout);
+    }
+
+    function renderMostRead(container, result) {
+        container.textContent = '';
+        const items = (result && result.data && result.data.items) || [];
+        if (!items.length) {
+            renderEmpty(container, 'Lo más leído', 'Pronto vas a ver las notas top.');
+            return;
+        }
+        const box = el('div', 'hub-most-read');
+        box.appendChild(el('h3', 'hub-panel__title', 'Lo más leído'));
+        const list = el('ol', 'hub-most-read__list');
+        items.slice(0, 5).forEach((item, index) => {
+            const li = el('li', 'hub-most-read__item');
+            const link = el('a', 'hub-most-read__link');
+            link.href = item.href || 'blog.html';
+            link.appendChild(el('span', 'hub-most-read__rank', String(index + 1)));
+            const copy = el('div', 'hub-most-read__copy');
+            copy.appendChild(el('p', 'hub-most-read__title', item.title));
+            if (item.category) copy.appendChild(el('p', 'hub-most-read__cat', item.category));
+            link.appendChild(copy);
+            li.appendChild(link);
+            list.appendChild(li);
+        });
+        box.appendChild(list);
+        container.appendChild(box);
+    }
+
+    function renderSpotlightCard(container, data, kind) {
+        container.textContent = '';
+        if (!data) {
+            renderEmpty(container, 'Destacado', 'Contenido no disponible.');
+            return;
+        }
+        const card = el('article', 'hub-spotlight-card hub-spotlight-card--' + kind);
+        if (data.image) {
+            const media = el('div', 'hub-spotlight-card__media');
+            const img = document.createElement('img');
+            img.src = data.image;
+            img.alt = '';
+            img.loading = 'lazy';
+            img.decoding = 'async';
+            media.appendChild(img);
+            card.appendChild(media);
+        }
+        const body = el('div', 'hub-spotlight-card__body');
+        body.appendChild(el('p', 'hub-spotlight-card__eyebrow', data.role || data.eyebrow || 'Destacado'));
+        body.appendChild(el('h3', 'hub-spotlight-card__title', data.name || data.title || ''));
+        if (data.team || data.competition) {
+            body.appendChild(el('p', 'hub-spotlight-card__meta', data.team || data.competition));
+        }
+        if (data.stat) body.appendChild(el('p', 'hub-spotlight-card__stat', data.stat));
+        if (data.blurb || data.text) {
+            body.appendChild(el('p', 'hub-spotlight-card__text', data.blurb || data.text));
+        }
+        card.appendChild(body);
+        container.appendChild(card);
+    }
+
+    function renderTrivia(container, trivia) {
+        container.textContent = '';
+        if (!trivia) {
+            renderEmpty(container, 'Trivia', 'Volvé más tarde.');
+            return;
+        }
+        const card = el('article', 'hub-trivia');
+        card.appendChild(el('p', 'hub-trivia__eyebrow', 'Trivia rápida'));
+        card.appendChild(el('h3', 'hub-trivia__q', trivia.question));
+        const options = el('div', 'hub-trivia__options');
+        (trivia.options || []).forEach((label, index) => {
+            const btn = el('button', 'hub-trivia__option');
+            btn.type = 'button';
+            btn.textContent = label;
+            btn.dataset.index = String(index);
+            options.appendChild(btn);
+        });
+        card.appendChild(options);
+        const feedback = el('p', 'hub-trivia__feedback');
+        feedback.hidden = true;
+        card.appendChild(feedback);
+        const cta = el('a', 'hub-trivia__cta ct-button ct-button--primary');
+        cta.href = trivia.ctaHref || 'games.html';
+        cta.textContent = trivia.ctaLabel || 'Jugar ahora';
+        card.appendChild(cta);
+
+        options.addEventListener('click', (event) => {
+            const btn = event.target.closest('.hub-trivia__option');
+            if (!btn || options.classList.contains('is-locked')) return;
+            options.classList.add('is-locked');
+            const chosen = Number(btn.dataset.index);
+            const correct = Number(trivia.answerIndex);
+            Array.from(options.children).forEach((node, idx) => {
+                if (idx === correct) node.classList.add('is-correct');
+                else if (idx === chosen) node.classList.add('is-wrong');
+            });
+            feedback.hidden = false;
+            feedback.textContent =
+                chosen === correct ? '¡Bien! Seguís en ritmo de crack.' : 'Casi. Entrá a jugar y mejorá.';
+        });
+
+        container.appendChild(card);
     }
 
     function renderGameOfDay(container, result) {
@@ -168,9 +385,8 @@
             item.facts.forEach((fact) => facts.appendChild(el('li', '', fact)));
             body.appendChild(facts);
         }
-        const cta = el('span', 'hub-game-day__cta');
-        cta.textContent = item.cta || 'Jugar';
-        cta.innerHTML += ' <i class="fas fa-arrow-right" aria-hidden="true"></i>';
+        const cta = el('span', 'hub-game-day__cta ct-button ct-button--primary');
+        cta.textContent = item.cta || 'Jugar ahora';
         body.appendChild(cta);
         card.appendChild(body);
         container.appendChild(card);
@@ -210,18 +426,24 @@
     }
 
     UI.hubRenderers = {
-        skeletonRows,
-        renderLive(container, result) {
+        skeletonRows: skeletonRows,
+        matchCard: matchCard,
+        renderLive: function (container, result) {
             renderMatchList(container, result, 'live', 'Sin partidos en vivo');
         },
-        renderUpcoming(container, result) {
+        renderUpcoming: function (container, result) {
             renderMatchList(container, result, 'upcoming', 'Agenda vacía');
         },
-        renderResults(container, result) {
+        renderResults: function (container, result) {
             renderMatchList(container, result, 'result', 'Sin resultados');
         },
-        renderNews,
-        renderGameOfDay,
-        renderRanking
+        renderNews: renderNews,
+        renderMostRead: renderMostRead,
+        renderFeatured: renderFeatured,
+        renderBoard: renderBoard,
+        renderSpotlightCard: renderSpotlightCard,
+        renderTrivia: renderTrivia,
+        renderGameOfDay: renderGameOfDay,
+        renderRanking: renderRanking
     };
 })();
