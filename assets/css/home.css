@@ -673,6 +673,196 @@ body.home-v2 {
     text-align: center;
 }
 
+.home-editorial {
+    position: relative;
+    background:
+        radial-gradient(circle at 12% 10%, rgba(96, 165, 250, 0.12), transparent 30rem),
+        radial-gradient(circle at 88% 75%, rgba(121, 242, 166, 0.09), transparent 28rem);
+    border-top: 1px solid var(--home-line);
+}
+
+.home-heading-action {
+    max-width: 31rem;
+}
+
+.home-text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 0.85rem;
+    color: var(--home-primary);
+    font-size: 0.88rem;
+    font-weight: 900;
+    text-decoration: none;
+}
+
+.home-text-link:hover {
+    color: var(--home-primary-strong);
+}
+
+.home-stories-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.85fr) minmax(250px, 0.72fr);
+    gap: 1.2rem;
+}
+
+.home-stories-stack {
+    display: grid;
+    gap: 1.2rem;
+}
+
+.home-story-card {
+    position: relative;
+    display: flex;
+    min-height: 100%;
+    align-items: end;
+    overflow: hidden;
+    isolation: isolate;
+    color: #fff;
+    border: 1px solid var(--home-line);
+    border-radius: var(--home-radius);
+    text-decoration: none;
+    box-shadow: var(--home-shadow);
+}
+
+.home-story-card--lead {
+    min-height: 520px;
+}
+
+.home-story-card--compact {
+    min-height: 250px;
+}
+
+.home-story-card img {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 450ms ease;
+}
+
+.home-story-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(0deg, rgba(3, 8, 15, 0.98), rgba(3, 8, 15, 0.18) 75%);
+}
+
+.home-story-card:hover img {
+    transform: scale(1.05);
+}
+
+.home-story-overlay {
+    width: 100%;
+    padding: clamp(1.2rem, 3vw, 2rem);
+}
+
+.home-story-kicker {
+    display: inline-flex;
+    margin: 0;
+    padding: 0.32rem 0.6rem;
+    color: #05200e;
+    background: var(--home-primary);
+    border-radius: 99px;
+    font-size: 0.67rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.home-story-kicker--current {
+    color: #071629;
+    background: var(--home-accent);
+}
+
+.home-story-card h3,
+.home-trivia-card h3 {
+    margin: 0.8rem 0 0;
+    font-family: "Oswald", sans-serif;
+    line-height: 1.08;
+}
+
+.home-story-card--lead h3 {
+    font-size: clamp(2rem, 4vw, 3.35rem);
+}
+
+.home-story-card--compact h3 {
+    font-size: clamp(1.35rem, 2.3vw, 1.8rem);
+}
+
+.home-story-card p {
+    margin: 0.75rem 0 0;
+    color: #d5deeb;
+    line-height: 1.55;
+}
+
+.home-story-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 1rem;
+    color: var(--home-primary);
+    font-size: 0.82rem;
+    font-weight: 900;
+}
+
+.home-trivia-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: clamp(1.4rem, 3vw, 2rem);
+    background:
+        radial-gradient(circle at 100% 0, rgba(251, 191, 36, 0.16), transparent 16rem),
+        linear-gradient(155deg, rgba(16, 29, 48, 0.98), rgba(8, 17, 29, 0.98));
+    border: 1px solid var(--home-line);
+    border-radius: var(--home-radius);
+    box-shadow: var(--home-shadow);
+}
+
+.home-trivia-icon {
+    display: grid;
+    place-items: center;
+    width: 3.1rem;
+    height: 3.1rem;
+    margin-bottom: 1.25rem;
+    color: #211500;
+    background: var(--home-warm);
+    border-radius: 14px;
+    font-size: 1.25rem;
+}
+
+.home-trivia-card h3 {
+    color: var(--home-text);
+    font-size: clamp(1.65rem, 2.8vw, 2.25rem);
+}
+
+.home-trivia-card details {
+    margin: 1.25rem 0 1.5rem;
+    color: var(--home-muted);
+}
+
+.home-trivia-card summary {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    color: var(--home-primary);
+    font-weight: 900;
+    cursor: pointer;
+}
+
+.home-trivia-card details p {
+    margin: 0.65rem 0 0;
+    line-height: 1.55;
+}
+
+.home-trivia-card .home-button {
+    width: 100%;
+    margin-top: auto;
+}
+
 .home-stats-band {
     position: relative;
     overflow: hidden;
@@ -877,6 +1067,15 @@ body.home-v2 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    .home-stories-grid {
+        grid-template-columns: 1.25fr 0.9fr;
+    }
+
+    .home-trivia-card {
+        grid-column: 1 / -1;
+        min-height: 300px;
+    }
+
     .home-catalog-toolbar {
         grid-template-columns: 1fr;
     }
@@ -929,8 +1128,17 @@ body.home-v2 {
 
     .home-featured-grid,
     .home-games-grid,
+    .home-stories-grid,
     .home-cta {
         grid-template-columns: 1fr;
+    }
+
+    .home-story-card--lead {
+        min-height: 420px;
+    }
+
+    .home-trivia-card {
+        grid-column: auto;
     }
 
     .home-feature-card {
@@ -974,6 +1182,7 @@ body.home-v2 {
 
     .home-featured-grid,
     .home-games-grid,
+    .home-stories-grid,
     .home-footer-grid {
         grid-template-columns: 1fr;
     }

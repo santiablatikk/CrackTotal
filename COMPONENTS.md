@@ -100,9 +100,9 @@ CrackTotalUI.avatar.create({ name: 'El 10' }).mount(parent);
 
 Helper one-shot: [`scripts/migrate-shell.js`](scripts/migrate-shell.js) (ya aplicado). Nuevas páginas: usar placeholders + scripts shell desde el inicio.
 
-## Football Hub (Home)
+## Football data layer (archived)
 
-Sección `#centro-futbol` en [`index.html`](index.html). Arquitectura desacoplada:
+La portada ya no carga resultados, partidos en vivo ni la UI del antiguo Football Hub. Home se enfoca en juegos y contenido editorial estático. La capa de datos queda desacoplada y disponible para usos futuros, pero no forma parte del frontend activo:
 
 | Capa | Archivos |
 |------|----------|
@@ -115,8 +115,6 @@ Sección `#centro-futbol` en [`index.html`](index.html). Arquitectura desacoplad
 | CacheManager | `services/cache-manager.js` |
 | ErrorManager | `services/error-manager.js` |
 | RefreshManager | `services/refresh-manager.js` (60s si hay live, 15m si no) |
-| Facade UI | `services/hub-service.js` → mismos shapes que los JSON |
-| Render | `components/hub/hub-renderers.js` (**no** conoce API-Football) |
-| Orquestación | `football-hub.js` |
+| Facade de datos | `services/hub-service.js` → mismos shapes que los JSON |
 
-Activar API: `MODE = 'API'` + key en `env.local.js`. Si la API falla → mock/caché + indicador “Mostrando datos almacenados”.
+No activar esta capa desde Home sin una nueva decisión de producto.

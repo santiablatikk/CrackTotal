@@ -31,7 +31,7 @@
     <meta name="apple-mobile-web-app-title" content="Crack Total">
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
     <title>Crack Total - Juegos y trivias de fútbol</title>
-    <meta name="description" content="Jugá desafíos de fútbol, trivias diarias y duelos online. Explorá Crack Total gratis y creá tu perfil cuando quieras guardar tu puntuación.">
+    <meta name="description" content="Jugá desafíos y trivias de fútbol, competí con otros cracks y descubrí historias y actualidad futbolera en Crack Total.">
     <link rel="icon" href="/portada.ico?v=20260801" type="image/x-icon">
     <link rel="canonical" href="https://cracktotal.com/">
     <link rel="alternate" hreflang="es" href="https://cracktotal.com/">
@@ -42,7 +42,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://cracktotal.com/">
     <meta property="og:title" content="Crack Total - El desafío definitivo para futboleros">
-    <meta property="og:description" content="Jugá, competí y demostrá cuánto sabés de fútbol. Entrá sin registro y elegí tu desafío.">
+    <meta property="og:description" content="Jugá, competí y descubrí historias y actualidad del fútbol. Entrá sin registro y elegí tu desafío.">
     <meta property="og:image" content="https://cracktotal.com/assets/images/portada.jpg">
     <meta property="og:image:width" content="1024">
     <meta property="og:image:height" content="682">
@@ -59,7 +59,7 @@
         "@type": "WebSite",
         "name": "Crack Total",
         "url": "https://cracktotal.com/",
-        "description": "Juegos, trivias diarias y desafíos online de fútbol.",
+        "description": "Juegos, trivias, historia y actualidad del fútbol.",
         "image": "https://cracktotal.com/assets/images/portada.jpg",
         "publisher": {
             "@type": "Organization",
@@ -80,8 +80,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/base.css?v=20260801">
     <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801">
-    <link rel="stylesheet" href="assets/css/home.css?v=20260801">
-    <link rel="stylesheet" href="assets/css/football-hub.css?v=20260801h">
+    <link rel="stylesheet" href="assets/css/home.css?v=20260803">
     <link rel="preload" href="/assets/images/portada.jpg" as="image" type="image/jpeg" fetchpriority="high">
 
     <script src="assets/js/adsense-early-blocker.js?v=202506072312"></script>
@@ -109,8 +108,9 @@
 
             <ul class="home-nav-list" id="homeNavMenu">
                 <li><a class="home-nav-link" href="/" aria-current="page">Inicio</a></li>
-                <li><a class="home-nav-link" href="#juegos">Juegos</a></li>
-                <li><a class="home-nav-link" href="#centro-futbol">Centro</a></li>
+                <li><a class="home-nav-link" href="games.html">Juegos</a></li>
+                <li><a class="home-nav-link" href="#historias">Historias</a></li>
+                <li><a class="home-nav-link" href="blog.html">Actualidad</a></li>
                 <li><a class="home-nav-link" href="ranking.html">Rankings</a></li>
                 <li><a class="home-nav-link" href="logros.html">Logros</a></li>
                 <li><a class="home-nav-link" href="profile.html" data-profile-label>Perfil</a></li>
@@ -188,83 +188,6 @@
                         <span class="home-feature-link">Resolver el Top 10 <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
                     </div>
                 </a>
-            </div>
-        </section>
-
-        <section class="football-hub hub-pro home-reveal" id="centro-futbol" aria-labelledby="hub-title">
-            <div class="home-shell" id="footballHub">
-                <div class="hub-hero-heading">
-                    <div>
-                        <p class="home-eyebrow">Centro de Fútbol</p>
-                        <h2 id="hub-title">La portada del fútbol.</h2>
-                        <p class="hub-hero-copy">Partidos, historias y el pulso del día — pensado para volver siempre.</p>
-                        <p id="hubDataStatus" class="hub-data-status" hidden role="status" aria-live="polite"></p>
-                    </div>
-                    <a class="ct-button ct-button--primary hub-hero-cta" href="games.html">Jugar ahora</a>
-                </div>
-
-                <section class="hub-featured-block" aria-label="Partidos destacados">
-                    <div class="hub-panel-head">
-                        <h3 class="hub-panel__title"><i class="fas fa-bolt" aria-hidden="true"></i> Destacados</h3>
-                        <span class="hub-live-pill">EN VIVO <span id="hubLiveCount" hidden>0</span></span>
-                    </div>
-                    <div id="hubFeatured" class="hub-featured" aria-live="polite"></div>
-                </section>
-
-                <div class="hub-controls">
-                    <div class="hub-tabs" role="tablist" aria-label="Vistas de partidos">
-                        <button class="hub-tab is-active" type="button" role="tab" id="hubTabHoy" data-hub-tab="hoy" aria-controls="hubMatchBoard" aria-selected="true" tabindex="0">Hoy</button>
-                        <button class="hub-tab" type="button" role="tab" id="hubTabVivo" data-hub-tab="vivo" aria-controls="hubMatchBoard" aria-selected="false" tabindex="-1">En Vivo</button>
-                        <button class="hub-tab" type="button" role="tab" id="hubTabResultados" data-hub-tab="resultados" aria-controls="hubMatchBoard" aria-selected="false" tabindex="-1">Resultados</button>
-                        <button class="hub-tab" type="button" role="tab" id="hubTabProximos" data-hub-tab="proximos" aria-controls="hubMatchBoard" aria-selected="false" tabindex="-1">Próximos</button>
-                    </div>
-                    <div class="hub-filters" id="hubCompFilters" role="group" aria-label="Filtrar por competición"></div>
-                    <p id="hubBoardStatus" class="sr-only" aria-live="polite"></p>
-                </div>
-
-                <section class="hub-board-block" aria-label="Partidos">
-                    <div id="hubMatchBoard" class="hub-board" role="tabpanel" aria-labelledby="hubTabHoy" aria-live="polite" tabindex="0"></div>
-                </section>
-
-                <!-- Staging mounts (kept for existing panel pipeline; visually hidden) -->
-                <div class="hub-staging" hidden>
-                    <div id="hubLive"></div>
-                    <div id="hubUpcoming"></div>
-                    <div id="hubResults"></div>
-                </div>
-
-                <div class="hub-editorial">
-                    <article class="hub-panel hub-panel--news" aria-labelledby="hub-news-title">
-                        <header class="hub-panel-head">
-                            <h3 class="hub-panel__title" id="hub-news-title"><i class="fas fa-newspaper" aria-hidden="true"></i> Noticias</h3>
-                            <a class="hub-card__more" href="blog.html">Ver blog</a>
-                        </header>
-                        <div id="hubNews" aria-live="polite"></div>
-                    </article>
-                    <aside class="hub-panel hub-panel--most" id="hubMostRead" aria-label="Lo más leído"></aside>
-                </div>
-
-                <div class="hub-spotlight-grid">
-                    <div id="hubPlayerDay" class="hub-panel hub-panel--spot" aria-live="polite"></div>
-                    <div id="hubTeamDay" class="hub-panel hub-panel--spot" aria-live="polite"></div>
-                    <div id="hubFunFact" class="hub-panel hub-panel--spot" aria-live="polite"></div>
-                    <div id="hubTrivia" class="hub-panel hub-panel--trivia" aria-live="polite"></div>
-                </div>
-
-                <div class="hub-secondary">
-                    <article class="hub-panel hub-panel--game" aria-labelledby="hub-game-title">
-                        <header class="hub-panel-head">
-                            <h3 class="hub-panel__title" id="hub-game-title"><i class="fas fa-star" aria-hidden="true"></i> Del día</h3>
-                        </header>
-                        <div id="hubGameDay" aria-live="polite"></div>
-                    </article>
-                    <article class="hub-panel hub-panel--ranking" aria-labelledby="hub-rank-title">
-                        <header class="hub-panel-head">
-                            <h3 class="hub-panel__title" id="hub-rank-title"><i class="fas fa-trophy" aria-hidden="true"></i> Ranking</h3>
-                        </header>
-                        <div id="hubRanking" aria-live="polite"></div>
-                    </article>
-                </div>
             </div>
         </section>
 
@@ -401,6 +324,63 @@
             </div>
         </section>
 
+        <section class="home-section home-editorial" id="historias" aria-labelledby="stories-title">
+            <div class="home-shell">
+                <div class="home-section-heading home-reveal">
+                    <div>
+                        <p class="home-eyebrow">Leé, aprendé, volvé a jugar</p>
+                        <h2 id="stories-title">El fútbol también se entiende fuera de la cancha.</h2>
+                    </div>
+                    <div class="home-heading-action">
+                        <p>Historia, protagonistas y actualidad para alimentar cada respuesta.</p>
+                        <a class="home-text-link" href="blog.html">Ver todos los artículos <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+
+                <div class="home-stories-grid">
+                    <a class="home-story-card home-story-card--lead home-reveal" href="blog-detail-libertadores.html">
+                        <img src="assets/images/blog/libertadores.jpg" alt="" width="1024" height="576" loading="lazy" decoding="async">
+                        <div class="home-story-overlay">
+                            <span class="home-story-kicker">Historia</span>
+                            <h3>La Copa Libertadores y las noches que hicieron grande a Sudamérica</h3>
+                            <p>Finales, héroes y rivalidades del torneo más apasionante del continente.</p>
+                            <span class="home-story-link">Leer historia <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                        </div>
+                    </a>
+
+                    <div class="home-stories-stack">
+                        <a class="home-story-card home-story-card--compact home-reveal" href="blog-detail-scaloneta.html">
+                            <img src="assets/images/blog/scaloni.jpg" alt="" width="1024" height="576" loading="lazy" decoding="async">
+                            <div class="home-story-overlay">
+                                <span class="home-story-kicker">Selección</span>
+                                <h3>La Scaloneta: cómo se construyó un equipo campeón</h3>
+                                <span class="home-story-link">Leer artículo <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                            </div>
+                        </a>
+                        <a class="home-story-card home-story-card--compact home-reveal" href="blog-detail-transferencias-caras.html">
+                            <img src="assets/images/blog/Mercado Europeo.jpg" alt="" width="1024" height="576" loading="lazy" decoding="async">
+                            <div class="home-story-overlay">
+                                <span class="home-story-kicker home-story-kicker--current">Actualidad</span>
+                                <h3>El mercado europeo y los pases que mueven al fútbol</h3>
+                                <span class="home-story-link">Leer actualidad <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <aside class="home-trivia-card home-reveal" aria-labelledby="home-trivia-title">
+                        <span class="home-trivia-icon" aria-hidden="true"><i class="fas fa-lightbulb"></i></span>
+                        <p class="home-story-kicker">Dato para cracks</p>
+                        <h3 id="home-trivia-title">¿Qué selección ganó el primer Mundial en 1930?</h3>
+                        <details>
+                            <summary>Ver respuesta</summary>
+                            <p><strong>Uruguay.</strong> Fue anfitrión y venció 4–2 a Argentina en la final de Montevideo.</p>
+                        </details>
+                        <a class="home-button home-button-primary" href="pasalache.html">Ponerme a prueba</a>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
         <section class="home-stats-band" aria-labelledby="stats-title">
             <h2 class="sr-only" id="stats-title">Crack Total en números</h2>
             <div class="home-stats-grid home-shell">
@@ -451,8 +431,8 @@
                 <div>
                     <h2>Competí</h2>
                     <ul class="home-footer-links">
-                        <li><a href="#juegos">Juegos</a></li>
-                        <li><a href="#centro-futbol">Centro de Fútbol</a></li>
+                        <li><a href="games.html">Juegos</a></li>
+                        <li><a href="#historias">Historias</a></li>
                         <li><a href="ranking.html">Rankings</a></li>
                         <li><a href="logros.html">Logros</a></li>
                         <li><a href="profile.html">Perfil</a></li>
@@ -484,31 +464,17 @@
         </div>
     </footer>
 
-    <!-- Optional private key (gitignored). Uncomment after copying env.example.js → env.local.js -->
-    <!-- <script src="assets/js/config/env.local.js"></script> -->
     <script src="assets/js/config/app-config.js?v=20260801d"></script>
-    <script src="assets/js/config/football-api-config.js?v=20260801d"></script>
     <script src="assets/js/services/http-client.js?v=20260801"></script>
     <script src="assets/js/services/cache.js?v=20260801"></script>
-    <script src="assets/js/services/cache-manager.js?v=20260801d"></script>
-    <script src="assets/js/services/error-manager.js?v=20260801d"></script>
-    <script src="assets/js/services/api-client.js?v=20260801d"></script>
-    <script src="assets/js/services/mappers/api-football-mapper.js?v=20260801d"></script>
-    <script src="assets/js/services/football-service.js?v=20260801d"></script>
-    <script src="assets/js/services/refresh-manager.js?v=20260801d"></script>
     <script src="assets/js/utils/errors.js?v=20260801"></script>
-    <script src="assets/js/utils/hub-format.js?v=20260801g"></script>
-    <script src="assets/js/services/hub-service.js?v=20260801d"></script>
     <script src="assets/js/services/index.js?v=20260801"></script>
     <script src="assets/js/components/loader.js?v=20260801"></script>
     <script src="assets/js/components/empty-state.js?v=20260801"></script>
-    <script src="assets/js/components/error-state.js?v=20260801b"></script>
     <script src="assets/js/essential.js?v=202505272312"></script>
     <script src="assets/js/components/toast.js?v=20260801"></script>
     <script src="assets/js/components/modal.js?v=20260801"></script>
-    <script src="assets/js/components/hub/hub-renderers.js?v=20260801h"></script>
     <script src="assets/js/player-profile.js?v=20260801"></script>
-    <script src="assets/js/football-hub.js?v=20260801h" defer></script>
     <script src="assets/js/home.js?v=20260801" defer></script>
     <script src="assets/js/main.js?v=20260801" defer></script>
 </body>

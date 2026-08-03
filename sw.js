@@ -1,5 +1,5 @@
 // Service Worker optimizado para Crack Total
-const APP_VERSION = '3.5.0';
+const APP_VERSION = '3.6.0';
 const CACHE_NAME = `crack-total-v${APP_VERSION}`;
 const STATIC_CACHE_NAME = `crack-total-static-v${APP_VERSION}`;
 const DYNAMIC_CACHE_NAME = `crack-total-dynamic-v${APP_VERSION}`;
@@ -25,7 +25,6 @@ const STATIC_ASSETS = [
     '/assets/css/landing.css',
     '/assets/css/modals.css',
     '/assets/css/home.css',
-    '/assets/css/football-hub.css',
     '/assets/css/player-profile.css',
     '/assets/css/design-system/index.css',
     '/assets/css/design-system/tokens.css',
@@ -34,25 +33,15 @@ const STATIC_ASSETS = [
     '/assets/css/design-system/bridges.css',
     '/assets/js/main.js',
     '/assets/js/home.js',
-    '/assets/js/football-hub.js',
     '/assets/js/player-profile.js',
     '/assets/js/firebase-utils.js',
     '/assets/js/firebase-init.js',
     '/assets/js/cookie-consent.js',
     '/assets/js/config/app-config.js',
-    '/assets/js/config/football-api-config.js',
     '/assets/js/services/http-client.js',
     '/assets/js/services/cache.js',
-    '/assets/js/services/cache-manager.js',
-    '/assets/js/services/error-manager.js',
-    '/assets/js/services/api-client.js',
-    '/assets/js/services/mappers/api-football-mapper.js',
-    '/assets/js/services/football-service.js',
-    '/assets/js/services/refresh-manager.js',
-    '/assets/js/services/hub-service.js',
     '/assets/js/services/index.js',
     '/assets/js/utils/errors.js',
-    '/assets/js/utils/hub-format.js',
     '/assets/js/components/loader.js',
     '/assets/js/components/empty-state.js',
     '/assets/js/components/toast.js',
@@ -64,14 +53,6 @@ const STATIC_ASSETS = [
     '/assets/js/components/avatar.js',
     '/assets/js/components/ranking-item.js',
     '/assets/js/components/stat-card.js',
-    '/assets/js/components/hub/hub-renderers.js',
-    '/assets/data/hub/live-matches.json',
-    '/assets/data/hub/upcoming-matches.json',
-    '/assets/data/hub/recent-results.json',
-    '/assets/data/hub/news.json',
-    '/assets/data/hub/game-of-day.json',
-    '/assets/data/hub/user-ranking.json',
-    '/assets/data/hub/spotlight.json',
     '/assets/images/portada.jpg',
     '/portada.ico',
     '/config/manifest.json'
