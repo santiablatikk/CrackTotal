@@ -13,6 +13,8 @@
         const menu = document.getElementById('homeNavMenu');
 
         if (!header || !toggle || !menu) return;
+        if (header.getAttribute('data-home-nav-bound') === 'true') return;
+        header.setAttribute('data-home-nav-bound', 'true');
 
         const setOpen = (open) => {
             menu.classList.toggle('is-open', open);

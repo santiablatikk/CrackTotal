@@ -7,7 +7,7 @@
 
     const AppConfig = {
         appName: 'Crack Total',
-        version: '3.6.1',
+        version: '3.6.2',
         env: 'browser',
 
         urls: {

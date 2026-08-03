@@ -24,7 +24,7 @@
     }
 
     // Placeholders are above this script at end of body — mount immediately
-    // so defer main.js finds .main-navigation on DOMContentLoaded.
+    // so defer scripts find the Home shell (.home-header / .home-footer).
     if (document.readyState === 'loading' && !document.querySelector('[data-ct-navbar], [data-ct-footer]')) {
         document.addEventListener('DOMContentLoaded', mountShell);
     } else {

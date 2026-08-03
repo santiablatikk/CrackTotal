@@ -56,28 +56,24 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
-    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801b">
-    <link rel="stylesheet" href="assets/css/home.css?v=20260801">
-    <link rel="stylesheet" href="assets/css/discover.css?v=20260803k">
-    <link rel="stylesheet" href="assets/css/modals.css?v=202505272312">
+    <link rel="stylesheet" href="assets/css/base.css?v=20260803m">
+    <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260803m">
+    <link rel="stylesheet" href="assets/css/home.css?v=20260803m">
+    <link rel="stylesheet" href="assets/css/discover.css?v=20260803m">
+    <link rel="stylesheet" href="assets/css/modals.css?v=20260803m">
 
     <script src="assets/js/adsense-early-blocker.js?v=202506072312"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427" crossorigin="anonymous"></script>
 </head>
 <body class="discover-page ct-ds">
-    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+    <a href="#main-content" class="home-skip-link">Saltar al contenido principal</a>
     <div data-ct-navbar data-active="games"></div>
 
     <main id="main-content" class="discover-main">
-        <section class="discover-hero" aria-labelledby="games-hero-title">
+        <section class="discover-hero discover-hero--compact" aria-labelledby="games-hero-title">
             <div class="home-shell">
-                <a class="discover-hero-brand" href="/" aria-label="Crack Total, inicio">
-                    <i class="fas fa-futbol" aria-hidden="true"></i>
-                    Crack Total
-                </a>
                 <p class="home-eyebrow"><i class="fas fa-gamepad" aria-hidden="true"></i> Catálogo</p>
-                <h1 id="games-hero-title">Elegí tu próximo <span>partido</span>.</h1>
+                <h1 id="games-hero-title">Elegí tu próximo <span>desafío</span>.</h1>
                 <p class="discover-hero-lead">Roscos, desafíos diarios y duelos online. Entrá, elegí un juego y demostrá cuánto sabés.</p>
                 <div class="discover-greeting">
                     <span>Hola, <strong id="playerNameDisplay">Jugador</strong></span>
@@ -91,163 +87,155 @@
                         Empezar con Pasala Che
                         <i class="fas fa-arrow-right" aria-hidden="true"></i>
                     </a>
-                    <a class="home-button home-button-secondary" href="#juegos-un-jugador">
+                    <a class="home-button home-button-secondary" href="#juegos">
                         Ver todos
                     </a>
                 </div>
             </div>
         </section>
 
-        <section class="discover-section" id="juegos-un-jugador" aria-labelledby="solo-title">
+        <section class="home-section discover-section" id="juegos" aria-labelledby="catalog-title">
             <div class="home-shell">
-                <div class="discover-section-heading">
-                    <p class="home-eyebrow">Un jugador</p>
-                    <h2 id="solo-title">Jugá a tu ritmo</h2>
-                    <p>Desafíos para practicar solo: rosco, top diario y wordle futbolero.</p>
+                <div class="home-section-heading home-reveal">
+                    <div>
+                        <p class="home-eyebrow">Todos los juegos</p>
+                        <h2 id="catalog-title">Misma cancha. Elegí tu modo.</h2>
+                    </div>
+                    <p>Filtrá por tema o buscá el juego que mejor encaja con tu estilo.</p>
                 </div>
-                <div class="discover-games-grid" aria-label="Juegos de un jugador disponibles">
-                    <article class="discover-game-card cosmic-game-card" data-game="pasalache" tabindex="0">
-                        <div class="discover-game-top">
-                            <span class="discover-game-icon" aria-hidden="true"><i class="fas fa-circle-notch"></i></span>
-                            <div class="discover-game-badges">
-                                <span class="discover-badge discover-badge--primary">Principal</span>
-                                <span class="discover-badge">Rosco</span>
-                            </div>
-                        </div>
-                        <h3>Pasala Che</h3>
-                        <p>Un rosco de preguntas futboleras. Respondé de la A a la Z y demostrá tu conocimiento del fútbol.</p>
-                        <div class="discover-game-meta">
-                            <span class="discover-chip"><i class="fas fa-font" aria-hidden="true"></i>26 Letras</span>
-                            <span class="discover-chip"><i class="fas fa-clock" aria-hidden="true"></i>Contrarreloj</span>
-                        </div>
-                        <button class="discover-play quantum-play-btn" type="button" aria-label="Jugar a Pasala Che">
-                            Jugar <i class="fas fa-play" aria-hidden="true"></i>
-                        </button>
-                    </article>
 
-                    <article class="discover-game-card cosmic-game-card" data-game="top10" tabindex="0">
-                        <div class="discover-game-top">
-                            <span class="discover-game-icon" aria-hidden="true"><i class="fas fa-list-ol"></i></span>
-                            <div class="discover-game-badges">
-                                <span class="discover-badge discover-badge--warm">Diario</span>
-                            </div>
-                        </div>
-                        <h3>Top 10</h3>
-                        <p>Adiviná los 10 apellidos del tema diario. Historia, mundiales, ligas y más.</p>
-                        <div class="discover-game-meta">
-                            <span class="discover-chip"><i class="fas fa-calendar-day" aria-hidden="true"></i>Diario</span>
-                            <span class="discover-chip"><i class="fas fa-list-ol" aria-hidden="true"></i>10 Respuestas</span>
-                        </div>
-                        <button class="discover-play quantum-play-btn" type="button" aria-label="Jugar Top 10">
-                            Jugar <i class="fas fa-play" aria-hidden="true"></i>
-                        </button>
-                    </article>
-
-                    <article class="discover-game-card cosmic-game-card" data-game="wordle-futbol" tabindex="0">
-                        <div class="discover-game-top">
-                            <span class="discover-game-icon" aria-hidden="true"><i class="fas fa-th"></i></span>
-                            <div class="discover-game-badges">
-                                <span class="discover-badge discover-badge--accent">Nuevo</span>
-                            </div>
-                        </div>
-                        <h3>Wordle Futbolero</h3>
-                        <p>Descubrí el apellido oculto de un futbolista o entrenador en un máximo de 6 intentos.</p>
-                        <div class="discover-game-meta">
-                            <span class="discover-chip"><i class="fas fa-dice-six" aria-hidden="true"></i>6 Intentos</span>
-                            <span class="discover-chip"><i class="fas fa-calendar-day" aria-hidden="true"></i>Desafío Diario</span>
-                        </div>
-                        <button class="discover-play quantum-play-btn" type="button" aria-label="Jugar Wordle Futbolero">
-                            Jugar <i class="fas fa-play" aria-hidden="true"></i>
-                        </button>
-                    </article>
+                <div class="home-catalog-toolbar home-reveal">
+                    <div class="home-search">
+                        <label class="sr-only" for="gameSearch">Buscar juegos</label>
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                        <input id="gameSearch" type="search" placeholder="Buscar por juego, modo o tema…" autocomplete="off">
+                    </div>
+                    <div class="home-filters" role="group" aria-label="Filtrar juegos por categoría">
+                        <button class="home-filter" type="button" data-filter="todos" aria-pressed="true">Todos</button>
+                        <button class="home-filter" type="button" data-filter="roscos" aria-pressed="false">Roscos</button>
+                        <button class="home-filter" type="button" data-filter="trivias" aria-pressed="false">Trivias</button>
+                        <button class="home-filter" type="button" data-filter="desafios" aria-pressed="false">Desafíos</button>
+                        <button class="home-filter" type="button" data-filter="mundiales" aria-pressed="false">Mundiales</button>
+                        <button class="home-filter" type="button" data-filter="clubes" aria-pressed="false">Clubes</button>
+                        <button class="home-filter" type="button" data-filter="jugadores" aria-pressed="false">Jugadores</button>
+                        <button class="home-filter" type="button" data-filter="selecciones" aria-pressed="false">Selecciones</button>
+                    </div>
                 </div>
-            </div>
-        </section>
+                <p class="sr-only" id="catalogResultStatus" aria-live="polite"></p>
 
-        <section class="discover-section" id="juegos-online" aria-labelledby="online-title">
-            <div class="home-shell">
-                <div class="discover-section-heading">
-                    <p class="home-eyebrow">Online</p>
-                    <h2 id="online-title">Duelos 1 vs 1</h2>
-                    <p>Enfrentá a otro crack en tiempo real. Creá sala o entrá a una abierta.</p>
+                <div class="home-games-grid">
+                    <a class="home-game-card home-reveal" href="pasalache.html" data-categories="roscos trivias mundiales clubes jugadores selecciones" data-search="pasala che rosco contrarreloj un jugador">
+                        <div class="home-game-media">
+                            <img src="assets/images/blog/worldcup.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async">
+                            <span class="home-game-icon" aria-hidden="true"><i class="fas fa-circle-notch"></i></span>
+                            <span class="home-game-badge">Principal</span>
+                        </div>
+                        <div class="home-game-content">
+                            <h3>Pasala Che</h3>
+                            <p class="home-game-description">Un rosco futbolero de la A a la Z con ayudas, dificultad configurable y reloj en contra.</p>
+                            <ul class="home-game-facts">
+                                <li><i class="fas fa-user" aria-hidden="true"></i> 1 jugador</li>
+                                <li><i class="fas fa-font" aria-hidden="true"></i> 26 letras</li>
+                                <li><i class="fas fa-signal" aria-hidden="true"></i> 3 dificultades</li>
+                            </ul>
+                            <span class="home-game-action">Jugar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                        </div>
+                    </a>
+
+                    <a class="home-game-card home-reveal" href="top10.html" data-categories="trivias desafios mundiales clubes jugadores selecciones" data-search="top 10 diario diez apellidos trivia">
+                        <div class="home-game-media">
+                            <img src="assets/images/blog/championss.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async">
+                            <span class="home-game-icon" aria-hidden="true"><i class="fas fa-list-ol"></i></span>
+                            <span class="home-game-badge">Diario</span>
+                        </div>
+                        <div class="home-game-content">
+                            <h3>Top 10</h3>
+                            <p class="home-game-description">Adiviná los diez protagonistas del tema diario antes de que se agote el tiempo.</p>
+                            <ul class="home-game-facts">
+                                <li><i class="fas fa-user" aria-hidden="true"></i> 1 jugador</li>
+                                <li><i class="fas fa-list-ol" aria-hidden="true"></i> 10 respuestas</li>
+                                <li><i class="fas fa-clock" aria-hidden="true"></i> 2 minutos</li>
+                            </ul>
+                            <span class="home-game-action">Jugar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                        </div>
+                    </a>
+
+                    <a class="home-game-card home-reveal" href="wordle-futbol.html" data-categories="desafios jugadores clubes selecciones" data-search="wordle futbolero apellido jugador dt diario seis intentos">
+                        <div class="home-game-media">
+                            <img src="assets/images/blog/messi.jpg" alt="" width="1024" height="576" loading="lazy" decoding="async">
+                            <span class="home-game-icon" aria-hidden="true"><i class="fas fa-border-all"></i></span>
+                            <span class="home-game-badge">Diario</span>
+                        </div>
+                        <div class="home-game-content">
+                            <h3>Wordle Futbolero</h3>
+                            <p class="home-game-description">Descubrí el apellido oculto de un futbolista o entrenador en un máximo de seis intentos.</p>
+                            <ul class="home-game-facts">
+                                <li><i class="fas fa-user" aria-hidden="true"></i> 1 jugador</li>
+                                <li><i class="fas fa-dice-six" aria-hidden="true"></i> 6 intentos</li>
+                                <li><i class="fas fa-calendar-day" aria-hidden="true"></i> Diario</li>
+                            </ul>
+                            <span class="home-game-action">Jugar <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                        </div>
+                    </a>
+
+                    <a class="home-game-card home-reveal" href="quiensabemas.html" data-categories="trivias desafios mundiales clubes jugadores selecciones" data-search="quien sabe mas online duelo preguntas uno contra uno">
+                        <div class="home-game-media">
+                            <img src="assets/images/portada.jpg" alt="" width="1024" height="682" loading="lazy" decoding="async">
+                            <span class="home-game-icon" aria-hidden="true"><i class="fas fa-brain"></i></span>
+                            <span class="home-game-badge">Online</span>
+                        </div>
+                        <div class="home-game-content">
+                            <h3>Quién Sabe Más</h3>
+                            <p class="home-game-description">Enfrentá a un rival en un duelo de diez preguntas y compará quién sabe más de fútbol.</p>
+                            <ul class="home-game-facts">
+                                <li><i class="fas fa-users" aria-hidden="true"></i> 1 vs 1</li>
+                                <li><i class="fas fa-question" aria-hidden="true"></i> 10 preguntas</li>
+                                <li><i class="fas fa-wifi" aria-hidden="true"></i> Online</li>
+                            </ul>
+                            <span class="home-game-action">Entrar al lobby <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                        </div>
+                    </a>
+
+                    <a class="home-game-card home-reveal" href="mentiroso.html" data-categories="trivias desafios mundiales clubes selecciones" data-search="mentiroso online bluff engaño apuesta uno contra uno">
+                        <div class="home-game-media">
+                            <img src="assets/images/blog/worldcup.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async">
+                            <span class="home-game-icon" aria-hidden="true"><i class="fas fa-masks-theater"></i></span>
+                            <span class="home-game-badge">Online</span>
+                        </div>
+                        <div class="home-game-content">
+                            <h3>Mentiroso</h3>
+                            <p class="home-game-description">Apostá cuánto sabés, desafiá a tu rival y defendé tus respuestas bajo presión.</p>
+                            <ul class="home-game-facts">
+                                <li><i class="fas fa-users" aria-hidden="true"></i> 1 vs 1</li>
+                                <li><i class="fas fa-layer-group" aria-hidden="true"></i> 6 categorías</li>
+                                <li><i class="fas fa-wifi" aria-hidden="true"></i> Online</li>
+                            </ul>
+                            <span class="home-game-action">Entrar al lobby <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                        </div>
+                    </a>
                 </div>
-                <div class="discover-games-grid" aria-label="Juegos online disponibles">
-                    <article class="discover-game-card cosmic-game-card" data-game="quiensabemas" tabindex="0">
-                        <div class="discover-game-top">
-                            <span class="discover-game-icon" aria-hidden="true"><i class="fas fa-brain"></i></span>
-                            <div class="discover-game-badges">
-                                <span class="discover-badge discover-badge--accent">Online</span>
-                            </div>
-                        </div>
-                        <h3>Quién Sabe Más</h3>
-                        <p>Enfrentá a un rival en un duelo de 10 preguntas y compará quién sabe más de fútbol.</p>
-                        <div class="discover-game-meta">
-                            <span class="discover-chip"><i class="fas fa-question" aria-hidden="true"></i>10 Preguntas</span>
-                            <span class="discover-chip"><i class="fas fa-users" aria-hidden="true"></i>1 vs 1</span>
-                        </div>
-                        <button class="discover-play quantum-play-btn" type="button" aria-label="Jugar a Quién Sabe Más">
-                            Jugar <i class="fas fa-play" aria-hidden="true"></i>
-                        </button>
-                        <div class="discover-room-status room-status" id="quiensabemas-rooms">
-                            <i class="fas fa-satellite-dish" aria-hidden="true"></i>
-                            <span>Salas: <span class="room-count">-/-</span></span>
-                        </div>
-                    </article>
 
-                    <article class="discover-game-card cosmic-game-card" data-game="mentiroso" tabindex="0">
-                        <div class="discover-game-top">
-                            <span class="discover-game-icon" aria-hidden="true"><i class="fas fa-mask"></i></span>
-                            <div class="discover-game-badges">
-                                <span class="discover-badge discover-badge--accent">Online</span>
-                            </div>
-                        </div>
-                        <h3>Mentiroso</h3>
-                        <p>Decí cuántas respuestas sabés y desafiá a tu rival. ¡Que no te agarren bluffeando!</p>
-                        <div class="discover-game-meta">
-                            <span class="discover-chip"><i class="fas fa-users" aria-hidden="true"></i>1 vs 1</span>
-                            <span class="discover-chip"><i class="fas fa-theater-masks" aria-hidden="true"></i>Bluff</span>
-                        </div>
-                        <button class="discover-play quantum-play-btn" type="button" aria-label="Jugar a Mentiroso">
-                            Jugar <i class="fas fa-play" aria-hidden="true"></i>
-                        </button>
-                        <div class="discover-room-status room-status" id="mentiroso-rooms">
-                            <i class="fas fa-satellite-dish" aria-hidden="true"></i>
-                            <span>Salas: <span class="room-count">-/-</span></span>
-                        </div>
-                    </article>
+                <div class="home-empty-state ct-empty" id="catalogEmptyState" hidden role="status">
+                    <div class="ct-empty__icon" aria-hidden="true"><i class="fas fa-futbol"></i></div>
+                    <p class="ct-empty__title">Sin resultados</p>
+                    <p class="ct-empty__text">No encontramos juegos con ese filtro. Probá otra categoría o búsqueda.</p>
                 </div>
 
                 <div class="discover-cta" aria-labelledby="explore-title">
                     <h2 id="explore-title">Seguí explorando</h2>
-                    <p>Revisá tu perfil, subí en el ranking o volvé al Centro de Fútbol.</p>
+                    <p>Revisá tu perfil, subí en el ranking o leé historias y actualidad futbolera.</p>
                     <div class="discover-cta-actions">
-                        <a class="home-button home-button-secondary extra-link-button" href="profile.html">
+                        <a class="home-button home-button-secondary" href="profile.html">
                             <i class="fas fa-user" aria-hidden="true"></i>
                             Ver perfil
                         </a>
-                        <a class="home-button home-button-secondary extra-link-button" href="ranking.html">
+                        <a class="home-button home-button-secondary" href="ranking.html">
                             <i class="fas fa-trophy" aria-hidden="true"></i>
                             Ver rankings
                         </a>
                         <a class="home-button home-button-primary" href="/#historias">
                             Historias
                         </a>
-                    </div>
-                </div>
-
-                <div class="discover-soon">
-                    <p class="home-eyebrow">Próximamente</p>
-                    <h2>Nuevas experiencias</h2>
-                    <p>Estamos preparando modos que amplían la competencia sin tocar lo que ya funciona.</p>
-                    <div class="discover-soon-grid">
-                        <div class="discover-soon-item">
-                            <h3><i class="fas fa-trophy" aria-hidden="true"></i> Torneos online</h3>
-                            <p>Competencias semanales para medir fuerzas contra la comunidad.</p>
-                        </div>
-                        <div class="discover-soon-item">
-                            <h3><i class="fas fa-users" aria-hidden="true"></i> Modo cooperativo</h3>
-                            <p>Salas privadas y desafíos en equipo con amigos.</p>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -274,201 +262,20 @@
         </div>
     </div>
 
-    <script src="assets/js/config/app-config.js?v=20260801"></script>
-    <script src="assets/js/services/http-client.js?v=20260801"></script>
-    <script src="assets/js/services/cache.js?v=20260801"></script>
-    <script src="assets/js/utils/errors.js?v=20260801"></script>
-    <script src="assets/js/services/index.js?v=20260801"></script>
-    <script src="assets/js/components/loader.js?v=20260801"></script>
-    <script src="assets/js/components/empty-state.js?v=20260801"></script>
-    <script src="assets/js/components/toast.js?v=20260801"></script>
-    <script src="assets/js/components/modal.js?v=20260801"></script>
-    <script src="assets/js/player-profile.js?v=20260801"></script>
-    <script src="assets/js/main.js?v=202505272312" defer></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                const gameFrames = new Map();
-                let roomsData = {
-                    quiensabemas: { active: 0, available: 0 },
-                    mentiroso: { active: 0, available: 0 }
-                };
-
-                const quienSabeMasRooms = document.getElementById('quiensabemas-rooms');
-                const mentirosoRooms = document.getElementById('mentiroso-rooms');
-
-                function updateRoomsDisplay() {
-                    if (quienSabeMasRooms) {
-                        const qsmCount = quienSabeMasRooms.querySelector('.room-count');
-                        if (qsmCount) {
-                            const qsmData = roomsData.quiensabemas;
-                            qsmCount.textContent = `${qsmData.active}/${qsmData.active + qsmData.available}`;
-                        }
-                    }
-                    if (mentirosoRooms) {
-                        const mentirosoCount = mentirosoRooms.querySelector('.room-count');
-                        if (mentirosoCount) {
-                            const mentirosoData = roomsData.mentiroso;
-                            mentirosoCount.textContent = `${mentirosoData.active}/${mentirosoData.active + mentirosoData.available}`;
-                        }
-                    }
-                }
-
-                function createGameFrame(gameType, gameUrl) {
-                    if (gameFrames.has(gameType)) {
-                        const existingFrame = gameFrames.get(gameType);
-                        if (existingFrame.parentNode) {
-                            existingFrame.parentNode.removeChild(existingFrame);
-                        }
-                    }
-
-                    const iframe = document.createElement('iframe');
-                    iframe.src = gameUrl;
-                    iframe.style.display = 'none';
-                    iframe.style.position = 'absolute';
-                    iframe.style.left = '-9999px';
-                    iframe.style.width = '1px';
-                    iframe.style.height = '1px';
-                    document.body.appendChild(iframe);
-                    gameFrames.set(gameType, iframe);
-
-                    iframe.onload = function() {
-                        setTimeout(() => requestRoomsFromGame(gameType), 2000);
-                    };
-                    return iframe;
-                }
-
-                function requestRoomsFromGame(gameType) {
-                    const iframe = gameFrames.get(gameType);
-                    if (iframe && iframe.contentWindow) {
-                        try {
-                            iframe.contentWindow.postMessage({
-                                type: 'requestRooms',
-                                gameType: gameType
-                            }, window.location.origin);
-                        } catch (error) {
-                            console.error(`Error solicitando salas de ${gameType}:`, error);
-                        }
-                    }
-                }
-
-                function processRoomsResponse(data) {
-                    if (!data.rooms || !Array.isArray(data.rooms)) {
-                        roomsData[data.gameType] = { active: 0, available: 0 };
-                        updateRoomsDisplay();
-                        return;
-                    }
-
-                    let active = 0;
-                    let available = 0;
-                    data.rooms.forEach((room) => {
-                        const currentPlayers = room.playerCount || 0;
-                        const maxPlayers = room.maxPlayers || 2;
-                        if (currentPlayers >= maxPlayers) active++;
-                        else available++;
-                    });
-                    roomsData[data.gameType] = { active, available };
-                    updateRoomsDisplay();
-                }
-
-                window.addEventListener('message', function(event) {
-                    if (event.origin !== window.location.origin) return;
-                    if (event.data && event.data.type === 'availableRooms') {
-                        processRoomsResponse(event.data);
-                    }
-                });
-
-                function navigateToGame(gameType, playButton) {
-                    if (playButton && (playButton.disabled || playButton.classList.contains('disabled'))) {
-                        if (window.gtag) {
-                            gtag('event', 'disabled_game_click', {
-                                event_category: 'games',
-                                event_label: gameType,
-                                game_type: gameType,
-                                status: 'coming_soon',
-                                value: 0
-                            });
-                        }
-                        return;
-                    }
-
-                    if (window.gtag) {
-                        gtag('event', 'game_click', {
-                            event_category: 'games',
-                            event_label: gameType,
-                            game_type: gameType,
-                            value: 1
-                        });
-                        gtag('event', 'game_start', {
-                            event_category: 'games',
-                            event_label: gameType,
-                            navigation_type: 'direct',
-                            value: 1
-                        });
-                    }
-                    window.location.href = `${gameType}.html`;
-                }
-
-                const gameCards = document.querySelectorAll('.cosmic-game-card');
-                gameCards.forEach(card => {
-                    const gameType = card.getAttribute('data-game');
-                    const playButton = card.querySelector('.quantum-play-btn');
-
-                    if (playButton) {
-                        playButton.addEventListener('click', function(event) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                            navigateToGame(gameType, playButton);
-                        });
-                    }
-
-                    card.addEventListener('click', function(event) {
-                        if (event.target.closest('.quantum-play-btn')) return;
-                        navigateToGame(gameType, playButton);
-                    });
-
-                    card.addEventListener('keydown', function(event) {
-                        if (event.key === 'Enter' || event.key === ' ') {
-                            event.preventDefault();
-                            navigateToGame(gameType, playButton);
-                        }
-                    });
-                });
-
-                setTimeout(() => {
-                    createGameFrame('quiensabemas', 'quiensabemas.html');
-                    createGameFrame('mentiroso', 'mentiroso.html');
-                    setInterval(() => {
-                        requestRoomsFromGame('quiensabemas');
-                        requestRoomsFromGame('mentiroso');
-                    }, 5000);
-                }, 1000);
-
-                window.addEventListener('beforeunload', function() {
-                    gameFrames.forEach((iframe) => {
-                        if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
-                    });
-                    gameFrames.clear();
-                });
-
-                document.querySelectorAll('.extra-link-button').forEach(link => {
-                    link.addEventListener('click', function() {
-                        if (window.gtag) {
-                            gtag('event', 'navigation_click', {
-                                event_category: 'navigation',
-                                event_label: this.textContent.trim(),
-                                link_url: this.getAttribute('href'),
-                                value: 1
-                            });
-                        }
-                    });
-                });
-            }, 100);
-        });
-    </script>
-    <script src="assets/js/components/navbar.js?v=20260801b"></script>
-    <script src="assets/js/components/footer.js?v=20260801b"></script>
-    <script src="assets/js/components/shell.js?v=20260801b"></script>
+    <script src="assets/js/config/app-config.js?v=20260803m"></script>
+    <script src="assets/js/services/http-client.js?v=20260803m"></script>
+    <script src="assets/js/services/cache.js?v=20260803m"></script>
+    <script src="assets/js/utils/errors.js?v=20260803m"></script>
+    <script src="assets/js/services/index.js?v=20260803m"></script>
+    <script src="assets/js/components/loader.js?v=20260803m"></script>
+    <script src="assets/js/components/empty-state.js?v=20260803m"></script>
+    <script src="assets/js/components/toast.js?v=20260803m"></script>
+    <script src="assets/js/components/modal.js?v=20260803m"></script>
+    <script src="assets/js/player-profile.js?v=20260803m"></script>
+    <script src="assets/js/main.js?v=20260803m" defer></script>
+    <script src="assets/js/home.js?v=20260803m" defer></script>
+    <script src="assets/js/components/navbar.js?v=20260803m"></script>
+    <script src="assets/js/components/footer.js?v=20260803m"></script>
+    <script src="assets/js/components/shell.js?v=20260803m"></script>
 </body>
 </html>
