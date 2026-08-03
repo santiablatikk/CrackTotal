@@ -1,0 +1,77 @@
+/* Lightweight exit/chrome shell for in-match pages — does not restyle gameplay boards */
+
+body.game-body.ct-ds,
+body.top10-body.ct-ds,
+body.mentiroso-body.ct-ds,
+body.qsm-1v1-body.ct-ds,
+body.wordle-body.ct-ds,
+body.futboleros-body.ct-ds {
+    background:
+        radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.12), transparent 32rem),
+        radial-gradient(circle at 88% 30%, rgba(34, 197, 94, 0.08), transparent 28rem),
+        var(--ct-bg, #050b14);
+    color: var(--ct-text, #f7f9fc);
+}
+
+body.game-body.ct-ds .breadcrumbs-container,
+body.top10-body.ct-ds .breadcrumbs-container,
+body.mentiroso-body.ct-ds .breadcrumbs-container,
+body.qsm-1v1-body.ct-ds .breadcrumbs-container,
+body.wordle-body.ct-ds .breadcrumbs-container {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0.75rem auto 0;
+}
+
+body.game-body.ct-ds .breadcrumb,
+body.top10-body.ct-ds .breadcrumb,
+body.mentiroso-body.ct-ds .breadcrumb,
+body.wordle-body.ct-ds .breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--ct-text-muted, #aebbd0);
+    font-size: 0.85rem;
+}
+
+body.game-body.ct-ds .breadcrumb a,
+body.top10-body.ct-ds .breadcrumb a,
+body.mentiroso-body.ct-ds .breadcrumb a,
+body.wordle-body.ct-ds .breadcrumb a {
+    color: var(--ct-primary, #79f2a6);
+    text-decoration: none;
+}
+
+/* Compact brand bar above gameplay (Pasala Che / similar) */
+body.game-body.ct-ds .game-header,
+body.mentiroso-body.ct-ds .game-header,
+body.wordle-body.ct-ds .wordle-header,
+body.top10-body.ct-ds .top10-header {
+    background: rgba(11, 21, 36, 0.92);
+    border-bottom: 1px solid var(--ct-line, rgba(255, 255, 255, 0.12));
+    box-shadow: none;
+}
+
+body.game-body.ct-ds .game-header .logo-text,
+body.game-body.ct-ds .game-header .logo,
+body.mentiroso-body.ct-ds .game-title-header,
+body.wordle-body.ct-ds .wordle-header h1,
+body.top10-body.ct-ds .top10-header h1 {
+    font-family: var(--ct-font-display, "Oswald", sans-serif);
+    color: var(--ct-text, #f7f9fc);
+}
+
+body.game-body.ct-ds .game-header .logo-ball,
+body.game-body.ct-ds .game-header .game-title {
+    color: var(--ct-primary, #79f2a6);
+}
+
+body.game-body.ct-ds .game-header a:focus-visible,
+body.top10-body.ct-ds a:focus-visible,
+body.mentiroso-body.ct-ds a:focus-visible,
+body.wordle-body.ct-ds a:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+}

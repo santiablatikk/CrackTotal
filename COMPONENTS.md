@@ -102,7 +102,7 @@ Helper one-shot: [`scripts/migrate-shell.js`](scripts/migrate-shell.js) (ya apli
 
 ## Football data layer (archived)
 
-La portada ya no carga resultados, partidos en vivo ni la UI del antiguo Football Hub. Home se enfoca en juegos y contenido editorial estático. La capa de datos queda desacoplada y disponible para usos futuros, pero no forma parte del frontend activo:
+La portada ya no carga resultados, partidos en vivo ni la UI del antiguo Football Hub. Home se enfoca en juegos y contenido editorial estático. Los JSON mock de fixtures (`live-matches`, `upcoming-matches`, `recent-results`) fueron eliminados. La capa de datos editorial (news / game-of-day / ranking) queda desacoplada y no forma parte del frontend activo:
 
 | Capa | Archivos |
 |------|----------|

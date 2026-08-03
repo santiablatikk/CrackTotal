@@ -7,20 +7,14 @@
 
     const Services = (window.CrackTotalServices = window.CrackTotalServices || {});
 
+    // Match fixtures were removed from product UI; keep only editorial/game helpers.
     const RESOURCES = {
-        liveMatches: 'live-matches',
-        upcomingMatches: 'upcoming-matches',
-        recentResults: 'recent-results',
         news: 'news',
         gameOfDay: 'game-of-day',
         userRanking: 'user-ranking'
     };
 
-    const API_KEYS = {
-        liveMatches: 'getLiveMatches',
-        upcomingMatches: 'getUpcomingMatches',
-        recentResults: 'getRecentResults'
-    };
+    const API_KEYS = {};
 
     function footballConfig() {
         return window.CrackTotalFootballApiConfig || {
@@ -314,12 +308,9 @@
         );
 
         const bundle = Object.fromEntries(entries);
-        const liveItems = (bundle.liveMatches && bundle.liveMatches.data && bundle.liveMatches.data.items) || [];
         bundle._meta = {
             mode: footballConfig().MODE,
-            hasLive: liveItems.length > 0,
-            // Only show the stored indicator on real fallbacks (API failure / empty / stale),
-            // not on healthy cache hits.
+            hasLive: false,
             showingStored: Object.values(bundle).some(
                 (item) => item && typeof item === 'object' && item.isFallback
             )

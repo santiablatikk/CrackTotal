@@ -7,7 +7,7 @@
 
     const AppConfig = {
         appName: 'Crack Total',
-        version: '3.5.0',
+        version: '3.6.1',
         env: 'browser',
 
         urls: {
@@ -36,7 +36,7 @@
          * (synced on load). Keep this object for backwards compatibility.
          */
         hub: {
-            enabled: true,
+            enabled: false,
             source: 'mock',
             mockBasePath: 'assets/data/hub',
             apiBasePath: '',
@@ -47,7 +47,7 @@
         features: {
             designSystem: true,
             playerProfileModal: true,
-            footballHub: true,
+            footballHub: false,
             gamification: true,
             liveMatches: false,
             sportsNews: false,

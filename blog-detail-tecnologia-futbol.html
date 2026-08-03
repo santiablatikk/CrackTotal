@@ -100,7 +100,7 @@
 
     <style>
         body {
-            background: linear-gradient(135deg, #0a0f1a 0%, #101726 100%);
+            /* background managed by discover.css */
             color: #e2e8f0;
             font-family: 'Montserrat', sans-serif;
         }
@@ -293,8 +293,10 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="assets/css/home.css?v=20260803">
+    <link rel="stylesheet" href="assets/css/discover.css?v=20260803k">
 </head>
-<body class="ct-ds">
+<body class="discover-page ct-ds">
     <!-- AdSense content block (consent dependent) -->
     <div class="adsense-container" style="margin: 24px 0; text-align:center;">
       <ins class="adsbygoogle"
@@ -313,6 +315,23 @@
     <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
     
     <div data-ct-navbar data-active="blog"></div>
+
+    <header class="discover-hero discover-hero--compact" aria-labelledby="article-hero-title">
+      <div class="home-shell">
+        <a class="discover-hero-brand" href="/" aria-label="Crack Total, inicio">
+          <i class="fas fa-futbol" aria-hidden="true"></i>
+          Crack Total
+        </a>
+        <p class="home-eyebrow"><i class="fas fa-newspaper" aria-hidden="true"></i> Artículo</p>
+        <h1 id="article-hero-title">La Revolución Tecnológica en el fútbol 2025 - Innovación que Transforma el Deporte Rey</h1>
+        <p class="discover-hero-lead">Historia y actualidad del fútbol. Volvé al blog o saltá a un juego cuando termines.</p>
+        <div class="discover-hero-actions">
+          <a class="home-button home-button-secondary" href="blog.html">Volver al blog</a>
+          <a class="home-button home-button-primary" href="games.html">Jugar</a>
+        </div>
+      </div>
+    </header>
+
     
     <div class="breadcrumbs-container">
         <nav aria-label="breadcrumb">

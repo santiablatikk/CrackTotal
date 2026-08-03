@@ -2,11 +2,12 @@
 
 body.discover-page {
     margin: 0;
-    color: var(--home-text);
+    color: var(--home-text) !important;
     background:
         radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.14), transparent 32rem),
         radial-gradient(circle at 88% 30%, rgba(34, 197, 94, 0.1), transparent 28rem),
-        var(--home-bg);
+        var(--home-bg) !important;
+    background-attachment: scroll !important;
     overflow-x: hidden;
     min-height: 100vh;
 }
@@ -91,10 +92,15 @@ body.discover-page > a.home-link {
 .discover-page .page-container.about-container,
 .discover-page .page-container.privacy-container,
 .discover-page .page-container,
-.discover-page .blog-screen.page-container {
+.discover-page .blog-screen.page-container,
+.discover-page .blog-detail-container {
     width: min(1180px, calc(100% - 40px));
     margin: 0 auto;
     padding: 0 0 clamp(2rem, 5vw, 3.5rem);
+}
+
+.discover-page .blog-detail-header {
+    border-bottom-color: rgba(var(--ct-primary-rgb, 121, 242, 166), 0.45) !important;
 }
 
 .discover-main {
