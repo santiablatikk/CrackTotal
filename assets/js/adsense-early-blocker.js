@@ -26,15 +26,18 @@
     // Permitir siempre rastreadores de Google Ads/AdSense aunque la página esté bloqueada para usuarios
     const ua = navigator.userAgent || '';
     const isGoogleBot = false; // Evitar excepciones por bot que puedan parecer cloaking
+    const legalPages = [
+        '/contact.html',
+        '/privacy.html',
+        '/cookies.html',
+        '/terminos.html',
+        '/disclaimer.html',
+        '/ads-policy.html'
+    ];
     const shouldBlockAds = blockedPages.some(page => currentPath.endsWith(page)) ||
-                           currentPath.endsWith('/contact.html') ||
-                           currentPath.endsWith('/privacy.html') ||
-                           currentPath.endsWith('/cookies.html') ||
-                           currentPath.endsWith('/terminos.html');
-    
+                           legalPages.some(page => currentPath.endsWith(page));
+
     if (shouldBlockAds && !isGoogleBot) {
-        console.log('[AdSense Early Blocker] Bloqueando anuncios en página:', currentPath);
-        
         // Prevenir la carga de AdSense completamente
         // No forzar pausa global ni sobrescribir push; solo ocultar contenedores cuando corresponda
         window.__adsense_blocked = true;
@@ -83,7 +86,6 @@
         
         // Si la página tiene menos de 50 palabras, bloquear anuncios
         if (wordCount < 50) {
-            console.log('[AdSense Early Blocker] Página con contenido insuficiente, bloqueando anuncios');
             window.__adsense_blocked = true;
             
             // Ocultar cualquier contenedor de anuncios existente
