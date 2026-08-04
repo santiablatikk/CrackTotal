@@ -929,16 +929,6 @@
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿De qué color es tradicionalmente la camiseta del Real Madrid?",
-      "opciones": {
-        "A": "Blanca",
-        "B": "Azul",
-        "C": "Roja",
-        "D": "Negra"
-      },
-      "respuesta_correcta": "A"
-    },
-    {
       "pregunta": "¿Qué jugador brasileño es conocido como 'Ronaldinho'?",
       "opciones": {
         "A": "Ronaldo Nazário",
@@ -955,16 +945,6 @@
         "B": "5",
         "C": "6",
         "D": "3"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
-      "pregunta": "¿Qué club inglés juega en Anfield?",
-      "opciones": {
-        "A": "Manchester United",
-        "B": "Liverpool",
-        "C": "Chelsea",
-        "D": "Arsenal"
       },
       "respuesta_correcta": "B"
     },
@@ -1007,16 +987,6 @@
         "D": "Tres cambios"
       },
       "respuesta_correcta": "A"
-    },
-    {
-      "pregunta": "¿Cuál es el apodo de la selección argentina?",
-      "opciones": {
-        "A": "Los Gauchos",
-        "B": "La Albiceleste",
-        "C": "Los Pamperos",
-        "D": "Los Tangueros"
-      },
-      "respuesta_correcta": "B"
     },
     {
       "pregunta": "¿En qué ciudad italiana juega la Juventus?",
@@ -1067,16 +1037,6 @@
         "D": "Italia"
       },
       "respuesta_correcta": "C"
-    },
-    {
-      "pregunta": "¿Cuántas Copas del Mundo ha ganado Alemania?",
-      "opciones": {
-        "A": "3",
-        "B": "4",
-        "C": "5",
-        "D": "2"
-      },
-      "respuesta_correcta": "B"
     },
     {
       "pregunta": "¿En qué año nació Lionel Messi?",

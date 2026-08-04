@@ -71,7 +71,7 @@
       "respuesta_correcta": "C"
     },
     {
-      "pregunta": "¿Qué club fue el primer equipo no inglés en ganar la Copa de Europa/Champions League?",
+      "pregunta": "¿Qué club ganó la primera Copa de Europa, en la temporada 1955-56?",
       "opciones": {
         "A": "Real Madrid (España)",
         "B": "Benfica (Portugal)",
@@ -171,12 +171,12 @@
       "respuesta_correcta": "C"
     },
     {
-      "pregunta": "¿Qué portero tiene el récord de más penales detenidos en la historia de la Premier League?",
+      "pregunta": "¿Qué arquero tiene el récord de más penales detenidos en la historia de la Premier League?",
       "opciones": {
-        "A": "Pepe Reina (23)",
-        "B": "David James (13)",
+        "A": "David James (13)",
+        "B": "Pepe Reina (9)",
         "C": "Edwin van der Sar (11)",
-        "D": "Brad Friedel (9)"
+        "D": "Brad Friedel (10)"
       },
       "respuesta_correcta": "A"
     },
@@ -261,7 +261,7 @@
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Qué jugador argentino marcó el primer gol en la historia de la J-League japonesa?",
+      "pregunta": "¿Qué astro brasileño marcó el primer gol en la historia de la J-League japonesa?",
       "opciones": {
         "A": "Gary Lineker",
         "B": "Pierre Littbarski",

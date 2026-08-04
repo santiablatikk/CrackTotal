@@ -61,16 +61,6 @@
       "respuesta_correcta": "A"
     },
     {
-      "pregunta": "¿Qué jugador tiene el récord de más asistencias en una temporada de Premier League?",
-      "opciones": {
-        "A": "Kevin De Bruyne (20)",
-        "B": "Thierry Henry (20)",
-        "C": "Mesut Özil (19)",
-        "D": "Kevin De Bruyne (21)"
-      },
-      "respuesta_correcta": "A"
-    },
-    {
       "pregunta": "¿En qué minuto marcó Sergio Agüero su famoso gol del título en 2012?",
       "opciones": {
         "A": "93:15",
@@ -111,34 +101,14 @@
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Cuántos penales erró Messi en su carrera profesional hasta 2023?",
-      "opciones": {
-        "A": "28",
-        "B": "31",
-        "C": "25",
-        "D": "35"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
       "pregunta": "¿Qué equipo marcó el gol más rápido en la historia de la Champions League?",
       "opciones": {
-        "A": "Bayern Munich (10.12 segundos)",
+        "A": "Bayern Múnich (10.12 segundos)",
         "B": "Real Madrid (9.9 segundos)",
         "C": "Barcelona (8.1 segundos)",
         "D": "Olympiakos (7.69 segundos)"
       },
       "respuesta_correcta": "A"
-    },
-    {
-      "pregunta": "¿Cuántas tarjetas rojas recibió Sergio Ramos en su carrera?",
-      "opciones": {
-        "A": "26",
-        "B": "29",
-        "C": "31",
-        "D": "28"
-      },
-      "respuesta_correcta": "C"
     },
     {
       "pregunta": "¿En qué año terminó la racha invicta de 49 partidos del Arsenal?",
@@ -211,26 +181,6 @@
       "respuesta_correcta": "A"
     },
     {
-      "pregunta": "¿En qué año se introdujo la regla de 3 puntos por victoria?",
-      "opciones": {
-        "A": "1981",
-        "B": "1995",
-        "C": "1993",
-        "D": "1994"
-      },
-      "respuesta_correcta": "D"
-    },
-    {
-      "pregunta": "¿Cuántas veces tocó el balón Iniesta en la final del Mundial 2010?",
-      "opciones": {
-        "A": "126",
-        "B": "128",
-        "C": "130",
-        "D": "124"
-      },
-      "respuesta_correcta": "A"
-    },
-    {
       "pregunta": "¿Qué entrenador tiene más partidos dirigidos en Champions League?",
       "opciones": {
         "A": "Alex Ferguson (194)",
@@ -241,16 +191,6 @@
       "respuesta_correcta": "C"
     },
     {
-      "pregunta": "¿Cuántos metros corrió Kanté en promedio por partido en la temporada 2016-17?",
-      "opciones": {
-        "A": "11.2 km",
-        "B": "11.6 km",
-        "C": "12.1 km",
-        "D": "10.8 km"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
       "pregunta": "¿En qué año se estableció el número máximo de 5 sustituciones?",
       "opciones": {
         "A": "2019",
@@ -259,16 +199,6 @@
         "D": "2018"
       },
       "respuesta_correcta": "B"
-    },
-    {
-      "pregunta": "¿Cuál es el récord de velocidad máxima registrada de Mbappé?",
-      "opciones": {
-        "A": "37.9 km/h",
-        "B": "36.5 km/h",
-        "C": "38.4 km/h",
-        "D": "35.8 km/h"
-      },
-      "respuesta_correcta": "A"
     },
     {
       "pregunta": "¿Cuántos goles marcó Ronaldinho en su primera temporada en el Barcelona?",
@@ -301,272 +231,342 @@
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Qué porcentaje de precisión en pases tuvo Xavi en la final del Mundial 2010?",
+      "pregunta": "¿Cuántos goles oficiales marcó Messi en el año calendario 2012, récord mundial?",
       "opciones": {
-        "A": "95%",
-        "B": "96%",
-        "C": "97%",
-        "D": "94%"
+        "A": "86",
+        "B": "91",
+        "C": "79",
+        "D": "95"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Qué equipo remontó un 0-4 y ganó 6-1 en la Champions 2016-17?",
+      "opciones": {
+        "A": "Roma",
+        "B": "Liverpool",
+        "C": "Barcelona",
+        "D": "Ajax"
       },
       "respuesta_correcta": "C"
     },
     {
-      "pregunta": "¿Cuántos hat-tricks marcó Cristiano Ronaldo en la Champions League?",
+      "pregunta": "¿Quién es el máximo goleador histórico de la Copa Libertadores?",
+      "opciones": {
+        "A": "Alberto Spencer",
+        "B": "Fernando Morena",
+        "C": "Pedro Rocha",
+        "D": "Daniel Onega"
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "pregunta": "¿En qué temporada ganó el Manchester United el triplete con Ferguson?",
+      "opciones": {
+        "A": "1997-98",
+        "B": "1998-99",
+        "C": "1999-2000",
+        "D": "2000-01"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Qué club ganó la primera Copa Libertadores, en 1960?",
+      "opciones": {
+        "A": "Peñarol",
+        "B": "Nacional",
+        "C": "Independiente",
+        "D": "Santos"
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "pregunta": "¿Quién fue el máximo goleador del Mundial 2018?",
+      "opciones": {
+        "A": "Romelu Lukaku",
+        "B": "Harry Kane",
+        "C": "Kylian Mbappé",
+        "D": "Antoine Griezmann"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Cuántos goles marcó Ronaldo Nazário en el Mundial 2002?",
+      "opciones": {
+        "A": "6",
+        "B": "7",
+        "C": "8",
+        "D": "9"
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "pregunta": "¿Qué selección ganó la Eurocopa 2004?",
+      "opciones": {
+        "A": "Portugal",
+        "B": "Grecia",
+        "C": "República Checa",
+        "D": "Países Bajos"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Cuántas Copas de Europa/Champions League tiene el AC Milan?",
+      "opciones": {
+        "A": "6",
+        "B": "7",
+        "C": "5",
+        "D": "8"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿En qué año se disputó el primer Mundial de fútbol?",
+      "opciones": {
+        "A": "1928",
+        "B": "1930",
+        "C": "1934",
+        "D": "1926"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Quién ganó el Balón de Oro en 2006?",
+      "opciones": {
+        "A": "Thierry Henry",
+        "B": "Gianluigi Buffon",
+        "C": "Fabio Cannavaro",
+        "D": "Ronaldinho"
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "pregunta": "¿Cuántos goles marcó Gerd Müller en el Mundial 1970?",
+      "opciones": {
+        "A": "8",
+        "B": "9",
+        "C": "10",
+        "D": "11"
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "pregunta": "¿Qué club goleó 8-2 al Barcelona en la Champions 2019-20?",
+      "opciones": {
+        "A": "Bayern Múnich",
+        "B": "Liverpool",
+        "C": "PSG",
+        "D": "Manchester City"
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "pregunta": "¿Quién marcó el gol del empate en el minuto 93 de la final de la Champions 2014?",
+      "opciones": {
+        "A": "Gareth Bale",
+        "B": "Sergio Ramos",
+        "C": "Marcelo",
+        "D": "Karim Benzema"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Cuántos partidos disputó invicto el Arsenal en la Premier 2003-04?",
+      "opciones": {
+        "A": "34",
+        "B": "36",
+        "C": "38",
+        "D": "40"
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "pregunta": "¿Qué arquero atajó dos penales en la tanda de la final del Mundial 2022?",
+      "opciones": {
+        "A": "Hugo Lloris",
+        "B": "Emiliano Martínez",
+        "C": "Dominik Livaković",
+        "D": "Yassine Bounou"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Qué club portugués ganó la Copa de Europa en 1961 y 1962?",
+      "opciones": {
+        "A": "Porto",
+        "B": "Sporting CP",
+        "C": "Benfica",
+        "D": "Belenenses"
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "pregunta": "¿Cuántos goles oficiales marcó Cristiano Ronaldo con el Real Madrid?",
+      "opciones": {
+        "A": "450",
+        "B": "398",
+        "C": "511",
+        "D": "372"
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "pregunta": "¿En qué año ganó Boca Juniors su última Copa Libertadores?",
+      "opciones": {
+        "A": "2003",
+        "B": "2005",
+        "C": "2007",
+        "D": "2012"
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "pregunta": "¿Qué selección africana llegó a semifinales del Mundial 2022?",
+      "opciones": {
+        "A": "Senegal",
+        "B": "Camerún",
+        "C": "Marruecos",
+        "D": "Ghana"
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "pregunta": "¿Cuántos goles marcó Gabriel Batistuta en Copas del Mundo?",
       "opciones": {
         "A": "8",
         "B": "10",
-        "C": "9",
-        "D": "11"
+        "C": "12",
+        "D": "9"
       },
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Cuál fue la velocidad exacta del tiro de Roberto Carlos contra Francia en 1997?",
+      "pregunta": "¿Qué club brasileño ganó la Copa Libertadores 2024?",
       "opciones": {
-        "A": "134.8 km/h",
-        "B": "137.2 km/h",
-        "C": "132.5 km/h",
-        "D": "139.1 km/h"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
-      "pregunta": "¿Cuántos pases completó Kroos en la final de Champions League 2018?",
-      "opciones": {
-        "A": "102",
-        "B": "109",
-        "C": "114",
-        "D": "98"
+        "A": "Palmeiras",
+        "B": "Flamengo",
+        "C": "Botafogo",
+        "D": "Atlético Mineiro"
       },
       "respuesta_correcta": "C"
     },
     {
-      "pregunta": "¿En qué segundo exacto marcó Alan Shearer el gol más rápido de su carrera?",
+      "pregunta": "¿Cuántas Eurocopas ganó España hasta 2024?",
       "opciones": {
-        "A": "9.7 segundos",
-        "B": "8.4 segundos",
-        "C": "10.2 segundos",
-        "D": "7.8 segundos"
+        "A": "3",
+        "B": "4",
+        "C": "2",
+        "D": "5"
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Cuántos metros cuadrados cubre exactamente el área grande del fútbol?",
+      "pregunta": "¿Quién ganó la Bota de Oro de la Bundesliga 2023-24 con 36 goles?",
       "opciones": {
-        "A": "1320 m²",
+        "A": "Serhou Guirassy",
+        "B": "Harry Kane",
+        "C": "Niclas Füllkrug",
+        "D": "Loïs Openda"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Qué equipo ganó la primera Premier League, en 1992-93?",
+      "opciones": {
+        "A": "Arsenal",
+        "B": "Blackburn Rovers",
+        "C": "Manchester United",
+        "D": "Aston Villa"
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "pregunta": "¿Cuántos goles marcó Pelé en Copas del Mundo?",
+      "opciones": {
+        "A": "10",
+        "B": "12",
+        "C": "14",
+        "D": "9"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Qué entrenador ganó la Champions League con el Porto en 2004?",
+      "opciones": {
+        "A": "André Villas-Boas",
+        "B": "José Mourinho",
+        "C": "Jorge Jesus",
+        "D": "Fernando Santos"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Cuántas Copas América ganó Argentina hasta 2024?",
+      "opciones": {
+        "A": "15",
+        "B": "16",
+        "C": "14",
+        "D": "17"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Qué selección ganó la Copa América 2019?",
+      "opciones": {
+        "A": "Argentina",
+        "B": "Brasil",
+        "C": "Perú",
+        "D": "Chile"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Cuál es el área exacta del área penal reglamentaria (40,32 m x 16,5 m)?",
+      "opciones": {
+        "A": "665,28 m²",
         "B": "1368 m²",
-        "C": "1296 m²",
-        "D": "1404 m²"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
-      "pregunta": "¿Qué portero tiene el récord de más penales atajados en una temporada (La Liga)?",
-      "opciones": {
-        "A": "Jan Oblak (5)",
-        "B": "Ter Stegen (4)",
-        "C": "Unai Simón (6)",
-        "D": "Courtois (3)"
-      },
-      "respuesta_correcta": "C"
-    },
-    {
-      "pregunta": "¿Cuántos regates completó Messi en el partido contra el Athletic en 2015?",
-      "opciones": {
-        "A": "16",
-        "B": "17",
-        "C": "18",
-        "D": "15"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
-      "pregunta": "¿En qué minuto exacto se produjo el primer cambio en la final de Mundial 2010?",
-      "opciones": {
-        "A": "71'",
-        "B": "73'",
-        "C": "75'",
-        "D": "69'"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
-      "pregunta": "¿Cuál fue el xG (Expected Goals) exacto de Messi en el Barcelona 2018-19?",
-      "opciones": {
-        "A": "28.7",
-        "B": "31.2",
-        "C": "29.8",
-        "D": "33.4"
-      },
-      "respuesta_correcta": "D"
-    },
-    {
-      "pregunta": "¿Cuántos centros exactos completó Kevin De Bruyne en la temporada 2019-20?",
-      "opciones": {
-        "A": "134",
-        "B": "142",
-        "C": "127",
-        "D": "156"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
-      "pregunta": "¿Qué jugador tiene el récord de más sprints de alta intensidad en un partido de Champions?",
-      "opciones": {
-        "A": "Kanté vs Real Madrid (67)",
-        "B": "Vidal vs Bayern (59)",
-        "C": "Henderson vs Barcelona (71)",
-        "D": "Casemiro vs Liverpool (63)"
-      },
-      "respuesta_correcta": "C"
-    },
-    {
-      "pregunta": "¿Cuántos kilómetros exactos corrió Luka Modric en la final del Mundial 2018?",
-      "opciones": {
-        "A": "16.7 km",
-        "B": "15.8 km",
-        "C": "17.2 km",
-        "D": "14.9 km"
+        "C": "540 m²",
+        "D": "742,5 m²"
       },
       "respuesta_correcta": "A"
     },
     {
-      "pregunta": "¿Cuál fue la precisión exacta de Busquets en pases en el clásico de 2011?",
+      "pregunta": "¿Quién es el máximo goleador histórico de la selección argentina?",
       "opciones": {
-        "A": "96.8%",
-        "B": "97.4%",
-        "C": "98.1%",
-        "D": "95.9%"
-      },
-      "respuesta_correcta": "C"
-    },
-    {
-      "pregunta": "¿Cuántos toques del balón tuvo Iniesta en el partido España vs Alemania 2010?",
-      "opciones": {
-        "A": "89",
-        "B": "94",
-        "C": "87",
-        "D": "92"
+        "A": "Gabriel Batistuta",
+        "B": "Lionel Messi",
+        "C": "Sergio Agüero",
+        "D": "Hernán Crespo"
       },
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿En qué segundo exacto entró Götze en la final del Mundial 2014?",
+      "pregunta": "¿Qué club ganó la Europa League 2024/25?",
       "opciones": {
-        "A": "88:32",
-        "B": "88:45",
-        "C": "87:54",
-        "D": "89:12"
-      },
-      "respuesta_correcta": "A"
-    },
-    {
-      "pregunta": "¿Cuál fue la velocidad máxima de Gareth Bale en su gol contra Barcelona en Copa del Rey 2014?",
-      "opciones": {
-        "A": "36.9 km/h",
-        "B": "37.8 km/h",
-        "C": "35.7 km/h",
-        "D": "38.2 km/h"
+        "A": "Manchester United",
+        "B": "Tottenham",
+        "C": "Athletic Club",
+        "D": "Lyon"
       },
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Cuántos duelos aéreos ganó Virgil van Dijk en la Champions League 2018-19?",
+      "pregunta": "¿Cuántas Champions League ganó el Liverpool?",
       "opciones": {
-        "A": "47",
-        "B": "52",
-        "C": "49",
-        "D": "55"
+        "A": "5",
+        "B": "6",
+        "C": "4",
+        "D": "7"
       },
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Qué árbitro dirigió más finales de Champions League en la historia?",
+      "pregunta": "¿Qué jugador ganó el Balón de Oro 2021?",
       "opciones": {
-        "A": "Pierluigi Collina (5)",
-        "B": "Félix Brych (3)",
-        "C": "Howard Webb (2)",
-        "D": "Nicola Rizzoli (3)"
-      },
-      "respuesta_correcta": "A"
-    },
-    {
-      "pregunta": "¿Cuántos pases largos completó Alonso en la final de Champions 2005?",
-      "opciones": {
-        "A": "23",
-        "B": "27",
-        "C": "31",
-        "D": "19"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
-      "pregunta": "¿Cuál fue el tiempo exacto de posesión del Barcelona en el 5-0 al Madrid?",
-      "opciones": {
-        "A": "68.7%",
-        "B": "71.2%",
-        "C": "69.4%",
-        "D": "73.1%"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
-      "pregunta": "¿Cuántos saques de esquina ejecutó Beckham en el Mundial 2002?",
-      "opciones": {
-        "A": "18",
-        "B": "22",
-        "C": "25",
-        "D": "16"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
-      "pregunta": "¿En qué fracción de segundo se midió el tiempo de reacción de Neuer ante el tiro de Higuaín en 2014?",
-      "opciones": {
-        "A": "0.186 segundos",
-        "B": "0.174 segundos",
-        "C": "0.192 segundos",
-        "D": "0.201 segundos"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
-      "pregunta": "¿Cuántos centímetros exactos saltó Cristiano en su gol de cabeza contra Sampdoria?",
-      "opciones": {
-        "A": "71 cm",
-        "B": "78 cm",
-        "C": "84 cm",
-        "D": "69 cm"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
-      "pregunta": "¿Cuál fue la temperatura exacta en el estadio durante la final del Mundial 1994?",
-      "opciones": {
-        "A": "39.4°C",
-        "B": "41.8°C",
-        "C": "37.2°C",
-        "D": "43.1°C"
-      },
-      "respuesta_correcta": "B"
-    },
-    {
-      "pregunta": "¿Cuántos milisegundos tardó en reaccionar Buffon ante el cabezazo de Zidane en 2006?",
-      "opciones": {
-        "A": "287 ms",
-        "B": "312 ms",
-        "C": "294 ms",
-        "D": "276 ms"
-      },
-      "respuesta_correcta": "A"
-    },
-    {
-      "pregunta": "¿Cuál fue el grado exacto de curvatura del tiro libre de Ronaldinho vs Inglaterra?",
-      "opciones": {
-        "A": "12.7°",
-        "B": "14.2°",
-        "C": "16.8°",
-        "D": "11.3°"
+        "A": "Robert Lewandowski",
+        "B": "Lionel Messi",
+        "C": "Karim Benzema",
+        "D": "Jorginho"
       },
       "respuesta_correcta": "B"
     }
