@@ -3,7 +3,6 @@ Allow: /
 
 # Sitemaps
 Sitemap: https://cracktotal.com/sitemap.xml
-Sitemap: https://cracktotal.com/sitemap-simplificado.xml
 
 # Permitir acceso a recursos estáticos
 Allow: /assets/

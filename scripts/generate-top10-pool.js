@@ -156,11 +156,8 @@ async function generate(){
       }
     }
 
-    // Si aún faltan, duplicar manteniendo el mismo título (sin sufijo "variante")
-    while (out.length < 220 && out.length > 0) {
-      const base = out[out.length % Math.max(1, SYNTHETIC_TOPICS.length)];
-      out.push({ id: idCounter++, title: base.title, source: base.source, answers: base.answers });
-    }
+    // Prefer unique topics only — never pad the pool with duplicate titles
+    // (duplicates bias daily Top10 selection).
   }
 
   // Filtrar sólo títulos objetivos (estadísticos)

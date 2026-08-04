@@ -204,7 +204,7 @@
     ]
   },
   {
-    "id": 1019,
+    "id": 1012,
     "title": "Goleadores históricos de Portugal (selección)",
     "source": "transfermarkt-approx",
     "answers": [
@@ -218,180 +218,180 @@
       "postiga (por)",
       "quaresma (por)",
       "joao moutinho (por)"
+    ]
+  },
+  {
+    "id": 1013,
+    "title": "Goleadores históricos de Países Bajos (selección)",
+    "source": "transfermarkt-approx",
+    "answers": [
+      "van persie (ned)",
+      "huntelaar (ned)",
+      "memphis (ned)",
+      "bergkamp (ned)",
+      "kuyt (ned)",
+      "robben (ned)",
+      "van nistelrooy (ned)",
+      "kieft (ned)",
+      "kluivert (ned)",
+      "cruyff (ned)"
+    ]
+  },
+  {
+    "id": 1014,
+    "title": "Goleadores históricos de Uruguay (selección)",
+    "source": "transfermarkt-approx",
+    "answers": [
+      "suárez (uru)",
+      "cavani (uru)",
+      "forlán (uru)",
+      "abreu (uru)",
+      "recoba (uru)",
+      "francescoli (uru)",
+      "ruben sosa (uru)",
+      "coates (uru)",
+      "lugano (uru)",
+      "goltz (uru)"
+    ]
+  },
+  {
+    "id": 1015,
+    "title": "Goleadores históricos de México (selección)",
+    "source": "transfermarkt-approx",
+    "answers": [
+      "chicharito (mex)",
+      "borgetti (mex)",
+      "hermosillo (mex)",
+      "blanco (mex)",
+      "jiménez (mex)",
+      "sánchez (mex)",
+      "vuoso (mex)",
+      "luis garcía (mex)",
+      "pineda (mex)",
+      "cardozo (par)"
+    ]
+  },
+  {
+    "id": 1016,
+    "title": "Goleadores históricos de Italia (selección)",
+    "source": "transfermarkt-approx",
+    "answers": [
+      "immobile (ita)",
+      "balotelli (ita)",
+      "inzaghi (ita)",
+      "del piero (ita)",
+      "totti (ita)",
+      "vieri (ita)",
+      "rossi (ita)",
+      "altobelli (ita)",
+      "zola (ita)",
+      "rivera (ita)"
+    ]
+  },
+  {
+    "id": 1017,
+    "title": "Goleadores históricos MLS",
+    "source": "transfermarkt-approx",
+    "answers": [
+      "wondolowski (usa)",
+      "keane (irl)",
+      "martínez (ven)",
+      "donovan (usa)",
+      "kamara (sle)",
+      "morales (arg)",
+      "zlatan (swe)",
+      "valeri (arg)",
+      "blanco (mex)",
+      "altidore (usa)"
+    ]
+  },
+  {
+    "id": 1018,
+    "title": "Goleadores históricos Liga MX",
+    "source": "transfermarkt-approx",
+    "answers": [
+      "cardozo (par)",
+      "borgetti (mex)",
+      "palencia (mex)",
+      "gignac (fra)",
+      "cabañas (par)",
+      "corona (mex)",
+      "chucho benítez (ecu)",
+      "sambueza (arg)",
+      "funes mori (arg)",
+      "chuletita (mex)"
+    ]
+  },
+  {
+    "id": 1019,
+    "title": "Goleadores históricos Brasileirão",
+    "source": "transfermarkt-approx",
+    "answers": [
+      "roberto dinamit e (bra)",
+      "zico (bra)",
+      "romário (bra)",
+      "fred (bra)",
+      "gabigol (bra)",
+      "neymar (bra)",
+      "rivaldo (bra)",
+      "careca (bra)",
+      "edmundo (bra)",
+      "tita (bra)"
     ]
   },
   {
     "id": 1020,
-    "title": "Goleadores históricos de Países Bajos (selección)",
+    "title": "Goleadores históricos Copa Libertadores",
     "source": "transfermarkt-approx",
     "answers": [
-      "van persie (ned)",
-      "huntelaar (ned)",
-      "memphis (ned)",
-      "bergkamp (ned)",
-      "kuyt (ned)",
-      "robben (ned)",
-      "van nistelrooy (ned)",
-      "kieft (ned)",
-      "kluivert (ned)",
-      "cruyff (ned)"
+      "aristizábal (col)",
+      "palermo (arg)",
+      "barcos (arg)",
+      "cabañas (par)",
+      "tevez (arg)",
+      "riquelme (arg)",
+      "francescoli (uru)",
+      "angel (col)",
+      "boca (arg)",
+      "river (arg)"
     ]
   },
   {
     "id": 1021,
-    "title": "Goleadores históricos de Uruguay (selección)",
+    "title": "Goleadores históricos Copa América",
     "source": "transfermarkt-approx",
     "answers": [
+      "zizinho (bra)",
+      "norc hvall (uru)",
+      "severino vargas (arg)",
+      "batistuta (arg)",
+      "varallo (arg)",
+      "paolo guerrero (per)",
+      "eduardo vargas (chi)",
+      "messi (arg)",
       "suárez (uru)",
-      "cavani (uru)",
-      "forlán (uru)",
-      "abreu (uru)",
-      "recoba (uru)",
-      "francescoli (uru)",
-      "ruben sosa (uru)",
-      "coates (uru)",
-      "lugano (uru)",
-      "goltz (uru)"
+      "forlán (uru)"
     ]
   },
   {
     "id": 1022,
-    "title": "Goleadores históricos de México (selección)",
+    "title": "Goleadores históricos Eurocopa",
     "source": "transfermarkt-approx",
     "answers": [
-      "chicharito (mex)",
-      "borgetti (mex)",
-      "hermosillo (mex)",
-      "blanco (mex)",
-      "jiménez (mex)",
-      "sánchez (mex)",
-      "vuoso (mex)",
-      "luis garcía (mex)",
-      "pineda (mex)",
-      "cardozo (par)"
+      "ronaldo (por)",
+      "platini (fra)",
+      "griezmann (fra)",
+      "shearer (eng)",
+      "van nistelrooy (ned)",
+      "ibrahimovic (swe)",
+      "klinsmann (ger)",
+      "rooney (eng)",
+      "henry (fra)",
+      "nani (por)"
     ]
   },
   {
     "id": 1023,
-    "title": "Goleadores históricos de Italia (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "immobile (ita)",
-      "balotelli (ita)",
-      "inzaghi (ita)",
-      "del piero (ita)",
-      "totti (ita)",
-      "vieri (ita)",
-      "rossi (ita)",
-      "altobelli (ita)",
-      "zola (ita)",
-      "rivera (ita)"
-    ]
-  },
-  {
-    "id": 1032,
-    "title": "Goleadores históricos MLS",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "wondolowski (usa)",
-      "keane (irl)",
-      "martínez (ven)",
-      "donovan (usa)",
-      "kamara (sle)",
-      "morales (arg)",
-      "zlatan (swe)",
-      "valeri (arg)",
-      "blanco (mex)",
-      "altidore (usa)"
-    ]
-  },
-  {
-    "id": 1033,
-    "title": "Goleadores históricos Liga MX",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "cardozo (par)",
-      "borgetti (mex)",
-      "palencia (mex)",
-      "gignac (fra)",
-      "cabañas (par)",
-      "corona (mex)",
-      "chucho benítez (ecu)",
-      "sambueza (arg)",
-      "funes mori (arg)",
-      "chuletita (mex)"
-    ]
-  },
-  {
-    "id": 1034,
-    "title": "Goleadores históricos Brasileirão",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "roberto dinamit e (bra)",
-      "zico (bra)",
-      "romário (bra)",
-      "fred (bra)",
-      "gabigol (bra)",
-      "neymar (bra)",
-      "rivaldo (bra)",
-      "careca (bra)",
-      "edmundo (bra)",
-      "tita (bra)"
-    ]
-  },
-  {
-    "id": 1035,
-    "title": "Goleadores históricos Copa Libertadores",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "aristizábal (col)",
-      "palermo (arg)",
-      "barcos (arg)",
-      "cabañas (par)",
-      "tevez (arg)",
-      "riquelme (arg)",
-      "francescoli (uru)",
-      "angel (col)",
-      "boca (arg)",
-      "river (arg)"
-    ]
-  },
-  {
-    "id": 1036,
-    "title": "Goleadores históricos Copa América",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "zizinho (bra)",
-      "norc hvall (uru)",
-      "severino vargas (arg)",
-      "batistuta (arg)",
-      "varallo (arg)",
-      "paolo guerrero (per)",
-      "eduardo vargas (chi)",
-      "messi (arg)",
-      "suárez (uru)",
-      "forlán (uru)"
-    ]
-  },
-  {
-    "id": 1037,
-    "title": "Goleadores históricos Eurocopa",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "platini (fra)",
-      "griezmann (fra)",
-      "shearer (eng)",
-      "van nistelrooy (ned)",
-      "ibrahimovic (swe)",
-      "klinsmann (ger)",
-      "rooney (eng)",
-      "henry (fra)",
-      "nani (por)"
-    ]
-  },
-  {
-    "id": 1042,
     "title": "Goleadores históricos Eredivisie",
     "source": "transfermarkt-approx",
     "answers": [
@@ -408,7 +408,7 @@
     ]
   },
   {
-    "id": 1043,
+    "id": 1024,
     "title": "Goleadores históricos Primeira Liga",
     "source": "transfermarkt-approx",
     "answers": [
@@ -425,7 +425,7 @@
     ]
   },
   {
-    "id": 1044,
+    "id": 1025,
     "title": "Goleadores históricos de Chile (selección)",
     "source": "transfermarkt-approx",
     "answers": [
@@ -442,7 +442,7 @@
     ]
   },
   {
-    "id": 1045,
+    "id": 1026,
     "title": "Goleadores históricos de Colombia (selección)",
     "source": "transfermarkt-approx",
     "answers": [
@@ -456,1672 +456,6 @@
       "valderrama (col)",
       "duvan zapata (col)",
       "teo gutiérrez (col)"
-    ]
-  },
-  {
-    "id": 1047,
-    "title": "Goleadores históricos Champions League",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "messi (arg)",
-      "lewandowski (pol)",
-      "benzema (fra)",
-      "raúl (esp)",
-      "van nistelrooy (ned)",
-      "shevchenko (ukr)",
-      "henry (fra)",
-      "ibrahimovic (swe)",
-      "müller (ger)"
-    ]
-  },
-  {
-    "id": 1048,
-    "title": "Goleadores históricos Premier League",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "shearer (eng)",
-      "rooney (eng)",
-      "kane (eng)",
-      "aguero (arg)",
-      "lampard (eng)",
-      "henry (fra)",
-      "fowler (eng)",
-      "defoe (eng)",
-      "cole (eng)",
-      "owen (eng)"
-    ]
-  },
-  {
-    "id": 1049,
-    "title": "Goleadores históricos LaLiga",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "messi (arg)",
-      "ronaldo (por)",
-      "zarra (esp)",
-      "hugo sánchez (mex)",
-      "raúl (esp)",
-      "di stéfano (arg)",
-      "benzema (fra)",
-      "quini (esp)",
-      "pahiño (esp)",
-      "griezmann (fra)"
-    ]
-  },
-  {
-    "id": 1050,
-    "title": "Goleadores históricos Serie A",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "piola (ita)",
-      "totti (ita)",
-      "nordahl (swe)",
-      "meazza (ita)",
-      "altafini (bra)",
-      "di natale (ita)",
-      "baggio (ita)",
-      "del piero (ita)",
-      "icardi (arg)",
-      "immobile (ita)"
-    ]
-  },
-  {
-    "id": 1051,
-    "title": "Goleadores históricos Bundesliga",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "müller (ger)",
-      "lewandowski (pol)",
-      "fischer (ger)",
-      "heynckes (ger)",
-      "burgsmüller (ger)",
-      "pizarro (per)",
-      "seeler (ger)",
-      "kirsten (ger)",
-      "aller (ger)",
-      "rummenigge (ger)"
-    ]
-  },
-  {
-    "id": 1052,
-    "title": "Goleadores históricos Ligue 1",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "delio onnis (arg)",
-      "lacazette (fra)",
-      "cavani (uru)",
-      "pauleta (por)",
-      "di nallo (fra)",
-      "iben (fra)",
-      "bapé (fra)",
-      "ben yedder (fra)",
-      "drogba (civ)",
-      "ibrahimovic (swe)"
-    ]
-  },
-  {
-    "id": 1053,
-    "title": "Goleadores históricos de Argentina (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "messi (arg)",
-      "batistuta (arg)",
-      "aguero (arg)",
-      "crespo (arg)",
-      "maradona (arg)",
-      "di maría (arg)",
-      "higuaín (arg)",
-      "lautaro (arg)",
-      "kempes (arg)",
-      "tucho (arg)"
-    ]
-  },
-  {
-    "id": 1054,
-    "title": "Goleadores históricos de Brasil (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "neymar (bra)",
-      "pelé (bra)",
-      "ronaldo (bra)",
-      "romário (bra)",
-      "zico (bra)",
-      "rivaldo (bra)",
-      "bebeto (bra)",
-      "jairzinho (bra)",
-      "tostão (bra)",
-      "adriano (bra)"
-    ]
-  },
-  {
-    "id": 1055,
-    "title": "Goleadores históricos de Alemania (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "klose (ger)",
-      "müller (ger)",
-      "podolski (ger)",
-      "klinsmann (ger)",
-      "voller (ger)",
-      "rumenigge (ger)",
-      "ballack (ger)",
-      "matthäus (ger)",
-      "schweinsteiger (ger)",
-      "reus (ger)"
-    ]
-  },
-  {
-    "id": 1056,
-    "title": "Goleadores históricos de España (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "villa (esp)",
-      "raúl (esp)",
-      "torres (esp)",
-      "morata (esp)",
-      "hierro (esp)",
-      "silva (esp)",
-      "morientes (esp)",
-      "butragueño (esp)",
-      "iniesta (esp)",
-      "xavi (esp)"
-    ]
-  },
-  {
-    "id": 1057,
-    "title": "Goleadores históricos de Francia (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "giroud (fra)",
-      "henry (fra)",
-      "mbappé (fra)",
-      "griezmann (fra)",
-      "benzema (fra)",
-      "trezeguet (fra)",
-      "platini (fra)",
-      "zidane (fra)",
-      "papin (fra)",
-      "giresse (fra)"
-    ]
-  },
-  {
-    "id": 1058,
-    "title": "Goleadores históricos de Inglaterra (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "kane (eng)",
-      "rooney (eng)",
-      "greaves (eng)",
-      "lineker (eng)",
-      "owen (eng)",
-      "charlton (eng)",
-      "shearer (eng)",
-      "sterling (eng)",
-      "lampard (eng)",
-      "gerard (eng)"
-    ]
-  },
-  {
-    "id": 1066,
-    "title": "Goleadores históricos de Portugal (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "pauleta (por)",
-      "eusebio (por)",
-      "nuno gomes (por)",
-      "luis figo (por)",
-      "joao felix (por)",
-      "bernardo (por)",
-      "postiga (por)",
-      "quaresma (por)",
-      "joao moutinho (por)"
-    ]
-  },
-  {
-    "id": 1067,
-    "title": "Goleadores históricos de Países Bajos (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "van persie (ned)",
-      "huntelaar (ned)",
-      "memphis (ned)",
-      "bergkamp (ned)",
-      "kuyt (ned)",
-      "robben (ned)",
-      "van nistelrooy (ned)",
-      "kieft (ned)",
-      "kluivert (ned)",
-      "cruyff (ned)"
-    ]
-  },
-  {
-    "id": 1068,
-    "title": "Goleadores históricos de Uruguay (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "suárez (uru)",
-      "cavani (uru)",
-      "forlán (uru)",
-      "abreu (uru)",
-      "recoba (uru)",
-      "francescoli (uru)",
-      "ruben sosa (uru)",
-      "coates (uru)",
-      "lugano (uru)",
-      "goltz (uru)"
-    ]
-  },
-  {
-    "id": 1069,
-    "title": "Goleadores históricos de México (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "chicharito (mex)",
-      "borgetti (mex)",
-      "hermosillo (mex)",
-      "blanco (mex)",
-      "jiménez (mex)",
-      "sánchez (mex)",
-      "vuoso (mex)",
-      "luis garcía (mex)",
-      "pineda (mex)",
-      "cardozo (par)"
-    ]
-  },
-  {
-    "id": 1070,
-    "title": "Goleadores históricos de Italia (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "immobile (ita)",
-      "balotelli (ita)",
-      "inzaghi (ita)",
-      "del piero (ita)",
-      "totti (ita)",
-      "vieri (ita)",
-      "rossi (ita)",
-      "altobelli (ita)",
-      "zola (ita)",
-      "rivera (ita)"
-    ]
-  },
-  {
-    "id": 1079,
-    "title": "Goleadores históricos MLS",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "wondolowski (usa)",
-      "keane (irl)",
-      "martínez (ven)",
-      "donovan (usa)",
-      "kamara (sle)",
-      "morales (arg)",
-      "zlatan (swe)",
-      "valeri (arg)",
-      "blanco (mex)",
-      "altidore (usa)"
-    ]
-  },
-  {
-    "id": 1080,
-    "title": "Goleadores históricos Liga MX",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "cardozo (par)",
-      "borgetti (mex)",
-      "palencia (mex)",
-      "gignac (fra)",
-      "cabañas (par)",
-      "corona (mex)",
-      "chucho benítez (ecu)",
-      "sambueza (arg)",
-      "funes mori (arg)",
-      "chuletita (mex)"
-    ]
-  },
-  {
-    "id": 1081,
-    "title": "Goleadores históricos Brasileirão",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "roberto dinamit e (bra)",
-      "zico (bra)",
-      "romário (bra)",
-      "fred (bra)",
-      "gabigol (bra)",
-      "neymar (bra)",
-      "rivaldo (bra)",
-      "careca (bra)",
-      "edmundo (bra)",
-      "tita (bra)"
-    ]
-  },
-  {
-    "id": 1082,
-    "title": "Goleadores históricos Copa Libertadores",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "aristizábal (col)",
-      "palermo (arg)",
-      "barcos (arg)",
-      "cabañas (par)",
-      "tevez (arg)",
-      "riquelme (arg)",
-      "francescoli (uru)",
-      "angel (col)",
-      "boca (arg)",
-      "river (arg)"
-    ]
-  },
-  {
-    "id": 1083,
-    "title": "Goleadores históricos Copa América",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "zizinho (bra)",
-      "norc hvall (uru)",
-      "severino vargas (arg)",
-      "batistuta (arg)",
-      "varallo (arg)",
-      "paolo guerrero (per)",
-      "eduardo vargas (chi)",
-      "messi (arg)",
-      "suárez (uru)",
-      "forlán (uru)"
-    ]
-  },
-  {
-    "id": 1084,
-    "title": "Goleadores históricos Eurocopa",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "platini (fra)",
-      "griezmann (fra)",
-      "shearer (eng)",
-      "van nistelrooy (ned)",
-      "ibrahimovic (swe)",
-      "klinsmann (ger)",
-      "rooney (eng)",
-      "henry (fra)",
-      "nani (por)"
-    ]
-  },
-  {
-    "id": 1089,
-    "title": "Goleadores históricos Eredivisie",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "willy van der kuijlen (ned)",
-      "cruyff (ned)",
-      "moulijn (ned)",
-      "huntelaar (ned)",
-      "van nistelrooy (ned)",
-      "bergkamp (ned)",
-      "kuyt (ned)",
-      "robben (ned)",
-      "de jong (ned)",
-      "van basten (ned)"
-    ]
-  },
-  {
-    "id": 1090,
-    "title": "Goleadores históricos Primeira Liga",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "fernando peyroteo (por)",
-      "cristiano (por)",
-      "eusebio (por)",
-      "pauleta (por)",
-      "nuno gomes (por)",
-      "falcao (col)",
-      "joão pinto (por)",
-      "simão (por)",
-      "liedson (bra)",
-      "cardozo (par)"
-    ]
-  },
-  {
-    "id": 1091,
-    "title": "Goleadores históricos de Chile (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "sánchez (chi)",
-      "salas (chi)",
-      "eduardo vargas (chi)",
-      "vidal (chi)",
-      "zamorano (chi)",
-      "valdivia (chi)",
-      "suazo (chi)",
-      "pizzi (esp)",
-      "aránguiz (chi)",
-      "isla (chi)"
-    ]
-  },
-  {
-    "id": 1092,
-    "title": "Goleadores históricos de Colombia (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "falcao (col)",
-      "asprilla (col)",
-      "rincon (col)",
-      "aristizábal (col)",
-      "cuadrado (col)",
-      "muriel (col)",
-      "borja (col)",
-      "valderrama (col)",
-      "duvan zapata (col)",
-      "teo gutiérrez (col)"
-    ]
-  },
-  {
-    "id": 1094,
-    "title": "Goleadores históricos Champions League",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "messi (arg)",
-      "lewandowski (pol)",
-      "benzema (fra)",
-      "raúl (esp)",
-      "van nistelrooy (ned)",
-      "shevchenko (ukr)",
-      "henry (fra)",
-      "ibrahimovic (swe)",
-      "müller (ger)"
-    ]
-  },
-  {
-    "id": 1095,
-    "title": "Goleadores históricos Premier League",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "shearer (eng)",
-      "rooney (eng)",
-      "kane (eng)",
-      "aguero (arg)",
-      "lampard (eng)",
-      "henry (fra)",
-      "fowler (eng)",
-      "defoe (eng)",
-      "cole (eng)",
-      "owen (eng)"
-    ]
-  },
-  {
-    "id": 1096,
-    "title": "Goleadores históricos LaLiga",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "messi (arg)",
-      "ronaldo (por)",
-      "zarra (esp)",
-      "hugo sánchez (mex)",
-      "raúl (esp)",
-      "di stéfano (arg)",
-      "benzema (fra)",
-      "quini (esp)",
-      "pahiño (esp)",
-      "griezmann (fra)"
-    ]
-  },
-  {
-    "id": 1097,
-    "title": "Goleadores históricos Serie A",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "piola (ita)",
-      "totti (ita)",
-      "nordahl (swe)",
-      "meazza (ita)",
-      "altafini (bra)",
-      "di natale (ita)",
-      "baggio (ita)",
-      "del piero (ita)",
-      "icardi (arg)",
-      "immobile (ita)"
-    ]
-  },
-  {
-    "id": 1098,
-    "title": "Goleadores históricos Bundesliga",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "müller (ger)",
-      "lewandowski (pol)",
-      "fischer (ger)",
-      "heynckes (ger)",
-      "burgsmüller (ger)",
-      "pizarro (per)",
-      "seeler (ger)",
-      "kirsten (ger)",
-      "aller (ger)",
-      "rummenigge (ger)"
-    ]
-  },
-  {
-    "id": 1099,
-    "title": "Goleadores históricos Ligue 1",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "delio onnis (arg)",
-      "lacazette (fra)",
-      "cavani (uru)",
-      "pauleta (por)",
-      "di nallo (fra)",
-      "iben (fra)",
-      "bapé (fra)",
-      "ben yedder (fra)",
-      "drogba (civ)",
-      "ibrahimovic (swe)"
-    ]
-  },
-  {
-    "id": 1100,
-    "title": "Goleadores históricos de Argentina (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "messi (arg)",
-      "batistuta (arg)",
-      "aguero (arg)",
-      "crespo (arg)",
-      "maradona (arg)",
-      "di maría (arg)",
-      "higuaín (arg)",
-      "lautaro (arg)",
-      "kempes (arg)",
-      "tucho (arg)"
-    ]
-  },
-  {
-    "id": 1101,
-    "title": "Goleadores históricos de Brasil (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "neymar (bra)",
-      "pelé (bra)",
-      "ronaldo (bra)",
-      "romário (bra)",
-      "zico (bra)",
-      "rivaldo (bra)",
-      "bebeto (bra)",
-      "jairzinho (bra)",
-      "tostão (bra)",
-      "adriano (bra)"
-    ]
-  },
-  {
-    "id": 1102,
-    "title": "Goleadores históricos de Alemania (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "klose (ger)",
-      "müller (ger)",
-      "podolski (ger)",
-      "klinsmann (ger)",
-      "voller (ger)",
-      "rumenigge (ger)",
-      "ballack (ger)",
-      "matthäus (ger)",
-      "schweinsteiger (ger)",
-      "reus (ger)"
-    ]
-  },
-  {
-    "id": 1103,
-    "title": "Goleadores históricos de España (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "villa (esp)",
-      "raúl (esp)",
-      "torres (esp)",
-      "morata (esp)",
-      "hierro (esp)",
-      "silva (esp)",
-      "morientes (esp)",
-      "butragueño (esp)",
-      "iniesta (esp)",
-      "xavi (esp)"
-    ]
-  },
-  {
-    "id": 1104,
-    "title": "Goleadores históricos de Francia (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "giroud (fra)",
-      "henry (fra)",
-      "mbappé (fra)",
-      "griezmann (fra)",
-      "benzema (fra)",
-      "trezeguet (fra)",
-      "platini (fra)",
-      "zidane (fra)",
-      "papin (fra)",
-      "giresse (fra)"
-    ]
-  },
-  {
-    "id": 1105,
-    "title": "Goleadores históricos de Inglaterra (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "kane (eng)",
-      "rooney (eng)",
-      "greaves (eng)",
-      "lineker (eng)",
-      "owen (eng)",
-      "charlton (eng)",
-      "shearer (eng)",
-      "sterling (eng)",
-      "lampard (eng)",
-      "gerard (eng)"
-    ]
-  },
-  {
-    "id": 1113,
-    "title": "Goleadores históricos de Portugal (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "pauleta (por)",
-      "eusebio (por)",
-      "nuno gomes (por)",
-      "luis figo (por)",
-      "joao felix (por)",
-      "bernardo (por)",
-      "postiga (por)",
-      "quaresma (por)",
-      "joao moutinho (por)"
-    ]
-  },
-  {
-    "id": 1114,
-    "title": "Goleadores históricos de Países Bajos (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "van persie (ned)",
-      "huntelaar (ned)",
-      "memphis (ned)",
-      "bergkamp (ned)",
-      "kuyt (ned)",
-      "robben (ned)",
-      "van nistelrooy (ned)",
-      "kieft (ned)",
-      "kluivert (ned)",
-      "cruyff (ned)"
-    ]
-  },
-  {
-    "id": 1115,
-    "title": "Goleadores históricos de Uruguay (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "suárez (uru)",
-      "cavani (uru)",
-      "forlán (uru)",
-      "abreu (uru)",
-      "recoba (uru)",
-      "francescoli (uru)",
-      "ruben sosa (uru)",
-      "coates (uru)",
-      "lugano (uru)",
-      "goltz (uru)"
-    ]
-  },
-  {
-    "id": 1116,
-    "title": "Goleadores históricos de México (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "chicharito (mex)",
-      "borgetti (mex)",
-      "hermosillo (mex)",
-      "blanco (mex)",
-      "jiménez (mex)",
-      "sánchez (mex)",
-      "vuoso (mex)",
-      "luis garcía (mex)",
-      "pineda (mex)",
-      "cardozo (par)"
-    ]
-  },
-  {
-    "id": 1117,
-    "title": "Goleadores históricos de Italia (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "immobile (ita)",
-      "balotelli (ita)",
-      "inzaghi (ita)",
-      "del piero (ita)",
-      "totti (ita)",
-      "vieri (ita)",
-      "rossi (ita)",
-      "altobelli (ita)",
-      "zola (ita)",
-      "rivera (ita)"
-    ]
-  },
-  {
-    "id": 1126,
-    "title": "Goleadores históricos MLS",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "wondolowski (usa)",
-      "keane (irl)",
-      "martínez (ven)",
-      "donovan (usa)",
-      "kamara (sle)",
-      "morales (arg)",
-      "zlatan (swe)",
-      "valeri (arg)",
-      "blanco (mex)",
-      "altidore (usa)"
-    ]
-  },
-  {
-    "id": 1127,
-    "title": "Goleadores históricos Liga MX",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "cardozo (par)",
-      "borgetti (mex)",
-      "palencia (mex)",
-      "gignac (fra)",
-      "cabañas (par)",
-      "corona (mex)",
-      "chucho benítez (ecu)",
-      "sambueza (arg)",
-      "funes mori (arg)",
-      "chuletita (mex)"
-    ]
-  },
-  {
-    "id": 1128,
-    "title": "Goleadores históricos Brasileirão",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "roberto dinamit e (bra)",
-      "zico (bra)",
-      "romário (bra)",
-      "fred (bra)",
-      "gabigol (bra)",
-      "neymar (bra)",
-      "rivaldo (bra)",
-      "careca (bra)",
-      "edmundo (bra)",
-      "tita (bra)"
-    ]
-  },
-  {
-    "id": 1129,
-    "title": "Goleadores históricos Copa Libertadores",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "aristizábal (col)",
-      "palermo (arg)",
-      "barcos (arg)",
-      "cabañas (par)",
-      "tevez (arg)",
-      "riquelme (arg)",
-      "francescoli (uru)",
-      "angel (col)",
-      "boca (arg)",
-      "river (arg)"
-    ]
-  },
-  {
-    "id": 1130,
-    "title": "Goleadores históricos Copa América",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "zizinho (bra)",
-      "norc hvall (uru)",
-      "severino vargas (arg)",
-      "batistuta (arg)",
-      "varallo (arg)",
-      "paolo guerrero (per)",
-      "eduardo vargas (chi)",
-      "messi (arg)",
-      "suárez (uru)",
-      "forlán (uru)"
-    ]
-  },
-  {
-    "id": 1131,
-    "title": "Goleadores históricos Eurocopa",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "platini (fra)",
-      "griezmann (fra)",
-      "shearer (eng)",
-      "van nistelrooy (ned)",
-      "ibrahimovic (swe)",
-      "klinsmann (ger)",
-      "rooney (eng)",
-      "henry (fra)",
-      "nani (por)"
-    ]
-  },
-  {
-    "id": 1136,
-    "title": "Goleadores históricos Eredivisie",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "willy van der kuijlen (ned)",
-      "cruyff (ned)",
-      "moulijn (ned)",
-      "huntelaar (ned)",
-      "van nistelrooy (ned)",
-      "bergkamp (ned)",
-      "kuyt (ned)",
-      "robben (ned)",
-      "de jong (ned)",
-      "van basten (ned)"
-    ]
-  },
-  {
-    "id": 1137,
-    "title": "Goleadores históricos Primeira Liga",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "fernando peyroteo (por)",
-      "cristiano (por)",
-      "eusebio (por)",
-      "pauleta (por)",
-      "nuno gomes (por)",
-      "falcao (col)",
-      "joão pinto (por)",
-      "simão (por)",
-      "liedson (bra)",
-      "cardozo (par)"
-    ]
-  },
-  {
-    "id": 1138,
-    "title": "Goleadores históricos de Chile (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "sánchez (chi)",
-      "salas (chi)",
-      "eduardo vargas (chi)",
-      "vidal (chi)",
-      "zamorano (chi)",
-      "valdivia (chi)",
-      "suazo (chi)",
-      "pizzi (esp)",
-      "aránguiz (chi)",
-      "isla (chi)"
-    ]
-  },
-  {
-    "id": 1139,
-    "title": "Goleadores históricos de Colombia (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "falcao (col)",
-      "asprilla (col)",
-      "rincon (col)",
-      "aristizábal (col)",
-      "cuadrado (col)",
-      "muriel (col)",
-      "borja (col)",
-      "valderrama (col)",
-      "duvan zapata (col)",
-      "teo gutiérrez (col)"
-    ]
-  },
-  {
-    "id": 1141,
-    "title": "Goleadores históricos Champions League",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "messi (arg)",
-      "lewandowski (pol)",
-      "benzema (fra)",
-      "raúl (esp)",
-      "van nistelrooy (ned)",
-      "shevchenko (ukr)",
-      "henry (fra)",
-      "ibrahimovic (swe)",
-      "müller (ger)"
-    ]
-  },
-  {
-    "id": 1142,
-    "title": "Goleadores históricos Premier League",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "shearer (eng)",
-      "rooney (eng)",
-      "kane (eng)",
-      "aguero (arg)",
-      "lampard (eng)",
-      "henry (fra)",
-      "fowler (eng)",
-      "defoe (eng)",
-      "cole (eng)",
-      "owen (eng)"
-    ]
-  },
-  {
-    "id": 1143,
-    "title": "Goleadores históricos LaLiga",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "messi (arg)",
-      "ronaldo (por)",
-      "zarra (esp)",
-      "hugo sánchez (mex)",
-      "raúl (esp)",
-      "di stéfano (arg)",
-      "benzema (fra)",
-      "quini (esp)",
-      "pahiño (esp)",
-      "griezmann (fra)"
-    ]
-  },
-  {
-    "id": 1144,
-    "title": "Goleadores históricos Serie A",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "piola (ita)",
-      "totti (ita)",
-      "nordahl (swe)",
-      "meazza (ita)",
-      "altafini (bra)",
-      "di natale (ita)",
-      "baggio (ita)",
-      "del piero (ita)",
-      "icardi (arg)",
-      "immobile (ita)"
-    ]
-  },
-  {
-    "id": 1145,
-    "title": "Goleadores históricos Bundesliga",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "müller (ger)",
-      "lewandowski (pol)",
-      "fischer (ger)",
-      "heynckes (ger)",
-      "burgsmüller (ger)",
-      "pizarro (per)",
-      "seeler (ger)",
-      "kirsten (ger)",
-      "aller (ger)",
-      "rummenigge (ger)"
-    ]
-  },
-  {
-    "id": 1146,
-    "title": "Goleadores históricos Ligue 1",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "delio onnis (arg)",
-      "lacazette (fra)",
-      "cavani (uru)",
-      "pauleta (por)",
-      "di nallo (fra)",
-      "iben (fra)",
-      "bapé (fra)",
-      "ben yedder (fra)",
-      "drogba (civ)",
-      "ibrahimovic (swe)"
-    ]
-  },
-  {
-    "id": 1147,
-    "title": "Goleadores históricos de Argentina (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "messi (arg)",
-      "batistuta (arg)",
-      "aguero (arg)",
-      "crespo (arg)",
-      "maradona (arg)",
-      "di maría (arg)",
-      "higuaín (arg)",
-      "lautaro (arg)",
-      "kempes (arg)",
-      "tucho (arg)"
-    ]
-  },
-  {
-    "id": 1148,
-    "title": "Goleadores históricos de Brasil (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "neymar (bra)",
-      "pelé (bra)",
-      "ronaldo (bra)",
-      "romário (bra)",
-      "zico (bra)",
-      "rivaldo (bra)",
-      "bebeto (bra)",
-      "jairzinho (bra)",
-      "tostão (bra)",
-      "adriano (bra)"
-    ]
-  },
-  {
-    "id": 1149,
-    "title": "Goleadores históricos de Alemania (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "klose (ger)",
-      "müller (ger)",
-      "podolski (ger)",
-      "klinsmann (ger)",
-      "voller (ger)",
-      "rumenigge (ger)",
-      "ballack (ger)",
-      "matthäus (ger)",
-      "schweinsteiger (ger)",
-      "reus (ger)"
-    ]
-  },
-  {
-    "id": 1150,
-    "title": "Goleadores históricos de España (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "villa (esp)",
-      "raúl (esp)",
-      "torres (esp)",
-      "morata (esp)",
-      "hierro (esp)",
-      "silva (esp)",
-      "morientes (esp)",
-      "butragueño (esp)",
-      "iniesta (esp)",
-      "xavi (esp)"
-    ]
-  },
-  {
-    "id": 1151,
-    "title": "Goleadores históricos de Francia (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "giroud (fra)",
-      "henry (fra)",
-      "mbappé (fra)",
-      "griezmann (fra)",
-      "benzema (fra)",
-      "trezeguet (fra)",
-      "platini (fra)",
-      "zidane (fra)",
-      "papin (fra)",
-      "giresse (fra)"
-    ]
-  },
-  {
-    "id": 1152,
-    "title": "Goleadores históricos de Inglaterra (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "kane (eng)",
-      "rooney (eng)",
-      "greaves (eng)",
-      "lineker (eng)",
-      "owen (eng)",
-      "charlton (eng)",
-      "shearer (eng)",
-      "sterling (eng)",
-      "lampard (eng)",
-      "gerard (eng)"
-    ]
-  },
-  {
-    "id": 1160,
-    "title": "Goleadores históricos de Portugal (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "pauleta (por)",
-      "eusebio (por)",
-      "nuno gomes (por)",
-      "luis figo (por)",
-      "joao felix (por)",
-      "bernardo (por)",
-      "postiga (por)",
-      "quaresma (por)",
-      "joao moutinho (por)"
-    ]
-  },
-  {
-    "id": 1161,
-    "title": "Goleadores históricos de Países Bajos (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "van persie (ned)",
-      "huntelaar (ned)",
-      "memphis (ned)",
-      "bergkamp (ned)",
-      "kuyt (ned)",
-      "robben (ned)",
-      "van nistelrooy (ned)",
-      "kieft (ned)",
-      "kluivert (ned)",
-      "cruyff (ned)"
-    ]
-  },
-  {
-    "id": 1162,
-    "title": "Goleadores históricos de Uruguay (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "suárez (uru)",
-      "cavani (uru)",
-      "forlán (uru)",
-      "abreu (uru)",
-      "recoba (uru)",
-      "francescoli (uru)",
-      "ruben sosa (uru)",
-      "coates (uru)",
-      "lugano (uru)",
-      "goltz (uru)"
-    ]
-  },
-  {
-    "id": 1163,
-    "title": "Goleadores históricos de México (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "chicharito (mex)",
-      "borgetti (mex)",
-      "hermosillo (mex)",
-      "blanco (mex)",
-      "jiménez (mex)",
-      "sánchez (mex)",
-      "vuoso (mex)",
-      "luis garcía (mex)",
-      "pineda (mex)",
-      "cardozo (par)"
-    ]
-  },
-  {
-    "id": 1164,
-    "title": "Goleadores históricos de Italia (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "immobile (ita)",
-      "balotelli (ita)",
-      "inzaghi (ita)",
-      "del piero (ita)",
-      "totti (ita)",
-      "vieri (ita)",
-      "rossi (ita)",
-      "altobelli (ita)",
-      "zola (ita)",
-      "rivera (ita)"
-    ]
-  },
-  {
-    "id": 1173,
-    "title": "Goleadores históricos MLS",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "wondolowski (usa)",
-      "keane (irl)",
-      "martínez (ven)",
-      "donovan (usa)",
-      "kamara (sle)",
-      "morales (arg)",
-      "zlatan (swe)",
-      "valeri (arg)",
-      "blanco (mex)",
-      "altidore (usa)"
-    ]
-  },
-  {
-    "id": 1174,
-    "title": "Goleadores históricos Liga MX",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "cardozo (par)",
-      "borgetti (mex)",
-      "palencia (mex)",
-      "gignac (fra)",
-      "cabañas (par)",
-      "corona (mex)",
-      "chucho benítez (ecu)",
-      "sambueza (arg)",
-      "funes mori (arg)",
-      "chuletita (mex)"
-    ]
-  },
-  {
-    "id": 1175,
-    "title": "Goleadores históricos Brasileirão",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "roberto dinamit e (bra)",
-      "zico (bra)",
-      "romário (bra)",
-      "fred (bra)",
-      "gabigol (bra)",
-      "neymar (bra)",
-      "rivaldo (bra)",
-      "careca (bra)",
-      "edmundo (bra)",
-      "tita (bra)"
-    ]
-  },
-  {
-    "id": 1176,
-    "title": "Goleadores históricos Copa Libertadores",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "aristizábal (col)",
-      "palermo (arg)",
-      "barcos (arg)",
-      "cabañas (par)",
-      "tevez (arg)",
-      "riquelme (arg)",
-      "francescoli (uru)",
-      "angel (col)",
-      "boca (arg)",
-      "river (arg)"
-    ]
-  },
-  {
-    "id": 1177,
-    "title": "Goleadores históricos Copa América",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "zizinho (bra)",
-      "norc hvall (uru)",
-      "severino vargas (arg)",
-      "batistuta (arg)",
-      "varallo (arg)",
-      "paolo guerrero (per)",
-      "eduardo vargas (chi)",
-      "messi (arg)",
-      "suárez (uru)",
-      "forlán (uru)"
-    ]
-  },
-  {
-    "id": 1178,
-    "title": "Goleadores históricos Eurocopa",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "platini (fra)",
-      "griezmann (fra)",
-      "shearer (eng)",
-      "van nistelrooy (ned)",
-      "ibrahimovic (swe)",
-      "klinsmann (ger)",
-      "rooney (eng)",
-      "henry (fra)",
-      "nani (por)"
-    ]
-  },
-  {
-    "id": 1183,
-    "title": "Goleadores históricos Eredivisie",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "willy van der kuijlen (ned)",
-      "cruyff (ned)",
-      "moulijn (ned)",
-      "huntelaar (ned)",
-      "van nistelrooy (ned)",
-      "bergkamp (ned)",
-      "kuyt (ned)",
-      "robben (ned)",
-      "de jong (ned)",
-      "van basten (ned)"
-    ]
-  },
-  {
-    "id": 1184,
-    "title": "Goleadores históricos Primeira Liga",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "fernando peyroteo (por)",
-      "cristiano (por)",
-      "eusebio (por)",
-      "pauleta (por)",
-      "nuno gomes (por)",
-      "falcao (col)",
-      "joão pinto (por)",
-      "simão (por)",
-      "liedson (bra)",
-      "cardozo (par)"
-    ]
-  },
-  {
-    "id": 1185,
-    "title": "Goleadores históricos de Chile (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "sánchez (chi)",
-      "salas (chi)",
-      "eduardo vargas (chi)",
-      "vidal (chi)",
-      "zamorano (chi)",
-      "valdivia (chi)",
-      "suazo (chi)",
-      "pizzi (esp)",
-      "aránguiz (chi)",
-      "isla (chi)"
-    ]
-  },
-  {
-    "id": 1186,
-    "title": "Goleadores históricos de Colombia (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "falcao (col)",
-      "asprilla (col)",
-      "rincon (col)",
-      "aristizábal (col)",
-      "cuadrado (col)",
-      "muriel (col)",
-      "borja (col)",
-      "valderrama (col)",
-      "duvan zapata (col)",
-      "teo gutiérrez (col)"
-    ]
-  },
-  {
-    "id": 1188,
-    "title": "Goleadores históricos Champions League",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "messi (arg)",
-      "lewandowski (pol)",
-      "benzema (fra)",
-      "raúl (esp)",
-      "van nistelrooy (ned)",
-      "shevchenko (ukr)",
-      "henry (fra)",
-      "ibrahimovic (swe)",
-      "müller (ger)"
-    ]
-  },
-  {
-    "id": 1189,
-    "title": "Goleadores históricos Premier League",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "shearer (eng)",
-      "rooney (eng)",
-      "kane (eng)",
-      "aguero (arg)",
-      "lampard (eng)",
-      "henry (fra)",
-      "fowler (eng)",
-      "defoe (eng)",
-      "cole (eng)",
-      "owen (eng)"
-    ]
-  },
-  {
-    "id": 1190,
-    "title": "Goleadores históricos LaLiga",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "messi (arg)",
-      "ronaldo (por)",
-      "zarra (esp)",
-      "hugo sánchez (mex)",
-      "raúl (esp)",
-      "di stéfano (arg)",
-      "benzema (fra)",
-      "quini (esp)",
-      "pahiño (esp)",
-      "griezmann (fra)"
-    ]
-  },
-  {
-    "id": 1191,
-    "title": "Goleadores históricos Serie A",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "piola (ita)",
-      "totti (ita)",
-      "nordahl (swe)",
-      "meazza (ita)",
-      "altafini (bra)",
-      "di natale (ita)",
-      "baggio (ita)",
-      "del piero (ita)",
-      "icardi (arg)",
-      "immobile (ita)"
-    ]
-  },
-  {
-    "id": 1192,
-    "title": "Goleadores históricos Bundesliga",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "müller (ger)",
-      "lewandowski (pol)",
-      "fischer (ger)",
-      "heynckes (ger)",
-      "burgsmüller (ger)",
-      "pizarro (per)",
-      "seeler (ger)",
-      "kirsten (ger)",
-      "aller (ger)",
-      "rummenigge (ger)"
-    ]
-  },
-  {
-    "id": 1193,
-    "title": "Goleadores históricos Ligue 1",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "delio onnis (arg)",
-      "lacazette (fra)",
-      "cavani (uru)",
-      "pauleta (por)",
-      "di nallo (fra)",
-      "iben (fra)",
-      "bapé (fra)",
-      "ben yedder (fra)",
-      "drogba (civ)",
-      "ibrahimovic (swe)"
-    ]
-  },
-  {
-    "id": 1194,
-    "title": "Goleadores históricos de Argentina (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "messi (arg)",
-      "batistuta (arg)",
-      "aguero (arg)",
-      "crespo (arg)",
-      "maradona (arg)",
-      "di maría (arg)",
-      "higuaín (arg)",
-      "lautaro (arg)",
-      "kempes (arg)",
-      "tucho (arg)"
-    ]
-  },
-  {
-    "id": 1195,
-    "title": "Goleadores históricos de Brasil (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "neymar (bra)",
-      "pelé (bra)",
-      "ronaldo (bra)",
-      "romário (bra)",
-      "zico (bra)",
-      "rivaldo (bra)",
-      "bebeto (bra)",
-      "jairzinho (bra)",
-      "tostão (bra)",
-      "adriano (bra)"
-    ]
-  },
-  {
-    "id": 1196,
-    "title": "Goleadores históricos de Alemania (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "klose (ger)",
-      "müller (ger)",
-      "podolski (ger)",
-      "klinsmann (ger)",
-      "voller (ger)",
-      "rumenigge (ger)",
-      "ballack (ger)",
-      "matthäus (ger)",
-      "schweinsteiger (ger)",
-      "reus (ger)"
-    ]
-  },
-  {
-    "id": 1197,
-    "title": "Goleadores históricos de España (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "villa (esp)",
-      "raúl (esp)",
-      "torres (esp)",
-      "morata (esp)",
-      "hierro (esp)",
-      "silva (esp)",
-      "morientes (esp)",
-      "butragueño (esp)",
-      "iniesta (esp)",
-      "xavi (esp)"
-    ]
-  },
-  {
-    "id": 1198,
-    "title": "Goleadores históricos de Francia (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "giroud (fra)",
-      "henry (fra)",
-      "mbappé (fra)",
-      "griezmann (fra)",
-      "benzema (fra)",
-      "trezeguet (fra)",
-      "platini (fra)",
-      "zidane (fra)",
-      "papin (fra)",
-      "giresse (fra)"
-    ]
-  },
-  {
-    "id": 1199,
-    "title": "Goleadores históricos de Inglaterra (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "kane (eng)",
-      "rooney (eng)",
-      "greaves (eng)",
-      "lineker (eng)",
-      "owen (eng)",
-      "charlton (eng)",
-      "shearer (eng)",
-      "sterling (eng)",
-      "lampard (eng)",
-      "gerard (eng)"
-    ]
-  },
-  {
-    "id": 1207,
-    "title": "Goleadores históricos de Portugal (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "ronaldo (por)",
-      "pauleta (por)",
-      "eusebio (por)",
-      "nuno gomes (por)",
-      "luis figo (por)",
-      "joao felix (por)",
-      "bernardo (por)",
-      "postiga (por)",
-      "quaresma (por)",
-      "joao moutinho (por)"
-    ]
-  },
-  {
-    "id": 1208,
-    "title": "Goleadores históricos de Países Bajos (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "van persie (ned)",
-      "huntelaar (ned)",
-      "memphis (ned)",
-      "bergkamp (ned)",
-      "kuyt (ned)",
-      "robben (ned)",
-      "van nistelrooy (ned)",
-      "kieft (ned)",
-      "kluivert (ned)",
-      "cruyff (ned)"
-    ]
-  },
-  {
-    "id": 1209,
-    "title": "Goleadores históricos de Uruguay (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "suárez (uru)",
-      "cavani (uru)",
-      "forlán (uru)",
-      "abreu (uru)",
-      "recoba (uru)",
-      "francescoli (uru)",
-      "ruben sosa (uru)",
-      "coates (uru)",
-      "lugano (uru)",
-      "goltz (uru)"
-    ]
-  },
-  {
-    "id": 1210,
-    "title": "Goleadores históricos de México (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "chicharito (mex)",
-      "borgetti (mex)",
-      "hermosillo (mex)",
-      "blanco (mex)",
-      "jiménez (mex)",
-      "sánchez (mex)",
-      "vuoso (mex)",
-      "luis garcía (mex)",
-      "pineda (mex)",
-      "cardozo (par)"
-    ]
-  },
-  {
-    "id": 1211,
-    "title": "Goleadores históricos de Italia (selección)",
-    "source": "transfermarkt-approx",
-    "answers": [
-      "immobile (ita)",
-      "balotelli (ita)",
-      "inzaghi (ita)",
-      "del piero (ita)",
-      "totti (ita)",
-      "vieri (ita)",
-      "rossi (ita)",
-      "altobelli (ita)",
-      "zola (ita)",
-      "rivera (ita)"
     ]
   }
 ]
