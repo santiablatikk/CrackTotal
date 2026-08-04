@@ -1,0 +1,59 @@
+# -*- coding: utf-8 -*-
+from pathlib import Path
+
+flags = Path(__file__).resolve().parents[1] / "assets" / "images" / "flags"
+flags.mkdir(parents=True, exist_ok=True)
+
+SVGS = {
+    "ar": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="14" fill="#74acdf"/><rect y="14" width="60" height="14" fill="#fff"/><rect y="28" width="60" height="14" fill="#74acdf"/><circle cx="30" cy="21" r="5" fill="#f6b40e"/></svg>',
+    "br": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#009c3b"/><polygon points="30,6 54,21 30,36 6,21" fill="#ffdf00"/><circle cx="30" cy="21" r="8" fill="#002776"/></svg>',
+    "uy": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#fff"/><rect y="0" width="60" height="4.67" fill="#0038a8"/><rect y="9.34" width="60" height="4.67" fill="#0038a8"/><rect y="18.68" width="60" height="4.67" fill="#0038a8"/><rect y="28.02" width="60" height="4.67" fill="#0038a8"/><rect y="37.36" width="60" height="4.67" fill="#0038a8"/><rect width="24" height="23.3" fill="#fff"/><circle cx="12" cy="11.5" r="5" fill="#fcd116"/></svg>',
+    "es": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="10.5" fill="#aa151b"/><rect y="10.5" width="60" height="21" fill="#f1bf00"/><rect y="31.5" width="60" height="10.5" fill="#aa151b"/></svg>',
+    "fr": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="20" height="42" fill="#002395"/><rect x="20" width="20" height="42" fill="#fff"/><rect x="40" width="20" height="42" fill="#ed2939"/></svg>',
+    "it": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="20" height="42" fill="#009246"/><rect x="20" width="20" height="42" fill="#fff"/><rect x="40" width="20" height="42" fill="#ce2b37"/></svg>',
+    "de": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="14" fill="#000"/><rect y="14" width="60" height="14" fill="#dd0000"/><rect y="28" width="60" height="14" fill="#ffce00"/></svg>',
+    "pt": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="24" height="42" fill="#006600"/><rect x="24" width="36" height="42" fill="#ff0000"/><circle cx="24" cy="21" r="8" fill="#ffcc00"/></svg>',
+    "gb": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#012169"/><path d="M0,0 L60,42 M60,0 L0,42" stroke="#fff" stroke-width="8"/><path d="M0,0 L60,42 M60,0 L0,42" stroke="#c8102e" stroke-width="4"/><path d="M30,0 V42 M0,21 H60" stroke="#fff" stroke-width="12"/><path d="M30,0 V42 M0,21 H60" stroke="#c8102e" stroke-width="6"/></svg>',
+    "nl": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="14" fill="#ae1c28"/><rect y="14" width="60" height="14" fill="#fff"/><rect y="28" width="60" height="14" fill="#21468b"/></svg>',
+    "be": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="20" height="42" fill="#000"/><rect x="20" width="20" height="42" fill="#fdda24"/><rect x="40" width="20" height="42" fill="#ef3340"/></svg>',
+    "co": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="21" fill="#ffe800"/><rect y="21" width="60" height="10.5" fill="#0018a8"/><rect y="31.5" width="60" height="10.5" fill="#ce1126"/></svg>',
+    "mx": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="20" height="42" fill="#006847"/><rect x="20" width="20" height="42" fill="#fff"/><rect x="40" width="20" height="42" fill="#ce1126"/><circle cx="30" cy="21" r="5" fill="#8b4513"/></svg>',
+    "us": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#bf0a30"/><rect y="3.23" width="60" height="3.23" fill="#fff"/><rect y="9.69" width="60" height="3.23" fill="#fff"/><rect y="16.15" width="60" height="3.23" fill="#fff"/><rect y="22.61" width="60" height="3.23" fill="#fff"/><rect y="29.07" width="60" height="3.23" fill="#fff"/><rect y="35.53" width="60" height="3.23" fill="#fff"/><rect width="24" height="22.6" fill="#002868"/></svg>',
+    "pl": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="21" fill="#fff"/><rect y="21" width="60" height="21" fill="#dc143c"/></svg>',
+    "se": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#006aa7"/><rect x="16" width="8" height="42" fill="#fecc00"/><rect y="17" width="60" height="8" fill="#fecc00"/></svg>',
+    "ua": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="21" fill="#0057b7"/><rect y="21" width="60" height="21" fill="#ffd700"/></svg>',
+    "hr": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="14" fill="#ff0000"/><rect y="14" width="60" height="14" fill="#fff"/><rect y="28" width="60" height="14" fill="#171796"/></svg>',
+    "ch": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#d52b1e"/><rect x="25" y="8" width="10" height="26" fill="#fff"/><rect x="17" y="16" width="26" height="10" fill="#fff"/></svg>',
+    "jp": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#fff"/><circle cx="30" cy="21" r="10" fill="#bc002d"/></svg>',
+    "kr": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#fff"/><circle cx="30" cy="21" r="10" fill="#cd2e3a"/><path d="M20,21 a10,10 0 0,1 20,0" fill="#0047a0"/></svg>',
+    "ng": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="20" height="42" fill="#008751"/><rect x="20" width="20" height="42" fill="#fff"/><rect x="40" width="20" height="42" fill="#008751"/></svg>',
+    "sn": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="20" height="42" fill="#00853f"/><rect x="20" width="20" height="42" fill="#fdef42"/><rect x="40" width="20" height="42" fill="#e31b23"/></svg>',
+    "ci": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="20" height="42" fill="#f77f00"/><rect x="20" width="20" height="42" fill="#fff"/><rect x="40" width="20" height="42" fill="#009e60"/></svg>',
+    "cl": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="21" fill="#fff"/><rect y="21" width="60" height="21" fill="#d52b1e"/><rect width="20" height="21" fill="#0039a6"/><circle cx="10" cy="10.5" r="3" fill="#fff"/></svg>',
+    "py": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="14" fill="#d52b1e"/><rect y="14" width="60" height="14" fill="#fff"/><rect y="28" width="60" height="14" fill="#0038a8"/></svg>',
+    "pe": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="20" height="42" fill="#d91023"/><rect x="20" width="20" height="42" fill="#fff"/><rect x="40" width="20" height="42" fill="#d91023"/></svg>',
+    "ec": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="21" fill="#ffdd00"/><rect y="21" width="60" height="10.5" fill="#034ea2"/><rect y="31.5" width="60" height="10.5" fill="#ed1c24"/></svg>',
+    "ve": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="14" fill="#ffcc00"/><rect y="14" width="60" height="14" fill="#00247d"/><rect y="28" width="60" height="14" fill="#cf142b"/></svg>',
+    "bo": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="14" fill="#d52b1e"/><rect y="14" width="60" height="14" fill="#f9e300"/><rect y="28" width="60" height="14" fill="#007934"/></svg>',
+    "at": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="14" fill="#ed2939"/><rect y="14" width="60" height="14" fill="#fff"/><rect y="28" width="60" height="14" fill="#ed2939"/></svg>',
+    "tr": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#e30a17"/><circle cx="24" cy="21" r="9" fill="#fff"/><circle cx="27" cy="21" r="7" fill="#e30a17"/></svg>',
+    "dk": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#c8102e"/><rect x="18" width="8" height="42" fill="#fff"/><rect y="17" width="60" height="8" fill="#fff"/></svg>',
+    "no": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#ef2b2d"/><rect x="16" width="10" height="42" fill="#fff"/><rect y="16" width="60" height="10" fill="#fff"/><rect x="18" width="6" height="42" fill="#002868"/><rect y="18" width="60" height="6" fill="#002868"/></svg>',
+    "ie": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="20" height="42" fill="#169b62"/><rect x="20" width="20" height="42" fill="#fff"/><rect x="40" width="20" height="42" fill="#ff883e"/></svg>',
+    "rs": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="14" fill="#c6363c"/><rect y="14" width="60" height="14" fill="#0c4076"/><rect y="28" width="60" height="14" fill="#fff"/></svg>',
+    "au": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#00008b"/><rect width="24" height="21" fill="#012169"/><circle cx="42" cy="28" r="3" fill="#fff"/></svg>',
+    "cn": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#de2910"/><polygon points="12,8 13.5,12.5 18,12.5 14.5,15.2 16,19.5 12,16.8 8,19.5 9.5,15.2 6,12.5 10.5,12.5" fill="#ffde00"/></svg>',
+    "qa": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#8d1b3d"/><rect width="18" height="42" fill="#fff"/></svg>',
+    "sa": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#005430"/><rect x="10" y="18" width="40" height="6" fill="#fff"/></svg>',
+    "ae": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="14" fill="#00732f"/><rect y="14" width="60" height="14" fill="#fff"/><rect y="28" width="60" height="14" fill="#000"/><rect width="14" height="42" fill="#ff0000"/></svg>',
+    "cm": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="20" height="42" fill="#007a5e"/><rect x="20" width="20" height="42" fill="#ce1126"/><rect x="40" width="20" height="42" fill="#fcd116"/></svg>',
+    "gh": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="14" fill="#ce1126"/><rect y="14" width="60" height="14" fill="#fcd116"/><rect y="28" width="60" height="14" fill="#006b3f"/><polygon points="30,16 31.5,20.5 36,20.5 32.5,23.2 34,27.5 30,24.8 26,27.5 27.5,23.2 24,20.5 28.5,20.5" fill="#000"/></svg>',
+    "eg": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="14" fill="#ce1126"/><rect y="14" width="60" height="14" fill="#fff"/><rect y="28" width="60" height="14" fill="#000"/><circle cx="30" cy="21" r="4" fill="#c09300"/></svg>',
+    "ma": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#c1272d"/><polygon points="30,12 32,18 38,18 33,22 35,28 30,24 25,28 27,22 22,18 28,18" fill="#006233"/></svg>',
+    "gr": '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 42"><rect width="60" height="42" fill="#0d5eaf"/><rect y="4.67" width="60" height="4.67" fill="#fff"/><rect y="14" width="60" height="4.67" fill="#fff"/><rect y="23.34" width="60" height="4.67" fill="#fff"/><rect y="32.67" width="60" height="4.67" fill="#fff"/><rect width="24" height="23.3" fill="#0d5eaf"/><rect x="10" width="4" height="23.3" fill="#fff"/><rect y="9.65" width="24" height="4" fill="#fff"/></svg>',
+}
+
+for code, svg in SVGS.items():
+    (flags / f"{code}.svg").write_text(svg, encoding="utf-8")
+
+print(f"Wrote {len(SVGS)} flags to {flags}")

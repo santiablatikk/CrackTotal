@@ -318,7 +318,7 @@
     }
 
     function isTriviaGame(gameId) {
-        return ['top10', 'quiensabemas', 'mentiroso', 'wordle', 'crackrapido'].indexOf(gameId) !== -1;
+        return ['top10', 'quiensabemas', 'mentiroso', 'wordle'].indexOf(gameId) !== -1;
     }
 
     function snapshot() {

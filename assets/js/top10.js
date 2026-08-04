@@ -16,8 +16,49 @@
     'psg': ['paris saint-germain', 'paris sg'],
     'españa': ['spain', 'seleccion espanola'],
     'dembélé': ['dembele', 'ousmane dembele'],
-    'flamengo': ['cr flamengo', 'mengao']
+    'flamengo': ['cr flamengo', 'mengao'],
+    'álvarez': ['alvarez', 'julian alvarez', 'julian'],
+    'alvarez': ['álvarez', 'julian alvarez', 'julian']
   };
+
+  const ISO2 = {
+    ARG:'AR', AR:'AR', BRA:'BR', BR:'BR', URU:'UY', UY:'UY', CHI:'CL', CL:'CL',
+    COL:'CO', CO:'CO', PER:'PE', PE:'PE', PAR:'PY', PY:'PY', ECU:'EC', EC:'EC',
+    BOL:'BO', BO:'BO', VEN:'VE', VE:'VE', MEX:'MX', MX:'MX', USA:'US', US:'US',
+    CAN:'CA', CA:'CA', ESP:'ES', ES:'ES', POR:'PT', PT:'PT', FRA:'FR', FR:'FR',
+    ITA:'IT', IT:'IT', GER:'DE', DE:'DE', NED:'NL', NL:'NL', BEL:'BE', BE:'BE',
+    ENG:'GB', GBR:'GB', GB:'GB', SCO:'GB', WAL:'GB', IRL:'IE', IE:'IE',
+    SWE:'SE', SE:'SE', NOR:'NO', NO:'NO', DEN:'DK', DK:'DK', POL:'PL', PL:'PL',
+    UKR:'UA', UA:'UA', CRO:'HR', HR:'HR', SRB:'RS', RS:'RS', SUI:'CH', SUIZ:'CH', CH:'CH',
+    AUT:'AT', AT:'AT', TUR:'TR', TR:'TR', GRE:'GR', GR:'GR', RUS:'RU', RU:'RU',
+    JPN:'JP', JP:'JP', KOR:'KR', KR:'KR', AUS:'AU', AU:'AU', NGA:'NG', NG:'NG',
+    SEN:'SN', SN:'SN', CIV:'CI', CI:'CI', CMR:'CM', CM:'CM', GHA:'GH', GH:'GH',
+    MAR:'MA', MA:'MA', EGY:'EG', EG:'EG', RSA:'ZA', ZA:'ZA', QAT:'QA', QA:'QA',
+    UAE:'AE', AE:'AE', KSA:'SA', SA:'SA', CHN:'CN', CN:'CN'
+  };
+
+  function toIso2(code){
+    if (!code) return '';
+    const raw = String(code).trim().toUpperCase().replace(/[^A-Z]/g,'');
+    return ISO2[raw] || (raw.length === 2 ? raw : '');
+  }
+
+  function flagEmoji(iso2){
+    if (!iso2 || iso2.length !== 2) return '';
+    const A = 0x1F1E6;
+    return String.fromCodePoint(
+      A + iso2.charCodeAt(0) - 65,
+      A + iso2.charCodeAt(1) - 65
+    );
+  }
+
+  function flagMarkup(code){
+    const iso2 = toIso2(code);
+    if (!iso2) return '';
+    const emoji = flagEmoji(iso2);
+    // Prefer local SVG crest/flag when present; fall back to emoji (no hotlink).
+    return `<img class="flag" src="assets/images/flags/${iso2.toLowerCase()}.svg" width="20" height="14" alt="" loading="lazy" decoding="async" data-emoji="${emoji}" onerror="this.outerHTML='<span class=\\'flag-emoji\\' aria-hidden=\\'true\\'>'+this.dataset.emoji+'</span>'" /><span class="sr-only">${iso2}</span>`;
+  }
 
   let topic = null; // { id, title, source, answers: ['messi (AR)', ...] }
   let foundSet = new Set();
@@ -94,8 +135,9 @@
       li.className = solved? 'solved' : '';
       const hint = ans.match(/\(([^)]+)\)/);
       const country = hint? hint[1] : '';
-      const hintText = country? `(${country})` : '';
-      li.innerHTML = `<span class="pos">${pos}.</span><span class="hint">${hintText}</span><span class="label">${solved? ans.toUpperCase(): '—'.repeat(6)}</span>`;
+      const flag = country ? flagMarkup(country) : '';
+      const hintText = country? `(${String(country).toUpperCase()})` : '';
+      li.innerHTML = `<span class="pos">${pos}.</span><span class="hint">${flag}${hintText}</span><span class="label">${solved? ans.toUpperCase(): '—'.repeat(6)}</span>`;
       list.appendChild(li);
     });
     document.getElementById('foundCount').innerHTML = `<i class="fas fa-check"></i> ${foundSet.size}/10`;

@@ -50,16 +50,6 @@
         <changefreq>weekly</changefreq>
         <priority>0.8</priority>
     </url>
-    
-    <!-- crack-rapido: fuera del catálogo activo; noindex en la página -->
-
-    <url>
-        <loc>https://cracktotal.com/100-futboleros-dicen.html</loc>
-        <lastmod>2026-08-04</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
     <!-- Páginas de usuario -->
     <url>
         <loc>https://cracktotal.com/profile.html</loc>

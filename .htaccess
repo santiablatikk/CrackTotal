@@ -36,6 +36,11 @@ RewriteRule ^search/?$ / [L,R=301]
 
 # Duplicado editorial: historia-mundial → worldcups (canónico)
 RewriteRule ^blog-detail-historia-mundial\.html$ /blog-detail-worldcups.html [L,R=301,NC]
+# Removed games → Games catalog
+RewriteRule ^crack-rapido\.html$ /games.html [L,R=301,NC]
+RewriteRule ^ranking-crackrapido\.html$ /ranking.html [L,R=301,NC]
+RewriteRule ^100-futboleros-dicen\.html$ /games.html [L,R=301,NC]
+
 
 # Cache Control - CONFIGURACIÓN PARA PRODUCCIÓN
 <IfModule mod_expires.c>

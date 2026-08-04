@@ -372,7 +372,11 @@ document.addEventListener('DOMContentLoaded', function() {
         'espana': ['spain', 'seleccion espanola', 'la roja'],
         'dembele': ['ousmane dembele'],
         'mbappe': ['kylian mbappe'],
-        'flamengo': ['cr flamengo', 'mengao']
+        'flamengo': ['cr flamengo', 'mengao'],
+        'alvarez': ['julian alvarez', 'julian', 'la arana'],
+        'julian alvarez': ['alvarez', 'la arana'],
+        'atletico de madrid': ['atletico madrid', 'atleti'],
+        'atletico madrid': ['atletico de madrid', 'atleti']
     };
 
     function answersMatchWithAliases(userAnswerNorm, correctAnswerNorm) {
@@ -872,20 +876,28 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update score displays
         updateScoreDisplays();
         
-        // <<<--- START: Fetch questions from the single merged file --- >>>
-        // Permite alternar dataset por query param (?dataset=2025)
+        // Default: banco curado pasalache_2025; fallback legacy; override ?dataset=legacy
         const params = new URLSearchParams(window.location.search);
-        const dataset = params.get('dataset');
-        const questionFile = dataset === '2025' 
-            ? 'assets/data/pasalache_2025.json' 
-            : 'assets/data/preguntas_combinadas.json';
+        const dataset = (params.get('dataset') || '').toLowerCase();
+        const primaryFile = dataset === 'legacy'
+            ? 'assets/data/preguntas_combinadas.json'
+            : 'assets/data/pasalache_2025.json';
+        const fallbackFile = 'assets/data/preguntas_combinadas.json';
 
-        fetch(questionFile)
-            .then(response => {
+        function loadQuestions(file) {
+            return fetch(file).then(response => {
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status} for file ${questionFile}`);
+                    throw new Error(`HTTP error! status: ${response.status} for file ${file}`);
                 }
                 return response.json();
+            });
+        }
+
+        loadQuestions(primaryFile)
+            .catch(err => {
+                console.warn('Pasala: falló banco primario, usando fallback', err);
+                if (primaryFile !== fallbackFile) return loadQuestions(fallbackFile);
+                throw err;
             })
             .then(loadedQuestions => {
                 // Assign the loaded questions directly
@@ -2241,6 +2253,27 @@ document.addEventListener('DOMContentLoaded', function() {
             Volver a Juegos
         `;
 
+        const playTop10Button = document.createElement('button');
+        playTop10Button.className = 'modal-button secondary-button';
+        playTop10Button.innerHTML = `
+            <i class="fas fa-list-ol"></i>
+            Jugar Top 10
+        `;
+
+        const playWordleButton = document.createElement('button');
+        playWordleButton.className = 'modal-button secondary-button';
+        playWordleButton.innerHTML = `
+            <i class="fas fa-border-all"></i>
+            Wordle Futbolero
+        `;
+
+        const readBlogButton = document.createElement('button');
+        readBlogButton.className = 'modal-button secondary-button';
+        readBlogButton.innerHTML = `
+            <i class="fas fa-newspaper"></i>
+            Actualidad
+        `;
+
         // --- Botones secundarios ---
         const viewProfileButton = document.createElement('button');
         viewProfileButton.className = 'modal-button secondary-button';
@@ -2263,7 +2296,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Añadir botones al contenedor
         buttonsContainer.appendChild(playAgainButton);
+        buttonsContainer.appendChild(playTop10Button);
+        buttonsContainer.appendChild(playWordleButton);
         buttonsContainer.appendChild(backToGamesButton);
+        buttonsContainer.appendChild(readBlogButton);
         buttonsContainer.appendChild(viewProfileButton);
         buttonsContainer.appendChild(shareTwitterButton);
         buttonsContainer.appendChild(shareWhatsAppButton);
@@ -2311,6 +2347,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         backToGamesButton.addEventListener('click', () => {
             window.location.href = 'games.html';
+        });
+
+        playTop10Button.addEventListener('click', () => {
+            window.location.href = 'top10.html';
+        });
+        playWordleButton.addEventListener('click', () => {
+            window.location.href = 'wordle-futbol.html';
+        });
+        readBlogButton.addEventListener('click', () => {
+            window.location.href = 'blog.html';
         });
 
         viewProfileButton.addEventListener('click', () => {

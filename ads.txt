@@ -17,5 +17,5 @@ google.com, pub-9579152019412427, DIRECT, f08c47fec0942fa0
 # Field #3: The type of relationship (DIRECT or RESELLER)
 # Field #4: The certification authority ID
 
-# Last updated: 2025-01-27
+# Last updated: 2026-08-04
 # Contact: contact@cracktotal.com

@@ -26,9 +26,7 @@
             path.includes('top10') ||
             path.includes('mentiroso') ||
             path.includes('quiensabemas') ||
-            path.includes('wordle') ||
-            path.includes('futboleros') ||
-            path.includes('crack-rapido')
+            path.includes('wordle')
         ) {
             return 'games';
         }
