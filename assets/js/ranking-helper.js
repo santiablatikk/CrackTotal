@@ -19,14 +19,27 @@ class RankingHelper {
     }
 
     // Mostrar error
-    showError(message) {
-        console.error('❌ Error en ranking:', message);
-        const tbody = document.getElementById('ranking-body');
+    showError(message, tableBodyId = 'ranking-body') {
+        const tbody = document.getElementById(tableBodyId);
         if (tbody) {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="5" class="error-state" style="text-align: center; padding: 20px; color: #dc3545;">
                         ⚠️ ${message}
+                    </td>
+                </tr>
+            `;
+        }
+    }
+
+    // Estado vacío: no es un error, es un ranking que todavía nadie estrenó
+    showEmpty(message, tableBodyId = 'ranking-body') {
+        const tbody = document.getElementById(tableBodyId);
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="5" class="no-data-state" style="text-align: center; padding: 20px; color: #6c757d;">
+                        🎮 ${message}
                     </td>
                 </tr>
             `;
@@ -162,13 +175,15 @@ class RankingHelper {
             if (rankingData && rankingData.length > 0) {
                 this.populateRankingTable(rankingData, tableBodyId);
             } else {
-                console.warn('⚠️ No hay datos de ranking');
-                this.showError(`¡Sé el primero en jugar ${gameType} y aparecer en el ranking!`);
+                this.showEmpty(
+                    `Todavía no hay partidas de ${this.getGameDisplayName(gameType)}. ¡Sé el primero en aparecer!`,
+                    tableBodyId
+                );
             }
 
         } catch (error) {
-            console.error('❌ Error cargando ranking:', error);
-            this.showError('No se pudo conectar con el servidor. Inténtalo de nuevo.');
+            console.error('Error cargando ranking:', error);
+            this.showError('No pudimos cargar el ranking. Revisá tu conexión y volvé a intentar.', tableBodyId);
         }
     }
 
@@ -767,12 +782,4 @@ class RankingHelper {
 // Instancia global
 window.rankingHelper = new RankingHelper();
 
-// Función de conveniencia para inicializar
-window.initializeRanking = function(gameType, limit = 15) {
-    console.log(`🚀 Inicializando ranking para ${gameType}`);
-    window.rankingHelper.initializeElements();
-    window.rankingHelper.loadGameRanking(gameType, limit);
-    window.rankingHelper.loadUserHistory(gameType);
-};
-
-console.log('🏆 Ranking Helper cargado'); 
+// initializeRanking vive en ranking-init.js; tenerla acá también la pisaba según el orden de carga.

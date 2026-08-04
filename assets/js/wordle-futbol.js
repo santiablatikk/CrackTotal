@@ -8,6 +8,7 @@
     let board = [];
     let keyboardState = {}; // letter -> 'correct' | 'present' | 'absent'
     let stats = { played: 0, streak: 0, best: 0, lastDayKey: '' };
+    const startTime = Date.now();
 
     function normalizeWord(str) {
         return str
@@ -389,7 +390,58 @@
         window.stats.lastDayKey = today;
         window.saveStats();
         window.updateStreakDisplay();
+        publishResult(win);
     };
+
+    // Los intentos usados definen el puntaje: adivinar en la primera vale más que en la última.
+    function scoreFor(win, attemptsUsed) {
+        if (!win) return 0;
+        return Math.max(10, 100 - (attemptsUsed - 1) * 15);
+    }
+
+    async function publishResult(win) {
+        const attemptsUsed = win ? Math.min(currentRow + 1, BOARD_ROWS) : BOARD_ROWS;
+        const elapsed = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
+        const score = scoreFor(win, attemptsUsed);
+
+        if (window.CrackTotalProgressBridge) {
+            window.CrackTotalProgressBridge.reportMatch({
+                gameId: 'wordle',
+                gameName: 'Wordle Futbolero',
+                won: win,
+                score: score,
+                correctAnswers: win ? 1 : 0,
+                incorrectAnswers: win ? 0 : 1,
+                durationSec: elapsed,
+                dailyChallenge: true,
+                meta: { attempts: attemptsUsed }
+            });
+        }
+
+        if (!window.firebaseService || typeof window.firebaseService.saveMatch !== 'function') return;
+        try {
+            const playerName = window.CrackTotalProfile
+                ? await window.CrackTotalProfile.ensurePlayerName({ reason: 'publish-score' })
+                : localStorage.getItem('playerName');
+            if (!playerName) return;
+
+            await window.firebaseService.saveMatch('wordle', {
+                playerName,
+                score: score,
+                correctAnswers: win ? 1 : 0,
+                totalQuestions: 1,
+                accuracy: win ? 100 : 0,
+                duration: elapsed,
+                gameResult: win ? 'victory' : 'defeat',
+                resultDescription: win
+                    ? `Adivinada en ${attemptsUsed} ${attemptsUsed === 1 ? 'intento' : 'intentos'}`
+                    : 'No adivinó la palabra del día',
+                gameVersion: '1.0'
+            });
+        } catch (error) {
+            console.warn('Wordle saveMatch error', error);
+        }
+    }
     window.openResultModal = function(win){
         const modal = document.getElementById('wordleResultModal');
         if (!modal) return;
