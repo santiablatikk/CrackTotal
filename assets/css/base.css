@@ -24,6 +24,7 @@ html {
     line-height: 1.6;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
+    overflow-x: clip;
 }
 
 body {
@@ -38,6 +39,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     font-feature-settings: "liga", "kern";
+    overflow-x: clip;
 }
 
 /* Mejorar la legibilidad en dispositivos de alta densidad */
