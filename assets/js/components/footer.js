@@ -45,6 +45,7 @@
             '<li><a href="cookies.html">Cookies</a></li>' +
             '<li><a href="terminos.html">Términos</a></li>' +
             '<li><a href="ads-policy.html">Publicidad</a></li>' +
+            '<li><a href="disclaimer.html">Disclaimer</a></li>' +
             '</ul>' +
             '</div>' +
             '</div>' +

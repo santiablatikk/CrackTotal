@@ -913,7 +913,7 @@ function promptForRoomPassword(roomName, callback) {
     
     // Estilo de foco
     passwordInput.addEventListener('focus', () => {
-        passwordInput.style.borderColor = 'var(--qsm-purple, #a651ff)';
+        passwordInput.style.borderColor = 'var(--qsm-purple, #79f2a6)';
     });
     
     passwordInput.addEventListener('blur', () => {
@@ -930,7 +930,8 @@ function promptForRoomPassword(roomName, callback) {
     confirmButton.textContent = 'Unirse';
     confirmButton.style.flex = '1';
     confirmButton.style.padding = '10px';
-    confirmButton.style.backgroundColor = 'var(--qsm-purple, #a651ff)';
+    confirmButton.style.backgroundColor = 'var(--qsm-purple, #79f2a6)';
+    confirmButton.style.color = '#04120a';
     confirmButton.style.color = 'white';
     confirmButton.style.border = 'none';
     confirmButton.style.borderRadius = '8px';
@@ -945,7 +946,8 @@ function promptForRoomPassword(roomName, callback) {
     });
     
     confirmButton.addEventListener('mouseout', () => {
-        confirmButton.style.backgroundColor = 'var(--qsm-purple, #a651ff)';
+        confirmButton.style.backgroundColor = 'var(--qsm-purple, #79f2a6)';
+    confirmButton.style.color = '#04120a';
         confirmButton.style.transform = 'translateY(0)';
     });
     

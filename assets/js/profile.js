@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Handle initial tab from URL hash
         const urlHash = window.location.hash.substring(1);
-        const validTabs = ['pasalache', 'quiensabemas', 'mentiroso', 'crackrapido', 'logros'];
+        const validTabs = ['pasalache', 'quiensabemas', 'mentiroso', 'top10', 'wordle', 'logros'];
         
         if (urlHash && validTabs.includes(urlHash)) {
             const targetTab = document.querySelector(`[data-tab="${urlHash}"]`);
@@ -257,39 +257,11 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // --- Mostrar Estadísticas de Crack Rápido ---
-        displayCrackRapidoStats();
+        // Crack Rápido retirado del catálogo: no renderizar stats legacy.
     }
 
     function displayCrackRapidoStats() {
-        const crackRapidoStats = loadCrackRapidoStats();
-        
-        // Safely update elements if they exist
-        const elements = {
-            gamesPlayed: document.getElementById('stats-crackrapido-gamesPlayed'),
-            bestScore: document.getElementById('stats-crackrapido-bestScore'),
-            totalCorrect: document.getElementById('stats-crackrapido-totalCorrect'),
-            bestStreak: document.getElementById('stats-crackrapido-bestStreak'),
-            averageAccuracy: document.getElementById('stats-crackrapido-averageAccuracy'),
-            averageSpeed: document.getElementById('stats-crackrapido-averageSpeed')
-        };
-
-        if (elements.gamesPlayed) elements.gamesPlayed.textContent = crackRapidoStats.gamesPlayed;
-        if (elements.bestScore) elements.bestScore.textContent = crackRapidoStats.bestScore;
-        if (elements.totalCorrect) elements.totalCorrect.textContent = crackRapidoStats.totalCorrect;
-        if (elements.bestStreak) elements.bestStreak.textContent = crackRapidoStats.bestStreak;
-        
-        // Calculate average accuracy
-        const averageAccuracy = crackRapidoStats.gamesPlayed > 0 ? 
-            Math.round((crackRapidoStats.totalCorrect / (crackRapidoStats.gamesPlayed * 20)) * 100) : 0;
-        if (elements.averageAccuracy) elements.averageAccuracy.textContent = `${averageAccuracy}%`;
-        
-        // Calculate average speed (estimate - 5 seconds per question with bonus for speed)
-        const averageSpeed = crackRapidoStats.gamesPlayed > 0 ? 
-            (crackRapidoStats.totalCorrect * 3.5) / crackRapidoStats.totalCorrect : 0;
-        if (elements.averageSpeed) elements.averageSpeed.textContent = `${averageSpeed.toFixed(1)}s`;
-
-        console.log("Estadísticas de Crack Rápido cargadas:", crackRapidoStats);
+        return;
     }
 
     // --- Lógica para el botón de restablecer --- 
@@ -628,51 +600,7 @@ if (typeof window !== 'undefined') {
     };
 }
 
-// Función para cargar estadísticas de Crack Rápido desde Firebase
 async function loadCrackRapidoFirebaseStats() {
-    // Asegurar que los elementos existan
-    const elements = {
-        gamesPlayed: document.getElementById('stats-crackrapido-gamesPlayed'),
-        bestScore: document.getElementById('stats-crackrapido-bestScore'),
-        totalCorrect: document.getElementById('stats-crackrapido-totalCorrect'),
-        bestStreak: document.getElementById('stats-crackrapido-bestStreak'),
-        averageAccuracy: document.getElementById('stats-crackrapido-averageAccuracy'),
-        averageSpeed: document.getElementById('stats-crackrapido-averageSpeed')
-    };
-
-    // Valores por defecto (primero cargar desde localStorage)
-    let defaultStats = loadCrackRapidoStats();
-
-    try {
-        const crackRapidoStats = await window.firebaseService?.getUserStats('crackrapido');
-        if (crackRapidoStats) {
-            defaultStats = {
-                gamesPlayed: Math.max(defaultStats.gamesPlayed, crackRapidoStats.totalPlayed || 0),
-                bestScore: Math.max(defaultStats.bestScore, crackRapidoStats.bestScore || 0),
-                totalCorrect: Math.max(defaultStats.totalCorrect, crackRapidoStats.totalCorrect || 0),
-                bestStreak: defaultStats.bestStreak
-            };
-        }
-    } catch (error) {
-        console.warn("Error cargando estadísticas de Crack Rápido desde Firebase:", error);
-    }
-
-    // Actualizar elementos con los datos obtenidos (de Firebase/localStorage o por defecto)
-    if (elements.gamesPlayed) elements.gamesPlayed.textContent = defaultStats.gamesPlayed;
-    if (elements.bestScore) elements.bestScore.textContent = defaultStats.bestScore;
-    if (elements.totalCorrect) elements.totalCorrect.textContent = defaultStats.totalCorrect;
-    if (elements.bestStreak) elements.bestStreak.textContent = defaultStats.bestStreak;
-    
-    // Calculate derived statistics
-    const averageAccuracy = defaultStats.gamesPlayed > 0 ? 
-        Math.round((defaultStats.totalCorrect / (defaultStats.gamesPlayed * 20)) * 100) : 0;
-    if (elements.averageAccuracy) elements.averageAccuracy.textContent = `${averageAccuracy}%`;
-    
-    // Estimate average speed (more realistic calculation)
-    const averageSpeed = defaultStats.totalCorrect > 0 ? 
-        Math.max(1.5, 5 - (defaultStats.bestStreak * 0.1)) : 5.0;
-    if (elements.averageSpeed) elements.averageSpeed.textContent = `${averageSpeed.toFixed(1)}s`;
-
-    console.log("Estadísticas de Crack Rápido cargadas (Firebase + localStorage):", defaultStats);
-    return defaultStats;
+    // Juego retirado — no-op para no romper callers legacy.
+    return getDefaultCrackRapidoStats();
 } 

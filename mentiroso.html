@@ -110,8 +110,8 @@
     <script src="assets/js/firebase-service.js?v=202505272312"></script>
     <script src="assets/js/logros.js?v=202505272312"></script>
     <script src="assets/js/mentiroso.js?v=202505272312"></script>
-    <link rel="stylesheet" href="assets/css/home.css?v=20260803n">
-    <link rel="stylesheet" href="assets/css/discover.css?v=20260803n">
+    <link rel="stylesheet" href="assets/css/home.css?v=20260804v">
+    <link rel="stylesheet" href="assets/css/discover.css?v=20260804v">
     <link rel="stylesheet" href="assets/css/game-shell.css?v=20260803n">
     <link rel="stylesheet" href="assets/css/game-shell.css?v=20260803m">
 </head>
@@ -404,11 +404,11 @@
     
     <style>
         :root {
-            --qsm-purple: #a651ff;
-            --qsm-purple-2: #7a3bff;
+            --qsm-purple: #79f2a6;
+            --qsm-purple-2: #22c55e;
             --qsm-accent: #30d158;
             --qsm-card: rgba(20, 22, 35, 0.9);
-            --qsm-border: rgba(166, 81, 255, 0.25);
+            --qsm-border: rgba(121, 242, 166, 0.25);
             --qsm-shadow: 0 10px 25px rgba(0,0,0,.35);
         }
 
@@ -421,10 +421,10 @@
         .lobby-card h3 { display:flex; align-items:center; gap:8px; margin: 4px 0 12px; }
 
         .lobby-input, .modern-input, .modern-textarea { width: 100%; padding: 12px 14px; border-radius: 10px; border:1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.06); color:#fff; outline:none; transition:.2s; }
-        .lobby-input:focus, .modern-input:focus, .modern-textarea:focus { border-color: var(--qsm-purple); box-shadow: 0 0 0 3px rgba(166,81,255,.2); }
+        .lobby-input:focus, .modern-input:focus, .modern-textarea:focus { border-color: var(--qsm-purple); box-shadow: 0 0 0 3px rgba(121,242,166,.2); }
 
         .lobby-button { display:inline-flex; align-items:center; gap:8px; border:0; border-radius:12px; padding:12px 16px; cursor:pointer; transition:.2s; font-weight:700; letter-spacing:.3px; }
-        .primary-button { background: linear-gradient(135deg, var(--qsm-purple), var(--qsm-purple-2)); color:#fff; }
+        .primary-button { background: linear-gradient(135deg, #79f2a6, #22c55e); color:#04120a; }
         .secondary-button { background: linear-gradient(135deg, #374151, #2d3748); color:#e6e6e6; }
         .danger-button { background: linear-gradient(135deg, #ef4444, #dc2626); color:#fff; }
         .lobby-button:hover { transform: translateY(-1px); filter: brightness(1.05); }
@@ -436,18 +436,18 @@
         .players-info-header { display:flex; align-items:center; justify-content:center; gap:10px; }
         .game-status { background: rgba(30,32,45,.9); padding: 14px; border-radius: 12px; margin: 10px 0 14px; display:flex; justify-content:space-between; align-items:center; border:1px solid var(--qsm-border); box-shadow: var(--qsm-shadow); }
         .player-box { background: rgba(16,17,26,.8); padding: 10px 12px; border-radius: 10px; transition:.2s; border:1px solid rgba(255,255,255,.1); box-shadow: 0 4px 8px rgba(0,0,0,.2); display:flex; align-items:center; gap:10px; }
-        .player-box .player-avatar { width: 40px; height: 40px; display:flex; align-items:center; justify-content:center; border-radius: 50%; background: rgba(166,81,255,.22); }
+        .player-box .player-avatar { width: 40px; height: 40px; display:flex; align-items:center; justify-content:center; border-radius: 50%; background: rgba(121,242,166,.22); }
         .vs-separator { color: rgba(255,255,255,.6); font-weight:800; margin:0 8px; background: rgba(255,255,255,.12); padding: 4px 10px; border-radius: 10px; }
 
         /* Barra de categorías */
         .categories-progress { background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); }
         .category-pill { background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); opacity: .9; }
-        .category-pill.active { background: rgba(166,81,255,.25); border-color: var(--qsm-border); }
+        .category-pill.active { background: rgba(121,242,166,.25); border-color: var(--qsm-border); }
         .category-pill.completed { background: rgba(34,197,94,.25); border-color: rgba(34,197,94,.45); }
 
         /* Carta principal del juego */
         .mentiroso-card { background: var(--qsm-card); border:1px solid var(--qsm-border); border-radius: 16px; box-shadow: var(--qsm-shadow); }
-        .mentiroso-challenge-text { background: radial-gradient(100% 100% at 50% 0%, rgba(166,81,255,.15), rgba(0,0,0,0)); border-left: 4px solid var(--qsm-purple); }
+        .mentiroso-challenge-text { background: radial-gradient(100% 100% at 50% 0%, rgba(121,242,166,.15), rgba(0,0,0,0)); border-left: 4px solid var(--qsm-purple); }
 
         /* Botones de acción */
         .mentiroso-action-btn { padding: 12px 16px; border-radius: 12px; border:0; cursor:pointer; }

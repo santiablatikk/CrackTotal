@@ -1,5 +1,5 @@
 // Service Worker optimizado para Crack Total
-const APP_VERSION = '3.7.0';
+const APP_VERSION = '3.8.0';
 const CACHE_NAME = `crack-total-v${APP_VERSION}`;
 const STATIC_CACHE_NAME = `crack-total-static-v${APP_VERSION}`;
 const DYNAMIC_CACHE_NAME = `crack-total-dynamic-v${APP_VERSION}`;

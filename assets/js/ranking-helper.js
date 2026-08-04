@@ -695,11 +695,13 @@ class RankingHelper {
     // Obtener nombre de visualización del juego
     getGameDisplayName(gameType) {
         const names = {
-            'pasalache': 'Pasalache',
+            'pasalache': 'Pasala Che',
             'mentiroso': 'Mentiroso',
-            'crackrapido': 'Crack Rápido',
             'quiensabemas': 'Quién Sabe Más',
-            '100futboleros': '100 Futboleros'
+            'top10': 'Top 10',
+            'wordle': 'Wordle Futbolero',
+            'crackrapido': 'Archivado',
+            '100futboleros': 'Archivado'
         };
         
         return names[gameType] || gameType;

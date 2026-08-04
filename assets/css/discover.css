@@ -173,7 +173,81 @@ body.discover-page > a.home-link {
 }
 
 .discover-page .blog-detail-header {
-    border-bottom-color: rgba(var(--ct-primary-rgb, 121, 242, 166), 0.45) !important;
+    border-bottom-color: rgba(121, 242, 166, 0.55) !important;
+}
+
+/* Article pages: kill leftover purple/pink brand accents from inline <style> eras */
+.discover-page .blog-detail-header .title-text,
+.discover-page .blog-detail-header h1 {
+    font-family: "Oswald", sans-serif !important;
+    color: var(--home-text, #f7f9fc) !important;
+}
+
+.discover-page .blog-detail-container {
+    background: rgba(11, 21, 36, 0.88) !important;
+    border: 1px solid var(--home-line, rgba(255, 255, 255, 0.12)) !important;
+    border-radius: 18px !important;
+    box-shadow: none !important;
+    color: var(--home-text, #f7f9fc);
+}
+
+.discover-page .blog-detail-container::before {
+    background: linear-gradient(90deg, transparent, rgba(121, 242, 166, 0.55), transparent) !important;
+}
+
+.discover-page .blog-detail-container h2,
+.discover-page .blog-detail-container h3,
+.discover-page .blog-content h2,
+.discover-page .blog-content h3 {
+    font-family: "Oswald", sans-serif;
+    color: var(--home-text, #f7f9fc);
+}
+
+.discover-page .blog-detail-container a,
+.discover-page .blog-content a {
+    color: var(--home-primary, #79f2a6);
+}
+
+.discover-page .blog-meta,
+.discover-page .blog-date,
+.discover-page .updated-label {
+    color: var(--home-muted, #aebbd0) !important;
+}
+
+.discover-page .stat-number,
+.discover-page .highlight-stat,
+.discover-page .legend-year,
+.discover-page .accent-text {
+    color: var(--home-primary, #79f2a6) !important;
+}
+
+.discover-page .primary-button,
+.discover-page a.primary-button,
+.discover-page .cta-button,
+.discover-page .read-more {
+    background: var(--home-primary, #79f2a6) !important;
+    color: #04120a !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    border-radius: 12px !important;
+    font-weight: 800 !important;
+    box-shadow: none !important;
+}
+
+/* Legal / static pages: Montserrat + Home surface */
+.discover-page.privacy-page-body,
+.discover-page.cookies-page-body,
+.discover-page.terms-page-body,
+.discover-page.disclaimer-page-body,
+.discover-page.ads-policy-page-body,
+.discover-page.about-page-body,
+.discover-page.contact-page-body {
+    font-family: "Montserrat", sans-serif !important;
+}
+
+.discover-page .page-container h1,
+.discover-page .static-content h1 {
+    font-family: "Oswald", sans-serif !important;
+    color: var(--home-text, #f7f9fc) !important;
 }
 
 .discover-main {
