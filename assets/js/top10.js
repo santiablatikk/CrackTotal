@@ -11,7 +11,12 @@
     'messi': ['leo messi','lionel'],
     'van persie': ['vanpersie', 'persie'],
     'higuaín': ['higuain','pipita'],
-    'müller': ['muller']
+    'müller': ['muller'],
+    'paris saint-germain': ['psg', 'paris sg'],
+    'psg': ['paris saint-germain', 'paris sg'],
+    'españa': ['spain', 'seleccion espanola'],
+    'dembélé': ['dembele', 'ousmane dembele'],
+    'flamengo': ['cr flamengo', 'mengao']
   };
 
   let topic = null; // { id, title, source, answers: ['messi (AR)', ...] }

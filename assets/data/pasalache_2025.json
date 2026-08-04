@@ -11,7 +11,7 @@
         "respuesta": "Ancelotti"
       },
       {
-        "pregunta": "¿Apellido del delantero argentino apodado 'La Araña', figura del Manchester City?",
+        "pregunta": "¿Apellido del delantero argentino apodado 'La Araña', figura del Atlético de Madrid?",
         "respuesta": "Álvarez"
       },
       {
@@ -158,6 +158,10 @@
     "letra": "D",
     "preguntas": [
       {
+        "pregunta": "¿Apellido del francés ganador del Balón de Oro 2025?",
+        "respuesta": "Dembélé"
+      },
+      {
         "pregunta": "¿Ciudad del club subcampeón de la Champions 2024 (Borussia …)?",
         "respuesta": "Dortmund"
       },
@@ -203,6 +207,10 @@
     "letra": "E",
     "preguntas": [
       {
+        "pregunta": "¿Selección campeona del Mundial 2026?",
+        "respuesta": "España"
+      },
+      {
         "pregunta": "¿País sede del Mundial de Clubes 2025?",
         "respuesta": "Estados Unidos"
       },
@@ -247,6 +255,10 @@
   {
     "letra": "F",
     "preguntas": [
+      {
+        "pregunta": "¿Club brasileño campeón de la Copa Libertadores 2025?",
+        "respuesta": "Flamengo"
+      },
       {
         "pregunta": "¿Cómo se llama la federación internacional que organiza el Mundial de Clubes?",
         "respuesta": "FIFA"
@@ -650,6 +662,10 @@
     "letra": "P",
     "preguntas": [
       {
+        "pregunta": "¿Club francés campeón de la Champions League 2024/25?",
+        "respuesta": "Paris Saint-Germain"
+      },
+      {
         "pregunta": "¿Club brasileño tricampeón de América en 2020-2021?",
         "respuesta": "Palmeiras"
       },
@@ -881,6 +897,10 @@
   {
     "letra": "T",
     "preguntas": [
+      {
+        "pregunta": "CONTIENE T: ¿Apellido del delantero español autor del gol de la final del Mundial 2026?",
+        "respuesta": "Torres"
+      },
       {
         "pregunta": "¿Apellido del delantero argentino campeón con Boca y Manchester City, Carlos …?",
         "respuesta": "Tevez"

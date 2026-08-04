@@ -365,6 +365,28 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     // +++ Fin nueva función +++
 
+    // Alias mínimos de aceptación (PSG/España/etc.) sin tocar scoring ni UI
+    const ANSWER_ALIASES = {
+        'paris saint-germain': ['psg', 'paris sg', 'paris saint germain'],
+        'paris saint germain': ['psg', 'paris sg', 'paris saint-germain'],
+        'espana': ['spain', 'seleccion espanola', 'la roja'],
+        'dembele': ['ousmane dembele'],
+        'mbappe': ['kylian mbappe'],
+        'flamengo': ['cr flamengo', 'mengao']
+    };
+
+    function answersMatchWithAliases(userAnswerNorm, correctAnswerNorm) {
+        if (!userAnswerNorm || !correctAnswerNorm) return false;
+        const direct = ANSWER_ALIASES[correctAnswerNorm] || [];
+        if (direct.map(normalizeResponseText).includes(userAnswerNorm)) return true;
+        for (const [canonical, list] of Object.entries(ANSWER_ALIASES)) {
+            const canon = normalizeResponseText(canonical);
+            const pool = [canon, ...list.map(normalizeResponseText)];
+            if (pool.includes(correctAnswerNorm) && pool.includes(userAnswerNorm)) return true;
+        }
+        return false;
+    }
+
     // Function to get default stats object
     function getDefaultStats() {
         return {
@@ -1601,6 +1623,10 @@ document.addEventListener('DOMContentLoaded', function() {
     function isAnswerCorrectEnough(userAnswerNorm, correctAnswerNorm) { // Ambas ya vienen normalizadas
         // Exact match
         if (userAnswerNorm === correctAnswerNorm) {
+            return true;
+        }
+
+        if (answersMatchWithAliases(userAnswerNorm, correctAnswerNorm)) {
             return true;
         }
         

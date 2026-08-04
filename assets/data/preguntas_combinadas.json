@@ -641,7 +641,7 @@
         "respuesta": "Casemiro"
       },
       {
-        "pregunta": "Apellido del delantero uruguayo que actualmente juega en Boca Juniors.",
+        "pregunta": "Apellido del delantero uruguayo que jugó en Boca Juniors entre 2023 y 2026.",
         "respuesta": "Cavani"
       },
       {
@@ -841,7 +841,7 @@
         "respuesta": "Cagliari"
       },
       {
-        "pregunta": "¿Cuál es el apodo del entrenador brasileño actualmente en Atlético Mineiro?",
+        "pregunta": "¿Cuál es el apodo del entrenador brasileño conocido por dirigir a Atlético Mineiro?",
         "respuesta": "Cuca"
       },
       {
@@ -873,7 +873,7 @@
         "respuesta": "Claudio Ranieri"
       },
       {
-        "pregunta": "Apellido del delantero uruguayo que ha jugado en Napoli, PSG, Manchester United y actualmente en Boca Juniors",
+        "pregunta": "Apellido del delantero uruguayo que ha jugado en Napoli, PSG, Manchester United y también jugó en Boca Juniors",
         "respuesta": "Cavani"
       },
       {
@@ -929,7 +929,7 @@
         "respuesta": "Croacia"
       },
       {
-        "pregunta": "¿Apellido del delantero uruguayo que ha jugado en clubes como Napoli, PSG, Manchester United y actualmente en Boca Juniors?",
+        "pregunta": "¿Apellido del delantero uruguayo que ha jugado en clubes como Napoli, PSG, Manchester United y también jugó en Boca Juniors?",
         "respuesta": "Cavani"
       },
       {
@@ -973,6 +973,10 @@
   {
     "letra": "D",
     "preguntas": [
+      {
+        "pregunta": "¿Apellido del francés ganador del Balón de Oro 2025?",
+        "respuesta": "Dembélé"
+      },
       {
         "pregunta": "Apellido del futbolista argentino campeón del mundo 2022, autor de goles clave, apodado 'Fideo'.",
         "respuesta": "Di Maria"
@@ -1307,6 +1311,10 @@
     "letra": "E",
     "preguntas": [
       {
+        "pregunta": "¿Selección campeona del Mundial 2026?",
+        "respuesta": "España"
+      },
+      {
         "pregunta": "CONTIENE E: Apellido del delantero francés Balón de Oro 2022, actualmente en Al-Ittihad.",
         "respuesta": "Benzema"
       },
@@ -1599,6 +1607,10 @@
   {
     "letra": "F",
     "preguntas": [
+      {
+        "pregunta": "¿Club campeón de la Copa Libertadores 2025?",
+        "respuesta": "Flamengo"
+      },
       {
         "pregunta": "CONTIENE F: Apellido del arquero italiano campeón del mundo 2006.",
         "respuesta": "Buffon"
@@ -2157,7 +2169,7 @@
         "respuesta": "Grecia"
       },
       {
-        "pregunta": "¿Apellido del ex mediocampista inglés, leyenda y capitán del Liverpool FC, actualmente entrenador?",
+        "pregunta": "¿Apellido del ex mediocampista inglés, leyenda y capitán del Liverpool FC, exentrenador de clubes como el Aston Villa?",
         "respuesta": "Gerrard"
       },
       {
@@ -2892,7 +2904,7 @@
         "respuesta": "Joshua Kimmich"
       },
       {
-        "pregunta": "¿Nombre completo del delantero argentino, campeón del mundo en 2022, apodado 'La Araña', que jugó en River Plate y actualmente milita en el Manchester City?",
+        "pregunta": "¿Nombre completo del delantero argentino, campeón del mundo en 2022, apodado 'La Araña', que jugó en River Plate y que fichó por el Atlético de Madrid?",
         "respuesta": "Julián Álvarez"
       },
       {
@@ -3101,7 +3113,7 @@
         "respuesta": "Saka"
       },
       {
-        "pregunta": "CONTIENE K: Apellido del ex lateral inglés del Manchester City. Actualmente en Milan.",
+        "pregunta": "CONTIENE K: Apellido del ex lateral inglés del Manchester City. que también jugó en el Milan.",
         "respuesta": "Walker"
       },
       {
@@ -3603,8 +3615,8 @@
         "respuesta": "Modric"
       },
       {
-        "pregunta": "Apellido del delantero francés del PSG",
-        "respuesta": "Mbappe"
+        "pregunta": "¿Apellido del delantero francés del Real Madrid?",
+        "respuesta": "Mbappé"
       },
       {
         "pregunta": "Apellido del delantero argentino del Inter Miami",
@@ -4090,6 +4102,10 @@
     "letra": "P",
     "preguntas": [
       {
+        "pregunta": "¿Qué club ganó la Champions League 2024/25?",
+        "respuesta": "Paris Saint-Germain"
+      },
+      {
         "pregunta": "CONTIENE P: Apellido del defensor español del Al-Nassr.",
         "respuesta": "Laporte"
       },
@@ -4103,7 +4119,7 @@
       },
       {
         "pregunta": "Club francés de la capital, donde jugaron Neymar y Mbappé.",
-        "respuesta": "Paris Saint-Germain"
+        "respuesta": "Real Madrid"
       },
       {
         "pregunta": "Apellido del ex mediocampista italiano, campeón del mundo 2006, famoso por su clase y visión de juego.",
