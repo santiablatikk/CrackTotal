@@ -34,6 +34,9 @@ RewriteRule ^(.+)/$ /$1 [L,R=301]
 # 6. Redirecciones específicas para páginas problemáticas
 RewriteRule ^search/?$ / [L,R=301]
 
+# Duplicado editorial: historia-mundial → worldcups (canónico)
+RewriteRule ^blog-detail-historia-mundial\.html$ /blog-detail-worldcups.html [L,R=301,NC]
+
 # Cache Control - CONFIGURACIÓN PARA PRODUCCIÓN
 <IfModule mod_expires.c>
     ExpiresActive On

@@ -53,6 +53,15 @@ build/
 temp/
 tmp/
 
+# Local audit / backup junk (never ship)
+reports/
+*.bak
+*.bak.json
+**/*.bak.json
+assets/data/*_backup.json
+firebase-debug.log
+google-indexing.json
+
 # Local development
 .local
 

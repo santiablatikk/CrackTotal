@@ -115,7 +115,7 @@
     
     <url>
         <loc>https://cracktotal.com/blog-detail-worldcups.html</loc>
-        <lastmod>2025-06-07</lastmod>
+        <lastmod>2026-08-04</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -164,13 +164,8 @@
     
     <!-- Removed: blog-detail-community.html (no existe) -->
     
-    <url>
-        <loc>https://cracktotal.com/blog-detail-historia-mundial.html</loc>
-        <lastmod>2025-06-07</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    
+    <!-- Redirect canónico: blog-detail-historia-mundial.html → blog-detail-worldcups.html -->
+
     <url>
         <loc>https://cracktotal.com/blog-detail-estilos-juego.html</loc>
         <lastmod>2025-06-07</lastmod>
@@ -244,7 +239,7 @@
     
     <url>
         <loc>https://cracktotal.com/blog-detail-mercado-pases.html</loc>
-        <lastmod>2025-06-07</lastmod>
+        <lastmod>2026-08-04</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
@@ -293,6 +288,20 @@
         <lastmod>2025-06-07</lastmod>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>
+    </url>
+
+    <url>
+        <loc>https://cracktotal.com/blog-detail-transferencias-caras.html</loc>
+        <lastmod>2026-08-04</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <url>
+        <loc>https://cracktotal.com/blog-detail-jungblut-top.html</loc>
+        <lastmod>2026-08-04</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
     </url>
     
     <!-- Páginas adicionales requeridas para AdSense -->

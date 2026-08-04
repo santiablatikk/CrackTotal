@@ -10,9 +10,9 @@ const VERSION = '20260801b';
 
 const SKIP = new Set([
     'index.html', // Home keeps its own shell
-    'template-enhanced.html',
     '404.html',
-    '500.html'
+    '500.html',
+    'blog-detail-historia-mundial.html' // redirect stub → worldcups
 ]);
 
 const ACTIVE_BY_FILE = {
