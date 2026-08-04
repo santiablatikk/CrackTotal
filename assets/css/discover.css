@@ -22,6 +22,69 @@ body.discover-page .site-footer.ct-footer:not(.home-footer) {
     display: none !important;
 }
 
+/* Neutralize leftover legacy chrome if styles.css somehow loads */
+body.discover-page .app-header,
+body.discover-page .main-navigation:not(.home-navbar):not(.ct-navbar) {
+    display: none !important;
+}
+
+body.discover-page {
+    font-family: "Montserrat", sans-serif !important;
+}
+
+body.discover-page h1,
+body.discover-page h2,
+body.discover-page .discover-hero h1,
+body.discover-page .home-section-heading h2 {
+    font-family: "Oswald", sans-serif;
+}
+
+body.discover-page .discover-hero-brand {
+    display: none; /* brand lives in home-header shell */
+}
+
+/* Blog cards on discover: keep interactive cards, Home-aligned */
+body.discover-page .blog-card,
+body.discover-page .blog-entries .blog-card {
+    background: rgba(11, 21, 36, 0.72);
+    border: 1px solid var(--home-line, rgba(255, 255, 255, 0.12));
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: none;
+}
+
+body.discover-page .blog-card h2,
+body.discover-page .blog-card-content h2 {
+    font-family: "Oswald", sans-serif;
+    color: var(--home-text, #f7f9fc);
+}
+
+body.discover-page .blog-card p,
+body.discover-page .blog-date {
+    color: var(--home-muted, #aebbd0);
+}
+
+body.discover-page .primary-button,
+body.discover-page a.primary-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    min-height: 44px;
+    padding: 0.7rem 1.1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: var(--home-primary, #79f2a6);
+    color: #04120a !important;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+body.discover-page .primary-button:hover,
+body.discover-page a.primary-button:hover {
+    background: #a5f7c3;
+    color: #04120a !important;
+}
+
 body.discover-page.ranking-page-body,
 body.discover-page.logros-page,
 body.discover-page.profile-body,
