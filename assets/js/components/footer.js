@@ -32,7 +32,7 @@
             '<div>' +
             '<h2>Descubrí</h2>' +
             '<ul class="home-footer-links">' +
-            '<li><a href="blog.html">Blog</a></li>' +
+            '<li><a href="blog.html">Actualidad</a></li>' +
             '<li><a href="about.html">Acerca de</a></li>' +
             '<li><a href="contact.html">Contacto</a></li>' +
             '<li><button class="home-share" type="button" data-ct-share>Compartir</button></li>' +
