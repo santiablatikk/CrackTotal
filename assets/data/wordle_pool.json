@@ -320,16 +320,6 @@
     "birth": 1976
   },
   {
-    "id": 31,
-    "type": "player",
-    "name": "Andrea Pirlo",
-    "answer": "pirlo",
-    "nationality": "ITA",
-    "position": "MED",
-    "club": "Juventus",
-    "birth": 1979
-  },
-  {
     "id": 32,
     "type": "player",
     "name": "Johan Cruyff",
@@ -468,16 +458,6 @@
     "role": "DT",
     "club": "Real Madrid",
     "birth": 1959
-  },
-  {
-    "id": 106,
-    "type": "coach",
-    "name": "Zinedine Zidane",
-    "answer": "zidane",
-    "nationality": "FRA",
-    "role": "DT",
-    "club": "Real Madrid",
-    "birth": 1972
   },
   {
     "id": 107,
@@ -740,16 +720,6 @@
     "birth": 1983
   },
   {
-    "id": 133,
-    "type": "player",
-    "name": "Alexis Sanchez",
-    "answer": "sanchez",
-    "nationality": "CHI",
-    "position": "DEL",
-    "club": "Inter",
-    "birth": 1988
-  },
-  {
     "id": 134,
     "type": "player",
     "name": "Gary Medel",
@@ -928,5 +898,25 @@
     "position": "Delantero",
     "club": "Paris Saint-Germain",
     "birth": 1997
+  },
+  {
+    "id": "mbappe-rm",
+    "type": "player",
+    "name": "Kylian Mbappé",
+    "answer": "MBAPPE",
+    "nationality": "FRA",
+    "position": "DEL",
+    "club": "Real Madrid",
+    "birth": 1998
+  },
+  {
+    "id": "julian-alvarez",
+    "type": "player",
+    "name": "Julián Álvarez",
+    "answer": "ALVAREZ",
+    "nationality": "ARG",
+    "position": "DEL",
+    "club": "Atlético Madrid",
+    "birth": 2000
   }
 ]

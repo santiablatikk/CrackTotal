@@ -7,11 +7,11 @@
         "respuesta": "Argentina"
       },
       {
-        "pregunta": "¿Apellido del técnico del Real Madrid campeón de la Champions 2024?",
+        "pregunta": "¿Apellido del técnico del Real Madrid campeón de la Champions 2023/24?",
         "respuesta": "Ancelotti"
       },
       {
-        "pregunta": "¿Apellido del delantero argentino apodado 'La Araña', figura del Atlético de Madrid?",
+        "pregunta": "¿Apellido del delantero argentino apodado 'La Araña', del Atlético de Madrid?",
         "respuesta": "Álvarez"
       },
       {
@@ -19,7 +19,7 @@
         "respuesta": "Atalanta"
       },
       {
-        "pregunta": "¿Club inglés donde ataja Emiliano 'Dibu' Martínez?",
+        "pregunta": "¿Club inglés donde se consagró Emiliano 'Dibu' Martínez como titular?",
         "respuesta": "Aston Villa"
       },
       {
@@ -39,15 +39,15 @@
         "respuesta": "Al Hilal"
       },
       {
-        "pregunta": "¿Club saudí donde juega Cristiano Ronaldo desde 2023?",
+        "pregunta": "¿Club saudí al que llegó Cristiano Ronaldo en 2023?",
         "respuesta": "Al Nassr"
       },
       {
-        "pregunta": "¿Actual entrenador del Liverpool 2024/25?",
+        "pregunta": "¿Entrenador neerlandés del Liverpool en la temporada 2024/25?",
         "respuesta": "Arne Slot"
       },
       {
-        "pregunta": "CONTIENE A: ¿Apellido del goleador noruego del Manchester City?",
+        "pregunta": "CONTIENE A: ¿Apellido del goleador noruego estrella del Manchester City?",
         "respuesta": "Haaland"
       },
       {
@@ -81,7 +81,7 @@
       },
       {
         "pregunta": "¿Club alemán más ganador de la Bundesliga?",
-        "respuesta": "Bayern Munich"
+        "respuesta": "Bayern Múnich"
       },
       {
         "pregunta": "¿Apellido del legendario defensor italiano del Milan, Franco …?",
@@ -125,7 +125,7 @@
         "respuesta": "Colombia"
       },
       {
-        "pregunta": "¿Apellido del lateral derecho del Real Madrid, Dani …?",
+        "pregunta": "¿Apellido del lateral derecho leyenda del Real Madrid, Dani …?",
         "respuesta": "Carvajal"
       },
       {
@@ -145,11 +145,11 @@
         "respuesta": "Celta de Vigo"
       },
       {
-        "pregunta": "¿Club brasileño de Belo Horizonte con cinco Libertadores?",
+        "pregunta": "¿Club brasileño de Belo Horizonte bicampeón de la Copa Libertadores?",
         "respuesta": "Cruzeiro"
       },
       {
-        "pregunta": "CONTIENE C: ¿Nombre del extremo brasileño del Real Madrid, figura en 2024?",
+        "pregunta": "CONTIENE C: ¿Nombre del extremo brasileño del Real Madrid, Vinicius …?",
         "respuesta": "Vinicius Junior"
       }
     ]
@@ -162,11 +162,11 @@
         "respuesta": "Dembélé"
       },
       {
-        "pregunta": "¿Ciudad del club subcampeón de la Champions 2024 (Borussia …)?",
+        "pregunta": "¿Ciudad del club subcampeón de la Champions 2023/24 (Borussia …)?",
         "respuesta": "Dortmund"
       },
       {
-        "pregunta": "¿Apellido del mediocampista belga del Manchester City, Kevin …?",
+        "pregunta": "¿Apellido del mediocampista belga del Napoli, Kevin …?",
         "respuesta": "De Bruyne"
       },
       {
@@ -198,7 +198,7 @@
         "respuesta": "Defensa y Justicia"
       },
       {
-        "pregunta": "CONTIENE D: ¿Apellido del mediocampista uruguayo del Real Madrid, Federico …?",
+        "pregunta": "CONTIENE D: ¿Apellido del mediocampista uruguayo estrella del Real Madrid, Federico …?",
         "respuesta": "Valverde"
       }
     ]
@@ -223,20 +223,20 @@
         "respuesta": "Europa"
       },
       {
-        "pregunta": "¿Club argentino de La Plata con 6 Copas Libertadores?",
+        "pregunta": "¿Club argentino de La Plata tetracampeón de la Copa Libertadores?",
         "respuesta": "Estudiantes de La Plata"
       },
       {
-        "pregunta": "¿País sudamericano que juega eliminatorias CONMEBOL y tiene capital en Quito?",
+        "pregunta": "¿País sudamericano de CONMEBOL con capital en Quito?",
         "respuesta": "Ecuador"
       },
       {
-        "pregunta": "¿Nombre y apellido del arquero argentino campeón del mundo apodado 'Dibu'?",
+        "pregunta": "¿Nombre y apellido del arquero argentino campeón del mundo 2022 apodado 'Dibu'?",
         "respuesta": "Emiliano Martínez"
       },
       {
-        "pregunta": "¿Nombre y apellido del defensor brasileño del Real Madrid?",
-        "respuesta": "Eder Militao"
+        "pregunta": "¿Nombre completo del defensor brasileño estrella del Real Madrid?",
+        "respuesta": "Éder Militão"
       },
       {
         "pregunta": "¿Nombre y apellido del campeón del mundo argentino que fichó por Chelsea en 2023?",
@@ -247,8 +247,8 @@
         "respuesta": "Erik ten Hag"
       },
       {
-        "pregunta": "¿País europeo campeón del Mundial 2010?",
-        "respuesta": "España"
+        "pregunta": "¿Estadio del SL Benfica en Lisboa, conocido como da Luz?",
+        "respuesta": "Estádio da Luz"
       }
     ]
   },
@@ -268,7 +268,7 @@
         "respuesta": "Fluminense"
       },
       {
-        "pregunta": "¿Apellido del volante inglés del Manchester City, Phil …?",
+        "pregunta": "¿Apellido del volante inglés figura del Manchester City, Phil …?",
         "respuesta": "Foden"
       },
       {
@@ -276,24 +276,24 @@
         "respuesta": "Fabio Cannavaro"
       },
       {
-        "pregunta": "¿Apodo del goleador colombiano Radamel García Zárate?",
+        "pregunta": "¿Apodo del goleador colombiano Radamel Falcao García Zárate?",
         "respuesta": "Falcao"
       },
       {
-        "pregunta": "¿Nombre y apellido del mediocampista uruguayo del Real Madrid, Federico …?",
+        "pregunta": "¿Nombre completo del mediocampista uruguayo estrella del Real Madrid?",
         "respuesta": "Federico Valverde"
       },
       {
         "pregunta": "¿Nombre y apellido del goleador húngaro leyenda del Real Madrid?",
-        "respuesta": "Ferenc Puskas"
+        "respuesta": "Ferenc Puskás"
       },
       {
-        "pregunta": "¿Club italiano de Florencia que juega en el Artemio Franchi?",
+        "pregunta": "¿Club italiano de Florencia con estadio Artemio Franchi?",
         "respuesta": "Fiorentina"
       },
       {
-        "pregunta": "¿Club brasileño de Río con más hinchas junto a Flamengo y Fluminense?",
-        "respuesta": "Flamengo"
+        "pregunta": "¿Club cearense de la Serie A brasileña, apodado Leão do Pici?",
+        "respuesta": "Fortaleza"
       },
       {
         "pregunta": "¿Nombre y apellido del ex mediocampista inglés del Chelsea que luego fue su DT?",
@@ -305,15 +305,15 @@
     "letra": "G",
     "preguntas": [
       {
-        "pregunta": "¿Apellido del entrenador del Manchester City desde 2016?",
+        "pregunta": "¿Apellido del DT del Manchester City campeón de la Champions 2022/23?",
         "respuesta": "Guardiola"
       },
       {
-        "pregunta": "¿Apellido del extremo argentino del Manchester United, Alejandro …?",
+        "pregunta": "¿Apellido del extremo argentino surgido en Manchester United, Alejandro …?",
         "respuesta": "Garnacho"
       },
       {
-        "pregunta": "¿Apellido del mediocampista español del Barcelona, Pablo …?",
+        "pregunta": "¿Apellido del mediocampista español surgido en el Barcelona, Pablo …?",
         "respuesta": "Gavi"
       },
       {
@@ -325,7 +325,7 @@
         "respuesta": "Griezmann"
       },
       {
-        "pregunta": "¿Club catalán revelación de 2022/23 y 2023/24 en LaLiga?",
+        "pregunta": "¿Club catalán revelación de LaLiga en 2022/23 y 2023/24?",
         "respuesta": "Girona"
       },
       {
@@ -334,7 +334,7 @@
       },
       {
         "pregunta": "¿Club brasileño de Porto Alegre conocido como el Tricolor Gaúcho?",
-        "respuesta": "Gremio"
+        "respuesta": "Grêmio"
       },
       {
         "pregunta": "¿Nombre y apellido del chileno apodado 'Pitbull'?",
@@ -350,7 +350,7 @@
     "letra": "H",
     "preguntas": [
       {
-        "pregunta": "¿Apellido del delantero noruego del Manchester City, Erling …?",
+        "pregunta": "¿Apellido del delantero noruego estrella del Manchester City, Erling …?",
         "respuesta": "Haaland"
       },
       {
@@ -362,7 +362,7 @@
         "respuesta": "Hugo Sánchez"
       },
       {
-        "pregunta": "¿Nombre y apellido del ex delantero argentino campeón con River y DT de Banfield?",
+        "pregunta": "¿Nombre y apellido del ex delantero argentino ídolo de River y DT de Banfield?",
         "respuesta": "Hernán Crespo"
       },
       {
@@ -378,7 +378,7 @@
         "respuesta": "Hulk"
       },
       {
-        "pregunta": "CONTIENE H: ¿Apellido del mediocampista inglés del Real Madrid, Jude …?",
+        "pregunta": "CONTIENE H: ¿Apellido del mediocampista inglés estrella del Real Madrid, Jude …?",
         "respuesta": "Bellingham"
       }
     ]
@@ -387,7 +387,7 @@
     "letra": "I",
     "preguntas": [
       {
-        "pregunta": "¿Club de la MLS donde juega Lionel Messi desde 2023?",
+        "pregunta": "¿Club de la MLS al que llegó Lionel Messi en 2023?",
         "respuesta": "Inter Miami"
       },
       {
@@ -403,7 +403,7 @@
         "respuesta": "Independiente"
       },
       {
-        "pregunta": "¿Apellido del delantero argentino del Galatasaray, Mauro …?",
+        "pregunta": "¿Apellido del delantero argentino ídolo de Inter y Galatasaray, Mauro …?",
         "respuesta": "Icardi"
       },
       {
@@ -424,7 +424,7 @@
     "letra": "J",
     "preguntas": [
       {
-        "pregunta": "¿Nombre de pila del delantero argentino apodado 'La Araña'?",
+        "pregunta": "¿Nombre de pila del delantero argentino 'La Araña' del Atlético de Madrid?",
         "respuesta": "Julián"
       },
       {
@@ -432,15 +432,15 @@
         "respuesta": "Juventus"
       },
       {
-        "pregunta": "¿Nombre y apellido del 10 colombiano campeón de 2014 en Brasil (BOTA de ORO asistencias)?",
+        "pregunta": "¿Nombre y apellido del 10 colombiano Bota de Oro del Mundial 2014?",
         "respuesta": "James Rodríguez"
       },
       {
-        "pregunta": "¿Nombre y apellido del máximo ídolo de Boca Juniors, Juan Román …?",
+        "pregunta": "¿Nombre completo del máximo ídolo de Boca Juniors apodado 'El Román'?",
         "respuesta": "Juan Román Riquelme"
       },
       {
-        "pregunta": "¿Nombre y apellido del delantero portugués del Barcelona cedido desde Atlético?",
+        "pregunta": "¿Nombre y apellido del delantero portugués que brilló en Atlético Madrid y Barcelona?",
         "respuesta": "João Félix"
       },
       {
@@ -448,15 +448,15 @@
         "respuesta": "José Mourinho"
       },
       {
-        "pregunta": "¿Nombre y apellido del lateral izquierdo español del Inter Miami?",
+        "pregunta": "¿Nombre y apellido del lateral izquierdo español compañero de Messi en Inter Miami?",
         "respuesta": "Jordi Alba"
       },
       {
-        "pregunta": "¿Nombre y apellido del central croata del Manchester City, Joško …?",
+        "pregunta": "¿Nombre completo del central croata figura del Manchester City?",
         "respuesta": "Joško Gvardiol"
       },
       {
-        "pregunta": "¿Nombre y apellido del extremo inglés del Manchester United, Jadon …?",
+        "pregunta": "¿Nombre completo del extremo inglés surgido en Manchester United?",
         "respuesta": "Jadon Sancho"
       }
     ]
@@ -465,19 +465,19 @@
     "letra": "K",
     "preguntas": [
       {
-        "pregunta": "¿Apellido del delantero inglés del Bayern/Spurs, Harry …?",
+        "pregunta": "¿Apellido del delantero inglés del Bayern Múnich, Harry …?",
         "respuesta": "Kane"
       },
       {
-        "pregunta": "¿Apellido del mediocampista alemán del Real Madrid, Toni …?",
+        "pregunta": "¿Apellido del mediocampista alemán leyenda del Real Madrid, Toni …?",
         "respuesta": "Kroos"
       },
       {
-        "pregunta": "¿Apellido del extremo georgiano del Napoli, Khvicha …?",
+        "pregunta": "¿Apellido del extremo georgiano figura del PSG, Khvicha …?",
         "respuesta": "Kvaratskhelia"
       },
       {
-        "pregunta": "¿Apellido del mediocampista alemán del Bayern, Joshua …?",
+        "pregunta": "¿Apellido del mediocampista alemán figura del Bayern Múnich, Joshua …?",
         "respuesta": "Kimmich"
       },
       {
@@ -485,11 +485,11 @@
         "respuesta": "Koulibaly"
       },
       {
-        "pregunta": "¿Nombre y apellido del arquero español del Real Madrid 2023/24?",
+        "pregunta": "¿Nombre y apellido del arquero español que reforzó al Real Madrid en 2023/24?",
         "respuesta": "Kepa Arrizabalaga"
       },
       {
-        "pregunta": "¿Nombre y apellido del extremo francés del Bayern, Kingsley …?",
+        "pregunta": "¿Nombre completo del extremo francés figura del Bayern Múnich?",
         "respuesta": "Kingsley Coman"
       },
       {
@@ -502,7 +502,7 @@
     "letra": "L",
     "preguntas": [
       {
-        "pregunta": "¿Apellido del delantero polaco del Barcelona, Robert …?",
+        "pregunta": "¿Apellido del delantero polaco estrella del Barcelona, Robert …?",
         "respuesta": "Lewandowski"
       },
       {
@@ -514,7 +514,7 @@
         "respuesta": "Liga Profesional"
       },
       {
-        "pregunta": "¿Nombre y apellido del 9 argentino del Inter, campeón del mundo?",
+        "pregunta": "¿Nombre y apellido del 9 argentino del Inter de Milán, campeón del mundo 2022?",
         "respuesta": "Lautaro Martínez"
       },
       {
@@ -530,11 +530,11 @@
         "respuesta": "Lille"
       },
       {
-        "pregunta": "¿Nombre y apellido del joven crack del Barcelona y España, Lamine …?",
+        "pregunta": "¿Nombre completo del joven crack del Barcelona y España?",
         "respuesta": "Lamine Yamal"
       },
       {
-        "pregunta": "¿Nombre y apellido del defensor argentino del Manchester United campeón del mundo?",
+        "pregunta": "¿Nombre y apellido del defensor argentino campeón del mundo 2022 en Manchester United?",
         "respuesta": "Lisandro Martínez"
       }
     ]
@@ -547,12 +547,12 @@
         "respuesta": "Messi"
       },
       {
-        "pregunta": "¿Club inglés campeón de la Champions 2023?",
+        "pregunta": "¿Club inglés campeón de la Champions 2022/23?",
         "respuesta": "Manchester City"
       },
       {
         "pregunta": "¿Apellido del Balón de Oro 2018, Luka …?",
-        "respuesta": "Modric"
+        "respuesta": "Modrić"
       },
       {
         "pregunta": "¿Club italiano de Milán apodado 'Rossoneri'?",
@@ -563,7 +563,7 @@
         "respuesta": "Manuel Neuer"
       },
       {
-        "pregunta": "¿Apellido del delantero francés del Real Madrid, Kylian …?",
+        "pregunta": "¿Apellido del delantero francés estrella del Real Madrid, Kylian …?",
         "respuesta": "Mbappé"
       },
       {
@@ -571,7 +571,7 @@
         "respuesta": "Monumental"
       },
       {
-        "pregunta": "¿Apellido del arquero argentino del Aston Villa, Emiliano …?",
+        "pregunta": "¿Apellido del arquero argentino ídolo del Aston Villa, Emiliano …?",
         "respuesta": "Martínez"
       }
     ]
@@ -600,7 +600,7 @@
         "respuesta": "Nations League"
       },
       {
-        "pregunta": "¿Nombre y apellido del lateral argentino campeón del mundo, Nahuel …?",
+        "pregunta": "¿Nombre completo del lateral argentino campeón del mundo?",
         "respuesta": "Nahuel Molina"
       }
     ]
@@ -617,7 +617,7 @@
         "respuesta": "Osasuna"
       },
       {
-        "pregunta": "¿Apellido del extremo argentino del Sevilla, Lucas …?",
+        "pregunta": "¿Apellido del extremo argentino que brilló en Sevilla, Lucas …?",
         "respuesta": "Ocampos"
       },
       {
@@ -625,7 +625,7 @@
         "respuesta": "Origi"
       },
       {
-        "pregunta": "¿Apellido del atacante de la Real Sociedad, Mikel …?",
+        "pregunta": "¿Apellido del atacante ídolo de la Real Sociedad, Mikel …?",
         "respuesta": "Oyarzabal"
       },
       {
@@ -633,11 +633,11 @@
         "respuesta": "Overmars"
       },
       {
-        "pregunta": "¿Apellido del goleador nigeriano del Napoli, Victor …?",
+        "pregunta": "¿Apellido del goleador nigeriano ex Napoli, Victor …?",
         "respuesta": "Osimhen"
       },
       {
-        "pregunta": "¿Apellido del mediocampista de España y RB Leipzig, Dani …?",
+        "pregunta": "¿Apellido del mediocampista de España y el Barcelona desde 2024, Dani …?",
         "respuesta": "Olmo"
       },
       {
@@ -654,7 +654,7 @@
       },
       {
         "pregunta": "¿Apellido del mediocampista alemán campeón del mundo 2014, Mesut …?",
-        "respuesta": "Ozil"
+        "respuesta": "Özil"
       }
     ]
   },
@@ -666,12 +666,12 @@
         "respuesta": "Paris Saint-Germain"
       },
       {
-        "pregunta": "¿Club brasileño tricampeón de América en 2020-2021?",
+        "pregunta": "¿Club brasileño bicampeón consecutivo de la Libertadores 2020 y 2021?",
         "respuesta": "Palmeiras"
       },
       {
-        "pregunta": "¿Club francés campeón múltiple desde 2010s?",
-        "respuesta": "Paris Saint-Germain"
+        "pregunta": "¿Club italiano de Emilia-Romaña apodado 'I Crociati'?",
+        "respuesta": "Parma"
       },
       {
         "pregunta": "¿Apellido del entrenador argentino del Chelsea 2023/24, Mauricio …?",
@@ -686,7 +686,7 @@
         "respuesta": "Porto"
       },
       {
-        "pregunta": "¿Club uruguayo con muchas Libertadores junto a Nacional?",
+        "pregunta": "¿Club uruguayo pentacampeón histórico de la Copa Libertadores?",
         "respuesta": "Peñarol"
       },
       {
@@ -698,7 +698,7 @@
         "respuesta": "Pumas UNAM"
       },
       {
-        "pregunta": "¿Nombre futbolístico del mediocampista español de Barcelona, Pedro …?",
+        "pregunta": "¿Nombre futbolístico del mediocampista español del Barcelona, Pedro …?",
         "respuesta": "Pedri"
       },
       {
@@ -711,10 +711,10 @@
       },
       {
         "pregunta": "¿Apellido del ex defensor del Barcelona, Gerard …?",
-        "respuesta": "Pique"
+        "respuesta": "Piqué"
       },
       {
-        "pregunta": "¿Apellido del extremo estadounidense del Milan, Christian …?",
+        "pregunta": "¿Apellido del extremo estadounidense estrella de la selección de EE.UU., Christian …?",
         "respuesta": "Pulisic"
       },
       {
@@ -722,11 +722,11 @@
         "respuesta": "Pavard"
       },
       {
-        "pregunta": "¿Apellido del mediocampista brasileño del West Ham, Lucas …?",
+        "pregunta": "¿Apellido del mediocampista brasileño figura del West Ham, Lucas …?",
         "respuesta": "Paquetá"
       },
       {
-        "pregunta": "¿Apellido del entrenador del Tottenham 2023/24, Ange …?",
+        "pregunta": "¿Apellido del entrenador australiano del Tottenham en 2023/24, Ange …?",
         "respuesta": "Postecoglou"
       },
       {
@@ -747,7 +747,7 @@
         "respuesta": "Quilmes"
       },
       {
-        "pregunta": "¿Nombre y apellido del DT español ex Betis y Barcelona, Quique …?",
+        "pregunta": "¿Nombre completo del DT español ex Betis y Barcelona?",
         "respuesta": "Quique Setién"
       },
       {
@@ -763,8 +763,8 @@
         "respuesta": "Querétaro"
       },
       {
-        "pregunta": "¿Nombre y apellido del delantero neerlandés ex Ajax y Sevilla, Quincy …?",
-        "respuesta": "Quincy Promes"
+        "pregunta": "¿Apellido del 10 colombiano ídolo de River Plate, Juan Fernando …?",
+        "respuesta": "Quintero"
       }
     ]
   },
@@ -772,7 +772,7 @@
     "letra": "R",
     "preguntas": [
       {
-        "pregunta": "¿Club español campeón de la Champions 2024?",
+        "pregunta": "¿Club español campeón de la Champions 2023/24?",
         "respuesta": "Real Madrid"
       },
       {
@@ -784,7 +784,7 @@
         "respuesta": "Racing Club"
       },
       {
-        "pregunta": "¿Nombre y apellido del ídolo de Boca Juniors, Juan Román …?",
+        "pregunta": "¿Apellido del ídolo de Boca Juniors, Juan Román …?",
         "respuesta": "Riquelme"
       },
       {
@@ -792,7 +792,7 @@
         "respuesta": "Rodrygo"
       },
       {
-        "pregunta": "¿Apellido del delantero inglés del Manchester United, Marcus …?",
+        "pregunta": "¿Apellido del delantero inglés ídolo de Manchester United, Marcus …?",
         "respuesta": "Rashford"
       },
       {
@@ -808,7 +808,7 @@
         "respuesta": "Red Bull Salzburg"
       },
       {
-        "pregunta": "CONTIENE R: ¿Apellido del capitán de la selección española 2024, Álvaro …?",
+        "pregunta": "CONTIENE R: ¿Apellido del capitán de España en la Eurocopa 2024, Álvaro …?",
         "respuesta": "Morata"
       },
       {
@@ -820,16 +820,16 @@
         "respuesta": "Roberto Carlos"
       },
       {
-        "pregunta": "¿Apellido del extremo brasileño del Barcelona, Raphael …?",
+        "pregunta": "¿Apellido del extremo brasileño figura del Barcelona, Raphael …?",
         "respuesta": "Raphinha"
       },
       {
-        "pregunta": "¿Nombre deportivo del mediocampista español del Manchester City, Rodrigo …?",
+        "pregunta": "¿Nombre deportivo del mediocampista español Balón de Oro 2024, Rodrigo …?",
         "respuesta": "Rodri"
       },
       {
-        "pregunta": "¿Nombre y apellido del zaguero portugués del Manchester City, Rúben …?",
-        "respuesta": "Ruben Dias"
+        "pregunta": "¿Nombre completo del zaguero portugués estrella del Manchester City?",
+        "respuesta": "Rúben Dias"
       }
     ]
   },
@@ -837,7 +837,7 @@
     "letra": "S",
     "preguntas": [
       {
-        "pregunta": "¿Apellido del director técnico de la Selección Argentina campeona 2022 y 2024?",
+        "pregunta": "¿Apellido del DT de Argentina campeón del Mundo 2022 y de la Copa América 2024?",
         "respuesta": "Scaloni"
       },
       {
@@ -861,31 +861,31 @@
         "respuesta": "Suárez"
       },
       {
-        "pregunta": "¿Cómo se denomina al conjunto nacional de fútbol de un país?",
-        "respuesta": "Selección"
+        "pregunta": "¿Club inglés de la costa sur apodado 'The Saints'?",
+        "respuesta": "Southampton"
       },
       {
         "pregunta": "¿Club portugués de Lisboa también llamado Sporting?",
         "respuesta": "Sporting CP"
       },
       {
-        "pregunta": "¿Club de Junín que milita en la Liga Profesional?",
+        "pregunta": "¿Club de Junín de la Liga Profesional argentina?",
         "respuesta": "Sarmiento"
       },
       {
-        "pregunta": "CONTIENE S: ¿Apellido del joven extremo del Barcelona y España, Lamine …?",
-        "respuesta": "Yamal"
+        "pregunta": "¿Apellido del extremo inglés del Arsenal, Bukayo …?",
+        "respuesta": "Saka"
       },
       {
-        "pregunta": "CONTIENE S: ¿Apellido del goleador egipcio del Liverpool, Mohamed …?",
+        "pregunta": "¿Apellido del goleador egipcio ídolo del Liverpool, Mohamed …?",
         "respuesta": "Salah"
       },
       {
-        "pregunta": "¿Apellido del capitán surcoreano del Tottenham, Heung-min …?",
+        "pregunta": "¿Apellido del capitán surcoreano ídolo del Tottenham, Heung-min …?",
         "respuesta": "Son"
       },
       {
-        "pregunta": "¿Apellido del entrenador del Atlético de Madrid, Diego …?",
+        "pregunta": "¿Apellido del entrenador histórico del Atlético de Madrid, Diego …?",
         "respuesta": "Simeone"
       },
       {
@@ -898,7 +898,7 @@
     "letra": "T",
     "preguntas": [
       {
-        "pregunta": "CONTIENE T: ¿Apellido del delantero español autor del gol de la final del Mundial 2026?",
+        "pregunta": "CONTIENE T: ¿Apellido del delantero español autor del gol de la final del Mundial 2026 (Ferran …)?",
         "respuesta": "Torres"
       },
       {
@@ -918,7 +918,7 @@
         "respuesta": "Tite"
       },
       {
-        "pregunta": "¿Nombre y apellido del central brasileño del Chelsea, … Silva?",
+        "pregunta": "¿Nombre completo del central brasileño leyenda de Milan, PSG y Chelsea?",
         "respuesta": "Thiago Silva"
       },
       {
@@ -943,12 +943,12 @@
     "letra": "U",
     "preguntas": [
       {
-        "pregunta": "¿País sudamericano con 15 Copas América (empate histórico)?",
+        "pregunta": "¿País sudamericano bicampeón del mundo en 1930 y 1950?",
         "respuesta": "Uruguay"
       },
       {
-        "pregunta": "¿Apellido del técnico español que dirigió al PSG y al Sevilla, Unai …?",
-        "respuesta": "Emery"
+        "pregunta": "¿Nombre de pila del técnico español … Emery, ex Sevilla y PSG?",
+        "respuesta": "Unai"
       },
       {
         "pregunta": "¿Club chileno de Santiago conocido como 'La U'?",
@@ -963,16 +963,16 @@
         "respuesta": "Udinese"
       },
       {
-        "pregunta": "¿Nombre y apellido del central francés campeón del mundo 2018, Samuel …?",
-        "respuesta": "Samuel Umtiti"
+        "pregunta": "¿Apellido del central francés campeón del mundo 2018, Samuel …?",
+        "respuesta": "Umtiti"
       },
       {
-        "pregunta": "¿Club coreano de la K League con el que jugó el argentino Leonardo?",
+        "pregunta": "¿Club surcoreano de la K League 1 con sede en Ulsan?",
         "respuesta": "Ulsan Hyundai"
       },
       {
-        "pregunta": "¿Competición de selecciones de la UEFA iniciada en 2018?",
-        "respuesta": "UEFA Nations League"
+        "pregunta": "¿Sigla de la Unión de Asociaciones Europeas de Fútbol?",
+        "respuesta": "UEFA"
       }
     ]
   },
@@ -984,7 +984,7 @@
         "respuesta": "Villarreal"
       },
       {
-        "pregunta": "¿Apellido del extremo brasileño del Real Madrid, figura en 2024?",
+        "pregunta": "¿Apellido del extremo brasileño Balón de Plata frecuente del Real Madrid?",
         "respuesta": "Vinicius"
       },
       {
@@ -996,15 +996,15 @@
         "respuesta": "Valencia"
       },
       {
-        "pregunta": "¿Nombre y apellido del central neerlandés del Liverpool, Virgil …?",
-        "respuesta": "Virgil van Dijk"
+        "pregunta": "¿Apellido del central neerlandés capitán del Liverpool, Virgil …?",
+        "respuesta": "van Dijk"
       },
       {
         "pregunta": "¿Club brasileño de Río fundado en 1898, con apodo 'Gigante da Colina'?",
         "respuesta": "Vasco da Gama"
       },
       {
-        "pregunta": "¿Apodo del mediocampista portugués Luis Filipe Vieira …?",
+        "pregunta": "¿Apodo del mediocampista portugués Vítor Machado Ferreira, estrella del PSG?",
         "respuesta": "Vitinha"
       }
     ]
@@ -1033,11 +1033,11 @@
         "respuesta": "Wijnaldum"
       },
       {
-        "pregunta": "¿Nombre y apellido del histórico goleador inglés del Manchester United, Wayne …?",
+        "pregunta": "¿Nombre completo del histórico goleador inglés del Manchester United?",
         "respuesta": "Wayne Rooney"
       },
       {
-        "pregunta": "¿Apellido del lateral derecho inglés del Manchester City, Kyle …?",
+        "pregunta": "¿Apellido del lateral derecho inglés leyenda del Manchester City, Kyle …?",
         "respuesta": "Walker"
       }
     ]
@@ -1050,24 +1050,24 @@
         "respuesta": "Xavi"
       },
       {
-        "pregunta": "¿Nombre del técnico del Bayer Leverkusen 2023/24?",
+        "pregunta": "¿Nombre del DT del Bayer Leverkusen campeón invicto 2023/24?",
         "respuesta": "Xabi Alonso"
       },
       {
-        "pregunta": "¿Nombre y apellido del extremo suizo del Chicago Fire, Xherdan …?",
+        "pregunta": "¿Nombre completo del extremo suizo ex Liverpool e Inter?",
         "respuesta": "Xherdan Shaqiri"
       },
       {
-        "pregunta": "¿Club mexicano cuyo apodo incluye la letra X en su nombre?",
+        "pregunta": "¿Apodo del Club Tijuana de la Liga MX?",
         "respuesta": "Xolos de Tijuana"
       },
       {
-        "pregunta": "¿Nombre y apellido del joven mediapunta neerlandés del PSG/RB Leipzig, Xavi …?",
+        "pregunta": "¿Nombre completo del mediapunta neerlandés surgido en el PSG?",
         "respuesta": "Xavi Simons"
       },
       {
-        "pregunta": "CONTIENE X: ¿Apellido del ex delantero chileno del Barcelona y Arsenal, Alexis …?",
-        "respuesta": "Sánchez"
+        "pregunta": "CONTIENE X: ¿Nombre de pila del ex delantero chileno del Barcelona y Arsenal, … Sánchez?",
+        "respuesta": "Alexis"
       }
     ]
   },
@@ -1079,15 +1079,15 @@
         "respuesta": "Yamal"
       },
       {
-        "pregunta": "¿País asiático cuyo nombre en inglés comienza con Y?",
-        "respuesta": "Yemen"
+        "pregunta": "¿Apellido del legendario arquero soviético Balón de Oro 1963, Lev …?",
+        "respuesta": "Yashin"
       },
       {
-        "pregunta": "¿Nombre y apellido del zaguero colombiano ex Barcelona y Everton, Yerry …?",
+        "pregunta": "¿Nombre completo del zaguero colombiano ex Barcelona y Everton?",
         "respuesta": "Yerry Mina"
       },
       {
-        "pregunta": "¿Nombre y apellido del mediocampista marfileño leyenda del City, Yaya …?",
+        "pregunta": "¿Nombre completo del mediocampista marfileño leyenda del City?",
         "respuesta": "Yaya Touré"
       },
       {
@@ -1095,8 +1095,8 @@
         "respuesta": "Yokohama F. Marinos"
       },
       {
-        "pregunta": "¿Nombre y apellido del extremo austriaco de origen turco, Yusuf …?",
-        "respuesta": "Yusuf Demir"
+        "pregunta": "¿Apellido del extremo inglés ex Manchester United e Inter, Ashley …?",
+        "respuesta": "Young"
       }
     ]
   },
@@ -1112,7 +1112,7 @@
         "respuesta": "Zoff"
       },
       {
-        "pregunta": "¿Apellido del delantero colombiano del Torino y la Atalanta, Duván …?",
+        "pregunta": "¿Apellido del delantero colombiano ex Atalanta y Torino, Duván …?",
         "respuesta": "Zapata"
       },
       {

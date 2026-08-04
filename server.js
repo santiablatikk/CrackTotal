@@ -2026,6 +2026,8 @@ const mentirosoCategories = {
     { template: "Puedo nombrar X futbolistas que fueron transferencias récord después de brillar en un Mundial." },
     { template: "Puedo nombrar X mascotas de Mundiales que la gente todavía recuerda." },
     { template: "Puedo nombrar X selecciones que participaron en el Mundial de 2022 (fase final)." },
+    { template: "Puedo nombrar X selecciones que llegaron a semifinales del Mundial 2026." },
+    { template: "Puedo nombrar X jugadores que disputaron la final del Mundial 2026." },
     { template: "Puedo nombrar X árbitros que dirigieron finales de la Copa del Mundo." },
     { template: "Puedo nombrar X jugadores argentinos que disputaron una final del Mundial (como titulares o suplentes que ingresaron)." },
     { template: "Puedo nombrar X selecciones que eliminaron a Brasil en Copas del Mundo." }
