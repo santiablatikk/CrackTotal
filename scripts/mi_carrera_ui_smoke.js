@@ -82,11 +82,16 @@ function loadAll() {
     'assets/js/games/mi-carrera/engine/career-rules.js',
     'assets/js/games/mi-carrera/engine/career-events.js',
     'assets/js/games/mi-carrera/engine/career-decisions.js',
+    'assets/js/games/mi-carrera/engine/career-competitions.js',
+    'assets/js/games/mi-carrera/engine/career-awards.js',
+    'assets/js/games/mi-carrera/engine/career-records.js',
+    'assets/js/games/mi-carrera/engine/career-moments.js',
     'assets/js/games/mi-carrera/engine/career-scoring.js',
     'assets/js/games/mi-carrera/engine/career-engine.js',
     'assets/js/games/mi-carrera/persistence/career-storage.js',
     'assets/js/games/mi-carrera/providers/flags.js',
     'assets/js/games/mi-carrera/providers/badges.js',
+    'assets/js/games/mi-carrera/providers/assets.js',
     'assets/js/games/mi-carrera/main.js',
     'assets/js/games/mi-carrera/ui/format.js',
     'assets/js/games/mi-carrera/ui/components.js',
@@ -117,7 +122,8 @@ function loadData() {
     archetypes: readJson('narrative/archetypes.json'),
     decisions: readJson('narrative/decisions.json'),
     events: readJson('narrative/events.json'),
-    retirementLines: readJson('narrative/retirement_lines.json')
+    retirementLines: readJson('narrative/retirement_lines.json'),
+    awards: readJson('narrative/awards.json')
   };
 }
 
@@ -131,6 +137,9 @@ function main() {
     'career-share.js',
     'career-legacy.js',
     'career-rewards.js',
+    'career-competitions.js',
+    'career-awards.js',
+    'providers/assets.js',
     'progress-bridge.js',
     'gamification-config.js'
   ].forEach(function (t) {

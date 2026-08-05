@@ -48,7 +48,6 @@
     var ratingFactor = Math.pow(state.rating / 80, 1.15);
     var formFactor = 0.7 + state.form / 16;
     var clubFactor = club ? 0.85 + (club.prestige || 50) / 400 : 1;
-    var compFactor = comp ? 0.9 + (comp.level || 3) * 0.03 : 1;
 
     var goalRate =
       (POS_GOAL_RATE[pos] || 0.1) *
@@ -77,34 +76,6 @@
     if (injuryWeeks >= 10) avgRating -= 0.4;
     avgRating = NS.State.round1(NS.State.clamp(avgRating, 5.0, 9.8));
 
-    var trophies = [];
-    var titleChance =
-      ((club && club.prestige) || 40) / 220 +
-      (state.rating - 70) / 120 +
-      (avgRating - 6.5) / 20 +
-      rng.range(-0.05, 0.08);
-    if (club && rng.bool(NS.State.clamp(titleChance, 0.02, 0.55))) {
-      trophies.push(club.primaryCompetitionId);
-    }
-    if (club && (club.level || 1) >= 4 && state.rating >= 82 && rng.bool(0.12)) {
-      if (club.continentId === 'continent_eu') trophies.push('comp_ucl');
-      else if (club.continentId === 'continent_sa') trophies.push('comp_libertadores');
-    }
-
-    var nationalCaps = 0;
-    var nationalGoals = 0;
-    var nt = NS.Rules.getNationalTeam(world, state.nationalTeamId);
-    if (nt && state.rating + state.form >= nt.rating - 8 && state.fitness >= 55) {
-      var callChance = NS.State.clamp((state.rating - (nt.rating - 15)) / 30, 0.05, 0.75);
-      if (state.nationalCaps > 0) callChance += 0.15;
-      if (rng.bool(callChance)) {
-        nationalCaps = rng.int(1, state.rating >= 85 ? 10 : 5);
-        if (pos === 'FWD' || pos === 'MID') {
-          nationalGoals = Math.round(nationalCaps * (pos === 'FWD' ? 0.35 : 0.15) * rng.range(0.4, 1.2));
-        }
-      }
-    }
-
     var grade = NS.Rules.performanceGrade(avgRating, appearances, injuryWeeks);
 
     return {
@@ -112,10 +83,11 @@
       goals: goals,
       assists: assists,
       averageRating: avgRating,
-      trophies: trophies.filter(Boolean),
+      trophies: [],
       injuryWeeks: injuryWeeks,
-      nationalCaps: nationalCaps,
-      nationalGoals: nationalGoals,
+      nationalCaps: 0,
+      nationalGoals: 0,
+      nationalAssists: 0,
       performanceGrade: grade,
       competitionId: club ? club.primaryCompetitionId : null
     };
@@ -124,9 +96,21 @@
   function applySeasonAftermath(state, stats, world, rng) {
     state.nationalCaps += stats.nationalCaps || 0;
     state.nationalGoals += stats.nationalGoals || 0;
+    state.nationalAssists = (state.nationalAssists || 0) + (stats.nationalAssists || 0);
     state.totalTitles += (stats.trophies || []).length;
     (stats.trophies || []).forEach(function (t) {
       if (state.titleIds.indexOf(t) === -1) state.titleIds.push(t);
+    });
+    (stats.titles || []).forEach(function (title) {
+      if (!state.titles) state.titles = [];
+      state.titles.push(title);
+    });
+    (stats.awards || []).forEach(function (award) {
+      if (!state.awards) state.awards = [];
+      state.awards.push(award);
+      state.prestige = NS.State.clamp(state.prestige + Math.round((award.importance || 50) / 25), 0, 100);
+      state.reputation = NS.State.clamp(state.reputation + Math.round((award.importance || 50) / 30), 0, 100);
+      state.popularity = NS.State.clamp(state.popularity + Math.round((award.importance || 50) / 28), 0, 100);
     });
 
     var formDelta = 0;
@@ -146,7 +130,8 @@
     state.morale = NS.State.clamp(
       state.morale +
         (stats.performanceGrade === 'S' || stats.performanceGrade === 'A' ? 6 : 0) +
-        (stats.performanceGrade === 'D' ? -8 : 0),
+        (stats.performanceGrade === 'D' ? -8 : 0) +
+        ((stats.trophies || []).length ? 3 : 0),
       10,
       100
     );
@@ -165,7 +150,9 @@
       100
     );
     state.popularity = NS.State.clamp(
-      state.popularity + Math.min(6, Math.floor((stats.goals + stats.assists) / 8)) + (stats.trophies.length ? 2 : 0),
+      state.popularity +
+        Math.min(6, Math.floor((stats.goals + stats.assists) / 8)) +
+        (stats.trophies.length ? 2 : 0),
       0,
       100
     );
@@ -188,7 +175,9 @@
       state.peakMarketValue = state.marketValue;
     }
     state.prestige = NS.State.clamp(
-      Math.round(state.prestige * 0.85 + (club ? club.prestige * 0.15 : 10) + (stats.trophies.length ? 2 : 0)),
+      Math.round(
+        state.prestige * 0.85 + (club ? club.prestige * 0.15 : 10) + (stats.trophies.length ? 2 : 0)
+      ),
       0,
       100
     );
@@ -297,6 +286,17 @@
     var rng = this.getRng(state, 'sim');
     var eventRng = this.getRng(state, 'event');
     var offerRng = this.getRng(state, 'offers');
+    var compRng = this.getRng(state, 'comps');
+    var awardRng = this.getRng(state, 'awards');
+
+    var prevClubId =
+      (state.seasonHistory.length && state.seasonHistory[state.seasonHistory.length - 1].clubId) ||
+      null;
+    var originClubId =
+      (state.clubsPlayed && state.clubsPlayed[0]) ||
+      (state.seasonHistory[0] && state.seasonHistory[0].clubId) ||
+      state.clubId;
+    var capsBefore = state.nationalCaps || 0;
 
     var stats = simulateSeasonStats(state, this.world, rng);
     var picked = NS.Events.pickEvent(state, this.world, eventRng);
@@ -304,10 +304,44 @@
     if (eventResult.event && eventResult.event.effects && eventResult.event.effects.injuryWeeks) {
       stats.injuryWeeks += eventResult.event.effects.injuryWeeks;
     }
+
+    var clubBag = NS.Competitions.simulateClubSeason(state, this.world, compRng, stats);
+    var ntBag = NS.Competitions.simulateNationalSeason(
+      state,
+      this.world,
+      compRng.fork('nt'),
+      stats
+    );
+
+    stats.trophies = (clubBag.trophyIds || []).concat(ntBag.trophyIds || []);
+    stats.titles = (clubBag.titles || []).concat(ntBag.titles || []);
+    stats.nationalCaps = ntBag.nationalCaps || 0;
+    stats.nationalGoals = ntBag.nationalGoals || 0;
+    stats.nationalAssists = ntBag.nationalAssists || 0;
+    stats.competitions = {
+      league: clubBag.competitions.league || null,
+      nationalCup: clubBag.competitions.nationalCup || null,
+      continentalCompetition: clubBag.competitions.continentalCompetition || null,
+      superCup: clubBag.competitions.superCup || null,
+      clubWorldCup: clubBag.competitions.clubWorldCup || null,
+      nationalTeamCompetitions: ntBag.nationalTeamCompetitions || []
+    };
+
+    var seasonAwards = NS.Awards.resolveSeasonAwards(
+      state,
+      this.world,
+      awardRng,
+      stats,
+      clubBag,
+      ntBag
+    );
+    stats.awards = seasonAwards;
+
     var growth = applySeasonAftermath(state, stats, this.world, rng);
 
     var seasonRecord = {
-      seasonIndex: state.seasonIndex,
+      seasonIndex: Math.max(0, state.seasonIndex),
+      seasonLabel: NS.Competitions.seasonLabel(state.seasonIndex),
       age: state.age,
       clubId: state.clubId,
       competitionId: stats.competitionId,
@@ -316,16 +350,45 @@
       assists: stats.assists,
       averageRating: stats.averageRating,
       trophies: stats.trophies.slice(),
+      titles: (stats.titles || []).slice(),
+      awards: (stats.awards || []).slice(),
+      competitions: stats.competitions,
       injuryWeeks: stats.injuryWeeks,
       nationalCaps: stats.nationalCaps,
       nationalGoals: stats.nationalGoals,
+      nationalAssists: stats.nationalAssists,
+      nationalRole: ntBag.role || 'none',
       performanceGrade: stats.performanceGrade,
       event: eventResult.event,
       decisionId: (state.recentDecisions[0] && state.recentDecisions[0].id) || null,
       ratingAfter: state.rating,
-      growth: growth
+      growth: growth,
+      transferThisSeason: !!(prevClubId && prevClubId !== state.clubId),
+      returnHome: !!(
+        prevClubId &&
+        prevClubId !== state.clubId &&
+        state.clubId === originClubId &&
+        (state.clubsPlayed || []).length > 1
+      ),
+      moments: []
     };
     state.seasonHistory.push(seasonRecord);
+
+    if (capsBefore === 0 && (stats.nationalCaps || 0) > 0) {
+      seasonRecord.firstCallUp = true;
+    }
+
+    NS.Moments.detectSeasonMoments(state, seasonRecord, clubBag, ntBag, seasonAwards);
+
+    var recordExtras = {};
+    seasonAwards.forEach(function (a) {
+      if (a.awardId === 'award_ballon_dor') recordExtras.ballonAge = a.age;
+    });
+    (stats.titles || []).forEach(function (t) {
+      if (t.competitionId === 'comp_ucl') recordExtras.uclAge = state.age - 1;
+      if ((t.importance || 0) >= 70) recordExtras.veteranTitleAge = state.age - 1;
+    });
+    NS.Records.updateCareerRecords(state, recordExtras);
 
     state.pendingOffers = NS.Rules.generateOffers(state, this.world, offerRng, 3);
     NS.State.resetSeasonModifiers(state);
@@ -349,6 +412,7 @@
     }
 
     if (state.retired) {
+      NS.Moments.detectSeasonMoments(state, seasonRecord, clubBag, ntBag, []);
       this._finalize(state);
       return { state: state, season: seasonRecord, event: eventResult.event, offers: [], retired: true };
     }
@@ -383,6 +447,19 @@
     }
     state.retired = true;
     state.retirementReason = reason || 'voluntary';
+    if (NS.Moments && NS.Moments.pushMoment) {
+      NS.Moments.pushMoment(state, {
+        id: 'moment_retire',
+        label: 'Retiro',
+        seasonIndex: Math.max(0, state.seasonIndex - 1),
+        seasonLabel: NS.Competitions
+          ? NS.Competitions.seasonLabel(Math.max(0, state.seasonIndex - 1))
+          : String(state.seasonIndex),
+        age: state.age,
+        clubId: state.clubId,
+        unique: true
+      });
+    }
     this._finalize(state);
     return state;
   };

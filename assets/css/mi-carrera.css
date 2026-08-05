@@ -1025,6 +1025,44 @@ body.mi-carrera-body.ct-ds .breadcrumb-item + .breadcrumb-item::before {
     margin-top: var(--ct-space-sm);
 }
 
+.mc-career-card__highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin: 0.65rem 0 0.25rem;
+}
+
+.mc-career-card__chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    background: rgba(121, 242, 166, 0.12);
+    color: #d7ffe8;
+    border: 1px solid rgba(121, 242, 166, 0.28);
+}
+
+.mc-career-card__chip--award {
+    background: rgba(251, 191, 36, 0.14);
+    border-color: rgba(251, 191, 36, 0.35);
+    color: #ffe9b0;
+}
+
+.mc-career-card__chip--nt {
+    background: rgba(96, 165, 250, 0.14);
+    border-color: rgba(96, 165, 250, 0.35);
+    color: #cfe3ff;
+}
+
+.mc-career-card__chip--record {
+    background: rgba(244, 114, 182, 0.12);
+    border-color: rgba(244, 114, 182, 0.3);
+    color: #ffd0ea;
+}
+
 .mc-career-card__footer {
     margin-top: var(--ct-space-md);
     color: var(--ct-text-subtle);

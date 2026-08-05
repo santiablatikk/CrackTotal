@@ -45,11 +45,16 @@ function loadEngineModules() {
     'engine/career-rules.js',
     'engine/career-events.js',
     'engine/career-decisions.js',
+    'engine/career-competitions.js',
+    'engine/career-awards.js',
+    'engine/career-records.js',
+    'engine/career-moments.js',
     'engine/career-scoring.js',
     'engine/career-engine.js',
     'persistence/career-storage.js',
     'providers/flags.js',
     'providers/badges.js',
+    'providers/assets.js',
     'main.js'
   ];
 
@@ -72,6 +77,7 @@ function loadData() {
     decisions: readJson('narrative/decisions.json'),
     events: readJson('narrative/events.json'),
     retirementLines: readJson('narrative/retirement_lines.json'),
+    awards: readJson('narrative/awards.json'),
     packs: readJson('manifests/packs.json')
   };
 }
@@ -212,6 +218,7 @@ function validateDataIntegrity(data) {
   assert(data.nationalTeams.length === data.countries.length, 'NT matches countries');
   assert(data.events.length >= 12, 'events >= 12');
   assert(data.decisions.length >= 8, 'decisions >= 8');
+  assert(Array.isArray(data.awards) && data.awards.length >= 8, 'awards >= 8');
 }
 
 function main() {

@@ -45,12 +45,25 @@
       games += s.appearances || 0;
       goals += s.goals || 0;
       assists += s.assists || 0;
-      (s.trophies || []).forEach(function (t) {
-        titles += 1;
-        titleIds.push(t);
-      });
+      if (s.titles && s.titles.length) {
+        s.titles.forEach(function (t) {
+          titles += 1;
+          if (t.competitionId) titleIds.push(t.competitionId);
+        });
+      } else {
+        (s.trophies || []).forEach(function (t) {
+          titles += 1;
+          titleIds.push(t);
+        });
+      }
       if (s.clubId) clubSet[s.clubId] = true;
     });
+    if ((state.titles || []).length && !titleIds.length) {
+      state.titles.forEach(function (t) {
+        titles += 1;
+        if (t.competitionId) titleIds.push(t.competitionId);
+      });
+    }
     return {
       games: games,
       goals: goals,
@@ -73,7 +86,6 @@
     if (position === 'DEF') {
       return normalize(perGameG * 0.25 + perGameA * 0.35 + Math.min(1, games / 450) * 0.4, 0, 0.55);
     }
-    // GK: longevity + reliability proxy via games and low "attack" is fine
     return normalize(Math.min(1, games / 500) * 0.75 + (1 - Math.min(1, perGameG)) * 0.1, 0, 1);
   }
 
@@ -90,6 +102,23 @@
       else weight += 1.2 + (comp.prestige || 40) / 50;
     });
     return weight;
+  }
+
+  function awardsWeight(state) {
+    var weight = 0;
+    var byId = Object.create(null);
+    (state.awards || []).forEach(function (a) {
+      byId[a.awardId] = (byId[a.awardId] || 0) + 1;
+      var n = byId[a.awardId];
+      var base = (a.importance || 50) / 100;
+      // diminishing returns so one Ballon d'Or cannot dominate
+      weight += base * (n === 1 ? 1 : n === 2 ? 0.55 : 0.3);
+    });
+    return weight;
+  }
+
+  function recordsWeight(state) {
+    return normalize((state.records || []).length, 0, 8);
   }
 
   function prestigePathScore(state, world, agg) {
@@ -131,6 +160,9 @@
     if (state.nationalCaps >= 60 || (state.nationalCaps >= 40 && state.nationalGoals >= 15)) {
       flags.push({ id: 'especialista_internacional', label: 'Especialista internacional' });
     }
+    if (NS.Awards && NS.Awards.countAwards(state, 'award_ballon_dor') >= 1) {
+      flags.push({ id: 'ballon_winner', label: 'Balón de Oro' });
+    }
     var cult =
       score >= 7.2 &&
       ((clubs.length <= 2 && state.popularity >= 70) ||
@@ -150,23 +182,28 @@
       agg.assists,
       agg.games
     );
-    var titlesNorm = normalize(titlesWeight(agg.titleIds, world), 0, 28);
+    var titlesNorm = normalize(titlesWeight(agg.titleIds, world), 0, 32);
+    var awardsNorm = normalize(awardsWeight(state), 0, 4.5);
     var gamesNorm = normalize(agg.games, 80, 650);
     var nationalNorm = clamp01(
-      normalize(state.nationalCaps, 0, 100) * 0.65 +
-        normalize(state.nationalGoals, 0, 40) * 0.35
+      normalize(state.nationalCaps, 0, 100) * 0.55 +
+        normalize(state.nationalGoals, 0, 40) * 0.3 +
+        normalize(state.nationalAssists || 0, 0, 25) * 0.15
     );
     var prestigeNorm = prestigePathScore(state, world, agg);
     var longevity = normalize(state.age - 17, 8, 22);
+    var recordsNorm = recordsWeight(state);
 
     var score =
-      0.25 * normalize(peak, 70, 96) +
-      0.2 * titlesNorm +
-      0.15 * gamesNorm +
-      0.15 * posScore +
+      0.2 * normalize(peak, 70, 96) +
+      0.18 * titlesNorm +
+      0.1 * awardsNorm +
+      0.12 * gamesNorm +
+      0.12 * posScore +
       0.1 * nationalNorm +
-      0.1 * prestigeNorm +
-      0.05 * longevity;
+      0.08 * prestigeNorm +
+      0.05 * longevity +
+      0.05 * recordsNorm;
 
     var seasons = (state.seasonHistory || []).length;
     if (seasons < 6) score -= 0.6;
@@ -185,6 +222,8 @@
       breakdown: {
         peakRating: peak,
         titles: agg.titles,
+        awards: (state.awards || []).length,
+        records: (state.records || []).length,
         careerGames: agg.games,
         goals: agg.goals,
         assists: agg.assists,
@@ -208,11 +247,36 @@
     return Object.keys(set).length;
   }
 
+  function summarizeTitles(state) {
+    var map = Object.create(null);
+    (state.titles || []).forEach(function (t) {
+      var key = t.competitionId || t.name;
+      if (!map[key]) {
+        map[key] = {
+          competitionId: t.competitionId,
+          name: t.shortName || t.name,
+          count: 0,
+          importance: t.importance || 50
+        };
+      }
+      map[key].count += 1;
+    });
+    return Object.keys(map)
+      .map(function (k) {
+        return map[k];
+      })
+      .sort(function (a, b) {
+        return b.importance - a.importance || b.count - a.count;
+      });
+  }
+
   NS.Scoring = {
     evaluate: evaluate,
     categoryFromScore: categoryFromScore,
     aggregateHistory: aggregateHistory,
     specialFlags: specialFlags,
-    retirementLine: retirementLine
+    retirementLine: retirementLine,
+    summarizeTitles: summarizeTitles,
+    awardsWeight: awardsWeight
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

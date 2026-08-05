@@ -284,6 +284,7 @@
       decisions: data.decisions || [],
       events: data.events || [],
       retirementLines: data.retirementLines || [],
+      awards: data.awards || [],
       continentsById: indexById(data.continents),
       countriesById: indexById(data.countries),
       competitionsById: indexById(data.competitions),
@@ -291,7 +292,8 @@
       clubsById: indexById(data.clubs),
       archetypesById: indexById(data.archetypes),
       decisionsById: indexById(data.decisions),
-      eventsById: indexById(data.events)
+      eventsById: indexById(data.events),
+      awardsById: indexById(data.awards)
     };
   }
 

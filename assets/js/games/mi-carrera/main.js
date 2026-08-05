@@ -15,6 +15,7 @@
     decisions: 'narrative/decisions.json',
     events: 'narrative/events.json',
     retirementLines: 'narrative/retirement_lines.json',
+    awards: 'narrative/awards.json',
     packs: 'manifests/packs.json'
   };
 
@@ -53,7 +54,7 @@
     var opts = options || {};
     return loadDataBundle(opts.dataRoot).then(function (data) {
       var engine = createEngineFromData(data);
-      return { engine: engine, data: data, storage: NS.Storage, flags: NS.Flags, badges: NS.Badges };
+      return { engine: engine, data: data, storage: NS.Storage, flags: NS.Flags, badges: NS.Badges, assets: NS.Assets };
     });
   }
 
@@ -66,6 +67,16 @@
     return NS.Flags.getCountryFlag(code);
   };
   NS.getClubBadge = function (clubId, clubData) {
+    if (NS.Assets && NS.Assets.getClubBadge) return NS.Assets.getClubBadge(clubId, clubData);
     return NS.Badges.getClubBadge(clubId, clubData);
+  };
+  NS.getPlayerImage = function (playerId, playerData) {
+    return NS.Assets ? NS.Assets.getPlayerImage(playerId, playerData) : null;
+  };
+  NS.getCompetitionLogo = function (competitionId, competitionData) {
+    return NS.Assets ? NS.Assets.getCompetitionLogo(competitionId, competitionData) : null;
+  };
+  NS.getAwardIcon = function (awardId, awardData) {
+    return NS.Assets ? NS.Assets.getAwardIcon(awardId, awardData) : null;
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

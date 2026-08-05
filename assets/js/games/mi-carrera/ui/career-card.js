@@ -48,6 +48,12 @@
     var achievements = UI.Legacy
       ? UI.Legacy.detectAchievements(state, engine.world)
       : state.careerFlags || [];
+    var titleSummary = NS.Scoring.summarizeTitles
+      ? NS.Scoring.summarizeTitles(state)
+      : [];
+    var awardSummary = NS.Awards && NS.Awards.summarizeAwards ? NS.Awards.summarizeAwards(state) : [];
+    var highlightTitles = titleSummary.slice(0, 6);
+    var highlightAwards = awardSummary.slice(0, 6);
 
     return {
       playerName: state.player.name,
@@ -64,6 +70,13 @@
       goals: agg.goals,
       assists: agg.assists,
       titles: agg.titles,
+      titleSummary: titleSummary,
+      highlightTitles: highlightTitles,
+      awards: (state.awards || []).length,
+      awardSummary: awardSummary,
+      highlightAwards: highlightAwards,
+      records: (state.records || []).length,
+      moments: (state.moments || []).length,
       nationalCaps: state.nationalCaps || 0,
       nationalGoals: state.nationalGoals || 0,
       peakRating: state.peakRating,
@@ -76,6 +89,40 @@
       createdAt: state.createdAt,
       clubsPlayedCount: (state.clubsPlayed || []).length
     };
+  }
+
+  function renderHighlights(vm) {
+    var bits = [];
+    (vm.highlightAwards || []).forEach(function (a) {
+      bits.push(
+        '<span class="mc-career-card__chip mc-career-card__chip--award">' +
+          F().escapeHtml((a.shortName || a.name) + ' ×' + a.count) +
+          '</span>'
+      );
+    });
+    (vm.highlightTitles || []).forEach(function (t) {
+      bits.push(
+        '<span class="mc-career-card__chip mc-career-card__chip--title">' +
+          F().escapeHtml((t.name || t.competitionId) + ' ×' + t.count) +
+          '</span>'
+      );
+    });
+    if (vm.nationalCaps) {
+      bits.push(
+        '<span class="mc-career-card__chip mc-career-card__chip--nt">' +
+          F().escapeHtml('Selección ' + vm.nationalCaps + ' caps') +
+          '</span>'
+      );
+    }
+    if (vm.records) {
+      bits.push(
+        '<span class="mc-career-card__chip mc-career-card__chip--record">' +
+          F().escapeHtml('Récords ×' + vm.records) +
+          '</span>'
+      );
+    }
+    if (!bits.length) return '';
+    return '<div class="mc-career-card__highlights">' + bits.join('') + '</div>';
   }
 
   function renderHtml(vm) {
@@ -138,6 +185,7 @@
       F().escapeHtml(vm.finalClub ? vm.finalClub.shortName || vm.finalClub.name : '—') +
       '</strong></div></div>' +
       (badges ? '<div class="mc-career-card__badge-row">' + badges + '</div>' : '') +
+      renderHighlights(vm) +
       '<div class="mc-career-card__stats">' +
       '<div><span>PJ</span><strong>' +
       vm.appearances +
@@ -151,11 +199,11 @@
       '<div><span>Títulos</span><strong>' +
       vm.titles +
       '</strong></div>' +
+      '<div><span>Premios</span><strong>' +
+      vm.awards +
+      '</strong></div>' +
       '<div><span>Sel.</span><strong>' +
       vm.nationalCaps +
-      '</strong></div>' +
-      '<div><span>Goles Sel.</span><strong>' +
-      vm.nationalGoals +
       '</strong></div>' +
       '<div><span>Peak OVR</span><strong class="is-accent">' +
       vm.peakRating +
@@ -220,7 +268,9 @@
           vm.assists +
           ' A · ' +
           vm.titles +
-          ' títulos'
+          ' títulos · ' +
+          vm.awards +
+          ' premios'
       ) +
       '</text>' +
       '<text x="28" y="242" fill="#aebbd0" font-family="Montserrat, Arial" font-size="14">' +
@@ -232,7 +282,8 @@
           ' · Sel ' +
           vm.nationalCaps +
           '/' +
-          vm.nationalGoals
+          vm.nationalGoals +
+          (vm.records ? ' · Récords ' + vm.records : '')
       ) +
       '</text>' +
       '<text x="28" y="660" fill="#8493aa" font-family="Montserrat, Arial" font-size="12">Mi Carrera · cracktotal.com</text>' +
