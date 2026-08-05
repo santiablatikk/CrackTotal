@@ -1428,6 +1428,14 @@ body.mi-carrera-body.ct-ds .breadcrumb-item + .breadcrumb-item::before {
     object-fit: contain;
 }
 
+.mc-badge--xxl {
+    width: 7rem;
+    height: 7rem;
+    font-size: 1.25rem;
+    object-fit: contain;
+    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.35));
+}
+
 .mc-screen--cover {
     padding: 0 0 var(--ct-space-2xl);
 }
@@ -2271,6 +2279,466 @@ body.mi-carrera-body.ct-ds .breadcrumb-item + .breadcrumb-item::before {
     .mc-pos-tile,
     .mc-arch-tile,
     .mc-offer-hero {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* ===== Premium UX polish ===== */
+
+.mc-step-rail {
+    display: flex;
+    gap: 0.4rem;
+    margin: 0 0 0.85rem;
+}
+
+.mc-step-rail span {
+    flex: 1;
+    height: 0.28rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.1);
+}
+
+.mc-step-rail span.is-done,
+.mc-step-rail span.is-current {
+    background: var(--ct-primary);
+}
+
+.mc-step-rail span.is-current {
+    box-shadow: 0 0 0 3px rgba(var(--ct-primary-rgb), 0.25);
+}
+
+.mc-create-flow__title {
+    margin: 0 0 1rem;
+    font-family: var(--ct-font-display);
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+    text-transform: uppercase;
+    line-height: 1;
+}
+
+.mc-player-card__stripe {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0.35rem;
+    background: linear-gradient(180deg, var(--ct-primary), transparent);
+}
+
+.mc-player-card--elite .mc-player-card__ovr {
+    background: rgba(255, 196, 0, 0.18);
+}
+
+.mc-player-card--elite .mc-player-card__ovr strong {
+    color: #ffd56a;
+}
+
+.mc-player-card--high .mc-player-card__ovr strong {
+    color: var(--ct-primary);
+}
+
+.mc-now {
+    margin: 0 0 1.15rem;
+    padding: 1.1rem 1.15rem;
+    border-radius: 1.15rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+}
+
+.mc-now--market {
+    background:
+        radial-gradient(circle at 0% 0%, rgba(var(--ct-primary-rgb), 0.28), transparent 55%),
+        rgba(255,255,255,0.03);
+    border-color: rgba(var(--ct-primary-rgb), 0.35);
+}
+
+.mc-now--play {
+    background:
+        radial-gradient(circle at 100% 0%, rgba(var(--ct-accent-rgb), 0.22), transparent 50%),
+        rgba(255,255,255,0.03);
+}
+
+.mc-now--life {
+    border-style: dashed;
+}
+
+.mc-now h2 {
+    margin: 0.15rem 0 0.35rem;
+    font-family: var(--ct-font-display);
+    font-size: 1.35rem;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.mc-now p:last-child {
+    margin: 0;
+    color: var(--ct-text-muted);
+}
+
+.mc-home-form,
+.mc-home-legacy {
+    margin-bottom: 1.25rem;
+}
+
+.mc-dash-grid--compact {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.mc-moment-rail {
+    margin: 0 0 1.5rem;
+}
+
+.mc-moment-rail__track {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.mc-moment-card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
+    align-items: start;
+    padding: 0.85rem 1rem;
+    border-radius: var(--ct-radius-lg);
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.mc-moment-card strong {
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ct-primary);
+}
+
+.mc-moment-card p {
+    margin: 0.15rem 0 0;
+    font-weight: 700;
+}
+
+.mc-offer-hero {
+    position: relative;
+    overflow: hidden;
+}
+
+.mc-offer-hero--tier-s,
+.mc-offer-hero--tier-a,
+.mc-offer-hero.is-featured {
+    background:
+        radial-gradient(circle at 50% -10%, rgba(var(--ct-primary-rgb), 0.38), transparent 50%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+    border-color: rgba(var(--ct-primary-rgb), 0.45);
+}
+
+.mc-offer-hero__crest {
+    margin-bottom: 0.35rem;
+}
+
+.mc-offer-hero__league {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.mc-offer-hero__nation {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--ct-text-muted);
+    font-size: 0.85rem;
+}
+
+.mc-offer-hero__role-badge {
+    display: inline-flex;
+    margin: 0.15rem 0;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(var(--ct-primary-rgb), 0.18);
+    color: var(--ct-primary);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.mc-offer-hero__project {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+}
+
+.mc-offer-hero__project strong {
+    font-family: var(--ct-font-display);
+    font-size: 1.35rem;
+}
+
+.mc-offer-hero__wage {
+    margin: 0 0 0.65rem;
+    color: var(--ct-text-muted);
+    font-size: 0.9rem;
+}
+
+.mc-offer-hero__wage span {
+    opacity: 0.7;
+}
+
+.mc-offer-stars {
+    margin: 0.2rem 0;
+    color: #ffd56a;
+    letter-spacing: 0.12em;
+    font-size: 1.05rem;
+}
+
+.mc-comp-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.mc-comp-mark img {
+    width: 1.4rem;
+    height: 1.4rem;
+    object-fit: contain;
+}
+
+.mc-comp-mark--md img {
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
+.mc-actions--market-stay {
+    margin-top: 1.25rem;
+    justify-content: center;
+}
+
+.mc-stay-card--hero {
+    padding: 1.75rem 1.25rem;
+}
+
+.mc-stay-card__pitch {
+    margin: 0;
+    max-width: 22rem;
+    color: var(--ct-text-muted);
+}
+
+.mc-stay-points {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    justify-content: center;
+    margin: 0.75rem 0 1rem;
+    padding: 0;
+    list-style: none;
+}
+
+.mc-stay-points li,
+.mc-trade-chip {
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.mc-stay-points .is-up,
+.mc-trade-chip--up {
+    background: rgba(46, 204, 113, 0.14);
+    color: #7dffa8;
+}
+
+.mc-stay-points .is-down,
+.mc-trade-chip--down {
+    background: rgba(231, 76, 60, 0.14);
+    color: #ff9b8f;
+}
+
+.mc-compare-pro__question {
+    margin: 0 0 0.75rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.mc-trade-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.mc-recap-club {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    text-align: left;
+    margin: 0.35rem 0 0.75rem;
+}
+
+.mc-recap-club strong {
+    display: block;
+    font-family: var(--ct-font-display);
+    font-size: 1.35rem;
+    text-transform: uppercase;
+}
+
+.mc-recap-ovr {
+    color: var(--ct-primary);
+    font-weight: 800;
+    letter-spacing: 0.06em;
+}
+
+.mc-recap-moment {
+    width: min(100%, 26rem);
+    margin: 0.75rem 0 1.25rem;
+    padding: 1rem 1.1rem;
+    border-radius: 1rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-align: left;
+}
+
+.mc-recap-moment p:last-child {
+    margin: 0.25rem 0 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.mc-cinematic-crest {
+    margin: 0.5rem 0;
+    animation: mc-crest-in 0.55s ease-out both;
+}
+
+.mc-cinematic-comp {
+    margin: 0;
+}
+
+.mc-cinematic-meta {
+    margin: 0 0 1rem;
+    color: var(--ct-text-muted);
+}
+
+.mc-celebrate--ballon {
+    padding: 0.5rem 0.25rem 0.25rem;
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255, 196, 0, 0.22), transparent 55%);
+}
+
+.mc-celebrate--ballon .mc-celebrate__name {
+    font-size: clamp(1.9rem, 5vw, 2.6rem);
+}
+
+.mc-celebrate__world {
+    margin: 0;
+    font-family: var(--ct-font-display);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffd56a;
+}
+
+.mc-celebrate--epic .mc-celebrate__name {
+    font-size: clamp(1.7rem, 4.5vw, 2.3rem);
+}
+
+.mc-celebrate__trophy,
+.mc-award-mark {
+    display: block;
+    margin: 0 auto 0.5rem;
+    width: 4.5rem;
+    height: 4.5rem;
+    object-fit: contain;
+    filter: drop-shadow(0 10px 20px rgba(0,0,0,0.35));
+}
+
+.mc-event-panel {
+    text-align: left;
+}
+
+.mc-event-kicker {
+    margin: 0 0 0.5rem;
+    color: var(--ct-text-muted);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.mc-preseason {
+    margin: 0 0 1.25rem;
+    padding: 0;
+    background: transparent;
+    border: 0;
+}
+
+.mc-preseason--life .mc-decision-option {
+    border-style: dashed;
+}
+
+.mc-decision-option:focus-visible,
+.mc-pos-tile:focus-visible,
+.mc-arch-tile:focus-visible,
+.mc-offer-hero button:focus-visible,
+.mc-country-item:focus-visible,
+.ct-button:focus-visible {
+    outline: 2px solid var(--ct-primary);
+    outline-offset: 3px;
+}
+
+.mc-modal__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.mc-modal__actions .ct-button {
+    width: 100%;
+}
+
+@keyframes mc-crest-in {
+    from {
+        opacity: 0;
+        transform: scale(0.86) translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (max-width: 430px) {
+    .mc-badge--xxl {
+        width: 5.75rem;
+        height: 5.75rem;
+    }
+
+    .mc-hero-player {
+        padding: 1rem;
+    }
+
+    .mc-offer-hero {
+        padding: 1.25rem 1rem;
+    }
+
+    .mc-actions--sticky {
+        padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    }
+
+    .mc-compare-pro__grid {
+        gap: 0.5rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mc-cinematic-crest,
+    .mc-reveal,
+    .mc-offer-hero,
+    .mc-pos-tile,
+    .mc-arch-tile {
         animation: none !important;
         transition: none !important;
     }

@@ -211,8 +211,51 @@ function main() {
   });
   assert(marketHtml.indexOf('Mercado de fichajes') !== -1, 'market empty title');
   assert(marketHtml.indexOf('nadie llamó') !== -1, 'market empty copy');
+  assert(marketHtml.indexOf('mc-stay-card') !== -1, 'market empty stay card');
   assert(typeof MC.UI.screens.careerHome === 'function', 'career home screen');
   assert(typeof MC.UI.screens.compareOfferBody === 'function', 'compare offer body');
+
+  const homeHtml = MC.UI.screens.careerHome({
+    state: engine.createCareer({
+      name: 'HomeQA',
+      countryId: 'country_ar',
+      position: 'MID',
+      archetypeId: 'arch_tech_promise',
+      seed: 3
+    }),
+    engine: engine
+  });
+  assert(homeHtml.indexOf('mc-hero-player') !== -1, 'career home hero');
+  assert(homeHtml.indexOf('mc-now') !== -1, 'career home moment block');
+  assert(homeHtml.indexOf('mc-timeline') === -1, 'career home avoids age timeline dashboard');
+
+  const recapHtml = MC.UI.screens.seasonRecap({
+    season: {
+      seasonIndex: 0,
+      seasonLabel: '2026/27',
+      clubId: engine.createCareer({
+        name: 'R',
+        countryId: 'country_uy',
+        position: 'FWD',
+        archetypeId: 'arch_physical',
+        seed: 4
+      }).clubId,
+      appearances: 30,
+      goals: 12,
+      assists: 7,
+      averageRating: 7.4,
+      performanceGrade: 'A',
+      titles: [],
+      trophies: [],
+      awards: [],
+      moments: [{ label: 'Doblete decisivo' }],
+      ratingAfter: 71
+    },
+    state: { rating: 71, clubId: 'x' },
+    engine: engine
+  });
+  assert(recapHtml.indexOf('Momento de la temporada') !== -1, 'recap has moment');
+  assert(recapHtml.indexOf('2026/27') !== -1, 'recap season headline');
 
   assert(typeof MC.UI.screens.titleCelebrationBody === 'function', 'title celebration renderer');
   assert(typeof MC.UI.screens.awardCelebrationBody === 'function', 'award celebration renderer');

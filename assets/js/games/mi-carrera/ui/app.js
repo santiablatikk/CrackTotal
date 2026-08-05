@@ -311,7 +311,8 @@
       'cinematic',
       UI.screens.transferCinematic({
         club: club,
-        state: this.state
+        state: this.state,
+        engine: this.engine
       }),
       { state: 'success' }
     );

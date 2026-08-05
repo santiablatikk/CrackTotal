@@ -107,6 +107,7 @@
       '</div></div>';
     overlay.classList.add('is-open');
     overlay.setAttribute('data-open', 'true');
+    overlay.setAttribute('aria-hidden', 'false');
     overlay.hidden = false;
     var focusable = overlay.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
     if (focusable) focusable.focus();
@@ -117,6 +118,7 @@
     if (!overlay) return;
     overlay.classList.remove('is-open');
     overlay.removeAttribute('data-open');
+    overlay.setAttribute('aria-hidden', 'true');
     overlay.hidden = true;
     overlay.innerHTML = '';
   }
