@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "packs": [
+    {
+      "id": "world_core",
+      "path": "world",
+      "priority": 1
+    },
+    {
+      "id": "clubs_seed",
+      "path": "clubs/clubs_seed.json",
+      "priority": 1,
+      "count": 156
+    },
+    {
+      "id": "narrative_core",
+      "path": "narrative",
+      "priority": 1
+    }
+  ],
+  "counts": {
+    "continents": 7,
+    "countries": 105,
+    "competitions": 52,
+    "nationalTeams": 105,
+    "clubs": 156,
+    "archetypes": 4,
+    "decisions": 8,
+    "events": 13
+  }
+}

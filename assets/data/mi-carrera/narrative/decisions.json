@@ -1,0 +1,361 @@
+[
+  {
+    "id": "dec_transfer",
+    "type": "transferencia",
+    "title": "Ofertas de transferencia",
+    "prompt": "Llegaron propuestas. ¿Qué hacés?",
+    "tags": [
+      "transfer",
+      "market"
+    ],
+    "options": [
+      {
+        "id": "accept_best_prestige",
+        "label": "Ir al club de más prestigio",
+        "summary": "Escaparate grande, pelear minutos",
+        "effects": {
+          "prestigeDelta": 6,
+          "popularityDelta": 4,
+          "minutesBias": -0.15,
+          "moneyDelta": 800000,
+          "clubRelationDelta": -8,
+          "transferPreference": "prestige"
+        }
+      },
+      {
+        "id": "accept_minutes",
+        "label": "Elegir el club que garantiza titularidad",
+        "summary": "Más PJ, menos glamour",
+        "effects": {
+          "prestigeDelta": -2,
+          "minutesBias": 0.2,
+          "reputationDelta": 2,
+          "moneyDelta": 200000,
+          "transferPreference": "minutes"
+        }
+      },
+      {
+        "id": "stay_loyal",
+        "label": "Quedarte y renovar el vínculo",
+        "summary": "Lealtad, menos salto inmediato",
+        "effects": {
+          "clubRelationDelta": 10,
+          "reputationDelta": 3,
+          "popularityDelta": 1,
+          "moneyDelta": 150000,
+          "transferPreference": "stay"
+        }
+      }
+    ]
+  },
+  {
+    "id": "dec_renewal",
+    "type": "renovacion",
+    "title": "Renovación de contrato",
+    "prompt": "El club pone un papel sobre la mesa.",
+    "tags": [
+      "contract"
+    ],
+    "options": [
+      {
+        "id": "money_short",
+        "label": "Cobrar más ahora (contrato corto)",
+        "summary": "+plata, menos estabilidad",
+        "effects": {
+          "moneyDelta": 1200000,
+          "clubRelationDelta": 2,
+          "reputationDelta": -1,
+          "transferBias": 0.1
+        }
+      },
+      {
+        "id": "years_role",
+        "label": "Años y rol claro, salario contenido",
+        "summary": "Titularidad y calma",
+        "effects": {
+          "moneyDelta": 300000,
+          "minutesBias": 0.12,
+          "clubRelationDelta": 8,
+          "moraleDelta": 5
+        }
+      },
+      {
+        "id": "refuse",
+        "label": "No renovar y esperar el mercado",
+        "summary": "Libertad futura, roce presente",
+        "effects": {
+          "clubRelationDelta": -12,
+          "reputationDelta": -2,
+          "popularityDelta": 3,
+          "transferBias": 0.2
+        }
+      }
+    ]
+  },
+  {
+    "id": "dec_training",
+    "type": "entrenamiento",
+    "title": "Plan de entrenamiento",
+    "prompt": "¿En qué metés el foco esta temporada?",
+    "tags": [
+      "training",
+      "growth"
+    ],
+    "options": [
+      {
+        "id": "tech",
+        "label": "Trabajo técnico extra",
+        "summary": "+rating potencial suave, algo de fatiga",
+        "effects": {
+          "ratingDelta": 1,
+          "potentialDelta": 1,
+          "fitnessDelta": -4,
+          "injuryRiskDelta": 0.01
+        }
+      },
+      {
+        "id": "phys",
+        "label": "Carga física fuerte",
+        "summary": "+fitness y minutos, riesgo muscular",
+        "effects": {
+          "fitnessDelta": 8,
+          "minutesBias": 0.08,
+          "injuryRiskDelta": 0.03,
+          "moraleDelta": -2
+        }
+      },
+      {
+        "id": "mental",
+        "label": "Trabajo mental y video",
+        "summary": "+reputación y forma estable",
+        "effects": {
+          "reputationDelta": 3,
+          "formDelta": 1,
+          "moraleDelta": 4,
+          "fitnessDelta": -1
+        }
+      }
+    ]
+  },
+  {
+    "id": "dec_role",
+    "type": "rol",
+    "title": "Definición de rol",
+    "prompt": "El DT te llama para hablar de tu lugar en el equipo.",
+    "tags": [
+      "role",
+      "minutes"
+    ],
+    "options": [
+      {
+        "id": "starter_mid",
+        "label": "Pedir titularidad aunque el club sea menor",
+        "summary": "Minutos ya, prestigio después",
+        "effects": {
+          "minutesBias": 0.18,
+          "prestigeDelta": -3,
+          "clubRelationDelta": 2,
+          "transferPreference": "minutes"
+        }
+      },
+      {
+        "id": "bench_big",
+        "label": "Aceptar rotación en club grande",
+        "summary": "Escaparate, menos PJ",
+        "effects": {
+          "minutesBias": -0.12,
+          "prestigeDelta": 5,
+          "popularityDelta": 4,
+          "transferPreference": "prestige"
+        }
+      },
+      {
+        "id": "trust_coach",
+        "label": "Confiar en el proceso del DT",
+        "summary": "Relación alta, resultado mixto",
+        "effects": {
+          "clubRelationDelta": 12,
+          "moraleDelta": 3,
+          "minutesBias": 0.05
+        }
+      }
+    ]
+  },
+  {
+    "id": "dec_national",
+    "type": "seleccion",
+    "title": "Convocatoria de selección",
+    "prompt": "La selección te tiene en el radar.",
+    "tags": [
+      "national",
+      "caps"
+    ],
+    "options": [
+      {
+        "id": "accept_call",
+        "label": "Ir sí o sí",
+        "summary": "+caps, fatiga de viajes",
+        "effects": {
+          "nationalCallBias": 0.35,
+          "popularityDelta": 5,
+          "fitnessDelta": -6,
+          "clubRelationDelta": -2
+        }
+      },
+      {
+        "id": "protect_body",
+        "label": "Cuidar el cuerpo y priorizar club",
+        "summary": "Menos riesgo, menos exposición",
+        "effects": {
+          "nationalCallBias": -0.2,
+          "fitnessDelta": 5,
+          "clubRelationDelta": 4,
+          "popularityDelta": -3
+        }
+      },
+      {
+        "id": "negotiate",
+        "label": "Negociar minutos y calendario",
+        "summary": "Equilibrio político",
+        "effects": {
+          "nationalCallBias": 0.1,
+          "reputationDelta": 2,
+          "moraleDelta": 2,
+          "clubRelationDelta": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "dec_press",
+    "type": "prensa",
+    "title": "Rueda de prensa caliente",
+    "prompt": "Te preguntan por el DT y el vestuario.",
+    "tags": [
+      "press",
+      "reputation"
+    ],
+    "options": [
+      {
+        "id": "diplomatic",
+        "label": "Respuesta diplomática",
+        "summary": "Poco ruido",
+        "effects": {
+          "reputationDelta": 2,
+          "popularityDelta": 1,
+          "clubRelationDelta": 3
+        }
+      },
+      {
+        "id": "honest_fire",
+        "label": "Hablar con fuego",
+        "summary": "+show, posible roce",
+        "effects": {
+          "popularityDelta": 7,
+          "reputationDelta": -4,
+          "clubRelationDelta": -6,
+          "moraleDelta": 2
+        }
+      },
+      {
+        "id": "silence",
+        "label": "Cortar y no hablar",
+        "summary": "Frío mediático",
+        "effects": {
+          "popularityDelta": -2,
+          "reputationDelta": 1,
+          "clubRelationDelta": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "dec_sponsor",
+    "type": "patrocinio",
+    "title": "Oferta de patrocinio",
+    "prompt": "Una marca quiere tu cara en la campaña.",
+    "tags": [
+      "sponsor",
+      "money"
+    ],
+    "options": [
+      {
+        "id": "global_brand",
+        "label": "Marca global (más plata, más exposición)",
+        "summary": "+money +popularity",
+        "effects": {
+          "moneyDelta": 2000000,
+          "popularityDelta": 8,
+          "reputationDelta": -1
+        }
+      },
+      {
+        "id": "local_brand",
+        "label": "Marca local alineada al club",
+        "summary": "Menos plata, mejor clima",
+        "effects": {
+          "moneyDelta": 500000,
+          "popularityDelta": 3,
+          "clubRelationDelta": 5,
+          "reputationDelta": 2
+        }
+      },
+      {
+        "id": "reject",
+        "label": "Rechazar y cuidar imagen",
+        "summary": "Menos ruido comercial",
+        "effects": {
+          "moneyDelta": 0,
+          "reputationDelta": 3,
+          "popularityDelta": -1,
+          "moraleDelta": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "dec_injury",
+    "type": "lesion",
+    "title": "Molestia muscular",
+    "prompt": "El cuerpo pide freno. El calendario no.",
+    "tags": [
+      "injury",
+      "fitness"
+    ],
+    "options": [
+      {
+        "id": "rush_back",
+        "label": "Volver rápido",
+        "summary": "Más PJ, más riesgo",
+        "effects": {
+          "fitnessDelta": -10,
+          "minutesBias": 0.1,
+          "injuryRiskDelta": 0.08,
+          "clubRelationDelta": 4
+        }
+      },
+      {
+        "id": "full_recovery",
+        "label": "Recuperación completa",
+        "summary": "Pierde ritmo, cuida carrera",
+        "effects": {
+          "fitnessDelta": 12,
+          "minutesBias": -0.2,
+          "injuryRiskDelta": -0.05,
+          "moraleDelta": -3
+        }
+      },
+      {
+        "id": "managed",
+        "label": "Minutos controlados",
+        "summary": "Equilibrio",
+        "effects": {
+          "fitnessDelta": 4,
+          "minutesBias": -0.05,
+          "injuryRiskDelta": -0.02,
+          "clubRelationDelta": 2
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,279 @@
+[
+  {
+    "id": "ev_injury_minor",
+    "category": "lesion",
+    "title": "Contractura a destiempo",
+    "body": "Una molestia te saca del once por algunas semanas.",
+    "weightBase": 10,
+    "cooldownSeasons": 2,
+    "tags": [
+      "injury"
+    ],
+    "conditions": {
+      "minAge": 17
+    },
+    "effects": {
+      "fitnessDelta": -12,
+      "injuryWeeks": 3,
+      "minutesBias": -0.15,
+      "moraleDelta": -4
+    }
+  },
+  {
+    "id": "ev_injury_major",
+    "category": "lesion",
+    "title": "Lesión seria",
+    "body": "El scanner confirma lo peor: temporada complicada.",
+    "weightBase": 4,
+    "cooldownSeasons": 4,
+    "tags": [
+      "injury",
+      "major"
+    ],
+    "conditions": {
+      "minAge": 18
+    },
+    "effects": {
+      "fitnessDelta": -25,
+      "injuryWeeks": 12,
+      "minutesBias": -0.45,
+      "moraleDelta": -10,
+      "ratingDelta": -1
+    }
+  },
+  {
+    "id": "ev_national_call",
+    "category": "seleccion",
+    "title": "Primera del boletín",
+    "body": "El DT de la selección te convoca.",
+    "weightBase": 8,
+    "cooldownSeasons": 2,
+    "tags": [
+      "national"
+    ],
+    "conditions": {
+      "minRating": 72,
+      "minForm": 3
+    },
+    "effects": {
+      "nationalCapsDelta": 2,
+      "popularityDelta": 5,
+      "prestigeDelta": 2,
+      "fitnessDelta": -3
+    }
+  },
+  {
+    "id": "ev_coach_conflict",
+    "category": "entrenador",
+    "title": "Roce con el entrenador",
+    "body": "El vestuario se entera de una discusión en el despacho.",
+    "weightBase": 7,
+    "cooldownSeasons": 2,
+    "tags": [
+      "coach",
+      "relation"
+    ],
+    "conditions": {
+      "minAge": 19
+    },
+    "effects": {
+      "clubRelationDelta": -14,
+      "moraleDelta": -6,
+      "minutesBias": -0.1,
+      "reputationDelta": -2
+    }
+  },
+  {
+    "id": "ev_scoring_streak",
+    "category": "racha_goleadora",
+    "title": "Racha de gol",
+    "body": "Las redes se llenan cada domingo.",
+    "weightBase": 6,
+    "cooldownSeasons": 3,
+    "tags": [
+      "form",
+      "goals"
+    ],
+    "conditions": {
+      "positions": [
+        "FWD",
+        "MID"
+      ],
+      "minRating": 70
+    },
+    "effects": {
+      "formDelta": 2,
+      "popularityDelta": 6,
+      "goalsBonus": 4,
+      "moraleDelta": 5
+    }
+  },
+  {
+    "id": "ev_press_storm",
+    "category": "prensa",
+    "title": "Tormenta mediática",
+    "body": "Un titular exagerado prende fuego la semana.",
+    "weightBase": 7,
+    "cooldownSeasons": 2,
+    "tags": [
+      "press"
+    ],
+    "conditions": {
+      "minPopularity": 40
+    },
+    "effects": {
+      "popularityDelta": 3,
+      "reputationDelta": -5,
+      "moraleDelta": -4
+    }
+  },
+  {
+    "id": "ev_sponsor_boost",
+    "category": "patrocinio",
+    "title": "Campaña que pega",
+    "body": "El comercial sale bien y suena el teléfono.",
+    "weightBase": 5,
+    "cooldownSeasons": 3,
+    "tags": [
+      "sponsor",
+      "money"
+    ],
+    "conditions": {
+      "minPopularity": 45
+    },
+    "effects": {
+      "moneyDelta": 900000,
+      "popularityDelta": 4
+    }
+  },
+  {
+    "id": "ev_clasico_hero",
+    "category": "clasico",
+    "title": "Héroe del clásico",
+    "body": "En el partido del año, tu nombre queda en la foto.",
+    "weightBase": 5,
+    "cooldownSeasons": 3,
+    "tags": [
+      "clasico",
+      "prestige"
+    ],
+    "conditions": {
+      "minMinutesBias": -1,
+      "minRating": 68
+    },
+    "effects": {
+      "prestigeDelta": 4,
+      "popularityDelta": 7,
+      "clubRelationDelta": 6,
+      "moraleDelta": 6
+    }
+  },
+  {
+    "id": "ev_foreign_interest",
+    "category": "interes_extranjero",
+    "title": "Interés del exterior",
+    "body": "Un intermediario deja un mensaje: hay ojos puestos en vos.",
+    "weightBase": 8,
+    "cooldownSeasons": 2,
+    "tags": [
+      "transfer",
+      "foreign"
+    ],
+    "conditions": {
+      "minRating": 74,
+      "minAge": 18,
+      "maxAge": 32
+    },
+    "effects": {
+      "transferBias": 0.25,
+      "popularityDelta": 3,
+      "marketValueFactor": 1.08
+    }
+  },
+  {
+    "id": "ev_bad_form",
+    "category": "mala_forma",
+    "title": "Bajón de rendimiento",
+    "body": "Los controles salen flojos y la hinchada silba.",
+    "weightBase": 8,
+    "cooldownSeasons": 2,
+    "tags": [
+      "form"
+    ],
+    "conditions": {
+      "minAge": 17
+    },
+    "effects": {
+      "formDelta": -2,
+      "moraleDelta": -7,
+      "popularityDelta": -3,
+      "minutesBias": -0.08
+    }
+  },
+  {
+    "id": "ev_historic_season",
+    "category": "temporada_historica",
+    "title": "Temporada para el museo",
+    "body": "Números de leyenda y noches inolvidables.",
+    "weightBase": 2,
+    "cooldownSeasons": 6,
+    "tags": [
+      "historic",
+      "peak"
+    ],
+    "conditions": {
+      "minRating": 84,
+      "minForm": 4
+    },
+    "effects": {
+      "prestigeDelta": 8,
+      "popularityDelta": 10,
+      "ratingDelta": 1,
+      "trophyChanceBonus": 0.2,
+      "moraleDelta": 8
+    }
+  },
+  {
+    "id": "ev_unexpected_chance",
+    "category": "oportunidad_inesperada",
+    "title": "Oportunidad inesperada",
+    "body": "Una baja en el once te abre la puerta.",
+    "weightBase": 7,
+    "cooldownSeasons": 2,
+    "tags": [
+      "opportunity",
+      "minutes"
+    ],
+    "conditions": {
+      "minAge": 17,
+      "maxAge": 29
+    },
+    "effects": {
+      "minutesBias": 0.16,
+      "formDelta": 1,
+      "clubRelationDelta": 3
+    }
+  },
+  {
+    "id": "ev_contract_conflict",
+    "category": "conflicto_contractual",
+    "title": "Conflicto contractual",
+    "body": "La negociación se traba y el clima se enfría.",
+    "weightBase": 6,
+    "cooldownSeasons": 3,
+    "tags": [
+      "contract",
+      "relation"
+    ],
+    "conditions": {
+      "minAge": 20,
+      "minReputation": 30
+    },
+    "effects": {
+      "clubRelationDelta": -10,
+      "moraleDelta": -5,
+      "transferBias": 0.15,
+      "moneyDelta": -100000
+    }
+  }
+]

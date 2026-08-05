@@ -1,0 +1,27 @@
+[
+  {
+    "id": "ret_legend",
+    "minScore": 9.0,
+    "text": "Colgaste los botines entre ovaciones. El museo ya tiene tu camiseta."
+  },
+  {
+    "id": "ret_idol",
+    "minScore": 8.0,
+    "text": "Te retirás como ídolo de una generación que te va a discutir en las mesas por años."
+  },
+  {
+    "id": "ret_solid",
+    "minScore": 6.0,
+    "text": "Carrera sólida, respeto ganado y una despedida sin ruido de fracaso."
+  },
+  {
+    "id": "ret_irregular",
+    "minScore": 3.5,
+    "text": "Hubo picos y valles. El fútbol te dio capítulos, no una novela perfecta."
+  },
+  {
+    "id": "ret_fail",
+    "minScore": 0.0,
+    "text": "La promesa se apagó antes de tiempo. Queda la lección y el orgullo de haberlo intentado."
+  }
+]

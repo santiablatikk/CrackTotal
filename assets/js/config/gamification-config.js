@@ -118,6 +118,22 @@
                 icon: 'fa-calendar-check',
                 target: 3,
                 rule: { type: 'daily_challenge' }
+            },
+            {
+                id: 'mi_carrera_elite',
+                title: 'Jugador de élite',
+                description: 'Completá una carrera de Mi Carrera con score 7.0 o más.',
+                icon: 'fa-route',
+                target: 1,
+                rule: { type: 'game_wins', gameId: 'mi_carrera' }
+            },
+            {
+                id: 'mi_carrera_legend',
+                title: 'Leyenda de carrera',
+                description: 'Acumulá 3 carreras élite en Mi Carrera.',
+                icon: 'fa-crown',
+                target: 3,
+                rule: { type: 'game_wins', gameId: 'mi_carrera' }
             }
         ],
 

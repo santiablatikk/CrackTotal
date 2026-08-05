@@ -1,0 +1,58 @@
+[
+  {
+    "id": "arch_tech_promise",
+    "name": "Promesa técnica",
+    "description": "Toque fino y lectura de juego. Crece más con minutos y buen entorno.",
+    "modifiers": {
+      "ratingBias": 1,
+      "potentialBias": 3,
+      "popularityBias": 0,
+      "reputationBias": 1,
+      "injuryRiskBias": 0,
+      "goalBias": 0.05,
+      "assistBias": 0.12
+    }
+  },
+  {
+    "id": "arch_physical",
+    "name": "Tanque físico",
+    "description": "Potencia y resistencia. Aguanta más minutos, menos magia con la pelota.",
+    "modifiers": {
+      "ratingBias": 2,
+      "potentialBias": 1,
+      "popularityBias": -1,
+      "reputationBias": 0,
+      "injuryRiskBias": 0.02,
+      "goalBias": 0.08,
+      "assistBias": -0.05
+    }
+  },
+  {
+    "id": "arch_tactical",
+    "name": "Cerebro táctico",
+    "description": "Orden y liderazgo silencioso. Mejor relación con DT y crecimiento estable.",
+    "modifiers": {
+      "ratingBias": 1,
+      "potentialBias": 2,
+      "popularityBias": -2,
+      "reputationBias": 3,
+      "injuryRiskBias": -0.01,
+      "goalBias": -0.05,
+      "assistBias": 0.1
+    }
+  },
+  {
+    "id": "arch_media_star",
+    "name": "Crack mediático",
+    "description": "Presencia y marketing. Sube popularidad y valor, más presión y ruido.",
+    "modifiers": {
+      "ratingBias": 0,
+      "potentialBias": 2,
+      "popularityBias": 8,
+      "reputationBias": -1,
+      "injuryRiskBias": 0,
+      "goalBias": 0.1,
+      "assistBias": 0.05
+    }
+  }
+]
