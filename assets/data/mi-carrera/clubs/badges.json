@@ -1,0 +1,1885 @@
+{
+  "version": 1,
+  "updated": "2026-08-06",
+  "note": "status real = local licensed crest file present. missing = no official crest; UI uses generated monogram (never claimed as real).",
+  "counts": {
+    "total": 156,
+    "real": 0,
+    "fallback": 0,
+    "missing": 156
+  },
+  "clubs": [
+    {
+      "clubId": "club_boca",
+      "clubName": "Club Atlético Boca Juniors",
+      "shortName": "Boca",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#003B93",
+        "secondary": "#FABB00"
+      }
+    },
+    {
+      "clubId": "club_river",
+      "clubName": "Club Atlético River Plate",
+      "shortName": "River",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E3132D",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_independiente",
+      "clubName": "Club Atlético Independiente",
+      "shortName": "Independiente",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E20E17",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_racing",
+      "clubName": "Racing Club",
+      "shortName": "Racing",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#92C3E0",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_san_lorenzo",
+      "clubName": "Club Atlético San Lorenzo de Almagro",
+      "shortName": "San Lorenzo",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0066B3",
+        "secondary": "#CE0E2D"
+      }
+    },
+    {
+      "clubId": "club_estudiantes",
+      "clubName": "Club Estudiantes de La Plata",
+      "shortName": "Estudiantes",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#E30613"
+      }
+    },
+    {
+      "clubId": "club_velez",
+      "clubName": "Club Atlético Vélez Sarsfield",
+      "shortName": "Vélez",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#003DA5"
+      }
+    },
+    {
+      "clubId": "club_newells",
+      "clubName": "Club Atlético Newell's Old Boys",
+      "shortName": "Newell's",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#D21033",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_rosario_central",
+      "clubName": "Club Atlético Rosario Central",
+      "shortName": "Central",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#002B5C",
+        "secondary": "#FCE300"
+      }
+    },
+    {
+      "clubId": "club_talleres",
+      "clubName": "Club Atlético Talleres",
+      "shortName": "Talleres",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_lanus",
+      "clubName": "Club Atlético Lanús",
+      "shortName": "Lanús",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#8B0000",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_huracan",
+      "clubName": "Club Atlético Huracán",
+      "shortName": "Huracán",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#E30613"
+      }
+    },
+    {
+      "clubId": "club_argentinos",
+      "clubName": "Asociación Atlética Argentinos Juniors",
+      "shortName": "Argentinos",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_banfield",
+      "clubName": "Club Atlético Banfield",
+      "shortName": "Banfield",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#006633",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_gimnasia",
+      "clubName": "Club de Gimnasia y Esgrima La Plata",
+      "shortName": "Gimnasia",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#0033A0"
+      }
+    },
+    {
+      "clubId": "club_union",
+      "clubName": "Club Atlético Unión",
+      "shortName": "Unión",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_defensa",
+      "clubName": "Defensa y Justicia",
+      "shortName": "Defensa",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#F5D300",
+        "secondary": "#1A1A1A"
+      }
+    },
+    {
+      "clubId": "club_godoy_cruz",
+      "clubName": "Club Deportivo Godoy Cruz Antonio Tomba",
+      "shortName": "Godoy Cruz",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_instituto",
+      "clubName": "Instituto Atlético Central Córdoba",
+      "shortName": "Instituto",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_flamengo",
+      "clubName": "Clube de Regatas do Flamengo",
+      "shortName": "Flamengo",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#C8102E",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_palmeiras",
+      "clubName": "Sociedade Esportiva Palmeiras",
+      "shortName": "Palmeiras",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#006437",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_corinthians",
+      "clubName": "Sport Club Corinthians Paulista",
+      "shortName": "Corinthians",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_sao_paulo",
+      "clubName": "São Paulo Futebol Clube",
+      "shortName": "São Paulo",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FE0000",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_santos",
+      "clubName": "Santos Futebol Clube",
+      "shortName": "Santos",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_gremio",
+      "clubName": "Grêmio Foot-Ball Porto Alegrense",
+      "shortName": "Grêmio",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0D80BF",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_internacional",
+      "clubName": "Sport Club Internacional",
+      "shortName": "Internacional",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E20E17",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_atletico_mineiro",
+      "clubName": "Clube Atlético Mineiro",
+      "shortName": "Atlético-MG",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_cruzeiro",
+      "clubName": "Cruzeiro Esporte Clube",
+      "shortName": "Cruzeiro",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#2F6FED",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_botafogo",
+      "clubName": "Botafogo de Futebol e Regatas",
+      "shortName": "Botafogo",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_fluminense",
+      "clubName": "Fluminense Football Club",
+      "shortName": "Fluminense",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#7A0019",
+        "secondary": "#006633"
+      }
+    },
+    {
+      "clubId": "club_vasco",
+      "clubName": "Club de Regatas Vasco da Gama",
+      "shortName": "Vasco",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_athletico_pr",
+      "clubName": "Club Athletico Paranaense",
+      "shortName": "Athletico-PR",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_fortaleza",
+      "clubName": "Fortaleza Esporte Clube",
+      "shortName": "Fortaleza",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#0033A0"
+      }
+    },
+    {
+      "clubId": "club_bahia",
+      "clubName": "Esporte Clube Bahia",
+      "shortName": "Bahia",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#E30613"
+      }
+    },
+    {
+      "clubId": "club_penarol",
+      "clubName": "Club Atlético Peñarol",
+      "shortName": "Peñarol",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#FFD100"
+      }
+    },
+    {
+      "clubId": "club_nacional_uy",
+      "clubName": "Club Nacional de Football",
+      "shortName": "Nacional",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#E30613"
+      }
+    },
+    {
+      "clubId": "club_colo_colo",
+      "clubName": "Club Social y Deportivo Colo-Colo",
+      "shortName": "Colo-Colo",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_u_de_chile",
+      "clubName": "Club Universidad de Chile",
+      "shortName": "U. de Chile",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#E30613"
+      }
+    },
+    {
+      "clubId": "club_catolica_cl",
+      "clubName": "Club Deportivo Universidad Católica",
+      "shortName": "U. Católica",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_atletico_nacional",
+      "clubName": "Atlético Nacional",
+      "shortName": "Atlético Nacional",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#009639",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_millonarios",
+      "clubName": "Millonarios Fútbol Club",
+      "shortName": "Millonarios",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_america_cali",
+      "clubName": "América de Cali",
+      "shortName": "América de Cali",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_junior",
+      "clubName": "Club Deportivo Popular Junior F.C.",
+      "shortName": "Junior",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_olimpia_py",
+      "clubName": "Club Olimpia",
+      "shortName": "Olimpia",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_cerro_porteno",
+      "clubName": "Club Cerro Porteño",
+      "shortName": "Cerro Porteño",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#0033A0"
+      }
+    },
+    {
+      "clubId": "club_ldu",
+      "clubName": "Liga Deportiva Universitaria",
+      "shortName": "LDU Quito",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#E30613"
+      }
+    },
+    {
+      "clubId": "club_barcelona_sc",
+      "clubName": "Barcelona Sporting Club",
+      "shortName": "Barcelona SC",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#F6EB16",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_alianza_lima",
+      "clubName": "Club Alianza Lima",
+      "shortName": "Alianza Lima",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_universitario",
+      "clubName": "Club Universitario de Deportes",
+      "shortName": "Universitario",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#F5D300",
+        "secondary": "#800000"
+      }
+    },
+    {
+      "clubId": "club_bolivar",
+      "clubName": "Club Bolívar",
+      "shortName": "Bolívar",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#75AADB",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_the_strongest",
+      "clubName": "The Strongest",
+      "shortName": "The Strongest",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#F5D300",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_america_mx",
+      "clubName": "Club América",
+      "shortName": "América",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#F5D300",
+        "secondary": "#0033A0"
+      }
+    },
+    {
+      "clubId": "club_chivas",
+      "clubName": "Club Deportivo Guadalajara",
+      "shortName": "Chivas",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_monterrey",
+      "clubName": "Club de Fútbol Monterrey",
+      "shortName": "Monterrey",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_tigres",
+      "clubName": "Club de Fútbol Tigres de la UANL",
+      "shortName": "Tigres",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#F5D300",
+        "secondary": "#0033A0"
+      }
+    },
+    {
+      "clubId": "club_cruz_azul",
+      "clubName": "Cruz Azul Fútbol Club",
+      "shortName": "Cruz Azul",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_pumas",
+      "clubName": "Club Universidad Nacional",
+      "shortName": "Pumas",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#C4A35A"
+      }
+    },
+    {
+      "clubId": "club_inter_miami",
+      "clubName": "Inter Miami CF",
+      "shortName": "Inter Miami",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#F7B5CD",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_lafc",
+      "clubName": "Los Angeles FC",
+      "shortName": "LAFC",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#C39E6D"
+      }
+    },
+    {
+      "clubId": "club_lagalaxy",
+      "clubName": "LA Galaxy",
+      "shortName": "Galaxy",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#00245D",
+        "secondary": "#FFD200"
+      }
+    },
+    {
+      "clubId": "club_seattle",
+      "clubName": "Seattle Sounders FC",
+      "shortName": "Sounders",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#5D9732",
+        "secondary": "#0054A6"
+      }
+    },
+    {
+      "clubId": "club_nycfc",
+      "clubName": "New York City FC",
+      "shortName": "NYCFC",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#6CACE4",
+        "secondary": "#041E42"
+      }
+    },
+    {
+      "clubId": "club_atlanta",
+      "clubName": "Atlanta United FC",
+      "shortName": "Atlanta",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#80000B",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_toronto",
+      "clubName": "Toronto FC",
+      "shortName": "Toronto",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E31937",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_vancouver",
+      "clubName": "Vancouver Whitecaps FC",
+      "shortName": "Whitecaps",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#00245D",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_saprissa",
+      "clubName": "Deportivo Saprissa",
+      "shortName": "Saprissa",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#7B2D8E",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_alajuelense",
+      "clubName": "Liga Deportiva Alajuelense",
+      "shortName": "Alajuelense",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_manchester_city",
+      "clubName": "Manchester City FC",
+      "shortName": "Man City",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#6CABDD",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_arsenal",
+      "clubName": "Arsenal FC",
+      "shortName": "Arsenal",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#EF0107",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_liverpool",
+      "clubName": "Liverpool FC",
+      "shortName": "Liverpool",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#C8102E",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_manchester_united",
+      "clubName": "Manchester United FC",
+      "shortName": "Man United",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#DA291C",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_chelsea",
+      "clubName": "Chelsea FC",
+      "shortName": "Chelsea",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#034694",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_tottenham",
+      "clubName": "Tottenham Hotspur FC",
+      "shortName": "Tottenham",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#132257"
+      }
+    },
+    {
+      "clubId": "club_newcastle",
+      "clubName": "Newcastle United FC",
+      "shortName": "Newcastle",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#241F20",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_aston_villa",
+      "clubName": "Aston Villa FC",
+      "shortName": "Aston Villa",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#95BFE5",
+        "secondary": "#670E36"
+      }
+    },
+    {
+      "clubId": "club_west_ham",
+      "clubName": "West Ham United FC",
+      "shortName": "West Ham",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#7A263A",
+        "secondary": "#1BB1E7"
+      }
+    },
+    {
+      "clubId": "club_brighton",
+      "clubName": "Brighton & Hove Albion FC",
+      "shortName": "Brighton",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0057B8",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_real_madrid",
+      "clubName": "Real Madrid Club de Fútbol",
+      "shortName": "Real Madrid",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#FFD100"
+      }
+    },
+    {
+      "clubId": "club_barcelona",
+      "clubName": "FC Barcelona",
+      "shortName": "Barcelona",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#A50044",
+        "secondary": "#004D98"
+      }
+    },
+    {
+      "clubId": "club_atletico_madrid",
+      "clubName": "Club Atlético de Madrid",
+      "shortName": "Atlético",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#CB3524",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_sevilla",
+      "clubName": "Sevilla FC",
+      "shortName": "Sevilla",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#D4A017"
+      }
+    },
+    {
+      "clubId": "club_real_sociedad",
+      "clubName": "Real Sociedad de Fútbol",
+      "shortName": "Real Sociedad",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0067B1",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_villarreal",
+      "clubName": "Villarreal CF",
+      "shortName": "Villarreal",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFE014",
+        "secondary": "#005187"
+      }
+    },
+    {
+      "clubId": "club_athletic",
+      "clubName": "Athletic Club",
+      "shortName": "Athletic",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#EE2523",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_betis",
+      "clubName": "Real Betis Balompié",
+      "shortName": "Betis",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0BB363",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_valencia",
+      "clubName": "Valencia CF",
+      "shortName": "Valencia",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#EE3524"
+      }
+    },
+    {
+      "clubId": "club_inter",
+      "clubName": "FC Internazionale Milano",
+      "shortName": "Inter",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#010E80",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_milan",
+      "clubName": "AC Milan",
+      "shortName": "Milan",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FB090B",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_juventus",
+      "clubName": "Juventus FC",
+      "shortName": "Juventus",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_napoli",
+      "clubName": "SSC Napoli",
+      "shortName": "Napoli",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#12A0D7",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_roma",
+      "clubName": "AS Roma",
+      "shortName": "Roma",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#8E1F2F",
+        "secondary": "#F0BC42"
+      }
+    },
+    {
+      "clubId": "club_lazio",
+      "clubName": "SS Lazio",
+      "shortName": "Lazio",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#87D8F7",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_fiorentina",
+      "clubName": "ACF Fiorentina",
+      "shortName": "Fiorentina",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#482E92",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_atalanta",
+      "clubName": "Atalanta BC",
+      "shortName": "Atalanta",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#1B2E5B",
+        "secondary": "#E30613"
+      }
+    },
+    {
+      "clubId": "club_bayern",
+      "clubName": "FC Bayern München",
+      "shortName": "Bayern",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#DC052D",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_dortmund",
+      "clubName": "Borussia Dortmund",
+      "shortName": "Dortmund",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FDE100",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_leipzig",
+      "clubName": "RB Leipzig",
+      "shortName": "Leipzig",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#DD0741"
+      }
+    },
+    {
+      "clubId": "club_leverkusen",
+      "clubName": "Bayer 04 Leverkusen",
+      "shortName": "Leverkusen",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E32221",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_frankfurt",
+      "clubName": "Eintracht Frankfurt",
+      "shortName": "Frankfurt",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E1000F",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_wolfsburg",
+      "clubName": "VfL Wolfsburg",
+      "shortName": "Wolfsburg",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#65B32E",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_psg",
+      "clubName": "Paris Saint-Germain FC",
+      "shortName": "PSG",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#004170",
+        "secondary": "#DA291C"
+      }
+    },
+    {
+      "clubId": "club_marseille",
+      "clubName": "Olympique de Marseille",
+      "shortName": "Marsella",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#00A0E3",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_lyon",
+      "clubName": "Olympique Lyonnais",
+      "shortName": "Lyon",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#003366",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_monaco",
+      "clubName": "AS Monaco FC",
+      "shortName": "Monaco",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_lille",
+      "clubName": "LOSC Lille",
+      "shortName": "Lille",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E00E0F",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_nice",
+      "clubName": "OGC Nice",
+      "shortName": "Nice",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_benfica",
+      "clubName": "SL Benfica",
+      "shortName": "Benfica",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_porto",
+      "clubName": "FC Porto",
+      "shortName": "Porto",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#003893",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_sporting",
+      "clubName": "Sporting Clube de Portugal",
+      "shortName": "Sporting",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#008057",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_ajax",
+      "clubName": "AFC Ajax",
+      "shortName": "Ajax",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#D2122E",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_psv",
+      "clubName": "PSV Eindhoven",
+      "shortName": "PSV",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_feyenoord",
+      "clubName": "Feyenoord Rotterdam",
+      "shortName": "Feyenoord",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30713",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_anderlecht",
+      "clubName": "RSC Anderlecht",
+      "shortName": "Anderlecht",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#5A2D81"
+      }
+    },
+    {
+      "clubId": "club_club_brugge",
+      "clubName": "Club Brugge KV",
+      "shortName": "Club Brugge",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0070AD",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_celtic",
+      "clubName": "Celtic FC",
+      "shortName": "Celtic",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#018749",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_rangers",
+      "clubName": "Rangers FC",
+      "shortName": "Rangers",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#1B4BA0",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_galatasaray",
+      "clubName": "Galatasaray SK",
+      "shortName": "Galatasaray",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FDB912",
+        "secondary": "#A90432"
+      }
+    },
+    {
+      "clubId": "club_fenerbahce",
+      "clubName": "Fenerbahçe SK",
+      "shortName": "Fenerbahçe",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFF00",
+        "secondary": "#00205B"
+      }
+    },
+    {
+      "clubId": "club_besiktas",
+      "clubName": "Beşiktaş JK",
+      "shortName": "Beşiktaş",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_olympiacos",
+      "clubName": "Olympiacos FC",
+      "shortName": "Olympiacos",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_paok",
+      "clubName": "PAOK FC",
+      "shortName": "PAOK",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_al_hilal",
+      "clubName": "Al Hilal SFC",
+      "shortName": "Al Hilal",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_al_nassr",
+      "clubName": "Al Nassr FC",
+      "shortName": "Al Nassr",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFF00",
+        "secondary": "#0033A0"
+      }
+    },
+    {
+      "clubId": "club_al_ittihad",
+      "clubName": "Al Ittihad Club",
+      "shortName": "Al Ittihad",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#F5D300"
+      }
+    },
+    {
+      "clubId": "club_al_ahli_sa",
+      "clubName": "Al Ahli Saudi FC",
+      "shortName": "Al Ahli",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#006633",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_al_sadd",
+      "clubName": "Al Sadd SC",
+      "shortName": "Al Sadd",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_al_ain",
+      "clubName": "Al Ain FC",
+      "shortName": "Al Ain",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#8B0000"
+      }
+    },
+    {
+      "clubId": "club_urawa",
+      "clubName": "Urawa Red Diamonds",
+      "shortName": "Urawa",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_kashima",
+      "clubName": "Kashima Antlers",
+      "shortName": "Kashima",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#A32035",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_yokohama",
+      "clubName": "Yokohama F. Marinos",
+      "shortName": "Marinos",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_vissel_kobe",
+      "clubName": "Vissel Kobe",
+      "shortName": "Vissel",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#8B0000",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_ulsan",
+      "clubName": "Ulsan HD FC",
+      "shortName": "Ulsan",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#E30613"
+      }
+    },
+    {
+      "clubId": "club_jeonbuk",
+      "clubName": "Jeonbuk Hyundai Motors FC",
+      "shortName": "Jeonbuk",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#006633",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_melbourne_city",
+      "clubName": "Melbourne City FC",
+      "shortName": "Melbourne City",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#6CABDD",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_sydney_fc",
+      "clubName": "Sydney FC",
+      "shortName": "Sydney FC",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_al_ahly",
+      "clubName": "Al Ahly SC",
+      "shortName": "Al Ahly",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_zamalek",
+      "clubName": "Zamalek SC",
+      "shortName": "Zamalek",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#E30613"
+      }
+    },
+    {
+      "clubId": "club_wydad",
+      "clubName": "Wydad Athletic Club",
+      "shortName": "Wydad",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_raja",
+      "clubName": "Raja Club Athletic",
+      "shortName": "Raja",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#006633",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_esperance",
+      "clubName": "Espérance Sportive de Tunis",
+      "shortName": "Espérance",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#F5D300",
+        "secondary": "#E30613"
+      }
+    },
+    {
+      "clubId": "club_mamelodi",
+      "clubName": "Mamelodi Sundowns FC",
+      "shortName": "Sundowns",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#F5D300",
+        "secondary": "#0033A0"
+      }
+    },
+    {
+      "clubId": "club_tp_mazembe",
+      "clubName": "TP Mazembe",
+      "shortName": "Mazembe",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_salzburg",
+      "clubName": "FC Red Bull Salzburg",
+      "shortName": "Salzburg",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#E30613"
+      }
+    },
+    {
+      "clubId": "club_shakhtar",
+      "clubName": "FC Shakhtar Donetsk",
+      "shortName": "Shakhtar",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FF6600",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_dynamo_kyiv",
+      "clubName": "FC Dynamo Kyiv",
+      "shortName": "Dynamo Kyiv",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#0033A0"
+      }
+    },
+    {
+      "clubId": "club_red_star",
+      "clubName": "FK Crvena zvezda",
+      "shortName": "Estrella Roja",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_partizan",
+      "clubName": "FK Partizan",
+      "shortName": "Partizan",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#000000",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_dinamo_zagreb",
+      "clubName": "GNK Dinamo Zagreb",
+      "shortName": "Dinamo Zagreb",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#0033A0",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_basel",
+      "clubName": "FC Basel 1893",
+      "shortName": "Basel",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#0033A0"
+      }
+    },
+    {
+      "clubId": "club_young_boys",
+      "clubName": "BSC Young Boys",
+      "shortName": "Young Boys",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#F5D300",
+        "secondary": "#000000"
+      }
+    },
+    {
+      "clubId": "club_copenhagen",
+      "clubName": "FC København",
+      "shortName": "Copenhague",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#FFFFFF",
+        "secondary": "#0033A0"
+      }
+    },
+    {
+      "clubId": "club_brondby",
+      "clubName": "Brøndby IF",
+      "shortName": "Brøndby",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#F5D300",
+        "secondary": "#0033A0"
+      }
+    },
+    {
+      "clubId": "club_legia",
+      "clubName": "Legia Warszawa",
+      "shortName": "Legia",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#006633",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_sparta_prague",
+      "clubName": "AC Sparta Praha",
+      "shortName": "Sparta Praga",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_slavia_prague",
+      "clubName": "SK Slavia Praha",
+      "shortName": "Slavia Praga",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#E30613",
+        "secondary": "#FFFFFF"
+      }
+    },
+    {
+      "clubId": "club_ferencvaros",
+      "clubName": "Ferencvárosi TC",
+      "shortName": "Ferencváros",
+      "assetPath": null,
+      "status": "missing",
+      "badgeStyle": "shield",
+      "colors": {
+        "primary": "#006633",
+        "secondary": "#FFFFFF"
+      }
+    }
+  ]
+}

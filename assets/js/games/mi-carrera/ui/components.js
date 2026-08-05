@@ -16,11 +16,15 @@
     var view = NS.getClubBadge(club.id, club);
     var src = NS.Badges.resolveBadgeSrc(view);
     var gen = view && view.generatedHref;
+    var status = (view && view.status) || 'missing';
+    var generatedClass =
+      !view || view.isOfficialCrest || status === 'real' ? '' : ' mc-badge--generated';
     if (!src) {
       return (
         '<span class="mc-badge mc-badge--' +
         size +
-        '" aria-hidden="true">' +
+        generatedClass +
+        '" aria-hidden="true" title="Escudo generado">' +
         F().escapeHtml(view.initials || 'FC') +
         '</span>'
       );
@@ -32,10 +36,13 @@
     return (
       '<img class="mc-badge mc-badge--' +
       size +
+      generatedClass +
       '" src="' +
       F().escapeHtml(src) +
       '" alt="" width="64" height="64" loading="lazy" decoding="async" data-club="' +
       F().escapeHtml(club.id) +
+      '" data-badge-status="' +
+      F().escapeHtml(status) +
       '"' +
       onerr +
       ' />'
@@ -54,20 +61,30 @@
         : option.pathId === 'minutes'
           ? 'Riesgo bajo'
           : 'Riesgo medio';
+    var pathName =
+      option.pathId === 'giant'
+        ? 'Escaparate'
+        : option.pathId === 'minutes'
+          ? 'Protagonista'
+          : 'Equilibrio';
     return (
       '<article class="mc-club-pick mc-club-pick--' +
       F().escapeHtml(option.pathId || 'balance') +
       '">' +
       clubBadgeHtml(club, 'xxl') +
       '<p class="mc-club-pick__path">' +
-      F().escapeHtml(option.pathLabel || '') +
+      F().escapeHtml(pathName) +
       '</p>' +
       '<h2>' +
       F().escapeHtml(club ? club.shortName || club.name : 'Club') +
       '</h2>' +
       '<p class="mc-club-pick__meta">' +
-      (country ? countryFlagHtml(country, 'sm') + ' ' : '') +
+      (country ? countryFlagHtml(country, 'md') + ' ' : '') +
+      F().escapeHtml((country && country.name) || '') +
+      '</p>' +
+      '<p class="mc-club-pick__meta">' +
       F().escapeHtml(option.competitionName || '') +
+      (option.level != null ? ' · Nivel ' + option.level : '') +
       '</p>' +
       '<p class="mc-club-pick__stars" aria-hidden="true">' +
       stars +
@@ -78,11 +95,8 @@
       F().escapeHtml((option.minutes && option.minutes.label) || '') +
       '</p>' +
       '<p class="mc-club-pick__tag">' +
-      F().escapeHtml(option.tagline || '') +
-      '</p>' +
-      '<p class="mc-club-pick__meta">' +
       F().escapeHtml(risk) +
-      (option.level != null ? ' · Nivel ' + option.level : '') +
+      (option.tagline ? ' · ' + F().escapeHtml(option.tagline) : '') +
       '</p>' +
       '<button type="button" class="ct-button ct-button--primary" data-mc-action="pick-start-club" data-club="' +
       F().escapeHtml(option.clubId) +
@@ -93,16 +107,18 @@
   function countryFlagHtml(country, size) {
     size = size || 'md';
     if (!country) {
-      return '<span class="mc-flag mc-flag--' + size + '" aria-hidden="true">🏳️</span>';
+      return '<span class="mc-flag mc-flag--' + size + '" aria-hidden="true">—</span>';
     }
-    var code = String(country.flagCode || country.iso2 || '')
-      .toLowerCase()
-      .replace(/[^a-z]/g, '');
+    var raw = String(country.flagCode || country.iso2 || '').toLowerCase();
     var emoji = F().flagEmoji(country.iso2 || country.flagCode);
     var view = null;
-    if (NS.getCountryFlag) view = NS.getCountryFlag(code);
-    else if (NS.Flags && NS.Flags.getCountryFlag) view = NS.Flags.getCountryFlag(code);
-    var src = view && (view.href || view.fallbackHref);
+    if (NS.getCountryFlag) view = NS.getCountryFlag(raw);
+    else if (NS.Flags && NS.Flags.getCountryFlag) view = NS.Flags.getCountryFlag(raw);
+    var src = null;
+    if (view) {
+      if (NS.Flags && NS.Flags.resolveFlagSrc) src = NS.Flags.resolveFlagSrc(view);
+      else src = view.href || view.fallbackHref;
+    }
     if (src) {
       return (
         '<img class="mc-flag mc-flag--img mc-flag--' +
@@ -110,14 +126,10 @@
         '" src="' +
         F().escapeHtml(src) +
         '" alt="' +
-        F().escapeHtml(country.name || code.toUpperCase()) +
+        F().escapeHtml(country.name || raw.toUpperCase()) +
         '" title="' +
         F().escapeHtml(country.name || '') +
-        '" width="32" height="24" loading="lazy" decoding="async" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement(\'span\'),{className:\'mc-flag mc-flag--' +
-        size +
-        '\',textContent:\'' +
-        emoji +
-        '\',title:this.title}));" />'
+        '" width="32" height="24" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=\'assets/images/flags/_unknown.svg\';" />'
       );
     }
     return (

@@ -62,29 +62,45 @@
     return Array(n + 1).join('★');
   }
 
+  function tradeoffPhrase(current, next, offer) {
+    var curP = (current && current.prestige) || 0;
+    var nextP = (next && next.prestige) || 0;
+    var curL = (current && current.level) || 1;
+    var nextL = (next && next.level) || 1;
+    if (offer && offer.kind === 'loan') return 'Más minutos. Menor riesgo. No es definitivo.';
+    if (nextL >= curL + 2) return 'Salto enorme. Riesgo alto.';
+    if (nextL > curL) return 'Más escaparate. Hay que pelear el puesto.';
+    if (offer && offer.role === 'titular' && nextP < curP) return 'Más minutos, menos prestigio.';
+    if (offer && offer.role === 'titular') return 'Te quieren como titular.';
+    if (offer && offer.role === 'promesa') return 'Gran oportunidad para crecer.';
+    if (nextL < curL) return 'Menos escaparate. Más protagonismo.';
+    return 'Nuevo escenario para tu carrera.';
+  }
+
   function tradeoffChips(current, next, offer) {
     var chips = [];
     var curP = (current && current.prestige) || 0;
     var nextP = (next && next.prestige) || 0;
     var curL = (current && current.level) || 1;
     var nextL = (next && next.level) || 1;
-    if (nextP > curP + 4) chips.push({ tone: 'up', text: '+ Prestigio' });
-    else if (nextP < curP - 4) chips.push({ tone: 'down', text: '− Prestigio' });
-    if (nextL > curL) chips.push({ tone: 'up', text: '+ Escaparate' });
-    else if (nextL < curL) chips.push({ tone: 'down', text: '− Escaparate' });
-    if (offer.role === 'titular') chips.push({ tone: 'up', text: '+ Minutos' });
-    else if (offer.role === 'rotacion') chips.push({ tone: 'down', text: '− Minutos' });
-    else if (offer.role === 'promesa') chips.push({ tone: 'up', text: '+ Futuro' });
+    if (nextP > curP + 4) chips.push({ tone: 'up', text: 'Prestigio' });
+    else if (nextP < curP - 4) chips.push({ tone: 'down', text: 'Prestigio' });
+    if (nextL > curL) chips.push({ tone: 'up', text: 'Competición' });
+    else if (nextL < curL) chips.push({ tone: 'down', text: 'Competición' });
+    if (offer.role === 'titular') chips.push({ tone: 'up', text: 'Minutos' });
+    else if (offer.role === 'rotacion') chips.push({ tone: 'down', text: 'Minutos' });
+    else if (offer.role === 'promesa') chips.push({ tone: 'up', text: 'Desarrollo' });
     if (offer.kind === 'loan') {
       chips = [
-        { tone: 'up', text: '+ Minutos' },
-        { tone: 'up', text: '+ Desarrollo' },
-        { tone: 'down', text: 'No es definitivo' }
+        { tone: 'up', text: 'Minutos' },
+        { tone: 'up', text: 'Desarrollo' },
+        { tone: 'down', text: 'Riesgo' }
       ];
     }
-    if (!chips.length) chips.push({ tone: 'up', text: 'Nuevo escenario' });
+    if (nextL >= curL + 2) chips.push({ tone: 'down', text: 'Riesgo' });
+    if (!chips.length) chips.push({ tone: 'up', text: 'Desarrollo' });
     return chips
-      .slice(0, 3)
+      .slice(0, 4)
       .map(function (c) {
         return (
           '<span class="mc-trade-chip mc-trade-chip--' +
@@ -266,15 +282,15 @@
         id: 'intro',
         tone: 'cover',
         kicker: 'Crack Total',
-        title: 'Mi Carrera',
+        title: 'Tu carrera. Tu historia.',
         lead: 'CONVERTITE EN LEYENDA.',
         body:
           '<div class="mc-cover-visual" aria-hidden="true">' +
           '<div class="mc-cover-visual__pitch"></div>' +
-          '<div class="mc-cover-visual__card"><span>OVR</span><strong>99</strong></div></div>' +
-          '<p class="mc-scene__meta" id="como-funciona">Creá. Decidí. Dejá legado.</p>',
+          '<div class="mc-cover-visual__card"></div></div>' +
+          '<p class="mc-scene__meta" id="como-funciona">Creá. Jugá. Decidí tu futuro.</p>',
         actions:
-          '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="start-create">Crear carrera</button>'
+          '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="start-create">Empezar carrera</button>'
       }) +
       '</div>'
     );
@@ -284,7 +300,7 @@
     var draft = ctx.draft || {};
     var step = draft.createStep || 1;
     var data = ctx.data || {};
-    var titles = ['', 'Tu nombre', '¿De dónde sos?', '¿Qué posición jugás?', '¿Qué tipo de jugador sos?'];
+    var titles = ['', 'Tu nombre', 'Tu país', 'Tu posición', 'Tu estilo'];
     var body = '';
 
     if (step === 1) {
@@ -526,6 +542,15 @@
     else if (state.age >= 33) tone = 'decline';
     else if (state.rating >= 88) tone = 'prime';
 
+    var poster =
+      state.seasonIndex === 0
+        ? 'Tu primera temporada puede cambiarlo todo.'
+        : state.arcFlags && state.arcFlags.crisis
+          ? 'El año se te hizo cuesta arriba. Todavía hay partido.'
+          : state.arcFlags && state.arcFlags.comeback
+            ? 'Volviste. Ahora hay que sostenerlo.'
+            : 'Este año puede cambiarlo todo.';
+
     var actions = '';
     if (decision && decision.type === 'retiro') {
       actions = (decision.options || [])
@@ -550,12 +575,16 @@
         '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="play-season">Jugar temporada</button>';
     }
 
+    var seasonN = Math.max(1, (state.seasonIndex || 0) + 1);
+    var seasonOrdinal =
+      seasonN === 1 ? 'Tu primera temporada' : 'Tu temporada ' + seasonN;
+
     return scene({
       id: 'hub',
       tone: tone,
       kicker: F().escapeHtml(F().seasonLabel(state.seasonIndex)),
-      title: F().escapeHtml(state.player.name),
-      lead: F().escapeHtml(seasonLine(state)),
+      title: F().escapeHtml(club ? club.shortName || club.name : 'Tu club'),
+      lead: F().escapeHtml(seasonOrdinal),
       body:
         '<div class="mc-hub-hero mc-hero-player">' +
         C().clubBadgeHtml(club, 'xxl') +
@@ -563,6 +592,8 @@
         C().countryFlagHtml(country, 'md') +
         '<p class="mc-hub-pos">' +
         F().escapeHtml(state.player.position) +
+        ' · ' +
+        F().escapeHtml(state.player.name) +
         '</p>' +
         '<p class="mc-hub-club">' +
         F().escapeHtml(club ? club.shortName || club.name : '—') +
@@ -571,12 +602,13 @@
         state.rating +
         '</strong></div></div>' +
         '<div class="mc-now">' +
+        '<p class="mc-poster-line">' +
+        F().escapeHtml(poster) +
+        '</p>' +
         (fs
           ? '<p class="mc-form-chip mc-form-chip--' +
             F().escapeHtml(fs.id) +
-            '"><span aria-hidden="true">' +
-            fs.emoji +
-            '</span> ' +
+            '">' +
             F().escapeHtml(fs.label) +
             '</p>'
           : '') +
@@ -614,24 +646,27 @@
         F().escapeHtml(club ? club.shortName || club.name : 'Club') +
         '</h2>' +
         '<p class="mc-offer-scene__league">' +
+        (country ? C().countryFlagHtml(country, 'sm') + ' ' : '') +
+        F().escapeHtml(country ? country.name : '') +
+        '</p>' +
+        '<p class="mc-offer-scene__league">' +
         competitionMarkHtml(comp, 'sm') +
-        (country ? ' ' + C().countryFlagHtml(country, 'sm') : '') +
         '</p>' +
         '<p class="mc-offer-stars" aria-hidden="true">' +
         levelStars(offer.level || (club && club.level) || 1) +
         '</p>' +
-          '<span class="mc-offer-role">' +
-          F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
-          (offer.minutesLabel ? ' · ' + F().escapeHtml(offer.minutesLabel) : '') +
-          '</span>' +
-          (offer.blurb
-            ? '<p class="mc-offer-blurb">' + F().escapeHtml(offer.blurb) + '</p>'
-            : '') +
-          '<button type="button" class="ct-button ct-button--primary" data-mc-action="market-compare" data-offer="' +
-          F().escapeHtml(offer.id) +
-          '">' +
-          (isLoan ? 'Ver cesión' : 'Ver oferta') +
-          '</button></article>'
+        '<span class="mc-offer-role">' +
+        F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
+        (offer.minutesLabel ? ' · ' + F().escapeHtml(offer.minutesLabel) : '') +
+        '</span>' +
+        (offer.blurb
+          ? '<p class="mc-offer-blurb">' + F().escapeHtml(offer.blurb) + '</p>'
+          : '') +
+        '<button type="button" class="ct-button ct-button--primary" data-mc-action="market-compare" data-offer="' +
+        F().escapeHtml(offer.id) +
+        '">' +
+        (isLoan ? 'Ver cesión' : 'Ver oferta') +
+        '</button></article>'
       );
     }
 
@@ -650,7 +685,7 @@
           '<h2 class="mc-scene__club">' +
           F().escapeHtml(currentClub ? currentClub.shortName || currentClub.name : 'Tu club') +
           '</h2>' +
-          '<p class="mc-scene__meta">Tu club sigue siendo tu casa.</p></div>',
+          '<p class="mc-scene__meta">Podés construir tu legado acá.</p></div>',
         actions:
           '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-stay">Quedarme</button>' +
           (canLoan
@@ -675,15 +710,15 @@
       id: 'market',
       tone: 'market',
       kicker: 'Mercado de fichajes',
-      title: 'El mercado habló',
+      title: 'El mercado habla',
       lead: transfers.length
         ? 'Hay clubes que te quieren. Elegí tu próximo capítulo.'
         : 'Hay cesiones sobre la mesa. Más minutos, menos presión.',
       body: '<div class="mc-offer-row">' + cards + '</div>',
       actions:
-        '<button type="button" class="ct-button ct-button--ghost" data-mc-action="market-stay">Quedarme</button>' +
+        '<button type="button" class="ct-button ct-button--secondary ct-button--lg" data-mc-action="market-stay">Quedarme</button>' +
         (canLoan && !loans.length
-          ? '<button type="button" class="ct-button ct-button--secondary" data-mc-action="seek-loan">Buscar préstamo</button>'
+          ? '<button type="button" class="ct-button ct-button--ghost" data-mc-action="seek-loan">Buscar préstamo</button>'
           : '')
     });
   }
@@ -724,8 +759,8 @@
       id: 'compare',
       tone: 'decision',
       kicker: offer.kind === 'loan' ? '¿Cesión?' : '¿Te vas?',
-      title: offer.kind === 'loan' ? 'Préstamo' : 'Decisión de club',
-      lead: offer.kind === 'loan' ? 'Más minutos. Menor riesgo.' : '¿Me voy o me quedo?',
+      title: offer.kind === 'loan' ? 'Préstamo' : 'Tu decisión',
+      lead: tradeoffPhrase(current, next, offer),
       body:
         '<div class="mc-vs">' +
         '<div class="mc-vs__col">' +
@@ -747,7 +782,10 @@
         '</span></div></div>' +
         '<div class="mc-trade-row">' +
         tradeoffChips(current, next, offer) +
-        '</div>',
+        '</div>' +
+        '<p class="mc-compare-line">' +
+        F().escapeHtml(tradeoffPhrase(current, next, offer)) +
+        '</p>',
       actions:
         '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-sign" data-offer="' +
         F().escapeHtml(offer.id) +
@@ -762,6 +800,11 @@
     var club = ctx.club;
     var state = ctx.state;
     var engine = ctx.engine || NS._lastEngine;
+    var prevId =
+      (state.clubsPlayed && state.clubsPlayed.length > 1
+        ? state.clubsPlayed[state.clubsPlayed.length - 2]
+        : null) || null;
+    var prev = prevId && engine ? engine.getClub(prevId) : null;
     var comp =
       club && engine && engine.world
         ? engine.world.competitionsById[club.primaryCompetitionId]
@@ -770,12 +813,21 @@
       id: 'transfer',
       tone: 'transfer',
       kicker: 'Nuevo capítulo',
-      title: F().escapeHtml(club ? club.name : 'Nuevo club'),
-      lead: 'Fichaje confirmado',
+      title: 'Nuevo club',
+      lead: F().escapeHtml(club ? club.name : 'Nuevo club'),
       body:
-        '<div class="mc-scene-crest mc-scene-crest--pulse">' +
-        C().clubBadgeHtml(club, 'xxl') +
-        '</div>' +
+        (prev
+          ? '<div class="mc-vs" style="margin-bottom:1rem">' +
+            '<div class="mc-vs__col">' +
+            C().clubBadgeHtml(prev, 'xl') +
+            '</div>' +
+            '<div class="mc-vs__mark" aria-hidden="true">→</div>' +
+            '<div class="mc-vs__col is-next">' +
+            C().clubBadgeHtml(club, 'xxl') +
+            '</div></div>'
+          : '<div class="mc-scene-crest mc-scene-crest--pulse">' +
+            C().clubBadgeHtml(club, 'xxl') +
+            '</div>') +
         (comp ? '<p class="mc-scene__meta">' + competitionMarkHtml(comp, 'md') + '</p>' : '') +
         '<p class="mc-scene__meta"><strong>' +
         F().escapeHtml(state.player.name) +
@@ -868,9 +920,7 @@
         (fs
           ? '<p class="mc-form-chip mc-form-chip--' +
             F().escapeHtml(fs.id) +
-            '"><span aria-hidden="true">' +
-            fs.emoji +
-            '</span> ' +
+            '">' +
             F().escapeHtml(fs.label) +
             '</p>'
           : '') +

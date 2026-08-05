@@ -16,7 +16,8 @@
     events: 'narrative/events.json',
     retirementLines: 'narrative/retirement_lines.json',
     awards: 'narrative/awards.json',
-    packs: 'manifests/packs.json'
+    packs: 'manifests/packs.json',
+    clubBadges: 'clubs/badges.json'
   };
 
   function fetchJson(path) {
@@ -45,6 +46,9 @@
   }
 
   function createEngineFromData(data) {
+    if (data && data.clubBadges && NS.Badges && NS.Badges.loadManifest) {
+      NS.Badges.loadManifest(data.clubBadges);
+    }
     var engine = NS.createEngine(data);
     NS._lastEngine = engine;
     return engine;

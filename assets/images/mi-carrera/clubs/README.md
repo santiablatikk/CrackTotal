@@ -1,26 +1,25 @@
 # Mi Carrera — club badge assets
 
-## Paths
+## Resolve order
 
-- Preferred: `assets/images/mi-carrera/clubs/{clubId}.svg|webp|png`
-- Legacy: `assets/images/badges/{badgeId}.webp`
+1. **REAL LOCAL** — file listed in `assets/data/mi-carrera/clubs/badges.json` with `status: "real"`
+2. **REAL ASSET ON DISK** — `assets/images/mi-carrera/clubs/{clubId}.{svg|webp|png}`
+3. **FALLBACK LOCAL** — legacy `assets/images/badges/`
+4. **GENERATED** — monogram SVG from club colors (never claimed as an official crest)
 
-Provider resolve order (`getClubBadge`):
+## Manifest
 
-1. **REAL LOCAL** — file present under `mi-carrera/clubs/` (or legacy badges)
-2. **FALLBACK LOCAL** — alternate local path if mapped
-3. **GENERATED** — monogram SVG from club colors + initials (never claimed as official crest)
+`assets/data/mi-carrera/clubs/badges.json`
+
+Fields per club: `clubId`, `clubName`, `assetPath`, `status` (`real` | `fallback` | `missing`).
 
 ## Status (2026-08-06)
 
-- Clubs in dataset: 156
-- Clubs with official local crest files: 0
-- Runtime: generated monogram fallbacks only. No hotlinking. No paid APIs. No remote URLs.
+- Clubs: **156**
+- `status: real`: **0**
+- Local crest files in `mi-carrera/clubs/`: **0**
+- Runtime: generated monograms only. No hotlinking. No paid APIs.
 
 ## Adding real crests
 
-Only add files that are legally reusable (open license / permission). Filename should match `clubId` (e.g. `club_boca.svg`).
-
-Document source and license next to any added file when required.
-
-Do not invent that a monogram is an official crest.
+Only add legally redistributable files. Name them `{clubId}.svg` (preferred) and set `status` to `real` + `assetPath` in the manifest.

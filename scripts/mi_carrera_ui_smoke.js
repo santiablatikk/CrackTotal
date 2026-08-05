@@ -187,8 +187,11 @@ function main() {
 
   const introHtml = MC.UI.screens.intro({ activeSummary: null });
   assert(introHtml.indexOf('CONVERTITE EN LEYENDA.') !== -1, 'intro flagship lead');
+  assert(introHtml.indexOf('Tu carrera') !== -1 || introHtml.indexOf('TU CARRERA') !== -1, 'intro career fantasy');
   assert(introHtml.indexOf('como-funciona') !== -1, 'intro how-it-works anchor');
   assert(introHtml.indexOf('mc-screen--cover') !== -1, 'intro game cover');
+  assert(introHtml.indexOf('OVR</span><strong>99') === -1, 'intro has no fake OVR 99');
+  assert(introHtml.indexOf('Empezar carrera') !== -1, 'intro CTA empezar');
 
   const createHtml = MC.UI.screens.create({
     draft: {
