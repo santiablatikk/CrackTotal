@@ -55,16 +55,16 @@
     <link rel="stylesheet" href="assets/css/discover.css?v=20260804v">
     <link rel="stylesheet" href="assets/css/modals.css?v=20260803m">
     <link rel="stylesheet" href="assets/css/game-shell.css?v=20260803m">
-    <link rel="stylesheet" href="assets/css/mi-carrera.css?v=20260805i">
+    <link rel="stylesheet" href="assets/css/mi-carrera.css?v=20260805j">
 
     <script src="assets/js/adsense-early-blocker.js?v=202506072312"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427" crossorigin="anonymous"></script>
 </head>
-<body class="mi-carrera-body ct-ds">
+<body class="mi-carrera-body ct-ds mc-immersive">
     <a href="#main-content" class="home-skip-link">Saltar al contenido principal</a>
     <div data-ct-navbar data-active="games"></div>
 
-    <div class="breadcrumbs-container">
+    <div class="breadcrumbs-container" hidden>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/">Inicio</a></li>
@@ -77,12 +77,11 @@
     <main id="main-content" class="mc-app-shell">
         <div id="mc-live" class="mc-live" aria-live="polite"></div>
         <div id="mc-app" data-screen="loading" aria-busy="true">
-            <div class="mc-screen mc-screen--loading" aria-busy="true">
-                <div class="ct-card mc-panel">
-                    <div class="ct-skeleton ct-skeleton--title"></div>
-                    <div class="ct-skeleton" style="margin-top:1rem"></div>
-                    <div class="ct-skeleton" style="margin-top:.6rem;width:80%"></div>
-                    <div class="ct-skeleton ct-skeleton--card" style="margin-top:1.5rem"></div>
+            <div class="mc-screen mc-screen--loading mc-scene" aria-busy="true">
+                <div class="mc-scene__stage">
+                    <p class="mc-scene__kicker">Mi Carrera</p>
+                    <div class="ct-skeleton ct-skeleton--title" style="width:12rem;margin:0 auto"></div>
+                    <div class="ct-skeleton" style="margin-top:1rem;width:8rem;margin-left:auto;margin-right:auto"></div>
                 </div>
             </div>
         </div>
@@ -92,35 +91,35 @@
 
     <div data-ct-footer></div>
 
-    <script src="assets/js/config/gamification-config.js?v=20260805i"></script>
-    <script src="assets/js/services/progress/storage-adapter.js?v=20260805i"></script>
-    <script src="assets/js/services/progress/progress-service.js?v=20260805i"></script>
-    <script src="assets/js/services/progress/progress-bridge.js?v=20260805i"></script>
+    <script src="assets/js/config/gamification-config.js?v=20260805j"></script>
+    <script src="assets/js/services/progress/storage-adapter.js?v=20260805j"></script>
+    <script src="assets/js/services/progress/progress-service.js?v=20260805j"></script>
+    <script src="assets/js/services/progress/progress-bridge.js?v=20260805j"></script>
 
-    <script src="assets/js/games/mi-carrera/engine/career-randomizer.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/engine/career-state.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/engine/career-rules.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/engine/career-events.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/engine/career-decisions.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/engine/career-competitions.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/engine/career-awards.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/engine/career-records.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/engine/career-moments.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/engine/career-scoring.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/engine/career-engine.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/persistence/career-storage.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/providers/flags.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/providers/badges.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/providers/assets.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/main.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/ui/format.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/ui/components.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/ui/career-legacy.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/ui/career-card.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/ui/career-share.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/ui/career-rewards.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/ui/screens.js?v=20260805i"></script>
-    <script src="assets/js/games/mi-carrera/ui/app.js?v=20260805i"></script>
+    <script src="assets/js/games/mi-carrera/engine/career-randomizer.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/engine/career-state.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/engine/career-rules.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/engine/career-events.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/engine/career-decisions.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/engine/career-competitions.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/engine/career-awards.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/engine/career-records.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/engine/career-moments.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/engine/career-scoring.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/engine/career-engine.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/persistence/career-storage.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/providers/flags.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/providers/badges.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/providers/assets.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/main.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/ui/format.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/ui/components.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/ui/career-legacy.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/ui/career-card.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/ui/career-share.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/ui/career-rewards.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/ui/screens.js?v=20260805j"></script>
+    <script src="assets/js/games/mi-carrera/ui/app.js?v=20260805j"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
         if (window.MiCarrera && MiCarrera.UI && typeof MiCarrera.UI.start === 'function') {

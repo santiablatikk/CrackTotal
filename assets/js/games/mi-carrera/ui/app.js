@@ -73,6 +73,17 @@
     } else {
       this.root.setAttribute('aria-busy', 'false');
     }
+    if (typeof document !== 'undefined' && document.body) {
+      document.body.classList.add('mc-immersive');
+      document.body.setAttribute('data-mc-screen', name);
+    }
+    var stage = this.root.querySelector('.mc-scene');
+    if (stage) {
+      stage.classList.remove('is-enter');
+      // force reflow for enter animation
+      void stage.offsetWidth;
+      stage.classList.add('is-enter');
+    }
   };
 
   App.prototype.renderLoading = function () {
@@ -266,6 +277,19 @@
     } else {
       this.showIntro();
     }
+  };
+
+  App.prototype.showDebut = function () {
+    if (!this.state) return;
+    this.setRootScreen(
+      'debut',
+      UI.screens.debut({
+        state: this.state,
+        engine: this.engine
+      }),
+      { state: 'debut' }
+    );
+    this.announce('Debut profesional');
   };
 
   App.prototype.showPresent = function () {
@@ -497,36 +521,49 @@
       self.showSeasonRecap(result.season);
     };
 
-    var celebrateQueue = self.buildCelebrationQueue(result.season);
-    var runCelebrations = function () {
-      if (!celebrateQueue.length) {
-        finish();
-        return;
-      }
-      var next = celebrateQueue.shift();
-      UI.components.openModal({
-        title: next.title,
-        size: 'lg',
-        bodyHtml: next.bodyHtml,
-        actionsHtml:
-          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="after-event">Continuar</button>'
-      });
-      self._pendingAfterModal = runCelebrations;
-    };
-
+    this._beatQueue = [];
     if (result.event) {
-      UI.components.openModal({
-        title: result.event.title || 'Fuera de la cancha',
-        size: 'lg',
-        bodyHtml: UI.screens.eventModalBody(result.event),
-        actionsHtml:
-          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="after-event">Continuar</button>'
-      });
-      this._pendingAfterModal = runCelebrations;
-    } else {
-      runCelebrations();
+      this._beatQueue.push({ type: 'event', event: result.event });
     }
+    this._beatQueue = this._beatQueue.concat(self.buildCelebrationQueue(result.season));
+    this._onBeatsDone = finish;
+    this.playNextBeat();
     void before;
+  };
+
+  App.prototype.playNextBeat = function () {
+    var queue = this._beatQueue || [];
+    if (!queue.length) {
+      var done = this._onBeatsDone;
+      this._onBeatsDone = null;
+      if (typeof done === 'function') done();
+      return;
+    }
+    var next = queue.shift();
+    this._beatQueue = queue;
+    if (next.type === 'event') {
+      this.setRootScreen('event', UI.screens.eventScene(next.event), { state: 'beat' });
+      return;
+    }
+    if (next.type === 'title') {
+      this.setRootScreen(
+        'title',
+        UI.screens.titleScene(next.titleObj, next.club, next.nt),
+        { state: 'beat' }
+      );
+      return;
+    }
+    if (next.type === 'award') {
+      this.setRootScreen('award', UI.screens.awardScene(next.award, next.playerName), {
+        state: 'beat'
+      });
+      return;
+    }
+    if (next.type === 'moment') {
+      this.setRootScreen('moment', UI.screens.momentScene(next.moment), { state: 'beat' });
+      return;
+    }
+    this.playNextBeat();
   };
 
   /** @deprecated kept for smoke/compat — prefer resolveDecisionOnly + runSeason */
@@ -574,38 +611,16 @@
       }
     };
 
-    var celebrateQueue = self.buildCelebrationQueue(result.season);
-    var runCelebrations = function () {
-      if (!celebrateQueue.length) {
-        afterFlow();
-        return;
-      }
-      var next = celebrateQueue.shift();
-      UI.components.openModal({
-        title: next.title,
-        size: 'lg',
-        bodyHtml: next.bodyHtml,
-        actionsHtml:
-          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="after-event">Continuar</button>'
-      });
-      self._pendingAfterModal = runCelebrations;
-    };
-
-    if (result.event) {
-      UI.components.openModal({
-        title: result.event.title || 'Fuera de la cancha',
-        size: 'lg',
-        bodyHtml: UI.screens.eventModalBody(result.event),
-        actionsHtml:
-          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="after-event">Continuar</button>'
-      });
-      this._pendingAfterModal = runCelebrations;
-    } else if (result.retired && !result.season) {
+    this._beatQueue = [];
+    if (result.event) this._beatQueue.push({ type: 'event', event: result.event });
+    this._beatQueue = this._beatQueue.concat(self.buildCelebrationQueue(result.season));
+    this._onBeatsDone = afterFlow;
+    if (result.retired && !result.season) {
       this.busy = false;
       this.showRetireTransition();
-    } else {
-      runCelebrations();
+      return;
     }
+    this.playNextBeat();
     void before;
   };
 
@@ -620,17 +635,11 @@
       var nt = title.nationalTeamId
         ? self.engine.world.nationalTeamsById[title.nationalTeamId]
         : null;
-      queue.push({
-        title: 'Campeones',
-        bodyHtml: UI.screens.titleCelebrationBody(title, club, nt)
-      });
+      queue.push({ type: 'title', titleObj: title, club: club, nt: nt });
     });
 
     (season.awards || []).forEach(function (award) {
-      queue.push({
-        title: award.name || 'Premio',
-        bodyHtml: UI.screens.awardCelebrationBody(award, playerName)
-      });
+      queue.push({ type: 'award', award: award, playerName: playerName });
     });
 
     var seasonIdx = season.seasonIndex;
@@ -651,26 +660,14 @@
         String(moment.id).indexOf('moment_comeback_') === 0 ||
         String(moment.id).indexOf('moment_crisis_') === 0;
       if (!big) return;
-      queue.push({
-        title: 'Momento histórico',
-        bodyHtml: UI.screens.momentCelebrationBody(moment)
-      });
+      queue.push({ type: 'moment', moment: moment });
     });
 
     return queue;
   };
 
   App.prototype.showRetireTransition = function () {
-    var self = this;
-    UI.components.openModal({
-      title: 'Tu historia terminó',
-      bodyHtml: '<p>El ciclo se cierra. Prepará el resumen final.</p>',
-      actionsHtml:
-        '<button type="button" class="ct-button ct-button--primary" data-mc-modal="show-retire">Ver mi legado</button>'
-    });
-    this._pendingAfterModal = function () {
-      self.showRetire();
-    };
+    this.showRetire();
   };
 
   App.prototype.openCompareModal = function (offerId) {
@@ -680,24 +677,16 @@
       })[0] || null;
     if (!offer) return;
     this.selectedOfferId = offerId;
-    var self = this;
-    UI.components.openModal({
-      title: '¿Te vas?',
-      size: 'lg',
-      bodyHtml: UI.screens.compareOfferBody({
+    this._compareOfferId = offerId;
+    this.setRootScreen(
+      'compare',
+      UI.screens.compareScene({
         state: this.state,
         engine: this.engine,
         offer: offer
       }),
-      actionsHtml:
-        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-modal="market-sign" data-offer="' +
-        UI.format.escapeHtml(offerId) +
-        '">Fichar por este club</button>' +
-        '<button type="button" class="ct-button ct-button--secondary" data-mc-modal="market-stay">Quedarme en mi club</button>'
-    });
-    this._pendingAfterModal = null;
-    this._compareOfferId = offerId;
-    void self;
+      { state: 'decision' }
+    );
   };
 
   App.prototype.handleMarketStay = function () {
@@ -872,6 +861,10 @@
     }
     if (action === 'begin-career') {
       this.focusAge = this.state.age;
+      this.showDebut();
+      return;
+    }
+    if (action === 'after-debut') {
       this.showCareerHome();
       return;
     }
@@ -909,13 +902,21 @@
       this.showCareerHome();
       return;
     }
+    if (action === 'beat-continue') {
+      this.playNextBeat();
+      return;
+    }
     if (action === 'choose-option') {
       var optionId = target.getAttribute('data-option');
       var offerId = null;
       if (optionId !== 'stay_loyal') {
         offerId = target.getAttribute('data-offer') || this.selectedOfferId;
       }
-      this.resolveDecisionOnly(optionId, offerId);
+      var self = this;
+      this.resolveDecisionOnly(optionId, offerId, function () {
+        self.showCareerHome();
+      });
+      return;
     }
   };
 
