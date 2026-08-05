@@ -64,6 +64,15 @@
         : {},
       recentMarketFamilies: o.recentMarketFamilies ? o.recentMarketFamilies.slice() : [],
       recentOfferBlurbs: o.recentOfferBlurbs ? o.recentOfferBlurbs.slice() : [],
+      clubAttachment: o.clubAttachment != null ? clamp(o.clubAttachment, 0, 100) : 22,
+      clubBonds: o.clubBonds ? JSON.parse(JSON.stringify(o.clubBonds)) : {},
+      returnCooldownUntil: o.returnCooldownUntil != null ? o.returnCooldownUntil : 0,
+      consecutiveCrisis: o.consecutiveCrisis != null ? o.consecutiveCrisis : 0,
+      crisisSeasons: o.crisisSeasons != null ? o.crisisSeasons : 0,
+      stayedStreak: o.stayedStreak != null ? o.stayedStreak : 0,
+      legacyClubId: o.legacyClubId || null,
+      missedBigMove: !!o.missedBigMove,
+      _loanCount: o._loanCount != null ? o._loanCount : 0,
       pendingOffers: o.pendingOffers ? o.pendingOffers.slice() : [],
       seasonModifiers: o.seasonModifiers
         ? Object.assign({}, o.seasonModifiers)

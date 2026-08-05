@@ -3,6 +3,13 @@
 
   var NS = (root.MiCarrera = root.MiCarrera || {});
 
+  function lastSeasonWasGood(state) {
+    var hist = state.seasonHistory || [];
+    if (!hist.length) return false;
+    var g = hist[hist.length - 1].performanceGrade;
+    return g === 'S' || g === 'A' || g === 'B';
+  }
+
   function findDecision(world, typeOrId) {
     var list = world.decisions || [];
     for (var i = 0; i < list.length; i++) {
@@ -158,9 +165,19 @@
     if (isLoan) {
       state.loanParentClubId = state.clubId;
       state.onLoan = true;
+      state._loanCount = (state._loanCount || 0) + 1;
     } else {
       state.onLoan = false;
       state.loanParentClubId = null;
+      // Permanent move: reset attachment, start new bond chapter
+      state.clubAttachment = NS.State.clamp(12 + Math.round((offer.role === 'titular' ? 8 : 0)), 8, 35);
+      state.stayedStreak = 0;
+      if (state.legacyClubId && state.legacyClubId !== club.id) {
+        // leaving legacy club
+      }
+      if ((state.clubsPlayed || []).indexOf(club.id) !== -1) {
+        state.returnCooldownUntil = (state.seasonIndex || 0) + 4;
+      }
     }
 
     state.clubId = club.id;
@@ -216,9 +233,33 @@
       }
       if (effects.transferPreference === 'stay') {
         transferOffer = null;
-        state.clubRelation = NS.State.clamp(state.clubRelation + 6, 0, 100);
-        state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) + 0.06;
-        state.confidence = NS.State.clamp((state.confidence || 55) + 2, 0, 100);
+        var years = NS.Rules.yearsAtClubApprox ? NS.Rules.yearsAtClubApprox(state) : 1;
+        var attach = state.clubAttachment != null ? state.clubAttachment : 22;
+        state.stayedStreak = (state.stayedStreak || 0) + 1;
+        state.clubRelation = NS.State.clamp(state.clubRelation + 6 + (years >= 3 ? 4 : 0), 0, 100);
+        state.seasonModifiers.minutesBias =
+          (state.seasonModifiers.minutesBias || 0) + 0.06 + (years >= 4 ? 0.04 : 0);
+        state.confidence = NS.State.clamp((state.confidence || 55) + 2 + (attach >= 60 ? 2 : 0), 0, 100);
+        state.clubAttachment = NS.State.clamp(attach + 5 + (years >= 3 ? 3 : 0), 0, 100);
+
+        // Legacy / referente stay
+        if (years >= 4 && (lastSeasonWasGood(state) || attach >= 60)) {
+          state.legacyClubId = state.clubId;
+          state.popularity = NS.State.clamp((state.popularity || 40) + 5, 0, 100);
+          state.reputation = NS.State.clamp((state.reputation || 40) + 3, 0, 100);
+          state.morale = NS.State.clamp((state.morale || 70) + 4, 10, 100);
+          state.seasonModifiers.transferBias = (state.seasonModifiers.transferBias || 0) - 0.08;
+        }
+
+        // Missed opportunity: turned down a big step-up
+        var big = (state.pendingOffers || []).some(function (o) {
+          return o.kind !== 'loan' && (o.marketFamily === 'STEP_UP' || o.marketFamily === 'GIANT' || o.marketFamily === 'EUROPE');
+        });
+        if (big) state.missedBigMove = true;
+
+        state.pendingOffers = [];
+      } else {
+        state.stayedStreak = 0;
       }
     }
 

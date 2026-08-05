@@ -492,6 +492,9 @@
     };
     state.seasonHistory.push(seasonRecord);
 
+    if (NS.Rules.updateClubBond) NS.Rules.updateClubBond(state, seasonRecord);
+    if (NS.Rules.updateClubAttachment) NS.Rules.updateClubAttachment(state, stats);
+
     if (capsBefore === 0 && (stats.nationalCaps || 0) > 0) {
       seasonRecord.firstCallUp = true;
     }

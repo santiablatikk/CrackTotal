@@ -669,6 +669,22 @@
 
     score -= Math.max(0, (club.prestige || 50) - state.prestige) * 0.12;
     score += (state.seasonModifiers.transferBias || 0) * 22;
+
+    // Attachment: current club pull reduces outbound interest (anti-nomad)
+    var attach = state.clubAttachment != null ? state.clubAttachment : 22;
+    if (current && club.id !== current.id && attach >= 45) {
+      score -= (attach - 40) * 0.35;
+    }
+    if (current && club.id !== current.id && attach >= 70 && (club.level || 1) <= (current.level || 1)) {
+      score -= 8;
+    }
+
+    // Meaningful return only — otherwise suppress
+    if (current && club.id !== current.id && (state.clubsPlayed || []).indexOf(club.id) !== -1) {
+      if (!isSignificantBond(state, club.id)) score -= 25;
+      else score += 6;
+    }
+
     return score;
   }
 
@@ -699,7 +715,108 @@
     if (state.age <= 19) p *= 0.85;
     if ((state.arcFlags && state.arcFlags.crisis) || state.form <= 2) p *= 0.55;
     if (state.arcFlags && state.arcFlags.breakout) p = Math.min(0.95, p + 0.12);
-    return NS.State.clamp(p, 0.06, 0.92);
+    // Club attachment cools the market without freezing it
+    var attach = state.clubAttachment != null ? state.clubAttachment : 22;
+    if (attach >= 60) p *= 1 - Math.min(0.28, (attach - 55) / 160);
+    if (state.stayedStreak >= 4) p *= 0.88;
+    if (state.legacyClubId && state.legacyClubId === state.clubId && lastGrade !== 'S' && lastGrade !== 'A') {
+      p *= 0.85;
+    }
+    return NS.State.clamp(p, 0.06, 0.9);
+  }
+
+  function yearsAtClubApprox(state) {
+    var hist = state.seasonHistory || [];
+    var n = 0;
+    for (var i = hist.length - 1; i >= 0; i--) {
+      if (hist[i].clubId === state.clubId) n += 1;
+      else break;
+    }
+    return n;
+  }
+
+  function getClubBond(state, clubId) {
+    if (!state.clubBonds || !clubId) return null;
+    return state.clubBonds[clubId] || null;
+  }
+
+  /** RETURN only with a real history — not a one-season cameo. */
+  function isSignificantBond(state, clubId) {
+    if (!clubId) return false;
+    var bond = getClubBond(state, clubId);
+    if (!bond) {
+      // formative start club before bonds mature
+      if ((state.clubsPlayed || [])[0] === clubId && (state.seasonHistory || []).length >= 2) {
+        var seasonsThere = 0;
+        (state.seasonHistory || []).forEach(function (s) {
+          if (s.clubId === clubId) seasonsThere += 1;
+        });
+        return seasonsThere >= 3;
+      }
+      return false;
+    }
+    if (bond.formative && bond.seasons >= 2) return true;
+    if (bond.seasons >= 3) return true;
+    if ((bond.titles || 0) >= 1) return true;
+    if ((bond.apps || 0) >= 55) return true;
+    if (bond.peak && bond.seasons >= 2) return true;
+    return false;
+  }
+
+  function canOfferReturn(state, clubId) {
+    if (!isSignificantBond(state, clubId)) return false;
+    if ((state.returnCooldownUntil || 0) > (state.seasonIndex || 0)) return false;
+    var recent = state.recentMarketFamilies || [];
+    var returnHits = 0;
+    for (var i = 0; i < Math.min(4, recent.length); i++) {
+      if (recent[i] === 'RETURN') returnHits += 1;
+    }
+    if (returnHits >= 1) return false;
+    return true;
+  }
+
+  function updateClubBond(state, seasonRecord) {
+    if (!seasonRecord || !seasonRecord.clubId) return;
+    state.clubBonds = state.clubBonds || {};
+    var id = seasonRecord.clubId;
+    var b = state.clubBonds[id] || {
+      seasons: 0,
+      titles: 0,
+      apps: 0,
+      formative: false,
+      peak: false
+    };
+    b.seasons += 1;
+    b.apps += seasonRecord.appearances || 0;
+    b.titles += (seasonRecord.titles || seasonRecord.trophies || []).length;
+    if ((state.clubsPlayed || [])[0] === id) b.formative = true;
+    if (seasonRecord.performanceGrade === 'S' || seasonRecord.performanceGrade === 'A') {
+      b.peak = true;
+    }
+    state.clubBonds[id] = b;
+  }
+
+  function updateClubAttachment(state, stats) {
+    var attach = state.clubAttachment != null ? state.clubAttachment : 22;
+    var delta = 1;
+    if ((stats.appearances || 0) >= 28) delta += 5;
+    else if ((stats.appearances || 0) >= 22) delta += 3;
+    else if ((stats.appearances || 0) < 12) delta -= 5;
+    if (stats.performanceGrade === 'S') delta += 6;
+    else if (stats.performanceGrade === 'A') delta += 4;
+    else if (stats.performanceGrade === 'D') delta -= 4;
+    if ((stats.titles || stats.trophies || []).length) delta += 7;
+    if (state.onLoan) delta -= 4;
+    if (stats.arcFlags && stats.arcFlags.crisis) delta -= 6;
+    if (stats.arcFlags && stats.arcFlags.comeback) delta += 3;
+    state.clubAttachment = NS.State.clamp(attach + delta, 0, 100);
+    var years = yearsAtClubApprox(state);
+    if (
+      years >= 4 &&
+      (stats.performanceGrade === 'S' || stats.performanceGrade === 'A' || state.clubAttachment >= 65)
+    ) {
+      state.legacyClubId = state.clubId;
+    }
   }
 
   function classifyMarketFamily(state, club, kind, world) {
@@ -709,17 +826,15 @@
     var country = getCountry(world, state.player.countryId);
     var curLevel = current ? current.level || 1 : 2;
     var lv = club.level || 1;
-    var played = state.clubsPlayed || [];
 
-    if (played.indexOf(club.id) !== -1 && club.id !== state.clubId) return 'RETURN';
+    if (club.id !== state.clubId && (state.clubsPlayed || []).indexOf(club.id) !== -1) {
+      if (canOfferReturn(state, club.id)) return 'RETURN';
+      // Weak bond → treat as lateral/home, never fake RETURN
+    }
     if (country && club.countryId === country.id && (!current || current.countryId !== country.id)) {
       return 'HOME';
     }
-    if (
-      current &&
-      yearsAtClubApprox(state) >= 4 &&
-      club.id === state.clubId
-    ) {
+    if (current && yearsAtClubApprox(state) >= 4 && club.id === state.clubId) {
       return 'LEGACY';
     }
     if (lv >= 5 && curLevel <= 3) return 'GIANT';
@@ -752,18 +867,7 @@
     return 'LATERAL';
   }
 
-  function yearsAtClubApprox(state) {
-    var hist = state.seasonHistory || [];
-    var n = 0;
-    for (var i = hist.length - 1; i >= 0; i--) {
-      if (hist[i].clubId === state.clubId) n += 1;
-      else break;
-    }
-    return n;
-  }
-
   function craftOfferBlurb(state, club, role, world, rng, family) {
-    var current = getClub(world, state.clubId);
     var pool = [];
     var pos = state.player ? state.player.position : 'MID';
     var posWord =
@@ -820,7 +924,6 @@
     if (state.arcFlags && state.arcFlags.comeback) pool.push('Vieron tu comeback. Quieren apostar de nuevo.');
     if (state.arcFlags && state.arcFlags.crisis) pool.push('Una puerta para resetear la carrera.');
 
-    // Anti-repeat blurbs across seasons
     var recent = state.recentOfferBlurbs || [];
     var filtered = pool.filter(function (line) {
       return recent.indexOf(line) === -1;
@@ -847,6 +950,14 @@
     for (var i = 0; i < clubs.length; i++) {
       var club = clubs[i];
       if (!isEligibleForClub(state, club, world)) continue;
+      // Block weak RETURN spam at eligibility
+      if (
+        club.id !== state.clubId &&
+        (state.clubsPlayed || []).indexOf(club.id) !== -1 &&
+        !canOfferReturn(state, club.id)
+      ) {
+        continue;
+      }
       var interest = interestScore(state, club, world, lastGrade);
       if (lastApps >= 28) interest += 5;
       else if (lastApps >= 20) interest += 2;
@@ -864,8 +975,11 @@
 
     var pool = candidates.slice(0, Math.min(18, candidates.length));
     var count = 0;
+    var attach = state.clubAttachment != null ? state.clubAttachment : 22;
     if (forceOpen) {
       count = Math.min(maxOffers, pool.length);
+      if (attach >= 70) count = Math.min(count, 2);
+      if (attach >= 85) count = Math.min(count, 1);
     } else if (lastGrade === 'S') count = rng.int(2, Math.min(maxOffers, pool.length));
     else if (lastGrade === 'A') count = rng.int(1, Math.min(maxOffers, pool.length));
     else if (lastGrade === 'B') count = rng.int(0, Math.min(3, pool.length));
@@ -886,13 +1000,15 @@
 
     function familyOk(fam) {
       if (!fam || !lastFamily) return true;
+      if (fam === 'RETURN' && lastFamily === 'RETURN') return false;
       if (fam === lastFamily && rng.bool(0.72)) return false;
       if (recentFamilies[0] === fam && recentFamilies[1] === fam) return false;
       return true;
     }
 
     function takePred(pred, preferredFamily) {
-      for (var pi = 0; pi < pool.length && picked.length < count; pi++) {
+      var matches = [];
+      for (var pi = 0; pi < pool.length; pi++) {
         var it = pool[pi];
         if (used[it.club.id]) continue;
         if (pred && !pred(it)) continue;
@@ -903,14 +1019,15 @@
         if ((it.club.level || 1) >= 5 && !rng.bool(0.32 + Math.max(0, state.reputation - 60) / 80)) {
           continue;
         }
-        used[it.club.id] = true;
-        picked.push(it);
-        return true;
+        matches.push(it);
       }
-      return false;
+      if (!matches.length) return false;
+      var choice = rng.pick(matches.slice(0, Math.min(6, matches.length)));
+      used[choice.club.id] = true;
+      picked.push(choice);
+      return true;
     }
 
-    // Diverse scenario slots
     takePred(function (it) {
       return (it.club.level || 1) > curLevel;
     }, 'STEP_UP');
@@ -923,9 +1040,12 @@
     takePred(function (it) {
       return country && it.club.countryId === country.id;
     }, 'HOME');
-    takePred(function (it) {
-      return (state.clubsPlayed || []).indexOf(it.club.id) !== -1;
-    }, 'RETURN');
+    // RETURN rarely forced into the packet
+    if (rng.bool(0.18)) {
+      takePred(function (it) {
+        return canOfferReturn(state, it.club.id);
+      }, 'RETURN');
+    }
     takePred(function (it) {
       return current && current.continentId === 'continent_sa' && it.club.continentId === 'continent_eu';
     }, 'EUROPE');
@@ -972,7 +1092,7 @@
 
   function loanEligible(state, world) {
     if (!state || state.onLoan) return false;
-    if (state.age > 28) return false;
+    if (state.age > 25) return false;
     var club = getClub(world, state.clubId);
     if (!club) return false;
     var last = state.seasonHistory && state.seasonHistory.length
@@ -981,16 +1101,13 @@
     var apps = last ? last.appearances || 0 : 0;
     var level = club.level || 1;
     var grade = last ? last.performanceGrade : null;
-    if (state.age <= 19 && level >= 3) return true;
-    if (state.age <= 21 && level >= 4) return true;
-    if (state.age <= 22 && level >= 3 && apps < 20) return true;
-    if (state.age <= 23 && level >= 4 && apps < 18) return true;
-    if (state.age <= 24 && level >= 5 && apps < 20) return true;
-    if (state.age <= 25 && level >= 3 && apps < 14) return true;
-    if (state.age <= 26 && state.form <= 3 && level >= 3) return true;
-    if (state.arcFlags && state.arcFlags.crisis && state.age <= 27 && level >= 3) return true;
-    if (state.potential >= 86 && level >= 4 && apps < 16 && state.age <= 24) return true;
-    if (grade === 'D' && apps < 16 && state.age <= 25 && level >= 3) return true;
+    if (state.age <= 19 && level >= 3 && apps < 20) return true;
+    if (state.age <= 21 && level >= 4 && apps < 18) return true;
+    if (state.age <= 22 && level >= 4 && apps < 15) return true;
+    if (state.age <= 23 && level >= 5 && apps < 14) return true;
+    if (state.arcFlags && state.arcFlags.crisis && state.age <= 24 && apps < 18) return true;
+    if (state.potential >= 88 && level >= 4 && apps < 14 && state.age <= 22) return true;
+    if (grade === 'D' && apps < 12 && state.age <= 23 && level >= 4) return true;
     return false;
   }
 
@@ -1067,19 +1184,33 @@
     var recentShapes = state.recentMarketShapes || [];
     var lastShape = recentShapes[0] || null;
     var recentFamilies = state.recentMarketFamilies || [];
+    var attach = state.clubAttachment != null ? state.clubAttachment : 22;
+    var years = yearsAtClubApprox(state);
 
-    // 0–4 transfer offers by context
+    // 0–4 transfer offers by context + attachment
     var wantTx = 0;
-    if (lastGrade === 'S') wantTx = rng.int(2, 4);
-    else if (lastGrade === 'A') wantTx = rng.int(1, 3);
-    else if (lastGrade === 'B') wantTx = rng.bool(0.72) ? rng.int(1, 2) : 0;
-    else if (lastGrade === 'C') wantTx = rng.bool(0.48) ? 1 : 0;
-    else wantTx = rng.bool(0.18) ? 1 : 0;
+    if (lastGrade === 'S') wantTx = rng.int(1, 3);
+    else if (lastGrade === 'A') wantTx = rng.int(1, 2);
+    else if (lastGrade === 'B') wantTx = rng.bool(0.55) ? rng.int(1, 2) : 0;
+    else if (lastGrade === 'C') wantTx = rng.bool(0.38) ? 1 : 0;
+    else wantTx = rng.bool(0.14) ? 1 : 0;
+
+    if (attach >= 70) wantTx = Math.max(0, wantTx - (rng.bool(0.55) ? 1 : 0));
+    if (attach >= 88) wantTx = Math.min(wantTx, 1);
+    if (years >= 5 && (lastGrade === 'A' || lastGrade === 'B') && rng.bool(0.4)) {
+      wantTx = Math.min(wantTx, 1);
+    }
+    // Strong seasons still open doors even for club idols
+    if ((lastGrade === 'S' || lastGrade === 'A') && wantTx === 0 && attach < 90 && rng.bool(0.55)) {
+      wantTx = 1;
+    }
 
     if (lastShape === 'tx:' + wantTx && rng.bool(0.65)) {
       wantTx = Math.max(0, Math.min(4, wantTx + (rng.bool(0.5) ? 1 : -1)));
     }
-    if (lastShape === 'cold' && lastGrade !== 'D' && rng.bool(0.5)) wantTx = Math.max(wantTx, 1);
+    if (lastShape === 'cold' && lastGrade !== 'D' && attach < 70 && rng.bool(0.4)) {
+      wantTx = Math.max(wantTx, 1);
+    }
     if (state.age >= 34) wantTx = Math.min(wantTx, 1);
 
     var transfers =
@@ -1087,33 +1218,30 @@
         ? generateOffers(state, world, rng.fork('tx'), wantTx, true)
         : [];
 
+    // Natural loans — not almost every career
     var loans = [];
     var eligible = loanEligible(state, world);
     var forceLoan =
       eligible &&
-      (apps < 16 ||
-        (state.arcFlags && state.arcFlags.crisis) ||
-        (lastGrade === 'D' && apps < 20) ||
-        (state.age <= 20 && (getClub(world, state.clubId) || {}).level >= 4));
+      ((state.age <= 21 && apps < 14 && (getClub(world, state.clubId) || {}).level >= 4) ||
+        (state.arcFlags && state.arcFlags.crisis && apps < 16 && state.age <= 24));
     var wantLoan = false;
     if (eligible) {
-      if (forceLoan) wantLoan = true;
-      else if (!transfers.length && rng.bool(0.72)) wantLoan = true;
-      else if (transfers.length && rng.bool(0.42)) wantLoan = true;
-      else if (lastShape && String(lastShape).indexOf('loan') === -1 && rng.bool(0.48)) wantLoan = true;
-      else if (state.age <= 22 && rng.bool(0.35)) wantLoan = true;
+      if (forceLoan) wantLoan = rng.bool(0.85);
+      else if (!transfers.length && state.age <= 22 && apps < 18 && rng.bool(0.48)) wantLoan = true;
+      else if (transfers.length && state.age <= 21 && apps < 15 && rng.bool(0.26)) wantLoan = true;
+      else if (state.age <= 20 && (getClub(world, state.clubId) || {}).level >= 4 && rng.bool(0.22)) {
+        wantLoan = true;
+      }
     }
-    if (wantLoan && lastShape && String(lastShape).indexOf('loan') === 0 && transfers.length && rng.bool(0.45)) {
-      wantLoan = false;
-    }
-    if (wantLoan && recentFamilies[0] === 'LOAN' && transfers.length && rng.bool(0.55)) {
-      wantLoan = false;
-    }
+    if (wantLoan && lastShape && String(lastShape).indexOf('loan') === 0) wantLoan = false;
+    if (wantLoan && recentFamilies[0] === 'LOAN') wantLoan = false;
+    if (wantLoan && (state.stayedStreak || 0) >= 3 && !forceLoan) wantLoan = false;
     if (wantLoan) {
-      loans = generateLoanOffers(state, world, rng.fork('loan'), forceLoan && !transfers.length ? 2 : 1);
+      loans = generateLoanOffers(state, world, rng.fork('loan'), 1);
     }
 
-    if (!transfers.length && !loans.length && lastGrade !== 'D' && rng.bool(0.38)) {
+    if (!transfers.length && !loans.length && lastGrade !== 'D' && attach < 75 && rng.bool(0.28)) {
       transfers = generateOffers(state, world, rng.fork('txRetry'), 1, lastGrade === 'A' || lastGrade === 'S');
     }
 
@@ -1137,6 +1265,12 @@
     if (!families.length) families = ['NO_OFFER'];
     state.recentMarketFamilies = families.concat(recentFamilies).slice(0, 10);
 
+    // Legacy beat metadata for UI/narrative (no dashboard)
+    var legacyPressure =
+      years >= 4 &&
+      state.legacyClubId === state.clubId &&
+      (lastGrade === 'A' || lastGrade === 'S' || lastGrade === 'B');
+
     return {
       transfers: transfers,
       loans: loans,
@@ -1145,7 +1279,8 @@
       canLoan: eligible,
       cold: !transfers.length && !loans.length,
       shape: shape,
-      families: families
+      families: families,
+      legacyPressure: !!legacyPressure
     };
   }
 
@@ -1314,16 +1449,36 @@
 
     // Crisis is rare and meaningful — not a permanent death spiral
     var crisisChance = 0;
-    if (state.streakBad >= 3 && grade === 'D') crisisChance = 0.32;
-    else if (state.streakBad >= 2 && grade === 'D' && (state.confidence || 55) <= 40) crisisChance = 0.22;
-    else if (grade === 'D' && apps < 12 && (state.confidence || 55) <= 35) crisisChance = 0.18;
+    if (state.streakBad >= 3 && grade === 'D') crisisChance = 0.12;
+    else if (state.streakBad >= 2 && grade === 'D' && (state.confidence || 55) <= 35) crisisChance = 0.07;
+    else if (grade === 'D' && apps < 8 && (state.confidence || 55) <= 28) crisisChance = 0.05;
+    if ((state.consecutiveCrisis || 0) >= 1) crisisChance *= 0.35;
+    if ((state.consecutiveCrisis || 0) >= 2) crisisChance *= 0.25;
     if (crisisChance > 0 && rng.bool(crisisChance)) flags.crisis = true;
 
-    // Comeback after adversity — rare and satisfying
+    // Comeback after adversity — rare and satisfying; multiple paths
     if (prevBad >= 1 && (good || grade === 'B') && apps >= 14) {
       var comeP = prevBad >= 2 ? (good ? 0.38 : 0.22) : good ? 0.18 : 0.08;
       if ((state.confidence || 55) <= 40) comeP += 0.06;
+      if (state.onLoan && good) comeP += 0.08;
+      if ((state.consecutiveCrisis || 0) >= 1 && good) comeP += 0.1;
       if (rng.bool(NS.State.clamp(comeP, 0.06, 0.55))) flags.comeback = true;
+    }
+
+    // Explicit recovery: leave crisis orbit after a solid season
+    if ((state.consecutiveCrisis || 0) > 0 && (good || (grade === 'B' && apps >= 18))) {
+      var recoverP =
+        0.35 +
+        (good ? 0.25 : 0) +
+        (apps >= 24 ? 0.1 : 0) +
+        (state.age <= 24 ? 0.08 : 0) -
+        (state.age >= 32 ? 0.12 : 0);
+      if (rng.bool(NS.State.clamp(recoverP, 0.2, 0.85))) {
+        state.consecutiveCrisis = 0;
+        state.streakBad = Math.max(0, (state.streakBad || 0) - 1);
+        state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) + 0.05;
+        if (!flags.comeback && prevBad >= 1 && good) flags.comeback = true;
+      }
     }
 
     if (flags.breakout) {
@@ -1334,12 +1489,17 @@
     if (flags.crisis) {
       if (state.form > 3) state.form = NS.State.clamp(state.form - 1, 1, 10);
       state.confidence = NS.State.clamp(state.confidence - 5, 5, 100);
+      state.consecutiveCrisis = (state.consecutiveCrisis || 0) + 1;
+      state.crisisSeasons = (state.crisisSeasons || 0) + 1;
+    } else if ((state.consecutiveCrisis || 0) > 0 && good) {
+      state.consecutiveCrisis = Math.max(0, state.consecutiveCrisis - 1);
     }
     if (flags.comeback) {
       state.form = NS.State.clamp(state.form + 1, 1, 10);
       state.confidence = NS.State.clamp(state.confidence + 12, 5, 100);
       state.morale = NS.State.clamp((state.morale || 70) + 8, 10, 100);
       state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) + 0.04;
+      state.consecutiveCrisis = 0;
     }
 
     state.arcFlags = flags;
@@ -1353,6 +1513,165 @@
     if (avgRating >= 6.7) return 'B';
     if (avgRating >= 6.15) return 'C';
     return 'D';
+  }
+
+  /**
+   * Coarse trajectory fingerprint for variety analysis — real paths, not micro-diffs.
+   */
+  function analyzeCareer(state, world) {
+    var hist = state.seasonHistory || [];
+    var continents = [];
+    var countries = Object.create(null);
+    var clubCounts = Object.create(null);
+    var transfers = 0;
+    var loans = 0;
+    var crisis = 0;
+    var comeback = 0;
+    var titles = 0;
+    var maxLevel = 1;
+    var giantSeasons = 0;
+    var giantApps = 0;
+    var peakRating = 0;
+    var peakAge = 17;
+    var prevClub = null;
+
+    hist.forEach(function (s) {
+      var club = getClub(world, s.clubId);
+      if (club) {
+        continents.push(club.continentId || 'unknown');
+        countries[club.countryId] = true;
+        clubCounts[s.clubId] = (clubCounts[s.clubId] || 0) + 1;
+        maxLevel = Math.max(maxLevel, club.level || 1);
+        if ((club.level || 1) >= 4) {
+          giantSeasons += 1;
+          giantApps += s.appearances || 0;
+        }
+      }
+      if (prevClub && s.clubId !== prevClub) {
+        if (s.transferThisSeason !== false) transfers += 1;
+      }
+      prevClub = s.clubId;
+      if (s.arcFlags && s.arcFlags.crisis) crisis += 1;
+      if (s.arcFlags && s.arcFlags.comeback) comeback += 1;
+      titles += (s.titles || s.trophies || []).length;
+      var r = s.ratingAfter != null ? s.ratingAfter : 0;
+      if (r > peakRating) {
+        peakRating = r;
+        peakAge = s.age || peakAge;
+      }
+    });
+    if (!peakRating) peakRating = state.peakRating || state.rating || 60;
+
+    var hasEU = continents.indexOf('continent_eu') !== -1;
+    var hasSA = continents.indexOf('continent_sa') !== -1;
+    var firstCont = continents[0] || 'unknown';
+    var lastCont = continents.length ? continents[continents.length - 1] : 'unknown';
+    var regionPath = 'OTHER';
+    if (hasSA && !hasEU) regionPath = 'SA_ONLY';
+    else if (hasEU && !hasSA) regionPath = 'EUROPE_ONLY';
+    else if (hasSA && hasEU) {
+      if (firstCont === 'continent_sa' && lastCont === 'continent_eu') regionPath = 'SA_EUROPE';
+      else if (firstCont === 'continent_eu' && lastCont === 'continent_sa') regionPath = 'EUROPE_RETURN_SA';
+      else if (firstCont === 'continent_sa' && lastCont === 'continent_sa') regionPath = 'SA_EUROPE_RETURN_SA';
+      else regionPath = 'BRIDGE';
+    }
+    var countryN = Object.keys(countries).length;
+    if (regionPath === 'SA_ONLY' && countryN >= 3) regionPath = 'SA_MULTIPLE_COUNTRIES';
+    if (regionPath === 'EUROPE_ONLY' && countryN >= 3) regionPath = 'EUROPE_MULTIPLE_COUNTRIES';
+
+    var uniqueClubs = Object.keys(clubCounts).length;
+    var mobility = uniqueClubs <= 1 ? 'loyal' : uniqueClubs <= 4 ? 'mover' : 'nomad';
+    var maxStay = 0;
+    Object.keys(clubCounts).forEach(function (id) {
+      if (clubCounts[id] > maxStay) maxStay = clubCounts[id];
+    });
+
+    var peakBand = peakRating >= 88 ? 'legend' : peakRating >= 80 ? 'star' : peakRating >= 72 ? 'solid' : 'low';
+    var titleBand = titles >= 5 ? 'many' : titles >= 1 ? 'some' : 'none';
+    var ntBand = (state.nationalCaps || 0) >= 20 ? 'ntCore' : (state.nationalCaps || 0) > 0 ? 'nt' : 'nont';
+    var crisisBand = crisis >= 3 ? 'multiCrisis' : crisis >= 1 ? 'crisis' : 'stable';
+    var comeBand = comeback >= 1 ? 'comeback' : 'nocome';
+    var longevity = hist.length <= 12 ? 'short' : hist.length <= 18 ? 'mid' : 'long';
+    var peakAgeBand = peakAge <= 22 ? 'earlyPeak' : peakAge <= 28 ? 'primePeak' : 'latePeak';
+
+    var giantOutcome = 'noGiant';
+    if (giantSeasons >= 2) {
+      var avgGiantApps = giantApps / giantSeasons;
+      if (avgGiantApps >= 22 && peakRating >= 82) giantOutcome = 'giantSuccess';
+      else if (avgGiantApps < 14 || peakRating < 74) giantOutcome = 'giantFail';
+      else giantOutcome = 'giantMixed';
+    } else if (giantSeasons === 1) {
+      if (giantApps < 12) giantOutcome = 'giantFail';
+      else if (giantApps >= 26 && peakRating >= 84) giantOutcome = 'giantSuccess';
+      else giantOutcome = 'giantMixed';
+    }
+
+    var loanBand = 'noloan';
+    if ((state._loanCount || 0) >= 2) loanBand = 'loans';
+    else if ((state._loanCount || 0) === 1) loanBand = 'loan';
+
+    var returnedHome = hist.some(function (s) {
+      return s.returnHome;
+    });
+    var returnBand = returnedHome ? 'homeReturn' : 'noReturn';
+
+    var fingerprint = [
+      regionPath,
+      mobility,
+      loanBand,
+      peakBand,
+      titleBand,
+      ntBand,
+      crisisBand,
+      comeBand,
+      giantOutcome,
+      longevity,
+      peakAgeBand,
+      maxStay >= 6 ? 'clubLegacy' : maxStay >= 4 ? 'clubLong' : 'clubShort',
+      returnBand
+    ].join('|');
+
+    // Emergent labels for analysis — order matters; avoid one bucket eating all
+    var archetype = 'RISING_STAR';
+    if (uniqueClubs <= 1 && hist.length >= 10 && peakRating >= 78) archetype = 'ONE_CLUB_LEGEND';
+    else if (comeBand === 'comeback' && crisis >= 1) archetype = 'COMEBACK';
+    else if (regionPath === 'SA_ONLY' && titles >= 2 && peakRating >= 80) archetype = 'SOUTH_AMERICAN_KING';
+    else if (giantOutcome === 'giantSuccess') archetype = 'GIANT_SUCCESS';
+    else if (giantOutcome === 'giantFail' && peakBand === 'low') archetype = 'GIANT_FAILURE';
+    else if (peakAgeBand === 'latePeak' && peakRating >= 80 && peakAge >= 29) archetype = 'LATE_BLOOMER';
+    else if (peakAgeBand === 'earlyPeak' && peakRating >= 82) archetype = 'WUNDERKIND';
+    else if (
+      regionPath.indexOf('SA_EUROPE') === 0 &&
+      hist[0] &&
+      (getClub(world, hist[0].clubId) || {}).continentId === 'continent_sa'
+    ) {
+      archetype = peakAge <= 22 ? 'EARLY_EUROPE' : 'LATE_EUROPEAN_MOVE';
+    } else if (loanBand !== 'noloan' && uniqueClubs >= 3) archetype = 'LOAN_SPECIALIST';
+    else if (uniqueClubs >= 8) archetype = 'EUROPEAN_JOURNEYMAN';
+    else if (ntBand !== 'nont' && titles >= 1 && peakRating >= 76) archetype = 'NATIONAL_HERO';
+    else if (returnBand === 'homeReturn' && peakAge >= 28) archetype = 'HOME_RETURN';
+    else if (peakBand === 'low' && titles === 0 && ntBand === 'nont') archetype = 'CAREER_STAGNATION';
+    else if (mobility === 'nomad' && peakBand === 'low') archetype = 'FALLEN_STAR';
+    else if (peakBand === 'legend' || peakBand === 'star') archetype = 'RISING_STAR';
+    else archetype = 'RISING_STAR';
+
+    return {
+      fingerprint: fingerprint,
+      regionPath: regionPath,
+      archetype: archetype,
+      uniqueClubs: uniqueClubs,
+      transfers: Math.max(0, uniqueClubs - 1),
+      maxStay: maxStay,
+      crisis: crisis,
+      comeback: comeback,
+      titles: titles,
+      peakRating: peakRating,
+      peakAge: peakAge,
+      duration: hist.length,
+      giantOutcome: giantOutcome,
+      hasEU: hasEU,
+      hasSA: hasSA
+    };
   }
 
   NS.Rules = {
@@ -1396,6 +1715,12 @@
     regionMarketWeight: regionMarketWeight,
     maxTierStep: maxTierStep,
     classifyMarketFamily: classifyMarketFamily,
-    craftOfferBlurb: craftOfferBlurb
+    craftOfferBlurb: craftOfferBlurb,
+    isSignificantBond: isSignificantBond,
+    canOfferReturn: canOfferReturn,
+    updateClubBond: updateClubBond,
+    updateClubAttachment: updateClubAttachment,
+    yearsAtClubApprox: yearsAtClubApprox,
+    analyzeCareer: analyzeCareer
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);
