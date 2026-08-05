@@ -469,41 +469,6 @@
   function renderTransferDecision(ctx, decision, currentClub) {
     var offers = ctx.state.pendingOffers || [];
     var selectedOfferId = ctx.selectedOfferId || (offers[0] && offers[0].id) || '';
-    var offerCards = offers
-      .map(function (offer) {
-        var club = ctx.engine.getClub(offer.clubId);
-        var comp = club ? ctx.engine.world.competitionsById[club.primaryCompetitionId] : null;
-        var selected = offer.id === selectedOfferId;
-        return (
-          '<button type="button" class="mc-offer-card' +
-          (selected ? ' is-selected' : '') +
-          '" data-mc-action="select-offer" data-offer="' +
-          F().escapeHtml(offer.id) +
-          '" aria-pressed="' +
-          selected +
-          '">' +
-          C().clubBadgeHtml(club, 'md') +
-          '<div class="mc-offer-card__body">' +
-          '<strong>' +
-          F().escapeHtml(club ? club.shortName || club.name : 'Club') +
-          '</strong>' +
-          '<span>' +
-          F().escapeHtml(F().LEVEL_LABELS[club ? club.level : 1] || '') +
-          ' · Prestigio ' +
-          (club ? club.prestige : '—') +
-          '</span>' +
-          '<span>' +
-          F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
-          ' · ' +
-          F().formatMoney(offer.wage) +
-          '/año</span>' +
-          '<span>' +
-          F().escapeHtml(comp ? comp.shortName || comp.name : 'Competición') +
-          '</span></div></button>'
-        );
-      })
-      .join('');
-
     var selected = offers.filter(function (o) {
       return o.id === selectedOfferId;
     })[0];
@@ -538,20 +503,56 @@
           '</li></ul></div></div>'
         : '<p class="mc-muted">No hay ofertas sobre la mesa. Podés reforzar el vínculo con tu club.</p>';
 
+    var offerCards = offers
+      .map(function (offer) {
+        var club = ctx.engine.getClub(offer.clubId);
+        var isSelected = offer.id === selectedOfferId;
+        var stars = Math.max(1, Math.min(5, offer.level || 1));
+        return (
+          '<button type="button" class="mc-offer-card' +
+          (isSelected ? ' is-selected' : '') +
+          '" data-mc-action="select-offer" data-offer="' +
+          F().escapeHtml(offer.id) +
+          '" aria-pressed="' +
+          isSelected +
+          '">' +
+          C().clubBadgeHtml(club, 'md') +
+          '<div class="mc-offer-card__body">' +
+          '<strong>' +
+          F().escapeHtml(club ? club.shortName || club.name : 'Club') +
+          '</strong>' +
+          '<span class="mc-offer-stars" aria-label="Nivel ' +
+          stars +
+          '">' +
+          Array(stars + 1).join('⭐') +
+          '</span>' +
+          '<span>' +
+          F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
+          ' · ' +
+          F().formatMoney(offer.wage) +
+          '/año</span>' +
+          '<span>' +
+          F().escapeHtml(offer.blurb || offer.tier || '') +
+          '</span></div></button>'
+        );
+      })
+      .join('');
+
     return (
       '<article class="ct-card mc-decision mc-decision--transfer mc-reveal">' +
       '<p class="mc-kicker">Mercado</p>' +
-      '<h2>Oferta sobre la mesa</h2>' +
+      '<h2>Tu futuro</h2>' +
       '<p class="mc-decision__prompt">' +
-      F().escapeHtml(decision.prompt) +
+      F().escapeHtml(decision.prompt || 'El mercado habló. ¿Qué hacés ahora?') +
       '</p>' +
+      (offers.length ? '' : '<p class="mc-muted">El mercado no se mueve para vos esta vez.</p>') +
       compare +
       (offers.length ? '<div class="mc-offer-list" role="list">' + offerCards + '</div>' : '') +
       '<div class="mc-decision__options mc-decision__options--row">' +
       (selected
         ? '<button type="button" class="ct-button ct-button--primary" data-mc-action="choose-option" data-option="accept_best_prestige" data-offer="' +
           F().escapeHtml(selected.id) +
-          '">Aceptar oferta</button>' +
+          '">Fichar</button>' +
           '<button type="button" class="ct-button ct-button--secondary" data-mc-action="choose-option" data-option="accept_minutes" data-offer="' +
           F().escapeHtml(selected.id) +
           '">Priorizar minutos</button>'

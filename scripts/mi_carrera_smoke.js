@@ -218,6 +218,7 @@ function validateDataIntegrity(data) {
   assert(data.nationalTeams.length === data.countries.length, 'NT matches countries');
   assert(data.events.length >= 12, 'events >= 12');
   assert(data.decisions.length >= 8, 'decisions >= 8');
+  assert(data.decisions.length >= 11, 'decisions include life/market types');
   assert(Array.isArray(data.awards) && data.awards.length >= 8, 'awards >= 8');
 }
 
@@ -289,7 +290,7 @@ function main() {
       const offer = career.pendingOffers[0];
       const club = engine.getClub(offer.clubId);
       assert(offer.clubId !== career.clubId, '4. offer not current club');
-      assert(MiCarrera.Rules.isEligibleForClub(career, club), '4. offer eligible');
+      assert(MiCarrera.Rules.isEligibleForClub(career, club, engine.world), '4. offer eligible');
       result = engine.playSeason(career, 'accept_best_prestige', offer.id);
       if (career.clubId !== startClub) didTransfer = true;
       break;
@@ -447,7 +448,7 @@ function main() {
   });
   let blocked = 0;
   elite.forEach(function (c) {
-    if (!MiCarrera.Rules.isEligibleForClub(low, c)) blocked += 1;
+    if (!MiCarrera.Rules.isEligibleForClub(low, c, absEngine.world)) blocked += 1;
   });
   assert(elite.length > 0 && blocked === elite.length, '14. all world-elite clubs blocked for low rating');
 

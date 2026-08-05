@@ -23,12 +23,23 @@
     var types = [];
     if (state.pendingOffers && state.pendingOffers.length) types.push('transferencia');
     types.push('renovacion');
+    types.push('mercado');
     types.push('entrenamiento');
     types.push('rol');
     if (state.rating >= 68 || state.nationalCaps > 0) types.push('seleccion');
     types.push('prensa');
     if (state.popularity >= 35 || state.rating >= 75) types.push('patrocinio');
     if (state.fitness < 75 || state.age >= 30) types.push('lesion');
+    // Extra-football (rare): only if not flooded by recent life tags
+    var recent = state.recentDecisions || [];
+    var recentLife = recent.some(function (d) {
+      return d.type === 'familia' || d.type === 'rumor' || d.type === 'actitud';
+    });
+    if (!recentLife) {
+      if (state.age >= 22) types.push('familia');
+      if (state.popularity >= 40 || state.reputation >= 45) types.push('rumor');
+      if (state.clubRelation <= 55 || state.form <= 4) types.push('actitud');
+    }
     if (NS.Rules.canVoluntaryRetire(state.age)) types.push('retiro');
     return types;
   }
@@ -40,20 +51,35 @@
       return d.type;
     });
 
+    // Primary cycle: if market moved, the decision IS your future
+    if (state.pendingOffers && state.pendingOffers.length) {
+      var transfer = findDecision(world, 'transferencia');
+      if (transfer) {
+        var copy = JSON.parse(JSON.stringify(transfer));
+        copy.title = 'Tu futuro';
+        copy.prompt = 'El mercado habló. ¿Qué hacés ahora?';
+        return copy;
+      }
+    }
+
     var weighted = types
       .map(function (type) {
         var w = 1;
-        if (type === 'transferencia') w = state.pendingOffers.length ? 3.2 : 0;
-        if (type === 'renovacion') w = 1.4;
-        if (type === 'entrenamiento') w = 1.6;
-        if (type === 'rol') w = 1.3;
-        if (type === 'seleccion') w = state.rating >= 78 ? 1.8 : 1.1;
-        if (type === 'prensa') w = state.popularity >= 50 ? 1.5 : 1;
-        if (type === 'patrocinio') w = 1.2;
-        if (type === 'lesion') w = state.fitness < 60 ? 2.2 : 0.8;
-        if (type === 'retiro') w = state.age >= 36 ? 2.5 : 0.7;
-        if (recentTypes.indexOf(type) === 0) w *= 0.25;
-        else if (recentTypes.indexOf(type) !== -1) w *= 0.55;
+        if (type === 'transferencia') w = 0;
+        if (type === 'renovacion') w = 2.2;
+        if (type === 'mercado') w = 1.8;
+        if (type === 'entrenamiento') w = 1.5;
+        if (type === 'rol') w = 1.2;
+        if (type === 'seleccion') w = state.rating >= 78 ? 1.6 : 1.0;
+        if (type === 'prensa') w = state.popularity >= 50 ? 1.1 : 0.7;
+        if (type === 'patrocinio') w = 0.9;
+        if (type === 'lesion') w = state.fitness < 60 ? 1.8 : 0.5;
+        if (type === 'familia') w = 0.35;
+        if (type === 'rumor') w = 0.4;
+        if (type === 'actitud') w = state.clubRelation < 45 ? 0.7 : 0.25;
+        if (type === 'retiro') w = state.age >= 36 ? 2.4 : 0.6;
+        if (recentTypes.indexOf(type) === 0) w *= 0.2;
+        else if (recentTypes.indexOf(type) !== -1) w *= 0.5;
         return { type: type, weight: w };
       })
       .filter(function (x) {
@@ -120,15 +146,30 @@
     if (!offer) return state;
     var club = NS.Rules.getClub(world, offer.clubId);
     if (!club) return state;
+    var prev = NS.Rules.getClub(world, state.clubId);
+    var prevTier = prev ? NS.Rules.tierRank(NS.Rules.clubTier(prev, world)) : 2;
+    var nextTier = NS.Rules.tierRank(NS.Rules.clubTier(club, world));
+
     state.clubId = club.id;
     if (state.clubsPlayed.indexOf(club.id) === -1) state.clubsPlayed.push(club.id);
-    state.clubRelation = offer.role === 'titular' ? 65 : offer.role === 'promesa' ? 70 : 55;
-    state.prestige = Math.round(state.prestige * 0.7 + club.prestige * 0.3);
-    if (offer.role === 'rotacion') {
-      state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) - 0.12;
+    state.clubRelation = offer.role === 'titular' ? 65 : offer.role === 'promesa' ? 70 : 52;
+    state.prestige = Math.round(state.prestige * 0.65 + club.prestige * 0.35);
+
+    // Big step-up → minutes risk / pressure (can fail at giants)
+    if (nextTier - prevTier >= 2) {
+      state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) - 0.16;
+      state.morale = NS.State.clamp(state.morale - 4, 10, 100);
+    } else if (offer.role === 'rotacion') {
+      state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) - 0.14;
     } else if (offer.role === 'titular') {
       state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) + 0.08;
     }
+
+    if (nextTier < prevTier) {
+      state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) + 0.1;
+      state.clubRelation = NS.State.clamp(state.clubRelation + 8, 0, 100);
+    }
+
     state.money += Math.round((offer.wage || 0) * 0.5);
     state.pendingOffers = [];
     return state;
@@ -157,6 +198,9 @@
       }
       if (effects.transferPreference === 'stay') {
         transferOffer = null;
+        // Loyalty path: real value
+        state.clubRelation = NS.State.clamp(state.clubRelation + 6, 0, 100);
+        state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) + 0.06;
       }
     }
 

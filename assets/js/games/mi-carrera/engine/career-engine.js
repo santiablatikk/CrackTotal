@@ -21,13 +21,10 @@
     var arch = NS.Rules.archetypeById(world, state.player.archetypeId);
     var archMod = (arch && arch.modifiers) || {};
 
-    var minutesFactor = 0.55;
-    minutesFactor += (state.clubRelation - 50) / 200;
-    minutesFactor += (state.form - 5) * 0.03;
-    minutesFactor += (state.fitness - 70) / 200;
-    minutesFactor += state.seasonModifiers.minutesBias || 0;
-    if (state.rating >= (club ? (club.level || 1) * 14 + 10 : 70)) minutesFactor += 0.08;
-    minutesFactor = NS.State.clamp(minutesFactor, 0.15, 0.98);
+    var minutesFactor = NS.Rules.minutesFactorForClub
+      ? NS.Rules.minutesFactorForClub(state, club)
+      : 0.55;
+    minutesFactor = NS.State.clamp(minutesFactor, 0.12, 0.98);
 
     var injuryWeeks = state._pendingInjuryWeeks || 0;
     state._pendingInjuryWeeks = 0;
@@ -164,13 +161,18 @@
       state.form,
       state.seasonModifiers.minutesBias,
       state.seasonModifiers.trainingFocus,
-      rng
+      rng,
+      { lastGrade: stats.performanceGrade }
     );
     state.rating = NS.State.clamp(state.rating + growth, 40, 99);
     if (state.rating > state.peakRating) state.peakRating = state.rating;
 
+    if (NS.Rules.updateReputation) {
+      NS.Rules.updateReputation(state, stats, world);
+    }
+
     var club = NS.Rules.getClub(world, state.clubId);
-    state.marketValue = NS.Rules.computeMarketValue(state, club);
+    state.marketValue = NS.Rules.computeMarketValue(state, club, world);
     if (state.marketValue > (state.peakMarketValue || 0)) {
       state.peakMarketValue = state.marketValue;
     }
@@ -238,7 +240,7 @@
       clubsPlayed: [club.id]
     });
 
-    state.marketValue = NS.Rules.computeMarketValue(state, club);
+    state.marketValue = NS.Rules.computeMarketValue(state, club, this.world);
     state.peakMarketValue = state.marketValue;
     state.phase = 'decision';
     state.currentDecision = NS.Decisions.pickDecision(state, this.world, rng.fork('dec0'));
