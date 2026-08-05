@@ -1168,8 +1168,244 @@ body.mi-carrera-body.ct-ds .breadcrumb-item + .breadcrumb-item::before {
     .mc-choice-card,
     .mc-decision-option,
     .mc-career-card,
+    .mc-celebrate,
     .ct-button {
         animation: none !important;
         transition: none !important;
+    }
+}
+
+/* Flagship intro / create / celebrate / story timeline */
+.mc-hero--flagship {
+    text-align: left;
+    padding: 1.2rem 0 0.5rem;
+}
+
+.mc-pillars {
+    margin-top: 1.75rem;
+}
+
+.mc-pillars__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.mc-pillars__grid li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    padding: 0.85rem 0.9rem;
+    border-radius: var(--ct-radius-md);
+    border: 1px solid var(--ct-line);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.mc-pillars__grid strong {
+    font-size: 0.92rem;
+}
+
+.mc-pillars__grid em {
+    font-style: normal;
+    color: var(--ct-text-subtle);
+    font-size: 0.78rem;
+}
+
+.mc-create-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 220px) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+.mc-create-preview {
+    position: sticky;
+    top: 5.5rem;
+}
+
+.mc-player-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+    padding: 1rem;
+    border-radius: var(--ct-radius-lg);
+    border: 1px solid rgba(121, 242, 166, 0.28);
+    background:
+        linear-gradient(160deg, rgba(121, 242, 166, 0.1), rgba(255, 255, 255, 0.03));
+}
+
+.mc-player-card__avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    object-fit: cover;
+}
+
+.mc-player-card__name {
+    margin: 0.2rem 0 0;
+    font-family: "Oswald", sans-serif;
+    font-size: 1.7rem;
+    line-height: 1;
+    overflow-wrap: anywhere;
+}
+
+.mc-player-card__meta {
+    margin: 0;
+    color: var(--ct-text-muted);
+    font-size: 0.88rem;
+}
+
+.mc-player-card__ovr {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.45rem;
+    margin: 0.35rem 0 0;
+}
+
+.mc-player-card__ovr span {
+    color: var(--ct-text-subtle);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.mc-player-card__ovr strong {
+    color: var(--ct-primary);
+    font-family: "Oswald", sans-serif;
+    font-size: 2rem;
+    line-height: 1;
+}
+
+.mc-player-card__hint {
+    margin: 0.35rem 0 0;
+    font-size: 0.72rem;
+}
+
+.mc-dash-summary {
+    margin-bottom: 0.85rem;
+}
+
+.mc-dash-summary__row,
+.mc-dash-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+}
+
+.mc-dash-grid {
+    margin-top: 0.55rem;
+}
+
+.mc-timeline-stack {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0.85rem 0 1rem;
+}
+
+.mc-story-timeline {
+    display: grid;
+    gap: 0.45rem;
+    margin: 0;
+    padding: 0.75rem;
+    list-style: none;
+    border-radius: var(--ct-radius-md);
+    border: 1px solid var(--ct-line);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.mc-story-timeline__item {
+    display: grid;
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+    gap: 0.55rem;
+    align-items: start;
+}
+
+.mc-story-timeline__item strong {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--ct-primary);
+}
+
+.mc-story-timeline__item span {
+    color: var(--ct-text-muted);
+    font-size: 0.88rem;
+}
+
+.mc-celebrate {
+    text-align: center;
+    padding: 0.4rem 0.2rem 0.2rem;
+}
+
+.mc-celebrate__icon {
+    margin: 0;
+    font-size: 2.4rem;
+    line-height: 1;
+}
+
+.mc-celebrate__name {
+    margin: 0.35rem 0;
+    font-family: "Oswald", sans-serif;
+    font-size: clamp(1.55rem, 4vw, 2.1rem);
+    line-height: 1.05;
+}
+
+.mc-celebrate__club {
+    margin: 0;
+    font-weight: 700;
+    color: var(--ct-text);
+}
+
+.mc-celebrate__season {
+    margin: 0.35rem 0 0;
+    color: var(--ct-text-muted);
+}
+
+.mc-highlight-list {
+    margin: 0.75rem 0;
+    padding-left: 1.1rem;
+    color: var(--ct-text);
+}
+
+.mc-modal--lg .mc-celebrate {
+    animation: mc-celebrate-in 0.35s ease-out;
+}
+
+@keyframes mc-celebrate-in {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@media (max-width: 720px) {
+    .mc-create-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .mc-create-preview {
+        position: static;
+    }
+
+    .mc-dash-summary__row,
+    .mc-dash-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 390px) {
+    .mc-pillars__grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .mc-player-card__name {
+        font-size: 1.45rem;
     }
 }

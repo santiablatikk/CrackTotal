@@ -146,6 +146,17 @@ function main() {
     assert(html.indexOf(t) !== -1, 'html loads ' + t);
   });
 
+  const home = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+  assert(home.indexOf('id="mi-carrera-feature"') !== -1, 'home has mi-carrera-feature');
+  assert(home.indexOf('Crear mi carrera') !== -1, 'home CTA crear carrera');
+  assert(home.indexOf('mi-carrera.html') !== -1, 'home links mi-carrera');
+  assert(home.indexOf('home-game-card--flagship') !== -1, 'home catalog flagship card');
+
+  const games = fs.readFileSync(path.join(ROOT, 'games.html'), 'utf8');
+  assert(games.indexOf('home-game-card--flagship') !== -1, 'games.html flagship card');
+  assert(games.indexOf('Jugar ahora') !== -1, 'games.html jugar ahora CTA');
+  assert((games.match(/href="mi-carrera.html"/g) || []).length >= 1, 'games links mi-carrera once+');
+
   const cfg = fs.readFileSync(path.join(ROOT, 'assets/js/config/gamification-config.js'), 'utf8');
   assert(cfg.indexOf('mi_carrera_elite') !== -1, 'config has mi_carrera achievements');
 
@@ -172,6 +183,27 @@ function main() {
   assert(miniCard.html.indexOf('Mini') !== -1, '1. card uses real name');
   assert(miniCard.viewModel.appearances === 0 || miniCard.viewModel.appearances >= 0, '2. minimal career card builds');
   assert(miniCard.svg.indexOf('Mini') !== -1, 'svg renderer works');
+
+  const introHtml = MC.UI.screens.intro({ activeSummary: null });
+  assert(introHtml.indexOf('¿Hasta dónde puede llegar tu nombre?') !== -1, 'intro flagship lead');
+  assert(introHtml.indexOf('como-funciona') !== -1, 'intro how-it-works anchor');
+
+  const createHtml = MC.UI.screens.create({
+    draft: {
+      name: 'Tisan',
+      countryId: 'country_ar',
+      position: 'MID',
+      archetypeId: 'arch_tech_promise'
+    },
+    data: data
+  });
+  assert(createHtml.indexOf('mc-create-preview') !== -1, 'create has live preview');
+  assert(createHtml.indexOf('Tisan') !== -1, 'preview shows draft name');
+  assert(createHtml.indexOf('OVR') !== -1, 'preview shows OVR');
+
+  assert(typeof MC.UI.screens.titleCelebrationBody === 'function', 'title celebration renderer');
+  assert(typeof MC.UI.screens.awardCelebrationBody === 'function', 'award celebration renderer');
+  assert(typeof MC.UI.screens.momentCelebrationBody === 'function', 'moment celebration renderer');
 
   // Full career
   MC.Storage.resetAll();

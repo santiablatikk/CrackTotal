@@ -122,6 +122,94 @@
   }
 
   function timelineHtml(state, selectedAge) {
+    var moments = state.moments || [];
+    var titles = state.titles || [];
+    var awards = state.awards || [];
+    var events = [];
+
+    function pushEv(ev) {
+      if (!ev || !ev.label) return;
+      events.push(ev);
+    }
+
+    if (state.seasonHistory && state.seasonHistory.length) {
+      var first = state.seasonHistory[0];
+      pushEv({
+        seasonIndex: first.seasonIndex,
+        seasonLabel: first.seasonLabel || F().seasonLabel(first.seasonIndex),
+        label: 'Debut',
+        type: 'debut',
+        icon: '🚩'
+      });
+    }
+
+    titles.forEach(function (t) {
+      pushEv({
+        seasonIndex: t.seasonIndex,
+        seasonLabel: t.seasonLabel,
+        label: t.shortName || t.name,
+        type: 'title',
+        icon: '🏆'
+      });
+    });
+
+    awards.forEach(function (a) {
+      pushEv({
+        seasonIndex: a.seasonIndex,
+        seasonLabel: a.seasonLabel,
+        label: a.shortName || a.name,
+        type: 'award',
+        icon: '🥇'
+      });
+    });
+
+    moments.forEach(function (m) {
+      var important =
+        m.id === 'moment_retire' ||
+        m.id === 'moment_intl_debut' ||
+        m.id === 'moment_first_callup' ||
+        m.id === 'moment_world_cup' ||
+        m.id === 'moment_first_ucl' ||
+        m.id === 'moment_first_libertadores' ||
+        m.id === 'moment_ballon' ||
+        m.id === 'moment_100_goals' ||
+        m.id === 'moment_500_apps' ||
+        m.id === 'moment_first_league';
+      if (!important) return;
+      pushEv({
+        seasonIndex: m.seasonIndex,
+        seasonLabel: m.seasonLabel,
+        label: m.label,
+        type: 'moment',
+        icon: '⭐'
+      });
+    });
+
+    if (state.retired) {
+      pushEv({
+        seasonIndex: Math.max(0, (state.seasonIndex || 1) - 1),
+        seasonLabel: NS.Competitions
+          ? NS.Competitions.seasonLabel(Math.max(0, state.seasonIndex - 1))
+          : '',
+        label: 'Retiro',
+        type: 'retire',
+        icon: '🎖️'
+      });
+    }
+
+    events.sort(function (a, b) {
+      return (a.seasonIndex || 0) - (b.seasonIndex || 0);
+    });
+
+    var seen = Object.create(null);
+    var unique = [];
+    events.forEach(function (ev) {
+      var key = (ev.seasonIndex || 0) + ':' + ev.label;
+      if (seen[key]) return;
+      seen[key] = true;
+      unique.push(ev);
+    });
+
     var currentAge = state.age;
     var start = 17;
     var end = Math.max(currentAge, 17);
@@ -147,7 +235,41 @@
           '</button>'
       );
     }
-    return '<div class="mc-timeline" role="group" aria-label="Línea de carrera">' + items.join('') + '</div>';
+
+    var ageStrip =
+      '<div class="mc-timeline" role="group" aria-label="Edades de carrera">' + items.join('') + '</div>';
+
+    if (!unique.length) {
+      return ageStrip;
+    }
+
+    var story = unique
+      .slice(-10)
+      .map(function (ev) {
+        return (
+          '<li class="mc-story-timeline__item mc-story-timeline__item--' +
+          F().escapeHtml(ev.type || 'event') +
+          '">' +
+          '<span class="mc-story-timeline__icon" aria-hidden="true">' +
+          (ev.icon || '•') +
+          '</span>' +
+          '<div><strong>' +
+          F().escapeHtml(ev.seasonLabel || '') +
+          '</strong>' +
+          '<span>' +
+          F().escapeHtml(ev.label) +
+          '</span></div></li>'
+        );
+      })
+      .join('');
+
+    return (
+      '<div class="mc-timeline-stack">' +
+      ageStrip +
+      '<ol class="mc-story-timeline" aria-label="Momentos de la carrera">' +
+      story +
+      '</ol></div>'
+    );
   }
 
   function loadingSkeleton() {

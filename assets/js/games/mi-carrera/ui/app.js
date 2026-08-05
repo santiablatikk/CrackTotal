@@ -101,6 +101,15 @@
       { state: this.getActiveSummary() ? 'resume' : 'empty' }
     );
     this.announce('Mi Carrera');
+    var hash = (typeof location !== 'undefined' && location.hash) || '';
+    if (hash === '#como-funciona') {
+      setTimeout(function () {
+        var el = document.getElementById('como-funciona');
+        if (el && typeof el.scrollIntoView === 'function') {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 40);
+    }
   };
 
   App.prototype.showCreate = function () {
@@ -328,6 +337,23 @@
       self._pendingAfterModal = afterFlow;
     };
 
+    var celebrateQueue = self.buildCelebrationQueue(result.season);
+    var runCelebrations = function () {
+      if (!celebrateQueue.length) {
+        showFeedback();
+        return;
+      }
+      var next = celebrateQueue.shift();
+      UI.components.openModal({
+        title: next.title,
+        size: 'lg',
+        bodyHtml: next.bodyHtml,
+        actionsHtml:
+          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="after-event">Continuar</button>'
+      });
+      self._pendingAfterModal = runCelebrations;
+    };
+
     if (result.event) {
       UI.components.openModal({
         title: result.event.title || 'Evento',
@@ -335,13 +361,67 @@
         bodyHtml: UI.screens.eventModalBody(result.event),
         actionsHtml: '<button type="button" class="ct-button ct-button--primary" data-mc-modal="after-event">Continuar</button>'
       });
-      this._pendingAfterModal = showFeedback;
+      this._pendingAfterModal = runCelebrations;
     } else if (result.retired && !result.season) {
       this.busy = false;
       this.showRetireTransition();
     } else {
-      showFeedback();
+      runCelebrations();
     }
+  };
+
+  App.prototype.buildCelebrationQueue = function (season) {
+    var queue = [];
+    if (!season || !this.state) return queue;
+    var self = this;
+    var playerName = this.state.player && this.state.player.name;
+
+    (season.titles || []).forEach(function (title) {
+      var club = title.clubId ? self.engine.getClub(title.clubId) : null;
+      var nt = title.nationalTeamId
+        ? self.engine.world.nationalTeamsById[title.nationalTeamId]
+        : null;
+      queue.push({
+        title: 'Campeón',
+        bodyHtml: UI.screens.titleCelebrationBody(title, club, nt)
+      });
+    });
+
+    (season.awards || []).forEach(function (award) {
+      queue.push({
+        title: award.name || 'Premio',
+        bodyHtml: UI.screens.awardCelebrationBody(award, playerName)
+      });
+    });
+
+    var seasonIdx = season.seasonIndex;
+    (this.state.moments || []).forEach(function (moment) {
+      if (moment.seasonIndex !== seasonIdx) return;
+      if (
+        moment.id === 'moment_retire' ||
+        moment.id === 'moment_first_callup' ||
+        moment.id === 'moment_intl_debut'
+      ) {
+        // call-up is nice but keep queue short; still show big moments
+        if (moment.id === 'moment_intl_debut') return;
+      }
+      var big =
+        moment.id === 'moment_first_league' ||
+        moment.id === 'moment_first_ucl' ||
+        moment.id === 'moment_first_libertadores' ||
+        moment.id === 'moment_world_cup' ||
+        moment.id === 'moment_ballon' ||
+        moment.id === 'moment_100_goals' ||
+        moment.id === 'moment_500_apps' ||
+        moment.id === 'moment_return_home';
+      if (!big) return;
+      queue.push({
+        title: 'Entrá en la historia',
+        bodyHtml: UI.screens.momentCelebrationBody(moment)
+      });
+    });
+
+    return queue;
   };
 
   App.prototype.showRetireTransition = function () {
@@ -560,6 +640,11 @@
     }
     if (ev.target && ev.target.id === 'mc-player-name') {
       this.draft.name = ev.target.value;
+      var nameEl = this.root && this.root.querySelector('.mc-player-card__name');
+      if (nameEl) {
+        var n = String(this.draft.name || '').trim();
+        nameEl.textContent = n || 'Tu nombre';
+      }
     }
   };
 
