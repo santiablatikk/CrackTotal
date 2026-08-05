@@ -44,6 +44,7 @@
 
     var ratingFactor = Math.pow(state.rating / 80, 1.15);
     var formFactor = 0.7 + state.form / 16;
+    var confFactor = 0.92 + ((state.confidence != null ? state.confidence : 55) / 100) * 0.16;
     var clubFactor = club ? 0.85 + (club.prestige || 50) / 400 : 1;
 
     var goalRate =
@@ -54,10 +55,16 @@
       (1 + (archMod.assistBias || 0) + (state.seasonModifiers.assistBias || 0));
 
     var goals = Math.round(
-      appearances * goalRate * ratingFactor * formFactor * clubFactor * rng.range(0.75, 1.25)
+      appearances *
+        goalRate *
+        ratingFactor *
+        formFactor *
+        confFactor *
+        clubFactor *
+        rng.range(0.75, 1.25)
     );
     var assists = Math.round(
-      appearances * assistRate * ratingFactor * formFactor * rng.range(0.75, 1.25)
+      appearances * assistRate * ratingFactor * formFactor * confFactor * rng.range(0.75, 1.25)
     );
     if (pos === 'GK') {
       goals = rng.bool(0.02) ? 1 : 0;
@@ -65,13 +72,16 @@
     }
 
     var avgRating =
-      5.4 +
-      (state.rating - 60) * 0.045 +
-      (state.form - 5) * 0.18 +
-      (minutesFactor - 0.5) * 0.6 +
-      rng.range(-0.35, 0.45);
-    if (injuryWeeks >= 10) avgRating -= 0.4;
-    avgRating = NS.State.round1(NS.State.clamp(avgRating, 5.0, 9.8));
+      6.15 +
+      (state.rating - 60) * 0.048 +
+      (state.form - 5) * 0.14 +
+      ((state.confidence != null ? state.confidence : 55) - 55) * 0.008 +
+      (minutesFactor - 0.5) * 0.5 +
+      rng.range(-0.28, 0.38);
+    if (injuryWeeks >= 10) avgRating -= 0.3;
+    if (state.streakBad >= 3) avgRating -= 0.1;
+    if (state.streakGood >= 3) avgRating += 0.12;
+    avgRating = NS.State.round1(NS.State.clamp(avgRating, 5.4, 9.8));
 
     var grade = NS.Rules.performanceGrade(avgRating, appearances, injuryWeeks);
 
@@ -113,11 +123,24 @@
     var formDelta = 0;
     if (stats.performanceGrade === 'S') formDelta = rng.int(1, 2);
     else if (stats.performanceGrade === 'A') formDelta = 1;
-    else if (stats.performanceGrade === 'B') formDelta = rng.bool(0.5) ? 1 : 0;
-    else if (stats.performanceGrade === 'C') formDelta = -1;
-    else formDelta = -2;
+    else if (stats.performanceGrade === 'B') formDelta = rng.bool(0.55) ? 1 : 0;
+    else if (stats.performanceGrade === 'C') formDelta = rng.bool(0.35) ? 0 : -1;
+    else formDelta = -1;
     if (stats.injuryWeeks >= 8) formDelta -= 1;
+    // Soft floor: form can crash, but not stay frozen forever
+    if (state.form <= 2 && stats.performanceGrade !== 'D' && formDelta < 1) {
+      formDelta = rng.bool(0.55) ? 1 : 0;
+    } else if (state.form <= 2 && stats.performanceGrade === 'D' && rng.bool(0.25)) {
+      formDelta = 0;
+    }
     state.form = NS.State.clamp(state.form + formDelta, 1, 10);
+
+    var arcRng = rng.fork ? rng.fork('arc') : rng;
+    var arc =
+      NS.Rules.updateArcState
+        ? NS.Rules.updateArcState(state, stats, arcRng)
+        : { breakout: false, crisis: false, comeback: false };
+    stats.arcFlags = arc;
 
     state.fitness = NS.State.clamp(
       state.fitness + (stats.injuryWeeks >= 6 ? -8 : 4) + rng.int(-3, 3),
@@ -162,8 +185,19 @@
       state.seasonModifiers.minutesBias,
       state.seasonModifiers.trainingFocus,
       rng,
-      { lastGrade: stats.performanceGrade }
+      {
+        lastGrade: stats.performanceGrade,
+        confidence: state.confidence,
+        streakGood: state.streakGood,
+        streakBad: state.streakBad,
+        breakout: !!(arc && arc.breakout),
+        crisis: !!(arc && arc.crisis),
+        comeback: !!(arc && arc.comeback)
+      }
     );
+    if (arc && arc.breakout && growth < 2 && state.age <= 26 && (state.potential - state.rating) >= 6) {
+      growth = Math.min(3, growth + 1);
+    }
     state.rating = NS.State.clamp(state.rating + growth, 40, 99);
     if (state.rating > state.peakRating) state.peakRating = state.rating;
 
@@ -233,6 +267,7 @@
       potential: rp.potential,
       peakRating: rp.rating,
       form: rng.int(4, 7),
+      confidence: rng.int(48, 62),
       reputation: NS.State.clamp(18 + (mod.reputationBias || 0), 0, 100),
       popularity: NS.State.clamp(12 + (mod.popularityBias || 0), 0, 100),
       prestige: Math.round((club.prestige || 40) * 0.25),
@@ -366,6 +401,7 @@
       ratingAfter: state.rating,
       growth: growth,
       transferThisSeason: !!(prevClubId && prevClubId !== state.clubId),
+      arcFlags: stats.arcFlags ? Object.assign({}, stats.arcFlags) : null,
       returnHome: !!(
         prevClubId &&
         prevClubId !== state.clubId &&
@@ -472,6 +508,7 @@
     state.careerCategory = result.category;
     state.careerFlags = result.flags;
     state.retirementLine = result.retirementLine;
+    state.narrativeTag = result.narrativeTag || null;
     state.phase = 'retired';
     state.currentDecision = null;
     state.pendingOffers = [];

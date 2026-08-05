@@ -226,27 +226,46 @@
     var resume = '';
     if (active) {
       resume =
-        '<section class="mc-resume mc-resume--game" aria-labelledby="mc-resume-title">' +
-        '<p class="mc-kicker">Partida en curso</p>' +
+        '<section class="mc-resume mc-resume--priority" aria-labelledby="mc-resume-title">' +
+        '<p class="mc-kicker">Tu última carrera</p>' +
+        '<div class="mc-resume__hero">' +
+        (active.clubId && NS._lastEngine
+          ? C().clubBadgeHtml(NS._lastEngine.getClub(active.clubId), 'xl')
+          : '') +
+        '<div>' +
+        '<div class="mc-resume__name-row">' +
         '<h2 id="mc-resume-title">' +
         F().escapeHtml(active.playerName) +
         '</h2>' +
-        '<p>' +
+        (active.country ? C().countryFlagHtml(active.country, 'lg') : '') +
+        '</div>' +
+        '<p class="mc-resume__meta">' +
         active.age +
         ' años · ' +
         F().escapeHtml(active.clubName) +
-        ' · OVR ' +
+        ' · <strong>' +
         active.rating +
+        ' OVR</strong></p>' +
+        '<p class="mc-resume__season">' +
+        F().escapeHtml(F().seasonLabel(active.seasonIndex)) +
+        (active.formEmoji ? ' · ' + active.formEmoji + ' ' + F().escapeHtml(active.formLabel || '') : '') +
         '</p>' +
+        (active.lastHighlight
+          ? '<p class="mc-resume__highlight">' + F().escapeHtml(active.lastHighlight) + '</p>'
+          : '') +
+        '</div></div>' +
         '<div class="mc-actions">' +
-        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="continue-career">Continuar</button>' +
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="continue-career">Continuar carrera</button>' +
         '<button type="button" class="ct-button ct-button--ghost" data-mc-action="new-career-confirm">Nueva carrera</button>' +
         '</div></section>';
     }
 
     return (
       '<section class="mc-screen mc-screen--cover">' +
-      '<div class="mc-cover">' +
+      (active ? resume : '') +
+      '<div class="mc-cover' +
+      (active ? ' mc-cover--secondary' : '') +
+      '">' +
       '<div class="mc-cover__visual" aria-hidden="true">' +
       '<div class="mc-cover__pitch"></div>' +
       '<div class="mc-cover__silhouette"></div>' +
@@ -255,11 +274,17 @@
       '<div class="mc-cover__copy">' +
       '<p class="mc-kicker">Crack Total</p>' +
       '<h1 class="mc-cover__title">Mi Carrera</h1>' +
-      '<p class="mc-cover__tag">CONVERTITE EN LEYENDA.</p>' +
-      '<p class="mc-cover__lead">Creá tu futbolista. Tomá decisiones. Ganate un lugar en la historia.</p>' +
+      '<p class="mc-cover__tag">' +
+      (active ? '¿Y SI LO INTENTAMOS DE NUEVO?' : 'CONVERTITE EN LEYENDA.') +
+      '</p>' +
+      '<p class="mc-cover__lead">' +
+      (active
+        ? 'Terminá otra historia. El fútbol no se juega una sola vez.'
+        : 'Creá tu futbolista. Tomá decisiones. Ganate un lugar en la historia.') +
+      '</p>' +
       '<div class="mc-actions">' +
       (active
-        ? ''
+        ? '<button type="button" class="ct-button ct-button--secondary ct-button--lg" data-mc-action="new-career-confirm">Crear nueva carrera</button>'
         : '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="start-create">Crear mi futbolista</button>') +
       '<a class="ct-button ct-button--ghost" href="#como-funciona">Cómo funciona</a>' +
       '</div>' +
@@ -269,7 +294,6 @@
       '<li><span aria-hidden="true">🌎</span>Selección</li>' +
       '<li><span aria-hidden="true">⭐</span>Legado</li>' +
       '</ul></div></div>' +
-      resume +
       '</section>'
     );
   }
@@ -569,6 +593,22 @@
       ' · ' +
       state.age +
       ' años</p>' +
+      (function () {
+        var fs = NS.Rules && NS.Rules.formStatus ? NS.Rules.formStatus(state.form) : null;
+        if (!fs) return '';
+        return (
+          '<p class="mc-form-chip mc-form-chip--' +
+          F().escapeHtml(fs.id) +
+          '" aria-label="Forma">' +
+          '<span aria-hidden="true">' +
+          fs.emoji +
+          '</span> ' +
+          F().escapeHtml(fs.label) +
+          ' · ' +
+          state.form +
+          '/10</p>'
+        );
+      })() +
       nowBlock +
       (last
         ? '<section class="mc-home-form" aria-label="Último rendimiento">' +
@@ -614,8 +654,8 @@
         '<section class="mc-screen mc-screen--market">' +
         '<div class="mc-market-hero">' +
         '<p class="mc-kicker">Mercado de fichajes</p>' +
-        '<h1 class="mc-display">Silencio en el mercado</h1>' +
-        '<p class="mc-market-lead">Esta temporada nadie llamó a tu puerta. Tu historia todavía no terminó.</p>' +
+        '<h1 class="mc-display">El mercado pasó de largo</h1>' +
+        '<p class="mc-market-lead">Esta temporada nadie llamó a tu puerta. Duele. Tu historia todavía no terminó.</p>' +
         '<article class="mc-stay-card mc-stay-card--hero">' +
         C().clubBadgeHtml(currentClub, 'xxl') +
         '<h2>' +
@@ -691,8 +731,8 @@
       '<section class="mc-screen mc-screen--market">' +
       '<div class="mc-market-hero">' +
       '<p class="mc-kicker">Mercado de fichajes</p>' +
-      '<h1 class="mc-display">Tu futuro está en juego</h1>' +
-      '<p class="mc-market-lead">Después de la temporada, varios clubes preguntan por vos.</p></div>' +
+      '<h1 class="mc-display">El mercado está abierto</h1>' +
+      '<p class="mc-market-lead">Tu temporada despertó interés. ¿Quién te quiere?</p></div>' +
       '<div class="mc-offer-rail" role="list">' +
       cards +
       '</div>' +
@@ -958,7 +998,12 @@
       '<h1 class="mc-display">Tu historia terminó</h1>' +
       '<p class="mc-cinematic">' +
       F().escapeHtml(state.retirementLine || 'Colgaste los botines.') +
-      '</p></header>' +
+      '</p>' +
+      '<p class="mc-retire-seasons">' +
+      (state.seasonHistory || []).length +
+      ' temporadas · Pico ' +
+      (state.peakRating || state.rating) +
+      ' OVR</p></header>' +
       '<div class="mc-last-strip mc-reveal">' +
       '<div><span>PJ</span><strong>' +
       agg.games +
@@ -977,14 +1022,16 @@
       UI.Legacy.legacyHtml(legacy) +
       UI.Legacy.achievementsHtml(achievements) +
       UI.Rewards.rewardsHtml(reward) +
-      '<section class="ct-card mc-final-actions mc-reveal">' +
+      '<section class="ct-card mc-final-actions mc-reveal mc-final-actions--replay">' +
+      '<p class="mc-kicker">¿Y si lo intentamos de nuevo?</p>' +
+      '<h2 class="mc-replay-title">Otra carrera. Otra historia.</h2>' +
       '<div class="mc-actions mc-actions--final">' +
-      '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="share-career"' +
+      '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="play-again">Crear nueva carrera</button>' +
+      '<button type="button" class="ct-button ct-button--primary" data-mc-action="share-career"' +
       (shareAvailable ? '' : ' hidden') +
       '>Compartir mi carrera</button>' +
-      '<button type="button" class="ct-button ct-button--secondary ct-button--lg" data-mc-action="copy-career">Copiar resultado</button>' +
+      '<button type="button" class="ct-button ct-button--secondary" data-mc-action="copy-career">Copiar resultado</button>' +
       '<a class="ct-button ct-button--ghost" href="#mc-legacy-title">Ver mi legado</a>' +
-      '<button type="button" class="ct-button ct-button--primary" data-mc-action="play-again">Jugar otra vez</button>' +
       '<a class="ct-button ct-button--ghost" href="games.html">Volver a Crack Total</a>' +
       '</div>' +
       '<p class="mc-toast" id="mc-share-toast" role="status" aria-live="polite" hidden></p>' +

@@ -41,7 +41,31 @@
     if (!country) {
       return '<span class="mc-flag mc-flag--' + size + '" aria-hidden="true">🏳️</span>';
     }
+    var code = String(country.flagCode || country.iso2 || '')
+      .toLowerCase()
+      .replace(/[^a-z]/g, '');
     var emoji = F().flagEmoji(country.iso2 || country.flagCode);
+    var view = null;
+    if (NS.getCountryFlag) view = NS.getCountryFlag(code);
+    else if (NS.Flags && NS.Flags.getCountryFlag) view = NS.Flags.getCountryFlag(code);
+    var src = view && (view.href || view.fallbackHref);
+    if (src) {
+      return (
+        '<img class="mc-flag mc-flag--img mc-flag--' +
+        size +
+        '" src="' +
+        F().escapeHtml(src) +
+        '" alt="' +
+        F().escapeHtml(country.name || code.toUpperCase()) +
+        '" title="' +
+        F().escapeHtml(country.name || '') +
+        '" width="32" height="24" loading="lazy" decoding="async" onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement(\'span\'),{className:\'mc-flag mc-flag--' +
+        size +
+        '\',textContent:\'' +
+        emoji +
+        '\',title:this.title}));" />'
+      );
+    }
     return (
       '<span class="mc-flag mc-flag--' +
       size +

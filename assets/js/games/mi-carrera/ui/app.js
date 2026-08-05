@@ -87,12 +87,33 @@
     var active = NS.Storage.loadActive();
     if (!active || active.retired) return null;
     var club = this.engine ? this.engine.getClub(active.clubId) : null;
+    var country =
+      this.engine && active.player
+        ? this.engine.world.countriesById[active.player.countryId]
+        : null;
+    var lastMoment =
+      active.moments && active.moments.length ? active.moments[active.moments.length - 1] : null;
+    var lastTitle =
+      active.titles && active.titles.length ? active.titles[active.titles.length - 1] : null;
+    var formInfo =
+      NS.Rules && NS.Rules.formStatus ? NS.Rules.formStatus(active.form) : { label: '', emoji: '' };
     return {
       playerName: active.player.name,
       age: active.age,
       rating: active.rating,
+      position: active.player.position,
       clubName: club ? club.shortName || club.name : 'Club',
-      seasonIndex: active.seasonIndex
+      clubId: active.clubId,
+      country: country,
+      seasonIndex: active.seasonIndex,
+      form: active.form,
+      formLabel: formInfo.label,
+      formEmoji: formInfo.emoji,
+      lastHighlight: lastMoment
+        ? lastMoment.label
+        : lastTitle
+          ? lastTitle.shortName || lastTitle.name
+          : null
     };
   };
 
@@ -625,7 +646,10 @@
         moment.id === 'moment_100_goals' ||
         moment.id === 'moment_500_apps' ||
         moment.id === 'moment_return_home' ||
-        moment.id === 'moment_first_callup';
+        moment.id === 'moment_first_callup' ||
+        String(moment.id).indexOf('moment_breakout_') === 0 ||
+        String(moment.id).indexOf('moment_comeback_') === 0 ||
+        String(moment.id).indexOf('moment_crisis_') === 0;
       if (!big) return;
       queue.push({
         title: 'Momento histórico',

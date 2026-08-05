@@ -155,36 +155,54 @@
     else if (ctx.lastGrade === 'D') gradeBoost = -0.35;
     else if (ctx.lastGrade === 'C') gradeBoost = -0.15;
 
+    var confidence = ctx.confidence != null ? ctx.confidence : 55;
+    var confMod = (confidence - 55) * 0.008;
+    if (ctx.breakout) gradeBoost += 0.55;
+    if (ctx.crisis) gradeBoost -= 0.4;
+    if (ctx.comeback) gradeBoost += 0.45;
+    if ((ctx.streakBad || 0) >= 3) gradeBoost -= 0.2;
+    if ((ctx.streakGood || 0) >= 3) gradeBoost += 0.15;
+
     var raw = 0;
     var maxUp = 1;
     var declineChance = 0;
 
     if (band === 'youth') {
       maxUp = 3;
-      raw = (gap > 0 ? gap * 0.12 : 0) + formMod + minutesMod + trainMod + gradeBoost;
-      raw += rng.range(-0.25, 0.55);
+      raw = (gap > 0 ? gap * 0.12 : 0) + formMod + minutesMod + trainMod + gradeBoost + confMod;
+      raw += rng.range(-0.35, 0.65);
     } else if (band === 'growth') {
       maxUp = 2;
-      raw = (gap > 0 ? gap * 0.1 : 0) + formMod + minutesMod + trainMod + gradeBoost;
-      raw += rng.range(-0.3, 0.45);
+      raw = (gap > 0 ? gap * 0.1 : 0) + formMod + minutesMod + trainMod + gradeBoost + confMod;
+      raw += rng.range(-0.4, 0.5);
     } else if (band === 'prime') {
       maxUp = 2;
-      raw = (gap > 0 ? gap * 0.06 : rng.bool(0.2) ? -0.2 : 0) + formMod * 0.8 + minutesMod + trainMod + gradeBoost;
-      raw += rng.range(-0.35, 0.35);
+      raw = (gap > 0 ? gap * 0.06 : rng.bool(0.2) ? -0.2 : 0) + formMod * 0.8 + minutesMod + trainMod + gradeBoost + confMod * 0.7;
+      raw += rng.range(-0.4, 0.4);
     } else if (band === 'peak_stable') {
       maxUp = 1;
-      raw = formMod * 0.6 + minutesMod * 0.5 + trainMod + gradeBoost * 0.5;
-      raw += rng.range(-0.45, 0.3);
+      raw = formMod * 0.6 + minutesMod * 0.5 + trainMod + gradeBoost * 0.5 + confMod * 0.5;
+      raw += rng.range(-0.5, 0.3);
       declineChance = 0.12;
     } else if (band === 'early_decline') {
       maxUp = 1;
-      raw = -0.25 + formMod * 0.45 + minutesMod * 0.3 + gradeBoost * 0.3;
+      raw = -0.25 + formMod * 0.45 + minutesMod * 0.3 + gradeBoost * 0.3 + confMod * 0.35;
       raw += rng.range(-0.55, 0.25);
       declineChance = 0.35;
+      // Veterans can still surge after a comeback season
+      if (ctx.comeback && rng.bool(0.4)) {
+        maxUp = 1;
+        declineChance *= 0.4;
+      }
     } else if (band === 'decline') {
       maxUp = 0;
-      raw = -0.55 + formMod * 0.35 + (rng.range(-0.5, 0.15));
+      raw = -0.55 + formMod * 0.35 + (rng.range(-0.5, 0.15)) + confMod * 0.2;
       declineChance = 0.55;
+      if (ctx.comeback && rng.bool(0.25)) {
+        maxUp = 1;
+        raw += 0.4;
+        declineChance = 0.25;
+      }
     } else {
       maxUp = 0;
       raw = -0.85 + formMod * 0.25 + rng.range(-0.4, 0.1);
@@ -419,9 +437,14 @@
     else p = 0.4;
     p += (state.reputation - 40) * 0.0035;
     p += (state.form - 5) * 0.025;
+    p += ((state.confidence || 55) - 55) * 0.002;
+    p += (state.streakGood || 0) * 0.035;
+    p -= (state.streakBad || 0) * 0.04;
     p += (state.seasonModifiers.transferBias || 0) * 0.28;
     if (state.age >= 34) p *= 0.55;
     if (state.age <= 19) p *= 0.85;
+    if ((state.arcFlags && state.arcFlags.crisis) || state.form <= 2) p *= 0.55;
+    if (state.arcFlags && state.arcFlags.breakout) p = Math.min(0.95, p + 0.12);
     return NS.State.clamp(p, 0.06, 0.92);
   }
 
@@ -584,12 +607,115 @@
     };
   }
 
+  function formStatus(form) {
+    var f = Number(form) || 5;
+    if (f >= 9) return { id: 'hot', label: 'En racha', emoji: '🔥' };
+    if (f >= 7) return { id: 'good', label: 'Buena forma', emoji: '🙂' };
+    if (f >= 5) return { id: 'normal', label: 'Normal', emoji: '😐' };
+    if (f >= 3) return { id: 'low', label: 'Bajo rendimiento', emoji: '📉' };
+    return { id: 'crisis', label: 'En crisis', emoji: '❄️' };
+  }
+
+  /**
+   * Update streaks/confidence and detect breakout / crisis / comeback for this season.
+   * Context + probability + state + seeded RNG — not pure random.
+   */
+  function updateArcState(state, stats, rng) {
+    var grade = stats.performanceGrade || 'B';
+    var apps = stats.appearances || 0;
+    var good = grade === 'S' || grade === 'A';
+    var bad = grade === 'D' || apps < 10;
+    var prevBad = state.streakBad || 0;
+    var prevGood = state.streakGood || 0;
+
+    if (good) {
+      state.streakGood = prevGood + 1;
+      state.streakBad = 0;
+    } else if (bad) {
+      state.streakBad = prevBad + 1;
+      state.streakGood = 0;
+    } else if (grade === 'C') {
+      // Irregular: don't inflate endless crisis, but don't erase it either
+      state.streakGood = 0;
+      state.streakBad = prevBad > 0 ? prevBad : 0;
+    } else {
+      // B: gradual recovery of bad streak
+      state.streakGood = Math.max(0, prevGood);
+      state.streakBad = Math.max(0, prevBad - 1);
+    }
+
+    var confDelta = 0;
+    if (grade === 'S') confDelta = rng.int(5, 10);
+    else if (grade === 'A') confDelta = rng.int(2, 6);
+    else if (grade === 'B') confDelta = rng.int(-1, 3);
+    else if (grade === 'C') confDelta = -rng.int(2, 5);
+    else confDelta = -rng.int(3, 6);
+    if (apps < 12) confDelta -= 2;
+    if ((stats.titles || stats.trophies || []).length) confDelta += 5;
+    if (stats.injuryWeeks >= 8) confDelta -= 3;
+    // Confidence recovers slowly from the floor
+    if ((state.confidence || 55) <= 25 && grade !== 'D') confDelta = Math.max(confDelta, rng.int(3, 7));
+    state.confidence = NS.State.clamp((state.confidence != null ? state.confidence : 55) + confDelta, 12, 100);
+
+    var flags = {
+      breakout: false,
+      crisis: false,
+      comeback: false
+    };
+
+    var band = ageBand(state.age);
+    var gap = (state.potential || 80) - (state.rating || 70);
+    var breakoutChance =
+      0.03 +
+      (grade === 'S' ? 0.1 : 0) +
+      (state.streakGood >= 2 ? 0.05 : 0) +
+      (gap >= 10 ? 0.04 : 0) +
+      (band === 'youth' || band === 'growth' ? 0.04 : 0) +
+      ((state.confidence || 55) >= 72 ? 0.03 : 0);
+    if (band === 'late' || band === 'decline') breakoutChance *= 0.2;
+    if (grade === 'S' && apps >= 26 && rng.bool(NS.State.clamp(breakoutChance, 0.02, 0.22))) {
+      flags.breakout = true;
+    }
+
+    // Crisis is rare and meaningful — not a permanent death spiral
+    var crisisChance = 0;
+    if (state.streakBad >= 3 && grade === 'D') crisisChance = 0.32;
+    else if (state.streakBad >= 2 && grade === 'D' && (state.confidence || 55) <= 40) crisisChance = 0.22;
+    else if (grade === 'D' && apps < 12 && (state.confidence || 55) <= 35) crisisChance = 0.18;
+    if (crisisChance > 0 && rng.bool(crisisChance)) flags.crisis = true;
+
+    // Comeback after adversity (even one deep D season can set up a return)
+    if (prevBad >= 1 && (good || grade === 'B') && apps >= 14) {
+      var comeP = prevBad >= 2 ? (good ? 0.6 : 0.42) : good ? 0.35 : 0.22;
+      if (rng.bool(NS.State.clamp(comeP, 0.18, 0.9))) flags.comeback = true;
+    }
+
+    if (flags.breakout) {
+      state.form = NS.State.clamp(state.form + 1, 1, 10);
+      state.confidence = NS.State.clamp(state.confidence + 8, 5, 100);
+      state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) + 0.05;
+    }
+    if (flags.crisis) {
+      if (state.form > 3) state.form = NS.State.clamp(state.form - 1, 1, 10);
+      state.confidence = NS.State.clamp(state.confidence - 5, 5, 100);
+    }
+    if (flags.comeback) {
+      state.form = NS.State.clamp(state.form + 1, 1, 10);
+      state.confidence = NS.State.clamp(state.confidence + 12, 5, 100);
+      state.morale = NS.State.clamp((state.morale || 70) + 8, 10, 100);
+      state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) + 0.04;
+    }
+
+    state.arcFlags = flags;
+    return flags;
+  }
+
   function performanceGrade(avgRating, appearances, injuryWeeks) {
-    if (injuryWeeks >= 16 || appearances < 8) return 'D';
-    if (avgRating >= 8.2 && appearances >= 25) return 'S';
-    if (avgRating >= 7.5) return 'A';
-    if (avgRating >= 6.8) return 'B';
-    if (avgRating >= 6.2) return 'C';
+    if (injuryWeeks >= 16 || appearances < 6) return 'D';
+    if (avgRating >= 8.15 && appearances >= 24) return 'S';
+    if (avgRating >= 7.4) return 'A';
+    if (avgRating >= 6.7) return 'B';
+    if (avgRating >= 6.15) return 'C';
     return 'D';
   }
 
@@ -619,6 +745,8 @@
     clubTier: clubTier,
     tierRank: tierRank,
     ageBand: ageBand,
+    formStatus: formStatus,
+    updateArcState: updateArcState,
     minutesFactorForClub: minutesFactorForClub,
     updateReputation: updateReputation,
     marketOpenChance: marketOpenChance,

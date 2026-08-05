@@ -96,6 +96,17 @@
       if (seasonRecord.returnHome) add('moment_return_home', 'Regreso al club de origen');
     }
 
+    var arc = seasonRecord.arcFlags || state.arcFlags || {};
+    if (arc.breakout) {
+      add('moment_breakout_' + seasonIndex, 'Tu momento llegó', false);
+    }
+    if (arc.crisis) {
+      add('moment_crisis_' + seasonIndex, 'Algo no está funcionando', false);
+    }
+    if (arc.comeback) {
+      add('moment_comeback_' + seasonIndex, 'El resurgimiento', false);
+    }
+
     if (state.retired) add('moment_retire', 'Retiro');
 
     if (seasonRecord && created.length) {

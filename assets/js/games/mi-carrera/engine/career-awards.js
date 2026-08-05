@@ -140,7 +140,19 @@
     }
 
     var bd = ballonScore(state, playerSeason, flags);
-    tryWin('award_ballon_dor', bd, 78, 0.08, { score: Math.round(bd) });
+    var ballonEligible =
+      (flags.continentalTitle ||
+        flags.worldCup ||
+        flags.uclChamp ||
+        (flags.leagueTitle && (playerSeason.averageRating || 0) >= 8.15 && state.reputation >= 68)) &&
+      state.rating >= 84 &&
+      (playerSeason.appearances || 0) >= 26 &&
+      state.form >= 6;
+    var priorBallons = countAwards(state, 'award_ballon_dor');
+    if (ballonEligible && priorBallons < 3) {
+      var ballonChance = priorBallons === 0 ? 0.055 : priorBallons === 1 ? 0.035 : 0.02;
+      tryWin('award_ballon_dor', bd, 86, ballonChance, { score: Math.round(bd) });
+    }
 
     if (pos === 'FWD' || pos === 'MID') {
       var myGoals = playerSeason.goals || 0;

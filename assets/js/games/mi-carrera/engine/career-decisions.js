@@ -69,7 +69,7 @@
         if (type === 'renovacion') w = 2.2;
         if (type === 'mercado') w = 1.8;
         if (type === 'entrenamiento') w = 1.5;
-        if (type === 'rol') w = 1.2;
+        if (type === 'rol') w = state.seasonModifiers && state.seasonModifiers.minutesBias < -0.08 ? 2.4 : 1.2;
         if (type === 'seleccion') w = state.rating >= 78 ? 1.6 : 1.0;
         if (type === 'prensa') w = state.popularity >= 50 ? 1.1 : 0.7;
         if (type === 'patrocinio') w = 0.9;

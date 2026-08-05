@@ -170,7 +170,97 @@
     if (cult) {
       flags.push({ id: 'jugador_culto', label: 'Jugador de culto' });
     }
+
+    var hist = state.seasonHistory || [];
+    var peakAge = 17;
+    var peak = state.peakRating || state.rating;
+    hist.forEach(function (s) {
+      if ((s.ratingAfter || 0) >= peak - 1) peakAge = s.age || peakAge;
+    });
+    if (peak >= 88 && peakAge <= 22) {
+      flags.push({ id: 'wonderkid', label: 'Wonderkid' });
+    }
+    if (peakAge >= 28 && peak >= 84) {
+      flags.push({ id: 'late_bloomer', label: 'Late bloomer' });
+    }
+
+    var hadCrisis = false;
+    var hadComeback = false;
+    var euSeasons = 0;
+    var saTitles = 0;
+    var worldChamp = false;
+    hist.forEach(function (s) {
+      if (s.arcFlags && s.arcFlags.crisis) hadCrisis = true;
+      if (s.arcFlags && s.arcFlags.comeback) hadComeback = true;
+      var club = NS.Rules.getClub(world, s.clubId);
+      if (club && club.continentId === 'continent_eu') euSeasons += 1;
+      (s.titles || []).forEach(function (t) {
+        if (t.competitionId === 'comp_libertadores') saTitles += 1;
+        if (t.competitionId === 'comp_world_cup') worldChamp = true;
+      });
+    });
+    (state.moments || []).forEach(function (m) {
+      if (String(m.id).indexOf('moment_crisis_') === 0) hadCrisis = true;
+      if (String(m.id).indexOf('moment_comeback_') === 0) hadComeback = true;
+      if (m.id === 'moment_world_cup') worldChamp = true;
+    });
+    if (worldChamp) flags.push({ id: 'world_champion', label: 'Campeón del mundo' });
+    if (hadCrisis && hadComeback) {
+      flags.push({ id: 'comeback_king', label: 'Comeback' });
+    }
+    if (hadCrisis && peak >= 86 && (state.rating || 0) <= peak - 8) {
+      flags.push({ id: 'fallen_star', label: 'Fallen star' });
+    }
+    if (euSeasons >= 5 && score >= 7) {
+      flags.push({ id: 'european_star', label: 'Estrella europea' });
+    }
+    if (saTitles >= 2 || (saTitles >= 1 && clubs.length <= 3 && euSeasons <= 2 && score >= 7)) {
+      flags.push({ id: 'sa_king', label: 'Rey de Sudamérica' });
+    }
+
     return flags;
+  }
+
+  function narrativeArcLine(state, world, agg, score, flags) {
+    var ids = {};
+    (flags || []).forEach(function (f) {
+      ids[f.id] = true;
+    });
+    if (ids.ballon_winner && ids.world_champion) {
+      return 'Una carrera de leyenda absoluta: el mundo a tus pies.';
+    }
+    if (ids.ballon_winner) {
+      return 'Una carrera de Balón de Oro: el pico del fútbol mundial.';
+    }
+    if (ids.world_champion) {
+      return 'Una carrera de campeón del mundo.';
+    }
+    if (ids.one_club_man) {
+      return 'El ídolo que nunca abandonó su club.';
+    }
+    if (ids.comeback_king) {
+      return 'El prodigio que volvió después de caer.';
+    }
+    if (ids.sa_king) {
+      return 'El rey de Sudamérica.';
+    }
+    if (ids.european_star) {
+      return 'El trotamundos que conquistó Europa.';
+    }
+    if (ids.late_bloomer) {
+      return 'Una carrera de madurez tardía y gloria demorada.';
+    }
+    if (ids.fallen_star) {
+      return 'Una estrella que brilló… y tuvo que reinventarse.';
+    }
+    if (ids.trotamundos) {
+      return 'Una carrera de maletas, ligas y nuevos comienzos.';
+    }
+    if (score >= 8.5) return 'Una carrera de gloria sostenida.';
+    if (score >= 7) return 'Una carrera que dejó huella.';
+    if (score >= 5) return 'Una carrera profesional, con altibajos reales.';
+    if (score >= 3.5) return 'Una carrera irregular, pero con momentos.';
+    return 'Una promesa que el fútbol no terminó de cumplir.';
   }
 
   function evaluate(state, world) {
@@ -215,6 +305,8 @@
 
     var category = categoryFromScore(score);
     var flags = specialFlags(state, world, agg, score);
+    var arcLine = narrativeArcLine(state, world, agg, score, flags);
+    var baseLine = retirementLine(score, world.retirementLines);
     return {
       score: score,
       category: category,
@@ -232,7 +324,8 @@
         clubs: clubsCount(agg, state),
         positionContribution: Math.round(posScore * 100) / 100
       },
-      retirementLine: retirementLine(score, world.retirementLines)
+      retirementLine: arcLine || baseLine,
+      narrativeTag: (flags[0] && flags[0].id) || category.id
     };
   }
 
