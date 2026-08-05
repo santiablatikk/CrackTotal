@@ -75,6 +75,13 @@
     if (offer.role === 'titular') chips.push({ tone: 'up', text: '+ Minutos' });
     else if (offer.role === 'rotacion') chips.push({ tone: 'down', text: '− Minutos' });
     else if (offer.role === 'promesa') chips.push({ tone: 'up', text: '+ Futuro' });
+    if (offer.kind === 'loan') {
+      chips = [
+        { tone: 'up', text: '+ Minutos' },
+        { tone: 'up', text: '+ Desarrollo' },
+        { tone: 'down', text: 'No es definitivo' }
+      ];
+    }
     if (!chips.length) chips.push({ tone: 'up', text: 'Nuevo escenario' });
     return chips
       .slice(0, 3)
@@ -425,6 +432,12 @@
     var country = engine.world.countriesById[state.player.countryId];
     var club = engine.getClub(state.clubId);
     var comp = club ? engine.world.competitionsById[club.primaryCompetitionId] : null;
+    var mins = NS.Rules.expectedMinutesBand
+      ? NS.Rules.expectedMinutesBand(state, club)
+      : { label: '—' };
+    var role = state.clubRole || (NS.Rules.expectedRoleForClub
+      ? NS.Rules.expectedRoleForClub(state, club)
+      : 'promesa');
     return scene({
       id: 'contract',
       tone: 'contract',
@@ -442,15 +455,36 @@
         (country ? ' ' + C().countryFlagHtml(country, 'sm') : '') +
         '</p>' +
         '<div class="mc-scene-stats">' +
-        '<div><span>Edad</span><strong>' +
-        state.age +
+        '<div><span>Rol</span><strong>' +
+        F().escapeHtml(F().ROLE_LABELS[role] || role) +
         '</strong></div>' +
         '<div><span>OVR</span><strong class="is-accent">' +
         state.rating +
         '</strong></div>' +
-        '<div><span>Rol</span><strong>Promesa</strong></div></div>',
+        '<div><span>Minutos</span><strong>' +
+        F().escapeHtml(mins.label) +
+        '</strong></div></div>',
       actions:
         '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="begin-career">Firmar</button>'
+    });
+  }
+
+  function startClubScreen(ctx) {
+    var options = ctx.options || [];
+    var cards = options
+      .map(function (opt) {
+        return C().clubPathCardHtml(opt, ctx.engine);
+      })
+      .join('');
+    return scene({
+      id: 'start-club',
+      tone: 'start',
+      kicker: 'Primer destino',
+      title: '¿Dónde empieza tu historia?',
+      lead: 'Tres caminos. Una decisión.',
+      body: '<div class="mc-start-row">' + cards + '</div>',
+      actions:
+        '<button type="button" class="ct-button ct-button--ghost" data-mc-action="go-intro">Volver</button>'
     });
   }
 
@@ -561,9 +595,50 @@
     var state = ctx.state;
     var engine = ctx.engine;
     var offers = state.pendingOffers || [];
+    var transfers = offers.filter(function (o) {
+      return o.kind !== 'loan';
+    });
+    var loans = offers.filter(function (o) {
+      return o.kind === 'loan';
+    });
     var currentClub = engine.getClub(state.clubId);
+    var canLoan =
+      state.canLoan ||
+      (NS.Rules.loanEligible && NS.Rules.loanEligible(state, engine.world));
 
-    if (!offers.length) {
+    function offerCard(offer, isLoan) {
+      var club = engine.getClub(offer.clubId);
+      var comp = club ? engine.world.competitionsById[club.primaryCompetitionId] : null;
+      var country = club ? engine.world.countriesById[club.countryId] : null;
+      return (
+        '<article class="mc-offer-scene' +
+        (isLoan ? ' mc-offer-scene--loan' : '') +
+        '">' +
+        C().clubBadgeHtml(club, 'xxl') +
+        (isLoan ? '<p class="mc-offer-kind">Cesión</p>' : '') +
+        '<h2>' +
+        F().escapeHtml(club ? club.shortName || club.name : 'Club') +
+        '</h2>' +
+        '<p class="mc-offer-scene__league">' +
+        competitionMarkHtml(comp, 'sm') +
+        (country ? ' ' + C().countryFlagHtml(country, 'sm') : '') +
+        '</p>' +
+        '<p class="mc-offer-stars" aria-hidden="true">' +
+        levelStars(offer.level || (club && club.level) || 1) +
+        '</p>' +
+        '<span class="mc-offer-role">' +
+        F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
+        (offer.minutesLabel ? ' · ' + F().escapeHtml(offer.minutesLabel) : '') +
+        '</span>' +
+        '<button type="button" class="ct-button ct-button--primary" data-mc-action="market-compare" data-offer="' +
+        F().escapeHtml(offer.id) +
+        '">' +
+        (isLoan ? 'Ver cesión' : 'Ver oferta') +
+        '</button></article>'
+      );
+    }
+
+    if (!transfers.length && !loans.length) {
       return scene({
         id: 'market',
         tone: 'quiet',
@@ -578,53 +653,41 @@
           '<h2 class="mc-scene__club">' +
           F().escapeHtml(currentClub ? currentClub.shortName || currentClub.name : 'Tu club') +
           '</h2>' +
-          '<p class="mc-scene__meta">Convertite en referente.</p></div>',
+          '<p class="mc-scene__meta">Quedarte también es una decisión.</p></div>',
         actions:
-          '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-stay">Continuar en mi club</button>'
+          '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-stay">Quedarme</button>' +
+          (canLoan
+            ? '<button type="button" class="ct-button ct-button--secondary" data-mc-action="seek-loan">Buscar préstamo</button>'
+            : '')
       });
     }
 
-    var cards = offers
-      .slice(0, 4)
-      .map(function (offer) {
-        var club = engine.getClub(offer.clubId);
-        var comp = club ? engine.world.competitionsById[club.primaryCompetitionId] : null;
-        var country = club ? engine.world.countriesById[club.countryId] : null;
-        return (
-          '<article class="mc-offer-scene">' +
-          C().clubBadgeHtml(club, 'xxl') +
-          '<h2>' +
-          F().escapeHtml(club ? club.shortName || club.name : 'Club') +
-          '</h2>' +
-          '<p class="mc-offer-scene__league">' +
-          competitionMarkHtml(comp, 'sm') +
-          (country ? ' ' + C().countryFlagHtml(country, 'sm') : '') +
-          '</p>' +
-          '<p class="mc-offer-stars" aria-hidden="true">' +
-          levelStars(offer.level || (club && club.level) || 1) +
-          '</p>' +
-          '<span class="mc-offer-role">' +
-          F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
-          '</span>' +
-          '<p class="mc-offer-project">Proyecto <strong>' +
-          projectScore(offer, club) +
-          '/10</strong></p>' +
-          '<button type="button" class="ct-button ct-button--primary" data-mc-action="market-compare" data-offer="' +
-          F().escapeHtml(offer.id) +
-          '">Ver oferta</button></article>'
-        );
+    var cards = transfers
+      .slice(0, 3)
+      .map(function (o) {
+        return offerCard(o, false);
       })
+      .concat(
+        loans.slice(0, 2).map(function (o) {
+          return offerCard(o, true);
+        })
+      )
       .join('');
 
     return scene({
       id: 'market',
       tone: 'market',
       kicker: 'Mercado de fichajes',
-      title: 'El mercado está abierto',
-      lead: 'Tu temporada llamó la atención.',
+      title: transfers.length ? 'El mercado está abierto' : 'Opciones de cesión',
+      lead: transfers.length
+        ? 'Tu temporada llamó la atención.'
+        : 'Pocos minutos. Hay clubes que te darían juego.',
       body: '<div class="mc-offer-row">' + cards + '</div>',
       actions:
-        '<button type="button" class="ct-button ct-button--ghost" data-mc-action="market-stay">Quedarme</button>'
+        '<button type="button" class="ct-button ct-button--ghost" data-mc-action="market-stay">Quedarme</button>' +
+        (canLoan && !loans.length
+          ? '<button type="button" class="ct-button ct-button--secondary" data-mc-action="seek-loan">Buscar préstamo</button>'
+          : '')
     });
   }
 
@@ -663,9 +726,9 @@
     return scene({
       id: 'compare',
       tone: 'decision',
-      kicker: '¿Te vas?',
-      title: 'Decisión de club',
-      lead: '¿Me voy o me quedo?',
+      kicker: offer.kind === 'loan' ? '¿Cesión?' : '¿Te vas?',
+      title: offer.kind === 'loan' ? 'Préstamo' : 'Decisión de club',
+      lead: offer.kind === 'loan' ? 'Más minutos. Menor riesgo.' : '¿Me voy o me quedo?',
       body:
         '<div class="mc-vs">' +
         '<div class="mc-vs__col">' +
@@ -679,7 +742,11 @@
         '<strong>' +
         F().escapeHtml(next ? next.shortName || next.name : '—') +
         '</strong><span>' +
-        F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
+        F().escapeHtml(
+          offer.kind === 'loan'
+            ? 'Cesión'
+            : F().ROLE_LABELS[offer.role] || offer.role
+        ) +
         '</span></div></div>' +
         '<div class="mc-trade-row">' +
         tradeoffChips(current, next, offer) +
@@ -687,7 +754,9 @@
       actions:
         '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-sign" data-offer="' +
         F().escapeHtml(offer.id) +
-        '">Fichar</button>' +
+        '">' +
+        (offer.kind === 'loan' ? 'Ir cedido' : 'Fichar') +
+        '</button>' +
         '<button type="button" class="ct-button ct-button--secondary" data-mc-action="market-stay">Quedarme</button>'
     });
   }
@@ -973,6 +1042,7 @@
   UI.screens = {
     intro: introScreen,
     create: createScreen,
+    startClub: startClubScreen,
     present: presentScreen,
     debut: debutScreen,
     season: seasonScreen,

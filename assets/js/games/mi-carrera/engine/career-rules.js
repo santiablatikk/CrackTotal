@@ -256,21 +256,252 @@
     return Math.max(50000, Math.round(base / 1000) * 1000);
   }
 
+  function expectedRoleForClub(stateLike, club) {
+    var rating = stateLike.rating != null ? stateLike.rating : 62;
+    var age = stateLike.age != null ? stateLike.age : 17;
+    var potential = stateLike.potential != null ? stateLike.potential : 80;
+    var need = LEVEL_MIN_RATING[club.level || 1] || 50;
+    var gap = rating - need;
+    if (age <= 20 && potential >= 84 && (club.level || 1) >= 4 && gap < 0) return 'promesa';
+    if (gap >= 2) return 'titular';
+    if (gap >= -2 && (club.level || 1) <= 3) return 'titular';
+    if (gap < -6 || (club.level || 1) >= 5) return 'rotacion';
+    if (gap < -2) return 'rotacion';
+    return age <= 19 ? 'promesa' : 'rotacion';
+  }
+
+  function expectedMinutesBand(stateLike, club) {
+    var role = expectedRoleForClub(stateLike, club);
+    var level = club.level || 1;
+    var rating = stateLike.rating != null ? stateLike.rating : 62;
+    var need = LEVEL_MIN_RATING[level] || 50;
+    var gap = rating - need;
+    if (level >= 5 && gap < 0) return { id: 'bench', label: 'Pocos minutos', appsHint: '8–16' };
+    if (level >= 4 && gap < -2) return { id: 'bench', label: 'Pocos minutos', appsHint: '10–18' };
+    if (role === 'titular' && level <= 2) return { id: 'starter', label: 'Titular', appsHint: '28–34' };
+    if (role === 'titular') return { id: 'rotation_high', label: 'Minutos altos', appsHint: '24–32' };
+    if (role === 'promesa') return { id: 'promise', label: 'Entradas y copas', appsHint: '12–22' };
+    return { id: 'rotation', label: 'Rotación', appsHint: '16–26' };
+  }
+
+  function startingMinutesBias(stateLike, club) {
+    var level = club.level || 1;
+    var need = LEVEL_MIN_RATING[level] || 50;
+    var gap = (stateLike.rating || 62) - need;
+    var bias = 0;
+    if (level >= 5) bias -= 0.18;
+    else if (level >= 4) bias -= 0.12;
+    else if (level <= 2) bias += 0.16;
+    else if (level === 3) bias += 0.04;
+    if (gap < -8) bias -= 0.08;
+    else if (gap >= 6) bias += 0.08;
+    if (stateLike.onLoan) bias += 0.18;
+    return bias;
+  }
+
   function minutesFactorForClub(state, club) {
     if (!club) return 0.5;
     var need = LEVEL_MIN_RATING[club.level || 1] || 50;
     var gap = state.rating - need;
-    var f = 0.48 + gap * 0.038;
+    var level = club.level || 1;
+    var f = 0.46 + gap * 0.038;
     f += (state.clubRelation - 50) / 220;
     f += (state.form - 5) * 0.028;
     f += (state.fitness - 70) / 220;
     f += state.seasonModifiers.minutesBias || 0;
     // Giant club pressure: below threshold → clear bench risk
-    if ((club.level || 1) >= 5 && gap < -2) f -= 0.18;
-    if ((club.level || 1) >= 4 && gap < -4) f -= 0.12;
-    // Small club star → near automatic starter
-    if ((club.level || 1) <= 2 && gap >= 8) f += 0.16;
-    return NS.State.clamp(f, 0.12, 0.98);
+    if (level >= 5 && gap < 0) f -= 0.18;
+    else if (level >= 5 && gap < 4) f -= 0.1;
+    if (level >= 4 && gap < -2) f -= 0.12;
+    if (level >= 4 && gap < 2 && state.age <= 20) f -= 0.06;
+    // Development clubs → minutes for growth
+    if (level <= 2 && gap >= -2) f += 0.18;
+    if (level <= 2 && gap >= 6) f += 0.1;
+    if (level === 3 && gap >= 0) f += 0.08;
+    if (state.onLoan) f += 0.16;
+    return NS.State.clamp(f, 0.18, 0.98);
+  }
+
+  function pathMetaForLevel(level) {
+    if (level >= 5 || level >= 4) {
+      return {
+        pathId: 'giant',
+        pathLabel: 'El escaparate',
+        tagline: 'Competí desde arriba.',
+        stars: level >= 5 ? 5 : 4
+      };
+    }
+    if (level >= 3) {
+      return {
+        pathId: 'balance',
+        pathLabel: 'El equilibrio',
+        tagline: 'Minutos y crecimiento.',
+        stars: 3
+      };
+    }
+    return {
+      pathId: 'minutes',
+      pathLabel: 'El protagonismo',
+      tagline: 'Jugar para crecer.',
+      stars: Math.max(1, level)
+    };
+  }
+
+  function pickBestFromPool(pool, preferHigh) {
+    if (!pool.length) return null;
+    var sorted = pool.slice().sort(function (a, b) {
+      var d = (b.prestige || 0) - (a.prestige || 0);
+      if (d) return preferHigh ? d : -d;
+      return preferHigh ? (b.level || 1) - (a.level || 1) : (a.level || 1) - (b.level || 1);
+    });
+    return sorted[0];
+  }
+
+  function generateStartingClubOptions(world, ctx, rng) {
+    ctx = ctx || {};
+    var countryId = ctx.countryId;
+    var country = getCountry(world, countryId);
+    var age = ctx.age != null ? ctx.age : 17;
+    var stateLike = {
+      rating: ctx.rating != null ? ctx.rating : 62,
+      potential: ctx.potential != null ? ctx.potential : 82,
+      age: age
+    };
+
+    function usable(c) {
+      return c && !c.incomplete && c.countryId;
+    }
+
+    var local = (world.clubs || []).filter(function (c) {
+      return usable(c) && c.countryId === countryId;
+    });
+    if (local.length < 3 && country) {
+      var continental = (world.clubs || []).filter(function (c) {
+        return usable(c) && c.continentId === country.continentId;
+      });
+      local = local.concat(
+        continental.filter(function (c) {
+          return c.countryId !== countryId;
+        })
+      );
+    }
+    if (local.length < 3) {
+      local = (world.clubs || []).filter(usable);
+    }
+
+    var byLevel = { 5: [], 4: [], 3: [], 2: [], 1: [] };
+    local.forEach(function (c) {
+      var lv = c.level || 1;
+      if (!byLevel[lv]) byLevel[lv] = [];
+      byLevel[lv].push(c);
+    });
+
+    var giantPool = byLevel[5].concat(byLevel[4]);
+    var midPool = byLevel[3].length ? byLevel[3] : byLevel[4];
+    var smallPool = byLevel[2].concat(byLevel[1]);
+    if (!smallPool.length) smallPool = byLevel[3];
+    if (!giantPool.length) giantPool = midPool.slice();
+    if (!midPool.length) midPool = giantPool.concat(smallPool);
+
+    var giant = pickBestFromPool(rng.shuffle(giantPool).slice(0, Math.min(6, giantPool.length)), true);
+    var small = pickBestFromPool(rng.shuffle(smallPool).slice(0, Math.min(8, smallPool.length)), false);
+    var midCandidates = midPool.filter(function (c) {
+      return c && giant && small && c.id !== giant.id && c.id !== small.id;
+    });
+    if (!midCandidates.length) {
+      midCandidates = local.filter(function (c) {
+        return c && (!giant || c.id !== giant.id) && (!small || c.id !== small.id);
+      });
+    }
+    var mid = pickBestFromPool(rng.shuffle(midCandidates).slice(0, Math.min(8, midCandidates.length)), true);
+
+    // Soft surprise: occasionally swap mid with another continental club
+    if (rng.bool(0.18) && country) {
+      var surprise = (world.clubs || []).filter(function (c) {
+        return (
+          usable(c) &&
+          c.continentId === country.continentId &&
+          (c.level || 1) === 3 &&
+          (!giant || c.id !== giant.id) &&
+          (!small || c.id !== small.id)
+        );
+      });
+      if (surprise.length) mid = rng.pick(surprise);
+    }
+
+    var picked = [giant, mid, small].filter(Boolean);
+    var used = Object.create(null);
+    var unique = [];
+    picked.forEach(function (c) {
+      if (!c || used[c.id]) return;
+      used[c.id] = true;
+      unique.push(c);
+    });
+    // Fill to exactly 3
+    var filler = rng.shuffle(local.slice());
+    for (var i = 0; unique.length < 3 && i < filler.length; i++) {
+      if (used[filler[i].id]) continue;
+      used[filler[i].id] = true;
+      unique.push(filler[i]);
+    }
+
+    // Order: giant, balance, minutes — by level desc then prestige
+    unique.sort(function (a, b) {
+      var ld = (b.level || 1) - (a.level || 1);
+      if (ld) return ld;
+      return (b.prestige || 0) - (a.prestige || 0);
+    });
+    unique = unique.slice(0, 3);
+
+    // Ensure level spread when possible
+    var levels = unique.map(function (c) {
+      return c.level || 1;
+    });
+    var distinctLevels = levels.filter(function (v, idx, arr) {
+      return arr.indexOf(v) === idx;
+    });
+    if (distinctLevels.length < 2 && local.length >= 3) {
+      var low = pickBestFromPool(
+        local.filter(function (c) {
+          return (c.level || 1) <= 2 && !used[c.id];
+        }),
+        false
+      );
+      if (low) unique[2] = low;
+    }
+
+    return unique.map(function (club, idx) {
+      var meta = pathMetaForLevel(club.level || 1);
+      if (idx === 0 && (club.level || 1) >= 4) meta = pathMetaForLevel(5);
+      if (idx === 2 && (club.level || 1) <= 3) {
+        meta = pathMetaForLevel(2);
+        meta.stars = Math.min(meta.stars, club.level || 2);
+      }
+      if (idx === 1) {
+        meta.pathId = 'balance';
+        meta.pathLabel = 'El equilibrio';
+        meta.tagline = 'Minutos y crecimiento.';
+        meta.stars = Math.min(4, Math.max(2, club.level || 3));
+      }
+      var mins = expectedMinutesBand(stateLike, club);
+      var role = expectedRoleForClub(stateLike, club);
+      var comp = getCompetition(world, club.primaryCompetitionId);
+      return {
+        clubId: club.id,
+        club: club,
+        pathId: meta.pathId,
+        pathLabel: meta.pathLabel,
+        tagline: meta.tagline,
+        stars: meta.stars,
+        role: role,
+        minutes: mins,
+        competitionId: club.primaryCompetitionId,
+        competitionName: comp ? comp.shortName || comp.name : '',
+        prestige: club.prestige || 0,
+        level: club.level || 1,
+        tier: clubTier(club, world)
+      };
+    });
   }
 
   function maxTierStep(state, currentClub, world) {
@@ -452,6 +683,10 @@
     maxOffers = maxOffers == null ? 4 : Math.min(4, maxOffers);
     var clubs = world.clubs || [];
     var lastGrade = lastSeasonGrade(state);
+    var last = state.seasonHistory && state.seasonHistory.length
+      ? state.seasonHistory[state.seasonHistory.length - 1]
+      : null;
+    var lastApps = last ? last.appearances || 0 : 20;
     if (!rng.bool(marketOpenChance(state, lastGrade))) {
       return [];
     }
@@ -461,6 +696,11 @@
       var club = clubs[i];
       if (!isEligibleForClub(state, club, world)) continue;
       var interest = interestScore(state, club, world, lastGrade);
+      // Minutes / exposure feed the market
+      if (lastApps >= 28) interest += 5;
+      else if (lastApps >= 20) interest += 2;
+      else if (lastApps < 12) interest -= 6;
+      if (last && (last.goals || 0) + (last.assists || 0) >= 15) interest += 4;
       if (interest < 10) continue;
       candidates.push({ club: club, interest: interest });
     }
@@ -473,12 +713,15 @@
 
     var pool = candidates.slice(0, Math.min(16, candidates.length));
     var count = 0;
-    if (lastGrade === 'S' || lastGrade === 'A') count = rng.int(1, Math.min(maxOffers, pool.length));
+    if (lastGrade === 'S') count = rng.int(2, Math.min(maxOffers, pool.length));
+    else if (lastGrade === 'A') count = rng.int(1, Math.min(maxOffers, pool.length));
     else if (lastGrade === 'B') count = rng.int(0, Math.min(3, pool.length));
-    else count = rng.int(0, Math.min(2, pool.length));
+    else if (lastGrade === 'C') count = rng.int(0, Math.min(2, pool.length));
+    else count = rng.int(0, Math.min(1, pool.length));
 
     if (count === 0 && state.rating >= 82 && state.reputation >= 55 && rng.bool(0.4)) count = 1;
     if (state.age >= 34) count = Math.min(count, 1);
+    if (lastApps < 10 && lastGrade !== 'S') count = Math.min(count, 1);
 
     var picked = [];
     var used = Object.create(null);
@@ -499,8 +742,10 @@
           (role === 'titular' ? 1.1 : 0.85) *
           region
       );
+      var mins = expectedMinutesBand(state, item.club);
       picked.push({
         id: 'offer_' + state.seasonIndex + '_' + item.club.id,
+        kind: 'transfer',
         clubId: item.club.id,
         role: role,
         wage: wage,
@@ -509,6 +754,7 @@
         prestige: item.club.prestige,
         level: item.club.level,
         tier: clubTier(item.club, world),
+        minutesLabel: mins.label,
         blurb:
           role === 'titular'
             ? 'Proyecto con minutos claros.'
@@ -518,6 +764,140 @@
       });
     }
     return picked;
+  }
+
+  function loanEligible(state, world) {
+    if (!state || state.onLoan) return false;
+    if (state.age > 26) return false;
+    var club = getClub(world, state.clubId);
+    if (!club) return false;
+    var last = state.seasonHistory && state.seasonHistory.length
+      ? state.seasonHistory[state.seasonHistory.length - 1]
+      : null;
+    var apps = last ? last.appearances || 0 : 0;
+    var level = club.level || 1;
+    if (state.age <= 21 && level >= 4) return true;
+    if (state.age <= 23 && level >= 4 && apps < 18) return true;
+    if (state.age <= 24 && level >= 5 && apps < 20) return true;
+    if (state.arcFlags && state.arcFlags.crisis && state.age <= 25 && level >= 3) return true;
+    if (state.potential >= 88 && level >= 4 && apps < 16 && state.age <= 23) return true;
+    return false;
+  }
+
+  function generateLoanOffers(state, world, rng, maxOffers) {
+    maxOffers = maxOffers == null ? 2 : Math.min(2, maxOffers);
+    if (!loanEligible(state, world)) return [];
+    var current = getClub(world, state.clubId);
+    if (!current) return [];
+    var country = getCountry(world, state.player.countryId);
+    var candidates = (world.clubs || []).filter(function (c) {
+      if (!c || c.incomplete || c.id === state.clubId) return false;
+      var lv = c.level || 1;
+      if (lv >= (current.level || 1)) return false;
+      if (lv > 3) return false;
+      if (lv < 2) return false;
+      // Prefer same country / continent
+      if (c.countryId === current.countryId) return true;
+      if (country && c.continentId === country.continentId) return true;
+      return false;
+    });
+    if (!candidates.length) {
+      candidates = (world.clubs || []).filter(function (c) {
+        return c && !c.incomplete && c.id !== state.clubId && (c.level || 1) <= 3 && (c.level || 1) >= 2;
+      });
+    }
+    if (!candidates.length) return [];
+
+    candidates.sort(function (a, b) {
+      var scoreA =
+        (a.countryId === current.countryId ? 10 : 0) +
+        (a.prestige || 0) * 0.05 +
+        ((a.level || 1) === 3 ? 3 : 5);
+      var scoreB =
+        (b.countryId === current.countryId ? 10 : 0) +
+        (b.prestige || 0) * 0.05 +
+        ((b.level || 1) === 3 ? 3 : 5);
+      return scoreB - scoreA;
+    });
+
+    var pool = rng.shuffle(candidates.slice(0, Math.min(10, candidates.length)));
+    var count = rng.int(1, Math.min(maxOffers, pool.length));
+    var out = [];
+    for (var i = 0; i < pool.length && out.length < count; i++) {
+      var club = pool[i];
+      var mins = expectedMinutesBand(
+        { rating: state.rating, potential: state.potential, age: state.age, onLoan: true },
+        club
+      );
+      out.push({
+        id: 'loan_' + state.seasonIndex + '_' + club.id,
+        kind: 'loan',
+        clubId: club.id,
+        role: 'titular',
+        wage: Math.round(40000 + state.rating * 4000),
+        years: 1,
+        interest: 20,
+        prestige: club.prestige,
+        level: club.level,
+        tier: clubTier(club, world),
+        minutesLabel: mins.label,
+        blurb: 'Cesión para sumar minutos y volver más fuerte.'
+      });
+    }
+    return out;
+  }
+
+  function buildMarketPacket(state, world, rng) {
+    var transfers = generateOffers(state, world, rng.fork('tx'), 3);
+    var loans = [];
+    if (loanEligible(state, world)) {
+      // Always try to surface a coherent loan when minutes/context call for it
+      var last = state.seasonHistory && state.seasonHistory.length
+        ? state.seasonHistory[state.seasonHistory.length - 1]
+        : null;
+      var apps = last ? last.appearances || 0 : 22;
+      var forceLoan = apps < 16 || (state.arcFlags && state.arcFlags.crisis);
+      if (forceLoan || rng.bool(0.55) || !transfers.length) {
+        loans = generateLoanOffers(state, world, rng.fork('loan'), forceLoan || !transfers.length ? 2 : 1);
+      }
+    }
+    return {
+      transfers: transfers,
+      loans: loans,
+      offers: transfers.concat(loans),
+      canStay: true,
+      canLoan: loanEligible(state, world),
+      cold: !transfers.length
+    };
+  }
+
+  function pickStartingClub(world, countryId, rng) {
+    var options = generateStartingClubOptions(
+      world,
+      { countryId: countryId, rating: 62, potential: 82, age: 17 },
+      rng
+    );
+    if (options.length) {
+      // Auto careers: prefer balance / minutes path, not always giant
+      var pick = options[1] || options[2] || options[0];
+      return getClub(world, pick.clubId) || rng.pick(world.clubs || []);
+    }
+    var local = (world.clubs || []).filter(function (c) {
+      return c.countryId === countryId && (c.level || 1) <= 4;
+    });
+    if (!local.length) {
+      var country = getCountry(world, countryId);
+      local = (world.clubs || []).filter(function (c) {
+        return country && c.continentId === country.continentId && (c.level || 1) <= 3;
+      });
+    }
+    if (!local.length) {
+      local = (world.clubs || []).filter(function (c) {
+        return (c.level || 1) <= 2;
+      });
+    }
+    if (!local.length) local = world.clubs || [];
+    return rng.pick(local);
   }
 
   function updateReputation(state, stats, world) {
@@ -549,29 +929,6 @@
 
     state.reputation = NS.State.clamp(state.reputation + delta, 0, 100);
     return delta;
-  }
-
-  function pickStartingClub(world, countryId, rng) {
-    var local = (world.clubs || []).filter(function (c) {
-      return c.countryId === countryId && (c.level || 1) <= 4;
-    });
-    if (!local.length) {
-      var country = getCountry(world, countryId);
-      local = (world.clubs || []).filter(function (c) {
-        return country && c.continentId === country.continentId && (c.level || 1) <= 3;
-      });
-    }
-    if (!local.length) {
-      local = (world.clubs || []).filter(function (c) {
-        return (c.level || 1) <= 2;
-      });
-    }
-    if (!local.length) local = world.clubs || [];
-    var youth = local.filter(function (c) {
-      return (c.level || 1) <= 3;
-    });
-    var pool = youth.length ? youth : local;
-    return rng.pick(pool);
   }
 
   function initialRatingPotential(archetype, rng) {
@@ -731,6 +1088,13 @@
     computeMarketValue: computeMarketValue,
     isEligibleForClub: isEligibleForClub,
     generateOffers: generateOffers,
+    generateLoanOffers: generateLoanOffers,
+    buildMarketPacket: buildMarketPacket,
+    loanEligible: loanEligible,
+    generateStartingClubOptions: generateStartingClubOptions,
+    expectedMinutesBand: expectedMinutesBand,
+    expectedRoleForClub: expectedRoleForClub,
+    startingMinutesBias: startingMinutesBias,
     pickStartingClub: pickStartingClub,
     initialRatingPotential: initialRatingPotential,
     buildWorldIndexes: buildWorldIndexes,

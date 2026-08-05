@@ -149,28 +149,43 @@
     var prev = NS.Rules.getClub(world, state.clubId);
     var prevTier = prev ? NS.Rules.tierRank(NS.Rules.clubTier(prev, world)) : 2;
     var nextTier = NS.Rules.tierRank(NS.Rules.clubTier(club, world));
+    var isLoan = offer.kind === 'loan';
+
+    if (isLoan) {
+      state.loanParentClubId = state.clubId;
+      state.onLoan = true;
+    } else {
+      state.onLoan = false;
+      state.loanParentClubId = null;
+    }
 
     state.clubId = club.id;
     if (state.clubsPlayed.indexOf(club.id) === -1) state.clubsPlayed.push(club.id);
+    state.clubRole = offer.role || 'rotacion';
     state.clubRelation = offer.role === 'titular' ? 65 : offer.role === 'promesa' ? 70 : 52;
-    state.prestige = Math.round(state.prestige * 0.65 + club.prestige * 0.35);
+    if (!isLoan) {
+      state.prestige = Math.round(state.prestige * 0.65 + club.prestige * 0.35);
+    }
 
     // Big step-up → minutes risk / pressure (can fail at giants)
-    if (nextTier - prevTier >= 2) {
+    if (!isLoan && nextTier - prevTier >= 2) {
       state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) - 0.16;
       state.morale = NS.State.clamp(state.morale - 4, 10, 100);
+    } else if (isLoan) {
+      state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) + 0.2;
+      state.clubRelation = NS.State.clamp(state.clubRelation + 10, 0, 100);
     } else if (offer.role === 'rotacion') {
       state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) - 0.14;
     } else if (offer.role === 'titular') {
       state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) + 0.08;
     }
 
-    if (nextTier < prevTier) {
+    if (!isLoan && nextTier < prevTier) {
       state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) + 0.1;
       state.clubRelation = NS.State.clamp(state.clubRelation + 8, 0, 100);
     }
 
-    state.money += Math.round((offer.wage || 0) * 0.5);
+    state.money += Math.round((offer.wage || 0) * (isLoan ? 0.25 : 0.5));
     state.pendingOffers = [];
     return state;
   }
@@ -201,6 +216,7 @@
         // Loyalty path: real value
         state.clubRelation = NS.State.clamp(state.clubRelation + 6, 0, 100);
         state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) + 0.06;
+        state.confidence = NS.State.clamp((state.confidence || 55) + 2, 0, 100);
       }
     }
 

@@ -15,7 +15,11 @@
       countryQuery: '',
       position: null,
       archetypeId: null,
-      createStep: 1
+      createStep: 1,
+      careerSeed: null,
+      startOptions: null,
+      previewRating: null,
+      previewPotential: null
     };
   }
 
@@ -697,6 +701,17 @@
       this.showCareerHome();
       return;
     }
+    if (this.state && this.state.phase === 'decision') {
+      this.state.clubRelation = Math.min(100, (this.state.clubRelation || 50) + 4);
+      this.state.seasonModifiers = this.state.seasonModifiers || {};
+      this.state.seasonModifiers.minutesBias =
+        (this.state.seasonModifiers.minutesBias || 0) + 0.05;
+      this.state.confidence = Math.min(100, (this.state.confidence || 55) + 2);
+      this.state.currentDecision = null;
+      this.state.phase = 'simulate';
+      this.state.pendingOffers = [];
+      if (NS.Storage && NS.Storage.saveActive) NS.Storage.saveActive(this.state);
+    }
     this.showCareerHome();
   };
 
@@ -704,10 +719,33 @@
     UI.components.closeModal();
     var oid = offerId || this._compareOfferId || this.selectedOfferId;
     var self = this;
-    var decision = this.state && this.state.currentDecision;
-    if (!decision || decision.type !== 'transferencia') {
+    if (!this.state) return;
+    var offer =
+      (this.state.pendingOffers || []).filter(function (o) {
+        return o.id === oid;
+      })[0] || null;
+    if (!offer) {
       this.showCareerHome();
       return;
+    }
+    if (!this.state.currentDecision || this.state.currentDecision.type !== 'transferencia') {
+      var transfer = null;
+      if (this.engine.world.decisionsById) {
+        transfer = this.engine.world.decisions.filter(function (d) {
+          return d.type === 'transferencia';
+        })[0];
+      }
+      this.state.currentDecision = transfer
+        ? JSON.parse(JSON.stringify(transfer))
+        : {
+            id: 'dec_transfer',
+            type: 'transferencia',
+            options: [
+              { id: 'accept_best_prestige', effects: { transferPreference: 'prestige' } },
+              { id: 'stay_loyal', effects: { transferPreference: 'stay' } }
+            ]
+          };
+      this.state.phase = 'decision';
     }
     this.resolveDecisionOnly('accept_best_prestige', oid, function (result) {
       if (result.transferOffer) {
@@ -717,6 +755,34 @@
         self.showCareerHome();
       }
     });
+  };
+
+  App.prototype.seekLoanOffers = function () {
+    if (!this.state || !this.engine) return;
+    if (!NS.Rules.loanEligible || !NS.Rules.loanEligible(this.state, this.engine.world)) {
+      this.announce('Ahora no hay una cesión coherente');
+      return;
+    }
+    var rng = this.engine.getRng(this.state, 'seekLoan');
+    var loans = NS.Rules.generateLoanOffers(this.state, this.engine.world, rng, 2);
+    if (!loans.length) {
+      this.announce('Ningún club ofrece cesión ahora');
+      return;
+    }
+    var transfers = (this.state.pendingOffers || []).filter(function (o) {
+      return o.kind !== 'loan';
+    });
+    this.state.pendingOffers = transfers.concat(loans);
+    this.state.canLoan = true;
+    this.state.phase = 'decision';
+    this.state.currentDecision = NS.Decisions.pickDecision(
+      this.state,
+      this.engine.world,
+      this.engine.getRng(this.state, 'loanDec')
+    );
+    if (NS.Storage && NS.Storage.saveActive) NS.Storage.saveActive(this.state);
+    this.selectedOfferId = loans[0].id;
+    this.showMarket();
   };
 
   App.prototype.continueCareer = function () {
@@ -748,17 +814,57 @@
     if (!this.validateCreateStep()) return;
     var name = String(this.draft.name || '').trim();
     try {
+      var preview = this.engine.previewStartingClubs({
+        name: name,
+        countryId: this.draft.countryId,
+        position: this.draft.position,
+        archetypeId: this.draft.archetypeId,
+        seed: this.draft.careerSeed || undefined
+      });
+      this.draft.careerSeed = preview.seed;
+      this.draft.startOptions = preview.options;
+      this.draft.previewRating = preview.rating;
+      this.draft.previewPotential = preview.potential;
+      localStorage.setItem('playerName', name);
+      this.showStartClub();
+    } catch (err) {
+      UI.components.openModal({
+        title: 'No se pudo crear',
+        bodyHtml: '<p>' + UI.format.escapeHtml((err && err.message) || 'Error') + '</p>',
+        actionsHtml:
+          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="close">Cerrar</button>'
+      });
+    }
+  };
+
+  App.prototype.showStartClub = function () {
+    this.setRootScreen(
+      'start-club',
+      UI.screens.startClub({
+        options: this.draft.startOptions || [],
+        engine: this.engine,
+        draft: this.draft
+      }),
+      { state: 'start-club' }
+    );
+    this.announce('Elegí tu primer club');
+  };
+
+  App.prototype.pickStartingClub = function (clubId) {
+    var name = String(this.draft.name || '').trim();
+    try {
       this.state = this.engine.createCareer({
         name: name,
         countryId: this.draft.countryId,
         position: this.draft.position,
-        archetypeId: this.draft.archetypeId
+        archetypeId: this.draft.archetypeId,
+        seed: this.draft.careerSeed,
+        clubId: clubId
       });
-      localStorage.setItem('playerName', name);
       this.showPresent();
     } catch (err) {
       UI.components.openModal({
-        title: 'No se pudo crear',
+        title: 'No se pudo firmar',
         bodyHtml: '<p>' + UI.format.escapeHtml((err && err.message) || 'Error') + '</p>',
         actionsHtml:
           '<button type="button" class="ct-button ct-button--primary" data-mc-modal="close">Cerrar</button>'
@@ -892,6 +998,14 @@
     }
     if (action === 'market-stay') {
       this.handleMarketStay();
+      return;
+    }
+    if (action === 'seek-loan') {
+      this.seekLoanOffers();
+      return;
+    }
+    if (action === 'pick-start-club') {
+      this.pickStartingClub(target.getAttribute('data-club'));
       return;
     }
     if (action === 'market-sign') {

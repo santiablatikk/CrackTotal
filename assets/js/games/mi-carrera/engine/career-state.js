@@ -71,6 +71,11 @@
             trainingFocus: null
           },
       clubsPlayed: o.clubsPlayed ? o.clubsPlayed.slice() : o.clubId ? [o.clubId] : [],
+      clubRole: o.clubRole || null,
+      onLoan: !!o.onLoan,
+      loanParentClubId: o.loanParentClubId || null,
+      marketCold: !!o.marketCold,
+      canLoan: !!o.canLoan,
       peakRating: o.peakRating != null ? o.peakRating : o.rating != null ? o.rating : 62,
       peakMarketValue:
         o.peakMarketValue != null

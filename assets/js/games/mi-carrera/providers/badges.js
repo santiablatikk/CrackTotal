@@ -3,7 +3,11 @@
 
   var NS = (root.MiCarrera = root.MiCarrera || {});
 
-  var BADGE_BASE = 'assets/images/badges/';
+  /** Local-only badge roots (no runtime hotlinking). */
+  var BADGE_ROOTS = [
+    'assets/images/mi-carrera/clubs/',
+    'assets/images/badges/'
+  ];
   var cache = Object.create(null);
 
   function initialsFromName(shortName, name) {
@@ -72,6 +76,25 @@
     return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
   }
 
+  function candidateHrefs(clubId, badgeId) {
+    var id = String(clubId || '').replace(/[^a-z0-9_\-]/gi, '');
+    var bid = badgeId ? String(badgeId).replace(/[^a-z0-9_\-]/gi, '') : '';
+    var list = [];
+    BADGE_ROOTS.forEach(function (root) {
+      if (id) {
+        list.push(root + id + '.svg');
+        list.push(root + id + '.webp');
+        list.push(root + id + '.png');
+      }
+      if (bid && bid !== id) {
+        list.push(root + bid + '.svg');
+        list.push(root + bid + '.webp');
+        list.push(root + bid + '.png');
+      }
+    });
+    return list;
+  }
+
   function getClubBadge(clubId, clubData) {
     var key = String(clubId || '');
     if (cache[key] && !clubData) return cache[key];
@@ -82,53 +105,46 @@
     }
 
     var badgeId = club && club.badgeId ? club.badgeId : null;
-    var result;
-    if (badgeId) {
-      result = {
-        type: 'image',
-        clubId: key,
-        href: BADGE_BASE + badgeId + '.webp',
-        generatedHref: club ? buildGeneratedSvg(club) : null,
-        initials: club ? initialsFromName(club.shortName, club.name) : 'FC',
-        colors: club && club.colors ? club.colors : null,
-        shape: club && club.badgeStyle ? club.badgeStyle : 'shield'
-      };
-    } else if (club) {
-      result = {
-        type: 'generated',
-        clubId: key,
-        href: null,
-        generatedHref: buildGeneratedSvg(club),
-        initials: initialsFromName(club.shortName, club.name),
-        colors: club.colors || null,
-        shape: club.badgeStyle || 'shield'
-      };
-    } else {
-      result = {
-        type: 'generated',
-        clubId: key,
-        href: null,
-        generatedHref: buildGeneratedSvg({
+    var generated = club
+      ? buildGeneratedSvg(club)
+      : buildGeneratedSvg({
           shortName: 'FC',
           name: 'Unknown',
           colors: { primary: '#334155', secondary: '#f8fafc' },
           badgeStyle: 'circle'
-        }),
-        initials: 'FC',
-        colors: { primary: '#334155', secondary: '#f8fafc' },
-        shape: 'circle'
-      };
-    }
+        });
+    var hrefs = candidateHrefs(key, badgeId);
+
+    var result = {
+      type: 'generated',
+      clubId: key,
+      href: hrefs[0] || null,
+      hrefCandidates: hrefs,
+      generatedHref: generated,
+      initials: club ? initialsFromName(club.shortName, club.name) : 'FC',
+      colors: club && club.colors ? club.colors : { primary: '#334155', secondary: '#f8fafc' },
+      shape: club && club.badgeStyle ? club.badgeStyle : 'shield',
+      hasLocalFile: false
+    };
     cache[key] = result;
     return result;
   }
 
   function resolveBadgeSrc(badgeView, existsFn) {
     if (!badgeView) return null;
-    if (badgeView.type === 'image' && badgeView.href) {
-      if (typeof existsFn !== 'function' || existsFn(badgeView.href)) return badgeView.href;
+    var candidates = badgeView.hrefCandidates || (badgeView.href ? [badgeView.href] : []);
+    if (typeof existsFn === 'function') {
+      for (var i = 0; i < candidates.length; i++) {
+        if (candidates[i] && existsFn(candidates[i])) {
+          badgeView.hasLocalFile = true;
+          badgeView.type = 'image';
+          return candidates[i];
+        }
+      }
+      return badgeView.generatedHref || null;
     }
-    return badgeView.generatedHref || null;
+    // Browser / unknown FS: never assume a disk file exists (avoids broken images).
+    return badgeView.generatedHref || candidates[0] || null;
   }
 
   NS.Badges = {
@@ -136,6 +152,7 @@
     resolveBadgeSrc: resolveBadgeSrc,
     initialsFromName: initialsFromName,
     buildGeneratedSvg: buildGeneratedSvg,
-    BADGE_BASE: BADGE_BASE
+    BADGE_BASE: BADGE_ROOTS[0],
+    BADGE_ROOTS: BADGE_ROOTS
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

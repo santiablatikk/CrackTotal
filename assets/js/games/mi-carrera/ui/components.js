@@ -15,7 +15,7 @@
     }
     var view = NS.getClubBadge(club.id, club);
     var src = NS.Badges.resolveBadgeSrc(view);
-    var label = F().escapeHtml(club.shortName || club.name || 'Club');
+    var gen = view && view.generatedHref;
     if (!src) {
       return (
         '<span class="mc-badge mc-badge--' +
@@ -25,6 +25,10 @@
         '</span>'
       );
     }
+    var onerr =
+      gen && src !== gen
+        ? ' onerror="this.onerror=null;this.src=\'' + String(gen).replace(/'/g, '%27') + '\'"'
+        : '';
     return (
       '<img class="mc-badge mc-badge--' +
       size +
@@ -32,7 +36,47 @@
       F().escapeHtml(src) +
       '" alt="" width="64" height="64" loading="lazy" decoding="async" data-club="' +
       F().escapeHtml(club.id) +
-      '" />'
+      '"' +
+      onerr +
+      ' />'
+    );
+  }
+
+  function clubPathCardHtml(option, engine) {
+    if (!option) return '';
+    var club = option.club || (engine && engine.getClub(option.clubId));
+    var country =
+      club && engine ? engine.world.countriesById[club.countryId] : null;
+    var stars = Array(Math.max(1, Math.min(5, option.stars || 1)) + 1).join('★');
+    return (
+      '<article class="mc-club-pick mc-club-pick--' +
+      F().escapeHtml(option.pathId || 'balance') +
+      '">' +
+      clubBadgeHtml(club, 'xxl') +
+      '<p class="mc-club-pick__path">' +
+      F().escapeHtml(option.pathLabel || '') +
+      '</p>' +
+      '<h2>' +
+      F().escapeHtml(club ? club.shortName || club.name : 'Club') +
+      '</h2>' +
+      '<p class="mc-club-pick__meta">' +
+      (country ? countryFlagHtml(country, 'sm') + ' ' : '') +
+      F().escapeHtml(option.competitionName || '') +
+      '</p>' +
+      '<p class="mc-club-pick__stars" aria-hidden="true">' +
+      stars +
+      '</p>' +
+      '<p class="mc-club-pick__role">' +
+      F().escapeHtml(F().ROLE_LABELS[option.role] || option.role || '') +
+      ' · ' +
+      F().escapeHtml((option.minutes && option.minutes.label) || '') +
+      '</p>' +
+      '<p class="mc-club-pick__tag">' +
+      F().escapeHtml(option.tagline || '') +
+      '</p>' +
+      '<button type="button" class="ct-button ct-button--primary" data-mc-action="pick-start-club" data-club="' +
+      F().escapeHtml(option.clubId) +
+      '">Elegir</button></article>'
     );
   }
 
@@ -325,6 +369,7 @@
 
   UI.components = {
     clubBadgeHtml: clubBadgeHtml,
+    clubPathCardHtml: clubPathCardHtml,
     countryFlagHtml: countryFlagHtml,
     meter: meter,
     statChip: statChip,

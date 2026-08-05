@@ -248,9 +248,27 @@
     var rng = new NS.Randomizer(seed);
     var arch = this.world.archetypesById[opts.archetypeId];
     var rp = NS.Rules.initialRatingPotential(arch, rng);
-    var club = NS.Rules.pickStartingClub(this.world, opts.countryId, rng);
+    var club = null;
+    if (opts.clubId) {
+      club = this.world.clubsById[opts.clubId];
+      if (!club) throw new Error('clubId inválido');
+    } else {
+      club = NS.Rules.pickStartingClub(this.world, opts.countryId, rng.fork('startClub'));
+    }
     var nt = NS.Rules.nationalTeamForCountry(this.world, opts.countryId);
     var mod = arch.modifiers || {};
+    var startBias = NS.Rules.startingMinutesBias
+      ? NS.Rules.startingMinutesBias(
+          { rating: rp.rating, potential: rp.potential, age: 17 },
+          club
+        )
+      : 0;
+    var startRole = NS.Rules.expectedRoleForClub
+      ? NS.Rules.expectedRoleForClub(
+          { rating: rp.rating, potential: rp.potential, age: 17 },
+          club
+        )
+      : 'promesa';
 
     var state = NS.State.createInitialState({
       careerSeed: seed,
@@ -272,7 +290,16 @@
       popularity: NS.State.clamp(12 + (mod.popularityBias || 0), 0, 100),
       prestige: Math.round((club.prestige || 40) * 0.25),
       money: 40000 + rng.int(0, 40000),
-      clubsPlayed: [club.id]
+      clubsPlayed: [club.id],
+      clubRole: startRole,
+      seasonModifiers: {
+        minutesBias: startBias,
+        goalBias: 0,
+        assistBias: 0,
+        injuryRiskBias: 0,
+        transferBias: 0,
+        trainingFocus: null
+      }
     });
 
     state.marketValue = NS.Rules.computeMarketValue(state, club, this.world);
@@ -281,6 +308,44 @@
     state.currentDecision = NS.Decisions.pickDecision(state, this.world, rng.fork('dec0'));
     if (NS.Storage && NS.Storage.saveActive) NS.Storage.saveActive(state);
     return state;
+  };
+
+  CareerEngine.prototype.previewStartingClubs = function (input) {
+    var opts = input || {};
+    if (!opts.countryId || !this.world.countriesById[opts.countryId]) {
+      throw new Error('countryId inválido');
+    }
+    if (!opts.archetypeId || !this.world.archetypesById[opts.archetypeId]) {
+      throw new Error('Arquetipo inválido');
+    }
+    var seed =
+      opts.seed != null
+        ? typeof opts.seed === 'number'
+          ? opts.seed >>> 0
+          : NS.Randomizer.hashSeed(opts.seed)
+        : NS.Randomizer.hashSeed(
+            (opts.name || 'x') + '|' + opts.countryId + '|' + opts.archetypeId + '|preview'
+          );
+    var rng = new NS.Randomizer(seed);
+    var arch = this.world.archetypesById[opts.archetypeId];
+    var rp = NS.Rules.initialRatingPotential(arch, rng);
+    return {
+      seed: seed,
+      rating: rp.rating,
+      potential: rp.potential,
+      options: NS.Rules.generateStartingClubOptions(
+        this.world,
+        {
+          countryId: opts.countryId,
+          position: opts.position,
+          archetypeId: opts.archetypeId,
+          rating: rp.rating,
+          potential: rp.potential,
+          age: 17
+        },
+        rng.fork('startClub')
+      )
+    };
   };
 
   CareerEngine.prototype.getRng = function (state, salt) {
@@ -428,7 +493,24 @@
     });
     NS.Records.updateCareerRecords(state, recordExtras);
 
-    state.pendingOffers = NS.Rules.generateOffers(state, this.world, offerRng, 3);
+    // End of loan season → return to parent club
+    if (state.onLoan && state.loanParentClubId) {
+      var parent = this.world.clubsById[state.loanParentClubId];
+      if (parent) {
+        state.clubId = parent.id;
+        state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) - 0.06;
+        state.clubRelation = NS.State.clamp((state.clubRelation || 50) - 2, 0, 100);
+      }
+      state.onLoan = false;
+      state.loanParentClubId = null;
+    }
+
+    var market = NS.Rules.buildMarketPacket
+      ? NS.Rules.buildMarketPacket(state, this.world, offerRng)
+      : { offers: NS.Rules.generateOffers(state, this.world, offerRng, 3) };
+    state.pendingOffers = market.offers || [];
+    state.marketCold = !!market.cold;
+    state.canLoan = !!market.canLoan;
     NS.State.resetSeasonModifiers(state);
 
     state.age += 1;
