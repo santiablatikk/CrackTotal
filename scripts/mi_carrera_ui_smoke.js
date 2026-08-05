@@ -185,21 +185,34 @@ function main() {
   assert(miniCard.svg.indexOf('Mini') !== -1, 'svg renderer works');
 
   const introHtml = MC.UI.screens.intro({ activeSummary: null });
-  assert(introHtml.indexOf('¿Hasta dónde puede llegar tu nombre?') !== -1, 'intro flagship lead');
+  assert(introHtml.indexOf('CONVERTITE EN LEYENDA.') !== -1, 'intro flagship lead');
   assert(introHtml.indexOf('como-funciona') !== -1, 'intro how-it-works anchor');
+  assert(introHtml.indexOf('mc-screen--cover') !== -1, 'intro game cover');
 
   const createHtml = MC.UI.screens.create({
     draft: {
       name: 'Tisan',
       countryId: 'country_ar',
       position: 'MID',
-      archetypeId: 'arch_tech_promise'
+      archetypeId: 'arch_tech_promise',
+      createStep: 1
     },
     data: data
   });
   assert(createHtml.indexOf('mc-create-preview') !== -1, 'create has live preview');
+  assert(createHtml.indexOf('mc-create-flow') !== -1, 'create stepped flow');
   assert(createHtml.indexOf('Tisan') !== -1, 'preview shows draft name');
   assert(createHtml.indexOf('OVR') !== -1, 'preview shows OVR');
+
+  const marketHtml = MC.UI.screens.market({
+    state: { pendingOffers: [], player: { name: 'Tisan' }, clubId: 'club_boca' },
+    engine: engine,
+    selectedOfferId: null
+  });
+  assert(marketHtml.indexOf('Mercado de fichajes') !== -1, 'market empty title');
+  assert(marketHtml.indexOf('nadie llamó') !== -1, 'market empty copy');
+  assert(typeof MC.UI.screens.careerHome === 'function', 'career home screen');
+  assert(typeof MC.UI.screens.compareOfferBody === 'function', 'compare offer body');
 
   assert(typeof MC.UI.screens.titleCelebrationBody === 'function', 'title celebration renderer');
   assert(typeof MC.UI.screens.awardCelebrationBody === 'function', 'award celebration renderer');

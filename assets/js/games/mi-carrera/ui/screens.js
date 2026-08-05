@@ -16,50 +16,83 @@
     return 62 + bias + 2;
   }
 
-  function createPreviewHtml(draft, data) {
-    var country = draft.countryId
-      ? (data.countries || []).filter(function (c) {
-          return c.id === draft.countryId;
-        })[0]
+  function assetSrc(view) {
+    if (!view) return null;
+    if (NS.Assets && NS.Assets.resolveSrc) return NS.Assets.resolveSrc(view);
+    return view.generatedHref || view.href || null;
+  }
+
+  function playerCardHtml(draft, data, liveState) {
+    var country = null;
+    var arch = null;
+    var name = 'Tu nombre';
+    var pos = '—';
+    var ovr = '—';
+    var age = 17;
+    var clubLabel = 'Sin club';
+
+    if (liveState) {
+      name = liveState.player.name;
+      pos = liveState.player.position;
+      ovr = liveState.rating;
+      age = liveState.age;
+      country = data && data.countries
+        ? null
+        : null;
+      if (liveState.player.countryId && NS._lastEngine) {
+        country = NS._lastEngine.world.countriesById[liveState.player.countryId];
+        arch = NS._lastEngine.world.archetypesById[liveState.player.archetypeId];
+        var club = NS._lastEngine.getClub(liveState.clubId);
+        clubLabel = club ? club.shortName || club.name : clubLabel;
+      }
+    } else {
+      draft = draft || {};
+      name = String(draft.name || '').trim() || 'Tu nombre';
+      pos = draft.position || '—';
+      country = draft.countryId
+        ? (data.countries || []).filter(function (c) {
+            return c.id === draft.countryId;
+          })[0]
+        : null;
+      arch = draft.archetypeId
+        ? (data.archetypes || []).filter(function (a) {
+            return a.id === draft.archetypeId;
+          })[0]
+        : null;
+      ovr = arch ? previewOvr(arch) : '—';
+    }
+
+    var img = NS.getPlayerImage
+      ? NS.getPlayerImage(null, { name: name, position: draft && draft.position ? draft.position : pos })
       : null;
-    var arch = draft.archetypeId
-      ? (data.archetypes || []).filter(function (a) {
-          return a.id === draft.archetypeId;
-        })[0]
-      : null;
-    var name = String(draft.name || '').trim() || 'Tu nombre';
-    var pos = draft.position || '—';
-    var ovr = arch ? previewOvr(arch) : '—';
-    var playerImg =
-      NS.getPlayerImage &&
-      NS.getPlayerImage(null, { name: name, position: draft.position || 'MID' });
-    var imgSrc =
-      playerImg && NS.Assets && NS.Assets.resolveSrc
-        ? NS.Assets.resolveSrc(playerImg)
-        : playerImg && playerImg.generatedHref;
+    var src = assetSrc(img);
 
     return (
-      '<aside class="mc-create-preview" aria-live="polite" aria-label="Vista previa del jugador">' +
-      '<p class="mc-kicker">Vista previa</p>' +
-      '<div class="mc-player-card">' +
-      (country ? C().countryFlagHtml(country, 'lg') : '<span class="mc-player-card__flag-ph" aria-hidden="true"></span>') +
-      (imgSrc
-        ? '<img class="mc-player-card__avatar" src="' +
-          F().escapeHtml(imgSrc) +
-          '" alt="" width="72" height="72" />'
-        : '') +
+      '<aside class="mc-player-card mc-player-card--premium" aria-live="polite">' +
+      '<div class="mc-player-card__glow" aria-hidden="true"></div>' +
+      '<div class="mc-player-card__top">' +
+      (country ? C().countryFlagHtml(country, 'lg') : '<span class="mc-player-card__flag-ph"></span>') +
+      '<span class="mc-player-card__age">' +
+      age +
+      ' años</span></div>' +
+      (src
+        ? '<img class="mc-player-card__avatar" src="' + F().escapeHtml(src) + '" alt="" width="88" height="88" />'
+        : '<div class="mc-player-card__avatar mc-player-card__avatar--ph" aria-hidden="true"></div>') +
+      '<p class="mc-player-card__pos">' +
+      F().escapeHtml(pos) +
+      '</p>' +
       '<h2 class="mc-player-card__name">' +
       F().escapeHtml(name) +
       '</h2>' +
-      '<p class="mc-player-card__meta">' +
-      F().escapeHtml(pos) +
-      (arch ? ' · ' + F().escapeHtml(arch.name) : '') +
+      '<p class="mc-player-card__arch">' +
+      F().escapeHtml(arch ? arch.name : 'Elegí tu estilo') +
       '</p>' +
-      '<p class="mc-player-card__ovr"><span>OVR</span><strong>' +
+      '<div class="mc-player-card__ovr"><span>OVR</span><strong>' +
       F().escapeHtml(String(ovr)) +
-      '</strong></p>' +
-      '<p class="mc-muted mc-player-card__hint">Estimación al debut. El motor define el valor exacto al crear.</p>' +
-      '</div></aside>'
+      '</strong></div>' +
+      '<p class="mc-player-card__club">' +
+      F().escapeHtml(clubLabel) +
+      '</p></aside>'
     );
   }
 
@@ -68,205 +101,180 @@
     var resume = '';
     if (active) {
       resume =
-        '<section class="ct-card mc-resume" aria-labelledby="mc-resume-title">' +
-        '<p class="mc-kicker">Carrera en curso</p>' +
-        '<h2 id="mc-resume-title">Continuar carrera</h2>' +
-        '<div class="mc-resume__row">' +
-        '<div><strong>' +
+        '<section class="mc-resume mc-resume--game" aria-labelledby="mc-resume-title">' +
+        '<p class="mc-kicker">Partida en curso</p>' +
+        '<h2 id="mc-resume-title">' +
         F().escapeHtml(active.playerName) +
-        '</strong><span>' +
+        '</h2>' +
+        '<p>' +
         active.age +
         ' años · ' +
         F().escapeHtml(active.clubName) +
-        '</span></div>' +
-        '<div class="mc-resume__rating" aria-label="Rating ' +
+        ' · OVR ' +
         active.rating +
-        '"><span>OVR</span><strong>' +
-        active.rating +
-        '</strong></div></div>' +
+        '</p>' +
         '<div class="mc-actions">' +
         '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="continue-career">Continuar</button>' +
-        '<button type="button" class="ct-button ct-button--secondary" data-mc-action="new-career-confirm">Nueva carrera</button>' +
+        '<button type="button" class="ct-button ct-button--ghost" data-mc-action="new-career-confirm">Nueva carrera</button>' +
         '</div></section>';
     }
 
     return (
-      '<section class="mc-screen mc-screen--intro">' +
-      '<div class="mc-hero mc-hero--flagship">' +
-      '<p class="mc-kicker">Crack Total · Juego estrella</p>' +
-      '<h1 class="mc-hero__title">Mi Carrera</h1>' +
-      '<p class="mc-hero__lead">¿Hasta dónde puede llegar tu nombre?</p>' +
+      '<section class="mc-screen mc-screen--cover">' +
+      '<div class="mc-cover">' +
+      '<div class="mc-cover__visual" aria-hidden="true">' +
+      '<div class="mc-cover__pitch"></div>' +
+      '<div class="mc-cover__silhouette"></div>' +
+      '<div class="mc-cover__card-float">' +
+      '<span>OVR</span><strong>99</strong><em>LEYENDA</em></div></div>' +
+      '<div class="mc-cover__copy">' +
+      '<p class="mc-kicker">Crack Total</p>' +
+      '<h1 class="mc-cover__title">Mi Carrera</h1>' +
+      '<p class="mc-cover__tag">CONVERTITE EN LEYENDA.</p>' +
+      '<p class="mc-cover__lead">Creá tu futbolista. Tomá decisiones. Ganate un lugar en la historia.</p>' +
       '<div class="mc-actions">' +
       (active
         ? ''
-        : '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="start-create">Comenzar carrera</button>') +
+        : '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="start-create">Crear mi futbolista</button>') +
       '<a class="ct-button ct-button--ghost" href="#como-funciona">Cómo funciona</a>' +
-      '<a class="ct-button ct-button--ghost" href="games.html">Volver a juegos</a>' +
-      '</div></div>' +
+      '</div>' +
+      '<ul class="mc-cover__pillars" id="como-funciona">' +
+      '<li><span aria-hidden="true">🏆</span>Títulos</li>' +
+      '<li><span aria-hidden="true">🥇</span>Premios</li>' +
+      '<li><span aria-hidden="true">🌎</span>Selección</li>' +
+      '<li><span aria-hidden="true">⭐</span>Legado</li>' +
+      '</ul></div></div>' +
       resume +
-      '<section class="mc-pillars" id="como-funciona" aria-labelledby="mc-how-title">' +
-      '<h2 id="mc-how-title" class="sr-only">Cómo funciona</h2>' +
-      '<ul class="mc-pillars__grid">' +
-      '<li><span aria-hidden="true">🏆</span><strong>Ganá títulos</strong><em>Ligas, copas y continentales</em></li>' +
-      '<li><span aria-hidden="true">🥇</span><strong>Ganá premios</strong><em>Balón de Oro y más</em></li>' +
-      '<li><span aria-hidden="true">🌎</span><strong>Representá a tu país</strong><em>Selección y Mundiales</em></li>' +
-      '<li><span aria-hidden="true">💰</span><strong>Convertite en estrella</strong><em>Rating y valor de mercado</em></li>' +
-      '<li><span aria-hidden="true">⭐</span><strong>Entrá en la historia</strong><em>Momentos y Career Card</em></li>' +
-      '</ul></section></section>'
+      '</section>'
     );
   }
 
   function createScreen(ctx) {
     var draft = ctx.draft || {};
-    var continents = ctx.data.continents || [];
-    var continentOptions = continents
-      .map(function (c) {
-        var selected =
-          draft.continentId === c.id ? ' aria-pressed="true" class="mc-chip is-active"' : ' aria-pressed="false" class="mc-chip"';
-        return (
-          '<button type="button"' +
-          selected +
-          ' data-mc-action="filter-continent" data-id="' +
-          F().escapeHtml(c.id) +
-          '">' +
-          F().escapeHtml(c.shortName || c.name) +
-          '</button>'
-        );
-      })
-      .join('');
+    var step = draft.createStep || 1;
+    var data = ctx.data || {};
+    var stepTitle = ['', 'Tu nombre', 'Tu país', 'Tu posición', 'Tu estilo'][step] || '';
+    var body = '';
 
-    var positions = ['GK', 'DEF', 'MID', 'FWD']
-      .map(function (pos) {
-        var active = draft.position === pos ? ' is-selected' : '';
-        return (
-          '<button type="button" class="mc-choice-card mc-choice-card--pos' +
-          active +
-          '" data-mc-action="pick-position" data-id="' +
-          pos +
-          '" aria-pressed="' +
-          (draft.position === pos) +
-          '">' +
-          '<span class="mc-choice-card__code">' +
-          pos +
-          '</span>' +
-          '<strong>' +
-          F().escapeHtml(F().POSITION_LABELS[pos]) +
-          '</strong></button>'
-        );
-      })
-      .join('');
-
-    var archetypes = (ctx.data.archetypes || [])
-      .map(function (arch) {
-        var active = draft.archetypeId === arch.id ? ' is-selected' : '';
-        return (
-          '<button type="button" class="mc-choice-card mc-choice-card--arch' +
-          active +
-          '" data-mc-action="pick-archetype" data-id="' +
-          F().escapeHtml(arch.id) +
-          '" aria-pressed="' +
-          (draft.archetypeId === arch.id) +
-          '">' +
-          '<strong>' +
-          F().escapeHtml(arch.name) +
-          '</strong>' +
-          '<span>' +
-          F().escapeHtml(arch.description) +
-          '</span></button>'
-        );
-      })
-      .join('');
-
-    var country = draft.countryId
-      ? (ctx.data.countries || []).filter(function (c) {
-          return c.id === draft.countryId;
-        })[0]
-      : null;
+    if (step === 1) {
+      body =
+        '<label class="ct-label sr-only" for="mc-player-name">Nombre</label>' +
+        '<input class="mc-create-name" id="mc-player-name" name="name" maxlength="24" autocomplete="nickname" required placeholder="TISAN" value="' +
+        F().escapeHtml(draft.name || '') +
+        '" />' +
+        '<p class="ct-field-error" id="mc-name-error" hidden></p>';
+    } else if (step === 2) {
+      body =
+        '<label class="ct-label" for="mc-country-search">Buscar país</label>' +
+        '<input class="ct-input" id="mc-country-search" type="search" placeholder="Argentina, Brasil…" value="' +
+        F().escapeHtml(draft.countryQuery || '') +
+        '" autocomplete="off" />' +
+        '<div class="mc-chip-row" role="group" aria-label="Continente">' +
+        '<button type="button" class="mc-chip' +
+        (!draft.continentId ? ' is-active' : '') +
+        '" data-mc-action="filter-continent" data-id="">Todos</button>' +
+        (data.continents || [])
+          .map(function (c) {
+            return (
+              '<button type="button" class="mc-chip' +
+              (draft.continentId === c.id ? ' is-active' : '') +
+              '" data-mc-action="filter-continent" data-id="' +
+              F().escapeHtml(c.id) +
+              '">' +
+              F().escapeHtml(c.shortName || c.name) +
+              '</button>'
+            );
+          })
+          .join('') +
+        '</div>' +
+        '<div class="mc-country-list mc-country-list--game" id="mc-country-list" role="listbox"></div>' +
+        '<p class="ct-field-error" id="mc-country-error" hidden></p>';
+    } else if (step === 3) {
+      body =
+        '<div class="mc-pos-grid">' +
+        ['GK', 'DEF', 'MID', 'FWD']
+          .map(function (pos) {
+            return (
+              '<button type="button" class="mc-pos-tile' +
+              (draft.position === pos ? ' is-selected' : '') +
+              '" data-mc-action="pick-position" data-id="' +
+              pos +
+              '" aria-pressed="' +
+              (draft.position === pos) +
+              '"><strong>' +
+              pos +
+              '</strong><span>' +
+              F().escapeHtml(F().POSITION_LABELS[pos]) +
+              '</span></button>'
+            );
+          })
+          .join('') +
+        '</div><p class="ct-field-error" id="mc-position-error" hidden></p>';
+    } else {
+      body =
+        '<div class="mc-arch-grid">' +
+        (data.archetypes || [])
+          .map(function (arch) {
+            return (
+              '<button type="button" class="mc-arch-tile' +
+              (draft.archetypeId === arch.id ? ' is-selected' : '') +
+              '" data-mc-action="pick-archetype" data-id="' +
+              F().escapeHtml(arch.id) +
+              '" aria-pressed="' +
+              (draft.archetypeId === arch.id) +
+              '"><strong>' +
+              F().escapeHtml(arch.name) +
+              '</strong><span>' +
+              F().escapeHtml(arch.description) +
+              '</span></button>'
+            );
+          })
+          .join('') +
+        '</div><p class="ct-field-error" id="mc-archetype-error" hidden></p>';
+    }
 
     return (
-      '<section class="mc-screen mc-screen--create">' +
-      '<header class="mc-screen__header">' +
-      '<p class="mc-kicker">Creá tu crack</p>' +
-      '<h1>Tu jugador</h1>' +
-      '<p>Nombre, país, posición y estilo. Sin registro.</p>' +
-      '</header>' +
-      '<div class="mc-create-layout">' +
-      createPreviewHtml(draft, ctx.data) +
-      '<form class="mc-create" id="mc-create-form" novalidate>' +
-      '<div class="ct-card mc-panel">' +
-      '<label class="ct-label" for="mc-player-name">Nombre</label>' +
-      '<input class="ct-input" id="mc-player-name" name="name" maxlength="24" autocomplete="nickname" required placeholder="Ej: Tisan" value="' +
-      F().escapeHtml(draft.name || '') +
-      '" />' +
-      '<p class="ct-field-error" id="mc-name-error" hidden></p>' +
+      '<section class="mc-screen mc-screen--create-flow">' +
+      '<div class="mc-create-flow">' +
+      '<div class="mc-create-preview">' +
+      playerCardHtml(draft, data, null) +
       '</div>' +
-      '<div class="ct-card mc-panel">' +
-      '<div class="mc-panel__title-row"><h2>País</h2>' +
-      (country
-        ? '<span class="mc-selected-pill">' +
-          C().countryFlagHtml(country, 'sm') +
-          ' ' +
-          F().escapeHtml(country.name) +
-          '</span>'
-        : '') +
-      '</div>' +
-      '<label class="ct-label" for="mc-country-search">Buscar país</label>' +
-      '<input class="ct-input" id="mc-country-search" type="search" placeholder="Argentina, Brasil, Japón…" value="' +
-      F().escapeHtml(draft.countryQuery || '') +
-      '" autocomplete="off" />' +
-      '<div class="mc-chip-row" role="group" aria-label="Filtrar por continente">' +
-      '<button type="button" class="mc-chip' +
-      (!draft.continentId ? ' is-active' : '') +
-      '" data-mc-action="filter-continent" data-id="" aria-pressed="' +
-      (!draft.continentId) +
-      '">Todos</button>' +
-      continentOptions +
-      '</div>' +
-      '<div class="mc-country-list" id="mc-country-list" role="listbox" aria-label="Resultados de países"></div>' +
-      '<p class="ct-field-error" id="mc-country-error" hidden></p>' +
-      '</div>' +
-      '<div class="ct-card mc-panel">' +
-      '<h2>Posición</h2>' +
-      '<div class="mc-choice-grid mc-choice-grid--4">' +
-      positions +
-      '</div>' +
-      '<p class="ct-field-error" id="mc-position-error" hidden></p>' +
-      '</div>' +
-      '<div class="ct-card mc-panel">' +
-      '<h2>Arquetipo</h2>' +
-      '<div class="mc-choice-grid mc-choice-grid--2">' +
-      archetypes +
-      '</div>' +
-      '<p class="ct-field-error" id="mc-archetype-error" hidden></p>' +
-      '</div>' +
+      '<div class="mc-create-flow__main">' +
+      '<p class="mc-kicker">Paso 0' +
+      step +
+      ' / 04</p>' +
+      '<h1>' +
+      F().escapeHtml(stepTitle) +
+      '</h1>' +
+      '<form id="mc-create-form" class="mc-create-step" novalidate>' +
+      body +
       '<div class="mc-actions mc-actions--sticky">' +
-      '<button type="button" class="ct-button ct-button--ghost" data-mc-action="go-intro">Volver</button>' +
-      '<button type="submit" class="ct-button ct-button--primary ct-button--lg">Crear jugador</button>' +
-      '</div></form></div></section>'
+      (step > 1
+        ? '<button type="button" class="ct-button ct-button--ghost" data-mc-action="create-prev">Atrás</button>'
+        : '<button type="button" class="ct-button ct-button--ghost" data-mc-action="go-intro">Volver</button>') +
+      (step < 4
+        ? '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="create-next">Siguiente</button>'
+        : '<button type="submit" class="ct-button ct-button--primary ct-button--lg">Firmar y crear</button>') +
+      '</div></form></div></div></section>'
     );
   }
 
   function countryResultsHtml(countries, selectedId) {
-    if (!countries.length) {
-      return '<p class="mc-empty-inline">No hay países con ese filtro.</p>';
-    }
+    if (!countries.length) return '<p class="mc-empty-inline">Sin resultados.</p>';
     return countries
       .map(function (c) {
-        var selected = c.id === selectedId;
         return (
           '<button type="button" class="mc-country-item' +
-          (selected ? ' is-selected' : '') +
+          (c.id === selectedId ? ' is-selected' : '') +
           '" role="option" aria-selected="' +
-          selected +
+          (c.id === selectedId) +
           '" data-mc-action="pick-country" data-id="' +
           F().escapeHtml(c.id) +
           '">' +
           C().countryFlagHtml(c, 'sm') +
           '<span class="mc-country-item__text"><strong>' +
           F().escapeHtml(c.name) +
-          '</strong><em>' +
-          F().escapeHtml(c.nationality || c.iso2) +
-          '</em></span></button>'
+          '</strong></span></button>'
         );
       })
       .join('');
@@ -274,336 +282,369 @@
 
   function presentScreen(ctx) {
     var state = ctx.state;
-    var country = ctx.engine.world.countriesById[state.player.countryId];
-    var club = ctx.engine.getClub(state.clubId);
-    var arch = ctx.engine.world.archetypesById[state.player.archetypeId];
+    var engine = ctx.engine;
+    var country = engine.world.countriesById[state.player.countryId];
+    var club = engine.getClub(state.clubId);
+    var comp = club ? engine.world.competitionsById[club.primaryCompetitionId] : null;
+    var badge = C().clubBadgeHtml(club, 'xl');
 
     return (
-      '<section class="mc-screen mc-screen--present">' +
-      '<header class="mc-screen__header">' +
-      '<p class="mc-kicker">Presentación</p>' +
+      '<section class="mc-screen mc-screen--contract">' +
+      '<p class="mc-kicker mc-reveal">Tu carrera comienza</p>' +
+      '<h1 class="mc-display">Primer contrato</h1>' +
+      '<article class="mc-contract-card mc-reveal">' +
+      badge +
+      '<h2>' +
+      F().escapeHtml(club ? club.name : 'Club') +
+      '</h2>' +
+      '<p>' +
+      F().escapeHtml(comp ? comp.shortName || comp.name : '') +
+      ' · ' +
+      (country ? C().countryFlagHtml(country, 'sm') + ' ' + F().escapeHtml(country.name) : '') +
+      '</p>' +
+      '<div class="mc-contract-stats">' +
+      '<div><span>Edad</span><strong>' +
+      state.age +
+      '</strong></div>' +
+      '<div><span>OVR</span><strong class="is-accent">' +
+      state.rating +
+      '</strong></div>' +
+      '<div><span>Valor</span><strong>' +
+      F().escapeHtml(F().formatMoney(state.marketValue)) +
+      '</strong></div></div>' +
+      '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="begin-career">Comenzar temporada</button>' +
+      '</article></section>'
+    );
+  }
+
+  function careerHomeScreen(ctx) {
+    var state = ctx.state;
+    var engine = ctx.engine;
+    var club = engine.getClub(state.clubId);
+    var country = engine.world.countriesById[state.player.countryId];
+    var last =
+      state.seasonHistory && state.seasonHistory.length
+        ? state.seasonHistory[state.seasonHistory.length - 1]
+        : null;
+    var decision = state.currentDecision;
+    var needsMarket =
+      (state.pendingOffers && state.pendingOffers.length) ||
+      (decision && decision.type === 'transferencia');
+    var preseason =
+      decision &&
+      decision.type !== 'transferencia' &&
+      state.phase === 'decision'
+        ? '<div class="mc-preseason ct-card">' +
+          '<p class="mc-kicker">Antes de salir a la cancha</p>' +
+          '<h2>' +
+          F().escapeHtml(decision.title) +
+          '</h2>' +
+          '<p>' +
+          F().escapeHtml(decision.prompt) +
+          '</p>' +
+          '<div class="mc-decision__options">' +
+          (decision.options || [])
+            .map(function (opt) {
+              return (
+                '<button type="button" class="mc-decision-option" data-mc-action="choose-option" data-option="' +
+                F().escapeHtml(opt.id) +
+                '"><strong>' +
+                F().escapeHtml(opt.label) +
+                '</strong><span>' +
+                F().escapeHtml(opt.summary || '') +
+                '</span></button>'
+              );
+            })
+            .join('') +
+          '</div></div>'
+        : '';
+
+    var cta = needsMarket
+      ? '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="open-market">Ir al mercado</button>'
+      : state.phase === 'simulate'
+        ? '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="play-season">Jugar temporada</button>'
+        : preseason
+          ? ''
+          : '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="open-market">Continuar</button>';
+
+    return (
+      '<section class="mc-screen mc-screen--career-home">' +
+      '<header class="mc-hero-player">' +
+      '<div class="mc-hero-player__badge">' +
+      C().clubBadgeHtml(club, 'xl') +
+      '</div>' +
+      '<div class="mc-hero-player__id">' +
+      '<div class="mc-hero-player__name-row">' +
       '<h1>' +
       F().escapeHtml(state.player.name) +
       '</h1>' +
-      '<p>Tu historia empieza ahora.</p></header>' +
-      '<div class="ct-card mc-panel mc-present-card">' +
       C().countryFlagHtml(country, 'lg') +
-      '<p><strong>' +
-      F().escapeHtml(F().POSITION_LABELS[state.player.position]) +
-      '</strong> · ' +
-      F().escapeHtml(arch ? arch.name : '') +
+      '</div>' +
+      '<p class="mc-hero-player__pos">' +
+      F().escapeHtml(state.player.position) +
       '</p>' +
-      '<p>Club: <strong>' +
+      '<p class="mc-hero-player__club">' +
       F().escapeHtml(club ? club.shortName || club.name : '—') +
-      '</strong></p>' +
-      '<p class="mc-player-card__ovr"><span>OVR</span><strong>' +
+      '</p></div>' +
+      '<div class="mc-hero-player__stats">' +
+      '<div class="mc-hero-player__ovr"><span>OVR</span><strong>' +
       state.rating +
-      '</strong></p>' +
-      '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="begin-career">Empezar temporada</button>' +
+      '</strong></div>' +
+      '<div class="mc-hero-player__value"><span>Valor</span><strong>' +
+      F().escapeHtml(F().formatMoney(state.marketValue)) +
+      '</strong></div></div></header>' +
+      '<p class="mc-season-chip">' +
+      F().escapeHtml(F().seasonLabel(state.seasonIndex)) +
+      ' · ' +
+      state.age +
+      ' años · Forma ' +
+      state.form +
+      '/10</p>' +
+      (last
+        ? '<div class="mc-last-strip" aria-label="Última temporada">' +
+          '<div><span>PJ</span><strong>' +
+          last.appearances +
+          '</strong></div>' +
+          '<div><span>Goles</span><strong>' +
+          last.goals +
+          '</strong></div>' +
+          '<div><span>Asist.</span><strong>' +
+          last.assists +
+          '</strong></div>' +
+          '<div><span>Títulos</span><strong>' +
+          (last.titles || last.trophies || []).length +
+          '</strong></div></div>'
+        : '<p class="mc-muted">Tu primera temporada te espera.</p>') +
+      '<div class="mc-dash-grid">' +
+      C().statChip('Títulos', (state.titles || []).length) +
+      C().statChip('Premios', (state.awards || []).length) +
+      C().statChip('Selección', state.nationalCaps || 0) +
+      C().statChip('Récords', (state.records || []).length) +
+      '</div>' +
+      C().timelineHtml(state, state.age) +
+      preseason +
+      '<div class="mc-actions mc-actions--sticky">' +
+      cta +
       '</div></section>'
     );
   }
 
-  function seasonStatsFromHistory(state, age) {
-    if (!state.seasonHistory || !state.seasonHistory.length) return null;
-    if (age == null || age === state.age) return null;
-    for (var i = 0; i < state.seasonHistory.length; i++) {
-      if (state.seasonHistory[i].age === age) return state.seasonHistory[i];
+  function marketScreen(ctx) {
+    var state = ctx.state;
+    var engine = ctx.engine;
+    var offers = state.pendingOffers || [];
+    var selectedOfferId = ctx.selectedOfferId || (offers[0] && offers[0].id) || '';
+    var currentClub = engine.getClub(state.clubId);
+
+    if (!offers.length) {
+      return (
+        '<section class="mc-screen mc-screen--market">' +
+        '<div class="mc-market-hero">' +
+        '<p class="mc-kicker">Mercado de fichajes</p>' +
+        '<h1 class="mc-display">Silencio en el mercado</h1>' +
+        '<p class="mc-market-lead">Esta temporada nadie llamó a tu puerta. Tu historia todavía no terminó.</p>' +
+        '<article class="mc-stay-card">' +
+        C().clubBadgeHtml(currentClub, 'xl') +
+        '<h2>Continuar en ' +
+        F().escapeHtml(currentClub ? currentClub.shortName || currentClub.name : 'tu club') +
+        '</h2>' +
+        '<p>Convertite en referente. Más continuidad, más protagonismo.</p>' +
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-stay">Continuar en mi club</button>' +
+        '</article></div></section>'
+      );
     }
-    return null;
+
+    var cards = offers
+      .map(function (offer) {
+        var club = engine.getClub(offer.clubId);
+        var comp = club ? engine.world.competitionsById[club.primaryCompetitionId] : null;
+        var country = club ? engine.world.countriesById[club.countryId] : null;
+        var stars = Math.max(1, Math.min(5, offer.level || club.level || 1));
+        var selected = offer.id === selectedOfferId;
+        return (
+          '<article class="mc-offer-hero' +
+          (selected ? ' is-selected' : '') +
+          '">' +
+          C().clubBadgeHtml(club, 'xl') +
+          '<h2>' +
+          F().escapeHtml(club ? club.name : 'Club') +
+          '</h2>' +
+          '<p class="mc-offer-hero__comp">' +
+          F().escapeHtml(comp ? comp.shortName || comp.name : '') +
+          (country ? ' · ' + F().escapeHtml(country.name) : '') +
+          '</p>' +
+          '<p class="mc-offer-stars" aria-label="Nivel">' +
+          Array(stars + 1).join('⭐') +
+          '</p>' +
+          '<p class="mc-offer-hero__role">' +
+          F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
+          '</p>' +
+          '<div class="mc-offer-hero__money">' +
+          '<div><span>Salario</span><strong>' +
+          F().escapeHtml(F().formatMoney(offer.wage)) +
+          '</strong></div>' +
+          '<div><span>Prestigio</span><strong>' +
+          (offer.prestige || (club && club.prestige) || '—') +
+          '</strong></div></div>' +
+          '<p class="mc-offer-project">Proyecto: <strong>' +
+          Math.max(1, Math.min(10, Math.round((offer.prestige || (club && club.prestige) || 50) / 10))) +
+          '/10</strong></p>' +
+          '<p class="mc-muted">' +
+          F().escapeHtml(offer.blurb || 'Proyecto deportivo.') +
+          '</p>' +
+          '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-compare" data-offer="' +
+          F().escapeHtml(offer.id) +
+          '">Ver oferta</button>' +
+          '</article>'
+        );
+      })
+      .join('');
+
+    return (
+      '<section class="mc-screen mc-screen--market">' +
+      '<div class="mc-market-hero">' +
+      '<p class="mc-kicker">Mercado de fichajes</p>' +
+      '<h1 class="mc-display">Tu futuro está en juego</h1>' +
+      '<p class="mc-market-lead">Después de la temporada, varios clubes preguntan por vos.</p></div>' +
+      '<div class="mc-offer-rail">' +
+      cards +
+      '</div>' +
+      '<div class="mc-actions">' +
+      '<button type="button" class="ct-button ct-button--ghost" data-mc-action="market-stay">Quedarme en mi club</button>' +
+      '</div></section>'
+    );
   }
 
-  function dashboardHighlights(state) {
-    var titles = (state.titles || []).length;
-    var awards = (state.awards || []).length;
-    var records = (state.records || []).length;
+  function compareOfferBody(ctx) {
+    var state = ctx.state;
+    var engine = ctx.engine;
+    var offer = ctx.offer;
+    var current = engine.getClub(state.clubId);
+    var next = engine.getClub(offer.clubId);
+    var curComp = current ? engine.world.competitionsById[current.primaryCompetitionId] : null;
+    var nextComp = next ? engine.world.competitionsById[next.primaryCompetitionId] : null;
+    var minutesHint =
+      offer.role === 'titular' ? 'Altos' : offer.role === 'promesa' ? 'Crecimiento' : 'Rotación';
+
     return (
-      '<div class="mc-dash-grid" aria-label="Resumen de carrera">' +
-      C().statChip('Títulos', titles) +
-      C().statChip('Premios', awards) +
-      C().statChip('Selección', (state.nationalCaps || 0) + ' caps') +
-      C().statChip('Récords', records) +
-      '</div>'
+      '<div class="mc-compare-pro">' +
+      '<div class="mc-compare-pro__grid">' +
+      '<div class="mc-compare-pro__col">' +
+      '<p class="mc-kicker">Club actual</p>' +
+      C().clubBadgeHtml(current, 'xl') +
+      '<strong class="mc-compare-pro__name">' +
+      F().escapeHtml(current ? current.shortName || current.name : '—') +
+      '</strong>' +
+      '<p class="mc-compare-pro__comp">' +
+      F().escapeHtml(curComp ? curComp.shortName || curComp.name : '') +
+      '</p>' +
+      '<ul class="mc-compare-pro__list">' +
+      '<li><span>Nivel</span><strong>' +
+      F().escapeHtml(F().LEVEL_LABELS[current ? current.level : 1] || '') +
+      '</strong></li>' +
+      '<li><span>Prestigio</span><strong>' +
+      (current ? current.prestige || '—' : '—') +
+      '</strong></li></ul></div>' +
+      '<div class="mc-compare-pro__vs" aria-hidden="true">VS</div>' +
+      '<div class="mc-compare-pro__col is-next">' +
+      '<p class="mc-kicker">Nuevo club</p>' +
+      C().clubBadgeHtml(next, 'xl') +
+      '<strong class="mc-compare-pro__name">' +
+      F().escapeHtml(next ? next.shortName || next.name : '—') +
+      '</strong>' +
+      '<p class="mc-compare-pro__comp">' +
+      F().escapeHtml(nextComp ? nextComp.shortName || nextComp.name : '') +
+      '</p>' +
+      '<ul class="mc-compare-pro__list">' +
+      '<li><span>Nivel</span><strong>' +
+      F().escapeHtml(F().LEVEL_LABELS[next ? next.level : 1] || '') +
+      '</strong></li>' +
+      '<li class="is-focus"><span>Minutos</span><strong>' +
+      F().escapeHtml(minutesHint) +
+      '</strong></li>' +
+      '<li class="is-focus"><span>Salario</span><strong>' +
+      F().escapeHtml(F().formatMoney(offer.wage)) +
+      '</strong></li>' +
+      '<li><span>Rol</span><strong>' +
+      F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
+      '</strong></li></ul></div></div>' +
+      '<div class="mc-stay-aside">' +
+      '<p class="mc-kicker">Quedarte</p>' +
+      '<p>Convertite en referente: más continuidad y liderazgo. Menos escaparate internacional.</p>' +
+      '</div></div>'
+    );
+  }
+
+  function transferCinematicHtml(ctx) {
+    var club = ctx.club;
+    var state = ctx.state;
+    return (
+      '<section class="mc-screen mc-screen--cinematic">' +
+      '<p class="mc-kicker">Nuevo capítulo</p>' +
+      C().clubBadgeHtml(club, 'xl') +
+      '<h1 class="mc-display">' +
+      F().escapeHtml(club ? club.name : 'Nuevo club') +
+      '</h1>' +
+      '<p class="mc-cinematic-line">Fichaje confirmado</p>' +
+      '<p><strong>' +
+      F().escapeHtml(state.player.name) +
+      '</strong> · ' +
+      F().escapeHtml(F().seasonLabel(state.seasonIndex)) +
+      '</p>' +
+      '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="after-transfer">Continuar</button>' +
+      '</section>'
+    );
+  }
+
+  function seasonRecapScreen(ctx) {
+    var season = ctx.season;
+    var state = ctx.state;
+    var club = ctx.engine.getClub(season.clubId || state.clubId);
+    return (
+      '<section class="mc-screen mc-screen--recap">' +
+      '<p class="mc-kicker">Temporada ' +
+      F().escapeHtml(season.seasonLabel || F().seasonLabel(season.seasonIndex)) +
+      '</p>' +
+      '<h1 class="mc-display">Resultado</h1>' +
+      '<p class="mc-recap-club">' +
+      C().clubBadgeHtml(club, 'md') +
+      ' ' +
+      F().escapeHtml(club ? club.shortName || club.name : '') +
+      '</p>' +
+      '<p class="mc-stars" aria-hidden="true">' +
+      F().starsFromRating(season.averageRating) +
+      '</p>' +
+      '<p class="mc-feedback-score"><strong>' +
+      season.averageRating +
+      '</strong> · Grado ' +
+      F().escapeHtml(season.performanceGrade) +
+      '</p>' +
+      '<div class="mc-last-strip">' +
+      '<div><span>PJ</span><strong>' +
+      season.appearances +
+      '</strong></div>' +
+      '<div><span>Goles</span><strong>' +
+      season.goals +
+      '</strong></div>' +
+      '<div><span>Asist.</span><strong>' +
+      season.assists +
+      '</strong></div>' +
+      '<div><span>Títulos</span><strong>' +
+      (season.titles || season.trophies || []).length +
+      '</strong></div></div>' +
+      '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="open-market">Ir al mercado</button>' +
+      '</section>'
     );
   }
 
   function seasonScreen(ctx) {
-    var state = ctx.state;
-    var club = ctx.engine.getClub(state.clubId);
-    var country = ctx.engine.world.countriesById[state.player.countryId];
-    var comp = club ? ctx.engine.world.competitionsById[club.primaryCompetitionId] : null;
-    var focusAge = ctx.focusAge != null ? ctx.focusAge : state.age;
-    var past = seasonStatsFromHistory(state, focusAge);
-    var decision = state.currentDecision;
-    var viewingPast = !!(past && focusAge !== state.age);
-
-    var decisionHtml = viewingPast
-      ? '<div class="ct-card mc-panel"><p class="mc-kicker">Temporada consultada</p><h2>A los ' +
-        focusAge +
-        ' años</h2><p>Estás viendo el archivo. Volvé a la temporada actual para decidir.</p>' +
-        '<button type="button" class="ct-button ct-button--secondary" data-mc-action="focus-age" data-age="' +
-        state.age +
-        '">Volver al presente</button></div>'
-      : renderDecision(ctx, decision, club);
-
-    var lastSeason =
-      state.seasonHistory && state.seasonHistory.length
-        ? state.seasonHistory[state.seasonHistory.length - 1]
-        : null;
-    var statsSource = past || (!viewingPast ? lastSeason : null);
-    var statsBlock = statsSource
-      ? '<div class="mc-stat-grid">' +
-        C().statChip('Partidos', statsSource.appearances) +
-        C().statChip('Goles', statsSource.goals) +
-        C().statChip('Asistencias', statsSource.assists) +
-        C().statChip('Rating', statsSource.averageRating) +
-        C().statChip('Títulos', (statsSource.titles || statsSource.trophies || []).length) +
-        C().statChip('Premios', (statsSource.awards || []).length) +
-        C().statChip('Selección', statsSource.nationalCaps || 0) +
-        '</div>'
-      : '<p class="mc-muted">Las estadísticas aparecen al cerrar tu primera temporada.</p>';
-
-    return (
-      '<section class="mc-screen mc-screen--season">' +
-      '<div class="mc-season-layout">' +
-      '<div class="mc-season-main">' +
-      '<header class="mc-season-top ct-card mc-player-dash">' +
-      '<div class="mc-season-top__club">' +
-      C().clubBadgeHtml(club, 'lg') +
-      '<div>' +
-      '<p class="mc-kicker">' +
-      F().escapeHtml(F().seasonLabel(state.seasonIndex)) +
-      ' · ' +
-      state.age +
-      ' años</p>' +
-      '<h1>' +
-      F().escapeHtml(state.player.name) +
-      '</h1>' +
-      '<p>' +
-      C().countryFlagHtml(country, 'sm') +
-      ' ' +
-      F().escapeHtml(F().POSITION_LABELS[state.player.position]) +
-      ' · ' +
-      F().escapeHtml(club ? club.shortName || club.name : 'Sin club') +
-      '</p></div></div>' +
-      '<div class="mc-season-top__ovr"><span>OVR</span><strong class="mc-num">' +
-      state.rating +
-      '</strong></div></header>' +
-      '<div class="ct-card mc-panel mc-dash-summary">' +
-      '<div class="mc-dash-summary__row">' +
-      C().statChip('Valor', F().formatMoney(state.marketValue)) +
-      C().statChip('Forma', state.form + '/10') +
-      '</div>' +
-      dashboardHighlights(state) +
-      '</div>' +
-      C().timelineHtml(state, focusAge) +
-      decisionHtml +
-      '</div>' +
-      '<aside class="mc-season-side" aria-label="Estado del jugador">' +
-      '<div class="ct-card mc-panel">' +
-      '<h2>Estado</h2>' +
-      C().meter('Forma', state.form, 10, 'warm') +
-      C().meter('Físico', state.fitness, 100, 'accent') +
-      C().meter('Prestigio', state.prestige, 100, 'primary') +
-      C().meter('Popularidad', state.popularity, 100, 'warm') +
-      '<div class="mc-side-facts">' +
-      C().statChip('Dinero', F().formatMoney(state.money)) +
-      C().statChip('Potencial', state.potential) +
-      C().statChip('Goles sel.', state.nationalGoals || 0) +
-      '</div>' +
-      (comp
-        ? '<p class="mc-muted mc-comp-line">Compite en <strong>' +
-          F().escapeHtml(comp.shortName || comp.name) +
-          '</strong></p>'
-        : '') +
-      '</div>' +
-      '<div class="ct-card mc-panel">' +
-      '<h2>' +
-      (viewingPast ? 'Temporada archivada' : 'Última temporada') +
-      '</h2>' +
-      statsBlock +
-      '</div></aside></div></section>'
-    );
-  }
-
-  function renderDecision(ctx, decision, currentClub) {
-    if (!decision) {
-      return '<div class="ct-card mc-panel" role="status"><p>No hay decisión pendiente.</p></div>';
-    }
-    if (decision.type === 'transferencia') {
-      return renderTransferDecision(ctx, decision, currentClub);
-    }
-    if (decision.type === 'seleccion') {
-      return renderNationalDecision(ctx, decision);
-    }
-    var options = (decision.options || [])
-      .map(function (opt) {
-        return (
-          '<button type="button" class="mc-decision-option" data-mc-action="choose-option" data-option="' +
-          F().escapeHtml(opt.id) +
-          '">' +
-          '<strong>' +
-          F().escapeHtml(opt.label) +
-          '</strong>' +
-          '<span>' +
-          F().escapeHtml(opt.summary || '') +
-          '</span></button>'
-        );
-      })
-      .join('');
-    return (
-      '<article class="ct-card mc-decision mc-reveal" aria-labelledby="mc-decision-title">' +
-      '<p class="mc-kicker">Decisión</p>' +
-      '<h2 id="mc-decision-title">' +
-      F().escapeHtml(decision.title) +
-      '</h2>' +
-      '<p class="mc-decision__prompt">' +
-      F().escapeHtml(decision.prompt) +
-      '</p>' +
-      '<div class="mc-decision__options">' +
-      options +
-      '</div></article>'
-    );
-  }
-
-  function renderTransferDecision(ctx, decision, currentClub) {
-    var offers = ctx.state.pendingOffers || [];
-    var selectedOfferId = ctx.selectedOfferId || (offers[0] && offers[0].id) || '';
-    var selected = offers.filter(function (o) {
-      return o.id === selectedOfferId;
-    })[0];
-    var selectedClub = selected ? ctx.engine.getClub(selected.clubId) : null;
-    var compare =
-      selectedClub && currentClub
-        ? '<div class="mc-compare" aria-label="Comparación de clubes">' +
-          '<div class="mc-compare__col"><p class="mc-kicker">Club actual</p>' +
-          C().clubBadgeHtml(currentClub, 'md') +
-          '<strong>' +
-          F().escapeHtml(currentClub.shortName || currentClub.name) +
-          '</strong>' +
-          '<ul><li>Nivel: ' +
-          F().escapeHtml(F().LEVEL_LABELS[currentClub.level] || String(currentClub.level)) +
-          '</li><li>Prestigio: ' +
-          currentClub.prestige +
-          '</li></ul></div>' +
-          '<div class="mc-compare__vs" aria-hidden="true">VS</div>' +
-          '<div class="mc-compare__col is-offer"><p class="mc-kicker">Nueva oferta</p>' +
-          C().clubBadgeHtml(selectedClub, 'md') +
-          '<strong>' +
-          F().escapeHtml(selectedClub.shortName || selectedClub.name) +
-          '</strong>' +
-          '<ul><li>Nivel: ' +
-          F().escapeHtml(F().LEVEL_LABELS[selectedClub.level] || String(selectedClub.level)) +
-          '</li><li>Prestigio: ' +
-          selectedClub.prestige +
-          '</li><li>Salario: ' +
-          F().formatMoney(selected.wage) +
-          '</li><li>Rol: ' +
-          F().escapeHtml(F().ROLE_LABELS[selected.role] || selected.role) +
-          '</li></ul></div></div>'
-        : '<p class="mc-muted">No hay ofertas sobre la mesa. Podés reforzar el vínculo con tu club.</p>';
-
-    var offerCards = offers
-      .map(function (offer) {
-        var club = ctx.engine.getClub(offer.clubId);
-        var isSelected = offer.id === selectedOfferId;
-        var stars = Math.max(1, Math.min(5, offer.level || 1));
-        return (
-          '<button type="button" class="mc-offer-card' +
-          (isSelected ? ' is-selected' : '') +
-          '" data-mc-action="select-offer" data-offer="' +
-          F().escapeHtml(offer.id) +
-          '" aria-pressed="' +
-          isSelected +
-          '">' +
-          C().clubBadgeHtml(club, 'md') +
-          '<div class="mc-offer-card__body">' +
-          '<strong>' +
-          F().escapeHtml(club ? club.shortName || club.name : 'Club') +
-          '</strong>' +
-          '<span class="mc-offer-stars" aria-label="Nivel ' +
-          stars +
-          '">' +
-          Array(stars + 1).join('⭐') +
-          '</span>' +
-          '<span>' +
-          F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
-          ' · ' +
-          F().formatMoney(offer.wage) +
-          '/año</span>' +
-          '<span>' +
-          F().escapeHtml(offer.blurb || offer.tier || '') +
-          '</span></div></button>'
-        );
-      })
-      .join('');
-
-    return (
-      '<article class="ct-card mc-decision mc-decision--transfer mc-reveal">' +
-      '<p class="mc-kicker">Mercado</p>' +
-      '<h2>Tu futuro</h2>' +
-      '<p class="mc-decision__prompt">' +
-      F().escapeHtml(decision.prompt || 'El mercado habló. ¿Qué hacés ahora?') +
-      '</p>' +
-      (offers.length ? '' : '<p class="mc-muted">El mercado no se mueve para vos esta vez.</p>') +
-      compare +
-      (offers.length ? '<div class="mc-offer-list" role="list">' + offerCards + '</div>' : '') +
-      '<div class="mc-decision__options mc-decision__options--row">' +
-      (selected
-        ? '<button type="button" class="ct-button ct-button--primary" data-mc-action="choose-option" data-option="accept_best_prestige" data-offer="' +
-          F().escapeHtml(selected.id) +
-          '">Fichar</button>' +
-          '<button type="button" class="ct-button ct-button--secondary" data-mc-action="choose-option" data-option="accept_minutes" data-offer="' +
-          F().escapeHtml(selected.id) +
-          '">Priorizar minutos</button>'
-        : '') +
-      '<button type="button" class="ct-button ct-button--ghost" data-mc-action="choose-option" data-option="stay_loyal">Quedarme</button>' +
-      '</div></article>'
-    );
-  }
-
-  function renderNationalDecision(ctx, decision) {
-    var state = ctx.state;
-    var nt = ctx.engine.world.nationalTeamsById[state.nationalTeamId];
-    var country = ctx.engine.world.countriesById[state.player.countryId];
-    var options = (decision.options || [])
-      .map(function (opt) {
-        return (
-          '<button type="button" class="mc-decision-option" data-mc-action="choose-option" data-option="' +
-          F().escapeHtml(opt.id) +
-          '"><strong>' +
-          F().escapeHtml(opt.label) +
-          '</strong><span>' +
-          F().escapeHtml(opt.summary || '') +
-          '</span></button>'
-        );
-      })
-      .join('');
-    return (
-      '<article class="ct-card mc-decision mc-decision--national mc-reveal">' +
-      '<p class="mc-kicker">Selección</p>' +
-      '<div class="mc-national-head">' +
-      C().countryFlagHtml(country, 'lg') +
-      '<div><h2>' +
-      F().escapeHtml(nt ? nt.name : country ? country.name : 'Selección') +
-      '</h2><p>' +
-      F().escapeHtml(decision.prompt) +
-      '</p></div></div>' +
-      '<div class="mc-stat-grid">' +
-      C().statChip('Internacionales', state.nationalCaps) +
-      C().statChip('Goles', state.nationalGoals) +
-      C().statChip('Prestigio NT', nt ? nt.prestige : '—') +
-      '</div>' +
-      '<div class="mc-decision__options">' +
-      options +
-      '</div></article>'
-    );
+    return careerHomeScreen(ctx);
   }
 
   function eventModalBody(event) {
     var lines = F().effectImpactLines(event.effects);
     return (
-      '<p class="mc-event-kicker">Tu temporada cambió</p>' +
+      '<p class="mc-event-kicker">Fuera de la cancha</p>' +
       '<p class="mc-event-body">' +
       F().escapeHtml(event.body || '') +
       '</p>' +
@@ -621,73 +662,32 @@
 
   function seasonFeedbackBody(payload) {
     var season = payload.season;
-    var deltas = payload.deltas || {};
-    var highlights = [];
-    (season.titles || []).slice(0, 3).forEach(function (t) {
-      highlights.push('🏆 ' + (t.shortName || t.name));
-    });
-    (season.awards || []).slice(0, 2).forEach(function (a) {
-      highlights.push('🥇 ' + (a.shortName || a.name));
-    });
     return (
-      '<p class="mc-kicker">Temporada ' +
+      '<p class="mc-kicker">' +
       F().escapeHtml(season.seasonLabel || F().seasonLabel(season.seasonIndex)) +
       '</p>' +
       '<p class="mc-stars" aria-hidden="true">' +
       F().starsFromRating(season.averageRating) +
       '</p>' +
-      '<p class="mc-feedback-score"><strong>' +
-      season.averageRating +
-      '</strong> · Grado ' +
-      F().escapeHtml(season.performanceGrade) +
-      '</p>' +
-      '<p>' +
-      F().escapeHtml(F().seasonBlurb(season.performanceGrade, season.averageRating)) +
-      '</p>' +
-      (highlights.length
-        ? '<ul class="mc-highlight-list">' +
-          highlights
-            .map(function (h) {
-              return '<li>' + F().escapeHtml(h) + '</li>';
-            })
-            .join('') +
-          '</ul>'
-        : '') +
       '<div class="mc-stat-grid">' +
       C().statChip('PJ', season.appearances) +
       C().statChip('Goles', season.goals) +
       C().statChip('Asist.', season.assists) +
       C().statChip('Títulos', (season.titles || season.trophies || []).length) +
-      '</div>' +
-      '<ul class="mc-delta-list">' +
-      '<li>' +
-      F().escapeHtml(F().formatDelta(deltas.rating, { zero: 'Rating estable' })) +
-      (deltas.rating ? ' Rating' : '') +
-      '</li>' +
-      '<li>' +
-      F().escapeHtml(F().formatDelta(deltas.marketValue, { money: true, zero: 'Valor estable' })) +
-      (deltas.marketValue ? ' valor' : '') +
-      '</li>' +
-      '<li>' +
-      F().escapeHtml(F().formatDelta(deltas.prestige, { zero: 'Prestigio estable' })) +
-      (deltas.prestige ? ' Prestigio' : '') +
-      '</li></ul>'
+      '</div>'
     );
   }
 
   function titleCelebrationBody(title, club, nt) {
-    var who = club
-      ? club.shortName || club.name
-      : nt
-        ? nt.name
-        : '';
+    var who = club ? club.shortName || club.name : nt ? nt.name : '';
     return (
       '<div class="mc-celebrate mc-celebrate--title">' +
       '<p class="mc-celebrate__icon" aria-hidden="true">🏆</p>' +
-      '<p class="mc-kicker">Campeón</p>' +
+      '<p class="mc-kicker">Campeones</p>' +
       '<h3 class="mc-celebrate__name">' +
       F().escapeHtml(title.name) +
       '</h3>' +
+      (club ? C().clubBadgeHtml(club, 'lg') : '') +
       (who ? '<p class="mc-celebrate__club">' + F().escapeHtml(who) + '</p>' : '') +
       '<p class="mc-celebrate__season">' +
       F().escapeHtml(title.seasonLabel || '') +
@@ -696,10 +696,15 @@
   }
 
   function awardCelebrationBody(award, playerName) {
+    var isBallon = award.awardId === 'award_ballon_dor';
     return (
-      '<div class="mc-celebrate mc-celebrate--award">' +
+      '<div class="mc-celebrate mc-celebrate--award' +
+      (isBallon ? ' mc-celebrate--ballon' : '') +
+      '">' +
       '<p class="mc-celebrate__icon" aria-hidden="true">🥇</p>' +
-      '<p class="mc-kicker">Premio individual</p>' +
+      '<p class="mc-kicker">' +
+      (isBallon ? 'El mejor del mundo' : 'Premio individual') +
+      '</p>' +
       '<h3 class="mc-celebrate__name">' +
       F().escapeHtml(award.name) +
       '</h3>' +
@@ -707,7 +712,7 @@
       F().escapeHtml(playerName || '') +
       '</p>' +
       '<p class="mc-celebrate__season">' +
-      F().escapeHtml(award.seasonLabel || String(award.seasonIndex)) +
+      F().escapeHtml(award.seasonLabel || '') +
       '</p>' +
       '<p class="mc-stars" aria-hidden="true">★★★★★</p></div>'
     );
@@ -717,13 +722,12 @@
     return (
       '<div class="mc-celebrate mc-celebrate--moment">' +
       '<p class="mc-celebrate__icon" aria-hidden="true">⭐</p>' +
-      '<p class="mc-kicker">Entrá en la historia</p>' +
+      '<p class="mc-kicker">Momento histórico</p>' +
       '<h3 class="mc-celebrate__name">' +
-      F().escapeHtml(moment.label || 'Momento histórico') +
+      F().escapeHtml(moment.label || '') +
       '</h3>' +
       '<p class="mc-celebrate__season">' +
       F().escapeHtml(moment.seasonLabel || '') +
-      (moment.age != null ? ' · ' + moment.age + ' años' : '') +
       '</p></div>'
     );
   }
@@ -736,26 +740,41 @@
     var legacy = UI.Legacy.buildLegacy(state, engine);
     var achievements = card.viewModel.achievements || [];
     var shareAvailable = UI.Share.canNativeShare();
+    var agg = NS.Scoring.aggregateHistory(state);
 
     return (
       '<section class="mc-screen mc-screen--retire">' +
       '<header class="mc-screen__header mc-reveal">' +
       '<p class="mc-kicker">Fin de ciclo</p>' +
-      '<h1>Tu carrera terminó</h1>' +
+      '<h1 class="mc-display">Tu historia terminó</h1>' +
       '<p class="mc-cinematic">' +
       F().escapeHtml(state.retirementLine || 'Colgaste los botines.') +
       '</p></header>' +
+      '<div class="mc-last-strip mc-reveal">' +
+      '<div><span>PJ</span><strong>' +
+      agg.games +
+      '</strong></div>' +
+      '<div><span>Goles</span><strong>' +
+      agg.goals +
+      '</strong></div>' +
+      '<div><span>Títulos</span><strong>' +
+      agg.titles +
+      '</strong></div>' +
+      '<div><span>Premios</span><strong>' +
+      (state.awards || []).length +
+      '</strong></div></div>' +
       '<div class="mc-retire-stack">' +
       card.html +
       UI.Legacy.legacyHtml(legacy) +
       UI.Legacy.achievementsHtml(achievements) +
       UI.Rewards.rewardsHtml(reward) +
-      '<section class="ct-card mc-final-actions mc-reveal" aria-label="Acciones finales">' +
+      '<section class="ct-card mc-final-actions mc-reveal">' +
       '<div class="mc-actions mc-actions--final">' +
       '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="share-career"' +
       (shareAvailable ? '' : ' hidden') +
       '>Compartir mi carrera</button>' +
       '<button type="button" class="ct-button ct-button--secondary ct-button--lg" data-mc-action="copy-career">Copiar resultado</button>' +
+      '<a class="ct-button ct-button--ghost" href="#mc-legacy-title">Ver mi legado</a>' +
       '<button type="button" class="ct-button ct-button--primary" data-mc-action="play-again">Jugar otra vez</button>' +
       '<a class="ct-button ct-button--ghost" href="games.html">Volver a Crack Total</a>' +
       '</div>' +
@@ -769,6 +788,11 @@
     create: createScreen,
     present: presentScreen,
     season: seasonScreen,
+    careerHome: careerHomeScreen,
+    market: marketScreen,
+    seasonRecap: seasonRecapScreen,
+    transferCinematic: transferCinematicHtml,
+    compareOfferBody: compareOfferBody,
     retire: retireScreen,
     countryResultsHtml: countryResultsHtml,
     eventModalBody: eventModalBody,
@@ -776,6 +800,7 @@
     titleCelebrationBody: titleCelebrationBody,
     awardCelebrationBody: awardCelebrationBody,
     momentCelebrationBody: momentCelebrationBody,
-    previewOvr: previewOvr
+    previewOvr: previewOvr,
+    playerCardHtml: playerCardHtml
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

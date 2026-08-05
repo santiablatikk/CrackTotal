@@ -7,22 +7,28 @@
   var BASE_YEAR = 2026;
   var COUNTRY_PAGE_SIZE = 14;
 
+  function emptyDraft(name) {
+    return {
+      name: name || '',
+      countryId: null,
+      continentId: '',
+      countryQuery: '',
+      position: null,
+      archetypeId: null,
+      createStep: 1
+    };
+  }
+
   function App() {
     this.root = null;
     this.engine = null;
     this.data = null;
     this.state = null;
     this.screen = 'loading';
-    this.draft = {
-      name: '',
-      countryId: null,
-      continentId: '',
-      countryQuery: '',
-      position: null,
-      archetypeId: null
-    };
+    this.draft = emptyDraft();
     this.focusAge = null;
     this.selectedOfferId = null;
+    this._lastSeason = null;
     this.busy = false;
     this._onClick = this.onClick.bind(this);
     this._onSubmit = this.onSubmit.bind(this);
@@ -113,15 +119,18 @@
   };
 
   App.prototype.showCreate = function () {
+    if (!this.draft.createStep) this.draft.createStep = 1;
     if (!this.draft.name) {
       this.draft.name = localStorage.getItem('playerName') || '';
     }
     this.setRootScreen('create', UI.screens.create({ draft: this.draft, data: this.data }), {
       state: 'active'
     });
-    this.refreshCountryList();
-    var input = document.getElementById('mc-player-name');
-    if (input) input.focus();
+    if (this.draft.createStep === 2) this.refreshCountryList();
+    if (this.draft.createStep === 1) {
+      var input = document.getElementById('mc-player-name');
+      if (input) input.focus();
+    }
   };
 
   App.prototype.filteredCountries = function () {
@@ -138,7 +147,20 @@
         (c.iso2 && c.iso2.toLowerCase().indexOf(q) !== -1)
       );
     });
-    var priority = ['country_ar', 'country_br', 'country_es', 'country_mx', 'country_us', 'country_eng', 'country_fr', 'country_de', 'country_it', 'country_pt', 'country_uy', 'country_co'];
+    var priority = [
+      'country_ar',
+      'country_br',
+      'country_es',
+      'country_mx',
+      'country_us',
+      'country_eng',
+      'country_fr',
+      'country_de',
+      'country_it',
+      'country_pt',
+      'country_uy',
+      'country_co'
+    ];
     if (!q && !continentId) {
       list.sort(function (a, b) {
         var ia = priority.indexOf(a.id);
@@ -162,20 +184,84 @@
     node.innerHTML = UI.screens.countryResultsHtml(this.filteredCountries(), this.draft.countryId);
   };
 
+  App.prototype.validateCreateStep = function () {
+    var step = this.draft.createStep || 1;
+    var errId = null;
+    var msg = '';
+    if (step === 1) {
+      var name = String(this.draft.name || '').trim();
+      if (name.length < 2) {
+        errId = 'mc-name-error';
+        msg = 'Ingresá un nombre (mínimo 2 caracteres).';
+      }
+    } else if (step === 2) {
+      if (!this.draft.countryId) {
+        errId = 'mc-country-error';
+        msg = 'Elegí un país.';
+      }
+    } else if (step === 3) {
+      if (!this.draft.position) {
+        errId = 'mc-position-error';
+        msg = 'Elegí una posición.';
+      }
+    } else if (step === 4) {
+      if (!this.draft.archetypeId) {
+        errId = 'mc-archetype-error';
+        msg = 'Elegí un arquetipo.';
+      }
+    }
+    ['mc-name-error', 'mc-country-error', 'mc-position-error', 'mc-archetype-error'].forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el) {
+        el.hidden = true;
+        el.textContent = '';
+      }
+    });
+    if (errId) {
+      var node = document.getElementById(errId);
+      if (node) {
+        node.hidden = false;
+        node.textContent = msg;
+      }
+      return false;
+    }
+    return true;
+  };
+
+  App.prototype.createNext = function () {
+    var nameInput = document.getElementById('mc-player-name');
+    if (nameInput) this.draft.name = nameInput.value;
+    if (!this.validateCreateStep()) return;
+    if ((this.draft.createStep || 1) < 4) {
+      this.draft.createStep = (this.draft.createStep || 1) + 1;
+      this.showCreate();
+    }
+  };
+
+  App.prototype.createPrev = function () {
+    if ((this.draft.createStep || 1) > 1) {
+      this.draft.createStep -= 1;
+      this.showCreate();
+    } else {
+      this.showIntro();
+    }
+  };
+
   App.prototype.showPresent = function () {
     this.setRootScreen('present', UI.screens.present({ state: this.state, engine: this.engine }), {
       state: 'success'
     });
+    this.announce('Primer contrato');
   };
 
-  App.prototype.showSeason = function () {
-    if (this.focusAge == null) this.focusAge = this.state.age;
+  App.prototype.showCareerHome = function () {
+    if (this.focusAge == null && this.state) this.focusAge = this.state.age;
     if (!this.selectedOfferId && this.state.pendingOffers && this.state.pendingOffers.length) {
       this.selectedOfferId = this.state.pendingOffers[0].id;
     }
     this.setRootScreen(
-      'season',
-      UI.screens.season({
+      'career-home',
+      UI.screens.careerHome({
         state: this.state,
         engine: this.engine,
         focusAge: this.focusAge,
@@ -184,6 +270,52 @@
       { state: 'active' }
     );
     this.announce('Temporada ' + UI.format.seasonLabel(this.state.seasonIndex, BASE_YEAR));
+  };
+
+  App.prototype.showSeason = function () {
+    this.showCareerHome();
+  };
+
+  App.prototype.showMarket = function () {
+    if (!this.selectedOfferId && this.state.pendingOffers && this.state.pendingOffers.length) {
+      this.selectedOfferId = this.state.pendingOffers[0].id;
+    }
+    this.setRootScreen(
+      'market',
+      UI.screens.market({
+        state: this.state,
+        engine: this.engine,
+        selectedOfferId: this.selectedOfferId
+      }),
+      { state: 'active' }
+    );
+    this.announce('Mercado de fichajes');
+  };
+
+  App.prototype.showSeasonRecap = function (season) {
+    this._lastSeason = season;
+    this.setRootScreen(
+      'recap',
+      UI.screens.seasonRecap({
+        season: season,
+        state: this.state,
+        engine: this.engine
+      }),
+      { state: 'active' }
+    );
+    this.announce('Resumen de temporada');
+  };
+
+  App.prototype.showTransferCinematic = function (club) {
+    this.setRootScreen(
+      'cinematic',
+      UI.screens.transferCinematic({
+        club: club,
+        state: this.state
+      }),
+      { state: 'success' }
+    );
+    this.announce('Fichaje confirmado');
   };
 
   App.prototype.showRetire = function () {
@@ -223,16 +355,18 @@
     var self = this;
     var vm = this._retireCard && this._retireCard.viewModel;
     if (!vm) return;
-    UI.Share.shareCareer(vm).then(function (result) {
-      if (result.aborted) return;
-      if (result.method === 'share') {
-        self.showShareToast('¡Compartido!');
-      } else {
-        self.showShareToast('¡Copiado!');
-      }
-    }).catch(function () {
-      self.showShareToast('No se pudo compartir');
-    });
+    UI.Share.shareCareer(vm)
+      .then(function (result) {
+        if (result.aborted) return;
+        if (result.method === 'share') {
+          self.showShareToast('¡Compartido!');
+        } else {
+          self.showShareToast('¡Copiado!');
+        }
+      })
+      .catch(function () {
+        self.showShareToast('No se pudo compartir');
+      });
   };
 
   App.prototype.handleCopy = function () {
@@ -254,17 +388,13 @@
       NS.Storage.ensureHistoryEntry(this.state);
     }
     NS.Storage.clearActive();
-    this.draft = {
-      name: (this.state && this.state.player && this.state.player.name) || localStorage.getItem('playerName') || '',
-      countryId: null,
-      continentId: '',
-      countryQuery: '',
-      position: null,
-      archetypeId: null
-    };
+    this.draft = emptyDraft(
+      (this.state && this.state.player && this.state.player.name) || localStorage.getItem('playerName') || ''
+    );
     this.state = null;
     this._retireCard = null;
     this._retireReward = null;
+    this._lastSeason = null;
     this.showCreate();
   };
 
@@ -285,62 +415,70 @@
     };
   };
 
-  App.prototype.chooseOption = function (optionId, offerId) {
+  App.prototype.resolveDecisionOnly = function (optionId, offerId, then) {
     if (this.busy || !this.state || this.state.retired) return;
-    if (this.focusAge != null && this.focusAge !== this.state.age) {
-      this.focusAge = this.state.age;
-    }
+    if (this.state.phase !== 'decision') return;
     this.busy = true;
-    var before = this.snapshotAttrs(this.state);
     var result;
     try {
-      result = this.engine.playSeason(this.state, optionId, offerId || undefined);
+      result = this.engine.resolveDecision(this.state, optionId, offerId || undefined);
     } catch (err) {
       this.busy = false;
       UI.components.openModal({
         title: 'No se pudo resolver',
         bodyHtml: '<p>' + UI.format.escapeHtml((err && err.message) || 'Error') + '</p>',
-        actionsHtml: '<button type="button" class="ct-button ct-button--primary" data-mc-modal="close">Entendido</button>'
+        actionsHtml:
+          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="close">Entendido</button>'
+      });
+      return;
+    }
+    this.busy = false;
+    this.selectedOfferId = null;
+    if (result.retired) {
+      this.showRetireTransition();
+      return;
+    }
+    if (typeof then === 'function') {
+      then(result);
+    } else {
+      this.showCareerHome();
+    }
+  };
+
+  App.prototype.runSeason = function () {
+    if (this.busy || !this.state || this.state.retired) return;
+    if (this.state.phase !== 'simulate') return;
+    this.busy = true;
+    var before = this.snapshotAttrs(this.state);
+    var result;
+    try {
+      result = this.engine.simulateCurrentSeason(this.state);
+    } catch (err) {
+      this.busy = false;
+      UI.components.openModal({
+        title: 'No se pudo simular',
+        bodyHtml: '<p>' + UI.format.escapeHtml((err && err.message) || 'Error') + '</p>',
+        actionsHtml:
+          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="close">Entendido</button>'
       });
       return;
     }
 
     var self = this;
-    var afterFlow = function () {
-      self.selectedOfferId = null;
+    var finish = function () {
       self.focusAge = self.state.age;
       self.busy = false;
       if (self.state.retired) {
         self.showRetireTransition();
         return;
       }
-      self.showSeason();
-    };
-
-    var showFeedback = function () {
-      if (!result.season) {
-        afterFlow();
-        return;
-      }
-      var deltas = {
-        rating: (result.season.ratingAfter != null ? result.season.ratingAfter : self.state.rating) - before.rating,
-        marketValue: self.state.marketValue - before.marketValue,
-        prestige: self.state.prestige - before.prestige
-      };
-      UI.components.openModal({
-        title: 'Cierre de temporada',
-        size: 'lg',
-        bodyHtml: UI.screens.seasonFeedbackBody({ season: result.season, deltas: deltas }),
-        actionsHtml:
-          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="continue-season">Continuar</button>'
-      });
-      self._pendingAfterModal = afterFlow;
+      self.showSeasonRecap(result.season);
     };
 
     var celebrateQueue = self.buildCelebrationQueue(result.season);
     var runCelebrations = function () {
       if (!celebrateQueue.length) {
-        showFeedback();
+        finish();
         return;
       }
       var next = celebrateQueue.shift();
@@ -356,10 +494,88 @@
 
     if (result.event) {
       UI.components.openModal({
-        title: result.event.title || 'Evento',
+        title: result.event.title || 'Fuera de la cancha',
         size: 'lg',
         bodyHtml: UI.screens.eventModalBody(result.event),
-        actionsHtml: '<button type="button" class="ct-button ct-button--primary" data-mc-modal="after-event">Continuar</button>'
+        actionsHtml:
+          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="after-event">Continuar</button>'
+      });
+      this._pendingAfterModal = runCelebrations;
+    } else {
+      runCelebrations();
+    }
+    void before;
+  };
+
+  /** @deprecated kept for smoke/compat — prefer resolveDecisionOnly + runSeason */
+  App.prototype.chooseOption = function (optionId, offerId) {
+    if (this.busy || !this.state || this.state.retired) return;
+    if (this.focusAge != null && this.focusAge !== this.state.age) {
+      this.focusAge = this.state.age;
+    }
+    if (this.state.phase === 'decision') {
+      this.resolveDecisionOnly(optionId, offerId, function () {
+        /* stay on home; user plays season next */
+      });
+      this.showCareerHome();
+      return;
+    }
+    this.busy = true;
+    var before = this.snapshotAttrs(this.state);
+    var result;
+    try {
+      result = this.engine.playSeason(this.state, optionId, offerId || undefined);
+    } catch (err) {
+      this.busy = false;
+      UI.components.openModal({
+        title: 'No se pudo resolver',
+        bodyHtml: '<p>' + UI.format.escapeHtml((err && err.message) || 'Error') + '</p>',
+        actionsHtml:
+          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="close">Entendido</button>'
+      });
+      return;
+    }
+
+    var self = this;
+    var afterFlow = function () {
+      self.selectedOfferId = null;
+      self.focusAge = self.state.age;
+      self.busy = false;
+      if (self.state.retired) {
+        self.showRetireTransition();
+        return;
+      }
+      if (result.season) {
+        self.showSeasonRecap(result.season);
+      } else {
+        self.showCareerHome();
+      }
+    };
+
+    var celebrateQueue = self.buildCelebrationQueue(result.season);
+    var runCelebrations = function () {
+      if (!celebrateQueue.length) {
+        afterFlow();
+        return;
+      }
+      var next = celebrateQueue.shift();
+      UI.components.openModal({
+        title: next.title,
+        size: 'lg',
+        bodyHtml: next.bodyHtml,
+        actionsHtml:
+          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="after-event">Continuar</button>'
+      });
+      self._pendingAfterModal = runCelebrations;
+    };
+
+    if (result.event) {
+      UI.components.openModal({
+        title: result.event.title || 'Fuera de la cancha',
+        size: 'lg',
+        bodyHtml: UI.screens.eventModalBody(result.event),
+        actionsHtml:
+          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="after-event">Continuar</button>'
       });
       this._pendingAfterModal = runCelebrations;
     } else if (result.retired && !result.season) {
@@ -368,6 +584,7 @@
     } else {
       runCelebrations();
     }
+    void before;
   };
 
   App.prototype.buildCelebrationQueue = function (season) {
@@ -382,7 +599,7 @@
         ? self.engine.world.nationalTeamsById[title.nationalTeamId]
         : null;
       queue.push({
-        title: 'Campeón',
+        title: 'Campeones',
         bodyHtml: UI.screens.titleCelebrationBody(title, club, nt)
       });
     });
@@ -397,14 +614,7 @@
     var seasonIdx = season.seasonIndex;
     (this.state.moments || []).forEach(function (moment) {
       if (moment.seasonIndex !== seasonIdx) return;
-      if (
-        moment.id === 'moment_retire' ||
-        moment.id === 'moment_first_callup' ||
-        moment.id === 'moment_intl_debut'
-      ) {
-        // call-up is nice but keep queue short; still show big moments
-        if (moment.id === 'moment_intl_debut') return;
-      }
+      if (moment.id === 'moment_retire' || moment.id === 'moment_intl_debut') return;
       var big =
         moment.id === 'moment_first_league' ||
         moment.id === 'moment_first_ucl' ||
@@ -413,10 +623,11 @@
         moment.id === 'moment_ballon' ||
         moment.id === 'moment_100_goals' ||
         moment.id === 'moment_500_apps' ||
-        moment.id === 'moment_return_home';
+        moment.id === 'moment_return_home' ||
+        moment.id === 'moment_first_callup';
       if (!big) return;
       queue.push({
-        title: 'Entrá en la historia',
+        title: 'Momento histórico',
         bodyHtml: UI.screens.momentCelebrationBody(moment)
       });
     });
@@ -427,13 +638,71 @@
   App.prototype.showRetireTransition = function () {
     var self = this;
     UI.components.openModal({
-      title: 'Tu carrera terminó',
+      title: 'Tu historia terminó',
       bodyHtml: '<p>El ciclo se cierra. Prepará el resumen final.</p>',
-      actionsHtml: '<button type="button" class="ct-button ct-button--primary" data-mc-modal="show-retire">Ver resumen</button>'
+      actionsHtml:
+        '<button type="button" class="ct-button ct-button--primary" data-mc-modal="show-retire">Ver mi legado</button>'
     });
     this._pendingAfterModal = function () {
       self.showRetire();
     };
+  };
+
+  App.prototype.openCompareModal = function (offerId) {
+    var offer =
+      (this.state.pendingOffers || []).filter(function (o) {
+        return o.id === offerId;
+      })[0] || null;
+    if (!offer) return;
+    this.selectedOfferId = offerId;
+    var self = this;
+    UI.components.openModal({
+      title: '¿Te vas?',
+      size: 'lg',
+      bodyHtml: UI.screens.compareOfferBody({
+        state: this.state,
+        engine: this.engine,
+        offer: offer
+      }),
+      actionsHtml:
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-modal="market-sign" data-offer="' +
+        UI.format.escapeHtml(offerId) +
+        '">Fichar por este club</button>' +
+        '<button type="button" class="ct-button ct-button--secondary" data-mc-modal="market-stay">Quedarme en mi club</button>'
+    });
+    this._pendingAfterModal = null;
+    this._compareOfferId = offerId;
+    void self;
+  };
+
+  App.prototype.handleMarketStay = function () {
+    UI.components.closeModal();
+    var decision = this.state && this.state.currentDecision;
+    if (this.state && this.state.phase === 'decision' && decision && decision.type === 'transferencia') {
+      this.resolveDecisionOnly('stay_loyal', null, function () {});
+      this.showCareerHome();
+      return;
+    }
+    this.showCareerHome();
+  };
+
+  App.prototype.handleMarketSign = function (offerId) {
+    UI.components.closeModal();
+    var oid = offerId || this._compareOfferId || this.selectedOfferId;
+    var self = this;
+    var decision = this.state && this.state.currentDecision;
+    if (!decision || decision.type !== 'transferencia') {
+      this.showCareerHome();
+      return;
+    }
+    this.resolveDecisionOnly('accept_best_prestige', oid, function (result) {
+      if (result.transferOffer) {
+        var club = self.engine.getClub(result.transferOffer.clubId);
+        self.showTransferCinematic(club);
+      } else {
+        self.showCareerHome();
+      }
+    });
   };
 
   App.prototype.continueCareer = function () {
@@ -444,48 +713,26 @@
     }
     this.state = active;
     this.focusAge = active.age;
-    this.selectedOfferId = (active.pendingOffers && active.pendingOffers[0] && active.pendingOffers[0].id) || null;
-    if (this.state.phase === 'simulate' && !this.state.retired) {
-      try {
-        this.engine.simulateCurrentSeason(this.state);
-      } catch (e) {
-        /* keep state; user can still interact */
-      }
-    }
+    this.selectedOfferId =
+      (active.pendingOffers && active.pendingOffers[0] && active.pendingOffers[0].id) || null;
     if (!this.state.currentDecision && this.state.phase === 'decision' && !this.state.retired) {
       var rng = this.engine.getRng(this.state, 'resumeDec');
       this.state.currentDecision = NS.Decisions.pickDecision(this.state, this.engine.world, rng);
       NS.Storage.saveActive(this.state);
     }
-    this.showSeason();
+    var hasOffers = this.state.pendingOffers && this.state.pendingOffers.length;
+    var isTransfer =
+      this.state.currentDecision && this.state.currentDecision.type === 'transferencia';
+    if (hasOffers || isTransfer) {
+      this.showMarket();
+    } else {
+      this.showCareerHome();
+    }
   };
 
   App.prototype.createFromDraft = function () {
-    var errors = [];
+    if (!this.validateCreateStep()) return;
     var name = String(this.draft.name || '').trim();
-    if (name.length < 2) errors.push(['mc-name-error', 'Ingresá un nombre (mínimo 2 caracteres).']);
-    if (!this.draft.countryId) errors.push(['mc-country-error', 'Elegí un país.']);
-    if (!this.draft.position) errors.push(['mc-position-error', 'Elegí una posición.']);
-    if (!this.draft.archetypeId) errors.push(['mc-archetype-error', 'Elegí un arquetipo.']);
-
-    ['mc-name-error', 'mc-country-error', 'mc-position-error', 'mc-archetype-error'].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) {
-        el.hidden = true;
-        el.textContent = '';
-      }
-    });
-    if (errors.length) {
-      errors.forEach(function (pair) {
-        var el = document.getElementById(pair[0]);
-        if (el) {
-          el.hidden = false;
-          el.textContent = pair[1];
-        }
-      });
-      return;
-    }
-
     try {
       this.state = this.engine.createCareer({
         name: name,
@@ -499,7 +746,8 @@
       UI.components.openModal({
         title: 'No se pudo crear',
         bodyHtml: '<p>' + UI.format.escapeHtml((err && err.message) || 'Error') + '</p>',
-        actionsHtml: '<button type="button" class="ct-button ct-button--primary" data-mc-modal="close">Cerrar</button>'
+        actionsHtml:
+          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="close">Cerrar</button>'
       });
     }
   };
@@ -517,14 +765,7 @@
     this._pendingAfterModal = null;
     this._onConfirmNew = function () {
       NS.Storage.clearActive();
-      self.draft = {
-        name: localStorage.getItem('playerName') || '',
-        countryId: null,
-        continentId: '',
-        countryQuery: '',
-        position: null,
-        archetypeId: null
-      };
+      self.draft = emptyDraft(localStorage.getItem('playerName') || '');
       self.showCreate();
     };
   };
@@ -548,6 +789,7 @@
       return;
     }
     if (action === 'start-create') {
+      this.draft = emptyDraft(localStorage.getItem('playerName') || '');
       this.showCreate();
       return;
     }
@@ -563,11 +805,7 @@
       this.confirmNewCareer();
       return;
     }
-    if (action === 'new-career') {
-      this.playAgain();
-      return;
-    }
-    if (action === 'play-again') {
+    if (action === 'new-career' || action === 'play-again') {
       this.playAgain();
       return;
     }
@@ -577,6 +815,14 @@
     }
     if (action === 'copy-career') {
       this.handleCopy();
+      return;
+    }
+    if (action === 'create-next') {
+      this.createNext();
+      return;
+    }
+    if (action === 'create-prev') {
+      this.createPrev();
       return;
     }
     if (action === 'filter-continent') {
@@ -601,17 +847,41 @@
     }
     if (action === 'begin-career') {
       this.focusAge = this.state.age;
-      this.showSeason();
+      this.showCareerHome();
       return;
     }
     if (action === 'focus-age') {
       this.focusAge = Number(target.getAttribute('data-age'));
-      this.showSeason();
+      this.showCareerHome();
+      return;
+    }
+    if (action === 'open-market') {
+      this.showMarket();
+      return;
+    }
+    if (action === 'play-season') {
+      this.runSeason();
       return;
     }
     if (action === 'select-offer') {
       this.selectedOfferId = target.getAttribute('data-offer');
-      this.showSeason();
+      this.showMarket();
+      return;
+    }
+    if (action === 'market-compare') {
+      this.openCompareModal(target.getAttribute('data-offer') || this.selectedOfferId);
+      return;
+    }
+    if (action === 'market-stay') {
+      this.handleMarketStay();
+      return;
+    }
+    if (action === 'market-sign') {
+      this.handleMarketSign(target.getAttribute('data-offer'));
+      return;
+    }
+    if (action === 'after-transfer') {
+      this.showCareerHome();
       return;
     }
     if (action === 'choose-option') {
@@ -620,7 +890,7 @@
       if (optionId !== 'stay_loyal') {
         offerId = target.getAttribute('data-offer') || this.selectedOfferId;
       }
-      this.chooseOption(optionId, offerId);
+      this.resolveDecisionOnly(optionId, offerId);
     }
   };
 
@@ -629,6 +899,10 @@
       ev.preventDefault();
       var nameInput = document.getElementById('mc-player-name');
       if (nameInput) this.draft.name = nameInput.value;
+      if ((this.draft.createStep || 1) < 4) {
+        this.createNext();
+        return;
+      }
       this.createFromDraft();
     }
   };
@@ -676,6 +950,14 @@
     if (action === 'confirm-new') {
       UI.components.closeModal();
       if (this._onConfirmNew) this._onConfirmNew();
+      return;
+    }
+    if (action === 'market-sign') {
+      this.handleMarketSign(btn.getAttribute('data-offer'));
+      return;
+    }
+    if (action === 'market-stay') {
+      this.handleMarketStay();
       return;
     }
     if (action === 'after-event' || action === 'continue-season' || action === 'show-retire') {
