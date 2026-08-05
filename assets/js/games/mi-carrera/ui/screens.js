@@ -479,9 +479,9 @@
     return scene({
       id: 'start-club',
       tone: 'start',
-      kicker: 'Primer destino',
+      kicker: 'Capítulo uno',
       title: '¿Dónde empieza tu historia?',
-      lead: 'Tres caminos. Una decisión.',
+      lead: 'Protagonista. Equilibrio. Escaparate. Tres caminos distintos.',
       body: '<div class="mc-start-row">' + cards + '</div>',
       actions:
         '<button type="button" class="ct-button ct-button--ghost" data-mc-action="go-intro">Volver</button>'
@@ -515,6 +515,7 @@
     var country = engine.world.countriesById[state.player.countryId];
     var decision = state.currentDecision;
     var needsMarket =
+      state.phase === 'decision' ||
       (state.pendingOffers && state.pendingOffers.length) ||
       (decision && decision.type === 'transferencia');
     var fs = NS.Rules && NS.Rules.formStatus ? NS.Rules.formStatus(state.form) : null;
@@ -526,33 +527,27 @@
     else if (state.rating >= 88) tone = 'prime';
 
     var actions = '';
-    var bodyExtra = '';
-
-    if (needsMarket) {
+    if (decision && decision.type === 'retiro') {
+      actions = (decision.options || [])
+        .slice(0, 2)
+        .map(function (opt) {
+          return (
+            '<button type="button" class="ct-button ' +
+            (opt.id === 'retire_yes' ? 'ct-button--danger' : 'ct-button--primary') +
+            ' ct-button--lg" data-mc-action="choose-option" data-option="' +
+            F().escapeHtml(opt.id) +
+            '">' +
+            F().escapeHtml(opt.label) +
+            '</button>'
+          );
+        })
+        .join('');
+    } else if (needsMarket) {
       actions =
-        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="open-market">Ver mercado</button>';
-    } else if (state.phase === 'simulate') {
-      actions =
-        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="play-season">Jugar temporada</button>';
-    } else if (decision && decision.type !== 'transferencia') {
-      bodyExtra =
-        '<div class="mc-scene-choices">' +
-        (decision.options || [])
-          .slice(0, 3)
-          .map(function (opt) {
-            return (
-              '<button type="button" class="mc-choice mc-choice--decision" data-mc-action="choose-option" data-option="' +
-              F().escapeHtml(opt.id) +
-              '"><strong>' +
-              F().escapeHtml(opt.label) +
-              '</strong></button>'
-            );
-          })
-          .join('') +
-        '</div>';
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="open-market">El mercado</button>';
     } else {
       actions =
-        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="open-market">Continuar</button>';
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="play-season">Jugar temporada</button>';
     }
 
     return scene({
@@ -585,8 +580,7 @@
             F().escapeHtml(fs.label) +
             '</p>'
           : '') +
-        '</div>' +
-        bodyExtra,
+        '</div>',
       actions: actions
     });
   }
@@ -645,9 +639,9 @@
       return scene({
         id: 'market',
         tone: 'quiet',
-        kicker: 'Mercado de fichajes',
+        kicker: 'Tu futuro',
         title: 'El mercado pasó de largo',
-        lead: 'Esta temporada nadie llamó a tu puerta.',
+        lead: 'Nadie llamó. Quedarte también construye tu historia.',
         body:
           '<div class="mc-stay-card">' +
           '<div class="mc-scene-crest">' +
@@ -656,7 +650,7 @@
           '<h2 class="mc-scene__club">' +
           F().escapeHtml(currentClub ? currentClub.shortName || currentClub.name : 'Tu club') +
           '</h2>' +
-          '<p class="mc-scene__meta">Quedarte también es una decisión.</p></div>',
+          '<p class="mc-scene__meta">Tu club sigue siendo tu casa.</p></div>',
         actions:
           '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-stay">Quedarme</button>' +
           (canLoan
@@ -681,10 +675,10 @@
       id: 'market',
       tone: 'market',
       kicker: 'Mercado de fichajes',
-      title: transfers.length ? 'El mercado está abierto' : 'Opciones de cesión',
+      title: 'El mercado habló',
       lead: transfers.length
-        ? 'Tu temporada llamó la atención.'
-        : 'Pocos minutos. Hay clubes que te darían juego.',
+        ? 'Hay clubes que te quieren. Elegí tu próximo capítulo.'
+        : 'Hay cesiones sobre la mesa. Más minutos, menos presión.',
       body: '<div class="mc-offer-row">' + cards + '</div>',
       actions:
         '<button type="button" class="ct-button ct-button--ghost" data-mc-action="market-stay">Quedarme</button>' +
@@ -760,7 +754,7 @@
         '">' +
         (offer.kind === 'loan' ? 'Ir cedido' : 'Fichar') +
         '</button>' +
-        '<button type="button" class="ct-button ct-button--secondary" data-mc-action="market-stay">Quedarme</button>'
+        '<button type="button" class="ct-button ct-button--secondary" data-mc-action="open-market">Volver</button>'
     });
   }
 

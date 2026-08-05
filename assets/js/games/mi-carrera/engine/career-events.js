@@ -64,6 +64,8 @@
   }
 
   function pickEvent(state, world, rng) {
+    // Rare in-season beats (prensa, familia, lesión…): not every season.
+    if (!rng.bool(0.28)) return null;
     var events = world.events || [];
     var eligible = [];
     for (var i = 0; i < events.length; i++) {

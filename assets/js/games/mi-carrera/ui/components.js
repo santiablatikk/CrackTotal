@@ -48,6 +48,12 @@
     var country =
       club && engine ? engine.world.countriesById[club.countryId] : null;
     var stars = Array(Math.max(1, Math.min(5, option.stars || 1)) + 1).join('★');
+    var risk =
+      option.pathId === 'giant'
+        ? 'Riesgo alto'
+        : option.pathId === 'minutes'
+          ? 'Riesgo bajo'
+          : 'Riesgo medio';
     return (
       '<article class="mc-club-pick mc-club-pick--' +
       F().escapeHtml(option.pathId || 'balance') +
@@ -74,9 +80,13 @@
       '<p class="mc-club-pick__tag">' +
       F().escapeHtml(option.tagline || '') +
       '</p>' +
+      '<p class="mc-club-pick__meta">' +
+      F().escapeHtml(risk) +
+      (option.level != null ? ' · Nivel ' + option.level : '') +
+      '</p>' +
       '<button type="button" class="ct-button ct-button--primary" data-mc-action="pick-start-club" data-club="' +
       F().escapeHtml(option.clubId) +
-      '">Elegir</button></article>'
+      '">Empezar aquí</button></article>'
     );
   }
 

@@ -139,6 +139,7 @@
       moraleDelta: ['morale', 0, 100],
       fitnessDelta: ['fitness', 0, 100],
       clubRelationDelta: ['clubRelation', 0, 100],
+      confidenceDelta: ['confidence', 0, 100],
       nationalCapsDelta: ['nationalCaps', 0, null],
       nationalGoalsDelta: ['nationalGoals', 0, null],
       marketValueDelta: ['marketValue', 0, null]

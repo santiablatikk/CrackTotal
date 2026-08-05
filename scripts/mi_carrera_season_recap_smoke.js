@@ -102,7 +102,9 @@ function main() {
     archetypeId: 'arch_tech_promise',
     seed: 2026
   });
-  engine.resolveDecision(st, (st.currentDecision.options || [{ id: 'x' }])[0].id);
+  if (st.phase === 'decision' && st.currentDecision) {
+    engine.resolveDecision(st, (st.currentDecision.options || [{ id: 'stay_loyal' }])[0].id);
+  }
   const res = engine.simulateCurrentSeason(st);
   assert(!!res.season, 'season record produced');
   assert(res.season.ratingBefore != null, 'ratingBefore stored');

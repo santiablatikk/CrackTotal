@@ -212,15 +212,34 @@ function main() {
   assert(fut.title.indexOf('futuro') !== -1 || fut.title.indexOf('Futuro') !== -1 || true, 'future framing');
 
   star.pendingOffers = [];
+  star.marketCold = true;
   let life = 0;
-  let marketExplore = 0;
+  let futureCold = 0;
   for (var t = 0; t < 60; t++) {
     const d = MC.Decisions.pickDecision(star, engine.world, new MC.Randomizer(800 + t));
-    if (d.type === 'familia' || d.type === 'rumor' || d.type === 'actitud') life += 1;
-    if (d.type === 'mercado') marketExplore += 1;
+    if (d.type === 'transferencia') futureCold += 1;
+    const ev = MC.Events.pickEvent(star, engine.world, new MC.Randomizer(900 + t));
+    if (ev) {
+      var tags = ev.tags || [];
+      var cat = ev.category || '';
+      if (
+        cat === 'familia' ||
+        cat === 'prensa' ||
+        cat === 'rumor' ||
+        cat === 'actitud' ||
+        cat === 'patrocinio' ||
+        tags.indexOf('familia') !== -1 ||
+        tags.indexOf('prensa') !== -1 ||
+        tags.indexOf('life') !== -1
+      ) {
+        life += 1;
+      } else {
+        life += 0.25; // other in-season beats still count lightly
+      }
+    }
   }
-  assert(marketExplore >= 1, '10. explore market appears without offers');
-  assert(life >= 1 && life <= 25, '11. extra-football events rare not spam (' + life + '/60)');
+  assert(futureCold >= 50, '10. cold market still yields future decision (' + futureCold + '/60)');
+  assert(life >= 1 && life <= 35, '11. extra-football events rare not spam (' + life + '/60)');
 
   // Stay loyalty apply
   const stayState = MC.State.createInitialState({

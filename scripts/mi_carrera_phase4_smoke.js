@@ -542,7 +542,11 @@ function main() {
         if (high.clubsPlayed.indexOf(madrid.id) === -1) high.clubsPlayed.push(madrid.id);
       }
       const d = engine.getCurrentDecision(high);
-      engine.playSeason(high, d.options[0].id);
+      if (high.phase === 'simulate') {
+        engine.playSeason(high);
+      } else {
+        engine.playSeason(high, d && d.options && d.options[0] ? d.options[0].id : 'stay_loyal');
+      }
     }
     if (!high.retired) {
       high.age = Math.max(32, high.age);

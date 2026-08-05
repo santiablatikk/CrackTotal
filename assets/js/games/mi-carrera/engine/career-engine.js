@@ -304,8 +304,11 @@
 
     state.marketValue = NS.Rules.computeMarketValue(state, club, this.world);
     state.peakMarketValue = state.marketValue;
-    state.phase = 'decision';
-    state.currentDecision = NS.Decisions.pickDecision(state, this.world, rng.fork('dec0'));
+    // First season: play football first. Market/future decisions come after recap.
+    state.phase = 'simulate';
+    state.currentDecision = null;
+    state.pendingOffers = [];
+    state.marketCold = false;
     if (NS.Storage && NS.Storage.saveActive) NS.Storage.saveActive(state);
     return state;
   };
@@ -558,8 +561,10 @@
   };
 
   CareerEngine.prototype.playSeason = function (state, optionId, explicitOfferId) {
-    var dec = this.resolveDecision(state, optionId, explicitOfferId);
-    if (dec.retired) return { state: state, retired: true, transferOffer: dec.transferOffer };
+    if (state.phase === 'decision') {
+      var dec = this.resolveDecision(state, optionId, explicitOfferId);
+      if (dec.retired) return { state: state, retired: true, transferOffer: dec.transferOffer };
+    }
     return this.simulateCurrentSeason(state);
   };
 
@@ -621,12 +626,20 @@
     var guard = maxSeasons != null ? maxSeasons : 40;
     var results = [];
     while (!state.retired && guard-- > 0) {
+      if (state.phase === 'simulate') {
+        results.push(this.simulateCurrentSeason(state));
+        continue;
+      }
       var decision = state.currentDecision;
+      if ((!decision || !decision.options || !decision.options.length) && NS.Decisions.buildFutureDecision) {
+        state.currentDecision = NS.Decisions.buildFutureDecision(state);
+        decision = state.currentDecision;
+      }
       if (!decision || !decision.options || !decision.options.length) break;
       var option = null;
       for (var i = 0; i < decision.options.length; i++) {
         var oid = decision.options[i].id;
-        if (oid === 'retire_no' || oid === 'stay_loyal' || oid === 'balanced') {
+        if (oid === 'retire_no' || oid === 'stay_loyal' || oid === 'renew_project' || oid === 'balanced') {
           option = decision.options[i];
           break;
         }

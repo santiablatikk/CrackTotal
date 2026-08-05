@@ -117,6 +117,7 @@ function fingerprint(state) {
 
 function pickOption(decision, preferIds) {
   preferIds = preferIds || [];
+  if (!decision || !decision.options || !decision.options.length) return 'stay_loyal';
   for (var i = 0; i < preferIds.length; i++) {
     for (var j = 0; j < decision.options.length; j++) {
       if (decision.options[j].id === preferIds[i]) return decision.options[j].id;
@@ -144,9 +145,16 @@ function runCareer(MiCarrera, data, seed, opts) {
   const maxSeasons = opts.maxSeasons != null ? opts.maxSeasons : 30;
 
   while (!state.retired && seasons < maxSeasons) {
+    if (state.phase === 'simulate') {
+      const result = engine.simulateCurrentSeason(state);
+      seasons += 1;
+      if (result.event) sawEvent = true;
+      if (result.offers && result.offers.length) sawOffer = true;
+      continue;
+    }
     const decision = engine.getCurrentDecision(state);
     assert(!!decision, 'decision present season ' + seasons + ' seed ' + seed);
-    let optionId = pickOption(decision, opts.preferOptions || ['stay_loyal', 'retire_no', 'balanced', 'accept_minutes']);
+    let optionId = pickOption(decision, opts.preferOptions || ['stay_loyal', 'retire_no', 'renew_project', 'balanced', 'accept_minutes']);
 
     if (decision.type === 'transferencia' && state.pendingOffers && state.pendingOffers.length && opts.acceptTransfer) {
       optionId = 'accept_best_prestige';
@@ -247,25 +255,33 @@ function main() {
   });
   assert(career.age === 17, '1. create career age 17');
   assert(!!career.clubId, '1. create career has club');
-  assert(career.phase === 'decision', '1. starts in decision phase');
+  assert(career.phase === 'simulate', '1. starts ready to play season');
 
-  const decision = engine.getCurrentDecision(career);
-  assert(!!decision && decision.options.length >= 2, '3. decision with options');
-
-  let optionId = pickOption(decision, ['stay_loyal', 'balanced', decision.options[0].id]);
-  let result = engine.playSeason(career, optionId);
+  let result = engine.playSeason(career);
   assert(!!result.season, '2. simulate season');
   assert(career.seasonHistory.length === 1, '2. season history recorded');
   assert(career.age === 18, '2. age incremented');
+  assert(career.phase === 'decision', '3. post-season opens future decision');
+
+  const decision = engine.getCurrentDecision(career);
+  assert(!!decision && decision.options.length >= 1, '3. future decision with options');
+  assert(decision.type === 'transferencia' || decision.type === 'retiro', '3. decision is football future');
+
+  let optionId = pickOption(decision, ['stay_loyal', 'renew_project', 'retire_no', decision.options[0].id]);
+  engine.resolveDecision(career, optionId);
+  assert(career.phase === 'simulate', '3. stay/resolve returns to simulate');
 
   if (result.event) {
     assert(!!result.event.id, '6. event fired');
   } else {
-    // force another seasons until event
     let found = false;
-    for (var i = 0; i < 8 && !career.retired; i++) {
+    for (var i = 0; i < 24 && !career.retired; i++) {
       const d = engine.getCurrentDecision(career);
-      result = engine.playSeason(career, pickOption(d, ['stay_loyal', 'retire_no']));
+      if (career.phase === 'decision' && d) {
+        result = engine.playSeason(career, pickOption(d, ['stay_loyal', 'retire_no', 'renew_project']));
+      } else {
+        result = engine.playSeason(career);
+      }
       if (result.event) {
         found = true;
         break;

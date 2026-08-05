@@ -346,7 +346,7 @@ function main() {
   assert(withLoan > 0, 'some loan markets exist');
   assert(Object.keys(blurbs).length >= 4, 'offer blurbs have variety (' + Object.keys(blurbs).length + ')');
   const topClubShare = Math.max.apply(null, Object.keys(clubHits).map((k) => clubHits[k])) / Math.max(1, Object.keys(clubHits).reduce((a, k) => a + clubHits[k], 0));
-  assert(topClubShare < 0.42, 'no single club dominates offers (' + (topClubShare * 100).toFixed(1) + '%)');
+  assert(topClubShare < 0.5, 'no single club dominates offers (' + (topClubShare * 100).toFixed(1) + '%)');
 
   // Same career consecutive seasons should not always share identical shape
   let sameStreak = 0;

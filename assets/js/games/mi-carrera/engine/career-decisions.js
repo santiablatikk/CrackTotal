@@ -19,79 +19,88 @@
     return null;
   }
 
+  /**
+   * Between seasons the only primary decision is football future:
+   * stay / transfer / loan (via market UI). Life choices live as rare in-season events.
+   */
   function availableDecisionTypes(state) {
-    var types = [];
-    if (state.pendingOffers && state.pendingOffers.length) types.push('transferencia');
-    types.push('renovacion');
-    types.push('mercado');
-    types.push('entrenamiento');
-    types.push('rol');
-    if (state.rating >= 68 || state.nationalCaps > 0) types.push('seleccion');
-    types.push('prensa');
-    if (state.popularity >= 35 || state.rating >= 75) types.push('patrocinio');
-    if (state.fitness < 75 || state.age >= 30) types.push('lesion');
-    // Extra-football (rare): only if not flooded by recent life tags
-    var recent = state.recentDecisions || [];
-    var recentLife = recent.some(function (d) {
-      return d.type === 'familia' || d.type === 'rumor' || d.type === 'actitud';
-    });
-    if (!recentLife) {
-      if (state.age >= 22) types.push('familia');
-      if (state.popularity >= 40 || state.reputation >= 45) types.push('rumor');
-      if (state.clubRelation <= 55 || state.form <= 4) types.push('actitud');
-    }
+    var types = ['transferencia'];
     if (NS.Rules.canVoluntaryRetire(state.age)) types.push('retiro');
     return types;
   }
 
-  function pickDecision(state, world, rng) {
-    var types = availableDecisionTypes(state);
-    var recent = state.recentDecisions || [];
-    var recentTypes = recent.slice(0, 3).map(function (d) {
-      return d.type;
-    });
+  function buildFutureDecision(state) {
+    var cold = !!state.marketCold || !(state.pendingOffers && state.pendingOffers.length);
+    var options = [
+      {
+        id: 'stay_loyal',
+        label: 'Quedarme',
+        summary: 'Seguir en mi club',
+        effects: { transferPreference: 'stay' }
+      }
+    ];
+    if (cold) {
+      options.push({
+        id: 'renew_project',
+        label: 'Apostar al proyecto',
+        summary: 'Más compromiso con el club actual',
+        effects: {
+          transferPreference: 'stay',
+          moraleDelta: 3,
+          clubRelationDelta: 5,
+          minutesBias: 0.05,
+          confidenceDelta: 2
+        }
+      });
+    } else {
+      options.push({
+        id: 'accept_best_prestige',
+        label: 'Escuchar ofertas',
+        summary: 'Evaluar el mercado',
+        effects: { transferPreference: 'prestige' }
+      });
+      options.push({
+        id: 'accept_best_minutes',
+        label: 'Buscar minutos',
+        summary: 'Priorizar protagonismo',
+        effects: { transferPreference: 'minutes' }
+      });
+    }
+    if (NS.Rules.canVoluntaryRetire(state.age)) {
+      options.push({
+        id: 'retire_yes',
+        label: 'Retirarme',
+        summary: 'Cerrar el ciclo',
+        effects: { retire: true }
+      });
+    }
+    return {
+      id: 'dec_future',
+      type: 'transferencia',
+      title: 'Tu futuro',
+      prompt: cold
+        ? 'El mercado pasó de largo. ¿Qué hacés con tu carrera?'
+        : 'El mercado habló. ¿Dónde jugás el año que viene?',
+      tags: ['market', 'future'],
+      options: options
+    };
+  }
 
-    // Primary cycle: if market moved, the decision IS your future
+  function pickDecision(state, world, rng) {
+    // Always a football-future decision between seasons.
     if (state.pendingOffers && state.pendingOffers.length) {
       var transfer = findDecision(world, 'transferencia');
       if (transfer) {
         var copy = JSON.parse(JSON.stringify(transfer));
+        copy.id = 'dec_future';
         copy.title = 'Tu futuro';
         copy.prompt = 'El mercado habló. ¿Qué hacés ahora?';
         return copy;
       }
     }
 
-    var weighted = types
-      .map(function (type) {
-        var w = 1;
-        if (type === 'transferencia') w = 0;
-        if (type === 'renovacion') w = 2.2;
-        if (type === 'mercado') w = 1.8;
-        if (type === 'entrenamiento') w = 1.5;
-        if (type === 'rol') w = state.seasonModifiers && state.seasonModifiers.minutesBias < -0.08 ? 2.4 : 1.2;
-        if (type === 'seleccion') w = state.rating >= 78 ? 1.6 : 1.0;
-        if (type === 'prensa') w = state.popularity >= 50 ? 1.1 : 0.7;
-        if (type === 'patrocinio') w = 0.9;
-        if (type === 'lesion') w = state.fitness < 60 ? 1.8 : 0.5;
-        if (type === 'familia') w = 0.35;
-        if (type === 'rumor') w = 0.4;
-        if (type === 'actitud') w = state.clubRelation < 45 ? 0.7 : 0.25;
-        if (type === 'retiro') w = state.age >= 36 ? 2.4 : 0.6;
-        if (recentTypes.indexOf(type) === 0) w *= 0.2;
-        else if (recentTypes.indexOf(type) !== -1) w *= 0.5;
-        return { type: type, weight: w };
-      })
-      .filter(function (x) {
-        return x.weight > 0;
-      });
-
-    var chosen = rng.weightedPick(weighted, function (x) {
-      return x.weight;
-    });
-    var type = chosen ? chosen.type : 'entrenamiento';
-
-    if (type === 'retiro') {
+    // Cold market / no offers: still a future decision (UI shows stay / loan).
+    if (rng && typeof rng.bool === 'function' && NS.Rules.canVoluntaryRetire(state.age) && rng.bool(0.12)) {
       return {
         id: 'dec_retire',
         type: 'retiro',
@@ -115,9 +124,7 @@
       };
     }
 
-    var decision = findDecision(world, type);
-    if (!decision) decision = findDecision(world, 'entrenamiento');
-    return JSON.parse(JSON.stringify(decision));
+    return buildFutureDecision(state);
   }
 
   function selectOfferByPreference(offers, preference, rng) {
@@ -167,7 +174,6 @@
       state.prestige = Math.round(state.prestige * 0.65 + club.prestige * 0.35);
     }
 
-    // Big step-up → minutes risk / pressure (can fail at giants)
     if (!isLoan && nextTier - prevTier >= 2) {
       state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) - 0.16;
       state.morale = NS.State.clamp(state.morale - 4, 10, 100);
@@ -213,7 +219,6 @@
       }
       if (effects.transferPreference === 'stay') {
         transferOffer = null;
-        // Loyalty path: real value
         state.clubRelation = NS.State.clamp(state.clubRelation + 6, 0, 100);
         state.seasonModifiers.minutesBias = (state.seasonModifiers.minutesBias || 0) + 0.06;
         state.confidence = NS.State.clamp((state.confidence || 55) + 2, 0, 100);
@@ -256,6 +261,7 @@
     optionById: optionById,
     availableDecisionTypes: availableDecisionTypes,
     pickDecision: pickDecision,
+    buildFutureDecision: buildFutureDecision,
     applyDecision: applyDecision,
     selectOfferByPreference: selectOfferByPreference,
     applyTransfer: applyTransfer

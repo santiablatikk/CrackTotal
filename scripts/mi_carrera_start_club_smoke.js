@@ -181,8 +181,10 @@ function main() {
       clubId: p.clubId
     });
     assert(st.clubId === p.clubId, 'createCareer honors clubId ' + p.label);
-    // One season minutes probe
-    engine.resolveDecision(st, (st.currentDecision.options || [{ id: 'train_balanced' }])[0].id);
+    // One season minutes probe (career starts in simulate)
+    if (st.phase === 'decision' && st.currentDecision) {
+      engine.resolveDecision(st, (st.currentDecision.options || [{ id: 'stay_loyal' }])[0].id);
+    }
     const before = st.seasonIndex;
     const res = engine.simulateCurrentSeason(st);
     const apps = res.season.appearances;

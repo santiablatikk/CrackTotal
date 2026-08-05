@@ -210,8 +210,8 @@ function main() {
     engine: engine,
     selectedOfferId: null
   });
-  assert(marketHtml.indexOf('Mercado de fichajes') !== -1, 'market empty title');
-  assert(marketHtml.indexOf('nadie llamó') !== -1, 'market empty copy');
+  assert(marketHtml.indexOf('El mercado pasó de largo') !== -1, 'market empty title');
+  assert(marketHtml.indexOf('Nadie llamó') !== -1 || marketHtml.indexOf('nadie llamó') !== -1, 'market empty copy');
   assert(marketHtml.indexOf('mc-stay-card') !== -1, 'market empty stay card');
   assert(typeof MC.UI.screens.careerHome === 'function', 'career home screen');
   assert(typeof MC.UI.screens.compareOfferBody === 'function', 'compare offer body');

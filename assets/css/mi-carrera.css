@@ -1,4 +1,4 @@
-/* Mi Carrera â€” game chrome (tokens from Design System) */
+/* Mi Carrera ? game chrome (tokens from Design System) */
 
 body.mi-carrera-body.ct-ds {
     margin: 0;
@@ -2829,7 +2829,7 @@ body.mi-carrera-body.ct-ds .breadcrumb-item + .breadcrumb-item::before {
 }
 
 /* ============================================================
-   SCENE SYSTEM — game viewport (no-scroll scenes)
+   SCENE SYSTEM ? game viewport (no-scroll scenes)
    ============================================================ */
 
 body.mi-carrera-body.mc-immersive {
@@ -3697,126 +3697,235 @@ img.mc-award-mark {
 }
 
 @media (max-width: 720px) {
+  /* legacy compression neutralized ? Experience 2.0 below owns mobile layout */
   .mc-start-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    max-height: 56vh;
-    overflow: hidden;
-  }
-  .mc-club-pick {
-    flex-direction: column;
-    padding: 0.4rem 0.25rem;
-    gap: 0.15rem;
-  }
-  .mc-club-pick .mc-badge--xxl {
-    width: 2.6rem;
-    height: 2.6rem;
-  }
-  .mc-club-pick h2 { font-size: 0.72rem; }
-  .mc-club-pick__tag { display: none; }
-  .mc-club-pick__meta { font-size: 0.62rem; }
-  .mc-club-pick .ct-button {
-    margin-top: 0.15rem;
-    min-height: 2rem;
-    font-size: 0.72rem;
-    padding: 0.25rem 0.4rem;
+    max-height: none;
+    overflow: visible;
   }
 }
 
 /* ============================================================
-   SPACIOUS GAME LOOP — recap / celebrations / desktop air
+   CAREER EXPERIENCE 2.0 ? one idea per scene, air, presence
+   Supersedes stacked spacious/compression patches above.
    ============================================================ */
 
 .mc-scene {
-  --mc-scene-pad: clamp(1.1rem, 3.5vw, 2.25rem);
-  gap: 1rem;
+  --mc-scene-pad: clamp(1.25rem, 4vw, 2.75rem);
+  gap: 1.15rem;
 }
 
 .mc-scene__title {
-  font-size: clamp(2.1rem, 8vw, 4rem);
-  max-width: 18ch;
+  font-size: clamp(2.2rem, 8.5vw, 4.25rem);
+  max-width: 16ch;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
 }
 
 .mc-scene__lead {
-  font-size: clamp(1.05rem, 2.8vw, 1.35rem);
-  max-width: 32ch;
-  line-height: 1.35;
+  font-size: clamp(1.05rem, 2.8vw, 1.4rem);
+  max-width: 34ch;
+  line-height: 1.4;
+  opacity: 0.92;
 }
 
-.mc-scene-crest .mc-badge--xxl {
-  width: clamp(6.5rem, 24vw, 10rem);
-  height: clamp(6.5rem, 24vw, 10rem);
+.mc-scene-crest .mc-badge--xxl,
+.mc-vs__col .mc-badge--xxl,
+.mc-stay-card .mc-badge--xxl {
+  width: clamp(7rem, 26vw, 11rem);
+  height: clamp(7rem, 26vw, 11rem);
 }
 
 .mc-hub-hero {
-  width: min(34rem, 100%);
-  padding: 1.1rem 1.25rem;
-  gap: 1.1rem;
+  width: min(38rem, 100%);
+  padding: 1.35rem 1.5rem;
+  gap: 1.25rem;
+  border-radius: 1.35rem;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06), transparent 55%),
+    rgba(0, 0, 0, 0.22);
 }
 
 .mc-hub-hero .mc-badge--xxl {
-  width: 5.5rem;
-  height: 5.5rem;
+  width: clamp(5.75rem, 18vw, 7.5rem);
+  height: clamp(5.75rem, 18vw, 7.5rem);
 }
 
 .mc-hub-ovr strong {
-  font-size: 2.4rem;
+  font-size: clamp(2.4rem, 7vw, 3.2rem);
+  letter-spacing: -0.04em;
 }
 
-.mc-start-row {
-  width: min(56rem, 100%);
-  gap: 0.9rem;
-  max-height: none;
-}
-
-.mc-club-pick {
-  padding: 1.1rem 0.75rem;
-  gap: 0.4rem;
-  min-height: 16rem;
-}
-
-.mc-club-pick .mc-badge--xxl {
-  width: 5rem;
-  height: 5rem;
-}
-
-.mc-club-pick h2 {
-  font-size: 1.15rem;
-}
-
-.mc-club-pick .ct-button {
-  min-height: 2.6rem;
-  font-size: 0.9rem;
-  margin-top: 0.55rem;
-}
-
+.mc-start-row,
 .mc-offer-row {
-  width: min(48rem, 100%);
-  gap: 0.85rem;
+  width: min(64rem, 100%);
+  gap: 1rem;
   max-height: none;
+  align-items: stretch;
 }
 
+.mc-club-pick,
 .mc-offer-scene {
-  padding: 1rem 0.75rem;
-  gap: 0.35rem;
+  padding: 1.35rem 1rem 1.15rem;
+  gap: 0.45rem;
+  min-height: 18rem;
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08), transparent 55%),
+    rgba(0, 0, 0, 0.28);
 }
 
+.mc-club-pick .mc-badge--xxl,
 .mc-offer-scene .mc-badge--xxl {
-  width: 4.5rem;
-  height: 4.5rem;
+  width: clamp(5.5rem, 16vw, 7.25rem);
+  height: clamp(5.5rem, 16vw, 7.25rem);
 }
 
+.mc-club-pick h2,
 .mc-offer-scene h2 {
-  font-size: 1.15rem;
+  font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+  margin: 0.15rem 0;
+}
+
+.mc-club-pick .ct-button,
+.mc-offer-scene .ct-button {
+  min-height: 2.85rem;
+  font-size: 0.95rem;
+  margin-top: auto;
 }
 
 .mc-offer-blurb {
-  margin: 0.15rem 0 0;
-  font-size: 0.78rem;
-  color: var(--ct-text-muted);
-  line-height: 1.25;
-  max-width: 18ch;
+  display: block;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  max-width: 22ch;
+  margin: 0.35rem auto 0.5rem;
+  opacity: 0.9;
 }
 
+.mc-recap-numbers strong {
+  font-size: clamp(2.2rem, 10vw, 3.4rem);
+  letter-spacing: -0.04em;
+}
+
+.mc-recap-ovrline {
+  font-size: clamp(1.35rem, 4vw, 1.85rem);
+}
+
+.mc-vs {
+  gap: clamp(1rem, 4vw, 2.5rem);
+}
+
+.mc-vs__col strong {
+  font-size: clamp(1.1rem, 2.5vw, 1.35rem);
+}
+
+.mc-scene__actions .ct-button {
+  min-height: 3.15rem;
+  font-size: 1.05rem;
+  padding-inline: 1.35rem;
+}
+
+.mc-trade-row {
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+  body.mi-carrera-body.ct-ds.mc-immersive #mc-app,
+  body.mi-carrera-body.mc-immersive #mc-app {
+    width: min(72rem, 100%);
+  }
+
+  .mc-scene__stage {
+    gap: 1.15rem;
+  }
+
+  .mc-start-row,
+  .mc-offer-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .mc-recap-hero {
+    width: min(52rem, 94%);
+  }
+}
+
+/* Mobile: one hero option + snap ? never crush crests */
+@media (max-width: 720px) {
+  .mc-start-row,
+  .mc-offer-row {
+    display: flex;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1rem;
+    gap: 0.85rem;
+    padding: 0.25rem 0.15rem 0.65rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mc-club-pick,
+  .mc-offer-scene {
+    flex: 0 0 min(86vw, 19.5rem);
+    scroll-snap-align: center;
+    min-height: 17.5rem;
+    padding: 1.25rem 1rem;
+  }
+
+  .mc-club-pick .mc-badge--xxl,
+  .mc-offer-scene .mc-badge--xxl {
+    width: 6.25rem;
+    height: 6.25rem;
+  }
+
+  .mc-club-pick h2,
+  .mc-offer-scene h2 {
+    font-size: 1.2rem;
+  }
+
+  .mc-club-pick__tag {
+    display: block;
+  }
+
+  .mc-hub-hero {
+    padding: 1.1rem 1rem;
+  }
+
+  .mc-hub-hero .mc-badge--xxl {
+    width: 5.5rem;
+    height: 5.5rem;
+  }
+
+  /* Drop secondary copy before shrinking heroes */
+  .mc-scene__meta:not(.mc-offer-blurb) {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 390px) {
+  .mc-club-pick,
+  .mc-offer-scene {
+    flex-basis: min(90vw, 18.5rem);
+  }
+
+  .mc-scene__lead {
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mc-start-row,
+  .mc-offer-row {
+    scroll-behavior: auto;
+  }
+}
+
+.mc-scene--retire .mc-scene__stage {
+  overflow: auto;
+}
+
+/* Recap / celebrate base (kept after Experience 2.0 so heroes stay large) */
 .mc-recap-hero {
   display: flex;
   flex-direction: column;
@@ -3833,8 +3942,8 @@ img.mc-award-mark {
 }
 
 .mc-recap-hero__club .mc-badge--xxl {
-  width: 5.5rem;
-  height: 5.5rem;
+  width: clamp(5.75rem, 18vw, 7rem);
+  height: clamp(5.75rem, 18vw, 7rem);
 }
 
 .mc-recap-club {
@@ -3854,16 +3963,17 @@ img.mc-award-mark {
 .mc-recap-numbers > div {
   padding: 0.9rem 0.5rem;
   border-radius: 1rem;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .mc-recap-numbers strong {
   display: block;
   font-family: var(--ct-font-display);
-  font-size: clamp(2rem, 7vw, 3.2rem);
+  font-size: clamp(2.2rem, 10vw, 3.4rem);
   line-height: 0.95;
   color: #fff;
+  letter-spacing: -0.04em;
 }
 
 .mc-recap-numbers span {
@@ -3881,7 +3991,7 @@ img.mc-award-mark {
   justify-content: center;
   gap: 0.75rem;
   font-family: var(--ct-font-display);
-  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-size: clamp(1.35rem, 4vw, 1.85rem);
 }
 
 .mc-recap-ovrline__arrow {
@@ -3902,7 +4012,7 @@ img.mc-award-mark {
 .mc-recap-chip {
   padding: 0.35rem 0.7rem;
   border-radius: 999px;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   font-size: 0.75rem;
   font-weight: 800;
 }
@@ -3935,70 +4045,4 @@ img.mc-award-mark {
 img.mc-award-mark {
   width: 6.5rem;
   height: 6.5rem;
-}
-
-.mc-vs {
-  width: min(36rem, 100%);
-  gap: 1rem;
-}
-
-.mc-vs__col .mc-badge--xxl {
-  width: 5.5rem;
-  height: 5.5rem;
-}
-
-.mc-vs__col strong {
-  font-size: 1.15rem;
-}
-
-.mc-scene__actions .ct-button {
-  min-height: 3rem;
-  font-size: 1rem;
-}
-
-@media (min-width: 1024px) {
-  .mc-scene__stage {
-    gap: 0.9rem;
-  }
-  .mc-start-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .mc-offer-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .mc-recap-hero {
-    width: min(48rem, 92%);
-  }
-  .mc-scene--recap .mc-scene__stage,
-  .mc-scene--tone-recap .mc-scene__stage,
-  .mc-scene--tone-hot .mc-scene__stage {
-    justify-content: center;
-  }
-}
-
-@media (max-width: 720px) {
-  .mc-start-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .mc-club-pick {
-    min-height: 0;
-    padding: 0.65rem 0.35rem;
-  }
-  .mc-club-pick .mc-badge--xxl {
-    width: 3.4rem;
-    height: 3.4rem;
-  }
-  .mc-club-pick h2 { font-size: 0.82rem; }
-  .mc-club-pick__tag { display: none; }
-  .mc-recap-numbers strong {
-    font-size: clamp(1.7rem, 9vw, 2.4rem);
-  }
-  .mc-offer-blurb {
-    display: none;
-  }
-}
-
-/* Soft overflow only for dense celebrate stacks — still prefer one idea */
-.mc-scene--retire .mc-scene__stage {
-  overflow: auto;
 }

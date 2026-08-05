@@ -141,17 +141,15 @@
 
     var bd = ballonScore(state, playerSeason, flags);
     var ballonEligible =
-      (flags.continentalTitle ||
-        flags.worldCup ||
-        flags.uclChamp ||
-        (flags.leagueTitle && (playerSeason.averageRating || 0) >= 8.15 && state.reputation >= 68)) &&
-      state.rating >= 84 &&
-      (playerSeason.appearances || 0) >= 26 &&
-      state.form >= 6;
+      (flags.continentalTitle || flags.worldCup || flags.uclChamp) &&
+      state.rating >= 87 &&
+      (playerSeason.appearances || 0) >= 28 &&
+      state.form >= 7 &&
+      state.reputation >= 70;
     var priorBallons = countAwards(state, 'award_ballon_dor');
-    if (ballonEligible && priorBallons < 3) {
-      var ballonChance = priorBallons === 0 ? 0.055 : priorBallons === 1 ? 0.035 : 0.02;
-      tryWin('award_ballon_dor', bd, 86, ballonChance, { score: Math.round(bd) });
+    if (ballonEligible && priorBallons < 2) {
+      var ballonChance = priorBallons === 0 ? 0.012 : 0.005;
+      tryWin('award_ballon_dor', bd, 91, ballonChance, { score: Math.round(bd) });
     }
 
     if (pos === 'FWD' || pos === 'MID') {
