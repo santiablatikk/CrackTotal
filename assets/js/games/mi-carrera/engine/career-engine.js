@@ -439,6 +439,7 @@
     );
     stats.awards = seasonAwards;
 
+    var ratingBefore = state.rating;
     var growth = applySeasonAftermath(state, stats, this.world, rng);
 
     var seasonRecord = {
@@ -463,8 +464,10 @@
       performanceGrade: stats.performanceGrade,
       event: eventResult.event,
       decisionId: (state.recentDecisions[0] && state.recentDecisions[0].id) || null,
+      ratingBefore: ratingBefore,
       ratingAfter: state.rating,
       growth: growth,
+      formAfter: state.form,
       transferThisSeason: !!(prevClubId && prevClubId !== state.clubId),
       arcFlags: stats.arcFlags ? Object.assign({}, stats.arcFlags) : null,
       returnHome: !!(

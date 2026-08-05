@@ -3721,3 +3721,284 @@ img.mc-award-mark {
     padding: 0.25rem 0.4rem;
   }
 }
+
+/* ============================================================
+   SPACIOUS GAME LOOP — recap / celebrations / desktop air
+   ============================================================ */
+
+.mc-scene {
+  --mc-scene-pad: clamp(1.1rem, 3.5vw, 2.25rem);
+  gap: 1rem;
+}
+
+.mc-scene__title {
+  font-size: clamp(2.1rem, 8vw, 4rem);
+  max-width: 18ch;
+}
+
+.mc-scene__lead {
+  font-size: clamp(1.05rem, 2.8vw, 1.35rem);
+  max-width: 32ch;
+  line-height: 1.35;
+}
+
+.mc-scene-crest .mc-badge--xxl {
+  width: clamp(6.5rem, 24vw, 10rem);
+  height: clamp(6.5rem, 24vw, 10rem);
+}
+
+.mc-hub-hero {
+  width: min(34rem, 100%);
+  padding: 1.1rem 1.25rem;
+  gap: 1.1rem;
+}
+
+.mc-hub-hero .mc-badge--xxl {
+  width: 5.5rem;
+  height: 5.5rem;
+}
+
+.mc-hub-ovr strong {
+  font-size: 2.4rem;
+}
+
+.mc-start-row {
+  width: min(56rem, 100%);
+  gap: 0.9rem;
+  max-height: none;
+}
+
+.mc-club-pick {
+  padding: 1.1rem 0.75rem;
+  gap: 0.4rem;
+  min-height: 16rem;
+}
+
+.mc-club-pick .mc-badge--xxl {
+  width: 5rem;
+  height: 5rem;
+}
+
+.mc-club-pick h2 {
+  font-size: 1.15rem;
+}
+
+.mc-club-pick .ct-button {
+  min-height: 2.6rem;
+  font-size: 0.9rem;
+  margin-top: 0.55rem;
+}
+
+.mc-offer-row {
+  width: min(48rem, 100%);
+  gap: 0.85rem;
+  max-height: none;
+}
+
+.mc-offer-scene {
+  padding: 1rem 0.75rem;
+  gap: 0.35rem;
+}
+
+.mc-offer-scene .mc-badge--xxl {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+.mc-offer-scene h2 {
+  font-size: 1.15rem;
+}
+
+.mc-offer-blurb {
+  margin: 0.15rem 0 0;
+  font-size: 0.78rem;
+  color: var(--ct-text-muted);
+  line-height: 1.25;
+  max-width: 18ch;
+}
+
+.mc-recap-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: min(40rem, 100%);
+}
+
+.mc-recap-hero__club {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+
+.mc-recap-hero__club .mc-badge--xxl {
+  width: 5.5rem;
+  height: 5.5rem;
+}
+
+.mc-recap-club {
+  display: block;
+  font-family: var(--ct-font-display);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  text-transform: uppercase;
+}
+
+.mc-recap-numbers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.85rem;
+  width: 100%;
+}
+
+.mc-recap-numbers > div {
+  padding: 0.9rem 0.5rem;
+  border-radius: 1rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.mc-recap-numbers strong {
+  display: block;
+  font-family: var(--ct-font-display);
+  font-size: clamp(2rem, 7vw, 3.2rem);
+  line-height: 0.95;
+  color: #fff;
+}
+
+.mc-recap-numbers span {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ct-text-subtle);
+}
+
+.mc-recap-ovrline {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-family: var(--ct-font-display);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+}
+
+.mc-recap-ovrline__arrow {
+  opacity: 0.55;
+}
+
+.mc-recap-ovrline strong {
+  color: #ffd56a;
+}
+
+.mc-recap-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.mc-recap-chip {
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.mc-recap-moment {
+  max-width: 28ch;
+  font-size: 1.05rem;
+}
+
+.mc-ballon-tease {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.mc-scene--tone-ballon .mc-scene__title {
+  color: #ffd56a;
+}
+
+.mc-celebrate__name {
+  font-size: clamp(1.8rem, 6vw, 3rem);
+}
+
+.mc-celebrate--epic .mc-celebrate__icon,
+.mc-celebrate--ballon .mc-award-mark {
+  font-size: 4rem;
+}
+
+img.mc-award-mark {
+  width: 6.5rem;
+  height: 6.5rem;
+}
+
+.mc-vs {
+  width: min(36rem, 100%);
+  gap: 1rem;
+}
+
+.mc-vs__col .mc-badge--xxl {
+  width: 5.5rem;
+  height: 5.5rem;
+}
+
+.mc-vs__col strong {
+  font-size: 1.15rem;
+}
+
+.mc-scene__actions .ct-button {
+  min-height: 3rem;
+  font-size: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .mc-scene__stage {
+    gap: 0.9rem;
+  }
+  .mc-start-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .mc-offer-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .mc-recap-hero {
+    width: min(48rem, 92%);
+  }
+  .mc-scene--recap .mc-scene__stage,
+  .mc-scene--tone-recap .mc-scene__stage,
+  .mc-scene--tone-hot .mc-scene__stage {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 720px) {
+  .mc-start-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .mc-club-pick {
+    min-height: 0;
+    padding: 0.65rem 0.35rem;
+  }
+  .mc-club-pick .mc-badge--xxl {
+    width: 3.4rem;
+    height: 3.4rem;
+  }
+  .mc-club-pick h2 { font-size: 0.82rem; }
+  .mc-club-pick__tag { display: none; }
+  .mc-recap-numbers strong {
+    font-size: clamp(1.7rem, 9vw, 2.4rem);
+  }
+  .mc-offer-blurb {
+    display: none;
+  }
+}
+
+/* Soft overflow only for dense celebrate stacks — still prefer one idea */
+.mc-scene--retire .mc-scene__stage {
+  overflow: auto;
+}

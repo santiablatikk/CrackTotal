@@ -99,6 +99,7 @@ function loadAll() {
     'assets/js/games/mi-carrera/ui/career-card.js',
     'assets/js/games/mi-carrera/ui/career-share.js',
     'assets/js/games/mi-carrera/ui/career-rewards.js',
+    'assets/js/games/mi-carrera/ui/career-narrative.js',
     'assets/js/games/mi-carrera/ui/screens.js',
     'assets/js/games/mi-carrera/ui/app.js'
   ];

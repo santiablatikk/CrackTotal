@@ -679,7 +679,38 @@
     return NS.State.clamp(p, 0.06, 0.92);
   }
 
-  function generateOffers(state, world, rng, maxOffers) {
+  function craftOfferBlurb(state, club, role, world, rng) {
+    var current = getClub(world, state.clubId);
+    var pool = [];
+    var pos = state.player ? state.player.position : 'MID';
+    var posWord =
+      pos === 'FWD' ? 'delantero' : pos === 'DEF' ? 'defensor' : pos === 'GK' ? 'arquero' : 'mediocampista';
+    if (role === 'titular') {
+      pool.push('Necesitan un ' + posWord + ' titular.');
+      pool.push('Te ofrecen minutos claros.');
+      pool.push('Buscan alguien que arranque de entrada.');
+    } else if (role === 'promesa') {
+      pool.push('Quieren apostar por tu potencial.');
+      pool.push('Te ven como proyecto a mediano plazo.');
+    } else {
+      pool.push('El entrenador te ve como pieza de rotación.');
+      pool.push('Escaparate grande, minutos a pelear.');
+    }
+    if (current && club && current.continentId === 'continent_sa' && club.continentId === 'continent_eu') {
+      pool.push('Tu temporada en Sudamérica llamó su atención.');
+    }
+    if (current && club && (club.level || 1) > (current.level || 1)) {
+      pool.push('Es un salto de nivel. La presión sube.');
+    }
+    if (current && club && (club.level || 1) < (current.level || 1)) {
+      pool.push('Menos escaparate. Más protagonismo.');
+    }
+    if (state.age <= 21) pool.push('Ven en vos una apuesta de futuro.');
+    if (state.arcFlags && state.arcFlags.breakout) pool.push('Tu explosión no pasó desapercibida.');
+    return rng.pick(pool);
+  }
+
+  function generateOffers(state, world, rng, maxOffers, forceOpen) {
     maxOffers = maxOffers == null ? 4 : Math.min(4, maxOffers);
     var clubs = world.clubs || [];
     var lastGrade = lastSeasonGrade(state);
@@ -687,7 +718,7 @@
       ? state.seasonHistory[state.seasonHistory.length - 1]
       : null;
     var lastApps = last ? last.appearances || 0 : 20;
-    if (!rng.bool(marketOpenChance(state, lastGrade))) {
+    if (!forceOpen && !rng.bool(marketOpenChance(state, lastGrade))) {
       return [];
     }
 
@@ -713,28 +744,61 @@
 
     var pool = candidates.slice(0, Math.min(16, candidates.length));
     var count = 0;
-    if (lastGrade === 'S') count = rng.int(2, Math.min(maxOffers, pool.length));
+    if (forceOpen) {
+      count = Math.min(maxOffers, pool.length);
+    } else if (lastGrade === 'S') count = rng.int(2, Math.min(maxOffers, pool.length));
     else if (lastGrade === 'A') count = rng.int(1, Math.min(maxOffers, pool.length));
     else if (lastGrade === 'B') count = rng.int(0, Math.min(3, pool.length));
     else if (lastGrade === 'C') count = rng.int(0, Math.min(2, pool.length));
     else count = rng.int(0, Math.min(1, pool.length));
 
-    if (count === 0 && state.rating >= 82 && state.reputation >= 55 && rng.bool(0.4)) count = 1;
+    if (!forceOpen && count === 0 && state.rating >= 82 && state.reputation >= 55 && rng.bool(0.4)) count = 1;
     if (state.age >= 34) count = Math.min(count, 1);
-    if (lastApps < 10 && lastGrade !== 'S') count = Math.min(count, 1);
+    if (!forceOpen && lastApps < 10 && lastGrade !== 'S') count = Math.min(count, 1);
 
     var picked = [];
     var used = Object.create(null);
-    var shuffled = rng.shuffle(pool);
-    for (var j = 0; j < shuffled.length && picked.length < count; j++) {
-      var item = shuffled[j];
-      if (used[item.club.id]) continue;
-      if (item.interest < 14 && !rng.bool(0.22)) continue;
-      // Soft rarity: tier S even when eligible
-      if ((item.club.level || 1) >= 5 && !rng.bool(0.35 + Math.max(0, state.reputation - 60) / 80)) {
-        continue;
+    var current = getClub(world, state.clubId);
+    var curLevel = current ? current.level || 1 : 2;
+
+    function takePred(pred) {
+      for (var pi = 0; pi < pool.length && picked.length < count; pi++) {
+        var it = pool[pi];
+        if (used[it.club.id]) continue;
+        if (pred && !pred(it)) continue;
+        if (it.interest < 12 && !rng.bool(0.18)) continue;
+        if ((it.club.level || 1) >= 5 && !rng.bool(0.32 + Math.max(0, state.reputation - 60) / 80)) {
+          continue;
+        }
+        used[it.club.id] = true;
+        picked.push(it);
+        return true;
       }
-      used[item.club.id] = true;
+      return false;
+    }
+
+    // Diverse slots: step-up / lateral / minutes club
+    takePred(function (it) {
+      return (it.club.level || 1) > curLevel;
+    });
+    takePred(function (it) {
+      return (it.club.level || 1) === curLevel;
+    });
+    takePred(function (it) {
+      return (it.club.level || 1) < curLevel;
+    });
+    // Prefer different countries / continents for remaining
+    takePred(function (it) {
+      return current && it.club.countryId !== current.countryId;
+    });
+    while (picked.length < count) {
+      if (!takePred(null)) break;
+    }
+
+    // Soft shuffle of final order for visual variety
+    picked = rng.shuffle(picked);
+
+    return picked.map(function (item) {
       var role = roleForOffer(state, item.club);
       var region = regionMarketWeight(item.club.continentId, item.club.primaryCompetitionId);
       var wage = Math.round(
@@ -743,7 +807,8 @@
           region
       );
       var mins = expectedMinutesBand(state, item.club);
-      picked.push({
+      var blurb = craftOfferBlurb(state, item.club, role, world, rng);
+      return {
         id: 'offer_' + state.seasonIndex + '_' + item.club.id,
         kind: 'transfer',
         clubId: item.club.id,
@@ -755,15 +820,9 @@
         level: item.club.level,
         tier: clubTier(item.club, world),
         minutesLabel: mins.label,
-        blurb:
-          role === 'titular'
-            ? 'Proyecto con minutos claros.'
-            : role === 'promesa'
-              ? 'Te ven como apuesta de futuro.'
-              : 'Rotación en un escaparate mayor.'
-      });
-    }
-    return picked;
+        blurb: blurb
+      };
+    });
   }
 
   function loanEligible(state, world) {
@@ -848,26 +907,75 @@
   }
 
   function buildMarketPacket(state, world, rng) {
-    var transfers = generateOffers(state, world, rng.fork('tx'), 3);
-    var loans = [];
-    if (loanEligible(state, world)) {
-      // Always try to surface a coherent loan when minutes/context call for it
-      var last = state.seasonHistory && state.seasonHistory.length
-        ? state.seasonHistory[state.seasonHistory.length - 1]
-        : null;
-      var apps = last ? last.appearances || 0 : 22;
-      var forceLoan = apps < 16 || (state.arcFlags && state.arcFlags.crisis);
-      if (forceLoan || rng.bool(0.55) || !transfers.length) {
-        loans = generateLoanOffers(state, world, rng.fork('loan'), forceLoan || !transfers.length ? 2 : 1);
-      }
+    var lastGrade = lastSeasonGrade(state);
+    var last = state.seasonHistory && state.seasonHistory.length
+      ? state.seasonHistory[state.seasonHistory.length - 1]
+      : null;
+    var apps = last ? last.appearances || 0 : 22;
+    var recentShapes = state.recentMarketShapes || [];
+    var lastShape = recentShapes[0] || null;
+
+    // Vary intended transfer count by grade + anti-repeat
+    var wantTx = 0;
+    if (lastGrade === 'S') wantTx = rng.int(2, 3);
+    else if (lastGrade === 'A') wantTx = rng.int(1, 3);
+    else if (lastGrade === 'B') wantTx = rng.int(1, 2);
+    else if (lastGrade === 'C') wantTx = rng.bool(0.55) ? 1 : 0;
+    else wantTx = rng.bool(0.22) ? 1 : 0;
+
+    if (lastShape === 'tx:' + wantTx && rng.bool(0.7)) {
+      wantTx = Math.max(0, Math.min(3, wantTx + (rng.bool(0.5) ? 1 : -1)));
     }
+    if (lastShape === 'cold' && lastGrade !== 'D' && rng.bool(0.55)) wantTx = Math.max(wantTx, 1);
+
+    var transfers =
+      wantTx > 0
+        ? generateOffers(state, world, rng.fork('tx'), wantTx, true)
+        : [];
+
+    var loans = [];
+    var eligible = loanEligible(state, world);
+    var forceLoan =
+      eligible && (apps < 16 || (state.arcFlags && state.arcFlags.crisis) || (lastGrade === 'D' && apps < 20));
+    var wantLoan = false;
+    if (eligible) {
+      if (forceLoan) wantLoan = true;
+      else if (!transfers.length && rng.bool(0.65)) wantLoan = true;
+      else if (transfers.length && rng.bool(0.28)) wantLoan = true;
+      else if (lastShape && String(lastShape).indexOf('loan') === -1 && rng.bool(0.35)) wantLoan = true;
+    }
+    // Anti-repeat: if last was loan-heavy and we have transfers, sometimes skip loan
+    if (wantLoan && lastShape && String(lastShape).indexOf('loan') === 0 && transfers.length && rng.bool(0.55)) {
+      wantLoan = false;
+    }
+    if (wantLoan) {
+      loans = generateLoanOffers(state, world, rng.fork('loan'), forceLoan && !transfers.length ? 2 : 1);
+    }
+
+    // Soften cold markets: empty packet still rolls once more for B+ form
+    if (!transfers.length && !loans.length && lastGrade !== 'D' && rng.bool(0.4)) {
+      transfers = generateOffers(state, world, rng.fork('txRetry'), 1, lastGrade === 'A' || lastGrade === 'S');
+    }
+
+    var shape =
+      !transfers.length && !loans.length
+        ? 'cold'
+        : !transfers.length
+          ? 'loan:' + loans.length
+          : !loans.length
+            ? 'tx:' + transfers.length
+            : 'tx:' + transfers.length + '+loan:' + loans.length;
+
+    state.recentMarketShapes = [shape].concat(recentShapes).slice(0, 6);
+
     return {
       transfers: transfers,
       loans: loans,
       offers: transfers.concat(loans),
       canStay: true,
-      canLoan: loanEligible(state, world),
-      cold: !transfers.length
+      canLoan: eligible,
+      cold: !transfers.length,
+      shape: shape
     };
   }
 

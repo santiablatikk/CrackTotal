@@ -626,15 +626,18 @@
         '<p class="mc-offer-stars" aria-hidden="true">' +
         levelStars(offer.level || (club && club.level) || 1) +
         '</p>' +
-        '<span class="mc-offer-role">' +
-        F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
-        (offer.minutesLabel ? ' · ' + F().escapeHtml(offer.minutesLabel) : '') +
-        '</span>' +
-        '<button type="button" class="ct-button ct-button--primary" data-mc-action="market-compare" data-offer="' +
-        F().escapeHtml(offer.id) +
-        '">' +
-        (isLoan ? 'Ver cesión' : 'Ver oferta') +
-        '</button></article>'
+          '<span class="mc-offer-role">' +
+          F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
+          (offer.minutesLabel ? ' · ' + F().escapeHtml(offer.minutesLabel) : '') +
+          '</span>' +
+          (offer.blurb
+            ? '<p class="mc-offer-blurb">' + F().escapeHtml(offer.blurb) + '</p>'
+            : '') +
+          '<button type="button" class="ct-button ct-button--primary" data-mc-action="market-compare" data-offer="' +
+          F().escapeHtml(offer.id) +
+          '">' +
+          (isLoan ? 'Ver cesión' : 'Ver oferta') +
+          '</button></article>'
       );
     }
 
@@ -793,52 +796,96 @@
   function seasonRecapScreen(ctx) {
     var season = ctx.season;
     var state = ctx.state;
-    var club = ctx.engine.getClub(season.clubId || state.clubId);
-    var ovr = season.ratingAfter != null ? season.ratingAfter : state.rating;
+    var engine = ctx.engine;
+    var club = engine.getClub(season.clubId || state.clubId);
+    var player = (state && state.player) || {};
+    var country = player.countryId
+      ? engine.world.countriesById[player.countryId]
+      : null;
+    var ovrAfter = season.ratingAfter != null ? season.ratingAfter : state.rating;
+    var ovrBefore =
+      season.ratingBefore != null ? season.ratingBefore : ovrAfter - (season.growth || 0);
     var arc = season.arcFlags || {};
     var tone = 'recap';
-    var title = F().escapeHtml(season.seasonLabel || F().seasonLabel(season.seasonIndex));
-    var lead = F().escapeHtml(seasonMomentLine(season));
-    if (arc.crisis) {
-      tone = 'crisis';
-      title = 'Algo cambió';
-      lead = 'Ya no sos el mismo en el campo.';
-    } else if (arc.comeback) {
-      tone = 'comeback';
-      title = 'Volviste';
-      lead = F().escapeHtml(seasonMomentLine(season));
-    } else if (arc.breakout) {
-      tone = 'prime';
-      title = 'Tu momento llegó';
-    }
+    if (arc.crisis) tone = 'crisis';
+    else if (arc.comeback) tone = 'comeback';
+    else if (arc.breakout) tone = 'prime';
+    else if (season.performanceGrade === 'S' || season.performanceGrade === 'A') tone = 'hot';
+    else if (season.performanceGrade === 'D') tone = 'cold';
+
+    var narrative =
+      UI.Narrative && UI.Narrative.seasonNarrative
+        ? UI.Narrative.seasonNarrative(season, state)
+        : seasonMomentLine(season);
+
+    var fs =
+      NS.Rules && NS.Rules.formStatus
+        ? NS.Rules.formStatus(season.formAfter != null ? season.formAfter : state.form)
+        : null;
+
+    var minorAwards = (season.awards || []).filter(function (a) {
+      return (a.importance || 0) < 70;
+    });
+    var awardChips = minorAwards
+      .map(function (a) {
+        return (
+          '<span class="mc-recap-chip">' + F().escapeHtml(a.shortName || a.name) + '</span>'
+        );
+      })
+      .join('');
 
     return scene({
       id: 'recap',
       tone: tone,
-      kicker: 'Temporada terminada',
-      title: title,
-      lead: lead,
+      kicker: 'Tu temporada',
+      title: F().escapeHtml(season.seasonLabel || F().seasonLabel(season.seasonIndex)),
+      lead: F().escapeHtml(narrative),
       body:
-        '<div class="mc-recap-top">' +
-        C().clubBadgeHtml(club, 'xl') +
-        '<div class="mc-hub-ovr"><span>OVR</span><strong>' +
-        ovr +
-        '</strong></div></div>' +
-        '<div class="mc-scene-stats">' +
-        '<div><span>PJ</span><strong>' +
+        '<div class="mc-recap-hero">' +
+        '<div class="mc-recap-hero__club">' +
+        C().clubBadgeHtml(club, 'xxl') +
+        '<div>' +
+        '<strong class="mc-recap-club">' +
+        F().escapeHtml(club ? club.shortName || club.name : '—') +
+        '</strong>' +
+        '<p class="mc-scene__meta">' +
+        (country ? C().countryFlagHtml(country, 'sm') + ' ' : '') +
+        F().escapeHtml(player.name || '') +
+        (player.position ? ' · ' + F().escapeHtml(player.position) : '') +
+        '</p></div></div>' +
+        '<div class="mc-recap-numbers">' +
+        '<div><strong>' +
         season.appearances +
-        '</strong></div>' +
-        '<div><span>Goles</span><strong>' +
+        '</strong><span>Partidos</span></div>' +
+        '<div><strong>' +
         season.goals +
-        '</strong></div>' +
-        '<div><span>Asist.</span><strong>' +
+        '</strong><span>Goles</span></div>' +
+        '<div><strong>' +
         season.assists +
-        '</strong></div></div>' +
+        '</strong><span>Asistencias</span></div>' +
+        '</div>' +
+        '<div class="mc-recap-ovrline">' +
+        '<span>' +
+        ovrBefore +
+        '</span><span class="mc-recap-ovrline__arrow" aria-hidden="true">→</span>' +
+        '<strong>' +
+        ovrAfter +
+        ' OVR</strong></div>' +
+        (fs
+          ? '<p class="mc-form-chip mc-form-chip--' +
+            F().escapeHtml(fs.id) +
+            '"><span aria-hidden="true">' +
+            fs.emoji +
+            '</span> ' +
+            F().escapeHtml(fs.label) +
+            '</p>'
+          : '') +
+        (awardChips ? '<div class="mc-recap-chips">' + awardChips + '</div>' : '') +
         '<p class="mc-recap-moment"><span class="mc-scene__kicker">Momento de la temporada</span>' +
         F().escapeHtml(seasonMomentLine(season)) +
-        '</p>',
+        '</p></div>',
       actions:
-        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="open-market">Continuar</button>'
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="after-recap">Continuar</button>'
     });
   }
 
@@ -883,11 +930,15 @@
   }
 
   function titleScene(title, club, nt) {
+    var tone =
+      UI.Narrative && UI.Narrative.titleTone ? UI.Narrative.titleTone(title) : 'title';
+    var epic = tone === 'epic' || (title.importance || 50) >= 70;
     return scene({
       id: 'title',
-      tone: 'title',
-      kicker: 'Campeón',
-      title: F().escapeHtml(title.name),
+      tone: epic ? 'title' : 'title',
+      kicker: epic ? 'Campeones' : 'Título',
+      title: 'Campeón',
+      lead: F().escapeHtml(title.shortName || title.name),
       body: titleCelebrationBody(title, club, nt),
       actions:
         '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="beat-continue">Continuar</button>'
@@ -914,6 +965,24 @@
     );
   }
 
+  function ballonTeaseScene(award, playerName) {
+    return scene({
+      id: 'ballon-tease',
+      tone: 'ballon',
+      kicker: 'Balón de Oro',
+      title: 'Los nominados',
+      lead: 'Y el ganador es…',
+      body:
+        '<div class="mc-ballon-tease">' +
+        awardMarkHtml(award) +
+        '<p class="mc-scene__meta">' +
+        F().escapeHtml(award.seasonLabel || '') +
+        '</p></div>',
+      actions:
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="beat-continue">Revelar</button>'
+    });
+  }
+
   function awardScene(award, playerName) {
     var isBallon = award.awardId === 'award_ballon_dor';
     return scene({
@@ -921,6 +990,7 @@
       tone: isBallon ? 'ballon' : 'award',
       kicker: isBallon ? 'Balón de Oro' : 'Premio',
       title: isBallon ? F().escapeHtml(playerName || '') : F().escapeHtml(award.name),
+      lead: isBallon ? 'Tu carrera acaba de cambiar.' : '',
       body: awardCelebrationBody(award, playerName),
       actions:
         '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="beat-continue">Continuar</button>'
@@ -1054,6 +1124,7 @@
     compareScene: compareScene,
     titleScene: titleScene,
     awardScene: awardScene,
+    ballonTease: ballonTeaseScene,
     momentScene: momentScene,
     eventScene: eventScene,
     beatScene: beatScene,

@@ -515,6 +515,7 @@
     }
 
     var self = this;
+    this._pendingSeasonResult = result;
     var finish = function () {
       self.focusAge = self.state.age;
       self.busy = false;
@@ -522,17 +523,34 @@
         self.showRetireTransition();
         return;
       }
+      // Recap first — celebrations + market come after Continuar
       self.showSeasonRecap(result.season);
     };
+    finish();
+    void before;
+  };
 
+  App.prototype.afterSeasonRecap = function () {
+    var result = this._pendingSeasonResult;
+    var self = this;
+    if (!result || !result.season) {
+      this.showMarket();
+      return;
+    }
     this._beatQueue = [];
     if (result.event) {
       this._beatQueue.push({ type: 'event', event: result.event });
     }
-    this._beatQueue = this._beatQueue.concat(self.buildCelebrationQueue(result.season));
-    this._onBeatsDone = finish;
+    this._beatQueue = this._beatQueue.concat(this.buildCelebrationQueue(result.season));
+    this._onBeatsDone = function () {
+      self._pendingSeasonResult = null;
+      if (self.state && self.state.retired) {
+        self.showRetireTransition();
+        return;
+      }
+      self.showMarket();
+    };
     this.playNextBeat();
-    void before;
   };
 
   App.prototype.playNextBeat = function () {
@@ -553,6 +571,14 @@
       this.setRootScreen(
         'title',
         UI.screens.titleScene(next.titleObj, next.club, next.nt),
+        { state: 'beat' }
+      );
+      return;
+    }
+    if (next.type === 'ballon-tease') {
+      this.setRootScreen(
+        'ballon-tease',
+        UI.screens.ballonTease(next.award, next.playerName),
         { state: 'beat' }
       );
       return;
@@ -600,31 +626,19 @@
     }
 
     var self = this;
-    var afterFlow = function () {
-      self.selectedOfferId = null;
-      self.focusAge = self.state.age;
-      self.busy = false;
-      if (self.state.retired) {
-        self.showRetireTransition();
-        return;
-      }
-      if (result.season) {
-        self.showSeasonRecap(result.season);
-      } else {
-        self.showCareerHome();
-      }
-    };
-
-    this._beatQueue = [];
-    if (result.event) this._beatQueue.push({ type: 'event', event: result.event });
-    this._beatQueue = this._beatQueue.concat(self.buildCelebrationQueue(result.season));
-    this._onBeatsDone = afterFlow;
+    this.selectedOfferId = null;
+    this.focusAge = this.state.age;
+    this.busy = false;
     if (result.retired && !result.season) {
-      this.busy = false;
       this.showRetireTransition();
       return;
     }
-    this.playNextBeat();
+    this._pendingSeasonResult = result;
+    if (result.season) {
+      this.showSeasonRecap(result.season);
+    } else {
+      this.showCareerHome();
+    }
     void before;
   };
 
@@ -634,7 +648,10 @@
     var self = this;
     var playerName = this.state.player && this.state.player.name;
 
-    (season.titles || []).forEach(function (title) {
+    var titles = (season.titles || []).slice().sort(function (a, b) {
+      return (b.importance || 0) - (a.importance || 0);
+    });
+    titles.forEach(function (title) {
       var club = title.clubId ? self.engine.getClub(title.clubId) : null;
       var nt = title.nationalTeamId
         ? self.engine.world.nationalTeamsById[title.nationalTeamId]
@@ -643,28 +660,55 @@
     });
 
     (season.awards || []).forEach(function (award) {
+      var tier =
+        UI.Narrative && UI.Narrative.awardTier
+          ? UI.Narrative.awardTier(award)
+          : award.awardId === 'award_ballon_dor'
+            ? 'ballon'
+            : 'major';
+      if (tier === 'minor') return;
+      if (tier === 'ballon') {
+        queue.push({ type: 'ballon-tease', award: award, playerName: playerName });
+        queue.push({ type: 'award', award: award, playerName: playerName });
+        return;
+      }
       queue.push({ type: 'award', award: award, playerName: playerName });
     });
 
     var seasonIdx = season.seasonIndex;
+    var momentPriority = {
+      moment_ballon: 100,
+      moment_world_cup: 95,
+      moment_first_ucl: 90,
+      moment_first_libertadores: 88,
+      moment_first_league: 70,
+      moment_first_callup: 60,
+      moment_return_home: 55,
+      moment_100_goals: 50,
+      moment_500_apps: 45
+    };
+    var moments = [];
     (this.state.moments || []).forEach(function (moment) {
       if (moment.seasonIndex !== seasonIdx) return;
       if (moment.id === 'moment_retire' || moment.id === 'moment_intl_debut') return;
+      var id = String(moment.id);
       var big =
-        moment.id === 'moment_first_league' ||
-        moment.id === 'moment_first_ucl' ||
-        moment.id === 'moment_first_libertadores' ||
-        moment.id === 'moment_world_cup' ||
-        moment.id === 'moment_ballon' ||
-        moment.id === 'moment_100_goals' ||
-        moment.id === 'moment_500_apps' ||
-        moment.id === 'moment_return_home' ||
-        moment.id === 'moment_first_callup' ||
-        String(moment.id).indexOf('moment_breakout_') === 0 ||
-        String(moment.id).indexOf('moment_comeback_') === 0 ||
-        String(moment.id).indexOf('moment_crisis_') === 0;
+        momentPriority[id] != null ||
+        id.indexOf('moment_breakout_') === 0 ||
+        id.indexOf('moment_comeback_') === 0 ||
+        id.indexOf('moment_crisis_') === 0;
       if (!big) return;
-      queue.push({ type: 'moment', moment: moment });
+      var score = momentPriority[id] || 40;
+      if (id.indexOf('moment_breakout_') === 0) score = 75;
+      if (id.indexOf('moment_comeback_') === 0) score = 72;
+      if (id.indexOf('moment_crisis_') === 0) score = 65;
+      moments.push({ moment: moment, score: score });
+    });
+    moments.sort(function (a, b) {
+      return b.score - a.score;
+    });
+    moments.slice(0, 4).forEach(function (m) {
+      queue.push({ type: 'moment', moment: m.moment });
     });
 
     return queue;
@@ -977,6 +1021,10 @@
     if (action === 'focus-age') {
       this.focusAge = Number(target.getAttribute('data-age'));
       this.showCareerHome();
+      return;
+    }
+    if (action === 'after-recap') {
+      this.afterSeasonRecap();
       return;
     }
     if (action === 'open-market') {

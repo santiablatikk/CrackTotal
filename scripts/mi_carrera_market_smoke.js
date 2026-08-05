@@ -283,6 +283,115 @@ function main() {
   assert((stay.seasonModifiers.minutesBias || 0) >= minsBefore, 'stay can improve minutes bias');
   assert(stay.phase === 'simulate', 'stay advances to simulate');
 
+  // --- Variety across 100 market packets ---
+  const shapes = Object.create(null);
+  let withLoan = 0;
+  let cold = 0;
+  let withTx = 0;
+  let blurbs = Object.create(null);
+  let clubHits = Object.create(null);
+  for (let i = 0; i < 100; i++) {
+    const st = engine.createCareer({
+      name: 'Var' + i,
+      countryId: i % 2 === 0 ? 'country_ar' : 'country_es',
+      position: i % 3 === 0 ? 'FWD' : 'MID',
+      archetypeId: 'arch_tech_promise',
+      seed: 12000 + i
+    });
+    // Simulate a few seasons to build history
+    for (let s = 0; s < 3 && !st.retired; s++) {
+      if (st.phase === 'decision') {
+        const opt =
+          st.currentDecision && st.currentDecision.options && st.currentDecision.options[0]
+            ? st.currentDecision.options[0].id
+            : 'stay_loyal';
+        const useStay =
+          st.currentDecision && st.currentDecision.type === 'transferencia'
+            ? 'stay_loyal'
+            : opt;
+        try {
+          engine.resolveDecision(st, useStay, null);
+        } catch (e) {
+          break;
+        }
+      }
+      if (st.phase === 'simulate') {
+        try {
+          engine.simulateCurrentSeason(st);
+        } catch (e) {
+          break;
+        }
+      }
+      const pkt = {
+        transfers: (st.pendingOffers || []).filter((o) => o.kind !== 'loan'),
+        loans: (st.pendingOffers || []).filter((o) => o.kind === 'loan'),
+        shape: (st.recentMarketShapes && st.recentMarketShapes[0]) || 'unknown'
+      };
+      shapes[pkt.shape] = (shapes[pkt.shape] || 0) + 1;
+      if (!pkt.transfers.length) cold += 1;
+      else withTx += 1;
+      if (pkt.loans.length) withLoan += 1;
+      (st.pendingOffers || []).forEach(function (o) {
+        if (o.blurb) blurbs[o.blurb] = (blurbs[o.blurb] || 0) + 1;
+        clubHits[o.clubId] = (clubHits[o.clubId] || 0) + 1;
+      });
+    }
+  }
+  const shapeKeys = Object.keys(shapes);
+  console.log('  INFO market shapes:', shapeKeys.map((k) => k + '=' + shapes[k]).join(' | '));
+  console.log('  INFO cold=' + cold + ' withTx=' + withTx + ' withLoan=' + withLoan);
+  assert(shapeKeys.length >= 3, 'market produces >=3 distinct shapes (' + shapeKeys.length + ')');
+  assert(cold > 0, 'some cold markets exist');
+  assert(withTx > 0, 'some transfer markets exist');
+  assert(withLoan > 0, 'some loan markets exist');
+  assert(Object.keys(blurbs).length >= 4, 'offer blurbs have variety (' + Object.keys(blurbs).length + ')');
+  const topClubShare = Math.max.apply(null, Object.keys(clubHits).map((k) => clubHits[k])) / Math.max(1, Object.keys(clubHits).reduce((a, k) => a + clubHits[k], 0));
+  assert(topClubShare < 0.42, 'no single club dominates offers (' + (topClubShare * 100).toFixed(1) + '%)');
+
+  // Same career consecutive seasons should not always share identical shape
+  let sameStreak = 0;
+  let checked = 0;
+  for (let i = 0; i < 20; i++) {
+    const st = engine.createCareer({
+      name: 'Seq' + i,
+      countryId: 'country_br',
+      position: 'FWD',
+      archetypeId: 'arch_physical',
+      seed: 22000 + i
+    });
+    const seen = [];
+    for (let s = 0; s < 4 && !st.retired; s++) {
+      if (st.phase === 'decision') {
+        try {
+          engine.resolveDecision(
+            st,
+            st.currentDecision && st.currentDecision.type === 'transferencia'
+              ? 'stay_loyal'
+              : (st.currentDecision.options || [{ id: 'train_balanced' }])[0].id,
+            null
+          );
+        } catch (e) {
+          break;
+        }
+      }
+      if (st.phase === 'simulate') {
+        try {
+          engine.simulateCurrentSeason(st);
+        } catch (e) {
+          break;
+        }
+      }
+      seen.push((st.recentMarketShapes && st.recentMarketShapes[0]) || 'x');
+    }
+    for (let j = 1; j < seen.length; j++) {
+      checked += 1;
+      if (seen[j] === seen[j - 1]) sameStreak += 1;
+    }
+  }
+  const sameRate = checked ? sameStreak / checked : 1;
+  console.log('  INFO consecutive identical shape rate=' + (sameRate * 100).toFixed(1) + '%');
+  assert(sameRate < 0.72, 'consecutive seasons rarely clone market shape');
+
   console.log('\nPassed: ' + passed + '  Failed: ' + failed);
   process.exit(failed ? 1 : 0);
 }
