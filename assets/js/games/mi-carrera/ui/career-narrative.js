@@ -64,8 +64,101 @@
     return arr[h % arr.length];
   }
 
-  function seasonNarrative(season, state) {
+  function clubName(world, clubId) {
+    if (!world || !clubId || !NS.Rules || !NS.Rules.getClub) return '';
+    var c = NS.Rules.getClub(world, clubId);
+    return (c && (c.shortName || c.name)) || '';
+  }
+
+  function yearsAtClub(state) {
+    var hist = (state && state.seasonHistory) || [];
+    var n = 0;
+    var id = state && state.clubId;
+    for (var i = hist.length - 1; i >= 0; i--) {
+      if (hist[i].clubId === id) n += 1;
+      else break;
+    }
+    return n;
+  }
+
+  function memoryLine(season, state, world) {
+    if (!season || !state) return '';
+    var hist = state.seasonHistory || [];
+    var idx = hist.indexOf(season);
+    if (idx < 0) idx = hist.length - 1;
+    var prev = idx > 0 ? hist[idx - 1] : null;
+    var name = clubName(world, season.clubId);
+    var prevName = prev ? clubName(world, prev.clubId) : '';
+    var salt = (season.seasonIndex || 0) + ':' + (season.performanceGrade || 'B');
+
+    if (season.returnHome && name) {
+      return pickVariant(
+        [
+          'Volviste a ' + name + '. El círculo se cierra… o se reabre.',
+          'El regreso a ' + name + ' no es nostalgia: es una decisión.'
+        ],
+        salt + ':home'
+      );
+    }
+
+    if (prev && prev.clubId !== season.clubId && prevName && name) {
+      if (season.performanceGrade === 'S' || season.performanceGrade === 'A') {
+        return (
+          'Después de ' +
+          (prev.performanceGrade === 'D' || prev.performanceGrade === 'C'
+            ? 'una temporada difícil en ' + prevName
+            : 'tu paso por ' + prevName) +
+          ', explotaste en ' +
+          name +
+          '.'
+        );
+      }
+      if (prev.onLoan || (state.recentEvents || []).some(function (e) {
+        return e && e.id === 'ev_loan_rumor';
+      })) {
+        return 'Cedido en ' + name + ', buscaste minutos y otra cara.';
+      }
+    }
+
+    var years = yearsAtClub(state);
+    if (years >= 7 && name && (season.performanceGrade === 'A' || season.performanceGrade === 'S')) {
+      return (
+        'Tras ' +
+        years +
+        ' temporadas en ' +
+        name +
+        ', el club empezó a construir alrededor tuyo.'
+      );
+    }
+    if (years >= 5 && name && season.arcFlags && season.arcFlags.comeback) {
+      return 'En ' + name + ' te conocen demasiado bien. Y igual te dieron otra chance.';
+    }
+
+    if (season.events && season.events.length) {
+      var ev = season.events[0];
+      if (ev && ev.id === 'ev_became_idol' && name) {
+        return 'En ' + name + ' ya no sos un jugador: sos bandera.';
+      }
+      if (ev && ev.id === 'ev_lost_place') {
+        return 'Perdiste el puesto. La carrera se pone seria.';
+      }
+      if (ev && ev.id === 'ev_called_up') {
+        return 'La selección te sumó. El país te mira distinto.';
+      }
+    }
+
+    if (season.firstCallUp) {
+      return 'Primera convocatoria. Otro capítulo empieza.';
+    }
+
+    return '';
+  }
+
+  function seasonNarrative(season, state, world) {
     if (!season) return 'Otra página de tu historia.';
+    var mem = memoryLine(season, state, world);
+    if (mem) return mem;
+
     var arc = season.arcFlags || (state && state.arcFlags) || {};
     var salt =
       (season.seasonIndex || 0) +
@@ -81,6 +174,9 @@
   }
 
   function offerBlurb(state, club, role, world, rng) {
+    if (NS.Rules && NS.Rules.craftOfferBlurb && rng) {
+      return NS.Rules.craftOfferBlurb(state, club, role, world, rng);
+    }
     var current = world && state ? NS.Rules.getClub(world, state.clubId) : null;
     var pool = [];
     var pos = state && state.player ? state.player.position : 'MID';
@@ -148,6 +244,7 @@
 
   UI.Narrative = {
     seasonNarrative: seasonNarrative,
+    memoryLine: memoryLine,
     offerBlurb: offerBlurb,
     marketShape: marketShape,
     awardTier: awardTier,

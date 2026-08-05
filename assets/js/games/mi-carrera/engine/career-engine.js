@@ -403,12 +403,20 @@
       state.clubId;
     var capsBefore = state.nationalCaps || 0;
 
-    var stats = simulateSeasonStats(state, this.world, rng);
-    var picked = NS.Events.pickEvent(state, this.world, eventRng);
-    var eventResult = NS.Events.applyEvent(state, picked);
-    if (eventResult.event && eventResult.event.effects && eventResult.event.effects.injuryWeeks) {
-      stats.injuryWeeks += eventResult.event.effects.injuryWeeks;
+    // In-season events first so minutes/form/injury bias this season (cause → effect)
+    var pickedEvents = NS.Events.pickSeasonEvents
+      ? NS.Events.pickSeasonEvents(state, this.world, eventRng)
+      : [];
+    if (!pickedEvents.length && NS.Events.pickEvent) {
+      var legacyEv = NS.Events.pickEvent(state, this.world, eventRng);
+      if (legacyEv) pickedEvents = [legacyEv];
     }
+    var appliedEvents = NS.Events.applySeasonEvents
+      ? NS.Events.applySeasonEvents(state, pickedEvents, eventRng)
+      : [];
+    var primaryEvent = appliedEvents[0] || null;
+
+    var stats = simulateSeasonStats(state, this.world, rng);
 
     var clubBag = NS.Competitions.simulateClubSeason(state, this.world, compRng, stats);
     var ntBag = NS.Competitions.simulateNationalSeason(
@@ -465,7 +473,8 @@
       nationalAssists: stats.nationalAssists,
       nationalRole: ntBag.role || 'none',
       performanceGrade: stats.performanceGrade,
-      event: eventResult.event,
+      event: primaryEvent,
+      events: appliedEvents.slice(),
       decisionId: (state.recentDecisions[0] && state.recentDecisions[0].id) || null,
       ratingBefore: ratingBefore,
       ratingAfter: state.rating,
@@ -540,7 +549,14 @@
     if (state.retired) {
       NS.Moments.detectSeasonMoments(state, seasonRecord, clubBag, ntBag, []);
       this._finalize(state);
-      return { state: state, season: seasonRecord, event: eventResult.event, offers: [], retired: true };
+      return {
+        state: state,
+        season: seasonRecord,
+        event: primaryEvent,
+        events: appliedEvents.slice(),
+        offers: [],
+        retired: true
+      };
     }
 
     state.phase = 'decision';
@@ -554,7 +570,8 @@
     return {
       state: state,
       season: seasonRecord,
-      event: eventResult.event,
+      event: primaryEvent,
+      events: appliedEvents.slice(),
       offers: state.pendingOffers.slice(),
       retired: false
     };

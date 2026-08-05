@@ -538,9 +538,15 @@
       return;
     }
     this._beatQueue = [];
-    if (result.event) {
-      this._beatQueue.push({ type: 'event', event: result.event });
-    }
+    var seasonEvents =
+      result.events && result.events.length
+        ? result.events
+        : result.event
+          ? [result.event]
+          : [];
+    seasonEvents.slice(0, 2).forEach(function (ev) {
+      if (ev) self._beatQueue.push({ type: 'event', event: ev });
+    });
     this._beatQueue = this._beatQueue.concat(this.buildCelebrationQueue(result.season));
     this._onBeatsDone = function () {
       self._pendingSeasonResult = null;

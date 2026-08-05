@@ -30,7 +30,9 @@
   }
 
   function buildFutureDecision(state) {
-    var cold = !!state.marketCold || !(state.pendingOffers && state.pendingOffers.length);
+    var cold = !(state.pendingOffers && state.pendingOffers.length);
+    if (cold) state.marketCold = true;
+    else state.marketCold = false;
     var options = [
       {
         id: 'stay_loyal',
@@ -87,20 +89,14 @@
   }
 
   function pickDecision(state, world, rng) {
-    // Always a football-future decision between seasons.
-    if (state.pendingOffers && state.pendingOffers.length) {
-      var transfer = findDecision(world, 'transferencia');
-      if (transfer) {
-        var copy = JSON.parse(JSON.stringify(transfer));
-        copy.id = 'dec_future';
-        copy.title = 'Tu futuro';
-        copy.prompt = 'El mercado habló. ¿Qué hacés ahora?';
-        return copy;
-      }
-    }
-
-    // Cold market / no offers: still a future decision (UI shows stay / loan).
-    if (rng && typeof rng.bool === 'function' && NS.Rules.canVoluntaryRetire(state.age) && rng.bool(0.12)) {
+    // Cold market / no offers: occasional retirement prompt late career
+    if (
+      rng &&
+      typeof rng.bool === 'function' &&
+      NS.Rules.canVoluntaryRetire(state.age) &&
+      !(state.pendingOffers && state.pendingOffers.length) &&
+      rng.bool(0.12)
+    ) {
       return {
         id: 'dec_retire',
         type: 'retiro',
@@ -124,6 +120,7 @@
       };
     }
 
+    // Always build from live market state (offers / cold), not static JSON options.
     return buildFutureDecision(state);
   }
 

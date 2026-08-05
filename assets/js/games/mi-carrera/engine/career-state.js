@@ -59,6 +59,11 @@
       recentEvents: o.recentEvents ? o.recentEvents.slice() : [],
       recentDecisions: o.recentDecisions ? o.recentDecisions.slice() : [],
       eventCooldowns: o.eventCooldowns ? Object.assign({}, o.eventCooldowns) : {},
+      eventCategoryCooldowns: o.eventCategoryCooldowns
+        ? Object.assign({}, o.eventCategoryCooldowns)
+        : {},
+      recentMarketFamilies: o.recentMarketFamilies ? o.recentMarketFamilies.slice() : [],
+      recentOfferBlurbs: o.recentOfferBlurbs ? o.recentOfferBlurbs.slice() : [],
       pendingOffers: o.pendingOffers ? o.pendingOffers.slice() : [],
       seasonModifiers: o.seasonModifiers
         ? Object.assign({}, o.seasonModifiers)

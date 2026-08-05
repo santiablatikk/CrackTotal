@@ -155,12 +155,14 @@ function playCareer(engine, MC, seed, countryId, position, arch) {
       const forcedLoans = MC.Rules.generateLoanOffers(st, engine.world, engine.getRng(st, 'varLoan'), 1);
       if (forcedLoans.length) {
         st.pendingOffers = forcedLoans.concat(offers.filter((o) => o.kind !== 'loan'));
+        st.currentDecision = MC.Decisions.buildFutureDecision(st);
         engine.resolveDecision(st, 'accept_best_prestige', forcedLoans[0].id);
         loans += 1;
         didLoan = true;
       }
     }
     if (!didLoan && offers.length && season % 4 === 2) {
+      st.currentDecision = MC.Decisions.buildFutureDecision(st);
       const loan = offers.filter((o) => o.kind === 'loan')[0];
       const tx = offers.filter((o) => o.kind !== 'loan')[0] || offers[0];
       if (loan && season % 8 === 2) {
@@ -178,6 +180,7 @@ function playCareer(engine, MC, seed, countryId, position, arch) {
       }
     }
     if (!didLoan && !didTx) {
+      st.currentDecision = MC.Decisions.buildFutureDecision(st);
       engine.resolveDecision(st, 'stay_loyal', null);
       stays += 1;
     }

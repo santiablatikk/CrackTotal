@@ -101,13 +101,14 @@
   }
 
   function regionMarketWeight(continentId, competitionId) {
-    if (competitionId && BIG5[competitionId]) return 1.35;
-    if (continentId === 'continent_eu') return 1.18;
-    if (continentId === 'continent_sa') return 0.92;
-    if (continentId === 'continent_na' || continentId === 'continent_ca') return 0.78;
-    if (continentId === 'continent_as') return 0.82;
-    if (continentId === 'continent_af') return 0.75;
-    return 0.7;
+    // Prestige bias without making Europe the only “correct” path
+    if (competitionId && BIG5[competitionId]) return 1.26;
+    if (continentId === 'continent_eu') return 1.1;
+    if (continentId === 'continent_sa') return 1.04;
+    if (continentId === 'continent_na' || continentId === 'continent_ca') return 0.82;
+    if (continentId === 'continent_as') return 0.84;
+    if (continentId === 'continent_af') return 0.78;
+    return 0.72;
   }
 
   function lastSeasonGrade(state) {
@@ -565,18 +566,23 @@
         club.continentId === 'continent_eu' &&
         BIG5[club.primaryCompetitionId]
       ) {
-        if (state.reputation < 50 && lastSeasonGrade(state) !== 'S' && lastSeasonGrade(state) !== 'A') {
+        // SA → Big5 requires a real peak, not just good OVR
+        if (
+          state.reputation < 42 &&
+          lastSeasonGrade(state) !== 'S' &&
+          lastSeasonGrade(state) !== 'A'
+        ) {
           return false;
         }
       }
       if (
         current.continentId === 'continent_eu' &&
         club.continentId === 'continent_sa' &&
-        state.age < 28 &&
-        state.rating >= 78 &&
-        lastSeasonGrade(state) !== 'D' &&
-        lastSeasonGrade(state) !== 'C'
+        state.age < 26 &&
+        state.rating >= 82 &&
+        lastSeasonGrade(state) === 'S'
       ) {
+        // Only block mid-prime EU stars from dumping to SA after a historic year
         return false;
       }
     }
@@ -629,9 +635,17 @@
       current.continentId === 'continent_sa' &&
       club.continentId === 'continent_eu' &&
       (lastGrade === 'S' || lastGrade === 'A') &&
-      state.reputation >= 55
+      state.reputation >= 48
     ) {
-      score += 14;
+      score += 10;
+    }
+
+    // SA clubs remain attractive: minutes, idol path, continental glory
+    if (club.continentId === 'continent_sa') {
+      score += 5;
+      if (recent.apps >= 24) score += 4;
+      if ((state.nationalCaps || 0) >= 8) score += 3;
+      if (state.age >= 28) score += 3;
     }
 
     // Late career homecoming / SA return
@@ -639,9 +653,18 @@
       current &&
       current.continentId === 'continent_eu' &&
       club.continentId === 'continent_sa' &&
-      state.age >= 30
+      (state.age >= 28 || lastGrade === 'D' || lastGrade === 'C')
     ) {
-      score += 10;
+      score += 12;
+    }
+
+    // Mexico / NA as bridge path
+    if (
+      club.continentId === 'continent_na' &&
+      current &&
+      (current.continentId === 'continent_sa' || current.continentId === 'continent_eu')
+    ) {
+      score += state.age >= 24 && state.age <= 31 ? 4 : 1;
     }
 
     score -= Math.max(0, (club.prestige || 50) - state.prestige) * 0.12;
@@ -679,13 +702,107 @@
     return NS.State.clamp(p, 0.06, 0.92);
   }
 
-  function craftOfferBlurb(state, club, role, world, rng) {
+  function classifyMarketFamily(state, club, kind, world) {
+    if (kind === 'loan') return 'LOAN';
+    if (!club) return 'LATERAL';
+    var current = getClub(world, state.clubId);
+    var country = getCountry(world, state.player.countryId);
+    var curLevel = current ? current.level || 1 : 2;
+    var lv = club.level || 1;
+    var played = state.clubsPlayed || [];
+
+    if (played.indexOf(club.id) !== -1 && club.id !== state.clubId) return 'RETURN';
+    if (country && club.countryId === country.id && (!current || current.countryId !== country.id)) {
+      return 'HOME';
+    }
+    if (
+      current &&
+      yearsAtClubApprox(state) >= 4 &&
+      club.id === state.clubId
+    ) {
+      return 'LEGACY';
+    }
+    if (lv >= 5 && curLevel <= 3) return 'GIANT';
+    if (lv > curLevel + 1) return 'STEP_UP';
+    if (lv > curLevel) return 'STEP_UP';
+    if (lv < curLevel && (state.age >= 30 || lastSeasonGrade(state) === 'D' || lastSeasonGrade(state) === 'C')) {
+      return 'DECLINE';
+    }
+    if (lv < curLevel) return 'MINUTES';
+    if (
+      current &&
+      current.continentId === 'continent_sa' &&
+      club.continentId === 'continent_eu'
+    ) {
+      return 'EUROPE';
+    }
+    if (
+      current &&
+      current.continentId === 'continent_eu' &&
+      club.continentId === 'continent_sa'
+    ) {
+      return 'SOUTH_AMERICA';
+    }
+    if (club.continentId === 'continent_sa' && (!current || current.continentId !== 'continent_sa')) {
+      return 'SOUTH_AMERICA';
+    }
+    if (club.continentId === 'continent_eu' && (!current || current.continentId !== 'continent_eu')) {
+      return 'EUROPE';
+    }
+    return 'LATERAL';
+  }
+
+  function yearsAtClubApprox(state) {
+    var hist = state.seasonHistory || [];
+    var n = 0;
+    for (var i = hist.length - 1; i >= 0; i--) {
+      if (hist[i].clubId === state.clubId) n += 1;
+      else break;
+    }
+    return n;
+  }
+
+  function craftOfferBlurb(state, club, role, world, rng, family) {
     var current = getClub(world, state.clubId);
     var pool = [];
     var pos = state.player ? state.player.position : 'MID';
     var posWord =
       pos === 'FWD' ? 'delantero' : pos === 'DEF' ? 'defensor' : pos === 'GK' ? 'arquero' : 'mediocampista';
-    if (role === 'titular') {
+    var fam = family || classifyMarketFamily(state, club, 'transfer', world);
+
+    if (fam === 'LOAN') {
+      pool.push('Cesión para sumar minutos y volver más fuerte.');
+      pool.push('El club te manda a jugar. Es una apuesta temporal.');
+      pool.push('Minutos afuera. Regreso con otra cara.');
+    } else if (fam === 'STEP_UP') {
+      pool.push('Es un salto de nivel. La presión sube.');
+      pool.push('Te llaman desde más arriba. El riesgo también.');
+      pool.push('Más escaparate. Menos garantía de titularidad.');
+    } else if (fam === 'GIANT') {
+      pool.push('Un gigante te abre la puerta. El banquillo es real.');
+      pool.push('Escaparate máximo. Minutos a conquistar.');
+    } else if (fam === 'MINUTES') {
+      pool.push('Menos escaparate. Más protagonismo.');
+      pool.push('Te ofrecen ser el dueño del puesto.');
+    } else if (fam === 'HOME') {
+      pool.push('Desde casa te quieren de vuelta.');
+      pool.push('Un club de tu país pone la oferta sobre la mesa.');
+    } else if (fam === 'RETURN') {
+      pool.push('El club donde ya estuviste quiere recuperarte.');
+      pool.push('Vuelven a llamar. Conocen tu versión.');
+    } else if (fam === 'EUROPE') {
+      pool.push('Europa te está mirando.');
+      pool.push('Tu temporada en Sudamérica llamó su atención.');
+    } else if (fam === 'SOUTH_AMERICA') {
+      pool.push('Sudamérica ofrece protagonismo y otra historia.');
+      pool.push('Libertadores, hinchada y minutos de verdad.');
+    } else if (fam === 'DECLINE') {
+      pool.push('El mercado se enfría. Aparece una salida realista.');
+      pool.push('Un club inferior te garantiza continuidad.');
+    } else if (fam === 'LEGACY') {
+      pool.push('El club quiere construir alrededor tuyo.');
+      pool.push('Renovación de ídolo. Quedarte también es un movimiento.');
+    } else if (role === 'titular') {
       pool.push('Necesitan un ' + posWord + ' titular.');
       pool.push('Te ofrecen minutos claros.');
       pool.push('Buscan alguien que arranque de entrada.');
@@ -696,18 +813,22 @@
       pool.push('El entrenador te ve como pieza de rotación.');
       pool.push('Escaparate grande, minutos a pelear.');
     }
-    if (current && club && current.continentId === 'continent_sa' && club.continentId === 'continent_eu') {
-      pool.push('Tu temporada en Sudamérica llamó su atención.');
-    }
-    if (current && club && (club.level || 1) > (current.level || 1)) {
-      pool.push('Es un salto de nivel. La presión sube.');
-    }
-    if (current && club && (club.level || 1) < (current.level || 1)) {
-      pool.push('Menos escaparate. Más protagonismo.');
-    }
+
     if (state.age <= 21) pool.push('Ven en vos una apuesta de futuro.');
+    if (state.age >= 30) pool.push('Buscan experiencia inmediata.');
     if (state.arcFlags && state.arcFlags.breakout) pool.push('Tu explosión no pasó desapercibida.');
-    return rng.pick(pool);
+    if (state.arcFlags && state.arcFlags.comeback) pool.push('Vieron tu comeback. Quieren apostar de nuevo.');
+    if (state.arcFlags && state.arcFlags.crisis) pool.push('Una puerta para resetear la carrera.');
+
+    // Anti-repeat blurbs across seasons
+    var recent = state.recentOfferBlurbs || [];
+    var filtered = pool.filter(function (line) {
+      return recent.indexOf(line) === -1;
+    });
+    if (!filtered.length) filtered = pool;
+    var pick = rng.pick(filtered);
+    state.recentOfferBlurbs = [pick].concat(recent).slice(0, 8);
+    return pick;
   }
 
   function generateOffers(state, world, rng, maxOffers, forceOpen) {
@@ -727,7 +848,6 @@
       var club = clubs[i];
       if (!isEligibleForClub(state, club, world)) continue;
       var interest = interestScore(state, club, world, lastGrade);
-      // Minutes / exposure feed the market
       if (lastApps >= 28) interest += 5;
       else if (lastApps >= 20) interest += 2;
       else if (lastApps < 12) interest -= 6;
@@ -742,7 +862,7 @@
       return b.interest - a.interest;
     });
 
-    var pool = candidates.slice(0, Math.min(16, candidates.length));
+    var pool = candidates.slice(0, Math.min(18, candidates.length));
     var count = 0;
     if (forceOpen) {
       count = Math.min(maxOffers, pool.length);
@@ -760,12 +880,25 @@
     var used = Object.create(null);
     var current = getClub(world, state.clubId);
     var curLevel = current ? current.level || 1 : 2;
+    var country = getCountry(world, state.player.countryId);
+    var recentFamilies = state.recentMarketFamilies || [];
+    var lastFamily = recentFamilies[0] || null;
 
-    function takePred(pred) {
+    function familyOk(fam) {
+      if (!fam || !lastFamily) return true;
+      if (fam === lastFamily && rng.bool(0.72)) return false;
+      if (recentFamilies[0] === fam && recentFamilies[1] === fam) return false;
+      return true;
+    }
+
+    function takePred(pred, preferredFamily) {
       for (var pi = 0; pi < pool.length && picked.length < count; pi++) {
         var it = pool[pi];
         if (used[it.club.id]) continue;
         if (pred && !pred(it)) continue;
+        var fam = classifyMarketFamily(state, it.club, 'transfer', world);
+        if (preferredFamily && fam !== preferredFamily) continue;
+        if (!familyOk(fam) && picked.length > 0) continue;
         if (it.interest < 12 && !rng.bool(0.18)) continue;
         if ((it.club.level || 1) >= 5 && !rng.bool(0.32 + Math.max(0, state.reputation - 60) / 80)) {
           continue;
@@ -777,25 +910,35 @@
       return false;
     }
 
-    // Diverse slots: step-up / lateral / minutes club
+    // Diverse scenario slots
     takePred(function (it) {
       return (it.club.level || 1) > curLevel;
-    });
+    }, 'STEP_UP');
     takePred(function (it) {
       return (it.club.level || 1) === curLevel;
-    });
+    }, 'LATERAL');
     takePred(function (it) {
       return (it.club.level || 1) < curLevel;
-    });
-    // Prefer different countries / continents for remaining
+    }, 'MINUTES');
+    takePred(function (it) {
+      return country && it.club.countryId === country.id;
+    }, 'HOME');
+    takePred(function (it) {
+      return (state.clubsPlayed || []).indexOf(it.club.id) !== -1;
+    }, 'RETURN');
+    takePred(function (it) {
+      return current && current.continentId === 'continent_sa' && it.club.continentId === 'continent_eu';
+    }, 'EUROPE');
+    takePred(function (it) {
+      return current && current.continentId === 'continent_eu' && it.club.continentId === 'continent_sa';
+    }, 'SOUTH_AMERICA');
     takePred(function (it) {
       return current && it.club.countryId !== current.countryId;
-    });
+    }, null);
     while (picked.length < count) {
-      if (!takePred(null)) break;
+      if (!takePred(null, null)) break;
     }
 
-    // Soft shuffle of final order for visual variety
     picked = rng.shuffle(picked);
 
     return picked.map(function (item) {
@@ -807,7 +950,8 @@
           region
       );
       var mins = expectedMinutesBand(state, item.club);
-      var blurb = craftOfferBlurb(state, item.club, role, world, rng);
+      var family = classifyMarketFamily(state, item.club, 'transfer', world);
+      var blurb = craftOfferBlurb(state, item.club, role, world, rng, family);
       return {
         id: 'offer_' + state.seasonIndex + '_' + item.club.id,
         kind: 'transfer',
@@ -820,6 +964,7 @@
         level: item.club.level,
         tier: clubTier(item.club, world),
         minutesLabel: mins.label,
+        marketFamily: family,
         blurb: blurb
       };
     });
@@ -827,7 +972,7 @@
 
   function loanEligible(state, world) {
     if (!state || state.onLoan) return false;
-    if (state.age > 26) return false;
+    if (state.age > 28) return false;
     var club = getClub(world, state.clubId);
     if (!club) return false;
     var last = state.seasonHistory && state.seasonHistory.length
@@ -835,11 +980,17 @@
       : null;
     var apps = last ? last.appearances || 0 : 0;
     var level = club.level || 1;
+    var grade = last ? last.performanceGrade : null;
+    if (state.age <= 19 && level >= 3) return true;
     if (state.age <= 21 && level >= 4) return true;
+    if (state.age <= 22 && level >= 3 && apps < 20) return true;
     if (state.age <= 23 && level >= 4 && apps < 18) return true;
     if (state.age <= 24 && level >= 5 && apps < 20) return true;
-    if (state.arcFlags && state.arcFlags.crisis && state.age <= 25 && level >= 3) return true;
-    if (state.potential >= 88 && level >= 4 && apps < 16 && state.age <= 23) return true;
+    if (state.age <= 25 && level >= 3 && apps < 14) return true;
+    if (state.age <= 26 && state.form <= 3 && level >= 3) return true;
+    if (state.arcFlags && state.arcFlags.crisis && state.age <= 27 && level >= 3) return true;
+    if (state.potential >= 86 && level >= 4 && apps < 16 && state.age <= 24) return true;
+    if (grade === 'D' && apps < 16 && state.age <= 25 && level >= 3) return true;
     return false;
   }
 
@@ -855,7 +1006,6 @@
       if (lv >= (current.level || 1)) return false;
       if (lv > 3) return false;
       if (lv < 2) return false;
-      // Prefer same country / continent
       if (c.countryId === current.countryId) return true;
       if (country && c.continentId === country.continentId) return true;
       return false;
@@ -879,7 +1029,7 @@
       return scoreB - scoreA;
     });
 
-    var pool = rng.shuffle(candidates.slice(0, Math.min(10, candidates.length)));
+    var pool = rng.shuffle(candidates.slice(0, Math.min(12, candidates.length)));
     var count = rng.int(1, Math.min(maxOffers, pool.length));
     var out = [];
     for (var i = 0; i < pool.length && out.length < count; i++) {
@@ -888,6 +1038,7 @@
         { rating: state.rating, potential: state.potential, age: state.age, onLoan: true },
         club
       );
+      var blurb = craftOfferBlurb(state, club, 'titular', world, rng, 'LOAN');
       out.push({
         id: 'loan_' + state.seasonIndex + '_' + club.id,
         kind: 'loan',
@@ -900,7 +1051,8 @@
         level: club.level,
         tier: clubTier(club, world),
         minutesLabel: mins.label,
-        blurb: 'Cesión para sumar minutos y volver más fuerte.'
+        marketFamily: 'LOAN',
+        blurb: blurb
       });
     }
     return out;
@@ -914,19 +1066,21 @@
     var apps = last ? last.appearances || 0 : 22;
     var recentShapes = state.recentMarketShapes || [];
     var lastShape = recentShapes[0] || null;
+    var recentFamilies = state.recentMarketFamilies || [];
 
-    // Vary intended transfer count by grade + anti-repeat
+    // 0–4 transfer offers by context
     var wantTx = 0;
-    if (lastGrade === 'S') wantTx = rng.int(2, 3);
+    if (lastGrade === 'S') wantTx = rng.int(2, 4);
     else if (lastGrade === 'A') wantTx = rng.int(1, 3);
-    else if (lastGrade === 'B') wantTx = rng.int(1, 2);
-    else if (lastGrade === 'C') wantTx = rng.bool(0.55) ? 1 : 0;
-    else wantTx = rng.bool(0.22) ? 1 : 0;
+    else if (lastGrade === 'B') wantTx = rng.bool(0.72) ? rng.int(1, 2) : 0;
+    else if (lastGrade === 'C') wantTx = rng.bool(0.48) ? 1 : 0;
+    else wantTx = rng.bool(0.18) ? 1 : 0;
 
-    if (lastShape === 'tx:' + wantTx && rng.bool(0.7)) {
-      wantTx = Math.max(0, Math.min(3, wantTx + (rng.bool(0.5) ? 1 : -1)));
+    if (lastShape === 'tx:' + wantTx && rng.bool(0.65)) {
+      wantTx = Math.max(0, Math.min(4, wantTx + (rng.bool(0.5) ? 1 : -1)));
     }
-    if (lastShape === 'cold' && lastGrade !== 'D' && rng.bool(0.55)) wantTx = Math.max(wantTx, 1);
+    if (lastShape === 'cold' && lastGrade !== 'D' && rng.bool(0.5)) wantTx = Math.max(wantTx, 1);
+    if (state.age >= 34) wantTx = Math.min(wantTx, 1);
 
     var transfers =
       wantTx > 0
@@ -936,24 +1090,30 @@
     var loans = [];
     var eligible = loanEligible(state, world);
     var forceLoan =
-      eligible && (apps < 16 || (state.arcFlags && state.arcFlags.crisis) || (lastGrade === 'D' && apps < 20));
+      eligible &&
+      (apps < 16 ||
+        (state.arcFlags && state.arcFlags.crisis) ||
+        (lastGrade === 'D' && apps < 20) ||
+        (state.age <= 20 && (getClub(world, state.clubId) || {}).level >= 4));
     var wantLoan = false;
     if (eligible) {
       if (forceLoan) wantLoan = true;
-      else if (!transfers.length && rng.bool(0.65)) wantLoan = true;
-      else if (transfers.length && rng.bool(0.28)) wantLoan = true;
-      else if (lastShape && String(lastShape).indexOf('loan') === -1 && rng.bool(0.35)) wantLoan = true;
+      else if (!transfers.length && rng.bool(0.72)) wantLoan = true;
+      else if (transfers.length && rng.bool(0.42)) wantLoan = true;
+      else if (lastShape && String(lastShape).indexOf('loan') === -1 && rng.bool(0.48)) wantLoan = true;
+      else if (state.age <= 22 && rng.bool(0.35)) wantLoan = true;
     }
-    // Anti-repeat: if last was loan-heavy and we have transfers, sometimes skip loan
-    if (wantLoan && lastShape && String(lastShape).indexOf('loan') === 0 && transfers.length && rng.bool(0.55)) {
+    if (wantLoan && lastShape && String(lastShape).indexOf('loan') === 0 && transfers.length && rng.bool(0.45)) {
+      wantLoan = false;
+    }
+    if (wantLoan && recentFamilies[0] === 'LOAN' && transfers.length && rng.bool(0.55)) {
       wantLoan = false;
     }
     if (wantLoan) {
       loans = generateLoanOffers(state, world, rng.fork('loan'), forceLoan && !transfers.length ? 2 : 1);
     }
 
-    // Soften cold markets: empty packet still rolls once more for B+ form
-    if (!transfers.length && !loans.length && lastGrade !== 'D' && rng.bool(0.4)) {
+    if (!transfers.length && !loans.length && lastGrade !== 'D' && rng.bool(0.38)) {
       transfers = generateOffers(state, world, rng.fork('txRetry'), 1, lastGrade === 'A' || lastGrade === 'S');
     }
 
@@ -968,14 +1128,24 @@
 
     state.recentMarketShapes = [shape].concat(recentShapes).slice(0, 6);
 
+    var families = transfers
+      .concat(loans)
+      .map(function (o) {
+        return o.marketFamily || (o.kind === 'loan' ? 'LOAN' : 'LATERAL');
+      })
+      .filter(Boolean);
+    if (!families.length) families = ['NO_OFFER'];
+    state.recentMarketFamilies = families.concat(recentFamilies).slice(0, 10);
+
     return {
       transfers: transfers,
       loans: loans,
       offers: transfers.concat(loans),
       canStay: true,
       canLoan: eligible,
-      cold: !transfers.length,
-      shape: shape
+      cold: !transfers.length && !loans.length,
+      shape: shape,
+      families: families
     };
   }
 
@@ -1149,10 +1319,11 @@
     else if (grade === 'D' && apps < 12 && (state.confidence || 55) <= 35) crisisChance = 0.18;
     if (crisisChance > 0 && rng.bool(crisisChance)) flags.crisis = true;
 
-    // Comeback after adversity (even one deep D season can set up a return)
+    // Comeback after adversity — rare and satisfying
     if (prevBad >= 1 && (good || grade === 'B') && apps >= 14) {
-      var comeP = prevBad >= 2 ? (good ? 0.6 : 0.42) : good ? 0.35 : 0.22;
-      if (rng.bool(NS.State.clamp(comeP, 0.18, 0.9))) flags.comeback = true;
+      var comeP = prevBad >= 2 ? (good ? 0.38 : 0.22) : good ? 0.18 : 0.08;
+      if ((state.confidence || 55) <= 40) comeP += 0.06;
+      if (rng.bool(NS.State.clamp(comeP, 0.06, 0.55))) flags.comeback = true;
     }
 
     if (flags.breakout) {
@@ -1223,6 +1394,8 @@
     updateReputation: updateReputation,
     marketOpenChance: marketOpenChance,
     regionMarketWeight: regionMarketWeight,
-    maxTierStep: maxTierStep
+    maxTierStep: maxTierStep,
+    classifyMarketFamily: classifyMarketFamily,
+    craftOfferBlurb: craftOfferBlurb
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

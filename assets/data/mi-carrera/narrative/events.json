@@ -275,5 +275,287 @@
       "transferBias": 0.15,
       "moneyDelta": -100000
     }
+  },
+  {
+    "id": "ev_lost_place",
+    "category": "club",
+    "title": "Perdiste el puesto",
+    "body": "El entrenador elige a otro. Tus minutos se evaporan.",
+    "weightBase": 9,
+    "cooldownSeasons": 3,
+    "rarity": "uncommon",
+    "tags": [
+      "club",
+      "minutes",
+      "crisis"
+    ],
+    "conditions": {
+      "minAge": 18,
+      "minClubLevel": 3,
+      "maxForm": 5
+    },
+    "effects": {
+      "minutesBias": -0.22,
+      "clubRelationDelta": -8,
+      "moraleDelta": -8,
+      "formDelta": -1,
+      "confidenceDelta": -6
+    }
+  },
+  {
+    "id": "ev_breakout_run",
+    "category": "form",
+    "title": "Explotaste",
+    "body": "De repente cada balón te encuentra. El vestuario lo nota.",
+    "weightBase": 7,
+    "cooldownSeasons": 4,
+    "rarity": "rare",
+    "tags": [
+      "form",
+      "breakout"
+    ],
+    "conditions": {
+      "minAge": 17,
+      "maxAge": 24,
+      "maxRating": 78,
+      "minForm": 7
+    },
+    "effects": {
+      "formDelta": 2,
+      "minutesBias": 0.12,
+      "reputationDelta": 6,
+      "popularityDelta": 8,
+      "transferBias": 0.2,
+      "confidenceDelta": 8
+    }
+  },
+  {
+    "id": "ev_called_up",
+    "category": "selection",
+    "title": "Te llamaron",
+    "body": "La selección te suma al plantel. Es otro nivel.",
+    "weightBase": 8,
+    "cooldownSeasons": 3,
+    "rarity": "uncommon",
+    "tags": [
+      "national",
+      "selection"
+    ],
+    "conditions": {
+      "minRating": 74,
+      "minForm": 5,
+      "minReputation": 35
+    },
+    "effects": {
+      "nationalCapsDelta": 3,
+      "prestigeDelta": 3,
+      "popularityDelta": 6,
+      "fitnessDelta": -4,
+      "confidenceDelta": 5
+    }
+  },
+  {
+    "id": "ev_coach_change",
+    "category": "club",
+    "title": "Cambió el entrenador",
+    "body": "Nuevo DT. Nuevas reglas. Tu rol puede cambiar.",
+    "weightBase": 8,
+    "cooldownSeasons": 3,
+    "rarity": "uncommon",
+    "tags": [
+      "coach",
+      "club"
+    ],
+    "conditions": {
+      "minAge": 18
+    },
+    "effects": {
+      "clubRelationDelta": 0,
+      "minutesBias": 0,
+      "moraleDelta": 2
+    }
+  },
+  {
+    "id": "ev_became_idol",
+    "category": "legacy",
+    "title": "Te convertiste en ídolo",
+    "body": "La hinchada te canta. El club gira alrededor tuyo.",
+    "weightBase": 3,
+    "cooldownSeasons": 8,
+    "rarity": "legendary",
+    "tags": [
+      "legacy",
+      "idol"
+    ],
+    "conditions": {
+      "minAge": 23,
+      "minYearsAtClub": 4,
+      "minClubRelation": 70,
+      "minRating": 76
+    },
+    "effects": {
+      "popularityDelta": 12,
+      "prestigeDelta": 8,
+      "reputationDelta": 10,
+      "clubRelationDelta": 10,
+      "moraleDelta": 10
+    }
+  },
+  {
+    "id": "ev_vestuario",
+    "category": "club",
+    "title": "Ruido en el vestuario",
+    "body": "Bandos, miradas y una pelea que no sale en las cámaras.",
+    "weightBase": 6,
+    "cooldownSeasons": 3,
+    "rarity": "uncommon",
+    "tags": [
+      "club",
+      "relation"
+    ],
+    "conditions": {
+      "minAge": 19,
+      "maxClubRelation": 55
+    },
+    "effects": {
+      "clubRelationDelta": -10,
+      "moraleDelta": -6,
+      "minutesBias": -0.06
+    }
+  },
+  {
+    "id": "ev_back_in_xi",
+    "category": "form",
+    "title": "Volviste al once",
+    "body": "El DT te mira de nuevo. Estás en la lista de titulares.",
+    "weightBase": 7,
+    "cooldownSeasons": 3,
+    "rarity": "uncommon",
+    "tags": [
+      "form",
+      "minutes",
+      "comeback"
+    ],
+    "conditions": {
+      "minAge": 18,
+      "maxForm": 5,
+      "minYearsAtClub": 1
+    },
+    "effects": {
+      "minutesBias": 0.18,
+      "formDelta": 1,
+      "confidenceDelta": 7,
+      "moraleDelta": 5
+    }
+  },
+  {
+    "id": "ev_pressure_cooker",
+    "category": "crisis",
+    "title": "La presión te come",
+    "body": "Cada error pesa el doble. El entorno no perdona.",
+    "weightBase": 6,
+    "cooldownSeasons": 3,
+    "rarity": "uncommon",
+    "tags": [
+      "crisis",
+      "press"
+    ],
+    "conditions": {
+      "minClubLevel": 4,
+      "minPopularity": 40
+    },
+    "effects": {
+      "formDelta": -1,
+      "confidenceDelta": -8,
+      "moraleDelta": -6,
+      "minutesBias": -0.05
+    }
+  },
+  {
+    "id": "ev_loan_rumor",
+    "category": "market",
+    "title": "Suena una cesión",
+    "body": "El club evalúa mandarte a jugar minutos afuera.",
+    "weightBase": 7,
+    "cooldownSeasons": 2,
+    "rarity": "uncommon",
+    "tags": [
+      "market",
+      "loan"
+    ],
+    "conditions": {
+      "minAge": 17,
+      "maxAge": 24,
+      "minClubLevel": 4
+    },
+    "effects": {
+      "transferBias": 0.15,
+      "moraleDelta": -2
+    }
+  },
+  {
+    "id": "ev_home_pull",
+    "category": "market",
+    "title": "Te buscan de casa",
+    "body": "Un club de tu país quiere recuperarte.",
+    "weightBase": 6,
+    "cooldownSeasons": 3,
+    "rarity": "uncommon",
+    "tags": [
+      "market",
+      "home"
+    ],
+    "conditions": {
+      "minAge": 22,
+      "minReputation": 40
+    },
+    "effects": {
+      "transferBias": 0.18,
+      "popularityDelta": 3
+    }
+  },
+  {
+    "id": "ev_quiet_season",
+    "category": "career",
+    "title": "Temporada sin ruido",
+    "body": "Nada estalla. Solo trabajo, partidos y concentración.",
+    "weightBase": 5,
+    "cooldownSeasons": 2,
+    "rarity": "common",
+    "tags": [
+      "career",
+      "quiet"
+    ],
+    "conditions": {
+      "minAge": 17
+    },
+    "effects": {
+      "moraleDelta": 2,
+      "fitnessDelta": 3
+    }
+  },
+  {
+    "id": "ev_late_bloom",
+    "category": "comeback",
+    "title": "Floreces tarde",
+    "body": "A esta edad muchos bajan. Vos estás subiendo.",
+    "weightBase": 4,
+    "cooldownSeasons": 5,
+    "rarity": "rare",
+    "tags": [
+      "comeback",
+      "form"
+    ],
+    "conditions": {
+      "minAge": 27,
+      "maxAge": 32,
+      "minForm": 6
+    },
+    "effects": {
+      "formDelta": 1,
+      "ratingDelta": 1,
+      "confidenceDelta": 6,
+      "transferBias": 0.12
+    }
   }
 ]

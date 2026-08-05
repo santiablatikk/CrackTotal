@@ -861,7 +861,7 @@
 
     var narrative =
       UI.Narrative && UI.Narrative.seasonNarrative
-        ? UI.Narrative.seasonNarrative(season, state)
+        ? UI.Narrative.seasonNarrative(season, state, engine && engine.world)
         : seasonMomentLine(season);
 
     var fs =
