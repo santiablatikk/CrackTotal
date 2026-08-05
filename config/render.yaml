@@ -1,18 +1,28 @@
+# Mirror of root render.yaml for docs/config reference.
+# Source of truth for Blueprint: /render.yaml
 services:
   - type: web
     name: cracktotal
-    env: node
+    runtime: node
     plan: free
-    buildCommand: npm install
+    buildCommand: npm run build
     startCommand: npm start
+    healthCheckPath: /
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 8081
     domains:
       - cracktotal.com
     headers:
+      - path: /sw.js
+        name: Cache-Control
+        value: "no-cache, no-store, must-revalidate"
+      - path: /*.html
+        name: Cache-Control
+        value: "no-cache"
+      - path: /
+        name: Cache-Control
+        value: "no-cache"
       - path: /*
         name: X-Frame-Options
         value: DENY
@@ -22,13 +32,10 @@ services:
       - path: /*
         name: Referrer-Policy
         value: strict-origin-when-cross-origin
-      - path: /*
-        name: Permissions-Policy
-        value: geolocation=(), microphone=(), camera=()
     redirects:
       - source: /index.html
         destination: /
         type: permanent
       - source: www.cracktotal.com/*
         destination: https://cracktotal.com/:splat
-        type: permanent 
+        type: permanent

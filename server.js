@@ -174,8 +174,15 @@ const server = http.createServer((req, res) => {
                 const canonicalPath = req.url === '/' || req.url === '/index.html' ? '/' : req.url;
                 headers['X-Canonical-URL'] = `https://cracktotal.com${canonicalPath}`;
                 headers['Cache-Control'] = 'no-cache';
+            } else if (pathname === '/sw.js' || filePath.endsWith(`${path.sep}sw.js`)) {
+                // Service Worker must revalidate so APP_VERSION bumps reach clients
+                headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+                headers['Pragma'] = 'no-cache';
+            } else if (mimeType === 'text/javascript' || mimeType === 'text/css') {
+                // Short CDN/browser cache; query ?v= busting + SW network-first handle updates
+                headers['Cache-Control'] = 'public, max-age=86400, must-revalidate';
             } else {
-                headers['Cache-Control'] = 'public, max-age=31536000'; // 1 año para archivos estáticos
+                headers['Cache-Control'] = 'public, max-age=31536000'; // 1 año para imágenes/fonts
             }
             
             res.writeHead(200, headers);

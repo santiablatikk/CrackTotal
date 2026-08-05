@@ -1,16 +1,31 @@
+# Crack Total — Render Blueprint (production)
+# Live site: https://cracktotal.com (Render + Cloudflare)
+# Auto-deploy: connect this repo in Render with Auto-Deploy on `main`,
+# or set GitHub secret RENDER_DEPLOY_HOOK (Deploy Hook URL from Render).
 services:
   - type: web
-    name: crack-total
-    env: node
+    name: cracktotal
+    runtime: node
     plan: free
+    region: oregon
     buildCommand: npm run build
     startCommand: npm start
+    healthCheckPath: /
     envVars:
       - key: NODE_ENV
         value: production
-    healthCheckPath: /
-    staticPublishPath: ./
+    domains:
+      - cracktotal.com
     headers:
+      - path: /sw.js
+        name: Cache-Control
+        value: "no-cache, no-store, must-revalidate"
+      - path: /*.html
+        name: Cache-Control
+        value: "no-cache"
+      - path: /
+        name: Cache-Control
+        value: "no-cache"
       - path: /*
         name: X-Frame-Options
         value: DENY
@@ -18,12 +33,12 @@ services:
         name: X-Content-Type-Options
         value: nosniff
       - path: /*
-        name: X-XSS-Protection
-        value: "1; mode=block"
-      - path: /assets/*
-        name: Cache-Control
-        value: "public, max-age=31536000"
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html 
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+    redirects:
+      - source: /index.html
+        destination: /
+        type: permanent
+      - source: www.cracktotal.com/*
+        destination: https://cracktotal.com/:splat
+        type: permanent

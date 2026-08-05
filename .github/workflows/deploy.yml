@@ -1,0 +1,44 @@
+name: Deploy production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: true
+
+jobs:
+  validate-and-deploy:
+    name: Validate + deploy to Render
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate deploy surface
+        run: npm run validate
+
+      - name: Trigger Render deploy hook
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: |
+          set -e
+          if [ -z "$RENDER_DEPLOY_HOOK" ]; then
+            echo "RENDER_DEPLOY_HOOK secret is not set."
+            echo "If Render Auto-Deploy is already enabled for main, push alone is enough."
+            echo "Otherwise: Render Dashboard → Service → Settings → Deploy Hook → add URL as GitHub secret RENDER_DEPLOY_HOOK."
+            exit 0
+          fi
+          echo "Triggering Render deploy..."
+          curl -fsS -X POST "$RENDER_DEPLOY_HOOK"
+          echo ""
+          echo "Deploy hook accepted."
