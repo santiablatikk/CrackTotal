@@ -61,6 +61,21 @@
     var result = null;
     var bridge = root.CrackTotalProgressBridge;
     var progress = root.CrackTotalProgress;
+    var hasApi =
+      (bridge && typeof bridge.reportMatch === 'function') ||
+      (progress && typeof progress.recordMatch === 'function');
+
+    if (!hasApi) {
+      return {
+        granted: false,
+        duplicate: false,
+        skipped: true,
+        rewardId: id,
+        xpEstimate: 0,
+        unlocked: [],
+        message: 'Progreso no disponible en este entorno'
+      };
+    }
 
     var payload = {
       id: id,
@@ -83,10 +98,22 @@
       }
     };
 
-    if (bridge && typeof bridge.reportMatch === 'function') {
-      result = bridge.reportMatch(payload);
-    } else if (progress && typeof progress.recordMatch === 'function') {
-      result = progress.recordMatch(payload);
+    try {
+      if (bridge && typeof bridge.reportMatch === 'function') {
+        result = bridge.reportMatch(payload);
+      } else {
+        result = progress.recordMatch(payload);
+      }
+    } catch (err) {
+      return {
+        granted: false,
+        duplicate: false,
+        error: true,
+        rewardId: id,
+        xpEstimate: 0,
+        unlocked: [],
+        message: 'No se pudo registrar la recompensa'
+      };
     }
 
     markRewarded(id);
@@ -119,17 +146,26 @@
             .join('') +
           '</ul>'
         : '';
+    var body;
+    if (reward.duplicate) {
+      body = '<p class="mc-muted">Ya registramos esta carrera. No se duplicó XP.</p>';
+    } else if (reward.skipped || reward.error) {
+      body = '<p class="mc-muted">' + F.escapeHtml(reward.message) + '</p>';
+    } else if (reward.granted) {
+      body =
+        '<p><strong>+' +
+        reward.xpEstimate +
+        ' XP</strong> estimada · ' +
+        F.escapeHtml(reward.message) +
+        '</p>';
+    } else {
+      body = '<p class="mc-muted">' + F.escapeHtml(reward.message || 'Sin cambios de XP.') + '</p>';
+    }
     return (
       '<section class="ct-card mc-xp mc-reveal" aria-labelledby="mc-xp-title">' +
       '<p class="mc-kicker">Crack Total Progress</p>' +
       '<h2 id="mc-xp-title">XP ganada</h2>' +
-      (reward.duplicate
-        ? '<p class="mc-muted">Ya registramos esta carrera. No se duplicó XP.</p>'
-        : '<p><strong>+' +
-          reward.xpEstimate +
-          ' XP</strong> estimada · ' +
-          F.escapeHtml(reward.message) +
-          '</p>') +
+      body +
       unlocked +
       '</section>'
     );

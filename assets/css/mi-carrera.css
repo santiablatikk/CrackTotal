@@ -400,6 +400,8 @@ body.mi-carrera-body.ct-ds .breadcrumb-item + .breadcrumb-item::before {
     font-size: clamp(1.8rem, 5vw, 2.4rem);
     letter-spacing: var(--ct-letter-tight);
     text-transform: uppercase;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .mc-player-card__ratings {
@@ -460,6 +462,8 @@ body.mi-carrera-body.ct-ds .breadcrumb-item + .breadcrumb-item::before {
     font-size: clamp(1.4rem, 4vw, 2rem);
     letter-spacing: var(--ct-letter-tight);
     text-transform: uppercase;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .mc-season-top p {
@@ -574,6 +578,16 @@ body.mi-carrera-body.ct-ds .breadcrumb-item + .breadcrumb-item::before {
     border-radius: var(--ct-radius-md);
     border: 1px solid var(--ct-line);
     background: rgba(0, 0, 0, 0.18);
+}
+
+@media (max-width: 720px) {
+    .mc-compare {
+        grid-template-columns: 1fr;
+    }
+
+    .mc-compare__vs {
+        justify-self: center;
+    }
 }
 
 .mc-compare__col {
@@ -907,6 +921,8 @@ body.mi-carrera-body.ct-ds .breadcrumb-item + .breadcrumb-item::before {
     letter-spacing: var(--ct-letter-tight);
     text-transform: uppercase;
     line-height: 1.05;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .mc-career-card__ages {

@@ -449,7 +449,15 @@
     };
   };
 
+  App.prototype.advanceModal = function () {
+    var next = this._pendingAfterModal;
+    this._pendingAfterModal = null;
+    UI.components.closeModal();
+    if (typeof next === 'function') next();
+  };
+
   App.prototype.onClick = function (ev) {
+    if (!ev.target || typeof ev.target.closest !== 'function') return;
     var target = ev.target.closest('[data-mc-action]');
     if (!target || !this.root.contains(target)) return;
     var action = target.getAttribute('data-mc-action');
@@ -528,7 +536,10 @@
     }
     if (action === 'choose-option') {
       var optionId = target.getAttribute('data-option');
-      var offerId = target.getAttribute('data-offer') || this.selectedOfferId;
+      var offerId = null;
+      if (optionId !== 'stay_loyal') {
+        offerId = target.getAttribute('data-offer') || this.selectedOfferId;
+      }
       this.chooseOption(optionId, offerId);
     }
   };
@@ -556,18 +567,20 @@
     if (ev.key === 'Escape') {
       var overlay = document.getElementById('mc-modal-root');
       if (overlay && overlay.classList.contains('is-open')) {
-        if (this._pendingAfterModal) return;
+        if (this._pendingAfterModal) {
+          ev.preventDefault();
+          this.advanceModal();
+          return;
+        }
         UI.components.closeModal();
       }
     }
   };
 
   App.prototype.onModalClick = function (ev) {
+    if (!ev.target || typeof ev.target.closest !== 'function') return;
     var btn = ev.target.closest('[data-mc-modal]');
     if (!btn) {
-      if (ev.target.id === 'mc-modal-root') {
-        return;
-      }
       return;
     }
     var action = btn.getAttribute('data-mc-modal');
@@ -581,15 +594,15 @@
       return;
     }
     if (action === 'after-event' || action === 'continue-season' || action === 'show-retire') {
-      UI.components.closeModal();
-      var next = this._pendingAfterModal;
-      this._pendingAfterModal = null;
-      if (typeof next === 'function') next();
+      this.advanceModal();
     }
   };
 
   UI.App = App;
   UI.start = function (selector) {
+    if (NS._uiApp && NS._uiApp.root) {
+      return NS._uiApp;
+    }
     var app = new App();
     app.mount(selector || '#mc-app');
     NS._uiApp = app;
