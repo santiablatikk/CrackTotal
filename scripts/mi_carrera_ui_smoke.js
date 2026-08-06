@@ -204,10 +204,9 @@ function main() {
     },
     data: data
   });
-  assert(createHtml.indexOf('mc-create-preview') !== -1, 'create has live preview');
   assert(createHtml.indexOf('mc-create-flow') !== -1, 'create stepped flow');
-  assert(createHtml.indexOf('Tisan') !== -1, 'preview shows draft name');
-  assert(createHtml.indexOf('OVR') !== -1, 'preview shows OVR');
+  assert(createHtml.indexOf('Tisan') !== -1, 'create shows draft name');
+  assert(createHtml.indexOf('mc-player-name') !== -1, 'create has name input');
 
   const marketHtml = MC.UI.screens.market({
     state: { pendingOffers: [], player: { name: 'Tisan' }, clubId: 'club_boca' },

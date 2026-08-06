@@ -41,21 +41,12 @@
       (state.seasonHistory.length &&
         state.seasonHistory[state.seasonHistory.length - 1].clubId) ||
       state.clubId;
-    var initialClub = engine.getClub(initialId);
-    var finalClub = engine.getClub(finalId);
-    var clubs = topClubs(state, engine, 3);
     var analysis =
       NS.Rules && NS.Rules.analyzeCareer ? NS.Rules.analyzeCareer(state, engine.world) : null;
     var category = state.careerCategory || NS.Scoring.categoryFromScore(state.careerScore || 0);
     var achievements = UI.Legacy
       ? UI.Legacy.detectAchievements(state, engine.world)
       : state.careerFlags || [];
-    var titleSummary = NS.Scoring.summarizeTitles
-      ? NS.Scoring.summarizeTitles(state)
-      : [];
-    var awardSummary = NS.Awards && NS.Awards.summarizeAwards ? NS.Awards.summarizeAwards(state) : [];
-    var highlightTitles = titleSummary.slice(0, 6);
-    var highlightAwards = awardSummary.slice(0, 6);
 
     return {
       playerName: state.player.name,
@@ -70,24 +61,17 @@
         NS.Rules && NS.Rules.clubTimelineSummary
           ? NS.Rules.clubTimelineSummary(state, engine.world)
           : [],
-      initialClub: initialClub,
-      finalClub: finalClub,
-      topClubs: clubs,
+      initialClub: engine.getClub(initialId),
+      finalClub: engine.getClub(finalId),
+      topClubs: topClubs(state, engine, 3),
       appearances: agg.games,
       goals: agg.goals,
       assists: agg.assists,
       goalsAgainst: agg.goalsAgainst || 0,
       cleanSheets: agg.cleanSheets || 0,
       titles: agg.titles,
-      titleSummary: titleSummary,
-      highlightTitles: highlightTitles,
       awards: (state.awards || []).length,
-      awardSummary: awardSummary,
-      highlightAwards: highlightAwards,
-      records: (state.records || []).length,
-      moments: (state.moments || []).length,
       nationalCaps: state.nationalCaps || 0,
-      nationalGoals: state.nationalGoals || 0,
       peakRating: state.peakRating,
       peakMarketValue: state.peakMarketValue || state.marketValue || 0,
       score: state.careerScore,
@@ -109,93 +93,42 @@
     };
   }
 
-  function renderHighlights(vm) {
-    var bits = [];
-    (vm.highlightAwards || []).forEach(function (a) {
-      bits.push(
-        '<span class="mc-career-card__chip mc-career-card__chip--award">' +
-          F().escapeHtml((a.shortName || a.name) + ' ×' + a.count) +
-          '</span>'
-      );
-    });
-    (vm.highlightTitles || []).forEach(function (t) {
-      bits.push(
-        '<span class="mc-career-card__chip mc-career-card__chip--title">' +
-          F().escapeHtml((t.name || t.competitionId) + ' ×' + t.count) +
-          '</span>'
-      );
-    });
-    if (vm.nationalCaps) {
-      bits.push(
-        '<span class="mc-career-card__chip mc-career-card__chip--nt">' +
-          F().escapeHtml('Selección ' + vm.nationalCaps + ' caps') +
-          '</span>'
-      );
-    }
-    if (vm.records) {
-      bits.push(
-        '<span class="mc-career-card__chip mc-career-card__chip--record">' +
-          F().escapeHtml('Récords ×' + vm.records) +
-          '</span>'
-      );
-    }
-    if (!bits.length) return '';
-    return '<div class="mc-career-card__highlights">' + bits.join('') + '</div>';
-  }
-
   function renderHtml(vm) {
-    var flag = UI.components.countryFlagHtml(vm.country, 'lg');
+    var flag = UI.components.countryFlagHtml(vm.country, 'md');
     var badges = (vm.topClubs || [])
       .map(function (c) {
-        return (
-          '<span class="mc-card-club">' +
-          UI.components.clubBadgeHtml(c, 'sm') +
-          '<em>' +
-          F().escapeHtml(c.shortName || c.name) +
-          '</em></span>'
-        );
-      })
-      .join('');
-
-    var ach = (vm.achievements || [])
-      .slice(0, 6)
-      .map(function (a) {
-        return '<span class="ct-badge ct-badge--primary">' + F().escapeHtml(a.label || a.id) + '</span>';
+        return UI.components.clubBadgeHtml(c, 'sm');
       })
       .join('');
 
     return (
-      '<article class="mc-career-card" aria-label="Career Card de ' +
+      '<article class="mc-card mc-career-card" aria-label="Career Card de ' +
       F().escapeHtml(vm.playerName) +
       '">' +
-      '<div class="mc-career-card__glow" aria-hidden="true"></div>' +
-      '<header class="mc-career-card__header">' +
-      '<div class="mc-career-card__identity">' +
+      '<header class="mc-card__head">' +
       flag +
       '<div>' +
-      '<p class="mc-kicker">' +
+      '<p class="mc-card__kicker">' +
       F().escapeHtml(vm.emergentLabel || vm.positionLabel || vm.position) +
       '</p>' +
-      '<h2 class="mc-career-card__name">' +
+      '<h2 class="mc-card__name">' +
       F().escapeHtml(vm.playerName) +
       '</h2>' +
-      '<p class="mc-career-card__ages">' +
+      '<p class="mc-card__ages">' +
       vm.ageStart +
       ' → ' +
       vm.ageEnd +
       ' años</p>' +
-      (vm.storyPhrase
-        ? '<p class="mc-career-card__story">' + F().escapeHtml(vm.storyPhrase) + '</p>'
-        : '') +
-      '</div></div>' +
-      '<div class="mc-career-card__scoreblock">' +
-      '<span class="mc-career-card__score">' +
+      '</div>' +
+      '<div class="mc-card__score"><strong>' +
       (vm.score != null ? Number(vm.score).toFixed(1) : '—') +
-      '</span>' +
-      '<strong>' +
+      '</strong><span>' +
       F().escapeHtml((vm.category && vm.category.label) || 'Carrera') +
-      '</strong></div></header>' +
-      '<div class="mc-career-card__clubs">' +
+      '</span></div></header>' +
+      (vm.storyPhrase
+        ? '<p class="mc-card__story mc-career-card__story">' + F().escapeHtml(vm.storyPhrase) + '</p>'
+        : '') +
+      '<div class="mc-card__clubs">' +
       '<div><span>Debut</span><strong>' +
       F().escapeHtml(
         vm.initialClub ? vm.initialClub.shortName || vm.initialClub.name : '—'
@@ -204,9 +137,8 @@
       '<div><span>Retiro</span><strong>' +
       F().escapeHtml(vm.finalClub ? vm.finalClub.shortName || vm.finalClub.name : '—') +
       '</strong></div></div>' +
-      (badges ? '<div class="mc-career-card__badge-row">' + badges + '</div>' : '') +
-      renderHighlights(vm) +
-      '<div class="mc-career-card__stats mc-career-card__stats--story">' +
+      (badges ? '<div class="mc-card__badges">' + badges + '</div>' : '') +
+      '<div class="mc-card__stats mc-career-card__stats">' +
       '<div><span>PJ</span><strong>' +
       vm.appearances +
       '</strong></div>' +
@@ -229,8 +161,7 @@
       '<div><span>Pico</span><strong class="is-accent">' +
       vm.peakRating +
       '</strong></div></div>' +
-      (ach ? '<div class="mc-career-card__ach">' + ach + '</div>' : '') +
-      '<footer class="mc-career-card__footer">Crack Total · Mi Carrera</footer>' +
+      '<footer class="mc-card__foot">Crack Total · Mi Carrera</footer>' +
       '</article>'
     );
   }
@@ -246,100 +177,52 @@
   function renderSvg(vm) {
     var score = vm.score != null ? Number(vm.score).toFixed(1) : '—';
     var category = (vm.category && vm.category.label) || 'Carrera';
-    var flag = vm.country ? String(vm.country.iso2 || '').toUpperCase() : '';
     var clubLine =
       (vm.initialClub ? vm.initialClub.shortName : '?') +
       ' → ' +
       (vm.finalClub ? vm.finalClub.shortName : '?');
-
     return (
-      '<svg xmlns="http://www.w3.org/2000/svg" width="390" height="694" viewBox="0 0 390 694" role="img" aria-label="Career Card">' +
-      '<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">' +
-      '<stop offset="0%" stop-color="#0b1524"/><stop offset="100%" stop-color="#050b14"/></linearGradient>' +
-      '<linearGradient id="line" x1="0" y1="0" x2="1" y2="0">' +
-      '<stop offset="0%" stop-color="#79f2a6"/><stop offset="50%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#fbbf24"/>' +
-      '</linearGradient></defs>' +
-      '<rect width="390" height="694" rx="28" fill="url(#bg)"/>' +
-      '<rect x="0" y="0" width="390" height="6" fill="url(#line)"/>' +
-      '<text x="28" y="48" fill="#79f2a6" font-family="Montserrat, Arial" font-size="12" font-weight="800" letter-spacing="2">CRACK TOTAL</text>' +
-      '<text x="28" y="92" fill="#f7f9fc" font-family="Oswald, Arial" font-size="42" font-weight="700">' +
+      '<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350">' +
+      '<rect width="1080" height="1350" fill="#070b10"/>' +
+      '<text x="80" y="160" fill="#79f2a6" font-size="36" font-family="Arial">' +
+      escapeXml(vm.emergentLabel || vm.position) +
+      '</text>' +
+      '<text x="80" y="280" fill="#fff" font-size="72" font-family="Arial" font-weight="700">' +
       escapeXml(vm.playerName) +
       '</text>' +
-      '<text x="28" y="122" fill="#aebbd0" font-family="Montserrat, Arial" font-size="14">' +
-      escapeXml(flag + ' · ' + vm.position + ' · ' + (vm.archetypeName || '')) +
+      '<text x="80" y="360" fill="#aebbd0" font-size="36" font-family="Arial">' +
+      vm.ageStart +
+      ' → ' +
+      vm.ageEnd +
+      ' · ' +
+      escapeXml(clubLine) +
       '</text>' +
-      '<text x="28" y="148" fill="#8493aa" font-family="Montserrat, Arial" font-size="13">' +
-      escapeXml(vm.ageStart + ' → ' + vm.ageEnd + ' · ' + clubLine) +
+      '<text x="80" y="480" fill="#fff" font-size="40" font-family="Arial">' +
+      escapeXml(vm.storyPhrase || '') +
       '</text>' +
-      '<text x="300" y="100" text-anchor="middle" fill="#79f2a6" font-family="Oswald, Arial" font-size="48" font-weight="700">' +
-      escapeXml(score) +
+      '<text x="80" y="640" fill="#79f2a6" font-size="96" font-family="Arial" font-weight="700">' +
+      score +
       '</text>' +
-      '<text x="300" y="124" text-anchor="middle" fill="#aebbd0" font-family="Montserrat, Arial" font-size="11" font-weight="700">' +
-      escapeXml(category.toUpperCase()) +
+      '<text x="80" y="720" fill="#aebbd0" font-size="32" font-family="Arial">' +
+      escapeXml(category) +
+      ' · Pico ' +
+      vm.peakRating +
       '</text>' +
-      '<text x="28" y="210" fill="#f7f9fc" font-family="Montserrat, Arial" font-size="16">' +
-      escapeXml(
-        F().isGoalkeeper(vm.position)
-          ? vm.appearances +
-              ' PJ · ' +
-              vm.goalsAgainst +
-              ' GC · ' +
-              vm.cleanSheets +
-              ' VI · ' +
-              vm.titles +
-              ' títulos · ' +
-              vm.awards +
-              ' premios'
-          : vm.appearances +
-              ' PJ · ' +
-              vm.goals +
-              ' G · ' +
-              vm.assists +
-              ' A · ' +
-              vm.titles +
-              ' títulos · ' +
-              vm.awards +
-              ' premios'
-      ) +
-      '</text>' +
-      '<text x="28" y="242" fill="#aebbd0" font-family="Montserrat, Arial" font-size="14">' +
-      escapeXml(
-        'Peak ' +
-          vm.peakRating +
-          ' · ' +
-          F().formatMoney(vm.peakMarketValue) +
-          ' · Sel ' +
-          vm.nationalCaps +
-          '/' +
-          vm.nationalGoals +
-          (vm.records ? ' · Récords ' + vm.records : '')
-      ) +
-      '</text>' +
-      '<text x="28" y="660" fill="#8493aa" font-family="Montserrat, Arial" font-size="12">Mi Carrera · cracktotal.com</text>' +
+      '<text x="80" y="1280" fill="#667" font-size="28" font-family="Arial">Crack Total · Mi Carrera</text>' +
       '</svg>'
     );
   }
 
-  function toDataUrl(svg) {
-    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  function render(state, engine) {
+    var vm = buildViewModel(state, engine);
+    return { html: renderHtml(vm), svg: renderSvg(vm), viewModel: vm };
   }
 
-  var CareerCardRenderer = {
+  UI.CareerCardRenderer = {
     buildViewModel: buildViewModel,
     renderHtml: renderHtml,
     renderSvg: renderSvg,
-    toDataUrl: toDataUrl,
-    render: function (state, engine) {
-      var vm = buildViewModel(state, engine);
-      return {
-        viewModel: vm,
-        html: renderHtml(vm),
-        svg: renderSvg(vm),
-        dataUrl: toDataUrl(renderSvg(vm))
-      };
-    }
+    render: render
   };
-
-  UI.CareerCardRenderer = CareerCardRenderer;
-  NS.CareerCardRenderer = CareerCardRenderer;
+  NS.CareerCardRenderer = UI.CareerCardRenderer;
 })(typeof globalThis !== 'undefined' ? globalThis : window);

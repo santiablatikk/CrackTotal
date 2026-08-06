@@ -12,24 +12,22 @@
     var flag = vm.country ? F().flagEmoji(vm.country.iso2 || vm.country.flagCode) : '';
     var category = (vm.category && vm.category.label) || 'Carrera';
     var lines = [
-      '🏆 Mi carrera en Crack Total',
+      'Mi carrera en Crack Total',
       '',
       vm.playerName,
-      flag + ' ' + vm.position + (vm.emergentLabel ? ' · ' + vm.emergentLabel : ''),
+      (vm.emergentLabel || vm.position) +
+        (flag ? ' · ' + flag : ''),
       vm.ageStart + ' → ' + vm.ageEnd + ' años',
       '',
       vm.storyPhrase || '',
       '',
-      vm.appearances + ' partidos',
+      vm.appearances + ' partidos · Pico ' + vm.peakRating,
       F().isGoalkeeper(vm.position)
-        ? vm.goalsAgainst + ' goles en contra · ' + vm.cleanSheets + ' vallas invictas'
-        : vm.goals + ' goles',
-      vm.titles + ' títulos',
+        ? vm.goalsAgainst + ' GC · ' + vm.cleanSheets + ' VI'
+        : vm.goals + ' goles · ' + vm.titles + ' títulos',
       '',
-      'Rating máximo: ' + vm.peakRating,
-      'Score: ' + (vm.score != null ? Number(vm.score).toFixed(1) : '—') + '/10',
-      '',
-      '🏅 ' + String(category).toUpperCase(),
+      String(category).toUpperCase() +
+        (vm.score != null ? ' · ' + Number(vm.score).toFixed(1) + '/10' : ''),
       '',
       '¿Podés superar mi carrera?',
       'https://cracktotal.com/mi-carrera.html'

@@ -219,13 +219,11 @@ function main() {
     }
   ];
   const queue = app.buildCelebrationQueue(historic);
-  // Product rule: only epic titles interrupt the loop (importance >= 75).
+  // Product rule: only Ballon or titles importance >= 90 interrupt.
   assert(!queue.some((q) => q.type === 'title'), 'non-epic league title stays in recap, not queue');
-  assert(queue.some((q) => q.type === 'ballon-tease'), 'queue includes ballon tease');
-  assert(queue.filter((q) => q.type === 'award').length >= 1, 'queue includes ballon award');
-  assert(queue.length <= 2, 'celebration queue capped at 2');
+  assert(queue.some((q) => q.type === 'award'), 'queue includes ballon award');
+  assert(queue.length <= 1, 'celebration queue capped at 1');
 
-  // Epic title would interrupt
   const epicSeason = Object.assign({}, historic, {
     titles: [
       {

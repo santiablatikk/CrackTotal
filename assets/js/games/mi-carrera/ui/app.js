@@ -84,10 +84,9 @@
       document.body.classList.add('mc-immersive');
       document.body.setAttribute('data-mc-screen', name);
     }
-    var stage = this.root.querySelector('.mc-scene');
+    var stage = this.root.querySelector('.mc-stage, .mc-scene');
     if (stage) {
       stage.classList.remove('is-enter');
-      // force reflow for enter animation
       void stage.offsetWidth;
       stage.classList.add('is-enter');
     }
@@ -676,16 +675,6 @@
       this.showMarket({ resetIndex: true });
       return;
     }
-    this._beatQueue = [];
-    var seasonEvents =
-      result.events && result.events.length
-        ? result.events
-        : result.event
-          ? [result.event]
-          : [];
-    seasonEvents.slice(0, 2).forEach(function (ev) {
-      if (ev) self._beatQueue.push({ type: 'event', event: ev });
-    });
     var celebrateSeason = result.season;
     if (result.block && result.seasons && result.seasons.length) {
       celebrateSeason = {
@@ -695,7 +684,7 @@
         seasonLabel: result.block.seasonLabel
       };
     }
-    this._beatQueue = this._beatQueue.concat(this.buildCelebrationQueue(celebrateSeason));
+    this._beatQueue = this.buildCelebrationQueue(celebrateSeason);
     this._onBeatsDone = function () {
       self._pendingSeasonResult = null;
       if (self.state && self.state.retired) {
@@ -802,43 +791,26 @@
     var self = this;
     var playerName = this.state.player && this.state.player.name;
 
+    var ballon = (season.awards || []).filter(function (a) {
+      return a.awardId === 'award_ballon_dor';
+    })[0];
+    if (ballon) {
+      queue.push({ type: 'award', award: ballon, playerName: playerName });
+      return queue.slice(0, 1);
+    }
+
     var titles = (season.titles || []).slice().sort(function (a, b) {
       return (b.importance || 0) - (a.importance || 0);
     });
-    // Only epic titles interrupt the loop — rest live in recap.
-    titles.slice(0, 1).forEach(function (title) {
-      if ((title.importance || 0) < 75) return;
+    if (titles[0] && (titles[0].importance || 0) >= 90) {
+      var title = titles[0];
       var club = title.clubId ? self.engine.getClub(title.clubId) : null;
       var nt = title.nationalTeamId
         ? self.engine.world.nationalTeamsById[title.nationalTeamId]
         : null;
       queue.push({ type: 'title', titleObj: title, club: club, nt: nt });
-    });
-
-    (season.awards || []).forEach(function (award) {
-      if (award.awardId === 'award_ballon_dor') {
-        queue.push({ type: 'ballon-tease', award: award, playerName: playerName });
-        queue.push({ type: 'award', award: award, playerName: playerName });
-      }
-    });
-
-    var seasonIdx = season.seasonIndex;
-    var moments = [];
-    (this.state.moments || []).forEach(function (moment) {
-      if (moment.seasonIndex !== seasonIdx) return;
-      var id = String(moment.id);
-      if (
-        id === 'moment_first_callup' ||
-        id === 'moment_world_cup' ||
-        id.indexOf('moment_breakout_') === 0 ||
-        id.indexOf('moment_comeback_') === 0
-      ) {
-        moments.push(moment);
-      }
-    });
-    if (moments[0]) queue.push({ type: 'moment', moment: moments[0] });
-
-    return queue.slice(0, 2);
+    }
+    return queue.slice(0, 1);
   };
 
   App.prototype.showRetireTransition = function () {
