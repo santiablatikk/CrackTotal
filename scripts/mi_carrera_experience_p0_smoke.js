@@ -54,6 +54,7 @@ function loadMC() {
     'engine/career-rules.js',
     'engine/career-events.js',
     'engine/career-decisions.js',
+    'engine/career-beats.js',
     'engine/career-competitions.js',
     'engine/career-awards.js',
     'engine/career-records.js',

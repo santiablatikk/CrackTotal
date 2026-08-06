@@ -1674,3 +1674,91 @@ img.mc-award-mark,
     }
 }
 
+
+/* —— Copero-like pacing / decision beats —— */
+.mc-mode-grid {
+  display: grid;
+  gap: 0.85rem;
+  width: min(100%, 28rem);
+  margin: 1.25rem auto 0;
+}
+.mc-mode-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 1.15rem 1.2rem;
+  border-radius: 1.15rem;
+  border: 1px solid var(--mc-line, rgba(255,255,255,0.12));
+  background: linear-gradient(160deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+.mc-mode-card strong {
+  font-family: var(--ct-font-display, Oswald, sans-serif);
+  font-size: clamp(1.4rem, 5vw, 1.85rem);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.mc-mode-card span {
+  color: var(--ct-text-muted, #aebbd0);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+@media (hover: hover) {
+  .mc-mode-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(121, 242, 166, 0.45);
+  }
+}
+.mc-beat-options {
+  display: grid;
+  gap: 0.75rem;
+  width: min(100%, 32rem);
+  margin: 1.1rem auto 0;
+}
+.mc-beat-option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 1rem 1.1rem;
+  border-radius: 1.1rem;
+  border: 1px solid var(--mc-line, rgba(255,255,255,0.12));
+  background: rgba(8, 14, 24, 0.55);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.mc-beat-option__label {
+  font-family: var(--ct-font-display, Oswald, sans-serif);
+  font-size: clamp(1.15rem, 4.2vw, 1.45rem);
+  text-transform: uppercase;
+}
+.mc-beat-option__summary {
+  color: var(--ct-text-muted, #aebbd0);
+  font-size: 0.92rem;
+}
+.mc-beat-option__trade {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.75rem;
+  margin-top: 0.2rem;
+}
+.mc-beat-option__trade em {
+  font-style: normal;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+.mc-scene--mode .mc-scene__title,
+.mc-scene--career-beat .mc-scene__title,
+.mc-scene--block-recap .mc-scene__title {
+  font-size: clamp(2.2rem, 10vw, 3.4rem);
+  line-height: 0.95;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mc-mode-card { transition: none; }
+}

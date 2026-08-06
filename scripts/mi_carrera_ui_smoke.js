@@ -82,6 +82,7 @@ function loadAll() {
     'assets/js/games/mi-carrera/engine/career-rules.js',
     'assets/js/games/mi-carrera/engine/career-events.js',
     'assets/js/games/mi-carrera/engine/career-decisions.js',
+    'assets/js/games/mi-carrera/engine/career-beats.js',
     'assets/js/games/mi-carrera/engine/career-competitions.js',
     'assets/js/games/mi-carrera/engine/career-awards.js',
     'assets/js/games/mi-carrera/engine/career-records.js',

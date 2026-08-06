@@ -18,6 +18,7 @@
       position: null,
       archetypeId: null,
       createStep: 1,
+      pacingMode: 'normal',
       careerSeed: null,
       startOptions: null,
       previewRating: null,
@@ -293,17 +294,68 @@
     }
   };
 
-  App.prototype.showDebut = function () {
+  App.prototype.showModeSelect = function () {
+    this.setRootScreen('mode', UI.screens.modeSelect(), { state: 'mode' });
+    this.announce('Elegí el ritmo de tu carrera');
+  };
+
+  App.prototype.pickMode = function (modeId) {
+    this.draft.pacingMode = modeId || 'normal';
+    this.showCreate();
+  };
+
+  App.prototype.showCareerBeat = function () {
     if (!this.state) return;
+    if (this.state.phase !== 'beat' || !this.state.currentBeat) {
+      this.engine.prepareCareerBeat(this.state);
+    }
     this.setRootScreen(
-      'debut',
-      UI.screens.debut({
+      'career-beat',
+      UI.screens.careerBeat({
         state: this.state,
-        engine: this.engine
+        engine: this.engine,
+        beat: this.state.currentBeat
       }),
-      { state: 'debut' }
+      { state: 'beat' }
     );
-    this.announce('Debut profesional');
+    this.announce('Tu decisión');
+  };
+
+  App.prototype.resolveBeatAndPlay = function (optionId) {
+    if (this.busy || !this.state || this.state.phase !== 'beat') return;
+    try {
+      this.engine.resolveCareerBeat(this.state, optionId);
+    } catch (err) {
+      UI.components.openModal({
+        title: 'No se pudo decidir',
+        bodyHtml: '<p>' + UI.format.escapeHtml((err && err.message) || 'Error') + '</p>',
+        actionsHtml:
+          '<button type="button" class="ct-button ct-button--primary" data-mc-modal="close">Entendido</button>'
+      });
+      return;
+    }
+    this.runBlock();
+  };
+
+  App.prototype.routeAfterDecision = function () {
+    if (!this.state || this.state.retired) {
+      this.showRetireTransition();
+      return;
+    }
+    if (this.state.phase === 'beat') {
+      this.showCareerBeat();
+      return;
+    }
+    if (this.state.phase === 'decision') {
+      this.showMarket({ resetIndex: true });
+      return;
+    }
+    if (this.state.phase === 'simulate' && NS.Beats) {
+      this.engine.prepareCareerBeat(this.state);
+      this.showCareerBeat();
+      return;
+    }
+    this.showCareerHome();
   };
 
   App.prototype.showPresent = function () {
@@ -510,18 +562,39 @@
     if (typeof then === 'function') {
       then(result);
     } else {
-      this.showCareerHome();
+      this.routeAfterDecision();
     }
   };
 
+  App.prototype.showDebut = function () {
+    if (!this.state) return;
+    this.setRootScreen(
+      'debut',
+      UI.screens.debut({
+        state: this.state,
+        engine: this.engine
+      }),
+      { state: 'debut' }
+    );
+    this.announce('Debut profesional');
+  };
+
   App.prototype.runSeason = function () {
+    this.runBlock();
+  };
+
+  App.prototype.runBlock = function () {
     if (this.busy || !this.state || this.state.retired) return;
+    if (this.state.phase === 'beat') {
+      this.showCareerBeat();
+      return;
+    }
     if (this.state.phase !== 'simulate') return;
     this.busy = true;
-    var before = this.snapshotAttrs(this.state);
+    var ageBefore = this.state.age;
     var result;
     try {
-      result = this.engine.simulateCurrentSeason(this.state);
+      result = this.engine.simulateBlock(this.state);
     } catch (err) {
       this.busy = false;
       UI.components.openModal({
@@ -533,26 +606,37 @@
       return;
     }
 
-    var self = this;
     this._pendingSeasonResult = result;
-    var finish = function () {
-      self.focusAge = self.state.age;
-      self.busy = false;
-      if (self.state.retired) {
-        self.showRetireTransition();
-        return;
-      }
-      // Recap first — celebrations + market come after Continuar
-      self.showSeasonRecap(result.season);
+    this._pendingAgeUp = {
+      fromAge: ageBefore,
+      toAge: this.state.retired ? this.state.age : this.state.age
     };
-    finish();
-    void before;
+    this.focusAge = this.state.age;
+    this.busy = false;
+    if (this.state.retired) {
+      this.showRetireTransition();
+      return;
+    }
+    var block = result.block || result.season;
+    if (block && result.seasons && result.seasons.length > 1) {
+      this.setRootScreen(
+        'block-recap',
+        UI.screens.blockRecap({
+          block: block,
+          state: this.state,
+          engine: this.engine
+        }),
+        { state: 'recap' }
+      );
+    } else {
+      this.showSeasonRecap(result.season);
+    }
   };
 
   App.prototype.afterSeasonRecap = function () {
     var result = this._pendingSeasonResult;
     var self = this;
-    if (!result || !result.season) {
+    if (!result || (!result.season && !result.block)) {
       this.showMarket({ resetIndex: true });
       return;
     }
@@ -566,7 +650,16 @@
     seasonEvents.slice(0, 2).forEach(function (ev) {
       if (ev) self._beatQueue.push({ type: 'event', event: ev });
     });
-    this._beatQueue = this._beatQueue.concat(this.buildCelebrationQueue(result.season));
+    var celebrateSeason = result.season;
+    if (result.block && result.seasons && result.seasons.length) {
+      celebrateSeason = {
+        titles: result.block.titles || [],
+        awards: result.block.awards || [],
+        seasonIndex: result.block.seasonIndex,
+        seasonLabel: result.block.seasonLabel
+      };
+    }
+    this._beatQueue = this._beatQueue.concat(this.buildCelebrationQueue(celebrateSeason));
     this._onBeatsDone = function () {
       self._pendingSeasonResult = null;
       if (self.state && self.state.retired) {
@@ -797,17 +890,17 @@
         return;
       }
     }
-    this.showCareerHome();
+    this.routeAfterDecision();
   };
 
   App.prototype.handleMarketStay = function () {
     UI.components.closeModal();
     var decision = this.state && this.state.currentDecision;
-    var ageBefore = this.state ? this.state.age : null;
+    var self = this;
     if (this.state && this.state.phase === 'decision' && decision && decision.type === 'transferencia') {
-      this.resolveDecisionOnly('stay_loyal', null, function () {});
-      if (ageBefore != null) this._pendingAgeUp = { fromAge: ageBefore - 1 };
-      this.enterNextSeason();
+      this.resolveDecisionOnly('stay_loyal', null, function () {
+        self.enterNextSeason();
+      });
       return;
     }
     if (this.state && this.state.phase === 'decision') {
@@ -818,11 +911,10 @@
       this.state.confidence = Math.min(100, (this.state.confidence || 55) + 2);
       this.state.stayedStreak = (this.state.stayedStreak || 0) + 1;
       this.state.currentDecision = null;
-      this.state.phase = 'simulate';
       this.state.pendingOffers = [];
+      this.engine.prepareCareerBeat(this.state);
       if (NS.Storage && NS.Storage.saveActive) NS.Storage.saveActive(this.state);
     }
-    if (ageBefore != null) this._pendingAgeUp = { fromAge: ageBefore - 1 };
     this.enterNextSeason();
   };
 
@@ -915,6 +1007,11 @@
     this.focusAge = active.age;
     this.selectedOfferId =
       (active.pendingOffers && active.pendingOffers[0] && active.pendingOffers[0].id) || null;
+    if (!this.state.pacingMode) this.state.pacingMode = 'normal';
+    if (this.state.phase === 'beat') {
+      this.showCareerBeat();
+      return;
+    }
     if (!this.state.currentDecision && this.state.phase === 'decision' && !this.state.retired) {
       var rng = this.engine.getRng(this.state, 'resumeDec');
       this.state.currentDecision = NS.Decisions.pickDecision(this.state, this.engine.world, rng);
@@ -923,8 +1020,10 @@
     var hasOffers = this.state.pendingOffers && this.state.pendingOffers.length;
     var isTransfer =
       this.state.currentDecision && this.state.currentDecision.type === 'transferencia';
-    if (hasOffers || isTransfer) {
+    if (hasOffers || isTransfer || this.state.phase === 'decision') {
       this.showMarket();
+    } else if (this.state.phase === 'simulate') {
+      this.showCareerBeat();
     } else {
       this.showCareerHome();
     }
@@ -985,7 +1084,8 @@
             ? this.draft.birthYear
             : BASE_YEAR - (this.draft.age != null ? this.draft.age : 17),
         seed: this.draft.careerSeed,
-        clubId: clubId
+        clubId: clubId,
+        pacingMode: this.draft.pacingMode || 'normal'
       });
       this.showPresent();
     } catch (err) {
@@ -1036,7 +1136,20 @@
     }
     if (action === 'start-create') {
       this.draft = emptyDraft(localStorage.getItem('playerName') || '');
-      this.showCreate();
+      this.showModeSelect();
+      return;
+    }
+    if (action === 'start-mode') {
+      this.draft = emptyDraft(localStorage.getItem('playerName') || '');
+      this.showModeSelect();
+      return;
+    }
+    if (action === 'pick-mode') {
+      this.pickMode(target.getAttribute('data-mode'));
+      return;
+    }
+    if (action === 'resolve-beat') {
+      this.resolveBeatAndPlay(target.getAttribute('data-option'));
       return;
     }
     if (action === 'go-intro') {
@@ -1103,7 +1216,10 @@
       return;
     }
     if (action === 'after-debut') {
-      this.showCareerHome();
+      if (this.state && this.engine.prepareCareerBeat) {
+        this.engine.prepareCareerBeat(this.state);
+      }
+      this.showCareerBeat();
       return;
     }
     if (action === 'focus-age') {
@@ -1132,11 +1248,19 @@
       return;
     }
     if (action === 'play-season') {
+      if (this.state && this.state.phase === 'beat') {
+        this.showCareerBeat();
+        return;
+      }
       this.showPreSeason();
       return;
     }
     if (action === 'confirm-season') {
-      this.runSeason();
+      if (this.state && this.state.phase === 'beat') {
+        this.showCareerBeat();
+        return;
+      }
+      this.runBlock();
       return;
     }
     if (action === 'back-hub') {
@@ -1144,7 +1268,7 @@
       return;
     }
     if (action === 'after-age-up') {
-      this.showCareerHome();
+      this.routeAfterDecision();
       return;
     }
     if (action === 'select-offer') {

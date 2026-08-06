@@ -349,8 +349,20 @@
 
     state.marketValue = NS.Rules.computeMarketValue(state, club, this.world);
     state.peakMarketValue = state.marketValue;
-    // First season: play football first. Market/future decisions come after recap.
+    state.pacingMode =
+      opts.pacingMode && NS.Beats && NS.Beats.PACING[opts.pacingMode]
+        ? opts.pacingMode
+        : 'intense';
+    if (!NS.Beats || !NS.Beats.PACING[state.pacingMode]) state.pacingMode = 'intense';
+    state.blockModifiers = null;
+    state.blockSeasonsLeft = 0;
+    state.recentBeats = [];
+    state.lastBeatConsequence = '';
+    state.lastBeatLabel = '';
+    // First season is playable immediately (tests + first kickoff).
+    // The UI inserts a career beat before each block via prepareCareerBeat().
     state.phase = 'simulate';
+    state.currentBeat = null;
     state.currentDecision = null;
     state.pendingOffers = [];
     state.marketCold = false;
@@ -409,6 +421,48 @@
     return state.currentDecision || null;
   };
 
+  CareerEngine.prototype.getCurrentBeat = function (state) {
+    return state.currentBeat || null;
+  };
+
+  CareerEngine.prototype.prepareCareerBeat = function (state) {
+    if (state.retired) return state;
+    if (!NS.Beats || !NS.Beats.pickBeat) {
+      state.phase = 'simulate';
+      return state;
+    }
+    state.currentBeat = NS.Beats.pickBeat(state, this.world, this.getRng(state, 'beat'));
+    state.phase = 'beat';
+    state.currentDecision = null;
+    NS.State.touch(state);
+    return state;
+  };
+
+  CareerEngine.prototype.resolveCareerBeat = function (state, optionId) {
+    if (state.retired) throw new Error('Carrera ya retirada');
+    if (state.phase !== 'beat') throw new Error('No hay beat pendiente');
+    var beat = state.currentBeat;
+    if (!beat) {
+      beat = NS.Beats.pickBeat(state, this.world, this.getRng(state, 'beat'));
+      state.currentBeat = beat;
+    }
+    var result = NS.Beats.applyBeat(state, beat, optionId, this.world);
+    state.currentBeat = null;
+    state.phase = 'simulate';
+    NS.State.touch(state);
+    if (NS.Storage && NS.Storage.saveActive) NS.Storage.saveActive(state);
+    return { state: state, beat: result };
+  };
+
+  CareerEngine.prototype._ensureReadyToSimulate = function (state) {
+    if (state.phase === 'beat' && NS.Beats) {
+      var beat =
+        state.currentBeat || NS.Beats.pickBeat(state, this.world, this.getRng(state, 'beat'));
+      state.currentBeat = beat;
+      this.resolveCareerBeat(state, NS.Beats.defaultOptionId(beat));
+    }
+  };
+
   CareerEngine.prototype.resolveDecision = function (state, optionId, explicitOfferId) {
     if (state.retired) throw new Error('Carrera ya retirada');
     if (state.phase !== 'decision') throw new Error('No hay decisión pendiente');
@@ -427,6 +481,7 @@
       this._finalize(state);
       return { state: state, retired: true, transferOffer: result.transferOffer };
     }
+    // Engine returns to simulate for API/tests. UI calls prepareCareerBeat() before the next block.
     state.phase = 'simulate';
     if (NS.Storage && NS.Storage.saveActive) NS.Storage.saveActive(state);
     return { state: state, retired: false, transferOffer: result.transferOffer };
@@ -434,7 +489,11 @@
 
   CareerEngine.prototype.simulateCurrentSeason = function (state) {
     if (state.retired) throw new Error('Carrera ya retirada');
+    this._ensureReadyToSimulate(state);
     if (state.phase !== 'simulate') throw new Error('Fase inválida para simular');
+    if (NS.Beats && NS.Beats.applyBlockModifiersToSeason) {
+      NS.Beats.applyBlockModifiersToSeason(state);
+    }
 
     var rng = this.getRng(state, 'sim');
     var eventRng = this.getRng(state, 'event');
@@ -605,6 +664,7 @@
     state.marketLegacy = !!market.legacyPressure;
     state.marketShape = market.shape || null;
     NS.State.resetSeasonModifiers(state);
+    if (NS.Beats && NS.Beats.tickBlockModifiers) NS.Beats.tickBlockModifiers(state);
 
     state.age += 1;
     state.seasonIndex += 1;
@@ -655,12 +715,76 @@
     };
   };
 
+  CareerEngine.prototype.simulateBlock = function (state) {
+    if (state.retired) throw new Error('Carrera ya retirada');
+    this._ensureReadyToSimulate(state);
+    var n = NS.Beats && NS.Beats.blockSize ? NS.Beats.blockSize(state) : 1;
+    n = Math.max(1, Math.min(3, n));
+    var seasons = [];
+    var events = [];
+    var last = null;
+    var i;
+    for (i = 0; i < n; i++) {
+      if (state.retired) break;
+      if (state.phase === 'decision' && i > 0) {
+        var midDec = state.currentDecision;
+        var midOpt = 'stay_loyal';
+        if (midDec && midDec.options && midDec.options.length) {
+          var pick = null;
+          for (var mi = 0; mi < midDec.options.length; mi++) {
+            var midId = midDec.options[mi].id;
+            if (midId === 'stay_loyal' || midId === 'renew_project' || midId === 'retire_no') {
+              pick = midDec.options[mi];
+              break;
+            }
+          }
+          midOpt = pick ? pick.id : midDec.options[0].id;
+        } else if (NS.Decisions && NS.Decisions.buildFutureDecision) {
+          state.currentDecision = NS.Decisions.buildFutureDecision(state);
+          midOpt = 'stay_loyal';
+        }
+        this.resolveDecision(state, midOpt);
+        if (state.phase === 'beat') {
+          state.currentBeat = null;
+          state.phase = 'simulate';
+        }
+      }
+      if (state.phase !== 'simulate') this._ensureReadyToSimulate(state);
+      last = this.simulateCurrentSeason(state);
+      if (last.season) seasons.push(last.season);
+      if (last.events && last.events.length) events = events.concat(last.events);
+      else if (last.event) events.push(last.event);
+      if (last.retired) break;
+    }
+    var block =
+      NS.Beats && NS.Beats.aggregateBlock ? NS.Beats.aggregateBlock(seasons, state) : null;
+    return {
+      state: state,
+      seasons: seasons,
+      season: seasons.length ? seasons[seasons.length - 1] : null,
+      block: block,
+      event: events[0] || null,
+      events: events,
+      offers: state.pendingOffers ? state.pendingOffers.slice() : [],
+      retired: !!state.retired
+    };
+  };
+
   CareerEngine.prototype.playSeason = function (state, optionId, explicitOfferId) {
+    if (state.phase === 'beat') {
+      var beatOpt =
+        optionId &&
+        state.currentBeat &&
+        NS.Beats.findOption(state.currentBeat, optionId)
+          ? optionId
+          : NS.Beats.defaultOptionId(state.currentBeat);
+      this.resolveCareerBeat(state, beatOpt);
+    }
     if (state.phase === 'decision') {
       var dec = this.resolveDecision(state, optionId, explicitOfferId);
       if (dec.retired) return { state: state, retired: true, transferOffer: dec.transferOffer };
     }
-    return this.simulateCurrentSeason(state);
+    return this.simulateBlock(state);
   };
 
   CareerEngine.prototype.forceRetire = function (state, reason) {
@@ -718,11 +842,19 @@
    * Auto-play helper for tests: always picks a deterministic middle option.
    */
   CareerEngine.prototype.autoPlayUntilRetired = function (state, maxSeasons) {
-    var guard = maxSeasons != null ? maxSeasons : 40;
+    var max = maxSeasons != null ? maxSeasons : 40;
+    var guard = max * 4;
     var results = [];
-    while (!state.retired && guard-- > 0) {
+    while (!state.retired && (state.seasonHistory || []).length < max && guard-- > 0) {
+      if (state.phase === 'beat') {
+        var beat =
+          state.currentBeat || NS.Beats.pickBeat(state, this.world, this.getRng(state, 'beat'));
+        state.currentBeat = beat;
+        this.resolveCareerBeat(state, NS.Beats.defaultOptionId(beat));
+        continue;
+      }
       if (state.phase === 'simulate') {
-        results.push(this.simulateCurrentSeason(state));
+        results.push(this.simulateBlock(state));
         continue;
       }
       var decision = state.currentDecision;
@@ -740,7 +872,7 @@
         }
       }
       if (!option) option = decision.options[Math.min(1, decision.options.length - 1)];
-      results.push(this.playSeason(state, option.id));
+      this.resolveDecision(state, option.id);
     }
     return results;
   };

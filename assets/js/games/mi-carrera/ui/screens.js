@@ -333,10 +333,152 @@
           '<div class="mc-cover-visual__card"></div></div>' +
           '<p class="mc-scene__meta" id="como-funciona">Creá. Jugá. Decidí tu futuro.</p>',
         actions:
-          '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="start-create">Empezar carrera</button>'
+          '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="start-mode">Empezar carrera</button>'
       }) +
       '</div>'
     );
+  }
+
+  function modeSelectScreen() {
+    var modes = (NS.Beats && NS.Beats.PACING) || {
+      intense: { id: 'intense', label: 'Intensa', blurb: 'Una decisión por temporada.' },
+      normal: { id: 'normal', label: 'Normal', blurb: 'Una decisión cada 2 temporadas.' },
+      express: { id: 'express', label: 'Exprés', blurb: 'Una decisión cada 3 temporadas.' }
+    };
+    var order = ['express', 'normal', 'intense'];
+    var cards = order
+      .map(function (id) {
+        var m = modes[id];
+        if (!m) return '';
+        return (
+          '<button type="button" class="mc-mode-card" data-mc-action="pick-mode" data-mode="' +
+          F().escapeHtml(m.id) +
+          '">' +
+          '<strong>' +
+          F().escapeHtml(m.label) +
+          '</strong>' +
+          '<span>' +
+          F().escapeHtml(m.blurb) +
+          '</span></button>'
+        );
+      })
+      .join('');
+    return scene({
+      id: 'mode',
+      tone: 'cover',
+      kicker: 'Mi Carrera',
+      title: 'Elegí el ritmo',
+      lead: 'Misma fantasía. Distinta duración.',
+      body: '<div class="mc-mode-grid">' + cards + '</div>',
+      actions:
+        '<button type="button" class="ct-button ct-button--ghost" data-mc-action="go-intro">Volver</button>'
+    });
+  }
+
+  function careerBeatScreen(ctx) {
+    var state = ctx.state;
+    var beat = ctx.beat || state.currentBeat;
+    var engine = ctx.engine;
+    var club = engine.getClub(state.clubId);
+    var options = (beat && beat.options) || [];
+    var blockN = (beat && beat.blockSize) || (NS.Beats ? NS.Beats.blockSize(state) : 1);
+    var optsHtml = options
+      .map(function (opt) {
+        return (
+          '<button type="button" class="mc-beat-option" data-mc-action="resolve-beat" data-option="' +
+          F().escapeHtml(opt.id) +
+          '">' +
+          '<strong class="mc-beat-option__label">' +
+          F().escapeHtml(opt.label) +
+          '</strong>' +
+          '<span class="mc-beat-option__summary">' +
+          F().escapeHtml(opt.summary || '') +
+          '</span>' +
+          '<span class="mc-beat-option__trade">' +
+          (opt.ups || [])
+            .map(function (u) {
+              return '<em class="mc-path-up">+ ' + F().escapeHtml(u) + '</em>';
+            })
+            .join('') +
+          (opt.downs || [])
+            .map(function (d) {
+              return '<em class="mc-path-down">− ' + F().escapeHtml(d) + '</em>';
+            })
+            .join('') +
+          '</span></button>'
+        );
+      })
+      .join('');
+    return scene({
+      id: 'career-beat',
+      tone: 'decision',
+      kicker:
+        blockN === 1
+          ? 'Próxima temporada'
+          : 'Próximas ' + blockN + ' temporadas',
+      title: F().escapeHtml((beat && beat.title) || state.age + ' AÑOS'),
+      lead: F().escapeHtml((beat && beat.lead) || (club ? club.shortName || club.name : '')),
+      body:
+        '<div class="mc-scene-crest">' +
+        C().clubBadgeHtml(club, 'xxl') +
+        '</div>' +
+        '<p class="mc-poster-line">' +
+        F().escapeHtml((beat && beat.prompt) || '¿Qué hacés ahora?') +
+        '</p>' +
+        '<div class="mc-beat-options">' +
+        optsHtml +
+        '</div>',
+      actions: ''
+    });
+  }
+
+  function blockRecapScreen(ctx) {
+    var block = ctx.block || ctx.season;
+    var state = ctx.state;
+    var engine = ctx.engine;
+    var club = engine.getClub((block && block.clubId) || state.clubId);
+    var player = (state && state.player) || {};
+    var statsHtml = F().primarySeasonStatsHtml(block, player.position);
+    var consequence = (block && block.consequence) || state.lastBeatConsequence || '';
+    return scene({
+      id: 'block-recap',
+      tone: 'recap',
+      kicker: F().escapeHtml((block && block.seasonLabel) || F().seasonLabel(state.seasonIndex - 1)),
+      title:
+        (block && block.ageEnd != null ? block.ageEnd : state.age - 1) + ' AÑOS',
+      lead: F().escapeHtml(club ? club.shortName || club.name : 'Tu club'),
+      body:
+        '<div class="mc-recap-hero">' +
+        '<div class="mc-scene-crest">' +
+        C().clubBadgeHtml(club, 'xxl') +
+        '</div>' +
+        (consequence
+          ? '<p class="mc-poster-line">' + F().escapeHtml(consequence) + '</p>'
+          : '') +
+        '<div class="mc-recap-ovrline"><span>' +
+        (block.ratingBefore != null ? block.ratingBefore : '') +
+        '</span><span class="mc-recap-ovrline__arrow" aria-hidden="true">→</span><strong>' +
+        (block.ratingAfter != null ? block.ratingAfter : state.rating) +
+        ' OVR</strong></div>' +
+        '<div class="mc-recap-numbers">' +
+        statsHtml +
+        '</div>' +
+        ((block.titles || []).length
+          ? '<p class="mc-scene__meta">🏆 ' +
+            F().escapeHtml(
+              block.titles
+                .slice(0, 3)
+                .map(function (t) {
+                  return t.shortName || t.name;
+                })
+                .join(' · ')
+            ) +
+            '</p>'
+          : '') +
+        '</div>',
+      actions:
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="after-recap">Continuar</button>'
+    });
   }
 
   function createScreen(ctx) {
@@ -1451,6 +1593,9 @@
 
   UI.screens = {
     intro: introScreen,
+    modeSelect: modeSelectScreen,
+    careerBeat: careerBeatScreen,
+    blockRecap: blockRecapScreen,
     create: createScreen,
     startClub: startClubScreen,
     present: presentScreen,
