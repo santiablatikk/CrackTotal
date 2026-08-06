@@ -379,7 +379,8 @@
       UI.screens.transferCinematic({
         club: club,
         state: this.state,
-        engine: this.engine
+        engine: this.engine,
+        consequence: this.state && this.state._lastTransferLine
       }),
       { state: 'success' }
     );
@@ -860,6 +861,13 @@
     this.resolveDecisionOnly('accept_best_prestige', oid, function (result) {
       if (result.transferOffer) {
         var club = self.engine.getClub(result.transferOffer.clubId);
+        if (NS.Rules && NS.Rules.transferConsequence) {
+          self.state._lastTransferLine = NS.Rules.transferConsequence(
+            self.state,
+            result.transferOffer,
+            self.engine.world
+          );
+        }
         self.showTransferCinematic(club);
       } else {
         self._pendingAgeUp = { fromAge: self.state.age - 1 };

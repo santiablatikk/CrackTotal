@@ -140,16 +140,28 @@
     }
 
     var bd = ballonScore(state, playerSeason, flags);
+    // Ballon requires a true peak season (UCL or World Cup), never Libertadores-only.
+    // Intentionally bypass tryWin: that helper inflates chance with score and made Ballons common.
     var ballonEligible =
-      (flags.continentalTitle || flags.worldCup || flags.uclChamp) &&
-      state.rating >= 87 &&
-      (playerSeason.appearances || 0) >= 28 &&
+      (flags.uclChamp || flags.worldCup) &&
+      state.rating >= 89 &&
+      (playerSeason.appearances || 0) >= 30 &&
       state.form >= 7 &&
-      state.reputation >= 70;
+      state.reputation >= 75 &&
+      state.age >= 21 &&
+      state.age <= 34;
     var priorBallons = countAwards(state, 'award_ballon_dor');
-    if (ballonEligible && priorBallons < 2) {
-      var ballonChance = priorBallons === 0 ? 0.012 : 0.005;
-      tryWin('award_ballon_dor', bd, 91, ballonChance, { score: Math.round(bd) });
+    if (ballonEligible && priorBallons < 2 && bd >= 95) {
+      var ballonDef = findAward(world, 'award_ballon_dor');
+      if (ballonDef && posOk(ballonDef, pos) && ageOk(ballonDef, state.age)) {
+        // Hard-capped: peak seasons only; ~few % of full careers, not every superstar season.
+        var ballonBase = priorBallons === 0 ? 0.045 : 0.015;
+        var ballonBoost = Math.min(0.04, Math.max(0, bd - 95) / 400);
+        var ballonP = Math.min(0.1, ballonBase + ballonBoost);
+        if (rng.bool(ballonP)) {
+          wins.push(makeAwardWin(ballonDef, state, { score: Math.round(bd) }));
+        }
+      }
     }
 
     if (pos === 'FWD' || pos === 'MID') {

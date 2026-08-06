@@ -745,14 +745,32 @@
     );
 
     if (!offers.length) {
+      var stayInfo =
+        NS.Rules && NS.Rules.stayConsequence
+          ? NS.Rules.stayConsequence(
+              Object.assign({}, state, { marketCold: true }),
+              engine.world
+            )
+          : null;
+      var coldLead = state.marketLegacy
+        ? stayInfo &&
+          stayInfo.headline &&
+          (stayInfo.headline.indexOf('legado') !== -1 ||
+            stayInfo.headline.indexOf('referente') !== -1)
+          ? stayInfo.headline
+          : 'Después de tanto, el club quiere convertirte en referente.'
+        : stayInfo && stayInfo.headline && stayInfo.headline.indexOf('Nadie') !== -1
+          ? stayInfo.headline
+          : 'Nadie llamó. ' +
+            (stayInfo && stayInfo.headline
+              ? stayInfo.headline
+              : 'Quedarte también construye tu historia.');
       return scene({
         id: 'market',
         tone: 'quiet',
         kicker: 'Tu futuro',
         title: state.marketLegacy ? 'Tu club te necesita' : 'El mercado pasó de largo',
-        lead: state.marketLegacy
-          ? 'Después de tanto, el club quiere convertirte en referente.'
-          : 'Nadie llamó. Quedarte también construye tu historia.',
+        lead: F().escapeHtml(coldLead),
         body:
           '<div class="mc-stay-card">' +
           '<div class="mc-scene-crest">' +
@@ -761,13 +779,21 @@
           '<h2 class="mc-scene__club">' +
           F().escapeHtml(currentClub ? currentClub.shortName || currentClub.name : 'Tu club') +
           '</h2>' +
-          '<p class="mc-scene__meta">' +
-          F().escapeHtml(
-            state.marketLegacy
-              ? 'Quedarte ahora puede definir tu legado.'
-              : 'Podés construir tu legado acá.'
-          ) +
-          '</p></div>',
+          (stayInfo
+            ? '<div class="mc-stay-trade">' +
+              (stayInfo.ups || [])
+                .map(function (u) {
+                  return '<span class="mc-path-up">+ ' + F().escapeHtml(u) + '</span>';
+                })
+                .join('') +
+              (stayInfo.downs || [])
+                .map(function (d) {
+                  return '<span class="mc-path-down">− ' + F().escapeHtml(d) + '</span>';
+                })
+                .join('') +
+              '</div>'
+            : '<p class="mc-scene__meta">Podés construir tu legado acá.</p>') +
+          '</div>',
         actions:
           '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-stay">Quedarme</button>' +
           (canLoan
@@ -867,12 +893,16 @@
     var offer = ctx.offer;
     var current = engine.getClub(state.clubId);
     var next = engine.getClub(offer.clubId);
+    var consequence =
+      NS.Rules && NS.Rules.transferConsequence
+        ? NS.Rules.transferConsequence(state, offer, engine.world)
+        : tradeoffPhrase(current, next, offer);
     return scene({
       id: 'compare',
       tone: 'decision',
       kicker: offer.kind === 'loan' ? '¿Cesión?' : '¿Te vas?',
       title: offer.kind === 'loan' ? 'Préstamo' : 'Tu decisión',
-      lead: tradeoffPhrase(current, next, offer),
+      lead: F().escapeHtml(consequence),
       body:
         '<div class="mc-vs">' +
         '<div class="mc-vs__col">' +
@@ -920,29 +950,43 @@
       club && engine && engine.world
         ? engine.world.competitionsById[club.primaryCompetitionId]
         : null;
+    var consequence =
+      ctx.consequence ||
+      (state._lastTransferLine
+        ? state._lastTransferLine
+        : 'Nuevo club. Nueva presión. Nueva oportunidad.');
     return scene({
       id: 'transfer',
       tone: 'transfer',
       kicker: 'Nuevo capítulo',
-      title: 'Nuevo club',
+      title: 'Cambiaste de club',
       lead: F().escapeHtml(club ? club.name : 'Nuevo club'),
       body:
         (prev
           ? '<div class="mc-vs" style="margin-bottom:1rem">' +
             '<div class="mc-vs__col">' +
             C().clubBadgeHtml(prev, 'xl') +
-            '</div>' +
+            '<strong>' +
+            F().escapeHtml(prev.shortName || prev.name) +
+            '</strong></div>' +
             '<div class="mc-vs__mark" aria-hidden="true">→</div>' +
             '<div class="mc-vs__col is-next">' +
             C().clubBadgeHtml(club, 'xxl') +
-            '</div></div>'
+            '<strong>' +
+            F().escapeHtml(club ? club.shortName || club.name : '') +
+            '</strong></div></div>'
           : '<div class="mc-scene-crest mc-scene-crest--pulse">' +
             C().clubBadgeHtml(club, 'xxl') +
             '</div>') +
         (comp ? '<p class="mc-scene__meta">' + competitionMarkHtml(comp, 'md') + '</p>' : '') +
+        '<p class="mc-poster-line">' +
+        F().escapeHtml(consequence) +
+        '</p>' +
         '<p class="mc-scene__meta"><strong>' +
         F().escapeHtml(state.player.name) +
         '</strong> · ' +
+        state.age +
+        ' años · ' +
         F().escapeHtml(F().seasonLabel(state.seasonIndex)) +
         '</p>',
       actions:
@@ -988,6 +1032,32 @@
     var roleLabel = season.role
       ? F().ROLE_LABELS[season.role] || season.role
       : '';
+
+    var highlightBits = [];
+    (season.titles || []).slice(0, 2).forEach(function (t) {
+      highlightBits.push(
+        '<p class="mc-recap-highlight mc-recap-highlight--title">🏆 ' +
+          F().escapeHtml(t.shortName || t.name) +
+          '</p>'
+      );
+    });
+    (season.awards || [])
+      .filter(function (a) {
+        return (a.importance || 0) >= 70 || a.awardId === 'award_ballon_dor';
+      })
+      .slice(0, 2)
+      .forEach(function (a) {
+        highlightBits.push(
+          '<p class="mc-recap-highlight mc-recap-highlight--award">⭐ ' +
+            F().escapeHtml(a.shortName || a.name) +
+            '</p>'
+        );
+      });
+    if (season.firstCallUp) {
+      highlightBits.push(
+        '<p class="mc-recap-highlight mc-recap-highlight--nt">🌎 Debut con la selección</p>'
+      );
+    }
 
     return scene({
       id: 'recap',
@@ -1042,6 +1112,9 @@
             F().escapeHtml(fs.label) +
             '</p>'
           : '') +
+        (highlightBits.length
+          ? '<div class="mc-recap-highlights">' + highlightBits.join('') + '</div>'
+          : '') +
         '</div>',
       actions:
         '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="after-recap">Continuar</button>'
@@ -1055,7 +1128,9 @@
     var sit =
       UI.Narrative && UI.Narrative.preSeasonLine
         ? UI.Narrative.preSeasonLine(state, engine.world)
-        : { age: state.age, chapter: '', line: 'Listo para salir a la cancha.' };
+        : NS.Rules.seasonSituation
+          ? NS.Rules.seasonSituation(state, engine.world)
+          : { age: state.age, chapter: '', line: 'Listo para salir a la cancha.' };
     var seasonN = Math.max(1, (state.seasonIndex || 0) + 1);
     return scene({
       id: 'preseason',
@@ -1074,7 +1149,22 @@
         '</p>' +
         '<p class="mc-poster-line">' +
         F().escapeHtml(sit.line || '') +
-        '</p>',
+        '</p>' +
+        '<div class="mc-pre-meta">' +
+        '<div><span>Rol</span><strong>' +
+        F().escapeHtml(sit.roleLabel || F().ROLE_LABELS[sit.role] || '—') +
+        '</strong></div>' +
+        '<div><span>Forma</span><strong>' +
+        F().escapeHtml(sit.formLabel || '—') +
+        '</strong></div>' +
+        '<div><span>Valor</span><strong>' +
+        F().escapeHtml(sit.valueLabel || '—') +
+        '</strong></div></div>' +
+        (sit.objective
+          ? '<p class="mc-pre-objective"><span>Objetivo</span> ' +
+            F().escapeHtml(sit.objective) +
+            '</p>'
+          : ''),
       actions:
         '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="confirm-season">Jugar temporada</button>' +
         '<button type="button" class="ct-button ct-button--ghost" data-mc-action="back-hub">Volver</button>'
@@ -1283,13 +1373,23 @@
     var card = UI.CareerCardRenderer.render(state, engine);
     var shareAvailable = UI.Share.canNativeShare();
     var seasons = (state.seasonHistory || []).length;
+    var analysis =
+      NS.Rules && NS.Rules.analyzeCareer ? NS.Rules.analyzeCareer(state, engine.world) : null;
+    var archLabel =
+      analysis && NS.Rules.archetypeLabel
+        ? NS.Rules.archetypeLabel(analysis.archetype)
+        : '';
+    var story =
+      NS.Rules && NS.Rules.careerStoryPhrase
+        ? NS.Rules.careerStoryPhrase(state, engine.world)
+        : state.retirementLine || '';
 
     return scene({
       id: 'retire',
       tone: 'retire',
       kicker: 'Tu legado',
-      title: 'Tu historia terminó',
-      lead: F().escapeHtml(state.retirementLine || 'Colgaste los botines.'),
+      title: archLabel || 'Tu historia terminó',
+      lead: F().escapeHtml(story),
       body:
         '<p class="mc-scene__meta">' +
         (state.ageStart != null ? state.ageStart : 17) +

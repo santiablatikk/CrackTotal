@@ -44,6 +44,8 @@
     var initialClub = engine.getClub(initialId);
     var finalClub = engine.getClub(finalId);
     var clubs = topClubs(state, engine, 3);
+    var analysis =
+      NS.Rules && NS.Rules.analyzeCareer ? NS.Rules.analyzeCareer(state, engine.world) : null;
     var category = state.careerCategory || NS.Scoring.categoryFromScore(state.careerScore || 0);
     var achievements = UI.Legacy
       ? UI.Legacy.detectAchievements(state, engine.world)
@@ -90,6 +92,15 @@
       category: category,
       achievements: achievements,
       retirementLine: state.retirementLine || '',
+      storyPhrase:
+        NS.Rules && NS.Rules.careerStoryPhrase
+          ? NS.Rules.careerStoryPhrase(state, engine.world)
+          : state.retirementLine || '',
+      emergentArchetype: analysis ? analysis.archetype : null,
+      emergentLabel:
+        analysis && NS.Rules.archetypeLabel
+          ? NS.Rules.archetypeLabel(analysis.archetype)
+          : '',
       careerSeed: state.careerSeed,
       createdAt: state.createdAt,
       clubsPlayedCount: (state.clubsPlayed || []).length
@@ -162,8 +173,7 @@
       '<div>' +
       '<p class="mc-kicker">' +
       F().escapeHtml(vm.position) +
-      ' · ' +
-      F().escapeHtml(vm.archetypeName) +
+      (vm.emergentLabel ? ' · ' + F().escapeHtml(vm.emergentLabel) : '') +
       '</p>' +
       '<h2 class="mc-career-card__name">' +
       F().escapeHtml(vm.playerName) +
@@ -172,7 +182,11 @@
       vm.ageStart +
       ' → ' +
       vm.ageEnd +
-      ' años</p></div></div>' +
+      ' años</p>' +
+      (vm.storyPhrase
+        ? '<p class="mc-career-card__story">' + F().escapeHtml(vm.storyPhrase) + '</p>'
+        : '') +
+      '</div></div>' +
       '<div class="mc-career-card__scoreblock">' +
       '<span class="mc-career-card__score">' +
       (vm.score != null ? Number(vm.score).toFixed(1) : '—') +

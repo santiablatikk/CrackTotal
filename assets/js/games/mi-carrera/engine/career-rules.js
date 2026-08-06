@@ -364,62 +364,239 @@
     var mins = minutesFactorForClub(state, club);
     var band = ageBand(state.age);
     var chapter = ageChapter(state.age, state);
+    var form = formStatus(state.form);
+    var value = computeMarketValue(state, club, world);
     var line = 'El entrenador te ve como una apuesta.';
     var tone = 'project';
+    var objective = 'Ganar minutos y crecer.';
 
     if (state.onLoan) {
       line = 'Estás cedido. Cada minuto cuenta.';
       tone = 'loan';
+      objective = 'Jugar 25+ partidos y volver más fuerte.';
     } else if (state.arcFlags && state.arcFlags.crisis) {
       line = 'El vestuario está tenso. Hay que responder.';
       tone = 'crisis';
+      objective = 'Recuperar la confianza del entrenador.';
     } else if (state.arcFlags && state.arcFlags.comeback) {
       line = 'Volviste. Ahora hay que sostenerlo.';
       tone = 'comeback';
+      objective = 'Confirmar el comeback con consistencia.';
     } else if (state.arcFlags && state.arcFlags.breakout) {
       line = 'El club necesita que confirmes el salto.';
       tone = 'breakout';
+      objective = 'Convertirte en referencia del equipo.';
     } else if (mins < 0.4 || role === 'rotacion' || role === 'promesa') {
       if (level >= 4 && state.age <= 20) {
         line = 'Empezás como suplente en un grande.';
         tone = 'bench';
+        objective = 'Robar minutos y demostrar potencial.';
       } else if (role === 'promesa') {
         line = 'El entrenador te ve como una apuesta.';
         tone = 'project';
+        objective = 'Crecer sin quemarte.';
       } else {
         line = 'Vas a pelear minutos desde el banco.';
         tone = 'bench';
+        objective = 'Ganarte un lugar en el once.';
       }
     } else if (mins >= 0.72 || role === 'titular') {
       if (level <= 2) {
         line = 'El club necesita que seas titular.';
         tone = 'starter';
+        objective = 'Liderar y llamar la atención.';
+      } else if (level >= 4 && club && club.continentId === 'continent_eu') {
+        line = 'Después de convertirte en pieza importante, el club espera más.';
+        tone = 'starter';
+        objective = 'Consolidarte en Europa.';
       } else {
         line = 'Te ganaste un rol de peso en el once.';
         tone = 'starter';
+        objective = 'Ser decisivo toda la temporada.';
       }
-    } else if (band === 'early_decline' || band === 'decline') {
+    } else if (band === 'early_decline' || band === 'decline' || band === 'late') {
       line = 'La experiencia pesa. Hay que elegir bien los partidos.';
       tone = 'veteran';
+      objective = 'Cerrar el capítulo con dignidad.';
     } else if ((state.stayedStreak || 0) >= 3) {
       line = 'Sos un referente. El club espera liderazgo.';
       tone = 'leader';
+      objective = 'Sostener el legado en el club.';
+    } else if (band === 'prime' || band === 'rising') {
+      line = 'Estás en años clave. Cada decisión pesa.';
+      tone = 'prime';
+      objective = 'Maximizar tu mejor versión.';
     } else {
       line = 'Hay lugar para crecer si respondés.';
       tone = 'rotation';
+      objective = 'Dar un salto de nivel.';
     }
 
+    var roleLabels = { titular: 'Titular', rotacion: 'Rotación', promesa: 'Promesa' };
     return {
       age: state.age,
       chapter: chapter,
       band: band,
       role: role,
+      roleLabel: roleLabels[role] || role || '—',
       minutesFactor: mins,
+      formId: form.id,
+      formLabel: form.label,
+      marketValue: value,
+      valueLabel: formatMarketValue(value),
+      objective: objective,
       line: line,
       tone: tone,
       clubId: state.clubId,
       seasonIndex: state.seasonIndex || 0
     };
+  }
+
+  function formatMarketValue(n) {
+    var v = Math.max(0, Math.round(Number(n) || 0));
+    if (v >= 1000000) return '€' + (v / 1000000).toFixed(v >= 10000000 ? 0 : 1) + 'M';
+    if (v >= 1000) return '€' + Math.round(v / 1000) + 'K';
+    return '€' + v;
+  }
+
+  function transferConsequence(state, offer, world) {
+    if (!offer) return 'Nuevo escenario para tu carrera.';
+    var current = getClub(world, state.clubId);
+    var next = getClub(world, offer.clubId);
+    if (offer.kind === 'loan') {
+      return 'Más minutos. Menos presión. Volvés al club dueño.';
+    }
+    var curL = (current && current.level) || 1;
+    var nextL = (next && next.level) || offer.level || 1;
+    if (offer.role === 'titular' && nextL < curL) {
+      return 'Pasás a ser titular, con menos escaparate.';
+    }
+    if (offer.role === 'titular') return 'Llegás para ser titular.';
+    if (nextL >= curL + 2) return 'Pasás a competir por minutos en un escenario mucho más grande.';
+    if (nextL > curL) return 'Más prestigio. Hay que pelear el puesto.';
+    if (
+      current &&
+      next &&
+      current.continentId === 'continent_sa' &&
+      next.continentId === 'continent_eu'
+    ) {
+      return 'Este fichaje te pone en un escenario europeo.';
+    }
+    if (
+      current &&
+      next &&
+      current.continentId === 'continent_eu' &&
+      next.continentId === 'continent_sa'
+    ) {
+      return 'Regreso a Sudamérica: protagonismo y otra historia.';
+    }
+    return 'Nuevo club. Nueva presión. Nueva oportunidad.';
+  }
+
+  function stayConsequence(state, world) {
+    var club = getClub(world, state.clubId);
+    var years = yearsAtClubApprox(state);
+    var attach = state.clubAttachment != null ? state.clubAttachment : 0;
+    if (attach >= 80 || years >= 5) {
+      return {
+        headline: 'Quedarte construye legado',
+        ups: ['Continuidad', 'Estatus', 'Minutos'],
+        downs: ['Menos salto', 'Menos exposición']
+      };
+    }
+    if (state.marketCold) {
+      return {
+        headline: 'Nadie llamó. Quedarte también es una decisión',
+        ups: ['Estabilidad', 'Proyecto'],
+        downs: ['Sin salto de club']
+      };
+    }
+    var level = (club && club.level) || 1;
+    if (level >= 4) {
+      return {
+        headline: 'Renunciás a una oportunidad de cambio',
+        ups: ['Minutos posibles', 'Continuidad'],
+        downs: ['Menor exploración', 'Menos mercado']
+      };
+    }
+    return {
+      headline: 'Seguís el proyecto del club',
+      ups: ['Protagonismo', 'Crecimiento'],
+      downs: ['Menor prestigio inmediato']
+    };
+  }
+
+  var ARCHETYPE_LABELS = {
+    ONE_CLUB_LEGEND: 'EL ÍDOLO',
+    COMEBACK: 'EL REGRESO IMPOSIBLE',
+    SOUTH_AMERICAN_KING: 'EL REY DE SUDAMÉRICA',
+    GIANT_SUCCESS: 'EL HOMBRE DE LAS GRANDES NOCHES',
+    GIANT_FAILURE: 'EL ETERNO SUPLENTE',
+    WUNDERKIND: 'EL PRODIGIO',
+    EARLY_EUROPE: 'EL SALTO TEMPRANO',
+    LATE_EUROPEAN_MOVE: 'EL SALTO A EUROPA',
+    LOAN_SPECIALIST: 'EL CEDIDO QUE EXPLOTÓ',
+    EUROPEAN_JOURNEYMAN: 'EL VIAJERO',
+    NATIONAL_HERO: 'EL HÉROE DE SELECCIÓN',
+    HOME_RETURN: 'EL REGRESO A CASA',
+    LATE_BLOOMER: 'EL FLORECER TARDÍO',
+    CAREER_STAGNATION: 'LA CARRERA INCONCLUSA',
+    FALLEN_STAR: 'LA ESTRELLA CAÍDA',
+    RISING_STAR: 'LA ESTRELLA EN ASCENSO'
+  };
+
+  function archetypeLabel(id) {
+    return ARCHETYPE_LABELS[id] || 'TU HISTORIA';
+  }
+
+  function careerStoryPhrase(state, world) {
+    if (!state) return 'Una carrera para contar.';
+    var analysis = analyzeCareer(state, world);
+    var hist = state.seasonHistory || [];
+    var first = hist[0] && getClub(world, hist[0].clubId);
+    var last = hist.length
+      ? getClub(world, hist[hist.length - 1].clubId)
+      : getClub(world, state.clubId);
+    var firstName = first ? first.shortName || first.name : '';
+    var lastName = last ? last.shortName || last.name : '';
+    var seasons = hist.length;
+    var clubs = (state.clubsPlayed || []).length;
+    var titles = state.totalTitles || 0;
+    var ballons =
+      NS.Awards && NS.Awards.countAwards ? NS.Awards.countAwards(state, 'award_ballon_dor') : 0;
+    var city = first && first.city ? first.city : firstName;
+
+    if (ballons >= 1 && firstName && lastName && firstName !== lastName) {
+      return 'De ' + firstName + ' al Balón de Oro.';
+    }
+    if (analysis.archetype === 'ONE_CLUB_LEGEND' && firstName) {
+      return 'Nunca dejó ' + firstName + '. Se convirtió en leyenda.';
+    }
+    if (analysis.archetype === 'SOUTH_AMERICAN_KING') {
+      return 'Jamás necesitó Europa para ser leyenda.';
+    }
+    if (analysis.regionPath === 'SA_EUROPE' && city && lastName) {
+      return 'Una carrera que empezó en ' + city + ' y terminó en ' + lastName + '.';
+    }
+    if (analysis.archetype === 'HOME_RETURN' && lastName) {
+      return 'Volvió a ' + lastName + ' para cerrar el círculo.';
+    }
+    if (analysis.archetype === 'COMEBACK') {
+      return 'Cayó. Volvió. La historia no terminó ahí.';
+    }
+    if (analysis.archetype === 'GIANT_FAILURE') {
+      return 'El escaparate grande no le dio minutos. La carrera se reescribió.';
+    }
+    if (seasons && clubs) {
+      return (
+        seasons +
+        ' temporadas. ' +
+        clubs +
+        ' clubes.' +
+        (titles ? ' ' + titles + ' títulos.' : '')
+      );
+    }
+    return state.retirementLine || 'Una carrera para contar.';
   }
 
   function appendClubTimeline(state, seasonRecord) {
@@ -690,10 +867,12 @@
         state.rating >= 80 && state.potential >= 90 && state.age <= 22 && state.reputation >= 40;
       var eliteOk = state.rating >= minRating && state.reputation >= 48;
       if (!eliteOk && !promiseOk) return false;
+      if (state.age <= 18 && state.rating < 78 && !promiseOk) return false;
       if (state.age > 29 && state.rating < 86) return false;
       if (state.form <= 3) return false;
       if (current && (current.level || 1) <= 2 && state.reputation < 60 && !promiseOk) return false;
     } else if (level >= 4) {
+      if (state.age <= 17 && state.rating < 70) return false;
       if (state.rating < minRating - 1 && !(state.potential >= 88 && state.rating >= minRating - 4)) {
         return false;
       }
@@ -1802,8 +1981,15 @@
     else if (ntBand !== 'nont' && titles >= 1 && peakRating >= 76) archetype = 'NATIONAL_HERO';
     else if (returnBand === 'homeReturn' && peakAge >= 28) archetype = 'HOME_RETURN';
     else if (peakAgeBand === 'latePeak' && peakRating >= 82 && peakAge >= 30) archetype = 'LATE_BLOOMER';
-    else if (peakBand === 'low' && titles === 0 && ntBand === 'nont') archetype = 'CAREER_STAGNATION';
-    else if (mobility === 'nomad' && peakBand === 'low') archetype = 'FALLEN_STAR';
+    else if (
+      peakBand === 'low' &&
+      titles === 0 &&
+      ntBand === 'nont' &&
+      uniqueClubs <= 3 &&
+      peakRating < 74
+    ) {
+      archetype = 'CAREER_STAGNATION';
+    } else if (mobility === 'nomad' && peakBand === 'low') archetype = 'FALLEN_STAR';
     else if (peakBand === 'legend' || peakBand === 'star') archetype = 'RISING_STAR';
     else archetype = 'RISING_STAR';
 
@@ -1863,6 +2049,11 @@
     seasonSituation: seasonSituation,
     appendClubTimeline: appendClubTimeline,
     clubTimelineSummary: clubTimelineSummary,
+    transferConsequence: transferConsequence,
+    stayConsequence: stayConsequence,
+    careerStoryPhrase: careerStoryPhrase,
+    archetypeLabel: archetypeLabel,
+    formatMarketValue: formatMarketValue,
     formStatus: formStatus,
     updateArcState: updateArcState,
     minutesFactorForClub: minutesFactorForClub,

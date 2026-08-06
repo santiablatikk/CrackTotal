@@ -19,12 +19,18 @@
     var status = (view && view.status) || 'missing';
     var generatedClass =
       !view || view.isOfficialCrest || status === 'real' ? '' : ' mc-badge--generated';
+    var honestTitle =
+      status === 'real' ? club.shortName || club.name || '' : 'Fallback · sin escudo oficial';
     if (!src) {
       return (
         '<span class="mc-badge mc-badge--' +
         size +
         generatedClass +
-        '" aria-hidden="true" title="Escudo generado">' +
+        '" role="img" aria-label="' +
+        F().escapeHtml(honestTitle) +
+        '" title="' +
+        F().escapeHtml(honestTitle) +
+        '">' +
         F().escapeHtml(view.initials || 'FC') +
         '</span>'
       );
@@ -39,10 +45,14 @@
       generatedClass +
       '" src="' +
       F().escapeHtml(src) +
-      '" alt="" width="64" height="64" loading="lazy" decoding="async" data-club="' +
+      '" alt="' +
+      F().escapeHtml(honestTitle) +
+      '" title="' +
+      F().escapeHtml(honestTitle) +
+      '" width="64" height="64" loading="lazy" decoding="async" data-club="' +
       F().escapeHtml(club.id) +
       '" data-badge-status="' +
-      F().escapeHtml(status) +
+      F().escapeHtml(status === 'real' ? 'real' : 'generated') +
       '"' +
       onerr +
       ' />'

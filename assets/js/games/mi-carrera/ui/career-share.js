@@ -15,7 +15,10 @@
       '🏆 Mi carrera en Crack Total',
       '',
       vm.playerName,
-      flag + ' ' + vm.position,
+      flag + ' ' + vm.position + (vm.emergentLabel ? ' · ' + vm.emergentLabel : ''),
+      vm.ageStart + ' → ' + vm.ageEnd + ' años',
+      '',
+      vm.storyPhrase || '',
       '',
       vm.appearances + ' partidos',
       vm.goals + ' goles',
@@ -28,7 +31,9 @@
       '',
       '¿Podés superar mi carrera?',
       'https://cracktotal.com/mi-carrera.html'
-    ];
+    ].filter(function (line, i, arr) {
+      return !(line === '' && arr[i - 1] === '');
+    });
     return lines.join('\n');
   }
 
