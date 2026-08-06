@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "count": 9,
+  "profiles": [
+    {
+      "id": "creator",
+      "name": "El Creador",
+      "positions": [
+        "MCO",
+        "MC",
+        "EI",
+        "ED"
+      ],
+      "bias": {
+        "assist": 1.25,
+        "goal": 0.9,
+        "vision": 1.2
+      }
+    },
+    {
+      "id": "finisher",
+      "name": "El Goleador",
+      "positions": [
+        "DC",
+        "ED",
+        "EI",
+        "MCO"
+      ],
+      "bias": {
+        "goal": 1.35,
+        "assist": 0.85,
+        "shot": 1.25
+      }
+    },
+    {
+      "id": "winger",
+      "name": "El Extremo",
+      "positions": [
+        "ED",
+        "EI",
+        "DC"
+      ],
+      "bias": {
+        "pace": 1.25,
+        "dribble": 1.2,
+        "goal": 1.05
+      }
+    },
+    {
+      "id": "engine",
+      "name": "Box to Box",
+      "positions": [
+        "MC",
+        "MCD",
+        "MCO"
+      ],
+      "bias": {
+        "stamina": 1.3,
+        "tackle": 1.1,
+        "assist": 1.05
+      }
+    },
+    {
+      "id": "wall",
+      "name": "El Muro",
+      "positions": [
+        "DFC",
+        "MCD",
+        "LD",
+        "LI"
+      ],
+      "bias": {
+        "defend": 1.3,
+        "aerial": 1.2,
+        "pace": 0.9
+      }
+    },
+    {
+      "id": "fullback",
+      "name": "El Carrilero",
+      "positions": [
+        "LD",
+        "LI"
+      ],
+      "bias": {
+        "pace": 1.2,
+        "cross": 1.2,
+        "defend": 1.05
+      }
+    },
+    {
+      "id": "specialist",
+      "name": "El Especialista",
+      "positions": [
+        "MCO",
+        "MC",
+        "DC"
+      ],
+      "bias": {
+        "setpiece": 1.4,
+        "shot": 1.1
+      }
+    },
+    {
+      "id": "modern_gk",
+      "name": "Portero Moderno",
+      "positions": [
+        "POR"
+      ],
+      "bias": {
+        "reflex": 1.15,
+        "distribution": 1.25,
+        "command": 1.1
+      }
+    },
+    {
+      "id": "brain",
+      "name": "El Cerebro",
+      "positions": [
+        "MC",
+        "MCO",
+        "MCD"
+      ],
+      "bias": {
+        "vision": 1.35,
+        "pass": 1.3,
+        "pace": 0.9
+      }
+    }
+  ]
+}

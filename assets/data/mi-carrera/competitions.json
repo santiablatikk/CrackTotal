@@ -1,0 +1,377 @@
+{
+  "version": 1,
+  "count": 35,
+  "competitions": [
+    {
+      "id": "uefa_cl",
+      "name": "UEFA Champions League",
+      "shortName": "Champions",
+      "region": "EU",
+      "type": "club_continental",
+      "tier": "legendary",
+      "prestige": 98,
+      "rarity": "legendary"
+    },
+    {
+      "id": "uefa_el",
+      "name": "UEFA Europa League",
+      "shortName": "Europa League",
+      "region": "EU",
+      "type": "club_continental",
+      "tier": "major",
+      "prestige": 86,
+      "rarity": "major"
+    },
+    {
+      "id": "uefa_uecl",
+      "name": "UEFA Conference League",
+      "shortName": "Conference",
+      "region": "EU",
+      "type": "club_continental",
+      "tier": "notable",
+      "prestige": 74,
+      "rarity": "notable"
+    },
+    {
+      "id": "conmebol_libertadores",
+      "name": "Copa Libertadores",
+      "shortName": "Libertadores",
+      "region": "SA",
+      "type": "club_continental",
+      "tier": "legendary",
+      "prestige": 94,
+      "rarity": "legendary"
+    },
+    {
+      "id": "conmebol_sudamericana",
+      "name": "Copa Sudamericana",
+      "shortName": "Sudamericana",
+      "region": "SA",
+      "type": "club_continental",
+      "tier": "major",
+      "prestige": 80,
+      "rarity": "major"
+    },
+    {
+      "id": "conmebol_recopa",
+      "name": "Recopa Sudamericana",
+      "shortName": "Recopa",
+      "region": "SA",
+      "type": "club_continental",
+      "tier": "notable",
+      "prestige": 76,
+      "rarity": "notable"
+    },
+    {
+      "id": "fifa_club_world_cup",
+      "name": "Mundial de Clubes",
+      "shortName": "Mundial Clubes",
+      "region": "WORLD",
+      "type": "club_world",
+      "tier": "legendary",
+      "prestige": 90,
+      "rarity": "legendary"
+    },
+    {
+      "id": "fifa_world_cup",
+      "name": "Copa del Mundo",
+      "shortName": "Mundial",
+      "region": "WORLD",
+      "type": "national_major",
+      "tier": "mythic",
+      "prestige": 100,
+      "rarity": "mythic"
+    },
+    {
+      "id": "conmebol_copa_america",
+      "name": "Copa América",
+      "shortName": "Copa América",
+      "region": "SA",
+      "type": "national_continental",
+      "tier": "legendary",
+      "prestige": 92,
+      "rarity": "legendary"
+    },
+    {
+      "id": "uefa_euro",
+      "name": "Eurocopa",
+      "shortName": "Euro",
+      "region": "EU",
+      "type": "national_continental",
+      "tier": "legendary",
+      "prestige": 93,
+      "rarity": "legendary"
+    },
+    {
+      "id": "caf_afcon",
+      "name": "Copa Africana de Naciones",
+      "shortName": "AFCON",
+      "region": "AF",
+      "type": "national_continental",
+      "tier": "major",
+      "prestige": 84,
+      "rarity": "major"
+    },
+    {
+      "id": "afc_asian_cup",
+      "name": "Copa Asiática",
+      "shortName": "Asian Cup",
+      "region": "AS",
+      "type": "national_continental",
+      "tier": "major",
+      "prestige": 82,
+      "rarity": "major"
+    },
+    {
+      "id": "concacaf_gold_cup",
+      "name": "Copa Oro",
+      "shortName": "Gold Cup",
+      "region": "NA",
+      "type": "national_continental",
+      "tier": "major",
+      "prestige": 78,
+      "rarity": "major"
+    },
+    {
+      "id": "ar_league",
+      "name": "Liga Profesional",
+      "shortName": "Liga AR",
+      "region": "AR",
+      "type": "domestic_league",
+      "tier": "notable",
+      "prestige": 72,
+      "rarity": "notable",
+      "countryCode": "AR"
+    },
+    {
+      "id": "ar_copa",
+      "name": "Copa Argentina",
+      "shortName": "Copa AR",
+      "region": "AR",
+      "type": "domestic_cup",
+      "tier": "normal",
+      "prestige": 64,
+      "rarity": "normal",
+      "countryCode": "AR"
+    },
+    {
+      "id": "br_league",
+      "name": "Brasileirão",
+      "shortName": "Brasileirão",
+      "region": "BR",
+      "type": "domestic_league",
+      "tier": "major",
+      "prestige": 78,
+      "rarity": "major",
+      "countryCode": "BR"
+    },
+    {
+      "id": "br_copa",
+      "name": "Copa do Brasil",
+      "shortName": "Copa BR",
+      "region": "BR",
+      "type": "domestic_cup",
+      "tier": "notable",
+      "prestige": 70,
+      "rarity": "notable",
+      "countryCode": "BR"
+    },
+    {
+      "id": "gb_league",
+      "name": "Premier League",
+      "shortName": "Premier",
+      "region": "GB",
+      "type": "domestic_league",
+      "tier": "legendary",
+      "prestige": 96,
+      "rarity": "legendary",
+      "countryCode": "GB"
+    },
+    {
+      "id": "gb_fa_cup",
+      "name": "FA Cup",
+      "shortName": "FA Cup",
+      "region": "GB",
+      "type": "domestic_cup",
+      "tier": "major",
+      "prestige": 84,
+      "rarity": "major",
+      "countryCode": "GB"
+    },
+    {
+      "id": "gb_efl_cup",
+      "name": "EFL Cup",
+      "shortName": "Carabao",
+      "region": "GB",
+      "type": "domestic_cup",
+      "tier": "notable",
+      "prestige": 74,
+      "rarity": "notable",
+      "countryCode": "GB"
+    },
+    {
+      "id": "es_league",
+      "name": "LaLiga",
+      "shortName": "LaLiga",
+      "region": "ES",
+      "type": "domestic_league",
+      "tier": "legendary",
+      "prestige": 94,
+      "rarity": "legendary",
+      "countryCode": "ES"
+    },
+    {
+      "id": "es_copa",
+      "name": "Copa del Rey",
+      "shortName": "Copa del Rey",
+      "region": "ES",
+      "type": "domestic_cup",
+      "tier": "major",
+      "prestige": 82,
+      "rarity": "major",
+      "countryCode": "ES"
+    },
+    {
+      "id": "es_supercopa",
+      "name": "Supercopa de España",
+      "shortName": "Supercopa ES",
+      "region": "ES",
+      "type": "domestic_super",
+      "tier": "notable",
+      "prestige": 72,
+      "rarity": "notable",
+      "countryCode": "ES"
+    },
+    {
+      "id": "it_league",
+      "name": "Serie A",
+      "shortName": "Serie A",
+      "region": "IT",
+      "type": "domestic_league",
+      "tier": "legendary",
+      "prestige": 92,
+      "rarity": "legendary",
+      "countryCode": "IT"
+    },
+    {
+      "id": "it_copa",
+      "name": "Coppa Italia",
+      "shortName": "Coppa Italia",
+      "region": "IT",
+      "type": "domestic_cup",
+      "tier": "major",
+      "prestige": 78,
+      "rarity": "major",
+      "countryCode": "IT"
+    },
+    {
+      "id": "de_league",
+      "name": "Bundesliga",
+      "shortName": "Bundesliga",
+      "region": "DE",
+      "type": "domestic_league",
+      "tier": "legendary",
+      "prestige": 90,
+      "rarity": "legendary",
+      "countryCode": "DE"
+    },
+    {
+      "id": "de_copa",
+      "name": "DFB-Pokal",
+      "shortName": "DFB-Pokal",
+      "region": "DE",
+      "type": "domestic_cup",
+      "tier": "major",
+      "prestige": 80,
+      "rarity": "major",
+      "countryCode": "DE"
+    },
+    {
+      "id": "fr_league",
+      "name": "Ligue 1",
+      "shortName": "Ligue 1",
+      "region": "FR",
+      "type": "domestic_league",
+      "tier": "major",
+      "prestige": 88,
+      "rarity": "major",
+      "countryCode": "FR"
+    },
+    {
+      "id": "fr_copa",
+      "name": "Coupe de France",
+      "shortName": "Coupe FR",
+      "region": "FR",
+      "type": "domestic_cup",
+      "tier": "notable",
+      "prestige": 74,
+      "rarity": "notable",
+      "countryCode": "FR"
+    },
+    {
+      "id": "pt_league",
+      "name": "Liga Portugal",
+      "shortName": "Liga PT",
+      "region": "PT",
+      "type": "domestic_league",
+      "tier": "major",
+      "prestige": 80,
+      "rarity": "major",
+      "countryCode": "PT"
+    },
+    {
+      "id": "pt_copa",
+      "name": "Taça de Portugal",
+      "shortName": "Taça PT",
+      "region": "PT",
+      "type": "domestic_cup",
+      "tier": "notable",
+      "prestige": 70,
+      "rarity": "notable",
+      "countryCode": "PT"
+    },
+    {
+      "id": "nl_league",
+      "name": "Eredivisie",
+      "shortName": "Eredivisie",
+      "region": "NL",
+      "type": "domestic_league",
+      "tier": "major",
+      "prestige": 78,
+      "rarity": "major",
+      "countryCode": "NL"
+    },
+    {
+      "id": "mx_league",
+      "name": "Liga MX",
+      "shortName": "Liga MX",
+      "region": "MX",
+      "type": "domestic_league",
+      "tier": "major",
+      "prestige": 74,
+      "rarity": "major",
+      "countryCode": "MX"
+    },
+    {
+      "id": "us_league",
+      "name": "MLS Cup",
+      "shortName": "MLS Cup",
+      "region": "US",
+      "type": "domestic_league",
+      "tier": "notable",
+      "prestige": 68,
+      "rarity": "notable",
+      "countryCode": "US"
+    },
+    {
+      "id": "uefa_super_cup",
+      "name": "UEFA Super Cup",
+      "shortName": "Supercopa UEFA",
+      "region": "EU",
+      "type": "club_continental",
+      "tier": "notable",
+      "prestige": 78,
+      "rarity": "notable"
+    }
+  ]
+}

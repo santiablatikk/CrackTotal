@@ -1,0 +1,6695 @@
+{
+  "version": 1,
+  "generatedAt": "2026-08-06",
+  "counts": {
+    "real": 0,
+    "missing": 557,
+    "total": 557
+  },
+  "badges": {
+    "dk_aarhus": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "AGF"
+      }
+    },
+    "sct_aberdeen": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF0000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Aberdeen"
+      }
+    },
+    "it_ac-milan": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FB090B",
+        "secondaryColor": "#000000",
+        "label": "Milan"
+      }
+    },
+    "ve_academia-puerto-cabello": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#000000",
+        "label": "Puerto Cabello"
+      }
+    },
+    "tr_adana-demirspor": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Adana Demir"
+      }
+    },
+    "au_adelaide-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Adelaide"
+      }
+    },
+    "pe_adt": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "ADT"
+      }
+    },
+    "gr_aek-athens": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "AEK"
+      }
+    },
+    "se_aik": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "AIK"
+      }
+    },
+    "nl_ajax": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#D2122E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Ajax"
+      }
+    },
+    "sa_al-ahli": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Al Ahli"
+      }
+    },
+    "eg_al-ahly": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Al Ahly"
+      }
+    },
+    "ae_al-ain": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#582C83",
+        "secondaryColor": "#FFFFFF",
+        "label": "Al Ain"
+      }
+    },
+    "qa_al-arabi": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Al Arabi"
+      }
+    },
+    "qa_al-duhail": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Al Duhail"
+      }
+    },
+    "sa_al-ettifaq": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Al Ettifaq"
+      }
+    },
+    "sa_al-fateh": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Al Fateh"
+      }
+    },
+    "qa_al-gharafa": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Al Gharafa"
+      }
+    },
+    "sa_al-hilal": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Al Hilal"
+      }
+    },
+    "sa_al-ittihad": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFD100",
+        "label": "Al Ittihad"
+      }
+    },
+    "ae_al-jazira": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Al Jazira"
+      }
+    },
+    "eg_al-masry": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Al Masry"
+      }
+    },
+    "ae_al-nasr-dubai": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Al Nasr"
+      }
+    },
+    "sa_al-nassr": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Al Nassr"
+      }
+    },
+    "sa_al-raed": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Al Raed"
+      }
+    },
+    "qa_al-rayyan": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Al Rayyan"
+      }
+    },
+    "qa_al-sadd": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Al Sadd"
+      }
+    },
+    "sa_al-shabab": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Al Shabab"
+      }
+    },
+    "ae_al-sharjah": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sharjah"
+      }
+    },
+    "sa_al-taawoun": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Al Taawoun"
+      }
+    },
+    "ae_al-wasl": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Al Wasl"
+      }
+    },
+    "tr_alanyaspor": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#006341",
+        "label": "Alanyaspor"
+      }
+    },
+    "es_alaves": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#004B9D",
+        "secondaryColor": "#FFFFFF",
+        "label": "Alavés"
+      }
+    },
+    "es_albacete": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Albacete"
+      }
+    },
+    "pe_alianza-lima": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Alianza"
+      }
+    },
+    "bo_always-ready": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Always Ready"
+      }
+    },
+    "co_america-de-cali": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "América"
+      }
+    },
+    "br_america-mineiro": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#000000",
+        "label": "América-MG"
+      }
+    },
+    "fr_amiens": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Amiens"
+      }
+    },
+    "be_anderlecht": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#582C83",
+        "secondaryColor": "#FFFFFF",
+        "label": "Anderlecht"
+      }
+    },
+    "fr_angers": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Angers"
+      }
+    },
+    "tr_antalyaspor": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Antalyaspor"
+      }
+    },
+    "be_antwerp": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Antwerp"
+      }
+    },
+    "ar_argentinos-juniors": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Argentinos"
+      }
+    },
+    "gr_aris": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Aris"
+      }
+    },
+    "pt_arouca": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Arouca"
+      }
+    },
+    "gb_arsenal": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#EF0107",
+        "secondaryColor": "#FFFFFF",
+        "label": "Arsenal"
+      }
+    },
+    "ma_as-far": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#006341",
+        "label": "AS FAR"
+      }
+    },
+    "gr_asteras-tripolis": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Asteras"
+      }
+    },
+    "gb_aston-villa": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#95BFE5",
+        "secondaryColor": "#670E36",
+        "label": "Aston Villa"
+      }
+    },
+    "it_atalanta": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#1E71B8",
+        "secondaryColor": "#000000",
+        "label": "Atalanta"
+      }
+    },
+    "es_athletic-club": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#EE2523",
+        "secondaryColor": "#FFFFFF",
+        "label": "Athletic"
+      }
+    },
+    "br_athletico-paranaense": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Athletico"
+      }
+    },
+    "ar_atl-tucuman": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Atl. Tucumán"
+      }
+    },
+    "us_atlanta-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#80000B",
+        "secondaryColor": "#000000",
+        "label": "Atlanta"
+      }
+    },
+    "mx_atlas": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Atlas"
+      }
+    },
+    "co_atletico-bucaramanga": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#006341",
+        "label": "Bucaramanga"
+      }
+    },
+    "br_atletico-goianiense": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Atl. Goianiense"
+      }
+    },
+    "es_atletico-madrid": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#CB3524",
+        "secondaryColor": "#FFFFFF",
+        "label": "Atlético"
+      }
+    },
+    "br_atletico-mineiro": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Atl. Mineiro"
+      }
+    },
+    "co_atletico-nacional": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Nacional"
+      }
+    },
+    "mx_atletico-san-luis": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "San Luis"
+      }
+    },
+    "ec_aucas": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#C8102E",
+        "label": "Aucas"
+      }
+    },
+    "cl_audax-italiano": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Audax"
+      }
+    },
+    "de_augsburg": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#BA3733",
+        "secondaryColor": "#FFFFFF",
+        "label": "Augsburg"
+      }
+    },
+    "us_austin-fc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#00B140",
+        "secondaryColor": "#000000",
+        "label": "Austin"
+      }
+    },
+    "at_austria-klagenfurt": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#582C83",
+        "secondaryColor": "#FFFFFF",
+        "label": "Klagenfurt"
+      }
+    },
+    "at_austria-wien": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#582C83",
+        "secondaryColor": "#FFFFFF",
+        "label": "Austria Wien"
+      }
+    },
+    "fr_auxerre": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Auxerre"
+      }
+    },
+    "jp_avispa-fukuoka": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#000000",
+        "label": "Avispa"
+      }
+    },
+    "nl_az-alkmaar": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "AZ"
+      }
+    },
+    "br_bahia": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#C8102E",
+        "label": "Bahia"
+      }
+    },
+    "ar_banfield": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Banfield"
+      }
+    },
+    "cz_banik-ostrava": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Baník"
+      }
+    },
+    "ec_barcelona-sc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Barcelona SC"
+      }
+    },
+    "it_bari": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#C8102E",
+        "label": "Bari"
+      }
+    },
+    "ar_barracas-central": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Barracas"
+      }
+    },
+    "tr_basaksehir": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#003DA5",
+        "label": "Başakşehir"
+      }
+    },
+    "ch_basel": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "Basel"
+      }
+    },
+    "de_bayer-leverkusen": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E32221",
+        "secondaryColor": "#000000",
+        "label": "Leverkusen"
+      }
+    },
+    "de_bayern-munchen": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#DC052D",
+        "secondaryColor": "#FFFFFF",
+        "label": "Bayern"
+      }
+    },
+    "cn_beijing-guoan": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Guoan"
+      }
+    },
+    "ar_belgrano": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Belgrano"
+      }
+    },
+    "pt_benfica": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E32219",
+        "secondaryColor": "#FFFFFF",
+        "label": "Benfica"
+      }
+    },
+    "tr_besiktas": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Beşiktaş"
+      }
+    },
+    "gb_blackburn-rovers": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#009EE0",
+        "secondaryColor": "#FFFFFF",
+        "label": "Blackburn"
+      }
+    },
+    "bo_blooming": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Blooming"
+      }
+    },
+    "pt_boavista": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Boavista"
+      }
+    },
+    "ar_boca-juniors": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003B77",
+        "secondaryColor": "#FBBF24",
+        "label": "Boca"
+      }
+    },
+    "de_bochum": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#005CA9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Bochum"
+      }
+    },
+    "no_bod-glimt": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Bodø/Glimt"
+      }
+    },
+    "bo_bolivar": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Bolívar"
+      }
+    },
+    "it_bologna": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#1A2F4A",
+        "secondaryColor": "#A51C30",
+        "label": "Bologna"
+      }
+    },
+    "fr_bordeaux": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Bordeaux"
+      }
+    },
+    "de_borussia-dortmund": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FDE100",
+        "secondaryColor": "#000000",
+        "label": "Dortmund"
+      }
+    },
+    "de_borussia-monchengladbach": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Gladbach"
+      }
+    },
+    "uy_boston-river": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#C8102E",
+        "label": "Boston River"
+      }
+    },
+    "br_botafogo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Botafogo"
+      }
+    },
+    "gb_bournemouth": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#DA291C",
+        "secondaryColor": "#000000",
+        "label": "Bournemouth"
+      }
+    },
+    "pt_braga": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Braga"
+      }
+    },
+    "br_bragantino": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#C8102E",
+        "label": "Bragantino"
+      }
+    },
+    "no_brann": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Brann"
+      }
+    },
+    "gb_brentford": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E30613",
+        "secondaryColor": "#FFFFFF",
+        "label": "Brentford"
+      }
+    },
+    "it_brescia": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Brescia"
+      }
+    },
+    "fr_brest": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Brest"
+      }
+    },
+    "gb_brighton": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#0057B8",
+        "secondaryColor": "#FFFFFF",
+        "label": "Brighton"
+      }
+    },
+    "au_brisbane-roar": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#003DA5",
+        "label": "Brisbane"
+      }
+    },
+    "gb_bristol-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E21E26",
+        "secondaryColor": "#FFFFFF",
+        "label": "Bristol City"
+      }
+    },
+    "dk_br-ndby": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Brøndby"
+      }
+    },
+    "es_burgos": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Burgos"
+      }
+    },
+    "gb_burnley": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#6C1D45",
+        "secondaryColor": "#99D6EA",
+        "label": "Burnley"
+      }
+    },
+    "fr_caen": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#C8102E",
+        "label": "Caen"
+      }
+    },
+    "it_cagliari": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "Cagliari"
+      }
+    },
+    "za_cape-town-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Cape Town City"
+      }
+    },
+    "ve_caracas-fc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Caracas"
+      }
+    },
+    "gb_cardiff-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#0070B5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Cardiff"
+      }
+    },
+    "pt_casa-pia": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Casa Pia"
+      }
+    },
+    "it_catanzaro": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#C8102E",
+        "label": "Catanzaro"
+      }
+    },
+    "br_ceara": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Ceará"
+      }
+    },
+    "es_celta-vigo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#8AC3E5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Celta"
+      }
+    },
+    "sct_celtic": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#018749",
+        "secondaryColor": "#FFFFFF",
+        "label": "Celtic"
+      }
+    },
+    "au_central-coast-mariners": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Mariners"
+      }
+    },
+    "ar_central-cordoba": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "C. Córdoba"
+      }
+    },
+    "be_cercle-brugge": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#000000",
+        "label": "Cercle"
+      }
+    },
+    "jp_cerezo-osaka": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF69B4",
+        "secondaryColor": "#000000",
+        "label": "Cerezo"
+      }
+    },
+    "uy_cerro-largo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Cerro Largo"
+      }
+    },
+    "py_cerro-porteno": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#C8102E",
+        "label": "Cerro"
+      }
+    },
+    "us_cf-montreal": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#000000",
+        "label": "Montréal"
+      }
+    },
+    "br_chapecoense": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Chapecoense"
+      }
+    },
+    "be_charleroi": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Charleroi"
+      }
+    },
+    "us_charlotte-fc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#1A9A39",
+        "secondaryColor": "#000000",
+        "label": "Charlotte"
+      }
+    },
+    "gb_chelsea": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#034694",
+        "secondaryColor": "#FFFFFF",
+        "label": "Chelsea"
+      }
+    },
+    "cn_chengdu-rongcheng": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Chengdu"
+      }
+    },
+    "us_chicago-fire": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "Fire"
+      }
+    },
+    "pe_cienciano": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Cienciano"
+      }
+    },
+    "mx_club-america": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "América"
+      }
+    },
+    "be_club-brugge": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#000000",
+        "label": "Club Brugge"
+      }
+    },
+    "cl_cobresal": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#003DA5",
+        "label": "Cobresal"
+      }
+    },
+    "cl_colo-colo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Colo-Colo"
+      }
+    },
+    "ar_colon": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Colón"
+      }
+    },
+    "us_colorado-rapids": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#8A1538",
+        "secondaryColor": "#9AC0CD",
+        "label": "Rapids"
+      }
+    },
+    "us_columbus-crew": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Crew"
+      }
+    },
+    "it_como": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Como"
+      }
+    },
+    "br_corinthians": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Corinthians"
+      }
+    },
+    "br_coritiba": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Coritiba"
+      }
+    },
+    "it_cosenza": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "Cosenza"
+      }
+    },
+    "gb_coventry-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#77A9D0",
+        "secondaryColor": "#FFFFFF",
+        "label": "Coventry"
+      }
+    },
+    "pl_cracovia": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Cracovia"
+      }
+    },
+    "it_cremonese": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#B0E0E6",
+        "label": "Cremonese"
+      }
+    },
+    "mx_cruz-azul": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Cruz Azul"
+      }
+    },
+    "br_cruzeiro": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Cruzeiro"
+      }
+    },
+    "gb_crystal-palace": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#1B458F",
+        "secondaryColor": "#C4122E",
+        "label": "Palace"
+      }
+    },
+    "br_cuiaba": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFD100",
+        "label": "Cuiabá"
+      }
+    },
+    "rs_cukaricki": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Čukarički"
+      }
+    },
+    "pe_cusco-fc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#C8102E",
+        "label": "Cusco"
+      }
+    },
+    "sa_damac": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#000000",
+        "label": "Damac"
+      }
+    },
+    "uy_danubio": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Danubio"
+      }
+    },
+    "us_dc-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#C8102E",
+        "label": "DC United"
+      }
+    },
+    "ar_defensa-y-justicia": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#006341",
+        "label": "Defensa"
+      }
+    },
+    "uy_defensor-sporting": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#582C83",
+        "secondaryColor": "#FFFFFF",
+        "label": "Defensor"
+      }
+    },
+    "ec_delfin": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFD100",
+        "label": "Delfín"
+      }
+    },
+    "co_deportes-tolima": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#881C1C",
+        "label": "Tolima"
+      }
+    },
+    "co_deportivo-cali": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Dep. Cali"
+      }
+    },
+    "ve_deportivo-la-guaira": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#003DA5",
+        "label": "La Guaira"
+      }
+    },
+    "ve_deportivo-tachira": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Táchira"
+      }
+    },
+    "gb_derby-county": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Derby"
+      }
+    },
+    "hr_dinamo-zagreb": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Dinamo"
+      }
+    },
+    "se_djurgarden": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Djurgården"
+      }
+    },
+    "ua_dnipro-1": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Dnipro-1"
+      }
+    },
+    "sct_dundee": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Dundee"
+      }
+    },
+    "sct_dundee-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#000000",
+        "label": "Dundee Utd"
+      }
+    },
+    "ua_dynamo-kyiv": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Dynamo"
+      }
+    },
+    "es_eibar": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#582C83",
+        "secondaryColor": "#FFFFFF",
+        "label": "Eibar"
+      }
+    },
+    "de_eintracht-frankfurt": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E1000F",
+        "secondaryColor": "#000000",
+        "label": "Frankfurt"
+      }
+    },
+    "ec_el-nacional": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "El Nacional"
+      }
+    },
+    "es_elche": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Elche"
+      }
+    },
+    "se_elfsborg": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Elfsborg"
+      }
+    },
+    "de_elversberg": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Elversberg"
+      }
+    },
+    "ec_emelec": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Emelec"
+      }
+    },
+    "it_empoli": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Empoli"
+      }
+    },
+    "eg_enppi": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "ENPPI"
+      }
+    },
+    "co_envigado": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#006341",
+        "label": "Envigado"
+      }
+    },
+    "ng_enyimba": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Enyimba"
+      }
+    },
+    "es_espanyol": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#007FC8",
+        "secondaryColor": "#FFFFFF",
+        "label": "Espanyol"
+      }
+    },
+    "pt_estoril": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Estoril"
+      }
+    },
+    "ar_estudiantes": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Estudiantes"
+      }
+    },
+    "gb_everton": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003399",
+        "secondaryColor": "#FFFFFF",
+        "label": "Everton"
+      }
+    },
+    "cl_everton-vina": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Everton"
+      }
+    },
+    "pt_famalicao": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Famalicão"
+      }
+    },
+    "pt_farense": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Farense"
+      }
+    },
+    "es_fc-barcelona": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#A50044",
+        "secondaryColor": "#004D98",
+        "label": "Barcelona"
+      }
+    },
+    "us_fc-cincinnati": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#F05323",
+        "secondaryColor": "#003DA5",
+        "label": "Cincinnati"
+      }
+    },
+    "us_fc-dallas": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E31937",
+        "secondaryColor": "#003DA5",
+        "label": "Dallas"
+      }
+    },
+    "dk_fc-k-benhavn": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "FCK"
+      }
+    },
+    "kr_fc-seoul": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "FC Seoul"
+      }
+    },
+    "jp_fc-tokyo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#C8102E",
+        "label": "FC Tokyo"
+      }
+    },
+    "tr_fenerbahce": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFED00",
+        "secondaryColor": "#003DA5",
+        "label": "Fenerbahçe"
+      }
+    },
+    "uy_fenix": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#582C83",
+        "secondaryColor": "#FFFFFF",
+        "label": "Fénix"
+      }
+    },
+    "nl_feyenoord": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Feyenoord"
+      }
+    },
+    "it_fiorentina": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#6C2C91",
+        "secondaryColor": "#FFFFFF",
+        "label": "Fiorentina"
+      }
+    },
+    "br_flamengo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Flamengo"
+      }
+    },
+    "br_fluminense": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#C8102E",
+        "label": "Fluminense"
+      }
+    },
+    "br_fortaleza": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#C8102E",
+        "label": "Fortaleza"
+      }
+    },
+    "de_fortuna-dusseldorf": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Düsseldorf"
+      }
+    },
+    "nl_fortuna-sittard": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#006341",
+        "label": "Fortuna"
+      }
+    },
+    "de_freiburg": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Freiburg"
+      }
+    },
+    "gb_fulham": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Fulham"
+      }
+    },
+    "ma_fus-rabat": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "FUS"
+      }
+    },
+    "eg_future-fc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Future"
+      }
+    },
+    "tr_galatasaray": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFA700",
+        "secondaryColor": "#A90432",
+        "label": "Galatasaray"
+      }
+    },
+    "jp_gamba-osaka": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#000000",
+        "label": "Gamba"
+      }
+    },
+    "tr_gaziantep": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Gaziantep"
+      }
+    },
+    "py_general-caballero": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Gral. Caballero"
+      }
+    },
+    "be_genk": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Genk"
+      }
+    },
+    "it_genoa": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "Genoa"
+      }
+    },
+    "be_gent": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Gent"
+      }
+    },
+    "es_getafe": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#0055A5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Getafe"
+      }
+    },
+    "pt_gil-vicente": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "Gil Vicente"
+      }
+    },
+    "ar_gimnasia-la-plata": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Gimnasia"
+      }
+    },
+    "es_girona": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C4122E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Girona"
+      }
+    },
+    "nl_go-ahead-eagles": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#C8102E",
+        "label": "GA Eagles"
+      }
+    },
+    "ar_godoy-cruz": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Godoy Cruz"
+      }
+    },
+    "br_goias": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Goiás"
+      }
+    },
+    "hr_gorica": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "Gorica"
+      }
+    },
+    "pl_gornik-zabrze": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Górnik"
+      }
+    },
+    "br_gremio": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#000000",
+        "label": "Grêmio"
+      }
+    },
+    "fr_grenoble": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Grenoble"
+      }
+    },
+    "nl_groningen": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Groningen"
+      }
+    },
+    "mx_guadalajara": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Chivas"
+      }
+    },
+    "py_guarani": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Guaraní"
+      }
+    },
+    "fr_guingamp": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Guingamp"
+      }
+    },
+    "se_hacken": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Häcken"
+      }
+    },
+    "hr_hajduk-split": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Hajduk"
+      }
+    },
+    "de_hamburger-sv": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "HSV"
+      }
+    },
+    "se_hammarby": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Hammarby"
+      }
+    },
+    "de_hannover-96": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#000000",
+        "label": "Hannover"
+      }
+    },
+    "at_hartberg": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Hartberg"
+      }
+    },
+    "sct_hearts": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#8B0000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Hearts"
+      }
+    },
+    "nl_heerenveen": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Heerenveen"
+      }
+    },
+    "de_heidenheim": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E30613",
+        "secondaryColor": "#003DA5",
+        "label": "Heidenheim"
+      }
+    },
+    "nl_heracles": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Heracles"
+      }
+    },
+    "de_hertha-bsc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Hertha"
+      }
+    },
+    "sct_hibernian": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006633",
+        "secondaryColor": "#FFFFFF",
+        "label": "Hibs"
+      }
+    },
+    "de_hoffenheim": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#1C63B7",
+        "secondaryColor": "#FFFFFF",
+        "label": "Hoffenheim"
+      }
+    },
+    "us_houston-dynamo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#F36600",
+        "secondaryColor": "#FFFFFF",
+        "label": "Dynamo"
+      }
+    },
+    "cl_huachipato": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#000000",
+        "label": "Huachipato"
+      }
+    },
+    "es_huesca": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Huesca"
+      }
+    },
+    "gb_hull-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#F5A12D",
+        "secondaryColor": "#000000",
+        "label": "Hull"
+      }
+    },
+    "ar_huracan": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#C8102E",
+        "label": "Huracán"
+      }
+    },
+    "se_ifk-goteborg": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "IFK Göteborg"
+      }
+    },
+    "kr_incheon-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#000000",
+        "label": "Incheon"
+      }
+    },
+    "ar_independiente": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#D32F2F",
+        "secondaryColor": "#FFFFFF",
+        "label": "Independiente"
+      }
+    },
+    "ec_independiente-del-valle": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "IDV"
+      }
+    },
+    "co_independiente-medellin": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "DIM"
+      }
+    },
+    "ar_instituto": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Instituto"
+      }
+    },
+    "it_inter": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#010E80",
+        "secondaryColor": "#000000",
+        "label": "Inter"
+      }
+    },
+    "us_inter-miami": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#F7B5CD",
+        "secondaryColor": "#000000",
+        "label": "Inter Miami"
+      }
+    },
+    "br_internacional": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Inter"
+      }
+    },
+    "gb_ipswich-town": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#0033A0",
+        "secondaryColor": "#FFFFFF",
+        "label": "Ipswich"
+      }
+    },
+    "pl_jagiellonia": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#C8102E",
+        "label": "Jagiellonia"
+      }
+    },
+    "kr_jeonbuk-hyundai": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Jeonbuk"
+      }
+    },
+    "bo_jorge-wilstermann": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "Wilstermann"
+      }
+    },
+    "mx_juarez": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#000000",
+        "label": "Juárez"
+      }
+    },
+    "co_junior": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Junior"
+      }
+    },
+    "br_juventude": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Juventude"
+      }
+    },
+    "it_juventus": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Juventus"
+      }
+    },
+    "de_kaiserslautern": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "FCK"
+      }
+    },
+    "za_kaizer-chiefs": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Chiefs"
+      }
+    },
+    "ng_kano-pillars": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Kano Pillars"
+      }
+    },
+    "de_karlsruher-sc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Karlsruhe"
+      }
+    },
+    "jp_kashima-antlers": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Kashima"
+      }
+    },
+    "tr_kas-mpasa": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Kasımpaşa"
+      }
+    },
+    "jp_kawasaki-frontale": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#000000",
+        "label": "Frontale"
+      }
+    },
+    "sct_kilmarnock": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#0033A0",
+        "secondaryColor": "#FFFFFF",
+        "label": "Kilmarnock"
+      }
+    },
+    "de_koln": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#ED1C24",
+        "secondaryColor": "#FFFFFF",
+        "label": "Köln"
+      }
+    },
+    "ua_kolos-kovalivka": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#006341",
+        "label": "Kolos"
+      }
+    },
+    "tr_konyaspor": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Konyaspor"
+      }
+    },
+    "co_la-equidad": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Equidad"
+      }
+    },
+    "us_la-galaxy": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#00245D",
+        "secondaryColor": "#FFD100",
+        "label": "LA Galaxy"
+      }
+    },
+    "us_lafc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#C39E6D",
+        "label": "LAFC"
+      }
+    },
+    "ar_lanus": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#6B2D5B",
+        "secondaryColor": "#FFFFFF",
+        "label": "Lanús"
+      }
+    },
+    "es_las-palmas": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Las Palmas"
+      }
+    },
+    "at_lask": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "LASK"
+      }
+    },
+    "fr_laval": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#000000",
+        "label": "Laval"
+      }
+    },
+    "it_lazio": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#87D8F7",
+        "secondaryColor": "#FFFFFF",
+        "label": "Lazio"
+      }
+    },
+    "ec_ldu-quito": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#C8102E",
+        "label": "LDU"
+      }
+    },
+    "fr_le-havre": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Le Havre"
+      }
+    },
+    "it_lecce": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#C8102E",
+        "label": "Lecce"
+      }
+    },
+    "pl_lech-poznan": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Lech"
+      }
+    },
+    "gb_leeds-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFCD00",
+        "secondaryColor": "#1D428A",
+        "label": "Leeds"
+      }
+    },
+    "es_leganes": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Leganés"
+      }
+    },
+    "pl_legia-warszawa": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Legia"
+      }
+    },
+    "gb_leicester-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003090",
+        "secondaryColor": "#FDBE11",
+        "label": "Leicester"
+      }
+    },
+    "fr_lens": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#C8102E",
+        "label": "Lens"
+      }
+    },
+    "mx_leon": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "León"
+      }
+    },
+    "es_levante": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#C8102E",
+        "label": "Levante"
+      }
+    },
+    "py_libertad": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Libertad"
+      }
+    },
+    "fr_lille": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E01E26",
+        "secondaryColor": "#FFFFFF",
+        "label": "Lille"
+      }
+    },
+    "no_lillestr-m": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Lillestrøm"
+      }
+    },
+    "gb_liverpool": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Liverpool"
+      }
+    },
+    "uy_liverpool-montevideo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#000000",
+        "label": "Liverpool"
+      }
+    },
+    "hr_lokomotiva": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Lokomotiva"
+      }
+    },
+    "ch_lugano": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Lugano"
+      }
+    },
+    "ch_luzern": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Luzern"
+      }
+    },
+    "fr_lyon": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Lyon"
+      }
+    },
+    "ma_maghreb-fes": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "MAS"
+      }
+    },
+    "de_mainz-05": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C3141E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Mainz"
+      }
+    },
+    "es_mallorca": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E20613",
+        "secondaryColor": "#000000",
+        "label": "Mallorca"
+      }
+    },
+    "se_malmo-ff": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Malmö"
+      }
+    },
+    "za_mamelodi-sundowns": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Sundowns"
+      }
+    },
+    "gb_manchester-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#6CABDD",
+        "secondaryColor": "#FFFFFF",
+        "label": "Man City"
+      }
+    },
+    "gb_manchester-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#DA291C",
+        "secondaryColor": "#FBE122",
+        "label": "Man United"
+      }
+    },
+    "fr_marseille": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#2FA3E0",
+        "secondaryColor": "#FFFFFF",
+        "label": "Marseille"
+      }
+    },
+    "mx_mazatlan": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#582C83",
+        "secondaryColor": "#FFFFFF",
+        "label": "Mazatlán"
+      }
+    },
+    "be_mechelen": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#C8102E",
+        "label": "Mechelen"
+      }
+    },
+    "au_melbourne-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Melbourne City"
+      }
+    },
+    "au_melbourne-victory": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Victory"
+      }
+    },
+    "pe_melgar": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Melgar"
+      }
+    },
+    "fr_metz": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#8B0000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Metz"
+      }
+    },
+    "gb_middlesbrough": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#ED1A3B",
+        "label": "Boro"
+      }
+    },
+    "dk_midtjylland": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Midtjylland"
+      }
+    },
+    "co_millonarios": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Millonarios"
+      }
+    },
+    "gb_millwall": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#002F6C",
+        "secondaryColor": "#FFFFFF",
+        "label": "Millwall"
+      }
+    },
+    "us_minnesota-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#8CD2F4",
+        "secondaryColor": "#FFFFFF",
+        "label": "Minnesota"
+      }
+    },
+    "es_mirandes": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Mirandés"
+      }
+    },
+    "it_modena": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Modena"
+      }
+    },
+    "no_molde": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Molde"
+      }
+    },
+    "fr_monaco": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E2001A",
+        "secondaryColor": "#FFFFFF",
+        "label": "Monaco"
+      }
+    },
+    "ve_monagas": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFD100",
+        "label": "Monagas"
+      }
+    },
+    "mx_monterrey": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Monterrey"
+      }
+    },
+    "uy_montevideo-city-torque": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Torque"
+      }
+    },
+    "fr_montpellier": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#003DA5",
+        "label": "Montpellier"
+      }
+    },
+    "it_monza": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E30613",
+        "secondaryColor": "#FFFFFF",
+        "label": "Monza"
+      }
+    },
+    "pt_moreirense": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Moreirense"
+      }
+    },
+    "sct_motherwell": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#F7A41A",
+        "secondaryColor": "#8B0000",
+        "label": "Motherwell"
+      }
+    },
+    "ec_mushuc-runa": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFD100",
+        "label": "Mushuc Runa"
+      }
+    },
+    "uy_nacional": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Nacional"
+      }
+    },
+    "py_nacional-asuncion": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Nacional"
+      }
+    },
+    "pt_nacional-madeira": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Nacional"
+      }
+    },
+    "jp_nagoya-grampus": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Nagoya"
+      }
+    },
+    "fr_nantes": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#006341",
+        "label": "Nantes"
+      }
+    },
+    "it_napoli": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#12A0D7",
+        "secondaryColor": "#FFFFFF",
+        "label": "Napoli"
+      }
+    },
+    "us_nashville-sc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#ECE83A",
+        "secondaryColor": "#1F1646",
+        "label": "Nashville"
+      }
+    },
+    "nl_nec": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#006341",
+        "label": "NEC"
+      }
+    },
+    "mx_necaxa": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Necaxa"
+      }
+    },
+    "us_new-england-revolution": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#0A2240",
+        "secondaryColor": "#C8102E",
+        "label": "Revolution"
+      }
+    },
+    "us_new-york-city-fc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#6CACE4",
+        "secondaryColor": "#00245D",
+        "label": "NYCFC"
+      }
+    },
+    "us_new-york-red-bulls": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#ED1E36",
+        "secondaryColor": "#FFFFFF",
+        "label": "Red Bulls"
+      }
+    },
+    "gb_newcastle-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#241F20",
+        "secondaryColor": "#FFFFFF",
+        "label": "Newcastle"
+      }
+    },
+    "ar_newell-s-old-boys": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E30613",
+        "secondaryColor": "#000000",
+        "label": "Newell's"
+      }
+    },
+    "fr_nice": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#E30613",
+        "label": "Nice"
+      }
+    },
+    "dk_nordsj-lland": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Nordsjælland"
+      }
+    },
+    "se_norrkoping": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Norrköping"
+      }
+    },
+    "gb_norwich-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFF200",
+        "secondaryColor": "#00A650",
+        "label": "Norwich"
+      }
+    },
+    "gb_nottingham-forest": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#DD0000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Forest"
+      }
+    },
+    "de_nurnberg": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Nürnberg"
+      }
+    },
+    "cl_nublense": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "Ñublense"
+      }
+    },
+    "cl_o-higgins": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "O'Higgins"
+      }
+    },
+    "no_odd": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Odd"
+      }
+    },
+    "gr_ofi": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "OFI"
+      }
+    },
+    "be_oh-leuven": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "OH Leuven"
+      }
+    },
+    "py_olimpia": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Olimpia"
+      }
+    },
+    "gr_olympiacos": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Olympiacos"
+      }
+    },
+    "co_once-caldas": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#006341",
+        "label": "Once Caldas"
+      }
+    },
+    "ec_orense": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Orense"
+      }
+    },
+    "bo_oriente-petrolero": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Oriente"
+      }
+    },
+    "us_orlando-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#61259E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Orlando"
+      }
+    },
+    "za_orlando-pirates": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Pirates"
+      }
+    },
+    "es_osasuna": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#0A3161",
+        "secondaryColor": "#D32E2E",
+        "label": "Osasuna"
+      }
+    },
+    "hr_osijek": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Osijek"
+      }
+    },
+    "gb_oxford-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FDB913",
+        "secondaryColor": "#000000",
+        "label": "Oxford"
+      }
+    },
+    "mx_pachuca": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Pachuca"
+      }
+    },
+    "de_paderborn": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#000000",
+        "label": "Paderborn"
+      }
+    },
+    "it_palermo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#C8102E",
+        "label": "Palermo"
+      }
+    },
+    "cl_palestino": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#006341",
+        "label": "Palestino"
+      }
+    },
+    "br_palmeiras": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Palmeiras"
+      }
+    },
+    "gr_panathinaikos": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Panathinaikos"
+      }
+    },
+    "gr_paok": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "PAOK"
+      }
+    },
+    "fr_paris-saint-germain": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#004170",
+        "secondaryColor": "#DA291C",
+        "label": "PSG"
+      }
+    },
+    "it_parma": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Parma"
+      }
+    },
+    "rs_partizan": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Partizan"
+      }
+    },
+    "fr_pau": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Pau"
+      }
+    },
+    "uy_penarol": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Peñarol"
+      }
+    },
+    "au_perth-glory": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#582C83",
+        "secondaryColor": "#FFFFFF",
+        "label": "Perth"
+      }
+    },
+    "us_philadelphia-union": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#0C2340",
+        "secondaryColor": "#B9975B",
+        "label": "Union"
+      }
+    },
+    "it_pisa": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#000000",
+        "label": "Pisa"
+      }
+    },
+    "ng_plateau-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Plateau"
+      }
+    },
+    "ar_platense": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#6B2D5B",
+        "secondaryColor": "#FFFFFF",
+        "label": "Platense"
+      }
+    },
+    "uy_plaza-colonia": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Plaza"
+      }
+    },
+    "pl_pogon-szczecin": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#8B0000",
+        "label": "Pogoń"
+      }
+    },
+    "kr_pohang-steelers": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Pohang"
+      }
+    },
+    "us_portland-timbers": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#004812",
+        "secondaryColor": "#FFFFFF",
+        "label": "Timbers"
+      }
+    },
+    "pt_porto": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Porto"
+      }
+    },
+    "gb_preston-north-end": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#002D62",
+        "label": "Preston"
+      }
+    },
+    "nl_psv": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "PSV"
+      }
+    },
+    "mx_puebla": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Puebla"
+      }
+    },
+    "mx_pumas-unam": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFD100",
+        "label": "Pumas"
+      }
+    },
+    "eg_pyramids": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Pyramids"
+      }
+    },
+    "qa_qatar-sc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#8B0000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Qatar SC"
+      }
+    },
+    "gb_queens-park-rangers": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#005CAB",
+        "secondaryColor": "#FFFFFF",
+        "label": "QPR"
+      }
+    },
+    "mx_queretaro": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#000000",
+        "label": "Querétaro"
+      }
+    },
+    "ar_racing-club": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Racing"
+      }
+    },
+    "es_racing-santander": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Racing"
+      }
+    },
+    "rs_radnicki-nis": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Radnički"
+      }
+    },
+    "ma_raja-casablanca": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Raja"
+      }
+    },
+    "pl_rakow-czestochowa": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "Raków"
+      }
+    },
+    "dk_randers": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Randers"
+      }
+    },
+    "sct_rangers": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#1B458F",
+        "secondaryColor": "#FFFFFF",
+        "label": "Rangers"
+      }
+    },
+    "ng_rangers-international": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Enugu Rangers"
+      }
+    },
+    "at_rapid-wien": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Rapid"
+      }
+    },
+    "es_rayo-vallecano": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#E20613",
+        "label": "Rayo"
+      }
+    },
+    "de_rb-leipzig": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#DD0741",
+        "secondaryColor": "#FFFFFF",
+        "label": "Leipzig"
+      }
+    },
+    "es_real-betis": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#0BB363",
+        "secondaryColor": "#FFFFFF",
+        "label": "Betis"
+      }
+    },
+    "es_real-madrid": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#FEBE10",
+        "label": "Real Madrid"
+      }
+    },
+    "es_real-oviedo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Oviedo"
+      }
+    },
+    "us_real-salt-lake": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#B30838",
+        "secondaryColor": "#FFC600",
+        "label": "RSL"
+      }
+    },
+    "es_real-sociedad": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#0067B1",
+        "secondaryColor": "#FFFFFF",
+        "label": "Real Sociedad"
+      }
+    },
+    "at_red-bull-salzburg": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Salzburg"
+      }
+    },
+    "rs_red-star-belgrade": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Crvena Zvezda"
+      }
+    },
+    "fr_reims": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Reims"
+      }
+    },
+    "ng_remo-stars": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Remo Stars"
+      }
+    },
+    "fr_rennes": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E30613",
+        "secondaryColor": "#000000",
+        "label": "Rennes"
+      }
+    },
+    "ar_riestra": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Riestra"
+      }
+    },
+    "hr_rijeka": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Rijeka"
+      }
+    },
+    "pt_rio-ave": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Rio Ave"
+      }
+    },
+    "ar_river-plate": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E2412B",
+        "secondaryColor": "#FFFFFF",
+        "label": "River"
+      }
+    },
+    "uy_river-plate-montevideo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "River UY"
+      }
+    },
+    "ng_rivers-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Rivers"
+      }
+    },
+    "fr_rodez": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFD100",
+        "label": "Rodez"
+      }
+    },
+    "it_roma": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#8E1F2F",
+        "secondaryColor": "#F0BC42",
+        "label": "Roma"
+      }
+    },
+    "ar_rosario-central": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Central"
+      }
+    },
+    "no_rosenborg": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Rosenborg"
+      }
+    },
+    "sct_ross-county": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Ross County"
+      }
+    },
+    "ma_rs-berkane": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#000000",
+        "label": "Berkane"
+      }
+    },
+    "fr_saint-etienne": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "ASSE"
+      }
+    },
+    "it_sampdoria": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sampdoria"
+      }
+    },
+    "us_san-jose-earthquakes": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#000000",
+        "label": "Earthquakes"
+      }
+    },
+    "ar_san-lorenzo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#1B2A4A",
+        "secondaryColor": "#C8102E",
+        "label": "San Lorenzo"
+      }
+    },
+    "jp_sanfrecce-hiroshima": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#582C83",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sanfrecce"
+      }
+    },
+    "pt_santa-clara": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Santa Clara"
+      }
+    },
+    "co_santa-fe": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Santa Fe"
+      }
+    },
+    "br_santos": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Santos"
+      }
+    },
+    "mx_santos-laguna": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Santos"
+      }
+    },
+    "br_sao-paulo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#C8102E",
+        "label": "São Paulo"
+      }
+    },
+    "ar_sarmiento": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sarmiento"
+      }
+    },
+    "it_sassuolo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#00A651",
+        "secondaryColor": "#000000",
+        "label": "Sassuolo"
+      }
+    },
+    "de_schalke-04": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#004D9E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Schalke"
+      }
+    },
+    "us_seattle-sounders": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#005D2E",
+        "secondaryColor": "#6CACE4",
+        "label": "Sounders"
+      }
+    },
+    "ch_servette": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#8B0000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Servette"
+      }
+    },
+    "es_sevilla": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#D61921",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sevilla"
+      }
+    },
+    "ae_shabab-al-ahli": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Shabab Al Ahli"
+      }
+    },
+    "ua_shakhtar-donetsk": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#000000",
+        "label": "Shakhtar"
+      }
+    },
+    "cn_shandong-taishan": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF6600",
+        "secondaryColor": "#FFFFFF",
+        "label": "Taishan"
+      }
+    },
+    "cn_shanghai-port": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Shanghai Port"
+      }
+    },
+    "cn_shanghai-shenhua": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Shenhua"
+      }
+    },
+    "gb_sheffield-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#EE2737",
+        "secondaryColor": "#000000",
+        "label": "Sheff Utd"
+      }
+    },
+    "cz_sigma-olomouc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#C8102E",
+        "label": "Sigma"
+      }
+    },
+    "dk_silkeborg": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Silkeborg"
+      }
+    },
+    "tr_sivasspor": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sivasspor"
+      }
+    },
+    "pl_slask-wroc-aw": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Śląsk"
+      }
+    },
+    "cz_slavia-praha": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Slavia"
+      }
+    },
+    "cz_slovan-liberec": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Liberec"
+      }
+    },
+    "py_sol-de-america": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sol"
+      }
+    },
+    "gb_southampton": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#D71920",
+        "secondaryColor": "#FFFFFF",
+        "label": "Southampton"
+      }
+    },
+    "cz_sparta-praha": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#8B0000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sparta"
+      }
+    },
+    "nl_sparta-rotterdam": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sparta"
+      }
+    },
+    "it_spezia": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Spezia"
+      }
+    },
+    "pe_sport-boys": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FF69B4",
+        "secondaryColor": "#000000",
+        "label": "Sport Boys"
+      }
+    },
+    "br_sport-recife": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Sport"
+      }
+    },
+    "pt_sporting-cp": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sporting"
+      }
+    },
+    "pe_sporting-cristal": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Cristal"
+      }
+    },
+    "es_sporting-gijon": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sporting"
+      }
+    },
+    "us_sporting-kansas-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#002B5C",
+        "secondaryColor": "#93B1C6",
+        "label": "Sporting KC"
+      }
+    },
+    "py_sportivo-luqueno": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFD100",
+        "label": "Luqueño"
+      }
+    },
+    "sct_st-johnstone": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "St Johnstone"
+      }
+    },
+    "sct_st-mirren": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "St Mirren"
+      }
+    },
+    "ch_st-gallen": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "St. Gallen"
+      }
+    },
+    "us_st-louis-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "St. Louis"
+      }
+    },
+    "de_st-pauli": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E30613",
+        "secondaryColor": "#8B4513",
+        "label": "St. Pauli"
+      }
+    },
+    "be_standard-liege": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Standard"
+      }
+    },
+    "za_stellenbosch": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Stellenbosch"
+      }
+    },
+    "gb_stoke-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E03A3E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Stoke"
+      }
+    },
+    "fr_strasbourg": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Strasbourg"
+      }
+    },
+    "at_sturm-graz": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sturm"
+      }
+    },
+    "gb_sunderland": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#EB172B",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sunderland"
+      }
+    },
+    "za_supersport-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Supersport"
+      }
+    },
+    "kr_suwon-samsung": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#C8102E",
+        "label": "Suwon"
+      }
+    },
+    "gb_swansea-city": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Swansea"
+      }
+    },
+    "au_sydney-fc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#59A3D9",
+        "secondaryColor": "#FFFFFF",
+        "label": "Sydney FC"
+      }
+    },
+    "ar_talleres": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Talleres"
+      }
+    },
+    "es_tenerife": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Tenerife"
+      }
+    },
+    "bo_the-strongest": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "The Strongest"
+      }
+    },
+    "cn_tianjin-jinmen": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Tianjin"
+      }
+    },
+    "ar_tigre": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#C8102E",
+        "label": "Tigre"
+      }
+    },
+    "mx_tigres-uanl": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Tigres"
+      }
+    },
+    "mx_tijuana": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Xolos"
+      }
+    },
+    "mx_toluca": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Toluca"
+      }
+    },
+    "it_torino": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#8B1E1E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Torino"
+      }
+    },
+    "us_toronto-fc": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E31937",
+        "secondaryColor": "#FFFFFF",
+        "label": "Toronto"
+      }
+    },
+    "gb_tottenham-hotspur": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#132257",
+        "secondaryColor": "#FFFFFF",
+        "label": "Spurs"
+      }
+    },
+    "fr_toulouse": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#582C83",
+        "secondaryColor": "#FFFFFF",
+        "label": "Toulouse"
+      }
+    },
+    "tr_trabzonspor": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#800000",
+        "secondaryColor": "#59A3D9",
+        "label": "Trabzonspor"
+      }
+    },
+    "no_troms": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Tromsø"
+      }
+    },
+    "rs_tsc-backa-topola": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "TSC"
+      }
+    },
+    "nl_twente": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Twente"
+      }
+    },
+    "it_udinese": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Udinese"
+      }
+    },
+    "kr_ulsan-hd": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFD100",
+        "label": "Ulsan"
+      }
+    },
+    "ar_union": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Unión"
+      }
+    },
+    "de_union-berlin": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#EB1923",
+        "secondaryColor": "#FFFFFF",
+        "label": "Union"
+      }
+    },
+    "cl_union-espanola": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFD100",
+        "label": "U. Española"
+      }
+    },
+    "cl_union-la-calera": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "La Calera"
+      }
+    },
+    "be_union-saint-gilloise": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Union SG"
+      }
+    },
+    "cl_universidad-catolica": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "U. Católica"
+      }
+    },
+    "ec_universidad-catolica-quito": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "U. Católica"
+      }
+    },
+    "cl_universidad-de-chile": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#C8102E",
+        "label": "U. de Chile"
+      }
+    },
+    "pe_universitario": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Universitario"
+      }
+    },
+    "jp_urawa-red-diamonds": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Urawa"
+      }
+    },
+    "nl_utrecht": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Utrecht"
+      }
+    },
+    "es_valencia": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#EE3524",
+        "secondaryColor": "#FFFFFF",
+        "label": "Valencia"
+      }
+    },
+    "es_valladolid": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#582C83",
+        "secondaryColor": "#FFFFFF",
+        "label": "Valladolid"
+      }
+    },
+    "us_vancouver-whitecaps": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#00245D",
+        "secondaryColor": "#FFFFFF",
+        "label": "Whitecaps"
+      }
+    },
+    "br_vasco-da-gama": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Vasco"
+      }
+    },
+    "ar_velez-sarsfield": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Vélez"
+      }
+    },
+    "it_verona": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Verona"
+      }
+    },
+    "de_vfb-stuttgart": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#E32219",
+        "secondaryColor": "#FFFFFF",
+        "label": "Stuttgart"
+      }
+    },
+    "dk_viborg": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Viborg"
+      }
+    },
+    "no_viking": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Viking"
+      }
+    },
+    "cz_viktoria-plzen": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#C8102E",
+        "label": "Plzeň"
+      }
+    },
+    "es_villarreal": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFE667",
+        "secondaryColor": "#005187",
+        "label": "Villarreal"
+      }
+    },
+    "jp_vissel-kobe": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#8B0000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Vissel"
+      }
+    },
+    "nl_vitesse": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Vitesse"
+      }
+    },
+    "br_vitoria": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Vitória"
+      }
+    },
+    "pt_vitoria-guimaraes": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Guimarães"
+      }
+    },
+    "rs_vojvodina": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Vojvodina"
+      }
+    },
+    "gr_volos": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Volos"
+      }
+    },
+    "ua_vorskla": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#006341",
+        "secondaryColor": "#FFFFFF",
+        "label": "Vorskla"
+      }
+    },
+    "uy_wanderers": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Wanderers"
+      }
+    },
+    "gb_watford": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FBEE23",
+        "secondaryColor": "#ED2127",
+        "label": "Watford"
+      }
+    },
+    "de_werder-bremen": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#1D9053",
+        "secondaryColor": "#FFFFFF",
+        "label": "Werder"
+      }
+    },
+    "gb_west-bromwich": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#122F67",
+        "secondaryColor": "#FFFFFF",
+        "label": "West Brom"
+      }
+    },
+    "gb_west-ham-united": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#7A263A",
+        "secondaryColor": "#1BB1E7",
+        "label": "West Ham"
+      }
+    },
+    "be_westerlo": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#003DA5",
+        "label": "Westerlo"
+      }
+    },
+    "au_western-sydney": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#000000",
+        "label": "Wanderers"
+      }
+    },
+    "nl_willem-ii": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#003DA5",
+        "label": "Willem II"
+      }
+    },
+    "ch_winterthur": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Winterthur"
+      }
+    },
+    "at_wolfsberger": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "WAC"
+      }
+    },
+    "de_wolfsburg": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#65B32E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Wolfsburg"
+      }
+    },
+    "gb_wolverhampton": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FDB913",
+        "secondaryColor": "#000000",
+        "label": "Wolves"
+      }
+    },
+    "ma_wydad-casablanca": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#C8102E",
+        "secondaryColor": "#FFFFFF",
+        "label": "Wydad"
+      }
+    },
+    "jp_yokohama-f-marinos": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Marinos"
+      }
+    },
+    "ch_young-boys": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFD100",
+        "secondaryColor": "#000000",
+        "label": "Young Boys"
+      }
+    },
+    "eg_zamalek": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Zamalek"
+      }
+    },
+    "ve_zamora": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#000000",
+        "label": "Zamora"
+      }
+    },
+    "es_zaragoza": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Zaragoza"
+      }
+    },
+    "ua_zorya-luhansk": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#000000",
+        "secondaryColor": "#FFFFFF",
+        "label": "Zorya"
+      }
+    },
+    "ch_zurich": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#FFFFFF",
+        "secondaryColor": "#003DA5",
+        "label": "Zürich"
+      }
+    },
+    "nl_zwolle": {
+      "status": "missing",
+      "src": null,
+      "license": null,
+      "source": null,
+      "fallback": {
+        "type": "color_tile",
+        "primaryColor": "#003DA5",
+        "secondaryColor": "#FFFFFF",
+        "label": "Zwolle"
+      }
+    }
+  }
+}

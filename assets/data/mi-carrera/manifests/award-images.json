@@ -1,0 +1,130 @@
+{
+  "version": 1,
+  "counts": {
+    "real": 0,
+    "missing": 15,
+    "total": 15
+  },
+  "items": {
+    "ballon_dor": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "ballon_dor"
+      }
+    },
+    "golden_boot_europe": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "golden_boot_europe"
+      }
+    },
+    "best_fifa_player": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "best_fifa_player"
+      }
+    },
+    "continental_player_sa": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "continental_player_sa"
+      }
+    },
+    "continental_player_eu": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "continental_player_eu"
+      }
+    },
+    "league_mvp": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "league_mvp"
+      }
+    },
+    "league_top_scorer": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "league_top_scorer"
+      }
+    },
+    "league_top_assist": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "league_top_assist"
+      }
+    },
+    "young_player": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "young_player"
+      }
+    },
+    "competition_mvp": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "competition_mvp"
+      }
+    },
+    "team_of_season": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "team_of_season"
+      }
+    },
+    "goalkeeper_season": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "goalkeeper_season"
+      }
+    },
+    "world_cup_golden_ball": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "world_cup_golden_ball"
+      }
+    },
+    "world_cup_golden_boot": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "world_cup_golden_boot"
+      }
+    },
+    "club_player_of_year": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "award_mark",
+        "label": "club_player_of_year"
+      }
+    }
+  }
+}

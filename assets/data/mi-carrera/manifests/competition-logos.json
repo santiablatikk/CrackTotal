@@ -1,0 +1,290 @@
+{
+  "version": 1,
+  "counts": {
+    "real": 0,
+    "missing": 35,
+    "total": 35
+  },
+  "items": {
+    "uefa_cl": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "uefa_cl"
+      }
+    },
+    "uefa_el": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "uefa_el"
+      }
+    },
+    "uefa_uecl": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "uefa_uecl"
+      }
+    },
+    "conmebol_libertadores": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "conmebol_libertadores"
+      }
+    },
+    "conmebol_sudamericana": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "conmebol_sudamericana"
+      }
+    },
+    "conmebol_recopa": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "conmebol_recopa"
+      }
+    },
+    "fifa_club_world_cup": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "fifa_club_world_cup"
+      }
+    },
+    "fifa_world_cup": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "fifa_world_cup"
+      }
+    },
+    "conmebol_copa_america": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "conmebol_copa_america"
+      }
+    },
+    "uefa_euro": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "uefa_euro"
+      }
+    },
+    "caf_afcon": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "caf_afcon"
+      }
+    },
+    "afc_asian_cup": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "afc_asian_cup"
+      }
+    },
+    "concacaf_gold_cup": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "concacaf_gold_cup"
+      }
+    },
+    "ar_league": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "ar_league"
+      }
+    },
+    "ar_copa": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "ar_copa"
+      }
+    },
+    "br_league": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "br_league"
+      }
+    },
+    "br_copa": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "br_copa"
+      }
+    },
+    "gb_league": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "gb_league"
+      }
+    },
+    "gb_fa_cup": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "gb_fa_cup"
+      }
+    },
+    "gb_efl_cup": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "gb_efl_cup"
+      }
+    },
+    "es_league": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "es_league"
+      }
+    },
+    "es_copa": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "es_copa"
+      }
+    },
+    "es_supercopa": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "es_supercopa"
+      }
+    },
+    "it_league": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "it_league"
+      }
+    },
+    "it_copa": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "it_copa"
+      }
+    },
+    "de_league": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "de_league"
+      }
+    },
+    "de_copa": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "de_copa"
+      }
+    },
+    "fr_league": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "fr_league"
+      }
+    },
+    "fr_copa": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "fr_copa"
+      }
+    },
+    "pt_league": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "pt_league"
+      }
+    },
+    "pt_copa": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "pt_copa"
+      }
+    },
+    "nl_league": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "nl_league"
+      }
+    },
+    "mx_league": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "mx_league"
+      }
+    },
+    "us_league": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "us_league"
+      }
+    },
+    "uefa_super_cup": {
+      "status": "missing",
+      "src": null,
+      "fallback": {
+        "type": "competition_wordmark",
+        "label": "uefa_super_cup"
+      }
+    }
+  }
+}

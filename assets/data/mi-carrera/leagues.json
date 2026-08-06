@@ -1,0 +1,447 @@
+{
+  "version": 1,
+  "count": 49,
+  "leagues": [
+    {
+      "id": "ar_primera",
+      "name": "Liga Profesional",
+      "shortName": "LPF",
+      "countryCode": "AR",
+      "continent": "SA",
+      "level": 1,
+      "prestige": 72
+    },
+    {
+      "id": "br_serie_a",
+      "name": "Brasileirão Série A",
+      "shortName": "Série A",
+      "countryCode": "BR",
+      "continent": "SA",
+      "level": 1,
+      "prestige": 78
+    },
+    {
+      "id": "uy_primera",
+      "name": "Primera División",
+      "shortName": "Primera UY",
+      "countryCode": "UY",
+      "continent": "SA",
+      "level": 1,
+      "prestige": 64
+    },
+    {
+      "id": "cl_primera",
+      "name": "Primera División",
+      "shortName": "Primera CL",
+      "countryCode": "CL",
+      "continent": "SA",
+      "level": 1,
+      "prestige": 62
+    },
+    {
+      "id": "co_primera",
+      "name": "Primera A",
+      "shortName": "Primera CO",
+      "countryCode": "CO",
+      "continent": "SA",
+      "level": 1,
+      "prestige": 63
+    },
+    {
+      "id": "ec_serie_a",
+      "name": "Serie A",
+      "shortName": "Serie A EC",
+      "countryCode": "EC",
+      "continent": "SA",
+      "level": 1,
+      "prestige": 58
+    },
+    {
+      "id": "py_primera",
+      "name": "División de Honor",
+      "shortName": "Primera PY",
+      "countryCode": "PY",
+      "continent": "SA",
+      "level": 1,
+      "prestige": 56
+    },
+    {
+      "id": "pe_liga1",
+      "name": "Liga 1",
+      "shortName": "Liga 1",
+      "countryCode": "PE",
+      "continent": "SA",
+      "level": 1,
+      "prestige": 55
+    },
+    {
+      "id": "bo_primera",
+      "name": "División Profesional",
+      "shortName": "Primera BO",
+      "countryCode": "BO",
+      "continent": "SA",
+      "level": 1,
+      "prestige": 50
+    },
+    {
+      "id": "ve_primera",
+      "name": "Liga FUTVE",
+      "shortName": "FUTVE",
+      "countryCode": "VE",
+      "continent": "SA",
+      "level": 1,
+      "prestige": 52
+    },
+    {
+      "id": "mx_liga_mx",
+      "name": "Liga MX",
+      "shortName": "Liga MX",
+      "countryCode": "MX",
+      "continent": "NA",
+      "level": 1,
+      "prestige": 74
+    },
+    {
+      "id": "us_mls",
+      "name": "Major League Soccer",
+      "shortName": "MLS",
+      "countryCode": "US",
+      "continent": "NA",
+      "level": 1,
+      "prestige": 68
+    },
+    {
+      "id": "gb_premier",
+      "name": "Premier League",
+      "shortName": "Premier",
+      "countryCode": "GB",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 96
+    },
+    {
+      "id": "gb_championship",
+      "name": "EFL Championship",
+      "shortName": "Championship",
+      "countryCode": "GB",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 72
+    },
+    {
+      "id": "sct_prem",
+      "name": "Scottish Premiership",
+      "shortName": "SPFL",
+      "countryCode": "SCT",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 66
+    },
+    {
+      "id": "es_laliga",
+      "name": "LaLiga",
+      "shortName": "LaLiga",
+      "countryCode": "ES",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 94
+    },
+    {
+      "id": "es_segunda",
+      "name": "LaLiga Hypermotion",
+      "shortName": "Segunda",
+      "countryCode": "ES",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 70
+    },
+    {
+      "id": "it_serie_a",
+      "name": "Serie A",
+      "shortName": "Serie A",
+      "countryCode": "IT",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 92
+    },
+    {
+      "id": "it_serie_b",
+      "name": "Serie B",
+      "shortName": "Serie B",
+      "countryCode": "IT",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 68
+    },
+    {
+      "id": "de_bundesliga",
+      "name": "Bundesliga",
+      "shortName": "Bundesliga",
+      "countryCode": "DE",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 90
+    },
+    {
+      "id": "de_2bundesliga",
+      "name": "2. Bundesliga",
+      "shortName": "2. Bundesliga",
+      "countryCode": "DE",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 68
+    },
+    {
+      "id": "fr_ligue1",
+      "name": "Ligue 1",
+      "shortName": "Ligue 1",
+      "countryCode": "FR",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 88
+    },
+    {
+      "id": "fr_ligue2",
+      "name": "Ligue 2",
+      "shortName": "Ligue 2",
+      "countryCode": "FR",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 64
+    },
+    {
+      "id": "pt_liga",
+      "name": "Liga Portugal",
+      "shortName": "Liga Portugal",
+      "countryCode": "PT",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 80
+    },
+    {
+      "id": "nl_eredivisie",
+      "name": "Eredivisie",
+      "shortName": "Eredivisie",
+      "countryCode": "NL",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 78
+    },
+    {
+      "id": "be_pro",
+      "name": "Jupiler Pro League",
+      "shortName": "Pro League",
+      "countryCode": "BE",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 74
+    },
+    {
+      "id": "tr_super",
+      "name": "Süper Lig",
+      "shortName": "Süper Lig",
+      "countryCode": "TR",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 76
+    },
+    {
+      "id": "gr_super",
+      "name": "Super League Greece",
+      "shortName": "Super League",
+      "countryCode": "GR",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 68
+    },
+    {
+      "id": "at_bundesliga",
+      "name": "Admiral Bundesliga",
+      "shortName": "Bundesliga AT",
+      "countryCode": "AT",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 66
+    },
+    {
+      "id": "ch_super",
+      "name": "Super League",
+      "shortName": "Super League CH",
+      "countryCode": "CH",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 65
+    },
+    {
+      "id": "dk_superliga",
+      "name": "Superliga",
+      "shortName": "Superliga",
+      "countryCode": "DK",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 64
+    },
+    {
+      "id": "no_eliteserien",
+      "name": "Eliteserien",
+      "shortName": "Eliteserien",
+      "countryCode": "NO",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 60
+    },
+    {
+      "id": "se_allsvenskan",
+      "name": "Allsvenskan",
+      "shortName": "Allsvenskan",
+      "countryCode": "SE",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 60
+    },
+    {
+      "id": "pl_ekstraklasa",
+      "name": "Ekstraklasa",
+      "shortName": "Ekstraklasa",
+      "countryCode": "PL",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 62
+    },
+    {
+      "id": "cz_fortuna",
+      "name": "Chance Liga",
+      "shortName": "Chance Liga",
+      "countryCode": "CZ",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 61
+    },
+    {
+      "id": "hr_hnl",
+      "name": "HNL",
+      "shortName": "HNL",
+      "countryCode": "HR",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 63
+    },
+    {
+      "id": "rs_superliga",
+      "name": "Mozzart Bet Superliga",
+      "shortName": "Superliga RS",
+      "countryCode": "RS",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 62
+    },
+    {
+      "id": "ua_premier",
+      "name": "Ukrainian Premier League",
+      "shortName": "UPL",
+      "countryCode": "UA",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 64
+    },
+    {
+      "id": "jp_j1",
+      "name": "J1 League",
+      "shortName": "J1",
+      "countryCode": "JP",
+      "continent": "AS",
+      "level": 1,
+      "prestige": 66
+    },
+    {
+      "id": "kr_k1",
+      "name": "K League 1",
+      "shortName": "K League 1",
+      "countryCode": "KR",
+      "continent": "AS",
+      "level": 1,
+      "prestige": 62
+    },
+    {
+      "id": "cn_csl",
+      "name": "Chinese Super League",
+      "shortName": "CSL",
+      "countryCode": "CN",
+      "continent": "AS",
+      "level": 1,
+      "prestige": 60
+    },
+    {
+      "id": "sa_pro",
+      "name": "Saudi Pro League",
+      "shortName": "SPL",
+      "countryCode": "SA",
+      "continent": "AS",
+      "level": 1,
+      "prestige": 82
+    },
+    {
+      "id": "qa_stars",
+      "name": "Qatar Stars League",
+      "shortName": "QSL",
+      "countryCode": "QA",
+      "continent": "AS",
+      "level": 1,
+      "prestige": 64
+    },
+    {
+      "id": "ae_pro",
+      "name": "UAE Pro League",
+      "shortName": "UAE Pro",
+      "countryCode": "AE",
+      "continent": "AS",
+      "level": 1,
+      "prestige": 63
+    },
+    {
+      "id": "au_aleague",
+      "name": "A-League Men",
+      "shortName": "A-League",
+      "countryCode": "AU",
+      "continent": "OC",
+      "level": 1,
+      "prestige": 58
+    },
+    {
+      "id": "eg_premier",
+      "name": "Egyptian Premier League",
+      "shortName": "EPL EG",
+      "countryCode": "EG",
+      "continent": "AF",
+      "level": 1,
+      "prestige": 60
+    },
+    {
+      "id": "ma_botola",
+      "name": "Botola Pro",
+      "shortName": "Botola",
+      "countryCode": "MA",
+      "continent": "AF",
+      "level": 1,
+      "prestige": 58
+    },
+    {
+      "id": "za_psl",
+      "name": "DStv Premiership",
+      "shortName": "PSL",
+      "countryCode": "ZA",
+      "continent": "AF",
+      "level": 1,
+      "prestige": 56
+    },
+    {
+      "id": "ng_npfl",
+      "name": "NPFL",
+      "shortName": "NPFL",
+      "countryCode": "NG",
+      "continent": "AF",
+      "level": 1,
+      "prestige": 52
+    }
+  ]
+}
