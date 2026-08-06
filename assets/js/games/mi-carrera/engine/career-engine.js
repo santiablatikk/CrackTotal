@@ -357,8 +357,11 @@
     state.blockModifiers = null;
     state.blockSeasonsLeft = 0;
     state.recentBeats = [];
+    state.storyBeats = [];
     state.lastBeatConsequence = '';
     state.lastBeatLabel = '';
+    state.lastMarketLine = '';
+    state.lastStoryLine = '';
     // First season is playable immediately (tests + first kickoff).
     // The UI inserts a career beat before each block via prepareCareerBeat().
     state.phase = 'simulate';
@@ -619,7 +622,9 @@
           )
         : null,
       ageChapter: NS.Rules.ageChapter ? NS.Rules.ageChapter(state.age, state) : null,
-      role: state.clubRole || null
+      role: state.clubRole || null,
+      consequence: state.lastBeatConsequence || state.lastStoryLine || '',
+      beatLabel: state.lastBeatLabel || null
     };
     state.seasonHistory.push(seasonRecord);
     if (NS.Rules.appendClubTimeline) NS.Rules.appendClubTimeline(state, seasonRecord);

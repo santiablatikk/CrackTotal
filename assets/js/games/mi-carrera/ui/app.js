@@ -323,8 +323,9 @@
 
   App.prototype.resolveBeatAndPlay = function (optionId) {
     if (this.busy || !this.state || this.state.phase !== 'beat') return;
+    var result;
     try {
-      this.engine.resolveCareerBeat(this.state, optionId);
+      result = this.engine.resolveCareerBeat(this.state, optionId);
     } catch (err) {
       UI.components.openModal({
         title: 'No se pudo decidir',
@@ -334,7 +335,26 @@
       });
       return;
     }
-    this.runBlock();
+    this._lastBeatResult = result && result.beat ? result.beat : null;
+    this.showBeatCommit(this._lastBeatResult);
+  };
+
+  App.prototype.showBeatCommit = function (beatResult) {
+    this.setRootScreen(
+      'beat-commit',
+      UI.screens.beatCommit({
+        state: this.state,
+        engine: this.engine,
+        beatResult: beatResult || {
+          consequence: this.state.lastBeatConsequence,
+          label: this.state.lastBeatLabel,
+          ups: [],
+          downs: []
+        }
+      }),
+      { state: 'beat-commit' }
+    );
+    this.announce(this.state.lastBeatLabel || 'Decisión tomada');
   };
 
   App.prototype.routeAfterDecision = function () {
@@ -355,7 +375,36 @@
       this.showCareerBeat();
       return;
     }
-    this.showCareerHome();
+    this.routeActivePlay();
+  };
+
+  App.prototype.routeActivePlay = function () {
+    if (!this.state) {
+      this.showIntro();
+      return;
+    }
+    if (this.state.retired) {
+      this.showRetire();
+      return;
+    }
+    if (this.state.phase === 'decision') {
+      this.showMarket({ resetIndex: true });
+      return;
+    }
+    if (this.state.phase === 'beat') {
+      this.showCareerBeat();
+      return;
+    }
+    if (this.state.phase === 'simulate') {
+      if (NS.Beats && this.engine.prepareCareerBeat) {
+        this.engine.prepareCareerBeat(this.state);
+        this.showCareerBeat();
+        return;
+      }
+      this.runBlock();
+      return;
+    }
+    this.showIntro();
   };
 
   App.prototype.showPresent = function () {
@@ -366,25 +415,12 @@
   };
 
   App.prototype.showCareerHome = function () {
-    if (this.focusAge == null && this.state) this.focusAge = this.state.age;
-    if (!this.selectedOfferId && this.state.pendingOffers && this.state.pendingOffers.length) {
-      this.selectedOfferId = this.state.pendingOffers[0].id;
-    }
-    this.setRootScreen(
-      'career-home',
-      UI.screens.careerHome({
-        state: this.state,
-        engine: this.engine,
-        focusAge: this.focusAge,
-        selectedOfferId: this.selectedOfferId
-      }),
-      { state: 'active' }
-    );
-    this.announce('Temporada ' + UI.format.seasonLabel(this.state.seasonIndex, BASE_YEAR));
+    // Copero-like: never park the player on a stats hub.
+    this.routeActivePlay();
   };
 
   App.prototype.showSeason = function () {
-    this.showCareerHome();
+    this.routeActivePlay();
   };
 
   App.prototype.showMarket = function (opts) {
@@ -721,10 +757,10 @@
       this.focusAge = this.state.age;
     }
     if (this.state.phase === 'decision') {
+      var selfChoose = this;
       this.resolveDecisionOnly(optionId, offerId, function () {
-        /* stay on home; user plays season next */
+        selfChoose.routeAfterDecision();
       });
-      this.showCareerHome();
       return;
     }
     this.busy = true;
@@ -755,7 +791,7 @@
     if (result.season) {
       this.showSeasonRecap(result.season);
     } else {
-      this.showCareerHome();
+      this.routeActivePlay();
     }
     void before;
   };
@@ -769,7 +805,9 @@
     var titles = (season.titles || []).slice().sort(function (a, b) {
       return (b.importance || 0) - (a.importance || 0);
     });
-    titles.forEach(function (title) {
+    // Only epic titles interrupt the loop — rest live in recap.
+    titles.slice(0, 1).forEach(function (title) {
+      if ((title.importance || 0) < 75) return;
       var club = title.clubId ? self.engine.getClub(title.clubId) : null;
       var nt = title.nationalTeamId
         ? self.engine.world.nationalTeamsById[title.nationalTeamId]
@@ -778,58 +816,29 @@
     });
 
     (season.awards || []).forEach(function (award) {
-      var tier =
-        UI.Narrative && UI.Narrative.awardTier
-          ? UI.Narrative.awardTier(award)
-          : award.awardId === 'award_ballon_dor'
-            ? 'ballon'
-            : 'major';
-      if (tier === 'minor') return;
-      if (tier === 'ballon') {
+      if (award.awardId === 'award_ballon_dor') {
         queue.push({ type: 'ballon-tease', award: award, playerName: playerName });
         queue.push({ type: 'award', award: award, playerName: playerName });
-        return;
       }
-      queue.push({ type: 'award', award: award, playerName: playerName });
     });
 
     var seasonIdx = season.seasonIndex;
-    var momentPriority = {
-      moment_ballon: 100,
-      moment_world_cup: 95,
-      moment_first_ucl: 90,
-      moment_first_libertadores: 88,
-      moment_first_league: 70,
-      moment_first_callup: 60,
-      moment_return_home: 55,
-      moment_100_goals: 50,
-      moment_500_apps: 45
-    };
     var moments = [];
     (this.state.moments || []).forEach(function (moment) {
       if (moment.seasonIndex !== seasonIdx) return;
-      if (moment.id === 'moment_retire' || moment.id === 'moment_intl_debut') return;
       var id = String(moment.id);
-      var big =
-        momentPriority[id] != null ||
+      if (
+        id === 'moment_first_callup' ||
+        id === 'moment_world_cup' ||
         id.indexOf('moment_breakout_') === 0 ||
-        id.indexOf('moment_comeback_') === 0 ||
-        id.indexOf('moment_crisis_') === 0;
-      if (!big) return;
-      var score = momentPriority[id] || 40;
-      if (id.indexOf('moment_breakout_') === 0) score = 75;
-      if (id.indexOf('moment_comeback_') === 0) score = 72;
-      if (id.indexOf('moment_crisis_') === 0) score = 65;
-      moments.push({ moment: moment, score: score });
+        id.indexOf('moment_comeback_') === 0
+      ) {
+        moments.push(moment);
+      }
     });
-    moments.sort(function (a, b) {
-      return b.score - a.score;
-    });
-    moments.slice(0, 4).forEach(function (m) {
-      queue.push({ type: 'moment', moment: m.moment });
-    });
+    if (moments[0]) queue.push({ type: 'moment', moment: moments[0] });
 
-    return queue;
+    return queue.slice(0, 2);
   };
 
   App.prototype.showRetireTransition = function () {
@@ -899,6 +908,14 @@
     var self = this;
     if (this.state && this.state.phase === 'decision' && decision && decision.type === 'transferencia') {
       this.resolveDecisionOnly('stay_loyal', null, function () {
+        var stay =
+          NS.Rules && NS.Rules.stayConsequence
+            ? NS.Rules.stayConsequence(self.state, self.engine.world)
+            : null;
+        var line = (stay && stay.headline) || 'Te quedaste. La historia sigue acá.';
+        if (NS.Rules && NS.Rules.pushStoryBeat) {
+          NS.Rules.pushStoryBeat(self.state, { kind: 'stay', line: line, label: 'Quedarme' });
+        }
         self.enterNextSeason();
       });
       return;
@@ -912,6 +929,15 @@
       this.state.stayedStreak = (this.state.stayedStreak || 0) + 1;
       this.state.currentDecision = null;
       this.state.pendingOffers = [];
+      var stayInfo =
+        NS.Rules && NS.Rules.stayConsequence
+          ? NS.Rules.stayConsequence(this.state, this.engine.world)
+          : null;
+      var stayLine =
+        (stayInfo && stayInfo.headline) || 'Te quedaste. La historia sigue acá.';
+      if (NS.Rules && NS.Rules.pushStoryBeat) {
+        NS.Rules.pushStoryBeat(this.state, { kind: 'stay', line: stayLine, label: 'Quedarme' });
+      }
       this.engine.prepareCareerBeat(this.state);
       if (NS.Storage && NS.Storage.saveActive) NS.Storage.saveActive(this.state);
     }
@@ -928,7 +954,7 @@
         return o.id === oid;
       })[0] || null;
     if (!offer) {
-      this.showCareerHome();
+      this.routeActivePlay();
       return;
     }
     if (!this.state.currentDecision || this.state.currentDecision.type !== 'transferencia') {
@@ -953,12 +979,22 @@
     this.resolveDecisionOnly('accept_best_prestige', oid, function (result) {
       if (result.transferOffer) {
         var club = self.engine.getClub(result.transferOffer.clubId);
-        if (NS.Rules && NS.Rules.transferConsequence) {
-          self.state._lastTransferLine = NS.Rules.transferConsequence(
-            self.state,
-            result.transferOffer,
-            self.engine.world
-          );
+        var line =
+          NS.Rules && NS.Rules.transferConsequence
+            ? NS.Rules.transferConsequence(
+                self.state,
+                result.transferOffer,
+                self.engine.world
+              )
+            : 'Nuevo club. Nueva presión.';
+        self.state._lastTransferLine = line;
+        if (NS.Rules && NS.Rules.pushStoryBeat) {
+          NS.Rules.pushStoryBeat(self.state, {
+            kind: result.transferOffer.kind === 'loan' ? 'loan' : 'transfer',
+            line: line,
+            label: club ? club.shortName || club.name : 'Traspaso',
+            clubId: result.transferOffer.clubId
+          });
         }
         self.showTransferCinematic(club);
       } else {
@@ -1017,16 +1053,7 @@
       this.state.currentDecision = NS.Decisions.pickDecision(this.state, this.engine.world, rng);
       NS.Storage.saveActive(this.state);
     }
-    var hasOffers = this.state.pendingOffers && this.state.pendingOffers.length;
-    var isTransfer =
-      this.state.currentDecision && this.state.currentDecision.type === 'transferencia';
-    if (hasOffers || isTransfer || this.state.phase === 'decision') {
-      this.showMarket();
-    } else if (this.state.phase === 'simulate') {
-      this.showCareerBeat();
-    } else {
-      this.showCareerHome();
-    }
+    this.routeActivePlay();
   };
 
   App.prototype.createFromDraft = function () {
@@ -1224,7 +1251,7 @@
     }
     if (action === 'focus-age') {
       this.focusAge = Number(target.getAttribute('data-age'));
-      this.showCareerHome();
+      this.routeActivePlay();
       return;
     }
     if (action === 'after-recap') {
@@ -1248,23 +1275,15 @@
       return;
     }
     if (action === 'play-season') {
-      if (this.state && this.state.phase === 'beat') {
-        this.showCareerBeat();
-        return;
-      }
-      this.showPreSeason();
+      this.routeActivePlay();
       return;
     }
-    if (action === 'confirm-season') {
-      if (this.state && this.state.phase === 'beat') {
-        this.showCareerBeat();
-        return;
-      }
+    if (action === 'confirm-season' || action === 'confirm-beat-play') {
       this.runBlock();
       return;
     }
     if (action === 'back-hub') {
-      this.showCareerHome();
+      this.routeActivePlay();
       return;
     }
     if (action === 'after-age-up') {
@@ -1313,7 +1332,7 @@
       }
       var self = this;
       this.resolveDecisionOnly(optionId, offerId, function () {
-        self.showCareerHome();
+        self.routeAfterDecision();
       });
       return;
     }

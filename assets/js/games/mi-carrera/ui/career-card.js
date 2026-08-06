@@ -174,8 +174,7 @@
       flag +
       '<div>' +
       '<p class="mc-kicker">' +
-      F().escapeHtml(vm.position) +
-      (vm.emergentLabel ? ' · ' + F().escapeHtml(vm.emergentLabel) : '') +
+      F().escapeHtml(vm.emergentLabel || vm.positionLabel || vm.position) +
       '</p>' +
       '<h2 class="mc-career-card__name">' +
       F().escapeHtml(vm.playerName) +
@@ -207,7 +206,7 @@
       '</strong></div></div>' +
       (badges ? '<div class="mc-career-card__badge-row">' + badges + '</div>' : '') +
       renderHighlights(vm) +
-      '<div class="mc-career-card__stats">' +
+      '<div class="mc-career-card__stats mc-career-card__stats--story">' +
       '<div><span>PJ</span><strong>' +
       vm.appearances +
       '</strong></div>' +
@@ -227,17 +226,8 @@
       '<div><span>Títulos</span><strong>' +
       vm.titles +
       '</strong></div>' +
-      '<div><span>Premios</span><strong>' +
-      vm.awards +
-      '</strong></div>' +
-      '<div><span>Sel.</span><strong>' +
-      vm.nationalCaps +
-      '</strong></div>' +
-      '<div><span>Peak OVR</span><strong class="is-accent">' +
+      '<div><span>Pico</span><strong class="is-accent">' +
       vm.peakRating +
-      '</strong></div>' +
-      '<div><span>Valor máx.</span><strong>' +
-      F().escapeHtml(F().formatMoney(vm.peakMarketValue)) +
       '</strong></div></div>' +
       (ach ? '<div class="mc-career-card__ach">' + ach + '</div>' : '') +
       '<footer class="mc-career-card__footer">Crack Total · Mi Carrera</footer>' +

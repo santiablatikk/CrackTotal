@@ -345,15 +345,22 @@
       normal: { id: 'normal', label: 'Normal', blurb: 'Una decisión cada 2 temporadas.' },
       express: { id: 'express', label: 'Exprés', blurb: 'Una decisión cada 3 temporadas.' }
     };
-    var order = ['express', 'normal', 'intense'];
+    var order = ['intense', 'normal', 'express'];
     var cards = order
       .map(function (id) {
         var m = modes[id];
         if (!m) return '';
+        var seasonsHint =
+          id === 'intense' ? '1 temporada' : id === 'normal' ? '2 temporadas' : '3 temporadas';
         return (
-          '<button type="button" class="mc-mode-card" data-mc-action="pick-mode" data-mode="' +
+          '<button type="button" class="mc-mode-card mc-mode-card--' +
+          F().escapeHtml(m.id) +
+          '" data-mc-action="pick-mode" data-mode="' +
           F().escapeHtml(m.id) +
           '">' +
+          '<span class="mc-mode-card__tag">' +
+          F().escapeHtml(seasonsHint) +
+          ' por decisión</span>' +
           '<strong>' +
           F().escapeHtml(m.label) +
           '</strong>' +
@@ -429,6 +436,47 @@
         optsHtml +
         '</div>',
       actions: ''
+    });
+  }
+
+  function beatCommitScreen(ctx) {
+    var state = ctx.state;
+    var engine = ctx.engine;
+    var club = engine.getClub(state.clubId);
+    var beat = ctx.beatResult || {};
+    var blockN = NS.Beats ? NS.Beats.blockSize(state) : state.blockSeasonsLeft || 1;
+    var trade =
+      ((beat.ups || [])
+        .map(function (u) {
+          return '<em class="mc-path-up">+ ' + F().escapeHtml(u) + '</em>';
+        })
+        .join('') || '') +
+      ((beat.downs || [])
+        .map(function (d) {
+          return '<em class="mc-path-down">− ' + F().escapeHtml(d) + '</em>';
+        })
+        .join('') || '');
+    return scene({
+      id: 'beat-commit',
+      tone: 'preseason',
+      kicker: beat.label || state.lastBeatLabel || 'Decisión tomada',
+      title: state.age + ' AÑOS',
+      lead: F().escapeHtml(club ? club.shortName || club.name : 'Tu club'),
+      body:
+        '<div class="mc-scene-crest">' +
+        C().clubBadgeHtml(club, 'xxl') +
+        '</div>' +
+        '<p class="mc-poster-line">' +
+        F().escapeHtml(beat.consequence || state.lastBeatConsequence || 'La temporada ya empezó.') +
+        '</p>' +
+        (trade ? '<div class="mc-beat-option__trade mc-beat-commit__trade">' + trade + '</div>' : '') +
+        '<p class="mc-scene__meta">' +
+        (blockN === 1
+          ? 'Se simula 1 temporada con esta decisión.'
+          : 'Se simulan ' + blockN + ' temporadas con esta decisión.') +
+        '</p>',
+      actions:
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="confirm-beat-play">Jugar</button>'
     });
   }
 
@@ -984,15 +1032,21 @@
         '<span class="mc-offer-role">' +
         F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
         (offer.minutesLabel ? ' · ' + F().escapeHtml(offer.minutesLabel) : '') +
-        '</span></article>',
+        '</span>' +
+        '<div class="mc-trade-row">' +
+        tradeoffChips(currentClub, club, offer) +
+        '</div></article>',
       actions:
-        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-compare" data-offer="' +
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-sign" data-offer="' +
         F().escapeHtml(offer.id) +
         '">' +
-        (isLoan ? 'Ver cesión' : 'Ver oferta') +
+        (isLoan ? 'Aceptar cesión' : 'Firmar') +
         '</button>' +
+        '<button type="button" class="ct-button ct-button--secondary" data-mc-action="market-compare" data-offer="' +
+        F().escapeHtml(offer.id) +
+        '">Comparar</button>' +
         (more
-          ? '<button type="button" class="ct-button ct-button--secondary" data-mc-action="market-next-offer">Otra oferta</button>'
+          ? '<button type="button" class="ct-button ct-button--ghost" data-mc-action="market-next-offer">Otra oferta</button>'
           : '') +
         '<button type="button" class="ct-button ct-button--ghost" data-mc-action="market-stay">Quedarme</button>' +
         (canLoan && !offers.some(function (o) {
@@ -1142,9 +1196,6 @@
     var engine = ctx.engine;
     var club = engine.getClub(season.clubId || state.clubId);
     var player = (state && state.player) || {};
-    var country = player.countryId
-      ? engine.world.countriesById[player.countryId]
-      : null;
     var ovrAfter = season.ratingAfter != null ? season.ratingAfter : state.rating;
     var ovrBefore =
       season.ratingBefore != null ? season.ratingBefore : ovrAfter - (season.growth || 0);
@@ -1156,48 +1207,25 @@
     else if (season.performanceGrade === 'S' || season.performanceGrade === 'A') tone = 'hot';
     else if (season.performanceGrade === 'D') tone = 'cold';
 
-    var narrative =
-      UI.Narrative && UI.Narrative.seasonNarrative
+    var consequence =
+      season.consequence ||
+      state.lastBeatConsequence ||
+      (UI.Narrative && UI.Narrative.seasonNarrative
         ? UI.Narrative.seasonNarrative(season, state, engine && engine.world)
-        : seasonMomentLine(season);
-
-    var fs =
-      NS.Rules && NS.Rules.formStatus
-        ? NS.Rules.formStatus(season.formAfter != null ? season.formAfter : state.form)
-        : null;
+        : seasonMomentLine(season));
     var seasonAge = season.age != null ? season.age : state.age;
-    var chapter =
-      season.ageChapter ||
-      (UI.Narrative && UI.Narrative.ageHeadline
-        ? UI.Narrative.ageHeadline(seasonAge, state)
-        : '');
-    var roleLabel = season.role
-      ? F().ROLE_LABELS[season.role] || season.role
-      : '';
 
     var highlightBits = [];
     (season.titles || []).slice(0, 2).forEach(function (t) {
       highlightBits.push(
-        '<p class="mc-recap-highlight mc-recap-highlight--title">🏆 ' +
+        '<p class="mc-recap-highlight mc-recap-highlight--title">' +
           F().escapeHtml(t.shortName || t.name) +
           '</p>'
       );
     });
-    (season.awards || [])
-      .filter(function (a) {
-        return (a.importance || 0) >= 70 || a.awardId === 'award_ballon_dor';
-      })
-      .slice(0, 2)
-      .forEach(function (a) {
-        highlightBits.push(
-          '<p class="mc-recap-highlight mc-recap-highlight--award">⭐ ' +
-            F().escapeHtml(a.shortName || a.name) +
-            '</p>'
-        );
-      });
     if (season.firstCallUp) {
       highlightBits.push(
-        '<p class="mc-recap-highlight mc-recap-highlight--nt">🌎 Debut con la selección</p>'
+        '<p class="mc-recap-highlight mc-recap-highlight--nt">Debut con la selección</p>'
       );
     }
 
@@ -1205,30 +1233,16 @@
       id: 'recap',
       tone: tone,
       kicker: F().escapeHtml(season.seasonLabel || F().seasonLabel(season.seasonIndex)),
-      title: F().escapeHtml(narrative),
-      lead:
-        '<span class="mc-recap-age">' +
-        seasonAge +
-        ' AÑOS</span> · ' +
-        F().escapeHtml(club ? club.shortName || club.name : 'Tu club'),
+      title: seasonAge + ' AÑOS',
+      lead: F().escapeHtml(club ? club.shortName || club.name : 'Tu club'),
       body:
         '<div class="mc-recap-hero">' +
-        '<div class="mc-recap-hero__club">' +
+        '<div class="mc-scene-crest">' +
         C().clubBadgeHtml(club, 'xxl') +
-        '<div>' +
-        '<strong class="mc-recap-club">' +
-        F().escapeHtml(club ? club.shortName || club.name : '—') +
-        '</strong>' +
-        '<p class="mc-scene__meta">' +
-        (country ? C().countryFlagHtml(country, 'sm') + ' ' : '') +
-        F().escapeHtml(player.name || '') +
-        (player.position ? ' · ' + F().escapeHtml(player.position) : '') +
-        (roleLabel ? ' · ' + F().escapeHtml(roleLabel) : '') +
+        '</div>' +
+        '<p class="mc-poster-line">' +
+        F().escapeHtml(consequence) +
         '</p>' +
-        (chapter
-          ? '<p class="mc-age-chapter">' + F().escapeHtml(chapter) + '</p>'
-          : '') +
-        '</div></div>' +
         '<div class="mc-recap-ovrline">' +
         '<span>' +
         ovrBefore +
@@ -1236,19 +1250,12 @@
         '<strong>' +
         ovrAfter +
         ' OVR</strong></div>' +
-        '<div class="mc-recap-numbers">' +
+        '<div class="mc-recap-numbers mc-scene-stats">' +
         F().primarySeasonStatsHtml(
           season,
           (player && player.position) || (state.player && state.player.position)
         ) +
         '</div>' +
-        (fs
-          ? '<p class="mc-form-chip mc-form-chip--' +
-            F().escapeHtml(fs.id) +
-            '">' +
-            F().escapeHtml(fs.label) +
-            '</p>'
-          : '') +
         (highlightBits.length
           ? '<div class="mc-recap-highlights">' + highlightBits.join('') + '</div>'
           : '') +
@@ -1311,17 +1318,29 @@
   function ageUpScreen(ctx) {
     var fromAge = ctx.fromAge;
     var toAge = ctx.toAge;
+    var state = ctx.state;
+    var engine = ctx.engine;
+    var club = engine && state ? engine.getClub(state.clubId) : null;
+    var chapter =
+      (UI.Narrative && UI.Narrative.ageHeadline
+        ? UI.Narrative.ageHeadline(toAge, state)
+        : '') ||
+      (NS.Rules && NS.Rules.ageChapter ? NS.Rules.ageChapter(toAge, state) : '') ||
+      '';
+    var tone = 'age';
+    if (toAge >= 34) tone = 'decline';
+    else if (toAge >= 30) tone = 'prime';
+    else if (toAge <= 21) tone = 'hot';
     return scene({
       id: 'age-up',
-      tone: 'age',
-      kicker: 'Nueva temporada',
+      tone: tone,
+      kicker: 'El tiempo no perdona',
       title: String(toAge) + ' AÑOS',
-      lead: F().escapeHtml(
-        (UI.Narrative && UI.Narrative.ageHeadline
-          ? UI.Narrative.ageHeadline(toAge, ctx.state)
-          : '') || ''
-      ),
+      lead: F().escapeHtml(chapter),
       body:
+        (club
+          ? '<div class="mc-scene-crest">' + C().clubBadgeHtml(club, 'xl') + '</div>'
+          : '') +
         '<div class="mc-age-up" aria-live="polite">' +
         '<span>' +
         fromAge +
@@ -1520,6 +1539,18 @@
       NS.Rules && NS.Rules.careerStoryPhrase
         ? NS.Rules.careerStoryPhrase(state, engine.world)
         : state.retirementLine || '';
+    var storyBits = (state.storyBeats || [])
+      .slice(0, 4)
+      .map(function (b) {
+        return (
+          '<li><strong>' +
+          (b.age != null ? b.age + ' · ' : '') +
+          '</strong>' +
+          F().escapeHtml(b.line || '') +
+          '</li>'
+        );
+      })
+      .join('');
 
     return scene({
       id: 'retire',
@@ -1538,6 +1569,11 @@
         (state.peakRating || state.rating) +
         ' OVR</p>' +
         timelineHtml(state, engine) +
+        (storyBits
+          ? '<ul class="mc-story-beats" aria-label="Momentos de la carrera">' +
+            storyBits +
+            '</ul>'
+          : '') +
         '<div class="mc-retire-card">' +
         card.html +
         '</div>' +
@@ -1560,14 +1596,18 @@
       '<div class="mc-career-timeline" aria-label="Historial de clubes">' +
       rows
         .map(function (row) {
+          var club = engine.getClub(row.clubId);
           return (
-            '<p><strong>' +
+            '<div class="mc-career-timeline__row">' +
+            C().clubBadgeHtml(club, 'sm') +
+            '<div class="mc-career-timeline__text">' +
+            '<strong>' +
             row.ageStart +
             (row.ageEnd !== row.ageStart ? '–' + row.ageEnd : '') +
             '</strong> ' +
             F().escapeHtml(row.name) +
             (row.onLoan ? ' <span>(cesión)</span>' : '') +
-            '</p>'
+            '</div></div>'
           );
         })
         .join('') +
@@ -1595,6 +1635,7 @@
     intro: introScreen,
     modeSelect: modeSelectScreen,
     careerBeat: careerBeatScreen,
+    beatCommit: beatCommitScreen,
     blockRecap: blockRecapScreen,
     create: createScreen,
     startClub: startClubScreen,

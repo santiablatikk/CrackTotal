@@ -219,17 +219,33 @@ function main() {
     }
   ];
   const queue = app.buildCelebrationQueue(historic);
-  assert(queue.some((q) => q.type === 'title'), 'queue includes title');
+  // Product rule: only epic titles interrupt the loop (importance >= 75).
+  assert(!queue.some((q) => q.type === 'title'), 'non-epic league title stays in recap, not queue');
   assert(queue.some((q) => q.type === 'ballon-tease'), 'queue includes ballon tease');
   assert(queue.filter((q) => q.type === 'award').length >= 1, 'queue includes ballon award');
-  assert(queue.filter((q) => q.type === 'moment').length <= 4, 'moments capped at 4');
+  assert(queue.length <= 2, 'celebration queue capped at 2');
 
-  // Only real titles from season object appear
-  queue
+  // Epic title would interrupt
+  const epicSeason = Object.assign({}, historic, {
+    titles: [
+      {
+        name: 'Champions League',
+        shortName: 'UCL',
+        competitionId: 'comp_ucl',
+        importance: 95,
+        seasonLabel: '2030/31',
+        clubId: st.clubId
+      }
+    ],
+    awards: []
+  });
+  const epicQueue = app.buildCelebrationQueue(epicSeason);
+  assert(epicQueue.some((q) => q.type === 'title'), 'epic title enters celebration queue');
+  epicQueue
     .filter((q) => q.type === 'title')
     .forEach(function (q) {
       assert(
-        historic.titles.some((t) => t.name === q.titleObj.name),
+        epicSeason.titles.some((t) => t.name === q.titleObj.name),
         'queued title exists in season'
       );
     });

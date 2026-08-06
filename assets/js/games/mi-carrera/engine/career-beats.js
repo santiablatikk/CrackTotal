@@ -301,6 +301,147 @@
       );
     }
 
+    if (age <= 22) {
+      pool.push(
+        option(
+          'learn_from_stars',
+          'Aprender de los cracks',
+          'Bajar el ego y subir el techo',
+          ['Potencial', 'Confianza'],
+          ['Menos protagonismo'],
+          {
+            minutesBias: -0.04,
+            confidenceDelta: 4,
+            formDelta: 1,
+            trainingFocus: 'consistency',
+            reputationDelta: 2
+          },
+          'Aprendiste de los cracks: menos ego, más techo.'
+        )
+      );
+    }
+
+    if (age >= 28 && age <= 33 && level >= 3) {
+      pool.push(
+        option(
+          'mentor_youth',
+          'Mentorear a la cantera',
+          'Dejar huella y ganar respeto interno',
+          ['Relación club', 'Legado'],
+          ['Menos escaparate'],
+          {
+            clubRelationDelta: 8,
+            popularityDelta: 3,
+            minutesBias: -0.05,
+            transferBias: -0.06,
+            moraleDelta: 4
+          },
+          'Mentoreaste a la cantera: el vestuario te miró distinto.'
+        )
+      );
+    }
+
+    if (form >= 7 && state.rating >= 78) {
+      pool.push(
+        option(
+          'media_heat',
+          'Aceptar el ruido mediático',
+          'Más fama, más presión',
+          ['Popularidad', 'Mercado'],
+          ['Presión', 'Distracción'],
+          {
+            popularityDelta: 8,
+            reputationDelta: 3,
+            transferBias: 0.08,
+            moraleDelta: -2,
+            confidenceDelta: 1
+          },
+          'Aceptaste el ruido: más fama, más ojos encima.'
+        )
+      );
+    }
+
+    if (region === 'continent_eu' && age >= 29 && age <= 34) {
+      pool.push(
+        option(
+          'go_home',
+          'Volver a casa',
+          'Cerrar el círculo en tu continente de origen',
+          ['Attachment', 'Historia'],
+          ['Menos prestigio posible'],
+          {
+            transferBias: 0.12,
+            prestigeDelta: -2,
+            moraleDelta: 6,
+            clubRelationDelta: -3,
+            popularityDelta: 4
+          },
+          'Te pusiste en modo vuelta a casa: la historia pide cierre.'
+        )
+      );
+    }
+
+    if (age >= 24 && age <= 32 && (state.seasonIndex || 0) % 4 === 2) {
+      pool.push(
+        option(
+          'world_cycle',
+          'Apuntar al gran torneo',
+          'Llegar entero a la cita grande',
+          ['Selección', 'Forma'],
+          ['Fatiga de club'],
+          {
+            reputationDelta: 4,
+            formDelta: 1,
+            fitnessDelta: -3,
+            minutesBias: 0.04,
+            clubRelationDelta: -1
+          },
+          'Apuntaste al gran torneo: todo el año se midió por esa cita.'
+        )
+      );
+    }
+
+    if (role === 'titular' && state.rating >= 74) {
+      pool.push(
+        option(
+          'money_focus',
+          'Priorizar el contrato',
+          'Seguridad económica sobre el escaparate',
+          ['Contrato', 'Estabilidad'],
+          ['Menos salto de club'],
+          {
+            transferBias: -0.1,
+            clubRelationDelta: 5,
+            moraleDelta: 3,
+            minutesBias: 0.02
+          },
+          'Priorizaste el contrato: menos maletas, más estabilidad.'
+        )
+      );
+    }
+
+    if (crisis || (state.injuryWeeksLeft && state.injuryWeeksLeft > 0) || form <= 2) {
+      pool.push(
+        option(
+          'quiet_rebuild',
+          'Reconstruir en silencio',
+          'Sin titulares, sin drama',
+          ['Fitness', 'Moral'],
+          ['Menos mercado'],
+          {
+            fitnessDelta: 10,
+            moraleDelta: 8,
+            formDelta: 1,
+            injuryRiskBias: -0.08,
+            transferBias: -0.08,
+            minutesBias: -0.06,
+            trainingFocus: 'recovery'
+          },
+          'Reconstruiste en silencio: sin titulares, con trabajo.'
+        )
+      );
+    }
+
     return pool;
   }
 
@@ -315,7 +456,6 @@
         options: pool
       };
     }
-    // Pick 2–3 distinct options weighted by context
     var shuffled = pool.slice();
     for (var i = shuffled.length - 1; i > 0; i--) {
       var j = rng.int(0, i);
@@ -328,13 +468,21 @@
     var chapter =
       NS.Rules && NS.Rules.ageChapter ? NS.Rules.ageChapter(state.age, state) : '';
     var club = NS.Rules.getClub(world, state.clubId);
+    var marketHook =
+      NS.Rules && NS.Rules.consumeMarketHook ? NS.Rules.consumeMarketHook(state) : '';
+    var prompt;
+    if (marketHook) {
+      prompt = marketHook + ' ¿Cómo encarás lo que viene?';
+    } else if (chapter) {
+      prompt = chapter + '. ¿Qué hacés ahora?';
+    } else {
+      prompt = '¿Cómo encarás las próximas temporadas?';
+    }
     return {
       id: 'beat_' + state.seasonIndex + '_' + state.age,
       type: 'career_beat',
       title: state.age + ' AÑOS',
-      prompt: chapter
-        ? chapter + '. ¿Qué hacés ahora?'
-        : '¿Cómo encarás las próximas temporadas?',
+      prompt: prompt,
       lead: club ? club.shortName || club.name : 'Tu club',
       blockSize: blockSize(state),
       options: options
@@ -368,6 +516,16 @@
     state.lastBeatId = opt.id;
     state.lastBeatLabel = opt.label;
     state.lastBeatConsequence = opt.consequence || opt.summary;
+    if (NS.Rules && NS.Rules.pushStoryBeat) {
+      NS.Rules.pushStoryBeat(state, {
+        kind: 'beat',
+        label: opt.label,
+        line: state.lastBeatConsequence,
+        age: state.age,
+        seasonIndex: state.seasonIndex,
+        clubId: state.clubId
+      });
+    }
     state.recentBeats = NS.State.pushRecent(
       state.recentBeats || [],
       {
@@ -381,6 +539,7 @@
     );
     return {
       option: opt,
+      label: opt.label,
       consequence: state.lastBeatConsequence,
       ups: opt.ups || [],
       downs: opt.downs || []

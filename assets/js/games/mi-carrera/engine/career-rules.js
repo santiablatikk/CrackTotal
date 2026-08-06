@@ -582,6 +582,36 @@
     };
   }
 
+  function pushStoryBeat(state, entry) {
+    if (!state || !entry) return state;
+    var line = entry.line || entry.consequence || entry.headline || '';
+    if (!line) return state;
+    var row = {
+      line: line,
+      kind: entry.kind || 'beat',
+      age: entry.age != null ? entry.age : state.age,
+      seasonIndex: entry.seasonIndex != null ? entry.seasonIndex : state.seasonIndex,
+      clubId: entry.clubId || state.clubId,
+      label: entry.label || null
+    };
+    state.storyBeats = NS.State.pushRecent(state.storyBeats || [], row, 16);
+    state.lastStoryLine = line;
+    if (entry.kind === 'market' || entry.kind === 'stay' || entry.kind === 'transfer' || entry.kind === 'loan') {
+      state.lastMarketLine = line;
+    }
+    if (entry.kind === 'beat') {
+      state.lastBeatConsequence = line;
+    }
+    return state;
+  }
+
+  function consumeMarketHook(state) {
+    if (!state || !state.lastMarketLine) return '';
+    var line = state.lastMarketLine;
+    state.lastMarketLine = null;
+    return line;
+  }
+
   var ARCHETYPE_LABELS = {
     ONE_CLUB_LEGEND: 'EL ÍDOLO',
     COMEBACK: 'EL REGRESO IMPOSIBLE',
@@ -2126,6 +2156,8 @@
     clubTimelineSummary: clubTimelineSummary,
     transferConsequence: transferConsequence,
     stayConsequence: stayConsequence,
+    pushStoryBeat: pushStoryBeat,
+    consumeMarketHook: consumeMarketHook,
     careerStoryPhrase: careerStoryPhrase,
     archetypeLabel: archetypeLabel,
     formatMarketValue: formatMarketValue,
