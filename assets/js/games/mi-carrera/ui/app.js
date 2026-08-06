@@ -325,16 +325,24 @@
     this.showCareerHome();
   };
 
-  App.prototype.showMarket = function () {
-    if (!this.selectedOfferId && this.state.pendingOffers && this.state.pendingOffers.length) {
-      this.selectedOfferId = this.state.pendingOffers[0].id;
+  App.prototype.showMarket = function (opts) {
+    opts = opts || {};
+    if (opts.resetIndex) this.marketOfferIndex = 0;
+    if (this.marketOfferIndex == null) this.marketOfferIndex = 0;
+    var offers = this.state.pendingOffers || [];
+    if (offers.length && this.marketOfferIndex >= offers.length) {
+      this.marketOfferIndex = 0;
+    }
+    if (!this.selectedOfferId && offers.length) {
+      this.selectedOfferId = offers[Math.min(this.marketOfferIndex, offers.length - 1)].id;
     }
     this.setRootScreen(
       'market',
       UI.screens.market({
         state: this.state,
         engine: this.engine,
-        selectedOfferId: this.selectedOfferId
+        selectedOfferId: this.selectedOfferId,
+        offerIndex: this.marketOfferIndex || 0
       }),
       { state: 'active' }
     );
@@ -534,7 +542,7 @@
     var result = this._pendingSeasonResult;
     var self = this;
     if (!result || !result.season) {
-      this.showMarket();
+      this.showMarket({ resetIndex: true });
       return;
     }
     this._beatQueue = [];
@@ -554,7 +562,7 @@
         self.showRetireTransition();
         return;
       }
-      self.showMarket();
+      self.showMarket({ resetIndex: true });
     };
     this.playNextBeat();
   };
@@ -832,6 +840,7 @@
     );
     if (NS.Storage && NS.Storage.saveActive) NS.Storage.saveActive(this.state);
     this.selectedOfferId = loans[0].id;
+    this.marketOfferIndex = transfers.length;
     this.showMarket();
   };
 
@@ -1034,6 +1043,18 @@
       return;
     }
     if (action === 'open-market') {
+      this.showMarket();
+      return;
+    }
+    if (action === 'market-next-offer') {
+      var offerList = (this.state && this.state.pendingOffers) || [];
+      this.marketOfferIndex = Math.min(
+        (this.marketOfferIndex || 0) + 1,
+        Math.max(0, offerList.length - 1)
+      );
+      if (offerList[this.marketOfferIndex]) {
+        this.selectedOfferId = offerList[this.marketOfferIndex].id;
+      }
       this.showMarket();
       return;
     }

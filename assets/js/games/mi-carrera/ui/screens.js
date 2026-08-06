@@ -113,6 +113,48 @@
       .join('');
   }
 
+  function tradeMetric(label, delta) {
+    var tone = delta > 0 ? 'up' : delta < 0 ? 'down' : 'flat';
+    var sign = delta > 0 ? '+' : delta < 0 ? '−' : '·';
+    var word =
+      tone === 'up' ? 'Más ' + label : tone === 'down' ? 'Menos ' + label : label + ' similar';
+    return (
+      '<div class="mc-trade-metric mc-trade-metric--' +
+      tone +
+      '"><span class="mc-trade-metric__sign" aria-hidden="true">' +
+      sign +
+      '</span><strong>' +
+      F().escapeHtml(word) +
+      '</strong></div>'
+    );
+  }
+
+  function tradeoffMetricsHtml(current, next, offer) {
+    var curP = (current && current.prestige) || 0;
+    var nextP = (next && next.prestige) || 0;
+    var curL = (current && current.level) || 1;
+    var nextL = (next && next.level) || 1;
+    var minsDelta = 0;
+    if (offer.kind === 'loan' || offer.role === 'titular') minsDelta = 1;
+    else if (offer.role === 'rotacion') minsDelta = -1;
+    else if (offer.role === 'promesa') minsDelta = 0;
+    var prestigeDelta = nextP > curP + 4 ? 1 : nextP < curP - 4 ? -1 : 0;
+    var levelDelta = nextL > curL ? 1 : nextL < curL ? -1 : 0;
+    var html =
+      '<div class="mc-trade-metrics" role="list">' +
+      tradeMetric('prestigio', prestigeDelta) +
+      tradeMetric('minutos', minsDelta) +
+      tradeMetric('nivel', levelDelta);
+    if (offer.kind === 'loan') {
+      html +=
+        '<div class="mc-trade-metric mc-trade-metric--flat"><strong>Temporal · volvés</strong></div>';
+    } else if (nextL >= curL + 2) {
+      html +=
+        '<div class="mc-trade-metric mc-trade-metric--down"><strong>Más presión</strong></div>';
+    }
+    return html + '</div>';
+  }
+
   function seasonMomentLine(season) {
     if (!season) return 'Otra página de tu historia.';
     if (season.moments && season.moments.length) {
@@ -497,7 +539,7 @@
       tone: 'start',
       kicker: 'Capítulo uno',
       title: '¿Dónde empieza tu historia?',
-      lead: 'Protagonista. Equilibrio. Escaparate. Tres caminos distintos.',
+      lead: 'Tres clubes. Tres carreras distintas. Elegí el costo que estás dispuesto a pagar.',
       body: '<div class="mc-start-row">' + cards + '</div>',
       actions:
         '<button type="button" class="ct-button ct-button--ghost" data-mc-action="go-intro">Volver</button>'
@@ -535,6 +577,8 @@
       (state.pendingOffers && state.pendingOffers.length) ||
       (decision && decision.type === 'transferencia');
     var fs = NS.Rules && NS.Rules.formStatus ? NS.Rules.formStatus(state.form) : null;
+    var hist = state.seasonHistory || [];
+    var last = hist.length ? hist[hist.length - 1] : null;
     var tone = 'hub';
     if (state.arcFlags && state.arcFlags.crisis) tone = 'crisis';
     else if (state.arcFlags && state.arcFlags.comeback) tone = 'comeback';
@@ -542,14 +586,47 @@
     else if (state.age >= 33) tone = 'decline';
     else if (state.rating >= 88) tone = 'prime';
 
-    var poster =
-      state.seasonIndex === 0
-        ? 'Tu primera temporada puede cambiarlo todo.'
-        : state.arcFlags && state.arcFlags.crisis
-          ? 'El año se te hizo cuesta arriba. Todavía hay partido.'
-          : state.arcFlags && state.arcFlags.comeback
-            ? 'Volviste. Ahora hay que sostenerlo.'
-            : 'Este año puede cambiarlo todo.';
+    var poster = seasonLine(state);
+    var ctaLabel = 'Jugar temporada';
+    if (state.seasonIndex === 0) {
+      poster = 'Tu primera temporada puede cambiarlo todo.';
+      ctaLabel = 'Debutá la temporada';
+    } else if (needsMarket) {
+      if (state.marketCold) {
+        poster = state.marketLegacy
+          ? 'Nadie llamó. Acá todavía te quieren como referente.'
+          : 'El mercado pasó de largo. Quedarte también construye legado.';
+        ctaLabel = 'Ver tu futuro';
+      } else if ((state.pendingOffers || []).some(function (o) {
+        return o.kind === 'loan';
+      }) && !(state.pendingOffers || []).some(function (o) {
+        return o.kind !== 'loan';
+      })) {
+        poster = 'Hay una cesión sobre la mesa. Más minutos, menos presión.';
+        ctaLabel = 'Ver cesión';
+      } else {
+        poster = 'Hay clubes que te quieren. Una decisión puede reescribir tu carrera.';
+        ctaLabel = 'Abrir el mercado';
+      }
+    } else if (state.arcFlags && state.arcFlags.crisis) {
+      poster = 'El año se te hizo cuesta arriba. Todavía hay partido.';
+      ctaLabel = 'Seguí peleando';
+    } else if (state.arcFlags && state.arcFlags.comeback) {
+      poster = 'Volviste. Ahora hay que sostenerlo.';
+      ctaLabel = 'Sostener el comeback';
+    } else if (last && (last.performanceGrade === 'S' || last.performanceGrade === 'A')) {
+      poster = 'Después de una gran temporada, este año pide más.';
+      ctaLabel = 'Subir la apuesta';
+    } else if (last && last.performanceGrade === 'D') {
+      poster = 'El año pasado dolió. Este puede ser el reinicio.';
+      ctaLabel = 'Buscar el reinicio';
+    } else if (state.onLoan) {
+      poster = 'Estás cedido. Cada minuto cuenta para volver más fuerte.';
+      ctaLabel = 'Jugar la cesión';
+    } else if (state.age >= 33) {
+      poster = 'Los últimos capítulos pesan más. Escribí bien este.';
+      ctaLabel = 'Jugar temporada';
+    }
 
     var actions = '';
     if (decision && decision.type === 'retiro') {
@@ -569,15 +646,19 @@
         .join('');
     } else if (needsMarket) {
       actions =
-        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="open-market">El mercado</button>';
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="open-market">' +
+        F().escapeHtml(ctaLabel) +
+        '</button>';
     } else {
       actions =
-        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="play-season">Jugar temporada</button>';
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="play-season">' +
+        F().escapeHtml(ctaLabel) +
+        '</button>';
     }
 
     var seasonN = Math.max(1, (state.seasonIndex || 0) + 1);
     var seasonOrdinal =
-      seasonN === 1 ? 'Tu primera temporada' : 'Tu temporada ' + seasonN;
+      seasonN === 1 ? 'Tu primera temporada' : 'Temporada ' + seasonN;
 
     return scene({
       id: 'hub',
@@ -621,30 +702,74 @@
     var state = ctx.state;
     var engine = ctx.engine;
     var offers = state.pendingOffers || [];
-    var transfers = offers.filter(function (o) {
-      return o.kind !== 'loan';
-    });
-    var loans = offers.filter(function (o) {
-      return o.kind === 'loan';
-    });
     var currentClub = engine.getClub(state.clubId);
     var canLoan =
       state.canLoan ||
       (NS.Rules.loanEligible && NS.Rules.loanEligible(state, engine.world));
+    var focusIndex = Math.max(
+      0,
+      Math.min(ctx.offerIndex != null ? ctx.offerIndex : 0, Math.max(0, offers.length - 1))
+    );
 
-    function offerCard(offer, isLoan) {
-      var club = engine.getClub(offer.clubId);
-      var comp = club ? engine.world.competitionsById[club.primaryCompetitionId] : null;
-      var country = club ? engine.world.countriesById[club.countryId] : null;
-      return (
-        '<article class="mc-offer-scene' +
-        (isLoan ? ' mc-offer-scene--loan' : '') +
+    if (!offers.length) {
+      return scene({
+        id: 'market',
+        tone: 'quiet',
+        kicker: 'Tu futuro',
+        title: state.marketLegacy ? 'Tu club te necesita' : 'El mercado pasó de largo',
+        lead: state.marketLegacy
+          ? 'Después de tanto, el club quiere convertirte en referente.'
+          : 'Nadie llamó. Quedarte también construye tu historia.',
+        body:
+          '<div class="mc-stay-card">' +
+          '<div class="mc-scene-crest">' +
+          C().clubBadgeHtml(currentClub, 'xxl') +
+          '</div>' +
+          '<h2 class="mc-scene__club">' +
+          F().escapeHtml(currentClub ? currentClub.shortName || currentClub.name : 'Tu club') +
+          '</h2>' +
+          '<p class="mc-scene__meta">' +
+          F().escapeHtml(
+            state.marketLegacy
+              ? 'Quedarte ahora puede definir tu legado.'
+              : 'Podés construir tu legado acá.'
+          ) +
+          '</p></div>',
+        actions:
+          '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-stay">Quedarme</button>' +
+          (canLoan
+            ? '<button type="button" class="ct-button ct-button--secondary" data-mc-action="seek-loan">Buscar préstamo</button>'
+            : '')
+      });
+    }
+
+    var offer = offers[focusIndex];
+    var isLoan = offer.kind === 'loan';
+    var club = engine.getClub(offer.clubId);
+    var comp = club ? engine.world.competitionsById[club.primaryCompetitionId] : null;
+    var country = club ? engine.world.countriesById[club.countryId] : null;
+    var more = focusIndex < offers.length - 1;
+    var blurb =
+      offer.blurb ||
+      tradeoffPhrase(currentClub, club, offer);
+
+    return scene({
+      id: 'market',
+      tone: isLoan ? 'loan' : 'market',
+      kicker:
+        offers.length > 1
+          ? 'Oferta ' + (focusIndex + 1) + ' de ' + offers.length
+          : isLoan
+            ? 'Cesión'
+            : 'Oferta',
+      title: F().escapeHtml(club ? club.shortName || club.name : 'Club'),
+      lead: F().escapeHtml(blurb),
+      body:
+        '<article class="mc-offer-focus' +
+        (isLoan ? ' mc-offer-focus--loan' : '') +
         '">' +
         C().clubBadgeHtml(club, 'xxl') +
         (isLoan ? '<p class="mc-offer-kind">Cesión</p>' : '') +
-        '<h2>' +
-        F().escapeHtml(club ? club.shortName || club.name : 'Club') +
-        '</h2>' +
         '<p class="mc-offer-scene__league">' +
         (country ? C().countryFlagHtml(country, 'sm') + ' ' : '') +
         F().escapeHtml(country ? country.name : '') +
@@ -658,66 +783,20 @@
         '<span class="mc-offer-role">' +
         F().escapeHtml(F().ROLE_LABELS[offer.role] || offer.role) +
         (offer.minutesLabel ? ' · ' + F().escapeHtml(offer.minutesLabel) : '') +
-        '</span>' +
-        (offer.blurb
-          ? '<p class="mc-offer-blurb">' + F().escapeHtml(offer.blurb) + '</p>'
-          : '') +
-        '<button type="button" class="ct-button ct-button--primary" data-mc-action="market-compare" data-offer="' +
+        '</span></article>',
+      actions:
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-compare" data-offer="' +
         F().escapeHtml(offer.id) +
         '">' +
         (isLoan ? 'Ver cesión' : 'Ver oferta') +
-        '</button></article>'
-      );
-    }
-
-    if (!transfers.length && !loans.length) {
-      return scene({
-        id: 'market',
-        tone: 'quiet',
-        kicker: 'Tu futuro',
-        title: 'El mercado pasó de largo',
-        lead: 'Nadie llamó. Quedarte también construye tu historia.',
-        body:
-          '<div class="mc-stay-card">' +
-          '<div class="mc-scene-crest">' +
-          C().clubBadgeHtml(currentClub, 'xxl') +
-          '</div>' +
-          '<h2 class="mc-scene__club">' +
-          F().escapeHtml(currentClub ? currentClub.shortName || currentClub.name : 'Tu club') +
-          '</h2>' +
-          '<p class="mc-scene__meta">Podés construir tu legado acá.</p></div>',
-        actions:
-          '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-stay">Quedarme</button>' +
-          (canLoan
-            ? '<button type="button" class="ct-button ct-button--secondary" data-mc-action="seek-loan">Buscar préstamo</button>'
-            : '')
-      });
-    }
-
-    var cards = transfers
-      .slice(0, 3)
-      .map(function (o) {
-        return offerCard(o, false);
-      })
-      .concat(
-        loans.slice(0, 2).map(function (o) {
-          return offerCard(o, true);
+        '</button>' +
+        (more
+          ? '<button type="button" class="ct-button ct-button--secondary" data-mc-action="market-next-offer">Otra oferta</button>'
+          : '') +
+        '<button type="button" class="ct-button ct-button--ghost" data-mc-action="market-stay">Quedarme</button>' +
+        (canLoan && !offers.some(function (o) {
+          return o.kind === 'loan';
         })
-      )
-      .join('');
-
-    return scene({
-      id: 'market',
-      tone: 'market',
-      kicker: 'Mercado de fichajes',
-      title: 'El mercado habla',
-      lead: transfers.length
-        ? 'Hay clubes que te quieren. Elegí tu próximo capítulo.'
-        : 'Hay cesiones sobre la mesa. Más minutos, menos presión.',
-      body: '<div class="mc-offer-row">' + cards + '</div>',
-      actions:
-        '<button type="button" class="ct-button ct-button--secondary ct-button--lg" data-mc-action="market-stay">Quedarme</button>' +
-        (canLoan && !loans.length
           ? '<button type="button" class="ct-button ct-button--ghost" data-mc-action="seek-loan">Buscar préstamo</button>'
           : '')
     });
@@ -780,19 +859,18 @@
             : F().ROLE_LABELS[offer.role] || offer.role
         ) +
         '</span></div></div>' +
+        tradeoffMetricsHtml(current, next, offer) +
         '<div class="mc-trade-row">' +
         tradeoffChips(current, next, offer) +
-        '</div>' +
-        '<p class="mc-compare-line">' +
-        F().escapeHtml(tradeoffPhrase(current, next, offer)) +
-        '</p>',
+        '</div>',
       actions:
         '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="market-sign" data-offer="' +
         F().escapeHtml(offer.id) +
         '">' +
         (offer.kind === 'loan' ? 'Ir cedido' : 'Fichar') +
         '</button>' +
-        '<button type="button" class="ct-button ct-button--secondary" data-mc-action="open-market">Volver</button>'
+        '<button type="button" class="ct-button ct-button--secondary" data-mc-action="market-stay">Quedarme</button>' +
+        '<button type="button" class="ct-button ct-button--ghost" data-mc-action="open-market">Otra oferta</button>'
     });
   }
 
@@ -869,23 +947,12 @@
         ? NS.Rules.formStatus(season.formAfter != null ? season.formAfter : state.form)
         : null;
 
-    var minorAwards = (season.awards || []).filter(function (a) {
-      return (a.importance || 0) < 70;
-    });
-    var awardChips = minorAwards
-      .map(function (a) {
-        return (
-          '<span class="mc-recap-chip">' + F().escapeHtml(a.shortName || a.name) + '</span>'
-        );
-      })
-      .join('');
-
     return scene({
       id: 'recap',
       tone: tone,
-      kicker: 'Tu temporada',
-      title: F().escapeHtml(season.seasonLabel || F().seasonLabel(season.seasonIndex)),
-      lead: F().escapeHtml(narrative),
+      kicker: F().escapeHtml(season.seasonLabel || F().seasonLabel(season.seasonIndex)),
+      title: F().escapeHtml(narrative),
+      lead: F().escapeHtml(club ? club.shortName || club.name : 'Tu club'),
       body:
         '<div class="mc-recap-hero">' +
         '<div class="mc-recap-hero__club">' +
@@ -899,17 +966,6 @@
         F().escapeHtml(player.name || '') +
         (player.position ? ' · ' + F().escapeHtml(player.position) : '') +
         '</p></div></div>' +
-        '<div class="mc-recap-numbers">' +
-        '<div><strong>' +
-        season.appearances +
-        '</strong><span>Partidos</span></div>' +
-        '<div><strong>' +
-        season.goals +
-        '</strong><span>Goles</span></div>' +
-        '<div><strong>' +
-        season.assists +
-        '</strong><span>Asistencias</span></div>' +
-        '</div>' +
         '<div class="mc-recap-ovrline">' +
         '<span>' +
         ovrBefore +
@@ -917,6 +973,17 @@
         '<strong>' +
         ovrAfter +
         ' OVR</strong></div>' +
+        '<div class="mc-recap-numbers">' +
+        '<div><strong>' +
+        season.appearances +
+        '</strong><span>PJ</span></div>' +
+        '<div><strong>' +
+        season.goals +
+        '</strong><span>Goles</span></div>' +
+        '<div><strong>' +
+        season.assists +
+        '</strong><span>Asist.</span></div>' +
+        '</div>' +
         (fs
           ? '<p class="mc-form-chip mc-form-chip--' +
             F().escapeHtml(fs.id) +
@@ -924,10 +991,7 @@
             F().escapeHtml(fs.label) +
             '</p>'
           : '') +
-        (awardChips ? '<div class="mc-recap-chips">' + awardChips + '</div>' : '') +
-        '<p class="mc-recap-moment"><span class="mc-scene__kicker">Momento de la temporada</span>' +
-        F().escapeHtml(seasonMomentLine(season)) +
-        '</p></div>',
+        '</div>',
       actions:
         '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="after-recap">Continuar</button>'
     });
@@ -1124,9 +1188,10 @@
         '<div class="mc-retire-card">' +
         card.html +
         '</div>' +
-        UI.Rewards.rewardsHtml(reward),
+        UI.Rewards.rewardsHtml(reward) +
+        '<p class="mc-retire-hook">¿Y si hubieras elegido distinto?</p>',
       actions:
-        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="play-again">¿Y si lo intentamos de nuevo?</button>' +
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="play-again">Nueva carrera</button>' +
         '<button type="button" class="ct-button ct-button--secondary" data-mc-action="share-career"' +
         (shareAvailable ? '' : ' hidden') +
         '>Compartir mi carrera</button>' +

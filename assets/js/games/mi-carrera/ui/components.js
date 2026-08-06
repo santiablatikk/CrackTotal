@@ -55,21 +55,26 @@
     var country =
       club && engine ? engine.world.countriesById[club.countryId] : null;
     var stars = Array(Math.max(1, Math.min(5, option.stars || 1)) + 1).join('★');
+    var pathId = option.pathId || 'balance';
     var risk =
-      option.pathId === 'giant'
-        ? 'Riesgo alto'
-        : option.pathId === 'minutes'
-          ? 'Riesgo bajo'
-          : 'Riesgo medio';
+      pathId === 'giant' ? 'Riesgo alto' : pathId === 'minutes' ? 'Riesgo bajo' : 'Riesgo medio';
     var pathName =
-      option.pathId === 'giant'
-        ? 'Escaparate'
-        : option.pathId === 'minutes'
-          ? 'Protagonista'
-          : 'Equilibrio';
+      pathId === 'giant' ? 'Escaparate' : pathId === 'minutes' ? 'Protagonista' : 'Equilibrio';
+    var promise =
+      pathId === 'giant'
+        ? 'Más prestigio. Menos minutos. El camino más duro.'
+        : pathId === 'minutes'
+          ? 'Ser figura ya. El camino más largo hacia arriba.'
+          : 'Crecer sin ahogarte. El camino más estable.';
+    var trade =
+      pathId === 'giant'
+        ? '<span class="mc-path-up">Prestigio</span><span class="mc-path-down">Minutos</span>'
+        : pathId === 'minutes'
+          ? '<span class="mc-path-up">Minutos</span><span class="mc-path-down">Prestigio</span>'
+          : '<span class="mc-path-up">Equilibrio</span><span class="mc-path-up">Crecimiento</span>';
     return (
       '<article class="mc-club-pick mc-club-pick--' +
-      F().escapeHtml(option.pathId || 'balance') +
+      F().escapeHtml(pathId) +
       '">' +
       clubBadgeHtml(club, 'xxl') +
       '<p class="mc-club-pick__path">' +
@@ -94,6 +99,12 @@
       ' · ' +
       F().escapeHtml((option.minutes && option.minutes.label) || '') +
       '</p>' +
+      '<p class="mc-path-promise">' +
+      F().escapeHtml(promise) +
+      '</p>' +
+      '<div class="mc-path-trade">' +
+      trade +
+      '</div>' +
       '<p class="mc-club-pick__tag">' +
       F().escapeHtml(risk) +
       (option.tagline ? ' · ' + F().escapeHtml(option.tagline) : '') +

@@ -544,6 +544,110 @@ body.mi-carrera-body.mc-immersive #mc-app {
 .mc-club-pick--giant .mc-club-pick__path { color: #ffb454; }
 .mc-club-pick--minutes .mc-club-pick__path { color: #8dffb4; }
 
+.mc-path-promise {
+  margin: 0.35rem 0 0;
+  max-width: 22ch;
+  font-size: 0.98rem;
+  line-height: 1.35;
+  color: var(--mc-ink, #f4f4f5);
+  font-weight: 600;
+}
+
+.mc-path-trade {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  justify-content: center;
+  margin-top: 0.15rem;
+}
+
+.mc-path-up,
+.mc-path-down {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+}
+
+.mc-path-up {
+  color: #8dffb4;
+  background: rgba(141, 255, 180, 0.12);
+}
+
+.mc-path-down {
+  color: #ff9b9b;
+  background: rgba(255, 155, 155, 0.12);
+}
+
+.mc-offer-focus {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 0.45rem;
+  width: min(28rem, 100%);
+  padding: 1.75rem 1.25rem 1.5rem;
+  border-radius: 1.5rem;
+  border: 1px solid var(--mc-line);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.1), transparent 55%),
+    rgba(0, 0, 0, 0.36);
+}
+
+.mc-offer-focus .mc-badge--xxl {
+  width: clamp(7.5rem, 28vw, 11rem);
+  height: clamp(7.5rem, 28vw, 11rem);
+}
+
+.mc-offer-focus--loan {
+  border-color: rgba(141, 255, 180, 0.28);
+}
+
+.mc-trade-metrics {
+  display: grid;
+  gap: 0.55rem;
+  width: min(22rem, 100%);
+  margin: 1.1rem auto 0;
+  text-align: left;
+}
+
+.mc-trade-metric {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.85rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mc-trade-metric__sign {
+  font-family: var(--ct-font-display);
+  font-size: 1.35rem;
+  line-height: 1;
+  min-width: 1.25rem;
+  text-align: center;
+}
+
+.mc-trade-metric strong {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.mc-trade-metric--up { color: #8dffb4; }
+.mc-trade-metric--down { color: #ff9b9b; }
+.mc-trade-metric--flat { color: var(--mc-muted); }
+
+.mc-retire-hook {
+  margin: 1.25rem 0 0;
+  font-family: var(--ct-font-display);
+  font-size: clamp(1.15rem, 3.2vw, 1.55rem);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--mc-ink, #f4f4f5);
+}
+
 .mc-club-pick__meta,
 .mc-club-pick__role,
 .mc-club-pick__tag,

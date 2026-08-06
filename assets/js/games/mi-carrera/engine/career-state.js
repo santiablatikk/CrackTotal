@@ -89,6 +89,8 @@
       onLoan: !!o.onLoan,
       loanParentClubId: o.loanParentClubId || null,
       marketCold: !!o.marketCold,
+      marketLegacy: !!o.marketLegacy,
+      marketShape: o.marketShape || null,
       canLoan: !!o.canLoan,
       recentMarketShapes: o.recentMarketShapes ? o.recentMarketShapes.slice() : [],
       peakRating: o.peakRating != null ? o.peakRating : o.rating != null ? o.rating : 62,

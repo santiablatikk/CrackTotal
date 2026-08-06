@@ -529,6 +529,8 @@
     state.pendingOffers = market.offers || [];
     state.marketCold = !!market.cold;
     state.canLoan = !!market.canLoan;
+    state.marketLegacy = !!market.legacyPressure;
+    state.marketShape = market.shape || null;
     NS.State.resetSeasonModifiers(state);
 
     state.age += 1;

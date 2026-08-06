@@ -258,8 +258,45 @@ function main() {
     state: { rating: 71, clubId: 'x' },
     engine: engine
   });
-  assert(recapHtml.indexOf('Momento de la temporada') !== -1, 'recap has moment');
-  assert(recapHtml.indexOf('2026/27') !== -1, 'recap season headline');
+  assert(recapHtml.indexOf('2026/27') !== -1, 'recap season kicker');
+  assert(recapHtml.indexOf('mc-recap-hero') !== -1, 'recap editorial hero');
+  assert(recapHtml.indexOf('Continuar') !== -1, 'recap single CTA');
+  assert(recapHtml.indexOf('mc-recap-chips') === -1, 'recap avoids award chip dump');
+
+  const offerState = engine.createCareer({
+    name: 'OfferQA',
+    countryId: 'country_ar',
+    position: 'MID',
+    archetypeId: 'arch_tech_promise',
+    seed: 7
+  });
+  offerState.pendingOffers = [
+    {
+      id: 'off_a',
+      clubId: 'club_river',
+      role: 'titular',
+      kind: 'transfer',
+      level: 4,
+      blurb: 'Te quieren como titular.'
+    },
+    {
+      id: 'off_b',
+      clubId: 'club_boca',
+      role: 'rotacion',
+      kind: 'transfer',
+      level: 4,
+      blurb: 'Rotación en un grande.'
+    }
+  ];
+  const marketOffersHtml = MC.UI.screens.market({
+    state: offerState,
+    engine: engine,
+    offerIndex: 0
+  });
+  assert(marketOffersHtml.indexOf('mc-offer-focus') !== -1, 'market shows one offer focus');
+  assert(marketOffersHtml.indexOf('mc-offer-row') === -1, 'market avoids offer dashboard row');
+  assert(marketOffersHtml.indexOf('Otra oferta') !== -1, 'market can advance offers');
+  assert(marketOffersHtml.indexOf('Oferta 1 de 2') !== -1, 'market shows offer counter');
 
   assert(typeof MC.UI.screens.titleCelebrationBody === 'function', 'title celebration renderer');
   assert(typeof MC.UI.screens.awardCelebrationBody === 'function', 'award celebration renderer');

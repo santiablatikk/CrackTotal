@@ -119,7 +119,8 @@ function main() {
   assert(html.indexOf(String(res.season.appearances)) !== -1, 'recap shows appearances');
   assert(html.indexOf(String(res.season.goals)) !== -1, 'recap shows goals');
   assert(html.indexOf(String(res.season.assists)) !== -1, 'recap shows assists');
-  assert(html.indexOf('Momento de la temporada') !== -1, 'recap moment label');
+  assert(html.indexOf('mc-recap-hero') !== -1, 'recap editorial hero');
+  assert(html.indexOf('mc-recap-moment') === -1, 'recap defers moments to beat queue');
   assert(html.indexOf('after-recap') !== -1, 'recap continues to beat/market loop');
   assert(html.indexOf(res.season.seasonLabel) !== -1, 'recap season label');
 
