@@ -1,6 +1,6 @@
 /**
  * Mi Carrera data bootstrap (Phase 1).
- * Loads local datasets into providers. No career engine yet.
+ * Loads local datasets into providers. Career engine lives under engine/.
  */
 (function (root) {
   'use strict';
