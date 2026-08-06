@@ -21,7 +21,9 @@
       vm.storyPhrase || '',
       '',
       vm.appearances + ' partidos',
-      vm.goals + ' goles',
+      F().isGoalkeeper(vm.position)
+        ? vm.goalsAgainst + ' goles en contra · ' + vm.cleanSheets + ' vallas invictas'
+        : vm.goals + ' goles',
       vm.titles + ' títulos',
       '',
       'Rating máximo: ' + vm.peakRating,

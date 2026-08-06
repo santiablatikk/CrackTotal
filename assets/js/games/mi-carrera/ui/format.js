@@ -90,6 +90,41 @@
     return 'La temporada pesó. Hora de resetear.';
   }
 
+  function isGoalkeeper(position) {
+    return position === 'GK';
+  }
+
+  function primarySeasonStats(stats, position) {
+    stats = stats || {};
+    var apps = stats.appearances != null ? stats.appearances : stats.games != null ? stats.games : 0;
+    if (isGoalkeeper(position)) {
+      return [
+        { key: 'apps', label: 'PJ', value: apps },
+        { key: 'ga', label: 'GC', value: stats.goalsAgainst || 0 },
+        { key: 'cs', label: 'VI', value: stats.cleanSheets || 0 }
+      ];
+    }
+    return [
+      { key: 'apps', label: 'PJ', value: apps },
+      { key: 'g', label: 'Goles', value: stats.goals || 0 },
+      { key: 'a', label: 'Asist.', value: stats.assists || 0 }
+    ];
+  }
+
+  function primarySeasonStatsHtml(stats, position) {
+    return primarySeasonStats(stats, position)
+      .map(function (row) {
+        return (
+          '<div><strong>' +
+          row.value +
+          '</strong><span>' +
+          escapeHtml(row.label) +
+          '</span></div>'
+        );
+      })
+      .join('');
+  }
+
   function effectImpactLines(effects) {
     if (!effects) return [];
     var lines = [];
@@ -140,6 +175,9 @@
     seasonLabel: seasonLabel,
     starsFromRating: starsFromRating,
     seasonBlurb: seasonBlurb,
+    isGoalkeeper: isGoalkeeper,
+    primarySeasonStats: primarySeasonStats,
+    primarySeasonStatsHtml: primarySeasonStatsHtml,
     effectImpactLines: effectImpactLines
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

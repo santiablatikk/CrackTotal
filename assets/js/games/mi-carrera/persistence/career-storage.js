@@ -124,6 +124,8 @@
       appearances: agg.games,
       goals: agg.goals,
       assists: agg.assists,
+      goalsAgainst: agg.goalsAgainst || 0,
+      cleanSheets: agg.cleanSheets || 0,
       titles: agg.titles,
       nationalCaps: state.nationalCaps,
       nationalGoals: state.nationalGoals,

@@ -79,11 +79,28 @@
 
     var games = 0;
     var goals = 0;
+    var cleanSheets = 0;
     (state.seasonHistory || []).forEach(function (s) {
       games += s.appearances || 0;
       goals += s.goals || 0;
+      cleanSheets += s.cleanSheets || 0;
     });
-    if (goals >= 100) add('moment_100_goals', 'Superó los 100 goles');
+    if (state.player && state.player.position === 'GK') {
+      if (cleanSheets >= 100) add('moment_100_clean_sheets', 'Superó las 100 vallas invictas');
+      if (
+        seasonRecord &&
+        (seasonRecord.cleanSheets || 0) >= 18 &&
+        (seasonRecord.appearances || 0) >= 28
+      ) {
+        add(
+          'moment_clean_sheet_season_' + seasonIndex,
+          'Temporada de vallas invictas',
+          false
+        );
+      }
+    } else if (goals >= 100) {
+      add('moment_100_goals', 'Superó los 100 goles');
+    }
     if (games >= 500) add('moment_500_apps', 'Superó los 500 partidos');
 
     if (seasonRecord.firstCallUp) {

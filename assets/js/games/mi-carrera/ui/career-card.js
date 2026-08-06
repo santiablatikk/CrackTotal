@@ -76,6 +76,8 @@
       appearances: agg.games,
       goals: agg.goals,
       assists: agg.assists,
+      goalsAgainst: agg.goalsAgainst || 0,
+      cleanSheets: agg.cleanSheets || 0,
       titles: agg.titles,
       titleSummary: titleSummary,
       highlightTitles: highlightTitles,
@@ -209,12 +211,19 @@
       '<div><span>PJ</span><strong>' +
       vm.appearances +
       '</strong></div>' +
-      '<div><span>Goles</span><strong>' +
-      vm.goals +
-      '</strong></div>' +
-      '<div><span>Asist.</span><strong>' +
-      vm.assists +
-      '</strong></div>' +
+      (F().isGoalkeeper(vm.position)
+        ? '<div><span>GC</span><strong>' +
+          vm.goalsAgainst +
+          '</strong></div>' +
+          '<div><span>VI</span><strong>' +
+          vm.cleanSheets +
+          '</strong></div>'
+        : '<div><span>Goles</span><strong>' +
+          vm.goals +
+          '</strong></div>' +
+          '<div><span>Asist.</span><strong>' +
+          vm.assists +
+          '</strong></div>') +
       '<div><span>Títulos</span><strong>' +
       vm.titles +
       '</strong></div>' +
@@ -280,16 +289,27 @@
       '</text>' +
       '<text x="28" y="210" fill="#f7f9fc" font-family="Montserrat, Arial" font-size="16">' +
       escapeXml(
-        vm.appearances +
-          ' PJ · ' +
-          vm.goals +
-          ' G · ' +
-          vm.assists +
-          ' A · ' +
-          vm.titles +
-          ' títulos · ' +
-          vm.awards +
-          ' premios'
+        F().isGoalkeeper(vm.position)
+          ? vm.appearances +
+              ' PJ · ' +
+              vm.goalsAgainst +
+              ' GC · ' +
+              vm.cleanSheets +
+              ' VI · ' +
+              vm.titles +
+              ' títulos · ' +
+              vm.awards +
+              ' premios'
+          : vm.appearances +
+              ' PJ · ' +
+              vm.goals +
+              ' G · ' +
+              vm.assists +
+              ' A · ' +
+              vm.titles +
+              ' títulos · ' +
+              vm.awards +
+              ' premios'
       ) +
       '</text>' +
       '<text x="28" y="242" fill="#aebbd0" font-family="Montserrat, Arial" font-size="14">' +

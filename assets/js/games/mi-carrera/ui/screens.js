@@ -1095,15 +1095,10 @@
         ovrAfter +
         ' OVR</strong></div>' +
         '<div class="mc-recap-numbers">' +
-        '<div><strong>' +
-        season.appearances +
-        '</strong><span>PJ</span></div>' +
-        '<div><strong>' +
-        season.goals +
-        '</strong><span>Goles</span></div>' +
-        '<div><strong>' +
-        season.assists +
-        '</strong><span>Asist.</span></div>' +
+        F().primarySeasonStatsHtml(
+          season,
+          (player && player.position) || (state.player && state.player.position)
+        ) +
         '</div>' +
         (fs
           ? '<p class="mc-form-chip mc-form-chip--' +
@@ -1440,20 +1435,17 @@
 
   function seasonFeedbackBody(payload) {
     var season = payload.season;
+    var position =
+      (payload.state && payload.state.player && payload.state.player.position) ||
+      (season && season.position) ||
+      'MID';
     return (
       '<p class="mc-kicker">' +
       F().escapeHtml(season.seasonLabel || F().seasonLabel(season.seasonIndex)) +
       '</p>' +
       '<div class="mc-scene-stats">' +
-      '<div><span>PJ</span><strong>' +
-      season.appearances +
-      '</strong></div>' +
-      '<div><span>Goles</span><strong>' +
-      season.goals +
-      '</strong></div>' +
-      '<div><span>Asist.</span><strong>' +
-      season.assists +
-      '</strong></div></div>'
+      F().primarySeasonStatsHtml(season, position) +
+      '</div>'
     );
   }
 

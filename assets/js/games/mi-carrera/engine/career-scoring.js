@@ -38,6 +38,8 @@
     var games = 0;
     var goals = 0;
     var assists = 0;
+    var goalsAgainst = 0;
+    var cleanSheets = 0;
     var titles = 0;
     var titleIds = [];
     var clubSet = {};
@@ -45,6 +47,8 @@
       games += s.appearances || 0;
       goals += s.goals || 0;
       assists += s.assists || 0;
+      goalsAgainst += s.goalsAgainst || 0;
+      cleanSheets += s.cleanSheets || 0;
       if (s.titles && s.titles.length) {
         s.titles.forEach(function (t) {
           titles += 1;
@@ -68,13 +72,15 @@
       games: games,
       goals: goals,
       assists: assists,
+      goalsAgainst: goalsAgainst,
+      cleanSheets: cleanSheets,
       titles: titles,
       titleIds: titleIds,
       clubs: Object.keys(clubSet)
     };
   }
 
-  function positionContribution(position, goals, assists, games) {
+  function positionContribution(position, goals, assists, games, goalsAgainst, cleanSheets) {
     var perGameG = games > 0 ? goals / games : 0;
     var perGameA = games > 0 ? assists / games : 0;
     if (position === 'FWD') {
@@ -86,7 +92,15 @@
     if (position === 'DEF') {
       return normalize(perGameG * 0.25 + perGameA * 0.35 + Math.min(1, games / 450) * 0.4, 0, 0.55);
     }
-    return normalize(Math.min(1, games / 500) * 0.75 + (1 - Math.min(1, perGameG)) * 0.1, 0, 1);
+    var csRate = games > 0 ? (cleanSheets || 0) / games : 0;
+    var gaRate = games > 0 ? (goalsAgainst || 0) / games : 1.6;
+    return normalize(
+      csRate * 0.72 +
+        (1 - Math.min(1, gaRate / 1.8)) * 0.28 +
+        Math.min(1, games / 480) * 0.2,
+      0,
+      1
+    );
   }
 
   function titlesWeight(titleIds, world) {
@@ -156,6 +170,9 @@
     }
     if (state.player.position === 'MID' && agg.goals + agg.assists >= 220) {
       flags.push({ id: 'goleador_historico', label: 'Goleador histórico' });
+    }
+    if (state.player.position === 'GK' && (agg.cleanSheets || 0) >= 150) {
+      flags.push({ id: 'arquero_de_era', label: 'Arquero de una era' });
     }
     if (state.nationalCaps >= 60 || (state.nationalCaps >= 40 && state.nationalGoals >= 15)) {
       flags.push({ id: 'especialista_internacional', label: 'Especialista internacional' });
@@ -270,7 +287,9 @@
       state.player.position,
       agg.goals,
       agg.assists,
-      agg.games
+      agg.games,
+      agg.goalsAgainst,
+      agg.cleanSheets
     );
     var titlesNorm = normalize(titlesWeight(agg.titleIds, world), 0, 32);
     var awardsNorm = normalize(awardsWeight(state), 0, 4.5);
@@ -319,6 +338,8 @@
         careerGames: agg.games,
         goals: agg.goals,
         assists: agg.assists,
+        goalsAgainst: agg.goalsAgainst || 0,
+        cleanSheets: agg.cleanSheets || 0,
         nationalCaps: state.nationalCaps,
         nationalGoals: state.nationalGoals,
         clubs: clubsCount(agg, state),

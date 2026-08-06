@@ -66,9 +66,39 @@
     var assists = Math.round(
       appearances * assistRate * ratingFactor * formFactor * confFactor * rng.range(0.75, 1.25)
     );
+    var goalsAgainst = 0;
+    var cleanSheets = 0;
     if (pos === 'GK') {
-      goals = rng.bool(0.02) ? 1 : 0;
-      assists = rng.bool(0.15) ? rng.int(0, 2) : 0;
+      // Rare outfield-style moments only — not the primary GK metrics.
+      goals = rng.bool(0.015) ? 1 : 0;
+      assists = rng.bool(0.08) ? 1 : 0;
+
+      var skill = NS.State.clamp((state.rating - 55) / 40, 0, 1.05);
+      var formBoost = (state.form - 5) / 20;
+      var agePen = state.age >= 34 ? 0.1 : state.age >= 32 ? 0.05 : 0;
+      var level = club && club.level != null ? club.level : 2;
+      var press = level >= 5 ? 1.22 : level >= 4 ? 1.12 : level <= 2 ? 0.88 : 1;
+      var csRate = NS.State.clamp(
+        0.16 + skill * 0.3 + formBoost * 0.14 - agePen - (press - 1) * 0.1,
+        0.04,
+        0.52
+      );
+      if (injuryWeeks >= 8) csRate *= 0.82;
+      cleanSheets = Math.round(appearances * csRate * rng.range(0.88, 1.12));
+      cleanSheets = NS.State.clamp(cleanSheets, 0, appearances);
+      var concededApps = Math.max(0, appearances - cleanSheets);
+      var gaPerGame = NS.State.clamp(
+        (1.28 - skill * 0.5 - formBoost * 0.35 + agePen) * press,
+        0.55,
+        2.35
+      );
+      goalsAgainst =
+        concededApps === 0
+          ? 0
+          : Math.max(
+              concededApps,
+              Math.round(concededApps * gaPerGame * rng.range(0.88, 1.14))
+            );
     }
 
     var avgRating =
@@ -78,6 +108,11 @@
       ((state.confidence != null ? state.confidence : 55) - 55) * 0.008 +
       (minutesFactor - 0.5) * 0.5 +
       rng.range(-0.28, 0.38);
+    if (pos === 'GK' && appearances > 0) {
+      var csShare = cleanSheets / appearances;
+      var gaShare = goalsAgainst / appearances;
+      avgRating += csShare * 0.85 - Math.max(0, gaShare - 1.05) * 0.45;
+    }
     if (injuryWeeks >= 10) avgRating -= 0.3;
     if (state.streakBad >= 3) avgRating -= 0.1;
     if (state.streakGood >= 3) avgRating += 0.12;
@@ -89,6 +124,8 @@
       appearances: appearances,
       goals: goals,
       assists: assists,
+      goalsAgainst: goalsAgainst,
+      cleanSheets: cleanSheets,
       averageRating: avgRating,
       trophies: [],
       injuryWeeks: injuryWeeks,
@@ -169,10 +206,12 @@
       0,
       100
     );
+    var popBump =
+      state.player.position === 'GK'
+        ? Math.min(6, Math.floor((stats.cleanSheets || 0) / 5))
+        : Math.min(6, Math.floor((stats.goals + stats.assists) / 8));
     state.popularity = NS.State.clamp(
-      state.popularity +
-        Math.min(6, Math.floor((stats.goals + stats.assists) / 8)) +
-        (stats.trophies.length ? 2 : 0),
+      state.popularity + popBump + (stats.trophies.length ? 2 : 0),
       0,
       100
     );
@@ -471,6 +510,8 @@
       appearances: stats.appearances,
       goals: stats.goals,
       assists: stats.assists,
+      goalsAgainst: stats.goalsAgainst || 0,
+      cleanSheets: stats.cleanSheets || 0,
       averageRating: stats.averageRating,
       trophies: stats.trophies.slice(),
       titles: (stats.titles || []).slice(),

@@ -7,6 +7,8 @@
     var games = 0;
     var goals = 0;
     var assists = 0;
+    var goalsAgainst = 0;
+    var cleanSheets = 0;
     var titles = (state.titles || []).length;
     var champions = 0;
     var libertadores = 0;
@@ -15,6 +17,8 @@
       games += s.appearances || 0;
       goals += s.goals || 0;
       assists += s.assists || 0;
+      goalsAgainst += s.goalsAgainst || 0;
+      cleanSheets += s.cleanSheets || 0;
       if (s.clubId) clubSeasons[s.clubId] = (clubSeasons[s.clubId] || 0) + 1;
     });
     (state.titles || []).forEach(function (t) {
@@ -29,6 +33,8 @@
       games: games,
       goals: goals,
       assists: assists,
+      goalsAgainst: goalsAgainst,
+      cleanSheets: cleanSheets,
       titles: titles,
       champions: champions,
       libertadores: libertadores,
@@ -78,8 +84,17 @@
       if (rec) created.push(rec);
     }
 
-    if (agg.goals >= 100) add('rec_career_goals_100', 'Máximo goleador de la carrera (100+)', agg.goals);
-    if (agg.assists >= 80) add('rec_career_assists_80', 'Máximo asistidor de la carrera (80+)', agg.assists);
+    if (state.player && state.player.position === 'GK') {
+      if (agg.cleanSheets >= 100) {
+        add('rec_career_clean_sheets_100', '100+ vallas invictas en la carrera', agg.cleanSheets);
+      }
+      if (agg.cleanSheets >= 150) {
+        add('rec_career_clean_sheets_150', 'Arquero de una era (150+ VI)', agg.cleanSheets);
+      }
+    } else {
+      if (agg.goals >= 100) add('rec_career_goals_100', 'Máximo goleador de la carrera (100+)', agg.goals);
+      if (agg.assists >= 80) add('rec_career_assists_80', 'Máximo asistidor de la carrera (80+)', agg.assists);
+    }
     if (agg.titles >= 10) add('rec_titles_10', 'Más títulos de la carrera (10+)', agg.titles);
     if (agg.champions >= 2) add('rec_ucl_multi', 'Más Champions de la carrera', agg.champions);
     if (agg.nationalCaps >= 80) add('rec_caps_80', 'Más partidos internacionales', agg.nationalCaps);

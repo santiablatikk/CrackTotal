@@ -366,68 +366,124 @@
     var chapter = ageChapter(state.age, state);
     var form = formStatus(state.form);
     var value = computeMarketValue(state, club, world);
+    var pos = state.player && state.player.position;
     var line = 'El entrenador te ve como una apuesta.';
     var tone = 'project';
     var objective = 'Ganar minutos y crecer.';
 
     if (state.onLoan) {
-      line = 'Estás cedido. Cada minuto cuenta.';
+      line =
+        pos === 'GK'
+          ? 'Cedido para atajar. Cada valla invicta cuenta.'
+          : 'Estás cedido. Cada minuto cuenta.';
       tone = 'loan';
-      objective = 'Jugar 25+ partidos y volver más fuerte.';
+      objective =
+        pos === 'GK' ? 'Jugar 25+ partidos y sumar vallas.' : 'Jugar 25+ partidos y volver más fuerte.';
     } else if (state.arcFlags && state.arcFlags.crisis) {
-      line = 'El vestuario está tenso. Hay que responder.';
+      line =
+        pos === 'GK'
+          ? 'La portería está en duda. Hay que responder.'
+          : 'El vestuario está tenso. Hay que responder.';
       tone = 'crisis';
-      objective = 'Recuperar la confianza del entrenador.';
+      objective =
+        pos === 'GK'
+          ? 'Recuperar la titularidad en el arco.'
+          : 'Recuperar la confianza del entrenador.';
     } else if (state.arcFlags && state.arcFlags.comeback) {
-      line = 'Volviste. Ahora hay que sostenerlo.';
+      line =
+        pos === 'GK'
+          ? 'Volviste al arco. Ahora hay que sostenerlo.'
+          : 'Volviste. Ahora hay que sostenerlo.';
       tone = 'comeback';
       objective = 'Confirmar el comeback con consistencia.';
     } else if (state.arcFlags && state.arcFlags.breakout) {
-      line = 'El club necesita que confirmes el salto.';
+      line =
+        pos === 'GK'
+          ? 'El club necesita que confirmes el salto bajo los palos.'
+          : 'El club necesita que confirmes el salto.';
       tone = 'breakout';
-      objective = 'Convertirte en referencia del equipo.';
+      objective =
+        pos === 'GK'
+          ? 'Convertirte en el dueño del arco.'
+          : 'Convertirte en referencia del equipo.';
     } else if (mins < 0.4 || role === 'rotacion' || role === 'promesa') {
       if (level >= 4 && state.age <= 20) {
-        line = 'Empezás como suplente en un grande.';
+        line =
+          pos === 'GK'
+            ? 'Empezás como suplente en un grande. El arco se pelea.'
+            : 'Empezás como suplente en un grande.';
         tone = 'bench';
         objective = 'Robar minutos y demostrar potencial.';
       } else if (role === 'promesa') {
-        line = 'El entrenador te ve como una apuesta.';
+        line =
+          pos === 'GK'
+            ? 'El entrenador te ve como apuesta para el arco.'
+            : 'El entrenador te ve como una apuesta.';
         tone = 'project';
         objective = 'Crecer sin quemarte.';
       } else {
-        line = 'Vas a pelear minutos desde el banco.';
+        line =
+          pos === 'GK'
+            ? 'Vas a pelear el arco desde el banco.'
+            : 'Vas a pelear minutos desde el banco.';
         tone = 'bench';
-        objective = 'Ganarte un lugar en el once.';
+        objective =
+          pos === 'GK' ? 'Ganarte la titularidad en el arco.' : 'Ganarte un lugar en el once.';
       }
     } else if (mins >= 0.72 || role === 'titular') {
       if (level <= 2) {
-        line = 'El club necesita que seas titular.';
+        line =
+          pos === 'GK'
+            ? 'El club necesita que seas el arquero titular.'
+            : 'El club necesita que seas titular.';
         tone = 'starter';
-        objective = 'Liderar y llamar la atención.';
+        objective =
+          pos === 'GK' ? 'Sostener el arco y llamar la atención.' : 'Liderar y llamar la atención.';
       } else if (level >= 4 && club && club.continentId === 'continent_eu') {
-        line = 'Después de convertirte en pieza importante, el club espera más.';
+        line =
+          pos === 'GK'
+            ? 'Sos el dueño del arco. Europa espera más.'
+            : 'Después de convertirte en pieza importante, el club espera más.';
         tone = 'starter';
-        objective = 'Consolidarte en Europa.';
+        objective =
+          pos === 'GK' ? 'Consolidarte como referencia europea.' : 'Consolidarte en Europa.';
       } else {
-        line = 'Te ganaste un rol de peso en el once.';
+        line =
+          pos === 'GK'
+            ? 'Te ganaste el arco. Ahora hay que sostenerlo.'
+            : 'Te ganaste un rol de peso en el once.';
         tone = 'starter';
-        objective = 'Ser decisivo toda la temporada.';
+        objective =
+          pos === 'GK'
+            ? 'Sumar vallas invictas toda la temporada.'
+            : 'Ser decisivo toda la temporada.';
       }
     } else if (band === 'early_decline' || band === 'decline' || band === 'late') {
-      line = 'La experiencia pesa. Hay que elegir bien los partidos.';
+      line =
+        pos === 'GK'
+          ? 'La experiencia pesa bajo los palos. Elegí bien los partidos.'
+          : 'La experiencia pesa. Hay que elegir bien los partidos.';
       tone = 'veteran';
       objective = 'Cerrar el capítulo con dignidad.';
     } else if ((state.stayedStreak || 0) >= 3) {
-      line = 'Sos un referente. El club espera liderazgo.';
+      line =
+        pos === 'GK'
+          ? 'Sos el arquero del club. Esperan liderazgo.'
+          : 'Sos un referente. El club espera liderazgo.';
       tone = 'leader';
       objective = 'Sostener el legado en el club.';
     } else if (band === 'prime' || band === 'rising') {
-      line = 'Estás en años clave. Cada decisión pesa.';
+      line =
+        pos === 'GK'
+          ? 'Estás en años clave bajo los palos. Cada paro pesa.'
+          : 'Estás en años clave. Cada decisión pesa.';
       tone = 'prime';
       objective = 'Maximizar tu mejor versión.';
     } else {
-      line = 'Hay lugar para crecer si respondés.';
+      line =
+        pos === 'GK'
+          ? 'Hay lugar para crecer si respondés en el arco.'
+          : 'Hay lugar para crecer si respondés.';
       tone = 'rotation';
       objective = 'Dar un salto de nivel.';
     }
@@ -565,7 +621,18 @@
     var ballons =
       NS.Awards && NS.Awards.countAwards ? NS.Awards.countAwards(state, 'award_ballon_dor') : 0;
     var city = first && first.city ? first.city : firstName;
+    var pos = state.player && state.player.position;
+    var cleanSheets = 0;
+    hist.forEach(function (s) {
+      cleanSheets += s.cleanSheets || 0;
+    });
 
+    if (pos === 'GK' && cleanSheets >= 150) {
+      return cleanSheets + ' vallas invictas. Un arquero de una era.';
+    }
+    if (pos === 'GK' && cleanSheets >= 100) {
+      return cleanSheets + ' vallas invictas. Dueño del arco.';
+    }
     if (ballons >= 1 && firstName && lastName && firstName !== lastName) {
       return 'De ' + firstName + ' al Balón de Oro.';
     }
@@ -612,6 +679,8 @@
       appearances: seasonRecord.appearances || 0,
       goals: seasonRecord.goals || 0,
       assists: seasonRecord.assists || 0,
+      goalsAgainst: seasonRecord.goalsAgainst || 0,
+      cleanSheets: seasonRecord.cleanSheets || 0,
       grade: seasonRecord.performanceGrade || null,
       ratingAfter: seasonRecord.ratingAfter != null ? seasonRecord.ratingAfter : state.rating
     });
@@ -1288,7 +1357,12 @@
       if (lastApps >= 28) interest += 5;
       else if (lastApps >= 20) interest += 2;
       else if (lastApps < 12) interest -= 6;
-      if (last && (last.goals || 0) + (last.assists || 0) >= 15) interest += 4;
+      if (state.player && state.player.position === 'GK') {
+        if (last && (last.cleanSheets || 0) >= 12) interest += 4;
+        else if (last && (last.cleanSheets || 0) >= 8) interest += 2;
+      } else if (last && (last.goals || 0) + (last.assists || 0) >= 15) {
+        interest += 4;
+      }
       if (interest < 10) continue;
       candidates.push({ club: club, interest: interest });
     }
@@ -1985,8 +2059,9 @@
       peakBand === 'low' &&
       titles === 0 &&
       ntBand === 'nont' &&
-      uniqueClubs <= 3 &&
-      peakRating < 74
+      uniqueClubs <= 2 &&
+      peakRating < 72 &&
+      hist.length >= 12
     ) {
       archetype = 'CAREER_STAGNATION';
     } else if (mobility === 'nomad' && peakBand === 'low') archetype = 'FALLEN_STAR';

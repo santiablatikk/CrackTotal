@@ -151,6 +151,21 @@
       return 'Primera convocatoria. Otro capítulo empieza.';
     }
 
+    if (
+      state.player &&
+      state.player.position === 'GK' &&
+      (season.cleanSheets || 0) >= 14 &&
+      (season.appearances || 0) >= 25
+    ) {
+      return pickVariant(
+        [
+          'Una temporada de vallas invictas. El arco fue tuyo.',
+          season.cleanSheets + ' vallas. El arquero se hizo dueño del partido.'
+        ],
+        salt + ':gkcs'
+      );
+    }
+
     return '';
   }
 

@@ -198,11 +198,21 @@
     }
 
     if (pos === 'GK') {
-      var cleanProxy =
-        Math.max(0, (playerSeason.appearances || 0) * 0.35 - (playerSeason.goals || 0)) +
-        (playerSeason.averageRating || 0) * 4 +
-        (flags.leagueTitle ? 10 : 0);
-      tryWin('award_best_gk', cleanProxy, 55, 0.18, {});
+      var apps = playerSeason.appearances || 0;
+      var cs = playerSeason.cleanSheets != null ? playerSeason.cleanSheets : 0;
+      var ga = playerSeason.goalsAgainst != null ? playerSeason.goalsAgainst : 0;
+      var gaRate = apps > 0 ? ga / apps : 2;
+      var cleanScore =
+        cs * 2.4 +
+        Math.max(0, 18 - gaRate * 10) +
+        (playerSeason.averageRating || 0) * 4.5 +
+        (flags.leagueTitle ? 12 : 0) +
+        (flags.continentalTitle ? 8 : 0) +
+        Math.min(10, Math.max(0, apps - 20) * 0.35);
+      tryWin('award_best_gk', cleanScore, 58, 0.16, {
+        cleanSheets: cs,
+        goalsAgainst: ga
+      });
     }
 
     if (pos === 'DEF') {
