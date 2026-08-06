@@ -13,6 +13,8 @@
       countryId: null,
       continentId: '',
       countryQuery: '',
+      age: 17,
+      birthYear: 2009,
       position: null,
       archetypeId: null,
       createStep: 1,
@@ -236,23 +238,31 @@
         msg = 'Elegí un país.';
       }
     } else if (step === 3) {
+      var age = Number(this.draft.age);
+      if (!(age >= 16 && age <= 19)) {
+        errId = 'mc-age-error';
+        msg = 'Elegí una edad entre 16 y 19.';
+      }
+    } else if (step === 4) {
       if (!this.draft.position) {
         errId = 'mc-position-error';
         msg = 'Elegí una posición.';
       }
-    } else if (step === 4) {
+    } else if (step === 5) {
       if (!this.draft.archetypeId) {
         errId = 'mc-archetype-error';
         msg = 'Elegí un arquetipo.';
       }
     }
-    ['mc-name-error', 'mc-country-error', 'mc-position-error', 'mc-archetype-error'].forEach(function (id) {
-      var el = document.getElementById(id);
-      if (el) {
-        el.hidden = true;
-        el.textContent = '';
+    ['mc-name-error', 'mc-country-error', 'mc-age-error', 'mc-position-error', 'mc-archetype-error'].forEach(
+      function (id) {
+        var el = document.getElementById(id);
+        if (el) {
+          el.hidden = true;
+          el.textContent = '';
+        }
       }
-    });
+    );
     if (errId) {
       var node = document.getElementById(errId);
       if (node) {
@@ -268,7 +278,7 @@
     var nameInput = document.getElementById('mc-player-name');
     if (nameInput) this.draft.name = nameInput.value;
     if (!this.validateCreateStep()) return;
-    if ((this.draft.createStep || 1) < 4) {
+    if ((this.draft.createStep || 1) < 5) {
       this.draft.createStep = (this.draft.createStep || 1) + 1;
       this.showCreate();
     }
@@ -751,12 +761,52 @@
     );
   };
 
+  App.prototype.showPreSeason = function () {
+    this.setRootScreen(
+      'preseason',
+      UI.screens.preSeason({
+        state: this.state,
+        engine: this.engine
+      }),
+      { state: 'preseason' }
+    );
+    this.announce('Situación de temporada');
+  };
+
+  App.prototype.showAgeUp = function (fromAge, toAge) {
+    this.setRootScreen(
+      'age-up',
+      UI.screens.ageUp({
+        fromAge: fromAge,
+        toAge: toAge,
+        state: this.state
+      }),
+      { state: 'age-up' }
+    );
+    this.announce(toAge + ' años');
+  };
+
+  App.prototype.enterNextSeason = function () {
+    if (this._pendingAgeUp && this.state) {
+      var toAge = this.state.age;
+      var fromAge = this._pendingAgeUp.fromAge != null ? this._pendingAgeUp.fromAge : toAge - 1;
+      this._pendingAgeUp = null;
+      if (fromAge < toAge) {
+        this.showAgeUp(fromAge, toAge);
+        return;
+      }
+    }
+    this.showCareerHome();
+  };
+
   App.prototype.handleMarketStay = function () {
     UI.components.closeModal();
     var decision = this.state && this.state.currentDecision;
+    var ageBefore = this.state ? this.state.age : null;
     if (this.state && this.state.phase === 'decision' && decision && decision.type === 'transferencia') {
       this.resolveDecisionOnly('stay_loyal', null, function () {});
-      this.showCareerHome();
+      if (ageBefore != null) this._pendingAgeUp = { fromAge: ageBefore - 1 };
+      this.enterNextSeason();
       return;
     }
     if (this.state && this.state.phase === 'decision') {
@@ -765,12 +815,14 @@
       this.state.seasonModifiers.minutesBias =
         (this.state.seasonModifiers.minutesBias || 0) + 0.05;
       this.state.confidence = Math.min(100, (this.state.confidence || 55) + 2);
+      this.state.stayedStreak = (this.state.stayedStreak || 0) + 1;
       this.state.currentDecision = null;
       this.state.phase = 'simulate';
       this.state.pendingOffers = [];
       if (NS.Storage && NS.Storage.saveActive) NS.Storage.saveActive(this.state);
     }
-    this.showCareerHome();
+    if (ageBefore != null) this._pendingAgeUp = { fromAge: ageBefore - 1 };
+    this.enterNextSeason();
   };
 
   App.prototype.handleMarketSign = function (offerId) {
@@ -810,7 +862,8 @@
         var club = self.engine.getClub(result.transferOffer.clubId);
         self.showTransferCinematic(club);
       } else {
-        self.showCareerHome();
+        self._pendingAgeUp = { fromAge: self.state.age - 1 };
+        self.enterNextSeason();
       }
     });
   };
@@ -878,6 +931,7 @@
         countryId: this.draft.countryId,
         position: this.draft.position,
         archetypeId: this.draft.archetypeId,
+        age: this.draft.age != null ? this.draft.age : 17,
         seed: this.draft.careerSeed || undefined
       });
       this.draft.careerSeed = preview.seed;
@@ -917,6 +971,11 @@
         countryId: this.draft.countryId,
         position: this.draft.position,
         archetypeId: this.draft.archetypeId,
+        age: this.draft.age != null ? this.draft.age : 17,
+        birthYear:
+          this.draft.birthYear != null
+            ? this.draft.birthYear
+            : BASE_YEAR - (this.draft.age != null ? this.draft.age : 17),
         seed: this.draft.careerSeed,
         clubId: clubId
       });
@@ -1014,6 +1073,12 @@
       this.showCreate();
       return;
     }
+    if (action === 'pick-age') {
+      this.draft.age = Number(target.getAttribute('data-age'));
+      this.draft.birthYear = BASE_YEAR - this.draft.age;
+      this.showCreate();
+      return;
+    }
     if (action === 'pick-position') {
       this.draft.position = target.getAttribute('data-id');
       this.showCreate();
@@ -1059,7 +1124,19 @@
       return;
     }
     if (action === 'play-season') {
+      this.showPreSeason();
+      return;
+    }
+    if (action === 'confirm-season') {
       this.runSeason();
+      return;
+    }
+    if (action === 'back-hub') {
+      this.showCareerHome();
+      return;
+    }
+    if (action === 'after-age-up') {
+      this.showCareerHome();
       return;
     }
     if (action === 'select-offer') {
@@ -1088,7 +1165,8 @@
       return;
     }
     if (action === 'after-transfer') {
-      this.showCareerHome();
+      if (this.state) this._pendingAgeUp = { fromAge: this.state.age - 1 };
+      this.enterNextSeason();
       return;
     }
     if (action === 'beat-continue') {
@@ -1114,7 +1192,7 @@
       ev.preventDefault();
       var nameInput = document.getElementById('mc-player-name');
       if (nameInput) this.draft.name = nameInput.value;
-      if ((this.draft.createStep || 1) < 4) {
+      if ((this.draft.createStep || 1) < 5) {
         this.createNext();
         return;
       }

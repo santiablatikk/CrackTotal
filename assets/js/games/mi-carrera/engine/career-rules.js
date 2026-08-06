@@ -127,13 +127,37 @@
   }
 
   function ageBand(age) {
-    if (age <= 19) return 'youth';
-    if (age <= 23) return 'growth';
-    if (age <= 27) return 'prime';
-    if (age <= 30) return 'peak_stable';
-    if (age <= 33) return 'early_decline';
-    if (age <= 36) return 'decline';
+    if (age <= 18) return 'youth';
+    if (age <= 21) return 'growth';
+    if (age <= 25) return 'rising';
+    if (age <= 29) return 'prime';
+    if (age <= 32) return 'peak_stable';
+    if (age <= 35) return 'early_decline';
+    if (age <= 37) return 'decline';
     return 'late';
+  }
+
+  function ageChapter(age, state) {
+    var band = ageBand(age);
+    var rating = state && state.rating != null ? state.rating : 0;
+    var peak = state && state.peakRating != null ? state.peakRating : rating;
+    if (band === 'youth') return 'DESARROLLO';
+    if (band === 'growth') {
+      if (rating >= 78 || (state && state.arcFlags && state.arcFlags.breakout)) return 'PRIMER GRAN SALTO';
+      return 'CONSOLIDACIÓN';
+    }
+    if (band === 'rising') return rating >= 84 ? 'HACIA EL PRIME' : 'CRECIMIENTO';
+    if (band === 'prime') {
+      if (rating >= peak - 1 && rating >= 86) return 'TU MEJOR MOMENTO';
+      return 'PRIME';
+    }
+    if (band === 'peak_stable') return 'EXPERIENCIA';
+    if (band === 'early_decline') {
+      if (state && state.arcFlags && state.arcFlags.comeback) return 'ÚLTIMA GRAN EMPUJADA';
+      return 'EL FINAL SE ACERCA';
+    }
+    if (band === 'decline' || band === 'late') return 'LEGADO';
+    return 'TEMPORADA';
   }
 
   /**
@@ -173,9 +197,19 @@
       raw = (gap > 0 ? gap * 0.12 : 0) + formMod + minutesMod + trainMod + gradeBoost + confMod;
       raw += rng.range(-0.35, 0.65);
     } else if (band === 'growth') {
+      maxUp = 3;
+      raw = (gap > 0 ? gap * 0.11 : 0) + formMod + minutesMod + trainMod + gradeBoost + confMod;
+      raw += rng.range(-0.35, 0.55);
+    } else if (band === 'rising') {
       maxUp = 2;
-      raw = (gap > 0 ? gap * 0.1 : 0) + formMod + minutesMod + trainMod + gradeBoost + confMod;
-      raw += rng.range(-0.4, 0.5);
+      raw =
+        (gap > 0 ? gap * 0.08 : rng.bool(0.15) ? -0.15 : 0) +
+        formMod * 0.9 +
+        minutesMod +
+        trainMod +
+        gradeBoost +
+        confMod * 0.8;
+      raw += rng.range(-0.4, 0.45);
     } else if (band === 'prime') {
       maxUp = 2;
       raw = (gap > 0 ? gap * 0.06 : rng.bool(0.2) ? -0.2 : 0) + formMod * 0.8 + minutesMod + trainMod + gradeBoost + confMod * 0.7;
@@ -310,17 +344,130 @@
     f += (state.form - 5) * 0.028;
     f += (state.fitness - 70) / 220;
     f += state.seasonModifiers.minutesBias || 0;
-    // Giant club pressure: below threshold → clear bench risk
     if (level >= 5 && gap < 0) f -= 0.18;
     else if (level >= 5 && gap < 4) f -= 0.1;
     if (level >= 4 && gap < -2) f -= 0.12;
     if (level >= 4 && gap < 2 && state.age <= 20) f -= 0.06;
-    // Development clubs → minutes for growth
     if (level <= 2 && gap >= -2) f += 0.18;
     if (level <= 2 && gap >= 6) f += 0.1;
     if (level === 3 && gap >= 0) f += 0.08;
     if (state.onLoan) f += 0.16;
+    if (state.age <= 18 && level >= 4) f -= 0.05;
+    if (state.age >= 30 && gap >= 4) f += 0.04;
     return NS.State.clamp(f, 0.18, 0.98);
+  }
+
+  function seasonSituation(state, world) {
+    var club = getClub(world, state.clubId);
+    var level = (club && club.level) || 1;
+    var role = state.clubRole || expectedRoleForClub(state, club);
+    var mins = minutesFactorForClub(state, club);
+    var band = ageBand(state.age);
+    var chapter = ageChapter(state.age, state);
+    var line = 'El entrenador te ve como una apuesta.';
+    var tone = 'project';
+
+    if (state.onLoan) {
+      line = 'Estás cedido. Cada minuto cuenta.';
+      tone = 'loan';
+    } else if (state.arcFlags && state.arcFlags.crisis) {
+      line = 'El vestuario está tenso. Hay que responder.';
+      tone = 'crisis';
+    } else if (state.arcFlags && state.arcFlags.comeback) {
+      line = 'Volviste. Ahora hay que sostenerlo.';
+      tone = 'comeback';
+    } else if (state.arcFlags && state.arcFlags.breakout) {
+      line = 'El club necesita que confirmes el salto.';
+      tone = 'breakout';
+    } else if (mins < 0.4 || role === 'rotacion' || role === 'promesa') {
+      if (level >= 4 && state.age <= 20) {
+        line = 'Empezás como suplente en un grande.';
+        tone = 'bench';
+      } else if (role === 'promesa') {
+        line = 'El entrenador te ve como una apuesta.';
+        tone = 'project';
+      } else {
+        line = 'Vas a pelear minutos desde el banco.';
+        tone = 'bench';
+      }
+    } else if (mins >= 0.72 || role === 'titular') {
+      if (level <= 2) {
+        line = 'El club necesita que seas titular.';
+        tone = 'starter';
+      } else {
+        line = 'Te ganaste un rol de peso en el once.';
+        tone = 'starter';
+      }
+    } else if (band === 'early_decline' || band === 'decline') {
+      line = 'La experiencia pesa. Hay que elegir bien los partidos.';
+      tone = 'veteran';
+    } else if ((state.stayedStreak || 0) >= 3) {
+      line = 'Sos un referente. El club espera liderazgo.';
+      tone = 'leader';
+    } else {
+      line = 'Hay lugar para crecer si respondés.';
+      tone = 'rotation';
+    }
+
+    return {
+      age: state.age,
+      chapter: chapter,
+      band: band,
+      role: role,
+      minutesFactor: mins,
+      line: line,
+      tone: tone,
+      clubId: state.clubId,
+      seasonIndex: state.seasonIndex || 0
+    };
+  }
+
+  function appendClubTimeline(state, seasonRecord) {
+    if (!state || !seasonRecord) return;
+    if (!state.clubTimeline) state.clubTimeline = [];
+    state.clubTimeline.push({
+      type: 'club_season',
+      age: seasonRecord.age,
+      seasonIndex: seasonRecord.seasonIndex,
+      seasonLabel: seasonRecord.seasonLabel,
+      clubId: seasonRecord.clubId,
+      onLoan: !!state.onLoan,
+      appearances: seasonRecord.appearances || 0,
+      goals: seasonRecord.goals || 0,
+      assists: seasonRecord.assists || 0,
+      grade: seasonRecord.performanceGrade || null,
+      ratingAfter: seasonRecord.ratingAfter != null ? seasonRecord.ratingAfter : state.rating
+    });
+  }
+
+  function clubTimelineSummary(state, world) {
+    var rows = [];
+    var timeline = (state && state.clubTimeline) || [];
+    var i;
+    for (i = 0; i < timeline.length; i++) {
+      var row = timeline[i];
+      var club = getClub(world, row.clubId);
+      var name = club ? club.shortName || club.name : 'Club';
+      var prev = rows[rows.length - 1];
+      if (prev && prev.clubId === row.clubId && !row.onLoan && !prev.onLoan) {
+        prev.ageEnd = row.age;
+        prev.seasons += 1;
+        prev.appearances += row.appearances || 0;
+        prev.goals += row.goals || 0;
+        continue;
+      }
+      rows.push({
+        clubId: row.clubId,
+        name: name,
+        ageStart: row.age,
+        ageEnd: row.age,
+        seasons: 1,
+        onLoan: !!row.onLoan,
+        appearances: row.appearances || 0,
+        goals: row.goals || 0
+      });
+    }
+    return rows;
   }
 
   function pathMetaForLevel(level) {
@@ -1212,6 +1359,11 @@
       wantTx = Math.max(wantTx, 1);
     }
     if (state.age >= 34) wantTx = Math.min(wantTx, 1);
+    if (state.age <= 18) wantTx = Math.min(wantTx, lastGrade === 'S' || lastGrade === 'A' ? 1 : 0);
+    if (state.age >= 26 && state.age <= 29 && (lastGrade === 'S' || lastGrade === 'A')) {
+      wantTx = Math.max(wantTx, rng.int(1, 3));
+    }
+    if (state.age >= 33 && lastGrade !== 'S') wantTx = Math.min(wantTx, 1);
 
     var transfers =
       wantTx > 0
@@ -1592,7 +1744,7 @@
     var crisisBand = crisis >= 3 ? 'multiCrisis' : crisis >= 1 ? 'crisis' : 'stable';
     var comeBand = comeback >= 1 ? 'comeback' : 'nocome';
     var longevity = hist.length <= 12 ? 'short' : hist.length <= 18 ? 'mid' : 'long';
-    var peakAgeBand = peakAge <= 22 ? 'earlyPeak' : peakAge <= 28 ? 'primePeak' : 'latePeak';
+    var peakAgeBand = peakAge <= 22 ? 'earlyPeak' : peakAge <= 29 ? 'primePeak' : 'latePeak';
 
     var giantOutcome = 'noGiant';
     if (giantSeasons >= 2) {
@@ -1638,7 +1790,6 @@
     else if (regionPath === 'SA_ONLY' && titles >= 2 && peakRating >= 80) archetype = 'SOUTH_AMERICAN_KING';
     else if (giantOutcome === 'giantSuccess') archetype = 'GIANT_SUCCESS';
     else if (giantOutcome === 'giantFail' && peakBand === 'low') archetype = 'GIANT_FAILURE';
-    else if (peakAgeBand === 'latePeak' && peakRating >= 80 && peakAge >= 29) archetype = 'LATE_BLOOMER';
     else if (peakAgeBand === 'earlyPeak' && peakRating >= 82) archetype = 'WUNDERKIND';
     else if (
       regionPath.indexOf('SA_EUROPE') === 0 &&
@@ -1650,6 +1801,7 @@
     else if (uniqueClubs >= 8) archetype = 'EUROPEAN_JOURNEYMAN';
     else if (ntBand !== 'nont' && titles >= 1 && peakRating >= 76) archetype = 'NATIONAL_HERO';
     else if (returnBand === 'homeReturn' && peakAge >= 28) archetype = 'HOME_RETURN';
+    else if (peakAgeBand === 'latePeak' && peakRating >= 82 && peakAge >= 30) archetype = 'LATE_BLOOMER';
     else if (peakBand === 'low' && titles === 0 && ntBand === 'nont') archetype = 'CAREER_STAGNATION';
     else if (mobility === 'nomad' && peakBand === 'low') archetype = 'FALLEN_STAR';
     else if (peakBand === 'legend' || peakBand === 'star') archetype = 'RISING_STAR';
@@ -1707,6 +1859,10 @@
     clubTier: clubTier,
     tierRank: tierRank,
     ageBand: ageBand,
+    ageChapter: ageChapter,
+    seasonSituation: seasonSituation,
+    appendClubTimeline: appendClubTimeline,
+    clubTimelineSummary: clubTimelineSummary,
     formStatus: formStatus,
     updateArcState: updateArcState,
     minutesFactorForClub: minutesFactorForClub,

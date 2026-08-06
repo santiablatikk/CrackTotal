@@ -233,6 +233,7 @@
       draft = draft || {};
       name = String(draft.name || '').trim() || 'Tu nombre';
       pos = draft.position || '—';
+      age = draft.age != null ? draft.age : 17;
       country = draft.countryId
         ? (data.countries || []).filter(function (c) {
             return c.id === draft.countryId;
@@ -342,7 +343,7 @@
     var draft = ctx.draft || {};
     var step = draft.createStep || 1;
     var data = ctx.data || {};
-    var titles = ['', 'Tu nombre', 'Tu país', 'Tu posición', 'Tu estilo'];
+    var titles = ['', 'Tu nombre', 'Tu país', 'Tu edad', 'Tu posición', 'Tu estilo'];
     var body = '';
 
     if (step === 1) {
@@ -395,6 +396,28 @@
         '<p class="ct-field-error" id="mc-country-error" hidden></p>';
     } else if (step === 3) {
       body =
+        '<div class="mc-choice-grid mc-choice-grid--2" role="listbox" aria-label="Edad inicial">' +
+        [16, 17, 18, 19]
+          .map(function (age) {
+            var birth = 2026 - age;
+            return (
+              '<button type="button" class="mc-choice mc-choice--age' +
+              (Number(draft.age) === age ? ' is-selected' : '') +
+              '" data-mc-action="pick-age" data-age="' +
+              age +
+              '" role="option" aria-selected="' +
+              (Number(draft.age) === age) +
+              '"><strong>' +
+              age +
+              '</strong><span>años · ' +
+              birth +
+              '</span></button>'
+            );
+          })
+          .join('') +
+        '</div><p class="ct-field-error" id="mc-age-error" hidden></p>';
+    } else if (step === 4) {
+      body =
         '<div class="mc-choice-grid mc-choice-grid--2">' +
         ['GK', 'DEF', 'MID', 'FWD']
           .map(function (pos) {
@@ -445,7 +468,7 @@
       '<form id="mc-create-form" class="mc-create-step" novalidate>' +
       '<p class="mc-scene__kicker">0' +
       step +
-      ' / 04</p>' +
+      ' / 05</p>' +
       '<h1 class="mc-scene__title">' +
       F().escapeHtml(titles[step]) +
       '</h1>' +
@@ -455,7 +478,7 @@
       (step > 1
         ? '<button type="button" class="ct-button ct-button--ghost" data-mc-action="create-prev">Atrás</button>'
         : '<button type="button" class="ct-button ct-button--ghost" data-mc-action="go-intro">Volver</button>') +
-      (step < 4
+      (step < 5
         ? '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="create-next">Continuar</button>'
         : '<button type="submit" form="mc-create-form" class="ct-button ct-button--primary ct-button--lg">Empezar</button>') +
       '</div></section>'
@@ -659,6 +682,10 @@
     var seasonN = Math.max(1, (state.seasonIndex || 0) + 1);
     var seasonOrdinal =
       seasonN === 1 ? 'Tu primera temporada' : 'Temporada ' + seasonN;
+    var chapter =
+      UI.Narrative && UI.Narrative.ageHeadline
+        ? UI.Narrative.ageHeadline(state.age, state)
+        : '';
 
     return scene({
       id: 'hub',
@@ -679,9 +706,15 @@
         '<p class="mc-hub-club">' +
         F().escapeHtml(club ? club.shortName || club.name : '—') +
         '</p></div>' +
+        '<div class="mc-hub-age" aria-label="Edad"><strong>' +
+        state.age +
+        '</strong><span>AÑOS</span></div>' +
         '<div class="mc-hub-ovr"><span>OVR</span><strong>' +
         state.rating +
         '</strong></div></div>' +
+        (chapter
+          ? '<p class="mc-age-chapter">' + F().escapeHtml(chapter) + '</p>'
+          : '') +
         '<div class="mc-now">' +
         '<p class="mc-poster-line">' +
         F().escapeHtml(poster) +
@@ -946,13 +979,26 @@
       NS.Rules && NS.Rules.formStatus
         ? NS.Rules.formStatus(season.formAfter != null ? season.formAfter : state.form)
         : null;
+    var seasonAge = season.age != null ? season.age : state.age;
+    var chapter =
+      season.ageChapter ||
+      (UI.Narrative && UI.Narrative.ageHeadline
+        ? UI.Narrative.ageHeadline(seasonAge, state)
+        : '');
+    var roleLabel = season.role
+      ? F().ROLE_LABELS[season.role] || season.role
+      : '';
 
     return scene({
       id: 'recap',
       tone: tone,
       kicker: F().escapeHtml(season.seasonLabel || F().seasonLabel(season.seasonIndex)),
       title: F().escapeHtml(narrative),
-      lead: F().escapeHtml(club ? club.shortName || club.name : 'Tu club'),
+      lead:
+        '<span class="mc-recap-age">' +
+        seasonAge +
+        ' AÑOS</span> · ' +
+        F().escapeHtml(club ? club.shortName || club.name : 'Tu club'),
       body:
         '<div class="mc-recap-hero">' +
         '<div class="mc-recap-hero__club">' +
@@ -965,7 +1011,12 @@
         (country ? C().countryFlagHtml(country, 'sm') + ' ' : '') +
         F().escapeHtml(player.name || '') +
         (player.position ? ' · ' + F().escapeHtml(player.position) : '') +
-        '</p></div></div>' +
+        (roleLabel ? ' · ' + F().escapeHtml(roleLabel) : '') +
+        '</p>' +
+        (chapter
+          ? '<p class="mc-age-chapter">' + F().escapeHtml(chapter) + '</p>'
+          : '') +
+        '</div></div>' +
         '<div class="mc-recap-ovrline">' +
         '<span>' +
         ovrBefore +
@@ -994,6 +1045,66 @@
         '</div>',
       actions:
         '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="after-recap">Continuar</button>'
+    });
+  }
+
+  function preSeasonScreen(ctx) {
+    var state = ctx.state;
+    var engine = ctx.engine;
+    var club = engine.getClub(state.clubId);
+    var sit =
+      UI.Narrative && UI.Narrative.preSeasonLine
+        ? UI.Narrative.preSeasonLine(state, engine.world)
+        : { age: state.age, chapter: '', line: 'Listo para salir a la cancha.' };
+    var seasonN = Math.max(1, (state.seasonIndex || 0) + 1);
+    return scene({
+      id: 'preseason',
+      tone: sit.tone || 'hub',
+      kicker: F().escapeHtml(F().seasonLabel(state.seasonIndex)),
+      title: sit.age + ' AÑOS',
+      lead: F().escapeHtml(
+        seasonN === 1 ? 'PRIMERA TEMPORADA' : sit.chapter || 'TEMPORADA ' + seasonN
+      ),
+      body:
+        '<div class="mc-scene-crest">' +
+        C().clubBadgeHtml(club, 'xxl') +
+        '</div>' +
+        '<p class="mc-scene__club">' +
+        F().escapeHtml(club ? club.shortName || club.name : 'Tu club') +
+        '</p>' +
+        '<p class="mc-poster-line">' +
+        F().escapeHtml(sit.line || '') +
+        '</p>',
+      actions:
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="confirm-season">Jugar temporada</button>' +
+        '<button type="button" class="ct-button ct-button--ghost" data-mc-action="back-hub">Volver</button>'
+    });
+  }
+
+  function ageUpScreen(ctx) {
+    var fromAge = ctx.fromAge;
+    var toAge = ctx.toAge;
+    return scene({
+      id: 'age-up',
+      tone: 'age',
+      kicker: 'Nueva temporada',
+      title: String(toAge) + ' AÑOS',
+      lead: F().escapeHtml(
+        (UI.Narrative && UI.Narrative.ageHeadline
+          ? UI.Narrative.ageHeadline(toAge, ctx.state)
+          : '') || ''
+      ),
+      body:
+        '<div class="mc-age-up" aria-live="polite">' +
+        '<span>' +
+        fromAge +
+        '</span>' +
+        '<span class="mc-age-up__arrow" aria-hidden="true">↓</span>' +
+        '<strong>' +
+        toAge +
+        '</strong></div>',
+      actions:
+        '<button type="button" class="ct-button ct-button--primary ct-button--lg" data-mc-action="after-age-up">Continuar</button>'
     });
   }
 
@@ -1181,10 +1292,15 @@
       lead: F().escapeHtml(state.retirementLine || 'Colgaste los botines.'),
       body:
         '<p class="mc-scene__meta">' +
+        (state.ageStart != null ? state.ageStart : 17) +
+        ' → ' +
+        state.age +
+        ' años · ' +
         seasons +
         ' temporadas · Pico ' +
         (state.peakRating || state.rating) +
         ' OVR</p>' +
+        timelineHtml(state, engine) +
         '<div class="mc-retire-card">' +
         card.html +
         '</div>' +
@@ -1197,6 +1313,29 @@
         '>Compartir mi carrera</button>' +
         '<button type="button" class="ct-button ct-button--ghost" data-mc-action="copy-career">Copiar resultado</button>'
     });
+  }
+
+  function timelineHtml(state, engine) {
+    if (!NS.Rules || !NS.Rules.clubTimelineSummary) return '';
+    var rows = NS.Rules.clubTimelineSummary(state, engine.world);
+    if (!rows.length) return '';
+    return (
+      '<div class="mc-career-timeline" aria-label="Historial de clubes">' +
+      rows
+        .map(function (row) {
+          return (
+            '<p><strong>' +
+            row.ageStart +
+            (row.ageEnd !== row.ageStart ? '–' + row.ageEnd : '') +
+            '</strong> ' +
+            F().escapeHtml(row.name) +
+            (row.onLoan ? ' <span>(cesión)</span>' : '') +
+            '</p>'
+          );
+        })
+        .join('') +
+      '</div>'
+    );
   }
 
   function seasonFeedbackBody(payload) {
@@ -1228,6 +1367,8 @@
     careerHome: careerHomeScreen,
     market: marketScreen,
     seasonRecap: seasonRecapScreen,
+    preSeason: preSeasonScreen,
+    ageUp: ageUpScreen,
     transferCinematic: transferCinematicHtml,
     compareOfferBody: compareOfferBody,
     compareScene: compareScene,

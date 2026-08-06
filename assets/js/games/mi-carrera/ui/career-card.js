@@ -61,8 +61,13 @@
       positionLabel: F().POSITION_LABELS[state.player.position] || state.player.position,
       archetypeName: arch ? arch.name : '',
       country: country,
-      ageStart: 17,
+      ageStart: state.ageStart != null ? state.ageStart : 17,
       ageEnd: state.age,
+      birthYear: state.birthYear || null,
+      clubTimeline:
+        NS.Rules && NS.Rules.clubTimelineSummary
+          ? NS.Rules.clubTimelineSummary(state, engine.world)
+          : [],
       initialClub: initialClub,
       finalClub: finalClub,
       topClubs: clubs,

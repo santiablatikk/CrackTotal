@@ -27,11 +27,22 @@
   function createInitialState(opts) {
     var o = opts || {};
     var player = createPlayer(o.player || o);
+    var age = o.age != null ? clamp(Math.round(o.age), 16, 45) : 17;
+    var ageStart =
+      o.ageStart != null
+        ? clamp(Math.round(o.ageStart), 16, 19)
+        : clamp(age <= 19 ? age : 17, 16, 19);
+    var birthYear =
+      o.birthYear != null
+        ? Math.round(o.birthYear)
+        : (o.baseYear != null ? o.baseYear : 2026) - ageStart;
     return {
       version: 1,
       careerSeed: o.careerSeed >>> 0 || 1,
       player: player,
-      age: o.age != null ? o.age : 17,
+      age: age,
+      ageStart: ageStart,
+      birthYear: birthYear,
       clubId: o.clubId || null,
       nationalTeamId: o.nationalTeamId || null,
       rating: clamp(Math.round(o.rating != null ? o.rating : 62), 40, 99),
@@ -56,6 +67,7 @@
       seasonIndex: o.seasonIndex != null ? o.seasonIndex : 0,
       seasonHistory: o.seasonHistory ? o.seasonHistory.slice() : createEmptySeasonHistory(),
       careerHistory: o.careerHistory ? o.careerHistory.slice() : [],
+      clubTimeline: o.clubTimeline ? o.clubTimeline.slice() : [],
       recentEvents: o.recentEvents ? o.recentEvents.slice() : [],
       recentDecisions: o.recentDecisions ? o.recentDecisions.slice() : [],
       eventCooldowns: o.eventCooldowns ? Object.assign({}, o.eventCooldowns) : {},

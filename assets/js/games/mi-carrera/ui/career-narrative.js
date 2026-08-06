@@ -173,6 +173,27 @@
     return pickVariant(GRADE_LINES[grade] || GRADE_LINES.B, salt);
   }
 
+  function ageHeadline(age, state) {
+    if (NS.Rules && NS.Rules.ageChapter) return NS.Rules.ageChapter(age, state);
+    if (age <= 18) return 'DESARROLLO';
+    if (age <= 21) return 'CONSOLIDACIÓN';
+    if (age <= 29) return 'PRIME';
+    if (age <= 32) return 'EXPERIENCIA';
+    return 'LEGADO';
+  }
+
+  function preSeasonLine(state, world) {
+    if (NS.Rules && NS.Rules.seasonSituation) {
+      return NS.Rules.seasonSituation(state, world);
+    }
+    return {
+      age: state.age,
+      chapter: ageHeadline(state.age, state),
+      line: 'Listo para salir a la cancha.',
+      tone: 'ready'
+    };
+  }
+
   function offerBlurb(state, club, role, world, rng) {
     if (NS.Rules && NS.Rules.craftOfferBlurb && rng) {
       return NS.Rules.craftOfferBlurb(state, club, role, world, rng);
@@ -249,6 +270,8 @@
     marketShape: marketShape,
     awardTier: awardTier,
     titleTone: titleTone,
-    pickVariant: pickVariant
+    pickVariant: pickVariant,
+    ageHeadline: ageHeadline,
+    preSeasonLine: preSeasonLine
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

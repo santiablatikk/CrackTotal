@@ -257,15 +257,18 @@
     }
     var nt = NS.Rules.nationalTeamForCountry(this.world, opts.countryId);
     var mod = arch.modifiers || {};
+    var startAge =
+      opts.age != null ? Math.max(16, Math.min(19, Math.round(opts.age))) : 17;
+    var baseYear = 2026;
     var startBias = NS.Rules.startingMinutesBias
       ? NS.Rules.startingMinutesBias(
-          { rating: rp.rating, potential: rp.potential, age: 17 },
+          { rating: rp.rating, potential: rp.potential, age: startAge },
           club
         )
       : 0;
     var startRole = NS.Rules.expectedRoleForClub
       ? NS.Rules.expectedRoleForClub(
-          { rating: rp.rating, potential: rp.potential, age: 17 },
+          { rating: rp.rating, potential: rp.potential, age: startAge },
           club
         )
       : 'promesa';
@@ -278,7 +281,10 @@
         position: opts.position,
         archetypeId: opts.archetypeId
       },
-      age: 17,
+      age: startAge,
+      ageStart: startAge,
+      birthYear: opts.birthYear != null ? opts.birthYear : baseYear - startAge,
+      baseYear: baseYear,
       clubId: club.id,
       nationalTeamId: nt ? nt.id : null,
       rating: rp.rating,
@@ -332,10 +338,13 @@
     var rng = new NS.Randomizer(seed);
     var arch = this.world.archetypesById[opts.archetypeId];
     var rp = NS.Rules.initialRatingPotential(arch, rng);
+    var startAge =
+      opts.age != null ? Math.max(16, Math.min(19, Math.round(opts.age))) : 17;
     return {
       seed: seed,
       rating: rp.rating,
       potential: rp.potential,
+      age: startAge,
       options: NS.Rules.generateStartingClubOptions(
         this.world,
         {
@@ -344,7 +353,7 @@
           archetypeId: opts.archetypeId,
           rating: rp.rating,
           potential: rp.potential,
-          age: 17
+          age: startAge
         },
         rng.fork('startClub')
       )
@@ -488,9 +497,32 @@
         state.clubId === originClubId &&
         (state.clubsPlayed || []).length > 1
       ),
-      moments: []
+      moments: [],
+      situation: NS.Rules.seasonSituation
+        ? NS.Rules.seasonSituation(
+            {
+              age: state.age,
+              clubId: state.clubId,
+              clubRole: state.clubRole,
+              rating: ratingBefore,
+              form: state.form,
+              fitness: state.fitness,
+              clubRelation: state.clubRelation,
+              onLoan: state.onLoan,
+              arcFlags: state.arcFlags,
+              stayedStreak: state.stayedStreak,
+              seasonModifiers: state.seasonModifiers,
+              seasonIndex: Math.max(0, state.seasonIndex),
+              peakRating: state.peakRating
+            },
+            this.world
+          )
+        : null,
+      ageChapter: NS.Rules.ageChapter ? NS.Rules.ageChapter(state.age, state) : null,
+      role: state.clubRole || null
     };
     state.seasonHistory.push(seasonRecord);
+    if (NS.Rules.appendClubTimeline) NS.Rules.appendClubTimeline(state, seasonRecord);
 
     if (NS.Rules.updateClubBond) NS.Rules.updateClubBond(state, seasonRecord);
     if (NS.Rules.updateClubAttachment) NS.Rules.updateClubAttachment(state, stats);
