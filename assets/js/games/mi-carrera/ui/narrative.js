@@ -1,0 +1,298 @@
+/**
+ * Narrative copy derived from real engine state. Never invents outcomes.
+ */
+(function (root) {
+  'use strict';
+
+  var NS = (root.MiCarrera = root.MiCarrera || {});
+  var UI = (NS.UI = NS.UI || {});
+
+  var ROLE_LABEL = {
+    youth_prospect: 'Promesa',
+    rotation: 'Rotación',
+    substitute: 'Suplente',
+    regular: 'Habitual',
+    starter: 'Titular',
+    key_player: 'Figura',
+    star: 'Estrella',
+    captain: 'Capitán',
+    veteran_leader: 'Líder veterano'
+  };
+
+  var PATH_META = {
+    minutes: {
+      title: 'PROTAGONISTA',
+      promise: 'Acá vas a jugar.',
+      tone: 'minutes'
+    },
+    balance: {
+      title: 'EQUILIBRIO',
+      promise: 'Acá vas a competir.',
+      tone: 'balance'
+    },
+    prestige: {
+      title: 'ESCAPARATE',
+      promise: 'Acá vas a tener que ganarte el puesto.',
+      tone: 'prestige'
+    }
+  };
+
+  var ARCHETYPE_LINE = {
+    BALLON_DOR_WINNER: 'EL MEJOR DEL MUNDO.',
+    WORLDCUP_HERO: 'HÉROE DE UN MUNDIAL.',
+    ONE_CLUB_LEGEND: 'EL ÍDOLO QUE NUNCA SE FUE.',
+    ONE_CLUB_MAN: 'TODA UNA VIDA EN UN SOLO ESCUDO.',
+    JOURNEYMAN: 'UNA CARRERA SIN GUION.',
+    COMEBACK: 'EL QUE VOLVIÓ CUANDO TODOS LO DABAN POR MUERTO.',
+    EUROPEAN_STAR: 'DE PROMESA A ESTRELLA EUROPEA.',
+    SOUTH_AMERICAN_KING: 'EL REY DE SUDAMÉRICA.',
+    FALLEN_PRODIGY: 'EL TALENTO QUE EL FÚTBOL NO PERDONÓ.',
+    LATE_BLOOMER: 'EL QUE EXPLOTÓ CUANDO NADIE ESPERABA.',
+    WONDERKID: 'LA PROMESA QUE CUMPLIÓ.',
+    TROPHY_HUNTER: 'UNA VIDA COLECCIONANDO TÍTULOS.',
+    CULT_HERO: 'MÁS QUE UN JUGADOR: UNA IDENTIDAD.',
+    VETERAN: 'EL ÚLTIMO QUE APAGÓ LA LUZ.',
+    OVERACHIEVER: 'LLEGÓ MÁS LEJOS DE LO PREVISTO.',
+    CAREER_PLAYER: 'UNA CARRERA REAL.'
+  };
+
+  function roleLabel(role) {
+    return ROLE_LABEL[role] || role || 'Jugador';
+  }
+
+  function pathMeta(path) {
+    return PATH_META[path] || PATH_META.balance;
+  }
+
+  function ageChapter(age) {
+    if (age <= 18) return 'juvenil';
+    if (age <= 21) return 'desarrollo';
+    if (age <= 25) return 'crecimiento';
+    if (age <= 29) return 'prime';
+    if (age <= 32) return 'prime_tardio';
+    if (age <= 35) return 'declive';
+    return 'veterano';
+  }
+
+  function preseasonLine(career) {
+    var p = career.player;
+    var age = p.age;
+    var role = career.role;
+    var club = NS.Providers.clubs.getById(career.currentClubId);
+    var years = (career.marketMemory && career.marketMemory.yearsAtClub) || 0;
+    var last = career.seasons[career.seasons.length - 1];
+    var chapter = ageChapter(age);
+
+    if (!career.seasons.length) {
+      if (role === 'youth_prospect' || role === 'substitute') {
+        return 'El club te ve como una apuesta de futuro.';
+      }
+      if (role === 'starter' || role === 'regular') {
+        return 'Llegás para jugar. El vestuario te está esperando.';
+      }
+      return 'Tu primera temporada empieza ahora.';
+    }
+
+    if (p.injury && p.injury.status && p.injury.status !== 'healthy') {
+      return 'Venís de una lesión. Esta temporada es de reconstrucción.';
+    }
+    if (career.crisis && career.crisis.active) {
+      return 'Estás en crisis. Hay que recuperar el lugar.';
+    }
+    if (career.comeback && career.comeback.active) {
+      return 'El comeback está en marcha. Esta temporada define si vuelve.';
+    }
+    if (career.onLoan) {
+      return 'Estás cedido. Los minutos son la prioridad.';
+    }
+    if ((career.contractYears || 0) <= 1) {
+      return 'Tu contrato termina esta temporada. Cada partido pesa más.';
+    }
+    if (last && last.rating >= 7.3 && last.minutes >= 2000) {
+      return 'Después de una gran temporada, ahora todos esperan más de vos.';
+    }
+    if (last && last.minutes < 900) {
+      return 'Llegaste a un club donde vas a tener que pelear minutos.';
+    }
+    if (role === 'youth_prospect' || role === 'rotation' || role === 'substitute') {
+      return 'Tu entrenador todavía no te considera titular.';
+    }
+    if (chapter === 'prime' || chapter === 'prime_tardio') {
+      return 'Estás entrando en tu mejor etapa.';
+    }
+    if (chapter === 'declive' || chapter === 'veterano') {
+      return 'La experiencia es tu ventaja. Hay que administrarla.';
+    }
+    if (years >= 3 && club) {
+      return 'Ya sos parte de ' + (club.shortName || club.name) + '. El vínculo pesa.';
+    }
+    if (career.nationalTeam && career.nationalTeam.status === 'uncapped' && p.overall >= 78) {
+      return 'Tu selección te está siguiendo.';
+    }
+    if (role === 'star' || role === 'key_player') {
+      return 'Sos referencia. El club gira alrededor de tu rendimiento.';
+    }
+    return 'Una nueva temporada. Un nuevo capítulo.';
+  }
+
+  function seasonStakeLine(career) {
+    var role = career.role;
+    var p = career.player;
+    if (career.onLoan) return 'Este año puede definir si volvés más fuerte.';
+    if (role === 'youth_prospect' || role === 'substitute') {
+      return 'Este año puede cambiar tu lugar en el equipo.';
+    }
+    if (p.age >= 30) return 'Cada temporada cuenta. No sobra tiempo.';
+    if (p.overall >= 84) return 'El listón está alto. Hay que responder.';
+    return 'Este año puede cambiar tu lugar en el equipo.';
+  }
+
+  function recapHeadline(season, career) {
+    var before = season.overallBefore;
+    var after = season.overallAfter;
+    var delta = after - before;
+    var minutes = season.minutes || 0;
+    var rating = season.rating || 0;
+    var titles = season.titles || [];
+    var awards = season.awards || [];
+    var goals = season.goals || 0;
+    var age = season.age;
+
+    if (awards.some(function (a) { return a.awardId === 'ballon_dor'; })) {
+      return 'EL AÑO QUE EL MUNDO TE NOMBRÓ.';
+    }
+    if (titles.some(function (t) {
+      return t.competitionId === 'uefa_cl' || t.competitionId === 'conmebol_libertadores' || t.competitionId === 'fifa_world_cup';
+    })) {
+      return 'EL AÑO DEL TÍTULO GRANDE.';
+    }
+    if (season.national && season.national.caps > 0 && career.nationalTeam && career.nationalTeam.caps <= (season.national.caps || 0) + 2) {
+      if ((career.moments || []).some(function (m) {
+        return m.type === 'debut_national_team' && m.seasonIndex === season.seasonIndex;
+      })) {
+        return 'DEBUT INTERNACIONAL.';
+      }
+    }
+    if ((career.careerArc || []).indexOf('comeback') !== -1 && (career.moments || []).some(function (m) {
+      return m.type === 'comeback' && m.seasonIndex === season.seasonIndex;
+    })) {
+      return 'EL REGRESO.';
+    }
+    if (season.injurySeverity >= 2) {
+      return 'UNA TEMPORADA MARCADA POR LA LESIÓN.';
+    }
+    if (minutes >= 2200 && rating >= 7.25 && delta >= 2) {
+      return age <= 21 ? 'DE PROMESA A TITULAR.' : 'EL AÑO QUE CAMBIASTE DE NIVEL.';
+    }
+    if (minutes >= 2000 && rating >= 7.1 && goals >= 15) {
+      return 'TE GANASTE EL PUESTO.';
+    }
+    if (minutes < 700) {
+      return 'POCOS MINUTOS. DEMASIADAS DUDAS.';
+    }
+    if (rating < 6.5 && minutes >= 1000) {
+      return 'NO FUE TU MEJOR TEMPORADA.';
+    }
+    if (delta >= 3) {
+      return 'EL SALTO LLEGÓ ANTES DE LO ESPERADO.';
+    }
+    if (delta <= -2) {
+      return 'TU PRODUCCIÓN CAYÓ. EL PRÓXIMO PASO SERÁ DIFÍCIL.';
+    }
+    if (after >= 82 && before < 80) {
+      return 'EL MUNDO EMPIEZA A MIRARTE.';
+    }
+    if (minutes >= 2500 && rating >= 7.0) {
+      return 'UNA TEMPORADA SÓLIDA.';
+    }
+    if ((career.marketMemory && career.marketMemory.yearsAtClub || 0) >= 4) {
+      return 'EL CLUB YA FORMA PARTE DE TU IDENTIDAD.';
+    }
+    return 'OTRO CAPÍTULO EN TU HISTORIA.';
+  }
+
+  function ageUpLine(ageBefore, ageAfter, career) {
+    var chapter = ageChapter(ageAfter);
+    var last = career.seasons[career.seasons.length - 1];
+    if (ageAfter === 18) return 'Dejás de ser un pibe del plantel.';
+    if (ageAfter === 20) return 'Ya no sos solo una apuesta.';
+    if (ageAfter === 23) return 'Ya no sos una promesa.';
+    if (ageAfter === 26) return 'Entrá al corazón de tu carrera.';
+    if (ageAfter === 30) return 'La veteranía llega. La cabeza manda.';
+    if (ageAfter === 34) return 'Cada temporada es una decisión.';
+    if (chapter === 'prime' && last && last.rating >= 7.2) return 'Estás en tu mejor momento.';
+    if (last && last.overallAfter < last.overallBefore) return 'No sos el mismo jugador. Hay que adaptarse.';
+    return 'No sos el mismo jugador.';
+  }
+
+  function marketSituationLine(situation) {
+    return (
+      {
+        decision: 'El mercado está abierto.',
+        market_cold: 'El teléfono no suena. Hay que decidir con la cabeza fría.',
+        club_wants_you: 'El club quiere que te quedes.',
+        europe_interest: 'Europa llama.',
+        loan_suggested: 'Una cesión puede destrabarte.',
+        step_up: 'Hay un salto posible.',
+        loan_end: 'Se termina el préstamo.',
+        no_club: 'Sin club. Hay que rearmar el camino.'
+      }[situation] || 'Decidí tu próximo paso.'
+    );
+  }
+
+  function legacyLine(career) {
+    var arch = career.legacy && career.legacy.archetype;
+    return ARCHETYPE_LINE[arch] || 'SE TERMINÓ UNA CARRERA.';
+  }
+
+  function trophyTitle(competitionId) {
+    var c = NS.Providers.competitions.getById(competitionId);
+    if (!c) return 'CAMPEÓN';
+    if (competitionId === 'fifa_world_cup') return 'CAMPEÓN DEL MUNDO';
+    if (competitionId === 'uefa_cl') return 'CAMPEÓN DE EUROPA';
+    if (competitionId === 'conmebol_libertadores') return 'CAMPEÓN DE AMÉRICA';
+    if (competitionId === 'uefa_euro') return 'CAMPEÓN DE EUROPA';
+    if (competitionId === 'conmebol_copa_america') return 'CAMPEÓN DE AMÉRICA';
+    return 'CAMPEÓN · ' + (c.shortName || c.name).toUpperCase();
+  }
+
+  function awardTitle(awardId) {
+    var a = NS.Providers.awards.getById(awardId);
+    if (awardId === 'ballon_dor') return 'BALÓN DE ORO';
+    return ((a && (a.shortName || a.name)) || awardId).toUpperCase();
+  }
+
+  function momentLine(type) {
+    return (
+      {
+        debut_national_team: 'DEBUT EN LA SELECCIÓN.',
+        first_goal: 'TU PRIMER GOL.',
+        first_title: 'TU PRIMER TÍTULO.',
+        major_injury: 'UNA LESIÓN QUE MARCA.',
+        comeback: 'EL COMEBACK.',
+        major_transfer: 'UN CAMBIO DE DESTINO.',
+        world_cup: 'EL MUNDIAL.',
+        continental_title: 'TÍTULO CONTINENTAL.',
+        loan: 'NUEVA CASA POR UNA TEMPORADA.',
+        ballon_dor: 'BALÓN DE ORO.',
+        retirement: 'SE TERMINÓ UNA CARRERA.'
+      }[type] || 'UN MOMENTO CLAVE.'
+    );
+  }
+
+  UI.Narrative = {
+    roleLabel: roleLabel,
+    pathMeta: pathMeta,
+    ageChapter: ageChapter,
+    preseasonLine: preseasonLine,
+    seasonStakeLine: seasonStakeLine,
+    recapHeadline: recapHeadline,
+    ageUpLine: ageUpLine,
+    marketSituationLine: marketSituationLine,
+    legacyLine: legacyLine,
+    trophyTitle: trophyTitle,
+    awardTitle: awardTitle,
+    momentLine: momentLine,
+    ARCHETYPE_LINE: ARCHETYPE_LINE
+  };
+})(typeof globalThis !== 'undefined' ? globalThis : window);

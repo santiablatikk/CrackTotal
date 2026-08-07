@@ -26,12 +26,21 @@
     return h >>> 0;
   }
 
-  function createRng(seed) {
+  function createRng(seed, restoreT) {
     var s = typeof seed === 'number' ? seed >>> 0 : hashString(String(seed || 'mi-carrera'));
-    var next = mulberry32(s);
+    var t = restoreT != null ? restoreT >>> 0 : s;
+    var next = function () {
+      t += 0x6d2b79f5;
+      var r = Math.imul(t ^ (t >>> 15), 1 | t);
+      r ^= r + Math.imul(r ^ (r >>> 7), 61 | r);
+      return ((r ^ (r >>> 14)) >>> 0) / 4294967296;
+    };
     return {
       seed: s,
       next: next,
+      getState: function () {
+        return t >>> 0;
+      },
       float: function (min, max) {
         return min + next() * (max - min);
       },
