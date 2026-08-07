@@ -78,7 +78,10 @@ UI.CareerCard.render(career, cardMount);
 assert(!!cardMount.children.length || !!cardMount.childElementCount, 'career card mounts');
 
 const html = fs.readFileSync(path.join(ROOT, 'mi-carrera.html'), 'utf8');
-assert(html.indexOf('mi-carrera.css?v=20260807g') !== -1, 'CSS cache bust updated');
+assert(html.indexOf('mi-carrera.css?v=20260807h') !== -1, 'CSS cache bust updated');
+assert(css.indexOf('.mc-preseason') !== -1, 'preseason split layout');
+assert(css.indexOf('.mc-season-play') !== -1, 'season play split layout');
+assert(css.indexOf('mc-badge::before') !== -1 || css.indexOf('.mc-badge::before') !== -1, 'badge contrast plate');
 
 if (failed) {
   console.error('\nFAILED', failed);

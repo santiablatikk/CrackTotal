@@ -207,7 +207,12 @@
           C.text(
             'div',
             'mc-path__role',
-            [N.roleLabel(opt.role), opt.expectedMinutes != null ? '~' + opt.expectedMinutes + ' MIN' : '']
+            [
+              N.roleLabel(opt.role),
+              opt.expectedMinutes != null && opt.expectedMinutes >= 200
+                ? '~' + opt.expectedMinutes + ' MIN'
+                : ''
+            ]
               .filter(Boolean)
               .join(' · ')
           )
@@ -258,16 +263,22 @@
       var N = UI.Narrative;
       var career = session.career;
       var scene = C.Scene('PRESEASON');
-      scene.appendChild(C.text('div', 'mc-kicker', 'ESTA TEMPORADA'));
+      var lay = C.el('div', 'mc-preseason');
       var board = C.el('div', 'mc-season-board');
+      board.appendChild(C.text('div', 'mc-kicker', 'ESTA TEMPORADA'));
       board.appendChild(C.text('div', 'mc-season-board__age', String(career.player.age)));
       board.appendChild(C.text('div', 'mc-season-board__age-u', 'AÑOS'));
       board.appendChild(C.text('div', 'mc-season-board__ovr', String(career.player.overall)));
       board.appendChild(C.text('div', 'mc-season-board__ovr-u', 'OVR'));
-      scene.appendChild(board);
-      scene.appendChild(C.text('div', 'mc-role mc-role--lg', N.roleLabel(career.role).toUpperCase()));
-      scene.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.preseasonLine(career)));
-      scene.appendChild(C.text('div', 'mc-path__meta', clubShort(career.currentClubId) + ' · ' + clubMeta(career.currentClubId)));
+      board.appendChild(C.text('div', 'mc-role mc-role--lg', N.roleLabel(career.role).toUpperCase()));
+      board.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.preseasonLine(career)));
+      lay.appendChild(board);
+      var crest = C.el('div', 'mc-preseason__crest');
+      crest.appendChild(C.Badge(career.currentClubId, 'xl'));
+      crest.appendChild(C.text('div', 'mc-display', clubShort(career.currentClubId)));
+      crest.appendChild(C.text('div', 'mc-path__meta', clubMeta(career.currentClubId)));
+      lay.appendChild(crest);
+      scene.appendChild(lay);
       scene.appendChild(C.PrimaryCTA('JUGAR TEMPORADA', 'to-season'));
       return scene;
     },
@@ -277,20 +288,25 @@
       var N = UI.Narrative;
       var career = session.career;
       var scene = C.Scene('SEASON');
-      scene.appendChild(C.text('div', 'mc-kicker', 'ANTES DEL PARTIDO'));
-      scene.appendChild(C.text('div', 'mc-ovr-solo', String(career.player.overall)));
-      scene.appendChild(C.text('div', 'mc-ovr-solo__u', 'OVR'));
-      var line = C.el('div', 'mc-season-line');
-      line.appendChild(C.Badge(career.currentClubId, 'lg'));
-      line.appendChild(
+      var lay = C.el('div', 'mc-season-play');
+      var left = C.el('div', 'mc-season-play__main');
+      left.appendChild(C.text('div', 'mc-kicker', 'ANTES DEL PARTIDO'));
+      left.appendChild(C.text('div', 'mc-ovr-solo', String(career.player.overall)));
+      left.appendChild(C.text('div', 'mc-ovr-solo__u', 'OVR'));
+      left.appendChild(
         C.text(
           'div',
           'mc-season-line__t',
           career.player.age + ' AÑOS · ' + N.roleLabel(career.role).toUpperCase()
         )
       );
-      scene.appendChild(line);
-      scene.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.seasonStakeLine(career)));
+      left.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.seasonStakeLine(career)));
+      lay.appendChild(left);
+      var right = C.el('div', 'mc-season-play__crest');
+      right.appendChild(C.Badge(career.currentClubId, 'xl'));
+      right.appendChild(C.text('div', 'mc-display', clubShort(career.currentClubId)));
+      lay.appendChild(right);
+      scene.appendChild(lay);
       scene.appendChild(C.PrimaryCTA('JUGAR TEMPORADA', 'play-season'));
       return scene;
     },
