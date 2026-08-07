@@ -26,16 +26,22 @@
       C.text(
         'div',
         'mc-card__meta',
-        [p.position, totals.retireAge ? totals.retireAge + ' años' : '', legacy.archetype || '']
-          .filter(Boolean)
-          .join(' · ')
+        [p.position, totals.retireAge ? totals.retireAge + ' AÑOS' : ''].filter(Boolean).join(' · ')
       )
     );
+
+    card.appendChild(C.text('p', 'mc-card__line', N.legacyLine(career)));
 
     var peak = C.el('div', 'mc-card__peak');
     peak.appendChild(C.text('div', 'mc-card__peak-n', totals.peakOverall || p.peakOverall || p.overall));
     peak.appendChild(C.text('div', 'mc-card__peak-l', 'MEJOR OVR'));
     card.appendChild(peak);
+
+    var clubs = C.el('div', 'mc-card__clubs');
+    (legacy.timeline || career.clubs || []).slice(0, 6).forEach(function (spell) {
+      clubs.appendChild(C.Badge(spell.clubId, 'md'));
+    });
+    card.appendChild(clubs);
 
     var stats = C.el('div', 'mc-card__stats');
     stats.appendChild(C.Stat('PJ', totals.appearances || 0));
@@ -49,14 +55,7 @@
     stats.appendChild(C.Stat('Premios', totals.awards || 0));
     card.appendChild(stats);
 
-    var clubs = C.el('div', 'mc-card__clubs');
-    (legacy.timeline || career.clubs || []).slice(0, 6).forEach(function (spell) {
-      clubs.appendChild(C.Badge(spell.clubId, 'sm'));
-    });
-    card.appendChild(clubs);
-
-    card.appendChild(C.text('p', 'mc-card__line', N.legacyLine(career)));
-    card.appendChild(C.text('div', 'mc-card__fp', (legacy.fingerprint || '').slice(0, 48)));
+    card.appendChild(C.text('div', 'mc-card__arch', legacy.archetype || ''));
 
     if (mount) {
       mount.innerHTML = '';

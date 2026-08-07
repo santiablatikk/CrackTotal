@@ -20,6 +20,28 @@
     return node;
   }
 
+  function colorLum(hex) {
+    var c = String(hex || '').replace('#', '');
+    if (c.length === 3) c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+    if (c.length !== 6) return 80;
+    var r = parseInt(c.slice(0, 2), 16);
+    var g = parseInt(c.slice(2, 4), 16);
+    var b = parseInt(c.slice(4, 6), 16);
+    return (r * 299 + g * 587 + b * 114) / 1000;
+  }
+
+  function badgeColors(primary, secondary) {
+    var p = primary || '#2a3344';
+    var s = secondary || '#9aa3b5';
+    if (colorLum(p) < 28) p = '#3d4658';
+    if (colorLum(s) > 235 && colorLum(p) < 90) s = '#c8ceda';
+    if (colorLum(p) > 220 && colorLum(s) > 220) {
+      p = '#2a3344';
+      s = '#d8ff3e';
+    }
+    return { primary: p, secondary: s };
+  }
+
   function Badge(clubId, size) {
     size = size || 'md';
     var wrap = el('div', 'mc-badge mc-badge--' + size);
@@ -34,14 +56,12 @@
       wrap.appendChild(img);
     } else {
       var fb = asset.fallback || {};
+      var colors = badgeColors(fb.primaryColor, fb.secondaryColor);
       var tile = el('div', 'mc-badge__fallback');
       tile.style.background =
-        'linear-gradient(145deg, ' +
-        (fb.primaryColor || '#1f2937') +
-        ', ' +
-        (fb.secondaryColor || '#9ca3af') +
-        ')';
-      tile.appendChild(text('span', 'mc-badge__label', fb.label || '?'));
+        'linear-gradient(160deg, ' + colors.primary + ' 0%, ' + colors.secondary + ' 100%)';
+      var label = String(fb.label || (club && club.shortName) || '?');
+      tile.appendChild(text('span', 'mc-badge__label', label.length > 8 ? label.slice(0, 3) : label));
       wrap.appendChild(tile);
     }
     return wrap;
@@ -100,9 +120,10 @@
       wrap.appendChild(img);
     } else {
       var fb = asset.fallback || {};
-      var sil = el('div', 'mc-trophy__fallback mc-trophy__fallback--' + (fb.rarity || 'normal'));
-      sil.appendChild(text('span', 'mc-trophy__mark', '◆'));
-      sil.appendChild(text('span', 'mc-trophy__label', fb.label || competitionId));
+      var rarity = (comp && comp.rarity) || fb.rarity || 'normal';
+      var sil = el('div', 'mc-trophy__fallback mc-trophy__fallback--' + rarity);
+      sil.appendChild(el('div', 'mc-trophy__cup'));
+      sil.appendChild(text('span', 'mc-trophy__label', fb.label || (comp && comp.shortName) || competitionId));
       wrap.appendChild(sil);
     }
     return wrap;

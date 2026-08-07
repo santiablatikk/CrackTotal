@@ -39,9 +39,22 @@
 
   function playableCountries() {
     var all = (NS.data && NS.data.countries && NS.data.countries.countries) || [];
-    return all.filter(function (c) {
+    var priority = ['AR', 'BR', 'UY', 'ES', 'GB', 'IT', 'DE', 'FR', 'PT', 'MX', 'CO', 'CL'];
+    var playable = all.filter(function (c) {
       return c.playable !== false;
     });
+    var byCode = {};
+    playable.forEach(function (c) {
+      byCode[c.code] = c;
+    });
+    var ordered = [];
+    priority.forEach(function (code) {
+      if (byCode[code]) ordered.push(byCode[code]);
+    });
+    playable.forEach(function (c) {
+      if (priority.indexOf(c.code) === -1) ordered.push(c);
+    });
+    return ordered.slice(0, 12);
   }
 
   var Screens = {
@@ -149,40 +162,39 @@
       scene.appendChild(C.text('div', 'mc-kicker', 'PRIMER CLUB'));
       scene.appendChild(C.CareerHeadline('ELEGÍ TU CAMINO'));
       var row = C.el('div', 'mc-paths');
-      (session.firstClubs || []).forEach(function (opt) {
+      var order = { minutes: 0, balance: 1, prestige: 2 };
+      var opts = (session.firstClubs || []).slice().sort(function (a, b) {
+        return (order[a.path] != null ? order[a.path] : 9) - (order[b.path] != null ? order[b.path] : 9);
+      });
+      opts.forEach(function (opt) {
         var meta = N.pathMeta(opt.path);
         var club = NS.Providers.clubs.getById(opt.clubId);
         var panel = C.el('article', 'mc-path mc-path--' + meta.tone);
-        panel.appendChild(C.text('div', 'mc-path__tag', meta.title));
-        panel.appendChild(C.Badge(opt.clubId, 'lg'));
-        panel.appendChild(C.text('h3', 'mc-path__name', club ? club.name : opt.clubId));
-        panel.appendChild(
+        var crest = C.el('div', 'mc-path__crest');
+        crest.appendChild(C.Badge(opt.clubId, meta.tone === 'minutes' ? 'xl' : 'lg'));
+        panel.appendChild(crest);
+        var body = C.el('div', 'mc-path__body');
+        body.appendChild(C.text('div', 'mc-path__tag', meta.title));
+        body.appendChild(C.text('h3', 'mc-path__name', club ? club.name : opt.clubId));
+        body.appendChild(
           C.text(
             'div',
             'mc-path__meta',
-            [club && club.league, club && club.countryCode, NS.Providers.clubs.getTierLabel(club)]
-              .filter(Boolean)
-              .join(' · ')
+            [club && club.league, NS.Providers.clubs.getTierLabel(club)].filter(Boolean).join(' · ')
           )
         );
-        panel.appendChild(C.text('p', 'mc-path__promise', meta.promise));
-        var gain = C.el('div', 'mc-path__col');
-        gain.appendChild(C.text('div', 'mc-path__h', 'LO QUE GANÁS'));
-        (opt.gains || []).forEach(function (g) {
-          gain.appendChild(C.text('div', 'mc-path__i', g));
-        });
-        var risk = C.el('div', 'mc-path__col');
-        risk.appendChild(C.text('div', 'mc-path__h', 'LO QUE ARRIESGÁS'));
-        (opt.risks || []).forEach(function (g) {
-          risk.appendChild(C.text('div', 'mc-path__i', g));
-        });
-        var cols = C.el('div', 'mc-path__cols');
-        cols.appendChild(gain);
-        cols.appendChild(risk);
-        panel.appendChild(cols);
+        body.appendChild(C.text('p', 'mc-path__promise', meta.promise));
+        body.appendChild(
+          C.text(
+            'div',
+            'mc-path__trade',
+            'Ganás: ' + (opt.gains || []).slice(0, 2).join(' · ') + '. Arriesgás: ' + (opt.risks || []).slice(0, 2).join(' · ') + '.'
+          )
+        );
         var cta = C.PrimaryCTA('ELEGIR', 'pick-first-club');
         cta.setAttribute('data-club', opt.clubId);
-        panel.appendChild(cta);
+        body.appendChild(cta);
+        panel.appendChild(body);
         row.appendChild(panel);
       });
       scene.appendChild(row);
@@ -208,7 +220,6 @@
       var N = UI.Narrative;
       var career = session.career;
       var scene = C.Scene('PRESEASON');
-      scene.appendChild(C.Age(career.player.age, { huge: true }));
       scene.appendChild(
         C.text(
           'div',
@@ -216,10 +227,18 @@
           career.seasons.length ? 'TEMPORADA ' + career.seasonYear : 'PRIMERA TEMPORADA'
         )
       );
-      scene.appendChild(C.Badge(career.currentClubId, 'lg'));
-      scene.appendChild(C.text('div', 'mc-clubline', clubName(career.currentClubId)));
-      scene.appendChild(C.text('p', 'mc-quote', N.preseasonLine(career)));
-      scene.appendChild(C.PrimaryCTA('JUGAR TEMPORADA', 'to-season'));
+      var lay = C.el('div', 'mc-split');
+      var left = C.el('div', 'mc-split__main');
+      left.appendChild(C.Age(career.player.age, { huge: true }));
+      left.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.preseasonLine(career)));
+      var right = C.el('div', 'mc-split__side');
+      right.appendChild(C.Badge(career.currentClubId, 'xl'));
+      right.appendChild(C.text('div', 'mc-display', clubName(career.currentClubId)));
+      right.appendChild(C.text('div', 'mc-role', N.roleLabel(career.role)));
+      lay.appendChild(left);
+      lay.appendChild(right);
+      scene.appendChild(lay);
+      scene.appendChild(C.PrimaryCTA('ENTRAR A LA TEMPORADA', 'to-season'));
       return scene;
     },
 
@@ -228,11 +247,14 @@
       var N = UI.Narrative;
       var career = session.career;
       var scene = C.Scene('SEASON');
-      scene.appendChild(C.Age(career.player.age));
-      scene.appendChild(C.Badge(career.currentClubId, 'lg'));
-      scene.appendChild(C.text('div', 'mc-display', clubName(career.currentClubId)));
-      scene.appendChild(C.text('div', 'mc-ovr-solo', career.player.overall + ' OVR'));
-      scene.appendChild(C.text('p', 'mc-quote', N.seasonStakeLine(career)));
+      scene.appendChild(C.text('div', 'mc-kicker', career.player.age + ' AÑOS · ' + clubName(career.currentClubId)));
+      scene.appendChild(C.text('div', 'mc-ovr-solo', String(career.player.overall)));
+      scene.appendChild(C.text('div', 'mc-ovr-solo__u', 'OVR'));
+      scene.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.seasonStakeLine(career)));
+      var chip = C.el('div', 'mc-season-chip');
+      chip.appendChild(C.Badge(career.currentClubId, 'md'));
+      chip.appendChild(C.text('span', 'mc-season-chip__t', N.roleLabel(career.role)));
+      scene.appendChild(chip);
       scene.appendChild(C.PrimaryCTA('JUGAR TEMPORADA', 'play-season'));
       return scene;
     },
@@ -247,14 +269,15 @@
         scene.appendChild(C.text('p', 'mc-sub', 'Sin temporada.'));
         return scene;
       }
-      scene.appendChild(C.text('div', 'mc-kicker', String(season.seasonYear)));
+      scene.appendChild(C.text('div', 'mc-kicker', String(season.seasonYear) + ' · ' + season.age + ' AÑOS'));
       scene.appendChild(C.CareerHeadline(N.recapHeadline(season, career)));
       var hero = C.el('div', 'mc-recap-hero');
-      hero.appendChild(C.Badge(season.clubId, 'lg'));
-      hero.appendChild(C.text('div', 'mc-recap-club', clubName(season.clubId)));
-      hero.appendChild(C.Age(season.age));
+      hero.appendChild(C.Badge(season.clubId, 'xl'));
+      var heroText = C.el('div', 'mc-recap-hero__text');
+      heroText.appendChild(C.text('div', 'mc-recap-club', clubName(season.clubId)));
+      heroText.appendChild(C.OVRChange(season.overallBefore, season.overallAfter));
+      hero.appendChild(heroText);
       scene.appendChild(hero);
-      scene.appendChild(C.OVRChange(season.overallBefore, season.overallAfter));
       var stats = C.el('div', 'mc-recap-stats');
       stats.appendChild(C.Stat('PJ', season.matches));
       if (NS.Engine.Rules.isGoalkeeper(career.player.position)) {
@@ -274,12 +297,13 @@
       var N = UI.Narrative;
       var ev = session.eventQueue && session.eventQueue[0];
       var scene = C.Scene('TROPHY');
+      scene.classList.add('mc-scene--celebrate');
       if (!ev) return scene;
       var id = ev.competitionId;
-      scene.appendChild(C.Trophy(id, 'md'));
-      scene.appendChild(C.CompetitionLogo(id, 'sm'));
+      scene.appendChild(C.text('div', 'mc-kicker', 'GANASTE ESTO'));
+      scene.appendChild(C.Trophy(id, 'lg'));
       scene.appendChild(C.CareerHeadline(N.trophyTitle(id)));
-      scene.appendChild(C.text('div', 'mc-kicker', String(ev.seasonYear || '')));
+      scene.appendChild(C.text('div', 'mc-year', String(ev.seasonYear || '')));
       scene.appendChild(C.text('p', 'mc-quote', ev.first ? 'Tu primer gran título.' : 'Otro título para la colección.'));
       scene.appendChild(C.PrimaryCTA('CONTINUAR', 'next-event'));
       return scene;
@@ -292,12 +316,14 @@
       var scene = C.Scene('AWARD');
       if (!ev) return scene;
       if (ev.awardId === 'ballon_dor') scene.classList.add('mc-scene--ballon');
+      else scene.classList.add('mc-scene--celebrate');
+      scene.appendChild(C.text('div', 'mc-kicker', 'PREMIO'));
       scene.appendChild(C.Award(ev.awardId, ev.awardId === 'ballon_dor' ? 'lg' : 'md'));
       scene.appendChild(C.CareerHeadline(N.awardTitle(ev.awardId)));
       if (ev.awardId === 'ballon_dor') {
         scene.appendChild(C.text('div', 'mc-display', session.career.player.name));
       }
-      scene.appendChild(C.text('div', 'mc-kicker', String(ev.seasonYear || '')));
+      scene.appendChild(C.text('div', 'mc-year', String(ev.seasonYear || '')));
       scene.appendChild(C.PrimaryCTA('CONTINUAR', 'next-event'));
       return scene;
     },
@@ -323,12 +349,16 @@
       var scene = C.Scene('AGE_UP');
       var before = season ? season.age : session.career.player.age - 1;
       var after = season ? season.ageAfter : session.career.player.age;
+      scene.appendChild(C.text('div', 'mc-kicker', 'UN AÑO MÁS'));
       var wrap = C.el('div', 'mc-age-flow');
       wrap.appendChild(C.text('div', 'mc-age-flow__n', before));
       wrap.appendChild(C.text('div', 'mc-age-flow__arrow', '↓'));
-      wrap.appendChild(C.text('div', 'mc-age-flow__n is-next', after));
+      var next = C.el('div', 'mc-age-flow__next');
+      next.appendChild(C.text('div', 'mc-age-flow__n is-next', after));
+      next.appendChild(C.text('div', 'mc-age-flow__u', 'AÑOS'));
+      wrap.appendChild(next);
       scene.appendChild(wrap);
-      scene.appendChild(C.text('p', 'mc-quote', N.ageUpLine(before, after, session.career)));
+      scene.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.ageUpLine(before, after, session.career)));
       scene.appendChild(C.PrimaryCTA('CONTINUAR', 'to-market'));
       return scene;
     },
@@ -340,9 +370,14 @@
       var market = session.pending && session.pending.market;
       var scene = C.Scene('MARKET');
       scene.appendChild(C.text('div', 'mc-kicker', 'MERCADO'));
-      scene.appendChild(C.CareerHeadline(N.marketSituationLine(market && market.situation)));
-      scene.appendChild(C.Badge(career.currentClubId, 'md'));
-      scene.appendChild(C.text('div', 'mc-clubline', clubName(career.currentClubId)));
+      scene.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.marketSituationLine(market && market.situation)));
+      var here = C.el('div', 'mc-market-here');
+      here.appendChild(C.Badge(career.currentClubId, 'lg'));
+      var hereText = C.el('div', 'mc-market-here__t');
+      hereText.appendChild(C.text('div', 'mc-kicker', 'ESTÁS EN'));
+      hereText.appendChild(C.text('div', 'mc-display', clubName(career.currentClubId)));
+      here.appendChild(hereText);
+      scene.appendChild(here);
       var list = C.el('div', 'mc-market-list');
       ((market && market.options) || []).forEach(function (opt, idx) {
         var row = C.el('article', 'mc-offer mc-offer--' + (opt.type || 'stay'));
@@ -350,10 +385,13 @@
           var crests = C.el('div', 'mc-offer__crests');
           crests.appendChild(C.Badge(career.currentClubId, 'md'));
           crests.appendChild(C.text('span', 'mc-offer__to', '→'));
-          crests.appendChild(C.Badge(opt.clubId, 'lg'));
+          crests.appendChild(C.Badge(opt.clubId, 'xl'));
           row.appendChild(crests);
           row.appendChild(C.text('h3', 'mc-offer__name', clubName(opt.clubId)));
         } else {
+          var stayRow = C.el('div', 'mc-offer__crests');
+          stayRow.appendChild(C.Badge(career.currentClubId, 'lg'));
+          row.appendChild(stayRow);
           row.appendChild(C.text('h3', 'mc-offer__name', opt.label || 'Quedarte'));
         }
         row.appendChild(
@@ -365,20 +403,13 @@
               .join(' · ')
           )
         );
-        var cols = C.el('div', 'mc-path__cols');
-        var g = C.el('div', 'mc-path__col');
-        g.appendChild(C.text('div', 'mc-path__h', 'QUÉ GANÁS'));
-        (opt.gains || []).forEach(function (x) {
-          g.appendChild(C.text('div', 'mc-path__i', x));
-        });
-        var r = C.el('div', 'mc-path__col');
-        r.appendChild(C.text('div', 'mc-path__h', 'QUÉ ARRIESGÁS'));
-        (opt.risks || []).forEach(function (x) {
-          r.appendChild(C.text('div', 'mc-path__i', x));
-        });
-        cols.appendChild(g);
-        cols.appendChild(r);
-        row.appendChild(cols);
+        row.appendChild(
+          C.text(
+            'div',
+            'mc-path__trade',
+            'Ganás: ' + (opt.gains || []).slice(0, 2).join(' · ') + '. Arriesgás: ' + (opt.risks || []).slice(0, 2).join(' · ') + '.'
+          )
+        );
         var cta = C.PrimaryCTA(opt.type === 'stay' ? 'QUEDARME' : opt.type === 'loan' ? 'IR A PRÉSTAMO' : 'ACEPTAR', 'pick-offer');
         cta.setAttribute('data-index', String(idx));
         row.appendChild(cta);

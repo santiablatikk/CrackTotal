@@ -190,11 +190,18 @@
     if (minutes < 700) {
       return 'POCOS MINUTOS. DEMASIADAS DUDAS.';
     }
-    if (rating < 6.5 && minutes >= 1000) {
+    // Growth + minutes beat a low rating for narrative (cause → effect)
+    if (delta >= 3 && minutes >= 1500) {
+      return age <= 21 ? 'CRECISTE A LO GRANDE.' : 'EL SALTO LLEGÓ ANTES DE LO ESPERADO.';
+    }
+    if (goals >= 12 && minutes >= 1800) {
+      return 'TE GANASTE EL PUESTO.';
+    }
+    if (rating < 6.5 && minutes >= 1000 && delta <= 1 && goals < 8) {
       return 'NO FUE TU MEJOR TEMPORADA.';
     }
-    if (delta >= 3) {
-      return 'EL SALTO LLEGÓ ANTES DE LO ESPERADO.';
+    if (rating < 6.5 && minutes >= 1000 && delta >= 2) {
+      return 'NÚMEROS DUROS. PERO SEGUÍSTE CRECIENDO.';
     }
     if (delta <= -2) {
       return 'TU PRODUCCIÓN CAYÓ. EL PRÓXIMO PASO SERÁ DIFÍCIL.';
