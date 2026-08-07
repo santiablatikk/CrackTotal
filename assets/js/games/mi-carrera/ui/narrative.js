@@ -455,6 +455,56 @@
     );
   }
 
+  /** Narrative progression feel from real season deltas — not a dashboard. */
+  function progressionFeel(season, career) {
+    if (!season) return 'estable';
+    var delta = (season.overallAfter || 0) - (season.overallBefore || 0);
+    var moments = (career && career.moments) || [];
+    var comeback = moments.some(function (m) {
+      return m.type === 'comeback' && m.seasonIndex === season.seasonIndex;
+    });
+    if (comeback) return 'volviendo';
+    if (season.injurySeverity >= 3) return 'cayendo';
+    if (delta >= 3) return 'explotando';
+    if (delta <= -2) return 'cayendo';
+    if (delta <= 0 && (season.minutes || 0) < 1200) return 'estancado';
+    if (delta >= 1) return 'creciendo';
+    return 'estable';
+  }
+
+  function progressionLine(feel) {
+    return (
+      {
+        creciendo: 'ESTÁS CRECIENDO.',
+        estancado: 'ESTÁS ESTANCADO.',
+        explotando: 'ESTÁS EXPLOTANDO.',
+        cayendo: 'ESTÁS CAYENDO.',
+        volviendo: 'ESTÁS VOLVIENDO.',
+        estable: 'TE MANTENÉS.'
+      }[feel] || ''
+    );
+  }
+
+  function marketMoveLabel(kind, type) {
+    if (type === 'loan' || kind === 'LOAN') return 'PRÉSTAMO';
+    if (type === 'loan_return') return 'REGRESO DE CESIÓN';
+    if (type === 'stay') return 'ESTABILIDAD';
+    return (
+      {
+        HOME: 'REGRESO A CASA',
+        EUROPE: 'EUROPA',
+        SOUTH_AMERICA: 'SUDAMÉRICA',
+        STEP_UP: 'SALTO',
+        MINUTES: 'MINUTOS',
+        DECLINE: 'REVIVAL',
+        LATERAL: 'LATERAL',
+        STAY: 'ESTABILIDAD',
+        GIANT: 'GIGANTE',
+        LOAN: 'PRÉSTAMO'
+      }[kind] || 'TRASPASO'
+    );
+  }
+
   UI.Narrative = {
     roleLabel: roleLabel,
     pathMeta: pathMeta,
@@ -475,6 +525,9 @@
     momentKicker: momentKicker,
     momentLine: momentLine,
     seasonBeatLine: seasonBeatLine,
+    progressionFeel: progressionFeel,
+    progressionLine: progressionLine,
+    marketMoveLabel: marketMoveLabel,
     ARCHETYPE_LINE: ARCHETYPE_LINE,
     ARCHETYPE_LABEL: ARCHETYPE_LABEL
   };

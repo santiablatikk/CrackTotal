@@ -1678,7 +1678,15 @@
 }
 
 .mc-change-offer .mc-badge {
-  grid-row: span 5;
+  grid-row: span 6;
+}
+
+.mc-move-kind {
+  grid-column: 2;
+  font-family: var(--mc-display);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: var(--mc-accent) !important;
 }
 
 .mc-change-offer__n {
@@ -1686,6 +1694,27 @@
   font-size: 1.45rem;
   letter-spacing: 0.03em;
 }
+
+.mc-season-beat {
+  font-family: var(--mc-display);
+  font-size: clamp(1.1rem, 2.5vw, 1.55rem);
+  letter-spacing: 0.1em;
+  color: var(--mc-accent) !important;
+}
+
+.mc-progress-feel {
+  font-family: var(--mc-display);
+  font-size: clamp(1rem, 2.2vw, 1.35rem);
+  letter-spacing: 0.08em;
+  margin: 2px 0 4px;
+}
+
+.mc-progress-feel--creciendo { color: var(--mc-accent-2) !important; }
+.mc-progress-feel--explotando { color: var(--mc-accent) !important; }
+.mc-progress-feel--estancado { color: var(--mc-muted) !important; }
+.mc-progress-feel--cayendo { color: var(--mc-warn) !important; }
+.mc-progress-feel--volviendo { color: var(--mc-gold) !important; }
+.mc-progress-feel--estable { color: var(--mc-muted) !important; }
 
 .mc-change-offer__m {
   font-size: 0.7rem;

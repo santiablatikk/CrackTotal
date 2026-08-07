@@ -306,20 +306,21 @@
     if (t.saOnly && (t.hasLib || t.peak >= 84)) return 'SOUTH_AMERICAN_LEGEND';
     if (t.saOnly && t.seasons >= 12) return 'SOUTH_AMERICAN_CAREER';
     if (t.eu >= 8 && (t.hasCL || t.peak >= 88)) return 'EUROPEAN_STAR';
-    if (t.europeOnly && t.seasons >= 12) return 'EUROPEAN_CAREER';
     if (domesticHeavy) return 'DOMESTIC_LEGEND';
     if (t.caps >= 50 || ((t.hasCopaAmerica || t.hasEuro) && t.caps >= 25)) return 'INTERNATIONAL_STAR';
     if (t.midClubTitles >= 2 && t.titles >= 3 && t.peak < 86) return 'UNDERDOG_CHAMPION';
     if (t.uniqueClubs <= 2 && t.seasons >= 10) return 'CLUB_ICON';
     if (t.titles >= 8) return 'TROPHY_HUNTER';
-    // Mercenary is rarer than journeyman: many short spells, not just club count
+    // Mercenary / journeyman before the broad EUROPEAN_CAREER catch-all
     if (t.uniqueClubs >= 8 || (t.uniqueClubs >= 7 && t.shortSpells >= 4)) return 'MERCENARY';
     if (t.uniqueClubs >= 6) return 'JOURNEYMAN';
+    if (t.europeOnly && t.seasons >= 12 && t.uniqueClubs <= 4) return 'EUROPEAN_CAREER';
     if (t.retireAge <= 32 && t.seasons <= 12) return 'SHORT_CAREER';
     if (t.retireAge <= 34 && t.seasons >= 8) return 'EARLY_RETIREMENT';
     if (t.retireAge >= 38 && t.seasons >= 18) return 'LONG_CAREER';
     if (t.peak >= 86 && (career.player.potential || 0) - t.peak > 3) return 'OVERACHIEVER';
     if (t.retireAge >= 36) return 'VETERAN';
+    if (t.europeOnly && t.seasons >= 12) return 'EUROPEAN_CAREER';
     return 'CAREER_PLAYER';
   }
 

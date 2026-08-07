@@ -230,7 +230,10 @@
 
       // South American abroad returning
       if (regionalHome || goingHome) {
-        // Block young peak returns: 23yo + good OVR + competitive EU club → weak SA
+        // Block young soft landings: EU → SA before 26 only if minutes/form really collapsed
+        if (p.age < 26 && !(lowMinutes && (cold || career.role === 'substitute' || career.role === 'rotation'))) {
+          return false;
+        }
         if (p.age < 26 && p.overall >= 76 && fromRank >= 4 && !lowMinutes && !cold) return false;
         if (p.age < 28 && p.overall >= 80 && fromRank >= 5 && (p.form || 50) >= 60 && !lowMinutes) return false;
 

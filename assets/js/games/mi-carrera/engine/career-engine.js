@@ -33,6 +33,49 @@
     return career.__rng;
   }
 
+  /** Pick the single most important season beat from real season/moment data. */
+  function deriveSeasonBeat(career, season) {
+    var idx = season.seasonIndex;
+    var momentTypes = {};
+    (career.moments || []).forEach(function (m) {
+      if (m.seasonIndex === idx) momentTypes[m.type] = 1;
+    });
+    var delta = (season.overallAfter || 0) - (season.overallBefore || 0);
+    var minutes = season.minutes || 0;
+    var rating = season.rating || 0;
+    var titles = season.titles || [];
+    var prev = (career.seasons || [])[career.seasons.length - 1];
+
+    if (season.injurySeverity >= 3 || momentTypes.major_injury) return 'injury';
+    if (momentTypes.comeback) return 'comeback';
+    if (
+      titles.some(function (t) {
+        return (
+          t.competitionId === 'uefa_cl' ||
+          t.competitionId === 'conmebol_libertadores' ||
+          t.competitionId === 'fifa_world_cup' ||
+          t.competitionId === 'uefa_euro' ||
+          t.competitionId === 'conmebol_copa_america'
+        );
+      })
+    ) {
+      return 'title';
+    }
+    if (momentTypes.debut_national_team || momentTypes.world_cup) return 'national_call';
+    if (titles.length) return 'title';
+    if (idx === 0) return 'debut';
+    if (prev && prev.role && prev.role !== season.role) return 'role_change';
+    if (delta >= 3 && minutes >= 1500) return 'explosion';
+    if (delta <= -2) return 'collapse';
+    if (minutes < 700) return 'bad_season';
+    if (minutes >= 2200 && rating >= 7.2) return 'great_season';
+    if (minutes >= 1800 && rating >= 7.0 && delta >= 1) return 'great_season';
+    if (rating < 6.5 && minutes >= 1000) return 'bad_season';
+    if (career.player.age >= 34 && minutes >= 900) return 'farewell';
+    if (delta >= 1 && minutes >= 1200) return 'great_season';
+    return null;
+  }
+
   function generateFirstClubs(career) {
     var rng = rngOf(career);
     var p = career.player;
@@ -270,6 +313,7 @@
         goals: national.goals
       }
     };
+    seasonRecord.beat = deriveSeasonBeat(career, seasonRecord);
     career.seasons.push(seasonRecord);
     Engine.History.applySeasonToSpell(career, seasonRecord);
 

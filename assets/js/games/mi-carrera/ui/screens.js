@@ -85,7 +85,7 @@
       copy.appendChild(C.CareerHeadline('TU HISTORIA\nEMPIEZA AQUÍ'));
       copy.appendChild(C.text('p', 'mc-sub mc-sub--tight', 'Modo carrera. Tu legado.'));
       var actions = C.el('div', 'mc-actions');
-      actions.appendChild(C.PrimaryCTA('EMPEZAR CARRERA', 'start'));
+      actions.appendChild(C.PrimaryCTA('EMPEZAR MI HISTORIA', 'start'));
       if (NS.Persistence.hasSave()) {
         actions.appendChild(C.SecondaryCTA('CONTINUAR PARTIDA', 'continue'));
       }
@@ -303,6 +303,13 @@
           career.player.age + ' AÑOS · ' + N.roleLabel(career.role).toUpperCase()
         )
       );
+      var lastSeason = (career.seasons || [])[(career.seasons || []).length - 1];
+      if (lastSeason) {
+        var feelPrev = N.progressionFeel(lastSeason, career);
+        if (feelPrev && feelPrev !== 'estable') {
+          left.appendChild(C.text('div', 'mc-progress-feel mc-progress-feel--' + feelPrev, N.progressionLine(feelPrev)));
+        }
+      }
       left.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.seasonStakeLine(career)));
       lay.appendChild(left);
       var right = C.el('div', 'mc-season-play__crest');
@@ -310,7 +317,7 @@
       right.appendChild(C.text('div', 'mc-display', clubShort(career.currentClubId)));
       lay.appendChild(right);
       scene.appendChild(lay);
-      scene.appendChild(C.PrimaryCTA('JUGAR TEMPORADA', 'play-season'));
+      scene.appendChild(C.PrimaryCTA('JUGAR LA TEMPORADA', 'play-season'));
       return scene;
     },
 
@@ -324,7 +331,12 @@
         scene.appendChild(C.text('p', 'mc-sub', 'Sin temporada.'));
         return scene;
       }
+      var beat = season.beat;
+      var feel = N.progressionFeel(season, career);
       scene.appendChild(C.text('div', 'mc-kicker', 'ASÍ FUE TU AÑO'));
+      if (beat) {
+        scene.appendChild(C.text('div', 'mc-season-beat', N.seasonBeatLine(beat)));
+      }
       scene.appendChild(
         C.text(
           'div',
@@ -336,6 +348,9 @@
       crest.appendChild(C.Badge(season.clubId, 'lg'));
       scene.appendChild(crest);
       scene.appendChild(C.CareerHeadline(N.recapHeadline(season, career)));
+      if (feel) {
+        scene.appendChild(C.text('div', 'mc-progress-feel mc-progress-feel--' + feel, N.progressionLine(feel)));
+      }
       scene.appendChild(C.OVRChange(season.overallBefore, season.overallAfter));
       var stats = C.el('div', 'mc-recap-stats mc-recap-stats--editorial');
       stats.appendChild(C.Stat('PJ', season.matches));
@@ -346,7 +361,7 @@
         stats.appendChild(C.Stat('A', season.assists));
       }
       scene.appendChild(stats);
-      scene.appendChild(C.PrimaryCTA('SEGUIR', 'after-recap'));
+      scene.appendChild(C.PrimaryCTA('VER CÓMO SIGUE', 'after-recap'));
       return scene;
     },
 
@@ -498,18 +513,15 @@
           offer.setAttribute('data-action', 'pick-offer');
           offer.setAttribute('data-index', String(idx));
           offer.appendChild(C.Badge(opt.clubId, 'lg'));
+          offer.appendChild(
+            C.text('span', 'mc-move-kind', N.marketMoveLabel(opt.kind, opt.type))
+          );
           offer.appendChild(C.text('span', 'mc-change-offer__n', clubShort(opt.clubId)));
           offer.appendChild(
             C.text(
               'span',
               'mc-change-offer__m',
-              [
-                opt.leagueName || clubMeta(opt.clubId),
-                N.roleLabel(opt.role),
-                opt.type === 'loan' ? 'PRÉSTAMO' : opt.kind === 'HOME' ? 'REGRESO' : 'TRASPASO'
-              ]
-                .filter(Boolean)
-                .join(' · ')
+              [opt.leagueName || clubMeta(opt.clubId), N.roleLabel(opt.role)].filter(Boolean).join(' · ')
             )
           );
           if (opt.expectedMinutes != null) {
@@ -598,8 +610,10 @@
       scene.appendChild(axes);
 
       var actions = C.el('div', 'mc-actions');
-      actions.appendChild(C.PrimaryCTA(opt.type === 'loan' ? 'IR A PRÉSTAMO' : 'ACEPTAR FICHAJE', 'confirm-compare'));
-      actions.appendChild(C.SecondaryCTA('VOLVER', 'cancel-compare'));
+      actions.appendChild(
+        C.PrimaryCTA(opt.type === 'loan' ? 'ACEPTAR EL DESAFÍO' : 'DAR EL SALTO', 'confirm-compare')
+      );
+      actions.appendChild(C.SecondaryCTA('QUEDARME', 'cancel-compare'));
       scene.appendChild(actions);
       return scene;
     },
@@ -686,7 +700,7 @@
       stats.appendChild(C.Stat('Goles', totals.goals));
       stats.appendChild(C.Stat('Selección', totals.nationalCaps || 0));
       scene.appendChild(stats);
-      scene.appendChild(C.PrimaryCTA('VER CAREER CARD', 'to-card'));
+      scene.appendChild(C.PrimaryCTA('VER MI LEGADO', 'to-card'));
       return scene;
     },
 
@@ -697,7 +711,7 @@
       UI.CareerCard.render(session.career, mount);
       scene.appendChild(mount);
       var actions = C.el('div', 'mc-actions');
-      actions.appendChild(C.PrimaryCTA('NUEVA CARRERA', 'new-career'));
+      actions.appendChild(C.PrimaryCTA('OTRA CARRERA', 'new-career'));
       actions.appendChild(C.SecondaryCTA('INICIO', 'to-intro'));
       scene.appendChild(actions);
       return scene;

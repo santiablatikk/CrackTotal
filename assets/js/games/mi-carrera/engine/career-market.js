@@ -71,6 +71,12 @@
 
     var fromCont = fromContinent(career);
     var homeCont = Engine.Eligibility ? Engine.Eligibility.playerHomeContinent(career) : null;
+    var last = (career.seasons && career.seasons[career.seasons.length - 1]) || {};
+    var lowMinutes = (last.minutes || 0) < 1400;
+    var benchRole =
+      career.role === 'youth_prospect' ||
+      career.role === 'substitute' ||
+      career.role === 'rotation';
 
     // SA → EU pathway boost for ready players
     if (club.continent === 'EU' && fromCont === 'SA' && p.overall >= 76) score += 10;
@@ -80,8 +86,22 @@
     if (club.continent === 'SA' && fromCont === 'EU') {
       if (club.countryCode === country) score += 14;
       if (p.age >= 30) score += 8;
-      if (p.age < 28) score *= 0.55;
+      if (p.age < 28) score *= 0.45;
+      if (p.age < 26) score *= 0.15;
       if (homeCont === 'EU') score *= 0.25;
+    }
+
+    // Keep CONMEBOL periphery reachable (VE/BO/PY/EC/PE) for SA careers
+    if (fromCont === 'SA' && club.continent === 'SA' && club.countryCode !== country) {
+      if (['VE', 'BO', 'PY', 'EC', 'PE'].indexOf(club.countryCode) !== -1) score += 6;
+    }
+
+    // Minutes pathway: second divisions matter when you need games
+    var level =
+      Engine.Eligibility && Engine.Eligibility.leagueLevel ? Engine.Eligibility.leagueLevel(club) : 1;
+    if (level >= 2) {
+      if (lowMinutes || benchRole || (p.form || 50) < 48) score += 10;
+      else score *= 0.42;
     }
 
     // Late-career home return pull
@@ -126,15 +146,35 @@
     else role = career.player.overall >= 84 ? 'key_player' : 'starter';
 
     var league = NS.Providers.clubs.getLeague ? NS.Providers.clubs.getLeague(toClub.leagueId) : null;
+    var moveKind = kind || classifyMove(fromClub, toClub);
+    var gains = ['Nuevo proyecto', 'Cambio de contexto'];
+    var risks = gap > 8 ? ['Menos minutos', 'Adaptación', 'Competencia interna'] : ['Adaptación', 'Expectativa'];
+    if (moveKind === 'EUROPE') {
+      gains = ['Europa', 'Exposición', 'Techo más alto'];
+      risks = gap > 6 ? ['Menos minutos', 'Adaptación'] : ['Adaptación', 'Competencia'];
+    } else if (moveKind === 'HOME') {
+      gains = ['Regreso a casa', 'Protagonismo', 'Historia'];
+      risks = ['Expectativa local', 'Menos escaparate europeo'];
+    } else if (moveKind === 'STEP_UP') {
+      gains = ['Salto de nivel', 'Prestigio', 'Competición mayor'];
+      risks = gap > 6 ? ['Riesgo de banco', 'Adaptación'] : ['Expectativa', 'Competencia interna'];
+    } else if (moveKind === 'MINUTES' || moveKind === 'DECLINE') {
+      gains = ['Más minutos', 'Confianza', 'Protagonismo'];
+      risks = ['Menor prestigio', 'Techo más bajo'];
+    } else if (moveKind === 'SOUTH_AMERICA') {
+      gains = ['Sudamérica', 'Nuevo capítulo', 'Identidad'];
+      risks = ['Cambio de contexto', 'Expectativa'];
+    }
+
     return {
       type: 'transfer',
-      kind: kind || classifyMove(fromClub, toClub),
+      kind: moveKind,
       clubId: toClub.id,
       label: 'Fichar',
       role: role,
       expectedMinutes: Rules.expectedMinutes(role),
-      gains: ['Nuevo proyecto', 'Cambio de contexto', Rules.clubBand(toClub)],
-      risks: gap > 8 ? ['Menos minutos', 'Adaptación', 'Competencia interna'] : ['Adaptación', 'Expectativa'],
+      gains: gains,
+      risks: risks,
       prestige: toClub.prestige,
       band: Rules.clubBand(toClub),
       fromClubId: fromClub.id,
@@ -263,10 +303,14 @@
       var eligible = scored.filter(function (x) {
         return !used[x.club.id] && Rules.canJoinClub(p, x.club);
       });
-      // Top slice + occasional deeper pick to keep catalog regions reachable
+      // Top slice + deeper catalog picks so mid/small leagues stay alive
       var pool = eligible.slice(0, 28);
-      if (eligible.length > 40 && rng.chance(0.22)) {
-        pool = pool.concat(eligible.slice(28, 55));
+      if (eligible.length > 40 && rng.chance(0.34)) {
+        pool = pool.concat(eligible.slice(28, 90));
+      }
+      if (eligible.length > 70 && rng.chance(0.22)) {
+        var deep = eligible.slice(50, 140);
+        if (deep.length) pool.push(rng.pick(deep));
       }
       if (!pool.length) break;
       var pick = rng.weighted(pool, function (x) {
