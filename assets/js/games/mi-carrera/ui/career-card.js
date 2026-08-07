@@ -101,7 +101,7 @@
       clubsRow.appendChild(C.text('div', 'mc-card__section', 'CLUBES'));
       var badges = C.el('div', 'mc-card__icons');
       clubs.forEach(function (id) {
-        badges.appendChild(C.Badge(id, 'sm'));
+        badges.appendChild(C.Badge(id, 'md'));
       });
       clubsRow.appendChild(badges);
       card.appendChild(clubsRow);
@@ -121,7 +121,7 @@
       titlesRow.appendChild(C.text('div', 'mc-card__section', 'TÍTULOS'));
       var icons = C.el('div', 'mc-card__icons');
       majors.slice(0, 6).forEach(function (t) {
-        icons.appendChild(C.Trophy(t.competitionId, 'sm'));
+        icons.appendChild(C.Trophy(t.competitionId, 'md'));
       });
       titlesRow.appendChild(icons);
       card.appendChild(titlesRow);
@@ -143,7 +143,7 @@
       awardsRow.appendChild(C.text('div', 'mc-card__section', 'PREMIOS'));
       var aIcons = C.el('div', 'mc-card__icons');
       awards.slice(0, 4).forEach(function (a) {
-        aIcons.appendChild(C.Award(a.awardId, 'sm'));
+        aIcons.appendChild(C.Award(a.awardId, 'md'));
       });
       awardsRow.appendChild(aIcons);
       card.appendChild(awardsRow);

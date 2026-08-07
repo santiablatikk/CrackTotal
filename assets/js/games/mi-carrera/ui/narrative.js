@@ -386,6 +386,30 @@
     return ((a && (a.shortName || a.name)) || awardId).toUpperCase();
   }
 
+  function momentKicker(type) {
+    return (
+      {
+        debut_national_team: 'SELECCIÓN',
+        first_goal: 'PRIMER GOL',
+        first_title: 'PRIMER TÍTULO',
+        major_injury: 'LESIÓN',
+        injury: 'LESIÓN',
+        comeback: 'COMEBACK',
+        major_transfer: 'TRANSFERENCIA',
+        world_cup: 'MUNDIAL',
+        continental_title: 'CONTINENTAL',
+        champions: 'CHAMPIONS',
+        libertadores: 'LIBERTADORES',
+        loan: 'PRÉSTAMO',
+        ballon_dor: 'PREMIO',
+        retirement: 'RETIRO',
+        career_start: 'INICIO',
+        explosion: 'EXPLOSIÓN',
+        last_season: 'ÚLTIMO AÑO'
+      }[type] || 'CARRERA'
+    );
+  }
+
   function momentLine(type) {
     return (
       {
@@ -448,6 +472,7 @@
     legacyLine: legacyLine,
     trophyTitle: trophyTitle,
     awardTitle: awardTitle,
+    momentKicker: momentKicker,
     momentLine: momentLine,
     seasonBeatLine: seasonBeatLine,
     ARCHETYPE_LINE: ARCHETYPE_LINE,
