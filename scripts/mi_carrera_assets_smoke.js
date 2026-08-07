@@ -21,15 +21,21 @@ assert(clubs.length >= 500, 'full club catalog available (' + clubs.length + ')'
 
 let missing = 0;
 let real = 0;
+let generated = 0;
 clubs.forEach(function (c) {
   const b = MC.Providers.clubs.getClubBadge(c.id);
   if (b.status === 'real') real += 1;
+  else if (b.status === 'generated') generated += 1;
   else missing += 1;
-  assert(b.status === 'real' || b.status === 'missing' || b.status === 'fallback', 'badge status for ' + c.id);
-  if (b.status !== 'real') assert(b.fallback && b.fallback.honest, 'honest fallback for ' + c.id);
+  assert(
+    b.status === 'real' || b.status === 'generated' || b.status === 'missing' || b.status === 'fallback',
+    'badge status for ' + c.id
+  );
+  if (b.status !== 'real' && b.status !== 'generated') assert(b.fallback && b.fallback.honest, 'honest fallback for ' + c.id);
+  if (b.status === 'generated') assert(!!b.src, 'generated has src for ' + c.id);
 });
-assert(missing === clubs.length || real >= 0, 'badge statuses counted');
-console.log('Badges real/missing:', real, missing);
+assert(missing + real + generated === clubs.length, 'badge statuses counted');
+console.log('Badges real/generated/missing:', real, generated, missing);
 
 const badgeNode = MC.UI.Components.Badge(clubs[0].id, 'lg');
 assert(badgeNode.getAttribute('data-status'), 'Badge component sets status');

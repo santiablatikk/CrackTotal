@@ -1,130 +1,86 @@
 {
-  "version": 1,
+  "version": 2,
+  "generatedAt": "2026-08-07",
   "counts": {
-    "real": 0,
-    "missing": 15,
+    "real": 15,
+    "missing": 0,
     "total": 15
   },
   "items": {
     "ballon_dor": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "ballon_dor"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/ballon_dor.svg",
+      "license": "local-original"
     },
     "golden_boot_europe": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "golden_boot_europe"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/golden_boot_europe.svg",
+      "license": "local-original"
     },
     "best_fifa_player": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "best_fifa_player"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/best_fifa_player.svg",
+      "license": "local-original"
     },
     "continental_player_sa": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "continental_player_sa"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/continental_player_sa.svg",
+      "license": "local-original"
     },
     "continental_player_eu": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "continental_player_eu"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/continental_player_eu.svg",
+      "license": "local-original"
     },
     "league_mvp": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "league_mvp"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/league_mvp.svg",
+      "license": "local-original"
     },
     "league_top_scorer": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "league_top_scorer"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/league_top_scorer.svg",
+      "license": "local-original"
     },
     "league_top_assist": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "league_top_assist"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/league_top_assist.svg",
+      "license": "local-original"
     },
     "young_player": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "young_player"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/young_player.svg",
+      "license": "local-original"
     },
     "competition_mvp": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "competition_mvp"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/competition_mvp.svg",
+      "license": "local-original"
     },
     "team_of_season": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "team_of_season"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/team_of_season.svg",
+      "license": "local-original"
     },
     "goalkeeper_season": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "goalkeeper_season"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/goalkeeper_season.svg",
+      "license": "local-original"
     },
     "world_cup_golden_ball": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "world_cup_golden_ball"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/world_cup_golden_ball.svg",
+      "license": "local-original"
     },
     "world_cup_golden_boot": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "world_cup_golden_boot"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/world_cup_golden_boot.svg",
+      "license": "local-original"
     },
     "club_player_of_year": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "award_mark",
-        "label": "club_player_of_year"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/awards/club_player_of_year.svg",
+      "license": "local-original"
     }
   }
 }

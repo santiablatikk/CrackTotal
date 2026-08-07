@@ -1,8 +1,13 @@
 /**
  * Scan local Mi Carrera image folders and refresh manifests.
- * Places a real file as: assets/images/mi-carrera/clubs/{clubId}.png|svg|webp
- * Same pattern for competitions/, trophies/, awards/.
- * Never invents official artwork — only marks files that exist locally.
+ *
+ * Clubs:
+ *   assets/images/mi-carrera/clubs/{id}.(png|svg|webp)           → status real
+ *   assets/images/mi-carrera/clubs/generated/{id}.svg            → status generated
+ * Competitions / trophies / awards:
+ *   assets/images/mi-carrera/{folder}/{id}.(png|svg|...)         → status real
+ *
+ * Never invents official trademark artwork. generated ≠ real.
  *
  * Run: node scripts/sync_mi_carrera_assets.js
  */
@@ -24,18 +29,14 @@ function writeJson(rel, data) {
   fs.writeFileSync(path.join(DATA, rel), JSON.stringify(data, null, 2) + '\n', 'utf8');
 }
 
-function findLocal(dir, id) {
+function findInDir(dir, id, webFolder) {
   for (let i = 0; i < EXTS.length; i++) {
     const file = id + EXTS[i];
     const full = path.join(dir, file);
     if (fs.existsSync(full)) {
       return {
-        status: 'real',
-        src: path
-          .join('assets', 'images', 'mi-carrera', path.basename(dir), file)
-          .replace(/\\/g, '/'),
-        license: 'local',
-        source: 'local'
+        src: path.join('assets', 'images', 'mi-carrera', webFolder, file).replace(/\\/g, '/'),
+        ext: EXTS[i]
       };
     }
   }
@@ -47,42 +48,63 @@ function syncBadges() {
   const prev = readJson('manifests/club-badges.json');
   const badges = {};
   let real = 0;
+  let generated = 0;
   let missing = 0;
-  const dir = path.join(IMG, 'clubs');
+  const realDir = path.join(IMG, 'clubs');
+  const genDir = path.join(IMG, 'clubs', 'generated');
+
   (clubs.clubs || []).forEach(function (club) {
-    const found = findLocal(dir, club.id);
-    if (found) {
-      badges[club.id] = found;
-      real += 1;
-    } else {
-      const old = (prev.badges && prev.badges[club.id]) || {};
+    const official = findInDir(realDir, club.id, 'clubs');
+    if (official) {
       badges[club.id] = {
-        status: 'missing',
-        src: null,
-        license: null,
-        source: null,
-        fallback: Object.assign(
-          {
-            type: 'color_tile',
-            primaryColor: club.primaryColor || '#1f2937',
-            secondaryColor: club.secondaryColor || '#9ca3af',
-            label: club.shortName || club.name,
-            honest: true
-          },
-          old.fallback || {},
-          { honest: true }
-        )
+        status: 'real',
+        src: official.src,
+        license: 'local',
+        source: 'local'
       };
-      missing += 1;
+      real += 1;
+      return;
     }
+    const gen = findInDir(genDir, club.id, 'clubs/generated');
+    if (gen) {
+      badges[club.id] = {
+        status: 'generated',
+        src: gen.src,
+        license: 'local-generated',
+        source: 'local-generated',
+        honest: true
+      };
+      generated += 1;
+      return;
+    }
+    const old = (prev.badges && prev.badges[club.id]) || {};
+    badges[club.id] = {
+      status: 'missing',
+      src: null,
+      license: null,
+      source: null,
+      fallback: Object.assign(
+        {
+          type: 'color_tile',
+          primaryColor: club.primaryColor || '#1f2937',
+          secondaryColor: club.secondaryColor || '#9ca3af',
+          label: club.shortName || club.name,
+          honest: true
+        },
+        old.fallback || {},
+        { honest: true }
+      )
+    };
+    missing += 1;
   });
+
   writeJson('manifests/club-badges.json', {
-    version: 1,
+    version: 2,
     generatedAt: new Date().toISOString().slice(0, 10),
-    counts: { real: real, missing: missing, total: real + missing },
+    counts: { real: real, generated: generated, missing: missing, total: real + generated + missing },
     badges: badges
   });
-  return { real: real, missing: missing };
+  return { real: real, generated: generated, missing: missing };
 }
 
 function syncKeyed(listKey, folder, manifestRel, idField) {
@@ -95,12 +117,12 @@ function syncKeyed(listKey, folder, manifestRel, idField) {
   const list = payload[idField] || payload.items || [];
   list.forEach(function (entry) {
     const id = entry.id;
-    const found = findLocal(dir, id);
+    const found = findInDir(dir, id, folder);
     if (found) {
       items[id] = {
         status: 'real',
         src: found.src,
-        license: 'local'
+        license: 'local-original'
       };
       real += 1;
     } else {
@@ -122,7 +144,7 @@ function syncKeyed(listKey, folder, manifestRel, idField) {
     }
   });
   writeJson(manifestRel, {
-    version: 1,
+    version: 2,
     generatedAt: new Date().toISOString().slice(0, 10),
     counts: { real: real, missing: missing, total: real + missing },
     items: items
@@ -136,8 +158,7 @@ const trophies = syncKeyed('competitions.json', 'trophies', 'manifests/trophy-im
 const awards = syncKeyed('awards.json', 'awards', 'manifests/award-images.json', 'awards');
 
 console.log('Mi Carrera asset sync');
-console.log('  clubs:        real', badges.real, '/ missing', badges.missing);
+console.log('  clubs:        real', badges.real, '/ generated', badges.generated, '/ missing', badges.missing);
 console.log('  competitions: real', logos.real, '/ missing', logos.missing);
 console.log('  trophies:     real', trophies.real, '/ missing', trophies.missing);
 console.log('  awards:       real', awards.real, '/ missing', awards.missing);
-console.log('Drop local files under assets/images/mi-carrera/{clubs,competitions,trophies,awards}/ then re-run.');

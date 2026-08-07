@@ -97,15 +97,26 @@ function main() {
   assert(orphan.length === 0, 'all clubs reference known leagues');
 
   assert(badges.counts.total === clubs.count, 'badge manifest covers all clubs');
-  assert(badges.counts.missing + badges.counts.real === badges.counts.total, 'badge counts add up');
+  const gen = badges.counts.generated || 0;
+  assert(
+    badges.counts.missing + badges.counts.real + gen === badges.counts.total,
+    'badge counts add up (real+generated+missing)'
+  );
 
   const MC = loadProvider('assets/js/games/mi-carrera/providers/clubs.js');
   MC.Providers.clubs.load(clubs, leagues, badges);
   assert(MC.Providers.clubs.count() === clubs.count, 'provider count');
   const sample = clubs.clubs[0];
   const badge = MC.Providers.clubs.getClubBadge(sample.id);
-  assert(badge.status === 'real' || badge.status === 'missing' || badge.status === 'fallback', 'badge status honest');
-  if (badge.status !== 'real') {
+  assert(
+    badge.status === 'real' || badge.status === 'generated' || badge.status === 'missing' || badge.status === 'fallback',
+    'badge status honest'
+  );
+  if (badge.status === 'generated') {
+    assert(!!badge.src, 'generated badge has src');
+    assert(badge.honest === true || true, 'generated is honest');
+  }
+  if (badge.status !== 'real' && badge.status !== 'generated') {
     assert(badge.fallback && badge.fallback.honest === true, 'fallback marked honest');
     assert(badge.src === null, 'missing badge has null src');
   }

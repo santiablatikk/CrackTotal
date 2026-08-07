@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 180" role="img" aria-label="Eredivisie">
+  <rect width="200" height="180" fill="none"/>
+  <path d="M70 40 H130 V70 C130 96 118 112 100 120 C82 112 70 96 70 70 Z" fill="#d8b45a" stroke="#fff" stroke-width="3"/>
+      <path d="M62 48 H70 V72 C62 72 56 64 56 56 Z" fill="#d8b45a"/>
+      <path d="M130 48 H138 C144 56 144 72 130 72 Z" fill="#d8b45a"/>
+      <rect x="92" y="118" width="16" height="22" fill="#d8b45a"/>
+      <rect x="78" y="138" width="44" height="10" rx="2" fill="#d8b45a"/>
+</svg>

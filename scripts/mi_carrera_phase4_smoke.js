@@ -42,8 +42,13 @@ assert(N.ageChapterTitle(33) === 'EL FINAL SE ACERCA', '33 chapter');
 const clubs = MC.Providers.clubs.getAll();
 assert(clubs.length >= 500, 'catalog preserved (' + clubs.length + ')');
 const badge = C.Badge(clubs[0].id, 'lg');
-assert(badge.getAttribute('data-badge') === 'real' || badge.getAttribute('data-badge') === 'fallback', 'badge REAL/FALLBACK');
-assert(badge.getAttribute('data-status') !== 'real' ? !!badge.querySelector('.mc-badge__fallback') : true, 'fallback not presented as official');
+assert(badge.getAttribute('data-badge') === 'real' || badge.getAttribute('data-badge') === 'generated' || badge.getAttribute('data-badge') === 'fallback', 'badge REAL/GENERATED/FALLBACK');
+assert(
+  badge.getAttribute('data-status') === 'real' || badge.getAttribute('data-status') === 'generated'
+    ? !!badge.querySelector('img')
+    : !!badge.querySelector('.mc-badge__fallback'),
+  'badge visual matches status (generated≠official real)'
+);
 
 const clubMark = C.ClubMark(clubs[0].id, { variant: 'lg' });
 assert(clubMark.className.indexOf('mc-club') !== -1, 'ClubMark component');

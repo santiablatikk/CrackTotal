@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 140" role="img" aria-label="Arsenal">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EF0107"/>
+      <stop offset="100%" stop-color="#FFFFFF"/>
+    </linearGradient>
+  </defs>
+  <path d="M64 6 L114 22 L114 74 C114 104 90 124 64 134 C38 124 14 104 14 74 L14 22 Z" fill="url(#g)" stroke="rgba(255,255,255,0.35)" stroke-width="3"/>
+  <path d="M64 18 L102 30 L102 72 C102 94 84 110 64 118 C44 110 26 94 26 72 L26 30 Z" fill="rgba(0,0,0,0.18)"/>
+  <text x="64" y="78" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="34" fill="#fff" stroke="rgba(0,0,0,0.35)" stroke-width="1.5">ARS</text>
+</svg>

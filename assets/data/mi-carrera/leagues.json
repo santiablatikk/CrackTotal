@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 49,
+  "count": 89,
   "leagues": [
     {
       "id": "ar_primera",
@@ -442,6 +442,366 @@
       "continent": "AF",
       "level": 1,
       "prestige": 52
+    },
+    {
+      "id": "ar_nacional",
+      "name": "Primera Nacional",
+      "shortName": "Nacional AR",
+      "countryCode": "AR",
+      "continent": "SA",
+      "level": 2,
+      "prestige": 54
+    },
+    {
+      "id": "br_serie_b",
+      "name": "Brasileirão Série B",
+      "shortName": "Série B",
+      "countryCode": "BR",
+      "continent": "SA",
+      "level": 2,
+      "prestige": 58
+    },
+    {
+      "id": "uy_segunda",
+      "name": "Segunda División",
+      "shortName": "Segunda UY",
+      "countryCode": "UY",
+      "continent": "SA",
+      "level": 2,
+      "prestige": 46
+    },
+    {
+      "id": "cl_primera_b",
+      "name": "Primera B",
+      "shortName": "Primera B CL",
+      "countryCode": "CL",
+      "continent": "SA",
+      "level": 2,
+      "prestige": 46
+    },
+    {
+      "id": "co_primera_b",
+      "name": "Primera B",
+      "shortName": "Primera B CO",
+      "countryCode": "CO",
+      "continent": "SA",
+      "level": 2,
+      "prestige": 48
+    },
+    {
+      "id": "mx_expansion",
+      "name": "Liga de Expansión MX",
+      "shortName": "Expansión",
+      "countryCode": "MX",
+      "continent": "NA",
+      "level": 2,
+      "prestige": 50
+    },
+    {
+      "id": "us_usl",
+      "name": "USL Championship",
+      "shortName": "USL",
+      "countryCode": "US",
+      "continent": "NA",
+      "level": 2,
+      "prestige": 46
+    },
+    {
+      "id": "pt_liga2",
+      "name": "Liga Portugal 2",
+      "shortName": "Liga 2 PT",
+      "countryCode": "PT",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 54
+    },
+    {
+      "id": "nl_eerste",
+      "name": "Keuken Kampioen Divisie",
+      "shortName": "Eerste",
+      "countryCode": "NL",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 52
+    },
+    {
+      "id": "be_challenger",
+      "name": "Challenger Pro League",
+      "shortName": "Challenger",
+      "countryCode": "BE",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 50
+    },
+    {
+      "id": "tr_1lig",
+      "name": "1. Lig",
+      "shortName": "1. Lig",
+      "countryCode": "TR",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 52
+    },
+    {
+      "id": "at_2liga",
+      "name": "2. Liga",
+      "shortName": "2. Liga AT",
+      "countryCode": "AT",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 48
+    },
+    {
+      "id": "ch_challenge",
+      "name": "Challenge League",
+      "shortName": "Challenge CH",
+      "countryCode": "CH",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 48
+    },
+    {
+      "id": "gr_super2",
+      "name": "Super League 2",
+      "shortName": "SL2",
+      "countryCode": "GR",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 46
+    },
+    {
+      "id": "se_superettan",
+      "name": "Superettan",
+      "shortName": "Superettan",
+      "countryCode": "SE",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 46
+    },
+    {
+      "id": "no_obos",
+      "name": "OBOS-ligaen",
+      "shortName": "OBOS",
+      "countryCode": "NO",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 44
+    },
+    {
+      "id": "dk_1div",
+      "name": "1. Division",
+      "shortName": "1. Div DK",
+      "countryCode": "DK",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 46
+    },
+    {
+      "id": "pl_1liga",
+      "name": "I liga",
+      "shortName": "I liga",
+      "countryCode": "PL",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 48
+    },
+    {
+      "id": "sct_championship",
+      "name": "Scottish Championship",
+      "shortName": "Champ SCT",
+      "countryCode": "SCT",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 48
+    },
+    {
+      "id": "ie_premier",
+      "name": "League of Ireland Premier",
+      "shortName": "LOI Prem",
+      "countryCode": "IE",
+      "continent": "EU",
+      "level": 1,
+      "prestige": 44
+    },
+    {
+      "id": "ie_first",
+      "name": "LOI First Division",
+      "shortName": "LOI 1st",
+      "countryCode": "IE",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 40
+    },
+    {
+      "id": "ua_persha",
+      "name": "Persha Liga",
+      "shortName": "Persha",
+      "countryCode": "UA",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 44
+    },
+    {
+      "id": "rs_prva",
+      "name": "Prva Liga",
+      "shortName": "Prva RS",
+      "countryCode": "RS",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 42
+    },
+    {
+      "id": "hr_prva_nl",
+      "name": "Prva NL",
+      "shortName": "Prva NL",
+      "countryCode": "HR",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 42
+    },
+    {
+      "id": "cz_fnl",
+      "name": "Chance Národní Liga",
+      "shortName": "FNL",
+      "countryCode": "CZ",
+      "continent": "EU",
+      "level": 2,
+      "prestige": 44
+    },
+    {
+      "id": "jp_j2",
+      "name": "J2 League",
+      "shortName": "J2",
+      "countryCode": "JP",
+      "continent": "AS",
+      "level": 2,
+      "prestige": 50
+    },
+    {
+      "id": "kr_k2",
+      "name": "K League 2",
+      "shortName": "K2",
+      "countryCode": "KR",
+      "continent": "AS",
+      "level": 2,
+      "prestige": 46
+    },
+    {
+      "id": "cn_league1",
+      "name": "China League One",
+      "shortName": "CL1",
+      "countryCode": "CN",
+      "continent": "AS",
+      "level": 2,
+      "prestige": 44
+    },
+    {
+      "id": "sa_first",
+      "name": "Saudi First Division",
+      "shortName": "Yelo",
+      "countryCode": "SA",
+      "continent": "AS",
+      "level": 2,
+      "prestige": 48
+    },
+    {
+      "id": "ae_first",
+      "name": "UAE Division 1",
+      "shortName": "UAE D1",
+      "countryCode": "AE",
+      "continent": "AS",
+      "level": 2,
+      "prestige": 42
+    },
+    {
+      "id": "au_npl",
+      "name": "NPL",
+      "shortName": "NPL",
+      "countryCode": "AU",
+      "continent": "OC",
+      "level": 2,
+      "prestige": 40
+    },
+    {
+      "id": "pe_liga2",
+      "name": "Liga 2",
+      "shortName": "Liga 2 PE",
+      "countryCode": "PE",
+      "continent": "SA",
+      "level": 2,
+      "prestige": 42
+    },
+    {
+      "id": "ec_serie_b",
+      "name": "Serie B",
+      "shortName": "Serie B EC",
+      "countryCode": "EC",
+      "continent": "SA",
+      "level": 2,
+      "prestige": 42
+    },
+    {
+      "id": "py_intermedia",
+      "name": "División Intermedia",
+      "shortName": "Intermedia",
+      "countryCode": "PY",
+      "continent": "SA",
+      "level": 2,
+      "prestige": 40
+    },
+    {
+      "id": "ve_segunda",
+      "name": "Segunda División",
+      "shortName": "Segunda VE",
+      "countryCode": "VE",
+      "continent": "SA",
+      "level": 2,
+      "prestige": 38
+    },
+    {
+      "id": "bo_copa_sb",
+      "name": "Copa Simón Bolívar",
+      "shortName": "Simón Bolívar",
+      "countryCode": "BO",
+      "continent": "SA",
+      "level": 2,
+      "prestige": 36
+    },
+    {
+      "id": "eg_second",
+      "name": "Egyptian Second Division A",
+      "shortName": "2nd EG",
+      "countryCode": "EG",
+      "continent": "AF",
+      "level": 2,
+      "prestige": 40
+    },
+    {
+      "id": "ma_botola2",
+      "name": "Botola 2",
+      "shortName": "Botola 2",
+      "countryCode": "MA",
+      "continent": "AF",
+      "level": 2,
+      "prestige": 38
+    },
+    {
+      "id": "za_motsepe",
+      "name": "Motsepe Foundation Championship",
+      "shortName": "Motsepe",
+      "countryCode": "ZA",
+      "continent": "AF",
+      "level": 2,
+      "prestige": 40
+    },
+    {
+      "id": "ng_nnl",
+      "name": "Nigeria National League",
+      "shortName": "NNL",
+      "countryCode": "NG",
+      "continent": "AF",
+      "level": 2,
+      "prestige": 36
     }
   ]
 }

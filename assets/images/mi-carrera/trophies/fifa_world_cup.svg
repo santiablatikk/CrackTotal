@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 180" role="img" aria-label="Mundial">
+  <rect width="200" height="180" fill="none"/>
+  <ellipse cx="100" cy="70" rx="34" ry="40" fill="#f0c85a" stroke="#fff" stroke-width="3"/>
+      <path d="M78 48 Q100 30 122 48" fill="none" stroke="#8a6a20" stroke-width="3"/>
+      <rect x="92" y="108" width="16" height="24" fill="#f0c85a"/>
+      <rect x="74" y="130" width="52" height="12" rx="2" fill="#f0c85a"/>
+      <circle cx="100" cy="58" r="8" fill="#fff" opacity="0.35"/>
+</svg>

@@ -99,14 +99,24 @@
         };
       }
 
+      if (entry && entry.status === 'generated' && entry.src) {
+        return {
+          status: 'generated',
+          src: entry.src,
+          license: entry.license || 'local-generated',
+          source: entry.source || 'local-generated',
+          honest: true
+        };
+      }
+
       return {
         status: entry && entry.status === 'fallback' ? 'fallback' : 'missing',
         src: null,
         fallback: {
           type: 'color_tile',
-          primaryColor: (club && club.primaryColor) || '#1f2937',
-          secondaryColor: (club && club.secondaryColor) || '#9ca3af',
-          label: (club && club.shortName) || clubId || '?',
+          primaryColor: (club && club.primaryColor) || (entry && entry.fallback && entry.fallback.primaryColor) || '#1f2937',
+          secondaryColor: (club && club.secondaryColor) || (entry && entry.fallback && entry.fallback.secondaryColor) || '#9ca3af',
+          label: (club && club.shortName) || (entry && entry.fallback && entry.fallback.label) || clubId || '?',
           honest: true
         }
       };

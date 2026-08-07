@@ -1,290 +1,186 @@
 {
-  "version": 1,
+  "version": 2,
+  "generatedAt": "2026-08-07",
   "counts": {
-    "real": 0,
-    "missing": 35,
+    "real": 35,
+    "missing": 0,
     "total": 35
   },
   "items": {
     "uefa_cl": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "uefa_cl"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/uefa_cl.svg",
+      "license": "local-original"
     },
     "uefa_el": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "uefa_el"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/uefa_el.svg",
+      "license": "local-original"
     },
     "uefa_uecl": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "uefa_uecl"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/uefa_uecl.svg",
+      "license": "local-original"
     },
     "conmebol_libertadores": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "conmebol_libertadores"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/conmebol_libertadores.svg",
+      "license": "local-original"
     },
     "conmebol_sudamericana": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "conmebol_sudamericana"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/conmebol_sudamericana.svg",
+      "license": "local-original"
     },
     "conmebol_recopa": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "conmebol_recopa"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/conmebol_recopa.svg",
+      "license": "local-original"
     },
     "fifa_club_world_cup": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "fifa_club_world_cup"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/fifa_club_world_cup.svg",
+      "license": "local-original"
     },
     "fifa_world_cup": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "fifa_world_cup"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/fifa_world_cup.svg",
+      "license": "local-original"
     },
     "conmebol_copa_america": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "conmebol_copa_america"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/conmebol_copa_america.svg",
+      "license": "local-original"
     },
     "uefa_euro": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "uefa_euro"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/uefa_euro.svg",
+      "license": "local-original"
     },
     "caf_afcon": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "caf_afcon"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/caf_afcon.svg",
+      "license": "local-original"
     },
     "afc_asian_cup": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "afc_asian_cup"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/afc_asian_cup.svg",
+      "license": "local-original"
     },
     "concacaf_gold_cup": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "concacaf_gold_cup"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/concacaf_gold_cup.svg",
+      "license": "local-original"
     },
     "ar_league": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "ar_league"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/ar_league.svg",
+      "license": "local-original"
     },
     "ar_copa": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "ar_copa"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/ar_copa.svg",
+      "license": "local-original"
     },
     "br_league": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "br_league"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/br_league.svg",
+      "license": "local-original"
     },
     "br_copa": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "br_copa"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/br_copa.svg",
+      "license": "local-original"
     },
     "gb_league": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "gb_league"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/gb_league.svg",
+      "license": "local-original"
     },
     "gb_fa_cup": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "gb_fa_cup"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/gb_fa_cup.svg",
+      "license": "local-original"
     },
     "gb_efl_cup": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "gb_efl_cup"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/gb_efl_cup.svg",
+      "license": "local-original"
     },
     "es_league": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "es_league"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/es_league.svg",
+      "license": "local-original"
     },
     "es_copa": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "es_copa"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/es_copa.svg",
+      "license": "local-original"
     },
     "es_supercopa": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "es_supercopa"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/es_supercopa.svg",
+      "license": "local-original"
     },
     "it_league": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "it_league"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/it_league.svg",
+      "license": "local-original"
     },
     "it_copa": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "it_copa"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/it_copa.svg",
+      "license": "local-original"
     },
     "de_league": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "de_league"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/de_league.svg",
+      "license": "local-original"
     },
     "de_copa": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "de_copa"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/de_copa.svg",
+      "license": "local-original"
     },
     "fr_league": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "fr_league"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/fr_league.svg",
+      "license": "local-original"
     },
     "fr_copa": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "fr_copa"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/fr_copa.svg",
+      "license": "local-original"
     },
     "pt_league": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "pt_league"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/pt_league.svg",
+      "license": "local-original"
     },
     "pt_copa": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "pt_copa"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/pt_copa.svg",
+      "license": "local-original"
     },
     "nl_league": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "nl_league"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/nl_league.svg",
+      "license": "local-original"
     },
     "mx_league": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "mx_league"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/mx_league.svg",
+      "license": "local-original"
     },
     "us_league": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "us_league"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/us_league.svg",
+      "license": "local-original"
     },
     "uefa_super_cup": {
-      "status": "missing",
-      "src": null,
-      "fallback": {
-        "type": "trophy_silhouette",
-        "label": "uefa_super_cup"
-      }
+      "status": "real",
+      "src": "assets/images/mi-carrera/trophies/uefa_super_cup.svg",
+      "license": "local-original"
     }
   }
 }

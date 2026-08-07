@@ -49,12 +49,16 @@
     var asset = NS.Providers.clubs.getClubBadge(clubId);
     var status = asset.status || 'missing';
     wrap.setAttribute('data-status', status);
-    wrap.setAttribute('data-badge', status === 'real' ? 'real' : 'fallback');
-    if (status === 'real' && asset.src) {
+    wrap.setAttribute(
+      'data-badge',
+      status === 'real' ? 'real' : status === 'generated' ? 'generated' : 'fallback'
+    );
+    if ((status === 'real' || status === 'generated') && asset.src) {
       var img = el('img', 'mc-badge__img');
       img.src = asset.src;
       img.alt = club ? club.name : clubId;
       img.loading = 'lazy';
+      if (status === 'generated') img.setAttribute('data-generated', '1');
       wrap.appendChild(img);
     } else {
       var fb = asset.fallback || {};
