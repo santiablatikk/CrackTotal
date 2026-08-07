@@ -22,18 +22,24 @@
   var PATH_META = {
     minutes: {
       title: 'PROTAGONISTA',
-      promise: 'Acá vas a jugar.',
-      tone: 'minutes'
+      promise: 'JUGÁS.',
+      tone: 'minutes',
+      gainLabel: 'MINUTOS',
+      riskLabel: 'PRESTIGIO'
     },
     balance: {
       title: 'EQUILIBRIO',
-      promise: 'Acá vas a competir.',
-      tone: 'balance'
+      promise: 'CRECÉS.',
+      tone: 'balance',
+      gainLabel: 'DESARROLLO',
+      riskLabel: 'TECHO'
     },
     prestige: {
       title: 'ESCAPARATE',
-      promise: 'Acá vas a tener que ganarte el puesto.',
-      tone: 'prestige'
+      promise: 'TE VEN.',
+      tone: 'prestige',
+      gainLabel: 'PRESTIGIO',
+      riskLabel: 'PACIENCIA'
     }
   };
 

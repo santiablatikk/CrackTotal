@@ -8,6 +8,7 @@
     "restart": "node server-restart.js",
     "build": "node validate-deploy.js && echo 'Build completed successfully - all files validated' && exit 0",
     "validate": "node validate-deploy.js",
+    "deploy:check": "node scripts/check_production_deploy_path.js",
     "dev": "node server.js",
     "fix-rankings": "node ranking-fix-util.js",
     "gen:top10": "node scripts/generate-top10-pool.js",

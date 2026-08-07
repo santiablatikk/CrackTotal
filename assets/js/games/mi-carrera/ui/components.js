@@ -179,7 +179,8 @@
       var fb = asset.fallback || {};
       var mark = el('div', 'mc-award__fallback');
       mark.setAttribute('aria-label', 'Premio ilustrativo');
-      mark.appendChild(text('span', 'mc-award__glyph', awardId === 'ballon_dor' ? '●' : '★'));
+      var disc = el('div', 'mc-award__disc' + (awardId === 'ballon_dor' ? ' mc-award__disc--ballon' : ''));
+      mark.appendChild(disc);
       mark.appendChild(text('span', 'mc-award__label', fb.label || (award && award.shortName) || awardId));
       wrap.appendChild(mark);
     }

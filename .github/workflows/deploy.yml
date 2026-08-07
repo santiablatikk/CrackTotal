@@ -1,5 +1,8 @@
 name: Deploy production
 
+# Production only tracks `main`.
+# Pushing a feature branch does NOT deploy cracktotal.com.
+# Fetch origin never deploys — it only downloads remotes.
 on:
   push:
     branches:

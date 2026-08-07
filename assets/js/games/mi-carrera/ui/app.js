@@ -36,7 +36,9 @@
       firstClubs: null,
       pending: null,
       eventQueue: [],
-      selectedOffer: null
+      selectedOffer: null,
+      compareOffer: null,
+      compareIndex: null
     };
   }
 
@@ -299,7 +301,23 @@
       if (action === 'pick-offer') {
         var idx = Number(el.getAttribute('data-index'));
         var opt = session.pending.market.options[idx];
+        if (opt && opt.type !== 'stay' && opt.type !== 'loan_return' && opt.clubId) {
+          session.compareOffer = opt;
+          session.compareIndex = idx;
+          setScene('COMPARE');
+          return;
+        }
         afterMarketDecision(opt);
+        return;
+      }
+      if (action === 'confirm-compare') {
+        afterMarketDecision(session.compareOffer);
+        session.compareOffer = null;
+        return;
+      }
+      if (action === 'cancel-compare') {
+        session.compareOffer = null;
+        setScene('MARKET');
         return;
       }
       if (action === 'retire') {
