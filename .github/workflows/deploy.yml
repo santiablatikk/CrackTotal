@@ -1,7 +1,10 @@
 name: Deploy production
 
 # Production only tracks `main`.
-# Pushing a feature branch does NOT deploy cracktotal.com.
+# Pushing a feature branch does NOT deploy cracktotal.com by itself.
+# Feature → main automation for Mi Carrera lives in promote-mi-carrera.yml
+# (exclusive to cursor/mi-carrera-age-causality).
+#
 # Fetch origin never deploys — it only downloads remotes.
 on:
   push:
@@ -13,13 +16,16 @@ concurrency:
   group: production-deploy
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   validate-and-deploy:
     name: Validate + deploy to Render
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - name: Checkout
+      - name: '[prod-1] Checkout main'
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -27,21 +33,25 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Validate deploy surface
-        run: npm run validate
+      - name: '[prod-2] Validate deploy surface'
+        run: |
+          echo "[prod-2] Validating production candidate"
+          npm run validate
+          echo "[prod-2] Validation passed"
 
-      - name: Trigger Render deploy hook
+      - name: '[prod-3] Trigger Render deploy hook'
         env:
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
         run: |
           set -e
+          echo "[prod-3] Triggering Render"
           if [ -z "$RENDER_DEPLOY_HOOK" ]; then
             echo "RENDER_DEPLOY_HOOK secret is not set."
-            echo "If Render Auto-Deploy is already enabled for main, push alone is enough."
+            echo "If Render Auto-Deploy is already enabled for main, the push/dispatch to main is enough."
             echo "Otherwise: Render Dashboard → Service → Settings → Deploy Hook → add URL as GitHub secret RENDER_DEPLOY_HOOK."
+            echo "[prod-3] Skipped hook (no secret); relying on Render auto-deploy if configured."
             exit 0
           fi
-          echo "Triggering Render deploy..."
           curl -fsS -X POST "$RENDER_DEPLOY_HOOK"
           echo ""
-          echo "Deploy hook accepted."
+          echo "[prod-3] Deploy hook accepted. Render should rebuild cracktotal.com."

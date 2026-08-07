@@ -1,0 +1,125 @@
+# Promote ONLY cursor/mi-carrera-age-causality → main (after validation).
+# Other branches are unaffected.
+#
+# Flow:
+#   push feature → validate → fast-forward main → dispatch Deploy production
+#
+# Note: pushes made with GITHUB_TOKEN do not chain-trigger other workflows,
+# so production deploy is started explicitly via workflow_dispatch.
+
+name: Promote Mi Carrera branch
+
+on:
+  push:
+    branches:
+      - cursor/mi-carrera-age-causality
+  workflow_dispatch:
+
+concurrency:
+  group: promote-mi-carrera
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  validate-and-promote:
+    name: Validate + integrate into main
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: '[1] Validating feature branch'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Needed so this job can push the updated main ref.
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run npm validate
+        run: |
+          echo "[1] Validating feature branch"
+          npm run validate
+
+      - name: Run deploy path check
+        run: npm run deploy:check
+
+      - name: '[2] Validation passed'
+        run: echo "[2] Validation passed"
+
+      - name: '[3] Integrating into main'
+        id: integrate
+        env:
+          FEATURE_BRANCH: cursor/mi-carrera-age-causality
+        run: |
+          set -euo pipefail
+          echo "[3] Integrating into main"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin main "${FEATURE_BRANCH}"
+
+          FEATURE_SHA="$(git rev-parse "origin/${FEATURE_BRANCH}")"
+          MAIN_SHA="$(git rev-parse origin/main)"
+
+          echo "Feature tip: ${FEATURE_SHA}"
+          echo "Main tip:    ${MAIN_SHA}"
+
+          if git merge-base --is-ancestor "${FEATURE_SHA}" origin/main; then
+            echo "Feature tip is already contained in origin/main. Nothing to integrate."
+            echo "already_integrated=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          BEHIND="$(git rev-list --count "origin/${FEATURE_BRANCH}..origin/main")"
+          if [ "${BEHIND}" -gt 0 ]; then
+            echo "::error::FAILED at [3] Integrating into main"
+            echo "Feature branch is ${BEHIND} commit(s) behind origin/main."
+            echo "Do NOT force-merge. Update/rebase/merge main into ${FEATURE_BRANCH} locally, resolve conflicts, push the feature branch, and re-run."
+            exit 1
+          fi
+
+          git checkout -B main origin/main
+
+          if ! git merge --ff-only "origin/${FEATURE_BRANCH}"; then
+            echo "::error::FAILED at [3] Integrating into main"
+            echo "Fast-forward into main failed (unexpected divergence)."
+            echo "Update ${FEATURE_BRANCH} from main manually, then push again."
+            exit 1
+          fi
+
+          echo "already_integrated=false" >> "$GITHUB_OUTPUT"
+          echo "merged_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: '[4] Main updated'
+        if: steps.integrate.outputs.already_integrated != 'true'
+        run: |
+          set -euo pipefail
+          echo "[4] Main updated"
+          git push origin main
+          echo "Pushed main at $(git rev-parse --short HEAD)"
+
+      - name: '[5] Production deployment triggered'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ALREADY: ${{ steps.integrate.outputs.already_integrated }}
+        run: |
+          set -euo pipefail
+          echo "[5] Production deployment triggered"
+
+          if [ "${ALREADY}" = "true" ]; then
+            echo "Main already had this tip. Dispatching Deploy production anyway is skipped to avoid noise."
+            echo "If production is stale, run workflow_dispatch on 'Deploy production' manually."
+            exit 0
+          fi
+
+          # GITHUB_TOKEN pushes do not chain-trigger workflows; dispatch explicitly.
+          gh workflow run "Deploy production" --ref main
+          echo "Dispatched workflow: Deploy production (ref=main)"
+          echo "That workflow validates again and triggers Render (hook and/or auto-deploy on main)."
