@@ -78,6 +78,18 @@
     return 'SMALL';
   }
 
+  function footballTier(club) {
+    if (Engine.Eligibility && Engine.Eligibility.footballTier) {
+      return Engine.Eligibility.footballTier(club);
+    }
+    var band = clubBand(club);
+    if (band === 'WORLD_GIANT') return 'S';
+    if (band === 'CONTINENTAL_GIANT') return 'A';
+    if (band === 'BIG') return 'B';
+    if (band === 'STRONG' || band === 'MID') return 'C';
+    return 'D';
+  }
+
   function bandRank(band) {
     return (
       {
@@ -108,7 +120,8 @@
     var rep = player.reputation || 0;
     if (ovr < 62) return 'MID';
     if (ovr < 70) return 'STRONG';
-    if (ovr < 78) return age <= 20 ? 'BIG' : 'CONTINENTAL_GIANT';
+    if (ovr < 76) return age <= 20 ? 'BIG' : 'STRONG';
+    if (ovr < 80) return age <= 21 ? 'BIG' : 'CONTINENTAL_GIANT';
     if (ovr < 84) return 'CONTINENTAL_GIANT';
     if (ovr < 88 || rep < 70) return age >= 33 ? 'CONTINENTAL_GIANT' : 'WORLD_GIANT';
     return 'WORLD_GIANT';
@@ -119,9 +132,16 @@
     var need = bandRank(clubBand(club));
     var max = bandRank(maxClubBandForPlayer(player));
     if (need > max) return false;
+    // Giants demand compatible level — no constant incompatible signings
+    var gap = (club.squadStrength || club.prestige || 70) - player.overall;
+    if (need >= 7 && gap > 10) return false;
+    if (need >= 6 && gap > 14) return false;
     if (player.overall < 58 && need >= 5) return false;
     if (player.age <= 17 && need >= 7 && player.overall < 78) return false;
     if (player.age >= 34 && need >= 7 && player.overall < 86) return false;
+    // Mid players cannot leap D→S without already being near the bar
+    if (need >= 7 && player.overall < 84) return false;
+    if (need >= 6 && player.overall < 78 && player.age > 22) return false;
     return true;
   }
 
@@ -166,6 +186,7 @@
     isGoalkeeper: isGoalkeeper,
     isOutfield: isOutfield,
     clubBand: clubBand,
+    footballTier: footballTier,
     bandRank: bandRank,
     agePhase: agePhase,
     maxClubBandForPlayer: maxClubBandForPlayer,

@@ -42,6 +42,13 @@
     if (recentlyLeft(career, club.id)) return 0;
     if ((career.marketMemory.rejectedClubIds || []).indexOf(club.id) !== -1 && rng.chance(0.7)) return 0;
 
+    var fromClub = NS.Providers.clubs.getById(career.currentClubId);
+    if (fromClub && fromClub.continent !== club.continent) {
+      if (Engine.Eligibility && !Engine.Eligibility.isCredibleInternationalMove(career, fromClub, club)) {
+        return 0;
+      }
+    }
+
     var band = Rules.clubBand(club);
     var rank = Rules.bandRank(band);
     var max = Rules.bandRank(Rules.maxClubBandForPlayer(p));
@@ -56,14 +63,31 @@
     if (p.age >= 32 && rank >= 6) score -= 15;
     if (p.age <= 21 && rank >= 6 && (career.role === 'youth_prospect' || career.role === 'substitute')) score -= 8;
 
-    // Regional affinity / anti-noise
+    // Prefer home country affinity
     var country = p.country;
-    if (club.countryCode === country) score += 6;
-    if (club.continent === 'EU' && career.flags.playedSouthAmerica && p.overall >= 78) score += 8;
-    if (club.continent === 'SA' && career.flags.playedEurope && p.age >= 30) score += 10;
-    // Young Europeans should not randomly flood to SA
-    if (club.continent === 'SA' && fromContinent(career) === 'EU' && p.age < 30) score *= 0.15;
-    if (club.continent === 'EU' && fromContinent(career) === 'SA' && p.overall < 74) score *= 0.35;
+    if (club.countryCode === country) score += 8;
+
+    var fromCont = fromContinent(career);
+    var homeCont = Engine.Eligibility ? Engine.Eligibility.playerHomeContinent(career) : null;
+
+    // SA → EU pathway boost for ready players
+    if (club.continent === 'EU' && fromCont === 'SA' && p.overall >= 76) score += 10;
+    if (club.continent === 'EU' && fromCont === 'SA' && p.overall < 74) score *= 0.35;
+
+    // EU → SA: contextual only (hard gate above). Soft weighting when allowed.
+    if (club.continent === 'SA' && fromCont === 'EU') {
+      if (club.countryCode === country) score += 14;
+      if (p.age >= 30) score += 8;
+      if (p.age < 28) score *= 0.55;
+      if (homeCont === 'EU') score *= 0.25;
+    }
+
+    // Giants: require closer overall match
+    if (rank >= 6) {
+      var gap = (club.squadStrength || 70) - p.overall;
+      if (gap > 8) score *= 0.4;
+      if (gap > 12) score *= 0.2;
+    }
 
     return Math.max(0, score);
   }
@@ -230,10 +254,18 @@
       options.push(makeTransferOption(career, fromClub, pick));
     }
 
-    // Home return tease for veterans
-    if (p.age >= 31 && career.flags.playedEurope && rng.chance(0.25)) {
+    // Home return tease for veterans / soft landings (contextual)
+    if (
+      career.flags.playedEurope &&
+      ((p.age >= 29 && rng.chance(0.28)) ||
+        (p.age >= 27 && ((last.minutes || 0) < 1400 || (p.form || 50) < 50) && rng.chance(0.22)))
+    ) {
       var home = scored.filter(function (x) {
-        return x.club.countryCode === p.country && Rules.bandRank(Rules.clubBand(x.club)) >= 4;
+        return (
+          x.club.countryCode === p.country &&
+          Rules.bandRank(Rules.clubBand(x.club)) >= 3 &&
+          Engine.Eligibility.isCredibleInternationalMove(career, fromClub, x.club)
+        );
       });
       if (home.length) {
         var h = rng.pick(home).club;

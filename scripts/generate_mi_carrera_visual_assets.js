@@ -43,7 +43,33 @@ function clubSvg(club) {
   const p = club.primaryColor || '#2a3344';
   const s = club.secondaryColor || '#9aa3b5';
   const text = initials(club);
-  const fontSize = text.length >= 3 ? 34 : 42;
+  const fontSize = text.length >= 3 ? 30 : 40;
+  const id = String(club.id || '');
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  const variant = h % 4;
+  const cont = club.continent || 'EU';
+  const tags = club.tags || [];
+  const historic = tags.indexOf('historic') !== -1 || tags.indexOf('giant') !== -1 || tags.indexOf('world_class') !== -1;
+  const rim = historic ? '#f0c85a' : cont === 'SA' ? 'rgba(216,255,62,0.55)' : cont === 'EU' ? 'rgba(255,255,255,0.45)' : 'rgba(200,206,218,0.4)';
+  const accentDot = cont === 'SA' ? '#d8ff3e' : cont === 'EU' ? '#7eb6ff' : cont === 'AF' ? '#f0c85a' : '#c8ceda';
+
+  let shape;
+  if (variant === 0) {
+    shape = `<path d="M64 8 L112 24 L112 76 C112 104 90 124 64 134 C38 124 16 104 16 76 L16 24 Z" fill="url(#g)" stroke="${rim}" stroke-width="3"/>`;
+  } else if (variant === 1) {
+    shape = `<path d="M64 10 L108 28 L100 118 L64 132 L28 118 L20 28 Z" fill="url(#g)" stroke="${rim}" stroke-width="3"/>`;
+  } else if (variant === 2) {
+    shape = `<circle cx="64" cy="70" r="54" fill="url(#g)" stroke="${rim}" stroke-width="3"/>
+      <circle cx="64" cy="70" r="44" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>`;
+  } else {
+    shape = `<rect x="18" y="18" width="92" height="104" rx="18" fill="url(#g)" stroke="${rim}" stroke-width="3"/>`;
+  }
+
+  const star = historic
+    ? `<path d="M64 34 L68 46 L80 46 L70 54 L74 66 L64 58 L54 66 L58 54 L48 46 L60 46 Z" fill="${accentDot}" opacity="0.85"/>`
+    : `<circle cx="64" cy="40" r="4" fill="${accentDot}" opacity="0.7"/>`;
+
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 140" role="img" aria-label="${esc(club.name)}">
   <defs>
@@ -51,10 +77,16 @@ function clubSvg(club) {
       <stop offset="0%" stop-color="${esc(p)}"/>
       <stop offset="100%" stop-color="${esc(s)}"/>
     </linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
   </defs>
-  <path d="M64 6 L114 22 L114 74 C114 104 90 124 64 134 C38 124 14 104 14 74 L14 22 Z" fill="url(#g)" stroke="rgba(255,255,255,0.35)" stroke-width="3"/>
-  <path d="M64 18 L102 30 L102 72 C102 94 84 110 64 118 C44 110 26 94 26 72 L26 30 Z" fill="rgba(0,0,0,0.18)"/>
-  <text x="64" y="78" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="${fontSize}" fill="#fff" stroke="rgba(0,0,0,0.35)" stroke-width="1.5">${esc(text)}</text>
+  <g filter="url(#sh)">
+    ${shape}
+  </g>
+  <path d="M64 22 L100 34 L100 74 C100 96 84 112 64 120 C44 112 28 96 28 74 L28 34 Z" fill="rgba(0,0,0,0.14)"/>
+  ${star}
+  <text x="64" y="86" text-anchor="middle" font-family="Arial Black, Arial, sans-serif" font-size="${fontSize}" fill="#fff" stroke="rgba(0,0,0,0.4)" stroke-width="1.2">${esc(text)}</text>
 </svg>
 `;
 }

@@ -422,10 +422,22 @@
     var home = opts.filter(function (o) {
       return o.kind === 'HOME';
     })[0];
-    if (home && career.player.age >= 31 && rng.chance(0.5)) return home;
+    if (home && career.player.age >= 28 && rng.chance(0.55)) return home;
+
+    // SOUTH_AMERICA returns only when contextual (offer already gated); still rarer for young peaks
+    var saReturn = opts.filter(function (o) {
+      return o.type === 'transfer' && o.kind === 'SOUTH_AMERICA';
+    })[0];
+    if (saReturn) {
+      var takeReturn =
+        career.player.age >= 29 ||
+        career.player.form < 50 ||
+        (career.seasons[career.seasons.length - 1] && career.seasons[career.seasons.length - 1].minutes < 1400);
+      if (takeReturn && rng.chance(0.4)) return saReturn;
+    }
 
     var transfer = opts.filter(function (o) {
-      return o.type === 'transfer';
+      return o.type === 'transfer' && o.kind !== 'SOUTH_AMERICA';
     })[0];
     if (transfer && rng.chance(0.35)) return transfer;
 

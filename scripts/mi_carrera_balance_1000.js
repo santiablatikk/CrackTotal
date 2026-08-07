@@ -213,6 +213,8 @@ assert(report.absurdLateSpike === 0, 'no late +8 spikes');
 assert(report.absurdGiantJoin === 0, 'no weak->giant transfers');
 assert(report.untitledCareers > 50, 'enough untitled careers');
 assert(report.saToEu > 10, 'SA→EU paths exist');
+assert(report.euToSa < report.saToEu * 1.15, 'EU→SA not higher than SA→EU (got ' + report.euToSa + ' vs ' + report.saToEu + ')');
+assert(report.euToSa / N < 0.32, 'EU→SA rate moderated (' + (report.euToSa / N).toFixed(3) + ')');
 assert(report.oneClubCareers > 5, 'one-club careers exist');
 assert(report.journeymanCareers > 5, 'journeymen exist');
 assert(report.loansPerCareer > 0.02, 'loans happen');

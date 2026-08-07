@@ -89,8 +89,22 @@
     }
 
     var caps = totals.nationalCaps || 0;
-    if (caps > 0 || (career.nationalTeam && career.nationalTeam.status !== 'uncapped')) {
-      card.appendChild(C.text('div', 'mc-card__national', 'SELECCIÓN · ' + caps));
+    var nt = career.nationalTeam || {};
+    if (caps > 0 || (nt.status && nt.status !== 'uncapped')) {
+      var natBits = ['SELECCIÓN', String(caps)];
+      if (p.country) natBits.push(p.country);
+      card.appendChild(C.text('div', 'mc-card__national', natBits.join(' · ')));
+      var tournaments = nt.tournaments || [];
+      tournaments.forEach(function (t) {
+        if (!t || !t.won) return;
+        if (t.id === 'fifa_world_cup') {
+          card.appendChild(C.text('div', 'mc-card__national-title', 'CAMPEÓN DEL MUNDO · ' + (t.year || '')));
+        } else if (t.id === 'conmebol_copa_america') {
+          card.appendChild(C.text('div', 'mc-card__national-title', 'COPA AMÉRICA · ' + (t.year || '')));
+        } else if (t.id === 'uefa_euro') {
+          card.appendChild(C.text('div', 'mc-card__national-title', 'EURO · ' + (t.year || '')));
+        }
+      });
     }
 
     card.appendChild(C.text('p', 'mc-card__line', N.legacyLine(career)));

@@ -18,6 +18,7 @@ const SCRIPTS = [
   'assets/js/games/mi-carrera/main.js',
   'assets/js/games/mi-carrera/engine/career-randomizer.js',
   'assets/js/games/mi-carrera/engine/career-rules.js',
+  'assets/js/games/mi-carrera/engine/career-eligibility.js',
   'assets/js/games/mi-carrera/engine/career-state.js',
   'assets/js/games/mi-carrera/engine/career-progression.js',
   'assets/js/games/mi-carrera/engine/career-events.js',

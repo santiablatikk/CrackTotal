@@ -35,8 +35,10 @@
     ) {
       out.push('competition_mvp');
     }
-    if ((seasonStats.rating || 0) >= 7.1 && rng.chance(0.2)) out.push('team_of_season');
-    if ((seasonStats.rating || 0) >= 7.0 && rng.chance(0.15)) out.push('club_player_of_year');
+    if ((seasonStats.rating || 0) >= 7.1 && rng.chance(0.12)) out.push('team_of_season');
+    if ((seasonStats.rating || 0) >= 7.15 && (seasonStats.minutes || 0) >= 1800 && rng.chance(0.1)) {
+      out.push('club_player_of_year');
+    }
 
     // Continental player awards
     var club = NS.Providers.clubs.getById(career.currentClubId);
@@ -76,20 +78,20 @@
       ga >= 32 ||
       (Rules.isGoalkeeper(p.position) && (seasonStats.cleanSheets || 0) >= 16 && legendaryTitle);
     var ballonEligible =
-      p.overall >= 87 &&
-      p.reputation >= 80 &&
-      seasonAge >= 21 &&
+      p.overall >= 88 &&
+      p.reputation >= 82 &&
+      seasonAge >= 22 &&
       seasonAge <= 34 &&
-      (seasonStats.rating || 0) >= 7.4 &&
-      (seasonStats.minutes || 0) >= 2000 &&
-      (legendaryTitle || (eliteOutput && p.overall >= 89) || (majorContinental && p.overall >= 90 && eliteOutput)) &&
+      (seasonStats.rating || 0) >= 7.45 &&
+      (seasonStats.minutes || 0) >= 2200 &&
+      (legendaryTitle || (eliteOutput && p.overall >= 90) || (majorContinental && p.overall >= 91 && eliteOutput)) &&
       club &&
-      (club.continent === 'EU' || (club.continent === 'SA' && p.reputation >= 86));
+      (club.continent === 'EU' || (club.continent === 'SA' && p.reputation >= 88));
 
-    var ballonChance = 0.07;
-    if (p.overall >= 90) ballonChance += 0.06;
-    if (legendaryTitle) ballonChance += 0.04;
-    if ((seasonStats.rating || 0) >= 7.7) ballonChance += 0.03;
+    var ballonChance = 0.055;
+    if (p.overall >= 91) ballonChance += 0.05;
+    if (legendaryTitle) ballonChance += 0.035;
+    if ((seasonStats.rating || 0) >= 7.75) ballonChance += 0.025;
 
     if (ballonEligible && !career.flags.wonBallon && rng.chance(ballonChance)) {
       out.push('ballon_dor');
