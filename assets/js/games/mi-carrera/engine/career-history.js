@@ -51,6 +51,7 @@
   function buildLegacy(career) {
     closeCurrentSpell(career);
     var archetype = Engine.State.deriveArchetype(career);
+    var traj = Engine.State.analyzeTrajectory(career);
     var totals = {
       seasons: career.seasons.length,
       appearances: 0,
@@ -61,6 +62,8 @@
       awards: career.awards.length,
       clubs: career.clubs.length,
       peakOverall: career.player.peakOverall,
+      peakAge: traj.peakAge,
+      debutAge: traj.debutAge,
       retireAge: career.player.age,
       nationalCaps: career.nationalTeam.caps,
       nationalGoals: career.nationalTeam.goals

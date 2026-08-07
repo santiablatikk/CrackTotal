@@ -66,6 +66,8 @@
     // Prefer home country affinity
     var country = p.country;
     if (club.countryCode === country) score += 8;
+    // Soft catalog spread: small noise so mid-table clubs can surface
+    score += rng.next() * 6;
 
     var fromCont = fromContinent(career);
     var homeCont = Engine.Eligibility ? Engine.Eligibility.playerHomeContinent(career) : null;
@@ -80,6 +82,11 @@
       if (p.age >= 30) score += 8;
       if (p.age < 28) score *= 0.55;
       if (homeCont === 'EU') score *= 0.25;
+    }
+
+    // Late-career home return pull
+    if (club.countryCode === country && p.age >= 30 && fromCont && club.continent !== fromCont) {
+      score += 12;
     }
 
     // Giants: require closer overall match
@@ -118,6 +125,7 @@
     else if (gap > 0) role = 'starter';
     else role = career.player.overall >= 84 ? 'key_player' : 'starter';
 
+    var league = NS.Providers.clubs.getLeague ? NS.Providers.clubs.getLeague(toClub.leagueId) : null;
     return {
       type: 'transfer',
       kind: kind || classifyMove(fromClub, toClub),
@@ -129,13 +137,18 @@
       risks: gap > 8 ? ['Menos minutos', 'Adaptación', 'Competencia interna'] : ['Adaptación', 'Expectativa'],
       prestige: toClub.prestige,
       band: Rules.clubBand(toClub),
-      fromClubId: fromClub.id
+      fromClubId: fromClub.id,
+      leagueId: toClub.leagueId || null,
+      leagueName: (league && league.name) || toClub.league || '',
+      countryCode: toClub.countryCode || '',
+      continent: toClub.continent || ''
     };
   }
 
   function makeLoanOption(career, fromClub, toClub) {
     var role = 'starter';
     if ((toClub.squadStrength || 70) - career.player.overall > 6) role = 'regular';
+    var league = NS.Providers.clubs.getLeague ? NS.Providers.clubs.getLeague(toClub.leagueId) : null;
     return {
       type: 'loan',
       kind: 'LOAN',
@@ -148,7 +161,11 @@
       prestige: toClub.prestige,
       band: Rules.clubBand(toClub),
       fromClubId: fromClub.id,
-      loanFromClubId: fromClub.id
+      loanFromClubId: fromClub.id,
+      leagueId: toClub.leagueId || null,
+      leagueName: (league && league.name) || toClub.league || '',
+      countryCode: toClub.countryCode || '',
+      continent: toClub.continent || ''
     };
   }
 
@@ -243,9 +260,14 @@
 
     var used = {};
     for (var t = 0; t < transferCount; t++) {
-      var pool = scored.filter(function (x) {
+      var eligible = scored.filter(function (x) {
         return !used[x.club.id] && Rules.canJoinClub(p, x.club);
-      }).slice(0, 25);
+      });
+      // Top slice + occasional deeper pick to keep catalog regions reachable
+      var pool = eligible.slice(0, 28);
+      if (eligible.length > 40 && rng.chance(0.22)) {
+        pool = pool.concat(eligible.slice(28, 55));
+      }
       if (!pool.length) break;
       var pick = rng.weighted(pool, function (x) {
         return x.score;
@@ -257,8 +279,8 @@
     // Home return tease for veterans / soft landings (contextual)
     if (
       career.flags.playedEurope &&
-      ((p.age >= 29 && rng.chance(0.28)) ||
-        (p.age >= 27 && ((last.minutes || 0) < 1400 || (p.form || 50) < 50) && rng.chance(0.22)))
+      ((p.age >= 29 && rng.chance(0.38)) ||
+        (p.age >= 27 && ((last.minutes || 0) < 1400 || (p.form || 50) < 50) && rng.chance(0.28)))
     ) {
       var home = scored.filter(function (x) {
         return (

@@ -68,12 +68,18 @@
     GIANT_FAILURE: 'GIGANTE QUE NO FUE',
     GIANT_SUCCESS: 'CONQUISTÓ AL GIGANTE',
     INJURY_CAREER: 'CARRERA MARCADA',
+    INJURY_COMEBACK: 'REGRESO DESPUÉS DE TODO',
     TROPHY_HUNTER: 'CAZADOR DE TÍTULOS',
     CULT_HERO: 'ÍDOLO DEL CLUB',
     LONG_CAREER: 'CARRERA LARGA',
+    SHORT_CAREER: 'CARRERA BREVE',
     EARLY_RETIREMENT: 'RETIRO TEMPRANO',
     VETERAN: 'VETERANO',
     OVERACHIEVER: 'SUPERÓ EL TECHO',
+    NATIONAL_HERO: 'HÉROE NACIONAL',
+    DOMESTIC_LEGEND: 'LEYENDA DOMÉSTICA',
+    EUROPEAN_CAREER: 'CARRERA EUROPEA',
+    SOUTH_AMERICAN_CAREER: 'CARRERA SUDAMERICANA',
     CAREER_PLAYER: 'CARRERA REAL'
   };
 
@@ -101,12 +107,18 @@
     GIANT_FAILURE: 'LLEGÓ AL TECHO… Y SE QUEBRÓ.',
     GIANT_SUCCESS: 'ENTRE GIGANTES, FUE GIGANTE.',
     INJURY_CAREER: 'EL CUERPO PIDIÓ PELEA. ÉL SIGUIÓ.',
+    INJURY_COMEBACK: 'SE QUEBRÓ. VOLVIÓ. Y ESCRIBIÓ OTRA PÁGINA.',
     TROPHY_HUNTER: 'UNA VIDA COLECCIONANDO TÍTULOS.',
     CULT_HERO: 'MÁS QUE UN JUGADOR: UNA IDENTIDAD.',
     LONG_CAREER: 'DURÓ MÁS QUE CASI TODOS.',
+    SHORT_CAREER: 'UNA HISTORIA CORTA, PERO INTENSA.',
     EARLY_RETIREMENT: 'SE FUE ANTES DE QUE LO OBLIGARAN.',
     VETERAN: 'EL ÚLTIMO QUE APAGÓ LA LUZ.',
     OVERACHIEVER: 'LLEGÓ MÁS LEJOS DE LO PREVISTO.',
+    NATIONAL_HERO: 'LA CAMISETA DE SU PAÍS FUE SU DESTINO.',
+    DOMESTIC_LEGEND: 'REINÓ EN CASA. ESO BASTA.',
+    EUROPEAN_CAREER: 'EUROPA FUE TODO SU MAPA.',
+    SOUTH_AMERICAN_CAREER: 'SUDAMÉRICA FUE SU MUNDO.',
     CAREER_PLAYER: 'UNA CARRERA REAL.'
   };
 
@@ -381,14 +393,41 @@
         first_goal: 'TU PRIMER GOL.',
         first_title: 'TU PRIMER TÍTULO.',
         major_injury: 'UNA LESIÓN QUE MARCA.',
+        injury: 'EL CUERPO PIDE TREGUA.',
         comeback: 'EL COMEBACK.',
         major_transfer: 'UN CAMBIO DE DESTINO.',
         world_cup: 'EL MUNDIAL.',
         continental_title: 'TÍTULO CONTINENTAL.',
+        champions: 'LA NOCHE MÁS GRANDE DE EUROPA.',
+        libertadores: 'LA GLORIA DE AMÉRICA.',
         loan: 'NUEVA CASA POR UNA TEMPORADA.',
         ballon_dor: 'BALÓN DE ORO.',
-        retirement: 'SE TERMINÓ UNA CARRERA.'
+        retirement: 'SE TERMINÓ UNA CARRERA.',
+        career_start: 'ACÁ EMPIEZA TODO.'
       }[type] || 'UN MOMENTO CLAVE.'
+    );
+  }
+
+  function seasonBeatLine(beat) {
+    return (
+      {
+        debut: 'EL DEBUT.',
+        first_start: 'PRIMERA TITULARIDAD.',
+        explosion: 'EXPLOSIÓN.',
+        collapse: 'CAÍDA.',
+        injury: 'LESIÓN.',
+        comeback: 'REGRESO.',
+        role_change: 'CAMBIO DE ROL.',
+        great_season: 'GRAN TEMPORADA.',
+        bad_season: 'MALA TEMPORADA.',
+        title: 'TÍTULO.',
+        national_call: 'SELECCIÓN.',
+        continental: 'TORNEO INTERNACIONAL.',
+        personal_best: 'RÉCORD PERSONAL.',
+        transfer: 'TRANSFERENCIA.',
+        homecoming: 'REGRESO A CASA.',
+        farewell: 'ÚLTIMO AÑO.'
+      }[beat] || 'UN BEAT DE TEMPORADA.'
     );
   }
 
@@ -410,6 +449,7 @@
     trophyTitle: trophyTitle,
     awardTitle: awardTitle,
     momentLine: momentLine,
+    seasonBeatLine: seasonBeatLine,
     ARCHETYPE_LINE: ARCHETYPE_LINE,
     ARCHETYPE_LABEL: ARCHETYPE_LABEL
   };

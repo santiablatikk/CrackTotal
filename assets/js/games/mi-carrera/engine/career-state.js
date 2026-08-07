@@ -282,28 +282,40 @@
   function deriveArchetype(career) {
     var t = analyzeTrajectory(career);
     var oneClub = t.uniqueClubs <= 1;
+    var domesticHeavy =
+      t.titles >= 4 &&
+      !(t.hasCL || t.hasLib || t.hasWC) &&
+      t.midClubTitles >= 2;
 
     if (t.hasBallon) return 'BALLON_DOR_WINNER';
     if (t.hasWC && t.caps >= 30) return 'WORLD_CHAMPION';
     if (oneClub && t.seasons >= 10 && t.titles >= 2) return 'ONE_CLUB_LEGEND';
+    if (oneClub && t.seasons >= 8) return 'ONE_CLUB_MAN';
     if (oneClub && t.seasons >= 12) return 'CLUB_ICON';
     if (t.growth === 'wonderkid' && t.peak >= 86 && (t.peakAge == null || t.peakAge <= 24)) return 'WONDERKID';
     if (t.growth === 'wonderkid' && t.peak < 78) return 'FALLEN_WONDERKID';
     if (t.growth === 'late_bloomer' && t.peak >= 82) return 'LATE_BLOOMER';
-    if (t.homecoming && t.peak >= 80) return 'HOMECOMING';
+    if (t.homecoming && t.peak >= 78) return 'HOMECOMING';
     if (t.saToEu && t.eu >= 5 && t.peak >= 84) return 'CONTINENTAL_BRIDGE';
     if (t.giantFail) return 'GIANT_FAILURE';
-    if (t.giantSuccess && (t.hasCL || t.peak >= 88)) return 'GIANT_SUCCESS';
-    if (t.injurySeasons >= 5 || (t.hadMajorInjury && t.peak < 76 && t.seasons >= 12)) return 'INJURY_CAREER';
+    if (t.giantSuccess && (t.hasCL || t.hasLib || t.peak >= 88)) return 'GIANT_SUCCESS';
+    if (t.hadComeback && t.hadMajorInjury) return 'INJURY_COMEBACK';
     if (t.hadComeback) return 'COMEBACK';
+    if (t.injurySeasons >= 5 || (t.hadMajorInjury && t.peak < 76 && t.seasons >= 12)) return 'INJURY_CAREER';
+    if ((t.hasWC || t.hasCopaAmerica || t.hasEuro) && t.caps >= 40) return 'NATIONAL_HERO';
     if (t.saOnly && (t.hasLib || t.peak >= 84)) return 'SOUTH_AMERICAN_LEGEND';
+    if (t.saOnly && t.seasons >= 12) return 'SOUTH_AMERICAN_CAREER';
     if (t.eu >= 8 && (t.hasCL || t.peak >= 88)) return 'EUROPEAN_STAR';
-    if (t.caps >= 50 || (t.hasCopaAmerica || t.hasEuro) && t.caps >= 25) return 'INTERNATIONAL_STAR';
+    if (t.europeOnly && t.seasons >= 12) return 'EUROPEAN_CAREER';
+    if (domesticHeavy) return 'DOMESTIC_LEGEND';
+    if (t.caps >= 50 || ((t.hasCopaAmerica || t.hasEuro) && t.caps >= 25)) return 'INTERNATIONAL_STAR';
     if (t.midClubTitles >= 2 && t.titles >= 3 && t.peak < 86) return 'UNDERDOG_CHAMPION';
-    if (t.uniqueClubs >= 7 || (t.uniqueClubs >= 6 && t.shortSpells >= 3)) return 'MERCENARY';
-    if (t.uniqueClubs >= 6) return 'JOURNEYMAN';
-    if (t.titles >= 8) return 'TROPHY_HUNTER';
     if (t.uniqueClubs <= 2 && t.seasons >= 10) return 'CLUB_ICON';
+    if (t.titles >= 8) return 'TROPHY_HUNTER';
+    // Mercenary is rarer than journeyman: many short spells, not just club count
+    if (t.uniqueClubs >= 8 || (t.uniqueClubs >= 7 && t.shortSpells >= 4)) return 'MERCENARY';
+    if (t.uniqueClubs >= 6) return 'JOURNEYMAN';
+    if (t.retireAge <= 32 && t.seasons <= 12) return 'SHORT_CAREER';
     if (t.retireAge <= 34 && t.seasons >= 8) return 'EARLY_RETIREMENT';
     if (t.retireAge >= 38 && t.seasons >= 18) return 'LONG_CAREER';
     if (t.peak >= 86 && (career.player.potential || 0) - t.peak > 3) return 'OVERACHIEVER';

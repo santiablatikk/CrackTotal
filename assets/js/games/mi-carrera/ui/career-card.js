@@ -8,10 +8,44 @@
   var UI = (NS.UI = NS.UI || {});
 
   function debutAge(career, legacy) {
+    if (legacy && legacy.totals && legacy.totals.debutAge != null) return legacy.totals.debutAge;
     var tl = (legacy && legacy.timeline) || career.clubs || [];
     if (tl[0] && tl[0].ageStart != null) return tl[0].ageStart;
     if (career.seasons && career.seasons[0]) return career.seasons[0].age;
     return career.careerStartAge || null;
+  }
+
+  function importantClubs(career, legacy) {
+    var spells = career.clubs || [];
+    var scored = spells
+      .map(function (s) {
+        var club = NS.Providers.clubs.getById(s.clubId);
+        var band = club && NS.Engine.Rules ? NS.Engine.Rules.clubBand(club) : 'MID';
+        var rank = NS.Engine.Rules ? NS.Engine.Rules.bandRank(band) : 1;
+        return {
+          clubId: s.clubId,
+          score: (s.seasons || 0) * 3 + (s.titles || 0) * 5 + rank + (s.appearances || 0) / 40
+        };
+      })
+      .sort(function (a, b) {
+        return b.score - a.score;
+      });
+    var out = [];
+    var seen = {};
+    scored.forEach(function (s) {
+      if (!s.clubId || seen[s.clubId]) return;
+      seen[s.clubId] = 1;
+      out.push(s.clubId);
+    });
+    if (!out.length && legacy && legacy.timeline) {
+      legacy.timeline.forEach(function (t) {
+        if (t.clubId && !seen[t.clubId]) {
+          seen[t.clubId] = 1;
+          out.push(t.clubId);
+        }
+      });
+    }
+    return out.slice(0, 5);
   }
 
   function render(career, mount) {
@@ -22,6 +56,9 @@
     var totals = legacy.totals || {};
     var archCode = legacy.archetype || '';
     var dAge = debutAge(career, legacy);
+    var peakAge = totals.peakAge;
+    var years =
+      dAge != null && totals.retireAge != null ? Math.max(1, totals.retireAge - dAge) : totals.seasons || null;
     var card = C.el('article', 'mc-card');
     card.setAttribute('data-career-card', '1');
     card.setAttribute('data-export', 'poster');
@@ -36,15 +73,39 @@
       C.text(
         'div',
         'mc-card__meta',
-        [p.position, dAge != null && totals.retireAge ? dAge + ' → ' + totals.retireAge : ''].filter(Boolean).join(' · ')
+        [p.position, p.country, dAge != null && totals.retireAge ? dAge + ' → ' + totals.retireAge : '']
+          .filter(Boolean)
+          .join(' · ')
       )
     );
     card.appendChild(C.text('div', 'mc-card__arch', N.archetypeLabel(archCode)));
 
     var peak = C.el('div', 'mc-card__peak');
     peak.appendChild(C.text('div', 'mc-card__peak-n', totals.peakOverall || p.peakOverall || p.overall));
-    peak.appendChild(C.text('div', 'mc-card__peak-l', 'PEAK OVR'));
+    peak.appendChild(
+      C.text(
+        'div',
+        'mc-card__peak-l',
+        peakAge != null ? 'PEAK · ' + peakAge + ' AÑOS' : 'PEAK OVR'
+      )
+    );
     card.appendChild(peak);
+
+    if (years != null) {
+      card.appendChild(C.text('div', 'mc-card__years', years + ' AÑOS DE CARRERA'));
+    }
+
+    var clubs = importantClubs(career, legacy);
+    if (clubs.length) {
+      var clubsRow = C.el('div', 'mc-card__clubs');
+      clubsRow.appendChild(C.text('div', 'mc-card__section', 'CLUBES'));
+      var badges = C.el('div', 'mc-card__icons');
+      clubs.forEach(function (id) {
+        badges.appendChild(C.Badge(id, 'sm'));
+      });
+      clubsRow.appendChild(badges);
+      card.appendChild(clubsRow);
+    }
 
     var timeline = C.ClubTimeline(legacy.timeline || career.clubs, {
       size: 'md',
@@ -59,7 +120,7 @@
       var titlesRow = C.el('div', 'mc-card__titles');
       titlesRow.appendChild(C.text('div', 'mc-card__section', 'TÍTULOS'));
       var icons = C.el('div', 'mc-card__icons');
-      majors.slice(0, 5).forEach(function (t) {
+      majors.slice(0, 6).forEach(function (t) {
         icons.appendChild(C.Trophy(t.competitionId, 'sm'));
       });
       titlesRow.appendChild(icons);

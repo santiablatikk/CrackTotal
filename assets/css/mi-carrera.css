@@ -1299,6 +1299,50 @@
   font-weight: 800;
   color: var(--mc-muted) !important;
 }
+.mc-change-offer__meta {
+  grid-column: 2;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+  color: var(--mc-muted) !important;
+  opacity: 0.9;
+}
+.mc-change-offer__gain,
+.mc-change-offer__risk {
+  grid-column: 2;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  font-weight: 800;
+}
+.mc-change-offer__gain { color: var(--mc-accent-2) !important; }
+.mc-change-offer__risk { color: var(--mc-warn) !important; }
+.mc-change-offer .mc-badge { grid-row: span 5; }
+
+.mc-trophy-club {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 8px 0 4px;
+}
+.mc-trophy-club__n {
+  font-family: var(--mc-display);
+  font-size: clamp(1.1rem, 3vw, 1.6rem);
+  letter-spacing: 0.04em;
+}
+
+.mc-card__years {
+  letter-spacing: 0.16em;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--mc-muted) !important;
+  margin-bottom: 8px;
+}
+.mc-card__clubs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 8px 0;
+}
 
 .mc-vs {
   display: grid;

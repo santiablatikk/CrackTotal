@@ -16,6 +16,7 @@ const scripts = fs
 
 scripts.push('mi_carrera_balance_1000.js');
 scripts.push('mi_carrera_archetypes_1000.js');
+scripts.push('mi_carrera_variety_1000.js');
 
 let failed = 0;
 scripts.forEach(function (s) {

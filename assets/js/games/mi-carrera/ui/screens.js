@@ -321,11 +321,15 @@
       scene.classList.add('mc-scene--celebrate');
       if (!ev) return scene;
       var id = ev.competitionId;
-      scene.appendChild(C.text('div', 'mc-kicker mc-kicker--gold', 'CAMPEÓN'));
+      var clubId = ev.clubId || career.currentClubId;
+      var comp = NS.Providers.competitions.getById(id);
+      var shortName = comp ? (comp.shortName || comp.name || id) : id;
+      // Hierarchy: trophy → competition → season → club → context (no triple name repeat)
+      scene.appendChild(C.text('div', 'mc-kicker mc-kicker--gold', N.trophyTitle(id)));
       var hero = C.el('div', 'mc-trophy-hero');
       hero.appendChild(C.Trophy(id, 'xl'));
       scene.appendChild(hero);
-      scene.appendChild(C.text('div', 'mc-trophy-comp', N.competitionDisplayName(id)));
+      scene.appendChild(C.text('div', 'mc-trophy-comp', String(shortName).toUpperCase()));
       scene.appendChild(
         C.text(
           'div',
@@ -335,6 +339,14 @@
             .join(' · ')
         )
       );
+      if (clubId) {
+        var clubRow = C.el('div', 'mc-trophy-club');
+        clubRow.appendChild(C.Badge(clubId, 'md'));
+        clubRow.appendChild(C.text('span', 'mc-trophy-club__n', clubShort(clubId)));
+        scene.appendChild(clubRow);
+      }
+      var phrase = N.trophyPhrase(id, { first: !!ev.first, clubId: clubId });
+      if (phrase) scene.appendChild(C.text('p', 'mc-quote mc-quote--hero', phrase));
       scene.appendChild(C.PrimaryCTA('CONTINUAR', 'next-event'));
       return scene;
     },
@@ -414,6 +426,7 @@
       stayCol.appendChild(C.text('div', 'mc-market-col__h', 'QUEDARME'));
       stayCol.appendChild(C.Badge(career.currentClubId, 'xl'));
       stayCol.appendChild(C.text('div', 'mc-display', clubShort(career.currentClubId)));
+      stayCol.appendChild(C.text('div', 'mc-change-offer__meta', clubMeta(career.currentClubId)));
 
       var changeCol = C.el('div', 'mc-market-col mc-market-col--change');
       changeCol.appendChild(C.text('div', 'mc-market-col__h', 'CAMBIAR'));
@@ -429,6 +442,11 @@
               ((opt.gains || [])[0] || 'CONTINUIDAD').toUpperCase()
             )
           );
+          if (opt.expectedMinutes != null) {
+            stayCol.appendChild(
+              C.text('div', 'mc-change-offer__meta', 'MINUTOS · ~' + opt.expectedMinutes)
+            );
+          }
           stayCol.appendChild(stayCta);
         } else if (opt.clubId) {
           var offer = C.el('button', 'mc-change-offer');
@@ -441,9 +459,27 @@
             C.text(
               'span',
               'mc-change-offer__m',
-              [N.roleLabel(opt.role), opt.type === 'loan' ? 'PRÉSTAMO' : 'TRASPASO'].filter(Boolean).join(' · ')
+              [
+                opt.leagueName || clubMeta(opt.clubId),
+                N.roleLabel(opt.role),
+                opt.type === 'loan' ? 'PRÉSTAMO' : opt.kind === 'HOME' ? 'REGRESO' : 'TRASPASO'
+              ]
+                .filter(Boolean)
+                .join(' · ')
             )
           );
+          if (opt.expectedMinutes != null) {
+            offer.appendChild(
+              C.text('span', 'mc-change-offer__meta', 'MIN ~' + opt.expectedMinutes)
+            );
+          }
+          var gr = gainRisk(opt);
+          if (gr.gains[0]) {
+            offer.appendChild(C.text('span', 'mc-change-offer__gain', '⊕ ' + String(gr.gains[0]).toUpperCase()));
+          }
+          if (gr.risks[0]) {
+            offer.appendChild(C.text('span', 'mc-change-offer__risk', '⊖ ' + String(gr.risks[0]).toUpperCase()));
+          }
           changeCol.appendChild(offer);
         }
       });
@@ -472,11 +508,17 @@
       left.appendChild(C.Badge(career.currentClubId, 'xl'));
       left.appendChild(C.text('div', 'mc-vs__name', clubShort(career.currentClubId)));
       left.appendChild(C.text('div', 'mc-vs__tag', 'AHORA'));
-      var mid = C.text('div', 'mc-vs__mark', 'VS');
+      left.appendChild(C.text('div', 'mc-change-offer__meta', clubMeta(career.currentClubId)));
+      var mid = C.text('div', 'mc-vs__mark', '→');
       var right = C.el('div', 'mc-vs__side');
       right.appendChild(C.Badge(opt.clubId, 'xl'));
       right.appendChild(C.text('div', 'mc-vs__name', clubShort(opt.clubId)));
-      right.appendChild(C.text('div', 'mc-vs__tag', opt.type === 'loan' ? 'PRÉSTAMO' : 'DESTINO'));
+      right.appendChild(
+        C.text('div', 'mc-vs__tag', opt.type === 'loan' ? 'PRÉSTAMO' : opt.kind === 'HOME' ? 'CASA' : 'DESTINO')
+      );
+      right.appendChild(
+        C.text('div', 'mc-change-offer__meta', opt.leagueName || clubMeta(opt.clubId))
+      );
       vs.appendChild(left);
       vs.appendChild(mid);
       vs.appendChild(right);
@@ -490,6 +532,25 @@
         axes.appendChild(C.text('div', 'mc-vs-axes__m', 'MINUTOS ESPERADOS · ~' + opt.expectedMinutes));
       }
       if (opt.role) axes.appendChild(C.text('div', 'mc-vs-axes__m', 'ROL · ' + N.roleLabel(opt.role).toUpperCase()));
+      if (opt.kind) {
+        axes.appendChild(
+          C.text(
+            'div',
+            'mc-vs-axes__m',
+            'MOVIMIENTO · ' +
+              ({
+                EUROPE: 'EUROPA',
+                SOUTH_AMERICA: 'SUDAMÉRICA',
+                HOME: 'REGRESO A CASA',
+                STEP_UP: 'SALTO',
+                DECLINE: 'ESCALÓN ABAJO',
+                MINUTES: 'MINUTOS',
+                LATERAL: 'LATERAL',
+                LOAN: 'PRÉSTAMO'
+              }[opt.kind] || String(opt.kind))
+          )
+        );
+      }
       scene.appendChild(axes);
 
       var actions = C.el('div', 'mc-actions');

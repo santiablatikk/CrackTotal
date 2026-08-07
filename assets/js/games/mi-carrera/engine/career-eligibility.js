@@ -96,9 +96,17 @@
 
     var canTopDomestic = topDiv && !!TOP_DOMESTIC_LEAGUE[club.countryCode];
     var canCup = !!DOMESTIC_CUP[club.countryCode];
-    // Continental: only top division. Access by sporting band, not raw prestige alone.
-    var canContinentalTop = topDiv && (bandR >= 6 || (bandR >= 5 && (club.prestige || 0) >= 80));
-    var canContinentalSecondary = topDiv && bandR >= 4;
+    var prest = club.prestige || 0;
+    // Continental: top division only. EU CL stays elite; SA Libertadores needs a real field
+    // (CONMEBOL regularly fields STRONG+ clubs, not only continental giants).
+    var canContinentalTop =
+      topDiv &&
+      (bandR >= 6 ||
+        (bandR >= 5 && prest >= 80) ||
+        (club.continent === 'SA' && bandR >= 4 && prest >= 65));
+    // Sudamericana / Europa League: mid+ top-flight clubs
+    var canContinentalSecondary =
+      topDiv && (bandR >= 4 || (club.continent === 'SA' && bandR >= 3 && prest >= 58));
     var canContinentalTertiary = topDiv && club.continent === 'EU' && bandR >= 3 && bandR <= 5;
 
     return {

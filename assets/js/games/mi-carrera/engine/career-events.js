@@ -105,9 +105,10 @@
 
     if (career.comeback.active && !career.comeback.achieved) {
       var from = career.comeback.fromOverall || p.overall;
+      // Plausible rebound after crisis: strong season + minutes, not a miracle spike
       var rebound =
-        (p.overall >= from + 2 && rating >= 7.15 && minutes >= 1800) ||
-        (rating >= 7.35 && minutes >= 2200 && !bad && career.careerArc.indexOf('crisis') !== -1);
+        (p.overall >= from + 1 && rating >= 7.05 && minutes >= 1600 && !bad) ||
+        (rating >= 7.25 && minutes >= 2000 && !bad && career.careerArc.indexOf('crisis') !== -1);
       if (rebound) {
         career.comeback.achieved = true;
         career.comeback.active = false;

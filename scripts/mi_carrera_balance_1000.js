@@ -225,16 +225,24 @@ assert(report.comebackCareers > 5, 'comebacks occur (' + report.comebackCareers 
 assert(report.ballonDorAwards < 50, 'Ballon not flooded (' + report.ballonDorAwards + ')');
 let ballonPossible = report.ballonDorAwards;
 if (!ballonPossible) {
-  for (let i = 0; i < 2500 && !ballonPossible; i++) {
+  // Probe with diversified seeds (same family as variety matrix) before declaring impossible
+  const probes = [];
+  for (let i = 0; i < 1200; i++) probes.push(600000 + i * 7919);
+  for (let i = 0; i < 800; i++) probes.push(777000 + i * 17);
+  for (let i = 0; i < probes.length && !ballonPossible; i++) {
     const c = E.simulateFullCareer({
-      seed: 777000 + i * 17,
+      seed: probes[i],
       name: 'BallonProbe' + i,
-      country: ['AR', 'BR', 'ES', 'GB', 'FR', 'IT'][i % 6],
-      age: 17,
-      position: 'ST',
+      country: ['AR', 'BR', 'ES', 'GB', 'FR', 'IT', 'UY', 'DE'][i % 8],
+      age: 16 + (i % 3),
+      position: i % 7 === 0 ? 'ST' : ['ST', 'AM', 'CM', 'LW', 'RW'][i % 5],
       profile: 'finisher'
     });
-    if ((c.awards || []).some(function (a) { return a.awardId === 'ballon_dor'; })) ballonPossible = 1;
+    if ((c.awards || []).some(function (a) {
+      return a.awardId === 'ballon_dor';
+    })) {
+      ballonPossible = 1;
+    }
   }
 }
 assert(ballonPossible >= 1, 'Ballon rare but possible');

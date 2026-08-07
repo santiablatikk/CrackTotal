@@ -49,6 +49,7 @@
     var seenTitle = {};
     var titlesBefore = Math.max(0, (career.titles || []).length - titles.length);
     var firstTitle = titlesBefore === 0 && titles.length > 0;
+    var seenMoment = {};
 
     titles.forEach(function (t, idx) {
       if (seenTitle[t.competitionId]) return;
@@ -74,7 +75,7 @@
 
     awards.forEach(function (a) {
       queue.push({
-        kind: a.awardId === 'ballon_dor' ? 'AWARD' : 'AWARD',
+        kind: 'AWARD',
         awardId: a.awardId,
         seasonYear: a.seasonYear || season.seasonYear
       });
@@ -85,13 +86,24 @@
         return m.seasonIndex === season.seasonIndex;
       })
       .forEach(function (m) {
+        if (seenMoment[m.type]) return;
         if (
           m.type === 'debut_national_team' ||
           m.type === 'comeback' ||
           m.type === 'major_injury' ||
+          m.type === 'injury' ||
           m.type === 'world_cup' ||
-          m.type === 'continental_title'
+          m.type === 'continental_title' ||
+          m.type === 'first_goal' ||
+          m.type === 'first_title' ||
+          m.type === 'champions' ||
+          m.type === 'libertadores'
         ) {
+          // Trophy scenes already cover CL / Libertadores assets
+          if (m.type === 'champions' || m.type === 'libertadores' || m.type === 'first_title') {
+            if (titles.length) return;
+          }
+          seenMoment[m.type] = 1;
           queue.push({
             kind: 'MOMENT',
             type: m.type,
@@ -102,12 +114,14 @@
         }
       });
 
-    // Ballon first among awards
+    // Ballon first among awards; trophies before moments
     queue.sort(function (a, b) {
       if (a.awardId === 'ballon_dor') return -1;
       if (b.awardId === 'ballon_dor') return 1;
       if (a.kind === 'TROPHY' && b.kind !== 'TROPHY') return -1;
       if (b.kind === 'TROPHY' && a.kind !== 'TROPHY') return 1;
+      if (a.kind === 'AWARD' && b.kind === 'MOMENT') return -1;
+      if (b.kind === 'AWARD' && a.kind === 'MOMENT') return 1;
       return 0;
     });
 
