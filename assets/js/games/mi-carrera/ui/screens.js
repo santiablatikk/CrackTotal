@@ -79,16 +79,15 @@
     INTRO: function (session) {
       var C = UI.Components;
       var scene = C.Scene('INTRO');
-      scene.appendChild(C.el('div', 'mc-atmosphere'));
       var lay = C.el('div', 'mc-intro');
       var copy = C.el('div', 'mc-intro__copy');
       copy.appendChild(C.text('div', 'mc-kicker', 'MI CARRERA'));
-      copy.appendChild(C.CareerHeadline('TU CARRERA.\nTU HISTORIA.'));
-      copy.appendChild(C.text('p', 'mc-sub mc-sub--tight', 'Esta es mi historia.'));
+      copy.appendChild(C.CareerHeadline('TU HISTORIA\nEMPIEZA AQUÍ'));
+      copy.appendChild(C.text('p', 'mc-sub mc-sub--tight', 'Modo carrera. Tu legado.'));
       var actions = C.el('div', 'mc-actions');
       actions.appendChild(C.PrimaryCTA('EMPEZAR CARRERA', 'start'));
       if (NS.Persistence.hasSave()) {
-        actions.appendChild(C.SecondaryCTA('CONTINUAR', 'continue'));
+        actions.appendChild(C.SecondaryCTA('CONTINUAR PARTIDA', 'continue'));
       }
       copy.appendChild(actions);
       var art = C.el('div', 'mc-intro__art');
@@ -187,7 +186,8 @@
       var N = UI.Narrative;
       var scene = C.Scene('FIRST_CLUB');
       scene.appendChild(C.text('div', 'mc-kicker', 'PRIMER CLUB'));
-      scene.appendChild(C.text('div', 'mc-display', 'TRES CAMINOS.'));
+      scene.appendChild(C.CareerHeadline('ELEGÍ TU\nCAMINO'));
+      scene.appendChild(C.text('p', 'mc-sub', 'Tres puertas. Una historia.'));
       var row = C.el('div', 'mc-paths');
       var order = { minutes: 0, balance: 1, prestige: 2 };
       var opts = (session.firstClubs || []).slice().sort(function (a, b) {
@@ -197,12 +197,21 @@
         var meta = N.pathMeta(opt.path);
         var club = NS.Providers.clubs.getById(opt.clubId);
         var panel = C.el('article', 'mc-path mc-path--' + meta.tone);
-        panel.appendChild(C.Badge(opt.clubId, 'lg'));
+        panel.appendChild(C.text('div', 'mc-path__tag', meta.title));
+        panel.appendChild(C.Badge(opt.clubId, 'xl'));
         var body = C.el('div', 'mc-path__body');
-        body.appendChild(C.text('div', 'mc-path__tag', meta.title));
         body.appendChild(C.text('div', 'mc-path__promise', meta.promise));
-        body.appendChild(C.text('h3', 'mc-path__name', club ? club.name : opt.clubId));
+        body.appendChild(C.text('h3', 'mc-path__name', club ? club.shortName || club.name : opt.clubId));
         body.appendChild(C.text('div', 'mc-path__meta', clubMeta(opt.clubId)));
+        body.appendChild(
+          C.text(
+            'div',
+            'mc-path__role',
+            [N.roleLabel(opt.role), opt.expectedMinutes != null ? '~' + opt.expectedMinutes + ' MIN' : '']
+              .filter(Boolean)
+              .join(' · ')
+          )
+        );
         var trade = C.el('div', 'mc-path__axes');
         trade.appendChild(
           C.text('div', 'mc-path__axis is-gain', 'GANÁS · ' + ((opt.gains || [])[0] || meta.gainLabel || '').toUpperCase())
@@ -211,7 +220,7 @@
           C.text('div', 'mc-path__axis is-risk', 'ARRIESGÁS · ' + ((opt.risks || [])[0] || meta.riskLabel || '').toUpperCase())
         );
         body.appendChild(trade);
-        var cta = C.PrimaryCTA('ELEGIR', 'pick-first-club');
+        var cta = C.PrimaryCTA('ELEGIR ESTE CAMINO', 'pick-first-club');
         cta.setAttribute('data-club', opt.clubId);
         body.appendChild(cta);
         panel.appendChild(body);
@@ -227,18 +236,20 @@
       var career = session.career;
       var scene = C.Scene('DEBUT');
       var lay = C.el('div', 'mc-debut');
-      lay.appendChild(C.Badge(career.currentClubId, 'xl'));
       var copy = C.el('div', 'mc-debut__copy');
       copy.appendChild(C.text('div', 'mc-kicker', 'DEBUT'));
       copy.appendChild(C.text('div', 'mc-debut__age', String(career.player.age)));
-      copy.appendChild(C.text('div', 'mc-debut__chapter', N.ageChapterTitle(career.player.age)));
-      copy.appendChild(C.text('h2', 'mc-display', clubShort(career.currentClubId)));
-      copy.appendChild(C.text('div', 'mc-path__meta', clubMeta(career.currentClubId)));
-      copy.appendChild(C.text('div', 'mc-role', N.roleLabel(career.role)));
-      copy.appendChild(C.CareerHeadline('ACÁ EMPIEZA TODO.'));
+      copy.appendChild(C.CareerHeadline('TU HISTORIA\nCOMIENZA'));
+      copy.appendChild(C.text('div', 'mc-debut__chapter', 'PRIMER CAPÍTULO'));
       lay.appendChild(copy);
+      var crest = C.el('div', 'mc-debut__crest');
+      crest.appendChild(C.Badge(career.currentClubId, 'xl'));
+      crest.appendChild(C.text('h2', 'mc-display', clubShort(career.currentClubId)));
+      crest.appendChild(C.text('div', 'mc-path__meta', clubMeta(career.currentClubId)));
+      crest.appendChild(C.text('div', 'mc-role', N.roleLabel(career.role)));
+      lay.appendChild(crest);
       scene.appendChild(lay);
-      scene.appendChild(C.PrimaryCTA('CONTINUAR', 'to-preseason'));
+      scene.appendChild(C.PrimaryCTA('EMPEZAR TEMPORADA', 'to-preseason'));
       return scene;
     },
 
@@ -308,7 +319,7 @@
         stats.appendChild(C.Stat('A', season.assists));
       }
       scene.appendChild(stats);
-      scene.appendChild(C.PrimaryCTA('CONTINUAR', 'after-recap'));
+      scene.appendChild(C.PrimaryCTA('SEGUIR', 'after-recap'));
       return scene;
     },
 
@@ -324,7 +335,6 @@
       var clubId = ev.clubId || career.currentClubId;
       var comp = NS.Providers.competitions.getById(id);
       var shortName = comp ? (comp.shortName || comp.name || id) : id;
-      // Hierarchy: trophy → competition → season → club → context (no triple name repeat)
       scene.appendChild(C.text('div', 'mc-kicker mc-kicker--gold', N.trophyTitle(id)));
       var hero = C.el('div', 'mc-trophy-hero');
       hero.appendChild(C.Trophy(id, 'xl'));
@@ -347,7 +357,7 @@
       }
       var phrase = N.trophyPhrase(id, { first: !!ev.first, clubId: clubId });
       if (phrase) scene.appendChild(C.text('p', 'mc-quote mc-quote--hero', phrase));
-      scene.appendChild(C.PrimaryCTA('CONTINUAR', 'next-event'));
+      scene.appendChild(C.PrimaryCTA('SEGUIR', 'next-event'));
       return scene;
     },
 
@@ -366,7 +376,7 @@
         scene.appendChild(C.text('div', 'mc-display', session.career.player.name));
       }
       scene.appendChild(C.text('div', 'mc-year', String(ev.seasonYear || '')));
-      scene.appendChild(C.PrimaryCTA('CONTINUAR', 'next-event'));
+      scene.appendChild(C.PrimaryCTA('SEGUIR', 'next-event'));
       return scene;
     },
 
@@ -377,6 +387,7 @@
       var scene = C.Scene('MOMENT');
       if (!ev) return scene;
       scene.appendChild(C.el('div', 'mc-moment-mark'));
+      scene.appendChild(C.text('div', 'mc-kicker', 'MOMENTO'));
       scene.appendChild(C.CareerHeadline(N.momentLine(ev.type)));
       if (ev.payload && ev.payload.to) scene.appendChild(C.Badge(ev.payload.to, 'xl'));
       else if (ev.payload && ev.payload.clubId) scene.appendChild(C.Badge(ev.payload.clubId, 'xl'));
@@ -388,7 +399,7 @@
           [ev.age != null ? ev.age + ' AÑOS' : '', ev.seasonYear || ''].filter(Boolean).join(' · ')
         )
       );
-      scene.appendChild(C.PrimaryCTA('CONTINUAR', 'next-event'));
+      scene.appendChild(C.PrimaryCTA('SEGUIR', 'next-event'));
       return scene;
     },
 
@@ -407,7 +418,7 @@
       scene.appendChild(wrap);
       scene.appendChild(C.text('div', 'mc-age-chapter', N.ageChapterTitle(after)));
       scene.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.ageUpLine(before, after, session.career)));
-      scene.appendChild(C.PrimaryCTA('CONTINUAR', 'to-market'));
+      scene.appendChild(C.PrimaryCTA('AL MERCADO', 'to-market'));
       return scene;
     },
 

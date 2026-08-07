@@ -254,13 +254,15 @@
   function Scene(kind) {
     var scene = el('section', 'mc-scene mc-scene--' + String(kind || 'base').toLowerCase());
     scene.setAttribute('data-scene', kind);
+    scene.appendChild(el('div', 'mc-atmosphere'));
+    scene.appendChild(el('div', 'mc-vignette'));
     return scene;
   }
 
   function PrimaryCTA(label, action) {
     var btn = el('button', 'mc-cta mc-cta--primary');
     btn.type = 'button';
-    btn.textContent = label;
+    btn.appendChild(text('span', 'mc-cta__label', String(label || '').trim()));
     if (action) btn.setAttribute('data-action', action);
     return btn;
   }
@@ -268,7 +270,7 @@
   function SecondaryCTA(label, action) {
     var btn = el('button', 'mc-cta mc-cta--secondary');
     btn.type = 'button';
-    btn.textContent = label;
+    btn.appendChild(text('span', 'mc-cta__label', label));
     if (action) btn.setAttribute('data-action', action);
     return btn;
   }
