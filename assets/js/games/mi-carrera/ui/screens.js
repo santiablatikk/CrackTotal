@@ -92,9 +92,12 @@
       copy.appendChild(C.CareerHeadline('TU HISTORIA\nEMPIEZA AQUÍ'));
       copy.appendChild(C.text('p', 'mc-sub mc-sub--tight', 'Modo carrera. Tu legado.'));
       var actions = C.el('div', 'mc-actions');
-      actions.appendChild(C.PrimaryCTA('EMPEZAR MI HISTORIA', 'start'));
-      if (NS.Persistence.hasSave()) {
-        actions.appendChild(C.SecondaryCTA('CONTINUAR PARTIDA', 'continue'));
+      var hasSave = NS.Persistence.hasSave();
+      if (hasSave) {
+        actions.appendChild(C.PrimaryCTA('CONTINUAR CARRERA', 'continue'));
+        actions.appendChild(C.SecondaryCTA('NUEVA CARRERA', 'ask-new-career'));
+      } else {
+        actions.appendChild(C.PrimaryCTA('EMPEZAR MI HISTORIA', 'start'));
       }
       copy.appendChild(actions);
       var art = C.el('div', 'mc-intro__art');
@@ -273,23 +276,14 @@
       var N = UI.Narrative;
       var career = session.career;
       var scene = C.Scene('PRESEASON');
-      var lay = C.el('div', 'mc-preseason');
-      var board = C.el('div', 'mc-season-board');
-      board.appendChild(C.text('div', 'mc-kicker', 'ESTA TEMPORADA'));
-      board.appendChild(C.text('div', 'mc-season-board__age', String(career.player.age)));
-      board.appendChild(C.text('div', 'mc-season-board__age-u', 'AÑOS'));
-      board.appendChild(C.text('div', 'mc-season-board__ovr', String(career.player.overall)));
-      board.appendChild(C.text('div', 'mc-season-board__ovr-u', 'OVR'));
-      board.appendChild(C.text('div', 'mc-role mc-role--lg', N.roleLabel(career.role).toUpperCase()));
-      board.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.preseasonLine(career)));
-      lay.appendChild(board);
-      var crest = C.el('div', 'mc-preseason__crest');
-      crest.appendChild(C.Badge(career.currentClubId, 'xl'));
-      crest.appendChild(C.text('div', 'mc-display', clubShort(career.currentClubId)));
-      crest.appendChild(C.text('div', 'mc-path__meta', clubMeta(career.currentClubId)));
-      lay.appendChild(crest);
-      scene.appendChild(lay);
-      scene.appendChild(C.PrimaryCTA('JUGAR TEMPORADA', 'to-season'));
+      var year = career.seasonYear;
+      scene.appendChild(C.text('div', 'mc-kicker', 'TEMPORADA ' + year + '/' + String(year + 1).slice(-2)));
+      scene.appendChild(C.Badge(career.currentClubId, 'xl'));
+      scene.appendChild(C.text('div', 'mc-display', clubShort(career.currentClubId)));
+      scene.appendChild(C.text('div', 'mc-ovr-solo', String(career.player.overall)));
+      scene.appendChild(C.text('div', 'mc-ovr-solo__u', 'OVR'));
+      scene.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.preseasonLine(career) || 'ES HORA.'));
+      scene.appendChild(C.PrimaryCTA('JUGAR LA TEMPORADA', 'play-season'));
       return scene;
     },
 
@@ -298,32 +292,13 @@
       var N = UI.Narrative;
       var career = session.career;
       var scene = C.Scene('SEASON');
-      var lay = C.el('div', 'mc-season-play');
-      var left = C.el('div', 'mc-season-play__main');
-      left.appendChild(C.text('div', 'mc-kicker', 'ANTES DEL PARTIDO'));
-      left.appendChild(C.text('div', 'mc-ovr-solo', String(career.player.overall)));
-      left.appendChild(C.text('div', 'mc-ovr-solo__u', 'OVR'));
-      left.appendChild(
-        C.text(
-          'div',
-          'mc-season-line__t',
-          career.player.age + ' AÑOS · ' + N.roleLabel(career.role).toUpperCase()
-        )
-      );
-      var lastSeason = (career.seasons || [])[(career.seasons || []).length - 1];
-      if (lastSeason) {
-        var feelPrev = N.progressionFeel(lastSeason, career);
-        if (feelPrev) {
-          left.appendChild(C.text('div', 'mc-progress-feel mc-progress-feel--' + feelPrev, N.progressionLine(feelPrev)));
-        }
-      }
-      left.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.seasonStakeLine(career)));
-      lay.appendChild(left);
-      var right = C.el('div', 'mc-season-play__crest');
-      right.appendChild(C.Badge(career.currentClubId, 'xl'));
-      right.appendChild(C.text('div', 'mc-display', clubShort(career.currentClubId)));
-      lay.appendChild(right);
-      scene.appendChild(lay);
+      var year = career.seasonYear;
+      scene.appendChild(C.text('div', 'mc-kicker', 'TEMPORADA ' + year + '/' + String(year + 1).slice(-2)));
+      scene.appendChild(C.Badge(career.currentClubId, 'xl'));
+      scene.appendChild(C.text('div', 'mc-display', clubShort(career.currentClubId)));
+      scene.appendChild(C.text('div', 'mc-ovr-solo', String(career.player.overall)));
+      scene.appendChild(C.text('div', 'mc-ovr-solo__u', 'OVR'));
+      scene.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.seasonStakeLine(career) || 'ES HORA.'));
       scene.appendChild(C.PrimaryCTA('JUGAR LA TEMPORADA', 'play-season'));
       return scene;
     },
@@ -338,27 +313,10 @@
         scene.appendChild(C.text('p', 'mc-sub', 'Sin temporada.'));
         return scene;
       }
-      var beat = season.beat;
       var feel = N.progressionFeel(season, career);
-      scene.appendChild(C.text('div', 'mc-kicker', 'ASÍ FUE TU AÑO'));
-      if (beat) {
-        scene.appendChild(C.text('div', 'mc-season-beat', N.seasonBeatLine(beat)));
-      }
-      scene.appendChild(
-        C.text(
-          'div',
-          'mc-year',
-          [String(season.seasonYear), season.age + ' AÑOS', clubShort(season.clubId)].filter(Boolean).join(' · ')
-        )
-      );
-      var crest = C.el('div', 'mc-recap-club');
-      crest.appendChild(C.Badge(season.clubId, 'lg'));
-      scene.appendChild(crest);
-      scene.appendChild(C.CareerHeadline(N.recapHeadline(season, career)));
-      if (feel) {
-        scene.appendChild(C.text('div', 'mc-progress-feel mc-progress-feel--' + feel, N.progressionLine(feel)));
-      }
-      scene.appendChild(C.OVRChange(season.overallBefore, season.overallAfter));
+      var year = season.seasonYear;
+      scene.appendChild(C.text('div', 'mc-kicker', 'TEMPORADA ' + year + '/' + String(year + 1).slice(-2)));
+      scene.appendChild(C.text('div', 'mc-display', clubShort(season.clubId || career.currentClubId)));
       var stats = C.el('div', 'mc-recap-stats mc-recap-stats--editorial');
       stats.appendChild(C.Stat('PJ', season.matches));
       if (NS.Engine.Rules.isGoalkeeper(career.player.position)) {
@@ -368,7 +326,16 @@
         stats.appendChild(C.Stat('A', season.assists));
       }
       scene.appendChild(stats);
-      scene.appendChild(C.PrimaryCTA('VER CÓMO SIGUE', 'after-recap'));
+      scene.appendChild(C.OVRChange(season.overallBefore, season.overallAfter));
+      if (feel) {
+        scene.appendChild(
+          C.text('div', 'mc-progress-feel mc-progress-feel--' + feel + ' mc-progress-feel--hero', N.progressionLine(feel))
+        );
+      }
+      if (season.beat) {
+        scene.appendChild(C.text('div', 'mc-season-beat', N.seasonBeatLine(season.beat)));
+      }
+      scene.appendChild(C.PrimaryCTA('VER QUÉ SIGUE', 'after-recap'));
       return scene;
     },
 
@@ -482,74 +449,129 @@
       var N = UI.Narrative;
       var career = session.career;
       var market = session.pending && session.pending.market;
+      var options = (market && market.options) || [];
       var scene = C.Scene('MARKET');
       scene.appendChild(C.text('div', 'mc-kicker', 'MERCADO'));
       scene.appendChild(C.CareerHeadline('¿ME QUEDO\nO DOY EL SALTO?'));
       scene.appendChild(C.text('p', 'mc-quote', N.marketSituationLine(market && market.situation)));
 
-      var dual = C.el('div', 'mc-market-dual');
+      var stayOpt = null;
+      var stayIdx = -1;
+      var moves = [];
+      options.forEach(function (opt, idx) {
+        if (opt.type === 'stay' || opt.type === 'loan_return') {
+          stayOpt = opt;
+          stayIdx = idx;
+        } else if (opt.clubId) {
+          moves.push({ opt: opt, idx: idx });
+        }
+      });
+
+      var dual = C.el('div', 'mc-market-dual mc-market-dual--simple');
       var stayCol = C.el('div', 'mc-market-col mc-market-col--stay');
       stayCol.appendChild(C.text('div', 'mc-market-col__h', 'QUEDARME'));
       stayCol.appendChild(C.Badge(career.currentClubId, 'xl'));
       stayCol.appendChild(C.text('div', 'mc-display', clubShort(career.currentClubId)));
       stayCol.appendChild(C.text('div', 'mc-change-offer__meta', clubMeta(career.currentClubId)));
+      if (stayOpt) {
+        stayCol.appendChild(
+          C.text('div', 'mc-path__axis is-gain', ((stayOpt.gains || [])[0] || 'CONTINUIDAD').toUpperCase())
+        );
+        var stayCta = C.PrimaryCTA(stayOpt.type === 'loan_return' ? 'VOLVER' : 'QUEDARME', 'pick-offer');
+        stayCta.setAttribute('data-index', String(stayIdx));
+        stayCol.appendChild(stayCta);
+      }
 
       var changeCol = C.el('div', 'mc-market-col mc-market-col--change');
-      changeCol.appendChild(C.text('div', 'mc-market-col__h', 'CAMBIAR'));
-
-      ((market && market.options) || []).forEach(function (opt, idx) {
-        if (opt.type === 'stay' || opt.type === 'loan_return') {
-          var stayCta = C.PrimaryCTA(opt.type === 'loan_return' ? 'VOLVER' : 'QUEDARME', 'pick-offer');
-          stayCta.setAttribute('data-index', String(idx));
-          stayCol.appendChild(
-            C.text(
-              'div',
-              'mc-path__axis is-gain',
-              ((opt.gains || [])[0] || 'CONTINUIDAD').toUpperCase()
-            )
-          );
-          if (opt.expectedMinutes != null) {
-            stayCol.appendChild(
-              C.text('div', 'mc-change-offer__meta', 'CARGA · ' + expectedLoadLabel(opt.expectedMinutes))
-            );
-          }
-          stayCol.appendChild(stayCta);
-        } else if (opt.clubId) {
-          var offer = C.el('button', 'mc-change-offer');
+      changeCol.appendChild(C.text('div', 'mc-market-col__h', moves.length ? 'CAMBIAR' : 'FICHAJE'));
+      if (!moves.length) {
+        changeCol.appendChild(C.text('div', 'mc-market-empty', 'NINGUNO'));
+        changeCol.appendChild(C.text('p', 'mc-quote', 'EL PROYECTO CONTINÚA.'));
+      } else {
+        moves.forEach(function (m) {
+          var opt = m.opt;
+          var offer = C.el('button', 'mc-change-offer mc-change-offer--simple');
           offer.type = 'button';
           offer.setAttribute('data-action', 'pick-offer');
-          offer.setAttribute('data-index', String(idx));
+          offer.setAttribute('data-index', String(m.idx));
           offer.appendChild(C.Badge(opt.clubId, 'lg'));
-          offer.appendChild(
-            C.text('span', 'mc-move-kind', N.marketMoveLabel(opt.kind, opt.type))
-          );
           offer.appendChild(C.text('span', 'mc-change-offer__n', clubShort(opt.clubId)));
           offer.appendChild(
             C.text(
               'span',
               'mc-change-offer__m',
-              [opt.leagueName || clubMeta(opt.clubId), N.roleLabel(opt.role)].filter(Boolean).join(' · ')
+              [opt.leagueName || clubMeta(opt.clubId), opt.continent === 'EU' ? 'EUROPA' : opt.continent === 'SA' ? 'SUDAMÉRICA' : '']
+                .filter(Boolean)
+                .join(' · ')
             )
           );
-          if (opt.expectedMinutes != null) {
-            offer.appendChild(
-              C.text('span', 'mc-change-offer__meta', expectedLoadLabel(opt.expectedMinutes))
-            );
-          }
+          offer.appendChild(
+            C.text('span', 'mc-change-offer__why', (N.roleLabel(opt.role) || 'ROL').toUpperCase())
+          );
           var gr = gainRisk(opt);
           if (gr.gains[0]) {
-            offer.appendChild(C.text('span', 'mc-change-offer__gain', '⊕ ' + String(gr.gains[0]).toUpperCase()));
+            offer.appendChild(C.text('span', 'mc-change-offer__gain', '+ ' + String(gr.gains[0]).toUpperCase()));
           }
-          if (gr.risks[0]) {
-            offer.appendChild(C.text('span', 'mc-change-offer__risk', '⊖ ' + String(gr.risks[0]).toUpperCase()));
+          if (gr.gains[1]) {
+            offer.appendChild(C.text('span', 'mc-change-offer__gain', '+ ' + String(gr.gains[1]).toUpperCase()));
           }
+          offer.appendChild(
+            C.text(
+              'span',
+              'mc-change-offer__cta-label',
+              opt.type === 'loan' ? 'IRME A PRÉSTAMO' : 'DAR EL SALTO'
+            )
+          );
           changeCol.appendChild(offer);
-        }
-      });
+        });
+      }
 
       dual.appendChild(stayCol);
       dual.appendChild(changeCol);
       scene.appendChild(dual);
+      return scene;
+    },
+
+    HISTORY: function (session) {
+      var C = UI.Components;
+      var N = UI.Narrative;
+      var career = session.career;
+      var scene = C.Scene('HISTORY');
+      if (!career) {
+        scene.appendChild(C.text('p', 'mc-sub', 'Sin carrera.'));
+        scene.appendChild(C.SecondaryCTA('VOLVER', 'close-history'));
+        return scene;
+      }
+      var t = NS.Engine.History.liveTotals(career);
+      scene.appendChild(C.text('div', 'mc-kicker', 'MI HISTORIA'));
+      scene.appendChild(C.CareerHeadline((career.player.name || 'JUGADOR').toUpperCase()));
+      var grid = C.el('div', 'mc-history-grid');
+      [
+        ['PJ', t.appearances],
+        ['GOLES', t.goals],
+        ['ASISTENCIAS', t.assists],
+        ['CLUBES', t.clubs],
+        ['TÍTULOS', t.titles],
+        ['PEAK OVR', t.peakOverall],
+        ['EDAD PEAK', t.peakAge || '—'],
+        ['DEBUT', t.debutAge || '—'],
+        ['TEMPORADAS', t.seasons]
+      ].forEach(function (row) {
+        var r = C.el('div', 'mc-history-row');
+        r.appendChild(C.text('span', 'mc-history-row__k', row[0]));
+        r.appendChild(C.text('span', 'mc-history-row__v', String(row[1])));
+        grid.appendChild(r);
+      });
+      scene.appendChild(grid);
+      scene.appendChild(C.text('div', 'mc-kicker', 'CLUBES'));
+      scene.appendChild(
+        C.ClubTimeline(career.clubs, {
+          peakAge: t.peakAge,
+          debutAge: t.debutAge,
+          retireAge: t.retireAge || career.player.age
+        })
+      );
+      scene.appendChild(C.PrimaryCTA('SEGUIR JUGANDO', 'close-history'));
       return scene;
     },
 
@@ -702,7 +724,7 @@
       UI.CareerCard.render(session.career, mount);
       scene.appendChild(mount);
       var actions = C.el('div', 'mc-actions');
-      actions.appendChild(C.PrimaryCTA('OTRA CARRERA', 'new-career'));
+      actions.appendChild(C.PrimaryCTA('OTRA CARRERA', 'ask-new-career'));
       actions.appendChild(C.SecondaryCTA('INICIO', 'to-intro'));
       scene.appendChild(actions);
       return scene;

@@ -22,10 +22,24 @@
     'MARKET',
     'COMPARE',
     'TRANSFER',
+    'HISTORY',
     'RETIREMENT',
     'LEGACY',
     'CAREER_CARD'
   ];
+
+  var HUD_HIDE = {
+    INTRO: 1,
+    CREATE: 1,
+    FIRST_CLUB: 1,
+    TROPHY: 1,
+    AWARD: 1,
+    MOMENT: 1,
+    CAREER_CARD: 1,
+    LEGACY: 1,
+    RETIREMENT: 1,
+    HISTORY: 1
+  };
 
   function freshSession() {
     return {
@@ -38,7 +52,9 @@
       eventQueue: [],
       selectedOffer: null,
       compareOffer: null,
-      compareIndex: null
+      compareIndex: null,
+      overlay: null,
+      returnScene: null
     };
   }
 
@@ -99,7 +115,6 @@
           m.type === 'champions' ||
           m.type === 'libertadores'
         ) {
-          // Trophy scenes already cover CL / Libertadores assets
           if (m.type === 'champions' || m.type === 'libertadores' || m.type === 'first_title') {
             if (titles.length) return;
           }
@@ -114,7 +129,6 @@
         }
       });
 
-    // Ballon first among awards; trophies before moments
     queue.sort(function (a, b) {
       if (a.awardId === 'ballon_dor') return -1;
       if (b.awardId === 'ballon_dor') return 1;
@@ -131,6 +145,40 @@
   function createController(rootEl) {
     var session = freshSession();
     var stage = rootEl.querySelector('[data-mc-stage]') || rootEl;
+    var chrome = rootEl.querySelector('[data-mc-chrome]');
+    var hudMount = rootEl.querySelector('[data-mc-hud]');
+    var modalMount = rootEl.querySelector('[data-mc-modal]');
+
+    if (!chrome) {
+      chrome = document.createElement('div');
+      chrome.className = 'mc-chrome';
+      chrome.setAttribute('data-mc-chrome', '');
+      chrome.hidden = true;
+      hudMount = document.createElement('div');
+      hudMount.setAttribute('data-mc-hud', '');
+      var menuBtn = document.createElement('button');
+      menuBtn.type = 'button';
+      menuBtn.className = 'mc-chrome__menu';
+      menuBtn.setAttribute('data-action', 'open-menu');
+      menuBtn.setAttribute('aria-label', 'Menú');
+      menuBtn.textContent = '☰';
+      chrome.appendChild(hudMount);
+      chrome.appendChild(menuBtn);
+      if (typeof rootEl.insertBefore === 'function' && stage && stage.parentNode === rootEl) {
+        rootEl.insertBefore(chrome, stage);
+      } else {
+        rootEl.appendChild(chrome);
+      }
+    } else {
+      hudMount = chrome.querySelector('[data-mc-hud]') || hudMount;
+    }
+    if (!modalMount) {
+      modalMount = document.createElement('div');
+      modalMount.className = 'mc-modal-root';
+      modalMount.setAttribute('data-mc-modal', '');
+      modalMount.hidden = true;
+      rootEl.appendChild(modalMount);
+    }
 
     function persist() {
       NS.Persistence.save(session);
@@ -138,8 +186,65 @@
 
     function setScene(name) {
       session.scene = name;
+      session.overlay = null;
       render();
       persist();
+    }
+
+    function updateChrome() {
+      var career = session.career;
+      var hide =
+        !career ||
+        !career.currentClubId ||
+        career.status === 'retired' ||
+        HUD_HIDE[session.scene] ||
+        session.overlay === 'menu';
+      chrome.hidden = !!hide;
+      if (rootEl.classList) {
+        if (typeof rootEl.classList.toggle === 'function') {
+          rootEl.classList.toggle('mc-has-hud', !hide);
+        } else if (!hide && rootEl.classList.add) {
+          rootEl.classList.add('mc-has-hud');
+        }
+      }
+      if (hudMount) {
+        hudMount.innerHTML = '';
+        if (!hide) hudMount.appendChild(UI.Components.CareerHUD(career));
+      }
+    }
+
+    function renderOverlay() {
+      modalMount.innerHTML = '';
+      modalMount.hidden = !session.overlay;
+      if (!session.overlay) return;
+      var C = UI.Components;
+      if (session.overlay === 'menu') {
+        var menu = C.el('div', 'mc-menu-panel');
+        menu.appendChild(C.text('div', 'mc-kicker', 'MI CARRERA'));
+        menu.appendChild(C.PrimaryCTA('CONTINUAR', 'close-menu'));
+        menu.appendChild(C.SecondaryCTA('MI HISTORIA', 'open-history'));
+        menu.appendChild(C.SecondaryCTA('NUEVA CARRERA', 'ask-new-career'));
+        menu.appendChild(C.SecondaryCTA('SALIR', 'ask-exit'));
+        modalMount.appendChild(menu);
+        return;
+      }
+      if (session.overlay === 'exit') {
+        modalMount.appendChild(
+          C.Modal('SALIR DE LA CARRERA', 'Tu progreso está guardado.', [
+            { label: 'CONTINUAR', action: 'close-menu', primary: true },
+            { label: 'SALIR AL MENÚ', action: 'confirm-exit' }
+          ])
+        );
+        return;
+      }
+      if (session.overlay === 'new') {
+        modalMount.appendChild(
+          C.Modal('¿EMPEZAR UNA NUEVA CARRERA?', 'La carrera actual quedará reemplazada.', [
+            { label: 'CANCELAR', action: 'close-menu' },
+            { label: 'NUEVA CARRERA', action: 'confirm-new-career', primary: true }
+          ])
+        );
+      }
     }
 
     function render() {
@@ -149,6 +254,8 @@
       stage.appendChild(node);
       stage.setAttribute('data-active-scene', session.scene);
       rootEl.setAttribute('data-scene', session.scene);
+      updateChrome();
+      renderOverlay();
     }
 
     function ensureCareerFromDraft() {
@@ -212,18 +319,65 @@
     }
 
     function onAction(action, el) {
-      if (action === 'start') {
+      if (action === 'open-menu') {
+        session.overlay = 'menu';
+        render();
+        return;
+      }
+      if (action === 'close-menu') {
+        session.overlay = null;
+        render();
+        persist();
+        return;
+      }
+      if (action === 'ask-exit') {
+        session.overlay = 'exit';
+        render();
+        return;
+      }
+      if (action === 'confirm-exit') {
+        session.overlay = null;
+        var resumeScene = session.scene;
+        if (resumeScene === 'HISTORY' || resumeScene === 'INTRO') {
+          resumeScene = session.returnScene || 'PRESEASON';
+        }
+        var snap = Object.assign({}, session, { scene: resumeScene, overlay: null, returnScene: null });
+        NS.Persistence.save(snap);
         session = freshSession();
+        session.scene = 'INTRO';
+        render();
+        return;
+      }
+      if (action === 'ask-new-career') {
+        session.overlay = 'new';
+        render();
+        return;
+      }
+      if (action === 'confirm-new-career' || action === 'start') {
         NS.Persistence.clear();
+        session = freshSession();
         session.scene = 'CREATE';
         session.createStep = 'name';
-        setScene('CREATE');
+        render();
+        return;
+      }
+      if (action === 'open-history') {
+        session.overlay = null;
+        if (session.scene !== 'HISTORY') session.returnScene = session.scene;
+        setScene('HISTORY');
+        return;
+      }
+      if (action === 'close-history') {
+        var back = session.returnScene || 'PRESEASON';
+        session.returnScene = null;
+        setScene(back);
         return;
       }
       if (action === 'continue') {
         var saved = NS.Persistence.load();
         if (saved && saved.career) {
           session = Object.assign(freshSession(), saved);
+          session.overlay = null;
           setScene(session.scene || 'PRESEASON');
         }
         return;
@@ -335,7 +489,10 @@
         return;
       }
       if (action === 'retire') {
-        NS.Engine.retire(session.career, (session.pending && session.pending.retirement && session.pending.retirement.reason) || 'retired');
+        NS.Engine.retire(
+          session.career,
+          (session.pending && session.pending.retirement && session.pending.retirement.reason) || 'retired'
+        );
         NS.Persistence.clear();
         setScene('LEGACY');
         return;
@@ -350,20 +507,21 @@
         return;
       }
       if (action === 'new-career') {
-        session = freshSession();
-        NS.Persistence.clear();
-        setScene('CREATE');
+        session.overlay = 'new';
+        render();
         return;
       }
       if (action === 'to-intro') {
-        session = freshSession();
-        setScene('INTRO');
+        persist();
+        session.scene = 'INTRO';
+        session.overlay = null;
+        render();
       }
     }
 
-    stage.addEventListener('click', function (e) {
+    rootEl.addEventListener('click', function (e) {
       var t = e.target.closest('[data-action]');
-      if (!t || !stage.contains(t)) return;
+      if (!t || !rootEl.contains(t)) return;
       onAction(t.getAttribute('data-action'), t);
     });
 
@@ -379,6 +537,7 @@
         var saved = NS.Persistence.load();
         if (saved && saved.career && saved.scene && saved.scene !== 'INTRO' && saved.scene !== 'CAREER_CARD') {
           session = Object.assign(freshSession(), saved);
+          session.overlay = null;
         }
         render();
       }
@@ -388,9 +547,7 @@
   function boot(selector) {
     var rootEl = typeof selector === 'string' ? document.querySelector(selector) : selector;
     if (!rootEl) throw new Error('Mi Carrera: root no encontrado');
-    var ready = NS.loadPhase1Data
-      ? NS.loadPhase1Data()
-      : Promise.resolve(NS.loadPhase1DataSync());
+    var ready = NS.loadPhase1Data ? NS.loadPhase1Data() : Promise.resolve(NS.loadPhase1DataSync());
     return Promise.resolve(ready).then(function () {
       var ctrl = createController(rootEl);
       ctrl.start();

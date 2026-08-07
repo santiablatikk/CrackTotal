@@ -275,6 +275,81 @@
     return btn;
   }
 
+  /** Compact career HUD — live totals from Engine.History.liveTotals. */
+  function CareerHUD(career) {
+    var wrap = el('div', 'mc-hud');
+    if (!career || !career.player || !career.currentClubId) {
+      wrap.classList.add('is-empty');
+      return wrap;
+    }
+    var totals = NS.Engine.History.liveTotals(career);
+    var club = NS.Providers.clubs.getById(career.currentClubId);
+    var clubName = (club && (club.shortName || club.name)) || '—';
+
+    var top = el('div', 'mc-hud__top');
+    top.appendChild(text('div', 'mc-hud__brand', 'MI CARRERA'));
+    var id = el('div', 'mc-hud__id');
+    id.appendChild(text('span', 'mc-hud__age', totals.age + ' AÑOS'));
+    id.appendChild(text('span', 'mc-hud__dot', '·'));
+    id.appendChild(text('span', 'mc-hud__club', clubName));
+    id.appendChild(text('span', 'mc-hud__dot', '·'));
+    id.appendChild(text('span', 'mc-hud__ovr', 'OVR ' + totals.overall));
+    top.appendChild(id);
+    wrap.appendChild(top);
+
+    var stats = el('div', 'mc-hud__stats');
+    [
+      ['PJ', totals.appearances],
+      ['G', totals.goals],
+      ['A', totals.assists],
+      ['CLUBES', totals.clubs],
+      ['TÍTULOS', totals.titles]
+    ].forEach(function (pair) {
+      var cell = el('div', 'mc-hud__stat');
+      cell.appendChild(text('span', 'mc-hud__stat-k', pair[0]));
+      cell.appendChild(text('span', 'mc-hud__stat-v', String(pair[1])));
+      stats.appendChild(cell);
+    });
+    wrap.appendChild(stats);
+
+    var mobile = el('div', 'mc-hud__mobile');
+    mobile.appendChild(text('div', 'mc-hud__m1', totals.age + ' AÑOS · OVR ' + totals.overall));
+    mobile.appendChild(text('div', 'mc-hud__m2', clubName));
+    mobile.appendChild(
+      text(
+        'div',
+        'mc-hud__m3',
+        'PJ ' +
+          totals.appearances +
+          '   G ' +
+          totals.goals +
+          '   A ' +
+          totals.assists +
+          '   🏆 ' +
+          totals.titles
+      )
+    );
+    wrap.appendChild(mobile);
+    return wrap;
+  }
+
+  function Modal(title, body, actions) {
+    var root = el('div', 'mc-modal');
+    root.setAttribute('role', 'dialog');
+    root.setAttribute('aria-modal', 'true');
+    var card = el('div', 'mc-modal__card');
+    if (title) card.appendChild(text('div', 'mc-modal__title', title));
+    if (body) card.appendChild(text('p', 'mc-modal__body', body));
+    var row = el('div', 'mc-modal__actions');
+    (actions || []).forEach(function (a) {
+      var btn = a.primary ? PrimaryCTA(a.label, a.action) : SecondaryCTA(a.label, a.action);
+      row.appendChild(btn);
+    });
+    card.appendChild(row);
+    root.appendChild(card);
+    return root;
+  }
+
   UI.Components = {
     el: el,
     text: text,
@@ -291,6 +366,8 @@
     CareerHeadline: CareerHeadline,
     Scene: Scene,
     PrimaryCTA: PrimaryCTA,
-    SecondaryCTA: SecondaryCTA
+    SecondaryCTA: SecondaryCTA,
+    CareerHUD: CareerHUD,
+    Modal: Modal
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

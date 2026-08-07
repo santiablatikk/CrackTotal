@@ -2830,3 +2830,284 @@
     animation: none !important;
   }
 }
+
+/* --------------------------------------------------------------------------
+   FASE 12 — HUD / MENU / HISTORY / SIMPLE MARKET (additive)
+   -------------------------------------------------------------------------- */
+
+.mc-chrome {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px 0;
+  pointer-events: none;
+}
+
+.mc-chrome[hidden] {
+  display: none !important;
+}
+
+.mc-chrome > * {
+  pointer-events: auto;
+}
+
+.mc-chrome__menu {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--mc-line);
+  border-radius: 12px;
+  background: rgba(7, 9, 13, 0.72);
+  color: var(--mc-ink);
+  font-size: 18px;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+}
+
+.mc-chrome__menu:hover {
+  border-color: var(--mc-accent);
+  color: var(--mc-accent);
+}
+
+.mc-hud {
+  flex: 1 1 auto;
+  max-width: min(720px, 78vw);
+  padding: 10px 14px;
+  border: 1px solid var(--mc-line-soft);
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(12, 16, 24, 0.88), rgba(7, 9, 13, 0.72));
+  backdrop-filter: blur(12px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.mc-hud__brand {
+  font-family: var(--mc-display);
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  color: var(--mc-accent);
+  margin-bottom: 4px;
+}
+
+.mc-hud__id {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  font-family: var(--mc-display);
+  font-size: clamp(18px, 2.2vw, 28px);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.mc-hud__dot {
+  color: var(--mc-muted);
+  opacity: 0.5;
+}
+
+.mc-hud__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.mc-hud__stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 44px;
+}
+
+.mc-hud__stat-k {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: var(--mc-muted);
+}
+
+.mc-hud__stat-v {
+  font-family: var(--mc-display);
+  font-size: 22px;
+  line-height: 1;
+}
+
+.mc-hud__mobile {
+  display: none;
+}
+
+.mc-has-hud .mc-stage .mc-scene {
+  padding-top: 96px;
+}
+
+.mc-modal-root {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.62);
+  padding: 24px;
+}
+
+.mc-modal-root[hidden] {
+  display: none !important;
+}
+
+.mc-modal__card,
+.mc-menu-panel {
+  width: min(420px, 92vw);
+  padding: 28px 24px;
+  border: 1px solid var(--mc-line);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #121820, #07090d);
+  box-shadow: var(--mc-glow-lime);
+}
+
+.mc-modal__title {
+  font-family: var(--mc-display);
+  font-size: clamp(28px, 5vw, 40px);
+  line-height: 0.95;
+  margin-bottom: 10px;
+}
+
+.mc-modal__body {
+  color: var(--mc-muted);
+  margin-bottom: 22px;
+}
+
+.mc-modal__actions,
+.mc-menu-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mc-menu-panel .mc-kicker {
+  margin-bottom: 8px;
+}
+
+.mc-history-grid {
+  display: grid;
+  gap: 8px;
+  max-width: 420px;
+  margin: 18px 0 28px;
+}
+
+.mc-history-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--mc-line-soft);
+  font-family: var(--mc-display);
+  letter-spacing: 0.04em;
+}
+
+.mc-history-row__k {
+  color: var(--mc-muted);
+  font-size: 14px;
+}
+
+.mc-history-row__v {
+  font-size: 22px;
+}
+
+.mc-progress-feel--hero {
+  font-family: var(--mc-display);
+  font-size: clamp(28px, 5vw, 48px);
+  letter-spacing: 0.04em;
+  margin: 12px 0 8px;
+}
+
+.mc-market-dual--simple .mc-change-offer--simple {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  text-align: left;
+  padding: 16px;
+  width: 100%;
+  border: 1px solid var(--mc-line);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  color: inherit;
+  cursor: pointer;
+}
+
+.mc-market-empty {
+  font-family: var(--mc-display);
+  font-size: 42px;
+  letter-spacing: 0.06em;
+  opacity: 0.55;
+  margin: 12px 0 4px;
+}
+
+.mc-change-offer__why {
+  font-family: var(--mc-display);
+  letter-spacing: 0.08em;
+  color: var(--mc-accent-2);
+}
+
+.mc-change-offer__cta-label {
+  margin-top: 8px;
+  font-family: var(--mc-display);
+  color: var(--mc-accent);
+  letter-spacing: 0.08em;
+}
+
+.mc-scene--preseason,
+.mc-scene--season,
+.mc-scene--recap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+}
+
+@media (max-width: 720px) {
+  .mc-chrome {
+    padding: 10px 12px 0;
+  }
+
+  .mc-hud__top,
+  .mc-hud__stats {
+    display: none;
+  }
+
+  .mc-hud__mobile {
+    display: block;
+  }
+
+  .mc-hud__m1,
+  .mc-hud__m2 {
+    font-family: var(--mc-display);
+    letter-spacing: 0.04em;
+    line-height: 1.05;
+  }
+
+  .mc-hud__m1 {
+    font-size: 18px;
+  }
+
+  .mc-hud__m2 {
+    font-size: 22px;
+    margin: 2px 0 6px;
+  }
+
+  .mc-hud__m3 {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--mc-muted);
+  }
+
+  .mc-has-hud .mc-stage .mc-scene {
+    padding-top: 108px;
+  }
+}
+

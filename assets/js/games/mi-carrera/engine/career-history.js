@@ -48,32 +48,71 @@
     }
   }
 
-  function buildLegacy(career) {
-    closeCurrentSpell(career);
-    var archetype = Engine.State.deriveArchetype(career);
+  /** Live career totals from real seasons — no side effects, safe mid-career. */
+  function liveTotals(career) {
     var traj = Engine.State.analyzeTrajectory(career);
+    var clubIds = {};
+    (career.clubs || []).forEach(function (c) {
+      if (c && c.clubId) clubIds[c.clubId] = 1;
+    });
+    var titleIds = {};
+    var titleCount = 0;
+    (career.titles || []).forEach(function (t, i) {
+      var key = (t && t.competitionId ? t.competitionId : 't') + ':' + (t && t.seasonYear != null ? t.seasonYear : i);
+      if (titleIds[key]) return;
+      titleIds[key] = 1;
+      titleCount += 1;
+    });
     var totals = {
-      seasons: career.seasons.length,
+      seasons: (career.seasons || []).length,
       appearances: 0,
       goals: 0,
       assists: 0,
       cleanSheets: 0,
-      titles: career.titles.length,
-      awards: career.awards.length,
-      clubs: career.clubs.length,
-      peakOverall: career.player.peakOverall,
+      titles: titleCount,
+      awards: (career.awards || []).length,
+      clubs: Object.keys(clubIds).length,
+      peakOverall: career.player.peakOverall || career.player.overall,
       peakAge: traj.peakAge,
       debutAge: traj.debutAge,
-      retireAge: career.player.age,
-      nationalCaps: career.nationalTeam.caps,
-      nationalGoals: career.nationalTeam.goals
+      retireAge: career.status === 'retired' ? career.player.age : null,
+      nationalCaps: (career.nationalTeam && career.nationalTeam.caps) || 0,
+      nationalGoals: (career.nationalTeam && career.nationalTeam.goals) || 0,
+      overall: career.player.overall,
+      age: career.player.age,
+      clubId: career.currentClubId,
+      seasonYear: career.seasonYear
     };
-    career.seasons.forEach(function (s) {
+    (career.seasons || []).forEach(function (s) {
       totals.appearances += s.matches || 0;
       totals.goals += s.goals || 0;
       totals.assists += s.assists || 0;
       totals.cleanSheets += s.cleanSheets || 0;
     });
+    return totals;
+  }
+
+  function buildLegacy(career) {
+    closeCurrentSpell(career);
+    var archetype = Engine.State.deriveArchetype(career);
+    var traj = Engine.State.analyzeTrajectory(career);
+    var live = liveTotals(career);
+    var totals = {
+      seasons: live.seasons,
+      appearances: live.appearances,
+      goals: live.goals,
+      assists: live.assists,
+      cleanSheets: live.cleanSheets,
+      titles: live.titles,
+      awards: live.awards,
+      clubs: live.clubs,
+      peakOverall: live.peakOverall,
+      peakAge: traj.peakAge,
+      debutAge: traj.debutAge,
+      retireAge: career.player.age,
+      nationalCaps: live.nationalCaps,
+      nationalGoals: live.nationalGoals
+    };
 
     var bestSeason = null;
     career.seasons.forEach(function (s) {
@@ -116,6 +155,7 @@
     ensureClubSpell: ensureClubSpell,
     closeCurrentSpell: closeCurrentSpell,
     applySeasonToSpell: applySeasonToSpell,
+    liveTotals: liveTotals,
     buildLegacy: buildLegacy
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

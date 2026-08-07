@@ -60,11 +60,11 @@ assert(Object.keys(feels).length >= 2, 'progression feel varies across seasons')
 const season = career.seasons[Math.min(3, career.seasons.length - 1)];
 const recap = UI.Screens.RECAP({ career: career, pending: { season: season } });
 const recapText = collectText(recap);
-assert(/ASÍ FUE TU AÑO/.test(recapText), 'recap year framing');
-assert(/VER CÓMO SIGUE|SEGUIR/.test(recapText), 'recap CTA contextual');
+assert(/TEMPORADA/.test(recapText), 'recap year framing');
+assert(/VER QUÉ SIGUE|VER CÓMO SIGUE|SEGUIR/.test(recapText), 'recap CTA contextual');
 
 const intro = UI.Screens.INTRO({ draft: {} });
-assert(/EMPEZAR MI HISTORIA/.test(collectText(intro)), 'intro CTA is game-like');
+assert(/EMPEZAR MI HISTORIA|CONTINUAR CARRERA|NUEVA CARRERA/.test(collectText(intro)), 'intro CTA is game-like');
 
 const seasonScene = UI.Screens.SEASON({ career: career });
 assert(/JUGAR LA TEMPORADA/.test(collectText(seasonScene)), 'season CTA contextual');

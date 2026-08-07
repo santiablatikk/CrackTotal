@@ -88,7 +88,11 @@
 
   function hasSave() {
     try {
-      return !!(root.localStorage && root.localStorage.getItem(KEY));
+      if (!root.localStorage) return false;
+      var raw = root.localStorage.getItem(KEY);
+      if (!raw) return false;
+      var payload = JSON.parse(raw);
+      return !!(payload && payload.v === 2 && payload.career);
     } catch (e) {
       return false;
     }

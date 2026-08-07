@@ -35,6 +35,26 @@
     };
   }
 
+  function seasonForm(career) {
+    var p = career.player;
+    var last = (career.seasons && career.seasons[career.seasons.length - 1]) || {};
+    var rating = last.rating || 6.5;
+    var minutes = last.minutes || 0;
+    var delta = (last.overallAfter != null ? last.overallAfter : p.overall) - (last.overallBefore != null ? last.overallBefore : p.overall);
+    var form = p.form || 50;
+    var injury = (last.injurySeverity || 0) >= 2;
+    var good =
+      !injury &&
+      (rating >= 7.05 || (form >= 68 && minutes >= 1600) || (delta >= 2 && minutes >= 1400) || (rating >= 6.9 && minutes >= 2000 && form >= 60));
+    var poor =
+      injury ||
+      (rating < 6.45 && form < 52) ||
+      minutes < 900 ||
+      delta <= -2 ||
+      (career.role === 'substitute' && minutes < 1200);
+    return { good: good, poor: poor, rating: rating, minutes: minutes, delta: delta, form: form, injury: injury };
+  }
+
   function scoreClubForInterest(career, club, rng) {
     var p = career.player;
     if (!Rules.canJoinClub(p, club)) return 0;
@@ -54,6 +74,9 @@
     var max = Rules.bandRank(Rules.maxClubBandForPlayer(p));
     if (rank > max) return 0;
 
+    var form = seasonForm(career);
+    var fromRank = fromClub ? Rules.bandRank(Rules.clubBand(fromClub)) : 3;
+
     var score = 10;
     score += Math.max(0, 20 - Math.abs(club.squadStrength - p.overall));
     score += (p.reputation || 0) / 8;
@@ -62,6 +85,19 @@
     if (p.age <= 22 && (club.youthLevel || 0) >= 80) score += 12;
     if (p.age >= 32 && rank >= 6) score -= 15;
     if (p.age <= 21 && rank >= 6 && (career.role === 'youth_prospect' || career.role === 'substitute')) score -= 8;
+
+    // Performance → opportunity quality (reuse score, never invent clubs)
+    if (form.good) {
+      if (rank >= fromRank) score *= 1.4;
+      if (rank > fromRank) score *= 1.25;
+      if (rank === fromRank) score *= 1.1;
+      if (rank <= fromRank - 2) score *= 0.32;
+      if (rank <= fromRank - 3) score *= 0.12;
+    } else if (form.poor) {
+      if (rank < fromRank) score *= 1.3;
+      if (rank <= fromRank - 1) score *= 1.15;
+      if (rank > fromRank + 1) score *= 0.45;
+    }
 
     // Prefer home country affinity
     var country = p.country;
@@ -296,22 +332,51 @@
       }
     }
 
-    // Transfer interest
-    var interest = (last.rating || 6.5) >= 7.0 || p.form >= 68 || p.overall >= 78;
-    var cold = (last.rating || 6.5) < 6.5 && p.form < 45;
-    var transferCount = cold ? (rng.chance(0.35) ? 1 : 0) : interest ? rng.int(1, 2) : rng.chance(0.4) ? 1 : 0;
+    // Transfer interest — shaped by real form, never invents clubs
+    var formState = seasonForm(career);
+    var interest = formState.good || (last.rating || 6.5) >= 7.0 || p.form >= 68 || p.overall >= 78;
+    var cold = formState.poor || ((last.rating || 6.5) < 6.5 && p.form < 45);
+    var transferCount = cold
+      ? rng.chance(0.42)
+        ? 1
+        : 0
+      : interest
+        ? rng.int(1, 2)
+        : rng.chance(0.4)
+          ? 1
+          : 0;
 
     var used = {};
     for (var t = 0; t < transferCount; t++) {
       var eligible = scored.filter(function (x) {
         return !used[x.club.id] && Rules.canJoinClub(p, x.club);
       });
+      if (formState.good) {
+        var up = eligible.filter(function (x) {
+          return Rules.bandRank(Rules.clubBand(x.club)) >= fromRank - 0;
+        });
+        if (up.length >= 4) eligible = up;
+        else {
+          eligible = eligible.slice().sort(function (a, b) {
+            return (
+              Rules.bandRank(Rules.clubBand(b.club)) - Rules.bandRank(Rules.clubBand(a.club)) ||
+              b.score - a.score
+            );
+          });
+        }
+      } else if (formState.poor) {
+        var down = eligible.filter(function (x) {
+          var r = Rules.bandRank(Rules.clubBand(x.club));
+          return r <= fromRank && r >= Math.max(1, fromRank - 2);
+        });
+        if (down.length >= 3) eligible = down;
+      }
       // Top slice + deeper catalog picks so mid/small leagues stay alive
-      var pool = eligible.slice(0, 28);
-      if (eligible.length > 40 && rng.chance(0.34)) {
+      var pool = eligible.slice(0, formState.good ? 22 : 28);
+      if (!formState.good && eligible.length > 40 && rng.chance(0.34)) {
         pool = pool.concat(eligible.slice(28, 90));
       }
-      if (eligible.length > 70 && rng.chance(0.22)) {
+      if (!formState.good && eligible.length > 70 && rng.chance(0.22)) {
         var deep = eligible.slice(50, 140);
         if (deep.length) pool.push(rng.pick(deep));
       }
@@ -368,6 +433,7 @@
   Engine.Market = {
     generateMarket: generateMarket,
     offerFingerprint: offerFingerprint,
-    yearsAtClub: yearsAtClub
+    yearsAtClub: yearsAtClub,
+    seasonForm: seasonForm
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

@@ -72,7 +72,35 @@ function createDomMock() {
         .filter(Boolean);
       if (parts.indexOf(c) === -1) parts.push(c);
       n.className = parts.join(' ');
+    },
+    toggle: function (c, force) {
+      const n = this._owner;
+      const parts = String(n.className || '')
+        .split(/\s+/)
+        .filter(Boolean);
+      const idx = parts.indexOf(c);
+      const should = force === undefined ? idx === -1 : !!force;
+      if (should && idx === -1) parts.push(c);
+      if (!should && idx !== -1) parts.splice(idx, 1);
+      n.className = parts.join(' ');
     }
+  };
+
+  Node.prototype.insertBefore = function (node, ref) {
+    if (!ref) return this.appendChild(node);
+    const i = this.children.indexOf(ref);
+    if (i === -1) return this.appendChild(node);
+    node.parentNode = this;
+    this.children.splice(i, 0, node);
+    return node;
+  };
+  Node.prototype.contains = function (node) {
+    let n = node;
+    while (n) {
+      if (n === this) return true;
+      n = n.parentNode;
+    }
+    return false;
   };
 
   function matches(node, sel) {
