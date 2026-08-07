@@ -206,9 +206,15 @@
       var N = UI.Narrative;
       var career = session.career;
       var scene = C.Scene('DEBUT');
+      scene.appendChild(C.text('div', 'mc-kicker', 'DEBUT'));
+      scene.appendChild(
+        C.Age(career.player.age, {
+          huge: true,
+          chapter: N.ageChapterTitle(career.player.age)
+        })
+      );
       scene.appendChild(C.Badge(career.currentClubId, 'xl'));
       scene.appendChild(C.text('h2', 'mc-display', clubName(career.currentClubId)));
-      scene.appendChild(C.Age(career.player.age, { huge: false }));
       scene.appendChild(C.text('div', 'mc-role', N.roleLabel(career.role)));
       scene.appendChild(C.CareerHeadline('ACÁ EMPIEZA TODO.'));
       scene.appendChild(C.PrimaryCTA('CONTINUAR', 'to-preseason'));
@@ -229,7 +235,12 @@
       );
       var lay = C.el('div', 'mc-split');
       var left = C.el('div', 'mc-split__main');
-      left.appendChild(C.Age(career.player.age, { huge: true }));
+      left.appendChild(
+        C.Age(career.player.age, {
+          huge: true,
+          chapter: N.ageChapterTitle(career.player.age)
+        })
+      );
       left.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.preseasonLine(career)));
       var right = C.el('div', 'mc-split__side');
       right.appendChild(C.Badge(career.currentClubId, 'xl'));
@@ -296,15 +307,27 @@
       var C = UI.Components;
       var N = UI.Narrative;
       var ev = session.eventQueue && session.eventQueue[0];
+      var career = session.career;
       var scene = C.Scene('TROPHY');
       scene.classList.add('mc-scene--celebrate');
       if (!ev) return scene;
       var id = ev.competitionId;
-      scene.appendChild(C.text('div', 'mc-kicker', 'GANASTE ESTO'));
-      scene.appendChild(C.Trophy(id, 'lg'));
-      scene.appendChild(C.CareerHeadline(N.trophyTitle(id)));
-      scene.appendChild(C.text('div', 'mc-year', String(ev.seasonYear || '')));
-      scene.appendChild(C.text('p', 'mc-quote', ev.first ? 'Tu primer gran título.' : 'Otro título para la colección.'));
+      var age = ev.age != null ? ev.age : career.player.age;
+      var clubId = ev.clubId || career.currentClubId;
+      scene.appendChild(C.text('div', 'mc-kicker', 'CAMPEÓN'));
+      var hero = C.el('div', 'mc-trophy-hero');
+      hero.appendChild(C.Trophy(id, 'xl'));
+      scene.appendChild(hero);
+      scene.appendChild(C.CareerHeadline(N.competitionDisplayName(id)));
+      scene.appendChild(C.text('div', 'mc-trophy-title', N.trophyTitle(id)));
+      scene.appendChild(
+        C.text(
+          'div',
+          'mc-year',
+          [age != null ? age + ' AÑOS' : '', clubName(clubId)].filter(Boolean).join(' · ')
+        )
+      );
+      scene.appendChild(C.text('p', 'mc-quote mc-quote--hero', N.trophyPhrase(id, { first: ev.first })));
       scene.appendChild(C.PrimaryCTA('CONTINUAR', 'next-event'));
       return scene;
     },
@@ -350,6 +373,7 @@
       var before = season ? season.age : session.career.player.age - 1;
       var after = season ? season.ageAfter : session.career.player.age;
       scene.appendChild(C.text('div', 'mc-kicker', 'UN AÑO MÁS'));
+      scene.appendChild(C.text('div', 'mc-age-chapter', N.ageChapterTitle(after)));
       var wrap = C.el('div', 'mc-age-flow');
       wrap.appendChild(C.text('div', 'mc-age-flow__n', before));
       wrap.appendChild(C.text('div', 'mc-age-flow__arrow', '↓'));
@@ -465,20 +489,22 @@
       var totals = legacy.totals || {};
       var scene = C.Scene('LEGACY');
       scene.appendChild(C.text('div', 'mc-kicker', 'LEGADO'));
-      scene.appendChild(C.CareerHeadline('SE TERMINÓ UNA CARRERA.'));
       scene.appendChild(C.text('div', 'mc-display', career.player.name));
-      scene.appendChild(C.text('p', 'mc-quote', N.legacyLine(career)));
+      scene.appendChild(C.text('div', 'mc-arch-label', N.archetypeLabel(legacy.archetype)));
+      scene.appendChild(C.CareerHeadline(N.legacyLine(career)));
+      scene.appendChild(
+        C.ClubTimeline(legacy.timeline || career.clubs, {
+          size: 'md',
+          variant: 'poster',
+          retireAge: totals.retireAge || career.player.age
+        })
+      );
       var stats = C.el('div', 'mc-recap-stats');
-      stats.appendChild(C.Stat('Años', totals.retireAge));
-      stats.appendChild(C.Stat('Clubes', totals.clubs));
-      stats.appendChild(C.Stat('PJ', totals.appearances));
-      stats.appendChild(C.Stat('Goles', totals.goals));
+      stats.appendChild(C.Stat('Peak', totals.peakOverall));
       stats.appendChild(C.Stat('Títulos', totals.titles));
       stats.appendChild(C.Stat('Premios', totals.awards));
-      stats.appendChild(C.Stat('Peak', totals.peakOverall));
       stats.appendChild(C.Stat('Selección', totals.nationalCaps || 0));
       scene.appendChild(stats);
-      scene.appendChild(C.ClubTimeline(legacy.timeline || career.clubs, { size: 'sm' }));
       scene.appendChild(C.PrimaryCTA('VER CAREER CARD', 'to-card'));
       return scene;
     },

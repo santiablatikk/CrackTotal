@@ -705,10 +705,222 @@
 }
 
 .mc-card__arch {
-  letter-spacing: 0.14em;
-  font-size: 0.68rem;
-  font-weight: 800;
+  font-family: var(--mc-display);
+  letter-spacing: 0.08em;
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
+  font-weight: 400;
   color: var(--mc-accent) !important;
+  line-height: 1;
+}
+
+.mc-card__section {
+  letter-spacing: 0.18em;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: var(--mc-muted) !important;
+  margin-bottom: 6px;
+}
+
+.mc-card__titles,
+.mc-card__awards {
+  display: grid;
+  gap: 4px;
+}
+
+.mc-card__icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.mc-card__national {
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--mc-ink) !important;
+}
+
+.mc-arch-label {
+  font-family: var(--mc-display);
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  letter-spacing: 0.06em;
+  color: var(--mc-accent) !important;
+}
+
+.mc-age__chapter,
+.mc-age-chapter {
+  font-family: var(--mc-display);
+  font-size: clamp(1.4rem, 4.5vw, 2.2rem);
+  letter-spacing: 0.08em;
+  color: var(--mc-accent) !important;
+  line-height: 1;
+}
+
+.mc-club {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.mc-club__name {
+  font-family: var(--mc-display);
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--mc-ink) !important;
+}
+.mc-club__sub {
+  color: var(--mc-muted) !important;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+}
+
+.mc-trophy--xl { width: min(220px, 52vw); }
+.mc-trophy-hero {
+  display: grid;
+  place-items: start;
+  animation: mc-trophy-in 520ms ease both;
+}
+.mc-trophy-title {
+  font-family: var(--mc-display);
+  font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+  color: var(--mc-gold) !important;
+  letter-spacing: 0.06em;
+}
+.mc-trophy__img,
+.mc-award__img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 16px 28px rgba(0, 0, 0, 0.45));
+}
+
+.mc-trophy__fallback--uefa_cl .mc-trophy__cup,
+.mc-trophy__fallback--conmebol_libertadores .mc-trophy__cup {
+  border-color: var(--mc-gold);
+  box-shadow: 0 0 24px rgba(240, 200, 90, 0.25);
+}
+.mc-trophy__fallback--fifa_world_cup {
+  border-color: rgba(216, 255, 62, 0.55);
+}
+.mc-trophy__fallback--conmebol_sudamericana .mc-trophy__cup,
+.mc-trophy__fallback--uefa_el .mc-trophy__cup {
+  border-color: #c4a36a;
+}
+
+@keyframes mc-trophy-in {
+  from { opacity: 0; transform: scale(0.88) translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes mc-ovr-pop {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes mc-stagger {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.mc-ovr-solo {
+  animation: mc-ovr-pop 420ms ease both;
+}
+
+.mc-scene--debut .mc-badge,
+.mc-scene--first_club .mc-badge,
+.mc-scene--transfer .mc-badge {
+  animation: mc-crest 520ms ease both;
+}
+
+.mc-scene--season {
+  justify-content: center;
+  text-align: left;
+}
+.mc-scene--trophy {
+  align-items: flex-start;
+}
+.mc-scene--age_up .mc-age-flow__n.is-next {
+  animation: mc-ovr-pop 480ms ease both;
+}
+.mc-scene--market .mc-market-here {
+  animation: mc-enter 360ms ease both;
+}
+.mc-scene--career_card .mc-card {
+  animation: mc-enter 420ms ease both;
+}
+
+.mc-timeline {
+  display: grid;
+  gap: 12px;
+  max-width: 560px;
+  position: relative;
+}
+.mc-timeline--poster::before {
+  content: '';
+  position: absolute;
+  left: 72px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(180deg, rgba(216, 255, 62, 0.55), rgba(243, 240, 231, 0.08));
+}
+.mc-timeline__row {
+  display: grid;
+  grid-template-columns: 64px 48px 1fr;
+  gap: 14px;
+  align-items: center;
+  position: relative;
+  animation: mc-stagger 380ms ease both;
+  animation-delay: calc(var(--mc-i, 0) * 40ms);
+}
+.mc-timeline__age {
+  font-family: var(--mc-display);
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+  line-height: 1;
+  color: var(--mc-ink) !important;
+}
+.mc-timeline__body { display: grid; gap: 2px; }
+.mc-timeline__name {
+  font-family: var(--mc-display);
+  font-size: 1.35rem;
+  letter-spacing: 0.03em;
+  color: var(--mc-ink) !important;
+}
+.mc-timeline__span {
+  color: var(--mc-muted) !important;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+.mc-timeline__row--retire .mc-timeline__name {
+  color: var(--mc-accent) !important;
+}
+.mc-timeline__retire-mark {
+  display: grid;
+  place-items: center;
+  color: var(--mc-accent) !important;
+  font-size: 1.1rem;
+}
+.mc-timeline--card {
+  max-width: none;
+  gap: 8px;
+}
+.mc-timeline--card::before { left: 48px; }
+.mc-timeline--card .mc-timeline__row {
+  grid-template-columns: 44px 36px 1fr;
+  gap: 10px;
+}
+.mc-timeline--card .mc-timeline__age { font-size: 1.35rem; }
+.mc-timeline--card .mc-timeline__name { font-size: 1.05rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mc-trophy-hero,
+  .mc-ovr-solo,
+  .mc-timeline__row,
+  .mc-scene--career_card .mc-card {
+    animation: none !important;
+  }
 }
 
 @media (max-width: 900px) {
@@ -728,7 +940,11 @@
   .mc-path { grid-template-columns: 1fr; justify-items: start; }
   .mc-path__crest { margin-bottom: 4px; }
   .mc-badge--xl { width: 120px; height: 132px; }
+  .mc-trophy--xl { width: min(180px, 58vw); }
   .mc-cta { width: 100%; text-align: center; }
   .mc-market-list { max-width: 100%; }
   .mc-recap-stats { gap: 14px 18px; }
+  .mc-timeline--poster::before { left: 56px; }
+  .mc-card-mount { width: min(100%, 390px); }
+  .mc-transfer .mc-badge--xl { width: 112px; height: 122px; }
 }

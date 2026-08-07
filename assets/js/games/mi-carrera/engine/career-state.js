@@ -159,48 +159,155 @@
     ].join('|');
   }
 
-  function deriveArchetype(career) {
+  function analyzeTrajectory(career) {
     var clubs = career.clubs || [];
     var seasons = career.seasons || [];
     var titles = career.titles || [];
     var awards = career.awards || [];
-    var uniqueClubs = clubs.length;
     var continents = {};
+    var sawSA = false;
+    var sawEU = false;
+    var saToEu = false;
+    var euToSa = false;
     seasons.forEach(function (s) {
       if (s.continent) continents[s.continent] = (continents[s.continent] || 0) + 1;
+      if (s.continent === 'SA') {
+        if (sawEU) euToSa = true;
+        sawSA = true;
+      }
+      if (s.continent === 'EU') {
+        if (sawSA) saToEu = true;
+        sawEU = true;
+      }
     });
-    var eu = continents.EU || 0;
-    var sa = continents.SA || 0;
-    var hasBallon = awards.some(function (a) {
-      return a.awardId === 'ballon_dor';
-    });
-    var hasWC = titles.some(function (t) {
-      return t.competitionId === 'fifa_world_cup';
-    });
-    var hasCL = titles.some(function (t) {
-      return t.competitionId === 'uefa_cl';
-    });
-    var hasLib = titles.some(function (t) {
-      return t.competitionId === 'conmebol_libertadores';
-    });
-    var peak = career.player.peakOverall || 0;
-    var startPot = career.player.potential || 0;
 
-    if (hasBallon) return 'BALLON_DOR_WINNER';
-    if (hasWC && (career.nationalTeam.caps || 0) >= 40) return 'WORLDCUP_HERO';
-    if (uniqueClubs <= 1 && seasons.length >= 10 && titles.length >= 2) return 'ONE_CLUB_LEGEND';
-    if (uniqueClubs <= 1 && seasons.length >= 12) return 'ONE_CLUB_MAN';
-    if (uniqueClubs >= 6) return 'JOURNEYMAN';
-    if (career.flags.hadComeback) return 'COMEBACK';
-    if (eu >= 8 && (hasCL || peak >= 88)) return 'EUROPEAN_STAR';
-    if (sa >= 8 && eu === 0 && (hasLib || peak >= 84)) return 'SOUTH_AMERICAN_KING';
-    if (career.player.growthArchetype === 'wonderkid' && peak < 78) return 'FALLEN_PRODIGY';
-    if (career.player.growthArchetype === 'late_bloomer' && peak >= 82) return 'LATE_BLOOMER';
-    if (career.player.growthArchetype === 'wonderkid' && peak >= 86) return 'WONDERKID';
-    if (titles.length >= 8) return 'TROPHY_HUNTER';
-    if (uniqueClubs <= 2 && seasons.length >= 10) return 'CULT_HERO';
-    if ((career.player.age || 0) >= 36) return 'VETERAN';
-    if (peak >= 86 && startPot - peak > 4) return 'OVERACHIEVER';
+    var peak = career.player.peakOverall || 0;
+    var peakAge = null;
+    seasons.forEach(function (s) {
+      if ((s.overallAfter || 0) >= peak && peakAge == null) peakAge = s.ageAfter || s.age;
+    });
+
+    var giantSeasons = seasons.filter(function (s) {
+      var club = NS.Providers && NS.Providers.clubs ? NS.Providers.clubs.getById(s.clubId) : null;
+      if (!club) return false;
+      var band = Engine.Rules.clubBand(club);
+      return band === 'WORLD_GIANT' || band === 'CONTINENTAL_GIANT';
+    });
+    var giantFail =
+      giantSeasons.length >= 2 &&
+      giantSeasons.filter(function (s) {
+        return (s.minutes || 0) < 900 || (s.rating || 0) < 6.5;
+      }).length >=
+        Math.ceil(giantSeasons.length * 0.6) &&
+      peak < 84;
+    var giantSuccess =
+      giantSeasons.length >= 3 &&
+      giantSeasons.filter(function (s) {
+        return (s.minutes || 0) >= 1800 && (s.rating || 0) >= 7.0;
+      }).length >= 2 &&
+      peak >= 84;
+
+    var shortSpells = clubs.filter(function (c) {
+      return (c.seasons || 0) <= 1;
+    }).length;
+    var injurySeasons = (career.injuries || []).filter(function (i) {
+      return (i.severity || 0) >= 2;
+    }).length;
+    var firstClubId = clubs[0] && clubs[0].clubId;
+    var lastClubId = clubs.length ? clubs[clubs.length - 1].clubId : null;
+    var homecoming =
+      clubs.length >= 3 &&
+      firstClubId &&
+      lastClubId === firstClubId &&
+      clubs.slice(1, -1).some(function (c) {
+        return c.clubId !== firstClubId;
+      });
+
+    var midClubTitles = titles.filter(function (t) {
+      var club = NS.Providers && NS.Providers.clubs ? NS.Providers.clubs.getById(t.clubId) : null;
+      if (!club) return false;
+      var rank = Engine.Rules.bandRank(Engine.Rules.clubBand(club));
+      return rank <= 3;
+    }).length;
+
+    return {
+      uniqueClubs: clubs.length,
+      seasons: seasons.length,
+      eu: continents.EU || 0,
+      sa: continents.SA || 0,
+      saToEu: saToEu,
+      euToSa: euToSa,
+      europeOnly: sawEU && !sawSA,
+      saOnly: sawSA && !sawEU,
+      peak: peak,
+      peakAge: peakAge,
+      retireAge: career.player.age,
+      debutAge: seasons[0] ? seasons[0].age : career.careerStartAge || career.player.age,
+      hasBallon: awards.some(function (a) {
+        return a.awardId === 'ballon_dor';
+      }),
+      hasWC: titles.some(function (t) {
+        return t.competitionId === 'fifa_world_cup';
+      }),
+      hasCL: titles.some(function (t) {
+        return t.competitionId === 'uefa_cl';
+      }),
+      hasLib: titles.some(function (t) {
+        return t.competitionId === 'conmebol_libertadores';
+      }),
+      hasCopaAmerica: titles.some(function (t) {
+        return t.competitionId === 'conmebol_copa_america';
+      }),
+      hasEuro: titles.some(function (t) {
+        return t.competitionId === 'uefa_euro';
+      }),
+      titles: titles.length,
+      awards: awards.length,
+      caps: (career.nationalTeam && career.nationalTeam.caps) || 0,
+      growth: career.player.growthArchetype,
+      hadComeback: !!(career.flags && career.flags.hadComeback),
+      hadMajorInjury: !!(career.flags && career.flags.hadMajorInjury),
+      injurySeasons: injurySeasons,
+      giantFail: giantFail,
+      giantSuccess: giantSuccess,
+      giantSeasons: giantSeasons.length,
+      homecoming: homecoming,
+      shortSpells: shortSpells,
+      midClubTitles: midClubTitles,
+      transfers: (career.transfers || []).length,
+      loans: (career.loans || []).length
+    };
+  }
+
+  function deriveArchetype(career) {
+    var t = analyzeTrajectory(career);
+    var oneClub = t.uniqueClubs <= 1;
+
+    if (t.hasBallon) return 'BALLON_DOR_WINNER';
+    if (t.hasWC && t.caps >= 30) return 'WORLD_CHAMPION';
+    if (oneClub && t.seasons >= 10 && t.titles >= 2) return 'ONE_CLUB_LEGEND';
+    if (oneClub && t.seasons >= 12) return 'CLUB_ICON';
+    if (t.growth === 'wonderkid' && t.peak >= 86 && (t.peakAge == null || t.peakAge <= 24)) return 'WONDERKID';
+    if (t.growth === 'wonderkid' && t.peak < 78) return 'FALLEN_WONDERKID';
+    if (t.growth === 'late_bloomer' && t.peak >= 82) return 'LATE_BLOOMER';
+    if (t.homecoming && t.peak >= 80) return 'HOMECOMING';
+    if (t.saToEu && t.eu >= 5 && t.peak >= 84) return 'CONTINENTAL_BRIDGE';
+    if (t.giantFail) return 'GIANT_FAILURE';
+    if (t.giantSuccess && (t.hasCL || t.peak >= 88)) return 'GIANT_SUCCESS';
+    if (t.injurySeasons >= 5 || (t.hadMajorInjury && t.peak < 76 && t.seasons >= 12)) return 'INJURY_CAREER';
+    if (t.hadComeback) return 'COMEBACK';
+    if (t.saOnly && (t.hasLib || t.peak >= 84)) return 'SOUTH_AMERICAN_LEGEND';
+    if (t.eu >= 8 && (t.hasCL || t.peak >= 88)) return 'EUROPEAN_STAR';
+    if (t.caps >= 50 || (t.hasCopaAmerica || t.hasEuro) && t.caps >= 25) return 'INTERNATIONAL_STAR';
+    if (t.midClubTitles >= 2 && t.titles >= 3 && t.peak < 86) return 'UNDERDOG_CHAMPION';
+    if (t.uniqueClubs >= 7 || (t.uniqueClubs >= 6 && t.shortSpells >= 3)) return 'MERCENARY';
+    if (t.uniqueClubs >= 6) return 'JOURNEYMAN';
+    if (t.titles >= 8) return 'TROPHY_HUNTER';
+    if (t.uniqueClubs <= 2 && t.seasons >= 10) return 'CLUB_ICON';
+    if (t.retireAge <= 34 && t.seasons >= 8) return 'EARLY_RETIREMENT';
+    if (t.retireAge >= 38 && t.seasons >= 18) return 'LONG_CAREER';
+    if (t.peak >= 86 && (career.player.potential || 0) - t.peak > 3) return 'OVERACHIEVER';
+    if (t.retireAge >= 36) return 'VETERAN';
     return 'CAREER_PLAYER';
   }
 
@@ -208,6 +315,7 @@
     createCareer: createCareer,
     updateValue: updateValue,
     fingerprint: fingerprint,
+    analyzeTrajectory: analyzeTrajectory,
     deriveArchetype: deriveArchetype,
     clamp: clamp
   };

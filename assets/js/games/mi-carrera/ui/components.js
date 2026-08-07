@@ -47,8 +47,10 @@
     var wrap = el('div', 'mc-badge mc-badge--' + size);
     var club = NS.Providers.clubs.getById(clubId);
     var asset = NS.Providers.clubs.getClubBadge(clubId);
-    wrap.setAttribute('data-status', asset.status || 'missing');
-    if (asset.status === 'real' && asset.src) {
+    var status = asset.status || 'missing';
+    wrap.setAttribute('data-status', status);
+    wrap.setAttribute('data-badge', status === 'real' ? 'real' : 'fallback');
+    if (status === 'real' && asset.src) {
       var img = el('img', 'mc-badge__img');
       img.src = asset.src;
       img.alt = club ? club.name : clubId;
@@ -58,12 +60,33 @@
       var fb = asset.fallback || {};
       var colors = badgeColors(fb.primaryColor, fb.secondaryColor);
       var tile = el('div', 'mc-badge__fallback');
+      tile.setAttribute('aria-label', 'Escudo no disponible');
       tile.style.background =
         'linear-gradient(160deg, ' + colors.primary + ' 0%, ' + colors.secondary + ' 100%)';
       var label = String(fb.label || (club && club.shortName) || '?');
       tile.appendChild(text('span', 'mc-badge__label', label.length > 8 ? label.slice(0, 3) : label));
       wrap.appendChild(tile);
     }
+    return wrap;
+  }
+
+  /** Club mark: badge + name + optional country/competition. Variants: sm, md, lg, card. */
+  function ClubMark(clubId, opts) {
+    opts = opts || {};
+    var variant = opts.variant || 'md';
+    var wrap = el('div', 'mc-club mc-club--' + variant);
+    var club = NS.Providers.clubs.getById(clubId);
+    var size = opts.size || (variant === 'lg' || variant === 'card' ? 'lg' : variant === 'sm' ? 'sm' : 'md');
+    wrap.appendChild(Badge(clubId, size));
+    var meta = el('div', 'mc-club__meta');
+    meta.appendChild(text('div', 'mc-club__name', club ? club.name : clubId));
+    var bits = [];
+    if (opts.showCountry !== false && club && club.countryCode) bits.push(club.countryCode);
+    if (opts.showCompetition !== false && club) {
+      bits.push(NS.Providers.clubs.getTierLabel(club));
+    }
+    if (bits.length) meta.appendChild(text('div', 'mc-club__sub', bits.join(' · ')));
+    wrap.appendChild(meta);
     return wrap;
   }
 
@@ -111,9 +134,12 @@
     var wrap = el('div', 'mc-trophy mc-trophy--' + size);
     var asset = NS.Providers.trophies.getTrophyImage(competitionId);
     var comp = NS.Providers.competitions.getById(competitionId);
-    wrap.setAttribute('data-status', asset.status || 'missing');
+    var status = asset.status || 'missing';
+    wrap.setAttribute('data-status', status);
+    wrap.setAttribute('data-trophy', status === 'real' ? 'real' : 'fallback');
     wrap.setAttribute('data-rarity', (comp && comp.rarity) || 'normal');
-    if (asset.status === 'real' && asset.src) {
+    wrap.setAttribute('data-competition', competitionId || '');
+    if (status === 'real' && asset.src) {
       var img = el('img', 'mc-trophy__img');
       img.src = asset.src;
       img.alt = (comp && (comp.shortName || comp.name)) || competitionId;
@@ -121,7 +147,11 @@
     } else {
       var fb = asset.fallback || {};
       var rarity = (comp && comp.rarity) || fb.rarity || 'normal';
-      var sil = el('div', 'mc-trophy__fallback mc-trophy__fallback--' + rarity);
+      var sil = el(
+        'div',
+        'mc-trophy__fallback mc-trophy__fallback--' + rarity + ' mc-trophy__fallback--' + String(competitionId || 'generic').replace(/[^a-z0-9_-]/gi, '')
+      );
+      sil.setAttribute('aria-label', 'Trofeo ilustrativo');
       sil.appendChild(el('div', 'mc-trophy__cup'));
       sil.appendChild(text('span', 'mc-trophy__label', fb.label || (comp && comp.shortName) || competitionId));
       wrap.appendChild(sil);
@@ -134,10 +164,13 @@
     var wrap = el('div', 'mc-award mc-award--' + size);
     var asset = NS.Providers.awards.getAwardImage(awardId);
     var award = NS.Providers.awards.getById(awardId);
-    wrap.setAttribute('data-status', asset.status || 'missing');
+    var status = asset.status || 'missing';
+    wrap.setAttribute('data-status', status);
+    wrap.setAttribute('data-award', status === 'real' ? 'real' : 'fallback');
     wrap.setAttribute('data-rarity', (award && award.rarity) || 'normal');
+    wrap.setAttribute('data-award-id', awardId || '');
     if (awardId === 'ballon_dor') wrap.classList.add('mc-award--ballon');
-    if (asset.status === 'real' && asset.src) {
+    if (status === 'real' && asset.src) {
       var img = el('img', 'mc-award__img');
       img.src = asset.src;
       img.alt = (award && award.name) || awardId;
@@ -145,8 +178,9 @@
     } else {
       var fb = asset.fallback || {};
       var mark = el('div', 'mc-award__fallback');
+      mark.setAttribute('aria-label', 'Premio ilustrativo');
       mark.appendChild(text('span', 'mc-award__glyph', awardId === 'ballon_dor' ? '●' : '★'));
-      mark.appendChild(text('span', 'mc-award__label', fb.label || awardId));
+      mark.appendChild(text('span', 'mc-award__label', fb.label || (award && award.shortName) || awardId));
       wrap.appendChild(mark);
     }
     return wrap;
@@ -156,6 +190,7 @@
     opts = opts || {};
     var wrap = el('div', 'mc-age' + (opts.huge ? ' mc-age--huge' : ''));
     wrap.appendChild(text('div', 'mc-age__n', age));
+    if (opts.chapter) wrap.appendChild(text('div', 'mc-age__chapter', opts.chapter));
     wrap.appendChild(text('div', 'mc-age__u', opts.unit || 'AÑOS'));
     if (opts.birthYear != null) wrap.appendChild(text('div', 'mc-age__birth', opts.birthYear));
     return wrap;
@@ -182,16 +217,28 @@
 
   function ClubTimeline(spells, opts) {
     opts = opts || {};
-    var wrap = el('div', 'mc-timeline');
-    (spells || []).forEach(function (spell) {
+    var wrap = el('div', 'mc-timeline' + (opts.variant === 'poster' ? ' mc-timeline--poster' : ''));
+    (spells || []).forEach(function (spell, idx) {
       var row = el('div', 'mc-timeline__row');
-      var ages = String(spell.ageStart) + (spell.ageEnd != null ? '–' + spell.ageEnd : '');
-      row.appendChild(text('div', 'mc-timeline__age', ages));
-      row.appendChild(Badge(spell.clubId, opts.size || 'sm'));
+      row.setAttribute('style', '--mc-i:' + idx);
+      row.appendChild(text('div', 'mc-timeline__age', String(spell.ageStart)));
+      row.appendChild(Badge(spell.clubId, opts.size || 'md'));
       var club = NS.Providers.clubs.getById(spell.clubId);
-      row.appendChild(text('div', 'mc-timeline__name', club ? club.name : spell.clubId));
+      var body = el('div', 'mc-timeline__body');
+      body.appendChild(text('div', 'mc-timeline__name', club ? club.shortName || club.name : spell.clubId));
+      if (spell.ageEnd != null && spell.ageEnd !== spell.ageStart) {
+        body.appendChild(text('div', 'mc-timeline__span', spell.ageStart + '–' + spell.ageEnd));
+      }
+      row.appendChild(body);
       wrap.appendChild(row);
     });
+    if (opts.retireAge != null) {
+      var end = el('div', 'mc-timeline__row mc-timeline__row--retire');
+      end.appendChild(text('div', 'mc-timeline__age', String(opts.retireAge)));
+      end.appendChild(text('div', 'mc-timeline__retire-mark', '●'));
+      end.appendChild(text('div', 'mc-timeline__name', 'RETIRO'));
+      wrap.appendChild(end);
+    }
     return wrap;
   }
 
@@ -225,6 +272,7 @@
     el: el,
     text: text,
     Badge: Badge,
+    ClubMark: ClubMark,
     Flag: Flag,
     CompetitionLogo: CompetitionLogo,
     Trophy: Trophy,

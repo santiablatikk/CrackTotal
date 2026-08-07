@@ -63,6 +63,8 @@
           kind: 'TROPHY',
           competitionId: t.competitionId,
           seasonYear: season.seasonYear,
+          age: season.ageAfter != null ? season.ageAfter : season.age,
+          clubId: t.clubId || season.clubId || career.currentClubId,
           first: firstTitle && idx === 0
         });
       }

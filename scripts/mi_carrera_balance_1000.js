@@ -117,7 +117,15 @@ for (let i = 0; i < N; i++) {
   });
 
   const arch = career.legacy && career.legacy.archetype;
-  if (arch === 'EUROPEAN_STAR' || arch === 'BALLON_DOR_WINNER' || arch === 'WORLDCUP_HERO' || arch === 'SOUTH_AMERICAN_KING') {
+  if (
+    arch === 'EUROPEAN_STAR' ||
+    arch === 'BALLON_DOR_WINNER' ||
+    arch === 'WORLD_CHAMPION' ||
+    arch === 'WORLDCUP_HERO' ||
+    arch === 'SOUTH_AMERICAN_LEGEND' ||
+    arch === 'SOUTH_AMERICAN_KING' ||
+    arch === 'GIANT_SUCCESS'
+  ) {
     metrics.legendary += 1;
   }
 

@@ -37,23 +37,82 @@
     }
   };
 
+  /** Human-facing archetype labels — never show technical fingerprints. */
+  var ARCHETYPE_LABEL = {
+    BALLON_DOR_WINNER: 'BALÓN DE ORO',
+    WORLD_CHAMPION: 'CAMPEÓN DEL MUNDO',
+    WORLDCUP_HERO: 'CAMPEÓN DEL MUNDO',
+    ONE_CLUB_LEGEND: 'LEYENDA DE UN CLUB',
+    ONE_CLUB_MAN: 'UN SOLO ESCUDO',
+    CLUB_ICON: 'ÍDOLO DEL CLUB',
+    JOURNEYMAN: 'NÓMADA',
+    MERCENARY: 'MERCENARIO',
+    COMEBACK: 'EL REGRESO',
+    EUROPEAN_STAR: 'ESTRELLA EUROPEA',
+    SOUTH_AMERICAN_LEGEND: 'LEYENDA SUDAMERICANA',
+    SOUTH_AMERICAN_KING: 'LEYENDA SUDAMERICANA',
+    FALLEN_WONDERKID: 'PROMESA QUEBRADA',
+    FALLEN_PRODIGY: 'PROMESA QUEBRADA',
+    LATE_BLOOMER: 'FLOR TARDÍA',
+    WONDERKID: 'WONDERKID',
+    INTERNATIONAL_STAR: 'ESTRELLA INTERNACIONAL',
+    CONTINENTAL_BRIDGE: 'PUENTE CONTINENTAL',
+    HOMECOMING: 'EL REGRESO A CASA',
+    UNDERDOG_CHAMPION: 'CAMPEÓN IMPROBABLE',
+    GIANT_FAILURE: 'GIGANTE QUE NO FUE',
+    GIANT_SUCCESS: 'CONQUISTÓ AL GIGANTE',
+    INJURY_CAREER: 'CARRERA MARCADA',
+    TROPHY_HUNTER: 'CAZADOR DE TÍTULOS',
+    CULT_HERO: 'ÍDOLO DEL CLUB',
+    LONG_CAREER: 'CARRERA LARGA',
+    EARLY_RETIREMENT: 'RETIRO TEMPRANO',
+    VETERAN: 'VETERANO',
+    OVERACHIEVER: 'SUPERÓ EL TECHO',
+    CAREER_PLAYER: 'CARRERA REAL'
+  };
+
   var ARCHETYPE_LINE = {
     BALLON_DOR_WINNER: 'EL MEJOR DEL MUNDO.',
+    WORLD_CHAMPION: 'HÉROE DE UN MUNDIAL.',
     WORLDCUP_HERO: 'HÉROE DE UN MUNDIAL.',
     ONE_CLUB_LEGEND: 'EL ÍDOLO QUE NUNCA SE FUE.',
     ONE_CLUB_MAN: 'TODA UNA VIDA EN UN SOLO ESCUDO.',
+    CLUB_ICON: 'MÁS QUE UN JUGADOR: UNA IDENTIDAD.',
     JOURNEYMAN: 'UNA CARRERA SIN GUION.',
+    MERCENARY: 'CAMBIÓ DE ESCUDO HASTA ENCONTRARSE.',
     COMEBACK: 'EL QUE VOLVIÓ CUANDO TODOS LO DABAN POR MUERTO.',
     EUROPEAN_STAR: 'DE PROMESA A ESTRELLA EUROPEA.',
+    SOUTH_AMERICAN_LEGEND: 'EL REY DE SUDAMÉRICA.',
     SOUTH_AMERICAN_KING: 'EL REY DE SUDAMÉRICA.',
+    FALLEN_WONDERKID: 'EL TALENTO QUE EL FÚTBOL NO PERDONÓ.',
     FALLEN_PRODIGY: 'EL TALENTO QUE EL FÚTBOL NO PERDONÓ.',
     LATE_BLOOMER: 'EL QUE EXPLOTÓ CUANDO NADIE ESPERABA.',
     WONDERKID: 'LA PROMESA QUE CUMPLIÓ.',
+    INTERNATIONAL_STAR: 'LA SELECCIÓN FUE SU SEGUNDO CLUB.',
+    CONTINENTAL_BRIDGE: 'CRUZÓ EL OCÉANO Y DEJÓ HUELLA.',
+    HOMECOMING: 'SE FUE. VOLVIÓ. CERRÓ EL CÍRCULO.',
+    UNDERDOG_CHAMPION: 'GANÓ DONDE NADIE ESPERABA.',
+    GIANT_FAILURE: 'LLEGÓ AL TECHO… Y SE QUEBRÓ.',
+    GIANT_SUCCESS: 'ENTRE GIGANTES, FUE GIGANTE.',
+    INJURY_CAREER: 'EL CUERPO PIDIÓ PELEA. ÉL SIGUIÓ.',
     TROPHY_HUNTER: 'UNA VIDA COLECCIONANDO TÍTULOS.',
     CULT_HERO: 'MÁS QUE UN JUGADOR: UNA IDENTIDAD.',
+    LONG_CAREER: 'DURÓ MÁS QUE CASI TODOS.',
+    EARLY_RETIREMENT: 'SE FUE ANTES DE QUE LO OBLIGARAN.',
     VETERAN: 'EL ÚLTIMO QUE APAGÓ LA LUZ.',
     OVERACHIEVER: 'LLEGÓ MÁS LEJOS DE LO PREVISTO.',
     CAREER_PLAYER: 'UNA CARRERA REAL.'
+  };
+
+  var MAJOR_TITLE_IDS = {
+    uefa_cl: 1,
+    conmebol_libertadores: 1,
+    conmebol_sudamericana: 1,
+    fifa_world_cup: 1,
+    fifa_club_world_cup: 1,
+    uefa_euro: 1,
+    conmebol_copa_america: 1,
+    uefa_el: 1
   };
 
   function roleLabel(role) {
@@ -72,6 +131,42 @@
     if (age <= 32) return 'prime_tardio';
     if (age <= 35) return 'declive';
     return 'veterano';
+  }
+
+  function ageChapterTitle(age) {
+    if (age <= 18) return 'EL COMIENZO';
+    if (age <= 21) return 'EL SALTO';
+    if (age <= 25) return 'EN ASCENSO';
+    if (age <= 29) return 'TU PRIME';
+    if (age <= 32) return 'EL DESAFÍO';
+    if (age <= 35) return 'EL FINAL SE ACERCA';
+    return 'LA ÚLTIMA ETAPA';
+  }
+
+  function archetypeLabel(code) {
+    return ARCHETYPE_LABEL[code] || 'CARRERA REAL';
+  }
+
+  function majorTitles(titles) {
+    return (titles || []).filter(function (t) {
+      if (!t || !t.competitionId) return false;
+      if (MAJOR_TITLE_IDS[t.competitionId]) return true;
+      var c = NS.Providers.competitions.getById(t.competitionId);
+      return c && (c.rarity === 'legendary' || c.rarity === 'major');
+    });
+  }
+
+  function trophyPhrase(competitionId, ctx) {
+    ctx = ctx || {};
+    if (competitionId === 'fifa_world_cup') return 'El sueño de todos. Hecho realidad.';
+    if (competitionId === 'uefa_cl') return 'La noche más grande del fútbol de clubes.';
+    if (competitionId === 'conmebol_libertadores') return 'América entera lo va a recordar.';
+    if (competitionId === 'conmebol_sudamericana') return 'Un título continental que pesa.';
+    if (competitionId === 'uefa_euro') return 'Rey de Europa con la selección.';
+    if (competitionId === 'conmebol_copa_america') return 'Campeón de América.';
+    if (competitionId === 'fifa_club_world_cup') return 'El mundo de clubes a tus pies.';
+    if (ctx.first) return 'Tu primer gran título.';
+    return 'Otro título para la colección.';
   }
 
   function preseasonLine(career) {
@@ -190,7 +285,6 @@
     if (minutes < 700) {
       return 'POCOS MINUTOS. DEMASIADAS DUDAS.';
     }
-    // Growth + minutes beat a low rating for narrative (cause → effect)
     if (delta >= 3 && minutes >= 1500) {
       return age <= 21 ? 'CRECISTE A LO GRANDE.' : 'EL SALTO LLEGÓ ANTES DE LO ESPERADO.';
     }
@@ -263,6 +357,11 @@
     return 'CAMPEÓN · ' + (c.shortName || c.name).toUpperCase();
   }
 
+  function competitionDisplayName(competitionId) {
+    var c = NS.Providers.competitions.getById(competitionId);
+    return c ? (c.name || c.shortName || competitionId).toUpperCase() : String(competitionId || '').toUpperCase();
+  }
+
   function awardTitle(awardId) {
     var a = NS.Providers.awards.getById(awardId);
     if (awardId === 'ballon_dor') return 'BALÓN DE ORO';
@@ -291,6 +390,11 @@
     roleLabel: roleLabel,
     pathMeta: pathMeta,
     ageChapter: ageChapter,
+    ageChapterTitle: ageChapterTitle,
+    archetypeLabel: archetypeLabel,
+    majorTitles: majorTitles,
+    trophyPhrase: trophyPhrase,
+    competitionDisplayName: competitionDisplayName,
     preseasonLine: preseasonLine,
     seasonStakeLine: seasonStakeLine,
     recapHeadline: recapHeadline,
@@ -300,6 +404,7 @@
     trophyTitle: trophyTitle,
     awardTitle: awardTitle,
     momentLine: momentLine,
-    ARCHETYPE_LINE: ARCHETYPE_LINE
+    ARCHETYPE_LINE: ARCHETYPE_LINE,
+    ARCHETYPE_LABEL: ARCHETYPE_LABEL
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);
