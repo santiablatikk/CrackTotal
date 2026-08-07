@@ -309,10 +309,10 @@
     if (goals >= 12 && minutes >= 1800) {
       return 'TE GANASTE EL PUESTO.';
     }
-    if (rating < 6.5 && minutes >= 1000 && delta <= 1 && goals < 8) {
+    if (rating < 6.5 && minutes >= 1000 && delta <= 0 && goals < 8) {
       return 'NO FUE TU MEJOR TEMPORADA.';
     }
-    if (rating < 6.5 && minutes >= 1000 && delta >= 2) {
+    if (rating < 6.5 && minutes >= 1000 && delta >= 1) {
       return 'NÚMEROS DUROS. PERO SEGUÍSTE CRECIENDO.';
     }
     if (delta <= -2) {
@@ -372,7 +372,8 @@
     if (competitionId === 'conmebol_libertadores') return 'CAMPEÓN DE AMÉRICA';
     if (competitionId === 'uefa_euro') return 'CAMPEÓN DE EUROPA';
     if (competitionId === 'conmebol_copa_america') return 'CAMPEÓN DE AMÉRICA';
-    return 'CAMPEÓN · ' + (c.shortName || c.name).toUpperCase();
+    // Keep kicker short — competition name is shown once below the trophy asset
+    return 'CAMPEÓN';
   }
 
   function competitionDisplayName(competitionId) {
@@ -444,6 +445,7 @@
         role_change: 'CAMBIO DE ROL.',
         great_season: 'GRAN TEMPORADA.',
         bad_season: 'MALA TEMPORADA.',
+        consolidation: 'CONSOLIDACIÓN.',
         title: 'TÍTULO.',
         national_call: 'SELECCIÓN.',
         continental: 'TORNEO INTERNACIONAL.',

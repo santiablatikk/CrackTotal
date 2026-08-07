@@ -56,6 +56,8 @@ assert(seasons > 200, 'enough seasons sampled');
 assert(withBeat / seasons >= 0.35, 'beat coverage >= 35% (' + (withBeat / seasons).toFixed(2) + ')');
 assert(Object.keys(beatSet).length >= 4, 'multiple beat types (' + Object.keys(beatSet).join(', ') + ')');
 assert(beatSet.debut >= 1 || beatSet.injury >= 1 || beatSet.explosion >= 1 || beatSet.title >= 1, 'meaningful beats present');
+const badShare = (beatSet.bad_season || 0) / Math.max(1, withBeat);
+assert(badShare < 0.55, 'bad_season not dominating beats (' + badShare.toFixed(2) + ')');
 
 const career = Eng.simulateFullCareer({
   seed: 520999,

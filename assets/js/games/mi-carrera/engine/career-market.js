@@ -161,6 +161,9 @@
     } else if (moveKind === 'MINUTES' || moveKind === 'DECLINE') {
       gains = ['Más minutos', 'Confianza', 'Protagonismo'];
       risks = ['Menor prestigio', 'Techo más bajo'];
+    } else if (moveKind === 'LATERAL') {
+      gains = ['Cambio de aire', 'Seguir compitiendo'];
+      risks = ['Misma exigencia', 'Adaptación'];
     } else if (moveKind === 'SOUTH_AMERICA') {
       gains = ['Sudamérica', 'Nuevo capítulo', 'Identidad'];
       risks = ['Cambio de contexto', 'Expectativa'];

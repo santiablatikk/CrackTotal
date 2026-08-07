@@ -75,6 +75,13 @@
     };
   }
 
+  /** Engine expectedMinutes is match-load, not clock minutes. */
+  function expectedLoadLabel(n) {
+    if (n == null) return '';
+    if (n <= 45) return '~' + n + ' PJ';
+    return 'MIN ~' + n;
+  }
+
   var Screens = {
     INTRO: function (session) {
       var C = UI.Components;
@@ -306,7 +313,7 @@
       var lastSeason = (career.seasons || [])[(career.seasons || []).length - 1];
       if (lastSeason) {
         var feelPrev = N.progressionFeel(lastSeason, career);
-        if (feelPrev && feelPrev !== 'estable') {
+        if (feelPrev) {
           left.appendChild(C.text('div', 'mc-progress-feel mc-progress-feel--' + feelPrev, N.progressionLine(feelPrev)));
         }
       }
@@ -503,7 +510,7 @@
           );
           if (opt.expectedMinutes != null) {
             stayCol.appendChild(
-              C.text('div', 'mc-change-offer__meta', 'MINUTOS · ~' + opt.expectedMinutes)
+              C.text('div', 'mc-change-offer__meta', 'CARGA · ' + expectedLoadLabel(opt.expectedMinutes))
             );
           }
           stayCol.appendChild(stayCta);
@@ -526,7 +533,7 @@
           );
           if (opt.expectedMinutes != null) {
             offer.appendChild(
-              C.text('span', 'mc-change-offer__meta', 'MIN ~' + opt.expectedMinutes)
+              C.text('span', 'mc-change-offer__meta', expectedLoadLabel(opt.expectedMinutes))
             );
           }
           var gr = gainRisk(opt);
@@ -585,27 +592,11 @@
       axes.appendChild(C.text('div', 'mc-path__axis is-gain', 'GANÁS · ' + (gr.gains[0] || 'SALTO').toUpperCase()));
       axes.appendChild(C.text('div', 'mc-path__axis is-risk', 'ARRIESGÁS · ' + (gr.risks[0] || 'RIESGO').toUpperCase()));
       if (opt.expectedMinutes != null) {
-        axes.appendChild(C.text('div', 'mc-vs-axes__m', 'MINUTOS ESPERADOS · ~' + opt.expectedMinutes));
+        axes.appendChild(C.text('div', 'mc-vs-axes__m', 'CARGA ESPERADA · ' + expectedLoadLabel(opt.expectedMinutes)));
       }
       if (opt.role) axes.appendChild(C.text('div', 'mc-vs-axes__m', 'ROL · ' + N.roleLabel(opt.role).toUpperCase()));
-      if (opt.kind) {
-        axes.appendChild(
-          C.text(
-            'div',
-            'mc-vs-axes__m',
-            'MOVIMIENTO · ' +
-              ({
-                EUROPE: 'EUROPA',
-                SOUTH_AMERICA: 'SUDAMÉRICA',
-                HOME: 'REGRESO A CASA',
-                STEP_UP: 'SALTO',
-                DECLINE: 'ESCALÓN ABAJO',
-                MINUTES: 'MINUTOS',
-                LATERAL: 'LATERAL',
-                LOAN: 'PRÉSTAMO'
-              }[opt.kind] || String(opt.kind))
-          )
-        );
+      if (opt.kind || opt.type) {
+        axes.appendChild(C.text('div', 'mc-vs-axes__m', 'MOVIMIENTO · ' + N.marketMoveLabel(opt.kind, opt.type)));
       }
       scene.appendChild(axes);
 

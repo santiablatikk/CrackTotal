@@ -70,9 +70,12 @@
     if (minutes < 700) return 'bad_season';
     if (minutes >= 2200 && rating >= 7.2) return 'great_season';
     if (minutes >= 1800 && rating >= 7.0 && delta >= 1) return 'great_season';
-    if (rating < 6.5 && minutes >= 1000) return 'bad_season';
+    // Reserve "bad" for clearly poor campaigns — not every average season
+    if (minutes < 900 || (rating < 6.35 && delta <= 0 && minutes >= 1000)) return 'bad_season';
     if (career.player.age >= 34 && minutes >= 900) return 'farewell';
-    if (delta >= 1 && minutes >= 1200) return 'great_season';
+    if (delta >= 2 && minutes >= 1200) return 'great_season';
+    if (delta >= 1 && minutes >= 1500 && rating >= 6.8) return 'great_season';
+    if (minutes >= 1600 && rating >= 6.6 && delta >= 0) return 'consolidation';
     return null;
   }
 
