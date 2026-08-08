@@ -452,7 +452,12 @@
       var options = (market && market.options) || [];
       var scene = C.Scene('MARKET');
       scene.appendChild(C.text('div', 'mc-kicker', 'MERCADO'));
-      scene.appendChild(C.CareerHeadline('¿ME QUEDO\nO DOY EL SALTO?'));
+      var isRivalMarket = ((market && market.options) || []).some(function (o) {
+        return o.kind === 'RIVAL';
+      });
+      scene.appendChild(
+        C.CareerHeadline(isRivalMarket ? 'ELLOS TE QUIEREN.\nESTO CAMBIA TODO.' : '¿ME QUEDO\nO DOY EL SALTO?')
+      );
       scene.appendChild(C.text('p', 'mc-quote', N.marketSituationLine(market && market.situation)));
 
       var stayOpt = null;
@@ -495,6 +500,12 @@
           offer.setAttribute('data-action', 'pick-offer');
           offer.setAttribute('data-index', String(m.idx));
           offer.appendChild(C.Badge(opt.clubId, 'lg'));
+          if (opt.kind === 'RIVAL') {
+            offer.classList.add('mc-change-offer--rival');
+            offer.appendChild(C.text('span', 'mc-move-kind mc-move-kind--rival', 'RIVAL'));
+          } else {
+            offer.appendChild(C.text('span', 'mc-move-kind', N.marketMoveLabel(opt.kind, opt.type)));
+          }
           offer.appendChild(C.text('span', 'mc-change-offer__n', clubShort(opt.clubId)));
           offer.appendChild(
             C.text(
@@ -508,6 +519,9 @@
           offer.appendChild(
             C.text('span', 'mc-change-offer__why', (N.roleLabel(opt.role) || 'ROL').toUpperCase())
           );
+          if (opt.reason) {
+            offer.appendChild(C.text('span', 'mc-change-offer__reason', opt.reason));
+          }
           var gr = gainRisk(opt);
           if (gr.gains[0]) {
             offer.appendChild(C.text('span', 'mc-change-offer__gain', '+ ' + String(gr.gains[0]).toUpperCase()));
@@ -519,7 +533,11 @@
             C.text(
               'span',
               'mc-change-offer__cta-label',
-              opt.type === 'loan' ? 'IRME A PRÉSTAMO' : 'DAR EL SALTO'
+              opt.type === 'loan'
+                ? 'IRME A PRÉSTAMO'
+                : opt.kind === 'RIVAL'
+                  ? 'CRUZAR LA LÍNEA'
+                  : 'DAR EL SALTO'
             )
           );
           changeCol.appendChild(offer);
@@ -571,6 +589,33 @@
           retireAge: t.retireAge || career.player.age
         })
       );
+      var moments = (career.moments || []).filter(function (m) {
+        return (
+          m.type === 'first_goal' ||
+          m.type === 'first_title' ||
+          m.type === 'debut_national_team' ||
+          m.type === 'rival_move' ||
+          m.type === 'club_return' ||
+          m.type === 'giant_move' ||
+          m.type === 'comeback' ||
+          m.type === 'major_injury' ||
+          m.type === 'champions' ||
+          m.type === 'libertadores' ||
+          m.type === 'world_cup'
+        );
+      });
+      if (moments.length) {
+        scene.appendChild(C.text('div', 'mc-kicker', 'LÍNEA TEMPORAL'));
+        var tl = C.el('div', 'mc-history-beats');
+        moments.slice(-12).forEach(function (m) {
+          var row = C.el('div', 'mc-history-beat');
+          row.appendChild(C.text('span', 'mc-history-beat__age', m.age != null ? String(m.age) : '—'));
+          row.appendChild(C.text('span', 'mc-history-beat__lab', N.momentKicker(m.type)));
+          row.appendChild(C.text('span', 'mc-history-beat__line', N.momentLine(m.type)));
+          tl.appendChild(row);
+        });
+        scene.appendChild(tl);
+      }
       scene.appendChild(C.PrimaryCTA('SEGUIR JUGANDO', 'close-history'));
       return scene;
     },
@@ -586,20 +631,34 @@
         scene.appendChild(C.SecondaryCTA('VOLVER', 'cancel-compare'));
         return scene;
       }
-      scene.appendChild(C.text('div', 'mc-kicker', 'COMPARÁ'));
-      scene.appendChild(C.CareerHeadline('¿TE VAS?'));
-      var vs = C.el('div', 'mc-vs');
+      var rival = opt.kind === 'RIVAL';
+      scene.appendChild(C.text('div', 'mc-kicker', rival ? 'EL RIVAL' : 'COMPARÁ'));
+      scene.appendChild(C.CareerHeadline(rival ? 'ESTO CAMBIA TODO.' : '¿TE VAS?'));
+      if (rival) {
+        scene.appendChild(C.text('p', 'mc-quote mc-quote--hero', 'No es un traspaso cualquiera.'));
+      }
+      var vs = C.el('div', 'mc-vs' + (rival ? ' mc-vs--rival' : ''));
       var left = C.el('div', 'mc-vs__side');
       left.appendChild(C.Badge(career.currentClubId, 'xl'));
       left.appendChild(C.text('div', 'mc-vs__name', clubShort(career.currentClubId)));
-      left.appendChild(C.text('div', 'mc-vs__tag', 'AHORA'));
+      left.appendChild(C.text('div', 'mc-vs__tag', rival ? 'TU CLUB' : 'AHORA'));
       left.appendChild(C.text('div', 'mc-change-offer__meta', clubMeta(career.currentClubId)));
       var mid = C.text('div', 'mc-vs__mark', '→');
       var right = C.el('div', 'mc-vs__side');
       right.appendChild(C.Badge(opt.clubId, 'xl'));
       right.appendChild(C.text('div', 'mc-vs__name', clubShort(opt.clubId)));
       right.appendChild(
-        C.text('div', 'mc-vs__tag', opt.type === 'loan' ? 'PRÉSTAMO' : opt.kind === 'HOME' ? 'CASA' : 'DESTINO')
+        C.text(
+          'div',
+          'mc-vs__tag',
+          rival
+            ? 'TU RIVAL'
+            : opt.type === 'loan'
+              ? 'PRÉSTAMO'
+              : opt.kind === 'HOME' || opt.kind === 'RETURN'
+                ? 'CASA'
+                : 'DESTINO'
+        )
       );
       right.appendChild(
         C.text('div', 'mc-change-offer__meta', opt.leagueName || clubMeta(opt.clubId))
@@ -613,6 +672,7 @@
       var gr = gainRisk(opt);
       axes.appendChild(C.text('div', 'mc-path__axis is-gain', 'GANÁS · ' + (gr.gains[0] || 'SALTO').toUpperCase()));
       axes.appendChild(C.text('div', 'mc-path__axis is-risk', 'ARRIESGÁS · ' + (gr.risks[0] || 'RIESGO').toUpperCase()));
+      if (opt.reason) axes.appendChild(C.text('div', 'mc-vs-axes__m', opt.reason));
       if (opt.expectedMinutes != null) {
         axes.appendChild(C.text('div', 'mc-vs-axes__m', 'CARGA ESPERADA · ' + expectedLoadLabel(opt.expectedMinutes)));
       }
@@ -624,7 +684,10 @@
 
       var actions = C.el('div', 'mc-actions');
       actions.appendChild(
-        C.PrimaryCTA(opt.type === 'loan' ? 'ACEPTAR EL DESAFÍO' : 'DAR EL SALTO', 'confirm-compare')
+        C.PrimaryCTA(
+          opt.type === 'loan' ? 'ACEPTAR EL DESAFÍO' : rival ? 'CRUZAR LA LÍNEA' : 'DAR EL SALTO',
+          'confirm-compare'
+        )
       );
       actions.appendChild(C.SecondaryCTA('QUEDARME', 'cancel-compare'));
       scene.appendChild(actions);
@@ -641,13 +704,23 @@
           ? offer.fromClubId
           : (career.transfers[career.transfers.length - 1] || {}).fromClubId;
       var to = career.currentClubId;
-      scene.appendChild(C.text('div', 'mc-kicker', offer && offer.type === 'loan' ? 'CESIÓN' : 'FICHAJE'));
+      scene.appendChild(C.text('div', 'mc-kicker', offer && offer.type === 'loan' ? 'CESIÓN' : offer && offer.kind === 'RIVAL' ? 'EL RIVAL' : 'FICHAJE'));
       var crests = C.el('div', 'mc-transfer');
       if (from) crests.appendChild(C.Badge(from, 'lg'));
       crests.appendChild(C.text('div', 'mc-transfer__arrow', '→'));
       crests.appendChild(C.Badge(to, 'xl'));
       scene.appendChild(crests);
-      scene.appendChild(C.CareerHeadline(offer && offer.type === 'loan' ? 'NUEVA CASA.' : 'NUEVO CLUB.'));
+      scene.appendChild(
+        C.CareerHeadline(
+          offer && offer.type === 'loan'
+            ? 'NUEVA CASA.'
+            : offer && offer.kind === 'RIVAL'
+              ? 'CAMBIO DE BANDO.'
+              : offer && offer.kind === 'RETURN'
+                ? 'VOLVÉS A CASA.'
+                : 'NUEVO CLUB.'
+        )
+      );
       scene.appendChild(C.text('div', 'mc-display', clubName(to)));
       scene.appendChild(
         C.text('div', 'mc-path__meta', career.player.age + ' AÑOS · OVR ' + career.player.overall)

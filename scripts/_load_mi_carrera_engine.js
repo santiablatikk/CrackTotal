@@ -25,6 +25,7 @@ const SCRIPTS = [
   'assets/js/games/mi-carrera/engine/career-competitions.js',
   'assets/js/games/mi-carrera/engine/career-awards.js',
   'assets/js/games/mi-carrera/engine/career-national.js',
+  'assets/js/games/mi-carrera/engine/career-rivalries.js',
   'assets/js/games/mi-carrera/engine/career-market.js',
   'assets/js/games/mi-carrera/engine/career-history.js',
   'assets/js/games/mi-carrera/engine/career-engine.js'

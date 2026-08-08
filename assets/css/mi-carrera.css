@@ -3070,6 +3070,58 @@
   gap: 10px;
 }
 
+.mc-change-offer--rival {
+  border-color: rgba(255, 107, 74, 0.55) !important;
+  box-shadow: 0 0 28px rgba(255, 107, 74, 0.18);
+}
+
+.mc-move-kind--rival {
+  color: var(--mc-warn) !important;
+}
+
+.mc-change-offer__reason {
+  font-size: 12px;
+  color: var(--mc-muted);
+  line-height: 1.35;
+}
+
+.mc-vs--rival .mc-vs__tag {
+  color: var(--mc-warn);
+}
+
+.mc-history-beats {
+  display: grid;
+  gap: 10px;
+  max-width: 520px;
+  margin: 12px 0 24px;
+}
+
+.mc-history-beat {
+  display: grid;
+  grid-template-columns: 40px 110px 1fr;
+  gap: 10px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--mc-line-soft);
+  padding-bottom: 8px;
+}
+
+.mc-history-beat__age {
+  font-family: var(--mc-display);
+  font-size: 22px;
+}
+
+.mc-history-beat__lab {
+  font-family: var(--mc-display);
+  letter-spacing: 0.06em;
+  color: var(--mc-accent);
+  font-size: 14px;
+}
+
+.mc-history-beat__line {
+  color: var(--mc-muted);
+  font-size: 13px;
+}
+
 @media (max-width: 720px) {
   .mc-chrome {
     padding: 10px 12px 0;
@@ -3109,5 +3161,15 @@
   .mc-has-hud .mc-stage .mc-scene {
     padding-top: 108px;
   }
+
+  .mc-history-beat {
+    grid-template-columns: 36px 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .mc-history-beat__line {
+    grid-column: 1 / -1;
+  }
 }
+
 

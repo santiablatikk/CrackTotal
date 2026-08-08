@@ -1,5 +1,5 @@
 /**
- * Transfer / loan / stay market generation with memory and gates.
+ * Transfer / loan / stay market — trajectory-aware, never invents clubs.
  */
 (function (root) {
   'use strict';
@@ -9,7 +9,7 @@
   var Rules = Engine.Rules;
 
   function offerFingerprint(option) {
-    return [option.type, option.clubId || 'stay', option.role || ''].join(':');
+    return [option.type, option.clubId || 'stay', option.role || '', option.kind || ''].join(':');
   }
 
   function recentlyLeft(career, clubId) {
@@ -20,19 +20,33 @@
     return career.marketMemory.yearsAtClub || 0;
   }
 
-  function buildStayOption(career, club) {
-    return {
-      type: 'stay',
-      kind: 'STAY',
-      clubId: club.id,
-      label: 'Quedarte',
-      role: career.role,
-      expectedMinutes: Rules.expectedMinutes(career.role),
-      gains: ['Continuidad', 'Minutos estables', 'Vínculo con el club'],
-      risks: ['Menor salto de prestigio', 'Puede estancar exposición'],
-      prestige: club.prestige,
-      band: Rules.clubBand(club)
-    };
+  function clubCareerLevel(club) {
+    if (!club) return 0;
+    var rank = Rules.bandRank(Rules.clubBand(club));
+    var prestige = club.prestige || 50;
+    var tier = club.tier || 3;
+    return rank * 12 + prestige / 10 + tier;
+  }
+
+  function previousClubIds(career) {
+    var ids = [];
+    var seen = Object.create(null);
+    (career.clubs || []).forEach(function (spell) {
+      if (!spell || !spell.clubId || spell.clubId === career.currentClubId) return;
+      if (seen[spell.clubId]) return;
+      seen[spell.clubId] = 1;
+      ids.push(spell.clubId);
+    });
+    return ids;
+  }
+
+  function familiarLeagueIds(career) {
+    var leagues = Object.create(null);
+    (career.clubs || []).forEach(function (spell) {
+      var c = NS.Providers.clubs.getById(spell.clubId);
+      if (c && c.leagueId) leagues[c.leagueId] = 1;
+    });
+    return leagues;
   }
 
   function seasonForm(career) {
@@ -40,30 +54,202 @@
     var last = (career.seasons && career.seasons[career.seasons.length - 1]) || {};
     var rating = last.rating || 6.5;
     var minutes = last.minutes || 0;
-    var delta = (last.overallAfter != null ? last.overallAfter : p.overall) - (last.overallBefore != null ? last.overallBefore : p.overall);
+    var delta =
+      (last.overallAfter != null ? last.overallAfter : p.overall) -
+      (last.overallBefore != null ? last.overallBefore : p.overall);
     var form = p.form || 50;
     var injury = (last.injurySeverity || 0) >= 2;
+    var great =
+      !injury &&
+      ((rating >= 7.35 && minutes >= 1800 && delta >= 1) ||
+        (rating >= 7.2 && minutes >= 2200 && delta >= 2) ||
+        (delta >= 3 && minutes >= 1500));
     var good =
       !injury &&
-      (rating >= 7.05 || (form >= 68 && minutes >= 1600) || (delta >= 2 && minutes >= 1400) || (rating >= 6.9 && minutes >= 2000 && form >= 60));
+      (great ||
+        rating >= 7.05 ||
+        (form >= 68 && minutes >= 1600) ||
+        (delta >= 2 && minutes >= 1400) ||
+        (rating >= 6.9 && minutes >= 2000 && form >= 60));
     var poor =
       injury ||
       (rating < 6.45 && form < 52) ||
       minutes < 900 ||
       delta <= -2 ||
       (career.role === 'substitute' && minutes < 1200);
-    return { good: good, poor: poor, rating: rating, minutes: minutes, delta: delta, form: form, injury: injury };
+    return {
+      good: good,
+      great: great,
+      poor: poor,
+      rating: rating,
+      minutes: minutes,
+      delta: delta,
+      form: form,
+      injury: injury
+    };
   }
 
-  function scoreClubForInterest(career, club, rng) {
+  /** Trajectory snapshot for market decisions — derived only from existing career data. */
+  function buildCareerMarketProfile(career) {
+    var form = seasonForm(career);
     var p = career.player;
+    var titles = career.titles || [];
+    var hasCL = titles.some(function (t) {
+      return t.competitionId === 'uefa_cl';
+    });
+    var hasLib = titles.some(function (t) {
+      return t.competitionId === 'conmebol_libertadores';
+    });
+    var hasWC = titles.some(function (t) {
+      return t.competitionId === 'fifa_world_cup';
+    });
+    var hasContNT = titles.some(function (t) {
+      return t.competitionId === 'uefa_euro' || t.competitionId === 'conmebol_copa_america';
+    });
+    var caps = (career.nationalTeam && career.nationalTeam.caps) || 0;
+    var fromClub = NS.Providers.clubs.getById(career.currentClubId);
+    var fromRank = fromClub ? Rules.bandRank(Rules.clubBand(fromClub)) : 3;
+    var years = yearsAtClub(career);
+    var prev = previousClubIds(career);
+    var contractPressure = (career.contractYears || 0) <= 1;
+    var lowMinutes = form.minutes < 1400;
+    var benchRole =
+      career.role === 'youth_prospect' ||
+      career.role === 'substitute' ||
+      career.role === 'rotation';
+    var comebackRecent = (career.moments || []).some(function (m) {
+      return m.type === 'comeback' && m.seasonIndex >= (career.seasonIndex || 1) - 2;
+    });
+    return {
+      form: form,
+      age: p.age,
+      overall: p.overall,
+      reputation: p.reputation || 0,
+      potential: p.potential || p.overall,
+      fromClub: fromClub,
+      fromRank: fromRank,
+      fromLevel: clubCareerLevel(fromClub),
+      yearsAtClub: years,
+      previousClubIds: prev,
+      familiarLeagues: familiarLeagueIds(career),
+      hasCL: hasCL,
+      hasLib: hasLib,
+      hasWC: hasWC,
+      hasContNT: hasContNT,
+      caps: caps,
+      contractPressure: contractPressure,
+      lowMinutes: lowMinutes,
+      benchRole: benchRole,
+      young: p.age <= 22,
+      prime: p.age >= 23 && p.age <= 29,
+      veteran: p.age >= 30,
+      comebackRecent: comebackRecent,
+      playedEurope: !!(career.flags && career.flags.playedEurope),
+      playedSouthAmerica: !!(career.flags && career.flags.playedSouthAmerica)
+    };
+  }
+
+  function offerReason(profile, moveKind, toClub, fromClub) {
+    if (moveKind === 'RIVAL') return 'No es un traspaso cualquiera.';
+    if (moveKind === 'RETURN') return 'Volvés al lugar donde ya escribiste historia.';
+    if (moveKind === 'LOAN') return 'Te ofrecen protagonismo y minutos.';
+    if (moveKind === 'HOME') return 'Regreso a tu mercado.';
+    if (moveKind === 'GIANT') return 'Un club de élite midió tu momento.';
+    if (moveKind === 'EUROPE') return 'Europa te pone en la agenda.';
+    if (moveKind === 'RECOVERY') return 'Un proyecto para recuperar ritmo.';
+    if (moveKind === 'STEP_UP') return 'Buscan un salto de nivel contigo.';
+    if (profile.caps >= 10) return 'Tu nivel internacional elevó tu perfil.';
+    if (profile.young && (toClub.youthLevel || 0) >= 75) return 'Buscan talento para desarrollar.';
+    if (profile.veteran) return 'Buscan experiencia.';
+    if (profile.lowMinutes || profile.benchRole) return 'Te ofrecen protagonismo.';
+    if ((toClub.squadStrength || 70) - profile.overall <= 2) return 'Buscan un titular.';
+    return 'Ven un encaje deportivo.';
+  }
+
+  function buildStayOption(career, club, profile) {
+    var gains = ['Continuidad', 'Minutos estables', 'Vínculo con el club'];
+    var risks = ['Menor salto de prestigio', 'Puede estancar exposición'];
+    if (profile && profile.yearsAtClub >= 5) {
+      gains = ['Identidad', 'Casa', 'Continuidad'];
+      risks = ['Menos escaparate', 'Rutina'];
+    }
+    return {
+      type: 'stay',
+      kind: 'STAY',
+      clubId: club.id,
+      label: 'Quedarte',
+      role: career.role,
+      expectedMinutes: Rules.expectedMinutes(career.role),
+      gains: gains,
+      risks: risks,
+      reason: profile && profile.yearsAtClub >= 5 ? 'El club ya es parte de tu historia.' : 'El proyecto continúa.',
+      prestige: club.prestige,
+      band: Rules.clubBand(club)
+    };
+  }
+
+  function classifyMove(career, fromClub, toClub, profile) {
+    var Rivalries = Engine.Rivalries;
+    if (Rivalries && Rivalries.isRival(fromClub.id, toClub.id)) return 'RIVAL';
+    if (profile && profile.previousClubIds.indexOf(toClub.id) !== -1) return 'RETURN';
+    var a = Rules.bandRank(Rules.clubBand(fromClub));
+    var b = Rules.bandRank(Rules.clubBand(toClub));
+    if (b >= 6 && b > a) return 'GIANT';
+    if (toClub.continent === 'EU' && fromClub.continent === 'SA') return 'EUROPE';
+    if (toClub.continent === 'SA' && fromClub.continent === 'EU') {
+      if (toClub.countryCode === career.player.country) return 'HOME';
+      return 'SOUTH_AMERICA';
+    }
+    if (toClub.countryCode === career.player.country && fromClub.countryCode !== career.player.country) {
+      return 'HOME';
+    }
+    if (profile && profile.familiarLeagues[toClub.leagueId] && toClub.leagueId !== fromClub.leagueId) {
+      if (b >= a - 1 && b <= a + 1) return 'FAMILIAR_LEAGUE';
+    }
+    if (b >= a + 2) return 'STEP_UP';
+    if (b > a) return 'STEP_UP';
+    if (b <= a - 2) return profile && profile.form.poor ? 'RECOVERY' : 'RECOVERY';
+    if (b < a) return profile && profile.form.poor ? 'RECOVERY' : 'RECOVERY';
+    return 'SIDEWAYS';
+  }
+
+  function rivalEligible(profile, fromClub, toClub) {
+    if (!Engine.Rivalries || !Engine.Rivalries.isRival(fromClub.id, toClub.id)) return false;
+    if (profile.form.injury) return false;
+    if (profile.form.poor) return false;
+    if (!profile.form.good && !profile.form.great) return false;
+    if (profile.overall < 76) return false;
+    if (profile.age < 21 || profile.age > 32) return false;
+    if (profile.yearsAtClub < 1) return false;
+    var intensity = Engine.Rivalries.intensityBetween(fromClub.id, toClub.id);
+    if (intensity === 'ARCHRIVAL') {
+      return (
+        profile.overall >= 78 &&
+        (profile.form.great ||
+          profile.reputation >= 68 ||
+          profile.caps >= 10 ||
+          (profile.form.good && profile.overall >= 82))
+      );
+    }
+    return profile.overall >= 76 && (profile.form.good || profile.caps >= 6);
+  }
+
+  function scoreClubForInterest(career, club, rng, profile) {
+    var p = career.player;
+    profile = profile || buildCareerMarketProfile(career);
     if (!Rules.canJoinClub(p, club)) return 0;
     if (club.id === career.currentClubId) return 0;
     if (recentlyLeft(career, club.id)) return 0;
-    if ((career.marketMemory.rejectedClubIds || []).indexOf(club.id) !== -1 && rng.chance(0.7)) return 0;
+    if ((career.marketMemory.rejectedClubIds || []).indexOf(club.id) !== -1 && rng.chance(0.78)) return 0;
 
-    var fromClub = NS.Providers.clubs.getById(career.currentClubId);
-    if (fromClub && fromClub.continent !== club.continent) {
+    var fromClub = profile.fromClub;
+    if (!fromClub) return 0;
+
+    var Rivalries = Engine.Rivalries;
+    var isRival = Rivalries && Rivalries.isRival(fromClub.id, club.id);
+    if (isRival && !rivalEligible(profile, fromClub, club)) return 0;
+
+    if (fromClub.continent !== club.continent) {
       if (Engine.Eligibility && !Engine.Eligibility.isCredibleInternationalMove(career, fromClub, club)) {
         return 0;
       }
@@ -74,135 +260,145 @@
     var max = Rules.bandRank(Rules.maxClubBandForPlayer(p));
     if (rank > max) return 0;
 
-    var form = seasonForm(career);
-    var fromRank = fromClub ? Rules.bandRank(Rules.clubBand(fromClub)) : 3;
+    var fromRank = profile.fromRank;
+    // Hard gate: great/good seasons should not chase clearly inferior clubs as primary interest
+    if (profile.form.good && !isRival && profile.previousClubIds.indexOf(club.id) === -1) {
+      if (rank <= fromRank - 2) return 0;
+    }
+    if (profile.form.great && !isRival && profile.previousClubIds.indexOf(club.id) === -1) {
+      if (rank < fromRank) return 0;
+    }
 
     var score = 10;
     score += Math.max(0, 20 - Math.abs(club.squadStrength - p.overall));
     score += (p.reputation || 0) / 8;
-    if ((p.form || 50) >= 70) score += 8;
-    if ((career.seasons[career.seasons.length - 1] || {}).rating >= 7.2) score += 10;
+    score += (clubCareerLevel(club) - profile.fromLevel) * 0.35;
+
+    if (profile.form.form >= 70) score += 8;
+    if (profile.form.rating >= 7.2) score += 10;
+    if (profile.form.great) score += 12;
     if (p.age <= 22 && (club.youthLevel || 0) >= 80) score += 12;
     if (p.age >= 32 && rank >= 6) score -= 15;
-    if (p.age <= 21 && rank >= 6 && (career.role === 'youth_prospect' || career.role === 'substitute')) score -= 8;
+    if (p.age <= 21 && rank >= 6 && profile.benchRole) score -= 8;
 
-    // Performance → opportunity quality (reuse score, never invent clubs)
-    if (form.good) {
-      if (rank >= fromRank) score *= 1.4;
-      if (rank > fromRank) score *= 1.25;
-      if (rank === fromRank) score *= 1.1;
-      if (rank <= fromRank - 2) score *= 0.32;
-      if (rank <= fromRank - 3) score *= 0.12;
-    } else if (form.poor) {
-      if (rank < fromRank) score *= 1.3;
+    if (profile.hasCL) score += 8;
+    if (profile.hasLib) score += 7;
+    if (profile.hasWC) score += 10;
+    if (profile.hasContNT) score += 5;
+    if (profile.caps >= 10) score += 6;
+    if (profile.caps >= 30) score += 4;
+    if (profile.contractPressure) score += 5;
+    if (profile.yearsAtClub >= 4 && rank >= fromRank) score += 4;
+    if (profile.comebackRecent && profile.form.good) score += 6;
+    if (profile.form.injury) score *= 0.2;
+    else if ((career.seasons[career.seasons.length - 1] || {}).injurySeverity >= 1) score *= 0.7;
+
+    if (profile.previousClubIds.indexOf(club.id) !== -1) {
+      score += 18;
+    }
+    if (profile.familiarLeagues[club.leagueId]) score += 6;
+
+    if (profile.form.good) {
+      if (rank >= fromRank) score *= 1.45;
+      if (rank > fromRank) score *= 1.3;
+      if (rank === fromRank) score *= 1.12;
+    } else if (profile.form.poor) {
+      if (rank < fromRank) score *= 1.35;
       if (rank <= fromRank - 1) score *= 1.15;
-      if (rank > fromRank + 1) score *= 0.45;
+      if (rank > fromRank + 1) score *= 0.4;
     }
 
-    // Prefer home country affinity
-    var country = p.country;
-    if (club.countryCode === country) score += 8;
-    // Soft catalog spread: small noise so mid-table clubs can surface
-    score += rng.next() * 6;
+    if (club.countryCode === p.country) score += 8;
+    score += rng.next() * (profile.form.good ? 3 : 6);
 
-    var fromCont = fromContinent(career);
+    var fromCont = fromClub.continent;
     var homeCont = Engine.Eligibility ? Engine.Eligibility.playerHomeContinent(career) : null;
-    var last = (career.seasons && career.seasons[career.seasons.length - 1]) || {};
-    var lowMinutes = (last.minutes || 0) < 1400;
-    var benchRole =
-      career.role === 'youth_prospect' ||
-      career.role === 'substitute' ||
-      career.role === 'rotation';
-
-    // SA → EU pathway boost for ready players
     if (club.continent === 'EU' && fromCont === 'SA' && p.overall >= 76) score += 10;
     if (club.continent === 'EU' && fromCont === 'SA' && p.overall < 74) score *= 0.35;
-
-    // EU → SA: contextual only (hard gate above). Soft weighting when allowed.
     if (club.continent === 'SA' && fromCont === 'EU') {
-      if (club.countryCode === country) score += 14;
+      if (club.countryCode === p.country) score += 14;
       if (p.age >= 30) score += 8;
       if (p.age < 28) score *= 0.45;
       if (p.age < 26) score *= 0.15;
       if (homeCont === 'EU') score *= 0.25;
     }
-
-    // Keep CONMEBOL periphery reachable (VE/BO/PY/EC/PE) for SA careers
-    if (fromCont === 'SA' && club.continent === 'SA' && club.countryCode !== country) {
+    if (fromCont === 'SA' && club.continent === 'SA' && club.countryCode !== p.country) {
       if (['VE', 'BO', 'PY', 'EC', 'PE'].indexOf(club.countryCode) !== -1) score += 6;
     }
 
-    // Minutes pathway: second divisions matter when you need games
     var level =
       Engine.Eligibility && Engine.Eligibility.leagueLevel ? Engine.Eligibility.leagueLevel(club) : 1;
     if (level >= 2) {
-      if (lowMinutes || benchRole || (p.form || 50) < 48) score += 10;
-      else score *= 0.42;
+      if (profile.lowMinutes || profile.benchRole || profile.form.poor) score += 10;
+      else score *= 0.35;
     }
 
-    // Late-career home return pull
-    if (club.countryCode === country && p.age >= 30 && fromCont && club.continent !== fromCont) {
+    if (club.countryCode === p.country && p.age >= 30 && fromCont && club.continent !== fromCont) {
       score += 12;
     }
 
-    // Giants: require closer overall match
     if (rank >= 6) {
       var gap = (club.squadStrength || 70) - p.overall;
-      if (gap > 8) score *= 0.4;
-      if (gap > 12) score *= 0.2;
+      if (gap > 8) score *= 0.35;
+      if (gap > 12) score *= 0.15;
+      if (profile.overall < 80 && !profile.hasCL && !profile.hasLib) score *= 0.5;
+    }
+
+    if (isRival) {
+      // Rare and prestigious — keep score high only when eligible
+      score *= Engine.Rivalries.isArchRival(fromClub.id, club.id) ? 1.55 : 1.35;
     }
 
     return Math.max(0, score);
   }
 
-  function fromContinent(career) {
-    var c = NS.Providers.clubs.getById(career.currentClubId);
-    return c ? c.continent : null;
-  }
-
-  function classifyMove(fromClub, toClub) {
-    var a = Rules.bandRank(Rules.clubBand(fromClub));
-    var b = Rules.bandRank(Rules.clubBand(toClub));
-    if (toClub.continent === 'EU' && fromClub.continent === 'SA') return 'EUROPE';
-    if (toClub.continent === 'SA' && fromClub.continent === 'EU') return 'SOUTH_AMERICA';
-    if (b >= a + 2) return 'STEP_UP';
-    if (b <= a - 2) return 'DECLINE';
-    if (b > a) return 'STEP_UP';
-    if (b < a) return 'MINUTES';
-    return 'LATERAL';
-  }
-
-  function makeTransferOption(career, fromClub, toClub, kind) {
-    var role = Rules.roleFromContext(career.player, toClub, { chance: function () { return false; }, next: function () { return 0.5; }, int: function (a, b) { return a; } });
-    // Approximate role without rng dependency issues
+  function makeTransferOption(career, fromClub, toClub, kind, profile) {
+    profile = profile || buildCareerMarketProfile(career);
     var gap = (toClub.squadStrength || 70) - career.player.overall;
+    var role = 'starter';
     if (gap > 12) role = 'rotation';
     else if (gap > 6) role = 'regular';
     else if (gap > 0) role = 'starter';
     else role = career.player.overall >= 84 ? 'key_player' : 'starter';
 
     var league = NS.Providers.clubs.getLeague ? NS.Providers.clubs.getLeague(toClub.leagueId) : null;
-    var moveKind = kind || classifyMove(fromClub, toClub);
+    var moveKind = kind || classifyMove(career, fromClub, toClub, profile);
+    // Rival always wins over forced HOME/STEP_UP labels
+    if (Engine.Rivalries && Engine.Rivalries.isRival(fromClub.id, toClub.id)) {
+      moveKind = 'RIVAL';
+    }
     var gains = ['Nuevo proyecto', 'Cambio de contexto'];
-    var risks = gap > 8 ? ['Menos minutos', 'Adaptación', 'Competencia interna'] : ['Adaptación', 'Expectativa'];
-    if (moveKind === 'EUROPE') {
+    var risks = gap > 8 ? ['Menos minutos', 'Adaptación'] : ['Adaptación', 'Expectativa'];
+
+    if (moveKind === 'RIVAL') {
+      gains = ['Polémica', 'Protagonismo extremo', 'Historia'];
+      risks = ['Rechazo hinchas', 'Presión máxima', 'Herida abierta'];
+    } else if (moveKind === 'RETURN') {
+      gains = ['Regreso', 'Identidad', 'Cierre de círculo'];
+      risks = ['Expectativa local', 'Comparaciones'];
+    } else if (moveKind === 'EUROPE') {
       gains = ['Europa', 'Exposición', 'Techo más alto'];
       risks = gap > 6 ? ['Menos minutos', 'Adaptación'] : ['Adaptación', 'Competencia'];
     } else if (moveKind === 'HOME') {
       gains = ['Regreso a casa', 'Protagonismo', 'Historia'];
       risks = ['Expectativa local', 'Menos escaparate europeo'];
-    } else if (moveKind === 'STEP_UP') {
-      gains = ['Salto de nivel', 'Prestigio', 'Competición mayor'];
+    } else if (moveKind === 'STEP_UP' || moveKind === 'GIANT') {
+      gains = moveKind === 'GIANT' ? ['Élite', 'Prestigio', 'Escenario máximo'] : ['Salto de nivel', 'Prestigio', 'Competición mayor'];
       risks = gap > 6 ? ['Riesgo de banco', 'Adaptación'] : ['Expectativa', 'Competencia interna'];
-    } else if (moveKind === 'MINUTES' || moveKind === 'DECLINE') {
+    } else if (moveKind === 'RECOVERY') {
       gains = ['Más minutos', 'Confianza', 'Protagonismo'];
       risks = ['Menor prestigio', 'Techo más bajo'];
-    } else if (moveKind === 'LATERAL') {
+    } else if (moveKind === 'SIDEWAYS' || moveKind === 'FAMILIAR_LEAGUE' || moveKind === 'LATERAL') {
       gains = ['Cambio de aire', 'Seguir compitiendo'];
       risks = ['Misma exigencia', 'Adaptación'];
+      if (moveKind === 'LATERAL') moveKind = 'SIDEWAYS';
     } else if (moveKind === 'SOUTH_AMERICA') {
       gains = ['Sudamérica', 'Nuevo capítulo', 'Identidad'];
       risks = ['Cambio de contexto', 'Expectativa'];
+    } else if (moveKind === 'MINUTES' || moveKind === 'DECLINE') {
+      moveKind = 'RECOVERY';
+      gains = ['Más minutos', 'Confianza', 'Protagonismo'];
+      risks = ['Menor prestigio', 'Techo más bajo'];
     }
 
     return {
@@ -214,17 +410,20 @@
       expectedMinutes: Rules.expectedMinutes(role),
       gains: gains,
       risks: risks,
+      reason: offerReason(profile, moveKind, toClub, fromClub),
       prestige: toClub.prestige,
       band: Rules.clubBand(toClub),
       fromClubId: fromClub.id,
       leagueId: toClub.leagueId || null,
       leagueName: (league && league.name) || toClub.league || '',
       countryCode: toClub.countryCode || '',
-      continent: toClub.continent || ''
+      continent: toClub.continent || '',
+      rivalry: Engine.Rivalries ? Engine.Rivalries.intensityBetween(fromClub.id, toClub.id) : null
     };
   }
 
-  function makeLoanOption(career, fromClub, toClub) {
+  function makeLoanOption(career, fromClub, toClub, profile) {
+    profile = profile || buildCareerMarketProfile(career);
     var role = 'starter';
     if ((toClub.squadStrength || 70) - career.player.overall > 6) role = 'regular';
     var league = NS.Providers.clubs.getLeague ? NS.Providers.clubs.getLeague(toClub.leagueId) : null;
@@ -237,6 +436,7 @@
       expectedMinutes: Rules.expectedMinutes(role),
       gains: ['Minutos', 'Desarrollo', 'Visibilidad'],
       risks: ['Temporal', 'Vuelves al club de origen'],
+      reason: offerReason(profile, 'LOAN', toClub, fromClub),
       prestige: toClub.prestige,
       band: Rules.clubBand(toClub),
       fromClubId: fromClub.id,
@@ -251,12 +451,12 @@
   function generateMarket(career, rng) {
     var clubsProvider = NS.Providers.clubs;
     var fromClub = clubsProvider.getById(career.currentClubId);
-    if (!fromClub) return { situation: 'no_club', options: [] };
+    if (!fromClub) return { situation: 'no_club', options: [], profile: null };
 
     if (career.onLoan) {
-      // Forced evaluation: return or make permanent-ish stay/transfer later handled by engine
       return {
         situation: 'loan_end',
+        profile: buildCareerMarketProfile(career),
         options: [
           {
             type: 'loan_return',
@@ -267,6 +467,7 @@
             expectedMinutes: Rules.expectedMinutes('rotation'),
             gains: ['Regreso', 'Nueva oportunidad'],
             risks: ['Competencia por el puesto'],
+            reason: 'Se termina la cesión.',
             prestige: (clubsProvider.getById(career.loanFromClubId) || fromClub).prestige,
             band: Rules.clubBand(clubsProvider.getById(career.loanFromClubId) || fromClub)
           }
@@ -274,14 +475,15 @@
       };
     }
 
+    var profile = buildCareerMarketProfile(career);
     var options = [];
-    var stay = buildStayOption(career, fromClub);
+    var stay = buildStayOption(career, fromClub, profile);
     options.push(stay);
 
     var all = clubsProvider.getAll();
     var scored = [];
     for (var i = 0; i < all.length; i++) {
-      var s = scoreClubForInterest(career, all[i], rng);
+      var s = scoreClubForInterest(career, all[i], rng, profile);
       if (s > 0) scored.push({ club: all[i], score: s });
     }
     scored.sort(function (a, b) {
@@ -290,21 +492,21 @@
 
     var p = career.player;
     var last = career.seasons[career.seasons.length - 1] || {};
-    var lowMinutes = (last.minutes || 0) < 1400;
-    var young = p.age <= 22;
-    var fromRank = Rules.bandRank(Rules.clubBand(fromClub));
-    var bigClub = fromRank >= 5;
-    var benchRole =
-      career.role === 'youth_prospect' ||
-      career.role === 'substitute' ||
-      career.role === 'rotation';
+    var fromRank = profile.fromRank;
+    var formState = profile.form;
 
-    // Loan opportunity — common for young players stuck behind a stronger squad
+    // Loan — young players short of minutes at big clubs
     var loanChance = 0;
-    if (young && bigClub && (lowMinutes || benchRole) && p.potential >= 76) loanChance = 0.72;
-    else if (young && fromRank >= 4 && lowMinutes && p.potential >= 78) loanChance = 0.45;
-    else if (p.age <= 23 && benchRole && lowMinutes) loanChance = 0.28;
+    if (profile.form.injury) loanChance = 0;
+    else if (profile.young && fromRank >= 5 && (profile.lowMinutes || profile.benchRole) && profile.potential >= 76) {
+      loanChance = 0.72;
+    } else if (profile.young && fromRank >= 4 && profile.lowMinutes && profile.potential >= 78) {
+      loanChance = 0.45;
+    } else if (p.age <= 23 && profile.benchRole && profile.lowMinutes) {
+      loanChance = 0.28;
+    }
 
+    var used = {};
     if (rng.chance(loanChance)) {
       var loanPool = scored
         .filter(function (x) {
@@ -313,7 +515,7 @@
         })
         .slice(0, 20);
       if (!loanPool.length) {
-        loanPool = NS.Providers.clubs
+        loanPool = clubsProvider
           .getAll()
           .filter(function (c) {
             var r = Rules.bandRank(Rules.clubBand(c));
@@ -328,42 +530,34 @@
         var loanClub = rng.weighted(loanPool, function (x) {
           return x.score;
         }).club;
-        options.push(makeLoanOption(career, fromClub, loanClub));
+        used[loanClub.id] = 1;
+        options.push(makeLoanOption(career, fromClub, loanClub, profile));
       }
     }
 
-    // Transfer interest — shaped by real form, never invents clubs
-    var formState = seasonForm(career);
-    var interest = formState.good || (last.rating || 6.5) >= 7.0 || p.form >= 68 || p.overall >= 78;
-    var cold = formState.poor || ((last.rating || 6.5) < 6.5 && p.form < 45);
-    var transferCount = cold
-      ? rng.chance(0.42)
-        ? 1
-        : 0
-      : interest
-        ? rng.int(1, 2)
-        : rng.chance(0.4)
-          ? 1
-          : 0;
+    // Transfer volume by form — not every season needs a move
+    var interest = formState.great || formState.good || p.form >= 68 || p.overall >= 78;
+    var cold = formState.poor || formState.injury;
+    var transferCount = 0;
+    if (cold) transferCount = rng.chance(0.4) ? 1 : 0;
+    else if (formState.great) transferCount = rng.chance(0.82) ? rng.int(1, 2) : 1;
+    else if (interest) transferCount = rng.chance(0.62) ? rng.int(1, 2) : rng.chance(0.35) ? 1 : 0;
+    else transferCount = rng.chance(0.32) ? 1 : 0;
 
-    var used = {};
     for (var t = 0; t < transferCount; t++) {
       var eligible = scored.filter(function (x) {
-        return !used[x.club.id] && Rules.canJoinClub(p, x.club);
+        if (used[x.club.id]) return false;
+        if (!Rules.canJoinClub(p, x.club)) return false;
+        // Never put rivals into the generic transfer pool
+        if (Engine.Rivalries && Engine.Rivalries.isRival(fromClub.id, x.club.id)) return false;
+        return true;
       });
-      if (formState.good) {
+      if (formState.good || formState.great) {
+        var floor = formState.great ? fromRank : fromRank;
         var up = eligible.filter(function (x) {
-          return Rules.bandRank(Rules.clubBand(x.club)) >= fromRank - 0;
+          return Rules.bandRank(Rules.clubBand(x.club)) >= floor;
         });
-        if (up.length >= 4) eligible = up;
-        else {
-          eligible = eligible.slice().sort(function (a, b) {
-            return (
-              Rules.bandRank(Rules.clubBand(b.club)) - Rules.bandRank(Rules.clubBand(a.club)) ||
-              b.score - a.score
-            );
-          });
-        }
+        if (up.length >= 3) eligible = up;
       } else if (formState.poor) {
         var down = eligible.filter(function (x) {
           var r = Rules.bandRank(Rules.clubBand(x.club));
@@ -371,69 +565,149 @@
         });
         if (down.length >= 3) eligible = down;
       }
-      // Top slice + deeper catalog picks so mid/small leagues stay alive
-      var pool = eligible.slice(0, formState.good ? 22 : 28);
-      if (!formState.good && eligible.length > 40 && rng.chance(0.34)) {
-        pool = pool.concat(eligible.slice(28, 90));
-      }
-      if (!formState.good && eligible.length > 70 && rng.chance(0.22)) {
-        var deep = eligible.slice(50, 140);
-        if (deep.length) pool.push(rng.pick(deep));
+      var pool = eligible.slice(0, formState.good ? 20 : 28);
+      if (!formState.good && !formState.great && eligible.length > 40 && rng.chance(0.28)) {
+        pool = pool.concat(eligible.slice(28, 80));
       }
       if (!pool.length) break;
       var pick = rng.weighted(pool, function (x) {
         return x.score;
       }).club;
       used[pick.id] = 1;
-      options.push(makeTransferOption(career, fromClub, pick));
+      options.push(makeTransferOption(career, fromClub, pick, null, profile));
     }
 
-    // Home return tease for veterans / soft landings (contextual)
+    // Rival tease — exceptional only (Figo/Campbell-class rarity)
+    var rivalList = Engine.Rivalries ? Engine.Rivalries.rivalsOf(fromClub.id) : [];
+    if (rivalList.length && !formState.injury && formState.good) {
+      var hasArch = rivalList.some(function (r) {
+        return r.intensity === 'ARCHRIVAL';
+      });
+      var rivalChance = hasArch ? (profile.form.great ? 0.09 : 0.04) : profile.form.great ? 0.1 : 0.05;
+      if (profile.contractPressure) rivalChance += 0.02;
+      if (profile.yearsAtClub >= 4) rivalChance += 0.02;
+      if (rng.chance(rivalChance)) {
+        var rivalCandidates = rivalList
+          .map(function (r) {
+            return clubsProvider.getById(r.clubId);
+          })
+          .filter(function (c) {
+            return c && !used[c.id] && rivalEligible(profile, fromClub, c) && Rules.canJoinClub(p, c);
+          });
+        if (rivalCandidates.length) {
+          var rivalClub = rng.pick(rivalCandidates);
+          used[rivalClub.id] = 1;
+          options.push(makeTransferOption(career, fromClub, rivalClub, 'RIVAL', profile));
+        }
+      }
+    }
+
+    // Return to a previous club (still respects international credibility)
+    if (profile.previousClubIds.length && rng.chance(profile.veteran ? 0.22 : profile.form.poor ? 0.12 : 0.06)) {
+      var backId = rng.pick(profile.previousClubIds);
+      var backClub = clubsProvider.getById(backId);
+      if (
+        backClub &&
+        !used[backClub.id] &&
+        Rules.canJoinClub(p, backClub) &&
+        !(
+          fromClub.continent !== backClub.continent &&
+          Engine.Eligibility &&
+          !Engine.Eligibility.isCredibleInternationalMove(career, fromClub, backClub)
+        )
+      ) {
+        used[backClub.id] = 1;
+        options.push(makeTransferOption(career, fromClub, backClub, 'RETURN', profile));
+      }
+    }
+
+    // Home return tease
     if (
       career.flags.playedEurope &&
       ((p.age >= 29 && rng.chance(0.38)) ||
-        (p.age >= 27 && ((last.minutes || 0) < 1400 || (p.form || 50) < 50) && rng.chance(0.28)))
+        (p.age >= 27 && (profile.lowMinutes || (p.form || 50) < 50) && rng.chance(0.28)))
     ) {
       var home = scored.filter(function (x) {
         return (
+          !used[x.club.id] &&
           x.club.countryCode === p.country &&
           Rules.bandRank(Rules.clubBand(x.club)) >= 3 &&
+          !(Engine.Rivalries && Engine.Rivalries.isRival(fromClub.id, x.club.id)) &&
           Engine.Eligibility.isCredibleInternationalMove(career, fromClub, x.club)
         );
       });
       if (home.length) {
         var h = rng.pick(home).club;
-        if (!used[h.id]) {
-          var opt = makeTransferOption(career, fromClub, h, 'HOME');
-          opt.kind = 'HOME';
-          options.push(opt);
-        }
+        used[h.id] = 1;
+        options.push(makeTransferOption(career, fromClub, h, 'HOME', profile));
       }
     }
 
-    // Cap options 1..3 (+ stay already). Max 3 choices total for clarity in later UI.
-    // Keep stay + up to 2 others
+    // Prefer meaningful extras: rival/giant/step_up/europe before noise
     var extras = options.slice(1);
-    extras = rng.shuffle(extras).slice(0, 2);
+    extras.sort(function (a, b) {
+      var rank = function (o) {
+        if (o.kind === 'RIVAL') return 100;
+        if (o.kind === 'GIANT') return 90;
+        if (o.kind === 'EUROPE') return 80;
+        if (o.kind === 'RETURN') return 75;
+        if (o.kind === 'STEP_UP') return 70;
+        if (o.type === 'loan') return 60;
+        if (o.kind === 'HOME') return 55;
+        return 40;
+      };
+      return rank(b) - rank(a);
+    });
+    // Keep stay + up to 2 others; if good form, drop recovery/inferior leftovers
+    if (formState.good || formState.great) {
+      extras = extras.filter(function (o) {
+        if (o.type === 'loan') return true;
+        if (o.kind === 'RIVAL' || o.kind === 'RETURN' || o.kind === 'HOME' || o.kind === 'GIANT') return true;
+        if (o.kind === 'RECOVERY' || o.kind === 'DECLINE' || o.kind === 'MINUTES') return false;
+        var to = clubsProvider.getById(o.clubId);
+        if (!to) return false;
+        return Rules.bandRank(Rules.clubBand(to)) >= fromRank - (formState.great ? 0 : 0);
+      });
+    }
+    extras = extras.slice(0, 2);
     options = [stay].concat(extras);
 
-    // Dedup fingerprints vs last seasons
-    var fps = options.map(offerFingerprint);
-    career.marketMemory.lastOfferFingerprints = fps;
+    career.marketMemory.lastOfferFingerprints = options.map(offerFingerprint);
 
     var situation = 'decision';
     if (extras.length === 0) situation = cold ? 'market_cold' : 'club_wants_you';
-    else if (extras.some(function (o) { return o.kind === 'EUROPE'; })) situation = 'europe_interest';
-    else if (extras.some(function (o) { return o.type === 'loan'; })) situation = 'loan_suggested';
-    else if (extras.some(function (o) { return o.kind === 'STEP_UP'; })) situation = 'step_up';
+    else if (extras.some(function (o) {
+      return o.kind === 'RIVAL';
+    }))
+      situation = 'rival_interest';
+    else if (extras.some(function (o) {
+      return o.kind === 'EUROPE';
+    }))
+      situation = 'europe_interest';
+    else if (extras.some(function (o) {
+      return o.type === 'loan';
+    }))
+      situation = 'loan_suggested';
+    else if (extras.some(function (o) {
+      return o.kind === 'STEP_UP' || o.kind === 'GIANT';
+    }))
+      situation = 'step_up';
+    else if (extras.some(function (o) {
+      return o.kind === 'RETURN' || o.kind === 'HOME';
+    }))
+      situation = 'home_interest';
 
-    return { situation: situation, options: options };
+    return { situation: situation, options: options, profile: profile };
   }
 
   Engine.Market = {
     generateMarket: generateMarket,
     offerFingerprint: offerFingerprint,
     yearsAtClub: yearsAtClub,
-    seasonForm: seasonForm
+    seasonForm: seasonForm,
+    buildCareerMarketProfile: buildCareerMarketProfile,
+    clubCareerLevel: clubCareerLevel,
+    classifyMove: classifyMove,
+    rivalEligible: rivalEligible
   };
 })(typeof globalThis !== 'undefined' ? globalThis : window);

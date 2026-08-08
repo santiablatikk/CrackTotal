@@ -354,7 +354,9 @@
         loan_suggested: 'Una cesión puede destrabarte.',
         step_up: 'Hay un salto posible.',
         loan_end: 'Se termina el préstamo.',
-        no_club: 'Sin club. Hay que rearmar el camino.'
+        no_club: 'Sin club. Hay que rearmar el camino.',
+        rival_interest: 'Ellos te quieren. No es un traspaso cualquiera.',
+        home_interest: 'Hay un camino de regreso.'
       }[situation] || 'Decidí tu próximo paso.'
     );
   }
@@ -397,6 +399,10 @@
         injury: 'LESIÓN',
         comeback: 'COMEBACK',
         major_transfer: 'TRANSFERENCIA',
+        rival_move: 'EL RIVAL',
+        club_return: 'REGRESO',
+        giant_move: 'GIGANTE',
+        homecoming: 'CASA',
         world_cup: 'MUNDIAL',
         continental_title: 'CONTINENTAL',
         champions: 'CHAMPIONS',
@@ -421,6 +427,10 @@
         injury: 'EL CUERPO PIDE TREGUA.',
         comeback: 'EL COMEBACK.',
         major_transfer: 'UN CAMBIO DE DESTINO.',
+        rival_move: 'TE VAS AL RIVAL. NADA VUELVE A SER IGUAL.',
+        club_return: 'VOLVÉS AL LUGAR DONDE EMPEZÓ TODO.',
+        giant_move: 'EL SALTO A LA ÉLITE.',
+        homecoming: 'EL REGRESO A CASA.',
         world_cup: 'EL MUNDIAL.',
         continental_title: 'TÍTULO CONTINENTAL.',
         champions: 'LA NOCHE MÁS GRANDE DE EUROPA.',
@@ -499,9 +509,14 @@
         STEP_UP: 'SALTO',
         MINUTES: 'MINUTOS',
         DECLINE: 'REVIVAL',
+        RECOVERY: 'RECUPERACIÓN',
         LATERAL: 'LATERAL',
+        SIDEWAYS: 'MISMO NIVEL',
+        FAMILIAR_LEAGUE: 'LIGA CONOCIDA',
         STAY: 'ESTABILIDAD',
         GIANT: 'GIGANTE',
+        RIVAL: 'RIVAL',
+        RETURN: 'REGRESO',
         LOAN: 'PRÉSTAMO'
       }[kind] || 'TRASPASO'
     );

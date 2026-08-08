@@ -364,6 +364,11 @@
       career.contractYears = Math.max(career.contractYears, rng.int(1, 3));
       career.player.managerTrust = Engine.State.clamp(career.player.managerTrust + rng.int(1, 5), 10, 95);
       career.player.confidence = Engine.State.clamp(career.player.confidence + rng.int(0, 4), 15, 98);
+      if (decision.rejectedClubIds && decision.rejectedClubIds.length) {
+        career.marketMemory.rejectedClubIds = (career.marketMemory.rejectedClubIds || [])
+          .concat(decision.rejectedClubIds)
+          .slice(-16);
+      }
       return career;
     }
 
@@ -433,7 +438,17 @@
       career.marketMemory.recentClubIds = [fromId].concat(career.marketMemory.recentClubIds || []).slice(0, 4);
       career.player.managerTrust = Engine.State.clamp(40 + rng.int(0, 20), 10, 95);
       Engine.History.ensureClubSpell(career, toClub.id, decision.kind || 'transfer');
-      Engine.Events.pushMoment(career, 'major_transfer', { from: fromId, to: toClub.id, kind: decision.kind });
+      var momentType = 'major_transfer';
+      if (decision.kind === 'RIVAL') momentType = 'rival_move';
+      else if (decision.kind === 'RETURN') momentType = 'club_return';
+      else if (decision.kind === 'GIANT') momentType = 'giant_move';
+      else if (decision.kind === 'HOME') momentType = 'homecoming';
+      Engine.Events.pushMoment(career, momentType, {
+        from: fromId,
+        to: toClub.id,
+        kind: decision.kind,
+        rivalry: decision.rivalry || null
+      });
       if (toClub.continent === 'EU') career.flags.playedEurope = true;
       if (toClub.continent === 'SA') career.flags.playedSouthAmerica = true;
       Engine.State.updateValue(career);
@@ -461,8 +476,16 @@
     })[0];
     if (loan && career.player.age <= 22 && last && last.minutes < 1000 && rng.chance(0.7)) return loan;
 
+    var rivalOpt = opts.filter(function (o) {
+      return o.type === 'transfer' && o.kind === 'RIVAL';
+    })[0];
+    if (rivalOpt && career.player.form >= 65 && rng.chance(0.42)) return rivalOpt;
+
     var step = opts.filter(function (o) {
-      return o.type === 'transfer' && (o.kind === 'STEP_UP' || o.kind === 'EUROPE');
+      return (
+        o.type === 'transfer' &&
+        (o.kind === 'STEP_UP' || o.kind === 'EUROPE' || o.kind === 'GIANT')
+      );
     })[0];
     if (step && career.player.form >= 60 && rng.chance(0.55)) return step;
 

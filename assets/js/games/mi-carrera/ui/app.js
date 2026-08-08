@@ -113,7 +113,11 @@
           m.type === 'first_goal' ||
           m.type === 'first_title' ||
           m.type === 'champions' ||
-          m.type === 'libertadores'
+          m.type === 'libertadores' ||
+          m.type === 'rival_move' ||
+          m.type === 'club_return' ||
+          m.type === 'giant_move' ||
+          m.type === 'homecoming'
         ) {
           if (m.type === 'champions' || m.type === 'libertadores' || m.type === 'first_title') {
             if (titles.length) return;
@@ -298,6 +302,15 @@
 
     function afterMarketDecision(offer) {
       session.selectedOffer = offer;
+      if (offer && (offer.type === 'stay' || offer.type === 'renew') && session.pending && session.pending.market) {
+        offer.rejectedClubIds = (session.pending.market.options || [])
+          .filter(function (o) {
+            return o && o.clubId && o.type === 'transfer' && o.clubId !== offer.clubId;
+          })
+          .map(function (o) {
+            return o.clubId;
+          });
+      }
       var moved = offer && (offer.type === 'transfer' || offer.type === 'loan' || offer.type === 'loan_return');
       NS.Engine.applyDecision(session.career, offer);
       if (moved) {
