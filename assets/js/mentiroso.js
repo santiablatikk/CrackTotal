@@ -1,16 +1,9 @@
 // --- WebSocket URL (¡Configura esto!) ---
 // Firebase Integration - Usa window.firebaseService
-const WEBSOCKET_URL = (() => {
-    // Siempre usar el servidor de producción para evitar problemas de configuración local
-    return 'wss://cracktotal-servidor.onrender.com';
-    
-    // Código anterior comentado:
-    // if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    //     const port = 8081; // Puerto del servidor unificado
-    //     return `ws://${window.location.hostname}:${port}`;
-    // }
-    // return 'wss://cracktotal-servidor.onrender.com';
-})();
+const MENTIROSO_PREVIEW = /(?:^|\.)netlify\.(?:app|com)$/i.test(location.hostname);
+const MENTIROSO_STAGING = new URLSearchParams(location.search).get('server');
+const MENTIROSO_STAGING_WS = MENTIROSO_STAGING && /^wss:\/\/[a-z0-9.-]+(?::\d+)?(?:\/[^?#]*)?$/i.test(MENTIROSO_STAGING) ? MENTIROSO_STAGING : null;
+const WEBSOCKET_URL = MENTIROSO_PREVIEW ? MENTIROSO_STAGING_WS : 'wss://cracktotal-servidor.onrender.com';
 
 // Agregar después de la declaración de WEBSOCKET_URL, antes de DOMContentLoaded
 
@@ -888,6 +881,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- WebSocket Communication (Largely Reused) ---
     function initializeWebSocket() {
         const wsUrl = WEBSOCKET_URL;
+        if (!wsUrl) {
+            showLobbyMessage('Este preview es estático. Para probar Mentiroso, usá ?server=wss://TU-SERVIDOR-STAGING.', 'error');
+            disableLobbyButtons();
+            return;
+        }
         console.log(`Intentando conectar WebSocket (Mentiroso): ${wsUrl}`);
         
         if (gameState.websocket && gameState.websocket.readyState !== WebSocket.CLOSED) {
