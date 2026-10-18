@@ -148,3 +148,57 @@
  .ct2-hero-spotlight,.ct2-next-link,.ct2-mode-strip a {transition:none}
  .ct2-hero-spotlight:hover,.ct2-next-link:hover {transform:none}
 }
+
+/* Games hub — cinematic lineup with a clear career flagship. */
+body.discover-page.ct-ds:has(#catalog-title) .discover-hero {
+  padding-block:clamp(3.6rem,7vw,7rem)!important;
+  background:linear-gradient(90deg,rgba(8,15,18,.98),rgba(8,15,18,.82) 56%,rgba(8,15,18,.32)),
+    url("../images/portada.jpg") 65% 50%/cover;
+  border-bottom:1px solid rgba(184,255,56,.17);
+}
+body.discover-page.ct-ds:has(#catalog-title) .discover-hero::before {
+  background:linear-gradient(0deg,#090d12,transparent 70%)!important;
+}
+body.discover-page.ct-ds:has(#catalog-title) .discover-hero h1 {
+  font-family:"Oswald",Impact,sans-serif;font-size:clamp(3.3rem,7vw,7rem)!important;
+  line-height:.9!important;letter-spacing:-.035em;max-width:750px;
+}
+body.discover-page.ct-ds:has(#catalog-title) .discover-hero-lead {color:#cedad0;line-height:1.7}
+body.discover-page.ct-ds:has(#catalog-title) .discover-section {padding-block:clamp(2.8rem,5vw,5rem)}
+body.discover-page.ct-ds:has(#catalog-title) .home-section-heading h2 {
+  font-family:"Oswald",Impact,sans-serif;font-size:clamp(2.8rem,5vw,5rem)!important;
+  line-height:1;letter-spacing:-.025em;
+}
+body.discover-page.ct-ds:has(#catalog-title) .home-catalog-toolbar {
+  background:#141e22;border:1px solid rgba(255,255,255,.12);
+  padding:clamp(16px,2.5vw,28px);
+}
+body.discover-page.ct-ds:has(#catalog-title) .home-game-card {
+  border-radius:3px!important;overflow:hidden;
+}
+body.discover-page.ct-ds:has(#catalog-title) .home-game-card:nth-child(2) .home-game-media img {object-position:50% 30%}
+body.discover-page.ct-ds:has(#catalog-title) .home-game-card:nth-child(3) .home-game-media img {object-position:50% 20%}
+body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] {
+  grid-column:span 2;display:grid;grid-template-columns:1.1fr 1fr;
+  min-height:365px;background:linear-gradient(135deg,#263520,#101a20)!important;
+  border:1px solid rgba(184,255,56,.38)!important;
+}
+body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] .home-game-media {
+  min-height:100%;height:auto!important;aspect-ratio:auto!important;
+}
+body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] .home-game-content {
+  display:flex;flex-direction:column;justify-content:center;padding:clamp(22px,4vw,48px);
+}
+body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] h3 {
+  font-size:clamp(3.2rem,5vw,5.3rem)!important;
+}
+@media(max-width:760px) {
+ body.discover-page.ct-ds:has(#catalog-title) .discover-hero {padding-block:55px!important;background-position:67%}
+ body.discover-page.ct-ds:has(#catalog-title) .discover-hero h1 {font-size:clamp(3.3rem,12vw,5.1rem)!important}
+ body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] {grid-template-columns:1fr}
+ body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] .home-game-media {height:210px!important}
+}
+@media(max-width:590px) {
+ body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] {grid-column:span 1}
+ body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] h3 {font-size:3.3rem!important}
+}
