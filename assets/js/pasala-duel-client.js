@@ -14,7 +14,7 @@
   const isStaticPreview = /(?:^|\.)netlify\.app$/i.test(location.hostname) || /(?:^|\.)netlify\.com$/i.test(location.hostname);
   const wsUrl = urlOverride || (!isStaticPreview ? ((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host) : '');
   const safeCode = code => /^[A-F0-9]{10}$/.test(code);
-  const session = (() => { try { return JSON.parse(sessionStorage.getItem(storageKey) || 'null'); } catch { return null; } })();
+  const savedSession = () => { try { return JSON.parse(sessionStorage.getItem(storageKey) || 'null'); } catch { return null; } };
   const name = () => $('playerName').value.trim().slice(0,24) || 'Jugador';
   const send = (type, payload = {}) => {
     if (!state.connected || !state.ws || state.ws.readyState !== WebSocket.OPEN) {
@@ -48,9 +48,10 @@
       if (state.ws !== ws) return;
       state.connected = true; notice('Arena conectada. Lista para jugar.');
       if (watchOnly && safeCode(initialRoom)) send('spectate', { roomId: initialRoom });
-      else if (session && session.roomId && session.reconnectToken && !state.manualLeave) {
-        state.reconnecting = true; send('resume', { roomId: session.roomId, reconnectToken: session.reconnectToken });
-      } else if (safeCode(initialRoom)) send('join', { roomId: initialRoom, name: name() });
+      else if (savedSession()?.roomId && savedSession()?.reconnectToken && !state.manualLeave) {
+        state.reconnecting = true; send('resume', { roomId: savedSession().roomId, reconnectToken: savedSession().reconnectToken });
+      } else if (state.spectator && safeCode(state.roomId || initialRoom)) send('spectate', { roomId: state.roomId || initialRoom });
+      else if (safeCode(initialRoom)) send('join', { roomId: initialRoom, name: name() });
     };
     ws.onmessage = event => {
       if (state.ws !== ws) return;
@@ -150,10 +151,15 @@
     const self = players.find(p => p && p.id === state.selfId);
     const other = players.find(p => p && p.id !== state.selfId);
     drawScore();
-    $('readyPanel').hidden = phase === 'playing' || phase === 'finished' || state.spectator;
+    $('readyPanel').hidden = phase === 'finished' || (phase === 'playing' && !self?.finished && !state.spectator);
     $('questionPanel').hidden = phase !== 'playing' || state.spectator || !state.question || !!self?.finished;
     $('resultsPanel').hidden = phase !== 'finished';
     $('matchStatus').textContent = ({waiting:'SALA ABIERTA / ESPERANDO A LOS DOS',countdown:'CUENTA REGRESIVA / PREPARATE',playing:'DUELO EN CURSO / MARCADOR EN VIVO',finished:'FINAL / RESULTADOS OFICIALES'})[phase] || 'PREPARANDO PARTIDO';
+    if (phase === 'playing' && self?.finished) {
+      $('readyHeading').textContent = 'ROSCO COMPLETO.';
+      $('readyDescription').textContent = 'Terminaste tus 26 letras. Esperá a que tu rival cierre su rosco o termine el reloj.';
+      $('readyButton').hidden = true;
+    }
     if (phase === 'waiting' || phase === 'countdown') {
       $('readyHeading').textContent = phase === 'countdown' ? 'ARRANCA EL DUELO.' : !other ? 'ESPERANDO RIVAL.' : 'LOS DOS EN CANCHA.';
       $('readyDescription').textContent = phase === 'countdown' ? 'Preparate: ambos reciben las mismas 26 preguntas.' : !other ? 'Compartí la invitación y esperá a que llegue tu rival.' : 'Los dos deben marcarse como listos. Recién ahí comienza el partido.';
@@ -178,7 +184,7 @@
       $('readyPanel').hidden = false; $('readyButton').hidden = true;
       $('readyHeading').textContent = phase === 'playing' ? 'DUELO EN VIVO.' : 'EN LA PREVIA.';
       $('readyDescription').textContent = 'Estás siguiendo el marcador de ambos jugadores sin ver sus respuestas.';
-    } else $('readyButton').hidden = false;
+    } else if (!self?.finished) $('readyButton').hidden = false;
     renderRing(); updateClock();
   }
   function updateClock() {
@@ -211,6 +217,7 @@
   $('rematchButton').addEventListener('click', () => send('rematch'));
   function exitRoom() {
     send('leave'); state.manualLeave = true;
+    state.spectator = false;
     clearSession(); leaveUI();
     history.replaceState({}, '', 'pasala-1v1.html');
   }
@@ -228,7 +235,7 @@
   });
   $('reconnectButton').addEventListener('click', () => { if (state.retryTimer) clearTimeout(state.retryTimer); state.retryTimer=null; connect(); });
   if (safeCode(initialRoom) && !watchOnly) $('roomCode').value = initialRoom;
-  if (session?.roomId && !watchOnly && !initialRoom) $('roomCode').value = session.roomId;
+  if (savedSession()?.roomId && !watchOnly && !initialRoom) $('roomCode').value = savedSession().roomId;
   if (overlay) document.body.classList.add('overlay-mode');
   state.clockTimer = setInterval(updateClock, 500);
   connect();
