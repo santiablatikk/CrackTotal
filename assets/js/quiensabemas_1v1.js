@@ -115,10 +115,10 @@ async function initializeQSMApp() {
 
     loadPlayerName();
     updatePlayerNameInUI();
-    initializeWebSocket();
     setupEventListeners();
     showLobbyView();
     updateConnectionStatusUI(false, 'Conectando al servidor...');
+    initializeWebSocket();
 
     // Mostrar modal de introducción si es la primera vez
     if (DOM.qsmIntroModal && !localStorage.getItem(CONFIG.STORAGE_KEYS.INTRO_SHOWN)) {
@@ -576,7 +576,8 @@ function showLobbyView() {
     
     gameState.gamePhase = 'lobby';
     clearLobbyMessage();
-    enableLobbyButtons();
+    if (gameState.websocket?.readyState === WebSocket.OPEN) enableLobbyButtons();
+    else disableLobbyButtons();
     
     // Solicitar lista de salas disponibles
     if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN) {
