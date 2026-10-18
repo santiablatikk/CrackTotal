@@ -1,0 +1,40 @@
+/* Crack Total 2.0: shared presentation around existing game boards.
+   Intentionally does not change grids, timers, overlays or game input controls. */
+body.game-body.ct-ds,body.top10-body.ct-ds,body.mentiroso-body.ct-ds,
+body.qsm-1v1-body.ct-ds,body.wordle-body.ct-ds,body.futboleros-body.ct-ds,
+body.mc-body.ct-ds {
+  background:radial-gradient(circle at 84% 0%,rgba(184,255,56,.075),transparent 30rem),#090d12!important;
+  color:#f6f8f4;
+}
+body.ct-ds .breadcrumbs-container {max-width:1320px}
+body.ct-ds .breadcrumb a {color:#b8ff38!important}
+body.game-body.ct-ds .game-header,body.mentiroso-body.ct-ds .game-header,
+body.wordle-body.ct-ds .wordle-header,body.top10-body.ct-ds .top10-header,
+body.qsm-1v1-body.ct-ds .game-header {
+  background:rgba(15,21,27,.93)!important;
+  border-bottom:1px solid rgba(184,255,56,.14)!important;
+  box-shadow:0 8px 32px rgba(0,0,0,.16)!important;
+}
+body.game-body.ct-ds .game-header .game-title,
+body.mentiroso-body.ct-ds .game-title-header,
+body.wordle-body.ct-ds .wordle-header h1,
+body.top10-body.ct-ds .top10-header h1 {
+  font-family:"Oswald",Impact,sans-serif!important;
+  text-transform:uppercase;letter-spacing:.035em!important;
+}
+body.ct-ds .ct-navbar,body.ct-ds [data-ct-navbar] nav {
+  background:rgba(9,13,18,.93)!important;
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.1)!important;
+}
+body.ct-ds .ct-navbar a:hover,body.ct-ds [data-ct-navbar] a:hover {color:#b8ff38!important}
+body.ct-ds .ct-button--primary {
+  background:#b8ff38!important;color:#091008!important;
+  border-color:#b8ff38!important;
+}
+body.ct-ds :is(a,button,input,select,textarea):focus-visible {
+  outline:3px solid #b8ff38!important;outline-offset:3px;
+}
+@media(prefers-reduced-motion:reduce) {
+ body.ct-ds .ct-button {transition:none!important}
+}
