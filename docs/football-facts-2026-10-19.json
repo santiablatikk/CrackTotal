@@ -1,0 +1,240 @@
+{
+  "cutoff": "2026-10-19",
+  "policy": "Preguntas nuevas contrastadas en fuentes primarias; registro externo sin modificar el lector legado.",
+  "newQuestionCount": 17,
+  "questions": [
+    {
+      "game": "pasalache",
+      "letter": "A",
+      "pregunta": "¿Qué selección quedó subcampeona del Mundial masculino de la FIFA 2026?",
+      "respuesta": "Argentina",
+      "acceptedAlternatives": [],
+      "sourceUrls": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/final-tournament-standings"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "B",
+      "pregunta": "¿En qué ciudad húngara se disputó la final de la Champions League 2025/26?",
+      "respuesta": "Budapest",
+      "acceptedAlternatives": [],
+      "sourceUrls": [
+        "https://www.uefa.com/uefachampionsleague/news/02a5-20c02e59f219-15e92acdc717-1000/"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "C",
+      "pregunta": "¿Apellido del español elegido mejor jugador joven del Mundial de la FIFA 2026 (Pau …)?",
+      "respuesta": "Cubarsí",
+      "acceptedAlternatives": [
+        "Pau Cubarsí"
+      ],
+      "sourceUrls": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/award-winners"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "F",
+      "pregunta": "¿Nombre del español que marcó el gol de la final del Mundial de la FIFA 2026 (… Torres)?",
+      "respuesta": "Ferran",
+      "acceptedAlternatives": [
+        "Ferran Torres"
+      ],
+      "sourceUrls": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-argentina-final-report-highlights"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "G",
+      "pregunta": "¿Apellido de Cody, uno de los seis máximos goleadores de la EURO 2024?",
+      "respuesta": "Gakpo",
+      "acceptedAlternatives": [
+        "Cody Gakpo"
+      ],
+      "sourceUrls": [
+        "https://www.uefa.com/uefaeuro/history/news/028e-1b2c0d015a5f-e6ac102266dd-1000--euro-2024-alipay-top-scorers-gakpo-kane-mikautadze-musia/"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "H",
+      "pregunta": "¿Apellido del jugador de Arsenal que marcó en la final de Champions League 2025/26 (Kai …)?",
+      "respuesta": "Havertz",
+      "acceptedAlternatives": [
+        "Kai Havertz"
+      ],
+      "sourceUrls": [
+        "https://www.uefa.com/uefachampionsleague/news/02a5-20c02e59f219-15e92acdc717-1000/"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "J",
+      "pregunta": "¿Apellido del autor del único gol de Tottenham en la final de la Europa League 2024/25?",
+      "respuesta": "Johnson",
+      "acceptedAlternatives": [
+        "Brennan Johnson"
+      ],
+      "sourceUrls": [
+        "https://www.uefa.com/uefaeuropaleague/news/0299-1dcffd82d4a0-c280ee5f9c62-1000/"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "K",
+      "pregunta": "¿Nombre de pila del francés Mbappé, Bota de Oro del Mundial de la FIFA 2026?",
+      "respuesta": "Kylian",
+      "acceptedAlternatives": [
+        "Kylian Mbappé"
+      ],
+      "sourceUrls": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/award-winners"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "L",
+      "pregunta": "¿Qué club argentino fue campeón de la CONMEBOL Sudamericana 2025?",
+      "respuesta": "Lanús",
+      "acceptedAlternatives": [
+        "Club Atlético Lanús"
+      ],
+      "sourceUrls": [
+        "https://gol.conmebol.com/sudamericana/es/news/lanus-campeon-de-la-conmebol-sudamericana"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "M",
+      "pregunta": "¿Apellido del francés que ganó la Bota de Oro del Mundial de la FIFA 2026 con diez goles?",
+      "respuesta": "Mbappé",
+      "acceptedAlternatives": [
+        "Kylian Mbappé"
+      ],
+      "sourceUrls": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/award-winners"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "P",
+      "pregunta": "¿Qué club ganó la Champions League 2025/26 tras superar a Arsenal por penales?",
+      "respuesta": "Paris Saint-Germain",
+      "acceptedAlternatives": [
+        "PSG",
+        "París Saint-Germain"
+      ],
+      "sourceUrls": [
+        "https://www.uefa.com/uefachampionsleague/news/02a5-20c02e59f219-15e92acdc717-1000/"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "R",
+      "pregunta": "¿Nombre deportivo del español ganador del Balón de Oro del Mundial de la FIFA 2026?",
+      "respuesta": "Rodri",
+      "acceptedAlternatives": [
+        "Rodrigo Hernández"
+      ],
+      "sourceUrls": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/award-winners"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "S",
+      "pregunta": "¿Apellido del arquero español que recibió el Guante de Oro del Mundial de la FIFA 2026 (Unai …)?",
+      "respuesta": "Simón",
+      "acceptedAlternatives": [
+        "Unai Simón"
+      ],
+      "sourceUrls": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/award-winners"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "T",
+      "pregunta": "¿Qué club de Londres le ganó la final de la Europa League 2024/25 al Manchester United?",
+      "respuesta": "Tottenham",
+      "acceptedAlternatives": [
+        "Tottenham Hotspur"
+      ],
+      "sourceUrls": [
+        "https://www.uefa.com/uefaeuropaleague/news/0299-1dcffd82d4a0-c280ee5f9c62-1000/"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "U",
+      "pregunta": "¿Nombre del arquero español ganador del Guante de Oro del Mundial de la FIFA 2026 (… Simón)?",
+      "respuesta": "Unai",
+      "acceptedAlternatives": [
+        "Unai Simón"
+      ],
+      "sourceUrls": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/award-winners"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "V",
+      "pregunta": "¿Nombre deportivo del mediocampista de PSG elegido jugador de la final de la Champions 2025/26?",
+      "respuesta": "Vitinha",
+      "acceptedAlternatives": [],
+      "sourceUrls": [
+        "https://www.uefa.com/uefachampionsleague/news/029d-1ebd2e90ac06-6c331a7ee578-1000--every-uefa-champions-league-player-of-the-match/"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    },
+    {
+      "game": "pasalache",
+      "letter": "Y",
+      "pregunta": "¿Apellido de Lamine, futbolista de 19 años que disputó la final del Mundial de la FIFA 2026 con España?",
+      "respuesta": "Yamal",
+      "acceptedAlternatives": [
+        "Lamine Yamal"
+      ],
+      "sourceUrls": [
+        "https://inside.fifa.com/organisation/media-releases/spain-unprecedented-global-double-new-milestones-historic-world-cup-2026"
+      ],
+      "verifiedAt": "2026-10-19",
+      "asOf": "Competición y temporada indicadas explícitamente en la pregunta."
+    }
+  ]
+}
