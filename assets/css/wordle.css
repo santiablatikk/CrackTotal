@@ -228,3 +228,19 @@ body.wordle-body {
 @media (max-width: 420px) {
     :root { --tile-size: 44px; }
 }
+
+/* 3.1: teclados táctiles y apellidos largos sin scroll horizontal. */
+.board .tile { font-size: var(--tile-font,1.2rem); }
+@media (max-width: 480px) {
+  .wordle-container { padding-inline: 8px; }
+  .wordle-card { padding-inline: 8px; }
+  .keyboard { width: 100%; gap: 5px; }
+  .key-row { gap: 3px; width: 100%; }
+  .key { flex: 1; min-width: 0; padding: 12px 0; font-size: .78rem; }
+  .key.wide { min-width: 44px; flex: 1.4; font-size: .68rem; }
+}
+.key:focus-visible { outline: 2px solid #c5fa43; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  .tile.revealing,.tile.pop,.tile.shake { animation: none !important; }
+  .key { transition: none; }
+}
