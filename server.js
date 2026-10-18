@@ -3,6 +3,7 @@ const http = require('http');
 const url = require('url');
 const fs = require('fs'); // Added for file system operations
 const path = require('path'); // Added for constructing file paths
+const { createPasalaDuelService } = require('./server/pasala-duel');
 
 // --- Constants ---
 const MAX_LEVELS = 6; // 6 niveles de dificultad
@@ -348,6 +349,8 @@ function loadQuestions() {
 // --- Game State Management ---
 const clients = new Map(); // Map<WebSocket, {id: string, roomId: string | null}>
 const rooms = new Map(); // Map<string, Room>
+// Independent duel service: does not alter QSM or Mentiroso room semantics.
+const pasalaDuels = createPasalaDuelService();
 // interface Room {
 //     roomId: string;
 //     players: { player1: Player | null, player2: Player | null };
@@ -488,6 +491,7 @@ wss.on('connection', (ws, req) => {
         const clientInfo = clients.get(ws);
         if (clientInfo) {
             // // console.log(`Client disconnected: ${clientInfo.id}`);
+            pasalaDuels.disconnect(ws);
             handleDisconnect(ws, clientInfo.id, clientInfo.roomId);
             clients.delete(ws);
             // // console.log(`Client removed. Total clients: ${clients.size}`); // Comentar luego
@@ -502,6 +506,7 @@ wss.on('connection', (ws, req) => {
         console.error(`WebSocket error for client ${clientId}:`, error);
         // Attempt graceful disconnect and cleanup if possible
         if (clientInfo) {
+            pasalaDuels.disconnect(ws);
             handleDisconnect(ws, clientInfo.id, clientInfo.roomId); // Try cleanup
             clients.delete(ws);
             // // console.log(`Client removed after error. Total clients: ${clients.size}`); // Comentar luego
@@ -519,6 +524,13 @@ function handleClientMessage(ws, message) {
     if (!clientInfo) { return; } // Should not happen if client is connected
 
     // // console.log(`Handling message type: ${message.type} from player ${clientInfo.id}`); // ELIMINAR ESTA LÍNEA
+
+    // Pasala Che duel messages have an isolated protocol and authoritative state.
+    if (pasalaDuels.handle(ws, message, clientInfo)) return;
+    if (pasalaDuels.hasPeer(ws)) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Salí del rosco antes de entrar a otra sala.' } });
+        return;
+    }
 
     switch (message.type) {
         case 'createRoom':
