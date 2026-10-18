@@ -6,8 +6,12 @@
 console.log("✨ quiensabemas_1v1.js cargado (v3 Renovada - Junio 2024)");
 
 // --- Configuración ---
+// La vista previa estática no debe usar inadvertidamente el servidor de producción.
+const QSM_PREVIEW = /(?:^|\.)netlify\.(?:app|com)$/i.test(location.hostname);
+const QSM_STAGING = new URLSearchParams(location.search).get('server');
+const QSM_STAGING_WS = QSM_STAGING && /^wss:\/\/[a-z0-9.-]+(?::\d+)?(?:\/[^?#]*)?$/i.test(QSM_STAGING) ? QSM_STAGING : null;
 const CONFIG = {
-    WEBSOCKET_URL: 'wss://cracktotal-servidor.onrender.com',
+    WEBSOCKET_URL: QSM_PREVIEW ? QSM_STAGING_WS : 'wss://cracktotal-servidor.onrender.com',
     RECONNECT_DELAY: 3000,
     MAX_RECONNECT_ATTEMPTS: 5,
     TIME_PER_QUESTION: 20,
@@ -209,6 +213,12 @@ function initializeWebSocket() {
         gameState.websocket.close();
     }
 
+    if (!CONFIG.WEBSOCKET_URL) {
+        updateConnectionStatusUI(false, 'Servidor de pruebas pendiente');
+        showLobbyMessage('Este preview es estático. Para probar el 1v1 de Quién Sabe Más, usá ?server=wss://TU-SERVIDOR-STAGING.', 'error', true);
+        disableLobbyButtons();
+        return;
+    }
     console.log(`🔌 Conectando a: ${CONFIG.WEBSOCKET_URL}`);
     updateConnectionStatusUI(false, 'Conectando...');
     showLobbyMessage('Conectando al servidor de juego...', 'info', false);
