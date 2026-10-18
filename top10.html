@@ -63,6 +63,11 @@
     <link rel="stylesheet" href="assets/css/home.css?v=20260804v">
     <link rel="stylesheet" href="assets/css/game-shell.css?v=20260803n">
     <link rel="stylesheet" href="assets/css/discover.css?v=20260804v">
+<style>
+      .topic-source-note { margin: 3px 0 12px; font-size: 12px; line-height: 1.6; color: #aebbb3; }
+      .topic-source-note a { color: #c5fa43; text-underline-offset: 3px; }
+      .topic-source-note a:focus-visible { outline: 2px solid #c5fa43; outline-offset: 3px; }
+    </style>
 </head>
 <body class="top10-body ct-ds">
   <div data-ct-navbar data-active="games"></div>
@@ -85,11 +90,12 @@
 
       <div class="top10-header-area">
         <div class="topic" id="topicTitle">Cargando tema...</div>
+        <p class="topic-source-note">Orden editorial del grupo técnico de UEFA · Renueva a las 00:00 UTC · <a id="topicSource" href="#" target="_blank" rel="noopener noreferrer">Fuente oficial ↗</a></p>
         <div class="meta">
           <span id="timerChip" class="chip timer-chip"><i class="fas fa-clock"></i> 02:00</span>
           <span id="gameNumber" class="chip"><i class="fas fa-hashtag"></i> Juego #</span>
           <span id="foundCount" class="chip"><i class="fas fa-check"></i> 0/10</span>
-          <button id="giveUpBtn" class="giveup" title="Rendirse y revelar"><i class="fas fa-flag-checkered"></i> Rendirse</button>
+          <button id="giveUpBtn" class="giveup" title="Rendirse y cerrar el desafío"><i class="fas fa-flag-checkered"></i> Rendirse</button>
         </div>
       </div>
 
@@ -164,7 +170,7 @@
   <script src="assets/js/firebase-config.js"></script>
   <script src="assets/js/firebase-init.js"></script>
   <script src="assets/js/firebase-service.js"></script>
-  <script src="assets/js/top10.js" defer></script>
+  <script src="assets/js/top10.js?v=20261019a" defer></script>
 
   <div data-ct-footer></div>
     <script src="assets/js/components/navbar.js?v=20260803m"></script>
