@@ -1,11 +1,11 @@
-# Netlify preview settings for Crack Total's existing static root.
+# Crack Total's production app remains unchanged. This file creates a
+# static-only preview for unmerged design PRs on Netlify.
 [build]
-  base = "."
-  publish = "."
+  publish = "public"
 
 [build.environment]
   NODE_VERSION = "22"
 
 [context.deploy-preview]
-  publish = "."
-  command = "node validate-deploy.js"
+  command = "node validate-deploy.js && node scripts/build-netlify-preview.cjs"
+  publish = "public"
