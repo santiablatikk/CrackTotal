@@ -12,7 +12,7 @@
     "dev": "node server.js",
     "fix-rankings": "node ranking-fix-util.js",
     "gen:top10": "node scripts/generate-top10-pool.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node scripts/pasala_duel_smoke.js"
   },
   "keywords": [
     "futbol",
@@ -39,4 +39,4 @@
   "bugs": {
     "url": "https://github.com/santiablatikk/CrackTotal/issues"
   }
-} 
+}
