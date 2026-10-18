@@ -66,16 +66,21 @@
   let startTime = Date.now();
   let savedOnce = false;
   let publishingResult = false;
+  let finished = false;
+  let wonToday = false;
+  let elapsedSec = null;
+  let roundTimer = null;
 
   function normalize(s){
     return (s||'').toString().toLowerCase()
+      .replace(/ø/g,'o').replace(/æ/g,'ae').replace(/œ/g,'oe').replace(/ß/g,'ss').replace(/ł/g,'l')
       .normalize('NFD').replace(/\p{Diacritic}/gu,'')
-      .replace(/[^a-z\s-]/g,'').replace(/\s+/g,' ').trim();
+      .replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ').trim();
   }
 
   function isTodayKey(){
     const d = new Date();
-    return `${d.getUTCFullYear()}-${d.getUTCMonth()+1}-${d.getUTCDate()}`;
+    return d.toISOString().slice(0, 10);
   }
 
   async function pickDailyTopic(){
@@ -85,7 +90,12 @@
       fetch('assets/data/top10_pool_extended.json').then(r=>r.json()).catch(()=>[])
     ]);
     const merged = Array.isArray(extra) ? base.concat(extra) : base;
-    const pool = merged.length ? merged : base;
+    // Solo listas con fuente oficial documentada, fecha y diez respuestas distintas.
+    // Conservamos las listas históricas sin auditar en disco, fuera del desafío diario.
+    const pool = merged.filter(item => item.source_url && item.verified_at &&
+      Array.isArray(item.answers) && item.answers.length === 10 &&
+      new Set(item.answers.map(normalize)).size === 10);
+    if (!pool.length) throw new Error('No hay desafíos diarios con fuentes verificadas.');
     const todayKey = isTodayKey();
     const seed = new Date(todayKey).getTime()/86400000; // días
     const idx = Math.floor((seed % pool.length + pool.length) % pool.length);
@@ -99,10 +109,14 @@
     if (last === today && raw){
       try{
         const parsed = JSON.parse(raw);
-        foundSet = new Set(parsed.found||[]);
+        if (parsed.topicId !== topic.id) return false;
+        foundSet = new Set((parsed.found||[]).filter(answer => topic.answers.includes(answer)));
         attempts = parsed.attempts||0;
         startTime = parsed.startTime||Date.now();
         savedOnce = !!parsed.savedOnce;
+        finished = !!parsed.finished;
+        wonToday = !!parsed.won;
+        elapsedSec = Number.isFinite(parsed.elapsedSec) ? parsed.elapsedSec : null;
         return true;
       }catch{ return false; }
     }
@@ -112,10 +126,14 @@
   function saveState(){
     localStorage.setItem(LAST_DAY_KEY, isTodayKey());
     localStorage.setItem(STATE_KEY, JSON.stringify({
+      topicId: topic.id,
       found: Array.from(foundSet),
       attempts,
       startTime,
-      savedOnce
+      savedOnce,
+      finished,
+      won: wonToday,
+      elapsedSec
     }));
   }
 
@@ -135,8 +153,9 @@
       li.className = solved? 'solved' : '';
       const hint = ans.match(/\(([^)]+)\)/);
       const country = hint? hint[1] : '';
-      const flag = country ? flagMarkup(country) : '';
-      const hintText = country? `(${String(country).toUpperCase()})` : '';
+      const hasClubHint = !!topic.hints?.[i];
+      const flag = hasClubHint ? '' : (country ? flagMarkup(country) : '');
+      const hintText = hasClubHint ? topic.hints[i] : (country ? `(${String(country).toUpperCase()})` : '');
       li.innerHTML = `<span class="pos">${pos}.</span><span class="hint">${flag}${hintText}</span><span class="label">${solved? ans.toUpperCase(): '—'.repeat(6)}</span>`;
       list.appendChild(li);
     });
@@ -161,7 +180,7 @@
   }
 
   function trySubmit(value){
-    if (!value) return;
+    if (!value || finished) return;
     attempts += 1;
     const guessNorm = normalize(value);
     const guessSet = expandVariants(guessNorm);
@@ -194,7 +213,9 @@
   }
 
   async function checkCompletion(){
-    if (foundSet.size === 10){
+    if (foundSet.size === 10 && !finished){
+      finished = true; wonToday = true;
+      saveState();
       const elapsed = Math.max(1, Math.floor((Date.now()-startTime)/1000));
       const mm = Math.floor(elapsed/60);
       const ss = (elapsed%60).toString().padStart(2,'0');
@@ -233,13 +254,23 @@
 
   let progressReported = false;
   function showResult(won){
+    finished = true; wonToday = !!won;
+    if (roundTimer !== null) { clearInterval(roundTimer); roundTimer = null; }
+    document.getElementById('surnameInput').disabled = true;
+    document.getElementById('submitBtn').disabled = true;
+    document.getElementById('giveUpBtn').disabled = true;
+    if (elapsedSec === null) elapsedSec = Math.max(1, Math.min(120, Math.floor((Date.now()-startTime)/1000)));
+    saveState();
+    const elapsed = elapsedSec;
+    document.getElementById('statFound').textContent = String(foundSet.size);
+    document.getElementById('statAttempts').textContent = String(attempts);
+    document.getElementById('statTime').textContent = `${Math.floor(elapsed/60)}:${String(elapsed%60).padStart(2,'0')}`;
     const modal = document.getElementById('resultModal');
     document.getElementById('resultTitle').textContent = won? '¡Completado!' : 'Fin del intento';
-    document.getElementById('resultMessage').textContent = won? '¡Top 10 completo!': 'Vuelve mañana para otro desafío.';
+    document.getElementById('resultMessage').textContent = won? '¡Top 10 completo!': `Encontraste ${foundSet.size} de 10. Mañana hay un nuevo desafío.`;
     modal.style.display = 'flex';
     if (!progressReported && window.CrackTotalProgressBridge) {
       progressReported = true;
-      const elapsed = Math.max(1, Math.floor((Date.now() - startTime) / 1000));
       window.CrackTotalProgressBridge.reportMatch({
         gameId: 'top10',
         gameName: 'Top 10',
@@ -274,25 +305,22 @@
     tick(); setInterval(tick,1000);
   }
 
-  // Timer de 2 minutos
+  // El reloj se basa en startTime, guardado junto al tema. Recargar no suma tiempo.
   function startRoundTimer(){
-    const total = 120; // segundos
-    let left = total;
     const chip = document.getElementById('timerChip');
     const update = () => {
+      if (finished) return;
+      const left = Math.max(0, 120 - Math.floor((Date.now()-startTime)/1000));
       const mm = String(Math.floor(left/60)).padStart(2,'0');
       const ss = String(left%60).padStart(2,'0');
       if (chip) chip.innerHTML = `<i class="fas fa-clock"></i> ${mm}:${ss}`;
-      left -= 1;
-      if (left < 0){
-        // tiempo agotado
+      if (left === 0) {
         showResult(false);
         lockForToday();
-        clearInterval(timerId);
       }
     };
     update();
-    const timerId = setInterval(update, 1000);
+    if (!finished) roundTimer = setInterval(update,1000);
   }
 
   function attachHandlers(){
@@ -313,22 +341,27 @@
     await pickDailyTopic();
     document.getElementById('topicTitle').textContent = topic.title;
     document.getElementById('gameNumber').innerHTML = `<i class="fas fa-hashtag"></i> Juego #${topic.id}`;
-    if (!loadState()){ foundSet.clear(); attempts = 0; startTime = Date.now(); saveState(); }
+    const source = document.getElementById('topicSource');
+    if (source) { source.textContent = `${topic.source} · Verificado ${topic.verified_at} · Ver ranking original ↗`;
+      source.href = topic.source_url; source.target = '_blank'; source.rel = 'noopener noreferrer'; }
+    if (!loadState()) { foundSet.clear(); attempts = 0; startTime = Date.now(); savedOnce = false;
+      finished = false; wonToday = false; elapsedSec = null; saveState(); }
     renderBoard();
     attachHandlers();
     // botón rendirse
     const giveUp = document.getElementById('giveUpBtn');
     if (giveUp){
       giveUp.addEventListener('click', ()=>{
-        topic.answers.forEach(ans => foundSet.add(ans));
-        renderBoard();
         showResult(false);
         lockForToday();
         saveState();
       });
     }
-    startRoundTimer();
-    if (foundSet.size === 10){ lockForToday(); document.getElementById('resultModal').style.display='flex'; }
+    if (finished) {
+      progressReported = true; // No volver a reportar una partida guardada al recargar.
+      showResult(wonToday);
+      lockForToday();
+    } else startRoundTimer();
   }
 
   document.addEventListener('DOMContentLoaded', init);
