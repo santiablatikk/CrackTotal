@@ -26,13 +26,21 @@
   const notice = (message, error = false) => {
     $('connectionText').textContent = message;
     $('connectionNotice').dataset.state = error ? 'error' : 'ready';
+    if (overlay && error) $('streamPhase').textContent = 'SEÑAL INTERRUMPIDA';
     $('reconnectButton').hidden = !error || !wsUrl;
   };
   function persistSession(payload) {
     try { sessionStorage.setItem(storageKey, JSON.stringify(payload)); } catch {}
   }
   function clearSession() { try { sessionStorage.removeItem(storageKey); } catch {} }
+  function setLobbyAvailability(available) {
+    ['createForm', 'joinForm', 'watchForm'].forEach(id => {
+      $(id).querySelector('button[type="submit"]').disabled = !available;
+    });
+    $('randomButton').disabled = !available;
+  }
   function connect() {
+    setLobbyAvailability(false);
     if (!wsUrl) {
       notice('Esta vista previa es estática: para jugar online falta desplegar el servidor WebSocket de esta rama. Podés explorar la interfaz.', true);
       $('reconnectButton').hidden = true; return;
@@ -42,11 +50,13 @@
     }
     if (state.ws) { state.ws.onclose = null; state.ws.close(); }
     notice('Conectando al servidor del duelo…');
-    const ws = new WebSocket(wsUrl);
+    let ws;
+    try { ws = new WebSocket(wsUrl); }
+    catch { notice('No se pudo abrir el servidor de la arena. Revisá su dirección.', true); return; }
     state.ws = ws; state.connected = false;
     ws.onopen = () => {
       if (state.ws !== ws) return;
-      state.connected = true; notice('Arena conectada. Lista para jugar.');
+      state.connected = true; setLobbyAvailability(true); notice('Arena conectada. Lista para jugar.');
       if (watchOnly && safeCode(initialRoom)) send('spectate', { roomId: initialRoom });
       else if (savedSession()?.roomId && savedSession()?.reconnectToken && savedSession()?.endpoint === wsUrl && !state.manualLeave && (!safeCode(initialRoom) || initialRoom === savedSession().roomId)) {
         state.reconnecting = true; send('resume', { roomId: savedSession().roomId, reconnectToken: savedSession().reconnectToken });
@@ -62,7 +72,7 @@
     ws.onerror = () => notice('No se pudo establecer la conexión. Revisá que el servidor de duelos esté activo.', true);
     ws.onclose = () => {
       if (state.ws !== ws) return;
-      state.connected = false;
+      state.connected = false; setLobbyAvailability(false);
       notice('Conexión interrumpida. Intentando volver a la sala…', true);
       if (!state.manualLeave && wsUrl && !state.retryTimer) {
         state.retryTimer = setTimeout(() => { state.retryTimer = null; connect(); }, 3500);
@@ -100,6 +110,16 @@
         state.question = null; renderMatch(); break;
       case 'result':
         state.result = payload; state.question = null; renderMatch(); break;
+      case 'closed':
+        clearSession(); state.manualLeave = true; state.spectator = watchOnly;
+        leaveUI();
+        notice(payload.message || 'La sala se cerró. Podés buscar otro duelo.', true);
+        if (overlay) {
+          $('match').hidden = false;
+          $('streamPhase').textContent = 'SALA CERRADA';
+          $('streamClock').textContent = '--:--';
+        }
+        break;
       case 'error':
         if (state.room?.phase === 'playing' && !state.spectator) $('answerInput').disabled = false;
         notice(payload.message || 'No se pudo completar la acción.', true);
@@ -159,7 +179,10 @@
     $('readyPanel').hidden = phase === 'finished' || (phase === 'playing' && !self?.finished && !state.spectator);
     $('questionPanel').hidden = phase !== 'playing' || state.spectator || !state.question || !!self?.finished;
     $('resultsPanel').hidden = phase !== 'finished';
+    const phases = {waiting:'ESPERANDO RIVAL',countdown:'CUENTA REGRESIVA',playing:'DUELO EN VIVO',finished:'PARTIDO FINALIZADO'};
     $('matchStatus').textContent = ({waiting:'SALA ABIERTA / ESPERANDO A LOS DOS',countdown:'CUENTA REGRESIVA / PREPARATE',playing:'DUELO EN CURSO / MARCADOR EN VIVO',finished:'FINAL / RESULTADOS OFICIALES'})[phase] || 'PREPARANDO PARTIDO';
+    $('streamPhase').textContent = phases[phase] || 'PREPARANDO PARTIDO';
+    $('streamAudience').textContent = (state.room.spectatorCount || 0) + ' MIRANDO';
     if (phase === 'playing' && self?.finished) {
       $('readyHeading').textContent = 'ROSCO COMPLETO.';
       $('readyDescription').textContent = 'Terminaste tus 26 letras. Esperá a que tu rival cierre su rosco o termine el reloj.';
@@ -193,13 +216,20 @@
     renderRing(); updateClock();
   }
   function updateClock() {
+    if (!state.room) {
+      $('clock').textContent = '05:00';
+      $('streamClock').textContent = overlay ? '--:--' : '05:00';
+      return;
+    }
     if (state.room?.phase === 'countdown' && state.room.countdownEndsAt) {
       const remaining = Math.max(1, Math.ceil((state.room.countdownEndsAt - (Date.now() + state.clockOffset)) / 1000));
       $('readyHeading').textContent = `ARRANCAMOS EN ${remaining}`;
     }
     const ms = state.room?.deadline ? Math.max(0, state.room.deadline - (Date.now() + state.clockOffset)) : state.room?.duration * 1000 || 300000;
     const sec = Math.ceil(ms / 1000);
-    $('clock').textContent = String(Math.floor(sec / 60)).padStart(2,'0') + ':' + String(sec % 60).padStart(2,'0');
+    const timeLabel = String(Math.floor(sec / 60)).padStart(2,'0') + ':' + String(sec % 60).padStart(2,'0');
+    $('clock').textContent = timeLabel;
+    $('streamClock').textContent = timeLabel;
   }
   function launch(mode, roomCode) {
     if (!state.connected) return notice('Esperá a conectarte con el servidor del duelo.', true);
@@ -233,17 +263,26 @@
   }
   $('backToLobby').addEventListener('click', exitRoom);
   $('leaveButton').addEventListener('click', exitRoom);
-  $('copyInvite').addEventListener('click', async () => {
-    const link = new URL('pasala-1v1.html', location.href); link.search=''; link.searchParams.set('sala',state.roomId || ''); if (urlOverride) link.searchParams.set('server',urlOverride);
-    const value = link.href;
-    try { await navigator.clipboard.writeText(value); $('copyInvite').textContent='COPIADO ✓'; }
-    catch { window.prompt('Copiá esta invitación:', value); }
-  });
+  function invitation(type) {
+    const link = new URL('pasala-1v1.html', location.href);
+    link.search = '';
+    link.searchParams.set(type, state.roomId || '');
+    if (urlOverride) link.searchParams.set('server', urlOverride);
+    return link.href;
+  }
+  async function copyText(button, value) {
+    try { await navigator.clipboard.writeText(value); button.textContent = 'COPIADO ✓'; }
+    catch { window.prompt('Copiá y compartí:', value); }
+  }
+  $('copyCode').addEventListener('click', () => copyText($('copyCode'), state.roomId || ''));
+  $('copyInvite').addEventListener('click', () => copyText($('copyInvite'), invitation('sala')));
+  $('copySpectator').addEventListener('click', () => copyText($('copySpectator'), invitation('spectator')));
   $('watchOverlay').addEventListener('click', () => {
     const link = new URL('pasala-1v1.html',location.href); link.search=''; link.searchParams.set('overlay',state.roomId || ''); if (urlOverride) link.searchParams.set('server',urlOverride);
     window.open(link.href, '_blank', 'noopener,noreferrer');
   });
   $('reconnectButton').addEventListener('click', () => { if (state.retryTimer) clearTimeout(state.retryTimer); state.retryTimer=null; connect(); });
+  setLobbyAvailability(false);
   if (safeCode(initialRoom) && !watchOnly) $('roomCode').value = initialRoom;
   if (savedSession()?.roomId && savedSession()?.endpoint === wsUrl && !watchOnly && !initialRoom) $('roomCode').value = savedSession().roomId;
   if (overlay) document.body.classList.add('overlay-mode');
