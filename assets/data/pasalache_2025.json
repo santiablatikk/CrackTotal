@@ -53,6 +53,10 @@
       {
         "pregunta": "CONTIENE A: ¿Apellido del legendario delantero argentino 'Batigol'?",
         "respuesta": "Batistuta"
+      },
+      {
+        "pregunta": "¿Qué selección quedó subcampeona del Mundial masculino de la FIFA 2026?",
+        "respuesta": "Argentina"
       }
     ]
   },
@@ -102,6 +106,10 @@
       {
         "pregunta": "CONTIENE B: ¿Apellido del delantero francés que ganó el Balón de Oro 2022?",
         "respuesta": "Benzema"
+      },
+      {
+        "pregunta": "¿En qué ciudad húngara se disputó la final de la Champions League 2025/26?",
+        "respuesta": "Budapest"
       }
     ]
   },
@@ -151,6 +159,13 @@
       {
         "pregunta": "CONTIENE C: ¿Nombre deportivo del extremo brasileño del Real Madrid, segundo en el Balón de Oro 2024?",
         "respuesta": "Vinicius Junior"
+      },
+      {
+        "pregunta": "¿Apellido del español elegido mejor jugador joven del Mundial de la FIFA 2026 (Pau …)?",
+        "respuesta": "Cubarsí",
+        "respuestasAlternativas": [
+          "Pau Cubarsí"
+        ]
       }
     ]
   },
@@ -298,6 +313,13 @@
       {
         "pregunta": "¿Nombre y apellido del ex mediocampista inglés del Chelsea que luego fue su DT?",
         "respuesta": "Frank Lampard"
+      },
+      {
+        "pregunta": "¿Nombre del español que marcó el gol de la final del Mundial de la FIFA 2026 (… Torres)?",
+        "respuesta": "Ferran",
+        "respuestasAlternativas": [
+          "Ferran Torres"
+        ]
       }
     ]
   },
@@ -343,6 +365,13 @@
       {
         "pregunta": "CONTIENE G: ¿Apellido del lateral argentino campeón del mundo 2022, Nicolás …?",
         "respuesta": "Tagliafico"
+      },
+      {
+        "pregunta": "¿Apellido de Cody, uno de los seis máximos goleadores de la EURO 2024?",
+        "respuesta": "Gakpo",
+        "respuestasAlternativas": [
+          "Cody Gakpo"
+        ]
       }
     ]
   },
@@ -380,6 +409,13 @@
       {
         "pregunta": "CONTIENE H: ¿Apellido del mediocampista inglés estrella del Real Madrid, Jude …?",
         "respuesta": "Bellingham"
+      },
+      {
+        "pregunta": "¿Apellido del jugador de Arsenal que marcó en la final de Champions League 2025/26 (Kai …)?",
+        "respuesta": "Havertz",
+        "respuestasAlternativas": [
+          "Kai Havertz"
+        ]
       }
     ]
   },
@@ -458,6 +494,13 @@
       {
         "pregunta": "¿Nombre completo del extremo inglés que brilló en el Borussia Dortmund antes de fichar por el Manchester United?",
         "respuesta": "Jadon Sancho"
+      },
+      {
+        "pregunta": "¿Apellido del autor del único gol de Tottenham en la final de la Europa League 2024/25?",
+        "respuesta": "Johnson",
+        "respuestasAlternativas": [
+          "Brennan Johnson"
+        ]
       }
     ]
   },
@@ -495,6 +538,13 @@
       {
         "pregunta": "¿Nombre y apellido del goleador neerlandés ex Schalke y Ajax?",
         "respuesta": "Klaas-Jan Huntelaar"
+      },
+      {
+        "pregunta": "¿Nombre de pila del francés Mbappé, Bota de Oro del Mundial de la FIFA 2026?",
+        "respuesta": "Kylian",
+        "respuestasAlternativas": [
+          "Kylian Mbappé"
+        ]
       }
     ]
   },
@@ -536,6 +586,13 @@
       {
         "pregunta": "¿Nombre y apellido del defensor argentino campeón del mundo 2022 en Manchester United?",
         "respuesta": "Lisandro Martínez"
+      },
+      {
+        "pregunta": "¿Qué club argentino fue campeón de la CONMEBOL Sudamericana 2025?",
+        "respuesta": "Lanús",
+        "respuestasAlternativas": [
+          "Club Atlético Lanús"
+        ]
       }
     ]
   },
@@ -573,6 +630,13 @@
       {
         "pregunta": "¿Apellido del arquero argentino ídolo del Aston Villa, Emiliano …?",
         "respuesta": "Martínez"
+      },
+      {
+        "pregunta": "¿Apellido del francés que ganó la Bota de Oro del Mundial de la FIFA 2026 con diez goles?",
+        "respuesta": "Mbappé",
+        "respuestasAlternativas": [
+          "Kylian Mbappé"
+        ]
       }
     ]
   },
@@ -732,6 +796,14 @@
       {
         "pregunta": "¿Apellido del histórico goleador de Boca Juniors, Martín …?",
         "respuesta": "Palermo"
+      },
+      {
+        "pregunta": "¿Qué club ganó la Champions League 2025/26 tras superar a Arsenal por penales?",
+        "respuesta": "Paris Saint-Germain",
+        "respuestasAlternativas": [
+          "PSG",
+          "París Saint-Germain"
+        ]
       }
     ]
   },
@@ -830,6 +902,13 @@
       {
         "pregunta": "¿Nombre completo del zaguero portugués estrella del Manchester City?",
         "respuesta": "Rúben Dias"
+      },
+      {
+        "pregunta": "¿Nombre deportivo del español ganador del Balón de Oro del Mundial de la FIFA 2026?",
+        "respuesta": "Rodri",
+        "respuestasAlternativas": [
+          "Rodrigo Hernández"
+        ]
       }
     ]
   },
@@ -891,6 +970,13 @@
       {
         "pregunta": "¿Estadio de Milán compartido por Inter y Milan?",
         "respuesta": "San Siro"
+      },
+      {
+        "pregunta": "¿Apellido del arquero español que recibió el Guante de Oro del Mundial de la FIFA 2026 (Unai …)?",
+        "respuesta": "Simón",
+        "respuestasAlternativas": [
+          "Unai Simón"
+        ]
       }
     ]
   },
@@ -936,6 +1022,13 @@
       {
         "pregunta": "¿Club mexicano de la Liga MX con estadio Nemesio Díez?",
         "respuesta": "Toluca"
+      },
+      {
+        "pregunta": "¿Qué club de Londres le ganó la final de la Europa League 2024/25 al Manchester United?",
+        "respuesta": "Tottenham",
+        "respuestasAlternativas": [
+          "Tottenham Hotspur"
+        ]
       }
     ]
   },
@@ -973,6 +1066,13 @@
       {
         "pregunta": "¿Sigla de la Unión de Asociaciones Europeas de Fútbol?",
         "respuesta": "UEFA"
+      },
+      {
+        "pregunta": "¿Nombre del arquero español ganador del Guante de Oro del Mundial de la FIFA 2026 (… Simón)?",
+        "respuesta": "Unai",
+        "respuestasAlternativas": [
+          "Unai Simón"
+        ]
       }
     ]
   },
@@ -1005,6 +1105,10 @@
       },
       {
         "pregunta": "¿Apodo del mediocampista portugués Vítor Machado Ferreira, estrella del PSG?",
+        "respuesta": "Vitinha"
+      },
+      {
+        "pregunta": "¿Nombre deportivo del mediocampista de PSG elegido jugador de la final de la Champions 2025/26?",
         "respuesta": "Vitinha"
       }
     ]
@@ -1097,6 +1201,13 @@
       {
         "pregunta": "¿Apellido del extremo inglés ex Manchester United e Inter, Ashley …?",
         "respuesta": "Young"
+      },
+      {
+        "pregunta": "¿Apellido de Lamine, futbolista de 19 años que disputó la final del Mundial de la FIFA 2026 con España?",
+        "respuesta": "Yamal",
+        "respuestasAlternativas": [
+          "Lamine Yamal"
+        ]
       }
     ]
   },
