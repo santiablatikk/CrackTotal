@@ -38,6 +38,7 @@ function createPasalaDuelService(options = {}) {
     roomId: room.id, public: room.public, phase: room.phase, difficulty: room.difficulty,
     serverNow: now(),
     duration: room.duration, deadline: room.deadline, countdownEndsAt: room.countdownEndsAt, winner: room.winner,
+    spectatorCount: room.spectators.size,
     players: [playerPublic(room.players[0]), playerPublic(room.players[1])]
   });
   function emitRoom(room) {
@@ -222,6 +223,10 @@ function createPasalaDuelService(options = {}) {
   }
   function drop(room) {
     if (!room) return;
+    // Explicitly close clients still connected when the room expires or its host leaves.
+    const closing = { message: 'La sala se cerró. Podés crear o unirte a otro duelo.' };
+    room.players.forEach(p => { if (p) send(p.ws, 'pasala:closed', closing); });
+    room.spectators.forEach(ws => send(ws, 'pasala:closed', closing));
     if (room.countdown) timers.clearTimeout(room.countdown);
     if (room.ticker) timers.clearInterval(room.ticker);
     if (room.deadlineTimer) timers.clearTimeout(room.deadlineTimer);
@@ -267,6 +272,8 @@ function createPasalaDuelService(options = {}) {
     if (!player || player.ws !== ws) return;
     player.ws = null;
     player.ready = false;
+    // A reconnect during the lobby must require two fresh ready confirmations.
+    if (room.phase === 'waiting') room.players.forEach(p => { if (p) p.ready = false; });
     emitRoom(room);
     if (room.phase === 'countdown') {
       if (room.countdown) timers.clearTimeout(room.countdown);
