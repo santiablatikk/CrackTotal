@@ -36,6 +36,7 @@ function createPasalaDuelService(options = {}) {
   });
   const snapshot = room => ({
     roomId: room.id, public: room.public, phase: room.phase, difficulty: room.difficulty,
+    serverNow: now(),
     duration: room.duration, deadline: room.deadline, winner: room.winner,
     players: [playerPublic(room.players[0]), playerPublic(room.players[1])]
   });
