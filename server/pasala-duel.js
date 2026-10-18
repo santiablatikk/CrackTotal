@@ -122,7 +122,7 @@ function createPasalaDuelService(options = {}) {
     room.spectators.add(ws);
     peers.set(ws, { roomId: room.id, role: 'spectator' });
     send(ws, 'pasala:spectating', { roomId: room.id });
-    send(ws, 'pasala:state', snapshot(room));
+    emitRoom(room);
     if (room.phase === 'finished') send(ws, 'pasala:result', result(room));
   }
   function matchmake(ws, payload = {}, clientInfo) {
@@ -245,7 +245,7 @@ function createPasalaDuelService(options = {}) {
     peers.delete(ws);
     const room = rooms.get(link.roomId);
     if (!room) return;
-    if (link.role === 'spectator') { room.spectators.delete(ws); return; }
+    if (link.role === 'spectator') { room.spectators.delete(ws); emitRoom(room); return; }
     const player = room.players[link.slot];
     if (!player || player.ws !== ws) return;
     player.ws = null;
@@ -267,7 +267,7 @@ function createPasalaDuelService(options = {}) {
     peers.delete(ws);
     const room = rooms.get(link.roomId);
     if (!room) return;
-    if (link.role === 'spectator') { room.spectators.delete(ws); return; }
+    if (link.role === 'spectator') { room.spectators.delete(ws); emitRoom(room); return; }
     const player = room.players[link.slot];
     if (!player || player.ws !== ws) return;
     player.ws = null;
