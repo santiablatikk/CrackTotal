@@ -4,7 +4,7 @@ const { createPasalaDuelService } = require('../server/pasala-duel');
 
 const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const bank = alphabet.map(letter => ({ letra:letter, preguntas:[
-  { pregunta:'Pregunta compartida para ' + letter, respuesta:'Gol ' + letter },
+  { pregunta:'Pregunta compartida para ' + letter, respuesta:'Gol ' + letter, respuestasAlternativas:letter === 'A' ? ['Gol alternativo A'] : [] },
   { pregunta:'Otra pregunta de ' + letter, respuesta:'Pase ' + letter }
 ] }));
 let clock = 1000000;
@@ -46,6 +46,7 @@ act(a,'ready');
 assert.equal(get(a,'state').phase,'waiting');
 act(b,'ready');
 assert.equal(get(a,'state').phase,'countdown');
+assert.equal(get(a,'state').countdownEndsAt,clock+3000,'Countdown uses server time');
 advance(3000);
 assert.equal(get(a,'state').phase,'playing');
 assert.equal(get(a,'question').text,get(b,'question').text);
@@ -53,9 +54,12 @@ assert.equal(get(audience,'question'),undefined,'Spectator cannot see answers/qu
 assert.equal(JSON.stringify(audience.messages).includes('respuesta'),false);
 act(a,'answer',{letter:'Z',answer:'Gol Z'});
 assert.match(get(a,'error').message,/fuera de turno/);
-act(a,'answer',{letter:'A',answer:'Gol A'});
-assert.equal(get(a,'answerResult').correct,true);
+act(a,'answer',{letter:'A',answer:'Gol alternativo A'});
+assert.equal(get(a,'answerResult').correct,true,'Verified accepted variant scores');
+act(a,'pass',{letter:'B'});
+assert.match(get(a,'error').message,/Esperá un instante/,'Throttled action receives acknowledgement');
 assert.equal(get(a,'question').letter,'B');
+assert.equal(get(a,'state').players[0].correct,1);
 act(b,'answer',{letter:'A',answer:'incorrecto'});
 assert.equal(get(b,'answerResult').correct,false);
 
@@ -91,4 +95,4 @@ assert.equal(get(audience,'question'),undefined);
 act(aAgain,'leave');
 service.destroy();
 assert.equal(service.rooms.size,0);
-console.log('Pasala Che duel smoke OK: room, mirrored questions, authoritative answers, spectators, reconnect, winner, rematch, cleanup');
+console.log('Pasala Che duel smoke OK: room, mirrored questions, countdown, verified aliases, rate limit, spectators, reconnect, winner, rematch, cleanup');
