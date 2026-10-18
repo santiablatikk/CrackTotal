@@ -7,5 +7,5 @@
   NODE_VERSION = "22"
 
 [context.deploy-preview]
-  command = "node validate-deploy.js && node scripts/mi_carrera_engine_smoke.js && node scripts/mi_carrera_ui_smoke.js && node scripts/mi_carrera_responsive_smoke.js && node scripts/build-netlify-preview.cjs"
+  command = "node validate-deploy.js && node scripts/pasala_duel_smoke.js && node scripts/build-netlify-preview.cjs"
   publish = "public"
