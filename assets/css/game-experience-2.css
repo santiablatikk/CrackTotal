@@ -166,3 +166,31 @@ body.mc-body.ct-ds .mc-scene--career_card .mc-card {box-shadow:0 32px 100px rgba
  body.mc-body.ct-ds .mc-scene--first_club .mc-path:hover,
  body.mc-body.ct-ds .mc-scene--market .mc-offer:hover {transform:none!important}
 }
+/* Audit refinements — unify the pre-game screens with the platform identity. */
+body.game-body.ct-ds #gameRulesModal .horizontal-modal {
+  background:linear-gradient(147deg,#1b2929,#0c151d 70%)!important;
+  border:1px solid rgba(184,255,56,.27)!important;
+  box-shadow:0 36px 110px rgba(0,0,0,.52)!important;
+}
+body.game-body.ct-ds #gameRulesModal .modal-title {
+  color:#b8ff38!important;font-family:"Oswald",Impact,sans-serif!important;
+  text-transform:uppercase;letter-spacing:.035em;
+}
+body.game-body.ct-ds #gameRulesModal .difficulty-time {color:#b8ff38!important}
+body.game-body.ct-ds #gameRulesModal .difficulty-card {background:#162327!important;border-color:rgba(255,255,255,.13)!important}
+body.game-body.ct-ds #gameRulesModal .difficulty-card.active {background:linear-gradient(160deg,#253c32,#1a2a2b)!important;border-color:#b8ff38!important}
+body.game-body.ct-ds #gameRulesModal #startGameButton {
+  background:linear-gradient(115deg,#b8ff38,#8bdf30)!important;
+  color:#0c170b!important;border-color:#b8ff38!important;
+  box-shadow:0 12px 36px rgba(184,255,56,.17)!important;
+}
+body.game-body.ct-ds #gameRulesModal .rule-compact {background:rgba(255,255,255,.035)!important;border-color:rgba(255,255,255,.09)!important}
+body.game-body.ct-ds .loading-start-screen h2 {color:#b8ff38!important;background:none!important;-webkit-text-fill-color:#b8ff38}
+body.game-body.ct-ds .spinner-rosco {border-top-color:#b8ff38!important;border-right-color:rgba(184,255,56,.4)!important}
+body.qsm-1v1-body.ct-ds .qsm-1v1-content {width:calc(100% - 32px)!important}
+@media(max-width:700px) {
+ body.wordle-body.ct-ds {--tile-gap:4px;--tile-size:min(52px,calc((100vw - 66px) / 10))}
+ body.wordle-body.ct-ds .tile {font-size:clamp(.85rem,4vw,1.5rem)}
+ body.wordle-body.ct-ds .board {max-width:100%;overflow:visible}
+ body.qsm-1v1-body.ct-ds .qsm-1v1-content {width:100%!important}
+}
