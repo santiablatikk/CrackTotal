@@ -64,7 +64,7 @@
       if (state.ws !== ws) return;
       state.connected = false;
       notice('Conexión interrumpida. Intentando volver a la sala…', true);
-      if (!state.manualLeave && !isStaticPreview && !state.retryTimer) {
+      if (!state.manualLeave && wsUrl && !state.retryTimer) {
         state.retryTimer = setTimeout(() => { state.retryTimer = null; connect(); }, 3500);
       }
     };
@@ -79,6 +79,9 @@
       case 'spectating':
         state.roomId = payload.roomId; state.spectator = true; enterMatch(); break;
       case 'state':
+        if (state.room?.phase === 'finished' && payload.phase === 'countdown') {
+          state.result = null; state.question = null; state.statuses = {};
+        }
         state.room = payload; state.roomId = payload.roomId;
         if (Number.isFinite(payload.serverNow)) state.clockOffset = payload.serverNow - Date.now();
         enterMatch(); renderMatch(); break;
@@ -96,8 +99,9 @@
       case 'playerFinished':
         state.question = null; renderMatch(); break;
       case 'result':
-        state.result = payload; state.question = null; clearSession(); renderMatch(); break;
+        state.result = payload; state.question = null; renderMatch(); break;
       case 'error':
+        if (state.room?.phase === 'playing' && !state.spectator) $('answerInput').disabled = false;
         notice(payload.message || 'No se pudo completar la acción.', true);
         if (state.reconnecting) {
           state.reconnecting = false; clearSession();
@@ -189,6 +193,10 @@
     renderRing(); updateClock();
   }
   function updateClock() {
+    if (state.room?.phase === 'countdown' && state.room.countdownEndsAt) {
+      const remaining = Math.max(1, Math.ceil((state.room.countdownEndsAt - (Date.now() + state.clockOffset)) / 1000));
+      $('readyHeading').textContent = `ARRANCAMOS EN ${remaining}`;
+    }
     const ms = state.room?.deadline ? Math.max(0, state.room.deadline - (Date.now() + state.clockOffset)) : state.room?.duration * 1000 || 300000;
     const sec = Math.ceil(ms / 1000);
     $('clock').textContent = String(Math.floor(sec / 60)).padStart(2,'0') + ':' + String(sec % 60).padStart(2,'0');
@@ -218,6 +226,7 @@
   $('rematchButton').addEventListener('click', () => send('rematch'));
   function exitRoom() {
     send('leave'); state.manualLeave = true;
+    if (state.retryTimer) { clearTimeout(state.retryTimer); state.retryTimer = null; }
     state.spectator = false;
     clearSession(); leaveUI();
     history.replaceState({}, '', 'pasala-1v1.html');
