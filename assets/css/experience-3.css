@@ -36,3 +36,11 @@
 @media(max-width:800px){.home-v2 .home-hero{min-height:auto}.ct3-duel-feature{grid-template-columns:1fr;width:auto;margin-inline:18px}.ct3-duel-visual{min-height:280px}.ct3-duel-copy{padding:30px}.ct3-duel-copy h2{font-size:clamp(4rem,11vw,6.2rem)}.home-v2 .ct3-duel-card,.discover-page.ct-ds .ct3-duel-card{grid-template-columns:1fr;grid-column:span 2}.home-v2 .ct3-duel-card .home-game-media,.discover-page.ct-ds .ct3-duel-card .home-game-media{height:220px!important}.ct3-duel-mark{font-size:13rem}}
 @media(max-width:590px){.home-v2 .home-hero h1{font-size:clamp(3.3rem,14vw,5.3rem)!important}.ct3-duel-feature{margin-inline:16px}.ct3-duel-visual{min-height:230px}.ct3-duel-copy{padding:25px 22px 38px}.ct3-duel-copy h2{font-size:clamp(3.7rem,12vw,5.4rem)}.ct3-duel-copy li{font-size:.61rem}.home-v2 .ct3-duel-card,.discover-page.ct-ds .ct3-duel-card{grid-column:span 1}}
 @media(prefers-reduced-motion:reduce){.ct3-hero-spotlight,.ct3-duel-card{transition:none!important}}
+
+.game-body.ct-ds .ct3-solo-duel-banner{max-width:1140px;margin:22px auto 8px;padding:20px 28px;display:flex;align-items:center;justify-content:space-between;gap:22px;background:linear-gradient(110deg,#142a1b,#091612);border-left:5px solid #b8ff38;border-top:1px solid rgba(184,255,56,.22);border-right:1px solid rgba(184,255,56,.22);border-bottom:1px solid rgba(184,255,56,.22);color:#edf9e9}
+.game-body.ct-ds .ct3-solo-duel-banner strong{display:block;font-family:Oswald,Impact,sans-serif;font-size:clamp(1.3rem,2.4vw,2.1rem);line-height:1.1;margin:7px 0}
+.game-body.ct-ds .ct3-solo-duel-banner p{margin:0;color:#b4c5b4;font-size:.86rem}
+.game-body.ct-ds .ct3-solo-duel-kicker{font-size:.68rem;font-weight:900;letter-spacing:.11em;color:#b8ff38}
+.game-body.ct-ds .ct3-solo-duel-banner a{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:14px;background:#b8ff38;color:#10200b;text-decoration:none;font-size:.79rem;font-weight:900;letter-spacing:.05em;padding:14px 17px}
+.game-body.ct-ds .ct3-solo-duel-banner a:hover{background:#e7ffae}
+@media(max-width:700px){.game-body.ct-ds .ct3-solo-duel-banner{margin:16px;padding:18px;flex-direction:column;align-items:stretch}.game-body.ct-ds .ct3-solo-duel-banner a{align-self:stretch}}
