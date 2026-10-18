@@ -7,3 +7,7 @@
 @import url("./utilities.css");
 @import url("./components.css");
 @import url("./bridges.css");
+
+/* 2.0 shared theme (after legacy bridge). */
+@import url("../crack-total-2.css?v=20261018");
+@import url("../gameplay-2.css?v=20261018");
