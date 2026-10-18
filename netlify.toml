@@ -1,0 +1,7 @@
+# Crack Total keeps its static HTML and assets at repository root.
+# Netlify preview builds should publish this directory, not /public.
+[build]
+  publish = "."
+
+[build.environment]
+  NODE_VERSION = "22"
