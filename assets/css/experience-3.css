@@ -44,3 +44,25 @@
 .game-body.ct-ds .ct3-solo-duel-banner a{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:14px;background:#b8ff38;color:#10200b;text-decoration:none;font-size:.79rem;font-weight:900;letter-spacing:.05em;padding:14px 17px}
 .game-body.ct-ds .ct3-solo-duel-banner a:hover{background:#e7ffae}
 @media(max-width:700px){.game-body.ct-ds .ct3-solo-duel-banner{margin:16px;padding:18px;flex-direction:column;align-items:stretch}.game-body.ct-ds .ct3-solo-duel-banner a{align-self:stretch}}
+
+/* Competitive lineup: three distinct online games, one coherent destination. */
+.ct3-duel-lineup{padding-bottom:clamp(3rem,6vw,6rem)}
+.ct3-lineup-heading{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:30px}
+.ct3-lineup-heading h2{font:900 clamp(3.2rem,5.7vw,6.5rem)/.95 Oswald,Impact,sans-serif;letter-spacing:-.04em;margin:12px 0 0}
+.ct3-lineup-heading h2 span{color:#b8ff38}
+.ct3-lineup-heading>p{max-width:330px;color:#c1cfc1;line-height:1.75}
+.ct3-lineup-grid{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:12px}
+.ct3-lineup-mode{position:relative;min-height:340px;display:flex;flex-direction:column;align-items:flex-start;padding:clamp(21px,3vw,36px);color:#fff;text-decoration:none;background:linear-gradient(145deg,#1c2524,#0b1616);border:1px solid rgba(255,255,255,.14);overflow:hidden;transition:border-color .18s,transform .18s}
+.ct3-lineup-mode::before{content:"";position:absolute;right:-100px;bottom:-130px;width:270px;height:270px;border:1px solid rgba(184,255,56,.13);border-radius:50%;box-shadow:0 0 0 45px rgba(184,255,56,.025),0 0 0 90px rgba(184,255,56,.018);pointer-events:none}
+.ct3-lineup-mode:hover{color:#fff;border-color:#b8ff38;transform:translateY(-5px)}
+.ct3-lineup-mode--lead{background:linear-gradient(148deg,#293c21,#102418);border-color:rgba(184,255,56,.52)}
+.ct3-lineup-kicker{font-size:.68rem;font-weight:900;letter-spacing:.14em;color:#b8ff38}
+.ct3-lineup-arrow{position:absolute;top:21px;right:26px;font-size:2rem;color:#b8ff38}
+.ct3-lineup-mode strong{font:900 clamp(3.5rem,5.5vw,6rem)/.91 Oswald,Impact,sans-serif;letter-spacing:-.05em;margin:48px 0 25px}
+.ct3-lineup-mode strong em{font-style:normal;color:#b8ff38}
+.ct3-lineup-desc{display:block;max-width:280px;color:#d0dfd1;line-height:1.6;font-size:.87rem}
+.ct3-lineup-tag{display:block;margin-top:auto;padding-top:30px;font-weight:900;letter-spacing:.1em;font-size:.65rem;color:#b8ff38}
+.ct3-lineup-mode:focus-visible{outline:3px solid #b8ff38;outline-offset:3px}
+@media(max-width:900px){.ct3-lineup-heading{display:block}.ct3-lineup-heading>p{margin:20px 0 0}.ct3-lineup-grid{grid-template-columns:1fr 1fr}.ct3-lineup-mode--lead{grid-column:1/-1;min-height:290px}.ct3-lineup-mode--lead strong{font-size:5.8rem}}
+@media(max-width:590px){.ct3-duel-lineup{width:calc(100% - 32px)}.ct3-lineup-heading h2{font-size:clamp(3.1rem,10vw,4.6rem)}.ct3-lineup-grid{grid-template-columns:1fr}.ct3-lineup-mode--lead{grid-column:auto}.ct3-lineup-mode{min-height:295px}.ct3-lineup-mode strong,.ct3-lineup-mode--lead strong{font-size:clamp(3.6rem,13vw,5rem);margin:42px 0 22px}}
+@media(prefers-reduced-motion:reduce){.ct3-lineup-mode{transition:none}.ct3-lineup-mode:hover{transform:none}}
