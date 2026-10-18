@@ -18,7 +18,7 @@ Vista previa estática: https://deploy-preview-1--zingy-haupia-53b742.netlify.ap
 - `scripts/pasala_duel_smoke.js`: tests deterministas Node, con nuevos casos de cierre de sala, notificación de invitado y espectador, reinicio de `ready` y conteo de audiencia. **Correctos**, ejecutados mediante Node en memoria contra los archivos actualizados.
 - `scripts/arena_ui_smoke.js`: valida sintaxis del cliente, correspondencia de **43 referencias a IDs** con HTML, duplicaciones, presencia de enlaces de invitación y versiones de recursos. **Correcto**.
 - El comando `npm test` ahora ejecuta las dos suites anteriores más `content_verified_smoke.js`; Netlify las exige para el preview.
-- Browser/Netlify: preview 3.2 inspeccionado en escritorio, banner de staging ausente, cuatro acciones de lobby realmente deshabilitadas sin WebSocket, cliente `v=5` cargado y overlay de stream presentando `SEÑAL INTERRUMPIDA` cuando no hay servidor.
+- Browser/Netlify: preview 3.2 inspeccionado en escritorio, aviso explícito de que staging está ausente, cuatro acciones de lobby realmente deshabilitadas sin WebSocket, cliente `v=5` cargado y overlay de stream presentando `SEÑAL INTERRUMPIDA` cuando no hay servidor.
 - La compilación de Netlify terminó correctamente después de actualizar UI y servidor; comprobar el último commit de este documento y package al publicar.
 
 ## Limitaciones pendientes
