@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07110e">
+  <meta name="description" content="Pasala Che 1v1: enfrentá a un amigo en el mismo rosco futbolero, con reloj, marcador en vivo y revancha.">
+  <title>Pasala Che 1v1 | Crack Total</title>
+  <link rel="icon" href="portada.ico" type="image/x-icon">
+  <link rel="stylesheet" href="assets/css/pasala-duel.css?v=3">
+  <script src="assets/js/pasala-duel-client.js?v=3" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al juego</a>
+  <header class="arena-header">
+    <a class="brand" href="index.html" aria-label="Crack Total, volver al inicio"><span class="brand-icon">CT<span class="brand-star">✦</span></span> CRACK TOTAL</a>
+    <nav aria-label="Navegación de juego"><a href="pasalache.html">Rosco individual</a><a href="games.html">Todos los juegos ↗</a></nav>
+    <span class="arena-version">ARENA / 01</span>
+  </header>
+  <main id="main">
+    <section class="arena-hero">
+      <div class="arena-photo" aria-hidden="true"></div>
+      <div class="arena-hero-inner">
+        <div class="kicker"><span class="signal-dot"></span> CRACK TOTAL / DUELOS ONLINE</div>
+        <div class="title-lockup"><div class="title-index">01 / MODO COMPETITIVO</div><h1>PASALA<br><em>CHE.</em> <span>1V1</span></h1></div>
+        <p>El mismo rosco. Las mismas preguntas. Dos cabezas. Un solo ganador.</p>
+        <div class="hero-details"><span>26 LETRAS</span><span>RELOJ COMPARTIDO</span><span>MARCADOR EN VIVO</span></div>
+      </div>
+      <div class="hero-corner" aria-hidden="true">01—26<br>⚽</div>
+    </section>
+    <div class="arena-ticker" aria-hidden="true"><span>JUEGO LIMPIO ✦ MISMO DESAFÍO ✦ DUEL0 FUTBOLERO ✦ JUEGO LIMPIO ✦ MISMO DESAFÍO ✦</span></div>
+
+    <div class="arena-shell">
+      <div class="server-banner" id="connectionNotice" role="status" aria-live="polite"><span class="signal-dot"></span><span id="connectionText">Conectando a la arena…</span><button id="reconnectButton" type="button" hidden>Reintentar</button></div>
+      <section class="lobby-area" id="lobby" aria-labelledby="lobbyTitle">
+        <div class="section-marker"><span>01</span> / ARMÁ EL PARTIDO</div>
+        <div class="lobby-heading"><h2 id="lobbyTitle">Elegí cómo <em>competir.</em></h2><p>Entrá desde tu celular o computadora. Para empezar, los dos jugadores deben estar listos.</p></div>
+        <div class="player-field"><label for="playerName">TU NOMBRE EN LA CANCHA</label><input id="playerName" maxlength="24" autocomplete="nickname" placeholder="Ej.: Davo" value="Jugador"></div>
+        <div class="lobby-grid">
+          <form class="mode-card mode-card-primary" id="createForm">
+            <span class="mode-no">01 / PRIVADO</span><span class="mode-symbol" aria-hidden="true">↗</span>
+            <h3>ARMÁ<br>UN DUELO.</h3><p>Creá una sala, pasale el código a tu rival y disputen el rosco en simultáneo.</p>
+            <label for="difficulty">DIFICULTAD</label><select id="difficulty"><option value="normal">Normal · 5 minutos</option><option value="facil">Fácil · 6 minutos</option><option value="dificil">Difícil · 4 minutos</option></select>
+            <button class="arena-button primary" type="submit">CREAR SALA <span>↗</span></button>
+          </form>
+          <form class="mode-card" id="joinForm">
+            <span class="mode-no">02 / INVITACIÓN</span><span class="mode-symbol" aria-hidden="true">⇄</span>
+            <h3>ACEPTÁ<br>EL RETO.</h3><p>¿Ya te desafiaron? Pegá el código que te pasaron y entrá a la cancha.</p>
+            <label for="roomCode">CÓDIGO DE SALA</label><input id="roomCode" placeholder="XXXXXXXXXX" minlength="10" maxlength="10" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
+            <button class="arena-button outline" type="submit">ENTRAR AL DUELO <span>↗</span></button>
+          </form>
+          <div class="mode-card mode-card-random">
+            <span class="mode-no">03 / EMPAREJAMIENTO</span><span class="mode-symbol" aria-hidden="true">◎</span>
+            <h3>RIVAL<br>ALEATORIO.</h3><p>Buscá un adversario disponible de tu dificultad. Si no hay ninguno, esperás en una sala pública.</p>
+            <button class="arena-button outline" id="randomButton" type="button">BUSCAR RIVAL <span>↗</span></button>
+            <p class="mode-note">No hay bots. Necesitás otro jugador conectado.</p>
+          </div>
+        </div>
+        <div class="watch-line"><div><strong>¿VENÍS A MIRAR?</strong><span>Seguí el marcador de un duelo con código de sala.</span></div><form id="watchForm"><label class="sr-only" for="spectatorCode">Código del duelo</label><input id="spectatorCode" placeholder="CÓDIGO DE SALA" minlength="10" maxlength="10" required><button type="submit">VER PARTIDO ↗</button></form></div>
+      </section>
+
+      <section class="match-area" id="match" hidden aria-labelledby="matchTitle">
+        <div class="match-top"><div><div class="section-marker"><span>02</span> / PARTIDO EN VIVO</div><h2 id="matchTitle">LA CANCHA <em>ES TUYA.</em></h2></div><div class="match-room">SALA <strong id="displayRoom">—</strong> <button type="button" id="copyInvite">COPIAR INVITACIÓN ↗</button></div></div>
+        <div class="scoreboard" id="scoreboard" aria-label="Marcador del duelo"></div>
+        <div class="match-stage">
+          <div class="ring-side"><div class="clock-block"><span>TIEMPO RESTANTE</span><strong id="clock" aria-live="off">05:00</strong></div><div class="duel-ring" id="duelRing" role="list" aria-label="Progreso de las 26 letras"></div><div class="ring-legend"><span><i class="legend-dot correct"></i> ACERTADA</span><span><i class="legend-dot incorrect"></i> ERRADA</span><span><i class="legend-dot pending"></i> PENDIENTE</span></div></div>
+          <div class="question-side">
+            <div class="match-status" id="matchStatus" role="status" aria-live="polite">Esperando a tu rival…</div>
+            <div id="readyPanel" class="ready-panel"><span class="question-eyebrow">PREVIA DEL PARTIDO</span><h3 id="readyHeading">CALENTANDO MOTORES.</h3><p id="readyDescription">Cuando entren los dos, apretá listo. El rosco empieza con una cuenta regresiva de tres segundos.</p><button class="arena-button primary" id="readyButton" type="button">ESTOY LISTO ✓</button></div>
+            <div id="questionPanel" hidden><span class="question-eyebrow">LETRA EN JUEGO</span><div class="current-letter" id="currentLetter">A</div><p class="question-text" id="questionText"></p><form id="answerForm" autocomplete="off"><label for="answerInput" class="sr-only">Tu respuesta</label><input id="answerInput" maxlength="120" placeholder="ESCRIBÍ TU RESPUESTA" autocapitalize="off" spellcheck="false" required><div class="answer-actions"><button class="arena-button primary" type="submit">RESPONDER ↗</button><button class="arena-button outline" type="button" id="passButton">PASALА CHE →</button></div></form><p id="answerFeedback" role="status" aria-live="polite"></p></div>
+            <div id="resultsPanel" hidden><span class="question-eyebrow">FINAL DEL ENCUENTRO</span><h3 id="resultHeadline">PARTIDO TERMINADO.</h3><p id="resultDescription"></p><button class="arena-button primary" type="button" id="rematchButton">PEDIR REVANCHA ↗</button><button class="arena-button outline" type="button" id="backToLobby">VOLVER AL LOBBY</button></div>
+          </div>
+        </div>
+        <div class="match-bottom"><span id="playerRole">JUGADOR</span><button id="watchOverlay" type="button">ABRIR VISTA PARA STREAM ↗</button><button id="leaveButton" type="button">ABANDONAR SALA</button></div>
+      </section>
+      <footer class="arena-footer"><span>CRACK TOTAL © 2026</span><span>FÚTBOL · CONOCIMIENTO · COMPETENCIA</span><a href="games.html">EXPLORAR JUEGOS ↗</a></footer>
+    </div>
+  </main>
+</body>
+</html>
