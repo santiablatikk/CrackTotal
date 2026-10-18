@@ -9,7 +9,7 @@
   const storageKey = 'ct-pasala-duel-session-v1';
   const state = { ws: null, connected: false, room: null, selfId: null, spectator: watchOnly,
     roomId: null, question: null, statuses: {}, result: null, reconnecting: false,
-    clockTimer: null, retryTimer: null, manualLeave: false };
+    clockTimer: null, retryTimer: null, manualLeave: false, clockOffset: 0 };
   const urlOverride = params.get('server') || window.CRACK_TOTAL_DUEL_WS_URL || '';
   const isStaticPreview = /(?:^|\.)netlify\.app$/i.test(location.hostname) || /(?:^|\.)netlify\.com$/i.test(location.hostname);
   const wsUrl = urlOverride || (!isStaticPreview ? ((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host) : '');
@@ -80,6 +80,7 @@
         state.roomId = payload.roomId; state.spectator = true; enterMatch(); break;
       case 'state':
         state.room = payload; state.roomId = payload.roomId;
+        if (Number.isFinite(payload.serverNow)) state.clockOffset = payload.serverNow - Date.now();
         enterMatch(); renderMatch(); break;
       case 'question':
         state.question = payload; state.statuses = payload.statuses || {};
@@ -188,7 +189,7 @@
     renderRing(); updateClock();
   }
   function updateClock() {
-    const ms = state.room?.deadline ? Math.max(0, state.room.deadline - Date.now()) : state.room?.duration * 1000 || 300000;
+    const ms = state.room?.deadline ? Math.max(0, state.room.deadline - (Date.now() + state.clockOffset)) : state.room?.duration * 1000 || 300000;
     const sec = Math.ceil(ms / 1000);
     $('clock').textContent = String(Math.floor(sec / 60)).padStart(2,'0') + ':' + String(sec % 60).padStart(2,'0');
   }
