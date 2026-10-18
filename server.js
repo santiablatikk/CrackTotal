@@ -37,6 +37,8 @@ function getMimeType(filePath) {
 
 // Función para canonicalizar URLs - CRÍTICO PARA SEO
 function canonicalizeUrl(req, res) {
+    // Opt-in only for isolated staging backends; production keeps its canonical host policy.
+    if (process.env.CT_STAGING === 'true') return false;
     const host = req.headers.host || 'cracktotal.com';
     const protocol = req.headers['x-forwarded-proto'] || 'http';
     const url = req.url;
