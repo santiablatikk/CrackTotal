@@ -200,12 +200,13 @@ function createPasalaDuelService(options = {}) {
     if (room.ticker) timers.clearInterval(room.ticker);
     if (room.deadlineTimer) timers.clearTimeout(room.deadlineTimer);
     room.phase = 'finished';
+    room.players.forEach(p => { if (p) p.ready = false; });
     const [a, b] = room.players;
     if (forfeitSlot !== null) room.winner = room.players[1 - forfeitSlot]?.id || null;
     else if (!a || !b) room.winner = null;
     else if (a.correct !== b.correct) room.winner = (a.correct > b.correct ? a : b).id;
     else if (a.incorrect !== b.incorrect) room.winner = (a.incorrect < b.incorrect ? a : b).id;
-    else if (a.finishedAt && b.finishedAt && a.finishedAt !== b.finishedAt) room.winner = (a.finishedAt < b.finishedAt ? a : b).id;
+    else if ((a.finishedAt || room.deadline) !== (b.finishedAt || room.deadline)) room.winner = ((a.finishedAt || room.deadline) < (b.finishedAt || room.deadline) ? a : b).id;
     else room.winner = null;
     emitRoom(room);
     const resultData = result(room);
@@ -333,6 +334,6 @@ function createPasalaDuelService(options = {}) {
     return true;
   }
   function destroy() { [...rooms.values()].forEach(drop); peers.clear(); }
-  return { handle, disconnect, destroy, rooms, LETTERS };
+  return { handle, disconnect, destroy, rooms, LETTERS, hasPeer: ws => peers.has(ws) };
 }
 module.exports = { createPasalaDuelService };
