@@ -145,8 +145,7 @@
       "pregunta": "¿Qué club ganó la Champions League 2025/26 tras superar a Arsenal por penales?",
       "respuesta": "Paris Saint-Germain",
       "acceptedAlternatives": [
-        "PSG",
-        "París Saint-Germain"
+        "PSG"
       ],
       "sourceUrls": [
         "https://www.uefa.com/uefachampionsleague/news/02a5-20c02e59f219-15e92acdc717-1000/"
