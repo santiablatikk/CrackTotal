@@ -1435,10 +1435,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const correctAnswerNorm = normalizeResponseText(correctAnswerFull);
             const userAnswerNorm = normalizeResponseText(userAnswer);
 
+            const acceptedAlternatives = Array.isArray(actualQuestion.respuestasAlternativas)
+                ? actualQuestion.respuestasAlternativas.map(normalizeResponseText) : [];
+            const explicitAlternativeCorrect = acceptedAlternatives.includes(userAnswerNorm);
             let isCorrect = false; // Initialize isCorrect
 
-            // Check for incompleteness first...
-            if (isIncompleteAnswer(userAnswerNorm, correctAnswerNorm)) {
+            // No marcar como incompleta una variante explícitamente aceptada y verificada.
+            if (!explicitAlternativeCorrect && isIncompleteAnswer(userAnswerNorm, correctAnswerNorm)) {
                  if (incompleteAnswersUsed < maxIncompleteAnswers) {
                     incompleteAnswersUsed++;
                     const remainingAttempts = maxIncompleteAnswers - incompleteAnswersUsed;
@@ -1458,7 +1461,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // Check for correctness if not handled as incomplete
-            isCorrect = isAnswerCorrectEnough(userAnswerNorm, correctAnswerNorm);
+            isCorrect = explicitAlternativeCorrect || isAnswerCorrectEnough(userAnswerNorm, correctAnswerNorm);
 
             if (!isCorrect) {
                 // --- INCORRECT --- 
