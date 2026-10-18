@@ -1,0 +1,89 @@
+/* Crack Total 2.0 — visual layer; no game-state or gameplay overrides. */
+:root {
+  --ct-bg:#090d12; --ct-surface:#151b23; --ct-surface-strong:#1b242e;
+  --ct-text:#f6f8f4; --ct-text-muted:#aab5b2; --ct-primary:#b8ff38;
+  --ct-primary-strong:#97df17; --ct-accent:#b8ff38;
+  --ct-line:rgba(219,245,224,.13); --ct-line-strong:rgba(219,245,224,.26);
+  --home-bg:#090d12; --home-surface:#151b23; --home-surface-strong:#1b242e;
+  --home-text:#f6f8f4; --home-muted:#aab5b2; --home-primary:#b8ff38;
+  --home-primary-strong:#97df17; --home-accent:#b8ff38;
+  --home-line:rgba(219,245,224,.13);
+}
+body.home-v2,body.discover-page {
+  color:#f6f8f4;
+  background:radial-gradient(ellipse 60% 38% at 86% 0%,rgba(184,255,56,.07),transparent 75%),#090d12;
+}
+.home-shell {width:min(1320px,calc(100% - 64px))}
+.home-header,.home-navbar,.ct-navbar {--ct-header-height:84px}
+.home-header {background:rgba(9,13,18,.85);backdrop-filter:blur(22px);border-bottom:1px solid rgba(255,255,255,.08)}
+.home-brand {font-family:"Oswald",Impact,sans-serif!important;font-size:1.55rem!important;font-weight:700!important;letter-spacing:.03em;text-transform:uppercase}
+.home-brand-mark {background:#b8ff38!important;color:#091008!important;box-shadow:0 0 32px rgba(184,255,56,.2)}
+.home-nav-link {font-size:.78rem!important;letter-spacing:.055em;text-transform:uppercase}
+.home-nav-link:hover,.home-nav-link[aria-current="page"] {color:#b8ff38!important}
+.home-nav-play,.home-button-primary,.ct-button--primary {
+ background:#b8ff38!important;color:#0b1108!important;border:1px solid #b8ff38!important;
+ box-shadow:0 10px 32px rgba(184,255,56,.13)!important;font-weight:900!important;
+}
+.home-nav-play:hover,.home-button-primary:hover,.ct-button--primary:hover {background:#d0ff79!important;transform:translateY(-3px);box-shadow:0 16px 46px rgba(184,255,56,.24)!important}
+.home-button-secondary {background:rgba(255,255,255,.055)!important;border:1px solid rgba(255,255,255,.25)!important;color:#f6f8f4!important}
+.home-button-secondary:hover {border-color:#b8ff38!important;background:rgba(184,255,56,.08)!important}
+.home-hero {min-height:min(780px,88svh);isolation:isolate}
+.home-hero::after {content:"";position:absolute;z-index:0;inset:auto 0 0;height:120px;background:linear-gradient(transparent,#090d12);pointer-events:none}
+.home-hero-media {filter:saturate(.55) contrast(1.2)}
+.home-hero-media::after {content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(9,13,18,.97) 0%,rgba(9,13,18,.91) 31%,rgba(9,13,18,.24) 100%),linear-gradient(0deg,#090d12 0%,transparent 45%);}
+.home-hero-content {position:relative;z-index:1}
+.home-hero-copy {max-width:850px!important}
+.home-hero h1 {font-family:"Oswald",Impact,sans-serif!important;font-size:clamp(4rem,8.4vw,9.4rem)!important;font-weight:700!important;letter-spacing:-.035em!important;line-height:.91!important;text-transform:uppercase;text-wrap:balance}
+.home-hero h1 span {color:#b8ff38!important}
+.home-eyebrow {color:#b8ff38!important;font-size:.75rem!important;letter-spacing:.2em!important}
+.home-hero-lead {max-width:560px!important;color:#c4ccc9!important;font-size:clamp(1rem,1.5vw,1.2rem)!important;line-height:1.7!important}
+.home-hero-meta {margin-top:2rem!important}
+.home-hero-meta li {font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
+.home-hero-meta i {color:#b8ff38!important}
+.home-section {padding-block:clamp(4.5rem,8vw,8rem)}
+.home-section-heading h2 {font-family:"Oswald",Impact,sans-serif!important;font-size:clamp(2.7rem,5vw,5.5rem)!important;text-transform:uppercase;letter-spacing:-.025em!important;line-height:.98!important;max-width:880px}
+.home-section-heading p {color:#aab5b2!important}
+.home-featured-grid {gap:24px!important}
+.home-feature-card,.home-game-card,.home-story-card,.home-trivia-card,.home-cta {border:1px solid rgba(255,255,255,.11)!important;background:#151b23!important;border-radius:18px!important;box-shadow:none!important;overflow:hidden}
+.home-feature-card,.home-game-card,.home-story-card {transition:transform .38s cubic-bezier(.2,.8,.2,1),border-color .3s,box-shadow .38s!important}
+.home-feature-card:hover,.home-game-card:hover,.home-story-card:hover {transform:translateY(-8px)!important;border-color:rgba(184,255,56,.64)!important;box-shadow:0 24px 55px rgba(0,0,0,.32)!important}
+.home-feature-card img,.home-game-media img,.home-story-card img {filter:saturate(.7) contrast(1.1);transition:transform .65s cubic-bezier(.2,.8,.2,1),filter .5s!important}
+.home-feature-card:hover img,.home-game-card:hover img,.home-story-card:hover img {transform:scale(1.065)!important;filter:saturate(1) contrast(1.08)}
+.home-feature-content h3,.home-game-content h3 {font-family:"Oswald",Impact,sans-serif!important;font-size:clamp(1.7rem,2.5vw,2.7rem)!important;line-height:1!important;text-transform:uppercase}
+.home-feature-kicker,.home-game-badge,.home-story-kicker {background:#b8ff38!important;color:#10170b!important;border-radius:4px!important;text-transform:uppercase;letter-spacing:.1em;font-weight:900!important}
+.home-game-action,.home-feature-link,.home-story-link,.home-text-link {color:#b8ff38!important}
+.home-games-grid {gap:22px!important}
+.home-game-media {aspect-ratio:16/10!important}
+.home-game-content {padding:1.5rem!important}
+.home-game-description,.home-game-facts {color:#acb7b4!important}
+.home-game-icon {background:#b8ff38!important;color:#0b1108!important}
+.home-catalog-toolbar {background:#111820!important;border:1px solid rgba(255,255,255,.1)!important;border-radius:16px!important;padding:20px!important}
+.home-search input {background:#090e14!important;color:#fff!important;border:1px solid rgba(255,255,255,.18)!important}
+.home-search input:focus {border-color:#b8ff38!important;outline:2px solid rgba(184,255,56,.28)!important}
+.home-filter {border:1px solid rgba(255,255,255,.16)!important;background:#19232b!important;color:#c8d1ce!important}
+.home-filter[aria-pressed="true"],.home-filter:hover {background:#b8ff38!important;color:#0b1108!important;border-color:#b8ff38!important}
+.home-stats-band {background:#b8ff38!important;color:#0a1308!important}
+.home-stat-value,.home-stat-label {color:#0a1308!important}
+.home-cta {background:linear-gradient(115deg,#1f3020,#101820)!important;border-color:rgba(184,255,56,.32)!important}
+.home-footer {background:#080b0f!important;border-top:1px solid rgba(255,255,255,.1)!important}
+.discover-hero {background:radial-gradient(circle at 90% 20%,rgba(184,255,56,.13),transparent 43%),#0d141a!important}
+.discover-hero h1 {font-family:"Oswald",Impact,sans-serif!important;font-size:clamp(3.4rem,7.5vw,7rem)!important;line-height:.95!important;text-transform:uppercase}
+.discover-hero h1 span {color:#b8ff38!important}
+.discover-greeting {border-color:rgba(184,255,56,.25)!important}
+:where(.home-v2,.discover-page) a:focus-visible,:where(.home-v2,.discover-page) button:focus-visible {outline:3px solid #b8ff38!important;outline-offset:4px}
+@media(max-width:760px) {
+ .home-shell {width:calc(100% - 32px)}
+ .home-hero {min-height:680px;min-height:85svh}
+ .home-hero-media::after {background:linear-gradient(0deg,#090d12 0%,rgba(9,13,18,.67) 65%,rgba(9,13,18,.4)),linear-gradient(90deg,rgba(9,13,18,.6),transparent)}
+ .home-hero h1 {font-size:clamp(3.5rem,14vw,5.8rem)!important}
+ .home-hero-lead {font-size:1rem!important}
+ .home-featured-grid,.home-games-grid {gap:16px!important}
+ .home-section {padding-block:4.5rem}
+ .home-section-heading h2 {font-size:clamp(2.65rem,10vw,4.2rem)!important}
+ .home-catalog-toolbar {padding:14px!important}
+ .home-game-content {padding:1.15rem!important}
+}
+@media(prefers-reduced-motion:reduce) {
+ .home-feature-card,.home-game-card,.home-story-card,.home-feature-card img,.home-game-media img,.home-story-card img {transition:none!important}
+ .home-feature-card:hover,.home-game-card:hover,.home-story-card:hover {transform:none!important}
+}
