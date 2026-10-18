@@ -48,7 +48,7 @@
       if (state.ws !== ws) return;
       state.connected = true; notice('Arena conectada. Lista para jugar.');
       if (watchOnly && safeCode(initialRoom)) send('spectate', { roomId: initialRoom });
-      else if (savedSession()?.roomId && savedSession()?.reconnectToken && !state.manualLeave) {
+      else if (savedSession()?.roomId && savedSession()?.reconnectToken && savedSession()?.endpoint === wsUrl && !state.manualLeave && (!safeCode(initialRoom) || initialRoom === savedSession().roomId)) {
         state.reconnecting = true; send('resume', { roomId: savedSession().roomId, reconnectToken: savedSession().reconnectToken });
       } else if (state.spectator && safeCode(state.roomId || initialRoom)) send('spectate', { roomId: state.roomId || initialRoom });
       else if (safeCode(initialRoom)) send('join', { roomId: initialRoom, name: name() });
@@ -74,7 +74,7 @@
       case 'created': case 'joined':
         state.selfId = payload.playerId; state.roomId = payload.roomId; state.spectator = false;
         state.reconnecting = false; state.manualLeave = false;
-        persistSession({ roomId: payload.roomId, reconnectToken: payload.reconnectToken });
+        persistSession({ roomId: payload.roomId, reconnectToken: payload.reconnectToken, endpoint: wsUrl });
         enterMatch(); break;
       case 'spectating':
         state.roomId = payload.roomId; state.spectator = true; enterMatch(); break;
@@ -224,18 +224,18 @@
   $('backToLobby').addEventListener('click', exitRoom);
   $('leaveButton').addEventListener('click', exitRoom);
   $('copyInvite').addEventListener('click', async () => {
-    const link = new URL('pasala-1v1.html', location.href); link.search='?sala=' + encodeURIComponent(state.roomId || '');
+    const link = new URL('pasala-1v1.html', location.href); link.search=''; link.searchParams.set('sala',state.roomId || ''); if (urlOverride) link.searchParams.set('server',urlOverride);
     const value = link.href;
     try { await navigator.clipboard.writeText(value); $('copyInvite').textContent='COPIADO ✓'; }
     catch { window.prompt('Copiá esta invitación:', value); }
   });
   $('watchOverlay').addEventListener('click', () => {
-    const link = new URL('pasala-1v1.html',location.href); link.search='?overlay=' + encodeURIComponent(state.roomId || '');
+    const link = new URL('pasala-1v1.html',location.href); link.search=''; link.searchParams.set('overlay',state.roomId || ''); if (urlOverride) link.searchParams.set('server',urlOverride);
     window.open(link.href, '_blank', 'noopener,noreferrer');
   });
   $('reconnectButton').addEventListener('click', () => { if (state.retryTimer) clearTimeout(state.retryTimer); state.retryTimer=null; connect(); });
   if (safeCode(initialRoom) && !watchOnly) $('roomCode').value = initialRoom;
-  if (savedSession()?.roomId && !watchOnly && !initialRoom) $('roomCode').value = savedSession().roomId;
+  if (savedSession()?.roomId && savedSession()?.endpoint === wsUrl && !watchOnly && !initialRoom) $('roomCode').value = savedSession().roomId;
   if (overlay) document.body.classList.add('overlay-mode');
   state.clockTimer = setInterval(updateClock, 500);
   connect();
