@@ -179,7 +179,9 @@ function createPasalaDuelService(options = {}) {
     player.lastAction = now();
     if (!isPass) {
       if (typeof payload.answer !== 'string' || !payload.answer.trim() || payload.answer.length > 120) return error(ws, 'Ingresá una respuesta válida.');
-      const correct = normalize(payload.answer) === normalize(room.questions[letter].respuesta);
+      const question = room.questions[letter];
+      const allowed = [question.respuesta, ...(Array.isArray(question.respuestasAlternativas) ? question.respuestasAlternativas : [])];
+      const correct = allowed.some(value => normalize(payload.answer) === normalize(value));
       player.status[letter] = correct ? 'correct' : 'incorrect';
       player[correct ? 'correct' : 'incorrect']++;
       send(ws, 'pasala:answerResult', { letter, correct, correctCount: player.correct, incorrectCount: player.incorrect });
