@@ -1939,3 +1939,53 @@
 .volume-slider:active::-moz-range-thumb {
     animation: volumeChange 0.2s ease;
 } 
+
+/* 4.3 · Individual rosco competitive view.
+ * Stable legacy animation/state selectors retained; no new stylesheet. */
+body.game-body .game-content{background:#0d1618;animation:none;filter:none;padding:24px 0 55px}
+body.game-body .rosco-container{max-width:970px;background:#132722;border-top:4px solid #baff48;border-radius:4px;border-left:0;border-right:0;border-bottom:0;padding:28px 21px 35px;box-shadow:none;backdrop-filter:none;overflow:visible;transform:none}
+body.game-body .rosco-container:hover{transform:none;box-shadow:none}
+body.game-body .rosco-container:before,body.game-body .rosco-circle:before{display:none}
+body.game-body .game-instructions{font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:#dce9dc;padding:11px 13px;max-width:720px;margin:0 auto 24px;border:1px solid #b1d0b749;border-radius:3px;background:#284333}
+body.game-body .rosco-circle{width:min(90vw,620px);max-width:620px;box-shadow:none;border-radius:50%;backdrop-filter:none}
+body.game-body .letter{background:#243c32;color:#eef7e7;border:1px solid #a4c4a276;box-shadow:0 2px 8px #07110d55;text-shadow:none;font-family:Oswald,sans-serif;font-weight:700}
+body.game-body .letter.active{background:#baff48;color:#152717;border-color:#d4ff8f;box-shadow:0 0 0 3px #baff484f}
+body.game-body .question-card{width:79%;max-width:505px;background:#ebf0e6;border:2px solid #d1ddca;border-radius:50%;box-shadow:0 20px 45px #0006;backdrop-filter:none;overflow:hidden;transition:none}
+body.game-body .question-card:hover{transform:none;box-shadow:0 20px 45px #0006}
+body.game-body .question-header{margin:0 0 9px;color:#284735}
+body.game-body .question-header h3{color:#253a2c;font:700 clamp(17px,2vw,26px)/1.2 Oswald,sans-serif;margin:0}
+body.game-body #currentLetterText{color:#48792e;font:700 1.35em Oswald,sans-serif}
+body.game-body .question-text{max-width:85%;max-height:135px;overflow-y:auto;margin:5px auto 11px;padding:0 5px;background:none;border:0;box-shadow:none;border-radius:0;color:#193026;font-size:clamp(14px,1.7vw,20px);line-height:1.43;font-weight:750;text-align:center}
+body.game-body .timer-wrapper{width:76%;margin:3px auto 12px}
+body.game-body .timer-count{font:700 clamp(26px,3.5vw,43px)/1 Oswald,sans-serif;color:#253a27;background:none;-webkit-text-fill-color:currentColor;text-shadow:none;margin-bottom:6px}
+body.game-body .timer{height:7px;border:0;background:#b9c9b4;border-radius:2px;box-shadow:none}
+body.game-body .timer-bar{background:#83b92b;box-shadow:none}
+body.game-body .answer-form{width:80%;margin:0 auto}
+body.game-body .input-group{margin:0}
+body.game-body .answer-input{height:49px;min-height:49px;padding:10px 51px 10px 14px;background:#fff;color:#16291b;border:2px solid #adc3b0;border-radius:3px;box-shadow:none;backdrop-filter:none;font-size:16px;font-weight:700}
+body.game-body .answer-input::placeholder{color:#6d7e71}
+body.game-body .answer-input:focus-visible{outline:3px solid #87b83c;outline-offset:2px;border-color:#639537}
+body.game-body .submit-answer-icon-btn{height:45px;min-width:45px;color:#142619;background:#baff48;border:0;border-radius:2px;box-shadow:none}
+body.game-body .action-buttons{width:80%;margin:11px auto 0;gap:9px}
+body.game-body .pasapalabra-button{flex:1;min-height:43px;background:#172d24;color:#f2f8eb;border:0;border-radius:3px;padding:10px 15px;font-size:12px;letter-spacing:.06em;box-shadow:none;backdrop-filter:none}
+body.game-body .help-button{min-height:43px;min-width:75px;border-radius:3px;padding:9px 14px;font-size:12px;box-shadow:none}
+body.game-body .pasapalabra-button:hover{background:#2b5236;box-shadow:none}
+@media(max-width:650px){
+ body.game-body .game-content{padding:13px 0 35px}
+ body.game-body .rosco-container{padding:15px 7px 21px;width:calc(100% - 12px)}
+ body.game-body .game-instructions{font-size:12px;margin-bottom:12px}
+ body.game-body .rosco-circle{width:min(96vw,470px);max-width:470px}
+ body.game-body .letter{font-size:clamp(11px,2.9vw,16px)}
+ body.game-body .question-card{width:77%;border-width:1px}
+ body.game-body .question-header{margin-bottom:1px}
+ body.game-body .question-header h3{font-size:clamp(14px,3.7vw,21px)}
+ body.game-body .question-text{font-size:clamp(12px,3.55vw,16px);line-height:1.32;margin:2px auto 5px;max-height:79px;max-width:88%}
+ body.game-body .timer-wrapper{margin:0 auto 6px}
+ body.game-body .timer-count{font-size:clamp(22px,6vw,30px)}
+ body.game-body .answer-form{width:83%}
+ body.game-body .answer-input{height:39px;min-height:39px;font-size:15px;padding:6px 41px 6px 10px}
+ body.game-body .submit-answer-icon-btn{min-width:37px;height:37px}
+ body.game-body .action-buttons{width:85%;margin-top:6px;gap:5px}
+ body.game-body .pasapalabra-button,body.game-body .help-button{min-height:35px;font-size:10px;padding:5px 7px}
+}
+@media(prefers-reduced-motion:reduce){body.game-body .letter,body.game-body .question-card,body.game-body .answer-input,body.game-body .pasapalabra-button{animation:none!important;transition:none!important}}
