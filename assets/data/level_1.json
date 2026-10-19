@@ -5,28 +5,56 @@
       "respuesta": "Flamengo",
       "dificultad": 1,
       "question": "¿Qué club ganó la Copa Libertadores 2025?",
-      "answer": "Flamengo"
+      "answer": "Flamengo",
+      "opciones": {
+        "A": "Palmeiras",
+        "B": "Flamengo",
+        "C": "Botafogo",
+        "D": "River Plate"
+      },
+      "respuesta_correcta": "B"
     },
     {
       "pregunta": "¿Qué club ganó la Champions League 2024/25?",
       "respuesta": "Paris Saint-Germain",
       "dificultad": 1,
       "question": "¿Qué club ganó la Champions League 2024/25?",
-      "answer": "Paris Saint-Germain"
+      "answer": "Paris Saint-Germain",
+      "opciones": {
+        "A": "Inter de Milán",
+        "B": "Manchester City",
+        "C": "Paris Saint-Germain",
+        "D": "Real Madrid"
+      },
+      "respuesta_correcta": "C"
     },
     {
       "pregunta": "¿Qué selección ganó el Mundial 2026?",
       "respuesta": "España",
       "dificultad": 1,
       "question": "¿Qué selección ganó el Mundial 2026?",
-      "answer": "España"
+      "answer": "España",
+      "opciones": {
+        "A": "Argentina",
+        "B": "Francia",
+        "C": "Inglaterra",
+        "D": "España"
+      },
+      "respuesta_correcta": "D"
     },
     {
       "pregunta": "¿Quién ganó el Balón de Oro 2025?",
       "respuesta": "Ousmane Dembélé",
       "dificultad": 1,
       "question": "¿Quién ganó el Balón de Oro 2025?",
-      "answer": "Ousmane Dembélé"
+      "answer": "Ousmane Dembélé",
+      "opciones": {
+        "A": "Kylian Mbappé",
+        "B": "Ousmane Dembélé",
+        "C": "Lamine Yamal",
+        "D": "Jude Bellingham"
+      },
+      "respuesta_correcta": "B"
     },
     {
       "pregunta": "¿Cuántos jugadores hay en cancha por equipo en un partido de fútbol?",
@@ -1089,7 +1117,7 @@
       "respuesta_correcta": "A"
     },
     {
-      "pregunta": "¿Qué club brasileño es conocido mundialmente por sus colores amarillo y verde?",
+      "pregunta": "¿Qué club brasileño es conocido como el Peixe y utiliza tradicionalmente los colores blanco y negro?",
       "opciones": {
         "A": "Flamengo",
         "B": "Santos",
@@ -1117,6 +1145,46 @@
         "D": "España"
       },
       "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Quién ganó el Balón de Oro al mejor jugador del Mundial masculino 2026?",
+      "opciones": {
+        "A": "Rodri",
+        "B": "Lamine Yamal",
+        "C": "Kylian Mbappé",
+        "D": "Lionel Messi"
+      },
+      "respuesta_correcta": "A"
+    },
+    {
+      "pregunta": "¿Qué selección terminó subcampeona del Mundial masculino de la FIFA 2026?",
+      "opciones": {
+        "A": "Francia",
+        "B": "Inglaterra",
+        "C": "Argentina",
+        "D": "Alemania"
+      },
+      "respuesta_correcta": "C"
+    },
+    {
+      "pregunta": "¿En qué ciudad se jugó la final de la Copa Libertadores 2025?",
+      "opciones": {
+        "A": "Río de Janeiro",
+        "B": "Lima",
+        "C": "Montevideo",
+        "D": "Santiago"
+      },
+      "respuesta_correcta": "B"
+    },
+    {
+      "pregunta": "¿Con qué marcador le ganó el Paris Saint-Germain al Inter en la final de la Champions League 2024/25?",
+      "opciones": {
+        "A": "3-1",
+        "B": "2-0",
+        "C": "4-2",
+        "D": "5-0"
+      },
+      "respuesta_correcta": "D"
     }
   ]
 }
