@@ -290,6 +290,11 @@
     renderRing(); updateClock();
   }
   function updateClock() {
+    if (state.room?.phase === 'finished') {
+      $('clock').textContent = 'FINAL';
+      $('streamClock').textContent = 'FINAL';
+      return;
+    }
     if (!state.room) {
       $('clock').textContent = '05:00';
       $('streamClock').textContent = overlay ? '--:--' : '05:00';
