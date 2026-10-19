@@ -34,7 +34,7 @@ for (const id of ['homeDailyTop10Title', 'homeDailyTop10Status', 'homeDailyWordl
   assert(gamesPage.includes('id="' + id + '"'), 'Catalog daily link missing: ' + id);
 }
 assert(gamesPage.includes('assets/js/home.js?v=20261019b'), 'Catalog must load today’s real status script');
-assert(homeStyles.includes('@media(max-width:690px)'), 'Daily mobile layout missing');
+assert(homeStyles.includes('@media(max-width:760px)'), 'Daily mobile layout missing');
 assert(homeScript.includes("new Date().toISOString().slice(0, 10)"), 'Daily topic teaser must use UTC');
 assert(homeScript.includes("readSaved('top10_state_v1')"), 'Home status must be sourced from saved real progress');
 assert(homeScript.includes("readSaved('wordle_game_state_v1')"), 'Wordle status must be sourced from real state');
