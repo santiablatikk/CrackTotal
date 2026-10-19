@@ -104,3 +104,51 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
 /* 3.6 — Progreso público por jugador (sin mostrar letras ni soluciones). */
 .score-name{flex:1;min-width:0}.score-meter{margin-top:11px;width:min(100%,195px);height:5px;border-radius:5px;overflow:hidden;background:#3b5141}.score-meter-fill{height:100%;background:var(--lime);width:0;transition:width .25s ease-out}
 @media(prefers-reduced-motion:reduce){.score-meter-fill{transition:none}}
+
+/* 3.7 — El modo por turnos muestra dos roscos reales y dos relojes independientes.
+   El modo Espejo conserva la composición original sin depender de esta variante. */
+.duel-mode-help{font:600 13px/1.5 'DM Sans',Arial,sans-serif!important;margin:4px 0 2px!important;opacity:.88!important}
+.turn-hint{margin:-23px 0 24px!important;padding:9px 12px;border-left:3px solid var(--lime);background:rgba(186,250,60,.085);color:#e4ffbb!important;font:800 14px/1.4 'Barlow Condensed',sans-serif!important;letter-spacing:.095em}
+.match-stage.turns-stage{grid-template-columns:minmax(0,1fr) minmax(290px,1.08fr) minmax(0,1fr)}
+.turns-stage .ring-side{min-width:0;padding:26px 12px}
+.turns-stage .duel-ring{width:min(100%,286px);margin:16px auto 26px}
+.turns-stage .ring-letter{width:10%;font-size:clamp(12px,1.1vw,16px);transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-116px) rotate(calc(-1 * var(--angle)))}
+.turns-stage .duel-ring::after{font-size:86px}
+.turns-stage .clock-block strong{font-size:clamp(48px,5vw,72px)}
+.turns-stage .clock-block span{color:#cce8c1;text-transform:uppercase;letter-spacing:.12em;font-weight:800}
+.turns-stage .ring-side{transition:filter .2s ease,opacity .2s ease}
+.turns-stage .opponent-ring-side{background:radial-gradient(circle at center,rgba(162,188,188,.09),transparent 62%),linear-gradient(150deg,#192b28,#0a1513)}
+.turns-stage .opponent-ring-side .ring-letter.correct{background:#a5c8b1;border-color:#a5c8b1;color:#101b15}
+.turns-stage .opponent-ring-side .duel-ring::after{color:rgba(218,238,217,.12)}
+.score-player.is-active{background:linear-gradient(110deg,rgba(186,250,60,.18),rgba(186,250,60,.025));box-shadow:inset 0 4px var(--lime)}
+.turns-stage .question-side{padding:clamp(26px,3vw,44px)}
+.turns-stage .question-side h3{font-size:clamp(40px,4.5vw,67px)}
+.turns-stage .current-letter{font-size:clamp(78px,9vw,128px)}
+.turns-stage .question-text{font-size:clamp(19px,2.15vw,27px)!important}
+@media(max-width:1120px){
+  .match-stage.turns-stage{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
+  .turns-stage .opponent-ring-side{grid-column:1/-1;min-height:250px}
+  .turns-stage .opponent-ring-side .duel-ring{width:190px;margin:4px auto 8px}
+  .turns-stage .opponent-ring-side .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-76px) rotate(calc(-1 * var(--angle)))}
+  .turns-stage .opponent-ring-side .duel-ring::after{font-size:56px}
+}
+@media(max-width:780px){
+  .match-stage.turns-stage{grid-template-columns:minmax(0,1fr)}
+  .turns-stage .question-side{order:1;min-height:300px}
+  .turns-stage #ownRingSide{order:2;min-height:420px}
+  .turns-stage .opponent-ring-side{order:3;min-height:260px}
+  .turns-stage .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-116px) rotate(calc(-1 * var(--angle)))}
+}
+@media(max-width:600px){
+  .turns-stage .opponent-ring-side{display:none!important}
+  .turns-stage #ownRingSide{min-height:410px}
+  .turns-stage .duel-ring{width:min(100%,286px)}
+  .turns-stage .question-side{padding:24px 19px;min-height:320px}
+  .turns-stage .ring-legend{font-size:10px}
+  .turn-hint{margin:-8px 0 16px!important}
+}
+@media(max-width:365px){
+  .turns-stage .duel-ring{width:258px}
+  .turns-stage .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-103px) rotate(calc(-1 * var(--angle)))}
+}
+@media(prefers-reduced-motion:reduce){.turns-stage .ring-side{transition:none}}
