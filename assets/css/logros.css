@@ -28,7 +28,7 @@ body {
 }
 
 .logros-section h2 {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Space Grotesk', 'Manrope', sans-serif;
     font-size: clamp(1.8rem, 5vw, 2.5rem);
     background: linear-gradient(135deg, var(--primary-light, #ab8bfa), var(--accent, #FFB86C));
     -webkit-background-clip: text;
@@ -206,7 +206,7 @@ body {
 }
 
 .logro-title {
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Space Grotesk', 'Manrope', sans-serif;
     font-size: 1.4rem;
     background: linear-gradient(135deg, var(--text, #FFFFFE), var(--text-light, #b0b8c4));
     -webkit-background-clip: text;
