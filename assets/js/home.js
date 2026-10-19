@@ -188,6 +188,93 @@
         counters.forEach((counter) => observer.observe(counter));
     }
 
+    function initDailyChallenges() {
+        const title = document.getElementById('homeDailyTop10Title');
+        const context = document.getElementById('homeDailyTop10Context');
+        const status = document.getElementById('homeDailyTop10Status');
+        const date = document.getElementById('homeDailyDate');
+        const wordleStatus = document.getElementById('homeDailyWordleStatus');
+        if (!title || !context || !status || !date) return;
+
+        const utcKey = () => new Date().toISOString().slice(0, 10);
+        const dailyAnswerKey = (answer) => String(answer || '').toLowerCase()
+            .replace(/ø/g, 'o').replace(/æ/g, 'ae').replace(/œ/g, 'oe')
+            .replace(/ß/g, 'ss').replace(/ł/g, 'l').normalize('NFD')
+            .replace(/\p{Diacritic}/gu, '').replace(/[^a-z\s]/g, ' ')
+            .replace(/\s+/g, ' ').trim();
+        const localDayKey = () => {
+            const now = new Date();
+            return now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
+        };
+        const readSaved = (key) => {
+            try { return JSON.parse(localStorage.getItem(key) || 'null'); }
+            catch { return null; }
+        };
+
+        if (wordleStatus) {
+            const game = readSaved('wordle_game_state_v1');
+            const playedToday = game?.day === localDayKey();
+            wordleStatus.textContent = !playedToday ? 'Jugá el apellido de hoy · se renueva a tu medianoche.' :
+                game.finished ? (game.won ? '¡Ya lo resolviste hoy! Volvé mañana.' : 'Terminaste el Wordle de hoy. Volvé mañana.') :
+                game.board?.some(row => Array.isArray(row) && row.some(Boolean)) ? 'Tenés una partida empezada. Retomala.' :
+                'El apellido de hoy te está esperando.';
+        }
+
+        async function loadToday() {
+            const today = utcKey();
+            date.textContent = new Intl.DateTimeFormat('es-AR', {
+                timeZone: 'UTC', day: 'numeric', month: 'short'
+            }).format(new Date());
+            const fetchJson = async (path, optional) => {
+                try {
+                    const response = await fetch(path);
+                    if (!response.ok) throw new Error('Respuesta ' + response.status);
+                    const value = await response.json();
+                    return Array.isArray(value) ? value : [];
+                } catch (error) {
+                    if (optional) return [];
+                    throw error;
+                }
+            };
+            try {
+                const [base, extra] = await Promise.all([
+                    fetchJson('assets/data/top10_pool.json', false),
+                    fetchJson('assets/data/top10_pool_extended.json', true)
+                ]);
+                // Misma selección UTC y filtro de publicaciones verificadas que Top 10.
+                const verified = base.concat(extra).filter(item => item.source_url && item.verified_at &&
+                    Array.isArray(item.answers) && item.answers.length === 10 &&
+                    new Set(item.answers.map(dailyAnswerKey)).size === 10);
+                if (!verified.length) throw new Error('No hay desafíos con fuente verificada');
+                const day = new Date(today).getTime() / 86400000;
+                const topic = verified[Math.floor((day % verified.length + verified.length) % verified.length)];
+                title.textContent = topic.title;
+                context.textContent = 'Diez respuestas, dos minutos. Fuente: ' + (topic.source || 'organizador oficial') + '.';
+                const saved = readSaved('top10_state_v1');
+                const savedDay = (() => {
+                    try { return localStorage.getItem('top10_last_day_v1'); }
+                    catch { return null; }
+                })();
+                const validSaved = savedDay === today && saved?.topicId === topic.id;
+                status.textContent = !validSaved ? 'NUEVO DESAFÍO / SIN JUGAR' :
+                    saved.finished ? ((saved.found?.length || 0) === 10 ? 'COMPLETADO / 10 DE 10' : 'FINALIZADO / ' + (saved.found?.length || 0) + ' DE 10') :
+                    'EN PROGRESO / ' + (saved.found?.length || 0) + ' DE 10';
+            } catch (error) {
+                title.textContent = 'DESCUBRÍ EL TOP 10 DE HOY.';
+                context.textContent = 'Abrí el juego para ver el desafío verificado disponible.';
+                status.textContent = 'DESAFÍO DIARIO / IR AL JUEGO';
+            }
+            return today;
+        }
+
+        let loadedDay = '';
+        loadToday().then(day => { loadedDay = day; });
+        // Si una pestaña permanece abierta después de medianoche UTC, renovamos el teaser.
+        window.setInterval(() => {
+            if (utcKey() !== loadedDay) loadToday().then(day => { loadedDay = day; });
+        }, 60 * 1000);
+    }
+
     function updateProfileLabels() {
         let playerName = '';
         try {
@@ -212,6 +299,7 @@
         initCatalog();
         initSearchShortcuts();
         initReveals();
+        initDailyChallenges();
         initCounters();
         updateProfileLabels();
         updateYear();
