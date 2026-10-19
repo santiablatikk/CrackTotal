@@ -164,7 +164,7 @@
     function bindInput() {
         document.addEventListener('keydown', (e) => {
             if (inputLocked || finished || e.altKey || e.ctrlKey || e.metaKey ||
-                e.target?.closest?.('input, textarea, select, [contenteditable="true"]') ||
+                e.target?.closest?.('button, a, input, textarea, select, [contenteditable="true"]') ||
                 document.querySelector('.modal-overlay.active')) return;
             if (e.key === 'Backspace') { e.preventDefault(); handleBackspace(); return; }
             if (e.key === 'Enter') { e.preventDefault(); handleEnter(); return; }
