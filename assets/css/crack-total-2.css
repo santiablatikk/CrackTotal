@@ -87,3 +87,40 @@ body.home-v2,body.discover-page {
  .home-feature-card,.home-game-card,.home-story-card,.home-feature-card img,.home-game-media img,.home-story-card img {transition:none!important}
  .home-feature-card:hover,.home-game-card:hover,.home-story-card:hover {transform:none!important}
 }
+
+
+/* 3.5 / Editorial daily matchday. The title and progress are real data, never placeholders presented as facts. */
+.ct35-daily{padding-block:clamp(70px,8vw,120px);position:relative}
+.ct35-daily::before{content:"";position:absolute;pointer-events:none;top:22px;right:1%;width:160px;height:160px;border:1px solid rgba(184,255,56,.11);border-radius:50%;box-shadow:0 0 0 30px rgba(184,255,56,.025),0 0 0 64px rgba(184,255,56,.015)}
+.ct35-daily-heading{display:flex;align-items:end;justify-content:space-between;gap:clamp(22px,4vw,70px);margin-bottom:28px}
+.ct35-daily-heading h2{font:900 clamp(3.1rem,7vw,6.2rem)/.9 "Oswald",Impact,sans-serif;letter-spacing:-.025em;margin:12px 0 0;color:#f5f7ef;text-transform:uppercase}
+.ct35-daily-heading h2 span{color:#b8ff38}
+.ct35-daily-heading>p{max-width:360px;color:#bfc9c3;line-height:1.55;margin:0 0 4px;font-size:14px}
+.ct35-daily-grid{display:grid;grid-template-columns:minmax(0,1.48fr) minmax(280px,.85fr);grid-template-rows:repeat(2,minmax(0,1fr));gap:15px;min-height:490px}
+.ct35-daily-grid>a{position:relative;min-width:0;overflow:hidden;text-decoration:none!important;border-radius:10px;isolation:isolate;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s}
+.ct35-daily-grid>a:hover{transform:translateY(-5px);box-shadow:0 20px 45px rgba(0,0,0,.25)}
+.ct35-daily-main{grid-row:1/-1;display:flex;flex-direction:column;justify-content:space-between;min-height:450px;padding:clamp(22px,3.8vw,42px);color:#0c1507!important;background:radial-gradient(circle at 89% 22%,#daff9b 0,transparent 34%),linear-gradient(130deg,#b8ff38 0%,#9ae826 100%)}
+.ct35-daily-main::before{content:"10";position:absolute;right:-25px;top:44px;font:900 clamp(230px,33vw,445px)/.74 "Oswald",Impact,sans-serif;letter-spacing:-.09em;color:rgba(7,24,3,.075);z-index:-1;transform:rotate(-9deg)}
+.ct35-daily-main::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:repeating-linear-gradient(155deg,transparent 0 37px,rgba(12,36,6,.025) 38px 39px)}
+.ct35-daily-overline{display:flex;justify-content:space-between;gap:12px;align-items:center;font:900 13px "Oswald",Impact,sans-serif;letter-spacing:.1em;text-transform:uppercase}
+.ct35-daily-tag{display:inline-flex;align-items:center;padding:7px 11px;background:#0a1909;color:#b8ff38;font:800 11px "Montserrat",Arial,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+.ct35-daily-primary-content{max-width:650px;padding:60px 0 34px}
+.ct35-daily-primary-content h3{font:900 clamp(2.8rem,5.6vw,5.2rem)/.97 "Oswald",Impact,sans-serif;letter-spacing:-.03em;overflow-wrap:anywhere;text-transform:uppercase;margin:20px 0;color:#0c1507}
+.ct35-daily-primary-content p{max-width:480px;color:#243719;font-weight:700;line-height:1.5;margin:0}
+.ct35-daily-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:1px solid rgba(12,24,6,.3);padding-top:21px;font:800 12px "Montserrat",Arial,sans-serif;letter-spacing:.06em}
+.ct35-daily-bottom strong{font:900 18px "Oswald",Impact,sans-serif;white-space:nowrap}
+.ct35-daily-side{display:flex;flex-direction:column;justify-content:space-between;gap:20px;padding:clamp(22px,2.8vw,31px);border:1px solid rgba(235,255,220,.16);color:#f5f8f2!important}
+.ct35-daily-side h3{margin:0 0 7px;font:900 clamp(1.6rem,2.5vw,2.4rem)/.96 "Oswald",Impact,sans-serif;letter-spacing:-.01em;text-transform:uppercase}
+.ct35-daily-side p{margin:0;color:#c3d0c6;font-size:13px;line-height:1.45}
+.ct35-daily-wordle{background:radial-gradient(circle at 90% 14%,rgba(95,145,235,.22),transparent 50%),#152530}
+.ct35-wordle-motif{display:flex;gap:5px;align-items:center}
+.ct35-wordle-motif span{display:grid;place-items:center;background:#415963;color:#f7f8ec;aspect-ratio:1;width:clamp(23px,4vw,38px);font:900 clamp(15px,2vw,21px) "Oswald",Impact,sans-serif;border-radius:4px;transform:rotate(-2deg)}
+.ct35-wordle-motif span:nth-child(1),.ct35-wordle-motif span:nth-child(3){background:#82b944;color:#0c1c0c}
+.ct35-wordle-motif span:nth-child(4){background:#d4ae49;color:#171b0a}
+.ct35-daily-training{background:radial-gradient(circle at 90% 0,rgba(246,137,51,.16),transparent 55%),#22201c}
+.ct35-training-number{font:900 70px/.8 "Oswald",Impact,sans-serif;letter-spacing:-.05em;color:#f0a052}
+.ct35-training-number span{font-size:32px;vertical-align:top;color:#d6c7b4;margin-left:8px}
+@media(max-width:890px){.ct35-daily-grid{grid-template-columns:minmax(0,1.2fr) minmax(260px,1fr)}.ct35-daily-primary-content h3{font-size:clamp(2.5rem,5vw,4.2rem)}}
+@media(max-width:690px){.ct35-daily-heading{display:block}.ct35-daily-heading>p{margin-top:16px}.ct35-daily-grid{grid-template-columns:1fr;grid-template-rows:auto;min-height:0}.ct35-daily-main{grid-row:auto;min-height:380px}.ct35-daily-primary-content{padding:45px 0 38px}.ct35-daily-side{min-height:195px}.ct35-daily-main::before{font-size:310px}.ct35-daily-bottom{flex-wrap:wrap}.ct35-wordle-motif span{width:31px}.ct35-daily-primary-content h3{font-size:clamp(2.5rem,11vw,4.1rem)}}
+@media(max-width:390px){.ct35-daily-main{padding:21px}.ct35-daily-overline{font-size:11px}.ct35-daily-bottom strong{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.ct35-daily-grid>a{transition:none}.ct35-daily-grid>a:hover{transform:none}}
