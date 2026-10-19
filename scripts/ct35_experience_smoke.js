@@ -9,7 +9,7 @@ const gamesPage = read('games.html');
 const arena = read('pasala-1v1.html');
 const arenaClient = read('assets/js/pasala-duel-client.js');
 const homeScript = read('assets/js/home.js');
-const homeStyles = read('assets/css/crack-total-2.css');
+const homeStyles = read('assets/css/home-4.css');
 const topScript = read('assets/js/top10.js');
 const wordleScript = read('assets/js/wordle-futbol.js');
 const wordlePage = read('wordle-futbol.html');
@@ -29,7 +29,7 @@ for (const id of ['ct35-daily-title', 'homeDailyTop10Title', 'homeDailyTop10Cont
   'homeDailyTop10Status', 'homeDailyWordleStatus', 'homeDailyDate']) {
   assert(homepage.includes('id="' + id + '"'), 'Daily home element missing: ' + id);
 }
-assert(homeStyles.includes('.ct35-daily-grid'), 'Daily challenge visual styling missing');
+assert(homeStyles.includes('.ct4-daily-grid'), 'Daily challenge visual styling missing');
 for (const id of ['homeDailyTop10Title', 'homeDailyTop10Status', 'homeDailyWordleStatus']) {
   assert(gamesPage.includes('id="' + id + '"'), 'Catalog daily link missing: ' + id);
 }
@@ -62,4 +62,4 @@ assert(wordleScript.includes('if (inputLocked || finished) return;'), 'Keyboard 
 assert(wordleScript.includes('if (inputLocked || finished || currentRow >= BOARD_ROWS) return;'), 'Typing must respect daily lock');
 assert(!wordleScript.includes("document.addEventListener('keydown', blockAll"), 'Do not swallow a random keyboard event');
 assert(wordlePage.includes('id="message" role="status" aria-live="polite"'), 'Wordle feedback must be accessible');
-console.log('Crack Total 3.5 experience smoke PASS — staging setup, editorial daily module, locked Wordle, UTC rollover');
+console.log('Crack Total experience smoke PASS — staging setup, 4.0 daily module, locked Wordle, UTC rollover');
