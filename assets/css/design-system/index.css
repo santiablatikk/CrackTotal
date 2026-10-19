@@ -3,17 +3,17 @@
  * tokens → utilities → components → bridges
  */
 
-@import url("./tokens.css");
+@import url("./tokens.css?v=20261020v5");
 @import url("./utilities.css");
 @import url("./components.css");
-@import url("./bridges.css");
+@import url("./bridges.css?v=20261020v5");
 
 /* 2.0 shared theme (after legacy bridge). */
-@import url("../crack-total-2.css?v=20261018");
-@import url("../gameplay-2.css?v=20261018");
-@import url("../experience-2.css?v=20261018");
+@import url("../crack-total-2.css?v=20261020v5");
+@import url("../gameplay-2.css?v=20261020v5");
+@import url("../experience-2.css?v=20261020v5");
 
-@import url("../game-experience-2.css?v=20261018");
+@import url("../game-experience-2.css?v=20261020v5");
 
 /* 3.0 competitive arena feature, appended after prior theme. */
-@import url("../experience-3.css?v=20261018");
+@import url("../experience-3.css?v=20261020v5");
