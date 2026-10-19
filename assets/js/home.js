@@ -197,11 +197,6 @@
         if (!title || !context || !status || !date) return;
 
         const utcKey = () => new Date().toISOString().slice(0, 10);
-        const dailyAnswerKey = (answer) => String(answer || '').toLowerCase()
-            .replace(/ø/g, 'o').replace(/æ/g, 'ae').replace(/œ/g, 'oe')
-            .replace(/ß/g, 'ss').replace(/ł/g, 'l').normalize('NFD')
-            .replace(/\p{Diacritic}/gu, '').replace(/[^a-z\s]/g, ' ')
-            .replace(/\s+/g, ' ').trim();
         const localDayKey = () => {
             const now = new Date();
             return now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();
@@ -237,19 +232,14 @@
                 }
             };
             try {
-                const [base, extra] = await Promise.all([
-                    fetchJson('assets/data/top10_pool.json', false),
-                    fetchJson('assets/data/top10_pool_extended.json', true)
-                ]);
-                // Misma selección UTC y filtro de publicaciones verificadas que Top 10.
-                const verified = base.concat(extra).filter(item => item.source_url && item.verified_at &&
-                    Array.isArray(item.answers) && item.answers.length === 10 &&
-                    new Set(item.answers.map(dailyAnswerKey)).size === 10);
-                if (!verified.length) throw new Error('No hay desafíos con fuente verificada');
-                const day = new Date(today).getTime() / 86400000;
-                const topic = verified[Math.floor((day % verified.length + verified.length) % verified.length)];
+                const response = await fetch('assets/data/top10_verified_v2.json',{cache:'no-cache'});
+                if(!response.ok) throw new Error('No se pudo cargar el ranking oficial');
+                if(!window.CTTop10Verified) throw new Error('Falta el motor compartido Top 10');
+                const pool = await response.json();
+                // El teaser y el juego eligen del MISMO archivo inmutable y fecha UTC.
+                const topic = window.CTTop10Verified.pick(pool,today);
                 title.textContent = topic.title;
-                context.textContent = 'Diez respuestas, dos minutos. Fuente: ' + (topic.source || 'organizador oficial') + '.';
+                context.textContent = topic.competition+' '+topic.season+' · 10 equipos · 2 minutos · puestos oficiales.';
                 const saved = readSaved('top10_state_v1');
                 const savedDay = (() => {
                     try { return localStorage.getItem('top10_last_day_v1'); }
