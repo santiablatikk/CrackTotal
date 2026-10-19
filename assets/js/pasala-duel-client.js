@@ -423,9 +423,9 @@
         return String(Math.floor(secs / 60)).padStart(2,'0') + ':' + String(secs % 60).padStart(2,'0'); };
       $('clock').textContent = label(millis(ownSlot));
       $('turnTransitionCountdown').textContent = state.room.turnReadyAt ?
-        Math.max(0, Math.ceil((state.room.turnReadyAt - correctedTime()) / 1000)) + ' S' : '';
+        Math.min(2, Math.max(0, Math.ceil((state.room.turnReadyAt - correctedTime()) / 1000))) + ' S' : '';
       $('correctionCountdown').textContent = state.pendingAnswer ?
-        Math.max(0, Math.ceil((state.pendingAnswer.endsAt - correctedTime()) / 1000)) + ' S' : '00';
+        Math.min(6, Math.max(0, Math.ceil((state.pendingAnswer.endsAt - correctedTime()) / 1000))) + ' S' : '00';
       if (state.pendingAnswer && correctedTime() >= state.pendingAnswer.endsAt) {
         $('correctButton').disabled = true;
         $('confirmAnswer').disabled = true;
