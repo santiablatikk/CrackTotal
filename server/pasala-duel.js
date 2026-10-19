@@ -157,6 +157,16 @@ function createPasalaDuelService(options = {}) {
       room.countdown = timers.setTimeout(() => start(room), 3000);
     }
   }
+  function unready(ws) {
+    const link = peers.get(ws);
+    if (!link || link.role !== 'player') return error(ws, 'No estás jugando.');
+    const room = rooms.get(link.roomId);
+    if (!room || room.phase !== 'waiting') return error(ws, 'La partida ya está por comenzar.');
+    const player = room.players[link.slot];
+    if (!player || player.ws !== ws) return error(ws, 'No autorizado.');
+    player.ready = false;
+    emitRoom(room);
+  }
   function start(room) {
     if (room.phase !== 'countdown') return;
     if (!room.players.every(live)) {
@@ -289,7 +299,6 @@ function createPasalaDuelService(options = {}) {
     player.ready = false;
     // A reconnect during the lobby must require two fresh ready confirmations.
     if (room.phase === 'waiting') room.players.forEach(p => { if (p) p.ready = false; });
-    emitRoom(room);
     if (room.phase === 'countdown') {
       if (room.countdown) timers.clearTimeout(room.countdown);
       room.phase = 'waiting';
@@ -355,6 +364,7 @@ function createPasalaDuelService(options = {}) {
       case 'pasala:matchmake': matchmake(ws, payload, clientInfo); break;
       case 'pasala:spectate': spectate(ws, payload, clientInfo); break;
       case 'pasala:ready': ready(ws); break;
+      case 'pasala:unready': unready(ws); break;
       case 'pasala:answer': answer(ws, payload); break;
       case 'pasala:pass': answer(ws, payload, true); break;
       case 'pasala:leave': leave(ws); break;
