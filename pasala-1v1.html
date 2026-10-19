@@ -7,8 +7,8 @@
   <meta name="description" content="Pasala Che 1v1: enfrentá a un amigo en el mismo rosco futbolero, con reloj, marcador en vivo y revancha.">
   <title>Pasala Che 1v1 | Crack Total</title>
   <link rel="icon" href="portada.ico" type="image/x-icon">
-  <link rel="stylesheet" href="assets/css/pasala-duel.css?v=7">
-  <script src="assets/js/pasala-duel-client.js?v=9" defer></script>
+  <link rel="stylesheet" href="assets/css/pasala-duel.css?v=8">
+  <script src="assets/js/pasala-duel-client.js?v=10" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Saltar al juego</a>
@@ -52,7 +52,7 @@
           <form class="mode-card mode-card-primary" id="createForm">
             <span class="mode-no">01 / PRIVADO</span><span class="mode-symbol" aria-hidden="true">↗</span>
             <h3>ARMÁ<br>UN DUELO.</h3><p>Creá una sala, pasale el código a tu rival y disputen el rosco en simultáneo.</p>
-            <label for="difficulty">DIFICULTAD</label><select id="difficulty"><option value="normal">Normal · 5 minutos</option><option value="facil">Fácil · 6 minutos</option><option value="dificil">Difícil · 4 minutos</option></select>
+            <label for="difficulty">TIEMPO DEL DUELO</label><select id="difficulty"><option value="normal">Clásico · 5 minutos</option><option value="facil">Sin apuro · 6 minutos</option><option value="dificil">Contrarreloj · 4 minutos</option></select>
             <button class="arena-button primary" type="submit">CREAR SALA <span>↗</span></button>
           </form>
           <form class="mode-card" id="joinForm">
@@ -81,7 +81,7 @@
             <div class="match-status" id="matchStatus" role="status" aria-live="polite">Esperando a tu rival…</div>
             <div id="readyPanel" class="ready-panel"><span class="question-eyebrow">PREVIA DEL PARTIDO</span><h3 id="readyHeading">CALENTANDO MOTORES.</h3><p id="readyDescription">Cuando entren los dos, apretá listo. El rosco empieza con una cuenta regresiva de tres segundos.</p><button class="arena-button primary" id="readyButton" type="button">ESTOY LISTO ✓</button></div>
             <div id="questionPanel" hidden><span class="question-eyebrow">LETRA EN JUEGO</span><div class="current-letter" id="currentLetter">A</div><p class="question-text" id="questionText"></p><form id="answerForm" autocomplete="off"><label for="answerInput" class="sr-only">Tu respuesta</label><input id="answerInput" maxlength="120" placeholder="ESCRIBÍ TU RESPUESTA" autocapitalize="off" spellcheck="false" required><div class="answer-actions"><button class="arena-button primary" type="submit">RESPONDER ↗</button><button class="arena-button outline" type="button" id="passButton">PASALA CHE →</button></div></form><p id="answerFeedback" role="status" aria-live="polite"></p></div>
-            <div id="resultsPanel" hidden><span class="question-eyebrow">FINAL DEL ENCUENTRO</span><h3 id="resultHeadline">PARTIDO TERMINADO.</h3><p id="resultDescription"></p><div id="resultStats" class="result-stat-list" aria-label="Estadísticas del duelo"></div><button class="arena-button primary" type="button" id="rematchButton">PEDIR REVANCHA ↗</button><button class="arena-button outline" type="button" id="backToLobby">VOLVER AL LOBBY</button></div>
+            <div id="resultsPanel" hidden><span class="question-eyebrow">FINAL DEL ENCUENTRO</span><h3 id="resultHeadline">PARTIDO TERMINADO.</h3><p id="resultDescription"></p><div id="resultStats" class="result-stat-list" aria-label="Estadísticas del duelo"></div><button class="arena-button primary" type="button" id="rematchButton">PEDIR REVANCHA ↗</button><p class="rematch-hint" id="rematchHint" aria-live="polite"></p><button class="arena-button outline" type="button" id="shareResult">COMPARTIR RESULTADO ↗</button><button class="arena-button outline" type="button" id="backToLobby">VOLVER AL LOBBY</button></div>
           </div>
         </div>
         <div class="match-bottom"><span id="playerRole">JUGADOR</span><button id="watchOverlay" type="button">ABRIR VISTA PARA STREAM ↗</button><button id="leaveButton" type="button">ABANDONAR SALA</button></div>
