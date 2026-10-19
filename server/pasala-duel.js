@@ -305,7 +305,8 @@ function createPasalaDuelService(options = {}) {
     const room = rooms.get(link.roomId);
     if (!room || room.phase !== 'playing') return error(ws, 'La partida terminó.');
     if (room.mode === 'turns') {
-      if (room.activeSlot !== link.slot || room.turnReadyAt !== null || room.deadline === null) return error(ws, 'Esperá a que termine el cambio de turno.');
+      if (room.turnReadyAt !== null || room.deadline === null) return error(ws, 'Esperá a que termine el cambio de turno.');
+      if (room.activeSlot !== link.slot) return error(ws, 'Todavía no es tu turno.');
       if (now() >= room.deadline) {
         switchTurn(room, 1 - link.slot);
         return error(ws, 'Se agotó tu turno.');
