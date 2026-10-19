@@ -91,7 +91,7 @@ body.home-v2{background:var(--ct4-ink);color:var(--ct4-cream)}
 .ct4-daily-wordle h3 em{font-style:normal;color:#486b43}
 .ct4-daily-wordle p{font-size:13px;line-height:1.5;color:#445047;margin:0}
 .ct4-daily-link{color:#132418;font-size:11px;font-weight:950;letter-spacing:.1em}
-.ct4-arena{margin-block:0 72px;background:#161b1b;border-top:5px solid var(--ct4-lime);padding:0;position:relative;overflow:hidden;box-shadow:0 35px 80px #0006}
+.ct4-arena{margin-block:110px 72px;background:#161b1b;border-top:5px solid var(--ct4-lime);padding:0;position:relative;overflow:hidden;box-shadow:0 35px 80px #0006}
 .ct4-arena-topline,.ct4-arena-foot{display:flex;justify-content:space-between;align-items:center;padding:15px 34px;gap:20px;border-bottom:1px solid var(--ct4-line);font-size:10px;font-weight:900;letter-spacing:.16em}
 .ct4-arena-topline span:first-child{color:var(--ct4-lime)}
 .ct4-arena-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);min-height:495px}
