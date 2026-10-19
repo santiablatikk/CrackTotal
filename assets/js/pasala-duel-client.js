@@ -351,7 +351,8 @@
         correct: 'Se definió por cantidad de aciertos.',
         incorrect: 'Empate de aciertos: ganó quien cometió menos errores.',
         speed: 'Empate de aciertos y errores: decidió quién terminó antes.',
-        forfeit: 'Victoria por abandono o desconexión sin reconexión del rival.',
+        forfeit: 'Victoria por abandono voluntario del rival.',
+        disconnect: 'Victoria por desconexión del rival tras vencer el plazo de reconexión.',
         draw: turnMode ? 'Igual cantidad de aciertos. Los roscos eran diferentes: empate y revancha.' : 'Empate exacto. La revancha está abierta.',
         incomplete: 'El duelo terminó sin dos participantes.'
       }[state.result?.reason] || 'El duelo terminó.';
