@@ -7,7 +7,7 @@ const html = read('index.html');
 const css = read('assets/css/home-4.css');
 const js = read('assets/js/home.js');
 const catalog = read('games.html');
-assert.match(html, /href="assets\/css\/home-4\.css\?v=20261020b"/);
+assert.match(html, /href="assets\/css\/home-4\.css\?v=20261020c"/);
 assert.match(html, /class="ct4-hero"/);
 assert.match(html, /class="ct4-arena /);
 assert.match(html, /class="ct4-daily /);
