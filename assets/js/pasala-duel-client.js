@@ -165,12 +165,30 @@
       if (index) { const versus = document.createElement('div'); versus.className='score-versus'; versus.textContent='VS'; board.append(versus); }
       const card = document.createElement('div'); card.className='score-player';
       const identity = document.createElement('div'); identity.className='score-name'; identity.textContent = player?.name || 'RIVAL PENDIENTE';
-      const label = document.createElement('span'); label.textContent = player ? ((player.id === state.selfId) ? 'VOS' : player.ready ? 'LISTO' : player.connected ? 'EN SALA' : 'DESCONECTADO') : 'ESPERANDO…';
+      const phase = state.room?.phase;
+      const label = document.createElement('span');
+      label.textContent = !player ? 'ESPERANDO…' :
+        player.id === state.selfId ? 'VOS' :
+        !player.connected ? 'DESCONECTADO' :
+        phase === 'playing' ? (player.finished ? 'ROSCO COMPLETO' : 'JUGANDO') :
+        phase === 'finished' ? 'PARTIDO FINALIZADO' :
+        player.ready ? 'LISTO' : 'EN SALA';
       identity.append(label);
       const progress = document.createElement('span');
       progress.className = 'score-progress';
       progress.textContent = (player?.answered ?? 0) + '/26 LETRAS RESUELTAS';
       identity.append(progress);
+      const meter = document.createElement('div');
+      meter.className = 'score-meter';
+      meter.setAttribute('role', 'progressbar');
+      meter.setAttribute('aria-label', 'Letras resueltas por ' + (player?.name || 'jugador pendiente'));
+      meter.setAttribute('aria-valuemin', '0');
+      meter.setAttribute('aria-valuemax', '26');
+      meter.setAttribute('aria-valuenow', String(player?.answered ?? 0));
+      const meterFill = document.createElement('div');
+      meterFill.className = 'score-meter-fill';
+      meterFill.style.width = Math.max(0, Math.min(100, ((player?.answered ?? 0) / 26) * 100)) + '%';
+      meter.append(meterFill); identity.append(meter);
       const opponent = players[1 - index];
       if (player && opponent && state.room?.phase === 'playing' && player.correct > opponent.correct) {
         const lead = document.createElement('span'); lead.className = 'score-lead'; lead.textContent = 'EN VENTAJA'; identity.append(lead);
