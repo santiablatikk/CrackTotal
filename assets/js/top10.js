@@ -9,65 +9,19 @@
   const HISTORY_KEY = 'top10_history_v1'; // Independiente de los guardados diarios existentes.
 
 
-    const ISO2 = {
-    ARG:'AR', AR:'AR', BRA:'BR', BR:'BR', URU:'UY', UY:'UY', CHI:'CL', CL:'CL',
-    COL:'CO', CO:'CO', PER:'PE', PE:'PE', PAR:'PY', PY:'PY', ECU:'EC', EC:'EC',
-    BOL:'BO', BO:'BO', VEN:'VE', VE:'VE', MEX:'MX', MX:'MX', USA:'US', US:'US',
-    CAN:'CA', CA:'CA', ESP:'ES', ES:'ES', POR:'PT', PT:'PT', FRA:'FR', FR:'FR',
-    ITA:'IT', IT:'IT', GER:'DE', DE:'DE', NED:'NL', NL:'NL', BEL:'BE', BE:'BE',
-    ENG:'GB', GBR:'GB', GB:'GB', SCO:'GB', WAL:'GB', IRL:'IE', IE:'IE',
-    SWE:'SE', SE:'SE', NOR:'NO', NO:'NO', DEN:'DK', DK:'DK', POL:'PL', PL:'PL',
-    UKR:'UA', UA:'UA', CRO:'HR', HR:'HR', SRB:'RS', RS:'RS', SUI:'CH', SUIZ:'CH', CH:'CH',
-    AUT:'AT', AT:'AT', TUR:'TR', TR:'TR', GRE:'GR', GR:'GR', RUS:'RU', RU:'RU',
-    JPN:'JP', JP:'JP', KOR:'KR', KR:'KR', AUS:'AU', AU:'AU', NGA:'NG', NG:'NG',
-    SEN:'SN', SN:'SN', CIV:'CI', CI:'CI', CMR:'CM', CM:'CM', GHA:'GH', GH:'GH',
-    MAR:'MA', MA:'MA', EGY:'EG', EG:'EG', RSA:'ZA', ZA:'ZA', QAT:'QA', QA:'QA',
-    UAE:'AE', AE:'AE', KSA:'SA', SA:'SA', CHN:'CN', CN:'CN'
-  };
-
-  function toIso2(code){
-    if (!code) return '';
-    const raw = String(code).trim().toUpperCase().replace(/[^A-Z]/g,'');
-    return ISO2[raw] || (raw.length === 2 ? raw : '');
-  }
-
-  function flagEmoji(iso2){
-    if (!iso2 || iso2.length !== 2) return '';
-    const A = 0x1F1E6;
-    return String.fromCodePoint(
-      A + iso2.charCodeAt(0) - 65,
-      A + iso2.charCodeAt(1) - 65
-    );
-  }
-
-  function flagMarkup(code){
-    const iso2 = toIso2(code);
-    if (!iso2) return '';
-    const emoji = flagEmoji(iso2);
-    // Prefer local SVG crest/flag when present; fall back to emoji (no hotlink).
-    return `<img class="flag" src="assets/images/flags/${iso2.toLowerCase()}.svg" width="20" height="14" alt="" loading="lazy" decoding="async" data-emoji="${emoji}" onerror="this.outerHTML='<span class=\\'flag-emoji\\' aria-hidden=\\'true\\'>'+this.dataset.emoji+'</span>'" /><span class="sr-only">${iso2}</span>`;
-  }
-
   const verifiedCore = window.CTTop10Verified;
   let started = false;
   let topic = null; // { id, title, source, answers: ['messi (AR)', ...] }
   let challengeDay = ''; // Día UTC fijado al elegir el reto: cruzar medianoche no reescribe el día siguiente.
   let foundSet = new Set();
   let attempts = 0;
-  let startTime = Date.now();
+  let startTime = null;
   let savedOnce = false;
   let publishingResult = false;
   let finished = false;
   let wonToday = false;
   let elapsedSec = null;
   let roundTimer = null;
-
-  function normalize(s){
-    return (s||'').toString().toLowerCase()
-      .replace(/ø/g,'o').replace(/æ/g,'ae').replace(/œ/g,'oe').replace(/ß/g,'ss').replace(/ł/g,'l')
-      .normalize('NFD').replace(/\p{Diacritic}/gu,'')
-      .replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ').trim();
-  }
 
   function isTodayKey(){
     const d = new Date();
@@ -189,12 +143,13 @@
     document.getElementById('foundCount').textContent=foundSet.size+'/10';
     const progress=document.getElementById('progressFill');
     progress.style.width=(foundSet.size*10)+'%';
-    progress.setAttribute('aria-valuenow',String(foundSet.size));
+    document.querySelector('.top10-ranking-panel')?.setAttribute('aria-label', 'Ranking: '+foundSet.size+' de 10 respuestas acertadas');
   }
   let messageTimeout=null;
-  function showMessage(text){
+  function showMessage(text, type='info'){
     const el=document.getElementById('messageBox');
     clearTimeout(messageTimeout);el.textContent=text;
+    el.dataset.result=type;
     messageTimeout=setTimeout(()=>{if(el.textContent===text)el.textContent='';},2200);
   }
   function trySubmit(value){
@@ -202,13 +157,14 @@
     if(startTime!==null&&Date.now()-startTime>=120000){showResult(false);lockForToday();return}
     const idx=verifiedCore.match(topic,value);
     const matched=Number.isInteger(idx)?topic.answers[idx]:null;
-    if(matched&&foundSet.has(matched)){showMessage('Ya lo encontraste. Probá otro.');return}
+    if(matched&&foundSet.has(matched)){showMessage('Ese equipo ya lo encontraste.','info');return}
     attempts+=1;
     if(matched){
       foundSet.add(matched);
       renderBoard();pushGuessBadge(matched,true);
-      showMessage('¡Correcto! Puesto '+(idx+1)+' · '+topic.metric_values[idx]+' pts');
-    }else{pushGuessBadge(value,false);showMessage('No está entre los diez primeros.')}
+      showMessage('¡Correcto! Puesto '+(idx+1)+' · '+topic.metric_values[idx]+' pts','correct');
+      document.getElementById('answersList')?.children[idx]?.classList.add('newly-solved');
+    }else{pushGuessBadge(value,false);showMessage('No está entre los diez primeros.','incorrect')}
     saveState();checkCompletion();
   }
 
@@ -296,6 +252,7 @@
     document.getElementById('resultTitle').textContent = won? '¡Completado!' : 'Fin del intento';
     document.getElementById('resultMessage').textContent = won? '¡Top 10 completo!': `Encontraste ${foundSet.size} de 10. Mañana hay un nuevo desafío.`;
     modal.style.display = 'flex';
+    document.getElementById('closeResultBtn')?.focus({preventScroll:true});
     if (!progressReported && window.CrackTotalProgressBridge) {
       progressReported = true;
       window.CrackTotalProgressBridge.reportMatch({
@@ -329,7 +286,7 @@
       const s = String(diff%60).padStart(2,'0');
       el.textContent = `Próximo en ${h}:${m}:${s}`;
     };
-    tick(); setInterval(tick,1000);
+    tick(); if(!window.__ctTop10Countdown)window.__ctTop10Countdown=setInterval(tick,1000);
   }
 
   // El reloj se basa en startTime, guardado junto al tema. Recargar no suma tiempo.
@@ -340,7 +297,7 @@
       const left = Math.max(0, 120 - Math.floor((Date.now()-startTime)/1000));
       const mm = String(Math.floor(left/60)).padStart(2,'0');
       const ss = String(left%60).padStart(2,'0');
-      if (chip) chip.innerHTML = `<i class="fas fa-clock"></i> ${mm}:${ss}`;
+      if (chip){chip.textContent = `${mm}:${ss}`;chip.classList.toggle('is-urgent',left<=20);}
       if (left === 0) {
         showResult(false);
         lockForToday();
@@ -353,9 +310,12 @@
   function attachHandlers(){
     const input = document.getElementById('surnameInput');
     const btn = document.getElementById('submitBtn');
-    const submit = ()=>{if(!started||finished)return;const v=input.value.trim();input.value='';trySubmit(v);input.focus();};
+    const submit = ()=>{if(!started||finished)return;const v=input.value.trim();input.value='';trySubmit(v);if(!finished)input.focus({preventScroll:true});};
     input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submit(); }});
     btn.addEventListener('click', submit);
+    const dismiss=()=>{document.getElementById('resultModal').style.display='none';document.getElementById('topicTitle')?.focus({preventScroll:true});};
+    document.getElementById('closeResultBtn')?.addEventListener('click',dismiss);
+    document.getElementById('viewRankingBtn')?.addEventListener('click',dismiss);
     document.getElementById('shareTop10Btn')?.addEventListener('click', ()=>{
       const title = document.getElementById('topicTitle').textContent;
       const marks=topic.answers.map(ans=>foundSet.has(ans)?'🟩':'⬛').join('');
@@ -369,6 +329,7 @@
     if(started||finished)return;
     started=true;startTime=Date.now();
     document.getElementById('startOverlay').hidden=true;
+    document.getElementById('top10GameCard').hidden=false;
     document.getElementById('surnameInput').disabled=false;
     document.getElementById('submitBtn').disabled=false;
     document.getElementById('giveUpBtn').disabled=false;
@@ -387,7 +348,8 @@
     }
     document.getElementById('topicTitle').textContent=topic.title;
     document.getElementById('topicCategory').textContent=topic.competition+' · '+topic.season;
-    document.getElementById('startOverlayDetail').textContent=topic.title+' · Tenés 2 minutos desde que empezás. Cada acierto revela el puesto y los puntos.';
+    document.getElementById('startCompetition').textContent=topic.competition.toUpperCase()+' / '+topic.season;
+    document.getElementById('startOverlayDetail').textContent=topic.title+' Tenés 120 segundos para encontrar los diez clubes de la clasificación final.';
     document.getElementById('gameNumber').textContent='RETO DEL DÍA';
     const source=document.getElementById('topicSource');
     source.textContent=topic.source+' · Verificado '+topic.verified_at+' ↗';
@@ -408,14 +370,21 @@
       showResult(false);lockForToday();
     });
     if(finished){
+      document.getElementById('startOverlay').hidden=true;
+      document.getElementById('top10GameCard').hidden=false;
       progressReported=true;showResult(wonToday);lockForToday();
     }else if(started){
       document.getElementById('startOverlay').hidden=true;
+      document.getElementById('top10GameCard').hidden=false;
       document.getElementById('surnameInput').disabled=false;
       document.getElementById('submitBtn').disabled=false;
       document.getElementById('giveUpBtn').disabled=false;
       startRoundTimer();
-    }else document.getElementById('startOverlay').hidden=false;
+    }else{
+      document.getElementById('startOverlay').hidden=false;
+      document.getElementById('top10GameCard').hidden=true;
+      document.getElementById('startBtn').focus({preventScroll:true});
+    }
   }
 
     document.addEventListener('DOMContentLoaded', init);
