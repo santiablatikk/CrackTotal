@@ -1,33 +1,43 @@
-# Pasala Che 1v1 — entorno de pruebas
+# Pasala Che 1v1 — staging aislado (19-10-2026)
 
-La rama `redesign/crack-total-2` incorpora el protocolo WebSocket `pasala:*` en `server/pasala-duel.js` y una pantalla independiente en `pasala-1v1.html`.
+La rama `redesign/crack-total-2` contiene el servidor `server/pasala-duel.js` y la pantalla `pasala-1v1.html`. La vista previa de Netlify es estática: **no hospeda WebSockets**.
 
-## Estado y aislamiento
-- **No se modifican** las partidas y eventos de Quién Sabe Más ni Mentiroso.
-- Pasala Che individual sigue usando `assets/js/pasalache.js` y su guardado existente.
-- El servidor crea una sola selección de 26 preguntas por partida: ambos jugadores reciben las mismas, en el mismo orden. Las soluciones quedan en el servidor.
-- Los clientes solo envían letra, respuesta o paso. El servidor calcula aciertos, reloj y ganador.
-- Sala privada con código, búsqueda de un jugador de la misma dificultad, dos confirmaciones de inicio, espectadores, reconexión durante 45 s, revancha y limpieza.
-- Sala y resultados son **en memoria**: un reinicio de servidor corta las partidas. No hay ranking persistente de duelos 1v1 todavía.
-- Las preguntas originales son recursos públicos de Pasala Che solo, por lo que no se puede garantizar protección contra usuarios que consulten el banco.
+## Garantías y límites actuales
 
-## Comprobación
+- Los 2 jugadores reciben las mismas 26 preguntas y los mismos límites de tiempo, calculados por el servidor.
+- El servidor valida respuestas y puntajes, controla el inicio, estado de conexión, abandono, reconexión de hasta 45 segundos, espectadores, revancha, cierre y límite de 250 salas simultáneas por proceso.
+- Las respuestas correctas no aparecen en los mensajes de espectadores antes de acabar la partida. Sí están presentes en el JSON público del rosco individual: **un usuario malintencionado aún puede consultar ese archivo**.
+- Resultados y salas en memoria. No hay persistencia de duelos 1v1 ni escalado horizontal. Reiniciar el proceso interrumpe las salas.
+- Quién Sabe Más y Mentiroso conservan sus protocolos anteriores y requieren pruebas de staging propias.
+- No se alteran Firebase, formatos guardados, dominio ni servidor de producción.
+
+## Pruebas reproducibles antes de exponer staging
+
 ```sh
+npm ci
 npm test
 npm run validate
 ```
-`npm test` ejecuta el humo determinista de creación, emparejamiento privado, mismo rosco, validación en servidor, espectadores, reconexión y revancha.
 
-## Publicar un backend de pruebas (SIN cambiar producción)
-1. Desplegar la rama `redesign/crack-total-2` en **un servicio Node temporal separado**. Comando `npm start`, Node >= 22, instalar dependencias, puerto provisto por el proveedor.
-2. Configurar `CT_STAGING=true` **solo en ese backend** para desactivar las redirecciones canónicas HTTP a `cracktotal.com`. No cambiar las variables del servidor de producción.
-3. Obtener la URL WebSocket segura `wss://<host-de-staging>`. No apuntar la nueva interfaz al backend de producción sin desplegarle y probarle primero este protocolo.
-4. Abrir `https://deploy-preview-1--zingy-haupia-53b742.netlify.app/pasala-1v1?server=wss://<host-de-staging>`. El enlace de invitación y el de espectador conservan ese parámetro.
-5. Probar en dos dispositivos/navegadores: crear, invitar, preparar, responder y pasar, finalizar, revancha, pestaña recargada, desconexión de 45 s y el overlay `?overlay=CODIGO&server=...`.
-6. Probar en paralelo Quién Sabe Más y Mentiroso contra el backend de staging. La página estática por sí sola no verifica esos protocolos.
+`npm test` ejecuta cuatro suites, incluida **`scripts/pasala_duel_ws_integration.js`** que inicia `server.js` con `CT_STAGING=true` en un puerto local temporal y conecta **dos clientes WebSocket y un espectador reales**; comprueba endpoint de salud, origen rechazado, mismo rosco, desconexión y reanudación, marcador validado por servidor, filtrado de respuestas al espectador, revancha y abandono. Este test es local y automatizado; **no acredita una partida pública por Internet ni en dispositivos diferentes**.
+
+## Activar un servidor Render NUEVO, sin tocar producción
+
+1. En tu cuenta de Render, elegí crear **un nuevo Blueprint** desde este repositorio. Indicá el archivo `deploy/staging.render.yaml` como Blueprint Path. **No actualices ni sustituyas el Blueprint de producción `render.yaml`.** La rama especificada es `redesign/crack-total-2`.
+2. Revisá que el servicio por crear se llame **`cracktotal-arena-staging`**, use Node, tenga `CT_STAGING=true`, build `npm ci && npm test`, start `npm start`, health `/__ct_staging/health` y **despliegue automático desactivado**. Si Render propone tocar recursos ya existentes, cancelá la operación.
+3. Confirmá la creación en Render; anotá el host HTTPS independiente que asigne (ejemplo conceptual `https://SERVICIO.onrender.com`; no es una URL ya publicada). No asocies el dominio cracktotal.com.
+4. Abrí `https://HOST-REAL/__ct_staging/health`; debe devolver JSON con `ok: true` y `websocket: true`.
+5. En el servicio de staging, restringí `CT_STAGING_ORIGINS` a `https://deploy-preview-1--zingy-haupia-53b742.netlify.app` y otros orígenes de testing explícitamente aprobados, separados por comas. La configuración de origen por defecto acepta solo ese preview y localhost; **esto no sustituye autenticación, cuotas ni controles antitrampas**.
+6. Entrá a `https://deploy-preview-1--zingy-haupia-53b742.netlify.app/pasala-1v1?server=wss://HOST-REAL` en dos navegadores/dispositivos diferentes. La página conserva el parámetro de servidor al construir invitaciones, enlaces de espectador y overlay.
+7. Probar manualmente: crear sala, copiar invitación, segundo jugador, dos confirmaciones, cuenta regresiva, responder/pasar, mismo conjunto de preguntas, reloj y marcador, terminar y decidir ganador, revancha, abandonar, reconectar antes/después de 45 s y espectador con enlace `?overlay=CODIGO&server=wss://HOST-REAL`. Verificar que el espectador no recibe soluciones mientras corre el juego.
+8. Ejecutar las pruebas de Quién Sabe Más y Mentiroso contra este backend sin exponer a producción. Registrar evidencia y errores de consola.
+
+La URL de Render no se puede anticipar. **Hasta que el propietario cree ese servicio, no existe staging externo público comprobado**, y los controles online del preview seguirán deshabilitados explícitamente.
 
 ## Retiro de Mi Carrera
-- La página `mi-carrera.html` redirige al catálogo; portada y catálogo ya no la promocionan.
-- El bundle estático del Deploy Preview omite su motor, data y miles de imágenes exclusivas.
-- El historial de Git y los datos guardados del navegador no se borraron. Todavía existen archivos fuente antiguos en el repositorio; su eliminación definitiva requiere una limpieza separada y verificación de referencias.
-- No publicar en `main` ni en `cracktotal.com` sin verificación de backend real.
+
+- `mi-carrera.html` redirige al catálogo; portada y catálogo no lo promocionan.
+- El bundle de Netlify omite motor, datos e imágenes exclusivos de ese modo.
+- El código fuente histórico y los datos guardados antiguos no se borraron; auditar referencias antes de eliminarlos.
+
+**No fusionar esta rama con `main` ni publicar en `cracktotal.com` todavía.**
