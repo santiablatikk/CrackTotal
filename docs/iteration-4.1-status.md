@@ -27,6 +27,7 @@ Esta iteración recupera personalidad y dirección artística **sin volver a agr
 - Se mantienen IDs y scripts de progreso real de Top 10/Wordle; diseños editoriales con contrastes distintos y sin duplicarlos en otra sección.
 - En el encabezado, **«Buscar» ahora enlaza a `games.html#juegos`**: antes activaba un atajo a un buscador que ya no existe en la portada.
 - Footer con cierre editorial tipográfico de marca y accesos funcionales y legales preservados.
+- La quinta sección de perfil/rankings/logros dejó de ser un grupo de tarjetas heredadas y pasó a una franja editorial de progreso con tres accesos claros.
 
 ### CSS/arquitectura
 - Se **reemplazó** `assets/css/home-4.css` en el mismo path (sin crear `home-5.css` ni sumar librerías). Namespace `ct4-*` acotado a la portada.
@@ -35,7 +36,7 @@ Esta iteración recupera personalidad y dirección artística **sin volver a agr
 
 ## Verificación
 
-- **Netlify Deploy Preview:** estado GitHub `netlify/zingy-haupia-53b742/deploy-preview = success` en commit `9e37dcc`.
+- **Netlify Deploy Preview:** estado GitHub `netlify/zingy-haupia-53b742/deploy-preview = success` en commit `9e37dcc` (primera versión 4.1). La revisión visual final y el estado del último commit se verifican aparte.
 - `netlify.toml` especifica `node validate-deploy.js && npm test && node scripts/build-netlify-preview.cjs` para deploy-preview: por tanto el SUCCESS acredita ese pipeline del commit verificado.
 - `scripts/home_4_smoke.js` ahora verifica 5 tarjetas/5 secciones, enlaces esenciales, IDs diarios, estilo responsive, ausencia de marcadores inventados y **52 letras de la ilustración**. `scripts/ct35_experience_smoke.js` preserva los contratos de desafío del día y almacenamiento real.
 - Inspección estática de la rama: 5 secciones, 5 juegos, 52 letras, IDs HTML sin duplicados, enlaces a todas las rutas principales; no se observan referencias a Mi Carrera desde portada.
