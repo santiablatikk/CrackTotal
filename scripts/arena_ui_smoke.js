@@ -9,8 +9,8 @@ const styles = fs.readFileSync(path.join(root, 'assets/css/pasala-duel.css'), 'u
 
 // The arena uses zero frontend build tooling. Catch stale scripts and missing
 // DOM hooks early, before a browser gets stuck at "Conectando a la arena".
-assert.match(html, /pasala-duel-client\.js\?v=13/);
-assert.match(html, /pasala-duel\.css\?v=10/);
+assert.match(html, /pasala-duel-client\.js\?v=14/);
+assert.match(html, /pasala-duel\.css\?v=11/);
 new Function(client);
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
 assert.equal(new Set(ids).size, ids.length, 'Duplicate HTML id');
@@ -20,9 +20,14 @@ for (const id of referenced) {
 }
 for (const id of ['createForm', 'joinForm', 'watchForm', 'randomButton',
   'copyInvite', 'copyCode', 'copySpectator', 'shareResult', 'rematchHint', 'streamPhase', 'streamClock', 'streamAudience', 'resultStats',
-  'duelMode', 'duelModeHelp', 'otherClock', 'opponentRing', 'opponentRingSide', 'matchStage', 'turnHint']) {
+  'duelMode', 'duelModeHelp', 'otherClock', 'opponentRing', 'opponentRingSide', 'matchStage', 'turnHint',
+  'turnTransition', 'turnTransitionCountdown', 'lobbyPlayers', 'lobbyPlayersList',
+  'answerCorrection', 'correctionInput', 'correctButton', 'confirmAnswer']) {
   assert.ok(ids.includes(id), 'Expected arena control missing: ' + id);
 }
+assert.match(client, /case 'answerPending':/, 'Provisional answer must render privately');
+assert.match(client, /reviseAnswer/, 'Client can submit one correction');
+assert.match(styles, /\.is-rival-turn/, 'Rival-turn emphasis layout');
 assert.match(client, /case 'closed':/, 'Host-close client handler');
 assert.match(client, /activeSlot/, 'Turn-based mode must display authoritative active player');
 assert.match(client, /mode:\$\('duelMode'\)\.value/, 'Mode must be sent to server on room creation');
