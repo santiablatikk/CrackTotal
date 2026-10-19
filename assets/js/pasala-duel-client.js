@@ -10,8 +10,11 @@
   const state = { ws: null, connected: false, room: null, selfId: null, spectator: watchOnly,
     roomId: null, question: null, statuses: {}, result: null, reconnecting: false,
     clockTimer: null, retryTimer: null, manualLeave: false, clockOffset: 0, pendingAction: false };
-  const urlOverride = params.get('server') || window.CRACK_TOTAL_DUEL_WS_URL || '';
   const isStaticPreview = /(?:^|\.)netlify\.app$/i.test(location.hostname) || /(?:^|\.)netlify\.com$/i.test(location.hostname);
+  // Connect automatically only on the exact isolated PR preview; never on production or other Netlify sites.
+  const previewStaging = location.hostname === 'deploy-preview-1--zingy-haupia-53b742.netlify.app'
+    ? 'wss://cracktotal-arena-staging.onrender.com' : '';
+  const urlOverride = params.get('server') || window.CRACK_TOTAL_DUEL_WS_URL || previewStaging;
   const wsUrl = urlOverride || (!isStaticPreview ? ((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host) : '');
   const safeCode = code => /^[A-F0-9]{10}$/.test(code);
   const savedSession = () => { try { return JSON.parse(sessionStorage.getItem(storageKey) || 'null'); } catch { return null; } };
