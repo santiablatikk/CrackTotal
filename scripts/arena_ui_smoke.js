@@ -9,7 +9,7 @@ const styles = fs.readFileSync(path.join(root, 'assets/css/pasala-duel.css'), 'u
 
 // The arena uses zero frontend build tooling. Catch stale scripts and missing
 // DOM hooks early, before a browser gets stuck at "Conectando a la arena".
-assert.match(html, /pasala-duel-client\.js\?v=8/);
+assert.match(html, /pasala-duel-client\.js\?v=9/);
 assert.match(html, /pasala-duel\.css\?v=7/);
 new Function(client);
 const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
