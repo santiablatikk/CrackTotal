@@ -218,7 +218,32 @@
       const victorious = winner && winner === state.selfId;
       $('resultHeadline').textContent = !winner ? '¡EMPATE!' : state.spectator ? 'HAY GANADOR.' : victorious ? '¡GANASTE EL DUELO!' : 'FIN DEL PARTIDO.';
       const summary = state.result?.players;
-      $('resultDescription').textContent = (summary ? summary.map(p => p ? p.name + ': ' + p.correct + ' aciertos' : '').join(' · ') : 'El rosco terminó.') + (winner && !state.spectator ? (victorious ? ' Gran partido.' : ' Pedí revancha y volvé a intentarlo.') : '');
+      const decisionText = {
+        correct: 'Se definió por cantidad de aciertos.',
+        incorrect: 'Empate de aciertos: ganó quien cometió menos errores.',
+        speed: 'Empate de aciertos y errores: decidió quién terminó antes.',
+        forfeit: 'Victoria por abandono o desconexión sin reconexión del rival.',
+        draw: 'Empate exacto. La revancha está abierta.',
+        incomplete: 'El duelo terminó sin dos participantes.'
+      }[state.result?.reason] || 'El duelo terminó.';
+      $('resultDescription').textContent = decisionText +
+        (winner && !state.spectator ? (victorious ? ' ¡Gran partido!' : ' Pedí revancha y volvé a intentarlo.') : '');
+      const stats = $('resultStats');
+      stats.replaceChildren();
+      if (summary) summary.filter(Boolean).forEach(player => {
+        const row = document.createElement('div');
+        row.className = 'result-stat-item' + (player.id === winner ? ' is-winner' : '');
+        const identity = document.createElement('strong');
+        identity.textContent = player.name + (player.id === winner ? ' ★' : '');
+        const numbers = document.createElement('span');
+        const time = Number.isFinite(player.elapsedSeconds) ?
+          Math.floor(player.elapsedSeconds / 60) + ':' + String(player.elapsedSeconds % 60).padStart(2, '0') : '—';
+        const pending = Math.max(0, 26 - player.correct - player.incorrect);
+        numbers.textContent = player.correct + ' ✓  ·  ' + player.incorrect + ' ✕  ·  ' +
+          pending + ' pendientes  ·  ' + time;
+        row.append(identity, numbers);
+        stats.appendChild(row);
+      });
       $('rematchButton').hidden = state.spectator;
       $('rematchButton').disabled = !!self?.ready;
       $('rematchButton').textContent = self?.ready ? 'REVANCHA SOLICITADA ✓' : 'PEDIR REVANCHA ↗';
