@@ -263,36 +263,57 @@ async function main() {
   await wait(second, 'error', p => p.message === 'Todavía no es tu turno.', beforeIllegal);
   await sleep(230);
   const beforeCorrect = first.messages.length;
-  send(first, 'answer', { letter: firstQ.letter, answer: answerFor(firstQ) });
+  send(first, 'answer', { letter: firstQ.letter, answer: 'RESPUESTA TEMPORAL DE PRUEBA' });
+  const provisional = (await wait(first, 'answerPending', p => p.letter === 'A', beforeCorrect)).payload;
+  assert.equal(provisional.editsRemaining, 1);
+  assert.ok(provisional.endsAt > Date.now() && provisional.endsAt <= Date.now() + 6100);
+  assert.equal(first.messages.slice(beforeCorrect).some(m => m.type === 'pasala:answerResult'), false,
+    'Initial answer must remain undecided during correction');
+  assert.equal(turnsViewer.messages.some(m => m.type === 'pasala:answerPending'), false,
+    'Spectator cannot see private draft');
+  const beforeRevision = first.messages.length;
+  send(first, 'reviseAnswer', { letter: 'A', answer: answerFor(firstQ) });
+  await wait(first, 'answerPending', p => p.editsRemaining === 0, beforeRevision);
+  const beforeDuplicate = first.messages.length;
+  send(first, 'reviseAnswer', { letter: 'A', answer: 'REINTENTO EXCESIVO' });
+  await wait(first, 'error', p => /Solo se permite una/.test(p.message), beforeDuplicate);
+  send(first, 'confirmAnswer', { letter: 'A' });
   await wait(first, 'answerResult', p => p.correct && p.letter === 'A', beforeCorrect);
   const follow = (await wait(first, 'question', p => p.letter === 'B', beforeCorrect)).payload;
   const stillActive = (await wait(turnsViewer, 'state', p => p.phase === 'playing' &&
     p.players[turnStart.activeSlot].correct === 1)).payload;
-  assert.equal(stillActive.activeSlot, turnStart.activeSlot, 'Correct answer keeps the turn');
-  assert.equal(stillActive.players[1 - turnStart.activeSlot].remainingMs, 120000,
-    'Inactive player clock must be paused');
+  assert.equal(stillActive.activeSlot, turnStart.activeSlot);
+  assert.equal(stillActive.players[1 - turnStart.activeSlot].remainingMs, 120000);
   await sleep(230);
   const beforePass = second.messages.length;
   send(first, 'pass', { letter: follow.letter });
-  const switched = (await wait(second, 'state', p => p.phase === 'playing' &&
-    p.activeSlot === 1 - turnStart.activeSlot, beforePass)).payload;
-  assert.equal(switched.players[turnStart.activeSlot].correct, 1);
-  const secondQ = (await wait(second, 'question')).payload;
-  assert.equal(secondQ.letter, 'A', 'Second rosco begins on its own A');
-  assert.notEqual(firstQ.text, secondQ.text, 'Players must receive distinct questions for the same letter');
-  assert.ok(switched.players[turnStart.activeSlot].remainingMs < 120000);
-  const beforeSecondPass = first.messages.length;
+  const handoff = (await wait(second, 'state', p => p.phase === 'playing' &&
+    p.activeSlot === 1 - turnStart.activeSlot && Number.isFinite(p.turnReadyAt), beforePass)).payload;
+  assert.equal(handoff.deadline, null, 'Both clocks paused during two-second transition');
+  assert.ok(handoff.turnReadyAt >= Date.now() + 1400);
+  const beforeEarly = second.messages.length;
+  send(second, 'answer', { letter: 'A', answer: 'PRUEBA ANTICIPADA' });
+  await wait(second, 'error', p => /cambio de turno/.test(p.message), beforeEarly);
+  const secondQ = (await wait(second, 'question', p => p.letter === 'A', beforePass, 5000)).payload;
+  assert.notEqual(firstQ.text, secondQ.text, 'Different question for same letter');
+  const afterHandoff = (await wait(second, 'state', p => p.phase === 'playing' &&
+    p.activeSlot === 1 - turnStart.activeSlot && p.turnReadyAt === null && p.deadline > Date.now(), beforePass)).payload;
+  assert.equal(afterHandoff.players[turnStart.activeSlot].remainingMs, handoff.players[turnStart.activeSlot].remainingMs);
   await sleep(230);
+  const beforeWrong = second.messages.length;
+  const firstBeforeWrong = first.messages.length;
   send(second, 'answer', { letter: secondQ.letter, answer: 'RESPUESTA INVÁLIDA DE TEST 99999' });
-  await wait(second, 'answerResult', p => p.correct === false && p.letter === 'A');
+  await wait(second, 'answerPending', p => p.letter === 'A', beforeWrong);
+  await wait(second, 'answerResult', p => p.correct === false && p.letter === 'A', beforeWrong, 8500);
   await wait(first, 'state', p => p.phase === 'playing' &&
-    p.activeSlot === turnStart.activeSlot && p.players[1 - turnStart.activeSlot].incorrect === 1,
-    beforeSecondPass);
+    p.activeSlot === turnStart.activeSlot && p.turnReadyAt !== null &&
+    p.players[1 - turnStart.activeSlot].incorrect === 1, firstBeforeWrong, 4500);
   const beforeIllegalSpectator = turnsViewer.messages.length;
   send(turnsViewer, 'pass', { letter: 'A' });
   await wait(turnsViewer, 'error', p => p.message === 'Acción no permitida.', beforeIllegalSpectator);
   assert.equal(turnsViewer.messages.some(m => m.type === 'pasala:question'), false);
   assert.equal(JSON.stringify(turnsViewer.messages).includes('respuestasAlternativas'), false);
+  assert.equal(JSON.stringify(turnsViewer.messages).includes('RESPUESTA INVÁLIDA DE TEST'), false);
   const beforeEnding = second.messages.length;
   send(first, 'leave');
   const turnForfeit = (await wait(second, 'result', p => p.reason === 'forfeit', beforeEnding)).payload;
