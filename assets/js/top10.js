@@ -171,7 +171,7 @@
         Math.floor(row.seconds / 60) + ':' + String(row.seconds % 60).padStart(2, '0') : '—';
       detail.textContent = (row.won ? 'COMPLETADO' : 'FINALIZADO') + ' · ' + row.score +
         '/10 · ' + (Number.isInteger(row.attempts) ? row.attempts : '—') +
-        ' intentos · ' + duration;
+        ' intento' + (row.attempts === 1 ? '' : 's') + ' · ' + duration;
       item.append(headline, detail);
       list.appendChild(item);
     });
