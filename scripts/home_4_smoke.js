@@ -7,7 +7,7 @@ const html = read('index.html');
 const css = read('assets/css/home-4.css');
 const js = read('assets/js/home.js');
 const catalog = read('games.html');
-assert.match(html, /href="assets\/css\/home-4\.css\?v=20261019a"/);
+assert.match(html, /href="assets\/css\/home-4\.css\?v=20261020a"/);
 assert.match(html, /class="ct4-hero"/);
 assert.match(html, /class="ct4-arena /);
 assert.match(html, /class="ct4-daily /);
@@ -40,4 +40,4 @@ assert.equal((html.match(/--x:/g) || []).length, 52, 'Two accurate 26-letter ros
 assert(!html.includes('00 : 00'), 'No fabricated live scores');
 assert(html.includes('href="games.html#juegos"'), 'Header search must lead to the real catalog');
 assert(!html.includes('mi-carrera.html'), 'No public Mi Carrera link');
-console.log('Crack Total 4.0 home smoke PASS — five-game discovery, daily IDs, navigation, accessible page scaffolding');
+console.log('Crack Total 4.1 home smoke PASS — five-game discovery, daily IDs, navigation, accessible page scaffolding');
