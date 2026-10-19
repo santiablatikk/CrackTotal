@@ -152,3 +152,98 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
   .turns-stage .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-103px) rotate(calc(-1 * var(--angle)))}
 }
 @media(prefers-reduced-motion:reduce){.turns-stage .ring-side{transition:none}}
+
+/* 3.8 — Arena editorial: código de sala, previa real y jerarquía del jugador activo. */
+.match-top{align-items:center}
+.match-room{display:flex;flex-direction:column;align-items:stretch;gap:10px;min-width:min(100%,370px);background:linear-gradient(120deg,rgba(186,250,60,.12),rgba(186,250,60,.015));padding:15px 18px;border-top:3px solid var(--lime)}
+.match-room-code{display:grid;grid-template-columns:1fr auto;align-items:center;gap:7px 10px}
+.match-room-code>span{grid-column:1/-1;color:#aec4ac;font-size:12px}
+.match-room-code strong{font:900 clamp(31px,3.6vw,49px)/.96 'Barlow Condensed',sans-serif;letter-spacing:.12em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.match-room-code button{font-size:13px;background:rgba(186,250,60,.12);padding:9px;border:1px solid rgba(186,250,60,.45);white-space:nowrap}
+.match-room-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.match-room-actions button{font-size:13px;padding:9px 0}
+.match-room-actions button.invite-main{flex:1;text-align:center;background:var(--lime);color:var(--ink);padding:10px 12px;font-weight:900;white-space:nowrap}
+.match-room button:hover{color:#fff}.match-room .invite-main:hover{color:#07110e;background:#e3ff9d}
+.lobby-players{border:1px solid rgba(186,250,60,.29);background:linear-gradient(110deg,#13231a,#0b1b12);margin:0 0 18px;padding:20px}
+.lobby-players-heading{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px;font:800 13px 'Barlow Condensed',sans-serif;letter-spacing:.11em}
+.lobby-players-heading strong{font-size:17px;color:var(--lime);margin-right:auto}
+.lobby-players-heading span{color:#c4d3c6}
+.lobby-players-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.lobby-player{display:flex;flex-direction:column;gap:7px;background:#09170f;border-left:4px solid #526b55;padding:18px 20px;min-width:0}
+.lobby-player.is-ready{border-left-color:var(--lime);background:rgba(186,250,60,.055)}
+.lobby-player.is-disconnected{border-left-color:#ef826e}
+.lobby-player>span{font:800 12px 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:#9faf9f}
+.lobby-player strong{font:900 clamp(28px,3vw,40px)/1 'Barlow Condensed',sans-serif;text-transform:uppercase;overflow-wrap:anywhere}
+.lobby-player small{font:800 12px/1.5 'DM Sans',sans-serif;color:#c3d1c2}
+.lobby-player.is-ready small{color:var(--lime)}
+.mode-card{min-height:420px}.mode-card h3{margin:38px 0 18px}
+.mode-card-random{background:linear-gradient(135deg,#193028,#101c17)}
+.turn-transition{margin:0 0 18px;padding:17px 21px;background:linear-gradient(100deg,rgba(186,250,60,.19),rgba(186,250,60,.04));border-left:5px solid var(--lime);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px}
+.turn-transition>span{grid-column:1/-1;color:var(--lime);font:900 13px 'Barlow Condensed',sans-serif;letter-spacing:.16em}
+.turn-transition>strong{font:900 clamp(26px,3vw,42px)/1 'Barlow Condensed',sans-serif;text-transform:uppercase;overflow-wrap:anywhere}
+.turn-transition>em{font:900 38px/1 'Barlow Condensed',sans-serif;color:var(--lime);font-style:normal;font-variant-numeric:tabular-nums}
+.answer-correction{border-left:4px solid var(--lime);padding:18px;background:rgba(186,250,60,.065)}
+.answer-correction .correction-kicker{font:800 12px/1.5 'Barlow Condensed',sans-serif;letter-spacing:.12em;color:var(--lime)}
+.answer-correction>strong{display:block;font:900 clamp(28px,3.2vw,42px)/1.1 'Barlow Condensed',sans-serif;overflow-wrap:anywhere;margin:8px 0}
+.answer-correction>p{font-size:13px!important;line-height:1.45!important;margin:4px 0 10px!important}
+.correction-timer{font:900 15px 'Barlow Condensed',sans-serif;letter-spacing:.11em;color:#cbd8c9;margin:12px 0}
+.correction-timer span{font-size:29px;color:var(--lime);margin-left:8px;font-variant-numeric:tabular-nums}
+.answer-correction label{display:block;margin-bottom:8px;font:800 12px 'Barlow Condensed',sans-serif;letter-spacing:.12em}
+.answer-correction input{width:100%;background:#06110b}
+.match-stage.turns-stage{grid-template-columns:minmax(0,1.45fr) minmax(290px,1.25fr) minmax(0,.72fr);transition:grid-template-columns .32s ease}
+.turns-stage #ownRingSide{background:radial-gradient(circle at center,rgba(186,250,60,.15),transparent 68%),linear-gradient(155deg,#1d3c23,#0a150e)}
+.turns-stage #ownRingSide .duel-ring{width:min(100%,365px);transition:width .32s ease}
+.turns-stage #ownRingSide .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-146px) rotate(calc(-1 * var(--angle)))}
+.turns-stage .opponent-ring-side .duel-ring{width:min(100%,210px);transition:width .32s ease}
+.turns-stage .opponent-ring-side .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-83px) rotate(calc(-1 * var(--angle)))}
+.turns-stage.is-rival-turn{grid-template-columns:minmax(0,.72fr) minmax(290px,1.2fr) minmax(0,1.45fr)}
+.turns-stage.is-rival-turn #ownRingSide .duel-ring{width:min(100%,210px)}
+.turns-stage.is-rival-turn #ownRingSide .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-83px) rotate(calc(-1 * var(--angle)))}
+.turns-stage.is-rival-turn .opponent-ring-side .duel-ring{width:min(100%,365px)}
+.turns-stage.is-rival-turn .opponent-ring-side .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-146px) rotate(calc(-1 * var(--angle)))}
+.turns-stage.is-rival-turn #ownRingSide{filter:saturate(.64);opacity:.73}
+.turns-stage.is-rival-turn .opponent-ring-side{background:radial-gradient(circle at center,rgba(186,250,60,.18),transparent 65%),linear-gradient(150deg,#234126,#0b1810)}
+.turns-stage.is-handoff .question-side{background:linear-gradient(115deg,rgba(186,250,60,.055),transparent)}
+.turns-stage.is-handoff .turn-transition{animation:turn-pulse .65s ease both}
+@keyframes turn-pulse{from{opacity:.55;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media(max-width:1120px){
+  .match-stage.turns-stage,.turns-stage.is-rival-turn{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
+  .turns-stage .opponent-ring-side,.turns-stage.is-rival-turn .opponent-ring-side{grid-column:1/-1}
+  .turns-stage .opponent-ring-side .duel-ring,.turns-stage.is-rival-turn .opponent-ring-side .duel-ring{width:210px}
+  .turns-stage .opponent-ring-side .ring-letter,.turns-stage.is-rival-turn .opponent-ring-side .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-83px) rotate(calc(-1 * var(--angle)))}
+  .turns-stage #ownRingSide .duel-ring{width:min(100%,330px)}
+  .turns-stage #ownRingSide .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-132px) rotate(calc(-1 * var(--angle)))}
+}
+@media(max-width:780px){
+  .match-stage.turns-stage,.turns-stage.is-rival-turn{grid-template-columns:1fr}
+  .turns-stage #ownRingSide{order:1;min-height:400px}
+  .turns-stage .question-side{order:2;min-height:270px}
+  .turns-stage .opponent-ring-side{order:3;min-height:230px}
+  .match-top{display:block}
+  .match-room{margin-top:16px}
+}
+@media(max-width:600px){
+  .lobby-players-list{grid-template-columns:1fr}
+  .lobby-players{padding:14px}
+  .lobby-player{padding:13px 15px}
+  .match-room-code strong{font-size:34px}
+  .match-room-actions{flex-direction:column;align-items:stretch}
+  .match-room-actions button{width:100%}
+  .turns-stage #ownRingSide{min-height:365px}
+  .turns-stage #ownRingSide .duel-ring{width:min(100%,290px)}
+  .turns-stage #ownRingSide .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-116px) rotate(calc(-1 * var(--angle)))}
+  .turns-stage.is-rival-turn #ownRingSide{display:none!important}
+  .turns-stage.is-rival-turn .opponent-ring-side{display:flex!important;order:1;min-height:365px}
+  .turns-stage.is-rival-turn .opponent-ring-side .duel-ring{width:min(100%,290px)}
+  .turns-stage.is-rival-turn .opponent-ring-side .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-116px) rotate(calc(-1 * var(--angle)))}
+  .turns-stage .question-side{padding:22px 18px}
+  .answer-correction{padding:13px}
+  .answer-correction .answer-actions button{flex:1 1 100%}
+}
+@media(max-width:365px){
+  .turns-stage #ownRingSide .ring-letter,.turns-stage.is-rival-turn .opponent-ring-side .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-103px) rotate(calc(-1 * var(--angle)))}
+}
+@media(prefers-reduced-motion:reduce){
+  .match-stage.turns-stage,.turns-stage .duel-ring{transition:none}
+  .turns-stage.is-handoff .turn-transition{animation:none}
+}
