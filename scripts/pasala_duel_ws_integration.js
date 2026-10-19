@@ -233,7 +233,7 @@ async function main() {
     'Late spectators must never see growing elapsedSeconds after a final result');
   assert.equal(lateResult.winner, forfeit.winner);
 
-  // 3.7: a real alternating duel with two distinct roscos and independent clocks.
+  // 3.9: real alternating duel, instant exact/wrong grading, conditional spelling correction.
   const turnsA = await connect(port);
   const turnsB = await connect(port);
   const turnsViewer = await connect(port);
@@ -263,21 +263,27 @@ async function main() {
   await wait(second, 'error', p => p.message === 'Todavía no es tu turno.', beforeIllegal);
   await sleep(230);
   const beforeCorrect = first.messages.length;
-  send(first, 'answer', { letter: firstQ.letter, answer: 'RESPUESTA TEMPORAL DE PRUEBA' });
-  const provisional = (await wait(first, 'answerPending', p => p.letter === 'A', beforeCorrect)).payload;
-  assert.equal(provisional.editsRemaining, 1);
-  assert.ok(provisional.endsAt > Date.now() && provisional.endsAt <= Date.now() + 6100);
-  assert.equal(first.messages.slice(beforeCorrect).some(m => m.type === 'pasala:answerResult'), false,
-    'Initial answer must remain undecided during correction');
-  assert.equal(turnsViewer.messages.some(m => m.type === 'pasala:answerPending'), false,
-    'Spectator cannot see private draft');
-  const beforeRevision = first.messages.length;
-  send(first, 'reviseAnswer', { letter: 'A', answer: answerFor(firstQ) });
-  await wait(first, 'answerPending', p => p.editsRemaining === 0, beforeRevision);
-  const beforeDuplicate = first.messages.length;
-  send(first, 'reviseAnswer', { letter: 'A', answer: 'REINTENTO EXCESIVO' });
-  await wait(first, 'error', p => /Solo se permite una/.test(p.message), beforeDuplicate);
-  send(first, 'confirmAnswer', { letter: 'A' });
+  // Match the real bank dynamically: a single appended character is eligible only
+  // for normalized answers with at least six non-space characters.
+  const realAnswer = answerFor(firstQ);
+  const longEnough = String(realAnswer).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-zA-Z0-9]/g, '').length >= 6;
+  send(first, 'answer', { letter: firstQ.letter, answer: longEnough ? realAnswer + 'z' : realAnswer });
+  if (longEnough) {
+    const provisional = (await wait(first, 'answerPending', p => p.letter === 'A', beforeCorrect)).payload;
+    assert.equal(provisional.editsRemaining, 1);
+    assert.ok(provisional.endsAt > Date.now() && provisional.endsAt <= Date.now() + 6100);
+    assert.equal(first.messages.slice(beforeCorrect).some(m => m.type === 'pasala:answerResult'), false,
+      'Near-typo remains ungraded during correction');
+    assert.equal(turnsViewer.messages.some(m => m.type === 'pasala:answerPending'), false,
+      'Spectator cannot see private draft');
+    const beforeRevision = first.messages.length;
+    send(first, 'reviseAnswer', { letter: 'A', answer: realAnswer });
+    await wait(first, 'answerPending', p => p.editsRemaining === 0, beforeRevision);
+    const beforeDuplicate = first.messages.length;
+    send(first, 'reviseAnswer', { letter: 'A', answer: 'REINTENTO EXCESIVO' });
+    await wait(first, 'error', p => /Solo se permite una/.test(p.message), beforeDuplicate);
+    send(first, 'confirmAnswer', { letter: 'A' });
+  }
   await wait(first, 'answerResult', p => p.correct && p.letter === 'A', beforeCorrect);
   const follow = (await wait(first, 'question', p => p.letter === 'B', beforeCorrect)).payload;
   const stillActive = (await wait(turnsViewer, 'state', p => p.phase === 'playing' &&
@@ -303,8 +309,9 @@ async function main() {
   const beforeWrong = second.messages.length;
   const firstBeforeWrong = first.messages.length;
   send(second, 'answer', { letter: secondQ.letter, answer: 'RESPUESTA INVÁLIDA DE TEST 99999' });
-  await wait(second, 'answerPending', p => p.letter === 'A', beforeWrong);
-  await wait(second, 'answerResult', p => p.correct === false && p.letter === 'A', beforeWrong, 8500);
+  await wait(second, 'answerResult', p => p.correct === false && p.letter === 'A', beforeWrong, 2500);
+  assert.equal(second.messages.slice(beforeWrong).some(m => m.type === 'pasala:answerPending'), false,
+    'Clearly wrong response must not open a correction window');
   await wait(first, 'state', p => p.phase === 'playing' &&
     p.activeSlot === turnStart.activeSlot && p.turnReadyAt !== null &&
     p.players[1 - turnStart.activeSlot].incorrect === 1, firstBeforeWrong, 4500);
@@ -328,7 +335,7 @@ async function main() {
 
   console.log('Arena WebSocket integration OK: staging health, origin rejection, two clients, ' +
     'unready/ready, mirrored rosco, real socket reconnect, server-scored 26 answers, spectator privacy, ' +
-    'rematch, forfeit, distinct alternating roscos, individual clocks and immutable final statistics');
+    'rematch, forfeit, conditional correction, instant wrong grading, alternating roscos and immutable final statistics');
 }
 async function cleanup() {
   for (const client of connections) {
