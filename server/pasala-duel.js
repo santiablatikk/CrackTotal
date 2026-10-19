@@ -9,6 +9,7 @@ const crypto = require('crypto');
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const DURATIONS = Object.freeze({ facil: 360, normal: 300, dificil: 240 });
 const MAX_SPECTATORS = 80;
+const MAX_ROOMS = 250;
 
 function createPasalaDuelService(options = {}) {
   const bank = options.bank || require('../assets/data/pasalache_2025.json');
@@ -89,6 +90,7 @@ function createPasalaDuelService(options = {}) {
   }
   function create(ws, payload = {}, clientInfo) {
     if (peers.has(ws) || (clientInfo && clientInfo.roomId)) return error(ws, 'Ya estás en otra sala.');
+    if (rooms.size >= MAX_ROOMS) return error(ws, 'La arena está completa. Probá de nuevo más tarde.');
     let roomId = token(5).toUpperCase();
     while (rooms.has(roomId)) roomId = token(5).toUpperCase();
     const difficulty = DURATIONS[payload.difficulty] ? payload.difficulty : 'normal';
