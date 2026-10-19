@@ -387,6 +387,7 @@
     }
     document.getElementById('topicTitle').textContent=topic.title;
     document.getElementById('topicCategory').textContent=topic.competition+' · '+topic.season;
+    document.getElementById('startOverlayDetail').textContent=topic.title+' · Tenés 2 minutos desde que empezás. Cada acierto revela el puesto y los puntos.';
     document.getElementById('gameNumber').textContent='RETO DEL DÍA';
     const source=document.getElementById('topicSource');
     source.textContent=topic.source+' · Verificado '+topic.verified_at+' ↗';
