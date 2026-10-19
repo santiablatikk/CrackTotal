@@ -100,3 +100,7 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
 .rematch-hint{max-width:390px;color:var(--muted);font-size:13px;line-height:1.55;margin:0 0 13px}
 #resultsPanel .arena-button:disabled{opacity:.52;border-color:var(--line);color:var(--muted);background:rgba(255,255,255,.04)}
 #shareResult{border-color:rgba(236,255,212,.38);color:var(--cream)}
+
+/* 3.6 — Progreso público por jugador (sin mostrar letras ni soluciones). */
+.score-name{flex:1;min-width:0}.score-meter{margin-top:11px;width:min(100%,195px);height:5px;border-radius:5px;overflow:hidden;background:#3b5141}.score-meter-fill{height:100%;background:var(--lime);width:0;transition:width .25s ease-out}
+@media(prefers-reduced-motion:reduce){.score-meter-fill{transition:none}}
