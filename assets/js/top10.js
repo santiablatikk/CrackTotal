@@ -62,6 +62,7 @@
   }
 
   let topic = null; // { id, title, source, answers: ['messi (AR)', ...] }
+  let challengeDay = ''; // Día UTC fijado al elegir el reto: cruzar medianoche no reescribe el día siguiente.
   let foundSet = new Set();
   let attempts = 0;
   let startTime = Date.now();
@@ -98,13 +99,14 @@
       new Set(item.answers.map(normalize)).size === 10);
     if (!pool.length) throw new Error('No hay desafíos diarios con fuentes verificadas.');
     const todayKey = isTodayKey();
+    challengeDay = todayKey;
     const seed = new Date(todayKey).getTime()/86400000; // días
     const idx = Math.floor((seed % pool.length + pool.length) % pool.length);
     topic = pool[idx];
   }
 
   function loadState(){
-    const today = isTodayKey();
+    const today = challengeDay;
     const last = localStorage.getItem(LAST_DAY_KEY);
     const raw = localStorage.getItem(STATE_KEY);
     if (last === today && raw){
@@ -125,7 +127,7 @@
   }
 
   function saveState(){
-    localStorage.setItem(LAST_DAY_KEY, isTodayKey());
+    localStorage.setItem(LAST_DAY_KEY, challengeDay);
     localStorage.setItem(STATE_KEY, JSON.stringify({
       topicId: topic.id,
       found: Array.from(foundSet),
@@ -178,7 +180,7 @@
   }
 
   function recordHistory(){
-    const day = isTodayKey();
+    const day = challengeDay;
     const row = { day, topicId: topic.id, title: topic.title, score: foundSet.size,
       attempts, seconds: elapsedSec, won: wonToday };
     const rows = readHistory().filter(previous => previous.day !== day);
