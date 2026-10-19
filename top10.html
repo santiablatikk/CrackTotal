@@ -63,11 +63,6 @@
     <link rel="stylesheet" href="assets/css/home.css?v=20260804v">
     <link rel="stylesheet" href="assets/css/game-shell.css?v=20260803n">
     <link rel="stylesheet" href="assets/css/discover.css?v=20260804v">
-<style>
-      .topic-source-note { margin: 3px 0 12px; font-size: 12px; line-height: 1.6; color: #aebbb3; }
-      .topic-source-note a { color: #c5fa43; text-underline-offset: 3px; }
-      .topic-source-note a:focus-visible { outline: 2px solid #c5fa43; outline-offset: 3px; }
-    </style>
 </head>
 <body class="top10-body ct-ds">
   <div data-ct-navbar data-active="games"></div>
@@ -96,12 +91,12 @@
         <div class="overlay-content"><span class="top10-overlay-kicker">RETO FINALIZADO</span><h3 class="overlay-title">Ya jugaste hoy</h3><p class="overlay-message">Tu resultado se mantiene hasta el próximo desafío UTC.</p><div class="countdown-timer" id="overlayCountdown"></div><a class="primary-button" href="games.html">VER OTROS JUEGOS ↗</a></div>
       </div>
       <div class="top10-header-area">
-        <div class="top10-topic-block"><p class="top10-eyebrow">CLASIFICACIÓN OFICIAL · TEMPORADA FINALIZADA</p><h2 class="topic" id="topicTitle">Cargando el desafío…</h2><div class="top10-topic-info"><span id="topicCategory">Competiciones</span><a id="topicSource" href="#" rel="noopener noreferrer" target="_blank">Ver fuente oficial ↗</a></div></div>
+        <div class="top10-topic-block"><p class="top10-eyebrow">CLASIFICACIÓN OFICIAL · TEMPORADA FINALIZADA</p><h2 class="topic" id="topicTitle" tabindex="-1">Cargando el desafío…</h2><div class="top10-topic-info"><span id="topicCategory">Competiciones</span><a id="topicSource" href="#" rel="noopener noreferrer" target="_blank">Ver fuente oficial ↗</a></div></div>
         <div class="meta"><span id="timerChip" class="chip timer-chip" aria-label="Tiempo restante">02:00</span><span id="foundCount" class="chip">0/10</span><span id="gameNumber" class="chip">TOP 10</span></div>
       </div>
       <div class="top10-progressbar" aria-hidden="true"><div id="progressFill" style="width:0%"></div></div>
       <div class="top10-game-layout">
-        <div class="top10-ranking-panel"><div class="top10-ranking-caption"><span>POS.</span><span>EQUIPO</span><span>PTS</span></div><ol class="answers" id="answersList" aria-label="Diez posiciones oficiales"></ol></div>
+        <div class="top10-ranking-panel" role="region" aria-label="Clasificación de diez equipos"><div class="top10-ranking-caption"><span>POS.</span><span>EQUIPO</span><span>PTS</span></div><ol class="answers" id="answersList" aria-label="Diez posiciones oficiales"></ol></div>
         <div class="top10-play-panel">
           <div><p class="top10-play-kicker">TU RESPUESTA</p><h2>DECÍ UN<br><em>EQUIPO.</em></h2><p>Cada acierto revela su puesto y sus puntos oficiales.</p></div>
           <div class="top10-play-controls"><label for="surnameInput">¿QUÉ EQUIPO FALTA EN EL TOP 10?</label><div class="input-area"><input id="surnameInput" type="text" class="top10-input" placeholder="Escribí un club…" autocomplete="off" disabled><button id="submitBtn" class="primary-button" disabled>RESPONDER ↗</button></div><div class="messages" id="messageBox" role="status" aria-live="polite" aria-atomic="true"></div><div class="guesses" id="guessesContainer" aria-label="Últimos intentos"></div></div>
