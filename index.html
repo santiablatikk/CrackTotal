@@ -30,8 +30,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Crack Total">
     <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
-    <title>Crack Total - Juegos y trivias de fútbol</title>
-    <meta name="description" content="Jugá desafíos y trivias de fútbol, competí con otros cracks y descubrí historias y actualidad futbolera en Crack Total.">
+    <title>Crack Total - Juegos de fútbol y duelos 1v1</title>
+    <meta name="description" content="Jugá Pasala Che, Top 10, Wordle Futbolero y duelos 1v1. Juegos de fútbol para competir con amigos y resolver desafíos diarios.">
     <link rel="icon" href="/portada.ico?v=20260801" type="image/x-icon">
     <link rel="canonical" href="https://cracktotal.com/">
     <link rel="alternate" hreflang="es" href="https://cracktotal.com/">
@@ -82,7 +82,7 @@
     <link rel="stylesheet" href="assets/css/design-system/index.css?v=20260801">
     <link rel="stylesheet" href="assets/css/home.css?v=20260804v">
     <link rel="stylesheet" href="assets/css/crack-total-2.css?v=20261019b">
-    <link rel="stylesheet" href="assets/css/home-4.css?v=20261019a">
+    <link rel="stylesheet" href="assets/css/home-4.css?v=20261020a">
     <link rel="preload" href="/assets/images/portada.jpg" as="image" type="image/jpeg" fetchpriority="high">
 
     <script src="assets/js/adsense-early-blocker.js?v=202506072312"></script>
@@ -115,10 +115,10 @@
                 <li><a class="home-nav-link" href="ranking.html">Rankings</a></li>
                 <li><a class="home-nav-link" href="profile.html" data-profile-label>Perfil</a></li>
                 <li>
-                    <button class="home-nav-search" type="button" data-open-search>
+                    <a class="home-nav-search" href="games.html#juegos">
                         <i class="fas fa-search" aria-hidden="true"></i>
                         Buscar
-                    </button>
+                    </a>
                 </li>
             </ul>
 
@@ -134,73 +134,92 @@
 
     <main id="main-content">
         <section class="ct4-hero" aria-labelledby="hero-title">
-  <div class="ct4-hero-image" aria-hidden="true"><img src="assets/images/portada.jpg" alt="" width="1024" height="682" loading="eager" decoding="async" fetchpriority="high"></div>
+  <div class="ct4-hero-media" aria-hidden="true">
+    <img src="assets/images/portada.jpg" alt="" width="1024" height="682" loading="eager" decoding="async" fetchpriority="high">
+    <span class="ct4-hero-media-slice"></span>
+  </div>
+  <div class="ct4-hero-stencil" aria-hidden="true">CRACK<br>TOTAL</div>
   <div class="ct4-hero-inner home-shell">
     <div class="ct4-hero-copy">
-      <p class="ct4-eyebrow"><span class="ct4-live-dot" aria-hidden="true"></span> JUEGOS DE FÚTBOL · CRACK TOTAL</p>
-      <h1 id="hero-title">EL FÚTBOL<br>SE JUEGA <em>ACÁ.</em></h1>
-      <p class="ct4-hero-lead">Poné a prueba lo que sabés. Jugá solo, resolvé el desafío del día o enfrentá a un amigo en un rosco online.</p>
-      <div class="ct4-hero-actions">
-        <a class="ct4-button ct4-button--primary" href="#juegos">ELEGIR UN JUEGO <span aria-hidden="true">↗</span></a>
-        <a class="ct4-button ct4-button--outline" href="pasala-1v1.html">DESAFIAR A UN AMIGO <span aria-hidden="true">↗</span></a>
-      </div>
-      <p class="ct4-hero-caption">5 JUEGOS · ROSCO ONLINE · DESAFÍOS DIARIOS</p>
+      <div class="ct4-hero-kicker"><span class="ct4-hero-kicker-bar"></span> TU CANCHA. TUS REGLAS. <span>EST. 2026</span></div>
+      <h1 id="hero-title"><span class="ct4-hero-title-line">EL FÚTBOL</span><span class="ct4-hero-title-line ct4-hero-title-second">SE <em>JUEGA</em></span><span class="ct4-hero-title-line ct4-hero-title-last">ACÁ<span class="ct4-hero-period">.</span></span></h1>
+      <div class="ct4-hero-intro"><p>¿Quién sabe más de fútbol? Ponete a prueba, resolvé el desafío del día o enfrentá a tus amigos en vivo.</p>
+      <div class="ct4-hero-actions"><a class="ct4-button ct4-button--primary" href="#juegos">JUGAR AHORA <span aria-hidden="true">↗</span></a><a class="ct4-button ct4-button--ghost" href="pasala-1v1.html">DESAFIAR A UN AMIGO <span aria-hidden="true">↗</span></a></div></div>
     </div>
-    <div class="ct4-hero-deco" aria-hidden="true"><span>CT/04</span><strong>JUGÁ.<br>COMPETÍ.<br>REPETÍ.</strong><i>↗</i></div>
+    <div class="ct4-hero-photo-index" aria-hidden="true"><strong>01—05</strong><span>JUEGOS DE FÚTBOL<br>PARA COMPETIR</span></div>
   </div>
-  <div class="ct4-hero-bottom" aria-hidden="true"><span>01 / ENTRÁ A LA CANCHA</span><span>SCROLL PARA DESCUBRIR ↓</span></div>
+  <div class="ct4-hero-rail" aria-label="Explorá las modalidades"><span>CRACK TOTAL / PLATAFORMA FUTBOLERA</span><a href="#desafios-diarios">DESAFÍO DIARIO <span aria-hidden="true">↓</span></a><a href="pasala-1v1.html">ARENA 1V1 <span aria-hidden="true">↗</span></a></div>
 </section>
 
         <section class="ct4-daily home-shell" id="desafios-diarios" aria-labelledby="ct35-daily-title">
-  <div class="ct4-section-head"><div><p class="ct4-kicker">CADA DÍA, UN NUEVO RETO</p><h2 id="ct35-daily-title">HOY SE <em>JUEGA.</em></h2></div><p>Dos desafíos diarios para jugar cuando quieras.</p></div>
+  <div class="ct4-section-head"><div><p class="ct4-kicker">03 / FECHA DE PARTIDO</p><h2 id="ct35-daily-title">VOLVÉ <em>MAÑANA.</em></h2></div><p>Dos desafíos distintos cada día. El de hoy todavía te está esperando.</p></div>
   <div class="ct4-daily-grid">
-    <a class="ct4-daily-main" href="top10.html" aria-describedby="homeDailyTop10Status">
-      <span class="ct4-daily-top">TOP 10 / <span id="homeDailyDate">DESAFÍO DEL DÍA</span></span>
-      <div><span class="ct4-daily-no" aria-hidden="true">10</span><h3 id="homeDailyTop10Title" aria-live="polite">EL RETO DE HOY.</h3><p id="homeDailyTop10Context">Encontrá las diez respuestas del día.</p></div>
-      <span class="ct4-daily-bottom"><span id="homeDailyTop10Status">Cargando desafío…</span><strong>JUGAR TOP 10 ↗</strong></span>
-    </a>
-    <a class="ct4-daily-wordle" href="wordle-futbol.html">
-      <span class="ct4-daily-top">WORDLE FUTBOLERO / DIARIO</span>
-      <div class="ct4-daily-tiles" aria-hidden="true"><span>W</span><span>O</span><span>R</span><span>D</span><span>L</span><span>E</span></div>
-      <div><h3>SEIS INTENTOS.<br>UN APELLIDO.</h3><p id="homeDailyWordleStatus">Cargando estado…</p></div>
-      <strong class="ct4-daily-link">JUGAR WORDLE ↗</strong>
-    </a>
+   <a class="ct4-daily-main" href="top10.html" aria-describedby="homeDailyTop10Status">
+     <div class="ct4-daily-top"><span>TOP 10 · DESAFÍO OFICIAL</span><span id="homeDailyDate">DESAFÍO DEL DÍA</span></div>
+     <div class="ct4-daily-poster"><span class="ct4-daily-poster-number" aria-hidden="true">10</span><div><span class="ct4-daily-small">ENCONTRÁ LAS DIEZ RESPUESTAS</span><h3 id="homeDailyTop10Title" aria-live="polite">EL RETO DE HOY.</h3><p id="homeDailyTop10Context">Un nuevo ranking para resolver.</p></div></div>
+     <div class="ct4-daily-bottom"><span id="homeDailyTop10Status">Preparando desafío…</span><strong>ENTRAR AL TOP 10 <span aria-hidden="true">↗</span></strong></div>
+   </a>
+   <a class="ct4-daily-wordle" href="wordle-futbol.html">
+      <span class="ct4-daily-top"><span>WORDLE FUTBOLERO</span><span>DIARIO ↗</span></span>
+      <div class="ct4-wordle-daily-board" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div><h3>UNA PALABRA.<br><em>SEIS INTENTOS.</em></h3><p id="homeDailyWordleStatus">Cargando estado…</p></div>
+      <strong class="ct4-daily-link">JUGAR WORDLE <span aria-hidden="true">↗</span></strong>
+   </a>
   </div>
 </section>
 
         <section class="ct4-arena home-shell" aria-labelledby="ct4-arena-title">
-  <div class="ct4-arena-content">
-    <p class="ct4-kicker">EL JUEGO ESTRELLA / ONLINE 1V1</p>
-    <h2 id="ct4-arena-title">DOS ROSCOS.<br><em>UN GANADOR.</em></h2>
-    <p>Creá una sala, compartí el código y jugá desde cualquier dispositivo. Elegí entre roscos por turnos o el mismo rosco en simultáneo.</p>
-    <div class="ct4-mode-list" aria-label="Modalidades disponibles">
-      <span><b>01</b> POR TURNOS</span><span><b>02</b> ROSCO ESPEJO</span>
-    </div>
-    <a class="ct4-button ct4-button--primary" href="pasala-1v1.html">CREAR UN DUELO <span aria-hidden="true">↗</span></a>
-  </div>
-  <div class="ct4-arena-visual" aria-hidden="true">
-    <div class="ct4-arena-vs">VS</div>
-    <div class="ct4-ring ct4-ring--one"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span></div>
-    <div class="ct4-ring ct4-ring--two"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span></div>
-    <div class="ct4-arena-score">JUGADOR 1 <strong>00 : 00</strong> JUGADOR 2</div>
-  </div>
+ <div class="ct4-arena-topline"><span>01 / LA ARENA</span><span>CRACK TOTAL · MULTIJUGADOR</span></div>
+ <div class="ct4-arena-layout">
+   <div class="ct4-arena-content">
+      <p class="ct4-kicker">EL DUELO QUE NO TERMINA EN LOS 90'</p>
+      <h2 id="ct4-arena-title">LA ÚLTIMA<br><em>PALABRA.</em></h2>
+      <p>Dos jugadores. Dos roscos. Un rival que no te da respiro. Creá una sala, compartí el enlace y jugá online.</p>
+      <div class="ct4-arena-modes"><span><b>01</b> ROSCO POR TURNOS</span><span><b>02</b> ROSCO ESPEJO</span></div>
+      <a class="ct4-button ct4-button--primary" href="pasala-1v1.html">ENTRAR A LA ARENA <span aria-hidden="true">↗</span></a>
+   </div>
+   <div class="ct4-arena-visual" aria-label="Ilustración de dos roscos completos de 26 letras, uno por jugador">
+      <span class="ct4-stage-grid" aria-hidden="true"></span>
+      <div class="ct4-arena-faceoff" aria-hidden="true"><div class="ct4-display-ring ct4-display-ring--left"><div class="ct4-display-letter-track"><span style="--x:50.00%;--y:7.00%" aria-hidden="true">A</span><span style="--x:60.29%;--y:8.25%" aria-hidden="true">B</span><span style="--x:69.98%;--y:11.93%" aria-hidden="true">C</span><span style="--x:78.51%;--y:17.81%" aria-hidden="true">D</span><span style="--x:85.39%;--y:25.57%" aria-hidden="true">E</span><span style="--x:90.21%;--y:34.75%" aria-hidden="true">F</span><span style="--x:92.69%;--y:44.82%" aria-hidden="true">G</span><span style="--x:92.69%;--y:55.18%" aria-hidden="true">H</span><span style="--x:90.21%;--y:65.25%" aria-hidden="true">I</span><span style="--x:85.39%;--y:74.43%" aria-hidden="true">J</span><span style="--x:78.51%;--y:82.19%" aria-hidden="true">K</span><span style="--x:69.98%;--y:88.07%" aria-hidden="true">L</span><span style="--x:60.29%;--y:91.75%" aria-hidden="true">M</span><span style="--x:50.00%;--y:93.00%" aria-hidden="true">N</span><span style="--x:39.71%;--y:91.75%" aria-hidden="true">O</span><span style="--x:30.02%;--y:88.07%" aria-hidden="true">P</span><span style="--x:21.49%;--y:82.19%" aria-hidden="true">Q</span><span style="--x:14.61%;--y:74.43%" aria-hidden="true">R</span><span style="--x:9.79%;--y:65.25%" aria-hidden="true">S</span><span style="--x:7.31%;--y:55.18%" aria-hidden="true">T</span><span style="--x:7.31%;--y:44.82%" aria-hidden="true">U</span><span style="--x:9.79%;--y:34.75%" aria-hidden="true">V</span><span style="--x:14.61%;--y:25.57%" aria-hidden="true">W</span><span style="--x:21.49%;--y:17.81%" aria-hidden="true">X</span><span style="--x:30.02%;--y:11.93%" aria-hidden="true">Y</span><span style="--x:39.71%;--y:8.25%" aria-hidden="true">Z</span><b>01</b></div></div><span class="ct4-arena-vs">VS</span><div class="ct4-display-ring ct4-display-ring--right"><div class="ct4-display-letter-track"><span style="--x:50.00%;--y:7.00%" aria-hidden="true">A</span><span style="--x:60.29%;--y:8.25%" aria-hidden="true">B</span><span style="--x:69.98%;--y:11.93%" aria-hidden="true">C</span><span style="--x:78.51%;--y:17.81%" aria-hidden="true">D</span><span style="--x:85.39%;--y:25.57%" aria-hidden="true">E</span><span style="--x:90.21%;--y:34.75%" aria-hidden="true">F</span><span style="--x:92.69%;--y:44.82%" aria-hidden="true">G</span><span style="--x:92.69%;--y:55.18%" aria-hidden="true">H</span><span style="--x:90.21%;--y:65.25%" aria-hidden="true">I</span><span style="--x:85.39%;--y:74.43%" aria-hidden="true">J</span><span style="--x:78.51%;--y:82.19%" aria-hidden="true">K</span><span style="--x:69.98%;--y:88.07%" aria-hidden="true">L</span><span style="--x:60.29%;--y:91.75%" aria-hidden="true">M</span><span style="--x:50.00%;--y:93.00%" aria-hidden="true">N</span><span style="--x:39.71%;--y:91.75%" aria-hidden="true">O</span><span style="--x:30.02%;--y:88.07%" aria-hidden="true">P</span><span style="--x:21.49%;--y:82.19%" aria-hidden="true">Q</span><span style="--x:14.61%;--y:74.43%" aria-hidden="true">R</span><span style="--x:9.79%;--y:65.25%" aria-hidden="true">S</span><span style="--x:7.31%;--y:55.18%" aria-hidden="true">T</span><span style="--x:7.31%;--y:44.82%" aria-hidden="true">U</span><span style="--x:9.79%;--y:34.75%" aria-hidden="true">V</span><span style="--x:14.61%;--y:25.57%" aria-hidden="true">W</span><span style="--x:21.49%;--y:17.81%" aria-hidden="true">X</span><span style="--x:30.02%;--y:11.93%" aria-hidden="true">Y</span><span style="--x:39.71%;--y:8.25%" aria-hidden="true">Z</span><b>02</b></div></div></div>
+      <div class="ct4-stage-caption"><span>26 LETRAS POR ROSCO</span><span>VISTA ILUSTRATIVA · NO ES UNA PARTIDA EN VIVO</span></div>
+   </div>
+ </div>
+ <div class="ct4-arena-foot"><span>RESPONDÉ · PASÁ · CAMBIÁ EL TURNO</span><a href="pasala-1v1.html">ELEGÍ TU MODALIDAD ↗</a></div>
 </section>
-
-        
 
         <section class="ct4-catalog home-shell" id="juegos" aria-labelledby="catalog-title">
-  <div class="ct4-section-head"><div><p class="ct4-kicker">ELEGÍ TU CANCHA / 05 JUEGOS</p><h2 id="catalog-title">¿A QUÉ <em>JUGAMOS?</em></h2></div><p>Un rosco, un ranking o un duelo de conocimientos. Cada juego tiene sus reglas.</p></div>
+  <div class="ct4-section-head ct4-catalog-head"><div><p class="ct4-kicker">02 / EL VESTUARIO</p><h2 id="catalog-title">ELEGÍ <em>TU JUEGO.</em></h2></div><p>Cinco maneras de demostrar cuánto sabés. Entrá en la que más te guste.</p></div>
   <div class="ct4-game-grid">
-    <a class="ct4-game ct4-game--rosco" href="pasalache.html"><span class="ct4-game-top">01 / INDIVIDUAL <span aria-hidden="true">↗</span></span><div class="ct4-game-art ct4-game-art--ring" aria-hidden="true"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span></div><div class="ct4-game-info"><h3>PASALA CHE</h3><p>26 letras, preguntas de fútbol y el reloj corriendo.</p><strong>JUGAR ROSCO ↗</strong></div></a>
-    <a class="ct4-game ct4-game--top" href="top10.html"><span class="ct4-game-top">02 / DIARIO <span aria-hidden="true">↗</span></span><div class="ct4-game-art ct4-game-art--ranking" aria-hidden="true"><span>01</span><span>02</span><span>03</span></div><div class="ct4-game-info"><h3>TOP 10</h3><p>Diez nombres. Un desafío distinto cada día.</p><strong>IR AL TOP 10 ↗</strong></div></a>
-    <a class="ct4-game ct4-game--wordle" href="wordle-futbol.html"><span class="ct4-game-top">03 / DIARIO <span aria-hidden="true">↗</span></span><div class="ct4-game-art ct4-game-art--tiles" aria-hidden="true"><span>F</span><span>U</span><span>T</span><span>B</span><span>O</span><span>L</span></div><div class="ct4-game-info"><h3>WORDLE FUTBOLERO</h3><p>Encontrá el apellido oculto en seis intentos.</p><strong>ADIVINAR ↗</strong></div></a>
-    <a class="ct4-game ct4-game--qsm" href="quiensabemas.html"><span class="ct4-game-top">04 / DUELO <span aria-hidden="true">↗</span></span><div class="ct4-game-art ct4-game-art--vs" aria-hidden="true">1 <span>VS</span> 1</div><div class="ct4-game-info"><h3>QUIÉN SABE MÁS</h3><p>Diez preguntas para medirte contra otro futbolero.</p><strong>IR AL DUELO ↗</strong></div></a>
-    <a class="ct4-game ct4-game--mentiroso" href="mentiroso.html"><span class="ct4-game-top">05 / ESTRATEGIA <span aria-hidden="true">↗</span></span><div class="ct4-game-art ct4-game-art--bluff" aria-hidden="true">¿TE<br>ANIMÁS?</div><div class="ct4-game-info"><h3>MENTIROSO</h3><p>Apostá, desafiá y descubrí quién está mintiendo.</p><strong>ACEPTAR RETO ↗</strong></div></a>
+   <a class="ct4-game ct4-game--rosco" href="pasalache.html">
+    <div class="ct4-game-photo" aria-hidden="true"><img src="assets/images/blog/worldcup.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async"></div>
+    <span class="ct4-game-top">01 <span>EL CLÁSICO / INDIVIDUAL</span><i aria-hidden="true">↗</i></span>
+    <div class="ct4-rosco-visual" aria-hidden="true"><span>A</span><span>B</span><span>C</span><span>D</span><span>E</span><span>F</span><span>G</span><span>H</span></div>
+    <div class="ct4-game-info"><span class="ct4-game-label">CONTRARRELOJ · 26 LETRAS</span><h3>PASALA<br><em>CHE.</em></h3><p>Un rosco completo. Vos contra el reloj.</p><strong>JUGAR ROSCO <span aria-hidden="true">↗</span></strong></div>
+   </a>
+   <a class="ct4-game ct4-game--top" href="top10.html">
+    <span class="ct4-game-top">02 <span>DESAFÍO DIARIO</span><i aria-hidden="true">↗</i></span>
+    <div class="ct4-top-graphic" aria-hidden="true"><span>01</span><span>02</span><span>03</span><small>04—10</small></div>
+    <div class="ct4-game-info"><span class="ct4-game-label">UN RANKING · DIEZ RESPUESTAS</span><h3>TOP <em>10.</em></h3><p>Encontrá los diez nombres antes de que termine el tiempo.</p><strong>IR AL TOP 10 <span aria-hidden="true">↗</span></strong></div>
+   </a>
+   <a class="ct4-game ct4-game--wordle" href="wordle-futbol.html">
+    <span class="ct4-game-top">03 <span>PUZZLE DEL DÍA</span><i aria-hidden="true">↗</i></span>
+    <div class="ct4-wordle-board" aria-hidden="true"><span></span><span class="ct4-filled"></span><span></span><span class="ct4-yellow"></span><span></span><span></span><span></span><span></span><span class="ct4-filled"></span><span></span><span></span><span class="ct4-yellow"></span></div>
+    <div class="ct4-game-info"><span class="ct4-game-label">SEIS INTENTOS · UN APELLIDO</span><h3>WORDLE<br><em>FUTBOLERO.</em></h3><p>Una palabra. El desafío de todos los días.</p><strong>DESCUBRIR <span aria-hidden="true">↗</span></strong></div>
+   </a>
+   <a class="ct4-game ct4-game--qsm" href="quiensabemas.html">
+    <div class="ct4-game-photo" aria-hidden="true"><img src="assets/images/blog/championss.jpg" alt="" width="1024" height="1024" loading="lazy" decoding="async"></div>
+    <span class="ct4-game-top">04 <span>TRIVIA / 1 CONTRA 1</span><i aria-hidden="true">↗</i></span>
+    <div class="ct4-qsm-graphic" aria-hidden="true"><strong>VS</strong><span>QUIÉN SABE MÁS</span></div>
+    <div class="ct4-game-info"><h3>QUIÉN<br><em>SABE MÁS.</em></h3><p>Diez preguntas. Un duelo para medir lo que sabés.</p><strong>IR AL DUELO <span aria-hidden="true">↗</span></strong></div>
+   </a>
+   <a class="ct4-game ct4-game--mentiroso" href="mentiroso.html">
+    <span class="ct4-game-top">05 <span>RIESGO / ESTRATEGIA</span><i aria-hidden="true">↗</i></span>
+    <div class="ct4-bluff-graphic" aria-hidden="true"><span>¿ME<br>CREÉS?</span><b>!</b></div>
+    <div class="ct4-game-info"><h3>MENTIROSO<span>.</span></h3><p>Apostá cuánto sabés. Desafiá a tu rival.</p><strong>ACEPTAR EL RETO <span aria-hidden="true">↗</span></strong></div>
+   </a>
   </div>
-  <a class="ct4-catalog-more" href="games.html">EXPLORAR EL CATÁLOGO COMPLETO <span aria-hidden="true">↗</span></a>
+  <a class="ct4-catalog-more" href="games.html"><span>VER TODOS LOS JUEGOS Y MODALIDADES</span><span aria-hidden="true">↗</span></a>
 </section>
-
-        
 
         <section class="ct2-next home-shell" aria-labelledby="ct2-next-title">
             <div class="ct2-next-head">
@@ -231,17 +250,17 @@
         </main>
 
     <footer class="home-footer ct4-footer">
-<div class="home-shell">
-  <div class="ct4-footer-main">
-    <div class="ct4-footer-brand"><a class="home-brand" href="/"><span class="home-brand-mark" aria-hidden="true"><i class="fas fa-futbol"></i></span><span>Crack Total</span></a><p>Juegos de fútbol para jugar solo o competir con amigos.</p></div>
-    <div class="ct4-footer-links"><strong>EXPLORÁ</strong><a href="games.html">Todos los juegos</a><a href="pasala-1v1.html">Arena 1v1</a><a href="ranking.html">Rankings</a><a href="logros.html">Logros</a><a href="profile.html">Perfil</a></div>
-    <div class="ct4-footer-links"><strong>CRACK TOTAL</strong><a href="blog.html">Artículos</a><a href="about.html">Acerca de</a><a href="contact.html">Contacto</a><button class="home-share" type="button" onclick="shareSite()">Compartir</button></div>
-    <div class="ct4-footer-links"><strong>LEGAL</strong><a href="privacy.html">Privacidad</a><a href="cookies.html">Cookies</a><a href="terminos.html">Términos</a><a href="ads-policy.html">Publicidad</a><a href="disclaimer.html">Aviso legal</a></div>
-  </div>
-  <div class="home-footer-bottom"><span>© <span data-current-year>2026</span> Crack Total. Todos los derechos reservados.</span><span>HECHO PARA JUGAR FÚTBOL CON LA CABEZA.</span></div>
-</div>
+ <div class="home-shell">
+   <div class="ct4-footer-billboard"><span>EL PARTIDO SIGUE.</span><strong>LA PRÓXIMA<br><em>LA GANÁS VOS.</em></strong><a class="ct4-footer-cta" href="games.html">SEGUÍ JUGANDO <span aria-hidden="true">↗</span></a></div>
+   <div class="ct4-footer-main">
+     <div class="ct4-footer-brand"><a class="home-brand" href="/" aria-label="Crack Total, inicio"><span class="home-brand-mark" aria-hidden="true"><i class="fas fa-futbol"></i></span><span>Crack Total</span></a><p>Fútbol para jugarlo con la cabeza.</p></div>
+     <nav class="ct4-footer-links" aria-label="Juegos y cuenta"><strong>EXPLORÁ</strong><a href="games.html">Todos los juegos</a><a href="pasala-1v1.html">Arena 1v1</a><a href="ranking.html">Rankings</a><a href="logros.html">Logros</a><a href="profile.html">Perfil</a></nav>
+     <nav class="ct4-footer-links" aria-label="Acerca de Crack Total"><strong>CRACK TOTAL</strong><a href="blog.html">Artículos</a><a href="about.html">Acerca de</a><a href="contact.html">Contacto</a><button class="home-share" type="button" onclick="shareSite()">Compartir</button></nav>
+     <nav class="ct4-footer-links" aria-label="Información legal"><strong>LEGAL</strong><a href="privacy.html">Privacidad</a><a href="cookies.html">Cookies</a><a href="terminos.html">Términos</a><a href="ads-policy.html">Publicidad</a><a href="disclaimer.html">Aviso legal</a></nav>
+   </div>
+   <div class="home-footer-bottom"><span>© <span data-current-year>2026</span> CRACK TOTAL</span><span>HECHO PARA LOS QUE VIVEN EL FÚTBOL.</span></div>
+ </div>
 </footer>
-
     
 
         <script src="assets/js/config/app-config.js?v=20260801d"></script>
