@@ -110,6 +110,14 @@
       {
         "pregunta": "¿En qué ciudad húngara se disputó la final de la Champions League 2025/26?",
         "respuesta": "Budapest"
+      },
+      {
+        "pregunta": "¿Qué club cordobés ganó el Torneo Apertura de Primera División de Argentina 2026?",
+        "respuesta": "Belgrano",
+        "respuestasAlternativas": [
+          "Belgrano de Córdoba",
+          "Club Atlético Belgrano"
+        ]
       }
     ]
   },
@@ -166,6 +174,13 @@
         "respuestasAlternativas": [
           "Pau Cubarsí"
         ]
+      },
+      {
+        "pregunta": "¿Qué club inglés ganó la UEFA Conference League 2025/26 ante Rayo Vallecano?",
+        "respuesta": "Crystal Palace",
+        "respuestasAlternativas": [
+          "Crystal Palace FC"
+        ]
       }
     ]
   },
@@ -215,6 +230,13 @@
       {
         "pregunta": "CONTIENE D: ¿Apellido del mediocampista uruguayo estrella del Real Madrid, Federico …?",
         "respuesta": "Valverde"
+      },
+      {
+        "pregunta": "¿Qué club colombiano perdió por penales la final de la Libertadores Femenina CONMEBOL 2025?",
+        "respuesta": "Deportivo Cali",
+        "respuestasAlternativas": [
+          "Asociación Deportivo Cali"
+        ]
       }
     ]
   },
@@ -453,6 +475,21 @@
       {
         "pregunta": "¿Nombre y apellido del delantero español leyenda del Celta de Vigo?",
         "respuesta": "Iago Aspas"
+      },
+      {
+        "pregunta": "¿Qué club mendocino se consagró campeón de la Copa Argentina 2025?",
+        "respuesta": "Independiente Rivadavia",
+        "respuestasAlternativas": [
+          "Independiente Rivadavia de Mendoza",
+          "Club Sportivo Independiente Rivadavia"
+        ]
+      },
+      {
+        "pregunta": "¿Qué selección ganó la Eurocopa femenina de la UEFA 2025 tras vencer por penales a España?",
+        "respuesta": "Inglaterra",
+        "respuestasAlternativas": [
+          "England"
+        ]
       }
     ]
   },
@@ -637,6 +674,13 @@
         "respuestasAlternativas": [
           "Kylian Mbappé"
         ]
+      },
+      {
+        "pregunta": "¿Qué selección derrotó a Argentina en la final del Mundial Sub-20 de la FIFA 2025 disputado en Chile?",
+        "respuesta": "Marruecos",
+        "respuestasAlternativas": [
+          "Morocco"
+        ]
       }
     ]
   },
@@ -719,6 +763,10 @@
       {
         "pregunta": "¿Apellido del mediocampista alemán campeón del mundo 2014, Mesut …?",
         "respuesta": "Özil"
+      },
+      {
+        "pregunta": "¿En qué ciudad se jugó la final de la UEFA Women's Champions League 2025/26?",
+        "respuesta": "Oslo"
       }
     ]
   },
@@ -802,6 +850,13 @@
         "respuesta": "Paris Saint-Germain",
         "respuestasAlternativas": [
           "PSG"
+        ]
+      },
+      {
+        "pregunta": "¿Apellido de Ewa, máxima goleadora de la Women's Champions League 2025/26 con 11 tantos?",
+        "respuesta": "Pajor",
+        "respuestasAlternativas": [
+          "Ewa Pajor"
         ]
       }
     ]
@@ -976,6 +1031,13 @@
         "respuestasAlternativas": [
           "Unai Simón"
         ]
+      },
+      {
+        "pregunta": "¿Apellido de Ismaïla, máximo goleador de la UEFA Conference League 2025/26 con nueve goles?",
+        "respuesta": "Sarr",
+        "respuestasAlternativas": [
+          "Ismaïla Sarr"
+        ]
       }
     ]
   },
@@ -1072,6 +1134,14 @@
         "respuestasAlternativas": [
           "Unai Simón"
         ]
+      },
+      {
+        "pregunta": "¿Nombre del estadio de Oslo donde se disputó la final femenina de Champions UEFA 2025/26?",
+        "respuesta": "Ullevaal",
+        "respuestasAlternativas": [
+          "Ullevaal Stadion",
+          "Estadio Ullevaal"
+        ]
       }
     ]
   },
@@ -1142,6 +1212,13 @@
       {
         "pregunta": "¿Apellido del lateral derecho inglés leyenda del Manchester City, Kyle …?",
         "respuesta": "Walker"
+      },
+      {
+        "pregunta": "¿Apellido de Adam, elegido jugador de la final de la UEFA Conference League 2025/26?",
+        "respuesta": "Wharton",
+        "respuestasAlternativas": [
+          "Adam Wharton"
+        ]
       }
     ]
   },
@@ -1240,6 +1317,13 @@
       {
         "pregunta": "¿Apellido del delantero argentino ex Vélez y Boca, Mauro …?",
         "respuesta": "Zárate"
+      },
+      {
+        "pregunta": "¿Apellido de Yassir, autor de dos goles para Marruecos en la final del Mundial Sub-20 FIFA 2025?",
+        "respuesta": "Zabiri",
+        "respuestasAlternativas": [
+          "Yassir Zabiri"
+        ]
       }
     ]
   }
