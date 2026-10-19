@@ -90,7 +90,7 @@ for (const fact of qsmFacts.questions) {
   assert.ok(fact.sourceUrls.every(url => {
     const parsed = new URL(url);
     return parsed.protocol === 'https:' &&
-      ['www.fifa.com', 'www.conmebol.com', 'es.uefa.com', 'ballondor.com', 'www.santosfc.com'].includes(parsed.hostname);
+      ['www.fifa.com', 'www.conmebol.com', 'es.uefa.com', 'ballondor.com', 'www.santosfc.com.br'].includes(parsed.hostname);
   }), 'QSM provenance must link to official sources');
 }
 
