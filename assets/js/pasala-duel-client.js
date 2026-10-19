@@ -307,7 +307,9 @@
     if (state.retryTimer) { clearTimeout(state.retryTimer); state.retryTimer = null; }
     state.spectator = false;
     clearSession(); leaveUI();
-    history.replaceState({}, '', 'pasala-1v1.html');
+    const lobbyUrl = new URL('pasala-1v1.html', location.href);
+    if (urlOverride) lobbyUrl.searchParams.set('server', urlOverride);
+    history.replaceState({}, '', lobbyUrl.pathname + lobbyUrl.search);
   }
   $('backToLobby').addEventListener('click', exitRoom);
   $('leaveButton').addEventListener('click', exitRoom);
@@ -329,6 +331,27 @@
     const link = new URL('pasala-1v1.html',location.href); link.search=''; link.searchParams.set('overlay',state.roomId || ''); if (urlOverride) link.searchParams.set('server',urlOverride);
     window.open(link.href, '_blank', 'noopener,noreferrer');
   });
+  const setupForm = $('stagingSetup');
+  if (setupForm) {
+    setupForm.hidden = !isStaticPreview || !!urlOverride || watchOnly;
+    setupForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const feedback = $('stagingSetupFeedback');
+      try {
+        const proposed = new URL($('stagingServerInput').value.trim());
+        const host = proposed.hostname.toLowerCase();
+        if (!['https:', 'wss:'].includes(proposed.protocol) || proposed.username || proposed.password ||
+            host === 'cracktotal.com' || host.endsWith('.cracktotal.com')) {
+          throw new Error('Usá un servidor de pruebas HTTPS independiente, nunca cracktotal.com.');
+        }
+        const newPage = new URL(location.href);
+        newPage.searchParams.set('server', 'wss://' + proposed.host);
+        location.assign(newPage.href);
+      } catch (error) {
+        feedback.textContent = error.message || 'Ingresá la URL HTTPS del servidor de pruebas.';
+      }
+    });
+  }
   $('reconnectButton').addEventListener('click', () => { if (state.retryTimer) clearTimeout(state.retryTimer); state.retryTimer=null; connect(); });
   setLobbyAvailability(false); setActionControls(false);
   if (safeCode(initialRoom) && !watchOnly) $('roomCode').value = initialRoom;
