@@ -18,6 +18,7 @@
 - Marcador con barra de progreso por jugador (letras resueltas / 26) sin revelar posiciones individuales; estados claros de `JUGANDO` y `ROSCO COMPLETO`.
 - Selección etiquetada como **tiempo**, ya que el banco 1v1 no tiene metadatos de dificultad por pregunta.
 - Estilos responsive de acciones finales y soporte `prefers-reduced-motion` para las nuevas transiciones.
+- El resultado final fija la hora de cierre en el servidor (`endedAt`): al reconectar o entrar a mirar tarde, los segundos transcurridos no siguen creciendo. El cliente muestra `FINAL` en lugar de un reloj residual.
 
 ### Quién Sabe Más — auditoría acotada
 - Se inspeccionaron **113 registros preexistentes** del archivo `assets/data/level_1.json`.
@@ -29,8 +30,8 @@
 - **No se afirma verificación factual exhaustiva** de los otros 108 registros de este nivel ni de los otros niveles. No se tocaron esos bancos.
 
 ## Pruebas y evidencia reales
-- Netlify, preview de la rama: `validate-deploy.js` y `npm test` con suites de duelo, contenido, interfaz y experiencia; verificar estado del último commit en el PR antes de afirmar que esta versión es la última publicada.
-- Render staging: build `npm ci && npm test` **correcto en commit `8c03856`**, incluyendo loopback WebSocket con dos clientes, mismo rosco, cancelar listo, 26 respuestas validadas por servidor, espectador rechazado al responder, reconexión, revancha y abandono.
+- Netlify, preview de la rama: `validate-deploy.js` y `npm test` con suites de duelo, contenido, interfaz y experiencia; estado **SUCCESS** del commit `ec06cef` confirmado en GitHub.
+- Render staging: build `npm ci && npm test` **correcto en commit `ec06cef`**, incluyendo integración WebSocket con dos clientes, mismo rosco, cancelar listo, 26 respuestas validadas por servidor, espectador rechazado al responder, reconexión, revancha y abandono. El test verifica que el tiempo final es **inmutable** para un espectador que entra después de 1,5 s; desplegado LIVE el 19-10-2026 a las 19:44 UTC.
 - Arranque de Render después del despliegue: `[NIVEL 1] Procesadas: 117, Válidas cargadas: 117`, sin las cuatro advertencias previas.
 - QA de navegador en staging + Netlify con **dos sesiones de jugador y una sesión espectadora**, sala privada creada mediante enlace; cancelación de Listo visible; countdown real; primera pregunta idéntica; respuesta correcta y pase; marcador espectador 1-0 y sin pregunta; abandono con resultado `forfeit`; revancha deshabilitada para rival ausente; resumen copiado sin respuestas.
 - Las pruebas automatizadas también comprueban la revancha y reconexión real por WebSocket, pero **esta iteración no repitió esos dos casos completos manualmente en la interfaz**.
