@@ -34,6 +34,10 @@ assert(html.includes('assets/js/home.js'), 'Daily progress and menu script prese
 assert(js.includes("readSaved('top10_state_v1')"), 'Daily storage logic preserved');
 assert(js.includes("readSaved('wordle_game_state_v1')"), 'Wordle daily storage logic preserved');
 assert(css.includes('prefers-reduced-motion'), 'Reduced motion preserved');
-assert(css.includes('@media(max-width:690px)'), 'Responsive mobile rules required');
+assert(css.includes('@media(max-width:500px)'), 'Responsive mobile rules required');
+assert(html.includes('VISTA ILUSTRATIVA'), 'Non-live Arena art must be marked illustrative');
+assert.equal((html.match(/--x:/g) || []).length, 52, 'Two accurate 26-letter roscos are expected');
+assert(!html.includes('00 : 00'), 'No fabricated live scores');
+assert(html.includes('href="games.html#juegos"'), 'Header search must lead to the real catalog');
 assert(!html.includes('mi-carrera.html'), 'No public Mi Carrera link');
 console.log('Crack Total 4.0 home smoke PASS — five-game discovery, daily IDs, navigation, accessible page scaffolding');
