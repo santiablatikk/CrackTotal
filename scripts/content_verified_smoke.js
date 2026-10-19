@@ -56,6 +56,44 @@ assert.equal(new Set(wordle.map(item => normalize(item.answer))).size, wordle.le
   'Wordle words must remain unique');
 assert.ok(wordle.every(item => item.answer && normalize(item.answer).length >= 3 &&
   normalize(item.answer).length <= 11), 'Wordle entries must fit responsive board');
+
+const qsmLevel1 = require('../assets/data/level_1.json').preguntas;
+const qsmFacts = require('../docs/football-facts-qsm-2026-10-19.json');
+assert.equal(qsmFacts.cutoff, verified.cutoff, 'QSM source registry dated with review cutoff');
+assert.equal(qsmLevel1.length, qsmFacts.reviewedQuestions + qsmFacts.newQuestions,
+  'QSM bank must preserve existing questions and include verified additions');
+assert.equal(qsmFacts.questions.filter(fact => fact.kind === 'new').length, qsmFacts.newQuestions);
+assert.equal(qsmFacts.questions.filter(fact => fact.kind === 'recovered').length, qsmFacts.recoveredQuestions);
+assert.equal(qsmFacts.questions.filter(fact => fact.kind === 'corrected').length, qsmFacts.correctedQuestions);
+const qsmSeen = new Set();
+for (const question of qsmLevel1) {
+  assert.ok(typeof question.pregunta === 'string' && question.pregunta.trim());
+  assert.ok(!qsmSeen.has(normalize(question.pregunta)), 'Duplicate QSM question: ' + question.pregunta);
+  qsmSeen.add(normalize(question.pregunta));
+  assert.ok(question.opciones && typeof question.opciones === 'object',
+    'QSM answer options missing: ' + question.pregunta);
+  const choices = ['A', 'B', 'C', 'D'];
+  assert.ok(choices.every(key => typeof question.opciones[key] === 'string' && question.opciones[key].trim()),
+    'QSM must have four text options: ' + question.pregunta);
+  assert.ok(choices.includes(question.respuesta_correcta), 'QSM answer key invalid: ' + question.pregunta);
+  assert.equal(new Set(choices.map(key => normalize(question.opciones[key]))).size, 4,
+    'QSM choices must be distinct: ' + question.pregunta);
+}
+for (const fact of qsmFacts.questions) {
+  const matches = qsmLevel1.filter(item => item.pregunta === fact.pregunta);
+  assert.equal(matches.length, 1, 'One source-backed QSM question: ' + fact.pregunta);
+  const question = matches[0];
+  assert.equal(question.respuesta_correcta, fact.respuesta_correcta);
+  assert.equal(question.opciones[fact.respuesta_correcta], fact.respuesta);
+  assert.equal(fact.verifiedAt, qsmFacts.cutoff);
+  assert.ok(fact.sourceUrls.length > 0);
+  assert.ok(fact.sourceUrls.every(url => {
+    const parsed = new URL(url);
+    return parsed.protocol === 'https:' &&
+      ['www.fifa.com', 'www.conmebol.com', 'es.uefa.com', 'ballondor.com', 'www.santosfc.com'].includes(parsed.hostname);
+  }), 'QSM provenance must link to official sources');
+}
+
 console.log('Verified content smoke OK: ' + all.length + ' Pasala prompts (' +
-  verified.questions.length + ' newly sourced), ' + official.length +
+  verified.questions.length + ' newly sourced), ' + qsmFacts.newQuestions + ' new QSM, ' + official.length +
   ' UEFA Top10s, ' + wordle.length + ' Wordle entries structurally checked');
