@@ -71,7 +71,7 @@
       <div class="wordle-controls" style="text-align:center; margin-top:6px;">
         <button class="save-button" id="openRulesBtn" style="padding:6px 12px;">¿Cómo jugar?</button>
       </div>
-      <div class="message" id="message"></div>
+      <div class="message" id="message" role="status" aria-live="polite" aria-atomic="true"></div>
     </header>
 
     <div class="wordle-card">
@@ -107,7 +107,7 @@
   <script src="assets/js/firebase-config.js"></script>
   <script src="assets/js/firebase-init.js"></script>
   <script src="assets/js/firebase-service.js"></script>
-  <script src="assets/js/wordle-futbol.js?v=20261019a" defer></script>
+  <script src="assets/js/wordle-futbol.js?v=20261019b" defer></script>
   
   <!-- Modal de resultado -->
   <div class="modal-overlay" id="wordleResultModal">
