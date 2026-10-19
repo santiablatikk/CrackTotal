@@ -7,8 +7,8 @@
   <meta name="description" content="Pasala Che 1v1: enfrentá a un amigo en el mismo rosco futbolero, con reloj, marcador en vivo y revancha.">
   <title>Pasala Che 1v1 | Crack Total</title>
   <link rel="icon" href="portada.ico" type="image/x-icon">
-  <link rel="stylesheet" href="assets/css/pasala-duel.css?v=6">
-  <script src="assets/js/pasala-duel-client.js?v=7" defer></script>
+  <link rel="stylesheet" href="assets/css/pasala-duel.css?v=7">
+  <script src="assets/js/pasala-duel-client.js?v=8" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Saltar al juego</a>
@@ -32,6 +32,18 @@
 
     <div class="arena-shell">
       <div class="server-banner" id="connectionNotice" role="status" aria-live="polite"><span class="signal-dot"></span><span id="connectionText">Conectando a la arena…</span><button id="reconnectButton" type="button" hidden>Reintentar</button></div>
+      <form id="stagingSetup" class="arena-staging-setup" hidden aria-labelledby="stagingSetupTitle">
+        <div class="staging-setup-copy">
+          <span class="section-marker"><span>TEST</span> / SERVIDOR INDEPENDIENTE</span>
+          <h2 id="stagingSetupTitle">PROBÁ EL <em>1V1 REAL.</em></h2>
+          <p>Esta vista previa necesita un servidor de pruebas. Cuando Render te dé su URL, pegala acá para conectar la arena y compartir invitaciones listas para jugar.</p>
+        </div>
+        <div class="staging-setup-controls">
+          <label for="stagingServerInput">URL DEL SERVIDOR DE STAGING</label>
+          <div class="staging-setup-actions"><input id="stagingServerInput" type="url" inputmode="url" autocomplete="url" placeholder="https://tu-servidor.onrender.com" required><button class="arena-button primary" type="submit">CONECTAR ↗</button></div>
+          <p id="stagingSetupFeedback" role="status" aria-live="polite">Solo pruebas. No conectes el servidor de producción.</p>
+        </div>
+      </form>
       <section class="lobby-area" id="lobby" aria-labelledby="lobbyTitle">
         <div class="section-marker"><span>01</span> / ARMÁ EL PARTIDO</div>
         <div class="lobby-heading"><h2 id="lobbyTitle">Elegí cómo <em>competir.</em></h2><p>Entrá desde tu celular o computadora. Para empezar, los dos jugadores deben estar listos.</p></div>
