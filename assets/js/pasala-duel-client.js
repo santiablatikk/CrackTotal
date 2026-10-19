@@ -97,6 +97,10 @@
       case 'spectating':
         state.roomId = payload.roomId; state.spectator = true; enterMatch(); break;
       case 'state':
+        if (payload.mode === 'turns' && payload.phase === 'playing' &&
+            payload.activeSlot !== payload.players.findIndex(p => p && p.id === state.selfId)) {
+          state.question = null;
+        }
         if (state.room?.phase === 'finished' && payload.phase === 'countdown') {
           state.result = null; state.question = null; state.statuses = {};
         }
@@ -112,7 +116,8 @@
         break;
       case 'answerResult':
         state.statuses[payload.letter] = payload.correct ? 'correct' : 'incorrect';
-        $('answerFeedback').textContent = payload.correct ? '¡CORRECTO! +1' : 'INCORRECTO. SEGUÍ JUGANDO.';
+        $('answerFeedback').textContent = payload.correct ? '¡CORRECTO! +1' :
+          state.room?.mode === 'turns' ? 'INCORRECTO · TURNO DEL RIVAL' : 'INCORRECTO. SEGUÍ JUGANDO.';
         renderRing(); break;
       case 'playerFinished':
         state.question = null; renderMatch(); break;
@@ -129,7 +134,11 @@
         }
         break;
       case 'error':
-        if (state.room?.phase === 'playing' && !state.spectator) { state.pendingAction = false; setActionControls(true); }
+        if (state.room?.phase === 'playing' && !state.spectator) {
+          state.pendingAction = false;
+          const selfSlot = state.room.players.findIndex(p => p && p.id === state.selfId);
+          setActionControls(state.room.mode !== 'turns' || state.room.activeSlot === selfSlot);
+        }
         notice(payload.message || 'No se pudo completar la acción.', true);
         if (state.reconnecting) {
           state.reconnecting = false; clearSession();
@@ -143,7 +152,8 @@
     if (!state.roomId) return;
     $('lobby').hidden = true; $('match').hidden = false;
     $('displayRoom').textContent = state.roomId;
-    $('playerRole').textContent = state.spectator ? 'ESPECTADOR / SOLO MARCADOR' : 'JUGADOR / MISMO ROSCO';
+    $('playerRole').textContent = state.spectator ? 'ESPECTADOR / SOLO MARCADOR' :
+      state.room?.mode === 'turns' ? 'JUGADOR / ROSCO POR TURNOS' : 'JUGADOR / ROSCO ESPEJO';
     $('watchOverlay').hidden = overlay || !state.roomId;
     // Un espectador puede compartir la vista, pero no invitar jugadores al lobby.
     $('copyInvite').hidden = state.spectator;
@@ -170,7 +180,8 @@
       label.textContent = !player ? 'ESPERANDO…' :
         player.id === state.selfId ? 'VOS' :
         !player.connected ? 'DESCONECTADO' :
-        phase === 'playing' ? (player.finished ? 'ROSCO COMPLETO' : 'JUGANDO') :
+        phase === 'playing' ? (player.finished ? 'ROSCO FINALIZADO' :
+          state.room?.mode === 'turns' ? (state.room.activeSlot === index ? 'EN TURNO' : 'ESPERANDO TURNO') : 'JUGANDO') :
         phase === 'finished' ? 'PARTIDO FINALIZADO' :
         player.ready ? 'LISTO' : 'EN SALA';
       identity.append(label);
@@ -190,6 +201,7 @@
       meterFill.style.width = Math.max(0, Math.min(100, ((player?.answered ?? 0) / 26) * 100)) + '%';
       meter.append(meterFill); identity.append(meter);
       const opponent = players[1 - index];
+      if (player && state.room?.mode === 'turns' && state.room.phase === 'playing' && state.room.activeSlot === index) card.classList.add('is-active');
       if (player && opponent && state.room?.phase === 'playing' && player.correct > opponent.correct) {
         const lead = document.createElement('span'); lead.className = 'score-lead'; lead.textContent = 'EN VENTAJA'; identity.append(lead);
         card.classList.add('is-leading');
@@ -199,15 +211,24 @@
     });
   }
   function renderRing() {
-    const ring = $('duelRing'); ring.replaceChildren();
-    letters.forEach((letter,index) => {
-      const node = document.createElement('span');
-      node.className = 'ring-letter ' + (state.statuses[letter] || 'pending') + (state.question?.letter === letter && state.room?.phase === 'playing' ? ' current' : '');
-      node.style.setProperty('--angle', (index * 360 / letters.length) + 'deg');
-      node.textContent = letter; node.setAttribute('role','listitem');
-      node.setAttribute('aria-label', letter + ': ' + (state.statuses[letter] || 'pendiente'));
-      ring.append(node);
-    });
+    const turnMode = state.room?.mode === 'turns';
+    const players = state.room?.players || [];
+    const ownSlot = state.spectator ? 0 : Math.max(0, players.findIndex(p => p && p.id === state.selfId));
+    const render = (ring, statuses, currentLetter) => {
+      ring.replaceChildren();
+      letters.forEach((letter,index) => {
+        const node = document.createElement('span');
+        const status = statuses?.[letter] || 'pending';
+        node.className = 'ring-letter ' + status + (currentLetter === letter ? ' current' : '');
+        node.style.setProperty('--angle', (index * 360 / letters.length) + 'deg');
+        node.textContent = letter; node.setAttribute('role','listitem');
+        node.setAttribute('aria-label', letter + ': ' + status);
+        ring.append(node);
+      });
+    };
+    render($('duelRing'), turnMode ? players[ownSlot]?.status : state.statuses,
+      turnMode && state.room.activeSlot !== ownSlot ? null : state.question?.letter);
+    if (turnMode) render($('opponentRing'), players[1 - ownSlot]?.status, null);
   }
   function renderMatch() {
     if (!state.room) return;
@@ -215,14 +236,37 @@
     const players = state.room.players || [];
     const self = players.find(p => p && p.id === state.selfId);
     const other = players.find(p => p && p.id !== state.selfId);
+    const turnMode = state.room.mode === 'turns';
+    const ownSlot = state.spectator ? 0 : Math.max(0, players.findIndex(p => p && p.id === state.selfId));
+    const myTurn = !state.spectator && state.room.activeSlot === ownSlot;
+    $('matchStage').classList.toggle('turns-stage', turnMode);
+    $('opponentRingSide').hidden = !turnMode;
+    $('ownRingLabel').textContent = turnMode ? (state.spectator ? players[0]?.name || 'JUGADOR 1' : 'TU ROSCO') : 'TU ROSCO';
+    $('opponentRingLabel').textContent = turnMode ? (state.spectator ? players[1]?.name || 'JUGADOR 2' : other?.name || 'RIVAL') : 'RIVAL';
+    $('otherClockBlock').hidden = !turnMode;
+    $('turnHint').hidden = !turnMode;
+    $('turnHint').textContent = turnMode && phase === 'playing' ?
+      (state.spectator ? 'JUEGA ' + (players[state.room.activeSlot]?.name || '—') :
+        myTurn ? 'ES TU TURNO · ACERTÁ PARA SEGUIR' : 'TURNO DE ' + (other?.name || 'TU RIVAL')) :
+      'DOS ROSCOS · UN TURNO POR VEZ';
     drawScore();
-    $('readyPanel').hidden = phase === 'finished' || (phase === 'playing' && !self?.finished && !state.spectator);
-    $('questionPanel').hidden = phase !== 'playing' || state.spectator || !state.question || !!self?.finished;
+    $('readyPanel').hidden = phase === 'finished' || (phase === 'playing' &&
+      (turnMode ? myTurn : !self?.finished && !state.spectator));
+    $('questionPanel').hidden = phase !== 'playing' || state.spectator || !state.question ||
+      !!self?.finished || (turnMode && !myTurn);
+    setActionControls(!$('questionPanel').hidden && !state.pendingAction);
     $('resultsPanel').hidden = phase !== 'finished';
     const phases = {waiting:'ESPERANDO RIVAL',countdown:'CUENTA REGRESIVA',playing:'DUELO EN VIVO',finished:'PARTIDO FINALIZADO'};
     $('matchStatus').textContent = ({waiting:'SALA ABIERTA / ESPERANDO A LOS DOS',countdown:'CUENTA REGRESIVA / PREPARATE',playing:'DUELO EN CURSO / MARCADOR EN VIVO',finished:'FINAL / RESULTADOS OFICIALES'})[phase] || 'PREPARANDO PARTIDO';
     $('streamPhase').textContent = phases[phase] || 'PREPARANDO PARTIDO';
     $('streamAudience').textContent = (state.room.spectatorCount || 0) + ' MIRANDO';
+    $('playerRole').textContent = state.spectator ? 'ESPECTADOR / SOLO MARCADOR' :
+      turnMode ? 'JUGADOR / ROSCO POR TURNOS' : 'JUGADOR / ROSCO ESPEJO';
+    if (phase === 'playing' && turnMode && !myTurn && !state.spectator && !self?.finished) {
+      $('readyHeading').textContent = 'JUEGA TU RIVAL.';
+      $('readyDescription').textContent = 'Tu reloj está detenido. Cuando el rival pase, se equivoque o termine, seguís con tu rosco.';
+      $('readyButton').hidden = true;
+    }
     if (phase === 'playing' && self?.finished) {
       $('readyHeading').textContent = 'ROSCO COMPLETO.';
       $('readyDescription').textContent = 'Terminaste tus 26 letras. Esperá a que tu rival cierre su rosco o termine el reloj.';
@@ -230,7 +274,9 @@
     }
     if (phase === 'waiting' || phase === 'countdown') {
       $('readyHeading').textContent = phase === 'countdown' ? 'ARRANCA EL DUELO.' : !other ? 'ESPERANDO RIVAL.' : 'LOS DOS EN CANCHA.';
-      $('readyDescription').textContent = phase === 'countdown' ? 'Preparate: ambos reciben las mismas 26 preguntas.' : !other ? 'Compartí la invitación y esperá a que llegue tu rival.' : 'Los dos deben marcarse como listos. Recién ahí comienza el partido.';
+      $('readyDescription').textContent = phase === 'countdown' ?
+        turnMode ? 'Dos roscos distintos. Un jugador por vez. Cada uno con su propio reloj.' : 'Ambos reciben las mismas 26 preguntas.' :
+        !other ? 'Compartí la invitación y esperá a que llegue tu rival.' : 'Los dos deben marcarse como listos. Recién ahí comienza el partido.';
       $('readyButton').disabled = !other || phase !== 'waiting';
       $('readyButton').textContent = self?.ready ? 'CANCELAR LISTO ↶' : 'ESTOY LISTO ✓';
     }
@@ -248,7 +294,7 @@
         incorrect: 'Empate de aciertos: ganó quien cometió menos errores.',
         speed: 'Empate de aciertos y errores: decidió quién terminó antes.',
         forfeit: 'Victoria por abandono o desconexión sin reconexión del rival.',
-        draw: 'Empate exacto. La revancha está abierta.',
+        draw: turnMode ? 'Igual cantidad de aciertos. Los roscos eran diferentes: empate y revancha.' : 'Empate exacto. La revancha está abierta.',
         incomplete: 'El duelo terminó sin dos participantes.'
       }[state.result?.reason] || 'El duelo terminó.';
       $('resultDescription').textContent = decisionText +
@@ -286,18 +332,42 @@
       $('readyPanel').hidden = false; $('readyButton').hidden = true;
       $('readyHeading').textContent = phase === 'playing' ? 'DUELO EN VIVO.' : 'EN LA PREVIA.';
       $('readyDescription').textContent = 'Estás siguiendo el marcador de ambos jugadores sin ver sus respuestas.';
-    } else if (!self?.finished) $('readyButton').hidden = false;
+    } else if (!self?.finished && phase !== 'playing') $('readyButton').hidden = false;
+    if (phase === 'playing') $('readyButton').hidden = true;
     renderRing(); updateClock();
   }
   function updateClock() {
     if (state.room?.phase === 'finished') {
       $('clock').textContent = 'FINAL';
+      $('otherClock').textContent = 'FINAL';
       $('streamClock').textContent = 'FINAL';
       return;
     }
     if (!state.room) {
       $('clock').textContent = '05:00';
       $('streamClock').textContent = overlay ? '--:--' : '05:00';
+      return;
+    }
+    if (state.room.mode === 'turns') {
+      const players = state.room.players || [];
+      const ownSlot = state.spectator ? 0 : Math.max(0, players.findIndex(p => p && p.id === state.selfId));
+      const millis = slot => {
+        const p = players[slot];
+        if (!p) return state.room.duration * 1000;
+        return state.room.phase === 'playing' && state.room.activeSlot === slot && state.room.deadline ?
+          Math.max(0, state.room.deadline - (Date.now() + state.clockOffset)) :
+          Math.max(0, p.remainingMs ?? state.room.duration * 1000);
+      };
+      const label = ms => { const secs = Math.ceil(ms / 1000);
+        return String(Math.floor(secs / 60)).padStart(2,'0') + ':' + String(secs % 60).padStart(2,'0'); };
+      $('clock').textContent = label(millis(ownSlot));
+      $('otherClock').textContent = label(millis(1 - ownSlot));
+      $('streamClock').textContent = state.room.phase === 'playing' ?
+        label(millis(state.room.activeSlot)) : label(state.room.duration * 1000);
+      if (state.room.phase === 'countdown' && state.room.countdownEndsAt) {
+        const remaining = Math.max(1, Math.ceil((state.room.countdownEndsAt - (Date.now() + state.clockOffset)) / 1000));
+        $('readyHeading').textContent = 'ARRANCAMOS EN ' + remaining;
+      }
       return;
     }
     if (state.room?.phase === 'countdown' && state.room.countdownEndsAt) {
@@ -314,11 +384,24 @@
     if (!state.connected) return notice('Esperá a conectarte con el servidor del duelo.', true);
     state.manualLeave = false;
     state.result = null; state.question = null; state.statuses = {};
-    if (mode === 'create') send('create', { name:name(), difficulty:$('difficulty').value, public:false });
+    if (mode === 'create') send('create', { name:name(), difficulty:$('difficulty').value, mode:$('duelMode').value, public:false });
     if (mode === 'join') send('join', { roomId:roomCode, name:name() });
-    if (mode === 'matchmake') send('matchmake', { name:name(), difficulty:$('difficulty').value });
+    if (mode === 'matchmake') send('matchmake', { name:name(), difficulty:$('difficulty').value, mode:$('duelMode').value });
     if (mode === 'spectate') send('spectate', { roomId:roomCode });
   }
+  $('duelMode').addEventListener('change', () => {
+    const turns = $('duelMode').value === 'turns';
+    $('duelModeHelp').textContent = turns ? 'Dos roscos diferentes, uno por jugador. Cambia el turno cuando alguien pasa o se equivoca.' :
+      'Rosco Espejo: mismas 26 preguntas, ambos juegan al mismo tiempo.';
+    const labels = turns ?
+      ['Clásico · 2:30 por jugador', 'Sin apuro · 3:00 por jugador', 'Contrarreloj · 2:00 por jugador'] :
+      ['Clásico · 5 minutos', 'Sin apuro · 6 minutos', 'Contrarreloj · 4 minutos'];
+    Array.from($('difficulty').options).forEach((option,index) => { option.textContent = labels[index]; });
+    $('heroLead').textContent = turns ? 'Dos roscos distintos. Un turno por vez. La próxima respuesta puede cambiar el partido.' :
+      'Las mismas preguntas. Dos jugadores en simultáneo. Gana quien más acierta.';
+    $('heroClockLabel').textContent = turns ? 'RELOJ POR JUGADOR' : 'RELOJ COMPARTIDO';
+  });
+  $('duelMode').dispatchEvent(new Event('change'));
   $('createForm').addEventListener('submit', event => { event.preventDefault(); launch('create'); });
   $('joinForm').addEventListener('submit', event => { event.preventDefault(); launch('join',$('roomCode').value.trim().toUpperCase()); });
   $('watchForm').addEventListener('submit', event => { event.preventDefault(); launch('spectate',$('spectatorCode').value.trim().toUpperCase()); });
@@ -350,7 +433,7 @@
       player.name + ' ' + player.correct + '/26').join('  ·  ');
     const winner = state.result.players.find(player => player && player.id === state.result.winner);
     const verdict = winner ? 'Ganó ' + winner.name : 'Empate';
-    return '⚽ CRACK TOTAL · PASALA CHE 1V1\n' + names +
+    return '⚽ CRACK TOTAL · PASALA CHE 1V1 · ' + (state.room?.mode === 'turns' ? 'POR TURNOS' : 'ESPEJO') + '\n' + names +
       '\n' + verdict + '\n' + 'Jugá tu duelo: ' + new URL('pasala-1v1.html', location.href).origin +
       new URL('pasala-1v1.html', location.href).pathname;
   }
