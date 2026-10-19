@@ -358,7 +358,7 @@ function createPasalaDuelService(options = {}) {
       }))
     };
   }
-  function finish(room, forfeitSlot = null) {
+  function finish(room, forfeitSlot = null, forfeitReason = 'forfeit') {
     if (!room || room.phase === 'finished') return;
     if (room.countdown) timers.clearTimeout(room.countdown);
     if (room.ticker) timers.clearInterval(room.ticker);
@@ -377,7 +377,7 @@ function createPasalaDuelService(options = {}) {
     const [a, b] = room.players;
     if (forfeitSlot !== null) {
       room.winner = room.players[1 - forfeitSlot]?.id || null;
-      room.winnerReason = 'forfeit';
+      room.winnerReason = forfeitReason;
     } else if (!a || !b) { room.winner = null; room.winnerReason = 'incomplete'; }
     else if (a.correct !== b.correct) {
       room.winner = (a.correct > b.correct ? a : b).id; room.winnerReason = 'correct';
@@ -458,7 +458,7 @@ function createPasalaDuelService(options = {}) {
     }
     player.graceTimer = timers.setTimeout(() => {
       if (player.ws) return;
-      if (room.phase === 'playing') finish(room, link.slot);
+      if (room.phase === 'playing') finish(room, link.slot, 'disconnect');
       else if (room.phase === 'waiting' && link.slot === 1) {
         room.players[1] = null;
         emitRoom(room);
