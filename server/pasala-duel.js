@@ -38,7 +38,7 @@ function createPasalaDuelService(options = {}) {
   const snapshot = room => ({
     roomId: room.id, public: room.public, phase: room.phase, difficulty: room.difficulty,
     serverNow: now(),
-    duration: room.duration, deadline: room.deadline, countdownEndsAt: room.countdownEndsAt, winner: room.winner,
+    duration: room.duration, deadline: room.deadline, countdownEndsAt: room.countdownEndsAt, endedAt: room.endedAt, winner: room.winner,
     spectatorCount: room.spectators.size,
     players: [playerPublic(room.players[0]), playerPublic(room.players[1])]
   });
@@ -103,7 +103,7 @@ function createPasalaDuelService(options = {}) {
     const room = {
       id: roomId, public: !!payload.public, difficulty, duration: DURATIONS[difficulty],
       phase: 'waiting', players: [newPlayer(ws, payload.name), null], spectators: new Set(),
-      questions: null, deadline: null, startedAt: null, winner: null, winnerReason: null,
+      questions: null, deadline: null, startedAt: null, endedAt: null, winner: null, winnerReason: null,
       createdAt: now(), countdown: null, countdownEndsAt: null, ticker: null, deadlineTimer: null, cleanup: null
     };
     rooms.set(roomId, room);
@@ -216,7 +216,7 @@ function createPasalaDuelService(options = {}) {
       players: [a, b].map(p => p && ({
         id: p.id, name: p.name, correct: p.correct, incorrect: p.incorrect,
         elapsedSeconds: Math.max(0, Math.min(room.duration,
-          Math.ceil(((p.finishedAt ?? Math.min(now(), room.deadline ?? now())) - room.startedAt) / 1000)))
+          Math.ceil(((p.finishedAt ?? Math.min(room.endedAt ?? now(), room.deadline ?? room.endedAt ?? now())) - room.startedAt) / 1000)))
       }))
     };
   }
@@ -226,6 +226,7 @@ function createPasalaDuelService(options = {}) {
     if (room.ticker) timers.clearInterval(room.ticker);
     if (room.deadlineTimer) timers.clearTimeout(room.deadlineTimer);
     room.phase = 'finished';
+    room.endedAt = now(); // Freeze elapsed-time stats for reconnects and late spectators.
     room.players.forEach(p => { if (p) p.ready = false; });
     const [a, b] = room.players;
     if (forfeitSlot !== null) {
@@ -346,7 +347,7 @@ function createPasalaDuelService(options = {}) {
         p.correct = 0; p.incorrect = 0; p.position = 0; p.finishedAt = null;
         p.lastAction = 0; p.status = Object.fromEntries(LETTERS.map(letter => [letter, 'pending']));
       });
-      room.ready = false; room.deadline = null; room.winner = null; room.winnerReason = null;
+      room.ready = false; room.deadline = null; room.startedAt = null; room.endedAt = null; room.winner = null; room.winnerReason = null;
       room.questions = selectQuestions(room.questions);
       room.phase = 'countdown';
       room.countdownEndsAt = now() + 3000;
