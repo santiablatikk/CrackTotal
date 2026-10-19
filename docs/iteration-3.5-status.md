@@ -17,7 +17,7 @@ Esta iteración continúa **exclusivamente** la rama `redesign/crack-total-2`, P
 
 - En el HEAD de la iteración, Netlify notificó **SUCCESS** para el build del Deploy Preview (configurado para ejecutar validación, `npm test` y build). El despliegue debe volver a verificarse después de cada commit final.
 - Navegador desktop, deploy preview: portada y bloque diario visibles; título y fuente del Top 10 extraídos del banco real; búsqueda por «wordle» filtró el catálogo a un juego; la Arena bloqueó una URL de producción; Wordle aceptó la entrada por teclado, persistió una letra al recargar y expuso su nombre a tecnologías asistivas.
-- Las cinco suites se comprueban como parte del proceso de Netlify. **No** se hizo una partida WebSocket con dos equipos conectados a un servidor públicamente desplegado.
+- Las cinco suites se comprueban como parte del proceso de Netlify. **Sí** se conectaron dos pestañas cliente y una pestaña espectador al backend WebSocket público Render; el recorrido completo de 26 letras, la reconexión real entre redes y la revancha completada siguen pendientes.
 - **Mobile visual:** todavía no se verificaron capturas de 360, 390, 430 y 768 px; existen reglas responsive pero eso no sustituye la inspección visual.
 - **Firebase:** la consola del navegador mostró errores de autenticación anónima durante la prueba de Wordle; la persistencia local se comprobó, la escritura remota no. No atribuir estos errores a esta iteración sin investigación adicional.
 
@@ -25,21 +25,24 @@ Esta iteración continúa **exclusivamente** la rama `redesign/crack-total-2`, P
 
 Se reutilizó únicamente el conjunto Top 10 ya auditado/verificado por fuentes UEFA en iteraciones anteriores. La home y el catálogo lo consultan sin replicar ni revelar las soluciones. **Preguntas nuevas en esta iteración: 0. Preguntas auditadas individualmente en esta iteración: 0.** Siguen vigentes los registros previos de `docs/football-facts-2026-10-19.json`; esta iteración no afirma una nueva auditoría.
 
-## Staging pendiente — bloqueo externo
+## Staging público activado y probado (19/10/2026)
 
-El repositorio ya incluye el Blueprint `deploy/staging.render.yaml` y las instrucciones `docs/pasala-duel-staging.md`. La consola de Render mostró una pantalla de inicio de sesión; no había un servicio staging público accesible ni una sesión autorizada para crearlo. El dueño debe:
+- Blueprint nuevo: `cracktotal-arena-staging-blueprint`, ID `exs-dbb6h9jncjis73dl07r0`, rama `redesign/crack-total-2`, ruta `deploy/staging.render.yaml`.
+- Servicio nuevo: **`cracktotal-arena-staging`**, ID `srv-dbb6hj2gjjms73d73fd0`, runtime Node, **plan Free**, sin despliegue automático y separado de los dos servicios preexistentes `CrackTotal` (estático) y `cracktotal-servidor` (Node). Ninguno fue editado.
+- Host de pruebas: https://cracktotal-arena-staging.onrender.com
+- Endpoint de salud público **verificado en navegador**: https://cracktotal-arena-staging.onrender.com/__ct_staging/health devolvió `{"ok":true,"service":"cracktotal-arena-staging","websocket":true}`.
+- Build del servicio: `npm ci && npm test`, **SUCCESS**; los logs reportaron cinco suites correctas: smoke duelo, contenido verificado, UI Arena, experiencia 3.5, WebSocket integración con dos clientes y espectador de loopback.
+- URL navegable para probar online: https://deploy-preview-1--zingy-haupia-53b742.netlify.app/pasala-1v1 ; este hostname exacto ahora usa automáticamente `wss://cracktotal-arena-staging.onrender.com`. Otras vistas previas Netlify y producción no reciben esa conexión automática. Se puede forzar un servidor con el parámetro `?server=`.
+- Prueba manual pública realizada desde **dos pestañas de navegador y una pestaña OBS** contra ese host: crear sala privada, entrar por código, ambos listos, inicio sincronizado y misma primera pregunta, acierto `Aston Villa` validado, pase del rival, marcador 1–0 replicado, espectador observa nombres/marcador/reloj sin formularios ni soluciones, abandono del rival, victoria por ausencia y estadísticas finales, petición de revancha. El rival que abandonó no pudo reingresar a esa sala finalizada; una **revancha completa con ambos presentes no se verificó**.
+- Las pestañas fueron del mismo navegador cloud; **no** se probó aún con dos personas desde redes/dispositivos independientes. Tampoco se probó corte y reconexión manual en hosting.
+- El plan gratuito puede suspender el servicio por inactividad; al volver a jugar podría tardar en despertar.
+- `npm ci` en Render informó **15 avisos de vulnerabilidad: 10 moderados, 3 altos, 2 críticos** en el árbol de dependencias existente. No se aplicó `npm audit fix` automático: se requiere auditar cadenas y compatibilidad antes de introducir cambios. No tratar este staging como apto para tráfico masivo o datos sensibles.
 
-1. Entrar en https://dashboard.render.com/ mediante su cuenta.
-2. Elegir **New → Blueprint**, seleccionar este repositorio y la rama `redesign/crack-total-2`, e indicar el archivo `deploy/staging.render.yaml`.
-3. Verificar que se crea un **servicio nuevo y separado** con plan gratuito y que no se alteran recursos productivos. Revisar condiciones de uso/límites de Render antes de confirmar.
-4. Esperar el deploy y comprobar `https://<host>.onrender.com/__ct_staging/health`.
-5. Pegar la URL HTTPS del servicio en el campo **Servidor de pruebas** de `/pasala-1v1`. Crear sala y abrir la invitación en otra sesión/dispositivo para validar dos clientes, espectador, desconexión, reconexión y revancha.
-
-Hasta completar el paso anterior, el multijugador **no está verificado en hosting real**. La vista previa estática no constituye prueba del backend.
+No se fusionó el PR ni se cambió el dominio/servidor productivo.
 
 ## Próximas prioridades
 
-1. Habilitar staging y automatizar un test E2E con dos clientes reales, un espectador y pérdida de red.
-2. Diagnosticar el error de autenticación Firebase sin tocar producción.
+1. Extender QA E2E público a dos dispositivos y redes independientes, desconexión/reconexión y revancha completa.
+2. Auditar vulnerabilidades de dependencias y diagnosticar el error de autenticación Firebase sin tocar producción.
 3. Realizar QA visual móvil y recorridos completos de los cinco juegos.
 4. Continuar la auditoría y expansión de datos futboleros oficiales, con fuente y fecha para cada dato.
