@@ -1,35 +1,35 @@
 /**
  * Crack Total Design System — Tokens
- * Canonical language: Home premium (navy + mint).
+ * Canonical language 5.0: warm charcoal / forest green / cream / controlled lime.
  * Legacy aliases keep game pages visually stable.
  */
 
 :root {
     /* ========== Canonical surfaces ========== */
-    --ct-bg: #050b14;
-    --ct-bg-rgb: 5, 11, 20;
-    --ct-surface: #0b1524;
-    --ct-surface-rgb: 11, 21, 36;
-    --ct-surface-strong: #101d30;
-    --ct-surface-elevated: #17243a;
-    --ct-surface-hover: #1d2d47;
+    --ct-bg: #101b1b;
+    --ct-bg-rgb: 16, 27, 27;
+    --ct-surface: #1c302b;
+    --ct-surface-rgb: 28, 48, 43;
+    --ct-surface-strong: #243b35;
+    --ct-surface-elevated: #2b473e;
+    --ct-surface-hover: #355247;
 
     /* ========== Canonical text ========== */
-    --ct-text: #f7f9fc;
-    --ct-text-rgb: 247, 249, 252;
-    --ct-text-muted: #aebbd0;
-    --ct-text-subtle: #8493aa;
-    --ct-text-inverse: #04120a;
+    --ct-text: #f4f2e9;
+    --ct-text-rgb: 244, 242, 233;
+    --ct-text-muted: #c7d2c8;
+    --ct-text-subtle: #aebfb3;
+    --ct-text-inverse: #132118;
 
     /* ========== Brand / actions ========== */
-    --ct-primary: #79f2a6;
-    --ct-primary-rgb: 121, 242, 166;
-    --ct-primary-strong: #22c55e;
-    --ct-primary-soft: #a5f7c3;
-    --ct-accent: #60a5fa;
-    --ct-accent-rgb: 96, 165, 250;
-    --ct-warm: #fbbf24;
-    --ct-warm-rgb: 251, 191, 36;
+    --ct-primary: #b5eb53;
+    --ct-primary-rgb: 181, 235, 83;
+    --ct-primary-strong: #c7fa72;
+    --ct-primary-soft: #e0f9ad;
+    --ct-accent: #d89b70;
+    --ct-accent-rgb: 216, 155, 112;
+    --ct-warm: #d89b70;
+    --ct-warm-rgb: 216, 155, 112;
     --ct-danger: #fb7185;
     --ct-danger-rgb: 251, 113, 133;
     --ct-success: #22c55e;
@@ -46,8 +46,8 @@
     --ct-neon-pink: #f687b3;
 
     /* ========== Typography ========== */
-    --ct-font-sans: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    --ct-font-display: "Oswald", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --ct-font-sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --ct-font-display: "Space Grotesk", "Manrope", sans-serif;
     --ct-font-size-xs: 0.75rem;
     --ct-font-size-sm: 0.875rem;
     --ct-font-size-md: 1rem;
@@ -56,7 +56,7 @@
     --ct-font-size-2xl: 1.5rem;
     --ct-font-size-3xl: clamp(1.75rem, 3vw, 2.5rem);
     --ct-font-size-4xl: clamp(2rem, 4vw, 3.5rem);
-    --ct-font-size-hero: clamp(3.25rem, 8vw, 7.4rem);
+    --ct-font-size-hero: clamp(2.8rem, 6.3vw, 5.6rem);
     --ct-font-weight-normal: 400;
     --ct-font-weight-medium: 500;
     --ct-font-weight-semibold: 600;
@@ -81,9 +81,9 @@
     --ct-space-section: clamp(4.5rem, 10vw, 8rem);
 
     /* ========== Radii ========== */
-    --ct-radius-xs: 8px;
-    --ct-radius-sm: 12px;
-    --ct-radius-md: 16px;
+    --ct-radius-xs: 6px;
+    --ct-radius-sm: 9px;
+    --ct-radius-md: 13px;
     --ct-radius-lg: 20px;
     --ct-radius-xl: 24px;
     --ct-radius-2xl: 32px;
