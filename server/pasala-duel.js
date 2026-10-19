@@ -69,14 +69,20 @@ function createPasalaDuelService(options = {}) {
       }
     }
   }
-  function selectQuestions() {
+  function selectQuestions(previous = null) {
     const selected = {};
     for (const letter of LETTERS) {
       const record = bank.find(item => item.letra === letter);
       if (!record || !Array.isArray(record.preguntas)) throw new Error('Missing bank letter ' + letter);
       const questions = record.preguntas.filter(q => typeof q.pregunta === 'string' && typeof q.respuesta === 'string');
       if (!questions.length) throw new Error('No valid questions for ' + letter);
-      selected[letter] = questions[Math.floor(random() * questions.length)];
+      // Revancha inteligente: nunca repetir la misma pregunta si existe otra válida para la letra.
+      // Si el banco solo tiene una, se conserva para no bloquear partidas antiguas.
+      const fresh = previous?.[letter]
+        ? questions.filter(q => normalize(q.pregunta) !== normalize(previous[letter].pregunta))
+        : questions;
+      const candidates = fresh.length ? fresh : questions;
+      selected[letter] = candidates[Math.floor(random() * candidates.length)];
     }
     return selected;
   }
@@ -325,7 +331,7 @@ function createPasalaDuelService(options = {}) {
         p.lastAction = 0; p.status = Object.fromEntries(LETTERS.map(letter => [letter, 'pending']));
       });
       room.ready = false; room.deadline = null; room.winner = null;
-      room.questions = selectQuestions();
+      room.questions = selectQuestions(room.questions);
       room.phase = 'countdown';
       room.countdownEndsAt = now() + 3000;
       emitRoom(room);
