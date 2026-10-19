@@ -1,7 +1,7 @@
 /* Estilos Base para todo el sitio web de Crack Total */
 
 /* Tokens canónicos + aliases legacy (Design System) */
-@import url("./design-system/tokens.css");
+@import url("./design-system/tokens.css?v=20261020v5");
 
 /* Reseteo básico y box-sizing */
 *,
