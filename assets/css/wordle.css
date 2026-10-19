@@ -62,7 +62,7 @@ body.wordle-body .tile.shake{animation:shake .36s ease}
  body.wordle-body .keyboard{gap:5px}
  body.wordle-body .key-row{gap:3px}
  body.wordle-body .key{min-height:46px;font-size:clamp(10px,3vw,13px);padding:5px 0}
- body.wordle-body .key.wide{font-size:10px;flex:1.4 1 0}
+ body.wordle-body .key.wide{font-size:12px;flex:1.4 1 0}
  body.wordle-body .tile{border-width:1.5px}
 }
 @media(prefers-reduced-motion:reduce){body.wordle-body .tile.revealing,body.wordle-body .tile.pop,body.wordle-body .tile.shake{animation:none}body.wordle-body .key{transition:none}}
