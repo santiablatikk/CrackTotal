@@ -163,14 +163,33 @@ async function main() {
   await wait(spectator, 'spectating');
   await wait(opponent, 'state', state => state.spectatorCount === 1);
 
+  // A player can undo a ready confirmation before the opponent accepts.
+  const beforeReady = opponent.messages.length;
   send(host, 'ready');
+  await wait(opponent, 'state', state => state.phase === 'waiting' &&
+    state.players[0].ready === true, beforeReady);
+  const beforeUnready = opponent.messages.length;
+  send(host, 'unready');
+  await wait(opponent, 'state', state => state.phase === 'waiting' &&
+    state.players[0].ready === false, beforeUnready);
+  const beforeOpponentReady = opponent.messages.length;
   send(opponent, 'ready');
+  await wait(opponent, 'state', state => state.phase === 'waiting' &&
+    state.players[1].ready === true && state.players[0].ready === false,
+  beforeOpponentReady);
+  send(host, 'ready');
   await wait(host, 'state', state => state.phase === 'countdown');
   await wait(host, 'state', state => state.phase === 'playing', 0, 6500);
   const firstHostQuestion = (await wait(host, 'question')).payload;
   const firstOpponentQuestion = (await wait(opponent, 'question')).payload;
   assert.equal(firstHostQuestion.text, firstOpponentQuestion.text);
   assert.equal(firstHostQuestion.letter, firstOpponentQuestion.letter);
+  // Spectators cannot submit answers; the server rejects forged player actions.
+  const spectatorBeforeForgery = spectator.messages.length;
+  send(spectator, 'answer', { letter: firstHostQuestion.letter, answer: answerFor(firstHostQuestion) });
+  await wait(spectator, 'error', payload => payload.message === 'Acción no permitida.',
+    spectatorBeforeForgery);
+  assert.equal(spectator.messages.some(m => m.type === 'pasala:question'), false);
 
   // Actual network drop followed by an authenticated reconnect within 45s.
   const disconnectedAt = opponent.messages.length;
@@ -204,7 +223,7 @@ async function main() {
   assert.equal(forfeit.reason, 'forfeit', 'Server reports that opponent abandoned');
   assert.ok(forfeit.players[1].elapsedSeconds < 10, 'No full-duration time after immediate forfeit');
   console.log('Arena WebSocket integration OK: staging health, origin rejection, two clients, ' +
-    'mirrored rosco, real socket reconnect, server-scored 26 answers, spectator privacy, ' +
+    'unready/ready, mirrored rosco, real socket reconnect, server-scored 26 answers, spectator privacy, ' +
     'rematch and forfeit');
 }
 async function cleanup() {
