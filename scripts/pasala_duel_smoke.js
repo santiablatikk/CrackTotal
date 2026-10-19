@@ -82,6 +82,7 @@ for(let i=0;i<25;i++) {
   if(qb && get(b,'state').phase==='playing') act(b,'answer',{letter:qb.letter,answer:'mal'});
 }
 assert.equal(get(aAgain,'result').winner,created.playerId);
+assert.equal(get(aAgain,'result').reason,'correct','Most correct answers decide first');
 assert.equal(get(b,'result').players[0].correct,26);
 assert.equal(get(b,'result').players[1].correct,0);
 assert.equal(get(audience,'result').winner,created.playerId);
@@ -98,6 +99,8 @@ assert.equal(get(aAgain,'state').phase,'playing');
 assert.equal(get(b,'state').players[0].correct,0);
 assert.equal(get(audience,'question'),undefined);
 act(aAgain,'leave');
+assert.equal(get(b,'result').reason,'forfeit','The opponent wins an abandoned match');
+assert.equal(get(b,'result').players[1].elapsedSeconds,0,'Forfeit time must not show full round');
 const host=socket(), invited=socket(), watcher=socket();
 act(host,'create',{name:'Anfitrión'});
 const roomId=get(host,'created').roomId;
