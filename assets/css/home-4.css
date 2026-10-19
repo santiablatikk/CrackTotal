@@ -272,3 +272,20 @@ body.home-v2{background:var(--ct4-ink);color:var(--ct4-cream)}
  .ct4-button,.ct4-daily-grid>a,.ct4-game,.ct4-game-photo img{transition:none!important}
  .ct4-button:hover,.ct4-daily-grid>a:hover,.ct4-game:hover,.ct4-game:hover .ct4-game-photo img{transform:none!important}
 }
+
+
+/* Profile/progress: one quiet editorial chapter instead of three template cards. */
+.ct4-progress{margin-block:0 135px;padding:39px 0 32px;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:40px;border-top:2px solid var(--ct4-lime);border-bottom:1px solid var(--ct4-line)}
+.ct4-progress-lead h2{font-family:var(--ct4-font);font-weight:700;font-size:clamp(52px,6.4vw,91px);letter-spacing:-.05em;line-height:.9;margin:15px 0 21px}
+.ct4-progress-lead h2 em{color:var(--ct4-lime);font-style:normal}
+.ct4-progress-lead>p:last-child{font-size:14px;color:#b0beb5;max-width:410px;line-height:1.7;margin:0}
+.ct4-progress-links{display:flex;flex-direction:column;align-self:center}
+.ct4-progress-links a{display:grid;grid-template-columns:1fr auto;gap:7px 18px;text-decoration:none;color:var(--ct4-cream);padding:18px 3px;border-bottom:1px solid var(--ct4-line);transition:padding .2s ease}
+.ct4-progress-links a:first-child{border-top:1px solid var(--ct4-line)}
+.ct4-progress-links a:hover{padding-left:12px}
+.ct4-progress-links a span{grid-column:1;font-size:9px;color:#a9b8ad;letter-spacing:.14em;font-weight:900}
+.ct4-progress-links a strong{grid-column:1;font-family:var(--ct4-font);font-size:30px;letter-spacing:-.02em;line-height:1}
+.ct4-progress-links a i{grid-column:2;grid-row:1/3;align-self:center;font-style:normal;font-size:28px;color:var(--ct4-lime)}
+.ct4-progress a:focus-visible{outline:3px solid var(--ct4-lime);outline-offset:3px}
+@media(max-width:760px){.ct4-progress{grid-template-columns:1fr;gap:30px;margin-bottom:90px}.ct4-progress-lead h2{font-size:69px}}
+@media(max-width:500px){.ct4-progress-lead h2{font-size:57px}.ct4-progress-links a strong{font-size:27px}}
