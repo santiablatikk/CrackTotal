@@ -19,8 +19,8 @@ Fecha: 19/10/2026. Rama: `redesign/crack-total-2`. PR #1. No fusionar con main.
 ## Estado de QA y limitaciones
 
 - **Revisión estática del código:** completada; rutas de los cinco juegos conservadas. Antes: 37.397 caracteres HTML, después: 17.338. Reducción de marcado de 20.059 caracteres; **no equivale a reducción medida de bytes descargados**.
-- **Prueba automatizada añadida:** commit en rama; ejecución final en Netlify/GitHub **no confirmada desde este entorno**. No presentar los tests como PASS hasta comprobar los logs.
-- **Navegador:** no se pudo abrir el sitio preview mediante el acceso web de este entorno (error cache miss); por tanto no se han inspeccionado visualmente todas las resoluciones ni medido Lighthouse.
+- **Prueba automatizada añadida:** commit en rama; ejecución final en Netlify/GitHub **confirmada con el estado SUCCESS de Netlify** en el commit b3bf941 (tras corregir un test de clase CSS). No se leyeron logs individuales de todas las pruebas; no atribuir PASS individuales sin ellos.
+- **Navegador:** no se pudo abrir el sitio preview mediante el acceso web de este entorno (error cache miss); el check de deploy sí confirmó SUCCESS, pero no se inspeccionaron visualmente todas las resoluciones ni se midió Lighthouse.
 - **Limpieza de archivos:** no se borró ningún archivo por precaución. Las secciones redundantes se retiraron de `index.html`; los recursos compartidos, scripts antiguos de compatibilidad, legal y ads permanecen.
 - **WebSocket/Render:** no modificados. Las reglas 3.9 de Pasala Che y el resto de los juegos permanecen intactos.
 - **Dependencias:** no alteradas. Continúa pendiente la auditoría de avisos de seguridad existentes.
