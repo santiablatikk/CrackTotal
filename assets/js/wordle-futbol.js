@@ -13,6 +13,7 @@
     let rowRatings = [];
     let finished = false;
     let wonToday = false;
+    let inputLocked = false;
     const todayKey = () => { const d = new Date(); return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`; };
     function saveGame(){
         try { localStorage.setItem(GAME_KEY, JSON.stringify({ day:todayKey(), target,
@@ -139,17 +140,21 @@
 
     function createKey(ch) {
         const btn = document.createElement('button');
+        btn.type = 'button';
         btn.className = 'key';
         let label = ch;
         if (ch === '⌫') { btn.classList.add('wide'); label = 'Borrar'; }
         if (ch === '↵') { btn.classList.add('wide'); label = 'Enter'; }
         btn.textContent = label;
         btn.setAttribute('data-key', ch);
+        if (ch === '⌫') btn.setAttribute('aria-label', 'Borrar letra');
+        if (ch === '↵') btn.setAttribute('aria-label', 'Enviar intento');
         btn.addEventListener('click', onVirtualKey);
         return btn;
     }
 
     function onVirtualKey(e) {
+        if (inputLocked || finished) return;
         const val = e.currentTarget.getAttribute('data-key');
         if (val === '⌫') { handleBackspace(); return; }
         if (val === '↵') { handleEnter(); return; }
@@ -158,6 +163,9 @@
 
     function bindInput() {
         document.addEventListener('keydown', (e) => {
+            if (inputLocked || finished || e.altKey || e.ctrlKey || e.metaKey ||
+                e.target?.closest?.('input, textarea, select, [contenteditable="true"]') ||
+                document.querySelector('.modal-overlay.active')) return;
             if (e.key === 'Backspace') { e.preventDefault(); handleBackspace(); return; }
             if (e.key === 'Enter') { e.preventDefault(); handleEnter(); return; }
             const letter = normalizeKey(e.key);
@@ -166,12 +174,13 @@
     }
 
     function disableInput() {
-        document.addEventListener('keydown', blockAll, { capture: true, once: true });
+        // El bloqueo debe persistir también para el teclado físico, no solo el virtual.
+        // Nunca interceptar teclas de navegación ni bloquear toda la página.
+        inputLocked = true;
         const keys = document.querySelectorAll('.key');
         keys.forEach(k => k.setAttribute('disabled','disabled'));
-        setMessage('Juego diario completado. Vuelve mañana.');
+        setMessage('Juego diario completado. Volvé mañana.');
     }
-    function blockAll(e){ e.stopPropagation(); e.preventDefault(); }
 
     function setDailyInfo(idx) {
         const numEl = document.getElementById('gameNumber');
@@ -220,7 +229,7 @@
     }
 
     function handleLetter(letter) {
-        if (currentRow >= BOARD_ROWS) return;
+        if (inputLocked || finished || currentRow >= BOARD_ROWS) return;
         const wordLength = board[0].length;
         if (currentCol >= wordLength) return;
         board[currentRow][currentCol] = letter;
@@ -238,7 +247,7 @@
     }
 
     function handleBackspace() {
-        if (currentRow >= BOARD_ROWS) return;
+        if (inputLocked || finished || currentRow >= BOARD_ROWS) return;
         if (currentCol === 0) return;
         currentCol--;
         board[currentRow][currentCol] = '';
@@ -247,7 +256,7 @@
     }
 
     function handleEnter() {
-        if (finished || currentRow >= BOARD_ROWS) return;
+        if (inputLocked || finished || currentRow >= BOARD_ROWS) return;
         const wordLength = board[0].length;
         if (currentCol < wordLength) {
             setMessage('Faltan letras');
@@ -271,6 +280,7 @@
         if (!tile) return;
         tile.textContent = letter.toUpperCase();
         tile.classList.toggle('filled', !!filled);
+        tile.setAttribute('aria-label', filled ? 'Letra ' + letter.toUpperCase() : 'Casilla vacía');
     }
 
     function getTile(r, c) {
@@ -312,6 +322,8 @@
                 tile.classList.remove('revealing');
                 tile.classList.remove('filled');
                 tile.classList.add(result[i]);
+                const statusNames = { correct: 'posición correcta', present: 'otra posición', absent: 'no está' };
+                tile.setAttribute('aria-label', guessArr[i].toUpperCase() + ': ' + statusNames[result[i]]);
                 updateKeyboard(guessArr[i], result[i]);
             }, 90 * i);
         }
