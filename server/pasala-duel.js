@@ -25,6 +25,46 @@ function createPasalaDuelService(options = {}) {
   const normalize = value => String(value || '').normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '').toLowerCase()
     .replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+  // A correction is offered only for an obvious one-character typo or a vetted incomplete name.
+  // Never use fuzzy similarity to award points: exact normalized values and listed aliases alone score.
+  const acceptedFor = question => [question.respuesta,
+    ...(Array.isArray(question.respuestasAlternativas) ? question.respuestasAlternativas : [])];
+  const singleTypo = (input, expected) => {
+    const a = normalize(input), b = normalize(expected);
+    if (!a || !b || a === b || Math.min(a.replace(/ /g, '').length, b.replace(/ /g, '').length) < 6 ||
+        Math.abs(a.length - b.length) > 1) return false;
+    // Missing or additional words are not spelling errors.
+    if (a.split(' ').length !== b.split(' ').length) return false;
+    if (a.length === b.length) {
+      const mismatch = [];
+      for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) mismatch.push(i);
+      return mismatch.length === 1 || (mismatch.length === 2 && mismatch[1] === mismatch[0] + 1 &&
+        a[mismatch[0]] === b[mismatch[1]] && a[mismatch[1]] === b[mismatch[0]]);
+    }
+    const short = a.length < b.length ? a : b;
+    const long = a.length < b.length ? b : a;
+    let i = 0, j = 0, skipped = false;
+    while (i < short.length && j < long.length) {
+      if (short[i] === long[j]) { i++; j++; }
+      else if (!skipped) { skipped = true; j++; }
+      else return false;
+    }
+    return true;
+  };
+  const classifyTurnAnswer = (question, answer) => {
+    const candidate = normalize(answer);
+    const accepted = acceptedFor(question).map(normalize).filter(Boolean);
+    if (accepted.includes(candidate)) return 'correct';
+    const incomplete = Array.isArray(question.respuestasIncompletasCorregibles)
+      ? question.respuestasIncompletasCorregibles : [];
+    // Only an editorially vetted fragment of an explicitly requested full name is eligible.
+    const requestsFullName = question.requiereNombreCompleto === true ||
+      /nombre completo|nombre y apellido/i.test(String(question.pregunta || ''));
+    if (requestsFullName && incomplete.some(value => normalize(value) === candidate && candidate.length >= 5))
+      return 'eligible_for_correction';
+    if (accepted.some(value => singleTypo(candidate, value))) return 'eligible_for_correction';
+    return 'incorrect';
+  };
   const safeName = value => String(value || 'Jugador').trim().slice(0, 24) || 'Jugador';
   const token = size => crypto.randomBytes(size).toString('hex');
   const send = (ws, type, payload = {}) => {
@@ -161,20 +201,22 @@ function createPasalaDuelService(options = {}) {
     }, TURN_HANDOFF_MS);
     emitRoom(room);
   }
+  function scoreTurnAnswer(room, slot, letter, correct, timeExpired = false) {
+    const player = room.players[slot];
+    player.status[letter] = correct ? 'correct' : 'incorrect';
+    player[correct ? 'correct' : 'incorrect']++;
+    player.position = (player.position + 1) % LETTERS.length;
+    send(player.ws, 'pasala:answerResult', { letter, correct, correctCount: player.correct, incorrectCount: player.incorrect });
+    if (!correct || timeExpired || now() >= room.deadline) switchTurn(room, 1 - slot);
+    else { questionFor(room, player); emitRoom(room); }
+  }
   function finalizeAnswer(room, slot, timeExpired = false) {
     const player = room.players[slot], pending = player?.pendingAnswer;
     if (!pending || room.phase !== 'playing' || room.activeSlot !== slot) return;
     if (pending.timer) timers.clearTimeout(pending.timer);
     player.pendingAnswer = null;
     const question = questionsFor(room, slot)[pending.letter];
-    const allowed = [question.respuesta, ...(Array.isArray(question.respuestasAlternativas) ? question.respuestasAlternativas : [])];
-    const correct = allowed.some(value => normalize(pending.answer) === normalize(value));
-    player.status[pending.letter] = correct ? 'correct' : 'incorrect';
-    player[correct ? 'correct' : 'incorrect']++;
-    player.position = (player.position + 1) % LETTERS.length;
-    send(player.ws, 'pasala:answerResult', { letter: pending.letter, correct, correctCount: player.correct, incorrectCount: player.incorrect });
-    if (!correct || timeExpired || now() >= room.deadline) switchTurn(room, 1 - slot);
-    else { questionFor(room, player); emitRoom(room); }
+    scoreTurnAnswer(room, slot, pending.letter, classifyTurnAnswer(question, pending.answer) === 'correct', timeExpired);
   }
   function updateProvisionalAnswer(ws, payload = {}, finalize = false) {
     const link = peers.get(ws), room = link && rooms.get(link.roomId);
@@ -321,6 +363,12 @@ function createPasalaDuelService(options = {}) {
     player.lastAction = now();
     if (room.mode === 'turns' && !isPass) {
       if (typeof payload.answer !== 'string' || !payload.answer.trim() || payload.answer.length > 120) return error(ws, 'Ingresá una respuesta válida.');
+      const question = questionsFor(room, link.slot)[letter];
+      const decision = classifyTurnAnswer(question, payload.answer);
+      if (decision !== 'eligible_for_correction') {
+        scoreTurnAnswer(room, link.slot, letter, decision === 'correct');
+        return;
+      }
       const endsAt = Math.min(now() + ANSWER_CORRECTION_MS, room.deadline);
       const pending = { letter, answer: payload.answer.trim(), endsAt, edits: 0, timer: null };
       player.pendingAnswer = pending;
