@@ -145,6 +145,10 @@
     $('displayRoom').textContent = state.roomId;
     $('playerRole').textContent = state.spectator ? 'ESPECTADOR / SOLO MARCADOR' : 'JUGADOR / MISMO ROSCO';
     $('watchOverlay').hidden = overlay || !state.roomId;
+    // Un espectador puede compartir la vista, pero no invitar jugadores al lobby.
+    $('copyInvite').hidden = state.spectator;
+    $('copyCode').hidden = state.spectator;
+    $('copySpectator').hidden = overlay;
     if (overlay) document.body.classList.add('overlay-mode');
   }
   function leaveUI() {
@@ -209,8 +213,8 @@
     if (phase === 'waiting' || phase === 'countdown') {
       $('readyHeading').textContent = phase === 'countdown' ? 'ARRANCA EL DUELO.' : !other ? 'ESPERANDO RIVAL.' : 'LOS DOS EN CANCHA.';
       $('readyDescription').textContent = phase === 'countdown' ? 'Preparate: ambos reciben las mismas 26 preguntas.' : !other ? 'Compartí la invitación y esperá a que llegue tu rival.' : 'Los dos deben marcarse como listos. Recién ahí comienza el partido.';
-      $('readyButton').disabled = !other || !!self?.ready || phase !== 'waiting';
-      $('readyButton').textContent = self?.ready ? 'YA ESTÁS LISTO ✓' : 'ESTOY LISTO ✓';
+      $('readyButton').disabled = !other || phase !== 'waiting';
+      $('readyButton').textContent = self?.ready ? 'CANCELAR LISTO ↶' : 'ESTOY LISTO ✓';
     }
     if (phase === 'playing' && state.question && !state.spectator) {
       $('currentLetter').textContent = state.question.letter;
@@ -230,7 +234,8 @@
         incomplete: 'El duelo terminó sin dos participantes.'
       }[state.result?.reason] || 'El duelo terminó.';
       $('resultDescription').textContent = decisionText +
-        (winner && !state.spectator ? (victorious ? ' ¡Gran partido!' : ' Pedí revancha y volvé a intentarlo.') : '');
+        (winner && !state.spectator ? (victorious ? ' ¡Gran partido!' :
+          other?.connected ? ' Pedí revancha y volvé a intentarlo.' : ' Podés abrir un nuevo duelo cuando quieras.') : '');
       const stats = $('resultStats');
       stats.replaceChildren();
       if (summary) summary.filter(Boolean).forEach(player => {
@@ -247,9 +252,17 @@
         row.append(identity, numbers);
         stats.appendChild(row);
       });
+      const canRematch = !!self && !!other && !!other.connected && state.connected;
       $('rematchButton').hidden = state.spectator;
-      $('rematchButton').disabled = !!self?.ready;
-      $('rematchButton').textContent = self?.ready ? 'REVANCHA SOLICITADA ✓' : 'PEDIR REVANCHA ↗';
+      $('rematchButton').disabled = !!self?.ready || !canRematch;
+      $('rematchButton').textContent = self?.ready ? 'REVANCHA SOLICITADA ✓' :
+        !other?.connected ? 'RIVAL DESCONECTADO' : 'PEDIR REVANCHA ↗';
+      $('rematchHint').textContent = state.spectator ? '' :
+        !other?.connected ? 'El otro jugador salió o está sin conexión. Volvé al lobby para buscar otro rival; si se reconecta, reaparecerá la revancha.' :
+        self?.ready ? 'Tu pedido ya se registró. El rival también tiene que aceptar.' :
+        'Los dos tienen que pedir revancha para jugar otro rosco.';
+      $('shareResult').hidden = !state.result;
+      $('shareResult').disabled = !state.result;
     }
     if (state.spectator && phase !== 'finished') {
       $('readyPanel').hidden = false; $('readyButton').hidden = true;
@@ -287,7 +300,10 @@
   $('joinForm').addEventListener('submit', event => { event.preventDefault(); launch('join',$('roomCode').value.trim().toUpperCase()); });
   $('watchForm').addEventListener('submit', event => { event.preventDefault(); launch('spectate',$('spectatorCode').value.trim().toUpperCase()); });
   $('randomButton').addEventListener('click', () => launch('matchmake'));
-  $('readyButton').addEventListener('click', () => send('ready'));
+  $('readyButton').addEventListener('click', () => {
+    const self = state.room?.players?.find(player => player && player.id === state.selfId);
+    send(self?.ready ? 'unready' : 'ready');
+  });
   $('answerForm').addEventListener('submit', event => {
     event.preventDefault();
     if (!state.question) return;
@@ -305,6 +321,20 @@
     }
   });
   $('rematchButton').addEventListener('click', () => send('rematch'));
+  function shareResultText() {
+    if (!state.result?.players?.length) return '';
+    const names = state.result.players.filter(Boolean).map(player =>
+      player.name + ' ' + player.correct + '/26').join('  ·  ');
+    const winner = state.result.players.find(player => player && player.id === state.result.winner);
+    const verdict = winner ? 'Ganó ' + winner.name : 'Empate';
+    return '⚽ CRACK TOTAL · PASALA CHE 1V1\n' + names +
+      '\n' + verdict + '\n' + 'Jugá tu duelo: ' + new URL('pasala-1v1.html', location.href).origin +
+      new URL('pasala-1v1.html', location.href).pathname;
+  }
+  $('shareResult').addEventListener('click', () => {
+    const summary = shareResultText();
+    if (summary) copyText($('shareResult'), summary);
+  });
   function exitRoom() {
     send('leave'); state.manualLeave = true;
     if (state.retryTimer) { clearTimeout(state.retryTimer); state.retryTimer = null; }
