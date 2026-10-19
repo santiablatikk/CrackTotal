@@ -897,3 +897,17 @@
         font-size: 1rem;
     }
 } 
+
+/* Crack Total 5.0 / readable leaderboard and match history */
+body.ranking-page-body .ranking-container{max-width:1180px;margin-inline:auto}
+body.ranking-page-body .ranking-title{font-family:var(--ct-font-display);font-weight:700;letter-spacing:-.025em;font-size:clamp(31px,4.2vw,52px);line-height:1.16}
+body.ranking-page-body .table-responsive-wrapper{overflow-x:auto;border:1px solid #3d564b;border-radius:12px;background:#1c302b}
+body.ranking-page-body .ranking-table{width:100%;border-collapse:separate;border-spacing:0;min-width:590px;font-family:var(--ct-font-sans)}
+body.ranking-page-body .ranking-table th{font-size:13px;letter-spacing:.015em;line-height:1.5;padding:15px 16px;white-space:nowrap;background:#243b35;color:#f4f2e9}
+body.ranking-page-body .ranking-table td{font-size:15px;line-height:1.55;padding:16px;white-space:normal;overflow-wrap:anywhere;color:#f0f2e9}
+body.ranking-page-body .ranking-table .player-name{font-weight:750;min-width:150px}
+body.ranking-page-body .nav-button{min-height:44px;font-family:var(--ct-font-sans);font-size:15px;letter-spacing:0;border-radius:9px}
+body.ranking-page-body .history-container{max-width:1180px;margin-inline:auto}
+body.ranking-page-body .history-title{font-family:var(--ct-font-display);font-size:clamp(25px,3vw,40px);line-height:1.2}
+body.ranking-page-body .history-item{border-radius:10px;line-height:1.55}
+@media(max-width:640px){body.ranking-page-body .ranking-title{font-size:32px}body.ranking-page-body .history-item{padding:16px}body.ranking-page-body .ranking-table td{font-size:14px}}
