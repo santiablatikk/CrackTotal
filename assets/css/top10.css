@@ -33,3 +33,27 @@
 .giveup { background: linear-gradient(135deg, #ef4444, #dc2626); color:#fff; border:0; border-radius:12px; padding:10px 14px; font-weight:700; cursor:pointer }
 .timer-chip { font-size:1.1rem; padding:10px 14px; background: rgba(239,68,68,.18); border-color: rgba(239,68,68,.45); color:#ffdede; letter-spacing:.3px; box-shadow: 0 0 0 2px rgba(239,68,68,.08) inset }
 @media (max-width:768px){ .top10-card{ margin:0 10px } }
+
+/* Daily challenge history: separate from the saved score and game's live controls. */
+.top10-history {
+  max-width: 1050px; margin: 18px auto 10px; padding: clamp(18px, 3vw, 30px);
+  border-radius: 22px; background: linear-gradient(125deg, #171d1d, #0c1012 75%);
+  border: 1px solid rgba(184, 255, 48, .18); color: #f3f8ef;
+}
+.top10-history-kicker {
+  font-size: .72rem; letter-spacing: .14em; font-weight: 900; color: #baff32;
+}
+.top10-history h2 {
+  margin: 8px 0; font-weight: 900; font-size: clamp(1.45rem, 4vw, 2.2rem);
+  line-height: 1.05; letter-spacing: -.03em;
+}
+.top10-history > p { color: #c3cec6; line-height: 1.55; font-size: .89rem; margin: 10px 0 18px; }
+.top10-history-list { padding: 0; margin: 0; list-style: none; display: grid; gap: 8px; }
+.top10-history-item {
+  display: grid; gap: 6px; padding: 13px 16px; border: 1px solid #34403a;
+  border-radius: 12px; background: #202825; min-width: 0;
+}
+.top10-history-item strong { font-size: .95rem; overflow-wrap: anywhere; }
+.top10-history-item span { color: #baff32; font-size: .73rem; font-weight: 850; letter-spacing: .03em; }
+.top10-history-empty { color: #bcc9bf; font-size: .9rem; padding: 10px 0; }
+@media (max-width: 768px) { .top10-history { margin: 14px 10px; } }
