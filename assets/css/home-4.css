@@ -70,16 +70,16 @@ body.home-v2{background:var(--ct4-ink);color:var(--ct4-cream)}
 .ct4-daily-grid{display:grid;grid-template-columns:1.35fr .8fr;gap:15px;align-items:stretch}
 .ct4-daily-grid>a{position:relative;isolation:isolate;min-width:0;min-height:405px;overflow:hidden;text-decoration:none;display:flex;flex-direction:column;justify-content:space-between;transition:transform .28s ease,box-shadow .28s ease}
 .ct4-daily-grid>a:hover{transform:translateY(-5px)}
-.ct4-daily-main{color:#0e170e;background:#b8ff38;padding:27px 31px}
-.ct4-daily-main:after{content:"";position:absolute;top:17%;right:-19%;width:450px;height:450px;border:46px solid #11291215;transform:rotate(-30deg) skew(-12deg);z-index:-1}
+.ct4-daily-main{color:#f1f8ef;background:linear-gradient(125deg,#1a342c,#10231e 60%,#091a17);padding:27px 31px;border-top:4px solid #b8ff38}
+
 .ct4-daily-top{font-size:10px;font-weight:950;letter-spacing:.13em;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .ct4-daily-poster{display:flex;align-items:end;gap:24px;margin:15px 0}
 .ct4-daily-poster-number{font-family:var(--ct4-font);font-size:clamp(180px,20vw,325px);font-weight:700;line-height:.75;letter-spacing:-.08em;color:#0d30182b;position:absolute;right:5%;bottom:16%;pointer-events:none}
 .ct4-daily-poster>div{position:relative;z-index:1;max-width:540px}
 .ct4-daily-small{font-size:11px;font-weight:900;letter-spacing:.15em}
 .ct4-daily-main h3{font-size:clamp(36px,5.3vw,76px);font-weight:700;letter-spacing:-.045em;line-height:.99;margin:12px 0}
-.ct4-daily-main p{font-size:14px;margin:0;max-width:490px}
-.ct4-daily-bottom{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #133c2760;padding-top:18px;font-size:12px;font-weight:750}
+.ct4-daily-main p{font-size:14px;margin:0;max-width:490px;color:#bed0c2}
+.ct4-daily-bottom{display:flex;justify-content:space-between;gap:12px;align-items:center;border-top:1px solid #e6f9e440;padding-top:18px;font-size:12px;font-weight:750}
 .ct4-daily-bottom strong{white-space:nowrap;font-size:11px;letter-spacing:.06em}
 .ct4-daily-wordle{padding:27px 31px;background:#e7eadd;color:#12191b}
 .ct4-daily-wordle .ct4-daily-top{color:#36433d}
@@ -289,3 +289,17 @@ body.home-v2{background:var(--ct4-ink);color:var(--ct4-cream)}
 .ct4-progress a:focus-visible{outline:3px solid var(--ct4-lime);outline-offset:3px}
 @media(max-width:760px){.ct4-progress{grid-template-columns:1fr;gap:30px;margin-bottom:90px}.ct4-progress-lead h2{font-size:69px}}
 @media(max-width:500px){.ct4-progress-lead h2{font-size:57px}.ct4-progress-links a strong{font-size:27px}}
+
+/* Top 10 4.2: anonymous league-table motif; zero answers shown before play. */
+.ct42-daily-main .ct4-daily-top{color:#b8ff38}
+.ct42-daily-body{display:grid;grid-template-columns:minmax(0,1fr) 115px;gap:24px;align-items:center;position:relative;z-index:1;padding-block:26px}
+.ct42-daily-content{min-width:0}
+.ct42-daily-content h3{font-family:Oswald,sans-serif;font-size:clamp(36px,4.7vw,69px);font-weight:700;line-height:.99;letter-spacing:-.04em;color:#f3f9ef;margin:13px 0 12px}
+.ct42-daily-content .ct4-daily-small{color:#b8ff38}
+.ct42-daily-ranks{display:grid;gap:2px;transform:rotate(7deg);opacity:.85}
+.ct42-daily-ranks span{display:grid;grid-template-columns:20px 1fr;align-items:center;gap:8px;background:#eefbed14;border-left:2px solid #b8ff3888;color:#b8ff38;font:700 13px Oswald,sans-serif;padding:2px 7px}
+.ct42-daily-ranks i{display:block;height:3px;background:#c3dac653;max-width:64px}
+.ct42-daily-ranks span:nth-child(3n) i{max-width:35px}
+.ct42-daily-main .ct4-daily-bottom{color:#d4e5d3}
+.ct42-daily-main .ct4-daily-bottom strong{color:#b8ff38}
+@media(max-width:640px){.ct42-daily-body{grid-template-columns:minmax(0,1fr) 65px;gap:12px}.ct42-daily-ranks span{font-size:10px;grid-template-columns:12px 1fr;gap:3px;padding:3px}.ct42-daily-content h3{font-size:clamp(35px,9vw,54px)}}
