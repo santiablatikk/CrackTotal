@@ -48,7 +48,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/top10.css?v=20260804a">
+  <link rel="stylesheet" href="assets/css/top10.css?v=20261019b">
 
   <!-- GA -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XP3T1RTH7"></script>
@@ -117,6 +117,12 @@
         <div class="guesses" id="guessesContainer"></div>
       </div>
     </section>
+    <section class="top10-history" aria-labelledby="top10-history-title">
+      <div class="top10-history-kicker">TU RECORRIDO / DESAFÍO DIARIO</div>
+      <h2 id="top10-history-title">TU HISTORIAL DE TOP 10</h2>
+      <p>Últimas siete partidas terminadas en este dispositivo, sin revelar soluciones. Cada desafío cambia a las 00:00 UTC.</p>
+      <ol id="top10History" class="top10-history-list" aria-live="polite"></ol>
+    </section>
     <section class="rules-card" style="text-align:center; margin-top:12px;">
       <button class="secondary-button" onclick="document.getElementById('rulesModal').style.display='flex'">
         <i class="fas fa-info-circle"></i> ¿Cómo jugar?
@@ -170,7 +176,7 @@
   <script src="assets/js/firebase-config.js"></script>
   <script src="assets/js/firebase-init.js"></script>
   <script src="assets/js/firebase-service.js"></script>
-  <script src="assets/js/top10.js?v=20261019a" defer></script>
+  <script src="assets/js/top10.js?v=20261019b" defer></script>
 
   <div data-ct-footer></div>
     <script src="assets/js/components/navbar.js?v=20260803m"></script>
