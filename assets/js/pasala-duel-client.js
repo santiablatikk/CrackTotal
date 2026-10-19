@@ -193,8 +193,9 @@
     panel.hidden = false;
     const turns = state.room.mode === 'turns';
     $('lobbyModeLabel').textContent = turns ? 'ROSCO POR TURNOS' : 'ROSCO ESPEJO';
-    $('lobbyDurationLabel').textContent = turns ?
-      (state.room.duration / 60) + ' MIN / JUGADOR' : (state.room.duration / 60) + ' MIN / PARTIDA';
+    const durationMinutes = Math.floor(state.room.duration / 60);
+    const durationSeconds = String(state.room.duration % 60).padStart(2, '0');
+    $('lobbyDurationLabel').textContent = durationMinutes + ':' + durationSeconds + (turns ? ' POR JUGADOR' : ' POR PARTIDA');
     const holder = $('lobbyPlayersList'); holder.replaceChildren();
     (state.room.players || []).forEach((player, index) => {
       const item = document.createElement('div');
@@ -283,7 +284,7 @@
     const transitioning = turnMode && phase === 'playing' && !!state.room.turnReadyAt;
     const myTurn = !state.spectator && state.room.activeSlot === ownSlot && !transitioning;
     $('matchStage').classList.toggle('turns-stage', turnMode);
-    $('matchStage').classList.toggle('is-rival-turn', turnMode && state.room.activeSlot !== ownSlot);
+    $('matchStage').classList.toggle('is-rival-turn', turnMode && phase === 'playing' && state.room.activeSlot !== null && state.room.activeSlot !== ownSlot);
     $('matchStage').classList.toggle('is-handoff', !!transitioning);
     $('turnTransition').hidden = !transitioning;
     if (transitioning) $('turnTransitionLabel').textContent = (players[state.room.activeSlot]?.name || 'JUGADOR') + ' ENTRA A LA CANCHA';
