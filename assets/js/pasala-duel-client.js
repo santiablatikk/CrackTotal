@@ -9,7 +9,8 @@
   const storageKey = 'ct-pasala-duel-session-v1';
   const state = { ws: null, connected: false, room: null, selfId: null, spectator: watchOnly,
     roomId: null, question: null, statuses: {}, result: null, reconnecting: false,
-    clockTimer: null, retryTimer: null, manualLeave: false, clockOffset: 0, pendingAction: false };
+    clockTimer: null, retryTimer: null, manualLeave: false, clockOffset: 0, pendingAction: false,
+    pendingAnswer: null, connectionSlowTimer: null };
   const isStaticPreview = /(?:^|\.)netlify\.app$/i.test(location.hostname) || /(?:^|\.)netlify\.com$/i.test(location.hostname);
   // Connect automatically only on the exact isolated PR preview; never on production or other Netlify sites.
   const previewStaging = location.hostname === 'deploy-preview-1--zingy-haupia-53b742.netlify.app'
@@ -47,6 +48,7 @@
     $('answerForm').querySelector('button[type="submit"]').disabled = !enabled;
     $('passButton').disabled = !enabled;
   }
+  const correctedTime = () => Date.now() + state.clockOffset;
   function connect() {
     setLobbyAvailability(false);
     if (!wsUrl) {
@@ -58,13 +60,19 @@
     }
     if (state.ws) { state.ws.onclose = null; state.ws.close(); }
     notice('Conectando al servidor del duelo…');
+    if (state.connectionSlowTimer) clearTimeout(state.connectionSlowTimer);
+    state.connectionSlowTimer = setTimeout(() => {
+      if (!state.connected) notice('El servidor de pruebas está iniciando. Puede tardar cerca de un minuto; no cierres esta pantalla.');
+    }, 7000);
     let ws;
     try { ws = new WebSocket(wsUrl); }
     catch { notice('No se pudo abrir el servidor de la arena. Revisá su dirección.', true); return; }
     state.ws = ws; state.connected = false;
     ws.onopen = () => {
       if (state.ws !== ws) return;
-      state.connected = true; setLobbyAvailability(true); notice('Arena conectada. Lista para jugar.');
+      state.connected = true;
+      if (state.connectionSlowTimer) clearTimeout(state.connectionSlowTimer);
+      setLobbyAvailability(true); notice('Arena conectada. Lista para jugar.');
       if (watchOnly && safeCode(initialRoom)) send('spectate', { roomId: initialRoom });
       else if (savedSession()?.roomId && savedSession()?.reconnectToken && savedSession()?.endpoint === wsUrl && !state.manualLeave && (!safeCode(initialRoom) || initialRoom === savedSession().roomId)) {
         state.reconnecting = true; send('resume', { roomId: savedSession().roomId, reconnectToken: savedSession().reconnectToken });
@@ -81,6 +89,7 @@
     ws.onclose = () => {
       if (state.ws !== ws) return;
       state.connected = false; setLobbyAvailability(false); setActionControls(false);
+      if (state.connectionSlowTimer) clearTimeout(state.connectionSlowTimer);
       notice('Conexión interrumpida. Intentando volver a la sala…', true);
       if (!state.manualLeave && wsUrl && !state.retryTimer) {
         state.retryTimer = setTimeout(() => { state.retryTimer = null; connect(); }, 3500);
@@ -102,19 +111,26 @@
           state.question = null;
         }
         if (state.room?.phase === 'finished' && payload.phase === 'countdown') {
-          state.result = null; state.question = null; state.statuses = {};
+          state.result = null; state.question = null; state.statuses = {}; state.pendingAnswer = null;
         }
         state.room = payload; state.roomId = payload.roomId;
         if (Number.isFinite(payload.serverNow)) state.clockOffset = payload.serverNow - Date.now();
         enterMatch(); renderMatch(); break;
       case 'question':
-        state.question = payload; state.statuses = payload.statuses || {};
+        state.question = payload; state.statuses = payload.statuses || {}; state.pendingAnswer = null;
         $('answerInput').value = ''; state.pendingAction = false; setActionControls(true);
         $('answerFeedback').textContent = '';
         renderMatch();
         if (!state.spectator && state.room && state.room.phase === 'playing') $('answerInput').focus({ preventScroll:true });
         break;
+      case 'answerPending':
+        state.pendingAnswer = payload; state.pendingAction = false;
+        $('correctionInput').value = payload.answer;
+        $('confirmAnswer').disabled = false;
+        renderMatch();
+        break;
       case 'answerResult':
+        state.pendingAnswer = null; state.pendingAction = true;
         state.statuses[payload.letter] = payload.correct ? 'correct' : 'incorrect';
         $('answerFeedback').textContent = payload.correct ? '¡CORRECTO! +1' :
           state.room?.mode === 'turns' ? 'INCORRECTO · TURNO DEL RIVAL' : 'INCORRECTO. SEGUÍ JUGANDO.';
@@ -122,7 +138,7 @@
       case 'playerFinished':
         state.question = null; renderMatch(); break;
       case 'result':
-        state.result = payload; state.question = null; renderMatch(); break;
+        state.result = payload; state.question = null; state.pendingAnswer = null; renderMatch(); break;
       case 'closed':
         clearSession(); state.manualLeave = true; state.spectator = watchOnly;
         leaveUI();
@@ -137,7 +153,8 @@
         if (state.room?.phase === 'playing' && !state.spectator) {
           state.pendingAction = false;
           const selfSlot = state.room.players.findIndex(p => p && p.id === state.selfId);
-          setActionControls(state.room.mode !== 'turns' || state.room.activeSlot === selfSlot);
+          setActionControls(!state.pendingAnswer && (state.room.mode !== 'turns' ||
+            (state.room.activeSlot === selfSlot && !state.room.turnReadyAt)));
         }
         notice(payload.message || 'No se pudo completar la acción.', true);
         if (state.reconnecting) {
@@ -164,9 +181,34 @@
   function leaveUI() {
     $('match').hidden = true; $('lobby').hidden = false;
     state.room = null; state.roomId = null; state.selfId = null; state.question = null;
-    state.statuses = {}; state.result = null; state.pendingAction = false;
+    state.statuses = {}; state.result = null; state.pendingAction = false; state.pendingAnswer = null;
     setActionControls(false);
     if (!watchOnly) document.body.classList.remove('overlay-mode');
+  }
+  function renderLobbyPlayers() {
+    const panel = $('lobbyPlayers');
+    if (!state.room || !['waiting', 'countdown'].includes(state.room.phase)) {
+      panel.hidden = true; return;
+    }
+    panel.hidden = false;
+    const turns = state.room.mode === 'turns';
+    $('lobbyModeLabel').textContent = turns ? 'ROSCO POR TURNOS' : 'ROSCO ESPEJO';
+    $('lobbyDurationLabel').textContent = turns ?
+      (state.room.duration / 60) + ' MIN / JUGADOR' : (state.room.duration / 60) + ' MIN / PARTIDA';
+    const holder = $('lobbyPlayersList'); holder.replaceChildren();
+    (state.room.players || []).forEach((player, index) => {
+      const item = document.createElement('div');
+      item.className = 'lobby-player' + (player?.ready ? ' is-ready' : '') + (!player?.connected && player ? ' is-disconnected' : '');
+      const role = document.createElement('span');
+      role.textContent = index === 0 ? '01 · ANFITRIÓN' : '02 · INVITADO';
+      const title = document.createElement('strong');
+      title.textContent = player?.name || 'ESPERANDO RIVAL…';
+      const status = document.createElement('small');
+      status.textContent = !player ? 'COMPARTÍ EL CÓDIGO PARA INVITARLO' :
+        !player.connected ? 'DESCONECTADO · ESPERANDO RECONEXIÓN' :
+        player.ready ? '● LISTO PARA JUGAR' : '● CONECTADO · FALTA CONFIRMAR';
+      item.append(role, title, status); holder.append(item);
+    });
   }
   function drawScore() {
     const board = $('scoreboard'); board.replaceChildren();
@@ -178,7 +220,7 @@
       const phase = state.room?.phase;
       const label = document.createElement('span');
       label.textContent = !player ? 'ESPERANDO…' :
-        player.id === state.selfId ? 'VOS' :
+        player.id === state.selfId ? (phase === 'playing' && state.room?.mode === 'turns' && state.room.activeSlot === index ? 'VOS · EN TURNO' : 'VOS') :
         !player.connected ? 'DESCONECTADO' :
         phase === 'playing' ? (player.finished ? 'ROSCO FINALIZADO' :
           state.room?.mode === 'turns' ? (state.room.activeSlot === index ? 'EN TURNO' : 'ESPERANDO TURNO') : 'JUGANDO') :
@@ -238,23 +280,37 @@
     const other = players.find(p => p && p.id !== state.selfId);
     const turnMode = state.room.mode === 'turns';
     const ownSlot = state.spectator ? 0 : Math.max(0, players.findIndex(p => p && p.id === state.selfId));
-    const myTurn = !state.spectator && state.room.activeSlot === ownSlot;
+    const transitioning = turnMode && phase === 'playing' && !!state.room.turnReadyAt;
+    const myTurn = !state.spectator && state.room.activeSlot === ownSlot && !transitioning;
     $('matchStage').classList.toggle('turns-stage', turnMode);
+    $('matchStage').classList.toggle('is-rival-turn', turnMode && state.room.activeSlot !== ownSlot);
+    $('matchStage').classList.toggle('is-handoff', !!transitioning);
+    $('turnTransition').hidden = !transitioning;
+    if (transitioning) $('turnTransitionLabel').textContent = (players[state.room.activeSlot]?.name || 'JUGADOR') + ' ENTRA A LA CANCHA';
     $('opponentRingSide').hidden = !turnMode;
     $('ownRingLabel').textContent = turnMode ? (state.spectator ? players[0]?.name || 'JUGADOR 1' : 'TU ROSCO') : 'TU ROSCO';
     $('opponentRingLabel').textContent = turnMode ? (state.spectator ? players[1]?.name || 'JUGADOR 2' : other?.name || 'RIVAL') : 'RIVAL';
     $('otherClockBlock').hidden = !turnMode;
     $('turnHint').hidden = !turnMode;
     $('turnHint').textContent = turnMode && phase === 'playing' ?
-      (state.spectator ? 'JUEGA ' + (players[state.room.activeSlot]?.name || '—') :
+      (transitioning ? 'CAMBIO DE TURNO · RELOJES DETENIDOS' :
+        state.spectator ? 'JUEGA ' + (players[state.room.activeSlot]?.name || '—') :
         myTurn ? 'ES TU TURNO · ACERTÁ PARA SEGUIR' : 'TURNO DE ' + (other?.name || 'TU RIVAL')) :
       'DOS ROSCOS · UN TURNO POR VEZ';
     drawScore();
+    renderLobbyPlayers();
     $('readyPanel').hidden = phase === 'finished' || (phase === 'playing' &&
       (turnMode ? myTurn : !self?.finished && !state.spectator));
     $('questionPanel').hidden = phase !== 'playing' || state.spectator || !state.question ||
       !!self?.finished || (turnMode && !myTurn);
-    setActionControls(!$('questionPanel').hidden && !state.pendingAction);
+    $('answerForm').hidden = !!state.pendingAnswer;
+    $('answerCorrection').hidden = !state.pendingAnswer || $('questionPanel').hidden;
+    if (state.pendingAnswer) {
+      $('provisionalValue').textContent = state.pendingAnswer.answer;
+      $('correctButton').disabled = !state.pendingAnswer.editsRemaining;
+      $('correctionInput').disabled = !state.pendingAnswer.editsRemaining || correctedTime() >= state.pendingAnswer.endsAt;
+    }
+    setActionControls(!$('questionPanel').hidden && !state.pendingAction && !state.pendingAnswer);
     $('resultsPanel').hidden = phase !== 'finished';
     const phases = {waiting:'ESPERANDO RIVAL',countdown:'CUENTA REGRESIVA',playing:'DUELO EN VIVO',finished:'PARTIDO FINALIZADO'};
     $('matchStatus').textContent = ({waiting:'SALA ABIERTA / ESPERANDO A LOS DOS',countdown:'CUENTA REGRESIVA / PREPARATE',playing:'DUELO EN CURSO / MARCADOR EN VIVO',finished:'FINAL / RESULTADOS OFICIALES'})[phase] || 'PREPARANDO PARTIDO';
@@ -263,8 +319,9 @@
     $('playerRole').textContent = state.spectator ? 'ESPECTADOR / SOLO MARCADOR' :
       turnMode ? 'JUGADOR / ROSCO POR TURNOS' : 'JUGADOR / ROSCO ESPEJO';
     if (phase === 'playing' && turnMode && !myTurn && !state.spectator && !self?.finished) {
-      $('readyHeading').textContent = 'JUEGA TU RIVAL.';
-      $('readyDescription').textContent = 'Tu reloj está detenido. Cuando el rival pase, se equivoque o termine, seguís con tu rosco.';
+      $('readyHeading').textContent = transitioning ? 'CAMBIO DE TURNO.' : 'JUEGA TU RIVAL.';
+      $('readyDescription').textContent = transitioning ? 'Los dos relojes están detenidos. El servidor habilita al próximo jugador en 2 segundos.' :
+        'Tu reloj está detenido. Cuando el rival pase, se equivoque o termine, seguís con tu rosco.';
       $('readyButton').hidden = true;
     }
     if (phase === 'playing' && self?.finished) {
@@ -338,6 +395,8 @@
   }
   function updateClock() {
     if (state.room?.phase === 'finished') {
+      $('correctionCountdown').textContent = '00:00';
+      $('turnTransitionCountdown').textContent = '';
       $('clock').textContent = 'FINAL';
       $('otherClock').textContent = 'FINAL';
       $('streamClock').textContent = 'FINAL';
@@ -361,6 +420,14 @@
       const label = ms => { const secs = Math.ceil(ms / 1000);
         return String(Math.floor(secs / 60)).padStart(2,'0') + ':' + String(secs % 60).padStart(2,'0'); };
       $('clock').textContent = label(millis(ownSlot));
+      $('turnTransitionCountdown').textContent = state.room.turnReadyAt ?
+        Math.max(0, Math.ceil((state.room.turnReadyAt - correctedTime()) / 1000)) + ' S' : '';
+      $('correctionCountdown').textContent = state.pendingAnswer ?
+        Math.max(0, Math.ceil((state.pendingAnswer.endsAt - correctedTime()) / 1000)) + ' S' : '00';
+      if (state.pendingAnswer && correctedTime() >= state.pendingAnswer.endsAt) {
+        $('correctButton').disabled = true;
+        $('confirmAnswer').disabled = true;
+      }
       $('otherClock').textContent = label(millis(1 - ownSlot));
       $('streamClock').textContent = state.room.phase === 'playing' ?
         label(millis(state.room.activeSlot)) : label(state.room.duration * 1000);
@@ -383,7 +450,7 @@
   function launch(mode, roomCode) {
     if (!state.connected) return notice('Esperá a conectarte con el servidor del duelo.', true);
     state.manualLeave = false;
-    state.result = null; state.question = null; state.statuses = {};
+    state.result = null; state.question = null; state.statuses = {}; state.pendingAnswer = null;
     if (mode === 'create') send('create', { name:name(), difficulty:$('difficulty').value, mode:$('duelMode').value, public:false });
     if (mode === 'join') send('join', { roomId:roomCode, name:name() });
     if (mode === 'matchmake') send('matchmake', { name:name(), difficulty:$('difficulty').value, mode:$('duelMode').value });
@@ -419,6 +486,21 @@
     if (send('answer', { letter:state.question.letter, answer })) {
       state.pendingAction = true; setActionControls(false);
     }
+  });
+  $('correctButton').addEventListener('click', () => {
+    const pending = state.pendingAnswer;
+    if (!pending || !pending.editsRemaining || correctedTime() >= pending.endsAt) return;
+    const answer = $('correctionInput').value.trim();
+    if (!answer) return;
+    if (send('reviseAnswer', { letter: pending.letter, answer })) {
+      $('correctButton').disabled = true;
+      $('correctionInput').disabled = true;
+    }
+  });
+  $('confirmAnswer').addEventListener('click', () => {
+    const pending = state.pendingAnswer;
+    if (!pending || correctedTime() >= pending.endsAt) return;
+    if (send('confirmAnswer', { letter: pending.letter })) $('confirmAnswer').disabled = true;
   });
   $('passButton').addEventListener('click', () => {
     if (!state.question || state.pendingAction) return;
@@ -464,7 +546,14 @@
     catch { window.prompt('Copiá y compartí:', value); }
   }
   $('copyCode').addEventListener('click', () => copyText($('copyCode'), state.roomId || ''));
-  $('copyInvite').addEventListener('click', () => copyText($('copyInvite'), invitation('sala')));
+  $('copyInvite').addEventListener('click', async () => {
+    const link = invitation('sala');
+    if (navigator.share && /iPhone|iPad|Android/i.test(navigator.userAgent)) {
+      try { await navigator.share({ title: 'Crack Total · Pasala Che 1v1', text: 'Te desafío a un duelo futbolero', url: link }); return; }
+      catch (err) { if (err.name === 'AbortError') return; }
+    }
+    copyText($('copyInvite'), link);
+  });
   $('copySpectator').addEventListener('click', () => copyText($('copySpectator'), invitation('spectator')));
   $('watchOverlay').addEventListener('click', () => {
     const link = new URL('pasala-1v1.html',location.href); link.search=''; link.searchParams.set('overlay',state.roomId || ''); if (urlOverride) link.searchParams.set('server',urlOverride);
