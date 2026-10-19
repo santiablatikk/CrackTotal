@@ -22,7 +22,7 @@
   <meta name="google-adsense-account" content="ca-pub-9579152019412427">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Top 10 (Diario) - Crack Total</title>
-  <meta name="description" content="Juego diario Top 10: adiviná los 10 apellidos correctos del tema del día.">
+  <meta name="description" content="Jugá Top 10: encontrá los diez equipos de una clasificación oficial. Dos minutos, estadísticas reales y desafío diario.">
   <link rel="icon" href="/portada.ico" type="image/x-icon">
   <link rel="canonical" href="https://cracktotal.com/top10.html">
 
@@ -30,7 +30,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://cracktotal.com/top10.html">
   <meta property="og:title" content="Top 10 - Juego Diario">
-  <meta property="og:description" content="Adiviná los 10 apellidos del tema diario.">
+  <meta property="og:description" content="Diez equipos, diez puestos oficiales y un desafío diario de fútbol.">
   <meta property="og:image" content="https://cracktotal.com/assets/images/portada.jpg">
 
   <meta property="twitter:card" content="summary_large_image">
@@ -48,7 +48,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="assets/css/top10.css?v=20261020b">
+  <link rel="stylesheet" href="assets/css/top10.css?v=20261020c">
 
   <!-- GA -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-5XP3T1RTH7"></script>
@@ -77,24 +77,37 @@
     <div class="top10-hero-copy"><span>RANKING CHALLENGE · 10 POSICIONES</span><h1 class="title-text">TOP <em>10.</em></h1><p class="subtitle">Diez equipos. La clasificación oficial. ¿Cuántos conocés?</p></div>
   </header>
   <main class="top10-content" id="main-content">
-    <section class="top10-card" aria-label="Desafío del día">
-      <div class="daily-overlay" id="dailyOverlay" style="display:none">
+    <section class="top10-intro" id="startOverlay" aria-labelledby="startOverlayTitle" aria-describedby="startOverlayDetail">
+      <div class="top10-intro-label"><span>EL RETO DEL DÍA</span><span>01 / 10 EQUIPOS</span></div>
+      <div class="top10-intro-grid">
+        <div class="top10-intro-main">
+          <p class="top10-intro-kicker" id="startCompetition">CLASIFICACIÓN OFICIAL</p>
+          <h2 id="startOverlayTitle">¿ESTÁS<br><em>PARA EL TOP 10?</em></h2>
+          <p id="startOverlayDetail">Cargando el desafío de hoy…</p>
+          <div class="top10-intro-controls"><span>10 EQUIPOS</span><span>120 SEGUNDOS</span><span>1 INTENTO DIARIO</span></div>
+          <button id="startBtn" class="primary-button top10-intro-cta" type="button">EMPEZAR A JUGAR <span aria-hidden="true">↗</span></button>
+          <p class="top10-intro-note">El cronómetro arranca cuando empezás. Tu progreso se guarda.</p>
+        </div>
+        <div class="top10-intro-illustration" aria-hidden="true"><div class="top10-intro-numbers"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span></div><strong>TOP<br>10<span>.</span></strong></div>
+      </div>
+    </section>
+    <section class="top10-card" id="top10GameCard" aria-label="Desafío del día" hidden>
+      <div class="daily-overlay" id="dailyOverlay" style="display:none" role="status">
         <div class="overlay-content"><span class="top10-overlay-kicker">RETO FINALIZADO</span><h3 class="overlay-title">Ya jugaste hoy</h3><p class="overlay-message">Tu resultado se mantiene hasta el próximo desafío UTC.</p><div class="countdown-timer" id="overlayCountdown"></div><a class="primary-button" href="games.html">VER OTROS JUEGOS ↗</a></div>
       </div>
       <div class="top10-header-area">
         <div class="top10-topic-block"><p class="top10-eyebrow">CLASIFICACIÓN OFICIAL · TEMPORADA FINALIZADA</p><h2 class="topic" id="topicTitle">Cargando el desafío…</h2><div class="top10-topic-info"><span id="topicCategory">Competiciones</span><a id="topicSource" href="#" rel="noopener noreferrer" target="_blank">Ver fuente oficial ↗</a></div></div>
         <div class="meta"><span id="timerChip" class="chip timer-chip" aria-label="Tiempo restante">02:00</span><span id="foundCount" class="chip">0/10</span><span id="gameNumber" class="chip">TOP 10</span></div>
       </div>
-      <div class="top10-progressbar" role="progressbar" aria-label="Posiciones acertadas" aria-valuemin="0" aria-valuemax="10"><div id="progressFill" style="width:0%" role="progressbar" aria-label="Aciertos" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0"></div></div>
+      <div class="top10-progressbar" aria-hidden="true"><div id="progressFill" style="width:0%"></div></div>
       <div class="top10-game-layout">
-        <div class="top10-ranking-panel"><div class="top10-ranking-caption"><span>POS.</span><span>EQUIPO</span><span>PUNTOS</span></div><ol class="answers" id="answersList" aria-label="Diez posiciones oficiales"></ol></div>
+        <div class="top10-ranking-panel"><div class="top10-ranking-caption"><span>POS.</span><span>EQUIPO</span><span>PTS</span></div><ol class="answers" id="answersList" aria-label="Diez posiciones oficiales"></ol></div>
         <div class="top10-play-panel">
-          <div><p class="top10-play-kicker">TU TURNO</p><h2>ENCONTRÁ<br><em>LOS DIEZ.</em></h2><p>Escribí el nombre de un equipo del Top 10. Cada acierto revela su puesto y sus puntos reales.</p></div>
-          <div class="top10-play-controls"><label for="surnameInput">NOMBRE DEL EQUIPO</label><div class="input-area"><input id="surnameInput" type="text" class="top10-input" placeholder="Ej: Bayern Múnich" autocomplete="off" disabled><button id="submitBtn" class="primary-button" disabled>RESPONDER ↗</button></div><div class="messages" id="messageBox" role="status" aria-live="polite"></div><div class="guesses" id="guessesContainer" aria-label="Últimos intentos"></div></div>
+          <div><p class="top10-play-kicker">TU RESPUESTA</p><h2>DECÍ UN<br><em>EQUIPO.</em></h2><p>Cada acierto revela su puesto y sus puntos oficiales.</p></div>
+          <div class="top10-play-controls"><label for="surnameInput">¿QUÉ EQUIPO FALTA EN EL TOP 10?</label><div class="input-area"><input id="surnameInput" type="text" class="top10-input" placeholder="Escribí un club…" autocomplete="off" disabled><button id="submitBtn" class="primary-button" disabled>RESPONDER ↗</button></div><div class="messages" id="messageBox" role="status" aria-live="polite" aria-atomic="true"></div><div class="guesses" id="guessesContainer" aria-label="Últimos intentos"></div></div>
           <button id="giveUpBtn" class="giveup" type="button" disabled>TERMINAR INTENTO</button>
         </div>
       </div>
-      <div class="top10-start-overlay" id="startOverlay" role="dialog" aria-modal="true" aria-labelledby="startOverlayTitle" aria-describedby="startOverlayDetail"><div class="top10-start-copy"><span>RETO DIARIO / 02:00 MIN</span><h2 id="startOverlayTitle">¿CUÁNTOS<br>CONOCÉS?</h2><p id="startOverlayDetail">Diez equipos de una clasificación final oficial. El tiempo empieza cuando tocás jugar.</p><button id="startBtn" class="primary-button" type="button">EMPEZAR DESAFÍO ↗</button></div></div>
     </section>
     <section class="top10-history" aria-labelledby="top10-history-title">
       <div class="top10-history-kicker">TU RECORRIDO / DESAFÍO DIARIO</div>
@@ -110,9 +123,9 @@
   </main>
 
   <!-- Modales -->
-  <div id="resultModal" class="modal-overlay" style="display:none;">
+  <div id="resultModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="resultTitle" style="display:none;">
     <div class="modal-content result-modal">
-      <div class="result-modal-header"><h2 id="resultTitle" class="result-title">Resultado</h2></div>
+      <div class="result-modal-header"><span class="top10-result-kicker">CRACK TOTAL / RESULTADO DEL DÍA</span><h2 id="resultTitle" class="result-title">Resultado</h2><button id="closeResultBtn" class="top10-result-close" type="button" aria-label="Cerrar resultado y ver clasificación">✕</button></div>
       <p id="resultMessage" class="result-message"></p>
       <div class="result-stats">
         <div class="stat-item"><span class="stat-label">Encontrados</span><span class="stat-value" id="statFound">0</span></div>
@@ -120,7 +133,7 @@
         <div class="stat-item"><span class="stat-label">Tiempo</span><span class="stat-value" id="statTime">0:00</span></div>
       </div>
       <div class="top10-final-standings"><p>CLASIFICACIÓN OFICIAL · LOS DIEZ PUESTOS</p><ol id="resultRanking" aria-label="Ranking completo y puntuación oficial"></ol><a id="resultSource" href="#" target="_blank" rel="noopener noreferrer">CONSULTAR TABLA ORIGINAL ↗</a></div>
-      <div class="result-buttons">
+      <div class="result-buttons"><button id="viewRankingBtn" class="modal-button secondary" type="button">VER MI CLASIFICACIÓN</button>
         <button id="shareTop10Btn" class="modal-button primary"><i class="fas fa-share-alt"></i> Compartir</button>
         <button class="modal-button secondary" onclick="window.location.href='pasalache.html'"><i class="fas fa-circle-notch"></i> Pasala Che</button>
         <button class="modal-button secondary" onclick="window.location.href='wordle-futbol.html'"><i class="fas fa-border-all"></i> Wordle</button>
@@ -157,7 +170,7 @@
   <script src="assets/js/firebase-init.js"></script>
   <script src="assets/js/firebase-service.js"></script>
   <script src="assets/js/top10-verified.js?v=20261020a"></script>
-  <script src="assets/js/top10.js?v=20261020b" defer></script>
+  <script src="assets/js/top10.js?v=20261020c" defer></script>
 
   <div data-ct-footer></div>
     <script src="assets/js/components/navbar.js?v=20260803m"></script>
