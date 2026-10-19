@@ -95,3 +95,8 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
 .staging-setup-controls p{font-size:12px;margin:10px 0 0;color:#e0bca9}
 @media(max-width:870px){.arena-staging-setup{grid-template-columns:1fr}}
 @media(max-width:490px){.staging-setup-actions{flex-direction:column}.staging-setup-actions .arena-button{width:100%}}
+
+/* 3.6 — resultados: revancha honesta ante desconexión y acción para compartir. */
+.rematch-hint{max-width:390px;color:var(--muted);font-size:13px;line-height:1.55;margin:0 0 13px}
+#resultsPanel .arena-button:disabled{opacity:.52;border-color:var(--line);color:var(--muted);background:rgba(255,255,255,.04)}
+#shareResult{border-color:rgba(236,255,212,.38);color:var(--cream)}
