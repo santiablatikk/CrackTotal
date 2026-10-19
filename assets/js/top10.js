@@ -7,22 +7,9 @@
   const STATE_KEY = 'top10_state_v1';
   const LAST_DAY_KEY = 'top10_last_day_v1';
   const HISTORY_KEY = 'top10_history_v1'; // Independiente de los guardados diarios existentes.
-  const ACCEPTED_VARIANTS = {
-    'ronaldo': ['cristiano', 'c ronaldo'],
-    'messi': ['leo messi','lionel'],
-    'van persie': ['vanpersie', 'persie'],
-    'higuaín': ['higuain','pipita'],
-    'müller': ['muller'],
-    'paris saint-germain': ['psg', 'paris sg'],
-    'psg': ['paris saint-germain', 'paris sg'],
-    'españa': ['spain', 'seleccion espanola'],
-    'dembélé': ['dembele', 'ousmane dembele'],
-    'flamengo': ['cr flamengo', 'mengao'],
-    'álvarez': ['alvarez', 'julian alvarez', 'julian'],
-    'alvarez': ['álvarez', 'julian alvarez', 'julian']
-  };
 
-  const ISO2 = {
+
+    const ISO2 = {
     ARG:'AR', AR:'AR', BRA:'BR', BR:'BR', URU:'UY', UY:'UY', CHI:'CL', CL:'CL',
     COL:'CO', CO:'CO', PER:'PE', PE:'PE', PAR:'PY', PY:'PY', ECU:'EC', EC:'EC',
     BOL:'BO', BO:'BO', VEN:'VE', VE:'VE', MEX:'MX', MX:'MX', USA:'US', US:'US',
@@ -61,6 +48,8 @@
     return `<img class="flag" src="assets/images/flags/${iso2.toLowerCase()}.svg" width="20" height="14" alt="" loading="lazy" decoding="async" data-emoji="${emoji}" onerror="this.outerHTML='<span class=\\'flag-emoji\\' aria-hidden=\\'true\\'>'+this.dataset.emoji+'</span>'" /><span class="sr-only">${iso2}</span>`;
   }
 
+  const verifiedCore = window.CTTop10Verified;
+  let started = false;
   let topic = null; // { id, title, source, answers: ['messi (AR)', ...] }
   let challengeDay = ''; // Día UTC fijado al elegir el reto: cruzar medianoche no reescribe el día siguiente.
   let foundSet = new Set();
@@ -86,26 +75,16 @@
   }
 
   async function pickDailyTopic(){
-    // Cargar pool base + extendido si existe
-    const [base, extra] = await Promise.all([
-      fetch('assets/data/top10_pool.json').then(r=>r.json()),
-      fetch('assets/data/top10_pool_extended.json').then(r=>r.json()).catch(()=>[])
-    ]);
-    const merged = Array.isArray(extra) ? base.concat(extra) : base;
-    // Solo listas con fuente oficial documentada, fecha y diez respuestas distintas.
-    // Conservamos las listas históricas sin auditar en disco, fuera del desafío diario.
-    const pool = merged.filter(item => item.source_url && item.verified_at &&
-      Array.isArray(item.answers) && item.answers.length === 10 &&
-      new Set(item.answers.map(normalize)).size === 10);
-    if (!pool.length) throw new Error('No hay desafíos diarios con fuentes verificadas.');
-    const todayKey = isTodayKey();
+    if(!verifiedCore) throw new Error('Motor de rankings oficiales no disponible');
+    const response=await fetch('assets/data/top10_verified_v2.json',{cache:'no-cache'});
+    if(!response.ok)throw new Error('No se pudieron cargar los desafíos verificados');
+    const pool=await response.json();
+    const todayKey=isTodayKey();
     challengeDay = todayKey;
-    const seed = new Date(todayKey).getTime()/86400000; // días
-    const idx = Math.floor((seed % pool.length + pool.length) % pool.length);
-    topic = pool[idx];
+    topic=verifiedCore.pick(pool,todayKey);
   }
 
-  function loadState(){
+    function loadState(){
     const today = challengeDay;
     const last = localStorage.getItem(LAST_DAY_KEY);
     const raw = localStorage.getItem(STATE_KEY);
@@ -115,7 +94,8 @@
         if (parsed.topicId !== topic.id) return false;
         foundSet = new Set((parsed.found||[]).filter(answer => topic.answers.includes(answer)));
         attempts = parsed.attempts||0;
-        startTime = parsed.startTime||Date.now();
+        startTime = Number.isFinite(parsed.startTime) ? parsed.startTime : null;
+        started = typeof parsed.started === 'boolean' ? parsed.started : true;
         savedOnce = !!parsed.savedOnce;
         finished = !!parsed.finished;
         wonToday = !!parsed.won;
@@ -133,6 +113,7 @@
       found: Array.from(foundSet),
       attempts,
       startTime,
+      started,
       savedOnce,
       finished,
       won: wonToday,
@@ -190,72 +171,47 @@
     renderHistory();
   }
 
-  function answerKey(ans){
-    const idx = ans.indexOf('(');
-    const base = idx>0 ? ans.slice(0, idx).trim() : ans.trim();
-    return normalize(base);
-  }
-
-  function renderBoard(){
-    const list = document.getElementById('answersList');
-    list.innerHTML = '';
-    topic.answers.forEach((ans, i)=>{
-      const li = document.createElement('li');
-      const pos = i+1;
-      const solved = foundSet.has(ans);
-      li.className = solved? 'solved' : '';
-      const hint = ans.match(/\(([^)]+)\)/);
-      const country = hint? hint[1] : '';
-      const hasClubHint = !!topic.hints?.[i];
-      const flag = hasClubHint ? '' : (country ? flagMarkup(country) : '');
-      const hintText = hasClubHint ? topic.hints[i] : (country ? `(${String(country).toUpperCase()})` : '');
-      li.innerHTML = `<span class="pos">${pos}.</span><span class="hint">${flag}${hintText}</span><span class="label">${solved? ans.toUpperCase(): '—'.repeat(6)}</span>`;
-      list.appendChild(li);
+  function renderBoard(revealAll = false){
+    const list=document.getElementById('answersList');
+    list.replaceChildren();
+    topic.answers.forEach((ans,i)=>{
+      const solved=foundSet.has(ans),visible=solved||revealAll;
+      const li=document.createElement('li');
+      li.className=solved?'solved':revealAll?'revealed':'';
+      const pos=document.createElement('span');
+      pos.className='pos';pos.textContent=String(i+1).padStart(2,'0');
+      const name=document.createElement('span');
+      name.className='label';name.textContent=visible?ans:'······';
+      const stat=document.createElement('span');
+      stat.className='top10-row-metric';stat.textContent=visible?topic.metric_values[i]+' pts':'—';
+      li.append(pos,name,stat);list.appendChild(li);
     });
-    document.getElementById('foundCount').innerHTML = `<i class="fas fa-check"></i> ${foundSet.size}/10`;
-    const pf = document.getElementById('progressFill');
-    if (pf) pf.style.width = `${foundSet.size * 10}%`;
+    document.getElementById('foundCount').textContent=foundSet.size+'/10';
+    const progress=document.getElementById('progressFill');
+    progress.style.width=(foundSet.size*10)+'%';
+    progress.setAttribute('aria-valuenow',String(foundSet.size));
   }
-
-  function showMessage(msg){
-    const el = document.getElementById('messageBox');
-    el.textContent = msg;
-    setTimeout(()=>{ el.textContent=''; }, 1500);
+  let messageTimeout=null;
+  function showMessage(text){
+    const el=document.getElementById('messageBox');
+    clearTimeout(messageTimeout);el.textContent=text;
+    messageTimeout=setTimeout(()=>{if(el.textContent===text)el.textContent='';},2200);
   }
-
-  function expandVariants(s){
-    const base = normalize(s);
-    const variants = [base];
-    Object.keys(ACCEPTED_VARIANTS).forEach(key=>{
-      if (base===normalize(key)) variants.push(...ACCEPTED_VARIANTS[key].map(normalize));
-    });
-    return new Set(variants);
-  }
-
   function trySubmit(value){
-    if (!value || finished) return;
-    attempts += 1;
-    const guessNorm = normalize(value);
-    const guessSet = expandVariants(guessNorm);
-    const matched = topic.answers.find(ans => guessSet.has(answerKey(ans)));
-    if (matched){
-      if (foundSet.has(matched)){
-        showMessage('Ya lo tenías.');
-      } else {
-        foundSet.add(matched);
-        renderBoard();
-        pushGuessBadge(matched.toUpperCase(), true);
-        showMessage('¡Acertaste!');
-      }
-    } else {
-      pushGuessBadge(value, false);
-      showMessage('No está en el Top 10.');
-    }
-    saveState();
-    checkCompletion();
+    if(!value||finished||!started)return;
+    const idx=verifiedCore.match(topic,value);
+    const matched=Number.isInteger(idx)?topic.answers[idx]:null;
+    if(matched&&foundSet.has(matched)){showMessage('Ya lo encontraste. Probá otro.');return}
+    attempts+=1;
+    if(matched){
+      foundSet.add(matched);
+      renderBoard();pushGuessBadge(matched,true);
+      showMessage('¡Correcto! Puesto '+(idx+1)+' · '+topic.metric_values[idx]+' pts');
+    }else{pushGuessBadge(value,false);showMessage('No está entre los diez primeros.')}
+    saveState();checkCompletion();
   }
 
-  function pushGuessBadge(text, ok){
+    function pushGuessBadge(text, ok){
     const c = document.getElementById('guessesContainer');
     const b = document.createElement('span');
     b.className = 'guess';
@@ -263,6 +219,7 @@
     b.style.background = ok? 'rgba(34,197,94,.2)' : 'rgba(239,68,68,.18)';
     b.textContent = text;
     c.prepend(b);
+    while(c.children.length>8)c.lastElementChild.remove();
   }
 
   async function checkCompletion(){
@@ -308,6 +265,7 @@
   let progressReported = false;
   function showResult(won){
     finished = true; wonToday = !!won;
+    renderBoard(true);
     if (roundTimer !== null) { clearInterval(roundTimer); roundTimer = null; }
     document.getElementById('surnameInput').disabled = true;
     document.getElementById('submitBtn').disabled = true;
@@ -363,7 +321,7 @@
   function startRoundTimer(){
     const chip = document.getElementById('timerChip');
     const update = () => {
-      if (finished) return;
+      if (finished || !started) return;
       const left = Math.max(0, 120 - Math.floor((Date.now()-startTime)/1000));
       const mm = String(Math.floor(left/60)).padStart(2,'0');
       const ss = String(left%60).padStart(2,'0');
@@ -380,45 +338,70 @@
   function attachHandlers(){
     const input = document.getElementById('surnameInput');
     const btn = document.getElementById('submitBtn');
-    const submit = ()=>{ const v=input.value.trim(); input.value=''; trySubmit(v); input.focus(); };
+    const submit = ()=>{if(!started||finished)return;const v=input.value.trim();input.value='';trySubmit(v);input.focus();};
     input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submit(); }});
     btn.addEventListener('click', submit);
     document.getElementById('shareTop10Btn')?.addEventListener('click', ()=>{
       const title = document.getElementById('topicTitle').textContent;
-      const text = `Top 10 - ${title}\n✔ ${foundSet.size}/10 en ${attempts} intentos`;
+      const marks=topic.answers.map(ans=>foundSet.has(ans)?'🟩':'⬛').join('');
+      const text=`Crack Total · TOP 10 · ${challengeDay}\n${foundSet.size}/10 · ${marks}\n${title}`;
       if (navigator.share){ navigator.share({ title: 'Top 10', text, url: location.href }).catch(()=>{}); }
       else { navigator.clipboard?.writeText(`${text} ${location.href}`); alert('Resultado copiado'); }
     });
   }
 
+  function begin(){
+    if(started||finished)return;
+    started=true;startTime=Date.now();
+    document.getElementById('startOverlay').hidden=true;
+    document.getElementById('surnameInput').disabled=false;
+    document.getElementById('submitBtn').disabled=false;
+    document.getElementById('giveUpBtn').disabled=false;
+    saveState();startRoundTimer();
+    document.getElementById('surnameInput').focus({preventScroll:true});
+  }
   async function init(){
-    await pickDailyTopic();
-    document.getElementById('topicTitle').textContent = topic.title;
-    document.getElementById('gameNumber').innerHTML = `<i class="fas fa-hashtag"></i> Juego #${topic.id}`;
-    const source = document.getElementById('topicSource');
-    if (source) { source.textContent = `${topic.source} · Verificado ${topic.verified_at} · Ver ranking original ↗`;
-      source.href = topic.source_url; source.target = '_blank'; source.rel = 'noopener noreferrer'; }
-    if (!loadState()) { foundSet.clear(); attempts = 0; startTime = Date.now(); savedOnce = false;
-      finished = false; wonToday = false; elapsedSec = null; saveState(); }
-    renderBoard();
-    renderHistory();
-    attachHandlers();
-    // botón rendirse
-    const giveUp = document.getElementById('giveUpBtn');
-    if (giveUp){
-      giveUp.addEventListener('click', ()=>{
-        showResult(false);
-        lockForToday();
-        saveState();
-      });
+    try{await pickDailyTopic()}
+    catch(error){
+      console.error('Top 10: official challenge unavailable',error);
+      document.getElementById('startOverlay').hidden=false;
+      document.getElementById('startOverlayTitle').textContent='Desafío no disponible';
+      document.getElementById('startOverlayDetail').textContent='No se pudo cargar el ranking oficial del día.';
+      document.getElementById('startBtn').hidden=true;
+      return;
     }
-    if (finished) {
-      progressReported = true; // No volver a reportar una partida guardada al recargar.
-      showResult(wonToday);
-      lockForToday();
-    } else startRoundTimer();
+    document.getElementById('topicTitle').textContent=topic.title;
+    document.getElementById('topicCategory').textContent=topic.competition+' · '+topic.season;
+    document.getElementById('gameNumber').textContent='RETO DEL DÍA';
+    const source=document.getElementById('topicSource');
+    source.textContent=topic.source+' · Verificado '+topic.verified_at+' ↗';
+    source.href=topic.source_url;
+    source.target='_blank';source.rel='noopener noreferrer';
+    if(!loadState()){
+      const previous=localStorage.getItem(STATE_KEY);
+      if(previous&&localStorage.getItem(LAST_DAY_KEY)===challengeDay){
+        try{localStorage.setItem('top10_retired_backup_'+challengeDay,previous)}catch{}
+      }
+      foundSet.clear();attempts=0;started=false;startTime=null;
+      savedOnce=false;finished=false;wonToday=false;elapsedSec=null;saveState();
+    }
+    renderBoard();renderHistory();attachHandlers();
+    document.getElementById('startBtn').addEventListener('click',begin);
+    document.getElementById('giveUpBtn').addEventListener('click',()=>{
+      if(!started||finished)return;
+      showResult(false);lockForToday();
+    });
+    if(finished){
+      progressReported=true;showResult(wonToday);lockForToday();
+    }else if(started){
+      document.getElementById('startOverlay').hidden=true;
+      document.getElementById('surnameInput').disabled=false;
+      document.getElementById('submitBtn').disabled=false;
+      document.getElementById('giveUpBtn').disabled=false;
+      startRoundTimer();
+    }else document.getElementById('startOverlay').hidden=false;
   }
 
-  document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', init);
 })();
 
