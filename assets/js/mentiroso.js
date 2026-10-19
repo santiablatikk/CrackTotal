@@ -884,6 +884,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!wsUrl) {
             showLobbyMessage('Este preview es estático. Para probar Mentiroso, usá ?server=wss://TU-SERVIDOR-STAGING.', 'error');
             disableLobbyButtons();
+            if (availableRoomsListEl) {
+                availableRoomsListEl.replaceChildren();
+                const item = document.createElement('li');
+                item.className = 'no-rooms-message';
+                item.textContent = 'No se pueden consultar salas: falta conectar el servidor de pruebas.';
+                availableRoomsListEl.appendChild(item);
+            }
             return;
         }
         console.log(`Intentando conectar WebSocket (Mentiroso): ${wsUrl}`);
