@@ -41,13 +41,13 @@ assert(homeScript.includes("readSaved('wordle_game_state_v1')"), 'Wordle status 
 assert(!homepage.includes('¿Quién es actualmente el máximo goleador'), 'No floating factual claims on home');
 
 // Verified pool selection mirrors Top 10's UTC day seed: no unverified data in the teaser.
-const base = JSON.parse(read('assets/data/top10_pool.json'));
-const extended = JSON.parse(read('assets/data/top10_pool_extended.json'));
+const base = JSON.parse(read('assets/data/top10_verified_v2.json'));
+const extended = [];
 const norm = a => String(a).toLowerCase().replace(/ø/g, 'o').replace(/æ/g, 'ae')
   .replace(/œ/g, 'oe').replace(/ß/g, 'ss').replace(/ł/g, 'l')
   .normalize('NFD').replace(/\p{Diacritic}/gu, '').replace(/[^a-z\s]/g, ' ')
   .replace(/\s+/g, ' ').trim();
-const verified = base.concat(extended).filter(item => item.source_url && item.verified_at &&
+const verified = base.concat(extended).filter(item => item.audit_status === 'verified_official' && item.source_url && item.verified_at &&
   Array.isArray(item.answers) && item.answers.length === 10 &&
   new Set(item.answers.map(norm)).size === 10);
 assert(verified.length > 0, 'Verified daily pool must not be empty');
@@ -55,6 +55,7 @@ const utcDay = new Date().toISOString().slice(0, 10);
 const seed = new Date(utcDay).getTime() / 86400000;
 const today = verified[Math.floor((seed % verified.length + verified.length) % verified.length)];
 assert(today.title && today.source_url.startsWith('https://'), 'Daily topic must have verified source');
+assert(homeScript.includes("CTTop10Verified.pick(pool,today)"), 'Homepage must use the game\'s verified daily picker');
 assert(topScript.includes('challengeDay = todayKey'), 'Top 10 needs to freeze the UTC date at round start');
 assert(topScript.includes('localStorage.setItem(LAST_DAY_KEY, challengeDay)'), 'Crossing midnight must not overwrite tomorrow’s progress');
 
