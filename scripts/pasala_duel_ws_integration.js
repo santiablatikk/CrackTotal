@@ -222,9 +222,19 @@ async function main() {
   assert.equal(forfeit.winner, joined.playerId);
   assert.equal(forfeit.reason, 'forfeit', 'Server reports that opponent abandoned');
   assert.ok(forfeit.players[1].elapsedSeconds < 10, 'No full-duration time after immediate forfeit');
+  // The final whistle freezes the official elapsed time: a late spectator must
+  // see exactly the same statistics, even long after the game finished.
+  await sleep(1500);
+  const lateSpectator = await connect(port);
+  send(lateSpectator, 'spectate', { roomId: created.roomId });
+  const lateResult = (await wait(lateSpectator, 'result')).payload;
+  assert.deepEqual(lateResult.players.map(p => p.elapsedSeconds),
+    forfeit.players.map(p => p.elapsedSeconds),
+    'Late spectators must never see growing elapsedSeconds after a final result');
+  assert.equal(lateResult.winner, forfeit.winner);
   console.log('Arena WebSocket integration OK: staging health, origin rejection, two clients, ' +
     'unready/ready, mirrored rosco, real socket reconnect, server-scored 26 answers, spectator privacy, ' +
-    'rematch and forfeit');
+    'rematch, forfeit and immutable final statistics');
 }
 async function cleanup() {
   for (const client of connections) {
