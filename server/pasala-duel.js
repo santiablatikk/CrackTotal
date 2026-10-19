@@ -9,6 +9,8 @@ const crypto = require('crypto');
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const DURATIONS = Object.freeze({ facil: 360, normal: 300, dificil: 240 });
 const TURN_DURATIONS = Object.freeze({ facil: 180, normal: 150, dificil: 120 });
+const TURN_HANDOFF_MS = 2000;
+const ANSWER_CORRECTION_MS = 6000;
 const MAX_SPECTATORS = 80;
 const MAX_ROOMS = 250;
 
@@ -51,6 +53,7 @@ function createPasalaDuelService(options = {}) {
   const snapshot = room => ({
     roomId: room.id, public: room.public, phase: room.phase, difficulty: room.difficulty,
     mode: room.mode, activeSlot: room.activeSlot, firstSlot: room.firstSlot,
+    turnReadyAt: room.turnReadyAt, correctionWindowMs: room.mode === 'turns' ? ANSWER_CORRECTION_MS : null,
     serverNow: now(),
     duration: room.duration, deadline: room.deadline, countdownEndsAt: room.countdownEndsAt, endedAt: room.endedAt, winner: room.winner,
     spectatorCount: room.spectators.size,
@@ -65,7 +68,7 @@ function createPasalaDuelService(options = {}) {
   function questionFor(room, player) {
     if (!player || room.phase !== 'playing' || player.finishedAt !== null) return;
     const slot = room.players.indexOf(player);
-    if (room.mode === 'turns' && room.activeSlot !== slot) return;
+    if (room.mode === 'turns' && (room.activeSlot !== slot || room.turnReadyAt !== null)) return;
     const pending = LETTERS.filter(letter => player.status[letter] === 'pending');
     if (!pending.length) {
       player.finishedAt = now();
@@ -120,10 +123,22 @@ function createPasalaDuelService(options = {}) {
     }
     return [first, second];
   }
-  function switchTurn(room, requestedSlot) {
+  function activateTurn(room, slot) {
+    if (room.phase !== 'playing' || room.activeSlot !== slot) return;
+    room.turnReadyAt = null; room.turnTimer = null;
+    room.deadline = now() + room.players[slot].remainingMs;
+    room.deadlineTimer = timers.setTimeout(() => {
+      if (room.phase !== 'playing' || room.activeSlot !== slot) return;
+      if (room.players[slot].pendingAnswer) finalizeAnswer(room, slot, true);
+      else switchTurn(room, 1 - slot);
+    }, room.players[slot].remainingMs);
+    emitRoom(room); questionFor(room, room.players[slot]);
+  }
+  function switchTurn(room, requestedSlot, immediate = false) {
     if (room.mode !== 'turns' || room.phase !== 'playing') return;
     if (room.deadlineTimer) timers.clearTimeout(room.deadlineTimer);
-    if (room.activeSlot !== null) {
+    if (room.turnTimer) timers.clearTimeout(room.turnTimer);
+    if (room.activeSlot !== null && room.deadline !== null) {
       const outgoing = room.players[room.activeSlot];
       outgoing.remainingMs = remainingFor(room, room.activeSlot);
       if (outgoing.remainingMs <= 0 && outgoing.finishedAt === null) {
@@ -131,23 +146,54 @@ function createPasalaDuelService(options = {}) {
         send(outgoing.ws, 'pasala:playerFinished', { correct: outgoing.correct, incorrect: outgoing.incorrect, reason: 'timeout' });
       }
     }
+    room.deadline = null; room.turnReadyAt = null;
     const slot = [requestedSlot, 1 - requestedSlot].find(index => {
       const player = room.players[index];
       return player && player.finishedAt === null && player.remainingMs > 0;
     });
     if (slot === undefined) { finish(room); return; }
     room.activeSlot = slot;
-    room.deadline = now() + room.players[slot].remainingMs;
-    room.deadlineTimer = timers.setTimeout(() => switchTurn(room, 1 - slot), room.players[slot].remainingMs);
+    if (immediate) return activateTurn(room, slot);
+    const at = now() + TURN_HANDOFF_MS;
+    room.turnReadyAt = at;
+    room.turnTimer = timers.setTimeout(() => {
+      if (room.phase === 'playing' && room.activeSlot === slot && room.turnReadyAt === at) activateTurn(room, slot);
+    }, TURN_HANDOFF_MS);
     emitRoom(room);
-    questionFor(room, room.players[slot]);
+  }
+  function finalizeAnswer(room, slot, timeExpired = false) {
+    const player = room.players[slot], pending = player?.pendingAnswer;
+    if (!pending || room.phase !== 'playing' || room.activeSlot !== slot) return;
+    if (pending.timer) timers.clearTimeout(pending.timer);
+    player.pendingAnswer = null;
+    const question = questionsFor(room, slot)[pending.letter];
+    const allowed = [question.respuesta, ...(Array.isArray(question.respuestasAlternativas) ? question.respuestasAlternativas : [])];
+    const correct = allowed.some(value => normalize(pending.answer) === normalize(value));
+    player.status[pending.letter] = correct ? 'correct' : 'incorrect';
+    player[correct ? 'correct' : 'incorrect']++;
+    player.position = (player.position + 1) % LETTERS.length;
+    send(player.ws, 'pasala:answerResult', { letter: pending.letter, correct, correctCount: player.correct, incorrectCount: player.incorrect });
+    if (!correct || timeExpired || now() >= room.deadline) switchTurn(room, 1 - slot);
+    else { questionFor(room, player); emitRoom(room); }
+  }
+  function updateProvisionalAnswer(ws, payload = {}, finalize = false) {
+    const link = peers.get(ws), room = link && rooms.get(link.roomId);
+    if (!room || link.role !== 'player' || room.mode !== 'turns' || room.phase !== 'playing') return error(ws, 'Corrección no disponible.');
+    const player = room.players[link.slot], pending = player?.pendingAnswer;
+    if (!player || player.ws !== ws || room.activeSlot !== link.slot || !pending ||
+        pending.letter !== payload.letter || now() >= pending.endsAt) return error(ws, 'La ventana de corrección terminó.');
+    if (finalize) { finalizeAnswer(room, link.slot); return; }
+    if (pending.edits >= 1) return error(ws, 'Solo se permite una corrección por respuesta.');
+    if (typeof payload.answer !== 'string' || !payload.answer.trim() || payload.answer.length > 120) return error(ws, 'Ingresá una respuesta válida.');
+    pending.answer = payload.answer.trim(); pending.edits++;
+    send(ws, 'pasala:answerPending', { letter: pending.letter, answer: pending.answer, endsAt: pending.endsAt, editsRemaining: 0 });
   }
   function newPlayer(ws, name) {
     return {
       id: token(6), name: safeName(name), reconnectToken: token(18),
       ws, ready: false, correct: 0, incorrect: 0, position: 0,
       status: Object.fromEntries(LETTERS.map(letter => [letter, 'pending'])),
-      finishedAt: null, lastAction: 0, graceTimer: null, remainingMs: null
+      finishedAt: null, lastAction: 0, graceTimer: null, remainingMs: null, pendingAnswer: null
     };
   }
   function create(ws, payload = {}, clientInfo) {
@@ -163,7 +209,8 @@ function createPasalaDuelService(options = {}) {
       phase: 'waiting', players: [newPlayer(ws, payload.name), null], spectators: new Set(),
       activeSlot: null, firstSlot: random() < 0.5 ? 0 : 1,
       questions: null, deadline: null, startedAt: null, endedAt: null, winner: null, winnerReason: null,
-      createdAt: now(), countdown: null, countdownEndsAt: null, ticker: null, deadlineTimer: null, cleanup: null
+      createdAt: now(), countdown: null, countdownEndsAt: null, ticker: null, deadlineTimer: null,
+      turnReadyAt: null, turnTimer: null, cleanup: null
     };
     room.players[0].remainingMs = room.duration * 1000;
     rooms.set(roomId, room);
@@ -243,7 +290,7 @@ function createPasalaDuelService(options = {}) {
     room.startedAt = now();
     if (room.mode === 'turns') {
       room.activeSlot = null;
-      switchTurn(room, room.firstSlot);
+      switchTurn(room, room.firstSlot, true);
     } else {
       room.deadline = room.startedAt + room.duration * 1000;
       emitRoom(room);
@@ -258,7 +305,7 @@ function createPasalaDuelService(options = {}) {
     const room = rooms.get(link.roomId);
     if (!room || room.phase !== 'playing') return error(ws, 'La partida terminó.');
     if (room.mode === 'turns') {
-      if (room.activeSlot !== link.slot) return error(ws, 'Todavía no es tu turno.');
+      if (room.activeSlot !== link.slot || room.turnReadyAt !== null || room.deadline === null) return error(ws, 'Esperá a que termine el cambio de turno.');
       if (now() >= room.deadline) {
         switchTurn(room, 1 - link.slot);
         return error(ws, 'Se agotó tu turno.');
@@ -268,8 +315,18 @@ function createPasalaDuelService(options = {}) {
     if (!player || player.ws !== ws || player.finishedAt !== null) return error(ws, 'Acción no permitida.');
     const letter = LETTERS[player.position];
     if (player.status[letter] !== 'pending' || payload.letter !== letter) return error(ws, 'Letra fuera de turno.');
+    if (room.mode === 'turns' && player.pendingAnswer) return error(ws, 'Primero confirmá tu respuesta provisional.');
     if (now() - player.lastAction < 180) return error(ws, 'Esperá un instante antes de responder o pasar.');
     player.lastAction = now();
+    if (room.mode === 'turns' && !isPass) {
+      if (typeof payload.answer !== 'string' || !payload.answer.trim() || payload.answer.length > 120) return error(ws, 'Ingresá una respuesta válida.');
+      const endsAt = Math.min(now() + ANSWER_CORRECTION_MS, room.deadline);
+      const pending = { letter, answer: payload.answer.trim(), endsAt, edits: 0, timer: null };
+      player.pendingAnswer = pending;
+      pending.timer = timers.setTimeout(() => finalizeAnswer(room, link.slot), Math.max(0, endsAt - now()));
+      send(ws, 'pasala:answerPending', { letter, answer: pending.answer, endsAt, editsRemaining: 1 });
+      return;
+    }
     if (!isPass) {
       if (typeof payload.answer !== 'string' || !payload.answer.trim() || payload.answer.length > 120) return error(ws, 'Ingresá una respuesta válida.');
       const question = questionsFor(room, link.slot)[letter];
@@ -305,10 +362,14 @@ function createPasalaDuelService(options = {}) {
     if (room.countdown) timers.clearTimeout(room.countdown);
     if (room.ticker) timers.clearInterval(room.ticker);
     if (room.deadlineTimer) timers.clearTimeout(room.deadlineTimer);
+    if (room.turnTimer) timers.clearTimeout(room.turnTimer);
+    room.players.forEach(p => { if (p?.pendingAnswer?.timer) timers.clearTimeout(p.pendingAnswer.timer); if (p) p.pendingAnswer = null; });
     if (room.mode === 'turns' && room.activeSlot !== null) {
       room.players[room.activeSlot].remainingMs = remainingFor(room, room.activeSlot);
     }
     room.activeSlot = null;
+    room.turnReadyAt = null;
+    if (room.mode === 'turns') room.deadline = null;
     room.phase = 'finished';
     room.endedAt = now(); // Freeze elapsed-time stats for reconnects and late spectators.
     room.players.forEach(p => { if (p) p.ready = false; });
@@ -342,10 +403,12 @@ function createPasalaDuelService(options = {}) {
     if (room.countdown) timers.clearTimeout(room.countdown);
     if (room.ticker) timers.clearInterval(room.ticker);
     if (room.deadlineTimer) timers.clearTimeout(room.deadlineTimer);
+    if (room.turnTimer) timers.clearTimeout(room.turnTimer);
     if (room.cleanup) timers.clearTimeout(room.cleanup);
     room.players.forEach(p => {
       if (!p) return;
       if (p.graceTimer) timers.clearTimeout(p.graceTimer);
+      if (p.pendingAnswer?.timer) timers.clearTimeout(p.pendingAnswer.timer);
       if (p.ws) peers.delete(p.ws);
     });
     room.spectators.forEach(ws => peers.delete(ws));
@@ -415,7 +478,13 @@ function createPasalaDuelService(options = {}) {
     peers.set(ws, { roomId: room.id, role: 'player', slot });
     send(ws, 'pasala:joined', { roomId: room.id, playerId: player.id, reconnectToken: player.reconnectToken, resumed: true });
     send(ws, 'pasala:state', snapshot(room));
-    if (room.phase === 'playing') questionFor(room, player);
+    if (room.phase === 'playing') {
+      if (player.pendingAnswer) {
+        const pending = player.pendingAnswer, question = questionsFor(room, slot)[pending.letter];
+        send(ws, 'pasala:question', { letter: pending.letter, text: question.pregunta, statuses: player.status });
+        send(ws, 'pasala:answerPending', { letter: pending.letter, answer: pending.answer, endsAt: pending.endsAt, editsRemaining: 1 - pending.edits });
+      } else questionFor(room, player);
+    }
     if (room.phase === 'finished') send(ws, 'pasala:result', result(room));
     emitRoom(room);
   }
@@ -432,7 +501,7 @@ function createPasalaDuelService(options = {}) {
       room.players.forEach(p => {
         p.correct = 0; p.incorrect = 0; p.position = 0; p.finishedAt = null;
         p.remainingMs = room.duration * 1000;
-        p.lastAction = 0; p.status = Object.fromEntries(LETTERS.map(letter => [letter, 'pending']));
+        p.lastAction = 0; p.pendingAnswer = null; p.status = Object.fromEntries(LETTERS.map(letter => [letter, 'pending']));
       });
       room.ready = false; room.deadline = null; room.startedAt = null; room.endedAt = null; room.winner = null; room.winnerReason = null;
       room.activeSlot = null;
@@ -456,6 +525,8 @@ function createPasalaDuelService(options = {}) {
       case 'pasala:ready': ready(ws); break;
       case 'pasala:unready': unready(ws); break;
       case 'pasala:answer': answer(ws, payload); break;
+      case 'pasala:reviseAnswer': updateProvisionalAnswer(ws, payload); break;
+      case 'pasala:confirmAnswer': updateProvisionalAnswer(ws, payload, true); break;
       case 'pasala:pass': answer(ws, payload, true); break;
       case 'pasala:leave': leave(ws); break;
       case 'pasala:resume': resume(ws, payload, clientInfo); break;
