@@ -143,7 +143,7 @@
     try {
       const rows = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
       if (!Array.isArray(rows)) return [];
-      return rows.filter(row => row && /^\\d{4}-\\d{2}-\\d{2}$/.test(row.day) &&
+      return rows.filter(row => row && /^\d{4}-\d{2}-\d{2}$/.test(row.day) &&
         typeof row.title === 'string' && Number.isInteger(row.score) &&
         row.score >= 0 && row.score <= 10).slice(0, 30);
     } catch { return []; }
