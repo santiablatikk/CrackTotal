@@ -1,11 +1,11 @@
 /* Crack Total 2.0 — game surfaces.
    Pure presentation: no game state selectors are overridden and no rules/storage change. */
 :where(body.game-body,body.top10-body,body.wordle-body,body.qsm-1v1-body,body.mentiroso-body).ct-ds {
-  --ct2-lime:#b8ff38;--ct2-ink:#f6faf3;--ct2-line:rgba(225,246,217,.14);
+  --ct2-lime:#b5eb53;--ct2-ink:#f6faf3;--ct2-line:rgba(225,246,217,.14);
 }
 body.ct-ds :is(.lobby-input,.answer-input,.top10-input,.modern-input):focus-visible,
 body.ct-ds :is(.key,.tile,.difficulty-card,.lobby-button,.mentiroso-action-btn):focus-visible {
-  outline:3px solid var(--ct2-lime,#b8ff38)!important;outline-offset:3px;
+  outline:3px solid var(--ct2-lime,#b5eb53)!important;outline-offset:3px;
 }
 body.ct-ds :is(.lobby-button,.mentiroso-action-btn,.primary-button,.secondary-button,.pasapalabra-button,.help-button,.giveup) {
   transition:transform .2s ease,box-shadow .2s ease,background-color .2s ease,border-color .2s ease;
@@ -29,7 +29,7 @@ body.game-body.ct-ds .question-card {
   border:1px solid rgba(184,255,56,.22)!important;
   box-shadow:0 18px 55px rgba(0,0,0,.48),inset 0 0 0 5px rgba(255,255,255,.017)!important;
 }
-body.game-body.ct-ds .question-header h3 {font-family:"Oswald",Impact,sans-serif;text-transform:uppercase;letter-spacing:.055em}
+body.game-body.ct-ds .question-header h3 {font-family:"Space Grotesk","Manrope",sans-serif;text-transform:uppercase;letter-spacing:.055em}
 body.game-body.ct-ds .question-text {background:rgba(4,11,17,.72)!important;border-color:rgba(184,255,56,.13)!important;line-height:1.5}
 body.game-body.ct-ds .answer-input {background:#0a151b!important;border-color:rgba(184,255,56,.28)!important}
 body.game-body.ct-ds .pasapalabra-button {
@@ -37,19 +37,19 @@ body.game-body.ct-ds .pasapalabra-button {
   box-shadow:inset 0 1px 0 rgba(255,255,255,.3)!important;
 }
 body.game-body.ct-ds .help-button {background:#1e3134!important;border-color:rgba(184,255,56,.26)!important;color:#e6f9d7!important}
-body.game-body.ct-ds .timer-count {background:linear-gradient(120deg,#b8ff38,#e9ff8c);background-clip:text;-webkit-background-clip:text;color:transparent!important}
-body.game-body.ct-ds .modal-overlay .difficulty-card.active {border-color:#b8ff38!important;box-shadow:0 0 0 2px rgba(184,255,56,.22)!important}
+body.game-body.ct-ds .timer-count {background:linear-gradient(120deg,#b5eb53,#e9ff8c);background-clip:text;-webkit-background-clip:text;color:transparent!important}
+body.game-body.ct-ds .modal-overlay .difficulty-card.active {border-color:#b5eb53!important;box-shadow:0 0 0 2px rgba(184,255,56,.22)!important}
 body.game-body.ct-ds .loading-start-screen .container {max-width:720px;box-shadow:0 35px 110px rgba(0,0,0,.4)!important}
 /* TOP 10 — a competition scoreboard, not a generic card. */
 body.top10-body.ct-ds .top10-content {padding-top:clamp(26px,5vw,65px);padding-bottom:70px}
 body.top10-body.ct-ds .top10-card {
   max-width:900px!important;padding:clamp(20px,4vw,45px)!important;border-radius:5px!important;
   background:linear-gradient(144deg,rgba(26,42,37,.99),rgba(12,20,27,.99) 66%)!important;
-  box-shadow:0 34px 110px rgba(0,0,0,.42),inset 0 3px 0 #b8ff38!important;
+  box-shadow:0 34px 110px rgba(0,0,0,.42),inset 0 3px 0 #b5eb53!important;
 }
 body.top10-body.ct-ds .top10-header-area {align-items:start!important;gap:24px!important;margin-bottom:24px!important}
 body.top10-body.ct-ds .top10-header-area .topic {
-  color:#f6faf3;font-family:"Oswald",Impact,sans-serif;
+  color:#f6faf3;font-family:"Space Grotesk","Manrope",sans-serif;
   font-size:clamp(1.65rem,3vw,3rem)!important;line-height:1.1;text-transform:uppercase;max-width:450px;
 }
 body.top10-body.ct-ds .top10-header-area .meta {justify-content:flex-end}
@@ -81,12 +81,12 @@ body.wordle-body.ct-ds .wordle-card {
   position:relative;padding:clamp(20px,4vw,40px) clamp(10px,4vw,28px)!important;
   border-radius:5px!important;
   background:radial-gradient(ellipse at 50% 0%,rgba(184,255,56,.065),transparent 60%),#131e23!important;
-  box-shadow:inset 0 3px 0 #b8ff38,0 30px 80px rgba(0,0,0,.3);
+  box-shadow:inset 0 3px 0 #b5eb53,0 30px 80px rgba(0,0,0,.3);
 }
 body.wordle-body.ct-ds .board {margin:20px 0 30px;gap:7px}
 body.wordle-body.ct-ds .tile {
   border-radius:3px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.18);
-  font-family:"Oswald",Impact,sans-serif;font-size:1.5rem;
+  font-family:"Space Grotesk","Manrope",sans-serif;font-size:1.5rem;
 }
 body.wordle-body.ct-ds .tile:not(.correct):not(.present):not(.absent) {border-color:#40514e;background:#1b2a30}
 body.wordle-body.ct-ds .key {border-radius:3px;min-height:50px;padding:10px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.18)}
@@ -100,30 +100,30 @@ body.qsm-1v1-body.ct-ds .lobby-container-inner {
   padding:clamp(20px,4vw,55px)!important;box-shadow:0 30px 90px rgba(0,0,0,.28);
 }
 body.qsm-1v1-body.ct-ds .lobby-title {
-  color:#f8fff4!important;font-family:"Oswald",Impact,sans-serif!important;
+  color:#f8fff4!important;font-family:"Space Grotesk","Manrope",sans-serif!important;
   font-size:clamp(3rem,5vw,5.8rem)!important;text-transform:uppercase;line-height:1.05;
 }
 body.qsm-1v1-body.ct-ds .lobby-subtitle {color:#aabcb0!important;max-width:540px;margin-inline:auto}
 body.qsm-1v1-body.ct-ds .lobby-panel {background:rgba(5,13,18,.53)!important;border-radius:4px!important;border:1px solid rgba(255,255,255,.13)!important}
-body.qsm-1v1-body.ct-ds .create-panel {border-top:4px solid #b8ff38!important}
+body.qsm-1v1-body.ct-ds .create-panel {border-top:4px solid #b5eb53!important}
 body.qsm-1v1-body.ct-ds .join-panel {border-top:4px solid #7cb3ff!important}
-body.qsm-1v1-body.ct-ds .lobby-panel .panel-header h3 {font-family:"Oswald",Impact,sans-serif;text-transform:uppercase;letter-spacing:.045em;font-size:1.8rem}
+body.qsm-1v1-body.ct-ds .lobby-panel .panel-header h3 {font-family:"Space Grotesk","Manrope",sans-serif;text-transform:uppercase;letter-spacing:.045em;font-size:1.8rem}
 body.qsm-1v1-body.ct-ds .lobby-input {background:#101e24!important;color:#f8fff4!important;border-color:rgba(255,255,255,.17)!important}
 body.qsm-1v1-body.ct-ds .lobby-button {min-height:52px;border-radius:3px!important}
-body.qsm-1v1-body.ct-ds .create-panel .lobby-button {background:#b8ff38!important;color:#111b0e!important}
+body.qsm-1v1-body.ct-ds .create-panel .lobby-button {background:#b5eb53!important;color:#111b0e!important}
 body.qsm-1v1-body.ct-ds .available-rooms-section {background:rgba(255,255,255,.035)!important;border:1px solid rgba(255,255,255,.11)!important;border-radius:4px!important}
 body.qsm-1v1-body.ct-ds .game-card {background:linear-gradient(145deg,#1c2a31,#101a21)!important;border:1px solid rgba(184,255,56,.26)!important}
 body.mentiroso-body.ct-ds .lobby-container-inner {border-radius:5px!important;background:linear-gradient(145deg,#251c20,#12191f 68%)!important;border-color:rgba(255,137,106,.27)!important}
 body.mentiroso-body.ct-ds .lobby-title {font-size:clamp(2.7rem,5vw,5rem)!important;line-height:1.06}
 body.mentiroso-body.ct-ds .lobby-card {border-radius:4px!important;border-color:rgba(255,149,114,.22)!important}
-body.mentiroso-body.ct-ds .lobby-card.create-room-card {border-top:4px solid #b8ff38!important}
+body.mentiroso-body.ct-ds .lobby-card.create-room-card {border-top:4px solid #b5eb53!important}
 body.mentiroso-body.ct-ds .lobby-card.join-room-card {border-top:4px solid #ff946b!important}
-body.mentiroso-body.ct-ds .lobby-card h3 {font-family:"Oswald",Impact,sans-serif;text-transform:uppercase;font-size:1.8rem}
+body.mentiroso-body.ct-ds .lobby-card h3 {font-family:"Space Grotesk","Manrope",sans-serif;text-transform:uppercase;font-size:1.8rem}
 body.mentiroso-body.ct-ds .game-card.mentiroso-card {
   background:radial-gradient(circle at 50% 0%,rgba(255,149,114,.09),transparent 52%),#151d23!important;
   border:1px solid rgba(255,149,114,.32)!important;border-radius:5px!important;
 }
-body.mentiroso-body.ct-ds .mentiroso-challenge-text {font-family:"Oswald",Impact,sans-serif;line-height:1.15}
+body.mentiroso-body.ct-ds .mentiroso-challenge-text {font-family:"Space Grotesk","Manrope",sans-serif;line-height:1.15}
 body.mentiroso-body.ct-ds .category-pill {border-radius:3px!important}
 body.mentiroso-body.ct-ds .mentiroso-action-btn {min-height:52px;border-radius:3px}
 /* MI CARRERA — polish existing authored scenes without touching rendering logic. */
@@ -173,20 +173,20 @@ body.game-body.ct-ds #gameRulesModal .horizontal-modal {
   box-shadow:0 36px 110px rgba(0,0,0,.52)!important;
 }
 body.game-body.ct-ds #gameRulesModal .modal-title {
-  color:#b8ff38!important;font-family:"Oswald",Impact,sans-serif!important;
+  color:#b5eb53!important;font-family:"Space Grotesk","Manrope",sans-serif!important;
   text-transform:uppercase;letter-spacing:.035em;
 }
-body.game-body.ct-ds #gameRulesModal .difficulty-time {color:#b8ff38!important}
+body.game-body.ct-ds #gameRulesModal .difficulty-time {color:#b5eb53!important}
 body.game-body.ct-ds #gameRulesModal .difficulty-card {background:#162327!important;border-color:rgba(255,255,255,.13)!important}
-body.game-body.ct-ds #gameRulesModal .difficulty-card.active {background:linear-gradient(160deg,#253c32,#1a2a2b)!important;border-color:#b8ff38!important}
+body.game-body.ct-ds #gameRulesModal .difficulty-card.active {background:linear-gradient(160deg,#253c32,#1a2a2b)!important;border-color:#b5eb53!important}
 body.game-body.ct-ds #gameRulesModal #startGameButton {
-  background:linear-gradient(115deg,#b8ff38,#8bdf30)!important;
-  color:#0c170b!important;border-color:#b8ff38!important;
+  background:linear-gradient(115deg,#b5eb53,#8bdf30)!important;
+  color:#0c170b!important;border-color:#b5eb53!important;
   box-shadow:0 12px 36px rgba(184,255,56,.17)!important;
 }
 body.game-body.ct-ds #gameRulesModal .rule-compact {background:rgba(255,255,255,.035)!important;border-color:rgba(255,255,255,.09)!important}
-body.game-body.ct-ds .loading-start-screen h2 {color:#b8ff38!important;background:none!important;-webkit-text-fill-color:#b8ff38}
-body.game-body.ct-ds .spinner-rosco {border-top-color:#b8ff38!important;border-right-color:rgba(184,255,56,.4)!important}
+body.game-body.ct-ds .loading-start-screen h2 {color:#b5eb53!important;background:none!important;-webkit-text-fill-color:#b5eb53}
+body.game-body.ct-ds .spinner-rosco {border-top-color:#b5eb53!important;border-right-color:rgba(184,255,56,.4)!important}
 body.qsm-1v1-body.ct-ds .qsm-1v1-content {width:calc(100% - 32px)!important}
 @media(max-width:700px) {
  body.wordle-body.ct-ds {--tile-gap:4px;--tile-size:min(52px,calc((100vw - 66px) / 10))}
