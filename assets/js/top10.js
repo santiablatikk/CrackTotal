@@ -1,6 +1,6 @@
-/* Top 10 - Juego Diario
-   - Tema diario tomado de assets/data/top10_pool.json
-   - Se aceptan apellidos (normalización simple)
+/* Top 10 - desafío diario 4.2
+   - Rotación estable de clasificaciones oficiales en top10_verified_v2.json
+   - Nombres de equipos y alias verificados por reto, sin fuzzy matching
    - Guarda progreso del día en localStorage: found, attempts, streak
 */
 (function(){
@@ -199,6 +199,7 @@
   }
   function trySubmit(value){
     if(!value||finished||!started)return;
+    if(startTime!==null&&Date.now()-startTime>=120000){showResult(false);lockForToday();return}
     const idx=verifiedCore.match(topic,value);
     const matched=Number.isInteger(idx)?topic.answers[idx]:null;
     if(matched&&foundSet.has(matched)){showMessage('Ya lo encontraste. Probá otro.');return}
@@ -277,6 +278,20 @@
     document.getElementById('statFound').textContent = String(foundSet.size);
     document.getElementById('statAttempts').textContent = String(attempts);
     document.getElementById('statTime').textContent = `${Math.floor(elapsed/60)}:${String(elapsed%60).padStart(2,'0')}`;
+    const summary=document.getElementById('resultRanking');
+    if(summary){
+      summary.replaceChildren();
+      topic.answers.forEach((answer,i)=>{
+        const row=document.createElement('li');
+        if(foundSet.has(answer))row.className='found';
+        const rank=document.createElement('span');rank.textContent=String(i+1).padStart(2,'0');
+        const name=document.createElement('strong');name.textContent=answer;
+        const pts=document.createElement('span');pts.textContent=topic.metric_values[i]+' '+topic.unit;
+        row.append(rank,name,pts);summary.appendChild(row);
+      });
+      const sourceLink=document.getElementById('resultSource');
+      sourceLink.href=topic.source_url;
+    }
     const modal = document.getElementById('resultModal');
     document.getElementById('resultTitle').textContent = won? '¡Completado!' : 'Fin del intento';
     document.getElementById('resultMessage').textContent = won? '¡Top 10 completo!': `Encontraste ${foundSet.size} de 10. Mañana hay un nuevo desafío.`;
