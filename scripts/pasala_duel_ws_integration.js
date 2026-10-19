@@ -232,9 +232,82 @@ async function main() {
     forfeit.players.map(p => p.elapsedSeconds),
     'Late spectators must never see growing elapsedSeconds after a final result');
   assert.equal(lateResult.winner, forfeit.winner);
+
+  // 3.7: a real alternating duel with two distinct roscos and independent clocks.
+  const turnsA = await connect(port);
+  const turnsB = await connect(port);
+  const turnsViewer = await connect(port);
+  send(turnsA, 'create', { name: 'Turnos A', difficulty: 'dificil', mode: 'turns', public: false });
+  const turnRoom = (await wait(turnsA, 'created')).payload;
+  send(turnsB, 'join', { roomId: turnRoom.roomId, name: 'Turnos B' });
+  const turnJoin = (await wait(turnsB, 'joined')).payload;
+  send(turnsViewer, 'spectate', { roomId: turnRoom.roomId });
+  await wait(turnsViewer, 'spectating');
+  send(turnsA, 'ready');
+  send(turnsB, 'ready');
+  const turnStart = (await wait(turnsA, 'state', p => p.phase === 'playing' && p.mode === 'turns', 0, 6500)).payload;
+  assert.equal(turnStart.duration, 120);
+  assert.ok([0, 1].includes(turnStart.activeSlot));
+  assert.ok(turnStart.players.every(p => p.remainingMs >= 119900 && p.remainingMs <= 120000),
+    'Both independent clocks start at 120 seconds');
+  const first = turnStart.activeSlot === 0 ? turnsA : turnsB;
+  const second = turnStart.activeSlot === 0 ? turnsB : turnsA;
+  const firstQ = (await wait(first, 'question')).payload;
+  assert.equal(firstQ.letter, 'A');
+  assert.equal(second.messages.some(m => m.type === 'pasala:question'), false,
+    'Only the active player receives a private question');
+  assert.equal(turnsViewer.messages.some(m => m.type === 'pasala:question'), false,
+    'Spectators never receive clues');
+  const beforeIllegal = second.messages.length;
+  send(second, 'answer', { letter: firstQ.letter, answer: answerFor(firstQ) });
+  await wait(second, 'error', p => p.message === 'Todavía no es tu turno.', beforeIllegal);
+  await sleep(230);
+  const beforeCorrect = first.messages.length;
+  send(first, 'answer', { letter: firstQ.letter, answer: answerFor(firstQ) });
+  await wait(first, 'answerResult', p => p.correct && p.letter === 'A', beforeCorrect);
+  const follow = (await wait(first, 'question', p => p.letter === 'B', beforeCorrect)).payload;
+  const stillActive = (await wait(turnsViewer, 'state', p => p.phase === 'playing' &&
+    p.players[turnStart.activeSlot].correct === 1)).payload;
+  assert.equal(stillActive.activeSlot, turnStart.activeSlot, 'Correct answer keeps the turn');
+  assert.equal(stillActive.players[1 - turnStart.activeSlot].remainingMs, 120000,
+    'Inactive player clock must be paused');
+  await sleep(230);
+  const beforePass = second.messages.length;
+  send(first, 'pass', { letter: follow.letter });
+  const switched = (await wait(second, 'state', p => p.phase === 'playing' &&
+    p.activeSlot === 1 - turnStart.activeSlot, beforePass)).payload;
+  assert.equal(switched.players[turnStart.activeSlot].correct, 1);
+  const secondQ = (await wait(second, 'question')).payload;
+  assert.equal(secondQ.letter, 'A', 'Second rosco begins on its own A');
+  assert.notEqual(firstQ.text, secondQ.text, 'Players must receive distinct questions for the same letter');
+  assert.ok(switched.players[turnStart.activeSlot].remainingMs < 120000);
+  const beforeSecondPass = first.messages.length;
+  await sleep(230);
+  send(second, 'answer', { letter: secondQ.letter, answer: 'RESPUESTA INVÁLIDA DE TEST 99999' });
+  await wait(second, 'answerResult', p => p.correct === false && p.letter === 'A');
+  await wait(first, 'state', p => p.phase === 'playing' &&
+    p.activeSlot === turnStart.activeSlot && p.players[1 - turnStart.activeSlot].incorrect === 1,
+    beforeSecondPass);
+  const beforeIllegalSpectator = turnsViewer.messages.length;
+  send(turnsViewer, 'pass', { letter: 'A' });
+  await wait(turnsViewer, 'error', p => p.message === 'Acción no permitida.', beforeIllegalSpectator);
+  assert.equal(turnsViewer.messages.some(m => m.type === 'pasala:question'), false);
+  assert.equal(JSON.stringify(turnsViewer.messages).includes('respuestasAlternativas'), false);
+  const beforeEnding = second.messages.length;
+  send(first, 'leave');
+  const turnForfeit = (await wait(second, 'result', p => p.reason === 'forfeit', beforeEnding)).payload;
+  assert.equal(turnForfeit.winner, turnStart.activeSlot === 0 ? turnJoin.playerId : turnRoom.playerId);
+  assert.ok(turnForfeit.players.every(p => p.elapsedSeconds < 20));
+  await sleep(350);
+  const turnLateViewer = await connect(port);
+  send(turnLateViewer, 'spectate', { roomId: turnRoom.roomId });
+  const stableTurnResult = (await wait(turnLateViewer, 'result')).payload;
+  assert.deepEqual(stableTurnResult.players.map(p => p.elapsedSeconds),
+    turnForfeit.players.map(p => p.elapsedSeconds), 'Turn-duel clocks freeze at the final whistle');
+
   console.log('Arena WebSocket integration OK: staging health, origin rejection, two clients, ' +
     'unready/ready, mirrored rosco, real socket reconnect, server-scored 26 answers, spectator privacy, ' +
-    'rematch, forfeit and immutable final statistics');
+    'rematch, forfeit, distinct alternating roscos, individual clocks and immutable final statistics');
 }
 async function cleanup() {
   for (const client of connections) {
