@@ -201,6 +201,8 @@ async function main() {
   const forfeit = (await wait(opponent, 'result', payload => payload.winner === joined.playerId,
     beforeForfeit)).payload;
   assert.equal(forfeit.winner, joined.playerId);
+  assert.equal(forfeit.reason, 'forfeit', 'Server reports that opponent abandoned');
+  assert.ok(forfeit.players[1].elapsedSeconds < 10, 'No full-duration time after immediate forfeit');
   console.log('Arena WebSocket integration OK: staging health, origin rejection, two clients, ' +
     'mirrored rosco, real socket reconnect, server-scored 26 answers, spectator privacy, ' +
     'rematch and forfeit');
