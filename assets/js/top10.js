@@ -6,6 +6,7 @@
 (function(){
   const STATE_KEY = 'top10_state_v1';
   const LAST_DAY_KEY = 'top10_last_day_v1';
+  const HISTORY_KEY = 'top10_history_v1'; // Independiente de los guardados diarios existentes.
   const ACCEPTED_VARIANTS = {
     'ronaldo': ['cristiano', 'c ronaldo'],
     'messi': ['leo messi','lionel'],
@@ -137,6 +138,56 @@
     }));
   }
 
+  // Historial local de partidas terminadas. No cambia los registros diarios ni Firebase.
+  function readHistory(){
+    try {
+      const rows = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+      if (!Array.isArray(rows)) return [];
+      return rows.filter(row => row && /^\\d{4}-\\d{2}-\\d{2}$/.test(row.day) &&
+        typeof row.title === 'string' && Number.isInteger(row.score) &&
+        row.score >= 0 && row.score <= 10).slice(0, 30);
+    } catch { return []; }
+  }
+
+  function renderHistory(){
+    const list = document.getElementById('top10History');
+    if (!list) return;
+    list.replaceChildren();
+    const rows = readHistory().slice(0, 7);
+    if (!rows.length) {
+      const empty = document.createElement('li');
+      empty.className = 'top10-history-empty';
+      empty.textContent = 'Todavía no completaste desafíos en este dispositivo.';
+      list.appendChild(empty);
+      return;
+    }
+    rows.forEach(row => {
+      const item = document.createElement('li');
+      item.className = 'top10-history-item';
+      const headline = document.createElement('strong');
+      headline.textContent = row.day + ' · ' + row.title;
+      const detail = document.createElement('span');
+      const duration = Number.isFinite(row.seconds) ?
+        Math.floor(row.seconds / 60) + ':' + String(row.seconds % 60).padStart(2, '0') : '—';
+      detail.textContent = (row.won ? 'COMPLETADO' : 'FINALIZADO') + ' · ' + row.score +
+        '/10 · ' + (Number.isInteger(row.attempts) ? row.attempts : '—') +
+        ' intentos · ' + duration;
+      item.append(headline, detail);
+      list.appendChild(item);
+    });
+  }
+
+  function recordHistory(){
+    const day = isTodayKey();
+    const row = { day, topicId: topic.id, title: topic.title, score: foundSet.size,
+      attempts, seconds: elapsedSec, won: wonToday };
+    const rows = readHistory().filter(previous => previous.day !== day);
+    rows.unshift(row);
+    try { localStorage.setItem(HISTORY_KEY, JSON.stringify(rows.slice(0, 30))); }
+    catch (error) { console.warn('Top10: historial local no disponible', error); }
+    renderHistory();
+  }
+
   function answerKey(ans){
     const idx = ans.indexOf('(');
     const base = idx>0 ? ans.slice(0, idx).trim() : ans.trim();
@@ -261,6 +312,7 @@
     document.getElementById('giveUpBtn').disabled = true;
     if (elapsedSec === null) elapsedSec = Math.max(1, Math.min(120, Math.floor((Date.now()-startTime)/1000)));
     saveState();
+    recordHistory();
     const elapsed = elapsedSec;
     document.getElementById('statFound').textContent = String(foundSet.size);
     document.getElementById('statAttempts').textContent = String(attempts);
@@ -347,6 +399,7 @@
     if (!loadState()) { foundSet.clear(); attempts = 0; startTime = Date.now(); savedOnce = false;
       finished = false; wonToday = false; elapsedSec = null; saveState(); }
     renderBoard();
+    renderHistory();
     attachHandlers();
     // botón rendirse
     const giveUp = document.getElementById('giveUpBtn');
