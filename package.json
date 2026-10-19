@@ -12,7 +12,8 @@
     "dev": "node server.js",
     "fix-rankings": "node ranking-fix-util.js",
     "gen:top10": "node scripts/generate-top10-pool.js",
-    "test": "node scripts/pasala_duel_smoke.js && node scripts/content_verified_smoke.js && node scripts/arena_ui_smoke.js"
+    "test": "node scripts/pasala_duel_smoke.js && node scripts/content_verified_smoke.js && node scripts/arena_ui_smoke.js && npm run test:arena:ws",
+    "test:arena:ws": "node scripts/pasala_duel_ws_integration.js"
   },
   "keywords": [
     "futbol",
