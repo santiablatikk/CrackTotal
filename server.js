@@ -93,6 +93,14 @@ function canonicalizeUrl(req, res) {
 // --- Server Setup ---
 // Servidor HTTP que maneja tanto archivos estáticos como WebSocket upgrades
 const server = http.createServer((req, res) => {
+    // Staging-only health endpoint; never enabled on cracktotal.com.
+    if (process.env.CT_STAGING === 'true' && req.method === 'GET' &&
+        req.url.split('?')[0] === '/__ct_staging/health') {
+        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8',
+            'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
+        res.end(JSON.stringify({ ok: true, service: 'cracktotal-arena-staging', websocket: true }));
+        return;
+    }
     console.log(`${new Date().toISOString()} - ${req.method} ${req.url} - Host: ${req.headers.host}`);
     
     // CRÍTICO: Canonicalización de URLs antes de cualquier procesamiento
@@ -199,7 +207,21 @@ const server = http.createServer((req, res) => {
 const PORT = process.env.PORT || (3001 + Math.floor(Math.random() * 999));
 
 // Attach WebSocket server to the HTTP server
-const wss = new WebSocket.Server({ server });
+// Limit untrusted browser origins and message size on staging only.
+// The production server's existing WebSocket configuration remains unchanged.
+const stagingWsOptions = process.env.CT_STAGING === 'true' ? {
+    maxPayload: 64 * 1024,
+    verifyClient(info, done) {
+        const configured = (process.env.CT_STAGING_ORIGINS ||
+            'https://deploy-preview-1--zingy-haupia-53b742.netlify.app')
+            .split(',').map(origin => origin.trim()).filter(Boolean);
+        const origin = info.origin || '';
+        const allowed = !origin || configured.includes(origin) ||
+            /^http:\/\/(?:localhost|127\.0\.0\.1)(?::\d+)?$/.test(origin);
+        done(allowed, allowed ? undefined : 403, allowed ? undefined : 'Staging origin not allowed');
+    }
+} : {};
+const wss = new WebSocket.Server({ server, ...stagingWsOptions });
 
 server.listen(PORT, () => {
     console.log(`🚀 Servidor HTTP y WebSocket iniciado en el puerto ${PORT}`);
