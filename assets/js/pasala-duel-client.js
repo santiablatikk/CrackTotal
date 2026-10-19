@@ -9,7 +9,7 @@
   const storageKey = 'ct-pasala-duel-session-v1';
   const state = { ws: null, connected: false, room: null, selfId: null, spectator: watchOnly,
     roomId: null, question: null, statuses: {}, result: null, reconnecting: false,
-    clockTimer: null, retryTimer: null, manualLeave: false, clockOffset: 0 };
+    clockTimer: null, retryTimer: null, manualLeave: false, clockOffset: 0, pendingAction: false };
   const urlOverride = params.get('server') || window.CRACK_TOTAL_DUEL_WS_URL || '';
   const isStaticPreview = /(?:^|\.)netlify\.app$/i.test(location.hostname) || /(?:^|\.)netlify\.com$/i.test(location.hostname);
   const wsUrl = urlOverride || (!isStaticPreview ? ((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host) : '');
@@ -38,6 +38,11 @@
       $(id).querySelector('button[type="submit"]').disabled = !available;
     });
     $('randomButton').disabled = !available;
+  }
+  function setActionControls(enabled) {
+    $('answerInput').disabled = !enabled;
+    $('answerForm').querySelector('button[type="submit"]').disabled = !enabled;
+    $('passButton').disabled = !enabled;
   }
   function connect() {
     setLobbyAvailability(false);
@@ -72,7 +77,7 @@
     ws.onerror = () => notice('No se pudo establecer la conexión. Revisá que el servidor de duelos esté activo.', true);
     ws.onclose = () => {
       if (state.ws !== ws) return;
-      state.connected = false; setLobbyAvailability(false);
+      state.connected = false; setLobbyAvailability(false); setActionControls(false);
       notice('Conexión interrumpida. Intentando volver a la sala…', true);
       if (!state.manualLeave && wsUrl && !state.retryTimer) {
         state.retryTimer = setTimeout(() => { state.retryTimer = null; connect(); }, 3500);
@@ -97,7 +102,7 @@
         enterMatch(); renderMatch(); break;
       case 'question':
         state.question = payload; state.statuses = payload.statuses || {};
-        $('answerInput').value = ''; $('answerInput').disabled = false;
+        $('answerInput').value = ''; state.pendingAction = false; setActionControls(true);
         $('answerFeedback').textContent = '';
         renderMatch();
         if (!state.spectator && state.room && state.room.phase === 'playing') $('answerInput').focus({ preventScroll:true });
@@ -121,7 +126,7 @@
         }
         break;
       case 'error':
-        if (state.room?.phase === 'playing' && !state.spectator) $('answerInput').disabled = false;
+        if (state.room?.phase === 'playing' && !state.spectator) { state.pendingAction = false; setActionControls(true); }
         notice(payload.message || 'No se pudo completar la acción.', true);
         if (state.reconnecting) {
           state.reconnecting = false; clearSession();
@@ -142,7 +147,8 @@
   function leaveUI() {
     $('match').hidden = true; $('lobby').hidden = false;
     state.room = null; state.roomId = null; state.selfId = null; state.question = null;
-    state.statuses = {}; state.result = null;
+    state.statuses = {}; state.result = null; state.pendingAction = false;
+    setActionControls(false);
     if (!watchOnly) document.body.classList.remove('overlay-mode');
   }
   function drawScore() {
@@ -154,6 +160,15 @@
       const identity = document.createElement('div'); identity.className='score-name'; identity.textContent = player?.name || 'RIVAL PENDIENTE';
       const label = document.createElement('span'); label.textContent = player ? ((player.id === state.selfId) ? 'VOS' : player.ready ? 'LISTO' : player.connected ? 'EN SALA' : 'DESCONECTADO') : 'ESPERANDO…';
       identity.append(label);
+      const progress = document.createElement('span');
+      progress.className = 'score-progress';
+      progress.textContent = (player?.answered ?? 0) + '/26 LETRAS RESUELTAS';
+      identity.append(progress);
+      const opponent = players[1 - index];
+      if (player && opponent && state.room?.phase === 'playing' && player.correct > opponent.correct) {
+        const lead = document.createElement('span'); lead.className = 'score-lead'; lead.textContent = 'EN VENTAJA'; identity.append(lead);
+        card.classList.add('is-leading');
+      }
       const score = document.createElement('div'); score.className='score-value'; score.textContent = String(player?.correct ?? 0).padStart(2,'0');
       card.append(identity,score); board.append(card);
     });
@@ -250,9 +265,17 @@
     if (!state.question) return;
     const answer = $('answerInput').value.trim();
     if (!answer) return;
-    if (send('answer', { letter:state.question.letter, answer })) $('answerInput').disabled = true;
+    if (state.pendingAction) return;
+    if (send('answer', { letter:state.question.letter, answer })) {
+      state.pendingAction = true; setActionControls(false);
+    }
   });
-  $('passButton').addEventListener('click', () => { if (state.question) send('pass', { letter:state.question.letter }); });
+  $('passButton').addEventListener('click', () => {
+    if (!state.question || state.pendingAction) return;
+    if (send('pass', { letter:state.question.letter })) {
+      state.pendingAction = true; setActionControls(false);
+    }
+  });
   $('rematchButton').addEventListener('click', () => send('rematch'));
   function exitRoom() {
     send('leave'); state.manualLeave = true;
@@ -282,7 +305,7 @@
     window.open(link.href, '_blank', 'noopener,noreferrer');
   });
   $('reconnectButton').addEventListener('click', () => { if (state.retryTimer) clearTimeout(state.retryTimer); state.retryTimer=null; connect(); });
-  setLobbyAvailability(false);
+  setLobbyAvailability(false); setActionControls(false);
   if (safeCode(initialRoom) && !watchOnly) $('roomCode').value = initialRoom;
   if (savedSession()?.roomId && savedSession()?.endpoint === wsUrl && !watchOnly && !initialRoom) $('roomCode').value = savedSession().roomId;
   if (overlay) document.body.classList.add('overlay-mode');
