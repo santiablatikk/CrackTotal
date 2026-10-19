@@ -7,15 +7,15 @@
   <meta name="description" content="Pasala Che 1v1: elegí Rosco por Turnos con dos roscos distintos o Rosco Espejo, creá una sala y jugá online con un amigo.">
   <title>Pasala Che 1v1 | Crack Total</title>
   <link rel="icon" href="portada.ico" type="image/x-icon">
-  <link rel="stylesheet" href="assets/css/pasala-duel.css?v=10">
-  <script src="assets/js/pasala-duel-client.js?v=13" defer></script>
+  <link rel="stylesheet" href="assets/css/pasala-duel.css?v=11">
+  <script src="assets/js/pasala-duel-client.js?v=14" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Saltar al juego</a>
   <header class="arena-header">
     <a class="brand" href="index.html" aria-label="Crack Total, volver al inicio"><span class="brand-icon">CT<span class="brand-star">✦</span></span> CRACK TOTAL</a>
     <nav aria-label="Navegación de juego"><a href="pasalache.html">Rosco individual</a><a href="games.html">Todos los juegos ↗</a></nav>
-    <span class="arena-version">ARENA / 01</span>
+    <span class="arena-version">ARENA / 1V1</span>
   </header>
   <main id="main">
     <section class="arena-hero">
@@ -73,7 +73,17 @@
       </section>
 
       <section class="match-area" id="match" hidden aria-labelledby="matchTitle">
-        <div class="match-top"><div><div class="section-marker"><span>02</span> / PARTIDO EN VIVO</div><h2 id="matchTitle">LA CANCHA <em>ES TUYA.</em></h2></div><div class="match-room">SALA <strong id="displayRoom">—</strong> <button type="button" id="copyCode">COPIAR CÓDIGO</button> <button type="button" id="copyInvite">INVITAR RIVAL ↗</button> <button type="button" id="copySpectator">INVITAR ESPECTADORES ↗</button></div></div>
+        <div class="match-top">
+          <div class="match-title"><div class="section-marker"><span>02</span> / ARENA 1V1</div><h2 id="matchTitle">LA CANCHA <em>ES TUYA.</em></h2></div>
+          <div class="match-room">
+            <div class="match-room-code"><span>CÓDIGO DE TU SALA</span><strong id="displayRoom">—</strong><button type="button" id="copyCode">COPIAR CÓDIGO</button></div>
+            <div class="match-room-actions"><button class="invite-main" type="button" id="copyInvite">COMPARTIR INVITACIÓN ↗</button><button type="button" id="copySpectator">LINK PARA ESPECTADORES ↗</button></div>
+          </div>
+        </div>
+        <div id="lobbyPlayers" class="lobby-players" hidden>
+          <div class="lobby-players-heading"><strong>ANTES DE JUGAR</strong><span id="lobbyModeLabel">ROSCO POR TURNOS</span><span id="lobbyDurationLabel">2:30 MIN / JUGADOR</span></div>
+          <div id="lobbyPlayersList" class="lobby-players-list" aria-label="Jugadores y estado de preparación"></div>
+        </div>
         <div class="scoreboard" id="scoreboard" aria-label="Marcador del duelo"></div>
         <div class="stream-strip" id="streamStrip" role="status" aria-live="off"><span><i class="signal-dot" aria-hidden="true"></i> CRACK TOTAL / EN DIRECTO</span><strong id="streamPhase">ESPERANDO RIVAL</strong><span id="streamAudience">0 MIRANDO</span><strong id="streamClock" aria-label="Tiempo restante">05:00</strong></div>
         <div class="match-stage" id="matchStage">
@@ -84,8 +94,9 @@
           </div>
           <div class="question-side">
             <div class="match-status" id="matchStatus" role="status" aria-live="polite">Esperando a tu rival…</div><p id="turnHint" class="turn-hint" hidden aria-live="polite">DOS ROSCOS · UN TURNO POR VEZ</p>
+            <div id="turnTransition" class="turn-transition" hidden role="status" aria-live="polite"><span>CAMBIO DE TURNO</span><strong id="turnTransitionLabel">PREPARATE</strong><em id="turnTransitionCountdown">2 S</em></div>
             <div id="readyPanel" class="ready-panel"><span class="question-eyebrow">PREVIA DEL PARTIDO</span><h3 id="readyHeading">CALENTANDO MOTORES.</h3><p id="readyDescription">Cuando entren los dos, apretá listo. El rosco empieza con una cuenta regresiva de tres segundos.</p><button class="arena-button primary" id="readyButton" type="button">ESTOY LISTO ✓</button></div>
-            <div id="questionPanel" hidden><span class="question-eyebrow">LETRA EN JUEGO</span><div class="current-letter" id="currentLetter">A</div><p class="question-text" id="questionText"></p><form id="answerForm" autocomplete="off"><label for="answerInput" class="sr-only">Tu respuesta</label><input id="answerInput" maxlength="120" placeholder="ESCRIBÍ TU RESPUESTA" autocapitalize="off" spellcheck="false" required><div class="answer-actions"><button class="arena-button primary" type="submit">RESPONDER ↗</button><button class="arena-button outline" type="button" id="passButton">PASALA CHE →</button></div></form><p id="answerFeedback" role="status" aria-live="polite"></p></div>
+            <div id="questionPanel" hidden><span class="question-eyebrow">LETRA EN JUEGO</span><div class="current-letter" id="currentLetter">A</div><p class="question-text" id="questionText"></p><form id="answerForm" autocomplete="off"><label for="answerInput" class="sr-only">Tu respuesta</label><input id="answerInput" maxlength="120" placeholder="ESCRIBÍ TU RESPUESTA" autocapitalize="off" spellcheck="false" required><div class="answer-actions"><button class="arena-button primary" type="submit">RESPONDER ↗</button><button class="arena-button outline" type="button" id="passButton">PASALA CHE →</button></div></form><div class="answer-correction" id="answerCorrection" hidden><span class="correction-kicker">RESPUESTA PROVISIONAL · TODAVÍA NO SE CORRIGIÓ</span><strong id="provisionalValue">—</strong><p>Tenés una oportunidad para corregir un error de escritura. El reloj sigue corriendo.</p><div class="correction-timer">CIERRA EN <span id="correctionCountdown">6 S</span></div><label for="correctionInput">EDITÁ TU RESPUESTA (UNA VEZ)</label><input id="correctionInput" maxlength="120" autocomplete="off" spellcheck="false"><div class="answer-actions"><button class="arena-button outline" id="correctButton" type="button">CORREGIR RESPUESTA ↶</button><button class="arena-button primary" id="confirmAnswer" type="button">CONFIRMAR YA ↗</button></div></div><p id="answerFeedback" role="status" aria-live="polite"></p></div>
             <div id="resultsPanel" hidden><span class="question-eyebrow">FINAL DEL ENCUENTRO</span><h3 id="resultHeadline">PARTIDO TERMINADO.</h3><p id="resultDescription"></p><div id="resultStats" class="result-stat-list" aria-label="Estadísticas del duelo"></div><button class="arena-button primary" type="button" id="rematchButton">PEDIR REVANCHA ↗</button><p class="rematch-hint" id="rematchHint" aria-live="polite"></p><button class="arena-button outline" type="button" id="shareResult">COMPARTIR RESULTADO ↗</button><button class="arena-button outline" type="button" id="backToLobby">VOLVER AL LOBBY</button></div>
           </div>
           <div class="ring-side opponent-ring-side" id="opponentRingSide" hidden>
