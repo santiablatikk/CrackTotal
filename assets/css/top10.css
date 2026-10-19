@@ -35,7 +35,7 @@ body.top10-body .top10-intro-numbers{position:absolute;inset:8px;display:flex;ju
 body.top10-body .top10-card{padding:0;background:#f4f2e9;color:#15221a;box-shadow:none;border:0;overflow:visible}
 body.top10-body .top10-header-area{background:#10211b;color:#f7faef;padding:24px 28px;display:flex;justify-content:space-between;gap:24px;align-items:center}
 body.top10-body .top10-topic-block{min-width:0;max-width:740px}
-body.top10-body .top10-eyebrow{font-size:10px;color:#b5eb53;font-weight:900;letter-spacing:.1em;margin:0 0 9px}
+body.top10-body .top10-eyebrow{font-size:13px;color:#b5eb53;font-weight:900;letter-spacing:.1em;margin:0 0 9px}
 body.top10-body .top10-header-area .topic{font:700 clamp(23px,2.7vw,36px)/1.25 "Space Grotesk",sans-serif;letter-spacing:.005em;color:#f4f8eb;margin:0 0 12px;text-transform:uppercase}
 body.top10-body .top10-topic-info{display:flex;gap:12px;flex-wrap:wrap;align-items:center;font-size:14px;line-height:1.5;color:#bfcac0}
 body.top10-body .top10-topic-info a{color:#ccfa72;text-underline-offset:3px}
@@ -123,18 +123,18 @@ body.top10-body .result-buttons .modal-button{min-height:43px;font-weight:800;fo
 }
 @media(max-width:600px){
  body.top10-body .top10-header{padding-top:85px;padding-bottom:13px}
- body.top10-body .top10-header-line{font-size:9px}
+ body.top10-body .top10-header-line{font-size:12px}
  body.top10-body .top10-hero-copy{padding:16px 0 8px;align-items:flex-start;flex-direction:column;gap:7px}
  body.top10-body .title-text{font-size:52px}
  body.top10-body .top10-header .subtitle{font-size:14px}
  body.top10-body .top10-intro{padding:19px 18px 25px;min-height:0}
- body.top10-body .top10-intro-label{font-size:9px}
+ body.top10-body .top10-intro-label{font-size:12px}
  body.top10-body .top10-intro-grid{grid-template-columns:1fr;min-height:0;gap:5px}
  body.top10-body .top10-intro-main{padding-top:26px}
  body.top10-body .top10-intro-main h2{font-size:clamp(36px,8vw,53px)}
  body.top10-body #startOverlayDetail{font-size:15px}
  body.top10-body .top10-intro-illustration{display:none}
- body.top10-body .top10-intro-controls span{font-size:10px;padding:7px 10px}
+ body.top10-body .top10-intro-controls span{font-size:12px;padding:7px 10px}
  body.top10-body .top10-header-area{padding:16px 15px 14px;gap:14px}
  body.top10-body .top10-header-area .topic{font-size:clamp(24px,6.4vw,34px)}
  body.top10-body .top10-topic-info{font-size:13px}
@@ -150,7 +150,7 @@ body.top10-body .result-buttons .modal-button{min-height:43px;font-weight:800;fo
  body.top10-body .giveup{font-size:13px;margin-top:4px}
  body.top10-body .top10-ranking-panel{padding:14px 12px}
  body.top10-body .top10-ranking-caption,body.top10-body .answers li{grid-template-columns:39px minmax(0,1fr) 57px;gap:6px}
- body.top10-body .top10-ranking-caption{padding:0 7px 8px;font-size:10px}
+ body.top10-body .top10-ranking-caption{padding:0 7px 8px;font-size:12px}
  body.top10-body .answers li{padding:7px 8px;min-height:47px}
  body.top10-body .answers li .pos{font-size:23px}
  body.top10-body .answers li .label{font-size:clamp(14px,3.65vw,16px);line-height:1.35}
