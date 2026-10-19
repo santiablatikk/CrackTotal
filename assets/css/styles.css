@@ -32,7 +32,7 @@
     --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.4);
 
     /* Tipografía */
-    --font-family: 'Montserrat', sans-serif;
+    --font-family: 'Manrope', sans-serif;
     --font-size-base: 16px;
     --font-weight-normal: 400;
     --font-weight-bold: 700;
@@ -1650,7 +1650,7 @@ input:focus {
     gap: 12px;
   position: relative;
     padding-bottom: 15px;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Space Grotesk', 'Manrope', sans-serif;
   text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -2314,7 +2314,7 @@ input:focus {
     -webkit-text-fill-color: transparent;
     margin: 0;
     letter-spacing: -1px;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'Space Grotesk', 'Manrope', sans-serif;
   text-transform: uppercase;
 }
 
@@ -2702,7 +2702,7 @@ input:focus {
     -webkit-text-fill-color: transparent;
     margin: 0;
     letter-spacing: -1px;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Space Grotesk', 'Manrope', sans-serif;
     text-transform: uppercase;
 }
 
@@ -2843,7 +2843,7 @@ input:focus {
     gap: 12px;
     position: relative;
     padding-bottom: 15px;
-    font-family: 'Oswald', sans-serif;
+    font-family: 'Space Grotesk', 'Manrope', sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
