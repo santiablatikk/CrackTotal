@@ -124,3 +124,24 @@ body.home-v2,body.discover-page {
 @media(max-width:690px){.ct35-daily-heading{display:block}.ct35-daily-heading>p{margin-top:16px}.ct35-daily-grid{grid-template-columns:1fr;grid-template-rows:auto;min-height:0}.ct35-daily-main{grid-row:auto;min-height:380px}.ct35-daily-primary-content{padding:45px 0 38px}.ct35-daily-side{min-height:195px}.ct35-daily-main::before{font-size:310px}.ct35-daily-bottom{flex-wrap:wrap}.ct35-wordle-motif span{width:31px}.ct35-daily-primary-content h3{font-size:clamp(2.5rem,11vw,4.1rem)}}
 @media(max-width:390px){.ct35-daily-main{padding:21px}.ct35-daily-overline{font-size:11px}.ct35-daily-bottom strong{font-size:16px}}
 @media(prefers-reduced-motion:reduce){.ct35-daily-grid>a{transition:none}.ct35-daily-grid>a:hover{transform:none}}
+
+
+/* 3.5 catalog / the verified daily challenge is contextual, not a generic game tile. */
+.ct35-catalog-daily{display:grid;grid-template-columns:minmax(260px,1.15fr) minmax(280px,1.1fr) minmax(215px,.75fr);gap:12px;align-items:stretch;margin-block:35px 0}
+.ct35-catalog-daily-lead{display:flex;flex-direction:column;justify-content:center;padding:20px 24px 20px 0}
+.ct35-catalog-daily-lead h2{font:900 clamp(2.4rem,3.8vw,4rem)/.92 "Oswald",Impact,sans-serif;margin:12px 0;text-transform:uppercase;color:#fff}
+.ct35-catalog-daily-lead h2 span{color:#b8ff38}
+.ct35-catalog-daily-lead>p{font-size:13px;color:#b6c4b9;line-height:1.6;margin:0}
+.ct35-catalog-daily>a{display:flex;flex-direction:column;gap:15px;min-width:0;padding:25px;border-radius:9px;text-decoration:none!important;transition:transform .25s}
+.ct35-catalog-daily>a:hover{transform:translateY(-4px)}
+.ct35-catalog-daily-top{color:#071506!important;background:linear-gradient(135deg,#b8ff38,#83d623)}
+.ct35-catalog-daily-top>strong{font:900 clamp(1.55rem,2.4vw,2.6rem)/.98 "Oswald",Impact,sans-serif;text-transform:uppercase;overflow-wrap:anywhere}
+.ct35-catalog-daily-top>span:not(.ct35-daily-overline):not(.ct35-catalog-daily-footer){font-size:12px;color:#294019;font-weight:700;line-height:1.5}
+.ct35-catalog-daily-footer{margin-top:auto;padding-top:12px;border-top:1px solid rgba(9,32,3,.2);display:flex;justify-content:space-between;gap:12px;font:900 11px "Montserrat",Arial,sans-serif}
+.ct35-catalog-daily-wordle{background:linear-gradient(140deg,#203744,#0f1a25);color:#f5f8fa!important;border:1px solid rgba(255,255,255,.18)}
+.ct35-catalog-daily-wordle>strong{font:900 clamp(1.7rem,2.2vw,2.3rem)/.96 "Oswald",Impact,sans-serif;text-transform:uppercase}
+.ct35-catalog-daily-wordle>span:not(.ct35-daily-overline){font-size:12px;color:#b7cbd7;line-height:1.5}
+.ct35-catalog-daily-wordle>i{color:#b8ff38;align-self:flex-end;margin-top:auto}
+@media(max-width:1050px){.ct35-catalog-daily{grid-template-columns:repeat(2,minmax(0,1fr))}.ct35-catalog-daily-lead{grid-column:1/-1;padding:0 0 12px}}
+@media(max-width:590px){.ct35-catalog-daily{grid-template-columns:1fr;margin-top:18px}.ct35-catalog-daily-lead{grid-column:auto}.ct35-catalog-daily>a{min-height:195px}}
+@media(prefers-reduced-motion:reduce){.ct35-catalog-daily>a{transition:none}.ct35-catalog-daily>a:hover{transform:none}}
