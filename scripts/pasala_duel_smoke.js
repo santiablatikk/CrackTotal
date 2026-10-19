@@ -115,4 +115,14 @@ assert.match(get(watcher,'closed').message,/sala se cerró/,'Spectator gets host
 assert.equal(service.rooms.has(roomId),false);
 service.destroy();
 assert.equal(service.rooms.size,0);
-console.log('Pasala Che duel smoke OK: room, mirrored questions, countdown, verified aliases, rate limit, spectators, reconnect, winner, rematch, closed-room notices, cleanup');
+const capacity = createPasalaDuelService({bank, now:()=>clock, random:()=>0, timers:fakeTimers});
+for (let i = 0; i < 250; i++) {
+  const guest = socket();
+  assert.equal(capacity.handle(guest,{type:'pasala:create',payload:{name:'Jugador'}}),true);
+}
+assert.equal(capacity.rooms.size,250);
+const overflow=socket();
+capacity.handle(overflow,{type:'pasala:create',payload:{name:'Excedente'}});
+assert.match(get(overflow,'error').message,/arena está completa/);
+capacity.destroy();
+console.log('Pasala Che duel smoke OK: room, mirrored questions, countdown, verified aliases, rate limit, spectators, reconnect, winner, rematch, closed-room notices, room cap, cleanup');
