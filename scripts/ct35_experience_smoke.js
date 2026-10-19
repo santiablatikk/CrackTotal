@@ -5,6 +5,7 @@ const assert = require('assert');
 
 const read = file => fs.readFileSync(path.join(__dirname, '..', file), 'utf8');
 const homepage = read('index.html');
+const gamesPage = read('games.html');
 const arena = read('pasala-1v1.html');
 const arenaClient = read('assets/js/pasala-duel-client.js');
 const homeScript = read('assets/js/home.js');
@@ -26,6 +27,10 @@ for (const id of ['ct35-daily-title', 'homeDailyTop10Title', 'homeDailyTop10Cont
   assert(homepage.includes('id="' + id + '"'), 'Daily home element missing: ' + id);
 }
 assert(homeStyles.includes('.ct35-daily-grid'), 'Daily challenge visual styling missing');
+for (const id of ['homeDailyTop10Title', 'homeDailyTop10Status', 'homeDailyWordleStatus']) {
+  assert(gamesPage.includes('id="' + id + '"'), 'Catalog daily link missing: ' + id);
+}
+assert(gamesPage.includes('assets/js/home.js?v=20261019b'), 'Catalog must load today’s real status script');
 assert(homeStyles.includes('@media(max-width:690px)'), 'Daily mobile layout missing');
 assert(homeScript.includes("new Date().toISOString().slice(0, 10)"), 'Daily topic teaser must use UTC');
 assert(homeScript.includes("readSaved('top10_state_v1')"), 'Home status must be sourced from saved real progress');
