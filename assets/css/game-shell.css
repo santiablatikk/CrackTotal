@@ -15,7 +15,7 @@ body.futboleros-body.ct-ds {
         var(--home-bg, var(--ct-bg, #050b14));
     overflow-x: hidden;
     min-height: 100vh;
-    font-family: "Montserrat", sans-serif;
+    font-family: var(--ct-font-sans,"Manrope",sans-serif);
 }
 
 body.game-body.ct-ds .breadcrumbs-container,
