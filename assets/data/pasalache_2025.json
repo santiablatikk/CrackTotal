@@ -209,7 +209,8 @@
       },
       {
         "pregunta": "¿Nombre y apellido del 10 argentino campeón del mundo 1986?",
-        "respuesta": "Diego Maradona"
+        "respuesta": "Diego Maradona",
+        "respuestasIncompletasCorregibles": ["Maradona"]
       },
       {
         "pregunta": "¿Apellido del histórico delantero marfileño del Chelsea, Didier …?",
@@ -273,11 +274,13 @@
       },
       {
         "pregunta": "¿Nombre completo del defensor brasileño estrella del Real Madrid?",
-        "respuesta": "Éder Militão"
+        "respuesta": "Éder Militão",
+        "respuestasIncompletasCorregibles": ["Militão"]
       },
       {
         "pregunta": "¿Nombre y apellido del campeón del mundo argentino que fichó por Chelsea en 2023?",
-        "respuesta": "Enzo Fernández"
+        "respuesta": "Enzo Fernández",
+        "respuestasIncompletasCorregibles": ["Fernández"]
       },
       {
         "pregunta": "¿Nombre y apellido del entrenador neerlandés del Manchester United 2022-2024?",
@@ -310,7 +313,8 @@
       },
       {
         "pregunta": "¿Nombre y apellido del central italiano Balón de Oro 2006?",
-        "respuesta": "Fabio Cannavaro"
+        "respuesta": "Fabio Cannavaro",
+        "respuestasIncompletasCorregibles": ["Cannavaro"]
       },
       {
         "pregunta": "¿Apodo del goleador colombiano Radamel Falcao García Zárate?",
@@ -318,11 +322,13 @@
       },
       {
         "pregunta": "¿Nombre completo del mediocampista uruguayo estrella del Real Madrid?",
-        "respuesta": "Federico Valverde"
+        "respuesta": "Federico Valverde",
+        "respuestasIncompletasCorregibles": ["Valverde"]
       },
       {
         "pregunta": "¿Nombre y apellido del goleador húngaro leyenda del Real Madrid?",
-        "respuesta": "Ferenc Puskás"
+        "respuesta": "Ferenc Puskás",
+        "respuestasIncompletasCorregibles": ["Puskás"]
       },
       {
         "pregunta": "¿Club italiano de Florencia con estadio Artemio Franchi?",
@@ -334,7 +340,8 @@
       },
       {
         "pregunta": "¿Nombre y apellido del ex mediocampista inglés del Chelsea que luego fue su DT?",
-        "respuesta": "Frank Lampard"
+        "respuesta": "Frank Lampard",
+        "respuestasIncompletasCorregibles": ["Lampard"]
       },
       {
         "pregunta": "¿Nombre del español que marcó el gol de la final del Mundial de la FIFA 2026 (… Torres)?",
@@ -362,7 +369,8 @@
       },
       {
         "pregunta": "¿Nombre y apellido del arquero italiano leyenda de Juventus y la Azzurra?",
-        "respuesta": "Gianluigi Buffon"
+        "respuesta": "Gianluigi Buffon",
+        "respuestasIncompletasCorregibles": ["Buffon"]
       },
       {
         "pregunta": "¿Apellido del delantero francés campeón del mundo 2018, Antoine …?",
@@ -382,7 +390,8 @@
       },
       {
         "pregunta": "¿Nombre y apellido del chileno apodado 'Pitbull'?",
-        "respuesta": "Gary Medel"
+        "respuesta": "Gary Medel",
+        "respuestasIncompletasCorregibles": ["Medel"]
       },
       {
         "pregunta": "CONTIENE G: ¿Apellido del lateral argentino campeón del mundo 2022, Nicolás …?",
@@ -410,19 +419,23 @@
       },
       {
         "pregunta": "¿Nombre y apellido del goleador mexicano leyenda del Real Madrid?",
-        "respuesta": "Hugo Sánchez"
+        "respuesta": "Hugo Sánchez",
+        "respuestasIncompletasCorregibles": ["Sánchez"]
       },
       {
         "pregunta": "¿Nombre y apellido del ex delantero argentino ídolo de River, goleador en Parma, Lazio e Inter?",
-        "respuesta": "Hernán Crespo"
+        "respuesta": "Hernán Crespo",
+        "respuestasIncompletasCorregibles": ["Crespo"]
       },
       {
         "pregunta": "¿Nombre y apellido del mediocampista mexicano ex Porto y Atlético?",
-        "respuesta": "Héctor Herrera"
+        "respuesta": "Héctor Herrera",
+        "respuestasIncompletasCorregibles": ["Herrera"]
       },
       {
         "pregunta": "¿Nombre y apellido del DT alemán que ganó el sextete con el Bayern en 2020?",
-        "respuesta": "Hansi Flick"
+        "respuesta": "Hansi Flick",
+        "respuestasIncompletasCorregibles": ["Flick"]
       },
       {
         "pregunta": "¿Apodo del potente delantero brasileño ex Porto y Zenit?",
@@ -474,7 +487,8 @@
       },
       {
         "pregunta": "¿Nombre y apellido del delantero español leyenda del Celta de Vigo?",
-        "respuesta": "Iago Aspas"
+        "respuesta": "Iago Aspas",
+        "respuestasIncompletasCorregibles": ["Aspas"]
       },
       {
         "pregunta": "¿Qué club mendocino se consagró campeón de la Copa Argentina 2025?",
@@ -506,19 +520,23 @@
       },
       {
         "pregunta": "¿Nombre y apellido del 10 colombiano Bota de Oro del Mundial 2014?",
-        "respuesta": "James Rodríguez"
+        "respuesta": "James Rodríguez",
+        "respuestasIncompletasCorregibles": ["Rodríguez"]
       },
       {
         "pregunta": "¿Nombre completo del máximo ídolo de Boca Juniors apodado 'El Román'?",
-        "respuesta": "Juan Román Riquelme"
+        "respuesta": "Juan Román Riquelme",
+        "respuestasIncompletasCorregibles": ["Riquelme"]
       },
       {
         "pregunta": "¿Nombre y apellido del delantero portugués que brilló en Atlético Madrid y Barcelona?",
-        "respuesta": "João Félix"
+        "respuesta": "João Félix",
+        "respuestasIncompletasCorregibles": ["Félix"]
       },
       {
         "pregunta": "¿Nombre y apellido del técnico portugués multicampeón con Porto e Inter?",
-        "respuesta": "José Mourinho"
+        "respuesta": "José Mourinho",
+        "respuestasIncompletasCorregibles": ["Mourinho"]
       },
       {
         "pregunta": "¿Nombre y apellido del lateral izquierdo español leyenda del Barcelona que jugó junto a Messi en Inter Miami?",
@@ -526,11 +544,13 @@
       },
       {
         "pregunta": "¿Nombre completo del central croata figura del Manchester City?",
-        "respuesta": "Joško Gvardiol"
+        "respuesta": "Joško Gvardiol",
+        "respuestasIncompletasCorregibles": ["Gvardiol"]
       },
       {
         "pregunta": "¿Nombre completo del extremo inglés que brilló en el Borussia Dortmund antes de fichar por el Manchester United?",
-        "respuesta": "Jadon Sancho"
+        "respuesta": "Jadon Sancho",
+        "respuestasIncompletasCorregibles": ["Sancho"]
       },
       {
         "pregunta": "¿Apellido del autor del único gol de Tottenham en la final de la Europa League 2024/25?",
@@ -566,15 +586,18 @@
       },
       {
         "pregunta": "¿Nombre y apellido del arquero español que reforzó al Real Madrid en 2023/24?",
-        "respuesta": "Kepa Arrizabalaga"
+        "respuesta": "Kepa Arrizabalaga",
+        "respuestasIncompletasCorregibles": ["Arrizabalaga"]
       },
       {
         "pregunta": "¿Nombre completo del extremo francés autor del gol de la final de la Champions 2020 para el Bayern?",
-        "respuesta": "Kingsley Coman"
+        "respuesta": "Kingsley Coman",
+        "respuestasIncompletasCorregibles": ["Coman"]
       },
       {
         "pregunta": "¿Nombre y apellido del goleador neerlandés ex Schalke y Ajax?",
-        "respuesta": "Klaas-Jan Huntelaar"
+        "respuesta": "Klaas-Jan Huntelaar",
+        "respuestasIncompletasCorregibles": ["Huntelaar"]
       },
       {
         "pregunta": "¿Nombre de pila del francés Mbappé, Bota de Oro del Mundial de la FIFA 2026?",
@@ -618,7 +641,8 @@
       },
       {
         "pregunta": "¿Nombre completo del joven crack del Barcelona y España?",
-        "respuesta": "Lamine Yamal"
+        "respuesta": "Lamine Yamal",
+        "respuestasIncompletasCorregibles": ["Yamal"]
       },
       {
         "pregunta": "¿Nombre y apellido del defensor argentino campeón del mundo 2022 en Manchester United?",
@@ -654,7 +678,8 @@
       },
       {
         "pregunta": "¿Nombre y apellido del arquero alemán campeón del mundo 2014?",
-        "respuesta": "Manuel Neuer"
+        "respuesta": "Manuel Neuer",
+        "respuestasIncompletasCorregibles": ["Neuer"]
       },
       {
         "pregunta": "¿Apellido del delantero francés estrella del Real Madrid, Kylian …?",
@@ -709,7 +734,8 @@
       },
       {
         "pregunta": "¿Nombre completo del lateral argentino campeón del mundo?",
-        "respuesta": "Nahuel Molina"
+        "respuesta": "Nahuel Molina",
+        "respuestasIncompletasCorregibles": ["Molina"]
       }
     ]
   },
@@ -819,7 +845,8 @@
       },
       {
         "pregunta": "¿Nombre y apellido del 10 argentino campeón con Valencia y Benfica?",
-        "respuesta": "Pablo Aimar"
+        "respuesta": "Pablo Aimar",
+        "respuestasIncompletasCorregibles": ["Aimar"]
       },
       {
         "pregunta": "¿Apellido del ex defensor del Barcelona, Gerard …?",
@@ -874,7 +901,8 @@
       },
       {
         "pregunta": "¿Nombre completo del DT español ex Betis y Barcelona?",
-        "respuesta": "Quique Setién"
+        "respuesta": "Quique Setién",
+        "respuestasIncompletasCorregibles": ["Setién"]
       },
       {
         "pregunta": "¿Apellido del delantero italiano ex Sampdoria, Fabio …?",
@@ -1207,7 +1235,8 @@
       },
       {
         "pregunta": "¿Nombre completo del histórico goleador inglés del Manchester United?",
-        "respuesta": "Wayne Rooney"
+        "respuesta": "Wayne Rooney",
+        "respuestasIncompletasCorregibles": ["Rooney"]
       },
       {
         "pregunta": "¿Apellido del lateral derecho inglés leyenda del Manchester City, Kyle …?",
@@ -1235,7 +1264,8 @@
       },
       {
         "pregunta": "¿Nombre completo del extremo suizo ex Liverpool e Inter?",
-        "respuesta": "Xherdan Shaqiri"
+        "respuesta": "Xherdan Shaqiri",
+        "respuestasIncompletasCorregibles": ["Shaqiri"]
       },
       {
         "pregunta": "¿Apodo del Club Tijuana de la Liga MX?",
@@ -1243,7 +1273,8 @@
       },
       {
         "pregunta": "¿Nombre completo del mediapunta neerlandés surgido en el PSG?",
-        "respuesta": "Xavi Simons"
+        "respuesta": "Xavi Simons",
+        "respuestasIncompletasCorregibles": ["Simons"]
       },
       {
         "pregunta": "CONTIENE X: ¿Nombre de pila del ex delantero chileno del Barcelona y Arsenal, … Sánchez?",
@@ -1268,7 +1299,8 @@
       },
       {
         "pregunta": "¿Nombre completo del mediocampista marfileño leyenda del City?",
-        "respuesta": "Yaya Touré"
+        "respuesta": "Yaya Touré",
+        "respuestasIncompletasCorregibles": ["Touré"]
       },
       {
         "pregunta": "¿Club japonés campeón de la J1 League en 2019?",
