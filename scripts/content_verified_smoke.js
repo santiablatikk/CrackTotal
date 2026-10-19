@@ -27,7 +27,7 @@ for (const q of all) {
   questions.add(q.pregunta);
 }
 assert.equal(verified.questions.length, verified.newQuestionCount);
-assert.equal(verified.newQuestionCount, 17);
+assert.equal(verified.newQuestionCount, 29);
 for (const fact of verified.questions) {
   const q = all.find(row => row.letter === fact.letter && row.pregunta === fact.pregunta);
   assert.ok(q, 'Missing sourced Pasala fact: ' + fact.pregunta);
@@ -36,7 +36,7 @@ for (const fact of verified.questions) {
   assert.ok(normalize(q.respuesta).toUpperCase().includes(fact.letter),
     'Pasala answer must match its letter: ' + fact.pregunta);
   assert.equal(fact.verifiedAt, verified.cutoff);
-  assert.ok(fact.sourceUrls.every(url => /^https:\/\/(www\.fifa\.com|inside\.fifa\.com|www\.uefa\.com|gol\.conmebol\.com)\//.test(url)));
+  assert.ok(fact.sourceUrls.every(url => /^https:\/\/(www\.fifa\.com|inside\.fifa\.com|www\.uefa\.com|gol\.conmebol\.com|www\.conmebol\.com|www\.afa\.com\.ar)\//.test(url)));
   const acceptable = [q.respuesta, ...(q.respuestasAlternativas || [])].map(normalize);
   assert.equal(new Set(acceptable).size, acceptable.length, 'Redundant alias: ' + fact.pregunta);
 }
