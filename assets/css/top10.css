@@ -89,3 +89,14 @@
 .top10-final-standings li.found{background:#b8ff38}
 .top10-final-standings li strong{font-weight:850}
 .top10-final-standings a{color:#b8ff38;text-decoration:underline;font-size:11px;font-weight:900;letter-spacing:.08em}
+
+/* On phones, controls come before the ten-row table. The pre-start dialog
+   remains inside the viewport instead of appearing below the fold. */
+@media(max-width:640px){
+  .top10-game-layout{display:flex;flex-direction:column}
+  .top10-play-panel{order:-1;gap:10px}
+  .top10-start-overlay{position:fixed;inset:0;z-index:1200;width:auto;min-height:0;overflow:auto;background:#0b1519f5;padding:26px 19px;box-shadow:none}
+  .top10-start-copy{background:#13241f;border-top:4px solid #b8ff38;padding:30px 23px;max-width:410px;margin:auto}
+  .top10-start-copy h2{font-size:51px}
+  .top10-start-copy p{max-width:unset}
+}
