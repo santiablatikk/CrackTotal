@@ -364,14 +364,17 @@
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿En qué año se jugó la final de Champions más vista de la historia?",
+      "pregunta": "¿En qué año ganó el Real Madrid su duodécima Copa de Europa al vencer 4-1 a la Juventus en Cardiff?",
       "opciones": {
         "A": "2009",
         "B": "2019",
         "C": "2017",
         "D": "2022"
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "audit_status": "verified_official",
+      "source_url": "https://www.uefa.com/uefachampionsleague/news/0250-0c5117c008df-de0901ea6dae-1000--majestic-real-madrid-win-champions-league-in-cardiff/",
+      "verified_at": "2026-10-21"
     },
     {
       "pregunta": "¿Cuántos minutos duró el partido más largo de la historia oficial del fútbol?",
@@ -381,7 +384,10 @@
         "C": "186 minutos",
         "D": "210 minutos"
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "audit_status": "retired",
+      "audit_reason": "Una duración récord global sin ámbito, fecha, reglas ni fuente verificable es ambigua y no apta para competición.",
+      "verified_at": "2026-10-21"
     },
     {
       "pregunta": "¿Qué jugador marcó el primer hat-trick en una final de Mundial?",
@@ -594,14 +600,17 @@
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Qué jugador tiene el récord de más goles en una temporada de Serie A?",
+      "pregunta": "¿Qué delantero del Napoli marcó 36 goles en la Serie A 2015/16, batiendo entonces el récord anterior?",
       "opciones": {
         "A": "Gonzalo Higuaín (36)",
         "B": "Ciro Immobile (36)",
         "C": "Francesco Totti (32)",
         "D": "Roberto Baggio (27)"
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "audit_status": "verified_official",
+      "source_url": "https://www.legaseriea.it/serie-a/news/giornata-storica-per-batistuta-e-higuain",
+      "verified_at": "2026-10-21"
     },
     {
       "pregunta": "¿En qué año Independiente ganó 4 Copas Libertadores consecutivas?",
