@@ -111,6 +111,8 @@ const gameState = {
     // Nuevas propiedades para reconexión
     reconnectAttempts: 0,
     reconnectTimer: null,
+    arenaCompatible: false,
+    arenaHandshakeTimer: null,
     lastMessageTimestamp: Date.now()
 };
 
@@ -263,12 +265,19 @@ function initializeWebSocket() {
         console.log('✅ WebSocket Conectado!');
         updateConnectionStatusUI(true, 'Conectado');
         showLobbyMessage('¡Conectado! Listo para jugar.', 'success', true);
-        enableLobbyButtons();
-        const saved = savedQsmSession();
-        if (saved && QSM_PREVIEW) {
-            showLobbyMessage('Recuperando sala anterior…', 'info', true);
-            sendToServer('resumeRoom', saved);
-        }
+        if (QSM_PREVIEW) {
+            gameState.arenaCompatible = false;
+            disableLobbyButtons();
+            updateConnectionStatusUI(false, 'Comprobando compatibilidad de Arena…');
+            if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
+            gameState.arenaHandshakeTimer = setTimeout(() => {
+                if (!gameState.arenaCompatible && gameState.websocket?.readyState === WebSocket.OPEN) {
+                    updateConnectionStatusUI(false, 'Servidor de pruebas desactualizado');
+                    showLobbyMessage('Render todavía no ejecuta Arena 5.2. Falta actualizar el servidor de staging.', 'error', true);
+                    disableLobbyButtons();
+                }
+            }, 4000);
+        } else enableLobbyButtons();
         gameState.reconnectAttempts = 0; // Resetear intentos de reconexión
         
         // Solicitar salas disponibles inmediatamente después de conectar
@@ -305,6 +314,7 @@ function initializeWebSocket() {
 
     gameState.websocket.onclose = (event) => {
         clearTimeout(connectionTimeout);
+        if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
         const wasClean = event.wasClean;
         const reason = event.reason || (wasClean ? 'Desconexión normal' : 'Conexión interrumpida');
         console.log(`🔌 WebSocket Desconectado: ${reason} (Código: ${event.code})`);
@@ -390,6 +400,23 @@ function handleServerMessage(message) {
     const { type, payload } = message;
     
     switch (type) {
+        case 'arena:hello':
+            if (QSM_PREVIEW) {
+                gameState.arenaCompatible = payload.protocol === 'cracktotal-arena-5.2' &&
+                    payload.features?.qsmResume === true;
+                if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
+                if (gameState.arenaCompatible) {
+                    enableLobbyButtons();
+                    updateConnectionStatusUI(true, 'Arena 5.2 conectada');
+                    const saved = savedQsmSession();
+                    if (saved) sendToServer('resumeRoom', saved);
+                } else {
+                    updateConnectionStatusUI(false, 'Arena incompatible');
+                    showLobbyMessage('La versión de Arena no admite partidas 5.2. Actualizá el servicio de staging.', 'error', true);
+                    disableLobbyButtons();
+                }
+            }
+            break;
         case 'ping':
         case 'pong':
             // Responder al ping con un pong o ignorar el pong
