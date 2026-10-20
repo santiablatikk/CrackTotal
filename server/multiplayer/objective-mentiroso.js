@@ -5,11 +5,11 @@ const catalog = require('../../assets/data/mentiroso_objective_pilot.json');
 const MIN_VERIFIED_ANSWERS = 20;
 
 // Matchmaking may only select closed historical datasets with >=20 *distinct* entities.
-function checkCatalog() {
+function checkCatalog(data = catalog) {
   const categories = new Set();
   const ids = new Set();
   let answerCount = 0;
-  for (const challenge of catalog.challenges) {
+  for (const challenge of data.challenges) {
     if (!challenge || typeof challenge.id !== 'string' || ids.has(challenge.id)) {
       throw new Error('Missing or duplicate challenge ID');
     }
@@ -42,8 +42,8 @@ function checkCatalog() {
   }
   if (categories.size !== 6) throw new Error('Competitive pilot must cover all six categories');
   return { count: ids.size, answerCount, minAnswers: MIN_VERIFIED_ANSWERS,
-    minObserved: Math.min(...catalog.challenges.map(c => c.answers.length)),
-    maxObserved: Math.max(...catalog.challenges.map(c => c.answers.length)) };
+    minObserved: Math.min(...data.challenges.map(c => c.answers.length)),
+    maxObserved: Math.max(...data.challenges.map(c => c.answers.length)) };
 }
 
 function byCategory(category) {
