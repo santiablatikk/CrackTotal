@@ -7,9 +7,9 @@ Fecha de auditoría: 20-10-2026. Estado: **RELEASE CANDIDATE / PUBLICACIÓN AÚN
 - Rama de trabajo: `redesign/crack-total-2`.
 - PR #1 abierto; `main` sigue en `5e8ffb476a221dcb49946875957126c61928f13a`.
 - Backup del estado de producción previo al lanzamiento: rama `backup/production-pre-5-1-20261020` apuntando al mismo commit de `main`.
-- **Producción:** Render (Node y WebSocket) según `.github/workflows/deploy.yml` y `render.yaml`. El dominio canónico es `https://cracktotal.com` y `www` redirige al raíz.
+- **Producción:** Render Static Site `CrackTotal` (servicio `srv-d06n6p2li9vc73ei37m0`, repo `santiablatikk/CrackTotal`, rama `main`, auto-deploy confirmado en panel). Existe además un servidor Node histórico separado `cracktotal-servidor` (repo distinto, último deploy hace aproximadamente un año), que NO sirve el dominio principal. El dominio canónico es `https://cracktotal.com` y `www` redirige al raíz.
 - **Preview:** Netlify solo prueba el frontend estático, no es el despliegue de producción ni aloja el servidor de juegos.
-- El workflow producción utiliza un Deploy Hook de Render si existe `RENDER_DEPLOY_HOOK`; si el secreto no está configurado, emite advertencia y depende de auto-deploy en Render. **Su SUCCESS no demuestra que Render haya desplegado nada**.
+- El workflow producción utiliza un Deploy Hook opcional si existe `RENDER_DEPLOY_HOOK`; si no está configurado, depende del auto-deploy del Static Site en Render (confirmado en panel). No se debe apuntar el hook al antiguo servicio Node. **Su SUCCESS no demuestra que Render haya desplegado nada**.
 
 ## Hallazgos de auditoría
 Se revisó el árbol completo: inicialmente tenía 1.651 archivos versionados, de los cuales 1.267 tenían rutas del modo **Mi Carrera**, retirado del producto. Además había 56 scripts auxiliares exclusivos de ese modo y su workflow podía fast-forward hacia producción desde una rama obsoleta.
@@ -34,7 +34,7 @@ Se revisó el árbol completo: inicialmente tenía 1.651 archivos versionados, d
 - Durante la creación de la nueva suite hubo dos fallos de CI atribuibles a la propia prueba: condición incorrecta que exigía design system compartido en Arena autónoma; y expresión regular mal escapada. Ambas se corrigieron.
 - El resultado de Netlify para el **último commit** debe comprobarse en los checks del PR; no usar SUCCESS antiguo como prueba.
 - Se añadió `scripts/release_asset_integrity.js` a `npm test`. Valida archivos HTML y CSS directos, incluidos `@import` anidados, para impedir nuevos assets 404. Se corrigieron referencias a fuentes `.woff` Montserrat/Oswald inexistentes y dos imágenes de fondo antiguas inexistentes.
-- Se añadió el endpoint público no sensible `/__ct_release/health` que reporta `RENDER_GIT_COMMIT` y `RENDER_GIT_BRANCH`; el workflow de GitHub espera hasta verificar el commit exacto en `https://cracktotal.com` y falla en vez de declarar éxito si sigue una versión vieja.
+- Se descubrió que el dominio público lo sirve un Static Site; por eso `/__ct_release/health` del servidor Node no puede usarse allí (404 confirmado). Se agregó `scripts/write_release_manifest.js` al build para generar `/__ct_release.json` con el commit y la rama de Render y se actualizó el workflow para comprobar ese archivo en `https://cracktotal.com`. El endpoint Node se conserva solo como diagnóstico de su propio servidor.
 - Los registros de GitHub Actions del 18-10-2026 confirman que `RENDER_DEPLOY_HOOK` **no estaba configurado** en ese lanzamiento. Render podría usar auto-deploy, pero no está verificado.
 - Verificar rutas antiguas, caché, Render/Cloudflare, funcionamiento del backend y web publicada sigue pendiente de herramientas de entorno de producción y pruebas con navegador.
 - No se certifica WCAG completo ni QA visual a 320–1920 px. No se inventan capturas.
@@ -49,7 +49,7 @@ Se revisó el árbol completo: inicialmente tenía 1.651 archivos versionados, d
 5. Confirmar con el navegador el dominio canónico y disponibilidad de `www.cracktotal.com`.
 6. Revisar la diferencia final grande del PR antes de merge.
 
-El sitio público no resultó accesible en vivo desde el entorno de verificación de esta sesión (DNS de contenedor no disponible, navegación web sin resultado fresco fiable). Por este motivo no hay evidencia suficiente para afirmar que la producción publica 5.0 o para completar con seguridad el merge.
+En navegador se verificó que `www.cracktotal.com` redirige a `cracktotal.com` y que el dominio sirve el commit anterior `5e8ffb4` confirmado por el panel Render Static Site. En staging se probó una sala 1v1 con dos sesiones independientes: unión, confirmación de ambos jugadores, arranque, respuestas correctas, marcador sincronizado y cambio de turno. Falta QA completo, validación de los otros juegos y validar `/__ct_release.json` tras un deploy de la rama principal; NO se fusionó.
 
 ## Publicación pendiente
 Una vez aprobados los gates anteriores:
@@ -59,3 +59,9 @@ Una vez aprobados los gates anteriores:
 - Inspeccionar `https://cracktotal.com` y redirección desde `https://www.cracktotal.com`.
 - Confirmar commit, 5 juegos, Arena, perfiles y rutas, monitorizar errores.
 - No eliminar el backup hasta confirmar el lanzamiento.
+
+## Hallazgo de arquitectura de producción (20-10-2026)
+- Render Static Site `CrackTotal` publica el dominio canónico desde `santiablatikk/CrackTotal`, rama `main`, build `npm run build`, directorio `.` y Auto-Deploy activo (despliegue actual `5e8ffb4`).
+- El servicio `cracktotal-servidor` apunta a `santiablatikk/cracktotal-servidor` y no se actualiza con este PR. No se cambió su configuración ni se eliminaron datos.
+- El backend Arena de staging es un tercer servicio separado. La prueba funcional 1v1 se realizó allí; producción multijugador requiere integración/validación independiente.
+- El verificador del dominio oficial debe comprobar un archivo JSON estático generado en build, no una ruta Node.
