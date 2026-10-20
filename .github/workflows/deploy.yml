@@ -2,8 +2,7 @@ name: Deploy production
 
 # Production only tracks `main`.
 # Pushing a feature branch does NOT deploy cracktotal.com by itself.
-# Feature → main automation for Mi Carrera lives in promote-mi-carrera.yml
-# (exclusive to cursor/mi-carrera-age-causality).
+# Legacy Mi Carrera auto-promotion has been retired.
 #
 # Fetch origin never deploys — it only downloads remotes.
 on:
@@ -39,6 +38,11 @@ jobs:
           npm run validate
           echo "[prod-2] Validation passed"
 
+      - name: '[prod-2b] Run full release tests'
+        run: |
+          npm ci
+          npm test
+
       - name: '[prod-3] Trigger Render deploy hook'
         env:
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
@@ -49,7 +53,7 @@ jobs:
             echo "RENDER_DEPLOY_HOOK secret is not set."
             echo "If Render Auto-Deploy is already enabled for main, the push/dispatch to main is enough."
             echo "Otherwise: Render Dashboard → Service → Settings → Deploy Hook → add URL as GitHub secret RENDER_DEPLOY_HOOK."
-            echo "[prod-3] Skipped hook (no secret); relying on Render auto-deploy if configured."
+            echo "::warning::Deploy hook missing; GitHub cannot confirm Render deployment. Check Render auto-deploy and the live domain."
             exit 0
           fi
           curl -fsS -X POST "$RENDER_DEPLOY_HOOK"
