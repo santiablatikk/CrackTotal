@@ -79,6 +79,10 @@ async function run() {
   await ready(p);
 
   const q1 = await connect(p), q2 = await connect(p);
+  const handshake = await wait(q1, 'arena:hello');
+  assert.equal(handshake.protocol,'cracktotal-arena-5.2');
+  assert.equal(handshake.features.qsmResume,true);
+  assert.equal(handshake.features.mentirosoObjective,true);
   send(q1, 'createRoom', { playerName: 'QSM Host', gameType: 'quiensabemas' });
   const made = await wait(q1,'roomCreated');
   assert.match(made.reconnectToken,/^[0-9A-F]{48}$/);
