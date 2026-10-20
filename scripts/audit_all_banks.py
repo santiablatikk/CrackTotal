@@ -248,7 +248,7 @@ def audit_qsm(path: Path, label: str) -> dict:
         n += 1
         pregunta = q.get("pregunta") or q.get("question") or ""
         opciones = q.get("opciones") or q.get("options") or q.get("answers")
-        correcta = q.get("correcta") if "correcta" in q else q.get("correct") if "correct" in q else q.get("respuesta")
+        correcta = next((q[k] for k in ("respuesta_correcta", "correcta", "correct", "respuesta") if k in q), None)
         if opciones is None:
             issues.append(f"[{i}] NO_OPTIONS: {pregunta[:60]}")
             continue
