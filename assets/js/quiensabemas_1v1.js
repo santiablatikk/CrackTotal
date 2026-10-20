@@ -495,6 +495,11 @@ function handleServerMessage(message) {
                 showFeedbackInGame('El rival perdió conexión. Esperando hasta 45 segundos…', 'info');
             }
             break;
+        case 'roomClockResumed':
+            if (gameState.gameActive && gameState.currentTurn === gameState.myPlayerId) {
+                startQuestionTimer(Math.ceil((payload.remainingMs || 20000) / 1000));
+            }
+            break;
         case 'opponentReconnected':
             if (gameState.gameActive && gameState.currentQuestion) displayQuestionInUI();
             showFeedbackInGame('¡Conexión restablecida!', 'success');
@@ -581,8 +586,8 @@ function handleServerMessage(message) {
                 actualPlayerAnswerText
             );
             
-            const feedbackText = isCorrect ? 
-                `¡Correcto! ${pointsAwarded ? ` (+${pointsAwarded} pts)` : ''}` : 
+            const feedbackText = payload.timedOut ? '¡Tiempo agotado! No sumaste puntos.' : isCorrect ?
+                `¡Correcto! ${pointsAwarded ? ` (+${pointsAwarded} pts)` : ''}` :
                 `Incorrecto. La respuesta correcta era: ${correctAnswerText}`;
                 
             showFeedbackInGame(
@@ -1421,9 +1426,9 @@ function showErrorInGame(message) {
     showFeedbackInGame(message, 'error');
 }
 
-function startQuestionTimer() {
+function startQuestionTimer(seconds = gameState.timePerQuestion) {
     stopQuestionTimer();
-    gameState.timeLeft = gameState.timePerQuestion;
+    gameState.timeLeft = Math.max(1, Math.min(gameState.timePerQuestion, Math.ceil(seconds)));
     
     if (DOM.timerProgress) {
         DOM.timerProgress.style.width = '100%';
