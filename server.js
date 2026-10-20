@@ -1559,6 +1559,7 @@ function startMentirosoQuestionTimer(roomId, duration = 15, phase = 'bidding') {
     
     state.timeRemaining = duration;
     state.timerActive = true;
+    if (OBJECTIVE_MENTIROSO) state.phaseDeadline = Date.now() + duration * 1000;
     
     // Notificar a los clientes que el timer comenzó
     broadcastToRoom(roomId, {
@@ -1629,6 +1630,10 @@ function handleMentirosoTimeOut(roomId, phase) {
     
     const state = room.mentirosoState;
     if (OBJECTIVE_MENTIROSO && state.gamePhase !== phase) return;
+    if (OBJECTIVE_MENTIROSO && phase === 'listing') {
+        settleObjectiveMentirosoRound(roomId, []);
+        return;
+    }
     console.log(`Mentiroso Room ${roomId}: Timer expired for round ${state.currentRound} in phase ${phase}`);
     
     if (phase === 'bidding') {
@@ -1835,10 +1840,46 @@ function handleMentirosoCallLiar(ws, clientInfo, payload) {
         }
     });
     
-    // Iniciar timer de 60 segundos para listar respuestas
+    // Objective bidding can exceed 20 answers: provide proportional server time.
+    const listingDuration = OBJECTIVE_MENTIROSO
+        ? Math.max(60, Math.min(240, 45 + 6 * state.currentBid)) : 60;
     setTimeout(() => {
-        startMentirosoQuestionTimer(roomId, 60, 'listing');
-    }, 1000); // Dar 1 segundo para que se actualice la UI
+        startMentirosoQuestionTimer(roomId, listingDuration, 'listing');
+    }, 1000);
+}
+
+function settleObjectiveMentirosoRound(roomId, answers = []) {
+    if (!OBJECTIVE_MENTIROSO) return;
+    const room = rooms.get(roomId);
+    const state = room && room.mentirosoState;
+    // Guard prevents scoring twice on timeout, duplicate submissions or pending callbacks.
+    if (!state || !state.gameActive || state.gamePhase !== 'listing') return;
+    stopMentirosoQuestionTimer(roomId, 'objective_answered');
+    state.gamePhase = 'roundOver';
+    const verdict = objectiveMentiroso.adjudicate(state.objectiveChallenge, answers, state.currentBid);
+    const winnerId = verdict.wasMentiroso ? state.playerWhoCalledMentiroso : state.playerToListAnswers;
+    const winner = room.players.player1.id === winnerId ? room.players.player1 : room.players.player2;
+    winner.score += 1;
+    state.scores[winnerId] = winner.score;
+    broadcastToRoom(roomId, {
+        type: 'mentirosoRoundResult',
+        payload: {
+        wasMentiroso: verdict.wasMentiroso,
+        validAnswersCount: verdict.validCount,
+        requiredCount: verdict.requiredCount,
+        winnerId, winnerName: winner.name, validationDetails: verdict.details,
+        message: verdict.wasMentiroso ? 'La apuesta no se completó.' : 'La apuesta fue demostrada.',
+        players: {
+            player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
+            player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
+        }
+        }
+    });
+    state.currentRound += 1;
+    const nextRound = state.currentRound;
+    setTimeout(() => {
+        if (room.mentirosoState.gameActive && room.mentirosoState.currentRound === nextRound) nextRoundMentiroso(roomId);
+    }, 1500);
 }
 
 function handleMentirosoSubmitAnswers(ws, clientInfo, payload) {
@@ -1876,36 +1917,12 @@ function handleMentirosoSubmitAnswers(ws, clientInfo, payload) {
 
     if (OBJECTIVE_MENTIROSO) {
         if (state.gamePhase !== 'listing' || !state.objectiveChallenge ||
+            (state.phaseDeadline && Date.now() > state.phaseDeadline) ||
             answers.length > 100 || answers.some(answer => typeof answer !== 'string' || answer.length > 120)) {
             safeSend(ws, { type: 'errorMessage', payload: { error: 'Fase o respuestas inválidas.' } });
             return;
         }
-        stopMentirosoQuestionTimer(roomId, 'objective_answered');
-        state.gamePhase = 'roundOver';
-        const verdict = objectiveMentiroso.adjudicate(state.objectiveChallenge, answers, state.currentBid);
-        const winnerId = verdict.wasMentiroso ? state.playerWhoCalledMentiroso : state.playerToListAnswers;
-        const winner = room.players.player1.id === winnerId ? room.players.player1 : room.players.player2;
-        winner.score += 1;
-        state.scores[winnerId] = winner.score;
-        broadcastToRoom(roomId, {
-            type: 'mentirosoRoundResult',
-            payload: {
-                wasMentiroso: verdict.wasMentiroso,
-                validAnswersCount: verdict.validCount,
-                requiredCount: verdict.requiredCount,
-                winnerId, winnerName: winner.name, validationDetails: verdict.details,
-                message: verdict.wasMentiroso ? 'La apuesta no se completó.' : 'La apuesta fue demostrada.',
-                players: {
-                    player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
-                    player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
-                }
-            }
-        });
-        state.currentRound += 1;
-        const nextRound = state.currentRound;
-        setTimeout(() => {
-            if (room.mentirosoState.gameActive && room.mentirosoState.currentRound === nextRound) nextRoundMentiroso(roomId);
-        }, 1500);
+        settleObjectiveMentirosoRound(roomId, answers);
         return;
     }
 
