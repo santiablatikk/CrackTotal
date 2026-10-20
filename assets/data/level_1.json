@@ -12,7 +12,10 @@
         "C": "Botafogo",
         "D": "River Plate"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://www.conmebol.com/pt-br/noticias-pt-br/flamengo-faz-historia-e-conquista-o-quarto-titulo-da-conmebol-libertadores-2025/",
+      "verified_at": "2026-10-20"
     },
     {
       "pregunta": "¿Qué club ganó la Champions League 2024/25?",
@@ -26,7 +29,10 @@
         "C": "Paris Saint-Germain",
         "D": "Real Madrid"
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "audit_status": "verified_official",
+      "source_url": "https://www.uefa.com/uefachampionsleague/news/029d-1ec96c30aa3f-f6868c869cbd-1000--ousmane-dembele-wins-2025-men-s-ballon-d-or/",
+      "verified_at": "2026-10-20"
     },
     {
       "pregunta": "¿Qué selección ganó el Mundial 2026?",
@@ -40,7 +46,10 @@
         "C": "Inglaterra",
         "D": "España"
       },
-      "respuesta_correcta": "D"
+      "respuesta_correcta": "D",
+      "audit_status": "verified_official",
+      "source_url": "https://inside.fifa.com/organisation/news/spain-crowned-world-cup-2026-champions-new-york-new-jersey",
+      "verified_at": "2026-10-20"
     },
     {
       "pregunta": "¿Quién ganó el Balón de Oro 2025?",
@@ -54,7 +63,10 @@
         "C": "Lamine Yamal",
         "D": "Jude Bellingham"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://www.uefa.com/uefachampionsleague/news/029d-1ec96c30aa3f-f6868c869cbd-1000--ousmane-dembele-wins-2025-men-s-ballon-d-or/",
+      "verified_at": "2026-10-20"
     },
     {
       "pregunta": "¿Cuántos jugadores hay en cancha por equipo en un partido de fútbol?",
@@ -1154,7 +1166,10 @@
         "C": "Kylian Mbappé",
         "D": "Lionel Messi"
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "audit_status": "verified_official",
+      "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/award-winners",
+      "verified_at": "2026-10-20"
     },
     {
       "pregunta": "¿Qué selección terminó subcampeona del Mundial masculino de la FIFA 2026?",
@@ -1164,7 +1179,10 @@
         "C": "Argentina",
         "D": "Alemania"
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "audit_status": "verified_official",
+      "source_url": "https://inside.fifa.com/organisation/news/spain-crowned-world-cup-2026-champions-new-york-new-jersey",
+      "verified_at": "2026-10-20"
     },
     {
       "pregunta": "¿En qué ciudad se jugó la final de la Copa Libertadores 2025?",
@@ -1174,7 +1192,10 @@
         "C": "Montevideo",
         "D": "Santiago"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://gol.conmebol.com/libertadores/es/news/palmeiras-en-la-conmebol-libertadores-2026-resultados-plantel-y-calendario",
+      "verified_at": "2026-10-20"
     },
     {
       "pregunta": "¿Con qué marcador le ganó el Paris Saint-Germain al Inter en la final de la Champions League 2024/25?",
