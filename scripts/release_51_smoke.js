@@ -25,7 +25,7 @@ for(const p of pages){
 }
 const arena=read('pasala-1v1.html');
 assert(arena.includes('pasala-duel.css'),'Standalone Arena must load its own independent design system');
-assert(!/mi-carrera(?:\\.html|\\.css|\\/)/i.test(arena),'Standalone Arena must not reference retired game');
+assert(!arena.includes('mi-carrera'),'Standalone Arena must not reference retired game');
 const server=read('server.js');
 assert(server.includes("pathname === '/mi-carrera.html'"),'Old URL must redirect on production');
 assert(server.includes("'Location': '/games.html'"),'Retired game must redirect to current game catalog');
