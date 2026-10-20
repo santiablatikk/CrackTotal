@@ -69,6 +69,22 @@ window.addEventListener('message', function(event) {
     }
 });
 
+const MENTIROSO_SESSION_KEY = 'ct-mentiroso-room-session-v1';
+const savedMentirosoSession = () => {
+    try { return JSON.parse(sessionStorage.getItem(MENTIROSO_SESSION_KEY) || 'null'); }
+    catch { return null; }
+};
+const persistMentirosoSession = payload => {
+    if (!payload || !payload.roomId || !payload.reconnectToken) return;
+    try {
+        sessionStorage.setItem(MENTIROSO_SESSION_KEY, JSON.stringify({
+            roomId: payload.roomId, reconnectToken: payload.reconnectToken, gameType: 'mentiroso'
+        }));
+    } catch {}
+};
+const clearMentirosoSession = () => {
+    try { sessionStorage.removeItem(MENTIROSO_SESSION_KEY); } catch {}
+};
 document.addEventListener('DOMContentLoaded', function() {
     // --- Game State Variables (Mentiroso) ---
     let gameState = {
@@ -96,6 +112,8 @@ document.addEventListener('DOMContentLoaded', function() {
         gameStartTime: null,
         resultPublished: false,
         websocket: null,
+        reconnectAttempts: 0,
+        reconnectTimer: null,
         pendingRoomsRequest: null, // Para almacenar solicitud pendiente de salas
         isRoomCreator: false, // Para saber si este jugador creó la sala
         playNotificationSound: null // Para la función de sonido de notificación
@@ -946,6 +964,11 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('WebSocket Conectado! (Mentiroso)');
             showLobbyMessage("Conectado al servidor. Elige una opción.", "success");
             enableLobbyButtons();
+            gameState.reconnectAttempts = 0;
+            if (MENTIROSO_PREVIEW && savedMentirosoSession()) {
+                showLobbyMessage('Recuperando la sala anterior…', 'info');
+                sendToServer('resumeRoom', savedMentirosoSession());
+            }
         };
         
         gameState.websocket.onmessage = (event) => {
@@ -967,27 +990,31 @@ document.addEventListener('DOMContentLoaded', function() {
             if(gameState.gameActive) updateGamePhaseUI('waiting');
         };
         
-        gameState.websocket.onclose = (event) => {
+        gameState.websocket.onclose = event => {
             clearTimeout(connectionTimeout);
-            console.log('WebSocket Desconectado (Mentiroso):', event.reason, `Código: ${event.code}`);
-            const wasConnected = !!gameState.websocket;
             gameState.websocket = null;
-            
-            if (gameState.gameActive) {
-                showError("Conexión perdida con el servidor. Juego terminado.");
+            disableLobbyButtons();
+            if (MENTIROSO_PREVIEW && savedMentirosoSession()) {
+                showWaitingMessage('Conexión perdida. Recuperando la partida…');
+                if (gameState.reconnectAttempts < 10) {
+                    const delay = Math.min(6000, 600 * Math.pow(1.5, gameState.reconnectAttempts++));
+                    if (gameState.reconnectTimer) clearTimeout(gameState.reconnectTimer);
+                    gameState.reconnectTimer = setTimeout(initializeWebSocket, delay);
+                } else {
+                    showError('No se pudo recuperar la sesión. Volvé a ingresar a la sala.');
+                }
+            } else if (gameState.gameActive) {
+                showError('Se perdió la conexión con el servidor.');
                 gameState.gameActive = false;
-                showEndGameModalWithError("Conexión Perdida");
-            } else if (wasConnected) {
-                showLobbyMessage("Desconectado del servidor. Por favor refresca para reconectar.", "error");
-                disableLobbyButtons();
-            } else if (!event.wasClean) {
-                showLobbyMessage("No se pudo conectar al servidor. Asegúrate que esté corriendo y refresca.", "error");
-                disableLobbyButtons();
+                showEndGameModalWithError('Conexión perdida');
+            } else {
+                showLobbyMessage('Desconectado del servidor. Refrescá para reconectar.', 'error');
             }
         };
     }
 
     function sendToServer(type, payload) {
+        if (type === 'leaveRoom') clearMentirosoSession();
         if (gameState.websocket && gameState.websocket.readyState === WebSocket.OPEN) {
             const message = JSON.stringify({ type, payload });
             console.log('⭐ Enviando mensaje al servidor:', type, payload);
@@ -1026,6 +1053,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 case 'roomCreated':
                 case 'joinSuccess': // Server might send full player list or just confirmation
                     gameState.roomId = message.payload.roomId;
+                    persistMentirosoSession(message.payload);
                     
                     // Marcar si somos el creador de la sala
                     if (message.type === 'roomCreated') {
@@ -1092,6 +1120,67 @@ document.addEventListener('DOMContentLoaded', function() {
                     showWaitingMessage(`Sala ${gameState.roomId} ${message.type === 'roomCreated' ? 'creada' : 'unida'}. Esperando oponente...`);
                     break;
                 
+                case 'roomResumed': {
+                    if (message.payload.gameType !== 'mentiroso') break;
+                    const p = message.payload;
+                    persistMentirosoSession(p);
+                    gameState.myPlayerId = p.playerId;
+                    gameState.roomId = p.roomId;
+                    gameState.gameActive = !!p.gameActive;
+                    const participants = [p.players?.player1, p.players?.player2].filter(Boolean);
+                    const own = participants.find(x => x.id === p.playerId);
+                    const rival = participants.find(x => x.id !== p.playerId);
+                    gameState.players.player1 = own || { id: p.playerId, name: 'Jugador', score: 0 };
+                    gameState.players.player2 = rival || null;
+                    gameState.currentTurn = p.currentTurn;
+                    if (p.mentiroso) {
+                        const round = p.mentiroso;
+                        gameState.currentRound = round.currentRound;
+                        gameState.maxRounds = round.maxRounds;
+                        gameState.currentCategory = round.currentCategory;
+                        gameState.categoryRound = round.categoryRound;
+                        gameState.globalCategoryIndex = round.globalCategoryIndex;
+                        gameState.challengeTextTemplate = round.challengeTemplate;
+                        gameState.currentBid = round.currentBid;
+                        gameState.lastBidder = round.lastBidder;
+                        gameState.playerWhoCalledMentiroso = round.callerId;
+                        gameState.playerToListAnswers = round.playerToListAnswers;
+                        gameState.objectiveValidation = round.objectiveValidation;
+                        gameState.maxBid = round.maxBid;
+                        if (bidInputEl && round.maxBid) bidInputEl.max = String(round.maxBid);
+                        const hint = document.getElementById('bidUniverseHint');
+                        if (hint && round.maxBid) hint.textContent =
+                            'Hasta ' + round.maxBid + ' respuestas distintas verificadas.';
+                        gameState.gamePhase = round.phase;
+                    }
+                    showGameScreen();
+                    updatePlayerUI();
+                    updateGameStatusDisplay();
+                    updateChallengeArea();
+                    updateGamePhaseUI(gameState.gamePhase === 'lobby' ? 'waiting' : gameState.gamePhase);
+                    if (p.paused) showWaitingMessage('Esperando que el rival vuelva a conectarse…');
+                    else hideWaitingMessage();
+                    break;
+                }
+                case 'resumeError':
+                    clearMentirosoSession();
+                    gameState.gameActive = false;
+                    gameState.roomId = null;
+                    showLobbyMessage(message.payload.error || 'La sesión anterior venció. Creá otra sala.', 'error');
+                    break;
+                case 'opponentDisconnected':
+                    showWaitingMessage('El rival perdió conexión. Esperando reconexión…');
+                    if (bidInputEl) bidInputEl.disabled = true;
+                    if (submitBidButtonEl) submitBidButtonEl.disabled = true;
+                    if (callMentirosoButtonEl) callMentirosoButtonEl.disabled = true;
+                    if (answerListAreaEl) answerListAreaEl.disabled = true;
+                    if (submitAnswersButtonEl) submitAnswersButtonEl.disabled = true;
+                    break;
+                case 'opponentReconnected':
+                    hideWaitingMessage();
+                    if (gameState.gameActive) updateGamePhaseUI(gameState.gamePhase);
+                    break;
+
                 case 'playerJoined':
                     // Manejar cuando otro jugador se une a nuestra sala
                     console.log("⭐ Otro jugador se unió:", message.payload);
@@ -1594,6 +1683,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     break;
                 
                 case 'gameOver': // Generic or Mentiroso specific game over
+                    clearMentirosoSession();
                     gameState.gameActive = false;
                     // Ensure payload is for Mentiroso if distinguishing
                     if (message.payload.gameType === 'mentiroso' || !message.payload.gameType) { 
