@@ -22,7 +22,7 @@ jobs:
   validate-and-deploy:
     name: Validate + deploy to Render
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: '[prod-1] Checkout main'
         uses: actions/checkout@v4
@@ -30,7 +30,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: '[prod-2] Validate deploy surface'
         run: |
@@ -43,19 +43,38 @@ jobs:
           npm ci
           npm test
 
-      - name: '[prod-3] Trigger Render deploy hook'
+      - name: '[prod-3] Request Render deployment'
         env:
           RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
         run: |
-          set -e
-          echo "[prod-3] Triggering Render"
-          if [ -z "$RENDER_DEPLOY_HOOK" ]; then
-            echo "RENDER_DEPLOY_HOOK secret is not set."
-            echo "If Render Auto-Deploy is already enabled for main, the push/dispatch to main is enough."
-            echo "Otherwise: Render Dashboard → Service → Settings → Deploy Hook → add URL as GitHub secret RENDER_DEPLOY_HOOK."
-            echo "::warning::Deploy hook missing; GitHub cannot confirm Render deployment. Check Render auto-deploy and the live domain."
-            exit 0
+          set -euo pipefail
+          if [ -z "${RENDER_DEPLOY_HOOK:-}" ]; then
+            echo "::warning::RENDER_DEPLOY_HOOK is not configured. Waiting for Render auto-deploy on main instead."
+          else
+            echo "[prod-3] Triggering Render deployment for main"
+            curl --fail-with-body --show-error --silent --max-time 30 -X POST "$RENDER_DEPLOY_HOOK" > /dev/null
+            echo "[prod-3] Render accepted the deploy request; awaiting actual live commit."
           fi
-          curl -fsS -X POST "$RENDER_DEPLOY_HOOK"
-          echo ""
-          echo "[prod-3] Deploy hook accepted. Render should rebuild cracktotal.com."
+
+      - name: '[prod-4] Confirm exact production commit'
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          URL="https://cracktotal.com/__ct_release/health"
+          for attempt in $(seq 1 30); do
+            reply="$(curl -fsSL --max-time 12 --connect-timeout 7 \
+              -H 'Cache-Control: no-cache' \
+              "${URL}?expected=${EXPECTED_SHA}" 2>/dev/null || true)"
+            if printf '%s' "$reply" | jq -e --arg sha "$EXPECTED_SHA" \
+              '.service == "cracktotal" and .version == "5.1.0" and .environment == "production" and .branch == "main" and .commit == $sha' \
+              >/dev/null 2>&1; then
+              echo "[prod-4] Verified live commit: $EXPECTED_SHA"
+              echo "[prod-4] Render production serves the intended 5.1 release."
+              exit 0
+            fi
+            echo "[prod-4] Live commit not verified (attempt $attempt/30)."
+            if [ "$attempt" -lt 30 ]; then sleep 15; fi
+          done
+          echo "::error::Production commit could not be verified. Check Render deploy history, branch, hook/auto-deploy, Cloudflare and site reachability."
+          exit 1
