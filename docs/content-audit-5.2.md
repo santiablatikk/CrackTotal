@@ -177,3 +177,11 @@ Fuentes utilizadas en esta etapa:
 - https://www.legaseriea.it/serie-a/news/giornata-storica-per-batistuta-e-higuain
 
 **Gates aún bloqueantes:** faltan 84 consignas competitivas de Mentiroso para el objetivo 90 (mínimo 15 por cada categoría); no existe aún sincronización del backend público independiente; falta migración de sesiones QSM, prueba WebSocket completa de los modos actualizados, CI del HEAD final, auditoría factual de los bancos restantes, QA responsive y validación del despliegue. No fusionar el PR #1 aún.
+
+## 21 de octubre de 2026 — Mejoras de interacción y control de cierre de rondas
+
+- En `mentiroso.html`, `assets/js/mentiroso.js` y `assets/css/mentiroso.css` se implementaron campos de respuesta extensos, contador de entradas (sin indicar cuáles son correctas), anuncio del tamaño del conjunto válido y un máximo de apuesta reflejado en el input. Se conservaron botones y flujos existentes.
+- El temporizador del modo objetivo se adapta a apuestas grandes (mínimo 60 segundos, máximo 240 segundos) y se comprueba la fecha límite del servidor. Una llamada «Mentiroso» o una apuesta fuera de la fase correcta se rechaza.
+- El resultado de cada ronda y los avisos de feedback se muestran mediante nodos de texto seguros; los nombres de jugadores no se incorporan a HTML interpolado.
+- **Comprobación de esta fase**: ejecución real del código descargado de la rama en JavaScript V8 aislado, con primitivas Node simuladas, de ambos smoke tests: PASS (170 respuestas / 6 retos, min 20; 375 QSM estructurales y 1 retirado). También pasó la compilación sintáctica de los archivos principales. No implica `npm test` completo, despliegue de staging ni partida real.
+- **Sigue bloqueado el lanzamiento** mientras no se validen el nuevo servidor en staging, toda la superficie de QSM/Mentiroso, el contenido factual pendiente y los checks finales de CI. El backend antiguo independiente no recibió estos commits.
