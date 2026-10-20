@@ -116,6 +116,24 @@ const gameState = {
     lastMessageTimestamp: Date.now()
 };
 
+// Convert the server's {player1, player2} payload to the by-ID lookup
+// expected by scoreboards, turn ownership and opponent labels. Never use
+// object property names such as "player1" as actual player IDs.
+function qsmPlayersById(players) {
+    if (!players || typeof players !== 'object') return {};
+    const entries = Array.isArray(players) ? players :
+        Array.isArray(players.player1) ? players.player1 : Object.values(players);
+    const result = {};
+    for (const player of entries) {
+        if (!player || typeof player !== 'object' || !player.id) continue;
+        result[player.id] = {
+            id: player.id, name: String(player.name || 'Jugador').slice(0, 24),
+            score: Number.isFinite(Number(player.score)) ? Number(player.score) : 0
+        };
+    }
+    return result;
+}
+
 // --- Initialization ---
 document.addEventListener('DOMContentLoaded', initializeQSMApp);
 
@@ -480,7 +498,7 @@ function handleServerMessage(message) {
             saveQsmSession(payload);
             gameState.roomId = payload.roomId;
             gameState.isRoomCreator = false;
-            gameState.players = payload.players;
+            gameState.players = qsmPlayersById(payload.players);
             showLobbyMessage(`¡Te has unido a la sala ${gameState.roomId}!`, 'success', true);
             switchToGameView(
                 Object.keys(gameState.players).length < 2 ? 
@@ -496,7 +514,7 @@ function handleServerMessage(message) {
             saveQsmSession(payload);
             gameState.myPlayerId = payload.playerId;
             gameState.roomId = payload.roomId;
-            gameState.players = payload.players;
+            gameState.players = qsmPlayersById(payload.players);
             gameState.currentTurn = payload.currentTurn;
             gameState.gameActive = !!payload.gameActive;
             gameState.gamePhase = payload.gameActive ? 'playing' : 'waitingForOpponent';
@@ -545,7 +563,7 @@ function handleServerMessage(message) {
             break;
             
         case 'playerJoined':
-            gameState.players = payload.players;
+            gameState.players = qsmPlayersById(payload.players);
             updatePlayersHeaderUI();
             const newPlayerName = Object.values(gameState.players).find(p => p.name !== gameState.playerName)?.name || 'Un oponente';
             showFeedbackInGame(`${newPlayerName} se unió a la sala. ${gameState.isRoomCreator ? '¡Iniciando pronto!' : 'Preparándose para comenzar.'}`, 'info');
@@ -559,7 +577,7 @@ function handleServerMessage(message) {
             gameState.gamePhase = 'playing';
             gameState.gameStartTime = Date.now();
             gameState.resultPublished = false;
-            gameState.players = payload.players;
+            gameState.players = qsmPlayersById(payload.players);
             gameState.currentTurn = payload.startingPlayerId;
             hideWaitingStateInGame();
             updatePlayersHeaderUI();
@@ -572,7 +590,7 @@ function handleServerMessage(message) {
             gameState.currentQuestionIndex = payload.questionNumber - 1;
             gameState.totalQuestions = payload.totalQuestionsInLevel;
             gameState.currentTurn = payload.currentTurn;
-            gameState.players = payload.players;
+            gameState.players = qsmPlayersById(payload.players);
             
             displayQuestionInUI();
             updatePlayersHeaderUI();
@@ -584,7 +602,7 @@ function handleServerMessage(message) {
             
         case 'updateState':
             gameState.currentTurn = payload.currentTurn;
-            gameState.players = payload.players;
+            gameState.players = qsmPlayersById(payload.players);
             updatePlayersHeaderUI();
             break;
             
