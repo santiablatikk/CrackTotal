@@ -112,6 +112,17 @@ const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     let pathname = parsedUrl.pathname;
     
+    // Redirect bookmarks of the retired career mode to the active game catalog.
+    // Preserve existing public links without bringing the deleted game back.
+    if (pathname === '/mi-carrera.html' || pathname === '/mi-carrera') {
+        res.writeHead(301, {
+            'Location': '/games.html',
+            'Cache-Control': 'public, max-age=3600'
+        });
+        res.end();
+        return;
+    }
+
     // Redirect /index.html to /
     if (pathname === '/index.html') {
         console.log(`📄 Redirecting index.html to root: ${pathname} -> /`);
