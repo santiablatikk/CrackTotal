@@ -52,6 +52,8 @@ Fuentes primarias consultadas:
 
 - `python3 scripts/audit_all_banks.py` tras corregir el reconocimiento de `respuesta_correcta`: 0 fallos de estructura/validación en los bancos listados por el script.
 - `node scripts/release_51_smoke.js`: PASS.
+- `npm ci --ignore-scripts` + `npm test`: **PASS completo** el 20/10/2026, incluidos 26 aciertos reales del test WebSocket 1v1, reconexión, espectadores, revancha, abandono y estadísticas finales. La primera ejecución sin instalar dependencias falló por `MODULE_NOT_FOUND: ws` del entorno local; tras instalar las dependencias declaradas, la suite terminó con código 0.
+- `npm run validate`: PASS — referencias y estructura de despliegue presentes.
 - `node scripts/content_verified_smoke.js`: PASS tras la corrección de 30 pistas.
 - `node scripts/top10_42_smoke.js`: PASS — cotejo de los 40 puestos activos, alias, rotación y componentes.
 - `python3 scripts/audit_all_banks.py`: repetido tras la actualización de las 30 primeras pistas, con 0 errores de letra, 0 respuestas QSM inválidas y 0 problemas estructurales Top10/Wordle; quedan banderas suaves no bloqueantes.
