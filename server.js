@@ -112,6 +112,32 @@ const server = http.createServer((req, res) => {
     const parsedUrl = url.parse(req.url, true);
     let pathname = parsedUrl.pathname;
     
+    // Public release identity used by CI to verify the live Render commit.
+    // RENDER_GIT_COMMIT and RENDER_GIT_BRANCH are Render-provided metadata,
+    // not credentials. This endpoint deliberately does not expose environment secrets.
+    if (pathname === '/__ct_release/health') {
+        if (req.method !== 'GET' && req.method !== 'HEAD') {
+            res.writeHead(405, { 'Allow': 'GET, HEAD', 'Cache-Control': 'no-store' });
+            res.end();
+            return;
+        }
+        const identity = JSON.stringify({
+            service: 'cracktotal',
+            version: '5.1.0',
+            environment: process.env.CT_STAGING === 'true' ? 'staging' : 'production',
+            commit: process.env.RENDER_GIT_COMMIT || null,
+            branch: process.env.RENDER_GIT_BRANCH || null
+        });
+        res.writeHead(200, {
+            'Content-Type': 'application/json; charset=utf-8',
+            'Cache-Control': 'no-store, no-cache, must-revalidate',
+            'X-Content-Type-Options': 'nosniff',
+            'Content-Length': Buffer.byteLength(identity)
+        });
+        res.end(req.method === 'HEAD' ? undefined : identity);
+        return;
+    }
+
     // Redirect bookmarks of the retired career mode to the active game catalog.
     // Preserve existing public links without bringing the deleted game back.
     if (pathname === '/mi-carrera.html' || pathname === '/mi-carrera') {
