@@ -45,7 +45,13 @@ assert(deploy.includes('npm ci')&&deploy.includes('npm test'),'Production build 
 assert(deploy.includes('RENDER_DEPLOY_HOOK'),'Production is deployed through Render');
 assert(deploy.includes('[prod-4] Confirm exact production commit'),'Production workflow must verify actual live deployment');
 assert(deploy.includes('github.sha')&&deploy.includes('.commit == $sha'),'Production verification must compare exact commit SHA');
-assert(deploy.includes('cracktotal.com/__ct_release/health'),'Verify the real canonical domain');
+assert(deploy.includes('cracktotal.com/__ct_release.json'),'Verify the static canonical domain');
+assert(deploy.includes('cracktotal-static'),'Production verifier must target Render Static Site');
+const releaseWriter=read('scripts/write_release_manifest.js');
+assert(releaseWriter.includes('RENDER_GIT_COMMIT')&&releaseWriter.includes('RENDER_GIT_BRANCH'),'Static release manifest must report Render identity');
+assert(releaseWriter.includes('__ct_release.json'),'Static build must write identity file');
+const buildPkg=JSON.parse(read('package.json'));
+assert(buildPkg.scripts.build.includes('write_release_manifest.js'),'Render build must emit release manifest');
 assert(deploy.includes('exit 1'),'Missing live release must fail closed');
 
 const builder=read('scripts/build-netlify-preview.cjs');
