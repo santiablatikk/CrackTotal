@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "restart": "node server-restart.js",
-    "build": "node validate-deploy.js && echo 'Build completed successfully - all files validated' && exit 0",
+    "build": "node validate-deploy.js && node scripts/write_release_manifest.js",
     "validate": "node validate-deploy.js",
     "deploy:check": "node scripts/check_production_deploy_path.js",
     "dev": "node server.js",
