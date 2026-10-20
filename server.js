@@ -418,6 +418,11 @@ const clients = new Map(); // Map<WebSocket, {id: string, roomId: string | null}
 const rooms = new Map(); // Map<string, Room>
 // Independent duel service: does not alter QSM or Mentiroso room semantics.
 const pasalaDuels = createPasalaDuelService();
+const LEGACY_SESSION_RECOVERY = process.env.CT_STAGING === 'true';
+const ROOM_GRACE_MS = 45000;
+const roomPlayers = room => [room?.players?.player1, room?.players?.player2].filter(Boolean);
+const bothConnected = room => roomPlayers(room).length === 2 &&
+    roomPlayers(room).every(p => p.ws && p.ws.readyState === WebSocket.OPEN);
 // interface Room {
 //     roomId: string;
 //     players: { player1: Player | null, player2: Player | null };
@@ -599,7 +604,16 @@ function handleClientMessage(ws, message) {
         return;
     }
 
+    if (LEGACY_SESSION_RECOVERY && clientInfo.roomId &&
+        rooms.get(clientInfo.roomId)?.reconnectPaused &&
+        !['leaveRoom', 'getRooms', 'checkRoom', 'resumeRoom', 'ping', 'pong'].includes(message.type)) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Esperando que el rival vuelva a conectarse.' } });
+        return;
+    }
     switch (message.type) {
+        case 'resumeRoom':
+            handleResumeRoom(ws, clientInfo, message.payload);
+            break;
         case 'createRoom':
             handleCreateRoom(ws, clientInfo, message.payload);
             break;
@@ -649,7 +663,80 @@ function handleClientMessage(ws, message) {
 
 // --- Handler Implementations ---
 
-function handleCreateRoom(ws, clientInfo, payload) {
+
+// Recover a legacy QSM/Mentiroso room with the same secure bearer-session design as Pasala.
+// Keep this behind CT_STAGING until both clients pass reconnect E2E tests.
+function handleResumeRoom(ws, clientInfo, payload = {}) {
+    if (!LEGACY_SESSION_RECOVERY || clientInfo.roomId || pasalaDuels.hasPeer(ws)) {
+        return safeSend(ws, { type: 'resumeError', payload: { error: 'Reconexión no disponible.' } });
+    }
+    const roomId = String(payload.roomId || '').trim();
+    const token = String(payload.reconnectToken || '');
+    const room = rooms.get(roomId);
+    const player = room && roomPlayers(room).find(p => p.reconnectToken === token && token.length >= 32);
+    if (!room || !player || (payload.gameType && payload.gameType !== room.gameType)) {
+        return safeSend(ws, { type: 'resumeError', payload: { error: 'Sesión no encontrada o vencida.' } });
+    }
+    if (player.ws && player.ws.readyState === WebSocket.OPEN) {
+        return safeSend(ws, { type: 'resumeError', payload: { error: 'La sesión ya está conectada.' } });
+    }
+    if (player.graceTimer) clearTimeout(player.graceTimer);
+    player.graceTimer = null;
+    player.ws = ws;
+    clientInfo.id = player.id;
+    clientInfo.roomId = roomId;
+    player.reconnectToken = secureCode(24); // Rotate credentials on successful recovery.
+    const publicPlayers = {
+        player1: room.players.player1 && { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
+        player2: room.players.player2 && { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
+    };
+    const state = room.mentirosoState;
+    const snapshot = {
+        roomId, gameType: room.gameType, playerId: player.id,
+        reconnectToken: player.reconnectToken, gameActive: !!room.gameActive,
+        paused: !!room.reconnectPaused, players: publicPlayers,
+        currentTurn: room.currentTurn,
+        question: room.gameType === 'quiensabemas' && room.currentQuestion
+            ? { level: room.currentQuestion.level, text: room.currentQuestion.text,
+                options: room.currentQuestion.options }
+            : null,
+        questionNumber: room.questionsAnsweredInLevel,
+        totalQuestionsInLevel: room.questionsPerLevel,
+        mentiroso: state ? {
+            currentRound: state.currentRound, maxRounds: state.maxRounds,
+            currentCategory: state.currentCategory, categoryRound: state.categoryRound,
+            globalCategoryIndex: state.globalCategoryIndex, challengeTemplate: state.challengeTextTemplate,
+            currentBid: state.currentBid, lastBidder: state.lastBidder,
+            callerId: state.playerWhoCalledMentiroso, playerToListAnswers: state.playerToListAnswers,
+            phase: state.gamePhase, objectiveValidation: OBJECTIVE_MENTIROSO,
+            maxBid: OBJECTIVE_MENTIROSO && state.objectiveChallenge ? state.objectiveChallenge.answers.length : null
+        } : null
+    };
+    safeSend(ws, { type: 'roomResumed', payload: snapshot });
+    if (bothConnected(room)) {
+        room.reconnectPaused = false;
+        if (state?.gameActive) {
+            if (state.gamePhase === 'roundOver') {
+                const observedRound = state.currentRound;
+                setTimeout(() => {
+                    if (room.gameActive && !room.reconnectPaused && state.currentRound === observedRound) nextRoundMentiroso(roomId);
+                }, 500);
+            } else if (['bidding', 'listing'].includes(state.gamePhase)) {
+                startMentirosoQuestionTimer(roomId, Math.max(1, state.pausedTimeRemaining || 15), state.gamePhase);
+            }
+        } else if (room.gameType === 'quiensabemas' && room.pendingNextQuestion && room.gameActive) {
+            room.pendingNextQuestion = false;
+            setTimeout(() => sendNextQuestion(roomId), 100);
+        }
+        safeSend(ws, { type: 'opponentReconnected', payload: { roomId } });
+        roomPlayers(room).filter(p => p.ws !== ws).forEach(p =>
+            safeSend(p.ws, { type: 'opponentReconnected', payload: { roomId } }));
+    } else {
+        safeSend(ws, { type: 'opponentDisconnected', payload: { graceSeconds: ROOM_GRACE_MS / 1000 } });
+    }
+}
+
+function handleCreateRoom(ws, clientInfo, payload = {}) {
     if (clientInfo.roomId) {
         safeSend(ws, { type: 'joinError', payload: { error: 'Ya estás en una sala.' } });
         return;
@@ -663,6 +750,8 @@ function handleCreateRoom(ws, clientInfo, payload) {
         id: clientInfo.id,
         name: playerName,
         ws: ws,
+        reconnectToken: LEGACY_SESSION_RECOVERY ? secureCode(24) : null,
+        graceTimer: null,
         score: 0
     };
 
@@ -712,7 +801,10 @@ function handleCreateRoom(ws, clientInfo, payload) {
     clientInfo.roomId = roomId; // Update client's state
 
     console.log(`Room ${roomId} (${gameType}) created by ${playerName} (${clientInfo.id}). Password: ${password ? 'Yes' : 'No'}`);
-    safeSend(ws, { type: 'roomCreated', payload: { roomId: roomId } });
+    safeSend(ws, { type: 'roomCreated', payload: {
+        roomId: roomId, playerId: clientInfo.id,
+        reconnectToken: LEGACY_SESSION_RECOVERY ? player1.reconnectToken : undefined
+    } });
 
     // REMOVED: Automatic broadcast - clients will request rooms with gameType filter
 }
@@ -768,6 +860,8 @@ function handleJoinRoom(ws, clientInfo, payload) {
         id: clientInfo.id,
         name: safePlayerName(playerName || `Jugador_${clientInfo.id.substring(0, 4)}`),
         ws: ws,
+        reconnectToken: LEGACY_SESSION_RECOVERY ? secureCode(24) : null,
+        graceTimer: null,
         score: 0
     };
     room.players.player2 = player2;
@@ -782,7 +876,10 @@ function handleJoinRoom(ws, clientInfo, payload) {
     };
 
     // Send join success specifically to the joining player (player 2)
-    safeSend(ws, { type: 'joinSuccess', payload: { roomId: roomId, players: playersInfo } });
+    safeSend(ws, { type: 'joinSuccess', payload: {
+        roomId: roomId, players: playersInfo, playerId: clientInfo.id,
+        reconnectToken: LEGACY_SESSION_RECOVERY ? player2.reconnectToken : undefined
+    } });
 
     // Notify player 1 that player 2 joined
     safeSend(room.players.player1.ws, { type: 'playerJoined', payload: { players: playersInfo } });
@@ -970,6 +1067,10 @@ function startGame(roomId) {
 }
 
 function sendNextQuestion(roomId) {
+    if (LEGACY_SESSION_RECOVERY && rooms.get(roomId)?.reconnectPaused) {
+        rooms.get(roomId).pendingNextQuestion = true;
+        return;
+    }
     // // console.log(`DEBUG: sendNextQuestion called for room ${roomId}`); // ELIMINAR ESTA LÍNEA
     const room = rooms.get(roomId);
     if (!room || !room.gameActive) {
@@ -1362,6 +1463,42 @@ function endGame(roomId, reason = "Game finished") {
 }
 
 function handleDisconnect(ws, clientId, roomId) {
+    if (LEGACY_SESSION_RECOVERY && roomId) {
+        const room = rooms.get(roomId);
+        const player = roomPlayers(room).find(p => p.id === clientId && p.ws === ws);
+        if (room && player) {
+            player.ws = null;
+            if (room.gameActive) {
+                room.reconnectPaused = true;
+                if (room.mentirosoState) {
+                    const state = room.mentirosoState;
+                    state.pausedTimeRemaining = Math.max(1, state.timeRemaining || 15);
+                    stopMentirosoQuestionTimer(roomId, 'reconnect_pause');
+                }
+            }
+            roomPlayers(room).filter(p => p !== player).forEach(p =>
+                safeSend(p.ws, { type: 'opponentDisconnected', payload: { graceSeconds: ROOM_GRACE_MS / 1000 } }));
+            if (player.graceTimer) clearTimeout(player.graceTimer);
+            player.graceTimer = setTimeout(() => {
+                if (player.ws) return;
+                if (room.gameActive) {
+                    // Only server-confirmed forfeits count; no fabricated point changes.
+                    if (room.gameType === 'mentiroso') {
+                        endGameMentiroso(roomId, 'El rival no volvió a conectarse.');
+                    } else {
+                        endGame(roomId, 'El rival no volvió a conectarse.');
+                    }
+                }
+                room.players.player1 = room.players.player1 === player ? null : room.players.player1;
+                room.players.player2 = room.players.player2 === player ? null : room.players.player2;
+                if (!roomPlayers(room).length) rooms.delete(roomId);
+                else roomPlayers(room).forEach(p => safeSend(p.ws, {
+                    type: 'opponentLeftLobby', payload: { message: 'El rival no volvió a conectarse.' }
+                }));
+            }, ROOM_GRACE_MS);
+            return;
+        }
+    }
     console.log(`Handling disconnect for ${clientId} in room ${roomId || 'lobby'}`);
     if (roomId) {
     const room = rooms.get(roomId);
@@ -1461,6 +1598,7 @@ function handleGetRooms(ws, clientInfo, payload) {
 
 function nextRoundMentiroso(roomId) {
     const room = rooms.get(roomId);
+    if (LEGACY_SESSION_RECOVERY && room?.reconnectPaused) return;
     if (!room || !room.mentirosoState || !room.mentirosoState.gameActive) {
         console.error(`nextRoundMentiroso: Room ${roomId} not found or game not active`);
         return;
@@ -1553,6 +1691,7 @@ function startMentirosoQuestionTimer(roomId, duration = 15, phase = 'bidding') {
     }
 
     const state = room.mentirosoState;
+    if (LEGACY_SESSION_RECOVERY && room.reconnectPaused) return;
     if (OBJECTIVE_MENTIROSO && state.gamePhase !== phase) return;
 
     // Limpiar timer anterior si existe
