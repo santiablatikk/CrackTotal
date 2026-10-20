@@ -102,7 +102,14 @@ const server = http.createServer((req, res) => {
         req.url.split('?')[0] === '/__ct_staging/health') {
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8',
             'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' });
-        res.end(JSON.stringify({ ok: true, service: 'cracktotal-arena-staging', websocket: true }));
+        res.end(JSON.stringify({
+            ok: true, service: 'cracktotal-arena-staging', websocket: true,
+            arenaProtocol: 'cracktotal-arena-5.2',
+            features: { pasalaDuel: true, qsmResume: LEGACY_SESSION_RECOVERY,
+                mentirosoObjective: OBJECTIVE_MENTIROSO },
+            commit: process.env.RENDER_GIT_COMMIT || null,
+            branch: process.env.RENDER_GIT_BRANCH || null
+        }));
         return;
     }
     console.log(`${new Date().toISOString()} - ${req.method} ${req.url} - Host: ${req.headers.host}`);
@@ -538,6 +545,13 @@ wss.on('connection', (ws, req) => {
     clients.set(ws, { id: clientId, roomId: null });
     console.log(`Client connected: ${clientId} (Total: ${clients.size})`);
     safeSend(ws, { type: 'yourInfo', payload: { playerId: clientId } });
+    safeSend(ws, { type: 'arena:hello', payload: {
+        protocol: 'cracktotal-arena-5.2',
+        features: { pasalaDuel: true, qsmResume: LEGACY_SESSION_RECOVERY,
+            mentirosoObjective: OBJECTIVE_MENTIROSO },
+        commit: process.env.RENDER_GIT_COMMIT || null,
+        branch: process.env.RENDER_GIT_BRANCH || null
+    } });
     
     // REMOVED: Automatic room broadcast on connection
     // Client will request rooms specifically with gameType filter
