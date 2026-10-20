@@ -1,14 +1,17 @@
 {
   "preguntas": [
     {
-      "pregunta": "¿Cuántos goles marcó Messi en la temporada 2011-12?",
+      "pregunta": "¿Cuántos goles oficiales marcó Lionel Messi con el FC Barcelona durante la temporada 2011/12, en todas las competiciones?",
       "opciones": {
         "A": "73",
         "B": "91",
         "C": "85",
         "D": "69"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "A",
+      "audit_status": "verified_official",
+      "source_url": "https://www.fcbarcelona.com/en/card/2214377/lionel-messi",
+      "verified_at": "2026-10-21"
     },
     {
       "pregunta": "¿En qué año River Plate fue relegado a la Primera B Nacional?",
