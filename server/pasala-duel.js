@@ -5,7 +5,7 @@
  * Existing Quién Sabe Más / Mentiroso protocol is intentionally untouched.
  * No answer is ever sent over the duel protocol.
  */
-const crypto = require('crypto');
+const { normalize: normalizeAnswer, safePlayerName, secureCode } = require('./multiplayer/core');
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 const DURATIONS = Object.freeze({ facil: 360, normal: 300, dificil: 240 });
 const TURN_DURATIONS = Object.freeze({ facil: 180, normal: 150, dificil: 120 });
@@ -22,9 +22,7 @@ function createPasalaDuelService(options = {}) {
   const random = options.random || Math.random;
   const timers = options.timers || { setTimeout, clearTimeout, setInterval, clearInterval };
 
-  const normalize = value => String(value || '').normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '').toLowerCase()
-    .replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+  const normalize = normalizeAnswer;
   // A correction is offered only for an obvious one-character typo or a vetted incomplete name.
   // Never use fuzzy similarity to award points: exact normalized values and listed aliases alone score.
   const acceptedFor = question => [question.respuesta,
@@ -65,8 +63,8 @@ function createPasalaDuelService(options = {}) {
     if (accepted.some(value => singleTypo(candidate, value))) return 'eligible_for_correction';
     return 'incorrect';
   };
-  const safeName = value => String(value || 'Jugador').trim().slice(0, 24) || 'Jugador';
-  const token = size => crypto.randomBytes(size).toString('hex');
+  const safeName = safePlayerName;
+  const token = size => secureCode(size).toLowerCase();
   const send = (ws, type, payload = {}) => {
     if (ws && ws.readyState === 1) ws.send(JSON.stringify({ type, payload }));
   };
