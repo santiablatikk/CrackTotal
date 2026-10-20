@@ -142,6 +142,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const listingInstructionTextEl = document.getElementById('listingInstructionText');
     const bidToListCountEl = document.getElementById('bidToListCount');
     const answerListAreaEl = document.getElementById('answerListArea');
+    const answerCounterEl = document.getElementById('answerCounter');
+    if (answerListAreaEl && answerCounterEl) {
+        answerListAreaEl.addEventListener('input', () => {
+            const submitted = answerListAreaEl.value.split(/\r?\n/).filter(line => line.trim()).length;
+            answerCounterEl.textContent = 'Respuestas ingresadas: ' + submitted +
+                ' · Objetivo: ' + (gameState.currentBid || 0) + ' (aún sin verificar)';
+        });
+    }
     const submitAnswersButtonEl = document.getElementById('submitAnswersButton');
 
     const validationPhaseEl = document.getElementById('validationPhase');
@@ -754,7 +762,10 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("feedbackAreaEl no está disponible");
             return;
         }
-        feedbackAreaEl.innerHTML = `<span class="feedback-message ${type}">${message}</span>`;
+        const notice = document.createElement('span');
+        notice.className = 'feedback-message ' + (['info','success','error','warning'].includes(type) ? type : 'info');
+        notice.textContent = String(message);
+        feedbackAreaEl.replaceChildren(notice);
         console.log(`Feedback (${type}): ${message}`);
     }
     
@@ -763,7 +774,10 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("feedbackAreaEl no está disponible");
             return;
         }
-        feedbackAreaEl.innerHTML = `<span class="feedback-message error">Error: ${message}</span>`;
+        const notice = document.createElement('span');
+        notice.className = 'feedback-message error';
+        notice.textContent = 'Error: ' + String(message);
+        feedbackAreaEl.replaceChildren(notice);
         console.error("Mentiroso Game Error:", message);
     }
 
@@ -1202,6 +1216,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     gameState.objectiveValidation = message.payload.objectiveValidation === true;
                     gameState.maxRounds = Number(message.payload.maxRounds) || 18;
                     gameState.maxBid = Number.isInteger(message.payload.maxBid) ? message.payload.maxBid : null;
+                    if (bidInputEl) {
+                        if (gameState.maxBid) bidInputEl.max = String(gameState.maxBid);
+                        else bidInputEl.removeAttribute('max');
+                    }
+                    const bidHint = document.getElementById('bidUniverseHint');
+                    if (bidHint) bidHint.textContent = gameState.maxBid
+                        ? 'Hasta ' + gameState.maxBid + ' respuestas distintas verificadas en esta consigna.'
+                        : 'Apostá una cantidad mayor que la del rival.';
                     console.log("⭐ Nueva ronda/pregunta:", message.payload);
                     
                     // Verificación de seguridad para players
