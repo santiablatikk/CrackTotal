@@ -282,6 +282,8 @@ console.log('🎯 Server script initialized. Waiting for connections...');
 let allQuestions = {}; // Store questions globally { level: [processedQuestion, ...] }
 
 function processRawQuestion(rawQ, level) {
+    // Explicitly quarantined historical questions must never reach live matches.
+    if (rawQ && ['retired', 'ambiguous', 'pending'].includes(rawQ.audit_status)) return null;
     // Ensure basic structure exists based on level
     if (!rawQ || typeof rawQ.pregunta !== 'string' || typeof rawQ.respuesta_correcta !== 'string') {
         console.warn(`[L${level} - ERROR FORMATO BASICO] Pregunta saltada. Falta 'pregunta' o 'respuesta_correcta' como string. Pregunta: ${rawQ ? rawQ.pregunta : 'DESCONOCIDA'}`);
