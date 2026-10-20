@@ -29,6 +29,13 @@ assert(!arena.includes('mi-carrera'),'Standalone Arena must not reference retire
 const server=read('server.js');
 assert(server.includes("pathname === '/mi-carrera.html'"),'Old URL must redirect on production');
 assert(server.includes("'Location': '/games.html'"),'Retired game must redirect to current game catalog');
+
+assert(server.includes("pathname === '/__ct_release/health'"),'Release identity health endpoint must exist');
+assert(server.includes('RENDER_GIT_COMMIT'),'Release health must report Render-provided commit');
+assert(server.includes('RENDER_GIT_BRANCH'),'Release health must report Render-provided branch');
+assert(server.includes("'Cache-Control': 'no-store, no-cache, must-revalidate'"),'Release health cannot be cached');
+require('node:vm').runInNewContext('new Function('+JSON.stringify(server)+')');
+
 const sw=read('sw.js');
 assert(sw.includes("APP_VERSION = '5.1.0'"),'Service worker cache generation must be bumped');
 const workflows=fs.readdirSync(path.join(ROOT,'.github/workflows'));
@@ -36,6 +43,11 @@ assert(workflows.includes('deploy.yml')&&!workflows.includes('promote-mi-carrera
 const deploy=read('.github/workflows/deploy.yml');
 assert(deploy.includes('npm ci')&&deploy.includes('npm test'),'Production build must run tests');
 assert(deploy.includes('RENDER_DEPLOY_HOOK'),'Production is deployed through Render');
+assert(deploy.includes('[prod-4] Confirm exact production commit'),'Production workflow must verify actual live deployment');
+assert(deploy.includes('github.sha')&&deploy.includes('.commit == $sha'),'Production verification must compare exact commit SHA');
+assert(deploy.includes('cracktotal.com/__ct_release/health'),'Verify the real canonical domain');
+assert(deploy.includes('exit 1'),'Missing live release must fail closed');
+
 const builder=read('scripts/build-netlify-preview.cjs');
 assert(builder.includes('fs.rmSync(out'),'Preview output must be cleaned before rebuilding');
 assert(builder.includes("mi-carrera.html"),'Preview must reject retired pages');
