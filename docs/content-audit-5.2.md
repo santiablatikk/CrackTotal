@@ -60,6 +60,34 @@ Fuentes primarias consultadas:
 - Netlify Deploy Preview del commit `36738768afe3b1c45a2c25f27008ed7e2be9d485`: SUCCESS.
 - Búsqueda preliminar de términos volátiles en `assets/data/*.json`: 68 líneas coincidentes (no equivale a 68 preguntas únicas o erróneas).
 
+## Desfase del backend de dos juegos — BLOQUEANTE PARA RELEASE
+
+El dominio público se sirve desde **Render Static Site**, rama `main`. Sin embargo, los clientes de `Quién Sabe Más` (`assets/js/quiensabemas_1v1.js`) y `Mentiroso` (`assets/js/mentiroso.js`) se conectan en producción a `wss://cracktotal-servidor.onrender.com`, cuyo código fuente está en el repositorio **separado** `santiablatikk/cracktotal-servidor`. En el Deploy Preview no conectan a ese backend si no se indica explícitamente un servidor de staging.
+
+Comparación de **repositorios** al 20/10/2026 (no prueba qué commit concreto está corriendo en el servidor de Render):
+
+| Banco | Repo de backend antiguo | Rama nueva del sitio | Observación |
+| --- | ---: | ---: | --- |
+| QSM: niveles 1–6 | 366 | 375 | 295 enunciados en común; 80 propios de la rama nueva y 67 exclusivos del backend antiguo |
+| Mentiroso: retos `template` en `server.js` | 193 | 256 | Los 193 anteriores persisten; 63 adicionales están solo en la rama nueva |
+
+- Entre los enunciados QSM idénticos hay una diferencia textual de respuesta (`Bayern Munich`/`Bayern Múnich`), no una contradicción deportiva.
+- Al menos **43 de los 256 retos de Mentiroso** disparan una alerta editorial por términos como `importante`, `picante`, `batacazo`, `fracasó` o `golazo`. Es una señal heurística, no 43 errores probados. Por ser respuestas libres validadas entre jugadores, **no existe un solucionario inequívoco** para estos retos tal como están escritos.
+- **No prometer que QSM/Mentiroso usan las correcciones nuevas** hasta validar y desplegar su backend correspondiente; la actualización del Static Site por sí sola no lo logra.
+- Pendiente obligatorio: preparar staging reproducible del backend de esos juegos, reconciliar preguntas/retos, ejecutar partidas end-to-end y planificar despliegue/rollback del servicio independiente.
+
+## QA visual en el Deploy Preview
+
+- Portada: catálogo y enlaces a cinco juegos cargan.
+- Pasala Che individual: apertura de partida, carga de pregunta y corrección real de `Batistuta` (1/26), con avance a letra B.
+- Top 10: desafío Bundesliga 2022/23, ingreso de `Bayern Munich`, validación de alias y posición 1 con 71 puntos.
+- Wordle: pantalla, tablero, teclado virtual y control de reglas presentes; sin partida terminada.
+- No se ejecutó todavía una partida UI completa de QSM/Mentiroso contra staging del backend antiguo.
+
+## Otras preguntas cotejadas con fuentes oficiales
+
+Se añadieron `audit_status: verified_official`, `source_url` y `verified_at` a **8 preguntas QSM** de los niveles 1 y 5: campeones de Libertadores 2025 (Flamengo), Champions 2024/25 (PSG) y Mundial 2026 (España); Balón de Oro 2025 (Dembélé); Balón de Oro del Mundial 2026 (Rodri); subcampeón 2026 (Argentina); sede de la final Libertadores 2025 (Lima) y Mundiales celebrados en México antes de 2026 (dos). Fuentes: FIFA, UEFA y CONMEBOL. Son ocho verificaciones individuales, no certificación del banco completo.
+
 ## Pendientes obligatorios
 
 1. Construir inventario completo de preguntas embebidas y usadas dinámicamente; verificar qué bancos carga cada juego.
@@ -67,6 +95,6 @@ Fuentes primarias consultadas:
 3. Clasificar como `verified`, `corrected`, `ambiguous`, `duplicate`, `retired` o `pending`. No promover contenido pendiente como verificado.
 4. Resolver ambigüedades en datos variables, alias de respuestas y listas Top 10, sin cambiar arbitrariamente mecánicas.
 5. Ejecutar tests regresivos completos y QA manual de todos los juegos.
-6. Verificar arquitectura de producción y multijugador antes del merge del PR #1.
+6. Reconciliar y desplegar el backend independiente de Quién Sabe Más y Mentiroso, verificando que las preguntas/retos activos correspondan a los datos auditados, antes del merge del PR #1.
 
 **No fusionar ni publicar como release final mientras siga sin completarse la verificación factual y funcional acordada.**
