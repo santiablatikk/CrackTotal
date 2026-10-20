@@ -138,3 +138,42 @@ Fuentes primarias cotejadas para los casos nuevos:
 - https://www.uefa.com/uefachampionsleague/news/0245-0e98d8e8f00a-1372e16c4e8d-1000--zidane-leaves-real-madrid-how-much-did-he-achieve/
 - https://www.uefa.com/uefachampionsleague/news/022d-0e9475a3f13d-96d6cbb93192-1000--can-atletico-make-it-third-time-lucky-in-milan/
 - https://www.fcbarcelona.es/es/futbol/primer-equipo/news/1277948/barca-sign-griezmann
+
+
+## 21 de octubre de 2026 — Mentiroso mínimo 20 y continuación de QSM
+
+**Actualización posterior al piloto inicial.** El conjunto provisional de 6 retos / 29 entradas descrito arriba fue **sustituido**: no cumplía el mínimo editorial. Ya no se carga en `mentiroso_objective_pilot.json`.
+
+### Conjunto objetivo actualmente versionado
+
+| Categoría | Conjunto histórico | Respuestas únicas |
+| --- | --- | ---: |
+| Fútbol Argentino | 28 clubes Liga Profesional 2024 | 28 |
+| Libertadores | Fase de grupos Libertadores 2026 | 32 |
+| Mundiales | Participantes Qatar 2022 | 32 |
+| Champions League | Fase de grupos UEFA 2023/24 | 32 |
+| Selección Argentina | Plantel Qatar 2022 | 26 |
+| Fútbol General | Clubes Premier League 2023/24 | 20 |
+| **TOTAL** | **6 conjuntos cerrados** | **170** |
+
+Cada conjunto incorpora documentación oficial contextual (Liga Profesional/AFA, CONMEBOL, FIFA, UEFA, Premier League); fue cotejado a nivel de lista pública. Los alias y variantes de nombres **no** se incluyen en el conteo. Conjuntos mayores siguen sujetos a revisión editorial continua; las seis listas NO equivalen al objetivo final de 90 consignas.
+
+- `server/multiplayer/objective-mentiroso.js` impone **mínimo de 20 entidades canónicas diferentes**, exige marca de verificación, fecha, fuente y prohíbe IDs o alias ambiguos. Una consigna de 4–7 respuestas provoca fallo y no puede entrar al modo objetivo.
+- El test `scripts/objective_mentiroso_smoke.js` se actualizó para las 170 entradas, mínimo 20, pruebas de apuestas 1/5/10/15/20/21, respuestas repetidas y casos negativos de registros sin verificar y catálogos demasiado pequeños.
+- `server.js` incorpora tiempo para listar proporcional a la apuesta (acotado 60–240 s), arbitraje automático atómico al enviar o vencer el reloj y guardia contra doble puntuación. Todo sigue tras `CT_STAGING=true` + `CT_OBJECTIVE_MENTIROSO=true`: no es el backend actualmente desplegado.
+- Se ejecutó el código real descargado de GitHub del corrector y su smoke test en un entorno JavaScript aislado con dependencias Node emuladas: **PASS**. También pasó la compilación sintáctica de servidor y cliente. **No confundir con `npm test`, CI ni una partida WebSocket real:** siguen pendientes.
+- Quién Sabe Más: corregida respuesta **73 goles en temporada 2011/12 vs. 91 en año calendario 2012**, respaldada por FC Barcelona. Reformuladas una pregunta sobre la final UCL 2017 y otra sobre Higuaín (Serie A 2015/16) con UEFA y Lega Serie A. Se marcó como `retired` una pregunta global sin fuente sobre el partido de fútbol «más largo de la historia» y `server.js` evita servir explícitamente contenido `retired`, `ambiguous` o `pending`.
+- Nuevo test `scripts/qsm_content_integrity_smoke.js`: 375 registros revisados estructuralmente, 374 elegibles, 1 explícitamente retirado; 14 con marca `verified_official` y documentación consultable. Pasó ejecución aislada; **361 no están certificados factual e individualmente**. Este test también se añadió a `npm test`.
+
+Fuentes utilizadas en esta etapa:
+- https://www.ligaprofesional.ar/?p=48022
+- https://gol.conmebol.com/libertadores/es/news/sorteo-de-la-fase-de-grupos-de-la-conmebol-libertadores-2026-fecha-horario-clasificados
+- https://inside.fifa.com/tournament-organisation/world-cup-2022-in-numbers/fifa-world-cup-qatar-2022-at-a-glance
+- https://www.uefa.com/uefachampionsleague/news/0283-188394537406-c113ed18f2d0-1000--group-stage-line-up-complete/
+- https://www.afa.com.ar/es/posts/origen-futbolistas
+- https://www.premierleague.com/es/news/4028389/premier-league-202324-club-by-club-review
+- https://www.fcbarcelona.com/en/card/2214377/lionel-messi
+- https://www.uefa.com/uefachampionsleague/news/0250-0c5117c008df-de0901ea6dae-1000--majestic-real-madrid-win-champions-league-in-cardiff/
+- https://www.legaseriea.it/serie-a/news/giornata-storica-per-batistuta-e-higuain
+
+**Gates aún bloqueantes:** faltan 84 consignas competitivas de Mentiroso para el objetivo 90 (mínimo 15 por cada categoría); no existe aún sincronización del backend público independiente; falta migración de sesiones QSM, prueba WebSocket completa de los modos actualizados, CI del HEAD final, auditoría factual de los bancos restantes, QA responsive y validación del despliegue. No fusionar el PR #1 aún.
