@@ -114,6 +114,8 @@ document.addEventListener('DOMContentLoaded', function() {
         websocket: null,
         reconnectAttempts: 0,
         reconnectTimer: null,
+        arenaCompatible: false,
+        arenaHandshakeTimer: null,
         pendingRoomsRequest: null, // Para almacenar solicitud pendiente de salas
         isRoomCreator: false, // Para saber si este jugador creó la sala
         playNotificationSound: null // Para la función de sonido de notificación
@@ -963,12 +965,19 @@ document.addEventListener('DOMContentLoaded', function() {
             clearTimeout(connectionTimeout);
             console.log('WebSocket Conectado! (Mentiroso)');
             showLobbyMessage("Conectado al servidor. Elige una opción.", "success");
-            enableLobbyButtons();
             gameState.reconnectAttempts = 0;
-            if (MENTIROSO_PREVIEW && savedMentirosoSession()) {
-                showLobbyMessage('Recuperando la sala anterior…', 'info');
-                sendToServer('resumeRoom', savedMentirosoSession());
-            }
+            if (MENTIROSO_PREVIEW) {
+                gameState.arenaCompatible = false;
+                disableLobbyButtons();
+                showLobbyMessage('Comprobando compatibilidad del servidor 5.2…', 'info');
+                if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
+                gameState.arenaHandshakeTimer = setTimeout(() => {
+                    if (!gameState.arenaCompatible && gameState.websocket?.readyState === WebSocket.OPEN) {
+                        showLobbyMessage('El servidor de Render todavía no ejecuta Arena 5.2. Falta actualizar staging.', 'error');
+                        disableLobbyButtons();
+                    }
+                }, 4000);
+            } else enableLobbyButtons();
         };
         
         gameState.websocket.onmessage = (event) => {
@@ -992,6 +1001,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         gameState.websocket.onclose = event => {
             clearTimeout(connectionTimeout);
+            if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
             gameState.websocket = null;
             disableLobbyButtons();
             if (MENTIROSO_PREVIEW && savedMentirosoSession()) {
@@ -1045,6 +1055,23 @@ document.addEventListener('DOMContentLoaded', function() {
             hideWaitingMessage(); // General hide, specific messages might reshow
 
             switch (message.type) {
+                case 'arena:hello':
+                    if (MENTIROSO_PREVIEW) {
+                        gameState.arenaCompatible =
+                            message.payload?.protocol === 'cracktotal-arena-5.2' &&
+                            message.payload?.features?.mentirosoObjective === true;
+                        if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
+                        if (gameState.arenaCompatible) {
+                            enableLobbyButtons();
+                            showLobbyMessage('Arena 5.2 conectada. Corrección automática activa.', 'success');
+                            const saved = savedMentirosoSession();
+                            if (saved) sendToServer('resumeRoom', saved);
+                        } else {
+                            showLobbyMessage('Servidor incompatible: falta publicar Mentiroso objetivo en staging.', 'error');
+                            disableLobbyButtons();
+                        }
+                    }
+                    break;
                 case 'yourInfo':
                     gameState.myPlayerId = message.payload.playerId;
                     console.log(`⭐ Mi ID asignado: ${gameState.myPlayerId}`);
