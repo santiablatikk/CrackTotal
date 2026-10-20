@@ -15,7 +15,7 @@ const removed=[
  'scripts/run_mi_carrera_smokes.js'
 ];
 for(const x of removed)assert(!fs.existsSync(path.join(ROOT,x)),'Retired file still present: '+x);
-const pages=['index.html','games.html','pasalache.html','pasala-1v1.html','top10.html',
+const pages=['index.html','games.html','pasalache.html','top10.html',
  'wordle-futbol.html','quiensabemas.html','mentiroso.html','profile.html',
  'ranking.html','logros.html','blog.html'];
 for(const p of pages){
@@ -23,6 +23,9 @@ for(const p of pages){
  assert(!/mi-carrera(?:\.html|\.css|\/)/i.test(html),p+' must not reference retired game');
  assert(html.includes('design-system/index.css'),p+' missing shared design system');
 }
+const arena=read('pasala-1v1.html');
+assert(arena.includes('pasala-duel.css'),'Standalone Arena must load its own independent design system');
+assert(!/mi-carrera(?:\\.html|\\.css|\\/)/i.test(arena),'Standalone Arena must not reference retired game');
 const server=read('server.js');
 assert(server.includes("pathname === '/mi-carrera.html'"),'Old URL must redirect on production');
 assert(server.includes("'Location': '/games.html'"),'Retired game must redirect to current game catalog');
