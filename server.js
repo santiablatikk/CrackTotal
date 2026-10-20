@@ -420,6 +420,8 @@ const rooms = new Map(); // Map<string, Room>
 const pasalaDuels = createPasalaDuelService();
 const LEGACY_SESSION_RECOVERY = process.env.CT_STAGING === 'true';
 const ROOM_GRACE_MS = 45000;
+const QSM_QUESTION_MS = process.env.CT_STAGING === 'true' && process.env.CT_QSM_TEST_QUESTION_MS
+    ? Math.max(600, Math.min(20000, Number(process.env.CT_QSM_TEST_QUESTION_MS) || 20000)) : 20000;
 const roomPlayers = room => [room?.players?.player1, room?.players?.player2].filter(Boolean);
 const bothConnected = room => roomPlayers(room).length === 2 &&
     roomPlayers(room).every(p => p.ws && p.ws.readyState === WebSocket.OPEN);
@@ -633,6 +635,9 @@ function handleClientMessage(ws, message) {
             handleCheckRoom(ws, clientInfo, message.payload);
             break;
         // --- Game Actions (Quien Sabe Mas) ---
+        case 'timeOut':
+             // Only the server may expire QSM questions; browser timers cannot award points.
+             break;
         case 'submitAnswer':
              handleSubmitAnswer(ws, clientInfo, message.payload);
              break;
@@ -730,6 +735,12 @@ function handleResumeRoom(ws, clientInfo, payload = {}) {
         } else if (room.gameType === 'quiensabemas' && room.pendingNextQuestion && room.gameActive) {
             room.pendingNextQuestion = false;
             setTimeout(() => sendNextQuestion(roomId), 100);
+        } else if (room.gameType === 'quiensabemas' && room.gameActive &&
+            room.currentQuestion && !room.questionResolved) {
+            armQsmQuestionClock(room, room.questionRemainingMs || QSM_QUESTION_MS);
+            roomPlayers(room).forEach(p => safeSend(p.ws, { type: 'roomClockResumed', payload: {
+                remainingMs: room.questionRemainingMs || QSM_QUESTION_MS
+            } }));
         }
         safeSend(ws, { type: 'opponentReconnected', payload: { roomId } });
         roomPlayers(room).filter(p => p.ws !== ws).forEach(p =>
@@ -1069,6 +1080,22 @@ function startGame(roomId) {
     }
 }
 
+function armQsmQuestionClock(room, milliseconds = QSM_QUESTION_MS) {
+    if (room.questionTimer) clearTimeout(room.questionTimer);
+    if (!room.gameActive || room.reconnectPaused || room.questionResolved || !room.currentQuestion) return;
+    room.questionDeadline = Date.now() + milliseconds;
+    const currentQuestion = room.currentQuestion;
+    room.questionTimer = setTimeout(() => {
+        if (!room.gameActive || room.reconnectPaused || room.questionResolved ||
+            room.currentQuestion !== currentQuestion) return;
+        const currentPlayer = roomPlayers(room).find(player => player.id === room.currentTurn);
+        if (!currentPlayer) return;
+        // Count an unanswered turn as zero points, without trusting a client timeout event.
+        const intentionallyIncorrect = (currentQuestion.correctIndex + 1) % currentQuestion.options.length;
+        handleSubmitAnswer(currentPlayer.ws, { roomId: room.roomId, id: currentPlayer.id },
+            { selectedIndex: intentionallyIncorrect }, true);
+    }, milliseconds);
+}
 function sendNextQuestion(roomId) {
     if (LEGACY_SESSION_RECOVERY && rooms.get(roomId)?.reconnectPaused) {
         rooms.get(roomId).pendingNextQuestion = true;
@@ -1181,13 +1208,14 @@ function sendNextQuestion(roomId) {
     console.log(`Room ${roomId} - Sending Q${room.questionsAnsweredInLevel} L${room.currentLevel}, Turn: ${room.currentTurn}`); // Keep this summary log
      // // console.log(`DEBUG: Broadcasting newQuestion message for room ${roomId}...`); // Less verbose
     broadcastToRoom(roomId, message);
+    armQsmQuestionClock(room);
     // Also send individually to handle cases where broadcast might miss one? Redundant if broadcast works? Let's rely on broadcast for now.
     // safeSend(room.players.player1.ws, message);
     // safeSend(room.players.player2.ws, message);
      // // console.log(`DEBUG: newQuestion message sent for room ${roomId}.`); // Less verbose
 }
 
-function handleSubmitAnswer(ws, clientInfo, payload) {
+function handleSubmitAnswer(ws, clientInfo, payload, timedOut = false) {
     const roomId = clientInfo.roomId;
     const room = rooms.get(roomId);
 
@@ -1205,6 +1233,10 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
     }
     if (!room.currentQuestion) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'No active question.' } });
+        return;
+    }
+    if (!timedOut && room.questionDeadline && Date.now() >= room.questionDeadline) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Se agotó el tiempo para responder.' } });
         return;
     }
     // Check players still exist
@@ -1254,6 +1286,9 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
 
     // Atomic question lock before any score changes or delayed next-question callback.
     room.questionResolved = true;
+    if (room.questionTimer) clearTimeout(room.questionTimer);
+    room.questionTimer = null;
+    room.questionDeadline = null;
 
     // --- Score Calculation & Result Payload --- 
     const currentPlayer = room.players.player1.id === clientInfo.id ? room.players.player1 : room.players.player2;
@@ -1304,7 +1339,8 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
         forPlayerId: clientInfo.id,
         // submittedAnswerText: answerMethod === 'text' ? submittedAnswerText : null, // REMOVED
         submittedAnswerText: null, // No text submission method anymore
-        selectedIndex: submittedAnswerIndex // Send submitted index (was always by index)
+        selectedIndex: timedOut ? -1 : submittedAnswerIndex,
+        timedOut: timedOut === true // No fabricated answer when the clock runs out.
     };
 
     // Send result to everyone in the room
@@ -1426,6 +1462,8 @@ function endGame(roomId, reason = "Game finished") {
 
     // // console.log(`Ending game in room ${roomId}. Reason: ${reason}`); // Comentar luego
     room.gameActive = false;
+    if (room.questionTimer) clearTimeout(room.questionTimer);
+    room.questionTimer = null;
 
     let winnerId = null;
     let draw = false;
@@ -1481,6 +1519,12 @@ function handleDisconnect(ws, clientId, roomId) {
             player.ws = null;
             if (room.gameActive) {
                 room.reconnectPaused = true;
+                if (room.gameType === 'quiensabemas') {
+                    room.questionRemainingMs = Math.max(500, (room.questionDeadline || Date.now()+QSM_QUESTION_MS) - Date.now());
+                    if (room.questionTimer) clearTimeout(room.questionTimer);
+                    room.questionTimer = null;
+                    room.questionDeadline = null;
+                }
                 if (room.mentirosoState) {
                     const state = room.mentirosoState;
                     state.pausedTimeRemaining = Math.max(1, state.timeRemaining || 15);
