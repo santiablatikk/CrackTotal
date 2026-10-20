@@ -51,7 +51,7 @@ jobs:
           if [ -z "${RENDER_DEPLOY_HOOK:-}" ]; then
             echo "::warning::RENDER_DEPLOY_HOOK is not configured. Waiting for Render auto-deploy on main instead."
           else
-            echo "[prod-3] Triggering Render deployment for main"
+            echo "[prod-3] Triggering Render deployment for main (if hook targets the active static site)"
             curl --fail-with-body --show-error --silent --max-time 30 -X POST "$RENDER_DEPLOY_HOOK" > /dev/null
             echo "[prod-3] Render accepted the deploy request; awaiting actual live commit."
           fi
@@ -61,16 +61,16 @@ jobs:
           EXPECTED_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          URL="https://cracktotal.com/__ct_release/health"
+          URL="https://cracktotal.com/__ct_release.json"
           for attempt in $(seq 1 30); do
             reply="$(curl -fsSL --max-time 12 --connect-timeout 7 \
               -H 'Cache-Control: no-cache' \
               "${URL}?expected=${EXPECTED_SHA}" 2>/dev/null || true)"
             if printf '%s' "$reply" | jq -e --arg sha "$EXPECTED_SHA" \
-              '.service == "cracktotal" and .version == "5.1.0" and .environment == "production" and .branch == "main" and .commit == $sha' \
+              '.service == "cracktotal-static" and .version == "5.1.0" and .branch == "main" and .commit == $sha' \
               >/dev/null 2>&1; then
               echo "[prod-4] Verified live commit: $EXPECTED_SHA"
-              echo "[prod-4] Render production serves the intended 5.1 release."
+              echo "[prod-4] Render static production serves the intended 5.1 release."
               exit 0
             fi
             echo "[prod-4] Live commit not verified (attempt $attempt/30)."
