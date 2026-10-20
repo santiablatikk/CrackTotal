@@ -1468,8 +1468,8 @@ function nextRoundMentiroso(roomId) {
     }
 
     // Update round info
-    state.categoryRound = ((state.currentRound - 1) % 3) + 1;
-    state.globalCategoryIndex = Math.floor((state.currentRound - 1) / 3);
+    state.categoryRound = OBJECTIVE_MENTIROSO ? 1 : ((state.currentRound - 1) % 3) + 1;
+    state.globalCategoryIndex = OBJECTIVE_MENTIROSO ? state.currentRound - 1 : Math.floor((state.currentRound - 1) / 3);
     state.currentCategory = CATEGORY_ORDER[state.globalCategoryIndex];
 
     // Select random challenge template
@@ -1518,6 +1518,9 @@ function nextRoundMentiroso(roomId) {
         globalCategoryIndex: state.globalCategoryIndex,
         category: state.currentCategory,
         challengeTemplate: state.challengeTextTemplate,
+        objectiveValidation: OBJECTIVE_MENTIROSO,
+        maxRounds: state.maxRounds,
+        maxBid: OBJECTIVE_MENTIROSO ? state.objectiveChallenge.answers.length : null,
         currentTurn: room.currentTurn,
         players: {
             player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
