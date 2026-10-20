@@ -699,6 +699,7 @@ function handleResumeRoom(ws, clientInfo, payload = {}) {
         player2: room.players.player2 && { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
     };
     const state = room.mentirosoState;
+    let resumedQsmClockMs = null;
     const snapshot = {
         roomId, gameType: room.gameType, playerId: player.id,
         reconnectToken: player.reconnectToken, gameActive: !!room.gameActive,
@@ -737,14 +738,14 @@ function handleResumeRoom(ws, clientInfo, payload = {}) {
             setTimeout(() => sendNextQuestion(roomId), 100);
         } else if (room.gameType === 'quiensabemas' && room.gameActive &&
             room.currentQuestion && !room.questionResolved) {
-            armQsmQuestionClock(room, room.questionRemainingMs || QSM_QUESTION_MS);
-            roomPlayers(room).forEach(p => safeSend(p.ws, { type: 'roomClockResumed', payload: {
-                remainingMs: room.questionRemainingMs || QSM_QUESTION_MS
-            } }));
+            resumedQsmClockMs = room.questionRemainingMs || QSM_QUESTION_MS;
+            armQsmQuestionClock(room, resumedQsmClockMs);
         }
         safeSend(ws, { type: 'opponentReconnected', payload: { roomId } });
         roomPlayers(room).filter(p => p.ws !== ws).forEach(p =>
             safeSend(p.ws, { type: 'opponentReconnected', payload: { roomId } }));
+        if (resumedQsmClockMs !== null) roomPlayers(room).forEach(p =>
+            safeSend(p.ws, { type: 'roomClockResumed', payload: { remainingMs: resumedQsmClockMs } }));
     } else {
         safeSend(ws, { type: 'opponentDisconnected', payload: { graceSeconds: ROOM_GRACE_MS / 1000 } });
     }
