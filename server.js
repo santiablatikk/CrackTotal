@@ -1556,6 +1556,7 @@ function handleDisconnect(ws, clientId, roomId) {
             if (player.graceTimer) clearTimeout(player.graceTimer);
             player.graceTimer = setTimeout(() => {
                 if (player.ws) return;
+                const expiredDuringGame = !!room.gameActive;
                 if (room.gameActive) {
                     // Match termination is authoritative: the connected opponent wins by forfeit.
                     const connectedOpponent = roomPlayers(room).find(p => p !== player &&
@@ -1570,7 +1571,7 @@ function handleDisconnect(ws, clientId, roomId) {
                 room.players.player1 = room.players.player1 === player ? null : room.players.player1;
                 room.players.player2 = room.players.player2 === player ? null : room.players.player2;
                 if (!roomPlayers(room).length) rooms.delete(roomId);
-                else roomPlayers(room).forEach(p => safeSend(p.ws, {
+                else if (!expiredDuringGame) roomPlayers(room).forEach(p => safeSend(p.ws, {
                     type: 'opponentLeftLobby', payload: { message: 'El rival no volvió a conectarse.' }
                 }));
             }, ROOM_GRACE_MS);
