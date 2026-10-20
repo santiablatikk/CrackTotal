@@ -262,7 +262,8 @@
                             <p id="playerTurnBidText">Tu turno para apostar o decir "Mentiroso"</p>
                             <div class="form-group">
                                 <label for="bidInput">¿Cuántos podés nombrar?</label>
-                                <input type="number" id="bidInput" class="modern-input" placeholder="Ej: 5" min="1">
+                                <input type="number" id="bidInput" class="modern-input" placeholder="Ej: 12" min="1" step="1" inputmode="numeric">
+                                <small id="bidUniverseHint" class="ct-count-hint" aria-live="polite"></small>
                             </div>
                             <div class="action-buttons-mentiroso">
                                 <button id="submitBidButton" class="primary-button mentiroso-action-btn">
@@ -278,7 +279,8 @@
                         <div id="listingPhase" style="display: none;">
                             <p id="listingInstructionText">¡Te llamaron Mentiroso! Escribí los <span id="bidToListCount">X</span> nombres:</p>
                             <div class="form-group">
-                                <textarea id="answerListArea" class="modern-textarea" rows="6" placeholder="Escribe un ítem por línea..."></textarea>
+                                <textarea id="answerListArea" class="modern-textarea" rows="10" placeholder="Escribí una respuesta por línea..." aria-describedby="answerCounter"></textarea>
+                                <small id="answerCounter" class="ct-count-hint" aria-live="polite">Respuestas ingresadas: 0</small>
                             </div>
                             <button id="submitAnswersButton" class="primary-button mentiroso-action-btn">
                                 <i class="fas fa-list-ol"></i> Enviar Lista
