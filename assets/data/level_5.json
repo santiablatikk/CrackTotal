@@ -268,7 +268,10 @@
         "C": "3",
         "D": "0"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/historial-de-mexico-como-anfitrion-del-mundial",
+      "verified_at": "2026-10-20"
     },
     {
       "pregunta": "¿Cuántas finales de Champions League disputó el Atlético de Madrid?",
