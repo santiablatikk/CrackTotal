@@ -71,7 +71,7 @@ async function run() {
   child = spawn(process.execPath, ['server.js'], {
     cwd: path.resolve(__dirname, '..'),
     env: { ...process.env, PORT: String(p), CT_STAGING: 'true', CT_OBJECTIVE_MENTIROSO: 'true',
-      CT_STAGING_ORIGINS: origin },
+      CT_STAGING_ORIGINS: origin, CT_QSM_TEST_QUESTION_MS: '6000' },
     stdio: ['ignore','pipe','pipe']
   });
   child.stdout.on('data', chunk => { log = (log + String(chunk)).slice(-8000); });
@@ -111,7 +111,15 @@ async function run() {
   send(other,'submitAnswer',{selectedIndex:0});
   await wait(other,'errorMessage',p=>/ya fue respondida/.test(p.error||''),beforeRepeat);
   await wait(q2,'newQuestion',p=>p.questionNumber>=2,0,6500);
-  console.log('QSM: room creation, join, disconnect/pause, credential-based resume and duplicate-answer rejection PASS');
+  const beforeClock = q2.events.length;
+  send(q2, 'timeOut'); // Malicious or out-of-sync browser must not choose when the turn ends.
+  await sleep(250);
+  assert.equal(q2.events.slice(beforeClock).some(e=>e.type === 'answerResult'),false,
+    'Client must not be able to force an early server timeout');
+  const expired = await wait(q2,'answerResult',p=>p.timedOut === true,beforeClock,8500);
+  assert.equal(expired.pointsAwarded,0,'Server enforces zero points for expired question');
+  await wait(q2,'newQuestion',p=>p.questionNumber>=3,0,5000);
+  console.log('QSM: room recovery, duplicate protection, forged timeout rejection and real server expiry PASS');
 
   const m1 = await connect(p), m2 = await connect(p);
   send(m1,'createRoom',{playerName:'Mentiroso Host',gameType:'mentiroso'});
