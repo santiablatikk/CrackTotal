@@ -1,0 +1,237 @@
+{
+  "version": "2026-10-21-objective-pilot-1",
+  "verified_at": "2026-10-21",
+  "status": "verified_subset_not_full_catalog",
+  "challenges": [
+    {
+      "id": "arg-libertadores-champions-2000-2018",
+      "category": "Fútbol Argentino",
+      "template": "Puedo nombrar X clubes argentinos campeones de la Copa Libertadores entre 2000 y 2018 (ambos inclusive).",
+      "cutoff": "2018-12-31",
+      "source_urls": [
+        "https://gol.conmebol.com/libertadores/es/news/los-campeones-de-la-conmebol-libertadores-que-iran-por-una-nueva-corona",
+        "https://gol.conmebol.com/libertadores/es/news/pancho-sa-el-maximo-ganador-de-la-conmebol-libertadores-en-la-historia",
+        "https://gol.conmebol.com/libertadores/es/news/estudiantes-en-la-conmebol-libertadores-2026-resultados-plantel-y-calendario"
+      ],
+      "answers": [
+        {
+          "id": "boca",
+          "label": "Boca Juniors",
+          "aliases": [
+            "Boca"
+          ]
+        },
+        {
+          "id": "river",
+          "label": "River Plate",
+          "aliases": [
+            "River"
+          ]
+        },
+        {
+          "id": "estudiantes",
+          "label": "Estudiantes de La Plata",
+          "aliases": [
+            "Estudiantes",
+            "Estudiantes LP"
+          ]
+        },
+        {
+          "id": "san-lorenzo",
+          "label": "San Lorenzo de Almagro",
+          "aliases": [
+            "San Lorenzo"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "arg-opponents-qatar2022",
+      "category": "Selección Argentina",
+      "template": "Puedo nombrar X selecciones que enfrentaron a Argentina en la Copa Mundial masculina de 2022.",
+      "cutoff": "2022-12-18",
+      "source_urls": [
+        "https://www.fifa.com/es/articles/que-seleccion-gano-la-ultima-copa-mundial-de-la-fifa-qatar-2022"
+      ],
+      "answers": [
+        {
+          "id": "arabia",
+          "label": "Arabia Saudita",
+          "aliases": [
+            "Arabia Saudi",
+            "Saudi Arabia"
+          ]
+        },
+        {
+          "id": "mexico",
+          "label": "México"
+        },
+        {
+          "id": "polonia",
+          "label": "Polonia"
+        },
+        {
+          "id": "australia",
+          "label": "Australia"
+        },
+        {
+          "id": "paises-bajos",
+          "label": "Países Bajos",
+          "aliases": [
+            "Holanda",
+            "Netherlands"
+          ]
+        },
+        {
+          "id": "croacia",
+          "label": "Croacia"
+        },
+        {
+          "id": "francia",
+          "label": "Francia"
+        }
+      ]
+    },
+    {
+      "id": "worldcup-semifinalists-2022",
+      "category": "Mundiales",
+      "template": "Puedo nombrar X selecciones que llegaron a semifinales en la Copa Mundial masculina de 2022.",
+      "cutoff": "2022-12-18",
+      "source_urls": [
+        "https://www.fifa.com/fr/articles/phase-elimine-directe-qui-joue-qui-coupe-du-monde-2022"
+      ],
+      "answers": [
+        {
+          "id": "argentina",
+          "label": "Argentina"
+        },
+        {
+          "id": "francia",
+          "label": "Francia"
+        },
+        {
+          "id": "croacia",
+          "label": "Croacia"
+        },
+        {
+          "id": "marruecos",
+          "label": "Marruecos",
+          "aliases": [
+            "Morocco"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "libertadores-finalists-2023-2024",
+      "category": "Libertadores",
+      "template": "Puedo nombrar X clubes finalistas de la Copa Libertadores masculina de 2023 o 2024.",
+      "cutoff": "2024-11-30",
+      "source_urls": [
+        "https://gol.conmebol.com/libertadores/es/news/los-campeones-de-la-conmebol-libertadores-que-iran-por-una-nueva-corona",
+        "https://gol.conmebol.com/libertadores/es/news/finalistas-brasilenos-una-vez-mas"
+      ],
+      "answers": [
+        {
+          "id": "boca",
+          "label": "Boca Juniors",
+          "aliases": [
+            "Boca"
+          ]
+        },
+        {
+          "id": "fluminense",
+          "label": "Fluminense"
+        },
+        {
+          "id": "botafogo",
+          "label": "Botafogo"
+        },
+        {
+          "id": "atletico-mineiro",
+          "label": "Atlético Mineiro",
+          "aliases": [
+            "Atletico MG",
+            "Atletico Mineiro"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ucl-semifinalists-2023-24",
+      "category": "Champions League",
+      "template": "Puedo nombrar X clubes semifinalistas de la UEFA Champions League 2023/24.",
+      "cutoff": "2024-06-01",
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/028c-1aad7af4a471-75bd5cff54cf-1000--meet-the-semi-finalists/"
+      ],
+      "answers": [
+        {
+          "id": "real-madrid",
+          "label": "Real Madrid"
+        },
+        {
+          "id": "bayern",
+          "label": "Bayern Múnich",
+          "aliases": [
+            "Bayern Munich",
+            "Bayern München"
+          ]
+        },
+        {
+          "id": "dortmund",
+          "label": "Borussia Dortmund",
+          "aliases": [
+            "Dortmund"
+          ]
+        },
+        {
+          "id": "psg",
+          "label": "Paris Saint-Germain",
+          "aliases": [
+            "PSG",
+            "Paris SG"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "worldcup-winners-2002-2022",
+      "category": "Fútbol General",
+      "template": "Puedo nombrar X selecciones campeonas de la Copa Mundial masculina en las ediciones de 2002 a 2022.",
+      "cutoff": "2022-12-18",
+      "source_urls": [
+        "https://www.fifa.com/es/tournaments/mens/worldcup/articles/todas-las-finales-de-la-copa-mundial-de-la-fifa"
+      ],
+      "answers": [
+        {
+          "id": "brasil",
+          "label": "Brasil"
+        },
+        {
+          "id": "italia",
+          "label": "Italia"
+        },
+        {
+          "id": "espana",
+          "label": "España"
+        },
+        {
+          "id": "alemania",
+          "label": "Alemania",
+          "aliases": [
+            "Germany"
+          ]
+        },
+        {
+          "id": "francia",
+          "label": "Francia"
+        },
+        {
+          "id": "argentina",
+          "label": "Argentina"
+        }
+      ]
+    }
+  ]
+}
