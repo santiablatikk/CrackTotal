@@ -5,6 +5,7 @@ const fs = require('fs'); // Added for file system operations
 const path = require('path'); // Added for constructing file paths
 const { createPasalaDuelService } = require('./server/pasala-duel');
 const objectiveMentiroso = require('./server/multiplayer/objective-mentiroso');
+const { secureCode, safePlayerName } = require('./server/multiplayer/core');
 // Explicit staging-only feature flag: historical production backend stays unchanged.
 const OBJECTIVE_MENTIROSO = process.env.CT_STAGING === 'true' && process.env.CT_OBJECTIVE_MENTIROSO === 'true';
 
@@ -440,7 +441,7 @@ const pasalaDuels = createPasalaDuelService();
 
 // --- Helper Functions ---
 function generateUniqueId() {
-    return Math.random().toString(36).substring(2, 9);
+    return secureCode(8).toLowerCase();
 }
 
 function generateRoomId() {
@@ -652,7 +653,7 @@ function handleCreateRoom(ws, clientInfo, payload) {
         return;
     }
     const roomId = generateRoomId();
-    const playerName = payload.playerName || `Jugador_${clientInfo.id.substring(0, 4)}`;
+    const playerName = safePlayerName(payload.playerName || `Jugador_${clientInfo.id.substring(0, 4)}`);
     const password = payload.password || ''; // Empty string if no password
     const gameType = payload.gameType || 'quiensabemas'; // Default to quiensabemas
 
@@ -736,6 +737,10 @@ function handleJoinRoom(ws, clientInfo, payload) {
         return;
     }
 
+    if (payload.gameType && payload.gameType !== room.gameType) {
+        safeSend(ws, { type: 'joinError', payload: { error: 'La sala pertenece a otro juego.' } });
+        return;
+    }
     // Check password
     if (room.password && room.password !== password) {
         safeSend(ws, { type: 'joinError', payload: { error: 'Contraseña incorrecta.' } });
@@ -759,7 +764,7 @@ function handleJoinRoom(ws, clientInfo, payload) {
     // Add player 2
     const player2 = {
         id: clientInfo.id,
-        name: playerName || `Jugador_${clientInfo.id.substring(0, 4)}`,
+        name: safePlayerName(playerName || `Jugador_${clientInfo.id.substring(0, 4)}`),
         ws: ws,
         score: 0
     };
