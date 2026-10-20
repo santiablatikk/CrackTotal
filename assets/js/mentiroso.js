@@ -1507,18 +1507,31 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     // Crear un mensaje destacado con el resultado
                     const categoryNumber = gameState.globalCategoryIndex + 1;
-                    const resultMessage = `
-                        <div class="round-result ${isPlayerWinner ? 'winner' : 'loser'}">
-                            <div class="result-header">RESULTADO PREGUNTA ${gameState.categoryRound}/${gameState.objectiveValidation ? 1 : 3} (${gameState.currentRound}/${gameState.maxRounds || 18})</div>
-                            <div class="result-winner">Punto para: <strong>${winnerName}</strong></div>
-                            <div class="result-detail">${message.payload.message}</div>
-                            ${isLastQuestionInCategory ? `<div class="category-complete">¡CATEGORÍA ${categoryNumber} COMPLETADA!</div>` : ''}
-                        </div>
-                    `;
-                    
-                    // Mostrar el mensaje de resultado
+                    const resultNode = document.createElement('div');
+                    resultNode.className = 'round-result ' + (isPlayerWinner ? 'winner' : 'loser');
+                    const makeLine = (cls, txt) => {
+                        const line = document.createElement('div');
+                        line.className = cls;
+                        line.textContent = String(txt);
+                        resultNode.appendChild(line);
+                        return line;
+                    };
+                    makeLine('result-header',
+                        'RESULTADO PREGUNTA ' + gameState.categoryRound + '/' +
+                        (gameState.objectiveValidation ? 1 : 3) + ' (' + gameState.currentRound +
+                        '/' + (gameState.maxRounds || 18) + ')');
+                    const winnerLine = makeLine('result-winner', 'Punto para: ');
+                    const winnerBold = document.createElement('strong');
+                    winnerBold.textContent = winnerName;
+                    winnerLine.appendChild(winnerBold);
+                    makeLine('result-detail', message.payload.message || '');
+                    if (isLastQuestionInCategory) {
+                        makeLine('category-complete', '¡CATEGORÍA ' + categoryNumber + ' COMPLETADA!');
+                    }
+
+                    // Construir el resultado con textContent: los nombres nunca se interpretan como HTML.
                     if (feedbackAreaEl) {
-                        feedbackAreaEl.innerHTML = resultMessage;
+                        feedbackAreaEl.replaceChildren(resultNode);
                         if (gameState.objectiveValidation && Array.isArray(message.payload.validationDetails)) {
                             const verified = document.createElement('section');
                             verified.className = 'ct-objective-verdict';
