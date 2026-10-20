@@ -1515,6 +1515,7 @@ function nextRoundMentiroso(roomId) {
     state.answersListed = [];
     state.validationResults = [];
     state.gamePhase = 'bidding';
+    if (OBJECTIVE_MENTIROSO) state.phaseDeadline = null;
 
     console.log(`Mentiroso Room ${roomId}: Starting round ${state.currentRound}/18 - Category: ${state.currentCategory} (${state.categoryRound}/3)`);
 
@@ -1639,6 +1640,7 @@ function handleMentirosoTimeOut(roomId, phase) {
     console.log(`Mentiroso Room ${roomId}: Timer expired for round ${state.currentRound} in phase ${phase}`);
     
     if (phase === 'bidding') {
+        if (OBJECTIVE_MENTIROSO) state.gamePhase = 'roundOver';
         // Si se agota el tiempo en la fase de apuesta
         // El jugador actual pierde automáticamente el punto
         
@@ -1746,7 +1748,7 @@ function handleMentirosoSubmitBid(ws, clientInfo, payload) {
     const bid = payload && Number(payload.bid);
     if (!Number.isSafeInteger(bid) || bid <= state.currentBid ||
         (OBJECTIVE_MENTIROSO && (!state.objectiveChallenge || bid > state.objectiveChallenge.answers.length ||
-        state.gamePhase !== 'bidding'))) {
+        state.gamePhase !== 'bidding' || (state.phaseDeadline && Date.now() > state.phaseDeadline)))) {
         safeSend(ws, { type: 'errorMessage', payload: { error: `La apuesta debe ser un número mayor que la apuesta actual (${state.currentBid}).` } });
         return;
     }
@@ -1803,6 +1805,11 @@ function handleMentirosoCallLiar(ws, clientInfo, payload) {
     const state = room.mentirosoState;
 
     // Verify it's the player's turn
+    if (OBJECTIVE_MENTIROSO && (state.gamePhase !== 'bidding' ||
+        (state.phaseDeadline && Date.now() > state.phaseDeadline))) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'La fase de apuestas ya terminó.' } });
+        return;
+    }
     if (room.currentTurn !== clientInfo.id) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'No es tu turno para llamar Mentiroso.' } });
         return;
