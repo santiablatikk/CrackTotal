@@ -4,12 +4,12 @@
 
 :root {
   /* Color adicionales para Mentiroso */
-  --mentiroso-accent: #ff6b6b;
-  --mentiroso-accent-dark: #ff5252;
-  --mentiroso-gradient: linear-gradient(135deg, #ff6b6b, #ff5252);
-  --mentiroso-active: #4ecdc4;
-  --mentiroso-active-dark: #33b5ac;
-  --mentiroso-active-gradient: linear-gradient(135deg, #4ecdc4, #33b5ac);
+  --mentiroso-accent: #d89b70;
+  --mentiroso-accent-dark: #b97c58;
+  --mentiroso-gradient: linear-gradient(135deg, #d89b70, #b97c58);
+  --mentiroso-active: #b5eb53;
+  --mentiroso-active-dark: #8fc334;
+  --mentiroso-active-gradient: linear-gradient(135deg, #b5eb53, #8fc334);
   --card-glow: 0 0 20px rgba(78, 205, 196, 0.2);
   --turn-glow: 0 0 15px rgba(255, 107, 107, 0.5);
 }
@@ -1704,3 +1704,28 @@ input[type=number] {
         gap: 5px;
     }
 } 
+/* 5.2 objective adjudication — isolated component, no legacy cascade patches. */
+.ct-objective-verdict {
+  margin-top: 1rem;
+  padding: clamp(0.875rem, 3vw, 1.35rem);
+  color: #f4f2e9;
+  background: #243b35;
+  border: 1px solid rgba(181, 235, 83, .35);
+  border-left: 4px solid #b5eb53;
+  border-radius: .65rem;
+  font: 500 0.95rem/1.5 "Manrope", sans-serif;
+}
+.ct-objective-verdict > strong {
+  display: block;
+  color: #b5eb53;
+  font: 700 0.9rem/1.35 "Space Grotesk", "Manrope", sans-serif;
+  letter-spacing: .035em;
+}
+.ct-objective-verdict ul { list-style: none; margin: .65rem 0 0; padding: 0; }
+.ct-objective-verdict li {
+  padding: .45rem 0;
+  overflow-wrap: anywhere;
+  border-top: 1px solid rgba(244,242,233,.14);
+}
+.ct-objective-verdict li.valid { color: #b5eb53; }
+.ct-objective-verdict li.invalid { color: #f1b8a4; }
