@@ -131,14 +131,17 @@
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Qué club pagó la cláusula de rescisión más alta de la historia por un jugador español?",
+      "pregunta": "¿Qué club abonó en 2019 la cláusula de rescisión de 120 millones de euros por el delantero francés Antoine Griezmann?",
       "opciones": {
         "A": "Atlético Madrid por Griezmann (120M)",
         "B": "Barcelona por Griezmann (120M)",
         "C": "Real Madrid por Morata (80M)",
         "D": "PSG por Neymar (222M, Brasil)"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://www.fcbarcelona.com/en/football/first-team/news/1277948/antoine-griezmann-is-a-barca-player",
+      "verified_at": "2026-10-21"
     },
     {
       "pregunta": "¿Cuántos goles marcó Mbappé en el Mundial 2022?",
