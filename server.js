@@ -1465,7 +1465,7 @@ function handleRequestFiftyFifty(ws, clientInfo) {
 
 // --- End Game & Cleanup ---
 
-function endGame(roomId, reason = "Game finished") {
+function endGame(roomId, reason = "Game finished", forcedWinnerId = null) {
     const room = rooms.get(roomId);
     if (!room) return;
      // Check if game is already inactive to prevent double execution
@@ -1502,6 +1502,11 @@ function endGame(roomId, reason = "Game finished") {
          reason = reason || "Game ended unexpectedly.";
     }
 
+
+    if (forcedWinnerId && [p1?.id, p2?.id].includes(forcedWinnerId)) {
+        winnerId = forcedWinnerId;
+        draw = false;
+    }
 
     const finalScores = {};
     if (p1) finalScores[p1.id] = p1.score;
@@ -1552,11 +1557,14 @@ function handleDisconnect(ws, clientId, roomId) {
             player.graceTimer = setTimeout(() => {
                 if (player.ws) return;
                 if (room.gameActive) {
-                    // Only server-confirmed forfeits count; no fabricated point changes.
+                    // Match termination is authoritative: the connected opponent wins by forfeit.
+                    const connectedOpponent = roomPlayers(room).find(p => p !== player &&
+                        p.ws && p.ws.readyState === WebSocket.OPEN);
+                    const forcedWinnerId = connectedOpponent?.id || null;
                     if (room.gameType === 'mentiroso') {
-                        endGameMentiroso(roomId, 'El rival no volvió a conectarse.');
+                        endGameMentiroso(roomId, 'El rival no volvió a conectarse.', forcedWinnerId);
                     } else {
-                        endGame(roomId, 'El rival no volvió a conectarse.');
+                        endGame(roomId, 'El rival no volvió a conectarse.', forcedWinnerId);
                     }
                 }
                 room.players.player1 = room.players.player1 === player ? null : room.players.player1;
@@ -2242,7 +2250,7 @@ function handleMentirosoSubmitValidation(ws, clientInfo, payload) {
     }, 1000); // Reducido de 3000ms a 1000ms para transiciones más rápidas
 }
 
-function endGameMentiroso(roomId, reason = "Game completed") {
+function endGameMentiroso(roomId, reason = "Game completed", forcedWinnerId = null) {
     const room = rooms.get(roomId);
     if (!room || !room.mentirosoState) {
         console.error(`endGameMentiroso: Room ${roomId} not found`);
@@ -2271,6 +2279,13 @@ function endGameMentiroso(roomId, reason = "Game completed") {
     } else {
         draw = true;
     }
+
+    if (forcedWinnerId && [player1.id, player2.id].includes(forcedWinnerId)) {
+        winnerId = forcedWinnerId;
+        draw = false;
+    }
+    if (room.mentirosoState.questionTimer) clearInterval(room.mentirosoState.questionTimer);
+    room.mentirosoState.questionTimer = null;
 
     const finalScores = {};
     finalScores[player1.id] = player1.score;
