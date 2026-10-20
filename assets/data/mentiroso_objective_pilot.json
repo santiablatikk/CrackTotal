@@ -163,7 +163,7 @@
       "template": "Puedo nombrar X clubes semifinalistas de la UEFA Champions League 2023/24.",
       "cutoff": "2024-06-01",
       "source_urls": [
-        "https://www.uefa.com/uefachampionsleague/news/028c-1aad7af4a471-75bd5cff54cf-1000--meet-the-semi-finalists/"
+        "https://www.uefa.com/uefachampionsleague/news/028c-1aad7af4a471-75bd5cff54cf-1000--champions-league-semi-finals-meet-the-teams/"
       ],
       "answers": [
         {
@@ -201,7 +201,7 @@
       "template": "Puedo nombrar X selecciones campeonas de la Copa Mundial masculina en las ediciones de 2002 a 2022.",
       "cutoff": "2022-12-18",
       "source_urls": [
-        "https://www.fifa.com/es/tournaments/mens/worldcup/articles/todas-las-finales-de-la-copa-mundial-de-la-fifa"
+        "https://www.fifa.com/es/articles/todos-los-mundiales-de-la-historia-campeones-sedes-y-mejores-jugadores"
       ],
       "answers": [
         {
