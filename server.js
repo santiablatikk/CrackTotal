@@ -4,6 +4,9 @@ const url = require('url');
 const fs = require('fs'); // Added for file system operations
 const path = require('path'); // Added for constructing file paths
 const { createPasalaDuelService } = require('./server/pasala-duel');
+const objectiveMentiroso = require('./server/multiplayer/objective-mentiroso');
+// Explicit staging-only feature flag: historical production backend stays unchanged.
+const OBJECTIVE_MENTIROSO = process.env.CT_STAGING === 'true' && process.env.CT_OBJECTIVE_MENTIROSO === 'true';
 
 // --- Constants ---
 const MAX_LEVELS = 6; // 6 niveles de dificultad
@@ -679,7 +682,7 @@ function handleCreateRoom(ws, clientInfo, payload) {
         // Mentiroso specific state
         mentirosoState: gameType === 'mentiroso' ? {
             currentRound: 1,
-            maxRounds: 18,
+            maxRounds: OBJECTIVE_MENTIROSO ? 6 : 18,
             categoryRound: 1,
             globalCategoryIndex: 0,
             currentCategory: null,
@@ -818,7 +821,7 @@ function handleJoinRandomRoom(ws, clientInfo, payload) {
         // No room found, create a new public QSM room.
         const targetGameType = (payload && payload.gameType) || 'quiensabemas'; // Default to QSM if not specified
         console.log(`No random ${targetGameType} room found for ${clientInfo.id}. Creating new public quiensabemas room.`);
-            handleCreateRoom(ws, clientInfo, { playerName: payload ? payload.playerName : undefined, password: '' });
+            handleCreateRoom(ws, clientInfo, { playerName: payload ? payload.playerName : undefined, password: '', gameType: targetGameType });
     }
 }
 
@@ -1482,7 +1485,7 @@ function nextRoundMentiroso(roomId) {
     };
     
     const mappedKey = categoryMapping[categoryKey] || categoryKey;
-    const categoryData = mentirosoCategories[mappedKey];
+    const categoryData = OBJECTIVE_MENTIROSO ? objectiveMentiroso.byCategory(state.currentCategory) : mentirosoCategories[mappedKey];
     if (!categoryData || categoryData.length === 0) {
         console.error(`No challenges found for category: ${state.currentCategory} (key: ${categoryKey})`);
         endGameMentiroso(roomId, "Error: No challenges available");
@@ -1491,6 +1494,11 @@ function nextRoundMentiroso(roomId) {
 
     const randomChallenge = categoryData[Math.floor(Math.random() * categoryData.length)];
     state.challengeTextTemplate = randomChallenge.template;
+    if (OBJECTIVE_MENTIROSO) {
+        state.objectiveChallenge = randomChallenge;
+        // Deterministic starting-player alternation in the pilot.
+        room.currentTurn = state.currentRound % 2 ? room.players.player1.id : room.players.player2.id;
+    }
 
     // Reset round state
     state.currentBid = 0;
@@ -1534,7 +1542,8 @@ function startMentirosoQuestionTimer(roomId, duration = 15, phase = 'bidding') {
     }
 
     const state = room.mentirosoState;
-    
+    if (OBJECTIVE_MENTIROSO && state.gamePhase !== phase) return;
+
     // Limpiar timer anterior si existe
     if (state.questionTimer) {
         clearInterval(state.questionTimer);
@@ -1611,6 +1620,7 @@ function handleMentirosoTimeOut(roomId, phase) {
     }
     
     const state = room.mentirosoState;
+    if (OBJECTIVE_MENTIROSO && state.gamePhase !== phase) return;
     console.log(`Mentiroso Room ${roomId}: Timer expired for round ${state.currentRound} in phase ${phase}`);
     
     if (phase === 'bidding') {
@@ -1618,7 +1628,7 @@ function handleMentirosoTimeOut(roomId, phase) {
         // El jugador actual pierde automáticamente el punto
         
         let winnerId = null;
-        if (state.currentTurn === room.players.player1.id) {
+        if (room.currentTurn === room.players.player1.id) {
             winnerId = room.players.player2.id;
         } else {
             winnerId = room.players.player1.id;
@@ -1718,8 +1728,10 @@ function handleMentirosoSubmitBid(ws, clientInfo, payload) {
     }
 
     // Validate bid
-    const bid = parseInt(payload.bid);
-    if (isNaN(bid) || bid <= state.currentBid) {
+    const bid = payload && Number(payload.bid);
+    if (!Number.isSafeInteger(bid) || bid <= state.currentBid ||
+        (OBJECTIVE_MENTIROSO && (!state.objectiveChallenge || bid > state.objectiveChallenge.answers.length ||
+        state.gamePhase !== 'bidding'))) {
         safeSend(ws, { type: 'errorMessage', payload: { error: `La apuesta debe ser un número mayor que la apuesta actual (${state.currentBid}).` } });
         return;
     }
@@ -1796,6 +1808,7 @@ function handleMentirosoCallLiar(ws, clientInfo, payload) {
     // Update game state
     state.playerWhoCalledMentiroso = clientInfo.id;
     state.playerToListAnswers = state.lastBidder;
+    if (OBJECTIVE_MENTIROSO) state.gamePhase = 'listing';
     room.currentTurn = state.lastBidder; // The accused player must list answers
 
     // Detener el timer cuando se llama Mentiroso
@@ -1853,6 +1866,42 @@ function handleMentirosoSubmitAnswers(ws, clientInfo, payload) {
         return;
     }
 
+    if (OBJECTIVE_MENTIROSO) {
+        if (state.gamePhase !== 'listing' || !state.objectiveChallenge ||
+            answers.length > 100 || answers.some(answer => typeof answer !== 'string' || answer.length > 120)) {
+            safeSend(ws, { type: 'errorMessage', payload: { error: 'Fase o respuestas inválidas.' } });
+            return;
+        }
+        stopMentirosoQuestionTimer(roomId, 'objective_answered');
+        state.gamePhase = 'roundOver';
+        const verdict = objectiveMentiroso.adjudicate(state.objectiveChallenge, answers, state.currentBid);
+        const winnerId = verdict.wasMentiroso ? state.playerWhoCalledMentiroso : state.playerToListAnswers;
+        const winner = room.players.player1.id === winnerId ? room.players.player1 : room.players.player2;
+        winner.score += 1;
+        state.scores[winnerId] = winner.score;
+        broadcastToRoom(roomId, {
+            type: 'mentirosoRoundResult',
+            payload: {
+                wasMentiroso: verdict.wasMentiroso,
+                validAnswersCount: verdict.validCount,
+                requiredCount: verdict.requiredCount,
+                winnerId, winnerName: winner.name, validationDetails: verdict.details,
+                message: verdict.wasMentiroso ? 'La apuesta no se completó.' : 'La apuesta fue demostrada.',
+                players: {
+                    player1: { id: room.players.player1.id, name: room.players.player1.name, score: room.players.player1.score },
+                    player2: { id: room.players.player2.id, name: room.players.player2.name, score: room.players.player2.score }
+                }
+            }
+        });
+        state.currentRound += 1;
+        const nextRound = state.currentRound;
+        setTimeout(() => {
+            if (room.mentirosoState.gameActive && room.mentirosoState.currentRound === nextRound) nextRoundMentiroso(roomId);
+        }, 1500);
+        return;
+    }
+
+    // Legacy manual validation: retained only outside the objective staging pilot.
     // Save answers and change turn to validator
     state.answersListed = answers;
     room.currentTurn = state.playerWhoCalledMentiroso;
@@ -1874,6 +1923,10 @@ function handleMentirosoSubmitAnswers(ws, clientInfo, payload) {
 }
 
 function handleMentirosoSubmitValidation(ws, clientInfo, payload) {
+    if (OBJECTIVE_MENTIROSO) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'La corrección del desafío es automática.' } });
+        return;
+    }
     const roomId = clientInfo.roomId;
     if (!roomId) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'No estás en una sala de juego.' } });
