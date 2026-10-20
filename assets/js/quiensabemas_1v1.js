@@ -71,6 +71,18 @@ const DOM = {
 };
 
 // --- Game State ---
+const QSM_SESSION_KEY = 'ct-qsm-room-session-v1';
+const savedQsmSession = () => {
+    try { return JSON.parse(sessionStorage.getItem(QSM_SESSION_KEY) || 'null'); }
+    catch { return null; }
+};
+const saveQsmSession = payload => {
+    if (!payload || !payload.roomId || !payload.reconnectToken) return;
+    try { sessionStorage.setItem(QSM_SESSION_KEY, JSON.stringify({
+        roomId: payload.roomId, reconnectToken: payload.reconnectToken, gameType: 'quiensabemas'
+    })); } catch {}
+};
+const clearQsmSession = () => { try { sessionStorage.removeItem(QSM_SESSION_KEY); } catch {} };
 const gameState = {
     websocket: null,
     myPlayerId: null,
@@ -252,6 +264,11 @@ function initializeWebSocket() {
         updateConnectionStatusUI(true, 'Conectado');
         showLobbyMessage('¡Conectado! Listo para jugar.', 'success', true);
         enableLobbyButtons();
+        const saved = savedQsmSession();
+        if (saved && QSM_PREVIEW) {
+            showLobbyMessage('Recuperando sala anterior…', 'info', true);
+            sendToServer('resumeRoom', saved);
+        }
         gameState.reconnectAttempts = 0; // Resetear intentos de reconexión
         
         // Solicitar salas disponibles inmediatamente después de conectar
@@ -295,15 +312,18 @@ function initializeWebSocket() {
         updateConnectionStatusUI(false, wasClean ? 'Desconectado' : 'Conexión perdida');
         gameState.websocket = null;
         
-        if (gameState.gameActive) {
-            showErrorInGame("Conexión perdida. La partida ha terminado.");
-            handleGameEnd({ reason: "Conexión perdida. Intenta jugar de nuevo." });
+        if (gameState.gameActive && QSM_PREVIEW && savedQsmSession()) {
+            stopQuestionTimer();
+            disableAnswerOptions();
+            showFeedbackInGame('Conexión interrumpida. Intentando recuperar tu partida…', 'info');
+        } else if (gameState.gameActive) {
+            showErrorInGame('Conexión perdida. La partida ha terminado.');
+            handleGameEnd({ reason: 'Conexión perdida. Intenta jugar de nuevo.' });
+            gameState.gameActive = false;
         } else {
             showLobbyMessage('Desconectado del servidor. Intentando reconectar...', 'error', true);
         }
-        
         disableLobbyButtons();
-        gameState.gameActive = false;
         scheduleReconnect();
     };
 
@@ -414,6 +434,7 @@ function handleServerMessage(message) {
             break;
             
         case 'roomCreated':
+            saveQsmSession(payload);
             gameState.roomId = payload.roomId;
             gameState.isRoomCreator = true;
             gameState.players = {
@@ -429,6 +450,7 @@ function handleServerMessage(message) {
             break;
             
         case 'joinSuccess':
+            saveQsmSession(payload);
             gameState.roomId = payload.roomId;
             gameState.isRoomCreator = false;
             gameState.players = payload.players;
@@ -442,6 +464,48 @@ function handleServerMessage(message) {
             console.log('Unido exitosamente a la sala:', gameState.roomId, 'Jugadores:', gameState.players);
             break;
             
+        case 'roomResumed':
+            if (payload.gameType !== 'quiensabemas') break;
+            saveQsmSession(payload);
+            gameState.myPlayerId = payload.playerId;
+            gameState.roomId = payload.roomId;
+            gameState.players = payload.players;
+            gameState.currentTurn = payload.currentTurn;
+            gameState.gameActive = !!payload.gameActive;
+            gameState.gamePhase = payload.gameActive ? 'playing' : 'waitingForOpponent';
+            gameState.currentQuestion = payload.question;
+            gameState.currentQuestionIndex = Math.max(0, (payload.questionNumber || 1) - 1);
+            gameState.totalQuestions = payload.totalQuestionsInLevel || gameState.totalQuestions;
+            gameState.reconnectAttempts = 0;
+            switchToGameView(payload.gameActive ? 'Partida recuperada.' : 'Esperando rival…');
+            updatePlayersHeaderUI();
+            if (payload.gameActive && payload.question) {
+                displayQuestionInUI();
+                if (payload.paused) {
+                    stopQuestionTimer();
+                    disableAnswerOptions();
+                    showFeedbackInGame('Esperando a que el rival se reconecte…', 'info');
+                }
+            }
+            break;
+        case 'opponentDisconnected':
+            if (gameState.gameActive) {
+                stopQuestionTimer();
+                disableAnswerOptions();
+                showFeedbackInGame('El rival perdió conexión. Esperando hasta 45 segundos…', 'info');
+            }
+            break;
+        case 'opponentReconnected':
+            if (gameState.gameActive && gameState.currentQuestion) displayQuestionInUI();
+            showFeedbackInGame('¡Conexión restablecida!', 'success');
+            break;
+        case 'resumeError':
+            clearQsmSession();
+            gameState.roomId = null;
+            gameState.gameActive = false;
+            showLobbyView();
+            showLobbyMessage(payload.error || 'La sala anterior ya no existe. Creá otra.', 'error', true);
+            break;
         case 'joinError':
             console.error("❌ Error al unirse a la sala:", payload.error);
             showLobbyMessage(payload.error || "Error al unirse a la sala", 'error', true);
@@ -528,6 +592,7 @@ function handleServerMessage(message) {
             break;
             
         case 'gameOver':
+            clearQsmSession();
             gameState.gameActive = false;
             gameState.gamePhase = 'gameOver';
             handleGameEnd(payload);
