@@ -22,7 +22,6 @@ const STATIC_ASSETS = [
     '/games.html',
     '/assets/css/base.css',
     '/assets/css/layout.css',
-    '/assets/css/landing.css',
     '/assets/css/modals.css',
     '/assets/css/home.css',
     '/assets/css/discover.css',
