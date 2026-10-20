@@ -1729,3 +1729,20 @@ input[type=number] {
 }
 .ct-objective-verdict li.valid { color: #b5eb53; }
 .ct-objective-verdict li.invalid { color: #f1b8a4; }
+
+/* 5.2 accessibility: compact counters for substantial verified answer lists. */
+.ct-count-hint {
+  display: block;
+  margin: .55rem 0 .85rem;
+  font: 600 .875rem/1.5 "Manrope", sans-serif;
+  color: #d1e4cb;
+}
+#listingPhase .modern-textarea {
+  width: 100%;
+  min-height: min(36vh, 18rem);
+  line-height: 1.65;
+  resize: vertical;
+}
+@media (max-width: 640px) {
+  #listingPhase .modern-textarea { min-height: 11rem; font-size: 1rem; }
+}
