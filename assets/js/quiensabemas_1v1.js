@@ -10,8 +10,10 @@ console.log("✨ quiensabemas_1v1.js cargado (v3 Renovada - Junio 2024)");
 const QSM_PREVIEW = /(?:^|\.)netlify\.(?:app|com)$/i.test(location.hostname);
 const QSM_STAGING = new URLSearchParams(location.search).get('server');
 const QSM_STAGING_WS = QSM_STAGING && /^wss:\/\/[a-z0-9.-]+(?::\d+)?(?:\/[^?#]*)?$/i.test(QSM_STAGING) ? QSM_STAGING : null;
+const QSM_PREVIEW_WS = location.hostname === 'deploy-preview-1--zingy-haupia-53b742.netlify.app'
+    ? 'wss://cracktotal-arena-staging.onrender.com' : null;
 const CONFIG = {
-    WEBSOCKET_URL: QSM_PREVIEW ? QSM_STAGING_WS : 'wss://cracktotal-servidor.onrender.com',
+    WEBSOCKET_URL: QSM_PREVIEW ? (QSM_STAGING_WS || QSM_PREVIEW_WS) : 'wss://cracktotal-servidor.onrender.com',
     RECONNECT_DELAY: 3000,
     MAX_RECONNECT_ATTEMPTS: 5,
     TIME_PER_QUESTION: 20,
