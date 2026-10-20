@@ -670,6 +670,9 @@ function handleResumeRoom(ws, clientInfo, payload = {}) {
     if (!LEGACY_SESSION_RECOVERY || clientInfo.roomId || pasalaDuels.hasPeer(ws)) {
         return safeSend(ws, { type: 'resumeError', payload: { error: 'Reconexión no disponible.' } });
     }
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+        return safeSend(ws, { type: 'resumeError', payload: { error: 'Sesión inválida.' } });
+    }
     const roomId = String(payload.roomId || '').trim();
     const token = String(payload.reconnectToken || '');
     const room = rooms.get(roomId);
@@ -1131,6 +1134,7 @@ function sendNextQuestion(roomId) {
 
     const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
     room.currentQuestion = questionsForLevel[randomIndex];
+    room.questionResolved = false;
      // // console.log(`DEBUG: Selected question index ${randomIndex} for Level ${room.currentLevel}. Text: ${room.currentQuestion.text}`); // ELIMINAR ESTA LÍNEA
 
     // Mark question as used for this room and level
@@ -1195,6 +1199,10 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'Not your turn.' } });
         return;
     }
+    if (room.questionResolved) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Esa pregunta ya fue respondida.' } });
+        return;
+    }
     if (!room.currentQuestion) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'No active question.' } });
         return;
@@ -1243,6 +1251,9 @@ function handleSubmitAnswer(ws, clientInfo, payload) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'Invalid answer format (missing selectedIndex).' } });
             return; // Invalid submission
     }
+
+    // Atomic question lock before any score changes or delayed next-question callback.
+    room.questionResolved = true;
 
     // --- Score Calculation & Result Payload --- 
     const currentPlayer = room.players.player1.id === clientInfo.id ? room.players.player1 : room.players.player2;
