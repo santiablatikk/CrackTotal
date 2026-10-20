@@ -11,14 +11,17 @@
       "respuesta_correcta": "A"
     },
     {
-      "pregunta": "¿Qué entrenador tiene el mayor porcentaje de victorias en finales de Champions League?",
+      "pregunta": "¿Qué entrenador ganó tres Champions League consecutivas con el Real Madrid entre 2016 y 2018?",
       "opciones": {
-        "A": "Zinedine Zidane (100% - 3/3)",
-        "B": "Bob Paisley (100% - 3/3)",
-        "C": "Carlo Ancelotti (80% - 4/5)",
-        "D": "Pep Guardiola (100% - 2/2)"
+        "A": "Zinedine Zidane",
+        "B": "Bob Paisley",
+        "C": "Carlo Ancelotti",
+        "D": "Pep Guardiola"
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "audit_status": "verified_official",
+      "source_url": "https://www.uefa.com/uefachampionsleague/news/0245-0e98d8e8f00a-1372e16c4e8d-1000--zidane-leaves-real-madrid-how-much-did-he-achieve/",
+      "verified_at": "2026-10-21"
     },
     {
       "pregunta": "¿Qué jugador corrió la mayor distancia en el Mundial 2022?",
@@ -274,14 +277,17 @@
       "verified_at": "2026-10-20"
     },
     {
-      "pregunta": "¿Cuántas finales de Champions League disputó el Atlético de Madrid?",
+      "pregunta": "¿Cuántas finales de Copa de Europa o Champions League disputó el Atlético de Madrid hasta 2016?",
       "opciones": {
         "A": "2",
         "B": "3",
         "C": "4",
         "D": "1"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://www.uefa.com/uefachampionsleague/news/022d-0e9475a3f13d-96d6cbb93192-1000--can-atletico-make-it-third-time-lucky-in-milan/",
+      "verified_at": "2026-10-21"
     },
     {
       "pregunta": "¿Quién fue el DT campeón del mundo con Alemania en 2014?",
