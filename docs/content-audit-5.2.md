@@ -185,3 +185,29 @@ Fuentes utilizadas en esta etapa:
 - El resultado de cada ronda y los avisos de feedback se muestran mediante nodos de texto seguros; los nombres de jugadores no se incorporan a HTML interpolado.
 - **Comprobación de esta fase**: ejecución real del código descargado de la rama en JavaScript V8 aislado, con primitivas Node simuladas, de ambos smoke tests: PASS (170 respuestas / 6 retos, min 20; 375 QSM estructurales y 1 retirado). También pasó la compilación sintáctica de los archivos principales. No implica `npm test` completo, despliegue de staging ni partida real.
 - **Sigue bloqueado el lanzamiento** mientras no se validen el nuevo servidor en staging, toda la superficie de QSM/Mentiroso, el contenido factual pendiente y los checks finales de CI. El backend antiguo independiente no recibió estos commits.
+
+
+## 21 de octubre de 2026 — Online 1v1 (QSM y Mentiroso, aislamiento staging)
+
+**Implementado en la rama / PR, NO en el servicio histórico público:**
+
+1. Los clientes `quiensabemas_1v1.js` y `mentiroso.js` utilizan automáticamente **`wss://cracktotal-arena-staging.onrender.com`** solo desde la preview Netlify oficial `deploy-preview-1--zingy-haupia-53b742.netlify.app`. En otras previews Netlify se mantiene la protección de no utilizar producción; el despliegue `cracktotal.com` todavía utiliza el backend histórico. Las URLs de los recursos en ambas páginas fueron actualizadas para evitar scripts antiguos en caché.
+2. Para QSM y Mentiroso, el servidor staging implementa `resumeRoom` con credenciales aleatorias de 24 bytes, rotación del token al reconectar, grace period de 45 segundos, restauración de identidad/estado y bloqueo de acciones durante la caída del rival. Los clientes guardan el token en `sessionStorage` por partida, sin enviarlo al adversario.
+3. QSM corrige duplicados durante el retardo de próxima pregunta. El servidor controla el límite de **20 segundos** y emite `answerResult` con `timedOut:true`, 0 puntos y cambio de turno; ignora intentos de manipulación desde `timeOut` del navegador. El reloj se suspende al desconectar y se restaura con el tiempo restante; `CT_QSM_TEST_QUESTION_MS` permite reducirlo solo en tests de staging.
+4. Mentiroso conserva apuesta dinámica de 20 o más respuestas, arbitraje automático por IDs canónicos, reloj controlado por servidor y reconexión del estado de la ronda. **Solo** con `CT_STAGING=true` y `CT_OBJECTIVE_MENTIROSO=true`.
+5. El servidor publica `arena:hello` por WebSocket y un health de staging con `arenaProtocol:"cracktotal-arena-5.2"`, flags `qsmResume`, `mentirosoObjective` y `RENDER_GIT_COMMIT`. Los clientes de la preview no habilitan matchmaking cuando el backend es antiguo o carece de las capacidades obligatorias.
+6. Se añadió `scripts/legacy_online_ws_integration.js` a `npm test`: lanza un servidor Node local de staging y prueba dos sesiones QSM, pausa/reconexión, rechazo de segunda respuesta, expiración por servidor, señal de compatibilidad y luego Mentiroso con apuesta válida de 20 respuestas, rechazo de arbitraje subjetivo y reconexión en ronda 2. La URL remota de Render **no** se usa en este test.
+
+### Puesta en marcha del servidor remoto de staging (pendiente de verificar)
+
+Para `cracktotal-arena-staging` debe confirmarse en Render:
+- Repositorio: `santiablatikk/CrackTotal`.
+- Rama: `redesign/crack-total-2` y auto-deploy tras commit; no utilizar el repositorio histórico `cracktotal-servidor` para pruebas 5.2.
+- Comando de build: `npm ci`; inicio: `npm start` (servidor HTTP + WebSocket).
+- Variables: `CT_STAGING=true`, `CT_OBJECTIVE_MENTIROSO=true` y `CT_STAGING_ORIGINS=https://deploy-preview-1--zingy-haupia-53b742.netlify.app`.
+- Ruta de salud: `https://cracktotal-arena-staging.onrender.com/__ct_staging/health`.
+- Debe devolver protocolo 5.2, `features.qsmResume=true`, `features.mentirosoObjective=true` y un SHA igual al commit desplegado. Si no devuelve esto, el nuevo frontend no habilita las salas 5.2.
+
+**No se ha confirmado desde esta revisión un deploy remoto de Render ni una partida en esa instancia externa.** La preview Netlify puede validar `npm test` local y seguir sin tener el nuevo servidor remoto desplegado. No fusionar con `main` ni apuntar al dominio principal hasta desplegar, probar y versionar el backend de producción por separado.
+
+**Limitaciones pendientes:** QSM/Mentiroso siguen teniendo adaptadores de protocolo propios dentro de `server.js` (aunque ya comparten funciones base, servicio y recuperación). La convergencia del RoomManager completo con Pasala y la cobertura editorial de todas las preguntas/consignas continúa abierta. Los resultados de desconexión definitiva y la limpieza de sala merecen pruebas adicionales de tolerancia a fallos.
