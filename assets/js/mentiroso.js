@@ -777,6 +777,10 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
+        if (gameState.objectiveValidation && gameState.maxBid && bidAmount > gameState.maxBid) {
+            showFeedback('La apuesta no puede superar las ' + gameState.maxBid + ' respuestas verificadas.', 'error');
+            return;
+        }
         if (bidAmount <= gameState.currentBid) {
             showFeedback(`Tu apuesta debe ser mayor que la apuesta actual (${gameState.currentBid}).`, "error");
             return;
@@ -1195,6 +1199,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 case 'newQuestion':
                 case 'mentirosoNextRound': // Server signals start of game or new round
                     gameState.gameActive = true;
+                    gameState.objectiveValidation = message.payload.objectiveValidation === true;
+                    gameState.maxRounds = Number(message.payload.maxRounds) || 18;
+                    gameState.maxBid = Number.isInteger(message.payload.maxBid) ? message.payload.maxBid : null;
                     console.log("⭐ Nueva ronda/pregunta:", message.payload);
                     
                     // Verificación de seguridad para players
@@ -1478,7 +1485,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     updatePlayerUI();
                     
                     // Determinar si es la última pregunta de la categoría
-                    const isLastQuestionInCategory = gameState.categoryRound === 3;
+                    const isLastQuestionInCategory = gameState.objectiveValidation || gameState.categoryRound === 3;
                     
                     // Determinar quién ganó el punto de forma más clara
                     let winnerName = "Nadie";
@@ -1502,7 +1509,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const categoryNumber = gameState.globalCategoryIndex + 1;
                     const resultMessage = `
                         <div class="round-result ${isPlayerWinner ? 'winner' : 'loser'}">
-                            <div class="result-header">RESULTADO PREGUNTA ${gameState.categoryRound}/3 (${gameState.currentRound}/18)</div>
+                            <div class="result-header">RESULTADO PREGUNTA ${gameState.categoryRound}/${gameState.objectiveValidation ? 1 : 3} (${gameState.currentRound}/${gameState.maxRounds || 18})</div>
                             <div class="result-winner">Punto para: <strong>${winnerName}</strong></div>
                             <div class="result-detail">${message.payload.message}</div>
                             ${isLastQuestionInCategory ? `<div class="category-complete">¡CATEGORÍA ${categoryNumber} COMPLETADA!</div>` : ''}
@@ -1512,6 +1519,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Mostrar el mensaje de resultado
                     if (feedbackAreaEl) {
                         feedbackAreaEl.innerHTML = resultMessage;
+                        if (gameState.objectiveValidation && Array.isArray(message.payload.validationDetails)) {
+                            const verified = document.createElement('section');
+                            verified.className = 'ct-objective-verdict';
+                            const heading = document.createElement('strong');
+                            heading.textContent = 'CORRECCIÓN AUTOMÁTICA DEL SERVIDOR';
+                            verified.appendChild(heading);
+                            const list = document.createElement('ul');
+                            message.payload.validationDetails.forEach(entry => {
+                                const item = document.createElement('li');
+                                item.textContent = (entry.accepted ? '✓ ' : '✗ ') +
+                                    String(entry.answer || '').slice(0, 120) +
+                                    (entry.reason === 'duplicate' ? ' (repetida)' : '');
+                                item.className = entry.accepted ? 'valid' : 'invalid';
+                                list.appendChild(item);
+                            });
+                            verified.appendChild(list);
+                            feedbackAreaEl.appendChild(verified);
+                        }
                     }
                     
                     // Actualizar a fase roundOver sin mostrar el waiting message aún
