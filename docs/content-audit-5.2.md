@@ -98,3 +98,43 @@ Se añadieron `audit_status: verified_official`, `source_url` y `verified_at` a 
 6. Reconciliar y desplegar el backend independiente de Quién Sabe Más y Mentiroso, verificando que las preguntas/retos activos correspondan a los datos auditados, antes del merge del PR #1.
 
 **No fusionar ni publicar como release final mientras siga sin completarse la verificación factual y funcional acordada.**
+
+## 21 de octubre de 2026 — Unificación multijugador (fase piloto, SIN despliegue)
+
+**Estado: avance parcial, NO apto para producción.** El PR #1 permanece abierto y la rama `main` no se ha modificado en esta fase.
+
+### Hallazgos de código confirmados
+
+- Pasala Che usa `server/pasala-duel.js`: salas separadas, IDs seguros, verificación del servidor, reconexión por token y revancha.
+- Los clientes QSM y Mentiroso todavía utilizan el protocolo heredado, desplegado independientemente desde `santiablatikk/cracktotal-servidor`.
+- El cliente de QSM trata la desconexión durante una partida como finalización; falta integrar la recuperación que ofrece Pasala.
+- El Mentiroso heredado utiliza `mentirosoSubmitValidation` con booleanos remitidos por el adversario: no equivale a arbitraje factual.
+- Se identificó y corrigió en el código candidato un bug de `joinRandomRoom`: al crear una sala vacía ignoraba el `gameType` solicitado y hacía una sala QSM.
+
+### Código agregado y cambios ejecutados
+
+- `server/multiplayer/core.js`: normalización estricta, códigos seguros, nombres acotados, alias vinculados a IDs canónicos y descarte de respuestas duplicadas. El módulo se reutiliza en Pasala y en el servidor heredado candidato.
+- `server/multiplayer/objective-mentiroso.js`: adjudicación de respuestas por servidor, sin arbitraje manual, con validación del conjunto y apuestas acotadas.
+- `assets/data/mentiroso_objective_pilot.json`: **6 consignas cerradas, 29 respuestas canónicas** distribuidas en las seis categorías. Todas contienen URLs de FIFA, UEFA o CONMEBOL; su revisión editorial completa y cobertura total del banco antiguo aún NO está certificada.
+- `server.js`: el piloto se activa **solo** si ambas variables de entorno `CT_STAGING=true` y `CT_OBJECTIVE_MENTIROSO=true`. Fuera de ese escenario permanece la mecánica antigua para evitar una migración destructiva. En piloto, seis rondas, una por categoría, servidor decide la validez.
+- `assets/js/mentiroso.js`: pantalla de resultados con detalle de cada veredicto, límites de apuesta y números correctos de ronda; `assets/css/mentiroso.css`: colores del sistema visual 5.2 y tarjeta de verificación.
+- `scripts/objective_mentiroso_smoke.js`: nuevo test que cubre alias, duplicados, apuestas inválidas, rechazo de respuestas ajenas al conjunto y validez estructural del piloto, incorporado a `npm test`.
+- Tres preguntas ambiguas/incorrectas de QSM corregidas, con fuentes: Zidane 2016–2018 (UEFA), tres finales del Atlético hasta 2016 incluyendo Copa de Europa (UEFA), y Griezmann francés cuya cláusula de 120 millones de euros pagó Barcelona en 2019 (FC Barcelona).
+
+### Gate pendiente antes del lanzamiento
+
+1. Ejecutar y documentar `npm ci`, `npm test`, `npm run validate` y tests reales WebSocket del **nuevo HEAD**. La ejecución de estos tests **no fue confirmada** en esta fase: se añadieron y versionaron, pero no se informará PASS sin evidencia.
+2. Habilitar un servidor de staging que ejecute el código candidato con las dos variables indicadas; probar partida completa de Mentiroso con dos clientes, seis rondas, temporizadores y resultados, incluido fallo/reconexión.
+3. Integrar QSM al mismo sistema de salas y sesiones. **QSM todavía no utiliza el núcleo de Pasala para reconexión**.
+4. Verificar individualmente TODOS los bancos deportivos activos. El piloto de Mentiroso no reemplaza los 256 retos anteriores; los retos subjetivos permanecen fuera del piloto, no están borrados ni convertidos todos.
+5. Reconciliar y desplegar la fuente canónica en el servidor de producción de manera controlada (está en otro repositorio); QA completo responsive, seguridad y monitorización.
+6. Confirmar CI en verde y rollback antes de cualquier merge o modificación del dominio.
+
+Fuentes primarias cotejadas para los casos nuevos:
+- https://www.uefa.com/uefachampionsleague/news/028c-1aad7af4a471-75bd5cff54cf-1000--champions-league-semi-finals-meet-the-teams/
+- https://www.fifa.com/es/articles/que-seleccion-gano-la-ultima-copa-mundial-de-la-fifa-qatar-2022
+- https://www.fifa.com/es/articles/todos-los-mundiales-de-la-historia-campeones-sedes-y-mejores-jugadores
+- https://gol.conmebol.com/libertadores/es/news/los-campeones-de-la-conmebol-libertadores-que-iran-por-una-nueva-corona
+- https://www.uefa.com/uefachampionsleague/news/0245-0e98d8e8f00a-1372e16c4e8d-1000--zidane-leaves-real-madrid-how-much-did-he-achieve/
+- https://www.uefa.com/uefachampionsleague/news/022d-0e9475a3f13d-96d6cbb93192-1000--can-atletico-make-it-third-time-lucky-in-milan/
+- https://www.fcbarcelona.es/es/futbol/primer-equipo/news/1277948/barca-sign-griezmann
