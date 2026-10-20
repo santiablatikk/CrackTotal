@@ -3,7 +3,9 @@
 const MENTIROSO_PREVIEW = /(?:^|\.)netlify\.(?:app|com)$/i.test(location.hostname);
 const MENTIROSO_STAGING = new URLSearchParams(location.search).get('server');
 const MENTIROSO_STAGING_WS = MENTIROSO_STAGING && /^wss:\/\/[a-z0-9.-]+(?::\d+)?(?:\/[^?#]*)?$/i.test(MENTIROSO_STAGING) ? MENTIROSO_STAGING : null;
-const WEBSOCKET_URL = MENTIROSO_PREVIEW ? MENTIROSO_STAGING_WS : 'wss://cracktotal-servidor.onrender.com';
+const MENTIROSO_PREVIEW_WS = location.hostname === 'deploy-preview-1--zingy-haupia-53b742.netlify.app'
+    ? 'wss://cracktotal-arena-staging.onrender.com' : null;
+const WEBSOCKET_URL = MENTIROSO_PREVIEW ? (MENTIROSO_STAGING_WS || MENTIROSO_PREVIEW_WS) : 'wss://cracktotal-servidor.onrender.com';
 
 // Agregar después de la declaración de WEBSOCKET_URL, antes de DOMContentLoaded
 
