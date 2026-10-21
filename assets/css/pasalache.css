@@ -2023,3 +2023,23 @@ body.game-body.ct-ds .difficulty-card{border-radius:12px}
  body.game-body.ct-ds .action-buttons{flex-wrap:wrap;gap:9px}
  body.game-body.ct-ds .pasapalabra-button{flex:1 1 50%}
 }
+
+/* 5.2 — Remove retired violet/orange animated overlay from the solo game. */
+body.game-body.ct-ds .game-content {
+  background: transparent;
+  animation: none;
+  filter: none;
+}
+body.game-body.ct-ds .loading-start-screen {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(181,235,83,.075),transparent 48%),
+    linear-gradient(140deg,#172923 0%,#101b1b 82%);
+}
+body.game-body.ct-ds .loading-start-screen::before {
+  opacity:.32;
+}
+body.game-body.ct-ds .loading-title {
+  font-family:"Space Grotesk","Manrope",sans-serif;
+  letter-spacing:-.035em;
+  color:#f4f2e9;
+}
