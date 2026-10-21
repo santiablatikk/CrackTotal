@@ -48,7 +48,7 @@ for (const [label,source,feature] of [
 const qsmHtml = read('quiensabemas.html');
 const mentirosoHtml = read('mentiroso.html');
 assert.match(qsmHtml,/quiensabemas_1v1\.js\?v=20261021-arena52/);
-assert.match(mentirosoHtml,/mentiroso\.js\?v=20261021-arena52/);
+assert.match(mentirosoHtml,/mentiroso\.js\?v=20261021-arena52-r2/);
 assert.match(mentirosoHtml,/mentiroso\.css\?v=20261021-arena52/);
 assert.match(mentirosoHtml,/id="bidUniverseHint"/);
 assert.match(mentirosoHtml,/id="answerCounter"/);
