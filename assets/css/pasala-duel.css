@@ -270,3 +270,29 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
  .arena-shell button{min-height:42px}
  .arena-shell input{min-height:46px}
 }
+
+/* 5.2 — Pasala duel: retained standalone arena with unified interaction polish. */
+.arena-hero h1{letter-spacing:-.045em;overflow-wrap:anywhere}
+.arena-shell{width:100%;max-width:1390px}
+.lobby-grid,.match-stage,.match-top,.scoreboard{min-width:0}
+.lobby-panel,.mode-card,.question-side,.ring-side{min-width:0}
+.mode-card,.lobby-panel{border-radius:14px}
+.arena-shell input,.arena-shell select{border-radius:9px;min-height:48px}
+.arena-shell input:focus-visible,.arena-shell select:focus-visible,
+.arena-shell button:focus-visible{outline:3px solid #b5eb53;outline-offset:3px}
+.arena-button{border-radius:10px;min-height:46px}
+.question-text{overflow-wrap:anywhere;line-height:1.5!important}
+.match-room-code{overflow-wrap:anywhere}
+.server-banner{border-radius:10px;line-height:1.6}
+@media(max-width:650px){
+ .arena-hero{min-height:310px}
+ .arena-hero-inner{padding-block:44px 50px}
+ .arena-shell{padding:30px 12px 0}
+ .server-banner{flex-wrap:wrap;margin-bottom:26px}
+ .server-banner button{margin-left:0}
+ .match-stage{grid-template-columns:minmax(0,1fr)}
+ .ring-side{padding:20px 12px}
+ .question-side{padding:22px 15px}
+ .arena-hero h1{font-size:clamp(2.4rem,10vw,4rem)}
+ .arena-shell button{min-height:44px}
+}
