@@ -1,3 +1,34 @@
+/* Crack Total 5.2 game shell — shared design tokens and semantic chrome. */
+body.ct-ds {
+  --ct-shell-bg: #101b1b;
+  --ct-shell-surface: #243b35;
+  --ct-shell-cream: #f4f2e9;
+  --ct-shell-muted: #cbdccf;
+  --ct-shell-lime: #b5eb53;
+  --ct-shell-copper: #d89b70;
+  --ct-shell-container: 1180px;
+  --ct-shell-gutter: clamp(12px, 3vw, 32px);
+  --ct-shell-radius: 14px;
+  --ct-shell-focus: 3px solid var(--ct-shell-lime);
+}
+body.ct-ds,
+body.ct-ds * { box-sizing: border-box; }
+body.ct-ds :is(main, article, section, form, nav) { min-width: 0; }
+body.ct-ds :is(h1, h2, h3, p) { overflow-wrap: break-word; }
+body.ct-ds :is(input, textarea, select, button) {
+  font-family: "Manrope", system-ui, sans-serif;
+}
+body.ct-ds :is(input, textarea, select) {
+  min-width: 0;
+}
+body.ct-ds :is(button, a, input, textarea, select):focus-visible {
+  outline: var(--ct-shell-focus);
+  outline-offset: 3px;
+}
+body.ct-ds :is(button, a) { -webkit-tap-highlight-color: rgba(181,235,83,.16); }
+body.ct-ds :is(button, input, select, textarea):disabled {
+  cursor: not-allowed;
+}
 /* Exit/chrome shell for in-match pages — Home parity without restyling gameplay boards */
 
 body.game-body.ct-ds,
@@ -23,7 +54,7 @@ body.top10-body.ct-ds .breadcrumbs-container,
 body.mentiroso-body.ct-ds .breadcrumbs-container,
 body.qsm-1v1-body.ct-ds .breadcrumbs-container,
 body.wordle-body.ct-ds .breadcrumbs-container {
-    width: min(1180px, calc(100% - 40px));
+    width: min(var(--ct-shell-container), calc(100% - 2 * var(--ct-shell-gutter)));
     margin: 0.85rem auto 0.35rem;
 }
 
@@ -38,8 +69,9 @@ body.qsm-1v1-body.ct-ds .breadcrumb {
     margin: 0;
     padding: 0;
     list-style: none;
-    color: var(--home-muted, #aebbd0);
+    color: var(--ct-shell-muted);
     font-size: 0.85rem;
+    line-height: 1.55;
 }
 
 body.game-body.ct-ds .breadcrumb a,
@@ -47,8 +79,9 @@ body.top10-body.ct-ds .breadcrumb a,
 body.mentiroso-body.ct-ds .breadcrumb a,
 body.wordle-body.ct-ds .breadcrumb a,
 body.qsm-1v1-body.ct-ds .breadcrumb a {
-    color: var(--home-primary, #79f2a6);
-    text-decoration: none;
+    color: var(--ct-shell-lime);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
     font-weight: 700;
 }
 
