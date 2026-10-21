@@ -26,6 +26,10 @@ assert.match(server,/function armQsmQuestionClock\(/);
 assert.match(server,/state\.phaseDeadline - Date\.now\(\)/,
   'Mentiroso objective timer must use server deadline rather than interval counts');
 assert.match(server,/room\.questionResolved = true/);
+assert.match(server,/payload\.questionId !== room\.questionToken/,
+  'Backend must reject packets belonging to a previous QSM question');
+assert.match(qsm,/questionId: gameState\.questionId/,
+  'QSM client must attach the server-issued question ID to answers');
 assert.match(server,/CT_STAGING === 'true'/);
 assert.match(server,/CT_OBJECTIVE_MENTIROSO === 'true'/);
 for (const [label,source,feature] of [
