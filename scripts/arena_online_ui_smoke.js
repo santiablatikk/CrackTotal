@@ -76,4 +76,16 @@ assert.ok(mentirosoHtml.indexOf('assets/css/mentiroso.css') >
   mentirosoHtml.indexOf('assets/css/game-shell.css'),
   'Game-specific CSS must follow the shared game shell');
 
+const qsmCss = read('assets/css/qsm-1v1.css');
+assert.match(qsmHtml,/qsm-1v1\.css\?v=20261021-arena52/,
+  'QSM should load its canonical game-specific stylesheet');
+assert.ok(qsmHtml.indexOf('assets/css/qsm-1v1.css') >
+  qsmHtml.indexOf('assets/css/game-shell.css'),
+  'QSM stylesheet should override the shared shell');
+assert.doesNotMatch(qsmHtml,/Crack Total 4\.3 · Quién Sabe Más/,
+  'The old inline QSM visual system should be consolidated');
+assert.match(qsmCss,/Crack Total 5\.2 — QSM \/ shared Arena visual language/,
+  'QSM must carry the 5.2 Arena visual language');
+assert.match(qsmCss,/\.form-group label\s*\{[^}]*color:#eaf2e8/s,
+  'QSM form labels must remain readable');
 console.log('ARENA 5.2 CLIENT INTEGRITY: PASS — protocol handshake, isolated staging, recovery and asset versions.');
