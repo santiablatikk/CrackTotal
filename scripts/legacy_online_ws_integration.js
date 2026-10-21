@@ -186,10 +186,14 @@ async function run() {
     send(opponent,'mentirosoCallLiar');
     await wait(player,'mentirosoLiarCalled',()=>true,callStart);
     const resultStart = player.events.length;
-    send(player,'mentirosoSubmitAnswers',{answers:[verifiedSet.answers[0].label]});
+    const deliberateMiss = roundNumber === 2;
+    send(player,'mentirosoSubmitAnswers',{
+      answers: deliberateMiss ? [] : [verifiedSet.answers[0].label]
+    });
     const roundResult = await wait(player,'mentirosoRoundResult',
-      value=>value.validAnswersCount===1,resultStart);
-    assert.equal(roundResult.wasMentiroso,false,'One verified answer proves a one-name bid');
+      value=>value.validAnswersCount === (deliberateMiss ? 0 : 1),resultStart);
+    assert.equal(roundResult.wasMentiroso,deliberateMiss,
+      'Insufficient replies lose the bid objectively; correct replies win');
   }
   const finalMentiroso = await wait(m2,'gameOver',v=>v.gameType==='mentiroso',0,8000);
   assert.ok(finalMentiroso.finalScores[mc.playerId] >= 0);
