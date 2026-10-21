@@ -71,14 +71,18 @@
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Cuántos goles marcó Cristiano Ronaldo en la Liga portuguesa con el Sporting?",
+      "pregunta": "¿Cuántos goles marcó Cristiano Ronaldo en la Primeira Liga con el Sporting CP durante la temporada 2002/03?",
       "opciones": {
         "A": "3",
         "B": "5",
         "C": "4",
         "D": "2"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "A",
+      "audit_status": "verified_official",
+      "source_url": "https://fbref.com/en/squads/13dc44fd/2002-2003/roster/Sporting-CP-Roster-Details",
+      "verified_at": "2026-10-21",
+      "audit_reason": "3 goles de liga; los 5 corresponden a todas las competiciones"
     },
     {
       "pregunta": "¿Qué portero tiene más porterías a cero en la Premier League?",
