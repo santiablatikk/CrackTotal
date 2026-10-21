@@ -119,14 +119,18 @@
       "respuesta_correcta": "C"
     },
     {
-      "pregunta": "¿Cuál es el torneo de selecciones más importante del mundo?",
+      "pregunta": "¿Cómo se llama el torneo masculino de selecciones que organiza la FIFA cada cuatro años?",
       "opciones": {
         "A": "Copa América",
         "B": "Eurocopa",
         "C": "Copa del Mundo",
         "D": "Copa Confederaciones"
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "audit_status": "verified_official",
+      "source_url": "https://inside.fifa.com/tournament-organisation",
+      "verified_at": "2026-10-21",
+      "audit_reason": "Sustituye opinión sobre importancia por identificación de competición"
     },
     {
       "pregunta": "¿Qué selección ganó el Mundial de Qatar 2022?",
@@ -199,14 +203,18 @@
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Cuál es el torneo de clubes más prestigioso de Europa?",
+      "pregunta": "¿Qué competición europea masculina de clubes organiza la UEFA bajo el nombre Champions League?",
       "opciones": {
         "A": "Europa League",
         "B": "Champions League",
         "C": "Conference League",
         "D": "Copa del Rey"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://www.uefa.com/uefachampionsleague/about/",
+      "verified_at": "2026-10-21",
+      "audit_reason": "Sustituye valoración subjetiva de prestigio por identificación oficial"
     },
     {
       "pregunta": "¿En qué país se originó el fútbol moderno?",
@@ -259,14 +267,18 @@
       "respuesta_correcta": "C"
     },
     {
-      "pregunta": "¿Cuál es la medida más grande permitida para una cancha de fútbol según FIFA?",
+      "pregunta": "¿Cuáles son la longitud y anchura máximas permitidas para un campo en partidos internacionales según la Regla 1 del IFAB?",
       "opciones": {
         "A": "100 x 64 metros",
         "B": "110 x 75 metros",
         "C": "120 x 80 metros",
         "D": "105 x 68 metros"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "audit_status": "verified_official",
+      "source_url": "https://theifab.com/laws/latest/the-field-of-play/",
+      "verified_at": "2026-10-21",
+      "audit_reason": "110 × 75 m sólo corresponde al máximo de partidos internacionales; el general es 120 × 90 m"
     },
     {
       "pregunta": "¿Qué significa una tarjeta amarilla?",
@@ -299,14 +311,18 @@
       "respuesta_correcta": "D"
     },
     {
-      "pregunta": "¿Cuál es el clásico más famoso del fútbol argentino?",
+      "pregunta": "¿Qué dos clubes protagonizan el partido conocido como Superclásico del fútbol argentino?",
       "opciones": {
         "A": "Racing vs Independiente",
         "B": "San Lorenzo vs Huracán",
         "C": "Boca vs River",
         "D": "Estudiantes vs Gimnasia"
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "audit_status": "verified_official",
+      "source_url": "https://www.afa.com.ar/es/posts/domingo-de-superclasico-boca-derroto-1-0-a-river",
+      "verified_at": "2026-10-21",
+      "audit_reason": "Sustituye fama subjetiva por denominación oficial"
     },
     {
       "pregunta": "¿Qué selección es conocida como 'La Celeste'?",
