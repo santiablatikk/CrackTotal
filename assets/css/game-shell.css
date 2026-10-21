@@ -8,11 +8,11 @@ body.wordle-body.ct-ds,
 body.futboleros-body.ct-ds {
     margin: 0;
     padding-top: 76px;
-    color: var(--home-text, var(--ct-text, #f7f9fc));
+    color: var(--ct-cream, #f4f2e9);
     background:
-        radial-gradient(circle at 12% 8%, rgba(37, 99, 235, 0.16), transparent 32rem),
-        radial-gradient(circle at 88% 30%, rgba(34, 197, 94, 0.11), transparent 28rem),
-        var(--home-bg, var(--ct-bg, #050b14));
+        radial-gradient(circle at 8% 12%, rgba(36, 59, 53, 0.25), transparent 32rem),
+        radial-gradient(circle at 90% 38%, rgba(181, 235, 83, 0.045), transparent 30rem),
+        var(--ct-ink, #101b1b);
     overflow-x: hidden;
     min-height: 100vh;
     font-family: var(--ct-font-sans,"Manrope",sans-serif);
@@ -67,8 +67,8 @@ body.mentiroso-body.ct-ds .game-header,
 body.wordle-body.ct-ds .wordle-header,
 body.top10-body.ct-ds .top10-header,
 body.qsm-1v1-body.ct-ds .game-header {
-    background: rgba(11, 21, 36, 0.92);
-    border-bottom: 1px solid var(--home-line, rgba(255, 255, 255, 0.12));
+    background: rgba(16, 27, 27, 0.94);
+    border-bottom: 1px solid rgba(244, 242, 233, 0.13);
     box-shadow: none;
     -webkit-backdrop-filter: blur(14px);
     backdrop-filter: blur(14px);
@@ -84,8 +84,8 @@ body.game-body.ct-ds .game-header .game-title,
 body.mentiroso-body.ct-ds .game-title-header,
 body.wordle-body.ct-ds .wordle-header h1,
 body.top10-body.ct-ds .top10-header h1 {
-    font-family: "Oswald", var(--ct-font-display, sans-serif);
-    color: var(--home-text, #f7f9fc);
+    font-family: "Space Grotesk", "Manrope", sans-serif;
+    color: var(--ct-cream, #f4f2e9);
     letter-spacing: -0.02em;
 }
 
@@ -94,7 +94,7 @@ body.top10-body.ct-ds a:focus-visible,
 body.mentiroso-body.ct-ds a:focus-visible,
 body.wordle-body.ct-ds a:focus-visible,
 body.qsm-1v1-body.ct-ds a:focus-visible {
-    outline: 3px solid #fff;
+    outline: 3px solid #b5eb53;
     outline-offset: 3px;
 }
 
