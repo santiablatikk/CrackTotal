@@ -6,6 +6,7 @@ const MENTIROSO_STAGING_WS = MENTIROSO_STAGING && /^wss:\/\/[a-z0-9.-]+(?::\d+)?
 const MENTIROSO_PREVIEW_WS = location.hostname === 'deploy-preview-1--zingy-haupia-53b742.netlify.app'
     ? 'wss://cracktotal-arena-staging.onrender.com' : null;
 const WEBSOCKET_URL = MENTIROSO_PREVIEW ? (MENTIROSO_STAGING_WS || MENTIROSO_PREVIEW_WS) : 'wss://cracktotal-servidor.onrender.com';
+const MENTIROSO_EXPECTED_BANK_VERSION = '2026-10-21-objective-20min-2';
 
 // Agregar después de la declaración de WEBSOCKET_URL, antes de DOMContentLoaded
 
@@ -1084,7 +1085,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (MENTIROSO_PREVIEW) {
                         gameState.arenaCompatible =
                             message.payload?.protocol === 'cracktotal-arena-5.2' &&
-                            message.payload?.features?.mentirosoObjective === true;
+                            message.payload?.features?.mentirosoObjective === true &&
+                            message.payload?.contentVersions?.mentiroso === MENTIROSO_EXPECTED_BANK_VERSION;
                         if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
                         if (gameState.arenaCompatible) {
                             enableLobbyButtons();
@@ -1092,7 +1094,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             const saved = savedMentirosoSession();
                             if (saved) sendToServer('resumeRoom', saved);
                         } else {
-                            showLobbyMessage('Este servidor todavía no admite partidas verificadas de Mentiroso. Reintentá cuando se actualice.', 'error');
+                            showLobbyMessage('El servidor todavía no tiene la versión correcta de Arena y su banco de respuestas. Reintentá cuando se actualice.', 'error');
                             disableLobbyButtons();
                         }
                     }
