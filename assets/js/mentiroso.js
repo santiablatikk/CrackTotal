@@ -86,6 +86,12 @@ const clearMentirosoSession = () => {
     try { sessionStorage.removeItem(MENTIROSO_SESSION_KEY); } catch {}
 };
 document.addEventListener('DOMContentLoaded', function() {
+    // Prevent the browser from restoring a mid-page scroll that hides the game
+    // headline behind the shared sticky navbar on fresh lobby navigation.
+    if (!location.hash && !savedMentirosoSession()) {
+        try { history.scrollRestoration = 'manual'; } catch {}
+        requestAnimationFrame(() => window.scrollTo(0, 0));
+    }
     // --- Game State Variables (Mentiroso) ---
     let gameState = {
         players: {
@@ -504,7 +510,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateGameStatusDisplay() {
         // Calcular número global de pregunta (de 18) y categoría actual (de 6)
-        const categoryRound = gameState.categoryRound || 1; // Pregunta dentro de la categoría (1-3)
+        const categoryRound = gameState.categoryRound || 1;
+        const roundsPerCategory = gameState.objectiveValidation ? 1 : 3;
+        const totalRounds = Number(gameState.maxRounds) || 18;
         const globalCategoryIndex = gameState.globalCategoryIndex || 0; // Índice de categoría (0-5)
         const categoryNumber = globalCategoryIndex + 1; // Número de categoría para mostrar (1-6)
         
@@ -522,8 +530,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <i class="fas fa-trophy"></i> 
                 <span class="round-info">
                     <span class="category-counter">Categoría ${categoryNumber}/6: ${gameState.currentCategory}</span>
-                    <span class="question-counter">Pregunta ${categoryRound}/3</span>
-                    <span class="global-counter">Progreso: ${gameState.currentRound}/18</span>
+                    <span class="question-counter">Pregunta ${categoryRound}/${roundsPerCategory}</span>
+                    <span class="global-counter">Progreso: ${gameState.currentRound}/${totalRounds}</span>
                 </span>
             `;
         }
@@ -631,7 +639,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             : (gameState.players.player2?.id === gameState.currentTurn 
                                 ? gameState.players.player2.name 
                                 : 'otro jugador');
-                        playerTurnBidTextEl.innerHTML = `<i class="fas fa-hourglass-half"></i> Esperando que ${currentTurnPlayerName} realice su jugada...`;
+                        playerTurnBidTextEl.textContent = `Esperando que ${currentTurnPlayerName} realice su jugada...`;
                         playerTurnBidTextEl.classList.remove('your-turn');
                     }
                 }
@@ -1488,7 +1496,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const isFirstRound = gameState.currentRound === 1;
                     const feedbackMessage = isNewCategory ? 
                         `¡Nueva categoría! Ahora jugando: ${gameState.currentCategory}` :
-                        `${isFirstRound ? '¡Comienza' : 'Continúa'} la ronda ${gameState.categoryRound}/3! Categoría: ${gameState.currentCategory}`;
+                        `${isFirstRound ? '¡Comienza' : 'Continúa'} la ronda ${gameState.categoryRound}/${gameState.objectiveValidation ? 1 : 3}! Categoría: ${gameState.currentCategory}`;
                     
                     showFeedback(feedbackMessage, 'info');
                     break;
@@ -1744,7 +1752,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     updateTimerDisplay(
                         message.payload.timeRemaining, 
                         message.payload.phase || 'bidding', 
-                        message.payload.phase === 'listing' ? 60 : 15
+                        message.payload.duration || (message.payload.phase === 'listing' ? 60 : 15)
                     );
                     break;
                     
