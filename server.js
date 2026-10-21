@@ -1831,6 +1831,8 @@ function startMentirosoQuestionTimer(roomId, duration = 15, phase = 'bidding') {
     
     state.timeRemaining = duration;
     state.timerActive = true;
+    // Keep one monotonic deadline for every objective phase. Interval ticks
+    // only update the UI; elapsed time is never counted by the browser.
     if (OBJECTIVE_MENTIROSO) state.phaseDeadline = Date.now() + duration * 1000;
     
     // Notificar a los clientes que el timer comenzó
@@ -1844,8 +1846,10 @@ function startMentirosoQuestionTimer(roomId, duration = 15, phase = 'bidding') {
     });
     
     state.questionTimer = setInterval(() => {
-        state.timeRemaining--;
-        
+        state.timeRemaining = OBJECTIVE_MENTIROSO
+            ? Math.max(0, Math.ceil((state.phaseDeadline - Date.now()) / 1000))
+            : state.timeRemaining - 1;
+
         // Notificar actualización del timer
         broadcastToRoom(roomId, {
             type: 'mentirosoTimerUpdate',
