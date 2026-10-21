@@ -279,3 +279,37 @@ Se prepararon `render.arena-staging.yaml`, `.github/workflows/verify-arena-stagi
 - Se mantiene el retiro anterior del nivel 3 sobre el partido más largo de la historia, sin criterio verificable.
 
 **Restricciones pendientes:** no hay comprobación visual con navegador ni despliegue remoto de Arena 5.2 desde estas herramientas. Las pruebas de Netlify corresponden a servidor de test local; revisar estado del último HEAD antes de declarar PASS. El backend remoto `cracktotal-arena-staging` debe actualizarse y verificarse antes de publicar.
+
+
+## 21 de octubre de 2026 — Auditoría de CSS de todos los juegos
+
+**Aplicado en `redesign/crack-total-2`, sin merge a `main`.**
+
+### Problema transversal identificado
+
+`assets/css/game-shell.css` todavía imponía una decoración azul sobre el contenido de los juegos, el encabezado Oswald y un foco blanco. Se corrigió para alinear todos los juegos con el sistema aprobado: carbón `#101b1b`, verde bosque `#243b35`, crema `#f4f2e9`, lima `#b5eb53`, Manrope y Space Grotesk.
+
+### Cambios específicos
+
+| Juego | Mejora versionada |
+|---|---|
+| Pasala Che solo | Rosco y pregunta más equilibrados, bordes coherentes, foco visible, controles táctiles, contenedores móviles sin perder coordenadas del rosco |
+| Pasala Che 1v1 | Botones, inputs, espaciados, tarjetas, estados de servidor y columna de preguntas responsive, sin alterar el motor de turnos |
+| Top 10 | Mejora de panel de ranking, contraste del área interactiva, nombres extensos, estado de foco y stacking móvil |
+| Wordle | Bordes y tarjetas consistentes, teclado legible a 320–390 px, sin reemplazar el tamaño dinámico de casillas implementado por el motor para apellidos variables |
+| Quién Sabe Más | Se mantiene su CSS canónico 5.2 y se corrigió subtítulo de diez preguntas a **seis niveles y 36 preguntas**, que corresponde a la partida real |
+| Mentiroso | Mantiene CSS canónico 5.2 con formularios legibles, contador de respuestas, estado de conexión y retry; hereda la paleta corregida del game-shell |
+
+Se actualizaron las query strings de hojas CSS para evitar que el navegador utilice versiones anteriores cacheadas.
+
+### Tests nuevos y cobertura
+
+- `scripts/games_visual_52_smoke.js`: contrato de identidad visual para las **seis páginas**, integridad básica de llaves y cadenas CSS, estilos responsive, enfoque visible, carga de archivos, titular real de QSM y conservación de dimensiones dinámicas en Wordle. Añadido a `npm test`.
+- El test nuevo pasó ejecutado en V8 aislado con el CSS y HTML descargados de GitHub, no en un navegador con renderizado.
+- `scripts/arena_ui_smoke.js` actualizó el hash de stylesheet de Pasala Che 1v1; volvió a pasar el test aislado de los **74 hooks DOM**. El fallo de Netlify del commit anterior fue por esta aserción desactualizada.
+
+### Limitaciones y próximos requisitos
+
+**Esto NO equivale a auditoría pixel-perfect de 320, 360, 390, 768, 1440 y 1920 px**: no se pudo navegar capturando páginas renderizadas desde este entorno. No declarar WCAG AA certificado sin validación real.
+
+La conexión Render no está activa en las apps de ChatGPT: Render aparece disponible en el directorio, pero no instalado/conectado por el usuario. No se puede completar su instalación/autorización en su nombre. El backend remoto sigue sin commit y WebSocket verificados. Mantener PR abierto, preservar producción y realizar QA remoto después de la conexión autorizada.
