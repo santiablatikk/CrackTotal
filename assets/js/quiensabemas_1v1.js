@@ -591,6 +591,7 @@ function handleServerMessage(message) {
             gameState.gamePhase = 'playing';
             gameState.gameStartTime = Date.now();
             gameState.resultPublished = false;
+            gameState.progressReported = false;
             gameState.players = qsmPlayersById(payload.players);
             gameState.currentTurn = payload.startingPlayerId;
             hideWaitingStateInGame();
