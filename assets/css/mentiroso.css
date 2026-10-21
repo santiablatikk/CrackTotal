@@ -2039,7 +2039,7 @@ body.mentiroso-body .ct-stage-eyebrow {
 body.mentiroso-body .challenge-area .ct-stage-eyebrow {color:#4b6652;}
 body.mentiroso-body .ct-stage-footnote {
   font:750 .7rem/1.45 "Manrope",sans-serif;
-  letter-spacing:.085em;color:#738275;
+  letter-spacing:.085em;color:#4b6251;
 }
 body.mentiroso-body .ct-bluff-stage .interaction-area .ct-stage-eyebrow {margin-bottom:18px;}
 body.mentiroso-body .ct-bluff-stage .interaction-area :is(button,input,textarea):focus-visible {
