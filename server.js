@@ -1800,7 +1800,8 @@ function startMentirosoQuestionTimer(roomId, duration = 15, phase = 'bidding') {
             type: 'mentirosoTimerUpdate',
             payload: { 
                 timeRemaining: state.timeRemaining,
-                phase: phase
+                phase: phase,
+                duration: duration
             }
         });
         
