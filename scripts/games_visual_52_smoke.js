@@ -75,6 +75,10 @@ assert.doesNotMatch(shell,/["']Oswald["']/,'Game shell must not reintroduce Oswa
 assert.doesNotMatch(shell,/rgba\(37,\s*99,\s*235/,'Blue legacy overlay should not override forest design');
 assert.match(shell,/"Space Grotesk"/,'The shared game-shell headline must match 5.2');
 assert.match(shell,/#b5eb53/,'Accessible lime focus outline');
+assert.match(shell,/--ct-shell-container:\s*1180px/,'Game pages need a shared container token');
+assert.match(shell,/--ct-shell-focus:\s*3px solid/,'All games must share the focus ring');
+assert.match(shell,/body\.ct-ds :is\(main, article, section, form, nav\)/,
+  'Protect compact game forms and card overflow in every game');
 
 for (const [html,css,selector] of games) {
   const page = read(html);
@@ -87,7 +91,7 @@ for (const [html,css,selector] of games) {
   assert.match(styles,/focus-visible|outline:/,css+': missing focus affordance');
   if (html !== 'pasala-1v1.html') {
     assert.match(page,/assets\/css\/design-system\/index\.css/,html+': missing shared design system');
-    assert.match(page,/game-shell\.css\?v=20261021-premium3/,html+': game shell not refreshed');
+    assert.match(page,/game-shell\.css\?v=20261021-premium4/,html+': game shell not refreshed');
   }
 }
 const responsiveCss = ['assets/css/pasalache.css','assets/css/top10.css','assets/css/wordle.css'];
