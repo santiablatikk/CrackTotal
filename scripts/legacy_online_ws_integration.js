@@ -90,6 +90,7 @@ async function run() {
   assert.equal(handshake.protocol,'cracktotal-arena-5.2');
   assert.equal(handshake.features.qsmResume,true);
   assert.equal(handshake.features.mentirosoObjective,true);
+  assert.equal(handshake.contentVersions.mentiroso,catalog.version,'Clients require the same audited challenge bank');
   send(q1, 'createRoom', { playerName: 'QSM Host', gameType: 'quiensabemas' });
   const made = await wait(q1,'roomCreated');
   assert.match(made.reconnectToken,/^[0-9A-F]{48}$/);
