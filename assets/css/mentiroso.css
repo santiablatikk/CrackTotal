@@ -1978,3 +1978,88 @@ body.mentiroso-body .ct-arena-retry:focus-visible {outline:3px solid #b5eb53;out
 @media (min-width: 961px) {
   body.game-body.mentiroso-body.ct-ds {padding-top: 94px;}
 }
+
+
+/* Arena 5.2 composition: an editorial challenge stage with a dedicated
+   decision zone. Both sections preserve their original JavaScript hooks. */
+body.mentiroso-body .ct-bluff-stage {
+  display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);
+  gap:clamp(12px,1.8vw,22px);align-items:stretch;margin:0 0 17px;
+}
+body.mentiroso-body .ct-bluff-stage > * {min-width:0;}
+body.mentiroso-body .ct-bluff-stage .challenge-area {
+  display:flex;flex-direction:column;align-items:stretch;
+  justify-content:space-between;gap:clamp(20px,3.2vw,48px);
+  position:relative;min-height:clamp(300px,30vw,405px);margin:0;
+  padding:clamp(24px,3.1vw,44px);
+  border:1px solid #e7e1d4;border-radius:18px;
+  background:#f4f2e9;box-shadow:inset 0 5px 0 #d89b70;
+  color:#14231b;overflow:hidden;
+}
+body.mentiroso-body .ct-bluff-stage .mentiroso-challenge-text {
+  color:#142b1c;font:700 clamp(1.7rem,2.65vw,3.1rem)/1.22 "Space Grotesk","Manrope",sans-serif;
+  letter-spacing:-.044em;text-wrap:balance;margin:0;
+}
+body.mentiroso-body .ct-bluff-stage .current-bid-text {
+  color:#37543c;font:800 clamp(1rem,1.25vw,1.2rem)/1.46 "Manrope",sans-serif;
+  border-left:3px solid #789d3b;padding-left:14px;
+}
+body.mentiroso-body .ct-bluff-stage .interaction-area {
+  padding:clamp(20px,2.5vw,34px);
+  background:linear-gradient(155deg,#2e4b3e,#172a22 83%);
+  border:1px solid #5b7668;border-radius:18px;
+  display:flex;flex-direction:column;justify-content:center;min-width:0;
+}
+body.mentiroso-body .ct-bluff-stage .action-buttons-mentiroso {
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;
+}
+body.mentiroso-body .ct-bluff-stage .mentiroso-action-btn {
+  min-height:60px;padding:12px 14px;border-radius:11px;
+  font:800 .98rem/1.35 "Manrope",sans-serif;
+  white-space:normal;text-wrap:balance;
+}
+body.mentiroso-body .ct-bluff-stage #submitBidButton:not(:disabled) {
+  color:#102118;background:#b5eb53;border-color:#b5eb53;
+}
+body.mentiroso-body .ct-bluff-stage #callMentirosoButton:not(:disabled) {
+  color:#fdf2ec;background:#a34339;border:1px solid #c77264;
+}
+body.mentiroso-body .ct-bluff-stage #bidInput {
+  width:100%;font:700 clamp(1.4rem,2.4vw,2rem)/1.3 "Space Grotesk",sans-serif;
+  padding:13px 17px;background:#101d19;color:#f4f2e9;border:1px solid #88a693;
+}
+body.mentiroso-body .ct-bluff-stage #listingPhase .modern-textarea{
+  width:100%;min-height:min(34vh,240px);line-height:1.6;
+}
+body.mentiroso-body .ct-stage-eyebrow {
+  display:flex;align-items:center;gap:10px;
+  font:800 .74rem/1.4 "Manrope",sans-serif;
+  letter-spacing:.1em;text-transform:uppercase;color:#d9ebd5;
+}
+body.mentiroso-body .challenge-area .ct-stage-eyebrow {color:#4b6652;}
+body.mentiroso-body .ct-stage-footnote {
+  font:750 .7rem/1.45 "Manrope",sans-serif;
+  letter-spacing:.085em;color:#738275;
+}
+body.mentiroso-body .ct-bluff-stage .interaction-area .ct-stage-eyebrow {margin-bottom:18px;}
+body.mentiroso-body .ct-bluff-stage .interaction-area :is(button,input,textarea):focus-visible {
+  outline:3px solid #b5eb53;outline-offset:3px;
+}
+@media(max-width:1020px) {
+  body.mentiroso-body .ct-bluff-stage{grid-template-columns:minmax(0,1fr);}
+  body.mentiroso-body .ct-bluff-stage .challenge-area{min-height:0;gap:20px;}
+}
+@media(max-width:540px) {
+  body.mentiroso-body .ct-bluff-stage .challenge-area,
+  body.mentiroso-body .ct-bluff-stage .interaction-area{
+    padding:22px 17px;border-radius:13px;
+  }
+  body.mentiroso-body .ct-bluff-stage .action-buttons-mentiroso {
+    grid-template-columns:minmax(0,1fr);
+  }
+  body.mentiroso-body .ct-bluff-stage .mentiroso-action-btn{min-height:54px;}
+  body.mentiroso-body .ct-stage-footnote{font-size:.59rem;}
+}
+@media(prefers-reduced-motion:reduce) {
+ body.mentiroso-body .ct-bluff-stage button{transition:none;animation:none;}
+}
