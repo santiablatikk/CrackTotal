@@ -240,3 +240,42 @@ Se prepararon `render.arena-staging.yaml`, `.github/workflows/verify-arena-stagi
 3. Completar la revisión factual individual de los bancos. Mentiroso tiene solo seis consignas piloto de 20–32 respuestas; faltan 84 consignas para el objetivo editorial de 90. En QSM persisten muchas preguntas pendientes de verificación primaria.
 4. Mantener backend histórico `cracktotal-servidor` activo hasta coordinar una migración verificada a producción.
 5. No fusionar el PR #1 mientras haya gates críticos pendientes.
+
+## 21 de octubre de 2026 — Corrección adicional de protocolo y auditoría factual de QSM
+
+**Solo rama `redesign/crack-total-2` / PR #1; sin merge a main.**
+
+### Integridad de preguntas enviadas por WebSocket
+- El servidor genera un `questionToken` nuevo por cada pregunta QSM en staging y lo entrega como `questionId` en `newQuestion`.
+- El cliente QSM incluye `questionId` en `submitAnswer` y lo recupera en `roomResumed`.
+- Se rechazan respuestas retrasadas o reinyectadas de una pregunta anterior, incluso si el mismo jugador vuelve a tener turno. Los timeouts del servidor quedan exentos de necesitar token del cliente; el backend público antiguo mantiene su protocolo sin romperlo.
+- `scripts/legacy_online_ws_integration.js` verifica el token durante las 36 preguntas de los seis niveles, que cambia entre preguntas, y rechaza el replay. `scripts/arena_online_ui_smoke.js` impone este requisito en CI.
+
+### Estado real del banco de QSM después de esta revisión
+- Total: **375 registros** en los seis niveles.
+- **21** con marca `verified_official` y URL documental individual registrada.
+- **6** retirados del motor competitivo (no se cargan mediante `processRawQuestion`).
+- **369** estructuralmente elegibles, **348** de ellos todavía sin verificación documental individual registrada. Elegible **no** significa factual verificado.
+- El test `scripts/qsm_content_integrity_smoke.js` exige esos seis retiros y al menos 21 verificaciones registradas.
+
+### Correcciones verificadas de esta etapa
+
+| Nivel | Registro | Cambio | Fuente |
+|---|---|---|---|
+| 1 | Torneo de selecciones "más importante" | Se reescribió como identificación de competición FIFA, sin subjetividad | https://inside.fifa.com/tournament-organisation |
+| 1 | Torneo europeo de clubes "más prestigioso" | Se reescribió como identificación de UEFA Champions League | https://www.uefa.com/uefachampionsleague/about/ |
+| 1 | Máximo tamaño de un campo "según FIFA" | Se restringió a partidos internacionales: 110 × 75 m; el IFAB admite 120 × 90 m en general | https://theifab.com/laws/latest/the-field-of-play/ |
+| 1 | Clásico argentino "más famoso" | Se reescribió como identificación del Superclásico | https://www.afa.com.ar/es/posts/domingo-de-superclasico-boca-derroto-1-0-a-river |
+| 2 | Goles de Ronaldinho en Barcelona | Se corrigió **96 → 94** oficiales | https://www.fcbarcelona.es/es/futbol/primer-equipo/news/711001/all-of-ronaldinhos-goals-with-fc-barcelona |
+| 4 | Goles de Cristiano Ronaldo en Sporting | Se corrigió **5 → 3** en la Primeira Liga de 2002/03 (cinco son en todas las competiciones) | https://fbref.com/en/squads/13dc44fd/2002-2003/roster/Sporting-CP-Roster-Details |
+| 4 | Entrenador con más partidos UCL ("Ancelotti 199") | Se sustituyó por el hito cerrado de los primeros 200 partidos del entrenador en 2023/24 | https://www.uefa.com/uefachampionsleague/news/0281-18096ab833ba-60100b78b635-1000--coaches-with-100-wins/ |
+
+### Registros retirados en esta etapa
+- Nivel 6: primer goleador histórico de Copa Artemio Franchi de 1985; la pregunta atribuía el tanto a Roberto Dinamite pero **FFF y AUF discrepan entre sí** sobre Rocheteau y José Touré. No se elige arbitrariamente una respuesta. https://www.fff.fr/selection/matchs/2298-france-uruguay.html y https://www.auf.org.uy/antecedentes-vs-francia-rusia-2018/
+- Nivel 6: penales errados en toda la carrera de Roberto Baggio, sin fuente completa y criterios de cómputo claros.
+- Nivel 6: gol número 1000 de la historia de Primera División argentina, sin fecha/criterios ni fuente primaria sustentable.
+- Nivel 3: penales errados por Francesco Totti en su carrera, sin estadística primaria íntegra.
+- Nivel 6: número de futbolistas con más de 200 goles en la historia del Real Madrid, sin corte ni definición completa de competiciones.
+- Se mantiene el retiro anterior del nivel 3 sobre el partido más largo de la historia, sin criterio verificable.
+
+**Restricciones pendientes:** no hay comprobación visual con navegador ni despliegue remoto de Arena 5.2 desde estas herramientas. Las pruebas de Netlify corresponden a servidor de test local; revisar estado del último HEAD antes de declarar PASS. El backend remoto `cracktotal-arena-staging` debe actualizarse y verificarse antes de publicar.
