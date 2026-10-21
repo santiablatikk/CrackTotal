@@ -253,12 +253,16 @@
                 </div>
 
                 <div class="game-card mentiroso-card">
-                    <div class="challenge-area">
-                        <h3 class="mentiroso-challenge-text" id="challengeText">Puedo nombrar X ...</h3>
-                        <p class="current-bid-text" id="currentBidText">Apuesta actual: Ninguna</p>
-                    </div>
+                    <div class="ct-bluff-stage">
+                        <div class="challenge-area">
+                            <span class="ct-stage-eyebrow">LA CONSIGNA / RONDA ACTUAL</span>
+                            <h3 class="mentiroso-challenge-text" id="challengeText">Puedo nombrar X ...</h3>
+                            <p class="current-bid-text" id="currentBidText">Apuesta actual: Ninguna</p>
+                            <span class="ct-stage-footnote">APOSTÁ LO QUE SABÉS. DEMOSTRÁ LO QUE APOSTÁS.</span>
+                        </div>
 
-                    <div class="interaction-area" id="interactionArea">
+                        <div class="interaction-area" id="interactionArea">
+                            <span class="ct-stage-eyebrow">TU JUGADA / DECISIÓN</span>
                         <!-- This area will change based on game phase -->
                         
                         <!-- Bidding Phase -->
@@ -305,7 +309,9 @@
                         </div>
                     </div>
 
-                    <div class="feedback-area" id="feedbackArea">
+                    </div><!-- /ct-bluff-stage -->
+
+                    <div class="feedback-area" id="feedbackArea" role="status" aria-live="polite">
                         <!-- Mensajes de feedback -->
                     </div>
                 </div>
