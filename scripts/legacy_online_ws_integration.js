@@ -71,7 +71,7 @@ async function run() {
   child = spawn(process.execPath, ['server.js'], {
     cwd: path.resolve(__dirname, '..'),
     env: { ...process.env, PORT: String(p), CT_STAGING: 'true', CT_OBJECTIVE_MENTIROSO: 'true',
-      CT_STAGING_ORIGINS: origin, CT_QSM_TEST_QUESTION_MS: '6000' },
+      CT_STAGING_ORIGINS: origin, CT_QSM_TEST_QUESTION_MS: '6000', CT_QSM_TEST_NEXT_DELAY_MS: '30' },
     stdio: ['ignore','pipe','pipe']
   });
   child.stdout.on('data', chunk => { log = (log + String(chunk)).slice(-8000); });
@@ -124,6 +124,52 @@ async function run() {
   assert.equal(expired.pointsAwarded,0,'Server enforces zero points for expired question');
   await wait(q2,'newQuestion',p=>p.questionNumber>=3,0,5000);
   console.log('QSM: room recovery, duplicate protection, forged timeout rejection and real server expiry PASS');
+
+  // Complete all 36 QSM questions across six levels, not merely the first round.
+  // The staging-only next-question delay is 30 ms; production remains 1.5 seconds.
+  let nextQuestionEvent = 0;
+  for (let turn = 3; turn <= 36; turn++) {
+    const expectedLevel = Math.floor((turn - 1) / 6) + 1;
+    const expectedNumber = ((turn - 1) % 6) + 1;
+    const question = await wait(q2, 'newQuestion', v =>
+      v.question?.level === expectedLevel && v.questionNumber === expectedNumber,
+      nextQuestionEvent, 5000);
+    const foundAt = q2.events.findIndex((event, idx) =>
+      idx >= nextQuestionEvent && event.type === 'newQuestion' &&
+      event.payload?.question?.level === expectedLevel &&
+      event.payload.questionNumber === expectedNumber);
+    assert.ok(foundAt >= 0, 'Question order must be observable');
+    nextQuestionEvent = foundAt + 1;
+    assert.equal(question.totalQuestionsInLevel, 6);
+    assert.equal(question.question.options.length, 4);
+    const respondingPlayer = question.currentTurn === made.playerId ? q1Recovered : q2;
+    const expectedPlayerId = question.currentTurn;
+    const fromResponse = respondingPlayer.events.length;
+    send(respondingPlayer, 'submitAnswer', {selectedIndex: 0});
+    const resolved = await wait(respondingPlayer,'answerResult',
+      value => value.forPlayerId === expectedPlayerId, fromResponse, 5000);
+    assert.ok([0, 0.5, 1].includes(resolved.pointsAwarded));
+  }
+  const qsmFinal = await wait(q2,'gameOver',value=>Boolean(value.finalScores),0,6000);
+  assert.ok(Number.isFinite(qsmFinal.finalScores[made.playerId]));
+  assert.ok(Number.isFinite(qsmFinal.finalScores[joined.playerId]));
+  const scoredTotal = qsmFinal.finalScores[made.playerId] + qsmFinal.finalScores[joined.playerId];
+  assert.ok(scoredTotal >= 0 && scoredTotal <= 36, 'QSM must have exactly 36 scoring opportunities');
+  const qsmRematchStart = q2.events.length;
+  send(q1Recovered, 'requestRematch', {gameType:'quiensabemas'});
+  const qsmVote = await wait(q2,'rematchState', v=>v.waiting===true, qsmRematchStart);
+  assert.deepEqual(qsmVote.requested,[made.playerId]);
+  await sleep(80);
+  assert.equal(q2.events.slice(qsmRematchStart).filter(e=>e.type==='gameStart').length,0,
+    'One QSM player may not restart the match unilaterally');
+  const qsmBothVotes = q1Recovered.events.length;
+  send(q2,'requestRematch',{gameType:'quiensabemas'});
+  await wait(q1Recovered,'rematchState',v=>v.waiting===false,qsmBothVotes);
+  await wait(q1Recovered,'gameStart',()=>true,qsmBothVotes);
+  await wait(q1Recovered,'newQuestion',v=>v.question?.level===1&&v.questionNumber===1,qsmBothVotes);
+  q1Recovered.ws.close();
+  q2.ws.close();
+  console.log('QSM: all six levels, 36 questions, final result and consent-based rematch PASS');
 
   const m1 = await connect(p), m2 = await connect(p);
   send(m1,'createRoom',{playerName:'Mentiroso Host',gameType:'mentiroso'});
