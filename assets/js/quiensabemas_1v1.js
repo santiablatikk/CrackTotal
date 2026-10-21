@@ -549,6 +549,15 @@ function handleServerMessage(message) {
             if (gameState.gameActive && gameState.currentQuestion) displayQuestionInUI();
             showFeedbackInGame('¡Conexión restablecida!', 'success');
             break;
+        case 'rematchState':
+            if (DOM.playAgainQSMBtn && QSM_PREVIEW) {
+                const requested = payload.requested || [];
+                const waitingForOpponent = requested.includes(gameState.myPlayerId);
+                DOM.playAgainQSMBtn.textContent = waitingForOpponent
+                    ? 'Esperando revancha del rival…' : 'Aceptar revancha';
+                DOM.playAgainQSMBtn.disabled = waitingForOpponent;
+            }
+            break;
         case 'resumeError':
             clearQsmSession();
             gameState.roomId = null;
@@ -573,6 +582,11 @@ function handleServerMessage(message) {
             break;
             
         case 'gameStart':
+            if (DOM.qsmResultModal) DOM.qsmResultModal.style.display = 'none';
+            if (DOM.playAgainQSMBtn) {
+                DOM.playAgainQSMBtn.disabled = false;
+                DOM.playAgainQSMBtn.textContent = 'Revancha';
+            }
             gameState.gameActive = true;
             gameState.gamePhase = 'playing';
             gameState.gameStartTime = Date.now();
@@ -642,7 +656,7 @@ function handleServerMessage(message) {
             break;
             
         case 'gameOver':
-            clearQsmSession();
+            if (!QSM_PREVIEW) clearQsmSession();
             gameState.gameActive = false;
             gameState.gamePhase = 'gameOver';
             handleGameEnd(payload);
@@ -1709,6 +1723,13 @@ function setupEventListeners() {
     if (DOM.qsmResultModal) {
         if (DOM.playAgainQSMBtn) {
             DOM.playAgainQSMBtn.addEventListener('click', () => {
+                if (QSM_PREVIEW && gameState.roomId && !gameState.gameActive) {
+                    sendToServer('requestRematch', { gameType: 'quiensabemas' });
+                    DOM.playAgainQSMBtn.disabled = true;
+                    DOM.playAgainQSMBtn.textContent = 'Esperando revancha del rival…';
+                    return;
+                }
+                clearQsmSession();
                 DOM.qsmResultModal.style.display = 'none';
                 showLobbyView();
             });
@@ -1716,6 +1737,9 @@ function setupEventListeners() {
         
         if (DOM.goToLobbyFromResultsBtn) {
             DOM.goToLobbyFromResultsBtn.addEventListener('click', () => {
+                if (gameState.roomId) sendToServer('leaveRoom');
+                clearQsmSession();
+                gameState.roomId = null;
                 DOM.qsmResultModal.style.display = 'none';
                 showLobbyView();
             });
