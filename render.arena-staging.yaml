@@ -1,0 +1,24 @@
+# Optional Render Blueprint for the EXISTING Arena staging web service.
+# Import/associate with a Render Blueprint ONLY after verifying it targets the
+# existing cracktotal-arena-staging service; do not create a duplicate service.
+# Does not alter the separate production Static Site or legacy Node backend.
+services:
+  - type: web
+    name: cracktotal-arena-staging
+    runtime: node
+    repo: https://github.com/santiablatikk/CrackTotal
+    branch: redesign/crack-total-2
+    plan: free
+    region: frankfurt
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /__ct_staging/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CT_STAGING
+        value: 'true'
+      - key: CT_OBJECTIVE_MENTIROSO
+        value: 'true'
+      - key: CT_STAGING_ORIGINS
+        value: https://deploy-preview-1--zingy-haupia-53b742.netlify.app
