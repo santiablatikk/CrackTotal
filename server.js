@@ -107,6 +107,7 @@ const server = http.createServer((req, res) => {
             arenaProtocol: 'cracktotal-arena-5.2',
             features: { pasalaDuel: true, qsmResume: LEGACY_SESSION_RECOVERY,
                 mentirosoObjective: OBJECTIVE_MENTIROSO },
+            contentVersions: { mentiroso: objectiveMentiroso.catalog.version },
             commit: process.env.RENDER_GIT_COMMIT || null,
             branch: process.env.RENDER_GIT_BRANCH || null
         }));
@@ -551,6 +552,7 @@ wss.on('connection', (ws, req) => {
         protocol: 'cracktotal-arena-5.2',
         features: { pasalaDuel: true, qsmResume: LEGACY_SESSION_RECOVERY,
             mentirosoObjective: OBJECTIVE_MENTIROSO },
+        contentVersions: { mentiroso: objectiveMentiroso.catalog.version },
         commit: process.env.RENDER_GIT_COMMIT || null,
         branch: process.env.RENDER_GIT_BRANCH || null
     } });
