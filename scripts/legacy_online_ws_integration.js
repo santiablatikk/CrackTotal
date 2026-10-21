@@ -78,6 +78,13 @@ async function run() {
   child.stderr.on('data', chunk => { log = (log + String(chunk)).slice(-8000); });
   await ready(p);
 
+  const invalid = await connect(p);
+  send(invalid,'createRoom',{playerName:'Invalid',gameType:'not-a-real-game'});
+  await wait(invalid,'errorMessage',v=>/no reconocido/.test(v.error||''));
+  assert.equal(invalid.events.some(event=>event.type==='roomCreated'),false,
+    'Unrecognized games may not allocate shared Arena rooms');
+  invalid.ws.close();
+
   const q1 = await connect(p), q2 = await connect(p);
   const handshake = await wait(q1, 'arena:hello');
   assert.equal(handshake.protocol,'cracktotal-arena-5.2');
@@ -176,6 +183,22 @@ async function run() {
   const mc = await wait(m1,'roomCreated');
   send(m2,'joinRoom',{roomId:mc.roomId,playerName:'Mentiroso Rival',gameType:'mentiroso'});
   const mj = await wait(m2,'joinSuccess');
+
+  // A concurrent QSM room must not be able to enter a Mentiroso room or
+  // affect a Mentiroso score/phase through QSM-specific messages.
+  const extra = await connect(p);
+  send(extra,'createRoom',{playerName:'QSM Parallel',gameType:'quiensabemas'});
+  const parallel = await wait(extra,'roomCreated');
+  assert.notEqual(parallel.roomId,mc.roomId);
+  const crossJoinFrom = extra.events.length;
+  send(extra,'joinRoom',{roomId:mc.roomId,gameType:'quiensabemas',playerName:'Intruso'});
+  await wait(extra,'joinError',()=>true,crossJoinFrom);
+  const crossActionFrom = m1.events.length;
+  send(m1,'submitAnswer',{selectedIndex:0});
+  await wait(m1,'errorMessage',v=>/No active question/.test(v.error||''),crossActionFrom);
+  assert.equal(m1.events.slice(crossActionFrom).some(e=>e.type==='answerResult'),false);
+  extra.ws.close();
+
   await wait(m1,'mentirosoGameStart');
   const round = await wait(m1,'mentirosoNextRound',p=>p.objectiveValidation === true,0,6500);
   assert.equal(round.category,'Fútbol Argentino');
