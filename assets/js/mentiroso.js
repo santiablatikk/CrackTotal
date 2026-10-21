@@ -1214,6 +1214,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     else hideWaitingMessage();
                     break;
                 }
+                case 'rematchState':
+                    if (MENTIROSO_PREVIEW && playAgainButtonMentirosoEl) {
+                        const accepted = (message.payload.requested || []).includes(gameState.myPlayerId);
+                        playAgainButtonMentirosoEl.disabled = accepted;
+                        playAgainButtonMentirosoEl.textContent = accepted
+                            ? 'Esperando revancha del rival…' : 'Aceptar revancha';
+                    }
+                    break;
                 case 'resumeError':
                     clearMentirosoSession();
                     gameState.gameActive = false;
@@ -1299,6 +1307,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 case 'gameStart':
                 case 'mentirosoGameStart':
+                    hideEndGameModal();
+                    if (playAgainButtonMentirosoEl) {
+                        playAgainButtonMentirosoEl.disabled = false;
+                        playAgainButtonMentirosoEl.textContent = 'Revancha';
+                    }
+                    resetGameUI();
                     // El servidor inicia el juego
                     console.log("⭐ Inicio de juego Mentiroso:", message.payload);
                     gameState.gameActive = true;
@@ -1735,7 +1749,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     break;
                 
                 case 'gameOver': // Generic or Mentiroso specific game over
-                    clearMentirosoSession();
+                    if (!MENTIROSO_PREVIEW) clearMentirosoSession();
                     gameState.gameActive = false;
                     // Ensure payload is for Mentiroso if distinguishing
                     if (message.payload.gameType === 'mentiroso' || !message.payload.gameType) { 
@@ -2053,8 +2067,14 @@ document.addEventListener('DOMContentLoaded', function() {
         setupMentirosoEventListeners(); // Specific listeners for Mentiroso game actions
 
         if(playAgainButtonMentirosoEl) playAgainButtonMentirosoEl.addEventListener('click', () => {
+            if (MENTIROSO_PREVIEW && gameState.roomId && !gameState.gameActive) {
+                sendToServer('requestRematch', { gameType: 'mentiroso' });
+                playAgainButtonMentirosoEl.disabled = true;
+                playAgainButtonMentirosoEl.textContent = 'Esperando revancha del rival…';
+                return;
+            }
             hideEndGameModal();
-            showLobby(); // Go back to lobby
+            showLobby();
             gameState.gameActive = false;
             if (gameState.roomId) sendToServer('leaveRoom', { roomId: gameState.roomId });
             gameState.roomId = null;
