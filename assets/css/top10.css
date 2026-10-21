@@ -6,11 +6,11 @@ body.top10-body .top10-header,body.top10-body .top10-content{width:min(1180px,ca
 body.top10-body .top10-header{padding:99px 0 22px}
 body.top10-body .top10-header-line{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #edf8e532;padding-bottom:13px;color:#bccbbd;font-size:13px;letter-spacing:.09em;font-weight:800}
 body.top10-body .top10-header-line a{color:#baff47;text-decoration:none}
-body.top10-body .top10-hero-copy{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:22px 0 9px}
-body.top10-body .top10-hero-copy>span{display:none}
-body.top10-body .title-text{font-family:"Space Grotesk",Impact,sans-serif;font-weight:700;font-size:clamp(48px,5.5vw,80px);letter-spacing:-.02em;line-height:.95;margin:0;color:#f4f6ec}
+body.top10-body .top10-hero-copy{display:grid;grid-template-columns:minmax(0,1fr) minmax(235px,.53fr);align-items:center;gap:6px 35px;padding:32px 0 26px}
+body.top10-body .top10-hero-copy>span{display:block;grid-column:1;grid-row:1;font:800 .74rem/1.45 "Manrope",sans-serif;letter-spacing:.13em;color:#d89b70}
+body.top10-body .title-text{grid-column:1;grid-row:2;font-family:"Space Grotesk",Impact,sans-serif;font-weight:700;font-size:clamp(48px,5.5vw,80px);letter-spacing:-.02em;line-height:.95;margin:0;color:#f4f6ec}
 body.top10-body .title-text em{font-style:normal;color:#b5eb53}
-body.top10-body .top10-header .subtitle{max-width:390px;font-size:clamp(14px,1.3vw,17px);line-height:1.5;color:#b9c9bf;margin:0}
+body.top10-body .top10-header .subtitle{grid-column:2;grid-row:1 / span 2;max-width:390px;font-size:clamp(14px,1.3vw,17px);line-height:1.5;color:#b9c9bf;margin:0}
 body.top10-body .top10-content{padding:0 0 90px}
 body.top10-body .top10-intro{background:#dce5d9;color:#0f2117;border-top:6px solid #b5eb53;position:relative;overflow:hidden;min-height:420px;padding:27px 40px 38px}
 body.top10-body .top10-intro-label{display:flex;justify-content:space-between;gap:12px;font-size:13px;font-weight:900;letter-spacing:.1em;border-bottom:1px solid #23402138;padding-bottom:18px}
@@ -187,4 +187,16 @@ body.top10-body .top10-history{border-radius:14px}
  body.top10-body .input-area{flex-wrap:wrap}
  body.top10-body .top10-input{flex:1 1 100%;width:100%}
  body.top10-body .top10-play-controls .primary-button{flex:1 1 100%}
+}
+
+
+@media(max-width:780px){
+  body.top10-body .top10-hero-copy{
+    grid-template-columns:minmax(0,1fr);gap:12px;
+    padding:25px 0 19px;
+  }
+  body.top10-body .top10-hero-copy>span,
+  body.top10-body .title-text,
+  body.top10-body .top10-header .subtitle{grid-column:1;grid-row:auto;}
+  body.top10-body .top10-header .subtitle{max-width:65ch;}
 }
