@@ -731,6 +731,7 @@ function handleResumeRoom(ws, clientInfo, payload = {}) {
                 options: room.currentQuestion.options }
             : null,
         questionNumber: room.questionsAnsweredInLevel,
+        questionId: room.gameType === 'quiensabemas' ? room.questionToken : null,
         totalQuestionsInLevel: room.questionsPerLevel,
         mentiroso: state ? {
             currentRound: state.currentRound, maxRounds: state.maxRounds,
@@ -1131,6 +1132,7 @@ function startGame(roomId) {
             room.usedQuestionIndices[l] = [];
         }
         room.currentQuestion = null;
+        room.questionToken = null;
         room.optionsSent = false;
         room.fiftyFiftyUsed = false;
 
@@ -1228,6 +1230,7 @@ function sendNextQuestion(roomId) {
     const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
     room.currentQuestion = questionsForLevel[randomIndex];
     room.questionResolved = false;
+    room.questionToken = LEGACY_SESSION_RECOVERY ? secureCode(12) : null;
      // // console.log(`DEBUG: Selected question index ${randomIndex} for Level ${room.currentLevel}. Text: ${room.currentQuestion.text}`); // ELIMINAR ESTA LÍNEA
 
     // Mark question as used for this room and level
@@ -1264,6 +1267,7 @@ function sendNextQuestion(roomId) {
          type: 'newQuestion',
          payload: {
             question: questionPayload,
+            questionId: room.questionToken,
             questionNumber: room.questionsAnsweredInLevel,
             totalQuestionsInLevel: room.questionsPerLevel,
              currentTurn: room.currentTurn,
@@ -1299,6 +1303,13 @@ function handleSubmitAnswer(ws, clientInfo, payload, timedOut = false) {
     }
     if (!room.currentQuestion) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'No active question.' } });
+        return;
+    }
+    // Prevent a delayed/replayed answer for an earlier question from being
+    // scored against the next question, even if the same user has the turn.
+    if (LEGACY_SESSION_RECOVERY && !timedOut &&
+        (!payload || payload.questionId !== room.questionToken)) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Respuesta de una pregunta anterior. Esperá la próxima.' } });
         return;
     }
     if (!timedOut && room.questionDeadline && Date.now() >= room.questionDeadline) {
