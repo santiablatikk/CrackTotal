@@ -44,4 +44,36 @@ assert.match(mentirosoHtml,/mentiroso\.js\?v=20261021-arena52/);
 assert.match(mentirosoHtml,/mentiroso\.css\?v=20261021-arena52/);
 assert.match(mentirosoHtml,/id="bidUniverseHint"/);
 assert.match(mentirosoHtml,/id="answerCounter"/);
+
+const mapperStart = qsm.indexOf('function qsmPlayersById(players) {');
+const mapperEnd = qsm.indexOf('\n// --- Initialization ---', mapperStart);
+assert.ok(mapperStart >= 0 && mapperEnd > mapperStart, 'QSM player-normalization helper missing');
+const normalizePlayers = new Function(qsm.slice(mapperStart, mapperEnd) +
+    '\nreturn qsmPlayersById;')();
+const p1 = {id:'player-abc',name:'Titular',score:3};
+const p2 = {id:'player-def',name:'Invitado',score:2};
+for (const shape of [
+  { player1:p1, player2:p2 },
+  { [p1.id]:p1, [p2.id]:p2 },
+  [p1,p2]
+]) {
+  const mapped = normalizePlayers(shape);
+  assert.deepEqual(Object.keys(mapped),[p1.id,p2.id]);
+  assert.equal(mapped[p1.id].score,3);
+  assert.equal(mapped[p2.id].name,'Invitado');
+}
+assert.deepEqual(normalizePlayers(null), {});
+assert.match(qsm,/gameState\.players = qsmPlayersById\(payload\.players\);/,
+  'QSM incoming messages must normalize live server player lists');
+const mentirosoCss = read('assets/css/mentiroso.css');
+assert.doesNotMatch(mentirosoHtml, /Crack Total 4\.3 · Mentiroso/,
+  'Legacy page-specific CSS must no longer live inline');
+assert.match(mentirosoCss, /Crack Total 5\.2: single source of truth for Mentiroso/,
+  'Canonical Mentiroso stylesheet must contain the visual corrections');
+assert.match(mentirosoCss,/\.lobby-card \.form-group label\s*\{[^}]*color:\s*#eaf2e8/s,
+  'Lobby form labels need readable contrast');
+assert.ok(mentirosoHtml.indexOf('assets/css/mentiroso.css') >
+  mentirosoHtml.indexOf('assets/css/game-shell.css'),
+  'Game-specific CSS must follow the shared game shell');
+
 console.log('ARENA 5.2 CLIENT INTEGRITY: PASS — protocol handshake, isolated staging, recovery and asset versions.');
