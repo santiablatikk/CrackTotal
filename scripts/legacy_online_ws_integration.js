@@ -190,9 +190,11 @@ async function run() {
   send(extra,'createRoom',{playerName:'QSM Parallel',gameType:'quiensabemas'});
   const parallel = await wait(extra,'roomCreated');
   assert.notEqual(parallel.roomId,mc.roomId);
-  const crossJoinFrom = extra.events.length;
-  send(extra,'joinRoom',{roomId:mc.roomId,gameType:'quiensabemas',playerName:'Intruso'});
-  await wait(extra,'joinError',()=>true,crossJoinFrom);
+  const intruder = await connect(p);
+  const crossJoinFrom = intruder.events.length;
+  send(intruder,'joinRoom',{roomId:mc.roomId,gameType:'quiensabemas',playerName:'Intruso'});
+  await wait(intruder,'joinError',v=>/otro juego/.test(v.error||''),crossJoinFrom);
+  intruder.ws.close();
   const crossActionFrom = m1.events.length;
   send(m1,'submitAnswer',{selectedIndex:0});
   await wait(m1,'errorMessage',v=>/No active question/.test(v.error||''),crossActionFrom);
