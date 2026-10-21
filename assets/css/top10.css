@@ -160,3 +160,31 @@ body.top10-body .result-buttons .modal-button{min-height:43px;font-weight:800;fo
  body.top10-body .top10-final-standings{max-height:30vh}
 }
 @media(prefers-reduced-motion:reduce){body.top10-body *,body.top10-body *:before,body.top10-body *:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+
+/* 5.2 — Top 10: consistent cards, accessible controls and balanced ranking. */
+body.top10-body .top10-intro,
+body.top10-body .top10-card{border-radius:18px;overflow:hidden;box-shadow:0 18px 58px rgba(0,0,0,.13)}
+body.top10-body .top10-header{scroll-margin-top:100px}
+body.top10-body .top10-header .title-text{letter-spacing:-.045em;line-height:1.04}
+body.top10-body .top10-ranking-panel{background:#f4f2e9}
+body.top10-body .top10-play-panel{background:#243b35}
+body.top10-body .top10-input{border:1px solid #87998a;border-radius:10px;font-family:"Manrope",sans-serif;font-size:16px;min-width:0}
+body.top10-body .top10-input:focus-visible,
+body.top10-body button:focus-visible{outline:3px solid #b5eb53;outline-offset:3px}
+body.top10-body .answers li{min-width:0}
+body.top10-body .answers li .label{overflow-wrap:anywhere;line-height:1.45}
+body.top10-body .top10-ranking-caption{letter-spacing:.025em}
+body.top10-body .top10-play-controls .primary-button{border-radius:10px;min-height:48px}
+body.top10-body .top10-history{border-radius:14px}
+@media(max-width:760px){
+ body.top10-body .top10-header,body.top10-body .top10-content{width:calc(100% - 24px)}
+ body.top10-body .top10-game-layout{grid-template-columns:minmax(0,1fr)}
+ body.top10-body .top10-ranking-panel{padding:18px 13px}
+ body.top10-body .top10-play-panel{padding:21px 16px}
+ body.top10-body .top10-intro-grid{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:380px){
+ body.top10-body .input-area{flex-wrap:wrap}
+ body.top10-body .top10-input{flex:1 1 100%;width:100%}
+ body.top10-body .top10-play-controls .primary-button{flex:1 1 100%}
+}
