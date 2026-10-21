@@ -55,6 +55,7 @@ jobs:
                 .arenaProtocol == "cracktotal-arena-5.2" and
                 .features.qsmResume == true and
                 .features.mentirosoObjective == true and
+                .contentVersions.mentiroso == "2026-10-21-objective-20min-2" and
                 .branch == "redesign/crack-total-2" and .commit == $sha' >/dev/null 2>&1; then
               echo "Verified exact Arena staging commit: $EXPECTED_SHA"
               exit 0
