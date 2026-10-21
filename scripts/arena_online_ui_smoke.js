@@ -18,6 +18,8 @@ assert.match(server,/arena:hello/);
 assert.match(server,/cracktotal-arena-5\.2/);
 assert.match(server,/qsmResume: LEGACY_SESSION_RECOVERY/);
 assert.match(server,/mentirosoObjective: OBJECTIVE_MENTIROSO/);
+assert.match(server,/contentVersions: \{ mentiroso: objectiveMentiroso\.catalog\.version \}/);
+assert.match(mentiroso,/contentVersions\?\.mentiroso === MENTIROSO_EXPECTED_BANK_VERSION/);
 assert.match(server,/case 'resumeRoom':/);
 assert.match(server,/case 'timeOut':/);
 assert.match(server,/function armQsmQuestionClock\(/);
