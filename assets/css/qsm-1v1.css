@@ -146,3 +146,86 @@ body.qsm-1v1-body .options-grid .option-btn:focus-visible{outline:3px solid #b5e
   body.qsm-1v1-body .options-grid{grid-template-columns:minmax(0,1fr)}
 }
 @media (min-width:961px){body.game-body.qsm-1v1-body.ct-ds{padding-top:94px}}
+
+
+/* Arena 5.2 composition: question and choices form a single editorial stage.
+   New stage classes are intentionally scoped, not global override chains. */
+body.qsm-1v1-body .ct-quiz-stage {
+  display:grid;
+  grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+  align-items:stretch;
+  gap:clamp(12px,1.7vw,20px);
+  margin:0 0 18px;
+}
+body.qsm-1v1-body .ct-quiz-stage > * {min-width:0;}
+body.qsm-1v1-body .ct-quiz-stage .question-area {
+  display:flex;flex-direction:column;justify-content:space-between;gap:clamp(24px,4vw,52px);
+  margin:0;padding:clamp(25px,3vw,43px);min-height:clamp(300px,31vw,405px);
+  background:#f4f2e9;color:#14231b;border:1px solid #e5e2d6;
+  border-radius:18px;box-shadow:inset 0 5px 0 #d89b70;
+}
+body.qsm-1v1-body .ct-quiz-stage .qsm-question {
+  font:700 clamp(1.48rem,2.35vw,2.55rem)/1.32 "Space Grotesk","Manrope",sans-serif;
+  color:#16291e;letter-spacing:-.035em;text-transform:none;hyphens:auto;
+}
+body.qsm-1v1-body .ct-quiz-stage .answer-area {
+  display:flex;flex-direction:column;gap:16px;min-width:0;
+  padding:clamp(16px,2vw,25px);
+  background:linear-gradient(152deg,#2b493c,#152821 80%);
+  border:1px solid rgba(244,242,233,.14);border-radius:18px;
+}
+body.qsm-1v1-body .ct-quiz-stage .options-grid {
+  flex:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-auto-rows:minmax(98px,1fr);gap:clamp(10px,1.2vw,15px);
+}
+body.qsm-1v1-body .ct-quiz-stage .option-btn {
+  display:flex;align-items:center;justify-content:flex-start;
+  min-width:0;min-height:100px;padding:clamp(16px,1.6vw,24px);
+  font:700 clamp(.94rem,1.35vw,1.12rem)/1.48 "Manrope",sans-serif;
+  text-wrap:pretty;overflow-wrap:anywhere;
+  color:#f4f2e9;background:#315343;border:1px solid #587968;
+  border-radius:12px;box-shadow:0 4px 0 #101b1b47;
+  transition:transform 140ms ease,background-color 140ms ease,border-color 140ms ease;
+}
+body.qsm-1v1-body .ct-quiz-stage .option-btn:hover:not(:disabled) {
+  background:#40654f;border-color:#b5eb53;transform:translateY(-2px);
+}
+body.qsm-1v1-body .ct-quiz-stage .option-btn.correct {
+  background:#b5eb53;color:#102118;border-color:#a2d74b;
+}
+body.qsm-1v1-body .ct-quiz-stage .option-btn.wrong {
+  background:#963a35;color:#fff;border-color:#c7766c;
+}
+body.qsm-1v1-body .ct-stage-eyebrow {
+  display:inline-flex;align-items:center;gap:10px;
+  font:800 .73rem/1.4 "Manrope",sans-serif;
+  text-transform:uppercase;letter-spacing:.11em;
+  color:#d6ebd4;
+}
+body.qsm-1v1-body .question-area .ct-stage-eyebrow {color:#48604d;}
+body.qsm-1v1-body .ct-stage-footnote {
+  font:750 .69rem/1.5 "Manrope",sans-serif;
+  color:#627363;letter-spacing:.11em;
+}
+body.qsm-1v1-body .ct-live-indicator {
+  width:8px;height:8px;background:#47752b;border-radius:50%;flex:none;
+  box-shadow:0 0 0 4px rgba(181,235,83,.24);
+}
+@media (max-width:1020px) {
+  body.qsm-1v1-body .ct-quiz-stage {grid-template-columns:minmax(0,1fr);}
+  body.qsm-1v1-body .ct-quiz-stage .question-area {
+    min-height:0;gap:20px;padding:clamp(24px,4vw,32px);
+  }
+  body.qsm-1v1-body .ct-quiz-stage .options-grid {grid-auto-rows:minmax(76px,auto);}
+  body.qsm-1v1-body .ct-quiz-stage .option-btn{min-height:76px;}
+}
+@media (max-width:560px) {
+  body.qsm-1v1-body .ct-quiz-stage .answer-area{padding:14px;border-radius:13px;}
+  body.qsm-1v1-body .ct-quiz-stage .question-area{border-radius:13px;padding:22px;}
+  body.qsm-1v1-body .ct-quiz-stage .options-grid{grid-template-columns:minmax(0,1fr);}
+  body.qsm-1v1-body .ct-quiz-stage .option-btn{min-height:64px;padding:16px 18px;}
+  body.qsm-1v1-body .ct-stage-footnote{font-size:.6rem;}
+}
+@media(prefers-reduced-motion:reduce){
+  body.qsm-1v1-body .ct-quiz-stage .option-btn {transition:none;}
+}
