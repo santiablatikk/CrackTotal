@@ -381,14 +381,18 @@
       "respuesta_correcta": "B"
     },
     {
-      "pregunta": "¿Cuántos goles marcó Ronaldinho en el Barcelona?",
+      "pregunta": "¿Cuántos goles oficiales marcó Ronaldinho con el primer equipo del FC Barcelona entre 2003/04 y 2007/08?",
       "opciones": {
         "A": "94",
         "B": "95",
         "C": "96",
         "D": "93"
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "A",
+      "audit_status": "verified_official",
+      "source_url": "https://www.fcbarcelona.es/es/futbol/primer-equipo/news/711001/all-of-ronaldinhos-goals-with-fc-barcelona",
+      "verified_at": "2026-10-21",
+      "audit_reason": "FC Barcelona publica 94 goles oficiales, no 96"
     },
     {
       "pregunta": "¿En qué año se fundó el FC Barcelona?",
