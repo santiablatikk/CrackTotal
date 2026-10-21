@@ -199,6 +199,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Lobby Elements (Reused IDs from QSM where applicable)
     const lobbySectionEl = document.getElementById('lobbySection');
     const lobbyMessageAreaEl = document.getElementById('lobbyMessageArea');
+    const retryArenaButtonEl = document.getElementById('retryArenaButton');
+    if (retryArenaButtonEl) {
+        retryArenaButtonEl.addEventListener('click', () => {
+            retryArenaButtonEl.hidden = true;
+            showLobbyMessage('Volviendo a conectar con Arena…', 'info');
+            if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
+            if (gameState.websocket &&
+                [WebSocket.OPEN, WebSocket.CONNECTING].includes(gameState.websocket.readyState)) {
+                gameState.websocket.close();
+            }
+            setTimeout(initializeWebSocket, 300);
+        });
+    }
     const createPlayerNameInput = document.getElementById('createPlayerName');
     const createRoomPasswordInput = document.getElementById('createRoomPassword');
     const createRoomButton = document.getElementById('createRoomButton');
@@ -372,6 +385,10 @@ document.addEventListener('DOMContentLoaded', function() {
         lobbyMessageAreaEl.className = 'lobby-message';
         void lobbyMessageAreaEl.offsetWidth;
         lobbyMessageAreaEl.classList.add(type, 'show');
+        if (retryArenaButtonEl) {
+            retryArenaButtonEl.hidden = !(MENTIROSO_PREVIEW && type === 'error' &&
+                !gameState.gameActive && !gameState.arenaCompatible);
+        }
         if (type !== 'error') {
             setTimeout(() => {
                 if (lobbyMessageAreaEl.textContent === message) clearLobbyMessage();
@@ -981,7 +998,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (gameState.arenaHandshakeTimer) clearTimeout(gameState.arenaHandshakeTimer);
                 gameState.arenaHandshakeTimer = setTimeout(() => {
                     if (!gameState.arenaCompatible && gameState.websocket?.readyState === WebSocket.OPEN) {
-                        showLobbyMessage('El servidor de Render todavía no ejecuta Arena 5.2. Falta actualizar staging.', 'error');
+                        showLobbyMessage('Las salas online todavía no están disponibles. El servidor necesita actualizarse. Podés reintentar la conexión.', 'error');
                         disableLobbyButtons();
                     }
                 }, 4000);
@@ -1075,7 +1092,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             const saved = savedMentirosoSession();
                             if (saved) sendToServer('resumeRoom', saved);
                         } else {
-                            showLobbyMessage('Servidor incompatible: falta publicar Mentiroso objetivo en staging.', 'error');
+                            showLobbyMessage('Este servidor todavía no admite partidas verificadas de Mentiroso. Reintentá cuando se actualice.', 'error');
                             disableLobbyButtons();
                         }
                     }
