@@ -802,6 +802,10 @@ function handleCreateRoom(ws, clientInfo, payload = {}) {
     const playerName = safePlayerName(payload.playerName || `Jugador_${clientInfo.id.substring(0, 4)}`);
     const password = payload.password || ''; // Empty string if no password
     const gameType = payload.gameType || 'quiensabemas'; // Default to quiensabemas
+    if (!['quiensabemas', 'mentiroso'].includes(gameType)) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'Juego online no reconocido.' } });
+        return;
+    }
 
     const player1 = {
         id: clientInfo.id,
