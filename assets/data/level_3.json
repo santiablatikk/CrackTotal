@@ -427,7 +427,10 @@
         "C": "16",
         "D": "10"
       },
-      "respuesta_correcta": "B"
+      "respuesta_correcta": "B",
+      "audit_status": "retired",
+      "audit_reason": "Conteo histórico de penales fallados en carrera completa sin fuente primaria suficiente para validar metodología y total.",
+      "verified_at": "2026-10-21"
     },
     {
       "pregunta": "¿Qué entrenador llevó al Atlético Madrid a la final de Champions 2014?",
