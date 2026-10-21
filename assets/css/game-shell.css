@@ -105,3 +105,33 @@ body.qsm-1v1-body.ct-ds .home-footer,
 body.wordle-body.ct-ds .home-footer {
     margin-top: 2rem;
 }
+
+
+/* Premium game identity — one shared component for solo and Arena games. */
+body.ct-ds .ct-game-eyebrow {
+  display:flex;align-items:center;gap:clamp(10px,1.5vw,18px);
+  margin:0 0 20px;padding:0;
+  color:#cbdccf;
+  font:800 clamp(.67rem,.85vw,.8rem)/1.5 "Manrope",sans-serif;
+  letter-spacing:.12em;text-transform:uppercase;
+}
+body.ct-ds .ct-game-index {
+  display:inline-flex;align-items:center;justify-content:center;
+  flex:none;padding:7px 10px;border-radius:4px;
+  background:#b5eb53;color:#17251b;
+  font:800 .72rem/1.2 "Space Grotesk",sans-serif;
+  letter-spacing:.075em;
+}
+body.wordle-body.ct-ds .ct-game-eyebrow {justify-content:center;}
+body.game-body.ct-ds .rosco-container > .ct-game-eyebrow {
+  width:100%;justify-content:flex-start;margin-bottom:15px;
+}
+body.ct-ds :is(button,input,textarea,select):focus-visible {
+  outline:3px solid #b5eb53;outline-offset:3px;
+}
+@media(max-width:490px){
+  body.ct-ds .ct-game-eyebrow{flex-wrap:wrap;font-size:.66rem;gap:8px;}
+}
+@media(prefers-reduced-motion:reduce){
+  body.ct-ds *{scroll-behavior:auto;}
+}
