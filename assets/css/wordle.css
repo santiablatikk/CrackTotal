@@ -66,3 +66,26 @@ body.wordle-body .tile.shake{animation:shake .36s ease}
  body.wordle-body .tile{border-width:1.5px}
 }
 @media(prefers-reduced-motion:reduce){body.wordle-body .tile.revealing,body.wordle-body .tile.pop,body.wordle-body .tile.shake{animation:none}body.wordle-body .key{transition:none}}
+
+/* 5.2 — Wordle: preserve JS-computed board sizing for variable-length names. */
+body.wordle-body .wordle-container{border-radius:16px;overflow:visible}
+body.wordle-body .wordle-header{border-radius:16px 16px 0 0;border-top-width:3px}
+body.wordle-body .wordle-card{border-radius:0 0 16px 16px;box-shadow:0 20px 55px rgba(0,0,0,.12)}
+body.wordle-body .wordle-title{letter-spacing:-.045em}
+body.wordle-body .wordle-controls button{min-height:44px;border-radius:9px}
+body.wordle-body .tile{border-radius:6px}
+body.wordle-body .key{border-radius:8px;min-height:49px;font-family:"Manrope",sans-serif}
+body.wordle-body .key:focus-visible,
+body.wordle-body .save-button:focus-visible,
+body.wordle-body button:focus-visible{outline:3px solid #b5eb53;outline-offset:2px}
+body.wordle-body .keyboard{max-width:100%;overflow:visible}
+body.wordle-body .key-row{min-width:0}
+body.wordle-body .message{font:650 .94rem/1.4 "Manrope",sans-serif;min-height:1.4em}
+@media(max-width:390px){
+ body.wordle-body .wordle-container{width:calc(100% - 16px)}
+ body.wordle-body .wordle-card{padding-inline:8px}
+ body.wordle-body .keyboard{gap:5px}
+ body.wordle-body .key-row{gap:3px}
+ body.wordle-body .key{padding-inline:1px;min-height:45px;font-size:clamp(10px,2.8vw,12px)}
+ body.wordle-body .key.wide{font-size:10px}
+}
