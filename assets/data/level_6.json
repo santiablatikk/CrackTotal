@@ -178,7 +178,10 @@
         "C": "6 jugadores",
         "D": "8 jugadores"
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "audit_status": "retired",
+      "audit_reason": "Total acumulado histórico sin fecha de corte ni definición inequívoca de competiciones incluidas.",
+      "verified_at": "2026-10-21"
     },
     {
       "pregunta": "¿Qué arquero tiene el récord de más penales detenidos en la historia de la Premier League?",
