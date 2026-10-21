@@ -2176,12 +2176,15 @@ function handleMentirosoSubmitAnswers(ws, clientInfo, payload) {
 
     // Validate answers
     const answers = Array.isArray(payload.answers) ? payload.answers : [];
-    if (answers.length < 1) {
+    // A failed bet is part of the game. In objective mode a player may submit
+    // fewer names than promised (including none); the server awards the point
+    // to their opponent instead of trapping the player on an error screen.
+    if (!OBJECTIVE_MENTIROSO && answers.length < 1) {
         safeSend(ws, { type: 'errorMessage', payload: { error: 'Debes listar al menos una respuesta.' } });
         return;
     }
 
-    if (answers.length < state.currentBid) {
+    if (!OBJECTIVE_MENTIROSO && answers.length < state.currentBid) {
         safeSend(ws, { type: 'errorMessage', payload: { error: `Debes listar al menos ${state.currentBid} respuestas según tu apuesta.` } });
         return;
     }
