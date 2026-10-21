@@ -1994,3 +1994,32 @@ body.game-body .pasapalabra-button:hover{background:#2b5236;box-shadow:none}
  body.game-body .pasapalabra-button,body.game-body .help-button{min-height:46px;font-size:14px;padding:10px 13px}
 }
 @media(prefers-reduced-motion:reduce){body.game-body .letter,body.game-body .question-card,body.game-body .answer-input,body.game-body .pasapalabra-button{animation:none!important;transition:none!important}}
+
+/* 5.2 — Pasala Che: visual alignment without changing the circular game engine. */
+body.game-body.ct-ds .rosco-container{
+  border-top:3px solid #b5eb53;border-radius:18px;
+  box-shadow:0 18px 60px rgba(0,0,0,.17);
+  width:min(1020px,calc(100% - 28px));margin-inline:auto;
+}
+body.game-body.ct-ds .game-instructions{
+  font:600 clamp(.85rem,1.25vw,.99rem)/1.55 "Manrope",sans-serif;
+  border-radius:10px;
+}
+body.game-body.ct-ds .question-card{border-radius:26px;border-color:#c9d7c5;box-shadow:0 16px 45px rgba(0,0,0,.17)}
+body.game-body.ct-ds .question-text{font-family:"Manrope",sans-serif;font-weight:700;line-height:1.5;overflow-wrap:anywhere}
+body.game-body.ct-ds .answer-input{font:600 1rem/1.35 "Manrope",sans-serif;border-radius:10px}
+body.game-body.ct-ds .answer-input:focus-visible,
+body.game-body.ct-ds .pasapalabra-button:focus-visible,
+body.game-body.ct-ds .help-button:focus-visible,
+body.game-body.ct-ds .difficulty-card:focus-visible{outline:3px solid #b5eb53;outline-offset:3px}
+body.game-body.ct-ds .action-buttons{gap:12px}
+body.game-body.ct-ds .pasapalabra-button,body.game-body.ct-ds .help-button{border-radius:10px;font:750 .91rem/1.35 "Manrope",sans-serif;min-height:46px}
+body.game-body.ct-ds .modal-content{max-width:min(95vw,900px);border-radius:16px}
+body.game-body.ct-ds .difficulty-card{border-radius:12px}
+@media(max-width:650px){
+ body.game-body.ct-ds .rosco-container{width:calc(100% - 16px);padding:15px 9px 23px;border-radius:14px}
+ body.game-body.ct-ds .question-card{width:100%;border-radius:14px;padding:20px 13px}
+ body.game-body.ct-ds .question-text{line-height:1.5}
+ body.game-body.ct-ds .action-buttons{flex-wrap:wrap;gap:9px}
+ body.game-body.ct-ds .pasapalabra-button{flex:1 1 50%}
+}
