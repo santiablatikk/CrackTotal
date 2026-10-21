@@ -1318,6 +1318,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     gameState.gameActive = true;
                     gameState.gameStartTime = Date.now();
                     gameState.resultPublished = false;
+                    gameState.progressReported = false;
                     
                     // Normalizar players - puede venir como array o como objeto
                     let normalizedPlayersStart = [];
@@ -1949,9 +1950,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const matchData = {
                     playerName: playerName,
                     score: myFinalScore,
-                    correctAnswers: myFinalScore, // En Mentiroso, el score refleja los aciertos
-                    totalQuestions: (gameState.currentRound || 1) * 10, // Aproximadamente 10 preguntas por ronda
-                    accuracy: myFinalScore > 0 ? Math.round((myFinalScore / ((gameState.currentRound || 1) * 10)) * 100) : 0,
+                    // Mentiroso points are rounds WON, not correct quiz answers.
+                    // Do not fabricate ten questions per round or a quiz accuracy.
+                    correctAnswers: 0,
+                    totalQuestions: 0,
+                    accuracy: 0,
                     duration: Math.floor((Date.now() - (gameState.gameStartTime || Date.now())) / 1000)
                 };
 
@@ -1966,7 +1969,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- End Game (Mentiroso) ---
-    function endGame(payload) { 
+    function endGame(payload) {
+        if (gameState.resultPublished) return;
+        gameState.resultPublished = true;
         console.log("Game Over (Mentiroso). Payload:", payload);
         gameState.gameActive = false;
         updateGamePhaseUI('gameOver');
@@ -2017,15 +2022,31 @@ document.addEventListener('DOMContentLoaded', function() {
             modalHeader.className = 'result-modal-header'; // Reset
             if (headerClass) modalHeader.classList.add(headerClass);
         }
-        resultStatsEl.innerHTML = `
-            <div class="stat-item your-score ${payload.winnerId === gameState.myPlayerId && !payload.draw ? 'winner' : (payload.winnerId && !payload.draw ? 'loser' : '')}">
-                <span class="stat-label"><i class="fas fa-user-shield"></i> ${myName} (Tú)</span>
-                <span class="stat-value">${myFinalScore}</span>
-            </div>
-            <div class="stat-item opponent-score ${payload.winnerId === opponentId && !payload.draw ? 'winner' : (payload.winnerId && !payload.draw ? 'loser' : '')}">
-                <span class="stat-label"><i class="fas fa-user-ninja"></i> ${opponentName}</span>
-                <span class="stat-value">${opponentFinalScore}</span>
-            </div>`;
+        const makeResultStat = (className, icon, labelText, score) => {
+            const item = document.createElement('div');
+            item.className = className;
+            const label = document.createElement('span');
+            label.className = 'stat-label';
+            const glyph = document.createElement('i');
+            glyph.className = icon;
+            glyph.setAttribute('aria-hidden', 'true');
+            label.append(glyph, document.createTextNode(' ' + String(labelText)));
+            const value = document.createElement('span');
+            value.className = 'stat-value';
+            value.textContent = String(score);
+            item.append(label, value);
+            return item;
+        };
+        resultStatsEl.replaceChildren(
+            makeResultStat('stat-item your-score ' +
+                (payload.winnerId === gameState.myPlayerId && !payload.draw ? 'winner' :
+                    (payload.winnerId && !payload.draw ? 'loser' : '')),
+                'fas fa-user-shield', myName + ' (Tú)', myFinalScore),
+            makeResultStat('stat-item opponent-score ' +
+                (payload.winnerId === opponentId && !payload.draw ? 'winner' :
+                    (payload.winnerId && !payload.draw ? 'loser' : '')),
+                'fas fa-user-ninja', opponentName, opponentFinalScore)
+        );
         
         // Guardar estadísticas en Firebase
         saveMentirosoStats(payload);
@@ -2039,7 +2060,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 won: won,
                 result: payload.draw ? 'draw' : (won ? 'victory' : 'defeat'),
                 score: scoreNum,
-                correctAnswers: scoreNum,
+                correctAnswers: 0, // No quiz questions are scored in Mentiroso.
                 durationSec: Math.floor((Date.now() - (gameState.gameStartTime || Date.now())) / 1000)
             });
         }
