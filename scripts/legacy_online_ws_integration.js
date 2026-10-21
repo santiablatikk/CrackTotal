@@ -112,17 +112,23 @@ async function run() {
   assert.equal(state.gameType,'quiensabemas');
   assert.equal(state.gameActive,true);
   assert.ok(state.question && state.question.options.length===4,'QSM question restored');
+  assert.match(state.questionId,/^[0-9A-F]{24}$/,'Reconnect returns the identical question ID');
   assert.notEqual(state.reconnectToken,made.reconnectToken,'Credentials rotated');
   await wait(q2,'opponentReconnected');
   const answerer = state.currentTurn === made.playerId ? q1Recovered : q2;
   const other = answerer === q1Recovered ? q2 : q1Recovered;
   const prior = answerer.events.length;
-  send(answerer,'submitAnswer',{selectedIndex:0});
+  send(answerer,'submitAnswer',{selectedIndex:0,questionId:state.questionId});
   await wait(answerer,'answerResult',()=>true,prior);
   const beforeRepeat = other.events.length;
-  send(other,'submitAnswer',{selectedIndex:0});
+  send(other,'submitAnswer',{selectedIndex:0,questionId:state.questionId});
   await wait(other,'errorMessage',p=>/ya fue respondida/.test(p.error||''),beforeRepeat);
-  await wait(q2,'newQuestion',p=>p.questionNumber>=2,0,6500);
+  const next = await wait(q2,'newQuestion',p=>p.questionNumber>=2,0,6500);
+  const nextTurn = next.currentTurn === made.playerId ? q1Recovered : q2;
+  const fromStale = nextTurn.events.length;
+  send(nextTurn,'submitAnswer',{selectedIndex:0,questionId:state.questionId});
+  await wait(nextTurn,'errorMessage',p=>/pregunta anterior/.test(p.error || ''),fromStale);
+  assert.notEqual(next.questionId,state.questionId,'Every question rotates its verification ID');
   const beforeClock = q2.events.length;
   send(q2, 'timeOut'); // Malicious or out-of-sync browser must not choose when the turn ends.
   await sleep(250);
@@ -153,7 +159,8 @@ async function run() {
     const respondingPlayer = question.currentTurn === made.playerId ? q1Recovered : q2;
     const expectedPlayerId = question.currentTurn;
     const fromResponse = respondingPlayer.events.length;
-    send(respondingPlayer, 'submitAnswer', {selectedIndex: 0});
+    assert.match(question.questionId,/^[0-9A-F]{24}$/);
+    send(respondingPlayer, 'submitAnswer', {selectedIndex: 0,questionId:question.questionId});
     const resolved = await wait(respondingPlayer,'answerResult',
       value => value.forPlayerId === expectedPlayerId, fromResponse, 5000);
     assert.ok([0, 0.5, 1].includes(resolved.pointsAwarded));
