@@ -157,7 +157,10 @@
             <div class="container lobby-container-inner">
                 <h2 class="lobby-title">MENTIROSO <i class="fas fa-user-secret" aria-hidden="true"></i></h2>
                 <p class="lobby-subtitle">Apostá cuántos nombres sabés, subí la apuesta o desafiá al rival. Elegí cómo entrar.</p>
-                <div id="lobbyMessageArea" class="lobby-message"></div>
+                <div id="lobbyMessageArea" class="lobby-message" role="status" aria-live="polite"></div>
+                <button id="retryArenaButton" class="secondary-button ct-arena-retry" type="button" hidden>
+                    <i class="fas fa-rotate-right" aria-hidden="true"></i> Reintentar conexión
+                </button>
                 <div class="lobby-grid">
                     <div class="lobby-column lobby-actions-column">
                         <div class="lobby-card create-room-card">
