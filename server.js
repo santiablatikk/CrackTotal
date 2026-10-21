@@ -630,6 +630,9 @@ function handleClientMessage(ws, message) {
         case 'resumeRoom':
             handleResumeRoom(ws, clientInfo, message.payload);
             break;
+        case 'requestRematch':
+            handleRequestRematch(ws, clientInfo, message.payload);
+            break;
         case 'createRoom':
             handleCreateRoom(ws, clientInfo, message.payload);
             break;
@@ -762,6 +765,29 @@ function handleResumeRoom(ws, clientInfo, payload = {}) {
             safeSend(p.ws, { type: 'roomClockResumed', payload: { remainingMs: resumedQsmClockMs } }));
     } else {
         safeSend(ws, { type: 'opponentDisconnected', payload: { graceSeconds: ROOM_GRACE_MS / 1000 } });
+    }
+}
+
+function handleRequestRematch(ws, clientInfo, payload = {}) {
+    if (!LEGACY_SESSION_RECOVERY || !clientInfo.roomId) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'La revancha no está disponible en esta sala.' } });
+        return;
+    }
+    const room = rooms.get(clientInfo.roomId);
+    if (!room || room.gameActive || !bothConnected(room) ||
+        !roomPlayers(room).some(player => player.id === clientInfo.id) ||
+        (payload.gameType && payload.gameType !== room.gameType)) {
+        safeSend(ws, { type: 'errorMessage', payload: { error: 'La revancha requiere a ambos jugadores al final de la partida.' } });
+        return;
+    }
+    if (!room.rematchRequests) room.rematchRequests = new Set();
+    room.rematchRequests.add(clientInfo.id);
+    broadcastToRoom(room.roomId, { type: 'rematchState', payload: {
+        requested: [...room.rematchRequests], waiting: room.rematchRequests.size < 2
+    } });
+    if (room.rematchRequests.size === 2) {
+        room.rematchRequests.clear();
+        startGame(room.roomId);
     }
 }
 
@@ -1043,7 +1069,15 @@ function startGame(roomId) {
 
     console.log(`Starting ${room.gameType} game in room ${roomId}...`);
 
-    // Initialize game state
+    // Initialize game state. A rematch only begins after BOTH users consent.
+    room.reconnectPaused = false;
+    room.pendingNextQuestion = false;
+    room.questionResolved = false;
+    room.questionRemainingMs = QSM_QUESTION_MS;
+    if (room.questionTimer) clearTimeout(room.questionTimer);
+    room.questionTimer = null;
+    room.questionDeadline = null;
+    if (room.rematchRequests) room.rematchRequests.clear();
     room.gameActive = true;
     room.players.player1.score = 0; // Reset scores
     room.players.player2.score = 0;
@@ -1058,6 +1092,15 @@ function startGame(roomId) {
 
     if (room.gameType === 'mentiroso') {
         // Initialize Mentiroso specific state
+        if (room.mentirosoState.questionTimer) clearInterval(room.mentirosoState.questionTimer);
+        Object.assign(room.mentirosoState, {
+            currentRound: 1, categoryRound: 1, globalCategoryIndex: 0,
+            currentCategory: null, challengeTextTemplate: '', objectiveChallenge: null,
+            lastBidder: null, currentBid: 0, playerWhoCalledMentiroso: null,
+            playerToListAnswers: null, answersListed: [], validationResults: [],
+            gamePhase: 'lobby', questionTimer: null, phaseDeadline: null,
+            timeRemaining: 15, timerActive: false
+        });
         room.mentirosoState.gameActive = true;
         room.mentirosoState.scores = {};
         room.mentirosoState.scores[room.players.player1.id] = 0;
