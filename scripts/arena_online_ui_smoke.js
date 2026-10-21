@@ -49,7 +49,7 @@ const qsmHtml = read('quiensabemas.html');
 const mentirosoHtml = read('mentiroso.html');
 assert.match(qsmHtml,/quiensabemas_1v1\.js\?v=20261021-arena52-r2/);
 assert.match(mentirosoHtml,/mentiroso\.js\?v=20261021-arena52-r2/);
-assert.match(mentirosoHtml,/mentiroso\.css\?v=20261021-arena52/);
+assert.match(mentirosoHtml,/mentiroso\.css\?v=20261021-premium3/);
 assert.match(mentirosoHtml,/id="bidUniverseHint"/);
 assert.match(mentirosoHtml,/id="answerCounter"/);
 
@@ -85,7 +85,7 @@ assert.ok(mentirosoHtml.indexOf('assets/css/mentiroso.css') >
   'Game-specific CSS must follow the shared game shell');
 
 const qsmCss = read('assets/css/qsm-1v1.css');
-assert.match(qsmHtml,/qsm-1v1\.css\?v=20261021-arena52/,
+assert.match(qsmHtml,/qsm-1v1\.css\?v=20261021-premium3/,
   'QSM should load its canonical game-specific stylesheet');
 assert.ok(qsmHtml.indexOf('<link rel="stylesheet" href="assets/css/qsm-1v1.css') >
   qsmHtml.indexOf('<link rel="stylesheet" href="assets/css/game-shell.css'),
