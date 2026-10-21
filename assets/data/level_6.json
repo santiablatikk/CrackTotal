@@ -108,7 +108,14 @@
         "C": "Michel Platini (Francia)",
         "D": "Diego Forlán (Uruguay)"
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "audit_status": "retired",
+      "audit_reason": "Fuentes oficiales contradictorias sobre autor del primer gol de Francia-Uruguay en Copa Artemio Franchi 1985: FFF consigna a Rocheteau, AUF señala a Touré. El original atribuía a Roberto Dinamite, ausente de ambos registros.",
+      "conflicting_source_urls": [
+        "https://www.fff.fr/selection/matchs/2298-france-uruguay.html",
+        "https://www.auf.org.uy/antecedentes-vs-francia-rusia-2018/"
+      ],
+      "verified_at": "2026-10-21"
     },
     {
       "pregunta": "¿Cuántos penales falló Roberto Baggio en toda su carrera profesional?",
@@ -118,7 +125,10 @@
         "C": "25 penales",
         "D": "34 penales"
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "audit_status": "retired",
+      "audit_reason": "Estadística total de penales errados de carrera sin metodología ni registro primario fiable de cobertura completa.",
+      "verified_at": "2026-10-21"
     },
     {
       "pregunta": "¿Qué entrenador llevó al Montpellier a ganar su único título de Ligue 1 en 2012?",
@@ -208,7 +218,10 @@
         "C": "Herminio Masantonio",
         "D": "José Manuel Moreno"
       },
-      "respuesta_correcta": "A"
+      "respuesta_correcta": "A",
+      "audit_status": "retired",
+      "audit_reason": "Récord sin fecha de corte, temporada ni listado oficial verificable. La respuesta atribuida a Labruna carece de fundamento localizado.",
+      "verified_at": "2026-10-21"
     },
     {
       "pregunta": "¿Cuántas veces enfrentaron River Plate y Boca Juniors en finales oficiales hasta 2023?",
