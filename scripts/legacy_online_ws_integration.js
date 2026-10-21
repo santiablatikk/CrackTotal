@@ -168,6 +168,46 @@ async function run() {
   assert.ok(restored.mentiroso.maxBid>=20);
   await wait(m2,'opponentReconnected');
   console.log('MENTIROSO: reconnect preserves room, phase and round 2 PASS');
+
+  // Finish all six objective categories, then verify a mutual rematch really
+  // starts a clean match in the SAME room. No subjective answer votes allowed.
+  for (let roundNumber = 2; roundNumber <= 6; roundNumber++) {
+    const active = await wait(m2, 'mentirosoNextRound', value => value.round === roundNumber,
+      0, 7000);
+    const verifiedSet = catalog.challenges.find(entry => entry.category === active.category);
+    assert.ok(verifiedSet && verifiedSet.answers.length >= 20,
+      'Active round must use a source-checked 20+ canonical bank');
+    const player = active.currentTurn === mc.playerId ? m1Recovered : m2;
+    const opponent = player === m1Recovered ? m2 : m1Recovered;
+    const bidStart = opponent.events.length;
+    send(player,'mentirosoSubmitBid',{bid:1});
+    await wait(opponent,'mentirosoBidUpdate',value=>value.newBid===1,bidStart);
+    const callStart = player.events.length;
+    send(opponent,'mentirosoCallLiar');
+    await wait(player,'mentirosoLiarCalled',()=>true,callStart);
+    const resultStart = player.events.length;
+    send(player,'mentirosoSubmitAnswers',{answers:[verifiedSet.answers[0].label]});
+    const roundResult = await wait(player,'mentirosoRoundResult',
+      value=>value.validAnswersCount===1,resultStart);
+    assert.equal(roundResult.wasMentiroso,false,'One verified answer proves a one-name bid');
+  }
+  const finalMentiroso = await wait(m2,'gameOver',v=>v.gameType==='mentiroso',0,8000);
+  assert.ok(finalMentiroso.finalScores[mc.playerId] >= 0);
+  assert.ok(finalMentiroso.finalScores[mj.playerId] >= 0);
+  assert.equal(finalMentiroso.finalScores[mc.playerId]+finalMentiroso.finalScores[mj.playerId],6);
+
+  const firstRequest = m2.events.length;
+  send(m1Recovered,'requestRematch',{gameType:'mentiroso'});
+  const pending = await wait(m2,'rematchState',v=>v.waiting===true,firstRequest);
+  assert.deepEqual(pending.requested,[mc.playerId]);
+  const secondRequest = m1Recovered.events.length;
+  send(m2,'requestRematch',{gameType:'mentiroso'});
+  await wait(m1Recovered,'rematchState',v=>v.waiting===false,secondRequest);
+  await wait(m1Recovered,'mentirosoGameStart',()=>true,secondRequest);
+  const fresh = await wait(m1Recovered,'mentirosoNextRound',v=>v.round===1,secondRequest,7000);
+  assert.equal(fresh.category,'Fútbol Argentino');
+  assert.equal(fresh.maxBid,28);
+  console.log('MENTIROSO: six complete rounds, authoritative final score and mutual rematch PASS');
 }
 
 (async()=>{
