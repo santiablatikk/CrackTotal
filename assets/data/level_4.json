@@ -188,14 +188,18 @@
       "respuesta_correcta": "A"
     },
     {
-      "pregunta": "¿Qué entrenador tiene más partidos dirigidos en Champions League?",
+      "pregunta": "¿Qué entrenador fue el primero en alcanzar los 200 partidos dirigidos en la UEFA Champions League, durante 2023/24?",
       "opciones": {
-        "A": "Alex Ferguson (194)",
-        "B": "Arsène Wenger (178)",
-        "C": "Carlo Ancelotti (199)",
-        "D": "José Mourinho (151)"
+        "A": "Sir Alex Ferguson",
+        "B": "Arsène Wenger",
+        "C": "Carlo Ancelotti",
+        "D": "José Mourinho"
       },
-      "respuesta_correcta": "C"
+      "respuesta_correcta": "C",
+      "audit_status": "verified_official",
+      "source_url": "https://www.uefa.com/uefachampionsleague/news/0281-18096ab833ba-60100b78b635-1000--coaches-with-100-wins/",
+      "verified_at": "2026-10-21",
+      "audit_reason": "Evita cifras antiguas de partidos dirigidos y utiliza el hito verificado por UEFA"
     },
     {
       "pregunta": "¿En qué año se estableció el número máximo de 5 sustituciones?",
