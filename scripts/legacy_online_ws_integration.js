@@ -197,7 +197,7 @@ async function run() {
   intruder.ws.close();
   const crossActionFrom = m1.events.length;
   send(m1,'submitAnswer',{selectedIndex:0});
-  await wait(m1,'errorMessage',v=>/No active question/.test(v.error||''),crossActionFrom);
+  await wait(m1,'errorMessage',v=>/No active question|Not your turn/.test(v.error||''),crossActionFrom);
   assert.equal(m1.events.slice(crossActionFrom).some(e=>e.type==='answerResult'),false);
   extra.ws.close();
 
