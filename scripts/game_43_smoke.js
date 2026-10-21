@@ -8,7 +8,7 @@ const games=[
  ['top10.html','assets/css/top10.css',['top10GameCard','startOverlay','startBtn','answersList','surnameInput','resultRanking','closeResultBtn']],
  ['pasalache.html','assets/css/pasalache.css',['lettersContainer','currentLetterText','questionText','timerCount','answerInput','pasapalabraButton']],
  ['wordle-futbol.html','assets/css/wordle.css',['board','row1','row2','row3','streakDisplay','wordleResultModal']],
- ['quiensabemas.html',null,['lobbyContainer','gameArea','optionsGrid','qsmQuestionText','turnIndicator']],
+ ['quiensabemas.html','assets/css/qsm-1v1.css',['lobbyContainer','gameArea','optionsGrid','qsmQuestionText','turnIndicator']],
  ['mentiroso.html','assets/css/mentiroso.css',['lobbySection','gameContentSection','challengeText','bidInput','submitBidButton','callMentirosoButton']]
 ];
 for(const [page,cssPath,ids] of games){
@@ -31,7 +31,7 @@ assert(top.includes('id="closeResultBtn"')&&topJs.includes("getElementById('clos
 assert(topJs.includes('renderBoard(true)'),'Reveal the complete official ranking after game');
 assert(top.includes('top10-verified.js'));
 assert(get('wordle-futbol.html').match(/game-shell\.css/g).length===1,'Do not load game-shell CSS twice');
-assert(get('quiensabemas.html').includes('body.qsm-1v1-body .qsm-question'),'Quiz must have new readable question design');
+assert(get('assets/css/qsm-1v1.css').includes('body.qsm-1v1-body .qsm-question'),'Quiz must retain readable question design in canonical stylesheet');
 assert(get('assets/css/mentiroso.css').includes('body.mentiroso-body .mentiroso-challenge-text'),'Mentiroso must keep readable challenge design in canonical stylesheet');
 for(const p of ['assets/js/top10.js','assets/js/top10-verified.js','assets/js/wordle-futbol.js','assets/js/pasalache.js']){
  new vm.Script(get(p),{filename:p});
