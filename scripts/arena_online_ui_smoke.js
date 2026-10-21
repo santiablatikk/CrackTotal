@@ -23,6 +23,8 @@ assert.match(mentiroso,/contentVersions\?\.mentiroso === MENTIROSO_EXPECTED_BANK
 assert.match(server,/case 'resumeRoom':/);
 assert.match(server,/case 'timeOut':/);
 assert.match(server,/function armQsmQuestionClock\(/);
+assert.match(server,/state\.phaseDeadline - Date\.now\(\)/,
+  'Mentiroso objective timer must use server deadline rather than interval counts');
 assert.match(server,/room\.questionResolved = true/);
 assert.match(server,/CT_STAGING === 'true'/);
 assert.match(server,/CT_OBJECTIVE_MENTIROSO === 'true'/);
