@@ -519,6 +519,7 @@ function handleServerMessage(message) {
             gameState.gameActive = !!payload.gameActive;
             gameState.gamePhase = payload.gameActive ? 'playing' : 'waitingForOpponent';
             gameState.currentQuestion = payload.question;
+            gameState.questionId = payload.questionId || null;
             gameState.currentQuestionIndex = Math.max(0, (payload.questionNumber || 1) - 1);
             gameState.totalQuestions = payload.totalQuestionsInLevel || gameState.totalQuestions;
             gameState.reconnectAttempts = 0;
@@ -590,6 +591,7 @@ function handleServerMessage(message) {
             gameState.gameActive = true;
             gameState.gamePhase = 'playing';
             gameState.gameStartTime = Date.now();
+            gameState.questionId = null;
             gameState.resultPublished = false;
             gameState.progressReported = false;
             gameState.players = qsmPlayersById(payload.players);
@@ -602,6 +604,7 @@ function handleServerMessage(message) {
             
         case 'newQuestion':
             gameState.currentQuestion = payload.question;
+            gameState.questionId = payload.questionId || null;
             gameState.currentQuestionIndex = payload.questionNumber - 1;
             gameState.totalQuestions = payload.totalQuestionsInLevel;
             gameState.currentTurn = payload.currentTurn;
@@ -1412,7 +1415,8 @@ function submitAnswerToAPI(selectedOptionText, selectedIndex, optionButton) {
     }
 
     sendToServer('submitAnswer', {
-        selectedIndex: selectedIndex
+        selectedIndex: selectedIndex,
+        questionId: gameState.questionId
     });
     
     showFeedbackInGame("Respuesta enviada...", "info");
