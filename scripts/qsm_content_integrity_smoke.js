@@ -32,7 +32,7 @@ for (let level = 1; level <= 6; level++) {
   }
 }
 assert.strictEqual(found, 375);
-assert.ok(verified >= 20, 'Expected at least 20 source-documented QSM questions');
-assert.strictEqual(quarantined, 4);
-assert.strictEqual(eligible, 371);
+assert.ok(verified >= 21, 'Expected at least 20 source-documented QSM questions');
+assert.strictEqual(quarantined, 6);
+assert.strictEqual(eligible, 369);
 console.log('QSM BANK: PASS ('+found+' entries; '+eligible+' structurally eligible; '+quarantined+' explicitly quarantined; '+verified+' marked with cited sources). Structural checks DO NOT attest individual factual accuracy.');
