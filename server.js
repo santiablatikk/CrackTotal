@@ -429,6 +429,8 @@ const LEGACY_SESSION_RECOVERY = process.env.CT_STAGING === 'true';
 const ROOM_GRACE_MS = 45000;
 const QSM_QUESTION_MS = process.env.CT_STAGING === 'true' && process.env.CT_QSM_TEST_QUESTION_MS
     ? Math.max(600, Math.min(20000, Number(process.env.CT_QSM_TEST_QUESTION_MS) || 20000)) : 20000;
+const QSM_NEXT_QUESTION_DELAY_MS = process.env.CT_STAGING === 'true' && process.env.CT_QSM_TEST_NEXT_DELAY_MS
+    ? Math.max(20, Math.min(1500, Number(process.env.CT_QSM_TEST_NEXT_DELAY_MS) || 1500)) : 1500;
 const roomPlayers = room => [room?.players?.player1, room?.players?.player2].filter(Boolean);
 const bothConnected = room => roomPlayers(room).length === 2 &&
     roomPlayers(room).every(p => p.ws && p.ws.readyState === WebSocket.OPEN);
@@ -1427,7 +1429,7 @@ function handleSubmitAnswer(ws, clientInfo, payload, timedOut = false) {
          } else {
               // // console.log(`DEBUG: Skipping sendNextQuestion for room ${roomId} as it no longer exists or game is inactive.`); // ELIMINAR ESTA LÍNEA
          }
-    }, 1500); // Adjust delay as needed (e.g., 1.5 seconds)
+    }, QSM_NEXT_QUESTION_DELAY_MS); // Fast only in explicit CT_STAGING integration tests.
 }
 
 function handleRequestOptions(ws, clientInfo) {
