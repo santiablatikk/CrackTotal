@@ -211,3 +211,32 @@ Para `cracktotal-arena-staging` debe confirmarse en Render:
 **No se ha confirmado desde esta revisión un deploy remoto de Render ni una partida en esa instancia externa.** La preview Netlify puede validar `npm test` local y seguir sin tener el nuevo servidor remoto desplegado. No fusionar con `main` ni apuntar al dominio principal hasta desplegar, probar y versionar el backend de producción por separado.
 
 **Limitaciones pendientes:** QSM/Mentiroso siguen teniendo adaptadores de protocolo propios dentro de `server.js` (aunque ya comparten funciones base, servicio y recuperación). La convergencia del RoomManager completo con Pasala y la cobertura editorial de todas las preguntas/consignas continúa abierta. Los resultados de desconexión definitiva y la limpieza de sala merecen pruebas adicionales de tolerancia a fallos.
+
+
+## 21-10-2026 — Continuación: integridad real de Arena + corrección visual de Mentiroso
+
+**Código integrado únicamente en el PR de la rama `redesign/crack-total-2`, no en producción.**
+
+### Implementación
+- Normalización del contrato de jugadores de QSM: el servidor transmite `{player1, player2}` y el cliente lo transforma a un mapa por ID real antes de mostrar turnos y marcadores.
+- `mentiroso.html`: eliminación de los antiguos estilos 4.3 incrustados; trasladados a `assets/css/mentiroso.css`, cargada tras el shell compartido. Ajustes 5.2 de contraste WCAG orientativo, labels, botones activos/deshabilitados, tarjetas, anchos de lobby, mobile y espacio de header. Reinicio de scroll únicamente para nuevas visitas al lobby sin sesión recuperable.
+- Mensajes de error de Arena comprensibles en la UI, con botón accesible de **Reintentar conexión**. El error no se silencia ni se habilita el juego contra un protocolo incompatible.
+- Mentiroso: corregida la indicación de progreso del piloto (1 ronda por categoría, 6 en total) y el total real de segundos en los eventos de reloj. Los nombres de jugadores se muestran como texto seguro, no como HTML interpolado.
+- Resultado competitivo: una apuesta de Mentiroso incumplida se contabiliza como fracaso (en lugar de bloquear el envío); 20+ entradas y autocorrección siguen activas solamente en modo objetivo de staging.
+- Nuevo evento `requestRematch` autoritativo, limitado a staging, requiere **confirmación de ambos jugadores** cuando la partida ha terminado. QSM y Mentiroso preservan la misma sala, reinician la lógica y evitan reinicios unilaterales. En Mentiroso se reinician la categoría, contador, marcadores y estado del árbitro.
+- Mentiroso: retirada la métrica inventada de «diez preguntas por ronda» y el porcentaje de precisión fabricado; los puntos siguen siendo rondas ganadas. La presentación del resultado ya no interpreta los nombres como HTML.
+- Actualización de pruebas: `scripts/game_43_smoke.js` comprueba la hoja CSS canónica; `scripts/arena_online_ui_smoke.js` prueba normalización de jugadores y contraste/estructura; `scripts/legacy_online_ws_integration.js` recorre seis rondas objetivas de Mentiroso, una apuesta incompleta como derrota y una revancha real tras reconexión.
+
+### Render y despliegue
+
+Se prepararon `render.arena-staging.yaml`, `.github/workflows/verify-arena-staging.yml` y `docs/arena-staging-deploy-5.2.md`. **Estos archivos no despliegan ni cambian automáticamente el servicio Render existente.** El archivo Blueprint se ofrece solamente como referencia: no importarlo sin verificar el servicio ID.
+
+**El backend remoto no fue accesible desde las herramientas disponibles, por lo que NO SE CERTIFICA una partida jugada contra Render**, ni el SHA ejecutado. Netlify SUCCESS solo acredita el candidato local (revisar el estado del HEAD actual antes de citarlo).
+
+### Puertas pendientes antes de la publicación
+
+1. Actualizar el servicio Render existente `cracktotal-arena-staging` (ID `srv-dbb6hj2gjjms73d73fd0`) con la rama correcta y las flags `CT_STAGING` + `CT_OBJECTIVE_MENTIROSO`; verificar JSON de salud, branch y SHA.
+2. Ejecutar partidas reales QSM/Mentiroso con dos navegadores frente a ese servidor; QA visual en tamaños 320–1920 px.
+3. Completar la revisión factual individual de los bancos. Mentiroso tiene solo seis consignas piloto de 20–32 respuestas; faltan 84 consignas para el objetivo editorial de 90. En QSM persisten muchas preguntas pendientes de verificación primaria.
+4. Mantener backend histórico `cracktotal-servidor` activo hasta coordinar una migración verificada a producción.
+5. No fusionar el PR #1 mientras haya gates críticos pendientes.
