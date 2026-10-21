@@ -44,6 +44,31 @@ function balancedCss(file, source) {
   assert.equal(comment,false,file+': unclosed comment');
   assert.equal(quoted,null,file+': unclosed quoted string');
 }
+
+function balancedHtml(file, rawHtml) {
+  const html = rawHtml.replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi,'')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi,'');
+  const voidTags = new Set([
+    'area','base','br','col','embed','hr','img','input',
+    'link','meta','param','source','track','wbr'
+  ]);
+  const stack = [];
+  const tags = /<\/?([a-z][\w:-]*)(?:\s[^<>]*?)?\s*\/?>/gi;
+  let match;
+  while ((match = tags.exec(html)) !== null) {
+    const name = match[1].toLowerCase();
+    if (voidTags.has(name)) continue;
+    if (match[0].startsWith('</')) {
+      assert.equal(stack.pop(), name,
+        file+': mismatched closing tag </'+name+'>');
+    } else if (!match[0].endsWith('/>')) {
+      stack.push(name);
+    }
+  }
+  assert.deepEqual(stack, [], file+': unclosed game HTML elements');
+}
+
 const shell = read('assets/css/game-shell.css');
 balancedCss('game-shell.css', shell);
 assert.doesNotMatch(shell,/["']Oswald["']/,'Game shell must not reintroduce Oswald');
@@ -54,6 +79,7 @@ assert.match(shell,/#b5eb53/,'Accessible lime focus outline');
 for (const [html,css,selector] of games) {
   const page = read(html);
   const styles = read(css);
+  balancedHtml(html,page);
   balancedCss(css,styles);
   assert.ok(page.includes(css),html+': missing actual game stylesheet');
   assert.ok(styles.includes(selector),css+': missing scoped game component');
@@ -72,4 +98,32 @@ assert.match(read('assets/js/wordle-futbol.js'),/wordLength/,
   'Wordle board must preserve dynamic sizing for variable-length answers');
 assert.match(read('assets/css/pasala-duel.css'),/2026|5\.2/,
   'Standalone duel styles must stay compatible');
-console.log('GAMES 5.2 VISUAL CONTRACT: PASS (six game pages, shared shell, CSS structure, focus, responsive, factual lobby copy).');
+
+const qsmPage = read('quiensabemas.html');
+const qsmStyles = read('assets/css/qsm-1v1.css');
+assert.equal((qsmPage.match(/class="ct-quiz-stage"/g)||[]).length,1,
+  'QSM must have one editorial stage, never duplicated question layouts');
+assert.match(qsmStyles,/\.ct-quiz-stage\s*\{[\s\S]*?grid-template-columns:/,
+  'Quiz question/options stage must have a deliberate desktop composition');
+assert.match(qsmStyles,/@media\s*\(max-width:1020px\)/,
+  'Quiz must stack the match stage on tablets');
+const bluffPage = read('mentiroso.html');
+const bluffStyles = read('assets/css/mentiroso.css');
+assert.equal((bluffPage.match(/class="ct-bluff-stage"/g)||[]).length,1);
+assert.match(bluffStyles,/\.ct-bluff-stage\s*\{[\s\S]*?grid-template-columns:/,
+  'Mentiroso needs a dedicated challenge/decision grid');
+assert.match(bluffStyles,/@media\(max-width:1020px\)/,
+  'Mentiroso must stack the match stage on tablets');
+assert.match(read('wordle-futbol.html'),/class="ct-wordle-ledger"/,
+  'Wordle streak and countdown belong in one game-status ledger');
+assert.match(read('assets/css/wordle.css'),/\.ct-wordle-ledger\s*\{/,
+  'Wordle status ledger must be laid out in CSS, not inline');
+assert.match(read('assets/css/top10.css'),/\.top10-hero-copy\{display:grid/,
+  'Top10 must have an editorial header, not a row of squeezed content');
+for(const page of ['pasalache.html','wordle-futbol.html',
+                   'quiensabemas.html','mentiroso.html']) {
+  assert.match(read(page),/class="ct-game-eyebrow"/,
+    page+': must carry Crack Total 5.2 identity');
+}
+
+console.log('GAMES 5.2 VISUAL CONTRACT: PASS (six game pages, shared shell, HTML nesting, premium match composition, CSS structure, focus and responsive).');
