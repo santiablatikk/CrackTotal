@@ -1,0 +1,76 @@
+name: Crack Total 5.2 visual browser QA
+
+# Checks the pull request, not production. Compares baseline and candidate.
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'assets/css/**'
+      - 'pasalache.html'
+      - 'pasala-1v1.html'
+      - 'top10.html'
+      - 'wordle-futbol.html'
+      - 'quiensabemas.html'
+      - 'mentiroso.html'
+      - 'scripts/qa_browser_52.cjs'
+      - 'scripts/games_visual_52_smoke.js'
+      - '.github/workflows/games-visual-qa-52.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  visual-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout baseline before visual refactor
+        uses: actions/checkout@v4
+        with:
+          ref: 773939268eb8d96346505dc9177b3ff4a7ca22a4
+          path: before
+
+      - name: Checkout pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: after
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Run application test suite
+        working-directory: after
+        run: |
+          npm ci
+          npm test
+
+      - name: Capture baseline at mobile and desktop sizes
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs \
+            --root before \
+            --out "$RUNNER_TEMP/ct-visual-52/before" \
+            --widths 360,1366 \
+            --baseline
+
+      - name: Audit six updated game entry screens at ten viewport widths
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs \
+            --root after \
+            --out "$RUNNER_TEMP/ct-visual-52/after"
+
+      - name: Save before/after screenshots and viewport metrics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cracktotal-5-2-visual-audit
+          path: ${{ runner.temp }}/ct-visual-52
+          if-no-files-found: warn
+          retention-days: 14
