@@ -33,8 +33,16 @@ function serve(req,res) {
     });
   } catch {res.writeHead(400).end();}
 }
-function probe() {
+function probe(expectedWidth) {
   const width = window.innerWidth;
+  const inspectWidth = Math.min(width, expectedWidth);
+  const protrusions = [...document.body.querySelectorAll('*')].filter(el=>{
+    const style=getComputedStyle(el),rect=el.getBoundingClientRect();
+    return style.display!=='none' && style.visibility!=='hidden' && rect.width>0 && rect.right>inspectWidth+1;
+  }).sort((a,b)=>b.getBoundingClientRect().right-a.getBoundingClientRect().right).slice(0,8).map(el=>{
+    const rect=el.getBoundingClientRect();
+    return {tag:el.tagName.toLowerCase(),id:el.id,cls:String(el.className).slice(0,50),left:Math.round(rect.left),right:Math.round(rect.right)};
+  });
   const selectors = 'button,input,textarea,select,.board,.keyboard,.rosco-circle,.duel-ring,.top10-game-layout,.ct-quiz-stage,.ct-bluff-stage';
   const nodes = [...document.querySelectorAll(selectors)].filter(el=>{
     const style=getComputedStyle(el),rect=el.getBoundingClientRect();
@@ -45,7 +53,7 @@ function probe() {
     return rect.left < -2 || rect.right > width + 2;
   }).slice(0,15).map(el=>({tag:el.tagName.toLowerCase(),id:el.id || '',className:String(el.className).slice(0,60)}));
   const undersizeButtons=nodes.filter(el=>el.tagName==='BUTTON' && (el.getBoundingClientRect().height<44 || el.getBoundingClientRect().width<44)).length;
-  return {title:document.title,width,docWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-width,offscreen,undersizeButtons};
+  return {title:document.title,width,docWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-width,offscreen,undersizeButtons,protrusions};
 }
 async function main(){
   if (widths.some(w=>!Number.isInteger(w) || w<280 || w>3000))throw Error('Invalid viewport');
@@ -96,7 +104,7 @@ async function main(){
       await command('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<=430});
       await command('Page.navigate',{url:'http://127.0.0.1:'+httpPort+'/'+game});
       await sleep(1500);
-      const r=await command('Runtime.evaluate',{expression:'('+probe.toString()+')()',returnByValue:true});
+      const r=await command('Runtime.evaluate',{expression:'('+probe.toString()+')('+width+')',returnByValue:true});
       if(r.exceptionDetails || !r.result || !r.result.value)throw Error('Browser probe failed for '+game+' '+width);
       const row={game,expectedWidth:width,...r.result.value};
       rows.push(row);
@@ -105,6 +113,7 @@ async function main(){
         fs.writeFileSync(path.join(out,game.replace('.html','')+'-'+width+'.png'),Buffer.from(image.data,'base64'));
       }
       console.log((args.baseline?'BEFORE':'AFTER')+' '+game+' '+width+': viewport='+row.width+', overflow='+row.overflow+', offscreen='+row.offscreen.length);
+      if (row.overflow>2 || row.width!==width)console.log('   PROTRUSIONS '+JSON.stringify(row.protrusions));
     }
     fs.writeFileSync(path.join(out,'metrics.json'),JSON.stringify({baseline:!!args.baseline,rows},null,2));
     const failed=rows.filter(x=>!x.title.includes('Crack Total') || x.expectedWidth!==x.width || x.overflow>2 || x.offscreen.length);

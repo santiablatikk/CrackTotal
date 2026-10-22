@@ -133,6 +133,8 @@ for(const page of ['pasalache.html','wordle-futbol.html',
 // Responsive layout guards; these do not constitute browser screenshot QA.
 assert.ok(read('assets/css/pasala-duel.css').includes('container-type:inline-size'),
   'Ring size must drive duel letter positions');
+assert.ok(!/translateY\\(-(?:146|83|132)px\\)/.test(read('assets/css/pasala-duel.css')),
+  'Previous fixed-turn orbit radii must be removed');
 assert.ok(read('assets/css/pasala-duel.css').includes('42cqw'),
   'Duel orbital radius must scale with its actual circle');
 assert.ok(read('assets/css/mentiroso.css').includes('min-height:clamp(240px,40dvh,400px)'),
