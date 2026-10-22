@@ -94,10 +94,9 @@ body.wordle-body.ct-ds .breadcrumb-item + .breadcrumb-item::before {
     opacity: 0.7;
 }
 
+/* The game headers are chrome; Wordle and Top 10 own their hero treatment. */
 body.game-body.ct-ds .game-header,
 body.mentiroso-body.ct-ds .game-header,
-body.wordle-body.ct-ds .wordle-header,
-body.top10-body.ct-ds .top10-header,
 body.qsm-1v1-body.ct-ds .game-header {
     background: rgba(16, 27, 27, 0.94);
     border-bottom: 1px solid rgba(244, 242, 233, 0.13);

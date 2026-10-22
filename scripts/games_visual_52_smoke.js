@@ -139,6 +139,10 @@ assert.ok(read('assets/css/mentiroso.css').includes('min-height:clamp(240px,40dv
   'Bluff listing must support long answer lists');
 assert.ok(read('assets/css/qsm-1v1.css').includes('max-width:720px'),
   'QSM answers must stack early enough for narrow touchscreens');
+assert.ok(read('assets/js/wordle-futbol.js').includes('boardResizeObserver'),
+  'Wordle board must recompute size on responsive container changes');
+assert.ok(read('assets/js/wordle-futbol.js').includes('card.clientWidth'),
+  'Wordle must measure the actual card instead of assuming the viewport width');
 assert.ok(read('assets/css/wordle.css').includes('place-content:center'),
   'Variable-length Wordle board stays centered');
 console.log('GAMES 5.2 VISUAL CONTRACT: PASS (six game pages, shared shell, HTML nesting, premium match composition, CSS structure, focus and responsive).');
