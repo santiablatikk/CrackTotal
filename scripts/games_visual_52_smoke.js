@@ -131,6 +131,10 @@ for(const page of ['pasalache.html','wordle-futbol.html',
 }
 
 // Responsive layout guards; these do not constitute browser screenshot QA.
+assert.ok(read('assets/css/pasalache.css').includes('position: absolute;\n    top: calc(100% + 8px)'),
+  'Volume popover must not expand the solo mobile header');
+assert.ok(read('assets/css/pasala-duel.css').includes('@media(max-width:430px)'),
+  'Duel watch form must wrap before it forces mobile layout viewport expansion');
 assert.ok(read('assets/css/pasala-duel.css').includes('container-type:inline-size'),
   'Ring size must drive duel letter positions');
 assert.ok(!/translateY\\(-(?:146|83|132)px\\)/.test(read('assets/css/pasala-duel.css')),
