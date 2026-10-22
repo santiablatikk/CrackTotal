@@ -104,6 +104,13 @@ async function main(){
       await command('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<=430});
       await command('Page.navigate',{url:'http://127.0.0.1:'+httpPort+'/'+game});
       await sleep(1500);
+      // A consent dialog masks actual content in baseline screenshots;
+      // reject optional cookies in this disposable browser profile for visual QA.
+      const rejected=await command('Runtime.evaluate',{
+        expression:"(function(){const b=[...document.querySelectorAll('button,[role=button]')].find(x=>x.textContent?.trim().toLowerCase().includes('rechazar todo'));if(!b)return false;b.click();return true})()",
+        returnByValue:true
+      });
+      if (rejected.result?.value) await sleep(350);
       const r=await command('Runtime.evaluate',{expression:'('+probe.toString()+')('+width+')',returnByValue:true});
       if(r.exceptionDetails || !r.result || !r.result.value)throw Error('Browser probe failed for '+game+' '+width);
       const row={game,expectedWidth:width,...r.result.value};

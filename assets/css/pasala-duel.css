@@ -285,8 +285,11 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
 .match-room-code{overflow-wrap:anywhere}
 .server-banner{border-radius:10px;line-height:1.6}
 @media(max-width:650px){
- .arena-hero{min-height:310px}
- .arena-hero-inner{padding-block:44px 50px}
+ .arena-hero{min-height:0}
+ .arena-hero-inner{padding-block:26px 32px}
+ .arena-hero-inner>p{font-size:.97rem;line-height:1.5;margin:0 0 13px}
+ .hero-details{gap:7px;font-size:.69rem}
+ .lobby-heading h2{font-size:clamp(2.3rem,10vw,3.5rem)}
  .title-lockup{display:block;min-width:0}
  .title-index{writing-mode:horizontal-tb;margin:0 0 12px}
  .title-lockup h1{max-width:100%;overflow-wrap:anywhere}
