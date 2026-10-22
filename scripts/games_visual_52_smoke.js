@@ -130,4 +130,15 @@ for(const page of ['pasalache.html','wordle-futbol.html',
     page+': must carry Crack Total 5.2 identity');
 }
 
+// Responsive layout guards; these do not constitute browser screenshot QA.
+assert.ok(read('assets/css/pasala-duel.css').includes('container-type:inline-size'),
+  'Ring size must drive duel letter positions');
+assert.ok(read('assets/css/pasala-duel.css').includes('42cqw'),
+  'Duel orbital radius must scale with its actual circle');
+assert.ok(read('assets/css/mentiroso.css').includes('min-height:clamp(240px,40dvh,400px)'),
+  'Bluff listing must support long answer lists');
+assert.ok(read('assets/css/qsm-1v1.css').includes('max-width:720px'),
+  'QSM answers must stack early enough for narrow touchscreens');
+assert.ok(read('assets/css/wordle.css').includes('place-content:center'),
+  'Variable-length Wordle board stays centered');
 console.log('GAMES 5.2 VISUAL CONTRACT: PASS (six game pages, shared shell, HTML nesting, premium match composition, CSS structure, focus and responsive).');

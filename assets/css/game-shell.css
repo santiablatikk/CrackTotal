@@ -8,7 +8,8 @@ body.ct-ds {
   --ct-shell-copper: #d89b70;
   --ct-shell-container: 1180px;
   --ct-shell-gutter: clamp(12px, 3vw, 32px);
-  --ct-shell-radius: 14px;
+  --ct-shell-radius: 16px;
+  --ct-stage-gap: clamp(12px, 1.8vw, 22px);
   --ct-shell-focus: 3px solid var(--ct-shell-lime);
 }
 body.ct-ds,
@@ -20,6 +21,7 @@ body.ct-ds :is(input, textarea, select, button) {
 }
 body.ct-ds :is(input, textarea, select) {
   min-width: 0;
+  max-width: 100%;
 }
 body.ct-ds :is(button, a, input, textarea, select):focus-visible {
   outline: var(--ct-shell-focus);
@@ -40,10 +42,7 @@ body.futboleros-body.ct-ds {
     margin: 0;
     padding-top: 76px;
     color: var(--ct-cream, #f4f2e9);
-    background:
-        radial-gradient(circle at 8% 12%, rgba(36, 59, 53, 0.25), transparent 32rem),
-        radial-gradient(circle at 90% 38%, rgba(181, 235, 83, 0.045), transparent 30rem),
-        var(--ct-ink, #101b1b);
+    background: var(--ct-shell-bg);
     overflow-x: hidden;
     min-height: 100vh;
     font-family: var(--ct-font-sans,"Manrope",sans-serif);

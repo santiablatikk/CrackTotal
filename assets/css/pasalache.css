@@ -1942,8 +1942,8 @@
 
 /* 4.3 · Individual rosco competitive view.
  * Stable legacy animation/state selectors retained; no new stylesheet. */
-body.game-body .game-content{background:#0d1618;animation:none;filter:none;padding:24px 0 55px}
-body.game-body .rosco-container{max-width:970px;background:#132722;border-top:4px solid #b5eb53;border-radius:4px;border-left:0;border-right:0;border-bottom:0;padding:28px 21px 35px;box-shadow:none;backdrop-filter:none;overflow:visible;transform:none}
+body.game-body .game-content{background:#101b1b;animation:none;filter:none;padding:16px 0 48px}
+body.game-body .rosco-container{max-width:970px;background:#152b24;border-top:4px solid #d89b70;border-radius:4px;border-left:0;border-right:0;border-bottom:0;padding:28px 21px 35px;box-shadow:none;backdrop-filter:none;overflow:visible;transform:none}
 body.game-body .rosco-container:hover{transform:none;box-shadow:none}
 body.game-body .rosco-container:before,body.game-body .rosco-circle:before{display:none}
 body.game-body .game-instructions{font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:#dce9dc;padding:11px 13px;max-width:720px;margin:0 auto 24px;border:1px solid #b1d0b749;border-radius:3px;background:#284333}
@@ -1955,7 +1955,7 @@ body.game-body .question-card:hover{transform:none;box-shadow:0 20px 45px #0006}
 body.game-body .question-header{margin:0 0 9px;color:#284735}
 body.game-body .question-header h3{color:#253a2c;font:700 clamp(17px,2vw,26px)/1.2 "Space Grotesk","Manrope",sans-serif;margin:0}
 body.game-body #currentLetterText{color:#48792e;font:700 1.35em "Space Grotesk","Manrope",sans-serif}
-body.game-body .question-text{max-width:88%;max-height:none;overflow:visible;margin:10px auto 14px;padding:0 5px;background:none;border:0;box-shadow:none;border-radius:0;color:#193026;font-size:clamp(16px,1.85vw,21px);line-height:1.55;font-weight:700;text-align:center}
+body.game-body .question-text{max-width:92%;max-height:none;overflow:visible;margin:10px auto 14px;padding:0 5px;background:none;border:0;box-shadow:none;border-radius:0;color:#193026;font-size:clamp(16px,1.85vw,21px);line-height:1.55;font-weight:700;text-align:center}
 body.game-body .timer-wrapper{width:76%;margin:3px auto 12px}
 body.game-body .timer-count{font:700 clamp(26px,3.5vw,43px)/1 "Space Grotesk","Manrope",sans-serif;color:#253a27;background:none;-webkit-text-fill-color:currentColor;text-shadow:none;margin-bottom:6px}
 body.game-body .timer{height:7px;border:0;background:#b9c9b4;border-radius:2px;box-shadow:none}
@@ -1977,8 +1977,8 @@ body.game-body .pasapalabra-button:hover{background:#2b5236;box-shadow:none}
  body.game-body .rosco-container{width:calc(100% - 12px);padding:15px 10px 20px;border-radius:10px}
  body.game-body .game-instructions{position:relative;top:auto;left:auto;right:auto;font:600 13px/1.5 'Manrope',sans-serif;margin:0 auto 18px;max-width:600px;padding:10px 13px}
  body.game-body .rosco-circle{display:flex;flex-direction:column;width:100%;max-width:none;aspect-ratio:auto;height:auto;border-radius:0;gap:20px;box-shadow:none}
- body.game-body .letters-container{position:relative;flex:none;width:min(78vw,315px);height:auto;aspect-ratio:1;margin:0 auto;order:0;border-radius:50%}
- body.game-body .letter{font-family:'Manrope',sans-serif;font-size:clamp(11px,3vw,15px);width:clamp(26px,7.4vw,37px);height:clamp(26px,7.4vw,37px)}
+ body.game-body .letters-container{position:relative;flex:none;width:min(76vw,315px);height:auto;aspect-ratio:1;margin:0 auto;order:0;border-radius:50%}
+ body.game-body .letter{font-family:'Manrope',sans-serif;font-size:clamp(11px,3vw,15px);width:clamp(24px,7vw,36px);height:clamp(24px,7vw,36px)}
  body.game-body .question-card{position:relative;order:1;width:100%;max-width:610px;min-height:0;aspect-ratio:auto;padding:23px 17px;border-radius:12px;border-width:1px;overflow:visible;box-shadow:none}
  body.game-body .question-card:before{display:none}
  body.game-body .question-card > *{width:100%;max-width:none}
@@ -1997,15 +1997,15 @@ body.game-body .pasapalabra-button:hover{background:#2b5236;box-shadow:none}
 
 /* 5.2 — Pasala Che: visual alignment without changing the circular game engine. */
 body.game-body.ct-ds .rosco-container{
-  border-top:3px solid #b5eb53;border-radius:18px;
-  box-shadow:0 18px 60px rgba(0,0,0,.17);
-  width:min(1020px,calc(100% - 28px));margin-inline:auto;
+  border-top:4px solid #d89b70;border-radius:20px;
+  box-shadow:0 12px 38px rgba(0,0,0,.13);
+  width:min(990px,calc(100% - 28px));margin-inline:auto;
 }
 body.game-body.ct-ds .game-instructions{
   font:600 clamp(.85rem,1.25vw,.99rem)/1.55 "Manrope",sans-serif;
   border-radius:10px;
 }
-body.game-body.ct-ds .question-card{border-radius:26px;border-color:#c9d7c5;box-shadow:0 16px 45px rgba(0,0,0,.17)}
+body.game-body.ct-ds .question-card{border-radius:22px;border-color:#c9d7c5;box-shadow:0 12px 32px rgba(0,0,0,.14)}
 body.game-body.ct-ds .question-text{font-family:"Manrope",sans-serif;font-weight:700;line-height:1.5;overflow-wrap:anywhere}
 body.game-body.ct-ds .answer-input{font:600 1rem/1.35 "Manrope",sans-serif;border-radius:10px}
 body.game-body.ct-ds .answer-input:focus-visible,
@@ -2018,7 +2018,7 @@ body.game-body.ct-ds .modal-content{max-width:min(95vw,900px);border-radius:16px
 body.game-body.ct-ds .difficulty-card{border-radius:12px}
 @media(max-width:650px){
  body.game-body.ct-ds .rosco-container{width:calc(100% - 16px);padding:15px 9px 23px;border-radius:14px}
- body.game-body.ct-ds .question-card{width:100%;border-radius:14px;padding:20px 13px}
+ body.game-body.ct-ds .question-card{width:100%;border-radius:14px;padding:23px 16px}
  body.game-body.ct-ds .question-text{line-height:1.5}
  body.game-body.ct-ds .action-buttons{flex-wrap:wrap;gap:9px}
  body.game-body.ct-ds .pasapalabra-button{flex:1 1 50%}

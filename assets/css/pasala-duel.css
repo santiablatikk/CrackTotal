@@ -33,10 +33,10 @@ input,select{color:var(--cream);background:#08150f;border:1px solid #4a6150;bord
 input::placeholder{color:#829383}input:focus,select:focus{border-color:var(--lime)}
 .player-field input{width:min(350px,100%);font-size:18px;font-weight:700}
 .lobby-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-.mode-card{position:relative;display:flex;flex-direction:column;align-items:stretch;min-height:490px;background:linear-gradient(145deg,#16271b,#0c1712);border:1px solid var(--line);padding:clamp(24px,3vw,42px);transition:transform .18s,border-color .18s}
+.mode-card{position:relative;display:flex;flex-direction:column;align-items:stretch;min-height:380px;background:linear-gradient(145deg,#16271b,#0c1712);border:1px solid var(--line);padding:clamp(24px,3vw,42px);transition:transform .18s,border-color .18s}
 .mode-card:hover{transform:translateY(-4px);border-color:#6c916a}.mode-card-primary{background:linear-gradient(145deg,#b5eb53,#85d125);color:var(--ink);border-color:var(--lime)}
 .mode-no{font-size:15px;opacity:.78}.mode-symbol{position:absolute;right:35px;top:24px;font:700 54px/1 'Space Grotesk',sans-serif}
-.mode-card h3{font-size:clamp(31px,3.9vw,55px);margin:66px 0 20px}.mode-card>p{font-size:15px;max-width:315px;opacity:.81}
+.mode-card h3{font-size:clamp(30px,3.5vw,49px);margin:44px 0 18px}.mode-card>p{font-size:15px;max-width:315px;opacity:.81}
 .mode-card label{margin-top:auto;font-size:15px;padding:20px 0 7px}.mode-card input,.mode-card select{width:100%;margin-bottom:12px}.mode-card-primary select{background:#ddff99;color:var(--ink);border-color:#5e8c18}
 .arena-button{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:52px;padding:13px 18px;border:1px solid var(--lime);background:transparent;color:var(--lime);font:700 17px 'Space Grotesk',sans-serif;letter-spacing:.09em;text-align:left;transition:transform .15s,background .15s,color .15s}
 .arena-button span{font-size:23px}.arena-button:hover:not(:disabled){transform:translateY(-2px);background:var(--lime);color:var(--ink)}
@@ -49,11 +49,11 @@ input::placeholder{color:#829383}input:focus,select:focus{border-color:var(--lim
 .scoreboard{display:grid;grid-template-columns:1fr 64px 1fr;gap:0;align-items:stretch;border:1px solid var(--line);margin-bottom:20px;background:#132118}.score-player{padding:26px 32px;display:flex;align-items:center;gap:18px;justify-content:space-between;min-width:0}.score-name{font:700 clamp(24px,3.3vw,42px)/1 'Space Grotesk',sans-serif;text-transform:uppercase;overflow-wrap:anywhere}.score-name span{display:block;font:700 12px 'Manrope',sans-serif;color:var(--muted);margin-top:8px;letter-spacing:.08em}.score-name .score-progress{font:700 12px 'Space Grotesk',sans-serif;letter-spacing:.1em;color:#d2e2d0}.score-name .score-lead{display:inline-block;width:max-content;color:#091509;background:var(--lime);padding:4px 7px;margin-top:7px;font:700 11px 'Space Grotesk',sans-serif}.score-player.is-leading{background:linear-gradient(90deg,rgba(186,250,60,.065),transparent)}.score-value{font:700 clamp(55px,7vw,94px)/1.06 'Space Grotesk',sans-serif;color:var(--lime);font-variant-numeric:tabular-nums}.score-versus{display:grid;place-items:center;color:#7f9484;font:700 20px 'Space Grotesk',sans-serif;border-inline:1px solid var(--line);transform:skew(-8deg)}
 .stream-strip{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;background:linear-gradient(90deg,#1d3e25,#0e1d13);border:1px solid var(--line);border-left:4px solid var(--lime);padding:13px 18px;margin-bottom:20px;text-transform:uppercase;letter-spacing:.1em;font:700 14px 'Space Grotesk',sans-serif}
 .stream-strip span{display:flex;align-items:center;gap:10px;color:#b8d5b7}.stream-strip strong{color:var(--lime);font-size:19px}.stream-strip #streamClock{font-size:27px;font-variant-numeric:tabular-nums;color:var(--cream)}
-.match-stage{display:grid;grid-template-columns:minmax(300px,.92fr) minmax(0,1.08fr);background:linear-gradient(133deg,#13231a,#101b1b);border:1px solid var(--line);min-height:560px}
+.match-stage{display:grid;grid-template-columns:minmax(300px,.92fr) minmax(0,1.08fr);background:#142720;border:1px solid var(--line);min-height:490px}
 .ring-side{position:relative;padding:26px 24px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;overflow:hidden;background:radial-gradient(circle at center,rgba(186,250,60,.1),transparent 64%),linear-gradient(150deg,#1c3421,#0a150e)}
 .ring-side:before{content:'';position:absolute;inset:20px;border:1px solid rgba(255,255,255,.06);pointer-events:none}
 .clock-block{text-align:center;z-index:1}.clock-block span{display:block;font-size:15px;color:var(--muted)}.clock-block strong{font:700 74px/1.06 'Space Grotesk',sans-serif;font-variant-numeric:tabular-nums;color:var(--cream)}
-.duel-ring{width:min(100%,420px);aspect-ratio:1;position:relative;margin:14px auto 22px}.ring-letter{--angle:0deg;position:absolute;left:50%;top:50%;width:9%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(19vw,175px))) rotate(calc(-1 * var(--angle)));background:#243629;border:1px solid #506451;color:#e0e8df;font:700 clamp(12px,1.3vw,17px) 'Space Grotesk',sans-serif}
+.duel-ring{width:min(100%,420px);aspect-ratio:1;container-type:inline-size;position:relative;margin:14px auto 22px}.ring-letter{--angle:0deg;position:absolute;left:50%;top:50%;width:9%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(42cqw,175px))) rotate(calc(-1 * var(--angle)));background:#243629;border:1px solid #506451;color:#e0e8df;font:700 clamp(12px,1.3vw,17px) 'Space Grotesk',sans-serif}
 .ring-letter.current{outline:3px solid var(--cream);outline-offset:3px}.ring-letter.correct{background:var(--lime);color:var(--ink);border-color:var(--lime)}.ring-letter.incorrect{background:#f08376;color:#1b0805;border-color:#f08376}
 .duel-ring::after{content:'CT';position:absolute;inset:30%;display:grid;place-items:center;border:2px solid #3b5542;border-radius:50%;font:700 clamp(70px,11vw,128px) 'Space Grotesk',sans-serif;letter-spacing:-.08em;color:rgba(186,250,60,.18)}
 .ring-legend{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:15px;color:var(--muted)}.legend-dot{display:inline-block;vertical-align:middle;width:9px;height:9px;border-radius:50%;margin-right:5px}.legend-dot.correct{background:var(--lime)}.legend-dot.incorrect{background:#f08376}.legend-dot.pending{background:#536a57}
@@ -69,9 +69,9 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
 .overlay-mode .arena-shell{padding:0;max-width:none}.overlay-mode .match-area{display:block!important;padding:0}.overlay-mode .scoreboard{display:grid!important;margin:0;background:rgba(7,17,14,.94)}
 .overlay-mode .stream-strip{display:flex!important;margin:0;background:rgba(9,22,12,.94);border-color:rgba(186,250,60,.3)}
 .overlay-mode .score-name{overflow-wrap:anywhere}
-@media(max-width:900px){.arena-header nav{gap:16px}.arena-version{display:none}.title-lockup{gap:10px}.lobby-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.mode-card-random{grid-column:1/-1;min-height:250px}.mode-card-random h3{margin:25px 0 10px}.mode-card-random .arena-button{margin-top:15px}.match-stage{grid-template-columns:1fr}.duel-ring{width:min(100%,390px)}.ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-165px) rotate(calc(-1 * var(--angle)))}.ring-side{min-height:510px}.question-side{min-height:410px}}
-@media(max-width:600px){.arena-header{height:66px;padding:0 17px}.brand{font-size:20px}.brand-icon{width:35px;height:35px}.arena-header nav{font-size:15px}.arena-header nav a:first-child{display:none}.arena-hero{min-height:465px}.arena-hero-inner{padding:48px 20px 70px}.kicker{font-size:15px}h1{font-size:clamp(48px,11vw,75px)}h1 span{font-size:.24em;padding:6px;margin-top:8px}.title-index{font-size:12px;margin-top:7px}.arena-hero-inner>p{font-size:16px}.hero-details{font-size:12px;gap:8px}.hero-details span+span::before{margin-right:7px}.hero-corner{display:none}.arena-ticker{font-size:15px;height:38px}.arena-shell{padding:30px 16px 0}.server-banner{margin-bottom:36px}.lobby-heading{display:block;margin:20px 0}.lobby-heading h2{font-size:56px}.lobby-heading>p{margin-top:15px}.player-field{display:block}.player-field label{display:block;margin-bottom:8px}.player-field input{width:100%}.lobby-grid{grid-template-columns:1fr}.mode-card,.mode-card-random{grid-column:auto;min-height:auto;padding:27px}.mode-card h3{font-size:66px;margin:50px 0 20px}.mode-card-random h3{margin:50px 0 20px}.mode-card .arena-button{margin-top:15px}.watch-line{display:block}.watch-line>div{display:block}.watch-line span{display:block;margin:8px 0 15px}.watch-line form{display:flex}.watch-line input{flex:1;min-width:0}.watch-line button{flex:none}.match-top{display:block}.match-top h2{font-size:56px}.match-room{margin-top:20px}.match-room button{padding:7px 0;white-space:normal;text-align:left}.stream-strip{gap:9px;padding:12px}.stream-strip strong{font-size:16px}.stream-strip #streamClock{font-size:23px}.scoreboard{grid-template-columns:1fr 36px 1fr}.score-player{padding:17px 11px;display:block}.score-name{font-size:24px}.score-value{font-size:58px;margin-top:11px}.score-versus{font-size:15px}.ring-side{padding:24px 8px;min-height:425px}.clock-block strong{font-size:64px}.duel-ring{width:min(94vw,310px)}.ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-133px) rotate(calc(-1 * var(--angle)));font-size:15px}.ring-legend{font-size:12px}.question-side{padding:28px 20px;min-height:400px}.question-side h3{font-size:54px}.match-status{margin-bottom:25px}.arena-footer{flex-direction:column}.overlay-mode .score-player{display:flex}.overlay-mode .score-value{margin-top:0}}
-@media(max-width:365px){.ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-115px) rotate(calc(-1 * var(--angle)))}.arena-header nav{display:none}.watch-line form{flex-wrap:wrap}.watch-line button{width:100%}}
+@media(max-width:900px){.arena-header nav{gap:16px}.arena-version{display:none}.title-lockup{gap:10px}.lobby-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.mode-card-random{grid-column:1/-1;min-height:250px}.mode-card-random h3{margin:25px 0 10px}.mode-card-random .arena-button{margin-top:15px}.match-stage{grid-template-columns:1fr}.duel-ring{width:min(100%,390px)}.ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(42cqw,175px))) rotate(calc(-1 * var(--angle)))}.ring-side{min-height:510px}.question-side{min-height:410px}}
+@media(max-width:600px){.arena-header{height:66px;padding:0 17px}.brand{font-size:20px}.brand-icon{width:35px;height:35px}.arena-header nav{font-size:15px}.arena-header nav a:first-child{display:none}.arena-hero{min-height:465px}.arena-hero-inner{padding:48px 20px 70px}.kicker{font-size:15px}h1{font-size:clamp(48px,11vw,75px)}h1 span{font-size:.24em;padding:6px;margin-top:8px}.title-index{font-size:12px;margin-top:7px}.arena-hero-inner>p{font-size:16px}.hero-details{font-size:12px;gap:8px}.hero-details span+span::before{margin-right:7px}.hero-corner{display:none}.arena-ticker{font-size:15px;height:38px}.arena-shell{padding:30px 16px 0}.server-banner{margin-bottom:36px}.lobby-heading{display:block;margin:20px 0}.lobby-heading h2{font-size:56px}.lobby-heading>p{margin-top:15px}.player-field{display:block}.player-field label{display:block;margin-bottom:8px}.player-field input{width:100%}.lobby-grid{grid-template-columns:1fr}.mode-card,.mode-card-random{grid-column:auto;min-height:auto;padding:27px}.mode-card h3{font-size:66px;margin:50px 0 20px}.mode-card-random h3{margin:50px 0 20px}.mode-card .arena-button{margin-top:15px}.watch-line{display:block}.watch-line>div{display:block}.watch-line span{display:block;margin:8px 0 15px}.watch-line form{display:flex}.watch-line input{flex:1;min-width:0}.watch-line button{flex:none}.match-top{display:block}.match-top h2{font-size:56px}.match-room{margin-top:20px}.match-room button{padding:7px 0;white-space:normal;text-align:left}.stream-strip{gap:9px;padding:12px}.stream-strip strong{font-size:16px}.stream-strip #streamClock{font-size:23px}.scoreboard{grid-template-columns:1fr 36px 1fr}.score-player{padding:17px 11px;display:block}.score-name{font-size:clamp(16px,4.8vw,24px)}.score-value{font-size:clamp(38px,9vw,56px);margin-top:11px}.score-versus{font-size:15px}.ring-side{padding:24px 8px;min-height:425px}.clock-block strong{font-size:64px}.duel-ring{width:min(94vw,310px)}.ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(42cqw,175px))) rotate(calc(-1 * var(--angle)));font-size:15px}.ring-legend{font-size:12px}.question-side{padding:28px 20px;min-height:400px}.question-side h3{font-size:54px}.match-status{margin-bottom:25px}.arena-footer{flex-direction:column}.overlay-mode .score-player{display:flex}.overlay-mode .score-value{margin-top:0}}
+@media(max-width:365px){.ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(42cqw,175px))) rotate(calc(-1 * var(--angle)))}.arena-header nav{display:none}.watch-line form{flex-wrap:wrap}.watch-line button{width:100%}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;scroll-behavior:auto!important;transition:none!important}}
 
 /* Final-whistle data comes from the server result, never from the browser tally. */
@@ -112,7 +112,7 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
 .match-stage.turns-stage{grid-template-columns:minmax(0,1fr) minmax(290px,1.08fr) minmax(0,1fr)}
 .turns-stage .ring-side{min-width:0;padding:26px 12px}
 .turns-stage .duel-ring{width:min(100%,286px);margin:16px auto 26px}
-.turns-stage .ring-letter{width:10%;font-size:clamp(12px,1.1vw,16px);transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-116px) rotate(calc(-1 * var(--angle)))}
+.turns-stage .ring-letter{width:10%;font-size:clamp(12px,1.1vw,16px);transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(42cqw,175px))) rotate(calc(-1 * var(--angle)))}
 .turns-stage .duel-ring::after{font-size:62px}
 .turns-stage .clock-block strong{font-size:clamp(48px,5vw,72px)}
 .turns-stage .clock-block span{color:#cce8c1;text-transform:uppercase;letter-spacing:.12em;font-weight:800}
@@ -129,7 +129,7 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
   .match-stage.turns-stage{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
   .turns-stage .opponent-ring-side{grid-column:1/-1;min-height:250px}
   .turns-stage .opponent-ring-side .duel-ring{width:190px;margin:4px auto 8px}
-  .turns-stage .opponent-ring-side .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-76px) rotate(calc(-1 * var(--angle)))}
+  .turns-stage .opponent-ring-side .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(42cqw,175px))) rotate(calc(-1 * var(--angle)))}
   .turns-stage .opponent-ring-side .duel-ring::after{font-size:56px}
 }
 @media(max-width:780px){
@@ -137,10 +137,10 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
   .turns-stage .question-side{order:1;min-height:300px}
   .turns-stage #ownRingSide{order:2;min-height:420px}
   .turns-stage .opponent-ring-side{order:3;min-height:260px}
-  .turns-stage .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-116px) rotate(calc(-1 * var(--angle)))}
+  .turns-stage .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(42cqw,175px))) rotate(calc(-1 * var(--angle)))}
 }
 @media(max-width:600px){
-  .turns-stage .opponent-ring-side{display:none!important}
+  .turns-stage .opponent-ring-side{display:flex;min-height:245px;padding:15px}
   .turns-stage #ownRingSide{min-height:410px}
   .turns-stage .duel-ring{width:min(100%,286px)}
   .turns-stage .question-side{padding:24px 19px;min-height:320px}
@@ -149,7 +149,7 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
 }
 @media(max-width:365px){
   .turns-stage .duel-ring{width:258px}
-  .turns-stage .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-103px) rotate(calc(-1 * var(--angle)))}
+  .turns-stage .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(42cqw,175px))) rotate(calc(-1 * var(--angle)))}
 }
 @media(prefers-reduced-motion:reduce){.turns-stage .ring-side{transition:none}}
 
@@ -231,17 +231,17 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
   .match-room-actions button{width:100%}
   .turns-stage #ownRingSide{min-height:365px}
   .turns-stage #ownRingSide .duel-ring{width:min(100%,290px)}
-  .turns-stage #ownRingSide .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-116px) rotate(calc(-1 * var(--angle)))}
+  .turns-stage #ownRingSide .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(42cqw,175px))) rotate(calc(-1 * var(--angle)))}
   .turns-stage.is-rival-turn #ownRingSide{display:none!important}
   .turns-stage.is-rival-turn .opponent-ring-side{display:flex!important;order:1;min-height:365px}
   .turns-stage.is-rival-turn .opponent-ring-side .duel-ring{width:min(100%,290px)}
-  .turns-stage.is-rival-turn .opponent-ring-side .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-116px) rotate(calc(-1 * var(--angle)))}
+  .turns-stage.is-rival-turn .opponent-ring-side .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(42cqw,175px))) rotate(calc(-1 * var(--angle)))}
   .turns-stage .question-side{padding:22px 18px}
   .answer-correction{padding:13px}
   .answer-correction .answer-actions button{flex:1 1 100%}
 }
 @media(max-width:365px){
-  .turns-stage #ownRingSide .ring-letter,.turns-stage.is-rival-turn .opponent-ring-side .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(-103px) rotate(calc(-1 * var(--angle)))}
+  .turns-stage #ownRingSide .ring-letter,.turns-stage.is-rival-turn .opponent-ring-side .ring-letter{transform:translate(-50%,-50%) rotate(var(--angle)) translateY(calc(-1 * min(42cqw,175px))) rotate(calc(-1 * var(--angle)))}
 }
 @media(prefers-reduced-motion:reduce){
   .match-stage.turns-stage,.turns-stage .duel-ring{transition:none}
