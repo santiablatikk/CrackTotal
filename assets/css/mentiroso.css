@@ -1848,8 +1848,18 @@ body.mentiroso-body .lobby-subtitle {
   margin-bottom: clamp(20px, 3vw, 34px);
 }
 body.mentiroso-body .lobby-grid {
-  grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr);
+  /* The two primary decisions deserve equal real estate; public rooms are a full-width feed. */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: start; gap: clamp(16px, 2vw, 24px);
+}
+body.mentiroso-body .lobby-actions-column { display: contents; }
+body.mentiroso-body .available-rooms-column {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+body.mentiroso-body .available-rooms-card {
+  min-height: 0;
+  max-width: none;
 }
 body.mentiroso-body .lobby-card,
 body.mentiroso-body .lobby-card.create-room-card,
@@ -1945,6 +1955,7 @@ body.mentiroso-body .challenge-area { border-radius: 12px; }
 body.mentiroso-body .game-title-header { font-family: "Space Grotesk","Manrope",sans-serif; }
 @media (max-width: 900px) {
   body.mentiroso-body .lobby-grid { grid-template-columns: minmax(0,1fr); }
+  body.mentiroso-body .available-rooms-column { grid-column: auto; }
 }
 @media (max-width: 520px) {
   body.mentiroso-body .lobby-container-inner,

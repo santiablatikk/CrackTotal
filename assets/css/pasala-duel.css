@@ -287,6 +287,9 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
 @media(max-width:650px){
  .arena-hero{min-height:310px}
  .arena-hero-inner{padding-block:44px 50px}
+ .title-lockup{display:block;min-width:0}
+ .title-index{writing-mode:horizontal-tb;margin:0 0 12px}
+ .title-lockup h1{max-width:100%;overflow-wrap:anywhere}
  .arena-shell{padding:30px 12px 0}
  .server-banner{flex-wrap:wrap;margin-bottom:26px}
  .server-banner button{margin-left:0}
