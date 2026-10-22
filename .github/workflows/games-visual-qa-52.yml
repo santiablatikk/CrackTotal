@@ -66,6 +66,17 @@ jobs:
             --root after \
             --out "$RUNNER_TEMP/ct-visual-52/after"
 
+
+      - name: Audit representative in-match layouts with deterministic display fixtures
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs \
+            --root after \
+            --out "$RUNNER_TEMP/ct-visual-52/match-fixtures" \
+            --widths 320,360,390,768,1366 \
+            --fixture match
+
       - name: Save before/after screenshots and viewport metrics
         if: always()
         uses: actions/upload-artifact@v4
