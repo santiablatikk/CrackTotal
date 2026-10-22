@@ -271,6 +271,28 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
  .arena-shell input{min-height:46px}
 }
 
+
+/* Preserve the physical mobile viewport rather than letting large
+   headline and lobby min-content force a 373px layout on 320px devices. */
+@media (max-width:430px) {
+  html,body {max-width:100%;min-width:0;}
+  .arena-header,.arena-hero,.arena-hero-inner,
+  .arena-shell,.lobby-area,.match-area,.lobby-grid,
+  .lobby-heading,.player-field,.watch-line,.mode-card {
+    max-width:100%;min-width:0;
+  }
+  .arena-hero-inner,.arena-shell {box-sizing:border-box;}
+  .title-lockup,.lobby-heading,.watch-line {min-width:0;}
+  .arena-hero h1,.lobby-heading h2,.mode-card h3,.match-top h2 {
+    max-width:100%;overflow-wrap:anywhere;
+  }
+  .lobby-heading h2,.match-top h2 {
+    font-size:clamp(2rem,9vw,3rem);
+  }
+  .mode-card {overflow-wrap:anywhere;}
+  .watch-line input {width:100%;}
+}
+
 /* 5.2 — Pasala duel: retained standalone arena with unified interaction polish. */
 .arena-hero h1{letter-spacing:-.045em;overflow-wrap:anywhere}
 .arena-shell{width:100%;max-width:1390px}

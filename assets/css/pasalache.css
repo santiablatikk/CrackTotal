@@ -2028,6 +2028,31 @@ body.game-body.ct-ds .difficulty-card{border-radius:12px}
  body.game-body.ct-ds .pasapalabra-button{flex:1 1 50%}
 }
 
+
+/* Compact solo-player HUD: the legacy player row must never widen the
+   320px layout viewport; keep the score and sound button accessible. */
+@media (max-width:430px) {
+  body.game-body.ct-ds .game-header .header-content {
+    width:100%;max-width:100%;min-width:0;
+    padding-inline:10px;gap:8px;flex-wrap:wrap;
+  }
+  body.game-body.ct-ds .game-header .player-info {
+    display:flex;flex-wrap:wrap;justify-content:center;
+    width:100%;max-width:100%;min-width:0;
+    padding:7px 9px;gap:7px;margin-inline:0;
+    transform:none;
+  }
+  body.game-body.ct-ds .game-header .player-name {
+    min-width:0;overflow-wrap:anywhere;
+  }
+  body.game-body.ct-ds .game-header .sound-control {
+    flex:0 1 auto;min-width:0;max-width:100%;margin-left:0;
+  }
+  body.game-body.ct-ds .game-header .sound-control .volume-slider-container {
+    right:0;max-width:calc(100vw - 24px);
+  }
+}
+
 /* 5.2 — Remove retired violet/orange animated overlay from the solo game. */
 body.game-body.ct-ds .game-content {
   background: transparent;

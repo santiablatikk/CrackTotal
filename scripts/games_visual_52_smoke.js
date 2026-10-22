@@ -153,4 +153,9 @@ assert.ok(read('assets/js/wordle-futbol.js').includes('card.clientWidth'),
   'Wordle must measure the actual card instead of assuming the viewport width');
 assert.ok(read('assets/css/wordle.css').includes('place-content:center'),
   'Variable-length Wordle board stays centered');
+
+assert.ok(read('assets/css/pasalache.css').includes('body.game-body.ct-ds .game-header .player-info'),
+  'Pasala player HUD must wrap without creating a 338px page at 320px');
+assert.ok(read('assets/css/pasala-duel.css').includes('Preserve the physical mobile viewport'),
+  'Duel must guard 320px layout against min-content expansion');
 console.log('GAMES 5.2 VISUAL CONTRACT: PASS (six game pages, shared shell, HTML nesting, premium match composition, CSS structure, focus and responsive).');
