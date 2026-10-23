@@ -223,7 +223,7 @@ async function main(){
     for(let i=0;i<100;i++){
       if(chrome.exitCode!==null)throw Error('Chromium exited unexpectedly: '+chrome.exitCode);
       try {
-        const portfile=fs.readFileSync(path.join(profile,'DevToolsActivePort'),'utf8').split(/\\r?\\n/);
+        const portfile=fs.readFileSync(path.join(profile,'DevToolsActivePort'),'utf8').split(/\r?\n/);
         const debugPort=Number(portfile[0]);
         if(Number.isInteger(debugPort)&&debugPort>0){
           const response=await fetch('http://127.0.0.1:'+debugPort+'/json/list');
