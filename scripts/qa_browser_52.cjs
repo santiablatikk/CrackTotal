@@ -307,8 +307,8 @@ function qsmLongProbe(){
   if(!label)throw Error('QSM choice missing the real option-text child');
   label.textContent=samples[i];
  });
- buttons[0].classList.add('incorrect');
- const bg=getComputedStyle(buttons[0]).backgroundColor;
+ buttons[1].classList.add('incorrect');
+ const bg=getComputedStyle(buttons[1]).backgroundColor;
  const rgb=(bg.match(/\d+/g)||[]).slice(0,3).map(Number);
  if(rgb.length!==3||rgb[0]<100||rgb[0]<rgb[1]*1.5)
   throw Error('Incorrect answer state not styled as red: '+bg);
