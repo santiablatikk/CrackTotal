@@ -93,25 +93,29 @@
         boardEl.style.gridTemplateRows = `repeat(${BOARD_ROWS}, var(--tile-size))`;
         boardEl.style.gridAutoRows = `var(--tile-size)`;
 
-        // Size from the real game card, not a guessed viewport offset.
-        // Smaller gaps allow long surnames without cropping letters on phones.
+        // One measured playfield controls both keyboard and board. Using the full
+        // card width previously left short words stranded at the card's left edge.
+        const playfield = boardEl.closest('.wordle-playfield') || boardEl.parentElement;
         function sizeBoard() {
-            const card = boardEl.closest('.wordle-card') || boardEl.parentElement;
-            const css = getComputedStyle(card);
-            const available = Math.max(160, Math.min(520,
-                card.clientWidth - parseFloat(css.paddingLeft) - parseFloat(css.paddingRight) - 4));
-            const gap = Math.max(2, Math.min(6, Math.floor(available / (wordLength * 7))));
-            const tile = Math.max(8, Math.min(52,
+            const css = getComputedStyle(playfield);
+            const innerWidth = Math.max(0, playfield.clientWidth -
+                (parseFloat(css.paddingLeft) || 0) - (parseFloat(css.paddingRight) || 0));
+            const available = Math.min(570, innerWidth);
+            const gap = Math.max(2, Math.min(8, Math.floor(available / Math.max(wordLength * 8, 1))));
+            const tile = Math.max(1, Math.min(58,
                 Math.floor((available - gap * (wordLength - 1)) / wordLength)));
+            const measuredWidth = tile * wordLength + gap * (wordLength - 1);
             boardEl.style.setProperty('--tile-gap', gap + 'px');
             boardEl.style.setProperty('--tile-size', tile + 'px');
-            boardEl.style.setProperty('--tile-font', Math.max(9, Math.round(tile * .45)) + 'px');
+            boardEl.style.setProperty('--tile-font', Math.max(8, Math.round(tile * .45)) + 'px');
+            boardEl.style.width = measuredWidth + 'px';
+            boardEl.dataset.columns = String(wordLength);
         }
         if (boardResizeObserver) boardResizeObserver.disconnect();
         sizeBoard();
         if (typeof ResizeObserver !== 'undefined') {
             boardResizeObserver = new ResizeObserver(sizeBoard);
-            boardResizeObserver.observe(boardEl.closest('.wordle-card') || boardEl.parentElement);
+            boardResizeObserver.observe(playfield);
         }
         board = Array.from({ length: BOARD_ROWS }, () => Array(wordLength).fill(''));
 

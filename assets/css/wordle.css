@@ -1,47 +1,137 @@
-/* Crack Total 4.3 | Wordle Futbolero — scoreboard puzzle; one stylesheet. */
-:root{--tile-size:52px;--tile-gap:6px;--tile-font:22px;--color-correct:#b5eb53;--color-present:#efbc5c;--color-absent:#3f5551;--color-key:#d8e4d8;--color-key-text:#16241a}
-body.wordle-body{background:#101b1b;color:#eff5ed;overflow-x:clip}
-body.wordle-body *{box-sizing:border-box}
-body.wordle-body .wordle-container{width:min(740px,calc(100% - 32px));max-width:none;margin:0 auto;padding:27px 0 65px;display:flex;flex-direction:column;gap:0}
-body.wordle-body .wordle-header{text-align:center;background:#182621;border-top:4px solid #d89b70;padding:27px 26px 21px;margin:0}
-body.wordle-body .wordle-title{font:700 clamp(35px,5.2vw,60px)/1.1 "Space Grotesk",sans-serif;letter-spacing:-.02em;text-transform:uppercase;color:#f1f9ed;margin:0 0 13px}
-body.wordle-body .wordle-subtitle{color:#d4e3d1;font-size:clamp(15px,1.6vw,18px);line-height:1.55;margin:0 0 10px;opacity:1}
-body.wordle-body #streakDisplay{color:#c5fc81;font-weight:800;background:#25382e;display:inline-block;padding:7px 15px;margin:10px 3px;font-size:13px}
-body.wordle-body #dailyInfo{font-size:12px;color:#d3dfd1;margin:8px auto}
-body.wordle-body .wordle-controls{text-align:center}
-body.wordle-body .wordle-controls .save-button{min-height:38px;border:1px solid #d6e9cf77;border-radius:3px;color:#e8f3df;background:transparent;padding:7px 16px;font-weight:750;font-size:12px;cursor:pointer}
+/* Crack Total 6.0 — Wordle Futbolero
+ * Sole owner of the game composition. Shared design tokens live in design-system.
+ * Playfield and game logic are independent of desktop screen width.
+ */
+body.wordle-body {
+ --tile-size:52px;--tile-gap:6px;--tile-font:22px;
+ --color-correct:#b5eb53;--color-present:#efbc5c;--color-absent:#3f5551;
+ --color-key:#d8e4d8;--color-key-text:#16241a;
+ background:#101b1b;color:#f4f2e9;
+}
+body.wordle-body *,body.wordle-body *::before,body.wordle-body *::after{box-sizing:border-box}
+body.wordle-body .wordle-container{
+ width:min(760px,calc(100% - 28px));margin:0 auto;padding:clamp(14px,2.5vw,30px) 0 75px;
+ display:flex;flex-direction:column;min-width:0;
+}
+body.wordle-body .wordle-header{
+ padding:clamp(24px,3vw,35px) clamp(16px,4vw,38px) 23px;
+ text-align:center;background:linear-gradient(135deg,#1b3028,#12241e);
+ border-top:4px solid #d89b70;border-radius:14px 14px 0 0;
+}
+body.wordle-body .wordle-header .ct-game-eyebrow{margin-bottom:17px;justify-content:center}
+body.wordle-body .wordle-title{
+ margin:0 0 13px;font:700 clamp(35px,5vw,60px)/1.04 "Space Grotesk","Manrope",sans-serif;
+ letter-spacing:-.045em;text-transform:uppercase;color:#f4f2e9;
+}
+body.wordle-body .wordle-title span{color:#b5eb53}
+body.wordle-body .wordle-subtitle{
+ margin:0;color:#cbdccf;font-size:clamp(12px,1.5vw,15px);line-height:1.5;font-weight:650;
+}
+body.wordle-body .ct-wordle-ledger{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;
+ margin:20px auto 16px;max-width:590px;
+}
+body.wordle-body .ct-wordle-ledger #streakDisplay,
+body.wordle-body .ct-wordle-ledger #dailyInfo{
+ display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:4px;min-width:0;
+ min-height:52px;margin:0;padding:12px 14px;border:1px solid #496951;
+ border-radius:8px;background:#284234;color:#eff4e9;
+ font:750 clamp(12px,1.3vw,14px)/1.45 "Manrope",sans-serif;
+}
+body.wordle-body .ct-wordle-ledger #streakDisplay{color:#cbf68b}
+body.wordle-body .wordle-controls{display:flex;justify-content:center;margin:2px auto 0}
+body.wordle-body .wordle-controls .save-button{
+ display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+ padding:10px 18px!important;border:1px solid #93ad91;border-radius:7px;
+ background:transparent;color:#f4f2e9;font-size:13px;font-weight:800;cursor:pointer;
+}
 body.wordle-body .wordle-controls .save-button:hover{background:#314d37}
-body.wordle-body .message{min-height:20px;margin:14px 0 0;color:#ebf6e9;font-size:13px;font-weight:850;line-height:1.5;text-align:center}
-body.wordle-body .wordle-card{background:#f4f2e9;border:0;border-radius:0;padding:28px 20px 28px;box-shadow:none;backdrop-filter:none;position:relative;isolation:isolate}
-body.wordle-body .board{display:grid;gap:var(--tile-gap);place-content:center;max-width:100%;min-width:0;margin:0 auto 26px;width:max-content}
-body.wordle-body .board-row{display:grid;gap:var(--tile-gap);max-width:100%}
-body.wordle-body .tile{width:var(--tile-size);height:var(--tile-size);min-width:0;border:2px solid #9eb19f;border-radius:2px;background:#f7faf3;color:#14291a;font-size:var(--tile-font,22px);font-weight:900;display:flex;align-items:center;justify-content:center;text-transform:uppercase;user-select:none;letter-spacing:0;line-height:1}
-body.wordle-body .tile.filled{border-color:#426343;background:#eef5e8}
+body.wordle-body .message{
+ min-height:1.6em;margin:17px 0 0;color:#e1efda;font:700 clamp(13px,1.5vw,15px)/1.6 "Manrope",sans-serif;
+ text-align:center;
+}
+body.wordle-body .wordle-card{
+ position:relative;isolation:isolate;width:100%;min-width:0;
+ padding:clamp(20px,3.2vw,36px) clamp(12px,4vw,38px) clamp(27px,4vw,42px);
+ border-top:4px solid #b5eb53;border-radius:0 0 14px 14px;
+ background:radial-gradient(ellipse 72% 60% at 50% 0%,rgba(181,235,83,.08),transparent 80%),#142322;
+ box-shadow:0 22px 50px rgba(0,0,0,.28);
+}
+body.wordle-body .wordle-playfield{
+ display:grid;justify-items:center;align-content:start;gap:clamp(22px,3vw,32px);
+ width:min(100%,570px);min-width:0;margin-inline:auto;
+}
+body.wordle-body .wordle-playfield .board{
+ display:grid;place-content:center;justify-self:center;align-self:start;gap:var(--tile-gap);
+ width:max-content;max-width:100%;min-width:0;margin:0 auto!important;
+}
+body.wordle-body .board-row{
+ display:grid;gap:var(--tile-gap);width:max-content;max-width:100%;margin-inline:auto;
+}
+body.wordle-body .board .tile{
+ display:flex;align-items:center;justify-content:center;min-width:0;
+ width:var(--tile-size);height:var(--tile-size);border:2px solid #526a60;
+ border-radius:5px;background:#1c312e;color:#f4f2e9;
+ font:800 var(--tile-font,22px)/1 "Space Grotesk","Manrope",sans-serif;
+ text-transform:uppercase;letter-spacing:0;user-select:none;
+ box-shadow:inset 0 -2px 0 rgba(0,0,0,.13);
+}
+body.wordle-body .tile.filled{border-color:#afd28a;background:#29443b}
 body.wordle-body .tile.correct{background:var(--color-correct);border-color:#689c29;color:#0e2814}
 body.wordle-body .tile.present{background:var(--color-present);border-color:#bf8f37;color:#2b1c07}
 body.wordle-body .tile.absent{background:var(--color-absent);border-color:var(--color-absent);color:#e6efdf}
-body.wordle-body .keyboard{display:grid;gap:7px;justify-content:center;width:min(100%,570px);margin:0 auto}
-body.wordle-body .key-row{display:flex;gap:5px;justify-content:center;width:100%}
-body.wordle-body .key{flex:1 1 0;min-width:0;min-height:47px;border-radius:3px;border:1px solid #a8b9a7;background:var(--color-key);color:var(--color-key-text);padding:9px 4px;font-size:clamp(12px,1.5vw,17px);font-weight:900;line-height:1.1;cursor:pointer;transition:filter .12s ease,transform .08s ease;user-select:none}
-body.wordle-body .key.wide{flex:1.55 1 0;min-width:0;font-size:clamp(11px,1.4vw,13px);background:#214631;color:#eff8eb;border-color:#214631}
+body.wordle-body .wordle-playfield .keyboard{
+ display:grid;gap:7px;width:100%;min-width:0;max-width:570px;
+ padding-top:21px;border-top:1px solid #416054;margin:0 auto;
+}
+body.wordle-body .key-row{display:flex;justify-content:center;gap:5px;width:100%;min-width:0}
+body.wordle-body .key{
+ flex:1 1 0;min-width:0;min-height:52px;padding:10px 2px;
+ border:1px solid #9eaf9f;border-radius:5px;background:var(--color-key);color:var(--color-key-text);
+ font:850 clamp(12px,1.5vw,16px)/1.1 "Manrope",sans-serif;cursor:pointer;
+ user-select:none;touch-action:manipulation;transition:filter .12s ease,transform .08s ease;
+}
+body.wordle-body .key.wide{
+ flex:1.55 1 0;font-size:clamp(10px,1.25vw,13px);
+ background:#305540;color:#f4f2e9;border-color:#406c50;
+}
 body.wordle-body .key.correct{background:var(--color-correct);border-color:#89ae42;color:#0e2814}
 body.wordle-body .key.present{background:var(--color-present);border-color:#c79847;color:#2d1d0a}
 body.wordle-body .key.absent{background:var(--color-absent);border-color:var(--color-absent);color:#e3efe0}
-body.wordle-body .key:active{transform:scale(.97)}
-body.wordle-body .key:focus-visible,body.wordle-body .save-button:focus-visible{outline:3px solid #6b9a32;outline-offset:3px}
-body.wordle-body .wordle-footer{background:#f4f2e9;color:#5b6c5c;margin:0;padding:0 18px 25px;text-align:center;font-size:12px;opacity:1}
-body.wordle-body .daily-overlay{position:absolute;inset:0;display:grid;place-items:center;background:#12211cd9;backdrop-filter:blur(3px);border-radius:0;z-index:8;padding:18px}
-body.wordle-body .overlay-card{max-width:340px;max-height:calc(100dvh - 36px);overflow:auto;width:100%;background:#18342a;border-top:4px solid #b5eb53;border-radius:3px;padding:26px 19px;text-align:center;box-shadow:0 18px 45px #0005;color:#f1f8ed}
-body.wordle-body .overlay-title{font:700 34px "Space Grotesk",sans-serif;text-transform:uppercase;color:#baff4d}
-body.wordle-body .overlay-sub{font-size:14px;line-height:1.5;color:#d5e2d3;margin:9px 0}
-body.wordle-body .overlay-count{font:700 21px "Space Grotesk",sans-serif}
-body.wordle-body #wordleResultModal .modal-content{background:#13251e;border-top:5px solid #b5eb53;color:#f4f9f0;max-width:560px}
+body.wordle-body .key:active{transform:translateY(2px)}
+body.wordle-body button:focus-visible{outline:3px solid #b5eb53;outline-offset:3px}
+body.wordle-body button:disabled{opacity:.58;cursor:not-allowed}
+body.wordle-body .wordle-footer{
+ padding:17px 12px 0;margin:0;color:#9eb5a3;
+ text-align:center;font-size:11px;letter-spacing:.14em;font-weight:800;
+ background:transparent;
+}
+body.wordle-body .daily-overlay{
+ position:absolute;inset:0;z-index:8;display:grid;place-items:center;
+ padding:16px;border-radius:0 0 14px 14px;
+ background:rgba(11,25,22,.91);backdrop-filter:blur(3px);
+}
+body.wordle-body .overlay-card{
+ width:min(100%,360px);max-height:calc(100dvh - 36px);overflow:auto;
+ padding:28px 20px;border-top:4px solid #b5eb53;border-radius:5px;
+ background:#18342a;text-align:center;color:#f4f2e9;box-shadow:0 18px 45px #0005;
+}
+body.wordle-body .overlay-title{
+ color:#b5eb53;font:700 32px/1.1 "Space Grotesk",sans-serif;text-transform:uppercase;
+}
+body.wordle-body .overlay-sub{margin:12px 0;font-size:14px;line-height:1.5;color:#d5e2d3}
+body.wordle-body .overlay-count{font:700 20px "Space Grotesk",sans-serif}
+body.wordle-body #wordleResultModal .modal-content{
+ max-width:560px;background:#13251e;color:#f4f9f0;border-top:5px solid #b5eb53;
+}
 body.wordle-body #wordleResultModal .modal-content.win{border-color:#b5eb53}
 body.wordle-body #wordleResultModal .modal-content.lose{border-color:#e6a27d}
-body.wordle-body .modal-content .stat-box{border:1px solid #d4eaca48;border-radius:3px;background:#233a2d;padding:12px}
+body.wordle-body .modal-content .stat-box{
+ padding:12px;border:1px solid #d4eaca48;border-radius:4px;background:#233a2d;
+}
 body.wordle-body .modal-content .stat-number{font:700 30px "Space Grotesk",sans-serif;color:#c2ff68}
 body.wordle-body .modal-content .stat-label{font-size:12px;color:#d7e2d6}
-body.wordle-body .result-badge{display:inline-flex;border-radius:3px;font-weight:900;letter-spacing:.04em;padding:6px 10px}
+body.wordle-body .result-badge{display:inline-flex;padding:6px 10px;border-radius:3px;font-weight:900;letter-spacing:.04em}
 body.wordle-body .result-badge.win{background:#b5eb53;color:#102416}
 body.wordle-body .result-badge.lose{background:#e6a27d;color:#24160b}
 .confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:9999}
@@ -52,70 +142,26 @@ body.wordle-body .tile.revealing{animation:flip .38s ease}
 body.wordle-body .tile.pop{animation:pop .14s ease}
 body.wordle-body .tile.shake{animation:shake .36s ease}
 @media(max-width:600px){
- body.wordle-body .wordle-container{width:calc(100% - 18px);padding-top:17px;padding-bottom:36px}
- body.wordle-body .wordle-header{padding:20px 12px 15px}
- body.wordle-body .wordle-title{font-size:clamp(30px,7.8vw,50px)}
- body.wordle-body .wordle-subtitle{font-size:13px;margin-bottom:7px}
- body.wordle-body #streakDisplay{font-size:12px;margin:6px 0}
- body.wordle-body .wordle-card{padding:14px 6px 19px}
- body.wordle-body .board{margin-bottom:18px}
- body.wordle-body .keyboard{gap:5px}
+ body.wordle-body .wordle-container{width:calc(100% - 18px);padding-top:16px;padding-bottom:34px}
+ body.wordle-body .wordle-header{padding:20px 12px 17px}
+ body.wordle-body .wordle-title{font-size:clamp(30px,8vw,47px)}
+ body.wordle-body .ct-wordle-ledger{grid-template-columns:minmax(0,1fr);gap:7px;margin:15px auto 13px}
+ body.wordle-body .ct-wordle-ledger #streakDisplay,
+ body.wordle-body .ct-wordle-ledger #dailyInfo{min-height:43px;padding:8px 10px}
+ body.wordle-body .wordle-card{padding:18px 9px 28px}
+ body.wordle-body .wordle-playfield{gap:18px}
+ body.wordle-body .wordle-playfield .keyboard{padding-top:16px;gap:5px}
  body.wordle-body .key-row{gap:3px}
- body.wordle-body .key{min-height:46px;font-size:clamp(10px,3vw,13px);padding:5px 0}
- body.wordle-body .key.wide{font-size:12px;flex:1.4 1 0}
- body.wordle-body .tile{border-width:1.5px}
-}
-@media(prefers-reduced-motion:reduce){body.wordle-body .tile.revealing,body.wordle-body .tile.pop,body.wordle-body .tile.shake{animation:none}body.wordle-body .key{transition:none}}
-
-/* 5.2 — Wordle: preserve JS-computed board sizing for variable-length names. */
-body.wordle-body .wordle-container{border-radius:16px;overflow:visible}
-body.wordle-body .wordle-header{border-radius:16px 16px 0 0;border-top-width:3px}
-body.wordle-body .wordle-card{border-radius:0 0 16px 16px;box-shadow:0 20px 55px rgba(0,0,0,.12)}
-body.wordle-body .wordle-title{letter-spacing:-.045em}
-body.wordle-body .wordle-controls button{min-height:44px;border-radius:9px}
-body.wordle-body .tile{border-radius:6px}
-body.wordle-body .key{border-radius:8px;min-height:49px;font-family:"Manrope",sans-serif}
-body.wordle-body .key:focus-visible,
-body.wordle-body .save-button:focus-visible,
-body.wordle-body button:focus-visible{outline:3px solid #b5eb53;outline-offset:2px}
-body.wordle-body .keyboard{max-width:100%;overflow:visible}
-body.wordle-body .key-row{min-width:0}
-body.wordle-body .message{font:650 .94rem/1.4 "Manrope",sans-serif;min-height:1.4em}
-@media(max-width:390px){
- body.wordle-body .wordle-container{width:calc(100% - 16px)}
- body.wordle-body .wordle-card{padding-inline:8px}
- body.wordle-body .keyboard{gap:5px}
- body.wordle-body .key-row{gap:3px}
- body.wordle-body .key{padding-inline:1px;min-height:45px;font-size:clamp(10px,2.8vw,12px)}
+ body.wordle-body .key{min-height:47px;padding:8px 1px;font-size:clamp(10px,3vw,13px)}
  body.wordle-body .key.wide{font-size:10px}
+ body.wordle-body .board .tile{border-width:1.5px}
 }
-
-
-/* Daily-score ledger: treats streak and countdown as first-class game stats. */
-body.wordle-body .wordle-title span{color:#b5eb53}
-body.wordle-body .ct-wordle-ledger{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;margin:22px auto 17px;max-width:580px;
+@media(max-width:360px){
+ body.wordle-body .wordle-container{width:calc(100% - 12px)}
+ body.wordle-body .wordle-card{padding-inline:6px}
+ body.wordle-body .key{min-height:45px}
 }
-body.wordle-body .ct-wordle-ledger #streakDisplay,
-body.wordle-body .ct-wordle-ledger #dailyInfo{
-  min-height:58px;padding:13px 15px;display:flex;flex-wrap:wrap;
-  align-items:center;justify-content:center;gap:4px;margin:0;
-  background:#263c30;border:1px solid #4d6954;
-  border-radius:10px;color:#e9f4e5;
-  font:750 clamp(.77rem,1.3vw,.9rem)/1.45 "Manrope",sans-serif;
-}
-body.wordle-body .ct-wordle-ledger #streakDisplay{color:#cbf68b;}
-body.wordle-body .ct-wordle-ledger #dailyInfo{color:#e9f4e5;}
-body.wordle-body .wordle-header{background:#1b3028;}
-body.wordle-body .wordle-card{
-  padding-block:clamp(22px,3vw,38px);
-  background:#f4f2e9;
-}
-body.wordle-body .tile{box-shadow:inset 0 1px 0 rgba(255,255,255,.32);}
-body.wordle-body .keyboard{padding-top:10px;border-top:1px solid rgba(18,40,24,.13);}
-@media(max-width:560px){
-  body.wordle-body .ct-wordle-ledger{grid-template-columns:minmax(0,1fr);gap:7px;margin:16px auto;}
-  body.wordle-body .ct-wordle-ledger #streakDisplay,
-  body.wordle-body .ct-wordle-ledger #dailyInfo{min-height:43px;padding:9px 12px;}
+@media(prefers-reduced-motion:reduce){
+ body.wordle-body .tile.revealing,body.wordle-body .tile.pop,body.wordle-body .tile.shake{animation:none}
+ body.wordle-body .key{transition:none}
 }

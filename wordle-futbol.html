@@ -31,7 +31,6 @@
   <link rel="stylesheet" href="assets/css/base.css?v=202505272312">
     <link rel="stylesheet" href="assets/css/design-system/index.css?v=20261020v5">
   <link rel="stylesheet" href="assets/css/layout.css?v=202505272312">
-  <link rel="stylesheet" href="assets/css/wordle.css?v=20261021-premium3">
   <link rel="stylesheet" href="assets/css/modals.css?v=202505272312">
   <script src="assets/js/adsense-early-blocker.js?v=202506072312"></script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9579152019412427" crossorigin="anonymous"></script>
@@ -45,6 +44,7 @@
     <link rel="stylesheet" href="assets/css/home.css?v=20260804v">
     <link rel="stylesheet" href="assets/css/discover.css?v=20260804v">
     <link rel="stylesheet" href="assets/css/game-shell.css?v=20261021-premium4">
+    <link rel="stylesheet" href="assets/css/wordle.css?v=20261023-layout6">
 </head>
 <body class="wordle-body ct-ds">
   <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
@@ -76,13 +76,15 @@
     </header>
 
     <div class="wordle-card">
-      <section id="board" class="board" aria-label="Tablero de letras"></section>
+      <div class="wordle-playfield" aria-label="Zona de juego Wordle">
+        <section id="board" class="board" aria-label="Tablero de letras"></section>
 
-      <section class="keyboard" aria-label="Teclado virtual">
-        <div class="key-row" id="row1"></div>
-        <div class="key-row" id="row2"></div>
-        <div class="key-row" id="row3"></div>
-      </section>
+        <section class="keyboard" aria-label="Teclado virtual">
+          <div class="key-row" id="row1"></div>
+          <div class="key-row" id="row2"></div>
+          <div class="key-row" id="row3"></div>
+        </section>
+      </div>
       <div class="daily-overlay" id="dailyOverlay" style="display:none;">
         <div class="overlay-card">
           <div class="overlay-title">Juego diario completado</div>
