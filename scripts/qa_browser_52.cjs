@@ -48,9 +48,24 @@ function probe(expectedWidth) {
     const style=getComputedStyle(el),rect=el.getBoundingClientRect();
     return style.display!=='none' && style.visibility!=='hidden' && rect.width>0 && rect.height>0;
   });
+  // A horizontally scrollable group (e.g. filter chips) legitimately contains
+  // off-viewport choices. Only exempt children when the actual scroll container
+  // is itself within the viewport; never suppress a real body overflow.
+  const isInIntentionalScroller = el => {
+    let parent=el.parentElement;
+    while(parent && parent!==document.body) {
+      const css=getComputedStyle(parent);
+      const box=parent.getBoundingClientRect();
+      if (/^(auto|scroll)$/.test(css.overflowX) &&
+          parent.scrollWidth > parent.clientWidth+2 &&
+          box.left>=-2 && box.right<=width+2) return true;
+      parent=parent.parentElement;
+    }
+    return false;
+  };
   const offscreen=nodes.filter(el=>{
     const rect=el.getBoundingClientRect();
-    return rect.left < -2 || rect.right > width + 2;
+    return (rect.left < -2 || rect.right > width + 2) && !isInIntentionalScroller(el);
   }).slice(0,15).map(el=>({tag:el.tagName.toLowerCase(),id:el.id || '',className:String(el.className).slice(0,60)}));
   const undersizeButtons=nodes.filter(el=>el.tagName==='BUTTON' && (el.getBoundingClientRect().height<44 || el.getBoundingClientRect().width<44)).length;
   return {title:document.title,width,docWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-width,offscreen,undersizeButtons,protrusions};
@@ -194,25 +209,31 @@ async function main(){
   const server = http.createServer(serve);
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
   const httpPort=server.address().port;
-  const debugPort=9300+Math.floor(Math.random()*200);
+  // Chrome selects a free port itself (port=0) and writes DevToolsActivePort.
+  // Randomly guessing ports previously caused intermittent CI connection failures.
   const profile=fs.mkdtempSync(path.join(os.tmpdir(),'ct-game-qa-'));
   const chrome=spawn(process.env.CHROME_BIN || 'google-chrome',[
     '--headless=new','--no-sandbox','--disable-dev-shm-usage','--disable-gpu','--no-first-run',
-    '--remote-debugging-port='+debugPort,'--user-data-dir='+profile,'about:blank'
+    '--disable-background-networking','--no-default-browser-check',
+    '--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'
   ],{stdio:'ignore'});
   let ws;
   try {
     let target;
-    for(let i=0;i<55;i++){
-      if(chrome.exitCode!==null)throw Error('Chromium exited');
+    for(let i=0;i<100;i++){
+      if(chrome.exitCode!==null)throw Error('Chromium exited unexpectedly: '+chrome.exitCode);
       try {
-        const response=await fetch('http://127.0.0.1:'+debugPort+'/json/list');
-        target=(await response.json()).find(item=>item.type==='page');
-        if(target)break;
+        const portfile=fs.readFileSync(path.join(profile,'DevToolsActivePort'),'utf8').split(/\\r?\\n/);
+        const debugPort=Number(portfile[0]);
+        if(Number.isInteger(debugPort)&&debugPort>0){
+          const response=await fetch('http://127.0.0.1:'+debugPort+'/json/list');
+          target=(await response.json()).find(item=>item.type==='page');
+          if(target)break;
+        }
       } catch {}
       await sleep(200);
     }
-    if(!target)throw Error('Cannot access Chrome DevTools protocol');
+    if(!target)throw Error('Cannot access Chrome DevTools protocol (port discovery timed out)');
     ws=new WebSocket(target.webSocketDebuggerUrl);
     await new Promise((resolve,reject)=>{
       ws.addEventListener('open',resolve,{once:true});
