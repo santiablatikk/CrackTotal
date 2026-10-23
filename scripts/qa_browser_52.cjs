@@ -209,6 +209,13 @@ function stageMatchFixture(game) {
     if(!visibleText(question)||!visibleText(heading)||!visibleText(answer))
       throw Error('Unreadable Pasala match text: '+JSON.stringify({question,heading,answer}));
   }
+  if(game==='top10.html'&&window.innerWidth<=600){
+    const field=document.getElementById('surnameInput').getBoundingClientRect();
+    const submit=document.getElementById('submitBtn').getBoundingClientRect();
+    const controls=document.querySelector('.top10-play-panel .input-area').getBoundingClientRect();
+    if(field.width<controls.width*.85||submit.width<controls.width*.85||submit.top<field.bottom-2)
+      throw Error('Top10 mobile controls remain squeezed or overlapping');
+  }
   const box=stage.getBoundingClientRect();
   if (box.width < 150 || getComputedStyle(stage).display==='none') {
     throw new Error('Match fixture remained hidden: ' + game);
