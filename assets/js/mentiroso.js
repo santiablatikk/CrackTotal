@@ -762,7 +762,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function populateValidationList(answers, canValidate) {
         if (!answersToValidateListEl) return;
         answersToValidateListEl.innerHTML = ''; // Clear previous
-        gameState.clientSideValidations = [];
+        if (!Array.isArray(gameState.clientSideValidations)) gameState.clientSideValidations = [];
         answers.forEach((answer, index) => {
             const li = document.createElement('li');
             const answerTextSpan = document.createElement('span');
@@ -791,6 +791,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 incorrectButton.setAttribute('aria-pressed', 'false');
                 incorrectButton.addEventListener('click', handleSingleValidation);
                 
+                const previousVote = gameState.clientSideValidations[index];
+                if (typeof previousVote === 'boolean') {
+                    correctButton.classList.toggle('selected', previousVote);
+                    incorrectButton.classList.toggle('selected', !previousVote);
+                    correctButton.setAttribute('aria-pressed', String(previousVote));
+                    incorrectButton.setAttribute('aria-pressed', String(!previousVote));
+                }
                 buttonsDiv.appendChild(correctButton);
                 buttonsDiv.appendChild(incorrectButton);
                 li.appendChild(buttonsDiv);
