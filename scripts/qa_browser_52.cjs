@@ -320,6 +320,11 @@ async function main(){
 
       if(args.fixture === 'wordle-live') {
         if(game!=='wordle-futbol.html')throw Error('wordle-live requires Wordle page');
+        // Each width is a separate fresh-play case. Do not accumulate guesses
+        // across viewports in the disposable Chromium profile.
+        await command('Runtime.evaluate',{expression:"localStorage.removeItem('wordle_game_state_v1')",returnByValue:true});
+        await command('Page.reload',{ignoreCache:true});
+        await sleep(1500);
         // Isolated local test server and browser profile. A real keyboard click,
         // localStorage persistence, navigation reload and validation are exercised.
         const first=await command('Runtime.evaluate',{
