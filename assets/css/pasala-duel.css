@@ -376,3 +376,24 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
  .question-side .answer-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
  .question-side .answer-actions button{min-height:48px;width:100%}
 }
+
+/* 6.0 — Reduce the non-playing invitation chrome on narrow duel screens.
+ * Both spectator and player-sharing actions stay accessible without scrolling
+ * through two separate oversized button rows before reaching the question. */
+@media(max-width:600px){
+ .match-room-actions{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:stretch;gap:7px;
+ }
+ .match-room-actions button,
+ .match-room-actions button.invite-main{
+  width:100%;min-width:0;min-height:46px;display:flex;
+  align-items:center;justify-content:center;text-align:center;
+  padding:8px 7px;font:800 clamp(.66rem,2.75vw,.79rem)/1.22 "Manrope",sans-serif;
+  letter-spacing:0;overflow-wrap:anywhere;white-space:normal;
+ }
+ .match-room-actions #copySpectator{
+  border:1px solid #5a8062;border-radius:7px;
+  background:#1c3728;color:#e4f4d9;
+ }
+}

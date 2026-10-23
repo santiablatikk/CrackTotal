@@ -223,6 +223,14 @@ function stageMatchFixture(game) {
     const answer=document.getElementById('answerInput').getBoundingClientRect();
     if(own.top<side.top||answer.width<160)
       throw Error('Duel responsive interaction must precede the progress ring and keep answer usable');
+    if(window.innerWidth<=600){
+      const share=document.getElementById('copyInvite').getBoundingClientRect();
+      const spectator=document.getElementById('copySpectator').getBoundingClientRect();
+      if(Math.abs(share.top-spectator.top)>2||
+         share.width<100||spectator.width<100||
+         share.height<44||spectator.height<44)
+        throw Error('Duel room sharing must remain accessible side by side before play');
+    }
   }
   if(game==='top10.html'&&window.innerWidth<=600){
     const field=document.getElementById('surnameInput').getBoundingClientRect();
