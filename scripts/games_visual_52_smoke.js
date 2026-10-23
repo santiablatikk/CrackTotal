@@ -105,6 +105,14 @@ assert.match(read('assets/css/pasala-duel.css'),/2026|5\.2/,
 
 const qsmPage = read('quiensabemas.html');
 const qsmStyles = read('assets/css/qsm-1v1.css');
+const qsmClient = read('assets/js/quiensabemas_1v1.js');
+assert.ok(qsmClient.includes("btn.className = 'modern-option option-btn'"),
+  'Real QSM options must match the actual styled component');
+assert.ok(qsmClient.includes("label.textContent = optionText"),
+  'QSM option labels must be inserted as text, not interpolated HTML');
+assert.ok(qsmStyles.includes('.modern-option.option-btn.incorrect'),
+  'QSM wrong-answer styles must match real JS state class');
+
 assert.equal((qsmPage.match(/class="ct-quiz-stage"/g)||[]).length,1,
   'QSM must have one editorial stage, never duplicated question layouts');
 assert.match(qsmStyles,/\.ct-quiz-stage\s*\{[\s\S]*?grid-template-columns:/,

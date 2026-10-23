@@ -174,9 +174,15 @@ function stageMatchFixture(game) {
         options.innerHTML='';
         ['Uruguay','Argentina','Brasil','Italia'].forEach((answer,i)=>{
           const button=document.createElement('button');
-          button.className='option-btn'+(i===0?' correct':'');
+          button.className='modern-option option-btn'+(i===0?' correct':'');
           button.type='button';
-          button.textContent=String.fromCharCode(65+i)+'. '+answer;
+          const badge=document.createElement('span');
+          badge.className='option-letter';
+          badge.textContent=String.fromCharCode(65+i);
+          const text=document.createElement('span');
+          text.className='option-text';
+          text.textContent=answer;
+          button.append(badge,text);
           options.appendChild(button);
         });
       }

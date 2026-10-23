@@ -1366,14 +1366,21 @@ function displayQuestionInUI() {
     
     gameState.currentQuestion.options.forEach((optionText, index) => {
         const btn = document.createElement('button');
-        btn.className = 'modern-option';
+        // Keep the legacy JS hook while also using the canonical game UI
+        // component. Do not interpret questions from the server as HTML.
+        btn.type = 'button';
+        btn.className = 'modern-option option-btn';
         btn.dataset.optionText = optionText;
         btn.dataset.optionIndex = index;
-        
-        btn.innerHTML = `
-            <span class="option-letter">${optionLetters[index]}</span>
-            <span class="option-text">${optionText}</span>
-        `;
+        const letter = document.createElement('span');
+        letter.className = 'option-letter';
+        letter.textContent = optionLetters[index] || String(index + 1);
+        letter.setAttribute('aria-hidden', 'true');
+        const label = document.createElement('span');
+        label.className = 'option-text';
+        label.textContent = optionText;
+        btn.append(letter, label);
+        btn.setAttribute('aria-label', letter.textContent + ': ' + optionText);
         
         btn.onclick = () => submitAnswerToAPI(optionText, index, btn);
         DOM.optionsGrid.appendChild(btn);

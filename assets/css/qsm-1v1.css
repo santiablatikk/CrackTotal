@@ -229,3 +229,41 @@ body.qsm-1v1-body .ct-live-indicator {
 @media(prefers-reduced-motion:reduce){
   body.qsm-1v1-body .ct-quiz-stage .option-btn {transition:none;}
 }
+
+/* 6.0 — The live client renders .modern-option.option-btn.
+   Make long football answers readable without widening the match stage. */
+body.qsm-1v1-body .ct-quiz-stage .modern-option.option-btn{
+ display:flex;align-items:center;justify-content:flex-start;
+ gap:clamp(10px,1.2vw,15px);width:100%;min-width:0;
+ white-space:normal;text-align:left;line-height:1.45;
+ overflow-wrap:anywhere;word-break:normal;
+}
+body.qsm-1v1-body .ct-quiz-stage .modern-option .option-letter{
+ display:grid;place-items:center;flex:0 0 34px;width:34px;height:34px;
+ border:1px solid #739981;border-radius:7px;
+ color:#d7f0dc;background:#173327;
+ font:800 .91rem/1 "Space Grotesk","Manrope",sans-serif;
+}
+body.qsm-1v1-body .ct-quiz-stage .modern-option .option-text{
+ flex:1 1 0;min-width:0;overflow-wrap:anywhere;
+}
+body.qsm-1v1-body .ct-quiz-stage .modern-option.option-btn.selected:not(.correct):not(.incorrect){
+ border-color:#b5eb53;box-shadow:0 0 0 2px rgba(181,235,83,.18);
+}
+body.qsm-1v1-body .ct-quiz-stage .modern-option.option-btn.incorrect{
+ background:#963a35;color:#fff;border-color:#c7766c;
+}
+body.qsm-1v1-body .ct-quiz-stage .modern-option.option-btn.correct{
+ background:#b5eb53;color:#102118;border-color:#a2d74b;
+}
+body.qsm-1v1-body .ct-quiz-stage .modern-option:is(.correct,.incorrect) .option-letter{
+ color:inherit;background:rgba(0,0,0,.13);border-color:currentColor;
+}
+@media(max-width:720px){
+ body.qsm-1v1-body .ct-quiz-stage .modern-option .option-letter{
+  flex-basis:30px;width:30px;height:30px;
+ }
+ body.qsm-1v1-body .ct-quiz-stage .modern-option.option-btn{
+  min-height:64px;padding:13px 14px;
+ }
+}
