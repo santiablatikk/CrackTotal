@@ -203,6 +203,58 @@ function stageMatchFixture(game) {
   return {fixture:'synthetic-match',game,stageWidth:Math.round(box.width)};
 }
 
+
+/** Actual Wordle browser interactions, not simulated game state. */
+function checkWordleLiveLayout() {
+  const playfield=document.querySelector('.wordle-playfield');
+  const board=document.querySelector('.wordle-playfield .board');
+  const keyboard=document.querySelector('.wordle-playfield .keyboard');
+  const card=document.querySelector('.wordle-card');
+  if(!playfield||!board||!keyboard||!card)throw Error('Wordle layout hierarchy missing');
+  const box=el=>el.getBoundingClientRect();
+  const stage=box(playfield),b=box(board),k=box(keyboard),c=box(card);
+  const center=rect=>rect.left+rect.width/2;
+  const boardDelta=Math.abs(center(b)-center(stage));
+  const keyboardDelta=Math.abs(center(k)-center(stage));
+  const tiles=[...board.querySelectorAll('.tile')];
+  const columns=Number(board.dataset.columns);
+  if(!Number.isInteger(columns)||columns<2||columns>32||tiles.length!==columns*6)
+    throw Error('Wordle board shape wrong: '+columns+'/'+tiles.length);
+  if(boardDelta>2||keyboardDelta>2)throw Error('Puzzle off center: board '+boardDelta+' keyboard '+keyboardDelta);
+  if(b.left<c.left-1||b.right>c.right+1||k.left<c.left-1||k.right>c.right+1)
+    throw Error('Wordle board/keyboard protrudes outside card');
+  if(stage.width<100||k.width<100)throw Error('Wordle playfield unusably narrow');
+  const keys=[...keyboard.querySelectorAll('button.key')];
+  if(keys.length<25 || keys.some(el=>box(el).right>innerWidth+2||box(el).left<-2))
+    throw Error('Wordle virtual keyboard not fully reachable');
+  if(document.querySelector('.daily-overlay')?.style.display==='grid')
+    throw Error('Expected a fresh daily game, got completed state');
+  const letter=keyboard.querySelector('.key[data-key="m"]');
+  const del=keyboard.querySelector('.key[data-key="⌫"]');
+  if(!letter||!del)throw Error('Wordle virtual controls missing');
+  letter.click();
+  const first=board.querySelector('[data-row="0"][data-col="0"]');
+  if(first?.textContent!=='M')throw Error('Click did not enter letter');
+  del.click();
+  if(first?.textContent)throw Error('Backspace did not clear tile');
+  letter.click();
+  const state=JSON.parse(localStorage.getItem('wordle_game_state_v1')||'null');
+  if(state?.board?.[0]?.[0]!=='m')throw Error('Wordle in-progress move not persisted');
+  return {columns,tiles:tiles.length,boardDelta,keyboardDelta,boardWidth:b.width,keyboardWidth:k.width,moveSaved:true};
+}
+function verifyWordleReload() {
+  const first=document.querySelector('#board [data-row="0"][data-col="0"]');
+  if(first?.textContent!=='M')throw Error('Reload lost typed wordle progress');
+  const enter=document.querySelector('.key[data-key="↵"]');
+  if(!enter)throw Error('Wordle submit key missing after reload');
+  enter.click();
+  if(document.getElementById('message')?.textContent!=='Faltan letras')
+    throw Error('Incomplete guess should not consume a turn');
+  const state=JSON.parse(localStorage.getItem('wordle_game_state_v1')||'null');
+  if(state?.currentRow!==0)throw Error('Invalid guess advanced the daily game');
+  return true;
+}
+
 async function main(){
   if (widths.some(w=>!Number.isInteger(w) || w<280 || w>3000))throw Error('Invalid viewport');
   fs.mkdirSync(out,{recursive:true});
@@ -265,6 +317,29 @@ async function main(){
         returnByValue:true
       });
       if (rejected.result?.value) await sleep(350);
+
+      if(args.fixture === 'wordle-live') {
+        if(game!=='wordle-futbol.html')throw Error('wordle-live requires Wordle page');
+        // Isolated local test server and browser profile. A real keyboard click,
+        // localStorage persistence, navigation reload and validation are exercised.
+        const first=await command('Runtime.evaluate',{
+          expression:'('+checkWordleLiveLayout.toString()+')()',
+          returnByValue:true
+        });
+        if(first.exceptionDetails||!first.result?.value?.moveSaved)
+          throw Error('Wordle live interaction failed '+width+': '+
+            JSON.stringify(first.exceptionDetails||first.result).slice(0,800));
+        await command('Page.reload',{ignoreCache:true});
+        await sleep(1500);
+        const restored=await command('Runtime.evaluate',{
+          expression:'('+verifyWordleReload.toString()+')()',
+          returnByValue:true
+        });
+        if(restored.exceptionDetails||restored.result?.value!==true)
+          throw Error('Wordle live reload failed '+width+': '+
+            JSON.stringify(restored.exceptionDetails||restored.result).slice(0,800));
+        console.log('WORDLE LIVE '+width+'px: '+JSON.stringify(first.result.value));
+      }
       if(args.fixture === 'match') {
         const result = await command('Runtime.evaluate',{
           expression:'('+stageMatchFixture.toString()+')('+JSON.stringify(game)+')',
@@ -296,9 +371,9 @@ async function main(){
     }
     fs.writeFileSync(path.join(out,'metrics.json'),JSON.stringify({baseline:!!args.baseline,rows},null,2));
     const failed=rows.filter(x=>!x.title.includes('Crack Total') || x.expectedWidth!==x.width || x.overflow>2 || x.offscreen.length);
-    const summary='# Crack Total 5.2 — Chromium QA\n\n'+(args.baseline?'Before':'After')+' · '+rows.length+' viewport/page combinations · '+failed.length+' alerts\n\n'+
+    const summary='# Crack Total 6.0 — Chromium QA\n\n'+(args.baseline?'Before':'After')+' · '+rows.length+' viewport/page combinations · '+failed.length+' alerts\n\n'+
       (failed.map(x=>'- '+x.game+' '+x.expectedWidth+'px: title='+x.title+', overflow='+x.overflow+', offscreen='+x.offscreen.length).join('\n') || 'No reported overflow or offscreen primary controls')+
-      '\n\nScope: ' + (args.fixture === 'match' ? 'synthetic match-state layout only (no game logic or WebSocket assertions).' : 'initial screens only. Gameplay, results, virtual keyboard, WebSocket and disconnect states require separate QA.') + '\n';
+      '\n\nScope: ' + (args.fixture === 'match' ? 'synthetic match-state layout only (no game logic or WebSocket assertions).' : args.fixture === 'wordle-live' ? 'real local Wordle keyboard clicks, deletion, saved progress, page reload, invalid submit, and layout geometry (no backend or date rollover assertions).' : 'initial screens only. Gameplay, results, WebSocket and disconnect states require separate QA.') + '\n';
     fs.writeFileSync(path.join(out,'SUMMARY.md'),summary);
     if(failed.length&&!args.baseline)process.exitCode=1;
   } finally {

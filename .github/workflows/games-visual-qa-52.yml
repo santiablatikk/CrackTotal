@@ -19,6 +19,8 @@ on:
       - 'index.html'
       - 'scripts/qa_browser_52.cjs'
       - 'scripts/games_visual_52_smoke.js'
+      - 'scripts/wordle_6_layout_smoke.cjs'
+      - 'assets/js/wordle-futbol.js'
       - '.github/workflows/games-visual-qa-52.yml'
   workflow_dispatch:
 
@@ -81,6 +83,17 @@ jobs:
             --out "$RUNNER_TEMP/ct-visual-52/match-fixtures" \
             --widths 320,360,390,768,1366 \
             --fixture match
+
+      - name: Exercise real Wordle keyboard and saved progress on five viewport widths
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs \
+            --root after \
+            --out "$RUNNER_TEMP/ct-visual-52/wordle-live" \
+            --widths 320,360,390,768,1366 \
+            --games wordle-futbol.html \
+            --fixture wordle-live
 
       - name: Audit redesigned game hub at ten viewport widths
         if: always()

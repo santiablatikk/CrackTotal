@@ -91,11 +91,4 @@ body.top10-body.ct-ds .primary-button {
 body.top10-body.ct-ds .top10-input:focus {
   border-color:#b5eb53!important;box-shadow:0 0 0 3px rgba(184,255,56,.2)!important;
 }
-body.wordle-body.ct-ds {
-  --color-bg:#0a1016;--color-board:#172029;--color-border:#3a4c4b;
-  --color-key:#33413e;--color-key-text:#f1f8ef;
-}
-body.wordle-body.ct-ds .wordle-card {
-  background:#151e25!important;border-color:rgba(184,255,56,.2)!important;
-}
-body.wordle-body.ct-ds .wordle-title {color:#f4f2e9!important}
+/* Wordle game styles and color tokens now live in wordle.css (6.0). */
