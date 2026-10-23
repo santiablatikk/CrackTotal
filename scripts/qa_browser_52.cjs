@@ -293,7 +293,7 @@ function verifyWordleReload() {
 }
 
 
-function qsmLongProbe(){
+async function qsmLongProbe(){
  const buttons=[...document.querySelectorAll('#optionsGrid .modern-option.option-btn')];
  if(buttons.length!==4)throw Error('QSM fixture must have four real-style choices');
  const samples=[
@@ -308,6 +308,9 @@ function qsmLongProbe(){
   label.textContent=samples[i];
  });
  buttons[1].classList.add('incorrect');
+ // Background-color is animated. Assert after the CSS transition completes,
+ // rather than misreporting its initial frame as the final computed state.
+ await new Promise(resolve=>setTimeout(resolve,240));
  const bg=getComputedStyle(buttons[1]).backgroundColor;
  const rgb=(bg.match(/\d+/g)||[]).slice(0,3).map(Number);
  if(rgb.length!==3||rgb[0]<100||rgb[0]<rgb[1]*1.5)
@@ -388,7 +391,21 @@ async function main(){
         // across viewports in the disposable Chromium profile.
         await command('Runtime.evaluate',{expression:"localStorage.removeItem('wordle_game_state_v1')",returnByValue:true});
         await command('Page.reload',{ignoreCache:true});
-        await sleep(1500);
+        // A reload during a slow asset or daily-pool fetch can temporarily
+        // leave the document without the game DOM. Wait for the actual game,
+        // rather than relying on 1500ms to represent page readiness.
+        let readiness=null;
+        for(let attempt=0;attempt<32;attempt++){
+          const check=await command('Runtime.evaluate',{
+            expression:"(() => ({ready:document.readyState,playfield:!!document.querySelector('.wordle-playfield'),columns:document.querySelector('#board')?.dataset.columns,tiles:document.querySelectorAll('#board .tile').length,keys:document.querySelectorAll('.keyboard button.key').length}))()",
+            returnByValue:true
+          });
+          readiness=check.result?.value;
+          if(readiness?.playfield&&readiness?.tiles>=12&&readiness?.keys>=25)break;
+          await sleep(250);
+        }
+        if(!readiness?.playfield||readiness.tiles<12||readiness.keys<25)
+          throw Error('Wordle game did not initialize at '+width+': '+JSON.stringify(readiness));
         // Isolated local test server and browser profile. A real keyboard click,
         // localStorage persistence, navigation reload and validation are exercised.
         const first=await command('Runtime.evaluate',{
@@ -464,7 +481,7 @@ async function main(){
         if(game!=='quiensabemas.html')throw Error('qsm-long expects QSM');
         const checked=await command('Runtime.evaluate',{
           expression:'('+qsmLongProbe.toString()+')()',
-          returnByValue:true
+          returnByValue:true,awaitPromise:true
         });
         if(checked.exceptionDetails||checked.result?.value?.count!==4)
           throw Error('QSM long-answer layout failed '+width+': '+JSON.stringify(checked.exceptionDetails||checked.result).slice(0,700));
