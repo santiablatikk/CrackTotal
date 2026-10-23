@@ -78,10 +78,6 @@
 .home-v2 .home-game-card {position:relative}
 .home-v2 .home-game-card::after {content:"↗";position:absolute;top:12px;right:12px;z-index:2;width:33px;height:33px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.25);border-radius:50%;color:#fff;line-height:1;background:rgba(9,13,18,.55);transition:background .2s,color .2s}
 .home-v2 .home-game-card:hover::after {background:#b8ff38;color:#0b1509}
-.home-v2 .home-games-grid>a[href="mi-carrera.html"] {grid-column:span 2;display:grid;grid-template-columns:1.05fr 1fr;min-height:320px;background:linear-gradient(130deg,#202c1d,#111920)!important;border-color:rgba(184,255,56,.35)!important}
-.home-v2 .home-games-grid>a[href="mi-carrera.html"] .home-game-media {height:auto!important;min-height:100%;aspect-ratio:auto!important}
-.home-v2 .home-games-grid>a[href="mi-carrera.html"] .home-game-content {display:flex;flex-direction:column;justify-content:center;padding:clamp(1.5rem,4vw,3.5rem)!important}
-.home-v2 .home-games-grid>a[href="mi-carrera.html"] h3 {font-size:clamp(2.9rem,5vw,5rem)!important}
 .ct2-next {padding-block:clamp(3rem,7vw,7rem)}
 .ct2-next-head {display:flex;align-items:end;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.15);padding-bottom:24px;margin-bottom:18px;gap:20px}
 .ct2-next-head h2 {font-family:"Oswald",Impact,sans-serif;font-size:clamp(2.7rem,5vw,5.5rem);line-height:.97;margin:0}
@@ -121,8 +117,6 @@
  .ct2-career-visual {min-height:260px}
  .ct2-career-copy {padding:32px 26px 38px}
  .ct2-career-copy h2 {font-size:clamp(3.9rem,11vw,6rem)}
- .home-v2 .home-games-grid>a[href="mi-carrera.html"] {grid-template-columns:1fr;grid-column:span 2}
- .home-v2 .home-games-grid>a[href="mi-carrera.html"] .home-game-media {height:210px!important}
  .ct2-next {width:calc(100% - 36px)}
  .ct2-next-grid {grid-template-columns:1fr}
  .ct2-next-link {min-height:110px}
@@ -141,7 +135,6 @@
  .ct2-career-copy li {font-size:.65rem}
  .home-v2 .home-feature-card:first-child,.home-v2 .home-feature-card:nth-child(2) {min-height:360px}
  .home-v2 .home-feature-card h3 {font-size:3.2rem!important}
- .home-v2 .home-games-grid>a[href="mi-carrera.html"] {grid-column:span 1}
  .ct2-next-head h2 {font-size:3rem}
 }
 @media(prefers-reduced-motion:reduce) {
@@ -178,27 +171,9 @@ body.discover-page.ct-ds:has(#catalog-title) .home-game-card {
 }
 body.discover-page.ct-ds:has(#catalog-title) .home-game-card:nth-child(2) .home-game-media img {object-position:50% 30%}
 body.discover-page.ct-ds:has(#catalog-title) .home-game-card:nth-child(3) .home-game-media img {object-position:50% 20%}
-body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] {
-  grid-column:span 2;display:grid;grid-template-columns:1.1fr 1fr;
-  min-height:365px;background:linear-gradient(135deg,#263520,#101a20)!important;
-  border:1px solid rgba(184,255,56,.38)!important;
-}
-body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] .home-game-media {
-  min-height:100%;height:auto!important;aspect-ratio:auto!important;
-}
-body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] .home-game-content {
-  display:flex;flex-direction:column;justify-content:center;padding:clamp(22px,4vw,48px);
-}
-body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] h3 {
-  font-size:clamp(3.2rem,5vw,5.3rem)!important;
-}
 @media(max-width:760px) {
  body.discover-page.ct-ds:has(#catalog-title) .discover-hero {padding-block:55px!important;background-position:67%}
  body.discover-page.ct-ds:has(#catalog-title) .discover-hero h1 {font-size:clamp(3.3rem,12vw,5.1rem)!important}
- body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] {grid-template-columns:1fr}
- body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] .home-game-media {height:210px!important}
 }
 @media(max-width:590px) {
- body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] {grid-column:span 1}
- body.discover-page.ct-ds:has(#catalog-title) .home-game-card[href="mi-carrera.html"] h3 {font-size:3.3rem!important}
 }

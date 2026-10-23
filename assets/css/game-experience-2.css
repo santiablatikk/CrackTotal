@@ -126,17 +126,6 @@ body.mentiroso-body.ct-ds .game-card.mentiroso-card {
 body.mentiroso-body.ct-ds .mentiroso-challenge-text {font-family:"Space Grotesk","Manrope",sans-serif;line-height:1.15}
 body.mentiroso-body.ct-ds .category-pill {border-radius:3px!important}
 body.mentiroso-body.ct-ds .mentiroso-action-btn {min-height:52px;border-radius:3px}
-/* MI CARRERA — polish existing authored scenes without touching rendering logic. */
-body.mc-body.ct-ds .mc-scene--first_club .mc-path,
-body.mc-body.ct-ds .mc-scene--market .mc-offer,
-body.mc-body.ct-ds .mc-scene--compare .mc-offer {
-  transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;
-}
-@media(hover:hover) {
- body.mc-body.ct-ds .mc-scene--first_club .mc-path:hover,
- body.mc-body.ct-ds .mc-scene--market .mc-offer:hover {transform:translateY(-3px)}
-}
-body.mc-body.ct-ds .mc-scene--career_card .mc-card {box-shadow:0 32px 100px rgba(0,0,0,.42)}
 /* Touch comfort and clipping safeguards. */
 @media(max-width:700px) {
  body.game-body.ct-ds .game-content .rosco-container {padding:clamp(8px,2.5vw,18px);border-radius:14px}
@@ -159,12 +148,8 @@ body.mc-body.ct-ds .mc-scene--career_card .mc-card {box-shadow:0 32px 100px rgba
 }
 @media(prefers-reduced-motion:reduce) {
  body.ct-ds :is(.lobby-button,.mentiroso-action-btn,.primary-button,.secondary-button,.pasapalabra-button,.help-button,.giveup),
- body.mc-body.ct-ds .mc-scene--first_club .mc-path,
- body.mc-body.ct-ds .mc-scene--market .mc-offer,
  body.top10-body.ct-ds .top10-card #progressFill {transition:none!important}
- body.ct-ds :is(.lobby-button,.mentiroso-action-btn,.primary-button,.secondary-button,.pasapalabra-button,.help-button,.giveup):hover,
- body.mc-body.ct-ds .mc-scene--first_club .mc-path:hover,
- body.mc-body.ct-ds .mc-scene--market .mc-offer:hover {transform:none!important}
+ body.ct-ds :is(.lobby-button,.mentiroso-action-btn,.primary-button,.secondary-button,.pasapalabra-button,.help-button,.giveup):hover {transform:none!important}
 }
 /* Audit refinements — unify the pre-game screens with the platform identity. */
 body.game-body.ct-ds #gameRulesModal .horizontal-modal {
