@@ -265,6 +265,40 @@ async function main(){
         returnByValue:true
       });
       if (rejected.result?.value) await sleep(350);
+      if(args.fixture === 'career-onboarding') {
+        // Actual DOM clicks and real career engine; no synthetic scene injection.
+        // The browser profile is disposable and never touches production data.
+        const c=await command('Runtime.evaluate',{
+          expression:`(() => {
+            const root=document.querySelector('[data-mc-root]');
+            const controller=window.MiCarrera?.UI?.controller;
+            if(!root || !controller) throw Error('Mi Carrera controller not booted');
+            const trigger=(action)=>{
+              const el=root.querySelector('[data-action="'+action+'"]');
+              if(!el)throw Error('Missing career action: '+action);
+              el.click();
+            };
+            if(controller.session().scene!=='INTRO')throw Error('Career must begin in INTRO');
+            trigger('start');
+            if(controller.session().scene!=='CREATE')throw Error('Career start did not open creation');
+            const input=root.querySelector('[data-field="name"]');
+            if(!input)throw Error('Name input missing');
+            input.value='JUGADOR QA';
+            for(let i=0;i<4;i++)trigger('create-next');
+            if(controller.session().createStep!=='profile')throw Error('Could not advance all creation steps');
+            trigger('create-finish');
+            const session=controller.session();
+            const clubs=root.querySelectorAll('[data-action="pick-first-club"]');
+            if(session.scene!=='FIRST_CLUB'||!session.career||!session.firstClubs?.length||clubs.length<1)
+              throw Error('Career engine did not generate first contract options');
+            return {scene:session.scene,clubs:clubs.length,createdName:session.career.name};
+          })()`,
+          returnByValue:true
+        });
+        if(c.exceptionDetails || c.result?.value?.scene!=='FIRST_CLUB')
+          throw Error('Career onboarding failed at '+width+': '+JSON.stringify(c.exceptionDetails || c.result).slice(0,500));
+        await sleep(180);
+      }
       if(args.fixture === 'match') {
         const result = await command('Runtime.evaluate',{
           expression:'('+stageMatchFixture.toString()+')('+JSON.stringify(game)+')',
