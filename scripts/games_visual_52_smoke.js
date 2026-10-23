@@ -95,7 +95,7 @@ for (const [html,css,selector] of games) {
   }
 }
 const responsiveCss = ['assets/css/pasalache.css','assets/css/top10.css','assets/css/wordle.css'];
-for (const p of responsiveCss) assert.match(read(p),/2026|5\.2/,p+': expected 5.2 design rules');
+for (const p of responsiveCss) assert.match(read(p),/2026|5\.2|6\.0/,p+': expected modern responsive design rules');
 assert.match(read('quiensabemas.html'),/seis niveles y 36 preguntas/,
   'QSM lobby must describe six levels and 36 questions, not ten');
 assert.match(read('assets/js/wordle-futbol.js'),/wordLength/,
