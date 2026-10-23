@@ -199,7 +199,7 @@ function stageMatchFixture(game) {
     // A dark question surface with dark text caused unreadable rounds.
     const readColor=selector=>getComputedStyle(document.querySelector(selector)).color;
     const visibleText=value=>{
-      const rgb=(value.match(/\\d+/g)||[]).slice(0,3).map(Number);
+      const rgb=(value.match(/\d+/g)||[]).slice(0,3).map(Number);
       return rgb.length===3&&rgb[0]>=175&&rgb[1]>=175&&rgb[2]>=160;
     };
     const question=readColor('.question-card .question-text');
