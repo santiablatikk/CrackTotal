@@ -397,6 +397,10 @@ async function main(){
         if(game!=='wordle-futbol.html')throw Error('wordle-live requires Wordle page');
         // Each width is a separate fresh-play case. Do not accumulate guesses
         // across viewports in the disposable Chromium profile.
+        const beforeReload=await command('Runtime.evaluate',{
+          expression:"performance.timeOrigin",returnByValue:true
+        });
+        const oldOrigin=beforeReload.result?.value;
         await command('Runtime.evaluate',{expression:"localStorage.removeItem('wordle_game_state_v1')",returnByValue:true});
         await command('Page.reload',{ignoreCache:true});
         // A reload during a slow asset or daily-pool fetch can temporarily
@@ -405,15 +409,17 @@ async function main(){
         let readiness=null;
         for(let attempt=0;attempt<32;attempt++){
           const check=await command('Runtime.evaluate',{
-            expression:"(() => ({ready:document.readyState,playfield:!!document.querySelector('.wordle-playfield'),columns:document.querySelector('#board')?.dataset.columns,tiles:document.querySelectorAll('#board .tile').length,keys:document.querySelectorAll('.keyboard button.key').length}))()",
+            expression:"(() => ({origin:performance.timeOrigin,ready:document.readyState,playfield:!!document.querySelector('.wordle-playfield'),columns:document.querySelector('#board')?.dataset.columns,tiles:document.querySelectorAll('#board .tile').length,keys:document.querySelectorAll('.keyboard button.key').length}))()",
             returnByValue:true
           });
           readiness=check.result?.value;
-          if(readiness?.playfield&&readiness?.tiles>=12&&readiness?.keys>=25)break;
+          if(readiness?.origin!==oldOrigin&&readiness?.ready==='complete'&&
+             readiness?.playfield&&readiness?.tiles>=12&&readiness?.keys>=25)break;
           await sleep(250);
         }
-        if(!readiness?.playfield||readiness.tiles<12||readiness.keys<25)
-          throw Error('Wordle game did not initialize at '+width+': '+JSON.stringify(readiness));
+        if(readiness?.origin===oldOrigin||readiness?.ready!=='complete'||
+           !readiness?.playfield||readiness.tiles<12||readiness.keys<25)
+          throw Error('Wordle game did not initialize after reload at '+width+': '+JSON.stringify(readiness));
         // Isolated local test server and browser profile. A real keyboard click,
         // localStorage persistence, navigation reload and validation are exercised.
         const first=await command('Runtime.evaluate',{
@@ -423,21 +429,22 @@ async function main(){
         if(first.exceptionDetails||!first.result?.value?.moveSaved)
           throw Error('Wordle live interaction failed '+width+': '+
             JSON.stringify(first.exceptionDetails||first.result).slice(0,800));
+        const firstReloadOrigin=readiness.origin;
         await command('Page.reload',{ignoreCache:true});
-        await sleep(1500);
+        // Verify this is a genuinely new document, not a stale CDP context.
         // Resolve the asynchronous daily-pool fetch before making persistence
         // assertions; a fixed 1.5s timer is not a reliable loading contract.
         let restored=null,diagnostics=null;
         for(let attempt=0;attempt<24;attempt++){
           const read=await command('Runtime.evaluate',{
-            expression:"(() => {let saved=null;try{saved=JSON.parse(localStorage.getItem('wordle_game_state_v1')||'null')}catch{};return {saved:saved?.board?.[0]?.[0],day:saved?.day,target:saved?.target,tile:document.querySelector('#board [data-row=\\\"0\\\"][data-col=\\\"0\\\"]')?.textContent,tiles:document.querySelectorAll('#board .tile').length,ready:document.readyState,message:document.getElementById('message')?.textContent}})()",
+            expression:"(() => {let saved=null;try{saved=JSON.parse(localStorage.getItem('wordle_game_state_v1')||'null')}catch{};return {origin:performance.timeOrigin,saved:saved?.board?.[0]?.[0],day:saved?.day,target:saved?.target,tile:document.querySelector('#board [data-row=\\\"0\\\"][data-col=\\\"0\\\"]')?.textContent,tiles:document.querySelectorAll('#board .tile').length,ready:document.readyState,message:document.getElementById('message')?.textContent}})()",
             returnByValue:true
           });
           diagnostics=read.result?.value;
-          if(diagnostics?.tile==='M')break;
+          if(diagnostics?.origin!==firstReloadOrigin&&diagnostics?.ready==='complete'&&diagnostics?.tile==='M')break;
           await sleep(250);
         }
-        if(diagnostics?.tile!=='M')throw Error('Wordle reload did not restore saved move at '+width+': '+JSON.stringify(diagnostics));
+        if(diagnostics?.origin===firstReloadOrigin||diagnostics?.ready!=='complete'||diagnostics?.tile!=='M')throw Error('Wordle reload did not restore saved move at '+width+': '+JSON.stringify(diagnostics));
         restored=await command('Runtime.evaluate',{
           expression:'('+verifyWordleReload.toString()+')()',
           returnByValue:true
