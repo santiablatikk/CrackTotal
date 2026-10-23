@@ -194,6 +194,20 @@ function stageMatchFixture(game) {
     }
   }
   if (!stage) throw new Error('No match fixture root: ' + game);
+  if(game==='pasalache.html'){
+    // Real computed foregrounds after every shared CSS layer has loaded.
+    // A dark question surface with dark text caused unreadable rounds.
+    const readColor=selector=>getComputedStyle(document.querySelector(selector)).color;
+    const visibleText=value=>{
+      const rgb=(value.match(/\\d+/g)||[]).slice(0,3).map(Number);
+      return rgb.length===3&&rgb[0]>=175&&rgb[1]>=175&&rgb[2]>=160;
+    };
+    const question=readColor('.question-card .question-text');
+    const heading=readColor('.question-card .question-header h3');
+    const answer=readColor('.question-card .answer-input');
+    if(!visibleText(question)||!visibleText(heading)||!visibleText(answer))
+      throw Error('Unreadable Pasala match text: '+JSON.stringify({question,heading,answer}));
+  }
   const box=stage.getBoundingClientRect();
   if (box.width < 150 || getComputedStyle(stage).display==='none') {
     throw new Error('Match fixture remained hidden: ' + game);
