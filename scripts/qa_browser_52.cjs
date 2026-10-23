@@ -367,7 +367,7 @@ async function main(){
             JSON.stringify(restored.exceptionDetails||restored.result).slice(0,800));
         console.log('WORDLE LIVE '+width+'px: '+JSON.stringify(first.result.value));
       }
-      if(args.fixture === 'match') {
+      if(args.fixture === 'match' || args.fixture === 'bluff-long') {
         const result = await command('Runtime.evaluate',{
           expression:'('+stageMatchFixture.toString()+')('+JSON.stringify(game)+')',
           returnByValue:true,awaitPromise:true
@@ -375,6 +375,34 @@ async function main(){
         if(result.exceptionDetails || !result.result?.value?.stageWidth)
           throw Error('Match fixture injection failed: '+game+' '+JSON.stringify(result.exceptionDetails || result.result));
         await sleep(180);
+      }
+      if(args.fixture==='bluff-long'){
+        if(game!=='mentiroso.html')throw Error('Fixture only for Mentiroso');
+        const inspected=await command('Runtime.evaluate',{
+          expression: "(() => {"+
+            "const bid=document.getElementById('biddingPhase');"+
+            "const phase=document.getElementById('validationPhase');"+
+            "const list=document.getElementById('answersToValidateList');"+
+            "const confirm=document.getElementById('submitValidationButton');"+
+            "if(!phase||!list||!confirm)throw Error('Validation nodes missing');"+
+            "bid.style.display='none';phase.style.display='block';list.replaceChildren();"+
+            "for(let i=0;i<25;i++){const li=document.createElement('li');"+
+            "const name=document.createElement('span');name.textContent='Respuesta futbolera extensa '+(i+1);"+
+            "const actions=document.createElement('div');actions.className='validation-buttons';"+
+            "for(const cls of ['correct','incorrect']){const b=document.createElement('button');"+
+            "b.type='button';b.className='validate-'+cls;b.textContent=cls==='correct'?'✓':'×';actions.appendChild(b);}"+
+            "li.append(name,actions);list.appendChild(li);}"+
+            "const css=getComputedStyle(list);const rect=list.getBoundingClientRect();"+
+            "if(list.children.length!==25||list.scrollHeight<=list.clientHeight+2||"+
+            "!['auto','scroll'].includes(css.overflowY)||rect.width<175)"+
+            "throw Error('Mentiroso 25-item list not scrollable');"+
+            "list.scrollIntoView({behavior:'instant',block:'center'});"+
+            "return {items:list.children.length,height:list.clientHeight,scroll:list.scrollHeight};})()",
+          returnByValue:true
+        });
+        if(inspected.exceptionDetails||inspected.result?.value?.items!==25)
+          throw Error('Mentiroso long-list fixture failed at '+width+': '+JSON.stringify(inspected.exceptionDetails||inspected.result).slice(0,700));
+        console.log('MENTIROSO 25 RESPONSES '+width+': '+JSON.stringify(inspected.result.value));
       }
       // The renderer sometimes swaps execution contexts immediately after
       // navigation on CI. Retry transient evaluation failures, not layout failures.

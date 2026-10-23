@@ -103,6 +103,12 @@ jobs:
           node after/scripts/qa_browser_52.cjs --root after --out "$RUNNER_TEMP/ct-visual-52/match-390x667" --widths 390 --height 667 --fixture match
           node after/scripts/qa_browser_52.cjs --root after --out "$RUNNER_TEMP/ct-visual-52/match-768x800" --widths 768 --height 800 --fixture match
 
+      - name: Audit Mentiroso long validation lists in actual Chromium
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs --root after --out "$RUNNER_TEMP/ct-visual-52/mentiroso-25-answers" --widths 320,360,390,768,1366 --games mentiroso.html --fixture bluff-long
+
       - name: Audit redesigned game hub at ten viewport widths
         if: always()
         run: |
