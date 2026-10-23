@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "count": 15,
+  "awards": [
+    {
+      "id": "ballon_dor",
+      "name": "Balón de Oro",
+      "shortName": "Balón de Oro",
+      "scope": "global",
+      "rarity": "mythic",
+      "prestige": 100
+    },
+    {
+      "id": "golden_boot_europe",
+      "name": "Bota de Oro",
+      "shortName": "Bota de Oro",
+      "scope": "europe",
+      "rarity": "legendary",
+      "prestige": 90
+    },
+    {
+      "id": "best_fifa_player",
+      "name": "The Best",
+      "shortName": "The Best",
+      "scope": "global",
+      "rarity": "legendary",
+      "prestige": 92
+    },
+    {
+      "id": "continental_player_sa",
+      "name": "Rey de América",
+      "shortName": "Rey de América",
+      "scope": "SA",
+      "rarity": "major",
+      "prestige": 84
+    },
+    {
+      "id": "continental_player_eu",
+      "name": "Mejor Jugador UEFA",
+      "shortName": "UEFA Player",
+      "scope": "EU",
+      "rarity": "major",
+      "prestige": 86
+    },
+    {
+      "id": "league_mvp",
+      "name": "Jugador de la Temporada",
+      "shortName": "MVP Liga",
+      "scope": "league",
+      "rarity": "notable",
+      "prestige": 72
+    },
+    {
+      "id": "league_top_scorer",
+      "name": "Máximo Goleador",
+      "shortName": "Goleador",
+      "scope": "league",
+      "rarity": "notable",
+      "prestige": 70
+    },
+    {
+      "id": "league_top_assist",
+      "name": "Máximo Asistidor",
+      "shortName": "Asistidor",
+      "scope": "league",
+      "rarity": "normal",
+      "prestige": 64
+    },
+    {
+      "id": "young_player",
+      "name": "Mejor Jugador Joven",
+      "shortName": "Mejor Joven",
+      "scope": "league",
+      "rarity": "notable",
+      "prestige": 68
+    },
+    {
+      "id": "competition_mvp",
+      "name": "MVP de Competición",
+      "shortName": "MVP",
+      "scope": "competition",
+      "rarity": "major",
+      "prestige": 78
+    },
+    {
+      "id": "team_of_season",
+      "name": "Equipo de la Temporada",
+      "shortName": "XI Ideal",
+      "scope": "league",
+      "rarity": "normal",
+      "prestige": 60
+    },
+    {
+      "id": "goalkeeper_season",
+      "name": "Mejor Arquero",
+      "shortName": "Mejor Arquero",
+      "scope": "league",
+      "rarity": "notable",
+      "prestige": 66
+    },
+    {
+      "id": "world_cup_golden_ball",
+      "name": "Balón de Oro del Mundial",
+      "shortName": "Balón Mundial",
+      "scope": "world_cup",
+      "rarity": "mythic",
+      "prestige": 98
+    },
+    {
+      "id": "world_cup_golden_boot",
+      "name": "Bota de Oro del Mundial",
+      "shortName": "Bota Mundial",
+      "scope": "world_cup",
+      "rarity": "legendary",
+      "prestige": 90
+    },
+    {
+      "id": "club_player_of_year",
+      "name": "Jugador del Club",
+      "shortName": "Jugador del Club",
+      "scope": "club",
+      "rarity": "normal",
+      "prestige": 55
+    }
+  ]
+}

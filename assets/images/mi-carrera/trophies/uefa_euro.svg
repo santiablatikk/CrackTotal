@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 180" role="img" aria-label="Euro">
+  <rect width="200" height="180" fill="none"/>
+  <path d="M72 42 H128 V70 C128 96 116 112 100 120 C84 112 72 96 72 70 Z" fill="#f0c85a" stroke="#fff" stroke-width="3"/>
+      <path d="M60 50 H72 V74 C64 74 58 66 58 58 Z" fill="#f0c85a"/>
+      <path d="M128 50 H140 C146 58 146 74 128 74 Z" fill="#f0c85a"/>
+      <rect x="92" y="118" width="16" height="22" fill="#f0c85a"/>
+      <rect x="78" y="138" width="44" height="10" rx="2" fill="#d8ff3e"/>
+</svg>

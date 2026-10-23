@@ -1,0 +1,616 @@
+{
+  "version": 1,
+  "count": 61,
+  "countries": [
+    {
+      "code": "AR",
+      "name": "Argentina",
+      "continent": "SA",
+      "confederation": "CONMEBOL",
+      "demonym": "argentino",
+      "flagCode": "ar",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "BR",
+      "name": "Brasil",
+      "continent": "SA",
+      "confederation": "CONMEBOL",
+      "demonym": "brasileño",
+      "flagCode": "br",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "UY",
+      "name": "Uruguay",
+      "continent": "SA",
+      "confederation": "CONMEBOL",
+      "demonym": "uruguayo",
+      "flagCode": "uy",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "CL",
+      "name": "Chile",
+      "continent": "SA",
+      "confederation": "CONMEBOL",
+      "demonym": "chileno",
+      "flagCode": "cl",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "CO",
+      "name": "Colombia",
+      "continent": "SA",
+      "confederation": "CONMEBOL",
+      "demonym": "colombiano",
+      "flagCode": "co",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "EC",
+      "name": "Ecuador",
+      "continent": "SA",
+      "confederation": "CONMEBOL",
+      "demonym": "ecuatoriano",
+      "flagCode": "ec",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "PY",
+      "name": "Paraguay",
+      "continent": "SA",
+      "confederation": "CONMEBOL",
+      "demonym": "paraguayo",
+      "flagCode": "py",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "PE",
+      "name": "Perú",
+      "continent": "SA",
+      "confederation": "CONMEBOL",
+      "demonym": "peruano",
+      "flagCode": "pe",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "BO",
+      "name": "Bolivia",
+      "continent": "SA",
+      "confederation": "CONMEBOL",
+      "demonym": "boliviano",
+      "flagCode": "bo",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "VE",
+      "name": "Venezuela",
+      "continent": "SA",
+      "confederation": "CONMEBOL",
+      "demonym": "venezolano",
+      "flagCode": "ve",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "MX",
+      "name": "México",
+      "continent": "NA",
+      "confederation": "CONCACAF",
+      "demonym": "mexicano",
+      "flagCode": "mx",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "US",
+      "name": "Estados Unidos",
+      "continent": "NA",
+      "confederation": "CONCACAF",
+      "demonym": "estadounidense",
+      "flagCode": "us",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "CA",
+      "name": "Canadá",
+      "continent": "NA",
+      "confederation": "CONCACAF",
+      "demonym": "canadiense",
+      "flagCode": "ca",
+      "flagStatus": "missing",
+      "playable": true
+    },
+    {
+      "code": "CR",
+      "name": "Costa Rica",
+      "continent": "NA",
+      "confederation": "CONCACAF",
+      "demonym": "costarricense",
+      "flagCode": "cr",
+      "flagStatus": "missing",
+      "playable": true
+    },
+    {
+      "code": "HN",
+      "name": "Honduras",
+      "continent": "NA",
+      "confederation": "CONCACAF",
+      "demonym": "hondureño",
+      "flagCode": "hn",
+      "flagStatus": "missing",
+      "playable": true
+    },
+    {
+      "code": "PA",
+      "name": "Panamá",
+      "continent": "NA",
+      "confederation": "CONCACAF",
+      "demonym": "panameño",
+      "flagCode": "pa",
+      "flagStatus": "missing",
+      "playable": true
+    },
+    {
+      "code": "JM",
+      "name": "Jamaica",
+      "continent": "NA",
+      "confederation": "CONCACAF",
+      "demonym": "jamaicano",
+      "flagCode": "jm",
+      "flagStatus": "missing",
+      "playable": true
+    },
+    {
+      "code": "GB",
+      "name": "Inglaterra",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "inglés",
+      "flagCode": "gb",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "SCT",
+      "name": "Escocia",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "escocés",
+      "flagCode": "gb",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "ES",
+      "name": "España",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "español",
+      "flagCode": "es",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "IT",
+      "name": "Italia",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "italiano",
+      "flagCode": "it",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "DE",
+      "name": "Alemania",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "alemán",
+      "flagCode": "de",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "FR",
+      "name": "Francia",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "francés",
+      "flagCode": "fr",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "PT",
+      "name": "Portugal",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "portugués",
+      "flagCode": "pt",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "NL",
+      "name": "Países Bajos",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "neerlandés",
+      "flagCode": "nl",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "BE",
+      "name": "Bélgica",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "belga",
+      "flagCode": "be",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "TR",
+      "name": "Turquía",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "turco",
+      "flagCode": "tr",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "GR",
+      "name": "Grecia",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "griego",
+      "flagCode": "gr",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "AT",
+      "name": "Austria",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "austríaco",
+      "flagCode": "at",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "CH",
+      "name": "Suiza",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "suizo",
+      "flagCode": "ch",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "DK",
+      "name": "Dinamarca",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "danés",
+      "flagCode": "dk",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "NO",
+      "name": "Noruega",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "noruego",
+      "flagCode": "no",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "SE",
+      "name": "Suecia",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "sueco",
+      "flagCode": "se",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "PL",
+      "name": "Polonia",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "polaco",
+      "flagCode": "pl",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "CZ",
+      "name": "República Checa",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "checo",
+      "flagCode": "cz",
+      "flagStatus": "missing",
+      "playable": true
+    },
+    {
+      "code": "HR",
+      "name": "Croacia",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "croata",
+      "flagCode": "hr",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "RS",
+      "name": "Serbia",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "serbio",
+      "flagCode": "rs",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "UA",
+      "name": "Ucrania",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "ucraniano",
+      "flagCode": "ua",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "IE",
+      "name": "Irlanda",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "irlandés",
+      "flagCode": "ie",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "RU",
+      "name": "Rusia",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "ruso",
+      "flagCode": "ru",
+      "flagStatus": "missing",
+      "playable": true
+    },
+    {
+      "code": "RO",
+      "name": "Rumania",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "rumano",
+      "flagCode": "ro",
+      "flagStatus": "missing",
+      "playable": true
+    },
+    {
+      "code": "HU",
+      "name": "Hungría",
+      "continent": "EU",
+      "confederation": "UEFA",
+      "demonym": "húngaro",
+      "flagCode": "hu",
+      "flagStatus": "missing",
+      "playable": true
+    },
+    {
+      "code": "JP",
+      "name": "Japón",
+      "continent": "AS",
+      "confederation": "AFC",
+      "demonym": "japonés",
+      "flagCode": "jp",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "KR",
+      "name": "Corea del Sur",
+      "continent": "AS",
+      "confederation": "AFC",
+      "demonym": "surcoreano",
+      "flagCode": "kr",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "CN",
+      "name": "China",
+      "continent": "AS",
+      "confederation": "AFC",
+      "demonym": "chino",
+      "flagCode": "cn",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "SA",
+      "name": "Arabia Saudita",
+      "continent": "AS",
+      "confederation": "AFC",
+      "demonym": "saudí",
+      "flagCode": "sa",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "QA",
+      "name": "Qatar",
+      "continent": "AS",
+      "confederation": "AFC",
+      "demonym": "catarí",
+      "flagCode": "qa",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "AE",
+      "name": "Emiratos Árabes Unidos",
+      "continent": "AS",
+      "confederation": "AFC",
+      "demonym": "emiratí",
+      "flagCode": "ae",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "IR",
+      "name": "Irán",
+      "continent": "AS",
+      "confederation": "AFC",
+      "demonym": "iraní",
+      "flagCode": "ir",
+      "flagStatus": "missing",
+      "playable": true
+    },
+    {
+      "code": "AU",
+      "name": "Australia",
+      "continent": "OC",
+      "confederation": "AFC",
+      "demonym": "australiano",
+      "flagCode": "au",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "NZ",
+      "name": "Nueva Zelanda",
+      "continent": "OC",
+      "confederation": "OFC",
+      "demonym": "neozelandés",
+      "flagCode": "nz",
+      "flagStatus": "missing",
+      "playable": true
+    },
+    {
+      "code": "EG",
+      "name": "Egipto",
+      "continent": "AF",
+      "confederation": "CAF",
+      "demonym": "egipcio",
+      "flagCode": "eg",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "MA",
+      "name": "Marruecos",
+      "continent": "AF",
+      "confederation": "CAF",
+      "demonym": "marroquí",
+      "flagCode": "ma",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "NG",
+      "name": "Nigeria",
+      "continent": "AF",
+      "confederation": "CAF",
+      "demonym": "nigeriano",
+      "flagCode": "ng",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "GH",
+      "name": "Ghana",
+      "continent": "AF",
+      "confederation": "CAF",
+      "demonym": "ghanés",
+      "flagCode": "gh",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "SN",
+      "name": "Senegal",
+      "continent": "AF",
+      "confederation": "CAF",
+      "demonym": "senegalés",
+      "flagCode": "sn",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "CI",
+      "name": "Côte d'Ivoire",
+      "continent": "AF",
+      "confederation": "CAF",
+      "demonym": "marfileño",
+      "flagCode": "ci",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "CM",
+      "name": "Camerún",
+      "continent": "AF",
+      "confederation": "CAF",
+      "demonym": "camerunés",
+      "flagCode": "cm",
+      "flagStatus": "real",
+      "playable": true
+    },
+    {
+      "code": "ZA",
+      "name": "Sudáfrica",
+      "continent": "AF",
+      "confederation": "CAF",
+      "demonym": "sudafricano",
+      "flagCode": "za",
+      "flagStatus": "missing",
+      "playable": true
+    },
+    {
+      "code": "TN",
+      "name": "Túnez",
+      "continent": "AF",
+      "confederation": "CAF",
+      "demonym": "tunecino",
+      "flagCode": "tn",
+      "flagStatus": "missing",
+      "playable": true
+    },
+    {
+      "code": "DZ",
+      "name": "Argelia",
+      "continent": "AF",
+      "confederation": "CAF",
+      "demonym": "argelino",
+      "flagCode": "dz",
+      "flagStatus": "missing",
+      "playable": true
+    }
+  ]
+}
