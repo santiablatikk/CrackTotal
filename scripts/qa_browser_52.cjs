@@ -16,6 +16,7 @@ for (let i = 2; i < process.argv.length; ++i) {
 const root = path.resolve(args.root || '.');
 const out = path.resolve(args.out || 'ct-visual-qa');
 const widths = (args.widths || '320,360,375,390,430,768,1024,1366,1440,1920').split(',').map(Number);
+const viewportHeight = Number(args.height || '900');
 const games = (args.games || 'pasalache.html,pasala-1v1.html,top10.html,wordle-futbol.html,quiensabemas.html,mentiroso.html').split(',');
 const mimes = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'application/javascript; charset=utf-8','.svg':'image/svg+xml','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.ico':'image/x-icon','.json':'application/json'};
 function serve(req,res) {
@@ -68,7 +69,7 @@ function probe(expectedWidth) {
     return (rect.left < -2 || rect.right > width + 2) && !isInIntentionalScroller(el);
   }).slice(0,15).map(el=>({tag:el.tagName.toLowerCase(),id:el.id || '',className:String(el.className).slice(0,60)}));
   const undersizeButtons=nodes.filter(el=>el.tagName==='BUTTON' && (el.getBoundingClientRect().height<44 || el.getBoundingClientRect().width<44)).length;
-  return {title:document.title,width,docWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-width,offscreen,undersizeButtons,protrusions};
+  return {title:document.title,width,height:innerHeight,docHeight:document.documentElement.scrollHeight,docWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-width,offscreen,undersizeButtons,protrusions};
 }
 
 /*
@@ -270,7 +271,7 @@ function verifyWordleReload() {
 }
 
 async function main(){
-  if (widths.some(w=>!Number.isInteger(w) || w<280 || w>3000))throw Error('Invalid viewport');
+  if (widths.some(w=>!Number.isInteger(w) || w<280 || w>3000)||!Number.isInteger(viewportHeight)||viewportHeight<480||viewportHeight>2160)throw Error('Invalid viewport');
   fs.mkdirSync(out,{recursive:true});
   const server = http.createServer(serve);
   await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
@@ -321,7 +322,7 @@ async function main(){
     await command('Page.enable');await command('Runtime.enable');
     const rows=[];
     for(const width of widths)for(const game of games){
-      await command('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:width<=430});
+      await command('Emulation.setDeviceMetricsOverride',{width,height:viewportHeight,deviceScaleFactor:1,mobile:width<=430});
       await command('Page.navigate',{url:'http://127.0.0.1:'+httpPort+'/'+game});
       await sleep(1500);
       // A consent dialog masks actual content in baseline screenshots;

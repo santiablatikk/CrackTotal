@@ -1,4 +1,4 @@
-name: Crack Total 5.2 visual browser QA
+name: Crack Total 6.0 responsive and gameplay QA
 
 # Checks the pull request, not production. Compares baseline and candidate.
 on:
@@ -94,6 +94,14 @@ jobs:
             --widths 320,360,390,768,1366 \
             --games wordle-futbol.html \
             --fixture wordle-live
+
+      - name: Audit six active-game stages on short phone and tablet screens
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs --root after --out "$RUNNER_TEMP/ct-visual-52/match-360x600" --widths 360 --height 600 --fixture match
+          node after/scripts/qa_browser_52.cjs --root after --out "$RUNNER_TEMP/ct-visual-52/match-390x667" --widths 390 --height 667 --fixture match
+          node after/scripts/qa_browser_52.cjs --root after --out "$RUNNER_TEMP/ct-visual-52/match-768x800" --widths 768 --height 800 --fixture match
 
       - name: Audit redesigned game hub at ten viewport widths
         if: always()
