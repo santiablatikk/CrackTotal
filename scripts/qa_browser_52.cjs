@@ -120,6 +120,8 @@ function stageMatchFixture(game) {
     case 'pasala-1v1.html': {
       stage = $('match');
       show(stage);
+      // Deterministically capture the real turns-stage CSS, not a generic stage.
+      $('matchStage').classList.add('turns-stage');
       hide(document.querySelector('.lobby-area'));
       hide(document.querySelector('.arena-hero'));
       hide($('readyPanel'));
@@ -214,6 +216,13 @@ function stageMatchFixture(game) {
     const answer=readColor('.question-card .answer-input');
     if(!visibleText(question)||!visibleText(heading)||!visibleText(answer))
       throw Error('Unreadable Pasala match text: '+JSON.stringify({question,heading,answer}));
+  }
+  if(game==='pasala-1v1.html'&&window.innerWidth<=780){
+    const side=document.querySelector('#matchStage .question-side').getBoundingClientRect();
+    const own=document.getElementById('ownRingSide').getBoundingClientRect();
+    const answer=document.getElementById('answerInput').getBoundingClientRect();
+    if(own.top<side.top||answer.width<160)
+      throw Error('Duel responsive interaction must precede the progress ring and keep answer usable');
   }
   if(game==='top10.html'&&window.innerWidth<=600){
     const field=document.getElementById('surnameInput').getBoundingClientRect();

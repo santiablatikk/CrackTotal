@@ -324,3 +324,55 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
  .arena-hero h1{font-size:clamp(2.4rem,10vw,4rem)}
  .arena-shell button{min-height:44px}
 }
+
+/* 6.0 — On phones the live question must come before a full rosco.
+ * The clock remains available in the always-visible stream strip.
+ * Previous late media rules reversed the earlier question-first order. */
+@media(max-width:780px){
+ .match-stage{grid-template-columns:minmax(0,1fr)}
+ .match-stage .question-side,
+ .match-stage.turns-stage .question-side{order:1;min-height:0}
+ .match-stage #ownRingSide,
+ .match-stage.turns-stage #ownRingSide{order:2;min-height:0}
+ .match-stage .opponent-ring-side,
+ .match-stage.turns-stage .opponent-ring-side{order:3;min-height:0}
+ .match-stage.turns-stage.is-rival-turn .opponent-ring-side{order:2;min-height:0}
+ .match-stage .question-side{padding:clamp(18px,3vw,29px)}
+ .match-top{display:grid;grid-template-columns:minmax(0,1fr);gap:13px;margin-bottom:15px}
+ .match-title h2,.match-top h2{margin:9px 0 0;font-size:clamp(2.1rem,5.8vw,3.6rem)}
+ .match-room{width:100%;min-width:0;margin:0;padding:12px 14px}
+ .match-room-code strong{font-size:clamp(24px,4.5vw,34px);letter-spacing:.075em}
+ .scoreboard{margin-bottom:12px}
+ .stream-strip{margin-bottom:12px}
+ .ring-side{padding:20px 12px}
+ .ring-side .duel-ring{width:min(100%,280px);margin:12px auto 16px}
+ .match-stage.turns-stage .ring-side .duel-ring{width:min(100%,280px)}
+}
+@media(max-width:600px){
+ .match-stage .question-side,
+ .match-stage.turns-stage .question-side{order:1;min-height:0}
+ .match-stage #ownRingSide,.match-stage.turns-stage #ownRingSide{order:2;min-height:0}
+ .match-stage .opponent-ring-side,.match-stage.turns-stage .opponent-ring-side{order:3;min-height:0}
+ .match-stage.turns-stage.is-rival-turn .opponent-ring-side{order:2;min-height:0}
+ .match-top h2{font-size:clamp(1.95rem,8vw,2.7rem)}
+ .match-room-code{grid-template-columns:minmax(0,1fr) auto}
+ .match-room-code>span{font-size:.69rem}
+ .match-room-code strong{font-size:clamp(21px,6vw,29px)}
+ .match-room-code button{min-height:44px;padding:8px 10px;font-size:.78rem}
+ .match-room-actions{gap:8px}
+ .match-room-actions button{min-height:44px;padding:10px}
+ .score-player{padding:12px 9px}
+ .score-name{font-size:clamp(.91rem,4.5vw,1.25rem)}
+ .score-name span,.score-progress{font-size:.7rem}
+ .score-value{font-size:clamp(2rem,8vw,3rem);margin-top:5px}
+ .stream-strip{padding:10px 12px;gap:8px}
+ .stream-strip #streamClock{font-size:1.3rem}
+ .match-stage .ring-side{padding:17px 12px}
+ .match-stage .ring-side .duel-ring,
+ .match-stage.turns-stage .ring-side .duel-ring{width:min(100%,240px)}
+ .match-stage .clock-block strong{font-size:clamp(2.5rem,10vw,3.45rem)}
+ .question-side .current-letter{font-size:clamp(3.1rem,14vw,5.2rem)}
+ .question-side .question-text{font-size:clamp(1.08rem,4.8vw,1.42rem)!important}
+ .question-side .answer-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:9px}
+ .question-side .answer-actions button{min-height:48px;width:100%}
+}
