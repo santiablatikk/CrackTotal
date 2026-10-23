@@ -2072,3 +2072,10 @@ body.game-body.ct-ds .loading-title {
   letter-spacing:-.035em;
   color:#f4f2e9;
 }
+
+/* 6.0 readability: the game-shell question surface is dark. */
+body.game-body.ct-ds .question-card .question-header h3,
+body.game-body.ct-ds .question-card .question-text{color:#f4f2e9;text-shadow:none}
+body.game-body.ct-ds .question-card #currentLetterText{color:#b5eb53}
+body.game-body.ct-ds .question-card .answer-input{color:#f4f2e9;caret-color:#b5eb53}
+body.game-body.ct-ds .question-card .answer-input::placeholder{color:#b8cbb8;opacity:1}
