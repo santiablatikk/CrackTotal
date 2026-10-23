@@ -358,7 +358,20 @@ async function main(){
             JSON.stringify(first.exceptionDetails||first.result).slice(0,800));
         await command('Page.reload',{ignoreCache:true});
         await sleep(1500);
-        const restored=await command('Runtime.evaluate',{
+        // Resolve the asynchronous daily-pool fetch before making persistence
+        // assertions; a fixed 1.5s timer is not a reliable loading contract.
+        let restored=null,diagnostics=null;
+        for(let attempt=0;attempt<24;attempt++){
+          const read=await command('Runtime.evaluate',{
+            expression:"(() => {let saved=null;try{saved=JSON.parse(localStorage.getItem('wordle_game_state_v1')||'null')}catch{};return {saved:saved?.board?.[0]?.[0],day:saved?.day,target:saved?.target,tile:document.querySelector('#board [data-row=\\\"0\\\"][data-col=\\\"0\\\"]')?.textContent,tiles:document.querySelectorAll('#board .tile').length,ready:document.readyState,message:document.getElementById('message')?.textContent}})()",
+            returnByValue:true
+          });
+          diagnostics=read.result?.value;
+          if(diagnostics?.tile==='M')break;
+          await sleep(250);
+        }
+        if(diagnostics?.tile!=='M')throw Error('Wordle reload did not restore saved move at '+width+': '+JSON.stringify(diagnostics));
+        restored=await command('Runtime.evaluate',{
           expression:'('+verifyWordleReload.toString()+')()',
           returnByValue:true
         });
