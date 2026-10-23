@@ -12,12 +12,11 @@ on:
       - 'wordle-futbol.html'
       - 'quiensabemas.html'
       - 'mentiroso.html'
-      - 'mi-carrera.html'
       - 'games.html'
       - 'assets/css/games-hub-6.css'
       - 'scripts/hub_6_smoke.cjs'
-      - 'assets/js/games/mi-carrera/**'
-      - 'scripts/mi_carrera_assets_smoke.cjs'
+      - 'scripts/no_career_smoke.cjs'
+      - 'index.html'
       - 'scripts/qa_browser_52.cjs'
       - 'scripts/games_visual_52_smoke.js'
       - '.github/workflows/games-visual-qa-52.yml'
@@ -82,27 +81,6 @@ jobs:
             --out "$RUNNER_TEMP/ct-visual-52/match-fixtures" \
             --widths 320,360,390,768,1366 \
             --fixture match
-
-      - name: Audit restored Mi Carrera entry screen at ten viewport widths
-        if: always()
-        run: |
-          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
-          node after/scripts/qa_browser_52.cjs \
-            --root after \
-            --out "$RUNNER_TEMP/ct-visual-52/mi-carrera" \
-            --widths 320,360,375,390,430,768,1024,1366,1440,1920 \
-            --games mi-carrera.html
-
-      - name: Audit actual Mi Carrera creation through first club at five viewport widths
-        if: always()
-        run: |
-          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
-          node after/scripts/qa_browser_52.cjs \
-            --root after \
-            --out "$RUNNER_TEMP/ct-visual-52/career-onboarding" \
-            --widths 320,360,390,768,1366 \
-            --games mi-carrera.html \
-            --fixture career-onboarding
 
       - name: Audit redesigned game hub at ten viewport widths
         if: always()

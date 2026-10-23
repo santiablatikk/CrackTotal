@@ -38,7 +38,7 @@ assert(!arenaCss.includes('DM Sans'));
 const home=read('assets/css/home-4.css');
 assert(home.includes('Space Grotesk'));
 assert(!home.includes('Oswald'));
-assert(read('index.html').includes('home-4.css?v=20261023v6'));
+assert(read('index.html').includes('home-4.css?v=20261020v5'));
 for(const p of ['assets/css/top10.css','assets/css/wordle.css','assets/css/pasalache.css']){
  const css=read(p);
  assert(!css.includes('Oswald'), p+' still requires condensed font');

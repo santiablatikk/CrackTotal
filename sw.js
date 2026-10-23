@@ -20,8 +20,6 @@ const STATIC_ASSETS = [
     '/',
     '/index.html',
     '/games.html',
-    '/mi-carrera.html',
-    '/assets/css/mi-carrera.css',
     '/assets/css/games-hub-6.css',
     '/assets/css/home-4.css',
     '/assets/css/base.css',

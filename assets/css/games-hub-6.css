@@ -59,8 +59,9 @@
 .ct6-game-hub .discover-section .home-filter[aria-pressed="true"],.ct6-game-hub .discover-section .home-filter:hover{background:#203b2e!important;color:#f4f2e9!important;border-color:#203b2e!important}
 .ct6-game-hub .discover-section .home-games-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px;margin-top:26px}
 .ct6-game-hub .discover-section .home-game-card{grid-column:span 4;position:relative;min-width:0;min-height:455px;background:#142720!important;border:1px solid #3b5d4b!important;border-top:4px solid #b5eb53!important;border-radius:4px!important;box-shadow:none!important;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease!important}
-.ct6-game-hub .discover-section .home-game-card:nth-child(1),.ct6-game-hub .discover-section .ct3-duel-card{grid-column:span 7;display:grid;grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr)}
-.ct6-game-hub .discover-section .home-game-card:nth-child(2),.ct6-game-hub .discover-section .ct6-career-card{grid-column:span 5}
+.ct6-game-hub .discover-section .home-game-card:nth-child(1){grid-column:span 7;display:grid;grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr)}
+.ct6-game-hub .discover-section .ct3-duel-card{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:390px}
+.ct6-game-hub .discover-section .home-game-card:nth-child(2){grid-column:span 5}
 .ct6-game-hub .discover-section .home-game-card:hover{transform:translateY(-5px)!important;border-color:#a1db65!important;box-shadow:0 22px 35px rgba(16,27,27,.18)!important}
 .ct6-game-hub .discover-section .home-game-card:focus-visible,.ct6-game-hub .ct6-hub-feature:focus-visible,.ct6-game-hub .ct6-hub-action:focus-visible{outline:3px solid #668f20;outline-offset:4px}
 .ct6-game-hub .discover-section .home-game-card[hidden]{display:none!important}
@@ -82,8 +83,9 @@
 .ct6-game-hub .ct6-hub-hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,.75fr);gap:28px}
 .ct6-game-hub .ct6-hub-copy h1{font-size:clamp(42px,5vw,64px)}
 .ct6-game-hub .ct6-hub-feature{min-height:430px}
-.ct6-game-hub .discover-section .home-game-card,.ct6-game-hub .discover-section .home-game-card:nth-child(1),.ct6-game-hub .discover-section .ct3-duel-card,.ct6-game-hub .discover-section .home-game-card:nth-child(2),.ct6-game-hub .discover-section .ct6-career-card{grid-column:span 6;display:flex;flex-direction:column}
+.ct6-game-hub .discover-section .home-game-card,.ct6-game-hub .discover-section .home-game-card:nth-child(1),.ct6-game-hub .discover-section .ct3-duel-card,.ct6-game-hub .discover-section .home-game-card:nth-child(2){grid-column:span 6;display:flex;flex-direction:column}
 .ct6-game-hub .discover-section .home-game-card:nth-child(1) .home-game-media,.ct6-game-hub .discover-section .ct3-duel-card .home-game-media{min-height:0;height:205px}
+.ct6-game-hub .discover-section .ct3-duel-card{grid-column:1/-1}
 }
 @media(max-width:800px){
 .ct6-game-hub .ct6-hub-hero-grid{grid-template-columns:minmax(0,1fr);min-height:0;padding-block:52px 65px}
@@ -107,7 +109,7 @@
 .ct6-game-hub .ct6-hub-feature-heading strong{font-size:30px}
 .ct6-game-hub .ct6-hub-baseline .home-shell{font-size:10px;gap:9px}
 .ct6-game-hub .discover-section .home-games-grid{grid-template-columns:minmax(0,1fr);gap:16px}
-.ct6-game-hub .discover-section .home-game-card,.ct6-game-hub .discover-section .home-game-card:nth-child(1),.ct6-game-hub .discover-section .ct3-duel-card,.ct6-game-hub .discover-section .home-game-card:nth-child(2),.ct6-game-hub .discover-section .ct6-career-card{grid-column:1;min-height:0}
+.ct6-game-hub .discover-section .home-game-card,.ct6-game-hub .discover-section .home-game-card:nth-child(1),.ct6-game-hub .discover-section .ct3-duel-card,.ct6-game-hub .discover-section .home-game-card:nth-child(2){grid-column:1;min-height:0}
 .ct6-game-hub .discover-section .home-game-media{height:175px}
 .ct6-game-hub .discover-section .home-game-card:nth-child(1) .home-game-media,.ct6-game-hub .discover-section .ct3-duel-card .home-game-media{height:175px}
 .ct6-game-hub .discover-section .home-game-content h3{font-size:30px!important}

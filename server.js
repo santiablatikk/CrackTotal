@@ -150,8 +150,15 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    // Support legacy extensionless bookmarks for the restored career game.
-    if (pathname === '/mi-carrera') pathname = '/mi-carrera.html';
+    // The retired career mode is not part of Crack Total. Redirect old bookmarks.
+    if (pathname === '/mi-carrera.html' || pathname === '/mi-carrera') {
+        res.writeHead(301, {
+            'Location': '/games.html',
+            'Cache-Control': 'public, max-age=3600'
+        });
+        res.end();
+        return;
+    }
 
     // Redirect /index.html to /
     if (pathname === '/index.html') {
