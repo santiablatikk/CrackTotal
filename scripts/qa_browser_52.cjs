@@ -274,8 +274,17 @@ async function main(){
           throw Error('Match fixture injection failed: '+game+' '+JSON.stringify(result.exceptionDetails || result.result));
         await sleep(180);
       }
-      const r=await command('Runtime.evaluate',{expression:'('+probe.toString()+')('+width+')',returnByValue:true});
-      if(r.exceptionDetails || !r.result || !r.result.value)throw Error('Browser probe failed for '+game+' '+width);
+      // The renderer sometimes swaps execution contexts immediately after
+      // navigation on CI. Retry transient evaluation failures, not layout failures.
+      let r;
+      for(let attempt=0;attempt<4;attempt++){
+        r=await command('Runtime.evaluate',{expression:'('+probe.toString()+')('+width+')',returnByValue:true});
+        if(!r.exceptionDetails && r.result?.value)break;
+        await sleep(350);
+      }
+      if(r.exceptionDetails || !r.result || !r.result.value)throw Error(
+        'Browser probe failed for '+game+' '+width+': '+JSON.stringify(r.exceptionDetails || r.result).slice(0,600)
+      );
       const row={game,expectedWidth:width,fixture:args.fixture || 'entry',...r.result.value};
       rows.push(row);
       if(width===360 || width===1366){
