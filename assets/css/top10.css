@@ -201,3 +201,15 @@ body.top10-body .top10-history{border-radius:14px}
   body.top10-body .top10-header .subtitle{grid-column:1;grid-row:auto;}
   body.top10-body .top10-header .subtitle{max-width:65ch;}
 }
+
+/* 6.0 — On narrow phones, the game question and answer action need a
+   dedicated full-width row each. A legacy shared grid squeezed the field. */
+@media(max-width:600px){
+ body.top10-body.ct-ds .top10-card .input-area{
+  display:grid;grid-template-columns:minmax(0,1fr);gap:9px;width:100%;
+ }
+ body.top10-body.ct-ds .top10-card .input-area .top10-input,
+ body.top10-body.ct-ds .top10-card .input-area .primary-button{
+  width:100%;min-width:0;max-width:100%;
+ }
+}
