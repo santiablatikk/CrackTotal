@@ -222,7 +222,14 @@ function stageMatchFixture(game) {
     const own=document.getElementById('ownRingSide').getBoundingClientRect();
     const answer=document.getElementById('answerInput').getBoundingClientRect();
     if(own.top<side.top||answer.width<160)
-      throw Error('Duel responsive interaction must precede the progress ring and keep answer usable');
+      throw Error('Duel responsive layout: '+JSON.stringify({
+        viewport:window.innerWidth,questionTop:side.top,ownRingTop:own.top,
+        questionWidth:side.width,answerWidth:answer.width,
+        matchHidden:document.getElementById('match').hidden,
+        questionHidden:document.getElementById('questionPanel').hidden,
+        orderQuestion:getComputedStyle(document.querySelector('#matchStage .question-side')).order,
+        orderRing:getComputedStyle(document.getElementById('ownRingSide')).order
+      }));
     if(window.innerWidth<=600){
       const share=document.getElementById('copyInvite').getBoundingClientRect();
       const spectator=document.getElementById('copySpectator').getBoundingClientRect();
@@ -455,10 +462,18 @@ async function main(){
         console.log('WORDLE LIVE '+width+'px: '+JSON.stringify(first.result.value));
       }
       if(['match','bluff-long','qsm-long'].includes(args.fixture)) {
-        const result = await command('Runtime.evaluate',{
-          expression:'('+stageMatchFixture.toString()+')('+JSON.stringify(game)+')',
-          returnByValue:true,awaitPromise:true
-        });
+        // Offline duel clients may asynchronously restore their lobby after the
+        // synthetic match DOM was staged. Retry that *display-only* staging a
+        // bounded number of times; persistent geometry errors still fail.
+        let result;
+        for(let attempt=0;attempt<4;attempt++){
+          result=await command('Runtime.evaluate',{
+            expression:'('+stageMatchFixture.toString()+')('+JSON.stringify(game)+')',
+            returnByValue:true,awaitPromise:true
+          });
+          if(!result.exceptionDetails && result.result?.value?.stageWidth)break;
+          await sleep(300);
+        }
         if(result.exceptionDetails || !result.result?.value?.stageWidth)
           throw Error('Match fixture injection failed: '+game+' '+JSON.stringify(result.exceptionDetails || result.result));
         await sleep(180);
