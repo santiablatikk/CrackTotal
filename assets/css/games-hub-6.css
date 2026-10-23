@@ -1,0 +1,125 @@
+/* Crack Total 6.0 — dedicated editorial game-hub composition.
+   Scoped to games.html. Does not override gameplay components or application state. */
+.ct6-game-hub{--hub-ink:#101b1b;--hub-forest:#243b35;--hub-cream:#f4f2e9;--hub-lime:#b5eb53;--hub-copper:#d89b70}
+.ct6-game-hub .ct6-hub-hero{position:relative;overflow:hidden;isolation:isolate;color:var(--hub-cream);background:radial-gradient(ellipse 50% 80% at 76% 25%,#254337 0%,transparent 76%),linear-gradient(116deg,#081311 0%,#101f1a 52%,#0e211c 100%);border-bottom:1px solid #66846a}
+.ct6-game-hub .ct6-hub-hero::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.32;background:repeating-linear-gradient(90deg,transparent 0,transparent 95px,rgba(255,255,255,.045) 96px,transparent 97px)}
+.ct6-game-hub .ct6-hub-hero-grid{position:relative;display:grid;grid-template-columns:minmax(0,1.16fr) minmax(0,.84fr);gap:clamp(24px,4vw,66px);align-items:center;min-height:640px;padding-block:72px 82px}
+.ct6-game-hub .ct6-hub-copy{position:relative;z-index:1;min-width:0}
+.ct6-game-hub .ct6-hub-overline{display:flex;align-items:center;gap:12px;margin-bottom:55px;color:#d4e6d8;letter-spacing:.14em;font-weight:800;font-size:clamp(11px,1vw,13px)}
+.ct6-game-hub .ct6-hub-overline>span:not(.ct6-hub-live-dot){color:var(--hub-copper)}
+.ct6-game-hub .ct6-hub-live-dot{width:9px;height:9px;flex:none;border-radius:50%;background:var(--hub-lime);box-shadow:0 0 0 5px rgba(181,235,83,.12)}
+.ct6-game-hub .ct6-hub-edition{display:flex;align-items:center;gap:18px;color:var(--hub-lime);font-size:12px;font-weight:800;letter-spacing:.12em;margin:0 0 16px}
+.ct6-game-hub .ct6-hub-edition>span{color:#b6c5b9}
+.ct6-game-hub .ct6-hub-copy h1{font-family:var(--ct-font-display,"Space Grotesk",sans-serif);font-size:clamp(44px,5.2vw,78px);font-weight:700;letter-spacing:-.052em;line-height:1.02;color:var(--hub-cream);margin:0;max-width:850px;overflow-wrap:normal;text-wrap:balance}
+.ct6-game-hub .ct6-hub-copy h1 em{display:block;font-style:normal;color:var(--hub-lime)}
+.ct6-game-hub .ct6-hub-lead{max-width:610px;font-size:clamp(15px,1.2vw,18px);line-height:1.7;color:#c5d5cb;margin:27px 0 28px}
+.ct6-game-hub .ct6-hub-actions{display:flex;gap:10px;flex-wrap:wrap}
+.ct6-game-hub .ct6-hub-action{display:inline-flex;justify-content:space-between;align-items:center;gap:28px;min-height:54px;padding:15px 18px;text-decoration:none;font-size:13px;letter-spacing:.025em;font-weight:800;transition:background .22s,border-color .22s,transform .22s;color:var(--hub-cream)}
+.ct6-game-hub .ct6-hub-action:hover{transform:translateY(-3px)}
+.ct6-game-hub .ct6-hub-action--primary{background:var(--hub-lime);color:#112015;border:1px solid var(--hub-lime)}
+.ct6-game-hub .ct6-hub-action--primary:hover{background:#d3fb8f;color:#112015}
+.ct6-game-hub .ct6-hub-action--outline{border:1px solid rgba(222,243,222,.45);background:rgba(255,255,255,.04)}
+.ct6-game-hub .ct6-hub-action--outline:hover{border-color:var(--hub-lime);color:var(--hub-cream)}
+.ct6-game-hub .ct6-hub-player{margin-top:30px!important;padding-top:16px;border-top:1px solid rgba(255,255,255,.2);display:flex;gap:12px;font-size:12px;letter-spacing:.07em;font-weight:800;color:#b4c6b7}
+.ct6-game-hub .ct6-hub-player strong{color:var(--hub-cream);overflow-wrap:anywhere}
+.ct6-game-hub .ct6-hub-player button{color:var(--hub-cream);font-size:12px;min-height:38px;padding-inline:10px}
+.ct6-game-hub .ct6-hub-feature{position:relative;display:flex;flex-direction:column;min-width:0;min-height:495px;text-decoration:none;color:var(--hub-cream);background:linear-gradient(145deg,#263f34,#12261f);border:1px solid rgba(181,235,83,.32);padding:clamp(20px,2.6vw,32px);box-shadow:24px 28px 0 -14px rgba(181,235,83,.12);overflow:hidden;transition:transform .3s ease,border-color .3s ease}
+.ct6-game-hub .ct6-hub-feature:hover{transform:translateY(-6px);border-color:var(--hub-lime);color:var(--hub-cream)}
+.ct6-game-hub .ct6-hub-feature::before{position:absolute;content:"";width:330px;height:330px;border:1px solid rgba(181,235,83,.1);border-radius:50%;right:-175px;top:25px;pointer-events:none}
+.ct6-game-hub .ct6-hub-feature-top,.ct6-game-hub .ct6-hub-feature-bottom{display:flex;align-items:center;justify-content:space-between;gap:15px;font-weight:800;letter-spacing:.07em;font-size:11px;color:#d1dfd1}
+.ct6-game-hub .ct6-hub-feature-top{padding-bottom:17px;border-bottom:1px solid rgba(235,245,235,.16)}
+.ct6-game-hub .ct6-hub-feature-top span:first-child{color:var(--hub-lime)}
+.ct6-game-hub .ct6-hub-feature-heading{display:flex;flex-direction:column;gap:6px;margin-top:28px}
+.ct6-game-hub .ct6-hub-feature-heading>span{font-size:12px;letter-spacing:.14em;color:#b8c9b9;font-weight:800}
+.ct6-game-hub .ct6-hub-feature-heading strong{font-family:var(--ct-font-display,"Space Grotesk",sans-serif);font-size:clamp(30px,2.7vw,43px);line-height:1;letter-spacing:-.025em}
+.ct6-game-hub .ct6-hub-feature-heading em{font-style:normal;color:var(--hub-lime)}
+.ct6-game-hub .ct6-hub-faceoff{display:flex;align-items:center;justify-content:space-between;gap:clamp(10px,2vw,22px);margin-block:34px;flex:1;min-width:0}
+.ct6-game-hub .ct6-hub-ring{display:grid;place-items:center;flex:1 1 0;min-width:0;max-width:175px;aspect-ratio:1;border:clamp(7px,1vw,13px) solid var(--hub-lime);border-radius:50%;background:radial-gradient(circle at center,#244a32,#142a21);box-shadow:inset 0 0 0 7px rgba(10,30,16,.8),0 0 0 1px #152b23}
+.ct6-game-hub .ct6-hub-ring--rival{border-color:#c7d8cc;background:radial-gradient(circle at center,#365246,#152d26)}
+.ct6-game-hub .ct6-hub-ring span{display:flex;flex-direction:column;align-items:center;font-family:var(--ct-font-display,"Space Grotesk",sans-serif);font-size:clamp(36px,4.3vw,62px);font-weight:700;line-height:1;color:var(--hub-cream)}
+.ct6-game-hub .ct6-hub-ring small{font:800 10px/1.6 var(--ct-font-sans,"Manrope",sans-serif);letter-spacing:.1em;color:#d5e4d7}
+.ct6-game-hub .ct6-hub-versus{font-family:var(--ct-font-display,"Space Grotesk",sans-serif);font-size:clamp(25px,3vw,44px);letter-spacing:-.07em;color:var(--hub-copper);flex:none}
+.ct6-game-hub .ct6-hub-feature-bottom{border-top:1px solid rgba(235,245,235,.16);padding-top:18px}
+.ct6-game-hub .ct6-hub-feature-bottom strong{color:var(--hub-lime);font-size:13px}
+.ct6-game-hub .ct6-hub-caption{font-size:9px;letter-spacing:.08em;color:#91ac99;margin-top:10px;text-align:right}
+.ct6-game-hub .ct6-hub-baseline{position:relative;border-top:1px solid rgba(255,255,255,.1);background:#b5eb53;color:#12200d}
+.ct6-game-hub .ct6-hub-baseline .home-shell{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-block:13px;font-size:11px;font-weight:900;letter-spacing:.14em}
+.ct6-game-hub .ct35-catalog-daily{margin-block:70px 64px}
+.ct6-game-hub .ct35-catalog-daily-lead h2{font-weight:700;letter-spacing:-.045em}
+.ct6-game-hub .ct35-catalog-daily>a{border-radius:4px;min-height:225px}
+.ct6-game-hub .discover-section{margin-top:0;background:var(--hub-cream);color:var(--hub-ink);padding-block:clamp(64px,8vw,115px);border-top:1px solid #becdb9}
+.ct6-game-hub .discover-section .home-section-heading{align-items:end;gap:25px;margin-bottom:36px}
+.ct6-game-hub .discover-section .home-section-heading h2{font-family:var(--ct-font-display,"Space Grotesk",sans-serif);font-weight:700;color:var(--hub-ink)!important;text-transform:uppercase;font-size:clamp(40px,5vw,72px);line-height:1.04;letter-spacing:-.05em;max-width:900px}
+.ct6-game-hub .discover-section .home-section-heading p{color:#405147!important}
+.ct6-game-hub .discover-section .home-eyebrow{color:#49643c}
+.ct6-game-hub .discover-section .home-catalog-toolbar{grid-template-columns:minmax(220px,.65fr) minmax(0,1.35fr);background:#e7eade!important;border:1px solid #c4cfc0!important;padding:16px!important;border-radius:5px!important;gap:16px}
+.ct6-game-hub .discover-section .home-search input{background:#fff!important;color:#14231d!important;border:1px solid #b7c7b4!important;border-radius:4px}
+.ct6-game-hub .discover-section .home-search input::placeholder{color:#56695d}
+.ct6-game-hub .discover-section .home-filter{background:#f7f8f2!important;color:#213f2d!important;border:1px solid #b3c2b3!important;border-radius:4px!important}
+.ct6-game-hub .discover-section .home-filter[aria-pressed="true"],.ct6-game-hub .discover-section .home-filter:hover{background:#203b2e!important;color:#f4f2e9!important;border-color:#203b2e!important}
+.ct6-game-hub .discover-section .home-games-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px;margin-top:26px}
+.ct6-game-hub .discover-section .home-game-card{grid-column:span 4;position:relative;min-width:0;min-height:455px;background:#142720!important;border:1px solid #3b5d4b!important;border-top:4px solid #b5eb53!important;border-radius:4px!important;box-shadow:none!important;transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease!important}
+.ct6-game-hub .discover-section .home-game-card:nth-child(1),.ct6-game-hub .discover-section .ct3-duel-card{grid-column:span 7;display:grid;grid-template-columns:minmax(0,.94fr) minmax(0,1.06fr)}
+.ct6-game-hub .discover-section .home-game-card:nth-child(2),.ct6-game-hub .discover-section .ct6-career-card{grid-column:span 5}
+.ct6-game-hub .discover-section .home-game-card:hover{transform:translateY(-5px)!important;border-color:#a1db65!important;box-shadow:0 22px 35px rgba(16,27,27,.18)!important}
+.ct6-game-hub .discover-section .home-game-card:focus-visible,.ct6-game-hub .ct6-hub-feature:focus-visible,.ct6-game-hub .ct6-hub-action:focus-visible{outline:3px solid #668f20;outline-offset:4px}
+.ct6-game-hub .discover-section .home-game-card[hidden]{display:none!important}
+.ct6-game-hub .discover-section .home-game-media{height:205px;aspect-ratio:auto!important;background:#1e3028}
+.ct6-game-hub .discover-section .home-game-card:nth-child(1) .home-game-media,.ct6-game-hub .discover-section .ct3-duel-card .home-game-media{height:100%;min-height:430px}
+.ct6-game-hub .discover-section .home-game-card .home-game-media img{height:100%;width:100%;object-fit:cover;filter:saturate(.75) contrast(1.1)}
+.ct6-game-hub .discover-section .home-game-content{padding:clamp(18px,2.2vw,32px)!important;display:flex;flex-direction:column;min-width:0}
+.ct6-game-hub .discover-section .home-game-content h3{font-family:var(--ct-font-display,"Space Grotesk",sans-serif);font-size:clamp(27px,2.8vw,42px)!important;line-height:1.06!important;letter-spacing:-.045em;color:var(--hub-cream);text-transform:uppercase;overflow-wrap:anywhere}
+.ct6-game-hub .discover-section .home-game-description{color:#c6d7cb!important;font-size:14px;line-height:1.65}
+.ct6-game-hub .discover-section .home-game-facts li{border-radius:3px;background:#294436;color:#e0eddf;border-color:#446551}
+.ct6-game-hub .discover-section .home-game-action{color:#b5eb53!important;border-top:1px solid #44614b;padding-top:16px}
+.ct6-game-hub .discover-section .home-game-badge{background:#b5eb53!important;color:#10200f!important;border-radius:3px!important}
+.ct6-game-hub .discover-section .home-game-icon{border-radius:3px}
+.ct6-game-hub .discover-section .home-empty-state{background:#e8eddd;border-color:#98ac96;color:#23372b}
+.ct6-game-hub .discover-section .discover-cta{margin-top:65px;background:#203c31;color:#f4f2e9}
+.ct6-game-hub .discover-section .discover-cta h2{color:#f4f2e9}
+.ct6-game-hub .discover-section .discover-cta p{color:#c6d7ca}
+@media(max-width:1100px){
+.ct6-game-hub .ct6-hub-hero-grid{grid-template-columns:minmax(0,1fr) minmax(0,.75fr);gap:28px}
+.ct6-game-hub .ct6-hub-copy h1{font-size:clamp(42px,5vw,64px)}
+.ct6-game-hub .ct6-hub-feature{min-height:430px}
+.ct6-game-hub .discover-section .home-game-card,.ct6-game-hub .discover-section .home-game-card:nth-child(1),.ct6-game-hub .discover-section .ct3-duel-card,.ct6-game-hub .discover-section .home-game-card:nth-child(2),.ct6-game-hub .discover-section .ct6-career-card{grid-column:span 6;display:flex;flex-direction:column}
+.ct6-game-hub .discover-section .home-game-card:nth-child(1) .home-game-media,.ct6-game-hub .discover-section .ct3-duel-card .home-game-media{min-height:0;height:205px}
+}
+@media(max-width:800px){
+.ct6-game-hub .ct6-hub-hero-grid{grid-template-columns:minmax(0,1fr);min-height:0;padding-block:52px 65px}
+.ct6-game-hub .ct6-hub-overline{margin-bottom:30px}
+.ct6-game-hub .ct6-hub-feature{min-height:380px;max-width:620px;box-shadow:none}
+.ct6-game-hub .ct6-hub-faceoff{justify-content:center;gap:clamp(12px,4vw,30px);margin-block:30px}
+.ct6-game-hub .ct6-hub-ring{max-width:148px}
+.ct6-game-hub .ct35-catalog-daily{margin-block:45px 52px}
+.ct6-game-hub .discover-section .home-catalog-toolbar{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:620px){
+.ct6-game-hub .ct6-hub-hero-grid{padding-block:40px 50px}
+.ct6-game-hub .ct6-hub-edition{font-size:11px}
+.ct6-game-hub .ct6-hub-copy h1{font-size:clamp(35px,9vw,49px);letter-spacing:-.05em;overflow-wrap:anywhere}
+.ct6-game-hub .ct6-hub-overline{font-size:10px;margin-bottom:25px}
+.ct6-game-hub .ct6-hub-actions{flex-direction:column;align-items:stretch}
+.ct6-game-hub .ct6-hub-action{width:100%}
+.ct6-game-hub .ct6-hub-feature{padding:20px;min-height:370px}
+.ct6-game-hub .ct6-hub-ring{max-width:128px}
+.ct6-game-hub .ct6-hub-ring span{font-size:40px}
+.ct6-game-hub .ct6-hub-feature-heading strong{font-size:30px}
+.ct6-game-hub .ct6-hub-baseline .home-shell{font-size:10px;gap:9px}
+.ct6-game-hub .discover-section .home-games-grid{grid-template-columns:minmax(0,1fr);gap:16px}
+.ct6-game-hub .discover-section .home-game-card,.ct6-game-hub .discover-section .home-game-card:nth-child(1),.ct6-game-hub .discover-section .ct3-duel-card,.ct6-game-hub .discover-section .home-game-card:nth-child(2),.ct6-game-hub .discover-section .ct6-career-card{grid-column:1;min-height:0}
+.ct6-game-hub .discover-section .home-game-media{height:175px}
+.ct6-game-hub .discover-section .home-game-card:nth-child(1) .home-game-media,.ct6-game-hub .discover-section .ct3-duel-card .home-game-media{height:175px}
+.ct6-game-hub .discover-section .home-game-content h3{font-size:30px!important}
+.ct6-game-hub .discover-section .home-section-heading h2{font-size:clamp(34px,9vw,52px)}
+.ct6-game-hub .discover-section .home-game-description{margin-bottom:12px}
+}
+@media(max-width:360px){
+.ct6-game-hub .ct6-hub-copy h1{font-size:35px}
+.ct6-game-hub .ct6-hub-feature-heading strong{font-size:26px}
+.ct6-game-hub .ct6-hub-ring{max-width:98px;border-width:8px}
+.ct6-game-hub .ct6-hub-ring span{font-size:32px}
+.ct6-game-hub .ct6-hub-ring small{font-size:8px}
+.ct6-game-hub .ct6-hub-feature-bottom{font-size:10px;flex-wrap:wrap}
+}
+@media(prefers-reduced-motion:reduce){.ct6-game-hub .ct6-hub-feature,.ct6-game-hub .ct6-hub-action,.ct6-game-hub .discover-section .home-game-card{transition:none!important;transform:none!important}}

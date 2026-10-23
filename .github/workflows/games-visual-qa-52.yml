@@ -14,6 +14,8 @@ on:
       - 'mentiroso.html'
       - 'mi-carrera.html'
       - 'games.html'
+      - 'assets/css/games-hub-6.css'
+      - 'scripts/hub_6_smoke.cjs'
       - 'assets/js/games/mi-carrera/**'
       - 'scripts/mi_carrera_assets_smoke.cjs'
       - 'scripts/qa_browser_52.cjs'
@@ -90,6 +92,16 @@ jobs:
             --out "$RUNNER_TEMP/ct-visual-52/mi-carrera" \
             --widths 320,360,375,390,430,768,1024,1366,1440,1920 \
             --games mi-carrera.html
+
+      - name: Audit redesigned game hub at ten viewport widths
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs \
+            --root after \
+            --out "$RUNNER_TEMP/ct-visual-52/game-hub" \
+            --widths 320,360,375,390,430,768,1024,1366,1440,1920 \
+            --games games.html
 
       - name: Save before/after screenshots and viewport metrics
         if: always()
