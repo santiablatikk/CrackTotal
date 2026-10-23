@@ -109,6 +109,12 @@ jobs:
           export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
           node after/scripts/qa_browser_52.cjs --root after --out "$RUNNER_TEMP/ct-visual-52/mentiroso-25-answers" --widths 320,360,390,768,1366 --games mentiroso.html --fixture bluff-long
 
+      - name: Audit QSM options with long football answers at five widths
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs --root after --out "$RUNNER_TEMP/ct-visual-52/qsm-long-choices" --widths 320,360,390,768,1366 --games quiensabemas.html --fixture qsm-long
+
       - name: Audit redesigned game hub at ten viewport widths
         if: always()
         run: |

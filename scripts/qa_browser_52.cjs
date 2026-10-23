@@ -292,6 +292,33 @@ function verifyWordleReload() {
   return true;
 }
 
+
+function qsmLongProbe(){
+ const buttons=[...document.querySelectorAll('#optionsGrid .modern-option.option-btn')];
+ if(buttons.length!==4)throw Error('QSM fixture must have four real-style choices');
+ const samples=[
+  'Club Atlético del Sur con una denominación deportiva excepcionalmente extensa',
+  'Asociación Deportiva de un futbolista con apellido compuesto de más de sesenta caracteres',
+  'Club de Fútbol Internacional con selección y federación nombradas en la misma respuesta',
+  'Atlético Deportivo Ciudad del Fútbol con nombre extraordinariamente largo para pruebas'
+ ];
+ buttons.forEach((button,i)=>{
+  const label=button.querySelector('.option-text');
+  if(!label)throw Error('QSM choice missing the real option-text child');
+  label.textContent=samples[i];
+ });
+ buttons[0].classList.add('incorrect');
+ const bg=getComputedStyle(buttons[0]).backgroundColor;
+ const rgb=(bg.match(/\d+/g)||[]).slice(0,3).map(Number);
+ if(rgb.length!==3||rgb[0]<100||rgb[0]<rgb[1]*1.5)
+  throw Error('Incorrect answer state not styled as red: '+bg);
+ if(buttons.some(button=>button.scrollWidth>button.clientWidth+2||button.scrollHeight>button.clientHeight+2))
+  throw Error('Long football option labels clipped in match');
+ return {count:buttons.length,
+  tallest:Math.round(Math.max(...buttons.map(b=>b.getBoundingClientRect().height))),
+  narrowest:Math.round(Math.min(...buttons.map(b=>b.getBoundingClientRect().width))),failureColor:bg};
+}
+
 async function main(){
   if (widths.some(w=>!Number.isInteger(w) || w<280 || w>3000)||!Number.isInteger(viewportHeight)||viewportHeight<480||viewportHeight>2160)throw Error('Invalid viewport');
   fs.mkdirSync(out,{recursive:true});
@@ -395,7 +422,7 @@ async function main(){
             JSON.stringify(restored.exceptionDetails||restored.result).slice(0,800));
         console.log('WORDLE LIVE '+width+'px: '+JSON.stringify(first.result.value));
       }
-      if(args.fixture === 'match' || args.fixture === 'bluff-long') {
+      if(['match','bluff-long','qsm-long'].includes(args.fixture)) {
         const result = await command('Runtime.evaluate',{
           expression:'('+stageMatchFixture.toString()+')('+JSON.stringify(game)+')',
           returnByValue:true,awaitPromise:true
@@ -432,6 +459,16 @@ async function main(){
         if(inspected.exceptionDetails||inspected.result?.value?.items!==25)
           throw Error('Mentiroso long-list fixture failed at '+width+': '+JSON.stringify(inspected.exceptionDetails||inspected.result).slice(0,700));
         console.log('MENTIROSO 25 RESPONSES '+width+': '+JSON.stringify(inspected.result.value));
+      }
+      if(args.fixture==='qsm-long'){
+        if(game!=='quiensabemas.html')throw Error('qsm-long expects QSM');
+        const checked=await command('Runtime.evaluate',{
+          expression:'('+qsmLongProbe.toString()+')()',
+          returnByValue:true
+        });
+        if(checked.exceptionDetails||checked.result?.value?.count!==4)
+          throw Error('QSM long-answer layout failed '+width+': '+JSON.stringify(checked.exceptionDetails||checked.result).slice(0,700));
+        console.log('QSM LONG OPTIONS '+width+': '+JSON.stringify(checked.result.value));
       }
       // The renderer sometimes swaps execution contexts immediately after
       // navigation on CI. Retry transient evaluation failures, not layout failures.
