@@ -24,6 +24,9 @@ for(const file of [...pageFiles,...assetFiles]){
   const text=fs.readFileSync(file,'utf8');
   assert(!/mi[-_ ]carrera|MiCarrera/i.test(text),'Retired game reference: '+path.relative(root,file));
 }
+const preview=fs.readFileSync(path.join(root,'netlify.toml'),'utf8');
+assert(preview.includes('from = "/mi-carrera.html"'),'Old preview URL must redirect');
+assert(preview.includes('from = "/mi-carrera"'),'Old extensionless preview URL must redirect');
 const server=fs.readFileSync(path.join(root,'server.js'),'utf8');
 assert(server.includes("pathname === '/mi-carrera.html'"),'Old career URL must redirect');
 assert(server.includes("'Location': '/games.html'"),'Old career URL must not 404');

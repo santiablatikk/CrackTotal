@@ -9,3 +9,14 @@
 [context.deploy-preview]
   command = "node validate-deploy.js && npm test && node scripts/build-netlify-preview.cjs"
   publish = "public"
+
+# Retired mode: preserve legacy bookmarks without publishing its source/assets.
+[[redirects]]
+  from = "/mi-carrera.html"
+  to = "/games.html"
+  status = 301
+
+[[redirects]]
+  from = "/mi-carrera"
+  to = "/games.html"
+  status = 301
