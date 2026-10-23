@@ -17,7 +17,10 @@ function walk(dir){
     return e.isDirectory()?walk(full):e.isFile()?[full]:[];
   });
 }
-for(const file of [...walk(root).filter(p=>p.endsWith('.html')),...walk(path.join(root,'assets')).filter(p=>/\.(css|js|json)$/.test(p))]){
+const pageFiles=fs.readdirSync(root,{withFileTypes:true})
+  .filter(e=>e.isFile() && e.name.endsWith('.html')).map(e=>path.join(root,e.name));
+const assetFiles=walk(path.join(root,'assets')).filter(p=>/\.(css|js|json)$/.test(p));
+for(const file of [...pageFiles,...assetFiles]){
   const text=fs.readFileSync(file,'utf8');
   assert(!/mi[-_ ]carrera|MiCarrera/i.test(text),'Retired game reference: '+path.relative(root,file));
 }
