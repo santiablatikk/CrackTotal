@@ -436,8 +436,8 @@ async function main(){
         const inspected=await command('Runtime.evaluate',{
           expression: "(() => {"+
             "const bid=document.getElementById('biddingPhase');"+
-            "const phase=document.getElementById('validationPhase');
-            const progress=document.getElementById('validationProgress');"+
+            "const phase=document.getElementById('validationPhase');"+
+            "const progress=document.getElementById('validationProgress');"+
             "const list=document.getElementById('answersToValidateList');"+
             "const confirm=document.getElementById('submitValidationButton');"+
             "if(!phase||!list||!confirm||!progress)throw Error('Validation nodes missing');"+

@@ -31,7 +31,7 @@ for(const page of pages){
  assert.equal(new Set(ids).size,ids.length,page+' duplicated HTML IDs');
 }
 const arena=read('pasala-1v1.html'),arenaCss=read('assets/css/pasala-duel.css');
-assert(arena.includes('pasala-duel.css?v=20261023-mobile-qa2'));
+assert(arena.includes('pasala-duel.css?v=20261023-question-first6'));
 assert(arenaCss.includes('family=Manrope')&&arenaCss.includes('Space+Grotesk'));
 assert(!arenaCss.includes('Barlow Condensed'));
 assert(!arenaCss.includes('DM Sans'));
