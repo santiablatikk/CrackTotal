@@ -32,7 +32,9 @@ for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
 if (!fs.existsSync(path.join(out, 'index.html')) || !fs.existsSync(path.join(out, 'assets/css/crack-total-2.css'))) {
   throw new Error('Missing entry page or redesign stylesheet in preview output');
 }
-if (fs.existsSync(path.join(out, 'mi-carrera.html')) || fs.existsSync(path.join(out, 'assets/data/mi-carrera'))) {
-  throw new Error('Retired career game must not be published in the preview');
+if (!fs.existsSync(path.join(out, 'mi-carrera.html')) ||
+    !fs.existsSync(path.join(out, 'assets/data/mi-carrera/clubs.json')) ||
+    !fs.existsSync(path.join(out, 'assets/js/games/mi-carrera/ui/app.js'))) {
+  throw new Error('Restored Mi Carrera game or dependencies missing from preview');
 }
 console.log('Netlify static preview ready:', pageCount, 'HTML pages, plus assets and config.');

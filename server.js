@@ -135,7 +135,7 @@ const server = http.createServer((req, res) => {
         }
         const identity = JSON.stringify({
             service: 'cracktotal',
-            version: '5.1.0',
+            version: '6.0.0',
             environment: process.env.CT_STAGING === 'true' ? 'staging' : 'production',
             commit: process.env.RENDER_GIT_COMMIT || null,
             branch: process.env.RENDER_GIT_BRANCH || null
@@ -150,16 +150,8 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    // Redirect bookmarks of the retired career mode to the active game catalog.
-    // Preserve existing public links without bringing the deleted game back.
-    if (pathname === '/mi-carrera.html' || pathname === '/mi-carrera') {
-        res.writeHead(301, {
-            'Location': '/games.html',
-            'Cache-Control': 'public, max-age=3600'
-        });
-        res.end();
-        return;
-    }
+    // Support legacy extensionless bookmarks for the restored career game.
+    if (pathname === '/mi-carrera') pathname = '/mi-carrera.html';
 
     // Redirect /index.html to /
     if (pathname === '/index.html') {

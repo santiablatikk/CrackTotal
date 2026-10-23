@@ -1,5 +1,5 @@
 // Service Worker optimizado para Crack Total
-const APP_VERSION = '5.1.0';
+const APP_VERSION = '6.0.0';
 const CACHE_NAME = `crack-total-v${APP_VERSION}`;
 const STATIC_CACHE_NAME = `crack-total-static-v${APP_VERSION}`;
 const DYNAMIC_CACHE_NAME = `crack-total-dynamic-v${APP_VERSION}`;
@@ -20,6 +20,10 @@ const STATIC_ASSETS = [
     '/',
     '/index.html',
     '/games.html',
+    '/mi-carrera.html',
+    '/assets/css/mi-carrera.css',
+    '/assets/css/games-hub-6.css',
+    '/assets/css/home-4.css',
     '/assets/css/base.css',
     '/assets/css/layout.css',
     '/assets/css/modals.css',

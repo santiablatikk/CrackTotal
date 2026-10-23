@@ -303,3 +303,28 @@ body.home-v2{background:var(--ct4-ink);color:var(--ct4-cream)}
 .ct42-daily-main .ct4-daily-bottom{color:#d4e5d3}
 .ct42-daily-main .ct4-daily-bottom strong{color:#b5eb53}
 @media(max-width:640px){.ct42-daily-body{grid-template-columns:minmax(0,1fr) 65px;gap:12px}.ct42-daily-ranks span{font-size:15px;grid-template-columns:12px 1fr;gap:3px;padding:3px}.ct42-daily-content h3{font-size:clamp(35px,9vw,54px)}}
+
+/* 6.0 / Mi Carrera restored: prominent journey billboard, not another small tile. */
+.ct4-game.ct4-game--career{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(0,.88fr);grid-template-rows:auto 1fr;gap:20px;min-height:345px;background:#18251e;padding:29px 36px}
+.ct4-game--career .ct4-game-photo img{object-position:center 53%;filter:saturate(.58) contrast(1.14) brightness(.7)}
+.ct4-game--career .ct4-game-photo:after{background:linear-gradient(90deg,rgba(7,20,16,.97) 0%,rgba(7,20,16,.77) 48%,rgba(7,20,16,.5) 100%),linear-gradient(0deg,rgba(8,22,15,.88),transparent)}
+.ct4-game--career .ct4-game-top{grid-column:1/-1}
+.ct4-career-path{align-self:center;display:flex;align-items:center;gap:clamp(8px,2vw,24px);min-width:0}
+.ct4-career-path>span{display:flex;flex-direction:column;gap:10px;border-top:2px solid rgba(181,235,83,.8);padding-top:11px;color:#b5eb53;font:700 clamp(32px,4vw,56px)/1 var(--ct4-font)}
+.ct4-career-path small{color:#e1e9dd;font:800 11px/1.4 Manrope,sans-serif;letter-spacing:.09em}
+.ct4-career-path>i{color:#b5eb53;font:800 20px var(--ct4-font);font-style:normal}
+.ct4-game--career .ct4-game-info{grid-column:2;grid-row:2;align-self:end}
+.ct4-game--career .ct4-game-info h3{font-size:clamp(42px,5vw,75px);line-height:1.02}
+.ct4-game--career .ct4-game-info p{max-width:440px}
+@media(max-width:760px){
+ .ct4-game.ct4-game--career{grid-column:1/-1;display:flex;flex-direction:column;justify-content:space-between;gap:25px;min-height:420px;padding:25px}
+ .ct4-career-path{align-self:flex-start;gap:12px}
+ .ct4-career-path>span{font-size:30px}
+ .ct4-career-path small{font-size:9px}
+ .ct4-game--career .ct4-game-info h3{font-size:clamp(43px,8vw,66px)}
+}
+@media(max-width:500px){
+ .ct4-game.ct4-game--career{grid-column:1;min-height:375px}
+ .ct4-career-path{display:none}
+ .ct4-game--career .ct4-game-info h3{font-size:clamp(45px,12vw,64px)}
+}
