@@ -109,11 +109,11 @@
     <!-- Servicio de partidas/ranking -->
     <script src="assets/js/firebase-service.js?v=202505272312"></script>
     <script src="assets/js/logros.js?v=202505272312"></script>
-    <script src="assets/js/mentiroso.js?v=20261021-arena52-r2"></script>
+    <script src="assets/js/mentiroso.js?v=20261023-validation6"></script>
     <link rel="stylesheet" href="assets/css/home.css?v=20260804v">
     <link rel="stylesheet" href="assets/css/discover.css?v=20260804v">
     <link rel="stylesheet" href="assets/css/game-shell.css?v=20261021-premium4">
-    <link rel="stylesheet" href="assets/css/mentiroso.css?v=20261021-premium3">
+    <link rel="stylesheet" href="assets/css/mentiroso.css?v=20261023-validation6">
 </head>
 <body class="game-body mentiroso-body ct-ds">
     <!-- Skip Link para accesibilidad -->
@@ -299,6 +299,7 @@
                         <!-- Validation Phase -->
                         <div id="validationPhase" style="display: none;">
                             <p id="validationInstructionText">Revisá las respuestas del rival:</p>
+                            <p class="ct-validation-progress" id="validationProgress" role="status" aria-live="polite">Esperando respuestas...</p>
                             <ul id="answersToValidateList" class="answers-to-validate">
                                 <!-- JS will populate this like:
                                 <li><span>Respuesta 1</span> <button class="validate-correct"><i class="fas fa-check"></i></button> <button class="validate-incorrect"><i class="fas fa-times"></i></button></li>

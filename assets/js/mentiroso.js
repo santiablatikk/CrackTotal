@@ -746,9 +746,23 @@ document.addEventListener('DOMContentLoaded', function() {
         updateChallengeArea();
     }
     
+    function updateValidationProgress(canValidate) {
+        const progress = document.getElementById('validationProgress');
+        if (!progress) return;
+        const total = Array.isArray(gameState.answersListed) ? gameState.answersListed.length : 0;
+        if (!canValidate) {
+            progress.textContent = total + ' respuestas enviadas · esperando al rival';
+            return;
+        }
+        const marked = Array.from({length:total}, (_,i) => gameState.clientSideValidations?.[i])
+            .filter(value => typeof value === 'boolean').length;
+        progress.textContent = marked + ' de ' + total + ' respuestas revisadas';
+    }
+
     function populateValidationList(answers, canValidate) {
         if (!answersToValidateListEl) return;
         answersToValidateListEl.innerHTML = ''; // Clear previous
+        gameState.clientSideValidations = [];
         answers.forEach((answer, index) => {
             const li = document.createElement('li');
             const answerTextSpan = document.createElement('span');
@@ -761,14 +775,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const correctButton = document.createElement('button');
                 correctButton.innerHTML = '<i class="fas fa-check"></i>';
+                correctButton.type = 'button';
                 correctButton.classList.add('validate-correct');
                 correctButton.dataset.index = index;
+                correctButton.setAttribute('aria-label', 'Marcar respuesta '+(index + 1)+' como válida: '+answer);
+                correctButton.setAttribute('aria-pressed', 'false');
                 correctButton.addEventListener('click', handleSingleValidation);
 
                 const incorrectButton = document.createElement('button');
                 incorrectButton.innerHTML = '<i class="fas fa-times"></i>';
+                incorrectButton.type = 'button';
                 incorrectButton.classList.add('validate-incorrect');
                 incorrectButton.dataset.index = index;
+                incorrectButton.setAttribute('aria-label', 'Marcar respuesta '+(index + 1)+' como inválida: '+answer);
+                incorrectButton.setAttribute('aria-pressed', 'false');
                 incorrectButton.addEventListener('click', handleSingleValidation);
                 
                 buttonsDiv.appendChild(correctButton);
@@ -784,6 +804,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             answersToValidateListEl.appendChild(li);
         });
+        updateValidationProgress(canValidate);
     }
     
     function handleSingleValidation(event) {
@@ -797,8 +818,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // UI update for the button pair
         const parentLi = button.closest('li');
-        parentLi.querySelectorAll('.validation-buttons button').forEach(btn => btn.classList.remove('selected'));
+        parentLi.querySelectorAll('.validation-buttons button').forEach(btn => {
+            btn.classList.remove('selected');
+            btn.setAttribute('aria-pressed','false');
+        });
         button.classList.add('selected');
+        button.setAttribute('aria-pressed','true');
+        updateValidationProgress(true);
         
         console.log(`Validated item ${index} as ${isCorrect ? 'correct' : 'incorrect'}`);
     }

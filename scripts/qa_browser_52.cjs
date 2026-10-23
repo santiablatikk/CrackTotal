@@ -400,10 +400,11 @@ async function main(){
         const inspected=await command('Runtime.evaluate',{
           expression: "(() => {"+
             "const bid=document.getElementById('biddingPhase');"+
-            "const phase=document.getElementById('validationPhase');"+
+            "const phase=document.getElementById('validationPhase');
+            const progress=document.getElementById('validationProgress');"+
             "const list=document.getElementById('answersToValidateList');"+
             "const confirm=document.getElementById('submitValidationButton');"+
-            "if(!phase||!list||!confirm)throw Error('Validation nodes missing');"+
+            "if(!phase||!list||!confirm||!progress)throw Error('Validation nodes missing');"+
             "bid.style.display='none';phase.style.display='block';list.replaceChildren();"+
             "for(let i=0;i<25;i++){const li=document.createElement('li');"+
             "const name=document.createElement('span');name.textContent='Respuesta futbolera extensa '+(i+1);"+
@@ -412,7 +413,7 @@ async function main(){
             "b.type='button';b.className='validate-'+cls;b.textContent=cls==='correct'?'✓':'×';actions.appendChild(b);}"+
             "li.append(name,actions);list.appendChild(li);}"+
             "const css=getComputedStyle(list);const rect=list.getBoundingClientRect();"+
-            "if(list.children.length!==25||list.scrollHeight<=list.clientHeight+2||"+
+            "const buttons=[...list.querySelectorAll('.validation-buttons button')];if(buttons.some(b=>b.getBoundingClientRect().width<44||b.getBoundingClientRect().height<44))throw Error('Mentiroso validator targets smaller than 44px');if(list.children.length!==25||list.scrollHeight<=list.clientHeight+2||"+
             "!['auto','scroll'].includes(css.overflowY)||rect.width<175)"+
             "throw Error('Mentiroso 25-item list not scrollable');"+
             "list.scrollIntoView({behavior:'instant',block:'center'});"+

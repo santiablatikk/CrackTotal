@@ -2074,3 +2074,56 @@ body.mentiroso-body .ct-bluff-stage .interaction-area :is(button,input,textarea)
 @media(prefers-reduced-motion:reduce) {
  body.mentiroso-body .ct-bluff-stage button{transition:none;animation:none;}
 }
+
+/* 6.0: Complete 20–32-answer validation without tiny targets or clipped names. */
+body.mentiroso-body .ct-bluff-stage #validationPhase{min-width:0}
+body.mentiroso-body #validationPhase .ct-validation-progress{
+ display:flex;align-items:center;min-height:40px;margin:0 0 11px;
+ padding:9px 12px;border-left:3px solid #b5eb53;background:#1a3429;
+ color:#e2f4dd;font:750 .88rem/1.35 "Manrope",sans-serif;
+}
+body.mentiroso-body .ct-bluff-stage .answers-to-validate{
+ max-height:clamp(220px,44dvh,430px);overflow-x:hidden;overflow-y:auto;
+ overscroll-behavior:contain;scrollbar-gutter:stable;
+ padding:8px;margin-bottom:14px;border:1px solid #63806d;
+ background:#132a20;border-radius:10px;
+}
+body.mentiroso-body .ct-bluff-stage .answers-to-validate li{
+ display:flex;align-items:center;justify-content:space-between;
+ min-width:0;gap:10px;padding:10px 12px;margin:0 0 7px;
+ background:#294637;border:1px solid #526c5b;border-radius:8px;
+}
+body.mentiroso-body .ct-bluff-stage .answers-to-validate li>span:first-child{
+ flex:1 1 0;min-width:0;margin:0;color:#f4f2e9;
+ font:700 clamp(.88rem,1.4vw,1rem)/1.5 "Manrope",sans-serif;
+ overflow-wrap:anywhere;
+}
+body.mentiroso-body .ct-bluff-stage .answers-to-validate .validation-buttons{
+ display:flex;flex:0 0 auto;gap:7px;
+}
+body.mentiroso-body .ct-bluff-stage .answers-to-validate .validation-buttons button{
+ display:grid;place-items:center;flex:0 0 44px;
+ width:44px;height:44px;border:1px solid #8ca791;border-radius:8px;
+ color:#f4f2e9;background:#1c362a;cursor:pointer;transition:background .12s,border-color .12s;
+}
+body.mentiroso-body .ct-bluff-stage .answers-to-validate .validation-buttons .validate-correct.selected{
+ background:#b5eb53;color:#14251a;border-color:#b5eb53;transform:none;box-shadow:none;
+}
+body.mentiroso-body .ct-bluff-stage .answers-to-validate .validation-buttons .validate-incorrect.selected{
+ background:#b04a3b;color:#fff;border-color:#df9688;transform:none;box-shadow:none;
+}
+body.mentiroso-body .ct-bluff-stage .answers-to-validate .validation-buttons button:focus-visible{
+ outline:3px solid #b5eb53;outline-offset:2px;
+}
+body.mentiroso-body .ct-bluff-stage #submitValidationButton{
+ width:100%;min-height:52px;margin-top:2px;
+}
+@media(max-width:390px){
+ body.mentiroso-body .ct-bluff-stage .answers-to-validate{padding:5px}
+ body.mentiroso-body .ct-bluff-stage .answers-to-validate li{padding:9px 7px;gap:5px}
+ body.mentiroso-body .ct-bluff-stage .answers-to-validate .validation-buttons{gap:5px}
+ body.mentiroso-body .ct-bluff-stage .answers-to-validate .validation-buttons button{width:44px;height:44px;flex-basis:44px}
+}
+@media(prefers-reduced-motion:reduce){
+ body.mentiroso-body .ct-bluff-stage .answers-to-validate .validation-buttons button{transition:none}
+}
