@@ -166,4 +166,21 @@ assert.ok(read('assets/css/pasalache.css').includes('body.game-body.ct-ds .game-
   'Pasala player HUD must wrap without creating a 338px page at 320px');
 assert.ok(read('assets/css/pasala-duel.css').includes('Preserve the physical mobile viewport'),
   'Duel must guard 320px layout against min-content expansion');
+// 6.0: verify the real components, not only display-only browser fixtures.
+const qsmLogic=read('assets/js/quiensabemas_1v1.js');
+assert.ok(qsmLogic.includes("btn.className = 'modern-option option-btn'"),'QSM must render the CSS component in live games');
+assert.ok(qsmLogic.includes("label.textContent = optionText"),'QSM should render option text safely');
+assert.ok(read('assets/css/qsm-1v1.css').includes('.modern-option.option-btn.incorrect'),
+  'QSM error class must be styled');
+const bluffLogic=read('assets/js/mentiroso.js');
+const bluffMarkup=read('mentiroso.html');
+assert.ok(bluffMarkup.includes('id="validationProgress"'),'Mentiroso needs visible validation progress');
+assert.ok(bluffLogic.includes("updateValidationProgress(true)"),'Mentiroso must update progress on validation click');
+assert.ok(bluffLogic.includes("setAttribute('aria-pressed','true')"),'Mentiroso answer validation must expose its toggle state');
+assert.ok(read('assets/css/mentiroso.css').includes('flex-basis:44px'),
+  'Mentiroso answer validators need comfortable phone targets');
+const duelLayout=read('assets/css/pasala-duel.css');
+assert.ok(duelLayout.includes('.match-stage.turns-stage .question-side{order:1;min-height:0}'),
+  'In narrow views the duel question should precede the decorative ring');
+
 console.log('GAMES 5.2 VISUAL CONTRACT: PASS (six game pages, shared shell, HTML nesting, premium match composition, CSS structure, focus and responsive).');

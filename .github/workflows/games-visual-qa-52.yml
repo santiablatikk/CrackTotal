@@ -49,6 +49,16 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Parse game clients and browser QA before running integration tests
+        working-directory: after
+        run: |
+          node --check scripts/qa_browser_52.cjs
+          node --check assets/js/quiensabemas_1v1.js
+          node --check assets/js/mentiroso.js
+          node --check assets/js/pasala-duel-client.js
+          node --check assets/js/pasalache.js
+          node --check assets/js/wordle-futbol.js
+
       - name: Run application test suite
         working-directory: after
         run: |
