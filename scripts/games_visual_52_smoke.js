@@ -149,8 +149,8 @@ assert.ok(read('assets/css/qsm-1v1.css').includes('max-width:720px'),
   'QSM answers must stack early enough for narrow touchscreens');
 assert.ok(read('assets/js/wordle-futbol.js').includes('boardResizeObserver'),
   'Wordle board must recompute size on responsive container changes');
-assert.ok(read('assets/js/wordle-futbol.js').includes('card.clientWidth'),
-  'Wordle must measure the actual card instead of assuming the viewport width');
+assert.ok(read('assets/js/wordle-futbol.js').includes('playfield.clientWidth'),
+  'Wordle must measure its actual shared playfield instead of assuming the viewport width');
 assert.ok(read('assets/css/wordle.css').includes('place-content:center'),
   'Variable-length Wordle board stays centered');
 
