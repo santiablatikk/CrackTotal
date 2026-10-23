@@ -6,6 +6,17 @@ on:
     branches: [main]
     paths:
       - 'assets/css/**'
+      - 'assets/js/pasalache.js'
+      - 'assets/js/pasala-duel-client.js'
+      - 'assets/js/top10.js'
+      - 'assets/js/wordle-futbol.js'
+      - 'assets/js/quiensabemas_1v1.js'
+      - 'assets/js/mentiroso.js'
+      - 'assets/data/**'
+      - 'scripts/**'
+      - 'server/**'
+      - 'package.json'
+      - 'package-lock.json'
       - 'pasalache.html'
       - 'pasala-1v1.html'
       - 'top10.html'
