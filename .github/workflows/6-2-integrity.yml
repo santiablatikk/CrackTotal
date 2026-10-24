@@ -1,0 +1,21 @@
+name: Crack Total 6.2 quick integrity
+on:
+  push:
+    branches:
+      - feature/crack-total-6-2-realtime-integrity
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Verify source bank, leaderboard integrity and online protocols
+        run: npm test
