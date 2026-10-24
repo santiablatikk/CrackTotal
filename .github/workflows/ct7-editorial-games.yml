@@ -37,7 +37,7 @@ jobs:
           node scripts/qa_browser_52.cjs \
             --root . \
             --out "$RUNNER_TEMP/ct7-browser" \
-            --games quien-soy.html,adivina-carrera.html \
+            --games quien-soy.html,adivina-carrera.html,profile.html \
             --fixture ct7-live \
             --widths 320,390,768,1366
       - name: Upload screenshots and geometry
