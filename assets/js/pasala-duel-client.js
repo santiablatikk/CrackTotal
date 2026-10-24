@@ -103,6 +103,7 @@
     ws.onmessage = event => {
       if (state.ws !== ws) return;
       let message; try { message = JSON.parse(event.data); } catch { return; }
+      if (!message || typeof message !== 'object') return;
       if (message.type === 'arena:hello') {
         if (message.payload?.protocol !== 'cracktotal-arena-5.2' ||
             message.payload?.features?.pasalaDuel !== true) {
