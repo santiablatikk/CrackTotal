@@ -274,7 +274,7 @@
           Array.isArray(rec.clubs) && rec.clubs.length >= 2 &&
           Array.isArray(rec.hints) && rec.hints.length === 4 &&
           Array.isArray(rec.source_urls) && rec.source_urls.length &&
-          rec.source_urls.every(function (url) { return /^https:\/\/(www\.fifa\.com|inside\.fifa\.com|www\.uefa\.com)\//.test(url); }) &&
+          rec.source_urls.every(function (url) { return /^https:\/\/(www\.fifa\.com|inside\.fifa\.com|publications\.fifa\.com|www\.uefa\.com|es\.uefa\.com)\//.test(url); }) &&
           rec.verified_at && rec.verified_at <= todayUtc();
       });
       byId = new Map(records.map(function (rec) { return [rec.id, rec]; }));
