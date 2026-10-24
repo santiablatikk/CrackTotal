@@ -1685,17 +1685,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 console.log(`Correct answer for ${currentLetter}. Pending letters: [${pendingLetters.join(', ')}]}. Next index: ${currentLetterIndex}.`); // Log before timeout
 
-                // --- Load next question after delay --- 
-                setTimeout(() => {
-                     answerInput.value = ''; 
-                     // Check if the game hasn't ended in the meantime
-                     if (timerInterval) { // Check if timer is still active as proxy for game state
-                         console.log(`Timeout finished. Calling loadQuestion for index: ${currentLetterIndex}, letter: ${pendingLetters[currentLetterIndex]}`); // Log inside timeout
-                         loadQuestion();
-                     } else {
-                         console.error("Timeout finished, BUT timerInterval was null/cleared. Skipping loadQuestion."); // Log if timerInterval is missing
-                     } 
-                }, 150); 
+                // Cargar la nueva pregunta y actualizar la letra activa en
+                // la misma operación. El retardo anterior exponía la C
+                // mientras currentQuestionData todavía era la B.
+                answerInput.value = '';
+                currentQuestionData = null;
+                if (!gameEnded && pendingLetters.length > 0) {
+                    loadQuestion();
+                }
             }
 
         } else {
