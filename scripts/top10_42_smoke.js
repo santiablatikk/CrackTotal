@@ -7,7 +7,7 @@ const core=require('../assets/js/top10-verified.js');
 const pool=JSON.parse(read('assets/data/top10_verified_v2.json'));
 const old=JSON.parse(read('assets/data/top10_pool.json'));
 const legacy=JSON.parse(read('assets/data/top10_pool_extended.json'));
-assert.equal(old.length+legacy.length,39,'Original 39 topics must remain in Git');
+assert.equal(old.length+legacy.length,38,'38 retained historical topics must exclude withdrawn football content');
 assert.equal(pool.length,4,'The immutable version-2 rotation must not be modified in place');
 assert(pool.every(core.validate),'Only source-backed, structurally valid topics allowed');
 assert.equal(new Set(pool.map(x=>x.id)).size,pool.length,'IDs unique');
