@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#101b1b">
+  <meta name="description" content="¿Quién soy? — Un futbolista. Cuatro pistas. ¿Cuántas necesitás? Nuevo juego futbolero de Crack Total.">
+  <title>¿Quién soy? | Crack Total</title>
+  <link rel="icon" href="portada.ico">
+  <link rel="stylesheet" href="assets/css/design-system/tokens.css">
+  <link rel="stylesheet" href="assets/css/ct7-games.css?v=20261024v1">
+  <script defer src="assets/js/ct7-games.js?v=20261024v1"></script>
+</head>
+<body class="ct7" data-ct7-mode="identity">
+  <a class="ct7-skip" href="#juego">Saltar al juego</a>
+  <header class="ct7-header">
+    <a class="ct7-brand" href="index.html" aria-label="Crack Total, ir al inicio"><span class="ct7-brand-emblem" aria-hidden="true">CT<span>✦</span></span> CRACK TOTAL</a>
+    <nav class="ct7-nav" aria-label="Navegación principal">
+      <a href="games.html">Todos los juegos</a><a href="adivina-carrera.html">Adiviná la carrera</a>
+      <a href="ranking.html">Rankings</a>
+    </nav>
+    <span class="ct7-header-note">FÚTBOL / CULTURA / COMPETENCIA</span>
+  </header>
+  <main id="juego" class="ct7-shell">
+    <div class="ct7-topline"><span>CRACK TOTAL / LABORATORIO DE FÚTBOL</span><span>EDICIÓN 07 — SOLO</span></div>
+    <section class="ct7-intro">
+      <div>
+        <p class="ct7-eyebrow"><span class="ct7-signal" aria-hidden="true"></span> NUEVA EXPERIENCIA · 01 / IDENTIDAD</p>
+        <h1>¿QUIÉN<br><em>SOY?</em></h1>
+        <p class="ct7-deck">Un futbolista. Cuatro pistas. ¿Cuántas necesitás? Cada pista cuesta puntos. Cada acierto suma experiencia local.</p>
+      </div>
+      <aside class="ct7-editorial" aria-label="Formato del juego">
+        <span>EL RETO</span><strong>04</strong><p>pistas posibles por jugador</p>
+        <small>FUENTES: FIFA Y UEFA · REVISADAS 24.10.2026</small>
+      </aside>
+    </section>
+    <div class="ct7-layout">
+      <section class="ct7-board" aria-label="Partida">
+        <div class="ct7-board-head"><span id="roundLabel">RONDA 00 / 06</span><span id="scoreLabel">0000 PTS</span></div>
+        <div class="ct7-progress-track" role="progressbar" aria-label="Progreso de la partida" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="roundProgress"><span id="roundProgressFill"></span></div>
+        <div id="startView" class="ct7-screen">
+          <span class="ct7-ordinal">00 / EL SILBATAZO INICIAL</span><h2>¿CUÁNTO SABÉS?</h2>
+          <p>Seis futbolistas. Tres oportunidades por ronda. Cuanto antes los descubras, mayor será tu puntuación.</p>
+          <button type="button" class="ct7-button ct7-button-primary" id="startButton">EMPEZAR PARTIDA <span aria-hidden="true">↗</span></button>
+          <p class="ct7-fineprint">Sin registro obligatorio. El progreso de este modo se guarda únicamente en este dispositivo y no entra en rankings online.</p>
+        </div>
+        <div id="playView" class="ct7-screen" hidden>
+          <div class="ct7-round-kicker"><span id="revealLabel">PISTAS REVELADAS</span><span id="attemptsLabel">3 INTENTOS</span></div>
+          <h2 id="questionHeading" tabindex="-1">DESCUBRÍ AL JUGADOR</h2>
+          <div id="clueList" class="ct7-clues" aria-label="Pistas del jugador"></div>
+          <button type="button" id="revealButton" class="ct7-secondary">REVELAR OTRA PISTA <span aria-hidden="true">+ </span></button>
+          <form id="guessForm" class="ct7-guess" autocomplete="off">
+            <label for="guessInput">¿QUIÉN ES?</label>
+            <div class="ct7-input-row"><input id="guessInput" name="respuesta" required maxlength="80" placeholder="Nombre o apellido del futbolista" aria-describedby="gameFeedback"><button type="submit" class="ct7-button ct7-button-primary">RESPONDER <span aria-hidden="true">↗</span></button></div>
+          </form>
+          <p id="gameFeedback" class="ct7-feedback" role="status" aria-live="polite"></p>
+          <button id="passButton" type="button" class="ct7-text-action">No lo sé, pasar de ronda →</button>
+        </div>
+        <div id="answerView" class="ct7-screen" hidden>
+          <span class="ct7-ordinal" id="answerState"></span><h2 id="answerName"></h2>
+          <p id="answerText"></p><p id="answerPoints" class="ct7-points"></p>
+          <a id="answerSource" class="ct7-source" target="_blank" rel="noopener noreferrer">CONSULTAR FUENTE OFICIAL ↗</a>
+          <div class="ct7-result-actions"><button id="nextButton" type="button" class="ct7-button ct7-button-primary">SIGUIENTE JUGADOR <span aria-hidden="true">↗</span></button></div>
+        </div>
+        <div id="finishView" class="ct7-screen" hidden>
+          <span class="ct7-ordinal">FINAL / PARTIDO TERMINADO</span><h2 id="finishHeading"></h2>
+          <p id="finishSummary"></p><div id="finishNumbers" class="ct7-finish-numbers"></div>
+          <div class="ct7-result-actions"><button id="againButton" class="ct7-button ct7-button-primary" type="button">JUGAR DE NUEVO ↗</button><a class="ct7-secondary ct7-link" href="games.html">VOLVER AL CATÁLOGO</a></div>
+        </div>
+      </section>
+      <aside class="ct7-sidebar">
+        <section class="ct7-side-card"><span class="ct7-side-index">01 / TU PROGRESO</span><h2>LA PLANILLA.</h2>
+          <div class="ct7-stats"><div><span>XP LOCAL</span><strong id="localXp">0</strong></div><div><span>ACIERTOS</span><strong id="localWins">0</strong></div><div><span>RACHA DE DÍAS</span><strong id="localStreak">0</strong></div></div>
+          <p id="localProgressNotice">Tus estadísticas se guardan en este dispositivo. No son puntos competitivos verificados.</p>
+        </section>
+        <section class="ct7-side-card ct7-side-card-cream"><span class="ct7-side-index">02 / MISIÓN DIARIA</span><h2>VOLVÉ A LA CANCHA.</h2><p id="dailyMission">Completá tres rondas hoy para desbloquear una medalla local.</p><div class="ct7-mission-meter"><span id="missionProgress"></span></div><span id="missionCounter">0 / 3 RONDAS</span></section>
+        <section class="ct7-side-card"><span class="ct7-side-index">03 / EL OTRO DESAFÍO</span><h2>SEGUÍ LA<br>TRAYECTORIA.</h2><a href="adivina-carrera.html" class="ct7-rail-link">JUGAR ADIVINÁ LA CARRERA ↗</a></section>
+      </aside>
+    </div>
+    <footer class="ct7-footer"><span>CRACK TOTAL — EL FÚTBOL SE JUEGA. EL CONOCIMIENTO SE DEMUESTRA.</span><a href="games.html">VOLVER A TODOS LOS JUEGOS ↗</a></footer>
+  </main>
+</body>
+</html>
