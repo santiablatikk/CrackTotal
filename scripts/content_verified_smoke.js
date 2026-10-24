@@ -27,7 +27,7 @@ for (const q of all) {
   questions.add(q.pregunta);
 }
 assert.equal(verified.questions.length, verified.newQuestionCount);
-assert.equal(verified.newQuestionCount, 29);
+assert.equal(verified.newQuestionCount, 24);
 for (const fact of verified.questions) {
   const q = all.find(row => row.letter === fact.letter && row.pregunta === fact.pregunta);
   assert.ok(q, 'Missing sourced Pasala fact: ' + fact.pregunta);
@@ -41,7 +41,7 @@ for (const fact of verified.questions) {
   assert.equal(new Set(acceptable).size, acceptable.length, 'Redundant alias: ' + fact.pregunta);
 }
 const official = top10.filter(x => x.source_url && x.verified_at);
-assert.equal(official.length, 7, 'Seven official UEFA challenges must be available');
+assert.equal(official.length, 6, 'Six historical sourced Top 10 challenges must remain');
 for (const topic of official) {
   assert.equal(topic.verified_at, verified.cutoff);
   assert.match(topic.source_url, /^https:\/\/www\.uefa\.com\//);

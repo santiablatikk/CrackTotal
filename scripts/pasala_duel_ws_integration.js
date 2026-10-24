@@ -55,8 +55,8 @@ async function awaitHealthy(port) {
   }
   throw new Error('Staging health endpoint did not respond: ' + serverLogs);
 }
-async function connect(port) {
-  const socket = new WebSocket('ws://127.0.0.1:' + port, { origin });
+async function connect(port, requestOrigin = origin) {
+  const socket = new WebSocket('ws://127.0.0.1:' + port, { origin: requestOrigin });
   const client = { socket, messages: [] };
   connections.push(client);
   socket.on('message', raw => {
@@ -148,6 +148,14 @@ async function main() {
   });
   await awaitHealthy(port);
   await checkRejectedOrigin(port);
+  // Render serves its own staging HTML as well as WS. A same-origin
+  // browser must be admitted even if staging env explicitly lists only
+  // the authorized Netlify preview for cross-origin browser traffic.
+  const renderSameOrigin = await connect(port, 'https://cracktotal-arena-staging.onrender.com');
+  assert.equal(renderSameOrigin.socket.readyState, WebSocket.OPEN,
+    'The actual Render staging origin must pass the WS upgrade');
+  renderSameOrigin.socket.close();
+  await new Promise(resolve => renderSameOrigin.socket.once('close', resolve));
 
   let host = await connect(port);
   const opponent = await connect(port);

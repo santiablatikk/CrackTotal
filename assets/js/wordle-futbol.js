@@ -10,6 +10,20 @@
     let stats = { played: 0, streak: 0, best: 0, lastDayKey: '' };
     let startTime = Date.now();
     const GAME_KEY = 'wordle_game_state_v1';
+    // Immutable daily rotation contract: releases may append verified entries,
+    // but must never rewrite the pool size for a day already published.
+    // A future expansion is activated with a NEW effective date and frozen size.
+    const DAILY_POOL_WINDOWS = Object.freeze([
+        { from: 0, size: 92 } // Original 6.0 daily schedule
+    ]);
+    function eligibleDailyPoolSize(daySeed, fullPoolLength) {
+        const window = [...DAILY_POOL_WINDOWS].reverse().find(v => daySeed >= v.from);
+        if (!window || !Number.isInteger(window.size) || window.size < 1 || fullPoolLength < window.size) {
+            throw new Error('Wordle daily pool is incomplete or misconfigured');
+        }
+        return window.size;
+    }
+
     let rowRatings = [];
     let finished = false;
     let wonToday = false;
@@ -63,7 +77,7 @@
             // daily seed by date
             const today = new Date();
             const seed = today.getFullYear() * 10000 + (today.getMonth()+1) * 100 + today.getDate();
-            const idx = seed % pool.length;
+            const idx = seed % eligibleDailyPoolSize(seed, pool.length);
             const entry = pool[idx];
             target = normalizeWord(entry.answer || entry.name || 'messi');
             setupBoard(target.length);
@@ -335,6 +349,9 @@
         }
 
         rowRatings[currentRow] = result;
+        // La interfaz pinta cada casilla escalonadamente; el modal no puede
+        // tapar el tablero antes de que termine la secuencia.
+        const revealFinishDelayMs = 90 * Math.max(0, guessArr.length - 1) + 470;
         // paint
         for (let i = 0; i < guessArr.length; i++) {
             const tile = getTile(currentRow, i);
@@ -354,9 +371,12 @@
             const attemptsUsed = currentRow + 1;
             currentRow = BOARD_ROWS; // lock
             finished = true; wonToday = true; saveGame();
-            tryConfetti();
+            document.querySelectorAll('.key').forEach(key => { key.disabled = true; });
             registerResult(true,attemptsUsed,Math.max(1,Math.floor((Date.now()-startTime)/1000)));
-            openResultModal(true);
+            setTimeout(() => {
+                tryConfetti();
+                openResultModal(true);
+            }, revealFinishDelayMs);
             return;
         }
 
@@ -364,9 +384,10 @@
         currentCol = 0;
         if (currentRow >= BOARD_ROWS) {
             finished = true; wonToday = false; saveGame();
+            document.querySelectorAll('.key').forEach(key => { key.disabled = true; });
             setMessage(`La palabra era: ${target.toUpperCase()}`);
             registerResult(false,BOARD_ROWS,Math.max(1,Math.floor((Date.now()-startTime)/1000)));
-            openResultModal(false);
+            setTimeout(() => openResultModal(false), revealFinishDelayMs);
         } else {
             saveGame();
             setMessage('Seguí intentando');

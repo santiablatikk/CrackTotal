@@ -171,6 +171,7 @@ advance(210);
 turns.handle(turnA,{type:'pasala:pass',payload:{letter:'B'}});
 const changing=get(turnB,'state');
 assert.equal(changing.activeSlot,1,'Pass schedules other player');
+assert.deepEqual(changing.players[0].passedLetters,['B'],'A passed letter stays distinct from a never-played pending letter');
 assert.equal(changing.turnReadyAt,clock+2000);
 assert.equal(changing.deadline,null,'Neither clock runs in transition');
 const paused=get(turnA,'state').players[0].remainingMs;
@@ -267,3 +268,14 @@ assert.equal(get(tieA,'result').winner,null,'Distinct roscos tied on correct ans
 assert.equal(get(tieA,'result').reason,'draw');
 tieService.destroy();
 console.log('Pasala Che duel smoke OK: room, mirrored questions, countdown, verified aliases, rate limit, spectators, reconnect, winner, nonrepeating rematch, closed-room notices, room cap, cleanup');
+
+// Display regression: the client preserves gameplay "pending" but applies a
+// separate passed visual token received from the authoritative server.
+const fs=require('node:fs');
+const path=require('node:path');
+const root=path.resolve(__dirname,'..');
+const duelClient=fs.readFileSync(path.join(root,'assets/js/pasala-duel-client.js'),'utf8');
+const duelCss=fs.readFileSync(path.join(root,'assets/css/pasala-duel.css'),'utf8');
+assert.match(duelClient,/visualStatus = status === 'pending' && passed\.has\(letter\) \? 'passed' : status/);
+assert.match(duelCss,/\.duel-ring \.ring-letter\.passed/);
+assert.match(fs.readFileSync(path.join(root,'pasala-1v1.html'),'utf8'),/legend-dot passed/);

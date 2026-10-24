@@ -4,7 +4,7 @@
 // desde los scripts cargados anteriormente
 
 // --- Game variables (Declare totalTime globally/module scope) ---
-let totalTime = 240; // Default: Normal difficulty (240 seconds)
+let totalTime = 300; // Match the preselected Normal mode (300 seconds)
 let currentPlayerName = 'Jugador Anónimo'; // <-- Variable para guardar el nombre
 let logrosAlInicioDePartida = {}; // <<< NUEVA VARIABLE GLOBAL PARA LOGROS
 
@@ -590,6 +590,28 @@ document.addEventListener('DOMContentLoaded', function() {
     let gameEnded = false;
     let gameUsedQuestionIndices = {}; // <<<--- Reset used QUESTIONS for new game
     alphabet.split('').forEach(letter => { gameUsedQuestionIndices[letter] = []; }); // Initialize arrays
+    // 6.1: remember the first displayed question of each letter across games,
+    // without changing what "Pasapalabra" means within the current match.
+    const RECENT_PASALA_KEY = 'ct_pasala_recent_v1';
+    const recentPasalaLimit = 5;
+    let recentlySeenPasala = {};
+    let firstShownThisGame = new Set();
+    const normalizeQuestionKey = text => String(text || '').normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+    function readRecentPasala() {
+        try {
+            const parsed = JSON.parse(localStorage.getItem(RECENT_PASALA_KEY) || '{}');
+            return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+        } catch (_) { return {}; }
+    }
+    function recordSeenPasala(letter, questionText) {
+        const key = normalizeQuestionKey(questionText);
+        if (!key) return;
+        const recent = readRecentPasala();
+        const previous = Array.isArray(recent[letter]) ? recent[letter] : [];
+        recent[letter] = [key, ...previous.filter(x => x !== key)].slice(0, recentPasalaLimit);
+        try { localStorage.setItem(RECENT_PASALA_KEY, JSON.stringify(recent)); } catch (_) {}
+    }
     let timeLeft = totalTime;
     let timerInterval;
     let maxErrors = 3; // Maximum number of errors allowed
@@ -665,7 +687,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 totalTime = 300; // Antes 240. Usuario indica 300s para MEDIO.
                 maxErrors = 3;   // Antes 3. Para ganar con hasta 3 errores, se pierde con 4.
         }
-        console.log(`Dificultad seleccionada: ${difficulty}, Tiempo: ${totalTime}s, Errores Máx (umbral de derrota): ${maxErrors}`);
+        console.log(`Dificultad seleccionada: ${difficulty}, Tiempo: ${totalTime}s, Errores permitidos (derrota al superarlos): ${maxErrors}`);
     }
     
     // Enhanced event listeners for difficulty buttons (legacy support)
@@ -957,6 +979,8 @@ document.addEventListener('DOMContentLoaded', function() {
         usedAnswerSignatures = new Set(); // <--- Reset used answers for new game
         gameUsedQuestionIndices = {}; // <<<--- Reset used QUESTIONS for new game
         alphabet.split('').forEach(letter => { gameUsedQuestionIndices[letter] = []; }); // Initialize arrays
+        recentlySeenPasala = readRecentPasala();
+        firstShownThisGame = new Set();
         timeLeft = totalTime;
         helpUsed = 0;
         incompleteAnswersUsed = 0;
@@ -992,10 +1016,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Assign the loaded questions directly
                 questions = loadedQuestions; // Assumes the merged file has the correct array structure
 
-                // Optional: Shuffle questions within each letter for randomness (if needed)
+                // Unbiased Fisher-Yates shuffle. Prioritize unseen recent questions
+                // across games without changing answer selection or "Pasapalabra".
                 questions.forEach(letterData => {
                     if (letterData.preguntas && Array.isArray(letterData.preguntas)) {
-                        letterData.preguntas.sort(() => Math.random() - 0.5);
+                        const pool = letterData.preguntas;
+                        for (let i = pool.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [pool[i], pool[j]] = [pool[j], pool[i]];
+                        }
+                        const recent = new Set(Array.isArray(recentlySeenPasala[letterData.letra])
+                            ? recentlySeenPasala[letterData.letra] : []);
+                        const fresh = pool.filter(q => !recent.has(normalizeQuestionKey(q.pregunta)));
+                        const repeated = pool.filter(q => recent.has(normalizeQuestionKey(q.pregunta)));
+                        letterData.preguntas = fresh.concat(repeated);
                     }
                 });
                 // <<<--- END: Fetch questions from the single merged file --- >>>
@@ -1106,6 +1140,10 @@ document.addEventListener('DOMContentLoaded', function() {
             letterElement.className = 'letter';
             letterElement.textContent = letter;
             letterElement.dataset.letter = letter;
+            letterElement.dataset.status = 'unanswered';
+            letterElement.setAttribute('role', 'button');
+            letterElement.tabIndex = 0;
+            letterElement.setAttribute('aria-label', 'Letra ' + letter + ', sin responder');
 
             const hintElement = document.createElement('span');
             hintElement.className = 'letter-hint';
@@ -1115,9 +1153,16 @@ document.addEventListener('DOMContentLoaded', function() {
             lettersContainer.appendChild(letterElement);
 
             // Add click event to jump to that letter (solo para letras no contestadas o pendientes)
-            letterElement.addEventListener('click', () => {
-                if (letterStatuses[letter] === 'unanswered' || letterStatuses[letter] === 'pending') {
+            const navigateLetter = () => {
+                if (!gameEnded && (letterStatuses[letter] === 'unanswered' || letterStatuses[letter] === 'pending')) {
                     goToLetter(letter);
+                }
+            };
+            letterElement.addEventListener('click', navigateLetter);
+            letterElement.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    navigateLetter();
                 }
             });
         });
@@ -1285,6 +1330,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 fullQuestion: question.pregunta
             };
             console.log(`Question loaded for ${currentLetter} at index ${currentQuestionIndex}:`, question.pregunta.substring(0,50) + '...');
+            if (!firstShownThisGame.has(currentLetter)) {
+                firstShownThisGame.add(currentLetter);
+                recordSeenPasala(currentLetter, question.pregunta);
+            }
 
             // --- Display the found question --- 
             console.log(`Displaying question for letter: ${currentLetter}. Question: ${question.pregunta.substring(0,30)}...`); // Log before display update
@@ -1328,20 +1377,30 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.querySelectorAll('.letter').forEach(element => {
             const letter = element.dataset.letter;
-            element.className = 'letter'; // Reset classes
-            
-            // Add status class
-            if (letterStatuses[letter] === 'correct') {
-                element.classList.add('correct');
-            } else if (letterStatuses[letter] === 'incorrect') {
-                element.classList.add('incorrect');
-            } else if (letterStatuses[letter] === 'pending') {
-                element.classList.add('pending');
-            }
-            
-            // Highlight current letter
-            if (letter === currentLetter) {
-                element.classList.add('active');
+            const status = letterStatuses[letter] || 'unanswered';
+            const active = !gameEnded && letter === currentLetter
+                && (status === 'unanswered' || status === 'pending');
+            // Las clases, el atributo de estado y el nombre accesible se
+            // derivan siempre del mismo estado de juego; no de estilos previos.
+            element.className = 'letter';
+            element.classList.toggle('correct', status === 'correct');
+            element.classList.toggle('incorrect', status === 'incorrect');
+            element.classList.toggle('pending', status === 'pending');
+            element.classList.toggle('active', active);
+            element.dataset.status = status;
+            element.dataset.active = String(active);
+            const labels = {
+                correct: 'correcta',
+                incorrect: 'incorrecta',
+                pending: 'Pasapalabra, pendiente',
+                unanswered: 'sin responder'
+            };
+            element.setAttribute('aria-label', 'Letra ' + letter + ', ' +
+                (labels[status] || labels.unanswered) + (active ? ', en juego' : ''));
+            element.setAttribute('aria-disabled', String(status === 'correct' || status === 'incorrect'));
+            element.tabIndex = status === 'correct' || status === 'incorrect' ? -1 : 0;
+
+            if (active) {
                 
                 // Mostrar pista solo si ya fue revelada y ES la letra activa
                 if (hintDisplayed[letter]) {
@@ -1377,16 +1436,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // letrasVisitadasEnVueltaActual.clear(); // Si el logro fuera por *cada* vuelta completa
             // <<<--- FIN RESET --- >>>
 
-            // Al completar una vuelta, limpiar el estado "pending" para que las letras puedan volver a jugarse
-            if (completedRounds > 0) {
-                for (let letter of pendingLetters) {
-                    if (letterStatuses[letter] === 'pending') {
-                        letterStatuses[letter] = 'unanswered';
-                    }
-                }
-                // Actualizar la visualización de las letras
-                updateLetterStyles();
-            }
+            // Las letras pasadas siguen pendientes hasta contestarse.
+            // Volver a A no las convierte de nuevo en "unanswered" ni
+            // vuelve a incrementar la estadística por un mismo pase.
+            updateLetterStyles();
         }
         
         loadQuestion();
@@ -1476,7 +1529,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (currentLetter === 'A' && correctAnswers === 0 && incorrectAnswers === 1 && passedAnswers === 0) { //Aproximado para primer error en A
                     errorEnLetraAEstaPartida = true;
                 }
-                if (incorrectAnswers === maxErrors -1) {
+                if (incorrectAnswers === maxErrors) {
                     estuvoAUnErrorDePerderEstaPartida = true;
                 }
                 letrasAcertadasSeguidasEstaPartida = 0; // Reset racha de aciertos
@@ -1524,8 +1577,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log(`Letra ${letterToRemove} removida. Índice ajustado a: ${currentLetterIndex}. Letras restantes: [${pendingLetters.join(', ')}]`);
                 }
                 
+                // Mostrar el error aunque la partida termine inmediatamente.
+                updateLetterStyles();
+                updateScoreDisplays();
+
                 // --- Check for DEFEAT --- 
-                if (incorrectAnswers >= maxErrors) {
+                if (incorrectAnswers > maxErrors) {
                     saveProfileStats(profileStats); 
                     endGame('defeat');
                     return; // Stop execution
@@ -1536,7 +1593,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     saveProfileStats(profileStats);
                     // Si no quedan letras pendientes, el rosco está completo
                     // La victoria depende de si no se superó el máximo de errores
-                    if (incorrectAnswers < maxErrors) {
+                    if (incorrectAnswers <= maxErrors) {
                         endGame('victory');
                     } else {
                         endGame('defeat');
@@ -1551,7 +1608,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Si no quedan letras pendientes después de este error, el juego debe terminar
                 if (pendingLetters.length === 0) {
                     saveProfileStats(profileStats);
-                    if (incorrectAnswers < maxErrors) {
+                    if (incorrectAnswers <= maxErrors) {
                         endGame('victory');
                     } else {
                         endGame('defeat');
@@ -1606,8 +1663,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Adjust index for next question load
                 if (currentLetterIndex >= pendingLetters.length && pendingLetters.length > 0) {
-                    currentLetterIndex = 0; 
-                } // No change needed if index is still valid
+                    currentLetterIndex = 0;
+                }
+                updateLetterStyles(); // La letra resuelta no queda activa entre preguntas.
 
                 // --- VERIFICACIÓN: ROSCO COMPLETO (NO QUEDAN LETRAS PENDIENTES) ---
                 if (pendingLetters.length === 0) {
@@ -1627,17 +1685,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 console.log(`Correct answer for ${currentLetter}. Pending letters: [${pendingLetters.join(', ')}]}. Next index: ${currentLetterIndex}.`); // Log before timeout
 
-                // --- Load next question after delay --- 
-                setTimeout(() => {
-                     answerInput.value = ''; 
-                     // Check if the game hasn't ended in the meantime
-                     if (timerInterval) { // Check if timer is still active as proxy for game state
-                         console.log(`Timeout finished. Calling loadQuestion for index: ${currentLetterIndex}, letter: ${pendingLetters[currentLetterIndex]}`); // Log inside timeout
-                         loadQuestion();
-                     } else {
-                         console.error("Timeout finished, BUT timerInterval was null/cleared. Skipping loadQuestion."); // Log if timerInterval is missing
-                     } 
-                }, 150); 
+                // Cargar la nueva pregunta y actualizar la letra activa en
+                // la misma operación. El retardo anterior exponía la C
+                // mientras currentQuestionData todavía era la B.
+                answerInput.value = '';
+                currentQuestionData = null;
+                if (!gameEnded && pendingLetters.length > 0) {
+                    loadQuestion();
+                }
             }
 
         } else {
@@ -1958,7 +2013,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Check if game should end (no more letters to play)
         if (pendingLetters.length === 0) {
             saveProfileStats(profileStats);
-            if (incorrectAnswers < maxErrors) {
+            if (incorrectAnswers <= maxErrors) {
                 endGame('victory');
             } else {
                 endGame('defeat');
@@ -1983,8 +2038,18 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateScoreDisplays() {
-        // Update all score displays
         updateScore();
+        const statuses = Object.values(letterStatuses);
+        const correct = statuses.filter(value => value === 'correct').length;
+        const incorrect = statuses.filter(value => value === 'incorrect').length;
+        const unresolved = alphabet.length - correct - incorrect;
+        const setCounter = (id, value) => {
+            const node = document.getElementById(id);
+            if (node) node.textContent = String(value);
+        };
+        setCounter('correctCount', correct);
+        setCounter('incorrectCount', incorrect);
+        setCounter('pendingCount', unresolved);
     }
     
     // Start the timer
@@ -2038,6 +2103,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function endGame(result = 'timeout') {
         if (gameEnded) return;
         gameEnded = true;
+        updateLetterStyles(); // Nunca dejar la siguiente letra "activa" al terminar.
         clearInterval(timerInterval);
     
         if (window.soundManager) {
@@ -2761,7 +2827,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (pasapalabraButton) {
-        pasapalabraButton.addEventListener('click', pasapalabra);
+        pasapalabraButton.addEventListener('click', () => pasapalabra(false));
     }
 
     // Note: startGameButton event listeners are handled in the main initialization section above

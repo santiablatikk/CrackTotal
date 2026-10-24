@@ -1,0 +1,370 @@
+[
+  {
+    "id": 1,
+    "answer": "messi"
+  },
+  {
+    "id": 2,
+    "answer": "pirlo"
+  },
+  {
+    "id": 3,
+    "answer": "keane"
+  },
+  {
+    "id": 4,
+    "answer": "pele"
+  },
+  {
+    "id": 5,
+    "answer": "xavi"
+  },
+  {
+    "id": 101,
+    "answer": "pep"
+  },
+  {
+    "id": 102,
+    "answer": "bielsa"
+  },
+  {
+    "id": 6,
+    "answer": "maradona"
+  },
+  {
+    "id": 7,
+    "answer": "riquelme"
+  },
+  {
+    "id": 8,
+    "answer": "batistuta"
+  },
+  {
+    "id": 9,
+    "answer": "crespo"
+  },
+  {
+    "id": 10,
+    "answer": "zanetti"
+  },
+  {
+    "id": 11,
+    "answer": "passarella"
+  },
+  {
+    "id": 12,
+    "answer": "distefano"
+  },
+  {
+    "id": 13,
+    "answer": "francescoli"
+  },
+  {
+    "id": 14,
+    "answer": "cavani"
+  },
+  {
+    "id": 15,
+    "answer": "suarez"
+  },
+  {
+    "id": 16,
+    "answer": "neymar"
+  },
+  {
+    "id": 17,
+    "answer": "ronaldo"
+  },
+  {
+    "id": 18,
+    "answer": "ronaldinho"
+  },
+  {
+    "id": 19,
+    "answer": "rivaldo"
+  },
+  {
+    "id": 20,
+    "answer": "kaka"
+  },
+  {
+    "id": 21,
+    "answer": "zidane"
+  },
+  {
+    "id": 22,
+    "answer": "henry"
+  },
+  {
+    "id": 23,
+    "answer": "platini"
+  },
+  {
+    "id": 24,
+    "answer": "lewandowski"
+  },
+  {
+    "id": 25,
+    "answer": "modric"
+  },
+  {
+    "id": 26,
+    "answer": "iniesta"
+  },
+  {
+    "id": 27,
+    "answer": "ramos"
+  },
+  {
+    "id": 28,
+    "answer": "casillas"
+  },
+  {
+    "id": 29,
+    "answer": "maldini"
+  },
+  {
+    "id": 30,
+    "answer": "totti"
+  },
+  {
+    "id": 32,
+    "answer": "cruyff"
+  },
+  {
+    "id": 33,
+    "answer": "gullit"
+  },
+  {
+    "id": 34,
+    "answer": "vanbasten"
+  },
+  {
+    "id": 35,
+    "answer": "mane"
+  },
+  {
+    "id": 36,
+    "answer": "salah"
+  },
+  {
+    "id": 37,
+    "answer": "drogba"
+  },
+  {
+    "id": 38,
+    "answer": "weah"
+  },
+  {
+    "id": 39,
+    "answer": "robben"
+  },
+  {
+    "id": 40,
+    "answer": "marquez"
+  },
+  {
+    "id": 41,
+    "answer": "sanchez"
+  },
+  {
+    "id": 42,
+    "answer": "valderrama"
+  },
+  {
+    "id": 43,
+    "answer": "rodriguez"
+  },
+  {
+    "id": 104,
+    "answer": "simeone"
+  },
+  {
+    "id": 105,
+    "answer": "ancelotti"
+  },
+  {
+    "id": 107,
+    "answer": "enrique"
+  },
+  {
+    "id": 108,
+    "answer": "aguero"
+  },
+  {
+    "id": 109,
+    "answer": "tevez"
+  },
+  {
+    "id": 110,
+    "answer": "higuain"
+  },
+  {
+    "id": 111,
+    "answer": "otamendi"
+  },
+  {
+    "id": 112,
+    "answer": "paredes"
+  },
+  {
+    "id": 113,
+    "answer": "acuna"
+  },
+  {
+    "id": 114,
+    "answer": "molina"
+  },
+  {
+    "id": 115,
+    "answer": "romero"
+  },
+  {
+    "id": 116,
+    "answer": "pezzella"
+  },
+  {
+    "id": 117,
+    "answer": "mascherano"
+  },
+  {
+    "id": 118,
+    "answer": "ortega"
+  },
+  {
+    "id": 119,
+    "answer": "veron"
+  },
+  {
+    "id": 120,
+    "answer": "aimar"
+  },
+  {
+    "id": 121,
+    "answer": "saviola"
+  },
+  {
+    "id": 122,
+    "answer": "ayala"
+  },
+  {
+    "id": 123,
+    "answer": "milito"
+  },
+  {
+    "id": 124,
+    "answer": "palermo"
+  },
+  {
+    "id": 125,
+    "answer": "martinez"
+  },
+  {
+    "id": 126,
+    "answer": "tagliafico"
+  },
+  {
+    "id": 127,
+    "answer": "correa"
+  },
+  {
+    "id": 128,
+    "answer": "nunez"
+  },
+  {
+    "id": 129,
+    "answer": "godin"
+  },
+  {
+    "id": 130,
+    "answer": "gimenez"
+  },
+  {
+    "id": 131,
+    "answer": "vidal"
+  },
+  {
+    "id": 132,
+    "answer": "bravo"
+  },
+  {
+    "id": 134,
+    "answer": "medel"
+  },
+  {
+    "id": 135,
+    "answer": "isla"
+  },
+  {
+    "id": 136,
+    "answer": "ospina"
+  },
+  {
+    "id": 137,
+    "answer": "cuadrado"
+  },
+  {
+    "id": 138,
+    "answer": "mina"
+  },
+  {
+    "id": 139,
+    "answer": "zapata"
+  },
+  {
+    "id": 140,
+    "answer": "guerrero"
+  },
+  {
+    "id": 141,
+    "answer": "farfan"
+  },
+  {
+    "id": 142,
+    "answer": "solano"
+  },
+  {
+    "id": 143,
+    "answer": "pizarro"
+  },
+  {
+    "id": 144,
+    "answer": "enner"
+  },
+  {
+    "id": 145,
+    "answer": "caicedo"
+  },
+  {
+    "id": 146,
+    "answer": "almiron"
+  },
+  {
+    "id": 147,
+    "answer": "gamarra"
+  },
+  {
+    "id": 148,
+    "answer": "ochoa"
+  },
+  {
+    "id": 149,
+    "answer": "hernandez"
+  },
+  {
+    "id": 150,
+    "answer": "herrera"
+  },
+  {
+    "id": "dembele-2025",
+    "answer": "DEMBELE"
+  },
+  {
+    "id": "mbappe-rm",
+    "answer": "MBAPPE"
+  },
+  {
+    "id": "julian-alvarez",
+    "answer": "ALVAREZ"
+  }
+]

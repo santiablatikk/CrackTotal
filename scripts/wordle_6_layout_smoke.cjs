@@ -25,3 +25,10 @@ assert.match(js,/boardResizeObserver\.observe\(playfield\)/);
 assert.match(js,/wordLength/);
 assert.match(js,/restoreGame\(\)/);
 console.log('PASS Wordle 6.0 layout structure: one responsive playfield, isolated CSS, dynamic tiles and daily persistence hooks');
+
+assert.match(js,/revealFinishDelayMs = 90 \* Math\.max\(0, guessArr\.length - 1\) \+ 470/,
+  'Wordle outcome modal should wait until all tiles have visibly revealed their rating');
+assert.match(js,/setTimeout\(\(\) => openResultModal\(false\), revealFinishDelayMs\)/,
+  'Wordle defeat must retain a visible final row before opening the result');
+assert.match(js,/openResultModal\(true\);\s*\}, revealFinishDelayMs\)/,
+  'Wordle victory must reveal all correct tiles before showing the result');

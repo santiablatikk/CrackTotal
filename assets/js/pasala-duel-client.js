@@ -257,21 +257,27 @@
     const turnMode = state.room?.mode === 'turns';
     const players = state.room?.players || [];
     const ownSlot = state.spectator ? 0 : Math.max(0, players.findIndex(p => p && p.id === state.selfId));
-    const render = (ring, statuses, currentLetter) => {
+    const render = (ring, statuses, currentLetter, passedLetters = []) => {
       ring.replaceChildren();
+      const passed = new Set(Array.isArray(passedLetters) ? passedLetters : []);
       letters.forEach((letter,index) => {
         const node = document.createElement('span');
         const status = statuses?.[letter] || 'pending';
-        node.className = 'ring-letter ' + status + (currentLetter === letter ? ' current' : '');
+        const visualStatus = status === 'pending' && passed.has(letter) ? 'passed' : status;
+        node.className = 'ring-letter ' + visualStatus + (currentLetter === letter ? ' current' : '');
         node.style.setProperty('--angle', (index * 360 / letters.length) + 'deg');
         node.textContent = letter; node.setAttribute('role','listitem');
-        node.setAttribute('aria-label', letter + ': ' + status);
+        node.setAttribute('aria-label', 'Letra ' + letter + ': ' +
+          ({correct:'correcta',incorrect:'incorrecta',passed:'Pasapalabra, pendiente',pending:'sin responder'}[visualStatus] || 'sin responder') +
+          (currentLetter === letter ? ', en juego' : ''));
         ring.append(node);
       });
     };
     render($('duelRing'), turnMode ? players[ownSlot]?.status : state.statuses,
-      turnMode && state.room.activeSlot !== ownSlot ? null : state.question?.letter);
-    if (turnMode) render($('opponentRing'), players[1 - ownSlot]?.status, null);
+      turnMode && state.room.activeSlot !== ownSlot ? null : state.question?.letter,
+      players[ownSlot]?.passedLetters || state.question?.passedLetters);
+    if (turnMode) render($('opponentRing'), players[1 - ownSlot]?.status, null,
+      players[1 - ownSlot]?.passedLetters);
   }
   function renderMatch() {
     if (!state.room) return;

@@ -84,6 +84,7 @@ function createPasalaDuelService(options = {}) {
       id: player.id, name: player.name, connected: live(player), ready: player.ready,
       correct: player.correct, incorrect: player.incorrect,
       answered: player.correct + player.incorrect, finished: player.finishedAt !== null,
+      passedLetters: [...player.passedLetters].sort(),
       ...(room.mode === 'turns' ? { remainingMs: remainingFor(room, slot),
         status: { ...player.status } } : {})
     });
@@ -122,7 +123,8 @@ function createPasalaDuelService(options = {}) {
         player.position = pos;
         const letter = LETTERS[pos];
         send(player.ws, 'pasala:question', {
-          letter, text: questionsFor(room, slot)[letter].pregunta, statuses: player.status
+          letter, text: questionsFor(room, slot)[letter].pregunta,
+          statuses: player.status, passedLetters: [...player.passedLetters].sort()
         });
         return;
       }
@@ -202,6 +204,7 @@ function createPasalaDuelService(options = {}) {
   function scoreTurnAnswer(room, slot, letter, correct, timeExpired = false) {
     const player = room.players[slot];
     player.status[letter] = correct ? 'correct' : 'incorrect';
+    player.passedLetters.delete(letter);
     player[correct ? 'correct' : 'incorrect']++;
     player.position = (player.position + 1) % LETTERS.length;
     send(player.ws, 'pasala:answerResult', { letter, correct, correctCount: player.correct, incorrectCount: player.incorrect });
@@ -233,6 +236,7 @@ function createPasalaDuelService(options = {}) {
       id: token(6), name: safeName(name), reconnectToken: token(18),
       ws, ready: false, correct: 0, incorrect: 0, position: 0,
       status: Object.fromEntries(LETTERS.map(letter => [letter, 'pending'])),
+      passedLetters: new Set(),
       finishedAt: null, lastAction: 0, graceTimer: null, remainingMs: null, pendingAnswer: null
     };
   }
@@ -380,8 +384,13 @@ function createPasalaDuelService(options = {}) {
       const allowed = [question.respuesta, ...(Array.isArray(question.respuestasAlternativas) ? question.respuestasAlternativas : [])];
       const correct = allowed.some(value => normalize(payload.answer) === normalize(value));
       player.status[letter] = correct ? 'correct' : 'incorrect';
+      player.passedLetters.delete(letter);
       player[correct ? 'correct' : 'incorrect']++;
       send(ws, 'pasala:answerResult', { letter, correct, correctCount: player.correct, incorrectCount: player.incorrect });
+    } else {
+      // Editorial display-only memory: the scoring state remains "pending"
+      // until a definitive answer, but the UI may distinguish a passed letter.
+      player.passedLetters.add(letter);
     }
     player.position = (player.position + 1) % LETTERS.length;
     if (room.mode === 'turns' && (isPass || player.status[letter] === 'incorrect')) {
@@ -549,6 +558,7 @@ function createPasalaDuelService(options = {}) {
         p.correct = 0; p.incorrect = 0; p.position = 0; p.finishedAt = null;
         p.remainingMs = room.duration * 1000;
         p.lastAction = 0; p.pendingAnswer = null; p.status = Object.fromEntries(LETTERS.map(letter => [letter, 'pending']));
+        p.passedLetters.clear();
       });
       room.ready = false; room.deadline = null; room.startedAt = null; room.endedAt = null; room.winner = null; room.winnerReason = null;
       room.activeSlot = null;

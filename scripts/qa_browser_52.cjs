@@ -337,6 +337,226 @@ async function qsmLongProbe(){
   narrowest:Math.round(Math.min(...buttons.map(b=>b.getBoundingClientRect().width))),failureColor:bg};
 }
 
+/**
+ * Real solo Pasala interactions: no synthetic rosco states. The browser
+ * clicks the same controls as a player and reads actual computed styles.
+ * No production network and no real user account are involved.
+ */
+async function pasalaLiveProbe() {
+  const $=id=>document.getElementById(id);
+  const waitFor=async (test,label)=>{
+    for(let attempt=0;attempt<120;attempt++){
+      const value=test();
+      if(value)return value;
+      await new Promise(resolve=>setTimeout(resolve,100));
+    }
+    throw Error('Pasala live interaction timed out: '+label);
+  };
+  const start=$('startGameButton');
+  if(!start)throw Error('Missing Pasala rules modal start control');
+  start.click();
+  const begin=await waitFor(()=>{
+    const b=$('startGameAfterLoadingButton');
+    return b&&!b.disabled&&b.textContent.indexOf('Cargando')<0?b:null;
+  },'bank loaded / start enabled');
+  begin.click();
+  await waitFor(()=>document.querySelector('.letter[data-letter="A"].active'),'initial A active');
+  const letter=(l)=>document.querySelector('.letter[data-letter="'+l+'"]');
+  const inspect=(l,status,color)=>{
+    const node=letter(l);
+    if(!node||!node.classList.contains(status)||node.dataset.status!==status)
+      throw Error('Pasala '+l+' expected '+status+', got '+node?.className+' '+node?.dataset.status);
+    const computed=getComputedStyle(node);
+    const bg=computed.backgroundImage+' '+computed.backgroundColor;
+    if(!bg.includes(color))throw Error('Pasala '+l+' '+status+' lost computed color '+color+': '+bg);
+    if(!node.getAttribute('aria-label')||node.getAttribute('role')!=='button')
+      throw Error('Pasala missing accessible state on '+l);
+    return {letter:l,status,background:bg};
+  };
+  const pass=$('pasapalabraButton'), input=$('answerInput'), submit=$('submitAnswerBtnIcon');
+  if(!pass||!input||!submit)throw Error('Pasala missing gameplay controls');
+  pass.click();
+  await waitFor(()=>letter('B')?.classList.contains('active'),'B after passing A');
+  const pending=inspect('A','pending','rgb(255, 224, 131)');
+  const question=$('questionText').textContent;
+  const response=await fetch('assets/data/pasalache_2025.json');
+  if(!response.ok)throw Error('Cannot read authoritative solo Pasala question bank');
+  const bank=await response.json();
+  const b=bank.find(group=>group.letra==='B')?.preguntas.find(q=>q.pregunta===question);
+  if(!b)throw Error('Displayed B question not found in real bank: '+question);
+  input.value=b.respuesta;
+  submit.click();
+  await waitFor(()=>letter('B')?.classList.contains('correct'),'B correct after real submit');
+  await waitFor(()=>letter('C')?.classList.contains('active'),'C after correct B');
+  const correct=inspect('B','correct','rgb(49, 229, 178)');
+  const gameErrors=[];
+  const oldError=console.error;
+  console.error=(...message)=>{gameErrors.push(message.map(String).join(' '));oldError(...message)};
+  input.value='zzzzzz_invalid_not_a_player_9999';
+  submit.click();
+  try{
+    await waitFor(()=>letter('C')?.classList.contains('incorrect'),'C incorrect after real submit');
+    await waitFor(()=>letter('D')?.classList.contains('active'),'D after incorrect C');
+  }catch(error){
+    const visible={
+      C:letter('C')?.className, D:letter('D')?.className,
+      current:$('currentLetterText')?.textContent,question:$('questionText')?.textContent,
+      value:input.value,incorrect:$('incorrectCount')?.textContent,
+      console:gameErrors.slice(-8)
+    };
+    throw Error(error.message+'; DOM '+JSON.stringify(visible));
+  }finally{console.error=oldError}
+  const incorrect=inspect('C','incorrect','rgb(255, 104, 115)');
+  for(let code=68;code<=90;code++){
+    const expected=String.fromCharCode(code);
+    if(!letter(expected)?.classList.contains('active'))throw Error('Incorrect pass order at '+expected);
+    pass.click();
+  }
+  await waitFor(()=>letter('A')?.classList.contains('active'),'revisit passed A after full round');
+  inspect('A','pending','rgb(255, 224, 131)');
+  const stats=['correctCount','incorrectCount','pendingCount'].map(id=>Number($(id)?.textContent));
+  if(stats.join(',')!=='1,1,24')throw Error('Rosco counters diverged: '+stats.join(','));
+  if(!letter('A').getAttribute('aria-label').includes('pendiente'))
+    throw Error('Returned Pasapalabra letter lacks accessible pending status');
+  pass.click(); // A second pass must NOT revert A to unanswered.
+  inspect('A','pending','rgb(255, 224, 131)');
+  if($('pendingCount').textContent!=='24')throw Error('Second pass inflated unresolved count');
+  const submitWrong=async (letterName)=>{
+    await waitFor(()=>letter(letterName)?.classList.contains('active'),'active '+letterName);
+    input.value='zzzzzz_invalid_not_a_player_9999';
+    submit.click();
+    await waitFor(()=>letter(letterName)?.classList.contains('incorrect'),'incorrect '+letterName);
+    inspect(letterName,'incorrect','rgb(255, 104, 115)');
+  };
+  await submitWrong('D'); // 2 errors
+  await submitWrong('E'); // 3 errors, NORMAL must still continue
+  if(!letter('F')?.classList.contains('active')||$('incorrectCount')?.textContent!=='3')
+    throw Error('Normal ended before exceeding its advertised 3 allowed errors');
+  await submitWrong('F'); // 4 errors, now defeat
+  if($('incorrectCount')?.textContent!=='4')
+    throw Error('Defeat did not preserve the fourth incorrect result');
+  if(!letter('B').classList.contains('correct')||!letter('A').classList.contains('pending'))
+    throw Error('End state erased earlier letter outcomes');
+  if(document.querySelectorAll('#lettersContainer .letter.active').length)
+    throw Error('Ended rosco still displays an active letter');
+  return {correct,incorrect,pending,revisitedA:true,counters:stats,defeatAt:4};
+}
+
+/**
+ * Genuine Top 10 daily game browser regression. No mock game-state injection:
+ * interacts with the real daily pool and button handlers in a disposable profile.
+ */
+async function top10LiveProbe(){
+  const $=id=>document.getElementById(id);
+  const waitFor=async (predicate,label)=>{
+    for(let i=0;i<100;i++){
+      const value=predicate();if(value)return value;
+      await new Promise(resolve=>setTimeout(resolve,90));
+    }
+    throw Error('Top 10 browser timeout: '+label);
+  };
+  const start=await waitFor(()=>!$('startBtn')?.hidden&&$('startBtn'),'ready daily start');
+  start.click();
+  await waitFor(()=>!$('surnameInput').disabled&&$('top10GameCard').hidden===false,'gameplay start');
+  const input=$('surnameInput'),button=$('submitBtn');
+  const data=await (await fetch('assets/data/top10_verified_v2.json',{cache:'no-store'})).json();
+  const topic=window.CTTop10Verified.pick(data,new Date().toISOString().slice(0,10));
+  if(!topic.answers.length||!$('topicTitle').textContent.includes(topic.title))
+    throw Error('Top 10 daily game did not use official-pool picker');
+  const answer=topic.answers[0];
+  input.value='zzz-invalid-football-answer-999';
+  button.click();
+  if($('messageBox').dataset.result!=='incorrect'||$('foundCount').textContent!=='0/10')
+    throw Error('Top 10 incorrect guess was not rejected and identified');
+  const incorrectColor=getComputedStyle($('messageBox')).color;
+  if(!incorrectColor.includes('255, 159, 166'))
+    throw Error('Top 10 lost red incorrect feedback: '+incorrectColor);
+  input.value=answer;button.click();
+  await waitFor(()=>$('foundCount').textContent==='1/10','first valid team reveal');
+  if(!$('answersList').children[0].classList.contains('solved'))
+    throw Error('First answer was not revealed in its real ranking slot');
+  if($('messageBox').dataset.result!=='correct')
+    throw Error('Top 10 missing correct feedback on valid answer');
+  const before=JSON.parse(localStorage.getItem('top10_state_v1'));
+  if(before.attempts!==2||before.found.length!==1||before.found[0]!==answer)
+    throw Error('Top 10 scores or persisted answer incorrect: '+JSON.stringify(before));
+  input.value=answer;button.click();
+  const after=JSON.parse(localStorage.getItem('top10_state_v1'));
+  if(after.attempts!==2||after.found.length!==1)
+    throw Error('Duplicate Top 10 answer changed attempts or score');
+  $('giveUpBtn').click();
+  await waitFor(()=>$('resultModal').style.display==='flex','result modal on finishing');
+  if($('statFound').textContent!=='1'||$('statAttempts').textContent!=='2')
+    throw Error('Top 10 result summary diverged from play');
+  $('viewRankingBtn').click();
+  if($('resultModal').style.display!=='none'||$('dailyOverlay').style.display!=='none')
+    throw Error('Top 10 result dismissal still obscures completed ranking');
+  if(!$('surnameInput').disabled||!$('submitBtn').disabled||!$('giveUpBtn').disabled)
+    throw Error('Top 10 read-only final ranking accidentally permits another attempt');
+  if($('gameNumber').textContent!=='FINALIZADO'||$('foundCount').textContent!=='1/10')
+    throw Error('Top 10 final HUD is inconsistent');
+  const finished=JSON.parse(localStorage.getItem('top10_state_v1'));
+  if(!finished.finished||finished.won||finished.found.length!==1)
+    throw Error('Top 10 final state was not saved');
+  return {topicId:topic.id,correct:answer,attempts:finished.attempts,found:finished.found.length,
+    incorrectColor,rankingAccessible:true,gameLocked:true};
+}
+
+/**
+ * Real Wordle first-try win after the existing reload/invalid-guess test.
+ * Reads the exact verified daily pool rather than injecting synthetic scores.
+ */
+async function wordleVictoryRevealProbe(){
+  const waitFor=async (test,label)=>{
+    for(let i=0;i<80;i++){const ok=test();if(ok)return ok;
+      await new Promise(resolve=>setTimeout(resolve,85));}
+    throw Error('Wordle victory timeout: '+label);
+  };
+  const state=JSON.parse(localStorage.getItem('wordle_game_state_v1')||'null');
+  if(state?.board?.[0]?.[0]!=='m'||state?.currentRow!==0)
+    throw Error('Pre-victory Wordle session unexpectedly changed');
+  const pool=await (await fetch('assets/data/wordle_pool.json')).json();
+  const d=new Date(),seed=d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate();
+  const answer=pool[seed%92];
+  const target=String(answer.answer||answer.name||'messi').toLowerCase()
+    .normalize('NFD').replace(/\p{Diacritic}/gu,'').replace(/[^a-zñ]/g,'');
+  if(target.length!==Number(document.querySelector('#board').dataset.columns))
+    throw Error('Daily Wordle picker changed unexpectedly');
+  const key=letter=>document.querySelector('.key[data-key="'+letter+'"]');
+  key('⌫')?.click();
+  for(const letter of target){
+    const button=key(letter);
+    if(!button)throw Error('Missing key for daily football word: '+letter);
+    button.click();
+  }
+  if(document.querySelectorAll('#board [data-row="0"].filled').length!==target.length)
+    throw Error('Daily Wordle answer was not entered through visible keyboard');
+  key('↵')?.click();
+  const modal=document.getElementById('wordleResultModal');
+  if(modal?.classList.contains('active'))
+    throw Error('Wordle winner modal obscured letters before reveal animation');
+  await waitFor(()=>{
+    const tiles=[...document.querySelectorAll('#board [data-row="0"]')];
+    return tiles.length===target.length&&tiles.every(t=>t.classList.contains('correct'));
+  },'all correct tiles');
+  const tile=document.querySelector('#board [data-row="0"][data-col="0"]');
+  const neutral=document.querySelector('#board [data-row="1"][data-col="0"]');
+  const green=getComputedStyle(tile).backgroundColor;
+  if(green===getComputedStyle(neutral).backgroundColor)
+    throw Error('Wordle green correct-feedback color missing: '+green);
+  if(!tile.getAttribute('aria-label')?.includes('posición correcta'))
+    throw Error('Wordle tiles lost accessible result labels');
+  const persisted=JSON.parse(localStorage.getItem('wordle_game_state_v1')||'null');
+  if(!persisted?.finished||!persisted?.won||!persisted.rowRatings[0].every(x=>x==='correct'))
+    throw Error('Wordle completed correct state not persisted');
+  const keyboard=[...document.querySelectorAll('.key')];
+  if(!keyboard.length||keyboard.some(x=>!x.disabled))
+    throw Error('Wordle terminal game still exposes actionable keyboard controls');
+  await waitFor(()=>modal?.classList.contains('active'),'result modal after tile reveal');
+  return {answerLength:target.length,feedback:green,allCorrect:true,
+    modalAfterReveal:true,persisted:true,keyboardLocked:true};
+}
+
 async function main(){
   if (widths.some(w=>!Number.isInteger(w) || w<280 || w>3000)||!Number.isInteger(viewportHeight)||viewportHeight<480||viewportHeight>2160)throw Error('Invalid viewport');
   fs.mkdirSync(out,{recursive:true});
@@ -408,7 +628,7 @@ async function main(){
           expression:"performance.timeOrigin",returnByValue:true
         });
         const oldOrigin=beforeReload.result?.value;
-        await command('Runtime.evaluate',{expression:"localStorage.removeItem('wordle_game_state_v1')",returnByValue:true});
+        await command('Runtime.evaluate',{expression:"localStorage.removeItem('wordle_game_state_v1');localStorage.removeItem('wordle_stats')",returnByValue:true});
         await command('Page.reload',{ignoreCache:true});
         // A reload during a slow asset or daily-pool fetch can temporarily
         // leave the document without the game DOM. Wait for the actual game,
@@ -459,7 +679,36 @@ async function main(){
         if(restored.exceptionDetails||restored.result?.value!==true)
           throw Error('Wordle live reload failed '+width+': '+
             JSON.stringify(restored.exceptionDetails||restored.result).slice(0,800));
-        console.log('WORDLE LIVE '+width+'px: '+JSON.stringify(first.result.value));
+        const victory=await command('Runtime.evaluate',{
+          expression:'('+wordleVictoryRevealProbe.toString()+')()',
+          returnByValue:true,awaitPromise:true
+        });
+        if(victory.exceptionDetails||!victory.result?.value?.modalAfterReveal)
+          throw Error('Wordle real victory and color feedback failed '+width+': '+
+            JSON.stringify(victory.exceptionDetails||victory.result).slice(0,1100));
+        console.log('WORDLE LIVE '+width+'px: '+
+          JSON.stringify({...first.result.value,victory:victory.result.value}));
+      }
+      if(args.fixture==='top10-live'){
+        if(game!=='top10.html')throw Error('top10-live requires Top 10');
+        const result=await command('Runtime.evaluate',{
+          expression:'('+top10LiveProbe.toString()+')()',
+          returnByValue:true,awaitPromise:true
+        });
+        if(result.exceptionDetails||!result.result?.value?.rankingAccessible)
+          throw Error('TOP 10 LIVE failed at '+width+': '+
+            JSON.stringify(result.exceptionDetails||result.result).slice(0,1200));
+        console.log('TOP 10 LIVE '+width+'px: '+JSON.stringify(result.result.value));
+      }
+      if(args.fixture==='pasala-live'){
+        if(game!=='pasalache.html')throw Error('pasala-live requires Pasala Che');
+        const result=await command('Runtime.evaluate',{
+          expression:'('+pasalaLiveProbe.toString()+')()',
+          returnByValue:true,awaitPromise:true
+        });
+        if(result.exceptionDetails||!result.result?.value?.revisitedA||result.result?.value?.defeatAt!==4)
+          throw Error('PASALA LIVE failed at '+width+': '+JSON.stringify(result.exceptionDetails||result.result).slice(0,1000));
+        console.log('PASALA LIVE '+width+'px: '+JSON.stringify(result.result.value.counters));
       }
       if(['match','bluff-long','qsm-long'].includes(args.fixture)) {
         // Offline duel clients may asynchronously restore their lobby after the
@@ -541,7 +790,7 @@ async function main(){
     const failed=rows.filter(x=>!x.title.includes('Crack Total') || x.expectedWidth!==x.width || x.overflow>2 || x.offscreen.length);
     const summary='# Crack Total 6.0 — Chromium QA\n\n'+(args.baseline?'Before':'After')+' · '+rows.length+' viewport/page combinations · '+failed.length+' alerts\n\n'+
       (failed.map(x=>'- '+x.game+' '+x.expectedWidth+'px: title='+x.title+', overflow='+x.overflow+', offscreen='+x.offscreen.length).join('\n') || 'No reported overflow or offscreen primary controls')+
-      '\n\nScope: ' + (args.fixture === 'match' ? 'synthetic match-state layout only (no game logic or WebSocket assertions).' : args.fixture === 'wordle-live' ? 'real local Wordle keyboard clicks, deletion, saved progress, page reload, invalid submit, and layout geometry (no backend or date rollover assertions).' : 'initial screens only. Gameplay, results, WebSocket and disconnect states require separate QA.') + '\n';
+      '\n\nScope: ' + (args.fixture === 'match' ? 'synthetic match-state layout only (no game logic or WebSocket assertions).' : args.fixture === 'top10-live' ? 'real daily Top 10 invalid, correct, duplicate, result, read-only ranking and persisted state.' : args.fixture === 'pasala-live' ? 'real solo Pasala controls, correct/wrong/pass states, computed colors, and 26-letter round persistence (no backend assertions).' : args.fixture === 'wordle-live' ? 'real local Wordle keyboard clicks, deletion, saved progress, page reload, invalid submit, color-verified victory, and terminal keyboard lock (no backend or date rollover assertions).' : 'initial screens only. Gameplay, results, WebSocket and disconnect states require separate QA.') + '\n';
     fs.writeFileSync(path.join(out,'SUMMARY.md'),summary);
     if(failed.length&&!args.baseline)process.exitCode=1;
   } finally {

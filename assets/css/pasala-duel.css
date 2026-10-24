@@ -397,3 +397,18 @@ body.overlay-mode{background:transparent}.overlay-mode .arena-header,.overlay-mo
   background:#1c3728;color:#e4f4d9;
  }
 }
+
+/* 6.1 — Distinguish a player-initiated pass from an untouched letter.
+   This is server-reported display metadata; status remains pending for scoring. */
+.duel-ring .ring-letter.passed {
+  background:#ffcf65;
+  border-color:#fff0bd;
+  color:#342305;
+  box-shadow:0 0 0 1px rgba(255,207,101,.18);
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+.ring-legend .legend-dot.passed {background:#ffcf65}
+.duel-ring .ring-letter.current.passed {
+  outline-color:#f4f2e9;
+  outline-offset:3px;
+}

@@ -83,10 +83,6 @@ EDITORIAL_SOFT = [
         "Impacto Económico y Mediático hacia 2026",
     ),
     (
-        r"fútbol femenino en Argentina y el mundo en 2025",
-        "fútbol femenino en Argentina y el mundo hacia 2026",
-    ),
-    (
         r"tecnología está revolucionando el fútbol en 2025",
         "tecnología está revolucionando el fútbol hacia 2026",
     ),

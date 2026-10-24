@@ -89,7 +89,7 @@
     <link rel="stylesheet" href="assets/css/base.css?v=20260803n">
     <link rel="stylesheet" href="assets/css/design-system/index.css?v=20261020v5">
     <link rel="stylesheet" href="assets/css/layout.css?v=20260803n">
-    <link rel="stylesheet" href="assets/css/pasalache.css?v=20261023-readability6">
+    <link rel="stylesheet" href="assets/css/pasalache.css?v=20261024-rosco-state61">
     <link rel="stylesheet" href="assets/css/modals.css?v=20260803n">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -173,6 +173,13 @@
                         Respondé las preguntas del rosco o tocá Pasala Che para seguir
                     </div>
                     
+                    <div class="ct-rosco-stats" role="group" aria-label="Estado del rosco">
+                        <div class="ct-rosco-stat ct-rosco-stat--correct"><span>Aciertos</span><strong id="correctCount">0</strong></div>
+                        <div class="ct-rosco-stat ct-rosco-stat--incorrect"><span>Errores</span><strong id="incorrectCount">0</strong></div>
+                        <div class="ct-rosco-stat ct-rosco-stat--pending"><span>Por resolver</span><strong id="pendingCount">26</strong></div>
+                    </div>
+                    <p class="ct-rosco-legend">Verde: correcta · Rojo: incorrecta · Amarillo: Pasala Che · Lima: en juego</p>
+
                     <div class="rosco-circle">
                         <div class="letters-container" id="lettersContainer">
                             <!-- Letters will be populated dynamically -->
@@ -238,7 +245,7 @@
     <script src="assets/js/services/progress/progress-bridge.js?v=20260801e"></script>
     <script src="assets/js/player-profile.js?v=20260801"></script>
     <script src="assets/js/main.js?v=20260801" defer></script>
-    <script src="assets/js/pasalache.js?v=20261019a"></script>
+    <script src="assets/js/pasalache.js?v=20261024-rosco-state61"></script>
 
     <!-- Modal de reglas del juego -->
     <div class="modal-overlay active" id="gameRulesModal">

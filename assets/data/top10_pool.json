@@ -221,40 +221,6 @@
     "criteria": "Orden de los diez goles elegidos por los observadores técnicos de UEFA; clasificación editorial, no estadística de goles."
   },
   {
-    "comp": "Champions femenina",
-    "season": "2023/24",
-    "id": 2005,
-    "answers": [
-      "Oshoala",
-      "Bonmatí",
-      "Cascarino",
-      "Kielland",
-      "Dumornay",
-      "Graham Hansen",
-      "Cuthbert",
-      "Schough",
-      "Alidou",
-      "Katoto"
-    ],
-    "hints": [
-      "Barcelona",
-      "Barcelona",
-      "Lyon",
-      "Brann",
-      "Lyon",
-      "Barcelona",
-      "Chelsea",
-      "Rosengård",
-      "Benfica",
-      "PSG"
-    ],
-    "title": "10 mejores goles de Champions femenina 2023/24 (UEFA)",
-    "source": "UEFA — Observadores Técnicos",
-    "source_url": "https://www.uefa.com/womenschampionsleague/news/028d-1afcf84c08ab-d5e6b4da2e2c-1000--top-ten-goals-of-the-season/",
-    "verified_at": "2026-10-19",
-    "criteria": "Orden de los diez goles elegidos por los observadores técnicos de UEFA; clasificación editorial, no estadística de goles."
-  },
-  {
     "comp": "Conference League",
     "season": "2023/24",
     "id": 2006,

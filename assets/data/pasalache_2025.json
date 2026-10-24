@@ -72,10 +72,6 @@
         "respuesta": "Bellingham"
       },
       {
-        "pregunta": "¿Club catalán campeón de Europa en fútbol femenino 2024?",
-        "respuesta": "Barcelona"
-      },
-      {
         "pregunta": "¿Trofeo individual entregado por France Football al mejor del año?",
         "respuesta": "Balón de Oro"
       },
@@ -181,6 +177,15 @@
         "respuestasAlternativas": [
           "Crystal Palace FC"
         ]
+      },
+      {
+        "pregunta": "¿Nombre y apellido del futbolista inglés que igualó transitoriamente la final de la EURO 2024?",
+        "respuesta": "Cole Palmer",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefaeuro/history/news/028f-1b5e5c2b7b67-d5faab9be20b-1000--spain-2-1-england-late-oyarzabal-winner-earns-la-roja-reco/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -210,7 +215,9 @@
       {
         "pregunta": "¿Nombre y apellido del 10 argentino campeón del mundo 1986?",
         "respuesta": "Diego Maradona",
-        "respuestasIncompletasCorregibles": ["Maradona"]
+        "respuestasIncompletasCorregibles": [
+          "Maradona"
+        ]
       },
       {
         "pregunta": "¿Apellido del histórico delantero marfileño del Chelsea, Didier …?",
@@ -233,11 +240,13 @@
         "respuesta": "Valverde"
       },
       {
-        "pregunta": "¿Qué club colombiano perdió por penales la final de la Libertadores Femenina CONMEBOL 2025?",
-        "respuesta": "Deportivo Cali",
-        "respuestasAlternativas": [
-          "Asociación Deportivo Cali"
-        ]
+        "pregunta": "¿Apellido del atacante del PSG que marcó dos goles contra Inter en la final de Champions 2024/25?",
+        "respuesta": "Doué",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefachampionsleague/news/0299-1de417608530-15b01ff7b150-1000--paris-win-champions-league-doue-double-helps-secure-reco/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -275,12 +284,16 @@
       {
         "pregunta": "¿Nombre completo del defensor brasileño estrella del Real Madrid?",
         "respuesta": "Éder Militão",
-        "respuestasIncompletasCorregibles": ["Militão"]
+        "respuestasIncompletasCorregibles": [
+          "Militão"
+        ]
       },
       {
         "pregunta": "¿Nombre y apellido del campeón del mundo argentino que fichó por Chelsea en 2023?",
         "respuesta": "Enzo Fernández",
-        "respuestasIncompletasCorregibles": ["Fernández"]
+        "respuestasIncompletasCorregibles": [
+          "Fernández"
+        ]
       },
       {
         "pregunta": "¿Nombre y apellido del entrenador neerlandés del Manchester United 2022-2024?",
@@ -289,6 +302,15 @@
       {
         "pregunta": "¿Estadio del SL Benfica en Lisboa, conocido como da Luz?",
         "respuesta": "Estádio da Luz"
+      },
+      {
+        "pregunta": "¿Qué selección ganó sus siete partidos en la fase final de la EURO 2024 masculina?",
+        "respuesta": "España",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefaeuro/history/news/028f-1b5e5c2b7b67-d5faab9be20b-1000--spain-2-1-england-late-oyarzabal-winner-earns-la-roja-reco/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -314,7 +336,9 @@
       {
         "pregunta": "¿Nombre y apellido del central italiano Balón de Oro 2006?",
         "respuesta": "Fabio Cannavaro",
-        "respuestasIncompletasCorregibles": ["Cannavaro"]
+        "respuestasIncompletasCorregibles": [
+          "Cannavaro"
+        ]
       },
       {
         "pregunta": "¿Apodo del goleador colombiano Radamel Falcao García Zárate?",
@@ -323,12 +347,16 @@
       {
         "pregunta": "¿Nombre completo del mediocampista uruguayo estrella del Real Madrid?",
         "respuesta": "Federico Valverde",
-        "respuestasIncompletasCorregibles": ["Valverde"]
+        "respuestasIncompletasCorregibles": [
+          "Valverde"
+        ]
       },
       {
         "pregunta": "¿Nombre y apellido del goleador húngaro leyenda del Real Madrid?",
         "respuesta": "Ferenc Puskás",
-        "respuestasIncompletasCorregibles": ["Puskás"]
+        "respuestasIncompletasCorregibles": [
+          "Puskás"
+        ]
       },
       {
         "pregunta": "¿Club italiano de Florencia con estadio Artemio Franchi?",
@@ -341,7 +369,9 @@
       {
         "pregunta": "¿Nombre y apellido del ex mediocampista inglés del Chelsea que luego fue su DT?",
         "respuesta": "Frank Lampard",
-        "respuestasIncompletasCorregibles": ["Lampard"]
+        "respuestasIncompletasCorregibles": [
+          "Lampard"
+        ]
       },
       {
         "pregunta": "¿Nombre del español que marcó el gol de la final del Mundial de la FIFA 2026 (… Torres)?",
@@ -349,6 +379,15 @@
         "respuestasAlternativas": [
           "Ferran Torres"
         ]
+      },
+      {
+        "pregunta": "¿Qué selección perdió por penales la final del Mundial 2022 frente a Argentina?",
+        "respuesta": "Francia",
+        "audit_status": "verified_official",
+        "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/articles/argentina-france-2022-final-greatest-games",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -370,7 +409,9 @@
       {
         "pregunta": "¿Nombre y apellido del arquero italiano leyenda de Juventus y la Azzurra?",
         "respuesta": "Gianluigi Buffon",
-        "respuestasIncompletasCorregibles": ["Buffon"]
+        "respuestasIncompletasCorregibles": [
+          "Buffon"
+        ]
       },
       {
         "pregunta": "¿Apellido del delantero francés campeón del mundo 2018, Antoine …?",
@@ -391,7 +432,9 @@
       {
         "pregunta": "¿Nombre y apellido del chileno apodado 'Pitbull'?",
         "respuesta": "Gary Medel",
-        "respuestasIncompletasCorregibles": ["Medel"]
+        "respuestasIncompletasCorregibles": [
+          "Medel"
+        ]
       },
       {
         "pregunta": "CONTIENE G: ¿Apellido del lateral argentino campeón del mundo 2022, Nicolás …?",
@@ -403,6 +446,15 @@
         "respuestasAlternativas": [
           "Cody Gakpo"
         ]
+      },
+      {
+        "pregunta": "¿Nombre y apellido del arquero del PSG que atajó dos penales a Liverpool en los octavos de Champions 2024/25?",
+        "respuesta": "Gianluigi Donnarumma",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefachampionsleague/news/0299-1db3ed7babb3-e6227af6104f-1000--paris-win-champions-league-meet-the-2024-25-victors/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -420,22 +472,30 @@
       {
         "pregunta": "¿Nombre y apellido del goleador mexicano leyenda del Real Madrid?",
         "respuesta": "Hugo Sánchez",
-        "respuestasIncompletasCorregibles": ["Sánchez"]
+        "respuestasIncompletasCorregibles": [
+          "Sánchez"
+        ]
       },
       {
         "pregunta": "¿Nombre y apellido del ex delantero argentino ídolo de River, goleador en Parma, Lazio e Inter?",
         "respuesta": "Hernán Crespo",
-        "respuestasIncompletasCorregibles": ["Crespo"]
+        "respuestasIncompletasCorregibles": [
+          "Crespo"
+        ]
       },
       {
         "pregunta": "¿Nombre y apellido del mediocampista mexicano ex Porto y Atlético?",
         "respuesta": "Héctor Herrera",
-        "respuestasIncompletasCorregibles": ["Herrera"]
+        "respuestasIncompletasCorregibles": [
+          "Herrera"
+        ]
       },
       {
         "pregunta": "¿Nombre y apellido del DT alemán que ganó el sextete con el Bayern en 2020?",
         "respuesta": "Hansi Flick",
-        "respuestasIncompletasCorregibles": ["Flick"]
+        "respuestasIncompletasCorregibles": [
+          "Flick"
+        ]
       },
       {
         "pregunta": "¿Apodo del potente delantero brasileño ex Porto y Zenit?",
@@ -451,6 +511,15 @@
         "respuestasAlternativas": [
           "Kai Havertz"
         ]
+      },
+      {
+        "pregunta": "¿Apellido del jugador que abrió el marcador para el PSG en la final de Champions 2024/25?",
+        "respuesta": "Hakimi",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefachampionsleague/news/0299-1de417608530-15b01ff7b150-1000--paris-win-champions-league-doue-double-helps-secure-reco/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -488,7 +557,9 @@
       {
         "pregunta": "¿Nombre y apellido del delantero español leyenda del Celta de Vigo?",
         "respuesta": "Iago Aspas",
-        "respuestasIncompletasCorregibles": ["Aspas"]
+        "respuestasIncompletasCorregibles": [
+          "Aspas"
+        ]
       },
       {
         "pregunta": "¿Qué club mendocino se consagró campeón de la Copa Argentina 2025?",
@@ -499,11 +570,13 @@
         ]
       },
       {
-        "pregunta": "¿Qué selección ganó la Eurocopa femenina de la UEFA 2025 tras vencer por penales a España?",
-        "respuesta": "Inglaterra",
-        "respuestasAlternativas": [
-          "England"
-        ]
+        "pregunta": "¿Club italiano que perdió por 5-0 ante el PSG la final de Champions 2024/25?",
+        "respuesta": "Inter",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefachampionsleague/news/0299-1de417608530-15b01ff7b150-1000--paris-win-champions-league-doue-double-helps-secure-reco/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -521,22 +594,30 @@
       {
         "pregunta": "¿Nombre y apellido del 10 colombiano Bota de Oro del Mundial 2014?",
         "respuesta": "James Rodríguez",
-        "respuestasIncompletasCorregibles": ["Rodríguez"]
+        "respuestasIncompletasCorregibles": [
+          "Rodríguez"
+        ]
       },
       {
         "pregunta": "¿Nombre completo del máximo ídolo de Boca Juniors apodado 'El Román'?",
         "respuesta": "Juan Román Riquelme",
-        "respuestasIncompletasCorregibles": ["Riquelme"]
+        "respuestasIncompletasCorregibles": [
+          "Riquelme"
+        ]
       },
       {
         "pregunta": "¿Nombre y apellido del delantero portugués que brilló en Atlético Madrid y Barcelona?",
         "respuesta": "João Félix",
-        "respuestasIncompletasCorregibles": ["Félix"]
+        "respuestasIncompletasCorregibles": [
+          "Félix"
+        ]
       },
       {
         "pregunta": "¿Nombre y apellido del técnico portugués multicampeón con Porto e Inter?",
         "respuesta": "José Mourinho",
-        "respuestasIncompletasCorregibles": ["Mourinho"]
+        "respuestasIncompletasCorregibles": [
+          "Mourinho"
+        ]
       },
       {
         "pregunta": "¿Nombre y apellido del lateral izquierdo español leyenda del Barcelona que jugó junto a Messi en Inter Miami?",
@@ -545,12 +626,16 @@
       {
         "pregunta": "¿Nombre completo del central croata figura del Manchester City?",
         "respuesta": "Joško Gvardiol",
-        "respuestasIncompletasCorregibles": ["Gvardiol"]
+        "respuestasIncompletasCorregibles": [
+          "Gvardiol"
+        ]
       },
       {
         "pregunta": "¿Nombre completo del extremo inglés que brilló en el Borussia Dortmund antes de fichar por el Manchester United?",
         "respuesta": "Jadon Sancho",
-        "respuestasIncompletasCorregibles": ["Sancho"]
+        "respuestasIncompletasCorregibles": [
+          "Sancho"
+        ]
       },
       {
         "pregunta": "¿Apellido del autor del único gol de Tottenham en la final de la Europa League 2024/25?",
@@ -558,6 +643,15 @@
         "respuestasAlternativas": [
           "Brennan Johnson"
         ]
+      },
+      {
+        "pregunta": "¿Nombre y apellido del defensor francés que fue titular ante Argentina en la final de Qatar 2022?",
+        "respuesta": "Jules Koundé",
+        "audit_status": "verified_official",
+        "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/articles/argentina-france-2022-final-greatest-games",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -587,17 +681,23 @@
       {
         "pregunta": "¿Nombre y apellido del arquero español que reforzó al Real Madrid en 2023/24?",
         "respuesta": "Kepa Arrizabalaga",
-        "respuestasIncompletasCorregibles": ["Arrizabalaga"]
+        "respuestasIncompletasCorregibles": [
+          "Arrizabalaga"
+        ]
       },
       {
         "pregunta": "¿Nombre completo del extremo francés autor del gol de la final de la Champions 2020 para el Bayern?",
         "respuesta": "Kingsley Coman",
-        "respuestasIncompletasCorregibles": ["Coman"]
+        "respuestasIncompletasCorregibles": [
+          "Coman"
+        ]
       },
       {
         "pregunta": "¿Nombre y apellido del goleador neerlandés ex Schalke y Ajax?",
         "respuesta": "Klaas-Jan Huntelaar",
-        "respuestasIncompletasCorregibles": ["Huntelaar"]
+        "respuestasIncompletasCorregibles": [
+          "Huntelaar"
+        ]
       },
       {
         "pregunta": "¿Nombre de pila del francés Mbappé, Bota de Oro del Mundial de la FIFA 2026?",
@@ -605,6 +705,15 @@
         "respuestasAlternativas": [
           "Kylian Mbappé"
         ]
+      },
+      {
+        "pregunta": "¿Apellido del futbolista georgiano que convirtió el cuarto gol del PSG ante Inter en la final de Champions 2024/25?",
+        "respuesta": "Kvaratskhelia",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefachampionsleague/news/0299-1de417608530-15b01ff7b150-1000--paris-win-champions-league-doue-double-helps-secure-reco/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -642,7 +751,9 @@
       {
         "pregunta": "¿Nombre completo del joven crack del Barcelona y España?",
         "respuesta": "Lamine Yamal",
-        "respuestasIncompletasCorregibles": ["Yamal"]
+        "respuestasIncompletasCorregibles": [
+          "Yamal"
+        ]
       },
       {
         "pregunta": "¿Nombre y apellido del defensor argentino campeón del mundo 2022 en Manchester United?",
@@ -654,6 +765,15 @@
         "respuestasAlternativas": [
           "Club Atlético Lanús"
         ]
+      },
+      {
+        "pregunta": "¿Apellido del atacante de Atalanta que marcó los tres goles de la final de Europa League 2023/24?",
+        "respuesta": "Lookman",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefaeuropaleague/news/028d-1af3bf5e7e68-7d9202792002-1000--highlights-report-lookman-inspires-atalanta-triumph/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -679,7 +799,9 @@
       {
         "pregunta": "¿Nombre y apellido del arquero alemán campeón del mundo 2014?",
         "respuesta": "Manuel Neuer",
-        "respuestasIncompletasCorregibles": ["Neuer"]
+        "respuestasIncompletasCorregibles": [
+          "Neuer"
+        ]
       },
       {
         "pregunta": "¿Apellido del delantero francés estrella del Real Madrid, Kylian …?",
@@ -706,6 +828,15 @@
         "respuestasAlternativas": [
           "Morocco"
         ]
+      },
+      {
+        "pregunta": "¿Apellido del defensor argentino que anotó el penal decisivo de la final de Qatar 2022?",
+        "respuesta": "Montiel",
+        "audit_status": "verified_official",
+        "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/articles/argentina-france-2022-final-greatest-games",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -735,7 +866,18 @@
       {
         "pregunta": "¿Nombre completo del lateral argentino campeón del mundo?",
         "respuesta": "Nahuel Molina",
-        "respuestasIncompletasCorregibles": ["Molina"]
+        "respuestasIncompletasCorregibles": [
+          "Molina"
+        ]
+      },
+      {
+        "pregunta": "¿Nombre y apellido del español que abrió el marcador en la final de la EURO 2024?",
+        "respuesta": "Nico Williams",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefaeuro/history/news/028f-1b5e5c2b7b67-d5faab9be20b-1000--spain-2-1-england-late-oyarzabal-winner-earns-la-roja-reco/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -791,8 +933,22 @@
         "respuesta": "Özil"
       },
       {
-        "pregunta": "¿En qué ciudad se jugó la final de la UEFA Women's Champions League 2025/26?",
-        "respuesta": "Oslo"
+        "pregunta": "¿Apellido del delantero español que marcó el gol decisivo de la final de la EURO 2024?",
+        "respuesta": "Oyarzabal",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefaeuro/history/news/028f-1b5e5c2b7b67-d5faab9be20b-1000--spain-2-1-england-late-oyarzabal-winner-earns-la-roja-reco/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
+      },
+      {
+        "pregunta": "¿Nombre del estadio berlinés donde se jugó la final de la EURO 2024?",
+        "respuesta": "Olympiastadion",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefaeuro/history/news/0259-0e5e039dd8b6-ac24fc62a240-1000--all-the-euro-finals-scores-scorers-lineups-and-venues/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -846,7 +1002,9 @@
       {
         "pregunta": "¿Nombre y apellido del 10 argentino campeón con Valencia y Benfica?",
         "respuesta": "Pablo Aimar",
-        "respuestasIncompletasCorregibles": ["Aimar"]
+        "respuestasIncompletasCorregibles": [
+          "Aimar"
+        ]
       },
       {
         "pregunta": "¿Apellido del ex defensor del Barcelona, Gerard …?",
@@ -878,13 +1036,6 @@
         "respuestasAlternativas": [
           "PSG"
         ]
-      },
-      {
-        "pregunta": "¿Apellido de Ewa, máxima goleadora de la Women's Champions League 2025/26 con 11 tantos?",
-        "respuesta": "Pajor",
-        "respuestasAlternativas": [
-          "Ewa Pajor"
-        ]
       }
     ]
   },
@@ -902,7 +1053,9 @@
       {
         "pregunta": "¿Nombre completo del DT español ex Betis y Barcelona?",
         "respuesta": "Quique Setién",
-        "respuestasIncompletasCorregibles": ["Setién"]
+        "respuestasIncompletasCorregibles": [
+          "Setién"
+        ]
       },
       {
         "pregunta": "¿Apellido del delantero italiano ex Sampdoria, Fabio …?",
@@ -991,6 +1144,15 @@
         "respuestasAlternativas": [
           "Rodrigo Hernández"
         ]
+      },
+      {
+        "pregunta": "¿Nombre deportivo del mediocampista español al que reemplazó Zubimendi al descanso de la final de la EURO 2024?",
+        "respuesta": "Rodri",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefaeuro/history/news/0259-0e5e039dd8b6-ac24fc62a240-1000--all-the-euro-finals-scores-scorers-lineups-and-venues/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -1066,6 +1228,15 @@
         "respuestasAlternativas": [
           "Ismaïla Sarr"
         ]
+      },
+      {
+        "pregunta": "¿Nombre y apellido del jugador que anotó el quinto gol del PSG en la final de Champions 2024/25?",
+        "respuesta": "Senny Mayulu",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefachampionsleague/news/0299-1de417608530-15b01ff7b150-1000--paris-win-champions-league-doue-double-helps-secure-reco/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -1164,12 +1335,13 @@
         ]
       },
       {
-        "pregunta": "¿Nombre del estadio de Oslo donde se disputó la final femenina de Champions UEFA 2025/26?",
-        "respuesta": "Ullevaal",
-        "respuestasAlternativas": [
-          "Ullevaal Stadion",
-          "Estadio Ullevaal"
-        ]
+        "pregunta": "¿Nombre y apellido del arquero titular español en la final de la EURO 2024?",
+        "respuesta": "Unai Simón",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefaeuro/history/news/0259-0e5e039dd8b6-ac24fc62a240-1000--all-the-euro-finals-scores-scorers-lineups-and-venues/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -1236,7 +1408,9 @@
       {
         "pregunta": "¿Nombre completo del histórico goleador inglés del Manchester United?",
         "respuesta": "Wayne Rooney",
-        "respuestasIncompletasCorregibles": ["Rooney"]
+        "respuestasIncompletasCorregibles": [
+          "Rooney"
+        ]
       },
       {
         "pregunta": "¿Apellido del lateral derecho inglés leyenda del Manchester City, Kyle …?",
@@ -1265,7 +1439,9 @@
       {
         "pregunta": "¿Nombre completo del extremo suizo ex Liverpool e Inter?",
         "respuesta": "Xherdan Shaqiri",
-        "respuestasIncompletasCorregibles": ["Shaqiri"]
+        "respuestasIncompletasCorregibles": [
+          "Shaqiri"
+        ]
       },
       {
         "pregunta": "¿Apodo del Club Tijuana de la Liga MX?",
@@ -1274,7 +1450,9 @@
       {
         "pregunta": "¿Nombre completo del mediapunta neerlandés surgido en el PSG?",
         "respuesta": "Xavi Simons",
-        "respuestasIncompletasCorregibles": ["Simons"]
+        "respuestasIncompletasCorregibles": [
+          "Simons"
+        ]
       },
       {
         "pregunta": "CONTIENE X: ¿Nombre de pila del ex delantero chileno del Barcelona y Arsenal, … Sánchez?",
@@ -1300,7 +1478,9 @@
       {
         "pregunta": "¿Nombre completo del mediocampista marfileño leyenda del City?",
         "respuesta": "Yaya Touré",
-        "respuestasIncompletasCorregibles": ["Touré"]
+        "respuestasIncompletasCorregibles": [
+          "Touré"
+        ]
       },
       {
         "pregunta": "¿Club japonés campeón de la J1 League en 2019?",
@@ -1316,6 +1496,15 @@
         "respuestasAlternativas": [
           "Lamine Yamal"
         ]
+      },
+      {
+        "pregunta": "¿Apellido del futbolista español que fue titular en la final de la EURO 2024 con 17 años?",
+        "respuesta": "Yamal",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefaeuro/history/news/028f-1b5e5c2b7b67-d5faab9be20b-1000--spain-2-1-england-late-oyarzabal-winner-earns-la-roja-reco/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   },
@@ -1356,6 +1545,15 @@
         "respuestasAlternativas": [
           "Yassir Zabiri"
         ]
+      },
+      {
+        "pregunta": "¿Apellido del mediocampista español que sustituyó a Rodri en la final de la EURO 2024?",
+        "respuesta": "Zubimendi",
+        "audit_status": "verified_official",
+        "source_url": "https://www.uefa.com/uefaeuro/history/news/0259-0e5e039dd8b6-ac24fc62a240-1000--all-the-euro-finals-scores-scorers-lineups-and-venues/",
+        "verified_at": "2026-10-24",
+        "cutoff": "2026-10-24",
+        "content_batch": "ct-6.1-official-batch-01"
       }
     ]
   }

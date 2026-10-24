@@ -1,0 +1,44 @@
+'use strict';
+// Structural quality gate; never equate passing with independent football verification.
+const assert=require('node:assert/strict');
+const bank=require('../assets/data/pasalache_2025.json');
+const registry=require('../docs/audit/content-61-ledger.json');
+const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,' ').replace(/\s+/g,' ').trim();
+let added=0;const seen=new Set();
+assert.equal(bank.length,26,'26 Pasala letter groups required');
+for(const group of bank){
+  for(const q of group.preguntas){
+    const k=normalize(q.pregunta);assert(k&&!seen.has(k),'Duplicate Pasala question '+q.pregunta);seen.add(k);
+    const answer=normalize(q.respuesta),letter=normalize(group.letra);
+    assert((/^contiene/i).test(q.pregunta)?answer.includes(letter):answer.startsWith(letter),'Wrong rosco letter '+q.pregunta);
+    if(q.content_batch==='ct-6.1-official-batch-01'){
+      added++;
+      assert.equal(q.audit_status,'verified_official','Newly reviewed question requires audit status');
+      assert.match(q.source_url||'',/^https:\/\/(www\.)?(fifa\.com|uefa\.com)\//,'Official source URL required');
+      assert.equal(q.verified_at,'2026-10-24','New content needs an explicit review date');
+    }
+  }
+}
+assert.equal(added,19,'Expected 19 sourced questions in the 6.1 content batch');
+assert.equal(registry.total,2284,'Audited ledger must match male-only question banks');
+assert(registry.records.some(r=>r.file==='assets/data/preguntas_combinadas.json'&&r.status==='pending_factual_review'),'Legacy bank must not be auto-certified');
+assert(registry.records.some(r=>r.file==='assets/data/level_1.json'&&r.status==='pending_factual_review'),'QSM factual review still pending');
+
+const rotationSource=require('node:fs').readFileSync(require('node:path').join(__dirname,'../assets/js/pasalache.js'),'utf8');
+assert.match(rotationSource,/RECENT_PASALA_KEY = 'ct_pasala_recent_v1'/,'Recent question history should be versioned');
+assert.match(rotationSource,/Math\.floor\(Math\.random\(\) \* \(i \+ 1\)\)/,'Use unbiased Fisher-Yates shuffle');
+assert.match(rotationSource,/fresh\.concat\(repeated\)/,'Prefer fresh questions before recently played questions');
+assert.match(rotationSource,/firstShownThisGame\.has\(currentLetter\)/,'Passing a letter must not record each repeated display');
+assert.match(require('node:fs').readFileSync(require('node:path').join(__dirname,'../pasalache.html'),'utf8'),/pasalache\.js\?v=20261024-rosco-state61/);
+
+console.log('CONTENT 6.1: PASS ('+added+' new sourced Pasala questions; '+registry.records.length+' inventoried records).');
+console.log('This verifies structure and provenance fields, not each historical football assertion.');
+
+const soloClient=require('node:fs').readFileSync(require('node:path').join(__dirname,'../assets/js/pasalache.js'),'utf8');
+const soloCss=require('node:fs').readFileSync(require('node:path').join(__dirname,'../assets/css/pasalache.css'),'utf8');
+assert.match(soloClient,/pasapalabraButton\.addEventListener\('click', \(\) => pasapalabra\(false\)\)/,'A click must not be misread as silent pass');
+assert.doesNotMatch(soloClient,/letterStatuses\[letter\] = 'unanswered';[\s\S]{0,350}updateLetterStyles\(\)/,'Pending status should not reset during a new round');
+for(const outcome of ['correct','incorrect','pending']){
+ assert(soloCss.includes('#lettersContainer .letter.'+outcome),'Missing status-specific rosco outcome styling: '+outcome);
+}
+assert.match(soloClient,/element\.dataset\.status = status/,'Accessible status must derive from game state');
