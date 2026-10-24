@@ -21,7 +21,9 @@
     'cracktotal-pz9u.onrender.com'].includes(location.hostname);
   const provided=String(window.CRACK_TOTAL_DUEL_WS_URL||'');
   const override=isLocal||isStaging ? String(params.get('server')||'') : '';
-  const wsUrl=override || (isStaging ? STAGING : isProduction ? provided : '');
+  const isStaticPreview=/(?:^|\.)netlify\.(?:app|com)$/i.test(location.hostname) || isLocal;
+  const urlOverride=override || (isStaging ? STAGING : '');
+  const wsUrl=urlOverride || (isProduction ? provided : '');
 
   const safeCode = code => /^[A-F0-9]{10}$/.test(code);
   const savedSession = () => { try { return JSON.parse(sessionStorage.getItem(storageKey) || 'null'); } catch { return null; } };
