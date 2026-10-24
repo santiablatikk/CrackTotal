@@ -120,6 +120,20 @@
                 icon: 'fa-calendar-check',
                 target: 3,
                 rule: { type: 'daily_challenge' }
+            },
+            {
+                id: 'identity_detective', title: 'Olfato de gol',
+                description: 'Ganá tres partidas de ¿Quién soy?.',
+                icon: 'fa-fingerprint', target: 3,
+                rule: { type: 'game_wins', gameId: 'quien-soy' },
+                badgeId: 'badge_identity_3'
+            },
+            {
+                id: 'career_archivist', title: 'Memoria de vestuario',
+                description: 'Ganá tres partidas de Adiviná la carrera.',
+                icon: 'fa-route', target: 3,
+                rule: { type: 'game_wins', gameId: 'trayectoria' },
+                badgeId: 'badge_career_3'
             }
         ],
 
