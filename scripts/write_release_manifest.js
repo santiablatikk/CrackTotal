@@ -7,7 +7,7 @@ const path = require('path');
 
 const manifest = {
   service: 'cracktotal-static',
-  version: '5.1.0',
+  version: require('../package.json').version,
   environment: process.env.RENDER === 'true' ? 'production' : 'build',
   commit: process.env.RENDER_GIT_COMMIT || null,
   branch: process.env.RENDER_GIT_BRANCH || null

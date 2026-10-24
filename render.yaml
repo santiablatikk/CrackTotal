@@ -1,4 +1,6 @@
-# Crack Total — Render Blueprint (production)
+# Crack Total — historical Render Blueprint (not the active production service)
+# LIVE: Render Static Site srv-d06n6p2li9vc73ei37m0, branch main, build npm run build, publish path '.'
+# DO NOT apply this Node web-service blueprint to existing production without reviewing the service mismatch.
 # Live site: https://cracktotal.com (Render + Cloudflare)
 # Auto-deploy: connect this repo in Render with Auto-Deploy on `main`,
 # or set GitHub secret RENDER_DEPLOY_HOOK (Deploy Hook URL from Render).

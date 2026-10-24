@@ -1,6 +1,6 @@
 {
   "name": "crack-total",
-  "version": "1.0.0",
+  "version": "6.0.0",
   "description": "Crack Total - Juegos de fútbol online",
   "main": "server.js",
   "scripts": {

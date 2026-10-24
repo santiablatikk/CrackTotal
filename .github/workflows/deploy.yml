@@ -43,18 +43,11 @@ jobs:
           npm ci
           npm test
 
-      - name: '[prod-3] Request Render deployment'
-        env:
-          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
+      - name: '[prod-3] Confirm existing Render auto-deploy is configured'
         run: |
-          set -euo pipefail
-          if [ -z "${RENDER_DEPLOY_HOOK:-}" ]; then
-            echo "::warning::RENDER_DEPLOY_HOOK is not configured. Waiting for Render auto-deploy on main instead."
-          else
-            echo "[prod-3] Triggering Render deployment for main (if hook targets the active static site)"
-            curl --fail-with-body --show-error --silent --max-time 30 -X POST "$RENDER_DEPLOY_HOOK" > /dev/null
-            echo "[prod-3] Render accepted the deploy request; awaiting actual live commit."
-          fi
+          echo "[prod-3] Production Static Site auto-deploy tracks main."
+          echo "[prod-3] No webhook is invoked: a push to main already triggers Render."
+          echo "[prod-3] The next gate verifies the exact public build, not only the GitHub merge."
 
       - name: '[prod-4] Confirm exact production commit'
         env:
@@ -62,15 +55,16 @@ jobs:
         run: |
           set -euo pipefail
           URL="https://cracktotal.com/__ct_release.json"
+          EXPECTED_VERSION="$(node -p "require('./package.json').version")"
           for attempt in $(seq 1 30); do
             reply="$(curl -fsSL --max-time 12 --connect-timeout 7 \
               -H 'Cache-Control: no-cache' \
               "${URL}?expected=${EXPECTED_SHA}" 2>/dev/null || true)"
-            if printf '%s' "$reply" | jq -e --arg sha "$EXPECTED_SHA" \
-              '.service == "cracktotal-static" and .version == "5.1.0" and .branch == "main" and .commit == $sha' \
+            if printf '%s' "$reply" | jq -e --arg sha "$EXPECTED_SHA" --arg version "$EXPECTED_VERSION" \
+              '.service == "cracktotal-static" and .version == $version and .branch == "main" and .commit == $sha' \
               >/dev/null 2>&1; then
               echo "[prod-4] Verified live commit: $EXPECTED_SHA"
-              echo "[prod-4] Render static production serves the intended 5.1 release."
+              echo "[prod-4] Render static production serves the intended release."
               exit 0
             fi
             echo "[prod-4] Live commit not verified (attempt $attempt/30)."
