@@ -568,16 +568,32 @@ async function main(){
         console.log('WORDLE LIVE '+width+'px: '+JSON.stringify(first.result.value));
       }
       if(args.fixture === 'ct7-live') {
-        if(!['quien-soy.html','adivina-carrera.html'].includes(game))
-          throw Error('ct7-live requires one of the two editorial games');
-        const result=await command('Runtime.evaluate',{
-          expression:'('+ct7LiveProbe.toString()+')()',
-          returnByValue:true,awaitPromise:true
-        });
-        if(result.exceptionDetails||!result.result?.value?.finished)
-          throw Error('CT7 REAL CHROME PLAY FAILED '+game+' '+width+': '+
-            JSON.stringify(result.exceptionDetails||result.result).slice(0,1300));
-        console.log('CT7 LIVE '+game+' '+width+'px: '+JSON.stringify(result.result.value));
+        if(game==='profile.html'){
+          const result=await command('Runtime.evaluate',{
+            expression:"(()=>({xp:Number(document.getElementById('ct7ProfileXp')?.textContent||'0'),"+
+              "wins:Number(document.getElementById('ct7ProfileCorrect')?.textContent||'0'),"+
+              "entries:document.getElementById('ct7ProfileHistory')?.children.length||0,"+
+              "medal:document.getElementById('ct7ProfileMedals')?.textContent||''}))()",
+            returnByValue:true
+          });
+          const data=result.result?.value;
+          if(result.exceptionDetails||!data||data.xp<=0||data.wins<6||data.entries<2||
+             !data.medal.includes('Explorador'))
+            throw Error('CT7 profile failed to display real local history '+width+': '+
+              JSON.stringify(result.exceptionDetails||data).slice(0,700));
+          console.log('CT7 PROFILE '+width+'px: '+JSON.stringify(data));
+        }else{
+          if(!['quien-soy.html','adivina-carrera.html'].includes(game))
+            throw Error('ct7-live requires editorial games or local profile');
+          const result=await command('Runtime.evaluate',{
+            expression:'('+ct7LiveProbe.toString()+')()',
+            returnByValue:true,awaitPromise:true
+          });
+          if(result.exceptionDetails||!result.result?.value?.finished)
+            throw Error('CT7 REAL CHROME PLAY FAILED '+game+' '+width+': '+
+              JSON.stringify(result.exceptionDetails||result.result).slice(0,1300));
+          console.log('CT7 LIVE '+game+' '+width+'px: '+JSON.stringify(result.result.value));
+        }
       }
       if(args.fixture==='pasala-fill'){
         if(game!=='pasalache.html')throw Error('pasala-fill requires pasalache.html');
