@@ -41,4 +41,4 @@ const qsm=[1,2,3,4,5,6].map(i=>require('../assets/data/level_'+i+'.json').pregun
 assert.equal(bank.reduce((s,g)=>s+g.preguntas.length,0),293);
 assert.equal(qsm.reduce((s,g)=>s+g.length,0),373);
 assert.equal(require('../assets/data/top10_pool.json').length,11);
-console.log('MEN-ONLY GAME CONTENT: PASS ('+inspected+' files; zero excluded women's-football records).');
+console.log('MEN-ONLY GAME CONTENT: PASS ('+inspected+' files; zero excluded women\'s-football records).');
