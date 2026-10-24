@@ -389,10 +389,23 @@ async function pasalaLiveProbe() {
   await waitFor(()=>letter('B')?.classList.contains('correct'),'B correct after real submit');
   await waitFor(()=>letter('C')?.classList.contains('active'),'C after correct B');
   const correct=inspect('B','correct','rgb(49, 229, 178)');
+  const gameErrors=[];
+  const oldError=console.error;
+  console.error=(...message)=>{gameErrors.push(message.map(String).join(' '));oldError(...message)};
   input.value='zzzzzz_invalid_not_a_player_9999';
   submit.click();
-  await waitFor(()=>letter('C')?.classList.contains('incorrect'),'C incorrect after real submit');
-  await waitFor(()=>letter('D')?.classList.contains('active'),'D after incorrect C');
+  try{
+    await waitFor(()=>letter('C')?.classList.contains('incorrect'),'C incorrect after real submit');
+    await waitFor(()=>letter('D')?.classList.contains('active'),'D after incorrect C');
+  }catch(error){
+    const visible={
+      C:letter('C')?.className, D:letter('D')?.className,
+      current:$('currentLetterText')?.textContent,question:$('questionText')?.textContent,
+      value:input.value,incorrect:$('incorrectCount')?.textContent,
+      console:gameErrors.slice(-8)
+    };
+    throw Error(error.message+'; DOM '+JSON.stringify(visible));
+  }finally{console.error=oldError}
   const incorrect=inspect('C','incorrect','rgb(255, 104, 115)');
   for(let code=68;code<=90;code++){
     const expected=String.fromCharCode(code);
