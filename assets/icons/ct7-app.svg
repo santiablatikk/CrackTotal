@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+<title>Crack Total</title>
+<rect width="512" height="512" rx="104" fill="#101b1b"/>
+<rect x="30" y="30" width="452" height="452" rx="82" fill="none" stroke="#315346" stroke-width="6"/>
+<path d="M87 390H425" stroke="#315346" stroke-width="9"/>
+<path d="M87 410H325" stroke="#b6e85a" stroke-width="8"/>
+<path d="M398 93l12 27 29 3-22 19 7 28-26-14-25 14 5-28-21-19 29-3z" fill="#c9fa67"/>
+<text x="77" y="355" font-family="Arial,Helvetica,sans-serif" font-size="213" font-weight="900" letter-spacing="-19" fill="#f4f1e7">CT</text>
+</svg>

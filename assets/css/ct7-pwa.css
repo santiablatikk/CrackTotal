@@ -1,0 +1,18 @@
+/* Minimal editorial installation notice; never masquerades as a modal. */
+.ct7-app-prompt[hidden]{display:none!important}
+.ct7-app-prompt{position:fixed;z-index:1900;right:16px;bottom:16px;
+ width:min(410px,calc(100vw - 32px));padding:14px 45px 14px 16px;
+ display:grid;gap:10px;border:1px solid #42604e;border-left:4px solid #b5eb53;
+ border-radius:10px;background:#101b1b;color:#f4f1e7;
+ box-shadow:0 12px 34px rgba(0,0,0,.29);
+ font:500 14px/1.45 'Manrope',system-ui,sans-serif}
+.ct7-app-prompt>button:not(.ct7-app-prompt__close){
+ width:max-content;max-width:100%;min-height:44px;padding:9px 14px;
+ background:#b5eb53;color:#101b1b;border:0;border-radius:6px;
+ font:800 13px/1.2 inherit;cursor:pointer}
+.ct7-app-prompt__close{position:absolute;top:9px;right:9px;
+ width:32px;height:32px;border:1px solid #576c60;border-radius:5px;
+ background:transparent;color:#e7efe6;cursor:pointer;font:600 12px system-ui}
+.ct7-app-prompt button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){.ct7-app-prompt{scroll-behavior:auto}}
+@media(max-width:355px){.ct7-app-prompt{right:8px;bottom:8px;width:calc(100vw - 16px);font-size:13px}}
