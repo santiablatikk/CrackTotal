@@ -72,3 +72,19 @@ jobs:
           done
           echo "::error::Production commit could not be verified. Check Render deploy history, branch, hook/auto-deploy, Cloudflare and site reachability."
           exit 1
+
+      - name: '[prod-5] Verify www entry and all six games'
+        env:
+          EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          echo "[prod-5] Verify www.cracktotal.com maps to the identical release"
+          canonical="$(curl -fsSL --max-time 20 --connect-timeout 7 -H 'Cache-Control: no-cache' \
+            "https://www.cracktotal.com/__ct_release.json?expected=${EXPECTED_SHA}")"
+          printf '%s' "$canonical" | jq -e --arg sha "$EXPECTED_SHA" \
+            '.service == "cracktotal-static" and .commit == $sha' >/dev/null
+          for route in games.html pasalache.html pasala-1v1.html top10.html wordle-futbol.html quiensabemas.html mentiroso.html; do
+            curl -fsSL --max-time 20 --connect-timeout 7 \
+              -o /dev/null "https://cracktotal.com/$route?release=${EXPECTED_SHA}"
+            echo "[prod-5] Verified /$route"
+          done

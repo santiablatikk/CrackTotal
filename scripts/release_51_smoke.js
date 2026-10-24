@@ -55,6 +55,8 @@ assert(releaseWriter.includes("require('../package.json').version"),'Release ver
 const buildPkg=JSON.parse(read('package.json'));
 assert(buildPkg.scripts.build.includes('write_release_manifest.js'),'Render build must emit release manifest');
 assert(deploy.includes('exit 1'),'Missing live release must fail closed');
+assert(deploy.includes('www.cracktotal.com/__ct_release.json'),'Production validation must also check www domain');
+assert(deploy.includes('mentiroso.html')&&deploy.includes('wordle-futbol.html'),'Production must smoke-test active game URLs');
 
 const builder=read('scripts/build-netlify-preview.cjs');
 assert(builder.includes('fs.rmSync(out'),'Preview output must be cleaned before rebuilding');
