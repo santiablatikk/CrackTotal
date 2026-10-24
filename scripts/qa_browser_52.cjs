@@ -34,6 +34,42 @@ function serve(req,res) {
     });
   } catch {res.writeHead(400).end();}
 }
+async function ct71ConexionesLiveProbe(){
+ const assert=(ok,message)=>{if(!ok)throw Error(message);};
+ const $=id=>document.getElementById(id);
+ const response=await fetch('/assets/data/conexiones-verified.json',{cache:'no-cache'});
+ const bank=await response.json();
+ for(let retry=0;retry<35&&$('cxStartButton').disabled;retry++)
+   await new Promise(done=>setTimeout(done,100));
+ assert(!$('cxStartButton').disabled,'Connection challenge data did not load');
+ $('cxStartButton').click();
+ assert(!$('cxPlay').hidden,'Connection stage did not open');
+ assert($('cxTiles').children.length===16,'16 tile buttons expected');
+ const sessionKey='ct71:connections:session:v1';
+ const session=()=>JSON.parse(sessionStorage.getItem(sessionKey));
+ const board=bank.puzzles.find(b=>b.id===session().puzzleId);
+ assert(board,'Unknown sourced puzzle');
+ for(const group of board.groups){
+  for(const name of group.members){
+   const button=[...$('cxTiles').children].find(b=>b.textContent===name);
+   assert(button,'Missing clickable name '+name);
+   button.click();
+   assert(button.getAttribute('aria-pressed')==='true'||$('cxCheck').textContent.includes('4/4'),
+    'Accessible tile selection failed');
+  }
+  assert(!$('cxCheck').disabled,'Four selections must enable check');
+  $('cxCheck').click();
+ }
+ const last=session();
+ assert(last.phase==='end'&&last.won,'Actual Chrome game should end in victory');
+ assert(last.solved.length===4&&last.score>=400,'Victory should score four validated groupings');
+ assert($('cxEndSources').children.length===4,'Source links must be visible on final');
+ const progress=JSON.parse(localStorage.getItem('ct7:local-progress:v1'));
+ assert(progress.history.some(h=>h.mode==='connections'&&h.scope==='local-only'));
+ return {finished:true,groups:last.solved.length,points:last.score,
+   sourceCards:$('cxEndSources').children.length};
+}
+
 async function ct7TimelineLiveProbe(){
   const assert=(ok,message)=>{if(!ok)throw Error(message);};
   const $=id=>document.getElementById(id);
@@ -632,9 +668,9 @@ async function main(){
               JSON.stringify(result.exceptionDetails||data).slice(0,700));
           console.log('CT7 PROFILE '+width+'px: '+JSON.stringify(data));
         }else{
-          if(!['quien-soy.html','adivina-carrera.html','ordena-historia.html'].includes(game))
+          if(!['quien-soy.html','adivina-carrera.html','ordena-historia.html','conexiones.html'].includes(game))
             throw Error('ct7-live requires editorial games or local profile');
-          const probe=game==='ordena-historia.html'?ct7TimelineLiveProbe:ct7LiveProbe;
+          const probe=game==='conexiones.html'?ct71ConexionesLiveProbe:game==='ordena-historia.html'?ct7TimelineLiveProbe:ct7LiveProbe;
           const result=await command('Runtime.evaluate',{
             expression:'('+probe.toString()+')()',
             returnByValue:true,awaitPromise:true
