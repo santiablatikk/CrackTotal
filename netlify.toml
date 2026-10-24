@@ -20,3 +20,9 @@
   from = "/mi-carrera"
   to = "/games.html"
   status = 301
+
+# Editorial content withdrawn from this release
+[[redirects]]
+  from = "/blog-detail-futbol-femenino.html"
+  to = "/blog.html"
+  status = 301

@@ -34,6 +34,9 @@ RewriteRule ^(.+)/$ /$1 [L,R=301]
 # 6. Redirecciones específicas para páginas problemáticas
 RewriteRule ^search/?$ / [L,R=301]
 
+# Artículo retirado: redireccionar enlaces previos sin ofrecer el contenido.
+RewriteRule ^blog-detail-futbol-femenino\.html$ /blog.html [L,R=301,NC]
+
 # Duplicado editorial: historia-mundial → worldcups (canónico)
 RewriteRule ^blog-detail-historia-mundial\.html$ /blog-detail-worldcups.html [L,R=301,NC]
 # Removed games → Games catalog

@@ -41,4 +41,26 @@ const qsm=[1,2,3,4,5,6].map(i=>require('../assets/data/level_'+i+'.json').pregun
 assert.equal(bank.reduce((s,g)=>s+g.preguntas.length,0),293);
 assert.equal(qsm.reduce((s,g)=>s+g.length,0),373);
 assert.equal(require('../assets/data/top10_pool.json').length,11);
-console.log('MEN-ONLY GAME CONTENT: PASS ('+inspected+' files; zero excluded women\'s-football records).');
+ // Scan what users can reach, not just individual game banks.
+const runtimePaths=[
+ ...fs.readdirSync(root).filter(name=>name.endsWith('.html')),
+ 'sitemap.xml'
+];
+function findAssets(dir){
+ return fs.readdirSync(dir,{withFileTypes:true}).flatMap(item=>{
+  const full=path.join(dir,item.name);
+  return item.isDirectory()?findAssets(full):item.isFile()&&/\.(?:js|css|json)$/.test(item.name)?[path.relative(root,full)]:[];
+ });
+}
+runtimePaths.push(...findAssets(path.join(root,'assets')));
+const visiblePattern=/\bfemenin[ao]s?\b|f[uú]tbol\s+femenino|\bwomen(?:'s)?\b|\bwoman\b|\bgirls\b|\bbonmat[ií]\b|\bputellas\b|\brapinoe\b|\balex morgan\b|\bsam kerr\b/i;
+for(const file of runtimePaths){
+ if(visiblePattern.test(fs.readFileSync(path.join(root,file),'utf8')))throw new Error('Excluded public content in '+file);
+}
+for(const gone of ['blog-detail-futbol-femenino.html','assets/images/blog/futbol femenino.png']){
+ assert(!fs.existsSync(path.join(root,gone)),'Withdrawn resource still exists: '+gone);
+}
+assert.match(fs.readFileSync(path.join(root,'server.js'),'utf8'),/pathname === '\\/blog-detail-futbol-femenino.html'/);
+assert.match(fs.readFileSync(path.join(root,'netlify.toml'),'utf8'),/from = "\\/blog-detail-futbol-femenino.html"/);
+assert.match(fs.readFileSync(path.join(root,'.htaccess'),'utf8'),/blog-detail-futbol-femenino/);
+console.log('MEN-ONLY CONTENT: PASS ('+inspected+' game/provenance banks + '+runtimePaths.length+' public files).');

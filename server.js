@@ -150,6 +150,16 @@ const server = http.createServer((req, res) => {
         return;
     }
 
+    // Redirect legacy URLs from the withdrawn editorial section.
+    if (pathname === '/blog-detail-futbol-femenino.html') {
+        res.writeHead(301, {
+            'Location': '/blog.html',
+            'Cache-Control': 'public, max-age=3600'
+        });
+        res.end();
+        return;
+    }
+
     // The retired career mode is not part of Crack Total. Redirect old bookmarks.
     if (pathname === '/mi-carrera.html' || pathname === '/mi-carrera') {
         res.writeHead(301, {
