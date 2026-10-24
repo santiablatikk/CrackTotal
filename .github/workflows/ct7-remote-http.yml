@@ -1,0 +1,22 @@
+name: External CT7 staged routes and assets
+on:
+  push:
+    branches:
+      - redesign/crack-total-2
+    paths:
+      - 'scripts/staging_7_http_smoke.cjs'
+      - '.github/workflows/ct7-remote-http.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test-staging-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify exact Render deployment SHA and all CT7 static pages
+        run: node scripts/staging_7_http_smoke.cjs

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101b1b">
+<meta name="description" content="Ordená la historia: cinco desafíos de cronología futbolera basados en FIFA y UEFA.">
+<title>Ordená la historia | Crack Total</title>
+<link rel="icon" href="portada.ico">
+<link rel="stylesheet" href="assets/css/design-system/tokens.css">
+<link rel="stylesheet" href="assets/css/ct7-timeline.css?v=20261024v1">
+<script defer src="assets/js/ct7-timeline.js?v=20261024v1"></script>
+</head>
+<body class="ct7-timeline">
+<a class="ct7-tl-skip" href="#game">Saltar al juego</a>
+<header class="ct7-tl-header">
+<a class="ct7-tl-brand" href="index.html" aria-label="Crack Total inicio">CT<span>✦</span> <strong>CRACK TOTAL</strong></a>
+<nav aria-label="Navegación"><a href="games.html">Juegos</a><a href="quien-soy.html">¿Quién soy?</a><a href="profile.html">Mi perfil</a></nav>
+<span class="ct7-tl-header-motto">HISTORIA / CULTURA / COMPETENCIA</span>
+</header>
+<main id="game" class="ct7-tl-wrap">
+<div class="ct7-tl-meta"><span>CRACK TOTAL / EDICIÓN 07</span><span>03 / CRONOLOGÍA</span></div>
+<section class="ct7-tl-intro">
+<div><span class="ct7-tl-kicker">ARCHIVO FUTBOLERO · JUEGO INDIVIDUAL</span>
+<h1>ORDENÁ<br><em>LA HISTORIA.</em></h1>
+<p>Cuatro momentos. Una sola línea de tiempo. Del más antiguo al más reciente, sin mirar los años.</p></div>
+<div class="ct7-tl-decade" aria-hidden="true"><span>19</span><span>20</span><b>EL ORDEN<br>IMPORTA.</b></div>
+</section>
+<div class="ct7-tl-layout">
+<section class="ct7-tl-board" aria-label="Cronología de fútbol">
+<div class="ct7-tl-boardtop"><span id="tlRoundCounter">ARCHIVO 00 / 05</span><strong id="tlScore">0000 PTS</strong></div>
+<div id="tlTrack" class="ct7-tl-track" role="progressbar" aria-label="Desafíos completados" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"><span id="tlTrackFill"></span></div>
+<div id="tlStart" class="ct7-tl-screen">
+<span class="ct7-tl-index">00 / REGLAS DEL JUEGO</span>
+<h2>ACOMODÁ<br>LOS HECHOS.</h2>
+<p>Te damos cuatro acontecimientos reales y desordenados. Movelos con las flechas de cada tarjeta y confirmá tu cronología. Cada posición correcta suma puntos.</p>
+<button type="button" id="tlStartButton" class="ct7-tl-primary">EMPEZAR PARTIDA <span>↗</span></button>
+<p class="ct7-tl-small">Cinco rondas. Sin reloj. Fuentes oficiales al final de cada una. Los puntos son locales y no participan de clasificaciones online.</p>
+</div>
+<div id="tlPlay" class="ct7-tl-screen" hidden>
+<div class="ct7-tl-step"><span id="tlChapter">01 / EL ARCHIVO</span><span id="tlMoveCounter">0 MOVIMIENTOS</span></div>
+<h2 id="tlTitle"></h2><p id="tlDescription"></p>
+<p class="ct7-tl-order-label">ORDEN CRONOLÓGICO <span>ANTES ↓ DESPUÉS</span></p>
+<ol id="tlItems" class="ct7-tl-items" aria-label="Acontecimientos ordenables"></ol>
+<div class="ct7-tl-actions"><button type="button" id="tlCheck" class="ct7-tl-primary">CONFIRMAR ORDEN <span>↗</span></button><button type="button" id="tlSkip" class="ct7-tl-textbutton">Pasar esta ronda</button></div>
+<p id="tlFeedback" class="ct7-tl-feedback" role="status" aria-live="polite"></p>
+</div>
+<div id="tlAnswer" class="ct7-tl-screen" hidden>
+<span id="tlAnswerState" class="ct7-tl-index"></span><h2 id="tlAnswerTitle"></h2><p id="tlAnswerDesc"></p>
+<ol id="tlCorrectOrder" class="ct7-tl-correct"></ol><strong id="tlPoints" class="ct7-tl-points"></strong>
+<a id="tlSource" class="ct7-tl-source" target="_blank" rel="noopener noreferrer">COMPROBAR EN FUENTE OFICIAL ↗</a>
+<div class="ct7-tl-actions"><button type="button" id="tlNext" class="ct7-tl-primary">SIGUIENTE RONDA <span>↗</span></button></div>
+</div>
+<div id="tlEnd" class="ct7-tl-screen" hidden>
+<span class="ct7-tl-index">FINAL / ARCHIVO COMPLETADO</span><h2 id="tlEndTitle">SE CERRÓ EL ARCHIVO.</h2>
+<p id="tlEndMessage"></p><div id="tlEndStats" class="ct7-tl-endstats"></div>
+<div class="ct7-tl-actions"><button type="button" id="tlRestart" class="ct7-tl-primary">OTRA PARTIDA <span>↗</span></button><a class="ct7-tl-textbutton" href="games.html">VOLVER A JUEGOS</a></div>
+</div>
+</section>
+<aside class="ct7-tl-aside">
+<div class="ct7-tl-aside-panel"><span>01 / TU PLANILLA</span><h2>LO QUE SABÉS.</h2>
+<div class="ct7-tl-stats"><div><small>XP LOCAL</small><strong id="tlXp">0</strong></div><div><small>RONDA ACTUAL</small><strong id="tlCurrent">0/5</strong></div><div><small>ACIERTOS EXACTOS</small><strong id="tlPerfect">0</strong></div></div>
+<p>Este modo usa progreso local. No genera partidas verificadas ni puntos de ranking.</p></div>
+<div class="ct7-tl-aside-panel ct7-tl-aside-note"><span>02 / LA REGLA</span><h2>EL DETALLE<br>DECIDE.</h2><p>Si una posición queda bien ubicada, suma. Si los cuatro hechos están en orden, el bonus es tuyo.</p><p>Sin desempates dudosos: todos los acontecimientos tienen un año distinto.</p></div>
+<div class="ct7-tl-aside-panel"><span>03 / SEGUÍ JUGANDO</span><h2>OTRA FORMA<br>DE SABER.</h2><a href="adivina-carrera.html" class="ct7-tl-nextmode">ADIVINÁ LA CARRERA ↗</a></div>
+</aside>
+</div>
+<footer class="ct7-tl-footer"><span>CRACK TOTAL / EL FÚTBOL SE JUEGA. EL CONOCIMIENTO SE DEMUESTRA.</span><a href="games.html">TODOS LOS JUEGOS ↗</a></footer>
+</main>
+</body></html>

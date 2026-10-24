@@ -1,0 +1,358 @@
+{
+  "version": "2026-10-24-ct7-v1",
+  "editorial_scope": "male-senior-football",
+  "as_of": "2026-10-24",
+  "description": "Carreras profesionales masculinas de clubes. No incluye categorías juveniles ni cesiones a filiales salvo indicación expresa.",
+  "records": [
+    {
+      "id": "messi",
+      "name": "Lionel Messi",
+      "aliases": [
+        "Messi",
+        "Leo Messi",
+        "Lionel Andrés Messi"
+      ],
+      "nationality": "Argentina",
+      "position": "Delantero",
+      "clubs": [
+        "FC Barcelona",
+        "Paris Saint-Germain",
+        "Inter Miami"
+      ],
+      "hints": [
+        "Nació en Rosario, Argentina.",
+        "Ganó el Mundial masculino de 2022.",
+        "Jugó más de quince temporadas en el primer equipo del FC Barcelona.",
+        "Después jugó en Paris Saint-Germain e Inter Miami."
+      ],
+      "source_urls": [
+        "https://www.fifa.com/es/articles/en-que-equipos-jugo-lionel-messi-partidos-titulos-y-carrera-del-argentino"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "cristiano",
+      "name": "Cristiano Ronaldo",
+      "aliases": [
+        "Cristiano",
+        "Cristiano Ronaldo dos Santos Aveiro",
+        "CR7"
+      ],
+      "nationality": "Portugal",
+      "position": "Delantero",
+      "clubs": [
+        "Sporting CP",
+        "Manchester United",
+        "Real Madrid",
+        "Juventus",
+        "Manchester United",
+        "Al Nassr"
+      ],
+      "hints": [
+        "Nació en la isla de Madeira, Portugal.",
+        "Ganó la Eurocopa masculina de 2016.",
+        "Volvió a Manchester United después de su etapa en Juventus.",
+        "Fichó por Al Nassr en 2023."
+      ],
+      "source_urls": [
+        "https://www.fifa.com/es/tournaments/mens/worldcup/articles/26-superestrellas-cristiano-ronaldo",
+        "https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/cristiano-ronaldo-maximo-goleador-portugues-en-copa-del-mundo"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "ronaldo9",
+      "name": "Ronaldo Nazário",
+      "aliases": [
+        "Ronaldo Nazario",
+        "Ronaldo Luís Nazário de Lima",
+        "Ronaldo Fenômeno",
+        "El Fenómeno",
+        "Ronaldo el fenomeno"
+      ],
+      "nationality": "Brasil",
+      "position": "Delantero",
+      "clubs": [
+        "Cruzeiro",
+        "PSV Eindhoven",
+        "FC Barcelona",
+        "Inter de Milán",
+        "Real Madrid",
+        "AC Milan",
+        "Corinthians"
+      ],
+      "hints": [
+        "Fue delantero de la selección brasileña.",
+        "Marcó dos goles en la final del Mundial masculino de 2002.",
+        "Jugó en el PSV Eindhoven antes de pasar por Barcelona e Inter.",
+        "Cerró su carrera en Corinthians."
+      ],
+      "source_urls": [
+        "https://inside.fifa.com/es/news/feliz-cumpleanos-2834504-x0194"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "ronaldinho",
+      "name": "Ronaldinho",
+      "aliases": [
+        "Ronaldo de Assis Moreira",
+        "Ronaldinho Gaucho",
+        "Ronaldinho Gaúcho"
+      ],
+      "nationality": "Brasil",
+      "position": "Mediapunta",
+      "clubs": [
+        "Grêmio",
+        "Paris Saint-Germain",
+        "FC Barcelona",
+        "AC Milan",
+        "Flamengo",
+        "Atlético Mineiro",
+        "Querétaro",
+        "Fluminense"
+      ],
+      "hints": [
+        "Ganó el Mundial masculino de 2002.",
+        "Fue elegido Jugador Mundial de la FIFA en 2004 y 2005.",
+        "Ganó la Champions League con el Barcelona.",
+        "Conquistó la Libertadores de 2013 con Atlético Mineiro."
+      ],
+      "source_urls": [
+        "https://inside.fifa.com/es/news/ronaldinho-punto-y-final-2926510"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "dimaria",
+      "name": "Ángel Di María",
+      "aliases": [
+        "Di Maria",
+        "Di María",
+        "Angel Di Maria",
+        "Fideo"
+      ],
+      "nationality": "Argentina",
+      "position": "Extremo",
+      "clubs": [
+        "Rosario Central",
+        "Benfica",
+        "Real Madrid",
+        "Manchester United",
+        "Paris Saint-Germain",
+        "Juventus",
+        "Benfica",
+        "Rosario Central"
+      ],
+      "hints": [
+        "Nació en Rosario y comenzó en un club de esa ciudad.",
+        "Fue campeón del mundo con Argentina en Catar 2022.",
+        "Ganó la Champions League de 2014 con Real Madrid.",
+        "Regresó a Rosario Central en 2025."
+      ],
+      "source_urls": [
+        "https://www.fifa.com/es/articles/las-despedidas-de-mastantuono-y-di-maria-ida-y-vuelta-de-un-mismo-camino-en",
+        "https://www.fifa.com/es/articles/di-maria-un-amor-descontrolado"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "haaland",
+      "name": "Erling Haaland",
+      "aliases": [
+        "Haaland",
+        "Erling Braut Haaland",
+        "Erling Braut Håland"
+      ],
+      "nationality": "Noruega",
+      "position": "Delantero",
+      "clubs": [
+        "Bryne",
+        "Molde",
+        "Red Bull Salzburgo",
+        "Borussia Dortmund",
+        "Manchester City"
+      ],
+      "hints": [
+        "Es delantero de la selección noruega.",
+        "Debutó como profesional en el Bryne.",
+        "Pasó por Molde y Salzburgo antes de llegar a la Bundesliga.",
+        "Fichó por Manchester City en 2022."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/025a-0e9f8ba8ec7e-64c8a559c1e1-1000--erling-braut-haaland-dortmund-s-new-signing-by-numbers/",
+        "https://www.uefa.com/uefachampionsleague/news/0268-11f9321e7599-fde3dd4a7bd0-1000--erling-haaland-in-the-champions-league-records-stats-who-h/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "mbappe",
+      "name": "Kylian Mbappé",
+      "aliases": [
+        "Mbappe",
+        "Mbappé",
+        "Kylian Mbappe",
+        "Kylian Mbappé Lottin"
+      ],
+      "nationality": "Francia",
+      "position": "Delantero",
+      "clubs": [
+        "AS Mónaco",
+        "Paris Saint-Germain",
+        "Real Madrid"
+      ],
+      "hints": [
+        "Es delantero de la selección francesa.",
+        "Ganó el Mundial masculino de 2018.",
+        "Debutó como profesional en AS Mónaco.",
+        "Se incorporó al Real Madrid en el verano europeo de 2024."
+      ],
+      "source_urls": [
+        "https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/26-superestrellas-kylian-mbappe-francia-declaraciones-records"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "vinicius",
+      "name": "Vinícius Júnior",
+      "aliases": [
+        "Vinicius Junior",
+        "Vinícius Jr",
+        "Vini Jr",
+        "Vinicius Jr",
+        "Vini"
+      ],
+      "nationality": "Brasil",
+      "position": "Extremo",
+      "clubs": [
+        "Flamengo",
+        "Real Madrid"
+      ],
+      "hints": [
+        "Es extremo de la selección brasileña.",
+        "Se formó y debutó profesionalmente en Flamengo.",
+        "Ganó el premio The Best FIFA al jugador masculino de 2024.",
+        "Ha marcado en dos finales de Champions ganadas por Real Madrid."
+      ],
+      "source_urls": [
+        "https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/vinicius-junior-brasil-records-estadisticas-frases"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "neymar",
+      "name": "Neymar",
+      "aliases": [
+        "Neymar Jr",
+        "Neymar Junior",
+        "Neymar Júnior",
+        "Neymar da Silva Santos Júnior"
+      ],
+      "nationality": "Brasil",
+      "position": "Delantero",
+      "clubs": [
+        "Santos",
+        "FC Barcelona",
+        "Paris Saint-Germain",
+        "Al Hilal",
+        "Santos"
+      ],
+      "hints": [
+        "Surgió del Santos de Brasil.",
+        "Ganó la Copa Libertadores masculina de 2011.",
+        "Formó parte del tridente ofensivo del FC Barcelona con Messi y Luis Suárez.",
+        "Después de su etapa en Al Hilal regresó al Santos en 2025."
+      ],
+      "source_urls": [
+        "https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/los-iconos-de-la-copa-mundial-de-la-fifa-que-regresaron-a-casa"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "maradona",
+      "name": "Diego Maradona",
+      "aliases": [
+        "Maradona",
+        "Diego Armando Maradona",
+        "El Diego",
+        "Pelusa"
+      ],
+      "nationality": "Argentina",
+      "position": "Mediapunta",
+      "clubs": [
+        "Argentinos Juniors",
+        "Boca Juniors",
+        "FC Barcelona",
+        "Napoli",
+        "Sevilla",
+        "Newell's Old Boys",
+        "Boca Juniors"
+      ],
+      "hints": [
+        "Debutó profesionalmente en Argentinos Juniors.",
+        "Fue campeón del mundo con Argentina en 1986.",
+        "Fue ídolo del Napoli, donde ganó dos títulos de Serie A.",
+        "Terminó su carrera como futbolista en Boca Juniors."
+      ],
+      "source_urls": [
+        "https://publications.fifa.com/es/annual-report-2020/obituaries-20/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "lewandowski",
+      "name": "Robert Lewandowski",
+      "aliases": [
+        "Lewandowski",
+        "Robert Lewandowski"
+      ],
+      "nationality": "Polonia",
+      "position": "Delantero",
+      "clubs": [
+        "Znicz Pruszków",
+        "Lech Poznań",
+        "Borussia Dortmund",
+        "Bayern Múnich",
+        "FC Barcelona"
+      ],
+      "hints": [
+        "Es delantero de la selección polaca.",
+        "Fue goleador en tres divisiones distintas del fútbol polaco.",
+        "Marcó cuatro goles con Borussia Dortmund ante Real Madrid en semifinales de Champions 2013.",
+        "Después de Bayern Múnich pasó al FC Barcelona."
+      ],
+      "source_urls": [
+        "https://es.uefa.com/news/0257-0e95a52de1e6-60e6b0ea06da-1000--centenario-lewangolski/",
+        "https://www.uefa.com/uefachampionsleague/news/0257-0e9a0f70e31c-e6f6d51eef60-1000--most-uefa-club-appearances/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "marcelo",
+      "name": "Marcelo Vieira",
+      "aliases": [
+        "Marcelo",
+        "Marcelo Vieira da Silva",
+        "Marcelo Vieira da Silva Júnior"
+      ],
+      "nationality": "Brasil",
+      "position": "Lateral izquierdo",
+      "clubs": [
+        "Fluminense",
+        "Real Madrid",
+        "Olympiacos",
+        "Fluminense"
+      ],
+      "hints": [
+        "Es un lateral izquierdo brasileño ya retirado.",
+        "Fue una pieza importante del Real Madrid durante dieciséis temporadas.",
+        "Jugó brevemente en Olympiacos después de dejar España.",
+        "Ganó la Copa Libertadores 2023 con Fluminense."
+      ],
+      "source_urls": [
+        "https://www.fifa.com/es/articles/marcelo-retirada-real-madrid-fluminense"
+      ],
+      "verified_at": "2026-10-24"
+    }
+  ]
+}
