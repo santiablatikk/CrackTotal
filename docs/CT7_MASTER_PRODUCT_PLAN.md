@@ -65,7 +65,7 @@ Crack Total no es una lista de preguntas generadas en masa. Es una **arena edito
 - [x] Progreso local claramente etiquetado, sin integración fraudulenta en rankings.
 - [ ] Duelo Relámpago — dos clientes, reloj servidor, tie-break definido, sin preguntas desiguales.
 - [ ] Conexiones futboleras — cuatro grupos de cuatro con **una solución editorialmente inequívoca**.
-- [ ] Ordená la historia — secuencias documentadas; igualdad de fechas tratada explícitamente.
+- [x] Ordená la historia — cinco secuencias de cuatro hechos, años inequívocos, control por flechas táctil/teclado, 20 acontecimientos sourced FIFA/UEFA, XP local. Rama CT7; falta release QA.
 - [ ] Armá el 11 — planteles históricos verificables por competición/partido/formación; no mezclar convocados con titulares.
 **Release gate:** cada juego tiene fuente, tutorial, errores, éxito, resultado, reinicio, móvil, teclado y lector de pantalla; sin repetir mecánicas huecas.
 

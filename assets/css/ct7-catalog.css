@@ -65,3 +65,9 @@
 @media(max-width:760px){.ct7-home-feature{grid-template-columns:1fr;gap:16px}.ct7-home-feature-heading h3{font-size:clamp(34px,8vw,58px)}}
 @media(max-width:360px){.ct7-home-feature{padding:21px}.ct7-home-feature-list>a{gap:10px}.ct7-home-feature-list>a b{font-size:20px}}
 @media(prefers-reduced-motion:reduce){.ct7-home-feature-list>a{transition:none}}
+
+/* Third editorial catalogue entry: archival chronology, not a repeated hero. */
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline{grid-column:1/-1;grid-template-columns:minmax(0,.65fr) minmax(0,1.35fr);border-top-color:#b5eb53!important;background:#1b302a!important;min-height:310px}
+.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline .home-game-media img{object-position:center 42%}
+@media(max-width:1180px){.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline .home-game-media{height:100%;min-height:300px}}
+@media(max-width:620px){.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline{grid-column:1;display:flex;flex-direction:column}.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline .home-game-media{min-height:0;height:185px}}

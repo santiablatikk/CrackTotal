@@ -25,13 +25,13 @@
       : 'Sin medallas locales todavía. Completá tres rondas en un día para ganar Explorador.';
     var list=$('ct7ProfileHistory');list.replaceChildren();
     if(!p.history.length){
-      var empty=document.createElement('li');empty.textContent='Todavía no jugaste estos dos modos.';list.appendChild(empty);return;
+      var empty=document.createElement('li');empty.textContent='Todavía no jugaste estos tres modos.';list.appendChild(empty);return;
     }
     p.history.slice(0,6).forEach(function(h){
       var li=document.createElement('li');
       var title=document.createElement('strong');
-      title.textContent=(h.mode==='career'?'Adiviná la carrera':'¿Quién soy?')+
-        ' · '+(h.won?'Acertaste':'Sin respuesta');
+      title.textContent=(h.mode==='timeline'?'Ordená la historia':h.mode==='career'?'Adiviná la carrera':'¿Quién soy?')+
+        ' · '+(h.mode==='timeline'?(h.won?'Orden perfecto':'Orden parcial'):h.won?'Acertaste':'Sin respuesta');
       var meta=document.createElement('small');
       meta.textContent=String(h.date||'').slice(0,10)+' · '+
         (Number.isSafeInteger(h.points)&&h.points>=0?h.points:0)+' pts locales';
@@ -39,11 +39,12 @@
     });
   }
   function clear() {
-    if(!window.confirm('¿Borrar la experiencia, las medallas y los resultados locales de estos dos juegos en este dispositivo? No afecta tu perfil ni tus partidas online.'))return;
+    if(!window.confirm('¿Borrar la experiencia, las medallas y los resultados locales de estos tres juegos en este dispositivo? No afecta tu perfil ni tus partidas online.'))return;
     try {
       localStorage.removeItem(key);
       sessionStorage.removeItem('ct7:session:identity:v1');
       sessionStorage.removeItem('ct7:session:career:v1');
+      sessionStorage.removeItem('ct7:timeline:session:v1');
       $('ct7ProfileNotice').textContent='Progreso local borrado de este dispositivo.';
     } catch(e) {
       $('ct7ProfileNotice').textContent='No se pudo borrar el almacenamiento local.';
