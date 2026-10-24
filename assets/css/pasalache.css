@@ -2082,6 +2082,10 @@ body.game-body.ct-ds .question-card .answer-input::placeholder{color:#b8cbb8;opa
 
 /* 6.1 — Rosco state contract. Scope and specificity beat the old generic
    body.game-body .letter rule without leaking colors to other games. */
+body.game-body.ct-ds #lettersContainer .letter {
+  /* Palette is an immediate result; animate only movement and emphasis. */
+  transition:transform .18s ease, box-shadow .18s ease;
+}
 body.game-body.ct-ds #lettersContainer .letter.correct {
   background:linear-gradient(145deg,#31e5b2,#168d69);
   color:#071e16;border-color:#a2ffdf;
@@ -2102,7 +2106,7 @@ body.game-body.ct-ds #lettersContainer .letter.pending {
 }
 /* Active is an outline state; it must not overwrite an existing pending
    base color. Resolved letters can never be active. */
-body.game-body.ct-ds #lettersContainer .letter.active:not(.correct):not(.incorrect) {
+body.game-body.ct-ds #lettersContainer .letter.active:not(.correct):not(.incorrect):not(.pending) {
   background:#b5eb53;color:#172514;border-color:#f0ffc9;
   box-shadow:0 0 0 3px #9ad63880,0 5px 16px #b5eb535c;
   opacity:1;animation:none;
