@@ -39,6 +39,9 @@
         statsPanel.appendChild(statsTitle);
         G.StatsGrid.create({ stats: snap.stats, streak: snap.streak }).mount(statsPanel);
         root.appendChild(statsPanel);
+        if (window.CrackTotalMissions && typeof window.CrackTotalMissions.mount === 'function') {
+            window.CrackTotalMissions.mount(root,snap);
+        }
 
         const mid = document.createElement('div');
         mid.className = 'ct-gamification__grid';
@@ -118,7 +121,10 @@
             if (G.notifyLevelUp) G.notifyLevelUp((event.detail && event.detail.level) || {});
         });
         window.addEventListener(Progress.events.UPDATED, () => {
-            // Soft refresh on next open; avoid full remount thrash during same session paints
+            // Update only mission counters, leaving other widgets and leaderboard subscriptions intact.
+            if (window.CrackTotalMissions && Progress.getSnapshot()) {
+                window.CrackTotalMissions.mount(root, Progress.getSnapshot());
+            }
         });
     }
 

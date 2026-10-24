@@ -43,7 +43,9 @@
             { id: 'badge_streak_5', name: 'Constante', icon: 'fa-fire', description: '5 días seguidos activos.' },
             { id: 'badge_wins_10', name: 'Ganador', icon: 'fa-trophy', description: '10 victorias acumuladas.' },
             { id: 'badge_answers_100', name: 'Preciso', icon: 'fa-bullseye', description: '100 respuestas correctas.' },
-            { id: 'badge_legend', name: 'Leyenda CT', icon: 'fa-crown', description: 'Alcanzaste el nivel Leyenda.' }
+            { id: 'badge_legend', name: 'Leyenda CT', icon: 'fa-crown', description: 'Alcanzaste el nivel Leyenda.' },
+            { id: 'badge_identity_3', name: 'Sabueso', icon: 'fa-fingerprint', description: 'Ganaste tres partidas de ¿Quién soy?' },
+            { id: 'badge_career_3', name: 'Archivista', icon: 'fa-route', description: 'Ganaste tres partidas de Adiviná la carrera.' }
         ],
 
         /**
@@ -118,6 +120,20 @@
                 icon: 'fa-calendar-check',
                 target: 3,
                 rule: { type: 'daily_challenge' }
+            },
+            {
+                id: 'identity_detective', title: 'Olfato de gol',
+                description: 'Ganá tres partidas de ¿Quién soy?.',
+                icon: 'fa-fingerprint', target: 3,
+                rule: { type: 'game_wins', gameId: 'quien-soy' },
+                badgeId: 'badge_identity_3'
+            },
+            {
+                id: 'career_archivist', title: 'Memoria de vestuario',
+                description: 'Ganá tres partidas de Adiviná la carrera.',
+                icon: 'fa-route', target: 3,
+                rule: { type: 'game_wins', gameId: 'trayectoria' },
+                badgeId: 'badge_career_3'
             }
         ],
 

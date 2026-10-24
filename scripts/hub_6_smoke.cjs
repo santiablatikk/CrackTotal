@@ -15,8 +15,10 @@ for(const dest of ['pasalache.html','pasala-1v1.html','top10.html','wordle-futbo
   assert.ok(html.includes('href="'+dest+'"'),'Game missing from hub: '+dest);
 }
 const cardCount=(html.match(/class="home-game-card home-reveal/g)||[]).length;
-assert.equal(cardCount,6,'Expect six live game / game-mode cards');
+assert.equal(cardCount,8,'Expect eight working game / game-mode cards, including identity modes');
 assert.match(css, /@media\(max-width:360px\)/,'Small-phone layout missing');
 assert.match(css, /prefers-reduced-motion:reduce/,'Reduced-motion support missing');
 assert(!/mi-carrera\.html|ct6-career-card/i.test(html),'Retired career game must not appear in the catalog');
-console.log('PASS 6.0 game hub: six linked experiences, semantic hooks, responsive and motion rules');
+assert.match(html,/href="identidad-futbolera\.html\?modo=pistas"/);
+assert.match(html,/href="identidad-futbolera\.html\?modo=carrera"/);
+console.log('PASS 6.3 game hub: eight linked experiences, playable new identity modes and responsive rules');

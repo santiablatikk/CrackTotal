@@ -77,6 +77,55 @@ function probe(expectedWidth) {
  * populate it with deterministic *display-only* samples. They do not use
  * WebSocket, award points, mutate persistence, or verify game rules.
  */
+async function identityLiveProbe() {
+  const $ = id => document.getElementById(id);
+  const sleep=ms=>new Promise(done=>setTimeout(done,ms));
+  let ready=false;
+  for(let i=0;i<40;i++){
+    if($('idClues')?.children.length && $('idAnswerInput')){ready=true;break;}
+    await sleep(100);
+  }
+  if(!ready)throw Error('Identity game bank did not load: '+($('idLoadError')?.textContent||''));
+  const mode=new URLSearchParams(location.search).get('modo')==='carrera'?'carrera':'pistas';
+  const bank=await (await fetch('assets/data/identidad-futbolera.json')).json();
+  let oldCount=0;
+  for(let round=0;round<5;round++){
+    if($('idAnswer').hidden)throw Error('Form hidden before round '+round);
+    if(round===0) {
+      $('idAnswerInput').value='nombre totalmente equivocado';
+      $('idAnswer').requestSubmit();
+      if(!$('idStatus').textContent.includes('Te quedan 2 intentos'))
+        throw Error('Wrong guess should cost one attempt');
+      oldCount++;
+    }
+    let loops=0;
+    while(!$('idHint').disabled && loops++<6)$('idHint').click();
+    const visible=[...$('idClues').querySelectorAll('.ctid-clue-text')].map(x=>x.textContent);
+    const bankKey=mode==='carrera'?'clubes':'pistas';
+    const player=bank.jugadores.find(x=>
+      x[bankKey].length===visible.length && x[bankKey].every((q,i)=>q===visible[i]));
+    if(!player)throw Error('Clues do not match one catalog player');
+    $('idAnswerInput').value=player.aliases[0];
+    $('idAnswer').requestSubmit();
+    if($('idReveal').hidden || $('idSolution').textContent!==player.nombre)
+      throw Error('Correct answer not revealed for '+player.id);
+    if(!$('idSource').href.includes('https:'))throw Error('No source link');
+    $('idNext').click();
+  }
+  if($('idFinish').hidden)throw Error('Result screen not reached');
+  if($('idFinalHits').textContent!=='5 de 5')throw Error('Incorrect game result');
+  let recorded=false;
+  for(let i=0;i<40;i++){
+    const snap=window.CrackTotalProgress?.getSnapshot?.();
+    if(snap?.history?.matches?.some(m=>m.gameId===(mode==='carrera'?'trayectoria':'quien-soy'))){
+      recorded=true;break;
+    }
+    await sleep(100);
+  }
+  if(!recorded)throw Error('Completed game did not persist local progress');
+  return {mode,rounds:5,correct:5,wrongAttempts:oldCount,localProgress:true};
+}
+
 function stageMatchFixture(game) {
   const $ = id => document.getElementById(id);
   const show = el => {
@@ -458,6 +507,28 @@ async function main(){
       });
       if (rejected.result?.value) await sleep(350);
 
+      if(args.fixture === 'identity-live') {
+        if(game!=='identidad-futbolera.html')throw Error('identity-live requires identity page');
+        const first=await command('Runtime.evaluate',{
+          expression:'('+identityLiveProbe.toString()+')()',
+          returnByValue:true,awaitPromise:true
+        });
+        if(first.exceptionDetails || first.result?.value?.correct!==5)
+          throw Error('Identity clues mode failed '+width+': '+
+            JSON.stringify(first.exceptionDetails||first.result).slice(0,1200));
+        await command('Page.navigate',{url:'http://127.0.0.1:'+httpPort+'/identidad-futbolera.html?modo=carrera'});
+        await sleep(1000);
+        const career=await command('Runtime.evaluate',{
+          expression:'('+identityLiveProbe.toString()+')()',
+          returnByValue:true,awaitPromise:true
+        });
+        if(career.exceptionDetails || career.result?.value?.correct!==5)
+          throw Error('Identity career mode failed '+width+': '+
+            JSON.stringify(career.exceptionDetails||career.result).slice(0,1200));
+        console.log('IDENTITY REAL GAME '+width+'px '+JSON.stringify({
+          pistas:first.result.value,carrera:career.result.value
+        }));
+      }
       if(args.fixture === 'wordle-live') {
         if(game!=='wordle-futbol.html')throw Error('wordle-live requires Wordle page');
         // Each width is a separate fresh-play case. Do not accumulate guesses
