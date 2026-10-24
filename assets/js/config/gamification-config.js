@@ -123,7 +123,7 @@
 
         rankings: {
             collectionRoot: 'leaderboard_scopes',
-            scopes: ['global', 'weekly', 'monthly', 'friends']
+            scopes: ['global', 'weekly', 'monthly']
         },
 
         features: {
