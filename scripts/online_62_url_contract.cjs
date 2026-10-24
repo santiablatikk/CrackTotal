@@ -36,4 +36,16 @@ for(const host of ['cracktotal.com','www.cracktotal.com']){
     'wss://cracktotal-servidor.onrender.com');
 }
 assert.equal(evaluate(duet,'localhost','?server=wss://localhost.example','wsUrl'),'wss://localhost.example');
+// Opening a socket must not enable matchmaking: require exact Arena handshake.
+const openIndex=duel.indexOf('    ws.onopen = () => {');
+const messageIndex=duel.indexOf('    ws.onmessage = event => {',openIndex);
+assert(openIndex>0&&messageIndex>openIndex,'Duel open/message handler missing');
+assert(!duel.slice(openIndex,messageIndex).includes('state.connected = true'),
+  'Never expose online play before protocol and feature negotiation');
+assert.match(duel,/message\.type === 'arena:hello'/);
+assert.match(duel,/message\.payload\?\.protocol !== 'cracktotal-arena-5\.2'/);
+assert.match(duel,/message\.payload\?\.features\?\.pasalaDuel !== true/);
+assert.match(duel,/if \(!state\.connected \|\| typeof message\.type/);
+assert.match(duel,/incompatible = true/);
+assert.match(duel,/if \(!incompatible && !state\.manualLeave/);
 console.log('PASS 6.2: production/staging WebSocket routing is deliberate and isolated');
