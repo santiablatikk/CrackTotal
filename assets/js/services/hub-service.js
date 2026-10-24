@@ -256,6 +256,19 @@
 
         const cfg = footballConfig();
 
+        // Rankings competitivos nunca utilizan los ejemplos JSON del Hub.
+        if (key === 'userRanking') {
+            const svc=Services.RankingService;
+            if (!svc || typeof svc.getRanking!=='function') {
+                return {ok:false,data:emptyShape(key),source:'verified-firestore',
+                    message:'Ranking verificado no disponible'};
+            }
+            const rank=await svc.getRanking('global',8);
+            return {ok:rank.ok,source:'verified-firestore',live:rank.live,
+                message:rank.message,data:{updatedAt:rank.updatedAt,
+                    game:'Global',href:'ranking.html',items:rank.items}};
+        }
+
         if (key === 'competitions') {
             if (cfg.canUseApi && cfg.canUseApi() && Services.FootballService) {
                 return Services.FootballService.getCompetitions();
