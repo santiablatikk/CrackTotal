@@ -10,6 +10,18 @@ class RankingHelper {
         this.rankingTable = null;
     }
 
+    // Legacy match documents are user-submitted and not trusted HTML.
+    escapeText(value) {
+        return String(value ?? '').replace(/[&<>"']/g, char => ({
+            '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+        })[char]);
+    }
+
+    safeNonnegative(value, max = 10000000) {
+        const n = Number(value);
+        return Number.isFinite(n) ? Math.min(max, Math.max(0, n)) : 0;
+    }
+
     // Inicializar elementos del DOM
     initializeElements() {
         this.spinner = document.getElementById('ranking-spinner');
@@ -259,22 +271,22 @@ class RankingHelper {
 
                 const historyHTML = historyData.map((match, index) => {
                     // Información básica
-                    const score = match.score || 0;
-                    const correctAnswers = match.correctAnswers || 0;
-                    const totalQuestions = match.totalQuestions || 26;
-                    const accuracy = match.accuracy || 0;
+                    const score = this.safeNonnegative(match.score);
+                    const correctAnswers = this.safeNonnegative(match.correctAnswers, 10000);
+                    const totalQuestions = this.safeNonnegative(match.totalQuestions || 26, 10000);
+                    const accuracy = this.safeNonnegative(match.accuracy, 100);
                     const gameResult = match.gameResult || 'unknown';
                     const difficulty = match.difficulty || 'normal';
-                    const playerName = match.playerName || 'Anónimo';
+                    const playerName = this.escapeText(String(match.playerName || 'Anónimo').slice(0, 64));
                     
                     // Información de tiempo
-                    const duration = match.duration || 0;
-                    const timeFormatted = match.timeFormatted || this.formatDuration(duration);
+                    const duration = this.safeNonnegative(match.duration, 604800);
+                    const timeFormatted = this.escapeText(String(match.timeFormatted || this.formatDuration(duration)).slice(0, 32));
                     
                     // Información adicional
-                    const incorrectAnswers = match.incorrectAnswers || 0;
-                    const passedAnswers = match.passedAnswers || 0;
-                    const helpUsed = match.helpUsed || 0;
+                    const incorrectAnswers = this.safeNonnegative(match.incorrectAnswers, 10000);
+                    const passedAnswers = this.safeNonnegative(match.passedAnswers, 10000);
+                    const helpUsed = this.safeNonnegative(match.helpUsed, 10000);
                     
                     // Determinar tipo de resultado usando la nueva lógica
                     const result = this.determineGameResult(match, gameType);
@@ -396,7 +408,7 @@ class RankingHelper {
                                     <div>
                                         <h4 style="margin: 0; color: #ecf0f1; font-size: 1em;">
                                             👤 ${playerName} - ${difficultyDisplay}
-                                            ${showAllPlayers ? `<span style="font-size: 0.7em; color: #777; margin-left: 8px;">(${(match.playerId || '').substring(0, 8)}...)</span>` : ''}
+                                            ${showAllPlayers ? `<span style="font-size: 0.7em; color: #777; margin-left: 8px;">(${this.escapeText(String(match.playerId || '').substring(0, 8))}...)</span>` : ''}
                                         </h4>
                                         <p style="margin: 4px 0 0 0; color: #bdc3c7; font-size: 0.85em;">
                                             📅 ${gameDate}
