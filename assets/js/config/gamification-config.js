@@ -122,8 +122,8 @@
         ],
 
         rankings: {
-            mockBasePath: 'assets/data/rankings',
-            scopes: ['global', 'weekly', 'monthly', 'friends']
+            collectionRoot: 'leaderboard_scopes',
+            scopes: ['global', 'weekly', 'monthly']
         },
 
         features: {

@@ -1,93 +1,53 @@
-/**
- * RankingService — architecture for global / weekly / monthly / friends.
- * Uses mock JSON initially; swap fetcher later without touching cards.
- */
+/* Rankings públicos: exclusivamente documentos que valida el servidor.
+   Firestore leaderboard_scopes/{scope}/entries/{playerId}.
+   Ningún punto enviado desde el navegador participa en esta clasificación. */
 (function () {
-    'use strict';
-
-    const Services = (window.CrackTotalServices = window.CrackTotalServices || {});
-
-    function cfg() {
-        return (window.CrackTotalGamificationConfig && window.CrackTotalGamificationConfig.rankings) || {
-            mockBasePath: 'assets/data/rankings',
-            scopes: ['global', 'weekly', 'monthly', 'friends']
-        };
-    }
-
-    function injectLocalPlayer(items, scope) {
-        const snap = Services.Progress && Services.Progress.getSnapshot && Services.Progress.getSnapshot();
-        if (!snap) return items;
-        const name = snap.profile.displayName || 'Vos';
-        const score = snap.xp.total || 0;
-        const list = items.slice();
-        const existing = list.findIndex((row) => row.isYou || row.name === name);
-        if (existing >= 0) {
-            list[existing] = Object.assign({}, list[existing], {
-                name: name,
-                score: Math.max(Number(list[existing].score) || 0, score),
-                isYou: true,
-                meta: snap.level.current.name
-            });
-        } else {
-            list.push({
-                rank: list.length + 1,
-                name: name,
-                score: score,
-                meta: snap.level.current.name,
-                isYou: true
-            });
-        }
-        list.sort((a, b) => (Number(b.score) || 0) - (Number(a.score) || 0));
-        list.forEach((row, idx) => {
-            row.rank = idx + 1;
-        });
-        return list.slice(0, 20);
-    }
-
-    async function fetchScope(scope) {
-        const base = String(cfg().mockBasePath || 'assets/data/rankings').replace(/\/$/, '');
-        const url = base + '/' + scope + '.json';
-        try {
-            const response = await fetch(url, { credentials: 'same-origin' });
-            if (!response.ok) throw new Error('HTTP ' + response.status);
-            const data = await response.json();
-            const items = Array.isArray(data.items) ? data.items : [];
-            return {
-                ok: true,
-                scope: scope,
-                updatedAt: data.updatedAt || null,
-                items: injectLocalPlayer(items, scope),
-                source: 'mock'
-            };
-        } catch (error) {
-            return {
-                ok: true,
-                scope: scope,
-                updatedAt: null,
-                items: injectLocalPlayer([], scope),
-                source: 'fallback',
-                message: 'Ranking simulado'
-            };
-        }
-    }
-
-    Services.RankingService = {
-        scopes() {
-            return (cfg().scopes || []).slice();
-        },
-        getRanking(scope) {
-            const allowed = this.scopes();
-            const key = allowed.indexOf(scope) !== -1 ? scope : 'global';
-            return fetchScope(key);
-        },
-        getAll() {
-            return Promise.all(this.scopes().map((s) => fetchScope(s))).then((rows) => {
-                const map = {};
-                rows.forEach((row) => {
-                    map[row.scope] = row;
-                });
-                return map;
-            });
-        }
-    };
+  'use strict';
+  const Services=window.CrackTotalServices=window.CrackTotalServices||{};
+  const scopes=['global','weekly','monthly','pasalache','pasala-duel','quiensabemas','mentiroso','top10','wordle'];
+  const size=n=>Math.min(50,Math.max(1,Number.isInteger(n)?n:20));
+  const unavailable=(scope,error)=>({ok:false,scope,items:[],updatedAt:null,live:false,
+    source:'verified-firestore',message:'Ranking verificado no disponible.',error:String(error)});
+  function entries(scope,limit) {
+    if(!window.db) throw new Error('Firestore no disponible');
+    return window.db.collection('leaderboard_scopes').doc(scope)
+      .collection('entries').orderBy('score','desc').limit(size(limit));
+  }
+  function parse(snapshot,scope,limit,stream=false) {
+    const items=[];
+    let lastUpdated=null;
+    snapshot.forEach(doc=>{
+      const d=doc.data()||{};
+      if(d.verified!==true||d.verifiedBy!=='server'||d.schemaVersion!==1||
+         d.playerId!==doc.id||typeof d.playerId!=='string'||typeof d.name!=='string'||
+         !Number.isSafeInteger(d.score)||d.score<0||d.score>100000000) return;
+      const modified=d.updatedAt?.toDate?.() || (typeof d.updatedAt==='string' ? new Date(d.updatedAt) : null);
+      if(modified && Number.isFinite(modified.getTime()) && (!lastUpdated || modified>lastUpdated)) lastUpdated=modified;
+      items.push({playerId:d.playerId,name:d.name.slice(0,32),score:d.score,
+        gamesPlayed:Math.max(0,Number(d.gamesPlayed)||0),
+        victories:Math.max(0,Number(d.victories)||0),meta:'Resultado validado'});
+    });
+    items.sort((a,b)=>b.score-a.score||b.victories-a.victories||
+      a.name.localeCompare(b.name,'es')||a.playerId.localeCompare(b.playerId));
+    items.length=Math.min(items.length,size(limit));
+    items.forEach((x,i)=>{x.rank=i+1;});
+    return {ok:true,scope,items,updatedAt:lastUpdated?lastUpdated.toISOString():null,
+      live:stream && snapshot.metadata?.fromCache!==true,
+      source:'verified-firestore',message:items.length?'':'Todavía no hay resultados verificados.'};
+  }
+  function getRanking(scope,limit=20) {
+    if(!scopes.includes(scope))return Promise.resolve(unavailable(scope,'Ámbito inválido'));
+    try{return entries(scope,limit).get().then(s=>parse(s,scope,limit,false))
+      .catch(e=>unavailable(scope,e.message));}
+    catch(e){return Promise.resolve(unavailable(scope,e.message));}
+  }
+  function subscribe(scope,cb,limit=20){
+    if(typeof cb!=='function')throw new TypeError('Callback requerido');
+    if(!scopes.includes(scope)){cb(unavailable(scope,'Ámbito inválido'));return ()=>{};}
+    try{return entries(scope,limit).onSnapshot(s=>cb(parse(s,scope,limit,true)),
+      e=>cb(unavailable(scope,e.message)));}
+    catch(e){cb(unavailable(scope,e.message));return ()=>{};}
+  }
+  Services.RankingService={scopes:()=>scopes.slice(),getRanking,subscribe,
+    getAll:async()=>Object.fromEntries((await Promise.all(scopes.map(scope=>getRanking(scope)))).map(x=>[x.scope,x]))};
 })();

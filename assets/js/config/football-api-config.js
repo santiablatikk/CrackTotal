@@ -79,7 +79,7 @@
             useApiForCompetitions: MODE === 'API',
             newsFromMock: true,
             gameOfDayFromMock: true,
-            userRankingFromMock: true,
+            userRankingFromMock: false,
             fallbackToMockOnError: true,
             showStoredIndicator: true
         },
