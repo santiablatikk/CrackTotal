@@ -442,6 +442,66 @@ async function pasalaLiveProbe() {
   return {correct,incorrect,pending,revisitedA:true,counters:stats,defeatAt:4};
 }
 
+/**
+ * Genuine Top 10 daily game browser regression. No mock game-state injection:
+ * interacts with the real daily pool and button handlers in a disposable profile.
+ */
+async function top10LiveProbe(){
+  const $=id=>document.getElementById(id);
+  const waitFor=async (predicate,label)=>{
+    for(let i=0;i<100;i++){
+      const value=predicate();if(value)return value;
+      await new Promise(resolve=>setTimeout(resolve,90));
+    }
+    throw Error('Top 10 browser timeout: '+label);
+  };
+  const start=await waitFor(()=>!$('startBtn')?.hidden&&$('startBtn'),'ready daily start');
+  start.click();
+  await waitFor(()=>!$('surnameInput').disabled&&$('top10GameCard').hidden===false,'gameplay start');
+  const input=$('surnameInput'),button=$('submitBtn');
+  const data=await (await fetch('assets/data/top10_verified_v2.json',{cache:'no-store'})).json();
+  const topic=window.CTTop10Verified.pick(data,new Date().toISOString().slice(0,10));
+  if(!topic.answers.length||!$('topicTitle').textContent.includes(topic.title))
+    throw Error('Top 10 daily game did not use official-pool picker');
+  const answer=topic.answers[0];
+  input.value='zzz-invalid-football-answer-999';
+  button.click();
+  if($('messageBox').dataset.result!=='incorrect'||$('foundCount').textContent!=='0/10')
+    throw Error('Top 10 incorrect guess was not rejected and identified');
+  const incorrectColor=getComputedStyle($('messageBox')).color;
+  if(!incorrectColor.includes('255, 159, 166'))
+    throw Error('Top 10 lost red incorrect feedback: '+incorrectColor);
+  input.value=answer;button.click();
+  await waitFor(()=>$('foundCount').textContent==='1/10','first valid team reveal');
+  if(!$('answersList').children[0].classList.contains('solved'))
+    throw Error('First answer was not revealed in its real ranking slot');
+  if($('messageBox').dataset.result!=='correct')
+    throw Error('Top 10 missing correct feedback on valid answer');
+  const before=JSON.parse(localStorage.getItem('top10_state_v1'));
+  if(before.attempts!==2||before.found.length!==1||before.found[0]!==answer)
+    throw Error('Top 10 scores or persisted answer incorrect: '+JSON.stringify(before));
+  input.value=answer;button.click();
+  const after=JSON.parse(localStorage.getItem('top10_state_v1'));
+  if(after.attempts!==2||after.found.length!==1)
+    throw Error('Duplicate Top 10 answer changed attempts or score');
+  $('giveUpBtn').click();
+  await waitFor(()=>$('resultModal').style.display==='flex','result modal on finishing');
+  if($('statFound').textContent!=='1'||$('statAttempts').textContent!=='2')
+    throw Error('Top 10 result summary diverged from play');
+  $('viewRankingBtn').click();
+  if($('resultModal').style.display!=='none'||$('dailyOverlay').style.display!=='none')
+    throw Error('Top 10 result dismissal still obscures completed ranking');
+  if(!$('surnameInput').disabled||!$('submitBtn').disabled||!$('giveUpBtn').disabled)
+    throw Error('Top 10 read-only final ranking accidentally permits another attempt');
+  if($('gameNumber').textContent!=='FINALIZADO'||$('foundCount').textContent!=='1/10')
+    throw Error('Top 10 final HUD is inconsistent');
+  const finished=JSON.parse(localStorage.getItem('top10_state_v1'));
+  if(!finished.finished||finished.won||finished.found.length!==1)
+    throw Error('Top 10 final state was not saved');
+  return {topicId:topic.id,correct:answer,attempts:finished.attempts,found:finished.found.length,
+    incorrectColor,rankingAccessible:true,gameLocked:true};
+}
+
 async function main(){
   if (widths.some(w=>!Number.isInteger(w) || w<280 || w>3000)||!Number.isInteger(viewportHeight)||viewportHeight<480||viewportHeight>2160)throw Error('Invalid viewport');
   fs.mkdirSync(out,{recursive:true});
@@ -566,6 +626,17 @@ async function main(){
             JSON.stringify(restored.exceptionDetails||restored.result).slice(0,800));
         console.log('WORDLE LIVE '+width+'px: '+JSON.stringify(first.result.value));
       }
+      if(args.fixture==='top10-live'){
+        if(game!=='top10.html')throw Error('top10-live requires Top 10');
+        const result=await command('Runtime.evaluate',{
+          expression:'('+top10LiveProbe.toString()+')()',
+          returnByValue:true,awaitPromise:true
+        });
+        if(result.exceptionDetails||!result.result?.value?.rankingAccessible)
+          throw Error('TOP 10 LIVE failed at '+width+': '+
+            JSON.stringify(result.exceptionDetails||result.result).slice(0,1200));
+        console.log('TOP 10 LIVE '+width+'px: '+JSON.stringify(result.result.value));
+      }
       if(args.fixture==='pasala-live'){
         if(game!=='pasalache.html')throw Error('pasala-live requires Pasala Che');
         const result=await command('Runtime.evaluate',{
@@ -656,7 +727,7 @@ async function main(){
     const failed=rows.filter(x=>!x.title.includes('Crack Total') || x.expectedWidth!==x.width || x.overflow>2 || x.offscreen.length);
     const summary='# Crack Total 6.0 — Chromium QA\n\n'+(args.baseline?'Before':'After')+' · '+rows.length+' viewport/page combinations · '+failed.length+' alerts\n\n'+
       (failed.map(x=>'- '+x.game+' '+x.expectedWidth+'px: title='+x.title+', overflow='+x.overflow+', offscreen='+x.offscreen.length).join('\n') || 'No reported overflow or offscreen primary controls')+
-      '\n\nScope: ' + (args.fixture === 'match' ? 'synthetic match-state layout only (no game logic or WebSocket assertions).' : args.fixture === 'pasala-live' ? 'real solo Pasala controls, correct/wrong/pass states, computed colors, and 26-letter round persistence (no backend assertions).' : args.fixture === 'wordle-live' ? 'real local Wordle keyboard clicks, deletion, saved progress, page reload, invalid submit, and layout geometry (no backend or date rollover assertions).' : 'initial screens only. Gameplay, results, WebSocket and disconnect states require separate QA.') + '\n';
+      '\n\nScope: ' + (args.fixture === 'match' ? 'synthetic match-state layout only (no game logic or WebSocket assertions).' : args.fixture === 'top10-live' ? 'real daily Top 10 invalid, correct, duplicate, result, read-only ranking and persisted state.' : args.fixture === 'pasala-live' ? 'real solo Pasala controls, correct/wrong/pass states, computed colors, and 26-letter round persistence (no backend assertions).' : args.fixture === 'wordle-live' ? 'real local Wordle keyboard clicks, deletion, saved progress, page reload, invalid submit, and layout geometry (no backend or date rollover assertions).' : 'initial screens only. Gameplay, results, WebSocket and disconnect states require separate QA.') + '\n';
     fs.writeFileSync(path.join(out,'SUMMARY.md'),summary);
     if(failed.length&&!args.baseline)process.exitCode=1;
   } finally {

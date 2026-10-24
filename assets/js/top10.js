@@ -249,6 +249,7 @@
       sourceLink.href=topic.source_url;
     }
     const modal = document.getElementById('resultModal');
+    document.getElementById('gameNumber').textContent = 'FINALIZADO';
     document.getElementById('resultTitle').textContent = won? '¡Completado!' : 'Fin del intento';
     document.getElementById('resultMessage').textContent = won? '¡Top 10 completo!': `Encontraste ${foundSet.size} de 10. Mañana hay un nuevo desafío.`;
     modal.style.display = 'flex';
@@ -313,7 +314,13 @@
     const submit = ()=>{if(!started||finished)return;const v=input.value.trim();input.value='';trySubmit(v);if(!finished)input.focus({preventScroll:true});};
     input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submit(); }});
     btn.addEventListener('click', submit);
-    const dismiss=()=>{document.getElementById('resultModal').style.display='none';document.getElementById('topicTitle')?.focus({preventScroll:true});};
+    // El reto queda bloqueado por hoy, pero cerrar el resultado debe permitir
+    // inspeccionar las diez posiciones. El antiguo aviso tapaba el ranking.
+    const dismiss=()=>{
+      document.getElementById('resultModal').style.display='none';
+      if (finished) document.getElementById('dailyOverlay').style.display='none';
+      document.getElementById('topicTitle')?.focus({preventScroll:true});
+    };
     document.getElementById('closeResultBtn')?.addEventListener('click',dismiss);
     document.getElementById('viewRankingBtn')?.addEventListener('click',dismiss);
     document.getElementById('shareTop10Btn')?.addEventListener('click', ()=>{

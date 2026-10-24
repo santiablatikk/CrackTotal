@@ -57,3 +57,11 @@ assert(read('games.html').includes('top10-verified.js'));
 assert(read('index.html').includes('ct42-daily-ranks'));
 assert.equal((read('index.html').match(/ct42-daily-ranks[\s\S]*?<\/div>/)||[])[0].match(/<span>/g)?.length,10);
 console.log('Top 10 4.2 content and mechanics smoke PASS: 4 official tables / 40 positions; aliases; shared UTC picker; 38 retained legacy topics');
+
+const top10Css=read('assets/css/top10.css');
+assert.match(game,/if \(finished\) document\.getElementById\('dailyOverlay'\)\.style\.display='none'/,
+  'Closing the Top 10 result must reveal a read-only ranking, not a blocking completed overlay');
+assert.match(game,/getElementById\('gameNumber'\)\.textContent = 'FINALIZADO'/,
+  'Completed Top 10 should identify its read-only state');
+assert.match(top10Css,/messages\[data-result="incorrect"\]\{color:#ff9fa6\}/,
+  'Top 10 wrong answers must retain a visible red error cue');

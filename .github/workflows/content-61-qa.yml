@@ -33,3 +33,7 @@ jobs:
           export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
           node scripts/qa_browser_52.cjs --root . --out "$RUNNER_TEMP/ct-pasala-live" --widths 360 --games pasalache.html --fixture pasala-live
 
+      - name: Top 10 daily browser gameplay and completed-ranking regression
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node scripts/qa_browser_52.cjs --root . --out "$RUNNER_TEMP/ct-top10-live" --widths 360 --games top10.html --fixture top10-live

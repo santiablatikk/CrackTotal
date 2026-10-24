@@ -72,7 +72,7 @@ body.top10-body .top10-input:focus-visible{border-color:#b5eb53;box-shadow:0 0 0
 body.top10-body .top10-play-controls .primary-button{width:100%;font-size:14px}
 body.top10-body .messages{font-size:14px;font-weight:800;line-height:1.45;min-height:24px;color:#f5f9ef;margin:15px 0 5px}
 body.top10-body .messages[data-result="correct"]{color:#bbff71}
-body.top10-body .messages[data-result="incorrect"]{color:#ffd1b1}
+body.top10-body .messages[data-result="incorrect"]{color:#ff9fa6}
 body.top10-body .guesses{display:flex;flex-wrap:wrap;gap:6px;max-height:112px;overflow:auto}
 body.top10-body .guess{display:inline-flex;padding:6px 9px;border-radius:3px;border:1px solid #a8c0a144;color:#eef8ee;font-size:14px;overflow-wrap:anywhere}
 body.top10-body .giveup{appearance:none;align-self:start;background:transparent;color:#f3bbb5;border:0;border-bottom:1px solid #bd847e;padding:8px 0;font-size:14px;font-weight:900;cursor:pointer;margin-top:auto}
