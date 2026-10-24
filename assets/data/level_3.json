@@ -624,6 +624,94 @@
         "D": "1971-1974"
       },
       "respuesta_correcta": "A"
+    },
+    {
+      "pregunta": "¿Qué jugador recibió el Guante de Oro del Mundial masculino de 2026?",
+      "question": "¿Qué jugador recibió el Guante de Oro del Mundial masculino de 2026?",
+      "respuesta": "Unai Simón",
+      "answer": "Unai Simón",
+      "opciones": {
+        "A": "Emiliano Martínez",
+        "B": "Jordan Pickford",
+        "C": "Hugo Lloris",
+        "D": "Unai Simón"
+      },
+      "respuesta_correcta": "D",
+      "dificultad": 3,
+      "audit_status": "verified_official",
+      "source_url": "https://www.fifa.com/mens/articles/award-winners",
+      "source_urls": [
+        "https://www.fifa.com/mens/articles/award-winners"
+      ],
+      "verified_at": "2026-10-24",
+      "as_of": "2026-10-24",
+      "content_batch": "62-verified-20261024"
+    },
+    {
+      "pregunta": "¿En qué minuto marcó Ferran Torres el gol de España en la final del Mundial 2026?",
+      "question": "¿En qué minuto marcó Ferran Torres el gol de España en la final del Mundial 2026?",
+      "respuesta": "106",
+      "answer": "106",
+      "opciones": {
+        "A": "106",
+        "B": "90+4",
+        "C": "115",
+        "D": "119"
+      },
+      "respuesta_correcta": "A",
+      "dificultad": 3,
+      "audit_status": "verified_official",
+      "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-argentina-final-report-highlights",
+      "source_urls": [
+        "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-argentina-final-report-highlights"
+      ],
+      "verified_at": "2026-10-24",
+      "as_of": "2026-10-24",
+      "content_batch": "62-verified-20261024"
+    },
+    {
+      "pregunta": "¿Quién se quedó con el premio al mejor jugador joven del Mundial masculino de 2026?",
+      "question": "¿Quién se quedó con el premio al mejor jugador joven del Mundial masculino de 2026?",
+      "respuesta": "Pau Cubarsí",
+      "answer": "Pau Cubarsí",
+      "opciones": {
+        "A": "Lamine Yamal",
+        "B": "Pau Cubarsí",
+        "C": "Jude Bellingham",
+        "D": "Arda Güler"
+      },
+      "respuesta_correcta": "B",
+      "dificultad": 3,
+      "audit_status": "verified_official",
+      "source_url": "https://www.fifa.com/mens/articles/award-winners",
+      "source_urls": [
+        "https://www.fifa.com/mens/articles/award-winners"
+      ],
+      "verified_at": "2026-10-24",
+      "as_of": "2026-10-24",
+      "content_batch": "62-verified-20261024"
+    },
+    {
+      "pregunta": "¿Cuál fue el resultado de Belgrano ante River en la final del Apertura argentino de 2026?",
+      "question": "¿Cuál fue el resultado de Belgrano ante River en la final del Apertura argentino de 2026?",
+      "respuesta": "3-2",
+      "answer": "3-2",
+      "opciones": {
+        "A": "1-0",
+        "B": "2-1",
+        "C": "3-2",
+        "D": "4-3"
+      },
+      "respuesta_correcta": "C",
+      "dificultad": 3,
+      "audit_status": "verified_official",
+      "source_url": "https://www.afa.com.ar/a/posts/belgrano-vencio-3-2-a-river-y-se-quedo-con-el-torneo-apertura-2026",
+      "source_urls": [
+        "https://www.afa.com.ar/a/posts/belgrano-vencio-3-2-a-river-y-se-quedo-con-el-torneo-apertura-2026"
+      ],
+      "verified_at": "2026-10-24",
+      "as_of": "2026-10-24",
+      "content_batch": "62-verified-20261024"
     }
   ]
 }
