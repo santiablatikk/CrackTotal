@@ -14,7 +14,7 @@ for(const item of dataset.records){
   assert.equal(item.verified_at,'2026-10-24');
   assert(Array.isArray(item.aliases)&&item.source_urls.length>=1);
   assert(!/women|femenin|mujeres/i.test(JSON.stringify(item)));
-  item.source_urls.forEach(u=>assert(/^https:\/\/(?:www\.fifa\.com|inside\.fifa\.com|www\.uefa\.com)\//.test(u),item.id+' unofficial source'));
+  item.source_urls.forEach(u=>assert(/^https:\/\/(?:www\.fifa\.com|inside\.fifa\.com|publications\.fifa\.com|www\.uefa\.com|es\.uefa\.com)\//.test(u),item.id+' unofficial source'));
   for(const name of [item.name,...item.aliases]){
     const key=normalize(name);
     assert(key);
