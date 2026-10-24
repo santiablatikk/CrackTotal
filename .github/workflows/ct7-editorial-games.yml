@@ -1,0 +1,48 @@
+name: CT7 editorial games and responsive QA
+on:
+  push:
+    branches:
+      - feature/crack-total-7-0-editorial-games
+  pull_request:
+    branches:
+      - feature/crack-total-6-2-realtime-integrity
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  game-engines:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Dependencies
+        run: npm ci
+      - name: Test all existing games and new CT7 local gameplay
+        run: npm test
+  responsive-ct7:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Browser smoke at four meaningful viewports
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node scripts/qa_browser_52.cjs \
+            --root . \
+            --out "$RUNNER_TEMP/ct7-browser" \
+            --games quien-soy.html,adivina-carrera.html \
+            --widths 320,390,768,1366
+      - name: Upload screenshots and geometry
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ct7-responsive-screenshots
+          path: ${{ runner.temp }}/ct7-browser/
+          if-no-files-found: warn
