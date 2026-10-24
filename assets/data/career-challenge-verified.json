@@ -1,8 +1,8 @@
 {
-  "version": "2026-10-24-ct7-v1",
+  "version": "2026-10-24-ct72-v1",
   "editorial_scope": "male-senior-football",
   "as_of": "2026-10-24",
-  "description": "Carreras profesionales masculinas de clubes. No incluye categorías juveniles ni cesiones a filiales salvo indicación expresa.",
+  "description": "Fútbol masculino profesional. Los clubes listados son etapas destacadas en orden de aparición, no un registro exhaustivo de todos los fichajes y cesiones.",
   "records": [
     {
       "id": "messi",
@@ -351,6 +351,599 @@
       ],
       "source_urls": [
         "https://www.fifa.com/es/articles/marcelo-retirada-real-madrid-fluminense"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "zidane",
+      "name": "Zinedine Zidane",
+      "aliases": [
+        "zinedine zidane",
+        "zidane",
+        "zizou"
+      ],
+      "nationality": "Francia",
+      "position": "Mediocampista",
+      "clubs": [
+        "Girondins de Burdeos",
+        "Juventus",
+        "Real Madrid"
+      ],
+      "hints": [
+        "Mediocampista francés.",
+        "Pasó por Juventus antes de llegar a España.",
+        "Marcó en la final de Champions de 2002.",
+        "Dirigió al Real Madrid campeón de tres Champions seguidas."
+      ],
+      "source_urls": [
+        "https://www.fifa.com/es/articles/influencia-zidane-real-madrid-juventus"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "modric",
+      "name": "Luka Modrić",
+      "aliases": [
+        "luka modric",
+        "modric"
+      ],
+      "nationality": "Croacia",
+      "position": "Mediocampista",
+      "clubs": [
+        "Dinamo Zagreb",
+        "Tottenham",
+        "Real Madrid"
+      ],
+      "hints": [
+        "Mediocampista croata.",
+        "Brilló en la Premier League antes de ir a España.",
+        "Fue finalista del Mundial 2018.",
+        "Jugó muchos años en el Real Madrid."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/0257-0e9a0f70e31c-e6f6d51eef60-1000--who-has-made-the-most-uefa-club-competition-appearances/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "figo",
+      "name": "Luís Figo",
+      "aliases": [
+        "luis figo",
+        "figo"
+      ],
+      "nationality": "Portugal",
+      "position": "Extremo",
+      "clubs": [
+        "Sporting CP",
+        "Barcelona",
+        "Real Madrid",
+        "Inter"
+      ],
+      "hints": [
+        "Extremo portugués.",
+        "Jugó en dos gigantes rivales de España.",
+        "Luego pasó al Inter de Milán.",
+        "Ganó el Balón de Oro en 2000."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/news/0246-0e98e228fe16-d5ff2a10c737-1000--europe-s-top-portuguese-players/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "casillas",
+      "name": "Iker Casillas",
+      "aliases": [
+        "iker casillas",
+        "casillas"
+      ],
+      "nationality": "España",
+      "position": "Arquero",
+      "clubs": [
+        "Real Madrid",
+        "Porto"
+      ],
+      "hints": [
+        "Arquero español.",
+        "Jugó en Real Madrid y Porto.",
+        "Ganó tres Champions con el Madrid.",
+        "Fue capitán de España en Sudáfrica 2010."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/0257-0e9a0f70e31c-e6f6d51eef60-1000--who-has-made-the-most-uefa-club-competition-appearances/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "moutinho",
+      "name": "João Moutinho",
+      "aliases": [
+        "joao moutinho",
+        "moutinho"
+      ],
+      "nationality": "Portugal",
+      "position": "Mediocampista",
+      "clubs": [
+        "Sporting CP",
+        "Porto",
+        "Mónaco",
+        "Wolverhampton",
+        "Braga"
+      ],
+      "hints": [
+        "Mediocampista portugués.",
+        "Jugó en Francia e Inglaterra.",
+        "Fue campeón de Europa con Portugal en 2016.",
+        "Pasó por Wolverhampton antes de volver a Portugal."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/news/0246-0e98e228fe16-d5ff2a10c737-1000--europe-s-top-portuguese-players/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "quaresma",
+      "name": "Ricardo Quaresma",
+      "aliases": [
+        "ricardo quaresma",
+        "quaresma"
+      ],
+      "nationality": "Portugal",
+      "position": "Extremo",
+      "clubs": [
+        "Sporting CP",
+        "Barcelona",
+        "Porto",
+        "Inter",
+        "Beşiktaş"
+      ],
+      "hints": [
+        "Extremo portugués de gran técnica.",
+        "Jugó en España, Italia y Turquía.",
+        "Se destacó con Porto.",
+        "Su sello era la trivela."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/news/0246-0e98e228fe16-d5ff2a10c737-1000--europe-s-top-portuguese-players/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "pepe",
+      "name": "Pepe",
+      "aliases": [
+        "pepe",
+        "kepler pepe"
+      ],
+      "nationality": "Portugal",
+      "position": "Defensor",
+      "clubs": [
+        "Porto",
+        "Real Madrid",
+        "Beşiktaş"
+      ],
+      "hints": [
+        "Defensor internacional con Portugal.",
+        "Jugó en Portugal, España y Turquía.",
+        "Coincidió con Cristiano Ronaldo en el Madrid.",
+        "Su nombre futbolístico tiene cuatro letras."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/news/0246-0e98e228fe16-d5ff2a10c737-1000--europe-s-top-portuguese-players/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "rui-costa",
+      "name": "Rui Costa",
+      "aliases": [
+        "rui costa"
+      ],
+      "nationality": "Portugal",
+      "position": "Mediocampista",
+      "clubs": [
+        "Benfica",
+        "Fiorentina",
+        "AC Milan"
+      ],
+      "hints": [
+        "Mediocampista portugués.",
+        "Brilló en la Serie A italiana.",
+        "Pasó de Fiorentina al AC Milan.",
+        "Su nombre futbolístico incluye el apellido Costa."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/news/0246-0e98e228fe16-d5ff2a10c737-1000--europe-s-top-portuguese-players/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "reina",
+      "name": "Pepe Reina",
+      "aliases": [
+        "pepe reina",
+        "jose manuel reina"
+      ],
+      "nationality": "España",
+      "position": "Arquero",
+      "clubs": [
+        "Barcelona",
+        "Villarreal",
+        "Liverpool",
+        "Napoli",
+        "AC Milan",
+        "Lazio"
+      ],
+      "hints": [
+        "Arquero español.",
+        "Jugó en Inglaterra e Italia.",
+        "Pasó por Liverpool y Napoli.",
+        "Su nombre futbolístico es Pepe."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/0257-0e9a0f70e31c-e6f6d51eef60-1000--who-has-made-the-most-uefa-club-competition-appearances/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "simao",
+      "name": "Simão Sabrosa",
+      "aliases": [
+        "simao sabrosa",
+        "simao"
+      ],
+      "nationality": "Portugal",
+      "position": "Extremo",
+      "clubs": [
+        "Sporting CP",
+        "Barcelona",
+        "Benfica",
+        "Atlético de Madrid",
+        "Beşiktaş"
+      ],
+      "hints": [
+        "Extremo portugués.",
+        "Jugó en Portugal, España y Turquía.",
+        "Fue figura en Benfica antes de jugar en el Atlético.",
+        "Su nombre de pila lleva una virgulilla."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/news/0246-0e98e228fe16-d5ff2a10c737-1000--europe-s-top-portuguese-players/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "benzema",
+      "name": "Karim Benzema",
+      "aliases": [
+        "karim benzema",
+        "benzema"
+      ],
+      "nationality": "Francia",
+      "position": "Delantero",
+      "clubs": [
+        "Lyon",
+        "Real Madrid"
+      ],
+      "hints": [
+        "Delantero francés.",
+        "Comenzó su carrera en Lyon.",
+        "Ganó varias Champions League con un club español.",
+        "Es uno de los máximos goleadores de la historia del Real Madrid."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/025a-0e9f8a3d1e40-d534e8b4a897-1000--all-time-champions-league-most-appearances/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "kroos",
+      "name": "Toni Kroos",
+      "aliases": [
+        "toni kroos",
+        "kroos"
+      ],
+      "nationality": "Alemania",
+      "position": "Mediocampista",
+      "clubs": [
+        "Bayern Múnich",
+        "Real Madrid"
+      ],
+      "hints": [
+        "Mediocampista alemán de precisión quirúrgica.",
+        "Fue campeón del mundo en 2014.",
+        "Jugó para Bayern Múnich y Real Madrid.",
+        "Fue una pieza del mediocampo madridista durante una década."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/025a-0e9f8a3d1e40-d534e8b4a897-1000--all-time-champions-league-most-appearances/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "raul",
+      "name": "Raúl González",
+      "aliases": [
+        "raul gonzalez",
+        "raul gonzalez blanco",
+        "raul"
+      ],
+      "nationality": "España",
+      "position": "Delantero",
+      "clubs": [
+        "Real Madrid",
+        "Schalke 04"
+      ],
+      "hints": [
+        "Delantero español.",
+        "Jugó la Champions con un club de Alemania.",
+        "Marcó 71 goles en la Champions League.",
+        "Es una leyenda del Real Madrid conocida por besar el anillo."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/0266-118ae97c2773-d8735a218d6b-1000--busquets-ramos-pique-who-are-spain-s-top-uefa-champions-le/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "neuer",
+      "name": "Manuel Neuer",
+      "aliases": [
+        "manuel neuer",
+        "neuer"
+      ],
+      "nationality": "Alemania",
+      "position": "Arquero",
+      "clubs": [
+        "Schalke 04",
+        "Bayern Múnich"
+      ],
+      "hints": [
+        "Arquero alemán.",
+        "Jugó en Schalke antes de pasar a un gigante bávaro.",
+        "Fue campeón del mundo con Alemania en 2014.",
+        "Se hizo célebre por actuar como arquero-líbero."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/025a-0e9f8a3d1e40-d534e8b4a897-1000--all-time-champions-league-most-appearances/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "sergio-ramos",
+      "name": "Sergio Ramos",
+      "aliases": [
+        "sergio ramos",
+        "ramos"
+      ],
+      "nationality": "España",
+      "position": "Defensor",
+      "clubs": [
+        "Sevilla",
+        "Real Madrid",
+        "Paris Saint-Germain"
+      ],
+      "hints": [
+        "Defensor español.",
+        "Empezó en Sevilla y luego fichó por Real Madrid.",
+        "Ganó la Copa del Mundo 2010.",
+        "Su cabezazo en Lisboa cambió la final de Champions 2014."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/025a-0e9f8a3d1e40-d534e8b4a897-1000--all-time-champions-league-most-appearances/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "pique",
+      "name": "Gerard Piqué",
+      "aliases": [
+        "gerard pique",
+        "pique"
+      ],
+      "nationality": "España",
+      "position": "Defensor",
+      "clubs": [
+        "Manchester United",
+        "Barcelona"
+      ],
+      "hints": [
+        "Defensor español.",
+        "Pasó por Manchester United antes de consolidarse en España.",
+        "Ganó el Mundial 2010.",
+        "Fue símbolo de la defensa del Barcelona."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/0266-118ae97c2773-d8735a218d6b-1000--busquets-ramos-pique-who-are-spain-s-top-uefa-champions-le/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "seedorf",
+      "name": "Clarence Seedorf",
+      "aliases": [
+        "clarence seedorf",
+        "seedorf"
+      ],
+      "nationality": "Países Bajos",
+      "position": "Mediocampista",
+      "clubs": [
+        "Ajax",
+        "Real Madrid",
+        "Inter",
+        "AC Milan"
+      ],
+      "hints": [
+        "Mediocampista neerlandés.",
+        "Jugó en cuatro grandes clubes de Europa.",
+        "Fue campeón de Champions con tres clubes distintos.",
+        "También vistió las camisetas de Ajax y AC Milan."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/0257-0e9a0f70e31c-e6f6d51eef60-1000--most-uefa-club-appearances/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "buffon",
+      "name": "Gianluigi Buffon",
+      "aliases": [
+        "gianluigi buffon",
+        "buffon",
+        "gigi buffon"
+      ],
+      "nationality": "Italia",
+      "position": "Arquero",
+      "clubs": [
+        "Parma",
+        "Juventus",
+        "Paris Saint-Germain"
+      ],
+      "hints": [
+        "Arquero italiano.",
+        "Empezó en Parma y jugó también en Francia.",
+        "Fue campeón del mundo en 2006.",
+        "Es el legendario arquero de la Juventus."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/025a-0e9f8a3d1e40-d534e8b4a897-1000--all-time-champions-league-most-appearances/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "ibrahimovic",
+      "name": "Zlatan Ibrahimović",
+      "aliases": [
+        "zlatan ibrahimovic",
+        "zlatan",
+        "ibrahimovic"
+      ],
+      "nationality": "Suecia",
+      "position": "Delantero",
+      "clubs": [
+        "Ajax",
+        "Juventus",
+        "Inter",
+        "Barcelona",
+        "AC Milan",
+        "Paris Saint-Germain",
+        "Manchester United"
+      ],
+      "hints": [
+        "Delantero sueco.",
+        "Jugó para clubes de Italia, España, Francia e Inglaterra.",
+        "Pasó por Ajax, Juventus, Inter, Barcelona y AC Milan.",
+        "Es conocido por su nombre de pila: Zlatan."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/025a-0e9f8a3d1e40-d534e8b4a897-1000--all-time-champions-league-most-appearances/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "xabi-alonso",
+      "name": "Xabi Alonso",
+      "aliases": [
+        "xabi alonso",
+        "xabier alonso",
+        "alonso"
+      ],
+      "nationality": "España",
+      "position": "Mediocampista",
+      "clubs": [
+        "Real Sociedad",
+        "Liverpool",
+        "Real Madrid",
+        "Bayern Múnich"
+      ],
+      "hints": [
+        "Mediocampista español.",
+        "Jugó en Inglaterra y Alemania.",
+        "Ganó la Champions con Liverpool y Real Madrid.",
+        "Fue parte de la selección española campeona del Mundial 2010."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/0266-118ae97c2773-d8735a218d6b-1000--busquets-ramos-pique-who-are-spain-s-top-uefa-champions-le/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "henry",
+      "name": "Thierry Henry",
+      "aliases": [
+        "thierry henry",
+        "henry"
+      ],
+      "nationality": "Francia",
+      "position": "Delantero",
+      "clubs": [
+        "Mónaco",
+        "Juventus",
+        "Arsenal",
+        "Barcelona"
+      ],
+      "hints": [
+        "Delantero francés.",
+        "Jugó en Italia, Inglaterra y España.",
+        "Fue campeón del mundo en Francia 1998.",
+        "Se convirtió en ídolo y goleador histórico del Arsenal."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/0266-1190ecaf35c9-0d3e4c5a230e-1000/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "griezmann",
+      "name": "Antoine Griezmann",
+      "aliases": [
+        "antoine griezmann",
+        "griezmann"
+      ],
+      "nationality": "Francia",
+      "position": "Delantero",
+      "clubs": [
+        "Real Sociedad",
+        "Atlético de Madrid",
+        "Barcelona"
+      ],
+      "hints": [
+        "Delantero francés.",
+        "Su carrera española comenzó en la Real Sociedad.",
+        "Pasó del Atlético de Madrid al Barcelona.",
+        "Ganó el Mundial 2018 con Francia."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/0266-1190ecaf35c9-0d3e4c5a230e-1000/"
+      ],
+      "verified_at": "2026-10-24"
+    },
+    {
+      "id": "salah",
+      "name": "Mohamed Salah",
+      "aliases": [
+        "mohamed salah",
+        "salah",
+        "mo salah"
+      ],
+      "nationality": "Egipto",
+      "position": "Delantero",
+      "clubs": [
+        "Basel",
+        "Chelsea",
+        "Fiorentina",
+        "Roma",
+        "Liverpool"
+      ],
+      "hints": [
+        "Delantero egipcio.",
+        "Jugó en Suiza, Inglaterra e Italia.",
+        "Tras pasar por Roma, brilló con Liverpool.",
+        "Fue campeón de Champions con Liverpool en 2019."
+      ],
+      "source_urls": [
+        "https://www.uefa.com/uefachampionsleague/news/0257-0e9a0f70e31c-e6f6d51eef60-1000--most-uefa-club-appearances/"
       ],
       "verified_at": "2026-10-24"
     }
