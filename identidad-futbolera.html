@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101d18">
+  <title>¿Quién soy? y Adiviná la carrera | Crack Total</title>
+  <meta name="description" content="Dos desafíos de fútbol masculino para reconocer jugadores por sus pistas y sus trayectorias. Cinco rondas, puntos, revancha y progreso local.">
+  <link rel="canonical" href="https://cracktotal.com/identidad-futbolera.html">
+  <link rel="icon" href="portada.ico" type="image/x-icon">
+  <link rel="stylesheet" href="assets/css/base.css?v=20260803m">
+  <link rel="stylesheet" href="assets/css/design-system/index.css?v=20261020v5">
+  <link rel="stylesheet" href="assets/css/identidad-futbolera.css?v=20261024-a">
+  <script src="assets/js/config/gamification-config.js?v=20261024-a" defer></script>
+  <script src="assets/js/services/progress/storage-adapter.js?v=20261024-a" defer></script>
+  <script src="assets/js/services/progress/progress-service.js?v=20261024-a" defer></script>
+  <script src="assets/js/identidad-futbolera.js?v=20261024-a" defer></script>
+  <script src="assets/js/components/navbar.js?v=20260803n" defer></script>
+  <script src="assets/js/components/footer.js?v=20260803n" defer></script>
+  <script src="assets/js/components/shell.js?v=20260803n" defer></script>
+</head>
+<body class="ct-ds ctid-page">
+  <a class="ctid-skip" href="#idPlay">Saltar al desafío</a>
+  <div data-ct-navbar data-active="games"></div>
+  <main class="ctid-main">
+    <div class="ctid-shell">
+      <div class="ctid-breadcrumb"><a href="games.html">← VOLVER A TODOS LOS JUEGOS</a><span>CRACK TOTAL / IDENTIDAD</span></div>
+      <header class="ctid-hero">
+        <div class="ctid-hero-copy">
+          <div class="ctid-eyebrow"><span class="ctid-dot" aria-hidden="true"></span> CONOCÉ EL JUEGO. DESCUBRÍ AL JUGADOR.</div>
+          <h1>EL NOMBRE<br>LO PONÉS <em>VOS.</em></h1>
+          <p>Dos formas de pensar el fútbol. Identificá al protagonista antes de que se terminen las pistas. No hay suerte: hay memoria.</p>
+          <span class="ctid-tournament">EDICIÓN / 2026 <span aria-hidden="true">✦</span> MODO INDIVIDUAL</span>
+        </div>
+        <div class="ctid-hero-board" aria-label="Cinco rondas, más puntos cuanto antes aciertes">
+          <span class="ctid-board-label">TARJETA DE JUEGO / 01</span>
+          <div class="ctid-board-number">05<span>RONDAS</span></div>
+          <div class="ctid-board-rule"></div>
+          <p>UNA PISTA MENOS.<br>UN PUNTO MÁS.</p>
+          <span class="ctid-board-corner" aria-hidden="true">CT / 26</span>
+        </div>
+      </header>
+      <nav class="ctid-modes" aria-label="Elegí un modo de juego">
+        <a href="identidad-futbolera.html?modo=pistas" data-identity-mode="pistas">
+          <span class="ctid-mode-count">01</span><span class="ctid-mode-title">¿QUIÉN SOY?</span>
+          <span class="ctid-mode-subtitle">Cuatro pistas, una identidad</span><span aria-hidden="true">↗</span>
+        </a>
+        <a href="identidad-futbolera.html?modo=carrera" data-identity-mode="carrera">
+          <span class="ctid-mode-count">02</span><span class="ctid-mode-title">ADIVINÁ LA CARRERA</span>
+          <span class="ctid-mode-subtitle">Seguí el mapa de clubes</span><span aria-hidden="true">↗</span>
+        </a>
+      </nav>
+      <div id="idLoadError" class="ctid-error" role="alert" hidden></div>
+      <section id="idPlay" class="ctid-game" aria-labelledby="idModeName">
+        <div class="ctid-game-heading">
+          <div><span id="idModeTag" class="ctid-section-tag">CUATRO PISTAS</span><h2 id="idModeName">¿QUIÉN SOY?</h2><p id="idModeDescription">Adiviná la identidad.</p></div>
+          <div class="ctid-counter"><span id="idRound">01 / 05</span><small>FECHA DE JUEGO</small></div>
+        </div>
+        <div class="ctid-scoreline" aria-label="Estadísticas de esta partida">
+          <div><span>MARCADOR</span><strong id="idScore">0</strong><small>PTS</small></div>
+          <div><span>ACIERTOS</span><strong id="idHits">0</strong><small>DE 5</small></div>
+          <div class="ctid-scoreline-note">CINCO RONDAS.<br>HASTA TRES INTENTOS<br>POR JUGADOR.</div>
+        </div>
+        <div id="idProgressTrack" class="ctid-progress" role="progressbar" aria-label="Rondas completadas" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"><span id="idProgress"></span></div>
+        <div class="ctid-question-layout">
+          <div class="ctid-question-copy">
+            <div class="ctid-question-kicker">DOSSIER <span id="idRoundLabel">/ IDENTIDAD FUTBOLERA</span></div>
+            <h3 id="idQuestion">¿De qué futbolista hablamos?</h3>
+            <p id="idPrompt">Las pistas aparecen de a una.</p>
+            <ol id="idClues" class="ctid-clues" aria-live="polite" aria-label="Pistas reveladas"></ol>
+            <p id="idStatus" class="ctid-status" role="status" aria-live="polite">Cargando jugadores…</p>
+          </div>
+          <div class="ctid-answer-side">
+            <span class="ctid-answer-index">TU RESPUESTA / N° 10</span>
+            <form id="idAnswer" autocomplete="off">
+              <label for="idAnswerInput">¿QUIÉN ES?</label>
+              <input id="idAnswerInput" type="text" maxlength="80" enterkeyhint="go" spellcheck="false" autocomplete="off" placeholder="Nombre o apellido del jugador…" required>
+              <button id="idSubmit" type="submit" class="ctid-btn ctid-btn--primary">CONFIRMAR RESPUESTA <span aria-hidden="true">↗</span></button>
+            </form>
+            <div class="ctid-secondary-actions">
+              <button type="button" id="idHint" class="ctid-btn ctid-btn--secondary">Revelar otra pista</button>
+              <button type="button" id="idSkip" class="ctid-skip-round">Pasar →</button>
+            </div>
+            <div id="idReveal" class="ctid-reveal" hidden>
+              <span>IDENTIDAD CONFIRMADA</span>
+              <strong id="idSolution"></strong>
+              <a id="idSource" href="#" target="_blank" rel="noopener noreferrer">Consultar fuente ↗</a>
+            </div>
+            <button type="button" id="idNext" class="ctid-btn ctid-btn--primary" hidden>Siguiente futbolista →</button>
+            <p class="ctid-answer-disclaimer">Las partidas suman progreso <strong>en este dispositivo</strong>. No alteran rankings online.</p>
+          </div>
+        </div>
+      </section>
+      <section id="idFinish" class="ctid-finish" aria-labelledby="idFinalHeading" hidden>
+        <div class="ctid-finish-label">FINAL DEL PARTIDO / CT</div>
+        <h2 id="idFinalHeading">Buen partido.</h2>
+        <div class="ctid-final-grid">
+          <div><small>PUNTOS OBTENIDOS</small><strong id="idFinalScore">0</strong></div>
+          <div><small>IDENTIDADES RESUELTAS</small><strong id="idFinalHits">0 de 5</strong></div>
+        </div>
+        <p id="idFinalDetail">Tu resultado es local.</p>
+        <div class="ctid-finish-actions"><button id="idReplay" class="ctid-btn ctid-btn--primary" type="button">JUGAR REVANCHA ↗</button><a href="games.html" class="ctid-btn ctid-btn--secondary">VOLVER AL CATÁLOGO</a></div>
+      </section>
+      <aside class="ctid-footnote"><span>CRACK TOTAL / PROGRAMA DE JUEGOS</span><p>Datos futbolísticos documentados con FIFA y UEFA. Sin fútbol femenino en esta edición. <a href="profile.html">Ver mi progreso →</a></p></aside>
+    </div>
+  </main>
+  <div data-ct-footer></div>
+</body>
+</html>
