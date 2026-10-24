@@ -2079,3 +2079,62 @@ body.game-body.ct-ds .question-card .question-text{color:#f4f2e9;text-shadow:non
 body.game-body.ct-ds .question-card #currentLetterText{color:#b5eb53}
 body.game-body.ct-ds .question-card .answer-input{color:#f4f2e9;caret-color:#b5eb53}
 body.game-body.ct-ds .question-card .answer-input::placeholder{color:#b8cbb8;opacity:1}
+
+/* Hotfix 2026-10-24: visible, SOLID result fills on the published Pasala.
+   Previous generic body.game-body .letter overrode the result classes.
+   Keep scoped to this rosco; don't alter the other five games. */
+body.game-body.ct-ds #lettersContainer .letter.correct {
+  background:#21b887 !important;
+  background-image:none !important;
+  color:#06271e !important;
+  border:2px solid #b5ffe2 !important;
+  box-shadow:0 2px 15px #21b88760 !important;
+  opacity:1 !important;
+  animation:none !important;
+  transition:background-color 0s,border-color 0s !important;
+}
+body.game-body.ct-ds #lettersContainer .letter.incorrect {
+  background:#e2485c !important;
+  background-image:none !important;
+  color:#fff !important;
+  border:2px solid #ffc2c9 !important;
+  box-shadow:0 2px 15px #e2485c60 !important;
+  opacity:1 !important;
+  animation:none !important;
+  transition:background-color 0s,border-color 0s !important;
+}
+body.game-body.ct-ds #lettersContainer .letter.pending {
+  background:#ffcc45 !important;
+  background-image:none !important;
+  color:#292009 !important;
+  border:2px solid #fff0af !important;
+  box-shadow:0 2px 15px #ffcc4555 !important;
+  opacity:1 !important;
+  animation:none !important;
+  transition:background-color 0s,border-color 0s !important;
+}
+body.game-body.ct-ds #lettersContainer .letter.active:not(.correct):not(.incorrect):not(.pending) {
+  background:#b5eb53 !important;
+  background-image:none !important;
+  color:#132514 !important;
+  border:2px solid #eaffb9 !important;
+  box-shadow:0 0 0 3px #b5eb5370 !important;
+  animation:none !important;
+}
+body.game-body.ct-ds #lettersContainer .letter.active.pending {
+  background:#ffcc45 !important;
+  background-image:none !important;
+  color:#292009 !important;
+  border:2px solid #fff0af !important;
+  box-shadow:0 0 0 3px #b5eb53bd,0 2px 16px #ffcc4555 !important;
+}
+body.game-body.ct-ds #lettersContainer .letter:focus-visible {
+  outline:3px solid #faf5e7;
+  outline-offset:3px;
+}
+@media (prefers-reduced-motion:reduce) {
+  body.game-body.ct-ds #lettersContainer .letter {
+    animation:none !important;
+    transition:none !important;
+  }
+}

@@ -337,6 +337,64 @@ async function qsmLongProbe(){
   narrowest:Math.round(Math.min(...buttons.map(b=>b.getBoundingClientRect().width))),failureColor:bg};
 }
 
+
+async function pasalaLiveFillProbe(){
+  const $=id=>document.getElementById(id);
+  async function until(fn,label){
+    for(let i=0;i<125;i++){
+      const value=fn(); if(value)return value;
+      await new Promise(ok=>setTimeout(ok,100));
+    }
+    throw Error('Pasala hotfix '+label+' timed out');
+  }
+  const color=(letter,expected,cls)=>{
+    const el=document.querySelector('#lettersContainer .letter[data-letter="'+letter+'"]');
+    if(!el||!el.classList.contains(cls)||el.dataset.status!==cls)
+      throw Error('Pasala '+letter+' expected '+cls+', got '+(el?.className||'missing')+' '+el?.dataset.status);
+    const bg=getComputedStyle(el).backgroundColor;
+    if(bg!==expected)throw Error('Pasala '+letter+' color expected '+expected+', got '+bg);
+    return bg;
+  };
+  $('startGameButton').click();
+  const enter=await until(()=>{
+    const b=$('startGameAfterLoadingButton');
+    return b&&!b.disabled?b:null;
+  },'questions loaded');
+  enter.click();
+  await until(()=>document.querySelector('#lettersContainer .letter[data-letter="A"].active'),'initial active A');
+  const pass=$('pasapalabraButton'),input=$('answerInput'),submit=$('submitAnswerBtnIcon');
+  if(!pass||!input||!submit)throw Error('Missing real answer/pass controls');
+  pass.click();
+  await until(()=>document.querySelector('#lettersContainer .letter[data-letter="B"].active'),'B active after pass');
+  color('A','rgb(255, 204, 69)','pending');
+  const q=$('questionText').textContent;
+  const bank=await (await fetch('assets/data/pasalache_2025.json')).json();
+  const answer=bank.find(g=>g.letra==='B')?.preguntas.find(record=>record.pregunta===q)?.respuesta;
+  if(!answer)throw Error('Real displayed B question missing in male football bank: '+q);
+  input.value=answer;
+  submit.click();
+  await until(()=>document.querySelector('#lettersContainer .letter[data-letter="C"].active'),'C active after right B');
+  color('B','rgb(33, 184, 135)','correct');
+  input.value='zzzzzz_nonexistent_answer_999999';
+  submit.click();
+  await until(()=>document.querySelector('#lettersContainer .letter[data-letter="D"].active'),'D active after wrong C');
+  color('C','rgb(226, 72, 92)','incorrect');
+  // All subsequent letters pass and eventually return to yellow A.
+  for(let k=68;k<=90;k++){
+    const letter=String.fromCharCode(k);
+    if(!document.querySelector('#lettersContainer .letter[data-letter="'+letter+'"].active'))
+      throw Error('Wrong letter sequence at '+letter);
+    pass.click();
+  }
+  await until(()=>document.querySelector('#lettersContainer .letter[data-letter="A"].active'),'A after full round');
+  color('A','rgb(255, 204, 69)','pending');
+  pass.click();
+  color('A','rgb(255, 204, 69)','pending');
+  color('B','rgb(33, 184, 135)','correct');
+  color('C','rgb(226, 72, 92)','incorrect');
+  return {passed:'yellow solid',correct:'green solid',incorrect:'red solid',roundTrip:true};
+}
+
 async function main(){
   if (widths.some(w=>!Number.isInteger(w) || w<280 || w>3000)||!Number.isInteger(viewportHeight)||viewportHeight<480||viewportHeight>2160)throw Error('Invalid viewport');
   fs.mkdirSync(out,{recursive:true});
@@ -460,6 +518,17 @@ async function main(){
           throw Error('Wordle live reload failed '+width+': '+
             JSON.stringify(restored.exceptionDetails||restored.result).slice(0,800));
         console.log('WORDLE LIVE '+width+'px: '+JSON.stringify(first.result.value));
+      }
+      if(args.fixture==='pasala-fill'){
+        if(game!=='pasalache.html')throw Error('pasala-fill requires pasalache.html');
+        const result=await command('Runtime.evaluate',{
+          expression:'('+pasalaLiveFillProbe.toString()+')()',
+          returnByValue:true,awaitPromise:true
+        });
+        if(result.exceptionDetails||!result.result?.value?.roundTrip)
+          throw Error('PASALA SOLID FILL REGRESSION at '+width+': '+
+            JSON.stringify(result.exceptionDetails||result.result).slice(0,1100));
+        console.log('PASALA SOLID FILL VERIFIED '+width+'px: '+JSON.stringify(result.result.value));
       }
       if(['match','bluff-long','qsm-long'].includes(args.fixture)) {
         // Offline duel clients may asynchronously restore their lobby after the
