@@ -61,7 +61,7 @@ Crack Total no es una lista de preguntas generadas en masa. Es una **arena edito
 ### GATE 3 — Nuevos juegos de autor (ideas 15–20)
 - [x] ¿Quién soy? — seis rondas, cuatro pistas, hasta tres intentos, avance y puntuación por pistas usadas. Rama CT7.
 - [x] Adiviná la carrera — cronología por clubes, revelado progresivo, alias controlados. Rama CT7.
-- [x] Fuente oficial y fecha por trayectoria; primer lote de 8 dossiers con trazabilidad. Pendiente expansión.
+- [x] Fuente oficial y fecha por trayectoria; primer lote de 12 dossiers con trazabilidad. Pendiente expansión.
 - [x] Progreso local claramente etiquetado, sin integración fraudulenta en rankings.
 - [ ] Duelo Relámpago — dos clientes, reloj servidor, tie-break definido, sin preguntas desiguales.
 - [ ] Conexiones futboleras — cuatro grupos de cuatro con **una solución editorialmente inequívoca**.
