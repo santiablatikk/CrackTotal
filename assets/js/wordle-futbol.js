@@ -10,6 +10,20 @@
     let stats = { played: 0, streak: 0, best: 0, lastDayKey: '' };
     let startTime = Date.now();
     const GAME_KEY = 'wordle_game_state_v1';
+    // Immutable daily rotation contract: releases may append verified entries,
+    // but must never rewrite the pool size for a day already published.
+    // A future expansion is activated with a NEW effective date and frozen size.
+    const DAILY_POOL_WINDOWS = Object.freeze([
+        { from: 0, size: 92 } // Original 6.0 daily schedule
+    ]);
+    function eligibleDailyPoolSize(daySeed, fullPoolLength) {
+        const window = [...DAILY_POOL_WINDOWS].reverse().find(v => daySeed >= v.from);
+        if (!window || !Number.isInteger(window.size) || window.size < 1 || fullPoolLength < window.size) {
+            throw new Error('Wordle daily pool is incomplete or misconfigured');
+        }
+        return window.size;
+    }
+
     let rowRatings = [];
     let finished = false;
     let wonToday = false;
@@ -63,7 +77,7 @@
             // daily seed by date
             const today = new Date();
             const seed = today.getFullYear() * 10000 + (today.getMonth()+1) * 100 + today.getDate();
-            const idx = seed % pool.length;
+            const idx = seed % eligibleDailyPoolSize(seed, pool.length);
             const entry = pool[idx];
             target = normalizeWord(entry.answer || entry.name || 'messi');
             setupBoard(target.length);
