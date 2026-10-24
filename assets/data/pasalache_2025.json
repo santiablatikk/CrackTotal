@@ -229,6 +229,18 @@
       {
         "pregunta": "CONTIENE D: ¿Apellido del mediocampista uruguayo estrella del Real Madrid, Federico …?",
         "respuesta": "Valverde"
+      },
+      {
+        "pregunta": "¿Apellido compuesto del seleccionador Luis que dirigió a España campeona del Mundial masculino 2026?",
+        "respuesta": "de la Fuente",
+        "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-argentina-final-report-highlights",
+        "source_urls": [
+          "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-argentina-final-report-highlights"
+        ],
+        "verified_at": "2026-10-24",
+        "as_of": "2026-10-24",
+        "audit_status": "verified_official",
+        "content_batch": "62-verified-20261024"
       }
     ]
   },
@@ -410,6 +422,18 @@
         "respuestasAlternativas": [
           "Cody Gakpo"
         ]
+      },
+      {
+        "pregunta": "¿Cómo se llama el premio otorgado al mejor arquero del Mundial masculino de la FIFA 2026, ganado por Unai Simón?",
+        "respuesta": "Guante de Oro",
+        "source_url": "https://www.fifa.com/mens/articles/award-winners",
+        "source_urls": [
+          "https://www.fifa.com/mens/articles/award-winners"
+        ],
+        "verified_at": "2026-10-24",
+        "as_of": "2026-10-24",
+        "audit_status": "verified_official",
+        "content_batch": "62-verified-20261024"
       }
     ]
   },
@@ -580,6 +604,18 @@
         "respuestasAlternativas": [
           "Brennan Johnson"
         ]
+      },
+      {
+        "pregunta": "¿Nombre de pila de Bellingham, ganador de la Bota de Bronce del Mundial masculino 2026?",
+        "respuesta": "Jude",
+        "source_url": "https://www.fifa.com/mens/articles/award-winners",
+        "source_urls": [
+          "https://www.fifa.com/mens/articles/award-winners"
+        ],
+        "verified_at": "2026-10-24",
+        "as_of": "2026-10-24",
+        "audit_status": "verified_official",
+        "content_batch": "62-verified-20261024"
       }
     ]
   },
@@ -684,6 +720,18 @@
         "respuestasAlternativas": [
           "Club Atlético Lanús"
         ]
+      },
+      {
+        "pregunta": "¿Nombre de pila de Messi, ganador de la Bota de Plata del Mundial masculino 2026?",
+        "respuesta": "Lionel",
+        "source_url": "https://www.fifa.com/mens/articles/award-winners",
+        "source_urls": [
+          "https://www.fifa.com/mens/articles/award-winners"
+        ],
+        "verified_at": "2026-10-24",
+        "as_of": "2026-10-24",
+        "audit_status": "verified_official",
+        "content_batch": "62-verified-20261024"
       }
     ]
   },
@@ -770,6 +818,18 @@
         "respuestasIncompletasCorregibles": [
           "Molina"
         ]
+      },
+      {
+        "pregunta": "¿Nombre de pila de Williams, quien intervino en la jugada del gol decisivo de España en la final del Mundial 2026?",
+        "respuesta": "Nico",
+        "source_url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-argentina-final-report-highlights",
+        "source_urls": [
+          "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/spain-argentina-final-report-highlights"
+        ],
+        "verified_at": "2026-10-24",
+        "as_of": "2026-10-24",
+        "audit_status": "verified_official",
+        "content_batch": "62-verified-20261024"
       }
     ]
   },
@@ -823,6 +883,18 @@
       {
         "pregunta": "¿Apellido del mediocampista alemán campeón del mundo 2014, Mesut …?",
         "respuesta": "Özil"
+      },
+      {
+        "pregunta": "¿Nombre de pila del entrenador Glasner, campeón de la Conference League masculina 2025/26 con Crystal Palace?",
+        "respuesta": "Oliver",
+        "source_url": "https://www.uefa.com/uefaconferenceleague/news/02a5-20a0414978f7-a3966d9ccb5d-1000--conference-league-final-crystal-palace-vs-rayo-vallecano-/",
+        "source_urls": [
+          "https://www.uefa.com/uefaconferenceleague/news/02a5-20a0414978f7-a3966d9ccb5d-1000--conference-league-final-crystal-palace-vs-rayo-vallecano-/"
+        ],
+        "verified_at": "2026-10-24",
+        "as_of": "2026-10-24",
+        "audit_status": "verified_official",
+        "content_batch": "62-verified-20261024"
       }
     ]
   },
