@@ -71,3 +71,17 @@
 .ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline .home-game-media img{object-position:center 42%}
 @media(max-width:1180px){.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr)}.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline .home-game-media{height:100%;min-height:300px}}
 @media(max-width:620px){.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline{grid-column:1;display:flex;flex-direction:column}.ct6-game-hub .discover-section .home-game-card.ct7-catalog-timeline .home-game-media{min-height:0;height:185px}}
+
+/* Fourth editorial card — grid illustration drawn in CSS, not a generic stock image. */
+.ct6-game-hub .discover-section .home-game-card.ct71-catalog-connections{
+  border-top-color:#ce946c!important;background:#1a2b25!important}
+.ct71-connection-media{display:grid!important;place-items:center!important;
+  background:repeating-linear-gradient(0deg,#1d3128 0px,#1d3128 16px,#22392f 16px,#22392f 17px)!important}
+.ct71-four{display:grid;grid-template-columns:repeat(2,96px);gap:10px;transform:rotate(-5deg)}
+.ct71-four span{display:grid;place-items:center;height:90px;border:1px solid #6f8b77;
+  background:#304d3b;color:#d5f199;font:900 26px Manrope,system-ui,sans-serif;border-radius:5px}
+.ct71-four span:nth-child(2){background:#67533d;color:#f2d1b8}
+.ct71-four span:nth-child(3){background:#465b79;color:#c2d5f1}
+.ct71-four span:nth-child(4){background:#5f516c;color:#e0ccec}
+@media(max-width:620px){.ct71-four{grid-template-columns:repeat(2,72px);gap:7px}
+ .ct71-four span{height:59px;font-size:19px}}
