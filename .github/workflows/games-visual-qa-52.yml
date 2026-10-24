@@ -116,6 +116,17 @@ jobs:
             --games wordle-futbol.html \
             --fixture wordle-live
 
+      - name: Exercise real Pasala Che actions and computed state colors
+        if: always()
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node after/scripts/qa_browser_52.cjs \
+            --root after \
+            --out "$RUNNER_TEMP/ct-visual-52/pasala-live" \
+            --widths 320,360,390,768,1366 \
+            --games pasalache.html \
+            --fixture pasala-live
+
       - name: Audit six active-game stages on short phone and tablet screens
         if: always()
         run: |

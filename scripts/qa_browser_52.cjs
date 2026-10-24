@@ -337,6 +337,80 @@ async function qsmLongProbe(){
   narrowest:Math.round(Math.min(...buttons.map(b=>b.getBoundingClientRect().width))),failureColor:bg};
 }
 
+/**
+ * Real solo Pasala interactions: no synthetic rosco states. The browser
+ * clicks the same controls as a player and reads actual computed styles.
+ * No production network and no real user account are involved.
+ */
+async function pasalaLiveProbe() {
+  const $=id=>document.getElementById(id);
+  const waitFor=async (test,label)=>{
+    for(let attempt=0;attempt<120;attempt++){
+      const value=test();
+      if(value)return value;
+      await new Promise(resolve=>setTimeout(resolve,100));
+    }
+    throw Error('Pasala live interaction timed out: '+label);
+  };
+  const start=$('startGameButton');
+  if(!start)throw Error('Missing Pasala rules modal start control');
+  start.click();
+  const begin=await waitFor(()=>{
+    const b=$('startGameAfterLoadingButton');
+    return b&&!b.disabled&&b.textContent.indexOf('Cargando')<0?b:null;
+  },'bank loaded / start enabled');
+  begin.click();
+  await waitFor(()=>document.querySelector('.letter[data-letter="A"].active'),'initial A active');
+  const letter=(l)=>document.querySelector('.letter[data-letter="'+l+'"]');
+  const inspect=(l,status,color)=>{
+    const node=letter(l);
+    if(!node||!node.classList.contains(status)||node.dataset.status!==status)
+      throw Error('Pasala '+l+' expected '+status+', got '+node?.className+' '+node?.dataset.status);
+    const computed=getComputedStyle(node);
+    const bg=computed.backgroundImage+' '+computed.backgroundColor;
+    if(!bg.includes(color))throw Error('Pasala '+l+' '+status+' lost computed color '+color+': '+bg);
+    if(!node.getAttribute('aria-label')||node.getAttribute('role')!=='button')
+      throw Error('Pasala missing accessible state on '+l);
+    return {letter:l,status,background:bg};
+  };
+  const pass=$('pasapalabraButton'), input=$('answerInput'), submit=$('submitAnswerBtnIcon');
+  if(!pass||!input||!submit)throw Error('Pasala missing gameplay controls');
+  pass.click();
+  await waitFor(()=>letter('B')?.classList.contains('active'),'B after passing A');
+  const pending=inspect('A','pending','rgb(255, 224, 131)');
+  const question=$('questionText').textContent;
+  const response=await fetch('assets/data/pasalache_2025.json');
+  if(!response.ok)throw Error('Cannot read authoritative solo Pasala question bank');
+  const bank=await response.json();
+  const b=bank.find(group=>group.letra==='B')?.preguntas.find(q=>q.pregunta===question);
+  if(!b)throw Error('Displayed B question not found in real bank: '+question);
+  input.value=b.respuesta;
+  submit.click();
+  await waitFor(()=>letter('B')?.classList.contains('correct'),'B correct after real submit');
+  await waitFor(()=>letter('C')?.classList.contains('active'),'C after correct B');
+  const correct=inspect('B','correct','rgb(49, 229, 178)');
+  input.value='zzzzzz_invalid_not_a_player_9999';
+  submit.click();
+  await waitFor(()=>letter('C')?.classList.contains('incorrect'),'C incorrect after real submit');
+  await waitFor(()=>letter('D')?.classList.contains('active'),'D after incorrect C');
+  const incorrect=inspect('C','incorrect','rgb(255, 104, 115)');
+  for(let code=68;code<=90;code++){
+    const expected=String.fromCharCode(code);
+    if(!letter(expected)?.classList.contains('active'))throw Error('Incorrect pass order at '+expected);
+    pass.click();
+  }
+  await waitFor(()=>letter('A')?.classList.contains('active'),'revisit passed A after full round');
+  inspect('A','pending','rgb(255, 224, 131)');
+  const stats=['correctCount','incorrectCount','pendingCount'].map(id=>Number($(id)?.textContent));
+  if(stats.join(',')!=='1,1,24')throw Error('Rosco counters diverged: '+stats.join(','));
+  if(!letter('A').getAttribute('aria-label').includes('pendiente'))
+    throw Error('Returned Pasapalabra letter lacks accessible pending status');
+  pass.click(); // A second pass must NOT revert A to unanswered.
+  inspect('A','pending','rgb(255, 224, 131)');
+  if($('pendingCount').textContent!=='24')throw Error('Second pass inflated unresolved count');
+  return {correct,incorrect,pending,revisitedA:true,counters:stats};
+}
+
 async function main(){
   if (widths.some(w=>!Number.isInteger(w) || w<280 || w>3000)||!Number.isInteger(viewportHeight)||viewportHeight<480||viewportHeight>2160)throw Error('Invalid viewport');
   fs.mkdirSync(out,{recursive:true});
@@ -461,6 +535,16 @@ async function main(){
             JSON.stringify(restored.exceptionDetails||restored.result).slice(0,800));
         console.log('WORDLE LIVE '+width+'px: '+JSON.stringify(first.result.value));
       }
+      if(args.fixture==='pasala-live'){
+        if(game!=='pasalache.html')throw Error('pasala-live requires Pasala Che');
+        const result=await command('Runtime.evaluate',{
+          expression:'('+pasalaLiveProbe.toString()+')()',
+          returnByValue:true,awaitPromise:true
+        });
+        if(result.exceptionDetails||!result.result?.value?.revisitedA)
+          throw Error('PASALA LIVE failed at '+width+': '+JSON.stringify(result.exceptionDetails||result.result).slice(0,1000));
+        console.log('PASALA LIVE '+width+'px: '+JSON.stringify(result.result.value.counters));
+      }
       if(['match','bluff-long','qsm-long'].includes(args.fixture)) {
         // Offline duel clients may asynchronously restore their lobby after the
         // synthetic match DOM was staged. Retry that *display-only* staging a
@@ -541,7 +625,7 @@ async function main(){
     const failed=rows.filter(x=>!x.title.includes('Crack Total') || x.expectedWidth!==x.width || x.overflow>2 || x.offscreen.length);
     const summary='# Crack Total 6.0 — Chromium QA\n\n'+(args.baseline?'Before':'After')+' · '+rows.length+' viewport/page combinations · '+failed.length+' alerts\n\n'+
       (failed.map(x=>'- '+x.game+' '+x.expectedWidth+'px: title='+x.title+', overflow='+x.overflow+', offscreen='+x.offscreen.length).join('\n') || 'No reported overflow or offscreen primary controls')+
-      '\n\nScope: ' + (args.fixture === 'match' ? 'synthetic match-state layout only (no game logic or WebSocket assertions).' : args.fixture === 'wordle-live' ? 'real local Wordle keyboard clicks, deletion, saved progress, page reload, invalid submit, and layout geometry (no backend or date rollover assertions).' : 'initial screens only. Gameplay, results, WebSocket and disconnect states require separate QA.') + '\n';
+      '\n\nScope: ' + (args.fixture === 'match' ? 'synthetic match-state layout only (no game logic or WebSocket assertions).' : args.fixture === 'pasala-live' ? 'real solo Pasala controls, correct/wrong/pass states, computed colors, and 26-letter round persistence (no backend assertions).' : args.fixture === 'wordle-live' ? 'real local Wordle keyboard clicks, deletion, saved progress, page reload, invalid submit, and layout geometry (no backend or date rollover assertions).' : 'initial screens only. Gameplay, results, WebSocket and disconnect states require separate QA.') + '\n';
     fs.writeFileSync(path.join(out,'SUMMARY.md'),summary);
     if(failed.length&&!args.baseline)process.exitCode=1;
   } finally {
