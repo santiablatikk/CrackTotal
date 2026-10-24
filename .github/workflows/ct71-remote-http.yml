@@ -1,0 +1,22 @@
+name: External CT7.1 mobile and Conexiones staging
+on:
+  push:
+    branches:
+      - redesign/crack-total-2
+    paths:
+      - scripts/staging_71_http_smoke.cjs
+      - .github/workflows/ct71-remote-http.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  remote-staging:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify the exact Render commit and game/PWA routes
+        run: node scripts/staging_71_http_smoke.cjs
