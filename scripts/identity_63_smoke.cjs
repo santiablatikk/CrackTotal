@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
 const bank=JSON.parse(read('assets/data/identidad-futbolera.json'));
-assert.equal(bank.jugadores.length,16);
+assert.equal(bank.jugadores.length,32);
 assert.equal(bank.modo,'solo masculino');
 const normalized=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
 const ids=new Set(), aliases=new Set();
@@ -24,7 +24,7 @@ for(const row of bank.jugadores){
    aliases.add(key);
  }
 }
-assert(careers>=12);
+assert(careers>=28);
 for(const mode of ['pistas','carrera']){
  const html=read('identidad-futbolera.html');
  assert(html.includes('modo='+mode));
@@ -67,4 +67,4 @@ assert(read('assets/js/profile-gamification.js').includes('CrackTotalMissions.mo
 const hub=read('games.html');
 assert(hub.includes('identidad-futbolera.html?modo=pistas'));
 assert(hub.includes('identidad-futbolera.html?modo=carrera'));
-console.log('6.3 PASS: 16 sourced identities, 14+ club paths, alias uniqueness, two working mode contracts and six local missions.');
+console.log('6.3 PASS: 32 sourced identities, 28 club paths, alias uniqueness, two working mode contracts and six local missions.');
