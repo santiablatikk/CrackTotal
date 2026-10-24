@@ -15,9 +15,9 @@ for(const dest of ['pasalache.html','pasala-1v1.html','top10.html','wordle-futbo
   assert.ok(html.includes('href="'+dest+'"'),'Game missing from hub: '+dest);
 }
 const cardCount=(html.match(/class="home-game-card home-reveal/g)||[]).length;
-assert.equal(cardCount,9,'Expect nine published game / game-mode cards, including three CT7 formats');
-for (const dest of ['quien-soy.html','adivina-carrera.html','ordena-historia.html']) assert.ok(html.includes('href="'+dest+'"'),'CT7 game missing from catalogue: '+dest);
+assert.equal(cardCount,10,'Expect ten linked game / mode cards with four original editorial formats');
+for (const dest of ['quien-soy.html','adivina-carrera.html','ordena-historia.html','conexiones.html']) assert.ok(html.includes('href="'+dest+'"'),'CT7 game missing from catalogue: '+dest);
 assert.match(css, /@media\(max-width:360px\)/,'Small-phone layout missing');
 assert.match(css, /prefers-reduced-motion:reduce/,'Reduced-motion support missing');
 assert(!/mi-carrera\.html|ct6-career-card/i.test(html),'Retired career game must not appear in the catalog');
-console.log('PASS game hub: nine linked experiences, semantic hooks, responsive and motion rules');
+console.log('PASS game hub: ten linked experiences, semantic hooks, responsive and motion rules');
