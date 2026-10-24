@@ -1328,7 +1328,15 @@ document.addEventListener('DOMContentLoaded', function() {
         
         document.querySelectorAll('.letter').forEach(element => {
             const letter = element.dataset.letter;
-            element.className = 'letter'; // Reset classes
+            const status = letterStatuses[letter] || 'unanswered';
+            const active = !gameEnded && letter === currentLetter &&
+                (status === 'unanswered' || status === 'pending');
+            element.className = 'letter'; // Derive DOM from actual game state.
+            element.dataset.status = status;
+            element.setAttribute('aria-label', 'Letra ' + letter + ', ' +
+                ({correct:'correcta',incorrect:'incorrecta',pending:'Pasapalabra pendiente',
+                  unanswered:'sin responder'}[status] || 'sin responder') +
+                (active ? ', en juego' : ''));
             
             // Add status class
             if (letterStatuses[letter] === 'correct') {
@@ -1340,7 +1348,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Highlight current letter
-            if (letter === currentLetter) {
+            if (active) {
                 element.classList.add('active');
                 
                 // Mostrar pista solo si ya fue revelada y ES la letra activa
@@ -1377,16 +1385,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // letrasVisitadasEnVueltaActual.clear(); // Si el logro fuera por *cada* vuelta completa
             // <<<--- FIN RESET --- >>>
 
-            // Al completar una vuelta, limpiar el estado "pending" para que las letras puedan volver a jugarse
-            if (completedRounds > 0) {
-                for (let letter of pendingLetters) {
-                    if (letterStatuses[letter] === 'pending') {
-                        letterStatuses[letter] = 'unanswered';
-                    }
-                }
-                // Actualizar la visualización de las letras
-                updateLetterStyles();
-            }
+            // Una letra pasada sigue amarilla al regresar a ella: no borrar
+            // su estado ni volver a contar la misma letra como pase nuevo.
+            updateLetterStyles();
         }
         
         loadQuestion();
@@ -1524,6 +1525,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log(`Letra ${letterToRemove} removida. Índice ajustado a: ${currentLetterIndex}. Letras restantes: [${pendingLetters.join(', ')}]`);
                 }
                 
+                // Paint the final red letter even on a terminal error.
+                updateLetterStyles();
                 // --- Check for DEFEAT --- 
                 if (incorrectAnswers >= maxErrors) {
                     saveProfileStats(profileStats); 
@@ -1608,6 +1611,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (currentLetterIndex >= pendingLetters.length && pendingLetters.length > 0) {
                     currentLetterIndex = 0; 
                 } // No change needed if index is still valid
+                updateLetterStyles(); // Resolved letter must not retain active ring.
 
                 // --- VERIFICACIÓN: ROSCO COMPLETO (NO QUEDAN LETRAS PENDIENTES) ---
                 if (pendingLetters.length === 0) {
@@ -1627,17 +1631,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 console.log(`Correct answer for ${currentLetter}. Pending letters: [${pendingLetters.join(', ')}]}. Next index: ${currentLetterIndex}.`); // Log before timeout
 
-                // --- Load next question after delay --- 
-                setTimeout(() => {
-                     answerInput.value = ''; 
-                     // Check if the game hasn't ended in the meantime
-                     if (timerInterval) { // Check if timer is still active as proxy for game state
-                         console.log(`Timeout finished. Calling loadQuestion for index: ${currentLetterIndex}, letter: ${pendingLetters[currentLetterIndex]}`); // Log inside timeout
-                         loadQuestion();
-                     } else {
-                         console.error("Timeout finished, BUT timerInterval was null/cleared. Skipping loadQuestion."); // Log if timerInterval is missing
-                     } 
-                }, 150); 
+                // No 150ms interval with C visibly active while B is still
+                // the loaded answer. Update state and question together.
+                answerInput.value = '';
+                currentQuestionData = null;
+                if (!gameEnded && pendingLetters.length > 0) {
+                    loadQuestion();
+                }
             }
 
         } else {
@@ -2038,6 +2038,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function endGame(result = 'timeout') {
         if (gameEnded) return;
         gameEnded = true;
+        updateLetterStyles(); // Clear active ring, preserve settled result fills.
         clearInterval(timerInterval);
     
         if (window.soundManager) {
@@ -2761,7 +2762,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (pasapalabraButton) {
-        pasapalabraButton.addEventListener('click', pasapalabra);
+        pasapalabraButton.addEventListener('click', () => pasapalabra(false));
     }
 
     // Note: startGameButton event listeners are handled in the main initialization section above

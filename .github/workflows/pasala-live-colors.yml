@@ -1,0 +1,32 @@
+name: Pasala Che live color hotfix
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'assets/css/pasalache.css'
+      - 'assets/js/pasalache.js'
+      - 'pasalache.html'
+      - 'scripts/qa_browser_52.cjs'
+      - '.github/workflows/pasala-live-colors.yml'
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  pasala-real-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check syntax and install locked dependencies
+        run: |
+          node --check assets/js/pasalache.js
+          node --check scripts/qa_browser_52.cjs
+          npm ci
+      - name: Check solid filled circles with real interactions at three widths
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node scripts/qa_browser_52.cjs --root . --out "$RUNNER_TEMP/pasala-live" --widths 320,390,768 --games pasalache.html --fixture pasala-fill
