@@ -14,12 +14,16 @@ assert.equal(baseline.length,92,'Original Wordle daily schedule has 92 immutable
 assert(pool.length>=baseline.length,'Existing daily entries cannot disappear');
 const normal=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-zñ]/g,'');
 const seen=new Set();
+const ids=new Set();
 for(const [i,entry] of pool.entries()){
   const word=normal(entry.answer);
   assert(word.length>=3&&word.length<=20,'Unsupported answer length at '+i);
   assert(!seen.has(word),'Duplicate canonical Wordle answer: '+word);
   seen.add(word);
-  assert(Number.isInteger(entry.id),'Missing numeric player/coach id at '+i);
+  const stableId=String(entry.id);
+  assert(!ids.has(stableId),'Duplicate stable Wordle id '+stableId);
+  ids.add(stableId);
+  assert((Number.isInteger(entry.id) || (typeof entry.id==='string'&&entry.id.trim())),'Missing stable player/coach id at '+i);
   if(i<baseline.length){
     assert.equal(entry.id,baseline[i].id,'Wordle historical id reordered at '+i);
     assert.equal(entry.answer,baseline[i].answer,'Wordle historical answer changed at '+i);
