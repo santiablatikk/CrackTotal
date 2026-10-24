@@ -590,6 +590,28 @@ document.addEventListener('DOMContentLoaded', function() {
     let gameEnded = false;
     let gameUsedQuestionIndices = {}; // <<<--- Reset used QUESTIONS for new game
     alphabet.split('').forEach(letter => { gameUsedQuestionIndices[letter] = []; }); // Initialize arrays
+    // 6.1: remember the first displayed question of each letter across games,
+    // without changing what "Pasapalabra" means within the current match.
+    const RECENT_PASALA_KEY = 'ct_pasala_recent_v1';
+    const recentPasalaLimit = 5;
+    let recentlySeenPasala = {};
+    let firstShownThisGame = new Set();
+    const normalizeQuestionKey = text => String(text || '').normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, ' ').trim();
+    function readRecentPasala() {
+        try {
+            const parsed = JSON.parse(localStorage.getItem(RECENT_PASALA_KEY) || '{}');
+            return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+        } catch (_) { return {}; }
+    }
+    function recordSeenPasala(letter, questionText) {
+        const key = normalizeQuestionKey(questionText);
+        if (!key) return;
+        const recent = readRecentPasala();
+        const previous = Array.isArray(recent[letter]) ? recent[letter] : [];
+        recent[letter] = [key, ...previous.filter(x => x !== key)].slice(0, recentPasalaLimit);
+        try { localStorage.setItem(RECENT_PASALA_KEY, JSON.stringify(recent)); } catch (_) {}
+    }
     let timeLeft = totalTime;
     let timerInterval;
     let maxErrors = 3; // Maximum number of errors allowed
@@ -957,6 +979,8 @@ document.addEventListener('DOMContentLoaded', function() {
         usedAnswerSignatures = new Set(); // <--- Reset used answers for new game
         gameUsedQuestionIndices = {}; // <<<--- Reset used QUESTIONS for new game
         alphabet.split('').forEach(letter => { gameUsedQuestionIndices[letter] = []; }); // Initialize arrays
+        recentlySeenPasala = readRecentPasala();
+        firstShownThisGame = new Set();
         timeLeft = totalTime;
         helpUsed = 0;
         incompleteAnswersUsed = 0;
@@ -992,10 +1016,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Assign the loaded questions directly
                 questions = loadedQuestions; // Assumes the merged file has the correct array structure
 
-                // Optional: Shuffle questions within each letter for randomness (if needed)
+                // Unbiased Fisher-Yates shuffle. Prioritize unseen recent questions
+                // across games without changing answer selection or "Pasapalabra".
                 questions.forEach(letterData => {
                     if (letterData.preguntas && Array.isArray(letterData.preguntas)) {
-                        letterData.preguntas.sort(() => Math.random() - 0.5);
+                        const pool = letterData.preguntas;
+                        for (let i = pool.length - 1; i > 0; i--) {
+                            const j = Math.floor(Math.random() * (i + 1));
+                            [pool[i], pool[j]] = [pool[j], pool[i]];
+                        }
+                        const recent = new Set(Array.isArray(recentlySeenPasala[letterData.letra])
+                            ? recentlySeenPasala[letterData.letra] : []);
+                        const fresh = pool.filter(q => !recent.has(normalizeQuestionKey(q.pregunta)));
+                        const repeated = pool.filter(q => recent.has(normalizeQuestionKey(q.pregunta)));
+                        letterData.preguntas = fresh.concat(repeated);
                     }
                 });
                 // <<<--- END: Fetch questions from the single merged file --- >>>
@@ -1285,6 +1319,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 fullQuestion: question.pregunta
             };
             console.log(`Question loaded for ${currentLetter} at index ${currentQuestionIndex}:`, question.pregunta.substring(0,50) + '...');
+            if (!firstShownThisGame.has(currentLetter)) {
+                firstShownThisGame.add(currentLetter);
+                recordSeenPasala(currentLetter, question.pregunta);
+            }
 
             // --- Display the found question --- 
             console.log(`Displaying question for letter: ${currentLetter}. Question: ${question.pregunta.substring(0,30)}...`); // Log before display update

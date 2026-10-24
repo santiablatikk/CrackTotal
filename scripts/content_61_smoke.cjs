@@ -22,5 +22,13 @@ for(const group of bank){
 assert(added>=24,'The sourced content expansion must be preserved');
 assert(registry.records.some(r=>r.file==='assets/data/preguntas_combinadas.json'&&r.status==='pending_factual_review'),'Legacy bank must not be auto-certified');
 assert(registry.records.some(r=>r.file==='assets/data/level_1.json'&&r.status==='pending_factual_review'),'QSM factual review still pending');
+
+const rotationSource=require('node:fs').readFileSync(require('node:path').join(__dirname,'../assets/js/pasalache.js'),'utf8');
+assert.match(rotationSource,/RECENT_PASALA_KEY = 'ct_pasala_recent_v1'/,'Recent question history should be versioned');
+assert.match(rotationSource,/Math\.floor\(Math\.random\(\) \* \(i \+ 1\)\)/,'Use unbiased Fisher-Yates shuffle');
+assert.match(rotationSource,/fresh\.concat\(repeated\)/,'Prefer fresh questions before recently played questions');
+assert.match(rotationSource,/firstShownThisGame\.has\(currentLetter\)/,'Passing a letter must not record each repeated display');
+assert.match(require('node:fs').readFileSync(require('node:path').join(__dirname,'../pasalache.html'),'utf8'),/pasalache\.js\?v=20261024-rotation61/);
+
 console.log('CONTENT 6.1: PASS ('+added+' new sourced Pasala questions; '+registry.records.length+' inventoried records).');
 console.log('This verifies structure and provenance fields, not each historical football assertion.');
