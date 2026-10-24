@@ -1,0 +1,38 @@
+name: Crack Total 6.3 identity games and missions
+on:
+  push:
+    branches:
+      - feature/crack-total-6-3-editorial-games
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  identity-missions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci
+      - name: Validate all existing games, question banks and two new experiences
+        run: npm test
+      - name: Play both new games in real Chromium at four sizes
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node scripts/qa_browser_52.cjs \
+            --root . \
+            --out "$RUNNER_TEMP/identity-63" \
+            --games identidad-futbolera.html \
+            --widths 320,390,768,1366 \
+            --fixture identity-live
+      - name: Save browser screenshots and results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: identity-63-browser
+          path: ${{ runner.temp }}/identity-63/
+          retention-days: 7
+          if-no-files-found: ignore
