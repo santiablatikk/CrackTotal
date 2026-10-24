@@ -34,6 +34,55 @@ function serve(req,res) {
     });
   } catch {res.writeHead(400).end();}
 }
+async function ct7TimelineLiveProbe(){
+  const assert=(ok,message)=>{if(!ok)throw Error(message);};
+  const $=id=>document.getElementById(id);
+  const key='ct7:timeline:session:v1';
+  const response=await fetch('/assets/data/timeline-verified.json');
+  const dataset=await response.json();
+  for(let i=0;i<25&&$('tlStartButton').disabled;i++)
+    await new Promise(done=>setTimeout(done,100));
+  assert(!$('tlStartButton').disabled,'Official chronology bank did not load');
+  $('tlStartButton').click();
+  assert(!$('tlPlay').hidden,'Start must reveal sortable cards');
+  let correct=0;
+  for(let round=0;round<5;round++){
+    const session=JSON.parse(sessionStorage.getItem(key));
+    assert(session.idx===round,'Round sequence changed');
+    const record=dataset.rounds.find(r=>r.id===session.roundIds[round]);
+    assert(record&&record.events.length===4,'Missing verified chronology events');
+    const ordered=record.events.slice().sort((a,b)=>a.year-b.year);
+    for(let pos=0;pos<ordered.length;pos++){
+      const target=ordered[pos].id;
+      let at=JSON.parse(sessionStorage.getItem(key)).order.indexOf(target);
+      while(at>pos){
+        const row=[...$('tlItems').children].find(el=>el.dataset.eventId===target);
+        assert(row,'Target row missing');
+        const up=row.querySelector('button[data-direction="-1"]');
+        assert(up&&!up.disabled,'Up move must be enabled');
+        up.click();at--;
+      }
+    }
+    assert(JSON.parse(sessionStorage.getItem(key)).order.every((id,i)=>id===ordered[i].id),
+      'Actual arrow clicks must produce correct chronology');
+    $('tlCheck').click();
+    assert(!$('tlAnswer').hidden,'A checked chronology must show official answer');
+    assert($('tlPoints').textContent.includes('500'),'Perfect positions must add 500 points');
+    assert($('tlSource').href.startsWith('https://'),'Answer must link official primary source');
+    correct++;
+    $('tlNext').click();
+  }
+  assert(!$('tlEnd').hidden,'Five actual rounds must finish');
+  const final=JSON.parse(sessionStorage.getItem(key));
+  assert(final.score===2500&&final.perfect===5&&final.correctPositions===20,
+    'Timeline result disagrees with five complete chronology submissions');
+  const progress=JSON.parse(localStorage.getItem('ct7:local-progress:v1'));
+  assert(progress.history.filter(x=>x.mode==='timeline'&&x.scope==='local-only').length>=5);
+  assert(progress.achievements.includes('explorador'),'Daily goal not awarded');
+  return {finished:true,score:final.score,perfect:final.perfect,rounds:correct,
+    xp:progress.xp,localHistory:progress.history.length};
+}
+
 async function ct7LiveProbe() {
   const assert = (condition,message) => { if (!condition) throw Error(message); };
   const mode = document.body.dataset.ct7Mode;
@@ -583,10 +632,11 @@ async function main(){
               JSON.stringify(result.exceptionDetails||data).slice(0,700));
           console.log('CT7 PROFILE '+width+'px: '+JSON.stringify(data));
         }else{
-          if(!['quien-soy.html','adivina-carrera.html'].includes(game))
+          if(!['quien-soy.html','adivina-carrera.html','ordena-historia.html'].includes(game))
             throw Error('ct7-live requires editorial games or local profile');
+          const probe=game==='ordena-historia.html'?ct7TimelineLiveProbe:ct7LiveProbe;
           const result=await command('Runtime.evaluate',{
-            expression:'('+ct7LiveProbe.toString()+')()',
+            expression:'('+probe.toString()+')()',
             returnByValue:true,awaitPromise:true
           });
           if(result.exceptionDetails||!result.result?.value?.finished)
